@@ -1,4 +1,4 @@
-import { Theme, isTheme } from '@intuition-ts/1design'
+import { Theme, isTheme } from '@intuition-ts/1ui'
 import { json } from '@remix-run/node'
 import type { ActionFunction } from '@remix-run/node'
 import { useFetcher } from '@remix-run/react'

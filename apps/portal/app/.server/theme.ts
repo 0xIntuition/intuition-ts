@@ -1,4 +1,5 @@
-import { Theme, themesList } from '@intuition-ts/1design'
+
+import { Theme, themesList } from '@intuition-ts/1ui'
 import * as cookie from 'cookie'
 
 const cookieName = 'theme'

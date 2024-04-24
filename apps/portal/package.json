@@ -11,7 +11,7 @@
     "typecheck": "tsc"
   },
   "dependencies": {
-    "@intuition-ts/1design": "workspace:^",
+    "@intuition-ts/1ui": "workspace:^",
     "@privy-io/react-auth": "^1.60.7",
     "@privy-io/wagmi": "^0.2.3",
     "@remix-run/node": "^2.9.0",

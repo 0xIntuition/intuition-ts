@@ -1,6 +1,6 @@
+import { themePreset } from '@intuition-ts/1ui'
 import type { Config } from 'tailwindcss'
 
-import { themePreset } from '@intuition-ts/1design'
 
 const config = {
   presets: [themePreset],
