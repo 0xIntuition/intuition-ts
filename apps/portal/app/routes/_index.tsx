@@ -1,16 +1,9 @@
 import { Button } from '@intuition-ts/1design'
-import { ConnectButton } from '@rainbow-me/rainbowkit'
-import '@rainbow-me/rainbowkit/styles.css'
-
+import { PrivyButton } from '~/.client/privy-button'
 export default function Index() {
   return (
     <div>
-      <ConnectButton
-        accountStatus={{
-          smallScreen: 'avatar',
-          largeScreen: 'full',
-        }}
-      />{' '}
+      <PrivyButton />
       <Button />
     </div>
   )

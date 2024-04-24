@@ -12,7 +12,8 @@
   },
   "dependencies": {
     "@intuition-ts/1design": "workspace:^",
-    "@rainbow-me/rainbowkit": "^2.0.5",
+    "@privy-io/react-auth": "^1.60.7",
+    "@privy-io/wagmi": "^0.2.3",
     "@remix-run/node": "^2.9.0",
     "@remix-run/react": "^2.9.0",
     "@remix-run/serve": "^2.9.0",
