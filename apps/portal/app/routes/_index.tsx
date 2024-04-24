@@ -1,14 +1,17 @@
-import type { MetaFunction } from '@remix-run/node'
 import { Button } from '@intuition-ts/1design'
-
-export const meta: MetaFunction = () => {
-  return [{ title: 'New Remix App' }, { name: 'description', content: 'Welcome to Remix!' }]
-}
+import { ConnectButton } from '@rainbow-me/rainbowkit'
+import '@rainbow-me/rainbowkit/styles.css'
 
 export default function Index() {
   return (
     <div>
-      <Button onClick={() => console.log('clicked')}>Click me</Button>
+      <ConnectButton
+        accountStatus={{
+          smallScreen: 'avatar',
+          largeScreen: 'full',
+        }}
+      />{' '}
+      <Button />
     </div>
   )
 }
