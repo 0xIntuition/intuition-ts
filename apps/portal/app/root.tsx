@@ -1,13 +1,16 @@
-import { useMemo, useState } from 'react'
 import { LoaderFunctionArgs, json, type MetaFunction } from '@remix-run/node'
-import { Links, Meta, Outlet, Scripts, ScrollRestoration, useLoaderData } from '@remix-run/react'
+import { Links, Meta, Outlet, Scripts, ScrollRestoration } from '@remix-run/react'
 
-import { base, baseSepolia, mainnet } from 'wagmi/chains'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { QueryClient } from '@tanstack/react-query'
 
 import { getEnv } from './.server/env'
 import { ClientOnly } from 'remix-utils/client-only'
-import Providers from './.client/Providers'
+import Providers from './.client/providers'
+import './styles/global.css'
+import { ClientHintCheck, getHints } from './lib/utils/client-hints'
+import { getTheme } from './.server/theme'
+import { useNonce } from './lib/utils/nonce-provider'
+import { useTheme } from './routes/actions+/set-theme'
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
   return [
@@ -19,13 +22,29 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 export async function loader({ request }: LoaderFunctionArgs) {
   return json({
     env: getEnv(),
+    requestInfo: {
+      hints: getHints(request),
+      path: new URL(request.url).pathname,
+      userPrefs: {
+        theme: getTheme(request),
+      },
+    },
   })
 }
 
-export function Document({ children }: { children: React.ReactNode }) {
+export function Document({
+  children,
+  nonce,
+  theme = 'system',
+}: {
+  children: React.ReactNode
+  nonce: string
+  theme?: string
+}) {
   return (
-    <html lang="en">
+    <html lang="en" data-theme={theme}>
       <head>
+        <ClientHintCheck nonce={nonce} />
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta />
@@ -43,10 +62,11 @@ export function Document({ children }: { children: React.ReactNode }) {
 const queryClient = new QueryClient() // Set up a tanstack QueryClient. Required for wagmi v2
 
 export default function App() {
-  const { env } = useLoaderData<typeof loader>()
+  const nonce = useNonce()
+  const theme = useTheme()
 
   return (
-    <Document>
+    <Document nonce={nonce} theme={theme}>
       <ClientOnly>
         {() => (
           <Providers>
