@@ -7,7 +7,7 @@ export default function Index() {
     <div>
       <PrivyButton />
       <ThemeTest />
-      <Button />
+      <Button variant="secondary">Secondary</Button>
     </div>
   );
 }
