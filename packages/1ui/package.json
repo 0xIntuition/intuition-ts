@@ -11,7 +11,9 @@
   "scripts": {
     "build": "tsup ./index.tsx --format esm,cjs --dts --external react",
     "dev": "tsup ./index.tsx --format esm,cjs --watch --dts --external react",
-    "typecheck": "tsc"
+    "typecheck": "tsc",
+    "ui": "storybook dev -p 6006",
+    "ui:build": "storybook build"
   },
   "keywords": [],
   "author": "",
@@ -26,7 +28,18 @@
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
+    "@storybook/addon-essentials": "^8.0.9",
+    "@storybook/addon-interactions": "^8.0.9",
+    "@storybook/addon-links": "^8.0.9",
+    "@storybook/addon-onboarding": "^8.0.9",
+    "@storybook/blocks": "^8.0.9",
+    "@storybook/builder-vite": "^8.0.9",
+    "@storybook/react": "^8.0.9",
+    "@storybook/react-vite": "^8.0.9",
+    "@storybook/test": "^8.0.9",
+    "storybook": "^8.0.9",
     "tsup": "6.2.2",
-    "typescript": "^5.1.6"
+    "typescript": "^5.1.6",
+    "vite-tsconfig-paths": "^4.2.1"
   }
 }
