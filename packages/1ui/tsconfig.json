@@ -8,7 +8,11 @@
     "target": "ESNext",
     "moduleResolution": "Node",
     "outDir": "./dist",
-    "declaration": true
+    "declaration": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./*"]
+    }
   },
   "include": ["."],
   "exclude": ["dist", "node_modules", "**/*.spec.ts"]

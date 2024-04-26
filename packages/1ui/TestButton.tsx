@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-export function Button(props: any) {
+export function TestButton(props: any) {
   const [count, setCount] = useState(0);
   console.log('test', props);
   return (
@@ -10,4 +10,4 @@ export function Button(props: any) {
   );
 }
 
-export default Button;
+export default TestButton;
