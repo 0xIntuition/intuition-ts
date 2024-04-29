@@ -13,6 +13,7 @@
     "isolatedModules": true,
     "esModuleInterop": true,
     "jsx": "react-jsx",
+    // "jsx": "react",
     "module": "ESNext",
     "moduleResolution": "Bundler",
     "resolveJsonModule": true,
@@ -23,7 +24,8 @@
     "forceConsistentCasingInFileNames": true,
     "baseUrl": ".",
     "paths": {
-      "~/*": ["./app/*"]
+      "~/*": ["./app/*"],
+      "@intuition-ts/1ui": ["node_modules/@intuition-ts/1ui/index.ts"]
     },
 
     // Vite takes care of building everything, not tsc.
