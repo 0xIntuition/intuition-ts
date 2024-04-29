@@ -17,7 +17,6 @@ import { ClientHintCheck, getHints } from './lib/utils/client-hints';
 import { getTheme } from './.server/theme';
 import { useNonce } from './lib/utils/nonce-provider';
 import { useTheme } from './routes/actions+/set-theme';
-import { html } from 'remix-utils/responses';
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
   return [
