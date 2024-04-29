@@ -12,11 +12,12 @@ import { QueryClient } from '@tanstack/react-query';
 import { getEnv } from './.server/env';
 import { ClientOnly } from 'remix-utils/client-only';
 import Providers from './.client/providers';
-import './styles/global.css';
+import './styles/globals.css';
 import { ClientHintCheck, getHints } from './lib/utils/client-hints';
 import { getTheme } from './.server/theme';
 import { useNonce } from './lib/utils/nonce-provider';
 import { useTheme } from './routes/actions+/set-theme';
+import { html } from 'remix-utils/responses';
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
   return [
@@ -48,7 +49,7 @@ export function Document({
   theme?: string;
 }) {
   return (
-    <html lang="en" data-theme={theme}>
+    <html lang="en" data-theme="dark">
       <head>
         <ClientHintCheck nonce={nonce} />
         <meta charSet="utf-8" />

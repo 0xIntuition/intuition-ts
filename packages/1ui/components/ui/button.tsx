@@ -2,6 +2,7 @@ import { Loader2Icon } from 'lucide-react';
 import { Slot } from '@radix-ui/react-slot';
 import { cva, type VariantProps } from 'class-variance-authority';
 import * as React from 'react';
+
 import { cn } from '@/styles';
 
 const buttonVariants = cva(
@@ -53,7 +54,6 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       <Comp
         className={cn(buttonVariants({ variant, size, className }))}
         ref={ref}
-        data-testid="int-button"
         {...props}
       >
         {isLoading ? (

@@ -1,15 +1,9 @@
-import { themePreset } from '@intuition-ts/1ui'
-import type { Config } from 'tailwindcss'
+import { themePreset } from '@intuition-ts/1ui';
 
-
-const config = {
+module.exports = {
   presets: [themePreset],
-  content: [
-    './pages/**/*.{ts,tsx}',
-    './components/**/*.{ts,tsx}',
-    './app/**/*.{ts,tsx}',
-    './src/**/*.{ts,tsx}',
-  ],
-} satisfies Config
-
-export default config
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+};
