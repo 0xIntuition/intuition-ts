@@ -1,18 +1,3 @@
-// import type { Preview } from '@storybook/react';
-
-// const preview: Preview = {
-//   parameters: {
-//     controls: {
-//       matchers: {
-//         color: /(background|color)$/i,
-//         date: /Date$/,
-//       },
-//     },
-//   },
-// };
-
-// export default preview;
-
 import type { Preview } from '@storybook/react';
 
 import { themeDecorator } from './decorators';
@@ -51,7 +36,7 @@ export const globalTypes = {
       items: ['dark', 'light'].map((theme) => ({
         value: theme,
         title: `${theme} theme`,
-      })),
+      })), // we can make this more robust when we have more themes
       showName: true,
     },
   },

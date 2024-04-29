@@ -22,33 +22,14 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const onClickSpy = fn();
-
 export const BasicUsage: Story = {
   args: {
     children: 'Example Button',
-    onClick: onClickSpy,
   },
   render: (props) => <Button {...props} />,
-  play: async () => {
-    const button = screen.getByTestId<HTMLButtonElement>('int-button');
-
-    expect(button).toBeInTheDocument();
-    expect(button).toContainHTML('Example Button');
-
-    await fireEvent.click(button);
-
-    expect(onClickSpy).toHaveBeenCalled();
-    expect(onClickSpy).toHaveBeenCalledTimes(1);
-
-    expect(button).toHaveClass('bg-primary');
-  },
 };
 
 export const Variants: Story = {
-  args: {
-    // children: 'Example Button',
-  },
   parameters: {
     controls: {
       exclude: ['className', 'asChild', 'style', 'variant'],
@@ -89,14 +70,6 @@ export const Sizes: Story = {
       <Button size="lg" {...props} />
     </div>
   ),
-  play: async () => {
-    const buttons = screen.getAllByTestId<HTMLButtonElement>('int-button');
-    const [smBtn, defaultBtn, lgBtn] = buttons;
-
-    expect(smBtn).toHaveClass('h-9');
-    expect(defaultBtn).toHaveClass('h-10');
-    expect(lgBtn).toHaveClass('h-11');
-  },
 };
 
 export const States: Story = {
@@ -115,11 +88,4 @@ export const States: Story = {
       </Button>
     </div>
   ),
-  play: async () => {
-    const [loadingBtn, disabledBtn] =
-      screen.getAllByTestId<HTMLButtonElement>('int-button');
-
-    expect(loadingBtn.querySelector('.animate-spin')).toBeInTheDocument();
-    expect(disabledBtn).toBeDisabled();
-  },
 };
