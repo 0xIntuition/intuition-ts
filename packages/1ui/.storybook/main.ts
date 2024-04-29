@@ -1,4 +1,6 @@
 import type { StorybookConfig } from '@storybook/react-vite';
+import { mergeConfig } from 'vite';
+import path from 'path';
 
 const config: StorybookConfig = {
   stories: ['../**/*.stories.@(js|jsx|mjs|ts|tsx)'],
@@ -12,12 +14,25 @@ const config: StorybookConfig = {
     name: '@storybook/react-vite',
     options: {
       builder: {
-        viteConfigPath: '.storybook/vite-storybook.config.ts',
+        viteConfigPath: '.storybook/vite.config.ts',
       },
     },
   },
   docs: {
     autodocs: 'tag',
   },
+  async viteFinal(config) {
+    const customConfig = {
+      resolve: {
+        alias: {
+          '@': path.resolve('.', '/app'),
+          '@images': path.resolve('.', '/src/images'),
+        },
+      },
+    };
+
+    return mergeConfig(config, customConfig);
+  },
 };
+
 export default config;

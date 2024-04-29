@@ -8,8 +8,17 @@
   "files": [
     "dist/**"
   ],
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts",
+      "style": "./dist/style.css"
+    },
+    "./css": "./dist/style.css"
+  },
   "scripts": {
-    "build": "tsup ./index.tsx --format esm,cjs --dts --external react",
+    "build": "tsup ./index.ts --format esm,cjs --dts --external react",
     "dev": "tsup ./index.tsx --format esm,cjs --watch --dts --external react",
     "typecheck": "tsc",
     "ui": "storybook dev -p 6006",

@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Button } from '@/components/ui/button';
 import { screen, expect, fn, fireEvent } from '@storybook/test';
+import { Button } from '..';
 
 const meta = {
-  title: 'Atoms/Button',
+  title: 'Atom/Button',
   component: Button,
   tags: ['autodocs'],
   parameters: {
@@ -26,7 +26,7 @@ const onClickSpy = fn();
 
 export const BasicUsage: Story = {
   args: {
-    children: 'Hello, there!',
+    children: 'Example Button',
     onClick: onClickSpy,
   },
   render: (props) => <Button {...props} />,
@@ -34,7 +34,7 @@ export const BasicUsage: Story = {
     const button = screen.getByTestId<HTMLButtonElement>('int-button');
 
     expect(button).toBeInTheDocument();
-    expect(button).toContainHTML('Hello, there!');
+    expect(button).toContainHTML('Example Button');
 
     await fireEvent.click(button);
 
@@ -47,7 +47,7 @@ export const BasicUsage: Story = {
 
 export const Variants: Story = {
   args: {
-    children: 'Hello, there',
+    // children: 'Example Button',
   },
   parameters: {
     controls: {
@@ -63,14 +63,12 @@ export const Variants: Story = {
         gap: '2rem',
       }}
     >
-      <Button variant="default" {...props} />
-      <Button variant="destructive" {...props} />
-      <Button variant="outline" {...props} />
-      <Button variant="secondary" {...props} />
-      <Button variant="ghost" {...props} />
-      <Button variant="link" {...props} />
-      <Button variant="attestFor" {...props} />
-      <Button variant="attestAgainst" {...props} />
+      <Button variant="default" {...props} children="Default" />
+      <Button variant="secondary" {...props} children="Secondary" />
+      <Button variant="outline" {...props} children="Outline" />
+      <Button variant="ghost" {...props} children="Ghost" />
+      <Button variant="link" {...props} children="Link" />
+      <Button variant="destructive" {...props} children="Destructive" />
     </div>
   ),
 };
@@ -125,31 +123,3 @@ export const States: Story = {
     expect(disabledBtn).toBeDisabled();
   },
 };
-
-// import type { Meta, StoryObj } from '@storybook/react';
-// import { Button } from '@/components/ui';
-
-// const meta: Meta<typeof Button> = {
-//   title: 'Atoms/Button',
-//   component: Button,
-//   parameters: {
-//     controls: {
-//       exclude: ['className', 'style', 'asChild'],
-//     },
-//   },
-//   argTypes: {
-//     children: { control: 'text' },
-//     variant: { control: 'select' },
-//     size: { control: 'select' },
-//     isLoading: { control: 'boolean' },
-//   },
-// };
-
-// export default meta;
-// type Story = StoryObj<typeof Button>;
-
-// export const Primary: Story = {
-//   args: {
-//     variant: 'default',
-//   },
-// };

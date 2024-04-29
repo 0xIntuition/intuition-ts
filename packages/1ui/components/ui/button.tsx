@@ -9,7 +9,8 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: 'bg-primary text-primary-foreground hover:bg-primary/90',
+        // default: 'bg-primary text-primary-foreground hover:bg-primary/90 ',
+        default: 'h-4 w-4 bg-red-700 text-red-50',
         destructive:
           'bg-destructive text-destructive-foreground hover:bg-destructive/90',
         outline:
@@ -18,12 +19,6 @@ const buttonVariants = cva(
         ghost:
           'hover:bg-none hover:text-accent-foreground text-primary-300 transition-colors duration-150',
         link: 'text-primary underline-offset-4 hover:underline',
-        attestFor:
-          'bg-transparent text-blue-600 border-2 border-border hover:border-blue-600',
-        attestAgainst:
-          'bg-transparent text-red-600 border-2 border-border hover:border-red-600',
-        connect:
-          'bg-primary-foreground text-primary-950 hover:bg-primary transition-colors duration-150 border rounded-full',
         tooltip:
           '!text-primary-300 transition-colors duration-300 border rounded-lg border-primary-50/20 hover:border-primary-50/40 hover:text-primary-200 text-xxs',
       },
