@@ -21,18 +21,18 @@ const config: StorybookConfig = {
   docs: {
     autodocs: 'tag',
   },
-  async viteFinal(config) {
-    const customConfig = {
-      resolve: {
-        alias: {
-          '@': path.resolve('.', '/app'),
-          '@images': path.resolve('.', '/src/images'),
-        },
-      },
-    };
+  // async viteFinal(config) {
+  //   const customConfig = {
+  //     resolve: {
+  //       alias: {
+  //         '@': path.resolve('.', '/app'),
+  //         '@images': path.resolve('.', '/src/images'),
+  //       },
+  //     },
+  //   };
 
-    return mergeConfig(config, customConfig);
-  },
+  //   return mergeConfig(config, customConfig);
+  // },
 };
 
 export default config;

@@ -17,7 +17,7 @@ export function PrivyButton() {
 
   if (ready && !authenticated) {
     return (
-      <Button disabled={disableLogin} onClick={login}>
+      <Button disabled={disableLogin} onClick={login} className="bg-cyan-50">
         Log in
       </Button>
     );
@@ -25,9 +25,9 @@ export function PrivyButton() {
 
   if (ready && authenticated && privyUser !== null) {
     return (
-      <button disabled={disableLogin} onClick={login}>
+      <Button disabled={disableLogin} onClick={login}>
         User: {privyUser.id}
-      </button>
+      </Button>
     );
   }
 }
