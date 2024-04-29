@@ -9,11 +9,11 @@
     "moduleResolution": "Node",
     "outDir": "./dist",
     "declaration": true,
-    "baseUrl": ".",
+    "baseUrl": "./src",
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["*"]
     }
   },
-  "include": ["."],
+  "include": ["src"],
   "exclude": ["dist", "node_modules", "**/*.spec.ts"]
 }

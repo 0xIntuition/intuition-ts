@@ -1,9 +1,6 @@
 import type { Preview } from '@storybook/react';
-
 import { themeDecorator } from './decorators';
-import '../styles/globals.css';
-
-import { themes } from '@storybook/theming';
+import '../src/styles/globals.css';
 
 const preview: Preview = {
   parameters: {
