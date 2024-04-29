@@ -1,6 +1,8 @@
 // import type { Config } from 'tailwindcss';
 // import { themePreset } from './styles';
 
+import { themePreset } from './styles';
+
 // // const config = {
 // //   presets: [themePreset],
 // // } satisfies Config;
@@ -13,6 +15,7 @@
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+  // presets: [themePreset],
   content: ['./components/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {},
