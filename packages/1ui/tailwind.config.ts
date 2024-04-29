@@ -15,7 +15,7 @@ import { themePreset } from './styles';
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  // presets: [themePreset],
+  presets: [themePreset],
   content: ['./components/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {},
