@@ -1,36 +1,34 @@
-# Welcome to Remix + Vite!
+# Welcome to the Intuition Portal
 
+Our Portal app is built with Remix/Vite.
 📖 See the [Remix docs](https://remix.run/docs) and the [Remix Vite docs](https://remix.run/docs/en/main/guides/vite) for details on supported features.
+
+## Getting Started
+
+Once you've cloned the `intuition-ts` monorepo you can run Portal from the monorepo root. Install all packages from the monorepo root by running `pnpm install`.
+
+## Stack
+
+- **Remix (with Vite)**
+  - Vite: [Vite Documentation](https://vitejs.dev/guide/)
+  - Remix Flat Routes: [Flat Routes Documentation](https://github.com/kiliman/remix-flat-routes)
+- **Web3:**
+  - Privy: [Privy Documentation](https://docs.privy.io/)
+  - Wagmi: [Wagmi Documentation](https://wagmi.sh/)
+  - Viem: [Viem Documentation](https://viem.sh/)
+  - RainbowKit: [RainbowKit Documentation](https://www.rainbowkit.com/docs/introduction)
+  - Sign in with Ethereum: [Sign in with Ethereum Documentation](https://login.xyz/)
+  - DIDSession: [Ceramic Network did-session Module Documentation](https://developers.ceramic.network/docs/protocol/js-ceramic/guides/ceramic-clients/authentication/did-session)
+- **Styling:**
+  - Shadcn/ui: [Shadcn/ui Documentation](https://tailwindcss.com/docs/installation)
+  - Tailwind: [Tailwind Documentation](https://tailwindcss.com/docs/installation)
+  - Radix: [Radix Documentation](https://www.radix-ui.com/)
+- **Forms and Data:**
+  - Zod: [Zod Documentation](https://zod.dev/)
+  - Conform: [Conform Documentation](https://conform.guide/)
 
 ## Development
 
 Run the Vite dev server:
 
-```shellscript
-npm run dev
-```
-
-## Deployment
-
-First, build your app for production:
-
-```sh
-npm run build
-```
-
-Then run the app in production mode:
-
-```sh
-npm start
-```
-
-Now you'll need to pick a host to deploy it to.
-
-### DIY
-
-If you're familiar with deploying Node applications, the built-in Remix app server is production-ready.
-
-Make sure to deploy the output of `npm run build`
-
-- `build/server`
-- `build/client`
+`pnpm run --filter portal dev`
