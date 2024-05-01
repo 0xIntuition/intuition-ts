@@ -1,8 +1,8 @@
 {
-  "extends": "../../tsconfig.base.json", // Adjust the path as necessary
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "jsx": "react-jsx",
-    "baseUrl": "./src", // Overrides the base to set the root directory for relative module resolution to the src folder
+    "baseUrl": "./src",
     "paths": {
       "@/*": ["*"]
     }

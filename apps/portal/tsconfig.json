@@ -1,18 +1,19 @@
 {
-  "extends": "../../tsconfig.base.json", // Adjust the path as necessary to point to the location of your tsconfig.base.json
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "lib": ["DOM", "DOM.Iterable", "ES2022"],
     "types": ["@remix-run/node", "vite/client"],
+    "moduleResolution": "Bundler",
     "isolatedModules": true,
     "strict": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "baseUrl": ".", // This sets the base URL from which to resolve non-absolute module names
+    "baseUrl": ".",
     "paths": {
       "~/*": ["./app/*"],
       "@intuition-ts/1ui": ["node_modules/@intuition-ts/1ui/index.ts"]
     },
-    "noEmit": true // Since Vite is being used to handle module bundling, TypeScript's output is not needed
+    "noEmit": true
   },
   "include": ["**/*.ts", "**/*.tsx"]
 }
