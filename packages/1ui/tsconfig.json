@@ -1,19 +1,10 @@
 {
+  "extends": "../../tsconfig.base.json", // Adjust the path as necessary
   "compilerOptions": {
-    "jsx": "react-jsx",
-    "allowJs": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "module": "esnext",
-    "target": "ESNext",
-    "moduleResolution": "Node",
-    "outDir": "./dist",
-    "declaration": true,
-    "baseUrl": "./src",
+    "baseUrl": "./src", // Overrides the base to set the root directory for relative module resolution to the src folder
     "paths": {
       "@/*": ["*"]
     }
   },
-  "include": ["src"],
-  "exclude": ["dist", "node_modules", "**/*.spec.ts"]
+  "include": ["src"]
 }

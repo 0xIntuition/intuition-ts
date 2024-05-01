@@ -1,34 +1,18 @@
 {
-  "include": [
-    "**/*.ts",
-    "**/*.tsx",
-    "**/.server/**/*.ts",
-    "**/.server/**/*.tsx",
-    "**/.client/**/*.ts",
-    "**/.client/**/*.tsx"
-  ],
+  "extends": "../../tsconfig.base.json", // Adjust the path as necessary to point to the location of your tsconfig.base.json
   "compilerOptions": {
     "lib": ["DOM", "DOM.Iterable", "ES2022"],
     "types": ["@remix-run/node", "vite/client"],
     "isolatedModules": true,
-    "esModuleInterop": true,
-    "jsx": "react-jsx",
-    // "jsx": "react",
-    "module": "ESNext",
-    "moduleResolution": "Bundler",
-    "resolveJsonModule": true,
-    "target": "ES2022",
     "strict": true,
-    "allowJs": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "baseUrl": ".",
+    "baseUrl": ".", // This sets the base URL from which to resolve non-absolute module names
     "paths": {
       "~/*": ["./app/*"],
       "@intuition-ts/1ui": ["node_modules/@intuition-ts/1ui/index.ts"]
     },
-
-    // Vite takes care of building everything, not tsc.
-    "noEmit": true
-  }
+    "noEmit": true // Since Vite is being used to handle module bundling, TypeScript's output is not needed
+  },
+  "include": ["**/*.ts", "**/*.tsx"]
 }
