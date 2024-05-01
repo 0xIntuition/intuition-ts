@@ -1,6 +1,6 @@
 import React from 'react'
 import type { Meta, StoryObj } from '@storybook/react'
-import { Button } from '..'
+import { Button } from '../src/components/ui/button'
 
 const meta = {
   title: 'Atom/Button',
@@ -39,17 +39,29 @@ export const Variants: Story = {
     <div
       style={{
         display: 'grid',
-        gridTemplateColumns: 'repeat(5, 1fr)',
+        gridTemplateColumns: 'repeat(6, 1fr)', // Adjusted column count to match number of buttons
         gridTemplateRows: '1fr',
         gap: '2rem',
       }}
     >
-      <Button variant="default" {...props} children="Default" />
-      <Button variant="secondary" {...props} children="Secondary" />
-      <Button variant="outline" {...props} children="Outline" />
-      <Button variant="ghost" {...props} children="Ghost" />
-      <Button variant="link" {...props} children="Link" />
-      <Button variant="destructive" {...props} children="Destructive" />
+      <Button variant="default" {...props}>
+        Default
+      </Button>
+      <Button variant="secondary" {...props}>
+        Secondary
+      </Button>
+      <Button variant="outline" {...props}>
+        Outline
+      </Button>
+      <Button variant="ghost" {...props}>
+        Ghost
+      </Button>
+      <Button variant="link" {...props}>
+        Link
+      </Button>
+      <Button variant="destructive" {...props}>
+        Destructive
+      </Button>
     </div>
   ),
 }

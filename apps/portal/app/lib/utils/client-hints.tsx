@@ -68,6 +68,7 @@ export function getHints(request?: Request) {
     },
     {} as {
       [name in ClientHintNames]: (typeof clientHints)[name] extends {
+        /* eslint-disable @typescript-eslint/no-explicit-any */
         transform: (value: any) => infer ReturnValue
       }
         ? ReturnValue

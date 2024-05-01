@@ -15,6 +15,7 @@
  * @throws {Error} if condition is falsey
  */
 export function invariant(
+  /* eslint-disable @typescript-eslint/no-explicit-any */
   condition: any,
   message: string | (() => string),
 ): asserts condition {

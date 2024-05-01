@@ -2,7 +2,7 @@ import { ThemeSwitch } from '~/routes/actions+/set-theme'
 
 export interface ThemeTestProps {}
 
-export function ThemeTest(props: ThemeTestProps) {
+export function ThemeTest() {
   return (
     <div className="m-5 flex flex-col items-start gap-4">
       <ThemeSwitch />

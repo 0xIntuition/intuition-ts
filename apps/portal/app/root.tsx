@@ -41,6 +41,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 export function Document({
   children,
   nonce,
+  /* eslint-disable @typescript-eslint/no-unused-vars */
   theme = 'system',
 }: {
   children: React.ReactNode
@@ -65,6 +66,7 @@ export function Document({
   )
 }
 
+/* eslint-disable @typescript-eslint/no-unused-vars */
 const queryClient = new QueryClient() // Set up a tanstack QueryClient. Required for wagmi v2
 
 export default function App() {
