@@ -20,6 +20,7 @@
   "scripts": {
     "build": "tsup src/index.ts --format esm,cjs --dts --external react",
     "dev": "tsup src/index.ts --format esm,cjs --watch --dts --external react",
+    "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
     "typecheck": "tsc",
     "ui": "storybook dev -p 6006",
     "ui:build": "storybook build"
@@ -29,7 +30,14 @@
   "license": "ISC",
   "peerDependencies": {
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "@storybook/react": "^8.0.9",
+    "@storybook/react-vite": "^8.0.9",
+    "vite": "~5.0.0",
+    "@storybook/manager-api": "^8.0.9",
+    "@storybook/theming": "^8.0.9",
+    "tailwindcss": "^3.4.3",
+    "autoprefixer": "^10.4.19",
+    "tsup": "^6.2.2"
   },
   "dependencies": {
     "@radix-ui/react-avatar": "^1.0.4",
@@ -42,7 +50,6 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "lucide-react": "^0.376.0",
-    "sonner": "^1.4.41",
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7"
   },
@@ -64,7 +71,7 @@
     "postcss": "^8.4.38",
     "storybook": "^8.0.9",
     "tailwindcss": "^3.4.3",
-    "tsup": "6.2.2",
+    "tsup": "^6.2.2",
     "typescript": "^5.1.6",
     "vite-tsconfig-paths": "^4.2.1"
   }
