@@ -12,7 +12,7 @@
     "commonjs": true,
     "es6": true
   },
-  "ignorePatterns": ["!**/.server", "!**/.client"],
+  "ignorePatterns": ["!**/.server", "!**/.client", "node_modules", "dist"],
   "extends": ["eslint:recommended"],
   "overrides": [
     {
@@ -24,6 +24,9 @@
         "plugin:react-hooks/recommended",
         "plugin:jsx-a11y/recommended"
       ],
+      "rules": {
+        "react/prop-types": "off"
+      },
       "settings": {
         "react": {
           "version": "detect"
@@ -40,7 +43,7 @@
     },
     {
       "files": ["**/*.{ts,tsx}"],
-      "plugins": ["@typescript-eslint", "import"],
+      "plugins": ["@typescript-eslint", "import", "@nx"],
       "parser": "@typescript-eslint/parser",
       "settings": {
         "import/internal-regex": "^~/",
