@@ -1,4 +1,7 @@
 {
-  "name": "@intuition/core",
-  "version": "0.0.1"
+  "name": "@intuition-ts/core",
+  "version": "0.0.1",
+  "scripts": {
+    "build": "echo \"Core building...\" && exit 0"
+  }
 }

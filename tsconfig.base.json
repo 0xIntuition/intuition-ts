@@ -13,7 +13,7 @@
     "paths": {
       "@/*": ["src/*"],
       "@intuition/core": ["packages/core/src/index.ts"]
-    },
-    "exclude": ["node_modules", "dist", "**/*.spec.ts"]
-  }
+    }
+  },
+  "exclude": ["node_modules", "dist", "**/*.spec.ts"]
 }
