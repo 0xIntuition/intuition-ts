@@ -1,5 +1,5 @@
 {
-  "name": "core",
+  "name": "@intuition-ts/core",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "packages/core/src",
   "projectType": "library",
