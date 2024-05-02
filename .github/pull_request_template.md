@@ -14,4 +14,4 @@ If applicable, add screenshots or screen captures of your changes.
 
 ## Declaration
 
-- [ ] I hereby declare that I have abided by the rules and regulations as outlined in the [CONTRIBUTION.md]()
+- [ ] I hereby declare that I have abided by the rules and regulations as outlined in the [CONTRIBUTION.md](../CONTRIBUTING.md)
