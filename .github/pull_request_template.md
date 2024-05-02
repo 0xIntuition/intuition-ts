@@ -1,23 +1,17 @@
-## Linear Ticket
+## Affected Packages
 
-Add the link to the Linear ticket here.
+- [ ] Portal
+- [ ] 1UI
+- [ ] Core
 
 ## Overview
 
-Overview of the changes in the PR. If possible, include which packages/apps are impacted by the PR.
+Overview of the changes in the PR.
 
-## Installations Needed
+## Screen Captures
 
-List out any new packages that have been added.
+If applicable, add screenshots or screen captures of your changes.
 
-## Screencaps
+## Declaration
 
-Considering adding a screenshot or screencapture of the changes.
-
-## Checks
-
-Before making your PR, please check the following:
-
-- [ ] Critical lint errors are resolved
-- [ ] App/packages run locally
-- [ ] App/packages build locally (run the build command and resolve any errors before the PR when possible)
+- [ ] I hereby declare that I have abided by the rules and regulations as outlined in the [CONTRIBUTION.md]()
