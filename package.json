@@ -53,5 +53,8 @@
   },
   "nx": {
     "includedScripts": []
+  },
+  "engines": {
+    "pnpm": "9.0.6"
   }
 }
