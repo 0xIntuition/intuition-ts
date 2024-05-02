@@ -10,7 +10,7 @@
     "build": "nx run-many -t build",
     "lint": "nx run-many -t lint",
     "lint:fix": "nx run-many -t lint:fix",
-    "pre-commit": "pnpm build && pnpm lint:fix && pretty-quick --verbose --staged",
+    "pre-commit": "pnpm lint && pretty-quick --verbose --staged && pnpm build",
     "prepare": "husky"
   },
   "keywords": [],
