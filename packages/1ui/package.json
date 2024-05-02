@@ -21,6 +21,7 @@
     "build": "tsup src/index.ts --format esm,cjs --dts --external react",
     "dev": "tsup src/index.ts --format esm,cjs --watch --dts --external react",
     "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
+    "lint:fix": "pnpm lint --fix",
     "typecheck": "tsc",
     "ui": "storybook dev -p 6006",
     "ui:build": "storybook build"

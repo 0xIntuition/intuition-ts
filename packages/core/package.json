@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "scripts": {
     "build": "echo \"Core building...\" && exit 0",
-    "lint": "eslint --ignore-path .gitignore --cache --cache-location ./node_modules/.cache/eslint ."
+    "lint": "eslint --ignore-path .gitignore --cache --cache-location ./node_modules/.cache/eslint .",
+    "lint:fix": "pnpm lint --fix"
   }
 }

@@ -7,7 +7,10 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "prettier": "prettier --write .",
     "prettier:silent": "prettier --write . --log-level=silent",
-    "pre-commit": "pretty-quick --verbose --staged",
+    "build": "nx run-many -t build",
+    "lint": "nx run-many -t lint",
+    "lint:fix": "nx run-many -t lint:fix",
+    "pre-commit": "pnpm build && pnpm lint:fix && pretty-quick --verbose --staged",
     "prepare": "husky"
   },
   "keywords": [],
@@ -50,5 +53,6 @@
   },
   "nx": {
     "includedScripts": []
-  }
+  },
+  "packageManager": "pnpm@9.0.6+sha512.f6d863130973207cb7a336d6b439a242a26ac8068077df530d6a86069419853dc1ffe64029ec594a9c505a3a410d19643c870aba6776330f5cfddcf10a9c1617"
 }
