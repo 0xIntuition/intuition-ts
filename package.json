@@ -8,7 +8,7 @@
     "prettier": "prettier --write .",
     "prettier:silent": "prettier --write . --log-level=silent",
     "build": "nx run-many -t build",
-    "lint": "npx nx run-many -t lint",
+    "lint": "nx run-many -t lint",
     "lint:fix": "nx run-many -t lint:fix",
     "pre-commit": "pnpm build && pnpm lint:fix && pretty-quick --verbose --staged",
     "prepare": "husky"
