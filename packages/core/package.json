@@ -4,6 +4,16 @@
   "scripts": {
     "build": "echo \"Core building...\" && exit 0",
     "lint": "eslint --ignore-path .gitignore --cache --cache-location ./node_modules/.cache/eslint .",
-    "lint:fix": "pnpm lint --fix"
+    "lint:fix": "pnpm lint --fix",
+    "test": "vitest"
+  },
+  "dependencies": {
+    "viem": "^2.9.29"
+  },
+  "devDependencies": {
+    "@viem/anvil": "^0.0.10",
+    "typescript": "^5.4.5",
+    "vite": "^5.2.11",
+    "vitest": "^1.3.1"
   }
 }
