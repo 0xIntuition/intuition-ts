@@ -4,7 +4,7 @@ Thanks for your interest in contributing to 0xIntuition. We're happy to have you
 
 Please take a moment to review this document before submitting your first pull request. We also strongly recommend that you check for open issues and pull requests to see if someone else is working on something similar.
 
-If you need any help, feel free to reach out to [@0xintuition](https://twitter.com/0xintuition).
+If you need any help, feel free to [reach out to us](https://docs.intuition.systems/learn-more/contact-us).
 
 Please read the core [CONTRIBUTING.md](../../CONTRIBUTING.md) before proceeding.
 
