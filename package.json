@@ -12,6 +12,7 @@
     "lint": "nx run-many -t lint",
     "lint:fix": "nx run-many -t lint:fix",
     "pre-commit": "pnpm lint && pretty-quick --verbose --staged && pnpm build",
+    "storybook:1ui": "nx ui @intuition-ts/1ui",
     "prepare": "husky"
   },
   "keywords": [],

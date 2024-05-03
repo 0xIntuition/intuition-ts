@@ -4,6 +4,7 @@
     "node": true,
     "jest": true
   },
+  "ignorePatterns": ["storybook-static/**/*"],
   "overrides": [
     {
       "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],

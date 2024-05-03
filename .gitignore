@@ -5,3 +5,4 @@ out/
 dist/
 
 .nx/cache
+packages/1ui/storybook-static
