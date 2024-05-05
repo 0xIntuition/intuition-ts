@@ -12,8 +12,9 @@
     "baseUrl": "./",
     "paths": {
       "@/*": ["src/*"],
-      "@intuition/core": ["packages/core/src/index.ts"],
-      "@intuition/1ui": ["packages/1ui/src/index.ts"]
+      "@intuition-ts/1ui": ["packages/1ui/src/index.ts"],
+      "@intuition-ts/core": ["packages/core/src/index.ts"],
+      "@intuition-ts/automation-tools": ["tools/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "dist", "**/*.spec.ts"]
