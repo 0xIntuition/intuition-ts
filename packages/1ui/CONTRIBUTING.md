@@ -35,10 +35,11 @@ Components are structured within `1ui/src/components/` as follows:
 ComponentName
 ├── ComponentName.tsx
 ├── ComponentName.spec.tsx
-├── utils.ts
-├── utils.spec.ts
+├── utils.ts (as required)
+├── utils.spec.ts (as required)
 ├── types.ts
-├── ComponentName.stories.mdx
+├── ComponentName.stories.ts
+├── ComponentName.mdx
 └── index.ts
 ```
 
@@ -52,8 +53,20 @@ ComponentName
 
 `utils.spec.ts` - unit tests for the utilities _(optional)_
 
-`types.ts` - any unique interfaces, enums or types the component requires _(optional)_
+`types.ts` - any unique interfaces, enums or types the component requires
 
 `ComponentName.stories.mdx` - Storybook stories for the component
 
 `index.ts` - the component export
+
+### Creating components with the Generator
+
+To streamline the process of creating new components, you can use our provided generator script. This script sets up all necessary files following the structure outlined above.
+
+Run the following command in your terminal:
+
+```bash
+pnpm 1ui:component:create
+```
+
+This command will prompt you for the component name and generate all the associated files in the correct directories, ensuring everything is set up according to project standards.
