@@ -1,0 +1,15 @@
+{
+  "LABEL": {
+    "name": "title needs formatting",
+    "color": "CDAC11"
+  },
+  "CHECKS": {
+    "regexp": "^([A-Z]{2,}-[0-9]+|[A-Z]{2,}-[0-9]+( )[A-Z]{2,}-[0-9]+) (Feat|Feature|Fix|Chore): ([a-zA-Z - & ,]+( [a-zA-Z -]+)+)",
+    "regexpFlags": "i"
+  },
+  "MESSAGES": {
+    "success": "All good",
+    "failure": "Doesn't match required format",
+    "notice": ""
+  }
+}

@@ -34,3 +34,7 @@ Each package will have more detailed instructions, but you should clone the enti
 
 - Clone the monorepo from the root: `git@github.com:0xIntuition/intuition-ts.git`
 - Follow individual instructions for each app and package
+
+## Contributing
+
+Please read the [contributing guide](./CONTRIBUTING.md).
