@@ -61,6 +61,11 @@
         "plugin:import/recommended",
         "plugin:import/typescript"
       ]
+    },
+    {
+      "files": "*.json",
+      "parser": "jsonc-eslint-parser",
+      "rules": {}
     }
   ]
 }
