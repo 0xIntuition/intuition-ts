@@ -1,1 +1,1 @@
-export * from './__name__.tsx';
+export * from './<%= className %>.tsx';

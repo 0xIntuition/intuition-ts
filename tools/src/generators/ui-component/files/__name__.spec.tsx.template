@@ -1,0 +1,17 @@
+import { test, expect } from '@playwright/test';
+import { <%= className %> } from './<%= className %>';
+import { render } from '@playwright/react';
+
+test.describe('<%= className %>', () => {
+  test('renders successfully', async ({ page }) => {
+    await render(<<%= className %> />, page);
+
+    // Example assertion: Check if the component renders a specific text
+    const element = page.locator('text="Expected Text"');
+    await expect(element).toBeVisible();
+
+    // Add more tests as needed to cover the functionality of your component
+  });
+
+  // Additional tests can be written here to check different states and props
+});

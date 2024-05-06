@@ -1,0 +1,9 @@
+import React, { FC } from 'react'
+
+export interface <%= className %>Props {}
+
+const <%= className %>: FC<<%= className %>Props> = ({}) => {
+  return <>{/* Implement UI here */}</>
+}
+
+export { <%= className %> }
