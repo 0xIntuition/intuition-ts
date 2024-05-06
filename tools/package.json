@@ -8,8 +8,7 @@
   "private": true,
   "generators": "./generators.json",
   "scripts": {
-    "build": "echo \"Core building...\" && exit 0",
-    "lint": "echo \"Core building...\" && exit 0",
-    "lint:fix": "echo \"Core building...\" && exit 0"
+    "lint": "eslint --ignore-path .gitignore --cache --cache-location ./node_modules/.cache/eslint .",
+    "lint:fix": "pnpm lint --fix"
   }
 }
