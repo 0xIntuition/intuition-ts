@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "1ui:component:create": "npx nx g @intuition-ts/automation-tools:ui-component",
     "test": "echo \"Error: no test specified\" && exit 1",
     "prettier": "prettier --write .",
     "prettier:silent": "prettier --write . --log-level=silent",
