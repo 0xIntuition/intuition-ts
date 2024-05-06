@@ -1,0 +1,24 @@
+// Import Storybook meta and StoryObj type
+import type { Meta, StoryObj } from '@storybook/react';
+
+// Import your actual component
+import { <%= className %> } from './<%= className %>';
+
+// Setup meta for the Storybook
+const meta: Meta<typeof <%= className %>> = {
+  component: <%= className %>,
+  title: 'Components/<%= className %>'
+};
+
+export default meta;
+
+// Define types for your stories
+type Story = StoryObj<typeof <%= className %>>;
+
+// Example story for the default state
+export const Default: Story = {
+  render: (args) => <<%= className %> {...args} />,
+  args: {
+    // Define default props here, if any
+  },
+};

@@ -1,0 +1,11 @@
+import { Canvas, Meta } from '@storybook/blocks';
+
+import * as <%= className %>Stories from './<%= className %>.stories';
+
+<Meta of={<%= className %>Stories} />
+
+# <%= className %>
+
+Congratulations on creating <%= className %>! Please review the example below to see your component in action. You can add or modify its properties to explore different configurations.
+
+<Canvas of={<%= className %>Stories.Default} />

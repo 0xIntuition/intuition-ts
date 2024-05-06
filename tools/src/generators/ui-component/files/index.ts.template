@@ -1,1 +1,1 @@
-export * from './<%= className %>.tsx';
+export * from './<%= className %>';
