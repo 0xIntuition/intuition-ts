@@ -1,4 +1,3 @@
-import { FORK_BLOCK_NUMBER, FORK_URL } from "./constants.js";
 import { startProxy } from "@viem/anvil";
 
 export default async function() {
@@ -7,8 +6,6 @@ export default async function() {
     host: "::", // By default, the proxy will listen on all interfaces.
     options: {
       chainId: 123,
-      forkUrl: FORK_URL,
-      forkBlockNumber: FORK_BLOCK_NUMBER,
     },
   });
 }
