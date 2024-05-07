@@ -37,10 +37,8 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 export const BasicUsage: Story = {
-  // Leave the curly braces, even if empty (needed for code-gen)
-  // eslint-disable-next-line
-  render: ({}) => (
-    <Avatar>
+  render: (props) => (
+    <Avatar {...props}>
       <AvatarImage
         src="https://avatars.githubusercontent.com/u/94311139?s=200&v=4"
         alt="intuition"
@@ -51,10 +49,8 @@ export const BasicUsage: Story = {
 }
 
 export const Fallback: Story = {
-  // Leave the curly braces, even if empty (needed for code-gen)
-  // eslint-disable-next-line
-  render: ({}) => (
-    <Avatar>
+  render: (props) => (
+    <Avatar {...props}>
       <AvatarImage src="broken-link" alt="broken-link" />
       <AvatarFallback>IN</AvatarFallback>
     </Avatar>
