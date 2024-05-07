@@ -1,6 +1,7 @@
 import React from 'react'
 import type { Meta, StoryObj } from '@storybook/react'
 import { Button } from './Button'
+import { ButtonSize, ButtonVariant } from './types'
 
 const meta = {
   title: 'Components/Button',
@@ -17,10 +18,38 @@ const meta = {
     },
   },
   argTypes: {
-    children: { control: 'text' },
-    variant: { control: 'select' },
-    size: { control: 'select' },
-    isLoading: { control: 'boolean' },
+    children: {
+      description: 'Button label',
+      table: {
+        type: { summary: 'string' },
+      },
+      control: 'text',
+    },
+    variant: {
+      description: 'Variant of button',
+      options: Object.values(ButtonVariant),
+      table: {
+        type: { summary: 'ButtonVariant' },
+        defaultValue: { summary: ButtonVariant.Default },
+      },
+      control: 'select',
+    },
+    size: {
+      description: 'Size of button',
+      options: Object.values(ButtonSize),
+      table: {
+        type: { summary: 'ButtonSize' },
+        defaultValue: { summary: ButtonSize.Default },
+      },
+      control: 'select',
+    },
+    isLoading: {
+      description: 'Variant of button',
+      table: {
+        type: { summary: 'boolean' },
+      },
+      control: 'boolean',
+    },
   },
 } satisfies Meta<typeof Button>
 
@@ -49,22 +78,22 @@ export const Variants: Story = {
         gap: '2rem',
       }}
     >
-      <Button variant="default" {...props}>
+      <Button variant={ButtonVariant.Default} {...props}>
         Default
       </Button>
-      <Button variant="secondary" {...props}>
+      <Button variant={ButtonVariant.Secondary} {...props}>
         Secondary
       </Button>
-      <Button variant="outline" {...props}>
+      <Button variant={ButtonVariant.Outline} {...props}>
         Outline
       </Button>
-      <Button variant="ghost" {...props}>
+      <Button variant={ButtonVariant.Ghost} {...props}>
         Ghost
       </Button>
-      <Button variant="link" {...props}>
+      <Button variant={ButtonVariant.Link} {...props}>
         Link
       </Button>
-      <Button variant="destructive" {...props}>
+      <Button variant={ButtonVariant.Destructive} {...props}>
         Destructive
       </Button>
     </div>
@@ -82,9 +111,9 @@ export const Sizes: Story = {
   },
   render: (props) => (
     <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-      <Button size="sm" {...props} />
-      <Button size="default" {...props} />
-      <Button size="lg" {...props} />
+      <Button size={ButtonSize.Small}  {...props} />
+      <Button size={ButtonSize.Default} {...props} />
+      <Button size={ButtonSize.Large} {...props} />
     </div>
   ),
 }
@@ -97,10 +126,10 @@ export const States: Story = {
   },
   render: (props) => (
     <div style={{ display: 'flex', gap: '2rem' }}>
-      <Button isLoading variant="default" {...props}>
+      <Button isLoading variant={ButtonVariant.Default}  {...props}>
         isLoading
       </Button>
-      <Button disabled variant="default" {...props}>
+      <Button disabled variant={ButtonVariant.Default}  {...props}>
         disabled
       </Button>
     </div>
