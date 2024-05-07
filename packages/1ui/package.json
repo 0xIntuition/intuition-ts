@@ -18,9 +18,7 @@
     "./css": "./dist/style.css"
   },
   "scripts": {
-    "build": "tsup",
     "dev": "tsup --watch",
-    "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
     "lint:fix": "pnpm lint --fix",
     "typecheck": "tsc",
     "ui": "storybook dev -p 6006",

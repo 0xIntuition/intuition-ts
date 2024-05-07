@@ -8,7 +8,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "prettier": "prettier --write .",
     "prettier:silent": "prettier --write . --log-level=silent",
-    "build": "nx run-many -t build --exclude @intuition-ts/automation-tools",
+    "build": "nx run-many -t build",
     "lint": "nx run-many -t lint",
     "lint:fix": "nx run-many -t lint:fix",
     "pre-commit": "pnpm lint && pretty-quick --verbose --staged",
