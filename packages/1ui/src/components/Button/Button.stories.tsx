@@ -86,22 +86,22 @@ export const Variants: Story = {
         gap: '2rem',
       }}
     >
-      <Button variant={ButtonVariant.Default} {...props}>
+      <Button variant="default" {...props}>
         Default
       </Button>
-      <Button variant={ButtonVariant.Secondary} {...props}>
+      <Button variant="secondary" {...props}>
         Secondary
       </Button>
-      <Button variant={ButtonVariant.Outline} {...props}>
+      <Button variant="outline" {...props}>
         Outline
       </Button>
-      <Button variant={ButtonVariant.Ghost} {...props}>
+      <Button variant="ghost" {...props}>
         Ghost
       </Button>
-      <Button variant={ButtonVariant.Link} {...props}>
+      <Button variant="link" {...props}>
         Link
       </Button>
-      <Button variant={ButtonVariant.Destructive} {...props}>
+      <Button variant="destructive" {...props}>
         Destructive
       </Button>
     </div>
@@ -119,9 +119,9 @@ export const Sizes: Story = {
   },
   render: (props) => (
     <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-      <Button size={ButtonSize.Small} {...props} />
-      <Button size={ButtonSize.Default} {...props} />
-      <Button size={ButtonSize.Large} {...props} />
+      <Button size="sm" {...props} />
+      <Button size="default" {...props} />
+      <Button size="lg" {...props} />
     </div>
   ),
 }
@@ -134,10 +134,10 @@ export const States: Story = {
   },
   render: (props) => (
     <div style={{ display: 'flex', gap: '2rem' }}>
-      <Button isLoading variant={ButtonVariant.Default} {...props}>
+      <Button isLoading variant="default" {...props}>
         isLoading
       </Button>
-      <Button disabled variant={ButtonVariant.Default} {...props}>
+      <Button disabled variant="default" {...props}>
         disabled
       </Button>
     </div>
