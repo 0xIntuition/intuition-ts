@@ -1,7 +1,6 @@
 import React from 'react'
 import type { Meta, StoryObj } from '@storybook/react'
 import { Button } from './Button'
-import { ButtonSize, ButtonVariant } from './types'
 
 const meta = {
   title: 'Components/Button',
@@ -27,19 +26,27 @@ const meta = {
     },
     variant: {
       description: 'Variant of button',
-      options: Object.values(ButtonVariant),
+      options: [
+        'default',
+        'destructive',
+        'outline',
+        'secondary',
+        'ghost',
+        'link',
+        'tooltip',
+      ],
       table: {
         type: { summary: 'ButtonVariant' },
-        defaultValue: { summary: ButtonVariant.Default },
+        defaultValue: { summary: 'default' },
       },
       control: 'select',
     },
     size: {
       description: 'Size of button',
-      options: Object.values(ButtonSize),
+      options: ['default', 'sm', 'lg', 'icon', 'lg-icon'],
       table: {
         type: { summary: 'ButtonSize' },
-        defaultValue: { summary: ButtonSize.Default },
+        defaultValue: { summary: 'default' },
       },
       control: 'select',
     },
@@ -111,7 +118,7 @@ export const Sizes: Story = {
   },
   render: (props) => (
     <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-      <Button size={ButtonSize.Small}  {...props} />
+      <Button size={ButtonSize.Small} {...props} />
       <Button size={ButtonSize.Default} {...props} />
       <Button size={ButtonSize.Large} {...props} />
     </div>
@@ -126,10 +133,10 @@ export const States: Story = {
   },
   render: (props) => (
     <div style={{ display: 'flex', gap: '2rem' }}>
-      <Button isLoading variant={ButtonVariant.Default}  {...props}>
+      <Button isLoading variant={ButtonVariant.Default} {...props}>
         isLoading
       </Button>
-      <Button disabled variant={ButtonVariant.Default}  {...props}>
+      <Button disabled variant={ButtonVariant.Default} {...props}>
         disabled
       </Button>
     </div>
