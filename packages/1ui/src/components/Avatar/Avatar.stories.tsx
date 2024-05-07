@@ -5,29 +5,58 @@ import { Avatar, AvatarImage, AvatarFallback } from './Avatar'
 const meta = {
   title: 'Components/Avatar',
   component: Avatar,
-  subcomponents: { AvatarImage, AvatarFallback },
+  tags: ['autodocs'],
   parameters: {
-    layout: 'centered',
+    controls: {
+      exclude: ['className', 'style'],
+    },
+    docs: {
+      description: {
+        component:
+          'An image element with a fallback for representing the user.',
+      },
+    },
+  },
+  argTypes: {
+    // eslint-disable-next-line
+    // @ts-ignore
+    src: {
+      type: 'string',
+      description: 'Image URL',
+      control: false,
+    },
+    alt: {
+      type: 'string',
+      description: 'Alternate text',
+      control: false,
+    },
   },
 } satisfies Meta<typeof Avatar>
 
 export default meta
 type Story = StoryObj<typeof meta>
 
-export const Default: Story = {
-  render: () => (
+export const BasicUsage: Story = {
+  // Leave the curly braces, even if empty (needed for code-gen)
+  // eslint-disable-next-line
+  render: ({}) => (
     <Avatar>
-      <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-      <AvatarFallback>CN</AvatarFallback>
+      <AvatarImage
+        src="https://avatars.githubusercontent.com/u/94311139?s=200&v=4"
+        alt="intuition"
+      />
+      <AvatarFallback>IN</AvatarFallback>
     </Avatar>
   ),
 }
 
 export const Fallback: Story = {
-  render: () => (
+  // Leave the curly braces, even if empty (needed for code-gen)
+  // eslint-disable-next-line
+  render: ({}) => (
     <Avatar>
-      <AvatarImage src="unknown" />
-      <AvatarFallback>CN</AvatarFallback>
+      <AvatarImage src="broken-link" alt="broken-link" />
+      <AvatarFallback>IN</AvatarFallback>
     </Avatar>
   ),
 }

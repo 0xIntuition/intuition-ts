@@ -7,6 +7,11 @@ const meta = {
   component: Button,
   tags: ['autodocs'],
   parameters: {
+    docs: {
+      description: {
+        component: 'Displays a button or a component that looks like a button.',
+      },
+    },
     controls: {
       exclude: ['className', 'style', 'asChild'],
     },

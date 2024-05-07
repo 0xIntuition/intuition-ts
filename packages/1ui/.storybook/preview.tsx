@@ -1,9 +1,11 @@
 import type { Preview } from '@storybook/react'
 import { themeDecorator } from './decorators'
+import DocumentationTemplate from './templates/DocumentationTemplate.mdx'
 import '../src/styles/globals.css'
 
 const preview: Preview = {
   parameters: {
+    layout: 'centered',
     actions: { argTypesRegex: '^on[A-Z].*' },
     controls: {
       matchers: {
@@ -19,6 +21,14 @@ const preview: Preview = {
         { name: '50', value: 'hsl(var(--primary-50))' },
         { name: '100', value: 'hsl(var(--primary-100))' },
       ],
+    },
+    options: {
+      storySort: {
+        order: ['Documentation', 'Components'],
+      },
+    },
+    docs: {
+      page: DocumentationTemplate,
     },
   },
 }
