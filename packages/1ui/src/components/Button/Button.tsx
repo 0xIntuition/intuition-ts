@@ -1,7 +1,6 @@
 import { Loader2Icon } from 'lucide-react'
 import { Slot } from '@radix-ui/react-slot'
 import { cva, type VariantProps } from 'class-variance-authority'
-import { ButtonSize, ButtonVariant } from './types'
 import * as React from 'react'
 
 import { cn } from '@styles'
@@ -11,31 +10,29 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        [ButtonVariant.Default]:
-          'bg-primary-900 text-primary-foreground hover:bg-primary/90',
-        [ButtonVariant.Destructive]:
+        default: 'bg-primary-900 text-primary-foreground hover:bg-primary/90',
+        destructive:
           'bg-destructive text-destructive-foreground hover:bg-destructive/90',
-        [ButtonVariant.Outline]:
+        outline:
           'border border-input bg-background hover:bg-accent hover:text-accent-foreground',
-        [ButtonVariant.Secondary]:
-          'bg-primary-300 text-primary-900 hover:bg-primary-100',
-        [ButtonVariant.Ghost]:
+        secondary: 'bg-primary-300 text-primary-900 hover:bg-primary-100',
+        ghost:
           'hover:bg-none hover:text-accent-foreground text-primary-300 transition-colors duration-150',
-        [ButtonVariant.Link]: 'text-primary underline-offset-4 hover:underline',
-        [ButtonVariant.Tooltip]:
+        link: 'text-primary underline-offset-4 hover:underline',
+        tooltip:
           '!text-primary-300 transition-colors duration-300 border rounded-lg border-primary-50/20 hover:border-primary-50/40 hover:text-primary-200 text-xxs',
       },
       size: {
-        [ButtonSize.Default]: 'h-8 px-4 py-2',
-        [ButtonSize.Small]: 'h-6 px-3',
-        [ButtonSize.Large]: 'h-10 px-8',
-        [ButtonSize.Icon]: 'h-8 w-8',
+        default: 'h-8 px-4 py-2',
+        sm: 'h-6 px-3',
+        lg: 'h-10 px-8',
+        icon: 'h-8 w-8',
         'lg-icon': 'h-12 w-12',
       },
     },
     defaultVariants: {
-      variant: ButtonVariant.Default,
-      size: ButtonSize.Default,
+      variant: 'default',
+      size: 'default',
     },
   },
 )
