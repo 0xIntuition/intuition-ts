@@ -1,0 +1,25 @@
+{
+  "name": "@intuition-ts/portal",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/portal",
+  "projectType": "application",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/apps/portal",
+        "tsConfig": "apps/portal/tsconfig.lib.json",
+        "packageJson": "apps/portal/package.json",
+        "main": "apps/portal/src/index.ts",
+        "assets": ["apps/portal/*.md"]
+      }
+    },
+    "nx-release-publish": {
+      "options": {
+        "packageRoot": "dist/{projectRoot}"
+      }
+    }
+  }
+}
