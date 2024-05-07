@@ -1,11 +1,25 @@
 {
   "name": "@intuition-ts/core",
   "version": "0.0.1",
+  "main": "dist/index.js",
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "types": "dist/index.d.ts", 
   "scripts": {
-    "build": "echo \"Core building...\" && exit 0",
+    "build": "tsc",
     "lint": "eslint --ignore-path .gitignore --cache --cache-location ./node_modules/.cache/eslint .",
     "lint:fix": "pnpm lint --fix",
     "test": "vitest"
+  },
+  "files": [
+    "dist/**/*",
+    "src/**/*",    
+    "README.md",
+    "LICENSE"
+  ],
+  "publishConfig": {
+    "access": "public"
   },
   "dependencies": {
     "viem": "^2.9.29"

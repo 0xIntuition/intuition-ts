@@ -1,9 +1,9 @@
 {
   "extends": "../../tsconfig.base.json",
-  "include": ["src/**/*.ts", "tests/**/*.ts"],
+  "include": ["src/**/*.ts"],
   "exclude": [],
-  "references": [{ "path": "./tsconfig.node.json" }],
   "compilerOptions": {
-    "strict": true
+    "rootDir": "src",
+    "outDir": "dist"
   }
 }

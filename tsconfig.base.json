@@ -12,6 +12,7 @@
     "outDir": "./dist",
     "skipLibCheck": true,
     "target": "ESNext",
+    "strict": true,
     "paths": {
       "@/*": ["src/*"],
       "@intuition-ts/1ui": ["packages/1ui/src/index.ts"],
