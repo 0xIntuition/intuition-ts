@@ -1,7 +1,6 @@
 import React from 'react'
 import type { Meta, StoryObj } from '@storybook/react'
 import { Button } from './Button'
-import { ButtonSize, ButtonVariant } from './types'
 
 const meta: Meta<typeof Button> = {
   title: 'Components/Button',
@@ -120,7 +119,7 @@ export const Sizes: Story = {
   },
   render: (props) => (
     <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-      <Button size={ButtonSize.Small}  {...props} />
+      <Button size={ButtonSize.Small} {...props} />
       <Button size={ButtonSize.Default} {...props} />
       <Button size={ButtonSize.Large} {...props} />
     </div>
@@ -135,10 +134,10 @@ export const States: Story = {
   },
   render: (props) => (
     <div style={{ display: 'flex', gap: '2rem' }}>
-      <Button isLoading variant={ButtonVariant.Default}  {...props}>
+      <Button isLoading variant={ButtonVariant.Default} {...props}>
         isLoading
       </Button>
-      <Button disabled variant={ButtonVariant.Default}  {...props}>
+      <Button disabled variant={ButtonVariant.Default} {...props}>
         disabled
       </Button>
     </div>
