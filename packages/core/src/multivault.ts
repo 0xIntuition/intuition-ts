@@ -2,7 +2,7 @@ import { Account, Chain, PublicClient, Transport, WalletClient, toHex, Address, 
 import { abi } from './abi';
 import { multiVaultAddress } from './constants';
 
-export class Intuition {
+export class Multivault {
 
   private client: {
     public: PublicClient;
@@ -35,7 +35,7 @@ export class Intuition {
     })
   }
 
-  public async createAtom(data: string) {
+  public async createAtom(atomUri: string) {
 
     const atomCost = await this.getAtomCost();
 
@@ -43,42 +43,45 @@ export class Intuition {
       address: this.address,
       abi,
       functionName: 'createAtom',
-      args: [toHex(data)],
+      args: [toHex(atomUri)],
       value: atomCost,
     });
 
-    const receipt = await this.client.public.waitForTransactionReceipt({ hash });
+    const { logs } = await this.client.public.waitForTransactionReceipt({ hash });
 
-    const events = parseEventLogs({
+    const atomCreatedEvents = parseEventLogs({
       abi,
-      logs: receipt.logs,
+      logs,
       eventName: 'AtomCreated',
     })
 
-    const vaultId = events[0].args.vaultID
-    return vaultId
+    const vaultId = atomCreatedEvents[0].args.vaultID
+
+    return { vaultId, events: parseEventLogs({ abi, logs }) }
   }
 
-  public async createTriple(id1: bigint, id2: bigint, id3: bigint) {
+  public async createTriple(subjectId: bigint, predicateId: bigint, objectId: bigint) {
     const tripleCost = await this.getTripleCost();
 
     const hash = await this.client.wallet.writeContract({
       address: this.address,
       abi,
       functionName: 'createTriple',
-      args: [id1, id2, id3],
+      args: [subjectId, predicateId, objectId],
       value: tripleCost,
     });
-    const receipt = await this.client.public.waitForTransactionReceipt({ hash });
 
-    const events = parseEventLogs({
+    const { logs } = await this.client.public.waitForTransactionReceipt({ hash });
+
+    const tripleCreatedEvents = parseEventLogs({
       abi,
-      logs: receipt.logs,
+      logs,
       eventName: 'TripleCreated',
-    })
+    });
 
-    const tripleId = events[0].args.vaultID
-    return tripleId
+    const vaultId = tripleCreatedEvents[0].args.vaultID;
+
+    return { vaultId, events: parseEventLogs({ abi, logs }) }
 
   }
 

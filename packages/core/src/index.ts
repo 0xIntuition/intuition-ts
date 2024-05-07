@@ -1,0 +1,1 @@
+export { Multivault } from './multivault';
