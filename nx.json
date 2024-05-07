@@ -23,8 +23,15 @@
   },
   "defaultBase": "main",
   "release": {
+    "projects": ["apps/*", "packages/*"],
     "version": {
-      "preVersionCommand": "pnpm dlx nx run-many -t build"
+      "preVersionCommand": "pnpm dlx nx run-many -t build --projects='apps/*,packages/*'",
+      "conventionalCommits": true
+    },
+    "changelog": {
+      "workspaceChangelog": {
+        "createRelease": "github"
+      }
     }
   },
   "plugins": [

@@ -1,11 +1,11 @@
 {
   "name": "@intuition-ts/automation-tools",
   "version": "0.0.1",
+  "private": true,
   "dependencies": {},
   "type": "commonjs",
   "main": "./src/index.js",
   "typings": "./src/index.d.ts",
-  "private": true,
   "generators": "./generators.json",
   "scripts": {
     "lint": "eslint --ignore-path .gitignore --cache --cache-location ./node_modules/.cache/eslint .",
