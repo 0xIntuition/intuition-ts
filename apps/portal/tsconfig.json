@@ -11,7 +11,7 @@
     "baseUrl": ".",
     "paths": {
       "~/*": ["./app/*"],
-      "@intuition-ts/1ui": ["node_modules/@intuition-ts/1ui/src/index.ts"]
+      "@intuition-ts/1ui": ["node_modules/@intuition-ts/1ui/source/index.ts"]
     },
     "noEmit": true
   },

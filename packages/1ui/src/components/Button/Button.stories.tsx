@@ -1,6 +1,7 @@
 import React from 'react'
 import type { Meta, StoryObj } from '@storybook/react'
 import { Button } from './Button'
+import { ButtonSize, ButtonVariant } from './types'
 
 const meta: Meta<typeof Button> = {
   title: 'Components/Button',
@@ -86,22 +87,22 @@ export const Variants: Story = {
         gap: '2rem',
       }}
     >
-      <Button variant="default" {...props}>
+      <Button variant={ButtonVariant.Default} {...props}>
         Default
       </Button>
-      <Button variant="secondary" {...props}>
+      <Button variant={ButtonVariant.Secondary} {...props}>
         Secondary
       </Button>
-      <Button variant="outline" {...props}>
+      <Button variant={ButtonVariant.Outline} {...props}>
         Outline
       </Button>
-      <Button variant="ghost" {...props}>
+      <Button variant={ButtonVariant.Ghost} {...props}>
         Ghost
       </Button>
-      <Button variant="link" {...props}>
+      <Button variant={ButtonVariant.Link} {...props}>
         Link
       </Button>
-      <Button variant="destructive" {...props}>
+      <Button variant={ButtonVariant.Destructive} {...props}>
         Destructive
       </Button>
     </div>
@@ -119,9 +120,9 @@ export const Sizes: Story = {
   },
   render: (props) => (
     <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-      <Button size="sm" {...props} />
-      <Button size="default" {...props} />
-      <Button size="lg" {...props} />
+      <Button size={ButtonSize.Small}  {...props} />
+      <Button size={ButtonSize.Default} {...props} />
+      <Button size={ButtonSize.Large} {...props} />
     </div>
   ),
 }
@@ -134,10 +135,10 @@ export const States: Story = {
   },
   render: (props) => (
     <div style={{ display: 'flex', gap: '2rem' }}>
-      <Button isLoading variant="default" {...props}>
+      <Button isLoading variant={ButtonVariant.Default}  {...props}>
         isLoading
       </Button>
-      <Button disabled variant="default" {...props}>
+      <Button disabled variant={ButtonVariant.Default}  {...props}>
         disabled
       </Button>
     </div>
