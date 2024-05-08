@@ -9,7 +9,11 @@
     "noEmit": true,
     "skipLibCheck": true,
     "strict": true,
-    "types": ["@remix-run/node", "vite/client"]
+    "types": ["@remix-run/node", "vite/client"],
+    "paths": {
+      "@components/*": ["components/*"],
+      "@styles/*": ["styles/*"]
+    }
   },
   "include": ["**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules", "dist"]

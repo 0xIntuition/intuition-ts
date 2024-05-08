@@ -37,7 +37,9 @@
           { "name": "NavLink", "linkAttribute": "to" }
         ],
         "import/resolver": {
-          "typescript": {}
+          "typescript": {
+            "project": ["packages/*/tsconfig.json", "apps/*/tsconfig.json"]
+          }
         }
       }
     },
