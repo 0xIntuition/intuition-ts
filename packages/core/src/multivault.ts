@@ -1,4 +1,4 @@
-import { Account, Chain, PublicClient, Transport, WalletClient, toHex, Address, parseEventLogs } from 'viem'
+import { Account, Chain, PublicClient, Transport, WalletClient, toHex, Address, parseEventLogs, GetContractReturnType, getContract } from 'viem'
 import { abi } from './abi';
 import { multiVaultAddress } from './constants';
 
@@ -9,43 +9,36 @@ export class Multivault {
     wallet: WalletClient<Transport, Chain, Account>
   }
 
-  private address: Address
+  private contract: GetContractReturnType<typeof abi, WalletClient<Transport, Chain, Account>, Address>
 
   constructor(client: {
     public: PublicClient<Transport, Chain>,
     wallet: WalletClient<Transport, Chain, Account>,
   }, address?: Address) {
     this.client = client;
-    this.address = address || multiVaultAddress;
+    this.contract = getContract({
+      abi,
+      client,
+      address: address || multiVaultAddress
+    });
   }
 
   public async getAtomCost() {
-    return await this.client.public.readContract({
-      address: this.address,
-      abi,
-      functionName: 'getAtomCost',
-    })
+    return await this.contract.read.getAtomCost();
   }
 
   public async getTripleCost() {
-    return await this.client.public.readContract({
-      address: this.address,
-      abi,
-      functionName: 'getTripleCost',
-    })
+    return await this.contract.read.getTripleCost();
   }
 
   public async createAtom(atomUri: string) {
 
     const atomCost = await this.getAtomCost();
 
-    const hash = await this.client.wallet.writeContract({
-      address: this.address,
-      abi,
-      functionName: 'createAtom',
-      args: [toHex(atomUri)],
-      value: atomCost,
-    });
+    const hash = await this.contract.write.createAtom(
+      [toHex(atomUri)],
+      { value: atomCost }
+    );
 
     const { logs } = await this.client.public.waitForTransactionReceipt({ hash });
 
@@ -63,13 +56,10 @@ export class Multivault {
   public async createTriple(subjectId: bigint, predicateId: bigint, objectId: bigint) {
     const tripleCost = await this.getTripleCost();
 
-    const hash = await this.client.wallet.writeContract({
-      address: this.address,
-      abi,
-      functionName: 'createTriple',
-      args: [subjectId, predicateId, objectId],
-      value: tripleCost,
-    });
+    const hash = await this.contract.write.createTriple(
+      [subjectId, predicateId, objectId],
+      { value: tripleCost }
+    );
 
     const { logs } = await this.client.public.waitForTransactionReceipt({ hash });
 
