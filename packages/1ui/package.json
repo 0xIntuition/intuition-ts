@@ -2,21 +2,7 @@
   "name": "@intuition-ts/1ui",
   "version": "1.0.0",
   "description": "",
-  "main": "./dist/index.js",
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
-  "files": [
-    "dist/**"
-  ],
-  "exports": {
-    ".": {
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.js",
-      "types": "./dist/index.d.ts",
-      "style": "./dist/style.css"
-    },
-    "./css": "./dist/style.css"
-  },
+  "main": "index.js",
   "scripts": {
     "dev": "tsup --watch",
     "lint:fix": "pnpm lint --fix",

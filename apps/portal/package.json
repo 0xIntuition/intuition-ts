@@ -4,8 +4,10 @@
   "sideEffects": false,
   "type": "module",
   "scripts": {
-    "lint:fix": "pnpm lint --fix",
-    "start": "remix-serve ./build/server/index.js"
+    "build": "remix vite:build",
+    "dev": "remix vite:dev",
+    "start": "remix-serve ./build/server/index.js",
+    "lint:fix": "pnpm lint --fix"
   },
   "dependencies": {
     "@intuition-ts/1ui": "workspace:^",
