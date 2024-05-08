@@ -1,0 +1,28 @@
+import { Meta, ColorPalette, ColorItem } from '@storybook/blocks'
+
+import { palette } from '../styles/palette.ts'
+
+<Meta title="Styles/Colors" />
+
+# Color Palette
+
+<ColorPalette>
+  <ColorItem
+    title="White"
+    subtitle="Base white"
+    colors={{ white: palette.white.base }}
+  />
+  <ColorItem
+    title="Black"
+    subtitle="Base black"
+    colors={{ black: palette.black.base }}
+  />
+  <ColorItem title="Gray" subtitle="Variations" colors={palette.gray} />
+  <ColorItem title="Red" subtitle="Variations" colors={palette.red} />
+  <ColorItem title="Orange" subtitle="Variations" colors={palette.orange} />
+  <ColorItem title="Yellow" subtitle="Variations" colors={palette.yellow} />
+  <ColorItem title="Green" subtitle="Variations" colors={palette.green} />
+  <ColorItem title="Sky" subtitle="Variations" colors={palette.sky} />
+  <ColorItem title="Blue" subtitle="Variations" colors={palette.blue} />
+  <ColorItem title="Purple" subtitle="Variations" colors={palette.purple} />
+</ColorPalette>
