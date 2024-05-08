@@ -13,6 +13,7 @@
     "paths": {
       "@components/*": ["app/components/*"],
       "@lib/*": ["app/lib/*"],
+      "@routes/*": ["app/routes/*"],
       "@styles/*": ["app/styles/*"]
     }
   },
