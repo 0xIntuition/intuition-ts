@@ -1,8 +1,9 @@
 import React from 'react'
 import type { Meta, StoryObj } from '@storybook/react'
+
 import { Avatar, AvatarImage, AvatarFallback } from './Avatar'
 
-const meta = {
+const meta: Meta<typeof Avatar> = {
   title: 'Components/Avatar',
   component: Avatar,
   tags: ['autodocs'],
@@ -22,23 +23,24 @@ const meta = {
     // @ts-ignore
     src: {
       type: 'string',
-      description: 'Image URL',
+      description: 'Image URL (for AvatarImage)',
       control: false,
     },
     alt: {
       type: 'string',
-      description: 'Alternate text',
+      description: 'Alternate text (for AvatarImage)',
       control: false,
     },
   },
-} satisfies Meta<typeof Avatar>
+}
 
 export default meta
-type Story = StoryObj<typeof meta>
+
+type Story = StoryObj<typeof Avatar>
 
 export const BasicUsage: Story = {
-  render: (props) => (
-    <Avatar {...props}>
+  render: (args) => (
+    <Avatar {...args}>
       <AvatarImage
         src="https://avatars.githubusercontent.com/u/94311139?s=200&v=4"
         alt="intuition"
@@ -49,8 +51,8 @@ export const BasicUsage: Story = {
 }
 
 export const Fallback: Story = {
-  render: (props) => (
-    <Avatar {...props}>
+  render: (args) => (
+    <Avatar {...args}>
       <AvatarImage src="broken-link" alt="broken-link" />
       <AvatarFallback>IN</AvatarFallback>
     </Avatar>
