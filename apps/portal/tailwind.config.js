@@ -5,6 +5,7 @@ module.exports = {
   presets: [],
   // This breaks the build
   // presets: [themePreset],
+  content: ['./src/**/*.{js,jsx,ts,tsx}'],
   theme: {
     extend: {},
   },
