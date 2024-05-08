@@ -27,6 +27,12 @@ describe('Multivault', () => {
     expect(events).toBeDefined();
   });
 
+  it("throws error when creating atom with insufficient cost", async () => {
+    await expect(
+      () => multivault.createAtom('hello', BigInt(1))
+    ).rejects.toThrow('Transaction reverted');
+  });
+
   it("can get triple cost", async () => {
     const cost = await multivault.getTripleCost();
     expect(cost).toBeDefined();
@@ -40,5 +46,16 @@ describe('Multivault', () => {
     const { vaultId, events } = await multivault.createTriple(subjectId, predicateId, objectId)
     expect(vaultId).toBeDefined();
     expect(events).toBeDefined();
+  });
+
+
+  it("throws error when creating atom with insufficient cost", async () => {
+    const { vaultId: subjectId } = await multivault.createAtom('foo')
+    const { vaultId: predicateId } = await multivault.createAtom('bar')
+    const { vaultId: objectId } = await multivault.createAtom('baz')
+
+    await expect(
+      () => multivault.createTriple(subjectId, predicateId, objectId, BigInt(1))
+    ).rejects.toThrow('Transaction reverted');
   });
 });

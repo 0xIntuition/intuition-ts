@@ -1,10 +1,10 @@
 import {
   Account,
+  Address,
   Chain,
   PublicClient,
   Transport,
   WalletClient,
-  Address,
   parseEventLogs,
   toHex,
   getContract,
@@ -50,16 +50,20 @@ export class Multivault {
    * Create an atom and return its vault id
    * @param atomUri atom data to create atom with
    */
-  public async createAtom(atomUri: string): Promise<{ vaultId: bigint, events: ParseEventLogsReturnType }> {
+  public async createAtom(atomUri: string, cost?: bigint): Promise<{ vaultId: bigint, events: ParseEventLogsReturnType }> {
 
-    const atomCost = await this.getAtomCost();
+    const atomCost = cost || await this.getAtomCost();
 
     const hash = await this.contract.write.createAtom(
       [toHex(atomUri)],
       { value: atomCost }
     );
 
-    const { logs } = await this.client.public.waitForTransactionReceipt({ hash });
+    const { logs, status } = await this.client.public.waitForTransactionReceipt({ hash });
+
+    if (status === 'reverted') {
+      throw new Error('Transaction reverted')
+    }
 
     const atomCreatedEvents = parseEventLogs({
       abi,
@@ -78,15 +82,19 @@ export class Multivault {
   * @param predicateId vault id of the predicate atom
   * @param objectId vault id of the object atom
   */
-  public async createTriple(subjectId: bigint, predicateId: bigint, objectId: bigint) {
-    const tripleCost = await this.getTripleCost();
+  public async createTriple(subjectId: bigint, predicateId: bigint, objectId: bigint, cost?: bigint) {
+    const tripleCost = cost || await this.getTripleCost();
 
     const hash = await this.contract.write.createTriple(
       [subjectId, predicateId, objectId],
       { value: tripleCost }
     );
 
-    const { logs } = await this.client.public.waitForTransactionReceipt({ hash });
+    const { logs, status } = await this.client.public.waitForTransactionReceipt({ hash });
+
+    if (status === 'reverted') {
+      throw new Error('Transaction reverted')
+    }
 
     const tripleCreatedEvents = parseEventLogs({
       abi,
