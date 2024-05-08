@@ -1,4 +1,4 @@
-import { ThemeSwitch } from '~/routes/actions+/set-theme'
+import { ThemeSwitch } from '@routes/actions+/set-theme'
 
 export interface ThemeTestProps {}
 

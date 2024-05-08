@@ -2,25 +2,9 @@
   "name": "@intuition-ts/1ui",
   "version": "1.0.0",
   "description": "",
-  "main": "./dist/index.js",
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
-  "files": [
-    "dist/**"
-  ],
-  "exports": {
-    ".": {
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.js",
-      "types": "./dist/index.d.ts",
-      "style": "./dist/style.css"
-    },
-    "./css": "./dist/style.css"
-  },
+  "main": "src/index.ts",
   "scripts": {
-    "build": "tsup",
     "dev": "tsup --watch",
-    "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
     "lint:fix": "pnpm lint --fix",
     "typecheck": "tsc",
     "ui": "storybook dev -p 6006",

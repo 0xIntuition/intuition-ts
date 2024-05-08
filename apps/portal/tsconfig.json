@@ -1,19 +1,22 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "lib": ["DOM", "DOM.Iterable", "ES2022"],
-    "types": ["@remix-run/node", "vite/client"],
-    "moduleResolution": "Bundler",
-    "isolatedModules": true,
-    "strict": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
     "baseUrl": ".",
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
+    "lib": ["DOM", "DOM.Iterable", "ES2022"],
+    "moduleResolution": "Bundler",
+    "noEmit": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "types": ["@remix-run/node", "vite/client"],
     "paths": {
-      "~/*": ["./app/*"],
-      "@intuition-ts/1ui": ["node_modules/@intuition-ts/1ui/src/index.ts"]
-    },
-    "noEmit": true
+      "@components/*": ["app/components/*"],
+      "@lib/*": ["app/lib/*"],
+      "@routes/*": ["app/routes/*"],
+      "@styles/*": ["app/styles/*"]
+    }
   },
-  "include": ["**/*.ts", "**/*.tsx"]
+  "include": ["**/*.ts", "**/*.tsx", "tailwind.config.js"],
+  "exclude": ["node_modules", "dist"]
 }
