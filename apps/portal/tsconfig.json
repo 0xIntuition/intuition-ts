@@ -11,10 +11,11 @@
     "strict": true,
     "types": ["@remix-run/node", "vite/client"],
     "paths": {
-      "@components/*": ["components/*"],
-      "@styles/*": ["styles/*"]
+      "@components/*": ["app/components/*"],
+      "@lib/*": ["app/lib/*"],
+      "@styles/*": ["app/styles/*"]
     }
   },
-  "include": ["**/*.ts", "**/*.tsx"],
+  "include": ["**/*.ts", "**/*.tsx", "tailwind.config.js"],
   "exclude": ["node_modules", "dist"]
 }

@@ -2,10 +2,10 @@ import { Theme, isTheme } from '@intuition-ts/1ui'
 import { json } from '@remix-run/node'
 import type { ActionFunction } from '@remix-run/node'
 import { useFetcher } from '@remix-run/react'
-import { setTheme } from '~/.server/theme'
+import { setTheme } from '../../.server/theme'
 
-import { useHints } from '~/lib/utils/client-hints'
-import { useRequestInfo } from '~/lib/utils/request-info'
+import { useHints } from '@lib/utils/client-hints'
+import { useRequestInfo } from '@lib/utils/request-info'
 
 export const action: ActionFunction = async ({ request }) => {
   const requestText = await request.text()
