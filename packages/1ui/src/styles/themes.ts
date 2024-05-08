@@ -31,9 +31,9 @@ export const themes = {
     accentForeground: '220.9 39.3% 11%',
     destructive: '0 84.2% 60.2%',
     destructiveForeground: '210 20% 98%',
-    border: '220 13% 91%',
-    input: '220 13% 91%',
-    ring: '224 71.4% 4.1%',
+    border: '215 27.9% 16.9%',
+    input: '215 27.9% 16.9%',
+    ring: '216 12.2% 83.9%',
     radius: '0.5rem',
     // custom attributes
     success: palette.green[500],
