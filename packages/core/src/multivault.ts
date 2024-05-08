@@ -1,21 +1,30 @@
-import { Account, Chain, PublicClient, Transport, WalletClient, toHex, Address, parseEventLogs, GetContractReturnType, getContract } from 'viem'
+import {
+  Account,
+  Chain,
+  PublicClient,
+  Transport,
+  WalletClient,
+  Address,
+  parseEventLogs,
+  toHex,
+  getContract,
+  GetContractReturnType,
+  ParseEventLogsReturnType,
+} from 'viem'
 import { abi } from './abi';
 import { multiVaultAddress } from './constants';
 
 export class Multivault {
 
-  private client: {
-    public: PublicClient;
-    wallet: WalletClient<Transport, Chain, Account>
-  }
-
   private contract: GetContractReturnType<typeof abi, WalletClient<Transport, Chain, Account>, Address>
 
-  constructor(client: {
-    public: PublicClient<Transport, Chain>,
-    wallet: WalletClient<Transport, Chain, Account>,
-  }, address?: Address) {
-    this.client = client;
+  constructor(
+    private client: {
+      public: PublicClient<Transport, Chain>,
+      wallet: WalletClient<Transport, Chain, Account>,
+    },
+    address?: Address
+  ) {
     this.contract = getContract({
       abi,
       client,
@@ -23,15 +32,25 @@ export class Multivault {
     });
   }
 
+  /**
+   * Returns the cost of creating an atom
+   */
   public async getAtomCost() {
     return await this.contract.read.getAtomCost();
   }
 
+  /**
+   * Returns the cost of creating a triple
+   */
   public async getTripleCost() {
     return await this.contract.read.getTripleCost();
   }
 
-  public async createAtom(atomUri: string) {
+  /**
+   * Create an atom and return its vault id
+   * @param atomUri atom data to create atom with
+   */
+  public async createAtom(atomUri: string): Promise<{ vaultId: bigint, events: ParseEventLogsReturnType }> {
 
     const atomCost = await this.getAtomCost();
 
@@ -53,6 +72,12 @@ export class Multivault {
     return { vaultId, events: parseEventLogs({ abi, logs }) }
   }
 
+  /**
+  * Create a triple and return its vault id
+  * @param subjectId vault id of the subject atom
+  * @param predicateId vault id of the predicate atom
+  * @param objectId vault id of the object atom
+  */
   public async createTriple(subjectId: bigint, predicateId: bigint, objectId: bigint) {
     const tripleCost = await this.getTripleCost();
 
