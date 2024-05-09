@@ -10,7 +10,8 @@
     "build": "tsc",
     "lint": "eslint --ignore-path .gitignore --cache --cache-location ./node_modules/.cache/eslint .",
     "lint:fix": "pnpm lint --fix",
-    "test": "vitest"
+    "test": "vitest",
+    "generate": "node ./scripts/generate.js"
   },
   "files": [
     "dist/**/*",

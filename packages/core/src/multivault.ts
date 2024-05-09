@@ -16,7 +16,11 @@ import { multiVaultAddress } from './constants';
 
 export class Multivault {
 
-  private contract: GetContractReturnType<typeof abi, WalletClient<Transport, Chain, Account>, Address>
+  public readonly contract: GetContractReturnType<
+    typeof abi,
+    WalletClient<Transport, Chain, Account>,
+    Address
+  >
 
   constructor(
     private client: {
@@ -47,10 +51,24 @@ export class Multivault {
   }
 
   /**
+   * Returns the current share price for the given vault id
+   */
+  public async currentSharePrice(id: bigint) {
+    return await this.contract.read.currentSharePrice([id]);
+  }
+
+  public async previewDeposit(assets: bigint, id: bigint) {
+    return await this.contract.read.previewDeposit([assets, id]);
+  }
+
+  /**
    * Create an atom and return its vault id
    * @param atomUri atom data to create atom with
+   * @param cost Optional cost to create the atom 
    */
-  public async createAtom(atomUri: string, cost?: bigint): Promise<{ vaultId: bigint, events: ParseEventLogsReturnType }> {
+  public async createAtom(atomUri: string, cost?: bigint): Promise<{
+    vaultId: bigint, hash: `0x${string}`, events: ParseEventLogsReturnType
+  }> {
 
     const atomCost = cost || await this.getAtomCost();
 
@@ -73,7 +91,7 @@ export class Multivault {
 
     const vaultId = atomCreatedEvents[0].args.vaultID
 
-    return { vaultId, events: parseEventLogs({ abi, logs }) }
+    return { vaultId, hash, events: parseEventLogs({ abi, logs }) }
   }
 
   /**
@@ -81,8 +99,11 @@ export class Multivault {
   * @param subjectId vault id of the subject atom
   * @param predicateId vault id of the predicate atom
   * @param objectId vault id of the object atom
+  * @param cost Optional cost to create the triple 
   */
-  public async createTriple(subjectId: bigint, predicateId: bigint, objectId: bigint, cost?: bigint) {
+  public async createTriple(subjectId: bigint, predicateId: bigint, objectId: bigint, cost?: bigint): Promise<{
+    vaultId: bigint, hash: `0x${string}`, events: ParseEventLogsReturnType
+  }> {
     const tripleCost = cost || await this.getTripleCost();
 
     const hash = await this.contract.write.createTriple(
@@ -104,8 +125,31 @@ export class Multivault {
 
     const vaultId = tripleCreatedEvents[0].args.vaultID;
 
-    return { vaultId, events: parseEventLogs({ abi, logs }) }
+    return { vaultId, hash, events: parseEventLogs({ abi, logs }) }
 
   }
+
+  public async depositAtom(id: bigint, assets: bigint, receiver?: Address) {
+    const address = receiver || this.client.wallet.account.address;
+
+    const hash = await this.contract.write.depositAtom(
+      [address, id],
+      { value: assets }
+    );
+
+    const { logs, status } = await this.client.public.waitForTransactionReceipt({ hash });
+
+    if (status === 'reverted') {
+      throw new Error('Transaction reverted')
+    }
+
+    const depositedEvents = parseEventLogs({ abi, logs, eventName: 'Deposited' });
+
+    const shares = depositedEvents[0].args.sharesForReceiver;
+
+    return { hash, shares, events: parseEventLogs({ abi, logs }) }
+
+  }
+
 
 }

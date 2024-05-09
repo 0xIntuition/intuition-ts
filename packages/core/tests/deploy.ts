@@ -1,15 +1,14 @@
+import { expect } from "vitest";
+import { isAddress, type Address, parseEther, parseUnits } from 'viem';
 import { ALICE } from "./constants.js";
 import { publicClient, walletClient } from "../tests/utils.js";
-import { isAddress, type Address } from "viem";
-import { expect } from "vitest";
 import { abi } from "../src/abi";
-import { bytecode } from "../src/bytecode";
-import { parseEther, parseUnits } from 'viem';
+import { bytecode } from "./bytecode";
 
 export async function deployAndInit(): Promise<Address> {
   const hash = await walletClient.deployContract({
     abi,
-    bytecode: bytecode.object,
+    bytecode,
     account: ALICE,
   });
 
