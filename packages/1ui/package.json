@@ -9,7 +9,8 @@
     "typecheck": "tsc",
     "ui": "storybook dev -p 6006",
     "ui:build": "storybook build",
-    "test": "vitest",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "test:update": "vitest -u"
   },
   "keywords": [],

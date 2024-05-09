@@ -5,13 +5,13 @@
   "main": "index.js",
   "scripts": {
     "1ui:component:create": "npx nx g @intuition-ts/automation-tools:ui-component",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "nx run @intuition-ts/1ui:test",
     "prettier": "prettier --write .",
     "prettier:silent": "prettier --write . --log-level=silent",
     "build": "nx run-many -t build",
     "lint": "nx run-many -t lint",
     "lint:fix": "nx run-many -t lint:fix",
-    "pre-commit": "pnpm lint && pretty-quick --verbose --staged && pnpm build",
+    "pre-commit": "pnpm lint && pretty-quick --verbose --staged && pnpm test && pnpm build",
     "storybook:1ui": "nx ui @intuition-ts/1ui",
     "prepare": "husky"
   },
