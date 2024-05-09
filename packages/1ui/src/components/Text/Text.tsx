@@ -37,7 +37,6 @@ const textElement = {
   heading4: 'h4',
   heading5: 'h5',
   headline: 'h6',
-  bodyLarge: 'h7',
 }
 
 export interface TextProps

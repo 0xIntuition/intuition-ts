@@ -98,11 +98,11 @@ describe('Text', () => {
     const { asFragment } = render(<Text variant="bodyLarge">Text</Text>)
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
-        <h7
+        <p
           class="text-primary text-[1rem] font-normal"
         >
           Text
-        </h7>
+        </p>
       </DocumentFragment>
     `)
   })
