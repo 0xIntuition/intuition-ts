@@ -2,25 +2,9 @@
   "name": "@intuition-ts/1ui",
   "version": "0.0.1",
   "description": "",
-  "main": "./dist/index.js",
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
-  "files": [
-    "dist/**"
-  ],
-  "exports": {
-    ".": {
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.js",
-      "types": "./dist/index.d.ts",
-      "style": "./dist/style.css"
-    },
-    "./css": "./dist/style.css"
-  },
+  "main": "src/index.ts",
   "scripts": {
-    "build": "tsup src/index.ts --format esm,cjs --dts --external react",
-    "dev": "tsup src/index.ts --format esm,cjs --watch --dts --external react",
-    "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
+    "dev": "tsup --watch",
     "lint:fix": "pnpm lint --fix",
     "typecheck": "tsc",
     "ui": "storybook dev -p 6006",
@@ -30,15 +14,15 @@
   "author": "",
   "license": "ISC",
   "peerDependencies": {
-    "react": "^18.2.0",
+    "@storybook/manager-api": "^8.0.9",
     "@storybook/react": "^8.0.9",
     "@storybook/react-vite": "^8.0.9",
-    "vite": "~5.0.0",
-    "@storybook/manager-api": "^8.0.9",
     "@storybook/theming": "^8.0.9",
-    "tailwindcss": "^3.4.3",
     "autoprefixer": "^10.4.19",
-    "tsup": "^6.2.2"
+    "react": "^18.2.0",
+    "tailwindcss": "^3.4.3",
+    "tsup": "^6.2.2",
+    "vite": "~5.0.0"
   },
   "dependencies": {
     "@radix-ui/react-avatar": "^1.0.4",
@@ -74,6 +58,6 @@
     "tailwindcss": "^3.4.3",
     "tsup": "^6.2.2",
     "typescript": "^5.1.6",
-    "vite-tsconfig-paths": "^4.2.1"
+    "vite-tsconfig-paths": "^4.3.2"
   }
 }

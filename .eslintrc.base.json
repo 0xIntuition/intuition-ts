@@ -12,7 +12,13 @@
     "commonjs": true,
     "es6": true
   },
-  "ignorePatterns": ["!**/.server", "!**/.client", "node_modules", "dist"],
+  "ignorePatterns": [
+    "!**/.server",
+    "!**/.client",
+    "node_modules",
+    "dist",
+    "build"
+  ],
   "extends": ["eslint:recommended"],
   "overrides": [
     {
@@ -37,7 +43,9 @@
           { "name": "NavLink", "linkAttribute": "to" }
         ],
         "import/resolver": {
-          "typescript": {}
+          "typescript": {
+            "project": ["packages/*/tsconfig.json", "apps/*/tsconfig.json"]
+          }
         }
       }
     },

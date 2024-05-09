@@ -17,7 +17,7 @@ describe('ui-component generator', () => {
     // Adjust the directoryName to use the format the generator produces, e.g., hello-world
     const directoryName = names(options.name).fileName
     const pascalCaseName = names(options.name).className // This will be 'HelloWorld'
-    const componentDirectory = `packages/1ui/src/components/ui/${directoryName}`
+    const componentDirectory = `packages/1ui/src/components/${directoryName}`
 
     expect(
       tree.exists(`${componentDirectory}/${pascalCaseName}.tsx`),

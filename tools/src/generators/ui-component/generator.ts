@@ -18,7 +18,7 @@ export async function uiComponentGenerator(
 
   // Convert the name to a proper directory name if needed
   const directoryName = names(options.name).fileName
-  const projectRoot = `packages/1ui/src/components/ui/${directoryName}`
+  const projectRoot = `packages/1ui/src/components/${directoryName}`
 
   generateFiles(tree, path.join(__dirname, 'files'), projectRoot, {
     ...options,

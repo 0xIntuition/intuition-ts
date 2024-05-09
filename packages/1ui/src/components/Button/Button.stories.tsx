@@ -1,26 +1,68 @@
 import React from 'react'
 import type { Meta, StoryObj } from '@storybook/react'
-import { Button } from '../src/components/ui/button'
+import { Button } from './Button'
 
-const meta = {
-  title: 'Atom/Button',
+const meta: Meta<typeof Button> = {
+  title: 'Components/Button',
   component: Button,
   tags: ['autodocs'],
   parameters: {
+    docs: {
+      description: {
+        component: 'Displays a button or a component that looks like a button.',
+      },
+    },
     controls: {
       exclude: ['className', 'style', 'asChild'],
     },
   },
   argTypes: {
-    children: { control: 'text' },
-    variant: { control: 'select' },
-    size: { control: 'select' },
-    isLoading: { control: 'boolean' },
+    children: {
+      description: 'Button label',
+      table: {
+        type: { summary: 'string' },
+      },
+      control: 'text',
+    },
+    variant: {
+      description: 'Variant of button',
+      options: [
+        'default',
+        'destructive',
+        'outline',
+        'secondary',
+        'ghost',
+        'link',
+        'tooltip',
+      ],
+      table: {
+        type: { summary: 'ButtonVariant' },
+        defaultValue: { summary: 'default' },
+      },
+      control: 'select',
+    },
+    size: {
+      description: 'Size of button',
+      options: ['default', 'sm', 'lg', 'icon', 'lg-icon'],
+      table: {
+        type: { summary: 'ButtonSize' },
+        defaultValue: { summary: 'default' },
+      },
+      control: 'select',
+    },
+    isLoading: {
+      description: 'Variant of button',
+      table: {
+        type: { summary: 'boolean' },
+      },
+      control: 'boolean',
+    },
   },
-} satisfies Meta<typeof Button>
+}
 
 export default meta
-type Story = StoryObj<typeof meta>
+
+type Story = StoryObj<typeof Button>
 
 export const BasicUsage: Story = {
   args: {

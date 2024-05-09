@@ -3,39 +3,5 @@
   "$schema": "../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "tools/src",
   "projectType": "library",
-  "tags": [],
-  "targets": {
-    "build": {
-      "executor": "@nx/js:tsc",
-      "outputs": ["{options.outputPath}"],
-      "options": {
-        "outputPath": "dist/tools",
-        "main": "tools/src/index.ts",
-        "tsConfig": "tools/tsconfig.lib.json",
-        "assets": [
-          "tools/*.md",
-          {
-            "input": "./tools/src",
-            "glob": "**/!(*.ts)",
-            "output": "./src"
-          },
-          {
-            "input": "./tools/src",
-            "glob": "**/*.d.ts",
-            "output": "./src"
-          },
-          {
-            "input": "./tools",
-            "glob": "generators.json",
-            "output": "."
-          },
-          {
-            "input": "./tools",
-            "glob": "executors.json",
-            "output": "."
-          }
-        ]
-      }
-    }
-  }
+  "tags": []
 }
