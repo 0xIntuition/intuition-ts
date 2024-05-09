@@ -8,7 +8,8 @@
     "lint:fix": "pnpm lint --fix",
     "typecheck": "tsc",
     "ui": "storybook dev -p 6006",
-    "ui:build": "storybook build"
+    "ui:build": "storybook build",
+    "test": "vitest"
   },
   "keywords": [],
   "author": "",
@@ -50,6 +51,7 @@
     "@storybook/react-vite": "^8.0.9",
     "@storybook/test": "^8.0.9",
     "@storybook/theming": "^8.0.9",
+    "@testing-library/react": "^15.0.7",
     "@types/node": "^20.12.7",
     "@types/react": "^18.2.20",
     "autoprefixer": "^10.4.19",
