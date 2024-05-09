@@ -89,7 +89,7 @@ export const Variants: Story = {
       <Text variant="heading3" {...props}>
         Heading 3
       </Text>
-      <Text variant="Heading4" {...props}>
+      <Text variant="heading4" {...props}>
         Heading 4
       </Text>
       <Text variant="heading5" {...props}>
