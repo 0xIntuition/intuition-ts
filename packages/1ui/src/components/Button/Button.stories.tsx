@@ -36,7 +36,7 @@ const meta: Meta<typeof Button> = {
         'tooltip',
       ],
       table: {
-        type: { summary: 'ButtonVariant' },
+        type: { summary: 'string' },
         defaultValue: { summary: 'default' },
       },
       control: 'select',
@@ -45,7 +45,7 @@ const meta: Meta<typeof Button> = {
       description: 'Size of button',
       options: ['default', 'sm', 'lg', 'icon', 'lg-icon'],
       table: {
-        type: { summary: 'ButtonSize' },
+        type: { summary: 'string' },
         defaultValue: { summary: 'default' },
       },
       control: 'select',
@@ -74,7 +74,7 @@ export const BasicUsage: Story = {
 export const Variants: Story = {
   parameters: {
     controls: {
-      exclude: ['className', 'asChild', 'style', 'variant'],
+      disable: true,
     },
   },
   render: (props) => (
@@ -114,7 +114,7 @@ export const Sizes: Story = {
   },
   parameters: {
     controls: {
-      exclude: ['className', 'asChild', 'style', 'size'],
+      disable: true,
     },
   },
   render: (props) => (
