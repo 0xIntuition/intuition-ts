@@ -1,4 +1,5 @@
 import type { StorybookConfig } from '@storybook/react-vite'
+import { mergeConfig } from 'vite'
 
 const config: StorybookConfig = {
   stories: ['../src/**/*.mdx', '../**/*.stories.@(js|jsx|mjs|ts|tsx)'],
@@ -12,7 +13,7 @@ const config: StorybookConfig = {
     name: '@storybook/react-vite',
     options: {
       builder: {
-        viteConfigPath: '.storybook/vite.config.ts',
+        viteConfigPath: 'packages/1ui/.storybook/vite.config.ts',
       },
     },
   },
@@ -20,11 +21,7 @@ const config: StorybookConfig = {
     autodocs: 'tag',
   },
   async viteFinal(config) {
-    // Merge custom configuration into the default config
-    const { mergeConfig } = await import('vite')
-
     return mergeConfig(config, {
-      // Add dependencies to pre-optimization
       optimizeDeps: {},
     })
   },

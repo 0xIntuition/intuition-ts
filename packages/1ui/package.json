@@ -7,9 +7,6 @@
     "dev": "tsup --watch",
     "lint:fix": "pnpm lint --fix",
     "typecheck": "tsc",
-    "ui": "storybook dev -p 6006",
-    "ui:build": "storybook build",
-    "test": "vitest run",
     "test:watch": "vitest",
     "test:update": "vitest -u"
   },

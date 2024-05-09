@@ -12,7 +12,7 @@
     "lint": "nx run-many -t lint",
     "lint:fix": "nx run-many -t lint:fix",
     "pre-commit": "pnpm lint && pretty-quick --verbose --staged && pnpm test && pnpm build",
-    "storybook:1ui": "nx ui @intuition-ts/1ui",
+    "storybook:1ui": "nx run @intuition-ts/1ui:storybook",
     "prepare": "husky"
   },
   "keywords": [],
@@ -31,6 +31,7 @@
     "@nx/plugin": "^18.3.4",
     "@nx/react": "^18.3.4",
     "@nx/remix": "18.3.3",
+    "@nx/storybook": "^19.0.2",
     "@nx/vite": "18.3.3",
     "@nx/web": "18.3.3",
     "@playwright/test": "^1.36.0",
