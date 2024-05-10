@@ -1,0 +1,34 @@
+{
+  "name": "@intuition-ts/protocol",
+  "version": "0.0.1",
+  "main": "dist/index.js",
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "types": "dist/index.d.ts", 
+  "scripts": {
+    "build": "tsc",
+    "lint": "eslint --ignore-path .gitignore --cache --cache-location ./node_modules/.cache/eslint .",
+    "lint:fix": "pnpm lint --fix",
+    "test": "vitest",
+    "generate": "node ./scripts/generate.js"
+  },
+  "files": [
+    "dist/**/*",
+    "src/**/*",    
+    "README.md",
+    "LICENSE"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "viem": "^2.9.29"
+  },
+  "devDependencies": {
+    "@viem/anvil": "^0.0.10",
+    "typescript": "^5.4.5",
+    "vite": "^5.2.11",
+    "vitest": "^1.3.1"
+  }
+}

@@ -2,7 +2,7 @@
 
 - [ ] Portal
 - [ ] 1UI
-- [ ] Core
+- [ ] protocol
 
 ## Overview
 

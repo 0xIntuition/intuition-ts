@@ -1,7 +1,7 @@
 {
-  "name": "@intuition-ts/core",
+  "name": "@intuition-ts/protocol",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "packages/core/src",
+  "sourceRoot": "packages/protocol/src",
   "projectType": "library",
   "release": {
     "version": {
@@ -17,11 +17,11 @@
       "executor": "@nx/js:tsc",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/packages/core",
-        "tsConfig": "packages/core/tsconfig.lib.json",
-        "packageJson": "packages/core/package.json",
-        "main": "packages/core/src/index.ts",
-        "assets": ["packages/core/*.md"]
+        "outputPath": "dist/packages/protocol",
+        "tsConfig": "packages/protocol/tsconfig.lib.json",
+        "packageJson": "packages/protocol/package.json",
+        "main": "packages/protocol/src/index.ts",
+        "assets": ["packages/protocol/*.md"]
       }
     },
     "nx-release-publish": {
