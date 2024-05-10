@@ -5,17 +5,14 @@
   "exports": {
     ".": "./dist/index.js"
   },
-  "types": "dist/index.d.ts", 
+  "types": "dist/index.d.ts",
   "scripts": {
-    "build": "tsc",
-    "lint": "eslint --ignore-path .gitignore --cache --cache-location ./node_modules/.cache/eslint .",
     "lint:fix": "pnpm lint --fix",
-    "test": "vitest",
     "generate": "node ./scripts/generate.js"
   },
   "files": [
     "dist/**/*",
-    "src/**/*",    
+    "src/**/*",
     "README.md",
     "LICENSE"
   ],

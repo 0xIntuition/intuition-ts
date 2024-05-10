@@ -24,6 +24,18 @@
         "assets": ["packages/protocol/*.md"]
       }
     },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "options": {
+        "lintFilePatterns": ["packages/protocol/**/*.{ts,tsx,js,jsx}"]
+      }
+    },
+    "test": {
+      "executor": "@nx/vite:test",
+      "options": {
+        "config": "packages/protocol/vitest.config.ts"
+      }
+    },
     "nx-release-publish": {
       "options": {
         "packageRoot": "dist/{projectRoot}"
