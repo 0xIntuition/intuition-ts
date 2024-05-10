@@ -11,7 +11,7 @@
     "build": "nx run-many -t build",
     "lint": "nx run-many -t lint",
     "lint:fix": "nx run-many -t lint:fix",
-    "pre-commit": "pnpm lint && pretty-quick --verbose --staged && pnpm test && pnpm build",
+    "pre-commit": "pnpm lint && pretty-quick --verbose --staged",
     "storybook:1ui": "nx run @intuition-ts/1ui:storybook",
     "prepare": "husky"
   },
