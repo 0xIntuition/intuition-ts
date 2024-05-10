@@ -23,21 +23,21 @@ apps
 └── portal
 packages
 ├── 1ui
-└── core
+└── protocol
 ```
 
 | Path            | Description                               |
 | --------------- | ----------------------------------------- |
 | `apps/portal`   | The Remix application for the playground. |
 | `packages/1ui`  | Our design system.                        |
-| `packages/core` | Core SDK.                                 |
+| `packages/protocol` | protocol SDK.                                 |
 
 ## Contributing To `0xIntuition` Packages
 
 Please read the corresponding `CONTIBUTING.md` file for the app/package you wish to contribute to:
 
 - [1ui - CONTRIBUTING.md](./packages/1ui/CONTRIBUTING.md)
-- [Core - CONTRIBUTING.md]()
+- [protocol - CONTRIBUTING.md]()
 
 ## Development
 
