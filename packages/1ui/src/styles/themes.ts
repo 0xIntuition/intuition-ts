@@ -1,5 +1,7 @@
 import { palette } from './palette'
 
+const radiusValue = '0.5rem'
+
 export const themes = {
   light: {
     background: '0 0% 100%',
@@ -34,7 +36,7 @@ export const themes = {
     border: '215 27.9% 16.9%',
     input: '215 27.9% 16.9%',
     ring: '216 12.2% 83.9%',
-    radius: '0.5rem',
+    radius: radiusValue,
     // custom attributes
     success: palette.green[500],
     successForeground: palette.white.base,
@@ -64,7 +66,7 @@ export const themes = {
     border: palette.white.a20,
     input: palette.white.a20,
     ring: palette.white.base,
-    radius: '0.5rem',
+    radius: radiusValue,
     // custom attributes
     success: palette.green[500],
     successForeground: palette.white.base,

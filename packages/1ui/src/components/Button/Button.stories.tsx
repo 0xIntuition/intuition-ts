@@ -66,7 +66,7 @@ type Story = StoryObj<typeof Button>
 
 export const BasicUsage: Story = {
   args: {
-    children: 'Example Button',
+    children: 'I am a button',
   },
   render: (props) => <Button {...props} />,
 }
@@ -78,50 +78,36 @@ export const Variants: Story = {
     },
   },
   render: (props) => (
-    <div
-      style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(6, 1fr)', // Adjusted column count to match number of buttons
-        gridTemplateRows: '1fr',
-        gap: '2rem',
-      }}
-    >
-      <Button variant="default" {...props}>
-        Default
-      </Button>
+    <div style={{ display: 'flex', gap: '2rem', alignItems: 'center' }}>
+      <Button {...props}>Primary</Button>
       <Button variant="secondary" {...props}>
         Secondary
       </Button>
-      <Button variant="outline" {...props}>
-        Outline
-      </Button>
       <Button variant="ghost" {...props}>
         Ghost
-      </Button>
-      <Button variant="link" {...props}>
-        Link
-      </Button>
-      <Button variant="destructive" {...props}>
-        Destructive
       </Button>
     </div>
   ),
 }
 
 export const Sizes: Story = {
-  args: {
-    children: 'Hello, there',
-  },
   parameters: {
     controls: {
       disable: true,
     },
   },
   render: (props) => (
-    <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-      <Button size="sm" {...props} />
-      <Button size="default" {...props} />
-      <Button size="lg" {...props} />
+    <div style={{ display: 'flex', gap: '2rem', alignItems: 'center' }}>
+      <Button {...props}>Default</Button>
+      <Button size="medium" {...props}>
+        Medium
+      </Button>
+      <Button size="large" {...props}>
+        Large
+      </Button>
+      <Button size="extraLarge" {...props}>
+        Extra Large
+      </Button>
     </div>
   ),
 }
@@ -133,11 +119,11 @@ export const States: Story = {
     },
   },
   render: (props) => (
-    <div style={{ display: 'flex', gap: '2rem' }}>
-      <Button isLoading variant="default" {...props}>
+    <div style={{ display: 'flex', gap: '2rem', alignItems: 'center' }}>
+      <Button isLoading {...props}>
         isLoading
       </Button>
-      <Button disabled variant="default" {...props}>
+      <Button disabled {...props}>
         disabled
       </Button>
     </div>

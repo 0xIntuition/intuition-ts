@@ -5,37 +5,27 @@ import * as React from 'react'
 
 import { cn } from '@styles'
 
-const buttonVariants = cva(
-  'inline-flex items-center justify-center rounded-md text-sm shadow-lg font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:text-primary-700 disabled:bg-primary-500 transition-colors duration-300',
-  {
-    variants: {
-      variant: {
-        default: 'bg-primary-900 text-primary-foreground hover:bg-primary/90',
-        destructive:
-          'bg-destructive text-destructive-foreground hover:bg-destructive/90',
-        outline:
-          'border border-input bg-background hover:bg-accent hover:text-accent-foreground',
-        secondary: 'bg-primary-300 text-primary-900 hover:bg-primary-100',
-        ghost:
-          'hover:bg-none hover:text-accent-foreground text-primary-300 transition-colors duration-150',
-        link: 'text-primary underline-offset-4 hover:underline',
-        tooltip:
-          '!text-primary-300 transition-colors duration-300 border rounded-lg border-primary-50/20 hover:border-primary-50/40 hover:text-primary-200 text-xxs',
-      },
-      size: {
-        default: 'h-8 px-4 py-2',
-        sm: 'h-6 px-3',
-        lg: 'h-10 px-8',
-        icon: 'h-8 w-8',
-        'lg-icon': 'h-12 w-12',
-      },
+const buttonVariants = cva('flex items-center', {
+  variants: {
+    variant: {
+      primary:
+        'bg-primary text-primary-foreground border-primary hover:bg-primary/80 rounded-full disabled:bg-muted disabled:text-muted-foreground',
+      secondary: 'bg-primary-300 text-primary-900 hover:bg-primary-100',
+      ghost:
+        'hover:bg-none hover:text-accent-foreground text-primary-300 transition-colors duration-150',
     },
-    defaultVariants: {
-      variant: 'default',
-      size: 'default',
+    size: {
+      default: 'px-[12px] py-[4px] gap-[8px]',
+      medium: 'px-[16px] py-[6px] gap-[8px]',
+      large: 'px-[16px] py-[8px] gap-[16px]',
+      extraLarge: 'px-[20px] py-[10px] gap-[20px]',
     },
   },
-)
+  defaultVariants: {
+    variant: 'primary',
+    size: 'default',
+  },
+})
 
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
