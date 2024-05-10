@@ -30,13 +30,23 @@ const textVariants = cva('text-primary', {
   },
 })
 
-const textElement = {
-  heading1: 'h1',
-  heading2: 'h2',
-  heading3: 'h3',
-  heading4: 'h4',
-  heading5: 'h5',
-  headline: 'h6',
+const textElement = (variant: string | undefined | null) => {
+  switch (variant) {
+    case 'heading1':
+      return 'h1'
+    case 'heading2':
+      return 'h2'
+    case 'heading3':
+      return 'h3'
+    case 'heading4':
+      return 'h4'
+    case 'heading5':
+      return 'h5'
+    case 'headline':
+      return 'h6'
+    default:
+      return 'p'
+  }
 }
 
 export interface TextProps
@@ -45,7 +55,7 @@ export interface TextProps
 
 const Text = React.forwardRef<HTMLParagraphElement, TextProps>(
   ({ className, variant, weight, ...props }, ref) => {
-    const Comp = textElement[variant] || 'p'
+    const Comp = textElement(variant)
     return (
       <Comp
         className={cn(textVariants({ variant, weight, className }))}
