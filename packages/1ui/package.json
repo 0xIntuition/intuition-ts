@@ -5,10 +5,7 @@
   "main": "src/index.ts",
   "scripts": {
     "dev": "tsup --watch",
-    "lint:fix": "pnpm lint --fix",
-    "typecheck": "tsc",
-    "test:watch": "vitest",
-    "test:update": "vitest -u"
+    "lint:fix": "pnpm lint --fix"
   },
   "keywords": [],
   "author": "",

@@ -24,6 +24,18 @@
         "assets": ["packages/1ui/*.md"]
       }
     },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "options": {
+        "lintFilePatterns": ["packages/1ui/**/*.{ts,tsx,js,jsx}"]
+      }
+    },
+    "test": {
+      "executor": "@nx/vite:test",
+      "options": {
+        "config": "packages/1ui/vitest.config.ts"
+      }
+    },
     "build-storybook": {
       "executor": "@nx/storybook:build",
       "outputs": ["{options.outputDir}"],
@@ -47,12 +59,6 @@
         "ci": {
           "quiet": true
         }
-      }
-    },
-    "test": {
-      "executor": "@nx/vite:test",
-      "options": {
-        "config": "packages/1ui/vitest.config.ts"
       }
     },
     "nx-release-publish": {
