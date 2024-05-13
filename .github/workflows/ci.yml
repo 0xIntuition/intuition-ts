@@ -12,10 +12,16 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '19'
       - uses: pnpm/action-setup@v2
         with:
           version: 9.0.6
-      # Cache and restore the pnpm store
+      - name: Setup Git
+        run: |
+          git fetch --no-tags --depth=1 origin +refs/heads/main:refs/remotes/origin/main
+          git branch --track main origin/main
       - name: Cache pnpm store
         uses: actions/cache@v3
         with:
@@ -26,7 +32,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pnpm-
       - run: pnpm install --frozen-lockfile
-      # Lint, Test, & Build
       - name: Run Affected Lint
         run: pnpm nx affected -t lint
       - name: Run Affected Tests
