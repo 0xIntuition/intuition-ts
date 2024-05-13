@@ -1,0 +1,43 @@
+name: CI
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '19'
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 9.0.6
+      # Foundry setup for protocol
+      - name: Set up foundry
+        uses: foundry-rs/foundry-toolchain@v1
+      - name: Setup Git
+        run: |
+          git fetch --no-tags --depth=1 origin +refs/heads/main:refs/remotes/origin/main
+          git branch --track main origin/main
+      - name: Cache pnpm store
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.pnpm-store
+            **/node_modules/.pnpm
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-
+      - run: pnpm install --frozen-lockfile
+      - name: Run Affected Lint
+        run: pnpm nx affected -t lint
+      - name: Run Affected Tests
+        run: pnpm nx affected -t test
+      - name: Run Affected Builds
+        run: pnpm nx affected -t build
