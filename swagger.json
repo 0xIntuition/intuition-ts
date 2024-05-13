@@ -1,0 +1,5697 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "api",
+    "description": "",
+    "license": {
+      "name": ""
+    },
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/auth": {
+      "post": {
+        "tags": ["auth"],
+        "operationId": "auth",
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DidQuery"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Return JWT token using api key and did session",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["token", "refreshToken", "newUser", "userId"],
+                  "properties": {
+                    "newUser": {
+                      "type": "boolean"
+                    },
+                    "refreshToken": {
+                      "type": "string"
+                    },
+                    "token": {
+                      "type": "string"
+                    },
+                    "userId": {
+                      "type": "string",
+                      "format": "uuid"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKey": []
+          }
+        ]
+      }
+    },
+    "/claim/:id/positions": {
+      "get": {
+        "tags": ["claim_positions"],
+        "operationId": "get_claim_positions",
+        "responses": {
+          "200": {
+            "description": "Get all claim positions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["page", "limit", "total", "data"],
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/PositionPresenter"
+                      }
+                    },
+                    "limit": {
+                      "type": "integer",
+                      "format": "int64"
+                    },
+                    "page": {
+                      "type": "integer",
+                      "format": "int64"
+                    },
+                    "total": {
+                      "type": "integer",
+                      "format": "int64"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/claims": {
+      "get": {
+        "tags": ["claims"],
+        "operationId": "get_all",
+        "responses": {
+          "200": {
+            "description": "Get all claims in paginated list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["page", "limit", "total", "data"],
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ClaimPresenter"
+                      }
+                    },
+                    "limit": {
+                      "type": "integer",
+                      "format": "int64"
+                    },
+                    "page": {
+                      "type": "integer",
+                      "format": "int64"
+                    },
+                    "total": {
+                      "type": "integer",
+                      "format": "int64"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      },
+      "post": {
+        "tags": ["claims"],
+        "operationId": "create_claim",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewClaim"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Create a new claim",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "claim_id",
+                    "created_at",
+                    "updated_at",
+                    "status",
+                    "user_conviction_for",
+                    "user_conviction_against",
+                    "num_positions",
+                    "for_num_positions",
+                    "for_assets_sum",
+                    "assets_sum",
+                    "for_conviction_sum",
+                    "for_conviction_price",
+                    "against_num_positions",
+                    "against_assets_sum",
+                    "against_conviction_sum",
+                    "against_conviction_price",
+                    "contract"
+                  ],
+                  "properties": {
+                    "against_assets_sum": {
+                      "type": "string"
+                    },
+                    "against_conviction_price": {
+                      "type": "string"
+                    },
+                    "against_conviction_sum": {
+                      "type": "string"
+                    },
+                    "against_num_positions": {
+                      "type": "string"
+                    },
+                    "assets_sum": {
+                      "type": "string"
+                    },
+                    "claim_id": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "contract": {
+                      "type": "string"
+                    },
+                    "counter_vault_id": {
+                      "type": "string"
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "creator": {
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/UserPresenter"
+                        }
+                      ],
+                      "nullable": true
+                    },
+                    "for_assets_sum": {
+                      "type": "string"
+                    },
+                    "for_conviction_price": {
+                      "type": "string"
+                    },
+                    "for_conviction_sum": {
+                      "type": "string"
+                    },
+                    "for_num_positions": {
+                      "type": "integer",
+                      "format": "int64"
+                    },
+                    "num_positions": {
+                      "type": "integer",
+                      "format": "int64"
+                    },
+                    "object": {
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/IdentityPresenter"
+                        }
+                      ],
+                      "nullable": true
+                    },
+                    "predicate": {
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/IdentityPresenter"
+                        }
+                      ],
+                      "nullable": true
+                    },
+                    "status": {
+                      "$ref": "#/components/schemas/Status"
+                    },
+                    "subject": {
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/IdentityPresenter"
+                        }
+                      ],
+                      "nullable": true
+                    },
+                    "updated_at": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "user_conviction_against": {
+                      "type": "string"
+                    },
+                    "user_conviction_for": {
+                      "type": "string"
+                    },
+                    "vault_id": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/claims/:id": {
+      "get": {
+        "tags": ["claims"],
+        "operationId": "get_claim_by_id",
+        "responses": {
+          "200": {
+            "description": "Get single claim by id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "claim_id",
+                    "created_at",
+                    "updated_at",
+                    "status",
+                    "user_conviction_for",
+                    "user_conviction_against",
+                    "num_positions",
+                    "for_num_positions",
+                    "for_assets_sum",
+                    "assets_sum",
+                    "for_conviction_sum",
+                    "for_conviction_price",
+                    "against_num_positions",
+                    "against_assets_sum",
+                    "against_conviction_sum",
+                    "against_conviction_price",
+                    "contract"
+                  ],
+                  "properties": {
+                    "against_assets_sum": {
+                      "type": "string"
+                    },
+                    "against_conviction_price": {
+                      "type": "string"
+                    },
+                    "against_conviction_sum": {
+                      "type": "string"
+                    },
+                    "against_num_positions": {
+                      "type": "string"
+                    },
+                    "assets_sum": {
+                      "type": "string"
+                    },
+                    "claim_id": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "contract": {
+                      "type": "string"
+                    },
+                    "counter_vault_id": {
+                      "type": "string"
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "creator": {
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/UserPresenter"
+                        }
+                      ],
+                      "nullable": true
+                    },
+                    "for_assets_sum": {
+                      "type": "string"
+                    },
+                    "for_conviction_price": {
+                      "type": "string"
+                    },
+                    "for_conviction_sum": {
+                      "type": "string"
+                    },
+                    "for_num_positions": {
+                      "type": "integer",
+                      "format": "int64"
+                    },
+                    "num_positions": {
+                      "type": "integer",
+                      "format": "int64"
+                    },
+                    "object": {
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/IdentityPresenter"
+                        }
+                      ],
+                      "nullable": true
+                    },
+                    "predicate": {
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/IdentityPresenter"
+                        }
+                      ],
+                      "nullable": true
+                    },
+                    "status": {
+                      "$ref": "#/components/schemas/Status"
+                    },
+                    "subject": {
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/IdentityPresenter"
+                        }
+                      ],
+                      "nullable": true
+                    },
+                    "updated_at": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "user_conviction_against": {
+                      "type": "string"
+                    },
+                    "user_conviction_for": {
+                      "type": "string"
+                    },
+                    "vault_id": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      },
+      "put": {
+        "tags": ["claims"],
+        "operationId": "update_claim",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateClaim"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Update a claim",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "claim_id",
+                    "created_at",
+                    "updated_at",
+                    "status",
+                    "user_conviction_for",
+                    "user_conviction_against",
+                    "num_positions",
+                    "for_num_positions",
+                    "for_assets_sum",
+                    "assets_sum",
+                    "for_conviction_sum",
+                    "for_conviction_price",
+                    "against_num_positions",
+                    "against_assets_sum",
+                    "against_conviction_sum",
+                    "against_conviction_price",
+                    "contract"
+                  ],
+                  "properties": {
+                    "against_assets_sum": {
+                      "type": "string"
+                    },
+                    "against_conviction_price": {
+                      "type": "string"
+                    },
+                    "against_conviction_sum": {
+                      "type": "string"
+                    },
+                    "against_num_positions": {
+                      "type": "string"
+                    },
+                    "assets_sum": {
+                      "type": "string"
+                    },
+                    "claim_id": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "contract": {
+                      "type": "string"
+                    },
+                    "counter_vault_id": {
+                      "type": "string"
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "creator": {
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/UserPresenter"
+                        }
+                      ],
+                      "nullable": true
+                    },
+                    "for_assets_sum": {
+                      "type": "string"
+                    },
+                    "for_conviction_price": {
+                      "type": "string"
+                    },
+                    "for_conviction_sum": {
+                      "type": "string"
+                    },
+                    "for_num_positions": {
+                      "type": "integer",
+                      "format": "int64"
+                    },
+                    "num_positions": {
+                      "type": "integer",
+                      "format": "int64"
+                    },
+                    "object": {
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/IdentityPresenter"
+                        }
+                      ],
+                      "nullable": true
+                    },
+                    "predicate": {
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/IdentityPresenter"
+                        }
+                      ],
+                      "nullable": true
+                    },
+                    "status": {
+                      "$ref": "#/components/schemas/Status"
+                    },
+                    "subject": {
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/IdentityPresenter"
+                        }
+                      ],
+                      "nullable": true
+                    },
+                    "updated_at": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "user_conviction_against": {
+                      "type": "string"
+                    },
+                    "user_conviction_for": {
+                      "type": "string"
+                    },
+                    "vault_id": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/identities": {
+      "get": {
+        "tags": ["identities"],
+        "operationId": "get_identities",
+        "parameters": [
+          {
+            "name": "userWallet",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          },
+          {
+            "name": "timeframe",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/TimeFrame"
+                }
+              ],
+              "nullable": true
+            }
+          },
+          {
+            "name": "paging",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/PaginatedRequest"
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/IdentitySort"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get all identities in paginated list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["page", "limit", "total", "data"],
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/IdentityPresenter"
+                      }
+                    },
+                    "limit": {
+                      "type": "integer",
+                      "format": "int64"
+                    },
+                    "page": {
+                      "type": "integer",
+                      "format": "int64"
+                    },
+                    "total": {
+                      "type": "integer",
+                      "format": "int64"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/identities/:id": {
+      "get": {
+        "tags": ["identities"],
+        "operationId": "get_identity_by_id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "sql id",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Identifier"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get single identity by id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "id",
+                    "identity_id",
+                    "predicate",
+                    "is_user",
+                    "identity_hash",
+                    "display_name",
+                    "creator_address",
+                    "status",
+                    "created_at",
+                    "num_positions",
+                    "updated_at",
+                    "vault_id",
+                    "assets_sum",
+                    "conviction_sum",
+                    "conviction_price",
+                    "contract",
+                    "asset_delta",
+                    "user_asset_delta",
+                    "conviction_price_delta",
+                    "user_conviction",
+                    "user_assets"
+                  ],
+                  "properties": {
+                    "asset_delta": {
+                      "type": "string"
+                    },
+                    "assets_sum": {
+                      "type": "string"
+                    },
+                    "contract": {
+                      "type": "string"
+                    },
+                    "conviction_price": {
+                      "type": "string"
+                    },
+                    "conviction_price_delta": {
+                      "type": "string"
+                    },
+                    "conviction_sum": {
+                      "type": "string"
+                    },
+                    "corpora_id": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "creator": {
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/UserPresenter"
+                        }
+                      ],
+                      "nullable": true
+                    },
+                    "creator_address": {
+                      "type": "string"
+                    },
+                    "creator_id": {
+                      "type": "string",
+                      "format": "uuid",
+                      "nullable": true
+                    },
+                    "description": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "display_name": {
+                      "type": "string"
+                    },
+                    "external_reference": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "id": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "identity_hash": {
+                      "type": "string"
+                    },
+                    "identity_id": {
+                      "type": "string"
+                    },
+                    "image": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "is_user": {
+                      "type": "boolean"
+                    },
+                    "num_positions": {
+                      "type": "integer",
+                      "format": "int64"
+                    },
+                    "predicate": {
+                      "type": "boolean"
+                    },
+                    "semantic": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "status": {
+                      "$ref": "#/components/schemas/Status"
+                    },
+                    "updated_at": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "user_asset_delta": {
+                      "type": "string"
+                    },
+                    "user_assets": {
+                      "type": "string"
+                    },
+                    "user_conviction": {
+                      "type": "string"
+                    },
+                    "vault_id": {
+                      "type": "string"
+                    },
+                    "vault_uuid": {
+                      "type": "string",
+                      "format": "uuid",
+                      "nullable": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      },
+      "put": {
+        "tags": ["identities"],
+        "operationId": "update_identity",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "creator": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "creator_uuid": {
+                    "type": "string",
+                    "format": "uuid",
+                    "nullable": true
+                  },
+                  "description": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "display_name": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "external_reference": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "identity_id": {
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/Identifier"
+                      }
+                    ],
+                    "nullable": true
+                  },
+                  "image": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "status": {
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/Status"
+                      }
+                    ],
+                    "nullable": true
+                  },
+                  "vault_id": {
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/Identifier"
+                      }
+                    ],
+                    "nullable": true
+                  },
+                  "vault_uuid": {
+                    "type": "string",
+                    "format": "uuid",
+                    "nullable": true
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Update an identity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "id",
+                    "identity_id",
+                    "identity_hash",
+                    "display_name",
+                    "creator",
+                    "created_at",
+                    "updated_at",
+                    "status",
+                    "vault_id",
+                    "predicate",
+                    "contract",
+                    "is_user"
+                  ],
+                  "properties": {
+                    "contract": {
+                      "type": "string"
+                    },
+                    "corpora_id": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "creator": {
+                      "type": "string"
+                    },
+                    "creator_id": {
+                      "type": "string",
+                      "format": "uuid",
+                      "nullable": true
+                    },
+                    "description": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "display_name": {
+                      "type": "string"
+                    },
+                    "external_reference": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "id": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "identity_hash": {
+                      "type": "string"
+                    },
+                    "identity_id": {
+                      "type": "string"
+                    },
+                    "image": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "is_user": {
+                      "type": "boolean"
+                    },
+                    "predicate": {
+                      "type": "boolean"
+                    },
+                    "semantic": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "status": {
+                      "$ref": "#/components/schemas/Status"
+                    },
+                    "updated_at": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "vault_id": {
+                      "type": "string"
+                    },
+                    "vault_uuid": {
+                      "type": "string",
+                      "format": "uuid",
+                      "nullable": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/identity": {
+      "post": {
+        "tags": ["identities"],
+        "operationId": "create_identity",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["creator", "display_name", "contract"],
+                "properties": {
+                  "contract": {
+                    "type": "string"
+                  },
+                  "creator": {
+                    "type": "string"
+                  },
+                  "creator_uuid": {
+                    "type": "string",
+                    "format": "uuid",
+                    "nullable": true
+                  },
+                  "description": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "display_name": {
+                    "type": "string"
+                  },
+                  "external_reference": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "identity_hash": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "identity_id": {
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/IdentityId"
+                      }
+                    ],
+                    "nullable": true
+                  },
+                  "image": {
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/InputFile"
+                      }
+                    ],
+                    "nullable": true
+                  },
+                  "is_user": {
+                    "type": "boolean"
+                  },
+                  "predicate": {
+                    "type": "boolean"
+                  },
+                  "vault_id": {
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/Identifier"
+                      }
+                    ],
+                    "nullable": true
+                  },
+                  "vault_uuid": {
+                    "type": "string",
+                    "format": "uuid",
+                    "nullable": true
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Create a new identity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "id",
+                    "identity_id",
+                    "predicate",
+                    "is_user",
+                    "identity_hash",
+                    "display_name",
+                    "creator_address",
+                    "status",
+                    "created_at",
+                    "num_positions",
+                    "updated_at",
+                    "vault_id",
+                    "assets_sum",
+                    "conviction_sum",
+                    "conviction_price",
+                    "contract",
+                    "asset_delta",
+                    "user_asset_delta",
+                    "conviction_price_delta",
+                    "user_conviction",
+                    "user_assets"
+                  ],
+                  "properties": {
+                    "asset_delta": {
+                      "type": "string"
+                    },
+                    "assets_sum": {
+                      "type": "string"
+                    },
+                    "contract": {
+                      "type": "string"
+                    },
+                    "conviction_price": {
+                      "type": "string"
+                    },
+                    "conviction_price_delta": {
+                      "type": "string"
+                    },
+                    "conviction_sum": {
+                      "type": "string"
+                    },
+                    "corpora_id": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "creator": {
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/UserPresenter"
+                        }
+                      ],
+                      "nullable": true
+                    },
+                    "creator_address": {
+                      "type": "string"
+                    },
+                    "creator_id": {
+                      "type": "string",
+                      "format": "uuid",
+                      "nullable": true
+                    },
+                    "description": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "display_name": {
+                      "type": "string"
+                    },
+                    "external_reference": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "id": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "identity_hash": {
+                      "type": "string"
+                    },
+                    "identity_id": {
+                      "type": "string"
+                    },
+                    "image": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "is_user": {
+                      "type": "boolean"
+                    },
+                    "num_positions": {
+                      "type": "integer",
+                      "format": "int64"
+                    },
+                    "predicate": {
+                      "type": "boolean"
+                    },
+                    "semantic": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "status": {
+                      "$ref": "#/components/schemas/Status"
+                    },
+                    "updated_at": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "user_asset_delta": {
+                      "type": "string"
+                    },
+                    "user_assets": {
+                      "type": "string"
+                    },
+                    "user_conviction": {
+                      "type": "string"
+                    },
+                    "vault_id": {
+                      "type": "string"
+                    },
+                    "vault_uuid": {
+                      "type": "string",
+                      "format": "uuid",
+                      "nullable": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/identity/:id/positions": {
+      "get": {
+        "tags": ["identity_positions"],
+        "operationId": "get_identity_positions",
+        "responses": {
+          "200": {
+            "description": "Get all identity positions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["page", "limit", "total", "data"],
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/PositionPresenter"
+                      }
+                    },
+                    "limit": {
+                      "type": "integer",
+                      "format": "int64"
+                    },
+                    "page": {
+                      "type": "integer",
+                      "format": "int64"
+                    },
+                    "total": {
+                      "type": "integer",
+                      "format": "int64"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/identity/search": {
+      "get": {
+        "tags": ["identities"],
+        "operationId": "search_identity",
+        "parameters": [
+          {
+            "name": "displayName",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          },
+          {
+            "name": "creator",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/Identifier"
+                }
+              ],
+              "nullable": true
+            }
+          },
+          {
+            "name": "userWallet",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/Status"
+                }
+              ],
+              "nullable": true
+            }
+          },
+          {
+            "name": "predicate",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "nullable": true
+            }
+          },
+          {
+            "name": "isUser",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "nullable": true
+            }
+          },
+          {
+            "name": "timeframe",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/TimeFrame"
+                }
+              ],
+              "nullable": true
+            }
+          },
+          {
+            "name": "paging",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/PaginatedRequest"
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/IdentitySort"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Search identities in paginated list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["page", "limit", "total", "data"],
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/IdentityPresenter"
+                      }
+                    },
+                    "limit": {
+                      "type": "integer",
+                      "format": "int64"
+                    },
+                    "page": {
+                      "type": "integer",
+                      "format": "int64"
+                    },
+                    "total": {
+                      "type": "integer",
+                      "format": "int64"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/positions": {
+      "post": {
+        "tags": ["positions"],
+        "operationId": "create_position",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewPosition"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Create a new position",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "id",
+                    "vault_type",
+                    "vault_id",
+                    "creator",
+                    "created_at",
+                    "updated_at",
+                    "status",
+                    "conviction",
+                    "assets",
+                    "fee",
+                    "share_price",
+                    "value",
+                    "contract"
+                  ],
+                  "properties": {
+                    "assets": {
+                      "type": "string"
+                    },
+                    "contract": {
+                      "type": "string"
+                    },
+                    "conviction": {
+                      "type": "string"
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "creator": {
+                      "type": "string"
+                    },
+                    "creator_id": {
+                      "type": "string",
+                      "format": "uuid",
+                      "nullable": true
+                    },
+                    "fee": {
+                      "type": "string"
+                    },
+                    "id": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "share_price": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "$ref": "#/components/schemas/Status"
+                    },
+                    "updated_at": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "value": {
+                      "type": "string"
+                    },
+                    "vault_id": {
+                      "type": "string"
+                    },
+                    "vault_type": {
+                      "$ref": "#/components/schemas/VaultType"
+                    },
+                    "vault_uuid": {
+                      "type": "string",
+                      "format": "uuid",
+                      "nullable": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/positions/:id": {
+      "get": {
+        "tags": ["positions"],
+        "operationId": "get_position_by_id",
+        "responses": {
+          "200": {
+            "description": "Get single position by id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "id",
+                    "vault_type",
+                    "vault_id",
+                    "creator",
+                    "created_at",
+                    "updated_at",
+                    "status",
+                    "conviction",
+                    "assets",
+                    "fee",
+                    "share_price",
+                    "value",
+                    "contract"
+                  ],
+                  "properties": {
+                    "assets": {
+                      "type": "string"
+                    },
+                    "contract": {
+                      "type": "string"
+                    },
+                    "conviction": {
+                      "type": "string"
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "creator": {
+                      "type": "string"
+                    },
+                    "creator_id": {
+                      "type": "string",
+                      "format": "uuid",
+                      "nullable": true
+                    },
+                    "fee": {
+                      "type": "string"
+                    },
+                    "id": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "share_price": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "$ref": "#/components/schemas/Status"
+                    },
+                    "updated_at": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "value": {
+                      "type": "string"
+                    },
+                    "vault_id": {
+                      "type": "string"
+                    },
+                    "vault_type": {
+                      "$ref": "#/components/schemas/VaultType"
+                    },
+                    "vault_uuid": {
+                      "type": "string",
+                      "format": "uuid",
+                      "nullable": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      },
+      "post": {
+        "tags": ["positions"],
+        "operationId": "update_position",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePosition"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Update an position",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "id",
+                    "vault_type",
+                    "vault_id",
+                    "creator",
+                    "created_at",
+                    "updated_at",
+                    "status",
+                    "conviction",
+                    "assets",
+                    "fee",
+                    "share_price",
+                    "value",
+                    "contract"
+                  ],
+                  "properties": {
+                    "assets": {
+                      "type": "string"
+                    },
+                    "contract": {
+                      "type": "string"
+                    },
+                    "conviction": {
+                      "type": "string"
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "creator": {
+                      "type": "string"
+                    },
+                    "creator_id": {
+                      "type": "string",
+                      "format": "uuid",
+                      "nullable": true
+                    },
+                    "fee": {
+                      "type": "string"
+                    },
+                    "id": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "share_price": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "$ref": "#/components/schemas/Status"
+                    },
+                    "updated_at": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "value": {
+                      "type": "string"
+                    },
+                    "vault_id": {
+                      "type": "string"
+                    },
+                    "vault_type": {
+                      "$ref": "#/components/schemas/VaultType"
+                    },
+                    "vault_uuid": {
+                      "type": "string",
+                      "format": "uuid",
+                      "nullable": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/positions/search": {
+      "get": {
+        "tags": ["positions"],
+        "operationId": "search_positions",
+        "parameters": [
+          {
+            "name": "creator",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/Identifier"
+                }
+              ],
+              "nullable": true
+            }
+          },
+          {
+            "name": "vault_uuid",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "nullable": true
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/Status"
+                }
+              ],
+              "nullable": true
+            }
+          },
+          {
+            "name": "conviction",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "nullable": true
+            }
+          },
+          {
+            "name": "paging",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/PaginatedRequest"
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/PositionSort"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Search positions in paginated list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["page", "limit", "total", "data"],
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/PositionPresenter"
+                      }
+                    },
+                    "limit": {
+                      "type": "integer",
+                      "format": "int64"
+                    },
+                    "page": {
+                      "type": "integer",
+                      "format": "int64"
+                    },
+                    "total": {
+                      "type": "integer",
+                      "format": "int64"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/query_builder": {
+      "get": {
+        "tags": ["query_builder"],
+        "operationId": "get_query_structure",
+        "responses": {
+          "200": {
+            "description": "Return the query builder data structure for use with FE typeahead"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      },
+      "post": {
+        "tags": ["query_builder"],
+        "operationId": "run_dynamic_query",
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DataSetQuery"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Return query results if the query in body is valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/IdentityPaginatedResponse"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ClaimPaginatedResponse"
+                    },
+                    {
+                      "$ref": "#/components/schemas/PositionPaginatedResponse"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/refresh": {
+      "post": {
+        "tags": ["auth"],
+        "operationId": "refresh",
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RefreshRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Refresh JWT and refresh token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["refreshToken"],
+                  "properties": {
+                    "refreshToken": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKey": []
+          }
+        ]
+      }
+    },
+    "/revoke": {
+      "post": {
+        "tags": ["auth"],
+        "operationId": "revoke",
+        "responses": {
+          "200": {
+            "description": "Revoke JWT token"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/users": {
+      "get": {
+        "tags": ["users"],
+        "operationId": "get_users",
+        "responses": {
+          "200": {
+            "description": "Get all users in paginated list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["page", "limit", "total", "data"],
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/UserPresenter"
+                      }
+                    },
+                    "limit": {
+                      "type": "integer",
+                      "format": "int64"
+                    },
+                    "page": {
+                      "type": "integer",
+                      "format": "int64"
+                    },
+                    "total": {
+                      "type": "integer",
+                      "format": "int64"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      },
+      "post": {
+        "tags": ["users"],
+        "operationId": "create_user",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpsertUser"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Create a new user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "id",
+                    "created_at",
+                    "updated_at",
+                    "wallet",
+                    "role"
+                  ],
+                  "properties": {
+                    "api_key": {
+                      "type": "string",
+                      "format": "uuid",
+                      "nullable": true
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "did": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "display_name": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "ens_name": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "id": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "image": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "last_login": {
+                      "type": "string",
+                      "format": "date-time",
+                      "nullable": true
+                    },
+                    "privy_id": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "role": {
+                      "$ref": "#/components/schemas/Role"
+                    },
+                    "updated_at": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "wallet": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKey": []
+          }
+        ]
+      }
+    },
+    "/users/:id": {
+      "put": {
+        "tags": ["users"],
+        "operationId": "update_user",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpsertUser"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Update a user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "id",
+                    "created_at",
+                    "updated_at",
+                    "wallet",
+                    "role"
+                  ],
+                  "properties": {
+                    "api_key": {
+                      "type": "string",
+                      "format": "uuid",
+                      "nullable": true
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "did": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "display_name": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "ens_name": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "id": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "image": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "last_login": {
+                      "type": "string",
+                      "format": "date-time",
+                      "nullable": true
+                    },
+                    "privy_id": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "role": {
+                      "$ref": "#/components/schemas/Role"
+                    },
+                    "updated_at": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "wallet": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": ["users"],
+        "operationId": "delete_user",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Id of user to delete",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Delete a user by id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "id",
+                    "created_at",
+                    "updated_at",
+                    "wallet",
+                    "role"
+                  ],
+                  "properties": {
+                    "api_key": {
+                      "type": "string",
+                      "format": "uuid",
+                      "nullable": true
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "did": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "display_name": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "ens_name": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "id": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "image": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "last_login": {
+                      "type": "string",
+                      "format": "date-time",
+                      "nullable": true
+                    },
+                    "privy_id": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "role": {
+                      "$ref": "#/components/schemas/Role"
+                    },
+                    "updated_at": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "wallet": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/users/:id/points": {
+      "put": {
+        "tags": ["users"],
+        "operationId": "update_user_points",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpsertUser"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Add points for user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "id",
+                    "created_at",
+                    "updated_at",
+                    "wallet",
+                    "role"
+                  ],
+                  "properties": {
+                    "api_key": {
+                      "type": "string",
+                      "format": "uuid",
+                      "nullable": true
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "did": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "display_name": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "ens_name": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "id": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "image": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "last_login": {
+                      "type": "string",
+                      "format": "date-time",
+                      "nullable": true
+                    },
+                    "privy_id": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "role": {
+                      "$ref": "#/components/schemas/Role"
+                    },
+                    "updated_at": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "wallet": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/users/:id/private": {
+      "get": {
+        "tags": ["users"],
+        "operationId": "get_user_by_id",
+        "responses": {
+          "200": {
+            "description": "Get single user by id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "id",
+                    "created_at",
+                    "updated_at",
+                    "wallet",
+                    "role"
+                  ],
+                  "properties": {
+                    "api_key": {
+                      "type": "string",
+                      "format": "uuid",
+                      "nullable": true
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "did": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "display_name": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "ens_name": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "id": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "image": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "last_login": {
+                      "type": "string",
+                      "format": "date-time",
+                      "nullable": true
+                    },
+                    "privy_id": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "role": {
+                      "$ref": "#/components/schemas/Role"
+                    },
+                    "updated_at": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "wallet": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/users/:id/totals": {
+      "get": {
+        "tags": ["users"],
+        "operationId": "get_user_totals",
+        "responses": {
+          "200": {
+            "description": "Get total position values for user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "wallet",
+                    "total_identities",
+                    "total_claims",
+                    "total_positions",
+                    "user_points",
+                    "total_position_value",
+                    "total_delta",
+                    "total_entry_fees",
+                    "total_exit_fees",
+                    "total_protocol_fee_paid"
+                  ],
+                  "properties": {
+                    "created_at": {
+                      "type": "string",
+                      "format": "date-time",
+                      "nullable": true
+                    },
+                    "display_name": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "ens_name": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "id": {
+                      "type": "string",
+                      "format": "uuid",
+                      "nullable": true
+                    },
+                    "image": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "privy_id": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "total_claims": {
+                      "type": "integer",
+                      "format": "int64"
+                    },
+                    "total_delta": {
+                      "type": "string"
+                    },
+                    "total_entry_fees": {
+                      "type": "string"
+                    },
+                    "total_exit_fees": {
+                      "type": "string"
+                    },
+                    "total_identities": {
+                      "type": "integer",
+                      "format": "int64"
+                    },
+                    "total_position_value": {
+                      "type": "string"
+                    },
+                    "total_positions": {
+                      "type": "integer",
+                      "format": "int64"
+                    },
+                    "total_protocol_fee_paid": {
+                      "type": "string"
+                    },
+                    "updated_at": {
+                      "type": "string",
+                      "format": "date-time",
+                      "nullable": true
+                    },
+                    "user_points": {
+                      "type": "integer",
+                      "format": "int64"
+                    },
+                    "wallet": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/users/apikey": {
+      "post": {
+        "tags": ["users"],
+        "operationId": "reissue_api_key",
+        "responses": {
+          "200": {
+            "description": "Re-issue API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "id",
+                    "created_at",
+                    "updated_at",
+                    "wallet",
+                    "role"
+                  ],
+                  "properties": {
+                    "api_key": {
+                      "type": "string",
+                      "format": "uuid",
+                      "nullable": true
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "did": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "display_name": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "ens_name": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "id": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "image": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "last_login": {
+                      "type": "string",
+                      "format": "date-time",
+                      "nullable": true
+                    },
+                    "privy_id": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "role": {
+                      "$ref": "#/components/schemas/Role"
+                    },
+                    "updated_at": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "wallet": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/users/identities": {
+      "get": {
+        "tags": ["users"],
+        "operationId": "get_user_identities",
+        "responses": {
+          "200": {
+            "description": "Get identities user has position on",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["page", "limit", "total", "data"],
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/IdentityPresenter"
+                      }
+                    },
+                    "limit": {
+                      "type": "integer",
+                      "format": "int64"
+                    },
+                    "page": {
+                      "type": "integer",
+                      "format": "int64"
+                    },
+                    "total": {
+                      "type": "integer",
+                      "format": "int64"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/users/positions": {
+      "get": {
+        "tags": ["users"],
+        "operationId": "get_users_positions",
+        "responses": {
+          "200": {
+            "description": "Get positions for user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["page", "limit", "total", "data"],
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/PositionPresenter"
+                      }
+                    },
+                    "limit": {
+                      "type": "integer",
+                      "format": "int64"
+                    },
+                    "page": {
+                      "type": "integer",
+                      "format": "int64"
+                    },
+                    "total": {
+                      "type": "integer",
+                      "format": "int64"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/users/totals": {
+      "get": {
+        "tags": ["users"],
+        "operationId": "get_all_users_totals",
+        "responses": {
+          "200": {
+            "description": "Get total position values for paginated set of users",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["page", "limit", "total", "data"],
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/UserTotalsPresenter"
+                      }
+                    },
+                    "limit": {
+                      "type": "integer",
+                      "format": "int64"
+                    },
+                    "page": {
+                      "type": "integer",
+                      "format": "int64"
+                    },
+                    "total": {
+                      "type": "integer",
+                      "format": "int64"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/users/wallet/:wallet": {
+      "get": {
+        "tags": ["users"],
+        "operationId": "get_user_by_wallet_public",
+        "responses": {
+          "200": {
+            "description": "Get single user by id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "id",
+                    "created_at",
+                    "updated_at",
+                    "wallet",
+                    "role"
+                  ],
+                  "properties": {
+                    "api_key": {
+                      "type": "string",
+                      "format": "uuid",
+                      "nullable": true
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "did": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "display_name": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "ens_name": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "id": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "image": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "last_login": {
+                      "type": "string",
+                      "format": "date-time",
+                      "nullable": true
+                    },
+                    "privy_id": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "role": {
+                      "$ref": "#/components/schemas/Role"
+                    },
+                    "updated_at": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "wallet": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/users/wallet/:wallet/private": {
+      "get": {
+        "tags": ["users"],
+        "operationId": "get_user_by_wallet",
+        "responses": {
+          "200": {
+            "description": "Get single user by id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "id",
+                    "created_at",
+                    "updated_at",
+                    "wallet",
+                    "role"
+                  ],
+                  "properties": {
+                    "api_key": {
+                      "type": "string",
+                      "format": "uuid",
+                      "nullable": true
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "did": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "display_name": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "ens_name": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "id": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "image": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "last_login": {
+                      "type": "string",
+                      "format": "date-time",
+                      "nullable": true
+                    },
+                    "privy_id": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "role": {
+                      "$ref": "#/components/schemas/Role"
+                    },
+                    "updated_at": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "wallet": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ActivityPaginatedResponse": {
+        "type": "object",
+        "required": ["page", "limit", "total", "data"],
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ActivityPresenter"
+            }
+          },
+          "limit": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "ActivityPresenter": {
+        "type": "object",
+        "required": [
+          "id",
+          "created_at",
+          "timestamp",
+          "event_type",
+          "contract",
+          "block_hash",
+          "excess_value",
+          "block_number",
+          "from_address",
+          "value",
+          "gas_price",
+          "max_fee_per_gas",
+          "gas",
+          "gas_used",
+          "cumulative_gas_used",
+          "effective_gas_price",
+          "block_height",
+          "raw_input_data",
+          "entry_fee",
+          "exit_fee",
+          "protocol_fee",
+          "fee_denominator",
+          "min_deposit",
+          "min_share",
+          "atom_cost",
+          "atom_creation_fee",
+          "total_assets",
+          "total_shares",
+          "share_price",
+          "vault_balance",
+          "vault_assets",
+          "vault_id",
+          "net_user_assets",
+          "total_asset_delta",
+          "shares_for_receiver",
+          "protocol_fee_paid"
+        ],
+        "properties": {
+          "admin": {
+            "type": "string",
+            "nullable": true
+          },
+          "atom_cost": {
+            "type": "string"
+          },
+          "atom_creation_fee": {
+            "type": "string"
+          },
+          "block_hash": {
+            "type": "string"
+          },
+          "block_height": {
+            "type": "string"
+          },
+          "block_number": {
+            "type": "string"
+          },
+          "contract": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "cumulative_gas_used": {
+            "type": "string"
+          },
+          "effective_gas_price": {
+            "type": "string"
+          },
+          "entry_fee": {
+            "type": "string"
+          },
+          "event_type": {
+            "$ref": "#/components/schemas/Event"
+          },
+          "excess_value": {
+            "type": "string"
+          },
+          "exit_fee": {
+            "type": "string"
+          },
+          "fee_denominator": {
+            "type": "string"
+          },
+          "from_address": {
+            "type": "string"
+          },
+          "gas": {
+            "type": "string"
+          },
+          "gas_price": {
+            "type": "string"
+          },
+          "gas_used": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "input_data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InputData"
+              }
+            ],
+            "nullable": true
+          },
+          "logs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LogType"
+            },
+            "nullable": true
+          },
+          "max_fee_per_gas": {
+            "type": "string"
+          },
+          "min_deposit": {
+            "type": "string"
+          },
+          "min_share": {
+            "type": "string"
+          },
+          "net_user_assets": {
+            "type": "string"
+          },
+          "protocol_fee": {
+            "type": "string"
+          },
+          "protocol_fee_paid": {
+            "type": "string"
+          },
+          "protocol_vault": {
+            "type": "string",
+            "nullable": true
+          },
+          "raw_input_data": {
+            "type": "string"
+          },
+          "share_price": {
+            "type": "string"
+          },
+          "shares_for_receiver": {
+            "type": "string"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "total_asset_delta": {
+            "type": "string"
+          },
+          "total_assets": {
+            "type": "string"
+          },
+          "total_shares": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          },
+          "vault_assets": {
+            "type": "string"
+          },
+          "vault_balance": {
+            "type": "string"
+          },
+          "vault_id": {
+            "type": "string"
+          }
+        }
+      },
+      "ActivityQuery": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/PaginatedRequest"
+          },
+          {
+            "$ref": "#/components/schemas/IdentitySort"
+          },
+          {
+            "type": "object",
+            "required": ["blockNumber", "vaultId"],
+            "properties": {
+              "blockHash": {
+                "type": "string",
+                "nullable": true
+              },
+              "blockNumber": {
+                "type": "string"
+              },
+              "contract": {
+                "type": "string",
+                "nullable": true
+              },
+              "creator": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Identifier"
+                  }
+                ],
+                "nullable": true
+              },
+              "eventType": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Event"
+                  }
+                ],
+                "nullable": true
+              },
+              "fromAddress": {
+                "type": "string",
+                "nullable": true
+              },
+              "vaultId": {
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "AtomCreated": {
+        "type": "object",
+        "required": ["atom_data", "vault_id"],
+        "properties": {
+          "atom_data": {
+            "type": "string",
+            "format": "binary"
+          },
+          "vault_id": {
+            "type": "string"
+          }
+        }
+      },
+      "ClaimAttribute": {
+        "oneOf": [
+          {
+            "type": "object",
+            "required": ["vaultId"],
+            "properties": {
+              "vaultId": {
+                "$ref": "#/components/schemas/VaultIdQuery"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": ["counterVaultId"],
+            "properties": {
+              "counterVaultId": {
+                "$ref": "#/components/schemas/CounterVaultIdQuery"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": ["subjectVaultId"],
+            "properties": {
+              "subjectVaultId": {
+                "$ref": "#/components/schemas/SubjectVaultIdQuery"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": ["objectVaultId"],
+            "properties": {
+              "objectVaultId": {
+                "$ref": "#/components/schemas/ObjectVaultIdQuery"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": ["predicateVaultId"],
+            "properties": {
+              "predicateVaultId": {
+                "$ref": "#/components/schemas/PredicateVaultIdQuery"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": ["creator"],
+            "properties": {
+              "creator": {
+                "$ref": "#/components/schemas/CreatorQuery"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": ["status"],
+            "properties": {
+              "status": {
+                "$ref": "#/components/schemas/StatusQuery"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": ["subjectDisplayName"],
+            "properties": {
+              "subjectDisplayName": {
+                "$ref": "#/components/schemas/SubjectNameQuery"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": ["objectDisplayName"],
+            "properties": {
+              "objectDisplayName": {
+                "$ref": "#/components/schemas/ObjectNameQuery"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": ["predicateDisplayName"],
+            "properties": {
+              "predicateDisplayName": {
+                "$ref": "#/components/schemas/PredicateNameQuery"
+              }
+            }
+          },
+          {
+            "type": "string",
+            "enum": ["noOp"]
+          }
+        ]
+      },
+      "ClaimPaginatedResponse": {
+        "type": "object",
+        "required": ["page", "limit", "total", "data"],
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ClaimPresenter"
+            }
+          },
+          "limit": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "ClaimPresenter": {
+        "type": "object",
+        "required": [
+          "claim_id",
+          "created_at",
+          "updated_at",
+          "status",
+          "user_conviction_for",
+          "user_conviction_against",
+          "num_positions",
+          "for_num_positions",
+          "for_assets_sum",
+          "assets_sum",
+          "for_conviction_sum",
+          "for_conviction_price",
+          "against_num_positions",
+          "against_assets_sum",
+          "against_conviction_sum",
+          "against_conviction_price",
+          "contract"
+        ],
+        "properties": {
+          "against_assets_sum": {
+            "type": "string"
+          },
+          "against_conviction_price": {
+            "type": "string"
+          },
+          "against_conviction_sum": {
+            "type": "string"
+          },
+          "against_num_positions": {
+            "type": "string"
+          },
+          "assets_sum": {
+            "type": "string"
+          },
+          "claim_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "contract": {
+            "type": "string"
+          },
+          "counter_vault_id": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "creator": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UserPresenter"
+              }
+            ],
+            "nullable": true
+          },
+          "for_assets_sum": {
+            "type": "string"
+          },
+          "for_conviction_price": {
+            "type": "string"
+          },
+          "for_conviction_sum": {
+            "type": "string"
+          },
+          "for_num_positions": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "num_positions": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "object": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IdentityPresenter"
+              }
+            ],
+            "nullable": true
+          },
+          "predicate": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IdentityPresenter"
+              }
+            ],
+            "nullable": true
+          },
+          "status": {
+            "$ref": "#/components/schemas/Status"
+          },
+          "subject": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IdentityPresenter"
+              }
+            ],
+            "nullable": true
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "user_conviction_against": {
+            "type": "string"
+          },
+          "user_conviction_for": {
+            "type": "string"
+          },
+          "vault_id": {
+            "type": "string"
+          }
+        }
+      },
+      "ClaimSort": {
+        "type": "object",
+        "properties": {
+          "direction": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SortDirection"
+              }
+            ],
+            "nullable": true
+          },
+          "sortBy": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ClaimSortColumn"
+              }
+            ],
+            "nullable": true
+          }
+        }
+      },
+      "ClaimSortColumn": {
+        "type": "string",
+        "enum": [
+          "VaultId",
+          "CounterVaultId",
+          "Creator",
+          "SubjectVaultId",
+          "ObjectVaultId",
+          "PredicateVaultId",
+          "CreatedAt",
+          "UpdatedAt",
+          "Status",
+          "NumPositions",
+          "ForNumPositions",
+          "AgainstNumPositions",
+          "ConvictionSum",
+          "ForConvictionSum",
+          "AgainstConvictionSum",
+          "AssetsSum",
+          "ForAssetsSum",
+          "AgainstAssetsSum"
+        ]
+      },
+      "Combinator": {
+        "type": "string",
+        "enum": ["and", "or"]
+      },
+      "CombinedSort": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IdentitySort"
+          },
+          {
+            "$ref": "#/components/schemas/ClaimSort"
+          },
+          {
+            "$ref": "#/components/schemas/PositionSort"
+          },
+          {
+            "$ref": "#/components/schemas/UserTotalsSort"
+          }
+        ]
+      },
+      "CounterVaultIdQuery": {
+        "type": "object",
+        "properties": {
+          "combinator": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Combinator"
+              }
+            ],
+            "nullable": true
+          },
+          "comparator": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NumericComparators"
+              }
+            ],
+            "nullable": true
+          },
+          "options": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "userValue": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/JsonNum"
+              }
+            ],
+            "nullable": true
+          }
+        }
+      },
+      "CreateAtom": {
+        "type": "object",
+        "required": ["atom_data"],
+        "properties": {
+          "atom_data": {
+            "type": "string",
+            "format": "binary"
+          }
+        }
+      },
+      "CreateTriple": {
+        "type": "object",
+        "required": ["subject_id", "predicate_id", "object_id"],
+        "properties": {
+          "object_id": {
+            "type": "string"
+          },
+          "predicate_id": {
+            "type": "string"
+          },
+          "subject_id": {
+            "type": "string"
+          }
+        }
+      },
+      "CreatorQuery": {
+        "type": "object",
+        "properties": {
+          "combinator": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Combinator"
+              }
+            ],
+            "nullable": true
+          },
+          "comparator": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/StringComparators"
+              }
+            ],
+            "nullable": true
+          },
+          "options": {
+            "type": "string",
+            "nullable": true
+          },
+          "userValue": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "DataSetQueries": {
+        "oneOf": [
+          {
+            "type": "object",
+            "required": ["identity"],
+            "properties": {
+              "identity": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/IdentityAttribute"
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": ["claim"],
+            "properties": {
+              "claim": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ClaimAttribute"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "DataSetQuery": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/PaginatedRequest"
+          },
+          {
+            "$ref": "#/components/schemas/DataSetQuerySort"
+          },
+          {
+            "type": "object",
+            "required": ["query"],
+            "properties": {
+              "query": {
+                "$ref": "#/components/schemas/DataSetQueries"
+              }
+            }
+          }
+        ]
+      },
+      "DataSetQuerySort": {
+        "type": "object",
+        "properties": {
+          "direction": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SortDirection"
+              }
+            ],
+            "nullable": true
+          },
+          "sortBy": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CombinedSort"
+              }
+            ],
+            "nullable": true
+          }
+        }
+      },
+      "DepositAtom": {
+        "type": "object",
+        "required": ["receiver", "id"],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "receiver": {
+            "type": "string"
+          }
+        }
+      },
+      "DepositTriple": {
+        "type": "object",
+        "required": ["receiver", "id"],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "receiver": {
+            "type": "string"
+          }
+        }
+      },
+      "Deposited": {
+        "type": "object",
+        "required": [
+          "vault_balance",
+          "user_assets_after_total_fees",
+          "shares_for_receiver",
+          "entry_fee",
+          "id"
+        ],
+        "properties": {
+          "entry_fee": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "shares_for_receiver": {
+            "type": "string"
+          },
+          "user_assets_after_total_fees": {
+            "type": "string"
+          },
+          "vault_balance": {
+            "type": "string"
+          }
+        }
+      },
+      "DescriptionQuery": {
+        "type": "object",
+        "properties": {
+          "combinator": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Combinator"
+              }
+            ],
+            "nullable": true
+          },
+          "comparator": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/StringComparators"
+              }
+            ],
+            "nullable": true
+          },
+          "options": {
+            "type": "string",
+            "nullable": true
+          },
+          "userValue": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "DidQuery": {
+        "type": "object",
+        "required": ["didSession"],
+        "properties": {
+          "didSession": {
+            "type": "string"
+          }
+        }
+      },
+      "DisplayNameQuery": {
+        "type": "object",
+        "properties": {
+          "combinator": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Combinator"
+              }
+            ],
+            "nullable": true
+          },
+          "comparator": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/StringComparators"
+              }
+            ],
+            "nullable": true
+          },
+          "options": {
+            "type": "string",
+            "nullable": true
+          },
+          "userValue": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "EnumComparators": {
+        "type": "string",
+        "enum": ["eq", "notEq"]
+      },
+      "Event": {
+        "type": "string",
+        "enum": [
+          "createAtom",
+          "createAtomCompressed",
+          "createTriple",
+          "currentSharePrice",
+          "deployAtomWallet",
+          "depositAtom",
+          "depositTriple",
+          "entryFeeAmount",
+          "exitFeeAmount",
+          "getVaultBalance",
+          "getTripleAtoms",
+          "getVaultStates",
+          "maxRedeem",
+          "redeemTriple",
+          "redeemAtom",
+          "setAdmin",
+          "setAtomCost",
+          "getVaultStateForUser"
+        ]
+      },
+      "ExternalReferenceQuery": {
+        "type": "object",
+        "properties": {
+          "combinator": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Combinator"
+              }
+            ],
+            "nullable": true
+          },
+          "comparator": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/StringComparators"
+              }
+            ],
+            "nullable": true
+          },
+          "options": {
+            "type": "string",
+            "nullable": true
+          },
+          "userValue": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "Identifier": {
+        "oneOf": [
+          {
+            "type": "number",
+            "format": "double"
+          },
+          {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0
+          },
+          {
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "type": "string"
+          }
+        ]
+      },
+      "IdentityAttribute": {
+        "oneOf": [
+          {
+            "type": "object",
+            "required": ["displayName"],
+            "properties": {
+              "displayName": {
+                "$ref": "#/components/schemas/DisplayNameQuery"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": ["ids"],
+            "properties": {
+              "ids": {
+                "$ref": "#/components/schemas/IdsQuery"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": ["creator"],
+            "properties": {
+              "creator": {
+                "$ref": "#/components/schemas/CreatorQuery"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": ["description"],
+            "properties": {
+              "description": {
+                "$ref": "#/components/schemas/DescriptionQuery"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": ["identityId"],
+            "properties": {
+              "identityId": {
+                "$ref": "#/components/schemas/IdentityIdQuery"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": ["semantic"],
+            "properties": {
+              "semantic": {
+                "$ref": "#/components/schemas/SemanticQuery"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": ["externalReference"],
+            "properties": {
+              "externalReference": {
+                "$ref": "#/components/schemas/ExternalReferenceQuery"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": ["vaultId"],
+            "properties": {
+              "vaultId": {
+                "$ref": "#/components/schemas/VaultIdQuery"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": ["status"],
+            "properties": {
+              "status": {
+                "$ref": "#/components/schemas/StatusQuery"
+              }
+            }
+          },
+          {
+            "type": "string",
+            "enum": ["noOp"]
+          }
+        ]
+      },
+      "IdentityId": {
+        "oneOf": [
+          {
+            "type": "object",
+            "required": ["Did"],
+            "properties": {
+              "Did": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": ["Wallet"],
+            "properties": {
+              "Wallet": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": ["Other"],
+            "properties": {
+              "Other": {
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "IdentityIdQuery": {
+        "type": "object",
+        "properties": {
+          "combinator": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Combinator"
+              }
+            ],
+            "nullable": true
+          },
+          "comparator": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/StringComparators"
+              }
+            ],
+            "nullable": true
+          },
+          "options": {
+            "type": "string",
+            "nullable": true
+          },
+          "userValue": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "IdentityPaginatedResponse": {
+        "type": "object",
+        "required": ["page", "limit", "total", "data"],
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IdentityPresenter"
+            }
+          },
+          "limit": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "IdentityPresenter": {
+        "type": "object",
+        "required": [
+          "id",
+          "identity_id",
+          "predicate",
+          "is_user",
+          "identity_hash",
+          "display_name",
+          "creator_address",
+          "status",
+          "created_at",
+          "num_positions",
+          "updated_at",
+          "vault_id",
+          "assets_sum",
+          "conviction_sum",
+          "conviction_price",
+          "contract",
+          "asset_delta",
+          "user_asset_delta",
+          "conviction_price_delta",
+          "user_conviction",
+          "user_assets"
+        ],
+        "properties": {
+          "asset_delta": {
+            "type": "string"
+          },
+          "assets_sum": {
+            "type": "string"
+          },
+          "contract": {
+            "type": "string"
+          },
+          "conviction_price": {
+            "type": "string"
+          },
+          "conviction_price_delta": {
+            "type": "string"
+          },
+          "conviction_sum": {
+            "type": "string"
+          },
+          "corpora_id": {
+            "type": "string",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "creator": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UserPresenter"
+              }
+            ],
+            "nullable": true
+          },
+          "creator_address": {
+            "type": "string"
+          },
+          "creator_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "display_name": {
+            "type": "string"
+          },
+          "external_reference": {
+            "type": "string",
+            "nullable": true
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "identity_hash": {
+            "type": "string"
+          },
+          "identity_id": {
+            "type": "string"
+          },
+          "image": {
+            "type": "string",
+            "nullable": true
+          },
+          "is_user": {
+            "type": "boolean"
+          },
+          "num_positions": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "predicate": {
+            "type": "boolean"
+          },
+          "semantic": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "$ref": "#/components/schemas/Status"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "user_asset_delta": {
+            "type": "string"
+          },
+          "user_assets": {
+            "type": "string"
+          },
+          "user_conviction": {
+            "type": "string"
+          },
+          "vault_id": {
+            "type": "string"
+          },
+          "vault_uuid": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          }
+        }
+      },
+      "IdentitySort": {
+        "type": "object",
+        "properties": {
+          "direction": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SortDirection"
+              }
+            ],
+            "nullable": true
+          },
+          "sortBy": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SortColumn"
+              }
+            ],
+            "nullable": true
+          }
+        }
+      },
+      "IdsQuery": {
+        "type": "object",
+        "properties": {
+          "combinator": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Combinator"
+              }
+            ],
+            "nullable": true
+          },
+          "comparator": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/VecComparators"
+              }
+            ],
+            "nullable": true
+          },
+          "options": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "nullable": true
+          },
+          "userValue": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "nullable": true
+          }
+        }
+      },
+      "InputData": {
+        "oneOf": [
+          {
+            "type": "object",
+            "required": ["CreateAtom"],
+            "properties": {
+              "CreateAtom": {
+                "$ref": "#/components/schemas/CreateAtom"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": ["CreateTriple"],
+            "properties": {
+              "CreateTriple": {
+                "$ref": "#/components/schemas/CreateTriple"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": ["DepositAtom"],
+            "properties": {
+              "DepositAtom": {
+                "$ref": "#/components/schemas/DepositAtom"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": ["DepositTriple"],
+            "properties": {
+              "DepositTriple": {
+                "$ref": "#/components/schemas/DepositTriple"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": ["RedeemAtom"],
+            "properties": {
+              "RedeemAtom": {
+                "$ref": "#/components/schemas/RedeemAtom"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": ["RedeemTriple"],
+            "properties": {
+              "RedeemTriple": {
+                "$ref": "#/components/schemas/RedeemTriple"
+              }
+            }
+          },
+          {
+            "type": "string",
+            "enum": ["NoOp"]
+          }
+        ]
+      },
+      "InputFile": {
+        "oneOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "string"
+          }
+        ]
+      },
+      "IsCompleteQuery": {
+        "type": "object",
+        "properties": {
+          "combinator": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Combinator"
+              }
+            ],
+            "nullable": true
+          },
+          "comparator": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/EnumComparators"
+              }
+            ],
+            "nullable": true
+          },
+          "options": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "userValue": {
+            "type": "boolean",
+            "nullable": true
+          }
+        }
+      },
+      "JsonNum": {
+        "oneOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0
+          }
+        ]
+      },
+      "LinkedAccountPresenter": {
+        "type": "object",
+        "required": ["id", "user_id", "link_id", "created_at", "updated_at"],
+        "properties": {
+          "account_type": {
+            "type": "string",
+            "nullable": true
+          },
+          "active": {
+            "type": "boolean"
+          },
+          "address": {
+            "type": "string",
+            "nullable": true
+          },
+          "chain_type": {
+            "type": "string",
+            "nullable": true
+          },
+          "connector_type": {
+            "type": "string",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "link_id": {
+            "type": "string"
+          },
+          "privy_id": {
+            "type": "string",
+            "nullable": true
+          },
+          "total": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "user_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "verified_at": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "wallet_client": {
+            "type": "string",
+            "nullable": true
+          },
+          "wallet_client_type": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "LinkedAccountQuery": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/PaginatedRequest"
+          },
+          {
+            "$ref": "#/components/schemas/LinkedAccountSort"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "account_type": {
+                "type": "string",
+                "nullable": true
+              },
+              "active": {
+                "type": "boolean"
+              },
+              "address": {
+                "type": "string",
+                "nullable": true
+              },
+              "chain_type": {
+                "type": "string",
+                "nullable": true
+              },
+              "connector_type": {
+                "type": "string",
+                "nullable": true
+              },
+              "privy_id": {
+                "type": "string",
+                "nullable": true
+              },
+              "user_id": {
+                "type": "string",
+                "format": "uuid",
+                "nullable": true
+              },
+              "wallet_client": {
+                "type": "string",
+                "nullable": true
+              },
+              "wallet_client_type": {
+                "type": "string",
+                "nullable": true
+              }
+            }
+          }
+        ]
+      },
+      "LinkedAccountSort": {
+        "type": "object",
+        "properties": {
+          "direction": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SortDirection"
+              }
+            ],
+            "nullable": true
+          },
+          "sortBy": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SortColumn"
+              }
+            ],
+            "nullable": true
+          }
+        }
+      },
+      "LogType": {
+        "oneOf": [
+          {
+            "type": "object",
+            "required": ["AtomCreated"],
+            "properties": {
+              "AtomCreated": {
+                "$ref": "#/components/schemas/AtomCreated"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": ["Deposited"],
+            "properties": {
+              "Deposited": {
+                "$ref": "#/components/schemas/Deposited"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": ["TripleCreated"],
+            "properties": {
+              "TripleCreated": {
+                "$ref": "#/components/schemas/TripleCreated"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": ["Redeemed"],
+            "properties": {
+              "Redeemed": {
+                "$ref": "#/components/schemas/Redeemed"
+              }
+            }
+          },
+          {
+            "type": "string",
+            "enum": ["NoOp"]
+          }
+        ]
+      },
+      "NewClaim": {
+        "type": "object",
+        "required": ["creator", "subject", "object", "predicate", "contract"],
+        "properties": {
+          "contract": {
+            "type": "string"
+          },
+          "counter_vault_id": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Identifier"
+              }
+            ],
+            "nullable": true
+          },
+          "counter_vault_uuid": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "creator": {
+            "type": "string"
+          },
+          "creator_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "object": {
+            "$ref": "#/components/schemas/Identifier"
+          },
+          "object_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "predicate": {
+            "$ref": "#/components/schemas/Identifier"
+          },
+          "predicate_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "subject": {
+            "$ref": "#/components/schemas/Identifier"
+          },
+          "subject_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "vault_id": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Identifier"
+              }
+            ],
+            "nullable": true
+          },
+          "vault_uuid": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          }
+        }
+      },
+      "NewLinkedAccount": {
+        "type": "object",
+        "required": ["link_id", "user_id"],
+        "properties": {
+          "account_type": {
+            "type": "string",
+            "nullable": true
+          },
+          "active": {
+            "type": "boolean"
+          },
+          "add_points": {
+            "type": "boolean"
+          },
+          "address": {
+            "type": "string",
+            "nullable": true
+          },
+          "chain_type": {
+            "type": "string",
+            "nullable": true
+          },
+          "connector_type": {
+            "type": "string",
+            "nullable": true
+          },
+          "link_id": {
+            "type": "string"
+          },
+          "privy_id": {
+            "type": "string",
+            "nullable": true
+          },
+          "user_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "verified_at": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "wallet_client": {
+            "type": "string",
+            "nullable": true
+          },
+          "wallet_client_type": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "NewPosition": {
+        "type": "object",
+        "required": [
+          "creator",
+          "vault_id",
+          "shares",
+          "share_price",
+          "assets",
+          "fee",
+          "contract",
+          "value"
+        ],
+        "properties": {
+          "assets": {
+            "type": "string"
+          },
+          "contract": {
+            "type": "string"
+          },
+          "creator": {
+            "type": "string"
+          },
+          "creator_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "fee": {
+            "type": "string"
+          },
+          "share_price": {
+            "type": "string"
+          },
+          "shares": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          },
+          "vault_id": {
+            "$ref": "#/components/schemas/Identifier"
+          },
+          "vault_type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/VaultType"
+              }
+            ],
+            "nullable": true
+          },
+          "vault_uuid": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          }
+        }
+      },
+      "NumericComparators": {
+        "type": "string",
+        "enum": ["eq", "lte", "lt", "gt", "gte", "notEq"]
+      },
+      "ObjectNameQuery": {
+        "type": "object",
+        "properties": {
+          "combinator": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Combinator"
+              }
+            ],
+            "nullable": true
+          },
+          "comparator": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/StringComparators"
+              }
+            ],
+            "nullable": true
+          },
+          "options": {
+            "type": "string",
+            "nullable": true
+          },
+          "userValue": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "ObjectVaultIdQuery": {
+        "type": "object",
+        "properties": {
+          "combinator": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Combinator"
+              }
+            ],
+            "nullable": true
+          },
+          "comparator": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NumericComparators"
+              }
+            ],
+            "nullable": true
+          },
+          "options": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "userValue": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/JsonNum"
+              }
+            ],
+            "nullable": true
+          }
+        }
+      },
+      "PaginatedRequest": {
+        "type": "object",
+        "required": ["page", "offset", "limit"],
+        "properties": {
+          "limit": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0
+          },
+          "offset": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0
+          },
+          "page": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0
+          }
+        }
+      },
+      "PointsRequest": {
+        "type": "object",
+        "required": ["points"],
+        "properties": {
+          "points": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "PositionPaginatedResponse": {
+        "type": "object",
+        "required": ["page", "limit", "total", "data"],
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PositionPresenter"
+            }
+          },
+          "limit": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "PositionPresenter": {
+        "type": "object",
+        "required": [
+          "id",
+          "direction",
+          "vault_id",
+          "created_at",
+          "updated_at",
+          "conviction",
+          "share_price",
+          "assets",
+          "fee",
+          "contract",
+          "value",
+          "user_asset_delta"
+        ],
+        "properties": {
+          "assets": {
+            "type": "string"
+          },
+          "contract": {
+            "type": "string"
+          },
+          "conviction": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "creator_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "direction": {
+            "$ref": "#/components/schemas/VaultType"
+          },
+          "fee": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "share_price": {
+            "type": "string"
+          },
+          "total": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "user": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UserPresenter"
+              }
+            ],
+            "nullable": true
+          },
+          "user_asset_delta": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          },
+          "vault_id": {
+            "type": "string"
+          }
+        }
+      },
+      "PositionSort": {
+        "type": "object",
+        "properties": {
+          "direction": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SortDirection"
+              }
+            ],
+            "nullable": true
+          },
+          "sortBy": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PositionSortColumn"
+              }
+            ],
+            "nullable": true
+          }
+        }
+      },
+      "PositionSortColumn": {
+        "type": "string",
+        "enum": ["CreatedAt", "UpdatedAt", "Conviction", "Assets"]
+      },
+      "PredicateNameQuery": {
+        "type": "object",
+        "properties": {
+          "combinator": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Combinator"
+              }
+            ],
+            "nullable": true
+          },
+          "comparator": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/StringComparators"
+              }
+            ],
+            "nullable": true
+          },
+          "options": {
+            "type": "string",
+            "nullable": true
+          },
+          "userValue": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "PredicateVaultIdQuery": {
+        "type": "object",
+        "properties": {
+          "combinator": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Combinator"
+              }
+            ],
+            "nullable": true
+          },
+          "comparator": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NumericComparators"
+              }
+            ],
+            "nullable": true
+          },
+          "options": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "userValue": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/JsonNum"
+              }
+            ],
+            "nullable": true
+          }
+        }
+      },
+      "RedeemAtom": {
+        "type": "object",
+        "required": ["receiver", "shares", "id"],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "receiver": {
+            "type": "string"
+          },
+          "shares": {
+            "type": "string"
+          }
+        }
+      },
+      "RedeemTriple": {
+        "type": "object",
+        "required": ["receiver", "shares", "id"],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "receiver": {
+            "type": "string"
+          },
+          "shares": {
+            "type": "string"
+          }
+        }
+      },
+      "Redeemed": {
+        "type": "object",
+        "required": [
+          "vault_balance",
+          "assets_for_receiver",
+          "shares",
+          "exit_fee",
+          "id"
+        ],
+        "properties": {
+          "assets_for_receiver": {
+            "type": "string"
+          },
+          "exit_fee": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "shares": {
+            "type": "string"
+          },
+          "vault_balance": {
+            "type": "string"
+          }
+        }
+      },
+      "RefreshRequest": {
+        "type": "object",
+        "required": ["refreshToken"],
+        "properties": {
+          "refreshToken": {
+            "type": "string"
+          }
+        }
+      },
+      "Role": {
+        "type": "string",
+        "enum": ["User", "Admin", "Atom"]
+      },
+      "SemanticQuery": {
+        "type": "object",
+        "properties": {
+          "combinator": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Combinator"
+              }
+            ],
+            "nullable": true
+          },
+          "comparator": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/StringComparators"
+              }
+            ],
+            "nullable": true
+          },
+          "options": {
+            "type": "string",
+            "nullable": true
+          },
+          "userValue": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "SortColumn": {
+        "type": "string",
+        "enum": [
+          "IdentityId",
+          "DisplayName",
+          "Creator",
+          "NumPositions",
+          "AssetsSum",
+          "AssetsPrice",
+          "Description",
+          "CreatedAt",
+          "UpdatedAt",
+          "Status",
+          "SharesSum",
+          "ConvictionSum",
+          "ConvictionPrice",
+          "AssetDelta",
+          "ConvictionPriceDelta",
+          "UserConviction",
+          "UserAssets",
+          "UserAssetDelta"
+        ]
+      },
+      "SortDirection": {
+        "type": "string",
+        "enum": ["asc", "desc"]
+      },
+      "Status": {
+        "type": "string",
+        "enum": ["pending", "complete", "removed", "error"]
+      },
+      "StatusExplainer": {
+        "type": "string",
+        "enum": ["Pending", "Complete", "Removed"]
+      },
+      "StatusQuery": {
+        "type": "object",
+        "properties": {
+          "combinator": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Combinator"
+              }
+            ],
+            "nullable": true
+          },
+          "comparator": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/EnumComparators"
+              }
+            ],
+            "nullable": true
+          },
+          "options": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/StatusExplainer"
+              }
+            ],
+            "nullable": true
+          },
+          "userValue": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Status"
+              }
+            ],
+            "nullable": true
+          }
+        }
+      },
+      "StringComparators": {
+        "type": "string",
+        "enum": ["eq", "contains", "notEq"]
+      },
+      "SubjectNameQuery": {
+        "type": "object",
+        "properties": {
+          "combinator": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Combinator"
+              }
+            ],
+            "nullable": true
+          },
+          "comparator": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/StringComparators"
+              }
+            ],
+            "nullable": true
+          },
+          "options": {
+            "type": "string",
+            "nullable": true
+          },
+          "userValue": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "SubjectVaultIdQuery": {
+        "type": "object",
+        "properties": {
+          "combinator": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Combinator"
+              }
+            ],
+            "nullable": true
+          },
+          "comparator": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NumericComparators"
+              }
+            ],
+            "nullable": true
+          },
+          "options": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "userValue": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/JsonNum"
+              }
+            ],
+            "nullable": true
+          }
+        }
+      },
+      "TimeFrame": {
+        "type": "string",
+        "enum": [
+          "lastMinute",
+          "last5Minutes",
+          "last10Minutes",
+          "lastHour",
+          "last4Hours",
+          "lastDay",
+          "lastWeek",
+          "lastMonth",
+          "any"
+        ]
+      },
+      "TripleCreated": {
+        "type": "object",
+        "required": ["subject_id", "predicate_id", "object_id", "vault_id"],
+        "properties": {
+          "object_id": {
+            "type": "string"
+          },
+          "predicate_id": {
+            "type": "string"
+          },
+          "subject_id": {
+            "type": "string"
+          },
+          "vault_id": {
+            "type": "string"
+          }
+        }
+      },
+      "UpdateClaim": {
+        "type": "object",
+        "required": ["creator"],
+        "properties": {
+          "counter_vault_id": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Identifier"
+              }
+            ],
+            "nullable": true
+          },
+          "counter_vault_uuid": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "creator": {
+            "type": "string"
+          },
+          "creator_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "object": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Identifier"
+              }
+            ],
+            "nullable": true
+          },
+          "object_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "predicate": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Identifier"
+              }
+            ],
+            "nullable": true
+          },
+          "predicate_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Status"
+              }
+            ],
+            "nullable": true
+          },
+          "subject": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Identifier"
+              }
+            ],
+            "nullable": true
+          },
+          "subject_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "vault_id": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Identifier"
+              }
+            ],
+            "nullable": true
+          },
+          "vault_uuid": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          }
+        }
+      },
+      "UpdatePosition": {
+        "type": "object",
+        "required": ["shares", "share_price", "assets", "fee", "value"],
+        "properties": {
+          "assets": {
+            "type": "string"
+          },
+          "creator": {
+            "type": "string",
+            "nullable": true
+          },
+          "creator_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "fee": {
+            "type": "string"
+          },
+          "share_price": {
+            "type": "string"
+          },
+          "shares": {
+            "type": "string"
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Status"
+              }
+            ],
+            "nullable": true
+          },
+          "value": {
+            "type": "string"
+          },
+          "vault_id": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Identifier"
+              }
+            ],
+            "nullable": true
+          },
+          "vault_type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/VaultType"
+              }
+            ],
+            "nullable": true
+          },
+          "vault_uuid": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          }
+        }
+      },
+      "UpsertUser": {
+        "type": "object",
+        "required": ["privy_id"],
+        "properties": {
+          "api_key": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "did": {
+            "type": "string",
+            "nullable": true
+          },
+          "display_name": {
+            "type": "string",
+            "nullable": true
+          },
+          "ens_name": {
+            "type": "string",
+            "nullable": true
+          },
+          "image": {
+            "type": "string",
+            "nullable": true
+          },
+          "privy_id": {
+            "type": "string"
+          },
+          "role": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Role"
+              }
+            ],
+            "nullable": true
+          },
+          "wallet": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "User": {
+        "type": "object",
+        "required": ["id", "created_at", "updated_at", "wallet", "role"],
+        "properties": {
+          "api_key": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "did": {
+            "type": "string",
+            "nullable": true
+          },
+          "display_name": {
+            "type": "string",
+            "nullable": true
+          },
+          "ens_name": {
+            "type": "string",
+            "nullable": true
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "image": {
+            "type": "string",
+            "nullable": true
+          },
+          "last_login": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "privy_id": {
+            "type": "string",
+            "nullable": true
+          },
+          "role": {
+            "$ref": "#/components/schemas/Role"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "wallet": {
+            "type": "string"
+          }
+        }
+      },
+      "UserPoints": {
+        "type": "object",
+        "required": ["id", "created_at", "updated_at", "wallet", "points"],
+        "properties": {
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "points": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "user_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "wallet": {
+            "type": "string"
+          }
+        }
+      },
+      "UserPresenter": {
+        "type": "object",
+        "required": ["wallet"],
+        "properties": {
+          "display_name": {
+            "type": "string",
+            "nullable": true
+          },
+          "ens_name": {
+            "type": "string",
+            "nullable": true
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "image": {
+            "type": "string",
+            "nullable": true
+          },
+          "privy_id": {
+            "type": "string",
+            "nullable": true
+          },
+          "total": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "wallet": {
+            "type": "string"
+          }
+        }
+      },
+      "UserTotalPaginatedResponse": {
+        "type": "object",
+        "required": ["page", "limit", "total", "data"],
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserTotalsPresenter"
+            }
+          },
+          "limit": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "UserTotalsPresenter": {
+        "type": "object",
+        "required": [
+          "wallet",
+          "total_identities",
+          "total_claims",
+          "total_positions",
+          "user_points",
+          "total_position_value",
+          "total_delta",
+          "total_entry_fees",
+          "total_exit_fees",
+          "total_protocol_fee_paid"
+        ],
+        "properties": {
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "display_name": {
+            "type": "string",
+            "nullable": true
+          },
+          "ens_name": {
+            "type": "string",
+            "nullable": true
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "image": {
+            "type": "string",
+            "nullable": true
+          },
+          "privy_id": {
+            "type": "string",
+            "nullable": true
+          },
+          "total_claims": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "total_delta": {
+            "type": "string"
+          },
+          "total_entry_fees": {
+            "type": "string"
+          },
+          "total_exit_fees": {
+            "type": "string"
+          },
+          "total_identities": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "total_position_value": {
+            "type": "string"
+          },
+          "total_positions": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "total_protocol_fee_paid": {
+            "type": "string"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "user_points": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "wallet": {
+            "type": "string"
+          }
+        }
+      },
+      "UserTotalsQuery": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/PaginatedRequest"
+          },
+          {
+            "$ref": "#/components/schemas/UserTotalsSort"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "timeframe": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/TimeFrame"
+                  }
+                ],
+                "nullable": true
+              }
+            }
+          }
+        ]
+      },
+      "UserTotalsSort": {
+        "type": "object",
+        "properties": {
+          "direction": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SortDirection"
+              }
+            ],
+            "nullable": true
+          },
+          "sortBy": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SortColumn"
+              }
+            ],
+            "nullable": true
+          }
+        }
+      },
+      "VaultIdQuery": {
+        "type": "object",
+        "properties": {
+          "combinator": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Combinator"
+              }
+            ],
+            "nullable": true
+          },
+          "comparator": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NumericComparators"
+              }
+            ],
+            "nullable": true
+          },
+          "options": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "userValue": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/JsonNum"
+              }
+            ],
+            "nullable": true
+          }
+        }
+      },
+      "VaultType": {
+        "type": "string",
+        "enum": ["for", "against"]
+      },
+      "VecComparators": {
+        "type": "string",
+        "enum": ["in", "notIn"]
+      }
+    }
+  }
+}
