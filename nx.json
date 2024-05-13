@@ -35,15 +35,8 @@
     }
   },
   "release": {
-    "projects": ["apps/*", "packages/*"],
     "version": {
-      "preVersionCommand": "pnpm dlx nx run-many -t build --projects='apps/*,packages/*'",
-      "conventionalCommits": true
-    },
-    "changelog": {
-      "workspaceChangelog": {
-        "createRelease": "github"
-      }
+      "preVersionCommand": "pnpm dlx nx run-many -t build"
     }
   },
   "plugins": [
