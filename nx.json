@@ -1,5 +1,10 @@
 {
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
+  "defaultBase": "main",
+  "namedInputs": {
+    "default": ["{projectRoot}/**/*", "sharedGlobals"],
+    "sharedGlobals": ["{workspaceRoot}/.github/workflows/ci.yml"]
+  },
   "targetDefaults": {
     "build": {
       "dependsOn": ["^build", "typecheck"],
@@ -29,7 +34,6 @@
       "inputs": ["default", "^default"]
     }
   },
-  "defaultBase": "main",
   "release": {
     "projects": ["apps/*", "packages/*"],
     "version": {
