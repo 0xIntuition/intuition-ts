@@ -1,8 +1,14 @@
-export default {
+import { defineConfig } from '@hey-api/openapi-ts'
+
+export default defineConfig({
   client: 'axios',
   input: './swagger.json',
   output: {
-    lint: 'eslint',
-    path: 'libs/api-client/src',
+    format: 'prettier',
+    path: 'libs/api-client',
   },
-}
+  types: {
+    enums: 'javascript',
+  },
+  schemas: false,
+})

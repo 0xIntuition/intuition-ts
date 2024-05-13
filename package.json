@@ -22,12 +22,14 @@
     "prettier": "prettier --write .",
     "prettier:silent": "prettier --write . --log-level=silent",
     "pre-commit": "pnpm lint && pretty-quick --verbose --staged",
-    "prepare": "husky"
+    "prepare": "husky",
+    "codegen": "openapi-ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@hey-api/openapi-ts": "^0.44.0",
     "@nrwl/eslint-plugin-nx": "^18.3.4",
     "@nrwl/node": "^18.3.4",
     "@nx/devkit": "18.3.4",
@@ -83,6 +85,7 @@
     "@remix-run/node": "^2.8.1",
     "@remix-run/react": "^2.8.1",
     "@remix-run/serve": "^2.8.1",
+    "axios": "^1.6.8",
     "isbot": "^4.4.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
