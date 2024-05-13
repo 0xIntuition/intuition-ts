@@ -37,11 +37,6 @@
         "react": {
           "version": "detect"
         },
-        "formComponents": ["Form"],
-        "linkComponents": [
-          { "name": "Link", "linkAttribute": "to" },
-          { "name": "NavLink", "linkAttribute": "to" }
-        ],
         "import/resolver": {
           "typescript": {
             "project": ["packages/*/tsconfig.json", "apps/*/tsconfig.json"]
@@ -71,9 +66,11 @@
       ]
     },
     {
-      "files": "*.json",
+      "files": ["{package,project}.json"],
       "parser": "jsonc-eslint-parser",
-      "rules": {}
+      "rules": {
+        "@nx/dependency-checks": "off"
+      }
     }
   ]
 }

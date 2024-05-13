@@ -12,11 +12,12 @@
     "outDir": "./dist",
     "skipLibCheck": true,
     "target": "ESNext",
+    "strict": true,
     "paths": {
       "@/*": ["src/*"],
       "@intuition-ts/1ui": ["packages/1ui/src/index.ts"],
       "@intuition-ts/automation-tools": ["tools/src/index.ts"],
-      "@intuition-ts/core": ["packages/core/src/index.ts"]
+      "@intuition-ts/protocol": ["packages/protocol/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "dist", "**/*.spec.ts"]

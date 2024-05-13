@@ -1,8 +1,9 @@
 ## Affected Packages
 
-- [ ] Portal
-- [ ] 1UI
-- [ ] Core
+- [ ] portal
+- [ ] 1ui
+- [ ] protocol
+- [ ] tools
 
 ## Overview
 
