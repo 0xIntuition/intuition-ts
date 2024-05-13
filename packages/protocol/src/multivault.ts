@@ -36,6 +36,97 @@ export class Multivault {
   }
 
   /**
+   * Returns the general configuration of the multivault
+   */
+  public async getGeneralConfig() {
+    const [
+      admin,
+      protocolVault,
+      feeDenominator,
+      minDeposit,
+      minShare,
+      atomUriMaxLength,
+      decimalPrecision,
+      minDelay,
+    ] = await this.contract.read.generalConfig()
+    return {
+      admin,
+      protocolVault,
+      feeDenominator,
+      minDeposit,
+      minShare,
+      atomUriMaxLength,
+      decimalPrecision,
+      minDelay,
+    }
+  }
+
+  /**
+   * Returns the fees of the multivault
+   */
+  public async getVaultFees() {
+    const [entryFee, exitFee, protocolFee] = await this.contract.read.vaultFees(
+      [0n],
+    )
+    return { entryFee, exitFee, protocolFee }
+  }
+
+  /**
+   * Returns the atom configuration of the multivault
+   */
+  public async getAtomConfig() {
+    const [atomWalletInitialDepositAmount, atomCreationProtocolFee] =
+      await this.contract.read.atomConfig()
+    return {
+      atomWalletInitialDepositAmount,
+      atomCreationProtocolFee,
+    }
+  }
+
+  /**
+   * Returns the triple configuration of the multivault
+   */
+  public async getTripleConfig() {
+    const [
+      tripleCreationProtocolFee,
+      atomDepositFractionOnTripleCreation,
+      atomDepositFractionForTriple,
+    ] = await this.contract.read.tripleConfig()
+    return {
+      tripleCreationProtocolFee,
+      atomDepositFractionOnTripleCreation,
+      atomDepositFractionForTriple,
+    }
+  }
+
+  /**
+   * Returns the state of the vault with the given id
+   *
+   * @param vaultId - vault id to get state for
+   * @returns total assets and total shares for the given vault id
+   * @throws if the vault id does not exist
+   */
+  public async getVaultState(vaultId: bigint) {
+    const [totalAssets, totalShares] = await this.contract.read.vaults([
+      vaultId,
+    ])
+    return { totalAssets, totalShares }
+  }
+
+  /**
+   * Returns the state of the vault with the given id for the given user
+   *
+   * @param vaultId - vault id to get state for
+   * @param user - user to get state for
+   * @returns shares and total user assets for the given vault id and user
+   */
+  public async getVaultStateForUser(vaultId: bigint, user: Address) {
+    const [shares, totalUserAssets] =
+      await this.contract.read.getVaultStateForUser([vaultId, user])
+    return { shares, totalUserAssets }
+  }
+
+  /**
    * Returns the cost of creating an atom
    */
   public async getAtomCost() {
@@ -178,5 +269,41 @@ export class Multivault {
     const shares = depositedEvents[0].args.sharesForReceiver
 
     return { shares, hash, events: parseEventLogs({ abi, logs }) }
+  }
+
+  /**
+   * Redeem assets from a vault
+   *
+   * @param vaultId - vault id of the atom
+   * @param shares - amount of shares to withdraw
+   * @param receiver - optional address to receive assets
+   * @returns transaction assets, transaction hash and events
+   */
+  public async redeemAtom(vaultId: bigint, shares: bigint, receiver?: Address) {
+    const address = receiver || this.client.wallet.account.address
+
+    const hash = await this.contract.write.redeemAtom([
+      shares,
+      address,
+      vaultId,
+    ])
+
+    const { logs, status } = await this.client.public.waitForTransactionReceipt(
+      { hash },
+    )
+
+    if (status === 'reverted') {
+      throw new Error('Transaction reverted')
+    }
+
+    const redeemedEvents = parseEventLogs({
+      abi,
+      logs,
+      eventName: 'Redeemed',
+    })
+
+    const assets = redeemedEvents[0].args.assetsForReceiver
+
+    return { assets, hash, events: parseEventLogs({ abi, logs }) }
   }
 }

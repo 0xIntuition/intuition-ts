@@ -19,6 +19,42 @@ beforeAll(async () => {
 })
 
 describe('MultiVault', () => {
+  it('can get general config', async () => {
+    const config = await multiVault.getGeneralConfig()
+    expect(config).toBeDefined()
+    expect(config.admin).toBeDefined()
+    expect(config.protocolVault).toBeDefined()
+    expect(config.feeDenominator).toBeDefined()
+    expect(config.minDeposit).toBeDefined()
+    expect(config.minShare).toBeDefined()
+    expect(config.atomUriMaxLength).toBeDefined()
+    expect(config.decimalPrecision).toBeDefined()
+    expect(config.minDelay).toBeDefined()
+  })
+
+  it('can get atom config', async () => {
+    const config = await multiVault.getAtomConfig()
+    expect(config).toBeDefined()
+    expect(config.atomWalletInitialDepositAmount).toBeDefined()
+    expect(config.atomCreationProtocolFee).toBeDefined()
+  })
+
+  it('can get triple config', async () => {
+    const config = await multiVault.getTripleConfig()
+    expect(config).toBeDefined()
+    expect(config.tripleCreationProtocolFee).toBeDefined()
+    expect(config.atomDepositFractionOnTripleCreation).toBeDefined()
+    expect(config.atomDepositFractionForTriple).toBeDefined()
+  })
+
+  it('can get vault fees', async () => {
+    const fees = await multiVault.getVaultFees()
+    expect(fees).toBeDefined()
+    expect(fees.entryFee).toBeDefined()
+    expect(fees.exitFee).toBeDefined()
+    expect(fees.protocolFee).toBeDefined()
+  })
+
   it('can get atom cost', async () => {
     const cost = await multiVault.getAtomCost()
     expect(cost).toBeDefined()
@@ -70,7 +106,7 @@ describe('MultiVault', () => {
   })
 })
 
-describe('use case X', () => {
+describe('atom life cycle', () => {
   let atomVaultId: bigint
   let sharesPreview: bigint
 
@@ -105,5 +141,27 @@ describe('use case X', () => {
     // expect(shares).toEqual(sharesPreview);
     // console.log('shares', formatEther(shares));
     // console.log('sharesPreview', formatEther(sharesPreview));
+  })
+
+  it('can get vault details', async () => {
+    const vault = await multiVault.getVaultState(atomVaultId)
+    expect(vault).toBeDefined()
+    expect(vault.totalAssets).toBeDefined()
+    expect(vault.totalShares).toBeDefined()
+  })
+
+  it('can get vault details for user', async () => {
+    const user = walletClient.account.address
+    const vault = await multiVault.getVaultStateForUser(atomVaultId, user)
+    expect(vault).toBeDefined()
+    expect(vault.shares).toBeDefined()
+    expect(vault.totalUserAssets).toBeDefined()
+  })
+
+  it('can redeem shares', async () => {
+    const shares = parseEther('0.1')
+    const { hash, events } = await multiVault.redeemAtom(atomVaultId, shares)
+    expect(hash).toBeDefined()
+    expect(events).toBeDefined()
   })
 })
