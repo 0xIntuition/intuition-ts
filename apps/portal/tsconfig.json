@@ -14,7 +14,8 @@
       "@components/*": ["app/components/*"],
       "@lib/*": ["app/lib/*"],
       "@routes/*": ["app/routes/*"],
-      "@styles/*": ["app/styles/*"]
+      "@styles/*": ["app/styles/*"],
+      "@api-client": ["../../libs/api-client/index.ts"]
     }
   },
   "include": ["**/*.ts", "**/*.tsx", "tailwind.config.js"],

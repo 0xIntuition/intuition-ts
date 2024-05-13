@@ -15,10 +15,10 @@
     "strict": true,
     "paths": {
       "@/*": ["src/*"],
+      "@intuition-ts/api-client": ["libs/api-client/index.ts"],
       "@intuition-ts/1ui": ["packages/1ui/src/index.ts"],
       "@intuition-ts/automation-tools": ["tools/src/index.ts"],
-      "@intuition-ts/protocol": ["packages/protocol/src/index.ts"],
-      "@api-client": ["libs/api-client/index.ts"]
+      "@intuition-ts/protocol": ["packages/protocol/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "dist", "**/*.spec.ts"]
