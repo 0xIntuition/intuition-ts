@@ -18,6 +18,9 @@ jobs:
       - uses: pnpm/action-setup@v2
         with:
           version: 9.0.6
+      # Foundry setup for protocol
+      - name: Set up foundry
+        uses: foundry-rs/foundry-toolchain@v1
       - name: Setup Git
         run: |
           git fetch --no-tags --depth=1 origin +refs/heads/main:refs/remotes/origin/main
