@@ -62,8 +62,10 @@ export class Multivault {
 
   /**
    * Create an atom and return its vault id
-   * @param atomUri atom data to create atom with
-   * @param initialDeposit Optional initial deposit
+   *
+   * @param atomUri - atom data to create atom with
+   * @param initialDeposit - Optional initial deposit
+   * @returns vault id of the atom, transaction hash, and events
    */
   public async createAtom(
     atomUri: string,
@@ -100,9 +102,11 @@ export class Multivault {
 
   /**
    * Create a triple and return its vault id
-   * @param subjectId vault id of the subject atom
-   * @param predicateId vault id of the predicate atom
-   * @param objectId vault id of the object atom
+   *
+   * @param subjectId - vault id of the subject atom
+   * @param predicateId - vault id of the predicate atom
+   * @param objectId - vault id of the object atom
+   * @returns vault id of the triple, transaction hash, and events
    */
   public async createTriple(
     subjectId: bigint,
@@ -138,10 +142,22 @@ export class Multivault {
     return { vaultId, hash, events: parseEventLogs({ abi, logs }) }
   }
 
-  public async depositAtom(id: bigint, assets: bigint, receiver?: Address) {
+  /**
+   * Deposit assets into a vault
+   *
+   * @param vaultId - vault id of the atom
+   * @param assets - amount of assets to deposit
+   * @param receiver - optional address to receive shares
+   * @returns transaction hash, shares received, and events
+   */
+  public async depositAtom(
+    vaultId: bigint,
+    assets: bigint,
+    receiver?: Address,
+  ) {
     const address = receiver || this.client.wallet.account.address
 
-    const hash = await this.contract.write.depositAtom([address, id], {
+    const hash = await this.contract.write.depositAtom([address, vaultId], {
       value: assets,
     })
 
@@ -161,6 +177,6 @@ export class Multivault {
 
     const shares = depositedEvents[0].args.sharesForReceiver
 
-    return { hash, shares, events: parseEventLogs({ abi, logs }) }
+    return { shares, hash, events: parseEventLogs({ abi, logs }) }
   }
 }
