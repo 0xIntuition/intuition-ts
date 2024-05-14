@@ -58,7 +58,7 @@ export const themes = {
     secondary: palette.white.base,
     secondaryForeground: palette.gray[400],
     muted: palette.gray[800],
-    mutedForeground: palette.gray[700],
+    mutedForeground: palette.gray[500],
     accent: palette.blue[500],
     accentForeground: palette.white.base,
     destructive: palette.red[500],

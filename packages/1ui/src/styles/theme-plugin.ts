@@ -124,46 +124,74 @@ export const themePlugin = plugin(
         fontFamily: {
           sans: ['Geist', ...defaultTheme.fontFamily.sans],
         },
+        fontSize: {
+          xs: ['0.625rem', ''],
+          sm: ['0.75rem', ''],
+          base: ['0.875rem', ''],
+          lg: ['1rem', ''],
+          xl: ['1.25rem', ''],
+          '2xl': ['1.5rem', ''],
+          '3xl': ['1.875rem', ''],
+          '4xl': ['2.5rem', ''],
+          '5xl': ['3.125rem', ''],
+          '6xl': ['3.75rem', ''],
+        },
         colors: {
-          border: 'var(--border)',
-          input: 'var(--input)',
-          ring: 'var(--ring)',
-          background: 'var(--background)',
-          foreground: 'var(--foreground)',
+          border:
+            'color-mix(in srgb, var(--border) calc(<alpha-value> * 100%), transparent)',
+          input:
+            'color-mix(in srgb, var(--input) calc(<alpha-value> * 100%), transparent)',
+          ring: 'color-mix(in srgb, var(--ring) calc(<alpha-value> * 100%), transparent)',
+          background:
+            'color-mix(in srgb, var(--background) calc(<alpha-value> * 100%), transparent)',
+          foreground:
+            'color-mix(in srgb, var(--foreground) calc(<alpha-value> * 100%), transparent)',
           primary: {
-            DEFAULT: 'var(--primary)',
-            foreground: 'var(--primary-foreground)',
-            50: 'var(--primary-50)',
-            100: 'var(--primary-100)',
-            200: 'var(--primary-200)',
-            300: 'var(--primary-300)',
-            400: 'var(--primary-400)',
-            500: 'var(--primary-500)',
-            600: 'var(--primary-600)',
-            700: 'var(--primary-700)',
-            800: 'var(--primary-800)',
-            900: 'var(--primary-900)',
-            950: 'var(--primary-950)',
+            DEFAULT:
+              'color-mix(in srgb, var(--primary) calc(<alpha-value> * 100%), transparent)',
+            foreground:
+              'color-mix(in srgb, var(--primary-foreground) calc(<alpha-value> * 100%), transparent)',
+            50: 'color-mix(in srgb, var(--primary-50) calc(<alpha-value> * 100%), transparent)',
+            100: 'color-mix(in srgb, var(--primary-100) calc(<alpha-value> * 100%), transparent)',
+            200: 'color-mix(in srgb, var(--primary-200) calc(<alpha-value> * 100%), transparent)',
+            300: 'color-mix(in srgb, var(--primary-300) calc(<alpha-value> * 100%), transparent)',
+            400: 'color-mix(in srgb, var(--primary-400) calc(<alpha-value> * 100%), transparent)',
+            500: 'color-mix(in srgb, var(--primary-500) calc(<alpha-value> * 100%), transparent)',
+            600: 'color-mix(in srgb, var(--primary-600) calc(<alpha-value> * 100%), transparent)',
+            700: 'color-mix(in srgb, var(--primary-700) calc(<alpha-value> * 100%), transparent)',
+            800: 'color-mix(in srgb, var(--primary-800) calc(<alpha-value> * 100%), transparent)',
+            900: 'color-mix(in srgb, var(--primary-900) calc(<alpha-value> * 100%), transparent)',
+            950: 'color-mix(in srgb, var(--primary-950) calc(<alpha-value> * 100%), transparent)',
           },
           destructive: {
-            DEFAULT: 'var(--destructive)',
-            foreground: 'var(--destructive-foreground)',
+            DEFAULT:
+              'color-mix(in srgb, var(--destructive) calc(<alpha-value> * 100%), transparent)',
+            foreground:
+              'color-mix(in srgb, var(--destructive-foreground) calc(<alpha-value> * 100%), transparent)',
           },
           muted: {
-            DEFAULT: 'var(--muted)',
-            foreground: 'var(--muted-foreground)',
+            DEFAULT:
+              'color-mix(in srgb, var(--muted) calc(<alpha-value> * 100%), transparent)',
+            foreground:
+              'color-mix(in srgb, var(--muted-foreground) calc(<alpha-value> * 100%), transparent)',
           },
           accent: {
-            DEFAULT: 'var(--accent))',
-            foreground: 'var(--accent-foreground)',
+            DEFAULT:
+              'color-mix(in srgb, var(--accent)) calc(<alpha-value> * 100%), transparent)',
+            foreground:
+              'color-mix(in srgb, var(--accent-foreground) calc(<alpha-value> * 100%), transparent)',
           },
           popover: {
-            DEFAULT: 'var(--popover)',
-            foreground: 'var(--popover-foreground)',
+            DEFAULT:
+              'color-mix(in srgb, var(--popover) calc(<alpha-value> * 100%), transparent)',
+            foreground:
+              'color-mix(in srgb, var(--popover-foreground) calc(<alpha-value> * 100%), transparent)',
           },
           card: {
-            DEFAULT: 'var(--card)',
-            foreground: 'var(--card-foreground)',
+            DEFAULT:
+              'color-mix(in srgb, var(--card) calc(<alpha-value> * 100%), transparent)',
+            foreground:
+              'color-mix(in srgb, var(--card-foreground) calc(<alpha-value> * 100%), transparent)',
           },
         },
         borderRadius: {

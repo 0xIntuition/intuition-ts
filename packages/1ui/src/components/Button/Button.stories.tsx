@@ -71,6 +71,112 @@ export const BasicUsage: Story = {
   render: (props) => <Button {...props} />,
 }
 
+export const Primary: Story = {
+  parameters: {
+    controls: {
+      disable: true,
+    },
+  },
+  render: (props) => (
+    <div style={{ display: 'flex', gap: '2rem', alignItems: 'center' }}>
+      <Button {...props}>Default</Button>
+      <Button size="medium" {...props}>
+        Medium
+      </Button>
+      <Button size="large" {...props}>
+        Large
+      </Button>
+      <Button size="extraLarge" {...props}>
+        Extra Large
+      </Button>
+      <Button disabled {...props}>
+        Disabled
+      </Button>
+    </div>
+  ),
+}
+
+export const Secondary: Story = {
+  parameters: {
+    controls: {
+      disable: true,
+    },
+  },
+  render: (props) => (
+    <div style={{ display: 'flex', gap: '2rem', alignItems: 'center' }}>
+      <Button variant="secondary" {...props}>
+        Default
+      </Button>
+      <Button variant="secondary" size="medium" {...props}>
+        Medium
+      </Button>
+      <Button variant="secondary" size="large" {...props}>
+        Large
+      </Button>
+      <Button variant="secondary" size="extraLarge" {...props}>
+        Extra Large
+      </Button>
+      <Button variant="secondary" disabled {...props}>
+        Disabled
+      </Button>
+    </div>
+  ),
+}
+
+export const Ghost: Story = {
+  parameters: {
+    controls: {
+      disable: true,
+    },
+  },
+  render: (props) => (
+    <div style={{ display: 'flex', gap: '2rem', alignItems: 'center' }}>
+      <Button variant="ghost" {...props}>
+        Default
+      </Button>
+      <Button variant="ghost" size="medium" {...props}>
+        Medium
+      </Button>
+      <Button variant="ghost" size="large" {...props}>
+        Large
+      </Button>
+      <Button variant="ghost" size="extraLarge" {...props}>
+        Extra Large
+      </Button>
+      <Button variant="ghost" disabled {...props}>
+        Disabled
+      </Button>
+    </div>
+  ),
+}
+
+export const Text: Story = {
+  parameters: {
+    controls: {
+      disable: true,
+    },
+  },
+  render: (props) => (
+    <div style={{ display: 'flex', gap: '2rem', alignItems: 'center' }}>
+      <Button variant="text" {...props}>
+        Default
+      </Button>
+      <Button variant="text" size="medium" {...props}>
+        Medium
+      </Button>
+      <Button variant="text" size="large" {...props}>
+        Large
+      </Button>
+      <Button variant="text" size="extraLarge" {...props}>
+        Extra Large
+      </Button>
+      <Button variant="text" disabled {...props}>
+        Disabled
+      </Button>
+    </div>
+  ),
+}
+
 export const Variants: Story = {
   parameters: {
     controls: {
@@ -85,6 +191,9 @@ export const Variants: Story = {
       </Button>
       <Button variant="ghost" {...props}>
         Ghost
+      </Button>
+      <Button variant="text" {...props}>
+        Text
       </Button>
     </div>
   ),
