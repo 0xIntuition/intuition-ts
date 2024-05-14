@@ -1,5 +1,14 @@
 import { z } from 'zod'
 
+export type User = {
+  didSession: string
+  wallet: string
+  id: string
+  ensName?: string
+  newUser: boolean
+  accessToken: string
+}
+
 export const UserProfileSchema = z.object({
   id: z.string(),
   wallet: z.string(),
