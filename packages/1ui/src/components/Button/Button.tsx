@@ -6,32 +6,39 @@ import * as React from 'react'
 import { cn } from '@styles'
 
 const buttonVariants = cva(
-  'inline-flex items-center justify-center rounded-md text-sm shadow-lg font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:text-primary-700 disabled:bg-primary-500 transition-colors duration-300',
+  'flex items-center gap-2 text-sm font-medium border-solid border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted shadow-md-subtle',
   {
     variants: {
       variant: {
-        default: 'bg-primary-900 text-primary-foreground hover:bg-primary/90',
-        destructive:
-          'bg-destructive text-destructive-foreground hover:bg-destructive/90',
-        outline:
-          'border border-input bg-background hover:bg-accent hover:text-accent-foreground',
-        secondary: 'bg-primary-300 text-primary-900 hover:bg-primary-100',
+        primary:
+          'bg-primary text-primary-foreground border-primary hover:bg-primary/80 rounded-full',
+        secondary:
+          'bg-gradient-to-b from-primary/10 to-primary/5 text-primary/60 border-primary/10 rounded-lg hover:text-primary disabled:from-muted disabled:to-muted',
         ghost:
-          'hover:bg-none hover:text-accent-foreground text-primary-300 transition-colors duration-150',
-        link: 'text-primary underline-offset-4 hover:underline',
-        tooltip:
-          '!text-primary-300 transition-colors duration-300 border rounded-lg border-primary-50/20 hover:border-primary-50/40 hover:text-primary-200 text-xxs',
+          'bg-gradient-to-b from-transparent to-transparent text-primary/70 border-primary/70 rounded-lg hover:text-primary hover:border-primary disabled:bg-transparent aria-selected:from-primary/10 aria-selected:to-primary/5 aria-selected:border-primary/10',
+        text: 'bg-transparent text-primary/70 border-transparent hover:text-primary disabled:border-transparent disabled:bg-transparent',
+        accent:
+          'bg-accent text-accent-foreground border-accent rounded-full hover:bg-accent/70 hover:border-accent/30',
+        warning:
+          'bg-warning text-warning-foreground border-warning rounded-full hover:bg-warning/70 hover:border-warning/30',
+        success:
+          'bg-success text-success-foreground border-success rounded-full hover:bg-success/70 hover:border-success/30',
+        destructive:
+          'bg-destructive text-destructive-foreground border-destructive rounded-full hover:bg-destructive/70 hover:border-destructive/30',
       },
       size: {
-        default: 'h-8 px-4 py-2',
-        sm: 'h-6 px-3',
-        lg: 'h-10 px-8',
-        icon: 'h-8 w-8',
-        'lg-icon': 'h-12 w-12',
+        default: 'px-3 py-1',
+        medium: 'px-4 py-1.5',
+        large: 'px-4 py-2 gap-4 text-base',
+        extraLarge: 'px-5 py-2.5 gap-5 text-lg',
+        icon: 'p-1',
+        iconMd: 'p-1.5',
+        iconLg: 'p-2',
+        iconXl: 'p-2.5',
       },
     },
     defaultVariants: {
-      variant: 'default',
+      variant: 'primary',
       size: 'default',
     },
   },
@@ -56,11 +63,8 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         {...props}
       >
-        {isLoading ? (
-          <Loader2Icon className={`${isLoading && 'animate-spin'} h-6 w-6`} />
-        ) : (
-          props.children
-        )}
+        {isLoading && <Loader2Icon className="h-6 w-6 animate-spin" />}
+        {props.children}
       </Comp>
     )
   },

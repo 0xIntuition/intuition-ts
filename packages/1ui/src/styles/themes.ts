@@ -1,5 +1,7 @@
 import { palette } from './palette'
 
+const radiusValue = '0.5rem'
+
 export const themes = {
   light: {
     background: '0 0% 100%',
@@ -34,12 +36,12 @@ export const themes = {
     border: '215 27.9% 16.9%',
     input: '215 27.9% 16.9%',
     ring: '216 12.2% 83.9%',
-    radius: '0.5rem',
+    radius: radiusValue,
     // custom attributes
     success: palette.green[500],
-    successForeground: palette.white.base,
+    successForeground: palette.black.base,
     warning: palette.yellow[600],
-    warningForeground: palette.white.base,
+    warningForeground: palette.black.base,
   },
   dark: {
     background: palette.black.base,
@@ -56,7 +58,7 @@ export const themes = {
     secondary: palette.white.base,
     secondaryForeground: palette.gray[400],
     muted: palette.gray[800],
-    mutedForeground: palette.gray[700],
+    mutedForeground: palette.gray[500],
     accent: palette.blue[500],
     accentForeground: palette.white.base,
     destructive: palette.red[500],
@@ -64,11 +66,11 @@ export const themes = {
     border: palette.white.a20,
     input: palette.white.a20,
     ring: palette.white.base,
-    radius: '0.5rem',
+    radius: radiusValue,
     // custom attributes
     success: palette.green[500],
-    successForeground: palette.white.base,
+    successForeground: palette.black.base,
     warning: palette.yellow[600],
-    warningForeground: palette.white.base,
+    warningForeground: palette.black.base,
   },
 }

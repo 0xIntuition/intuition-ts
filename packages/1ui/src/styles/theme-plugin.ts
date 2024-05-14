@@ -2,7 +2,6 @@ import defaultTheme from 'tailwindcss/defaultTheme.js'
 import plugin from 'tailwindcss/plugin'
 
 import { themes } from './themes'
-import { hexToHSL } from './utils'
 
 export const themePlugin = plugin(
   // 1. Add css variable definitions to the base layer
@@ -15,7 +14,7 @@ export const themePlugin = plugin(
         '--card-foreground': themes.light.cardForeground,
         '--popover': themes.light.popover,
         '--popover-foreground': themes.light.popoverForeground,
-        '--primary': hexToHSL(themes.light.primary.DEFAULT),
+        '--primary': themes.light.primary.DEFAULT,
         '--primary-foreground': themes.light.primaryForeground,
         '--secondary': themes.light.secondary,
         '--secondary-foreground': themes.light.secondaryForeground,
@@ -29,18 +28,22 @@ export const themePlugin = plugin(
         '--input': themes.light.input,
         '--ring': themes.light.ring,
         '--radius': themes.light.radius,
+        '--success': themes.light.success,
+        '--success-foreground': themes.light.successForeground,
+        '--warning': themes.light.warning,
+        '--warning-foreground': themes.light.warningForeground,
         // primary
-        '--primary-50': hexToHSL(themes.light.primary[50]),
-        '--primary-100': hexToHSL(themes.light.primary[100]),
-        '--primary-200': hexToHSL(themes.light.primary[200]),
-        '--primary-300': hexToHSL(themes.light.primary[300]),
-        '--primary-400': hexToHSL(themes.light.primary[400]),
-        '--primary-500': hexToHSL(themes.light.primary[500]),
-        '--primary-600': hexToHSL(themes.light.primary[600]),
-        '--primary-700': hexToHSL(themes.light.primary[700]),
-        '--primary-800': hexToHSL(themes.light.primary[800]),
-        '--primary-900': hexToHSL(themes.light.primary[900]),
-        '--primary-950': hexToHSL(themes.light.primary[950]),
+        '--primary-50': themes.light.primary[50],
+        '--primary-100': themes.light.primary[100],
+        '--primary-200': themes.light.primary[200],
+        '--primary-300': themes.light.primary[300],
+        '--primary-400': themes.light.primary[400],
+        '--primary-500': themes.light.primary[500],
+        '--primary-600': themes.light.primary[600],
+        '--primary-700': themes.light.primary[700],
+        '--primary-800': themes.light.primary[800],
+        '--primary-900': themes.light.primary[900],
+        '--primary-950': themes.light.primary[950],
       },
     })
     Object.entries(themes).forEach(([key, value]) => {
@@ -52,7 +55,7 @@ export const themePlugin = plugin(
           '--card-foreground': value.cardForeground,
           '--popover': value.popover,
           '--popover-foreground': value.popoverForeground,
-          '--primary': hexToHSL(value.primary.DEFAULT),
+          '--primary': value.primary.DEFAULT,
           '--primary-foreground': value.primaryForeground,
           '--secondary': value.secondary,
           '--secondary-foreground': value.secondaryForeground,
@@ -66,18 +69,22 @@ export const themePlugin = plugin(
           '--input': value.input,
           '--ring': value.ring,
           '--radius': value.radius,
+          '--success': value.success,
+          '--success-foreground': value.successForeground,
+          '--warning': value.warning,
+          '--warning-foreground': value.warningForeground,
           // primary
-          '--primary-50': hexToHSL(value.primary[50]),
-          '--primary-100': hexToHSL(value.primary[100]),
-          '--primary-200': hexToHSL(value.primary[200]),
-          '--primary-300': hexToHSL(value.primary[300]),
-          '--primary-400': hexToHSL(value.primary[400]),
-          '--primary-500': hexToHSL(value.primary[500]),
-          '--primary-600': hexToHSL(value.primary[600]),
-          '--primary-700': hexToHSL(value.primary[700]),
-          '--primary-800': hexToHSL(value.primary[800]),
-          '--primary-900': hexToHSL(value.primary[900]),
-          '--primary-950': hexToHSL(value.primary[950]),
+          '--primary-50': value.primary[50],
+          '--primary-100': value.primary[100],
+          '--primary-200': value.primary[200],
+          '--primary-300': value.primary[300],
+          '--primary-400': value.primary[400],
+          '--primary-500': value.primary[500],
+          '--primary-600': value.primary[600],
+          '--primary-700': value.primary[700],
+          '--primary-800': value.primary[800],
+          '--primary-900': value.primary[900],
+          '--primary-950': value.primary[950],
         },
       })
     })
@@ -117,46 +124,86 @@ export const themePlugin = plugin(
         fontFamily: {
           sans: ['Geist', ...defaultTheme.fontFamily.sans],
         },
+        fontSize: {
+          xs: ['0.625rem', '1rem'], // small
+          sm: ['0.75rem', '1.125rem'], // caption & footnote
+          base: ['0.875rem', '1.25rem'], // body
+          lg: ['1rem', '1.875rem'], // bodyLarge
+          xl: ['1.25rem', '1.875rem'], // headline
+          '2xl': '1.5rem', // heading5
+          '3xl': '1.875rem', // heading4
+          '4xl': '2.5rem', // heading3
+          '5xl': '3.125rem', // heading2
+          '6xl': '3.75rem', // heading1
+        },
         colors: {
-          border: 'hsl(var(--border))',
-          input: 'hsl(var(--input))',
-          ring: 'hsl(var(--ring))',
-          background: 'hsl(var(--background))',
-          foreground: 'hsl(var(--foreground))',
+          border:
+            'color-mix(in srgb, var(--border) calc(<alpha-value> * 100%), transparent)',
+          input:
+            'color-mix(in srgb, var(--input) calc(<alpha-value> * 100%), transparent)',
+          ring: 'color-mix(in srgb, var(--ring) calc(<alpha-value> * 100%), transparent)',
+          background:
+            'color-mix(in srgb, var(--background) calc(<alpha-value> * 100%), transparent)',
+          foreground:
+            'color-mix(in srgb, var(--foreground) calc(<alpha-value> * 100%), transparent)',
           primary: {
-            DEFAULT: 'hsl(var(--primary))',
-            foreground: 'hsl(var(--primary-foreground))',
-            50: 'hsl(var(--primary-50))',
-            100: 'hsl(var(--primary-100))',
-            200: 'hsl(var(--primary-200))',
-            300: 'hsl(var(--primary-300))',
-            400: 'hsl(var(--primary-400))',
-            500: 'hsl(var(--primary-500))',
-            600: 'hsl(var(--primary-600))',
-            700: 'hsl(var(--primary-700))',
-            800: 'hsl(var(--primary-800))',
-            900: 'hsl(var(--primary-900))',
-            950: 'hsl(var(--primary-950))',
+            DEFAULT:
+              'color-mix(in srgb, var(--primary) calc(<alpha-value> * 100%), transparent)',
+            foreground:
+              'color-mix(in srgb, var(--primary-foreground) calc(<alpha-value> * 100%), transparent)',
+            50: 'color-mix(in srgb, var(--primary-50) calc(<alpha-value> * 100%), transparent)',
+            100: 'color-mix(in srgb, var(--primary-100) calc(<alpha-value> * 100%), transparent)',
+            200: 'color-mix(in srgb, var(--primary-200) calc(<alpha-value> * 100%), transparent)',
+            300: 'color-mix(in srgb, var(--primary-300) calc(<alpha-value> * 100%), transparent)',
+            400: 'color-mix(in srgb, var(--primary-400) calc(<alpha-value> * 100%), transparent)',
+            500: 'color-mix(in srgb, var(--primary-500) calc(<alpha-value> * 100%), transparent)',
+            600: 'color-mix(in srgb, var(--primary-600) calc(<alpha-value> * 100%), transparent)',
+            700: 'color-mix(in srgb, var(--primary-700) calc(<alpha-value> * 100%), transparent)',
+            800: 'color-mix(in srgb, var(--primary-800) calc(<alpha-value> * 100%), transparent)',
+            900: 'color-mix(in srgb, var(--primary-900) calc(<alpha-value> * 100%), transparent)',
+            950: 'color-mix(in srgb, var(--primary-950) calc(<alpha-value> * 100%), transparent)',
           },
           destructive: {
-            DEFAULT: 'hsl(var(--destructive))',
-            foreground: 'hsl(var(--destructive-foreground))',
+            DEFAULT:
+              'color-mix(in srgb, var(--destructive) calc(<alpha-value> * 100%), transparent)',
+            foreground:
+              'color-mix(in srgb, var(--destructive-foreground) calc(<alpha-value> * 100%), transparent)',
           },
           muted: {
-            DEFAULT: 'hsl(var(--muted))',
-            foreground: 'hsl(var(--muted-foreground))',
+            DEFAULT:
+              'color-mix(in srgb, var(--muted) calc(<alpha-value> * 100%), transparent)',
+            foreground:
+              'color-mix(in srgb, var(--muted-foreground) calc(<alpha-value> * 100%), transparent)',
           },
           accent: {
-            DEFAULT: 'hsl(var(--accent))',
-            foreground: 'hsl(var(--accent-foreground))',
+            DEFAULT:
+              'color-mix(in srgb, var(--accent) calc(<alpha-value> * 100%), transparent)',
+            foreground:
+              'color-mix(in srgb, var(--accent-foreground) calc(<alpha-value> * 100%), transparent)',
+          },
+          warning: {
+            DEFAULT:
+              'color-mix(in srgb, var(--warning) calc(<alpha-value> * 100%), transparent)',
+            foreground:
+              'color-mix(in srgb, var(--warning-foreground) calc(<alpha-value> * 100%), transparent)',
+          },
+          success: {
+            DEFAULT:
+              'color-mix(in srgb, var(--success) calc(<alpha-value> * 100%), transparent)',
+            foreground:
+              'color-mix(in srgb, var(--success-foreground) calc(<alpha-value> * 100%), transparent)',
           },
           popover: {
-            DEFAULT: 'hsl(var(--popover))',
-            foreground: 'hsl(var(--popover-foreground))',
+            DEFAULT:
+              'color-mix(in srgb, var(--popover) calc(<alpha-value> * 100%), transparent)',
+            foreground:
+              'color-mix(in srgb, var(--popover-foreground) calc(<alpha-value> * 100%), transparent)',
           },
           card: {
-            DEFAULT: 'hsl(var(--card))',
-            foreground: 'hsl(var(--card-foreground))',
+            DEFAULT:
+              'color-mix(in srgb, var(--card) calc(<alpha-value> * 100%), transparent)',
+            foreground:
+              'color-mix(in srgb, var(--card-foreground) calc(<alpha-value> * 100%), transparent)',
           },
         },
         borderRadius: {

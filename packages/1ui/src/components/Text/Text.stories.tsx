@@ -44,7 +44,7 @@ const meta: Meta<typeof Text> = {
     },
     weight: {
       description: 'Weight of text',
-      options: ['normal', 'semibold', 'bold'],
+      options: ['normal', 'medium', 'semibold', 'bold'],
       table: {
         type: { summary: 'string' },
         defaultValue: { summary: 'normal' },
