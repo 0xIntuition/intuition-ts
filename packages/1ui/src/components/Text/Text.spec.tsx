@@ -159,6 +159,19 @@ describe('Text', () => {
     `)
   })
 
+  it('should render appropriate element and classes for variant `medium`', () => {
+    const { asFragment } = render(<Text weight="medium">Text</Text>)
+    expect(asFragment()).toMatchInlineSnapshot(`
+      <DocumentFragment>
+        <p
+          class="text-primary text-base font-medium"
+        >
+          Text
+        </p>
+      </DocumentFragment>
+    `)
+  })
+
   it('should render appropriate element and classes for weight `semibold`', () => {
     const { asFragment } = render(<Text weight="semibold">Text</Text>)
     expect(asFragment()).toMatchInlineSnapshot(`
