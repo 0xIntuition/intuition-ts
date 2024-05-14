@@ -39,9 +39,9 @@ export const themes = {
     radius: radiusValue,
     // custom attributes
     success: palette.green[500],
-    successForeground: palette.white.base,
+    successForeground: palette.black.base,
     warning: palette.yellow[600],
-    warningForeground: palette.white.base,
+    warningForeground: palette.black.base,
   },
   dark: {
     background: palette.black.base,
@@ -69,8 +69,8 @@ export const themes = {
     radius: radiusValue,
     // custom attributes
     success: palette.green[500],
-    successForeground: palette.white.base,
+    successForeground: palette.black.base,
     warning: palette.yellow[600],
-    warningForeground: palette.white.base,
+    warningForeground: palette.black.base,
   },
 }
