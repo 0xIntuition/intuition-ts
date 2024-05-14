@@ -1,6 +1,7 @@
 import React from 'react'
 import type { Meta, StoryObj } from '@storybook/react'
 import { Button } from './Button'
+import { ChevronRight } from 'lucide-react'
 
 const meta: Meta<typeof Button> = {
   title: 'Components/Button',
@@ -27,23 +28,24 @@ const meta: Meta<typeof Button> = {
     variant: {
       description: 'Variant of button',
       options: [
-        'default',
-        'destructive',
-        'outline',
+        'primary',
         'secondary',
         'ghost',
-        'link',
-        'tooltip',
+        'text',
+        'accent',
+        'warning',
+        'success',
+        'destructive',
       ],
       table: {
         type: { summary: 'string' },
-        defaultValue: { summary: 'default' },
+        defaultValue: { summary: 'primary' },
       },
       control: 'select',
     },
     size: {
       description: 'Size of button',
-      options: ['default', 'sm', 'lg', 'icon', 'lg-icon'],
+      options: ['default', 'medium', 'large', 'extraLarge'],
       table: {
         type: { summary: 'string' },
         defaultValue: { summary: 'default' },
@@ -89,6 +91,12 @@ export const Primary: Story = {
       <Button size="extraLarge" {...props}>
         Extra Large
       </Button>
+      <Button {...props}>
+        <ChevronRight />
+      </Button>
+      <Button isLoading {...props}>
+        isLoading
+      </Button>
       <Button disabled {...props}>
         Disabled
       </Button>
@@ -115,6 +123,12 @@ export const Secondary: Story = {
       </Button>
       <Button variant="secondary" size="extraLarge" {...props}>
         Extra Large
+      </Button>
+      <Button variant="secondary" {...props}>
+        <ChevronRight />
+      </Button>
+      <Button variant="secondary" isLoading {...props}>
+        isLoading
       </Button>
       <Button variant="secondary" disabled {...props}>
         Disabled
@@ -143,6 +157,15 @@ export const Ghost: Story = {
       <Button variant="ghost" size="extraLarge" {...props}>
         Extra Large
       </Button>
+      <Button variant="ghost" aria-selected {...props}>
+        Selected
+      </Button>
+      <Button variant="ghost" {...props}>
+        <ChevronRight />
+      </Button>
+      <Button variant="ghost" isLoading {...props}>
+        isLoading
+      </Button>
       <Button variant="ghost" disabled {...props}>
         Disabled
       </Button>
@@ -170,6 +193,12 @@ export const Text: Story = {
       <Button variant="text" size="extraLarge" {...props}>
         Extra Large
       </Button>
+      <Button variant="text" {...props}>
+        <ChevronRight />
+      </Button>
+      <Button variant="text" isLoading {...props}>
+        isLoading
+      </Button>
       <Button variant="text" disabled {...props}>
         Disabled
       </Button>
@@ -177,7 +206,7 @@ export const Text: Story = {
   ),
 }
 
-export const Variants: Story = {
+export const Accent: Story = {
   parameters: {
     controls: {
       disable: true,
@@ -185,55 +214,125 @@ export const Variants: Story = {
   },
   render: (props) => (
     <div style={{ display: 'flex', gap: '2rem', alignItems: 'center' }}>
-      <Button {...props}>Primary</Button>
-      <Button variant="secondary" {...props}>
-        Secondary
+      <Button variant="accent" {...props}>
+        Default
       </Button>
-      <Button variant="ghost" {...props}>
-        Ghost
-      </Button>
-      <Button variant="text" {...props}>
-        Text
-      </Button>
-    </div>
-  ),
-}
-
-export const Sizes: Story = {
-  parameters: {
-    controls: {
-      disable: true,
-    },
-  },
-  render: (props) => (
-    <div style={{ display: 'flex', gap: '2rem', alignItems: 'center' }}>
-      <Button {...props}>Default</Button>
-      <Button size="medium" {...props}>
+      <Button variant="accent" size="medium" {...props}>
         Medium
       </Button>
-      <Button size="large" {...props}>
+      <Button variant="accent" size="large" {...props}>
         Large
       </Button>
-      <Button size="extraLarge" {...props}>
+      <Button variant="accent" size="extraLarge" {...props}>
         Extra Large
+      </Button>
+      <Button variant="accent" {...props}>
+        <ChevronRight />
+      </Button>
+      <Button variant="accent" isLoading {...props}>
+        isLoading
+      </Button>
+      <Button variant="accent" disabled {...props}>
+        Disabled
       </Button>
     </div>
   ),
 }
 
-export const States: Story = {
+export const Warning: Story = {
   parameters: {
     controls: {
-      exclude: ['className', 'children', 'asChild', 'style'],
+      disable: true,
     },
   },
   render: (props) => (
     <div style={{ display: 'flex', gap: '2rem', alignItems: 'center' }}>
-      <Button isLoading {...props}>
+      <Button variant="warning" {...props}>
+        Default
+      </Button>
+      <Button variant="warning" size="medium" {...props}>
+        Medium
+      </Button>
+      <Button variant="warning" size="large" {...props}>
+        Large
+      </Button>
+      <Button variant="warning" size="extraLarge" {...props}>
+        Extra Large
+      </Button>
+      <Button variant="warning" {...props}>
+        <ChevronRight />
+      </Button>
+      <Button variant="warning" isLoading {...props}>
         isLoading
       </Button>
-      <Button disabled {...props}>
-        disabled
+      <Button variant="warning" disabled {...props}>
+        Disabled
+      </Button>
+    </div>
+  ),
+}
+
+export const Success: Story = {
+  parameters: {
+    controls: {
+      disable: true,
+    },
+  },
+  render: (props) => (
+    <div style={{ display: 'flex', gap: '2rem', alignItems: 'center' }}>
+      <Button variant="success" {...props}>
+        Default
+      </Button>
+      <Button variant="success" size="medium" {...props}>
+        Medium
+      </Button>
+      <Button variant="success" size="large" {...props}>
+        Large
+      </Button>
+      <Button variant="success" size="extraLarge" {...props}>
+        Extra Large
+      </Button>
+      <Button variant="success" {...props}>
+        <ChevronRight />
+      </Button>
+      <Button variant="success" isLoading {...props}>
+        isLoading
+      </Button>
+      <Button variant="success" disabled {...props}>
+        Disabled
+      </Button>
+    </div>
+  ),
+}
+
+export const Destructive: Story = {
+  parameters: {
+    controls: {
+      disable: true,
+    },
+  },
+  render: (props) => (
+    <div style={{ display: 'flex', gap: '2rem', alignItems: 'center' }}>
+      <Button variant="destructive" {...props}>
+        Default
+      </Button>
+      <Button variant="destructive" size="medium" {...props}>
+        Medium
+      </Button>
+      <Button variant="destructive" size="large" {...props}>
+        Large
+      </Button>
+      <Button variant="destructive" size="extraLarge" {...props}>
+        Extra Large
+      </Button>
+      <Button variant="destructive" {...props}>
+        <ChevronRight />
+      </Button>
+      <Button variant="destructive" isLoading {...props}>
+        isLoading
+      </Button>
+      <Button variant="destructive" disabled {...props}>
+        Disabled
       </Button>
     </div>
   ),

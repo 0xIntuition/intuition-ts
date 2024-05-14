@@ -29,9 +29,9 @@ export const themePlugin = plugin(
         '--ring': themes.light.ring,
         '--radius': themes.light.radius,
         '--success': themes.light.success,
-        '--successForeground': themes.light.successForeground,
+        '--success-foreground': themes.light.successForeground,
         '--warning': themes.light.warning,
-        '--warningForeground': themes.light.warningForeground,
+        '--warning-foreground': themes.light.warningForeground,
         // primary
         '--primary-50': themes.light.primary[50],
         '--primary-100': themes.light.primary[100],
@@ -70,9 +70,9 @@ export const themePlugin = plugin(
           '--ring': value.ring,
           '--radius': value.radius,
           '--success': value.success,
-          '--successForeground': value.successForeground,
+          '--success-foreground': value.successForeground,
           '--warning': value.warning,
-          '--warningForeground': value.warningForeground,
+          '--warning-foreground': value.warningForeground,
           // primary
           '--primary-50': value.primary[50],
           '--primary-100': value.primary[100],
@@ -177,9 +177,21 @@ export const themePlugin = plugin(
           },
           accent: {
             DEFAULT:
-              'color-mix(in srgb, var(--accent)) calc(<alpha-value> * 100%), transparent)',
+              'color-mix(in srgb, var(--accent) calc(<alpha-value> * 100%), transparent)',
             foreground:
               'color-mix(in srgb, var(--accent-foreground) calc(<alpha-value> * 100%), transparent)',
+          },
+          warning: {
+            DEFAULT:
+              'color-mix(in srgb, var(--warning) calc(<alpha-value> * 100%), transparent)',
+            foreground:
+              'color-mix(in srgb, var(--warning-foreground) calc(<alpha-value> * 100%), transparent)',
+          },
+          success: {
+            DEFAULT:
+              'color-mix(in srgb, var(--success) calc(<alpha-value> * 100%), transparent)',
+            foreground:
+              'color-mix(in srgb, var(--success-foreground) calc(<alpha-value> * 100%), transparent)',
           },
           popover: {
             DEFAULT:
