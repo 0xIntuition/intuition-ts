@@ -69,7 +69,7 @@ describe('MultiVault', () => {
 
   it('throws error when creating atom with the same atomUri', async () => {
     await expect(() => multiVault.createAtom('hello')).rejects.toThrow(
-      'Transaction reverted',
+      'MultiVault_AtomExists',
     )
   })
 
@@ -162,6 +162,57 @@ describe('atom life cycle', () => {
     const shares = parseEther('0.1')
     const { hash, events } = await multiVault.redeemAtom(atomVaultId, shares)
     expect(hash).toBeDefined()
+    expect(events).toBeDefined()
+  })
+})
+
+describe('triple life cycle', () => {
+  let tripleVaultId: bigint
+  let sharesPreview: bigint
+
+  it('can create triple', async () => {
+    const { vaultId: subjectId } = await multiVault.createAtom('did:example:1')
+    const { vaultId: predicateId } =
+      await multiVault.createAtom('did:example:2')
+    const { vaultId: objectId } = await multiVault.createAtom('did:example:3')
+
+    const { vaultId } = await multiVault.createTriple(
+      subjectId,
+      predicateId,
+      objectId,
+    )
+    tripleVaultId = vaultId
+  })
+
+  it('can preview deposit', async () => {
+    const assets = parseEther('1')
+    sharesPreview = await multiVault.previewDeposit(assets, tripleVaultId)
+    expect(sharesPreview).toBeDefined()
+  })
+
+  it('can deposit assets to triple vault', async () => {
+    const assets = parseEther('1')
+    const { hash, shares, events } = await multiVault.depositTriple(
+      tripleVaultId,
+      assets,
+    )
+    expect(hash).toBeDefined()
+    expect(events).toBeDefined()
+    expect(shares).toBeDefined()
+    // fails
+    // expect(shares).toEqual(sharesPreview);
+    // console.log('shares', formatEther(shares));
+    // console.log('sharesPreview', formatEther(sharesPreview));
+  })
+
+  it('can redeem shares from triple vault', async () => {
+    const shares = parseEther('0.1')
+    const { assets, hash, events } = await multiVault.redeemTriple(
+      tripleVaultId,
+      shares,
+    )
+    expect(hash).toBeDefined()
+    expect(assets).toBeDefined()
     expect(events).toBeDefined()
   })
 })

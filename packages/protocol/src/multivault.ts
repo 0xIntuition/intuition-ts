@@ -10,6 +10,8 @@ import {
   getContract,
   GetContractReturnType,
   ParseEventLogsReturnType,
+  ContractFunctionRevertedError,
+  BaseError,
 } from 'viem'
 import { abi } from './abi'
 import { multiVaultAddress } from './constants'
@@ -33,6 +35,18 @@ export class Multivault {
       client,
       address: address || multiVaultAddress,
     })
+  }
+
+  private _throwRevertedError(err: BaseError) {
+    if (err instanceof BaseError) {
+      const revertError = err.walk(
+        (err) => err instanceof ContractFunctionRevertedError,
+      )
+      if (revertError instanceof ContractFunctionRevertedError) {
+        const errorName = revertError.data?.errorName ?? ''
+        throw new Error(errorName)
+      }
+    }
   }
 
   /**
@@ -147,8 +161,19 @@ export class Multivault {
     return await this.contract.read.currentSharePrice([id])
   }
 
+  /**
+   * Returns the preview of depositing assets to the given vault id
+   */
   public async previewDeposit(assets: bigint, id: bigint) {
     return await this.contract.read.previewDeposit([assets, id])
+  }
+
+  /**
+   * Returns amount of assets that would be charged by a vault
+   * on protocol fee given amount of 'assets' provided
+   */
+  public async getProtocolFeeAmount(assets: bigint, vaultId: bigint) {
+    return await this.contract.read.protocolFeeAmount([assets, vaultId])
   }
 
   /**
@@ -167,6 +192,15 @@ export class Multivault {
     events: ParseEventLogsReturnType
   }> {
     const costWithDeposit = (await this.getAtomCost()) + (initialDeposit || 0n)
+
+    try {
+      await this.contract.simulate.createAtom([toHex(atomUri)], {
+        value: costWithDeposit,
+        account: this.client.wallet.account.address,
+      })
+    } catch (e) {
+      this._throwRevertedError(e as BaseError)
+    }
 
     const hash = await this.contract.write.createAtom([toHex(atomUri)], {
       value: costWithDeposit,
@@ -209,6 +243,19 @@ export class Multivault {
     events: ParseEventLogsReturnType
   }> {
     const cost = await this.getTripleCost()
+
+    try {
+      await this.contract.simulate.createTriple(
+        [subjectId, predicateId, objectId],
+        {
+          value: cost,
+          account: this.client.wallet.account.address,
+        },
+      )
+    } catch (e) {
+      this._throwRevertedError(e as BaseError)
+    }
+
     const hash = await this.contract.write.createTriple(
       [subjectId, predicateId, objectId],
       { value: cost },
@@ -248,6 +295,15 @@ export class Multivault {
   ) {
     const address = receiver || this.client.wallet.account.address
 
+    try {
+      await this.contract.simulate.depositAtom([address, vaultId], {
+        value: assets,
+        account: this.client.wallet.account.address,
+      })
+    } catch (e) {
+      this._throwRevertedError(e as BaseError)
+    }
+
     const hash = await this.contract.write.depositAtom([address, vaultId], {
       value: assets,
     })
@@ -282,7 +338,110 @@ export class Multivault {
   public async redeemAtom(vaultId: bigint, shares: bigint, receiver?: Address) {
     const address = receiver || this.client.wallet.account.address
 
+    try {
+      await this.contract.simulate.redeemAtom([shares, address, vaultId], {
+        account: this.client.wallet.account.address,
+      })
+    } catch (e) {
+      this._throwRevertedError(e as BaseError)
+    }
+
     const hash = await this.contract.write.redeemAtom([
+      shares,
+      address,
+      vaultId,
+    ])
+
+    const { logs, status } = await this.client.public.waitForTransactionReceipt(
+      { hash },
+    )
+
+    if (status === 'reverted') {
+      throw new Error('Transaction reverted')
+    }
+
+    const redeemedEvents = parseEventLogs({
+      abi,
+      logs,
+      eventName: 'Redeemed',
+    })
+
+    const assets = redeemedEvents[0].args.assetsForReceiver
+
+    return { assets, hash, events: parseEventLogs({ abi, logs }) }
+  }
+
+  /**
+   * Deposits assets of underlying tokens into a triple vault and grants ownership of 'shares' to 'receiver'
+   *
+   * @param vaultId - vault id of the triple
+   * @param assets - amount of assets to deposit
+   * @param receiver - optional address to receive shares
+   * @returns transaction hash, shares received, and events
+   */
+  public async depositTriple(
+    vaultId: bigint,
+    assets: bigint,
+    receiver?: Address,
+  ) {
+    const address = receiver || this.client.wallet.account.address
+
+    try {
+      await this.contract.simulate.depositTriple([address, vaultId], {
+        value: assets,
+        account: this.client.wallet.account.address,
+      })
+    } catch (e) {
+      this._throwRevertedError(e as BaseError)
+    }
+
+    const hash = await this.contract.write.depositTriple([address, vaultId], {
+      value: assets,
+    })
+
+    const { logs, status } = await this.client.public.waitForTransactionReceipt(
+      { hash },
+    )
+
+    if (status === 'reverted') {
+      throw new Error('Transaction reverted')
+    }
+
+    const depositedEvents = parseEventLogs({
+      abi,
+      logs,
+      eventName: 'Deposited',
+    })
+
+    const shares = depositedEvents[0].args.sharesForReceiver
+
+    return { shares, hash, events: parseEventLogs({ abi, logs }) }
+  }
+
+  /**
+   * Redeem assets from a triple vault
+   *
+   * @param vaultId - vault id of the triple
+   * @param shares - amount of shares to withdraw
+   * @param receiver - optional address to receive assets
+   * @returns transaction assets, transaction hash and events
+   */
+  public async redeemTriple(
+    vaultId: bigint,
+    shares: bigint,
+    receiver?: Address,
+  ) {
+    const address = receiver || this.client.wallet.account.address
+
+    try {
+      await this.contract.simulate.redeemTriple([shares, address, vaultId], {
+        account: this.client.wallet.account.address,
+      })
+    } catch (e) {
+      this._throwRevertedError(e as BaseError)
+    }
+
+    const hash = await this.contract.write.redeemTriple([
       shares,
       address,
       vaultId,
