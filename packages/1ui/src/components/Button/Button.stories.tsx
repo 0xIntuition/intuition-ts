@@ -95,7 +95,7 @@ export const Primary: Story = {
         <ChevronRight />
       </Button>
       <Button isLoading {...props}>
-        isLoading
+        Loading...
       </Button>
       <Button disabled {...props}>
         Disabled
@@ -128,7 +128,7 @@ export const Secondary: Story = {
         <ChevronRight />
       </Button>
       <Button variant="secondary" isLoading {...props}>
-        isLoading
+        Loading...
       </Button>
       <Button variant="secondary" disabled {...props}>
         Disabled
@@ -164,7 +164,7 @@ export const Ghost: Story = {
         <ChevronRight />
       </Button>
       <Button variant="ghost" isLoading {...props}>
-        isLoading
+        Loading...
       </Button>
       <Button variant="ghost" disabled {...props}>
         Disabled
@@ -197,7 +197,7 @@ export const Text: Story = {
         <ChevronRight />
       </Button>
       <Button variant="text" isLoading {...props}>
-        isLoading
+        Loading...
       </Button>
       <Button variant="text" disabled {...props}>
         Disabled
@@ -230,7 +230,7 @@ export const Accent: Story = {
         <ChevronRight />
       </Button>
       <Button variant="accent" isLoading {...props}>
-        isLoading
+        Loading...
       </Button>
       <Button variant="accent" disabled {...props}>
         Disabled
@@ -263,7 +263,7 @@ export const Warning: Story = {
         <ChevronRight />
       </Button>
       <Button variant="warning" isLoading {...props}>
-        isLoading
+        Loading...
       </Button>
       <Button variant="warning" disabled {...props}>
         Disabled
@@ -296,7 +296,7 @@ export const Success: Story = {
         <ChevronRight />
       </Button>
       <Button variant="success" isLoading {...props}>
-        isLoading
+        Loading...
       </Button>
       <Button variant="success" disabled {...props}>
         Disabled
@@ -329,7 +329,7 @@ export const Destructive: Story = {
         <ChevronRight />
       </Button>
       <Button variant="destructive" isLoading {...props}>
-        isLoading
+        Loading...
       </Button>
       <Button variant="destructive" disabled {...props}>
         Disabled

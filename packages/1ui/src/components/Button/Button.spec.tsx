@@ -143,7 +143,7 @@ describe('Button', () => {
           class="flex items-center gap-[8px] text-sm font-medium border-solid border-[1px] disabled:bg-muted disabled:text-muted-foreground disabled:border-muted bg-primary text-primary-foreground border-primary hover:bg-primary/80 rounded-full px-[12px] py-[4px]"
         >
           <svg
-            class="lucide lucide-loader-circle animate-spin h-6 w-6"
+            class="lucide lucide-loader-circle h-6 w-6 animate-spin"
             fill="none"
             height="24"
             stroke="currentColor"
@@ -158,6 +158,7 @@ describe('Button', () => {
               d="M21 12a9 9 0 1 1-6.219-8.56"
             />
           </svg>
+          Text
         </button>
       </DocumentFragment>
     `)
