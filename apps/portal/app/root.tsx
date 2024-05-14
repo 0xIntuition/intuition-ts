@@ -155,7 +155,7 @@ export function AppLayout() {
     const formData = new FormData()
     formData.set('didSession', user?.id ?? '')
     formData.set('wallet', user?.wallet?.address ?? '')
-    formData.set('accessToken', (await getAccessToken()) ?? '')
+    formData.set('accessToken', accessToken ?? '')
     submit(formData, {
       method: 'post',
     })
