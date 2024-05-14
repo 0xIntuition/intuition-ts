@@ -17,7 +17,7 @@
     "build": "nx run-many -t build",
     "lint": "nx run-many -t lint",
     "lint:fix": "nx run-many -t lint:fix",
-    "test": "nx run-many -t test --reporter=verbose",
+    "test": "nx run-many -t test",
     "storybook": "nx run @intuition-ts/1ui:storybook",
     "prettier": "prettier --write .",
     "prettier:silent": "prettier --write . --log-level=silent",
