@@ -14,7 +14,7 @@ import {
   BaseError,
 } from 'viem'
 import { abi } from './abi'
-import { multiVaultAddress } from './constants'
+import { deployments } from './deployments'
 
 export class Multivault {
   public readonly contract: GetContractReturnType<
@@ -30,10 +30,17 @@ export class Multivault {
     },
     address?: Address,
   ) {
+    const deployment = deployments[this.client.public.chain.id]
+
+    if (address === undefined && deployment === undefined) {
+      throw new Error(
+        'Multivault not deployed on chain: ' + this.client.public.chain.id,
+      )
+    }
     this.contract = getContract({
       abi,
       client,
-      address: address || multiVaultAddress,
+      address: address || deployment,
     })
   }
 
