@@ -45,7 +45,16 @@ const meta: Meta<typeof Button> = {
     },
     size: {
       description: 'Size of button',
-      options: ['default', 'medium', 'large', 'extraLarge'],
+      options: [
+        'default',
+        'ms',
+        'lg',
+        'xl',
+        'icon',
+        'iconMd',
+        'iconLg',
+        'iconXl',
+      ],
       table: {
         type: { summary: 'string' },
         defaultValue: { summary: 'default' },
@@ -333,6 +342,30 @@ export const Destructive: Story = {
       </Button>
       <Button variant="destructive" disabled {...props}>
         Disabled
+      </Button>
+    </div>
+  ),
+}
+
+export const IconSizes: Story = {
+  parameters: {
+    controls: {
+      disable: true,
+    },
+  },
+  render: (props) => (
+    <div style={{ display: 'flex', gap: '2rem', alignItems: 'center' }}>
+      <Button size="icon" {...props}>
+        <ChevronRight />
+      </Button>
+      <Button variant="secondary" size="iconMd" {...props}>
+        <ChevronRight />
+      </Button>
+      <Button variant="ghost" size="iconLg" {...props}>
+        <ChevronRight />
+      </Button>
+      <Button variant="accent" size="iconXl" {...props}>
+        <ChevronRight />
       </Button>
     </div>
   ),

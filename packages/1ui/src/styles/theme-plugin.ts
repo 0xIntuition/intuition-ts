@@ -125,16 +125,16 @@ export const themePlugin = plugin(
           sans: ['Geist', ...defaultTheme.fontFamily.sans],
         },
         fontSize: {
-          xs: '0.625rem', // ['0.625rem', ''],
-          sm: '0.75rem', // ['0.75rem', ''],
-          base: '0.875rem', // ['0.875rem', ''],
-          lg: '1rem', // ['1rem', ''],
-          xl: '1.25rem', // ['1.25rem', ''],
-          '2xl': '1.5rem', // ['1.5rem', ''],
-          '3xl': '1.875rem', // ['1.875rem', ''],
-          '4xl': '2.5rem', // ['2.5rem', ''],
-          '5xl': '3.125rem', // ['3.125rem', ''],
-          '6xl': '3.75rem', // ['3.75rem', ''],
+          xs: ['0.625rem', '1rem'], // small
+          sm: ['0.75rem', '1.125rem'], // caption & footnote
+          base: ['0.875rem', '1.25rem'], // body
+          lg: ['1rem', '1.875rem'], // bodyLarge
+          xl: ['1.25rem', '1.875rem'], // headline
+          '2xl': '1.5rem', // heading5
+          '3xl': '1.875rem', // heading4
+          '4xl': '2.5rem', // heading3
+          '5xl': '3.125rem', // heading2
+          '6xl': '3.75rem', // heading1
         },
         colors: {
           border:

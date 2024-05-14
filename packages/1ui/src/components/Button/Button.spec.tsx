@@ -8,7 +8,7 @@ describe('Button', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <button
-          class="flex items-center gap-[8px] text-sm font-medium border-solid border-[1px] disabled:bg-muted disabled:text-muted-foreground disabled:border-muted bg-primary text-primary-foreground border-primary hover:bg-primary/80 rounded-full px-[12px] py-[4px]"
+          class="flex items-center gap-2 text-sm font-medium border-solid border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted shadow-md-subtle bg-primary text-primary-foreground border-primary hover:bg-primary/80 rounded-full px-3 py-1"
         >
           Text
         </button>
@@ -20,7 +20,7 @@ describe('Button', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <button
-          class="flex items-center gap-[8px] text-sm font-medium border-solid border-[1px] disabled:bg-muted disabled:text-muted-foreground disabled:border-muted bg-gradient-to-b from-primary/10 to-primary/5 text-primary/60 border-primary/10 rounded-[8px] hover:text-primary disabled:from-muted disabled:to-muted px-[12px] py-[4px]"
+          class="flex items-center gap-2 text-sm font-medium border-solid border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted shadow-md-subtle bg-gradient-to-b from-primary/10 to-primary/5 text-primary/60 border-primary/10 rounded-lg hover:text-primary disabled:from-muted disabled:to-muted px-3 py-1"
         >
           Text
         </button>
@@ -32,7 +32,7 @@ describe('Button', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <button
-          class="flex items-center gap-[8px] text-sm font-medium border-solid border-[1px] disabled:text-muted-foreground disabled:border-muted bg-gradient-to-b from-transparent to-transparent text-primary/70 border-primary/70 rounded-[8px] hover:text-primary hover:border-primary disabled:bg-transparent aria-selected:from-primary/10 aria-selected:to-primary/5 aria-selected:border-primary/10 px-[12px] py-[4px]"
+          class="flex items-center gap-2 text-sm font-medium border-solid border disabled:text-muted-foreground disabled:border-muted shadow-md-subtle bg-gradient-to-b from-transparent to-transparent text-primary/70 border-primary/70 rounded-lg hover:text-primary hover:border-primary disabled:bg-transparent aria-selected:from-primary/10 aria-selected:to-primary/5 aria-selected:border-primary/10 px-3 py-1"
         >
           Text
         </button>
@@ -44,7 +44,7 @@ describe('Button', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <button
-          class="flex items-center gap-[8px] text-sm font-medium border-solid border-[1px] disabled:text-muted-foreground bg-transparent text-primary/70 border-transparent hover:text-primary disabled:border-transparent disabled:bg-transparent px-[12px] py-[4px]"
+          class="flex items-center gap-2 text-sm font-medium border-solid border disabled:text-muted-foreground shadow-md-subtle bg-transparent text-primary/70 border-transparent hover:text-primary disabled:border-transparent disabled:bg-transparent px-3 py-1"
         >
           Text
         </button>
@@ -56,7 +56,7 @@ describe('Button', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <button
-          class="flex items-center gap-[8px] text-sm font-medium border-solid border-[1px] disabled:bg-muted disabled:text-muted-foreground disabled:border-muted bg-accent text-accent-foreground border-accent rounded-full hover:bg-accent/70 hover:border-accent/30 px-[12px] py-[4px]"
+          class="flex items-center gap-2 text-sm font-medium border-solid border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted shadow-md-subtle bg-accent text-accent-foreground border-accent rounded-full hover:bg-accent/70 hover:border-accent/30 px-3 py-1"
         >
           Text
         </button>
@@ -68,7 +68,7 @@ describe('Button', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <button
-          class="flex items-center gap-[8px] text-sm font-medium border-solid border-[1px] disabled:bg-muted disabled:text-muted-foreground disabled:border-muted bg-warning text-warning-foreground border-warning rounded-full hover:bg-warning/70 hover:border-warning/30 px-[12px] py-[4px]"
+          class="flex items-center gap-2 text-sm font-medium border-solid border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted shadow-md-subtle bg-warning text-warning-foreground border-warning rounded-full hover:bg-warning/70 hover:border-warning/30 px-3 py-1"
         >
           Text
         </button>
@@ -80,7 +80,7 @@ describe('Button', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <button
-          class="flex items-center gap-[8px] text-sm font-medium border-solid border-[1px] disabled:bg-muted disabled:text-muted-foreground disabled:border-muted bg-success text-success-foreground border-success rounded-full hover:bg-success/70 hover:border-success/30 px-[12px] py-[4px]"
+          class="flex items-center gap-2 text-sm font-medium border-solid border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted shadow-md-subtle bg-success text-success-foreground border-success rounded-full hover:bg-success/70 hover:border-success/30 px-3 py-1"
         >
           Text
         </button>
@@ -92,7 +92,7 @@ describe('Button', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <button
-          class="flex items-center gap-[8px] text-sm font-medium border-solid border-[1px] disabled:bg-muted disabled:text-muted-foreground disabled:border-muted bg-destructive text-destructive-foreground border-destructive rounded-full hover:bg-destructive/70 hover:border-destructive/30 px-[12px] py-[4px]"
+          class="flex items-center gap-2 text-sm font-medium border-solid border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted shadow-md-subtle bg-destructive text-destructive-foreground border-destructive rounded-full hover:bg-destructive/70 hover:border-destructive/30 px-3 py-1"
         >
           Text
         </button>
@@ -104,7 +104,7 @@ describe('Button', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <button
-          class="flex items-center gap-[8px] text-sm font-medium border-solid border-[1px] disabled:bg-muted disabled:text-muted-foreground disabled:border-muted bg-primary text-primary-foreground border-primary hover:bg-primary/80 rounded-full px-[16px] py-[6px]"
+          class="flex items-center gap-2 text-sm font-medium border-solid border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted shadow-md-subtle bg-primary text-primary-foreground border-primary hover:bg-primary/80 rounded-full px-4 py-1.5"
         >
           Text
         </button>
@@ -116,7 +116,7 @@ describe('Button', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <button
-          class="flex items-center font-medium border-solid border-[1px] disabled:bg-muted disabled:text-muted-foreground disabled:border-muted bg-primary text-primary-foreground border-primary hover:bg-primary/80 rounded-full px-[16px] py-[8px] gap-[16px] text-base"
+          class="flex items-center font-medium border-solid border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted shadow-md-subtle bg-primary text-primary-foreground border-primary hover:bg-primary/80 rounded-full px-4 py-2 gap-4 text-base"
         >
           Text
         </button>
@@ -128,7 +128,7 @@ describe('Button', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <button
-          class="flex items-center font-medium border-solid border-[1px] disabled:bg-muted disabled:text-muted-foreground disabled:border-muted bg-primary text-primary-foreground border-primary hover:bg-primary/80 rounded-full px-[20px] py-[10px] gap-[20px] text-lg"
+          class="flex items-center font-medium border-solid border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted shadow-md-subtle bg-primary text-primary-foreground border-primary hover:bg-primary/80 rounded-full px-5 py-2.5 gap-5 text-lg"
         >
           Text
         </button>
@@ -140,7 +140,7 @@ describe('Button', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <button
-          class="flex items-center gap-[8px] text-sm font-medium border-solid border-[1px] disabled:bg-muted disabled:text-muted-foreground disabled:border-muted bg-primary text-primary-foreground border-primary hover:bg-primary/80 rounded-full px-[12px] py-[4px]"
+          class="flex items-center gap-2 text-sm font-medium border-solid border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted shadow-md-subtle bg-primary text-primary-foreground border-primary hover:bg-primary/80 rounded-full px-3 py-1"
         >
           <svg
             class="lucide lucide-loader-circle h-6 w-6 animate-spin"
@@ -168,7 +168,7 @@ describe('Button', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <button
-          class="flex items-center gap-[8px] text-sm font-medium border-solid border-[1px] disabled:bg-muted disabled:text-muted-foreground disabled:border-muted bg-primary text-primary-foreground border-primary hover:bg-primary/80 rounded-full px-[12px] py-[4px]"
+          class="flex items-center gap-2 text-sm font-medium border-solid border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted shadow-md-subtle bg-primary text-primary-foreground border-primary hover:bg-primary/80 rounded-full px-3 py-1"
           disabled=""
         >
           Text
@@ -186,7 +186,7 @@ describe('Button', () => {
       <DocumentFragment>
         <button
           aria-selected="true"
-          class="flex items-center gap-[8px] text-sm font-medium border-solid border-[1px] disabled:text-muted-foreground disabled:border-muted bg-gradient-to-b from-transparent to-transparent text-primary/70 border-primary/70 rounded-[8px] hover:text-primary hover:border-primary disabled:bg-transparent aria-selected:from-primary/10 aria-selected:to-primary/5 aria-selected:border-primary/10 px-[12px] py-[4px]"
+          class="flex items-center gap-2 text-sm font-medium border-solid border disabled:text-muted-foreground disabled:border-muted shadow-md-subtle bg-gradient-to-b from-transparent to-transparent text-primary/70 border-primary/70 rounded-lg hover:text-primary hover:border-primary disabled:bg-transparent aria-selected:from-primary/10 aria-selected:to-primary/5 aria-selected:border-primary/10 px-3 py-1"
         >
           Text
         </button>
