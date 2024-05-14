@@ -147,7 +147,7 @@ export function AppLayout() {
     })
   }, [])
 
-  async function handleSignOut() {
+  async function handleLogout() {
     logout()
     fetcher.submit({}, { method: 'post', action: '/actions/auth/logout' })
   }
