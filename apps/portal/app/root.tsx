@@ -213,20 +213,20 @@ export function AppLayout() {
   }, [wallet])
 
   useEffect(() => {
+    async function handleLogin() {
+      const formData = new FormData()
+      formData.set('didSession', user?.id ?? '')
+      formData.set('wallet', user?.wallet?.address ?? '')
+      formData.set('accessToken', accessToken ?? '')
+      submit(formData, {
+        method: 'post',
+      })
+    }
+
     if (wallet && user?.id && accessToken) {
       handleLogin()
     }
-  }, [wallet, user, accessToken])
-
-  async function handleLogin() {
-    const formData = new FormData()
-    formData.set('didSession', user?.id ?? '')
-    formData.set('wallet', user?.wallet?.address ?? '')
-    formData.set('accessToken', accessToken ?? '')
-    submit(formData, {
-      method: 'post',
-    })
-  }
+  }, [wallet, user, accessToken, submit])
 
   async function handleLogout() {
     logout()
