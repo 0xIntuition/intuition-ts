@@ -16,7 +16,9 @@
     "paths": {
       "@/*": ["src/*"],
       "@intuition-ts/1ui": ["packages/1ui/src/index.ts"],
+      "@intuition-ts/api": ["packages/api/src/index.ts"],
       "@intuition-ts/automation-tools": ["tools/src/index.ts"],
+      "@intuition-ts/portal": ["apps/portal/src/index.ts"],
       "@intuition-ts/protocol": ["packages/protocol/src/index.ts"]
     }
   },
