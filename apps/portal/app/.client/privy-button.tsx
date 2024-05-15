@@ -36,7 +36,9 @@ export function PrivyButton() {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <span>
-              <Button className="bg-cyan-50">User: {privyUser.id}</Button>
+              <Button className="bg-cyan-50">
+                User: {privyUser.wallet?.address}
+              </Button>
             </span>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="center" className="bg-popover w-48">

@@ -4,6 +4,7 @@ import { LoaderFunctionArgs, json } from '@remix-run/node'
 import { getIdentities } from '../.server/identity'
 import type { Identity } from '../types/identity'
 import { ClientOnly } from 'remix-utils/client-only'
+import logger from '@lib/utils/logger'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url)
@@ -32,6 +33,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
   }
 
   const totalPages = calculateTotalPages(total, Number(limit))
+
+  logger('identities', identities)
 
   return json({
     identities: identities ?? [],

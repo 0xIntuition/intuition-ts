@@ -34,7 +34,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
     <PrivyProvider
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
-      appId={'clux3pbr200nrc2sexjkm8al0' as string}
+      appId={'clvcwhbx3082nypes1173q3wd' as string}
       config={privyConfig}
     >
       <QueryClientProvider client={queryClient}>
