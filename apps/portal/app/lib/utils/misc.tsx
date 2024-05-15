@@ -4,6 +4,7 @@ import { clsx, type ClassValue } from 'clsx'
 import React from 'react'
 import { twMerge } from 'tailwind-merge'
 import { formatUnits } from 'viem'
+import logger from './logger'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -85,6 +86,7 @@ export function getAuthHeaders(token?: string) {
     'Content-Type': 'application/json',
     'x-api-key': process.env.API_KEY as string,
   }
+  logger('getAuthHeaders token', token)
 
   if (token) {
     headers['authorization'] = `Bearer ${token}`

@@ -61,31 +61,28 @@ export async function authenticate(
   }
   // const ensName = await mainnetClient.getEnsName({ address: wallet as Address })
 
-  const isAuthed = await fetch(`${apiUrl}/auth`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': process.env.API_KEY!,
-    },
-    body: JSON.stringify({
-      didSession: didSession,
-    }),
-  })
-  logger('isAuthed', isAuthed)
+  // const isAuthed = await fetch(`${apiUrl}/auth`, {
+  //   method: 'POST',
+  //   headers: {
+  //     'Content-Type': 'application/json',
+  //     'x-api-key': process.env.API_KEY!,
+  //   },
+  //   body: JSON.stringify({
+  //     didSession: didSession,
+  //   }),
+  // })
+  // logger('isAuthed', isAuthed)
 
-  if (!isAuthed.ok) {
-    throw new Error('Not authorized')
-  }
+  // if (!isAuthed.ok) {
+  //   throw new Error('Not authorized')
+  // }
 
-  const { newUser, userId } = await isAuthed.json()
+  // const { newUser, userId } = await isAuthed.json()
 
   return {
     didSession,
     wallet,
-    id: userId,
-    // ensName: ensName?.toString(),
     accessToken,
-    newUser,
   }
 }
 export async function login(request: Request) {
