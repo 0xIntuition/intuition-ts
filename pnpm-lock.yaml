@@ -183,7 +183,7 @@ importers:
 
   apps/portal:
     dependencies:
-      '@intuition-ts/1ui':
+      '@0xintuition/1ui':
         specifier: workspace:^
         version: link:../../packages/1ui
       '@privy-io/react-auth':

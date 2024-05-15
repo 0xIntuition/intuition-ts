@@ -6,7 +6,7 @@ import { flatRoutes } from 'remix-flat-routes'
 import tailwindcss from 'tailwindcss'
 import autoprefixer from 'autoprefixer'
 // TODO: Update this once we figure our the TS issue that vite is throwing
-// import { themePreset } from '@intuition-ts/1ui'
+// import { themePreset } from '@0xintuition/1ui'
 import { themePreset } from '../../packages/1ui/src/styles/index'
 
 installGlobals()

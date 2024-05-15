@@ -26,8 +26,8 @@ console.log(events)
 
 ## Building
 
-Run `nx build @intuition-ts/protocol` to build the library.
+Run `nx build @0xintuition/protocol` to build the library.
 
 ## Running unit tests
 
-Run `nx test @intuition-ts/protocol` to execute the unit tests
+Run `nx test @0xintuition/protocol` to execute the unit tests

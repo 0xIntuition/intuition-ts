@@ -1,5 +1,5 @@
 {
-  "name": "@intuition-ts/api",
+  "name": "@0xintuition/api",
   "version": "0.0.1",
   "main": "dist/index.js",
   "exports": {

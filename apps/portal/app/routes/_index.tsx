@@ -1,4 +1,4 @@
-import { Button, Label, Input } from '@intuition-ts/1ui'
+import { Button, Label, Input } from '@0xintuition/1ui'
 
 export default function Index() {
   return (

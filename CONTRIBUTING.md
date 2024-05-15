@@ -55,12 +55,6 @@ You can fork this repo by clicking the fork button in the top right corner of th
 git clone https://github.com/0xIntuition/intuition-ts.git
 ```
 
-### Navigate to project directory
-
-```bash
-cd intuition-ts
-```
-
 ### Create a new Branch
 
 ```bash
