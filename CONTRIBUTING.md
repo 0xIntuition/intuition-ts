@@ -26,11 +26,11 @@ packages
 └── protocol
 ```
 
-| Path            | Description                               |
-| --------------- | ----------------------------------------- |
-| `apps/portal`   | The Remix application for the playground. |
-| `packages/1ui`  | Our design system.                        |
-| `packages/protocol` | protocol SDK.                                 |
+| Path                | Description                               |
+| ------------------- | ----------------------------------------- |
+| `apps/portal`       | The Remix application for the playground. |
+| `packages/1ui`      | Our design system.                        |
+| `packages/protocol` | protocol SDK.                             |
 
 ## Contributing To `0xIntuition` Packages
 
