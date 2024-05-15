@@ -6,6 +6,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@intuition-ts/1ui'
+
 import { usePrivy, useWallets } from '@privy-io/react-auth'
 import { NavLink } from '@remix-run/react'
 
@@ -16,10 +17,6 @@ export function PrivyButton() {
 
   // Disable login when Privy is not ready or the user is already authenticated
   const disableLogin = !ready || (ready && authenticated)
-
-  console.log('ready', ready)
-  console.log('authenticated', authenticated)
-  console.log('privyUser', privyUser)
 
   if (!ready) {
     return null

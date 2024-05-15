@@ -1,6 +1,6 @@
 import { CURRENT_ENV } from '@lib/utils/constants'
 import { getChainEnvConfig } from '@lib/utils/environment'
-import { usePrivy, useWallets } from '@privy-io/react-auth'
+// import { usePrivy, useWallets } from '@privy-io/react-auth'
 import {
   ActionFunctionArgs,
   LoaderFunctionArgs,
@@ -18,7 +18,7 @@ import {
   useSubmit,
 } from '@remix-run/react'
 import { QueryClient } from '@tanstack/react-query'
-import { User } from '@types/user'
+import { User } from './types/user'
 import { makeDomainFunction } from 'domain-functions'
 import { useEffect, useState } from 'react'
 import { ClientOnly } from 'remix-utils/client-only'
@@ -131,21 +131,113 @@ interface FetcherData {
   refreshToken?: string
 }
 
+interface User {
+  id: string
+  wallet?: { address: string }
+  didSession?: string
+  newUser?: boolean
+  accessToken?: string
+}
+
+interface UsePrivy {
+  user?: User | null
+  login: () => void
+  logout: () => void
+  getAccessToken: () => Promise<string | null>
+}
+
+interface Wallet {
+  address: string
+  chainId: string
+  switchChain: (chainId: number) => Promise<void>
+}
+
+interface UseWallets {
+  wallets?: Wallet[] // Now using a defined Wallet type instead of any
+  switchChain?: (chainId: number) => Promise<void>
+}
+
+interface PrivyHooks {
+  usePrivy?: () => UsePrivy
+  useWallets?: () => UseWallets
+}
+
+// Initialize state with default implementations to avoid calling undefined
+const defaultUsePrivy: UsePrivy = {
+  user: undefined,
+  login: () => {},
+  logout: () => {},
+  getAccessToken: () => Promise.resolve(null),
+}
+
+const defaultUseWallets: UseWallets = {
+  wallets: undefined,
+  switchChain: async (chainId: number) => {
+    // No-operation or placeholder implementation
+  },
+}
+
 export function AppLayout() {
   const { env } = useLoaderData<typeof loader>()
+  const [isClient, setIsClient] = useState(false)
+  const [privyHooks, setPrivyHooks] = useState<PrivyHooks>({
+    usePrivy: () => defaultUsePrivy,
+    useWallets: () => defaultUseWallets,
+  })
+
   const fetcher = useFetcher<FetcherData>()
   const submit = useSubmit()
-  const { user, login, logout, getAccessToken } = usePrivy()
-  const { wallets } = useWallets()
+
+  useEffect(() => {
+    setIsClient(typeof window !== 'undefined')
+    if (isClient) {
+      import('@privy-io/react-auth')
+        .then((module) => {
+          setPrivyHooks({
+            usePrivy: module.usePrivy,
+            useWallets: module.useWallets,
+          })
+        })
+        .catch((error) => {
+          console.error('Failed to load @privy-io/react-auth', error)
+          // Optionally set default functions on error to maintain functionality
+          setPrivyHooks({
+            usePrivy: () => defaultUsePrivy,
+            useWallets: () => defaultUseWallets,
+          })
+        })
+    }
+  }, [isClient])
+
+  const { user, login, logout, getAccessToken } = privyHooks.usePrivy
+    ? privyHooks.usePrivy()
+    : {
+        user: undefined,
+        login: () => undefined,
+        logout: () => undefined,
+        getAccessToken: () => Promise.resolve(undefined),
+      }
+
+  const { wallets } = privyHooks.useWallets
+    ? privyHooks.useWallets()
+    : { wallets: null }
+
+  // const { user, login, logout, getAccessToken } = usePrivy()
   const wallet = wallets?.[0]
+  logger('wallet', wallet)
   const [accessToken, setAccessToken] = useState<string | null>(null)
 
-  logger('accessToken', accessToken)
+  logger('privyUser', user)
+
   useEffect(() => {
-    getAccessToken().then((token) => {
-      setAccessToken(token)
-    })
-  }, [])
+    async function fetchAccessToken() {
+      const accessToken = await getAccessToken()
+      setAccessToken(accessToken ?? null)
+      logger('access token in root effect', accessToken)
+    }
+
+    fetchAccessToken()
+  }, [user])
 
   async function handleLogout() {
     logout()
