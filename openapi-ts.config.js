@@ -5,7 +5,7 @@ export default defineConfig({
   input: './swagger.json',
   output: {
     format: 'prettier',
-    path: 'libs/api-client',
+    path: 'packages/api/api-client',
   },
   types: {
     enums: 'javascript',
