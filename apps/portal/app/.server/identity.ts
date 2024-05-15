@@ -2,7 +2,7 @@ import logger from '@lib/utils/logger'
 import { generateQueryParams, getAuthHeaders } from '@lib/utils/misc'
 import { IdentitySchema, type Identity } from '@types/identity'
 import type { APIResponse, QueryParams } from '@types/query'
-import type { User } from '../types/user'
+import type { User } from '@types/user'
 import { z } from 'zod'
 import { requireAuthedUser } from './auth'
 
@@ -20,15 +20,8 @@ export async function getIdentities(
       throw new Error('API_URL is not defined')
     }
 
-    logger('get identities')
-
     const { accessToken } = (await requireAuthedUser(request)) as User
-
-    logger('access Token', accessToken)
-
     const headers = getAuthHeaders(accessToken !== null ? accessToken : '')
-
-    logger('headers', headers)
     const queryParams = generateQueryParams(params)
 
     const res = await fetch(`${apiUrl}/identities?${queryParams}`, {
@@ -36,7 +29,6 @@ export async function getIdentities(
       headers: headers,
     })
 
-    logger('get identities response', res)
     if (!res.ok) {
       throw new Error(
         `Error getting identities: ${res.status} ${res.statusText}`,
