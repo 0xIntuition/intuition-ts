@@ -19,7 +19,8 @@
       "@intuition-ts/api": ["packages/api/src/index.ts"],
       "@intuition-ts/automation-tools": ["tools/src/index.ts"],
       "@intuition-ts/portal": ["apps/portal/src/index.ts"],
-      "@intuition-ts/protocol": ["packages/protocol/src/index.ts"]
+      "@intuition-ts/protocol": ["packages/protocol/src/index.ts"],
+      "@intuition-ts/sdk": ["packages/sdk/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "dist", "**/*.spec.ts"]

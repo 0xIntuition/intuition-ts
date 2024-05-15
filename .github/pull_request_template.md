@@ -2,8 +2,9 @@
 
 - [ ] portal
 - [ ] 1ui
-- [ ] protocol
 - [ ] api
+- [ ] protocol
+- [ ] sdk
 - [ ] tools
 
 ## Overview
