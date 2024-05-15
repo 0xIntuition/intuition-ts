@@ -24,6 +24,8 @@ export async function getIdentities(
 
     const { accessToken } = (await requireAuthedUser(request)) as User
 
+    logger('access Token', accessToken)
+
     const headers = getAuthHeaders(accessToken !== null ? accessToken : '')
 
     logger('headers', headers)
