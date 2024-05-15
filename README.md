@@ -18,6 +18,12 @@ Each app and package has it's own README with instructions for getting up and ru
 
 - [1ui Component Library](./packages/1ui/) is the first package in our new monorepo. This is our core component library that also includes a Storybook instance. The 1ui README contains additional information.
 
+- [api](./packages/api/) is the api interaction layer of Intuition
+
+- [protocol](./packages/protocol/) is the on-chain interactions (abi, bytecode) SDK
+
+- [sdk](./packages/sdk/) contains high level logic that combines both on-chain and off-chain interactions
+
 ## Getting Started
 
 ### Prerequisites
