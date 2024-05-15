@@ -243,6 +243,7 @@ export function AppLayout() {
     fetcher.submit({}, { method: 'post', action: '/actions/auth/logout' })
   }
   async function handleLogin() {
+    logger('handle login')
     const formData = new FormData()
     formData.set('didSession', user?.id ?? '')
     formData.set('wallet', user?.wallet?.address ?? '')
