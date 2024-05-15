@@ -14,7 +14,7 @@ Each app and package has it's own README with instructions for getting up and ru
 
 - [Portal](./apps/portal/) is the first core application in our new monorepo. The Portal README contains additional information and details about how to get started.
 
-### Libs
+### Packages
 
 - [1ui Component Library](./packages/1ui/) is the first package in our new monorepo. This is our core component library that also includes a Storybook instance. The 1ui README contains additional information.
 
