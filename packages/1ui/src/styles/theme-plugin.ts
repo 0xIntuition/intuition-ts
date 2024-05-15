@@ -2,6 +2,7 @@ import defaultTheme from 'tailwindcss/defaultTheme.js'
 import plugin from 'tailwindcss/plugin'
 
 import { themes } from './themes'
+import { colorMix } from './utils'
 
 export const themePlugin = plugin(
   // 1. Add css variable definitions to the base layer
@@ -46,6 +47,7 @@ export const themePlugin = plugin(
         '--primary-950': themes.light.primary[950],
       },
     })
+
     Object.entries(themes).forEach(([key, value]) => {
       addBase({
         [`[data-theme="${key}"]`]: {
@@ -88,6 +90,7 @@ export const themePlugin = plugin(
         },
       })
     })
+
     addBase({
       '*': {
         '@apply border-border': {},
@@ -98,16 +101,24 @@ export const themePlugin = plugin(
       },
     })
 
-    const newUtilities = {
+    addUtilities({
       '.border-border': {
         border: '1px solid var(--border-color)',
         '.bg-background': {
           backgroundColor: 'var(--background)',
         },
       },
-    }
-
-    addUtilities(newUtilities)
+      // Gradient Utility Classes
+      '.primary-gradient-subtle': {
+        background: `linear-gradient(${colorMix('primary', 0.1)}, ${colorMix('primary', 0.05)})`,
+      },
+      '.primary-gradient': {
+        background: `linear-gradient(${colorMix('primary', 0.4)}, ${colorMix('primary', 0.2)})`,
+      },
+      '.primary-gradient-strong': {
+        background: `linear-gradient(${colorMix('primary', 0.8)}, ${colorMix('primary', 0.5)})`,
+      },
+    })
   },
 
   // 2. Extend the tailwind theme with 'themable' utilities
@@ -137,73 +148,53 @@ export const themePlugin = plugin(
           '6xl': '3.75rem', // heading1
         },
         colors: {
-          border:
-            'color-mix(in srgb, var(--border) calc(<alpha-value> * 100%), transparent)',
-          input:
-            'color-mix(in srgb, var(--input) calc(<alpha-value> * 100%), transparent)',
-          ring: 'color-mix(in srgb, var(--ring) calc(<alpha-value> * 100%), transparent)',
-          background:
-            'color-mix(in srgb, var(--background) calc(<alpha-value> * 100%), transparent)',
-          foreground:
-            'color-mix(in srgb, var(--foreground) calc(<alpha-value> * 100%), transparent)',
+          border: colorMix('border'),
+          input: colorMix('input'),
+          ring: colorMix('ring'),
+          background: colorMix('background'),
+          foreground: colorMix('foreground'),
           primary: {
-            DEFAULT:
-              'color-mix(in srgb, var(--primary) calc(<alpha-value> * 100%), transparent)',
-            foreground:
-              'color-mix(in srgb, var(--primary-foreground) calc(<alpha-value> * 100%), transparent)',
-            50: 'color-mix(in srgb, var(--primary-50) calc(<alpha-value> * 100%), transparent)',
-            100: 'color-mix(in srgb, var(--primary-100) calc(<alpha-value> * 100%), transparent)',
-            200: 'color-mix(in srgb, var(--primary-200) calc(<alpha-value> * 100%), transparent)',
-            300: 'color-mix(in srgb, var(--primary-300) calc(<alpha-value> * 100%), transparent)',
-            400: 'color-mix(in srgb, var(--primary-400) calc(<alpha-value> * 100%), transparent)',
-            500: 'color-mix(in srgb, var(--primary-500) calc(<alpha-value> * 100%), transparent)',
-            600: 'color-mix(in srgb, var(--primary-600) calc(<alpha-value> * 100%), transparent)',
-            700: 'color-mix(in srgb, var(--primary-700) calc(<alpha-value> * 100%), transparent)',
-            800: 'color-mix(in srgb, var(--primary-800) calc(<alpha-value> * 100%), transparent)',
-            900: 'color-mix(in srgb, var(--primary-900) calc(<alpha-value> * 100%), transparent)',
-            950: 'color-mix(in srgb, var(--primary-950) calc(<alpha-value> * 100%), transparent)',
+            DEFAULT: colorMix('primary'),
+            foreground: colorMix('primary-foreground'),
+            50: colorMix('primary-50'),
+            100: colorMix('primary-100'),
+            200: colorMix('primary-200'),
+            300: colorMix('primary-300'),
+            400: colorMix('primary-400'),
+            500: colorMix('primary-500'),
+            600: colorMix('primary-600'),
+            700: colorMix('primary-700'),
+            800: colorMix('primary-800'),
+            900: colorMix('primary-900'),
+            950: colorMix('primary-950'),
           },
           destructive: {
-            DEFAULT:
-              'color-mix(in srgb, var(--destructive) calc(<alpha-value> * 100%), transparent)',
-            foreground:
-              'color-mix(in srgb, var(--destructive-foreground) calc(<alpha-value> * 100%), transparent)',
+            DEFAULT: colorMix('destructive'),
+            foreground: colorMix('destructive-foreground'),
           },
           muted: {
-            DEFAULT:
-              'color-mix(in srgb, var(--muted) calc(<alpha-value> * 100%), transparent)',
-            foreground:
-              'color-mix(in srgb, var(--muted-foreground) calc(<alpha-value> * 100%), transparent)',
+            DEFAULT: colorMix('muted'),
+            foreground: colorMix('muted-foreground'),
           },
           accent: {
-            DEFAULT:
-              'color-mix(in srgb, var(--accent) calc(<alpha-value> * 100%), transparent)',
-            foreground:
-              'color-mix(in srgb, var(--accent-foreground) calc(<alpha-value> * 100%), transparent)',
+            DEFAULT: colorMix('accent'),
+            foreground: colorMix('accent-foreground'),
           },
           warning: {
-            DEFAULT:
-              'color-mix(in srgb, var(--warning) calc(<alpha-value> * 100%), transparent)',
-            foreground:
-              'color-mix(in srgb, var(--warning-foreground) calc(<alpha-value> * 100%), transparent)',
+            DEFAULT: colorMix('warning'),
+            foreground: colorMix('warning-foreground'),
           },
           success: {
-            DEFAULT:
-              'color-mix(in srgb, var(--success) calc(<alpha-value> * 100%), transparent)',
-            foreground:
-              'color-mix(in srgb, var(--success-foreground) calc(<alpha-value> * 100%), transparent)',
+            DEFAULT: colorMix('success'),
+            foreground: colorMix('success-foreground'),
           },
           popover: {
-            DEFAULT:
-              'color-mix(in srgb, var(--popover) calc(<alpha-value> * 100%), transparent)',
-            foreground:
-              'color-mix(in srgb, var(--popover-foreground) calc(<alpha-value> * 100%), transparent)',
+            DEFAULT: colorMix('popover'),
+            foreground: colorMix('popover-foreground'),
           },
           card: {
-            DEFAULT:
-              'color-mix(in srgb, var(--card) calc(<alpha-value> * 100%), transparent)',
-            foreground:
-              'color-mix(in srgb, var(--card-foreground) calc(<alpha-value> * 100%), transparent)',
+            DEFAULT: colorMix('card'),
+            foreground: colorMix('card-foreground'),
           },
         },
         borderRadius: {

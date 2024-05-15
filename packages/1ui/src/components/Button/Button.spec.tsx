@@ -20,7 +20,7 @@ describe('Button', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <button
-          class="flex items-center gap-2 text-sm font-medium border-solid border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted shadow-md-subtle bg-gradient-to-b from-primary/10 to-primary/5 text-primary/60 border-primary/10 rounded-lg hover:text-primary disabled:from-muted disabled:to-muted px-3 py-1"
+          class="flex items-center gap-2 text-sm font-medium border-solid border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted shadow-md-subtle primary-gradient-subtle text-primary/60 border-primary/10 rounded-lg hover:text-primary disabled:from-muted disabled:to-muted px-3 py-1"
         >
           Text
         </button>
@@ -32,7 +32,7 @@ describe('Button', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <button
-          class="flex items-center gap-2 text-sm font-medium border-solid border disabled:text-muted-foreground disabled:border-muted shadow-md-subtle bg-gradient-to-b from-transparent to-transparent text-primary/70 border-primary/70 rounded-lg hover:text-primary hover:border-primary disabled:bg-transparent aria-selected:from-primary/10 aria-selected:to-primary/5 aria-selected:border-primary/10 px-3 py-1"
+          class="flex items-center gap-2 text-sm font-medium border-solid border disabled:text-muted-foreground disabled:border-muted shadow-md-subtle bg-gradient-to-b from-transparent to-transparent text-primary/70 border-primary/70 rounded-lg hover:text-primary hover:border-primary disabled:bg-transparent aria-selected:primary-gradient-subtle aria-selected:border-primary/10 px-3 py-1"
         >
           Text
         </button>
@@ -186,7 +186,7 @@ describe('Button', () => {
       <DocumentFragment>
         <button
           aria-selected="true"
-          class="flex items-center gap-2 text-sm font-medium border-solid border disabled:text-muted-foreground disabled:border-muted shadow-md-subtle bg-gradient-to-b from-transparent to-transparent text-primary/70 border-primary/70 rounded-lg hover:text-primary hover:border-primary disabled:bg-transparent aria-selected:from-primary/10 aria-selected:to-primary/5 aria-selected:border-primary/10 px-3 py-1"
+          class="flex items-center gap-2 text-sm font-medium border-solid border disabled:text-muted-foreground disabled:border-muted shadow-md-subtle bg-gradient-to-b from-transparent to-transparent text-primary/70 border-primary/70 rounded-lg hover:text-primary hover:border-primary disabled:bg-transparent aria-selected:primary-gradient-subtle aria-selected:border-primary/10 px-3 py-1"
         >
           Text
         </button>

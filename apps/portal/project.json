@@ -1,5 +1,5 @@
 {
-  "name": "@intuition-ts/portal",
+  "name": "@0xintuition/portal",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/portal",
   "projectType": "application",

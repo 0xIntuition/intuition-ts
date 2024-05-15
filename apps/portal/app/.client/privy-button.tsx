@@ -1,4 +1,4 @@
-import { Button } from '@intuition-ts/1ui'
+import { Button } from '@0xintuition/1ui'
 import { usePrivy } from '@privy-io/react-auth'
 
 export function PrivyButton() {

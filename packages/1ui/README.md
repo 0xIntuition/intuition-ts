@@ -4,7 +4,7 @@ This is our initial `1ui` component library. This will eventually become a publi
 
 ## Getting Started
 
-Once you've cloned the `intuition-ts` monorepo you can run Portal from the monorepo root. Install all packages from the monorepo root by running `pnpm install`.
+Once you've cloned the `intuition-ts` monorepo you can run 1ui from the monorepo root. Install all packages from the monorepo root by running `pnpm install`.
 
 ## Installing Components in Apps
 
@@ -12,7 +12,7 @@ Once you add components to the component library you'll need to run `pnpm --filt
 
 Once `1ui` successfully builds, you can import components into apps directly from the 1ui package:
 
-`import { Button, Label, Input } from '@intuition-ts/1ui';`
+`import { Button, Label, Input } from '@0xintuition/1ui';`
 
 These components are fully type safe and have the styles/variants/etc. injected.
 

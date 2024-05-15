@@ -1,5 +1,5 @@
 {
-  "name": "@intuition-ts/1ui",
+  "name": "@0xintuition/1ui",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "packages/1ui/src",
   "projectType": "library",

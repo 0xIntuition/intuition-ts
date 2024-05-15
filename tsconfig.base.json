@@ -15,10 +15,12 @@
     "strict": true,
     "paths": {
       "@/*": ["src/*"],
-      "@intuition-ts/api-client": ["libs/api-client/index.ts"],
-      "@intuition-ts/1ui": ["packages/1ui/src/index.ts"],
-      "@intuition-ts/automation-tools": ["tools/src/index.ts"],
-      "@intuition-ts/protocol": ["packages/protocol/src/index.ts"]
+      "@0xintuition/1ui": ["packages/1ui/src/index.ts"],
+      "@0xintuition/api": ["packages/api/src/index.ts"],
+      "@0xintuition/automation-tools": ["tools/src/index.ts"],
+      "@0xintuition/portal": ["apps/portal/src/index.ts"],
+      "@0xintuition/protocol": ["packages/protocol/src/index.ts"],
+      "@0xintuition/sdk": ["packages/sdk/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "dist", "**/*.spec.ts"]

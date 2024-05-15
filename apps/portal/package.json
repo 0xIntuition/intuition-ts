@@ -1,5 +1,5 @@
 {
-  "name": "@intuition-ts/portal",
+  "name": "@0xintuition/portal",
   "version": "0.0.1",
   "private": true,
   "sideEffects": false,
@@ -11,7 +11,7 @@
     "lint:fix": "pnpm lint --fix"
   },
   "dependencies": {
-    "@intuition-ts/1ui": "workspace:^",
+    "@0xintuition/1ui": "workspace:^",
     "@privy-io/react-auth": "^1.60.7",
     "@privy-io/wagmi": "^0.2.3",
     "@remix-run/node": "^2.9.0",

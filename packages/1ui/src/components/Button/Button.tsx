@@ -13,9 +13,9 @@ const buttonVariants = cva(
         primary:
           'bg-primary text-primary-foreground border-primary hover:bg-primary/80 rounded-full',
         secondary:
-          'bg-gradient-to-b from-primary/10 to-primary/5 text-primary/60 border-primary/10 rounded-lg hover:text-primary disabled:from-muted disabled:to-muted',
+          'primary-gradient-subtle text-primary/60 border-primary/10 rounded-lg hover:text-primary disabled:from-muted disabled:to-muted',
         ghost:
-          'bg-gradient-to-b from-transparent to-transparent text-primary/70 border-primary/70 rounded-lg hover:text-primary hover:border-primary disabled:bg-transparent aria-selected:from-primary/10 aria-selected:to-primary/5 aria-selected:border-primary/10',
+          'bg-gradient-to-b from-transparent to-transparent text-primary/70 border-primary/70 rounded-lg hover:text-primary hover:border-primary disabled:bg-transparent aria-selected:primary-gradient-subtle aria-selected:border-primary/10',
         text: 'bg-transparent text-primary/70 border-transparent hover:text-primary disabled:border-transparent disabled:bg-transparent',
         accent:
           'bg-accent text-accent-foreground border-accent rounded-full hover:bg-accent/70 hover:border-accent/30',
