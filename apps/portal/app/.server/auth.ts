@@ -1,10 +1,11 @@
 import { FormStrategy } from '@lib/utils/auth-strategy'
 import { invariant } from '@lib/utils/misc'
 import { redirect } from '@remix-run/node'
-import type { User } from '@types/user'
+import type { User } from '../types/user'
 import { DIDSession } from 'did-session'
 import { Authenticator } from 'remix-auth'
 import { sessionStorage } from './session'
+import logger from '@lib/utils/logger'
 
 // Create an instance of the authenticator, pass a generic with what
 // strategies will return and will store in the session
@@ -25,6 +26,7 @@ authenticator.use(
     const didSession = form.get('didSession')
     const wallet = form.get('wallet')
     const accessToken = form.get('accessToken')
+    logger('access token from form', form.get('accessToken'))
     // Validate the inputs
     invariant(
       typeof didSession === 'string',
@@ -50,6 +52,10 @@ export async function authenticate(
 ): Promise<User> {
   const session = await DIDSession.fromSession(didSession)
 
+  logger('authenticator')
+  logger('didSession', didSession)
+  logger('accessToken', accessToken)
+
   if (!session || !session.hasSession || session.isExpired) {
     throw new Error('Invalid DID Session')
   }
@@ -62,9 +68,10 @@ export async function authenticate(
       'x-api-key': process.env.API_KEY!,
     },
     body: JSON.stringify({
-      didSession,
+      didSession: didSession,
     }),
   })
+  logger('isAuthed', isAuthed)
 
   if (!isAuthed.ok) {
     throw new Error('Not authorized')
@@ -81,11 +88,12 @@ export async function authenticate(
     newUser,
   }
 }
-
 export async function login(request: Request) {
-  await authenticator.authenticate('auth', request, {
+  logger('login request')
+  const response = await authenticator.authenticate('auth', request, {
     successRedirect: '/',
   })
+  logger('response', response)
 }
 
 export async function logout(request: Request) {

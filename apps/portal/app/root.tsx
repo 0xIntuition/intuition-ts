@@ -18,7 +18,6 @@ import {
   useSubmit,
 } from '@remix-run/react'
 import { QueryClient } from '@tanstack/react-query'
-import { User } from './types/user'
 import { makeDomainFunction } from 'domain-functions'
 import { useEffect, useState } from 'react'
 import { ClientOnly } from 'remix-utils/client-only'
@@ -237,7 +236,7 @@ export function AppLayout() {
     }
 
     fetchAccessToken()
-  }, [user])
+  }, [user, getAccessToken])
 
   async function handleLogout() {
     logout()
@@ -267,6 +266,7 @@ export function AppLayout() {
   // Trigger remix auth action if user has a did session and has signed
   useEffect(() => {
     if (wallet && user?.id && accessToken) {
+      logger('logging in via handleLogin()')
       handleLogin()
     }
   }, [wallet, user, accessToken])
