@@ -21,10 +21,6 @@ jobs:
       # Foundry setup for protocol
       - name: Set up foundry
         uses: foundry-rs/foundry-toolchain@v1
-      - name: Setup Git
-        run: |
-          git fetch --no-tags --depth=1 origin +refs/heads/main:refs/remotes/origin/main
-          git branch --track main origin/main
       - name: Cache pnpm store
         uses: actions/cache@v3
         with:
