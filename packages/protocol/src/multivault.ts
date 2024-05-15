@@ -176,11 +176,192 @@ export class Multivault {
   }
 
   /**
+   * Simulates the effects of the redemption of `shares` and returns the estimated
+   * amount of assets estimated to be returned to the receiver of the redeem
+   *
+   * @param shares amount of shares to calculate assets on
+   * @param id vault id to get corresponding assets for
+   * @return amount of assets estimated to be returned to the receiver
+   */
+  public async previewRedeem(shares: bigint, id: bigint) {
+    return await this.contract.read.previewRedeem([shares, id])
+  }
+
+  /**
+   * Returns max amount of shares that can be redeemed from the 'owner' balance through a redeem call
+   * @param vaultId vault id to get corresponding shares for
+   * @param owner owner to get corresponding shares for
+   */
+  public async maxRedeem(vaultId: bigint, owner?: Address) {
+    const address = owner || this.client.wallet.account.address
+    return await this.contract.read.maxRedeem([address, vaultId])
+  }
+
+  /**
    * Returns amount of assets that would be charged by a vault
    * on protocol fee given amount of 'assets' provided
    */
   public async getProtocolFeeAmount(assets: bigint, vaultId: bigint) {
     return await this.contract.read.protocolFeeAmount([assets, vaultId])
+  }
+
+  /**
+   * Returns the total fees that would be charged for depositing 'assets' into a vault
+   *
+   * @param assets - amount of `assets` to calculate fees on
+   * @param vaultId - vault id to get corresponding fees for
+   * @return totalFees total fees that would be charged for depositing 'assets' into a vault
+   */
+  public async getDepositFees(assets: bigint, vaultId: bigint) {
+    return await this.contract.read.getDepositFees([assets, vaultId])
+  }
+
+  /**
+   * Returns the shares for recipient and other important values when depositing 'assets' into a vault
+   *
+   * @param assets - amount of `assets` to calculate shares and fees on
+   * @param vaultId - vault id to get corresponding shares and fees for
+   * @return totalAssetsDelta, sharesForReceiver, userAssetsAfterTotalFees, entryFee
+   */
+  public async getDepositSharesAndFees(assets: bigint, vaultId: bigint) {
+    const [
+      totalAssetsDelta,
+      sharesForReceiver,
+      userAssetsAfterTotalFees,
+      entryFee,
+    ] = await this.contract.read.getDepositSharesAndFees([assets, vaultId])
+    return {
+      totalAssetsDelta,
+      sharesForReceiver,
+      userAssetsAfterTotalFees,
+      entryFee,
+    }
+  }
+
+  /**
+   * Returns the assets for receiver and other important values when redeeming 'shares' from a vault
+   *
+   * @param shares amount of `shares` to calculate fees on
+   * @param vaultId vault id to get corresponding fees for
+   * @return totalUserAssets, assetsForReceiver, protocolFees, exitFees
+   */
+  public async getRedeemAssetsAndFees(shares: bigint, vaultId: bigint) {
+    const [totalUserAssets, assetsForReceiver, protocolFees, exitFees] =
+      await this.contract.read.getRedeemAssetsAndFees([shares, vaultId])
+    return { totalUserAssets, assetsForReceiver, protocolFees, exitFees }
+  }
+
+  /**
+   * Returns amount of assets that would be charged for the entry fee given an amount of 'assets' provided
+   * @param assets amount of assets to calculate fee on
+   * @param vaultId vault id to get corresponding fee for
+   * @return amount of assets that would be charged for the entry fee
+   */
+  public async getEntryFeeAmount(assets: bigint, vaultId: bigint) {
+    return await this.contract.read.entryFeeAmount([assets, vaultId])
+  }
+
+  /**
+   * Returns amount of assets that would be charged for the exit fee given an amount of 'assets' provided
+   * @param assets amount of assets to calculate fee on
+   * @param vaultId vault id to get corresponding fee for
+   * @return amount of assets that would be charged for the exit fee
+   */
+  public async getExitFeeAmount(assets: bigint, vaultId: bigint) {
+    return await this.contract.read.exitFeeAmount([assets, vaultId])
+  }
+
+  /**
+   * Returns atom deposit fraction given amount of 'assets' provided
+   *
+   * @param assets amount of assets to calculate fraction on
+   * @param vaultId vault id to get corresponding fraction for
+   * @return amount of assets that would be used as atom deposit fraction
+   */
+  public async getAtomDepositFractionAmount(assets: bigint, vaultId: bigint) {
+    return await this.contract.read.atomDepositFractionAmount([assets, vaultId])
+  }
+
+  /**
+   * Returns amount of shares that would be exchanged by vault given amount of 'assets' provided
+   * @param assets amount of assets to calculate shares on
+   * @param vaultId vault id to get corresponding shares for
+   * @return shares amount of shares that would be exchanged by vault given amount of 'assets' provided
+   */
+  public async convertToShares(assets: bigint, vaultId: bigint) {
+    return await this.contract.read.convertToShares([assets, vaultId])
+  }
+
+  /**
+   * Returns amount of assets that would be exchanged by vault given amount of 'shares' provided
+   * @param shares amount of shares to calculate assets on
+   * @param vaultId vault id to get corresponding assets for
+   * @return amount of assets that would be exchanged by vault given amount of 'shares' provided
+   */
+  public async convertToAssets(shares: bigint, vaultId: bigint) {
+    return await this.contract.read.convertToAssets([shares, vaultId])
+  }
+
+  /**
+   * Returns the corresponding hash for the given RDF triple, given the atoms that make up the triple
+   *
+   * @param subjectId - vault id of the subject atom
+   * @param predicateId - vault id of the predicate atom
+   * @param objectId - vault id of the object atom
+   * @returns hash of the triple
+   */
+  public async tripleHashFromAtoms(
+    subjectId: bigint,
+    predicateId: bigint,
+    objectId: bigint,
+  ) {
+    return await this.contract.read.tripleHashFromAtoms([
+      subjectId,
+      predicateId,
+      objectId,
+    ])
+  }
+
+  /**
+   * Returns the corresponding hash for the given RDF triple, given the triple vault id
+   *
+   * @param vaultId - vault id of the triple
+   * @returns hash the corresponding hash for the given RDF triple
+   */
+  public async tripleHash(vaultId: bigint) {
+    return await this.contract.read.tripleHash([vaultId])
+  }
+
+  /**
+   * Returns whether the supplied vault id is a triple
+   *
+   * @param vaultId - vault id to check
+   * @returns whether the supplied vault id is a triple
+   */
+  public async isTripleId(vaultId: bigint) {
+    return await this.contract.read.isTripleId([vaultId])
+  }
+
+  /**
+   * Returns the atoms that make up a triple/counter-triple
+   *
+   * @param vaultId - vault id of the triple
+   * @returns subjectId, predicateId, objectId
+   */
+  public async getTripleAtoms(vaultId: bigint) {
+    const [subjectId, predicateId, objectId] =
+      await this.contract.read.getTripleAtoms([vaultId])
+    return { subjectId, predicateId, objectId }
+  }
+
+  /**
+   * Returns the counter id from the given triple id
+   *
+   * @param vaultId - vault id of the triple
+   * @returns counter id of the triple
+   */
+  public async getCounterIdFromTriple(vaultId: bigint) {
+    return await this.contract.read.getCounterIdFromTriple([vaultId])
   }
 
   /**
