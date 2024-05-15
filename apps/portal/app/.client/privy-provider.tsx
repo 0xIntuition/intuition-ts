@@ -1,19 +1,15 @@
-import React from 'react'
 import { PrivyProvider } from '@privy-io/react-auth'
+import React from 'react'
 
 const ClientOnlyPrivyProvider = ({
   children,
 }: {
   children: React.ReactNode
 }) => {
-  // const { ENV: env } = useLoaderData<typeof loader>()
-  // console.log('env in root', env)
-
   return (
     <div>
       <PrivyProvider appId="clux3pbr200nrc2sexjkm8al0">
         {children}
-        {/* <LoginButton /> */}
       </PrivyProvider>
     </div>
   )

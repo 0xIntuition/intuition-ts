@@ -1,6 +1,9 @@
 import { CURRENT_ENV } from '@lib/utils/constants'
 import { getChainEnvConfig } from '@lib/utils/environment'
 // import { usePrivy, useWallets } from '@privy-io/react-auth'
+import Providers from '@client/providers'
+import { ClientHintCheck, getHints } from '@lib/utils/client-hints'
+import { useNonce } from '@lib/utils/nonce-provider'
 import {
   ActionFunctionArgs,
   LoaderFunctionArgs,
@@ -17,21 +20,18 @@ import {
   useLoaderData,
   useSubmit,
 } from '@remix-run/react'
+import { useTheme } from '@routes/actions+/set-theme'
+import { login } from '@server/auth'
+import { getEnv } from '@server/env'
+import { formAction } from '@server/form'
+import { getTheme } from '@server/theme'
 import { QueryClient } from '@tanstack/react-query'
+import { PrivyHooks, UsePrivy, UseWallets, User } from '@types/privy'
 import { makeDomainFunction } from 'domain-functions'
 import { useEffect, useState } from 'react'
 import { ClientOnly } from 'remix-utils/client-only'
 import { z } from 'zod'
-import Providers from './.client/providers'
-import { login } from './.server/auth'
-import { getEnv } from './.server/env'
-import { formAction } from './.server/form'
-import { getTheme } from './.server/theme'
-import { ClientHintCheck, getHints } from './lib/utils/client-hints'
-import { useNonce } from './lib/utils/nonce-provider'
-import { useTheme } from './routes/actions+/set-theme'
 import './styles/globals.css'
-import logger from '@lib/utils/logger'
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
   return [
@@ -130,37 +130,6 @@ interface FetcherData {
   refreshToken?: string
 }
 
-interface User {
-  id: string
-  wallet?: { address: string }
-  didSession?: string
-  newUser?: boolean
-  accessToken?: string
-}
-
-interface UsePrivy {
-  user?: User | null
-  login: () => void
-  logout: () => void
-  getAccessToken: () => Promise<string | null>
-}
-
-interface Wallet {
-  address: string
-  chainId: string
-  switchChain: (chainId: number) => Promise<void>
-}
-
-interface UseWallets {
-  wallets?: Wallet[] // Now using a defined Wallet type instead of any
-  switchChain?: (chainId: number) => Promise<void>
-}
-
-interface PrivyHooks {
-  usePrivy?: () => UsePrivy
-  useWallets?: () => UseWallets
-}
-
 // Initialize state with default implementations to avoid calling undefined
 const defaultUsePrivy: UsePrivy = {
   user: undefined,
@@ -179,6 +148,7 @@ const defaultUseWallets: UseWallets = {
 export function AppLayout() {
   const { env } = useLoaderData<typeof loader>()
   const [isClient, setIsClient] = useState(false)
+
   const [privyHooks, setPrivyHooks] = useState<PrivyHooks>({
     usePrivy: () => defaultUsePrivy,
     useWallets: () => defaultUseWallets,
@@ -186,27 +156,6 @@ export function AppLayout() {
 
   const fetcher = useFetcher<FetcherData>()
   const submit = useSubmit()
-
-  useEffect(() => {
-    setIsClient(typeof window !== 'undefined')
-    if (isClient) {
-      import('@privy-io/react-auth')
-        .then((module) => {
-          setPrivyHooks({
-            usePrivy: module.usePrivy,
-            useWallets: module.useWallets,
-          })
-        })
-        .catch((error) => {
-          console.error('Failed to load @privy-io/react-auth', error)
-          // Optionally set default functions on error to maintain functionality
-          setPrivyHooks({
-            usePrivy: () => defaultUsePrivy,
-            useWallets: () => defaultUseWallets,
-          })
-        })
-    }
-  }, [isClient])
 
   const { user, login, logout, getAccessToken } = privyHooks.usePrivy
     ? privyHooks.usePrivy()
@@ -221,39 +170,38 @@ export function AppLayout() {
     ? privyHooks.useWallets()
     : { wallets: null }
 
-  // const { user, login, logout, getAccessToken } = usePrivy()
-  const wallet = wallets?.[0]
-  logger('wallet', wallet)
-  const [accessToken, setAccessToken] = useState<string | null>(null)
+  useEffect(() => {
+    setIsClient(typeof window !== 'undefined')
+    if (isClient) {
+      import('@privy-io/react-auth')
+        .then((module) => {
+          setPrivyHooks({
+            usePrivy: module.usePrivy,
+            useWallets: module.useWallets,
+          })
+        })
+        .catch((error) => {
+          console.error('Failed to load @privy-io/react-auth', error)
+          setPrivyHooks({
+            usePrivy: () => defaultUsePrivy,
+            useWallets: () => defaultUseWallets,
+          })
+        })
+    }
+  }, [isClient])
 
-  logger('privyUser', user)
+  const wallet = wallets?.[0]
+  const [accessToken, setAccessToken] = useState<string | null>(null)
 
   useEffect(() => {
     async function fetchAccessToken() {
       const accessToken = await getAccessToken()
       setAccessToken(accessToken ?? null)
-      logger('access token in root effect', accessToken)
     }
 
     fetchAccessToken()
   }, [user, getAccessToken])
 
-  async function handleLogout() {
-    logout()
-    fetcher.submit({}, { method: 'post', action: '/actions/auth/logout' })
-  }
-  async function handleLogin() {
-    logger('handle login')
-    const formData = new FormData()
-    formData.set('didSession', user?.id ?? '')
-    formData.set('wallet', user?.wallet?.address ?? '')
-    formData.set('accessToken', accessToken ?? '')
-    submit(formData, {
-      method: 'post',
-    })
-  }
-
-  // Detect Wrong Network  @TODO: Change approach to be based on env
   useEffect(() => {
     if (
       wallet &&
@@ -264,13 +212,26 @@ export function AppLayout() {
     }
   }, [wallet])
 
-  // Trigger remix auth action if user has a did session and has signed
   useEffect(() => {
     if (wallet && user?.id && accessToken) {
-      logger('logging in via handleLogin()')
       handleLogin()
     }
   }, [wallet, user, accessToken])
+
+  async function handleLogin() {
+    const formData = new FormData()
+    formData.set('didSession', user?.id ?? '')
+    formData.set('wallet', user?.wallet?.address ?? '')
+    formData.set('accessToken', accessToken ?? '')
+    submit(formData, {
+      method: 'post',
+    })
+  }
+
+  async function handleLogout() {
+    logout()
+    fetcher.submit({}, { method: 'post', action: '/actions/auth/logout' })
+  }
 
   return (
     <main className="relative flex min-h-screen w-full flex-col justify-between antialiased">

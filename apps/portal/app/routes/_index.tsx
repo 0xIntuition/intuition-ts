@@ -1,10 +1,10 @@
-import { PrivyButton } from '../.client/privy-button'
+import { PrivyButton } from '@client/privy-button'
+import logger from '@lib/utils/logger'
 import { calculateTotalPages } from '@lib/utils/misc'
 import { LoaderFunctionArgs, json } from '@remix-run/node'
-import { getIdentities } from '../.server/identity'
-import type { Identity } from '../types/identity'
+import { getIdentities } from '@server/identity'
+import type { Identity } from '@types/identity'
 import { ClientOnly } from 'remix-utils/client-only'
-import logger from '@lib/utils/logger'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url)

@@ -1,21 +1,10 @@
+import { wagmiConfig } from '@lib/utils/wagmi'
 import type { PrivyClientConfig } from '@privy-io/react-auth'
 import { PrivyProvider } from '@privy-io/react-auth'
-import { WagmiProvider, createConfig } from '@privy-io/wagmi'
+import { WagmiProvider } from '@privy-io/wagmi'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { http } from 'viem'
-import { base, baseSepolia, mainnet } from 'viem/chains'
-import { Config } from 'wagmi'
 
 const queryClient = new QueryClient()
-
-export const wagmiConfig: Config = createConfig({
-  chains: [mainnet, base, baseSepolia],
-  transports: {
-    [mainnet.id]: http(),
-    [base.id]: http(),
-    [baseSepolia.id]: http(),
-  },
-})
 
 const privyConfig: PrivyClientConfig = {
   embeddedWallets: {

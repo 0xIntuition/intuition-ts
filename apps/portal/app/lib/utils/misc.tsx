@@ -86,7 +86,6 @@ export function getAuthHeaders(token?: string) {
     'Content-Type': 'application/json',
     'x-api-key': process.env.API_KEY as string,
   }
-  logger('getAuthHeaders token', token)
 
   if (token) {
     headers['authorization'] = `Bearer ${token}`

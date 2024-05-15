@@ -1,11 +1,10 @@
 import { FormStrategy } from '@lib/utils/auth-strategy'
 import { invariant } from '@lib/utils/misc'
 import { redirect } from '@remix-run/node'
-import type { User } from '../types/user'
+import type { User } from '@types/user'
 // import { DIDSession } from 'did-session'
 import { Authenticator } from 'remix-auth'
 import { sessionStorage } from './session'
-import logger from '@lib/utils/logger'
 
 // Create an instance of the authenticator, pass a generic with what
 // strategies will return and will store in the session
@@ -14,7 +13,6 @@ export const authenticator = new Authenticator<User>(sessionStorage, {
   sessionKey: '_session',
   sessionErrorKey: '_session_error',
 })
-logger('AUTHENTICATOR')
 
 const apiUrl = process.env.API_URL
 
@@ -27,9 +25,6 @@ authenticator.use(
     const didSession = form.get('didSession')
     const wallet = form.get('wallet')
     const accessToken = form.get('accessToken')
-    logger('access token from form', form.get('accessToken'))
-    logger('didSession from form', didSession)
-    logger('wallet from form', wallet)
     // Validate the inputs
     invariant(
       typeof didSession === 'string',
@@ -41,10 +36,7 @@ authenticator.use(
     invariant(typeof accessToken === 'string', 'Access Token must be a string')
     invariant(accessToken.length > 0, 'Access Token must not be empty')
 
-    // login the user
-
     const user = await authenticate(didSession, wallet, accessToken)
-    logger('user', user)
     return user
   }),
   'auth',
@@ -58,9 +50,6 @@ export async function authenticate(
   // const session = await DIDSession.fromSession(didSession)
 
   // logger('SESSION', session)
-  logger('authenticator')
-  logger('didSession', didSession)
-  logger('accessToken', accessToken)
 
   // if (!session || !session.hasSession || session.isExpired) {
   //   throw new Error('Invalid DID Session')
@@ -111,7 +100,6 @@ export const requireAuthedUser = async <TRequest extends Request>(
   request: TRequest,
 ) => {
   const user = await authenticator.isAuthenticated(request) // why is this null
-  logger('user in requireAuthedUser', user)
 
   if (!user) {
     throw redirect('/login', 302)

@@ -7,6 +7,8 @@ const schema = z.object({
   ALCHEMY_BASE_SEPOLIA_RPC_URL: z.string(),
   ALCHEMY_BASE_RPC_URL: z.string(),
   MULTIVAULT_ADDRESS_BASE_SEPOLIA: z.string(),
+  PRODUCTION_ORIGIN_URL: z.string(),
+  STAGING_ORIGIN_URL: z.string(),
 })
 
 declare global {
@@ -47,6 +49,8 @@ export function getEnv() {
     ALCHEMY_BASE_RPC_URL: process.env.ALCHEMY_BASE_RPC_URL,
     MULTIVAULT_ADDRESS_BASE_SEPOLIA:
       process.env.MULTIVAULT_ADDRESS_BASE_SEPOLIA,
+    PRODUCTION_ORIGIN_URL: process.env.PRODUCTION_ORIGIN_URL,
+    STAGING_ORIGIN_URL: process.env.STAGING_ORIGIN_URL,
   }
 }
 

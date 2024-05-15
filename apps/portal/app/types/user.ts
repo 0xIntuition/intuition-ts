@@ -9,8 +9,6 @@ export type User = {
   accessToken: string
 }
 
-// export type UserWithoutIdAndNewUser = Omit<User, 'id' | 'newUser'>
-
 export const UserProfileSchema = z.object({
   id: z.string(),
   wallet: z.string(),
