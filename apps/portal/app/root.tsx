@@ -26,12 +26,17 @@ import { getEnv } from '@server/env'
 import { formAction } from '@server/form'
 import { getTheme } from '@server/theme'
 import { QueryClient } from '@tanstack/react-query'
-import { PrivyHooks, UsePrivy, UseWallets, User } from '@types/privy'
 import { makeDomainFunction } from 'domain-functions'
 import { useEffect, useState } from 'react'
 import { ClientOnly } from 'remix-utils/client-only'
 import { z } from 'zod'
 import './styles/globals.css'
+import logger from '@lib/utils/logger'
+import type { PrivyModuleType, User } from '@types/privy'
+import type {
+  User as PrivyUser,
+  ConnectedWallet as ConnectedPrivyWallet,
+} from '@privy-io/react-auth'
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
   return [
@@ -130,114 +135,115 @@ interface FetcherData {
   refreshToken?: string
 }
 
-// Initialize state with default implementations to avoid calling undefined
-const defaultUsePrivy: UsePrivy = {
-  user: undefined,
-  login: () => {},
-  logout: () => {},
-  getAccessToken: () => Promise.resolve(null),
-}
-
-const defaultUseWallets: UseWallets = {
-  wallets: undefined,
-  switchChain: async (chainId: number) => {
-    // No-operation or placeholder implementation
-  },
-}
-
 export function AppLayout() {
   const { env } = useLoaderData<typeof loader>()
-  const [isClient, setIsClient] = useState(false)
-
-  const [privyHooks, setPrivyHooks] = useState<PrivyHooks>({
-    usePrivy: () => defaultUsePrivy,
-    useWallets: () => defaultUseWallets,
-  })
 
   const fetcher = useFetcher<FetcherData>()
   const submit = useSubmit()
 
-  const { user, login, logout, getAccessToken } = privyHooks.usePrivy
-    ? privyHooks.usePrivy()
-    : {
-        user: undefined,
-        login: () => undefined,
-        logout: () => undefined,
-        getAccessToken: () => Promise.resolve(undefined),
-      }
+  const [privyUser, setPrivyUser] = useState<PrivyUser | null>(null)
+  const [privyWallet, setPrivyWallet] = useState<ConnectedPrivyWallet[] | null>(
+    null,
+  )
+  const [privyModule, setPrivyModule] = useState<PrivyModuleType | null>(null)
 
-  const { wallets } = privyHooks.useWallets
-    ? privyHooks.useWallets()
-    : { wallets: null }
-
-  useEffect(() => {
-    setIsClient(typeof window !== 'undefined')
-    if (isClient) {
-      import('@privy-io/react-auth')
-        .then((module) => {
-          setPrivyHooks({
-            usePrivy: module.usePrivy,
-            useWallets: module.useWallets,
-          })
-        })
-        .catch((error) => {
-          console.error('Failed to load @privy-io/react-auth', error)
-          setPrivyHooks({
-            usePrivy: () => defaultUsePrivy,
-            useWallets: () => defaultUseWallets,
-          })
-        })
-    }
-  }, [isClient])
-
-  const wallet = wallets?.[0]
   const [accessToken, setAccessToken] = useState<string | null>(null)
 
   useEffect(() => {
-    async function fetchAccessToken() {
-      const accessToken = await getAccessToken()
-      setAccessToken(accessToken ?? null)
+    if (typeof window !== 'undefined') {
+      import('@privy-io/react-auth')
+        .then((module) => {
+          setPrivyModule(module)
+        })
+        .catch((error) => console.error('Failed to load Privy module:', error))
     }
-
-    fetchAccessToken()
-  }, [user, getAccessToken])
+  }, [])
 
   useEffect(() => {
+    if (privyModule) {
+      const { getAccessToken } = privyModule
+      getAccessToken()
+        .then((accessToken: string | null) => {
+          setAccessToken(accessToken ?? null)
+          console.log('Access Token:', accessToken)
+        })
+        .catch((error: unknown) => {
+          console.error('Error fetching access token:', error)
+        })
+    }
+  }, [privyModule])
+
+  useEffect(() => {
+    const wallet = privyWallet?.[0]
+
     if (
       wallet &&
       wallet.chainId.split(':')[1] !==
         getChainEnvConfig(CURRENT_ENV).chainId.toString()
     ) {
-      wallet.switchChain(getChainEnvConfig(CURRENT_ENV).chainId)
+      wallet?.switchChain(getChainEnvConfig(CURRENT_ENV).chainId)
     }
-  }, [wallet])
+  }, [privyWallet])
 
   useEffect(() => {
+    logger('handle login')
+    logger('privyWallet', privyWallet)
+    logger('privyUser', privyUser)
+
     async function handleLogin() {
       const formData = new FormData()
-      formData.set('didSession', user?.id ?? '')
-      formData.set('wallet', user?.wallet?.address ?? '')
+      formData.set('didSession', privyUser?.id ?? '')
+      formData.set('wallet', privyUser?.wallet?.address ?? '')
       formData.set('accessToken', accessToken ?? '')
       submit(formData, {
         method: 'post',
       })
     }
 
-    if (wallet && user?.id && accessToken) {
+    if (privyWallet && privyUser?.id && accessToken) {
       handleLogin()
     }
-  }, [wallet, user, accessToken, submit])
-
-  async function handleLogout() {
-    logout()
-    fetcher.submit({}, { method: 'post', action: '/actions/auth/logout' })
-  }
+  }, [privyWallet, privyUser, accessToken, submit])
 
   return (
     <main className="relative flex min-h-screen w-full flex-col justify-between antialiased">
       <div className="flex w-full flex-1 flex-col">
         <Outlet />
+        {privyModule ? (
+          <PrivyHookHandler
+            privyModule={privyModule}
+            setPrivyUser={setPrivyUser}
+            setPrivyWallet={setPrivyWallet}
+          />
+        ) : null}
       </div>
     </main>
   )
+
+  interface PrivyHookHandlerProps {
+    privyModule: PrivyModuleType
+    setPrivyUser: React.Dispatch<React.SetStateAction<PrivyUser | null>>
+    setPrivyWallet: React.Dispatch<
+      React.SetStateAction<ConnectedPrivyWallet[] | null>
+    >
+  }
+
+  function PrivyHookHandler({
+    privyModule,
+    setPrivyUser,
+    setPrivyWallet,
+  }: PrivyHookHandlerProps) {
+    const { usePrivy, useWallets } = privyModule
+    const { user } = usePrivy()
+    const { wallets } = useWallets()
+
+    useEffect(() => {
+      if (user && wallets) {
+        setPrivyUser(user)
+        setPrivyWallet(wallets)
+      }
+    }, [user, wallets, setPrivyUser, setPrivyWallet])
+
+    return <></> // Needs to return this as a workaround from the hook rules
+  }
 }
