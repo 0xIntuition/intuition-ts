@@ -5,6 +5,7 @@ import type { User } from '@types/user'
 // import { DIDSession } from 'did-session'
 import { Authenticator } from 'remix-auth'
 import { sessionStorage } from './session'
+import logger from '@lib/utils/logger'
 
 // Create an instance of the authenticator, pass a generic with what
 // strategies will return and will store in the session
@@ -47,6 +48,9 @@ export async function authenticate(
   wallet: string,
   accessToken: string,
 ): Promise<User> {
+  logger('didSession', didSession)
+  logger('wallet', wallet)
+  logger('accessToken', accessToken)
   // const session = await DIDSession.fromSession(didSession)
 
   // logger('SESSION', session)
