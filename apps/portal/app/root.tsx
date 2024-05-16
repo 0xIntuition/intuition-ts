@@ -37,7 +37,6 @@ import type {
   User as PrivyUser,
   ConnectedWallet as ConnectedPrivyWallet,
 } from '@privy-io/react-auth'
-import Providers from '@client/providers'
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
   return [
@@ -138,6 +137,8 @@ interface FetcherData {
 }
 
 export function AppLayout() {
+  const { env } = useLoaderData<typeof loader>()
+
   const fetcher = useFetcher<FetcherData>()
   const submit = useSubmit()
 
