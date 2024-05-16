@@ -44,8 +44,6 @@ import type {
   UpdateUserResponse,
   DeleteUserData,
   DeleteUserResponse,
-  UpdateUserPointsData,
-  UpdateUserPointsResponse,
   GetUserByIdResponse,
   GetUserTotalsResponse,
   ReissueApiKeyResponse,
@@ -461,23 +459,6 @@ export class UsersService {
       path: {
         id: data.id,
       },
-    })
-  }
-
-  /**
-   * @param data The data for the request.
-   * @param data.requestBody
-   * @returns unknown Add points for user
-   * @throws ApiError
-   */
-  public static updateUserPoints(
-    data: UpdateUserPointsData,
-  ): CancelablePromise<UpdateUserPointsResponse> {
-    return __request(OpenAPI, {
-      method: 'PUT',
-      url: '/users/:id/points',
-      body: data.requestBody,
-      mediaType: 'application/json',
     })
   }
 

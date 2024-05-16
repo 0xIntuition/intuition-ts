@@ -470,7 +470,7 @@ export type LinkedAccountPresenter = {
   total?: number | null
   updated_at: string
   user_id: string
-  verified_at?: number | null
+  verified_at: string
   wallet_client?: string | null
   wallet_client_type?: string | null
 }
@@ -525,16 +525,16 @@ export type NewClaim = {
 }
 
 export type NewLinkedAccount = {
-  account_type?: string | null
+  account_type: string
   active?: boolean
   add_points?: boolean
-  address?: string | null
+  address: string
   chain_type?: string | null
   connector_type?: string | null
   link_id: string
   privy_id?: string | null
   user_id: string
-  verified_at?: number | null
+  verified_at: string
   wallet_client?: string | null
   wallet_client_type?: string | null
 }
@@ -1384,25 +1384,6 @@ export type DeleteUserResponse = {
   wallet: string
 }
 
-export type UpdateUserPointsData = {
-  requestBody: UpsertUser
-}
-
-export type UpdateUserPointsResponse = {
-  api_key?: string | null
-  created_at: string
-  did?: string | null
-  display_name?: string | null
-  ens_name?: string | null
-  id: string
-  image?: string | null
-  last_login?: string | null
-  privy_id?: string | null
-  role: Role
-  updated_at: string
-  wallet: string
-}
-
 export type GetUserByIdResponse = {
   api_key?: string | null
   created_at: string
@@ -2092,32 +2073,6 @@ export type $OpenApiTs = {
       res: {
         /**
          * Delete a user by id
-         */
-        200: {
-          api_key?: string | null
-          created_at: string
-          did?: string | null
-          display_name?: string | null
-          ens_name?: string | null
-          id: string
-          image?: string | null
-          last_login?: string | null
-          privy_id?: string | null
-          role: Role
-          updated_at: string
-          wallet: string
-        }
-      }
-    }
-  }
-  '/users/:id/points': {
-    put: {
-      req: {
-        requestBody: UpsertUser
-      }
-      res: {
-        /**
-         * Add points for user
          */
         200: {
           api_key?: string | null
