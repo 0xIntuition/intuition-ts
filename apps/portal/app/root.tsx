@@ -26,7 +26,7 @@ import {
   useSubmit,
 } from '@remix-run/react'
 import { useTheme } from '@routes/actions+/set-theme'
-import { login } from '@server/auth'
+import { isAuthedUser, login } from '@server/auth'
 import { getEnv } from '@server/env'
 import { formAction } from '@server/form'
 import { getTheme } from '@server/theme'
@@ -46,9 +46,10 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 }
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  logger('Request URL:', request.url)
+  const user = await isAuthedUser(request)
 
   return json({
+    user,
     env: getEnv(),
     requestInfo: {
       hints: getHints(request),
@@ -139,7 +140,7 @@ interface FetcherData {
 }
 
 export function AppLayout() {
-  const { env } = useLoaderData<typeof loader>()
+  const { env, user } = useLoaderData<typeof loader>()
 
   const fetcher = useFetcher<FetcherData>()
   const submit = useSubmit()
@@ -203,10 +204,10 @@ export function AppLayout() {
       })
     }
 
-    if (privyWallet && !privyUser?.id && !accessToken) {
+    if (privyWallet && privyUser?.id && accessToken && !user) {
       handleLogin()
     }
-  }, [privyWallet, privyUser, accessToken, submit])
+  }, [privyWallet, privyUser, accessToken, user, submit])
 
   return (
     <main className="relative flex min-h-screen w-full flex-col justify-between antialiased">
