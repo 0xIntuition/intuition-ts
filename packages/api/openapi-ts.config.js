@@ -2,10 +2,10 @@ import { defineConfig } from '@hey-api/openapi-ts'
 
 export default defineConfig({
   client: 'axios',
-  input: './swagger.json',
+  input: 'http://localhost:3002/api-docs/openapi.json',
   output: {
     format: 'prettier',
-    path: 'packages/api/api-client',
+    path: './api-client',
   },
   types: {
     enums: 'javascript',

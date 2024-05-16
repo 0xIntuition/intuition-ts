@@ -23,7 +23,7 @@
     "prettier:silent": "prettier --write . --log-level=silent",
     "pre-commit": "pnpm lint && pretty-quick --verbose --staged",
     "prepare": "husky",
-    "codegen": "openapi-ts"
+    "codegen": "nx codegen @0xintuition/api"
   },
   "keywords": [],
   "author": "",
