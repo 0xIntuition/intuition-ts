@@ -203,7 +203,7 @@ export function AppLayout() {
       })
     }
 
-    if (privyWallet && privyUser?.id && accessToken) {
+    if (privyWallet && !privyUser?.id && !accessToken) {
       handleLogin()
     }
   }, [privyWallet, privyUser, accessToken, submit])
