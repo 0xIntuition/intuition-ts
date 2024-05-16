@@ -1,11 +1,11 @@
 import { FormStrategy } from '@lib/utils/auth-strategy'
 import { invariant } from '@lib/utils/misc'
-import { redirect } from '@remix-run/node'
 import type { User } from '@types/user'
 // import { DIDSession } from 'did-session'
+import logger from '@lib/utils/logger'
 import { Authenticator } from 'remix-auth'
 import { sessionStorage } from './session'
-import logger from '@lib/utils/logger'
+import { redirect } from '@remix-run/react'
 
 // Create an instance of the authenticator, pass a generic with what
 // strategies will return and will store in the session
@@ -85,9 +85,7 @@ export async function authenticate(
   }
 }
 export async function login(request: Request) {
-  await authenticator.authenticate('auth', request, {
-    successRedirect: '/profile',
-  })
+  await authenticator.authenticate('auth', request, {})
 }
 
 export async function logout(request: Request) {
@@ -104,9 +102,8 @@ export const requireAuthedUser = async <TRequest extends Request>(
   request: TRequest,
 ) => {
   const user = await authenticator.isAuthenticated(request) // why is this null
-
   if (!user) {
-    throw redirect('/login', 302)
+    throw redirect('/', 302)
   }
 
   return user

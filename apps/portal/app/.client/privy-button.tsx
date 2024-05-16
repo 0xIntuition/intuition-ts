@@ -23,7 +23,7 @@ export function PrivyButton() {
 
   if (ready && !authenticated) {
     return (
-      <Button disabled={disableLogin} onClick={login} className="bg-cyan-50">
+      <Button disabled={disableLogin} onClick={login} variant="primary">
         Log in
       </Button>
     )
@@ -35,7 +35,7 @@ export function PrivyButton() {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <span>
-              <Button className="bg-cyan-50">
+              <Button variant="primary">
                 User: {privyUser.wallet?.address}
               </Button>
             </span>
