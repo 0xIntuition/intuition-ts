@@ -47,7 +47,7 @@ export type IdentityVaultDetails = {
   formatted_user_conviction_value?: string
 }
 
-export type ClaimVaultDetails = {
+export type VaultDetails = {
   assets_sum: string
   formatted_assets_sum: string
   conviction_sum: string
