@@ -12,9 +12,9 @@ import {
 } from './Resizable'
 
 // Setup meta for the Storybook
-const meta: Meta<typeof ResizablePanelGroup> = {
+const meta: Meta<typeof ResizablePanel> = {
   title: 'Components/Resizable',
-  component: ResizablePanelGroup,
+  component: ResizablePanel,
   tags: ['autodocs'],
   parameters: {
     docs: {
@@ -28,16 +28,16 @@ const meta: Meta<typeof ResizablePanelGroup> = {
 export default meta
 
 // Define types for your stories
-type Story = StoryObj<typeof ResizablePanelGroup>
+type Story = StoryObj<typeof ResizablePanel>
 
 // Example story for the default state
 export const BasicUsage: Story = {
+  // eslint-disable-next-line
   render: (args) => (
     <div className="w-[500px]">
       <ResizablePanelGroup
         direction="horizontal"
         className="border-border/30 max-w-lg rounded-lg border border-solid"
-        {...args}
       >
         <ResizablePanel defaultSize={50}>
           <div className="flex h-[200px] items-center justify-center p-6">
@@ -67,12 +67,12 @@ export const BasicUsage: Story = {
 
 // Example story for the default state
 export const Vertical: Story = {
+  // eslint-disable-next-line
   render: (args) => (
     <div className="w-[500px]">
       <ResizablePanelGroup
         direction="vertical"
         className="border-border/30 min-h-[200px] max-w-lg rounded-lg border border-solid"
-        {...args}
       >
         <ResizablePanel defaultSize={50}>
           <div className="flex h-full items-center justify-center p-6">
@@ -92,12 +92,12 @@ export const Vertical: Story = {
 
 // Example story for the default state
 export const Sidebar: Story = {
+  // eslint-disable-next-line
   render: (args) => (
     <div className="w-[500px]">
       <ResizablePanelGroup
         direction="horizontal"
         className="border-border/30 min-h-[200px] rounded-lg border border-solid"
-        {...args}
       >
         <ResizablePanel defaultSize={30}>
           <div className="flex h-full items-center justify-center p-6">
