@@ -13,7 +13,7 @@
     "api:test": "nx test @0xintuition/api --reporter=verbose",
     "portal:build": "nx build @0xintuition/portal",
     "portal:lint": "nx lint @0xintuition/portal",
-    "portal:test": "nx test @0xintuition/portal",
+    "portal:test": "nx test @0xintuition/portal --reporter=verbose",
     "protocol:build": "nx build @0xintuition/protocol",
     "protocol:lint": "nx lint @0xintuition/protocol",
     "protocol:test": "nx test @0xintuition/protocol --reporter=verbose",
