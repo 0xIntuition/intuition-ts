@@ -56,7 +56,7 @@ export const BasicUsage: Story = {
           </Button>
         </TooltipTrigger>
         <TooltipContent>
-          <Text variant="body">Add to library</Text>
+          <Text variant="body">Some text</Text>
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>
