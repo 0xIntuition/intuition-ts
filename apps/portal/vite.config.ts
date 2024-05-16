@@ -22,6 +22,7 @@ export default defineConfig({
       ignoredRouteFiles: ['**/.*'],
       routes: async (defineRoutes) => {
         return flatRoutes('routes', defineRoutes, {
+          appDir: 'apps/portal/app',
           ignoredRouteFiles: [
             '.*',
             '**/*.css',

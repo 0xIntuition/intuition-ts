@@ -1,4 +1,3 @@
-import tsconfigPaths from 'vite-tsconfig-paths'
 import {
   configDefaults,
   defineConfig,
@@ -16,7 +15,6 @@ const config = mergeConfig(
       environment: 'jsdom',
       setupFiles: './vitest.setup.ts',
     },
-    plugins: [tsconfigPaths()],
   }) as UserConfig,
 )
 
