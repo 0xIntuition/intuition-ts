@@ -5,9 +5,9 @@ export default defineConfig({
   input: 'http://localhost:3002/api-docs/openapi.json',
   output: {
     format: 'prettier',
-    path: './api-client',
+    path: './src/api-client',
   },
-  exportCore: false,
+  exportCore: true,
   types: {
     enums: 'javascript',
   },
