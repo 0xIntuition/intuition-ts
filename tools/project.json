@@ -1,5 +1,5 @@
 {
-  "name": "@intuition-ts/automation-tools",
+  "name": "@0xintuition/automation-tools",
   "$schema": "../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "tools/src",
   "projectType": "library",

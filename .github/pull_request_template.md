@@ -1,8 +1,18 @@
 ## Affected Packages
 
+Apps
+
 - [ ] portal
+
+Packages
+
 - [ ] 1ui
+- [ ] api
 - [ ] protocol
+- [ ] sdk
+
+Tools
+
 - [ ] tools
 
 ## Overview

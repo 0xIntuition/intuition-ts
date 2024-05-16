@@ -3,7 +3,7 @@
  * are needed by the server, but are only known by the browser.
  */
 import { useRevalidator } from '@remix-run/react'
-import { themesList, Theme } from '@intuition-ts/1ui'
+import { themesList, Theme } from '@0xintuition/1ui'
 import * as React from 'react'
 
 import { useRequestInfo } from './request-info'

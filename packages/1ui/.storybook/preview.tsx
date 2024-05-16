@@ -2,6 +2,7 @@ import type { Preview } from '@storybook/react'
 import { themeDecorator } from './decorators'
 import DocumentationTemplate from './templates/DocumentationTemplate.mdx'
 import '../src/styles/globals.css'
+import { palette } from '../src'
 
 const preview: Preview = {
   parameters: {
@@ -14,17 +15,15 @@ const preview: Preview = {
       },
     },
     backgrounds: {
-      default: '900',
+      default: 'dark',
       values: [
-        { name: '950', value: 'hsl(var(--primary-950))' },
-        { name: '900', value: 'hsl(var(--primary-900))' },
-        { name: '50', value: 'hsl(var(--primary-50))' },
-        { name: '100', value: 'hsl(var(--primary-100))' },
+        { name: 'dark', value: palette.black.base },
+        { name: 'light', value: palette.white.base },
       ],
     },
     options: {
       storySort: {
-        order: ['Documentation', 'Components'],
+        order: ['Documentation', 'Components', 'Styles'],
       },
     },
     docs: {

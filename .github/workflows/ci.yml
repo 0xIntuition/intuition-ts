@@ -21,10 +21,6 @@ jobs:
       # Foundry setup for protocol
       - name: Set up foundry
         uses: foundry-rs/foundry-toolchain@v1
-      - name: Setup Git
-        run: |
-          git fetch --no-tags --depth=1 origin +refs/heads/main:refs/remotes/origin/main
-          git branch --track main origin/main
       - name: Cache pnpm store
         uses: actions/cache@v3
         with:
@@ -35,6 +31,10 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pnpm-
       - run: pnpm install --frozen-lockfile
+      - uses: nrwl/nx-set-shas@v3
+      # This line is needed for nx affected to work when CI is running on a PR
+      - run: git branch --track main origin/main
+        if: ${{ github.event_name == 'pull_request' }}
       - name: Run Affected Lint
         run: pnpm nx affected -t lint
       - name: Run Affected Tests

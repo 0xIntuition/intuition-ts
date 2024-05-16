@@ -23,21 +23,25 @@ apps
 └── portal
 packages
 ├── 1ui
+└── api
 └── protocol
+└── sdk
 ```
 
-| Path            | Description                               |
-| --------------- | ----------------------------------------- |
-| `apps/portal`   | The Remix application for the playground. |
-| `packages/1ui`  | Our design system.                        |
-| `packages/protocol` | protocol SDK.                                 |
+| Path                | Description                                                |
+| ------------------- | ---------------------------------------------------------- |
+| `apps/portal`       | The Remix application for the playground                   |
+| `packages/1ui`      | Our design system.                                         |
+| `packages/api`      | backend interactions                                       |
+| `packages/protocol` | protocol SDK                                               |
+| `packages/sdk`      | high level logic that combines both on-chain and off-chain |
 
 ## Contributing To `0xIntuition` Packages
 
 Please read the corresponding `CONTIBUTING.md` file for the app/package you wish to contribute to:
 
 - [1ui - CONTRIBUTING.md](./packages/1ui/CONTRIBUTING.md)
-- [protocol - CONTRIBUTING.md]()
+- [protocol - CONTRIBUTING.md](./packages/protocol/CONTRIBUTING.md)
 
 ## Development
 
@@ -49,12 +53,6 @@ You can fork this repo by clicking the fork button in the top right corner of th
 
 ```bash
 git clone https://github.com/0xIntuition/intuition-ts.git
-```
-
-### Navigate to project directory
-
-```bash
-cd intuition-ts
 ```
 
 ### Create a new Branch

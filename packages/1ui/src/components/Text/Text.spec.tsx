@@ -6,13 +6,13 @@ describe('Text', () => {
   it('should render appropriate element and classes when given no props', () => {
     const { asFragment } = render(<Text>Text</Text>)
     expect(asFragment()).toMatchInlineSnapshot(`
-    <DocumentFragment>
-      <p
-        class="text-primary text-[0.875rem] font-normal"
-      >
-        Text
-      </p>
-    </DocumentFragment>
+      <DocumentFragment>
+        <p
+          class="text-primary text-base font-normal"
+        >
+          Text
+        </p>
+      </DocumentFragment>
     `)
   })
 
@@ -21,7 +21,7 @@ describe('Text', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <h1
-          class="text-primary text-[3.75rem] font-normal"
+          class="text-primary text-6xl font-normal"
         >
           Text
         </h1>
@@ -34,7 +34,7 @@ describe('Text', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <h2
-          class="text-primary text-[3.125rem] font-normal"
+          class="text-primary text-5xl font-normal"
         >
           Text
         </h2>
@@ -47,7 +47,7 @@ describe('Text', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <h3
-          class="text-primary text-[2.5rem] font-normal"
+          class="text-primary text-4xl font-normal"
         >
           Text
         </h3>
@@ -60,7 +60,7 @@ describe('Text', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <h4
-          class="text-primary text-[1.875rem] font-normal"
+          class="text-primary text-3xl font-normal"
         >
           Text
         </h4>
@@ -73,7 +73,7 @@ describe('Text', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <h5
-          class="text-primary text-[1.5rem] font-normal"
+          class="text-primary text-2xl font-normal"
         >
           Text
         </h5>
@@ -86,7 +86,7 @@ describe('Text', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <h6
-          class="text-primary text-[1.25rem] font-normal"
+          class="text-primary text-xl font-normal"
         >
           Text
         </h6>
@@ -99,7 +99,7 @@ describe('Text', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <p
-          class="text-primary text-[1rem] font-normal"
+          class="text-primary text-lg font-normal"
         >
           Text
         </p>
@@ -112,7 +112,7 @@ describe('Text', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <p
-          class="text-primary text-[0.875rem] font-normal"
+          class="text-primary text-base font-normal"
         >
           Text
         </p>
@@ -125,7 +125,7 @@ describe('Text', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <p
-          class="text-primary text-[0.75rem] font-normal"
+          class="text-primary text-sm font-normal"
         >
           Text
         </p>
@@ -138,7 +138,7 @@ describe('Text', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <p
-          class="text-primary text-[0.75rem] font-normal"
+          class="text-primary text-sm font-normal"
         >
           Text
         </p>
@@ -151,7 +151,20 @@ describe('Text', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <p
-          class="text-primary text-[0.625rem] font-normal"
+          class="text-primary text-xs font-normal"
+        >
+          Text
+        </p>
+      </DocumentFragment>
+    `)
+  })
+
+  it('should render appropriate element and classes for variant `medium`', () => {
+    const { asFragment } = render(<Text weight="medium">Text</Text>)
+    expect(asFragment()).toMatchInlineSnapshot(`
+      <DocumentFragment>
+        <p
+          class="text-primary text-base font-medium"
         >
           Text
         </p>
@@ -164,7 +177,7 @@ describe('Text', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <p
-          class="text-primary text-[0.875rem] font-semibold"
+          class="text-primary text-base font-semibold"
         >
           Text
         </p>
@@ -177,7 +190,7 @@ describe('Text', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <p
-          class="text-primary text-[0.875rem] font-bold"
+          class="text-primary text-base font-bold"
         >
           Text
         </p>
