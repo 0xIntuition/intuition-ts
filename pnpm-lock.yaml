@@ -301,6 +301,9 @@ importers:
       vite:
         specifier: ^5.1.0
         version: 5.2.10(@types/node@20.12.7)(terser@5.30.4)
+      vite-env-only:
+        specifier: ^2.3.0
+        version: 2.3.0(vite@5.2.10(@types/node@20.12.7)(terser@5.30.4))
       vite-tsconfig-paths:
         specifier: ^4.2.1
         version: 4.3.2(typescript@5.4.5)(vite@5.2.10(@types/node@20.12.7)(terser@5.30.4))
@@ -11111,6 +11114,11 @@ packages:
     peerDependenciesMeta:
       typescript:
         optional: true
+
+  vite-env-only@2.3.0:
+    resolution: {integrity: sha512-Q+7+G31twPpGPsY8Oy7vzESLUF79+HnLV5G1g5nxxgQUFvldT/q14n7ZDkkhvWJ46N+8HfPtCWifsPNHG7KHOQ==}
+    peerDependencies:
+      vite: '*'
 
   vite-node@1.5.2:
     resolution: {integrity: sha512-Y8p91kz9zU+bWtF7HGt6DVw2JbhyuB2RlZix3FPYAYmUyZ3n7iTp8eSyLyY6sxtPegvxQtmlTMhfPhUfCUF93A==}
@@ -26416,6 +26424,17 @@ snapshots:
       - bufferutil
       - utf-8-validate
       - zod
+
+  vite-env-only@2.3.0(vite@5.2.10(@types/node@20.12.7)(terser@5.30.4)):
+    dependencies:
+      '@babel/core': 7.24.4
+      '@babel/generator': 7.24.4
+      '@babel/parser': 7.24.4
+      '@babel/traverse': 7.24.1(supports-color@5.5.0)
+      '@babel/types': 7.24.0
+      vite: 5.2.10(@types/node@20.12.7)(terser@5.30.4)
+    transitivePeerDependencies:
+      - supports-color
 
   vite-node@1.5.2(@types/node@18.16.9)(terser@5.30.4):
     dependencies:
