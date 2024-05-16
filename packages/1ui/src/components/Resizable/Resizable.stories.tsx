@@ -12,9 +12,9 @@ import {
 } from './Resizable'
 
 // Setup meta for the Storybook
-const meta: Meta<typeof ResizablePanel> = {
+const meta: Meta<typeof ResizablePanelGroup> = {
   title: 'Components/Resizable',
-  component: ResizablePanel,
+  component: ResizablePanelGroup,
   tags: ['autodocs'],
   parameters: {
     docs: {
@@ -28,11 +28,10 @@ const meta: Meta<typeof ResizablePanel> = {
 export default meta
 
 // Define types for your stories
-type Story = StoryObj<typeof ResizablePanel>
+type Story = StoryObj<typeof ResizablePanelGroup>
 
 // Example story for the default state
 export const BasicUsage: Story = {
-  args: {},
   render: (args) => (
     <div className="w-[500px]">
       <ResizablePanelGroup
@@ -68,7 +67,6 @@ export const BasicUsage: Story = {
 
 // Example story for the default state
 export const Vertical: Story = {
-  args: {},
   render: (args) => (
     <div className="w-[500px]">
       <ResizablePanelGroup
@@ -94,9 +92,6 @@ export const Vertical: Story = {
 
 // Example story for the default state
 export const Sidebar: Story = {
-  args: {
-    // Define default props here, if any
-  },
   render: (args) => (
     <div className="w-[500px]">
       <ResizablePanelGroup
