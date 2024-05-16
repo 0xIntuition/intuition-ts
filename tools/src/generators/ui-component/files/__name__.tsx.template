@@ -1,7 +1,6 @@
-import React, { FC } from 'react'
-import { I<%= className %>Props } from './<%= className %>.types';
+import * as React from 'react'
 
-const <%= className %>: FC<I<%= className %>Props> = ({}) => {
+const <%= className %> = ({}) => {
   return <>{/* Implement UI here */}</>
 }
 
