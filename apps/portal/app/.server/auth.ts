@@ -93,7 +93,9 @@ export async function authenticate(
   }
 }
 export async function login(request: Request) {
-  await authenticator.authenticate('auth', request, {})
+  await authenticator.authenticate('auth', request, {
+    successRedirect: '/profile',
+  })
 }
 
 export async function logout(request: Request) {
