@@ -1,7 +1,5 @@
 import { CURRENT_ENV } from '@lib/utils/constants'
 import { getChainEnvConfig } from '@lib/utils/environment'
-// import { usePrivy, useWallets } from '@privy-io/react-auth'
-import Providers from '@client/providers'
 import { ClientHintCheck, getHints } from '@lib/utils/client-hints'
 import logger from '@lib/utils/logger'
 import { useNonce } from '@lib/utils/nonce-provider'
@@ -34,9 +32,10 @@ import { QueryClient } from '@tanstack/react-query'
 import type { PrivyModuleType, User } from '@types/privy'
 import { makeDomainFunction } from 'domain-functions'
 import { useEffect, useState } from 'react'
-import { ClientOnly } from 'remix-utils/client-only'
 import { z } from 'zod'
 import './styles/globals.css'
+import { clientOnly$ } from 'vite-env-only'
+import ClientOnlyPrivyProvider from './.client/privy-provider'
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
   return [
@@ -119,15 +118,16 @@ export default function App() {
   const theme = useTheme()
   const { env } = useLoaderData<typeof loader>()
 
+  const ClientOnlyPrivy = () =>
+    clientOnly$(
+      <ClientOnlyPrivyProvider privyAppId={env.PRIVY_APP_ID}>
+        <AppLayout />
+      </ClientOnlyPrivyProvider>,
+    )
+
   return (
     <Document nonce={nonce} theme={theme}>
-      <ClientOnly>
-        {() => (
-          <Providers privyAppId={env.PRIVY_APP_ID}>
-            <AppLayout />
-          </Providers>
-        )}
-      </ClientOnly>
+      <ClientOnlyPrivy />
     </Document>
   )
 }
