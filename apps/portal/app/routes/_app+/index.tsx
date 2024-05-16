@@ -3,6 +3,7 @@ import { calculateTotalPages } from '@lib/utils/misc'
 import { LoaderFunctionArgs, json } from '@remix-run/node'
 import { getIdentities } from '@server/identity'
 import type { Identity } from '@types/identity'
+import { ClientOnly } from 'remix-utils/client-only'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url)
@@ -42,11 +43,12 @@ export async function loader({ request }: LoaderFunctionArgs) {
   })
 }
 
-export default function Index() {
+export default function App() {
   return (
     <div className="m-8 flex flex-col items-center gap-4">
       <div className="flex flex-col">
-        <PrivyButton />
+        Profile Route
+        <ClientOnly>{() => <PrivyButton />}</ClientOnly>
       </div>
     </div>
   )

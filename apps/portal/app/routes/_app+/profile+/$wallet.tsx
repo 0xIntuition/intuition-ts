@@ -1,7 +1,9 @@
+import { PrivyButton } from '@client/privy-button'
 import { calculateTotalPages } from '@lib/utils/misc'
 import { LoaderFunctionArgs, json } from '@remix-run/node'
 import { getIdentities } from '@server/identity'
 import type { Identity } from '@types/identity'
+import { ClientOnly } from 'remix-utils/client-only'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url)
@@ -45,7 +47,7 @@ export default function PublicProfile() {
     <div className="m-8 flex flex-col items-center gap-4">
       <div className="flex flex-col">
         Public profile route test
-        {/* <PrivyButton /> */}
+        <ClientOnly>{() => <PrivyButton />}</ClientOnly>
       </div>
     </div>
   )
