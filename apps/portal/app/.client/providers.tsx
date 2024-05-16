@@ -18,12 +18,18 @@ const privyConfig: PrivyClientConfig = {
   },
 }
 
-export default function Providers({ children }: { children: React.ReactNode }) {
+export default function Providers({
+  privyAppId,
+  children,
+}: {
+  privyAppId: string
+  children: React.ReactNode
+}) {
   return (
     <PrivyProvider
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
-      appId={'clvcwhbx3082nypes1173q3wd' as string}
+      appId={privyAppId as string}
       config={privyConfig}
     >
       <QueryClientProvider client={queryClient}>

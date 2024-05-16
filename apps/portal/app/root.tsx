@@ -37,6 +37,7 @@ import type {
   User as PrivyUser,
   ConnectedWallet as ConnectedPrivyWallet,
 } from '@privy-io/react-auth'
+import Providers from '@client/providers'
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
   return [
@@ -114,12 +115,13 @@ const queryClient = new QueryClient() // Set up a tanstack QueryClient. Required
 export default function App() {
   const nonce = useNonce()
   const theme = useTheme()
+  const { env } = useLoaderData<typeof loader>()
 
   return (
     <Document nonce={nonce} theme={theme}>
       <ClientOnly>
         {() => (
-          <Providers>
+          <Providers privyAppId={env.PRIVY_APP_ID}>
             <AppLayout />
           </Providers>
         )}
@@ -136,8 +138,6 @@ interface FetcherData {
 }
 
 export function AppLayout() {
-  const { env } = useLoaderData<typeof loader>()
-
   const fetcher = useFetcher<FetcherData>()
   const submit = useSubmit()
 

@@ -9,6 +9,7 @@ const schema = z.object({
   MULTIVAULT_ADDRESS_BASE_SEPOLIA: z.string(),
   PRODUCTION_ORIGIN_URL: z.string(),
   STAGING_ORIGIN_URL: z.string(),
+  PRIVY_APP_ID: z.string(),
 })
 
 declare global {
@@ -51,6 +52,7 @@ export function getEnv() {
       process.env.MULTIVAULT_ADDRESS_BASE_SEPOLIA,
     PRODUCTION_ORIGIN_URL: process.env.PRODUCTION_ORIGIN_URL,
     STAGING_ORIGIN_URL: process.env.STAGING_ORIGIN_URL,
+    PRIVY_APP_ID: process.env.PRIVY_APP_ID,
   }
 }
 
