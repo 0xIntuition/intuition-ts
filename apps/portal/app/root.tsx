@@ -1,6 +1,9 @@
+import { Toaster } from '@0xintuition/1ui'
+import Providers from '@client/providers'
+import { ClientHintCheck, getHints } from '@lib/utils/client-hints'
 import { CURRENT_ENV } from '@lib/utils/constants'
 import { getChainEnvConfig } from '@lib/utils/environment'
-import { ClientHintCheck, getHints } from '@lib/utils/client-hints'
+import logger from '@lib/utils/logger'
 import { useNonce } from '@lib/utils/nonce-provider'
 import type {
   ConnectedWallet as ConnectedPrivyWallet,
@@ -21,7 +24,6 @@ import {
   useLoaderData,
   useSubmit,
 } from '@remix-run/react'
-import Providers from '@client/providers'
 import { useTheme } from '@routes/actions+/set-theme'
 import { isAuthedUser, login } from '@server/auth'
 import { getEnv } from '@server/env'
@@ -31,11 +33,9 @@ import { QueryClient } from '@tanstack/react-query'
 import type { PrivyModuleType, User } from '@types/privy'
 import { makeDomainFunction } from 'domain-functions'
 import { useEffect, useState } from 'react'
+import { ClientOnly } from 'remix-utils/client-only'
 import { z } from 'zod'
 import './styles/globals.css'
-import { ClientOnly } from 'remix-utils/client-only'
-import logger from '@lib/utils/logger'
-import { Toaster } from '@0xintuition/1ui'
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
   return [
