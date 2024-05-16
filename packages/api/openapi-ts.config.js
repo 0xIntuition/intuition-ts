@@ -7,6 +7,7 @@ export default defineConfig({
     format: 'prettier',
     path: './api-client',
   },
+  exportCore: false,
   types: {
     enums: 'javascript',
   },

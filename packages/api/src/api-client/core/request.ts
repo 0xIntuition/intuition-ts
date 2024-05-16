@@ -11,7 +11,15 @@ import type { ApiRequestOptions } from './ApiRequestOptions'
 import type { ApiResult } from './ApiResult'
 import { CancelablePromise } from './CancelablePromise'
 import type { OnCancel } from './CancelablePromise'
-import type { OpenAPIConfig } from './OpenAPI'
+import { OpenAPI, type OpenAPIConfig } from './OpenAPI'
+
+// Set custom headers here
+OpenAPI.HEADERS = async () => {
+  return { 'x-intuition-did': 'rahul' }
+}
+
+// Set base URL here
+OpenAPI.BASE = 'http://localhost:3002'
 
 export const isString = (value: unknown): value is string => {
   return typeof value === 'string'

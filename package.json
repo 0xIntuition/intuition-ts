@@ -8,6 +8,7 @@
     "1ui:build": "nx build @0xintuition/1ui",
     "1ui:lint": "nx lint @0xintuition/1ui",
     "1ui:test": "nx test @0xintuition/1ui --reporter=verbose",
+    "portal:dev": "nx dev @0xintuition/portal",
     "portal:build": "nx build @0xintuition/portal",
     "portal:lint": "nx lint @0xintuition/portal",
     "portal:test": "nx test @0xintuition/portal --reporter=verbose",
