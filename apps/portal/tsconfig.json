@@ -1,6 +1,7 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
+    "allowImportingTsExtensions": true,
     "baseUrl": ".",
     "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
@@ -13,8 +14,11 @@
     "paths": {
       "@components/*": ["app/components/*"],
       "@lib/*": ["app/lib/*"],
+      "@types/*": ["app/types/*"],
       "@routes/*": ["app/routes/*"],
-      "@styles/*": ["app/styles/*"]
+      "@styles/*": ["app/styles/*"],
+      "@server/*": ["app/.server/*"],
+      "@client/*": ["app/.client/*"]
     }
   },
   "include": ["**/*.ts", "**/*.tsx", "tailwind.config.js"],

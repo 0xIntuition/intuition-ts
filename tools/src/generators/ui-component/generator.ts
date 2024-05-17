@@ -10,21 +10,31 @@ export async function uiComponentGenerator(
     return /^[A-Z][a-zA-Z0-9]*$/.test(str)
   }
 
-  if (!isPascalCase(options.name)) {
+  const componentName = options.name
+
+  if (!isPascalCase(componentName)) {
     throw new Error(
-      `The component name "${options.name}" is not in PascalCase. Please use PascalCase naming (e.g., "MyComponent").`,
+      `The component name "${componentName}" is not in PascalCase. Please use PascalCase naming (e.g., "MyComponent").`,
     )
   }
 
   // Convert the name to a proper directory name if needed
-  const directoryName = names(options.name).fileName
-  const projectRoot = `packages/1ui/src/components/${directoryName}`
+  const projectRoot = `packages/1ui/src/components/${componentName}`
 
   generateFiles(tree, path.join(__dirname, 'files'), projectRoot, {
     ...options,
     // Spread other transformed names if needed, this allows for template customization
-    ...names(options.name),
+    ...names(componentName),
   })
+
+  // Add export to root index file
+  const indexFilePath = `packages/1ui/src/components/index.tsx`
+  let contents = tree.read(indexFilePath)?.toString()
+  const newContents = (contents += `export * from './${componentName}'`)
+  if (newContents) {
+    tree.write(indexFilePath, newContents)
+  }
+
   await formatFiles(tree)
 }
 

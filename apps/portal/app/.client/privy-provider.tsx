@@ -1,22 +1,36 @@
 import React from 'react'
-import { PrivyProvider } from '@privy-io/react-auth'
+import { PrivyClientConfig, PrivyProvider } from '@privy-io/react-auth'
 
-const ClientOnlyPrivyProvider = ({
+const privyConfig: PrivyClientConfig = {
+  embeddedWallets: {
+    createOnLogin: 'users-without-wallets',
+    requireUserPasswordOnCreate: true,
+    noPromptOnSignature: false,
+  },
+  loginMethods: ['wallet', 'email', 'sms'],
+  appearance: {
+    theme: 'dark',
+    showWalletLoginFirst: true,
+  },
+}
+
+export default function ClientOnlyPrivyProvider({
+  privyAppId,
   children,
 }: {
+  privyAppId: string
   children: React.ReactNode
-}) => {
-  // const { ENV: env } = useLoaderData<typeof loader>()
-  // console.log('env in root', env)
-
+}) {
   return (
     <div>
-      <PrivyProvider appId="clux3pbr200nrc2sexjkm8al0">
+      <PrivyProvider
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        appId={privyAppId as string}
+        config={privyConfig}
+      >
         {children}
-        {/* <LoginButton /> */}
       </PrivyProvider>
     </div>
   )
 }
-
-export default ClientOnlyPrivyProvider

@@ -14,10 +14,8 @@ describe('ui-component generator', () => {
 
   it('should create the correct files and directory structure', async () => {
     await uiComponentGenerator(tree, options)
-    // Adjust the directoryName to use the format the generator produces, e.g., hello-world
-    const directoryName = names(options.name).fileName
-    const pascalCaseName = names(options.name).className // This will be 'HelloWorld'
-    const componentDirectory = `packages/1ui/src/components/${directoryName}`
+    const pascalCaseName = names(options.name).className
+    const componentDirectory = `packages/1ui/src/components/${pascalCaseName}`
 
     expect(
       tree.exists(`${componentDirectory}/${pascalCaseName}.tsx`),
@@ -25,9 +23,6 @@ describe('ui-component generator', () => {
     expect(tree.exists(`${componentDirectory}/index.ts`)).toBeTruthy()
     expect(
       tree.exists(`${componentDirectory}/${pascalCaseName}.spec.tsx`),
-    ).toBeTruthy()
-    expect(
-      tree.exists(`${componentDirectory}/${pascalCaseName}.types.ts`),
     ).toBeTruthy()
     expect(
       tree.exists(`${componentDirectory}/${pascalCaseName}.stories.tsx`),

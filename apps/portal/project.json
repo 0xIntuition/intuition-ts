@@ -18,6 +18,12 @@
       "options": {
         "lintFilePatterns": ["apps/portal/**/*.{ts,tsx,js,jsx}"]
       }
+    },
+    "test": {
+      "executor": "@nx/vite:test",
+      "options": {
+        "config": "apps/portal/vitest.config.ts"
+      }
     }
   }
 }

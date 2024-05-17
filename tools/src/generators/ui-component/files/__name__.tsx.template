@@ -1,7 +1,8 @@
-import React, { FC } from 'react'
-import { I<%= className %>Props } from './<%= className %>.types';
+import * as React from 'react'
 
-const <%= className %>: FC<I<%= className %>Props> = ({}) => {
+export interface <%= className %>Props {}
+
+const <%= className %> = ({ ...props }: <%= className %>Props) => {
   return <>{/* Implement UI here */}</>
 }
 
