@@ -91,13 +91,13 @@ export const Primary: Story = {
   render: (props) => (
     <div style={{ display: 'flex', gap: '2rem', alignItems: 'center' }}>
       <Button {...props}>Default</Button>
-      <Button size="medium" {...props}>
+      <Button size="md" {...props}>
         Medium
       </Button>
-      <Button size="large" {...props}>
+      <Button size="lg" {...props}>
         Large
       </Button>
-      <Button size="extraLarge" {...props}>
+      <Button size="xl" {...props}>
         Extra Large
       </Button>
       <Button {...props}>
@@ -124,13 +124,13 @@ export const Secondary: Story = {
       <Button variant="secondary" {...props}>
         Default
       </Button>
-      <Button variant="secondary" size="medium" {...props}>
+      <Button variant="secondary" size="md" {...props}>
         Medium
       </Button>
-      <Button variant="secondary" size="large" {...props}>
+      <Button variant="secondary" size="lg" {...props}>
         Large
       </Button>
-      <Button variant="secondary" size="extraLarge" {...props}>
+      <Button variant="secondary" size="xl" {...props}>
         Extra Large
       </Button>
       <Button variant="secondary" {...props}>
@@ -157,13 +157,13 @@ export const Ghost: Story = {
       <Button variant="ghost" {...props}>
         Default
       </Button>
-      <Button variant="ghost" size="medium" {...props}>
+      <Button variant="ghost" size="md" {...props}>
         Medium
       </Button>
-      <Button variant="ghost" size="large" {...props}>
+      <Button variant="ghost" size="lg" {...props}>
         Large
       </Button>
-      <Button variant="ghost" size="extraLarge" {...props}>
+      <Button variant="ghost" size="xl" {...props}>
         Extra Large
       </Button>
       <Button variant="ghost" aria-selected {...props}>
@@ -193,13 +193,13 @@ export const Text: Story = {
       <Button variant="text" {...props}>
         Default
       </Button>
-      <Button variant="text" size="medium" {...props}>
+      <Button variant="text" size="md" {...props}>
         Medium
       </Button>
-      <Button variant="text" size="large" {...props}>
+      <Button variant="text" size="lg" {...props}>
         Large
       </Button>
-      <Button variant="text" size="extraLarge" {...props}>
+      <Button variant="text" size="xl" {...props}>
         Extra Large
       </Button>
       <Button variant="text" {...props}>
@@ -226,13 +226,13 @@ export const Accent: Story = {
       <Button variant="accent" {...props}>
         Default
       </Button>
-      <Button variant="accent" size="medium" {...props}>
+      <Button variant="accent" size="md" {...props}>
         Medium
       </Button>
-      <Button variant="accent" size="large" {...props}>
+      <Button variant="accent" size="lg" {...props}>
         Large
       </Button>
-      <Button variant="accent" size="extraLarge" {...props}>
+      <Button variant="accent" size="xl" {...props}>
         Extra Large
       </Button>
       <Button variant="accent" {...props}>
@@ -259,13 +259,13 @@ export const Warning: Story = {
       <Button variant="warning" {...props}>
         Default
       </Button>
-      <Button variant="warning" size="medium" {...props}>
+      <Button variant="warning" size="md" {...props}>
         Medium
       </Button>
-      <Button variant="warning" size="large" {...props}>
+      <Button variant="warning" size="lg" {...props}>
         Large
       </Button>
-      <Button variant="warning" size="extraLarge" {...props}>
+      <Button variant="warning" size="xl" {...props}>
         Extra Large
       </Button>
       <Button variant="warning" {...props}>
@@ -292,13 +292,13 @@ export const Success: Story = {
       <Button variant="success" {...props}>
         Default
       </Button>
-      <Button variant="success" size="medium" {...props}>
+      <Button variant="success" size="md" {...props}>
         Medium
       </Button>
-      <Button variant="success" size="large" {...props}>
+      <Button variant="success" size="lg" {...props}>
         Large
       </Button>
-      <Button variant="success" size="extraLarge" {...props}>
+      <Button variant="success" size="xl" {...props}>
         Extra Large
       </Button>
       <Button variant="success" {...props}>
@@ -325,13 +325,13 @@ export const Destructive: Story = {
       <Button variant="destructive" {...props}>
         Default
       </Button>
-      <Button variant="destructive" size="medium" {...props}>
+      <Button variant="destructive" size="md" {...props}>
         Medium
       </Button>
-      <Button variant="destructive" size="large" {...props}>
+      <Button variant="destructive" size="lg" {...props}>
         Large
       </Button>
-      <Button variant="destructive" size="extraLarge" {...props}>
+      <Button variant="destructive" size="xl" {...props}>
         Extra Large
       </Button>
       <Button variant="destructive" {...props}>

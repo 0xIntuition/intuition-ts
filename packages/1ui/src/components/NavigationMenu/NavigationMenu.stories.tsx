@@ -36,13 +36,13 @@ export const BasicUsage: Story = {
         <NavigationMenuItem>
           <NavigationMenuTrigger>Item One</NavigationMenuTrigger>
           <NavigationMenuContent>
-            <NavigationMenuLink>Link</NavigationMenuLink>
+            <NavigationMenuLink>Link One</NavigationMenuLink>
           </NavigationMenuContent>
         </NavigationMenuItem>
         <NavigationMenuItem>
           <NavigationMenuTrigger>Item Two</NavigationMenuTrigger>
           <NavigationMenuContent>
-            <NavigationMenuLink>Link</NavigationMenuLink>
+            <NavigationMenuLink>Link Two</NavigationMenuLink>
           </NavigationMenuContent>
         </NavigationMenuItem>
         <NavigationMenuItem>
@@ -57,7 +57,7 @@ export const BasicUsage: Story = {
 
 export const Vertical: Story = {
   render: (args) => (
-    <div className="w-[500px]">
+    <div className="w-[200px]">
       <NavigationMenu {...args} orientation="vertical">
         <NavigationMenuList>
           <NavigationMenuItem>
