@@ -51,7 +51,7 @@ export const BasicUsage: Story = {
     <TooltipProvider {...args}>
       <Tooltip>
         <TooltipTrigger asChild>
-          <Button variant="ghost" size="large">
+          <Button variant="ghost" size="lg">
             Hover
           </Button>
         </TooltipTrigger>
