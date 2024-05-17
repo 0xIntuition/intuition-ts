@@ -113,6 +113,7 @@ export const requireAuthedUser = async <TRequest extends Request>(
 
 export async function isAuthedUser(request: Request) {
   const user = await authenticator.isAuthenticated(request)
+
   if (user) return await Promise.resolve(user)
   return null
 }
