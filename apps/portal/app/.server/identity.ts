@@ -5,6 +5,11 @@ import type { APIResponse, QueryParams } from '@types/query'
 import type { User } from '@types/user'
 import { z } from 'zod'
 import { isAuthedUser, requireAuthedUser } from './auth'
+import {
+  checkResponse,
+  handleUnauthorized,
+  toJSON,
+} from '@lib/utils/http-requests'
 
 const apiUrl = process.env.API_URL
 if (!apiUrl) {
@@ -86,14 +91,9 @@ export async function getIdentity(
       headers: headers,
     })
 
-    const { data } = await res.json()
+    const data = await res.json()
 
-    const validatedData = IdentitySchema.safeParse(data)
-    if (!validatedData.success) {
-      throw new Error(`Could not validate identity: ${validatedData.error}`)
-    }
-
-    return { success: true, data: validatedData.data }
+    return { success: true, data: data }
   } catch (error) {
     logger(
       `Error in getIdentity: ${error instanceof Error ? error.message : 'Unknown error'}`,
@@ -119,25 +119,21 @@ export async function getIdentities(
     const headers = getAuthHeaders(accessToken !== null ? accessToken : '')
     const queryParams = generateQueryParams(params)
 
-    const res = await fetch(`${apiUrl}/identities?${queryParams}`, {
+    const res = (await fetch(`${apiUrl}/identities?${queryParams}`, {
       method: 'GET',
       headers: headers,
     })
-
-    if (!res.ok) {
-      throw new Error(
-        `Error getting identities: ${res.status} ${res.statusText}`,
+      .then((response) =>
+        checkResponse(response, () => handleUnauthorized(request)),
       )
-    }
+      .then(toJSON)) as APIResponse<Identity[]>
 
-    const { data, total } = await res.json()
-
-    const validatedData = z.array(IdentitySchema).safeParse(data)
+    const validatedData = z.array(IdentitySchema).safeParse(res.data)
     if (!validatedData.success) {
       throw new Error(`Error validating identities: ${validatedData.error}`)
     }
 
-    return { success: true, data: validatedData.data, total: total }
+    return { success: true, data: validatedData.data, total: res.total }
   } catch (error) {
     logger(
       `Error in getIdentities: ${error instanceof Error ? error.message : 'Unknown error'}`,

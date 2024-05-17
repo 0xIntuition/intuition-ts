@@ -1,5 +1,3 @@
-import { parseWithZod } from '@conform-to/zod'
-import { createIdentitySchema } from '@lib/schemas/create-identity-schema'
 import { MULTIVAULT_CONTRACT_ADDRESS } from '@lib/utils/constants'
 import logger from '@lib/utils/logger'
 import { json, type ActionFunctionArgs } from '@remix-run/node'
@@ -10,21 +8,17 @@ import type { User } from '@types/user'
 export async function action({ request }: ActionFunctionArgs) {
   logger('Validating create identity form data')
 
-  const formData = await request.formData()
-  const submission = await parseWithZod(formData, {
-    schema: createIdentitySchema(),
-    async: true,
-  })
+  logger('Request', request)
 
-  if (submission.status !== 'success') {
-    return json(submission.reply(), {
-      status: submission.status === 'error' ? 400 : 200,
-    })
+  const formData = await request.formData()
+
+  for (const [key, value] of formData.entries()) {
+    logger(`${key}: ${value}`)
   }
 
-  logger('Enter creating identity')
-  const { display_name, description } = submission.value
-  logger('Submission', submission.value)
+  const display_name = formData.get('display_name')
+  const identity_id = formData.get('identity_id')
+  const description = formData.get('description')
 
   try {
     const _data = await requireAuthedUser(request)
@@ -33,7 +27,9 @@ export async function action({ request }: ActionFunctionArgs) {
 
     const identityParams = {
       display_name: display_name as string,
+      identity_id: identity_id as string,
       description: description as string,
+      is_user: true,
       predicate: false,
       contract: MULTIVAULT_CONTRACT_ADDRESS as string,
       creator: user.wallet.toLowerCase(),
@@ -44,18 +40,22 @@ export async function action({ request }: ActionFunctionArgs) {
       'Content-Type': 'application/json',
     }
 
+    logger('create headers', headers)
     const apiResponse = await fetch(`${process.env.API_URL}/identity`, {
       method: 'POST',
       headers,
       body: JSON.stringify(identityParams),
     })
 
+    logger('create identity response', apiResponse)
     if (!apiResponse.ok) {
       throw new Error('Failed to create identity')
     }
 
     const responseBodyJson = await apiResponse.json()
     const identity = responseBodyJson as Identity
+    logger('create identity response body', responseBodyJson)
+    logger('Created identity:', identity)
 
     return json(
       {

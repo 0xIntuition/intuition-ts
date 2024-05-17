@@ -1,11 +1,14 @@
 import { PrivyButton } from '@client/privy-button'
 import { calculateTotalPages } from '@lib/utils/misc'
 import { LoaderFunctionArgs, json } from '@remix-run/node'
+import { isAuthedUser } from '@server/auth'
 import { getIdentities } from '@server/identity'
 import type { Identity } from '@types/identity'
 import { ClientOnly } from 'remix-utils/client-only'
 
 export async function loader({ request }: LoaderFunctionArgs) {
+  const user = await isAuthedUser(request)
+  logger('user', user)
   const url = new URL(request.url)
   const searchParams = new URLSearchParams(url.search)
 
@@ -47,7 +50,7 @@ export default function App() {
   return (
     <div className="m-8 flex flex-col items-center gap-4">
       <div className="flex flex-col">
-        Profile Route
+        App Route
         <ClientOnly>{() => <PrivyButton />}</ClientOnly>
       </div>
     </div>

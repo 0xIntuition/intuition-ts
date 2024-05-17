@@ -7,17 +7,15 @@ import {
 } from '@0xintuition/1ui'
 import { PrivyVerifiedLinks } from '@client/privy-verified-links'
 import Toast from '@components/toast'
-import { useForm } from '@conform-to/react'
-import { getZodConstraint, parseWithZod } from '@conform-to/zod'
 import { multivaultAbi } from '@lib/abis/multivault'
 import { useCreateIdentity } from '@lib/hooks/useCreateIdentity'
-import { createIdentitySchema } from '@lib/schemas/create-identity-schema'
 import { MULTIVAULT_CONTRACT_ADDRESS } from '@lib/utils/constants'
 import logger from '@lib/utils/logger'
 import { LoaderFunctionArgs, json } from '@remix-run/node'
 import { useFetcher, useLoaderData } from '@remix-run/react'
 import { CreateLoaderData } from '@routes/resources+/create'
 import { requireAuthedUser } from '@server/auth'
+import { getIdentity } from '@server/identity'
 import type { Identity } from '@types/identity'
 import { User } from '@types/user'
 import { AlertCircle } from 'lucide-react'
@@ -28,9 +26,9 @@ import { TransactionReceipt, keccak256, toHex } from 'viem'
 import { usePublicClient, useWalletClient } from 'wagmi'
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  const user = requireAuthedUser(request)
-
-  return json({ user })
+  const user = await requireAuthedUser(request)
+  const { data: userIdentity } = await getIdentity(user.wallet, request)
+  return json({ user, userIdentity })
 }
 
 // State
@@ -119,7 +117,6 @@ export function CreateButton({ onSuccess }: CreateButtonWrapperProps) {
   const loaderFetcherUrl = '/resources/create'
   const loaderFetcherRef = useRef(loaderFetcher.load)
   const [state, dispatch] = useReducer(transactionReducer, initialState)
-  const formRef = useRef(null)
 
   useEffect(() => {
     loaderFetcherRef.current = loaderFetcher.load
@@ -158,73 +155,18 @@ export function CreateButton({ onSuccess }: CreateButtonWrapperProps) {
   // off-chain fetcher
   const offChainFetcher = useFetcher<OffChainFetcherData>()
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const lastOffchainSubmission = offChainFetcher.data as any
   const createdIdentity = offChainFetcher?.data?.identity
   const emitterFetcher = useFetcher()
+  logger('createdIdentity', createdIdentity)
 
   const { data: walletClient } = useWalletClient()
 
-  // create identity form
-  const [form] = useForm({
-    id: 'create-identity',
-    lastResult: lastOffchainSubmission?.submission,
-    constraint: getZodConstraint(createIdentitySchema()),
-    onValidate({ formData }) {
-      return parseWithZod(formData, {
-        schema: createIdentitySchema,
-      })
-    },
-    shouldValidate: 'onInput',
-    onSubmit: async (e) => handleSubmit(e),
-  })
   const [loading, setLoading] = useState(false)
 
   interface OffChainFetcherData {
     success: 'success' | 'error'
     identity: Identity
   }
-
-  useEffect(() => {
-    if (user && user.wallet && state.status === 'idle') {
-      // Prepare the formData or payload for the off-chain transaction
-      const formData = new FormData()
-      formData.append('display_name', user.wallet)
-
-      // Submit the off-chain transaction
-      try {
-        offChainFetcher.submit(formData, {
-          action: '/actions/create',
-          method: 'post',
-        })
-      } catch (error: unknown) {
-        if (error instanceof Error) {
-          let errorMessage = 'Error in creating offchain identity data.'
-          if (error.message.includes('rejected')) {
-            errorMessage = 'Signature rejected. Try again when you are ready.'
-          }
-          dispatch({
-            type: 'TRANSACTION_ERROR',
-            error: errorMessage,
-          })
-          toast.custom(
-            () => (
-              <Toast
-                title="Error"
-                description={errorMessage}
-                icon={<AlertCircle />}
-              />
-            ),
-            {
-              duration: 5000,
-            },
-          )
-          dispatch({ type: 'START_ON_CHAIN_TRANSACTION' })
-          return
-        }
-        console.error('Error creating identity', error)
-      }
-    }
-  }, [state])
 
   useEffect(() => {
     if (
@@ -261,36 +203,65 @@ export function CreateButton({ onSuccess }: CreateButtonWrapperProps) {
   }, [state.status])
 
   // Handle Initial Form Submit
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    logger('clicked submit')
-    event.preventDefault()
+  const handleSubmit = async () => {
+    logger('handleSubmit')
     try {
       if (walletClient) {
         dispatch({ type: 'START_TRANSACTION' })
-        const formData = new FormData(event.currentTarget)
+        const formData = new FormData()
+        formData.append('display_name', user.wallet)
+        formData.append('identity_id', user.wallet)
+        formData.append('description', 'test')
 
-        // Initial form validation
-        const submission = parseWithZod(formData, {
-          schema: createIdentitySchema(),
-        })
-
-        if (
-          submission.status === 'error' &&
-          Object.keys(submission.error).length
-        ) {
-          console.error('Create identity validation errors: ', submission.error)
+        for (const [key, value] of formData.entries()) {
+          logger(`${key}: ${value}`)
         }
 
-        const formElement = event.target as HTMLFormElement
-        const identityName = formElement.display_name.value as string
+        try {
+          offChainFetcher.submit(formData, {
+            action: '/actions/create',
+            method: 'post',
+          })
+        } catch (error: unknown) {
+          if (error instanceof Error) {
+            let errorMessage = 'Error in creating offchain identity data.'
+            if (error.message.includes('rejected')) {
+              errorMessage = 'Signature rejected. Try again when you are ready.'
+            }
+            dispatch({
+              type: 'TRANSACTION_ERROR',
+              error: errorMessage,
+            })
+            toast.custom(
+              () => (
+                <Toast
+                  title="Error"
+                  description={errorMessage}
+                  icon={<AlertCircle />}
+                />
+              ),
+              {
+                duration: 5000,
+              },
+            )
+            dispatch({ type: 'START_ON_CHAIN_TRANSACTION' })
+            return
+          }
+          console.error('Error creating identity', error)
+        }
 
-        const identityMessage = `Creating user identity for ${identityName}.`
+        const identityMessage = `Creating user identity for ${user.wallet} on Intuition.`
 
         await walletClient?.signMessage({
           message: JSON.stringify(identityMessage).replace(/\\n/g, '\n'),
         })
 
         setLoading(true)
+        dispatch({ type: 'START_OFF_CHAIN_TRANSACTION' })
+        offChainFetcher.submit(formData, {
+          action: '/actions/create',
+          method: 'post',
+        })
       }
     } catch (error: unknown) {
       logger(error)
@@ -338,11 +309,10 @@ export function CreateButton({ onSuccess }: CreateButtonWrapperProps) {
         if (error instanceof Error) {
           let errorMessage = 'Failed transaction'
           if (error.message.includes('insufficient')) {
-            errorMessage =
-              "Insufficient Funds: Ask your gf's boyfriend for more ETH"
+            errorMessage = 'Insufficient funds'
           }
           if (error.message.includes('rejected')) {
-            errorMessage = 'Transaction rejected: Are we not so back?'
+            errorMessage = 'Transaction rejected'
           }
           dispatch({
             type: 'TRANSACTION_ERROR',
@@ -386,21 +356,7 @@ export function CreateButton({ onSuccess }: CreateButtonWrapperProps) {
 
   return (
     <>
-      <offChainFetcher.Form
-        hidden
-        ref={formRef}
-        action={`/actions/create`}
-        method="post"
-      >
-        <input type="hidden" name="display_name" value={user.wallet} />
-      </offChainFetcher.Form>
-      <Button
-        variant="primary"
-        form={form.id}
-        type="submit"
-        disabled={loading}
-        onClick={() => handleSubmit}
-      >
+      <Button variant="primary" disabled={loading} onClick={handleSubmit}>
         {awaitingWalletConfirmation || awaitingOnChainConfirmation || loading
           ? 'Creating Identity...'
           : 'Create Identity'}
@@ -410,35 +366,38 @@ export function CreateButton({ onSuccess }: CreateButtonWrapperProps) {
 }
 
 export default function Profile() {
+  const { userIdentity } = useLoaderData<{ userIdentity: Identity }>()
+
+  logger('userIdentity', userIdentity)
   return (
-    <div className="m-8 flex flex-col items-center">
-      <div className="flex flex-col gap-8">
-        Profile Route
-        <div className="flex flex-col gap-4">
-          <Accordion
-            type="multiple"
-            className="w-full"
-            defaultValue={['verified-links']}
-          >
-            <AccordionItem value="verified-links">
-              <AccordionTrigger>
-                <span className="text-secondary-foreground text-sm font-normal">
-                  Verified Links
-                </span>
-              </AccordionTrigger>
-              <AccordionContent>
-                <PrivyVerifiedLinks />
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
-        </div>
-        <div className="m-8 flex flex-col items-center gap-4">
-          <div className="flex flex-col">
-            <ClientOnly>
-              {() => <CreateButton onSuccess={() => {}} />}
-            </ClientOnly>
+    <div className="m-8 flex flex-col items-center gap-4">
+      <div className="flex flex-col">
+        {userIdentity ? (
+          <div>
+            <p>User Identity Exists</p>
+            <p>{userIdentity.id}</p>
+            <div className="flex flex-col gap-4">
+              <Accordion
+                type="multiple"
+                className="w-full"
+                defaultValue={['verified-links']}
+              >
+                <AccordionItem value="verified-links">
+                  <AccordionTrigger>
+                    <span className="text-secondary-foreground text-sm font-normal">
+                      Verified Links
+                    </span>
+                  </AccordionTrigger>
+                  <AccordionContent>
+                    <PrivyVerifiedLinks />
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
+            </div>
           </div>
-        </div>
+        ) : (
+          <ClientOnly>{() => <CreateButton onSuccess={() => {}} />}</ClientOnly>
+        )}
       </div>
     </div>
   )

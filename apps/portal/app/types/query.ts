@@ -28,3 +28,11 @@ export interface APIResponse<T> {
   error?: string
   total?: number
 }
+
+export interface APIError {
+  name: string
+  message: string
+  status: number
+  /* eslint-disable @typescript-eslint/no-explicit-any */
+  fullError: any // You can further define this based on what `errorObj` might contain
+}
