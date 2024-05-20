@@ -37,6 +37,7 @@ import { z } from 'zod'
 import './styles/globals.css'
 
 import { ClientOnly } from 'remix-utils/client-only'
+import logger from '@lib/utils/logger'
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
   return [
@@ -178,7 +179,7 @@ export function AppLayout() {
       getAccessToken()
         .then((accessToken: string | null) => {
           setAccessToken(accessToken ?? null)
-          console.log('Access Token:', accessToken)
+          logger('Access Token:', accessToken)
         })
         .catch((error: unknown) => {
           console.error('Error fetching access token:', error)

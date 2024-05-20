@@ -47,9 +47,9 @@ export async function loader({ request }: LoaderFunctionArgs) {
 export default function Profile() {
   return (
     <div className="m-8 flex flex-col items-center">
-      <div className="flex flex-col">
+      <div className="flex flex-col gap-8">
         Profile Route
-        <div className="flex flex-col items-center gap-8">
+        <div className="flex flex-col gap-4">
           <span className="text-secondary-foreground text-sm font-normal">
             Verified Links
           </span>
