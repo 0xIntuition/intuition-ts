@@ -23,6 +23,7 @@ import {
   useLoaderData,
   useSubmit,
 } from '@remix-run/react'
+import Providers from '@client/providers'
 import { useTheme } from '@routes/actions+/set-theme'
 import { isAuthedUser, login } from '@server/auth'
 import { getEnv } from '@server/env'
@@ -34,8 +35,8 @@ import { makeDomainFunction } from 'domain-functions'
 import { useEffect, useState } from 'react'
 import { z } from 'zod'
 import './styles/globals.css'
-import { clientOnly$ } from 'vite-env-only'
-import ClientOnlyPrivyProvider from './.client/privy-provider'
+
+import { ClientOnly } from 'remix-utils/client-only'
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
   return [
@@ -118,16 +119,23 @@ export default function App() {
   const theme = useTheme()
   const { env } = useLoaderData<typeof loader>()
 
-  const ClientOnlyPrivy = () =>
-    clientOnly$(
-      <ClientOnlyPrivyProvider privyAppId={env.PRIVY_APP_ID}>
-        <AppLayout />
-      </ClientOnlyPrivyProvider>,
-    )
+  // const ClientOnlyPrivy = () =>
+  //   clientOnly$(
+  //     <ClientOnlyPrivyProvider privyAppId={env.PRIVY_APP_ID}>
+  //       <AppLayout />
+  //     </ClientOnlyPrivyProvider>,
+  //   )
 
   return (
     <Document nonce={nonce} theme={theme}>
-      <ClientOnlyPrivy />
+      {/* <ClientOnlyPrivy /> */}
+      <ClientOnly>
+        {() => (
+          <Providers privyAppId={env.PRIVY_APP_ID}>
+            <AppLayout />
+          </Providers>
+        )}
+      </ClientOnly>
     </Document>
   )
 }
@@ -141,6 +149,7 @@ interface FetcherData {
 
 export function AppLayout() {
   const { env, user } = useLoaderData<typeof loader>()
+  logger('user', user)
 
   const fetcher = useFetcher<FetcherData>()
   const submit = useSubmit()

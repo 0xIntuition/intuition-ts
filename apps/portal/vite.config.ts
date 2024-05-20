@@ -8,7 +8,6 @@ import autoprefixer from 'autoprefixer'
 // TODO: Update this once we figure our the TS issue that vite is throwing
 // import { themePreset } from '@0xintuition/1ui'
 import { themePreset } from '../../packages/1ui/src/styles/index'
-import envOnly from 'vite-env-only'
 
 installGlobals()
 
@@ -19,7 +18,7 @@ export default defineConfig({
     },
   },
   plugins: [
-    envOnly(),
+    // envOnly(),
     remix({
       ignoredRouteFiles: ['**/.*'],
       routes: async (defineRoutes) => {
@@ -41,7 +40,7 @@ export default defineConfig({
   build: {
     target: 'ES2022',
   },
-  ssr: {
-    noExternal: ['@privy-io/react-auth', 'react-use'],
-  },
+  // ssr: {
+  //   noExternal: ['@privy-io/react-auth', 'react-use'],
+  // },
 })

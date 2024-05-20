@@ -46,7 +46,7 @@ export const themes = {
   dark: {
     background: palette.black.base,
     foreground: palette.white.base,
-    card: palette.black.a70,
+    card: palette.black.base,
     cardForeground: palette.white.base,
     popover: palette.black.base,
     popoverForeground: palette.white.base,
@@ -63,8 +63,8 @@ export const themes = {
     accentForeground: palette.white.base,
     destructive: palette.red[500],
     destructiveForeground: palette.white.base,
-    border: palette.white.a20,
-    input: palette.white.a20,
+    border: palette.white.base,
+    input: palette.white.base,
     ring: palette.white.base,
     radius: radiusValue,
     // custom attributes
