@@ -3,6 +3,7 @@ import { calculateTotalPages } from '@lib/utils/misc'
 import { LoaderFunctionArgs, json } from '@remix-run/node'
 import { getIdentities } from '@server/identity'
 import type { Identity } from '@types/identity'
+import { IdentitiesService } from '../../../../../../packages/api/src'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url)
@@ -31,6 +32,9 @@ export async function loader({ request }: LoaderFunctionArgs) {
   }
 
   const totalPages = calculateTotalPages(total, Number(limit))
+
+  const test = await IdentitiesService.getIdentities({})
+  console.log('test', test)
 
   return json({
     identities: identities ?? [],

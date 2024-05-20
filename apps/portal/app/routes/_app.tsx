@@ -2,8 +2,15 @@ import { LoaderFunctionArgs, json } from '@remix-run/node'
 import { Outlet } from '@remix-run/react'
 import { isAuthedUser } from '@server/auth'
 import { User } from '@types/user'
+import { OpenAPI } from '../../../../packages/api/src'
 
 export async function loader({ request }: LoaderFunctionArgs) {
+  // @ts-ignore
+  OpenAPI.BASE = 'http://localhost:3002'
+  // @ts-ignore
+  OpenAPI.HEADERS = request.headers as Headers
+
+  console.log('OpenAPI', OpenAPI)
   const userResponse = await isAuthedUser(request)
   if (userResponse instanceof Response) {
     return userResponse

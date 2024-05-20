@@ -1,7 +1,7 @@
 import { defineConfig } from '@hey-api/openapi-ts'
 
 export default defineConfig({
-  client: 'axios',
+  client: 'fetch',
   input: 'http://localhost:3002/api-docs/openapi.json',
   output: {
     format: 'prettier',
