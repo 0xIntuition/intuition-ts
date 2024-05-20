@@ -1,4 +1,4 @@
-import { useLinkAccount, usePrivy } from '@privy-io/react-auth'
+import { User, useLinkAccount, usePrivy } from '@privy-io/react-auth'
 import { Button } from '@0xintuition/1ui'
 import logger from '@lib/utils/logger'
 
@@ -9,12 +9,17 @@ const verifiedPlatforms = [
     linkMethod: 'linkTwitter',
     unlinkMethod: 'unlinkTwitter',
   },
-
   {
     platformPrivyName: 'github',
     platformDisplayName: 'GitHub',
     linkMethod: 'linkGithub',
     unlinkMethod: 'unlinkGithub',
+  },
+  {
+    platformPrivyName: 'farcaster',
+    platformDisplayName: 'Farcaster',
+    linkMethod: 'linkFarcaster',
+    unlinkMethod: 'unlinkFarcaster',
   },
 ]
 
@@ -24,43 +29,68 @@ export function PrivyVerifiedLinks() {
     unlinkTwitter,
     unlinkGithub,
     unlinkFarcaster,
-    unlinkGoogle,
   } = usePrivy()
   logger('privyUser in PrivyVerifiedLinks', privyUser)
 
-  const { linkTwitter, linkGithub, linkFarcaster, linkGoogle } = useLinkAccount(
-    {
-      onSuccess: (user, linkMethod, linkedAccount) => {
-        logger(user, linkMethod, linkedAccount)
-      },
-      onError: (error) => {
-        logger(error)
-      },
+  const { linkTwitter, linkGithub, linkFarcaster } = useLinkAccount({
+    onSuccess: (user, linkMethod, linkedAccount) => {
+      logger('Link successful:', user, linkMethod, linkedAccount)
     },
-  )
+    onError: (error) => {
+      logger(error)
+    },
+  })
 
   const linkMethods = {
     linkTwitter,
     linkGithub,
     linkFarcaster,
-    linkGoogle,
   }
 
-  const unlinkMethods = {
-    unlinkTwitter,
-    unlinkGithub,
-    unlinkFarcaster,
-    unlinkGoogle,
+  type UnlinkMethod =
+    | ((subject: string) => Promise<User>) // For Twitter and GitHub
+    | ((fid: number) => Promise<User>) // For Farcaster
+
+  const unlinkMethods: Record<string | number, UnlinkMethod> = {
+    unlinkTwitter: (subject: string) => unlinkTwitter(subject),
+    unlinkGithub: (subject: string) => unlinkGithub(subject),
+    unlinkFarcaster: (fid: number) => unlinkFarcaster(fid),
   }
 
-  const handleUnlink = async (unlinkMethod, subject) => {
-    try {
-      await unlinkMethod(subject)
-      // Action after successful unlink
-      console.log('Unlink successful. privyUser:', privyUser)
-      // You can also check the updated privyUser object here if needed
-    } catch (error) {
-      console.error('Unlink failed', error)
+  const handleLink = async (linkMethodName: keyof typeof linkMethods) => {
+    const linkMethod = linkMethods[linkMethodName]
+    if (typeof linkMethod === 'function') {
+      try {
+        await linkMethod()
+      } catch (error) {
+        console.error('Link failed', error)
+      }
+    }
+  }
+
+  const handleUnlink = async (
+    unlinkMethodName: keyof typeof unlinkMethods,
+    subject?: string,
+    fid?: number,
+  ) => {
+    const unlinkMethod = unlinkMethods[unlinkMethodName]
+    if (typeof unlinkMethod === 'function') {
+      try {
+        if (unlinkMethodName === 'unlinkFarcaster') {
+          if (fid === undefined) {
+            throw new Error(`Missing fid for ${unlinkMethodName}`)
+          }
+          await unlinkMethod(fid) // fid is number, correct type for unlinkFarcaster
+        } else {
+          if (subject === undefined) {
+            throw new Error(`Missing subject for ${unlinkMethodName}`)
+          }
+          await unlinkMethod(subject as string) // subject is string, correct type for unlinkTwitter and unlinkGithub
+        }
+        console.log('Unlink successful. privyUser:', privyUser)
+      } catch (error) {
+        console.error('Unlink failed', error)
+      }
     }
   }
 
@@ -91,25 +121,26 @@ export function PrivyVerifiedLinks() {
         return (
           <VerifiedLinkItem
             key={platform.platformPrivyName}
-            platformPrivyName={platform.platformPrivyName}
+            // platformPrivyName={platform.platformPrivyName}
             platformDisplayName={platform.platformDisplayName}
             isConnected={isConnected}
-            // linkMethod={linkMethod}
-            // unlinkMethod={unlinkMethod}
-            linkMethod={() => linkMethod()}
-            unlinkMethod={() => handleUnlink(unlinkMethod, subject)}
+            linkMethod={() =>
+              handleLink(platform.linkMethod as keyof typeof linkMethods)
+            }
+            unlinkMethod={() =>
+              handleUnlink(
+                platform.unlinkMethod as keyof typeof unlinkMethods,
+                subject,
+              )
+            }
           />
         )
       })}
-      <Button onClick={() => unlinkGithub(privyUser?.github?.subject)}>
-        Test
-      </Button>
     </div>
   )
 }
 
 interface VerifiedLinkItemProps {
-  // platformPrivyName: string
   platformDisplayName: string
   platformIcon?: string
   linkMethod: () => Promise<void>
@@ -124,8 +155,6 @@ export function VerifiedLinkItem({
   unlinkMethod,
   isConnected,
 }: VerifiedLinkItemProps) {
-  logger('linkMethod', linkMethod)
-  logger('unlinkMethod', unlinkMethod)
   return (
     <div className="flex w-full justify-between gap-4 px-8">
       {platformIcon && <img src="" alt="" />}
