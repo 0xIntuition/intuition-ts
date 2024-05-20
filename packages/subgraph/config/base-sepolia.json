@@ -1,0 +1,5 @@
+{
+  "network": "base-sepolia",
+  "ethMultiVaultAddress": "'0x78f576A734dEEFFd0C3550E6576fFf437933D9D5'",
+  "ethMultiVaultStartBlock": "9722274"
+}

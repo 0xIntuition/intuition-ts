@@ -1,0 +1,12 @@
+# dependencies
+/node_modules
+
+# misc
+.DS_Store
+
+# subgraph artifacts
+build
+generated
+
+# build artifacts
+subgraph.yaml

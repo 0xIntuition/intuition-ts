@@ -1,0 +1,26 @@
+specVersion: 1.0.0
+indexerHints:
+  prune: auto
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: EthMultiVault
+    network: {{network}}
+    source:
+      address: {{{ethMultiVaultAddress}}}
+      abi: EthMultiVault
+      startBlock: {{ethMultiVaultStartBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Atom
+      abis:
+        - name: EthMultiVault
+          file: ./abis/EthMultiVault.json
+      eventHandlers:
+        - event: AtomCreated(indexed address,indexed address,bytes,uint256)
+          handler: handleAtomCreated
+      file: ./src/eth-multi-vault.ts
