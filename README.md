@@ -41,6 +41,14 @@ Each package will have more detailed instructions, but you should clone the enti
 - Clone the monorepo from the root: `git@github.com:0xIntuition/intuition-ts.git`
 - Follow individual instructions for each app and package
 
+### Environment variables
+
+Please read [Nx's env variable definition guide](https://nx.dev/recipes/tips-n-tricks/define-environment-variables) to see how we organize our env variables. Each app/package will have the following files that reflects the three configurations we have.
+
+- .env.local
+- .env.test
+- .env.production
+
 ## Contributing
 
 Please read the [contributing guide](./CONTRIBUTING.md).
