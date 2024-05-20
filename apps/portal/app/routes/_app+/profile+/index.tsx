@@ -1,9 +1,9 @@
-import { PrivyButton } from '@client/privy-button'
 import logger from '@lib/utils/logger'
 import { calculateTotalPages } from '@lib/utils/misc'
 import { LoaderFunctionArgs, json } from '@remix-run/node'
 import { getIdentities } from '@server/identity'
 import type { Identity } from '@types/identity'
+import { PrivyVerifiedLinks } from '@client/privy-verified-links'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url)
@@ -46,10 +46,15 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 export default function Profile() {
   return (
-    <div className="m-8 flex flex-col items-center gap-4">
+    <div className="m-8 flex flex-col items-center">
       <div className="flex flex-col">
         Profile Route
-        <PrivyButton />
+        <div className="flex flex-col items-center gap-8">
+          <span className="text-secondary-foreground text-sm font-normal">
+            Verified Links
+          </span>
+          <PrivyVerifiedLinks />
+        </div>
       </div>
     </div>
   )
