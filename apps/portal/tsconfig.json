@@ -2,14 +2,11 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "allowImportingTsExtensions": true,
-    "baseUrl": ".",
+    "baseUrl": "./",
     "forceConsistentCasingInFileNames": true,
-    "isolatedModules": true,
     "lib": ["DOM", "DOM.Iterable", "ES2022"],
     "moduleResolution": "Bundler",
     "noEmit": true,
-    "skipLibCheck": true,
-    "strict": true,
     "types": ["@remix-run/node", "vite/client"],
     "paths": {
       "@components/*": ["app/components/*"],
