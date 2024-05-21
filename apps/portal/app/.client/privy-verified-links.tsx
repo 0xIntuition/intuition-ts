@@ -58,13 +58,18 @@ export function PrivyVerifiedLinks() {
     [key: string | number]: PlatformUserDetails | undefined
   }
 
-  type UnlinkMethod =
-    | ((subject: string) => Promise<User>) // For Twitter and GitHub
-    | ((fid: number) => Promise<User>) // For Farcaster
+  type UnlinkMethodBySubject = (subject: string) => Promise<User>
+  type UnlinkMethodByFid = (fid: number) => Promise<User>
 
-  const unlinkMethods: Record<string | number, UnlinkMethod> = {
+  const unlinkMethodsBySubject: Record<
+    'unlinkTwitter' | 'unlinkGithub',
+    UnlinkMethodBySubject
+  > = {
     unlinkTwitter: (subject: string) => unlinkTwitter(subject),
     unlinkGithub: (subject: string) => unlinkGithub(subject),
+  }
+
+  const unlinkMethodsByFid: Record<'unlinkFarcaster', UnlinkMethodByFid> = {
     unlinkFarcaster: (fid: number) => unlinkFarcaster(fid),
   }
 
@@ -80,24 +85,28 @@ export function PrivyVerifiedLinks() {
   }
 
   const handleUnlink = async (
-    unlinkMethodName: keyof typeof unlinkMethods,
+    unlinkMethodName:
+      | keyof typeof unlinkMethodsBySubject
+      | keyof typeof unlinkMethodsByFid,
     subject?: string,
     fid?: number,
   ) => {
-    const unlinkMethod = unlinkMethods[unlinkMethodName]
-    if (typeof unlinkMethod === 'function') {
+    if (unlinkMethodName === 'unlinkFarcaster') {
+      if (fid === undefined) {
+        throw new Error(`Missing fid for ${unlinkMethodName}`)
+      }
       try {
-        if (unlinkMethodName === 'unlinkFarcaster') {
-          if (fid === undefined) {
-            throw new Error(`Missing fid for ${unlinkMethodName}`)
-          }
-          await unlinkMethod(fid) // fid is number, correct type for unlinkFarcaster
-        } else {
-          if (subject === undefined) {
-            throw new Error(`Missing subject for ${unlinkMethodName}`)
-          }
-          await unlinkMethod(subject) // subject is string, correct type for unlinkTwitter and unlinkGithub
-        }
+        await unlinkMethodsByFid[unlinkMethodName](fid)
+        console.log('Unlink successful. privyUser:', privyUser)
+      } catch (error) {
+        console.error('Unlink failed', error)
+      }
+    } else {
+      if (subject === undefined) {
+        throw new Error(`Missing subject for ${unlinkMethodName}`)
+      }
+      try {
+        await unlinkMethodsBySubject[unlinkMethodName](subject)
         console.log('Unlink successful. privyUser:', privyUser)
       } catch (error) {
         console.error('Unlink failed', error)
@@ -119,15 +128,34 @@ export function PrivyVerifiedLinks() {
           return null
         }
 
-        const unlinkMethod =
-          unlinkMethods[platform.unlinkMethod as keyof typeof unlinkMethods]
+        let unlinkMethod:
+          | ((subject: string) => Promise<User>)
+          | ((fid: number) => Promise<User>)
+          | undefined
+        if (platform.platformPrivyName === 'farcaster') {
+          unlinkMethod =
+            unlinkMethodsByFid[
+              platform.unlinkMethod as keyof typeof unlinkMethodsByFid
+            ]
+        } else {
+          unlinkMethod =
+            unlinkMethodsBySubject[
+              platform.unlinkMethod as keyof typeof unlinkMethodsBySubject
+            ]
+        }
+
         if (typeof unlinkMethod !== 'function') {
           logger(`Unlink method ${platform.unlinkMethod} is not a function`)
           return null
         }
+
         const subject = (privyUser as ExtendedPrivyUser)?.[
           platform.platformPrivyName
         ]?.subject
+
+        const fid = (privyUser as ExtendedPrivyUser)?.[
+          platform.platformPrivyName
+        ]?.fid
 
         const isConnected = privyUser
           ? Boolean(
@@ -138,18 +166,35 @@ export function PrivyVerifiedLinks() {
         return (
           <VerifiedLinkItem
             key={platform.platformPrivyName}
-            // platformPrivyName={platform.platformPrivyName}
             platformDisplayName={platform.platformDisplayName}
             isConnected={isConnected}
             linkMethod={() =>
               handleLink(platform.linkMethod as keyof typeof linkMethods)
             }
-            unlinkMethod={() =>
-              handleUnlink(
-                platform.unlinkMethod as keyof typeof unlinkMethods,
-                subject,
-              )
-            }
+            unlinkMethod={() => {
+              // Check for the 'farcaster' condition and ensure a 'fid' is defined
+              if (
+                platform.platformPrivyName === 'farcaster' &&
+                fid !== undefined
+              ) {
+                return handleUnlink(
+                  platform.unlinkMethod as keyof typeof unlinkMethodsByFid,
+                  undefined,
+                  fid,
+                )
+              } else if (subject !== undefined) {
+                // Check if subject is defined for other platforms
+                return handleUnlink(
+                  platform.unlinkMethod as keyof typeof unlinkMethodsBySubject,
+                  subject,
+                )
+              } else {
+                // Handle cases where neither 'fid' nor 'subject' is defined appropriately
+                const error = `Error: Unlink method called without required parameter for platform ${platform.platformPrivyName}`
+                console.error(error)
+                return Promise.reject(new Error(error))
+              }
+            }}
           />
         )
       })}
