@@ -17,7 +17,7 @@ const meta: Meta<typeof NavigationMenu> = {
   parameters: {
     docs: {
       description: {
-        component: 'A short description of the component goes here.',
+        component: 'A collection of links for navigating websites.',
       },
     },
   },
