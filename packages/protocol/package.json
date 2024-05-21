@@ -3,6 +3,7 @@
   "version": "0.1.2",
   "description": "Protocol",
   "main": "src/index.js",
+  "type": "module",
   "exports": {
     ".": "./src/index.js"
   },

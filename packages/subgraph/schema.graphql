@@ -2,7 +2,8 @@ type Atom @entity(immutable: true) {
   id: Bytes!
   creator: Bytes! # address
   atomWallet: Bytes! # address
-  atomData: Bytes! # bytes
+  atomUri: String! # bytes
+  atomData: String! # bytes
   vaultID: BigInt! # uint256
   blockNumber: BigInt!
   blockTimestamp: BigInt!

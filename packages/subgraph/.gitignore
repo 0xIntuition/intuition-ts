@@ -8,5 +8,7 @@
 build
 generated
 
+data
+
 # build artifacts
 subgraph.yaml

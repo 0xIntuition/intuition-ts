@@ -1,4 +1,7 @@
 specVersion: 1.0.0
+features:
+  - nonDeterministicIpfs
+  - ipfsOnEthereumContracts
 indexerHints:
   prune: auto
 schema:

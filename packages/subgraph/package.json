@@ -1,10 +1,12 @@
 {
   "name": "0xintuition/subgraph",
+  "type": "module",
   "scripts": {
     "codegen": "graph codegen",
     "build": "graph build",
     "deploy:base": "graph deploy --node https://api.thegraph.com/deploy/ 0xintuition/base",
     "deploy:base-sepolia": "graph deploy --studio intuition-base-sepolia",
+    "reset-local": "pnpm remove-local && pnpm create-local && pnpm deploy-local",
     "create-local": "graph create --node http://localhost:8020/ 0xintuition/subgraph",
     "remove-local": "graph remove --node http://localhost:8020/ 0xintuition/subgraph",
     "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 0xintuition/subgraph",
@@ -12,13 +14,18 @@
     "prepare:base": "mustache config/base.json subgraph.template.yaml > subgraph.yaml && graph codegen",
     "prepare:base-sepolia": "mustache config/base-sepolia.json subgraph.template.yaml > subgraph.yaml graph codegen",
     "build-and-deploy-prodnets": "pnpm prepare:base && pnpm build && pnpm deploy:base",
-    "build-and-deploy-testnets": "pnpm prepare:base-sepolia && pnpm build && pnpm deploy:base-sepolia"
+    "build-and-deploy-testnets": "pnpm prepare:base-sepolia && pnpm build && pnpm deploy:base-sepolia",
+    "simulate:book-club": "tsx src/simulation/book-club"
   },
   "dependencies": {
     "@graphprotocol/graph-cli": "0.71.2",
     "@graphprotocol/graph-ts": "0.32.0"
   },
   "devDependencies": {
-    "mustache": "^4.2.0"
+    "@0xintuition/protocol": "workspace:*",
+    "kubo-rpc-client": "^4.1.1",
+    "mustache": "^4.2.0",
+    "tsx": "^4.10.5",
+    "viem": "^2.9.29"
   }
 }
