@@ -54,6 +54,8 @@ export interface PrivyPlatform {
 export interface PlatformUserDetails {
   subject: string
   fid: number
+  username?: string
+  verifiedAt?: Date
 }
 
 export type ExtendedPrivyUser = PrivyUser & {

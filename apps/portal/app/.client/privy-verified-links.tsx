@@ -51,6 +51,8 @@ export function PrivyVerifiedLinks() {
             key={platform.platformPrivyName}
             platformDisplayName={platform.platformDisplayName}
             isConnected={isConnected}
+            privyUser={privyUser as ExtendedPrivyUser}
+            platform={platform}
             linkMethod={() => handleLink(platform.linkMethod)}
             unlinkMethod={() => {
               return new Promise<void>((resolve, reject) => {
@@ -93,6 +95,8 @@ interface VerifiedLinkItemProps {
   linkMethod: () => Promise<void>
   unlinkMethod: () => Promise<void>
   isConnected: boolean
+  privyUser: ExtendedPrivyUser | null
+  platform: PrivyPlatform
 }
 
 export function VerifiedLinkItem({
@@ -101,11 +105,23 @@ export function VerifiedLinkItem({
   linkMethod,
   unlinkMethod,
   isConnected,
+  privyUser,
+  platform,
 }: VerifiedLinkItemProps) {
   return (
     <div className="flex w-full justify-between gap-4 px-8">
       {platformIcon && <img src="" alt="" />}
-      <span>{platformDisplayName}</span>
+
+      {isConnected ? (
+        <span>
+          {(privyUser &&
+            (privyUser as ExtendedPrivyUser)[platform.platformPrivyName]
+              ?.username) ??
+            platformDisplayName}
+        </span>
+      ) : (
+        <span>{platformDisplayName}</span>
+      )}
       {isConnected ? (
         <Button onClick={unlinkMethod}>X</Button>
       ) : (
