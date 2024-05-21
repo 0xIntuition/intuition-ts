@@ -7,10 +7,7 @@ export * from './Label'
 export * from './Separator'
 export * from './Tooltip'
 export * from './Text'
-<<<<<<< HEAD
 export * from './Resizable'
 export * from './NavigationMenu'
-=======
 export * from './Accordion'
 export * from './Sonner'
->>>>>>> 50cf24d (Adds in Accordion and Sonner (Toast) to 1ui -- unthemed, basic Shadcn. Adds in supporting packages for these, and brings into Portal)
