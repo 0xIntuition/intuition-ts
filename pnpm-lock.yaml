@@ -476,6 +476,10 @@ importers:
         version: 1.6.0(@types/node@20.12.12)(@vitest/ui@1.6.0)(jsdom@22.1.0(bufferutil@4.0.8)(utf-8-validate@6.0.4))(terser@5.31.0)
 
   packages/sdk:
+    dependencies:
+      '@0xintuition/api':
+        specifier: workspace:^
+        version: link:../api
     devDependencies:
       typescript:
         specifier: ^5.4.5
