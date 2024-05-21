@@ -46,6 +46,17 @@ export function PrivyVerifiedLinks() {
     linkGithub,
     linkFarcaster,
   }
+  interface PlatformUserDetails {
+    subject: string
+    fid: number
+  }
+
+  type ExtendedPrivyUser = User & {
+    twitter?: PlatformUserDetails
+    github?: PlatformUserDetails
+    farcaster?: PlatformUserDetails
+    [key: string | number]: PlatformUserDetails | undefined
+  }
 
   type UnlinkMethod =
     | ((subject: string) => Promise<User>) // For Twitter and GitHub
@@ -85,7 +96,7 @@ export function PrivyVerifiedLinks() {
           if (subject === undefined) {
             throw new Error(`Missing subject for ${unlinkMethodName}`)
           }
-          await unlinkMethod(subject as string) // subject is string, correct type for unlinkTwitter and unlinkGithub
+          await unlinkMethod(subject) // subject is string, correct type for unlinkTwitter and unlinkGithub
         }
         console.log('Unlink successful. privyUser:', privyUser)
       } catch (error) {
@@ -114,9 +125,15 @@ export function PrivyVerifiedLinks() {
           logger(`Unlink method ${platform.unlinkMethod} is not a function`)
           return null
         }
-        const subject = privyUser?.[platform.platformPrivyName]?.subject
+        const subject = (privyUser as ExtendedPrivyUser)?.[
+          platform.platformPrivyName
+        ]?.subject
 
-        const isConnected = privyUser && privyUser[platform.platformPrivyName]
+        const isConnected = privyUser
+          ? Boolean(
+              (privyUser as ExtendedPrivyUser)[platform.platformPrivyName],
+            )
+          : false
 
         return (
           <VerifiedLinkItem

@@ -35,6 +35,7 @@ import { useEffect, useState } from 'react'
 import { z } from 'zod'
 import './styles/globals.css'
 import { ClientOnly } from 'remix-utils/client-only'
+import logger from '@lib/utils/logger'
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
   return [
@@ -45,6 +46,7 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await isAuthedUser(request)
+  logger('User in Root', user)
 
   return json({
     user,
