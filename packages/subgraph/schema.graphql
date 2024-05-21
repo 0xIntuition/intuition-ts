@@ -1,11 +1,16 @@
 type Atom @entity(immutable: true) {
-  id: Bytes!
-  creator: Bytes! # address
+  id: ID!
+  creator: Account! # address
   atomWallet: Bytes! # address
   atomUri: String! # bytes
   atomData: String! # bytes
-  vaultID: BigInt! # uint256
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
+}
+
+type Account @entity {
+  id: ID!
+  name: String
+  createdAtoms: [Atom!]! @derivedFrom(field: "creator")
 }

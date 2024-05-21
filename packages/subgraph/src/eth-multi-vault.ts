@@ -1,15 +1,19 @@
 import { AtomCreated as AtomCreatedEvent } from '../generated/EthMultiVault/EthMultiVault'
-import { Atom } from '../generated/schema'
+import { Atom, Account } from '../generated/schema'
 import { ipfs } from '@graphprotocol/graph-ts'
 
 export function handleAtomCreated(event: AtomCreatedEvent): void {
-  let entity = new Atom(
-    event.transaction.hash.concatI32(event.logIndex.toI32()),
-  )
-  entity.creator = event.params.creator
+  let entity = new Atom(event.params.vaultID.toHexString())
+
+  let creator = Account.load(event.params.creator.toHexString())
+  if (creator === null) {
+    creator = new Account(event.params.creator.toHexString())
+    creator.save()
+  }
+
+  entity.creator = creator.id
   entity.atomWallet = event.params.atomWallet
   entity.atomUri = event.params.atomData.toString()
-  entity.vaultID = event.params.vaultID
   entity.atomData = entity.atomUri
 
   if (entity.atomUri.startsWith('ipfs://')) {
