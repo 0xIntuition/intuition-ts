@@ -104,7 +104,7 @@ describe('Button', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <button
-          class="flex items-center gap-2 text-sm font-medium border-solid border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted shadow-md-subtle bg-primary text-primary-foreground border-primary hover:bg-primary/80 rounded-full px-4 py-1.5"
+          class="flex items-center gap-2 text-sm font-medium border-solid border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted shadow-md-subtle bg-primary text-primary-foreground border-primary hover:bg-primary/80 rounded-full"
         >
           Text
         </button>
@@ -116,7 +116,7 @@ describe('Button', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <button
-          class="flex items-center font-medium border-solid border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted shadow-md-subtle bg-primary text-primary-foreground border-primary hover:bg-primary/80 rounded-full px-4 py-2 gap-4 text-base"
+          class="flex items-center gap-2 text-sm font-medium border-solid border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted shadow-md-subtle bg-primary text-primary-foreground border-primary hover:bg-primary/80 rounded-full"
         >
           Text
         </button>
@@ -128,7 +128,7 @@ describe('Button', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <button
-          class="flex items-center font-medium border-solid border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted shadow-md-subtle bg-primary text-primary-foreground border-primary hover:bg-primary/80 rounded-full px-5 py-2.5 gap-5 text-lg"
+          class="flex items-center gap-2 text-sm font-medium border-solid border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted shadow-md-subtle bg-primary text-primary-foreground border-primary hover:bg-primary/80 rounded-full"
         >
           Text
         </button>

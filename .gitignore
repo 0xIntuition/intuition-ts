@@ -6,3 +6,6 @@ dist/
 
 .nx/cache
 packages/1ui/storybook-static
+
+.env*
+!.env.example
