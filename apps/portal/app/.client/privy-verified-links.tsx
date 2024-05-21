@@ -3,6 +3,7 @@ import logger from '@lib/utils/logger'
 import { useSocialLinking } from '@lib/hooks/usePrivySocialLinking'
 import { ExtendedPrivyUser, PrivyPlatform } from '@types/privy'
 
+// colocated this for now but we can move into a constants if that is cleaner
 const verifiedPlatforms: PrivyPlatform[] = [
   {
     platformPrivyName: 'twitter',
@@ -111,7 +112,6 @@ export function VerifiedLinkItem({
   return (
     <div className="flex w-full justify-between gap-4 px-8">
       {platformIcon && <img src="" alt="" />}
-
       {isConnected ? (
         <span>
           {(privyUser &&

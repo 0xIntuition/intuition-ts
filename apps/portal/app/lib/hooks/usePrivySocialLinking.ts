@@ -1,6 +1,10 @@
 import { useLinkAccount, usePrivy } from '@privy-io/react-auth'
 import logger from '@lib/utils/logger'
 import { PrivyPlatform, LinkMethodNames } from '@types/privy'
+import { toast } from '@0xintuition/1ui'
+
+// for now the onSuccess and onError are contained in the hook. we may need to allow for this to take callbacks
+// to use with the e2e integration with backend
 
 export function useSocialLinking(verifiedPlatforms: PrivyPlatform[]) {
   const {
@@ -12,9 +16,11 @@ export function useSocialLinking(verifiedPlatforms: PrivyPlatform[]) {
   const { linkTwitter, linkGithub, linkFarcaster } = useLinkAccount({
     onSuccess: (user, linkMethod, linkedAccount) => {
       logger('Link successful:', user, linkMethod, linkedAccount)
+      toast.success('Account link successful.')
     },
     onError: (error) => {
       logger('Link error:', error)
+      toast.success(`Account link failed: ${error}`)
     },
   })
 

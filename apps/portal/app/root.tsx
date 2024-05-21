@@ -36,6 +36,7 @@ import { z } from 'zod'
 import './styles/globals.css'
 import { ClientOnly } from 'remix-utils/client-only'
 import logger from '@lib/utils/logger'
+import { Toaster } from '@0xintuition/1ui'
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
   return [
@@ -129,6 +130,7 @@ export default function App() {
   return (
     <Document nonce={nonce} theme={theme}>
       {/* <ClientOnlyPrivy /> */}
+      <Toaster />
       <ClientOnly>
         {() => (
           <Providers privyAppId={env.PRIVY_APP_ID}>
