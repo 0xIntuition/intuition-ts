@@ -5,10 +5,9 @@ import { User } from '@types/user'
 import { OpenAPI } from '../../../../packages/api/src'
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  // @ts-ignore
+  // Setup codegen
   OpenAPI.BASE = 'http://localhost:3002'
-  // @ts-ignore
-  OpenAPI.HEADERS = request.headers as Headers
+  OpenAPI.HEADERS = request.headers as unknown as Record<string, string>
 
   console.log('OpenAPI', OpenAPI)
   const userResponse = await isAuthedUser(request)
