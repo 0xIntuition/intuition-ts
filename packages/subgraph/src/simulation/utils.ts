@@ -42,5 +42,5 @@ export async function getIntuition(accountIndex: number) {
   // @ts-ignore
   const multivault = new Multivault({ public: publicClient, wallet }, address)
 
-  return multivault
+  return { multivault, account }
 }

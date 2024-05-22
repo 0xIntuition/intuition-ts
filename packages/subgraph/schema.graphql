@@ -1,16 +1,31 @@
-type Atom @entity(immutable: true) {
+type Atom @entity {
   id: ID!
-  creator: Account! # address
-  atomWallet: Bytes! # address
-  atomUri: String! # bytes
-  atomData: String! # bytes
+  creator: Account!
+  wallet: Bytes!
+  uri: String!
+  data: String!
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
+  isSubject: [Triple!]! @derivedFrom(field: "subject")
+  isPredicate: [Triple!]! @derivedFrom(field: "predicate")
+  isObject: [Triple!]! @derivedFrom(field: "object")
 }
 
 type Account @entity {
   id: ID!
   name: String
   createdAtoms: [Atom!]! @derivedFrom(field: "creator")
+  createdTriples: [Triple!]! @derivedFrom(field: "creator")
+}
+
+type Triple @entity(immutable: true) {
+  id: String!
+  creator: Account!
+  subject: Atom!
+  predicate: Atom!
+  object: Atom!
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
 }

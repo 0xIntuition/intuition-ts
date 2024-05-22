@@ -19,11 +19,15 @@ dataSources:
       apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
+        - Account
         - Atom
+        - Triple
       abis:
         - name: EthMultiVault
           file: ./abis/EthMultiVault.json
       eventHandlers:
         - event: AtomCreated(indexed address,indexed address,bytes,uint256)
           handler: handleAtomCreated
+        - event: TripleCreated(indexed address,uint256,uint256,uint256,uint256)
+          handler: handleTripleCreated
       file: ./src/eth-multi-vault.ts
