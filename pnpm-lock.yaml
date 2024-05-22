@@ -17,9 +17,6 @@ importers:
       '@remix-run/serve':
         specifier: ^2.8.1
         version: 2.9.2(typescript@5.4.5)
-      axios:
-        specifier: ^1.6.8
-        version: 1.6.8
       isbot:
         specifier: ^4.4.0
         version: 4.4.0
@@ -446,9 +443,6 @@ importers:
 
   packages/api:
     devDependencies:
-      axios:
-        specifier: ^1.6.8
-        version: 1.6.8
       prettier:
         specifier: ^3.2.5
         version: 3.2.5
