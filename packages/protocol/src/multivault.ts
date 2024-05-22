@@ -12,6 +12,7 @@ import {
   toHex,
   Transport,
   WalletClient,
+  keccak256,
 } from 'viem'
 
 import { abi } from './abi'
@@ -81,6 +82,16 @@ export class Multivault {
       decimalPrecision,
       minDelay,
     }
+  }
+
+  public async getVaultIdFromUri(uri: string) {
+    const vaultId = await this.contract.read.atomsByHash([
+      keccak256(toHex(uri)),
+    ])
+    if (vaultId === 0n) {
+      return null
+    }
+    return vaultId
   }
 
   /**

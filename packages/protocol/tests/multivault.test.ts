@@ -114,11 +114,21 @@ describe('atom life cycle', () => {
   let atomVaultId: bigint
   let sharesPreview: bigint
 
+  it('can check if atom exists', async () => {
+    const vaultId = await multiVault.getVaultIdFromUri('lorem')
+    expect(vaultId).toBeNull()
+  })
+
   it('can create atom', async () => {
     const { vaultId } = await multiVault.createAtom('lorem')
     expect(vaultId).toBeDefined()
 
     atomVaultId = vaultId
+  })
+
+  it('can check if atom exists', async () => {
+    const vaultId = await multiVault.getVaultIdFromUri('lorem')
+    expect(vaultId).toEqual(atomVaultId)
   })
 
   it('can get current share price for given vault id', async () => {
