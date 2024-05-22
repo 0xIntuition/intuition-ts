@@ -2,7 +2,7 @@ import { defineConfig } from '@hey-api/openapi-ts'
 
 export default defineConfig({
   client: 'fetch',
-  input: 'http://localhost:3002/api-docs/openapi.json',
+  input: 'https://dev.api.intuition.systems/api-docs/openapi.json',
   output: {
     format: 'prettier',
     path: './src/api-client',

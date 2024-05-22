@@ -12,7 +12,6 @@ export type ActivityPresenter = {
   atom_cost: string
   atom_creation_fee: string
   block_hash: string
-  block_height: string
   block_number: string
   contract: string
   created_at: string
@@ -20,7 +19,6 @@ export type ActivityPresenter = {
   effective_gas_price: string
   entry_fee: string
   event_type: Event
-  excess_value: string
   exit_fee: string
   fee_denominator: string
   from_address: string
@@ -39,9 +37,7 @@ export type ActivityPresenter = {
   protocol_vault?: string | null
   raw_input_data: string
   share_price: string
-  shares_for_receiver: string
   timestamp: string
-  total_asset_delta: string
   total_assets: string
   total_shares: string
   value: string
@@ -286,15 +282,15 @@ export type Event =
   | 'depositTriple'
   | 'entryFeeAmount'
   | 'exitFeeAmount'
-  | 'getVaultBalance'
   | 'getTripleAtoms'
+  | 'getVaultBalance'
+  | 'getVaultStateForUser'
   | 'getVaultStates'
   | 'maxRedeem'
-  | 'redeemTriple'
   | 'redeemAtom'
+  | 'redeemTriple'
   | 'setAdmin'
   | 'setAtomCost'
-  | 'getVaultStateForUser'
 
 export const Event = {
   CREATE_ATOM: 'createAtom',
@@ -306,15 +302,15 @@ export const Event = {
   DEPOSIT_TRIPLE: 'depositTriple',
   ENTRY_FEE_AMOUNT: 'entryFeeAmount',
   EXIT_FEE_AMOUNT: 'exitFeeAmount',
-  GET_VAULT_BALANCE: 'getVaultBalance',
   GET_TRIPLE_ATOMS: 'getTripleAtoms',
+  GET_VAULT_BALANCE: 'getVaultBalance',
+  GET_VAULT_STATE_FOR_USER: 'getVaultStateForUser',
   GET_VAULT_STATES: 'getVaultStates',
   MAX_REDEEM: 'maxRedeem',
-  REDEEM_TRIPLE: 'redeemTriple',
   REDEEM_ATOM: 'redeemAtom',
+  REDEEM_TRIPLE: 'redeemTriple',
   SET_ADMIN: 'setAdmin',
   SET_ATOM_COST: 'setAtomCost',
-  GET_VAULT_STATE_FOR_USER: 'getVaultStateForUser',
 } as const
 
 export type ExternalReferenceQuery = {
@@ -356,16 +352,7 @@ export type IdentityAttribute =
     }
   | 'noOp'
 
-export type IdentityId =
-  | {
-      Did: string
-    }
-  | {
-      Wallet: string
-    }
-  | {
-      Other: string
-    }
+export type IdentityId = string
 
 export type IdentityIdQuery = {
   combinator?: Combinator | null
@@ -528,7 +515,7 @@ export type NewLinkedAccount = {
   account_type: string
   active?: boolean
   add_points?: boolean
-  address: string
+  address?: string | null
   chain_type?: string | null
   connector_type?: string | null
   link_id: string
@@ -1205,6 +1192,7 @@ export type CreateIdentityResponse = {
 export type SearchIdentityData = {
   creator?: Identifier | null
   displayName?: string | null
+  identityId?: IdentityId | null
   isUser?: boolean | null
   paging: PaginatedRequest
   predicate?: boolean | null
@@ -1834,6 +1822,7 @@ export type $OpenApiTs = {
       req: {
         creator?: Identifier | null
         displayName?: string | null
+        identityId?: IdentityId | null
         isUser?: boolean | null
         paging: PaginatedRequest
         predicate?: boolean | null

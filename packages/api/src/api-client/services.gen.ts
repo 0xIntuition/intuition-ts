@@ -256,6 +256,7 @@ export class IdentitiesService {
    * @param data.predicate
    * @param data.isUser
    * @param data.timeframe
+   * @param data.identityId
    * @returns unknown Search identities in paginated list
    * @throws ApiError
    */
@@ -273,6 +274,7 @@ export class IdentitiesService {
         predicate: data.predicate,
         isUser: data.isUser,
         timeframe: data.timeframe,
+        identityId: data.identityId,
         paging: data.paging,
         sort: data.sort,
       },
