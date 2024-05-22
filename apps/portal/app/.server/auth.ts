@@ -1,11 +1,11 @@
 import { FormStrategy } from '@lib/utils/auth-strategy'
 import { invariant } from '@lib/utils/misc'
 import type { User } from '@types/user'
-// import { DIDSession } from 'did-session'
 import logger from '@lib/utils/logger'
 import { Authenticator } from 'remix-auth'
 import { sessionStorage } from './session'
 import { redirect } from '@remix-run/react'
+import { getUserByWallet } from './user'
 
 // Create an instance of the authenticator, pass a generic with what
 // strategies will return and will store in the session
@@ -78,10 +78,18 @@ export async function authenticate(
 
   // const { newUser, userId } = await isAuthed.json()
 
+  const userIdResponse = await getUserByWallet({
+    wallet: wallet,
+    accessToken: accessToken,
+  })
+
+  const { data: userIdData } = userIdResponse
+
   return {
     didSession,
     wallet,
     accessToken,
+    id: userIdData ? userIdData.id : '',
   }
 }
 export async function login(request: Request) {

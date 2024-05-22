@@ -3,7 +3,7 @@ import { z } from 'zod'
 export type User = {
   didSession: string
   wallet: string
-  // id: string
+  id: string
   ensName?: string
   // newUser: boolean
   accessToken: string
@@ -47,3 +47,11 @@ export const EmbededUserAggregatesSchema = z.object({
 })
 
 export type EmbededUserAggregates = z.infer<typeof EmbededUserAggregatesSchema>
+
+export const UserIdResponseSchema = z.object({
+  id: z.string(),
+  wallet: z.string(),
+  total: z.string(),
+})
+
+export type UserIdResponse = z.infer<typeof UserIdResponseSchema>

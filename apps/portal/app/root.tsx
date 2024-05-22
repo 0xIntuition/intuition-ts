@@ -1,7 +1,6 @@
 import { CURRENT_ENV } from '@lib/utils/constants'
 import { getChainEnvConfig } from '@lib/utils/environment'
 import { ClientHintCheck, getHints } from '@lib/utils/client-hints'
-import logger from '@lib/utils/logger'
 import { useNonce } from '@lib/utils/nonce-provider'
 import type {
   ConnectedWallet as ConnectedPrivyWallet,
@@ -19,7 +18,6 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
-  useFetcher,
   useLoaderData,
   useSubmit,
 } from '@remix-run/react'
@@ -35,8 +33,9 @@ import { makeDomainFunction } from 'domain-functions'
 import { useEffect, useState } from 'react'
 import { z } from 'zod'
 import './styles/globals.css'
-
 import { ClientOnly } from 'remix-utils/client-only'
+import logger from '@lib/utils/logger'
+import { Toaster } from '@0xintuition/1ui'
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
   return [
@@ -47,6 +46,7 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await isAuthedUser(request)
+  logger('User in Root', user)
 
   return json({
     user,
@@ -119,16 +119,9 @@ export default function App() {
   const theme = useTheme()
   const { env } = useLoaderData<typeof loader>()
 
-  // const ClientOnlyPrivy = () =>
-  //   clientOnly$(
-  //     <ClientOnlyPrivyProvider privyAppId={env.PRIVY_APP_ID}>
-  //       <AppLayout />
-  //     </ClientOnlyPrivyProvider>,
-  //   )
-
   return (
     <Document nonce={nonce} theme={theme}>
-      {/* <ClientOnlyPrivy /> */}
+      <Toaster />
       <ClientOnly>
         {() => (
           <Providers privyAppId={env.PRIVY_APP_ID}>
@@ -149,9 +142,7 @@ interface FetcherData {
 
 export function AppLayout() {
   const { env, user } = useLoaderData<typeof loader>()
-  logger('user', user)
 
-  const fetcher = useFetcher<FetcherData>()
   const submit = useSubmit()
 
   const [privyUser, setPrivyUser] = useState<PrivyUser | null>(null)
@@ -178,7 +169,6 @@ export function AppLayout() {
       getAccessToken()
         .then((accessToken: string | null) => {
           setAccessToken(accessToken ?? null)
-          console.log('Access Token:', accessToken)
         })
         .catch((error: unknown) => {
           console.error('Error fetching access token:', error)
@@ -199,10 +189,6 @@ export function AppLayout() {
   }, [privyWallet])
 
   useEffect(() => {
-    logger('handle login')
-    logger('privyWallet', privyWallet)
-    logger('privyUser', privyUser)
-
     async function handleLogin() {
       const formData = new FormData()
       formData.set('didSession', privyUser?.id ?? '')
