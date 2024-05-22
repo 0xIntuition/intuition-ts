@@ -34,9 +34,9 @@ import type { PrivyModuleType, User } from '@types/privy'
 import { makeDomainFunction } from 'domain-functions'
 import { useEffect, useState } from 'react'
 import { ClientOnly } from 'remix-utils/client-only'
+import { useAccount } from 'wagmi'
 import { z } from 'zod'
 import './styles/globals.css'
-import { useAccount, useWalletClient } from 'wagmi'
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
   return [
