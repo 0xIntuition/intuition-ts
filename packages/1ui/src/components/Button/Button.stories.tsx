@@ -1,7 +1,7 @@
 import React from 'react'
 import type { Meta, StoryObj } from '@storybook/react'
 import { Button } from './Button'
-import { ChevronRight } from 'lucide-react'
+import { Icon } from '@components/Icon'
 
 const meta: Meta<typeof Button> = {
   title: 'Components/Button',
@@ -101,7 +101,7 @@ export const Primary: Story = {
         Extra Large
       </Button>
       <Button {...props}>
-        <ChevronRight />
+        <Icon name="crystal-ball" />
       </Button>
       <Button isLoading {...props}>
         Loading...
@@ -134,7 +134,7 @@ export const Secondary: Story = {
         Extra Large
       </Button>
       <Button variant="secondary" {...props}>
-        <ChevronRight />
+        <Icon name="crystal-ball" />
       </Button>
       <Button variant="secondary" isLoading {...props}>
         Loading...
@@ -170,7 +170,7 @@ export const Ghost: Story = {
         Selected
       </Button>
       <Button variant="ghost" {...props}>
-        <ChevronRight />
+        <Icon name="crystal-ball" />
       </Button>
       <Button variant="ghost" isLoading {...props}>
         Loading...
@@ -203,7 +203,7 @@ export const Text: Story = {
         Extra Large
       </Button>
       <Button variant="text" {...props}>
-        <ChevronRight />
+        <Icon name="crystal-ball" />
       </Button>
       <Button variant="text" isLoading {...props}>
         Loading...
@@ -236,7 +236,7 @@ export const Accent: Story = {
         Extra Large
       </Button>
       <Button variant="accent" {...props}>
-        <ChevronRight />
+        <Icon name="crystal-ball" />
       </Button>
       <Button variant="accent" isLoading {...props}>
         Loading...
@@ -269,7 +269,7 @@ export const Warning: Story = {
         Extra Large
       </Button>
       <Button variant="warning" {...props}>
-        <ChevronRight />
+        <Icon name="crystal-ball" />
       </Button>
       <Button variant="warning" isLoading {...props}>
         Loading...
@@ -302,7 +302,7 @@ export const Success: Story = {
         Extra Large
       </Button>
       <Button variant="success" {...props}>
-        <ChevronRight />
+        <Icon name="crystal-ball" />
       </Button>
       <Button variant="success" isLoading {...props}>
         Loading...
@@ -335,7 +335,7 @@ export const Destructive: Story = {
         Extra Large
       </Button>
       <Button variant="destructive" {...props}>
-        <ChevronRight />
+        <Icon name="crystal-ball" />
       </Button>
       <Button variant="destructive" isLoading {...props}>
         Loading...
@@ -356,16 +356,16 @@ export const IconSizes: Story = {
   render: (props) => (
     <div style={{ display: 'flex', gap: '2rem', alignItems: 'center' }}>
       <Button size="icon" {...props}>
-        <ChevronRight />
+        <Icon name="crystal-ball" />
       </Button>
       <Button variant="secondary" size="iconMd" {...props}>
-        <ChevronRight />
+        <Icon name="crystal-ball" />
       </Button>
       <Button variant="ghost" size="iconLg" {...props}>
-        <ChevronRight />
+        <Icon name="crystal-ball" />
       </Button>
       <Button variant="accent" size="iconXl" {...props}>
-        <ChevronRight />
+        <Icon name="crystal-ball" />
       </Button>
     </div>
   ),
