@@ -1,6 +1,7 @@
 import React from 'react'
 import type { Meta, StoryObj } from '@storybook/react'
-import { Icon, IconName } from './Icon'
+import { Icon } from './Icon'
+import { IconName } from './Icon.types'
 
 const iconOptions = [
   'arrow-left',
