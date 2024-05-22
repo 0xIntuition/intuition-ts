@@ -1,4 +1,5 @@
 import { PrivyButton } from '@client/privy-button'
+import logger from '@lib/utils/logger'
 import { calculateTotalPages } from '@lib/utils/misc'
 import { LoaderFunctionArgs, json } from '@remix-run/node'
 import { isAuthedUser } from '@server/auth'
@@ -34,6 +35,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     total: number
   }
 
+  logger('identites', identities)
   const totalPages = calculateTotalPages(total, Number(limit))
 
   // logger('identities', identities)

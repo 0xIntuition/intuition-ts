@@ -1,10 +1,12 @@
 import { FormStrategy } from '@lib/utils/auth-strategy'
-import { invariant } from '@lib/utils/misc'
-import type { User } from '@types/user'
 import logger from '@lib/utils/logger'
-import { Authenticator } from 'remix-auth'
-import { sessionStorage } from './session'
+import { invariant } from '@lib/utils/misc'
+import { mainnetClient } from '@lib/utils/viem'
 import { redirect } from '@remix-run/react'
+import type { User } from '@types/user'
+import { Authenticator } from 'remix-auth'
+import { Address } from 'viem'
+import { sessionStorage } from './session'
 import { getUserByWallet } from './user'
 
 // Create an instance of the authenticator, pass a generic with what
@@ -85,9 +87,14 @@ export async function authenticate(
 
   const { data: userIdData } = userIdResponse
 
+  const ensName = await mainnetClient.getEnsName({
+    address: wallet as Address,
+  })
+
   return {
     didSession,
     wallet,
+    ensName: ensName?.toString() ?? '',
     accessToken,
     id: userIdData ? userIdData.id : '',
   }

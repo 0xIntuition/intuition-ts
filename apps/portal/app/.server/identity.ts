@@ -1,10 +1,10 @@
 import logger from '@lib/utils/logger'
 import { generateQueryParams, getAuthHeaders, invariant } from '@lib/utils/misc'
 import { IdentitySchema, type Identity } from '@types/identity'
-import type { APIResponse, QueryParams } from '@types/query'
+import type { APIError, APIResponse, QueryParams } from '@types/query'
 import type { User } from '@types/user'
 import { z } from 'zod'
-import { isAuthedUser, requireAuthedUser } from './auth'
+import { authenticator, isAuthedUser, requireAuthedUser } from './auth'
 import {
   checkResponse,
   handleUnauthorized,
@@ -90,18 +90,35 @@ export async function getIdentity(
       method: 'GET',
       headers: headers,
     })
+      .then((response) =>
+        checkResponse(response, () => handleUnauthorized(request)),
+      )
+      .then(toJSON)
 
-    const data = await res.json()
-
-    return { success: true, data: data }
+    return { success: true, data: res as Identity }
   } catch (error) {
+    const typedError = error as APIError // Cast the error to APIError
+    if (
+      typedError &&
+      typeof typedError === 'object' &&
+      'status' in typedError
+    ) {
+      if (typedError.status === 401) {
+        logger('error', 'Authentication error: Token is invalid or expired')
+        await authenticator.logout(request, { redirectTo: '/' })
+      } else {
+        logger(
+          'error',
+          `Unhandled error: ${typedError.message} (status: ${typedError.status})`,
+        )
+      }
+    } else {
+      logger('error', 'An unexpected error occurred')
+    }
     logger(
       `Error in getIdentity: ${error instanceof Error ? error.message : 'Unknown error'}`,
     )
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : 'Unknown error',
-    }
+    return { success: false, error: (error as Error).message }
   }
 }
 

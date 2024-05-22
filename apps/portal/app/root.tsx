@@ -36,6 +36,7 @@ import { useEffect, useState } from 'react'
 import { ClientOnly } from 'remix-utils/client-only'
 import { z } from 'zod'
 import './styles/globals.css'
+import { useAccount, useWalletClient } from 'wagmi'
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
   return [
@@ -144,6 +145,8 @@ export function AppLayout() {
   const { env, user } = useLoaderData<typeof loader>()
 
   const submit = useSubmit()
+  const account = useAccount()
+  logger('account', account.address)
 
   const [privyUser, setPrivyUser] = useState<PrivyUser | null>(null)
   const [privyWallet, setPrivyWallet] = useState<ConnectedPrivyWallet[] | null>(
@@ -174,7 +177,7 @@ export function AppLayout() {
           console.error('Error fetching access token:', error)
         })
     }
-  }, [privyModule])
+  }, [privyModule, account.address])
 
   useEffect(() => {
     const wallet = privyWallet?.[0]
@@ -186,7 +189,7 @@ export function AppLayout() {
     ) {
       wallet?.switchChain(getChainEnvConfig(CURRENT_ENV).chainId)
     }
-  }, [privyWallet])
+  }, [privyWallet, account.address])
 
   useEffect(() => {
     async function handleLogin() {
@@ -202,7 +205,7 @@ export function AppLayout() {
     if (privyWallet && privyUser?.id && accessToken && !user) {
       handleLogin()
     }
-  }, [privyWallet, privyUser, accessToken, user, submit])
+  }, [privyWallet, privyUser, accessToken, user, submit, account.address])
 
   return (
     <main className="relative flex min-h-screen w-full flex-col justify-between antialiased">

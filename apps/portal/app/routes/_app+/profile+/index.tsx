@@ -218,8 +218,9 @@ export function CreateButton({ onSuccess }: CreateButtonWrapperProps) {
         }
 
         try {
+          dispatch({ type: 'START_OFF_CHAIN_TRANSACTION' })
           offChainFetcher.submit(formData, {
-            action: '/actions/create',
+            action: '/actions/create-user-identity',
             method: 'post',
           })
         } catch (error: unknown) {
@@ -250,18 +251,7 @@ export function CreateButton({ onSuccess }: CreateButtonWrapperProps) {
           console.error('Error creating identity', error)
         }
 
-        const identityMessage = `Creating user identity for ${user.wallet} on Intuition.`
-
-        await walletClient?.signMessage({
-          message: JSON.stringify(identityMessage).replace(/\\n/g, '\n'),
-        })
-
         setLoading(true)
-        dispatch({ type: 'START_OFF_CHAIN_TRANSACTION' })
-        offChainFetcher.submit(formData, {
-          action: '/actions/create',
-          method: 'post',
-        })
       }
     } catch (error: unknown) {
       logger(error)
@@ -297,6 +287,7 @@ export function CreateButton({ onSuccess }: CreateButtonWrapperProps) {
           const receipt = await publicClient.waitForTransactionReceipt({
             hash: txHash,
           })
+          logger('receipt', receipt)
           dispatch({
             type: 'ON_CHAIN_TRANSACTION_COMPLETE',
             txHash: txHash,
@@ -341,7 +332,6 @@ export function CreateButton({ onSuccess }: CreateButtonWrapperProps) {
   }
 
   function handleIdentityTxReceiptReceived() {
-    logger('createdIdentity', createdIdentity)
     if (createdIdentity) {
       logger(
         'Submitting to emitterFetcher with identity_id:',
@@ -368,7 +358,6 @@ export function CreateButton({ onSuccess }: CreateButtonWrapperProps) {
 export default function Profile() {
   const { userIdentity } = useLoaderData<{ userIdentity: Identity }>()
 
-  logger('userIdentity', userIdentity)
   return (
     <div className="m-8 flex flex-col items-center gap-4">
       <div className="flex flex-col">

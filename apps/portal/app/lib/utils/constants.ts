@@ -11,8 +11,8 @@ export const DEFAULT_VERIFIER = function (): void {
 
 export const MULTIVAULT_CONTRACT_ADDRESS =
   CURRENT_ENV === 'production'
-    ? '0x73Edf2A6Aca5AC52041D1D14deB3157A33b9Ab6d' // prod contract address
-    : '0x78f576A734dEEFFd0C3550E6576fFf437933D9D5' // dev contract address
+    ? '0xd57981d5Bc446768E8a1E3D582e545fa705415b5' // prod contract address
+    : '0xd57981d5Bc446768E8a1E3D582e545fa705415b5' // dev contract address
 
 export const DEFAULT_LIMIT = 10
 

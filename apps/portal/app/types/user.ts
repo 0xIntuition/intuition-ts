@@ -51,7 +51,7 @@ export type EmbededUserAggregates = z.infer<typeof EmbededUserAggregatesSchema>
 export const UserIdResponseSchema = z.object({
   id: z.string(),
   wallet: z.string(),
-  total: z.string(),
+  total: z.number(),
 })
 
 export type UserIdResponse = z.infer<typeof UserIdResponseSchema>
