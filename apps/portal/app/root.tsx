@@ -19,7 +19,6 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
-  useFetcher,
   useLoaderData,
   useSubmit,
 } from '@remix-run/react'
@@ -47,6 +46,7 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await isAuthedUser(request)
+  logger('user response', user)
 
   return json({
     user,
@@ -119,16 +119,8 @@ export default function App() {
   const theme = useTheme()
   const { env } = useLoaderData<typeof loader>()
 
-  // const ClientOnlyPrivy = () =>
-  //   clientOnly$(
-  //     <ClientOnlyPrivyProvider privyAppId={env.PRIVY_APP_ID}>
-  //       <AppLayout />
-  //     </ClientOnlyPrivyProvider>,
-  //   )
-
   return (
     <Document nonce={nonce} theme={theme}>
-      {/* <ClientOnlyPrivy /> */}
       <ClientOnly>
         {() => (
           <Providers privyAppId={env.PRIVY_APP_ID}>
@@ -151,7 +143,6 @@ export function AppLayout() {
   const { env, user } = useLoaderData<typeof loader>()
   logger('user', user)
 
-  const fetcher = useFetcher<FetcherData>()
   const submit = useSubmit()
 
   const [privyUser, setPrivyUser] = useState<PrivyUser | null>(null)
