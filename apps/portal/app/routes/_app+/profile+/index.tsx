@@ -1,4 +1,3 @@
-import { PrivyButton } from '@client/privy-button'
 import { calculateTotalPages } from '@lib/utils/misc'
 import { LoaderFunctionArgs, json } from '@remix-run/node'
 import { getIdentities } from '@server/identity'

@@ -5,12 +5,10 @@ import { LoaderFunctionArgs, json } from '@remix-run/node'
 import { requireAuthedUser } from '@server/auth'
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  console.log('Starting')
   OpenAPI.BASE = 'https://dev.api.intuition.systems'
   const { accessToken } = await requireAuthedUser(request)
   const headers = getAuthHeaders(accessToken !== null ? accessToken : '')
   OpenAPI.HEADERS = headers as Record<string, string>
-  console.log('OpenAPI initialized:', OpenAPI)
 
   const test = await IdentitiesService.getIdentities({
     paging: {
@@ -24,7 +22,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     },
   })
 
-  console.log('test api call', test)
+  console.log('test api call response', test)
 
   return json({
     hello: 'world',
