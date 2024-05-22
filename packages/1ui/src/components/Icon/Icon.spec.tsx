@@ -996,7 +996,7 @@ describe('Icon', () => {
             </symbol>
           </defs>
           <use
-            xlink:href="#book"
+            href="#book"
           />
         </svg>
       </DocumentFragment>

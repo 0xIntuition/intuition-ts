@@ -825,7 +825,7 @@ const Icon = ({ name, className }: IconProps) => {
           />
         </symbol>
       </defs>
-      <use xlinkHref={`#${name}`} />
+      <use href={`#${name}`} />
     </svg>
   )
 }
