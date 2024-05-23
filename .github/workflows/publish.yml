@@ -1,11 +1,10 @@
 # ./.github/workflows/publish.yml
 name: Publish
 
-# Will be published when a new tag is created
+# Will be published when a new release is created via Github UI
 on:
-  push:
-    tags:
-      - v*.*.*
+  release:
+    types: [published]
 
 jobs:
   publish:
@@ -26,6 +25,7 @@ jobs:
         with:
           node-version: 20
           registry-url: https://registry.npmjs.org/
+
       - name: Install pnpm
         uses: pnpm/action-setup@v2
         with:
@@ -45,12 +45,9 @@ jobs:
         run: pnpm install --frozen-lockfile
         shell: bash
 
-      - name: Print Environment Info
-        run: npx nx report
-        shell: bash
-
       - name: Publish packages
-        run: npx nx release publish
+        # Dry run for now while we test it out
+        run: npx nx release publish --dry-run
         shell: bash
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}

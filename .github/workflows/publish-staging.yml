@@ -1,0 +1,46 @@
+# ./.github/workflows/publish-staging.yml
+name: Publish @next Version
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 9.0.6
+
+      - name: Cache pnpm store
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.pnpm-store
+            **/node_modules/.pnpm
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+        shell: bash
+
+      - name: Publish affected projects
+        run: |
+          echo "//registry.npmjs.org/:_authToken=${{ secrets.NODE_AUTH_TOKEN }}" > ~/.npmrc
+          npx nx affected --target=publish-package --base=origin/main --head=$GITHUB_SHA --parallel=3 --verbose
+        env:
+          CI: true
