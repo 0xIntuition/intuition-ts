@@ -6,50 +6,50 @@ import { Atom, Account, Triple } from '../generated/schema'
 import { ipfs } from '@graphprotocol/graph-ts'
 
 export function handleAtomCreated(event: AtomCreated): void {
-  let entity = new Atom(event.params.vaultID.toString())
+  let atom = new Atom(event.params.vaultID.toString())
 
-  let creator = Account.load(event.params.creator.toHexString())
-  if (creator === null) {
-    creator = new Account(event.params.creator.toHexString())
-    creator.save()
+  let account = Account.load(event.params.creator.toHexString())
+  if (account === null) {
+    account = new Account(event.params.creator.toHexString())
+    account.save()
   }
 
-  entity.creator = creator.id
-  entity.wallet = event.params.atomWallet
-  entity.uri = event.params.atomData.toString()
-  entity.data = entity.uri
+  atom.creator = account.id
+  atom.wallet = event.params.atomWallet
+  atom.uri = event.params.atomData.toString()
+  atom.data = atom.uri
 
-  if (entity.uri.startsWith('ipfs://')) {
-    const cid = entity.uri.slice(7)
+  if (atom.uri.startsWith('ipfs://')) {
+    const cid = atom.uri.slice(7)
     const data = ipfs.cat(cid)
     if (data !== null) {
-      entity.data = data.toString()
+      atom.data = data.toString()
     }
   }
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
+  atom.blockNumber = event.block.number
+  atom.blockTimestamp = event.block.timestamp
+  atom.transactionHash = event.transaction.hash
 
-  entity.save()
+  atom.save()
 }
 
 export function handleTripleCreated(event: TripleCreated): void {
-  let entity = new Triple(event.params.vaultID.toString())
+  let triple = new Triple(event.params.vaultID.toString())
 
-  let creator = Account.load(event.params.creator.toHexString())
-  if (creator === null) {
-    creator = new Account(event.params.creator.toHexString())
-    creator.save()
+  let account = Account.load(event.params.creator.toHexString())
+  if (account === null) {
+    account = new Account(event.params.creator.toHexString())
+    account.save()
   }
 
-  entity.creator = creator.id
-  entity.subject = event.params.subjectId.toString()
-  entity.predicate = event.params.predicateId.toString()
-  entity.object = event.params.objectId.toString()
+  triple.creator = account.id
+  triple.subject = event.params.subjectId.toString()
+  triple.predicate = event.params.predicateId.toString()
+  triple.object = event.params.objectId.toString()
 
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
+  triple.blockNumber = event.block.number
+  triple.blockTimestamp = event.block.timestamp
+  triple.transactionHash = event.transaction.hash
 
-  entity.save()
+  triple.save()
 }
