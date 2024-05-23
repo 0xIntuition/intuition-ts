@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "tsup --watch",
     "lint:fix": "pnpm lint --fix",
-    "publish-package": "pnpm publish"
+    "publish-package": "pnpm publish --registry http://localhost:4873/"
   },
   "keywords": [],
   "author": "",
