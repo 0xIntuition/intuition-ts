@@ -7,9 +7,9 @@
     "1ui:build": "nx build @0xintuition/1ui",
     "1ui:lint": "nx lint @0xintuition/1ui",
     "1ui:test": "nx test @0xintuition/1ui --reporter=verbose",
+    "portal:dev": "nx dev @0xintuition/portal",
     "api:build": "nx build @0xintuition/api",
     "api:lint": "nx lint @0xintuition/api",
-    "api:test": "nx test @0xintuition/api --reporter=verbose",
     "portal:build": "nx build @0xintuition/portal",
     "portal:lint": "nx lint @0xintuition/portal",
     "portal:test": "nx test @0xintuition/portal --reporter=verbose",
@@ -28,12 +28,14 @@
     "prettier": "prettier --write .",
     "prettier:silent": "prettier --write . --log-level=silent",
     "pre-commit": "pnpm lint && pretty-quick --verbose --staged",
-    "prepare": "husky"
+    "prepare": "husky",
+    "codegen": "nx codegen @0xintuition/api"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@hey-api/openapi-ts": "^0.44.0",
     "@nrwl/eslint-plugin-nx": "^18.3.4",
     "@nrwl/node": "^18.3.4",
     "@nx/devkit": "18.3.4",

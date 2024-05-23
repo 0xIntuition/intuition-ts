@@ -1,5 +1,6 @@
 {
   "extends": ["../../.eslintrc.base.json"],
+  "ignorePatterns": ["core/**/*"],
   "env": {
     "node": true,
     "jest": true
