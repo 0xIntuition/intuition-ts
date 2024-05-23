@@ -9,7 +9,7 @@ export const IdentitySchema = z.object({
   identity_hash: z.string(),
   display_name: z.string(),
   description: z.string(),
-  image: z.string(),
+  image: z.string().optional(),
   creator: EmbededUserAggregatesSchema,
   creator_id: z.string(),
   status: z.string(),
