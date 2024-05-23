@@ -3,6 +3,7 @@ node_modules/
 build/
 out/
 dist/
+tmp/
 
 .nx/cache
 packages/1ui/storybook-static

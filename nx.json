@@ -23,6 +23,9 @@
     "typecheck": {
       "cache": true
     },
+    "publish-package": {
+      "dependsOn": ["build", "test"]
+    },
     "@nx/js:tsc": {
       "cache": true,
       "dependsOn": ["^build"],
