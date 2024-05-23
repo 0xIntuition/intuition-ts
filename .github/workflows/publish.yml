@@ -1,6 +1,7 @@
 # ./.github/workflows/publish.yml
 name: Publish
 
+# Will be published when a new tag is created
 on:
   push:
     tags:
