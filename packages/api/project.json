@@ -30,12 +30,6 @@
         "lintFilePatterns": ["packages/api/**/*.{ts,tsx,js,jsx}"]
       }
     },
-    "test": {
-      "executor": "@nx/vite:test",
-      "options": {
-        "config": "packages/api/vitest.config.ts"
-      }
-    },
     "nx-release-publish": {
       "options": {
         "packageRoot": "dist/{projectRoot}"

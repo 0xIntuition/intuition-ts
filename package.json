@@ -11,7 +11,6 @@
     "portal:dev": "nx dev @0xintuition/portal",
     "api:build": "nx build @0xintuition/api",
     "api:lint": "nx lint @0xintuition/api",
-    "api:test": "nx test @0xintuition/api --reporter=verbose",
     "portal:build": "nx build @0xintuition/portal",
     "portal:lint": "nx lint @0xintuition/portal",
     "portal:test": "nx test @0xintuition/portal --reporter=verbose",

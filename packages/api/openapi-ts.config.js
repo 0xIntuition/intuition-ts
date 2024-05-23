@@ -1,3 +1,7 @@
+/**
+ * This file is intended to set all configs for OpenAPI Codegen
+ * DO NOT edit any files in the `src/api-client` folder directly - it is generated using these settings
+ */
 import { defineConfig } from '@hey-api/openapi-ts'
 
 export default defineConfig({
