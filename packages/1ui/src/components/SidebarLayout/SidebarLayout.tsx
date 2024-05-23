@@ -7,7 +7,6 @@ import {
   ResizablePanel,
   ResizableHandle,
 } from '@components/Resizable'
-import Cookies from 'js-cookie'
 import {
   Tooltip,
   TooltipContent,
@@ -18,6 +17,8 @@ import { Text } from '@components/Text'
 import { type VariantProps } from 'class-variance-authority'
 
 import { cn } from '@styles'
+
+const sideBarLocalStorageVariable = 'isSideBarCollapsed'
 
 //--------------------------------------------------------//
 // PROVIDER
@@ -43,7 +44,7 @@ const useSidebarLayoutContext = () => {
 
 const SidebarLayoutProvider = ({ ...props }) => {
   const [isCollapsed, setIsCollapsed] = React.useState(
-    Cookies.get('side-nav:collapsed') === 'true',
+    localStorage.getItem(sideBarLocalStorageVariable) === 'true',
   )
 
   return (
@@ -75,7 +76,7 @@ const SidebarLayoutNav = ({ ...props }) => {
   const { isCollapsed, setIsCollapsed } = useSidebarLayoutContext()
   const updateIsCollapsedValues = (newValue: boolean) => {
     setIsCollapsed(newValue)
-    Cookies.set('side-nav:collapsed', newValue.toString())
+    localStorage.setItem(sideBarLocalStorageVariable, newValue.toString())
   }
 
   return (
