@@ -12,8 +12,8 @@ import {
   SidebarLayoutNavItem,
   SidebarLayoutNavItems,
   SidebarLayoutProvider,
-  SidebarNavAvatar,
-} from './SidebarLayout'
+  SidebarLayoutNavAvatar,
+} from '.'
 
 const meta: Meta<typeof SidebarLayout> = {
   title: 'Components/SidebarLayout',
@@ -111,7 +111,7 @@ export const BasicUsage: Story = {
                 label="Settings"
                 onClick={() => null}
               />
-              <SidebarNavAvatar
+              <SidebarLayoutNavAvatar
                 imageSrc="https://m.media-amazon.com/images/M/MV5BNDhiMWYzMjgtNTRiYi00ZTA3LThlODctNDRkMDk0NzFkMWI3L2ltYWdlL2ltYWdlXkEyXkFqcGdeQXVyNTg0MTkzMzA@._V1_.jpg"
                 name="Super Dave"
                 onClick={() => null}

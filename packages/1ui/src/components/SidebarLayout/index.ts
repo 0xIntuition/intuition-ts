@@ -1,1 +1,1 @@
-export * from './SidebarLayout'
+export * from './components'

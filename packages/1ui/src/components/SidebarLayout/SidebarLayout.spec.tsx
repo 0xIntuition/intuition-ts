@@ -12,8 +12,8 @@ import {
   SidebarLayoutNavItem,
   SidebarLayoutNavItems,
   SidebarLayoutProvider,
-  SidebarNavAvatar,
-} from './SidebarLayout'
+  SidebarLayoutNavAvatar,
+} from '.'
 
 describe('SidebarLayout', () => {
   it('should render appropriate element', () => {
@@ -45,7 +45,7 @@ describe('SidebarLayout', () => {
                 label="Settings"
                 onClick={() => null}
               />
-              <SidebarNavAvatar
+              <SidebarLayoutNavAvatar
                 imageSrc="imageSrc"
                 name="Super Dave"
                 onClick={() => null}
@@ -256,7 +256,7 @@ describe('SidebarLayout', () => {
                 label="Settings"
                 onClick={() => null}
               />
-              <SidebarNavAvatar
+              <SidebarLayoutNavAvatar
                 imageSrc="imageSrc"
                 name="Super Dave"
                 onClick={() => null}
