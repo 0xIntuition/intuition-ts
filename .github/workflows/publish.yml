@@ -1,8 +1,15 @@
 # ./.github/workflows/publish.yml
 name: Publish
 
-# Will be published when a new release is created via Github UI
 on:
+  # Run manually using the GitHub UI
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to publish'
+        required: false
+        default: ''
+  # or whenever a GitHub release gets created
   release:
     types: [published]
 
