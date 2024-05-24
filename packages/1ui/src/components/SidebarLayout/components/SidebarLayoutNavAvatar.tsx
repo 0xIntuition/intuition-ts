@@ -14,7 +14,7 @@ export interface SidebarLayoutNavAvatarProps
   extends VariantProps<typeof buttonVariants> {
   imageSrc: string
   name: string
-  onClick: () => void
+  onClick?: () => void
 }
 
 export const SidebarLayoutNavAvatar = ({

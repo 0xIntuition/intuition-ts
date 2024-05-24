@@ -14,7 +14,7 @@ export interface SidebarNavItemProps
   extends VariantProps<typeof buttonVariants> {
   iconName: IconName
   label: string
-  onClick: () => void
+  onClick?: () => void
 }
 
 export const SidebarNavItem = ({
