@@ -3,7 +3,7 @@ import {
   TripleCreated,
 } from '../generated/EthMultiVault/EthMultiVault'
 import { Atom, Account, Triple } from '../generated/schema'
-import { ipfs } from '@graphprotocol/graph-ts'
+import { parseAtomData } from './schema.org/parser'
 
 export function handleAtomCreated(event: AtomCreated): void {
   let atom = new Atom(event.params.vaultID.toString())
@@ -17,15 +17,9 @@ export function handleAtomCreated(event: AtomCreated): void {
   atom.creator = account.id
   atom.wallet = event.params.atomWallet
   atom.uri = event.params.atomData.toString()
-  atom.data = atom.uri
 
-  if (atom.uri.startsWith('ipfs://')) {
-    const cid = atom.uri.slice(7)
-    const data = ipfs.cat(cid)
-    if (data !== null) {
-      atom.data = data.toString()
-    }
-  }
+  parseAtomData(atom)
+
   atom.blockNumber = event.block.number
   atom.blockTimestamp = event.block.timestamp
   atom.transactionHash = event.transaction.hash

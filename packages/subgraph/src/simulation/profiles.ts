@@ -1,44 +1,29 @@
 import { getIntuition } from './utils'
 import { faker } from '@faker-js/faker'
+import { Person, WithContext } from 'schema-dts'
+import { ipfs } from './ipfs'
 
 async function main() {
-  const alice = await getIntuition(0)
-
-  const nameAtom = await alice.multivault.createAtom('https://schema.org/name')
-
-  const addressAtom = await alice.multivault.createAtom(
-    `eip155:1:${alice.account.address}`,
-  )
-  const aliceAtom = await alice.multivault.createAtom('Alice')
-
-  await alice.multivault.createTriple(
-    addressAtom.vaultId,
-    nameAtom.vaultId,
-    aliceAtom.vaultId,
-  )
-
   const accountCount = 5
+
   for (let i = 1; i < accountCount; i++) {
     const user = await getIntuition(i)
 
-    const addressAtom = await user.multivault.createAtom(
-      `eip155:1:${user.account.address}`,
-    )
-    const name = faker.person.firstName()
-    let vaultId = await user.multivault.getVaultIdFromUri(name)
-    if (vaultId == null) {
-      console.log(`Creating atom: ${name}`)
-      const nameAtomValue = await user.multivault.createAtom(name)
-      vaultId = nameAtomValue.vaultId
+    const person: WithContext<Person> = {
+      '@context': 'https://schema.org',
+      '@type': 'Person',
+      identifier: user.account.address,
+      name: faker.person.firstName() + ' ' + faker.person.lastName(),
+      image: faker.image.avatar(),
+      email: faker.internet.email(),
+      url: faker.internet.url(),
     }
 
-    console.log(`Creating triple: ${addressAtom.vaultId} ${name} ${vaultId}`)
-    await user.multivault.createTriple(
-      addressAtom.vaultId,
-      nameAtom.vaultId,
-      vaultId,
-    )
-    // await new Promise(resolve => setTimeout(resolve, 500))
+    const { cid } = await ipfs.add(JSON.stringify(person))
+
+    const atom = await user.multivault.createAtom(`ipfs://${cid}`)
+
+    console.log(`Created atom: ${atom.vaultId} ${person.name} `)
   }
 }
 

@@ -21,6 +21,7 @@ dataSources:
       entities:
         - Account
         - Atom
+        - AtomValue
         - Triple
       abis:
         - name: EthMultiVault
