@@ -2,11 +2,11 @@ import { IdentitiesService, OpenAPI } from '@0xintuition/api'
 import { PrivyButton } from '@client/privy-button'
 import { getAuthHeaders } from '@lib/utils/misc'
 import { LoaderFunctionArgs, json } from '@remix-run/node'
-import { requireAuthedUser } from '@server/auth'
+import { getPrivyAccessToken } from '@server/privy'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   OpenAPI.BASE = 'https://dev.api.intuition.systems'
-  const { accessToken } = await requireAuthedUser(request)
+  const accessToken = getPrivyAccessToken(request)
   const headers = getAuthHeaders(accessToken !== null ? accessToken : '')
   OpenAPI.HEADERS = headers as Record<string, string>
 

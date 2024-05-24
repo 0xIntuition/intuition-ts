@@ -15,7 +15,8 @@
       "@routes/*": ["app/routes/*"],
       "@styles/*": ["app/styles/*"],
       "@server/*": ["app/.server/*"],
-      "@client/*": ["app/.client/*"]
+      "@client/*": ["app/.client/*"],
+      "@middleware/*": ["app/middleware/*"]
     }
   },
   "include": ["**/*.ts", "**/*.tsx", "tailwind.config.js"],

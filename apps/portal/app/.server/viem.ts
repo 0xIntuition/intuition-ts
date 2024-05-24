@@ -58,3 +58,8 @@ export const multiVaultContract = {
   address: MULTIVAULT_CONTRACT_ADDRESS as `0x${string}`,
   abi: multivaultAbi as Abi,
 } as const
+
+
+export const getEnsName = async (address: `0x${string}`) => {
+  return await mainnetClient.getEnsName({ address: address })
+}
