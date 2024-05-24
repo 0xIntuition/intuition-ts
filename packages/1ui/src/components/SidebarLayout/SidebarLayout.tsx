@@ -25,18 +25,18 @@ const sideBarLocalStorageVariable = 'isSideBarCollapsed'
 //--------------------------------------------------------//
 
 interface ISidebarLayoutContext {
-  isCollapsed: boolean
+  isCollapsed: boolean | undefined
   setIsCollapsed: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const SidebarLayoutContext = React.createContext<ISidebarLayoutContext>({
-  isCollapsed: false,
+  isCollapsed: undefined,
   setIsCollapsed: () => {},
 })
 
 const useSidebarLayoutContext = () => {
   const context = React.useContext(SidebarLayoutContext)
-  if (!context) {
+  if (context.isCollapsed === undefined) {
     throw new Error('Must be used with a SidebarLayoutProvider')
   }
   return context

@@ -1,10 +1,6 @@
-// Import React
 import React from 'react'
-
-// Import Storybook meta and StoryObj type
 import type { Meta, StoryObj } from '@storybook/react'
 
-// Import your actual component
 import {
   SidebarLayout,
   SidebarLayoutContent,
@@ -19,7 +15,6 @@ import {
   SidebarNavAvatar,
 } from './SidebarLayout'
 
-// Setup meta for the Storybook
 const meta: Meta<typeof SidebarLayout> = {
   title: 'Components/SidebarLayout',
   component: SidebarLayout,
@@ -35,11 +30,10 @@ const meta: Meta<typeof SidebarLayout> = {
 
 export default meta
 
-// Define types for your stories
 type Story = StoryObj<typeof SidebarLayout>
 
-const ExampleComponent = ({ ...args }) => {
-  return (
+export const BasicUsage: Story = {
+  render: (args) => (
     <div
       style={{ width: '800px', height: '500px' }}
       className="border-border/30 rounded-lg border border-solid"
@@ -128,10 +122,5 @@ const ExampleComponent = ({ ...args }) => {
         </SidebarLayout>
       </SidebarLayoutProvider>
     </div>
-  )
-}
-
-// Example story for the default state
-export const BasicUsage: Story = {
-  render: (args) => <ExampleComponent {...args} />,
+  ),
 }
