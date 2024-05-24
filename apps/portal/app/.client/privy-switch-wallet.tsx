@@ -46,7 +46,15 @@ export default function PrivySwitchWallet({
         onLinkWalletSuccess?.()
       }
     }
-  }, [ready, walletsReady, wallets, activeWallet, privyUser, hasNavigated])
+  }, [
+    ready,
+    walletsReady,
+    wallets,
+    activeWallet,
+    privyUser,
+    hasNavigated,
+    onLinkWalletSuccess,
+  ])
 
   return (
     <div className="flex items-center gap-4">

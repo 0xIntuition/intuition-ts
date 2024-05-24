@@ -1,4 +1,4 @@
-import { AuthTokenClaims, PrivyClient } from '@privy-io/server-auth'
+import { AuthTokenClaims, PrivyClient, User } from '@privy-io/server-auth'
 import { parse } from 'cookie'
 
 export function getPrivyClient() {
@@ -13,7 +13,7 @@ export const verifyPrivyAccessToken = async (
 ): Promise<AuthTokenClaims | null> => {
   console.log('Enter verifyPrivyAccessToken')
   const privy = getPrivyClient()
-  let authToken = getPrivyAccessToken(req)
+  const authToken = getPrivyAccessToken(req)
   if (!authToken) {
     console.log('Exit verifyPrivyAccessToken')
     return null
@@ -25,7 +25,7 @@ export const verifyPrivyAccessToken = async (
 }
 
 // takes user privy DID (e.g. authCheck().userId)
-export const getPrivyUserById = async (id: string): Promise<any> => {
+export const getPrivyUserById = async (id: string): Promise<User> => {
   const privy = getPrivyClient()
   const user = await privy.getUser(id)
   return user
@@ -34,7 +34,7 @@ export const getPrivyUserById = async (id: string): Promise<any> => {
 // get access token from cookie or header
 export const getPrivyAccessToken = (req: Request): string | null => {
   const cookies = parse(req.headers.get('Cookie') ?? '')
-  let authToken =
+  const authToken =
     req.headers.get('Authorization')?.replace('Bearer ', '') ||
     cookies['privy-token']
   console.log('cookie[privy-token]', cookies['privy-token'])

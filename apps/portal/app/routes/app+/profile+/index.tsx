@@ -1,4 +1,3 @@
-import { LoaderFunctionArgs } from '@remix-run/node'
 import { PrivyVerifiedLinks } from '@client/privy-verified-links'
 import {
   Accordion,
@@ -6,8 +5,6 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@0xintuition/1ui'
-
-export async function loader({ request }: LoaderFunctionArgs) {}
 
 export default function Profile() {
   return (

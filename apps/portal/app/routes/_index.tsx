@@ -2,15 +2,13 @@ import { SessionContext } from '@middleware/session'
 import { LoaderFunctionArgs } from '@remix-run/node'
 import { Link, useLoaderData } from '@remix-run/react'
 
-export interface IIndexProps {}
-
 export async function loader({ context }: LoaderFunctionArgs) {
   const session = context.get(SessionContext)
   const error = session.get('error')
   return { error }
 }
 
-export default function Index(props: IIndexProps) {
+export default function Index() {
   const { error } = useLoaderData<typeof loader>()
 
   return (
