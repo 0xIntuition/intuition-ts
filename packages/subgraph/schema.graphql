@@ -1,14 +1,3 @@
-enum AtomType {
-  Unknown
-  JSON
-  Person
-}
-
-type AtomValue @entity {
-  id: ID!
-  person: Person
-}
-
 type Atom @entity {
   id: ID!
   creator: Account!
@@ -51,11 +40,31 @@ type Triple @entity(immutable: true) {
   transactionHash: Bytes!
 }
 
+enum AtomType {
+  Unknown
+  JSON
+  Person
+  Book
+}
+
+type AtomValue @entity {
+  id: ID!
+  person: Person
+  book: Book
+}
+
 type Person @entity {
   id: ID!
   identifier: String
   name: String
   image: String
   email: String
+  url: String
+}
+
+type Book @entity {
+  id: ID!
+  name: String
+  genre: String
   url: String
 }

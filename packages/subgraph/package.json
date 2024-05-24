@@ -16,8 +16,9 @@
     "build-and-deploy-prodnets": "pnpm prepare:base && pnpm build && pnpm deploy:base",
     "build-and-deploy-testnets": "pnpm prepare:base-sepolia && pnpm build && pnpm deploy:base-sepolia",
     "dev": "docker-compose down -v && sleep 5 && rm -rf data && docker-compose up -d && sleep 9 && pnpm codegen && pnpm prepare:dev && pnpm build && pnpm reset-local",
-    "simulate:profiles": "tsx src/simulation/profiles",
-    "simulate:schema": "tsx src/simulation/schema.org"
+    "simulate:profiles": "tsx simulation/profiles",
+    "simulate:books": "tsx simulation/books",
+    "simulate:schema": "tsx simulation/schema.org"
   },
   "dependencies": {
     "@graphprotocol/graph-cli": "0.71.2",
