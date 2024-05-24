@@ -6,8 +6,8 @@ import { abi, Multivault } from '@0xintuition/protocol'
 
 export async function getOrDeployAndInit(): Promise<Address> {
   // Check if contract is already deployed and initialized
-  // @ts-ignore
   const multivault = new Multivault(
+    // @ts-ignore
     { public: publicClient, wallet: adminClient },
     CONTRACT_ADDRESS,
   )
