@@ -1,5 +1,4 @@
-import type { QueryParams } from '@types/query'
-import { Theme } from '@types/theme'
+import { Theme } from 'types/theme'
 import { clsx, type ClassValue } from 'clsx'
 import React from 'react'
 import { twMerge } from 'tailwind-merge'
@@ -193,21 +192,6 @@ export function calculatePercentageOfTvl(
   const total = +formatUnits(BigInt(totalAssets ?? '0'), 18)
   const percentage = ((position / total) * 100).toFixed(2)
   return percentage
-}
-
-export function generateQueryParams(params?: QueryParams): URLSearchParams {
-  const offset = ((params?.page ?? 1) - 1) * (params?.limit ?? 10)
-  const queryParams = new URLSearchParams({
-    ...(params?.page && { page: params.page.toString() }),
-    ...(params?.limit && { limit: params.limit.toString() }),
-    offset: offset.toString(),
-    ...(params?.sortBy && { sortBy: params.sortBy }),
-    ...(params?.direction && { direction: params.direction }),
-    ...(params?.search && { search: params.search }),
-    ...(params?.filter && { filter: params.filter }),
-  })
-
-  return queryParams
 }
 
 export function calculateTotalPages(total: number, limit: number) {

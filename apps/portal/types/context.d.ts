@@ -6,4 +6,4 @@ declare module '@remix-run/node' {
   }
 }
 
-export { }
+export {}

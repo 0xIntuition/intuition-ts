@@ -1,7 +1,7 @@
 import { Button } from '@0xintuition/1ui'
 import logger from '@lib/utils/logger'
 import { useSocialLinking } from '@lib/hooks/usePrivySocialLinking'
-import { ExtendedPrivyUser, PrivyPlatform } from '@types/privy'
+import { ExtendedPrivyUser, PrivyPlatform } from 'types/privy'
 
 // colocated this for now but we can move into a constants if that is cleaner
 const verifiedPlatforms: PrivyPlatform[] = [
