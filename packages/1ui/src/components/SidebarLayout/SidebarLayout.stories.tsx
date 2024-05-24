@@ -22,7 +22,7 @@ const meta: Meta<typeof SidebarLayout> = {
   parameters: {
     docs: {
       description: {
-        component: 'A short description of the component goes here.',
+        component: 'A two-panel layout with a built in resizable side nav.',
       },
     },
   },
