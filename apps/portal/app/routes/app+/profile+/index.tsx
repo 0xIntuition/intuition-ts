@@ -1,10 +1,11 @@
-import { PrivyVerifiedLinks } from '@client/privy-verified-links'
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from '@0xintuition/1ui'
+
+import { PrivyVerifiedLinks } from '@client/privy-verified-links'
 
 export default function Profile() {
   return (

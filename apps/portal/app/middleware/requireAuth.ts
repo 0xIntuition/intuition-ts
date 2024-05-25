@@ -1,9 +1,9 @@
-import { getPrivyUserById, verifyPrivyAccessToken } from '@server/privy';
 import { redirect } from '@remix-run/node'
-import { type MiddlewareFunctionArgs } from 'remix-create-express-app/middleware'
-import { SessionContext } from './session';
+import { getPrivyUserById, verifyPrivyAccessToken } from '@server/privy'
 import { getEnsName } from '@server/viem'
+import { type MiddlewareFunctionArgs } from 'remix-create-express-app/middleware'
 
+import { SessionContext } from './session'
 
 export async function requireAuth({
   request,
@@ -34,7 +34,9 @@ export async function requireAuth({
   // if there is already user data in the session, check if the userId matches the token claim
   const user = session.get('user')
   if (user && user.details?.id !== authTokenClaims.userId) {
-    console.log('[MDL] User data in session does not match token claim, clearing session')
+    console.log(
+      '[MDL] User data in session does not match token claim, clearing session',
+    )
     session.unset('user')
   }
   let details = await getPrivyUserById(authTokenClaims.userId)
@@ -44,11 +46,17 @@ export async function requireAuth({
   }
 
   // set the user in the context from the cookie
-  console.log('[MDL] Setting SessionContext[user]', JSON.stringify({ privyAuthTokenClaims: authTokenClaims }));
-  session.set('user', { privyAuthTokenClaims: authTokenClaims, details });
-  console.log('[MDL] SessionContext[user] set successfully');
+  console.log(
+    '[MDL] Setting SessionContext[user]',
+    JSON.stringify({ privyAuthTokenClaims: authTokenClaims }),
+  )
+  session.set('user', { privyAuthTokenClaims: authTokenClaims, details })
+  console.log('[MDL] SessionContext[user] set successfully')
   // log context
-  console.log('[MDL] SessionContext[user]', JSON.stringify(session.get('user'), null, 2))
+  console.log(
+    '[MDL] SessionContext[user]',
+    JSON.stringify(session.get('user'), null, 2),
+  )
   console.log('[MDL] Exit requireAuth')
   return await next()
 }

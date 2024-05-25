@@ -5,6 +5,7 @@ import {
   mergeConfig,
   type UserConfig,
 } from 'vitest/config'
+
 import viteConfig from './.storybook/vite.config'
 
 const config = mergeConfig(

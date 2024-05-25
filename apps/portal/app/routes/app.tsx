@@ -1,10 +1,7 @@
-import { serverOnly$ } from 'vite-env-only'
-import { requireAuth } from '@middleware/requireAuth'
 import PrivyLogoutButton from '@client/privy-logout-button'
 import PrivySwitchWallet from '@client/privy-switch-wallet'
-
-export const middleware = serverOnly$([requireAuth])
-
+import { requireAuth } from '@middleware/requireAuth'
+import { SessionContext } from '@middleware/session'
 import { LoaderFunctionArgs } from '@remix-run/node'
 import {
   Link,
@@ -13,7 +10,9 @@ import {
   useNavigate,
   useRevalidator,
 } from '@remix-run/react'
-import { SessionContext } from '@middleware/session'
+import { serverOnly$ } from 'vite-env-only'
+
+export const middleware = serverOnly$([requireAuth])
 
 export async function loader({ context }: LoaderFunctionArgs) {
   const session = context.get(SessionContext)

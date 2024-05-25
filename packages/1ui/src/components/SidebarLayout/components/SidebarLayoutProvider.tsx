@@ -1,4 +1,5 @@
 import * as React from 'react'
+
 import { SIDEBAR_LOCAL_STORAGE_VARIABLE } from '../constants'
 
 interface ISidebarLayoutContext {

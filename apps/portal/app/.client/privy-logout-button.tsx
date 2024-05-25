@@ -1,4 +1,5 @@
 import { Button } from '@0xintuition/1ui'
+
 import { useLogout } from '@privy-io/react-auth'
 import { useDisconnect } from 'wagmi'
 

@@ -1,7 +1,8 @@
-import { Theme } from 'types/theme'
-import { clsx, type ClassValue } from 'clsx'
 import React from 'react'
+
+import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
+import { Theme } from 'types/theme'
 import { formatUnits } from 'viem'
 
 export function cn(...inputs: ClassValue[]) {

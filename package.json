@@ -22,7 +22,7 @@
     "sdk:test": "nx test @0xintuition/sdk --reporter=verbose",
     "build": "nx run-many -t build",
     "lint": "nx run-many -t lint",
-    "lint:fix": "nx run-many -t lint:fix",
+    "lint:fix": "nx run-many -t lint --fix",
     "test": "nx run-many -t test",
     "storybook": "nx run @0xintuition/1ui:storybook",
     "prettier": "prettier --write .",

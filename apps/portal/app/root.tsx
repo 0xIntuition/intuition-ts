@@ -1,10 +1,11 @@
+import Providers from '@client/providers'
 import { ClientHintCheck, getHints } from '@lib/utils/client-hints'
 import { useNonce } from '@lib/utils/nonce-provider'
 import {
-  LoaderFunctionArgs,
-  json,
-  type MetaFunction,
   createCookieSessionStorage,
+  json,
+  LoaderFunctionArgs,
+  type MetaFunction,
 } from '@remix-run/node'
 import {
   Links,
@@ -14,14 +15,16 @@ import {
   ScrollRestoration,
   useLoaderData,
 } from '@remix-run/react'
-import Providers from '@client/providers'
 import { useTheme } from '@routes/actions+/set-theme'
 import { getEnv } from '@server/env'
 import { getTheme } from '@server/theme'
+
 import './styles/globals.css'
-import { ClientOnly } from 'remix-utils/client-only'
+
 import { Toaster } from '@0xintuition/1ui'
+
 import { createSessionMiddleware } from '@middleware/session'
+import { ClientOnly } from 'remix-utils/client-only'
 import { serverOnly$ } from 'vite-env-only'
 
 const session = createSessionMiddleware(

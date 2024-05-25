@@ -1,7 +1,8 @@
 import { IdentitiesService, OpenAPI } from '@0xintuition/api'
+
 import { PrivyButton } from '@client/privy-button'
 import { getAuthHeaders } from '@lib/utils/misc'
-import { LoaderFunctionArgs, json } from '@remix-run/node'
+import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { getPrivyAccessToken } from '@server/privy'
 
 export async function loader({ request }: LoaderFunctionArgs) {

@@ -1,14 +1,14 @@
 import PrivyLoginButton from '@client/privy-login-button'
-import { useLoaderData, useSubmit } from '@remix-run/react'
 import { User as PrivyUser } from '@privy-io/react-auth'
 import {
   ActionFunctionArgs,
-  LoaderFunctionArgs,
   json,
+  LoaderFunctionArgs,
   redirect,
 } from '@remix-run/node'
-import { parse } from 'cookie'
+import { useLoaderData, useSubmit } from '@remix-run/react'
 import { verifyPrivyAccessToken } from '@server/privy'
+import { parse } from 'cookie'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const authTokenClaims = await verifyPrivyAccessToken(request)

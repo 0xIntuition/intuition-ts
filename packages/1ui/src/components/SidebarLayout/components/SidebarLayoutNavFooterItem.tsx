@@ -1,4 +1,4 @@
-import { SidebarNavItemProps, SidebarNavItem } from './SidebarNavItem'
+import { SidebarNavItem, SidebarNavItemProps } from './SidebarNavItem'
 
 export const SidebarLayoutNavFooterItem = ({
   iconName,

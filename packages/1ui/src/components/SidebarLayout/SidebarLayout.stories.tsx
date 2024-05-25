@@ -1,10 +1,12 @@
 import React from 'react'
+
 import type { Meta, StoryObj } from '@storybook/react'
 
 import {
   SidebarLayout,
   SidebarLayoutContent,
   SidebarLayoutNav,
+  SidebarLayoutNavAvatar,
   SidebarLayoutNavFooter,
   SidebarLayoutNavFooterItem,
   SidebarLayoutNavHeader,
@@ -12,7 +14,6 @@ import {
   SidebarLayoutNavItem,
   SidebarLayoutNavItems,
   SidebarLayoutProvider,
-  SidebarLayoutNavAvatar,
 } from '.'
 
 const meta: Meta<typeof SidebarLayout> = {

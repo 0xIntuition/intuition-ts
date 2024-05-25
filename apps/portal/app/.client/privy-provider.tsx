@@ -1,4 +1,5 @@
 import React from 'react'
+
 import { PrivyClientConfig, PrivyProvider } from '@privy-io/react-auth'
 
 const privyConfig: PrivyClientConfig = {

@@ -1,4 +1,4 @@
-import { type SessionStorage, type Session } from '@remix-run/node'
+import { type Session, type SessionStorage } from '@remix-run/node'
 import { createContext } from 'remix-create-express-app/context'
 import { MiddlewareFunctionArgs } from 'remix-create-express-app/middleware'
 

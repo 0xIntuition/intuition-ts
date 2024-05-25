@@ -1,15 +1,16 @@
 import { vitePlugin as remix } from '@remix-run/dev'
 import { installGlobals } from '@remix-run/node'
-import { defineConfig } from 'vite'
-import tsconfigPaths from 'vite-tsconfig-paths'
+import autoprefixer from 'autoprefixer'
+import { expressDevServer } from 'remix-express-dev-server'
 import { flatRoutes } from 'remix-flat-routes'
 import tailwindcss from 'tailwindcss'
-import autoprefixer from 'autoprefixer'
+import { defineConfig } from 'vite'
+import envOnly from 'vite-env-only'
+import tsconfigPaths from 'vite-tsconfig-paths'
+
 // TODO: Update this once we figure our the TS issue that vite is throwing
 // import { themePreset } from '@0xintuition/1ui'
 import { themePreset } from '../../packages/1ui/src/styles/index'
-import { expressDevServer } from 'remix-express-dev-server'
-import envOnly from 'vite-env-only'
 
 installGlobals({ nativeFetch: true })
 

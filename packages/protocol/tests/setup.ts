@@ -1,6 +1,7 @@
-import { pool } from './utils.js'
 import { fetchLogs } from '@viem/anvil'
 import { afterEach } from 'vitest'
+
+import { pool } from './utils.js'
 
 afterEach(async (context) => {
   context.onTestFailed(async () => {

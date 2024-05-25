@@ -1,5 +1,5 @@
-import { AuthTokenClaims } from '@privy-io/server-auth'
 import { User as PrivyUser } from '@privy-io/react-auth'
+import { AuthTokenClaims } from '@privy-io/server-auth'
 
 export type SessionUser = {
   privyAuthTokenClaims?: AuthTokenClaims

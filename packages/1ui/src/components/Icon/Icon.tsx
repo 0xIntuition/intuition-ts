@@ -1,11 +1,11 @@
 import * as React from 'react'
 
 import { cn } from '@styles'
-import { IconName } from './Icon.types'
 
 // eslint-disable-next-line
 // @ts-ignore
 import spriteSheet from './Icon.sprites.svg'
+import { IconName } from './Icon.types'
 
 export interface IconProps {
   name: IconName

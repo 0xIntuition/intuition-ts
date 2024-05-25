@@ -11,9 +11,9 @@ import type { AppLoadContext, EntryContext } from '@remix-run/node'
 import { createReadableStreamFromReadable } from '@remix-run/node'
 import { RemixServer } from '@remix-run/react'
 import { isbot } from 'isbot'
+import morgan from 'morgan'
 import { renderToPipeableStream } from 'react-dom/server'
 import { createExpressApp } from 'remix-create-express-app'
-import morgan from 'morgan'
 
 const ABORT_DELAY = 5_000
 

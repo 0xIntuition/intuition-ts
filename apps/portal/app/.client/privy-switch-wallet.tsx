@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
+
+import { usePrivy, useWallets, WalletWithMetadata } from '@privy-io/react-auth'
 import { Wallet } from '@privy-io/server-auth'
-import { WalletWithMetadata, usePrivy, useWallets } from '@privy-io/react-auth'
 import { useAccount } from 'wagmi'
 
 export interface IPrivySwitchWalletProps {

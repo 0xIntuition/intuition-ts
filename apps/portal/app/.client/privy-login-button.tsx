@@ -1,5 +1,6 @@
 import { Button } from '@0xintuition/1ui'
-import { User, useLogin } from '@privy-io/react-auth'
+
+import { useLogin, User } from '@privy-io/react-auth'
 
 interface PrivyLoginButtonProps {
   handleLogin: (

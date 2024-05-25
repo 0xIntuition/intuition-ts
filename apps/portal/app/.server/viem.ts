@@ -1,14 +1,15 @@
 import process from 'process'
+
+import { multivaultAbi } from '@lib/abis/multivault'
+import { CURRENT_ENV, MULTIVAULT_CONTRACT_ADDRESS } from '@lib/utils/constants'
 import {
-  PublicClient,
   createPublicClient,
   getContract,
   http,
+  PublicClient,
   type Abi,
 } from 'viem'
 import { base, baseSepolia, mainnet } from 'viem/chains'
-import { multivaultAbi } from '@lib/abis/multivault'
-import { CURRENT_ENV, MULTIVAULT_CONTRACT_ADDRESS } from '@lib/utils/constants'
 
 export const publicClient: PublicClient = createPublicClient({
   batch: {
@@ -58,7 +59,6 @@ export const multiVaultContract = {
   address: MULTIVAULT_CONTRACT_ADDRESS as `0x${string}`,
   abi: multivaultAbi as Abi,
 } as const
-
 
 export const getEnsName = async (address: `0x${string}`) => {
   return await mainnetClient.getEnsName({ address: address })

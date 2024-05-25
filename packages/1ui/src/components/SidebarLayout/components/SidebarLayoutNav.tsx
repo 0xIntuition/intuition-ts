@@ -1,8 +1,8 @@
-import { useSidebarLayoutContext } from './SidebarLayoutProvider'
-import { SIDEBAR_LOCAL_STORAGE_VARIABLE } from '../constants'
-import { ResizablePanel, ResizableHandle } from '@components/Resizable'
-
+import { ResizableHandle, ResizablePanel } from '@components/Resizable'
 import { cn } from '@styles'
+
+import { SIDEBAR_LOCAL_STORAGE_VARIABLE } from '../constants'
+import { useSidebarLayoutContext } from './SidebarLayoutProvider'
 
 export const SidebarLayoutNav = ({ ...props }) => {
   const { isCollapsed, setIsCollapsed } = useSidebarLayoutContext()

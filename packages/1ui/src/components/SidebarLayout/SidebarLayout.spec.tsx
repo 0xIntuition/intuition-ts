@@ -1,10 +1,13 @@
 import React from 'react'
+
 import { render } from '@testing-library/react'
 import { vi } from 'vitest'
+
 import {
   SidebarLayout,
   SidebarLayoutContent,
   SidebarLayoutNav,
+  SidebarLayoutNavAvatar,
   SidebarLayoutNavFooter,
   SidebarLayoutNavFooterItem,
   SidebarLayoutNavHeader,
@@ -12,7 +15,6 @@ import {
   SidebarLayoutNavItem,
   SidebarLayoutNavItems,
   SidebarLayoutProvider,
-  SidebarLayoutNavAvatar,
 } from '.'
 
 describe('SidebarLayout', () => {
