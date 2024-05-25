@@ -1,7 +1,8 @@
-import { Theme } from '@0xintuition/1ui'
-import { clsx, type ClassValue } from 'clsx'
 import React from 'react'
 
+import { Theme } from '@0xintuition/1ui'
+
+import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 import { formatUnits } from 'viem'
 
