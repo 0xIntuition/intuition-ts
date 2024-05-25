@@ -23,15 +23,17 @@
   "overrides": [
     {
       "files": ["**/*.{js,jsx,ts,tsx}"],
-      "plugins": ["react", "jsx-a11y"],
+      "plugins": ["react", "jsx-a11y", "prettier"],
       "extends": [
         "plugin:react/recommended",
         "plugin:react/jsx-runtime",
         "plugin:react-hooks/recommended",
-        "plugin:jsx-a11y/recommended"
+        "plugin:jsx-a11y/recommended",
+        "plugin:prettier/recommended"
       ],
       "rules": {
-        "react/prop-types": "off"
+        "react/prop-types": "off",
+        "prettier/prettier": "error"
       },
       "settings": {
         "react": {
@@ -46,7 +48,7 @@
     },
     {
       "files": ["**/*.{ts,tsx}"],
-      "plugins": ["@typescript-eslint", "import", "@nx"],
+      "plugins": ["@typescript-eslint", "import", "@nx", "prettier"],
       "parser": "@typescript-eslint/parser",
       "settings": {
         "import/internal-regex": "^~/",
@@ -62,8 +64,12 @@
       "extends": [
         "plugin:@typescript-eslint/recommended",
         "plugin:import/recommended",
-        "plugin:import/typescript"
-      ]
+        "plugin:import/typescript",
+        "plugin:prettier/recommended"
+      ],
+      "rules": {
+        "prettier/prettier": "error"
+      }
     },
     {
       "files": ["{package,project}.json"],
