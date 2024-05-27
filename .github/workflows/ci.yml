@@ -36,8 +36,8 @@ jobs:
         # - run: git branch --track main origin/main
         if: ${{ github.event_name == 'pull_request' }}
       - name: Run Affected Lint
-        run: nx affected -t lint
+        run: npx nx affected -t lint
       - name: Run Affected Tests
-        run: nx affected -t test
+        run: npx nx affected -t test
       - name: Run Affected Builds
-        run: nx affected -t build
+        run: npx nx affected -t build
