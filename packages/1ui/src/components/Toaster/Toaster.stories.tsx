@@ -1,5 +1,7 @@
 import React from 'react'
+
 import type { Meta, StoryObj } from '@storybook/react'
+
 import { Button, toast, Toaster } from '..'
 
 const meta: Meta<typeof Toaster> = {
