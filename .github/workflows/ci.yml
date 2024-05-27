@@ -32,12 +32,10 @@ jobs:
             ${{ runner.os }}-pnpm-
       - run: pnpm install --frozen-lockfile
       - uses: nrwl/nx-set-shas@v3
-      # This line is needed for nx affected to work when CI is running on a PR
-      - run: git branch --track main origin/main
         if: ${{ github.event_name == 'pull_request' }}
       - name: Run Affected Lint
-        run: pnpm nx affected -t lint
+        run: pnpm nx affected -t lint --base=origin/main
       - name: Run Affected Tests
-        run: pnpm nx affected -t test
+        run: pnpm nx affected -t test --base=origin/main
       - name: Run Affected Builds
-        run: pnpm nx affected -t build
+        run: pnpm nx affected -t build --base=origin/main
