@@ -6,9 +6,9 @@ import type { Meta, StoryObj } from '@storybook/react'
 
 // Import your actual component
 import {
-  ResizablePanelGroup,
-  ResizablePanel,
   ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
 } from './Resizable'
 
 // Setup meta for the Storybook

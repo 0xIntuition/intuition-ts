@@ -1,5 +1,7 @@
 import process from 'process'
+
 import { base, baseSepolia, type mainnet } from 'viem/chains'
+
 import logger from './logger'
 
 const alchemyRpcUrlSepolia =

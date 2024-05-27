@@ -1,10 +1,12 @@
 import React from 'react'
+
 import { render } from '@testing-library/react'
+
 import {
   Tooltip,
-  TooltipTrigger,
   TooltipContent,
   TooltipProvider,
+  TooltipTrigger,
 } from './Tooltip'
 
 describe('Tooltip', () => {

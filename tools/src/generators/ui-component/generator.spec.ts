@@ -1,5 +1,5 @@
+import { names, Tree } from '@nx/devkit'
 import { createTreeWithEmptyWorkspace } from '@nx/devkit/testing'
-import { Tree, names } from '@nx/devkit'
 
 import { uiComponentGenerator } from './generator'
 import { uiComponentGeneratorSchema } from './schema'

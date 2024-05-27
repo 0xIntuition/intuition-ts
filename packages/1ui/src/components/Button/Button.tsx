@@ -1,9 +1,9 @@
-import { Loader2Icon } from 'lucide-react'
-import { Slot } from '@radix-ui/react-slot'
-import { cva, type VariantProps } from 'class-variance-authority'
 import * as React from 'react'
 
+import { Slot } from '@radix-ui/react-slot'
 import { cn } from '@styles'
+import { cva, type VariantProps } from 'class-variance-authority'
+import { Loader2Icon } from 'lucide-react'
 
 const buttonVariants = cva(
   'flex items-center gap-2 text-sm font-medium border-solid border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted shadow-md-subtle',

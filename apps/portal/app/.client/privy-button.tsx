@@ -1,11 +1,12 @@
 import {
   Button,
   DropdownMenu,
-  DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
+  DropdownMenuTrigger,
 } from '@0xintuition/1ui'
+
 import { usePrivy, useWallets } from '@privy-io/react-auth'
 import { NavLink } from '@remix-run/react'
 
