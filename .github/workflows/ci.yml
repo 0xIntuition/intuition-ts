@@ -1,13 +1,12 @@
 name: CI
+runs:
+  using: 'node20'
+  main: 'main.js'
 on:
   push:
     branches:
       - main
   pull_request:
-
-runs:
-  using: 'node20'
-  main: 'main.js'
 
 jobs:
   build-and-test:
