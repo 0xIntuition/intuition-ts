@@ -27,5 +27,8 @@ describe('ui-component generator', () => {
     expect(
       tree.exists(`${componentDirectory}/${pascalCaseName}.stories.tsx`),
     ).toBeTruthy()
+    expect(
+      tree.exists(`${componentDirectory}/${pascalCaseName}.mdx`),
+    ).toBeTruthy()
   })
 })
