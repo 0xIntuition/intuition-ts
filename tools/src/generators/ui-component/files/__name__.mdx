@@ -1,0 +1,38 @@
+import { Canvas, Meta, Controls, Source } from '@storybook/blocks'
+
+import * as Stories from './<%= className %>.stories'
+
+<Meta of={Stories} />
+
+<Title />
+
+#### A short description goes here.
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { <%= className %> } from '@0xintuition/1ui'
+
+<<%= className %> />
+`} />
+
+<Canvas of={Stories.BasicUsage} sourceState="none" />
+
+## Properties
+
+<Controls />
+
+## Variants
+
+### Other
+
+<Source
+  dark
+  language="tsx"
+  code={`
+<<%= className %> variant="other">
+`}
+/>
+
+<Canvas of={Stories.Other} sourceState="none" />
