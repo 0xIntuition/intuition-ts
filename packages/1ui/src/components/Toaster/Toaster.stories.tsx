@@ -66,8 +66,8 @@ export const Info: Story = {
     <>
       <Toaster {...args} />
       <Button
-        variant="accent"
         size="lg"
+        variant="accent"
         onClick={() => toast.info('I am an info toast!')}
       >
         Launch toast
@@ -101,7 +101,9 @@ export const Error: Story = {
   render: (args) => (
     <>
       <Toaster {...args} />
-      <Button size="lg">Launch toast</Button>
+      <Button size="lg" variant="destructive">
+        Launch toast
+      </Button>
     </>
   ),
 }
