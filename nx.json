@@ -35,6 +35,10 @@
     }
   },
   "release": {
+    "git": {
+      "commit": true,
+      "tag": true
+    },
     "version": {
       "projects": [
         "*",
@@ -45,7 +49,7 @@
       "preVersionCommand": "npx nx run-many -t build"
     },
     "changelog": {
-      "projectChangelogs": {
+      "workspaceChangelog": {
         "createRelease": "github"
       }
     }
