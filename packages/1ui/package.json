@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "tsup --watch",
     "lint:fix": "pnpm lint --fix",
-    "publish-package": "pnpm publish --no-git-checks"
+    "publish-package": "pnpm publish --tag next --no-git-checks"
   },
   "keywords": [],
   "author": "",

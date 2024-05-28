@@ -39,9 +39,12 @@ jobs:
         shell: bash
 
       # Skip npm publish for now
-      # - name: Publish affected projects
-      #   run: |
-      #     echo "//registry.npmjs.org/:_authToken=${{ secrets.NODE_AUTH_TOKEN }}" > ~/.npmrc
-      #     npx nx affected --target=publish-package --base=origin/main --head=$GITHUB_SHA --parallel=3 --verbose
-      #   env:
-      #     CI: true
+      - name: Publish affected projects
+        run: |
+          echo "//registry.npmjs.org/:_authToken=${{ secrets.NODE_AUTH_TOKEN }}" > ~/.npmrc
+          npx nx affected --target=publish-package --dry-run --base=origin/main --head=$GITHUB_SHA --parallel=3 --verbose
+        shell: bash
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
+          NPM_CONFIG_PROVENANCE: true
+          CI: true
