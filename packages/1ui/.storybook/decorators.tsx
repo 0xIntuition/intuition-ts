@@ -3,8 +3,9 @@
  *
  * This file contains the decorators we use for the UI Storybook instance.
  */
-import { Decorator } from '@storybook/react'
 import React, { FC, useLayoutEffect } from 'react'
+
+import { Decorator } from '@storybook/react'
 
 /**
  * Makes sure the app theme changes by running an effect on the provided theme prop.
