@@ -8,6 +8,8 @@ const meta: Meta<typeof Popover> = {
   title: 'Components/Popover',
   component: Popover,
   argTypes: {
+    // eslint-disable-next-line
+    // @ts-ignore
     side: {
       describe: 'Side the content will open on',
       table: {
