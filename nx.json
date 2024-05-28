@@ -35,23 +35,21 @@
     }
   },
   "release": {
-    "git": {
-      "commit": true,
-      "tag": true
-    },
+    "projects": [
+      "*",
+      "!@0xintuition/intuition-ts",
+      "!@0xintuition/portal",
+      "!@0xintuition/automation-tools"
+    ],
     "version": {
-      "projects": [
-        "*",
-        "!@0xintuition/portal",
-        "!@0xintuition/automation-tools"
-      ],
       "conventionalCommits": true,
       "preVersionCommand": "npx nx run-many -t build"
     },
     "changelog": {
       "workspaceChangelog": {
         "createRelease": "github"
-      }
+      },
+      "projectChangelogs": true
     }
   },
   "plugins": [
