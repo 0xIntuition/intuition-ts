@@ -36,11 +36,6 @@
   },
   "release": {
     "projectsRelationship": "independent",
-    "git": {
-      "commit": true,
-      "commitMessage": "chore(release): release ${version}",
-      "tag": true
-    },
     "projects": [
       "*",
       "!@0xintuition/intuition-ts",
