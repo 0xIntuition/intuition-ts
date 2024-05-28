@@ -35,6 +35,12 @@
     }
   },
   "release": {
+    "projectsRelationship": "independent",
+    "git": {
+      "commit": true,
+      "commitMessage": "chore(release): release ${version}",
+      "tag": true
+    },
     "projects": [
       "*",
       "!@0xintuition/intuition-ts",
@@ -43,17 +49,19 @@
     ],
     "version": {
       "conventionalCommits": true,
-      "preVersionCommand": "npx nx run-many -t build"
+      "preVersionCommand": "pnpm dlx nx run-many -t build "
     },
     "changelog": {
       "workspaceChangelog": {
-        "createRelease": "github",
-        "git": {
-          "commit": true,
-          "tag": true
-        }
+        "createRelease": "github"
       },
-      "projectChangelogs": true
+      "projectChangelogs": {
+        "renderOptions": {
+          "authors": true,
+          "commitReferences": true,
+          "versionTitleDate": true
+        }
+      }
     }
   },
   "plugins": [
