@@ -255,8 +255,10 @@ export class IdentitiesService {
    * @param data.status
    * @param data.predicate
    * @param data.isUser
+   * @param data.isContract
    * @param data.timeframe
    * @param data.identityId
+   * @param data.description
    * @returns unknown Search identities in paginated list
    * @throws ApiError
    */
@@ -273,10 +275,12 @@ export class IdentitiesService {
         status: data.status,
         predicate: data.predicate,
         isUser: data.isUser,
+        isContract: data.isContract,
         timeframe: data.timeframe,
         identityId: data.identityId,
         paging: data.paging,
         sort: data.sort,
+        description: data.description,
       },
     })
   }
@@ -349,6 +353,9 @@ export class PositionsService {
    * @param data.vaultUuid
    * @param data.status
    * @param data.conviction
+   * @param data.claim
+   * @param data.identity
+   * @param data.vault
    * @returns unknown Search positions in paginated list
    * @throws ApiError
    */
@@ -363,6 +370,9 @@ export class PositionsService {
         vault_uuid: data.vaultUuid,
         status: data.status,
         conviction: data.conviction,
+        claim: data.claim,
+        identity: data.identity,
+        vault: data.vault,
         paging: data.paging,
         sort: data.sort,
       },

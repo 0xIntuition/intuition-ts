@@ -40,6 +40,7 @@ export type ActivityPresenter = {
   timestamp: string
   total_assets: string
   total_shares: string
+  transaction_hash?: string | null
   value: string
   vault_assets: string
   vault_balance: string
@@ -54,6 +55,7 @@ export type ActivityQuery = PaginatedRequest &
     creator?: Identifier | null
     eventType?: Event | null
     fromAddress?: string | null
+    transactionHash?: string | null
     vaultId: string
   }
 
@@ -387,6 +389,7 @@ export type IdentityPresenter = {
   identity_hash: string
   identity_id: string
   image?: string | null
+  is_contract: boolean
   is_user: boolean
   num_positions: number
   predicate: boolean
@@ -1089,6 +1092,7 @@ export type GetIdentityByIdResponse = {
   identity_hash: string
   identity_id: string
   image?: string | null
+  is_contract: boolean
   is_user: boolean
   num_positions: number
   predicate: boolean
@@ -1130,6 +1134,7 @@ export type UpdateIdentityResponse = {
   identity_hash: string
   identity_id: string
   image?: string | null
+  is_contract: boolean
   is_user: boolean
   predicate: boolean
   semantic?: string | null
@@ -1150,6 +1155,7 @@ export type CreateIdentityData = {
     identity_hash?: string | null
     identity_id?: IdentityId | null
     image?: InputFile | null
+    is_contract?: boolean
     is_user?: boolean
     predicate?: boolean
     vault_id?: Identifier | null
@@ -1176,6 +1182,7 @@ export type CreateIdentityResponse = {
   identity_hash: string
   identity_id: string
   image?: string | null
+  is_contract: boolean
   is_user: boolean
   num_positions: number
   predicate: boolean
@@ -1191,8 +1198,10 @@ export type CreateIdentityResponse = {
 
 export type SearchIdentityData = {
   creator?: Identifier | null
+  description?: string | null
   displayName?: string | null
   identityId?: IdentityId | null
+  isContract?: boolean | null
   isUser?: boolean | null
   paging: PaginatedRequest
   predicate?: boolean | null
@@ -1279,11 +1288,14 @@ export type UpdatePositionResponse = {
 }
 
 export type SearchPositionsData = {
+  claim?: Identifier | null
   conviction?: number | null
   creator?: Identifier | null
+  identity?: Identifier | null
   paging: PaginatedRequest
   sort: PositionSort
   status?: Status | null
+  vault?: Identifier | null
   vaultUuid?: string | null
 }
 
@@ -1703,6 +1715,7 @@ export type $OpenApiTs = {
           identity_hash: string
           identity_id: string
           image?: string | null
+          is_contract: boolean
           is_user: boolean
           num_positions: number
           predicate: boolean
@@ -1749,6 +1762,7 @@ export type $OpenApiTs = {
           identity_hash: string
           identity_id: string
           image?: string | null
+          is_contract: boolean
           is_user: boolean
           predicate: boolean
           semantic?: string | null
@@ -1773,6 +1787,7 @@ export type $OpenApiTs = {
           identity_hash?: string | null
           identity_id?: IdentityId | null
           image?: InputFile | null
+          is_contract?: boolean
           is_user?: boolean
           predicate?: boolean
           vault_id?: Identifier | null
@@ -1802,6 +1817,7 @@ export type $OpenApiTs = {
           identity_hash: string
           identity_id: string
           image?: string | null
+          is_contract: boolean
           is_user: boolean
           num_positions: number
           predicate: boolean
@@ -1821,8 +1837,10 @@ export type $OpenApiTs = {
     get: {
       req: {
         creator?: Identifier | null
+        description?: string | null
         displayName?: string | null
         identityId?: IdentityId | null
+        isContract?: boolean | null
         isUser?: boolean | null
         paging: PaginatedRequest
         predicate?: boolean | null
@@ -1944,11 +1962,14 @@ export type $OpenApiTs = {
   '/positions/search': {
     get: {
       req: {
+        claim?: Identifier | null
         conviction?: number | null
         creator?: Identifier | null
+        identity?: Identifier | null
         paging: PaginatedRequest
         sort: PositionSort
         status?: Status | null
+        vault?: Identifier | null
         vaultUuid?: string | null
       }
       res: {

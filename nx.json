@@ -47,10 +47,9 @@
       "preVersionCommand": "pnpm dlx nx run-many -t build "
     },
     "changelog": {
-      "workspaceChangelog": {
+      "projectChangelogs": {
         "createRelease": "github"
-      },
-      "projectChangelogs": true
+      }
     }
   },
   "plugins": [
