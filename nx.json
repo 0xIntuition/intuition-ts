@@ -47,6 +47,44 @@
     },
     "changelog": {
       "projectChangelogs": true
+    },
+    "conventionalCommits": {
+      "types": {
+        "feat": {
+          "semverBump": "minor",
+          "changelog": {
+            "title": "Features"
+          }
+        },
+        "deps": {
+          "semverBump": "minor",
+          "changelog": {
+            "title": "Dependency Updates"
+          }
+        },
+        "fix": {
+          "semverBump": "patch",
+          "changelog": {
+            "title": "Fixes"
+          }
+        },
+        "docs": {
+          "semverBump": "patch",
+          "changelog": {
+            "title": "Documentation Changes"
+          }
+        },
+        "chore": {
+          "semverBump": "patch",
+          "changelog": false
+        },
+        "perf": {
+          "semverBump": "none",
+          "changelog": {
+            "title": "Performance Improvements"
+          }
+        }
+      }
     }
   },
   "plugins": [

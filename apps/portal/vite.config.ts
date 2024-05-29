@@ -24,6 +24,7 @@ export default defineConfig({
     expressDevServer(),
     envOnly(),
     remix({
+      buildDirectory: '../../dist/apps/portal/build',
       future: { unstable_singleFetch: true },
       ignoredRouteFiles: ['**/.*'],
       routes: async (defineRoutes) => {
