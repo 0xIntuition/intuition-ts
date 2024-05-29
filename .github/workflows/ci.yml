@@ -42,7 +42,7 @@ jobs:
         if: github.event_name == 'pull_request'
         run: pnpm nx affected -t build --base=origin/main~1 --head=origin/main
       - name: Build 1ui Storybook
-        if: github.ref == 'refs/heads/main'
+      if: github.event_name == 'pull_request'
         run: pnpm 1ui:build-storybook
       - name: Deploy 1ui Storybook
         if: github.ref == 'refs/heads/main'

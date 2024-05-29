@@ -40,7 +40,7 @@
       "executor": "@nx/storybook:build",
       "outputs": ["{options.outputDir}"],
       "options": {
-        "outputDir": "dist/storybook/1ui",
+        "outputDir": "build/storybook/1ui",
         "configDir": "packages/1ui/.storybook"
       },
       "configurations": {
