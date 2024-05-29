@@ -34,13 +34,13 @@ jobs:
       - uses: nrwl/nx-set-shas@v3
       - name: Run Affected Lint
         if: github.event_name == 'pull_request'
-        run: pnpm nx affected -t lint --base=origin/main
+        run: pnpm nx affected -t lint --base=remotes/origin/main~1
       - name: Run Affected Tests
         if: github.event_name == 'pull_request'
-        run: pnpm nx affected -t test --base=origin/main
+        run: pnpm nx affected -t test --base=remotes/origin/main~1
       - name: Run Affected Builds
         if: github.event_name == 'pull_request'
-        run: pnpm nx affected -t build --base=origin/main
+        run: pnpm nx affected -t build --base=remotes/origin/main~1
       - name: Build 1ui Storybook
         if: github.ref == 'refs/heads/main'
         run: pnpm 1ui:build-storybook
