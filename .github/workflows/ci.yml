@@ -32,17 +32,20 @@ jobs:
             ${{ runner.os }}-pnpm-
       - run: pnpm install --frozen-lockfile
       - uses: nrwl/nx-set-shas@v3
-        if: ${{ github.event_name == 'pull_request' }}
       - name: Run Affected Lint
+        if: github.event.name == 'pull_request'
         run: pnpm nx affected -t lint --base=origin/main
       - name: Run Affected Tests
+        if: github.event.name == 'pull_request'
         run: pnpm nx affected -t test --base=origin/main
       - name: Run Affected Builds
+        if: github.event.name == 'pull_request'
         run: pnpm nx affected -t build --base=origin/main
-        else if: ${{ github.ref == 'refs/heads/main' }}
       - name: Build 1ui Storybook
+        if: github.ref == 'refs/heads/main'
         run: pnpm 1ui:build-storybook
       - name: Deploy 1ui Storybook
+        if: github.ref == 'refs/heads/main'
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           folder: dist/storybook/1ui
