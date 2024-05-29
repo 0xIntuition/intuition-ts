@@ -2,6 +2,7 @@ import { ipfs, json, TypedMap, JSONValue } from '@graphprotocol/graph-ts'
 import { Atom } from '../../generated/schema'
 import { createPerson } from './Person'
 import { createBook } from './Book'
+import { createLikeAction } from './LikeAction'
 
 export function parseAtomData(atom: Atom): void {
   atom.data = atom.uri
@@ -39,6 +40,9 @@ function resolveSchemaOrgProperties(
     }
     if (type == 'Book') {
       createBook(atom, obj)
+    }
+    if (type == 'LikeAction') {
+      createLikeAction(atom, obj)
     }
   }
 }

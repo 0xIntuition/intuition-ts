@@ -18,7 +18,9 @@
     "dev": "docker-compose down -v && sleep 5 && rm -rf data && docker-compose up -d && sleep 9 && pnpm codegen && pnpm prepare:dev && pnpm build && pnpm reset-local",
     "simulate:profiles": "tsx simulation/profiles",
     "simulate:books": "tsx simulation/books",
-    "simulate:schema": "tsx simulation/schema.org"
+    "simulate:likes": "tsx simulation/likes",
+    "simulate:json": "tsx simulation/json",
+    "simulate:unknown": "tsx simulation/unknown"
   },
   "dependencies": {
     "@graphprotocol/graph-cli": "0.71.2",
