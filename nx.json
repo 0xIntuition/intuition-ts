@@ -39,7 +39,6 @@
     "projects": [
       "*",
       "!@0xintuition/intuition-ts",
-      "!@0xintuition/portal",
       "!@0xintuition/automation-tools"
     ],
     "version": {
