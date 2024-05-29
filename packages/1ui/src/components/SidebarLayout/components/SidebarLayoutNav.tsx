@@ -19,7 +19,7 @@ export const SidebarLayoutNav = ({ ...props }) => {
         minSize={25}
         maxSize={50}
         collapsible
-        collapsedSize={7}
+        collapsedSize={7.5}
         onCollapse={() => updateIsCollapsedValues(true)}
         onExpand={() => updateIsCollapsedValues(false)}
         className={cn(
