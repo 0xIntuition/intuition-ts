@@ -16,7 +16,7 @@ export const SidebarLayoutNav = ({ ...props }) => {
     <>
       <ResizablePanel
         defaultSize={isCollapsed ? 7 : 30}
-        minSize={20}
+        minSize={25}
         maxSize={50}
         collapsible
         collapsedSize={7}

@@ -168,6 +168,10 @@ export const themePlugin = plugin(
             900: colorMix('primary-900'),
             950: colorMix('primary-950'),
           },
+          secondary: {
+            DEFAULT: colorMix('secondary'),
+            foreground: colorMix('secondary-foreground'),
+          },
           destructive: {
             DEFAULT: colorMix('destructive'),
             foreground: colorMix('destructive-foreground'),

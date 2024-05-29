@@ -93,7 +93,7 @@ describe('SidebarLayout', () => {
                 class="flex w-full flex-col gap-2 p-2"
               >
                 <button
-                  class="flex items-center gap-2 text-sm font-medium border-solid border disabled:text-muted-foreground disabled:border-muted shadow-md-subtle bg-gradient-to-b from-transparent to-transparent text-primary/70 border-primary/70 rounded-lg hover:text-primary hover:border-primary disabled:bg-transparent aria-selected:primary-gradient-subtle aria-selected:border-primary/10 px-4 py-1.5 w-full"
+                  class="flex items-center font-medium border-solid border disabled:bg-muted disabled:border-muted shadow-md-subtle bg-transparent text-secondary-foreground/70 border-transparent rounded-lg hover:text-secondary-foreground hover:border-border/20 aria-selected:bg-primary/10 aria-selected:text-secondary-foreground/80 disabled:text-muted-foreground shadow-none px-4 py-2 gap-3 text-base w-full"
                 >
                   <svg
                     class="h-6 w-6"
@@ -105,7 +105,7 @@ describe('SidebarLayout', () => {
                   Explore This
                 </button>
                 <button
-                  class="flex items-center gap-2 text-sm font-medium border-solid border disabled:text-muted-foreground disabled:border-muted shadow-md-subtle bg-gradient-to-b from-transparent to-transparent text-primary/70 border-primary/70 rounded-lg hover:text-primary hover:border-primary disabled:bg-transparent aria-selected:primary-gradient-subtle aria-selected:border-primary/10 px-4 py-1.5 w-full"
+                  class="flex items-center font-medium border-solid border disabled:bg-muted disabled:border-muted shadow-md-subtle bg-transparent text-secondary-foreground/70 border-transparent rounded-lg hover:text-secondary-foreground hover:border-border/20 aria-selected:bg-primary/10 aria-selected:text-secondary-foreground/80 disabled:text-muted-foreground shadow-none px-4 py-2 gap-3 text-base w-full"
                 >
                   <svg
                     class="h-6 w-6"
@@ -121,7 +121,7 @@ describe('SidebarLayout', () => {
                 class="flex h-full w-full flex-col justify-end gap-2 p-2"
               >
                 <button
-                  class="flex items-center gap-2 text-sm font-medium border-solid border disabled:text-muted-foreground shadow-md-subtle bg-transparent text-primary/70 border-transparent hover:text-primary disabled:border-transparent disabled:bg-transparent px-4 py-1.5 w-full"
+                  class="flex items-center font-medium border-solid border disabled:bg-muted disabled:border-muted shadow-md-subtle bg-transparent text-secondary-foreground/70 border-transparent rounded-lg hover:text-secondary-foreground hover:border-border/20 aria-selected:bg-primary/10 aria-selected:text-secondary-foreground/80 disabled:text-muted-foreground shadow-none px-4 py-2 gap-3 text-base w-full"
                 >
                   <svg
                     class="h-6 w-6"
@@ -133,7 +133,7 @@ describe('SidebarLayout', () => {
                   Settings
                 </button>
                 <button
-                  class="flex items-center gap-2 text-sm font-medium border-solid border disabled:text-muted-foreground shadow-md-subtle bg-transparent text-primary/70 border-transparent hover:text-primary disabled:border-transparent disabled:bg-transparent px-4 py-1.5 w-full"
+                  class="flex items-center font-medium border-solid border disabled:bg-muted disabled:border-muted shadow-md-subtle bg-transparent text-secondary-foreground/70 border-transparent rounded-lg hover:text-secondary-foreground hover:border-border/20 aria-selected:bg-primary/10 aria-selected:text-secondary-foreground/80 disabled:text-muted-foreground shadow-none px-4 py-2 gap-3 text-base w-full"
                 >
                   <span
                     class="relative flex shrink-0 overflow-hidden rounded-full h-6 w-6"

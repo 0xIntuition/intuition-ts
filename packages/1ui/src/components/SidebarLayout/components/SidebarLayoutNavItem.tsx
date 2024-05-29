@@ -9,7 +9,7 @@ export const SidebarLayoutNavItem = ({
   return (
     <SidebarNavItem
       {...props}
-      variant="ghost"
+      variant="navigation"
       label={label}
       iconName={iconName}
       onClick={onClick}

@@ -65,6 +65,18 @@ describe('Button', () => {
       </DocumentFragment>
     `)
   })
+  it('should render appropriate element and classes when given navigation variant value', () => {
+    const { asFragment } = render(<Button variant="navigation">Text</Button>)
+    expect(asFragment()).toMatchInlineSnapshot(`
+      <DocumentFragment>
+        <button
+          class="flex items-center gap-2 text-sm font-medium border-solid border disabled:bg-muted disabled:border-muted shadow-md-subtle bg-transparent text-secondary-foreground/70 border-transparent rounded-lg hover:text-secondary-foreground hover:border-border/20 aria-selected:bg-primary/10 aria-selected:text-secondary-foreground/80 disabled:text-muted-foreground shadow-none px-3 py-1"
+        >
+          Text
+        </button>
+      </DocumentFragment>
+    `)
+  })
   it('should render appropriate element and classes when given warning variant value', () => {
     const { asFragment } = render(<Button variant="warning">Text</Button>)
     expect(asFragment()).toMatchInlineSnapshot(`

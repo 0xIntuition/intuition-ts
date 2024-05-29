@@ -40,7 +40,7 @@ export const SidebarLayoutNavAvatar = ({
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>
-          <Button variant="text" size="iconMd" {...buttonProps}>
+          <Button variant="navigation" size="iconLg" {...buttonProps}>
             <AvatarComponent />
           </Button>
         </TooltipTrigger>
@@ -50,7 +50,7 @@ export const SidebarLayoutNavAvatar = ({
       </Tooltip>
     </TooltipProvider>
   ) : (
-    <Button variant="text" size="md" {...buttonProps}>
+    <Button variant="navigation" size="lg" {...buttonProps}>
       <AvatarComponent />
       {name}
     </Button>

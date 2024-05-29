@@ -36,7 +36,7 @@ export const SidebarNavItem = ({
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>
-          <Button size="iconMd" {...buttonProps}>
+          <Button size="iconLg" {...buttonProps}>
             <Icon name={iconName} />
           </Button>
         </TooltipTrigger>
@@ -46,7 +46,7 @@ export const SidebarNavItem = ({
       </Tooltip>
     </TooltipProvider>
   ) : (
-    <Button size="md" {...buttonProps}>
+    <Button size="lg" {...buttonProps}>
       <Icon name={iconName} />
       {label}
     </Button>

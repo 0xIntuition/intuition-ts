@@ -9,7 +9,7 @@ export const SidebarLayoutNavFooterItem = ({
   return (
     <SidebarNavItem
       {...props}
-      variant="text"
+      variant="navigation"
       label={label}
       iconName={iconName}
       onClick={onClick}

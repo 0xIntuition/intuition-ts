@@ -25,11 +25,13 @@ const buttonVariants = cva(
           'bg-success text-success-foreground border-success rounded-full hover:bg-success/70 hover:border-success/30',
         destructive:
           'bg-destructive text-destructive-foreground border-destructive rounded-full hover:bg-destructive/70 hover:border-destructive/30',
+        navigation:
+          'bg-transparent text-secondary-foreground/70 border-transparent rounded-lg  hover:text-secondary-foreground hover:border-border/20 aria-selected:bg-primary/10 aria-selected:text-secondary-foreground/80 disabled:text-muted-foreground shadow-none',
       },
       size: {
         default: 'px-3 py-1',
         md: 'px-4 py-1.5',
-        lg: 'px-4 py-2 gap-4 text-base',
+        lg: 'px-4 py-2 gap-3 text-base',
         xl: 'px-5 py-2.5 gap-5 text-lg',
         icon: 'p-1',
         iconMd: 'p-1.5',
