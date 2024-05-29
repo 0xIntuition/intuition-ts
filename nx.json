@@ -44,12 +44,10 @@
     ],
     "version": {
       "conventionalCommits": true,
-      "preVersionCommand": "pnpm dlx nx run-many -t build "
+      "preVersionCommand": "pnpm dlx nx run-many -t build"
     },
     "changelog": {
-      "projectChangelogs": {
-        "createRelease": "github"
-      }
+      "projectChangelogs": true
     }
   },
   "plugins": [
