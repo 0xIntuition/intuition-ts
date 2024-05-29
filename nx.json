@@ -43,8 +43,8 @@
       "!@0xintuition/automation-tools"
     ],
     "version": {
-      "conventionalCommits": true,
-      "preVersionCommand": "pnpm dlx nx run-many -t build"
+      "preVersionCommand": "pnpm dlx nx run-many -t build",
+      "conventionalCommits": true
     },
     "changelog": {
       "projectChangelogs": true
