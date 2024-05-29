@@ -33,13 +33,13 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - uses: nrwl/nx-set-shas@v3
       - name: Run Affected Lint
-        if: github.event.name == 'pull_request'
+        if: github.event_name == 'pull_request'
         run: pnpm nx affected -t lint --base=origin/main
       - name: Run Affected Tests
-        if: github.event.name == 'pull_request'
+        if: github.event_name == 'pull_request'
         run: pnpm nx affected -t test --base=origin/main
       - name: Run Affected Builds
-        if: github.event.name == 'pull_request'
+        if: github.event_name == 'pull_request'
         run: pnpm nx affected -t build --base=origin/main
       - name: Build 1ui Storybook
         if: github.ref == 'refs/heads/main'
