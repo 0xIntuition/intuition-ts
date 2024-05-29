@@ -44,18 +44,5 @@ jobs:
         run: pnpm install --frozen-lockfile
         shell: bash
 
-      - name: Make releases
-        run: npx nx release --skip-publish --first-release
-        shell: bash
-        env:
-          CI: true
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Publish packages
-        # Dry run for now while we test it out
-        run: npx nx release publish --dry-run
-        shell: bash
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
-          NPM_CONFIG_PROVENANCE: true
-          CI: true
+      - name: 🚀 Release
+        run: npx tsx scripts/release.ts --dry-run=false

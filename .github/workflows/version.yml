@@ -1,0 +1,15 @@
+# ./.github/workflows/version.yml
+name: Determine versions
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  version:
+    name: Determine versions
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
