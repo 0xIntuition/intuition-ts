@@ -1,0 +1,54 @@
+import { Canvas, Controls, Meta, Source, Title } from '@storybook/blocks'
+
+import * as Stories from './DropdownMenu.stories'
+
+<Meta of={Stories} />
+
+<Title />
+
+#### Displays a menu to the user — such as a set of actions or functions — triggered by a button.
+
+<a
+  href="https://www.radix-ui.com/primitives/docs/components/dropdown-menu#api-reference"
+  target="_blank"
+  style={{
+    'font-size': '12px',
+    color: 'white',
+    background: 'darkblue',
+    padding: '8px',
+    'border-radius': '4px',
+    cursor: 'pointer',
+  }}
+>
+  API Reference
+</a>
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { 
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger, 
+} from '@0xintuition/1ui'
+
+<DropdownMenu>
+  <DropdownMenuTrigger>
+    <Button size="lg">Open menu</Button>
+  </DropdownMenuTrigger>
+  <DropdownMenuContent>
+    <DropdownMenuLabel>My Account</DropdownMenuLabel>
+    <DropdownMenuSeparator />
+    <DropdownMenuItem>Profile</DropdownMenuItem>
+    <DropdownMenuItem>Billing</DropdownMenuItem>
+    <DropdownMenuItem>Team</DropdownMenuItem>
+    <DropdownMenuItem>Subscription</DropdownMenuItem>
+  </DropdownMenuContent>
+</DropdownMenu>
+`} />
+
+<Canvas of={Stories.BasicUsage} sourceState="none" />

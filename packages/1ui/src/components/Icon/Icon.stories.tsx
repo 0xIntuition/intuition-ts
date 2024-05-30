@@ -17,6 +17,7 @@ const iconOptions = [
   'brush-sparkle',
   'bubble-annotation',
   'calendar',
+  'checkmark',
   'chevron-bottom',
   'chevron-double-left',
   'chevron-double-right',
