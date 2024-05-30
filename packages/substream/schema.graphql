@@ -1,0 +1,71 @@
+type Atom @entity {
+  id: ID!
+  creator: Account!
+  wallet: Bytes!
+  uri: String!
+  data: String!
+
+  type: AtomType!
+  emoji: String
+  label: String
+  image: String
+
+  value: AtomValue
+
+  isSubject: [Triple!]! @derivedFrom(field: "subject")
+  isPredicate: [Triple!]! @derivedFrom(field: "predicate")
+  isObject: [Triple!]! @derivedFrom(field: "object")
+
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type Account @entity {
+  id: ID!
+  name: String
+  image: String
+  createdAtoms: [Atom!]! @derivedFrom(field: "creator")
+  createdTriples: [Triple!]! @derivedFrom(field: "creator")
+}
+
+type Triple @entity(immutable: true) {
+  id: String!
+  creator: Account!
+  subject: Atom!
+  predicate: Atom!
+  object: Atom!
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+enum AtomType {
+  Unknown
+  JSON
+  Person
+  Book
+  LikeAction
+}
+
+type AtomValue @entity {
+  id: ID!
+  person: Person
+  book: Book
+}
+
+type Person @entity {
+  id: ID!
+  identifier: String
+  name: String
+  image: String
+  email: String
+  url: String
+}
+
+type Book @entity {
+  id: ID!
+  name: String
+  genre: String
+  url: String
+}
