@@ -1,5 +1,6 @@
 import PrivyLogoutButton from '@client/privy-logout-button'
 import PrivySwitchWallet from '@client/privy-switch-wallet'
+import logger from '@lib/utils/logger'
 import { requireAuth } from '@middleware/requireAuth'
 import { SessionContext } from '@middleware/session'
 import { LoaderFunctionArgs } from '@remix-run/node'
@@ -16,7 +17,7 @@ export const middleware = serverOnly$([requireAuth])
 
 export async function loader({ context }: LoaderFunctionArgs) {
   const session = context.get(SessionContext)
-  console.log('[LOADER] user', session.get('user'))
+  console.log('[Index-Loader] user', session.get('user'))
   return { user: session.get('user') }
 }
 
@@ -26,12 +27,12 @@ export default function Index() {
   const navigate = useNavigate()
 
   async function handleLogout() {
-    console.log('[Index] handleLogout')
+    logger('[Index] handleLogout')
     navigate('/login')
   }
 
   function handleLinkWalletSuccess() {
-    console.log('[Index] handleLinkWalletSuccess')
+    logger('[Index] handleLinkWalletSuccess')
     revalidate()
   }
 
@@ -47,7 +48,7 @@ export default function Index() {
           />
         </div>
       </div>
-      <pre>{JSON.stringify(user, null, 2)}</pre>
+      {/* <pre>{JSON.stringify(user, null, 2)}</pre> */}
       <Outlet />
     </div>
   )

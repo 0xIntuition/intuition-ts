@@ -1,7 +1,6 @@
 import { Button } from '@0xintuition/1ui'
 
 import { useSocialLinking } from '@lib/hooks/usePrivySocialLinking'
-import logger from '@lib/utils/logger'
 import { ExtendedPrivyUser, PrivyPlatform } from 'types/privy'
 
 // colocated this for now but we can move into a constants if that is cleaner
@@ -38,7 +37,6 @@ export function PrivyVerifiedLinks() {
     <div className="flex w-full flex-col items-center gap-8">
       {linkedPlatforms.map((platform) => {
         if (privyUser === null) {
-          logger('Privy user is null')
           return null
         }
 
