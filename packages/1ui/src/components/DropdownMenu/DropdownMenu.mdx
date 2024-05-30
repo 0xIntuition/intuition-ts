@@ -1,3 +1,4 @@
+import { Button } from '@components'
 import { Canvas, Controls, Meta, Source, Title } from '@storybook/blocks'
 
 import * as Stories from './DropdownMenu.stories'
@@ -8,20 +9,17 @@ import * as Stories from './DropdownMenu.stories'
 
 #### Displays a menu to the user — such as a set of actions or functions — triggered by a button.
 
-<a
-  href="https://www.radix-ui.com/primitives/docs/components/dropdown-menu#api-reference"
-  target="_blank"
-  style={{
-    'font-size': '12px',
-    color: 'white',
-    background: 'darkblue',
-    padding: '8px',
-    'border-radius': '4px',
-    cursor: 'pointer',
-  }}
+<Button
+  variant="accent"
+  onClick={() =>
+    window.open(
+      'https://www.radix-ui.com/primitives/docs/components/dropdown-menu#api-reference',
+      '_blank',
+    )
+  }
 >
-  API Reference
-</a>
+  {'API Reference'}
+</Button>
 
 <Source
   dark
