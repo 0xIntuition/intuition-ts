@@ -6,7 +6,6 @@
   "scripts": {
     "1ui:component:create": "npx nx g @0xintuition/automation-tools:ui-component",
     "1ui:build": "nx build @0xintuition/1ui",
-    "1ui:build-storybook": "nx build-storybook @0xintuition/1ui",
     "1ui:lint": "nx lint @0xintuition/1ui",
     "1ui:test": "nx test @0xintuition/1ui --reporter=verbose",
     "portal:dev": "nx dev @0xintuition/portal",
@@ -30,7 +29,7 @@
     "publish-packages:local": "nx run-many -t publish-package --registry=http://localhost:4873",
     "prettier": "prettier --write .",
     "prettier:silent": "prettier --write . --log-level=silent",
-    "pre-commit": "pnpm lint && pretty-quick --verbose --staged",
+    "pre-commit": "pnpm lint && pretty-quick --verbose --staged && nx build-storybook @0xintuition/1ui",
     "prepare": "husky",
     "codegen": "nx codegen @0xintuition/api"
   },
