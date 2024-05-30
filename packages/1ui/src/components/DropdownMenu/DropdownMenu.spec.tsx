@@ -2,18 +2,42 @@ import React from 'react'
 
 import { render } from '@testing-library/react'
 
-import { DropdownMenu } from './DropdownMenu'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from './DropdownMenu'
 
 describe('DropdownMenu', () => {
-  // Example assertion: Check if the component renders a specific text
   it('should render appropriate element', () => {
-    const { asFragment } = render(<DropdownMenu>Something</DropdownMenu>)
+    const { asFragment } = render(
+      <DropdownMenu>
+        <DropdownMenuTrigger>Open menu</DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuLabel>My Account</DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem>Profile</DropdownMenuItem>
+          <DropdownMenuItem>Billing</DropdownMenuItem>
+          <DropdownMenuItem>Team</DropdownMenuItem>
+          <DropdownMenuItem>Subscription</DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>,
+    )
     expect(asFragment()).toMatchInlineSnapshot(`
-    <DocumentFragment>
-      <p>Something</p>>
-    </DocumentFragment>
+      <DocumentFragment>
+        <button
+          aria-expanded="false"
+          aria-haspopup="menu"
+          data-state="closed"
+          id="radix-:r0:"
+          type="button"
+        >
+          Open menu
+        </button>
+      </DocumentFragment>
     `)
   })
-  // Add more tests as needed to cover the functionality of your component
-  // Additional tests can be written here to check different states and props
 })
