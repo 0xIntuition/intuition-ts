@@ -41,9 +41,6 @@ jobs:
       - name: Run Affected Builds
         if: github.event_name == 'pull_request'
         run: pnpm nx affected -t build --base=origin/main~1 --head=origin/main
-      - name: Build 1ui Storybook
-        if: github.ref == 'refs/heads/main'
-        run: pnpm 1ui:build-storybook
       - name: Deploy 1ui Storybook
         if: github.ref == 'refs/heads/main'
         uses: JamesIves/github-pages-deploy-action@v4
