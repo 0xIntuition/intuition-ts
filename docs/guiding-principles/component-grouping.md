@@ -22,8 +22,8 @@ The PageHeader component set consists of several elements that collectively defi
 Each component utilizes cn for styling, and shares common props for consistency and modularity.
 
 ```tsx
-import { motion } from 'framer-motion'
 import { cn } from '@/lib/utils'
+import { motion } from 'framer-motion'
 
 function PageHeader({ children, className, ...props }) {
   // Implementation details

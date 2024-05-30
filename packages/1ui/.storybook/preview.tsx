@@ -1,7 +1,11 @@
 import type { Preview } from '@storybook/react'
+
 import { themeDecorator } from './decorators'
 import DocumentationTemplate from './templates/DocumentationTemplate.mdx'
+
 import '../src/styles/globals.css'
+import './global.css'
+
 import { palette } from '../src'
 
 const preview: Preview = {

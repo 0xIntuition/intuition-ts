@@ -1,18 +1,19 @@
 import {
   Account,
   Address,
+  BaseError,
   Chain,
-  PublicClient,
-  Transport,
-  WalletClient,
-  parseEventLogs,
-  toHex,
+  ContractFunctionRevertedError,
   getContract,
   GetContractReturnType,
+  parseEventLogs,
   ParseEventLogsReturnType,
-  ContractFunctionRevertedError,
-  BaseError,
+  PublicClient,
+  toHex,
+  Transport,
+  WalletClient,
 } from 'viem'
+
 import { abi } from './abi'
 import { deployments } from './deployments'
 

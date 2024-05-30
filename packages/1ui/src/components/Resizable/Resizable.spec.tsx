@@ -1,9 +1,11 @@
 import React from 'react'
+
 import { render } from '@testing-library/react'
+
 import {
-  ResizablePanelGroup,
-  ResizablePanel,
   ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
 } from './Resizable'
 
 describe('Resizable', () => {

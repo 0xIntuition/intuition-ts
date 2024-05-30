@@ -1,5 +1,5 @@
+import { names, Tree } from '@nx/devkit'
 import { createTreeWithEmptyWorkspace } from '@nx/devkit/testing'
-import { Tree, names } from '@nx/devkit'
 
 import { uiComponentGenerator } from './generator'
 import { uiComponentGeneratorSchema } from './schema'
@@ -26,6 +26,9 @@ describe('ui-component generator', () => {
     ).toBeTruthy()
     expect(
       tree.exists(`${componentDirectory}/${pascalCaseName}.stories.tsx`),
+    ).toBeTruthy()
+    expect(
+      tree.exists(`${componentDirectory}/${pascalCaseName}.mdx`),
     ).toBeTruthy()
   })
 })

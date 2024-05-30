@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+
 import type { Abi, TransactionReceipt } from 'viem'
 import {
   useSimulateContract,
@@ -7,6 +8,7 @@ import {
   type UseSimulateContractParameters,
   type UseWriteContractParameters,
 } from 'wagmi'
+
 import logger from '../utils/logger'
 
 type Handler = (receipt: TransactionReceipt) => void

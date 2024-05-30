@@ -1,0 +1,94 @@
+import { Canvas, Controls, Meta, Source, Title } from '@storybook/blocks'
+
+import * as Stories from './Toaster.stories'
+
+<Meta of={Stories} />
+
+<Title />
+
+#### A toaster component with a toast utility.
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { Toaster, toast } from '@0xintuition/1ui'
+
+<>
+  <Toaster />
+  <Button size="lg" onClick={() => toast('I am a toast!')}>
+    Launch toast
+  </Button>
+</>
+`} />
+
+<Canvas of={Stories.BasicUsage} sourceState="none" />
+
+## Properties
+
+<Controls />
+
+## Variants
+
+### Info
+
+<Source
+  dark
+  language="tsx"
+  code={`
+<>
+  <Toaster />
+  <Button
+    size="lg"
+    variant="accent"
+    onClick={() => toast.info('I am an info toast!')}
+  >
+    Launch toast
+  </Button>
+</>
+`}
+/>
+
+<Canvas of={Stories.Info} sourceState="none" />
+
+### Success
+
+<Source
+  dark
+  language="tsx"
+  code={`
+<>
+  <Toaster />
+  <Button
+    size="lg"
+    variant="success"
+    onClick={() => toast.success('I am a success toast!')}
+  >
+    Launch toast
+  </Button>
+</>
+`}
+/>
+
+<Canvas of={Stories.Success} sourceState="none" />
+
+### Error
+
+<Source
+  dark
+  language="tsx"
+  code={`
+<>
+  <Toaster />
+  <Button
+    size="lg"
+    variant="destructive"
+    onClick={() => toast.error('I am an error toast!')}
+  >
+    Launch toast
+  </Button>
+</>
+`}
+/>
+
+<Canvas of={Stories.Error} sourceState="none" />

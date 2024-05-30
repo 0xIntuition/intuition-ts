@@ -1,11 +1,13 @@
+import { IdentityPresenter, OpenAPI } from '@0xintuition/api'
+
 import { MULTIVAULT_CONTRACT_ADDRESS } from '@lib/utils/constants'
 import logger from '@lib/utils/logger'
+import { getAuthHeaders } from '@lib/utils/misc'
+import { SessionContext } from '@middleware/session'
 import { json, type ActionFunctionArgs } from '@remix-run/node'
-import { requireAuthedUser } from '@server/auth'
-import { type Identity } from '@types/identity'
-import type { User } from '@types/user'
+import { getPrivyAccessToken } from '@server/privy'
 
-export async function action({ request }: ActionFunctionArgs) {
+export async function action({ request, context }: ActionFunctionArgs) {
   logger('Validating create identity form data')
 
   logger('Request', request)
@@ -21,9 +23,14 @@ export async function action({ request }: ActionFunctionArgs) {
   const description = formData.get('description')
 
   try {
-    const _data = await requireAuthedUser(request)
-    const user = _data as User
-    const { accessToken } = user
+    OpenAPI.BASE = 'https://dev.api.intuition.systems'
+    const accessToken = getPrivyAccessToken(request)
+    const headers = getAuthHeaders(accessToken !== null ? accessToken : '')
+    OpenAPI.HEADERS = headers as Record<string, string>
+
+    const session = context.get(SessionContext)
+    console.log('[LOADER] user', session.get('user'))
+    const user = session.get('user')
 
     const identityParams = {
       display_name: display_name as string,
@@ -32,14 +39,9 @@ export async function action({ request }: ActionFunctionArgs) {
       is_user: true,
       predicate: false,
       contract: MULTIVAULT_CONTRACT_ADDRESS as string,
-      creator: user.wallet.toLowerCase(),
+      creator: user?.details?.wallet?.address.toLowerCase(),
     }
     logger('Identity params:', identityParams)
-    const headers = {
-      Authorization: `Bearer ${accessToken}`,
-      'Content-Type': 'application/json',
-    }
-
     logger('create headers', headers)
     const apiResponse = await fetch(`${process.env.API_URL}/identity`, {
       method: 'POST',
@@ -53,7 +55,7 @@ export async function action({ request }: ActionFunctionArgs) {
     }
 
     const responseBodyJson = await apiResponse.json()
-    const identity = responseBodyJson as Identity
+    const identity = responseBodyJson as IdentityPresenter
     logger('create identity response body', responseBodyJson)
     logger('Created identity:', identity)
 

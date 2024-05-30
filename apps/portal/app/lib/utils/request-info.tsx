@@ -1,7 +1,6 @@
 import { useRouteLoaderData } from '@remix-run/react'
 
 import { type loader as rootLoader } from '../../root'
-
 import { invariant } from './misc'
 
 /**

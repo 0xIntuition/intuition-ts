@@ -11,15 +11,6 @@ import { <%= className %> } from './<%= className %>';
 const meta: Meta<typeof <%= className %>> = {
   title: 'Components/<%= className %>',
   component: <%= className %>,
-  tags: ['autodocs'],
-  parameters: {
-    docs: {
-      description: {
-        component:
-          'A short description of the component goes here.',
-      },
-    },
-  },
 };
 
 export default meta;
@@ -29,8 +20,8 @@ type Story = StoryObj<typeof <%= className %>>;
 
 // Example story for the default state
 export const BasicUsage: Story = {
-  render: (args) => <<%= className %> {...args} />,
   args: {
     // Define default props here, if any
   },
+  render: (args) => <<%= className %> {...args} />,
 };

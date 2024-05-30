@@ -1,0 +1,35 @@
+import { Canvas, Controls, Meta, Source, Title } from '@storybook/blocks'
+
+import * as Stories from './Popover.stories'
+
+<Meta of={Stories} />
+
+<Title />
+
+#### Displays rich content in a portal, triggered by a button.
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { Popover, PopoverContent, PopoverTrigger } from '@0xintuition/1ui'
+
+<Popover {...args}>
+  <PopoverTrigger>
+    <Button>Open popover</Button>
+  </PopoverTrigger>
+  <PopoverContent>
+    <Text variant="bodyLarge">Popover Content</Text>
+    <Text variant="body">
+      Here is some very long content to test out this popover. It is good to see
+      how it looks with lots of text!
+    </Text>
+  </PopoverContent>
+</Popover>
+`} />
+
+<Canvas of={Stories.BasicUsage} sourceState="none" />
+
+## PopoverContent Properties
+
+<Controls />

@@ -6,9 +6,16 @@ uplinks:
   npmjs:
     url: https://registry.npmjs.org/
     maxage: 60m
+    max_fails: 20
+    fail_timeout: 2m
+  yarn:
+    url: https://registry.yarnpkg.com
+    maxage: 60m
+    max_fails: 20
+    fail_timeout: 2m
 
 packages:
-  '**':
+  '@*/*':
     # give all users (including non-authenticated users) full access
     # because it is a local registry
     access: $all

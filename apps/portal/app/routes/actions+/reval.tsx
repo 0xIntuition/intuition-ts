@@ -1,8 +1,7 @@
-import { emitter } from '@server/emitter'
-import { revalSchema } from '@lib/schemas/reval-schema'
 import { parseWithZod } from '@conform-to/zod'
-
+import { revalSchema } from '@lib/schemas/reval-schema'
 import { json, type ActionFunction } from '@remix-run/node'
+import { emitter } from '@server/emitter'
 
 export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData()

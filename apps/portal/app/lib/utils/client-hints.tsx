@@ -2,9 +2,11 @@
  * This file contains utilities for using client hints for user preference which
  * are needed by the server, but are only known by the browser.
  */
-import { useRevalidator } from '@remix-run/react'
-import { themesList, Theme } from '@0xintuition/1ui'
 import * as React from 'react'
+
+import { Theme, themesList } from '@0xintuition/1ui'
+
+import { useRevalidator } from '@remix-run/react'
 
 import { useRequestInfo } from './request-info'
 

@@ -1,13 +1,14 @@
-import logger from '@lib/utils/logger'
-import { json, type ActionFunction } from '@remix-run/node'
-import { requireAuthedUser } from '@server/auth'
-import { emitter } from '@server/emitter'
-import { getIdentity } from '@server/identity'
-import { type Identity } from '@types/identity'
-import type { User } from '@types/user'
+import { IdentitiesService, IdentityPresenter } from '@0xintuition/api'
 
-export const action: ActionFunction = async ({ request }) => {
-  const user = (await requireAuthedUser(request)) as User
+import logger from '@lib/utils/logger'
+import { SessionContext } from '@middleware/session'
+import { json, type ActionFunction } from '@remix-run/node'
+import { emitter } from '@server/emitter'
+
+export const action: ActionFunction = async ({ request, context }) => {
+  const session = context.get(SessionContext)
+  console.log('[LOADER] user', session.get('user'))
+  const user = session.get('user')
 
   const formData = await request.formData()
   const identity_id = formData.get('identity_id')
@@ -19,8 +20,10 @@ export const action: ActionFunction = async ({ request }) => {
     let attempts = 0
 
     do {
-      const response = await getIdentity(identity_id.toString(), request)
-      identity = response.data as Identity
+      const response = await IdentitiesService.getIdentityById({
+        id: identity_id.toString(),
+      })
+      identity = response as IdentityPresenter
       if (identity?.status === 'complete') break
       await new Promise((resolve) => setTimeout(resolve, 5000))
       attempts++

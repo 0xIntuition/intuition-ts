@@ -1,11 +1,12 @@
 import {
-  type Chain,
   createPublicClient,
   createTestClient,
   createWalletClient,
   http,
+  type Chain,
 } from 'viem'
 import { mainnet } from 'viem/chains'
+
 import { ALICE } from './constants'
 
 /**

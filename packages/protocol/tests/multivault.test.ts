@@ -1,5 +1,6 @@
 import { parseEther, type Address } from 'viem'
-import { describe, it, beforeAll, expect } from 'vitest'
+import { beforeAll, describe, expect, it } from 'vitest'
+
 import { Multivault } from '../src/multivault.js'
 import { deployAndInit } from './deploy.js'
 import { publicClient, walletClient } from './utils.js'

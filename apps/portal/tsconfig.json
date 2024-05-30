@@ -4,21 +4,18 @@
     "allowImportingTsExtensions": true,
     "baseUrl": ".",
     "forceConsistentCasingInFileNames": true,
-    "isolatedModules": true,
     "lib": ["DOM", "DOM.Iterable", "ES2022"],
     "moduleResolution": "Bundler",
     "noEmit": true,
-    "skipLibCheck": true,
-    "strict": true,
     "types": ["@remix-run/node", "vite/client"],
     "paths": {
       "@components/*": ["app/components/*"],
       "@lib/*": ["app/lib/*"],
-      "@types/*": ["app/types/*"],
       "@routes/*": ["app/routes/*"],
       "@styles/*": ["app/styles/*"],
       "@server/*": ["app/.server/*"],
-      "@client/*": ["app/.client/*"]
+      "@client/*": ["app/.client/*"],
+      "@middleware/*": ["app/middleware/*"]
     }
   },
   "include": ["**/*.ts", "**/*.tsx", "tailwind.config.js"],

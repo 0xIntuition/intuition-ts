@@ -1,3 +1,21 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+::-webkit-scrollbar {
+  @apply w-2;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-primary/10;
+  @apply rounded-sm;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-primary/20;
+  @apply rounded-sm;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-primary/40;
+}

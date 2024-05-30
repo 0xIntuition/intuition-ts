@@ -1,10 +1,12 @@
-import { type Toast } from '@server/toast'
+import { useEffect } from 'react'
+
+import { toast as showToast, Toaster } from '@0xintuition/1ui'
+
 import { BLOCK_EXPLORER_URL } from '@lib/utils/constants'
 import { cn } from '@lib/utils/misc'
 import { Link } from '@remix-run/react'
+import { type Toast } from '@server/toast'
 import { ExternalLinkIcon } from 'lucide-react'
-import { useEffect } from 'react'
-import { Toaster, toast as showToast } from 'sonner'
 
 export function MemekekToaster({ toast }: { toast?: Toast | null }) {
   return (

@@ -1,26 +1,19 @@
 import {
   Button,
   DropdownMenu,
-  DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
+  DropdownMenuTrigger,
 } from '@0xintuition/1ui'
-import logger from '@lib/utils/logger'
+
 import { usePrivy, useWallets } from '@privy-io/react-auth'
 import { NavLink, useFetcher } from '@remix-run/react'
-import { Address } from 'viem'
-import { mainnet } from 'viem/chains'
-import { useDisconnect, useEnsName } from 'wagmi'
+import { useDisconnect } from 'wagmi'
 
 export function PrivyButton() {
   const { ready, authenticated, login, logout, user: privyUser } = usePrivy()
-  const ensName = useEnsName({
-    address: privyUser?.wallet?.address as Address,
-    chainId: mainnet.id,
-  })
 
-  logger('ensName', ensName.toString())
   const { disconnect } = useDisconnect()
   const { wallets } = useWallets()
   const chainId = wallets?.[0]?.chainId

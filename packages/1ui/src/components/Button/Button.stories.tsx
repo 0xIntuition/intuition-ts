@@ -1,7 +1,9 @@
 import React from 'react'
-import type { Meta, StoryObj } from '@storybook/react'
-import { Button } from './Button'
+
 import { Icon } from '@components/Icon'
+import type { Meta, StoryObj } from '@storybook/react'
+
+import { Button } from './Button'
 
 const meta: Meta<typeof Button> = {
   title: 'Components/Button',
@@ -36,6 +38,7 @@ const meta: Meta<typeof Button> = {
         'warning',
         'success',
         'destructive',
+        'navigation',
       ],
       table: {
         type: { summary: 'string' },
@@ -341,6 +344,42 @@ export const Destructive: Story = {
         Loading...
       </Button>
       <Button variant="destructive" disabled {...props}>
+        Disabled
+      </Button>
+    </div>
+  ),
+}
+
+export const Navigation: Story = {
+  parameters: {
+    controls: {
+      disable: true,
+    },
+  },
+  render: (props) => (
+    <div style={{ display: 'flex', gap: '2rem', alignItems: 'center' }}>
+      <Button variant="navigation" {...props}>
+        Default
+      </Button>
+      <Button variant="navigation" size="md" {...props}>
+        Medium
+      </Button>
+      <Button variant="navigation" size="lg" {...props}>
+        Large
+      </Button>
+      <Button variant="navigation" size="xl" {...props}>
+        Extra Large
+      </Button>
+      <Button variant="navigation" aria-selected {...props}>
+        Selected
+      </Button>
+      <Button variant="navigation" {...props}>
+        <Icon name="crystal-ball" />
+      </Button>
+      <Button variant="navigation" isLoading {...props}>
+        Loading...
+      </Button>
+      <Button variant="navigation" disabled {...props}>
         Disabled
       </Button>
     </div>

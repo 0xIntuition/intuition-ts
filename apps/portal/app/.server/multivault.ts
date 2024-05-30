@@ -2,13 +2,14 @@ import {
   createMultiVaultContract,
   getMultivaultContract,
   publicClient,
-} from '@lib/utils/viem'
+} from '@server/viem'
 import type {
   IdentityVaultDetails,
   MultivaultConfig,
   VaultDetails,
 } from '@types/vault'
 import { formatUnits, parseUnits, type Address } from 'viem'
+
 interface MulticallResponse {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   result?: any
