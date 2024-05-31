@@ -1,0 +1,23 @@
+start:
+  args:
+  # Define Firehose components that will be used for this setup
+  - merger
+  - firehose
+  - reader-node
+  - relayer
+  flags:
+    # Prevent creation of file for logging (logs from previous sessions are not visible with this setting)
+    log-to-file: false
+
+    # Ethereum is the default chain, its id is 1. Update these flags for different chains such as Binance
+    # common-chain-id: "1"
+    # common-network-id: "1"
+    # Update the reader-node-path to reference the geth binary for the chain and OS being targeted
+    # reader-node-path: /app/geth
+    # Update the reader-code-arguments for the chain being targeted
+    # Find specific values in the Firehose Ethereum Setup Documentation
+    # reader-node-arguments: "--cache 8192 --maxpeers 100 --metrics --metrics.port 6061 --port=30303 --http.port=8545 --snapshot=true --txlookuplimit=1000"
+    # reader-node-arguments: "--mine --miner.etherbase=0x0000000000000000000000000000000000000000"
+    # reader-node-log-to-zap: false
+    reader-node-bootstrap-data-url: ./config/genesis.json
+    # substreams-rpc-endpoints: "http://localhost:8545"

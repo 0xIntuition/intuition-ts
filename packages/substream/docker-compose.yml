@@ -1,0 +1,10 @@
+services:
+  firehose:
+    build:
+      context: .
+    ports:
+      - '8545:8545'
+    volumes:
+      - ./data/firehose:/data/firehose
+      - ./firehose:/config
+    command: ['-c', './config/firehose.yaml', '-d /data/firehose', 'start']
