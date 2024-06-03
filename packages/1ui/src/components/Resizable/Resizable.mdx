@@ -1,0 +1,102 @@
+import { Button } from '@components'
+import { Canvas, Controls, Meta, Source, Title } from '@storybook/blocks'
+
+import * as Stories from './Resizable.stories'
+
+<Meta of={Stories} />
+
+<Title />
+
+#### Accessible resizable panel groups and layouts with keyboard support.
+
+<Button
+  variant="accent"
+  onClick={() =>
+    window.open(
+      'https://github.com/bvaughn/react-resizable-panels/tree/main/packages/react-resizable-panels',
+      '_blank',
+    )
+  }
+>
+  {'API Reference'}
+</Button>
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@0xintuition/1ui'
+
+<ResizablePanelGroup
+  direction="horizontal"
+>
+  <ResizablePanel defaultSize={50}>
+    <div>
+      <span>One</span>
+    </div>
+  </ResizablePanel>
+  <ResizableHandle />
+  <ResizablePanel defaultSize={50}>
+    <ResizablePanelGroup direction="vertical">
+      <ResizablePanel defaultSize={25}>
+        <div>
+          <span>Two</span>
+        </div>
+      </ResizablePanel>
+      <ResizableHandle />
+      <ResizablePanel defaultSize={75}>
+        <div>
+          <span>Three</span>
+        </div>
+      </ResizablePanel>
+    </ResizablePanelGroup>
+  </ResizablePanel>
+`} />
+
+<Canvas of={Stories.BasicUsage} sourceState="none" />
+
+## Variants
+
+### Vertical
+
+<Source
+  dark
+  language="tsx"
+  code={`
+<ResizablePanelGroup
+  direction="vertical"
+>
+  <ResizablePanel defaultSize={50}>
+    Top
+  </ResizablePanel>
+  <ResizableHandle />
+  <ResizablePanel defaultSize={50}>
+    Bottom
+  </ResizablePanel>
+</ResizablePanelGroup>
+`}
+/>
+
+<Canvas of={Stories.Vertical} sourceState="none" />
+
+### Sidebar
+
+<Source
+  dark
+  language="tsx"
+  code={`
+<ResizablePanelGroup
+  direction="horizontal"
+>
+  <ResizablePanel defaultSize={30}>
+    Sidebar
+  </ResizablePanel>
+  <ResizableHandle withHandle />
+  <ResizablePanel defaultSize={70}>
+    Content
+  </ResizablePanel>
+</ResizablePanelGroup>
+`}
+/>
+
+<Canvas of={Stories.Sidebar} sourceState="none" />

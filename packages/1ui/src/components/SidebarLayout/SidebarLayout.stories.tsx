@@ -19,14 +19,6 @@ import {
 const meta: Meta<typeof SidebarLayout> = {
   title: 'Components/SidebarLayout',
   component: SidebarLayout,
-  tags: ['autodocs'],
-  parameters: {
-    docs: {
-      description: {
-        component: 'A two-panel layout with a built in resizable side nav.',
-      },
-    },
-  },
 }
 
 export default meta

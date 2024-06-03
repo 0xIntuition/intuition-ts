@@ -1,3 +1,4 @@
+import { Button } from '@components'
 import { Canvas, Controls, Meta, Source, Title } from '@storybook/blocks'
 
 import * as Stories from './Dialog.stories'
@@ -7,6 +8,18 @@ import * as Stories from './Dialog.stories'
 <Title />
 
 #### A window overlaid on either the primary window or another dialog window, rendering the content underneath inert.
+
+<Button
+  variant="accent"
+  onClick={() =>
+    window.open(
+      'https://www.radix-ui.com/primitives/docs/components/dialog#api-reference',
+      '_blank',
+    )
+  }
+>
+  {'API Reference'}
+</Button>
 
 <Source
   dark

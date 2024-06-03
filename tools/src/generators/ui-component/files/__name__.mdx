@@ -1,3 +1,4 @@
+import { Button } from '@components'
 import { Canvas, Controls, Meta, Source, Title } from '@storybook/blocks'
 
 import * as Stories from './<%= className %>.stories'
@@ -7,6 +8,13 @@ import * as Stories from './<%= className %>.stories'
 <Title />
 
 #### A short description goes here.
+
+<Button
+  variant="accent"
+  onClick={() => window.open('link_goes_here', '_blank')}
+>
+  {'API Reference'}
+</Button>
 
 <Source
   dark

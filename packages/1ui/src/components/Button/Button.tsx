@@ -6,27 +6,27 @@ import { cva, type VariantProps } from 'class-variance-authority'
 import { Loader2Icon } from 'lucide-react'
 
 const buttonVariants = cva(
-  'flex items-center gap-2 text-sm font-medium border-solid border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted shadow-md-subtle',
+  'flex items-center gap-2 text-sm font-medium border-solid border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted',
   {
     variants: {
       variant: {
         primary:
-          'bg-primary text-primary-foreground border-primary hover:bg-primary/80 rounded-full',
+          'bg-primary text-primary-foreground border-primary hover:bg-primary/80 rounded-full shadow-md-subtle',
         secondary:
-          'primary-gradient-subtle text-primary/60 border-primary/10 rounded-lg hover:text-primary disabled:from-muted disabled:to-muted',
+          'primary-gradient-subtle text-primary/60 border-primary/10 rounded-lg hover:text-primary disabled:from-muted disabled:to-muted shadow-md-subtle',
         ghost:
-          'bg-gradient-to-b from-transparent to-transparent text-primary/70 border-primary/70 rounded-lg hover:text-primary hover:border-primary disabled:bg-transparent aria-selected:primary-gradient-subtle aria-selected:border-primary/10',
-        text: 'bg-transparent text-primary/70 border-transparent hover:text-primary disabled:border-transparent disabled:bg-transparent',
+          'bg-gradient-to-b from-transparent to-transparent text-primary/70 border-primary/70 rounded-lg hover:text-primary hover:border-primary disabled:bg-transparent aria-selected:primary-gradient-subtle aria-selected:border-primary/10 shadow-md-subtle',
+        text: 'bg-transparent text-primary/70 border-transparent hover:text-primary disabled:border-transparent disabled:bg-transparent shadow-md-subtle',
         accent:
-          'bg-accent text-accent-foreground border-accent rounded-full hover:bg-accent/70 hover:border-accent/30',
+          'bg-accent text-accent-foreground border-accent rounded-full hover:bg-accent/70 hover:border-accent/30 shadow-md-subtle',
         warning:
-          'bg-warning text-warning-foreground border-warning rounded-full hover:bg-warning/70 hover:border-warning/30',
+          'bg-warning text-warning-foreground border-warning rounded-full hover:bg-warning/70 hover:border-warning/30 shadow-md-subtle',
         success:
-          'bg-success text-success-foreground border-success rounded-full hover:bg-success/70 hover:border-success/30',
+          'bg-success text-success-foreground border-success rounded-full hover:bg-success/70 hover:border-success/30 shadow-md-subtle',
         destructive:
-          'bg-destructive text-destructive-foreground border-destructive rounded-full hover:bg-destructive/70 hover:border-destructive/30',
+          'bg-destructive text-destructive-foreground border-destructive rounded-full hover:bg-destructive/70 hover:border-destructive/30 shadow-md-subtle',
         navigation:
-          'bg-transparent text-secondary-foreground/70 border-transparent rounded-lg  hover:text-secondary-foreground hover:border-border/20 aria-selected:bg-primary/10 aria-selected:text-secondary-foreground/80 disabled:text-muted-foreground shadow-none',
+          'bg-transparent text-secondary-foreground/70 border-transparent rounded-lg  hover:text-secondary-foreground hover:border-border/20 aria-selected:bg-primary/10 aria-selected:text-secondary-foreground/80 disabled:text-muted-foreground',
       },
       size: {
         default: 'px-3 py-1',

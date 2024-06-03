@@ -1,0 +1,49 @@
+import { Button } from '@components'
+import { Canvas, Controls, Meta, Source, Title } from '@storybook/blocks'
+
+import * as Stories from './Tooltip.stories'
+
+<Meta of={Stories} />
+
+<Title />
+
+#### A popup that displays information related to an element when the element receives keyboard focus or the mouse hovers over it.
+
+<Button
+  variant="accent"
+  onClick={() =>
+    window.open(
+      'https://www.radix-ui.com/primitives/docs/components/tooltip#api-reference',
+      '_blank',
+    )
+  }
+>
+  {'API Reference'}
+</Button>
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { 
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger, 
+} from '@0xintuition/1ui'
+
+<TooltipProvider>
+  <Tooltip>
+    <TooltipTrigger asChild>
+      <Button variant="ghost" size="lg">
+        Hover
+      </Button>
+    </TooltipTrigger>
+    <TooltipContent>
+      <Text variant="body">Some text</Text>
+    </TooltipContent>
+  </Tooltip>
+</TooltipProvider>
+`} />
+
+<Canvas of={Stories.BasicUsage} sourceState="none" />

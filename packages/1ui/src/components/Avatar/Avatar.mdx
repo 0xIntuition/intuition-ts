@@ -1,0 +1,57 @@
+import { Button } from '@components'
+import { Canvas, Controls, Meta, Source, Title } from '@storybook/blocks'
+
+import * as Stories from './Avatar.stories'
+
+<Meta of={Stories} />
+
+<Title />
+
+#### An image element with a fallback for representing the user.
+
+<Button
+  variant="accent"
+  onClick={() =>
+    window.open(
+      'https://www.radix-ui.com/primitives/docs/components/avatar#api-reference',
+      '_blank',
+    )
+  }
+>
+  {'API Reference'}
+</Button>
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { Avatar, AvatarFallback, AvatarImage } from '@0xintuition/1ui'
+
+<Avatar>
+  <AvatarImage src="https://myimage.jpeg" alt="intuition" />
+  <AvatarFallback>IN</AvatarFallback>
+</Avatar>
+`} />
+
+<Canvas of={Stories.BasicUsage} sourceState="none" />
+
+## Properties
+
+<Controls />
+
+## Variants
+
+### Fallback
+
+<Source
+  dark
+  language="tsx"
+  code={`
+<Avatar>
+  <AvatarImage src="broken-link" alt="broken-link" />
+  <AvatarFallback>IN</AvatarFallback>
+</Avatar>
+`}
+/>
+
+<Canvas of={Stories.Fallback} sourceState="none" />
