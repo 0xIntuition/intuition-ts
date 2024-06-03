@@ -1,6 +1,7 @@
 {
   "name": "@0xintuition/protocol",
   "version": "0.1.1",
+  "description": "Protocol",
   "main": "dist/index.js",
   "exports": {
     ".": "./dist/index.js"
@@ -16,8 +17,10 @@
     "README.md",
     "LICENSE"
   ],
-  "publishConfig": {
-    "access": "public"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/0xIntuition/intuition-ts",
+    "directory": "packages/protocol"
   },
   "dependencies": {
     "viem": "^2.9.29"

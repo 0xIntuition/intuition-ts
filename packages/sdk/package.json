@@ -1,6 +1,7 @@
 {
   "name": "@0xintuition/sdk",
-  "version": "0.1.1",
+  "version": "0.1.0",
+  "description": "Backend SDK",
   "main": "dist/index.js",
   "exports": {
     ".": "./dist/index.js"
@@ -15,8 +16,10 @@
     "README.md",
     "LICENSE"
   ],
-  "publishConfig": {
-    "access": "public"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/0xIntuition/intuition-ts",
+    "directory": "packages/sdk"
   },
   "dependencies": {
     "@0xintuition/api": "0.1.1"

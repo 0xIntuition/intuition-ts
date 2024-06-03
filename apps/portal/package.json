@@ -1,7 +1,7 @@
 {
   "name": "@0xintuition/portal",
-  "version": "0.2.0",
-  "private": true,
+  "version": "0.1.0",
+  "description": "Portal",
   "sideEffects": false,
   "type": "module",
   "scripts": {
@@ -9,6 +9,11 @@
     "dev": "remix vite:dev",
     "start": "remix-serve ./build/server/index.js",
     "lint:fix": "pnpm lint --fix"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/0xIntuition/intuition-ts",
+    "directory": "apps/portal"
   },
   "dependencies": {
     "@0xintuition/1ui": "0.2.0",
