@@ -63,8 +63,11 @@ jobs:
         with:
           folder: build/storybook/1ui
 
-      - name: Publish all packages to npm with the canary tag
-        run: npx nx release publish --tag canary --verbose
+      - name: Bump package versions
+        run: npx nx release version --verbose --dry-run --first-release --git-commit
+
+      - name: Publish all packages to npm
+        run: npx nx release publish --verbose --dry-run --first-release
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
           NPM_CONFIG_PROVENANCE: true
