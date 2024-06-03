@@ -1353,6 +1353,7 @@ export type SearchIdentityData = {
   identityId?: IdentityId | null
   isContract?: boolean | null
   isUser?: boolean | null
+  linkedAccountUsername?: string | null
   paging: PaginatedRequest
   predicate?: boolean | null
   sort: IdentitySort
@@ -1704,6 +1705,20 @@ export type UpdateUserEnsResponse = {
   role: Role
   updated_at: string
   wallet: string
+}
+
+export type GetLinkedAccountsByUserData = {
+  /**
+   * User sql id
+   */
+  id: string
+}
+
+export type GetLinkedAccountsByUserResponse = {
+  data: Array<LinkedAccountPresenter>
+  limit: number
+  page: number
+  total: number
 }
 
 export type UpdateUserPointsData = {
@@ -2393,6 +2408,7 @@ export type $OpenApiTs = {
         identityId?: IdentityId | null
         isContract?: boolean | null
         isUser?: boolean | null
+        linkedAccountUsername?: string | null
         paging: PaginatedRequest
         predicate?: boolean | null
         sort: IdentitySort

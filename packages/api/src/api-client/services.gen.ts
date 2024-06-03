@@ -40,6 +40,8 @@ import type {
   GetIdentityPositionsResponse,
   GetLinkedAccountByIdData,
   GetLinkedAccountByIdResponse,
+  GetLinkedAccountsByUserData,
+  GetLinkedAccountsByUserResponse,
   GetLinkedAccountsData,
   GetLinkedAccountsResponse,
   GetPositionByIdData,
@@ -419,6 +421,7 @@ export class IdentitiesService {
    * @param data.timeframe
    * @param data.identityId
    * @param data.description
+   * @param data.linkedAccountUsername
    * @returns unknown Search identities in paginated list
    * @throws ApiError
    */
@@ -441,6 +444,7 @@ export class IdentitiesService {
         paging: data.paging,
         sort: data.sort,
         description: data.description,
+        linkedAccountUsername: data.linkedAccountUsername,
       },
     })
   }
@@ -802,9 +806,9 @@ export class UsersService {
    * @returns unknown Get linked accounts for user
    * @throws ApiError
    */
-  public static getLinkedAccounts(
-    data: GetLinkedAccountsData,
-  ): CancelablePromise<GetLinkedAccountsResponse> {
+  public static getLinkedAccountsByUser(
+    data: GetLinkedAccountsByUserData,
+  ): CancelablePromise<GetLinkedAccountsByUserResponse> {
     return __request(OpenAPI, {
       method: 'GET',
       url: '/users/:id/linked_accounts',
