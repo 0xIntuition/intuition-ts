@@ -1,0 +1,66 @@
+import { Button } from '@components'
+import { Canvas, Controls, Meta, Source, Title } from '@storybook/blocks'
+
+import * as Stories from './SidebarLayout.stories'
+
+<Meta of={Stories} />
+
+<Title />
+
+#### A two-panel layout with a built in resizable side nav.
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import {   
+  SidebarLayout,
+  SidebarLayoutContent,
+  SidebarLayoutNav,
+  SidebarLayoutNavAvatar,
+  SidebarLayoutNavFooter,
+  SidebarLayoutNavFooterItem,
+  SidebarLayoutNavHeader,
+  SidebarLayoutNavHeaderContent,
+  SidebarLayoutNavItem,
+  SidebarLayoutNavItems,
+  SidebarLayoutProvider, 
+} from '@0xintuition/1ui'
+
+<SidebarLayoutProvider>
+  <SidebarLayout {...args}>
+    <SidebarLayoutNav>
+      <SidebarLayoutNavHeader>
+        <SidebarLayoutNavHeaderContent imgLogo={<svg />} textLogo={<svg />} />
+      </SidebarLayoutNavHeader>
+      <SidebarLayoutNavItems>
+        <SidebarLayoutNavItem
+          iconName="crystal-ball"
+          label="Explore This"
+          onClick={() => doSomething}
+        />
+        <SidebarLayoutNavItem
+          iconName="megaphone"
+          label="Explore That"
+          onClick={() => doSomething}
+        />
+      </SidebarLayoutNavItems>
+      <SidebarLayoutNavFooter>
+        <SidebarLayoutNavFooterItem
+          iconName="settings-gear"
+          label="Settings"
+          onClick={() => doSomething}
+        />
+        <SidebarLayoutNavAvatar
+          imageSrc="image.jpg"
+          name="Super Dave"
+          onClick={() => doSomething}
+        />
+      </SidebarLayoutNavFooter>
+    </SidebarLayoutNav>
+    <SidebarLayoutContent>Content goes here.</SidebarLayoutContent>
+  </SidebarLayout>
+</SidebarLayoutProvider>
+`} />
+
+<Canvas of={Stories.BasicUsage} sourceState="none" />

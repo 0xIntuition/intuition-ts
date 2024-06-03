@@ -15,14 +15,6 @@ import {
 const meta: Meta<typeof ResizablePanel> = {
   title: 'Components/Resizable',
   component: ResizablePanel,
-  tags: ['autodocs'],
-  parameters: {
-    docs: {
-      description: {
-        component: 'A short description of the component goes here.',
-      },
-    },
-  },
 }
 
 export default meta

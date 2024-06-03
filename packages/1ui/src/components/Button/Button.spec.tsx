@@ -114,11 +114,11 @@ describe('Button', () => {
     `)
   })
   it('should render appropriate element and classes when given medium size value', () => {
-    const { asFragment } = render(<Button size="medium">Text</Button>)
+    const { asFragment } = render(<Button size="md">Text</Button>)
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <button
-          class="flex items-center gap-2 text-sm font-medium border-solid border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted shadow-md-subtle bg-primary text-primary-foreground border-primary hover:bg-primary/80 rounded-full"
+          class="flex items-center gap-2 text-sm font-medium border-solid border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted shadow-md-subtle bg-primary text-primary-foreground border-primary hover:bg-primary/80 rounded-full px-4 py-1.5"
         >
           Text
         </button>
@@ -126,11 +126,11 @@ describe('Button', () => {
     `)
   })
   it('should render appropriate element and classes when given large size value', () => {
-    const { asFragment } = render(<Button size="large">Text</Button>)
+    const { asFragment } = render(<Button size="lg">Text</Button>)
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <button
-          class="flex items-center gap-2 text-sm font-medium border-solid border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted shadow-md-subtle bg-primary text-primary-foreground border-primary hover:bg-primary/80 rounded-full"
+          class="flex items-center font-medium border-solid border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted shadow-md-subtle bg-primary text-primary-foreground border-primary hover:bg-primary/80 rounded-full px-4 py-2 gap-3 text-base"
         >
           Text
         </button>
@@ -138,11 +138,11 @@ describe('Button', () => {
     `)
   })
   it('should render appropriate element and classes when given extraLarge size value', () => {
-    const { asFragment } = render(<Button size="extraLarge">Text</Button>)
+    const { asFragment } = render(<Button size="xl">Text</Button>)
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <button
-          class="flex items-center gap-2 text-sm font-medium border-solid border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted shadow-md-subtle bg-primary text-primary-foreground border-primary hover:bg-primary/80 rounded-full"
+          class="flex items-center font-medium border-solid border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted shadow-md-subtle bg-primary text-primary-foreground border-primary hover:bg-primary/80 rounded-full px-5 py-2.5 gap-5 text-lg"
         >
           Text
         </button>
