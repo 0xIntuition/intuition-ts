@@ -2,7 +2,7 @@ import * as React from 'react'
 
 import { Icon } from '@components/Icon'
 import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu'
-import { cn } from '@styles'
+import { cn } from '@ui-styles'
 
 const DropdownMenu = DropdownMenuPrimitive.Root
 

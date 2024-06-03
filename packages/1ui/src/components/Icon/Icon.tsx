@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import { cn } from '@styles'
+import { cn } from '@ui-styles'
 
 // eslint-disable-next-line
 // @ts-ignore

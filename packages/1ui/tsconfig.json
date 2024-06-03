@@ -6,7 +6,7 @@
     "paths": {
       "@*": ["*"],
       "@components": ["components/index"],
-      "@styles": ["styles/index"]
+      "@ui-styles": ["styles/index"]
     },
     "outDir": "../../dist/packages/1ui"
   },
