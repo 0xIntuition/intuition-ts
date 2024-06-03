@@ -1,0 +1,22 @@
+{
+  "name": "simulation",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "profiles": "tsx profiles.ts",
+    "books": "tsx books.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@0xintuition/protocol": "workspace:*",
+    "@faker-js/faker": "^8.4.1",
+    "kubo-rpc-client": "^4.1.1",
+    "schema-dts": "^1.1.2",
+    "tsx": "^4.10.5",
+    "viem": "^2.13.2"
+  }
+}

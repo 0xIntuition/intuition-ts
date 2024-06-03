@@ -22,7 +22,7 @@ binaries:
 modules:
   - name: map_events
     kind: map
-    initialBlock: 14260785
+    initialBlock: 1
     inputs:
       - source: sf.ethereum.type.v2.Block
     output:
@@ -30,4 +30,4 @@ modules:
 
 
 
-network: mainnet
+# network: mainnet

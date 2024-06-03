@@ -11,11 +11,11 @@ endif
 
 .PHONY: run
 run: build
-	substreams -e base.substreams.pinax.network:443 run substreams.yaml $(if $(MODULE),$(MODULE),map_events) $(if $(START_BLOCK),-s $(START_BLOCK)) $(if $(STOP_BLOCK),-t $(STOP_BLOCK))
+	substreams -e localhost:9000 run --plaintext substreams.yaml $(if $(MODULE),$(MODULE),map_events) $(if $(START_BLOCK),-s $(START_BLOCK)) $(if $(STOP_BLOCK),-t $(STOP_BLOCK))
 
 .PHONY: gui
 gui: build
-	substreams -e base.substreams.pinax.network:443 gui substreams.yaml $(if $(MODULE),$(MODULE),map_events) $(if $(START_BLOCK),-s $(START_BLOCK)) $(if $(STOP_BLOCK),-t $(STOP_BLOCK))
+	substreams -e localhost:9000 gui --plaintext substreams.yaml $(if $(MODULE),$(MODULE),map_events) $(if $(START_BLOCK),-s $(START_BLOCK)) $(if $(STOP_BLOCK),-t $(STOP_BLOCK))
 
 .PHONY: protogen
 protogen:

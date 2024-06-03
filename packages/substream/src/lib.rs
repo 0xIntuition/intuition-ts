@@ -11,7 +11,7 @@ use num_traits::cast::ToPrimitive;
 
 substreams_ethereum::init!();
 
-const CONTRACT: [u8; 20] = hex!("73Edf2A6Aca5AC52041D1D14deB3157A33b9Ab6d");
+const CONTRACT: [u8; 20] = hex!("04056c43d0498b22f7a0c60d4c3584fb5fa881cc");
 
 fn map_hello_events(blk: &eth::Block, events: &mut contract::Events) {
     events.atom_createds.append(

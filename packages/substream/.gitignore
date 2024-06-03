@@ -1,2 +1,5 @@
 target
+data
+.DS_Store
+
 replay.log
