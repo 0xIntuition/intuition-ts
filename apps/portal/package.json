@@ -16,7 +16,7 @@
     "directory": "apps/portal"
   },
   "dependencies": {
-    "@0xintuition/1ui": "0.2.0",
+    "@0xintuition/1ui": "0.1.0",
     "@0xintuition/api": "0.1.1",
     "@privy-io/react-auth": "^1.60.7",
     "@privy-io/server-auth": "^1.7.3",
