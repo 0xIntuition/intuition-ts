@@ -1,0 +1,36 @@
+import { Button } from '@components'
+import { Canvas, Controls, Meta, Source, Title } from '@storybook/blocks'
+
+import * as Stories from './Switch.stories'
+
+<Meta of={Stories} />
+
+<Title />
+
+#### A control that allows the user to toggle between checked and not checked.
+
+<Button
+  variant="accent"
+  onClick={() =>
+    window.open(
+      'https://www.radix-ui.com/primitives/docs/components/switch#api-reference',
+      '_blank',
+    )
+  }
+>
+  {'API Reference'}
+</Button>
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { Switch } from '@0xintuition/1ui'
+
+<div>
+  <Switch id="airplane-mode" />
+  <Label htmlFor="airplane-mode">Airplane Mode</Label>
+</div>
+`} />
+
+<Canvas of={Stories.BasicUsage} sourceState="none" />
