@@ -64,10 +64,10 @@ jobs:
           folder: build/storybook/1ui
 
       - name: Bump package versions
-        run: npx nx release version --verbose --dry-run --first-release --git-commit
+        run: npx nx release version --git-commit --verbose
 
       - name: Publish all packages to npm
-        run: npx nx release publish --verbose --dry-run --first-release
+        run: npx nx release publish --dry-run --first-release --verbose
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
           NPM_CONFIG_PROVENANCE: true

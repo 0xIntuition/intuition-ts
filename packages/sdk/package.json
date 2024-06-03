@@ -1,6 +1,6 @@
 {
   "name": "@0xintuition/sdk",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "main": "dist/index.js",
   "exports": {
     ".": "./dist/index.js"
@@ -19,7 +19,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@0xintuition/api": "workspace:^"
+    "@0xintuition/api": "0.1.1"
   },
   "devDependencies": {
     "typescript": "^5.4.5",
