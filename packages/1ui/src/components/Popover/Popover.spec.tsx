@@ -30,7 +30,7 @@ describe('Popover', () => {
           type="button"
         />
         <button
-          class="flex items-center font-medium border-solid border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted shadow-md-subtle bg-primary text-primary-foreground border-primary hover:bg-primary/80 rounded-full px-4 py-2 gap-3 text-base"
+          class="flex items-center font-medium border-solid border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted bg-primary text-primary-foreground border-primary hover:bg-primary/80 rounded-full shadow-md-subtle px-4 py-2 gap-3 text-base"
         >
           Open popover
         </button>
