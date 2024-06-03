@@ -5,6 +5,25 @@ services:
       context: .
     ports:
       - '8545:8545'
+  firehose:
+    image: ghcr.io/streamingfast/firehose-ethereum
+    ports:
+      - '9000:9000' # Substreams tier 1 gRPC port
+    volumes:
+      - ./data:/data
+    command:
+      - start
+      - reader-node,merger,relayer,firehose,substreams-tier1,substreams-tier2
+      - --data-dir=/data
+      - --config-file=
+      - --log-format=text
+      - --log-to-file=false
+      - --common-first-streamable-block=1
+      - --reader-node-path=fireeth
+      - --caeiai
+      - --reader-node-arguments=tools poller generic-evm http://anvil:8545 0 --data-dir=/data
+      # - --substreams-tier1-block-type=sf.ethereum.type.v2.Block
+      - --substreams-tier1-grpc-listen-addr=:9000
   graph-node:
     image: graphprotocol/graph-node
     ports:

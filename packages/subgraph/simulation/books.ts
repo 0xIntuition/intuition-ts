@@ -4,7 +4,7 @@ import { Book, WithContext } from 'schema-dts'
 import { ipfs } from './ipfs'
 
 async function main() {
-  const bookCount = 5
+  const bookCount = 500
 
   for (let i = 1; i < bookCount; i++) {
     const user = await getIntuition(i)
