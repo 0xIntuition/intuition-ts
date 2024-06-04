@@ -45,7 +45,7 @@ export async function getIntuition(accountIndex: number) {
   // Faucet
   const hash = await adminClient.sendTransaction({
     account: ADMIN,
-    value: parseEther('0.1'),
+    value: parseEther('1'),
     to: account.address,
   })
 
@@ -53,7 +53,7 @@ export async function getIntuition(accountIndex: number) {
 
   const wallet = createWalletClient({
     chain: local,
-    transport: http(),
+    transport: http(local.rpcUrls.default.http[0], { batch: true }),
     account,
   })
 

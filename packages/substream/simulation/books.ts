@@ -6,9 +6,8 @@ import { ipfs } from './lib/ipfs'
 async function main() {
   const bookCount = 500
 
+  const user = await getIntuition(1)
   for (let i = 1; i < bookCount; i++) {
-    const user = await getIntuition(i)
-
     const book: WithContext<Book> = {
       '@context': 'https://schema.org',
       '@type': 'Book',

@@ -4,7 +4,7 @@ services:
     ports:
       - '8545:8545'
     entrypoint: sh /root/init-script.sh
-    command: '--dev --http --http.api=eth,web3,net --http.port=8545 --http.vhosts=* --http.addr=0.0.0.0 --http.corsdomain="https://remix.ethereum.org" --datadir=/data --password=/root/password.txt'
+    command: '--dev --dev.period=2 --cache=8192 --http --http.api=eth,web3,net --http.port=8545 --http.vhosts=* --http.addr=0.0.0.0 --http.corsdomain="https://remix.ethereum.org" --datadir=/data --password=/root/password.txt'
     volumes:
       - ./data:/data
       - ./geth/genesis.json:/config/genesis.json
@@ -38,3 +38,5 @@ services:
       - --reader-node-path=fireeth
       - --reader-node-arguments=tools poller generic-evm http://geth:8545 0 --data-dir=/data
       - --substreams-tier1-grpc-listen-addr=:9000
+      - --substreams-state-bundle-size=2
+      - --merger-time-between-store-pruning=1s

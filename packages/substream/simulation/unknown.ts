@@ -1,16 +1,20 @@
-import { getIntuition } from './utils'
+import { toHex } from 'viem'
+import { getIntuition } from './lib/utils'
 import { faker } from '@faker-js/faker'
 
 async function main() {
-  const count = 5
+  const count = 500
 
+  const user = await getIntuition(0)
+  const costWithDeposit = await user.multivault.getAtomCost()
   for (let i = 1; i < count; i++) {
-    const user = await getIntuition(i)
+    const uri = faker.lorem.words(3)
 
-    const uri = faker.lorem.words(5)
-    const atom = await user.multivault.createAtom(uri)
+    const hash = await user.multivault.contract.write.createAtom([toHex(uri)], {
+      value: costWithDeposit,
+    })
 
-    console.log(`Created atom: ${atom.vaultId} ${uri} `)
+    console.log(`Created atom: ${hash} ${uri} `)
   }
 }
 

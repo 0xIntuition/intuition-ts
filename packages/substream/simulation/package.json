@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "profiles": "tsx profiles.ts",
+    "unknown": "tsx unknown.ts",
     "books": "tsx books.ts"
   },
   "keywords": [],
