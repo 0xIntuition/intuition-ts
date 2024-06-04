@@ -53,7 +53,7 @@ describe('RadioGroup', () => {
               </span>
             </button>
             <label
-              class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              class="text-base font-normal leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
               for="option-one"
             >
               Option One
@@ -74,7 +74,7 @@ describe('RadioGroup', () => {
               value="option-two"
             />
             <label
-              class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              class="text-base font-normal leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
               for="option-two"
             >
               Option Two

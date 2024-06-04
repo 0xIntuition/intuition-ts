@@ -1,0 +1,34 @@
+import { Canvas, Controls, Meta, Source, Title } from '@storybook/blocks'
+
+import { Button } from '..'
+
+import * as Stories from './Label.stories'
+
+<Meta of={Stories} />
+
+<Title />
+
+#### Renders an accessible label associated with controls.
+
+<Button
+  variant="accent"
+  onClick={() =>
+    window.open(
+      'https://www.radix-ui.com/primitives/docs/components/label#api-reference',
+      '_blank',
+    )
+  }
+>
+  {'API Reference'}
+</Button>
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { Label } from '@0xintuition/1ui'
+
+<Label htmlFor="email">Your email address</Label>
+`} />
+
+<Canvas of={Stories.BasicUsage} sourceState="none" />
