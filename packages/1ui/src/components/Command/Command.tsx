@@ -3,7 +3,7 @@ import * as React from 'react'
 import { Dialog, DialogContent } from '@components/Dialog'
 import { Icon } from '@components/Icon'
 import { type DialogProps } from '@radix-ui/react-dialog'
-import { cn } from '@styles'
+import { cn } from '@ui-styles'
 import { Command as CommandPrimitive } from 'cmdk'
 
 const Command = React.forwardRef<

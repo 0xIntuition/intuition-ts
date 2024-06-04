@@ -3,14 +3,6 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "packages/1ui/src",
   "projectType": "library",
-  "release": {
-    "version": {
-      "generatorOptions": {
-        "packageRoot": "dist/{projectRoot}",
-        "currentVersionResolver": "git-tag"
-      }
-    }
-  },
   "tags": [],
   "targets": {
     "build": {
@@ -40,7 +32,7 @@
       "executor": "@nx/storybook:build",
       "outputs": ["{options.outputDir}"],
       "options": {
-        "outputDir": "dist/storybook/1ui",
+        "outputDir": "build/storybook/1ui",
         "configDir": "packages/1ui/.storybook"
       },
       "configurations": {

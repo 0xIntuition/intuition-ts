@@ -790,5 +790,9 @@
         fill="transparent"
       />
     </symbol>
+    <!-- checkmark -->
+    <symbol id="checkmark" viewBox="0 0 24 24">
+      <path d="M2.75 15.0938L9 20.25L21.25 3.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="square"/>
+    </symbol>
   </defs>
 </svg>

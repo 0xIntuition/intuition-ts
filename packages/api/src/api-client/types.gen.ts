@@ -40,6 +40,7 @@ export type ActivityPresenter = {
   timestamp: string
   total_assets: string
   total_shares: string
+  transaction_hash?: string | null
   value: string
   vault_assets: string
   vault_balance: string
@@ -54,6 +55,7 @@ export type ActivityQuery = PaginatedRequest &
     creator?: Identifier | null
     eventType?: Event | null
     fromAddress?: string | null
+    transactionHash?: string | null
     vaultId: string
   }
 
@@ -202,6 +204,13 @@ export type CreateTriple = {
   object_id: string
   predicate_id: string
   subject_id: string
+}
+
+export type CreateWebhook = {
+  address: string
+  block_hash?: string | null
+  deactivate_old?: boolean
+  url: string
 }
 
 export type CreatorQuery = {
@@ -387,6 +396,7 @@ export type IdentityPresenter = {
   identity_hash: string
   identity_id: string
   image?: string | null
+  is_contract: boolean
   is_user: boolean
   num_positions: number
   predicate: boolean
@@ -928,6 +938,112 @@ export const VecComparators = {
   NOT_IN: 'notIn',
 } as const
 
+export type AlchemyWebhookData = {
+  requestBody: Blob | File
+}
+
+export type AlchemyWebhookResponse = unknown
+
+export type SearchData = {
+  blockHash?: string | null
+  blockNumber: string
+  contract?: string | null
+  creator?: Identifier | null
+  eventType?: Event | null
+  fromAddress?: string | null
+  paging: PaginatedRequest
+  sort: IdentitySort
+  transactionHash?: string | null
+  vaultId: string
+}
+
+export type SearchResponse = {
+  admin?: string | null
+  atom_cost: string
+  atom_creation_fee: string
+  block_hash: string
+  block_number: string
+  contract: string
+  created_at: string
+  cumulative_gas_used: string
+  effective_gas_price: string
+  entry_fee: string
+  event_type: Event
+  exit_fee: string
+  fee_denominator: string
+  from_address: string
+  gas: string
+  gas_price: string
+  gas_used: string
+  id: string
+  input_data?: InputData | null
+  logs?: Array<LogType> | null
+  max_fee_per_gas: string
+  min_deposit: string
+  min_share: string
+  net_user_assets: string
+  protocol_fee: string
+  protocol_fee_paid: string
+  protocol_vault?: string | null
+  raw_input_data: string
+  share_price: string
+  timestamp: string
+  total_assets: string
+  total_shares: string
+  transaction_hash?: string | null
+  value: string
+  vault_assets: string
+  vault_balance: string
+  vault_id: string
+}
+
+export type GetActivityByIdData = {
+  /**
+   * Activity sql id
+   */
+  id: Identifier
+}
+
+export type GetActivityByIdResponse = {
+  admin?: string | null
+  atom_cost: string
+  atom_creation_fee: string
+  block_hash: string
+  block_number: string
+  contract: string
+  created_at: string
+  cumulative_gas_used: string
+  effective_gas_price: string
+  entry_fee: string
+  event_type: Event
+  exit_fee: string
+  fee_denominator: string
+  from_address: string
+  gas: string
+  gas_price: string
+  gas_used: string
+  id: string
+  input_data?: InputData | null
+  logs?: Array<LogType> | null
+  max_fee_per_gas: string
+  min_deposit: string
+  min_share: string
+  net_user_assets: string
+  protocol_fee: string
+  protocol_fee_paid: string
+  protocol_vault?: string | null
+  raw_input_data: string
+  share_price: string
+  timestamp: string
+  total_assets: string
+  total_shares: string
+  transaction_hash?: string | null
+  value: string
+  vault_assets: string
+  vault_balance: string
+  vault_id: string
+}
+
 export type AuthData = {
   requestBody: DidQuery
 }
@@ -993,6 +1109,13 @@ export type CreateClaimResponse = {
   vault_id?: string
 }
 
+export type GetClaimByIdData = {
+  /**
+   * Claim sql id or vault number
+   */
+  id: Identifier
+}
+
 export type GetClaimByIdResponse = {
   against_assets_sum: string
   against_conviction_price: string
@@ -1020,6 +1143,10 @@ export type GetClaimByIdResponse = {
 }
 
 export type UpdateClaimData = {
+  /**
+   * Claim sql id
+   */
+  id: string
   requestBody: UpdateClaim
 }
 
@@ -1049,6 +1176,28 @@ export type UpdateClaimResponse = {
   vault_id?: string
 }
 
+export type SearchClaimsData = {
+  againstUser?: Identifier | null
+  counterVault?: Identifier | null
+  creator?: Identifier | null
+  displayName?: string | null
+  forUser?: Identifier | null
+  identity?: Identifier | null
+  object?: Identifier | null
+  paging: PaginatedRequest
+  predicate?: Identifier | null
+  status?: Status | null
+  subject?: Identifier | null
+  vault?: Identifier | null
+}
+
+export type SearchClaimsResponse = {
+  data: Array<ClaimPresenter>
+  limit: number
+  page: number
+  total: number
+}
+
 export type GetIdentitiesData = {
   paging: PaginatedRequest
   sort: IdentitySort
@@ -1063,46 +1212,11 @@ export type GetIdentitiesResponse = {
   total: number
 }
 
-export type GetIdentityByIdData = {
-  /**
-   * sql id
-   */
-  id: Identifier
-}
-
-export type GetIdentityByIdResponse = {
-  asset_delta: string
-  assets_sum: string
-  contract: string
-  conviction_price: string
-  conviction_price_delta: string
-  conviction_sum: string
-  corpora_id?: string | null
-  created_at: string
-  creator?: UserPresenter | null
-  creator_address: string
-  creator_id?: string | null
-  description?: string | null
-  display_name: string
-  external_reference?: string | null
-  id: string
-  identity_hash: string
-  identity_id: string
-  image?: string | null
-  is_user: boolean
-  num_positions: number
-  predicate: boolean
-  semantic?: string | null
-  status: Status
-  updated_at: string
-  user_asset_delta: string
-  user_assets: string
-  user_conviction: string
-  vault_id: string
-  vault_uuid?: string | null
-}
-
 export type UpdateIdentityData = {
+  /**
+   * Identity sql id
+   */
+  id: string
   requestBody: {
     creator?: string | null
     creator_uuid?: string | null
@@ -1130,6 +1244,7 @@ export type UpdateIdentityResponse = {
   identity_hash: string
   identity_id: string
   image?: string | null
+  is_contract: boolean
   is_user: boolean
   predicate: boolean
   semantic?: string | null
@@ -1150,6 +1265,7 @@ export type CreateIdentityData = {
     identity_hash?: string | null
     identity_id?: IdentityId | null
     image?: InputFile | null
+    is_contract?: boolean
     is_user?: boolean
     predicate?: boolean
     vault_id?: Identifier | null
@@ -1176,6 +1292,47 @@ export type CreateIdentityResponse = {
   identity_hash: string
   identity_id: string
   image?: string | null
+  is_contract: boolean
+  is_user: boolean
+  num_positions: number
+  predicate: boolean
+  semantic?: string | null
+  status: Status
+  updated_at: string
+  user_asset_delta: string
+  user_assets: string
+  user_conviction: string
+  vault_id: string
+  vault_uuid?: string | null
+}
+
+export type GetIdentityByIdData = {
+  /**
+   * sql id,identity_id string, or vault number
+   */
+  identifier: Identifier
+}
+
+export type GetIdentityByIdResponse = {
+  asset_delta: string
+  assets_sum: string
+  contract: string
+  conviction_price: string
+  conviction_price_delta: string
+  conviction_sum: string
+  corpora_id?: string | null
+  created_at: string
+  creator?: UserPresenter | null
+  creator_address: string
+  creator_id?: string | null
+  description?: string | null
+  display_name: string
+  external_reference?: string | null
+  id: string
+  identity_hash: string
+  identity_id: string
+  image?: string | null
+  is_contract: boolean
   is_user: boolean
   num_positions: number
   predicate: boolean
@@ -1191,9 +1348,12 @@ export type CreateIdentityResponse = {
 
 export type SearchIdentityData = {
   creator?: Identifier | null
+  description?: string | null
   displayName?: string | null
   identityId?: IdentityId | null
+  isContract?: boolean | null
   isUser?: boolean | null
+  linkedAccountUsername?: string | null
   paging: PaginatedRequest
   predicate?: boolean | null
   sort: IdentitySort
@@ -1214,6 +1374,119 @@ export type GetIdentityPositionsResponse = {
   limit: number
   page: number
   total: number
+}
+
+export type GetLinkedAccountsData = {
+  accountType?: string | null
+  active?: boolean
+  address?: string | null
+  chainType?: string | null
+  connectorType?: string | null
+  paging: PaginatedRequest
+  privyId?: string | null
+  sort: LinkedAccountSort
+  userId?: string | null
+  walletClient?: string | null
+  walletClientType?: string | null
+}
+
+export type GetLinkedAccountsResponse = {
+  data: Array<LinkedAccountPresenter>
+  limit: number
+  page: number
+  total: number
+}
+
+export type CreateLinkedAccountData = {
+  requestBody: NewLinkedAccount
+}
+
+export type CreateLinkedAccountResponse = {
+  account_type: string
+  active?: boolean
+  add_points?: boolean
+  address?: string | null
+  chain_type?: string | null
+  connector_type?: string | null
+  link_id: string
+  privy_id?: string | null
+  user_id: string
+  verified_at: string
+  wallet_client?: string | null
+  wallet_client_type?: string | null
+}
+
+export type GetLinkedAccountByIdData = {
+  /**
+   * LinkedAccount sql id or link id str
+   */
+  identifier: Identifier
+}
+
+export type GetLinkedAccountByIdResponse = {
+  account_type?: string | null
+  active?: boolean
+  address?: string | null
+  chain_type?: string | null
+  connector_type?: string | null
+  created_at: string
+  id: string
+  link_id: string
+  privy_id?: string | null
+  total?: number | null
+  updated_at: string
+  user_id: string
+  verified_at: string
+  wallet_client?: string | null
+  wallet_client_type?: string | null
+}
+
+export type ActivateLinkedAccountData = {
+  /**
+   * sql id or link id str
+   */
+  identifier: Identifier
+}
+
+export type ActivateLinkedAccountResponse = {
+  active?: boolean
+  address?: string | null
+  chain_type?: string | null
+  connector_type?: string | null
+  created_at: string
+  id: string
+  link_id: string
+  privy_id?: string | null
+  type: string
+  updated_at: string
+  user_id: string
+  verified_at: string
+  wallet_client?: string | null
+  wallet_client_type?: string | null
+}
+
+export type DeactivateLinkedAccountData = {
+  /**
+   * LinkedAccount sql id or link id str
+   */
+  identifier: Identifier
+}
+
+export type DeactivateLinkedAccountResponse = {
+  active?: boolean
+  address?: string | null
+  chain_type?: string | null
+  connector_type?: string | null
+  created_at: string
+  id: string
+  link_id: string
+  privy_id?: string | null
+  type: string
+  updated_at: string
+  user_id: string
+  verified_at: string
+  wallet_client?: string | null
+  wallet_client_type?: string | null
 }
 
 export type CreatePositionData = {
@@ -1238,6 +1511,13 @@ export type CreatePositionResponse = {
   vault_uuid?: string | null
 }
 
+export type GetPositionByIdData = {
+  /**
+   * Position sql id or vault number
+   */
+  id: Identifier
+}
+
 export type GetPositionByIdResponse = {
   assets: string
   contract: string
@@ -1257,6 +1537,10 @@ export type GetPositionByIdResponse = {
 }
 
 export type UpdatePositionData = {
+  /**
+   * Position sql id
+   */
+  id: string
   requestBody: UpdatePosition
 }
 
@@ -1279,11 +1563,14 @@ export type UpdatePositionResponse = {
 }
 
 export type SearchPositionsData = {
+  claim?: Identifier | null
   conviction?: number | null
   creator?: Identifier | null
+  identity?: Identifier | null
   paging: PaginatedRequest
   sort: PositionSort
   status?: Status | null
+  vault?: Identifier | null
   vaultUuid?: string | null
 }
 
@@ -1331,7 +1618,33 @@ export type CreateUserResponse = {
   wallet: string
 }
 
+export type GetUserByIdPublicData = {
+  /**
+   * User sql id
+   */
+  id: string
+}
+
+export type GetUserByIdPublicResponse = {
+  api_key?: string | null
+  created_at: string
+  did?: string | null
+  display_name?: string | null
+  ens_name?: string | null
+  id: string
+  image?: string | null
+  last_login?: string | null
+  privy_id?: string | null
+  role: Role
+  updated_at: string
+  wallet: string
+}
+
 export type UpdateUserData = {
+  /**
+   * User sql id
+   */
+  id: string
   requestBody: UpsertUser
 }
 
@@ -1372,6 +1685,72 @@ export type DeleteUserResponse = {
   wallet: string
 }
 
+export type UpdateUserEnsData = {
+  /**
+   * User sql id or wallet
+   */
+  id: Identifier
+}
+
+export type UpdateUserEnsResponse = {
+  api_key?: string | null
+  created_at: string
+  did?: string | null
+  display_name?: string | null
+  ens_name?: string | null
+  id: string
+  image?: string | null
+  last_login?: string | null
+  privy_id?: string | null
+  role: Role
+  updated_at: string
+  wallet: string
+}
+
+export type GetLinkedAccountsByUserData = {
+  /**
+   * User sql id
+   */
+  id: string
+}
+
+export type GetLinkedAccountsByUserResponse = {
+  data: Array<LinkedAccountPresenter>
+  limit: number
+  page: number
+  total: number
+}
+
+export type UpdateUserPointsData = {
+  /**
+   * User sql id
+   */
+  id: string
+  requestBody: UpsertUser
+}
+
+export type UpdateUserPointsResponse = {
+  api_key?: string | null
+  created_at: string
+  did?: string | null
+  display_name?: string | null
+  ens_name?: string | null
+  id: string
+  image?: string | null
+  last_login?: string | null
+  privy_id?: string | null
+  role: Role
+  updated_at: string
+  wallet: string
+}
+
+export type GetUserByIdData = {
+  /**
+   * User sql id
+   */
+  id: string
+}
+
 export type GetUserByIdResponse = {
   api_key?: string | null
   created_at: string
@@ -1385,6 +1764,13 @@ export type GetUserByIdResponse = {
   role: Role
   updated_at: string
   wallet: string
+}
+
+export type GetUserTotalsData = {
+  /**
+   * User sql id
+   */
+  id: string
 }
 
 export type GetUserTotalsResponse = {
@@ -1443,6 +1829,13 @@ export type GetAllUsersTotalsResponse = {
   total: number
 }
 
+export type GetUserByWalletPublicData = {
+  /**
+   * User wallet
+   */
+  wallet: string
+}
+
 export type GetUserByWalletPublicResponse = {
   api_key?: string | null
   created_at: string
@@ -1455,6 +1848,13 @@ export type GetUserByWalletPublicResponse = {
   privy_id?: string | null
   role: Role
   updated_at: string
+  wallet: string
+}
+
+export type GetUserByWalletData = {
+  /**
+   * User wallet
+   */
   wallet: string
 }
 
@@ -1473,7 +1873,140 @@ export type GetUserByWalletResponse = {
   wallet: string
 }
 
+export type AddWebhookData = {
+  requestBody: CreateWebhook
+}
+
+export type AddWebhookResponse = unknown
+
 export type $OpenApiTs = {
+  '/Alchemy': {
+    post: {
+      req: {
+        requestBody: Blob | File
+      }
+      res: {
+        /**
+         * Receive message from Alchemy
+         */
+        200: unknown
+      }
+    }
+  }
+  '/activities': {
+    get: {
+      req: {
+        blockHash?: string | null
+        blockNumber: string
+        contract?: string | null
+        creator?: Identifier | null
+        eventType?: Event | null
+        fromAddress?: string | null
+        paging: PaginatedRequest
+        sort: IdentitySort
+        transactionHash?: string | null
+        vaultId: string
+      }
+      res: {
+        /**
+         * Search activities in paginated list
+         */
+        200: {
+          admin?: string | null
+          atom_cost: string
+          atom_creation_fee: string
+          block_hash: string
+          block_number: string
+          contract: string
+          created_at: string
+          cumulative_gas_used: string
+          effective_gas_price: string
+          entry_fee: string
+          event_type: Event
+          exit_fee: string
+          fee_denominator: string
+          from_address: string
+          gas: string
+          gas_price: string
+          gas_used: string
+          id: string
+          input_data?: InputData | null
+          logs?: Array<LogType> | null
+          max_fee_per_gas: string
+          min_deposit: string
+          min_share: string
+          net_user_assets: string
+          protocol_fee: string
+          protocol_fee_paid: string
+          protocol_vault?: string | null
+          raw_input_data: string
+          share_price: string
+          timestamp: string
+          total_assets: string
+          total_shares: string
+          transaction_hash?: string | null
+          value: string
+          vault_assets: string
+          vault_balance: string
+          vault_id: string
+        }
+      }
+    }
+  }
+  '/activities/:id': {
+    get: {
+      req: {
+        /**
+         * Activity sql id
+         */
+        id: Identifier
+      }
+      res: {
+        /**
+         * Get single activity by id
+         */
+        200: {
+          admin?: string | null
+          atom_cost: string
+          atom_creation_fee: string
+          block_hash: string
+          block_number: string
+          contract: string
+          created_at: string
+          cumulative_gas_used: string
+          effective_gas_price: string
+          entry_fee: string
+          event_type: Event
+          exit_fee: string
+          fee_denominator: string
+          from_address: string
+          gas: string
+          gas_price: string
+          gas_used: string
+          id: string
+          input_data?: InputData | null
+          logs?: Array<LogType> | null
+          max_fee_per_gas: string
+          min_deposit: string
+          min_share: string
+          net_user_assets: string
+          protocol_fee: string
+          protocol_fee_paid: string
+          protocol_vault?: string | null
+          raw_input_data: string
+          share_price: string
+          timestamp: string
+          total_assets: string
+          total_shares: string
+          transaction_hash?: string | null
+          value: string
+          vault_assets: string
+          vault_balance: string
+          vault_id: string
+        }
+      }
+    }
+  }
   '/auth': {
     post: {
       req: {
@@ -1584,6 +2117,12 @@ export type $OpenApiTs = {
   }
   '/claims/:id': {
     get: {
+      req: {
+        /**
+         * Claim sql id or vault number
+         */
+        id: Identifier
+      }
       res: {
         /**
          * Get single claim by id
@@ -1617,6 +2156,10 @@ export type $OpenApiTs = {
     }
     put: {
       req: {
+        /**
+         * Claim sql id
+         */
+        id: string
         requestBody: UpdateClaim
       }
       res: {
@@ -1651,6 +2194,35 @@ export type $OpenApiTs = {
       }
     }
   }
+  '/claims/search': {
+    get: {
+      req: {
+        againstUser?: Identifier | null
+        counterVault?: Identifier | null
+        creator?: Identifier | null
+        displayName?: string | null
+        forUser?: Identifier | null
+        identity?: Identifier | null
+        object?: Identifier | null
+        paging: PaginatedRequest
+        predicate?: Identifier | null
+        status?: Status | null
+        subject?: Identifier | null
+        vault?: Identifier | null
+      }
+      res: {
+        /**
+         * Search claims in paginated list
+         */
+        200: {
+          data: Array<ClaimPresenter>
+          limit: number
+          page: number
+          total: number
+        }
+      }
+    }
+  }
   '/identities': {
     get: {
       req: {
@@ -1673,52 +2245,12 @@ export type $OpenApiTs = {
     }
   }
   '/identities/:id': {
-    get: {
-      req: {
-        /**
-         * sql id
-         */
-        id: Identifier
-      }
-      res: {
-        /**
-         * Get single identity by id
-         */
-        200: {
-          asset_delta: string
-          assets_sum: string
-          contract: string
-          conviction_price: string
-          conviction_price_delta: string
-          conviction_sum: string
-          corpora_id?: string | null
-          created_at: string
-          creator?: UserPresenter | null
-          creator_address: string
-          creator_id?: string | null
-          description?: string | null
-          display_name: string
-          external_reference?: string | null
-          id: string
-          identity_hash: string
-          identity_id: string
-          image?: string | null
-          is_user: boolean
-          num_positions: number
-          predicate: boolean
-          semantic?: string | null
-          status: Status
-          updated_at: string
-          user_asset_delta: string
-          user_assets: string
-          user_conviction: string
-          vault_id: string
-          vault_uuid?: string | null
-        }
-      }
-    }
     put: {
       req: {
+        /**
+         * Identity sql id
+         */
+        id: string
         requestBody: {
           creator?: string | null
           creator_uuid?: string | null
@@ -1749,6 +2281,7 @@ export type $OpenApiTs = {
           identity_hash: string
           identity_id: string
           image?: string | null
+          is_contract: boolean
           is_user: boolean
           predicate: boolean
           semantic?: string | null
@@ -1773,6 +2306,7 @@ export type $OpenApiTs = {
           identity_hash?: string | null
           identity_id?: IdentityId | null
           image?: InputFile | null
+          is_contract?: boolean
           is_user?: boolean
           predicate?: boolean
           vault_id?: Identifier | null
@@ -1802,6 +2336,54 @@ export type $OpenApiTs = {
           identity_hash: string
           identity_id: string
           image?: string | null
+          is_contract: boolean
+          is_user: boolean
+          num_positions: number
+          predicate: boolean
+          semantic?: string | null
+          status: Status
+          updated_at: string
+          user_asset_delta: string
+          user_assets: string
+          user_conviction: string
+          vault_id: string
+          vault_uuid?: string | null
+        }
+      }
+    }
+  }
+  '/identity/:id': {
+    get: {
+      req: {
+        /**
+         * sql id,identity_id string, or vault number
+         */
+        identifier: Identifier
+      }
+      res: {
+        /**
+         * Get single identity by id
+         */
+        200: {
+          asset_delta: string
+          assets_sum: string
+          contract: string
+          conviction_price: string
+          conviction_price_delta: string
+          conviction_sum: string
+          corpora_id?: string | null
+          created_at: string
+          creator?: UserPresenter | null
+          creator_address: string
+          creator_id?: string | null
+          description?: string | null
+          display_name: string
+          external_reference?: string | null
+          id: string
+          identity_hash: string
+          identity_id: string
+          image?: string | null
+          is_contract: boolean
           is_user: boolean
           num_positions: number
           predicate: boolean
@@ -1821,9 +2403,12 @@ export type $OpenApiTs = {
     get: {
       req: {
         creator?: Identifier | null
+        description?: string | null
         displayName?: string | null
         identityId?: IdentityId | null
+        isContract?: boolean | null
         isUser?: boolean | null
+        linkedAccountUsername?: string | null
         paging: PaginatedRequest
         predicate?: boolean | null
         sort: IdentitySort
@@ -1859,6 +2444,152 @@ export type $OpenApiTs = {
       }
     }
   }
+  '/linked_accounts': {
+    get: {
+      req: {
+        accountType?: string | null
+        active?: boolean
+        address?: string | null
+        chainType?: string | null
+        connectorType?: string | null
+        paging: PaginatedRequest
+        privyId?: string | null
+        sort: LinkedAccountSort
+        userId?: string | null
+        walletClient?: string | null
+        walletClientType?: string | null
+      }
+      res: {
+        /**
+         * Get all linked accounts in paginated list
+         */
+        200: {
+          data: Array<LinkedAccountPresenter>
+          limit: number
+          page: number
+          total: number
+        }
+      }
+    }
+    post: {
+      req: {
+        requestBody: NewLinkedAccount
+      }
+      res: {
+        /**
+         * Create a new LinkedAccount for a user
+         */
+        200: {
+          account_type: string
+          active?: boolean
+          add_points?: boolean
+          address?: string | null
+          chain_type?: string | null
+          connector_type?: string | null
+          link_id: string
+          privy_id?: string | null
+          user_id: string
+          verified_at: string
+          wallet_client?: string | null
+          wallet_client_type?: string | null
+        }
+      }
+    }
+  }
+  '/linked_accounts/:identifier': {
+    get: {
+      req: {
+        /**
+         * LinkedAccount sql id or link id str
+         */
+        identifier: Identifier
+      }
+      res: {
+        /**
+         * Get single linked account by id
+         */
+        200: {
+          account_type?: string | null
+          active?: boolean
+          address?: string | null
+          chain_type?: string | null
+          connector_type?: string | null
+          created_at: string
+          id: string
+          link_id: string
+          privy_id?: string | null
+          total?: number | null
+          updated_at: string
+          user_id: string
+          verified_at: string
+          wallet_client?: string | null
+          wallet_client_type?: string | null
+        }
+      }
+    }
+  }
+  '/linked_accounts/:identifier/activate': {
+    put: {
+      req: {
+        /**
+         * sql id or link id str
+         */
+        identifier: Identifier
+      }
+      res: {
+        /**
+         * Activate linked account
+         */
+        200: {
+          active?: boolean
+          address?: string | null
+          chain_type?: string | null
+          connector_type?: string | null
+          created_at: string
+          id: string
+          link_id: string
+          privy_id?: string | null
+          type: string
+          updated_at: string
+          user_id: string
+          verified_at: string
+          wallet_client?: string | null
+          wallet_client_type?: string | null
+        }
+      }
+    }
+  }
+  '/linked_accounts/:identifier/deactivate': {
+    put: {
+      req: {
+        /**
+         * LinkedAccount sql id or link id str
+         */
+        identifier: Identifier
+      }
+      res: {
+        /**
+         * Deactivate linked account
+         */
+        200: {
+          active?: boolean
+          address?: string | null
+          chain_type?: string | null
+          connector_type?: string | null
+          created_at: string
+          id: string
+          link_id: string
+          privy_id?: string | null
+          type: string
+          updated_at: string
+          user_id: string
+          verified_at: string
+          wallet_client?: string | null
+          wallet_client_type?: string | null
+        }
+      }
+    }
+  }
   '/positions': {
     post: {
       req: {
@@ -1890,6 +2621,12 @@ export type $OpenApiTs = {
   }
   '/positions/:id': {
     get: {
+      req: {
+        /**
+         * Position sql id or vault number
+         */
+        id: Identifier
+      }
       res: {
         /**
          * Get single position by id
@@ -1915,6 +2652,10 @@ export type $OpenApiTs = {
     }
     post: {
       req: {
+        /**
+         * Position sql id
+         */
+        id: string
         requestBody: UpdatePosition
       }
       res: {
@@ -1944,11 +2685,14 @@ export type $OpenApiTs = {
   '/positions/search': {
     get: {
       req: {
+        claim?: Identifier | null
         conviction?: number | null
         creator?: Identifier | null
+        identity?: Identifier | null
         paging: PaginatedRequest
         sort: PositionSort
         status?: Status | null
+        vault?: Identifier | null
         vaultUuid?: string | null
       }
       res: {
@@ -2028,8 +2772,39 @@ export type $OpenApiTs = {
     }
   }
   '/users/:id': {
+    get: {
+      req: {
+        /**
+         * User sql id
+         */
+        id: string
+      }
+      res: {
+        /**
+         * Get single user by id
+         */
+        200: {
+          api_key?: string | null
+          created_at: string
+          did?: string | null
+          display_name?: string | null
+          ens_name?: string | null
+          id: string
+          image?: string | null
+          last_login?: string | null
+          privy_id?: string | null
+          role: Role
+          updated_at: string
+          wallet: string
+        }
+      }
+    }
     put: {
       req: {
+        /**
+         * User sql id
+         */
+        id: string
         requestBody: UpsertUser
       }
       res: {
@@ -2080,8 +2855,94 @@ export type $OpenApiTs = {
       }
     }
   }
+  '/users/:id/ens': {
+    put: {
+      req: {
+        /**
+         * User sql id or wallet
+         */
+        id: Identifier
+      }
+      res: {
+        /**
+         * Update a users ens if present
+         */
+        200: {
+          api_key?: string | null
+          created_at: string
+          did?: string | null
+          display_name?: string | null
+          ens_name?: string | null
+          id: string
+          image?: string | null
+          last_login?: string | null
+          privy_id?: string | null
+          role: Role
+          updated_at: string
+          wallet: string
+        }
+      }
+    }
+  }
+  '/users/:id/linked_accounts': {
+    get: {
+      req: {
+        /**
+         * User sql id
+         */
+        id: string
+      }
+      res: {
+        /**
+         * Get linked accounts for user
+         */
+        200: {
+          data: Array<LinkedAccountPresenter>
+          limit: number
+          page: number
+          total: number
+        }
+      }
+    }
+  }
+  '/users/:id/points': {
+    put: {
+      req: {
+        /**
+         * User sql id
+         */
+        id: string
+        requestBody: UpsertUser
+      }
+      res: {
+        /**
+         * Add points for user
+         */
+        200: {
+          api_key?: string | null
+          created_at: string
+          did?: string | null
+          display_name?: string | null
+          ens_name?: string | null
+          id: string
+          image?: string | null
+          last_login?: string | null
+          privy_id?: string | null
+          role: Role
+          updated_at: string
+          wallet: string
+        }
+      }
+    }
+  }
   '/users/:id/private': {
     get: {
+      req: {
+        /**
+         * User sql id
+         */
+        id: string
+      }
       res: {
         /**
          * Get single user by id
@@ -2105,6 +2966,12 @@ export type $OpenApiTs = {
   }
   '/users/:id/totals': {
     get: {
+      req: {
+        /**
+         * User sql id
+         */
+        id: string
+      }
       res: {
         /**
          * Get total position values for user
@@ -2201,6 +3068,12 @@ export type $OpenApiTs = {
   }
   '/users/wallet/:wallet': {
     get: {
+      req: {
+        /**
+         * User wallet
+         */
+        wallet: string
+      }
       res: {
         /**
          * Get single user by id
@@ -2224,6 +3097,12 @@ export type $OpenApiTs = {
   }
   '/users/wallet/:wallet/private': {
     get: {
+      req: {
+        /**
+         * User wallet
+         */
+        wallet: string
+      }
       res: {
         /**
          * Get single user by id
@@ -2242,6 +3121,19 @@ export type $OpenApiTs = {
           updated_at: string
           wallet: string
         }
+      }
+    }
+  }
+  '/webhooks': {
+    post: {
+      req: {
+        requestBody: CreateWebhook
+      }
+      res: {
+        /**
+         * Add new alchemy webhook
+         */
+        200: unknown
       }
     }
   }

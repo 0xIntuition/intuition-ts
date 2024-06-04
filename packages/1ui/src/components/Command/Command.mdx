@@ -1,3 +1,4 @@
+import { Button } from '@components'
 import { Canvas, Controls, Meta, Source, Title } from '@storybook/blocks'
 
 import * as Stories from './Command.stories'
@@ -6,7 +7,14 @@ import * as Stories from './Command.stories'
 
 <Title />
 
-#### A short description goes here.
+#### Fast, composable, unstyled command menu for React.
+
+<Button
+  variant="accent"
+  onClick={() => window.open('https://cmdk.paco.me/', '_blank')}
+>
+  {'API Reference'}
+</Button>
 
 <Source
   dark
@@ -19,7 +27,8 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-  CommandSeparator, } from '@0xintuition/1ui'
+  CommandSeparator, 
+} from '@0xintuition/1ui'
 
 <Command>
   <CommandInput placeholder="Type a command or search..." />

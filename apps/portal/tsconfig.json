@@ -16,7 +16,8 @@
       "@server/*": ["app/.server/*"],
       "@client/*": ["app/.client/*"],
       "@middleware/*": ["app/middleware/*"]
-    }
+    },
+    "outDir": "../../dist/apps/portal",
   },
   "include": ["**/*.ts", "**/*.tsx", "tailwind.config.js"],
   "exclude": ["node_modules", "dist"]
