@@ -1,9 +1,10 @@
 use anyhow::{format_err, Context, Error};
 use futures03::StreamExt;
+use hex;
 use pb::sf::substreams::rpc::v2::{BlockScopedData, BlockUndoSignal};
 use pb::sf::substreams::v1::Package;
-
 use prost::Message;
+use rsmgclient::{ConnectParams, Connection, SSLMode};
 use std::{env, process::exit, sync::Arc};
 use substreams::SubstreamsEndpoint;
 use substreams_stream::{BlockResponse, SubstreamsStream};
@@ -48,6 +49,9 @@ async fn main() -> Result<(), Error> {
         block_range.1,
     );
 
+    // Connect to Memgraph
+    let mut connection = get_connection()?;
+
     loop {
         match stream.next().await {
             None => {
@@ -55,7 +59,7 @@ async fn main() -> Result<(), Error> {
                 break;
             }
             Some(Ok(BlockResponse::New(data))) => {
-                process_block_scoped_data(&data)?;
+                process_block_scoped_data(&data, &mut connection)?;
                 persist_cursor(data.cursor)?;
             }
             Some(Ok(BlockResponse::Undo(undo_signal))) => {
@@ -74,23 +78,61 @@ async fn main() -> Result<(), Error> {
     Ok(())
 }
 
-fn process_block_scoped_data(data: &BlockScopedData) -> Result<(), Error> {
+fn get_connection() -> Result<Connection, Error> {
+    let connect_params = ConnectParams {
+        host: Some(String::from("localhost")),
+        port: 7687,
+        sslmode: SSLMode::Disable,
+        ..Default::default()
+    };
+
+    let connection = Connection::connect(&connect_params);
+    match connection {
+        Ok(conn) => Ok(conn),
+        Err(err) => Err(format_err!("Failed to connect to Memgraph: {:?}", err)),
+    }
+}
+
+fn process_block_scoped_data(
+    data: &BlockScopedData,
+    connection: &mut Connection,
+) -> Result<(), Error> {
     let output = data.output.as_ref().unwrap().map_output.as_ref().unwrap();
 
-    // You can decode the actual Any type received using this code:
-    //
-    //     let value = GeneratedStructName::decode(output.value.as_slice())?;
-    //
-    // Where GeneratedStructName is the Rust code generated for the Protobuf representing
-    // your type, so you will need generate it using `substreams protogen` and import it from the
-    // `src/pb` folder.
+    let value = pb::contract::v1::Events::decode(output.value.as_slice())?;
 
-    println!(
-        "Block #{} - Payload {} ({} bytes)",
-        data.clock.as_ref().unwrap().number,
-        output.type_url.replace("type.googleapis.com/", ""),
-        output.value.len()
-    );
+    value.atom_createds.iter().for_each(|atom| {
+
+        let query = format!(
+            "MERGE (n:Atom {{id: '{vault_id}'}});",
+            vault_id = atom.vault_id.to_string(),
+        );
+        println!("{}", query);
+        connection.execute_without_results( query.as_str()).unwrap();
+
+        let query = format!(
+            "MERGE (n:Account {{id: '{creator}'}});",
+            creator = hex::encode(atom.creator.clone())
+        );
+        println!("{}", query);
+        connection.execute_without_results( query.as_str() ).unwrap();
+
+        if let Err(e) = connection.commit() {
+          println!("Error: {}", e);
+        }
+
+        let query = format!(
+            "MATCH (a:Atom {{id: '{vault_id}'}}),(b:Account {{id: '{creator}' }}) CREATE (b)-[r:CREATED]->(a);",
+            vault_id = atom.vault_id.to_string(),
+            creator = hex::encode(atom.creator.clone())
+        );
+        println!("{}", query);
+        connection.execute_without_results( query.as_str() ).unwrap();
+
+        if let Err(e) = connection.commit() {
+          println!("Error: {}", e);
+        }
+    });
 
     Ok(())
 }
