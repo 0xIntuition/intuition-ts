@@ -1,4 +1,4 @@
-import { ResizablePanel } from '@components/Resizable'
+import { ResizablePanel } from 'components/Resizable'
 
 export const SidebarLayoutContent = ({ ...props }) => {
   return (

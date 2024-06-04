@@ -5,8 +5,8 @@
     "baseUrl": "./src",
     "paths": {
       "@*": ["*"],
-      "@components": ["components/index"],
-      "@ui-styles": ["styles/index"]
+      "components": ["components/index"],
+      "ui-styles": ["styles/index"]
     },
     "outDir": "../../dist/packages/1ui"
   },

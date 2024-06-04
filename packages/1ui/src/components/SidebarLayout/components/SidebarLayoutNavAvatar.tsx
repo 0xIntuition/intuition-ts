@@ -1,13 +1,13 @@
-import { Avatar, AvatarFallback, AvatarImage } from '@components/Avatar'
-import { Button, buttonVariants } from '@components/Button'
-import { Text } from '@components/Text'
+import { type VariantProps } from 'class-variance-authority'
+import { Avatar, AvatarFallback, AvatarImage } from 'components/Avatar'
+import { Button, buttonVariants } from 'components/Button'
+import { Text } from 'components/Text'
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '@components/Tooltip'
-import { type VariantProps } from 'class-variance-authority'
+} from 'components/Tooltip'
 
 import { useSidebarLayoutContext } from './SidebarLayoutProvider'
 
