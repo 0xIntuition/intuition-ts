@@ -4,6 +4,6 @@
   "exclude": [],
   "compilerOptions": {
     "rootDir": "src",
-    "outDir": "../../dist/packages/protocol",
+    "outDir": "../../dist/packages/protocol"
   }
 }

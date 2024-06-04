@@ -4,6 +4,6 @@
   "compilerOptions": {
     "baseUrl": "./src",
     "rootDir": "src",
-    "outDir": "../../dist/packages/api",
+    "outDir": "../../dist/packages/api"
   }
 }
