@@ -1,0 +1,26 @@
+import { Canvas, Controls, Meta, Source, Title } from '@storybook/blocks'
+
+import { Button } from '..'
+
+import * as Stories from './Input.stories'
+
+<Meta of={Stories} />
+
+<Title />
+
+#### Displays a form input field or a component that looks like an input field.
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { Input } from '@0xintuition/1ui'
+
+<Input type="email" placeholder="Email" />
+`} />
+
+<Canvas of={Stories.BasicUsage} sourceState="none" />
+
+## Properties
+
+<Controls />
