@@ -1,8 +1,8 @@
 import React from 'react'
 
 import type { Meta, StoryObj } from '@storybook/react'
-import { Icon } from 'components/Icon'
 
+import { Icon } from '..'
 import { Button } from './Button'
 
 const meta: Meta<typeof Button> = {

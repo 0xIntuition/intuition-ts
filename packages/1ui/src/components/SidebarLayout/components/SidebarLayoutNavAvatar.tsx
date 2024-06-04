@@ -1,14 +1,17 @@
 import { type VariantProps } from 'class-variance-authority'
-import { Avatar, AvatarFallback, AvatarImage } from 'components/Avatar'
-import { Button, buttonVariants } from 'components/Button'
-import { Text } from 'components/Text'
+
 import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+  Button,
+  buttonVariants,
+  Text,
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from 'components/Tooltip'
-
+} from '..'
 import { useSidebarLayoutContext } from './SidebarLayoutProvider'
 
 export interface SidebarLayoutNavAvatarProps
