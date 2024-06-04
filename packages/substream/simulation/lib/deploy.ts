@@ -1,10 +1,16 @@
 import { type Address, parseEther, parseUnits } from 'viem'
-import { ADMIN, CONTRACT_ADDRESS } from './constants.js'
+import { ADMIN, CONTRACT_ADDRESS, MNEMONIC } from './constants.js'
 import { publicClient, adminClient } from './utils.js'
 import { bytecode } from './bytecode'
 import { abi, Multivault } from '@0xintuition/protocol'
+import { mnemonicToAccount } from 'viem/accounts'
+
+let initialized = false
 
 export async function getOrDeployAndInit(): Promise<Address> {
+  if (initialized) {
+    return CONTRACT_ADDRESS
+  }
   // Check if contract is already deployed and initialized
   const multivault = new Multivault(
     // @ts-ignore
@@ -17,7 +23,7 @@ export async function getOrDeployAndInit(): Promise<Address> {
       return CONTRACT_ADDRESS
     }
   } catch (e) {
-    console.log('Contract not found')
+    console.log('Contract not found. Deploying...')
   }
 
   // Deploy contract
@@ -27,12 +33,15 @@ export async function getOrDeployAndInit(): Promise<Address> {
     account: ADMIN,
   })
 
+  console.log(`Waiting for tx hash: ${hash}`)
   const receipt = await publicClient.waitForTransactionReceipt({
     hash,
   })
 
   const address = receipt.contractAddress!
 
+  console.log(`Contract deployed at: ${address}`)
+  console.log(`Initializing contract...`)
   const hash2 = await adminClient.writeContract({
     address,
     account: ADMIN,
@@ -72,8 +81,35 @@ export async function getOrDeployAndInit(): Promise<Address> {
     ],
   })
 
+  console.log(`Waiting for tx hash: ${hash2}`)
   await publicClient.waitForTransactionReceipt({
     hash: hash2,
   })
+
+  console.log(`Contract initialized at: ${address}`)
+
+  let hash3
+  let accounts = 400
+  for (let accountIndex = 0; accountIndex < accounts; accountIndex++) {
+    const account = mnemonicToAccount(MNEMONIC, { accountIndex })
+
+    // Faucet
+    console.log(
+      `${accountIndex}/${accounts} Sending 10 ETH to ${account.address}`,
+    )
+    hash3 = await adminClient.sendTransaction({
+      account: ADMIN,
+      value: parseEther('10'),
+      to: account.address,
+    })
+  }
+
+  console.log(`Waiting for tx hash: ${hash3}`)
+  await publicClient.waitForTransactionReceipt({
+    hash: hash3,
+  })
+  console.log(`Faucet completed`)
+
+  initialized = true
   return address
 }
