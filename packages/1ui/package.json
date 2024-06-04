@@ -1,6 +1,6 @@
 {
   "name": "@0xintuition/1ui",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Design system",
   "main": "src/index.ts",
   "scripts": {
@@ -18,11 +18,6 @@
     "directory": "packages/1ui"
   },
   "peerDependencies": {
-    "@storybook/manager-api": "^8.0.9",
-    "@storybook/react": "^8.0.9",
-    "@storybook/react-vite": "^8.0.9",
-    "@storybook/theming": "^8.0.9",
-    "autoprefixer": "^10.4.19",
     "react": "^18.2.0",
     "tailwindcss": "^3.4.3",
     "tsup": "^6.2.2",
@@ -51,6 +46,7 @@
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
+    "autoprefixer": "^10.4.19",
     "@storybook/addon-essentials": "^8.0.9",
     "@storybook/addon-interactions": "^8.0.9",
     "@storybook/addon-links": "^8.0.9",
@@ -66,7 +62,6 @@
     "@testing-library/react": "^15.0.7",
     "@types/node": "^20.12.7",
     "@types/react": "^18.2.20",
-    "autoprefixer": "^10.4.19",
     "jsdom": "~22.1.0",
     "postcss": "^8.4.38",
     "storybook": "^8.0.9",
