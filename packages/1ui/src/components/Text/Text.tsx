@@ -1,7 +1,8 @@
 import * as React from 'react'
 
 import { cva, type VariantProps } from 'class-variance-authority'
-import { cn } from 'ui-styles'
+
+import { cn } from '../../styles'
 
 const textVariants = cva('text-primary', {
   variants: {

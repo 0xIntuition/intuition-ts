@@ -4,7 +4,8 @@ import { type DialogProps } from '@radix-ui/react-dialog'
 import { Command as CommandPrimitive } from 'cmdk'
 import { Dialog, DialogContent } from 'components/Dialog'
 import { Icon } from 'components/Icon'
-import { cn } from 'ui-styles'
+
+import { cn } from '../../styles'
 
 const Command = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive>,
