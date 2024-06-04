@@ -1,0 +1,26 @@
+import { Canvas, Controls, Meta, Source, Title } from '@storybook/blocks'
+
+import { Button } from '..'
+
+import * as Stories from './Textarea.stories'
+
+<Meta of={Stories} />
+
+<Title />
+
+#### Displays a form textarea or a component that looks like a textarea.
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { Textarea } from '@0xintuition/1ui'
+
+<Textarea />
+`} />
+
+<Canvas of={Stories.BasicUsage} sourceState="none" />
+
+## Properties
+
+<Controls />
