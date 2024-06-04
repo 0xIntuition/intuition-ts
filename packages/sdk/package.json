@@ -22,7 +22,7 @@
     "directory": "packages/sdk"
   },
   "dependencies": {
-    "@0xintuition/api": "0.1.1"
+    "@0xintuition/api": "workspace:^"
   },
   "devDependencies": {
     "typescript": "^5.4.5",
