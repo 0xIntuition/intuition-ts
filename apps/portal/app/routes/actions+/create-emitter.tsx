@@ -1,4 +1,8 @@
-import { IdentitiesService, IdentityPresenter } from '@0xintuition/api'
+import {
+  ApiError,
+  IdentitiesService,
+  IdentityPresenter,
+} from '@0xintuition/api'
 
 import logger from '@lib/utils/logger'
 import { SessionContext } from '@middleware/session'
@@ -20,17 +24,25 @@ export const action: ActionFunction = async ({ request, context }) => {
     let attempts = 0
 
     do {
-      const response = await IdentitiesService.getIdentityById({
-        id: identity_id.toString(),
-      })
-      identity = response as IdentityPresenter
+      try {
+        const response = await IdentitiesService.getIdentityById({
+          identifier: identity_id.toString(),
+        })
+        identity = response as IdentityPresenter
+        await new Promise((resolve) => setTimeout(resolve, 5000))
+      } catch (error) {
+        if (error instanceof ApiError && error.status === 404) {
+          console.log('Record not found, retrying...')
+        } else {
+          throw error
+        }
+      }
       if (identity?.status === 'complete') break
-      await new Promise((resolve) => setTimeout(resolve, 5000))
       attempts++
     } while (attempts < 10)
 
     if (identity?.status !== 'complete') {
-      logger('Identity status not complete after 5 attempts')
+      logger('Identity status not complete after 10 attempts')
     }
 
     if (!eventEmitted) {

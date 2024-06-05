@@ -84,11 +84,14 @@ export function parseMessage(message: string) {
 export function getAuthHeaders(token?: string) {
   const headers: HeadersInit = {
     'Content-Type': 'application/json',
-    'x-api-key': process.env.API_KEY as string,
   }
 
   if (token) {
     headers['authorization'] = `Bearer ${token}`
+  }
+
+  if (!token) {
+    headers['x-api-key'] = process.env.API_KEY as string
   }
 
   return headers

@@ -7,7 +7,12 @@ import {
   AccordionTrigger,
   Button,
 } from '@0xintuition/1ui'
-import { IdentitiesService, IdentityPresenter, OpenAPI } from '@0xintuition/api'
+import {
+  ApiError,
+  IdentitiesService,
+  IdentityPresenter,
+  OpenAPI,
+} from '@0xintuition/api'
 
 import { PrivyVerifiedLinks } from '@client/privy-verified-links'
 import Toast from '@components/toast'
@@ -39,13 +44,25 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
   const user = session.get('user')
 
   logger('user', user)
-  if (!user?.details?.wallet.address) {
+  if (!user?.details?.wallet?.address) {
     return console.log('No user found in session')
   }
 
-  const userIdentity = await IdentitiesService.getIdentityById({
-    id: user?.details?.wallet?.address,
-  })
+  let userIdentity
+  try {
+    userIdentity = await IdentitiesService.getIdentityById({
+      id: user.details.wallet.address,
+    })
+  } catch (error: unknown) {
+    if (error instanceof ApiError) {
+      userIdentity = undefined
+      console.log(
+        `${error.name} - ${error.status}: ${error.message} ${error.url}`,
+      )
+    } else {
+      throw error
+    }
+  }
 
   logger('userIdentity', userIdentity)
   return json({ user, userIdentity })
@@ -198,6 +215,7 @@ export function CreateButton({ onSuccess }: CreateButtonWrapperProps) {
       offChainFetcher.data !== undefined
     ) {
       const responseData = offChainFetcher.data as OffChainFetcherData
+      console.log('responseData', responseData)
       if (responseData !== null) {
         if (createdIdentity !== undefined && responseData.identity) {
           const { identity_id } = responseData.identity
@@ -232,8 +250,8 @@ export function CreateButton({ onSuccess }: CreateButtonWrapperProps) {
       if (walletClient) {
         dispatch({ type: 'START_TRANSACTION' })
         const formData = new FormData()
-        formData.append('display_name', user?.details?.wallet?.address)
-        formData.append('identity_id', user?.details?.wallet?.address)
+        formData.append('display_name', walletClient.account.address)
+        formData.append('identity_id', walletClient.account.address)
         formData.append('description', 'test')
 
         for (const [key, value] of formData.entries()) {

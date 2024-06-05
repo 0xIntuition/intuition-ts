@@ -15,12 +15,12 @@ export function createSessionMiddleware(storage: SessionStorage) {
   const { getSession, commitSession } = storage
 
   return async ({ request, context, next }: MiddlewareFunctionArgs) => {
-    console.log('[MDL] Enter createSessionMiddleware')
+    // console.log('[MDL] Enter createSessionMiddleware')
     const session = await getSession(request.headers.get('Cookie'))
-    console.log(
-      '[Session Middleware] Initial session data:',
-      JSON.stringify(session.data),
-    )
+    // console.log(
+    //   '[Session Middleware] Initial session data:',
+    //   JSON.stringify(session.data),
+    // )
 
     type PropType = keyof typeof session
 
@@ -40,13 +40,13 @@ export function createSessionMiddleware(storage: SessionStorage) {
 
     const session$ = new Proxy(session, sessionProxy) as typeof session
     // set the session context
-    console.log('[MDL] Setting session in context')
+    // console.log('[MDL] Setting session in context')
     context.set(SessionContext, session$)
 
     const response = await next()
 
     if (sessionProxy.isDirty) {
-      console.log('[MDL] Session is dirty, committing')
+      // console.log('[MDL] Session is dirty, committing')
       const result = await commitSession(session$)
       response.headers.append('Set-Cookie', result)
       console.log(
@@ -54,7 +54,7 @@ export function createSessionMiddleware(storage: SessionStorage) {
         JSON.stringify(result),
       )
     }
-    console.log('[MDL] Exit createSessionMiddleware')
+    // console.log('[MDL] Exit createSessionMiddleware')
     return response
   }
 }

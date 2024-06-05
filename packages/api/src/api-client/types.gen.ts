@@ -542,6 +542,7 @@ export type NewPosition = {
   creator: string
   creator_id?: string | null
   fee: string
+  parent_table: ParentTable
   share_price: string
   shares: string
   value: string
@@ -581,6 +582,13 @@ export type PaginatedRequest = {
   page: number
 }
 
+export type ParentTable = 'Identity' | 'Claim'
+
+export const ParentTable = {
+  IDENTITY: 'Identity',
+  CLAIM: 'Claim',
+} as const
+
 export type PointsRequest = {
   points: number
 }
@@ -601,6 +609,7 @@ export type PositionPresenter = {
   direction: VaultType
   fee: string
   id: string
+  parent_table: ParentTable
   share_price: string
   total?: number | null
   updated_at: string
@@ -1306,11 +1315,34 @@ export type CreateIdentityResponse = {
   vault_uuid?: string | null
 }
 
+export type SearchIdentityData = {
+  creator?: Identifier | null
+  description?: string | null
+  displayName?: string | null
+  identityId?: IdentityId | null
+  isContract?: boolean | null
+  isUser?: boolean | null
+  linkedAccountUsername?: string | null
+  paging: PaginatedRequest
+  predicate?: boolean | null
+  sort: IdentitySort
+  status?: Status | null
+  timeframe?: TimeFrame | null
+  userWallet?: string | null
+}
+
+export type SearchIdentityResponse = {
+  data: Array<IdentityPresenter>
+  limit: number
+  page: number
+  total: number
+}
+
 export type GetIdentityByIdData = {
   /**
    * sql id,identity_id string, or vault number
    */
-  identifier: Identifier
+  id: Identifier
 }
 
 export type GetIdentityByIdResponse = {
@@ -1344,29 +1376,6 @@ export type GetIdentityByIdResponse = {
   user_conviction: string
   vault_id: string
   vault_uuid?: string | null
-}
-
-export type SearchIdentityData = {
-  creator?: Identifier | null
-  description?: string | null
-  displayName?: string | null
-  identityId?: IdentityId | null
-  isContract?: boolean | null
-  isUser?: boolean | null
-  linkedAccountUsername?: string | null
-  paging: PaginatedRequest
-  predicate?: boolean | null
-  sort: IdentitySort
-  status?: Status | null
-  timeframe?: TimeFrame | null
-  userWallet?: string | null
-}
-
-export type SearchIdentityResponse = {
-  data: Array<IdentityPresenter>
-  limit: number
-  page: number
-  total: number
 }
 
 export type GetIdentityPositionsResponse = {
@@ -1502,6 +1511,7 @@ export type CreatePositionResponse = {
   creator_id?: string | null
   fee: string
   id: string
+  parent_table: ParentTable
   share_price: string
   status: Status
   updated_at: string
@@ -1527,6 +1537,7 @@ export type GetPositionByIdResponse = {
   creator_id?: string | null
   fee: string
   id: string
+  parent_table: ParentTable
   share_price: string
   status: Status
   updated_at: string
@@ -1553,6 +1564,7 @@ export type UpdatePositionResponse = {
   creator_id?: string | null
   fee: string
   id: string
+  parent_table: ParentTable
   share_price: string
   status: Status
   updated_at: string
@@ -2352,13 +2364,43 @@ export type $OpenApiTs = {
       }
     }
   }
-  '/identity/:id': {
+  '/identity/search': {
+    get: {
+      req: {
+        creator?: Identifier | null
+        description?: string | null
+        displayName?: string | null
+        identityId?: IdentityId | null
+        isContract?: boolean | null
+        isUser?: boolean | null
+        linkedAccountUsername?: string | null
+        paging: PaginatedRequest
+        predicate?: boolean | null
+        sort: IdentitySort
+        status?: Status | null
+        timeframe?: TimeFrame | null
+        userWallet?: string | null
+      }
+      res: {
+        /**
+         * Search identities in paginated list
+         */
+        200: {
+          data: Array<IdentityPresenter>
+          limit: number
+          page: number
+          total: number
+        }
+      }
+    }
+  }
+  '/identity/{id}': {
     get: {
       req: {
         /**
          * sql id,identity_id string, or vault number
          */
-        identifier: Identifier
+        id: Identifier
       }
       res: {
         /**
@@ -2395,36 +2437,6 @@ export type $OpenApiTs = {
           user_conviction: string
           vault_id: string
           vault_uuid?: string | null
-        }
-      }
-    }
-  }
-  '/identity/search': {
-    get: {
-      req: {
-        creator?: Identifier | null
-        description?: string | null
-        displayName?: string | null
-        identityId?: IdentityId | null
-        isContract?: boolean | null
-        isUser?: boolean | null
-        linkedAccountUsername?: string | null
-        paging: PaginatedRequest
-        predicate?: boolean | null
-        sort: IdentitySort
-        status?: Status | null
-        timeframe?: TimeFrame | null
-        userWallet?: string | null
-      }
-      res: {
-        /**
-         * Search identities in paginated list
-         */
-        200: {
-          data: Array<IdentityPresenter>
-          limit: number
-          page: number
-          total: number
         }
       }
     }
@@ -2608,6 +2620,7 @@ export type $OpenApiTs = {
           creator_id?: string | null
           fee: string
           id: string
+          parent_table: ParentTable
           share_price: string
           status: Status
           updated_at: string
@@ -2640,6 +2653,7 @@ export type $OpenApiTs = {
           creator_id?: string | null
           fee: string
           id: string
+          parent_table: ParentTable
           share_price: string
           status: Status
           updated_at: string
@@ -2671,6 +2685,7 @@ export type $OpenApiTs = {
           creator_id?: string | null
           fee: string
           id: string
+          parent_table: ParentTable
           share_price: string
           status: Status
           updated_at: string

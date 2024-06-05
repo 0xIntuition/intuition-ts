@@ -1,4 +1,4 @@
-import { IdentityPresenter, OpenAPI } from '@0xintuition/api'
+import { ApiError, IdentitiesService, OpenAPI } from '@0xintuition/api'
 
 import { MULTIVAULT_CONTRACT_ADDRESS } from '@lib/utils/constants'
 import logger from '@lib/utils/logger'
@@ -26,39 +26,47 @@ export async function action({ request, context }: ActionFunctionArgs) {
     OpenAPI.BASE = 'https://dev.api.intuition.systems'
     const accessToken = getPrivyAccessToken(request)
     const headers = getAuthHeaders(accessToken !== null ? accessToken : '')
+    logger('create headers', headers)
     OpenAPI.HEADERS = headers as Record<string, string>
 
     const session = context.get(SessionContext)
     console.log('[LOADER] user', session.get('user'))
     const user = session.get('user')
 
-    const identityParams = {
-      display_name: display_name as string,
-      identity_id: identity_id as string,
-      description: description as string,
-      is_user: true,
-      predicate: false,
-      contract: MULTIVAULT_CONTRACT_ADDRESS as string,
-      creator: user?.details?.wallet?.address.toLowerCase(),
+    if (!user?.details?.wallet?.address) {
+      throw new Error('User wallet address is undefined')
     }
-    logger('Identity params:', identityParams)
-    logger('create headers', headers)
-    const apiResponse = await fetch(`${process.env.API_URL}/identity`, {
-      method: 'POST',
-      headers,
-      body: JSON.stringify(identityParams),
-    })
 
-    logger('create identity response', apiResponse)
-    if (!apiResponse.ok) {
+    let identity
+    try {
+      const identityParams = {
+        contract: MULTIVAULT_CONTRACT_ADDRESS as string,
+        creator: user.details.wallet.address as string,
+        display_name: display_name as string,
+        identity_id: identity_id as string,
+        description: description as string,
+        is_user: true,
+        predicate: false,
+      }
+      logger('Identity params:', identityParams)
+      identity = await IdentitiesService.createIdentity({
+        requestBody: identityParams,
+      })
+      logger('Identity created:', identity)
+    } catch (error: unknown) {
+      if (error instanceof ApiError) {
+        identity = undefined
+        console.log(
+          `${error.name} - ${error.status}: ${error.message} - ${JSON.stringify(error.body)}`,
+        )
+      } else {
+        throw error
+      }
+    }
+
+    if (!identity) {
       throw new Error('Failed to create identity')
     }
-
-    const responseBodyJson = await apiResponse.json()
-    const identity = responseBodyJson as IdentityPresenter
-    logger('create identity response body', responseBodyJson)
-    logger('Created identity:', identity)
-
     return json(
       {
         status: 'success',

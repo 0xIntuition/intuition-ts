@@ -391,24 +391,6 @@ export class IdentitiesService {
 
   /**
    * @param data The data for the request.
-   * @param data.identifier sql id,identity_id string, or vault number
-   * @returns unknown Get single identity by id
-   * @throws ApiError
-   */
-  public static getIdentityById(
-    data: GetIdentityByIdData,
-  ): CancelablePromise<GetIdentityByIdResponse> {
-    return __request(OpenAPI, {
-      method: 'GET',
-      url: '/identity/:id',
-      path: {
-        identifier: data.identifier,
-      },
-    })
-  }
-
-  /**
-   * @param data The data for the request.
    * @param data.paging
    * @param data.sort
    * @param data.displayName
@@ -445,6 +427,24 @@ export class IdentitiesService {
         sort: data.sort,
         description: data.description,
         linkedAccountUsername: data.linkedAccountUsername,
+      },
+    })
+  }
+
+  /**
+   * @param data The data for the request.
+   * @param data.id sql id,identity_id string, or vault number
+   * @returns unknown Get single identity by id
+   * @throws ApiError
+   */
+  public static getIdentityById(
+    data: GetIdentityByIdData,
+  ): CancelablePromise<GetIdentityByIdResponse> {
+    return __request(OpenAPI, {
+      method: 'GET',
+      url: '/identity/{id}',
+      path: {
+        id: data.id,
       },
     })
   }
