@@ -23,7 +23,7 @@ const iconOptions = [
   'chevron-double-right',
   'chevron-down-small',
   'chevron-grabber-vertical',
-  'chevron-large-down',
+  'chevron-down-large',
   'chevron-left',
   'chevron-left-small',
   'chevron-right',

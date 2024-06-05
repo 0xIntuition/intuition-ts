@@ -1,0 +1,47 @@
+import { Canvas, Controls, Meta, Source, Title } from '@storybook/blocks'
+
+import { Button } from '..'
+
+import * as Stories from './Badge.stories'
+
+<Meta of={Stories} />
+
+<Title />
+
+#### A short description goes here.
+
+<Button
+  variant="accent"
+  onClick={() => window.open('link_goes_here', '_blank')}
+>
+  {'API Reference'}
+</Button>
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { Badge } from '@0xintuition/1ui'
+
+<Badge />
+`} />
+
+<Canvas of={Stories.BasicUsage} sourceState="none" />
+
+## Properties
+
+<Controls />
+
+## Variants
+
+### Other
+
+<Source
+  dark
+  language="tsx"
+  code={`
+<Badge variant="other">
+`}
+/>
+
+<Canvas of={Stories.Other} sourceState="none" />

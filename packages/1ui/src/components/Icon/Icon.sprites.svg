@@ -252,8 +252,8 @@
         fill="transparent"
       />
     </symbol>
-    <!-- chevron-large-down -->
-    <symbol id="chevron-large-down" viewBox="0 0 24 24">
+    <!-- chevron-down-large -->
+    <symbol id="chevron-down-large" viewBox="0 0 24 24">
       <path
         d="M21.25 9.75L12 15.25L2.75 9.75"
         stroke="currentColor"
