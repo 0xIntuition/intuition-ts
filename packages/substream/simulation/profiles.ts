@@ -4,7 +4,7 @@ import { ipfs } from './lib/ipfs'
 import { getIntuition } from './lib/utils'
 
 async function main() {
-  const accountCount = 5
+  const accountCount = 50
 
   for (let i = 1; i < accountCount; i++) {
     const user = await getIntuition(i)
