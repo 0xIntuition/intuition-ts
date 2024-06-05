@@ -8,14 +8,7 @@ import * as Stories from './Badge.stories'
 
 <Title />
 
-#### A short description goes here.
-
-<Button
-  variant="accent"
-  onClick={() => window.open('link_goes_here', '_blank')}
->
-  {'API Reference'}
-</Button>
+#### Displays a badge or a component that looks like a badge.
 
 <Source
   dark
@@ -23,7 +16,7 @@ import * as Stories from './Badge.stories'
   code={`
 import { Badge } from '@0xintuition/1ui'
 
-<Badge />
+<Badge>Badge</Badge>
 `} />
 
 <Canvas of={Stories.BasicUsage} sourceState="none" />
@@ -34,14 +27,38 @@ import { Badge } from '@0xintuition/1ui'
 
 ## Variants
 
-### Other
+### Secondary
 
 <Source
   dark
   language="tsx"
   code={`
-<Badge variant="other">
+<Badge variant="secondary">
 `}
 />
 
-<Canvas of={Stories.Other} sourceState="none" />
+<Canvas of={Stories.Secondary} sourceState="none" />
+
+### Destructive
+
+<Source
+  dark
+  language="tsx"
+  code={`
+<Badge variant="destructive">
+`}
+/>
+
+<Canvas of={Stories.Destructive} sourceState="none" />
+
+### Outline
+
+<Source
+  dark
+  language="tsx"
+  code={`
+<Badge variant="outline">
+`}
+/>
+
+<Canvas of={Stories.Outline} sourceState="none" />

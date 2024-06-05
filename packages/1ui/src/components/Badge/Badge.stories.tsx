@@ -1,27 +1,44 @@
-// Import React
 import React from 'react'
 
-// Import Storybook meta and StoryObj type
 import type { Meta, StoryObj } from '@storybook/react'
 
-// Import your actual component
 import { Badge } from './Badge'
 
-// Setup meta for the Storybook
 const meta: Meta<typeof Badge> = {
   title: 'Components/Badge',
   component: Badge,
+  argTypes: {
+    variant: {
+      description: 'Variant of badge',
+      options: ['default', 'secondary', 'destructive', 'outline'],
+      table: {
+        type: { summary: 'string' },
+        defaultValue: { summary: 'default' },
+      },
+      control: 'select',
+    },
+  },
 }
 
 export default meta
 
-// Define types for your stories
 type Story = StoryObj<typeof Badge>
 
-// Example story for the default state
 export const BasicUsage: Story = {
   args: {
-    // Define default props here, if any
+    variant: 'default',
   },
-  render: (args) => <Badge {...args} />,
+  render: (args) => <Badge {...args}>Badge</Badge>,
+}
+
+export const Secondary: Story = {
+  render: () => <Badge variant="secondary">Badge</Badge>,
+}
+
+export const Destructive: Story = {
+  render: () => <Badge variant="destructive">Badge</Badge>,
+}
+
+export const Outline: Story = {
+  render: () => <Badge variant="outline">Badge</Badge>,
 }
