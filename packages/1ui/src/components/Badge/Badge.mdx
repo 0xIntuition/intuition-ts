@@ -1,0 +1,64 @@
+import { Canvas, Controls, Meta, Source, Title } from '@storybook/blocks'
+
+import { Button } from '..'
+
+import * as Stories from './Badge.stories'
+
+<Meta of={Stories} />
+
+<Title />
+
+#### Displays a badge or a component that looks like a badge.
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { Badge } from '@0xintuition/1ui'
+
+<Badge>Badge</Badge>
+`} />
+
+<Canvas of={Stories.BasicUsage} sourceState="none" />
+
+## Properties
+
+<Controls />
+
+## Variants
+
+### Secondary
+
+<Source
+  dark
+  language="tsx"
+  code={`
+<Badge variant="secondary">
+`}
+/>
+
+<Canvas of={Stories.Secondary} sourceState="none" />
+
+### Destructive
+
+<Source
+  dark
+  language="tsx"
+  code={`
+<Badge variant="destructive">
+`}
+/>
+
+<Canvas of={Stories.Destructive} sourceState="none" />
+
+### Outline
+
+<Source
+  dark
+  language="tsx"
+  code={`
+<Badge variant="outline">
+`}
+/>
+
+<Canvas of={Stories.Outline} sourceState="none" />
