@@ -1,0 +1,26 @@
+import { Canvas, Controls, Meta, Source, Title } from '@storybook/blocks'
+
+import { Button } from '..'
+
+import * as Stories from './Pagination.stories'
+
+<Meta of={Stories} />
+
+<Title />
+
+#### Pagination with page navigation, next and previous links.
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { Pagination } from '@0xintuition/1ui'
+
+<Pagination />
+`} />
+
+<Canvas of={Stories.BasicUsage} sourceState="none" />
+
+## Properties
+
+<Controls />
