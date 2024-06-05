@@ -1,27 +1,41 @@
-// Import React
 import React from 'react'
 
-// Import Storybook meta and StoryObj type
 import type { Meta, StoryObj } from '@storybook/react'
 
-// Import your actual component
 import { Separator } from './Separator'
 
-// Setup meta for the Storybook
 const meta: Meta<typeof Separator> = {
   title: 'Components/Separator',
   component: Separator,
+  argTypes: {
+    orientation: {
+      description: 'The orientation of the separator.',
+      options: ['horizontal', 'vertical'],
+      table: {
+        type: { summary: 'string' },
+        defaultValue: { summary: 'horizontal' },
+      },
+      control: 'select',
+    },
+    decorative: {
+      description:
+        'When true, signifies that it is purely visual, carries no semantic meaning, and ensures it is not present in the accessibility tree.',
+      table: {
+        type: { summary: 'boolean' },
+      },
+      control: 'boolean',
+    },
+  },
 }
 
 export default meta
 
-// Define types for your stories
 type Story = StoryObj<typeof Separator>
 
-// Example story for the default state
 export const BasicUsage: Story = {
-  args: {
-    // Define default props here, if any
-  },
-  render: (args) => <Separator {...args} />,
+  render: (args) => (
+    <div className="w-[400px] h-[200px] flex justify-center items-center">
+      <Separator {...args} />
+    </div>
+  ),
 }

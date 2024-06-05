@@ -5,11 +5,28 @@ import { render } from '@testing-library/react'
 import { Separator } from './Separator'
 
 describe('Separator', () => {
-  // Example assertion: Check if the component renders a specific text
-  it('should render appropriate element', () => {
-    const { asFragment } = render(<Separator>Something</Separator>)
-    expect(asFragment()).toMatchInlineSnapshot(`<DocumentFragment />`)
+  it('should render appropriate element when given no props', () => {
+    const { asFragment } = render(<Separator />)
+    expect(asFragment()).toMatchInlineSnapshot(`
+      <DocumentFragment>
+        <div
+          class="shrink-0 bg-border/30 h-[1px] w-full"
+          data-orientation="horizontal"
+          role="none"
+        />
+      </DocumentFragment>
+    `)
   })
-  // Add more tests as needed to cover the functionality of your component
-  // Additional tests can be written here to check different states and props
+  it('should render appropriate element when given vertical orientation prop', () => {
+    const { asFragment } = render(<Separator orientation="vertical" />)
+    expect(asFragment()).toMatchInlineSnapshot(`
+      <DocumentFragment>
+        <div
+          class="shrink-0 bg-border/30 h-full w-[1px]"
+          data-orientation="vertical"
+          role="none"
+        />
+      </DocumentFragment>
+    `)
+  })
 })

@@ -8,11 +8,16 @@ import * as Stories from './Separator.stories'
 
 <Title />
 
-#### A short description goes here.
+#### Visually or semantically separates content.
 
 <Button
   variant="accent"
-  onClick={() => window.open('link_goes_here', '_blank')}
+  onClick={() =>
+    window.open(
+      'https://www.radix-ui.com/primitives/docs/components/separator#api-reference',
+      '_blank',
+    )
+  }
 >
   {'API Reference'}
 </Button>
@@ -31,17 +36,3 @@ import { Separator } from '@0xintuition/1ui'
 ## Properties
 
 <Controls />
-
-## Variants
-
-### Other
-
-<Source
-  dark
-  language="tsx"
-  code={`
-<Separator variant="other">
-`}
-/>
-
-<Canvas of={Stories.Other} sourceState="none" />
