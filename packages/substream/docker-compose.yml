@@ -1,5 +1,6 @@
 services:
   geth:
+    container_name: geth
     image: ethereum/client-go
     ports:
       - '8545:8545'
@@ -18,6 +19,7 @@ services:
       - ./geth/password.txt:/root/password.txt
 
   ipfs:
+    container_name: ipfs
     image: ipfs/kubo:v0.17.0
     ports:
       - '5001:5001'
@@ -25,6 +27,7 @@ services:
       - ./data/ipfs:/data/ipfs
 
   firehose:
+    container_name: firehose
     depends_on:
       - ipfs
       - geth
@@ -47,6 +50,7 @@ services:
       - --substreams-tier1-grpc-listen-addr=:9000
 
   memgraph:
+    container_name: memgraph-mage
     image: memgraph/memgraph-mage
     ports:
       - '7687:7687'
@@ -55,8 +59,70 @@ services:
       - ./data:/data
 
   lab:
+    container_name: memgraph-lab
     image: memgraph/lab
     ports:
       - '3000:3000'
     environment:
       - QUICK_CONNECT_MG_HOST=host.docker.internal
+
+  postgres:
+    container_name: postgres
+    image: postgres:14
+    ports:
+      - '5432:5432'
+    command: ['postgres', '-cshared_preload_libraries=pg_stat_statements']
+    #command: ["postgres", "-cshared_preload_libraries=pg_stat_statements", "-clog_statement=all"]
+    environment:
+      POSTGRES_USER: graph-node
+      POSTGRES_PASSWORD: let-me-in
+      POSTGRES_DB: graph-node
+      POSTGRES_INITDB_ARGS: '-E UTF8 --locale=C'
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD', 'nc', '-z', 'localhost', '5432']
+      interval: 30s
+      timeout: 10s
+      retries: 15
+
+  pgweb:
+    container_name: pgweb
+    image: sosedoff/pgweb:0.11.12
+    restart: on-failure
+    ports:
+      - '8081:8081'
+    command: ['pgweb', '--bind=0.0.0.0', '--listen=8081', '--binary-codec=hex']
+    #command: ["pgweb", "--binary-codec=base58"]
+    #command: ["pgweb", "--binary-codec=base64"]
+    links:
+      - postgres:postgres
+    environment:
+      - DATABASE_URL=postgres://graph-node:let-me-in@postgres:5432/graph-node?sslmode=disable
+    depends_on:
+      - postgres
+
+  graph-node:
+    container_name: graph-node
+    image: graphprotocol/graph-node
+    ports:
+      - '8000:8000'
+      - '8001:8001'
+      - '8020:8020'
+      - '8030:8030'
+      - '8040:8040'
+    depends_on:
+      - ipfs
+      - postgres
+    environment:
+      GRAPH_NODE_CONFIG: /etc/graph-node/config.toml
+      SUBSTREAMS_API_TOKEN: test123
+      postgres_host: postgres
+      postgres_user: graph-node
+      postgres_pass: let-me-in
+      postgres_db: graph-node
+      ipfs: 'ipfs:5001'
+      ethereum: 'mainnet:http://geth:8545'
+      GRAPH_LOG: info
+    volumes:
+      - ./graph-node-config.toml:/etc/graph-node/config.toml
