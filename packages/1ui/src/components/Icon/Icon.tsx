@@ -1,7 +1,6 @@
 import * as React from 'react'
 
-import { cn } from '@ui-styles'
-
+import { cn } from '../../styles'
 // eslint-disable-next-line
 // @ts-ignore
 import spriteSheet from './Icon.sprites.svg'

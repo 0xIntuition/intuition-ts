@@ -1,6 +1,5 @@
-import { ResizableHandle, ResizablePanel } from '@components/Resizable'
-import { cn } from '@ui-styles'
-
+import { ResizableHandle, ResizablePanel } from '../../../'
+import { cn } from '../../../styles'
 import { SIDEBAR_LOCAL_STORAGE_VARIABLE } from '../constants'
 import { useSidebarLayoutContext } from './SidebarLayoutProvider'
 

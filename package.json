@@ -27,6 +27,7 @@
     "lint:fix": "nx run-many -t lint --fix",
     "test": "nx run-many -t test",
     "storybook": "nx run @0xintuition/1ui:storybook",
+    "publish": "nx run-many -t nx-release-publish",
     "publish-packages:local": "nx run-many -t publish-package --registry=http://localhost:4873",
     "prettier": "prettier --write .",
     "prettier:silent": "prettier --write . --log-level=silent",

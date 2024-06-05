@@ -1,6 +1,6 @@
 {
   "name": "@0xintuition/protocol",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Protocol",
   "main": "dist/index.js",
   "exports": {

@@ -1,14 +1,16 @@
-import { Button, buttonVariants } from '@components/Button'
-import { Icon, IconName } from '@components/Icon'
-import { Text } from '@components/Text'
+import { type VariantProps } from 'class-variance-authority'
+
 import {
+  Button,
+  buttonVariants,
+  Icon,
+  IconName,
+  Text,
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '@components/Tooltip'
-import { type VariantProps } from 'class-variance-authority'
-
+} from '../..'
 import { useSidebarLayoutContext } from './SidebarLayoutProvider'
 
 export interface SidebarNavItemProps

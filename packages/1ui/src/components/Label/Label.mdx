@@ -2,19 +2,19 @@ import { Canvas, Controls, Meta, Source, Title } from '@storybook/blocks'
 
 import { Button } from '..'
 
-import * as Stories from './Switch.stories'
+import * as Stories from './Label.stories'
 
 <Meta of={Stories} />
 
 <Title />
 
-#### A control that allows the user to toggle between checked and not checked.
+#### Renders an accessible label associated with controls.
 
 <Button
   variant="accent"
   onClick={() =>
     window.open(
-      'https://www.radix-ui.com/primitives/docs/components/switch#api-reference',
+      'https://www.radix-ui.com/primitives/docs/components/label#api-reference',
       '_blank',
     )
   }
@@ -26,12 +26,9 @@ import * as Stories from './Switch.stories'
   dark
   language="tsx"
   code={`
-import { Switch } from '@0xintuition/1ui'
+import { Label } from '@0xintuition/1ui'
 
-<div>
-  <Switch id="airplane-mode" />
-  <Label htmlFor="airplane-mode">Airplane Mode</Label>
-</div>
+<Label htmlFor="email">Your email address</Label>
 `} />
 
 <Canvas of={Stories.BasicUsage} sourceState="none" />
