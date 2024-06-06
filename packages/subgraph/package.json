@@ -15,7 +15,7 @@
     "prepare:base-sepolia": "mustache config/base-sepolia.json subgraph.template.yaml > subgraph.yaml graph codegen",
     "build-and-deploy-prodnets": "pnpm prepare:base && pnpm build && pnpm deploy:base",
     "build-and-deploy-testnets": "pnpm prepare:base-sepolia && pnpm build && pnpm deploy:base-sepolia",
-    "dev": "docker-compose down -v && sleep 5 && rm -rf data && docker-compose up -d && sleep 9 && pnpm codegen && pnpm prepare:dev && pnpm build && pnpm reset-local",
+    "dev": "docker-compose down -v && docker-compose up -d && sleep 9 && pnpm codegen && pnpm prepare:dev && pnpm build && pnpm reset-local",
     "simulate:profiles": "tsx simulation/profiles",
     "simulate:books": "tsx simulation/books",
     "simulate:likes": "tsx simulation/likes",
