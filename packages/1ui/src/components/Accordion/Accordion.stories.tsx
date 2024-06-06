@@ -22,7 +22,7 @@ export const BasicUsage: Story = {
   args: { collapsible: true, disabled: false },
   render: (args) => (
     <div className="w-[400px]">
-      <Accordion type="single" className="w-full" {...args}>
+      <Accordion className="w-full" {...args}>
         <AccordionItem value="item-1">
           <AccordionTrigger>Is it accessible?</AccordionTrigger>
           <AccordionContent>
