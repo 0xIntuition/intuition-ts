@@ -7,6 +7,7 @@ import {
   Select,
   SelectContent,
   SelectItem,
+  SelectProps,
   SelectTrigger,
   SelectValue,
   Text,
@@ -46,6 +47,7 @@ PaginationItem.displayName = 'PaginationItem'
 
 type PaginationLinkProps = {
   isActive?: boolean
+  disabled?: boolean
 } & Pick<ButtonProps, 'size'> &
   React.ComponentProps<'a'>
 
@@ -53,6 +55,7 @@ const PaginationLink = ({
   className,
   isActive,
   size = 'icon',
+  disabled,
   ...props
 }: PaginationLinkProps) => (
   // eslint-disable-next-line
@@ -65,7 +68,7 @@ const PaginationLink = ({
         size,
       }),
       'min-w-8 flex justify-center',
-      props.disabled &&
+      disabled &&
         'bg-transparent text-muted-foreground border-muted pointer-events-none',
       className,
     )}
@@ -137,12 +140,17 @@ const PaginationEllipsis = ({
 )
 PaginationEllipsis.displayName = 'PaginationEllipsis'
 
+export interface PaginationPageCounterProps extends TextProps {
+  currentPage: string | number
+  totalPages: string | number
+}
+
 const PaginationPageCounter = ({
   currentPage,
   totalPages,
   className,
   ...props
-}: React.ComponentProps<TextProps>) => (
+}: PaginationPageCounterProps) => (
   <Text
     variant="caption"
     className={cn('self-center px-4', className)}
@@ -151,10 +159,7 @@ const PaginationPageCounter = ({
 )
 PaginationPageCounter.displayName = 'PaginationPageCounter'
 
-const PaginationRowSelection = ({
-  className,
-  ...props
-}: React.ComponentProps<'select'>) => (
+const PaginationRowSelection = ({ className, ...props }: SelectProps) => (
   <div
     className={cn(
       'self-center px-4 flex gap-4 justify-center items-center',
@@ -167,23 +172,28 @@ const PaginationRowSelection = ({
         <SelectValue placeholder="Select a fruit" />
       </SelectTrigger>
       <SelectContent side="top">
-        <SelectItem value={10}>10</SelectItem>
-        <SelectItem value={20}>20</SelectItem>
-        <SelectItem value={30}>30</SelectItem>
-        <SelectItem value={40}>40</SelectItem>
-        <SelectItem value={50}>50</SelectItem>
+        <SelectItem value="10">10</SelectItem>
+        <SelectItem value="20">20</SelectItem>
+        <SelectItem value="30">30</SelectItem>
+        <SelectItem value="40">40</SelectItem>
+        <SelectItem value="50">50</SelectItem>
       </SelectContent>
     </Select>
   </div>
 )
 PaginationRowSelection.displayName = 'PaginationRowSelection'
 
+export interface PaginationSummaryProps extends TextProps {
+  totalEntries: number | string
+  label: string
+}
+
 const PaginationSummary = ({
   totalEntries,
   label,
   className,
   ...props
-}: React.ComponentProps<TextProps>) => (
+}: PaginationSummaryProps) => (
   <Text
     variant="caption"
     className={cn('self-center', className)}

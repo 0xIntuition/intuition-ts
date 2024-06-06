@@ -32,7 +32,7 @@ export const BasicUsage: Story = {
     <Pagination {...args} className="w-[800px] flex justify-between">
       <PaginationSummary totalEntries={100} label="users" />
       <div className="flex">
-        <PaginationRowSelection defaultValue={10} />
+        <PaginationRowSelection defaultValue="10" />
         <PaginationPageCounter currentPage={1} totalPages={10} />
         <PaginationContent>
           <PaginationItem>

@@ -5,6 +5,22 @@ import * as SelectPrimitive from '@radix-ui/react-select'
 import { Icon } from '..'
 import { cn } from '../../styles'
 
+export interface SelectProps {
+  children?: React.ReactNode
+  value?: string
+  defaultValue?: string
+  onValueChange?(value: string): void
+  open?: boolean
+  defaultOpen?: boolean
+  onOpenChange?(open: boolean): void
+  dir?: 'ltr' | 'rtl'
+  name?: string
+  autoComplete?: string
+  disabled?: boolean
+  required?: boolean
+  className?: string
+}
+
 const Select = SelectPrimitive.Root
 
 const SelectGroup = SelectPrimitive.Group
@@ -43,7 +59,7 @@ const SelectScrollUpButton = React.forwardRef<
     )}
     {...props}
   >
-    <Icon name="chevron-up-small" className="h-4 w-4" />
+    <Icon name="chevron-top-small" className="h-4 w-4" />
   </SelectPrimitive.ScrollUpButton>
 ))
 SelectScrollUpButton.displayName = SelectPrimitive.ScrollUpButton.displayName
