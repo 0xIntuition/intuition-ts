@@ -141,7 +141,7 @@ export async function getVaultDetails(
   } as VaultDetails
 }
 
-export async function getMemeListDetails(
+export async function getIdentityListDetails(
   contract: string,
   vids: string[],
   wallet: Address,

@@ -8,7 +8,7 @@ import { Link } from '@remix-run/react'
 import { type Toast } from '@server/toast'
 import { ExternalLinkIcon } from 'lucide-react'
 
-export function MemekekToaster({ toast }: { toast?: Toast | null }) {
+export function IntuitionToaster({ toast }: { toast?: Toast | null }) {
   return (
     <>
       <Toaster

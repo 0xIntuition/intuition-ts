@@ -5,12 +5,12 @@ import { DESCRIPTION_MAX_LENGTH } from '../utils/constants'
 export function createIdentitySchema() {
   return z.object({
     display_name: z
-      .string({ required_error: 'Please enter a meme name.' })
+      .string({ required_error: 'Please enter a identity name.' })
       .min(2, {
-        message: 'Meme name must be at least 2 characters.',
+        message: 'Identity name must be at least 2 characters.',
       })
       .max(30, {
-        message: 'Meme name must not be longer than 30 characters.',
+        message: 'Identity name must not be longer than 30 characters.',
       }),
     description: z
       .string({
