@@ -1,0 +1,34 @@
+import { Canvas, Controls, Meta, Source, Title } from '@storybook/blocks'
+
+import { Button } from '..'
+
+import * as Stories from './Select.stories'
+
+<Meta of={Stories} />
+
+<Title />
+
+#### Displays a list of options for the user to pick from—triggered by a button.
+
+<Button
+  variant="accent"
+  onClick={() =>
+    window.open(
+      'https://www.radix-ui.com/primitives/docs/components/select#api-reference',
+      '_blank',
+    )
+  }
+>
+  {'API Reference'}
+</Button>
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { Select } from '@0xintuition/1ui'
+
+<Select />
+`} />
+
+<Canvas of={Stories.BasicUsage} sourceState="none" />

@@ -14,13 +14,77 @@ import * as Stories from './Pagination.stories'
   dark
   language="tsx"
   code={`
-import { Pagination } from '@0xintuition/1ui'
+import { 
+  Pagination,
+  PaginationContent,
+  PaginationFirst,
+  PaginationItem,
+  PaginationLast,
+  PaginationNext,
+  PaginationPageCounter,
+  PaginationPrevious,
+  PaginationRowSelection,
+  PaginationSummary, 
+  } from '@0xintuition/1ui'
 
-<Pagination />
+<Pagination className="flex w-[800px] justify-between">
+  <PaginationSummary totalEntries={100} label="users" />
+  <div className="flex">
+    <PaginationRowSelection defaultValue={10} />
+    <PaginationPageCounter currentPage={1} totalPages={10} />
+    <PaginationContent>
+      <PaginationItem>
+        <PaginationFirst href="#" disabled />
+      </PaginationItem>
+      <PaginationItem>
+        <PaginationPrevious href="#" disabled />
+      </PaginationItem>
+      <PaginationItem>
+        <PaginationNext href="#" />
+      </PaginationItem>
+      <PaginationItem>
+        <PaginationLast href="#" />
+      </PaginationItem>
+    </PaginationContent>
+  </div>
+</Pagination>
 `} />
 
 <Canvas of={Stories.BasicUsage} sourceState="none" />
 
-## Properties
+## Variants
 
-<Controls />
+### Alternate Setup
+
+<Source
+  dark
+  language="tsx"
+  code={`
+  <Pagination>
+    <PaginationContent>
+      <PaginationItem>
+        <PaginationPrevious href="#" disabled />
+      </PaginationItem>
+      <PaginationItem>
+        <PaginationLink href="#" isActive>
+          1
+        </PaginationLink>
+      </PaginationItem>
+      <PaginationItem>
+        <PaginationLink href="#">2</PaginationLink>
+      </PaginationItem>
+      <PaginationItem>
+        <PaginationLink href="#">3</PaginationLink>
+      </PaginationItem>
+      <PaginationItem>
+        <PaginationEllipsis />
+      </PaginationItem>
+      <PaginationItem>
+        <PaginationNext href="#" />
+      </PaginationItem>
+    </PaginationContent>
+  </Pagination>
+`}
+/>
+
+<Canvas of={Stories.AlternateSetup} sourceState="none" />

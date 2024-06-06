@@ -1,8 +1,17 @@
 import * as React from 'react'
 
-import { MoreHorizontal } from 'lucide-react'
-
-import { ButtonProps, buttonVariants, Icon } from '..'
+import {
+  ButtonProps,
+  buttonVariants,
+  Icon,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+  Text,
+  TextProps,
+} from '..'
 import { cn } from '../../styles'
 
 const Pagination = ({ className, ...props }: React.ComponentProps<'nav'>) => (
@@ -21,7 +30,7 @@ const PaginationContent = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <ul
     ref={ref}
-    className={cn('flex flex-row items-center gap-1 h-max', className)}
+    className={cn('flex flex-row items-center gap-2 h-max', className)}
     {...props}
   />
 ))
@@ -31,7 +40,7 @@ const PaginationItem = React.forwardRef<
   HTMLLIElement,
   React.ComponentProps<'li'>
 >(({ className, ...props }, ref) => (
-  <li ref={ref} className={cn('flex h-7', className)} {...props} />
+  <li ref={ref} className={cn('flex h-8', className)} {...props} />
 ))
 PaginationItem.displayName = 'PaginationItem'
 
@@ -56,6 +65,8 @@ const PaginationLink = ({
         size,
       }),
       'min-w-8 flex justify-center',
+      props.disabled &&
+        'bg-transparent text-muted-foreground border-muted pointer-events-none',
       className,
     )}
     {...props}
@@ -117,14 +128,69 @@ const PaginationEllipsis = ({
 }: React.ComponentProps<'span'>) => (
   <span
     aria-hidden
-    className={cn('flex h-9 w-9 items-center justify-center', className)}
+    className={cn('flex w-6 h-5 items-center justify-center', className)}
     {...props}
   >
-    <MoreHorizontal className="h-5 w-5" />
+    <Text variant="bodyLarge">...</Text>
     <span className="sr-only">More pages</span>
   </span>
 )
 PaginationEllipsis.displayName = 'PaginationEllipsis'
+
+const PaginationPageCounter = ({
+  currentPage,
+  totalPages,
+  className,
+  ...props
+}: React.ComponentProps<TextProps>) => (
+  <Text
+    variant="caption"
+    className={cn('self-center px-4', className)}
+    {...props}
+  >{`Page ${currentPage} of ${totalPages}`}</Text>
+)
+PaginationPageCounter.displayName = 'PaginationPageCounter'
+
+const PaginationRowSelection = ({
+  className,
+  ...props
+}: React.ComponentProps<'select'>) => (
+  <div
+    className={cn(
+      'self-center px-4 flex gap-4 justify-center items-center',
+      className,
+    )}
+  >
+    <Text variant="caption">Rows per page</Text>
+    <Select {...props}>
+      <SelectTrigger className="w-max h-8 gap-2">
+        <SelectValue placeholder="Select a fruit" />
+      </SelectTrigger>
+      <SelectContent side="top">
+        <SelectItem value={10}>10</SelectItem>
+        <SelectItem value={20}>20</SelectItem>
+        <SelectItem value={30}>30</SelectItem>
+        <SelectItem value={40}>40</SelectItem>
+        <SelectItem value={50}>50</SelectItem>
+      </SelectContent>
+    </Select>
+  </div>
+)
+PaginationRowSelection.displayName = 'PaginationRowSelection'
+
+const PaginationSummary = ({
+  totalEntries,
+  label,
+  className,
+  ...props
+}: React.ComponentProps<TextProps>) => (
+  <Text
+    variant="caption"
+    className={cn('self-center', className)}
+    {...props}
+  >{`${totalEntries} ${label} found`}</Text>
+)
+PaginationSummary.displayName = 'PaginationSummary'
 
 export {
   Pagination,
@@ -136,4 +202,7 @@ export {
   PaginationPrevious,
   PaginationFirst,
   PaginationLast,
+  PaginationPageCounter,
+  PaginationRowSelection,
+  PaginationSummary,
 }
