@@ -1,0 +1,69 @@
+import { Canvas, Controls, Meta, Source, Title } from '@storybook/blocks'
+
+import { Button } from '..'
+
+import * as Stories from './HoverCard.stories'
+
+<Meta of={Stories} />
+
+<Title />
+
+#### For sighted users to preview content available behind a link.
+
+<Button
+  variant="accent"
+  onClick={() =>
+    window.open(
+      'https://www.radix-ui.com/primitives/docs/components/hover-card#api-reference',
+      '_blank',
+    )
+  }
+>
+  {'API Reference'}
+</Button>
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { HoverCard } from '@0xintuition/1ui'
+
+<HoverCard>
+  <HoverCardTrigger asChild>
+    <Button variant="text">@super_dave</Button>
+  </HoverCardTrigger>
+  <HoverCardContent className="w-60">
+    <div className="flex gap-4">
+      <Avatar>
+        <AvatarImage src="image.jpg" />
+        <AvatarFallback>SD</AvatarFallback>
+      </Avatar>
+      <div>
+        <Text variant="body">Super Dave</Text>
+        <Text variant="caption" className="text-primary/50">
+          @super_dave
+        </Text>
+      </div>
+    </div>
+    <Text variant="caption">
+      I am Super Dave, the most super Dave you&apos;ll ever meet.
+    </Text>
+    <div className="flex gap-10">
+      <div>
+        <Text variant="body">9122</Text>
+        <Text variant="caption" className="text-primary/50">
+          followers
+        </Text>
+      </div>
+      <div>
+        <Text variant="body">1239</Text>
+        <Text variant="caption" className="text-primary/50">
+          following
+        </Text>
+      </div>
+    </div>
+  </HoverCardContent>
+</HoverCard>
+`} />
+
+<Canvas of={Stories.BasicUsage} sourceState="none" />
