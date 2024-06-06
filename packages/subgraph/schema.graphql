@@ -46,6 +46,7 @@ enum AtomType {
   Person
   Book
   LikeAction
+  FollowAction
 }
 
 type AtomValue @entity {
