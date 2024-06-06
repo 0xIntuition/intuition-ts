@@ -13,7 +13,7 @@ export default function Index() {
 
   return (
     <div style={{ fontFamily: 'system-ui, sans-serif', lineHeight: '1.8' }}>
-      <h1>Welcome to Remix</h1>
+      <h1>Welcome to Intuition</h1>
       {error && <p style={{ color: 'red' }}>{error}</p>}
       <ul>
         <li>
@@ -21,6 +21,9 @@ export default function Index() {
         </li>
         <li>
           <Link to="/app">App</Link>
+        </li>
+        <li>
+          <Link to="/restricted">Restricted (Geoblocked)</Link>
         </li>
         <li>
           <Link to="/app/test">Test</Link>
