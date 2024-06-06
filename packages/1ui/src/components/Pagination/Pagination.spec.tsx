@@ -77,9 +77,7 @@ describe('Pagination', () => {
               >
                 <span
                   style="pointer-events: none;"
-                >
-                  10
-                </span>
+                />
                 <svg
                   class="h-4 w-4"
                 >
@@ -103,7 +101,6 @@ describe('Pagination', () => {
                 <a
                   aria-label="Go to first page"
                   class="items-center gap-2 text-sm font-medium border-solid border disabled:text-muted-foreground disabled:border-muted bg-gradient-to-b from-transparent to-transparent rounded-lg hover:text-primary hover:border-primary disabled:bg-transparent aria-selected:primary-gradient-subtle aria-selected:border-primary/10 shadow-md-subtle p-1 min-w-8 flex justify-center bg-transparent text-muted-foreground border-muted pointer-events-none"
-                  disabled=""
                   href="#"
                 >
                   <svg
@@ -121,7 +118,6 @@ describe('Pagination', () => {
                 <a
                   aria-label="Go to previous page"
                   class="items-center gap-2 text-sm font-medium border-solid border disabled:text-muted-foreground disabled:border-muted bg-gradient-to-b from-transparent to-transparent rounded-lg hover:text-primary hover:border-primary disabled:bg-transparent aria-selected:primary-gradient-subtle aria-selected:border-primary/10 shadow-md-subtle p-1 min-w-8 flex justify-center bg-transparent text-muted-foreground border-muted pointer-events-none"
-                  disabled=""
                   href="#"
                 >
                   <svg
@@ -216,7 +212,6 @@ describe('Pagination', () => {
               <a
                 aria-label="Go to previous page"
                 class="items-center gap-2 text-sm font-medium border-solid border disabled:text-muted-foreground disabled:border-muted bg-gradient-to-b from-transparent to-transparent rounded-lg hover:text-primary hover:border-primary disabled:bg-transparent aria-selected:primary-gradient-subtle aria-selected:border-primary/10 shadow-md-subtle p-1 min-w-8 flex justify-center bg-transparent text-muted-foreground border-muted pointer-events-none"
-                disabled=""
                 href="#"
               >
                 <svg
