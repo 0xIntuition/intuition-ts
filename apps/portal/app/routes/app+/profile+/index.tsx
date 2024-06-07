@@ -235,7 +235,14 @@ export function CreateButton({ onSuccess }: CreateButtonWrapperProps) {
         })
       }
     }
-  }, [offChainFetcher.state, offChainFetcher.data, dispatch])
+  }, [
+    offChainFetcher.state,
+    offChainFetcher.data,
+    dispatch,
+    createdIdentity,
+    handleIdentityTxReceiptReceived,
+    handleOnChainCreateIdentity,
+  ])
 
   useEffect(() => {
     if (state.status === 'transaction-error') {

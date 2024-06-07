@@ -1,10 +1,8 @@
-import { platform } from 'node:os'
-
 import { Button } from '@0xintuition/1ui'
 
 import { useSocialLinking } from '@lib/hooks/usePrivySocialLinking'
 import logger from '@lib/utils/logger'
-import { ExtendedPrivyUser, PrivyPlatform } from 'types/privy'
+import { PrivyPlatform } from 'types/privy'
 import { SessionUser } from 'types/user'
 
 // colocated this for now but we can move into a constants if that is cleaner
@@ -29,12 +27,7 @@ const verifiedPlatforms: PrivyPlatform[] = [
   },
 ]
 
-export function PrivyVerifiedLinks({
-  privyUser,
-}: {
-  // privyUser: ExtendedPrivyUser
-  privyUser: SessionUser
-}) {
+export function PrivyVerifiedLinks({ privyUser }: { privyUser: SessionUser }) {
   const {
     privyUser: localPrivyUser,
     handleLink,
@@ -107,7 +100,7 @@ interface VerifiedLinkItemProps {
   linkMethod: () => Promise<void>
   unlinkMethod: () => Promise<void>
   isConnected: boolean
-  privyUser: ExtendedPrivyUser | null
+  privyUser: SessionUser | null
   platform: PrivyPlatform
 }
 
@@ -126,7 +119,7 @@ export function VerifiedLinkItem({
       {isConnected ? (
         <span>
           {(privyUser &&
-            (privyUser as ExtendedPrivyUser).details[platform.platformPrivyName]
+            (privyUser as SessionUser).details?.[platform.platformPrivyName]
               ?.username) ??
             platformDisplayName}
         </span>

@@ -23,6 +23,9 @@ export default function Index() {
           <Link to="/app">App</Link>
         </li>
         <li>
+          <Link to="/app/profile">Profile</Link>
+        </li>
+        <li>
           <Link to="/restricted">Restricted (Geoblocked)</Link>
         </li>
         <li>
