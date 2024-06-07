@@ -11,12 +11,12 @@ import {
   SidebarLayoutNavItems,
   SidebarLayoutProvider,
 } from '@0xintuition/1ui'
+import { Feed } from './Feed'
 function App() {
 
   return (
     <div
-      style={{ width: '800px', height: '500px' }}
-      className="border-border/30 rounded-lg border border-solid"
+      className="border-border/30 rounded-lg border border-solid h-full w-full"
     >
       <SidebarLayoutProvider>
         <SidebarLayout >
@@ -98,7 +98,9 @@ function App() {
               />
             </SidebarLayoutNavFooter>
           </SidebarLayoutNav>
-          <SidebarLayoutContent>Content goes here.</SidebarLayoutContent>
+          <SidebarLayoutContent className="flex" >
+            <Feed />
+          </SidebarLayoutContent>
         </SidebarLayout>
       </SidebarLayoutProvider>
     </div>)

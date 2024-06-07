@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "@0xintuition/1ui": "workspace:^",
+    "@apollo/client": "^3.10.4",
+    "graphql": "^16.8.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "tailwind-merge": "^2.3.0",
