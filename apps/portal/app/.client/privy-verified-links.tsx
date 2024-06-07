@@ -1,3 +1,5 @@
+import { platform } from 'node:os'
+
 import { Button } from '@0xintuition/1ui'
 
 import { useSocialLinking } from '@lib/hooks/usePrivySocialLinking'
@@ -34,13 +36,14 @@ export function PrivyVerifiedLinks({
   privyUser: SessionUser
 }) {
   const {
-    // privyUser,
+    privyUser: localPrivyUser,
     handleLink,
     handleUnlink,
     verifiedPlatforms: linkedPlatforms,
   } = useSocialLinking(verifiedPlatforms)
 
   logger('privy user in privy-verified-links', privyUser)
+  logger('privy user (client)', localPrivyUser)
 
   return (
     <div className="flex w-full flex-col items-center gap-8">
@@ -51,8 +54,7 @@ export function PrivyVerifiedLinks({
 
         const isConnected = privyUser
           ? Boolean(
-              privyUser?.details[platform.platformPrivyName],
-              // (privyUser as ExtendedPrivyUser).dte[platform.platformPrivyName],
+              (privyUser as SessionUser).details?.[platform.platformPrivyName],
             )
           : false
 
@@ -61,12 +63,12 @@ export function PrivyVerifiedLinks({
             key={platform.platformPrivyName}
             platformDisplayName={platform.platformDisplayName}
             isConnected={isConnected}
-            privyUser={privyUser as ExtendedPrivyUser}
+            privyUser={privyUser as SessionUser}
             platform={platform}
             linkMethod={() => handleLink(platform.linkMethod)}
             unlinkMethod={() => {
               return new Promise<void>((resolve, reject) => {
-                const userDetails = (privyUser as ExtendedPrivyUser).details[
+                const userDetails = (privyUser as SessionUser).details?.[
                   platform.platformPrivyName
                 ]
                 if (

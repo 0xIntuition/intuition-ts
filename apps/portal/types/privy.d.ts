@@ -57,10 +57,3 @@ export interface PlatformUserDetails {
   username?: string
   verifiedAt?: Date
 }
-
-export type ExtendedPrivyUser = PrivyUser & {
-  twitter?: PlatformUserDetails
-  github?: PlatformUserDetails
-  farcaster?: PlatformUserDetails
-  [key: string | number]: PlatformUserDetails | undefined
-}

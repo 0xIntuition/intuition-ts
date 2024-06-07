@@ -2,6 +2,7 @@ import { toast } from '@0xintuition/1ui'
 
 import logger from '@lib/utils/logger'
 import { useLinkAccount, usePrivy } from '@privy-io/react-auth'
+import { useRevalidator } from '@remix-run/react'
 import { LinkMethodNames, PrivyPlatform } from 'types/privy'
 
 // for now the onSuccess and onError are contained in the hook. we may need to allow for this to take callbacks
@@ -14,10 +15,12 @@ export function useSocialLinking(verifiedPlatforms: PrivyPlatform[]) {
     unlinkGithub,
     unlinkFarcaster,
   } = usePrivy()
+  const { revalidate } = useRevalidator()
   const { linkTwitter, linkGithub, linkFarcaster } = useLinkAccount({
     onSuccess: (user, linkMethod, linkedAccount) => {
       logger('Link successful:', user, linkMethod, linkedAccount)
       toast.success('Account link successful.')
+      revalidate()
     },
     onError: (error) => {
       logger('Link error:', error)
@@ -44,6 +47,7 @@ export function useSocialLinking(verifiedPlatforms: PrivyPlatform[]) {
     const linkMethod = linkMethods[linkMethodName]
     try {
       await linkMethod()
+      revalidate()
     } catch (error) {
       console.error('Link failed', error)
     }
@@ -65,6 +69,7 @@ export function useSocialLinking(verifiedPlatforms: PrivyPlatform[]) {
           unlinkMethodName as keyof typeof unlinkMethodsByFid
         ](fid)
         console.log('Unlink successful. privyUser:', privyUser)
+        revalidate()
       } catch (error) {
         console.error('Unlink failed', error)
       }
@@ -77,6 +82,7 @@ export function useSocialLinking(verifiedPlatforms: PrivyPlatform[]) {
           unlinkMethodName as keyof typeof unlinkMethodsBySubject
         ](subject)
         console.log('Unlink successful. privyUser:', privyUser)
+        revalidate()
       } catch (error) {
         console.error('Unlink failed', error)
       }

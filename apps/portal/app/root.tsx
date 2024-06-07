@@ -56,7 +56,7 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 }
 
 export async function loader({ request, context }: LoaderFunctionArgs) {
-  const session = context.get(SessionContext)
+  const session = context && context.get(SessionContext)
   const user = session.get('user')
   logger('[ROOT-loader] user:', session.get('user'))
 

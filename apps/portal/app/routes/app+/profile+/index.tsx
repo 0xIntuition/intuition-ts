@@ -409,7 +409,7 @@ export default function Profile() {
           <div>
             <p>User Identity Exists</p>
             <p>{userIdentity.id}</p>
-            {/* <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-4">
               <Accordion
                 type="multiple"
                 className="w-full"
@@ -422,11 +422,13 @@ export default function Profile() {
                     </span>
                   </AccordionTrigger>
                   <AccordionContent>
-                    <PrivyVerifiedLinks />
+                    <PrivyVerifiedLinks
+                      privyUser={JSON.parse(JSON.stringify(user))}
+                    />
                   </AccordionContent>
                 </AccordionItem>
               </Accordion>
-            </div> */}
+            </div>
           </div>
         ) : (
           <ClientOnly>{() => <CreateButton onSuccess={() => {}} />}</ClientOnly>
@@ -445,7 +447,9 @@ export default function Profile() {
               </span>
             </AccordionTrigger>
             <AccordionContent>
-              <PrivyVerifiedLinks privyUser={user} />
+              <PrivyVerifiedLinks
+                privyUser={JSON.parse(JSON.stringify(user))}
+              />
             </AccordionContent>
           </AccordionItem>
         </Accordion>
