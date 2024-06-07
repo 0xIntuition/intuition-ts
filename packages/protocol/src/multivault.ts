@@ -6,13 +6,13 @@ import {
   ContractFunctionRevertedError,
   getContract,
   GetContractReturnType,
+  keccak256,
   parseEventLogs,
   ParseEventLogsReturnType,
   PublicClient,
   toHex,
   Transport,
   WalletClient,
-  keccak256,
 } from 'viem'
 
 import { abi } from './abi'
