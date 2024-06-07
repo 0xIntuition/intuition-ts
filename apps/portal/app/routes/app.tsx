@@ -47,7 +47,7 @@ export default function Index() {
           />
         </div>
       </div>
-      <pre>{JSON.stringify(user, null, 2)}</pre>
+      {/* <pre>{JSON.stringify(user, null, 2)}</pre> */}
       <Outlet />
     </div>
   )

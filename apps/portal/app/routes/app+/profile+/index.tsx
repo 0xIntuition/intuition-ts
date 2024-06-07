@@ -397,7 +397,10 @@ export function CreateButton({ onSuccess }: CreateButtonWrapperProps) {
 }
 
 export default function Profile() {
-  const { userIdentity } = useLoaderData<{ userIdentity: IdentityPresenter }>()
+  const { userIdentity, user } = useLoaderData<{
+    userIdentity: IdentityPresenter
+    user: SessionUser
+  }>()
 
   return (
     <div className="m-8 flex flex-col items-center gap-4">
@@ -406,7 +409,7 @@ export default function Profile() {
           <div>
             <p>User Identity Exists</p>
             <p>{userIdentity.id}</p>
-            <div className="flex flex-col gap-4">
+            {/* <div className="flex flex-col gap-4">
               <Accordion
                 type="multiple"
                 className="w-full"
@@ -423,11 +426,29 @@ export default function Profile() {
                   </AccordionContent>
                 </AccordionItem>
               </Accordion>
-            </div>
+            </div> */}
           </div>
         ) : (
           <ClientOnly>{() => <CreateButton onSuccess={() => {}} />}</ClientOnly>
         )}
+      </div>
+      <div className="flex flex-col gap-4">
+        <Accordion
+          type="multiple"
+          className="w-full"
+          defaultValue={['verified-links']}
+        >
+          <AccordionItem value="verified-links">
+            <AccordionTrigger>
+              <span className="text-secondary-foreground text-sm font-normal">
+                Verified Links
+              </span>
+            </AccordionTrigger>
+            <AccordionContent>
+              <PrivyVerifiedLinks privyUser={user} />
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
       </div>
     </div>
   )
