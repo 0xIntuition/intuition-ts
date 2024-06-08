@@ -1,8 +1,12 @@
+import { useState } from 'react'
+
 import PrivyLogoutButton from '@client/privy-logout-button'
 import PrivySwitchWallet from '@client/privy-switch-wallet'
+import OnboardingModal from '@components/onboarding-modal'
+import { onboardingModalAtom } from '@lib/state/store'
 import { requireAuth } from '@middleware/requireAuth'
 import { SessionContext } from '@middleware/session'
-import { LoaderFunctionArgs } from '@remix-run/node'
+import { json, LoaderFunctionArgs } from '@remix-run/node'
 import {
   Link,
   Outlet,
@@ -10,18 +14,34 @@ import {
   useNavigate,
   useRevalidator,
 } from '@remix-run/react'
+import { onboardingModalCookie } from '@server/onboarding'
+import { useAtomValue } from 'jotai'
 import { serverOnly$ } from 'vite-env-only'
 
 export const middleware = serverOnly$([requireAuth])
 
-export async function loader({ context }: LoaderFunctionArgs) {
+export async function loader({ context, request }: LoaderFunctionArgs) {
   const session = context.get(SessionContext)
-  console.log('[LOADER] user', session.get('user'))
-  return { user: session.get('user') }
+  const user = session.get('user')
+
+  const cookieHeader = request.headers.get('Cookie')
+  const cookie = await onboardingModalCookie.parse(cookieHeader)
+
+  if (!cookie) {
+    return json({
+      user,
+      showOnboardingModal: true,
+    })
+  }
+
+  return json({
+    user,
+    showOnboardingModal: false,
+  })
 }
 
 export default function Index() {
-  const { user } = useLoaderData<typeof loader>()
+  const { user, showOnboardingModal } = useLoaderData<typeof loader>()
   const { revalidate } = useRevalidator()
   const navigate = useNavigate()
 
@@ -35,6 +55,9 @@ export default function Index() {
     revalidate()
   }
 
+  const [isOnboardingOpen, setIsOnboardingOpen] = useState(showOnboardingModal)
+  const onboardingModalActive = useAtomValue(onboardingModalAtom)
+
   return (
     <div>
       <div>
@@ -47,6 +70,10 @@ export default function Index() {
           />
         </div>
       </div>
+      <OnboardingModal
+        open={onboardingModalActive.isOpen || isOnboardingOpen}
+        onClose={() => setIsOnboardingOpen(false)}
+      />
       {/* <pre>{JSON.stringify(user, null, 2)}</pre> */}
       <Outlet />
     </div>
