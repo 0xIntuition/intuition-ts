@@ -25,6 +25,7 @@ import { SessionContext } from '@middleware/session'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { useFetcher, useLoaderData } from '@remix-run/react'
 import { CreateLoaderData } from '@routes/resources+/create'
+import { onboardingModalCookie } from '@server/onboarding'
 import { getPrivyAccessToken } from '@server/privy'
 import { AlertCircle } from 'lucide-react'
 import { ClientOnly } from 'remix-utils/client-only'
@@ -43,7 +44,6 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
   console.log('[LOADER] user', session.get('user'))
   const user = session.get('user')
 
-  logger('user', user)
   if (!user?.details?.wallet?.address) {
     return console.log('No user found in session')
   }
@@ -62,6 +62,16 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
     } else {
       throw error
     }
+  }
+
+  const cookieHeader = request.headers.get('Cookie')
+  const cookie = await onboardingModalCookie.parse(cookieHeader)
+
+  if (!cookie) {
+    return json({
+      user,
+      userIdentity,
+    })
   }
 
   logger('userIdentity', userIdentity)
@@ -209,6 +219,91 @@ export function CreateButton({ onSuccess }: CreateButtonWrapperProps) {
   }
 
   useEffect(() => {
+    // Handle On-Chain Transaction
+    async function handleOnChainCreateIdentity({
+      atomData,
+    }: {
+      atomData: string
+    }) {
+      if (
+        !awaitingOnChainConfirmation &&
+        !awaitingWalletConfirmation &&
+        user &&
+        publicClient &&
+        atomCost
+      ) {
+        try {
+          dispatch({ type: 'SIGNING_WALLET' })
+
+          const txHash = await writeCreateIdentity({
+            address: MULTIVAULT_CONTRACT_ADDRESS,
+            abi: multivaultAbi,
+            functionName: 'createAtom',
+            args: [keccak256(toHex(atomData))],
+            value: atomCost,
+          })
+
+          if (txHash) {
+            dispatch({ type: 'ON_CHAIN_TRANSACTION_PENDING' })
+            const receipt = await publicClient.waitForTransactionReceipt({
+              hash: txHash,
+            })
+            logger('receipt', receipt)
+            dispatch({
+              type: 'ON_CHAIN_TRANSACTION_COMPLETE',
+              txHash: txHash,
+              txReceipt: receipt,
+            })
+          }
+        } catch (error) {
+          logger('error', error)
+          setLoading(false)
+          if (error instanceof Error) {
+            let errorMessage = 'Failed transaction'
+            if (error.message.includes('insufficient')) {
+              errorMessage = 'Insufficient funds'
+            }
+            if (error.message.includes('rejected')) {
+              errorMessage = 'Transaction rejected'
+            }
+            dispatch({
+              type: 'TRANSACTION_ERROR',
+              error: errorMessage,
+            })
+            toast.custom(
+              () => (
+                <Toast
+                  title="Error"
+                  description={errorMessage}
+                  icon={<AlertCircle />}
+                />
+              ),
+              {
+                duration: 5000,
+              },
+            )
+            return
+          }
+        }
+      } else {
+        logger(
+          'Cannot initiate on-chain transaction, a transaction is already pending, a wallet is already signing, or a wallet is not connected',
+        )
+      }
+    }
+
+    function handleIdentityTxReceiptReceived() {
+      if (createdIdentity) {
+        logger(
+          'Submitting to emitterFetcher with identity_id:',
+          createdIdentity.identity_id,
+        )
+        emitterFetcher.submit(
+          { identity_id: createdIdentity.identity_id },
+          { method: 'post', action: '/actions/create-emitter' },
+        )
+      }
+    }
     if (
       offChainFetcher.state === 'idle' &&
       offChainFetcher.data !== null &&
@@ -240,8 +335,13 @@ export function CreateButton({ onSuccess }: CreateButtonWrapperProps) {
     offChainFetcher.data,
     dispatch,
     createdIdentity,
-    handleIdentityTxReceiptReceived,
-    handleOnChainCreateIdentity,
+    awaitingOnChainConfirmation,
+    awaitingWalletConfirmation,
+    user,
+    publicClient,
+    atomCost,
+    writeCreateIdentity,
+    emitterFetcher,
   ])
 
   useEffect(() => {
@@ -303,92 +403,6 @@ export function CreateButton({ onSuccess }: CreateButtonWrapperProps) {
       }
     } catch (error: unknown) {
       logger(error)
-    }
-  }
-
-  // Handle On-Chain Transaction
-  async function handleOnChainCreateIdentity({
-    atomData,
-  }: {
-    atomData: string
-  }) {
-    if (
-      !awaitingOnChainConfirmation &&
-      !awaitingWalletConfirmation &&
-      user &&
-      publicClient &&
-      atomCost
-    ) {
-      try {
-        dispatch({ type: 'SIGNING_WALLET' })
-
-        const txHash = await writeCreateIdentity({
-          address: MULTIVAULT_CONTRACT_ADDRESS,
-          abi: multivaultAbi,
-          functionName: 'createAtom',
-          args: [keccak256(toHex(atomData))],
-          value: atomCost,
-        })
-
-        if (txHash) {
-          dispatch({ type: 'ON_CHAIN_TRANSACTION_PENDING' })
-          const receipt = await publicClient.waitForTransactionReceipt({
-            hash: txHash,
-          })
-          logger('receipt', receipt)
-          dispatch({
-            type: 'ON_CHAIN_TRANSACTION_COMPLETE',
-            txHash: txHash,
-            txReceipt: receipt,
-          })
-        }
-      } catch (error) {
-        logger('error', error)
-        setLoading(false)
-        if (error instanceof Error) {
-          let errorMessage = 'Failed transaction'
-          if (error.message.includes('insufficient')) {
-            errorMessage = 'Insufficient funds'
-          }
-          if (error.message.includes('rejected')) {
-            errorMessage = 'Transaction rejected'
-          }
-          dispatch({
-            type: 'TRANSACTION_ERROR',
-            error: errorMessage,
-          })
-          toast.custom(
-            () => (
-              <Toast
-                title="Error"
-                description={errorMessage}
-                icon={<AlertCircle />}
-              />
-            ),
-            {
-              duration: 5000,
-            },
-          )
-          return
-        }
-      }
-    } else {
-      logger(
-        'Cannot initiate on-chain transaction, a transaction is already pending, a wallet is already signing, or a wallet is not connected',
-      )
-    }
-  }
-
-  function handleIdentityTxReceiptReceived() {
-    if (createdIdentity) {
-      logger(
-        'Submitting to emitterFetcher with identity_id:',
-        createdIdentity.identity_id,
-      )
-      emitterFetcher.submit(
-        { identity_id: createdIdentity.identity_id },
-        { method: 'post', action: '/actions/create-emitter' },
-      )
     }
   }
 

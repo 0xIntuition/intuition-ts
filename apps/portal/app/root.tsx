@@ -5,7 +5,6 @@ import {
   createCookieSessionStorage,
   json,
   LoaderFunctionArgs,
-  redirect,
   type MetaFunction,
 } from '@remix-run/node'
 import {
@@ -27,10 +26,7 @@ import { useEffect } from 'react'
 
 import { Toaster } from '@0xintuition/1ui'
 
-import { chainalysisOracleAbi } from '@lib/abis/chainalysisOracle'
-import logger from '@lib/utils/logger'
-import { createSessionMiddleware, SessionContext } from '@middleware/session'
-import { mainnetClient } from '@server/viem'
+import { createSessionMiddleware } from '@middleware/session'
 import { ClientOnly } from 'remix-utils/client-only'
 import { serverOnly$ } from 'vite-env-only'
 
@@ -55,23 +51,7 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
   ]
 }
 
-export async function loader({ request, context }: LoaderFunctionArgs) {
-  const session = context && context.get(SessionContext)
-  const user = session.get('user')
-  logger('[ROOT-loader] user:', session.get('user'))
-
-  const isSanctioned = user?.details?.wallet?.address
-    ? ((await mainnetClient.readContract({
-        address: '0x40C57923924B5c5c5455c48D93317139ADDaC8fb',
-        abi: chainalysisOracleAbi,
-        functionName: 'isSanctioned',
-        args: [user?.details?.wallet?.address],
-      })) as boolean)
-    : false
-
-  if (isSanctioned) {
-    return redirect('/sanctioned')
-  }
+export async function loader({ request }: LoaderFunctionArgs) {
   return json({
     env: getEnv(),
     requestInfo: {

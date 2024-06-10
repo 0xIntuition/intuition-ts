@@ -1,10 +1,19 @@
 import { SessionContext } from '@middleware/session'
-import { LoaderFunctionArgs } from '@remix-run/node'
+import { LoaderFunctionArgs, redirect } from '@remix-run/node'
 import { Link, useLoaderData } from '@remix-run/react'
+import { onboardingModalCookie } from '@server/onboarding'
 
-export async function loader({ context }: LoaderFunctionArgs) {
+export async function loader({ context, request }: LoaderFunctionArgs) {
   const session = context.get(SessionContext)
   const error = session.get('error')
+
+  const cookieHeader = request.headers.get('Cookie')
+  const cookie = await onboardingModalCookie.parse(cookieHeader)
+
+  if (!cookie) {
+    return redirect('/intro')
+  }
+
   return { error }
 }
 

@@ -1,12 +1,9 @@
-import { useState } from 'react'
-
 import PrivyLogoutButton from '@client/privy-logout-button'
 import PrivySwitchWallet from '@client/privy-switch-wallet'
-import OnboardingModal from '@components/onboarding-modal'
-import { onboardingModalAtom } from '@lib/state/store'
+import { chainalysisOracleAbi } from '@lib/abis/chainalysisOracle'
 import { requireAuth } from '@middleware/requireAuth'
 import { SessionContext } from '@middleware/session'
-import { json, LoaderFunctionArgs } from '@remix-run/node'
+import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
 import {
   Link,
   Outlet,
@@ -14,34 +11,35 @@ import {
   useNavigate,
   useRevalidator,
 } from '@remix-run/react'
-import { onboardingModalCookie } from '@server/onboarding'
-import { useAtomValue } from 'jotai'
+import { mainnetClient } from '@server/viem'
 import { serverOnly$ } from 'vite-env-only'
 
 export const middleware = serverOnly$([requireAuth])
 
-export async function loader({ context, request }: LoaderFunctionArgs) {
+export async function loader({ context }: LoaderFunctionArgs) {
   const session = context.get(SessionContext)
   const user = session.get('user')
 
-  const cookieHeader = request.headers.get('Cookie')
-  const cookie = await onboardingModalCookie.parse(cookieHeader)
+  const isSanctioned = user?.details?.wallet?.address
+    ? ((await mainnetClient.readContract({
+        address: '0x40C57923924B5c5c5455c48D93317139ADDaC8fb',
+        abi: chainalysisOracleAbi,
+        functionName: 'isSanctioned',
+        args: [user?.details?.wallet?.address],
+      })) as boolean)
+    : false
 
-  if (!cookie) {
-    return json({
-      user,
-      showOnboardingModal: true,
-    })
+  if (isSanctioned) {
+    return redirect('/sanctioned')
   }
 
   return json({
     user,
-    showOnboardingModal: false,
   })
 }
 
 export default function Index() {
-  const { user, showOnboardingModal } = useLoaderData<typeof loader>()
+  const { user } = useLoaderData<typeof loader>()
   const { revalidate } = useRevalidator()
   const navigate = useNavigate()
 
@@ -55,9 +53,6 @@ export default function Index() {
     revalidate()
   }
 
-  const [isOnboardingOpen, setIsOnboardingOpen] = useState(showOnboardingModal)
-  const onboardingModalActive = useAtomValue(onboardingModalAtom)
-
   return (
     <div>
       <div>
@@ -70,10 +65,6 @@ export default function Index() {
           />
         </div>
       </div>
-      <OnboardingModal
-        open={onboardingModalActive.isOpen || isOnboardingOpen}
-        onClose={() => setIsOnboardingOpen(false)}
-      />
       {/* <pre>{JSON.stringify(user, null, 2)}</pre> */}
       <Outlet />
     </div>
