@@ -20,15 +20,26 @@ dataSources:
       language: wasm/assemblyscript
       entities:
         - Account
+        - Activity
         - Atom
         - AtomValue
+        - Deposit
+        - FeeTransfer
+        - Redemption
         - Triple
+        - Vault
       abis:
         - name: EthMultiVault
           file: ./abis/EthMultiVault.json
       eventHandlers:
         - event: AtomCreated(indexed address,indexed address,bytes,uint256)
           handler: handleAtomCreated
+        - event: Deposited(indexed address,indexed address,uint256,uint256,uint256,uint256,uint256)
+          handler: handleDeposited
+        - event: FeesTransferred(indexed address,indexed address,uint256)
+          handler: handleFeesTransferred
+        - event: Redeemed(indexed address,indexed address,uint256,uint256,uint256,uint256,uint256)
+          handler: handleRedeemed
         - event: TripleCreated(indexed address,uint256,uint256,uint256,uint256)
           handler: handleTripleCreated
       file: ./src/eth-multi-vault.ts

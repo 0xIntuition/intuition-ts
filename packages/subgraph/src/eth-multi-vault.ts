@@ -1,8 +1,11 @@
 import {
   AtomCreated,
   TripleCreated,
+  Deposited,
+  FeesTransferred,
+  Redeemed,
 } from '../generated/EthMultiVault/EthMultiVault'
-import { Atom, Account, Triple } from '../generated/schema'
+import { Atom, Account, Triple, Deposit, Redemption, FeeTransfer } from '../generated/schema'
 import { parseAtomData } from './schema.org/parser'
 
 export function handleAtomCreated(event: AtomCreated): void {
@@ -47,3 +50,77 @@ export function handleTripleCreated(event: TripleCreated): void {
 
   triple.save()
 }
+
+
+
+export function handleDeposited(event: Deposited): void {
+  let entity = new Deposit(
+    event.transaction.hash.concatI32(event.logIndex.toI32())
+  )
+  let account = Account.load(event.params.sender.toHexString())
+  if (account === null) {
+    account = new Account(event.params.sender.toHexString())
+    account.save()
+  }
+
+  entity.sender = account.id
+
+  entity.receiver = event.params.receiver
+  entity.vaultBalance = event.params.vaultBalance
+  entity.userAssetsAfterTotalFees = event.params.userAssetsAfterTotalFees
+  entity.sharesForReceiver = event.params.sharesForReceiver
+  entity.entryFee = event.params.entryFee
+  entity.EthMultiVault_id = event.params.id
+
+  entity.blockNumber = event.block.number
+  entity.blockTimestamp = event.block.timestamp
+  entity.transactionHash = event.transaction.hash
+
+  entity.save()
+}
+
+export function handleFeesTransferred(event: FeesTransferred): void {
+  let entity = new FeeTransfer(
+    event.transaction.hash.concatI32(event.logIndex.toI32())
+  )
+
+  let account = Account.load(event.params.sender.toHexString())
+  if (account === null) {
+    account = new Account(event.params.sender.toHexString())
+    account.save()
+  }
+
+  entity.sender = account.id
+  entity.protocolVault = event.params.protocolVault
+  entity.amount = event.params.amount
+
+  entity.blockNumber = event.block.number
+  entity.blockTimestamp = event.block.timestamp
+  entity.transactionHash = event.transaction.hash
+
+  entity.save()
+}
+
+
+
+export function handleRedeemed(event: Redeemed): void {
+  let entity = new Redemption(
+    event.transaction.hash.concatI32(event.logIndex.toI32())
+  )
+  entity.sender = event.params.sender
+  entity.owner = event.params.owner
+  entity.vaultBalance = event.params.vaultBalance
+  entity.assetsForReceiver = event.params.assetsForReceiver
+  entity.shares = event.params.shares
+  entity.exitFee = event.params.exitFee
+  entity.EthMultiVault_id = event.params.id
+
+  entity.blockNumber = event.block.number
+  entity.blockTimestamp = event.block.timestamp
+  entity.transactionHash = event.transaction.hash
+
+  entity.save()
+}
+
+
+

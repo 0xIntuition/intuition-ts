@@ -27,6 +27,8 @@ type Account @entity {
   image: String
   createdAtoms: [Atom!]! @derivedFrom(field: "creator")
   createdTriples: [Triple!]! @derivedFrom(field: "creator")
+  feeTransfers: [FeeTransfer!]! @derivedFrom(field: "sender")
+  deposits: [Deposit!]! @derivedFrom(field: "sender")
 }
 
 type Triple @entity(immutable: true) {
@@ -69,4 +71,42 @@ type Book @entity {
   name: String
   genre: String
   url: String
+}
+
+type Deposit @entity(immutable: true) {
+  id: Bytes!
+  sender: Account! # address
+  receiver: Bytes! # address
+  vaultBalance: BigInt! # uint256
+  userAssetsAfterTotalFees: BigInt! # uint256
+  sharesForReceiver: BigInt! # uint256
+  entryFee: BigInt! # uint256
+  EthMultiVault_id: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type FeeTransfer @entity(immutable: true) {
+  id: Bytes!
+  sender: Account! # address
+  protocolVault: Bytes! # address
+  amount: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type Redemption @entity(immutable: true) {
+  id: Bytes!
+  sender: Bytes! # address
+  owner: Bytes! # address
+  vaultBalance: BigInt! # uint256
+  assetsForReceiver: BigInt! # uint256
+  shares: BigInt! # uint256
+  exitFee: BigInt! # uint256
+  EthMultiVault_id: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
 }
