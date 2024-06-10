@@ -1,12 +1,12 @@
 import { useQuery, gql } from '@apollo/client';
 import {
-  Button,
-  Label, Avatar, AvatarFallback, AvatarImage, HoverCard, HoverCardTrigger
+  Label, HoverCard
 } from '@0xintuition/1ui'
-import { AtomHoverCardContent } from './AtomHoverCardContent';
+import { AtomHoverCardContent } from './components/AtomHoverCardContent';
+import { AtomHoverCardTrigger } from './components/AtomHoverCardTrigger';
 
-const GET_FEED = gql`
-query Feed {
+const GET_TRIPLES = gql`
+query Triples {
   triples {
     id
     subject {
@@ -30,8 +30,8 @@ query Feed {
 }
 `;
 
-export function Feed() {
-  const { loading, error, data } = useQuery(GET_FEED);
+export function Triples() {
+  const { loading, error, data } = useQuery(GET_TRIPLES);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error : {error.message}</p>;
@@ -57,16 +57,3 @@ export function Feed() {
   </ul>)
 }
 
-function AtomHoverCardTrigger({ atom }: { atom: any }) {
-  return (
-    <HoverCardTrigger asChild>
-      <Button variant='text'>
-        <Avatar >
-          <AvatarImage src={atom.image} alt="intuition" />
-          <AvatarFallback>{atom.emoji}</AvatarFallback>
-        </Avatar>
-        <Label>{atom.label}</Label>
-      </Button>
-    </HoverCardTrigger>
-  )
-}

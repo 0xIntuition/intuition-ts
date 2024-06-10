@@ -11,9 +11,10 @@ import {
   SidebarLayoutNavItems,
   SidebarLayoutProvider,
 } from '@0xintuition/1ui'
-import { Feed } from './Feed'
+import { Outlet, useNavigate } from "react-router-dom"
 function App() {
 
+  const navigate = useNavigate()
   return (
     <div
       className="border-border/30 rounded-lg border border-solid h-full w-full"
@@ -76,13 +77,18 @@ function App() {
             <SidebarLayoutNavItems>
               <SidebarLayoutNavItem
                 iconName="crystal-ball"
-                label="Explore This"
-                onClick={() => null}
+                label="Triples"
+                onClick={() => navigate('/triples')}
               />
               <SidebarLayoutNavItem
-                iconName="megaphone"
-                label="Explore That"
-                onClick={() => null}
+                iconName="person-circle"
+                label="Atoms"
+                onClick={() => navigate('/atoms')}
+              />
+              <SidebarLayoutNavItem
+                iconName="person-circle"
+                label="Accounts"
+                onClick={() => navigate('/accounts')}
               />
             </SidebarLayoutNavItems>
             <SidebarLayoutNavFooter>
@@ -99,7 +105,7 @@ function App() {
             </SidebarLayoutNavFooter>
           </SidebarLayoutNav>
           <SidebarLayoutContent className="flex" >
-            <Feed />
+            <Outlet />
           </SidebarLayoutContent>
         </SidebarLayout>
       </SidebarLayoutProvider>
