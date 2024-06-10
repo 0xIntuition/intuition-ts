@@ -146,14 +146,11 @@ export default function IntroRoute() {
           Skip <ArrowRight className="h-4 w-4" />
         </Button>
       </div>
-      <div className="mx-auto">
-        <Carousel
-          slides={SLIDES}
-          options={OPTIONS}
-          onSlideChange={handleSlideChange}
-        />
-      </div>
-
+      <Carousel
+        slides={SLIDES}
+        options={OPTIONS}
+        onSlideChange={handleSlideChange}
+      />
       <fetcher.Form method="post" className="flex w-full" ref={formRef}>
         <input hidden name="redirectUrl" value={'/login'} readOnly />
         <Button
@@ -202,24 +199,28 @@ const Carousel: React.FC<CarouselProps> = (props) => {
   } = usePrevNextButtons(emblaApi)
 
   return (
-    <div className="py-4">
+    <div className="mx-auto w-[600px]">
       <div className="overflow-hidden" ref={emblaRef}>
         <div className="flex touch-pan-y">
           {slides.map((slide, index) => (
             <div className="w-full flex-none" key={index}>
-              <h3 className="mb-4 text-center text-3xl font-semibold text-primary-100">
-                {slide.title}
-              </h3>
-              <p className="px-16 mb-4 text-center text-primary-100/50">
-                {slide.text}
-              </p>
-              {slide.button}
-              <div className="h-[380px]"></div>
+              <div className="w-full flex-col justify-start items-center gap-3.5 inline-flex">
+                <p className="text-center text-white/90 text-3xl font-semibold">
+                  {slide.title}
+                </p>
+                <p className="self-stretch text-center text-white/70 text-xs font-normal leading-[18px]">
+                  {slide.text}
+                </p>
+              </div>
+              <div className="w-full flex-col justify-start items-center gap-7 mt-7 inline-flex">
+                {slide.button}
+                <div className="h-[380px]"></div>
+              </div>
             </div>
           ))}
         </div>
       </div>
-      <div className="z-1 flex items-center justify-center gap-4">
+      <div className="flex items-center justify-center gap-2 mt-7">
         <PrevButton onClick={onPrevButtonClick} disabled={prevBtnDisabled} />
         <div className="flex gap-2">
           {scrollSnaps.map((_, index) => (
