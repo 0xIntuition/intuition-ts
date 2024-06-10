@@ -15,8 +15,7 @@
       "@styles/*": ["app/styles/*"],
       "@server/*": ["app/.server/*"],
       "@client/*": ["app/.client/*"],
-      "@middleware/*": ["app/middleware/*"],
-      "@assets/*": ["src/assets/*"]
+      "@middleware/*": ["app/middleware/*"]
     },
     "outDir": "../../dist/apps/portal"
   },
