@@ -73,3 +73,4 @@ export type IconName =
   | 'trash-can'
   | 'wallet'
   | 'wreath'
+  | 'fingerprint'

@@ -80,6 +80,7 @@ const iconOptions = [
   'trash-can',
   'wallet',
   'wreath',
+  'fingerprint',
 ]
 
 const meta: Meta<typeof Icon> = {
