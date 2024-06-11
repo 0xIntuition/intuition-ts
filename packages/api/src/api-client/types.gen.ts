@@ -47,17 +47,21 @@ export type ActivityPresenter = {
   vault_id: string
 }
 
-export type ActivityQuery = PaginatedRequest &
-  IdentitySort & {
-    blockHash?: string | null
-    blockNumber: string
-    contract?: string | null
-    creator?: Identifier | null
-    eventType?: Event | null
-    fromAddress?: string | null
-    transactionHash?: string | null
-    vaultId: string
-  }
+export type ActivityQuery = {
+  blockHash?: string | null
+  blockNumber?: string | null
+  contract?: string | null
+  creator?: Identifier | null
+  direction?: SortDirection | null
+  eventType?: Event | null
+  fromAddress?: string | null
+  limit?: number | null
+  offset?: number | null
+  page?: number | null
+  sortBy?: SortColumn | null
+  transactionHash?: string | null
+  vaultId?: string | null
+}
 
 export type AtomCreated = {
   atom_data: Blob | File
@@ -108,11 +112,11 @@ export type ClaimPresenter = {
   against_assets_sum: string
   against_conviction_price: string
   against_conviction_sum: string
-  against_num_positions: string
+  against_num_positions: number
   assets_sum: string
   claim_id: string
   contract: string
-  counter_vault_id?: string
+  counter_vault_id: string
   created_at: string
   creator?: UserPresenter | null
   for_assets_sum: string
@@ -125,9 +129,11 @@ export type ClaimPresenter = {
   status: Status
   subject?: IdentityPresenter | null
   updated_at: string
+  user_assets_against: string
+  user_assets_for: string
   user_conviction_against: string
   user_conviction_for: string
-  vault_id?: string
+  vault_id: string
 }
 
 export type ClaimSort = {
@@ -228,10 +234,14 @@ export type DataSetQueries =
       claim: Array<ClaimAttribute>
     }
 
-export type DataSetQuery = PaginatedRequest &
-  DataSetQuerySort & {
-    query: DataSetQueries
-  }
+export type DataSetQuery = {
+  direction?: SortDirection | null
+  limit?: number | null
+  offset?: number | null
+  page?: number | null
+  query: DataSetQueries
+  sortBy?: CombinedSort | null
+}
 
 export type DataSetQuerySort = {
   direction?: SortDirection | null
@@ -472,18 +482,21 @@ export type LinkedAccountPresenter = {
   wallet_client_type?: string | null
 }
 
-export type LinkedAccountQuery = PaginatedRequest &
-  LinkedAccountSort & {
-    account_type?: string | null
-    active?: boolean
-    address?: string | null
-    chain_type?: string | null
-    connector_type?: string | null
-    privy_id?: string | null
-    user_id?: string | null
-    wallet_client?: string | null
-    wallet_client_type?: string | null
-  }
+export type LinkedAccountQuery = {
+  accountType?: string | null
+  address?: string | null
+  chainType?: string | null
+  connectorType?: string | null
+  direction?: SortDirection | null
+  limit?: number | null
+  offset?: number | null
+  page?: number | null
+  privyId?: string | null
+  sortBy?: SortColumn | null
+  userId?: string | null
+  walletClient?: string | null
+  walletClientType?: string | null
+}
 
 export type LinkedAccountSort = {
   direction?: SortDirection | null
@@ -916,10 +929,14 @@ export type UserTotalsPresenter = {
   wallet: string
 }
 
-export type UserTotalsQuery = PaginatedRequest &
-  UserTotalsSort & {
-    timeframe?: TimeFrame | null
-  }
+export type UserTotalsQuery = {
+  direction?: SortDirection | null
+  limit?: number | null
+  offset?: number | null
+  page?: number | null
+  sortBy?: SortColumn | null
+  timeframe?: TimeFrame | null
+}
 
 export type UserTotalsSort = {
   direction?: SortDirection | null
@@ -953,57 +970,27 @@ export type AlchemyWebhookData = {
 
 export type AlchemyWebhookResponse = unknown
 
-export type SearchData = {
+export type GetActivitiesData = {
   blockHash?: string | null
-  blockNumber: string
+  blockNumber?: string | null
   contract?: string | null
   creator?: Identifier | null
+  direction?: SortDirection | null
   eventType?: Event | null
   fromAddress?: string | null
-  paging: PaginatedRequest
-  sort: IdentitySort
+  limit?: number | null
+  offset?: number | null
+  page?: number | null
+  sortBy?: SortColumn | null
   transactionHash?: string | null
-  vaultId: string
+  vaultId?: string | null
 }
 
-export type SearchResponse = {
-  admin?: string | null
-  atom_cost: string
-  atom_creation_fee: string
-  block_hash: string
-  block_number: string
-  contract: string
-  created_at: string
-  cumulative_gas_used: string
-  effective_gas_price: string
-  entry_fee: string
-  event_type: Event
-  exit_fee: string
-  fee_denominator: string
-  from_address: string
-  gas: string
-  gas_price: string
-  gas_used: string
-  id: string
-  input_data?: InputData | null
-  logs?: Array<LogType> | null
-  max_fee_per_gas: string
-  min_deposit: string
-  min_share: string
-  net_user_assets: string
-  protocol_fee: string
-  protocol_fee_paid: string
-  protocol_vault?: string | null
-  raw_input_data: string
-  share_price: string
-  timestamp: string
-  total_assets: string
-  total_shares: string
-  transaction_hash?: string | null
-  value: string
-  vault_assets: string
-  vault_balance: string
-  vault_id: string
+export type GetActivitiesResponse = {
+  data: Array<ActivityPresenter>
+  limit: number
+  page: number
+  total: number
 }
 
 export type GetActivityByIdData = {
@@ -1053,6 +1040,15 @@ export type GetActivityByIdResponse = {
   vault_id: string
 }
 
+export type RetryActivityData = {
+  /**
+   * sql id
+   */
+  id: string
+}
+
+export type RetryActivityResponse = unknown
+
 export type AuthData = {
   requestBody: DidQuery
 }
@@ -1074,6 +1070,21 @@ export type RefreshResponse = {
 
 export type RevokeResponse = unknown
 
+export type GetClaimPositionsData = {
+  creator?: Identifier | null
+  direction?: SortDirection | null
+  /**
+   * sql id or vault number
+   */
+  id: Identifier
+  limit?: number | null
+  offset?: number | null
+  page?: number | null
+  sortBy?: PositionSortColumn | null
+  timeframe?: TimeFrame | null
+  userWallet?: string | null
+}
+
 export type GetClaimPositionsResponse = {
   data: Array<PositionPresenter>
   limit: number
@@ -1081,7 +1092,15 @@ export type GetClaimPositionsResponse = {
   total: number
 }
 
-export type GetAllResponse = {
+export type GetClaimsData = {
+  direction?: SortDirection | null
+  limit?: number | null
+  offset?: number | null
+  page?: number | null
+  sortBy?: ClaimSortColumn | null
+}
+
+export type GetClaimsResponse = {
   data: Array<ClaimPresenter>
   limit: number
   page: number
@@ -1096,11 +1115,11 @@ export type CreateClaimResponse = {
   against_assets_sum: string
   against_conviction_price: string
   against_conviction_sum: string
-  against_num_positions: string
+  against_num_positions: number
   assets_sum: string
   claim_id: string
   contract: string
-  counter_vault_id?: string
+  counter_vault_id: string
   created_at: string
   creator?: UserPresenter | null
   for_assets_sum: string
@@ -1113,9 +1132,37 @@ export type CreateClaimResponse = {
   status: Status
   subject?: IdentityPresenter | null
   updated_at: string
+  user_assets_against: string
+  user_assets_for: string
   user_conviction_against: string
   user_conviction_for: string
-  vault_id?: string
+  vault_id: string
+}
+
+export type SearchClaimsData = {
+  againstUser?: Identifier | null
+  counterVault?: Identifier | null
+  creator?: Identifier | null
+  direction?: SortDirection | null
+  displayName?: string | null
+  forUser?: Identifier | null
+  identity?: Identifier | null
+  limit?: number | null
+  object?: Identifier | null
+  offset?: number | null
+  page?: number | null
+  predicate?: Identifier | null
+  sortBy?: ClaimSortColumn | null
+  status?: Status | null
+  subject?: Identifier | null
+  vault?: Identifier | null
+}
+
+export type SearchClaimsResponse = {
+  data: Array<ClaimPresenter>
+  limit: number
+  page: number
+  total: number
 }
 
 export type GetClaimByIdData = {
@@ -1129,11 +1176,11 @@ export type GetClaimByIdResponse = {
   against_assets_sum: string
   against_conviction_price: string
   against_conviction_sum: string
-  against_num_positions: string
+  against_num_positions: number
   assets_sum: string
   claim_id: string
   contract: string
-  counter_vault_id?: string
+  counter_vault_id: string
   created_at: string
   creator?: UserPresenter | null
   for_assets_sum: string
@@ -1146,9 +1193,11 @@ export type GetClaimByIdResponse = {
   status: Status
   subject?: IdentityPresenter | null
   updated_at: string
+  user_assets_against: string
+  user_assets_for: string
   user_conviction_against: string
   user_conviction_for: string
-  vault_id?: string
+  vault_id: string
 }
 
 export type UpdateClaimData = {
@@ -1163,11 +1212,11 @@ export type UpdateClaimResponse = {
   against_assets_sum: string
   against_conviction_price: string
   against_conviction_sum: string
-  against_num_positions: string
+  against_num_positions: number
   assets_sum: string
   claim_id: string
   contract: string
-  counter_vault_id?: string
+  counter_vault_id: string
   created_at: string
   creator?: UserPresenter | null
   for_assets_sum: string
@@ -1180,36 +1229,19 @@ export type UpdateClaimResponse = {
   status: Status
   subject?: IdentityPresenter | null
   updated_at: string
+  user_assets_against: string
+  user_assets_for: string
   user_conviction_against: string
   user_conviction_for: string
-  vault_id?: string
-}
-
-export type SearchClaimsData = {
-  againstUser?: Identifier | null
-  counterVault?: Identifier | null
-  creator?: Identifier | null
-  displayName?: string | null
-  forUser?: Identifier | null
-  identity?: Identifier | null
-  object?: Identifier | null
-  paging: PaginatedRequest
-  predicate?: Identifier | null
-  status?: Status | null
-  subject?: Identifier | null
-  vault?: Identifier | null
-}
-
-export type SearchClaimsResponse = {
-  data: Array<ClaimPresenter>
-  limit: number
-  page: number
-  total: number
+  vault_id: string
 }
 
 export type GetIdentitiesData = {
-  paging: PaginatedRequest
-  sort: IdentitySort
+  direction?: SortDirection | null
+  limit?: number | null
+  offset?: number | null
+  page?: number | null
+  sortBy?: SortColumn | null
   timeframe?: TimeFrame | null
   userWallet?: string | null
 }
@@ -1318,14 +1350,17 @@ export type CreateIdentityResponse = {
 export type SearchIdentityData = {
   creator?: Identifier | null
   description?: string | null
+  direction?: SortDirection | null
   displayName?: string | null
   identityId?: IdentityId | null
   isContract?: boolean | null
   isUser?: boolean | null
+  limit?: number | null
   linkedAccountUsername?: string | null
-  paging: PaginatedRequest
+  offset?: number | null
+  page?: number | null
   predicate?: boolean | null
-  sort: IdentitySort
+  sortBy?: SortColumn | null
   status?: Status | null
   timeframe?: TimeFrame | null
   userWallet?: string | null
@@ -1378,6 +1413,21 @@ export type GetIdentityByIdResponse = {
   vault_uuid?: string | null
 }
 
+export type GetIdentityPositionsData = {
+  creator?: Identifier | null
+  direction?: SortDirection | null
+  /**
+   * sql id,identity_id string, or vault number
+   */
+  id: Identifier
+  limit?: number | null
+  offset?: number | null
+  page?: number | null
+  sortBy?: PositionSortColumn | null
+  timeframe?: TimeFrame | null
+  userWallet?: string | null
+}
+
 export type GetIdentityPositionsResponse = {
   data: Array<PositionPresenter>
   limit: number
@@ -1387,13 +1437,15 @@ export type GetIdentityPositionsResponse = {
 
 export type GetLinkedAccountsData = {
   accountType?: string | null
-  active?: boolean
   address?: string | null
   chainType?: string | null
   connectorType?: string | null
-  paging: PaginatedRequest
+  direction?: SortDirection | null
+  limit?: number | null
+  offset?: number | null
+  page?: number | null
   privyId?: string | null
-  sort: LinkedAccountSort
+  sortBy?: SortColumn | null
   userId?: string | null
   walletClient?: string | null
   walletClientType?: string | null
@@ -1521,6 +1573,25 @@ export type CreatePositionResponse = {
   vault_uuid?: string | null
 }
 
+export type SearchPositionsData = {
+  claim?: Identifier | null
+  conviction?: number | null
+  creator?: Identifier | null
+  identity?: Identifier | null
+  paging: PaginatedRequest
+  sort: PositionSort
+  status?: Status | null
+  vault?: Identifier | null
+  vaultUuid?: string | null
+}
+
+export type SearchPositionsResponse = {
+  data: Array<PositionPresenter>
+  limit: number
+  page: number
+  total: number
+}
+
 export type GetPositionByIdData = {
   /**
    * Position sql id or vault number
@@ -1574,25 +1645,6 @@ export type UpdatePositionResponse = {
   vault_uuid?: string | null
 }
 
-export type SearchPositionsData = {
-  claim?: Identifier | null
-  conviction?: number | null
-  creator?: Identifier | null
-  identity?: Identifier | null
-  paging: PaginatedRequest
-  sort: PositionSort
-  status?: Status | null
-  vault?: Identifier | null
-  vaultUuid?: string | null
-}
-
-export type SearchPositionsResponse = {
-  data: Array<PositionPresenter>
-  limit: number
-  page: number
-  total: number
-}
-
 export type GetQueryStructureResponse = unknown
 
 export type RunDynamicQueryData = {
@@ -1616,6 +1668,86 @@ export type CreateUserData = {
 }
 
 export type CreateUserResponse = {
+  api_key?: string | null
+  created_at: string
+  did?: string | null
+  display_name?: string | null
+  ens_name?: string | null
+  id: string
+  image?: string | null
+  last_login?: string | null
+  privy_id?: string | null
+  role: Role
+  updated_at: string
+  wallet: string
+}
+
+export type ReissueApiKeyResponse = {
+  api_key?: string | null
+  created_at: string
+  did?: string | null
+  display_name?: string | null
+  ens_name?: string | null
+  id: string
+  image?: string | null
+  last_login?: string | null
+  privy_id?: string | null
+  role: Role
+  updated_at: string
+  wallet: string
+}
+
+export type GetUserIdentitiesResponse = {
+  data: Array<IdentityPresenter>
+  limit: number
+  page: number
+  total: number
+}
+
+export type GetUsersPositionsResponse = {
+  data: Array<PositionPresenter>
+  limit: number
+  page: number
+  total: number
+}
+
+export type GetAllUsersTotalsResponse = {
+  data: Array<UserTotalsPresenter>
+  limit: number
+  page: number
+  total: number
+}
+
+export type GetUserByWalletPublicData = {
+  /**
+   * User wallet
+   */
+  wallet: string
+}
+
+export type GetUserByWalletPublicResponse = {
+  api_key?: string | null
+  created_at: string
+  did?: string | null
+  display_name?: string | null
+  ens_name?: string | null
+  id: string
+  image?: string | null
+  last_login?: string | null
+  privy_id?: string | null
+  role: Role
+  updated_at: string
+  wallet: string
+}
+
+export type GetUserByWalletData = {
+  /**
+   * User wallet
+   */
+  wallet: string
+}
+
+export type GetUserByWalletResponse = {
   api_key?: string | null
   created_at: string
   did?: string | null
@@ -1805,86 +1937,6 @@ export type GetUserTotalsResponse = {
   wallet: string
 }
 
-export type ReissueApiKeyResponse = {
-  api_key?: string | null
-  created_at: string
-  did?: string | null
-  display_name?: string | null
-  ens_name?: string | null
-  id: string
-  image?: string | null
-  last_login?: string | null
-  privy_id?: string | null
-  role: Role
-  updated_at: string
-  wallet: string
-}
-
-export type GetUserIdentitiesResponse = {
-  data: Array<IdentityPresenter>
-  limit: number
-  page: number
-  total: number
-}
-
-export type GetUsersPositionsResponse = {
-  data: Array<PositionPresenter>
-  limit: number
-  page: number
-  total: number
-}
-
-export type GetAllUsersTotalsResponse = {
-  data: Array<UserTotalsPresenter>
-  limit: number
-  page: number
-  total: number
-}
-
-export type GetUserByWalletPublicData = {
-  /**
-   * User wallet
-   */
-  wallet: string
-}
-
-export type GetUserByWalletPublicResponse = {
-  api_key?: string | null
-  created_at: string
-  did?: string | null
-  display_name?: string | null
-  ens_name?: string | null
-  id: string
-  image?: string | null
-  last_login?: string | null
-  privy_id?: string | null
-  role: Role
-  updated_at: string
-  wallet: string
-}
-
-export type GetUserByWalletData = {
-  /**
-   * User wallet
-   */
-  wallet: string
-}
-
-export type GetUserByWalletResponse = {
-  api_key?: string | null
-  created_at: string
-  did?: string | null
-  display_name?: string | null
-  ens_name?: string | null
-  id: string
-  image?: string | null
-  last_login?: string | null
-  privy_id?: string | null
-  role: Role
-  updated_at: string
-  wallet: string
-}
-
 export type AddWebhookData = {
   requestBody: CreateWebhook
 }
@@ -1909,63 +1961,33 @@ export type $OpenApiTs = {
     get: {
       req: {
         blockHash?: string | null
-        blockNumber: string
+        blockNumber?: string | null
         contract?: string | null
         creator?: Identifier | null
+        direction?: SortDirection | null
         eventType?: Event | null
         fromAddress?: string | null
-        paging: PaginatedRequest
-        sort: IdentitySort
+        limit?: number | null
+        offset?: number | null
+        page?: number | null
+        sortBy?: SortColumn | null
         transactionHash?: string | null
-        vaultId: string
+        vaultId?: string | null
       }
       res: {
         /**
          * Search activities in paginated list
          */
         200: {
-          admin?: string | null
-          atom_cost: string
-          atom_creation_fee: string
-          block_hash: string
-          block_number: string
-          contract: string
-          created_at: string
-          cumulative_gas_used: string
-          effective_gas_price: string
-          entry_fee: string
-          event_type: Event
-          exit_fee: string
-          fee_denominator: string
-          from_address: string
-          gas: string
-          gas_price: string
-          gas_used: string
-          id: string
-          input_data?: InputData | null
-          logs?: Array<LogType> | null
-          max_fee_per_gas: string
-          min_deposit: string
-          min_share: string
-          net_user_assets: string
-          protocol_fee: string
-          protocol_fee_paid: string
-          protocol_vault?: string | null
-          raw_input_data: string
-          share_price: string
-          timestamp: string
-          total_assets: string
-          total_shares: string
-          transaction_hash?: string | null
-          value: string
-          vault_assets: string
-          vault_balance: string
-          vault_id: string
+          data: Array<ActivityPresenter>
+          limit: number
+          page: number
+          total: number
         }
       }
     }
   }
-  '/activities/:id': {
+  '/activities/{id}': {
     get: {
       req: {
         /**
@@ -2019,6 +2041,19 @@ export type $OpenApiTs = {
       }
     }
   }
+  '/activities/{id}/retry': {
+    post: {
+      req: {
+        /**
+         * sql id
+         */
+        id: string
+      }
+      res: {
+        200: unknown
+      }
+    }
+  }
   '/auth': {
     post: {
       req: {
@@ -2062,8 +2097,22 @@ export type $OpenApiTs = {
       }
     }
   }
-  '/claim/:id/positions': {
+  '/claim/{id}/positions': {
     get: {
+      req: {
+        creator?: Identifier | null
+        direction?: SortDirection | null
+        /**
+         * sql id or vault number
+         */
+        id: Identifier
+        limit?: number | null
+        offset?: number | null
+        page?: number | null
+        sortBy?: PositionSortColumn | null
+        timeframe?: TimeFrame | null
+        userWallet?: string | null
+      }
       res: {
         /**
          * Get all claim positions
@@ -2079,6 +2128,13 @@ export type $OpenApiTs = {
   }
   '/claims': {
     get: {
+      req: {
+        direction?: SortDirection | null
+        limit?: number | null
+        offset?: number | null
+        page?: number | null
+        sortBy?: ClaimSortColumn | null
+      }
       res: {
         /**
          * Get all claims in paginated list
@@ -2103,11 +2159,11 @@ export type $OpenApiTs = {
           against_assets_sum: string
           against_conviction_price: string
           against_conviction_sum: string
-          against_num_positions: string
+          against_num_positions: number
           assets_sum: string
           claim_id: string
           contract: string
-          counter_vault_id?: string
+          counter_vault_id: string
           created_at: string
           creator?: UserPresenter | null
           for_assets_sum: string
@@ -2120,14 +2176,49 @@ export type $OpenApiTs = {
           status: Status
           subject?: IdentityPresenter | null
           updated_at: string
+          user_assets_against: string
+          user_assets_for: string
           user_conviction_against: string
           user_conviction_for: string
-          vault_id?: string
+          vault_id: string
         }
       }
     }
   }
-  '/claims/:id': {
+  '/claims/search': {
+    get: {
+      req: {
+        againstUser?: Identifier | null
+        counterVault?: Identifier | null
+        creator?: Identifier | null
+        direction?: SortDirection | null
+        displayName?: string | null
+        forUser?: Identifier | null
+        identity?: Identifier | null
+        limit?: number | null
+        object?: Identifier | null
+        offset?: number | null
+        page?: number | null
+        predicate?: Identifier | null
+        sortBy?: ClaimSortColumn | null
+        status?: Status | null
+        subject?: Identifier | null
+        vault?: Identifier | null
+      }
+      res: {
+        /**
+         * Search claims in paginated list
+         */
+        200: {
+          data: Array<ClaimPresenter>
+          limit: number
+          page: number
+          total: number
+        }
+      }
+    }
+  }
+  '/claims/{id}': {
     get: {
       req: {
         /**
@@ -2143,11 +2234,11 @@ export type $OpenApiTs = {
           against_assets_sum: string
           against_conviction_price: string
           against_conviction_sum: string
-          against_num_positions: string
+          against_num_positions: number
           assets_sum: string
           claim_id: string
           contract: string
-          counter_vault_id?: string
+          counter_vault_id: string
           created_at: string
           creator?: UserPresenter | null
           for_assets_sum: string
@@ -2160,9 +2251,11 @@ export type $OpenApiTs = {
           status: Status
           subject?: IdentityPresenter | null
           updated_at: string
+          user_assets_against: string
+          user_assets_for: string
           user_conviction_against: string
           user_conviction_for: string
-          vault_id?: string
+          vault_id: string
         }
       }
     }
@@ -2182,11 +2275,11 @@ export type $OpenApiTs = {
           against_assets_sum: string
           against_conviction_price: string
           against_conviction_sum: string
-          against_num_positions: string
+          against_num_positions: number
           assets_sum: string
           claim_id: string
           contract: string
-          counter_vault_id?: string
+          counter_vault_id: string
           created_at: string
           creator?: UserPresenter | null
           for_assets_sum: string
@@ -2199,38 +2292,11 @@ export type $OpenApiTs = {
           status: Status
           subject?: IdentityPresenter | null
           updated_at: string
+          user_assets_against: string
+          user_assets_for: string
           user_conviction_against: string
           user_conviction_for: string
-          vault_id?: string
-        }
-      }
-    }
-  }
-  '/claims/search': {
-    get: {
-      req: {
-        againstUser?: Identifier | null
-        counterVault?: Identifier | null
-        creator?: Identifier | null
-        displayName?: string | null
-        forUser?: Identifier | null
-        identity?: Identifier | null
-        object?: Identifier | null
-        paging: PaginatedRequest
-        predicate?: Identifier | null
-        status?: Status | null
-        subject?: Identifier | null
-        vault?: Identifier | null
-      }
-      res: {
-        /**
-         * Search claims in paginated list
-         */
-        200: {
-          data: Array<ClaimPresenter>
-          limit: number
-          page: number
-          total: number
+          vault_id: string
         }
       }
     }
@@ -2238,8 +2304,11 @@ export type $OpenApiTs = {
   '/identities': {
     get: {
       req: {
-        paging: PaginatedRequest
-        sort: IdentitySort
+        direction?: SortDirection | null
+        limit?: number | null
+        offset?: number | null
+        page?: number | null
+        sortBy?: SortColumn | null
         timeframe?: TimeFrame | null
         userWallet?: string | null
       }
@@ -2256,7 +2325,7 @@ export type $OpenApiTs = {
       }
     }
   }
-  '/identities/:id': {
+  '/identities/{id}': {
     put: {
       req: {
         /**
@@ -2369,14 +2438,17 @@ export type $OpenApiTs = {
       req: {
         creator?: Identifier | null
         description?: string | null
+        direction?: SortDirection | null
         displayName?: string | null
         identityId?: IdentityId | null
         isContract?: boolean | null
         isUser?: boolean | null
+        limit?: number | null
         linkedAccountUsername?: string | null
-        paging: PaginatedRequest
+        offset?: number | null
+        page?: number | null
         predicate?: boolean | null
-        sort: IdentitySort
+        sortBy?: SortColumn | null
         status?: Status | null
         timeframe?: TimeFrame | null
         userWallet?: string | null
@@ -2441,8 +2513,22 @@ export type $OpenApiTs = {
       }
     }
   }
-  '/identity/:id/positions': {
+  '/identity/{id}/positions': {
     get: {
+      req: {
+        creator?: Identifier | null
+        direction?: SortDirection | null
+        /**
+         * sql id,identity_id string, or vault number
+         */
+        id: Identifier
+        limit?: number | null
+        offset?: number | null
+        page?: number | null
+        sortBy?: PositionSortColumn | null
+        timeframe?: TimeFrame | null
+        userWallet?: string | null
+      }
       res: {
         /**
          * Get all identity positions
@@ -2460,13 +2546,15 @@ export type $OpenApiTs = {
     get: {
       req: {
         accountType?: string | null
-        active?: boolean
         address?: string | null
         chainType?: string | null
         connectorType?: string | null
-        paging: PaginatedRequest
+        direction?: SortDirection | null
+        limit?: number | null
+        offset?: number | null
+        page?: number | null
         privyId?: string | null
-        sort: LinkedAccountSort
+        sortBy?: SortColumn | null
         userId?: string | null
         walletClient?: string | null
         walletClientType?: string | null
@@ -2508,7 +2596,7 @@ export type $OpenApiTs = {
       }
     }
   }
-  '/linked_accounts/:identifier': {
+  '/linked_accounts/{identifier}': {
     get: {
       req: {
         /**
@@ -2540,7 +2628,7 @@ export type $OpenApiTs = {
       }
     }
   }
-  '/linked_accounts/:identifier/activate': {
+  '/linked_accounts/{identifier}/activate': {
     put: {
       req: {
         /**
@@ -2571,7 +2659,7 @@ export type $OpenApiTs = {
       }
     }
   }
-  '/linked_accounts/:identifier/deactivate': {
+  '/linked_accounts/{identifier}/deactivate': {
     put: {
       req: {
         /**
@@ -2632,7 +2720,33 @@ export type $OpenApiTs = {
       }
     }
   }
-  '/positions/:id': {
+  '/positions/search': {
+    get: {
+      req: {
+        claim?: Identifier | null
+        conviction?: number | null
+        creator?: Identifier | null
+        identity?: Identifier | null
+        paging: PaginatedRequest
+        sort: PositionSort
+        status?: Status | null
+        vault?: Identifier | null
+        vaultUuid?: string | null
+      }
+      res: {
+        /**
+         * Search positions in paginated list
+         */
+        200: {
+          data: Array<PositionPresenter>
+          limit: number
+          page: number
+          total: number
+        }
+      }
+    }
+  }
+  '/positions/{id}': {
     get: {
       req: {
         /**
@@ -2693,32 +2807,6 @@ export type $OpenApiTs = {
           vault_id: string
           vault_type: VaultType
           vault_uuid?: string | null
-        }
-      }
-    }
-  }
-  '/positions/search': {
-    get: {
-      req: {
-        claim?: Identifier | null
-        conviction?: number | null
-        creator?: Identifier | null
-        identity?: Identifier | null
-        paging: PaginatedRequest
-        sort: PositionSort
-        status?: Status | null
-        vault?: Identifier | null
-        vaultUuid?: string | null
-      }
-      res: {
-        /**
-         * Search positions in paginated list
-         */
-        200: {
-          data: Array<PositionPresenter>
-          limit: number
-          page: number
-          total: number
         }
       }
     }
@@ -2786,7 +2874,133 @@ export type $OpenApiTs = {
       }
     }
   }
-  '/users/:id': {
+  '/users/apikey': {
+    post: {
+      res: {
+        /**
+         * Re-issue API key
+         */
+        200: {
+          api_key?: string | null
+          created_at: string
+          did?: string | null
+          display_name?: string | null
+          ens_name?: string | null
+          id: string
+          image?: string | null
+          last_login?: string | null
+          privy_id?: string | null
+          role: Role
+          updated_at: string
+          wallet: string
+        }
+      }
+    }
+  }
+  '/users/identities': {
+    get: {
+      res: {
+        /**
+         * Get identities user has position on
+         */
+        200: {
+          data: Array<IdentityPresenter>
+          limit: number
+          page: number
+          total: number
+        }
+      }
+    }
+  }
+  '/users/positions': {
+    get: {
+      res: {
+        /**
+         * Get positions for user
+         */
+        200: {
+          data: Array<PositionPresenter>
+          limit: number
+          page: number
+          total: number
+        }
+      }
+    }
+  }
+  '/users/totals': {
+    get: {
+      res: {
+        /**
+         * Get total position values for paginated set of users
+         */
+        200: {
+          data: Array<UserTotalsPresenter>
+          limit: number
+          page: number
+          total: number
+        }
+      }
+    }
+  }
+  '/users/wallet/{wallet}': {
+    get: {
+      req: {
+        /**
+         * User wallet
+         */
+        wallet: string
+      }
+      res: {
+        /**
+         * Get single user by id
+         */
+        200: {
+          api_key?: string | null
+          created_at: string
+          did?: string | null
+          display_name?: string | null
+          ens_name?: string | null
+          id: string
+          image?: string | null
+          last_login?: string | null
+          privy_id?: string | null
+          role: Role
+          updated_at: string
+          wallet: string
+        }
+      }
+    }
+  }
+  '/users/wallet/{wallet}/private': {
+    get: {
+      req: {
+        /**
+         * User wallet
+         */
+        wallet: string
+      }
+      res: {
+        /**
+         * Get single user by id
+         */
+        200: {
+          api_key?: string | null
+          created_at: string
+          did?: string | null
+          display_name?: string | null
+          ens_name?: string | null
+          id: string
+          image?: string | null
+          last_login?: string | null
+          privy_id?: string | null
+          role: Role
+          updated_at: string
+          wallet: string
+        }
+      }
+    }
+  }
+  '/users/{id}': {
     get: {
       req: {
         /**
@@ -2870,7 +3084,7 @@ export type $OpenApiTs = {
       }
     }
   }
-  '/users/:id/ens': {
+  '/users/{id}/ens': {
     put: {
       req: {
         /**
@@ -2899,7 +3113,7 @@ export type $OpenApiTs = {
       }
     }
   }
-  '/users/:id/linked_accounts': {
+  '/users/{id}/linked_accounts': {
     get: {
       req: {
         /**
@@ -2920,7 +3134,7 @@ export type $OpenApiTs = {
       }
     }
   }
-  '/users/:id/points': {
+  '/users/{id}/points': {
     put: {
       req: {
         /**
@@ -2950,7 +3164,7 @@ export type $OpenApiTs = {
       }
     }
   }
-  '/users/:id/private': {
+  '/users/{id}/private': {
     get: {
       req: {
         /**
@@ -2979,7 +3193,7 @@ export type $OpenApiTs = {
       }
     }
   }
-  '/users/:id/totals': {
+  '/users/{id}/totals': {
     get: {
       req: {
         /**
@@ -3008,132 +3222,6 @@ export type $OpenApiTs = {
           total_protocol_fee_paid: string
           updated_at?: string | null
           user_points: number
-          wallet: string
-        }
-      }
-    }
-  }
-  '/users/apikey': {
-    post: {
-      res: {
-        /**
-         * Re-issue API key
-         */
-        200: {
-          api_key?: string | null
-          created_at: string
-          did?: string | null
-          display_name?: string | null
-          ens_name?: string | null
-          id: string
-          image?: string | null
-          last_login?: string | null
-          privy_id?: string | null
-          role: Role
-          updated_at: string
-          wallet: string
-        }
-      }
-    }
-  }
-  '/users/identities': {
-    get: {
-      res: {
-        /**
-         * Get identities user has position on
-         */
-        200: {
-          data: Array<IdentityPresenter>
-          limit: number
-          page: number
-          total: number
-        }
-      }
-    }
-  }
-  '/users/positions': {
-    get: {
-      res: {
-        /**
-         * Get positions for user
-         */
-        200: {
-          data: Array<PositionPresenter>
-          limit: number
-          page: number
-          total: number
-        }
-      }
-    }
-  }
-  '/users/totals': {
-    get: {
-      res: {
-        /**
-         * Get total position values for paginated set of users
-         */
-        200: {
-          data: Array<UserTotalsPresenter>
-          limit: number
-          page: number
-          total: number
-        }
-      }
-    }
-  }
-  '/users/wallet/:wallet': {
-    get: {
-      req: {
-        /**
-         * User wallet
-         */
-        wallet: string
-      }
-      res: {
-        /**
-         * Get single user by id
-         */
-        200: {
-          api_key?: string | null
-          created_at: string
-          did?: string | null
-          display_name?: string | null
-          ens_name?: string | null
-          id: string
-          image?: string | null
-          last_login?: string | null
-          privy_id?: string | null
-          role: Role
-          updated_at: string
-          wallet: string
-        }
-      }
-    }
-  }
-  '/users/wallet/:wallet/private': {
-    get: {
-      req: {
-        /**
-         * User wallet
-         */
-        wallet: string
-      }
-      res: {
-        /**
-         * Get single user by id
-         */
-        200: {
-          api_key?: string | null
-          created_at: string
-          did?: string | null
-          display_name?: string | null
-          ens_name?: string | null
-          id: string
-          image?: string | null
-          last_login?: string | null
-          privy_id?: string | null
-          role: Role
-          updated_at: string
           wallet: string
         }
       }

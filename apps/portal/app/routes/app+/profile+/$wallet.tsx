@@ -70,9 +70,10 @@ export default function PublicProfile() {
   return (
     <div className="m-8 flex flex-col items-center gap-4">
       <div className="flex flex-col">
-        Public profile route test
-        {JSON.stringify(userIdentity)}
-        {JSON.stringify(userTotals)}
+        <h3>User Identity</h3>
+        <p className="w-[600px] text-wrap">{JSON.stringify(userIdentity)}</p>
+        <h3>User Totals</h3>
+        <p>{JSON.stringify(userTotals)}</p>
       </div>
     </div>
   )

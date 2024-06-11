@@ -26,17 +26,22 @@ import type {
   DeactivateLinkedAccountResponse,
   DeleteUserData,
   DeleteUserResponse,
+  GetActivitiesData,
+  GetActivitiesResponse,
   GetActivityByIdData,
   GetActivityByIdResponse,
-  GetAllResponse,
   GetAllUsersTotalsResponse,
   GetClaimByIdData,
   GetClaimByIdResponse,
+  GetClaimPositionsData,
   GetClaimPositionsResponse,
+  GetClaimsData,
+  GetClaimsResponse,
   GetIdentitiesData,
   GetIdentitiesResponse,
   GetIdentityByIdData,
   GetIdentityByIdResponse,
+  GetIdentityPositionsData,
   GetIdentityPositionsResponse,
   GetLinkedAccountByIdData,
   GetLinkedAccountByIdResponse,
@@ -63,17 +68,17 @@ import type {
   RefreshData,
   RefreshResponse,
   ReissueApiKeyResponse,
+  RetryActivityData,
+  RetryActivityResponse,
   RevokeResponse,
   RunDynamicQueryData,
   RunDynamicQueryResponse,
   SearchClaimsData,
   SearchClaimsResponse,
-  SearchData,
   SearchIdentityData,
   SearchIdentityResponse,
   SearchPositionsData,
   SearchPositionsResponse,
-  SearchResponse,
   UpdateClaimData,
   UpdateClaimResponse,
   UpdateIdentityData,
@@ -110,34 +115,42 @@ export class AlchemyControllerService {
 export class ActivitiesService {
   /**
    * @param data The data for the request.
-   * @param data.blockNumber
-   * @param data.vaultId
-   * @param data.paging
-   * @param data.sort
+   * @param data.direction
+   * @param data.sortBy
+   * @param data.page
+   * @param data.offset
+   * @param data.limit
    * @param data.eventType
    * @param data.contract
    * @param data.creator
    * @param data.blockHash
    * @param data.transactionHash
    * @param data.fromAddress
+   * @param data.blockNumber
+   * @param data.vaultId
    * @returns unknown Search activities in paginated list
    * @throws ApiError
    */
-  public static search(data: SearchData): CancelablePromise<SearchResponse> {
+  public static getActivities(
+    data: GetActivitiesData = {},
+  ): CancelablePromise<GetActivitiesResponse> {
     return __request(OpenAPI, {
       method: 'GET',
       url: '/activities',
       query: {
+        direction: data.direction,
+        sortBy: data.sortBy,
+        page: data.page,
+        offset: data.offset,
+        limit: data.limit,
         eventType: data.eventType,
         contract: data.contract,
         creator: data.creator,
         blockHash: data.blockHash,
         transactionHash: data.transactionHash,
-        blockNumber: data.blockNumber,
         fromAddress: data.fromAddress,
+        blockNumber: data.blockNumber,
         vaultId: data.vaultId,
-        paging: data.paging,
-        sort: data.sort,
       },
     })
   }
@@ -153,7 +166,25 @@ export class ActivitiesService {
   ): CancelablePromise<GetActivityByIdResponse> {
     return __request(OpenAPI, {
       method: 'GET',
-      url: '/activities/:id',
+      url: '/activities/{id}',
+      path: {
+        id: data.id,
+      },
+    })
+  }
+
+  /**
+   * @param data The data for the request.
+   * @param data.id sql id
+   * @returns unknown
+   * @throws ApiError
+   */
+  public static retryActivity(
+    data: RetryActivityData,
+  ): CancelablePromise<RetryActivityResponse> {
+    return __request(OpenAPI, {
+      method: 'POST',
+      url: '/activities/{id}/retry',
       path: {
         id: data.id,
       },
@@ -206,26 +237,66 @@ export class AuthService {
 
 export class ClaimPositionsService {
   /**
+   * @param data The data for the request.
+   * @param data.id sql id or vault number
+   * @param data.direction
+   * @param data.sortBy
+   * @param data.page
+   * @param data.offset
+   * @param data.limit
+   * @param data.userWallet
+   * @param data.timeframe
+   * @param data.creator
    * @returns unknown Get all claim positions
    * @throws ApiError
    */
-  public static getClaimPositions(): CancelablePromise<GetClaimPositionsResponse> {
+  public static getClaimPositions(
+    data: GetClaimPositionsData,
+  ): CancelablePromise<GetClaimPositionsResponse> {
     return __request(OpenAPI, {
       method: 'GET',
-      url: '/claim/:id/positions',
+      url: '/claim/{id}/positions',
+      path: {
+        id: data.id,
+      },
+      query: {
+        direction: data.direction,
+        sortBy: data.sortBy,
+        page: data.page,
+        offset: data.offset,
+        limit: data.limit,
+        userWallet: data.userWallet,
+        timeframe: data.timeframe,
+        creator: data.creator,
+      },
     })
   }
 }
 
 export class ClaimsService {
   /**
+   * @param data The data for the request.
+   * @param data.direction
+   * @param data.sortBy
+   * @param data.page
+   * @param data.offset
+   * @param data.limit
    * @returns unknown Get all claims in paginated list
    * @throws ApiError
    */
-  public static getAll(): CancelablePromise<GetAllResponse> {
+  public static getClaims(
+    data: GetClaimsData = {},
+  ): CancelablePromise<GetClaimsResponse> {
     return __request(OpenAPI, {
       method: 'GET',
       url: '/claims',
+      query: {
+        direction: data.direction,
+        sortBy: data.sortBy,
+        page: data.page,
+        offset: data.offset,
+        limit: data.limit,
+      },
     })
   }
 
@@ -248,6 +319,54 @@ export class ClaimsService {
 
   /**
    * @param data The data for the request.
+   * @param data.direction
+   * @param data.sortBy
+   * @param data.page
+   * @param data.offset
+   * @param data.limit
+   * @param data.creator
+   * @param data.subject
+   * @param data.identity
+   * @param data.object
+   * @param data.predicate
+   * @param data.vault
+   * @param data.displayName
+   * @param data.counterVault
+   * @param data.status
+   * @param data.forUser
+   * @param data.againstUser
+   * @returns unknown Search claims in paginated list
+   * @throws ApiError
+   */
+  public static searchClaims(
+    data: SearchClaimsData = {},
+  ): CancelablePromise<SearchClaimsResponse> {
+    return __request(OpenAPI, {
+      method: 'GET',
+      url: '/claims/search',
+      query: {
+        direction: data.direction,
+        sortBy: data.sortBy,
+        page: data.page,
+        offset: data.offset,
+        limit: data.limit,
+        creator: data.creator,
+        subject: data.subject,
+        identity: data.identity,
+        object: data.object,
+        predicate: data.predicate,
+        vault: data.vault,
+        displayName: data.displayName,
+        counterVault: data.counterVault,
+        status: data.status,
+        forUser: data.forUser,
+        againstUser: data.againstUser,
+      },
+    })
+  }
+
+  /**
+   * @param data The data for the request.
    * @param data.id Claim sql id or vault number
    * @returns unknown Get single claim by id
    * @throws ApiError
@@ -257,7 +376,7 @@ export class ClaimsService {
   ): CancelablePromise<GetClaimByIdResponse> {
     return __request(OpenAPI, {
       method: 'GET',
-      url: '/claims/:id',
+      url: '/claims/{id}',
       path: {
         id: data.id,
       },
@@ -276,7 +395,7 @@ export class ClaimsService {
   ): CancelablePromise<UpdateClaimResponse> {
     return __request(OpenAPI, {
       method: 'PUT',
-      url: '/claims/:id',
+      url: '/claims/{id}',
       path: {
         id: data.id,
       },
@@ -284,69 +403,35 @@ export class ClaimsService {
       mediaType: 'application/json',
     })
   }
-
-  /**
-   * @param data The data for the request.
-   * @param data.paging
-   * @param data.creator
-   * @param data.subject
-   * @param data.identity
-   * @param data.object
-   * @param data.predicate
-   * @param data.vault
-   * @param data.displayName
-   * @param data.counterVault
-   * @param data.status
-   * @param data.forUser
-   * @param data.againstUser
-   * @returns unknown Search claims in paginated list
-   * @throws ApiError
-   */
-  public static searchClaims(
-    data: SearchClaimsData,
-  ): CancelablePromise<SearchClaimsResponse> {
-    return __request(OpenAPI, {
-      method: 'GET',
-      url: '/claims/search',
-      query: {
-        creator: data.creator,
-        subject: data.subject,
-        identity: data.identity,
-        object: data.object,
-        predicate: data.predicate,
-        vault: data.vault,
-        display_name: data.displayName,
-        counter_vault: data.counterVault,
-        status: data.status,
-        for_user: data.forUser,
-        against_user: data.againstUser,
-        paging: data.paging,
-      },
-    })
-  }
 }
 
 export class IdentitiesService {
   /**
    * @param data The data for the request.
-   * @param data.paging
-   * @param data.sort
+   * @param data.direction
+   * @param data.sortBy
+   * @param data.page
+   * @param data.offset
+   * @param data.limit
    * @param data.userWallet
    * @param data.timeframe
    * @returns unknown Get all identities in paginated list
    * @throws ApiError
    */
   public static getIdentities(
-    data: GetIdentitiesData,
+    data: GetIdentitiesData = {},
   ): CancelablePromise<GetIdentitiesResponse> {
     return __request(OpenAPI, {
       method: 'GET',
       url: '/identities',
       query: {
+        direction: data.direction,
+        sortBy: data.sortBy,
+        page: data.page,
+        offset: data.offset,
+        limit: data.limit,
         userWallet: data.userWallet,
         timeframe: data.timeframe,
-        paging: data.paging,
-        sort: data.sort,
       },
     })
   }
@@ -363,7 +448,7 @@ export class IdentitiesService {
   ): CancelablePromise<UpdateIdentityResponse> {
     return __request(OpenAPI, {
       method: 'PUT',
-      url: '/identities/:id',
+      url: '/identities/{id}',
       path: {
         id: data.id,
       },
@@ -391,8 +476,11 @@ export class IdentitiesService {
 
   /**
    * @param data The data for the request.
-   * @param data.paging
-   * @param data.sort
+   * @param data.direction
+   * @param data.sortBy
+   * @param data.page
+   * @param data.offset
+   * @param data.limit
    * @param data.displayName
    * @param data.creator
    * @param data.userWallet
@@ -408,12 +496,17 @@ export class IdentitiesService {
    * @throws ApiError
    */
   public static searchIdentity(
-    data: SearchIdentityData,
+    data: SearchIdentityData = {},
   ): CancelablePromise<SearchIdentityResponse> {
     return __request(OpenAPI, {
       method: 'GET',
       url: '/identity/search',
       query: {
+        direction: data.direction,
+        sortBy: data.sortBy,
+        page: data.page,
+        offset: data.offset,
+        limit: data.limit,
         displayName: data.displayName,
         creator: data.creator,
         userWallet: data.userWallet,
@@ -423,8 +516,6 @@ export class IdentitiesService {
         isContract: data.isContract,
         timeframe: data.timeframe,
         identityId: data.identityId,
-        paging: data.paging,
-        sort: data.sort,
         description: data.description,
         linkedAccountUsername: data.linkedAccountUsername,
       },
@@ -452,13 +543,38 @@ export class IdentitiesService {
 
 export class IdentityPositionsService {
   /**
+   * @param data The data for the request.
+   * @param data.id sql id,identity_id string, or vault number
+   * @param data.direction
+   * @param data.sortBy
+   * @param data.page
+   * @param data.offset
+   * @param data.limit
+   * @param data.userWallet
+   * @param data.timeframe
+   * @param data.creator
    * @returns unknown Get all identity positions
    * @throws ApiError
    */
-  public static getIdentityPositions(): CancelablePromise<GetIdentityPositionsResponse> {
+  public static getIdentityPositions(
+    data: GetIdentityPositionsData,
+  ): CancelablePromise<GetIdentityPositionsResponse> {
     return __request(OpenAPI, {
       method: 'GET',
-      url: '/identity/:id/positions',
+      url: '/identity/{id}/positions',
+      path: {
+        id: data.id,
+      },
+      query: {
+        direction: data.direction,
+        sortBy: data.sortBy,
+        page: data.page,
+        offset: data.offset,
+        limit: data.limit,
+        userWallet: data.userWallet,
+        timeframe: data.timeframe,
+        creator: data.creator,
+      },
     })
   }
 }
@@ -466,8 +582,11 @@ export class IdentityPositionsService {
 export class LinkedAccountsService {
   /**
    * @param data The data for the request.
-   * @param data.paging
-   * @param data.sort
+   * @param data.direction
+   * @param data.sortBy
+   * @param data.page
+   * @param data.offset
+   * @param data.limit
    * @param data.accountType
    * @param data.address
    * @param data.chainType
@@ -476,28 +595,29 @@ export class LinkedAccountsService {
    * @param data.connectorType
    * @param data.userId
    * @param data.privyId
-   * @param data.active
    * @returns unknown Get all linked accounts in paginated list
    * @throws ApiError
    */
   public static getLinkedAccounts(
-    data: GetLinkedAccountsData,
+    data: GetLinkedAccountsData = {},
   ): CancelablePromise<GetLinkedAccountsResponse> {
     return __request(OpenAPI, {
       method: 'GET',
       url: '/linked_accounts',
       query: {
-        account_type: data.accountType,
+        direction: data.direction,
+        sortBy: data.sortBy,
+        page: data.page,
+        offset: data.offset,
+        limit: data.limit,
+        accountType: data.accountType,
         address: data.address,
-        chain_type: data.chainType,
-        wallet_client: data.walletClient,
-        wallet_client_type: data.walletClientType,
-        connector_type: data.connectorType,
-        user_id: data.userId,
-        privy_id: data.privyId,
-        active: data.active,
-        paging: data.paging,
-        sort: data.sort,
+        chainType: data.chainType,
+        walletClient: data.walletClient,
+        walletClientType: data.walletClientType,
+        connectorType: data.connectorType,
+        userId: data.userId,
+        privyId: data.privyId,
       },
     })
   }
@@ -530,7 +650,7 @@ export class LinkedAccountsService {
   ): CancelablePromise<GetLinkedAccountByIdResponse> {
     return __request(OpenAPI, {
       method: 'GET',
-      url: '/linked_accounts/:identifier',
+      url: '/linked_accounts/{identifier}',
       path: {
         identifier: data.identifier,
       },
@@ -548,7 +668,7 @@ export class LinkedAccountsService {
   ): CancelablePromise<ActivateLinkedAccountResponse> {
     return __request(OpenAPI, {
       method: 'PUT',
-      url: '/linked_accounts/:identifier/activate',
+      url: '/linked_accounts/{identifier}/activate',
       path: {
         identifier: data.identifier,
       },
@@ -566,7 +686,7 @@ export class LinkedAccountsService {
   ): CancelablePromise<DeactivateLinkedAccountResponse> {
     return __request(OpenAPI, {
       method: 'PUT',
-      url: '/linked_accounts/:identifier/deactivate',
+      url: '/linked_accounts/{identifier}/deactivate',
       path: {
         identifier: data.identifier,
       },
@@ -587,45 +707,6 @@ export class PositionsService {
     return __request(OpenAPI, {
       method: 'POST',
       url: '/positions',
-      body: data.requestBody,
-      mediaType: 'application/json',
-    })
-  }
-
-  /**
-   * @param data The data for the request.
-   * @param data.id Position sql id or vault number
-   * @returns unknown Get single position by id
-   * @throws ApiError
-   */
-  public static getPositionById(
-    data: GetPositionByIdData,
-  ): CancelablePromise<GetPositionByIdResponse> {
-    return __request(OpenAPI, {
-      method: 'GET',
-      url: '/positions/:id',
-      path: {
-        id: data.id,
-      },
-    })
-  }
-
-  /**
-   * @param data The data for the request.
-   * @param data.id Position sql id
-   * @param data.requestBody
-   * @returns unknown Update an position
-   * @throws ApiError
-   */
-  public static updatePosition(
-    data: UpdatePositionData,
-  ): CancelablePromise<UpdatePositionResponse> {
-    return __request(OpenAPI, {
-      method: 'POST',
-      url: '/positions/:id',
-      path: {
-        id: data.id,
-      },
       body: data.requestBody,
       mediaType: 'application/json',
     })
@@ -662,6 +743,45 @@ export class PositionsService {
         paging: data.paging,
         sort: data.sort,
       },
+    })
+  }
+
+  /**
+   * @param data The data for the request.
+   * @param data.id Position sql id or vault number
+   * @returns unknown Get single position by id
+   * @throws ApiError
+   */
+  public static getPositionById(
+    data: GetPositionByIdData,
+  ): CancelablePromise<GetPositionByIdResponse> {
+    return __request(OpenAPI, {
+      method: 'GET',
+      url: '/positions/{id}',
+      path: {
+        id: data.id,
+      },
+    })
+  }
+
+  /**
+   * @param data The data for the request.
+   * @param data.id Position sql id
+   * @param data.requestBody
+   * @returns unknown Update an position
+   * @throws ApiError
+   */
+  public static updatePosition(
+    data: UpdatePositionData,
+  ): CancelablePromise<UpdatePositionResponse> {
+    return __request(OpenAPI, {
+      method: 'POST',
+      url: '/positions/{id}',
+      path: {
+        id: data.id,
+      },
+      body: data.requestBody,
+      mediaType: 'application/json',
     })
   }
 }
@@ -726,156 +846,6 @@ export class UsersService {
   }
 
   /**
-   * @param data The data for the request.
-   * @param data.id User sql id
-   * @returns unknown Get single user by id
-   * @throws ApiError
-   */
-  public static getUserByIdPublic(
-    data: GetUserByIdPublicData,
-  ): CancelablePromise<GetUserByIdPublicResponse> {
-    return __request(OpenAPI, {
-      method: 'GET',
-      url: '/users/:id',
-      path: {
-        id: data.id,
-      },
-    })
-  }
-
-  /**
-   * @param data The data for the request.
-   * @param data.id User sql id
-   * @param data.requestBody
-   * @returns unknown Update a user
-   * @throws ApiError
-   */
-  public static updateUser(
-    data: UpdateUserData,
-  ): CancelablePromise<UpdateUserResponse> {
-    return __request(OpenAPI, {
-      method: 'PUT',
-      url: '/users/:id',
-      path: {
-        id: data.id,
-      },
-      body: data.requestBody,
-      mediaType: 'application/json',
-    })
-  }
-
-  /**
-   * @param data The data for the request.
-   * @param data.id Id of user to delete
-   * @returns unknown Delete a user by id
-   * @throws ApiError
-   */
-  public static deleteUser(
-    data: DeleteUserData,
-  ): CancelablePromise<DeleteUserResponse> {
-    return __request(OpenAPI, {
-      method: 'DELETE',
-      url: '/users/:id',
-      path: {
-        id: data.id,
-      },
-    })
-  }
-
-  /**
-   * @param data The data for the request.
-   * @param data.id User sql id or wallet
-   * @returns unknown Update a users ens if present
-   * @throws ApiError
-   */
-  public static updateUserEns(
-    data: UpdateUserEnsData,
-  ): CancelablePromise<UpdateUserEnsResponse> {
-    return __request(OpenAPI, {
-      method: 'PUT',
-      url: '/users/:id/ens',
-      path: {
-        id: data.id,
-      },
-    })
-  }
-
-  /**
-   * @param data The data for the request.
-   * @param data.id User sql id
-   * @returns unknown Get linked accounts for user
-   * @throws ApiError
-   */
-  public static getLinkedAccountsByUser(
-    data: GetLinkedAccountsByUserData,
-  ): CancelablePromise<GetLinkedAccountsByUserResponse> {
-    return __request(OpenAPI, {
-      method: 'GET',
-      url: '/users/:id/linked_accounts',
-      path: {
-        id: data.id,
-      },
-    })
-  }
-
-  /**
-   * @param data The data for the request.
-   * @param data.id User sql id
-   * @param data.requestBody
-   * @returns unknown Add points for user
-   * @throws ApiError
-   */
-  public static updateUserPoints(
-    data: UpdateUserPointsData,
-  ): CancelablePromise<UpdateUserPointsResponse> {
-    return __request(OpenAPI, {
-      method: 'PUT',
-      url: '/users/:id/points',
-      path: {
-        id: data.id,
-      },
-      body: data.requestBody,
-      mediaType: 'application/json',
-    })
-  }
-
-  /**
-   * @param data The data for the request.
-   * @param data.id User sql id
-   * @returns unknown Get single user by id
-   * @throws ApiError
-   */
-  public static getUserById(
-    data: GetUserByIdData,
-  ): CancelablePromise<GetUserByIdResponse> {
-    return __request(OpenAPI, {
-      method: 'GET',
-      url: '/users/:id/private',
-      path: {
-        id: data.id,
-      },
-    })
-  }
-
-  /**
-   * @param data The data for the request.
-   * @param data.id User sql id
-   * @returns unknown Get total position values for user
-   * @throws ApiError
-   */
-  public static getUserTotals(
-    data: GetUserTotalsData,
-  ): CancelablePromise<GetUserTotalsResponse> {
-    return __request(OpenAPI, {
-      method: 'GET',
-      url: '/users/:id/totals',
-      path: {
-        id: data.id,
-      },
-    })
-  }
-
-  /**
    * @returns unknown Re-issue API key
    * @throws ApiError
    */
@@ -930,7 +900,7 @@ export class UsersService {
   ): CancelablePromise<GetUserByWalletPublicResponse> {
     return __request(OpenAPI, {
       method: 'GET',
-      url: '/users/wallet/:wallet',
+      url: '/users/wallet/{wallet}',
       path: {
         wallet: data.wallet,
       },
@@ -948,9 +918,159 @@ export class UsersService {
   ): CancelablePromise<GetUserByWalletResponse> {
     return __request(OpenAPI, {
       method: 'GET',
-      url: '/users/wallet/:wallet/private',
+      url: '/users/wallet/{wallet}/private',
       path: {
         wallet: data.wallet,
+      },
+    })
+  }
+
+  /**
+   * @param data The data for the request.
+   * @param data.id User sql id
+   * @returns unknown Get single user by id
+   * @throws ApiError
+   */
+  public static getUserByIdPublic(
+    data: GetUserByIdPublicData,
+  ): CancelablePromise<GetUserByIdPublicResponse> {
+    return __request(OpenAPI, {
+      method: 'GET',
+      url: '/users/{id}',
+      path: {
+        id: data.id,
+      },
+    })
+  }
+
+  /**
+   * @param data The data for the request.
+   * @param data.id User sql id
+   * @param data.requestBody
+   * @returns unknown Update a user
+   * @throws ApiError
+   */
+  public static updateUser(
+    data: UpdateUserData,
+  ): CancelablePromise<UpdateUserResponse> {
+    return __request(OpenAPI, {
+      method: 'PUT',
+      url: '/users/{id}',
+      path: {
+        id: data.id,
+      },
+      body: data.requestBody,
+      mediaType: 'application/json',
+    })
+  }
+
+  /**
+   * @param data The data for the request.
+   * @param data.id Id of user to delete
+   * @returns unknown Delete a user by id
+   * @throws ApiError
+   */
+  public static deleteUser(
+    data: DeleteUserData,
+  ): CancelablePromise<DeleteUserResponse> {
+    return __request(OpenAPI, {
+      method: 'DELETE',
+      url: '/users/{id}',
+      path: {
+        id: data.id,
+      },
+    })
+  }
+
+  /**
+   * @param data The data for the request.
+   * @param data.id User sql id or wallet
+   * @returns unknown Update a users ens if present
+   * @throws ApiError
+   */
+  public static updateUserEns(
+    data: UpdateUserEnsData,
+  ): CancelablePromise<UpdateUserEnsResponse> {
+    return __request(OpenAPI, {
+      method: 'PUT',
+      url: '/users/{id}/ens',
+      path: {
+        id: data.id,
+      },
+    })
+  }
+
+  /**
+   * @param data The data for the request.
+   * @param data.id User sql id
+   * @returns unknown Get linked accounts for user
+   * @throws ApiError
+   */
+  public static getLinkedAccountsByUser(
+    data: GetLinkedAccountsByUserData,
+  ): CancelablePromise<GetLinkedAccountsByUserResponse> {
+    return __request(OpenAPI, {
+      method: 'GET',
+      url: '/users/{id}/linked_accounts',
+      path: {
+        id: data.id,
+      },
+    })
+  }
+
+  /**
+   * @param data The data for the request.
+   * @param data.id User sql id
+   * @param data.requestBody
+   * @returns unknown Add points for user
+   * @throws ApiError
+   */
+  public static updateUserPoints(
+    data: UpdateUserPointsData,
+  ): CancelablePromise<UpdateUserPointsResponse> {
+    return __request(OpenAPI, {
+      method: 'PUT',
+      url: '/users/{id}/points',
+      path: {
+        id: data.id,
+      },
+      body: data.requestBody,
+      mediaType: 'application/json',
+    })
+  }
+
+  /**
+   * @param data The data for the request.
+   * @param data.id User sql id
+   * @returns unknown Get single user by id
+   * @throws ApiError
+   */
+  public static getUserById(
+    data: GetUserByIdData,
+  ): CancelablePromise<GetUserByIdResponse> {
+    return __request(OpenAPI, {
+      method: 'GET',
+      url: '/users/{id}/private',
+      path: {
+        id: data.id,
+      },
+    })
+  }
+
+  /**
+   * @param data The data for the request.
+   * @param data.id User sql id
+   * @returns unknown Get total position values for user
+   * @throws ApiError
+   */
+  public static getUserTotals(
+    data: GetUserTotalsData,
+  ): CancelablePromise<GetUserTotalsResponse> {
+    return __request(OpenAPI, {
+      method: 'GET',
+      url: '/users/{id}/totals',
+      path: {
+        id: data.id,
       },
     })
   }
