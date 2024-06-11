@@ -31,7 +31,7 @@ import { AlertCircle } from 'lucide-react'
 import { ClientOnly } from 'remix-utils/client-only'
 import { toast } from 'sonner'
 import { SessionUser } from 'types/user'
-import { keccak256, toHex, TransactionReceipt } from 'viem'
+import { toHex, TransactionReceipt } from 'viem'
 import { usePublicClient, useWalletClient } from 'wagmi'
 
 export async function loader({ context, request }: LoaderFunctionArgs) {
@@ -239,7 +239,7 @@ export function CreateButton({ onSuccess }: CreateButtonWrapperProps) {
             address: MULTIVAULT_CONTRACT_ADDRESS,
             abi: multivaultAbi,
             functionName: 'createAtom',
-            args: [keccak256(toHex(atomData))],
+            args: [toHex(atomData)],
             value: atomCost,
           })
 
