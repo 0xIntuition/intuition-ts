@@ -1,60 +1,78 @@
-import { IdentitiesService, OpenAPI } from '@0xintuition/api'
+import {
+  ApiError,
+  IdentitiesService,
+  OpenAPI,
+  UsersService,
+} from '@0xintuition/api'
 
-import { PrivyButton } from '@client/privy-button'
-import { calculateTotalPages, getAuthHeaders } from '@lib/utils/misc'
+import { useLiveLoader } from '@lib/hooks/useLiveLoader'
+import logger from '@lib/utils/logger'
+import { getAuthHeaders } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { getPrivyAccessToken } from '@server/privy'
-import { ClientOnly } from 'remix-utils/client-only'
 
-export async function loader({ request }: LoaderFunctionArgs) {
+export async function loader({ request, params }: LoaderFunctionArgs) {
   OpenAPI.BASE = 'https://dev.api.intuition.systems'
   const accessToken = getPrivyAccessToken(request)
   const headers = getAuthHeaders(accessToken !== null ? accessToken : '')
   OpenAPI.HEADERS = headers as Record<string, string>
 
-  const url = new URL(request.url)
-  const searchParams = new URLSearchParams(url.search)
+  const wallet = params.wallet
 
-  // pagination
-  const sortBy = searchParams.get('sortBy') ?? 'assets_sum'
-  const direction = searchParams.get('direction') ?? 'desc'
-  const page = searchParams.get('page')
-    ? parseInt(searchParams.get('page') as string)
-    : 1
-  const limit = searchParams.get('limit') ?? '10'
+  if (!wallet) {
+    return console.log('Wallet is undefined')
+  }
 
-  // search
-  const search = url.searchParams.get('search') || ''
+  let userIdentity
+  try {
+    userIdentity = await IdentitiesService.getIdentityById({
+      id: wallet,
+    })
+  } catch (error: unknown) {
+    if (error instanceof ApiError) {
+      userIdentity = undefined
+      console.log(
+        `${error.name} - ${error.status}: ${error.message} ${error.url}`,
+      )
+    } else {
+      throw error
+    }
+  }
 
-  const { data: identities, total } = await IdentitiesService.getIdentities({
-    paging: {
-      page: 1,
-      limit: 10,
-      offset: 0,
-    },
-    sort: {
-      sortBy: 'IdentityId',
-      direction: 'asc',
-    },
-  })
+  let userTotals
+  try {
+    userTotals = await UsersService.getUserTotals({
+      id: wallet,
+    })
+  } catch (error: unknown) {
+    if (error instanceof ApiError) {
+      userTotals = undefined
+      console.log(
+        `${error.name} - ${error.status}: ${error.message} ${error.url}`,
+      )
+    } else {
+      throw error
+    }
+  }
 
-  const totalPages = calculateTotalPages(total, Number(limit))
+  logger('userIdentity', userIdentity)
+  logger('userTotals', userTotals)
 
-  return json({
-    identities: identities ?? [],
-    sortBy,
-    direction,
-    search,
-    pagination: { page: Number(page), limit: Number(limit), total, totalPages },
-  })
+  return json({ userIdentity, userTotals })
 }
 
 export default function PublicProfile() {
+  const { userIdentity, userTotals } = useLiveLoader<typeof loader>([
+    'create-meme',
+    'stake',
+  ])
+
   return (
     <div className="m-8 flex flex-col items-center gap-4">
       <div className="flex flex-col">
         Public profile route test
-        <ClientOnly>{() => <PrivyButton />}</ClientOnly>
+        {JSON.stringify(userIdentity)}
+        {JSON.stringify(userTotals)}
       </div>
     </div>
   )

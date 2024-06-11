@@ -12,6 +12,7 @@ import {
   IdentitiesService,
   IdentityPresenter,
   OpenAPI,
+  UsersService,
 } from '@0xintuition/api'
 
 import { PrivyVerifiedLinks } from '@client/privy-verified-links'
@@ -25,7 +26,6 @@ import { SessionContext } from '@middleware/session'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { useFetcher, useLoaderData } from '@remix-run/react'
 import { CreateLoaderData } from '@routes/resources+/create'
-import { onboardingModalCookie } from '@server/onboarding'
 import { getPrivyAccessToken } from '@server/privy'
 import { AlertCircle } from 'lucide-react'
 import { ClientOnly } from 'remix-utils/client-only'
@@ -64,18 +64,26 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
     }
   }
 
-  const cookieHeader = request.headers.get('Cookie')
-  const cookie = await onboardingModalCookie.parse(cookieHeader)
-
-  if (!cookie) {
-    return json({
-      user,
-      userIdentity,
+  let userTotals
+  try {
+    userTotals = await UsersService.getUserTotals({
+      id: user.details.id,
     })
+  } catch (error: unknown) {
+    if (error instanceof ApiError) {
+      userTotals = undefined
+      console.log(
+        `${error.name} - ${error.status}: ${error.message} ${error.url}`,
+      )
+    } else {
+      throw error
+    }
   }
 
   logger('userIdentity', userIdentity)
-  return json({ user, userIdentity })
+  logger('userTotals', userTotals)
+
+  return json({ user, userIdentity, userTotals })
 }
 
 // State

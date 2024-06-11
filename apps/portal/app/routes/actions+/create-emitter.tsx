@@ -26,7 +26,7 @@ export const action: ActionFunction = async ({ request, context }) => {
     do {
       try {
         const response = await IdentitiesService.getIdentityById({
-          identifier: identity_id.toString(),
+          id: identity_id.toString(),
         })
         identity = response as IdentityPresenter
         await new Promise((resolve) => setTimeout(resolve, 5000))
