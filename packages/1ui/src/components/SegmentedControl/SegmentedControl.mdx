@@ -1,0 +1,45 @@
+import { Canvas, Controls, Meta, Source, Title } from '@storybook/blocks'
+
+import { Button } from '..'
+
+import * as Stories from './SegmentedControl.stories'
+
+<Meta of={Stories} />
+
+<Title />
+
+#### Used to switch between views within a page.
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import React from 'react'
+
+import { SegmentedControl } from '@0xintuition/1ui'
+
+const options = [
+{ value: 'overview', label: 'Overview' },
+{ value: 'claims', label: 'Claims' },
+{ value: 'positions', label: 'Positions' },
+{ value: 'activity', label: 'Activity' },
+]
+
+const [selectedTab, setSelectedTab] = React.useState(options[0].value)
+
+return (
+
+<SegmentedControl>
+  {options.map((option, index) => (
+    <SegmentedControlItem
+      key={index}
+      isActive={selectedTab === option.value}
+      onClick={() => setSelectedTab(option.value)}
+    >
+      {option.label}
+    </SegmentedControlItem>
+  ))}
+</SegmentedControl>
+) `} />
+
+<Canvas of={Stories.BasicUsage} sourceState="none" />
