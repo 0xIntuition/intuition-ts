@@ -11,7 +11,7 @@ import {
   SidebarLayoutNavFooter,
   SidebarLayoutNavFooterItem,
   SidebarLayoutNavHeader,
-  SidebarLayoutNavHeaderContent,
+  SidebarLayoutNavHeaderButton,
   SidebarLayoutNavItem,
   SidebarLayoutNavItems,
   SidebarLayoutProvider,
@@ -24,7 +24,7 @@ describe('SidebarLayout', () => {
         <SidebarLayout>
           <SidebarLayoutNav>
             <SidebarLayoutNavHeader>
-              <SidebarLayoutNavHeaderContent
+              <SidebarLayoutNavHeaderButton
                 imgLogo={<span>imgLogo</span>}
                 textLogo={<span>textLogo</span>}
               />
@@ -82,12 +82,16 @@ describe('SidebarLayout', () => {
               <div
                 class="border-primary/30 flex w-full items-center gap-2 border-0 border-b-[1px] border-solid p-4"
               >
-                <span>
-                  imgLogo
-                </span>
-                <span>
-                  textLogo
-                </span>
+                <button
+                  class="flex gap-2 items-center"
+                >
+                  <span>
+                    imgLogo
+                  </span>
+                  <span>
+                    textLogo
+                  </span>
+                </button>
               </div>
               <div
                 class="flex w-full flex-col gap-2 p-2"
@@ -235,7 +239,7 @@ describe('SidebarLayout', () => {
         <SidebarLayout>
           <SidebarLayoutNav>
             <SidebarLayoutNavHeader>
-              <SidebarLayoutNavHeaderContent
+              <SidebarLayoutNavHeaderButton
                 imgLogo={<span>imgLogo</span>}
                 textLogo={<span>textLogo</span>}
               />
