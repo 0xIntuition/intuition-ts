@@ -1,16 +1,16 @@
 import { useSidebarLayoutContext } from './SidebarLayoutProvider'
 
-export interface SidebarLayoutNavHeaderContentProps
+export interface SidebarLayoutNavHeaderButtonProps
   extends React.HTMLAttributes<HTMLButtonElement> {
   imgLogo: React.ReactElement
   textLogo: React.ReactElement
 }
 
-export const SidebarLayoutNavHeaderContent = ({
+export const SidebarLayoutNavHeaderButton = ({
   imgLogo,
   textLogo,
   ...props
-}: SidebarLayoutNavHeaderContentProps) => {
+}: SidebarLayoutNavHeaderButtonProps) => {
   const { isCollapsed } = useSidebarLayoutContext()
   return (
     <button className="flex gap-2 items-center" {...props}>

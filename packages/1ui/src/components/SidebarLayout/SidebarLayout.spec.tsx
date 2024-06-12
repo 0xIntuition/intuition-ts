@@ -11,7 +11,7 @@ import {
   SidebarLayoutNavFooter,
   SidebarLayoutNavFooterItem,
   SidebarLayoutNavHeader,
-  SidebarLayoutNavHeaderContent,
+  SidebarLayoutNavHeaderButton,
   SidebarLayoutNavItem,
   SidebarLayoutNavItems,
   SidebarLayoutProvider,
@@ -24,7 +24,7 @@ describe('SidebarLayout', () => {
         <SidebarLayout>
           <SidebarLayoutNav>
             <SidebarLayoutNavHeader>
-              <SidebarLayoutNavHeaderContent
+              <SidebarLayoutNavHeaderButton
                 imgLogo={<span>imgLogo</span>}
                 textLogo={<span>textLogo</span>}
               />
@@ -239,7 +239,7 @@ describe('SidebarLayout', () => {
         <SidebarLayout>
           <SidebarLayoutNav>
             <SidebarLayoutNavHeader>
-              <SidebarLayoutNavHeaderContent
+              <SidebarLayoutNavHeaderButton
                 imgLogo={<span>imgLogo</span>}
                 textLogo={<span>textLogo</span>}
               />

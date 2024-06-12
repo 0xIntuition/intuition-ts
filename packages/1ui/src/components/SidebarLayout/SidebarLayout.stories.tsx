@@ -10,7 +10,7 @@ import {
   SidebarLayoutNavFooter,
   SidebarLayoutNavFooterItem,
   SidebarLayoutNavHeader,
-  SidebarLayoutNavHeaderContent,
+  SidebarLayoutNavHeaderButton,
   SidebarLayoutNavItem,
   SidebarLayoutNavItems,
   SidebarLayoutProvider,
@@ -35,7 +35,7 @@ export const BasicUsage: Story = {
         <SidebarLayout {...args}>
           <SidebarLayoutNav>
             <SidebarLayoutNavHeader>
-              <SidebarLayoutNavHeaderContent
+              <SidebarLayoutNavHeaderButton
                 imgLogo={
                   <svg
                     width="22"
