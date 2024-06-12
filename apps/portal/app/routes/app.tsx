@@ -1,11 +1,11 @@
 import PrivyLogoutButton from '@client/privy-logout-button'
 import PrivySwitchWallet from '@client/privy-switch-wallet'
+import SidebarNav from '@components/sidebar-nav'
 import { chainalysisOracleAbi } from '@lib/abis/chainalysisOracle'
 import { requireAuth } from '@middleware/requireAuth'
 import { SessionContext } from '@middleware/session'
 import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
 import {
-  Link,
   Outlet,
   useLoaderData,
   useNavigate,
@@ -54,19 +54,15 @@ export default function Index() {
   }
 
   return (
-    <div>
-      <div>
-        <div className="flex items-start gap-4">
-          <Link to="/">Home</Link>
-          <PrivyLogoutButton handleLogout={handleLogout} />
-          <PrivySwitchWallet
-            activeWallet={user?.details?.wallet}
-            onLinkWalletSuccess={handleLinkWalletSuccess}
-          />
-        </div>
-      </div>
-      {/* <pre>{JSON.stringify(user, null, 2)}</pre> */}
-      <Outlet />
+    <div className="flex items-start gap-4 h-screen min-h-screen">
+      <SidebarNav>
+        <Outlet />
+        <PrivyLogoutButton handleLogout={handleLogout} />
+        <PrivySwitchWallet
+          activeWallet={user?.details?.wallet}
+          onLinkWalletSuccess={handleLinkWalletSuccess}
+        />
+      </SidebarNav>
     </div>
   )
 }

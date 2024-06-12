@@ -145,9 +145,7 @@ export default function App() {
 export function AppLayout() {
   return (
     <main className="relative flex min-h-screen w-full flex-col justify-between antialiased">
-      <div className="flex w-full flex-1 flex-col">
-        <Outlet />
-      </div>
+      <Outlet />
     </main>
   )
 }

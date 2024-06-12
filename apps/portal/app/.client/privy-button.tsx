@@ -11,7 +11,11 @@ import { usePrivy, useWallets } from '@privy-io/react-auth'
 import { NavLink, useFetcher } from '@remix-run/react'
 import { useDisconnect } from 'wagmi'
 
-export function PrivyButton() {
+export function PrivyButton({
+  triggerComponent,
+}: {
+  triggerComponent?: React.ReactNode
+}) {
   const { ready, authenticated, login, logout, user: privyUser } = usePrivy()
 
   const { disconnect } = useDisconnect()
@@ -46,11 +50,9 @@ export function PrivyButton() {
       <>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <span>
-              <Button variant="primary">
-                User: {privyUser.wallet?.address}
-              </Button>
-            </span>
+            <Button variant="ghost" className="border-none p-0">
+              {triggerComponent}
+            </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="center" className="bg-popover w-48">
             <DropdownMenuItem className="flex items-center gap-2">
