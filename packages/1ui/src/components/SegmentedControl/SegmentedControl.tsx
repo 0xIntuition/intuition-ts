@@ -20,7 +20,7 @@ const SegmentedControl = ({ className, ...props }: SegmentedControlProps) => {
 
 export interface SegmentedControlItemProps
   extends React.HTMLAttributes<HTMLButtonElement> {
-  isActive: boolean
+  isActive?: boolean
 }
 
 const SegmentedControlItem = ({
@@ -33,7 +33,7 @@ const SegmentedControlItem = ({
       role="tab"
       aria-selected={isActive}
       className={cn(
-        'rounded-full border border-solid border-transparent transition-all hover:border-border/30 aria-selected:border-border/30 py-2 px-3 aria-selected:bg-background',
+        'rounded-full border border-solid border-transparent transition duration-300 ease-in-out hover:border-border/30 aria-selected:border-border/30 py-2 px-3 aria-selected:bg-background',
         className,
       )}
       {...props}
