@@ -6,7 +6,7 @@ import {
   SidebarLayoutNavFooter,
   SidebarLayoutNavFooterItem,
   SidebarLayoutNavHeader,
-  SidebarLayoutNavHeaderContent,
+  SidebarLayoutNavHeaderButton,
   SidebarLayoutNavItem,
   SidebarLayoutNavItems,
   SidebarLayoutProvider,
@@ -26,7 +26,7 @@ export default function SidebarNav({
       <SidebarLayout>
         <SidebarLayoutNav>
           <SidebarLayoutNavHeader>
-            <SidebarLayoutNavHeaderContent
+            <SidebarLayoutNavHeaderButton
               imgLogo={
                 <svg
                   width="22"
@@ -75,6 +75,7 @@ export default function SidebarNav({
                   />
                 </svg>
               }
+              onClick={() => navigate('/')}
             />
           </SidebarLayoutNavHeader>
           <SidebarLayoutNavItems>
