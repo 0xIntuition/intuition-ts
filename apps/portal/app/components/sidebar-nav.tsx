@@ -1,4 +1,5 @@
 import {
+  IconName,
   SidebarLayout,
   SidebarLayoutContent,
   SidebarLayoutNav,
@@ -14,6 +15,35 @@ import {
 
 import { PrivyButton } from '@client/privy-button'
 import { useNavigate } from '@remix-run/react'
+
+interface SidebarNavRoute {
+  route: string
+  label: string
+  iconName: IconName
+}
+
+const sidebarNavRoutes: SidebarNavRoute[] = [
+  {
+    route: '/app/profile',
+    label: 'Profile',
+    iconName: 'eye-open',
+  },
+  {
+    route: '/app/identities',
+    label: 'Identities',
+    iconName: 'fingerprint',
+  },
+  {
+    route: '/app/quests',
+    label: 'Quests',
+    iconName: 'crystal-ball',
+  },
+  {
+    route: '/app/explore',
+    label: 'Explore',
+    iconName: 'magnifying-glass',
+  },
+]
 
 export default function SidebarNav({
   children,
@@ -79,26 +109,14 @@ export default function SidebarNav({
             />
           </SidebarLayoutNavHeader>
           <SidebarLayoutNavItems>
-            <SidebarLayoutNavItem
-              iconName="magnifying-glass"
-              label="Explore"
-              // onClick={() => doSomething}
-            />
-            <SidebarLayoutNavItem
-              iconName="fingerprint"
-              label="Identities"
-              // onClick={() => doSomething}
-            />
-            <SidebarLayoutNavItem
-              iconName="book"
-              label="Claims"
-              // onClick={() => doSomething}
-            />
-            <SidebarLayoutNavItem
-              iconName="crystal-ball"
-              label="Query"
-              // onClick={() => doSomething}
-            />
+            {sidebarNavRoutes.map((sidebarNavItem) => (
+              <SidebarLayoutNavItem
+                key={sidebarNavItem.label}
+                iconName={sidebarNavItem.iconName}
+                label={sidebarNavItem.label}
+                onClick={() => navigate(`${sidebarNavItem.route}`)}
+              />
+            ))}
           </SidebarLayoutNavItems>
           <SidebarLayoutNavFooter>
             <SidebarLayoutNavFooterItem
