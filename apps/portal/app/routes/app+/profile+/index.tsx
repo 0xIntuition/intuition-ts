@@ -118,6 +118,10 @@ export default function Profile() {
   const revalidator = useRevalidator()
 
   useEffect(() => {
+    setEditProfileModalActive(false)
+  }, [])
+
+  useEffect(() => {
     if (!editProfileModalActive) {
       revalidator.revalidate()
     }

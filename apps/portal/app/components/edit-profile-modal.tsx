@@ -26,7 +26,7 @@ import {
 } from '@lib/utils/constants'
 import logger from '@lib/utils/logger'
 import { cn } from '@lib/utils/misc'
-import { Link, useFetcher } from '@remix-run/react'
+import { Link, useFetcher, useLocation } from '@remix-run/react'
 import { type UploadApiResponse } from 'cloudinary'
 import {
   AlertCircle,
@@ -151,6 +151,8 @@ interface EditProfileFormProps {
 
 export function EditProfileForm({ userObject, onClose }: EditProfileFormProps) {
   const [state, dispatch] = useReducer(transactionReducer, initialState)
+  const location = useLocation()
+  const isCreateRoute = location.pathname.includes('create')
 
   // image upload fetcher
   const uploadFetcher = useFetcher<UploadApiResponse>()
@@ -325,7 +327,7 @@ export function EditProfileForm({ userObject, onClose }: EditProfileFormProps) {
         <DialogHeader className="py-4">
           <div className="absolute top-5 flex flex-row items-center gap-2 align-baseline text-primary-400">
             <h2 className="text-xl text-white/70 font-normal">
-              Update Profile
+              {isCreateRoute ? 'Create Profile' : 'Update Profile'}
             </h2>
             <TooltipProvider>
               <Tooltip delayDuration={300}>
@@ -476,7 +478,7 @@ export function EditProfileForm({ userObject, onClose }: EditProfileFormProps) {
             onClick={() => handleSubmit}
             className="mx-auto"
           >
-            Update Profile
+            {isCreateRoute ? 'Create Profile' : 'Update Profile'}
           </Button>
         </offChainFetcher.Form>
       </>
