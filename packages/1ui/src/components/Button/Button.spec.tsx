@@ -113,6 +113,58 @@ describe('Button', () => {
       </DocumentFragment>
     `)
   })
+  it('should render appropriate element and classes when given accentOutline variant value', () => {
+    const { asFragment } = render(<Button variant="accentOutline">Text</Button>)
+    expect(asFragment()).toMatchInlineSnapshot(`
+      <DocumentFragment>
+        <button
+          class="flex items-center gap-2 text-sm font-medium border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted bg-transparent text-accent border-accent rounded-full hover:bg-accent/30 hover:border-accent/30 shadow-md-subtle px-3 py-1"
+        >
+          Text
+        </button>
+      </DocumentFragment>
+    `)
+  })
+  it('should render appropriate element and classes when given warningOutline variant value', () => {
+    const { asFragment } = render(
+      <Button variant="warningOutline">Text</Button>,
+    )
+    expect(asFragment()).toMatchInlineSnapshot(`
+      <DocumentFragment>
+        <button
+          class="flex items-center gap-2 text-sm font-medium border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted bg-transparent text-warning border-warning rounded-full hover:bg-warning/30 hover:border-warning/30 shadow-md-subtle px-3 py-1"
+        >
+          Text
+        </button>
+      </DocumentFragment>
+    `)
+  })
+  it('should render appropriate element and classes when given successOutline variant value', () => {
+    const { asFragment } = render(
+      <Button variant="successOutline">Text</Button>,
+    )
+    expect(asFragment()).toMatchInlineSnapshot(`
+      <DocumentFragment>
+        <button
+          class="flex items-center gap-2 text-sm font-medium border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted bg-transparent text-success border-success rounded-full hover:bg-success/30 hover:border-success/30 shadow-md-subtle px-3 py-1"
+        >
+          Text
+        </button>
+      </DocumentFragment>
+    `)
+  })
+  it('should render appropriate element and classes when given destructive variant value', () => {
+    const { asFragment } = render(<Button variant="destructive">Text</Button>)
+    expect(asFragment()).toMatchInlineSnapshot(`
+      <DocumentFragment>
+        <button
+          class="flex items-center gap-2 text-sm font-medium border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted bg-destructive text-destructive-foreground border-destructive rounded-full hover:bg-destructive/70 hover:border-destructive/30 shadow-md-subtle px-3 py-1"
+        >
+          Text
+        </button>
+      </DocumentFragment>
+    `)
+  })
   it('should render appropriate element and classes when given medium size value', () => {
     const { asFragment } = render(<Button size="md">Text</Button>)
     expect(asFragment()).toMatchInlineSnapshot(`

@@ -35,9 +35,13 @@ const meta: Meta<typeof Button> = {
         'ghost',
         'text',
         'accent',
+        'accentOutline',
         'warning',
+        'warningOutline',
         'success',
+        'successOutline',
         'destructive',
+        'destructiveOutline',
         'navigation',
       ],
       table: {
@@ -344,6 +348,138 @@ export const Destructive: Story = {
         Loading...
       </Button>
       <Button variant="destructive" disabled {...props}>
+        Disabled
+      </Button>
+    </div>
+  ),
+}
+
+export const AccentOutline: Story = {
+  parameters: {
+    controls: {
+      disable: true,
+    },
+  },
+  render: (props) => (
+    <div style={{ display: 'flex', gap: '2rem', alignItems: 'center' }}>
+      <Button variant="accentOutline" {...props}>
+        Default
+      </Button>
+      <Button variant="accentOutline" size="md" {...props}>
+        Medium
+      </Button>
+      <Button variant="accentOutline" size="lg" {...props}>
+        Large
+      </Button>
+      <Button variant="accentOutline" size="xl" {...props}>
+        Extra Large
+      </Button>
+      <Button variant="accentOutline" {...props}>
+        <Icon name="crystal-ball" />
+      </Button>
+      <Button variant="accentOutline" isLoading {...props}>
+        Loading...
+      </Button>
+      <Button variant="accentOutline" disabled {...props}>
+        Disabled
+      </Button>
+    </div>
+  ),
+}
+
+export const WarningOutline: Story = {
+  parameters: {
+    controls: {
+      disable: true,
+    },
+  },
+  render: (props) => (
+    <div style={{ display: 'flex', gap: '2rem', alignItems: 'center' }}>
+      <Button variant="warningOutline" {...props}>
+        Default
+      </Button>
+      <Button variant="warningOutline" size="md" {...props}>
+        Medium
+      </Button>
+      <Button variant="warningOutline" size="lg" {...props}>
+        Large
+      </Button>
+      <Button variant="warningOutline" size="xl" {...props}>
+        Extra Large
+      </Button>
+      <Button variant="warningOutline" {...props}>
+        <Icon name="crystal-ball" />
+      </Button>
+      <Button variant="warningOutline" isLoading {...props}>
+        Loading...
+      </Button>
+      <Button variant="warningOutline" disabled {...props}>
+        Disabled
+      </Button>
+    </div>
+  ),
+}
+
+export const SuccessOutline: Story = {
+  parameters: {
+    controls: {
+      disable: true,
+    },
+  },
+  render: (props) => (
+    <div style={{ display: 'flex', gap: '2rem', alignItems: 'center' }}>
+      <Button variant="successOutline" {...props}>
+        Default
+      </Button>
+      <Button variant="successOutline" size="md" {...props}>
+        Medium
+      </Button>
+      <Button variant="successOutline" size="lg" {...props}>
+        Large
+      </Button>
+      <Button variant="successOutline" size="xl" {...props}>
+        Extra Large
+      </Button>
+      <Button variant="successOutline" {...props}>
+        <Icon name="crystal-ball" />
+      </Button>
+      <Button variant="successOutline" isLoading {...props}>
+        Loading...
+      </Button>
+      <Button variant="successOutline" disabled {...props}>
+        Disabled
+      </Button>
+    </div>
+  ),
+}
+
+export const DestructiveOutline: Story = {
+  parameters: {
+    controls: {
+      disable: true,
+    },
+  },
+  render: (props) => (
+    <div style={{ display: 'flex', gap: '2rem', alignItems: 'center' }}>
+      <Button variant="destructiveOutline" {...props}>
+        Default
+      </Button>
+      <Button variant="destructiveOutline" size="md" {...props}>
+        Medium
+      </Button>
+      <Button variant="destructiveOutline" size="lg" {...props}>
+        Large
+      </Button>
+      <Button variant="destructiveOutline" size="xl" {...props}>
+        Extra Large
+      </Button>
+      <Button variant="destructiveOutline" {...props}>
+        <Icon name="crystal-ball" />
+      </Button>
+      <Button variant="destructiveOutline" isLoading {...props}>
+        Loading...
+      </Button>
+      <Button variant="destructiveOutline" disabled {...props}>
         Disabled
       </Button>
     </div>
