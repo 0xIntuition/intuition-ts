@@ -6,20 +6,25 @@ import {
   IdentitiesService,
   IdentityPresenter,
   OpenAPI,
+  UserPresenter,
+  UsersService,
 } from '@0xintuition/api'
 
+import EditProfileModal from '@components/edit-profile-modal'
 import Toast from '@components/toast'
 import { multivaultAbi } from '@lib/abis/multivault'
 import { useCreateIdentity } from '@lib/hooks/useCreateIdentity'
+import { editProfileModalAtom } from '@lib/state/store'
 import { MULTIVAULT_CONTRACT_ADDRESS } from '@lib/utils/constants'
 import logger from '@lib/utils/logger'
 import { getAuthHeaders, sliceString } from '@lib/utils/misc'
 import { SessionContext } from '@middleware/session'
 import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
-import { useFetcher, useLoaderData } from '@remix-run/react'
+import { useFetcher, useLoaderData, useRevalidator } from '@remix-run/react'
 import { CreateLoaderData } from '@routes/resources+/create'
 import { getPrivyAccessToken } from '@server/privy'
 import * as blockies from 'blockies-ts'
+import { useAtom } from 'jotai'
 import { AlertCircle } from 'lucide-react'
 import { ClientOnly } from 'remix-utils/client-only'
 import { toast } from 'sonner'
@@ -57,13 +62,33 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
     }
   }
 
-  if (userIdentity) {
+  let userObject
+  try {
+    userObject = await UsersService.getUserByWallet({
+      wallet: user.details.wallet.address,
+    })
+  } catch (error: unknown) {
+    if (error instanceof ApiError) {
+      userObject = undefined
+      console.log(
+        `${error.name} - ${error.status}: ${error.message} ${error.url}`,
+      )
+    } else {
+      throw error
+    }
+  }
+
+  if (!userObject) {
+    return console.log('No user found in DB')
+  }
+
+  if (userObject.display_name) {
     return redirect('/app/profile')
   }
 
-  logger('userIdentity', userIdentity)
+  logger('userObject', userObject)
 
-  return json({ user, userIdentity })
+  return json({ user, userIdentity, userObject })
 }
 
 // State
@@ -347,7 +372,6 @@ export function CreateButton({ onSuccess }: CreateButtonWrapperProps) {
         const formData = new FormData()
         formData.append('display_name', walletClient.account.address)
         formData.append('identity_id', walletClient.account.address)
-        formData.append('description', 'test')
 
         for (const [key, value] of formData.entries()) {
           logger(`${key}: ${value}`)
@@ -356,7 +380,7 @@ export function CreateButton({ onSuccess }: CreateButtonWrapperProps) {
         try {
           dispatch({ type: 'START_OFF_CHAIN_TRANSACTION' })
           offChainFetcher.submit(formData, {
-            action: '/actions/create-user-identity',
+            action: '/actions/create-profile',
             method: 'post',
           })
         } catch (error: unknown) {
@@ -406,10 +430,17 @@ export function CreateButton({ onSuccess }: CreateButtonWrapperProps) {
 }
 
 export default function Profile() {
-  const { user } = useLoaderData<{ user: SessionUser }>()
+  const { user, userObject } = useLoaderData<{
+    user: SessionUser
+    userObject: UserPresenter
+  }>()
+  const revalidator = useRevalidator()
   const imgSrc = blockies
     .create({ seed: user?.details?.wallet?.address })
     .toDataURL()
+
+  const [editProfileModalActive, setEditProfileModalActive] =
+    useAtom(editProfileModalAtom)
 
   return (
     <>
@@ -444,7 +475,13 @@ export default function Profile() {
                 </div>
               </div>
               <ClientOnly>
-                {() => <CreateButton onSuccess={() => {}} />}
+                {() => (
+                  <CreateButton
+                    onSuccess={() => {
+                      setEditProfileModalActive(true)
+                    }}
+                  />
+                )}
               </ClientOnly>
             </div>
           </div>
@@ -464,6 +501,14 @@ export default function Profile() {
           </div>
         </div>
       </div>
+      <EditProfileModal
+        userObject={userObject}
+        open={editProfileModalActive}
+        onClose={() => {
+          setEditProfileModalActive(false)
+          revalidator.revalidate()
+        }}
+      />
     </>
   )
 }
