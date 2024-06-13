@@ -18,14 +18,14 @@ import { IdentityPresenter, UserPresenter } from '@0xintuition/api'
 
 import { getFormProps, getInputProps, useForm } from '@conform-to/react'
 import { getZodConstraint, parseWithZod } from '@conform-to/zod'
-import { createIdentitySchema } from '@lib/schemas/create-identity-schema'
+import { updateProfileSchema } from '@lib/schemas/update-profile-schema'
 import {
   DESCRIPTION_MAX_LENGTH,
   MAX_NAME_LENGTH,
   MAX_UPLOAD_SIZE,
 } from '@lib/utils/constants'
 import logger from '@lib/utils/logger'
-import { cn } from '@lib/utils/misc'
+import { cn, truncateString } from '@lib/utils/misc'
 import { Link, useFetcher, useLocation } from '@remix-run/react'
 import { type UploadApiResponse } from 'cloudinary'
 import {
@@ -33,6 +33,7 @@ import {
   CircleXIcon,
   ExternalLinkIcon,
   HelpCircle,
+  Loader2Icon,
   Upload,
 } from 'lucide-react'
 import { toast } from 'sonner'
@@ -60,7 +61,7 @@ export default function EditProfileModal({
         onClose?.()
       }}
     >
-      <DialogContent className="w-[600px] bg-neutral-950 rounded-xl shadow border border-solid border-black/10 pb-0">
+      <DialogContent className="w-[600px] bg-neutral-950 rounded-xl shadow border border-solid border-black/10">
         <EditProfileForm
           userObject={userObject}
           onSuccess={onSuccess}
@@ -172,10 +173,10 @@ export function EditProfileForm({ userObject, onClose }: EditProfileFormProps) {
   const [form, fields] = useForm({
     id: 'update-profile',
     lastResult: lastOffchainSubmission?.submission,
-    constraint: getZodConstraint(createIdentitySchema()),
+    constraint: getZodConstraint(updateProfileSchema()),
     onValidate({ formData }) {
       return parseWithZod(formData, {
-        schema: createIdentitySchema,
+        schema: updateProfileSchema,
       })
     },
     shouldValidate: 'onInput',
@@ -277,14 +278,14 @@ export function EditProfileForm({ userObject, onClose }: EditProfileFormProps) {
   // Handle Initial Form Submit
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     console.log('Form submitting')
-    event.preventDefault()
     try {
+      event.preventDefault()
       dispatch({ type: 'START_TRANSACTION' })
       const formData = new FormData(event.currentTarget)
 
       // Initial form validation
       const submission = parseWithZod(formData, {
-        schema: createIdentitySchema(),
+        schema: updateProfileSchema(),
       })
 
       if (
@@ -320,6 +321,12 @@ export function EditProfileForm({ userObject, onClose }: EditProfileFormProps) {
   ) => {
     setDescription(event.target.value)
   }
+
+  useEffect(() => {
+    if (userObject.image) {
+      setPreviewImage(userObject.image)
+    }
+  }, [userObject.image])
 
   return (
     <>
@@ -390,7 +397,7 @@ export function EditProfileForm({ userObject, onClose }: EditProfileFormProps) {
                 </div>
                 <div className="flex-col justify-start items-start inline-flex">
                   <div className="text-center text-neutral-200 text-sm font-normal leading-tight">
-                    {imageFilename}
+                    {truncateString(imageFilename ?? '', 36)}
                   </div>
                   <div className="text-center text-neutral-200 text-xs font-normal leading-[18px]">
                     {imageFilesize}
@@ -475,10 +482,28 @@ export function EditProfileForm({ userObject, onClose }: EditProfileFormProps) {
           <Button
             form={form.id}
             disabled={loading}
-            onClick={() => handleSubmit}
+            onClick={() => {
+              handleSubmit
+            }}
             className="mx-auto"
           >
-            {isCreateRoute ? 'Create Profile' : 'Update Profile'}
+            {loading ? (
+              isCreateRoute ? (
+                <>
+                  <Loader2Icon className="animate-spin h-5 w-5 mr-1" /> Creating
+                  Profile...
+                </>
+              ) : (
+                <>
+                  <Loader2Icon className="animate-spin h-5 w-5 mr-1" /> Updating
+                  Profile...
+                </>
+              )
+            ) : isCreateRoute ? (
+              'Create Profile'
+            ) : (
+              'Update Profile'
+            )}
           </Button>
         </offChainFetcher.Form>
       </>
@@ -489,7 +514,7 @@ export function EditProfileForm({ userObject, onClose }: EditProfileFormProps) {
 interface ImageChooseProps {
   previewImage: string | null
   setPreviewImage: React.Dispatch<React.SetStateAction<string | null>>
-  onFileChange: (filename: string, filesize: string, file: File) => void
+  onFileChange: (filename: string, filesize: string) => void
 }
 
 function ImageChooser({
@@ -520,7 +545,7 @@ function ImageChooser({
             )}
           >
             {previewImage ? (
-              <div className="flex h-[60px] w-[60px] items-center justify-center overflow-hidden rounded-md">
+              <div className="flex h-[60px] w-[60px] items-center justify-center overflow-hidden rounded-lg">
                 <img
                   src={previewImage}
                   className="h-full w-full object-cover object-position-center shadow-md"
@@ -528,9 +553,11 @@ function ImageChooser({
                 />
               </div>
             ) : (
-              <div className="flex h-full w-full items-center justify-center overflow-hidden rounded-md h-[60px] w-[60px]">
-                <div className="pointer-events-pointer inset-0 flex items-center justify-center">
-                  <Upload className="h-6 w-6 text-neutral-700" />
+              <div className="flex flex-row">
+                <div className="flex h-full w-full items-center justify-center overflow-hidden rounded-md h-[60px] w-[60px]">
+                  <div className="pointer-events-pointer inset-0 flex items-center justify-center">
+                    <Upload className="h-6 w-6 text-neutral-700" />
+                  </div>
                 </div>
               </div>
             )}
@@ -558,7 +585,7 @@ function ImageChooser({
                   formattedSize = `${Math.round(filesizeKB)} KB`
                 }
 
-                onFileChange(file.name, formattedSize, file)
+                onFileChange(file.name, formattedSize)
               } else {
                 setPreviewImage(null)
               }

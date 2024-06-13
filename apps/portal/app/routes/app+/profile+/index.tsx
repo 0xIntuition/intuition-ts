@@ -28,6 +28,7 @@ import { SessionContext } from '@middleware/session'
 import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
 import { useLoaderData, useRevalidator } from '@remix-run/react'
 import { getPrivyAccessToken } from '@server/privy'
+import * as blockies from 'blockies-ts'
 import { useAtom } from 'jotai'
 import { Loader2Icon } from 'lucide-react'
 import { SessionUser } from 'types/user'
@@ -112,6 +113,10 @@ export default function Profile() {
     userTotals: UserTotalsPresenter
   }>()
 
+  const imgSrc = blockies
+    .create({ seed: user?.details?.wallet?.address })
+    .toDataURL()
+
   const [editProfileModalActive, setEditProfileModalActive] =
     useAtom(editProfileModalAtom)
 
@@ -133,10 +138,7 @@ export default function Profile() {
         <div className="w-[300px] justify-start items-center gap-[18px] inline-flex">
           <div className="w-[70px] pr-1.5 justify-start items-center flex">
             <Avatar className="w-16 h-16">
-              <AvatarImage
-                src={userObject.image ?? 'https://via.placeholder.com/64x64'}
-                alt="Avatar"
-              />
+              <AvatarImage src={userObject.image ?? imgSrc} alt="Avatar" />
               <AvatarFallback>
                 <Loader2Icon className="h-6 w-6 animate-spin" />
               </AvatarFallback>

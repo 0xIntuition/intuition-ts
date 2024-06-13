@@ -8,7 +8,7 @@ export default function ErrorList({
   return errors?.length ? (
     <ul id={id} className="flex flex-col gap-1">
       {errors.map((error, i) => (
-        <li key={i} className="text-sm font-semibold text-destructive">
+        <li key={i} className="text-xs font-semibold text-destructive">
           {error}
         </li>
       ))}

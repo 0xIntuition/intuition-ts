@@ -410,7 +410,7 @@ export function CreateButton({
         awaitingOnChainConfirmation ||
         loading ? (
           <>
-            <Loader2Icon className="animate-spin h-5 w-5 mr-2" />
+            <Loader2Icon className="animate-spin h-5 w-5 mr-1" />
             Creating Identity...
           </>
         ) : (
