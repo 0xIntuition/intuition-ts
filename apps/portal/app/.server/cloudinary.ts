@@ -8,6 +8,7 @@ cloudinary.v2.config({
 })
 
 async function uploadImage(data: AsyncIterable<Uint8Array>) {
+  // eslint-disable-next-line no-async-promise-executor
   const uploadPromise = new Promise(async (resolve, reject) => {
     const uploadStream = cloudinary.v2.uploader.upload_stream(
       {
@@ -25,6 +26,7 @@ async function uploadImage(data: AsyncIterable<Uint8Array>) {
     )
     await writeAsyncIterableToWritable(data, uploadStream)
   })
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const response = (await uploadPromise) as any
   if (response.moderation && response.moderation[0].status === 'rejected') {
     throw new Error('Image failed moderation')

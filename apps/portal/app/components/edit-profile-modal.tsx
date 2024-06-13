@@ -5,7 +5,6 @@ import {
   Button,
   Dialog,
   DialogContent,
-  DialogFooter,
   DialogHeader,
   Input,
   Label,
@@ -21,7 +20,6 @@ import { getFormProps, getInputProps, useForm } from '@conform-to/react'
 import { getZodConstraint, parseWithZod } from '@conform-to/zod'
 import { createIdentitySchema } from '@lib/schemas/create-identity-schema'
 import {
-  ACCEPTED_IMAGE_MIME_TYPES,
   DESCRIPTION_MAX_LENGTH,
   MAX_NAME_LENGTH,
   MAX_UPLOAD_SIZE,
@@ -38,13 +36,11 @@ import {
   Upload,
 } from 'lucide-react'
 import { toast } from 'sonner'
-import { useWalletClient } from 'wagmi'
 
 import ErrorList from './error-list'
 import Toast from './toast'
 
 export interface EditProfileModalProps {
-  id: string
   userObject: UserPresenter
   open?: boolean
   onClose: () => void
@@ -52,7 +48,6 @@ export interface EditProfileModalProps {
 }
 
 export default function EditProfileModal({
-  id,
   userObject,
   open,
   onClose,
@@ -65,9 +60,8 @@ export default function EditProfileModal({
         onClose?.()
       }}
     >
-      <DialogContent className="w-[600px] bg-neutral-900 rounded-xl shadow border border-solid border-black/10 pb-0">
+      <DialogContent className="w-[600px] bg-neutral-950 rounded-xl shadow border border-solid border-black/10 pb-0">
         <EditProfileForm
-          id={id}
           userObject={userObject}
           onSuccess={onSuccess}
           onClose={onClose}
@@ -150,18 +144,12 @@ const initialState: TransactionState = {
 }
 
 interface EditProfileFormProps {
-  id: string
   userObject: UserPresenter
   onSuccess?: () => void
   onClose: () => void
 }
 
-export function EditProfileForm({
-  id,
-  userObject,
-  onSuccess,
-  onClose,
-}: EditProfileFormProps) {
+export function EditProfileForm({ userObject, onClose }: EditProfileFormProps) {
   const [state, dispatch] = useReducer(transactionReducer, initialState)
 
   // image upload fetcher
@@ -174,17 +162,10 @@ export function EditProfileForm({
   const userIdentity = offChainFetcher?.data?.userIdentity
   logger('userIdentity', userIdentity)
 
-  const [descriptionLength, setDescriptionLength] = useState(0)
-  const [imageSrc, setImageSrc] = useState<string | ArrayBuffer | null>(null)
   const [imageFilename, setImageFilename] = useState<string | null>(null)
   const [imageFilesize, setImageFilesize] = useState<string | null>(null)
-  const [imageUploading, setImageUploading] = useState(false)
-  const [isHovered, setIsHovered] = useState(false)
-  const [formTouched, setFormTouched] = useState(false) // to disable submit if user hasn't touched form yet
   const [displayName, setDisplayName] = useState(userObject.display_name ?? '')
   const [description, setDescription] = useState(userObject.description ?? '')
-
-  const { data: walletClient } = useWalletClient()
 
   const [form, fields] = useForm({
     id: 'update-profile',
@@ -207,7 +188,6 @@ export function EditProfileForm({
 
   // Handle Triggering Image Upload
   useEffect(() => {
-    console.log('imageUrl', state.imageUrl)
     if (uploadFetcher.state === 'submitting') {
       dispatch({ type: 'START_IMAGE_UPLOAD' })
     }
@@ -216,6 +196,7 @@ export function EditProfileForm({
       uploadFetcher.data &&
       uploadFetcher.data
     ) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const data = uploadFetcher.data as any
 
       if (typeof data.submission.payload.image_url !== 'string') {
@@ -244,7 +225,7 @@ export function EditProfileForm({
     if (state.status === 'image-upload-complete') {
       // Prepare the formData or payload for the off-chain transaction
       const formData = new FormData()
-      formData.append('id', id ?? '')
+      formData.append('id', userObject.id ?? '')
       formData.append('image_url', state.imageUrl ?? '')
       formData.append('display_name', state.displayName ?? '')
       formData.append('description', state.description ?? '')
@@ -252,7 +233,7 @@ export function EditProfileForm({
       // Submit the off-chain transaction
       try {
         offChainFetcher.submit(formData, {
-          action: '/actions/update-profile',
+          action: '/actions/edit-profile',
           method: 'post',
         })
         onClose()
@@ -293,32 +274,32 @@ export function EditProfileForm({
 
   // Handle Initial Form Submit
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    console.log('Form submitting')
     event.preventDefault()
     try {
-      if (walletClient) {
-        dispatch({ type: 'START_TRANSACTION' })
-        const formData = new FormData(event.currentTarget)
+      dispatch({ type: 'START_TRANSACTION' })
+      const formData = new FormData(event.currentTarget)
 
-        // Initial form validation
-        const submission = parseWithZod(formData, {
-          schema: createIdentitySchema(),
-        })
+      // Initial form validation
+      const submission = parseWithZod(formData, {
+        schema: createIdentitySchema(),
+      })
 
-        if (
-          submission.status === 'error' &&
-          Object.keys(submission.error).length
-        ) {
-          console.error('Update profile validation errors: ', submission.error)
-        }
-
-        setLoading(true)
-        dispatch({ type: 'START_IMAGE_UPLOAD' })
-        uploadFetcher.submit(formData, {
-          action: '/actions/upload',
-          method: 'post',
-          encType: 'multipart/form-data',
-        })
+      if (
+        submission.status === 'error' &&
+        submission.error !== null &&
+        Object.keys(submission.error).length
+      ) {
+        console.error('Update profile validation errors: ', submission.error)
       }
+
+      setLoading(true)
+      dispatch({ type: 'START_IMAGE_UPLOAD' })
+      uploadFetcher.submit(formData, {
+        action: '/actions/upload',
+        method: 'post',
+        encType: 'multipart/form-data',
+      })
     } catch (error: unknown) {
       logger(error)
     }
@@ -346,41 +327,39 @@ export function EditProfileForm({
             <h2 className="text-xl text-white/70 font-normal">
               Update Profile
             </h2>
-            <>
-              <TooltipProvider>
-                <Tooltip delayDuration={300}>
-                  <TooltipTrigger>
-                    <HelpCircle className="h-4 w-4 text-neutral-500 transition-colors duration-300 hover:text-neutral-400" />
-                  </TooltipTrigger>
-                  <TooltipContent className="max-w-[230px]" side="right">
-                    <div className="mb-2 flex flex-row items-center gap-2">
-                      <p className="text-base font-medium text-primary-300">
-                        Profile
-                      </p>
-                    </div>
-                    <p className="text-sm text-primary-400">
-                      Identities are the smallest units of knowledge in
-                      Intuition. Identities are the building blocks that form
-                      claims, and the things claims can be made about.
+            <TooltipProvider>
+              <Tooltip delayDuration={300}>
+                <TooltipTrigger>
+                  <HelpCircle className="h-4 w-4 text-neutral-500 transition-colors duration-300 hover:text-neutral-400" />
+                </TooltipTrigger>
+                <TooltipContent className="max-w-[230px]" side="right">
+                  <div className="mb-2 flex flex-row items-center gap-2">
+                    <p className="text-base font-medium text-primary-300">
+                      Profile
                     </p>
-                    <Link
-                      to={
-                        'https://docs.intuition.systems/primitives-and-interactions/primitives/identities'
-                      }
-                      target="_blank"
+                  </div>
+                  <p className="text-sm text-primary-400">
+                    Identities are the smallest units of knowledge in Intuition.
+                    Identities are the building blocks that form claims, and the
+                    things claims can be made about.
+                  </p>
+                  <Link
+                    to={
+                      'https://docs.intuition.systems/primitives-and-interactions/primitives/identities'
+                    }
+                    target="_blank"
+                  >
+                    <Button
+                      className="mt-2 flex items-center gap-1"
+                      variant="secondary"
                     >
-                      <Button
-                        className="mt-2 flex items-center gap-1"
-                        variant="secondary"
-                      >
-                        Learn more
-                        <ExternalLinkIcon className="h-3 w-3" />
-                      </Button>
-                    </Link>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            </>
+                      Learn more
+                      <ExternalLinkIcon className="h-3 w-3" />
+                    </Button>
+                  </Link>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </div>
         </DialogHeader>
 
@@ -401,9 +380,6 @@ export function EditProfileForm({
             <div className="self-stretch h-[100px] px-9 py-2.5 bg-neutral-900 rounded-lg border border-solid border-white/10 justify-between items-center inline-flex">
               <div className="justify-start items-center gap-[18px] flex">
                 <div className="w-[60px] h-[60px] rounded-xl justify-center items-center flex">
-                  <Label htmlFor={fields.image_url.id} hidden>
-                    Profile Picture
-                  </Label>
                   <ImageChooser
                     previewImage={previewImage}
                     setPreviewImage={setPreviewImage}
@@ -424,7 +400,6 @@ export function EditProfileForm({
                   onClick={(e) => {
                     e.preventDefault()
                     setPreviewImage(null)
-                    setImageSrc(null)
                     setImageFilename(null)
                     setImageFilesize(null)
                   }}
@@ -436,15 +411,14 @@ export function EditProfileForm({
             </div>
             <div className="self-stretch p-2.5 rounded-lg justify-center items-center gap-2.5 inline-flex">
               <div className="grow shrink basis-0 text-right text-white/50 text-xs font-normal leading-[18px]">
-                Max {MAX_UPLOAD_SIZE / 1024 / 1024} MB
-              </div>
-              <div
-                className={`min-h-[1rem] px-2 ${!fields.image_url.errors && 'invisible'}`}
-              >
-                <ErrorList
-                  id={fields.image_url.errorId}
-                  errors={fields.image_url.errors}
-                />
+                {fields.image_url.errors ? (
+                  <ErrorList
+                    id={fields.image_url.errorId}
+                    errors={fields.image_url.errors}
+                  />
+                ) : (
+                  `Max ${MAX_UPLOAD_SIZE / 1024 / 1024} MB`
+                )}
               </div>
             </div>
           </div>
@@ -498,13 +472,11 @@ export function EditProfileForm({
           </div>
           <Button
             form={form.id}
-            type="submit"
             disabled={loading}
             onClick={() => handleSubmit}
+            className="mx-auto"
           >
-            <div className="flex flex-row items-center gap-2 text-lg text-white">
-              Update Profile
-            </div>
+            Update Profile
           </Button>
         </offChainFetcher.Form>
       </>
@@ -515,7 +487,7 @@ export function EditProfileForm({
 interface ImageChooseProps {
   previewImage: string | null
   setPreviewImage: React.Dispatch<React.SetStateAction<string | null>>
-  onFileChange: (filename: string, filesize: string) => void
+  onFileChange: (filename: string, filesize: string, file: File) => void
 }
 
 function ImageChooser({
@@ -566,7 +538,6 @@ function ImageChooser({
             aria-label="Image"
             className="absolute left-0 w-full cursor-pointer opacity-0"
             onChange={(event) => {
-              const input = event.target
               const file = event.target.files?.[0]
               console.log('file', file)
 
@@ -585,12 +556,10 @@ function ImageChooser({
                   formattedSize = `${Math.round(filesizeKB)} KB`
                 }
 
-                onFileChange(file.name, formattedSize)
+                onFileChange(file.name, formattedSize, file)
               } else {
                 setPreviewImage(null)
               }
-
-              input.value = ''
             }}
             name="image_url"
             type="file"

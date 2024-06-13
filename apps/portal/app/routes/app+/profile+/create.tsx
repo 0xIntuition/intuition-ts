@@ -13,12 +13,13 @@ import { multivaultAbi } from '@lib/abis/multivault'
 import { useCreateIdentity } from '@lib/hooks/useCreateIdentity'
 import { MULTIVAULT_CONTRACT_ADDRESS } from '@lib/utils/constants'
 import logger from '@lib/utils/logger'
-import { getAuthHeaders } from '@lib/utils/misc'
+import { getAuthHeaders, sliceString } from '@lib/utils/misc'
 import { SessionContext } from '@middleware/session'
 import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
 import { useFetcher, useLoaderData } from '@remix-run/react'
 import { CreateLoaderData } from '@routes/resources+/create'
 import { getPrivyAccessToken } from '@server/privy'
+import * as blockies from 'blockies-ts'
 import { AlertCircle } from 'lucide-react'
 import { ClientOnly } from 'remix-utils/client-only'
 import { toast } from 'sonner'
@@ -405,11 +406,64 @@ export function CreateButton({ onSuccess }: CreateButtonWrapperProps) {
 }
 
 export default function Profile() {
+  const { user } = useLoaderData<{ user: SessionUser }>()
+  const imgSrc = blockies
+    .create({ seed: user?.details?.wallet?.address })
+    .toDataURL()
+
   return (
-    <div className="m-8 flex flex-col items-center gap-4">
-      <div className="flex flex-col">
-        <ClientOnly>{() => <CreateButton onSuccess={() => {}} />}</ClientOnly>
+    <>
+      <div className="flex justify-center items-center h-screen">
+        <div className="w-[600px] h-[307px] flex-col justify-start items-start gap-[42px] inline-flex">
+          <div className="h-[37px] flex-col justify-start items-start gap-6 flex">
+            <div className="self-stretch h-[37px] flex-col justify-start items-start gap-2.5 flex">
+              <div className="self-stretch text-white text-3xl font-semibold font-['Geist']">
+                Create your profile identity
+              </div>
+            </div>
+          </div>
+          <div className="h-28 p-6 bg-black rounded-[10px] shadow border border-solid border-neutral-300/20 backdrop-blur-xl flex-col justify-center items-center gap-6 flex">
+            <div className="w-[552px] justify-between items-center inline-flex">
+              <div className="grow shrink basis-0 h-16 justify-start items-center gap-[18px] flex">
+                <div className="w-[70px] pr-1.5 justify-start items-center flex">
+                  <img
+                    className="w-16 h-16 relative rounded-full border border-neutral-700"
+                    src={imgSrc}
+                    alt="Avatar"
+                  />
+                </div>
+                <div className="flex-col justify-start items-start gap-[3px] inline-flex">
+                  <div className="justify-start items-end gap-1.5 inline-flex">
+                    <div className="text-neutral-200 text-base font-medium font-['Geist'] leading-normal">
+                      {sliceString(user?.details?.wallet?.address, 6, 4)}
+                    </div>
+                    <div className="w-[0px] self-stretch pb-0.5 justify-start items-end gap-2.5 flex">
+                      <div></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <ClientOnly>
+                {() => <CreateButton onSuccess={() => {}} />}
+              </ClientOnly>
+            </div>
+          </div>
+          <div className="w-[600px] justify-start items-start gap-6 inline-flex">
+            <div className="grow shrink basis-0 self-stretch flex-col justify-start items-start gap-6 inline-flex">
+              <div className="self-stretch h-[74px] flex-col justify-start items-start gap-2.5 flex">
+                <div className="self-stretch text-white text-base font-medium font-['Geist'] leading-normal">
+                  Enhanced Visibility
+                </div>
+                <div className="self-stretch text-white/40 text-sm font-normal font-['Geist'] leading-tight">
+                  By creating a profile identity, you increase your visibility
+                  on the Intuition Portal, making it easier for others to find
+                  and connect with you within the community.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
+    </>
   )
 }

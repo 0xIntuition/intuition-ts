@@ -1,9 +1,4 @@
-import {
-  ApiError,
-  IdentitiesService,
-  OpenAPI,
-  UsersService,
-} from '@0xintuition/api'
+import { ApiError, OpenAPI, UsersService } from '@0xintuition/api'
 
 import logger from '@lib/utils/logger'
 import { getAuthHeaders } from '@lib/utils/misc'

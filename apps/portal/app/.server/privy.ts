@@ -11,7 +11,7 @@ export function getPrivyClient() {
 export const verifyPrivyAccessToken = async (
   req: Request,
 ): Promise<AuthTokenClaims | null> => {
-  console.log('Enter verifyPrivyAccessToken')
+  // console.log('Enter verifyPrivyAccessToken')
   const privy = getPrivyClient()
   const authToken = getPrivyAccessToken(req)
   if (!authToken) {
@@ -19,8 +19,8 @@ export const verifyPrivyAccessToken = async (
     return null
   }
   const verifiedClaims = await privy.verifyAuthToken(authToken)
-  console.log('Verified claims', JSON.stringify(verifiedClaims, null, 2))
-  console.log('Exit verifyPrivyAccessToken')
+  // console.log('Verified claims', JSON.stringify(verifiedClaims, null, 2))
+  // console.log('Exit verifyPrivyAccessToken')
   return verifiedClaims
 }
 
@@ -37,11 +37,11 @@ export const getPrivyAccessToken = (req: Request): string | null => {
   const authToken =
     req.headers.get('Authorization')?.replace('Bearer ', '') ||
     cookies['privy-token']
-  console.log('cookie[privy-token]', cookies['privy-token'])
-  console.log(
-    "req.headers.get('Authorization')",
-    req.headers.get('Authorization'),
-  )
-  console.log('authToken', authToken)
+  // console.log('cookie[privy-token]', cookies['privy-token'])
+  // console.log(
+  //   "req.headers.get('Authorization')",
+  //   req.headers.get('Authorization'),
+  // )
+  // console.log('authToken', authToken)
   return authToken
 }

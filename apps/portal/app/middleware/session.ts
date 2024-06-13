@@ -49,10 +49,10 @@ export function createSessionMiddleware(storage: SessionStorage) {
       // console.log('[MDL] Session is dirty, committing')
       const result = await commitSession(session$)
       response.headers.append('Set-Cookie', result)
-      console.log(
-        '[Session Middleware] Updated session data:',
-        JSON.stringify(result),
-      )
+      // console.log(
+      //   '[Session Middleware] Updated session data:',
+      //   JSON.stringify(result),
+      // )
     }
     // console.log('[MDL] Exit createSessionMiddleware')
     return response
