@@ -16,6 +16,8 @@ import type {
   CreateClaimResponse,
   CreateIdentityData,
   CreateIdentityResponse,
+  CreateInviteCodesData,
+  CreateInviteCodesResponse,
   CreateLinkedAccountData,
   CreateLinkedAccountResponse,
   CreatePositionData,
@@ -65,6 +67,8 @@ import type {
   GetUsersResponse,
   GetUserTotalsData,
   GetUserTotalsResponse,
+  RedeemInviteCodeData,
+  RedeemInviteCodeResponse,
   RefreshData,
   RefreshResponse,
   ReissueApiKeyResponse,
@@ -575,6 +579,42 @@ export class IdentityPositionsService {
         timeframe: data.timeframe,
         creator: data.creator,
       },
+    })
+  }
+}
+
+export class InviteCodesService {
+  /**
+   * @param data The data for the request.
+   * @param data.requestBody
+   * @returns unknown Allow admins to create invite codes
+   * @throws ApiError
+   */
+  public static createInviteCodes(
+    data: CreateInviteCodesData,
+  ): CancelablePromise<CreateInviteCodesResponse> {
+    return __request(OpenAPI, {
+      method: 'POST',
+      url: '/invite_codes',
+      body: data.requestBody,
+      mediaType: 'application/json',
+    })
+  }
+
+  /**
+   * @param data The data for the request.
+   * @param data.requestBody
+   * @returns unknown Redeemed valid invite code
+   * @throws ApiError
+   */
+  public static redeemInviteCode(
+    data: RedeemInviteCodeData,
+  ): CancelablePromise<RedeemInviteCodeResponse> {
+    return __request(OpenAPI, {
+      method: 'POST',
+      url: '/invite_codes/redeem',
+      body: data.requestBody,
+      mediaType: 'application/json',
     })
   }
 }

@@ -53,7 +53,7 @@ export default function Login() {
   }
 
   return (
-    <div>
+    <div className="flex items-center justify-center h-screen">
       <PrivyLoginButton handleLogin={handleLogin} />
     </div>
   )

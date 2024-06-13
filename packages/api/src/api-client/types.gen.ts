@@ -534,6 +534,11 @@ export type NewClaim = {
   vault_uuid?: string | null
 }
 
+export type NewInviteCodes = {
+  generate_codes_count?: number | null
+  invited_by?: string | null
+}
+
 export type NewLinkedAccount = {
   account_type: string
   active?: boolean
@@ -668,6 +673,11 @@ export type RedeemAtom = {
   id: string
   receiver: string
   shares: string
+}
+
+export type RedeemBody = {
+  invite_code: string
+  wallet: string
 }
 
 export type RedeemTriple = {
@@ -859,6 +869,7 @@ export type UpdatePosition = {
 
 export type UpsertUser = {
   api_key?: string | null
+  description?: string | null
   did?: string | null
   display_name?: string | null
   ens_name?: string | null
@@ -871,6 +882,7 @@ export type UpsertUser = {
 export type User = {
   api_key?: string | null
   created_at: string
+  description?: string | null
   did?: string | null
   display_name?: string | null
   ens_name?: string | null
@@ -893,6 +905,7 @@ export type UserPoints = {
 }
 
 export type UserPresenter = {
+  description?: string | null
   display_name?: string | null
   ens_name?: string | null
   id?: string | null
@@ -911,8 +924,11 @@ export type UserTotalPaginatedResponse = {
 
 export type UserTotalsPresenter = {
   created_at?: string | null
+  description?: string | null
   display_name?: string | null
   ens_name?: string | null
+  followed_count: number
+  follower_count: number
   id?: string | null
   image?: string | null
   privy_id?: string | null
@@ -1435,6 +1451,18 @@ export type GetIdentityPositionsResponse = {
   total: number
 }
 
+export type CreateInviteCodesData = {
+  requestBody: NewPosition
+}
+
+export type CreateInviteCodesResponse = unknown
+
+export type RedeemInviteCodeData = {
+  requestBody: NewPosition
+}
+
+export type RedeemInviteCodeResponse = unknown
+
 export type GetLinkedAccountsData = {
   accountType?: string | null
   address?: string | null
@@ -1670,6 +1698,7 @@ export type CreateUserData = {
 export type CreateUserResponse = {
   api_key?: string | null
   created_at: string
+  description?: string | null
   did?: string | null
   display_name?: string | null
   ens_name?: string | null
@@ -1685,6 +1714,7 @@ export type CreateUserResponse = {
 export type ReissueApiKeyResponse = {
   api_key?: string | null
   created_at: string
+  description?: string | null
   did?: string | null
   display_name?: string | null
   ens_name?: string | null
@@ -1728,6 +1758,7 @@ export type GetUserByWalletPublicData = {
 export type GetUserByWalletPublicResponse = {
   api_key?: string | null
   created_at: string
+  description?: string | null
   did?: string | null
   display_name?: string | null
   ens_name?: string | null
@@ -1750,6 +1781,7 @@ export type GetUserByWalletData = {
 export type GetUserByWalletResponse = {
   api_key?: string | null
   created_at: string
+  description?: string | null
   did?: string | null
   display_name?: string | null
   ens_name?: string | null
@@ -1772,6 +1804,7 @@ export type GetUserByIdPublicData = {
 export type GetUserByIdPublicResponse = {
   api_key?: string | null
   created_at: string
+  description?: string | null
   did?: string | null
   display_name?: string | null
   ens_name?: string | null
@@ -1795,6 +1828,7 @@ export type UpdateUserData = {
 export type UpdateUserResponse = {
   api_key?: string | null
   created_at: string
+  description?: string | null
   did?: string | null
   display_name?: string | null
   ens_name?: string | null
@@ -1817,6 +1851,7 @@ export type DeleteUserData = {
 export type DeleteUserResponse = {
   api_key?: string | null
   created_at: string
+  description?: string | null
   did?: string | null
   display_name?: string | null
   ens_name?: string | null
@@ -1839,6 +1874,7 @@ export type UpdateUserEnsData = {
 export type UpdateUserEnsResponse = {
   api_key?: string | null
   created_at: string
+  description?: string | null
   did?: string | null
   display_name?: string | null
   ens_name?: string | null
@@ -1876,6 +1912,7 @@ export type UpdateUserPointsData = {
 export type UpdateUserPointsResponse = {
   api_key?: string | null
   created_at: string
+  description?: string | null
   did?: string | null
   display_name?: string | null
   ens_name?: string | null
@@ -1898,6 +1935,7 @@ export type GetUserByIdData = {
 export type GetUserByIdResponse = {
   api_key?: string | null
   created_at: string
+  description?: string | null
   did?: string | null
   display_name?: string | null
   ens_name?: string | null
@@ -1919,8 +1957,11 @@ export type GetUserTotalsData = {
 
 export type GetUserTotalsResponse = {
   created_at?: string | null
+  description?: string | null
   display_name?: string | null
   ens_name?: string | null
+  followed_count: number
+  follower_count: number
   id?: string | null
   image?: string | null
   privy_id?: string | null
@@ -2542,6 +2583,32 @@ export type $OpenApiTs = {
       }
     }
   }
+  '/invite_codes': {
+    post: {
+      req: {
+        requestBody: NewPosition
+      }
+      res: {
+        /**
+         * Allow admins to create invite codes
+         */
+        200: unknown
+      }
+    }
+  }
+  '/invite_codes/redeem': {
+    post: {
+      req: {
+        requestBody: NewPosition
+      }
+      res: {
+        /**
+         * Redeemed valid invite code
+         */
+        200: unknown
+      }
+    }
+  }
   '/linked_accounts': {
     get: {
       req: {
@@ -2860,6 +2927,7 @@ export type $OpenApiTs = {
         200: {
           api_key?: string | null
           created_at: string
+          description?: string | null
           did?: string | null
           display_name?: string | null
           ens_name?: string | null
@@ -2883,6 +2951,7 @@ export type $OpenApiTs = {
         200: {
           api_key?: string | null
           created_at: string
+          description?: string | null
           did?: string | null
           display_name?: string | null
           ens_name?: string | null
@@ -2957,6 +3026,7 @@ export type $OpenApiTs = {
         200: {
           api_key?: string | null
           created_at: string
+          description?: string | null
           did?: string | null
           display_name?: string | null
           ens_name?: string | null
@@ -2986,6 +3056,7 @@ export type $OpenApiTs = {
         200: {
           api_key?: string | null
           created_at: string
+          description?: string | null
           did?: string | null
           display_name?: string | null
           ens_name?: string | null
@@ -3015,6 +3086,7 @@ export type $OpenApiTs = {
         200: {
           api_key?: string | null
           created_at: string
+          description?: string | null
           did?: string | null
           display_name?: string | null
           ens_name?: string | null
@@ -3043,6 +3115,7 @@ export type $OpenApiTs = {
         200: {
           api_key?: string | null
           created_at: string
+          description?: string | null
           did?: string | null
           display_name?: string | null
           ens_name?: string | null
@@ -3070,6 +3143,7 @@ export type $OpenApiTs = {
         200: {
           api_key?: string | null
           created_at: string
+          description?: string | null
           did?: string | null
           display_name?: string | null
           ens_name?: string | null
@@ -3099,6 +3173,7 @@ export type $OpenApiTs = {
         200: {
           api_key?: string | null
           created_at: string
+          description?: string | null
           did?: string | null
           display_name?: string | null
           ens_name?: string | null
@@ -3150,6 +3225,7 @@ export type $OpenApiTs = {
         200: {
           api_key?: string | null
           created_at: string
+          description?: string | null
           did?: string | null
           display_name?: string | null
           ens_name?: string | null
@@ -3179,6 +3255,7 @@ export type $OpenApiTs = {
         200: {
           api_key?: string | null
           created_at: string
+          description?: string | null
           did?: string | null
           display_name?: string | null
           ens_name?: string | null
@@ -3207,8 +3284,11 @@ export type $OpenApiTs = {
          */
         200: {
           created_at?: string | null
+          description?: string | null
           display_name?: string | null
           ens_name?: string | null
+          followed_count: number
+          follower_count: number
           id?: string | null
           image?: string | null
           privy_id?: string | null
