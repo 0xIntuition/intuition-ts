@@ -92,9 +92,6 @@ export const themePlugin = plugin(
     })
 
     addBase({
-      '*': {
-        '@apply border-border': {},
-      },
       body: {
         '@apply bg-background text-foreground': {},
         'font-feature-settings': '"rlig" 1, "calt" 1',
@@ -102,13 +99,7 @@ export const themePlugin = plugin(
     })
 
     addUtilities({
-      '.border-border': {
-        border: '1px solid var(--border-color)',
-        '.bg-background': {
-          backgroundColor: 'var(--background)',
-        },
-      },
-      // Gradient Utility Classes
+      // Gradient utility classes
       '.primary-gradient-subtle': {
         background: `linear-gradient(${colorMix('primary', 0.1)}, ${colorMix('primary', 0.05)})`,
       },

@@ -6,7 +6,7 @@ import { Icon } from '..'
 import { cn } from '../../styles'
 
 const identityVariants = cva(
-  'border border-solid border-border/20 font-medium py-1 px-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center',
+  'border border-border/20 font-medium py-1 px-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center',
   {
     variants: {
       variant: {

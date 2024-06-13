@@ -34,7 +34,7 @@ describe('RadioGroup', () => {
           >
             <button
               aria-checked="true"
-              class="aspect-square h-5 w-5 rounded-full border border-solid border-primary text-primary ring-offset-background focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              class="aspect-square h-5 w-5 rounded-full border border-primary text-primary ring-offset-background focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
               data-radix-collection-item=""
               data-state="checked"
               id="option-one"
@@ -64,7 +64,7 @@ describe('RadioGroup', () => {
           >
             <button
               aria-checked="false"
-              class="aspect-square h-5 w-5 rounded-full border border-solid border-primary text-primary ring-offset-background focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              class="aspect-square h-5 w-5 rounded-full border border-primary text-primary ring-offset-background focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
               data-radix-collection-item=""
               data-state="unchecked"
               id="option-two"

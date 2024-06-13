@@ -29,7 +29,7 @@ export const BasicUsage: Story = {
     <div className="w-[500px]">
       <ResizablePanelGroup
         direction="horizontal"
-        className="border-border/30 max-w-lg rounded-lg border border-solid"
+        className="border-border/30 max-w-lg rounded-lg border"
       >
         <ResizablePanel defaultSize={50}>
           <div className="flex h-[200px] items-center justify-center p-6">
@@ -64,7 +64,7 @@ export const Vertical: Story = {
     <div className="w-[500px]">
       <ResizablePanelGroup
         direction="vertical"
-        className="border-border/30 min-h-[200px] max-w-lg rounded-lg border border-solid"
+        className="border-border/30 min-h-[200px] max-w-lg rounded-lg border"
       >
         <ResizablePanel defaultSize={50}>
           <div className="flex h-full items-center justify-center p-6">
@@ -89,7 +89,7 @@ export const Sidebar: Story = {
     <div className="w-[500px]">
       <ResizablePanelGroup
         direction="horizontal"
-        className="border-border/30 min-h-[200px] rounded-lg border border-solid"
+        className="border-border/30 min-h-[200px] rounded-lg border"
       >
         <ResizablePanel defaultSize={30}>
           <div className="flex h-full items-center justify-center p-6">

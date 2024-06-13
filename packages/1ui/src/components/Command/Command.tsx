@@ -13,7 +13,7 @@ const Command = React.forwardRef<
   <CommandPrimitive
     ref={ref}
     className={cn(
-      'flex h-full w-full flex-col overflow-hidden rounded-md bg-popover text-popover-foreground border border-solid border-border/30',
+      'flex h-full w-full flex-col overflow-hidden rounded-md bg-popover text-popover-foreground border border-border/30',
       className,
     )}
     {...props}
@@ -39,8 +39,11 @@ const CommandInput = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive.Input>,
   React.ComponentPropsWithoutRef<typeof CommandPrimitive.Input>
 >(({ className, ...props }, ref) => (
-  // eslint-disable-next-line
-  <div className="flex items-center border-b px-3" cmdk-input-wrapper="">
+  <div
+    className="flex items-center border-b border-border/30 px-3"
+    // eslint-disable-next-line
+    cmdk-input-wrapper=""
+  >
     <Icon
       name="magnifying-glass"
       className="mr-2 h-4 w-4 shrink-0 opacity-50"

@@ -11,8 +11,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
       theme={theme as ToasterProps['theme']}
       toastOptions={{
         classNames: {
-          toast:
-            'bg-background-primary border-solid border-rounded border-primary/30',
+          toast: 'bg-background-primary border-rounded border-primary/30',
           closeButton:
             'bg-primary text-primary-foreground hover:text-primary-foreground/50',
           info: 'bg-accent/100 text-accent-foreground',

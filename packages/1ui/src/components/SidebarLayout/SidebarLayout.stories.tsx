@@ -29,7 +29,7 @@ export const BasicUsage: Story = {
   render: (args) => (
     <div
       style={{ width: '800px', height: '500px' }}
-      className="border-border/30 rounded-lg border border-solid"
+      className="border-border/30 rounded-lg border"
     >
       <SidebarLayoutProvider>
         <SidebarLayout {...args}>

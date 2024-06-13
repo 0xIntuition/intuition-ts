@@ -48,7 +48,7 @@ describe('Command', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="flex h-full w-full flex-col overflow-hidden rounded-md bg-popover text-popover-foreground border border-solid border-border/30"
+          class="flex h-full w-full flex-col overflow-hidden rounded-md bg-popover text-popover-foreground border border-border/30"
           cmdk-root=""
           tabindex="-1"
         >
@@ -59,7 +59,7 @@ describe('Command', () => {
             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
           />
           <div
-            class="flex items-center border-b px-3"
+            class="flex items-center border-b border-border/30 px-3"
             cmdk-input-wrapper=""
           >
             <svg

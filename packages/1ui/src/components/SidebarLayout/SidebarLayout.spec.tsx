@@ -80,7 +80,7 @@ describe('SidebarLayout', () => {
               class="from-primary/10 to-primary/2 flex h-full flex-col items-center bg-gradient-to-b"
             >
               <div
-                class="border-primary/30 flex w-full items-center gap-2 border-0 border-b-[1px] border-solid p-4"
+                class="border-primary/30 flex w-full items-center gap-2 border-0 border-b-[1px] p-4"
               >
                 <button
                   class="flex gap-2 items-center"
@@ -97,7 +97,7 @@ describe('SidebarLayout', () => {
                 class="flex w-full flex-col gap-2 p-2"
               >
                 <button
-                  class="flex items-center font-medium border-solid border disabled:bg-muted disabled:border-muted bg-transparent text-secondary-foreground/70 border-transparent rounded-lg hover:text-secondary-foreground hover:border-border/20 aria-selected:bg-primary/10 aria-selected:text-secondary-foreground/80 disabled:text-muted-foreground px-4 py-2 gap-3 text-base w-full"
+                  class="flex items-center font-medium border disabled:bg-muted disabled:border-muted bg-transparent text-secondary-foreground/70 border-transparent rounded-lg hover:text-secondary-foreground hover:border-border/20 aria-selected:bg-primary/10 aria-selected:text-secondary-foreground/80 disabled:text-muted-foreground px-4 py-2 gap-3 text-base w-full"
                 >
                   <svg
                     class="h-6 w-6"
@@ -109,7 +109,7 @@ describe('SidebarLayout', () => {
                   Explore This
                 </button>
                 <button
-                  class="flex items-center font-medium border-solid border disabled:bg-muted disabled:border-muted bg-transparent text-secondary-foreground/70 border-transparent rounded-lg hover:text-secondary-foreground hover:border-border/20 aria-selected:bg-primary/10 aria-selected:text-secondary-foreground/80 disabled:text-muted-foreground px-4 py-2 gap-3 text-base w-full"
+                  class="flex items-center font-medium border disabled:bg-muted disabled:border-muted bg-transparent text-secondary-foreground/70 border-transparent rounded-lg hover:text-secondary-foreground hover:border-border/20 aria-selected:bg-primary/10 aria-selected:text-secondary-foreground/80 disabled:text-muted-foreground px-4 py-2 gap-3 text-base w-full"
                 >
                   <svg
                     class="h-6 w-6"
@@ -125,7 +125,7 @@ describe('SidebarLayout', () => {
                 class="flex h-full w-full flex-col justify-end gap-2 p-2"
               >
                 <button
-                  class="flex items-center font-medium border-solid border disabled:bg-muted disabled:border-muted bg-transparent text-secondary-foreground/70 border-transparent rounded-lg hover:text-secondary-foreground hover:border-border/20 aria-selected:bg-primary/10 aria-selected:text-secondary-foreground/80 disabled:text-muted-foreground px-4 py-2 gap-3 text-base w-full"
+                  class="flex items-center font-medium border disabled:bg-muted disabled:border-muted bg-transparent text-secondary-foreground/70 border-transparent rounded-lg hover:text-secondary-foreground hover:border-border/20 aria-selected:bg-primary/10 aria-selected:text-secondary-foreground/80 disabled:text-muted-foreground px-4 py-2 gap-3 text-base w-full"
                 >
                   <svg
                     class="h-6 w-6"
@@ -137,7 +137,7 @@ describe('SidebarLayout', () => {
                   Settings
                 </button>
                 <button
-                  class="flex items-center font-medium border-solid border disabled:bg-muted disabled:border-muted bg-transparent text-secondary-foreground/70 border-transparent rounded-lg hover:text-secondary-foreground hover:border-border/20 aria-selected:bg-primary/10 aria-selected:text-secondary-foreground/80 disabled:text-muted-foreground px-4 py-2 gap-3 text-base w-full"
+                  class="flex items-center font-medium border disabled:bg-muted disabled:border-muted bg-transparent text-secondary-foreground/70 border-transparent rounded-lg hover:text-secondary-foreground hover:border-border/20 aria-selected:bg-primary/10 aria-selected:text-secondary-foreground/80 disabled:text-muted-foreground px-4 py-2 gap-3 text-base w-full"
                 >
                   <span
                     class="relative flex shrink-0 overflow-hidden rounded-full h-6 w-6"
@@ -154,7 +154,7 @@ describe('SidebarLayout', () => {
             </div>
           </div>
           <div
-            class="border-border/30 focus-visible:ring-ring relative flex w-px items-center justify-center border border-solid after:absolute after:inset-y-0 after:left-1/2 after:w-1 after:-translate-x-1/2 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-offset-1 data-[panel-group-direction=vertical]:h-px data-[panel-group-direction=vertical]:w-full data-[panel-group-direction=vertical]:after:left-0 data-[panel-group-direction=vertical]:after:h-1 data-[panel-group-direction=vertical]:after:w-full data-[panel-group-direction=vertical]:after:-translate-y-1/2 data-[panel-group-direction=vertical]:after:translate-x-0 [&[data-panel-group-direction=vertical]>div]:rotate-90"
+            class="border-border/30 focus-visible:ring-ring relative flex w-px items-center justify-center border after:absolute after:inset-y-0 after:left-1/2 after:w-1 after:-translate-x-1/2 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-offset-1 data-[panel-group-direction=vertical]:h-px data-[panel-group-direction=vertical]:w-full data-[panel-group-direction=vertical]:after:left-0 data-[panel-group-direction=vertical]:after:h-1 data-[panel-group-direction=vertical]:after:w-full data-[panel-group-direction=vertical]:after:-translate-y-1/2 data-[panel-group-direction=vertical]:after:translate-x-0 [&[data-panel-group-direction=vertical]>div]:rotate-90"
             data-panel-group-direction="horizontal"
             data-panel-group-id=":r0:"
             data-panel-resize-handle-enabled="true"
@@ -166,7 +166,7 @@ describe('SidebarLayout', () => {
             tabindex="0"
           >
             <div
-              class="bg-background border-border/30 z-10 flex h-4 w-3 items-center justify-center rounded-sm border border-solid"
+              class="bg-background border-border/30 z-10 flex h-4 w-3 items-center justify-center rounded-sm border"
             >
               <svg
                 class="lucide lucide-grip-vertical h-2.5 w-2.5"

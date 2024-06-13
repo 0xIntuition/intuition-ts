@@ -42,7 +42,7 @@ describe('Accordion', () => {
           data-orientation="vertical"
         >
           <div
-            class="border-0 border-b border-solid border-border/30"
+            class="border-0 border-b border-border/30"
             data-orientation="vertical"
             data-state="closed"
           >
@@ -83,7 +83,7 @@ describe('Accordion', () => {
             />
           </div>
           <div
-            class="border-0 border-b border-solid border-border/30"
+            class="border-0 border-b border-border/30"
             data-orientation="vertical"
             data-state="closed"
           >
@@ -124,7 +124,7 @@ describe('Accordion', () => {
             />
           </div>
           <div
-            class="border-0 border-b border-solid border-border/30"
+            class="border-0 border-b border-border/30"
             data-orientation="vertical"
             data-state="closed"
           >

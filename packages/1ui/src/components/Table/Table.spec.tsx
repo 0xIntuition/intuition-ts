@@ -45,7 +45,7 @@ describe('Table', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="relative w-full overflow-auto  border border-solid border-border/30 rounded-lg"
+          class="relative w-full overflow-auto  border border-border/30 rounded-lg"
         >
           <table
             class="w-full caption-bottom text-sm"
@@ -60,22 +60,22 @@ describe('Table', () => {
                 class="border-b transition-colors hover:bg-primary/10 data-[state=selected]:bg-muted"
               >
                 <th
-                  class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0 border-0 border-b border-solid border-border/20 w-[100px]"
+                  class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0 border-0 border-b border-border/20 w-[100px]"
                 >
                   Invoice
                 </th>
                 <th
-                  class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0 border-0 border-b border-solid border-border/20"
+                  class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0 border-0 border-b border-border/20"
                 >
                   Status
                 </th>
                 <th
-                  class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0 border-0 border-b border-solid border-border/20"
+                  class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0 border-0 border-b border-border/20"
                 >
                   Method
                 </th>
                 <th
-                  class="h-12 px-4 align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0 border-0 border-b border-solid border-border/20 text-right"
+                  class="h-12 px-4 align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0 border-0 border-b border-border/20 text-right"
                 >
                   Amount
                 </th>
