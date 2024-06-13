@@ -135,7 +135,9 @@ export default function SidebarNav({
             />
           </SidebarLayoutNavFooter>
         </SidebarLayoutNav>
-        <SidebarLayoutContent>{children}</SidebarLayoutContent>
+        <SidebarLayoutContent className="justify-start">
+          {children}
+        </SidebarLayoutContent>
       </SidebarLayout>
     </SidebarLayoutProvider>
   )
