@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react'
+
 import {
   IconName,
   SidebarLayout,
@@ -51,10 +53,16 @@ export default function SidebarNav({
   children: React.ReactNode
 }) {
   const navigate = useNavigate()
+  const [isPrivyButtonLoaded, setIsPrivyButtonLoaded] = useState(false)
+
+  useEffect(() => {
+    setIsPrivyButtonLoaded(true)
+  }, [])
+
   return (
     <SidebarLayoutProvider>
       <SidebarLayout>
-        <SidebarLayoutNav collapsedSize={4} maxSize={15}>
+        <SidebarLayoutNav collapsedSize={4} maxSize={15} defaultSize={4}>
           <SidebarLayoutNavHeader>
             <SidebarLayoutNavHeaderButton
               imgLogo={
@@ -124,15 +132,26 @@ export default function SidebarNav({
               label="Preferences"
               onClick={() => navigate('/app/profile')}
             />
-
-            <PrivyButton
+            {/* <PrivyButton
               triggerComponent={
                 <SidebarLayoutNavAvatar
                   imageSrc="path_to_image.jpg"
                   name="Account"
                 />
               }
-            />
+            /> */}
+            {isPrivyButtonLoaded ? (
+              <PrivyButton
+                triggerComponent={
+                  <SidebarLayoutNavAvatar
+                    imageSrc="path_to_image.jpg"
+                    name="Account"
+                  />
+                }
+              />
+            ) : (
+              <div className="h-20" />
+            )}
           </SidebarLayoutNavFooter>
         </SidebarLayoutNav>
         <SidebarLayoutContent className="justify-start">

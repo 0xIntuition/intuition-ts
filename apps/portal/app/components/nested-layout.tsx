@@ -10,13 +10,11 @@ export function NestedLayout({
   outlet: OutletComponent,
 }: NestedLayoutProps) {
   return (
-    <div className="m-8 grid grid-cols-3 gap-4">
-      <div className="col-span-1 border border-solid border-purple-100 h-full">
-        <div className="col-span-1 flex flex-col items-center m-8">
-          {children}
-        </div>
+    <div className="flex mx-8">
+      <div className="flex-shrink-0 w-1/3 max-w-xs p-4 space-y-4  h-screen">
+        <div className="flex flex-col items-center space-y-4">{children}</div>
       </div>
-      <div className="col-span-2 border border-solid border-cyan-100">
+      <div className="flex-grow p-4 ml-8 h-screen">
         <OutletComponent />
       </div>
     </div>

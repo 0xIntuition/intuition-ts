@@ -64,7 +64,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 }
 
 export default function PublicProfile() {
-  const { userIdentity, userTotals } = useLiveLoader<typeof loader>([
+  const { userIdentity } = useLiveLoader<typeof loader>([
     'create-meme',
     'stake',
   ])
@@ -75,7 +75,6 @@ export default function PublicProfile() {
         <h3>User Identity</h3>
         <p className="w-[600px] text-wrap">{JSON.stringify(userIdentity)}</p>
         <h3>User Totals</h3>
-        <p>{JSON.stringify(userTotals, null, 2)}</p>
       </div>
     </NestedLayout>
   )
