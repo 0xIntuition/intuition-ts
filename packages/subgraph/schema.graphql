@@ -1,5 +1,5 @@
 type Event @entity(immutable: true){
-  id: ID!
+  id: Bytes!
   type: EventType!
   atom: Atom
   triple: Triple
@@ -135,13 +135,28 @@ type Book @entity {
 
 type Deposit @entity(immutable: true) {
   id: Bytes!
+
+  "initializer of the deposit"
   sender: Account! 
+
+  "beneficiary of the minted shares"
   receiver: Account!
+
+  "total assets held in the vault"
   vaultBalance: BigInt! 
+
+  "total assets that go towards minting shares for the receiver"
   userAssetsAfterTotalFees: BigInt! 
-  sharesForReceiver: BigInt! 
+
+  "total shares transferred"
+  sharesForReceiver: BigInt!
+
+  "fee amount collected for entering the vault"
   entryFee: BigInt! 
+
+  "vault being deposited into"
   vault: Vault! 
+
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
@@ -159,13 +174,28 @@ type FeeTransfer @entity(immutable: true) {
 
 type Redemption @entity(immutable: true) {
   id: Bytes!
+
+  "initializer of the withdrawal (owner of the shares)"
   sender: Account! 
+
+  "beneficiary of the withdrawn assets (can be different from the sender)"
   receiver: Account! 
+
+  "total assets held in the vault"
   vaultBalance: BigInt! 
+
+  "quantity of assets withdrawn by the receiver"
   assetsForReceiver: BigInt! 
+
+  "quantity of shares redeemed"
   shares: BigInt! 
+
+  "total fee amount collected for exiting the vault"
   exitFee: BigInt! 
+
+  "vault being redeemed from"
   vault: Vault! 
+
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
@@ -183,9 +213,6 @@ type Vault @entity {
   redemptions: [Redemption!]! @derivedFrom(field: "vault")
   positions: [Position!]! @derivedFrom(field: "vault")
 
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
 }
 
 type Position @entity {

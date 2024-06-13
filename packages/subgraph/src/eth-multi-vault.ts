@@ -6,7 +6,16 @@ import {
   FeesTransferred,
   Redeemed,
 } from '../generated/EthMultiVault/EthMultiVault'
-import { Atom, Account, Triple, Deposit, Redemption, FeeTransfer, Vault } from '../generated/schema'
+import {
+  Atom,
+  Account,
+  Triple,
+  Deposit,
+  Redemption,
+  FeeTransfer,
+  Vault,
+  Event,
+} from '../generated/schema'
 import { parseAtomData } from './schema.org/parser'
 
 export function handleAtomCreated(event: AtomCreated): void {
@@ -21,10 +30,9 @@ export function handleAtomCreated(event: AtomCreated): void {
   let vault = Vault.load(event.params.vaultID.toString())
   if (vault === null) {
     vault = new Vault(event.params.vaultID.toString())
-    vault.blockNumber = event.block.number
-    vault.blockTimestamp = event.block.timestamp
-    vault.transactionHash = event.transaction.hash
   }
+  vault.atom = atom.id
+  vault.save()
   atom.vault = vault.id
   atom.tvl = vault.balance
 
@@ -43,6 +51,16 @@ export function handleAtomCreated(event: AtomCreated): void {
   atom.transactionHash = event.transaction.hash
 
   atom.save()
+
+  let ev = new Event(
+    event.transaction.hash.concatI32(event.logIndex.toI32())
+  )
+  ev.type = "AtomCreated"
+  ev.atom = atom.id
+  ev.blockNumber = event.block.number
+  ev.blockTimestamp = event.block.timestamp
+  ev.transactionHash = event.transaction.hash
+  ev.save()
 }
 
 export function handleTripleCreated(event: TripleCreated): void {
@@ -57,12 +75,10 @@ export function handleTripleCreated(event: TripleCreated): void {
   let vault = Vault.load(event.params.vaultID.toString())
   if (vault === null) {
     vault = new Vault(event.params.vaultID.toString())
-    vault.balance = BigInt.fromI32(0)
-    vault.blockNumber = event.block.number
-    vault.blockTimestamp = event.block.timestamp
-    vault.transactionHash = event.transaction.hash
-    vault.save()
   }
+  vault.triple = triple.id
+  vault.balance = BigInt.fromI32(0)
+  vault.save()
   triple.vault = vault.id
 
   //@ts-ignore
@@ -74,13 +90,10 @@ export function handleTripleCreated(event: TripleCreated): void {
   let inverseVault = Vault.load(invarseVaultId)
   if (inverseVault === null) {
     inverseVault = new Vault(invarseVaultId)
-    inverseVault.balance = BigInt.fromI32(0)
-    inverseVault.blockNumber = event.block.number
-    inverseVault.blockTimestamp = event.block.timestamp
-    inverseVault.transactionHash = event.transaction.hash
-    inverseVault.save()
   }
-
+  inverseVault.triple = triple.id
+  inverseVault.balance = BigInt.fromI32(0)
+  inverseVault.save()
   triple.inverseVault = inverseVault.id
 
   triple.positionsCount = 0
@@ -103,6 +116,16 @@ export function handleTripleCreated(event: TripleCreated): void {
   triple.transactionHash = event.transaction.hash
 
   triple.save()
+
+  let ev = new Event(
+    event.transaction.hash.concatI32(event.logIndex.toI32())
+  )
+  ev.type = "TripleCreated"
+  ev.triple = triple.id
+  ev.blockNumber = event.block.number
+  ev.blockTimestamp = event.block.timestamp
+  ev.transactionHash = event.transaction.hash
+  ev.save()
 }
 
 
@@ -126,9 +149,6 @@ export function handleDeposited(event: Deposited): void {
   let vault = Vault.load(event.params.id.toString())
   if (vault === null) {
     vault = new Vault(event.params.id.toString())
-    vault.blockNumber = event.block.number
-    vault.blockTimestamp = event.block.timestamp
-    vault.transactionHash = event.transaction.hash
   }
   vault.balance = event.params.vaultBalance
   vault.save()
@@ -148,6 +168,17 @@ export function handleDeposited(event: Deposited): void {
   deposit.transactionHash = event.transaction.hash
 
   deposit.save()
+
+  let ev = new Event(
+    event.transaction.hash.concatI32(event.logIndex.toI32())
+  )
+  ev.type = "Deposited"
+  ev.deposit = deposit.id
+  ev.blockNumber = event.block.number
+  ev.blockTimestamp = event.block.timestamp
+  ev.transactionHash = event.transaction.hash
+  ev.save()
+
 }
 
 export function handleFeesTransferred(event: FeesTransferred): void {
@@ -170,6 +201,16 @@ export function handleFeesTransferred(event: FeesTransferred): void {
   feeTransfer.transactionHash = event.transaction.hash
 
   feeTransfer.save()
+
+  let ev = new Event(
+    event.transaction.hash.concatI32(event.logIndex.toI32())
+  )
+  ev.type = "FeesTransfered"
+  ev.feeTransfer = feeTransfer.id
+  ev.blockNumber = event.block.number
+  ev.blockTimestamp = event.block.timestamp
+  ev.transactionHash = event.transaction.hash
+  ev.save()
 }
 
 
@@ -212,6 +253,16 @@ export function handleRedeemed(event: Redeemed): void {
   redemption.transactionHash = event.transaction.hash
 
   redemption.save()
+
+  let ev = new Event(
+    event.transaction.hash.concatI32(event.logIndex.toI32())
+  )
+  ev.type = "Redeemed"
+  ev.redemption = redemption.id
+  ev.blockNumber = event.block.number
+  ev.blockTimestamp = event.block.timestamp
+  ev.transactionHash = event.transaction.hash
+  ev.save()
 }
 
 

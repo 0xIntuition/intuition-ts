@@ -20,6 +20,7 @@
     "simulate:books": "tsx simulation/books",
     "simulate:likes": "tsx simulation/likes",
     "simulate:follows": "tsx simulation/follows",
+    "simulate:signaling": "tsx simulation/signaling",
     "simulate:json": "tsx simulation/json",
     "simulate:unknown": "tsx simulation/unknown"
   },
