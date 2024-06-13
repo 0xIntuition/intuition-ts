@@ -1,3 +1,25 @@
+type Event @entity(immutable: true){
+  id: ID!
+  type: EventType!
+  atom: Atom
+  triple: Triple
+  deposit: Deposit 
+  redemption: Redemption 
+  feeTransfer: FeeTransfer
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+enum EventType {
+  AtomCreated
+  TripleCreated
+  Deposited
+  Remeemed
+  FeesTransfered
+}
+
+
 type Atom @entity {
   id: ID!
   creator: Account!
@@ -12,6 +34,19 @@ type Atom @entity {
 
   value: AtomValue
 
+  vault: Vault!
+
+  "same as atom.vault.balance"
+  tvl: BigInt! 
+
+  "same as atom.tvl"
+  totalSignal: BigInt!
+  
+  signals: [Signal!]!
+  
+  activePositionsCount: Int
+  allPositionsCount: Int
+
   isSubject: [Triple!]! @derivedFrom(field: "subject")
   isPredicate: [Triple!]! @derivedFrom(field: "predicate")
   isObject: [Triple!]! @derivedFrom(field: "object")
@@ -23,20 +58,44 @@ type Atom @entity {
 
 type Account @entity {
   id: ID!
-  name: String
+  label: String
   image: String
   createdAtoms: [Atom!]! @derivedFrom(field: "creator")
   createdTriples: [Triple!]! @derivedFrom(field: "creator")
   feeTransfers: [FeeTransfer!]! @derivedFrom(field: "sender")
   deposits: [Deposit!]! @derivedFrom(field: "sender")
+  redemptions: [Redemption!]! @derivedFrom(field: "sender")
+  positions: [Position!]! @derivedFrom(field: "account")
+  signals: [Signal!]! @derivedFrom(field: "account")
 }
 
-type Triple @entity(immutable: true) {
+type Triple @entity {
   id: String!
   creator: Account!
   subject: Atom!
   predicate: Atom!
   object: Atom!
+
+
+  vault: Vault!
+  inverseVault: Vault!
+
+  positions: [Position!]!
+  positionsCount: Int!
+
+  inversePositions: [Position!]!
+  inversePositionsCount: Int!
+
+  activePositionsCount: Int
+  allPositionsCount: Int
+
+  "vault.balance + inverseVault.balance"
+  tvl: BigInt!
+
+  "vault.balance - inverseVault.balance"
+  totalSignal: BigInt! 
+  signals: [Signal!]!
+
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
@@ -49,6 +108,7 @@ enum AtomType {
   Book
   LikeAction
   FollowAction
+  Keywords
 }
 
 type AtomValue @entity {
@@ -75,13 +135,13 @@ type Book @entity {
 
 type Deposit @entity(immutable: true) {
   id: Bytes!
-  sender: Account! # address
-  receiver: Bytes! # address
-  vaultBalance: BigInt! # uint256
-  userAssetsAfterTotalFees: BigInt! # uint256
-  sharesForReceiver: BigInt! # uint256
-  entryFee: BigInt! # uint256
-  EthMultiVault_id: BigInt! # uint256
+  sender: Account! 
+  receiver: Account!
+  vaultBalance: BigInt! 
+  userAssetsAfterTotalFees: BigInt! 
+  sharesForReceiver: BigInt! 
+  entryFee: BigInt! 
+  vault: Vault! 
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
@@ -89,9 +149,9 @@ type Deposit @entity(immutable: true) {
 
 type FeeTransfer @entity(immutable: true) {
   id: Bytes!
-  sender: Account! # address
-  protocolVault: Bytes! # address
-  amount: BigInt! # uint256
+  sender: Account! 
+  protocolVault: Bytes! 
+  amount: BigInt! 
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
@@ -99,13 +159,56 @@ type FeeTransfer @entity(immutable: true) {
 
 type Redemption @entity(immutable: true) {
   id: Bytes!
-  sender: Bytes! # address
-  owner: Bytes! # address
-  vaultBalance: BigInt! # uint256
-  assetsForReceiver: BigInt! # uint256
-  shares: BigInt! # uint256
-  exitFee: BigInt! # uint256
-  EthMultiVault_id: BigInt! # uint256
+  sender: Account! 
+  receiver: Account! 
+  vaultBalance: BigInt! 
+  assetsForReceiver: BigInt! 
+  shares: BigInt! 
+  exitFee: BigInt! 
+  vault: Vault! 
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type Vault @entity {
+  id: ID!
+  atom: Atom
+  triple: Triple
+  inverse: Vault
+
+  balance: BigInt!
+
+  deposits: [Deposit!]! @derivedFrom(field: "vault")
+  redemptions: [Redemption!]! @derivedFrom(field: "vault")
+  positions: [Position!]! @derivedFrom(field: "vault")
+
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type Position @entity {
+  id: ID!
+  account: Account!
+  vault: Vault!
+  balance: BigInt!
+}
+
+type Signal @entity {
+  id: ID!
+
+  delta: BigInt!
+
+  "atom or triple (delta / tvl)"
+  relativeStrength: Int!
+
+  account: Account!
+  atom: Atom
+  triple: Triple
+  deposit: Deposit
+  redemption: Redemption
+  
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!

@@ -1,3 +1,4 @@
+import { BigInt } from '@graphprotocol/graph-ts'
 import {
   AtomCreated,
   TripleCreated,
@@ -5,7 +6,7 @@ import {
   FeesTransferred,
   Redeemed,
 } from '../generated/EthMultiVault/EthMultiVault'
-import { Atom, Account, Triple, Deposit, Redemption, FeeTransfer } from '../generated/schema'
+import { Atom, Account, Triple, Deposit, Redemption, FeeTransfer, Vault } from '../generated/schema'
 import { parseAtomData } from './schema.org/parser'
 
 export function handleAtomCreated(event: AtomCreated): void {
@@ -16,6 +17,20 @@ export function handleAtomCreated(event: AtomCreated): void {
     account = new Account(event.params.creator.toHexString())
     account.save()
   }
+
+  let vault = Vault.load(event.params.vaultID.toString())
+  if (vault === null) {
+    vault = new Vault(event.params.vaultID.toString())
+    vault.blockNumber = event.block.number
+    vault.blockTimestamp = event.block.timestamp
+    vault.transactionHash = event.transaction.hash
+  }
+  atom.vault = vault.id
+  atom.tvl = vault.balance
+
+  // TODO: do we need to update the total signal?
+  atom.totalSignal = atom.tvl
+  atom.signals = []
 
   atom.creator = account.id
   atom.wallet = event.params.atomWallet
@@ -39,6 +54,45 @@ export function handleTripleCreated(event: TripleCreated): void {
     account.save()
   }
 
+  let vault = Vault.load(event.params.vaultID.toString())
+  if (vault === null) {
+    vault = new Vault(event.params.vaultID.toString())
+    vault.balance = BigInt.fromI32(0)
+    vault.blockNumber = event.block.number
+    vault.blockTimestamp = event.block.timestamp
+    vault.transactionHash = event.transaction.hash
+    vault.save()
+  }
+  triple.vault = vault.id
+
+  //@ts-ignore
+  let p: u8 = 255 as u8
+
+  let invarseVaultId = BigInt.fromI32(2).pow(p).minus(BigInt.fromI32(1))
+    .minus(event.params.vaultID).toString()
+
+  let inverseVault = Vault.load(invarseVaultId)
+  if (inverseVault === null) {
+    inverseVault = new Vault(invarseVaultId)
+    inverseVault.balance = BigInt.fromI32(0)
+    inverseVault.blockNumber = event.block.number
+    inverseVault.blockTimestamp = event.block.timestamp
+    inverseVault.transactionHash = event.transaction.hash
+    inverseVault.save()
+  }
+
+  triple.inverseVault = inverseVault.id
+
+  triple.positionsCount = 0
+  triple.inversePositionsCount = 0
+  triple.activePositionsCount = 0
+  triple.allPositionsCount = 0
+  triple.tvl = vault.balance.plus(inverseVault.balance)
+  triple.totalSignal = triple.tvl
+  triple.signals = []
+  triple.positions = []
+  triple.inversePositions = []
+
   triple.creator = account.id
   triple.subject = event.params.subjectId.toString()
   triple.predicate = event.params.predicateId.toString()
@@ -54,33 +108,50 @@ export function handleTripleCreated(event: TripleCreated): void {
 
 
 export function handleDeposited(event: Deposited): void {
-  let entity = new Deposit(
+  let deposit = new Deposit(
     event.transaction.hash.concatI32(event.logIndex.toI32())
   )
-  let account = Account.load(event.params.sender.toHexString())
-  if (account === null) {
-    account = new Account(event.params.sender.toHexString())
-    account.save()
+  let sender = Account.load(event.params.sender.toHexString())
+  if (sender === null) {
+    sender = new Account(event.params.sender.toHexString())
+    sender.save()
   }
 
-  entity.sender = account.id
+  let receiver = Account.load(event.params.receiver.toHexString())
+  if (receiver === null) {
+    receiver = new Account(event.params.receiver.toHexString())
+    receiver.save()
+  }
 
-  entity.receiver = event.params.receiver
-  entity.vaultBalance = event.params.vaultBalance
-  entity.userAssetsAfterTotalFees = event.params.userAssetsAfterTotalFees
-  entity.sharesForReceiver = event.params.sharesForReceiver
-  entity.entryFee = event.params.entryFee
-  entity.EthMultiVault_id = event.params.id
+  let vault = Vault.load(event.params.id.toString())
+  if (vault === null) {
+    vault = new Vault(event.params.id.toString())
+    vault.blockNumber = event.block.number
+    vault.blockTimestamp = event.block.timestamp
+    vault.transactionHash = event.transaction.hash
+  }
+  vault.balance = event.params.vaultBalance
+  vault.save()
 
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
+  deposit.vault = vault.id
+  deposit.sender = sender.id
+  deposit.receiver = receiver.id
 
-  entity.save()
+  deposit.vaultBalance = event.params.vaultBalance
+
+  deposit.userAssetsAfterTotalFees = event.params.userAssetsAfterTotalFees
+  deposit.sharesForReceiver = event.params.sharesForReceiver
+  deposit.entryFee = event.params.entryFee
+
+  deposit.blockNumber = event.block.number
+  deposit.blockTimestamp = event.block.timestamp
+  deposit.transactionHash = event.transaction.hash
+
+  deposit.save()
 }
 
 export function handleFeesTransferred(event: FeesTransferred): void {
-  let entity = new FeeTransfer(
+  let feeTransfer = new FeeTransfer(
     event.transaction.hash.concatI32(event.logIndex.toI32())
   )
 
@@ -90,36 +161,57 @@ export function handleFeesTransferred(event: FeesTransferred): void {
     account.save()
   }
 
-  entity.sender = account.id
-  entity.protocolVault = event.params.protocolVault
-  entity.amount = event.params.amount
+  feeTransfer.sender = account.id
+  feeTransfer.protocolVault = event.params.protocolVault
+  feeTransfer.amount = event.params.amount
 
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
+  feeTransfer.blockNumber = event.block.number
+  feeTransfer.blockTimestamp = event.block.timestamp
+  feeTransfer.transactionHash = event.transaction.hash
 
-  entity.save()
+  feeTransfer.save()
 }
 
 
 
 export function handleRedeemed(event: Redeemed): void {
-  let entity = new Redemption(
+  let redemption = new Redemption(
     event.transaction.hash.concatI32(event.logIndex.toI32())
   )
-  entity.sender = event.params.sender
-  entity.owner = event.params.owner
-  entity.vaultBalance = event.params.vaultBalance
-  entity.assetsForReceiver = event.params.assetsForReceiver
-  entity.shares = event.params.shares
-  entity.exitFee = event.params.exitFee
-  entity.EthMultiVault_id = event.params.id
+  let sender = Account.load(event.params.sender.toHexString())
+  if (sender === null) {
+    sender = new Account(event.params.sender.toHexString())
+    sender.save()
+  }
 
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
+  // FIXME: This is a bug, the receiver should be the reciever, not th owner. Update ABIs
+  let receiver = Account.load(event.params.owner.toHexString())
+  if (receiver === null) {
+    receiver = new Account(event.params.owner.toHexString())
+    receiver.save()
+  }
 
-  entity.save()
+  let vault = Vault.load(event.params.id.toString())
+  if (vault === null) {
+    vault = new Vault(event.params.id.toString())
+  }
+  vault.balance = event.params.vaultBalance
+  vault.save()
+
+  redemption.sender = sender.id
+  redemption.receiver = receiver.id
+
+  redemption.vaultBalance = event.params.vaultBalance
+  redemption.assetsForReceiver = event.params.assetsForReceiver
+  redemption.shares = event.params.shares
+  redemption.exitFee = event.params.exitFee
+  redemption.vault = vault.id
+
+  redemption.blockNumber = event.block.number
+  redemption.blockTimestamp = event.block.timestamp
+  redemption.transactionHash = event.transaction.hash
+
+  redemption.save()
 }
 
 
