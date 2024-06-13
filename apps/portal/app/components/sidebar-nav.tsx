@@ -54,7 +54,7 @@ export default function SidebarNav({
   return (
     <SidebarLayoutProvider>
       <SidebarLayout>
-        <SidebarLayoutNav>
+        <SidebarLayoutNav collapsedSize={4} maxSize={15}>
           <SidebarLayoutNavHeader>
             <SidebarLayoutNavHeaderButton
               imgLogo={
