@@ -1,15 +1,6 @@
 import { useEffect } from 'react'
 
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-  Button,
-} from '@0xintuition/1ui'
+import { Avatar, AvatarFallback, AvatarImage, Button } from '@0xintuition/1ui'
 import {
   ApiError,
   IdentitiesService,
@@ -20,10 +11,14 @@ import {
   UserTotalsPresenter,
 } from '@0xintuition/api'
 
-import { PrivyVerifiedLinks } from '@client/privy-verified-links'
 import EditProfileModal from '@components/edit-profile-modal'
+import EditSocialLinksModal from '@components/edit-social-links-modal'
 import { NestedLayout } from '@components/nested-layout'
-import { editProfileModalAtom } from '@lib/state/store'
+import { ProfileSocialAccounts } from '@components/profile-social-accounts'
+import {
+  editProfileModalAtom,
+  editSocialLinksModalAtom,
+} from '@lib/state/store'
 import { getAuthHeaders, sliceString } from '@lib/utils/misc'
 import { SessionContext } from '@middleware/session'
 import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
@@ -112,7 +107,7 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
 }
 
 export default function Profile() {
-  const { user, userIdentity, userObject, userTotals } = useLoaderData<{
+  const { user, userObject, userTotals } = useLoaderData<{
     user: SessionUser
     userIdentity: IdentityPresenter
     userObject: UserPresenter
@@ -126,10 +121,15 @@ export default function Profile() {
   const [editProfileModalActive, setEditProfileModalActive] =
     useAtom(editProfileModalAtom)
 
+  const [editSocialLinksModalActive, setEditSocialLinksModalActive] = useAtom(
+    editSocialLinksModalAtom,
+  )
+
   const revalidator = useRevalidator()
 
   useEffect(() => {
     setEditProfileModalActive(false)
+    setEditSocialLinksModalActive(false)
   }, [])
 
   useEffect(() => {
@@ -217,60 +217,21 @@ export default function Profile() {
                 Edit Profile
               </div>
             </Button>
-          </div>
-
-          <div className="m-8 flex flex-col items-center gap-4">
-            <div className="flex flex-col">
-              <div>
-                <p>User Identity Exists</p>
-                <p>{userIdentity.id}</p>
-                <div className="flex flex-col gap-4">
-                  <Accordion
-                    type="multiple"
-                    className="w-full"
-                    defaultValue={['verified-links']}
-                  >
-                    <AccordionItem value="verified-links">
-                      <AccordionTrigger>
-                        <span className="text-secondary-foreground text-sm font-normal">
-                          Verified Links
-                        </span>
-                      </AccordionTrigger>
-                      <AccordionContent>
-                        <PrivyVerifiedLinks
-                          privyUser={JSON.parse(JSON.stringify(user))}
-                        />
-                      </AccordionContent>
-                    </AccordionItem>
-                  </Accordion>
-                </div>
-              </div>
-            </div>
-            <div className="flex flex-col gap-4">
-              <Accordion
-                type="multiple"
-                className="w-full"
-                defaultValue={['verified-links']}
-              >
-                <AccordionItem value="verified-links">
-                  <AccordionTrigger>
-                    <span className="text-secondary-foreground text-sm font-normal">
-                      Verified Links
-                    </span>
-                  </AccordionTrigger>
-                  <AccordionContent>
-                    <PrivyVerifiedLinks
-                      privyUser={JSON.parse(JSON.stringify(user))}
-                    />
-                  </AccordionContent>
-                </AccordionItem>
-              </Accordion>
-            </div>
+            <ProfileSocialAccounts
+              hasLinkedAccounts={false}
+              handleOpenEditSocialLinksModal={() =>
+                setEditSocialLinksModalActive(true)
+              }
+            />
           </div>
           <EditProfileModal
             userObject={userObject}
             open={editProfileModalActive}
             onClose={() => setEditProfileModalActive(false)}
+          />
+          <EditSocialLinksModal
+            open={editSocialLinksModalActive}
+            onClose={() => setEditSocialLinksModalActive(false)}
           />
         </>
       </div>

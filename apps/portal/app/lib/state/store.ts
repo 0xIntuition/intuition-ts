@@ -19,3 +19,4 @@ export function atomWithToggle(
 }
 
 export const editProfileModalAtom = atomWithToggle(false)
+export const editSocialLinksModalAtom = atomWithToggle(false)
