@@ -77,6 +77,16 @@ function App() {
             <SidebarLayoutNavItems>
               <SidebarLayoutNavItem
                 iconName="crystal-ball"
+                label="Positions"
+                onClick={() => navigate('/positions')}
+              />
+              <SidebarLayoutNavItem
+                iconName="crystal-ball"
+                label="Events"
+                onClick={() => navigate('/events')}
+              />
+              <SidebarLayoutNavItem
+                iconName="crystal-ball"
                 label="Triples"
                 onClick={() => navigate('/triples')}
               />

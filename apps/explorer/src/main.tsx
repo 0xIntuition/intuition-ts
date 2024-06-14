@@ -9,7 +9,8 @@ import App from './App.tsx'
 import { Triples } from './Triples.tsx';
 import { Atoms } from './Atoms.tsx';
 import { Accounts } from './Accounts.tsx';
-
+import { Events } from './Events.tsx';
+import { Positions } from './Positions.tsx';
 
 const client = new ApolloClient({
   uri: 'http://localhost:8000/subgraphs/name/0xintuition/subgraph',
@@ -22,6 +23,10 @@ const router = createBrowserRouter([
     element: <App />,
     children: [
       {
+        path: "/positions",
+        element: <Positions />,
+      },
+      {
         path: "/triples",
         element: <Triples />,
       },
@@ -32,6 +37,10 @@ const router = createBrowserRouter([
       {
         path: "/accounts",
         element: <Accounts />,
+      },
+      {
+        path: "/events",
+        element: <Events />,
       },
     ]
   },

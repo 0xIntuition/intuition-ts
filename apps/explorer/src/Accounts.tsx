@@ -1,6 +1,9 @@
 /* eslint-disable  @typescript-eslint/no-explicit-any */
 import { useQuery, gql } from '@apollo/client';
 import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
   Label
 } from '@0xintuition/1ui'
 
@@ -9,6 +12,7 @@ query Accounts {
   accounts {
     id
     image
+    label
   }
 }
 `;
@@ -21,7 +25,11 @@ export function Accounts() {
   return (<ul className="list-none list-inside w-full">
     {data.accounts.map((account: any) => (
       <li key={account.id} className="p-3 border-border/30 border-b-[1px] border-solid">
-        <Label>{account.id}</Label>
+        <Avatar >
+          <AvatarImage src={account.image} alt="intuition" />
+          <AvatarFallback>{account.label}</AvatarFallback>
+        </Avatar>
+        <Label>{account.label} {account.label === account.id ? '' : account.id}</Label>
       </li>
     ))}
   </ul>)
