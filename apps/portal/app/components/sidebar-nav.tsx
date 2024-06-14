@@ -14,9 +14,11 @@ import {
   SidebarLayoutNavItems,
   SidebarLayoutProvider,
 } from '@0xintuition/1ui'
+import { UserPresenter } from '@0xintuition/api'
 
 import { PrivyButton } from '@client/privy-button'
 import { useNavigate } from '@remix-run/react'
+import * as blockies from 'blockies-ts'
 
 interface SidebarNavRoute {
   route: string
@@ -49,8 +51,10 @@ const sidebarNavRoutes: SidebarNavRoute[] = [
 
 export default function SidebarNav({
   children,
+  userObject,
 }: {
   children: React.ReactNode
+  userObject: UserPresenter
 }) {
   const navigate = useNavigate()
   const [isPrivyButtonLoaded, setIsPrivyButtonLoaded] = useState(false)
@@ -59,14 +63,16 @@ export default function SidebarNav({
     setIsPrivyButtonLoaded(true)
   }, [])
 
+  const imgSrc = blockies.create({ seed: userObject?.wallet }).toDataURL()
+
   return (
     <SidebarLayoutProvider>
       <SidebarLayout>
         <SidebarLayoutNav
-          collapsedSize={2}
-          minSize={2}
+          collapsedSize={4}
+          minSize={4}
           maxSize={15}
-          defaultSize={2}
+          defaultSize={4}
         >
           <SidebarLayoutNavHeader>
             <SidebarLayoutNavHeaderButton
@@ -149,7 +155,7 @@ export default function SidebarNav({
               <PrivyButton
                 triggerComponent={
                   <SidebarLayoutNavAvatar
-                    imageSrc="path_to_image.jpg"
+                    imageSrc={userObject.image ?? imgSrc}
                     name="Account"
                   />
                 }

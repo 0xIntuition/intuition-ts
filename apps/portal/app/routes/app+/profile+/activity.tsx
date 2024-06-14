@@ -7,11 +7,11 @@ export async function loader() {
   })
 }
 
-export default function ProfileOverview() {
+export default function ProfileActivity() {
   const { message } = useLoaderData<typeof loader>()
   return (
     <div className="m-8 flex flex-col items-center gap-4">
-      <div className="flex flex-col">Profile Overview Route</div>
+      <div className="flex flex-col">Profile Activity Route</div>
       <div>{message}</div>
     </div>
   )

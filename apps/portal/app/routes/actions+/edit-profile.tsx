@@ -26,11 +26,9 @@ export async function action({ request, context }: ActionFunctionArgs) {
     OpenAPI.BASE = 'https://dev.api.intuition.systems'
     const accessToken = getPrivyAccessToken(request)
     const headers = getAuthHeaders(accessToken !== null ? accessToken : '')
-    logger('create headers', headers)
     OpenAPI.HEADERS = headers as Record<string, string>
 
     const session = context.get(SessionContext)
-    console.log('[LOADER] user', session.get('user'))
     const user = session.get('user')
 
     if (!user?.details?.wallet?.address) {
@@ -39,22 +37,24 @@ export async function action({ request, context }: ActionFunctionArgs) {
 
     let profile
     try {
-      const profileParams = {
-        id: id as string,
+      const requestBody: {
+        privy_id: string
+        display_name: string
+        description: string
+        image?: string
+      } = {
         privy_id: user.details.id as string,
         display_name: display_name as string,
-        image: image_url as string,
         description: description as string,
       }
-      logger('Profile params:', profileParams)
+      if (image_url) {
+        requestBody.image = image_url as string
+      }
+      logger('requestBody:', requestBody)
+
       profile = await UsersService.updateUser({
         id: id as string,
-        requestBody: {
-          privy_id: user.details.id as string,
-          display_name: display_name as string,
-          image: image_url as string,
-          description: description as string,
-        },
+        requestBody: requestBody,
       })
       logger('Profile updated:', profile)
     } catch (error: unknown) {

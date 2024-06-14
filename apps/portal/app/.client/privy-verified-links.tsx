@@ -1,7 +1,6 @@
 import { Button } from '@0xintuition/1ui'
 
 import { useSocialLinking } from '@lib/hooks/usePrivySocialLinking'
-import logger from '@lib/utils/logger'
 import { PrivyPlatform } from 'types/privy'
 import { SessionUser } from 'types/user'
 
@@ -29,14 +28,10 @@ const verifiedPlatforms: PrivyPlatform[] = [
 
 export function PrivyVerifiedLinks({ privyUser }: { privyUser: SessionUser }) {
   const {
-    privyUser: localPrivyUser,
     handleLink,
     handleUnlink,
     verifiedPlatforms: linkedPlatforms,
   } = useSocialLinking(verifiedPlatforms)
-
-  logger('privy user in privy-verified-links', privyUser)
-  logger('privy user (client)', localPrivyUser)
 
   return (
     <div className="flex w-full flex-col items-center gap-8">

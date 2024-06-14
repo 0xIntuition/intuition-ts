@@ -9,10 +9,6 @@ import {
   Input,
   Label,
   Textarea,
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
 } from '@0xintuition/1ui'
 import { IdentityPresenter, UserPresenter } from '@0xintuition/api'
 
@@ -26,12 +22,11 @@ import {
 } from '@lib/utils/constants'
 import logger from '@lib/utils/logger'
 import { cn, truncateString } from '@lib/utils/misc'
-import { Link, useFetcher, useLocation } from '@remix-run/react'
+import { useFetcher, useLocation } from '@remix-run/react'
 import { type UploadApiResponse } from 'cloudinary'
 import {
   AlertCircle,
   CircleXIcon,
-  ExternalLinkIcon,
   HelpCircle,
   Loader2Icon,
   Upload,
@@ -278,33 +273,75 @@ export function EditProfileForm({ userObject, onClose }: EditProfileFormProps) {
   // Handle Initial Form Submit
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     console.log('Form submitting')
-    try {
-      event.preventDefault()
-      dispatch({ type: 'START_TRANSACTION' })
-      const formData = new FormData(event.currentTarget)
+    event.preventDefault()
+    if (userObject.image !== previewImage) {
+      try {
+        dispatch({ type: 'START_TRANSACTION' })
+        const formData = new FormData(event.currentTarget)
 
-      // Initial form validation
-      const submission = parseWithZod(formData, {
-        schema: updateProfileSchema(),
-      })
+        // Initial form validation
+        const submission = parseWithZod(formData, {
+          schema: updateProfileSchema(),
+        })
 
-      if (
-        submission.status === 'error' &&
-        submission.error !== null &&
-        Object.keys(submission.error).length
-      ) {
-        console.error('Update profile validation errors: ', submission.error)
+        if (
+          submission.status === 'error' &&
+          submission.error !== null &&
+          Object.keys(submission.error).length
+        ) {
+          console.error('Update profile validation errors: ', submission.error)
+        }
+
+        setLoading(true)
+        dispatch({ type: 'START_IMAGE_UPLOAD' })
+        uploadFetcher.submit(formData, {
+          action: '/actions/upload',
+          method: 'post',
+          encType: 'multipart/form-data',
+        })
+      } catch (error: unknown) {
+        logger(error)
       }
+    } else {
+      try {
+        dispatch({ type: 'START_TRANSACTION' })
+        const formData = new FormData(event.currentTarget)
 
-      setLoading(true)
-      dispatch({ type: 'START_IMAGE_UPLOAD' })
-      uploadFetcher.submit(formData, {
-        action: '/actions/upload',
-        method: 'post',
-        encType: 'multipart/form-data',
-      })
-    } catch (error: unknown) {
-      logger(error)
+        console.log('previewImage', previewImage)
+        formData.append('id', userObject.id ?? '')
+        formData.append('image_url', previewImage ?? '')
+
+        offChainFetcher.submit(formData, {
+          action: '/actions/edit-profile',
+          method: 'post',
+        })
+        onClose()
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          let errorMessage = 'Error in creating offchain meme data.'
+          if (error.message.includes('rejected')) {
+            errorMessage = 'Signature rejected. Try again when you are ready.'
+          }
+          dispatch({
+            type: 'TRANSACTION_ERROR',
+            error: errorMessage,
+          })
+          toast.custom(
+            () => (
+              <Toast
+                title="Error"
+                description={errorMessage}
+                icon={<AlertCircle />}
+              />
+            ),
+            {
+              duration: 5000,
+            },
+          )
+          return
+        }
+        console.error('Error creating identity', error)
+      }
     }
   }
 
@@ -336,39 +373,7 @@ export function EditProfileForm({ userObject, onClose }: EditProfileFormProps) {
             <h2 className="text-xl text-white/70 font-normal">
               {isCreateRoute ? 'Create Profile' : 'Update Profile'}
             </h2>
-            <TooltipProvider>
-              <Tooltip delayDuration={300}>
-                <TooltipTrigger>
-                  <HelpCircle className="h-4 w-4 text-neutral-500 transition-colors duration-300 hover:text-neutral-400" />
-                </TooltipTrigger>
-                <TooltipContent className="max-w-[230px]" side="right">
-                  <div className="mb-2 flex flex-row items-center gap-2">
-                    <p className="text-base font-medium text-primary-300">
-                      Profile
-                    </p>
-                  </div>
-                  <p className="text-sm text-primary-400">
-                    Identities are the smallest units of knowledge in Intuition.
-                    Identities are the building blocks that form claims, and the
-                    things claims can be made about.
-                  </p>
-                  <Link
-                    to={
-                      'https://docs.intuition.systems/primitives-and-interactions/primitives/identities'
-                    }
-                    target="_blank"
-                  >
-                    <Button
-                      className="mt-2 flex items-center gap-1"
-                      variant="secondary"
-                    >
-                      Learn more
-                      <ExternalLinkIcon className="h-3 w-3" />
-                    </Button>
-                  </Link>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
+            <HelpCircle className="h-4 w-4 text-neutral-500 transition-colors duration-300 hover:text-neutral-400" />
           </div>
         </DialogHeader>
 
@@ -514,7 +519,7 @@ export function EditProfileForm({ userObject, onClose }: EditProfileFormProps) {
 interface ImageChooseProps {
   previewImage: string | null
   setPreviewImage: React.Dispatch<React.SetStateAction<string | null>>
-  onFileChange: (filename: string, filesize: string) => void
+  onFileChange: (filename: string, filesize: string, file: File) => void
 }
 
 function ImageChooser({
@@ -585,7 +590,7 @@ function ImageChooser({
                   formattedSize = `${Math.round(filesizeKB)} KB`
                 }
 
-                onFileChange(file.name, formattedSize)
+                onFileChange(file.name, formattedSize, file)
               } else {
                 setPreviewImage(null)
               }
