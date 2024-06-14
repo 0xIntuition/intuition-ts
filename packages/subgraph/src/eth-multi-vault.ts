@@ -82,9 +82,7 @@ export function handleTripleCreated(event: TripleCreated): void {
   triple.vault = vault.id
 
   //@ts-ignore
-  let p: u8 = 255 as u8
-
-  let invarseVaultId = BigInt.fromI32(2).pow(p).minus(BigInt.fromI32(1))
+  let invarseVaultId = BigInt.fromI32(2).pow(255 as u8).times(BigInt.fromI32(2)).minus(BigInt.fromI32(1))
     .minus(event.params.vaultID).toString()
 
   let inverseVault = Vault.load(invarseVaultId)
@@ -146,9 +144,9 @@ export function handleDeposited(event: Deposited): void {
     receiver.save()
   }
 
-  let vault = Vault.load(event.params.id.toString())
+  let vault = Vault.load(event.params.vaultId.toString())
   if (vault === null) {
-    vault = new Vault(event.params.id.toString())
+    vault = new Vault(event.params.vaultId.toString())
   }
   vault.balance = event.params.vaultBalance
   vault.save()
@@ -225,16 +223,15 @@ export function handleRedeemed(event: Redeemed): void {
     sender.save()
   }
 
-  // FIXME: This is a bug, the receiver should be the reciever, not th owner. Update ABIs
-  let receiver = Account.load(event.params.owner.toHexString())
+  let receiver = Account.load(event.params.receiver.toHexString())
   if (receiver === null) {
-    receiver = new Account(event.params.owner.toHexString())
+    receiver = new Account(event.params.receiver.toHexString())
     receiver.save()
   }
 
-  let vault = Vault.load(event.params.id.toString())
+  let vault = Vault.load(event.params.vaultId.toString())
   if (vault === null) {
-    vault = new Vault(event.params.id.toString())
+    vault = new Vault(event.params.vaultId.toString())
   }
   vault.balance = event.params.vaultBalance
   vault.save()

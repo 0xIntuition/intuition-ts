@@ -14,10 +14,10 @@ async function main() {
   const { cid } = await ipfs.add(JSON.stringify(followAction))
   const actionId = await getOrCreateAtom(user.multivault, `ipfs://${cid}`)
 
-  user.multivault.createTriple(1n, actionId, 2n)
+  await user.multivault.createTriple(1n, actionId, 2n)
 
   const user1 = await getIntuition(1)
-  user1.multivault.createTriple(3n, actionId, 4n)
+  await user1.multivault.createTriple(3n, actionId, 4n)
 }
 async function getOrCreateAtom(multivault: Multivault, atomUri: string) {
   const atomId = await multivault.getVaultIdFromUri(atomUri)
