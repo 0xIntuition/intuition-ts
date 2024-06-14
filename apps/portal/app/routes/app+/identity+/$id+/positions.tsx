@@ -36,7 +36,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   let positions
   try {
     positions = await PositionsService.searchPositions({
-      identity: id,
+      vault: id,
       paging: {
         page: page,
         limit: Number(limit),

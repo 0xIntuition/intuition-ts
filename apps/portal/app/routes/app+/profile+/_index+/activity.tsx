@@ -4,7 +4,6 @@ import {
   OpenAPI,
   SortColumn,
   SortDirection,
-  UsersService,
 } from '@0xintuition/api'
 
 import { calculateTotalPages, getAuthHeaders } from '@lib/utils/misc'
@@ -21,35 +20,16 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
 
   const session = context.get(SessionContext)
   const user = session.get('user')
+  console.log('accessToken', accessToken)
 
   if (!user?.details?.wallet?.address) {
     return console.log('No user found in session')
   }
 
-  let userObject
-  try {
-    userObject = await UsersService.getUserByWallet({
-      wallet: user.details.wallet.address,
-    })
-  } catch (error: unknown) {
-    if (error instanceof ApiError) {
-      userObject = undefined
-      console.log(
-        `${error.name} - ${error.status}: ${error.message} ${error.url}`,
-      )
-    } else {
-      throw error
-    }
-  }
-
-  if (!userObject) {
-    return console.log('No user found in DB')
-  }
-
   const url = new URL(request.url)
   const searchParams = new URLSearchParams(url.search)
   const sortBy: SortColumn =
-    (searchParams.get('sortBy') as SortColumn) ?? 'CreatedAt'
+    (searchParams.get('sortBy') as SortColumn) ?? 'createdAt'
   const direction: SortDirection =
     (searchParams.get('direction') as SortDirection) ?? 'desc'
   const page = searchParams.get('page')
@@ -60,7 +40,7 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
   let activity
   try {
     activity = await ActivitiesService.getActivities({
-      creator: userObject.id,
+      fromAddress: user.details.wallet.address,
       page: page,
       limit: Number(limit),
       offset: 0,
@@ -77,8 +57,6 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
   }
 
   const totalPages = calculateTotalPages(activity?.total ?? 0, Number(limit))
-
-  console.log('activity', activity)
 
   return json({
     activity,
