@@ -1,20 +1,39 @@
-import { Avatar, AvatarFallback, AvatarImage } from '@0xintuition/1ui'
+import { useEffect } from 'react'
+
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from '@0xintuition/1ui'
 import {
   ApiError,
   IdentitiesService,
+  IdentityPresenter,
   OpenAPI,
   UserPresenter,
   UsersService,
   UserTotalsPresenter,
 } from '@0xintuition/api'
 
+import { PrivyVerifiedLinks } from '@client/privy-verified-links'
 import { NestedLayout } from '@components/nested-layout'
+import { editProfileModalAtom } from '@lib/state/store'
 import { getAuthHeaders, sliceString } from '@lib/utils/misc'
 import { SessionContext } from '@middleware/session'
-import { json, LoaderFunctionArgs } from '@remix-run/node'
-import { Outlet, useLoaderData } from '@remix-run/react'
+import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
+import {
+  Outlet,
+  useLoaderData,
+  useMatches,
+  useRevalidator,
+} from '@remix-run/react'
 import { getPrivyAccessToken } from '@server/privy'
 import * as blockies from 'blockies-ts'
+import { useAtom } from 'jotai'
 import { Loader2Icon } from 'lucide-react'
 import { SessionUser } from 'types/user'
 
@@ -45,6 +64,10 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
     } else {
       throw error
     }
+  }
+
+  if (!userIdentity) {
+    return redirect('/create')
   }
 
   let userObject
@@ -86,15 +109,43 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
   return json({ user, userIdentity, userObject, userTotals })
 }
 
-export default function PublicProfile() {
-  const { user, userObject, userTotals } = useLoaderData<{
+export default function Profile() {
+  const { user, userIdentity, userObject, userTotals } = useLoaderData<{
     user: SessionUser
+    userIdentity: IdentityPresenter
     userObject: UserPresenter
     userTotals: UserTotalsPresenter
   }>()
+
   const imgSrc = blockies
     .create({ seed: user?.details?.wallet?.address })
     .toDataURL()
+
+  const [editProfileModalActive, setEditProfileModalActive] =
+    useAtom(editProfileModalAtom)
+
+  const revalidator = useRevalidator()
+
+  useEffect(() => {
+    setEditProfileModalActive(false)
+  }, [])
+
+  useEffect(() => {
+    if (!editProfileModalActive) {
+      revalidator.revalidate()
+    }
+  }, [editProfileModalActive])
+
+  const matches = useMatches()
+  const currentPath = matches[matches.length - 1].pathname
+  console.log('currentPath', currentPath)
+
+  // List of paths that should not use the ProfileLayout
+  const excludedPaths = ['/app/profile/create']
+
+  if (excludedPaths.includes(currentPath)) {
+    return <Outlet />
+  }
 
   return (
     <NestedLayout outlet={Outlet}>
@@ -154,6 +205,55 @@ export default function PublicProfile() {
               <div className="w-[300px] text-neutral-300 text-sm font-medium leading-tight">
                 {userObject.description}
               </div>
+            </div>
+          </div>
+
+          <div className="m-8 flex flex-col items-center gap-4">
+            <div className="flex flex-col">
+              <div>
+                <p>User Identity Exists</p>
+                <p>{userIdentity.id}</p>
+                <div className="flex flex-col gap-4">
+                  <Accordion
+                    type="multiple"
+                    className="w-full"
+                    defaultValue={['verified-links']}
+                  >
+                    <AccordionItem value="verified-links">
+                      <AccordionTrigger>
+                        <span className="text-secondary-foreground text-sm font-normal">
+                          Verified Links
+                        </span>
+                      </AccordionTrigger>
+                      <AccordionContent>
+                        <PrivyVerifiedLinks
+                          privyUser={JSON.parse(JSON.stringify(user))}
+                        />
+                      </AccordionContent>
+                    </AccordionItem>
+                  </Accordion>
+                </div>
+              </div>
+            </div>
+            <div className="flex flex-col gap-4">
+              <Accordion
+                type="multiple"
+                className="w-full"
+                defaultValue={['verified-links']}
+              >
+                <AccordionItem value="verified-links">
+                  <AccordionTrigger>
+                    <span className="text-secondary-foreground text-sm font-normal">
+                      Verified Links
+                    </span>
+                  </AccordionTrigger>
+                  <AccordionContent>
+                    <PrivyVerifiedLinks
+                      privyUser={JSON.parse(JSON.stringify(user))}
+                    />
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
             </div>
           </div>
         </>

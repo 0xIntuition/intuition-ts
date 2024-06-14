@@ -72,6 +72,11 @@ export function sliceString(
   return id?.slice(0, startNum) + '...' + id?.slice(-endNum)
 }
 
+export function truncateString(str: string, maxLength: number): string {
+  if (str.length <= maxLength) return str
+  return str.slice(0, maxLength) + '...'
+}
+
 export async function copyToClipboard(text: string) {
   await navigator.clipboard.writeText(text)
 }

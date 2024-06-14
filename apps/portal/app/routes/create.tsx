@@ -1,34 +1,31 @@
 import { useEffect, useReducer, useRef, useState } from 'react'
 
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-  Button,
-} from '@0xintuition/1ui'
+import { Button } from '@0xintuition/1ui'
 import {
   ApiError,
   IdentitiesService,
   IdentityPresenter,
   OpenAPI,
+  UserPresenter,
   UsersService,
 } from '@0xintuition/api'
 
-import { PrivyVerifiedLinks } from '@client/privy-verified-links'
-import { ProfileSocialAccounts } from '@components/profile-social-accounts'
+import EditProfileModal from '@components/edit-profile-modal'
 import Toast from '@components/toast'
 import { multivaultAbi } from '@lib/abis/multivault'
 import { useCreateIdentity } from '@lib/hooks/useCreateIdentity'
+import { editProfileModalAtom } from '@lib/state/store'
 import { MULTIVAULT_CONTRACT_ADDRESS } from '@lib/utils/constants'
 import logger from '@lib/utils/logger'
-import { getAuthHeaders } from '@lib/utils/misc'
+import { getAuthHeaders, sliceString } from '@lib/utils/misc'
 import { SessionContext } from '@middleware/session'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
-import { useFetcher, useLoaderData } from '@remix-run/react'
+import { useFetcher, useLoaderData, useNavigate } from '@remix-run/react'
 import { CreateLoaderData } from '@routes/resources+/create'
 import { getPrivyAccessToken } from '@server/privy'
-import { AlertCircle } from 'lucide-react'
+import * as blockies from 'blockies-ts'
+import { useAtom } from 'jotai'
+import { AlertCircle, Loader2Icon } from 'lucide-react'
 import { ClientOnly } from 'remix-utils/client-only'
 import { toast } from 'sonner'
 import { SessionUser } from 'types/user'
@@ -65,14 +62,14 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
     }
   }
 
-  let userTotals
+  let userObject
   try {
-    userTotals = await UsersService.getUserTotals({
-      id: user.details.id,
+    userObject = await UsersService.getUserByWallet({
+      wallet: user.details.wallet.address,
     })
   } catch (error: unknown) {
     if (error instanceof ApiError) {
-      userTotals = undefined
+      userObject = undefined
       console.log(
         `${error.name} - ${error.status}: ${error.message} ${error.url}`,
       )
@@ -81,10 +78,13 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
     }
   }
 
-  logger('userIdentity', userIdentity)
-  logger('userTotals', userTotals)
+  if (!userObject) {
+    return console.log('No user found in DB')
+  }
 
-  return json({ user, userIdentity, userTotals })
+  logger('userObject', userObject)
+
+  return json({ user, userIdentity, userObject })
 }
 
 // State
@@ -167,10 +167,12 @@ const initialState: TransactionState = {
 }
 
 interface CreateButtonWrapperProps {
-  onSuccess: () => void
+  setEditProfileModalActive: (active: boolean) => void
 }
 
-export function CreateButton({ onSuccess }: CreateButtonWrapperProps) {
+export function CreateButton({
+  setEditProfileModalActive,
+}: CreateButtonWrapperProps) {
   const { user } = useLoaderData<{ user: SessionUser }>()
   const loaderFetcher = useFetcher<CreateLoaderData>()
   const loaderFetcherUrl = '/resources/create'
@@ -195,15 +197,6 @@ export function CreateButton({ onSuccess }: CreateButtonWrapperProps) {
 
   const atomCost = BigInt(atomCostAmount ? atomCostAmount : 0)
 
-  useEffect(() => {
-    if (
-      state.status === 'on-chain-transaction-complete' &&
-      typeof onSuccess === 'function'
-    ) {
-      onSuccess()
-    }
-  }, [state.status, onSuccess])
-
   const publicClient = usePublicClient()
   const {
     writeContractAsync: writeCreateIdentity,
@@ -227,92 +220,101 @@ export function CreateButton({ onSuccess }: CreateButtonWrapperProps) {
     identity: IdentityPresenter
   }
 
-  useEffect(() => {
-    // Handle On-Chain Transaction
-    async function handleOnChainCreateIdentity({
-      atomData,
-    }: {
-      atomData: string
-    }) {
-      if (
-        !awaitingOnChainConfirmation &&
-        !awaitingWalletConfirmation &&
-        user &&
-        publicClient &&
-        atomCost
-      ) {
-        try {
-          dispatch({ type: 'SIGNING_WALLET' })
+  // Handle On-Chain Transaction
+  async function handleOnChainCreateIdentity({
+    atomData,
+  }: {
+    atomData: string
+  }) {
+    if (
+      !awaitingOnChainConfirmation &&
+      !awaitingWalletConfirmation &&
+      user &&
+      publicClient &&
+      atomCost
+    ) {
+      try {
+        dispatch({ type: 'SIGNING_WALLET' })
 
-          const txHash = await writeCreateIdentity({
-            address: MULTIVAULT_CONTRACT_ADDRESS,
-            abi: multivaultAbi,
-            functionName: 'createAtom',
-            args: [toHex(atomData)],
-            value: atomCost,
+        const txHash = await writeCreateIdentity({
+          address: MULTIVAULT_CONTRACT_ADDRESS,
+          abi: multivaultAbi,
+          functionName: 'createAtom',
+          args: [toHex(atomData)],
+          value: atomCost,
+        })
+
+        if (txHash) {
+          dispatch({ type: 'ON_CHAIN_TRANSACTION_PENDING' })
+          const receipt = await publicClient.waitForTransactionReceipt({
+            hash: txHash,
           })
-
-          if (txHash) {
-            dispatch({ type: 'ON_CHAIN_TRANSACTION_PENDING' })
-            const receipt = await publicClient.waitForTransactionReceipt({
-              hash: txHash,
-            })
-            logger('receipt', receipt)
-            dispatch({
-              type: 'ON_CHAIN_TRANSACTION_COMPLETE',
-              txHash: txHash,
-              txReceipt: receipt,
-            })
-          }
-        } catch (error) {
-          logger('error', error)
-          setLoading(false)
-          if (error instanceof Error) {
-            let errorMessage = 'Failed transaction'
-            if (error.message.includes('insufficient')) {
-              errorMessage = 'Insufficient funds'
-            }
-            if (error.message.includes('rejected')) {
-              errorMessage = 'Transaction rejected'
-            }
-            dispatch({
-              type: 'TRANSACTION_ERROR',
-              error: errorMessage,
-            })
-            toast.custom(
-              () => (
-                <Toast
-                  title="Error"
-                  description={errorMessage}
-                  icon={<AlertCircle />}
-                />
-              ),
-              {
-                duration: 5000,
-              },
-            )
-            return
-          }
+          logger('receipt', receipt)
+          dispatch({
+            type: 'ON_CHAIN_TRANSACTION_COMPLETE',
+            txHash: txHash,
+            txReceipt: receipt,
+          })
         }
-      } else {
-        logger(
-          'Cannot initiate on-chain transaction, a transaction is already pending, a wallet is already signing, or a wallet is not connected',
-        )
+      } catch (error) {
+        logger('error', error)
+        setLoading(false)
+        if (error instanceof Error) {
+          let errorMessage = 'Failed transaction'
+          if (error.message.includes('insufficient')) {
+            errorMessage = 'Insufficient funds'
+          }
+          if (error.message.includes('rejected')) {
+            errorMessage = 'Transaction rejected'
+          }
+          dispatch({
+            type: 'TRANSACTION_ERROR',
+            error: errorMessage,
+          })
+          toast.custom(
+            () => (
+              <Toast
+                title="Error"
+                description={errorMessage}
+                icon={<AlertCircle />}
+              />
+            ),
+            {
+              duration: 5000,
+            },
+          )
+          return
+        }
       }
+    } else {
+      logger(
+        'Cannot initiate on-chain transaction, a transaction is already pending, a wallet is already signing, or a wallet is not connected',
+      )
     }
+  }
 
-    function handleIdentityTxReceiptReceived() {
-      if (createdIdentity) {
-        logger(
-          'Submitting to emitterFetcher with identity_id:',
-          createdIdentity.identity_id,
-        )
-        emitterFetcher.submit(
-          { identity_id: createdIdentity.identity_id },
-          { method: 'post', action: '/actions/create-emitter' },
-        )
-      }
+  function handleIdentityTxReceiptReceived() {
+    logger('createdIdentity', createdIdentity)
+    if (createdIdentity) {
+      logger(
+        'Submitting to emitterFetcher with identity_id:',
+        createdIdentity.identity_id,
+      )
+      emitterFetcher.submit(
+        { identity_id: createdIdentity.identity_id },
+        { method: 'post', action: '/actions/create-emitter' },
+      )
     }
+  }
+
+  useEffect(() => {
+    if (state.status === 'on-chain-transaction-complete') {
+      handleIdentityTxReceiptReceived()
+      setEditProfileModalActive(true)
+    }
+  }, [state.status])
+
+  useEffect(() => {
     if (
       offChainFetcher.state === 'idle' &&
       offChainFetcher.data !== null &&
@@ -328,7 +330,6 @@ export function CreateButton({ onSuccess }: CreateButtonWrapperProps) {
             offChainReceipt: responseData.identity,
           })
           handleOnChainCreateIdentity({ atomData: identity_id })
-          handleIdentityTxReceiptReceived()
         }
       }
       if (offChainFetcher.data === null || offChainFetcher.data === undefined) {
@@ -339,19 +340,7 @@ export function CreateButton({ onSuccess }: CreateButtonWrapperProps) {
         })
       }
     }
-  }, [
-    offChainFetcher.state,
-    offChainFetcher.data,
-    dispatch,
-    createdIdentity,
-    awaitingOnChainConfirmation,
-    awaitingWalletConfirmation,
-    user,
-    publicClient,
-    atomCost,
-    writeCreateIdentity,
-    emitterFetcher,
-  ])
+  }, [offChainFetcher.state, offChainFetcher.data, dispatch])
 
   useEffect(() => {
     if (state.status === 'transaction-error') {
@@ -368,7 +357,6 @@ export function CreateButton({ onSuccess }: CreateButtonWrapperProps) {
         const formData = new FormData()
         formData.append('display_name', walletClient.account.address)
         formData.append('identity_id', walletClient.account.address)
-        formData.append('description', 'test')
 
         for (const [key, value] of formData.entries()) {
           logger(`${key}: ${value}`)
@@ -377,7 +365,7 @@ export function CreateButton({ onSuccess }: CreateButtonWrapperProps) {
         try {
           dispatch({ type: 'START_OFF_CHAIN_TRANSACTION' })
           offChainFetcher.submit(formData, {
-            action: '/actions/create-user-identity',
+            action: '/actions/create-profile',
             method: 'post',
           })
         } catch (error: unknown) {
@@ -418,73 +406,100 @@ export function CreateButton({ onSuccess }: CreateButtonWrapperProps) {
   return (
     <>
       <Button variant="primary" disabled={loading} onClick={handleSubmit}>
-        {awaitingWalletConfirmation || awaitingOnChainConfirmation || loading
-          ? 'Creating Identity...'
-          : 'Create Identity'}
+        {awaitingWalletConfirmation ||
+        awaitingOnChainConfirmation ||
+        loading ? (
+          <>
+            <Loader2Icon className="animate-spin h-5 w-5 mr-1" />
+            Creating Identity...
+          </>
+        ) : (
+          'Create Identity'
+        )}
       </Button>
     </>
   )
 }
 
 export default function Profile() {
-  const { userIdentity, user } = useLoaderData<{
-    userIdentity: IdentityPresenter
+  const { user, userObject } = useLoaderData<{
     user: SessionUser
+    userObject: UserPresenter
   }>()
+  const imgSrc = blockies
+    .create({ seed: user?.details?.wallet?.address })
+    .toDataURL()
+
+  const [editProfileModalActive, setEditProfileModalActive] =
+    useAtom(editProfileModalAtom)
+
+  const navigate = useNavigate()
 
   return (
-    <div className="m-8 flex flex-col items-center gap-4">
-      <div className="flex flex-col">
-        {userIdentity ? (
-          <div>
-            <p>User Identity Exists</p>
-            <p>{userIdentity.id}</p>
-            <div className="flex flex-col gap-4">
-              <Accordion
-                type="multiple"
-                className="w-full"
-                defaultValue={['verified-links']}
-              >
-                <AccordionItem value="verified-links">
-                  <AccordionTrigger>
-                    <span className="text-secondary-foreground text-sm font-normal">
-                      Verified Links
-                    </span>
-                  </AccordionTrigger>
-                  <AccordionContent>
-                    <PrivyVerifiedLinks
-                      privyUser={JSON.parse(JSON.stringify(user))}
-                    />
-                  </AccordionContent>
-                </AccordionItem>
-              </Accordion>
+    <>
+      <div className="flex justify-center items-center h-screen">
+        <div className="w-[600px] h-[307px] flex-col justify-start items-start gap-[42px] inline-flex">
+          <div className="h-[37px] flex-col justify-start items-start gap-6 flex">
+            <div className="self-stretch h-[37px] flex-col justify-start items-start gap-2.5 flex">
+              <div className="self-stretch text-white text-3xl font-semibold">
+                Create your profile identity
+              </div>
             </div>
           </div>
-        ) : (
-          <ClientOnly>{() => <CreateButton onSuccess={() => {}} />}</ClientOnly>
-        )}
+          <div className="h-28 p-6 bg-black rounded-[10px] shadow border border-solid border-neutral-300/20 backdrop-blur-xl flex-col justify-center items-center gap-6 flex">
+            <div className="w-[552px] justify-between items-center inline-flex">
+              <div className="grow shrink basis-0 h-16 justify-start items-center gap-[18px] flex">
+                <div className="w-[70px] pr-1.5 justify-start items-center flex">
+                  <img
+                    className="w-16 h-16 relative rounded-full border border-neutral-700"
+                    src={imgSrc}
+                    alt="Avatar"
+                  />
+                </div>
+                <div className="flex-col justify-start items-start gap-[3px] inline-flex">
+                  <div className="justify-start items-end gap-1.5 inline-flex">
+                    <div className="text-neutral-200 text-base font-medium leading-normal">
+                      {sliceString(user?.details?.wallet?.address, 6, 4)}
+                    </div>
+                    <div className="w-[0px] self-stretch pb-0.5 justify-start items-end gap-2.5 flex">
+                      <div></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <ClientOnly>
+                {() => (
+                  <CreateButton
+                    setEditProfileModalActive={setEditProfileModalActive}
+                  />
+                )}
+              </ClientOnly>
+            </div>
+          </div>
+          <div className="w-[600px] justify-start items-start gap-6 inline-flex">
+            <div className="grow shrink basis-0 self-stretch flex-col justify-start items-start gap-6 inline-flex">
+              <div className="self-stretch h-[74px] flex-col justify-start items-start gap-2.5 flex">
+                <div className="self-stretch text-white text-base font-medium leading-normal">
+                  Enhanced Visibility
+                </div>
+                <div className="self-stretch text-white/40 text-sm font-normal leading-tight">
+                  By creating a profile identity, you increase your visibility
+                  on the Intuition Portal, making it easier for others to find
+                  and connect with you within the community.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div className="flex flex-col gap-4">
-        {/* <Accordion
-          type="multiple"
-          className="w-full"
-          defaultValue={['verified-links']}
-        >
-          <AccordionItem value="verified-links">
-            <AccordionTrigger>
-              <span className="text-secondary-foreground text-sm font-normal">
-                Verified Links
-              </span>
-            </AccordionTrigger>
-            <AccordionContent>
-              <PrivyVerifiedLinks
-                privyUser={JSON.parse(JSON.stringify(user))}
-              />
-            </AccordionContent>
-          </AccordionItem>
-        </Accordion> */}
-      </div>
-      <ProfileSocialAccounts hasLinkedAccounts={false} />
-    </div>
+      <EditProfileModal
+        userObject={userObject}
+        open={editProfileModalActive}
+        onClose={() => {
+          setEditProfileModalActive(false)
+          navigate('/app/profile')
+        }}
+      />
+    </>
   )
 }

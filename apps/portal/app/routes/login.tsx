@@ -14,7 +14,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const authTokenClaims = await verifyPrivyAccessToken(request)
   if (authTokenClaims) {
     console.log('[Loader] User is already authenticated, redirecting to home')
-    throw redirect('/app')
+    throw redirect('/app/profile')
   }
   return json({ authTokenClaims })
 }
@@ -53,7 +53,7 @@ export default function Login() {
   }
 
   return (
-    <div>
+    <div className="flex items-center justify-center h-screen">
       <PrivyLoginButton handleLogin={handleLogin} />
     </div>
   )

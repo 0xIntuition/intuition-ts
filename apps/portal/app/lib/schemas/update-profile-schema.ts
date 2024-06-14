@@ -2,15 +2,15 @@ import { z } from 'zod'
 
 import { DESCRIPTION_MAX_LENGTH, MAX_UPLOAD_SIZE } from '../utils/constants'
 
-export function createIdentitySchema() {
+export function updateProfileSchema() {
   return z.object({
     display_name: z
-      .string({ required_error: 'Please enter a identity name.' })
+      .string({ required_error: 'Please enter a display name.' })
       .min(2, {
-        message: 'Identity name must be at least 2 characters.',
+        message: 'Display name must be at least 2 characters.',
       })
       .max(30, {
-        message: 'Identity name must not be longer than 30 characters.',
+        message: 'Display name must not be longer than 30 characters.',
       }),
     description: z
       .string({
@@ -31,10 +31,7 @@ export function createIdentitySchema() {
       .refine((file) => {
         return ['image/jpeg', 'image/png', 'image/gif'].includes(file.type)
       }, 'File must be a .png, .jpg, .jpeg, or .gif')
-      .or(z.string()),
-    vault_id: z.string().optional(),
-    creator: z.string().optional(),
-    contract: z.string().optional(),
-    predicate: z.boolean().optional(),
+      .or(z.string())
+      .optional(),
   })
 }
