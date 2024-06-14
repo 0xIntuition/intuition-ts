@@ -1,8 +1,8 @@
 import {
   ApiError,
+  ClaimSortColumn,
   ClaimsService,
   OpenAPI,
-  SortColumn,
   SortDirection,
 } from '@0xintuition/api'
 
@@ -28,8 +28,8 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
 
   const url = new URL(request.url)
   const searchParams = new URLSearchParams(url.search)
-  const sortBy: SortColumn =
-    (searchParams.get('sortBy') as SortColumn) ?? 'createdAt'
+  const sortBy: ClaimSortColumn =
+    (searchParams.get('sortBy') as ClaimSortColumn) ?? 'createdAt'
   const direction: SortDirection =
     (searchParams.get('direction') as SortDirection) ?? 'desc'
   const page = searchParams.get('page')
@@ -44,7 +44,7 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
       page: page,
       limit: Number(limit),
       offset: 0,
-      // sortBy: sortBy, ** TODO: Re-enable this when BE resolves issue
+      sortBy: sortBy,
       direction: direction,
     })
   } catch (error: unknown) {

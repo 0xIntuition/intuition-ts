@@ -455,6 +455,10 @@ export type InputData =
 
 export type InputFile = string
 
+export type InviteCodesResponse = {
+  invite_codes: Array<string>
+}
+
 export type IsCompleteQuery = {
   combinator?: Combinator | null
   comparator?: EnumComparators | null
@@ -1429,6 +1433,32 @@ export type GetIdentityByIdResponse = {
   vault_uuid?: string | null
 }
 
+export type SetFollowPredicateData = {
+  /**
+   * address of deployed contract
+   */
+  contract: string
+  /**
+   * sql id
+   */
+  id: string
+}
+
+export type SetFollowPredicateResponse = unknown
+
+export type SetTagPredicateData = {
+  /**
+   * address of deployed contract
+   */
+  contract: string
+  /**
+   * sql id
+   */
+  id: string
+}
+
+export type SetTagPredicateResponse = unknown
+
 export type GetIdentityPositionsData = {
   creator?: Identifier | null
   direction?: SortDirection | null
@@ -1885,6 +1915,17 @@ export type UpdateUserEnsResponse = {
   role: Role
   updated_at: string
   wallet: string
+}
+
+export type CreateInviteCodesByUserData = {
+  /**
+   * User sql id
+   */
+  id: string
+}
+
+export type CreateInviteCodesByUserResponse = {
+  invite_codes: Array<string>
 }
 
 export type GetLinkedAccountsByUserData = {
@@ -2554,6 +2595,40 @@ export type $OpenApiTs = {
       }
     }
   }
+  '/identity/{id}/{contract}/follow_predicate': {
+    post: {
+      req: {
+        /**
+         * address of deployed contract
+         */
+        contract: string
+        /**
+         * sql id
+         */
+        id: string
+      }
+      res: {
+        200: unknown
+      }
+    }
+  }
+  '/identity/{id}/{contract}/tag_predicate': {
+    post: {
+      req: {
+        /**
+         * address of deployed contract
+         */
+        contract: string
+        /**
+         * sql id
+         */
+        id: string
+      }
+      res: {
+        200: unknown
+      }
+    }
+  }
   '/identity/{id}/positions': {
     get: {
       req: {
@@ -3184,6 +3259,24 @@ export type $OpenApiTs = {
           role: Role
           updated_at: string
           wallet: string
+        }
+      }
+    }
+  }
+  '/users/{id}/invite_codes': {
+    post: {
+      req: {
+        /**
+         * User sql id
+         */
+        id: string
+      }
+      res: {
+        /**
+         * Invite codes created for user
+         */
+        200: {
+          invite_codes: Array<string>
         }
       }
     }

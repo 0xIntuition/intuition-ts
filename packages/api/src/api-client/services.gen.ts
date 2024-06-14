@@ -16,6 +16,8 @@ import type {
   CreateClaimResponse,
   CreateIdentityData,
   CreateIdentityResponse,
+  CreateInviteCodesByUserData,
+  CreateInviteCodesByUserResponse,
   CreateInviteCodesData,
   CreateInviteCodesResponse,
   CreateLinkedAccountData,
@@ -83,6 +85,10 @@ import type {
   SearchIdentityResponse,
   SearchPositionsData,
   SearchPositionsResponse,
+  SetFollowPredicateData,
+  SetFollowPredicateResponse,
+  SetTagPredicateData,
+  SetTagPredicateResponse,
   UpdateClaimData,
   UpdateClaimResponse,
   UpdateIdentityData,
@@ -540,6 +546,46 @@ export class IdentitiesService {
       url: '/identity/{id}',
       path: {
         id: data.id,
+      },
+    })
+  }
+
+  /**
+   * @param data The data for the request.
+   * @param data.id sql id
+   * @param data.contract address of deployed contract
+   * @returns unknown
+   * @throws ApiError
+   */
+  public static setFollowPredicate(
+    data: SetFollowPredicateData,
+  ): CancelablePromise<SetFollowPredicateResponse> {
+    return __request(OpenAPI, {
+      method: 'POST',
+      url: '/identity/{id}/{contract}/follow_predicate',
+      path: {
+        id: data.id,
+        contract: data.contract,
+      },
+    })
+  }
+
+  /**
+   * @param data The data for the request.
+   * @param data.id sql id
+   * @param data.contract address of deployed contract
+   * @returns unknown
+   * @throws ApiError
+   */
+  public static setTagPredicate(
+    data: SetTagPredicateData,
+  ): CancelablePromise<SetTagPredicateResponse> {
+    return __request(OpenAPI, {
+      method: 'POST',
+      url: '/identity/{id}/{contract}/tag_predicate',
+      path: {
+        id: data.id,
+        contract: data.contract,
       },
     })
   }
@@ -1034,6 +1080,24 @@ export class UsersService {
     return __request(OpenAPI, {
       method: 'PUT',
       url: '/users/{id}/ens',
+      path: {
+        id: data.id,
+      },
+    })
+  }
+
+  /**
+   * @param data The data for the request.
+   * @param data.id User sql id
+   * @returns unknown Invite codes created for user
+   * @throws ApiError
+   */
+  public static createInviteCodesByUser(
+    data: CreateInviteCodesByUserData,
+  ): CancelablePromise<CreateInviteCodesByUserResponse> {
+    return __request(OpenAPI, {
+      method: 'POST',
+      url: '/users/{id}/invite_codes',
       path: {
         id: data.id,
       },

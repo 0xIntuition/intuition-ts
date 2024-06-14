@@ -25,7 +25,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const url = new URL(request.url)
   const searchParams = new URLSearchParams(url.search)
   const sortBy: ClaimSortColumn =
-    (searchParams.get('sortBy') as ClaimSortColumn) ?? 'CreatedAt'
+    (searchParams.get('sortBy') as ClaimSortColumn) ?? 'createdAt'
   const direction: SortDirection =
     (searchParams.get('direction') as SortDirection) ?? 'desc'
   const page = searchParams.get('page')
@@ -40,7 +40,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
       page: page,
       limit: Number(limit),
       offset: 0,
-      // sortBy: sortBy, ** TODO: Re-enable this when BE resolves issue
+      sortBy: sortBy,
       direction: direction,
     })
   } catch (error: unknown) {

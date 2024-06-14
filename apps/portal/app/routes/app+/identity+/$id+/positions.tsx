@@ -25,7 +25,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const url = new URL(request.url)
   const searchParams = new URLSearchParams(url.search)
   const sortBy: PositionSortColumn =
-    (searchParams.get('sortBy') as PositionSortColumn) ?? 'CreatedAt'
+    (searchParams.get('sortBy') as PositionSortColumn) ?? 'createdAt'
   const direction: SortDirection =
     (searchParams.get('direction') as SortDirection) ?? 'desc'
   const page = searchParams.get('page')
