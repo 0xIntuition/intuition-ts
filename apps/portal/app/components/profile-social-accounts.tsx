@@ -1,5 +1,6 @@
 import { Button } from '@0xintuition/1ui'
 
+import { VerifiedLinkBadges } from '@client/privy-verified-links'
 import logger from '@lib/utils/logger'
 import { SessionUser } from 'types/user'
 
@@ -55,14 +56,15 @@ function EditSocialAccounts({
   privyUser: SessionUser
   handleOpenEditSocialLinksModal: () => void
 }) {
-  logger('privyUser', privyUser)
+  logger('privyUser in social accounts', privyUser.details)
   return (
-    <div className="flex flex-col items-center gap-5">
-      <p>
-        Manage your linked social accounts to keep your profile updated and
-        trustworthy.
-      </p>
-      <Button variant="secondary" onClick={handleOpenEditSocialLinksModal}>
+    <div className="flex flex-col w-full gap-5 mt-5">
+      <VerifiedLinkBadges privyUser={privyUser} />
+      <Button
+        variant="secondary"
+        className="text-center justify-center w-full"
+        onClick={handleOpenEditSocialLinksModal}
+      >
         Edit Social Links
       </Button>
     </div>

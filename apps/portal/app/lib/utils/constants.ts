@@ -1,3 +1,4 @@
+import { PrivyPlatform } from 'types/privy'
 import { base, baseSepolia } from 'viem/chains'
 
 export const CURRENT_ENV = process.env.NODE_ENV
@@ -31,3 +32,26 @@ export const BLOCK_EXPLORER_URL =
   CURRENT_ENV === 'production'
     ? 'https://basescan.org'
     : 'https://sepolia.basescan.org'
+
+// Privy Social Accounts
+
+export const verifiedPlatforms: PrivyPlatform[] = [
+  {
+    platformPrivyName: 'twitter',
+    platformDisplayName: 'X',
+    linkMethod: 'linkTwitter',
+    unlinkMethod: 'unlinkTwitter',
+  },
+  {
+    platformPrivyName: 'github',
+    platformDisplayName: 'GitHub',
+    linkMethod: 'linkGithub',
+    unlinkMethod: 'unlinkGithub',
+  },
+  {
+    platformPrivyName: 'farcaster',
+    platformDisplayName: 'Farcaster',
+    linkMethod: 'linkFarcaster',
+    unlinkMethod: 'unlinkFarcaster',
+  },
+]
