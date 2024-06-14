@@ -219,7 +219,6 @@ export default function Profile() {
             </Button>
             <ProfileSocialAccounts
               privyUser={JSON.parse(JSON.stringify(user))}
-              hasLinkedAccounts={true}
               handleOpenEditSocialLinksModal={() =>
                 setEditSocialLinksModalActive(true)
               }
@@ -231,6 +230,7 @@ export default function Profile() {
             onClose={() => setEditProfileModalActive(false)}
           />
           <EditSocialLinksModal
+            privyUser={JSON.parse(JSON.stringify(user))}
             open={editSocialLinksModalActive}
             onClose={() => setEditSocialLinksModalActive(false)}
           />

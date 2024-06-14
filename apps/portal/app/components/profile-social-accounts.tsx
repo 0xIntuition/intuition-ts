@@ -1,7 +1,7 @@
 import { Button } from '@0xintuition/1ui'
 
 import { VerifiedLinkBadges } from '@client/privy-verified-links'
-import logger from '@lib/utils/logger'
+import { verifiedPlatforms } from '@lib/utils/constants'
 import { SessionUser } from 'types/user'
 
 // if the user has not linked any accounts, render the Link CTA version
@@ -9,15 +9,19 @@ import { SessionUser } from 'types/user'
 
 interface ProfileSocialAccountProps {
   privyUser: SessionUser
-  hasLinkedAccounts: boolean
+
   handleOpenEditSocialLinksModal: () => void
 }
-// export function PrivyVerifiedLinks({ privyUser }: { privyUser: SessionUser }) {
+
 export function ProfileSocialAccounts({
   privyUser,
-  hasLinkedAccounts,
+
   handleOpenEditSocialLinksModal,
 }: ProfileSocialAccountProps) {
+  const hasLinkedAccounts = verifiedPlatforms.some((platform) =>
+    Boolean(privyUser.details?.[platform.platformPrivyName]),
+  )
+
   return hasLinkedAccounts ? (
     <EditSocialAccounts
       privyUser={privyUser}
@@ -56,7 +60,6 @@ function EditSocialAccounts({
   privyUser: SessionUser
   handleOpenEditSocialLinksModal: () => void
 }) {
-  logger('privyUser in social accounts', privyUser.details)
   return (
     <div className="flex flex-col w-full gap-5 mt-5">
       <VerifiedLinkBadges privyUser={privyUser} />
