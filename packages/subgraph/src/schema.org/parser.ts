@@ -1,9 +1,9 @@
 import { ipfs, json, TypedMap, JSONValue } from '@graphprotocol/graph-ts'
 import { Atom } from '../../generated/schema'
-import { createPerson } from './Person'
+import { createPerson, createPersonPredicate, PersonUri } from './Person'
 import { createBook } from './Book'
-import { createLikeAction } from './LikeAction'
-import { createFollowAction } from './FollowAction'
+import { createLikeAction, LikeActionUri } from './LikeAction'
+import { createFollowAction, FollowActionUri } from './FollowAction'
 
 export function parseAtomData(atom: Atom): void {
   atom.data = atom.uri
@@ -26,6 +26,18 @@ export function parseAtomData(atom: Atom): void {
       resolveSchemaOrgProperties(atom, obj)
     }
   }
+
+  if (atom.data == LikeActionUri) {
+    createLikeAction(atom)
+  }
+
+  if (atom.data == FollowActionUri) {
+    createFollowAction(atom)
+  }
+
+  if (atom.data == PersonUri) {
+    createPersonPredicate(atom)
+  }
 }
 
 function resolveSchemaOrgProperties(
@@ -42,11 +54,6 @@ function resolveSchemaOrgProperties(
     if (type == 'Book') {
       createBook(atom, obj)
     }
-    if (type == 'LikeAction') {
-      createLikeAction(atom, obj)
-    }
-    if (type == 'FollowAction') {
-      createFollowAction(atom, obj)
-    }
+
   }
 }

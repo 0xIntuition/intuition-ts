@@ -1,9 +1,9 @@
-import { TypedMap, JSONValue } from '@graphprotocol/graph-ts'
 import { Atom } from '../../generated/schema'
+
+export const LikeActionUri = 'https://schema.org/LikeAction'
 
 export function createLikeAction(
   atom: Atom,
-  obj: TypedMap<string, JSONValue>,
 ): void {
   atom.emoji = '👍'
   atom.type = 'LikeAction'

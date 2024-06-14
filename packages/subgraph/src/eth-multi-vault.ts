@@ -15,6 +15,8 @@ import {
   FeeTransfer,
   Vault,
   Event,
+  Position,
+  AtomValue,
 } from '../generated/schema'
 import { parseAtomData } from './schema.org/parser'
 
@@ -24,20 +26,20 @@ export function handleAtomCreated(event: AtomCreated): void {
   let account = Account.load(event.params.creator.toHexString())
   if (account === null) {
     account = new Account(event.params.creator.toHexString())
-    account.save()
+    account.label = account.id
   }
 
   let vault = Vault.load(event.params.vaultID.toString())
   if (vault === null) {
     vault = new Vault(event.params.vaultID.toString())
+    vault.totalShares = BigInt.fromI32(0)
   }
   vault.atom = atom.id
   vault.save()
   atom.vault = vault.id
-  atom.tvl = vault.balance
 
   // TODO: do we need to update the total signal?
-  atom.totalSignal = atom.tvl
+  atom.totalSignal = vault.totalShares
   atom.signals = []
 
   atom.creator = account.id
@@ -45,6 +47,19 @@ export function handleAtomCreated(event: AtomCreated): void {
   atom.uri = event.params.atomData.toString()
 
   parseAtomData(atom)
+
+  if (atom.uri.toLowerCase() == account.id.toLowerCase()) {
+    atom.type = "Account"
+    atom.emoji = "⛓️"
+    atom.label = account.id.toString()
+    let atomValue = new AtomValue(atom.id)
+    atomValue.account = account.id
+    atomValue.save()
+    atom.value = atomValue.id
+    account.atom = atom.id
+
+  }
+  account.save()
 
   atom.blockNumber = event.block.number
   atom.blockTimestamp = event.block.timestamp
@@ -69,15 +84,15 @@ export function handleTripleCreated(event: TripleCreated): void {
   let account = Account.load(event.params.creator.toHexString())
   if (account === null) {
     account = new Account(event.params.creator.toHexString())
-    account.save()
+    account.label = account.id
   }
 
   let vault = Vault.load(event.params.vaultID.toString())
   if (vault === null) {
     vault = new Vault(event.params.vaultID.toString())
+    vault.totalShares = BigInt.fromI32(0)
   }
   vault.triple = triple.id
-  vault.balance = BigInt.fromI32(0)
   vault.save()
   triple.vault = vault.id
 
@@ -90,7 +105,7 @@ export function handleTripleCreated(event: TripleCreated): void {
     inverseVault = new Vault(invarseVaultId)
   }
   inverseVault.triple = triple.id
-  inverseVault.balance = BigInt.fromI32(0)
+  inverseVault.totalShares = BigInt.fromI32(0)
   inverseVault.save()
   triple.inverseVault = inverseVault.id
 
@@ -98,7 +113,7 @@ export function handleTripleCreated(event: TripleCreated): void {
   triple.inversePositionsCount = 0
   triple.activePositionsCount = 0
   triple.allPositionsCount = 0
-  triple.tvl = vault.balance.plus(inverseVault.balance)
+  triple.tvl = vault.totalShares.plus(inverseVault.totalShares)
   triple.totalSignal = triple.tvl
   triple.signals = []
   triple.positions = []
@@ -108,6 +123,21 @@ export function handleTripleCreated(event: TripleCreated): void {
   triple.subject = event.params.subjectId.toString()
   triple.predicate = event.params.predicateId.toString()
   triple.object = event.params.objectId.toString()
+
+  let subject = Atom.load(event.params.subjectId.toString())
+  let predicate = Atom.load(event.params.predicateId.toString())
+  let object = Atom.load(event.params.objectId.toString())
+
+
+  if (subject !== null && predicate !== null && object !== null) {
+    if (subject.type == "Account" && predicate.type == "PersonPredicate" && object.type == "Person") {
+      if (subject.uri.toLowerCase() == account.id.toLowerCase()) {
+        account.label = object.label
+        account.image = object.image
+      }
+    }
+  }
+  account.save()
 
   triple.blockNumber = event.block.number
   triple.blockTimestamp = event.block.timestamp
@@ -135,20 +165,23 @@ export function handleDeposited(event: Deposited): void {
   let sender = Account.load(event.params.sender.toHexString())
   if (sender === null) {
     sender = new Account(event.params.sender.toHexString())
+    sender.label = sender.id
     sender.save()
   }
 
   let receiver = Account.load(event.params.receiver.toHexString())
   if (receiver === null) {
     receiver = new Account(event.params.receiver.toHexString())
+    receiver.label = receiver.id
     receiver.save()
   }
 
   let vault = Vault.load(event.params.vaultId.toString())
   if (vault === null) {
     vault = new Vault(event.params.vaultId.toString())
+    vault.totalShares = BigInt.fromI32(0)
   }
-  vault.balance = event.params.vaultBalance
+  vault.totalShares = vault.totalShares.plus(event.params.sharesForReceiver)
   vault.save()
 
   deposit.vault = vault.id
@@ -156,7 +189,6 @@ export function handleDeposited(event: Deposited): void {
   deposit.receiver = receiver.id
 
   deposit.vaultBalance = event.params.vaultBalance
-
   deposit.userAssetsAfterTotalFees = event.params.userAssetsAfterTotalFees
   deposit.sharesForReceiver = event.params.sharesForReceiver
   deposit.entryFee = event.params.entryFee
@@ -166,6 +198,17 @@ export function handleDeposited(event: Deposited): void {
   deposit.transactionHash = event.transaction.hash
 
   deposit.save()
+
+  let positionId = `${vault.id}-${receiver.id}`
+  let position = Position.load(positionId)
+  if (position === null) {
+    position = new Position(positionId)
+    position.vault = vault.id
+    position.account = receiver.id
+  }
+
+  position.balance = event.params.vaultBalance
+  position.save()
 
   let ev = new Event(
     event.transaction.hash.concatI32(event.logIndex.toI32())
@@ -187,6 +230,7 @@ export function handleFeesTransferred(event: FeesTransferred): void {
   let account = Account.load(event.params.sender.toHexString())
   if (account === null) {
     account = new Account(event.params.sender.toHexString())
+    account.label = account.id
     account.save()
   }
 
@@ -220,12 +264,14 @@ export function handleRedeemed(event: Redeemed): void {
   let sender = Account.load(event.params.sender.toHexString())
   if (sender === null) {
     sender = new Account(event.params.sender.toHexString())
+    sender.label = sender.id
     sender.save()
   }
 
   let receiver = Account.load(event.params.receiver.toHexString())
   if (receiver === null) {
     receiver = new Account(event.params.receiver.toHexString())
+    receiver.label = receiver.id
     receiver.save()
   }
 
@@ -233,7 +279,7 @@ export function handleRedeemed(event: Redeemed): void {
   if (vault === null) {
     vault = new Vault(event.params.vaultId.toString())
   }
-  vault.balance = event.params.vaultBalance
+  vault.totalShares = vault.totalShares.minus(event.params.shares)
   vault.save()
 
   redemption.sender = sender.id
@@ -250,6 +296,17 @@ export function handleRedeemed(event: Redeemed): void {
   redemption.transactionHash = event.transaction.hash
 
   redemption.save()
+
+  let positionId = `${vault.id}-${sender.id}`
+  let position = Position.load(positionId)
+  if (position === null) {
+    position = new Position(positionId)
+    position.vault = vault.id
+    position.account = sender.id
+  }
+
+  position.balance = event.params.vaultBalance
+  position.save()
 
   let ev = new Event(
     event.transaction.hash.concatI32(event.logIndex.toI32())

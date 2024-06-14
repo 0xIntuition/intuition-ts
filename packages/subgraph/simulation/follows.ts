@@ -1,7 +1,6 @@
-import { getIntuition } from './utils'
+import { getIntuition, getOrCreateAtom } from './utils'
 import { FollowAction, WithContext } from 'schema-dts'
 import { ipfs } from './ipfs'
-import { Multivault } from '@0xintuition/protocol'
 
 async function main() {
   const user = await getIntuition(0)
@@ -19,14 +18,5 @@ async function main() {
   const user1 = await getIntuition(1)
   await user1.multivault.createTriple(3n, actionId, 4n)
 }
-async function getOrCreateAtom(multivault: Multivault, atomUri: string) {
-  const atomId = await multivault.getVaultIdFromUri(atomUri)
-  if (atomId) {
-    return atomId
-  } else {
-    console.log(`Creating atom: ${atomUri}`)
-    const { vaultId } = await multivault.createAtom(atomUri)
-    return vaultId
-  }
-}
+
 main().catch(console.error)

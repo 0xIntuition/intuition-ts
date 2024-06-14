@@ -27,7 +27,7 @@ export async function getIntuition(accountIndex: number) {
   // Faucet
   const hash = await adminClient.sendTransaction({
     account: ADMIN,
-    value: parseEther('0.1'),
+    value: parseEther('1'),
     to: account.address,
   })
 
@@ -43,4 +43,15 @@ export async function getIntuition(accountIndex: number) {
   const multivault = new Multivault({ public: publicClient, wallet }, address)
 
   return { multivault, account }
+}
+
+export async function getOrCreateAtom(multivault: Multivault, atomUri: string) {
+  const atomId = await multivault.getVaultIdFromUri(atomUri)
+  if (atomId) {
+    return atomId
+  } else {
+    console.log(`Creating atom: ${atomUri}`)
+    const { vaultId } = await multivault.createAtom(atomUri)
+    return vaultId
+  }
 }

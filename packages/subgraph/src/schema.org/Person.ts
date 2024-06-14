@@ -1,6 +1,16 @@
 import { TypedMap, JSONValue } from '@graphprotocol/graph-ts'
 import { Atom, AtomValue, Person } from '../../generated/schema'
 
+export const PersonUri = 'https://schema.org/Person'
+
+export function createPersonPredicate(
+  atom: Atom,
+): void {
+  atom.emoji = '👤'
+  atom.type = 'PersonPredicate'
+  atom.label = 'Is person'
+}
+
 export function createPerson(
   atom: Atom,
   obj: TypedMap<string, JSONValue>,

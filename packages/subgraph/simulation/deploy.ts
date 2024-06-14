@@ -17,7 +17,7 @@ export async function getOrDeployAndInit(): Promise<Address> {
       return CONTRACT_ADDRESS
     }
   } catch (e) {
-    console.log('Contract not found')
+    console.log('Contract not found. Deploying...')
   }
 
   // Deploy contract
@@ -32,6 +32,8 @@ export async function getOrDeployAndInit(): Promise<Address> {
   })
 
   const address = receipt.contractAddress!
+
+  console.log(`Deployed contract at ${address}. Initializing...`)
 
   const hash2 = await adminClient.writeContract({
     address,
@@ -75,5 +77,6 @@ export async function getOrDeployAndInit(): Promise<Address> {
   await publicClient.waitForTransactionReceipt({
     hash: hash2,
   })
+  console.log('Contract initialized')
   return address
 }

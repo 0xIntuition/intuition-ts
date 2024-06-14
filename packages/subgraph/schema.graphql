@@ -15,7 +15,7 @@ enum EventType {
   AtomCreated
   TripleCreated
   Deposited
-  Remeemed
+  Redeemed
   FeesTransfered
 }
 
@@ -36,10 +36,7 @@ type Atom @entity {
 
   vault: Vault!
 
-  "same as atom.vault.balance"
-  tvl: BigInt! 
-
-  "same as atom.tvl"
+  "todo"
   totalSignal: BigInt!
   
   signals: [Signal!]!
@@ -60,6 +57,7 @@ type Account @entity {
   id: ID!
   label: String
   image: String
+  atom: Atom
   createdAtoms: [Atom!]! @derivedFrom(field: "creator")
   createdTriples: [Triple!]! @derivedFrom(field: "creator")
   feeTransfers: [FeeTransfer!]! @derivedFrom(field: "sender")
@@ -89,10 +87,10 @@ type Triple @entity {
   activePositionsCount: Int
   allPositionsCount: Int
 
-  "vault.balance + inverseVault.balance"
+  "vault.totalShares + inverseVault.totalShares"
   tvl: BigInt!
 
-  "vault.balance - inverseVault.balance"
+  "vault.totalShares - inverseVault.totalShares"
   totalSignal: BigInt! 
   signals: [Signal!]!
 
@@ -104,7 +102,9 @@ type Triple @entity {
 enum AtomType {
   Unknown
   JSON
+  Account
   Person
+  PersonPredicate
   Book
   LikeAction
   FollowAction
@@ -113,6 +113,7 @@ enum AtomType {
 
 type AtomValue @entity {
   id: ID!
+  account: Account
   person: Person
   book: Book
 }
@@ -207,7 +208,7 @@ type Vault @entity {
   triple: Triple
   inverse: Vault
 
-  balance: BigInt!
+  totalShares: BigInt!
 
   deposits: [Deposit!]! @derivedFrom(field: "vault")
   redemptions: [Redemption!]! @derivedFrom(field: "vault")
