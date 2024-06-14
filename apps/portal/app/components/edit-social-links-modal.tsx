@@ -5,6 +5,8 @@ import {
   AccordionTrigger,
   Dialog,
   DialogContent,
+  DialogHeader,
+  DialogTitle,
 } from '@0xintuition/1ui'
 
 import { PrivyVerifiedLinks } from '@client/privy-verified-links'
@@ -29,6 +31,11 @@ export default function EditSocialLinksModal({
       }}
     >
       <DialogContent className="w-[600px] bg-neutral-950 rounded-xl shadow border border-solid border-black/10">
+        <DialogHeader>
+          <DialogTitle className="text-primary/60 font-normal text-sm">
+            Connect Social Accounts
+          </DialogTitle>
+        </DialogHeader>
         <div className="flex flex-col gap-4">
           <Accordion
             type="multiple"

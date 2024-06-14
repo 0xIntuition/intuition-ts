@@ -12,58 +12,47 @@ export function PrivyVerifiedLinks({ privyUser }: { privyUser: SessionUser }) {
     verifiedPlatforms: linkedPlatforms,
   } = useSocialLinking(verifiedPlatforms)
 
-  return (
-    <div className="flex w-full flex-col items-center gap-8">
-      {linkedPlatforms.map((platform) => {
-        if (privyUser === null) {
-          return null
+  if (!privyUser) {
+    return null
+  }
+  const renderLinkItem = (platform: PrivyPlatform) => {
+    const isConnected = Boolean(privyUser.details?.[platform.platformPrivyName])
+
+    const handleUnlinkWrapper = () => {
+      const userDetails = privyUser.details?.[platform.platformPrivyName]
+
+      return new Promise<void>((resolve, reject) => {
+        if (platform.platformPrivyName === 'farcaster' && userDetails?.fid) {
+          handleUnlink(platform.unlinkMethod, undefined, userDetails.fid)
+            .then(resolve)
+            .catch(reject)
+        } else if (userDetails?.subject) {
+          handleUnlink(platform.unlinkMethod, userDetails.subject)
+            .then(resolve)
+            .catch(reject)
+        } else {
+          console.error(
+            `Error: Unlink method called without required parameter for platform ${platform.platformPrivyName}`,
+          )
+          reject(new Error('Missing required parameter'))
         }
-
-        const isConnected = privyUser
-          ? Boolean(
-              (privyUser as SessionUser).details?.[platform.platformPrivyName],
-            )
-          : false
-
-        return (
-          <VerifiedLinkItem
-            key={platform.platformPrivyName}
-            platformDisplayName={platform.platformDisplayName}
-            isConnected={isConnected}
-            privyUser={privyUser as SessionUser}
-            platform={platform}
-            linkMethod={() => handleLink(platform.linkMethod)}
-            unlinkMethod={() => {
-              return new Promise<void>((resolve, reject) => {
-                const userDetails = (privyUser as SessionUser).details?.[
-                  platform.platformPrivyName
-                ]
-                if (
-                  platform.platformPrivyName === 'farcaster' &&
-                  userDetails?.fid
-                ) {
-                  handleUnlink(
-                    platform.unlinkMethod,
-                    undefined,
-                    userDetails.fid,
-                  )
-                    .then(resolve)
-                    .catch(reject)
-                } else if (userDetails?.subject) {
-                  handleUnlink(platform.unlinkMethod, userDetails.subject)
-                    .then(resolve)
-                    .catch(reject)
-                } else {
-                  console.error(
-                    `Error: Unlink method called without required parameter for platform ${platform.platformPrivyName}`,
-                  )
-                  reject(new Error('Missing required parameter'))
-                }
-              })
-            }}
-          />
-        )
-      })}
+      })
+    }
+    return (
+      <VerifiedLinkItem
+        key={platform.platformPrivyName}
+        platformDisplayName={platform.platformDisplayName}
+        isConnected={isConnected}
+        privyUser={privyUser}
+        platform={platform}
+        linkMethod={() => handleLink(platform.linkMethod)}
+        unlinkMethod={handleUnlinkWrapper}
+      />
+    )
+  }
+  return (
+    <div className="flex flex-col items-center bg-red-100 gap-4">
+      {linkedPlatforms.map(renderLinkItem)}
     </div>
   )
 }
@@ -101,9 +90,13 @@ export function VerifiedLinkItem({
         <span>{platformDisplayName}</span>
       )}
       {isConnected ? (
-        <Button onClick={unlinkMethod}>X</Button>
+        <Button variant="destructive" onClick={unlinkMethod}>
+          Unlink
+        </Button>
       ) : (
-        <Button onClick={linkMethod}>Link</Button>
+        <Button variant="accent" onClick={linkMethod}>
+          Link Account
+        </Button>
       )}
     </div>
   )
