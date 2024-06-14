@@ -16,6 +16,7 @@ import {
 } from '@0xintuition/api'
 
 import { PrivyVerifiedLinks } from '@client/privy-verified-links'
+import { ProfileSocialAccounts } from '@components/profile-social-accounts'
 import Toast from '@components/toast'
 import { multivaultAbi } from '@lib/abis/multivault'
 import { useCreateIdentity } from '@lib/hooks/useCreateIdentity'
@@ -464,7 +465,7 @@ export default function Profile() {
         )}
       </div>
       <div className="flex flex-col gap-4">
-        <Accordion
+        {/* <Accordion
           type="multiple"
           className="w-full"
           defaultValue={['verified-links']}
@@ -481,8 +482,9 @@ export default function Profile() {
               />
             </AccordionContent>
           </AccordionItem>
-        </Accordion>
+        </Accordion> */}
       </div>
+      <ProfileSocialAccounts hasLinkedAccounts={false} />
     </div>
   )
 }
