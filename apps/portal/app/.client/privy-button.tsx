@@ -8,7 +8,7 @@ import {
 } from '@0xintuition/1ui'
 
 import { usePrivy, useWallets } from '@privy-io/react-auth'
-import { NavLink, useFetcher } from '@remix-run/react'
+import { NavLink } from '@remix-run/react'
 import { useDisconnect } from 'wagmi'
 
 export function PrivyButton({
@@ -25,12 +25,9 @@ export function PrivyButton({
   // Disable login when Privy is not ready or the user is already authenticated
   const disableLogin = !ready || (ready && authenticated)
 
-  const fetcher = useFetcher()
-
   async function handleSignout() {
     logout()
     disconnect()
-    fetcher.submit({}, { method: 'post', action: '/actions/auth/logout' })
   }
 
   if (!ready) {

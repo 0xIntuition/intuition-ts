@@ -27,7 +27,12 @@ import { editProfileModalAtom } from '@lib/state/store'
 import { getAuthHeaders, sliceString } from '@lib/utils/misc'
 import { SessionContext } from '@middleware/session'
 import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
-import { Outlet, useLoaderData, useRevalidator } from '@remix-run/react'
+import {
+  Outlet,
+  useLoaderData,
+  useMatches,
+  useRevalidator,
+} from '@remix-run/react'
 import { getPrivyAccessToken } from '@server/privy'
 import * as blockies from 'blockies-ts'
 import { useAtom } from 'jotai'
@@ -64,7 +69,7 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
   }
 
   if (!userIdentity) {
-    return redirect('/app/profile/create')
+    return redirect('/create')
   }
 
   let userObject
@@ -132,6 +137,17 @@ export default function Profile() {
       revalidator.revalidate()
     }
   }, [editProfileModalActive])
+
+  const matches = useMatches()
+  const currentPath = matches[matches.length - 1].pathname
+  console.log('currentPath', currentPath)
+
+  // List of paths that should not use the ProfileLayout
+  const excludedPaths = ['/app/profile/create']
+
+  if (excludedPaths.includes(currentPath)) {
+    return <Outlet />
+  }
 
   return (
     <NestedLayout outlet={Outlet}>
