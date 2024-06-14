@@ -1,3 +1,4 @@
+/* eslint-disable  @typescript-eslint/no-explicit-any */
 import { useQuery, gql } from '@apollo/client';
 import {
   Label

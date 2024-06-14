@@ -10,7 +10,7 @@
   "types": "src/index.d.ts",
   "scripts": {
     "lint:fix": "pnpm lint --fix",
-    "generate": "node ./scripts/generate.js"
+    "generate": "node ./scripts/generate.mjs"
   },
   "files": [
     "dist/**/*",
