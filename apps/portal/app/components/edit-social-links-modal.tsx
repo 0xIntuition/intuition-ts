@@ -48,7 +48,7 @@ export default function EditSocialLinksModal({
                   Verified Links
                 </span>
               </AccordionTrigger>
-              <AccordionContent>
+              <AccordionContent className="border-0">
                 <PrivyVerifiedLinks privyUser={privyUser} />
               </AccordionContent>
             </AccordionItem>
