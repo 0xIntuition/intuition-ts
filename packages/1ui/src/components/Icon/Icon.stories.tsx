@@ -81,6 +81,13 @@ const iconOptions = [
   'wallet',
   'wreath',
   'fingerprint',
+  'x',
+  'discord',
+  'lens',
+  'farcaster',
+  'calendly',
+  'medium',
+  'github',
 ]
 
 const meta: Meta<typeof Icon> = {
