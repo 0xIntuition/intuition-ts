@@ -1,0 +1,36 @@
+import { Canvas, Controls, Meta, Source, Title } from '@storybook/blocks'
+
+import * as Stories from './SocialLinks.stories'
+
+<Meta of={Stories} />
+
+<Title />
+
+#### Displays a user's social media connections.
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { 
+  SocialLinks
+  SocialLinksBadge,
+  SocialLinksBadges,
+  SocialLinksButton, 
+} from '@0xintuition/1ui'
+
+<SocialLinks>
+  <SocialLinksBadges>
+    <SocialLinksBadge isVerified platform="discord" username="@superdave" />
+    <SocialLinksBadge isVerified platform="x" username="@superdave" />
+    <SocialLinksBadge platform="farcaster" username="@superdave" />
+    <SocialLinksBadge platform="lens" username="@superdave" />
+    <SocialLinksBadge isVerified platform="calendly" username="@superdave" />
+    <SocialLinksBadge platform="github" username="@superdave" />
+    <SocialLinksBadge platform="medium" username="@superdave" />
+  </SocialLinksBadges>
+  <SocialLinksButton />
+</SocialLinks>
+`} />
+
+<Canvas of={Stories.BasicUsage} sourceState="none" />

@@ -7,7 +7,7 @@ import { Loader2Icon } from 'lucide-react'
 import { cn } from '../../styles'
 
 const buttonVariants = cva(
-  'flex items-center gap-2 text-sm font-medium border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted',
+  'flex justify-center items-center gap-2 text-sm font-medium border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted',
   {
     variants: {
       variant: {
