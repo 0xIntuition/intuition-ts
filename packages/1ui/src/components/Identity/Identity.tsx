@@ -36,7 +36,7 @@ export const identityVariants = cva(
         [IdentitySize.Xl]: 'text-2xl [&>span]:h-10 [&>span]:w-10',
       },
       disabled: {
-        true: 'opacity-50 cursor-not-allowed',
+        true: 'disabled:bg-muted disabled:text-muted-foreground disabled:border-muted cursor-not-allowed',
         false: '',
       },
     },
@@ -47,6 +47,7 @@ export const identityVariants = cva(
     },
   },
 )
+
 export interface IdentityProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof identityVariants> {
@@ -59,13 +60,13 @@ const Identity = ({
   imgSrc,
   variant,
   size,
-  children,
   disabled,
+  children,
   ...props
 }: IdentityProps) => {
   return (
     <button
-      className={cn(identityVariants({ variant, size }), className)}
+      className={cn(identityVariants({ variant, size, disabled }), className)}
       disabled={disabled}
       {...props}
     >
