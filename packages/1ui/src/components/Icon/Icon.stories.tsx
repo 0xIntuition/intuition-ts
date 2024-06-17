@@ -87,6 +87,7 @@ const iconOptions = [
   'farcaster',
   'calendly',
   'medium',
+  'github',
 ]
 
 const meta: Meta<typeof Icon> = {

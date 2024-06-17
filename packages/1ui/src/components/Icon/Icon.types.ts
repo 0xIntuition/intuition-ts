@@ -80,3 +80,4 @@ export type IconName =
   | 'farcaster'
   | 'calendly'
   | 'medium'
+  | 'github'
