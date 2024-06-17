@@ -1,0 +1,34 @@
+import { Canvas, Controls, Meta, Source, Title } from '@storybook/blocks'
+
+import * as Stories from './Tags.stories'
+
+<Meta of={Stories} />
+
+<Title />
+
+#### Displays a user's tags.
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { Tags, TagsBadge, TagsBadges, TagsButton } from '@0xintuition/1ui'
+
+<Tags>
+  <TagsBadges numberOfTags={32}>
+    <TagsBadge label="keyboard" value={192} />
+    <TagsBadge label="ergonomic" value={168} />
+    <TagsBadge label="wireless" value={143} />
+    <TagsBadge label="gaming" value={132} />
+    <TagsBadge label="mechanical" value={128} />
+    <TagsBadge label="tech" value={122} />
+    <TagsBadge label="innovation" value={118} />
+    <TagsBadge label="typing" value={111} />
+    <TagsBadge label="quality" value={98} />
+    <TagsBadge label="brand" value={94} />
+  </TagsBadges>
+  <TagsButton onClick={() => doSomething()} />
+</Tags>
+`} />
+
+<Canvas of={Stories.BasicUsage} sourceState="none" />
