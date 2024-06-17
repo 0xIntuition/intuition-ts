@@ -1,0 +1,27 @@
+import { Canvas, Controls, Meta, Source, Title } from '@storybook/blocks'
+
+import { Claim } from '..'
+
+import * as Stories from './Claim.stories'
+
+<Meta of={Stories} />
+
+<Title />
+
+#### To display a claim with subject, predicate, and object
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { Claim } from '@0xintuition/1ui'
+
+<Claim subject="0x1234" predicate="is" object="cool" />` } />
+
+<Canvas of={Stories.BasicUsage} sourceState="none" />
+
+## Properties
+
+<Controls />
+
+## Variants
