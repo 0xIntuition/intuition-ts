@@ -23,7 +23,7 @@ enum EventType {
 type Atom @entity {
   id: ID!
   creator: Account!
-  wallet: Bytes!
+  wallet: Account!
   uri: String!
   data: String!
 
@@ -58,6 +58,7 @@ type Account @entity {
   label: String
   image: String
   atom: Atom
+  type: AccountType!
   createdAtoms: [Atom!]! @derivedFrom(field: "creator")
   createdTriples: [Triple!]! @derivedFrom(field: "creator")
   feeTransfers: [FeeTransfer!]! @derivedFrom(field: "sender")
@@ -65,6 +66,12 @@ type Account @entity {
   redemptions: [Redemption!]! @derivedFrom(field: "sender")
   positions: [Position!]! @derivedFrom(field: "account")
   signals: [Signal!]! @derivedFrom(field: "account")
+}
+
+enum AccountType {
+  Default
+  AtomWallet
+  ProtocolVault
 }
 
 type Triple @entity {
@@ -166,7 +173,7 @@ type Deposit @entity(immutable: true) {
 type FeeTransfer @entity(immutable: true) {
   id: Bytes!
   sender: Account! 
-  protocolVault: Bytes! 
+  receiver: Account! 
   amount: BigInt! 
   blockNumber: BigInt!
   blockTimestamp: BigInt!

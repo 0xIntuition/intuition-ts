@@ -27,7 +27,18 @@ export function handleAtomCreated(event: AtomCreated): void {
   if (account === null) {
     account = new Account(event.params.creator.toHexString())
     account.label = account.id
+    account.type = "Default"
   }
+
+  let wallet = Account.load(event.params.atomWallet.toHexString())
+  if (wallet === null) {
+    wallet = new Account(event.params.atomWallet.toHexString())
+  }
+
+  wallet.type = "AtomWallet"
+  wallet.atom = atom.id
+  wallet.label = wallet.id
+  wallet.save()
 
   let vault = Vault.load(event.params.vaultID.toString())
   if (vault === null) {
@@ -43,7 +54,7 @@ export function handleAtomCreated(event: AtomCreated): void {
   atom.signals = []
 
   atom.creator = account.id
-  atom.wallet = event.params.atomWallet
+  atom.wallet = wallet.id
   atom.uri = event.params.atomData.toString()
 
   parseAtomData(atom)
@@ -85,6 +96,7 @@ export function handleTripleCreated(event: TripleCreated): void {
   if (account === null) {
     account = new Account(event.params.creator.toHexString())
     account.label = account.id
+    account.type = "Default"
   }
 
   let vault = Vault.load(event.params.vaultID.toString())
@@ -166,6 +178,7 @@ export function handleDeposited(event: Deposited): void {
   if (sender === null) {
     sender = new Account(event.params.sender.toHexString())
     sender.label = sender.id
+    sender.type = "Default"
     sender.save()
   }
 
@@ -173,6 +186,7 @@ export function handleDeposited(event: Deposited): void {
   if (receiver === null) {
     receiver = new Account(event.params.receiver.toHexString())
     receiver.label = receiver.id
+    receiver.type = "Default"
     receiver.save()
   }
 
@@ -231,11 +245,20 @@ export function handleFeesTransferred(event: FeesTransferred): void {
   if (account === null) {
     account = new Account(event.params.sender.toHexString())
     account.label = account.id
+    account.type = "Default"
     account.save()
   }
 
+  let receiver = Account.load(event.params.protocolVault.toHexString())
+  if (receiver === null) {
+    receiver = new Account(event.params.protocolVault.toHexString())
+    receiver.label = "Protocol vault"
+    receiver.type = "ProtocolVault"
+    receiver.save()
+  }
+
   feeTransfer.sender = account.id
-  feeTransfer.protocolVault = event.params.protocolVault
+  feeTransfer.receiver = receiver.id
   feeTransfer.amount = event.params.amount
 
   feeTransfer.blockNumber = event.block.number
@@ -265,6 +288,7 @@ export function handleRedeemed(event: Redeemed): void {
   if (sender === null) {
     sender = new Account(event.params.sender.toHexString())
     sender.label = sender.id
+    sender.type = "Default"
     sender.save()
   }
 
@@ -272,6 +296,7 @@ export function handleRedeemed(event: Redeemed): void {
   if (receiver === null) {
     receiver = new Account(event.params.receiver.toHexString())
     receiver.label = receiver.id
+    receiver.type = "Default"
     receiver.save()
   }
 
