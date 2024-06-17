@@ -10,19 +10,19 @@ const meta: Meta<typeof Identity> = {
   argTypes: {
     variant: {
       description: 'Variant of component',
-      options: IdentityVariant,
+      options: Object.values(IdentityVariant),
       table: {
         type: { summary: 'string' },
-        defaultValue: { summary: 'default' },
+        defaultValue: { summary: IdentityVariant.Default },
       },
       control: 'select',
     },
     size: {
       description: 'Size of component',
-      options: IdentitySize,
+      options: Object.values(IdentitySize),
       table: {
         type: { summary: 'string' },
-        defaultValue: { summary: 'default' },
+        defaultValue: { summary: IdentitySize.Default },
       },
       control: 'select',
     },
@@ -35,8 +35,8 @@ type Story = StoryObj<typeof Identity>
 
 export const BasicUsage: Story = {
   args: {
-    variant: 'default',
-    size: 'default',
+    variant: IdentityVariant.Default,
+    size: IdentitySize.Default,
     children: 'identity name',
     imgSrc: '',
     disabled: false,

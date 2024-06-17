@@ -33,7 +33,7 @@ const meta: Meta<typeof Claim> = {
     },
     size: {
       description: 'Size of component',
-      options: ['sm', 'default', 'md', 'lg', 'xl'],
+      options: Object.values(IdentitySize),
       table: {
         type: { summary: 'string' },
         defaultValue: { summary: 'default' },
