@@ -2,7 +2,7 @@ import React from 'react'
 
 import { render } from '@testing-library/react'
 
-import { Identity } from './Identity'
+import { Identity, IdentitySize, IdentityVariant } from './Identity'
 
 describe('Identity', () => {
   it('should render appropriate element when given no props', () => {
@@ -10,7 +10,7 @@ describe('Identity', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <button
-          class="border border-border/20 font-medium py-1 px-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center text-base [&>span]:h-[1.375rem] [&>span]:w-[1.375rem]"
+          class="border border-border/20 font-medium py-1 px-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center text-sm [&>span]:h-4 [&>span]:w-4"
         >
           <span>
             <span
@@ -35,7 +35,7 @@ describe('Identity', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <button
-          class="border border-border/20 font-medium py-1 px-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center text-base [&>span]:h-[1.375rem] [&>span]:w-[1.375rem]"
+          class="border border-border/20 font-medium py-1 px-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center text-sm [&>span]:h-4 [&>span]:w-4 disabled:bg-muted disabled:text-muted-foreground disabled:border-muted cursor-not-allowed"
           disabled=""
         >
           <span>
@@ -59,7 +59,7 @@ describe('Identity', () => {
   it('should render appropriate element when given `user` variant', () => {
     const { asFragment } = render(
       <Identity
-        variant="user"
+        variant={IdentityVariant.User}
         imgSrc="https://m.media-amazon.com/images/M/MV5BNDhiMWYzMjgtNTRiYi00ZTA3LThlODctNDRkMDk0NzFkMWI3L2ltYWdlL2ltYWdlXkEyXkFqcGdeQXVyNTg0MTkzMzA@._V1_.jpg"
       >
         something
@@ -68,7 +68,7 @@ describe('Identity', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <button
-          class="border border-border/20 font-medium py-1 px-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center rounded-full [&>span]:rounded-full [&>span]:overflow-hidden text-base [&>span]:h-[1.375rem] [&>span]:w-[1.375rem]"
+          class="border border-border/20 font-medium py-1 px-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center rounded-full [&>span]:rounded-full [&>span]:overflow-hidden text-sm [&>span]:h-4 [&>span]:w-4"
         >
           <span>
             <img
@@ -83,11 +83,13 @@ describe('Identity', () => {
     `)
   })
   it('should render appropriate element when given `sm` size', () => {
-    const { asFragment } = render(<Identity size="sm">something</Identity>)
+    const { asFragment } = render(
+      <Identity size={IdentitySize.Sm}>something</Identity>,
+    )
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <button
-          class="border border-border/20 font-medium py-1 px-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center text-sm [&>span]:h-4 [&>span]:w-4"
+          class="border border-border/20 font-medium py-1 px-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center text-base [&>span]:h-[1.375rem] [&>span]:w-[1.375rem]"
         >
           <span>
             <span
@@ -108,7 +110,9 @@ describe('Identity', () => {
     `)
   })
   it('should render appropriate element when given `md` size', () => {
-    const { asFragment } = render(<Identity size="md">something</Identity>)
+    const { asFragment } = render(
+      <Identity size={IdentitySize.Md}>something</Identity>,
+    )
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <button
@@ -133,7 +137,9 @@ describe('Identity', () => {
     `)
   })
   it('should render appropriate element when given `lg` size', () => {
-    const { asFragment } = render(<Identity size="lg">something</Identity>)
+    const { asFragment } = render(
+      <Identity size={IdentitySize.Lg}>something</Identity>,
+    )
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <button
@@ -158,7 +164,9 @@ describe('Identity', () => {
     `)
   })
   it('should render appropriate element when given `xl` size', () => {
-    const { asFragment } = render(<Identity size="xl">something</Identity>)
+    const { asFragment } = render(
+      <Identity size={IdentitySize.Xl}>something</Identity>,
+    )
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <button
