@@ -6,51 +6,79 @@ import { Loader2Icon } from 'lucide-react'
 
 import { cn } from '../../styles'
 
+export const ButtonVariant = {
+  primary: 'primary',
+  secondary: 'secondary',
+  ghost: 'ghost',
+  text: 'text',
+  accent: 'accent',
+  warning: 'warning',
+  success: 'success',
+  destructive: 'destructive',
+  navigation: 'navigation',
+  accentOutline: 'accentOutline',
+  warningOutline: 'warningOutline',
+  successOutline: 'successOutline',
+  destructiveOutline: 'destructiveOutline',
+}
+
+export const ButtonSize = {
+  default: 'default',
+  md: 'md',
+  lg: 'lg',
+  xl: 'xl',
+  icon: 'icon',
+  iconMd: 'iconMd',
+  iconLg: 'iconLg',
+  iconXl: 'iconXl',
+}
+
 const buttonVariants = cva(
   'flex justify-center items-center gap-2 text-sm font-medium border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted',
   {
     variants: {
       variant: {
-        primary:
+        [ButtonVariant.primary]:
           'bg-primary text-primary-foreground border-primary hover:bg-primary/80 rounded-full shadow-md-subtle',
-        secondary:
+        [ButtonVariant.secondary]:
           'primary-gradient-subtle text-primary/60 border-primary/10 rounded-lg hover:text-primary disabled:from-muted disabled:to-muted shadow-md-subtle',
-        ghost:
+        [ButtonVariant.ghost]:
           'bg-gradient-to-b from-transparent to-transparent text-primary/70 border-primary/70 rounded-lg hover:text-primary hover:border-primary disabled:bg-transparent aria-selected:primary-gradient-subtle aria-selected:border-primary/10 shadow-md-subtle',
-        text: 'bg-transparent text-primary/70 border-transparent hover:text-primary disabled:border-transparent disabled:bg-transparent shadow-md-subtle',
-        accent:
+        [ButtonVariant.text]:
+          'bg-transparent text-primary/70 border-transparent hover:text-primary disabled:border-transparent disabled:bg-transparent shadow-md-subtle',
+        [ButtonVariant.accent]:
           'bg-accent text-accent-foreground border-accent rounded-full hover:bg-accent/70 hover:border-accent/30 shadow-md-subtle',
-        warning:
+        [ButtonVariant.warning]:
           'bg-warning text-warning-foreground border-warning rounded-full hover:bg-warning/70 hover:border-warning/30 shadow-md-subtle',
-        success:
+        [ButtonVariant.success]:
           'bg-success text-success-foreground border-success rounded-full hover:bg-success/70 hover:border-success/30 shadow-md-subtle',
-        destructive:
+        [ButtonVariant.destructive]:
           'bg-destructive text-destructive-foreground border-destructive rounded-full hover:bg-destructive/70 hover:border-destructive/30 shadow-md-subtle',
-        navigation:
+        [ButtonVariant.navigation]:
           'bg-transparent text-secondary-foreground/70 border-transparent rounded-lg  hover:text-secondary-foreground hover:border-border/20 aria-selected:bg-primary/10 aria-selected:text-secondary-foreground/80 disabled:text-muted-foreground',
-        accentOutline:
+        [ButtonVariant.accentOutline]:
           'bg-transparent text-accent border-accent rounded-full hover:bg-accent/30 hover:border-accent/30 shadow-md-subtle',
-        warningOutline:
+        [ButtonVariant.warningOutline]:
           'bg-transparent text-warning border-warning rounded-full hover:bg-warning/30 hover:border-warning/30 shadow-md-subtle',
-        successOutline:
+        [ButtonVariant.successOutline]:
           'bg-transparent text-success border-success rounded-full hover:bg-success/30 hover:border-success/30 shadow-md-subtle',
-        destructiveOutline:
+        [ButtonVariant.destructiveOutline]:
           'bg-transparent text-destructive border-destructive rounded-full hover:bg-destructive/30 hover:border-destructive/30 shadow-md-subtle',
       },
       size: {
-        default: 'px-3 py-1',
-        md: 'px-4 py-1.5',
-        lg: 'px-4 py-2 gap-3 text-base',
-        xl: 'px-5 py-2.5 gap-5 text-lg',
-        icon: 'p-1',
-        iconMd: 'p-1.5',
-        iconLg: 'p-2',
-        iconXl: 'p-2.5',
+        [ButtonSize.default]: 'px-3 py-1',
+        [ButtonSize.md]: 'px-4 py-1.5',
+        [ButtonSize.lg]: 'px-4 py-2 gap-3 text-base',
+        [ButtonSize.xl]: 'px-5 py-2.5 gap-5 text-lg',
+        [ButtonSize.icon]: 'p-1',
+        [ButtonSize.iconMd]: 'p-1.5',
+        [ButtonSize.iconLg]: 'p-2',
+        [ButtonSize.iconXl]: 'p-2.5',
       },
     },
     defaultVariants: {
-      variant: 'primary',
-      size: 'default',
+      variant: ButtonVariant.primary,
+      size: ButtonSize.default,
     },
   },
 )
