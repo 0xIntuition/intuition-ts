@@ -2,7 +2,7 @@ import React from 'react'
 
 import type { Meta, StoryObj } from '@storybook/react'
 
-import { Identity } from '.'
+import { Identity, IdentitySize, IdentityVariant } from '.'
 
 const meta: Meta<typeof Identity> = {
   title: 'Components/Identity',
@@ -10,7 +10,7 @@ const meta: Meta<typeof Identity> = {
   argTypes: {
     variant: {
       description: 'Variant of component',
-      options: ['default', 'user'],
+      options: IdentityVariant,
       table: {
         type: { summary: 'string' },
         defaultValue: { summary: 'default' },
@@ -19,7 +19,7 @@ const meta: Meta<typeof Identity> = {
     },
     size: {
       description: 'Size of component',
-      options: ['sm', 'default', 'md', 'lg', 'xl'],
+      options: IdentitySize,
       table: {
         type: { summary: 'string' },
         defaultValue: { summary: 'default' },
@@ -47,7 +47,7 @@ export const BasicUsage: Story = {
 export const User: Story = {
   render: () => (
     <Identity
-      variant="user"
+      variant={IdentityVariant.User}
       imgSrc="https://m.media-amazon.com/images/M/MV5BNDhiMWYzMjgtNTRiYi00ZTA3LThlODctNDRkMDk0NzFkMWI3L2ltYWdlL2ltYWdlXkEyXkFqcGdeQXVyNTg0MTkzMzA@._V1_.jpg"
     >
       super dave

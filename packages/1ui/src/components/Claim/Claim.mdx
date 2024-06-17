@@ -16,12 +16,35 @@ import * as Stories from './Claim.stories'
   code={`
 import { Claim } from '@0xintuition/1ui'
 
-<Claim subject="0x1234" predicate="is" object="cool" />` } />
+<Claim
+  size="md"
+  subject={{
+    variant: 'user',
+    label: 'Alice',
+    imgSrc:
+      'https://m.media-amazon.com/images/M/MV5BNDhiMWYzMjgtNTRiYi00ZTA3LThlODctNDRkMDk0NzFkMWI3L2ltYWdlL2ltYWdlXkEyXkFqcGdeQXVyNTg0MTkzMzA@._V1_.jpg',
+  }}
+  predicate={{ label: 'likes' }}
+  object={{ label: 'pizza' }}
+/>
+`} />
 
-<Canvas of={Stories.BasicUsage} sourceState="none" />
+<Canvas of={Stories.ClaimWithUser} sourceState="none" />
 
 ## Properties
 
 <Controls />
 
 ## Variants
+
+With the `default` variant of `Identity`
+
+<Canvas>
+  <Stories.BasicUsage />
+</Canvas>
+
+With the `user` variant of `Identity`
+
+<Canvas>
+  <Stories.ClaimWithUser />
+</Canvas>

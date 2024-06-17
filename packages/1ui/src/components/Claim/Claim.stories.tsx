@@ -3,6 +3,7 @@ import React from 'react'
 
 // Import Storybook meta and StoryObj type
 import type { Meta, StoryObj } from '@storybook/react'
+import { IdentitySize, IdentityVariant } from 'components/Identity'
 
 // Import your actual component
 import { Claim } from './Claim'
@@ -30,15 +31,6 @@ const meta: Meta<typeof Claim> = {
         type: { summary: 'string' },
       },
     },
-    variant: {
-      description: 'Variant of component',
-      options: ['default', 'user'],
-      table: {
-        type: { summary: 'string' },
-        defaultValue: { summary: 'default' },
-      },
-      control: 'select',
-    },
     size: {
       description: 'Size of component',
       options: ['sm', 'default', 'md', 'lg', 'xl'],
@@ -56,14 +48,48 @@ export default meta
 // Define types for your stories
 type Story = StoryObj<typeof Claim>
 
-// Example story for the default state
+// Example story for the default variant
 export const BasicUsage: Story = {
   args: {
-    subject: '0xintuition',
-    predicate: 'is really',
-    object: 'cool',
-    variant: 'default',
-    size: 'default',
+    size: IdentitySize.Md,
+    disabled: false,
+    subject: {
+      label: '0xintution',
+    },
+    predicate: {
+      label: 'is really',
+    },
+    object: {
+      label: 'cool',
+    },
   },
-  render: (args) => <Claim {...args} />,
+  render: (args) => (
+    <div className="w-[500px]">
+      <Claim {...args} />
+    </div>
+  ),
+}
+
+// Example story for the User variant
+export const ClaimWithUser: Story = {
+  args: {
+    size: IdentitySize.Md,
+    subject: {
+      variant: IdentityVariant.User,
+      label: 'Alice',
+      imgSrc:
+        'https://m.media-amazon.com/images/M/MV5BNDhiMWYzMjgtNTRiYi00ZTA3LThlODctNDRkMDk0NzFkMWI3L2ltYWdlL2ltYWdlXkEyXkFqcGdeQXVyNTg0MTkzMzA@._V1_.jpg',
+    },
+    predicate: {
+      label: 'likes',
+    },
+    object: {
+      label: 'pizza',
+    },
+  },
+  render: (args) => (
+    <div className="w-[500px]">
+      <Claim {...args} />
+    </div>
+  ),
 }

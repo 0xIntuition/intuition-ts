@@ -1,39 +1,62 @@
-import * as React from 'react'
-
-import { type VariantProps } from 'class-variance-authority'
-import { Identity, identityVariants } from 'components/Identity'
+import { Identity, IdentitySize, IdentityVariant } from 'components/Identity'
 import { Separator } from 'components/Separator'
 
-interface ClaimElement {
-  label: string
-  variant?: VariantProps<typeof identityVariants>
-}
-
 export interface ClaimProps {
-  subject: ClaimElement
-  predicate: ClaimElement
-  object: ClaimElement
+  size: IdentitySize
+  disabled?: boolean
+  subject: {
+    variant?: IdentityVariant
+    label: string
+    imgSrc?: string
+  }
+  predicate: {
+    variant?: IdentityVariant
+    label: string
+    imgSrc?: string
+  }
+  object: {
+    variant?: IdentityVariant
+    label: string
+    imgSrc?: string
+  }
 }
 
-const Claim = ({ subject, predicate, object, ...props }: ClaimProps) => {
-  const elements = [subject, predicate, object]
+export const Claim = ({ ...props }: ClaimProps) => {
+  const { subject, predicate, object, disabled, size } = props
 
   return (
-    <div className="flex space-between items-center group">
-      {elements.map((element, index) => (
-        <React.Fragment key={index}>
-          <Identity
-            {...element.variant}
-            {...props}
-            className="group-hover:border-primary group-hover:bg-primary/20"
-          >
-            {element.label}
-          </Identity>
-          {index < elements.length - 1 && <Separator />}
-        </React.Fragment>
-      ))}
+    <div className="flex items-center w-full max-w-full group">
+      <Identity
+        variant={subject.variant}
+        size={size}
+        imgSrc={subject.imgSrc}
+        disabled={disabled}
+        className="group-hover:border-primary group-hover:bg-primary/20"
+      >
+        {subject.label}
+      </Identity>
+      <Separator className="w-8" />
+
+      <Identity
+        variant={predicate.variant}
+        size={size}
+        imgSrc={predicate.imgSrc}
+        disabled={disabled}
+        className="group-hover:border-primary group-hover:bg-primary/20"
+      >
+        {predicate.label}
+      </Identity>
+      <Separator className="w-8" />
+
+      <Identity
+        variant={object.variant}
+        size={size}
+        imgSrc={object.imgSrc}
+        disabled={disabled}
+        className="group-hover:border-primary group-hover:bg-primary/20"
+      >
+        {object.label}
+      </Identity>
     </div>
   )
 }
-
-export { Claim }
