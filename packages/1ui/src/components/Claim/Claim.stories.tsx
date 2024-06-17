@@ -3,7 +3,7 @@ import React from 'react'
 
 // Import Storybook meta and StoryObj type
 import type { Meta, StoryObj } from '@storybook/react'
-import { IdentitySize, IdentityVariant } from 'components/Identity'
+import { IdentitySize } from 'components/Identity'
 
 // Import your actual component
 import { Claim } from './Claim'
@@ -51,7 +51,7 @@ type Story = StoryObj<typeof Claim>
 // Example story for the default variant
 export const BasicUsage: Story = {
   args: {
-    size: IdentitySize.Md,
+    size: 'md',
     disabled: false,
     subject: {
       label: '0xintution',
@@ -75,9 +75,9 @@ export const User: Story = {
   render: () => (
     <div className="w-[500px]">
       <Claim
-        size={IdentitySize.Md}
+        size="md"
         subject={{
-          variant: IdentityVariant.User,
+          variant: 'user',
           label: 'Alice',
           imgSrc:
             'https://m.media-amazon.com/images/M/MV5BNDhiMWYzMjgtNTRiYi00ZTA3LThlODctNDRkMDk0NzFkMWI3L2ltYWdlL2ltYWdlXkEyXkFqcGdeQXVyNTg0MTkzMzA@._V1_.jpg',

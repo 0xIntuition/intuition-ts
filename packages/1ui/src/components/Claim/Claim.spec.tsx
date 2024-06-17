@@ -1,22 +1,21 @@
 import React from 'react'
 
 import { render } from '@testing-library/react'
-import { IdentitySize, IdentityVariant } from 'components/Identity'
 
 import { Claim, ClaimProps } from './Claim'
 
 describe('Claim', () => {
   const defaultProps: ClaimProps = {
-    size: IdentitySize.Md,
+    size: 'md',
     subject: {
       label: 'Alice',
-      variant: IdentityVariant.User,
+      variant: 'user',
       imgSrc:
         'https://m.media-amazon.com/images/M/MV5BNDhiMWYzMjgtNTRiYi00ZTA3LThlODctNDRkMDk0NzFkMWI3L2ltYWdlL2ltYWdlXkEyXkFqcGdeQXVyNTg0MTkzMzA@._V1_.jpg',
     },
     predicate: {
       label: 'likes',
-      variant: IdentityVariant.Default,
+      variant: 'default',
     },
     object: {
       label: 'pizza',
@@ -168,7 +167,7 @@ describe('Claim', () => {
 
   it('should render with different sizes', () => {
     const { asFragment: smFragment } = render(
-      <Claim {...defaultProps} size={IdentitySize.Sm} />,
+      <Claim {...defaultProps} size="sm" />,
     )
     expect(smFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
@@ -238,7 +237,7 @@ describe('Claim', () => {
     `)
 
     const { asFragment: lgFragment } = render(
-      <Claim {...defaultProps} size={IdentitySize.Lg} />,
+      <Claim {...defaultProps} size="lg" />,
     )
     expect(lgFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>

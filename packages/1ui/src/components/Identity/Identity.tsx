@@ -5,17 +5,17 @@ import { cva, type VariantProps } from 'class-variance-authority'
 import { Icon } from '..'
 import { cn } from '../../styles'
 
-export enum IdentitySize {
-  Sm = 'sm',
-  Default = 'default',
-  Md = 'md',
-  Lg = 'lg',
-  Xl = 'xl',
+export const IdentitySize = {
+  default: 'default',
+  sm: 'sm',
+  md: 'md',
+  lg: 'lg',
+  xl: 'xl',
 }
 
-export enum IdentityVariant {
-  Default = 'default',
-  User = 'user',
+export const IdentityVariant = {
+  default: 'default',
+  user: 'user',
 }
 
 export const identityVariants = cva(
@@ -23,17 +23,17 @@ export const identityVariants = cva(
   {
     variants: {
       variant: {
-        [IdentityVariant.Default]: '',
-        [IdentityVariant.User]:
+        [IdentityVariant.default]: '',
+        [IdentityVariant.user]:
           'rounded-full [&>span]:rounded-full [&>span]:overflow-hidden',
       },
       size: {
-        [IdentitySize.Default]: 'text-sm [&>span]:h-4 [&>span]:w-4',
-        [IdentitySize.Sm]:
+        [IdentitySize.default]: 'text-sm [&>span]:h-4 [&>span]:w-4',
+        [IdentitySize.sm]:
           'text-base [&>span]:h-[1.375rem] [&>span]:w-[1.375rem]',
-        [IdentitySize.Md]: 'text-lg [&>span]:h-6 [&>span]:w-6',
-        [IdentitySize.Lg]: 'text-xl [&>span]:h-8 [&>span]:w-8',
-        [IdentitySize.Xl]: 'text-2xl [&>span]:h-10 [&>span]:w-10',
+        [IdentitySize.md]: 'text-lg [&>span]:h-6 [&>span]:w-6',
+        [IdentitySize.lg]: 'text-xl [&>span]:h-8 [&>span]:w-8',
+        [IdentitySize.xl]: 'text-2xl [&>span]:h-10 [&>span]:w-10',
       },
       disabled: {
         true: 'disabled:bg-muted disabled:text-muted-foreground disabled:border-muted cursor-not-allowed',
@@ -41,8 +41,8 @@ export const identityVariants = cva(
       },
     },
     defaultVariants: {
-      variant: IdentityVariant.Default,
-      size: IdentitySize.Default,
+      variant: IdentityVariant.default,
+      size: IdentitySize.default,
       disabled: false,
     },
   },

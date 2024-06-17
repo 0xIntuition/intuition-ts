@@ -13,7 +13,7 @@ const meta: Meta<typeof Identity> = {
       options: Object.values(IdentityVariant),
       table: {
         type: { summary: 'string' },
-        defaultValue: { summary: IdentityVariant.Default },
+        defaultValue: { summary: 'default' },
       },
       control: 'select',
     },
@@ -22,7 +22,7 @@ const meta: Meta<typeof Identity> = {
       options: Object.values(IdentitySize),
       table: {
         type: { summary: 'string' },
-        defaultValue: { summary: IdentitySize.Default },
+        defaultValue: { summary: 'default' },
       },
       control: 'select',
     },
@@ -35,8 +35,8 @@ type Story = StoryObj<typeof Identity>
 
 export const BasicUsage: Story = {
   args: {
-    variant: IdentityVariant.Default,
-    size: IdentitySize.Default,
+    variant: 'default',
+    size: 'default',
     children: 'identity name',
     imgSrc: '',
     disabled: false,
@@ -47,7 +47,7 @@ export const BasicUsage: Story = {
 export const User: Story = {
   render: () => (
     <Identity
-      variant={IdentityVariant.User}
+      variant="user"
       imgSrc="https://m.media-amazon.com/images/M/MV5BNDhiMWYzMjgtNTRiYi00ZTA3LThlODctNDRkMDk0NzFkMWI3L2ltYWdlL2ltYWdlXkEyXkFqcGdeQXVyNTg0MTkzMzA@._V1_.jpg"
     >
       super dave
