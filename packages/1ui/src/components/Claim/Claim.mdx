@@ -19,17 +19,15 @@ import { Claim } from '@0xintuition/1ui'
 <Claim
   size="md"
   subject={{
-    variant: 'user',
-    label: 'Alice',
-    imgSrc:
-      'https://m.media-amazon.com/images/M/MV5BNDhiMWYzMjgtNTRiYi00ZTA3LThlODctNDRkMDk0NzFkMWI3L2ltYWdlL2ltYWdlXkEyXkFqcGdeQXVyNTg0MTkzMzA@._V1_.jpg',
+    variant: 'default',
+    label: '0xintuition',
   }}
-  predicate={{ label: 'likes' }}
-  object={{ label: 'pizza' }}
+  predicate={{ label: 'is really' }}
+  object={{ label: 'cool' }}
 />
 `} />
 
-<Canvas of={Stories.ClaimWithUser} sourceState="none" />
+<Canvas of={Stories.BasicUsage} sourceState="none" />
 
 ## Properties
 
@@ -37,14 +35,27 @@ import { Claim } from '@0xintuition/1ui'
 
 ## Variants
 
-With the `default` variant of `Identity`
-
-<Canvas>
-  <Stories.BasicUsage />
-</Canvas>
+### User
 
 With the `user` variant of `Identity`
 
-<Canvas>
-  <Stories.ClaimWithUser />
-</Canvas>
+<Source 
+dark
+language="tsx"
+code={`
+import { Claim } from '@0xintuition/1ui'
+
+<Claim
+  size="md"
+  subject={{
+    variant: 'user',
+    label: 'Alice',
+    imgSrc: 'https://m.media-amazon.com/images/M/MV5BNDhiMWYzMjgtNTRiYi00ZTA3LThlODctNDRkMDk0NzFkMWI3L2ltYWdlL2ltYWdlXkEyXkFqcGdeQXVyNTg0MTkzMzA@._V1_.jpg',
+  }}
+  predicate={{ label: 'likes' }}
+  object={{ label: 'pizza' }}
+
+/>
+`} />
+
+<Canvas of={Stories.User} sourceState="none" />

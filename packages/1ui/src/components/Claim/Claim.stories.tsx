@@ -71,25 +71,24 @@ export const BasicUsage: Story = {
 }
 
 // Example story for the User variant
-export const ClaimWithUser: Story = {
-  args: {
-    size: IdentitySize.Md,
-    subject: {
-      variant: IdentityVariant.User,
-      label: 'Alice',
-      imgSrc:
-        'https://m.media-amazon.com/images/M/MV5BNDhiMWYzMjgtNTRiYi00ZTA3LThlODctNDRkMDk0NzFkMWI3L2ltYWdlL2ltYWdlXkEyXkFqcGdeQXVyNTg0MTkzMzA@._V1_.jpg',
-    },
-    predicate: {
-      label: 'likes',
-    },
-    object: {
-      label: 'pizza',
-    },
-  },
-  render: (args) => (
+export const User: Story = {
+  render: () => (
     <div className="w-[500px]">
-      <Claim {...args} />
+      <Claim
+        size={IdentitySize.Md}
+        subject={{
+          variant: IdentityVariant.User,
+          label: 'Alice',
+          imgSrc:
+            'https://m.media-amazon.com/images/M/MV5BNDhiMWYzMjgtNTRiYi00ZTA3LThlODctNDRkMDk0NzFkMWI3L2ltYWdlL2ltYWdlXkEyXkFqcGdeQXVyNTg0MTkzMzA@._V1_.jpg',
+        }}
+        predicate={{
+          label: 'likes',
+        }}
+        object={{
+          label: 'pizza',
+        }}
+      />
     </div>
   ),
 }
