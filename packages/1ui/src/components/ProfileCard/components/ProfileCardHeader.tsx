@@ -24,11 +24,7 @@ const ProfileCardHeader = ({
         <Text variant="headline" weight="medium" className="text-primary">
           {name}
         </Text>
-        <Text
-          variant="body"
-          weight="medium"
-          className="text-secondary-foreground/70"
-        >
+        <Text variant="body" weight="medium" className="text-muted-foreground">
           {formatWalletAddress(walletAddress)}
         </Text>
       </div>
