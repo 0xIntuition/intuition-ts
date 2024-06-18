@@ -69,15 +69,15 @@ type Story = StoryObj<typeof ProfileCard>
 export const BasicUsage: Story = {
   args: {
     type: 'user',
-    avatarSrc: 'https://example.com/avatar.jpg',
+    avatarSrc: 'https://avatars.githubusercontent.com/u/94311139?s=200&v=4"',
     name: 'John Doe',
     walletAddress: '0x1234567890abcdef1234567890abcdef12345678',
     stats: {
       numberOfFollowers: 123,
       numberOfFollowing: 45,
-      points: 67,
+      points: 671234,
     },
-    bio: 'A short bio about John Doe',
+    bio: 'John Doe is a blockchain enthusiast. He loves to learn new things and share his knowledge with others. He is also a contributor to various open-source projects.',
   },
   render: (args: ProfileCardProps) => (
     <div className="w-[500px]">
@@ -93,37 +93,17 @@ export const BasicUsage: Story = {
   ),
 }
 
-export const UserProfile: Story = {
-  args: {
-    type: 'user',
-    avatarSrc: 'https://example.com/avatar.jpg',
-    name: 'Alice',
-    walletAddress: 'someperson.eth',
-    stats: {
-      numberOfFollowers: 100,
-      numberOfFollowing: 50,
-      points: 200,
-    },
-    bio: 'Alice is a blockchain enthusiast.',
-  },
-  render: (args: ProfileCardProps) => (
-    <div className="w-[500px]">
-      <ProfileCard {...args} />
-    </div>
-  ),
-}
-
 export const EntityProfile: Story = {
   args: {
     type: 'entity',
-    avatarSrc: 'https://example.com/avatar.jpg',
+    avatarSrc: 'https://avatars.githubusercontent.com/u/94311139?s=200&v=4"',
     name: 'Blockchain Corp',
     walletAddress: '0x1234567890abcdef1234567890abcdef12345678',
     stats: {
       numberOfFollowers: 300,
     },
     link: 'https://blockchaincorp.com',
-    bio: 'Blockchain Corp is a leading company in blockchain technology.',
+    bio: 'Blockchain Corp is a leading company in blockchain technology. Visit our website for more information about how you can benefit from our services.',
   },
   render: (args: ProfileCardProps) => (
     <div className="w-[500px]">

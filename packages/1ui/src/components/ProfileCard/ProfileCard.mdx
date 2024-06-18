@@ -22,10 +22,10 @@ import { ProfileCard } from '@0xintuition/1ui'
   stats={{
     numberOfFollowers: 123,
     numberOfFollowing: 45,
-    points: 67,
+    points: 671234,
   }}
   link="https://example.com"
-  bio="A short bio about John Doe"
+  bio="John Doe is a blockchain enthusiast. He loves to learn new things and share his knowledge with others. He is also a contributor to various open-source projects."
 >
   <Button
     variant="accent"
@@ -44,29 +44,6 @@ import { ProfileCard } from '@0xintuition/1ui'
 
 ## Variants
 
-### User Profile
-
-<Source
-  dark
-  language="tsx"
-  code={`
-<ProfileCard
-  type="user"
-  avatarSrc="https://example.com/avatar.jpg"
-  name="Alice"
-  walletAddress="someperson.eth"
-  stats={{
-    numberOfFollowers: 100,
-    numberOfFollowing: 50,
-    points: 200,
-  }}
-  bio="Alice is a blockchain enthusiast."
-/>
-`}
-/>
-
-<Canvas of={Stories.UserProfile} sourceState="none" />
-
 ### Entity Profile
 
 <Source
@@ -82,7 +59,7 @@ import { ProfileCard } from '@0xintuition/1ui'
     numberOfFollowers: 300,
   }}
   link="https://blockchaincorp.com"
-  bio="Blockchain Corp is a leading company in blockchain technology."
+  bio='Blockchain Corp is a leading company in blockchain technology. Visit our website for more information about how you can benefit from our services.'
 />
 `}
 />

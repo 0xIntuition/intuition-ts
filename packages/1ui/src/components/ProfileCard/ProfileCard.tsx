@@ -1,6 +1,8 @@
 import React from 'react'
 
-import { ProfileCardHeader } from './components'
+import { Text } from 'components/Text'
+
+import { ProfileCardHeader, ProfileCardStatItem } from './components'
 import { ProfileVariant } from './ProfileCard.utils'
 
 export type ProfileVariantType = keyof typeof ProfileVariant
@@ -31,23 +33,44 @@ const ProfileCard = ({
   return (
     <div className="flex flex-col justify-center items-start flex-grow self-stretch p-4 rounded-lg">
       <ProfileCardHeader
+        type={type}
         avatarSrc={avatarSrc}
         name={name}
         walletAddress={walletAddress}
       />
-      <p className="text-gray-400 mt-2">{bio}</p>
+      {type === ProfileVariant.user && (
+        <div className="flex justify-between items-center space-x-4 mt-2">
+          <ProfileCardStatItem
+            value={stats.numberOfFollowing ?? 0}
+            label="Following"
+          />
+          <ProfileCardStatItem
+            value={stats.numberOfFollowers}
+            label="Followers"
+          />
+          {type === 'user' && stats.points && (
+            <ProfileCardStatItem
+              value={stats.points}
+              label="Points"
+              valueClassName="text-success"
+            />
+          )}
+        </div>
+      )}
       <div className="mt-2">
-        <p className="text-gray-400">Followers: {stats.numberOfFollowers}</p>
-        {type === 'user' && stats.numberOfFollowing !== undefined && (
-          <p className="text-gray-400">Following: {stats.numberOfFollowing}</p>
-        )}
-        {type === 'user' && stats.points !== undefined && (
-          <p className="text-gray-400">Points: {stats.points}</p>
-        )}
-        {type === 'entity' && link && (
-          <a href={link} className="text-blue-500">
-            {link}
-          </a>
+        <Text variant="body" weight="medium" className="mt-4 text-primary-300">
+          {bio}
+        </Text>
+
+        {type === ProfileVariant.entity && link && (
+          <div className="mt-4">
+            <Text variant="body" className="text-muted-foreground">
+              Link
+            </Text>
+            <a href={link} className="text-primary-300">
+              {link}
+            </a>
+          </div>
         )}
       </div>
     </div>
