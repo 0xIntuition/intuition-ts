@@ -83,7 +83,9 @@ export const BasicUsage: Story = {
     <div className="w-[500px]">
       <ProfileCard {...args}>
         <Button
-          variant="accent"
+          variant="secondary"
+          size="lg"
+          className="w-full"
           onClick={() => window.open('https://example.com', '_blank')}
         >
           Follow

@@ -20,7 +20,7 @@ const ProfileCardStatItem = ({
       <Text variant="body" weight="medium" className={valueClassName}>
         {formattedValue}
       </Text>
-      <Text variant="body" className="text-foreground-muted">
+      <Text variant="body" className="text-muted-foreground">
         {label}
       </Text>
     </div>

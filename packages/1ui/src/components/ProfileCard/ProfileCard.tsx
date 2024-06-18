@@ -19,6 +19,7 @@ export interface ProfileCardProps {
   }
   link?: string
   bio?: string
+  children?: React.ReactNode
 }
 
 const ProfileCard = ({
@@ -29,9 +30,10 @@ const ProfileCard = ({
   stats,
   link,
   bio,
+  children,
 }: ProfileCardProps) => {
   return (
-    <div className="flex flex-col justify-center items-start flex-grow self-stretch p-4 rounded-lg">
+    <div className="flex flex-col justify-center items-start w-[300px] p-4 rounded-lg box-border">
       <ProfileCardHeader
         type={type}
         avatarSrc={avatarSrc}
@@ -39,7 +41,7 @@ const ProfileCard = ({
         walletAddress={walletAddress}
       />
       {type === ProfileVariant.user && (
-        <div className="flex justify-between items-center space-x-4 mt-2">
+        <div className="flex justify-between items-center space-x-4 mt-5">
           <ProfileCardStatItem
             value={stats.numberOfFollowing ?? 0}
             label="Following"
@@ -48,7 +50,7 @@ const ProfileCard = ({
             value={stats.numberOfFollowers}
             label="Followers"
           />
-          {type === 'user' && stats.points && (
+          {stats.points !== undefined && (
             <ProfileCardStatItem
               value={stats.points}
               label="Points"
@@ -57,13 +59,13 @@ const ProfileCard = ({
           )}
         </div>
       )}
-      <div className="mt-2">
-        <Text variant="body" weight="medium" className="mt-4 text-primary-300">
+      <div className="mt-5">
+        <Text variant="body" weight="medium" className="text-primary-300">
           {bio}
         </Text>
 
         {type === ProfileVariant.entity && link && (
-          <div className="mt-4">
+          <div className="mt-5">
             <Text variant="body" className="text-muted-foreground">
               Link
             </Text>
@@ -73,6 +75,7 @@ const ProfileCard = ({
           </div>
         )}
       </div>
+      {children && <div className="w-full mt-5">{children}</div>}
     </div>
   )
 }
