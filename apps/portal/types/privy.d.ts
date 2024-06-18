@@ -45,8 +45,24 @@ type UnlinkMethodNamesBySubject = 'unlinkTwitter' | 'unlinkGithub'
 type UnlinkMethodNamesByFid = 'unlinkFarcaster'
 
 export interface PrivyPlatform {
-  platformPrivyName: string
+  platformPrivyName:
+    | 'twitter'
+    | 'discord'
+    | 'lens'
+    | 'farcaster'
+    | 'calendly'
+    | 'medium'
+    | 'github'
   platformDisplayName: string
+  platformUiName:
+    | 'x'
+    | 'discord'
+    | 'lens'
+    | 'farcaster'
+    | 'calendly'
+    | 'medium'
+    | 'github'
+  platformIcon: IconName
   linkMethod: LinkMethodNames
   unlinkMethod: UnlinkMethodNamesBySubject | UnlinkMethodNamesByFid
 }

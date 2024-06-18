@@ -60,16 +60,15 @@ function EditSocialAccounts({
   privyUser: SessionUser
   handleOpenEditSocialLinksModal: () => void
 }) {
+  if (!privyUser) {
+    return null
+  }
   return (
     <div className="flex flex-col w-full gap-5 mt-5">
-      <VerifiedLinkBadges privyUser={privyUser} />
-      <Button
-        variant="secondary"
-        className="text-center justify-center w-full"
-        onClick={handleOpenEditSocialLinksModal}
-      >
-        Edit Social Links
-      </Button>
+      <VerifiedLinkBadges
+        privyUser={privyUser}
+        handleOpenEditSocialLinksModal={handleOpenEditSocialLinksModal}
+      />
     </div>
   )
 }

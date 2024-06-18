@@ -38,19 +38,25 @@ export const BLOCK_EXPLORER_URL =
 export const verifiedPlatforms: PrivyPlatform[] = [
   {
     platformPrivyName: 'twitter',
+    platformUiName: 'x',
     platformDisplayName: 'X',
+    platformIcon: 'x',
     linkMethod: 'linkTwitter',
     unlinkMethod: 'unlinkTwitter',
   },
   {
     platformPrivyName: 'github',
+    platformUiName: 'github',
     platformDisplayName: 'GitHub',
+    platformIcon: 'github',
     linkMethod: 'linkGithub',
     unlinkMethod: 'unlinkGithub',
   },
   {
     platformPrivyName: 'farcaster',
+    platformUiName: 'farcaster',
     platformDisplayName: 'Farcaster',
+    platformIcon: 'farcaster',
     linkMethod: 'linkFarcaster',
     unlinkMethod: 'unlinkFarcaster',
   },

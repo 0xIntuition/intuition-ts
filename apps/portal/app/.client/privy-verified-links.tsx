@@ -1,4 +1,11 @@
-import { Button, Icon } from '@0xintuition/1ui'
+import {
+  Button,
+  Icon,
+  IconName,
+  SocialLinks,
+  SocialLinksBadge,
+  SocialLinksButton,
+} from '@0xintuition/1ui'
 
 import { useSocialLinking } from '@lib/hooks/usePrivySocialLinking'
 import { verifiedPlatforms } from '@lib/utils/constants'
@@ -42,6 +49,7 @@ export function PrivyVerifiedLinks({ privyUser }: { privyUser: SessionUser }) {
       <VerifiedLinkItem
         key={platform.platformPrivyName}
         platformDisplayName={platform.platformDisplayName}
+        platformIcon={platform.platformIcon}
         isConnected={isConnected}
         privyUser={privyUser}
         platform={platform}
@@ -58,8 +66,15 @@ export function PrivyVerifiedLinks({ privyUser }: { privyUser: SessionUser }) {
 }
 
 interface VerifiedLinkItemProps {
-  platformDisplayName: string
-  platformIcon?: string
+  platformDisplayName:
+    | 'twitter'
+    | 'discord'
+    | 'lens'
+    | 'farcaster'
+    | 'calendly'
+    | 'medium'
+    | 'github'
+  platformIcon: IconName
   linkMethod: () => Promise<void>
   unlinkMethod: () => Promise<void>
   isConnected: boolean
@@ -77,24 +92,32 @@ export function VerifiedLinkItem({
   platform,
 }: VerifiedLinkItemProps) {
   return (
-    <div className="flex w-full justify-between gap-4 px-8">
-      {platformIcon && <img src="" alt="" />}
+    <div className="flex w-full justify-between gap-4 px-8 ">
+      <div className="flex flex-row items-center gap-3">
+        <div className="flex flex-col items-center border border-solid  border-white/10 rounded-full p-2.5">
+          <Icon name={platformIcon} className="w-4 h-4" />
+        </div>
+        {isConnected ? (
+          <span className="font-medium text-sm">
+            {(privyUser &&
+              (privyUser as SessionUser).details?.[platform.platformPrivyName]
+                ?.username) ??
+              platformDisplayName}
+          </span>
+        ) : (
+          <span>{platformDisplayName}</span>
+        )}
+      </div>
       {isConnected ? (
-        <span>
-          {(privyUser &&
-            (privyUser as SessionUser).details?.[platform.platformPrivyName]
-              ?.username) ??
-            platformDisplayName}
-        </span>
-      ) : (
-        <span>{platformDisplayName}</span>
-      )}
-      {isConnected ? (
-        <Button variant="destructive" onClick={unlinkMethod}>
+        <Button
+          variant="destructive"
+          className="py-1 px-3"
+          onClick={unlinkMethod}
+        >
           Unlink
         </Button>
       ) : (
-        <Button variant="accent" onClick={linkMethod}>
+        <Button variant="accent" className="py-1 px-3" onClick={linkMethod}>
           Link Account
         </Button>
       )}
@@ -102,40 +125,15 @@ export function VerifiedLinkItem({
   )
 }
 
-interface VerifiedLinkBadgeProps {
-  platformDisplayName: string
-  platformIcon?: string
-  isConnected: boolean
-  privyUser: SessionUser | null
-  platform: PrivyPlatform
-}
-
-export function VerifiedLinkBadge({
-  platformDisplayName,
-  platformIcon,
+export function VerifiedLinkBadges({
   privyUser,
-  platform,
-}: VerifiedLinkBadgeProps) {
+  handleOpenEditSocialLinksModal,
+}: {
+  privyUser: SessionUser
+  handleOpenEditSocialLinksModal: () => void
+}) {
   return (
-    <div
-      className="flex w-full justify-between
-    border border-solid border-white/10 rounded-xl px-2 py-1 items-center"
-    >
-      {platformIcon && <img src="" alt="" />}
-      <span className="font-normal text-sm text-foreground">
-        {(privyUser &&
-          (privyUser as SessionUser).details?.[platform.platformPrivyName]
-            ?.username) ??
-          platformDisplayName}
-      </span>
-      <Icon name="circle-check" className="text-blue-500 h-4 w-4  " />
-    </div>
-  )
-}
-
-export function VerifiedLinkBadges({ privyUser }: { privyUser: SessionUser }) {
-  return (
-    <div className="flex flex-row gap-2">
+    <SocialLinks>
       {verifiedPlatforms.map((platform) => {
         if (!privyUser) {
           return null
@@ -146,15 +144,20 @@ export function VerifiedLinkBadges({ privyUser }: { privyUser: SessionUser }) {
         )
 
         return isConnected ? (
-          <VerifiedLinkBadge
+          <SocialLinksBadge
             key={platform.platformPrivyName}
-            platformDisplayName={platform.platformDisplayName}
-            isConnected={isConnected}
-            privyUser={privyUser as SessionUser}
-            platform={platform}
+            platform={platform.platformUiName}
+            isVerified={isConnected}
+            username={
+              (privyUser &&
+                (privyUser as SessionUser).details?.[platform.platformPrivyName]
+                  ?.username) ??
+              platform.platformDisplayName
+            }
           />
         ) : null
       })}
-    </div>
+      <SocialLinksButton onClick={handleOpenEditSocialLinksModal} />
+    </SocialLinks>
   )
 }
