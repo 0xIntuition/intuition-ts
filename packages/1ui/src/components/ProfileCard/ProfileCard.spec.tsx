@@ -23,7 +23,7 @@ describe('ProfileCard', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="flex flex-col justify-center items-start w-[300px] p-4 rounded-lg box-border"
+          class="flex flex-col justify-center items-start w-[300px] rounded-lg box-border"
         >
           <div
             class="flex items-center space-x-4"
@@ -127,7 +127,7 @@ describe('ProfileCard', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="flex flex-col justify-center items-start w-[300px] p-4 rounded-lg box-border"
+          class="flex flex-col justify-center items-start w-[300px] rounded-lg box-border"
         >
           <div
             class="flex items-center space-x-4"
@@ -193,7 +193,7 @@ describe('ProfileCard', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="flex flex-col justify-center items-start w-[300px] p-4 rounded-lg box-border"
+          class="flex flex-col justify-center items-start w-[300px] rounded-lg box-border"
         >
           <div
             class="flex items-center space-x-4"
@@ -276,7 +276,7 @@ describe('ProfileCard', () => {
             </p>
           </div>
           <div
-            class="w-full mt-5"
+            class="flex justify-center w-full mt-5"
           >
             <button>
               Follow

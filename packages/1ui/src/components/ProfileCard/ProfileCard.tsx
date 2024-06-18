@@ -33,7 +33,7 @@ const ProfileCard = ({
   children,
 }: ProfileCardProps) => {
   return (
-    <div className="flex flex-col justify-center items-start w-[300px] p-4 rounded-lg box-border">
+    <div className="flex flex-col justify-center items-start w-[300px] rounded-lg box-border">
       <ProfileCardHeader
         type={type}
         avatarSrc={avatarSrc}
@@ -75,7 +75,9 @@ const ProfileCard = ({
           </div>
         )}
       </div>
-      {children && <div className="w-full mt-5">{children}</div>}
+      {children && (
+        <div className="flex justify-center w-full mt-5">{children}</div>
+      )}
     </div>
   )
 }
