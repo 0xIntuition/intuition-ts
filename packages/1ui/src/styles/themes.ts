@@ -42,6 +42,10 @@ export const themes = {
     successForeground: palette.black.base,
     warning: palette.yellow[600],
     warningForeground: palette.black.base,
+    for: palette.blue[500],
+    forForeground: palette.white.base,
+    against: palette.orange[500],
+    againstForeground: palette.black.base,
   },
   dark: {
     background: palette.black.base,
@@ -72,5 +76,9 @@ export const themes = {
     successForeground: palette.black.base,
     warning: palette.yellow[600],
     warningForeground: palette.black.base,
+    for: palette.blue[500],
+    forForeground: palette.white.base,
+    against: palette.orange[500],
+    againstForeground: palette.black.base,
   },
 }
