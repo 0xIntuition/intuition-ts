@@ -122,7 +122,7 @@ describe('Tags', () => {
               94
             </div>
             <p
-              class="text-primary text-sm font-normal"
+              class="text-primary text-base font-normal"
             >
               + 32 more
             </p>
