@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import { Badge, BadgeProps, Button, Text } from '..'
+import { Badge, BadgeProps, Button, Text, TextVariant } from '..'
 import { cn } from '../../styles'
 
 export interface TagsProps extends React.HTMLAttributes<HTMLDivElement> {}
@@ -32,7 +32,7 @@ const TagsBadges = ({
       {...props}
     >
       {children}
-      <Text variant="caption">+ {numberOfTagsNotDisplayed} more</Text>
+      <Text variant={TextVariant.body}>+ {numberOfTagsNotDisplayed} more</Text>
     </div>
   )
 }

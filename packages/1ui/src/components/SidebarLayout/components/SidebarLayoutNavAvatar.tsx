@@ -7,6 +7,7 @@ import {
   Button,
   buttonVariants,
   Text,
+  TextVariant,
   Tooltip,
   TooltipContent,
   TooltipProvider,
@@ -48,7 +49,7 @@ export const SidebarLayoutNavAvatar = ({
           </Button>
         </TooltipTrigger>
         <TooltipContent side="right" sideOffset={16}>
-          <Text variant="body">{name}</Text>
+          <Text variant={TextVariant.body}>{name}</Text>
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>

@@ -7,7 +7,7 @@ import spriteSheet from './Icon.sprites.svg'
 import { IconName } from './Icon.types'
 
 export interface IconProps {
-  name: IconName
+  name: keyof typeof IconName
   className?: string
 }
 

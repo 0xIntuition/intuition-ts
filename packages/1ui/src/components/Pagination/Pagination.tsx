@@ -12,6 +12,7 @@ import {
   SelectValue,
   Text,
   TextProps,
+  TextVariant,
 } from '..'
 import { cn } from '../../styles'
 
@@ -134,7 +135,7 @@ const PaginationEllipsis = ({
     className={cn('flex w-6 h-5 items-center justify-center', className)}
     {...props}
   >
-    <Text variant="bodyLarge">...</Text>
+    <Text variant={TextVariant.bodyLarge}>...</Text>
     <span className="sr-only">More pages</span>
   </span>
 )
@@ -152,7 +153,7 @@ const PaginationPageCounter = ({
   ...props
 }: PaginationPageCounterProps) => (
   <Text
-    variant="caption"
+    variant={TextVariant.caption}
     className={cn('self-center px-4', className)}
     {...props}
   >{`Page ${currentPage} of ${totalPages}`}</Text>
@@ -166,7 +167,7 @@ const PaginationRowSelection = ({ className, ...props }: SelectProps) => (
       className,
     )}
   >
-    <Text variant="caption">Rows per page</Text>
+    <Text variant={TextVariant.caption}>Rows per page</Text>
     <Select {...props}>
       <SelectTrigger className="w-max h-8 gap-2">
         <SelectValue placeholder="Select a fruit" />
@@ -195,7 +196,7 @@ const PaginationSummary = ({
   ...props
 }: PaginationSummaryProps) => (
   <Text
-    variant="caption"
+    variant={TextVariant.caption}
     className={cn('self-center', className)}
     {...props}
   >{`${totalEntries} ${label} found`}</Text>

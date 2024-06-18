@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import { Badge, BadgeProps, Button, Icon, IconName } from '..'
+import { Badge, BadgeProps, Button, Icon, IconNameType } from '..'
 import { cn } from '../../styles'
 
 export interface SocialLinksProps
@@ -50,7 +50,7 @@ const SocialLinksBadge = ({
       className={cn('flex gap-2 w-min text-sm font-normal', className)}
       {...props}
     >
-      <Icon className="h-3 w-3" name={platform as IconName} />
+      <Icon className="h-3 w-3" name={platform as IconNameType} />
       {username}
       {isVerified && (
         <Icon name="circle-check" className="h-4 w-4 text-accent" />

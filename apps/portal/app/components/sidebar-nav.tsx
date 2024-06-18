@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 
 import {
-  IconName,
+  IconNameType,
   SidebarLayout,
   SidebarLayoutContent,
   SidebarLayoutNav,
@@ -23,7 +23,7 @@ import * as blockies from 'blockies-ts'
 interface SidebarNavRoute {
   route: string
   label: string
-  iconName: IconName
+  iconName: IconNameType
 }
 
 const sidebarNavRoutes: SidebarNavRoute[] = [

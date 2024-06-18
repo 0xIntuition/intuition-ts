@@ -2,7 +2,7 @@ import * as React from 'react'
 
 import * as AccordionPrimitive from '@radix-ui/react-accordion'
 
-import { Icon } from '..'
+import { Icon, IconName } from '..'
 import { cn } from '../../styles'
 
 const Accordion = AccordionPrimitive.Root
@@ -34,7 +34,7 @@ const AccordionTrigger = React.forwardRef<
     >
       {children}
       <Icon
-        name="chevron-down-small"
+        name={IconName.chevronDownSmall as keyof typeof IconName}
         className="h-5 w-5 shrink-0 transition-transform duration-200"
       />
     </AccordionPrimitive.Trigger>

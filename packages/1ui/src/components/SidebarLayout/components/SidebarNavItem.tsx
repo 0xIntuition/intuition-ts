@@ -4,8 +4,9 @@ import {
   Button,
   buttonVariants,
   Icon,
-  IconName,
+  IconNameType,
   Text,
+  TextVariant,
   Tooltip,
   TooltipContent,
   TooltipProvider,
@@ -15,7 +16,7 @@ import { useSidebarLayoutContext } from './SidebarLayoutProvider'
 
 export interface SidebarNavItemProps
   extends VariantProps<typeof buttonVariants> {
-  iconName: IconName
+  iconName: IconNameType
   label: string
   onClick?: () => void
 }
@@ -43,7 +44,7 @@ export const SidebarNavItem = ({
           </Button>
         </TooltipTrigger>
         <TooltipContent side="right" sideOffset={16}>
-          <Text variant="body">{label}</Text>
+          <Text variant={TextVariant.body}>{label}</Text>
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>
