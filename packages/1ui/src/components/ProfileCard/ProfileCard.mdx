@@ -1,0 +1,90 @@
+import { Canvas, Controls, Meta, Source, Title } from '@storybook/blocks'
+
+import * as Stories from './ProfileCard.stories'
+
+<Meta of={Stories} />
+
+<Title />
+
+#### The ProfileCard component displays user or entity profile information with various details like followers, bio, and more.
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { ProfileCard } from '@0xintuition/1ui'
+
+<ProfileCard
+  type="user"
+  avatarSrc="path/to/avatar.jpg"
+  name="John Doe"
+  walletAddress="0x1234567890abcdef1234567890abcdef12345678"
+  stats={{
+    numberOfFollowers: 123,
+    numberOfFollowing: 45,
+    points: 67,
+  }}
+  link="https://example.com"
+  bio="A short bio about John Doe"
+>
+  <Button
+    variant="accent"
+    onClick={() => window.open('https://example.com', '_blank')}
+  >
+    Follow
+  </Button>
+</ProfileCard>
+`} />
+
+<Canvas of={Stories.BasicUsage} sourceState="none" />
+
+## Properties
+
+<Controls />
+
+## Variants
+
+### User Profile
+
+<Source
+  dark
+  language="tsx"
+  code={`
+<ProfileCard
+  type="user"
+  avatarSrc="https://example.com/avatar.jpg"
+  name="Alice"
+  walletAddress="someperson.eth"
+  stats={{
+    numberOfFollowers: 100,
+    numberOfFollowing: 50,
+    points: 200,
+  }}
+  bio="Alice is a blockchain enthusiast."
+/>
+`}
+/>
+
+<Canvas of={Stories.UserProfile} sourceState="none" />
+
+### Entity Profile
+
+<Source
+  dark
+  language="tsx"
+  code={`
+<ProfileCard
+  type="entity"
+  avatarSrc="https://example.com/avatar.jpg"
+  name="Blockchain Corp"
+  walletAddress="0x1234567890abcdef1234567890abcdef12345678"
+  stats={{
+    numberOfFollowers: 300,
+  }}
+  link="https://blockchaincorp.com"
+  bio="Blockchain Corp is a leading company in blockchain technology."
+/>
+`}
+/>
+
+<Canvas of={Stories.EntityProfile} sourceState="none" />
