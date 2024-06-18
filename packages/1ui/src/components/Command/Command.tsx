@@ -3,7 +3,7 @@ import * as React from 'react'
 import { type DialogProps } from '@radix-ui/react-dialog'
 import { Command as CommandPrimitive } from 'cmdk'
 
-import { Dialog, DialogContent, Icon } from '..'
+import { Dialog, DialogContent, Icon, IconName } from '..'
 import { cn } from '../../styles'
 
 const Command = React.forwardRef<
@@ -45,7 +45,7 @@ const CommandInput = React.forwardRef<
     cmdk-input-wrapper=""
   >
     <Icon
-      name="magnifying-glass"
+      name={IconName.magnifyingGlass}
       className="mr-2 h-4 w-4 shrink-0 opacity-50"
     />
     <CommandPrimitive.Input

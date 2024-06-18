@@ -2,7 +2,7 @@ import * as React from 'react'
 
 import { cva, type VariantProps } from 'class-variance-authority'
 
-import { Icon } from '..'
+import { Icon, IconName } from '..'
 import { cn } from '../../styles'
 
 export const IdentitySize = {
@@ -81,7 +81,7 @@ const Identity = ({
           />
         ) : (
           <span className="bg-primary/15 p-[10%] flex justify-center items-center h-full w-full">
-            <Icon name="fingerprint" className="h-full w-full" />
+            <Icon name={IconName.fingerprint} className="h-full w-full" />
           </span>
         )}
       </span>

@@ -47,7 +47,7 @@ export const BasicUsage: Story = {
 export const User: Story = {
   render: () => (
     <Identity
-      variant="user"
+      variant={'user'}
       imgSrc="https://m.media-amazon.com/images/M/MV5BNDhiMWYzMjgtNTRiYi00ZTA3LThlODctNDRkMDk0NzFkMWI3L2ltYWdlL2ltYWdlXkEyXkFqcGdeQXVyNTg0MTkzMzA@._V1_.jpg"
     >
       super dave

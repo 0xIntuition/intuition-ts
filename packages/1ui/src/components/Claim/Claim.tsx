@@ -6,7 +6,7 @@ import {
 import { Separator } from 'components/Separator'
 
 export interface ClaimProps {
-  size: keyof typeof IdentitySize | typeof IdentitySize
+  size: keyof typeof IdentitySize
   disabled?: boolean
   subject: {
     variant?: IdentityVariantType

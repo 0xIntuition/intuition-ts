@@ -4,10 +4,10 @@ import { cn } from '../../styles'
 // eslint-disable-next-line
 // @ts-ignore
 import spriteSheet from './Icon.sprites.svg'
-import { IconName } from './Icon.types'
+import { IconNameType } from './Icon.types'
 
 export interface IconProps {
-  name: keyof typeof IconName
+  name: IconNameType
   className?: string
 }
 

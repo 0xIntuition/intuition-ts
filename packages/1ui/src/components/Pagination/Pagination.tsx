@@ -4,6 +4,7 @@ import {
   ButtonProps,
   buttonVariants,
   Icon,
+  IconName,
   Select,
   SelectContent,
   SelectItem,
@@ -87,7 +88,7 @@ const PaginationFirst = ({
     className={className}
     {...props}
   >
-    <Icon name="chevron-double-left" className="h-5 w-5" />
+    <Icon name={IconName.chevronDoubleLeft} className="h-5 w-5" />
   </PaginationLink>
 )
 PaginationFirst.displayName = 'PaginationFirst'
@@ -97,7 +98,7 @@ const PaginationLast = ({
   ...props
 }: React.ComponentProps<typeof PaginationLink>) => (
   <PaginationLink aria-label="Go to last page" className={className} {...props}>
-    <Icon name="chevron-double-right" className="h-5 w-5" />
+    <Icon name={IconName.chevronDoubleRight} className="h-5 w-5" />
   </PaginationLink>
 )
 PaginationLast.displayName = 'PaginationLast'
@@ -111,7 +112,7 @@ const PaginationPrevious = ({
     className={className}
     {...props}
   >
-    <Icon name="chevron-left-small" className="h-5 w-5" />
+    <Icon name={IconName.chevronLeftSmall} className="h-5 w-5" />
   </PaginationLink>
 )
 PaginationPrevious.displayName = 'PaginationPrevious'
@@ -121,7 +122,7 @@ const PaginationNext = ({
   ...props
 }: React.ComponentProps<typeof PaginationLink>) => (
   <PaginationLink aria-label="Go to next page" className={className} {...props}>
-    <Icon name="chevron-right-small" className="h-5 w-5" />
+    <Icon name={IconName.chevronRightSmall} className="h-5 w-5" />
   </PaginationLink>
 )
 PaginationNext.displayName = 'PaginationNext'
