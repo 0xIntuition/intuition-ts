@@ -1,0 +1,29 @@
+import { Canvas, Controls, Meta, Source, Title } from '@storybook/blocks'
+
+import * as Stories from './StakeCard.stories'
+
+<Meta of={Stories} />
+
+<Title />
+
+#### A display card to show a user's stake position.
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { StakeCard } from '@0xintuition/1ui'
+
+<StakeCard
+  tvl="4.928 ETH"
+  holders={69}
+  onBuyClick={() => doSomething()}
+  onViewAllClick={() => doSomething()}
+/>
+`} />
+
+<Canvas of={Stories.BasicUsage} sourceState="none" />
+
+## Properties
+
+<Controls />

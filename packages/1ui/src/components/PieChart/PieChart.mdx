@@ -1,0 +1,24 @@
+import { Canvas, Controls, Meta, Source, Title } from '@storybook/blocks'
+
+import * as Stories from './PieChart.stories'
+
+<Meta of={Stories} />
+
+<Title />
+
+#### A pie chart to show percentage filled.
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { PieChart } from '@0xintuition/1ui'
+
+<PieChart percentage={50} />
+`} />
+
+<Canvas of={Stories.BasicUsage} sourceState="none" />
+
+## Properties
+
+<Controls />
