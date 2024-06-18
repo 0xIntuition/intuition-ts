@@ -1,21 +1,25 @@
-import { Identity, IdentitySize, IdentityVariant } from 'components/Identity'
+import {
+  Identity,
+  IdentitySize,
+  IdentityVariantType,
+} from 'components/Identity'
 import { Separator } from 'components/Separator'
 
 export interface ClaimProps {
   size: keyof typeof IdentitySize
   disabled?: boolean
   subject: {
-    variant?: keyof typeof IdentityVariant
+    variant?: IdentityVariantType
     label: string
     imgSrc?: string
   }
   predicate: {
-    variant?: keyof typeof IdentityVariant
+    variant?: IdentityVariantType
     label: string
     imgSrc?: string
   }
   object: {
-    variant?: keyof typeof IdentityVariant
+    variant?: IdentityVariantType
     label: string
     imgSrc?: string
   }

@@ -11,12 +11,14 @@ export const IdentitySize = {
   md: 'md',
   lg: 'lg',
   xl: 'xl',
-}
+} as const
+export type IdentitySizeType = keyof typeof IdentitySize
 
 export const IdentityVariant = {
   default: 'default',
   user: 'user',
-}
+} as const
+export type IdentityVariantType = keyof typeof IdentityVariant
 
 export const identityVariants = cva(
   'border border-border/20 font-medium py-1 px-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center',
