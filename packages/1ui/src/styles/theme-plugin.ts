@@ -33,6 +33,10 @@ export const themePlugin = plugin(
         '--success-foreground': themes.light.successForeground,
         '--warning': themes.light.warning,
         '--warning-foreground': themes.light.warningForeground,
+        '--for': themes.light.for,
+        '--for-foreground': themes.light.forForeground,
+        '--against': themes.light.against,
+        '--against-foreground': themes.light.againstForeground,
         // primary
         '--primary-50': themes.light.primary[50],
         '--primary-100': themes.light.primary[100],
@@ -75,6 +79,10 @@ export const themePlugin = plugin(
           '--success-foreground': value.successForeground,
           '--warning': value.warning,
           '--warning-foreground': value.warningForeground,
+          '--for': value.for,
+          '--for-foreground': value.forForeground,
+          '--against': value.against,
+          '--against-foreground': value.againstForeground,
           // primary
           '--primary-50': value.primary[50],
           '--primary-100': value.primary[100],
@@ -190,6 +198,14 @@ export const themePlugin = plugin(
           card: {
             DEFAULT: colorMix('card'),
             foreground: colorMix('card-foreground'),
+          },
+          for: {
+            DEFAULT: colorMix('for'),
+            foreground: colorMix('for-foreground'),
+          },
+          against: {
+            DEFAULT: colorMix('against'),
+            foreground: colorMix('against-foreground'),
           },
         },
         borderRadius: {
