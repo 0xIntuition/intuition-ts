@@ -24,9 +24,11 @@ import EditProfileModal from '@components/edit-profile-modal'
 import EditSocialLinksModal from '@components/edit-social-links-modal'
 import { NestedLayout } from '@components/nested-layout'
 import { ProfileSocialAccounts } from '@components/profile-social-accounts'
+import StakeModal from '@components/stake/stake-modal'
 import {
   editProfileModalAtom,
   editSocialLinksModalAtom,
+  stakeModalAtom,
 } from '@lib/state/store'
 import { userProfileRouteOptions } from '@lib/utils/constants'
 import logger from '@lib/utils/logger'
@@ -157,6 +159,8 @@ export default function Profile() {
     editSocialLinksModalAtom,
   )
 
+  const [stakeModalActive, setStakeModalActive] = useAtom(stakeModalAtom)
+
   const revalidator = useRevalidator()
 
   useEffect(() => {
@@ -254,6 +258,21 @@ export default function Profile() {
               onViewAllClick={() => logger('click view all')} // this will navigate to the data-about positions
             />
           </div>
+
+          <div>
+            <StakeCard
+              tvl={formatBalance(userIdentity.assets_sum, 18, 4) + ' ETH'}
+              holders={userIdentity.num_positions}
+              onBuyClick={() =>
+                setStakeModalActive((prevState) => ({
+                  ...prevState,
+                  isOpen: true,
+                }))
+              }
+              onViewAllClick={() => null}
+            />
+          </div>
+
           <EditProfileModal
             userObject={userObject}
             open={editProfileModalActive}
@@ -263,6 +282,20 @@ export default function Profile() {
             privyUser={JSON.parse(JSON.stringify(user))}
             open={editSocialLinksModalActive}
             onClose={() => setEditSocialLinksModalActive(false)}
+          />
+          <StakeModal
+            user={user}
+            contract={userIdentity.contract}
+            open={stakeModalActive.isOpen}
+            identity={userIdentity}
+            min_deposit={vaultDetails.min_deposit}
+            modalType={'identity'}
+            onClose={() => {
+              setStakeModalActive((prevState) => ({
+                ...prevState,
+                isOpen: false,
+              }))
+            }}
           />
         </>
       </div>
