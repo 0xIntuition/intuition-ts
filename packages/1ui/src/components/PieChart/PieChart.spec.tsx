@@ -17,7 +17,7 @@ describe('PieChart', () => {
             style="height: 80px; width: 80px; mask: radial-gradient(farthest-side,#0000 calc(99% - 10px),#000 calc(100% - 10px);"
           />
           <span
-            class="col-[1] row-[1] border-primary/50 rounded-full block"
+            class="col-[1] row-[1] border-muted-foreground rounded-full block"
             style="height: 80px; width: 80px; border-width: 10px;"
           />
         </div>

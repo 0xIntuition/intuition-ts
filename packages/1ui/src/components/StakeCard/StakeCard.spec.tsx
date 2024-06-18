@@ -29,7 +29,7 @@ describe('StakeCard', () => {
           >
             <div>
               <p
-                class="text-sm font-normal text-primary/80"
+                class="text-sm font-normal text-muted-foreground"
               >
                 TVL
               </p>
@@ -41,7 +41,7 @@ describe('StakeCard', () => {
             </div>
             <div>
               <p
-                class="text-sm font-normal text-primary/80"
+                class="text-sm font-normal text-muted-foreground"
               >
                 Holders
               </p>

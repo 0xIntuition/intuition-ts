@@ -24,7 +24,7 @@ const PieChart = ({
         }}
       />
       <span
-        className={`col-[1] row-[1] border-primary/50 rounded-full block`}
+        className={`col-[1] row-[1] border-muted-foreground rounded-full block`}
         style={{
           height: `${size}px`,
           width: `${size}px`,

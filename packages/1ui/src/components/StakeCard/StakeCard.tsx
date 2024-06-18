@@ -24,13 +24,13 @@ const StakeCard = ({
       <Text variant="bodyLarge">Stake</Text>
       <div className="flex justify-between items-center">
         <div>
-          <Text className="text-primary/80" variant="caption">
+          <Text className="text-muted-foreground" variant="caption">
             TVL
           </Text>
           <Text variant="body">{tvl}</Text>
         </div>
         <div>
-          <Text className="text-primary/80" variant="caption">
+          <Text className="text-muted-foreground" variant="caption">
             Holders
           </Text>
           <Text variant="body">{holders}</Text>
