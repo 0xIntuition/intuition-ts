@@ -3,19 +3,19 @@ import * as React from 'react'
 import { Icon, IconName, Text, TextVariant } from '..'
 
 export interface ClaimRowProps extends React.HTMLAttributes<HTMLDivElement> {
-  amountFor: number
-  amountAgainst: number
-  value: string
+  claimsFor: number
+  claimsAgainst: number
+  amountFor: string
 }
 
 const ClaimRow = ({
+  claimsFor,
+  claimsAgainst,
   amountFor,
-  amountAgainst,
-  value,
   children,
   ...props
 }: ClaimRowProps) => {
-  const againstPercentage = (amountAgainst / (amountFor + amountAgainst)) * 100
+  const againstPercentage = (claimsAgainst / (claimsFor + claimsAgainst)) * 100
   console.log(againstPercentage)
   return (
     <div className="flex-col gap-2" {...props}>
@@ -27,7 +27,7 @@ const ClaimRow = ({
           />
           <span className="h-full w-full bg-for block rounded-r-sm" />
         </div>
-        <Text variant={TextVariant.bodyLarge}>{value}</Text>
+        <Text variant={TextVariant.bodyLarge}>{amountFor}</Text>
       </div>
       <div className="flex justify-between items-center">
         {children}
@@ -38,7 +38,7 @@ const ClaimRow = ({
               variant={TextVariant.body}
               className="text-secondary-foreground"
             >
-              {amountAgainst}
+              {claimsAgainst}
             </Text>
           </div>
           <div className="flex gap-1 items-center">
@@ -47,7 +47,7 @@ const ClaimRow = ({
               variant={TextVariant.body}
               className="text-secondary-foreground"
             >
-              {amountFor}
+              {claimsFor}
             </Text>
           </div>
         </div>

@@ -16,9 +16,9 @@ type Story = StoryObj<typeof ClaimRow>
 
 export const BasicUsage: Story = {
   args: {
-    amountFor: 736,
-    amountAgainst: 234,
-    value: '0.383 ETH',
+    claimsFor: 736,
+    claimsAgainst: 234,
+    amountFor: '0.383 ETH',
   },
   render: (args) => (
     <div className="w-[600px]">
