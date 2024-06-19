@@ -27,7 +27,7 @@ export async function getIntuition(accountIndex: number) {
   // Faucet
   const hash = await adminClient.sendTransaction({
     account: ADMIN,
-    value: parseEther('1'),
+    value: parseEther('10'),
     to: account.address,
   })
 

@@ -1,4 +1,4 @@
-import { BigInt } from '@graphprotocol/graph-ts'
+import { BigInt, log } from '@graphprotocol/graph-ts'
 import {
   AtomCreated,
   TripleCreated,
@@ -17,6 +17,7 @@ import {
   Event,
   Position,
   AtomValue,
+  Signal,
 } from '../generated/schema'
 import { parseAtomData } from './schema.org/parser'
 
@@ -224,6 +225,29 @@ export function handleDeposited(event: Deposited): void {
   position.balance = event.params.vaultBalance
   position.save()
 
+  let signal = new Signal(
+    event.transaction.hash.concatI32(event.logIndex.toI32())
+  )
+  let totalShares = vault.totalShares
+  let relativeStrength = totalShares.gt(BigInt.fromI32(0)) ?
+    event.params.sharesForReceiver.times(BigInt.fromI32(100)).div(totalShares) : BigInt.fromI32(100)
+  log.info("relativeStrength: {}", [relativeStrength.toString()])
+  log.info("totalShares: {}", [totalShares.toString()])
+  log.info("sharesForReceiver: {}", [event.params.sharesForReceiver.toString()])
+  // 23634841607072053n totalshares
+  // 22341605886429n
+  signal.delta = event.params.sharesForReceiver
+  signal.relativeStrength = relativeStrength
+  signal.account = sender.id
+  signal.atom = null
+  signal.triple = null
+  signal.deposit = deposit.id
+  signal.redemption = null
+  signal.blockNumber = event.block.number
+  signal.blockTimestamp = event.block.timestamp
+  signal.transactionHash = event.transaction.hash
+  signal.save()
+
   let ev = new Event(
     event.transaction.hash.concatI32(event.logIndex.toI32())
   )
@@ -304,6 +328,7 @@ export function handleRedeemed(event: Redeemed): void {
   if (vault === null) {
     vault = new Vault(event.params.vaultId.toString())
   }
+  let totalShares = vault.totalShares
   vault.totalShares = vault.totalShares.minus(event.params.shares)
   vault.save()
 
@@ -332,6 +357,23 @@ export function handleRedeemed(event: Redeemed): void {
 
   position.balance = event.params.vaultBalance
   position.save()
+
+  let signal = new Signal(
+    event.transaction.hash.concatI32(event.logIndex.toI32())
+  )
+
+  let relativeStrength = event.params.shares.times(BigInt.fromI32(100)).div(totalShares)
+  signal.delta = event.params.shares.times(BigInt.fromI32(-1))
+  signal.relativeStrength = relativeStrength
+  signal.account = sender.id
+  signal.atom = null
+  signal.triple = null
+  signal.deposit = null
+  signal.redemption = redemption.id
+  signal.blockNumber = event.block.number
+  signal.blockTimestamp = event.block.timestamp
+  signal.transactionHash = event.transaction.hash
+  signal.save()
 
   let ev = new Event(
     event.transaction.hash.concatI32(event.logIndex.toI32())

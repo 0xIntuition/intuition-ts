@@ -28,6 +28,8 @@ dataSources:
         - Redemption
         - Triple
         - Vault
+        - Signal
+        - Event
       abis:
         - name: EthMultiVault
           file: ./abis/EthMultiVault.json

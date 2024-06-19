@@ -231,12 +231,12 @@ type Position @entity {
 }
 
 type Signal @entity {
-  id: ID!
+  id: Bytes!
 
   delta: BigInt!
 
   "atom or triple (delta / tvl)"
-  relativeStrength: Int!
+  relativeStrength: BigInt!
 
   account: Account!
   atom: Atom

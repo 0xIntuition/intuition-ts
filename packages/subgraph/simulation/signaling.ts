@@ -11,6 +11,28 @@ async function main() {
   const followPredicate = await getOrCreateAtom(admin.multivault, 'https://schema.org/FollowAction')
   const personPredicate = await getOrCreateAtom(admin.multivault, 'https://schema.org/Person')
 
+  const adminAccountAtom = await admin.multivault.createAtom(admin.account.address)
+  const adminPersonJson: WithContext<Person> = {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    name: 'Intuition Foundation',
+    image: 'https://avatars.githubusercontent.com/u/94311139?s=200&v=4',
+    email: 'info@intuition.systems',
+    url: 'https://intuition.systems',
+  }
+
+  const ipfs0 = await ipfs.add(JSON.stringify(adminPersonJson))
+  const adminPersonAtom = await admin.multivault.createAtom(`ipfs://${ipfs0.cid}`)
+
+  console.log(`Created atom: ${adminPersonAtom.vaultId} ${adminPersonJson.name} `)
+
+
+  const adminPersonTriple = await admin.multivault.createTriple(
+    adminAccountAtom.vaultId,
+    personPredicate,
+    adminPersonAtom.vaultId
+  )
+  console.log(`Created triple: ${adminPersonTriple.vaultId} https://schema.org/Person ${adminPersonJson.name} `)
 
   const alice = await getIntuition(1)
   const aliceAccountAtom = await alice.multivault.createAtom(alice.account.address)
@@ -36,6 +58,11 @@ async function main() {
   )
   console.log(`Created triple: ${alicePersonTriple.vaultId} https://schema.org/Person ${alicePersonJson.name} `)
 
+  const res = await alice.multivault.depositTriple(alicePersonTriple.vaultId, parseEther('1'))
+  const res2 = await alice.multivault.redeemTriple(alicePersonTriple.vaultId, parseEther('0.3'))
+
+  // const allShares = await alice.multivault.getVaultStateForUser(alicePersonTriple.vaultId, alice.account.address)
+  // const res2 = await alice.multivault.redeemTriple(alicePersonTriple.vaultId, allShares.shares)
 
   const bob = await getIntuition(2)
   const bobAccountAtom = await bob.multivault.createAtom(bob.account.address)
@@ -68,7 +95,6 @@ async function main() {
   const counterVault = await bob.multivault.getCounterIdFromTriple(alicePersonTriple.vaultId)
 
   const downvote = await bob.multivault.depositTriple(counterVault, parseEther('0.001'))
-  console.log(downvote)
 
 }
 
