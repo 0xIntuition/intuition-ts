@@ -83,4 +83,5 @@ export const IconName = {
   calendly: 'calendly',
   medium: 'medium',
   github: 'github',
+  people: 'people',
 } as const

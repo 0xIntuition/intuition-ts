@@ -1,0 +1,34 @@
+import { Canvas, Controls, Meta, Source, Title } from '@storybook/blocks'
+
+import * as Stories from './ClaimRow.stories'
+
+<Meta of={Stories} />
+
+<Title />
+
+#### A representation of claim details.
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { ClaimRow, Claim } from '@0xintuition/1ui'
+
+<ClaimRow amountFor={736} amountAgainst={234} value="0.383 ETH">
+  <Claim
+    size="sm"
+    subject={{
+      variant: 'default',
+      label: '0xintuition',
+    }}
+    predicate={{ label: 'is really' }}
+    object={{ label: 'cool' }}
+  />
+</ClaimRow>
+`} />
+
+<Canvas of={Stories.BasicUsage} sourceState="none" />
+
+## Properties
+
+<Controls />

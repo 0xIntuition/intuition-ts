@@ -187,7 +187,7 @@ describe('Claim', () => {
             Alice
           </button>
           <div
-            class="shrink-0 bg-border/30 h-[1px] w-8"
+            class="shrink-0 bg-border/30 h-[1px] w-2"
             data-orientation="horizontal"
             role="none"
           />
@@ -210,7 +210,7 @@ describe('Claim', () => {
             likes
           </button>
           <div
-            class="shrink-0 bg-border/30 h-[1px] w-8"
+            class="shrink-0 bg-border/30 h-[1px] w-2"
             data-orientation="horizontal"
             role="none"
           />

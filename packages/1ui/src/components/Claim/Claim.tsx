@@ -43,7 +43,7 @@ export const Claim = ({
       >
         {subject.label}
       </Identity>
-      <Separator className="w-8" />
+      <Separator className={size === IdentitySize.sm ? 'w-2' : 'w-8'} />
 
       <Identity
         variant={predicate.variant}
@@ -54,7 +54,7 @@ export const Claim = ({
       >
         {predicate.label}
       </Identity>
-      <Separator className="w-8" />
+      <Separator className={size === IdentitySize.sm ? 'w-2' : 'w-8'} />
 
       <Identity
         variant={object.variant}
