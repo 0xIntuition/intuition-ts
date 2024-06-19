@@ -16,7 +16,7 @@ const ClaimRow = ({
   ...props
 }: ClaimRowProps) => {
   const againstPercentage = (claimsAgainst / (claimsFor + claimsAgainst)) * 100
-  console.log(againstPercentage)
+
   return (
     <div className="flex-col gap-2" {...props}>
       <div className="flex justify-between items-center">

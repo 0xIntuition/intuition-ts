@@ -32,7 +32,9 @@ const TagsBadges = ({
       {...props}
     >
       {children}
-      <Text variant={TextVariant.body}>+ {numberOfTagsNotDisplayed} more</Text>
+      <Text variant={TextVariant.caption}>
+        + {numberOfTagsNotDisplayed} more
+      </Text>
     </div>
   )
 }
@@ -50,8 +52,12 @@ const TagsBadge = ({ className, label, value, ...props }: TagsBadgeProps) => {
       {...props}
     >
       {label}
-      <span className="h-[2px] w-[2px] bg-primary" />
-      {value}
+      {value && (
+        <>
+          <span className="h-[2px] w-[2px] bg-primary" />
+          {value}
+        </>
+      )}
     </Badge>
   )
 }

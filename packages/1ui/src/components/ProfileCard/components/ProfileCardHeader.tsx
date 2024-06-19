@@ -4,7 +4,7 @@ import { Text } from 'components/Text'
 import { ProfileVariantType } from '../ProfileCard'
 import { formatWalletAddress, ProfileVariant } from '../ProfileCard.utils'
 
-interface ProfileCardHeaderProps {
+export interface ProfileCardHeaderProps {
   type: ProfileVariantType
   avatarSrc: string
   name: string
