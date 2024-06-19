@@ -1,14 +1,13 @@
-import path from 'path'
 import { useState } from 'react'
 
 import { SegmentedControl, SegmentedControlItem } from '@0xintuition/1ui'
 
-import logger from '@lib/utils/logger'
 import { useNavigate, useParams } from '@remix-run/react'
 
 export interface OptionType {
   value: string
-  path: string
+  path?: string
+  basePath?: string
   label: string
 }
 
@@ -23,12 +22,20 @@ export const SegmentedNav = ({ options }: SegmentedNavProps) => {
 
   const handleTabClick = (option: OptionType) => {
     setSelectedTab(option.value)
-
     const wallet = params.wallet || null
-    const basePath = '/app/profile'
-    const fullPath = wallet
-      ? `${basePath}/${wallet}${option.value !== 'overview' ? '/' + option.value : ''}`
-      : `${basePath}${option.value !== 'overview' ? '/' + option.value : ''}`
+    let fullPath
+
+    if (option.path) {
+      fullPath = option.path
+    } else if (option.basePath) {
+      fullPath = `${option.basePath}${wallet ? '/' + wallet : ''}${option.value !== 'overview' ? '/' + option.value : ''}`
+    } else {
+      const basePath = '/app/profile'
+      fullPath = wallet
+        ? `${basePath}/${wallet}${option.value !== 'overview' ? '/' + option.value : ''}`
+        : `${basePath}${option.value !== 'overview' ? '/' + option.value : ''}`
+    }
+
     navigate(fullPath)
   }
 
