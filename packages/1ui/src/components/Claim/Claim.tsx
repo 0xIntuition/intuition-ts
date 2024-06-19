@@ -32,6 +32,7 @@ export const Claim = ({
   disabled,
   size,
 }: ClaimProps) => {
+  const separatorWidth = size === IdentitySize.sm ? 'w-2' : 'w-8'
   return (
     <div className="flex items-center w-full max-w-full group">
       <Identity
@@ -43,7 +44,7 @@ export const Claim = ({
       >
         {subject.label}
       </Identity>
-      <Separator className={size === IdentitySize.sm ? 'w-2' : 'w-8'} />
+      <Separator className={separatorWidth} />
 
       <Identity
         variant={predicate.variant}
@@ -54,7 +55,7 @@ export const Claim = ({
       >
         {predicate.label}
       </Identity>
-      <Separator className={size === IdentitySize.sm ? 'w-2' : 'w-8'} />
+      <Separator className={separatorWidth} />
 
       <Identity
         variant={object.variant}
