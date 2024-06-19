@@ -8,13 +8,14 @@ export async function loader() {
   })
 }
 
-export default function ProfileOverview() {
+export default function ProfileConnections() {
   const { message } = useLoaderData<typeof loader>()
   logger('message from profile overview loader', message)
 
   return (
     <div className="flex flex-col items-center gap-4">
-      this is the profile overview
+      <pre>Profile Connections Route</pre>
+      profile connections loader {message}
     </div>
   )
 }

@@ -19,6 +19,7 @@ import {
   editProfileModalAtom,
   editSocialLinksModalAtom,
 } from '@lib/state/store'
+import { userProfileRouteOptions } from '@lib/utils/constants'
 import { getAuthHeaders, sliceString } from '@lib/utils/misc'
 import { SessionContext } from '@middleware/session'
 import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
@@ -150,7 +151,7 @@ export default function Profile() {
   }
 
   return (
-    <NestedLayout outlet={Outlet}>
+    <NestedLayout outlet={Outlet} options={userProfileRouteOptions}>
       <div className="flex flex-col">
         <>
           <div className="w-[300px] h-[230px] flex-col justify-start items-start gap-5 inline-flex">

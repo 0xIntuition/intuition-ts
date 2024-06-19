@@ -61,3 +61,20 @@ export const verifiedPlatforms: PrivyPlatform[] = [
     unlinkMethod: 'unlinkFarcaster',
   },
 ]
+
+// Routes
+
+export const userProfileRouteOptions = [
+  { value: 'overview', label: 'Overview', path: '/app/profile/' },
+  { value: 'data-about', label: 'Data About', path: '/app/profile/data-about' },
+  {
+    value: 'data-created',
+    label: 'Data Created',
+    path: '/app/profile/data-created',
+  },
+  {
+    value: 'connections',
+    label: 'Connections',
+    path: '/app/profile/connections',
+  },
+]

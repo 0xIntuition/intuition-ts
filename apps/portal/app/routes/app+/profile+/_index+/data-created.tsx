@@ -1,4 +1,3 @@
-import logger from '@lib/utils/logger'
 import { json } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 
@@ -8,13 +7,13 @@ export async function loader() {
   })
 }
 
-export default function ProfileOverview() {
+export default function ProfileDataCreated() {
   const { message } = useLoaderData<typeof loader>()
-  logger('message from profile overview loader', message)
 
   return (
     <div className="flex flex-col items-center gap-4">
-      this is the profile overview
+      <pre>Profile Data-Created Route</pre>
+      data created loader: {message}
     </div>
   )
 }

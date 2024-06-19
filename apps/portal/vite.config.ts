@@ -15,6 +15,9 @@ import { themePreset } from '../../packages/1ui/src/styles/index'
 installGlobals({ nativeFetch: true })
 
 export default defineConfig({
+  // optimizeDeps: {
+  //   include: ['@0xintuition/1ui', '@0xintuition/api'],
+  // },
   css: {
     postcss: {
       plugins: [tailwindcss(themePreset), autoprefixer],
@@ -45,5 +48,12 @@ export default defineConfig({
   },
   build: {
     target: 'ES2022',
+  },
+  ssr: {
+    noExternal: [
+      '@privy-io/react-auth',
+      '@privy-io/wagmi',
+      '@privy-io/server-auth',
+    ],
   },
 })
