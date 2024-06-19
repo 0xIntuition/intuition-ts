@@ -110,11 +110,11 @@ describe('PositionCard', () => {
                 >
                   <span
                     class="col-[1] row-[1] rounded-full block"
-                    style="height: 21px; width: 21px; mask: radial-gradient(farthest-side,#0000 calc(99% - 2px),#000 calc(100% - 2px);"
+                    style="height: 22px; width: 22px; mask: radial-gradient(farthest-side,#0000 calc(99% - 2px),#000 calc(100% - 2px);"
                   />
                   <span
                     class="col-[1] row-[1] border-muted-foreground rounded-full block"
-                    style="height: 21px; width: 21px; border-width: 2px;"
+                    style="border-width: 2px;"
                   />
                 </div>
               </div>

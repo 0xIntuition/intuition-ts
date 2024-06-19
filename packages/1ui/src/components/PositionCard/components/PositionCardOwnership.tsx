@@ -1,4 +1,4 @@
-import { PieChart } from 'components/PieChart'
+import { PieChart, PieChartSize } from 'components/PieChart'
 import { Text } from 'components/Text'
 
 interface PositionCardOwnershipProps
@@ -19,7 +19,7 @@ const PositionCardOwnership = ({
         <Text variant="bodyLarge" className={`mr-2 ${className}`}>
           {`${percentOwnership}%`}
         </Text>
-        <PieChart percentage={percentOwnership} size={21} width={2} />
+        <PieChart percentage={percentOwnership} size={PieChartSize.sm} />
       </div>
     </div>
   )
