@@ -78,3 +78,22 @@ export const userProfileRouteOptions = [
     path: '/app/profile/connections',
   },
 ]
+
+export const userIdentityRouteOptions = [
+  { value: 'overview', label: 'Overview', path: '/app/profile/:wallet/' },
+  {
+    value: 'data-about',
+    label: 'Data About',
+    path: '/app/profile/:wallet/data-about',
+  },
+  {
+    value: 'data-created',
+    label: 'Data Created',
+    path: '/app/profile/:wallet/data-created',
+  },
+  {
+    value: 'connections',
+    label: 'Connections',
+    path: '/app/profile/:wallet/connections',
+  },
+]

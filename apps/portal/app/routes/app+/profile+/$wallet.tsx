@@ -9,6 +9,7 @@ import {
 } from '@0xintuition/api'
 
 import { NestedLayout } from '@components/nested-layout'
+import { userIdentityRouteOptions } from '@lib/utils/constants'
 import { getAuthHeaders, sliceString } from '@lib/utils/misc'
 import { SessionContext } from '@middleware/session'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
@@ -97,7 +98,7 @@ export default function PublicProfile() {
     .toDataURL()
 
   return (
-    <NestedLayout outlet={Outlet}>
+    <NestedLayout outlet={Outlet} options={userIdentityRouteOptions}>
       <div className="flex flex-col">
         <>
           <div className="w-[300px] h-[230px] flex-col justify-start items-start gap-5 inline-flex">
