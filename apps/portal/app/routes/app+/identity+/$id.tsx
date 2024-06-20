@@ -61,10 +61,6 @@ export default function IdentityDetails() {
             avatarSrc={identity.image ?? ''}
             name={identity.display_name ?? ''}
             walletAddress={sliceString(identity.identity_id, 6, 4)}
-            stats={{
-              numberOfFollowers: identity.follower_count,
-              numberOfFollowing: identity.followed_count,
-            }}
             bio={identity.description ?? ''}
           >
             <Button
