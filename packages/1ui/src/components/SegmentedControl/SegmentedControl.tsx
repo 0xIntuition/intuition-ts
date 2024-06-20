@@ -10,7 +10,7 @@ const SegmentedControl = ({ className, ...props }: SegmentedControlProps) => {
     <ul
       role="tablist"
       className={cn(
-        'rounded-full border p-px border-border/30 primary-gradient-subtle',
+        'rounded-full flex border p-px border-border/30 primary-gradient-subtle',
         className,
       )}
       {...props}
