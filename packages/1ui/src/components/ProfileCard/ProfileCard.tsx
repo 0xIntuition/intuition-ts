@@ -13,7 +13,7 @@ export interface ProfileCardProps {
   name: string
   walletAddress: string
   stats?: {
-    numberOfFollowers: number
+    numberOfFollowers?: number
     numberOfFollowing?: number
     points?: number
   }
