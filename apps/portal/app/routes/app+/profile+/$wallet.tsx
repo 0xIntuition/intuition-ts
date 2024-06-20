@@ -2,11 +2,6 @@ import {
   Avatar,
   AvatarFallback,
   AvatarImage,
-  PositionCard,
-  PositionCardFeesAccrued,
-  PositionCardLastUpdated,
-  PositionCardOwnership,
-  PositionCardStaked,
   StakeCard,
 } from '@0xintuition/1ui'
 import {
@@ -169,12 +164,7 @@ export default function PublicProfile() {
           </div>
           <div className="flex flex-col gap-6">
             {/* social links will go here */}
-            <PositionCard onButtonClick={() => logger('sell button clicked')}>
-              <PositionCardStaked amount={0.512} />
-              <PositionCardOwnership percentOwnership={24} />
-              <PositionCardFeesAccrued amount={0.005} />
-              <PositionCardLastUpdated timestamp="2024-05-10T00:00:00Z" />
-            </PositionCard>
+            {/* position card will go here */}
             <StakeCard
               tvl={formatBalance(userIdentity.assets_sum)}
               holders={userIdentity.num_positions}
