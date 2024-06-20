@@ -34,7 +34,7 @@ export async function loader({ context, request, params }: LoaderFunctionArgs) {
   const user = session.get('user')
 
   if (!user?.details?.wallet?.address) {
-    return console.log('No user found in session')
+    return logger('No user found in session')
   }
 
   if (!params.wallet) {
@@ -57,8 +57,6 @@ export async function loader({ context, request, params }: LoaderFunctionArgs) {
     }
   }
 
-  logger('userIdentity', userIdentity)
-
   let userTotals
   try {
     if (
@@ -66,10 +64,10 @@ export async function loader({ context, request, params }: LoaderFunctionArgs) {
       !userIdentity.creator ||
       typeof userIdentity.creator.id !== 'string'
     ) {
-      console.log('Invalid or missing creator ID')
+      logger('Invalid or missing creator ID')
       return
     }
-    logger('userIdentity.creator.id', userIdentity?.creator?.id)
+
     userTotals = await UsersService.getUserTotals({
       id: userIdentity.creator.id,
     })
@@ -83,7 +81,7 @@ export async function loader({ context, request, params }: LoaderFunctionArgs) {
       throw error
     }
   }
-  logger('userTotals', userTotals)
+
   return json({ user, userIdentity, userTotals })
 }
 
@@ -95,9 +93,6 @@ export default function PublicProfile() {
   const params = useParams()
 
   const imgSrc = blockies.create({ seed: params.wallet }).toDataURL()
-
-  logger('userIdentity', userIdentity)
-  logger('userTotals', userTotals)
 
   return (
     <NestedLayout outlet={Outlet} options={userIdentityRouteOptions}>

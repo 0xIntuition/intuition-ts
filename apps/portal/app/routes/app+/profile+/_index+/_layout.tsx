@@ -103,9 +103,7 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
   } catch (error: unknown) {
     if (error instanceof ApiError) {
       userTotals = undefined
-      console.log(
-        `${error.name} - ${error.status}: ${error.message} ${error.url}`,
-      )
+      logger(`${error.name} - ${error.status}: ${error.message} ${error.url}`)
     } else {
       throw error
     }
@@ -121,9 +119,6 @@ export default function Profile() {
     userObject: UserPresenter
     userTotals: UserTotalsPresenter
   }>()
-
-  logger('user identity', userIdentity)
-  logger('user totals', userTotals)
 
   const imgSrc = blockies
     .create({ seed: user?.details?.wallet?.address })
@@ -151,7 +146,6 @@ export default function Profile() {
 
   const matches = useMatches()
   const currentPath = matches[matches.length - 1].pathname
-  console.log('currentPath', currentPath)
 
   // List of paths that should not use the ProfileLayout
   const excludedPaths = ['/app/profile/create']
