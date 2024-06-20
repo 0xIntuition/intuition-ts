@@ -12,7 +12,7 @@ export interface ProfileCardProps {
   avatarSrc: string
   name: string
   walletAddress: string
-  stats?: {
+  stats: {
     numberOfFollowers: number
     numberOfFollowing?: number
     points?: number
