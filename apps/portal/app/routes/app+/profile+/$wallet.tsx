@@ -1,9 +1,4 @@
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-  StakeCard,
-} from '@0xintuition/1ui'
+import { Button, ProfileCard, StakeCard } from '@0xintuition/1ui'
 import {
   ApiError,
   IdentitiesService,
@@ -17,11 +12,10 @@ import { userIdentityRouteOptions } from '@lib/utils/constants'
 import logger from '@lib/utils/logger'
 import { formatBalance, getAuthHeaders, sliceString } from '@lib/utils/misc'
 import { SessionContext } from '@middleware/session'
-import { json, LoaderFunctionArgs } from '@remix-run/node'
+import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
 import { Outlet, useLoaderData, useParams } from '@remix-run/react'
 import { getPrivyAccessToken } from '@server/privy'
 import * as blockies from 'blockies-ts'
-import { Loader2Icon } from 'lucide-react'
 import { ExtendedUserPresenter } from 'types/user'
 
 export async function loader({ context, request, params }: LoaderFunctionArgs) {
@@ -39,6 +33,10 @@ export async function loader({ context, request, params }: LoaderFunctionArgs) {
 
   if (!params.wallet) {
     return
+  }
+
+  if (params.wallet === user?.details?.wallet?.address) {
+    throw redirect('/app/profile')
   }
 
   let userIdentity
@@ -98,64 +96,32 @@ export default function PublicProfile() {
     <NestedLayout outlet={Outlet} options={userIdentityRouteOptions}>
       <div className="flex flex-col">
         <>
-          <div className="w-[300px] h-[230px] flex-col justify-start items-start gap-5 inline-flex">
-            <div className="w-[300px] justify-start items-center gap-[18px] inline-flex">
-              <div className="w-[70px] pr-1.5 justify-start items-center flex">
-                <Avatar className="w-16 h-16">
-                  <AvatarImage
-                    src={userIdentity.user.image ?? imgSrc}
-                    alt="Avatar"
-                  />
-                  <AvatarFallback>
-                    <Loader2Icon className="h-6 w-6 animate-spin" />
-                  </AvatarFallback>
-                </Avatar>
-              </div>
-              <div className="grow shrink basis-0 self-stretch flex-col justify-center items-start inline-flex">
-                <div className="justify-start items-end gap-1.5 inline-flex">
-                  <div className="text-neutral-200 text-xl font-medium leading-[30px]">
-                    {userIdentity.user.display_name}
-                  </div>
+          <div className="w-[300px] h-[230px] flex-col justify-start items-start mb-6  inline-flex">
+            <ProfileCard
+              type="user"
+              avatarSrc={userIdentity.user.image ?? imgSrc}
+              name={userIdentity.user.display_name ?? ''}
+              walletAddress={
+                userIdentity.ens_name ??
+                sliceString(userIdentity.user.wallet, 6, 4)
+              }
+              stats={{
+                numberOfFollowers: userTotals.follower_count,
+                numberOfFollowing: userTotals.followed_count,
+                points: userTotals.user_points,
+              }}
+              bio={userIdentity.user.description ?? ''}
+            >
+              <Button
+                className="w-[300px] px-3 py-1 rounded-lg shadow border border solid border-neutral-300/10 backdrop-blur-xl justify-center items-center gap-2 inline-flex"
+                variant="secondary"
+                onClick={() => logger('follow functionality')}
+              >
+                <div className="duration-300 text-xs font-medium leading-[18px]">
+                  Follow
                 </div>
-                <div className="self-stretch h-6 pb-0.5 justify-start items-end gap-2.5 inline-flex">
-                  <div className="text-white/50 text-sm font-medium leading-tight">
-                    {userIdentity.user.ens_name ??
-                      sliceString(userIdentity.wallet, 6, 4)}
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="justify-start items-start gap-4 inline-flex">
-              <div className="justify-start items-start gap-1 flex">
-                <div className="text-neutral-300 text-sm font-medium leading-tight">
-                  -
-                </div>
-                <div className="text-white/50 text-sm font-normal leading-tight">
-                  Following
-                </div>
-              </div>
-              <div className="justify-start items-start gap-1 flex">
-                <div className="text-neutral-300 text-sm font-medium leading-tight">
-                  -
-                </div>
-                <div className="text-white/50 text-sm font-normal leading-tight">
-                  Followers
-                </div>
-              </div>
-              <div className="justify-start items-start gap-[3px] flex">
-                <div className="text-green-500 text-sm font-medium leading-tight">
-                  {userTotals.user_points}
-                </div>
-                <div className="text-white/50 text-sm font-normal leading-tight">
-                  Points
-                </div>
-              </div>
-            </div>
-            <div className="justify-center items-center gap-2.5 inline-flex">
-              <div className="w-[300px] text-neutral-300 text-sm font-medium leading-tight">
-                {userIdentity.user.description}
-              </div>
-            </div>
+              </Button>
+            </ProfileCard>
           </div>
           <div className="flex flex-col gap-6">
             {/* social links will go here */}
