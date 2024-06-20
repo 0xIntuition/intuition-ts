@@ -1,13 +1,10 @@
-// Import React
 import React from 'react'
 
-// Import Storybook meta and StoryObj type
 import type { Meta, StoryObj } from '@storybook/react'
+import { Text } from 'components/Text'
 
-// Import your actual component
 import { IdentityContentRow } from './IdentityContentRow'
 
-// Setup meta for the Storybook
 const meta: Meta<typeof IdentityContentRow> = {
   title: 'Components/IdentityContentRow',
   component: IdentityContentRow,
@@ -15,13 +12,41 @@ const meta: Meta<typeof IdentityContentRow> = {
 
 export default meta
 
-// Define types for your stories
 type Story = StoryObj<typeof IdentityContentRow>
 
 // Example story for the default state
 export const BasicUsage: Story = {
   args: {
-    // Define default props here, if any
+    variant: 'user',
+    avatarSrc: 'https://avatars.githubusercontent.com/u/94311139?s=200&v=4"',
+    name: 'John Doe',
+    walletAddress: '0x1234567890abcdef1234567890abcdef12345678',
+    amount: '10 ETH',
+    totalFollowers: 123,
   },
-  render: (args) => <IdentityContentRow {...args} />,
+  render: (args) => (
+    <IdentityContentRow {...args}>
+      <Text variant="body" className="text-primary-foreground">
+        Extra Content
+      </Text>
+    </IdentityContentRow>
+  ),
+}
+
+export const EntityVariant: Story = {
+  args: {
+    variant: 'entity',
+    avatarSrc: 'https://avatars.githubusercontent.com/u/94311139?s=200&v=4"',
+    name: 'John Doe',
+    walletAddress: '0x1234567890abcdef1234567890abcdef12345678',
+    amount: '10 ETH',
+    totalFollowers: 123,
+  },
+  render: (args) => (
+    <IdentityContentRow {...args}>
+      <Text variant="body" className="text-primary-foreground">
+        Extra Content
+      </Text>
+    </IdentityContentRow>
+  ),
 }

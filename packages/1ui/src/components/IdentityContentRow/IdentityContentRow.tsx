@@ -11,29 +11,29 @@ import {
   Text,
   TextVariant,
 } from '..'
-import { ProfileVariant } from '../ProfileCard/ProfileCard.utils'
+import { IdentityVariant } from './IdentityContentRow.utils'
 
 export interface IdentityContentRowProps
   extends React.HTMLAttributes<HTMLDivElement> {
-  amountFor: string
+  amount: string
   totalFollowers: number
-  type: string
+  variant: string
   avatarSrc: string
   name: string
   walletAddress: string
 }
 
 const IdentityContentRow = ({
-  type,
+  variant,
   avatarSrc,
   name,
   walletAddress,
-  amountFor,
+  amount,
   totalFollowers,
   children,
   ...props
 }: IdentityContentRowProps) => {
-  const avatarClass = type === ProfileVariant.entity ? 'rounded-lg' : ''
+  const avatarClass = variant === IdentityVariant.entity ? 'rounded-lg' : ''
 
   return (
     <div className="flex gap-2" {...props}>
@@ -52,7 +52,7 @@ const IdentityContentRow = ({
               {formatWalletAddress(walletAddress)}
             </Text>
           </div>
-          <Text variant={TextVariant.bodyLarge}>{amountFor}</Text>
+          <Text variant={TextVariant.bodyLarge}>{amount}</Text>
         </div>
         <div className="flex justify-between items-center">
           {children}

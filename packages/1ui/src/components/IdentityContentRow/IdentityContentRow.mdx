@@ -8,7 +8,7 @@ import * as Stories from './IdentityContentRow.stories'
 
 <Title />
 
-#### A short description goes here.
+#### An Identity Content Row is a component that displays the identity information for a user or an entity
 
 <Button
   variant="accent"
@@ -22,8 +22,20 @@ import * as Stories from './IdentityContentRow.stories'
   language="tsx"
   code={`
 import { IdentityContentRow } from '@0xintuition/1ui'
+import { Text } from 'components/Text'
 
-<IdentityContentRow />
+<IdentityContentRow
+  variant="user"
+  avatarSrc="https://avatars.githubusercontent.com/u/94311139?s=200&v=4"
+  name="John Doe"
+  walletAddress="0x1234567890abcdef1234567890abcdef12345678"
+  amount="10 ETH"
+  totalFollowers={123}
+>
+  <Text variant="body" className="text-primary-foreground">
+    Extra Content
+  </Text>
+</IdentityContentRow>
 `} />
 
 <Canvas of={Stories.BasicUsage} sourceState="none" />
@@ -34,14 +46,27 @@ import { IdentityContentRow } from '@0xintuition/1ui'
 
 ## Variants
 
-### Other
+### Entity
 
 <Source
   dark
   language="tsx"
   code={`
-<IdentityContentRow variant="other">
-`}
-/>
+import { IdentityContentRow } from '@0xintuition/1ui'
+import { Text } from 'components/Text'
 
-<Canvas of={Stories.Other} sourceState="none" />
+<IdentityContentRow
+  variant="entity"
+  avatarSrc="https://avatars.githubusercontent.com/u/94311139?s=200&v=4"
+  name="John Doe"
+  walletAddress="0x1234567890abcdef1234567890abcdef12345678"
+  amount="10 ETH"
+  totalFollowers={123}
+>
+  <Text variant="body" className="text-primary-foreground">
+    Extra Content
+  </Text>
+</IdentityContentRow>
+`} />
+
+<Canvas of={Stories.EntityVariant} sourceState="none" />
