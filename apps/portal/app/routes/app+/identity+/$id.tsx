@@ -1,10 +1,10 @@
-import { Button, ProfileCard } from '@0xintuition/1ui'
+import { Button, ProfileCard, StakeCard } from '@0xintuition/1ui'
 import { ApiError, IdentitiesService, OpenAPI } from '@0xintuition/api'
 
 import { NestedLayout } from '@components/nested-layout'
 import { identityRouteOptions } from '@lib/utils/constants'
 import logger from '@lib/utils/logger'
-import { getAuthHeaders, sliceString } from '@lib/utils/misc'
+import { formatBalance, getAuthHeaders, sliceString } from '@lib/utils/misc'
 import { SessionContext } from '@middleware/session'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { Outlet, useLoaderData } from '@remix-run/react'
@@ -55,7 +55,7 @@ export default function IdentityDetails() {
   return (
     <NestedLayout outlet={Outlet} options={identityRouteOptions}>
       <div className="flex flex-col">
-        <div className="w-[300px] h-[230px] flex-col justify-start items-start mb-6  inline-flex">
+        <div className="w-[300px] h-[230px] flex-col justify-start items-start  inline-flex gap-6">
           <ProfileCard
             type="entity"
             avatarSrc={identity.image ?? ''}
@@ -75,6 +75,12 @@ export default function IdentityDetails() {
               Follow
             </Button>
           </ProfileCard>
+          <StakeCard
+            tvl={formatBalance(identity.assets_sum)}
+            holders={identity.num_positions}
+            onBuyClick={() => logger('click buy')} // this will open the stake modal
+            onViewAllClick={() => logger('click view all')} // this will navigate to the data-about positions
+          />
         </div>
       </div>
     </NestedLayout>
