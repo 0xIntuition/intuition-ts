@@ -15,7 +15,7 @@ describe('SegmentedControl', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <ul
-          class="rounded-full border p-px border-border/30 primary-gradient-subtle"
+          class="rounded-full flex border p-px border-border/30 primary-gradient-subtle"
           role="tablist"
         >
           <li>
