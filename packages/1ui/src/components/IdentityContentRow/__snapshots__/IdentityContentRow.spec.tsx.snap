@@ -12,7 +12,7 @@ exports[`IdentityContentRow > should match snapshot 1`] = `
         class="flex items-center"
       >
         <span
-          class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full mr-4"
+          class="relative flex shrink-0 overflow-hidden rounded-full w-[64px] h-[64px] mr-4"
         >
           <span
             class="bg-muted flex h-full w-full items-center justify-center rounded-full"
@@ -24,7 +24,7 @@ exports[`IdentityContentRow > should match snapshot 1`] = `
           class="flex flex-col"
         >
           <div
-            class="flex items-center"
+            class="flex items-center mb-1.5"
           >
             <p
               class="text-primary text-lg font-normal mr-1"
@@ -43,7 +43,7 @@ exports[`IdentityContentRow > should match snapshot 1`] = `
         class="flex flex-col items-end"
       >
         <p
-          class="text-primary text-lg font-normal"
+          class="text-primary text-lg font-normal mb-1.5"
         >
           1.210 ETH
         </p>

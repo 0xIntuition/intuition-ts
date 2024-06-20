@@ -42,7 +42,7 @@ const IdentityContentRow = ({
     <div className="w-full mb-4">
       <div className="w-full flex justify-between items-center" {...props}>
         <div className="flex items-center">
-          <Avatar className="mr-4">
+          <Avatar className="w-[64px] h-[64px] mr-4">
             <AvatarImage src={avatarSrc} alt={name} />
             {variant === IdentityVariant.user && (
               <AvatarFallback>{name.slice(0, 2)}</AvatarFallback>
@@ -57,7 +57,7 @@ const IdentityContentRow = ({
             )}
           </Avatar>
           <div className="flex flex-col">
-            <div className="flex items-center">
+            <div className="flex items-center mb-1.5">
               <Text variant={TextVariant.bodyLarge} className="mr-1">
                 {name}
               </Text>
@@ -85,7 +85,9 @@ const IdentityContentRow = ({
         </div>
 
         <div className="flex flex-col items-end">
-          <Text variant={TextVariant.bodyLarge}>{amount}</Text>
+          <Text variant={TextVariant.bodyLarge} className="mb-1.5">
+            {amount}
+          </Text>
 
           <div className="flex gap-1 items-center">
             <Icon
