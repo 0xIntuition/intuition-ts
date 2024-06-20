@@ -23,12 +23,17 @@ export const SegmentedNav = ({ options }: SegmentedNavProps) => {
   const handleTabClick = (option: OptionType) => {
     setSelectedTab(option.value)
     const wallet = params.wallet || null
+    const id = params.id || null
     let fullPath
 
     if (option.path) {
       fullPath = option.path
     } else if (option.basePath) {
-      fullPath = `${option.basePath}${wallet ? '/' + wallet : ''}${option.value !== 'overview' ? '/' + option.value : ''}`
+      if (option.basePath.includes('/identity')) {
+        fullPath = `${option.basePath}${id ? '/' + id : ''}${option.value !== 'overview' ? '/' + option.value : ''}`
+      } else {
+        fullPath = `${option.basePath}${wallet ? '/' + wallet : ''}${option.value !== 'overview' ? '/' + option.value : ''}`
+      }
     } else {
       const basePath = '/app/profile'
       fullPath = wallet

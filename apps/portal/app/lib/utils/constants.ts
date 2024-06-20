@@ -80,35 +80,35 @@ export const userProfileRouteOptions = [
 ]
 
 export const userIdentityRouteOptions = [
-  { value: 'overview', label: 'Overview', basePath: '/app/profile/' },
+  { value: 'overview', label: 'Overview', basePath: '/app/profile' },
   {
     value: 'data-about',
     label: 'Data About',
-    basePath: '/app/profile/',
+    basePath: '/app/profile',
   },
   {
     value: 'data-created',
     label: 'Data Created',
-    basePath: '/app/profile/',
+    basePath: '/app/profile',
   },
   {
     value: 'connections',
     label: 'Connections',
-    basePath: '/app/profile/',
+    basePath: '/app/profile',
   },
 ]
 
 export const identityRouteOptions = [
-  { value: 'overview', label: 'Overview', basePath: '/app/identity/' },
+  { value: 'overview', label: 'Overview', basePath: '/app/identity' },
   {
     value: 'data-about',
     label: 'Data About',
-    basePath: '/app/identity/',
+    basePath: '/app/identity',
   },
 
   {
     value: 'tags',
     label: 'Tags',
-    basePath: '/app/identity/',
+    basePath: '/app/identity',
   },
 ]
