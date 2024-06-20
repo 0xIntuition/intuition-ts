@@ -12,8 +12,8 @@ export interface ProfileCardProps {
   avatarSrc: string
   name: string
   walletAddress: string
-  stats: {
-    numberOfFollowers: number
+  stats?: {
+    numberOfFollowers?: number
     numberOfFollowing?: number
     points?: number
   }
@@ -43,14 +43,14 @@ const ProfileCard = ({
       {type === ProfileVariant.user && (
         <div className="flex justify-between items-center space-x-4 mt-5">
           <ProfileCardStatItem
-            value={stats.numberOfFollowing ?? 0}
+            value={stats?.numberOfFollowing ?? 0}
             label="Following"
           />
           <ProfileCardStatItem
-            value={stats.numberOfFollowers}
+            value={stats?.numberOfFollowers ?? 0}
             label="Followers"
           />
-          {stats.points !== undefined && (
+          {stats?.points !== undefined && (
             <ProfileCardStatItem
               value={stats.points}
               label="Points"
