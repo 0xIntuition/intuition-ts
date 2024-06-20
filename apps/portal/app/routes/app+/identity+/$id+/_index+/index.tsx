@@ -1,4 +1,3 @@
-import logger from '@lib/utils/logger'
 import { json } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 
@@ -10,11 +9,11 @@ export async function loader() {
 
 export default function IdentityOverview() {
   const { message } = useLoaderData<typeof loader>()
-  logger('message from identity overview loader', message)
 
   return (
-    <div className="flex flex-col items-center gap-4">
-      this is the identity overview
+    <div className="m-8 flex flex-col items-center gap-4">
+      <div className="flex flex-col">Identity Overview Route</div>
+      <div>{message}</div>
     </div>
   )
 }
