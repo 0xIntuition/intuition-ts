@@ -10,13 +10,6 @@ import * as Stories from './IdentityContentRow.stories'
 
 #### An Identity Content Row is a component that displays the identity information for a user or an entity
 
-<Button
-  variant="accent"
-  onClick={() => window.open('link_goes_here', '_blank')}
->
-  {'API Reference'}
-</Button>
-
 <Source
   dark
   language="tsx"
@@ -29,8 +22,16 @@ import { Text } from 'components/Text'
   avatarSrc="https://avatars.githubusercontent.com/u/94311139?s=200&v=4"
   name="John Doe"
   walletAddress="0x1234567890abcdef1234567890abcdef12345678"
-  amount="10 ETH"
-  totalFollowers={123}
+  amount="1.210 ETH"
+  totalFollowers={305}
+  tags={[
+    { label: 'keyboard', value: 34 },
+    { label: 'ergonomic', value: 56 },
+    { label: 'wireless', value: 12 },
+    { label: 'gaming', value: 77 },
+    { label: 'work', value: 11 },
+    { label: 'home', value: 34 },
+  ]}
 >
   <Text variant="body" className="text-primary-foreground">
     Extra Content
@@ -38,7 +39,7 @@ import { Text } from 'components/Text'
 </IdentityContentRow>
 `} />
 
-<Canvas of={Stories.BasicUsage} sourceState="none" />
+<Canvas of={Stories.UserVariant} sourceState="none" />
 
 ## Properties
 
@@ -57,10 +58,19 @@ import { Text } from 'components/Text'
 
 <IdentityContentRow
   variant="entity"
-  name="John Doe"
+  avatarSrc="https://avatars.githubusercontent.com/u/94311139?s=200&v=4"
+  name="Amazon"
   walletAddress="0x1234567890abcdef1234567890abcdef12345678"
-  amount="10 ETH"
+  amount="0.321 ETH"
   totalFollowers={123}
+  tags={[
+    { label: 'keyboard', value: 34 },
+    { label: 'ergonomic', value: 56 },
+    { label: 'wireless', value: 12 },
+    { label: 'gaming', value: 77 },
+    { label: 'work', value: 11 },
+    { label: 'home', value: 34 },
+  ]}
 >
   <Text variant="body" className="text-primary-foreground">
     Extra Content

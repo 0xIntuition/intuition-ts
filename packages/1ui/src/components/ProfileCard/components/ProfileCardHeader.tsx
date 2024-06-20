@@ -1,8 +1,9 @@
 import { Avatar, AvatarFallback, AvatarImage } from 'components/Avatar'
 import { Text } from 'components/Text'
+import { formatWalletAddress } from 'utils/wallet'
 
 import { ProfileVariantType } from '../ProfileCard'
-import { formatWalletAddress, ProfileVariant } from '../ProfileCard.utils'
+import { ProfileVariant } from '../ProfileCard.utils'
 
 interface ProfileCardHeaderProps {
   type: ProfileVariantType

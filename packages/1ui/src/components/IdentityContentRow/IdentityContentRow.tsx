@@ -38,14 +38,11 @@ const IdentityContentRow = ({
   children,
   ...props
 }: IdentityContentRowProps) => {
-  const avatarClass =
-    variant === IdentityVariant.entity ? 'rounded-lg mr-4' : 'mr-4'
-
   return (
     <div className="w-full mb-4">
       <div className="w-full flex justify-between items-center" {...props}>
         <div className="flex items-center">
-          <Avatar className={avatarClass}>
+          <Avatar className="mr-4">
             <AvatarImage src={avatarSrc} alt={name} />
             {variant === IdentityVariant.user && (
               <AvatarFallback>{name.slice(0, 2)}</AvatarFallback>
