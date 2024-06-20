@@ -1,0 +1,48 @@
+import { Canvas, Controls, Meta, Source, Title } from '@storybook/blocks'
+
+import { Button } from '..'
+
+import * as Stories from './Tabs.stories'
+
+<Meta of={Stories} />
+
+<Title />
+
+#### A set of layered sections of content—known as tab panels—that are displayed one at a time.
+
+<Button
+  variant="accent"
+  onClick={() =>
+    window.open(
+      'https://www.radix-ui.com/primitives/docs/components/tabs#api-reference',
+      '_blank',
+    )
+  }
+>
+  {'API Reference'}
+</Button>
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@0xintuition/1ui'
+
+<Tabs defaultValue="one">
+  <TabsList>
+    <TabsTrigger value="one" label="One " totalCount={69} />
+    <TabsTrigger value="two" label="Two" totalCount={69} />
+    <TabsTrigger disabled value="three" label="Three" totalCount={69} />
+  </TabsList>
+  <div className="bg-primary/10 rounded-lg p-4">
+    <TabsContent value="one">
+      <p>One</p>
+    </TabsContent>
+    <TabsContent value="two">
+      <p>Two</p>
+    </TabsContent>
+  </div>
+</Tabs>
+`} />
+
+<Canvas of={Stories.BasicUsage} sourceState="none" />
