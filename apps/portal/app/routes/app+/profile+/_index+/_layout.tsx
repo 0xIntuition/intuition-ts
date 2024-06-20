@@ -1,6 +1,12 @@
 import { useEffect } from 'react'
 
-import { Avatar, AvatarFallback, AvatarImage, Button } from '@0xintuition/1ui'
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+  Button,
+  StakeCard,
+} from '@0xintuition/1ui'
 import {
   ApiError,
   IdentitiesService,
@@ -20,7 +26,8 @@ import {
   editSocialLinksModalAtom,
 } from '@lib/state/store'
 import { userProfileRouteOptions } from '@lib/utils/constants'
-import { getAuthHeaders, sliceString } from '@lib/utils/misc'
+import logger from '@lib/utils/logger'
+import { formatBalance, getAuthHeaders, sliceString } from '@lib/utils/misc'
 import { SessionContext } from '@middleware/session'
 import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
 import {
@@ -108,12 +115,15 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
 }
 
 export default function Profile() {
-  const { user, userObject, userTotals } = useLoaderData<{
+  const { user, userObject, userIdentity, userTotals } = useLoaderData<{
     user: SessionUser
     userIdentity: IdentityPresenter
     userObject: UserPresenter
     userTotals: UserTotalsPresenter
   }>()
+
+  logger('user identity', userIdentity)
+  logger('user totals', userTotals)
 
   const imgSrc = blockies
     .create({ seed: user?.details?.wallet?.address })
@@ -223,6 +233,12 @@ export default function Profile() {
               handleOpenEditSocialLinksModal={() =>
                 setEditSocialLinksModalActive(true)
               }
+            />
+            <StakeCard
+              tvl={formatBalance(userIdentity.assets_sum)}
+              holders={userIdentity.num_positions}
+              onBuyClick={() => logger('click buy')} // this will open the stake modal
+              onViewAllClick={() => logger('click view all')} // this will navigate to the data-about positions
             />
           </div>
           <EditProfileModal

@@ -13,3 +13,16 @@ export type SessionUser = {
   // User with optional ensName extended
   details?: ExtendedPrivyUser & { ensName?: string }
 }
+
+export type ExtendedUserPresenter = UserPresenter & {
+  user: {
+    id: string
+    privy_id: string
+    image: string
+    wallet: string
+    display_name: string
+    description: string
+    ens_name?: string
+    total: number
+  }
+}
