@@ -47,9 +47,7 @@ export async function loader({ context, request, params }: LoaderFunctionArgs) {
   } catch (error: unknown) {
     if (error instanceof ApiError) {
       userIdentity = undefined
-      console.log(
-        `${error.name} - ${error.status}: ${error.message} ${error.url}`,
-      )
+      logger(`${error.name} - ${error.status}: ${error.message} ${error.url}`)
     } else {
       throw error
     }
@@ -113,13 +111,11 @@ export default function PublicProfile() {
               bio={userIdentity.user.description ?? ''}
             >
               <Button
-                className="w-[300px] px-3 py-1 rounded-lg shadow border border solid border-neutral-300/10 backdrop-blur-xl justify-center items-center gap-2 inline-flex"
                 variant="secondary"
+                className="w-full"
                 onClick={() => logger('follow functionality')}
               >
-                <div className="duration-300 text-xs font-medium leading-[18px]">
-                  Follow
-                </div>
+                Follow
               </Button>
             </ProfileCard>
           </div>

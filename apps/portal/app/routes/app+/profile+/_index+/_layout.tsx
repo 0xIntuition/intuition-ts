@@ -20,6 +20,7 @@ import {
   editSocialLinksModalAtom,
 } from '@lib/state/store'
 import { userProfileRouteOptions } from '@lib/utils/constants'
+import logger from '@lib/utils/logger'
 import { getAuthHeaders, sliceString } from '@lib/utils/misc'
 import { SessionContext } from '@middleware/session'
 import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
@@ -95,9 +96,7 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
   } catch (error: unknown) {
     if (error instanceof ApiError) {
       userTotals = undefined
-      console.log(
-        `${error.name} - ${error.status}: ${error.message} ${error.url}`,
-      )
+      logger(`${error.name} - ${error.status}: ${error.message} ${error.url}`)
     } else {
       throw error
     }
@@ -140,7 +139,6 @@ export default function Profile() {
 
   const matches = useMatches()
   const currentPath = matches[matches.length - 1].pathname
-  console.log('currentPath', currentPath)
 
   // List of paths that should not use the ProfileLayout
   const excludedPaths = ['/app/profile/create']
@@ -169,13 +167,11 @@ export default function Profile() {
               bio={userObject.description ?? ''}
             >
               <Button
-                className="w-[300px] px-3 py-1 rounded-lg shadow border border solid border-neutral-300/10 backdrop-blur-xl justify-center items-center gap-2 inline-flex"
                 variant="secondary"
+                className="w-full"
                 onClick={() => setEditProfileModalActive(true)}
               >
-                <div className="duration-300 text-xs font-medium leading-[18px]">
-                  Edit Profile
-                </div>
+                Edit Profile
               </Button>
             </ProfileCard>
             <ProfileSocialAccounts
