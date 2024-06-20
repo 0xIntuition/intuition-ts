@@ -1,0 +1,70 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`IdentityContentRow > should match snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="w-full mb-4"
+  >
+    <div
+      class="w-full flex justify-between items-center"
+    >
+      <div
+        class="flex items-center"
+      >
+        <span
+          class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full mr-4"
+        >
+          <span
+            class="bg-muted flex h-full w-full items-center justify-center rounded-full"
+          >
+            Jo
+          </span>
+        </span>
+        <div
+          class="flex flex-col"
+        >
+          <div
+            class="flex items-center"
+          >
+            <p
+              class="text-primary text-lg font-normal mr-1"
+            >
+              John Doe
+            </p>
+            <p
+              class="text-base font-normal text-secondary-foreground"
+            >
+              0x1234...5678
+            </p>
+          </div>
+        </div>
+      </div>
+      <div
+        class="flex flex-col items-end"
+      >
+        <p
+          class="text-primary text-lg font-normal"
+        >
+          1.210 ETH
+        </p>
+        <div
+          class="flex gap-1 items-center"
+        >
+          <svg
+            class="text-secondary-foreground h-4 w-4"
+          >
+            <use
+              href="/src/components/Icon/Icon.sprites.svg#people"
+            />
+          </svg>
+          <p
+            class="text-base font-normal text-secondary-foreground"
+          >
+            305
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
