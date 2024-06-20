@@ -5,6 +5,11 @@ import {
   AvatarFallback,
   AvatarImage,
   Button,
+  PositionCard,
+  PositionCardFeesAccrued,
+  PositionCardLastUpdated,
+  PositionCardOwnership,
+  PositionCardStaked,
   StakeCard,
 } from '@0xintuition/1ui'
 import {
@@ -234,6 +239,12 @@ export default function Profile() {
                 setEditSocialLinksModalActive(true)
               }
             />
+            <PositionCard onButtonClick={() => logger('sell button clicked')}>
+              <PositionCardStaked amount={0.512} />
+              <PositionCardOwnership percentOwnership={24} />
+              <PositionCardFeesAccrued amount={0.005} />
+              <PositionCardLastUpdated timestamp="2024-05-10T00:00:00Z" />
+            </PositionCard>
             <StakeCard
               tvl={formatBalance(userIdentity.assets_sum)}
               holders={userIdentity.num_positions}
