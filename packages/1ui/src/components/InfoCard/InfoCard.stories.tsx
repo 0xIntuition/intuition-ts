@@ -1,12 +1,24 @@
 import React from 'react'
 
 import type { Meta, StoryObj } from '@storybook/react'
+import { IdentityVariant } from 'components/Identity'
 
 import { InfoCard } from './InfoCard'
 
 const meta: Meta<typeof InfoCard> = {
   title: 'Components/InfoCard',
   component: InfoCard,
+  argTypes: {
+    variant: {
+      description: 'Variant of identity component',
+      options: Object.values(IdentityVariant),
+      table: {
+        type: { summary: 'string' },
+        defaultValue: { summary: 'default' },
+      },
+      control: 'select',
+    },
+  },
 }
 
 export default meta

@@ -1,9 +1,9 @@
 import * as React from 'react'
 
-import { Identity, Text, TextVariant } from '..'
+import { Identity, IdentityVariantType, Text, TextVariant } from '..'
 
 export interface InfoCardProps extends React.HTMLAttributes<HTMLDivElement> {
-  variant: 'default' | 'user'
+  variant: IdentityVariantType
   username: string
   avatarImgSrc: string
   timestamp: string
