@@ -51,7 +51,7 @@ const QuestHeaderCard = ({
         <Text variant={TextVariant.small}>
           {`${percentageOfQuestsCompleted}% Complete`}
         </Text>
-        <Button variant={ButtonVariant.secondary} onClick={() => onButtonClick}>
+        <Button variant={ButtonVariant.secondary} onClick={onButtonClick}>
           View quests
         </Button>
       </div>
