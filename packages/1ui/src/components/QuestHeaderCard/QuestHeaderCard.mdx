@@ -1,0 +1,30 @@
+import { Canvas, Controls, Meta, Source, Title } from '@storybook/blocks'
+
+import * as Stories from './QuestHeaderCard.stories'
+
+<Meta of={Stories} />
+
+<Title />
+
+#### A card to show quest data to a user.
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { QuestHeaderCard } from '@0xintuition/1ui'
+
+<QuestHeaderCard
+  title="Primitive Island"
+  subtitle="Continue your journey."
+  numberOfCompletedQuests={1}
+  totalNumberOfQuests={10}
+  onButtonClick={() => doSomething}
+/>
+`} />
+
+<Canvas of={Stories.BasicUsage} sourceState="none" />
+
+## Properties
+
+<Controls />
