@@ -11,7 +11,7 @@ describe('InfoCard', () => {
         variant="user"
         username="super dave"
         avatarImgSrc="image.jpg"
-        timestamp="2024-05-10T00:00:00Z"
+        timestamp="2024-05-10T16:00:00Z"
       />,
     )
     expect(asFragment()).toMatchInlineSnapshot(`
@@ -45,7 +45,7 @@ describe('InfoCard', () => {
             <p
               class="text-base font-normal text-muted-foreground"
             >
-              May 9, 2024
+              May 10, 2024
             </p>
           </div>
         </div>
