@@ -18,7 +18,7 @@ export const BasicUsage: Story = {
     <div className="w-[500px]">
       <Tabs defaultValue="one">
         <TabsList>
-          <TabsTrigger value="one" label="One " totalCount={69} />
+          <TabsTrigger value="one" label="One" totalCount={69} />
           <TabsTrigger value="two" label="Two" totalCount={69} />
           <TabsTrigger disabled value="three" label="Three" totalCount={69} />
         </TabsList>

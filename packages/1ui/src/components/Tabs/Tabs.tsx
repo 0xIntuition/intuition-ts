@@ -1,5 +1,6 @@
 import * as React from 'react'
 
+import { PrimitiveButtonProps } from '@radix-ui/react-dialog'
 import * as TabsPrimitive from '@radix-ui/react-tabs'
 
 import { Text, TextVariant } from '..'
@@ -19,15 +20,16 @@ const TabsList = React.forwardRef<
 ))
 TabsList.displayName = TabsPrimitive.List.displayName
 
-export interface TabsTriggerProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface TabsTriggerProps extends PrimitiveButtonProps {
+  value: string
   label: string
-  totalCount: string
+  totalCount: number
 }
 
 const TabsTrigger = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.Trigger>,
-  React.ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger>
->(({ label, totalCount, className, ...props }: TabsTriggerProps, ref) => (
+  TabsTriggerProps
+>(({ label, totalCount, className, ...props }, ref) => (
   <TabsPrimitive.Trigger
     ref={ref}
     className={cn(
