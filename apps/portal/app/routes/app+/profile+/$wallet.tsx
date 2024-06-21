@@ -1,4 +1,13 @@
-import { Button, PositionCard, PositionCardFeesAccrued, PositionCardLastUpdated, PositionCardOwnership, PositionCardStaked, ProfileCard, StakeCard } from '@0xintuition/1ui'
+import {
+  Button,
+  PositionCard,
+  PositionCardFeesAccrued,
+  PositionCardLastUpdated,
+  PositionCardOwnership,
+  PositionCardStaked,
+  ProfileCard,
+  StakeCard,
+} from '@0xintuition/1ui'
 import {
   ApiError,
   IdentitiesService,
@@ -10,7 +19,12 @@ import {
 import { NestedLayout } from '@components/nested-layout'
 import { userIdentityRouteOptions } from '@lib/utils/constants'
 import logger from '@lib/utils/logger'
-import { calculatePercentageGain, formatBalance, getAuthHeaders, sliceString } from '@lib/utils/misc'
+import {
+  calculatePercentageGain,
+  formatBalance,
+  getAuthHeaders,
+  sliceString,
+} from '@lib/utils/misc'
 import { SessionContext } from '@middleware/session'
 import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
 import { Outlet, useLoaderData, useParams } from '@remix-run/react'
@@ -18,7 +32,7 @@ import { getVaultDetails } from '@server/multivault'
 import { getPrivyAccessToken } from '@server/privy'
 import * as blockies from 'blockies-ts'
 import { ExtendedUserPresenter } from 'types/user'
-import { VaultDetailsType, VaultDetailsType } from 'types/vault'
+import { VaultDetailsType } from 'types/vault'
 
 export async function loader({ context, request, params }: LoaderFunctionArgs) {
   OpenAPI.BASE = 'https://dev.api.intuition.systems'
@@ -104,7 +118,6 @@ export default function PublicProfile() {
   const params = useParams()
 
   const { user_conviction_value: user_assets } = vaultDetails
-
 
   const imgSrc = blockies.create({ seed: params.wallet }).toDataURL()
 
