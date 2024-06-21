@@ -1,0 +1,79 @@
+import { Canvas, Controls, Meta, Source, Title } from '@storybook/blocks'
+
+import { Button } from '..'
+
+import * as Stories from './IdentityPosition.stories'
+
+<Meta of={Stories} />
+
+<Title />
+
+#### An Identity Position component is used to display a position that a user holds on an identity
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { IdentityPosition } from '@0xintuition/1ui'
+import { Text } from 'components/Text'
+
+<IdentityPosition
+  variant="user"
+  avatarSrc="https://avatars.githubusercontent.com/u/94311139?s=200&v=4"
+  name="John Doe"
+  walletAddress="0x1234567890abcdef1234567890abcdef12345678"
+  amount: 1.21
+  tags={[
+    { label: 'keyboard', value: 34 },
+    { label: 'ergonomic', value: 56 },
+    { label: 'wireless', value: 12 },
+    { label: 'gaming', value: 77 },
+    { label: 'work', value: 11 },
+    { label: 'home', value: 34 },
+  ]}
+>
+  <Text variant="body" className="text-primary-foreground">
+    Extra Content
+  </Text>
+</IdentityPosition>
+`} />
+
+<Canvas of={Stories.UserVariant} sourceState="none" />
+
+## Properties
+
+<Controls />
+
+## Variants
+
+### Entity
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { IdentityPosition } from '@0xintuition/1ui'
+import { Text } from 'components/Text'
+
+<IdentityPosition
+  variant="entity"
+  avatarSrc="https://avatars.githubusercontent.com/u/94311139?s=200&v=4"
+  name="Amazon"
+  walletAddress="0x1234567890abcdef1234567890abcdef12345678"
+  amount: 1.21
+  tags={[
+    { label: 'keyboard', value: 34 },
+    { label: 'ergonomic', value: 56 },
+    { label: 'wireless', value: 12 },
+    { label: 'gaming', value: 77 },
+    { label: 'work', value: 11 },
+    { label: 'home', value: 34 },
+  ]}
+>
+  <Text variant="body" className="text-primary-foreground">
+    Extra Content
+  </Text>
+</IdentityPosition>
+`} />
+
+<Canvas of={Stories.EntityVariant} sourceState="none" />
