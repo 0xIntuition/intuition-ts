@@ -3,11 +3,11 @@ import {
   getMultivaultContract,
   publicClient,
 } from '@server/viem'
-import type {
-  IdentityVaultDetails,
+import {
+  IdentityVaultDetailsType,
   MultivaultConfig,
-  VaultDetails,
-} from '@types/vault'
+  VaultDetailsType,
+} from 'types/vault'
 import { formatUnits, parseUnits, type Address } from 'viem'
 
 interface MulticallResponse {
@@ -138,14 +138,14 @@ export async function getVaultDetails(
           formatted_user_conviction_value: formattedUserConvictionValue,
         }
       : {}),
-  } as VaultDetails
+  } as VaultDetailsType
 }
 
 export async function getIdentityListDetails(
   contract: string,
   vids: string[],
   wallet: Address,
-): Promise<IdentityVaultDetails[]> {
+): Promise<IdentityVaultDetailsType[]> {
   const multiVaultContract = createMultiVaultContract(contract)
 
   const identityDetailPromises = vids.map(async (vid) => {
