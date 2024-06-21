@@ -1,4 +1,12 @@
-import { Button, ProfileCard, StakeCard } from '@0xintuition/1ui'
+import {
+  Button,
+  ProfileCard,
+  StakeCard,
+  Tags,
+  TagsBadge,
+  TagsBadges,
+  TagsButton,
+} from '@0xintuition/1ui'
 import { ApiError, IdentitiesService, OpenAPI } from '@0xintuition/api'
 
 import { NestedLayout } from '@components/nested-layout'
@@ -71,6 +79,16 @@ export default function IdentityDetails() {
               Follow
             </Button>
           </ProfileCard>
+          {identity.tags !== null && (
+            <Tags>
+              <TagsBadges numberOfTags={identity.tag_count ?? 0}>
+                {identity?.tags?.map((tag, index) => (
+                  <TagsBadge key={index} label={tag} value={0} />
+                ))}
+              </TagsBadges>
+              <TagsButton onClick={() => 'add tags clicked'} />
+            </Tags>
+          )}
           <StakeCard
             tvl={formatBalance(identity.assets_sum)}
             holders={identity.num_positions}

@@ -1,3 +1,5 @@
+import { IconNameType } from '@0xintuition/1ui'
+
 import { User as PrivyUser, Wallet } from '@privy-io/react-auth'
 
 export interface User {
@@ -14,12 +16,6 @@ export interface UsePrivy {
   logout: () => void
   getAccessToken: () => Promise<string | null>
 }
-
-// export interface Wallet {
-//   address: string
-//   chainId: string
-//   switchChain: (chainId: number) => Promise<void>
-// }
 
 export interface UseWallets {
   wallets?: Wallet[] // Now using a defined Wallet type instead of any
@@ -62,7 +58,7 @@ export interface PrivyPlatform {
     | 'calendly'
     | 'medium'
     | 'github'
-  platformIcon: IconName
+  platformIcon: IconNameType
   linkMethod: LinkMethodNames
   unlinkMethod: UnlinkMethodNamesBySubject | UnlinkMethodNamesByFid
 }
