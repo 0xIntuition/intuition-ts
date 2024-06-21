@@ -8,7 +8,7 @@ import { ProfileVariant } from './ProfileCard.utils'
 export type ProfileVariantType = keyof typeof ProfileVariant
 
 export interface ProfileCardProps {
-  type: ProfileVariantType
+  variant: ProfileVariantType
   avatarSrc: string
   name: string
   walletAddress: string
@@ -23,7 +23,7 @@ export interface ProfileCardProps {
 }
 
 const ProfileCard = ({
-  type,
+  variant,
   avatarSrc,
   name,
   walletAddress,
@@ -35,12 +35,12 @@ const ProfileCard = ({
   return (
     <div className="flex flex-col justify-center items-start w-[300px] rounded-lg box-border">
       <ProfileCardHeader
-        type={type}
+        variant={variant}
         avatarSrc={avatarSrc}
         name={name}
         walletAddress={walletAddress}
       />
-      {type === ProfileVariant.user && (
+      {variant === ProfileVariant.user && (
         <div className="flex justify-between items-center space-x-4 mt-5">
           <ProfileCardStatItem
             value={stats?.numberOfFollowing ?? 0}
@@ -64,7 +64,7 @@ const ProfileCard = ({
           {bio}
         </Text>
 
-        {type === ProfileVariant.entity && link && (
+        {variant === ProfileVariant.entity && link && (
           <div className="mt-5">
             <Text variant="body" className="text-muted-foreground">
               Link

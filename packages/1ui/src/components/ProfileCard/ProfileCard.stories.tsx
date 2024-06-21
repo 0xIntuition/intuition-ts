@@ -97,7 +97,7 @@ export const BasicUsage: Story = {
 
 export const EntityProfile: Story = {
   args: {
-    type: 'entity',
+    variant: 'entity',
     avatarSrc: 'https://avatars.githubusercontent.com/u/94311139?s=200&v=4"',
     name: 'Blockchain Corp',
     walletAddress: '0x1234567890abcdef1234567890abcdef12345678',

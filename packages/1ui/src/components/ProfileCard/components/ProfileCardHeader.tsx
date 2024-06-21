@@ -6,19 +6,19 @@ import { ProfileVariantType } from '../ProfileCard'
 import { ProfileVariant } from '../ProfileCard.utils'
 
 interface ProfileCardHeaderProps {
-  type: ProfileVariantType
+  variant: ProfileVariantType
   avatarSrc: string
   name: string
   walletAddress: string
 }
 
 const ProfileCardHeader = ({
-  type,
+  variant,
   avatarSrc,
   name,
   walletAddress,
 }: ProfileCardHeaderProps) => {
-  const avatarClass = type === ProfileVariant.entity ? 'rounded-lg' : ''
+  const avatarClass = variant === ProfileVariant.entity ? 'rounded-lg' : ''
 
   return (
     <div className="flex items-center space-x-4">

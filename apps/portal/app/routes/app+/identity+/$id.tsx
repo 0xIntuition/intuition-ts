@@ -65,7 +65,7 @@ export default function IdentityDetails() {
       <div className="flex flex-col">
         <div className="w-[300px] h-[230px] flex-col justify-start items-start  inline-flex gap-6">
           <ProfileCard
-            type="entity"
+            variant="entity"
             avatarSrc={identity.image ?? ''}
             name={identity.display_name ?? ''}
             walletAddress={sliceString(identity.identity_id, 6, 4)}

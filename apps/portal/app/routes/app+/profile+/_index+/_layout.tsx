@@ -153,7 +153,7 @@ export default function Profile() {
         <>
           <div className="w-[300px] h-[230px] flex-col justify-start items-start gap-5 inline-flex">
             <ProfileCard
-              type="user"
+              variant="user"
               avatarSrc={userObject.image ?? imgSrc}
               name={userObject.display_name ?? ''}
               walletAddress={

@@ -6,7 +6,7 @@ import { ProfileCard, ProfileCardProps } from './ProfileCard'
 
 describe('ProfileCard', () => {
   const defaultProps: ProfileCardProps = {
-    type: 'user',
+    variant: 'user',
     avatarSrc: 'https://avatars.githubusercontent.com/u/94311139?s=200&v=4',
     name: 'John Doe',
     walletAddress: '0x1234567890abcdef1234567890abcdef12345678',
@@ -112,7 +112,7 @@ describe('ProfileCard', () => {
 
   it('should render with entity type and link', () => {
     const entityProps: ProfileCardProps = {
-      type: 'entity',
+      variant: 'entity',
       avatarSrc: 'https://avatars.githubusercontent.com/u/94311139?s=200&v=4',
       name: 'Blockchain Corp',
       walletAddress: '0x1234567890abcdef1234567890abcdef12345678',

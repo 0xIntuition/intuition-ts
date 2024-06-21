@@ -96,7 +96,7 @@ export default function PublicProfile() {
         <>
           <div className="w-[300px] h-[230px] flex-col justify-start items-start mb-6  inline-flex">
             <ProfileCard
-              type="user"
+              variant="user"
               avatarSrc={userIdentity.user.image ?? imgSrc}
               name={userIdentity.user.display_name ?? ''}
               walletAddress={
