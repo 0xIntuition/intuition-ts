@@ -1,0 +1,29 @@
+import { Canvas, Controls, Meta, Source, Title } from '@storybook/blocks'
+
+import * as Stories from './InfoCard.stories'
+
+<Meta of={Stories} />
+
+<Title />
+
+#### Claim creator info card.
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { InfoCard } from '@0xintuition/1ui'
+
+<InfoCard
+  variant="user"
+  username="super dave"
+  avatarImgSrc="image.jpg"
+  timestamp="2024-05-10T00:00:00Z"
+/>
+`} />
+
+<Canvas of={Stories.BasicUsage} sourceState="none" />
+
+## Properties
+
+<Controls />

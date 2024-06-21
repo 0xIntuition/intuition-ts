@@ -1,18 +1,84 @@
+import { Button, ProfileCard, StakeCard } from '@0xintuition/1ui'
+import { ApiError, IdentitiesService, OpenAPI } from '@0xintuition/api'
+
 import { NestedLayout } from '@components/nested-layout'
 import { identityRouteOptions } from '@lib/utils/constants'
-import { json } from '@remix-run/node'
-import { Outlet } from '@remix-run/react'
+import logger from '@lib/utils/logger'
+import { formatBalance, getAuthHeaders, sliceString } from '@lib/utils/misc'
+import { SessionContext } from '@middleware/session'
+import { json, LoaderFunctionArgs } from '@remix-run/node'
+import { Outlet, useLoaderData } from '@remix-run/react'
+import { getPrivyAccessToken } from '@server/privy'
+import { ExtendedIdentityPresenter } from 'types/identity'
 
-export async function loader() {
+export async function loader({ context, request, params }: LoaderFunctionArgs) {
+  OpenAPI.BASE = 'https://dev.api.intuition.systems'
+  const accessToken = getPrivyAccessToken(request)
+  const headers = getAuthHeaders(accessToken !== null ? accessToken : '')
+  OpenAPI.HEADERS = headers as Record<string, string>
+
+  const session = context.get(SessionContext)
+  const user = session.get('user')
+
+  if (!user?.details?.wallet?.address) {
+    return logger('No user found in session')
+  }
+
+  if (!params.id) {
+    return
+  }
+
+  let identity
+  try {
+    identity = await IdentitiesService.getIdentityById({
+      id: params.id,
+    })
+  } catch (error: unknown) {
+    if (error instanceof ApiError) {
+      identity = undefined
+      logger(`${error.name} - ${error.status}: ${error.message} ${error.url}`)
+    } else {
+      throw error
+    }
+  }
+
+  logger('identity', identity)
+
   return json({
-    message: '$id route layout: hack the planet',
+    identity: identity,
   })
 }
 
 export default function IdentityDetails() {
+  const { identity } = useLoaderData<{ identity: ExtendedIdentityPresenter }>()
+
   return (
     <NestedLayout outlet={Outlet} options={identityRouteOptions}>
-      <div className="flex flex-col">Identity Details route</div>
+      <div className="flex flex-col">
+        <div className="w-[300px] h-[230px] flex-col justify-start items-start  inline-flex gap-6">
+          <ProfileCard
+            type="entity"
+            avatarSrc={identity.image ?? ''}
+            name={identity.display_name ?? ''}
+            walletAddress={sliceString(identity.identity_id, 6, 4)}
+            bio={identity.description ?? ''}
+          >
+            <Button
+              variant="secondary"
+              className="w-full"
+              onClick={() => logger('follow functionality')}
+            >
+              Follow
+            </Button>
+          </ProfileCard>
+          <StakeCard
+            tvl={formatBalance(identity.assets_sum)}
+            holders={identity.num_positions}
+            onBuyClick={() => logger('click buy')} // this will open the stake modal
+            onViewAllClick={() => logger('click view all')} // this will navigate to the data-about positions
+          />
+        </div>
+      </div>
     </NestedLayout>
   )
 }

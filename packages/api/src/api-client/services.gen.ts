@@ -34,6 +34,7 @@ import type {
   GetActivitiesResponse,
   GetActivityByIdData,
   GetActivityByIdResponse,
+  GetAllUsersTotalsData,
   GetAllUsersTotalsResponse,
   GetClaimByIdData,
   GetClaimByIdResponse,
@@ -65,6 +66,7 @@ import type {
   GetUserByWalletPublicResponse,
   GetUserByWalletResponse,
   GetUserIdentitiesResponse,
+  GetUsersData,
   GetUsersPositionsResponse,
   GetUsersResponse,
   GetUserTotalsData,
@@ -904,13 +906,28 @@ export class QueryBuilderService {
 
 export class UsersService {
   /**
+   * @param data The data for the request.
+   * @param data.direction
+   * @param data.sortBy
+   * @param data.page
+   * @param data.offset
+   * @param data.limit
    * @returns unknown Get all users in paginated list
    * @throws ApiError
    */
-  public static getUsers(): CancelablePromise<GetUsersResponse> {
+  public static getUsers(
+    data: GetUsersData = {},
+  ): CancelablePromise<GetUsersResponse> {
     return __request(OpenAPI, {
       method: 'GET',
       url: '/users',
+      query: {
+        direction: data.direction,
+        sortBy: data.sortBy,
+        page: data.page,
+        offset: data.offset,
+        limit: data.limit,
+      },
     })
   }
 
@@ -965,13 +982,30 @@ export class UsersService {
   }
 
   /**
+   * @param data The data for the request.
+   * @param data.direction
+   * @param data.sortBy
+   * @param data.page
+   * @param data.offset
+   * @param data.limit
+   * @param data.timeframe
    * @returns unknown Get total position values for paginated set of users
    * @throws ApiError
    */
-  public static getAllUsersTotals(): CancelablePromise<GetAllUsersTotalsResponse> {
+  public static getAllUsersTotals(
+    data: GetAllUsersTotalsData = {},
+  ): CancelablePromise<GetAllUsersTotalsResponse> {
     return __request(OpenAPI, {
       method: 'GET',
       url: '/users/totals',
+      query: {
+        direction: data.direction,
+        sortBy: data.sortBy,
+        page: data.page,
+        offset: data.offset,
+        limit: data.limit,
+        timeframe: data.timeframe,
+      },
     })
   }
 
@@ -1164,6 +1198,12 @@ export class UsersService {
   /**
    * @param data The data for the request.
    * @param data.id User sql id
+   * @param data.direction
+   * @param data.sortBy
+   * @param data.page
+   * @param data.offset
+   * @param data.limit
+   * @param data.timeframe
    * @returns unknown Get total position values for user
    * @throws ApiError
    */
@@ -1175,6 +1215,14 @@ export class UsersService {
       url: '/users/{id}/totals',
       path: {
         id: data.id,
+      },
+      query: {
+        direction: data.direction,
+        sortBy: data.sortBy,
+        page: data.page,
+        offset: data.offset,
+        limit: data.limit,
+        timeframe: data.timeframe,
       },
     })
   }

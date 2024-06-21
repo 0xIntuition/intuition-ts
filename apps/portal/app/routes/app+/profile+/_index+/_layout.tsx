@@ -1,12 +1,6 @@
 import { useEffect } from 'react'
 
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-  Button,
-  StakeCard,
-} from '@0xintuition/1ui'
+import { Button, ProfileCard } from '@0xintuition/1ui'
 import {
   ApiError,
   IdentitiesService,
@@ -27,7 +21,7 @@ import {
 } from '@lib/state/store'
 import { userProfileRouteOptions } from '@lib/utils/constants'
 import logger from '@lib/utils/logger'
-import { formatBalance, getAuthHeaders, sliceString } from '@lib/utils/misc'
+import { getAuthHeaders, sliceString } from '@lib/utils/misc'
 import { SessionContext } from '@middleware/session'
 import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
 import {
@@ -39,7 +33,6 @@ import {
 import { getPrivyAccessToken } from '@server/privy'
 import * as blockies from 'blockies-ts'
 import { useAtom } from 'jotai'
-import { Loader2Icon } from 'lucide-react'
 import { SessionUser } from 'types/user'
 
 export async function loader({ context, request }: LoaderFunctionArgs) {
@@ -113,7 +106,7 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
 }
 
 export default function Profile() {
-  const { user, userObject, userIdentity, userTotals } = useLoaderData<{
+  const { user, userObject, userTotals } = useLoaderData<{
     user: SessionUser
     userIdentity: IdentityPresenter
     userObject: UserPresenter
@@ -159,81 +152,33 @@ export default function Profile() {
       <div className="flex flex-col">
         <>
           <div className="w-[300px] h-[230px] flex-col justify-start items-start gap-5 inline-flex">
-            <div className="w-[300px] justify-start items-center gap-[18px] inline-flex">
-              <div className="w-[70px] pr-1.5 justify-start items-center flex">
-                <Avatar className="w-16 h-16">
-                  <AvatarImage src={userObject.image ?? imgSrc} alt="Avatar" />
-                  <AvatarFallback>
-                    <Loader2Icon className="h-6 w-6 animate-spin" />
-                  </AvatarFallback>
-                </Avatar>
-              </div>
-              <div className="grow shrink basis-0 self-stretch flex-col justify-center items-start inline-flex">
-                <div className="justify-start items-end gap-1.5 inline-flex">
-                  <div className="text-neutral-200 text-xl font-medium leading-[30px]">
-                    {userObject.display_name}
-                  </div>
-                </div>
-                <div className="self-stretch h-6 pb-0.5 justify-start items-end gap-2.5 inline-flex">
-                  <div className="text-white/50 text-sm font-medium leading-tight">
-                    {userObject.ens_name ??
-                      sliceString(userObject.wallet, 6, 4)}
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="justify-start items-start gap-4 inline-flex">
-              <div className="justify-start items-start gap-1 flex">
-                <div className="text-neutral-300 text-sm font-medium leading-tight">
-                  -
-                </div>
-                <div className="text-white/50 text-sm font-normal leading-tight">
-                  Following
-                </div>
-              </div>
-              <div className="justify-start items-start gap-1 flex">
-                <div className="text-neutral-300 text-sm font-medium leading-tight">
-                  -
-                </div>
-                <div className="text-white/50 text-sm font-normal leading-tight">
-                  Followers
-                </div>
-              </div>
-              <div className="justify-start items-start gap-[3px] flex">
-                <div className="text-green-500 text-sm font-medium leading-tight">
-                  {userTotals.user_points}
-                </div>
-                <div className="text-white/50 text-sm font-normal leading-tight">
-                  Points
-                </div>
-              </div>
-            </div>
-            <div className="justify-center items-center gap-2.5 inline-flex">
-              <div className="w-[300px] text-neutral-300 text-sm font-medium leading-tight">
-                {userObject.description}
-              </div>
-            </div>
-            <Button
-              className="w-[300px] px-3 py-1 rounded-lg shadow border border solid border-neutral-300/10 backdrop-blur-xl justify-center items-center gap-2 inline-flex"
-              variant="secondary"
-              onClick={() => setEditProfileModalActive(true)}
+            <ProfileCard
+              type="user"
+              avatarSrc={userObject.image ?? imgSrc}
+              name={userObject.display_name ?? ''}
+              walletAddress={
+                userObject.ens_name ?? sliceString(userObject.wallet, 6, 4)
+              }
+              stats={{
+                numberOfFollowers: userTotals.follower_count,
+                numberOfFollowing: userTotals.followed_count,
+                points: userTotals.user_points,
+              }}
+              bio={userObject.description ?? ''}
             >
-              <div className="duration-300 text-xs font-medium leading-[18px]">
+              <Button
+                variant="secondary"
+                className="w-full"
+                onClick={() => setEditProfileModalActive(true)}
+              >
                 Edit Profile
-              </div>
-            </Button>
+              </Button>
+            </ProfileCard>
             <ProfileSocialAccounts
               privyUser={JSON.parse(JSON.stringify(user))}
               handleOpenEditSocialLinksModal={() =>
                 setEditSocialLinksModalActive(true)
               }
-            />
-            {/* position card will go here */}
-            <StakeCard
-              tvl={formatBalance(userIdentity.assets_sum)}
-              holders={userIdentity.num_positions}
-              onBuyClick={() => logger('click buy')} // this will open the stake modal
-              onViewAllClick={() => logger('click view all')} // this will navigate to the data-about positions
             />
           </div>
           <EditProfileModal

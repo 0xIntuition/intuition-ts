@@ -402,6 +402,8 @@ export type IdentityPresenter = {
   description?: string | null
   display_name: string
   external_reference?: string | null
+  followed_count?: number | null
+  follower_count?: number | null
   id: string
   identity_hash: string
   identity_id: string
@@ -412,7 +414,10 @@ export type IdentityPresenter = {
   predicate: boolean
   semantic?: string | null
   status: Status
+  tag_count?: number | null
+  tags?: Array<string> | null
   updated_at: string
+  user?: UserPresenter | null
   user_asset_delta: string
   user_assets: string
   user_conviction: string
@@ -899,6 +904,14 @@ export type User = {
   wallet: string
 }
 
+export type UserListQuery = {
+  direction?: SortDirection | null
+  limit?: number | null
+  offset?: number | null
+  page?: number | null
+  sortBy?: SortColumn | null
+}
+
 export type UserPoints = {
   created_at: string
   id: string
@@ -1349,6 +1362,8 @@ export type CreateIdentityResponse = {
   description?: string | null
   display_name: string
   external_reference?: string | null
+  followed_count?: number | null
+  follower_count?: number | null
   id: string
   identity_hash: string
   identity_id: string
@@ -1359,7 +1374,10 @@ export type CreateIdentityResponse = {
   predicate: boolean
   semantic?: string | null
   status: Status
+  tag_count?: number | null
+  tags?: Array<string> | null
   updated_at: string
+  user?: UserPresenter | null
   user_asset_delta: string
   user_assets: string
   user_conviction: string
@@ -1415,6 +1433,8 @@ export type GetIdentityByIdResponse = {
   description?: string | null
   display_name: string
   external_reference?: string | null
+  followed_count?: number | null
+  follower_count?: number | null
   id: string
   identity_hash: string
   identity_id: string
@@ -1425,7 +1445,10 @@ export type GetIdentityByIdResponse = {
   predicate: boolean
   semantic?: string | null
   status: Status
+  tag_count?: number | null
+  tags?: Array<string> | null
   updated_at: string
+  user?: UserPresenter | null
   user_asset_delta: string
   user_assets: string
   user_conviction: string
@@ -1714,6 +1737,14 @@ export type RunDynamicQueryResponse =
   | ClaimPaginatedResponse
   | PositionPaginatedResponse
 
+export type GetUsersData = {
+  direction?: SortDirection | null
+  limit?: number | null
+  offset?: number | null
+  page?: number | null
+  sortBy?: SortColumn | null
+}
+
 export type GetUsersResponse = {
   data: Array<UserPresenter>
   limit: number
@@ -1769,6 +1800,15 @@ export type GetUsersPositionsResponse = {
   limit: number
   page: number
   total: number
+}
+
+export type GetAllUsersTotalsData = {
+  direction?: SortDirection | null
+  limit?: number | null
+  offset?: number | null
+  page?: number | null
+  sortBy?: SortColumn | null
+  timeframe?: TimeFrame | null
 }
 
 export type GetAllUsersTotalsResponse = {
@@ -1990,10 +2030,16 @@ export type GetUserByIdResponse = {
 }
 
 export type GetUserTotalsData = {
+  direction?: SortDirection | null
   /**
    * User sql id
    */
   id: string
+  limit?: number | null
+  offset?: number | null
+  page?: number | null
+  sortBy?: SortColumn | null
+  timeframe?: TimeFrame | null
 }
 
 export type GetUserTotalsResponse = {
@@ -2495,6 +2541,8 @@ export type $OpenApiTs = {
           description?: string | null
           display_name: string
           external_reference?: string | null
+          followed_count?: number | null
+          follower_count?: number | null
           id: string
           identity_hash: string
           identity_id: string
@@ -2505,7 +2553,10 @@ export type $OpenApiTs = {
           predicate: boolean
           semantic?: string | null
           status: Status
+          tag_count?: number | null
+          tags?: Array<string> | null
           updated_at: string
+          user?: UserPresenter | null
           user_asset_delta: string
           user_assets: string
           user_conviction: string
@@ -2575,6 +2626,8 @@ export type $OpenApiTs = {
           description?: string | null
           display_name: string
           external_reference?: string | null
+          followed_count?: number | null
+          follower_count?: number | null
           id: string
           identity_hash: string
           identity_id: string
@@ -2585,7 +2638,10 @@ export type $OpenApiTs = {
           predicate: boolean
           semantic?: string | null
           status: Status
+          tag_count?: number | null
+          tags?: Array<string> | null
           updated_at: string
+          user?: UserPresenter | null
           user_asset_delta: string
           user_assets: string
           user_conviction: string
@@ -2979,6 +3035,13 @@ export type $OpenApiTs = {
   }
   '/users': {
     get: {
+      req: {
+        direction?: SortDirection | null
+        limit?: number | null
+        offset?: number | null
+        page?: number | null
+        sortBy?: SortColumn | null
+      }
       res: {
         /**
          * Get all users in paginated list
@@ -3073,6 +3136,14 @@ export type $OpenApiTs = {
   }
   '/users/totals': {
     get: {
+      req: {
+        direction?: SortDirection | null
+        limit?: number | null
+        offset?: number | null
+        page?: number | null
+        sortBy?: SortColumn | null
+        timeframe?: TimeFrame | null
+      }
       res: {
         /**
          * Get total position values for paginated set of users
@@ -3366,10 +3437,16 @@ export type $OpenApiTs = {
   '/users/{id}/totals': {
     get: {
       req: {
+        direction?: SortDirection | null
         /**
          * User sql id
          */
         id: string
+        limit?: number | null
+        offset?: number | null
+        page?: number | null
+        sortBy?: SortColumn | null
+        timeframe?: TimeFrame | null
       }
       res: {
         /**
