@@ -10,7 +10,7 @@ const meta: Meta<typeof ProfileCard> = {
   title: 'Components/ProfileCard',
   component: ProfileCard,
   argTypes: {
-    type: {
+    variant: {
       description: 'Type of the profile card (user or entity)',
       options: Object.keys(ProfileVariant),
       control: { type: 'radio' },
@@ -68,7 +68,7 @@ type Story = StoryObj<typeof ProfileCard>
 
 export const BasicUsage: Story = {
   args: {
-    type: 'user',
+    variant: 'user',
     avatarSrc: 'https://avatars.githubusercontent.com/u/94311139?s=200&v=4"',
     name: 'John Doe',
     walletAddress: '0x1234567890abcdef1234567890abcdef12345678',
