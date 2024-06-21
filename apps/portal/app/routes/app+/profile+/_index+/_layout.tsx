@@ -1,6 +1,15 @@
 import { useEffect } from 'react'
 
-import { Button, ProfileCard } from '@0xintuition/1ui'
+import {
+  Button,
+  PositionCard,
+  PositionCardFeesAccrued,
+  PositionCardLastUpdated,
+  PositionCardOwnership,
+  PositionCardStaked,
+  ProfileCard,
+  StakeCard,
+} from '@0xintuition/1ui'
 import {
   ApiError,
   IdentitiesService,
@@ -21,7 +30,12 @@ import {
 } from '@lib/state/store'
 import { userProfileRouteOptions } from '@lib/utils/constants'
 import logger from '@lib/utils/logger'
-import { getAuthHeaders, sliceString } from '@lib/utils/misc'
+import {
+  calculatePercentageGain,
+  formatBalance,
+  getAuthHeaders,
+  sliceString,
+} from '@lib/utils/misc'
 import { SessionContext } from '@middleware/session'
 import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
 import {
@@ -30,10 +44,12 @@ import {
   useMatches,
   useRevalidator,
 } from '@remix-run/react'
+import { getVaultDetails } from '@server/multivault'
 import { getPrivyAccessToken } from '@server/privy'
 import * as blockies from 'blockies-ts'
 import { useAtom } from 'jotai'
 import { SessionUser } from 'types/user'
+import { VaultDetailsType } from 'types/vault'
 
 export async function loader({ context, request }: LoaderFunctionArgs) {
   OpenAPI.BASE = 'https://dev.api.intuition.systems'
@@ -56,9 +72,7 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
   } catch (error: unknown) {
     if (error instanceof ApiError) {
       userIdentity = undefined
-      console.log(
-        `${error.name} - ${error.status}: ${error.message} ${error.url}`,
-      )
+      logger(`${error.name} - ${error.status}: ${error.message} ${error.url}`)
     } else {
       throw error
     }
@@ -76,16 +90,14 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
   } catch (error: unknown) {
     if (error instanceof ApiError) {
       userObject = undefined
-      console.log(
-        `${error.name} - ${error.status}: ${error.message} ${error.url}`,
-      )
+      logger(`${error.name} - ${error.status}: ${error.message} ${error.url}`)
     } else {
       throw error
     }
   }
 
   if (!userObject) {
-    return console.log('No user found in DB')
+    return logger('No user found in DB')
   }
 
   let userTotals
@@ -102,16 +114,33 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
     }
   }
 
-  return json({ user, userIdentity, userObject, userTotals })
+  logger('userIdentity', userIdentity)
+
+  let vaultDetails: VaultDetailsType | null = null
+
+  if (userIdentity.vault_id) {
+    vaultDetails = await getVaultDetails(
+      userIdentity.contract,
+      userIdentity.vault_id,
+      user.details.wallet.address as `0x${string}`,
+    )
+  }
+
+  return json({ user, userIdentity, userObject, userTotals, vaultDetails })
 }
 
 export default function Profile() {
-  const { user, userObject, userTotals } = useLoaderData<{
-    user: SessionUser
-    userIdentity: IdentityPresenter
-    userObject: UserPresenter
-    userTotals: UserTotalsPresenter
-  }>()
+  const { user, userObject, userIdentity, userTotals, vaultDetails } =
+    useLoaderData<{
+      user: SessionUser
+      userIdentity: IdentityPresenter
+      userObject: UserPresenter
+      userTotals: UserTotalsPresenter
+      vaultDetails: VaultDetailsType
+    }>()
+
+  logger('vaultDetails', vaultDetails)
+  const { user_conviction_value: user_assets } = vaultDetails
 
   const imgSrc = blockies
     .create({ seed: user?.details?.wallet?.address })
@@ -179,6 +208,42 @@ export default function Profile() {
               handleOpenEditSocialLinksModal={() =>
                 setEditSocialLinksModalActive(true)
               }
+            />
+            <PositionCard onButtonClick={() => logger('sell position clicked')}>
+              <PositionCardStaked
+                amount={user_assets ? +formatBalance(user_assets, 18, 4) : 0}
+              />
+              <PositionCardOwnership
+                percentOwnership={
+                  userIdentity.user_asset_delta !== null &&
+                  userIdentity.user_assets
+                    ? +calculatePercentageGain(
+                        +userIdentity.user_assets -
+                          +userIdentity.user_asset_delta,
+                        +userIdentity.user_assets,
+                      ).toFixed(1)
+                    : 0
+                }
+              />
+              <PositionCardFeesAccrued
+                amount={
+                  userIdentity.user_asset_delta
+                    ? +formatBalance(
+                        +userIdentity.user_assets -
+                          +userIdentity.user_asset_delta,
+                        18,
+                        5,
+                      )
+                    : 0
+                }
+              />
+              <PositionCardLastUpdated timestamp={userIdentity.updated_at} />
+            </PositionCard>
+            <StakeCard
+              tvl={formatBalance(userIdentity.assets_sum)}
+              holders={userIdentity.num_positions}
+              onBuyClick={() => logger('click buy')} // this will open the stake modal
+              onViewAllClick={() => logger('click view all')} // this will navigate to the data-about positions
             />
           </div>
           <EditProfileModal

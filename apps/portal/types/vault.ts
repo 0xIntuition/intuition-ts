@@ -15,7 +15,7 @@ export type MultivaultConfig = {
   formatted_atom_creation_fee: string
 }
 
-export type IdentityVaultDetails = {
+export type IdentityVaultDetailsType = {
   vault_id: string
   assets_sum: string
   formatted_assets_sum: string
@@ -47,7 +47,7 @@ export type IdentityVaultDetails = {
   formatted_user_conviction_value?: string
 }
 
-export type VaultDetails = {
+export type VaultDetailsType = {
   assets_sum: string
   formatted_assets_sum: string
   conviction_sum: string
