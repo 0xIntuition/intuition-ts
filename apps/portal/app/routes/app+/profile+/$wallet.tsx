@@ -1,4 +1,4 @@
-import { Button, ProfileCard, StakeCard } from '@0xintuition/1ui'
+import { Button, PositionCard, PositionCardFeesAccrued, PositionCardLastUpdated, PositionCardOwnership, PositionCardStaked, ProfileCard, StakeCard } from '@0xintuition/1ui'
 import {
   ApiError,
   IdentitiesService,
@@ -10,13 +10,15 @@ import {
 import { NestedLayout } from '@components/nested-layout'
 import { userIdentityRouteOptions } from '@lib/utils/constants'
 import logger from '@lib/utils/logger'
-import { formatBalance, getAuthHeaders, sliceString } from '@lib/utils/misc'
+import { calculatePercentageGain, formatBalance, getAuthHeaders, sliceString } from '@lib/utils/misc'
 import { SessionContext } from '@middleware/session'
 import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
 import { Outlet, useLoaderData, useParams } from '@remix-run/react'
+import { getVaultDetails } from '@server/multivault'
 import { getPrivyAccessToken } from '@server/privy'
 import * as blockies from 'blockies-ts'
 import { ExtendedUserPresenter } from 'types/user'
+import { VaultDetailsType, VaultDetailsType } from 'types/vault'
 
 export async function loader({ context, request, params }: LoaderFunctionArgs) {
   OpenAPI.BASE = 'https://dev.api.intuition.systems'
@@ -78,15 +80,31 @@ export async function loader({ context, request, params }: LoaderFunctionArgs) {
     }
   }
 
-  return json({ user, userIdentity, userTotals })
+  logger('userIdentity', userIdentity)
+
+  let vaultDetails: VaultDetailsType | null = null
+
+  if (userIdentity !== undefined && userIdentity.vault_id) {
+    vaultDetails = await getVaultDetails(
+      userIdentity.contract,
+      userIdentity.vault_id,
+      user.details.wallet.address as `0x${string}`,
+    )
+  }
+
+  return json({ user, userIdentity, userTotals, vaultDetails })
 }
 
 export default function PublicProfile() {
-  const { userIdentity, userTotals } = useLoaderData<{
+  const { userIdentity, userTotals, vaultDetails } = useLoaderData<{
     userIdentity: ExtendedUserPresenter
     userTotals: UserTotalsPresenter
+    vaultDetails: VaultDetailsType
   }>()
   const params = useParams()
+
+  const { user_conviction_value: user_assets } = vaultDetails
+
 
   const imgSrc = blockies.create({ seed: params.wallet }).toDataURL()
 
@@ -121,7 +139,36 @@ export default function PublicProfile() {
           </div>
           <div className="flex flex-col gap-6">
             {/* social links will go here */}
-            {/* position card will go here */}
+            <PositionCard onButtonClick={() => logger('sell position clicked')}>
+              <PositionCardStaked
+                amount={user_assets ? +formatBalance(user_assets, 18, 4) : 0}
+              />
+              <PositionCardOwnership
+                percentOwnership={
+                  userIdentity.user_asset_delta !== null &&
+                  userIdentity.user_assets
+                    ? +calculatePercentageGain(
+                        +userIdentity.user_assets -
+                          +userIdentity.user_asset_delta,
+                        +userIdentity.user_assets,
+                      ).toFixed(1)
+                    : 0
+                }
+              />
+              <PositionCardFeesAccrued
+                amount={
+                  userIdentity.user_asset_delta
+                    ? +formatBalance(
+                        +userIdentity.user_assets -
+                          +userIdentity.user_asset_delta,
+                        18,
+                        5,
+                      )
+                    : 0
+                }
+              />
+              <PositionCardLastUpdated timestamp={userIdentity.updated_at} />
+            </PositionCard>
             <StakeCard
               tvl={formatBalance(userIdentity.assets_sum)}
               holders={userIdentity.num_positions}

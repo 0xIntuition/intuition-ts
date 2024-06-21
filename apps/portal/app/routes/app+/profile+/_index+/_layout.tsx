@@ -118,7 +118,7 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
 
   let vaultDetails: VaultDetailsType | null = null
 
-  if (userIdentity.vault_id) {
+  if (userIdentity !== undefined && userIdentity.vault_id) {
     vaultDetails = await getVaultDetails(
       userIdentity.contract,
       userIdentity.vault_id,
@@ -139,7 +139,6 @@ export default function Profile() {
       vaultDetails: VaultDetailsType
     }>()
 
-  logger('vaultDetails', vaultDetails)
   const { user_conviction_value: user_assets } = vaultDetails
 
   const imgSrc = blockies
