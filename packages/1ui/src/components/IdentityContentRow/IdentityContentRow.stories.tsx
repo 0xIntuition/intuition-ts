@@ -1,7 +1,6 @@
 import React from 'react'
 
 import type { Meta, StoryObj } from '@storybook/react'
-import { Text } from 'components/Text'
 
 import { IdentityContentRow } from './IdentityContentRow'
 
@@ -34,11 +33,7 @@ export const UserVariant: Story = {
   },
   render: (args) => (
     <div className="w-[800px]">
-      <IdentityContentRow {...args}>
-        <Text variant="body" className="text-primary-foreground">
-          Extra Content
-        </Text>
-      </IdentityContentRow>
+      <IdentityContentRow {...args}></IdentityContentRow>
     </div>
   ),
 }
@@ -61,11 +56,7 @@ export const EntityVariant: Story = {
   },
   render: (args) => (
     <div className="w-[800px]">
-      <IdentityContentRow {...args}>
-        <Text variant="body" className="text-primary-foreground">
-          Extra Content
-        </Text>
-      </IdentityContentRow>
+      <IdentityContentRow {...args}></IdentityContentRow>
     </div>
   ),
 }

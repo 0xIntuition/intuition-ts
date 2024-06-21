@@ -42,17 +42,16 @@ const IdentityContentRow = ({
     <div className="w-full mb-4">
       <div className="w-full flex justify-between items-center" {...props}>
         <div className="flex items-center">
-          <Avatar className="w-[64px] h-[64px] mr-4">
+          <Avatar
+            className={`w-[64px] h-[64px] mr-4 ${variant === IdentityVariant.entity ? 'rounded-lg' : ''}`}
+          >
             <AvatarImage src={avatarSrc} alt={name} />
             {variant === IdentityVariant.user && (
               <AvatarFallback>{name.slice(0, 2)}</AvatarFallback>
             )}
             {variant === IdentityVariant.entity && (
-              <AvatarFallback>
-                <Icon
-                  name={IconName.fingerprint}
-                  className="h-full w-full rounded-lg"
-                />
+              <AvatarFallback className="rounded-lg">
+                <Icon name={IconName.fingerprint} className="h-full w-full" />
               </AvatarFallback>
             )}
           </Avatar>
