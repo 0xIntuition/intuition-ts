@@ -152,6 +152,7 @@ export default function PublicProfile() {
           </div>
           <div className="flex flex-col gap-6">
             {/* social links will go here */}
+
             <PositionCard onButtonClick={() => logger('sell position clicked')}>
               <PositionCardStaked
                 amount={user_assets ? +formatBalance(user_assets, 18, 4) : 0}
