@@ -20,11 +20,13 @@ import {
   UserTotalsPresenter,
 } from '@0xintuition/api'
 
+import CreateIdentityModal from '@components/create-identity-modal'
 import EditProfileModal from '@components/edit-profile-modal'
 import EditSocialLinksModal from '@components/edit-social-links-modal'
 import { NestedLayout } from '@components/nested-layout'
 import { ProfileSocialAccounts } from '@components/profile-social-accounts'
 import {
+  createIdentityModalAtom,
   editProfileModalAtom,
   editSocialLinksModalAtom,
 } from '@lib/state/store'
@@ -152,6 +154,10 @@ export default function Profile() {
     editSocialLinksModalAtom,
   )
 
+  const [createIdentityModalActive, setCreateIdentityModalActive] = useAtom(
+    createIdentityModalAtom,
+  )
+
   const revalidator = useRevalidator()
 
   useEffect(() => {
@@ -244,6 +250,13 @@ export default function Profile() {
               onBuyClick={() => logger('click buy')} // this will open the stake modal
               onViewAllClick={() => logger('click view all')} // this will navigate to the data-about positions
             />
+            <Button
+              variant="secondary"
+              className="w-full"
+              onClick={() => setCreateIdentityModalActive(true)}
+            >
+              Create Identity
+            </Button>
           </div>
           <EditProfileModal
             userObject={userObject}
@@ -254,6 +267,10 @@ export default function Profile() {
             privyUser={JSON.parse(JSON.stringify(user))}
             open={editSocialLinksModalActive}
             onClose={() => setEditSocialLinksModalActive(false)}
+          />
+          <CreateIdentityModal
+            open={createIdentityModalActive}
+            onClose={() => setCreateIdentityModalActive(false)}
           />
         </>
       </div>
