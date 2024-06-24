@@ -151,12 +151,12 @@ describe('ClaimStakeCard', () => {
             class="flex justify-between items-center gap-4 w-max mt-2"
           >
             <button
-              class="flex justify-center items-center font-medium border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted bg-against text-against-foreground border-against rounded-full hover:bg-against/70 hover:border-against/30 shadow-md-subtle px-4 py-2 gap-3 text-base w-[140px]"
+              class="flex justify-center items-center font-medium border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted bg-against text-against-foreground border-against rounded-full hover:bg-against/70 hover:border-against/30 shadow-md-subtle px-4 py-2 gap-3 text-base w-36"
             >
               Deposit Against
             </button>
             <button
-              class="flex justify-center items-center font-medium border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted bg-for text-for-foreground border-for rounded-full hover:bg-for/70 hover:border-for/30 shadow-md-subtle px-4 py-2 gap-3 text-base w-[140px]"
+              class="flex justify-center items-center font-medium border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted bg-for text-for-foreground border-for rounded-full hover:bg-for/70 hover:border-for/30 shadow-md-subtle px-4 py-2 gap-3 text-base w-36"
             >
               Deposit For
             </button>
@@ -308,13 +308,13 @@ describe('ClaimStakeCard', () => {
             class="flex justify-between items-center gap-4 w-max mt-2"
           >
             <button
-              class="flex justify-center items-center font-medium border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted bg-against text-against-foreground border-against rounded-full hover:bg-against/70 hover:border-against/30 shadow-md-subtle px-4 py-2 gap-3 text-base w-[140px]"
+              class="flex justify-center items-center font-medium border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted bg-against text-against-foreground border-against rounded-full hover:bg-against/70 hover:border-against/30 shadow-md-subtle px-4 py-2 gap-3 text-base w-36"
               disabled=""
             >
               Deposit Against
             </button>
             <button
-              class="flex justify-center items-center font-medium border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted bg-for text-for-foreground border-for rounded-full hover:bg-for/70 hover:border-for/30 shadow-md-subtle px-4 py-2 gap-3 text-base w-[140px]"
+              class="flex justify-center items-center font-medium border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted bg-for text-for-foreground border-for rounded-full hover:bg-for/70 hover:border-for/30 shadow-md-subtle px-4 py-2 gap-3 text-base w-36"
               disabled=""
             >
               Deposit For

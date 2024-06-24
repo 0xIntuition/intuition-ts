@@ -150,7 +150,7 @@ const ClaimStakeCard = ({
           size={ButtonSize.lg}
           disabled={disableAgainstBtn || !onAgainstBtnClick}
           onClick={onAgainstBtnClick}
-          className="w-[140px]"
+          className="w-36"
         >
           Deposit Against
         </Button>
@@ -159,7 +159,7 @@ const ClaimStakeCard = ({
           size={ButtonSize.lg}
           disabled={disableForBtn || !onForBtnClick}
           onClick={onForBtnClick}
-          className="w-[140px]"
+          className="w-36"
         >
           Deposit For
         </Button>
