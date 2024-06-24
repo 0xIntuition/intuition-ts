@@ -150,11 +150,11 @@ type Deposit @entity(immutable: true) {
   "beneficiary of the minted shares"
   receiver: Account!
 
-  "total assets held in the vault"
-  vaultBalance: BigInt! 
+  "total shares held by the receiver in the vault"
+  receiverTotalSharesInVault: BigInt! 
 
   "total assets that go towards minting shares for the receiver"
-  userAssetsAfterTotalFees: BigInt! 
+  senderAssetsAfterTotalFees: BigInt! 
 
   "total shares transferred"
   sharesForReceiver: BigInt!
@@ -164,6 +164,12 @@ type Deposit @entity(immutable: true) {
 
   "vault being deposited into"
   vault: Vault! 
+
+  "whether the vault is a triple vault or not"
+  isTriple: Boolean!
+
+  "whether the receiver is an atom wallet or not"
+  isAtomWallet: Boolean!
 
   blockNumber: BigInt!
   blockTimestamp: BigInt!
@@ -189,14 +195,14 @@ type Redemption @entity(immutable: true) {
   "beneficiary of the withdrawn assets (can be different from the sender)"
   receiver: Account! 
 
-  "total assets held in the vault"
-  vaultBalance: BigInt! 
+  "total shares held by the sender in the vault"
+  senderTotalSharesInVault: BigInt! 
 
   "quantity of assets withdrawn by the receiver"
   assetsForReceiver: BigInt! 
 
   "quantity of shares redeemed"
-  shares: BigInt! 
+  sharesRedeemedBySender: BigInt! 
 
   "total fee amount collected for exiting the vault"
   exitFee: BigInt! 
@@ -227,7 +233,7 @@ type Position @entity {
   id: ID!
   account: Account!
   vault: Vault!
-  balance: BigInt!
+  shares: BigInt!
 }
 
 type Signal @entity {

@@ -27,7 +27,7 @@ export function handleAtomCreated(event: AtomCreated): void {
   let account = Account.load(event.params.creator.toHexString())
   if (account === null) {
     account = new Account(event.params.creator.toHexString())
-    account.label = account.id
+    account.label = shortId(account.id)
     account.type = "Default"
   }
 
@@ -96,7 +96,7 @@ export function handleTripleCreated(event: TripleCreated): void {
   let account = Account.load(event.params.creator.toHexString())
   if (account === null) {
     account = new Account(event.params.creator.toHexString())
-    account.label = account.id
+    account.label = shortId(account.id)
     account.type = "Default"
   }
 
@@ -169,7 +169,9 @@ export function handleTripleCreated(event: TripleCreated): void {
   ev.save()
 }
 
-
+function shortId(id: string): string {
+  return id.substring(0, 6) + "..." + id.substring(id.length - 4)
+}
 
 export function handleDeposited(event: Deposited): void {
   let deposit = new Deposit(
@@ -178,7 +180,7 @@ export function handleDeposited(event: Deposited): void {
   let sender = Account.load(event.params.sender.toHexString())
   if (sender === null) {
     sender = new Account(event.params.sender.toHexString())
-    sender.label = sender.id
+    sender.label = shortId(sender.id)
     sender.type = "Default"
     sender.save()
   }
@@ -186,7 +188,7 @@ export function handleDeposited(event: Deposited): void {
   let receiver = Account.load(event.params.receiver.toHexString())
   if (receiver === null) {
     receiver = new Account(event.params.receiver.toHexString())
-    receiver.label = receiver.id
+    receiver.label = shortId(receiver.id)
     receiver.type = "Default"
     receiver.save()
   }
@@ -203,10 +205,13 @@ export function handleDeposited(event: Deposited): void {
   deposit.sender = sender.id
   deposit.receiver = receiver.id
 
-  deposit.vaultBalance = event.params.vaultBalance
-  deposit.userAssetsAfterTotalFees = event.params.userAssetsAfterTotalFees
+  deposit.receiverTotalSharesInVault = event.params.receiverTotalSharesInVault
+  deposit.senderAssetsAfterTotalFees = event.params.senderAssetsAfterTotalFees
   deposit.sharesForReceiver = event.params.sharesForReceiver
   deposit.entryFee = event.params.entryFee
+
+  deposit.isTriple = event.params.isTriple
+  deposit.isAtomWallet = event.params.isAtomWallet
 
   deposit.blockNumber = event.block.number
   deposit.blockTimestamp = event.block.timestamp
@@ -222,31 +227,33 @@ export function handleDeposited(event: Deposited): void {
     position.account = receiver.id
   }
 
-  position.balance = event.params.vaultBalance
+  position.shares = event.params.receiverTotalSharesInVault
   position.save()
 
-  let signal = new Signal(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-  let totalShares = vault.totalShares
-  let relativeStrength = totalShares.gt(BigInt.fromI32(0)) ?
-    event.params.sharesForReceiver.times(BigInt.fromI32(100)).div(totalShares) : BigInt.fromI32(100)
-  log.info("relativeStrength: {}", [relativeStrength.toString()])
-  log.info("totalShares: {}", [totalShares.toString()])
-  log.info("sharesForReceiver: {}", [event.params.sharesForReceiver.toString()])
-  // 23634841607072053n totalshares
-  // 22341605886429n
-  signal.delta = event.params.sharesForReceiver
-  signal.relativeStrength = relativeStrength
-  signal.account = sender.id
-  signal.atom = null
-  signal.triple = null
-  signal.deposit = deposit.id
-  signal.redemption = null
-  signal.blockNumber = event.block.number
-  signal.blockTimestamp = event.block.timestamp
-  signal.transactionHash = event.transaction.hash
-  signal.save()
+  if (deposit.isAtomWallet == false) {
+    let signal = new Signal(
+      event.transaction.hash.concatI32(event.logIndex.toI32())
+    )
+    let totalShares = vault.totalShares
+    let relativeStrength = totalShares.gt(BigInt.fromI32(0)) ?
+      event.params.sharesForReceiver.times(BigInt.fromI32(100)).div(totalShares) : BigInt.fromI32(100)
+    log.info("relativeStrength: {}", [relativeStrength.toString()])
+    log.info("totalShares: {}", [totalShares.toString()])
+    log.info("sharesForReceiver: {}", [event.params.sharesForReceiver.toString()])
+    // 23634841607072053n totalshares
+    // 22341605886429n
+    signal.delta = event.params.sharesForReceiver
+    signal.relativeStrength = relativeStrength
+    signal.account = sender.id
+    signal.atom = null
+    signal.triple = null
+    signal.deposit = deposit.id
+    signal.redemption = null
+    signal.blockNumber = event.block.number
+    signal.blockTimestamp = event.block.timestamp
+    signal.transactionHash = event.transaction.hash
+    signal.save()
+  }
 
   let ev = new Event(
     event.transaction.hash.concatI32(event.logIndex.toI32())
@@ -268,7 +275,7 @@ export function handleFeesTransferred(event: FeesTransferred): void {
   let account = Account.load(event.params.sender.toHexString())
   if (account === null) {
     account = new Account(event.params.sender.toHexString())
-    account.label = account.id
+    account.label = shortId(account.id)
     account.type = "Default"
     account.save()
   }
@@ -311,7 +318,7 @@ export function handleRedeemed(event: Redeemed): void {
   let sender = Account.load(event.params.sender.toHexString())
   if (sender === null) {
     sender = new Account(event.params.sender.toHexString())
-    sender.label = sender.id
+    sender.label = shortId(sender.id)
     sender.type = "Default"
     sender.save()
   }
@@ -319,7 +326,7 @@ export function handleRedeemed(event: Redeemed): void {
   let receiver = Account.load(event.params.receiver.toHexString())
   if (receiver === null) {
     receiver = new Account(event.params.receiver.toHexString())
-    receiver.label = receiver.id
+    receiver.label = shortId(receiver.id)
     receiver.type = "Default"
     receiver.save()
   }
@@ -329,15 +336,15 @@ export function handleRedeemed(event: Redeemed): void {
     vault = new Vault(event.params.vaultId.toString())
   }
   let totalShares = vault.totalShares
-  vault.totalShares = vault.totalShares.minus(event.params.shares)
+  vault.totalShares = vault.totalShares.minus(event.params.sharesRedeemedBySender)
   vault.save()
 
   redemption.sender = sender.id
   redemption.receiver = receiver.id
 
-  redemption.vaultBalance = event.params.vaultBalance
+  redemption.sharesRedeemedBySender = event.params.sharesRedeemedBySender
   redemption.assetsForReceiver = event.params.assetsForReceiver
-  redemption.shares = event.params.shares
+  redemption.senderTotalSharesInVault = event.params.senderTotalSharesInVault
   redemption.exitFee = event.params.exitFee
   redemption.vault = vault.id
 
@@ -355,15 +362,17 @@ export function handleRedeemed(event: Redeemed): void {
     position.account = sender.id
   }
 
-  position.balance = event.params.vaultBalance
+  position.shares = event.params.senderTotalSharesInVault
   position.save()
 
   let signal = new Signal(
     event.transaction.hash.concatI32(event.logIndex.toI32())
   )
 
-  let relativeStrength = event.params.shares.times(BigInt.fromI32(100)).div(totalShares)
-  signal.delta = event.params.shares.times(BigInt.fromI32(-1))
+  let relativeStrength = totalShares.equals(BigInt.zero()) ? BigInt.fromI32(100)
+    : event.params.sharesRedeemedBySender.times(BigInt.fromI32(100)).div(totalShares)
+
+  signal.delta = event.params.sharesRedeemedBySender.times(BigInt.fromI32(-1))
   signal.relativeStrength = relativeStrength
   signal.account = sender.id
   signal.atom = null

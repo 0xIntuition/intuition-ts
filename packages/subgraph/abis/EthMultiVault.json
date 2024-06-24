@@ -893,7 +893,7 @@
     "name": "maxRedeem",
     "inputs": [
       {
-        "name": "owner",
+        "name": "sender",
         "type": "address",
         "internalType": "address"
       },
@@ -1585,13 +1585,13 @@
         "internalType": "address"
       },
       {
-        "name": "vaultBalance",
+        "name": "receiverTotalSharesInVault",
         "type": "uint256",
         "indexed": false,
         "internalType": "uint256"
       },
       {
-        "name": "userAssetsAfterTotalFees",
+        "name": "senderAssetsAfterTotalFees",
         "type": "uint256",
         "indexed": false,
         "internalType": "uint256"
@@ -1613,6 +1613,18 @@
         "type": "uint256",
         "indexed": false,
         "internalType": "uint256"
+      },
+      {
+        "name": "isTriple",
+        "type": "bool",
+        "indexed": false,
+        "internalType": "bool"
+      },
+      {
+        "name": "isAtomWallet",
+        "type": "bool",
+        "indexed": false,
+        "internalType": "bool"
       }
     ],
     "anonymous": false
@@ -1685,7 +1697,7 @@
         "internalType": "address"
       },
       {
-        "name": "vaultBalance",
+        "name": "senderTotalSharesInVault",
         "type": "uint256",
         "indexed": false,
         "internalType": "uint256"
@@ -1697,7 +1709,7 @@
         "internalType": "uint256"
       },
       {
-        "name": "shares",
+        "name": "sharesRedeemedBySender",
         "type": "uint256",
         "indexed": false,
         "internalType": "uint256"

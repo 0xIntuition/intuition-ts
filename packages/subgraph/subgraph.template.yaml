@@ -36,7 +36,7 @@ dataSources:
       eventHandlers:
         - event: AtomCreated(indexed address,indexed address,bytes,uint256)
           handler: handleAtomCreated
-        - event: Deposited(indexed address,indexed address,uint256,uint256,uint256,uint256,uint256)
+        - event: Deposited(indexed address,indexed address,uint256,uint256,uint256,uint256,uint256,bool,bool)
           handler: handleDeposited
         - event: FeesTransferred(indexed address,indexed address,uint256)
           handler: handleFeesTransferred

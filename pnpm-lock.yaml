@@ -664,7 +664,7 @@ importers:
         version: 0.32.0
     devDependencies:
       '@0xintuition/protocol':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../protocol
       '@faker-js/faker':
         specifier: ^8.4.1
