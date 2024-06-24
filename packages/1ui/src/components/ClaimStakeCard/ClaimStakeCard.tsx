@@ -15,11 +15,16 @@ import {
 } from '..'
 import { cn } from '../../styles'
 
-const valueWithCurrency = (value: number, currency: CurrencyType) =>
-  `${value} ${currency}`
+const StakeCardDataVariant = {
+  For: 'for',
+  Against: 'against',
+}
+
+type StakeCardDataVariantType =
+  (typeof StakeCardDataVariant)[keyof typeof StakeCardDataVariant]
 
 interface ClaimStakeCardDataSetProps {
-  variant: 'for' | 'against'
+  variant: StakeCardDataVariantType
   value: string | number
 }
 
@@ -27,7 +32,7 @@ const ClaimStakeCardDataSet = ({
   variant,
   value,
 }: ClaimStakeCardDataSetProps) => {
-  const isVariantFor = variant === 'for'
+  const isVariantFor = variant === StakeCardDataVariant.For
   let subContainerClassName = 'flex gap-1 items-center'
   if (isVariantFor) {
     subContainerClassName += ' justify-end'
@@ -77,13 +82,16 @@ const ClaimStakeCard = ({
   tvlFor,
   amountAgainst,
   amountFor,
-  disableAgainstBtn,
+  disableAgainstBtn = false,
   onAgainstBtnClick,
-  disableForBtn,
+  disableForBtn = false,
   onForBtnClick,
   className,
   ...props
 }: ClaimStakeCardProps) => {
+  const valueWithCurrency = (value: number, currency: CurrencyType) =>
+    `${value} ${currency}`
+
   const stakedForPercentage = (tvlFor / totalTVL) * 100
 
   return (
@@ -118,23 +126,29 @@ const ClaimStakeCard = ({
       </div>
       <div className="flex justify-between items-center">
         <ClaimStakeCardDataSet
-          variant="against"
+          variant={StakeCardDataVariant.Against}
           value={valueWithCurrency(tvlAgainst, currency)}
         />
         <ClaimStakeCardDataSet
-          variant="for"
+          variant={StakeCardDataVariant.For}
           value={valueWithCurrency(tvlFor, currency)}
         />
       </div>
       <div className="flex justify-between items-center">
-        <ClaimStakeCardDataSet variant="against" value={amountAgainst} />
-        <ClaimStakeCardDataSet variant="for" value={amountFor} />
+        <ClaimStakeCardDataSet
+          variant={StakeCardDataVariant.Against}
+          value={amountAgainst}
+        />
+        <ClaimStakeCardDataSet
+          variant={StakeCardDataVariant.For}
+          value={amountFor}
+        />
       </div>
       <div className="flex justify-between items-center gap-4 w-max mt-2">
         <Button
           variant={ButtonVariant.against}
           size={ButtonSize.lg}
-          disabled={disableAgainstBtn}
+          disabled={disableAgainstBtn || !onAgainstBtnClick}
           onClick={onAgainstBtnClick}
           className="w-[140px]"
         >
@@ -143,7 +157,7 @@ const ClaimStakeCard = ({
         <Button
           variant={ButtonVariant.for}
           size={ButtonSize.lg}
-          disabled={disableForBtn}
+          disabled={disableForBtn || !onForBtnClick}
           onClick={onForBtnClick}
           className="w-[140px]"
         >

@@ -15,6 +15,8 @@ describe('ClaimStakeCard', () => {
         tvlFor={3.643}
         amountAgainst={39}
         amountFor={124}
+        onAgainstBtnClick={() => console.log('test')}
+        onForBtnClick={() => console.log('test')}
       />,
     )
     expect(asFragment()).toMatchInlineSnapshot(`
@@ -163,7 +165,7 @@ describe('ClaimStakeCard', () => {
       </DocumentFragment>
     `)
   })
-  it('should render appropriate elements when both buttons are disabled', () => {
+  it('should render disabled buttons when given no onClick args', () => {
     const { asFragment } = render(
       <ClaimStakeCard
         currency={Currency.ETH}
@@ -172,8 +174,6 @@ describe('ClaimStakeCard', () => {
         tvlFor={3.643}
         amountAgainst={39}
         amountFor={124}
-        disableAgainstBtn
-        disableForBtn
       />,
     )
     expect(asFragment()).toMatchInlineSnapshot(`

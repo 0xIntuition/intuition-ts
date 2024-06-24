@@ -34,6 +34,8 @@ export const BasicUsage: Story = {
     amountFor: 124,
     disableAgainstBtn: false,
     disableForBtn: false,
+    onAgainstBtnClick: () => console.log('Against button clicked!'),
+    onForBtnClick: () => console.log('For button clicked!'),
   },
   render: (args) => <ClaimStakeCard {...args} />,
 }
