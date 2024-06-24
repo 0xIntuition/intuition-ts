@@ -1,5 +1,10 @@
 import {
   Button,
+  PositionCard,
+  PositionCardFeesAccrued,
+  PositionCardLastUpdated,
+  PositionCardOwnership,
+  PositionCardStaked,
   ProfileCard,
   StakeCard,
   Tags,
@@ -12,12 +17,19 @@ import { ApiError, IdentitiesService, OpenAPI } from '@0xintuition/api'
 import { NestedLayout } from '@components/nested-layout'
 import { identityRouteOptions } from '@lib/utils/constants'
 import logger from '@lib/utils/logger'
-import { formatBalance, getAuthHeaders, sliceString } from '@lib/utils/misc'
+import {
+  calculatePercentageGain,
+  formatBalance,
+  getAuthHeaders,
+  sliceString,
+} from '@lib/utils/misc'
 import { SessionContext } from '@middleware/session'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { Outlet, useLoaderData } from '@remix-run/react'
+import { getVaultDetails } from '@server/multivault'
 import { getPrivyAccessToken } from '@server/privy'
 import { ExtendedIdentityPresenter } from 'types/identity'
+import { VaultDetailsType } from 'types/vault'
 
 export async function loader({ context, request, params }: LoaderFunctionArgs) {
   OpenAPI.BASE = 'https://dev.api.intuition.systems'
@@ -52,14 +64,29 @@ export async function loader({ context, request, params }: LoaderFunctionArgs) {
 
   logger('identity', identity)
 
+  let vaultDetails: VaultDetailsType | null = null
+
+  if (identity !== undefined && identity.vault_id) {
+    vaultDetails = await getVaultDetails(
+      identity.contract,
+      identity.vault_id,
+      user.details.wallet.address as `0x${string}`,
+    )
+  }
+
   return json({
     identity: identity,
+    vaultDetails,
   })
 }
 
 export default function IdentityDetails() {
-  const { identity } = useLoaderData<{ identity: ExtendedIdentityPresenter }>()
-  logger('identity in client', identity)
+  const { identity, vaultDetails } = useLoaderData<{
+    identity: ExtendedIdentityPresenter
+    vaultDetails: VaultDetailsType
+  }>()
+
+  const { user_conviction_value: user_assets } = vaultDetails
 
   return (
     <NestedLayout outlet={Outlet} options={identityRouteOptions}>
@@ -94,6 +121,33 @@ export default function IdentityDetails() {
               <TagsButton onClick={() => 'add tags clicked'} />
             </Tags>
           )}
+          <PositionCard onButtonClick={() => logger('sell position clicked')}>
+            <PositionCardStaked
+              amount={user_assets ? +formatBalance(user_assets, 18, 4) : 0}
+            />
+            <PositionCardOwnership
+              percentOwnership={
+                identity.user_asset_delta !== null && identity.user_assets
+                  ? +calculatePercentageGain(
+                      +identity.user_assets - +identity.user_asset_delta,
+                      +identity.user_assets,
+                    ).toFixed(1)
+                  : 0
+              }
+            />
+            <PositionCardFeesAccrued
+              amount={
+                identity.user_asset_delta
+                  ? +formatBalance(
+                      +identity.user_assets - +identity.user_asset_delta,
+                      18,
+                      5,
+                    )
+                  : 0
+              }
+            />
+            <PositionCardLastUpdated timestamp={identitys.updated_at} />
+          </PositionCard>
           <StakeCard
             tvl={formatBalance(identity?.assets_sum)}
             holders={identity?.num_positions}
