@@ -21,14 +21,7 @@ export const UserVariant: Story = {
     walletAddress: '0x1234567890abcdef1234567890abcdef12345678',
     avatarSrc: 'https://avatars.githubusercontent.com/u/94311139?s=200&v=4"',
     amount: 1.21,
-    tags: [
-      { label: 'keyboard', value: 34 },
-      { label: 'ergonomic', value: 56 },
-      { label: 'wireless', value: 12 },
-      { label: 'gaming', value: 77 },
-      { label: 'work', value: 11 },
-      { label: 'home', value: 34 },
-    ],
+    updatedAt: '2021-10-01T16:00:00Z',
   },
   render: (args) => (
     <div className="w-[800px]">
@@ -37,9 +30,9 @@ export const UserVariant: Story = {
   ),
 }
 
-export const EntityVariant: Story = {
+export const IdentityVariant: Story = {
   args: {
-    variant: 'entity',
+    variant: 'identity',
     name: 'Amazon',
     walletAddress: '0x1234567890abcdef1234567890abcdef12345678',
     amount: 1.21,

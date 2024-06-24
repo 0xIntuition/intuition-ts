@@ -15,27 +15,15 @@ import * as Stories from './IdentityPosition.stories'
   language="tsx"
   code={`
 import { IdentityPosition } from '@0xintuition/1ui'
-import { Text } from 'components/Text'
 
 <IdentityPosition
   variant="user"
   avatarSrc="https://avatars.githubusercontent.com/u/94311139?s=200&v=4"
   name="John Doe"
   walletAddress="0x1234567890abcdef1234567890abcdef12345678"
-  amount: 1.21
-  tags={[
-    { label: 'keyboard', value: 34 },
-    { label: 'ergonomic', value: 56 },
-    { label: 'wireless', value: 12 },
-    { label: 'gaming', value: 77 },
-    { label: 'work', value: 11 },
-    { label: 'home', value: 34 },
-  ]}
->
-  <Text variant="body" className="text-primary-foreground">
-    Extra Content
-  </Text>
-</IdentityPosition>
+  amount={1.21}
+  updatedAt="2021-10-01T16:00:00Z"
+/>
 `} />
 
 <Canvas of={Stories.UserVariant} sourceState="none" />
@@ -56,11 +44,11 @@ import { IdentityPosition } from '@0xintuition/1ui'
 import { Text } from 'components/Text'
 
 <IdentityPosition
-  variant="entity"
+  variant="identity"
   avatarSrc="https://avatars.githubusercontent.com/u/94311139?s=200&v=4"
   name="Amazon"
   walletAddress="0x1234567890abcdef1234567890abcdef12345678"
-  amount: 1.21
+  amount={1.21}
   tags={[
     { label: 'keyboard', value: 34 },
     { label: 'ergonomic', value: 56 },
@@ -69,11 +57,7 @@ import { Text } from 'components/Text'
     { label: 'work', value: 11 },
     { label: 'home', value: 34 },
   ]}
->
-  <Text variant="body" className="text-primary-foreground">
-    Extra Content
-  </Text>
-</IdentityPosition>
+/>
 `} />
 
-<Canvas of={Stories.EntityVariant} sourceState="none" />
+<Canvas of={Stories.IdentityVariant} sourceState="none" />
