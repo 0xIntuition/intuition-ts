@@ -59,6 +59,7 @@ export async function loader({ context, request, params }: LoaderFunctionArgs) {
 
 export default function IdentityDetails() {
   const { identity } = useLoaderData<{ identity: ExtendedIdentityPresenter }>()
+  logger('identity in client', identity)
 
   return (
     <NestedLayout outlet={Outlet} options={identityRouteOptions}>
@@ -66,10 +67,10 @@ export default function IdentityDetails() {
         <div className="w-[300px] h-[230px] flex-col justify-start items-start  inline-flex gap-6">
           <ProfileCard
             variant="entity"
-            avatarSrc={identity.image ?? ''}
-            name={identity.display_name ?? ''}
-            walletAddress={sliceString(identity.identity_id, 6, 4)}
-            bio={identity.description ?? ''}
+            avatarSrc={identity?.image ?? ''}
+            name={identity?.display_name ?? ''}
+            walletAddress={sliceString(identity?.identity_id, 6, 4)}
+            bio={identity?.description ?? ''}
           >
             <Button
               variant="secondary"
@@ -79,19 +80,23 @@ export default function IdentityDetails() {
               Follow
             </Button>
           </ProfileCard>
-          {identity.tags !== null && (
+          {identity?.tags !== null && (
             <Tags>
-              <TagsBadges numberOfTags={identity.tag_count ?? 0}>
+              <TagsBadges numberOfTags={identity?.tag_count ?? 0}>
                 {identity?.tags?.map((tag, index) => (
-                  <TagsBadge key={index} label={tag} value={0} />
+                  <TagsBadge
+                    key={index}
+                    label={tag.display_name}
+                    value={tag.num_positions}
+                  />
                 ))}
               </TagsBadges>
               <TagsButton onClick={() => 'add tags clicked'} />
             </Tags>
           )}
           <StakeCard
-            tvl={formatBalance(identity.assets_sum)}
-            holders={identity.num_positions}
+            tvl={formatBalance(identity?.assets_sum)}
+            holders={identity?.num_positions}
             onBuyClick={() => logger('click buy')} // this will open the stake modal
             onViewAllClick={() => logger('click view all')} // this will navigate to the data-about positions
           />
