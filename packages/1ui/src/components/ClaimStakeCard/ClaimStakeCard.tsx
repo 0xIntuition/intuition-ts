@@ -15,16 +15,16 @@ import {
 } from '..'
 import { cn } from '../../styles'
 
-const StakeCardDataVariant = {
+const StakeCardDataSetVariant = {
   For: 'for',
   Against: 'against',
 }
 
-type StakeCardDataVariantType =
-  (typeof StakeCardDataVariant)[keyof typeof StakeCardDataVariant]
+type StakeCardDataSetVariantType =
+  (typeof StakeCardDataSetVariant)[keyof typeof StakeCardDataSetVariant]
 
 interface ClaimStakeCardDataSetProps {
-  variant: StakeCardDataVariantType
+  variant: StakeCardDataSetVariantType
   value: string | number
 }
 
@@ -32,7 +32,7 @@ const ClaimStakeCardDataSet = ({
   variant,
   value,
 }: ClaimStakeCardDataSetProps) => {
-  const isVariantFor = variant === StakeCardDataVariant.For
+  const isVariantFor = variant === StakeCardDataSetVariant.For
   let subContainerClassName = 'flex gap-1 items-center'
   if (isVariantFor) {
     subContainerClassName += ' justify-end'
@@ -126,21 +126,21 @@ const ClaimStakeCard = ({
       </div>
       <div className="flex justify-between items-center">
         <ClaimStakeCardDataSet
-          variant={StakeCardDataVariant.Against}
+          variant={StakeCardDataSetVariant.Against}
           value={valueWithCurrency(tvlAgainst, currency)}
         />
         <ClaimStakeCardDataSet
-          variant={StakeCardDataVariant.For}
+          variant={StakeCardDataSetVariant.For}
           value={valueWithCurrency(tvlFor, currency)}
         />
       </div>
       <div className="flex justify-between items-center">
         <ClaimStakeCardDataSet
-          variant={StakeCardDataVariant.Against}
+          variant={StakeCardDataSetVariant.Against}
           value={amountAgainst}
         />
         <ClaimStakeCardDataSet
-          variant={StakeCardDataVariant.For}
+          variant={StakeCardDataSetVariant.For}
           value={amountFor}
         />
       </div>
