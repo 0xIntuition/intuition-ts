@@ -1,6 +1,5 @@
 import { Text } from 'components/Text'
-
-import { formatNumber } from '../ProfileCard.utils'
+import { formatNumber } from 'utils/number'
 
 interface ProfileCardStatItemProps {
   value: number | string
