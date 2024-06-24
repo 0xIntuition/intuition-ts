@@ -415,7 +415,7 @@ export type IdentityPresenter = {
   semantic?: string | null
   status: Status
   tag_count?: number | null
-  tags?: Array<string> | null
+  tags?: Array<TagEmbeddedPresenter> | null
   updated_at: string
   user?: UserPresenter | null
   user_asset_delta: string
@@ -480,13 +480,18 @@ export type LinkedAccountPresenter = {
   chain_type?: string | null
   connector_type?: string | null
   created_at: string
+  description?: string | null
+  display_name?: string | null
+  ens_name?: string | null
   id: string
+  image?: string | null
   link_id: string
   privy_id?: string | null
   total?: number | null
   updated_at: string
   user_id: string
   verified_at: string
+  wallet: string
   wallet_client?: string | null
   wallet_client_type?: string | null
 }
@@ -814,6 +819,12 @@ export type SubjectVaultIdQuery = {
   comparator?: NumericComparators | null
   options?: number | null
   userValue?: JsonNum | null
+}
+
+export type TagEmbeddedPresenter = {
+  display_name: string
+  num_positions: number
+  vault_id: string
 }
 
 export type TimeFrame =
@@ -1375,7 +1386,7 @@ export type CreateIdentityResponse = {
   semantic?: string | null
   status: Status
   tag_count?: number | null
-  tags?: Array<string> | null
+  tags?: Array<TagEmbeddedPresenter> | null
   updated_at: string
   user?: UserPresenter | null
   user_asset_delta: string
@@ -1446,7 +1457,7 @@ export type GetIdentityByIdResponse = {
   semantic?: string | null
   status: Status
   tag_count?: number | null
-  tags?: Array<string> | null
+  tags?: Array<TagEmbeddedPresenter> | null
   updated_at: string
   user?: UserPresenter | null
   user_asset_delta: string
@@ -1572,13 +1583,18 @@ export type GetLinkedAccountByIdResponse = {
   chain_type?: string | null
   connector_type?: string | null
   created_at: string
+  description?: string | null
+  display_name?: string | null
+  ens_name?: string | null
   id: string
+  image?: string | null
   link_id: string
   privy_id?: string | null
   total?: number | null
   updated_at: string
   user_id: string
   verified_at: string
+  wallet: string
   wallet_client?: string | null
   wallet_client_type?: string | null
 }
@@ -2554,7 +2570,7 @@ export type $OpenApiTs = {
           semantic?: string | null
           status: Status
           tag_count?: number | null
-          tags?: Array<string> | null
+          tags?: Array<TagEmbeddedPresenter> | null
           updated_at: string
           user?: UserPresenter | null
           user_asset_delta: string
@@ -2639,7 +2655,7 @@ export type $OpenApiTs = {
           semantic?: string | null
           status: Status
           tag_count?: number | null
-          tags?: Array<string> | null
+          tags?: Array<TagEmbeddedPresenter> | null
           updated_at: string
           user?: UserPresenter | null
           user_asset_delta: string
@@ -2813,13 +2829,18 @@ export type $OpenApiTs = {
           chain_type?: string | null
           connector_type?: string | null
           created_at: string
+          description?: string | null
+          display_name?: string | null
+          ens_name?: string | null
           id: string
+          image?: string | null
           link_id: string
           privy_id?: string | null
           total?: number | null
           updated_at: string
           user_id: string
           verified_at: string
+          wallet: string
           wallet_client?: string | null
           wallet_client_type?: string | null
         }
