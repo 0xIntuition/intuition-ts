@@ -32,6 +32,13 @@ export function createIdentitySchema() {
         return ['image/jpeg', 'image/png', 'image/gif'].includes(file.type)
       }, 'File must be a .png, .jpg, .jpeg, or .gif')
       .or(z.string()),
+    external_reference: z
+      .string()
+      .url({
+        message: 'This link is an invalid URL.',
+      })
+      .startsWith('https://', 'The URL must start with https://')
+      .optional(),
     vault_id: z.string().optional(),
     creator: z.string().optional(),
     contract: z.string().optional(),
