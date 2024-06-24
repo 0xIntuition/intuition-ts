@@ -8,7 +8,7 @@ describe('StakeCard', () => {
   it('should render appropriate element', () => {
     const { asFragment } = render(
       <StakeCard
-        tvl="4.928 ETH"
+        tvl={4.928}
         holders={69}
         onBuyClick={() => null}
         onViewAllClick={() => null}
@@ -34,7 +34,7 @@ describe('StakeCard', () => {
                 TVL
               </p>
               <p
-                class="text-primary text-base font-normal"
+                class="text-primary font-normal text-base"
               >
                 4.928 ETH
               </p>

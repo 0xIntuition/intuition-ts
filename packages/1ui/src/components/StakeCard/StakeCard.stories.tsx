@@ -15,7 +15,7 @@ type Story = StoryObj<typeof StakeCard>
 
 export const BasicUsage: Story = {
   args: {
-    tvl: '4.928 ETH',
+    tvl: 4.928,
     holders: 69,
   },
   render: (args) => (

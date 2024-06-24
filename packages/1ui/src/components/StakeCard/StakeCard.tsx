@@ -1,9 +1,12 @@
 import * as React from 'react'
 
-import { Button, Text } from '..'
+import { CurrencyType } from 'types'
+
+import { Button, MonetaryValue, Text } from '..'
 
 export interface StakeCardProps extends React.HTMLAttributes<HTMLDivElement> {
-  tvl: string
+  tvl: number
+  currency?: CurrencyType
   holders: number
   onBuyClick: () => void
   onViewAllClick: () => void
@@ -11,6 +14,7 @@ export interface StakeCardProps extends React.HTMLAttributes<HTMLDivElement> {
 
 const StakeCard = ({
   tvl,
+  currency,
   holders,
   onBuyClick,
   onViewAllClick,
@@ -27,7 +31,11 @@ const StakeCard = ({
           <Text className="text-muted-foreground" variant="caption">
             TVL
           </Text>
-          <Text variant="body">{tvl}</Text>
+          <MonetaryValue
+            value={tvl}
+            currency={currency}
+            className="text-base"
+          />
         </div>
         <div>
           <Text className="text-muted-foreground" variant="caption">

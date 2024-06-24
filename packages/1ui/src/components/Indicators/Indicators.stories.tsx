@@ -15,5 +15,5 @@ type Story = StoryObj<typeof Indicators>
 
 // Example story for the default state
 export const MonetaryValueUsage: Story = {
-  render: () => <MonetaryValue value={0.345} symbol="ETH" />,
+  render: () => <MonetaryValue value={0.345} currency="ETH" />,
 }
