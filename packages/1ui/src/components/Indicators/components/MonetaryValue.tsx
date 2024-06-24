@@ -3,17 +3,17 @@ import { Currency, CurrencyType } from 'types'
 
 interface MonetaryValueProps extends TextProps {
   value: number
-  symbol?: CurrencyType
+  currency?: CurrencyType
 }
 
 const MonetaryValue = ({
   value,
-  symbol = Currency.ETH,
+  currency = Currency.ETH,
   ...props
 }: MonetaryValueProps) => {
   return (
     <Text variant={TextVariant.bodyLarge} {...props}>
-      {value} {symbol}
+      {value} {currency}
     </Text>
   )
 }
