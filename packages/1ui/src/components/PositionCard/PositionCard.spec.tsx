@@ -84,7 +84,7 @@ describe('PositionCard', () => {
                 Amount Staked
               </p>
               <p
-                class="text-primary text-lg font-medium"
+                class="text-primary text-lg font-normal"
               >
                 0.512 ETH
               </p>

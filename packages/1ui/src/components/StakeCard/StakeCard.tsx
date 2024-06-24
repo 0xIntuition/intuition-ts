@@ -31,11 +31,7 @@ const StakeCard = ({
           <Text className="text-muted-foreground" variant="caption">
             TVL
           </Text>
-          <MonetaryValue
-            value={tvl}
-            currency={currency}
-            className="text-base"
-          />
+          <MonetaryValue variant="body" value={tvl} currency={currency} />
         </div>
         <div>
           <Text className="text-muted-foreground" variant="caption">

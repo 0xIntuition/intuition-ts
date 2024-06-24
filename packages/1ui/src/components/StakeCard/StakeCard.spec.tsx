@@ -34,7 +34,7 @@ describe('StakeCard', () => {
                 TVL
               </p>
               <p
-                class="text-primary font-normal text-base"
+                class="text-primary text-base font-normal"
               >
                 4.928 ETH
               </p>
