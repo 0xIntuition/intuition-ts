@@ -55,7 +55,7 @@ const IdentityPosition = ({
     <div className="w-full flex justify-between" {...props}>
       <div className="flex items-center">
         <Avatar
-          className={`w-[64px] h-[64px] mr-4 ${variant === IdentityPositionVariant.identity ? 'rounded-lg' : ''}`}
+          className={`w-16 h-16 mr-4 ${variant === IdentityPositionVariant.identity ? 'rounded-lg' : ''}`}
         >
           <AvatarImage src={avatarSrc} alt={name} />
           {variant === IdentityPositionVariant.user && (
