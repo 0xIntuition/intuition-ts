@@ -3,7 +3,7 @@ import React from 'react'
 import type { Meta, StoryObj } from '@storybook/react'
 
 import { Icon } from '..'
-import { Button } from './Button'
+import { Button, ButtonSize, ButtonVariant } from './Button'
 
 const meta: Meta<typeof Button> = {
   title: 'Components/Button',
@@ -29,21 +29,7 @@ const meta: Meta<typeof Button> = {
     },
     variant: {
       description: 'Variant of button',
-      options: [
-        'primary',
-        'secondary',
-        'ghost',
-        'text',
-        'accent',
-        'accentOutline',
-        'warning',
-        'warningOutline',
-        'success',
-        'successOutline',
-        'destructive',
-        'destructiveOutline',
-        'navigation',
-      ],
+      options: Object.values(ButtonVariant),
       table: {
         type: { summary: 'string' },
         defaultValue: { summary: 'primary' },
@@ -52,16 +38,7 @@ const meta: Meta<typeof Button> = {
     },
     size: {
       description: 'Size of button',
-      options: [
-        'default',
-        'ms',
-        'lg',
-        'xl',
-        'icon',
-        'iconMd',
-        'iconLg',
-        'iconXl',
-      ],
+      options: Object.values(ButtonSize),
       table: {
         type: { summary: 'string' },
         defaultValue: { summary: 'default' },
@@ -348,6 +325,72 @@ export const Destructive: Story = {
         Loading...
       </Button>
       <Button variant="destructive" disabled {...props}>
+        Disabled
+      </Button>
+    </div>
+  ),
+}
+
+export const For: Story = {
+  parameters: {
+    controls: {
+      disable: true,
+    },
+  },
+  render: (props) => (
+    <div style={{ display: 'flex', gap: '2rem', alignItems: 'center' }}>
+      <Button variant="for" {...props}>
+        Default
+      </Button>
+      <Button variant="for" size="md" {...props}>
+        Medium
+      </Button>
+      <Button variant="for" size="lg" {...props}>
+        Large
+      </Button>
+      <Button variant="for" size="xl" {...props}>
+        Extra Large
+      </Button>
+      <Button variant="for" {...props}>
+        <Icon name="crystal-ball" />
+      </Button>
+      <Button variant="for" isLoading {...props}>
+        Loading...
+      </Button>
+      <Button variant="for" disabled {...props}>
+        Disabled
+      </Button>
+    </div>
+  ),
+}
+
+export const Against: Story = {
+  parameters: {
+    controls: {
+      disable: true,
+    },
+  },
+  render: (props) => (
+    <div style={{ display: 'flex', gap: '2rem', alignItems: 'center' }}>
+      <Button variant="against" {...props}>
+        Default
+      </Button>
+      <Button variant="against" size="md" {...props}>
+        Medium
+      </Button>
+      <Button variant="against" size="lg" {...props}>
+        Large
+      </Button>
+      <Button variant="against" size="xl" {...props}>
+        Extra Large
+      </Button>
+      <Button variant="against" {...props}>
+        <Icon name="crystal-ball" />
+      </Button>
+      <Button variant="against" isLoading {...props}>
+        Loading...
+      </Button>
+      <Button variant="against" disabled {...props}>
         Disabled
       </Button>
     </div>
