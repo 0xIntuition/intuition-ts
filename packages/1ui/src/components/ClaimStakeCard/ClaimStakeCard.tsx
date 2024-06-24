@@ -15,7 +15,7 @@ import {
 } from '..'
 import { cn } from '../../styles'
 
-const ValueWithCurrency = (value: number, currency: CurrencyType) =>
+const valueWithCurrency = (value: number, currency: CurrencyType) =>
   `${value} ${currency}`
 
 interface ClaimStakeCardDataSetProps {
@@ -112,18 +112,18 @@ const ClaimStakeCard = ({
             Total TVL
           </Text>
           <Text variant={TextVariant.bodyLarge}>
-            {ValueWithCurrency(totalTVL, currency)}
+            {valueWithCurrency(totalTVL, currency)}
           </Text>
         </div>
       </div>
       <div className="flex justify-between items-center">
         <ClaimStakeCardDataSet
           variant="against"
-          value={ValueWithCurrency(tvlAgainst, currency)}
+          value={valueWithCurrency(tvlAgainst, currency)}
         />
         <ClaimStakeCardDataSet
           variant="for"
-          value={ValueWithCurrency(tvlFor, currency)}
+          value={valueWithCurrency(tvlFor, currency)}
         />
       </div>
       <div className="flex justify-between items-center">
