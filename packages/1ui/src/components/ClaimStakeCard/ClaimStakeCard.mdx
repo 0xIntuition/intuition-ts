@@ -1,0 +1,33 @@
+import { Canvas, Controls, Meta, Source, Title } from '@storybook/blocks'
+
+import * as Stories from './ClaimStakeCard.stories'
+
+<Meta of={Stories} />
+
+<Title />
+
+#### Card displaying claim stake information and actions.
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { ClaimStakeCard } from '@0xintuition/1ui'
+
+<ClaimStakeCard
+  currency="ETH"
+  totalTVL={4.928}
+  tvlAgainst={0.567}
+  tvlFor={3.643}
+  amountAgainst={39}
+  amountFor={124}
+  onAgainstBtnClick={() => doSomething}
+  onForBtnClick={() => doSomething}
+/>
+`} />
+
+<Canvas of={Stories.BasicUsage} sourceState="none" />
+
+## Properties
+
+<Controls />
