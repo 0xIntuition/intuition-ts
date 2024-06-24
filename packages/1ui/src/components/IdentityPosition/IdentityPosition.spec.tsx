@@ -14,6 +14,7 @@ describe('IdentityPosition', () => {
         walletAddress="0x1234567890abcdef1234567890abcdef12345678"
         avatarSrc="https://avatars.githubusercontent.com/u/94311139?s=200&v=4"
         amount={1.21}
+        amountChange={0.005}
         updatedAt="2021-10-01T16:00:00Z"
       />,
     )
@@ -70,7 +71,7 @@ describe('IdentityPosition', () => {
             <p
               class="text-primary text-lg font-normal"
             >
-              1.21
+              1.21 ETH
             </p>
             <div
               class="flex items-center"
@@ -78,7 +79,7 @@ describe('IdentityPosition', () => {
               <p
                 class="text-lg font-medium text-success"
               >
-                +1.210 ETH
+                +0.005 ETH
               </p>
             </div>
           </div>
@@ -95,6 +96,7 @@ describe('IdentityPosition', () => {
           walletAddress="0x1234567890abcdef1234567890abcdef12345678"
           avatarSrc="https://avatars.githubusercontent.com/u/94311139?s=200&v=4"
           amount={1.21}
+          amountChange={0.005}
           tags={[
             { label: 'keyboard', value: 34 },
             { label: 'ergonomic', value: 56 },
@@ -202,7 +204,7 @@ describe('IdentityPosition', () => {
               <p
                 class="text-primary text-lg font-normal"
               >
-                1.21
+                1.21 ETH
               </p>
               <div
                 class="flex items-center"
@@ -210,7 +212,7 @@ describe('IdentityPosition', () => {
                 <p
                   class="text-lg font-medium text-success"
                 >
-                  +1.210 ETH
+                  +0.005 ETH
                 </p>
               </div>
             </div>
