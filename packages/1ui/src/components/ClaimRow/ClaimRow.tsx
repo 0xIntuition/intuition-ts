@@ -1,22 +1,26 @@
 import * as React from 'react'
 
-import { Icon, IconName, Text, TextVariant } from '..'
+import { CurrencyType } from 'types'
+
+import { Icon, IconName, MonetaryValue, Text, TextVariant } from '..'
 
 export interface ClaimRowProps extends React.HTMLAttributes<HTMLDivElement> {
   claimsFor: number
   claimsAgainst: number
-  amountFor: string
+  amount: number
+  currency?: CurrencyType
 }
 
 const ClaimRow = ({
   claimsFor,
   claimsAgainst,
-  amountFor,
+  amount,
+  currency,
   children,
   ...props
 }: ClaimRowProps) => {
   const againstPercentage = (claimsAgainst / (claimsFor + claimsAgainst)) * 100
-  console.log(againstPercentage)
+
   return (
     <div className="flex-col gap-2" {...props}>
       <div className="flex justify-between items-center">
@@ -27,7 +31,11 @@ const ClaimRow = ({
           />
           <span className="h-full w-full bg-for block rounded-r-sm" />
         </div>
-        <Text variant={TextVariant.bodyLarge}>{amountFor}</Text>
+        <MonetaryValue
+          variant={TextVariant.bodyLarge}
+          value={amount}
+          currency={currency}
+        />
       </div>
       <div className="flex justify-between items-center">
         {children}
