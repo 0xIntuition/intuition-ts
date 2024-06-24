@@ -6,6 +6,7 @@ import {
   Button,
   ButtonSize,
   ButtonVariant,
+  MonetaryValue,
   PieChart,
   PieChartSize,
   PieChartVariant,
@@ -25,12 +26,14 @@ type StakeCardDataSetVariantType =
 
 interface ClaimStakeCardDataSetProps {
   variant: StakeCardDataSetVariantType
-  value: string | number
+  value: number
+  currency?: CurrencyType
 }
 
 const ClaimStakeCardDataSet = ({
   variant,
   value,
+  currency,
 }: ClaimStakeCardDataSetProps) => {
   const isVariantFor = variant === StakeCardDataSetVariant.for
   let subContainerClassName = 'flex gap-1 items-center'
@@ -51,12 +54,12 @@ const ClaimStakeCardDataSet = ({
           {isVariantFor ? 'TVL For' : 'TVL Against'}
         </Text>
       </div>
-      <Text
+      <MonetaryValue
         variant={TextVariant.bodyLarge}
+        value={value}
+        currency={currency}
         className={isVariantFor ? 'text-right' : 'text-left'}
-      >
-        {value}
-      </Text>
+      />
     </div>
   )
 }
@@ -89,9 +92,6 @@ const ClaimStakeCard = ({
   className,
   ...props
 }: ClaimStakeCardProps) => {
-  const valueWithCurrency = (value: number, currency: CurrencyType) =>
-    `${value} ${currency}`
-
   const stakedForPercentage = (tvlFor / totalTVL) * 100
 
   return (
@@ -119,19 +119,23 @@ const ClaimStakeCard = ({
           >
             Total TVL
           </Text>
-          <Text variant={TextVariant.bodyLarge}>
-            {valueWithCurrency(totalTVL, currency)}
-          </Text>
+          <MonetaryValue
+            variant={TextVariant.bodyLarge}
+            value={totalTVL}
+            currency={currency}
+          />
         </div>
       </div>
       <div className="flex justify-between items-center">
         <ClaimStakeCardDataSet
           variant={StakeCardDataSetVariant.against}
-          value={valueWithCurrency(tvlAgainst, currency)}
+          value={tvlAgainst}
+          currency={currency}
         />
         <ClaimStakeCardDataSet
           variant={StakeCardDataSetVariant.for}
-          value={valueWithCurrency(tvlFor, currency)}
+          value={tvlFor}
+          currency={currency}
         />
       </div>
       <div className="flex justify-between items-center">
