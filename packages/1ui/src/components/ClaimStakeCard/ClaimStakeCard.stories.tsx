@@ -1,5 +1,3 @@
-import React from 'react'
-
 import type { Meta, StoryObj } from '@storybook/react'
 
 import { Currency } from '../../types'
@@ -26,7 +24,7 @@ type Story = StoryObj<typeof ClaimStakeCard>
 
 export const BasicUsage: Story = {
   args: {
-    currency: Currency.ETH,
+    currency: 'ETH',
     totalTVL: 4.928,
     tvlAgainst: 0.567,
     tvlFor: 3.643,

@@ -9,7 +9,7 @@ describe('ClaimStakeCard', () => {
   it('should render appropriate elements', () => {
     const { asFragment } = render(
       <ClaimStakeCard
-        currency={Currency.ETH}
+        currency="ETH"
         totalTVL={4.928}
         tvlAgainst={0.567}
         tvlFor={3.643}
