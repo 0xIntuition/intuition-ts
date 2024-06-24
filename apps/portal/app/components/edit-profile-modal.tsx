@@ -14,6 +14,7 @@ import { IdentityPresenter, UserPresenter } from '@0xintuition/api'
 
 import { getFormProps, getInputProps, useForm } from '@conform-to/react'
 import { getZodConstraint, parseWithZod } from '@conform-to/zod'
+import { useImageUploadFetcher } from '@lib/hooks/useImageUploadFetcher'
 import { updateProfileSchema } from '@lib/schemas/update-profile-schema'
 import {
   DESCRIPTION_MAX_LENGTH,
@@ -23,7 +24,6 @@ import {
 import logger from '@lib/utils/logger'
 import { cn, truncateString } from '@lib/utils/misc'
 import { useFetcher, useLocation } from '@remix-run/react'
-import { type UploadApiResponse } from 'cloudinary'
 import {
   AlertCircle,
   CircleXIcon,
@@ -151,7 +151,9 @@ export function EditProfileForm({ userObject, onClose }: EditProfileFormProps) {
   const isCreateRoute = location.pathname.includes('create')
 
   // image upload fetcher
-  const uploadFetcher = useFetcher<UploadApiResponse>()
+  // const uploadFetcher = useFetcher<UploadApiResponse>()
+
+  const imageUploadFetcher = useImageUploadFetcher()
 
   // off-chain fetcher
   const offChainFetcher = useFetcher<OffChainFetcherData>()
@@ -186,16 +188,16 @@ export function EditProfileForm({ userObject, onClose }: EditProfileFormProps) {
 
   // Handle Triggering Image Upload
   useEffect(() => {
-    if (uploadFetcher.state === 'submitting') {
+    if (imageUploadFetcher.state === 'submitting') {
       dispatch({ type: 'START_IMAGE_UPLOAD' })
     }
     if (
-      uploadFetcher.state === 'idle' &&
-      uploadFetcher.data &&
-      uploadFetcher.data
+      imageUploadFetcher.state === 'idle' &&
+      imageUploadFetcher.data &&
+      imageUploadFetcher.data
     ) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const data = uploadFetcher.data as any
+      const data = imageUploadFetcher.data as any
 
       if (typeof data.submission.payload.image_url !== 'string') {
         logger('Transaction Error')
@@ -212,7 +214,7 @@ export function EditProfileForm({ userObject, onClose }: EditProfileFormProps) {
         })
       }
     }
-  }, [uploadFetcher.state, uploadFetcher.data, dispatch])
+  }, [imageUploadFetcher.state, imageUploadFetcher.data, dispatch])
 
   interface OffChainFetcherData {
     success: 'success' | 'error'
@@ -262,7 +264,7 @@ export function EditProfileForm({ userObject, onClose }: EditProfileFormProps) {
         console.error('Error creating identity', error)
       }
     }
-  }, [uploadFetcher.state, uploadFetcher.data, state])
+  }, [imageUploadFetcher.state, imageUploadFetcher.data, state])
 
   useEffect(() => {
     if (state.status === 'transaction-error') {
@@ -294,7 +296,7 @@ export function EditProfileForm({ userObject, onClose }: EditProfileFormProps) {
 
         setLoading(true)
         dispatch({ type: 'START_IMAGE_UPLOAD' })
-        uploadFetcher.submit(formData, {
+        imageUploadFetcher.submit(formData, {
           action: '/actions/upload',
           method: 'post',
           encType: 'multipart/form-data',

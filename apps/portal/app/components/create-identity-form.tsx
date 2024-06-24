@@ -9,5 +9,10 @@ export function CreateIdentityForm({
   onClose,
 }: CreateIdentityFormProps) {
   logger(onClose, onSuccess)
-  return <div>form</div>
+
+  return (
+    <div>
+      <pre>form</pre>
+    </div>
+  )
 }
