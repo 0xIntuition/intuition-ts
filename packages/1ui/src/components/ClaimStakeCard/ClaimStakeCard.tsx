@@ -84,7 +84,7 @@ const ClaimStakeCard = ({
   className,
   ...props
 }: ClaimStakeCardProps) => {
-  const stakedForPercentage = 75
+  const stakedForPercentage = (tvlFor / totalTVL) * 100
 
   return (
     <div
