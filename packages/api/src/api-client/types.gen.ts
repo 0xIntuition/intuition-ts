@@ -480,13 +480,18 @@ export type LinkedAccountPresenter = {
   chain_type?: string | null
   connector_type?: string | null
   created_at: string
+  description?: string | null
+  display_name?: string | null
+  ens_name?: string | null
   id: string
+  image?: string | null
   link_id: string
   privy_id?: string | null
   total?: number | null
   updated_at: string
   user_id: string
   verified_at: string
+  wallet: string
   wallet_client?: string | null
   wallet_client_type?: string | null
 }
@@ -1396,6 +1401,9 @@ export type SearchIdentityData = {
   description?: string | null
   direction?: SortDirection | null
   displayName?: string | null
+  followedBy?: string | null
+  follows?: string | null
+  hasTag?: string | null
   identityId?: IdentityId | null
   isContract?: boolean | null
   isUser?: boolean | null
@@ -1460,6 +1468,69 @@ export type GetIdentityByIdResponse = {
   user_conviction: string
   vault_id: string
   vault_uuid?: string | null
+}
+
+export type GetIdentityFollowedData = {
+  direction?: SortDirection | null
+  /**
+   * sql id
+   */
+  id: string
+  limit?: number | null
+  offset?: number | null
+  page?: number | null
+  sortBy?: SortColumn | null
+  timeframe?: TimeFrame | null
+  userWallet?: string | null
+}
+
+export type GetIdentityFollowedResponse = {
+  data: Array<IdentityPresenter>
+  limit: number
+  page: number
+  total: number
+}
+
+export type GetIdentityFollowersData = {
+  direction?: SortDirection | null
+  /**
+   * sql id
+   */
+  id: string
+  limit?: number | null
+  offset?: number | null
+  page?: number | null
+  sortBy?: SortColumn | null
+  timeframe?: TimeFrame | null
+  userWallet?: string | null
+}
+
+export type GetIdentityFollowersResponse = {
+  data: Array<IdentityPresenter>
+  limit: number
+  page: number
+  total: number
+}
+
+export type GetIdentityTagsData = {
+  direction?: SortDirection | null
+  /**
+   * sql id
+   */
+  id: string
+  limit?: number | null
+  offset?: number | null
+  page?: number | null
+  sortBy?: SortColumn | null
+  timeframe?: TimeFrame | null
+  userWallet?: string | null
+}
+
+export type GetIdentityTagsResponse = {
+  data: Array<IdentityPresenter>
+  limit: number
+  page: number
+  total: number
 }
 
 export type SetFollowPredicateData = {
@@ -1578,13 +1649,18 @@ export type GetLinkedAccountByIdResponse = {
   chain_type?: string | null
   connector_type?: string | null
   created_at: string
+  description?: string | null
+  display_name?: string | null
+  ens_name?: string | null
   id: string
+  image?: string | null
   link_id: string
   privy_id?: string | null
   total?: number | null
   updated_at: string
   user_id: string
   verified_at: string
+  wallet: string
   wallet_client?: string | null
   wallet_client_type?: string | null
 }
@@ -2579,6 +2655,9 @@ export type $OpenApiTs = {
         description?: string | null
         direction?: SortDirection | null
         displayName?: string | null
+        followedBy?: string | null
+        follows?: string | null
+        hasTag?: string | null
         identityId?: IdentityId | null
         isContract?: boolean | null
         isUser?: boolean | null
@@ -2653,6 +2732,90 @@ export type $OpenApiTs = {
           user_conviction: string
           vault_id: string
           vault_uuid?: string | null
+        }
+      }
+    }
+  }
+  '/identity/{id}/followed': {
+    get: {
+      req: {
+        direction?: SortDirection | null
+        /**
+         * sql id
+         */
+        id: string
+        limit?: number | null
+        offset?: number | null
+        page?: number | null
+        sortBy?: SortColumn | null
+        timeframe?: TimeFrame | null
+        userWallet?: string | null
+      }
+      res: {
+        /**
+         * Get paginated list of identities following this one
+         */
+        200: {
+          data: Array<IdentityPresenter>
+          limit: number
+          page: number
+          total: number
+        }
+      }
+    }
+  }
+  '/identity/{id}/followers': {
+    get: {
+      req: {
+        direction?: SortDirection | null
+        /**
+         * sql id
+         */
+        id: string
+        limit?: number | null
+        offset?: number | null
+        page?: number | null
+        sortBy?: SortColumn | null
+        timeframe?: TimeFrame | null
+        userWallet?: string | null
+      }
+      res: {
+        /**
+         * Get paginated list of identity's followers
+         */
+        200: {
+          data: Array<IdentityPresenter>
+          limit: number
+          page: number
+          total: number
+        }
+      }
+    }
+  }
+  '/identity/{id}/tags': {
+    get: {
+      req: {
+        direction?: SortDirection | null
+        /**
+         * sql id
+         */
+        id: string
+        limit?: number | null
+        offset?: number | null
+        page?: number | null
+        sortBy?: SortColumn | null
+        timeframe?: TimeFrame | null
+        userWallet?: string | null
+      }
+      res: {
+        /**
+         * Get paginated list of identity's tags
+         */
+        200: {
+          data: Array<IdentityPresenter>
+          limit: number
+          page: number
+          total: number
         }
       }
     }
@@ -2819,13 +2982,18 @@ export type $OpenApiTs = {
           chain_type?: string | null
           connector_type?: string | null
           created_at: string
+          description?: string | null
+          display_name?: string | null
+          ens_name?: string | null
           id: string
+          image?: string | null
           link_id: string
           privy_id?: string | null
           total?: number | null
           updated_at: string
           user_id: string
           verified_at: string
+          wallet: string
           wallet_client?: string | null
           wallet_client_type?: string | null
         }
