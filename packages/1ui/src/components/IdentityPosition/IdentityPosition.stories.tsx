@@ -21,6 +21,7 @@ export const UserVariant: Story = {
     walletAddress: '0x1234567890abcdef1234567890abcdef12345678',
     avatarSrc: 'https://avatars.githubusercontent.com/u/94311139?s=200&v=4"',
     amount: 1.21,
+    amountChange: 0.005,
     updatedAt: '2021-10-01T16:00:00Z',
   },
   render: (args) => (
@@ -36,6 +37,7 @@ export const IdentityVariant: Story = {
     name: 'Amazon',
     walletAddress: '0x1234567890abcdef1234567890abcdef12345678',
     amount: 1.21,
+    amountChange: 0.005,
     tags: [
       { label: 'keyboard', value: 34 },
       { label: 'ergonomic', value: 56 },

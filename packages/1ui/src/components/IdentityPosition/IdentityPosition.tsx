@@ -24,6 +24,7 @@ export interface IdentityPositionProps
   extends React.HTMLAttributes<HTMLDivElement> {
   variant: IdentityPositionVariantType
   amount: number
+  amountChange: number
   name: string
   walletAddress: string
   avatarSrc: string
@@ -34,6 +35,7 @@ export interface IdentityPositionProps
 const IdentityPosition = ({
   variant,
   amount,
+  amountChange,
   name,
   walletAddress,
   avatarSrc,
@@ -41,7 +43,7 @@ const IdentityPosition = ({
   tags,
   ...props
 }: IdentityPositionProps) => {
-  const formattedAmount = `${amount > 0 ? '+' : amount < 0 ? '-' : ''}${Math.abs(amount).toFixed(3)} ETH`
+  const formattedAmountChange = `${amountChange > 0 ? '+' : amountChange < 0 ? '-' : ''}${Math.abs(amountChange).toFixed(3)} ETH`
   const amountClass =
     amount > 0
       ? 'text-success'
@@ -65,7 +67,6 @@ const IdentityPosition = ({
             </AvatarFallback>
           )}
         </Avatar>
-        {/* Left */}
         <div className="flex flex-col">
           <div className="flex items-center mb-1.5">
             <Text variant={TextVariant.bodyLarge} className="mr-1">
@@ -101,12 +102,12 @@ const IdentityPosition = ({
 
       <div className="flex flex-col items-end justify-between">
         <Text variant={TextVariant.bodyLarge} className="">
-          {amount}
+          {amount} ETH
         </Text>
 
         <div className="flex items-center">
           <Text variant="bodyLarge" weight="medium" className={amountClass}>
-            {formattedAmount}
+            {formattedAmountChange}
           </Text>
         </div>
       </div>
