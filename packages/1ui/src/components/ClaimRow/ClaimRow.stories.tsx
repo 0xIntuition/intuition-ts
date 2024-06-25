@@ -18,7 +18,7 @@ export const BasicUsage: Story = {
   args: {
     claimsFor: 736,
     claimsAgainst: 234,
-    amountFor: '0.383 ETH',
+    amount: 0.383,
   },
   render: (args) => (
     <div className="w-[600px]">

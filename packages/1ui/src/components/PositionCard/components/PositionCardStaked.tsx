@@ -1,20 +1,28 @@
+import { MonetaryValue } from 'components/Indicators'
 import { Text } from 'components/Text'
+import { CurrencyType } from 'types'
 
 interface PositionCardStakedProps extends React.HTMLAttributes<HTMLDivElement> {
   amount: number
+  currency?: CurrencyType
 }
 
-const PositionCardStaked = ({ amount, className }: PositionCardStakedProps) => {
-  const formattedAmount = `${amount.toFixed(3)} ETH`
-
+const PositionCardStaked = ({
+  amount,
+  currency,
+  className,
+}: PositionCardStakedProps) => {
   return (
     <div className="flex flex-col">
       <Text variant="caption" className="text-muted-foreground mb-0.5">
         Amount Staked
       </Text>
-      <Text variant="bodyLarge" weight="medium" className={className}>
-        {formattedAmount}
-      </Text>
+      <MonetaryValue
+        variant="bodyLarge"
+        value={amount}
+        currency={currency}
+        className={className}
+      />
     </div>
   )
 }

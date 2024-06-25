@@ -13,7 +13,7 @@ describe('IdentityContentRow', () => {
         name="John Doe"
         walletAddress="0x1234567890abcdef1234567890abcdef12345678"
         avatarSrc="https://avatars.githubusercontent.com/u/94311139?s=200&v=4"
-        amount="1.210 ETH"
+        amount={1.21}
         totalFollowers={305}
       >
         <p>Extra Content</p>
@@ -30,7 +30,7 @@ describe('IdentityContentRow', () => {
         name="John Doe"
         walletAddress="0x1234567890abcdef1234567890abcdef12345678"
         avatarSrc="https://avatars.githubusercontent.com/u/94311139?s=200&v=4"
-        amount="1.210 ETH"
+        amount={1.21}
         totalFollowers={305}
       />,
     )
@@ -77,9 +77,9 @@ describe('IdentityContentRow', () => {
               class="flex flex-col items-end"
             >
               <p
-                class="text-primary text-lg font-normal mb-1.5"
+                class="text-primary text-lg font-normal"
               >
-                1.210 ETH
+                1.21 ETH
               </p>
               <div
                 class="flex gap-1 items-center"

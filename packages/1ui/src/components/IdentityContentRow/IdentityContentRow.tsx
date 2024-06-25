@@ -1,5 +1,6 @@
 import * as React from 'react'
 
+import { CurrencyType } from 'types'
 import { formatWalletAddress } from 'utils/wallet'
 
 import {
@@ -8,6 +9,7 @@ import {
   AvatarImage,
   Icon,
   IconName,
+  MonetaryValue,
   TagsBadge,
   TagsBadgeProps,
   TagsBadges,
@@ -21,7 +23,8 @@ export type IdentityContentVariantType = keyof typeof IdentityContentVariant
 export interface IdentityContentRowProps
   extends React.HTMLAttributes<HTMLDivElement> {
   variant: IdentityContentVariantType
-  amount: string
+  amount: number
+  currency?: CurrencyType
   name: string
   walletAddress: string
   avatarSrc: string
@@ -32,6 +35,7 @@ export interface IdentityContentRowProps
 const IdentityContentRow = ({
   variant,
   amount,
+  currency,
   name,
   walletAddress,
   avatarSrc,
@@ -86,9 +90,7 @@ const IdentityContentRow = ({
         </div>
 
         <div className="flex flex-col items-end">
-          <Text variant={TextVariant.bodyLarge} className="mb-1.5">
-            {amount}
-          </Text>
+          <MonetaryValue value={amount} currency={currency} />
 
           <div className="flex gap-1 items-center">
             <Icon

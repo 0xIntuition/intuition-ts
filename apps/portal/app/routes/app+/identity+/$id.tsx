@@ -1,5 +1,10 @@
 import {
   Button,
+  PositionCard,
+  PositionCardFeesAccrued,
+  PositionCardLastUpdated,
+  PositionCardOwnership,
+  PositionCardStaked,
   ProfileCard,
   StakeCard,
   Tags,
@@ -12,12 +17,19 @@ import { ApiError, IdentitiesService, OpenAPI } from '@0xintuition/api'
 import { NestedLayout } from '@components/nested-layout'
 import { identityRouteOptions } from '@lib/utils/constants'
 import logger from '@lib/utils/logger'
-import { formatBalance, getAuthHeaders, sliceString } from '@lib/utils/misc'
+import {
+  calculatePercentageGain,
+  formatBalance,
+  getAuthHeaders,
+  sliceString,
+} from '@lib/utils/misc'
 import { SessionContext } from '@middleware/session'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { Outlet, useLoaderData } from '@remix-run/react'
+import { getVaultDetails } from '@server/multivault'
 import { getPrivyAccessToken } from '@server/privy'
 import { ExtendedIdentityPresenter } from 'types/identity'
+import { VaultDetailsType } from 'types/vault'
 
 export async function loader({ context, request, params }: LoaderFunctionArgs) {
   OpenAPI.BASE = 'https://dev.api.intuition.systems'
@@ -52,13 +64,34 @@ export async function loader({ context, request, params }: LoaderFunctionArgs) {
 
   logger('identity', identity)
 
+  let vaultDetails: VaultDetailsType | null = null
+
+  if (identity !== undefined && identity.vault_id) {
+    try {
+      vaultDetails = await getVaultDetails(
+        identity.contract,
+        identity.vault_id,
+        user.details.wallet.address as `0x${string}`,
+      )
+    } catch (error) {
+      logger('Failed to fetch vaultDetails:', error)
+      vaultDetails = null
+    }
+  }
+
   return json({
     identity: identity,
+    vaultDetails,
   })
 }
 
 export default function IdentityDetails() {
-  const { identity } = useLoaderData<{ identity: ExtendedIdentityPresenter }>()
+  const { identity, vaultDetails } = useLoaderData<{
+    identity: ExtendedIdentityPresenter
+    vaultDetails: VaultDetailsType
+  }>()
+
+  const user_assets = vaultDetails ? vaultDetails.user_conviction_value : '0'
 
   return (
     <NestedLayout outlet={Outlet} options={identityRouteOptions}>
@@ -66,10 +99,10 @@ export default function IdentityDetails() {
         <div className="w-[300px] h-[230px] flex-col justify-start items-start  inline-flex gap-6">
           <ProfileCard
             variant="entity"
-            avatarSrc={identity.image ?? ''}
-            name={identity.display_name ?? ''}
-            walletAddress={sliceString(identity.identity_id, 6, 4)}
-            bio={identity.description ?? ''}
+            avatarSrc={identity?.image ?? ''}
+            name={identity?.display_name ?? ''}
+            walletAddress={sliceString(identity?.identity_id, 6, 4)}
+            bio={identity?.description ?? ''}
           >
             <Button
               variant="secondary"
@@ -79,19 +112,52 @@ export default function IdentityDetails() {
               Follow
             </Button>
           </ProfileCard>
-          {identity.tags !== null && (
+          {identity?.tags !== null && (
             <Tags>
-              <TagsBadges numberOfTags={identity.tag_count ?? 0}>
+              <TagsBadges numberOfTags={identity?.tag_count ?? 0}>
                 {identity?.tags?.map((tag, index) => (
-                  <TagsBadge key={index} label={tag} value={0} />
+                  <TagsBadge
+                    key={index}
+                    label={tag.display_name}
+                    value={tag.num_positions}
+                  />
                 ))}
               </TagsBadges>
               <TagsButton onClick={() => 'add tags clicked'} />
             </Tags>
           )}
+          {vaultDetails !== null && user_assets !== '0' ? (
+            <PositionCard onButtonClick={() => logger('sell position clicked')}>
+              <PositionCardStaked
+                amount={user_assets ? +formatBalance(user_assets, 18, 4) : 0}
+              />
+              <PositionCardOwnership
+                percentOwnership={
+                  identity.user_asset_delta !== null && identity.user_assets
+                    ? +calculatePercentageGain(
+                        +identity.user_assets - +identity.user_asset_delta,
+                        +identity.user_assets,
+                      ).toFixed(1)
+                    : 0
+                }
+              />
+              <PositionCardFeesAccrued
+                amount={
+                  identity.user_asset_delta
+                    ? +formatBalance(
+                        +identity.user_assets - +identity.user_asset_delta,
+                        18,
+                        5,
+                      )
+                    : 0
+                }
+              />
+              <PositionCardLastUpdated timestamp={identity.updated_at} />
+            </PositionCard>
+          ) : null}
           <StakeCard
-            tvl={formatBalance(identity.assets_sum)}
-            holders={identity.num_positions}
+            tvl={formatBalance(identity?.assets_sum)}
+            holders={identity?.num_positions}
             onBuyClick={() => logger('click buy')} // this will open the stake modal
             onViewAllClick={() => logger('click view all')} // this will navigate to the data-about positions
           />

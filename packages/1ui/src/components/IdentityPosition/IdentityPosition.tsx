@@ -1,5 +1,6 @@
 import * as React from 'react'
 
+import { CurrencyType } from 'types'
 import { formatDate } from 'utils/date'
 import { formatWalletAddress } from 'utils/wallet'
 
@@ -9,6 +10,7 @@ import {
   AvatarImage,
   Icon,
   IconName,
+  MonetaryValue,
   TagsBadge,
   TagsBadgeProps,
   TagsBadges,
@@ -24,6 +26,7 @@ export interface IdentityPositionProps
   extends React.HTMLAttributes<HTMLDivElement> {
   variant: IdentityPositionVariantType
   amount: number
+  currency?: CurrencyType
   amountChange: number
   name: string
   walletAddress: string
@@ -35,6 +38,7 @@ export interface IdentityPositionProps
 const IdentityPosition = ({
   variant,
   amount,
+  currency,
   amountChange,
   name,
   walletAddress,
@@ -101,9 +105,7 @@ const IdentityPosition = ({
       </div>
 
       <div className="flex flex-col items-end justify-between">
-        <Text variant={TextVariant.bodyLarge} className="">
-          {amount} ETH
-        </Text>
+        <MonetaryValue value={amount} currency={currency} />
 
         <div className="flex items-center">
           <Text variant="bodyLarge" weight="medium" className={amountClass}>

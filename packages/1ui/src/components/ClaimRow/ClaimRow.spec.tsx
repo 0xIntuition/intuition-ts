@@ -8,7 +8,7 @@ import { ClaimRow } from './ClaimRow'
 describe('ClaimRow', () => {
   it('should render appropriate element', () => {
     const { asFragment } = render(
-      <ClaimRow claimsFor={736} claimsAgainst={234} amountFor="0.383 ETH">
+      <ClaimRow claimsFor={736} claimsAgainst={234} amount={0.383}>
         <Claim
           size="sm"
           subject={{

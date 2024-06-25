@@ -2,14 +2,13 @@ import React from 'react'
 
 import { render } from '@testing-library/react'
 
-import { Currency } from '../../types'
 import { ClaimStakeCard } from './ClaimStakeCard'
 
 describe('ClaimStakeCard', () => {
   it('should render appropriate elements', () => {
     const { asFragment } = render(
       <ClaimStakeCard
-        currency={Currency.ETH}
+        currency="ETH"
         totalTVL={4.928}
         tvlAgainst={0.567}
         tvlFor={3.643}
@@ -124,7 +123,7 @@ describe('ClaimStakeCard', () => {
               <p
                 class="text-primary text-lg font-normal text-left"
               >
-                39
+                39 ETH
               </p>
             </div>
             <div>
@@ -143,7 +142,7 @@ describe('ClaimStakeCard', () => {
               <p
                 class="text-primary text-lg font-normal text-right"
               >
-                124
+                124 ETH
               </p>
             </div>
           </div>
@@ -168,7 +167,7 @@ describe('ClaimStakeCard', () => {
   it('should render disabled buttons when given no onClick args', () => {
     const { asFragment } = render(
       <ClaimStakeCard
-        currency={Currency.ETH}
+        currency="ETH"
         totalTVL={4.928}
         tvlAgainst={0.567}
         tvlFor={3.643}
@@ -281,7 +280,7 @@ describe('ClaimStakeCard', () => {
               <p
                 class="text-primary text-lg font-normal text-left"
               >
-                39
+                39 ETH
               </p>
             </div>
             <div>
@@ -300,7 +299,7 @@ describe('ClaimStakeCard', () => {
               <p
                 class="text-primary text-lg font-normal text-right"
               >
-                124
+                124 ETH
               </p>
             </div>
           </div>
