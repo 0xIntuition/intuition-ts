@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react'
 
-import { MonetaryValue, PositionValueDisplay } from './components'
+import { FeesAccrued, MonetaryValue, PositionValueDisplay } from './components'
 import { Indicators } from './Indicators'
 
 // Setup meta for the Storybook
@@ -25,6 +25,10 @@ export const IndicatorUsage: Story = {
       <Container>
         <p>MonetaryValue</p>
         <MonetaryValue value={0.345} currency="ETH" />
+      </Container>
+      <Container>
+        <p>FeesAccrued</p>
+        <FeesAccrued value={0.005} currency="ETH" />
       </Container>
       <Container>
         <p>PositionValueDisplay - claimFor</p>

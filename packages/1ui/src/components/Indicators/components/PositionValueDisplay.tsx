@@ -1,9 +1,10 @@
 import React from 'react'
 
 import { Badge, BadgeVariant } from 'components/Badge'
-import { Text, TextProps, TextVariant, TextWeight } from 'components/Text'
+import { TextProps } from 'components/Text'
 import { Currency, CurrencyType } from 'types'
 
+import { FeesAccrued } from './FeesAccrued'
 import { MonetaryValue } from './MonetaryValue'
 
 export const PositionValueVariants = {
@@ -28,9 +29,6 @@ const PositionValueDisplay = ({
   feesAccrued,
   currency = Currency.ETH,
 }: PositionValueDisplayProps) => {
-  const formattedFeesAccrued = `${feesAccrued > 0 ? '+' : ''}${feesAccrued.toFixed(3)}`
-  const amountClass = feesAccrued > 0 ? 'text-success' : ''
-
   const renderBadge = () => {
     if (position === PositionValueVariants.claimFor) {
       return (
@@ -56,13 +54,7 @@ const PositionValueDisplay = ({
       <div className="flex flex-col self-start pt-1">{renderBadge()}</div>
       <div className="flex flex-col items-end">
         <MonetaryValue value={value} currency={currency} />
-        <Text
-          variant={TextVariant.body}
-          weight={TextWeight.medium}
-          className={amountClass}
-        >
-          {formattedFeesAccrued} {currency}
-        </Text>
+        <FeesAccrued value={feesAccrued} currency={currency} />
       </div>
     </div>
   )

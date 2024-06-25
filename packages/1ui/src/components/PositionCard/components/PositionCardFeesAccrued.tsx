@@ -1,38 +1,32 @@
-import { Text } from 'components/Text'
+import { FeesAccrued } from 'components/Indicators'
+import { Text, TextVariant, TextWeight } from 'components/Text'
+import { CurrencyType } from 'types'
 
 interface PositionCardFeesAccruedProps
   extends React.HTMLAttributes<HTMLDivElement> {
   amount: number
+  currency?: CurrencyType
 }
 
 const PositionCardFeesAccrued = ({
   amount,
-  className,
+  currency,
 }: PositionCardFeesAccruedProps) => {
-  const formattedAmount = `${amount > 0 ? '+' : amount < 0 ? '-' : ''}${Math.abs(amount).toFixed(3)} ETH`
-  const amountClass =
-    amount > 0
-      ? 'text-success'
-      : amount < 0
-        ? 'text-destructive-foreground'
-        : 'text-muted-foreground'
-
   return (
     <div className="flex flex-col">
       <Text
-        variant="caption"
-        weight="medium"
+        variant={TextVariant.caption}
+        weight={TextWeight.medium}
         className="text-muted-foreground mb-0.5"
       >
         Fees Accrued
       </Text>
-      <Text
-        variant="bodyLarge"
-        weight="medium"
-        className={`${amountClass} ${className}`}
-      >
-        {formattedAmount}
-      </Text>
+      <FeesAccrued
+        value={amount}
+        currency={currency}
+        variant={TextVariant.bodyLarge}
+        weight={TextWeight.medium}
+      />
     </div>
   )
 }
