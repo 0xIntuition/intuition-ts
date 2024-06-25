@@ -24,7 +24,6 @@ export default defineConfig({
     expressDevServer(),
     envOnly(),
     remix({
-      buildDirectory: '../../dist/apps/portal/build',
       future: { unstable_singleFetch: true },
       ignoredRouteFiles: ['**/.*'],
       routes: async (defineRoutes) => {
@@ -45,5 +44,12 @@ export default defineConfig({
   },
   build: {
     target: 'ES2022',
+  },
+  ssr: {
+    noExternal: [
+      '@privy-io/react-auth',
+      '@privy-io/wagmi',
+      '@privy-io/server-auth',
+    ],
   },
 })
