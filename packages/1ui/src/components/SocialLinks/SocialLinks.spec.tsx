@@ -44,51 +44,107 @@ describe('SocialLinks', () => {
             <div
               class="items-center rounded-full border px-2.5 py-0.5 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shadow-md-subtle text-foreground border-border/30 hover:bg-primary/20 flex gap-2 w-min text-sm font-normal"
             >
-              <span
-                class="h-[2px] w-[2px] bg-primary"
-              />
+              <svg
+                class="h-3 w-3"
+              >
+                <use
+                  href="/src/components/Icon/Icon.sprites.svg#discord"
+                />
+              </svg>
+              @superdave
+              <svg
+                class="h-4 w-4 text-accent"
+              >
+                <use
+                  href="/src/components/Icon/Icon.sprites.svg#circle-check"
+                />
+              </svg>
             </div>
             <div
               class="items-center rounded-full border px-2.5 py-0.5 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shadow-md-subtle text-foreground border-border/30 hover:bg-primary/20 flex gap-2 w-min text-sm font-normal"
             >
-              <span
-                class="h-[2px] w-[2px] bg-primary"
-              />
+              <svg
+                class="h-3 w-3"
+              >
+                <use
+                  href="/src/components/Icon/Icon.sprites.svg#x"
+                />
+              </svg>
+              @superdave
+              <svg
+                class="h-4 w-4 text-accent"
+              >
+                <use
+                  href="/src/components/Icon/Icon.sprites.svg#circle-check"
+                />
+              </svg>
             </div>
             <div
               class="items-center rounded-full border px-2.5 py-0.5 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shadow-md-subtle text-foreground border-border/30 hover:bg-primary/20 flex gap-2 w-min text-sm font-normal"
             >
-              <span
-                class="h-[2px] w-[2px] bg-primary"
-              />
+              <svg
+                class="h-3 w-3"
+              >
+                <use
+                  href="/src/components/Icon/Icon.sprites.svg#farcaster"
+                />
+              </svg>
+              @superdave
             </div>
             <div
               class="items-center rounded-full border px-2.5 py-0.5 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shadow-md-subtle text-foreground border-border/30 hover:bg-primary/20 flex gap-2 w-min text-sm font-normal"
             >
-              <span
-                class="h-[2px] w-[2px] bg-primary"
-              />
+              <svg
+                class="h-3 w-3"
+              >
+                <use
+                  href="/src/components/Icon/Icon.sprites.svg#lens"
+                />
+              </svg>
+              @superdave
             </div>
             <div
               class="items-center rounded-full border px-2.5 py-0.5 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shadow-md-subtle text-foreground border-border/30 hover:bg-primary/20 flex gap-2 w-min text-sm font-normal"
             >
-              <span
-                class="h-[2px] w-[2px] bg-primary"
-              />
+              <svg
+                class="h-3 w-3"
+              >
+                <use
+                  href="/src/components/Icon/Icon.sprites.svg#calendly"
+                />
+              </svg>
+              @superdave
+              <svg
+                class="h-4 w-4 text-accent"
+              >
+                <use
+                  href="/src/components/Icon/Icon.sprites.svg#circle-check"
+                />
+              </svg>
             </div>
             <div
               class="items-center rounded-full border px-2.5 py-0.5 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shadow-md-subtle text-foreground border-border/30 hover:bg-primary/20 flex gap-2 w-min text-sm font-normal"
             >
-              <span
-                class="h-[2px] w-[2px] bg-primary"
-              />
+              <svg
+                class="h-3 w-3"
+              >
+                <use
+                  href="/src/components/Icon/Icon.sprites.svg#github"
+                />
+              </svg>
+              @superdave
             </div>
             <div
               class="items-center rounded-full border px-2.5 py-0.5 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shadow-md-subtle text-foreground border-border/30 hover:bg-primary/20 flex gap-2 w-min text-sm font-normal"
             >
-              <span
-                class="h-[2px] w-[2px] bg-primary"
-              />
+              <svg
+                class="h-3 w-3"
+              >
+                <use
+                  href="/src/components/Icon/Icon.sprites.svg#medium"
+                />
+              </svg>
+              @superdave
             </div>
           </div>
           <button

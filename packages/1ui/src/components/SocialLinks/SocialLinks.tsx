@@ -31,15 +31,20 @@ const SocialLinksBadges = ({ className, ...props }: SocialLinksBadgesProps) => {
   )
 }
 
+export const Platform = {
+  x: 'x',
+  discord: 'discord',
+  lens: 'lens',
+  farcaster: 'farcaster',
+  calendly: 'calendly',
+  medium: 'medium',
+  github: 'github',
+} as const
+
+export type PlatformType = (typeof Platform)[keyof typeof Platform]
+
 export interface SocialLinksBadgeProps extends TagsBadgeProps {
-  platform:
-    | 'x'
-    | 'discord'
-    | 'lens'
-    | 'farcaster'
-    | 'calendly'
-    | 'medium'
-    | 'github'
+  platform: PlatformType
   isVerified?: boolean
   username: string
 }

@@ -38,11 +38,17 @@ const TagsBadges = ({
 }
 
 export interface TagsBadgeProps extends React.HTMLAttributes<HTMLDivElement> {
-  label: string
-  value: string | number
+  label?: string
+  value?: string | number
 }
 
-const TagsBadge = ({ className, label, value, ...props }: TagsBadgeProps) => {
+const TagsBadge = ({
+  className,
+  label,
+  value,
+  children,
+  ...props
+}: TagsBadgeProps) => {
   return (
     <div
       className={cn(
@@ -51,9 +57,13 @@ const TagsBadge = ({ className, label, value, ...props }: TagsBadgeProps) => {
       )}
       {...props}
     >
-      {label}
-      <span className="h-[2px] w-[2px] bg-primary" />
-      {value}
+      {label || children}
+      {value && (
+        <>
+          <span className="h-[2px] w-[2px] bg-primary" />
+          {value}
+        </>
+      )}
     </div>
   )
 }
