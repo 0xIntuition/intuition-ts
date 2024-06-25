@@ -1,4 +1,4 @@
-export const IdentityVariant = {
+export const IdentityContentVariant = {
   entity: 'entity',
   user: 'user',
 } as const

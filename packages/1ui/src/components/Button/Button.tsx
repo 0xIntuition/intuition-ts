@@ -20,6 +20,8 @@ export const ButtonVariant = {
   warningOutline: 'warningOutline',
   successOutline: 'successOutline',
   destructiveOutline: 'destructiveOutline',
+  for: 'for',
+  against: 'against',
 }
 
 export const ButtonSize = {
@@ -64,6 +66,10 @@ const buttonVariants = cva(
           'bg-transparent text-success border-success rounded-full hover:bg-success/30 hover:border-success/30 shadow-md-subtle',
         [ButtonVariant.destructiveOutline]:
           'bg-transparent text-destructive border-destructive rounded-full hover:bg-destructive/30 hover:border-destructive/30 shadow-md-subtle',
+        [ButtonVariant.for]:
+          'bg-for text-for-foreground border-for rounded-full hover:bg-for/70 hover:border-for/30 shadow-md-subtle',
+        [ButtonVariant.against]:
+          'bg-against text-against-foreground border-against rounded-full hover:bg-against/70 hover:border-against/30 shadow-md-subtle',
       },
       size: {
         [ButtonSize.default]: 'px-3 py-1',

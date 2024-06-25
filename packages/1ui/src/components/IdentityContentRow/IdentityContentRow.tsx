@@ -1,5 +1,6 @@
 import * as React from 'react'
 
+import { CurrencyType } from 'types'
 import { formatWalletAddress } from 'utils/wallet'
 
 import {
@@ -8,18 +9,22 @@ import {
   AvatarImage,
   Icon,
   IconName,
+  MonetaryValue,
   TagsBadge,
   TagsBadgeProps,
   TagsBadges,
   Text,
   TextVariant,
 } from '..'
-import { IdentityVariant } from './IdentityContentRow.utils'
+import { IdentityContentVariant } from './IdentityContentRow.utils'
+
+export type IdentityContentVariantType = keyof typeof IdentityContentVariant
 
 export interface IdentityContentRowProps
   extends React.HTMLAttributes<HTMLDivElement> {
-  variant: string
-  amount: string
+  variant: IdentityContentVariantType
+  amount: number
+  currency?: CurrencyType
   name: string
   walletAddress: string
   avatarSrc: string
@@ -30,6 +35,7 @@ export interface IdentityContentRowProps
 const IdentityContentRow = ({
   variant,
   amount,
+  currency,
   name,
   walletAddress,
   avatarSrc,
@@ -43,13 +49,13 @@ const IdentityContentRow = ({
       <div className="w-full flex justify-between items-center" {...props}>
         <div className="flex items-center">
           <Avatar
-            className={`w-[64px] h-[64px] mr-4 ${variant === IdentityVariant.entity ? 'rounded-lg' : ''}`}
+            className={`w-[64px] h-[64px] mr-4 ${variant === IdentityContentVariant.entity ? 'rounded-lg' : ''}`}
           >
             <AvatarImage src={avatarSrc} alt={name} />
-            {variant === IdentityVariant.user && (
+            {variant === IdentityContentVariant.user && (
               <AvatarFallback>{name.slice(0, 2)}</AvatarFallback>
             )}
-            {variant === IdentityVariant.entity && (
+            {variant === IdentityContentVariant.entity && (
               <AvatarFallback className="rounded-lg">
                 <Icon name={IconName.fingerprint} className="h-full w-full" />
               </AvatarFallback>
@@ -84,9 +90,7 @@ const IdentityContentRow = ({
         </div>
 
         <div className="flex flex-col items-end">
-          <Text variant={TextVariant.bodyLarge} className="mb-1.5">
-            {amount}
-          </Text>
+          <MonetaryValue value={amount} currency={currency} />
 
           <div className="flex gap-1 items-center">
             <Icon

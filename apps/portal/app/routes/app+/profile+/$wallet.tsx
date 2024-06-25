@@ -99,11 +99,16 @@ export async function loader({ context, request, params }: LoaderFunctionArgs) {
   let vaultDetails: VaultDetailsType | null = null
 
   if (userIdentity !== undefined && userIdentity.vault_id) {
-    vaultDetails = await getVaultDetails(
-      userIdentity.contract,
-      userIdentity.vault_id,
-      user.details.wallet.address as `0x${string}`,
-    )
+    try {
+      vaultDetails = await getVaultDetails(
+        userIdentity.contract,
+        userIdentity.vault_id,
+        user.details.wallet.address as `0x${string}`,
+      )
+    } catch (error) {
+      logger('Failed to fetch vaultDetails', error)
+      vaultDetails = null
+    }
   }
 
   return json({ user, userIdentity, userTotals, vaultDetails })
@@ -152,37 +157,40 @@ export default function PublicProfile() {
           </div>
           <div className="flex flex-col gap-6">
             {/* social links will go here */}
-
-            <PositionCard onButtonClick={() => logger('sell position clicked')}>
-              <PositionCardStaked
-                amount={user_assets ? +formatBalance(user_assets, 18, 4) : 0}
-              />
-              <PositionCardOwnership
-                percentOwnership={
-                  userIdentity.user_asset_delta !== null &&
-                  userIdentity.user_assets
-                    ? +calculatePercentageGain(
-                        +userIdentity.user_assets -
-                          +userIdentity.user_asset_delta,
-                        +userIdentity.user_assets,
-                      ).toFixed(1)
-                    : 0
-                }
-              />
-              <PositionCardFeesAccrued
-                amount={
-                  userIdentity.user_asset_delta
-                    ? +formatBalance(
-                        +userIdentity.user_assets -
-                          +userIdentity.user_asset_delta,
-                        18,
-                        5,
-                      )
-                    : 0
-                }
-              />
-              <PositionCardLastUpdated timestamp={userIdentity.updated_at} />
-            </PositionCard>
+            {vaultDetails !== null && user_assets !== '0' ? (
+              <PositionCard
+                onButtonClick={() => logger('sell position clicked')}
+              >
+                <PositionCardStaked
+                  amount={user_assets ? +formatBalance(user_assets, 18, 4) : 0}
+                />
+                <PositionCardOwnership
+                  percentOwnership={
+                    userIdentity.user_asset_delta !== null &&
+                    userIdentity.user_assets
+                      ? +calculatePercentageGain(
+                          +userIdentity.user_assets -
+                            +userIdentity.user_asset_delta,
+                          +userIdentity.user_assets,
+                        ).toFixed(1)
+                      : 0
+                  }
+                />
+                <PositionCardFeesAccrued
+                  amount={
+                    userIdentity.user_asset_delta
+                      ? +formatBalance(
+                          +userIdentity.user_assets -
+                            +userIdentity.user_asset_delta,
+                          18,
+                          5,
+                        )
+                      : 0
+                  }
+                />
+                <PositionCardLastUpdated timestamp={userIdentity.updated_at} />
+              </PositionCard>
+            ) : null}
             <StakeCard
               tvl={formatBalance(userIdentity.assets_sum)}
               holders={userIdentity.num_positions}
