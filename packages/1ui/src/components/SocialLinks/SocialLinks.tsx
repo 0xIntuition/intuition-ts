@@ -1,6 +1,13 @@
 import * as React from 'react'
 
-import { Badge, BadgeProps, Button, Icon, IconName, IconNameType } from '..'
+import {
+  Button,
+  Icon,
+  IconName,
+  IconNameType,
+  TagsBadge,
+  TagsBadgeProps,
+} from '..'
 import { cn } from '../../styles'
 
 export interface SocialLinksProps
@@ -24,7 +31,7 @@ const SocialLinksBadges = ({ className, ...props }: SocialLinksBadgesProps) => {
   )
 }
 
-export interface SocialLinksBadgeProps extends BadgeProps {
+export interface SocialLinksBadgeProps extends TagsBadgeProps {
   platform:
     | 'x'
     | 'discord'
@@ -45,8 +52,7 @@ const SocialLinksBadge = ({
   ...props
 }: SocialLinksBadgeProps) => {
   return (
-    <Badge
-      variant="outline"
+    <TagsBadge
       className={cn('flex gap-2 w-min text-sm font-normal', className)}
       {...props}
     >
@@ -55,7 +61,7 @@ const SocialLinksBadge = ({
       {isVerified && (
         <Icon name={IconName.circleCheck} className="h-4 w-4 text-accent" />
       )}
-    </Badge>
+    </TagsBadge>
   )
 }
 

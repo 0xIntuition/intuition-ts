@@ -32,15 +32,8 @@ describe('Tags', () => {
             class="flex flex-wrap gap-2 items-center"
           >
             <div
-              class="items-center rounded-md pl-1 pr-1.5 py-0.5 text-foreground/65 flex gap-1 w-min text-sm font-normal"
+              class="inline-flex items-center rounded-full border px-2.5 py-0.5 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shadow-md-subtle gap-1 w-min text-sm font-normal text-foreground border-border/30 hover:bg-primary/20"
             >
-              <svg
-                class="h-3 w-3"
-              >
-                <use
-                  href="/src/components/Icon/Icon.sprites.svg#tag"
-                />
-              </svg>
               keyboard
               <span
                 class="h-[2px] w-[2px] bg-primary"
@@ -48,15 +41,8 @@ describe('Tags', () => {
               192
             </div>
             <div
-              class="items-center rounded-md pl-1 pr-1.5 py-0.5 text-foreground/65 flex gap-1 w-min text-sm font-normal"
+              class="inline-flex items-center rounded-full border px-2.5 py-0.5 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shadow-md-subtle gap-1 w-min text-sm font-normal text-foreground border-border/30 hover:bg-primary/20"
             >
-              <svg
-                class="h-3 w-3"
-              >
-                <use
-                  href="/src/components/Icon/Icon.sprites.svg#tag"
-                />
-              </svg>
               ergonomic
               <span
                 class="h-[2px] w-[2px] bg-primary"
@@ -64,15 +50,8 @@ describe('Tags', () => {
               168
             </div>
             <div
-              class="items-center rounded-md pl-1 pr-1.5 py-0.5 text-foreground/65 flex gap-1 w-min text-sm font-normal"
+              class="inline-flex items-center rounded-full border px-2.5 py-0.5 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shadow-md-subtle gap-1 w-min text-sm font-normal text-foreground border-border/30 hover:bg-primary/20"
             >
-              <svg
-                class="h-3 w-3"
-              >
-                <use
-                  href="/src/components/Icon/Icon.sprites.svg#tag"
-                />
-              </svg>
               wireless
               <span
                 class="h-[2px] w-[2px] bg-primary"
@@ -80,15 +59,8 @@ describe('Tags', () => {
               143
             </div>
             <div
-              class="items-center rounded-md pl-1 pr-1.5 py-0.5 text-foreground/65 flex gap-1 w-min text-sm font-normal"
+              class="inline-flex items-center rounded-full border px-2.5 py-0.5 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shadow-md-subtle gap-1 w-min text-sm font-normal text-foreground border-border/30 hover:bg-primary/20"
             >
-              <svg
-                class="h-3 w-3"
-              >
-                <use
-                  href="/src/components/Icon/Icon.sprites.svg#tag"
-                />
-              </svg>
               gaming
               <span
                 class="h-[2px] w-[2px] bg-primary"
@@ -96,15 +68,8 @@ describe('Tags', () => {
               132
             </div>
             <div
-              class="items-center rounded-md pl-1 pr-1.5 py-0.5 text-foreground/65 flex gap-1 w-min text-sm font-normal"
+              class="inline-flex items-center rounded-full border px-2.5 py-0.5 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shadow-md-subtle gap-1 w-min text-sm font-normal text-foreground border-border/30 hover:bg-primary/20"
             >
-              <svg
-                class="h-3 w-3"
-              >
-                <use
-                  href="/src/components/Icon/Icon.sprites.svg#tag"
-                />
-              </svg>
               mechanical
               <span
                 class="h-[2px] w-[2px] bg-primary"
@@ -112,15 +77,8 @@ describe('Tags', () => {
               128
             </div>
             <div
-              class="items-center rounded-md pl-1 pr-1.5 py-0.5 text-foreground/65 flex gap-1 w-min text-sm font-normal"
+              class="inline-flex items-center rounded-full border px-2.5 py-0.5 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shadow-md-subtle gap-1 w-min text-sm font-normal text-foreground border-border/30 hover:bg-primary/20"
             >
-              <svg
-                class="h-3 w-3"
-              >
-                <use
-                  href="/src/components/Icon/Icon.sprites.svg#tag"
-                />
-              </svg>
               tech
               <span
                 class="h-[2px] w-[2px] bg-primary"
@@ -128,15 +86,8 @@ describe('Tags', () => {
               122
             </div>
             <div
-              class="items-center rounded-md pl-1 pr-1.5 py-0.5 text-foreground/65 flex gap-1 w-min text-sm font-normal"
+              class="inline-flex items-center rounded-full border px-2.5 py-0.5 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shadow-md-subtle gap-1 w-min text-sm font-normal text-foreground border-border/30 hover:bg-primary/20"
             >
-              <svg
-                class="h-3 w-3"
-              >
-                <use
-                  href="/src/components/Icon/Icon.sprites.svg#tag"
-                />
-              </svg>
               innovation
               <span
                 class="h-[2px] w-[2px] bg-primary"
@@ -144,15 +95,8 @@ describe('Tags', () => {
               118
             </div>
             <div
-              class="items-center rounded-md pl-1 pr-1.5 py-0.5 text-foreground/65 flex gap-1 w-min text-sm font-normal"
+              class="inline-flex items-center rounded-full border px-2.5 py-0.5 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shadow-md-subtle gap-1 w-min text-sm font-normal text-foreground border-border/30 hover:bg-primary/20"
             >
-              <svg
-                class="h-3 w-3"
-              >
-                <use
-                  href="/src/components/Icon/Icon.sprites.svg#tag"
-                />
-              </svg>
               typing
               <span
                 class="h-[2px] w-[2px] bg-primary"
@@ -160,15 +104,8 @@ describe('Tags', () => {
               111
             </div>
             <div
-              class="items-center rounded-md pl-1 pr-1.5 py-0.5 text-foreground/65 flex gap-1 w-min text-sm font-normal"
+              class="inline-flex items-center rounded-full border px-2.5 py-0.5 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shadow-md-subtle gap-1 w-min text-sm font-normal text-foreground border-border/30 hover:bg-primary/20"
             >
-              <svg
-                class="h-3 w-3"
-              >
-                <use
-                  href="/src/components/Icon/Icon.sprites.svg#tag"
-                />
-              </svg>
               quality
               <span
                 class="h-[2px] w-[2px] bg-primary"
@@ -176,15 +113,8 @@ describe('Tags', () => {
               98
             </div>
             <div
-              class="items-center rounded-md pl-1 pr-1.5 py-0.5 text-foreground/65 flex gap-1 w-min text-sm font-normal"
+              class="inline-flex items-center rounded-full border px-2.5 py-0.5 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shadow-md-subtle gap-1 w-min text-sm font-normal text-foreground border-border/30 hover:bg-primary/20"
             >
-              <svg
-                class="h-3 w-3"
-              >
-                <use
-                  href="/src/components/Icon/Icon.sprites.svg#tag"
-                />
-              </svg>
               brand
               <span
                 class="h-[2px] w-[2px] bg-primary"
