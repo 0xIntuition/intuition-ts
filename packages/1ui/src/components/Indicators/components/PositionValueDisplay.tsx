@@ -13,11 +13,11 @@ export const PositionValueVariants = {
   claimAgainst: 'claimAgainst',
 } as const
 
-export type PositionValueVariant =
+export type PositionValueVariantType =
   (typeof PositionValueVariants)[keyof typeof PositionValueVariants]
 
 interface PositionValueDisplayProps extends TextProps {
-  position: PositionValueVariant
+  position: PositionValueVariantType
   value: number
   feesAccrued: number
   currency?: CurrencyType
