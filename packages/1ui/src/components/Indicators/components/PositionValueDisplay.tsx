@@ -1,9 +1,8 @@
 import React from 'react'
 
-import { Badge, BadgeVariant } from 'components/Badge'
-import { TextProps } from 'components/Text'
 import { Currency, CurrencyType } from 'types'
 
+import { Tag, TagVariant, TextProps } from '../..'
 import { FeesAccrued } from './FeesAccrued'
 import { MonetaryValue } from './MonetaryValue'
 
@@ -31,21 +30,10 @@ const PositionValueDisplay = ({
 }: PositionValueDisplayProps) => {
   const renderBadge = () => {
     if (position === PositionValueVariants.claimFor) {
-      return (
-        <Badge variant={BadgeVariant.outline} className="border-for text-for">
-          FOR
-        </Badge>
-      )
+      return <Tag variant={TagVariant.for}>FOR</Tag>
     }
     if (position === PositionValueVariants.claimAgainst) {
-      return (
-        <Badge
-          variant={BadgeVariant.outline}
-          className="border-against text-against"
-        >
-          AGAINST
-        </Badge>
-      )
+      return <Tag variant={TagVariant.against}>AGAINST</Tag>
     }
     return null
   }

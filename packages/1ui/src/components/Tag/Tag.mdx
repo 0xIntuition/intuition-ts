@@ -1,0 +1,142 @@
+import { Canvas, Controls, Meta, Source, Title } from '@storybook/blocks'
+
+import * as Stories from './Tag.stories'
+
+<Meta of={Stories} />
+
+<Title />
+
+#### Displays a tag or a component that looks like a tag.
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { Tag } from '@0xintuition/1ui'
+
+<Tag>
+  <Icon name="circle" className="h-4 w-4" />
+  sophie nélisse
+  <Icon name="circle" className="h-4 w-4" />
+</Tag>
+`} />
+
+<Canvas of={Stories.BasicUsage} sourceState="none" />
+
+## Properties
+
+<Controls />
+
+## Variants
+
+### Success
+
+<Source
+  dark
+  language="tsx"
+  code={`
+<Tag variant="success">
+  <Icon name={IconName.circle} className="h-4 w-4" />
+    sophie nélisse
+  <Icon name={IconName.circle} className="h-4 w-4" />
+</Tag>
+`}
+/>
+
+<Canvas of={Stories.Success} sourceState="none" />
+
+### Accent
+
+<Source
+  dark
+  language="tsx"
+  code={`
+<Tag variant="accent">
+  <Icon name={IconName.circle} className="h-4 w-4" />
+    sophie nélisse
+  <Icon name={IconName.circle} className="h-4 w-4" />
+</Tag>
+`}
+/>
+
+<Canvas of={Stories.Accent} sourceState="none" />
+
+### Social
+
+<Source
+  dark
+  language="tsx"
+  code={`
+<Tag variant="social">
+  <Icon name={IconName.circle} className="h-4 w-4" />
+    sophie nélisse
+  <Icon name={IconName.circle} className="h-4 w-4" />
+</Tag>
+`}
+/>
+
+<Canvas of={Stories.Social} sourceState="none" />
+
+### Warning
+
+<Source
+  dark
+  language="tsx"
+  code={`
+<Tag variant="warning">
+  <Icon name={IconName.circle} className="h-4 w-4" />
+    sophie nélisse
+  <Icon name={IconName.circle} className="h-4 w-4" />
+</Tag>
+`}
+/>
+
+<Canvas of={Stories.Warning} sourceState="none" />
+
+### Against
+
+<Source
+  dark
+  language="tsx"
+  code={`
+<Tag variant="against">
+  <Icon name={IconName.circle} className="h-4 w-4" />
+    sophie nélisse
+  <Icon name={IconName.circle} className="h-4 w-4" />
+</Tag>
+`}
+/>
+
+<Canvas of={Stories.Against} sourceState="none" />
+
+### For
+
+<Source
+  dark
+  language="tsx"
+  code={`
+<Tag variant="for">
+  <Icon name={IconName.circle} className="h-4 w-4" />
+    sophie nélisse
+  <Icon name={IconName.circle} className="h-4 w-4" />
+</Tag>
+`}
+/>
+
+<Canvas of={Stories.For} sourceState="none" />
+
+### Destructive
+
+<Source
+  dark
+  language="tsx"
+  code={`
+<Tag variant="destructive">
+  <Icon name={IconName.circle} className="h-4 w-4" />
+    sophie nélisse
+  <Icon name={IconName.circle} className="h-4 w-4" />
+</Tag>
+`}
+/>
+
+<Canvas of={Stories.Destructive} sourceState="none" />

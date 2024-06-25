@@ -2,24 +2,24 @@ import React from 'react'
 
 import { render } from '@testing-library/react'
 
-import { Tags, TagsBadge, TagsBadges, TagsButton } from './Tags'
+import { Tags, TagsButton, TagsContent, TagWithValue } from './Tags'
 
 describe('Tags', () => {
   it('should render appropriate element', () => {
     const { asFragment } = render(
       <Tags>
-        <TagsBadges numberOfTags={42}>
-          <TagsBadge label="keyboard" value={192} />
-          <TagsBadge label="ergonomic" value={168} />
-          <TagsBadge label="wireless" value={143} />
-          <TagsBadge label="gaming" value={132} />
-          <TagsBadge label="mechanical" value={128} />
-          <TagsBadge label="tech" value={122} />
-          <TagsBadge label="innovation" value={118} />
-          <TagsBadge label="typing" value={111} />
-          <TagsBadge label="quality" value={98} />
-          <TagsBadge label="brand" value={94} />
-        </TagsBadges>
+        <TagsContent numberOfTags={42}>
+          <TagWithValue label="keyboard" value={192} />
+          <TagWithValue label="ergonomic" value={168} />
+          <TagWithValue label="wireless" value={143} />
+          <TagWithValue label="gaming" value={132} />
+          <TagWithValue label="mechanical" value={128} />
+          <TagWithValue label="tech" value={122} />
+          <TagWithValue label="innovation" value={118} />
+          <TagWithValue label="typing" value={111} />
+          <TagWithValue label="quality" value={98} />
+          <TagWithValue label="brand" value={94} />
+        </TagsContent>
         <TagsButton />
       </Tags>,
     )
@@ -31,96 +31,96 @@ describe('Tags', () => {
           <div
             class="flex flex-wrap gap-2 items-center"
           >
-            <div
-              class="inline-flex items-center rounded-full border px-2.5 py-0.5 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shadow-md-subtle gap-1 w-min text-sm font-normal text-foreground border-border/30 hover:bg-primary/20"
+            <button
+              class="inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 text-base font-normal"
             >
               keyboard
               <span
                 class="h-[2px] w-[2px] bg-primary"
               />
               192
-            </div>
-            <div
-              class="inline-flex items-center rounded-full border px-2.5 py-0.5 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shadow-md-subtle gap-1 w-min text-sm font-normal text-foreground border-border/30 hover:bg-primary/20"
+            </button>
+            <button
+              class="inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 text-base font-normal"
             >
               ergonomic
               <span
                 class="h-[2px] w-[2px] bg-primary"
               />
               168
-            </div>
-            <div
-              class="inline-flex items-center rounded-full border px-2.5 py-0.5 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shadow-md-subtle gap-1 w-min text-sm font-normal text-foreground border-border/30 hover:bg-primary/20"
+            </button>
+            <button
+              class="inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 text-base font-normal"
             >
               wireless
               <span
                 class="h-[2px] w-[2px] bg-primary"
               />
               143
-            </div>
-            <div
-              class="inline-flex items-center rounded-full border px-2.5 py-0.5 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shadow-md-subtle gap-1 w-min text-sm font-normal text-foreground border-border/30 hover:bg-primary/20"
+            </button>
+            <button
+              class="inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 text-base font-normal"
             >
               gaming
               <span
                 class="h-[2px] w-[2px] bg-primary"
               />
               132
-            </div>
-            <div
-              class="inline-flex items-center rounded-full border px-2.5 py-0.5 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shadow-md-subtle gap-1 w-min text-sm font-normal text-foreground border-border/30 hover:bg-primary/20"
+            </button>
+            <button
+              class="inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 text-base font-normal"
             >
               mechanical
               <span
                 class="h-[2px] w-[2px] bg-primary"
               />
               128
-            </div>
-            <div
-              class="inline-flex items-center rounded-full border px-2.5 py-0.5 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shadow-md-subtle gap-1 w-min text-sm font-normal text-foreground border-border/30 hover:bg-primary/20"
+            </button>
+            <button
+              class="inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 text-base font-normal"
             >
               tech
               <span
                 class="h-[2px] w-[2px] bg-primary"
               />
               122
-            </div>
-            <div
-              class="inline-flex items-center rounded-full border px-2.5 py-0.5 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shadow-md-subtle gap-1 w-min text-sm font-normal text-foreground border-border/30 hover:bg-primary/20"
+            </button>
+            <button
+              class="inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 text-base font-normal"
             >
               innovation
               <span
                 class="h-[2px] w-[2px] bg-primary"
               />
               118
-            </div>
-            <div
-              class="inline-flex items-center rounded-full border px-2.5 py-0.5 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shadow-md-subtle gap-1 w-min text-sm font-normal text-foreground border-border/30 hover:bg-primary/20"
+            </button>
+            <button
+              class="inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 text-base font-normal"
             >
               typing
               <span
                 class="h-[2px] w-[2px] bg-primary"
               />
               111
-            </div>
-            <div
-              class="inline-flex items-center rounded-full border px-2.5 py-0.5 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shadow-md-subtle gap-1 w-min text-sm font-normal text-foreground border-border/30 hover:bg-primary/20"
+            </button>
+            <button
+              class="inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 text-base font-normal"
             >
               quality
               <span
                 class="h-[2px] w-[2px] bg-primary"
               />
               98
-            </div>
-            <div
-              class="inline-flex items-center rounded-full border px-2.5 py-0.5 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shadow-md-subtle gap-1 w-min text-sm font-normal text-foreground border-border/30 hover:bg-primary/20"
+            </button>
+            <button
+              class="inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 text-base font-normal"
             >
               brand
               <span
                 class="h-[2px] w-[2px] bg-primary"
               />
               94
-            </div>
+            </button>
             <p
               class="text-primary text-base font-normal"
             >

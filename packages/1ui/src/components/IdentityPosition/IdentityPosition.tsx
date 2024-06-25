@@ -11,9 +11,9 @@ import {
   Icon,
   IconName,
   PositionValueDisplay,
-  TagsBadge,
-  TagsBadgeProps,
-  TagsBadges,
+  TagsContent,
+  TagWithValue,
+  TagWithValueProps,
   Text,
   TextVariant,
   TextWeight,
@@ -32,7 +32,7 @@ export interface IdentityPositionProps
   walletAddress: string
   avatarSrc: string
   updatedAt?: string
-  tags?: TagsBadgeProps[]
+  tags?: TagWithValueProps[]
 }
 
 const IdentityPosition = ({
@@ -86,11 +86,15 @@ const IdentityPosition = ({
           )}
           {tags && tags.length > 0 && (
             <div className="flex gap-2 mt-1">
-              <TagsBadges numberOfTags={tags.length}>
+              <TagsContent numberOfTags={tags.length}>
                 {tags.slice(0, 4).map((tag, index) => (
-                  <TagsBadge label={tag.label} value={tag.value} key={index} />
+                  <TagWithValue
+                    label={tag.label}
+                    value={tag.value}
+                    key={index}
+                  />
                 ))}
-              </TagsBadges>
+              </TagsContent>
             </div>
           )}
         </div>

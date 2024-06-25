@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import { Button, Text, TextVariant } from '..'
+import { Button, Tag, TagProps, Text, TextVariant } from '..'
 import { cn } from '../../styles'
 
 export interface TagsProps extends React.HTMLAttributes<HTMLDivElement> {}
@@ -14,16 +14,16 @@ const Tags = ({ className, ...props }: TagsProps) => {
   )
 }
 
-export interface TagsBadgesProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface TagsContentProps extends React.HTMLAttributes<HTMLDivElement> {
   numberOfTags: number
 }
 
-const TagsBadges = ({
+const TagsContent = ({
   className,
   children,
   numberOfTags,
   ...props
-}: TagsBadgesProps) => {
+}: TagsContentProps) => {
   const numberOfTagsNotDisplayed =
     numberOfTags - React.Children.toArray(children).length
   return (
@@ -37,34 +37,22 @@ const TagsBadges = ({
   )
 }
 
-export interface TagsBadgeProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface TagWithValueProps extends TagProps {
   label?: string
   value?: string | number
 }
 
-const TagsBadge = ({
-  className,
-  label,
-  value,
-  children,
-  ...props
-}: TagsBadgeProps) => {
+const TagWithValue = ({ label, value, ...props }: TagWithValueProps) => {
   return (
-    <div
-      className={cn(
-        'inline-flex items-center rounded-full border px-2.5 py-0.5 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shadow-md-subtle gap-1 w-min text-sm font-normal text-foreground border-border/30 hover:bg-primary/20',
-        className,
-      )}
-      {...props}
-    >
-      {label || children}
+    <Tag {...props}>
+      {label}
       {value && (
         <>
           <span className="h-[2px] w-[2px] bg-primary" />
           {value}
         </>
       )}
-    </div>
+    </Tag>
   )
 }
 
@@ -79,4 +67,4 @@ const TagsButton = ({ ...props }: TagsButtonProps) => {
   )
 }
 
-export { Tags, TagsBadges, TagsBadge, TagsButton }
+export { Tags, TagsContent, TagWithValue, TagsButton }
