@@ -46,10 +46,6 @@ export default defineConfig({
     target: 'ES2022',
   },
   ssr: {
-    noExternal: [
-      '@privy-io/react-auth',
-      '@privy-io/wagmi',
-      '@privy-io/server-auth',
-    ],
+    noExternal: ['@privy-io/react-auth', '@privy-io/wagmi'],
   },
 })
