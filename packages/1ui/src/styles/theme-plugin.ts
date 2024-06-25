@@ -37,6 +37,8 @@ export const themePlugin = plugin(
         '--for-foreground': themes.light.forForeground,
         '--against': themes.light.against,
         '--against-foreground': themes.light.againstForeground,
+        '--social': themes.light.social,
+        '--social-foreground': themes.light.socialForeground,
         // primary
         '--primary-50': themes.light.primary[50],
         '--primary-100': themes.light.primary[100],
@@ -83,6 +85,8 @@ export const themePlugin = plugin(
           '--for-foreground': value.forForeground,
           '--against': value.against,
           '--against-foreground': value.againstForeground,
+          '--social': value.social,
+          '--social-foreground': value.socialForeground,
           // primary
           '--primary-50': value.primary[50],
           '--primary-100': value.primary[100],
@@ -206,6 +210,10 @@ export const themePlugin = plugin(
           against: {
             DEFAULT: colorMix('against'),
             foreground: colorMix('against-foreground'),
+          },
+          social: {
+            DEFAULT: colorMix('social'),
+            foreground: colorMix('social-foreground'),
           },
         },
         borderRadius: {

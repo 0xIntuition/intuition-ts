@@ -16,7 +16,7 @@ import * as Stories from './Badge.stories'
   code={`
 import { Badge } from '@0xintuition/1ui'
 
-<Badge>Badge</Badge>
+<Badge>0.0005 ETH</Badge>
 `} />
 
 <Canvas of={Stories.BasicUsage} sourceState="none" />
@@ -27,17 +27,77 @@ import { Badge } from '@0xintuition/1ui'
 
 ## Variants
 
-### Secondary
+### Success
 
 <Source
   dark
   language="tsx"
   code={`
-<Badge variant="secondary">
+<Badge variant="success">0.0005 ETH</Badge>
 `}
 />
 
-<Canvas of={Stories.Secondary} sourceState="none" />
+<Canvas of={Stories.Success} sourceState="none" />
+
+### Accent
+
+<Source
+  dark
+  language="tsx"
+  code={`
+<Badge variant="accent">0.0005 ETH</Badge>
+`}
+/>
+
+<Canvas of={Stories.Accent} sourceState="none" />
+
+### Social
+
+<Source
+  dark
+  language="tsx"
+  code={`
+<Badge variant="social">0.0005 ETH</Badge>
+`}
+/>
+
+<Canvas of={Stories.Social} sourceState="none" />
+
+### Warning
+
+<Source
+  dark
+  language="tsx"
+  code={`
+<Badge variant="warning">0.0005 ETH</Badge>
+`}
+/>
+
+<Canvas of={Stories.Warning} sourceState="none" />
+
+### Against
+
+<Source
+  dark
+  language="tsx"
+  code={`
+<Badge variant="against">0.0005 ETH</Badge>
+`}
+/>
+
+<Canvas of={Stories.Against} sourceState="none" />
+
+### For
+
+<Source
+  dark
+  language="tsx"
+  code={`
+<Badge variant="for">0.0005 ETH</Badge>
+`}
+/>
+
+<Canvas of={Stories.For} sourceState="none" />
 
 ### Destructive
 
@@ -45,20 +105,8 @@ import { Badge } from '@0xintuition/1ui'
   dark
   language="tsx"
   code={`
-<Badge variant="destructive">
+<Badge variant="destructive">0.0005 ETH</Badge>
 `}
 />
 
 <Canvas of={Stories.Destructive} sourceState="none" />
-
-### Outline
-
-<Source
-  dark
-  language="tsx"
-  code={`
-<Badge variant="outline">
-`}
-/>
-
-<Canvas of={Stories.Outline} sourceState="none" />

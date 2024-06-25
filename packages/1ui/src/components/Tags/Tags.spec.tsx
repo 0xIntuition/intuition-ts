@@ -32,7 +32,7 @@ describe('Tags', () => {
             class="flex flex-wrap gap-2 items-center"
           >
             <div
-              class="items-center rounded-full border px-2.5 py-0.5 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shadow-md-subtle text-foreground border-border/30 hover:bg-primary/20 flex gap-1 w-min text-sm font-normal"
+              class="inline-flex items-center rounded-full border px-2.5 py-0.5 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shadow-md-subtle gap-1 w-min text-sm font-normal text-foreground border-border/30 hover:bg-primary/20"
             >
               keyboard
               <span
@@ -41,7 +41,7 @@ describe('Tags', () => {
               192
             </div>
             <div
-              class="items-center rounded-full border px-2.5 py-0.5 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shadow-md-subtle text-foreground border-border/30 hover:bg-primary/20 flex gap-1 w-min text-sm font-normal"
+              class="inline-flex items-center rounded-full border px-2.5 py-0.5 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shadow-md-subtle gap-1 w-min text-sm font-normal text-foreground border-border/30 hover:bg-primary/20"
             >
               ergonomic
               <span
@@ -50,7 +50,7 @@ describe('Tags', () => {
               168
             </div>
             <div
-              class="items-center rounded-full border px-2.5 py-0.5 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shadow-md-subtle text-foreground border-border/30 hover:bg-primary/20 flex gap-1 w-min text-sm font-normal"
+              class="inline-flex items-center rounded-full border px-2.5 py-0.5 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shadow-md-subtle gap-1 w-min text-sm font-normal text-foreground border-border/30 hover:bg-primary/20"
             >
               wireless
               <span
@@ -59,7 +59,7 @@ describe('Tags', () => {
               143
             </div>
             <div
-              class="items-center rounded-full border px-2.5 py-0.5 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shadow-md-subtle text-foreground border-border/30 hover:bg-primary/20 flex gap-1 w-min text-sm font-normal"
+              class="inline-flex items-center rounded-full border px-2.5 py-0.5 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shadow-md-subtle gap-1 w-min text-sm font-normal text-foreground border-border/30 hover:bg-primary/20"
             >
               gaming
               <span
@@ -68,7 +68,7 @@ describe('Tags', () => {
               132
             </div>
             <div
-              class="items-center rounded-full border px-2.5 py-0.5 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shadow-md-subtle text-foreground border-border/30 hover:bg-primary/20 flex gap-1 w-min text-sm font-normal"
+              class="inline-flex items-center rounded-full border px-2.5 py-0.5 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shadow-md-subtle gap-1 w-min text-sm font-normal text-foreground border-border/30 hover:bg-primary/20"
             >
               mechanical
               <span
@@ -77,7 +77,7 @@ describe('Tags', () => {
               128
             </div>
             <div
-              class="items-center rounded-full border px-2.5 py-0.5 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shadow-md-subtle text-foreground border-border/30 hover:bg-primary/20 flex gap-1 w-min text-sm font-normal"
+              class="inline-flex items-center rounded-full border px-2.5 py-0.5 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shadow-md-subtle gap-1 w-min text-sm font-normal text-foreground border-border/30 hover:bg-primary/20"
             >
               tech
               <span
@@ -86,7 +86,7 @@ describe('Tags', () => {
               122
             </div>
             <div
-              class="items-center rounded-full border px-2.5 py-0.5 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shadow-md-subtle text-foreground border-border/30 hover:bg-primary/20 flex gap-1 w-min text-sm font-normal"
+              class="inline-flex items-center rounded-full border px-2.5 py-0.5 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shadow-md-subtle gap-1 w-min text-sm font-normal text-foreground border-border/30 hover:bg-primary/20"
             >
               innovation
               <span
@@ -95,7 +95,7 @@ describe('Tags', () => {
               118
             </div>
             <div
-              class="items-center rounded-full border px-2.5 py-0.5 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shadow-md-subtle text-foreground border-border/30 hover:bg-primary/20 flex gap-1 w-min text-sm font-normal"
+              class="inline-flex items-center rounded-full border px-2.5 py-0.5 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shadow-md-subtle gap-1 w-min text-sm font-normal text-foreground border-border/30 hover:bg-primary/20"
             >
               typing
               <span
@@ -104,7 +104,7 @@ describe('Tags', () => {
               111
             </div>
             <div
-              class="items-center rounded-full border px-2.5 py-0.5 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shadow-md-subtle text-foreground border-border/30 hover:bg-primary/20 flex gap-1 w-min text-sm font-normal"
+              class="inline-flex items-center rounded-full border px-2.5 py-0.5 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shadow-md-subtle gap-1 w-min text-sm font-normal text-foreground border-border/30 hover:bg-primary/20"
             >
               quality
               <span
@@ -113,7 +113,7 @@ describe('Tags', () => {
               98
             </div>
             <div
-              class="items-center rounded-full border px-2.5 py-0.5 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shadow-md-subtle text-foreground border-border/30 hover:bg-primary/20 flex gap-1 w-min text-sm font-normal"
+              class="inline-flex items-center rounded-full border px-2.5 py-0.5 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shadow-md-subtle gap-1 w-min text-sm font-normal text-foreground border-border/30 hover:bg-primary/20"
             >
               brand
               <span

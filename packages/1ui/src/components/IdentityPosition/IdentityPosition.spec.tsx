@@ -14,7 +14,7 @@ describe('IdentityPosition', () => {
         walletAddress="0x1234567890abcdef1234567890abcdef12345678"
         avatarSrc="https://avatars.githubusercontent.com/u/94311139?s=200&v=4"
         amount={1.21}
-        amountChange={0.005}
+        feesAccrued={0.005}
         updatedAt="2021-10-01T16:00:00Z"
       />,
     )
@@ -66,18 +66,21 @@ describe('IdentityPosition', () => {
             </div>
           </div>
           <div
-            class="flex flex-col items-end justify-between"
+            class="flex items-center justify-start gap-2"
           >
-            <p
-              class="text-primary text-lg font-normal"
-            >
-              1.21 ETH
-            </p>
             <div
-              class="flex items-center"
+              class="flex flex-col self-start pt-1"
+            />
+            <div
+              class="flex flex-col items-end"
             >
               <p
-                class="text-lg font-medium text-success"
+                class="text-primary text-lg font-normal"
+              >
+                1.21 ETH
+              </p>
+              <p
+                class="text-base font-medium text-success"
               >
                 +0.005 ETH
               </p>
@@ -96,7 +99,7 @@ describe('IdentityPosition', () => {
           walletAddress="0x1234567890abcdef1234567890abcdef12345678"
           avatarSrc="https://avatars.githubusercontent.com/u/94311139?s=200&v=4"
           amount={1.21}
-          amountChange={0.005}
+          feesAccrued={0.005}
           tags={[
             { label: 'keyboard', value: 34 },
             { label: 'ergonomic', value: 56 },
@@ -154,7 +157,7 @@ describe('IdentityPosition', () => {
                     class="flex flex-wrap gap-2 items-center"
                   >
                     <div
-                      class="items-center rounded-full border px-2.5 py-0.5 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shadow-md-subtle text-foreground border-border/30 hover:bg-primary/20 flex gap-1 w-min text-sm font-normal"
+                      class="inline-flex items-center rounded-full border px-2.5 py-0.5 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shadow-md-subtle gap-1 w-min text-sm font-normal text-foreground border-border/30 hover:bg-primary/20"
                     >
                       keyboard
                       <span
@@ -163,7 +166,7 @@ describe('IdentityPosition', () => {
                       34
                     </div>
                     <div
-                      class="items-center rounded-full border px-2.5 py-0.5 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shadow-md-subtle text-foreground border-border/30 hover:bg-primary/20 flex gap-1 w-min text-sm font-normal"
+                      class="inline-flex items-center rounded-full border px-2.5 py-0.5 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shadow-md-subtle gap-1 w-min text-sm font-normal text-foreground border-border/30 hover:bg-primary/20"
                     >
                       ergonomic
                       <span
@@ -172,7 +175,7 @@ describe('IdentityPosition', () => {
                       56
                     </div>
                     <div
-                      class="items-center rounded-full border px-2.5 py-0.5 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shadow-md-subtle text-foreground border-border/30 hover:bg-primary/20 flex gap-1 w-min text-sm font-normal"
+                      class="inline-flex items-center rounded-full border px-2.5 py-0.5 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shadow-md-subtle gap-1 w-min text-sm font-normal text-foreground border-border/30 hover:bg-primary/20"
                     >
                       wireless
                       <span
@@ -181,7 +184,7 @@ describe('IdentityPosition', () => {
                       12
                     </div>
                     <div
-                      class="items-center rounded-full border px-2.5 py-0.5 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shadow-md-subtle text-foreground border-border/30 hover:bg-primary/20 flex gap-1 w-min text-sm font-normal"
+                      class="inline-flex items-center rounded-full border px-2.5 py-0.5 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shadow-md-subtle gap-1 w-min text-sm font-normal text-foreground border-border/30 hover:bg-primary/20"
                     >
                       gaming
                       <span
@@ -199,18 +202,21 @@ describe('IdentityPosition', () => {
               </div>
             </div>
             <div
-              class="flex flex-col items-end justify-between"
+              class="flex items-center justify-start gap-2"
             >
-              <p
-                class="text-primary text-lg font-normal"
-              >
-                1.21 ETH
-              </p>
               <div
-                class="flex items-center"
+                class="flex flex-col self-start pt-1"
+              />
+              <div
+                class="flex flex-col items-end"
               >
                 <p
-                  class="text-lg font-medium text-success"
+                  class="text-primary text-lg font-normal"
+                >
+                  1.21 ETH
+                </p>
+                <p
+                  class="text-base font-medium text-success"
                 >
                   +0.005 ETH
                 </p>

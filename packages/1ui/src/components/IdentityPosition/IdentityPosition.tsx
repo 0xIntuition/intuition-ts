@@ -10,7 +10,7 @@ import {
   AvatarImage,
   Icon,
   IconName,
-  MonetaryValue,
+  PositionValueDisplay,
   TagsBadge,
   TagsBadgeProps,
   TagsBadges,
@@ -27,7 +27,7 @@ export interface IdentityPositionProps
   variant: IdentityPositionVariantType
   amount: number
   currency?: CurrencyType
-  amountChange: number
+  feesAccrued: number
   name: string
   walletAddress: string
   avatarSrc: string
@@ -39,7 +39,7 @@ const IdentityPosition = ({
   variant,
   amount,
   currency,
-  amountChange,
+  feesAccrued,
   name,
   walletAddress,
   avatarSrc,
@@ -47,14 +47,6 @@ const IdentityPosition = ({
   tags,
   ...props
 }: IdentityPositionProps) => {
-  const formattedAmountChange = `${amountChange > 0 ? '+' : amountChange < 0 ? '-' : ''}${Math.abs(amountChange).toFixed(3)} ETH`
-  const amountClass =
-    amount > 0
-      ? 'text-success'
-      : amount < 0
-        ? 'text-destructive-foreground'
-        : 'text-muted-foreground'
-
   return (
     <div className="w-full flex justify-between" {...props}>
       <div className="flex items-center">
@@ -104,15 +96,12 @@ const IdentityPosition = ({
         </div>
       </div>
 
-      <div className="flex flex-col items-end justify-between">
-        <MonetaryValue value={amount} currency={currency} />
-
-        <div className="flex items-center">
-          <Text variant="bodyLarge" weight="medium" className={amountClass}>
-            {formattedAmountChange}
-          </Text>
-        </div>
-      </div>
+      <PositionValueDisplay
+        value={amount}
+        position="identity"
+        feesAccrued={feesAccrued}
+        currency={currency}
+      />
     </div>
   )
 }

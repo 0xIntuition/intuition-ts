@@ -2,28 +2,33 @@ import * as React from 'react'
 
 import { cva, type VariantProps } from 'class-variance-authority'
 
+import { Icon, IconName } from '..'
 import { cn } from '../../styles'
 
 export const BadgeVariant = {
   default: 'default',
-  secondary: 'secondary',
+  success: 'success',
+  accent: 'accent',
+  social: 'social',
+  warning: 'warning',
+  against: 'against',
+  for: 'for',
   destructive: 'destructive',
-  outline: 'outline',
 }
 
 const badgeVariants = cva(
-  'inline-flex items-center rounded-full border px-2.5 py-0.5 text-sm font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shadow-md-subtle',
+  'inline-flex items-center gap-1 rounded-md pl-1 pr-1.5 py-0.5 text-sm font-light text-foreground/65',
   {
     variants: {
       variant: {
-        [BadgeVariant.default]:
-          'border-transparent bg-primary text-primary-foreground hover:bg-primary/80',
-        [BadgeVariant.secondary]:
-          'primary-gradient-subtle text-primary/70 border-primary/10 hover:text-primary',
-        [BadgeVariant.destructive]:
-          'border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80',
-        [BadgeVariant.outline]:
-          'text-foreground border-border/30 hover:bg-primary/20',
+        [BadgeVariant.default]: 'bg-primary/15',
+        [BadgeVariant.success]: 'bg-success/50',
+        [BadgeVariant.accent]: 'bg-accent/50',
+        [BadgeVariant.social]: 'bg-social/50',
+        [BadgeVariant.warning]: 'bg-warning/50',
+        [BadgeVariant.against]: 'bg-against/50',
+        [BadgeVariant.for]: 'bg-for/50',
+        [BadgeVariant.destructive]: 'bg-destructive/50',
       },
     },
     defaultVariants: {
@@ -36,9 +41,12 @@ export interface BadgeProps
   extends React.HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof badgeVariants> {}
 
-function Badge({ className, variant, ...props }: BadgeProps) {
+function Badge({ className, variant, children, ...props }: BadgeProps) {
   return (
-    <div className={cn(badgeVariants({ variant }), className)} {...props} />
+    <div className={cn(badgeVariants({ variant }), className)} {...props}>
+      <Icon name={IconName.tag} className="h-3 w-3" />
+      {children}
+    </div>
   )
 }
 

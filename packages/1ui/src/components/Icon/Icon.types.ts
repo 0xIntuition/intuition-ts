@@ -84,4 +84,6 @@ export const IconName = {
   medium: 'medium',
   github: 'github',
   people: 'people',
+  tag: 'tag',
+  tagFilled: 'tag-filled',
 } as const
