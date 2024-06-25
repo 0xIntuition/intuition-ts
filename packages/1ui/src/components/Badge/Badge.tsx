@@ -2,7 +2,6 @@ import * as React from 'react'
 
 import { cva, type VariantProps } from 'class-variance-authority'
 
-import { Icon, IconName } from '..'
 import { cn } from '../../styles'
 
 export const BadgeVariant = {
@@ -44,7 +43,6 @@ export interface BadgeProps
 function Badge({ className, variant, children, ...props }: BadgeProps) {
   return (
     <div className={cn(badgeVariants({ variant }), className)} {...props}>
-      <Icon name={IconName.tag} className="h-3 w-3" />
       {children}
     </div>
   )
