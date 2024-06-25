@@ -46,6 +46,8 @@ export const themes = {
     forForeground: palette.white.base,
     against: palette.orange[500],
     againstForeground: palette.black.base,
+    social: palette.purple[600],
+    socialForeground: palette.black.base,
   },
   dark: {
     background: palette.black.base,
@@ -76,9 +78,11 @@ export const themes = {
     successForeground: palette.black.base,
     warning: palette.yellow[600],
     warningForeground: palette.black.base,
-    for: palette.blue[500],
+    for: palette.blue[600],
     forForeground: palette.white.base,
-    against: palette.orange[500],
+    against: palette.orange[600],
     againstForeground: palette.black.base,
+    social: palette.purple[600],
+    socialForeground: palette.black.base,
   },
 }

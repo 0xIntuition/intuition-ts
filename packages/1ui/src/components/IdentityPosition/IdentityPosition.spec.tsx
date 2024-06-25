@@ -154,8 +154,15 @@ describe('IdentityPosition', () => {
                     class="flex flex-wrap gap-2 items-center"
                   >
                     <div
-                      class="items-center rounded-full border px-2.5 py-0.5 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shadow-md-subtle text-foreground border-border/30 hover:bg-primary/20 flex gap-1 w-min text-sm font-normal"
+                      class="items-center rounded-md pl-1 pr-1.5 py-0.5 text-foreground/65 flex gap-1 w-min text-sm font-normal"
                     >
+                      <svg
+                        class="h-3 w-3"
+                      >
+                        <use
+                          href="/src/components/Icon/Icon.sprites.svg#tag"
+                        />
+                      </svg>
                       keyboard
                       <span
                         class="h-[2px] w-[2px] bg-primary"
@@ -163,8 +170,15 @@ describe('IdentityPosition', () => {
                       34
                     </div>
                     <div
-                      class="items-center rounded-full border px-2.5 py-0.5 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shadow-md-subtle text-foreground border-border/30 hover:bg-primary/20 flex gap-1 w-min text-sm font-normal"
+                      class="items-center rounded-md pl-1 pr-1.5 py-0.5 text-foreground/65 flex gap-1 w-min text-sm font-normal"
                     >
+                      <svg
+                        class="h-3 w-3"
+                      >
+                        <use
+                          href="/src/components/Icon/Icon.sprites.svg#tag"
+                        />
+                      </svg>
                       ergonomic
                       <span
                         class="h-[2px] w-[2px] bg-primary"
@@ -172,8 +186,15 @@ describe('IdentityPosition', () => {
                       56
                     </div>
                     <div
-                      class="items-center rounded-full border px-2.5 py-0.5 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shadow-md-subtle text-foreground border-border/30 hover:bg-primary/20 flex gap-1 w-min text-sm font-normal"
+                      class="items-center rounded-md pl-1 pr-1.5 py-0.5 text-foreground/65 flex gap-1 w-min text-sm font-normal"
                     >
+                      <svg
+                        class="h-3 w-3"
+                      >
+                        <use
+                          href="/src/components/Icon/Icon.sprites.svg#tag"
+                        />
+                      </svg>
                       wireless
                       <span
                         class="h-[2px] w-[2px] bg-primary"
@@ -181,8 +202,15 @@ describe('IdentityPosition', () => {
                       12
                     </div>
                     <div
-                      class="items-center rounded-full border px-2.5 py-0.5 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shadow-md-subtle text-foreground border-border/30 hover:bg-primary/20 flex gap-1 w-min text-sm font-normal"
+                      class="items-center rounded-md pl-1 pr-1.5 py-0.5 text-foreground/65 flex gap-1 w-min text-sm font-normal"
                     >
+                      <svg
+                        class="h-3 w-3"
+                      >
+                        <use
+                          href="/src/components/Icon/Icon.sprites.svg#tag"
+                        />
+                      </svg>
                       gaming
                       <span
                         class="h-[2px] w-[2px] bg-primary"

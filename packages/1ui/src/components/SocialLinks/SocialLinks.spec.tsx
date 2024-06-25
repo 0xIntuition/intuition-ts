@@ -42,8 +42,15 @@ describe('SocialLinks', () => {
             class="flex flex-wrap gap-2"
           >
             <div
-              class="items-center rounded-full border px-2.5 py-0.5 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shadow-md-subtle text-foreground border-border/30 hover:bg-primary/20 flex gap-2 w-min text-sm font-normal"
+              class="items-center rounded-md pl-1 pr-1.5 py-0.5 text-foreground/65 flex gap-2 w-min text-sm font-normal"
             >
+              <svg
+                class="h-3 w-3"
+              >
+                <use
+                  href="/src/components/Icon/Icon.sprites.svg#tag"
+                />
+              </svg>
               <svg
                 class="h-3 w-3"
               >
@@ -61,8 +68,15 @@ describe('SocialLinks', () => {
               </svg>
             </div>
             <div
-              class="items-center rounded-full border px-2.5 py-0.5 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shadow-md-subtle text-foreground border-border/30 hover:bg-primary/20 flex gap-2 w-min text-sm font-normal"
+              class="items-center rounded-md pl-1 pr-1.5 py-0.5 text-foreground/65 flex gap-2 w-min text-sm font-normal"
             >
+              <svg
+                class="h-3 w-3"
+              >
+                <use
+                  href="/src/components/Icon/Icon.sprites.svg#tag"
+                />
+              </svg>
               <svg
                 class="h-3 w-3"
               >
@@ -80,8 +94,15 @@ describe('SocialLinks', () => {
               </svg>
             </div>
             <div
-              class="items-center rounded-full border px-2.5 py-0.5 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shadow-md-subtle text-foreground border-border/30 hover:bg-primary/20 flex gap-2 w-min text-sm font-normal"
+              class="items-center rounded-md pl-1 pr-1.5 py-0.5 text-foreground/65 flex gap-2 w-min text-sm font-normal"
             >
+              <svg
+                class="h-3 w-3"
+              >
+                <use
+                  href="/src/components/Icon/Icon.sprites.svg#tag"
+                />
+              </svg>
               <svg
                 class="h-3 w-3"
               >
@@ -92,8 +113,15 @@ describe('SocialLinks', () => {
               @superdave
             </div>
             <div
-              class="items-center rounded-full border px-2.5 py-0.5 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shadow-md-subtle text-foreground border-border/30 hover:bg-primary/20 flex gap-2 w-min text-sm font-normal"
+              class="items-center rounded-md pl-1 pr-1.5 py-0.5 text-foreground/65 flex gap-2 w-min text-sm font-normal"
             >
+              <svg
+                class="h-3 w-3"
+              >
+                <use
+                  href="/src/components/Icon/Icon.sprites.svg#tag"
+                />
+              </svg>
               <svg
                 class="h-3 w-3"
               >
@@ -104,8 +132,15 @@ describe('SocialLinks', () => {
               @superdave
             </div>
             <div
-              class="items-center rounded-full border px-2.5 py-0.5 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shadow-md-subtle text-foreground border-border/30 hover:bg-primary/20 flex gap-2 w-min text-sm font-normal"
+              class="items-center rounded-md pl-1 pr-1.5 py-0.5 text-foreground/65 flex gap-2 w-min text-sm font-normal"
             >
+              <svg
+                class="h-3 w-3"
+              >
+                <use
+                  href="/src/components/Icon/Icon.sprites.svg#tag"
+                />
+              </svg>
               <svg
                 class="h-3 w-3"
               >
@@ -123,8 +158,15 @@ describe('SocialLinks', () => {
               </svg>
             </div>
             <div
-              class="items-center rounded-full border px-2.5 py-0.5 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shadow-md-subtle text-foreground border-border/30 hover:bg-primary/20 flex gap-2 w-min text-sm font-normal"
+              class="items-center rounded-md pl-1 pr-1.5 py-0.5 text-foreground/65 flex gap-2 w-min text-sm font-normal"
             >
+              <svg
+                class="h-3 w-3"
+              >
+                <use
+                  href="/src/components/Icon/Icon.sprites.svg#tag"
+                />
+              </svg>
               <svg
                 class="h-3 w-3"
               >
@@ -135,8 +177,15 @@ describe('SocialLinks', () => {
               @superdave
             </div>
             <div
-              class="items-center rounded-full border px-2.5 py-0.5 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shadow-md-subtle text-foreground border-border/30 hover:bg-primary/20 flex gap-2 w-min text-sm font-normal"
+              class="items-center rounded-md pl-1 pr-1.5 py-0.5 text-foreground/65 flex gap-2 w-min text-sm font-normal"
             >
+              <svg
+                class="h-3 w-3"
+              >
+                <use
+                  href="/src/components/Icon/Icon.sprites.svg#tag"
+                />
+              </svg>
               <svg
                 class="h-3 w-3"
               >

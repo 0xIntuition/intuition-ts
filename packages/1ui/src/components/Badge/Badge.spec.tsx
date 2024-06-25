@@ -10,20 +10,129 @@ describe('Badge', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-sm font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shadow-md-subtle border-transparent bg-primary text-primary-foreground hover:bg-primary/80"
+          class="inline-flex items-center gap-1 rounded-md pl-1 pr-1.5 py-0.5 text-sm font-light text-foreground/65 bg-primary/15"
         >
+          <svg
+            class="h-3 w-3"
+          >
+            <use
+              href="/src/components/Icon/Icon.sprites.svg#tag"
+            />
+          </svg>
           Badge
         </div>
       </DocumentFragment>
     `)
   })
-  it('should render appropriate element when given `secondary` variant', () => {
-    const { asFragment } = render(<Badge variant="secondary">Badge</Badge>)
+  it('should render appropriate element when given `success` variant', () => {
+    const { asFragment } = render(<Badge variant="success">Badge</Badge>)
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-sm font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shadow-md-subtle primary-gradient-subtle text-primary/70 border-primary/10 hover:text-primary"
+          class="inline-flex items-center gap-1 rounded-md pl-1 pr-1.5 py-0.5 text-sm font-light text-foreground/65 bg-success/50"
         >
+          <svg
+            class="h-3 w-3"
+          >
+            <use
+              href="/src/components/Icon/Icon.sprites.svg#tag"
+            />
+          </svg>
+          Badge
+        </div>
+      </DocumentFragment>
+    `)
+  })
+  it('should render appropriate element when given `accent` variant', () => {
+    const { asFragment } = render(<Badge variant="accent">Badge</Badge>)
+    expect(asFragment()).toMatchInlineSnapshot(`
+      <DocumentFragment>
+        <div
+          class="inline-flex items-center gap-1 rounded-md pl-1 pr-1.5 py-0.5 text-sm font-light text-foreground/65 bg-accent/50"
+        >
+          <svg
+            class="h-3 w-3"
+          >
+            <use
+              href="/src/components/Icon/Icon.sprites.svg#tag"
+            />
+          </svg>
+          Badge
+        </div>
+      </DocumentFragment>
+    `)
+  })
+  it('should render appropriate element when given `social` variant', () => {
+    const { asFragment } = render(<Badge variant="social">Badge</Badge>)
+    expect(asFragment()).toMatchInlineSnapshot(`
+      <DocumentFragment>
+        <div
+          class="inline-flex items-center gap-1 rounded-md pl-1 pr-1.5 py-0.5 text-sm font-light text-foreground/65 bg-social/50"
+        >
+          <svg
+            class="h-3 w-3"
+          >
+            <use
+              href="/src/components/Icon/Icon.sprites.svg#tag"
+            />
+          </svg>
+          Badge
+        </div>
+      </DocumentFragment>
+    `)
+  })
+  it('should render appropriate element when given `warning` variant', () => {
+    const { asFragment } = render(<Badge variant="warning">Badge</Badge>)
+    expect(asFragment()).toMatchInlineSnapshot(`
+      <DocumentFragment>
+        <div
+          class="inline-flex items-center gap-1 rounded-md pl-1 pr-1.5 py-0.5 text-sm font-light text-foreground/65 bg-warning/50"
+        >
+          <svg
+            class="h-3 w-3"
+          >
+            <use
+              href="/src/components/Icon/Icon.sprites.svg#tag"
+            />
+          </svg>
+          Badge
+        </div>
+      </DocumentFragment>
+    `)
+  })
+  it('should render appropriate element when given `against` variant', () => {
+    const { asFragment } = render(<Badge variant="against">Badge</Badge>)
+    expect(asFragment()).toMatchInlineSnapshot(`
+      <DocumentFragment>
+        <div
+          class="inline-flex items-center gap-1 rounded-md pl-1 pr-1.5 py-0.5 text-sm font-light text-foreground/65 bg-against/50"
+        >
+          <svg
+            class="h-3 w-3"
+          >
+            <use
+              href="/src/components/Icon/Icon.sprites.svg#tag"
+            />
+          </svg>
+          Badge
+        </div>
+      </DocumentFragment>
+    `)
+  })
+  it('should render appropriate element when given `for` variant', () => {
+    const { asFragment } = render(<Badge variant="for">Badge</Badge>)
+    expect(asFragment()).toMatchInlineSnapshot(`
+      <DocumentFragment>
+        <div
+          class="inline-flex items-center gap-1 rounded-md pl-1 pr-1.5 py-0.5 text-sm font-light text-foreground/65 bg-for/50"
+        >
+          <svg
+            class="h-3 w-3"
+          >
+            <use
+              href="/src/components/Icon/Icon.sprites.svg#tag"
+            />
+          </svg>
           Badge
         </div>
       </DocumentFragment>
@@ -34,20 +143,15 @@ describe('Badge', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-sm font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shadow-md-subtle border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80"
+          class="inline-flex items-center gap-1 rounded-md pl-1 pr-1.5 py-0.5 text-sm font-light text-foreground/65 bg-destructive/50"
         >
-          Badge
-        </div>
-      </DocumentFragment>
-    `)
-  })
-  it('should render appropriate element when given `outline` variant', () => {
-    const { asFragment } = render(<Badge variant="outline">Badge</Badge>)
-    expect(asFragment()).toMatchInlineSnapshot(`
-      <DocumentFragment>
-        <div
-          class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-sm font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shadow-md-subtle text-foreground border-border/30 hover:bg-primary/20"
-        >
+          <svg
+            class="h-3 w-3"
+          >
+            <use
+              href="/src/components/Icon/Icon.sprites.svg#tag"
+            />
+          </svg>
           Badge
         </div>
       </DocumentFragment>
