@@ -8,44 +8,29 @@ import {
 } from '../generated/EthMultiVault/EthMultiVault'
 import {
   Atom,
-  Account,
   Triple,
   Deposit,
   Redemption,
   FeeTransfer,
-  Vault,
   Event,
   Position,
   AtomValue,
   Signal,
 } from '../generated/schema'
 import { parseAtomData } from './schema.org/parser'
+import { loadOrCreateAccount, loadOrCreateVault } from './utils'
 
 export function handleAtomCreated(event: AtomCreated): void {
   let atom = new Atom(event.params.vaultID.toString())
 
-  let account = Account.load(event.params.creator.toHexString())
-  if (account === null) {
-    account = new Account(event.params.creator.toHexString())
-    account.label = shortId(account.id)
-    account.type = "Default"
-  }
+  let account = loadOrCreateAccount(event.params.creator.toHexString())
 
-  let wallet = Account.load(event.params.atomWallet.toHexString())
-  if (wallet === null) {
-    wallet = new Account(event.params.atomWallet.toHexString())
-  }
-
+  let wallet = loadOrCreateAccount(event.params.atomWallet.toHexString())
   wallet.type = "AtomWallet"
   wallet.atom = atom.id
-  wallet.label = wallet.id
   wallet.save()
 
-  let vault = Vault.load(event.params.vaultID.toString())
-  if (vault === null) {
-    vault = new Vault(event.params.vaultID.toString())
-    vault.totalShares = BigInt.fromI32(0)
-  }
+  let vault = loadOrCreateVault(event.params.vaultID.toString())
   vault.atom = atom.id
   vault.save()
   atom.vault = vault.id
@@ -93,18 +78,9 @@ export function handleAtomCreated(event: AtomCreated): void {
 export function handleTripleCreated(event: TripleCreated): void {
   let triple = new Triple(event.params.vaultID.toString())
 
-  let account = Account.load(event.params.creator.toHexString())
-  if (account === null) {
-    account = new Account(event.params.creator.toHexString())
-    account.label = shortId(account.id)
-    account.type = "Default"
-  }
+  let account = loadOrCreateAccount(event.params.creator.toHexString())
 
-  let vault = Vault.load(event.params.vaultID.toString())
-  if (vault === null) {
-    vault = new Vault(event.params.vaultID.toString())
-    vault.totalShares = BigInt.fromI32(0)
-  }
+  let vault = loadOrCreateVault(event.params.vaultID.toString())
   vault.triple = triple.id
   vault.save()
   triple.vault = vault.id
@@ -113,10 +89,7 @@ export function handleTripleCreated(event: TripleCreated): void {
   let invarseVaultId = BigInt.fromI32(2).pow(255 as u8).times(BigInt.fromI32(2)).minus(BigInt.fromI32(1))
     .minus(event.params.vaultID).toString()
 
-  let inverseVault = Vault.load(invarseVaultId)
-  if (inverseVault === null) {
-    inverseVault = new Vault(invarseVaultId)
-  }
+  let inverseVault = loadOrCreateVault(invarseVaultId)
   inverseVault.triple = triple.id
   inverseVault.totalShares = BigInt.fromI32(0)
   inverseVault.save()
@@ -169,35 +142,17 @@ export function handleTripleCreated(event: TripleCreated): void {
   ev.save()
 }
 
-function shortId(id: string): string {
-  return id.substring(0, 6) + "..." + id.substring(id.length - 4)
-}
-
 export function handleDeposited(event: Deposited): void {
   let deposit = new Deposit(
     event.transaction.hash.concatI32(event.logIndex.toI32())
   )
-  let sender = Account.load(event.params.sender.toHexString())
-  if (sender === null) {
-    sender = new Account(event.params.sender.toHexString())
-    sender.label = shortId(sender.id)
-    sender.type = "Default"
-    sender.save()
-  }
+  let sender = loadOrCreateAccount(event.params.sender.toHexString())
+  sender.save()
 
-  let receiver = Account.load(event.params.receiver.toHexString())
-  if (receiver === null) {
-    receiver = new Account(event.params.receiver.toHexString())
-    receiver.label = shortId(receiver.id)
-    receiver.type = "Default"
-    receiver.save()
-  }
+  let receiver = loadOrCreateAccount(event.params.receiver.toHexString())
+  receiver.save()
 
-  let vault = Vault.load(event.params.vaultId.toString())
-  if (vault === null) {
-    vault = new Vault(event.params.vaultId.toString())
-    vault.totalShares = BigInt.fromI32(0)
-  }
+  let vault = loadOrCreateVault(event.params.vaultId.toString())
   vault.totalShares = vault.totalShares.plus(event.params.sharesForReceiver)
   vault.save()
 
@@ -237,11 +192,7 @@ export function handleDeposited(event: Deposited): void {
     let totalShares = vault.totalShares
     let relativeStrength = totalShares.gt(BigInt.fromI32(0)) ?
       event.params.sharesForReceiver.times(BigInt.fromI32(100)).div(totalShares) : BigInt.fromI32(100)
-    log.info("relativeStrength: {}", [relativeStrength.toString()])
-    log.info("totalShares: {}", [totalShares.toString()])
-    log.info("sharesForReceiver: {}", [event.params.sharesForReceiver.toString()])
-    // 23634841607072053n totalshares
-    // 22341605886429n
+
     signal.delta = event.params.sharesForReceiver
     signal.relativeStrength = relativeStrength
     signal.account = sender.id
@@ -272,21 +223,13 @@ export function handleFeesTransferred(event: FeesTransferred): void {
     event.transaction.hash.concatI32(event.logIndex.toI32())
   )
 
-  let account = Account.load(event.params.sender.toHexString())
-  if (account === null) {
-    account = new Account(event.params.sender.toHexString())
-    account.label = shortId(account.id)
-    account.type = "Default"
-    account.save()
-  }
+  let account = loadOrCreateAccount(event.params.sender.toHexString())
+  account.save()
 
-  let receiver = Account.load(event.params.protocolVault.toHexString())
-  if (receiver === null) {
-    receiver = new Account(event.params.protocolVault.toHexString())
-    receiver.label = "Protocol vault"
-    receiver.type = "ProtocolVault"
-    receiver.save()
-  }
+  let receiver = loadOrCreateAccount(event.params.protocolVault.toHexString())
+  receiver.label = "Protocol vault"
+  receiver.type = "ProtocolVault"
+  receiver.save()
 
   feeTransfer.sender = account.id
   feeTransfer.receiver = receiver.id
@@ -315,26 +258,13 @@ export function handleRedeemed(event: Redeemed): void {
   let redemption = new Redemption(
     event.transaction.hash.concatI32(event.logIndex.toI32())
   )
-  let sender = Account.load(event.params.sender.toHexString())
-  if (sender === null) {
-    sender = new Account(event.params.sender.toHexString())
-    sender.label = shortId(sender.id)
-    sender.type = "Default"
-    sender.save()
-  }
+  let sender = loadOrCreateAccount(event.params.sender.toHexString())
+  sender.save()
 
-  let receiver = Account.load(event.params.receiver.toHexString())
-  if (receiver === null) {
-    receiver = new Account(event.params.receiver.toHexString())
-    receiver.label = shortId(receiver.id)
-    receiver.type = "Default"
-    receiver.save()
-  }
+  let receiver = loadOrCreateAccount(event.params.receiver.toHexString())
+  receiver.save()
 
-  let vault = Vault.load(event.params.vaultId.toString())
-  if (vault === null) {
-    vault = new Vault(event.params.vaultId.toString())
-  }
+  let vault = loadOrCreateVault(event.params.vaultId.toString())
   let totalShares = vault.totalShares
   vault.totalShares = vault.totalShares.minus(event.params.sharesRedeemedBySender)
   vault.save()
