@@ -25,7 +25,7 @@ services:
       - --substreams-tier1-grpc-listen-addr=:9000
 
   graph-node:
-    image: graphprotocol/graph-node
+    image: graphprotocol/graph-node:latest
     ports:
       - '8000:8000'
       - '8001:8001'
