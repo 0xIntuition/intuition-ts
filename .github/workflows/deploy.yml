@@ -2,11 +2,15 @@ name: Deploy apps/portal
 
 on:
   push:
-    branches: [main]
+    branches:
+      - ENG-2003-devops
+
+  workflow_dispatch:
+
+  pull_request_target:
+    types: [opened, edited, synchronize, reopened, labeled, unlabeled]
 
 env:
-  CLUSTER_NAME: systems-intuition-dev-cluster
-  SERVICE_NAME: portal-intuition-dev
   AWS_REGION: us-west-2
 
 jobs:
@@ -31,6 +35,31 @@ jobs:
             exit 1
           fi
 
+      - name: Set variables
+        shell: bash
+        run: |
+          IS_DISPATCH=${{ github.event_name == 'workflow_dispatch' }}
+
+          if [[ $IS_DISPATCH = 'true' ]]; then
+            MY_ENV=production
+          else 
+            MY_ENV=dev
+          fi
+
+          ECR_IMAGE=${{ secrets.AWS_ACCOUNT }}.dkr.ecr.$AWS_REGION.amazonaws.com/portal-$MY_ENV:latest          
+          CLUSTER_NAME=systems-intuition-$MY_ENV-cluster
+          SERVICE_NAME=portal-intuition-$MY_ENV
+
+          echo "MY_ENV=$MY_ENV" >> $GITHUB_ENV
+          echo "CLUSTER_NAME=$CLUSTER_NAME" >> $GITHUB_ENV
+          echo "SERVICE_NAME=$SERVICE_NAME" >> $GITHUB_ENV
+          echo "ECR_IMAGE=$ECR_IMAGE" >> $GITHUB_ENV
+
+          echo "ENV: $MY_ENV"
+          echo "ECS CLUSTER: $CLUSTER_NAME"
+          echo "ECS SERVICE: $SERVICE_NAME"
+          echo "ECR IMAGE: $ECR_IMAGE"
+
       - name: Checkout code
         uses: actions/checkout@v3
 
@@ -53,8 +82,7 @@ jobs:
 
       - name: Build, tag, and push image to AWS ECR
         run: |
-          ECR_IMAGE=${{ secrets.AWS_ACCOUNT }}.dkr.ecr.$AWS_REGION.amazonaws.com/portal-dev:latest          
-          docker build --platform linux/x86_64 -t $ECR_IMAGE -f apps/portal/Dockerfile .
+          docker build --platform linux/x86_64 -t ${{ env.ECR_IMAGE }} -f apps/portal/Dockerfile .
           docker push ${{ env.ECR_IMAGE }}
 
       - name: Install AWS CLI
@@ -65,7 +93,7 @@ jobs:
       - name: Download task definition
         shell: bash
         run: |
-          aws ecs describe-task-definition --task-definition portal-dev --query taskDefinition > task-definition.json
+          aws ecs describe-task-definition --task-definition portal-intuition-${{ env.MY_ENV }} --query taskDefinition > task-definition.json
 
       - name: Render Amazon ECS task definition
         id: render-container
@@ -85,3 +113,13 @@ jobs:
           service: ${{ env.SERVICE_NAME }}
           cluster: ${{ env.CLUSTER_NAME }}
           wait-for-service-stability: true
+
+  update_release_draft:
+    permissions:
+      contents: write
+      pull-requests: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: release-drafter/release-drafter@v6
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
