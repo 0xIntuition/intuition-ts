@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import { CurrencyType, IdentityType } from 'types'
+import { CurrencyType, Identity, IdentityType } from 'types'
 import { formatWalletAddress } from 'utils/wallet'
 
 import {
@@ -17,7 +17,7 @@ import {
 
 export interface IdentityContentRowProps
   extends React.HTMLAttributes<HTMLDivElement> {
-  variant: IdentityType
+  variant?: IdentityType
   amount: number
   currency?: CurrencyType
   name: string
@@ -28,7 +28,7 @@ export interface IdentityContentRowProps
 }
 
 const IdentityContentRow = ({
-  variant,
+  variant = Identity.user,
   amount,
   currency,
   name,
