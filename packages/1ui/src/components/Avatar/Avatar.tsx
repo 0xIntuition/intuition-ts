@@ -2,10 +2,10 @@ import * as React from 'react'
 
 import * as AvatarPrimitive from '@radix-ui/react-avatar'
 import { cva, type VariantProps } from 'class-variance-authority'
+import { Identity } from 'types'
 
 import { Icon, IconName } from '..'
 import { cn } from '../../styles'
-import { Identity } from '../../types'
 
 const AvatarContainer = React.forwardRef<
   React.ElementRef<typeof AvatarPrimitive.Root>,
