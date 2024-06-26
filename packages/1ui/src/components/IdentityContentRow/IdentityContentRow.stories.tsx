@@ -1,12 +1,24 @@
 import React from 'react'
 
 import type { Meta, StoryObj } from '@storybook/react'
+import { Identity } from 'types'
 
 import { IdentityContentRow } from './IdentityContentRow'
 
 const meta: Meta<typeof IdentityContentRow> = {
   title: 'Components/IdentityContentRow',
   component: IdentityContentRow,
+  argTypes: {
+    variant: {
+      description: 'Variant of avatar',
+      options: Object.values(Identity),
+      table: {
+        type: { summary: 'string' },
+        defaultValue: { summary: 'user' },
+      },
+      control: 'select',
+    },
+  },
 }
 
 export default meta
