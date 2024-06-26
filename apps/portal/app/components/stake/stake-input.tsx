@@ -9,8 +9,6 @@ interface StakeInputProps {
   setVal: (value: string) => void
   wallet: string
   isLoading: boolean
-  action: 'deposit' | 'redeem'
-  ethOrConviction: 'eth' | 'conviction'
   showErrors: boolean
   setShowErrors: (show: boolean) => void
   validationErrors: string[]
@@ -22,8 +20,6 @@ export default function StakeInput({
   setVal,
   wallet,
   isLoading,
-  action,
-  ethOrConviction,
   showErrors,
   setShowErrors,
   validationErrors,

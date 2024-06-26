@@ -110,14 +110,6 @@ export default function StakeModal({
         : claim.against_conviction_price
   }
 
-  let user_assets: string | undefined
-  if (identityShouldOverride) {
-    user_assets = identity.user_assets
-  } else if (claim) {
-    user_assets =
-      direction === 'for' ? claim.user_assets_for : claim.user_assets_against
-  }
-
   const depositHook = useDepositAtom(contract)
 
   const redeemHook = useRedeemAtom(contract)
@@ -474,7 +466,6 @@ export default function StakeModal({
           vault_id={vault_id ? vault_id : '0'}
           conviction_price={conviction_price ? conviction_price : '0'}
           user_conviction={user_conviction ? user_conviction : '0'}
-          user_assets={user_assets ? user_assets : '0'}
           direction={direction ? direction : undefined}
           val={val}
           setVal={setVal}

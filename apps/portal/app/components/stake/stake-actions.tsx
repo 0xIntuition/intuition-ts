@@ -8,7 +8,6 @@ interface StakeActionsProps {
   walletBalance: string
   userConviction: string
   price: string
-  userAssets: string
 }
 
 export default function StakeActions({
@@ -17,9 +16,7 @@ export default function StakeActions({
   walletBalance,
   userConviction,
   price,
-  userAssets,
 }: StakeActionsProps) {
-  console.log('userAssets', userAssets)
   return (
     <div className="flex flex-col">
       <div className="grid grid-cols-2 items-center pb-5">
@@ -40,7 +37,11 @@ export default function StakeActions({
               if (action === 'deposit') {
                 setVal(walletBalance)
               } else {
-                setVal(formatUnits(BigInt(userAssets), 18))
+                const maxEth = (
+                  +formatUnits(BigInt(userConviction), 18) *
+                  +formatUnits(BigInt(price), 18)
+                ).toString()
+                setVal(maxEth)
               }
             }}
           >

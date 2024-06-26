@@ -20,13 +20,11 @@ interface StakeFormProps {
   vault_id: string
   user_conviction: string
   conviction_price: string
-  user_assets: string
   direction?: 'for' | 'against'
   val: string
   setVal: (val: string) => void
   mode: string
   ethOrConviction: 'eth' | 'conviction'
-  setEthOrConviction: (ethOrConviction: 'eth' | 'conviction') => void
   dispatch: (action: StakeTransactionAction) => void
   state: StakeTransactionState
   fetchReval: FetcherWithComponents<unknown>
@@ -45,13 +43,11 @@ export default function StakeForm({
   vault_id,
   user_conviction,
   conviction_price,
-  user_assets,
   direction,
   val,
   setVal,
   mode,
   ethOrConviction,
-  setEthOrConviction,
   dispatch,
   state,
   fetchReval,
@@ -135,7 +131,10 @@ export default function StakeForm({
                   action={mode}
                   setVal={setVal}
                   walletBalance={walletBalance ?? '0'}
-                  userAssets={user_assets}
+                  userConviction={
+                    latest_user_conviction ?? user_conviction ?? '0'
+                  }
+                  price={latest_conviction_price ?? conviction_price ?? '0'}
                 />
               </div>
             ) : (
