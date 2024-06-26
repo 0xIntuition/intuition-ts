@@ -1,10 +1,10 @@
-type Event @entity(immutable: true){
+type Event @entity(immutable: true) {
   id: Bytes!
   type: EventType!
   atom: Atom
   triple: Triple
-  deposit: Deposit 
-  redemption: Redemption 
+  deposit: Deposit
+  redemption: Redemption
   feeTransfer: FeeTransfer
   blockNumber: BigInt!
   blockTimestamp: BigInt!
@@ -18,7 +18,6 @@ enum EventType {
   Redeemed
   FeesTransfered
 }
-
 
 type Atom @entity {
   id: ID!
@@ -38,9 +37,9 @@ type Atom @entity {
 
   "todo"
   totalSignal: BigInt!
-  
+
   signals: [Signal!]!
-  
+
   activePositionsCount: Int
   allPositionsCount: Int
 
@@ -81,7 +80,6 @@ type Triple @entity {
   predicate: Atom!
   object: Atom!
 
-
   vault: Vault!
   inverseVault: Vault!
 
@@ -98,7 +96,7 @@ type Triple @entity {
   tvl: BigInt!
 
   "vault.totalShares - inverseVault.totalShares"
-  totalSignal: BigInt! 
+  totalSignal: BigInt!
   signals: [Signal!]!
 
   blockNumber: BigInt!
@@ -112,6 +110,8 @@ enum AtomType {
   Account
   Person
   PersonPredicate
+  Organization
+  OrganizationPredicate
   Book
   LikeAction
   FollowAction
@@ -122,10 +122,20 @@ type AtomValue @entity {
   id: ID!
   account: Account
   person: Person
+  organization: Organization
   book: Book
 }
 
 type Person @entity {
+  id: ID!
+  identifier: String
+  name: String
+  image: String
+  email: String
+  url: String
+}
+
+type Organization @entity {
   id: ID!
   identifier: String
   name: String
@@ -145,25 +155,25 @@ type Deposit @entity(immutable: true) {
   id: Bytes!
 
   "initializer of the deposit"
-  sender: Account! 
+  sender: Account!
 
   "beneficiary of the minted shares"
   receiver: Account!
 
   "total shares held by the receiver in the vault"
-  receiverTotalSharesInVault: BigInt! 
+  receiverTotalSharesInVault: BigInt!
 
   "total assets that go towards minting shares for the receiver"
-  senderAssetsAfterTotalFees: BigInt! 
+  senderAssetsAfterTotalFees: BigInt!
 
   "total shares transferred"
   sharesForReceiver: BigInt!
 
   "fee amount collected for entering the vault"
-  entryFee: BigInt! 
+  entryFee: BigInt!
 
   "vault being deposited into"
-  vault: Vault! 
+  vault: Vault!
 
   "whether the vault is a triple vault or not"
   isTriple: Boolean!
@@ -178,9 +188,9 @@ type Deposit @entity(immutable: true) {
 
 type FeeTransfer @entity(immutable: true) {
   id: Bytes!
-  sender: Account! 
-  receiver: Account! 
-  amount: BigInt! 
+  sender: Account!
+  receiver: Account!
+  amount: BigInt!
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
@@ -190,25 +200,25 @@ type Redemption @entity(immutable: true) {
   id: Bytes!
 
   "initializer of the withdrawal (owner of the shares)"
-  sender: Account! 
+  sender: Account!
 
   "beneficiary of the withdrawn assets (can be different from the sender)"
-  receiver: Account! 
+  receiver: Account!
 
   "total shares held by the sender in the vault"
-  senderTotalSharesInVault: BigInt! 
+  senderTotalSharesInVault: BigInt!
 
   "quantity of assets withdrawn by the receiver"
-  assetsForReceiver: BigInt! 
+  assetsForReceiver: BigInt!
 
   "quantity of shares redeemed"
-  sharesRedeemedBySender: BigInt! 
+  sharesRedeemedBySender: BigInt!
 
   "total fee amount collected for exiting the vault"
-  exitFee: BigInt! 
+  exitFee: BigInt!
 
   "vault being redeemed from"
-  vault: Vault! 
+  vault: Vault!
 
   blockNumber: BigInt!
   blockTimestamp: BigInt!
@@ -226,7 +236,6 @@ type Vault @entity {
   deposits: [Deposit!]! @derivedFrom(field: "vault")
   redemptions: [Redemption!]! @derivedFrom(field: "vault")
   positions: [Position!]! @derivedFrom(field: "vault")
-
 }
 
 type Position @entity {
@@ -249,8 +258,26 @@ type Signal @entity {
   triple: Triple
   deposit: Deposit
   redemption: Redemption
-  
+
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
+}
+
+type AtomSignalData @entity(timeseries: true) {
+  id: Int8!
+  timestamp: Timestamp!
+  atom: Atom!
+  account: Account!
+  delta: BigInt!
+}
+
+type SignalStats
+  @aggregation(intervals: ["hour", "day"], source: "AtomSignalData") {
+  id: Int8!
+  timestamp: Timestamp!
+  atom: Atom!
+  account: Account!
+  totalSignal: BigInt! @aggregate(fn: "sum", arg: "delta")
+  count: Int8! @aggregate(fn: "count", cumulative: true)
 }

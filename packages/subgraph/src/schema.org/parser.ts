@@ -1,9 +1,15 @@
-import { ipfs, json, TypedMap, JSONValue } from '@graphprotocol/graph-ts'
+import { ipfs, json, JSONValue, TypedMap } from '@graphprotocol/graph-ts'
+
 import { Atom } from '../../generated/schema'
-import { createPerson, createPersonPredicate, PersonUri } from './Person'
 import { createBook } from './Book'
-import { createLikeAction, LikeActionUri } from './LikeAction'
 import { createFollowAction, FollowActionUri } from './FollowAction'
+import { createLikeAction, LikeActionUri } from './LikeAction'
+import {
+  createOrganization,
+  createOrganizationPredicate,
+  OrganizationUri,
+} from './Organization'
+import { createPerson, createPersonPredicate, PersonUri } from './Person'
 
 export function parseAtomData(atom: Atom): void {
   atom.data = atom.uri
@@ -38,6 +44,10 @@ export function parseAtomData(atom: Atom): void {
   if (atom.data == PersonUri) {
     createPersonPredicate(atom)
   }
+
+  if (atom.data == OrganizationUri) {
+    createOrganizationPredicate(atom)
+  }
 }
 
 function resolveSchemaOrgProperties(
@@ -51,9 +61,11 @@ function resolveSchemaOrgProperties(
     if (type == 'Person') {
       createPerson(atom, obj)
     }
+    if (type == 'Organization') {
+      createOrganization(atom, obj)
+    }
     if (type == 'Book') {
       createBook(atom, obj)
     }
-
   }
 }

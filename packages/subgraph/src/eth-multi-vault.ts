@@ -1,21 +1,23 @@
 import { BigInt, log } from '@graphprotocol/graph-ts'
+
 import {
   AtomCreated,
-  TripleCreated,
   Deposited,
   FeesTransferred,
   Redeemed,
+  TripleCreated,
 } from '../generated/EthMultiVault/EthMultiVault'
 import {
   Atom,
-  Triple,
-  Deposit,
-  Redemption,
-  FeeTransfer,
-  Event,
-  Position,
+  AtomSignalData,
   AtomValue,
+  Deposit,
+  Event,
+  FeeTransfer,
+  Position,
+  Redemption,
   Signal,
+  Triple,
 } from '../generated/schema'
 import { parseAtomData } from './schema.org/parser'
 import { loadOrCreateAccount, loadOrCreateVault } from './utils'
@@ -26,7 +28,7 @@ export function handleAtomCreated(event: AtomCreated): void {
   let account = loadOrCreateAccount(event.params.creator.toHexString())
 
   let wallet = loadOrCreateAccount(event.params.atomWallet.toHexString())
-  wallet.type = "AtomWallet"
+  wallet.type = 'AtomWallet'
   wallet.atom = atom.id
   wallet.save()
 
@@ -46,15 +48,14 @@ export function handleAtomCreated(event: AtomCreated): void {
   parseAtomData(atom)
 
   if (atom.uri.toLowerCase() == account.id.toLowerCase()) {
-    atom.type = "Account"
-    atom.emoji = "⛓️"
+    atom.type = 'Account'
+    atom.emoji = '⛓️'
     atom.label = account.id.toString()
     let atomValue = new AtomValue(atom.id)
     atomValue.account = account.id
     atomValue.save()
     atom.value = atomValue.id
     account.atom = atom.id
-
   }
   account.save()
 
@@ -64,10 +65,8 @@ export function handleAtomCreated(event: AtomCreated): void {
 
   atom.save()
 
-  let ev = new Event(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-  ev.type = "AtomCreated"
+  let ev = new Event(event.transaction.hash.concatI32(event.logIndex.toI32()))
+  ev.type = 'AtomCreated'
   ev.atom = atom.id
   ev.blockNumber = event.block.number
   ev.blockTimestamp = event.block.timestamp
@@ -86,8 +85,12 @@ export function handleTripleCreated(event: TripleCreated): void {
   triple.vault = vault.id
 
   //@ts-ignore
-  let invarseVaultId = BigInt.fromI32(2).pow(255 as u8).times(BigInt.fromI32(2)).minus(BigInt.fromI32(1))
-    .minus(event.params.vaultID).toString()
+  let invarseVaultId = BigInt.fromI32(2)
+    .pow(255 as u8)
+    .times(BigInt.fromI32(2))
+    .minus(BigInt.fromI32(1))
+    .minus(event.params.vaultID)
+    .toString()
 
   let inverseVault = loadOrCreateVault(invarseVaultId)
   inverseVault.triple = triple.id
@@ -114,9 +117,23 @@ export function handleTripleCreated(event: TripleCreated): void {
   let predicate = Atom.load(event.params.predicateId.toString())
   let object = Atom.load(event.params.objectId.toString())
 
-
+  // TODO: abstract this to a function
   if (subject !== null && predicate !== null && object !== null) {
-    if (subject.type == "Account" && predicate.type == "PersonPredicate" && object.type == "Person") {
+    if (
+      subject.type == 'Account' &&
+      predicate.type == 'PersonPredicate' &&
+      object.type == 'Person'
+    ) {
+      if (subject.uri.toLowerCase() == account.id.toLowerCase()) {
+        account.label = object.label
+        account.image = object.image
+      }
+    }
+    if (
+      subject.type == 'Account' &&
+      predicate.type == 'OrganizationPredicate' &&
+      object.type == 'Organization'
+    ) {
       if (subject.uri.toLowerCase() == account.id.toLowerCase()) {
         account.label = object.label
         account.image = object.image
@@ -131,10 +148,8 @@ export function handleTripleCreated(event: TripleCreated): void {
 
   triple.save()
 
-  let ev = new Event(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-  ev.type = "TripleCreated"
+  let ev = new Event(event.transaction.hash.concatI32(event.logIndex.toI32()))
+  ev.type = 'TripleCreated'
   ev.triple = triple.id
   ev.blockNumber = event.block.number
   ev.blockTimestamp = event.block.timestamp
@@ -144,7 +159,7 @@ export function handleTripleCreated(event: TripleCreated): void {
 
 export function handleDeposited(event: Deposited): void {
   let deposit = new Deposit(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
+    event.transaction.hash.concatI32(event.logIndex.toI32()),
   )
   let sender = loadOrCreateAccount(event.params.sender.toHexString())
   sender.save()
@@ -187,48 +202,56 @@ export function handleDeposited(event: Deposited): void {
 
   if (deposit.isAtomWallet == false) {
     let signal = new Signal(
-      event.transaction.hash.concatI32(event.logIndex.toI32())
+      event.transaction.hash.concatI32(event.logIndex.toI32()),
     )
     let totalShares = vault.totalShares
-    let relativeStrength = totalShares.gt(BigInt.fromI32(0)) ?
-      event.params.sharesForReceiver.times(BigInt.fromI32(100)).div(totalShares) : BigInt.fromI32(100)
+    let relativeStrength = totalShares.gt(BigInt.fromI32(0))
+      ? event.params.sharesForReceiver
+          .times(BigInt.fromI32(100))
+          .div(totalShares)
+      : BigInt.fromI32(100)
 
     signal.delta = event.params.sharesForReceiver
     signal.relativeStrength = relativeStrength
     signal.account = sender.id
-    signal.atom = null
-    signal.triple = null
+    signal.atom = deposit.isTriple ? null : vault.id
+    signal.triple = deposit.isTriple ? vault.id : null
     signal.deposit = deposit.id
     signal.redemption = null
     signal.blockNumber = event.block.number
     signal.blockTimestamp = event.block.timestamp
     signal.transactionHash = event.transaction.hash
     signal.save()
+
+    if (deposit.isTriple == false) {
+      let atomSignalData = new AtomSignalData('auto')
+      atomSignalData.atom = vault.id
+      atomSignalData.account = sender.id
+      atomSignalData.delta = signal.delta
+      atomSignalData.save()
+    }
   }
 
-  let ev = new Event(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-  ev.type = "Deposited"
+  let ev = new Event(event.transaction.hash.concatI32(event.logIndex.toI32()))
+  ev.type = 'Deposited'
   ev.deposit = deposit.id
   ev.blockNumber = event.block.number
   ev.blockTimestamp = event.block.timestamp
   ev.transactionHash = event.transaction.hash
   ev.save()
-
 }
 
 export function handleFeesTransferred(event: FeesTransferred): void {
   let feeTransfer = new FeeTransfer(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
+    event.transaction.hash.concatI32(event.logIndex.toI32()),
   )
 
   let account = loadOrCreateAccount(event.params.sender.toHexString())
   account.save()
 
   let receiver = loadOrCreateAccount(event.params.protocolVault.toHexString())
-  receiver.label = "Protocol vault"
-  receiver.type = "ProtocolVault"
+  receiver.label = 'Protocol vault'
+  receiver.type = 'ProtocolVault'
   receiver.save()
 
   feeTransfer.sender = account.id
@@ -241,10 +264,8 @@ export function handleFeesTransferred(event: FeesTransferred): void {
 
   feeTransfer.save()
 
-  let ev = new Event(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-  ev.type = "FeesTransfered"
+  let ev = new Event(event.transaction.hash.concatI32(event.logIndex.toI32()))
+  ev.type = 'FeesTransfered'
   ev.feeTransfer = feeTransfer.id
   ev.blockNumber = event.block.number
   ev.blockTimestamp = event.block.timestamp
@@ -252,11 +273,9 @@ export function handleFeesTransferred(event: FeesTransferred): void {
   ev.save()
 }
 
-
-
 export function handleRedeemed(event: Redeemed): void {
   let redemption = new Redemption(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
+    event.transaction.hash.concatI32(event.logIndex.toI32()),
   )
   let sender = loadOrCreateAccount(event.params.sender.toHexString())
   sender.save()
@@ -266,7 +285,9 @@ export function handleRedeemed(event: Redeemed): void {
 
   let vault = loadOrCreateVault(event.params.vaultId.toString())
   let totalShares = vault.totalShares
-  vault.totalShares = vault.totalShares.minus(event.params.sharesRedeemedBySender)
+  vault.totalShares = vault.totalShares.minus(
+    event.params.sharesRedeemedBySender,
+  )
   vault.save()
 
   redemption.sender = sender.id
@@ -296,11 +317,14 @@ export function handleRedeemed(event: Redeemed): void {
   position.save()
 
   let signal = new Signal(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
+    event.transaction.hash.concatI32(event.logIndex.toI32()),
   )
 
-  let relativeStrength = totalShares.equals(BigInt.zero()) ? BigInt.fromI32(100)
-    : event.params.sharesRedeemedBySender.times(BigInt.fromI32(100)).div(totalShares)
+  let relativeStrength = totalShares.equals(BigInt.zero())
+    ? BigInt.fromI32(100)
+    : event.params.sharesRedeemedBySender
+        .times(BigInt.fromI32(100))
+        .div(totalShares)
 
   signal.delta = event.params.sharesRedeemedBySender.times(BigInt.fromI32(-1))
   signal.relativeStrength = relativeStrength
@@ -314,16 +338,11 @@ export function handleRedeemed(event: Redeemed): void {
   signal.transactionHash = event.transaction.hash
   signal.save()
 
-  let ev = new Event(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-  ev.type = "Redeemed"
+  let ev = new Event(event.transaction.hash.concatI32(event.logIndex.toI32()))
+  ev.type = 'Redeemed'
   ev.redemption = redemption.id
   ev.blockNumber = event.block.number
   ev.blockTimestamp = event.block.timestamp
   ev.transactionHash = event.transaction.hash
   ev.save()
 }
-
-
-
