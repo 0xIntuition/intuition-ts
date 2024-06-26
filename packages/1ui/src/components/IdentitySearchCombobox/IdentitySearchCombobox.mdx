@@ -1,0 +1,29 @@
+import { Canvas, Controls, Meta, Source, Title } from '@storybook/blocks'
+
+import * as Stories from './IdentitySearchCombobox.stories'
+
+<Meta of={Stories} />
+
+<Title />
+
+#### A searchable component to handle indentity creation and selection.
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { 
+  IdentitySearchCombobox, 
+  IdentitySearchComboboxItem 
+} from '@0xintuition/1ui'
+
+<IdentitySearchCombobox>
+  <IdentitySearchComboboxItem value="1" />
+</IdentitySearchCombobox>
+`} />
+
+<Canvas of={Stories.BasicUsage} sourceState="none" />
+
+## Properties
+
+<Controls />
