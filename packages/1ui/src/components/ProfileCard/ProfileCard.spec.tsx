@@ -29,12 +29,12 @@ describe('ProfileCard', () => {
             class="flex items-center space-x-4"
           >
             <span
-              class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full"
+              class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full bg-muted"
             >
               <span
-                class="bg-muted flex h-full w-full items-center justify-center rounded-full"
+                class="flex h-full w-full items-center justify-center bg-inherit"
               >
-                Jo
+                JO
               </span>
             </span>
             <div>
@@ -133,12 +133,12 @@ describe('ProfileCard', () => {
             class="flex items-center space-x-4"
           >
             <span
-              class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-lg"
+              class="relative flex h-10 w-10 shrink-0 overflow-hidden bg-muted rounded-lg"
             >
               <span
-                class="bg-muted flex h-full w-full items-center justify-center rounded-full"
+                class="flex h-full w-full items-center justify-center bg-inherit"
               >
-                Bl
+                BL
               </span>
             </span>
             <div>
@@ -199,12 +199,12 @@ describe('ProfileCard', () => {
             class="flex items-center space-x-4"
           >
             <span
-              class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full"
+              class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full bg-muted"
             >
               <span
-                class="bg-muted flex h-full w-full items-center justify-center rounded-full"
+                class="flex h-full w-full items-center justify-center bg-inherit"
               >
-                Jo
+                JO
               </span>
             </span>
             <div>
