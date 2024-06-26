@@ -1,27 +1,24 @@
+import { Identity, IdentityType } from 'types'
 import { formatWalletAddress } from 'utils/wallet'
 
 import { Avatar, Text } from '../..'
-import { ProfileVariantType } from '../ProfileCard'
-import { ProfileVariant } from '../ProfileCard.utils'
 
 interface ProfileCardHeaderProps {
-  variant: ProfileVariantType
+  variant?: IdentityType
   avatarSrc: string
   name: string
   walletAddress: string
 }
 
 const ProfileCardHeader = ({
-  variant,
+  variant = Identity.user,
   avatarSrc,
   name,
   walletAddress,
 }: ProfileCardHeaderProps) => {
-  const avatarClass = variant === ProfileVariant.entity ? 'rounded-lg' : ''
-
   return (
     <div className="flex items-center space-x-4">
-      <Avatar src={avatarSrc} name={name} className={avatarClass} />
+      <Avatar variant={variant} src={avatarSrc} name={name} />
       <div>
         <Text variant="headline" weight="medium" className="text-primary">
           {name}
