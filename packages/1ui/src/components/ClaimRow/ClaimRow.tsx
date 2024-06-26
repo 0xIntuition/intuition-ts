@@ -27,7 +27,7 @@ const ClaimRow = ({
         <div className="flex items-center h-[6px] mb-4">
           <span
             className="h-full bg-against block rounded-l-sm"
-            style={{ width: `${againstPercentage}%` }}
+            style={{ minWidth: `${againstPercentage}%` }}
           />
           <span className="h-full w-full bg-for block rounded-r-sm" />
         </div>

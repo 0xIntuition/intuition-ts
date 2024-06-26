@@ -127,7 +127,7 @@ describe('ClaimPosition', () => {
               >
                 <span
                   class="h-full bg-against block rounded-l-sm"
-                  style="width: 70%;"
+                  style="min-width: 70%;"
                 />
                 <span
                   class="h-full w-full bg-for block rounded-r-sm"

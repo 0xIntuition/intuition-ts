@@ -33,7 +33,7 @@ describe('ClaimRow', () => {
             >
               <span
                 class="h-full bg-against block rounded-l-sm"
-                style="width: 24.123711340206185%;"
+                style="min-width: 24.123711340206185%;"
               />
               <span
                 class="h-full w-full bg-for block rounded-r-sm"
