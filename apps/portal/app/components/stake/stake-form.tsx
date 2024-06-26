@@ -1,7 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
 
-import { SegmentedControl, SegmentedControlItem } from '@0xintuition/1ui'
-
 import { useFetcher, type FetcherWithComponents } from '@remix-run/react'
 import { useQueryClient } from '@tanstack/react-query'
 import {
@@ -9,7 +7,7 @@ import {
   type StakeTransactionState,
 } from 'types/stake-transaction'
 import { SessionUser } from 'types/user'
-import type { VaultDetails } from 'types/vault'
+import type { VaultDetailsType } from 'types/vault'
 import { useBalance, useBlockNumber } from 'wagmi'
 
 import DisabledIcon from '../svg/disabled-icon'
@@ -22,11 +20,11 @@ interface StakeFormProps {
   vault_id: string
   user_conviction: string
   conviction_price: string
+  user_assets: string
   direction?: 'for' | 'against'
   val: string
   setVal: (val: string) => void
   mode: string
-  setMode: (mode: string) => void
   ethOrConviction: 'eth' | 'conviction'
   setEthOrConviction: (ethOrConviction: 'eth' | 'conviction') => void
   dispatch: (action: StakeTransactionAction) => void
@@ -47,11 +45,11 @@ export default function StakeForm({
   vault_id,
   user_conviction,
   conviction_price,
+  user_assets,
   direction,
   val,
   setVal,
   mode,
-  setMode,
   ethOrConviction,
   setEthOrConviction,
   dispatch,
@@ -79,14 +77,15 @@ export default function StakeForm({
 
   const walletBalance = balance?.formatted ?? ''
 
-  const [latestVaultDetails, setLatestVaultDetails] = useState<VaultDetails>()
+  const [latestVaultDetails, setLatestVaultDetails] =
+    useState<VaultDetailsType>()
 
   const {
     conviction_price: latest_conviction_price,
     user_conviction: latest_user_conviction,
   } = latestVaultDetails ?? {}
 
-  const vaultContractDataFetcher = useFetcher<VaultDetails>()
+  const vaultContractDataFetcher = useFetcher<VaultDetailsType>()
   const vaultContractDataResourceUrl = `/resources/stake?vid=${vault_id}`
   const vaultContractDataLoadRef = useRef(vaultContractDataFetcher.load)
 
@@ -103,12 +102,6 @@ export default function StakeForm({
     }
   }, [vaultContractDataFetcher.data])
 
-  const tabs = [
-    { value: 'deposit', label: 'Deposit' },
-    { value: 'redeem', label: 'Redeem' },
-  ]
-  const [selectedTab, setSelectedTab] = useState(tabs[0].value)
-
   return !disabled ? (
     <>
       <fetchReval.Form
@@ -121,80 +114,29 @@ export default function StakeForm({
       </fetchReval.Form>
       <div className={`flex flex-col ${isModal && 'h-[250px]'}`}>
         <div className="flex w-full flex-col items-start justify-start gap-1 px-2.5">
+          {mode === 'deposit' ? 'Deposit' : 'Redeem'}
           <div className="flex w-full flex-row items-start justify-start">
             {state.status === 'idle' ? (
               <div className="rounded-t-lg bg-primary-950/15 px-4 pt-2.5">
-                <SegmentedControl className="w-fit">
-                  {tabs.map((option, index) => (
-                    <SegmentedControlItem
-                      key={index}
-                      isActive={selectedTab === option.value}
-                      onClick={() => {
-                        setSelectedTab(option.value)
-                        setMode(option.value)
-                        setVal('')
-                      }}
-                    >
-                      {option.label}
-                    </SegmentedControlItem>
-                  ))}
-                </SegmentedControl>
-                <div
-                  className={`${selectedTab === 'deposit' ? 'hidden' : 'flex flex-col'}`}
-                >
-                  <StakeInput
-                    val={val}
-                    setVal={setVal}
-                    wallet={user.details?.wallet?.address ?? ''}
-                    isLoading={isLoading}
-                    action={'redeem'}
-                    ethOrConviction={ethOrConviction}
-                    validationErrors={validationErrors}
-                    setValidationErrors={setValidationErrors}
-                    showErrors={showErrors}
-                    setShowErrors={setShowErrors}
-                  />
-                  <div className="flex h-3 flex-col items-start justify-center gap-2 self-stretch" />
-                  <StakeActions
-                    action={'deposit'}
-                    setVal={setVal}
-                    walletBalance={walletBalance ?? '0'}
-                    userConviction={
-                      latest_user_conviction ?? user_conviction ?? '0'
-                    }
-                    price={latest_conviction_price ?? conviction_price ?? '0'}
-                    ethOrConviction={ethOrConviction}
-                    setEthOrConviction={setEthOrConviction}
-                  />
-                </div>
-                <div
-                  className={`${selectedTab === 'redeem' ? 'hidden' : 'flex flex-col'}`}
-                >
-                  <StakeInput
-                    val={val}
-                    setVal={setVal}
-                    wallet={user.details?.wallet?.address ?? ''}
-                    isLoading={isLoading}
-                    action={'redeem'}
-                    ethOrConviction={ethOrConviction}
-                    validationErrors={validationErrors}
-                    setValidationErrors={setValidationErrors}
-                    showErrors={showErrors}
-                    setShowErrors={setShowErrors}
-                  />
-                  <div className="flex h-3 flex-col items-start justify-center gap-2 self-stretch" />
-                  <StakeActions
-                    action={'deposit'}
-                    setVal={setVal}
-                    walletBalance={walletBalance ?? '0'}
-                    userConviction={
-                      latest_user_conviction ?? user_conviction ?? '0'
-                    }
-                    price={latest_conviction_price ?? conviction_price ?? '0'}
-                    ethOrConviction={ethOrConviction}
-                    setEthOrConviction={setEthOrConviction}
-                  />
-                </div>
+                <StakeInput
+                  val={val}
+                  setVal={setVal}
+                  wallet={user.details?.wallet?.address ?? ''}
+                  isLoading={isLoading}
+                  action={'redeem'}
+                  ethOrConviction={ethOrConviction}
+                  validationErrors={validationErrors}
+                  setValidationErrors={setValidationErrors}
+                  showErrors={showErrors}
+                  setShowErrors={setShowErrors}
+                />
+                <div className="flex h-3 flex-col items-start justify-center gap-2 self-stretch" />
+                <StakeActions
+                  action={mode}
+                  setVal={setVal}
+                  walletBalance={walletBalance ?? '0'}
+                  userAssets={user_assets}
+                />
               </div>
             ) : (
               <>

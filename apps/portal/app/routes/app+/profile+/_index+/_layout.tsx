@@ -219,7 +219,14 @@ export default function Profile() {
             />
             {vaultDetails !== null && user_assets !== '0' ? (
               <PositionCard
-                onButtonClick={() => logger('sell position clicked')}
+                onButtonClick={() =>
+                  setStakeModalActive((prevState) => ({
+                    ...prevState,
+                    mode: 'redeem',
+                    modalType: 'identity',
+                    isOpen: true,
+                  }))
+                }
               >
                 <PositionCardStaked
                   amount={user_assets ? +formatBalance(user_assets, 18, 4) : 0}
@@ -254,22 +261,15 @@ export default function Profile() {
             <StakeCard
               tvl={formatBalance(userIdentity.assets_sum)}
               holders={userIdentity.num_positions}
-              onBuyClick={() => logger('click buy')} // this will open the stake modal
-              onViewAllClick={() => logger('click view all')} // this will navigate to the data-about positions
-            />
-          </div>
-
-          <div>
-            <StakeCard
-              tvl={formatBalance(userIdentity.assets_sum, 18, 4) + ' ETH'}
-              holders={userIdentity.num_positions}
               onBuyClick={() =>
                 setStakeModalActive((prevState) => ({
                   ...prevState,
+                  mode: 'deposit',
+                  modalType: 'identity',
                   isOpen: true,
                 }))
               }
-              onViewAllClick={() => null}
+              onViewAllClick={() => logger('click view all')} // this will navigate to the data-about positions
             />
           </div>
 
@@ -294,6 +294,7 @@ export default function Profile() {
               setStakeModalActive((prevState) => ({
                 ...prevState,
                 isOpen: false,
+                mode: null,
               }))
             }}
           />

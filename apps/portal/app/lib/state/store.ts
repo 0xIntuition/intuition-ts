@@ -26,9 +26,11 @@ export const stakeModalAtom = atom<{
   id: string | null
   direction?: 'for' | 'against' | null
   modalType?: 'identity' | 'claim' | null
+  mode?: 'deposit' | 'redeem' | null
 }>({
   isOpen: false,
   id: null,
   direction: null,
   modalType: null,
+  mode: null,
 })

@@ -23,7 +23,6 @@ interface StakeButtonProps {
   val: string
   setVal: (val: string) => void
   mode: string
-  setMode: (mode: string) => void
   handleAction: () => void
   handleClose?: () => void
   dispatch: (action: StakeTransactionAction) => void
@@ -44,7 +43,6 @@ const StakeButton: React.FC<StakeButtonProps> = ({
   val,
   setVal,
   mode,
-  setMode,
   handleAction,
   dispatch,
   state,
@@ -121,7 +119,6 @@ const StakeButton: React.FC<StakeButtonProps> = ({
         if (state.status === 'complete' || state.status === 'confirmed') {
           dispatch({ type: 'START_TRANSACTION' })
           setVal('')
-          setMode('deposit')
         } else if (state.status === 'review') {
           handleAction()
         } else {
@@ -137,13 +134,13 @@ const StakeButton: React.FC<StakeButtonProps> = ({
                   : +formattedMinDeposit * +formattedConvictionPrice)
             ) {
               errors.push(
-                `Minimum order is ${
+                `Minimum deposit is ${
                   ethOrConviction === 'eth'
                     ? formatBalance(min_deposit, 18, 4)
                     : (
                         +formattedMinDeposit * +formattedConvictionPrice
                       ).toFixed(4)
-                } ${ethOrConviction === 'eth' ? 'ETH' : 'KEK'}`,
+                } ${ethOrConviction === 'eth' ? 'ETH' : 'CONV'}`,
               )
             }
             if (

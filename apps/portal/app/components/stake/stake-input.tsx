@@ -37,14 +37,6 @@ export default function StakeInput({
     }
   }, [])
 
-  const getCurrencyLabel = () => {
-    if (action === 'deposit') {
-      return ethOrConviction === 'eth' ? 'ETH' : 'CONV'
-    } else {
-      return ethOrConviction === 'conviction' ? 'CONV' : 'ETH'
-    }
-  }
-
   return (
     <div className="flex flex-row items-center">
       <div className="flex w-full flex-col pb-8 pt-2">
@@ -71,16 +63,16 @@ export default function StakeInput({
             }}
             min={'0'}
             placeholder={'0'}
-            className="z-10 rounded-none border-none py-2 text-5xl font-medium !text-foreground focus:outline-none focus:ring-0 bg-transparent"
+            className="rounded-none border-none py-2 text-5xl font-medium text-foreground focus:outline-none focus:ring-0 bg-transparent"
             disabled={isLoading || !wallet || wallet === ''}
           />
           <span
-            className={`flex w-[fitpx] items-center py-2 text-5xl font-medium text-gray-300 ${
+            className={`flex items-center py-2 text-5xl font-medium text-gray-300 ${
               val !== '' && '!text-foreground'
             }
             }`}
           >
-            {getCurrencyLabel()}
+            ETH
           </span>
         </div>
         <div className={`h-2 px-2 ${!showErrors && 'invisible'}`}>

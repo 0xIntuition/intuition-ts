@@ -10,6 +10,7 @@ import {
   UsersService,
 } from '@0xintuition/api'
 
+import PrivyLogoutButton from '@client/privy-logout-button'
 import EditProfileModal from '@components/edit-profile-modal'
 import Toast from '@components/toast'
 import { multivaultAbi } from '@lib/abis/multivault'
@@ -38,6 +39,7 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
   const headers = getAuthHeaders(accessToken !== null ? accessToken : '')
   OpenAPI.HEADERS = headers as Record<string, string>
 
+  console.log('accessToken', accessToken)
   const session = context.get(SessionContext)
   console.log('[LOADER] user', session.get('user'))
   const user = session.get('user')

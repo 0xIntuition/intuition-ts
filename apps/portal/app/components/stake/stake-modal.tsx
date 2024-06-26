@@ -2,9 +2,11 @@ import { useEffect, useRef, useState } from 'react'
 
 import {
   Button,
+  Claim,
   Dialog,
   DialogContent,
   DialogHeader,
+  Identity,
   Tooltip,
   TooltipContent,
   TooltipProvider,
@@ -15,21 +17,21 @@ import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
 import { multivaultAbi } from '@lib/abis/multivault'
 import { useDepositAtom } from '@lib/hooks/useDepositAtom'
 import { useRedeemAtom } from '@lib/hooks/useRedeemAtom'
+import { stakeModalAtom } from '@lib/state/store'
 import logger from '@lib/utils/logger'
 import { formatBalance } from '@lib/utils/misc'
 import { useGenericTxState } from '@lib/utils/use-tx-reducer'
 import { Cookie } from '@remix-run/node'
 import { Link, useFetcher, useLocation } from '@remix-run/react'
 import { useQueryClient } from '@tanstack/react-query'
+import { useAtom } from 'jotai'
 import { ExternalLinkIcon, HelpCircle } from 'lucide-react'
 import { toast } from 'sonner'
 import { SessionUser } from 'types/user'
-import { VaultDetails } from 'types/vault'
-import { Abi, Address, decodeEventLog, parseUnits } from 'viem'
+import { VaultDetailsType } from 'types/vault'
+import { Abi, Address, decodeEventLog, formatUnits, parseUnits } from 'viem'
 import { useBalance, useBlockNumber } from 'wagmi'
 
-import { ClaimDisplay } from '../claim-display'
-import { IdentityDisplay } from '../identity-display'
 import UserConvictionIcon from '../svg/user-conviction-icon'
 import StakeButton from './stake-button'
 import StakeForm from './stake-form'
@@ -51,7 +53,6 @@ interface StakeModalProps {
   onClose?: () => void
   direction?: 'for' | 'against'
   min_deposit: string
-  modalType?: 'identity' | 'claim'
 }
 
 export default function StakeModal({
@@ -64,13 +65,13 @@ export default function StakeModal({
   claim,
   direction,
   min_deposit,
-  modalType,
 }: StakeModalProps) {
   const fetchReval = useFetcher()
+  const [stakeModalState] = useAtom(stakeModalAtom)
+  const { mode, modalType } = stakeModalState
   const formRef = useRef(null)
   const [val, setVal] = useState('')
   const [loading, setLoading] = useState(false)
-  const [mode, setMode] = useState<string>('deposit')
   const [ethOrConviction, setEthOrConviction] = useState<'conviction' | 'eth'>(
     'eth',
   )
@@ -99,7 +100,7 @@ export default function StakeModal({
         : claim.user_conviction_against
   }
 
-  let conviction_price
+  let conviction_price: string | undefined
   if (identityShouldOverride) {
     conviction_price = identity.conviction_price
   } else if (claim) {
@@ -107,6 +108,14 @@ export default function StakeModal({
       direction === 'for'
         ? claim.for_conviction_price
         : claim.against_conviction_price
+  }
+
+  let user_assets: string | undefined
+  if (identityShouldOverride) {
+    user_assets = identity.user_assets
+  } else if (claim) {
+    user_assets =
+      direction === 'for' ? claim.user_assets_for : claim.user_assets_against
   }
 
   const depositHook = useDepositAtom(contract)
@@ -142,7 +151,14 @@ export default function StakeModal({
           value:
             actionType === 'buy'
               ? parseUnits(val === '' ? '0' : val, 18)
-              : undefined,
+              : parseUnits(
+                  val === ''
+                    ? '0'
+                    : (
+                        Number(val) * Number(formatUnits(conviction_price, 18))
+                      ).toString(),
+                  18,
+                ),
         })
         onReceipt(() => {
           fetchReval.submit(formRef.current, {
@@ -299,14 +315,15 @@ export default function StakeModal({
 
   const walletBalance = balance?.formatted ?? ''
 
-  const [latestVaultDetails, setLatestVaultDetails] = useState<VaultDetails>()
+  const [latestVaultDetails, setLatestVaultDetails] =
+    useState<VaultDetailsType>()
 
   const {
     conviction_price: latest_conviction_price,
     user_conviction: latest_user_conviction,
   } = latestVaultDetails ?? {}
 
-  const vaultContractDataFetcher = useFetcher<VaultDetails>()
+  const vaultContractDataFetcher = useFetcher<VaultDetailsType>()
   const vaultContractDataResourceUrl = `/resources/stake?contract=${contract}&vid=${vault_id}`
   const vaultContractDataLoadRef = useRef(vaultContractDataFetcher.load)
 
@@ -340,7 +357,6 @@ export default function StakeModal({
   const location = useLocation()
 
   useEffect(() => {
-    setMode('deposit')
     setVal('')
     dispatch({ type: 'START_TRANSACTION' })
   }, [location])
@@ -351,7 +367,6 @@ export default function StakeModal({
       dispatch({ type: 'START_TRANSACTION' })
       reset()
       setVal('')
-      setMode('deposit')
     }, 500)
   }
 
@@ -423,18 +438,32 @@ export default function StakeModal({
         <div className="flex flex-col sm:px-5">
           <div className="flex w-full flex-row items-start justify-start pb-5 pt-[30px]">
             {modalType === 'identity' ? (
-              <IdentityDisplay
-                identity_id={identity!.identity_id}
-                display_name={identity!.display_name}
-                image={identity!.image}
-                isUser={identity!.is_user}
-              />
+              <Identity
+                imgSrc={identity?.user?.image ?? identity?.image}
+                variant={identity?.user ? 'user' : 'default'}
+              >
+                {identity?.user?.display_name ?? identity?.display_name}
+              </Identity>
             ) : (
-              <ClaimDisplay
-                claim_id={claim!.claim_id}
-                subject={claim!.subject!}
-                predicate={claim!.predicate!}
-                object={claim!.object!}
+              <Claim
+                subject={{
+                  imgSrc: claim?.subject?.user?.image ?? claim?.subject?.image,
+                  label:
+                    claim?.subject?.user?.display_name ??
+                    claim?.subject?.display_name,
+                  variant: claim?.subject?.user ? 'user' : 'default',
+                }}
+                predicate={{
+                  imgSrc: claim?.predicate?.image,
+                  label: claim?.predicate?.display_name,
+                }}
+                object={{
+                  imgSrc: claim?.object?.user?.image ?? claim?.object?.image,
+                  label:
+                    claim?.object?.user?.display_name ??
+                    claim?.object?.display_name,
+                  variant: claim?.object?.user ? 'user' : 'default',
+                }}
               />
             )}
           </div>
@@ -445,11 +474,11 @@ export default function StakeModal({
           vault_id={vault_id ? vault_id : '0'}
           conviction_price={conviction_price ? conviction_price : '0'}
           user_conviction={user_conviction ? user_conviction : '0'}
+          user_assets={user_assets ? user_assets : '0'}
           direction={direction ? direction : undefined}
           val={val}
           setVal={setVal}
           mode={mode}
-          setMode={setMode}
           ethOrConviction={ethOrConviction}
           setEthOrConviction={setEthOrConviction}
           dispatch={dispatch}
@@ -469,7 +498,6 @@ export default function StakeModal({
           val={val}
           setVal={setVal}
           mode={mode}
-          setMode={setMode}
           handleAction={handleStakeButtonClick}
           dispatch={dispatch}
           state={state}

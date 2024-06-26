@@ -8,8 +8,7 @@ interface StakeActionsProps {
   walletBalance: string
   userConviction: string
   price: string
-  ethOrConviction: 'eth' | 'conviction'
-  setEthOrConviction: (ethOrConviction: 'eth' | 'conviction') => void
+  userAssets: string
 }
 
 export default function StakeActions({
@@ -18,9 +17,9 @@ export default function StakeActions({
   walletBalance,
   userConviction,
   price,
-  ethOrConviction,
-  setEthOrConviction,
+  userAssets,
 }: StakeActionsProps) {
+  console.log('userAssets', userAssets)
   return (
     <div className="flex flex-col">
       <div className="grid grid-cols-2 items-center pb-5">
@@ -30,7 +29,6 @@ export default function StakeActions({
               action === 'redeem' && 'hidden'
             }`}
             onClick={() => {
-              setEthOrConviction('eth')
               setVal('0.0003')
             }}
           >
@@ -40,24 +38,9 @@ export default function StakeActions({
             className="flex flex-row items-center justify-start gap-1 rounded-full border bg-primary-50/[3%] px-2 py-0.5 text-primary-500 transition-colors duration-300 enabled:hover:border-primary-700 enabled:hover:bg-primary-800 enabled:hover:text-primary-300 disabled:opacity-50"
             onClick={() => {
               if (action === 'deposit') {
-                if (ethOrConviction === 'eth') {
-                  setVal(walletBalance)
-                } else {
-                  const maxConviction = (
-                    +walletBalance / +formatUnits(BigInt(price), 18)
-                  ).toString()
-                  setVal(maxConviction)
-                }
+                setVal(walletBalance)
               } else {
-                if (ethOrConviction === 'conviction') {
-                  setVal(formatUnits(BigInt(userConviction), 18))
-                } else {
-                  const maxEth = (
-                    +formatUnits(BigInt(userConviction), 18) *
-                    +formatUnits(BigInt(price), 18)
-                  ).toString()
-                  setVal(maxEth)
-                }
+                setVal(formatUnits(BigInt(userAssets), 18))
               }
             }}
           >
