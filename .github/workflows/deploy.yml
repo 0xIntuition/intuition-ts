@@ -1,0 +1,87 @@
+name: Deploy apps/portal
+
+on:
+  push:
+    branches: [main]
+
+env:
+  CLUSTER_NAME: systems-intuition-dev-cluster
+  SERVICE_NAME: portal-intuition-dev
+  AWS_REGION: us-west-2
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check if important variables are set
+        shell: bash
+        run: |
+          if [[ ${{ secrets.AWS_ACCESS_KEY_ID }} == '' ]]; then
+            echo "secret AWS_ACCESS_KEY_ID not set"
+            exit 1
+          fi
+          if [[ ${{ secrets.AWS_SECRET_ACCESS_KEY }} == '' ]]; then
+            echo "secret AWS_SECRET_ACCESS_KEY not set"
+            exit 1
+          fi
+          if [[ ${{ secrets.AWS_ACCOUNT }} == '' ]]; then
+            echo "secret AWS_ACCOUNT not set"
+            exit 1
+          fi
+
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1-node16
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v1
+        with:
+          mask-password: true
+
+      - name: Build, tag, and push image to AWS ECR
+        run: |
+          ECR_IMAGE=${{ secrets.AWS_ACCOUNT }}.dkr.ecr.$AWS_REGION.amazonaws.com/portal-dev:latest          
+          docker build --platform linux/x86_64 -t $ECR_IMAGE -f apps/portal/Dockerfile .
+          docker push ${{ env.ECR_IMAGE }}
+
+      - name: Install AWS CLI
+        uses: unfor19/install-aws-cli-action@v1
+        with:
+          version: 1
+
+      - name: Download task definition
+        shell: bash
+        run: |
+          aws ecs describe-task-definition --task-definition portal-dev --query taskDefinition > task-definition.json
+
+      - name: Render Amazon ECS task definition
+        id: render-container
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: task-definition.json
+          container-name: portal
+          image: ${{ env.ECR_IMAGE }}
+          environment-variables: |
+            AWS_REGION=${{ env.AWS_REGION }}
+            AWS_ACCOUNT=${{ secrets.AWS_ACCOUNT }}
+
+      - name: Deploy task definition to Amazon ECS
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: ${{ steps.render-container.outputs.task-definition }}
+          service: ${{ env.SERVICE_NAME }}
+          cluster: ${{ env.CLUSTER_NAME }}
+          wait-for-service-stability: true
