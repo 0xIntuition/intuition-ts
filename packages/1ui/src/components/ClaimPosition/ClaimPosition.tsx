@@ -27,9 +27,6 @@ interface CommonProps extends React.HTMLAttributes<HTMLDivElement> {
   amount: number
   currency?: CurrencyType
   feesAccrued: number
-  name: string
-  walletAddress: string
-  avatarSrc: string
   updatedAt?: string
   tags?: TagWithValueProps[]
 }
@@ -38,12 +35,18 @@ interface UserVariantProps extends CommonProps {
   variant: 'user'
   claimsFor?: never
   claimsAgainst?: never
+  name: string
+  avatarSrc: string
+  walletAddress: string
 }
 
 interface ClaimVariantProps extends CommonProps {
   variant: 'claim'
   claimsFor: number
   claimsAgainst: number
+  name?: never
+  avatarSrc?: never
+  walletAddress?: never
 }
 
 type ClaimPositionProps = UserVariantProps | ClaimVariantProps

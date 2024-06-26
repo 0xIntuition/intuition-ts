@@ -99,19 +99,8 @@ describe('ClaimPosition', () => {
           position="claimAgainst"
           claimsFor={30}
           claimsAgainst={70}
-          name="John Doe"
-          walletAddress="0x1234567890abcdef1234567890abcdef12345678"
-          avatarSrc="https://avatars.githubusercontent.com/u/94311139?s=200&v=4"
           amount={1.21}
           feesAccrued={0.005}
-          tags={[
-            { label: 'keyboard', value: 34 },
-            { label: 'ergonomic', value: 56 },
-            { label: 'wireless', value: 12 },
-            { label: 'gaming', value: 77 },
-            { label: 'work', value: 11 },
-            { label: 'home', value: 34 },
-          ]}
         />,
       )
       expect(asFragment()).toMatchInlineSnapshot(`
