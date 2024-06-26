@@ -9,7 +9,8 @@ describe('ClaimPosition', () => {
   it('should render UI for user variant', () => {
     const { asFragment } = render(
       <ClaimPosition
-        variant="identity"
+        variant="user"
+        position="claimFor"
         name="John Doe"
         walletAddress="0x1234567890abcdef1234567890abcdef12345678"
         avatarSrc="https://avatars.githubusercontent.com/u/94311139?s=200&v=4"
@@ -28,7 +29,13 @@ describe('ClaimPosition', () => {
           >
             <span
               class="relative flex shrink-0 overflow-hidden rounded-full w-16 h-16 mr-4"
-            />
+            >
+              <span
+                class="bg-muted flex h-full w-full items-center justify-center rounded-full"
+              >
+                Jo
+              </span>
+            </span>
             <div
               class="flex flex-col"
             >
@@ -58,7 +65,13 @@ describe('ClaimPosition', () => {
           >
             <div
               class="h-full flex flex-col pt-1"
-            />
+            >
+              <button
+                class="inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-for/10 text-for/90 border-for/30 hover:bg-for/40 hover:text-for hover:border-for/60 text-base font-normal"
+              >
+                FOR
+              </button>
+            </div>
             <div
               class="h-full flex flex-col items-end"
             >
@@ -82,7 +95,10 @@ describe('ClaimPosition', () => {
     it('should render UI for identity variant', () => {
       const { asFragment } = render(
         <ClaimPosition
-          variant="identity"
+          variant="claim"
+          position="claimAgainst"
+          claimsFor={30}
+          claimsAgainst={70}
           name="John Doe"
           walletAddress="0x1234567890abcdef1234567890abcdef12345678"
           avatarSrc="https://avatars.githubusercontent.com/u/94311139?s=200&v=4"
@@ -104,77 +120,18 @@ describe('ClaimPosition', () => {
             class="w-full flex justify-between"
           >
             <div
-              class="flex items-center"
+              class="flex flex-col justify-between w-[60%]"
             >
-              <span
-                class="relative flex shrink-0 overflow-hidden rounded-full w-16 h-16 mr-4"
-              />
               <div
-                class="flex flex-col"
+                class="flex items-center h-[6px] mb-4"
               >
-                <div
-                  class="flex items-center mb-1.5"
-                >
-                  <p
-                    class="text-primary text-lg font-normal mr-1"
-                  >
-                    John Doe
-                  </p>
-                  <p
-                    class="text-base font-normal text-secondary-foreground"
-                  >
-                    0x1234...5678
-                  </p>
-                </div>
-                <div
-                  class="flex gap-2 mt-1"
-                >
-                  <div
-                    class="flex flex-wrap gap-2 items-center"
-                  >
-                    <button
-                      class="inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 text-base font-normal"
-                    >
-                      keyboard
-                      <span
-                        class="h-[2px] w-[2px] bg-primary"
-                      />
-                      34
-                    </button>
-                    <button
-                      class="inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 text-base font-normal"
-                    >
-                      ergonomic
-                      <span
-                        class="h-[2px] w-[2px] bg-primary"
-                      />
-                      56
-                    </button>
-                    <button
-                      class="inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 text-base font-normal"
-                    >
-                      wireless
-                      <span
-                        class="h-[2px] w-[2px] bg-primary"
-                      />
-                      12
-                    </button>
-                    <button
-                      class="inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 text-base font-normal"
-                    >
-                      gaming
-                      <span
-                        class="h-[2px] w-[2px] bg-primary"
-                      />
-                      77
-                    </button>
-                    <p
-                      class="text-primary text-base font-normal"
-                    >
-                      + 2 more
-                    </p>
-                  </div>
-                </div>
+                <span
+                  class="h-full bg-against block rounded-l-sm"
+                  style="width: 70%;"
+                />
+                <span
+                  class="h-full w-full bg-for block rounded-r-sm"
+                />
               </div>
             </div>
             <div
@@ -182,7 +139,13 @@ describe('ClaimPosition', () => {
             >
               <div
                 class="h-full flex flex-col pt-1"
-              />
+              >
+                <button
+                  class="inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-against/10 text-against/90 border-against/40 hover:bg-against/30 hover:text-against hover:border-against/60 text-base font-normal"
+                >
+                  AGAINST
+                </button>
+              </div>
               <div
                 class="h-full flex flex-col items-end"
               >

@@ -1,6 +1,7 @@
 import React from 'react'
 
 import type { Meta, StoryObj } from '@storybook/react'
+import { Claim } from 'components'
 
 import { ClaimPosition } from './ClaimPosition'
 
@@ -36,6 +37,8 @@ export const IdentityVariant: Story = {
   args: {
     variant: 'claim',
     position: 'claimAgainst',
+    claimsFor: 30,
+    claimsAgainst: 70,
     name: 'Amazon',
     walletAddress: '0x1234567890abcdef1234567890abcdef12345678',
     amount: 1.21,
@@ -51,7 +54,17 @@ export const IdentityVariant: Story = {
   },
   render: (args) => (
     <div className="w-[800px]">
-      <ClaimPosition {...args}></ClaimPosition>
+      <ClaimPosition {...args}>
+        <Claim
+          size="sm"
+          subject={{
+            variant: 'default',
+            label: '0xintuition',
+          }}
+          predicate={{ label: 'is really' }}
+          object={{ label: 'cool' }}
+        />
+      </ClaimPosition>
     </div>
   ),
 }
