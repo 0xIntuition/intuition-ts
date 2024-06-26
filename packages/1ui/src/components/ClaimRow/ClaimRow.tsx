@@ -22,24 +22,24 @@ const ClaimRow = ({
   const againstPercentage = (claimsAgainst / (claimsFor + claimsAgainst)) * 100
 
   return (
-    <div className="flex-col gap-2" {...props}>
-      <div className="flex justify-between items-center">
-        <div className="flex items-center h-[6px] w-[60%]">
+    <div className="flex justify-between items-center gap-2" {...props}>
+      <div className="flex flex-col justify-between w-[60%]">
+        <div className="flex items-center h-[6px] mb-4">
           <span
             className="h-full bg-against block rounded-l-sm"
             style={{ width: `${againstPercentage}%` }}
           />
           <span className="h-full w-full bg-for block rounded-r-sm" />
         </div>
+        {children}
+      </div>
+      <div className="flex flex-col items-end w-[40%]">
         <MonetaryValue
           variant={TextVariant.bodyLarge}
           value={amount}
           currency={currency}
         />
-      </div>
-      <div className="flex justify-between items-center">
-        {children}
-        <div className="flex gap-2 items-center">
+        <div className="flex gap-2 items-center mt-2">
           <div className="flex gap-1 items-center">
             <Icon name={IconName.people} className="text-against h-4 w-4" />
             <Text

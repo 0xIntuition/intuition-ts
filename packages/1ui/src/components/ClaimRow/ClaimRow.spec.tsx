@@ -23,13 +23,13 @@ describe('ClaimRow', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="flex-col gap-2"
+          class="flex justify-between items-center gap-2"
         >
           <div
-            class="flex justify-between items-center"
+            class="flex flex-col justify-between w-[60%]"
           >
             <div
-              class="flex items-center h-[6px] w-[60%]"
+              class="flex items-center h-[6px] mb-4"
             >
               <span
                 class="h-full bg-against block rounded-l-sm"
@@ -39,15 +39,6 @@ describe('ClaimRow', () => {
                 class="h-full w-full bg-for block rounded-r-sm"
               />
             </div>
-            <p
-              class="text-primary text-lg font-normal"
-            >
-              0.383 ETH
-            </p>
-          </div>
-          <div
-            class="flex justify-between items-center"
-          >
             <div
               class="flex items-center w-full max-w-full group"
             >
@@ -116,8 +107,17 @@ describe('ClaimRow', () => {
                 cool
               </button>
             </div>
+          </div>
+          <div
+            class="flex flex-col items-end w-[40%]"
+          >
+            <p
+              class="text-primary text-lg font-normal"
+            >
+              0.383 ETH
+            </p>
             <div
-              class="flex gap-2 items-center"
+              class="flex gap-2 items-center mt-2"
             >
               <div
                 class="flex gap-1 items-center"

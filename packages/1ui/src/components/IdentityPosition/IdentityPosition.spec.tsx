@@ -69,10 +69,10 @@ describe('IdentityPosition', () => {
             class="flex items-center justify-start gap-2"
           >
             <div
-              class="flex flex-col self-start pt-1"
+              class="h-full flex flex-col pt-1"
             />
             <div
-              class="flex flex-col items-end"
+              class="h-full flex flex-col items-end"
             >
               <p
                 class="text-primary text-lg font-normal"
@@ -205,10 +205,10 @@ describe('IdentityPosition', () => {
               class="flex items-center justify-start gap-2"
             >
               <div
-                class="flex flex-col self-start pt-1"
+                class="h-full flex flex-col pt-1"
               />
               <div
-                class="flex flex-col items-end"
+                class="h-full flex flex-col items-end"
               >
                 <p
                   class="text-primary text-lg font-normal"

@@ -27,20 +27,8 @@ describe('ClaimPosition', () => {
             class="flex items-center"
           >
             <span
-              class="relative flex shrink-0 overflow-hidden w-16 h-16 mr-4 rounded-lg"
-            >
-              <span
-                class="bg-muted flex h-full w-full items-center justify-center rounded-lg"
-              >
-                <svg
-                  class="h-full w-full"
-                >
-                  <use
-                    href="/src/components/Icon/Icon.sprites.svg#fingerprint"
-                  />
-                </svg>
-              </span>
-            </span>
+              class="relative flex shrink-0 overflow-hidden rounded-full w-16 h-16 mr-4"
+            />
             <div
               class="flex flex-col"
             >
@@ -69,10 +57,10 @@ describe('ClaimPosition', () => {
             class="flex items-center justify-start gap-2"
           >
             <div
-              class="flex flex-col self-start pt-1"
+              class="h-full flex flex-col pt-1"
             />
             <div
-              class="flex flex-col items-end"
+              class="h-full flex flex-col items-end"
             >
               <p
                 class="text-primary text-lg font-normal"
@@ -119,20 +107,8 @@ describe('ClaimPosition', () => {
               class="flex items-center"
             >
               <span
-                class="relative flex shrink-0 overflow-hidden w-16 h-16 mr-4 rounded-lg"
-              >
-                <span
-                  class="bg-muted flex h-full w-full items-center justify-center rounded-lg"
-                >
-                  <svg
-                    class="h-full w-full"
-                  >
-                    <use
-                      href="/src/components/Icon/Icon.sprites.svg#fingerprint"
-                    />
-                  </svg>
-                </span>
-              </span>
+                class="relative flex shrink-0 overflow-hidden rounded-full w-16 h-16 mr-4"
+              />
               <div
                 class="flex flex-col"
               >
@@ -205,10 +181,10 @@ describe('ClaimPosition', () => {
               class="flex items-center justify-start gap-2"
             >
               <div
-                class="flex flex-col self-start pt-1"
+                class="h-full flex flex-col pt-1"
               />
               <div
-                class="flex flex-col items-end"
+                class="h-full flex flex-col items-end"
               >
                 <p
                   class="text-primary text-lg font-normal"
