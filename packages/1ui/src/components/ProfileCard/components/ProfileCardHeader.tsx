@@ -1,7 +1,6 @@
-import { Avatar, AvatarFallback, AvatarImage } from 'components/Avatar'
-import { Text } from 'components/Text'
 import { formatWalletAddress } from 'utils/wallet'
 
+import { Avatar, Text } from '../..'
 import { ProfileVariantType } from '../ProfileCard'
 import { ProfileVariant } from '../ProfileCard.utils'
 
@@ -22,10 +21,7 @@ const ProfileCardHeader = ({
 
   return (
     <div className="flex items-center space-x-4">
-      <Avatar className={avatarClass}>
-        <AvatarImage src={avatarSrc} alt={name} />
-        <AvatarFallback>{name.slice(0, 2)}</AvatarFallback>
-      </Avatar>
+      <Avatar src={avatarSrc} name={name} className={avatarClass} />
       <div>
         <Text variant="headline" weight="medium" className="text-primary">
           {name}

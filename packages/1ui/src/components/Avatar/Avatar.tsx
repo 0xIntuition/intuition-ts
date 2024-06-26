@@ -1,10 +1,13 @@
 import * as React from 'react'
 
 import * as AvatarPrimitive from '@radix-ui/react-avatar'
+import { cva, type VariantProps } from 'class-variance-authority'
 
+import { Icon, IconName } from '..'
 import { cn } from '../../styles'
+import { Identity } from '../../types'
 
-const Avatar = React.forwardRef<
+const AvatarContainer = React.forwardRef<
   React.ElementRef<typeof AvatarPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Root>
 >(({ className, ...props }, ref) => (
@@ -17,7 +20,7 @@ const Avatar = React.forwardRef<
     {...props}
   />
 ))
-Avatar.displayName = AvatarPrimitive.Root.displayName
+AvatarContainer.displayName = AvatarPrimitive.Root.displayName
 
 const AvatarImage = React.forwardRef<
   React.ElementRef<typeof AvatarPrimitive.Image>,
@@ -38,7 +41,7 @@ const AvatarFallback = React.forwardRef<
   <AvatarPrimitive.Fallback
     ref={ref}
     className={cn(
-      'bg-muted flex h-full w-full items-center justify-center rounded-full',
+      'bg-muted flex h-full w-full items-center justify-center',
       className,
     )}
     {...props}
@@ -46,4 +49,38 @@ const AvatarFallback = React.forwardRef<
 ))
 AvatarFallback.displayName = AvatarPrimitive.Fallback.displayName
 
-export { Avatar, AvatarImage, AvatarFallback }
+const avatarVariants = cva('', {
+  variants: {
+    variant: {
+      [Identity.user]: 'rounded-full bg-muted',
+      [Identity.entity]: 'rounded bg-background border border-border/30',
+    },
+  },
+  defaultVariants: {
+    variant: Identity.user,
+  },
+})
+
+export interface AvatarProps
+  extends React.HTMLAttributes<HTMLDivElement>,
+    VariantProps<typeof avatarVariants> {
+  src?: string
+  name: string
+}
+
+const Avatar = ({ className, variant, src, name }: AvatarProps) => {
+  return (
+    <AvatarContainer className={cn(avatarVariants({ variant }), className)}>
+      <AvatarImage src={src} alt={`${name} avatar`} />
+      <AvatarFallback className="bg-inherit">
+        {variant === Identity.entity ? (
+          <Icon name={IconName.fingerprint} className="text-primary/30" />
+        ) : (
+          <>{name?.substring(0, 2).toUpperCase() || `??`}</>
+        )}
+      </AvatarFallback>
+    </AvatarContainer>
+  )
+}
+
+export { Avatar, AvatarContainer, AvatarImage, AvatarFallback }

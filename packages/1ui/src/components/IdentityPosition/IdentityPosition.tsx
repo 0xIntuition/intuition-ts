@@ -1,15 +1,11 @@
 import * as React from 'react'
 
-import { CurrencyType } from 'types'
+import { CurrencyType, IdentityType } from 'types'
 import { formatDate } from 'utils/date'
 import { formatWalletAddress } from 'utils/wallet'
 
 import {
   Avatar,
-  AvatarFallback,
-  AvatarImage,
-  Icon,
-  IconName,
   PositionValueDisplay,
   TagsContent,
   TagWithValue,
@@ -18,13 +14,10 @@ import {
   TextVariant,
   TextWeight,
 } from '..'
-import { IdentityPositionVariant } from './IdentityPosition.utils'
-
-export type IdentityPositionVariantType = keyof typeof IdentityPositionVariant
 
 export interface IdentityPositionProps
   extends React.HTMLAttributes<HTMLDivElement> {
-  variant: IdentityPositionVariantType
+  variant: IdentityType
   amount: number
   currency?: CurrencyType
   feesAccrued: number
@@ -51,18 +44,11 @@ const IdentityPosition = ({
     <div className="w-full flex justify-between" {...props}>
       <div className="flex items-center">
         <Avatar
-          className={`w-16 h-16 mr-4 ${variant === IdentityPositionVariant.identity ? 'rounded-lg' : ''}`}
-        >
-          <AvatarImage src={avatarSrc} alt={name} />
-          {variant === IdentityPositionVariant.user && (
-            <AvatarFallback>{name.slice(0, 2)}</AvatarFallback>
-          )}
-          {variant === IdentityPositionVariant.identity && (
-            <AvatarFallback className="rounded-lg">
-              <Icon name={IconName.fingerprint} className="h-full w-full" />
-            </AvatarFallback>
-          )}
-        </Avatar>
+          variant={variant}
+          src={avatarSrc}
+          name={name}
+          className="w-16 h-16 mr-4"
+        />
         <div className="flex flex-col">
           <div className="flex items-center mb-1.5">
             <Text variant={TextVariant.bodyLarge} className="mr-1">

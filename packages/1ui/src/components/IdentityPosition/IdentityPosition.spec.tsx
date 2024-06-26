@@ -27,18 +27,12 @@ describe('IdentityPosition', () => {
             class="flex items-center"
           >
             <span
-              class="relative flex shrink-0 overflow-hidden w-16 h-16 mr-4 rounded-lg"
+              class="relative flex shrink-0 overflow-hidden rounded-full w-16 h-16 mr-4"
             >
               <span
-                class="bg-muted flex h-full w-full items-center justify-center rounded-lg"
+                class="flex h-full w-full items-center justify-center bg-inherit"
               >
-                <svg
-                  class="h-full w-full"
-                >
-                  <use
-                    href="/src/components/Icon/Icon.sprites.svg#fingerprint"
-                  />
-                </svg>
+                JO
               </span>
             </span>
             <div
@@ -119,18 +113,12 @@ describe('IdentityPosition', () => {
               class="flex items-center"
             >
               <span
-                class="relative flex shrink-0 overflow-hidden w-16 h-16 mr-4 rounded-lg"
+                class="relative flex shrink-0 overflow-hidden rounded-full w-16 h-16 mr-4"
               >
                 <span
-                  class="bg-muted flex h-full w-full items-center justify-center rounded-lg"
+                  class="flex h-full w-full items-center justify-center bg-inherit"
                 >
-                  <svg
-                    class="h-full w-full"
-                  >
-                    <use
-                      href="/src/components/Icon/Icon.sprites.svg#fingerprint"
-                    />
-                  </svg>
+                  JO
                 </span>
               </span>
               <div
