@@ -12,8 +12,8 @@ export interface ClaimRowProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const ClaimRow = ({
-  claimsFor,
-  claimsAgainst,
+  claimsFor = 0,
+  claimsAgainst = 0,
   amount,
   currency,
   children,

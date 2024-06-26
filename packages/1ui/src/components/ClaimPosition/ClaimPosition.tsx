@@ -54,8 +54,8 @@ type ClaimPositionProps = UserVariantProps | ClaimVariantProps
 const ClaimPosition = ({
   variant,
   position,
-  claimsFor,
-  claimsAgainst,
+  claimsFor = 0,
+  claimsAgainst = 0,
   amount,
   currency,
   feesAccrued,
@@ -67,8 +67,7 @@ const ClaimPosition = ({
   children,
   ...props
 }: ClaimPositionProps) => {
-  const againstPercentage =
-    ((claimsAgainst ?? 0) / ((claimsFor ?? 0) + (claimsAgainst ?? 0))) * 100
+  const againstPercentage = (claimsAgainst / (claimsFor + claimsAgainst)) * 100
 
   return (
     <div className="w-full flex justify-between" {...props}>
