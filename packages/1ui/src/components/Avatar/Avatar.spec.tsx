@@ -6,12 +6,7 @@ import { Avatar } from './Avatar'
 
 describe('Avatar', () => {
   it('should render appropriate elements when given no variant', () => {
-    const { asFragment } = render(
-      <Avatar
-        src="https://avatars.githubusercontent.com/u/94311139?s=200&v=4"
-        name="Test"
-      />,
-    )
+    const { asFragment } = render(<Avatar name="Test" />)
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <span
@@ -27,13 +22,7 @@ describe('Avatar', () => {
     `)
   })
   it('should render appropriate elements when given `entity` variant', () => {
-    const { asFragment } = render(
-      <Avatar
-        variant="entity"
-        src="https://avatars.githubusercontent.com/u/94311139?s=200&v=4"
-        name="Test"
-      />,
-    )
+    const { asFragment } = render(<Avatar variant="entity" name="Test" />)
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <span
