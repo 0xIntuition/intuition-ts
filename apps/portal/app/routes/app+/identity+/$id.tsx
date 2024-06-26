@@ -8,9 +8,9 @@ import {
   ProfileCard,
   StakeCard,
   Tags,
-  TagsBadge,
-  TagsBadges,
   TagsButton,
+  TagsContent,
+  TagWithValue,
 } from '@0xintuition/1ui'
 import { ApiError, IdentitiesService, OpenAPI } from '@0xintuition/api'
 
@@ -114,15 +114,15 @@ export default function IdentityDetails() {
           </ProfileCard>
           {identity?.tags !== null && (
             <Tags>
-              <TagsBadges numberOfTags={identity?.tag_count ?? 0}>
+              <TagsContent numberOfTags={identity?.tag_count ?? 0}>
                 {identity?.tags?.map((tag, index) => (
-                  <TagsBadge
+                  <TagWithValue
                     key={index}
                     label={tag.display_name}
                     value={tag.num_positions}
                   />
                 ))}
-              </TagsBadges>
+              </TagsContent>
               <TagsButton onClick={() => 'add tags clicked'} />
             </Tags>
           )}

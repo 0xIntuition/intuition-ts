@@ -156,42 +156,42 @@ describe('IdentityPosition', () => {
                   <div
                     class="flex flex-wrap gap-2 items-center"
                   >
-                    <div
-                      class="inline-flex items-center rounded-full border px-2.5 py-0.5 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shadow-md-subtle gap-1 w-min text-sm font-normal text-foreground border-border/30 hover:bg-primary/20"
+                    <button
+                      class="inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 text-base font-normal"
                     >
                       keyboard
                       <span
                         class="h-[2px] w-[2px] bg-primary"
                       />
                       34
-                    </div>
-                    <div
-                      class="inline-flex items-center rounded-full border px-2.5 py-0.5 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shadow-md-subtle gap-1 w-min text-sm font-normal text-foreground border-border/30 hover:bg-primary/20"
+                    </button>
+                    <button
+                      class="inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 text-base font-normal"
                     >
                       ergonomic
                       <span
                         class="h-[2px] w-[2px] bg-primary"
                       />
                       56
-                    </div>
-                    <div
-                      class="inline-flex items-center rounded-full border px-2.5 py-0.5 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shadow-md-subtle gap-1 w-min text-sm font-normal text-foreground border-border/30 hover:bg-primary/20"
+                    </button>
+                    <button
+                      class="inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 text-base font-normal"
                     >
                       wireless
                       <span
                         class="h-[2px] w-[2px] bg-primary"
                       />
                       12
-                    </div>
-                    <div
-                      class="inline-flex items-center rounded-full border px-2.5 py-0.5 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shadow-md-subtle gap-1 w-min text-sm font-normal text-foreground border-border/30 hover:bg-primary/20"
+                    </button>
+                    <button
+                      class="inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 text-base font-normal"
                     >
                       gaming
                       <span
                         class="h-[2px] w-[2px] bg-primary"
                       />
                       77
-                    </div>
+                    </button>
                     <p
                       class="text-primary text-base font-normal"
                     >

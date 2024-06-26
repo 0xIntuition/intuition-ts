@@ -10,9 +10,9 @@ import {
   Icon,
   IconName,
   MonetaryValue,
-  TagsBadge,
-  TagsBadgeProps,
-  TagsBadges,
+  TagsContent,
+  TagWithValue,
+  TagWithValueProps,
   Text,
   TextVariant,
 } from '..'
@@ -29,7 +29,7 @@ export interface IdentityContentRowProps
   walletAddress: string
   avatarSrc: string
   totalFollowers: number
-  tags?: TagsBadgeProps[]
+  tags?: TagWithValueProps[]
 }
 
 const IdentityContentRow = ({
@@ -75,15 +75,15 @@ const IdentityContentRow = ({
             </div>
             {tags && tags.length > 0 && (
               <div className="flex gap-2 mt-1">
-                <TagsBadges numberOfTags={tags.length}>
+                <TagsContent numberOfTags={tags.length}>
                   {tags.slice(0, 4).map((tag, index) => (
-                    <TagsBadge
+                    <TagWithValue
                       label={tag.label}
                       value={tag.value}
                       key={index}
                     />
                   ))}
-                </TagsBadges>
+                </TagsContent>
               </div>
             )}
           </div>

@@ -7,7 +7,7 @@
   "scripts": {
     "build": "remix vite:build --emptyOutDir",
     "dev": "remix vite:dev",
-    "start": "remix-serve ../../dist/apps/portal/build/server/index.js",
+    "start": "HOST=localhost remix-serve build/server/index.js",
     "lint:fix": "pnpm lint --fix"
   },
   "repository": {

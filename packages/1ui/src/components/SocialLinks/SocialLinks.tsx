@@ -1,13 +1,6 @@
 import * as React from 'react'
 
-import {
-  Button,
-  Icon,
-  IconName,
-  IconNameType,
-  TagsBadge,
-  TagsBadgeProps,
-} from '..'
+import { Button, Icon, IconName, IconNameType, Tag, TagProps } from '..'
 import { cn } from '../../styles'
 
 export interface SocialLinksProps
@@ -43,7 +36,7 @@ export const Platform = {
 
 export type PlatformType = (typeof Platform)[keyof typeof Platform]
 
-export interface SocialLinksBadgeProps extends TagsBadgeProps {
+export interface SocialLinksBadgeProps extends TagProps {
   platform: PlatformType
   isVerified?: boolean
   username: string
@@ -57,7 +50,7 @@ const SocialLinksBadge = ({
   ...props
 }: SocialLinksBadgeProps) => {
   return (
-    <TagsBadge
+    <Tag
       className={cn('flex gap-2 w-min text-sm font-normal', className)}
       {...props}
     >
@@ -66,7 +59,7 @@ const SocialLinksBadge = ({
       {isVerified && (
         <Icon name={IconName.circleCheck} className="h-4 w-4 text-accent" />
       )}
-    </TagsBadge>
+    </Tag>
   )
 }
 

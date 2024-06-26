@@ -12,21 +12,21 @@ import * as Stories from './Tags.stories'
   dark
   language="tsx"
   code={`
-import { Tags, TagsBadge, TagsBadges, TagsButton } from '@0xintuition/1ui'
+import { Tags, TagWithValue, TagsContent, TagsButton } from '@0xintuition/1ui'
 
 <Tags>
-  <TagsBadges numberOfTags={32}>
-    <TagsBadge label="keyboard" value={192} />
-    <TagsBadge label="ergonomic" value={168} />
-    <TagsBadge label="wireless" value={143} />
-    <TagsBadge label="gaming" value={132} />
-    <TagsBadge label="mechanical" value={128} />
-    <TagsBadge label="tech" value={122} />
-    <TagsBadge label="innovation" value={118} />
-    <TagsBadge label="typing" value={111} />
-    <TagsBadge label="quality" value={98} />
-    <TagsBadge label="brand" value={94} />
-  </TagsBadges>
+  <TagsContent numberOfTags={32}>
+    <TagWithValue label="keyboard" value={192} />
+    <TagWithValue label="ergonomic" value={168} />
+    <TagWithValue label="wireless" value={143} />
+    <TagWithValue label="gaming" value={132} />
+    <TagWithValue label="mechanical" value={128} />
+    <TagWithValue label="tech" value={122} />
+    <TagWithValue label="innovation" value={118} />
+    <TagWithValue label="typing" value={111} />
+    <TagWithValue label="quality" value={98} />
+    <TagWithValue label="brand" value={94} />
+  </TagsContent>
   <TagsButton onClick={() => doSomething()} />
 </Tags>
 `} />

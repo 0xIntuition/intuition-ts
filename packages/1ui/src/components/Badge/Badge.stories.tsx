@@ -2,6 +2,7 @@ import React from 'react'
 
 import type { Meta, StoryObj } from '@storybook/react'
 
+import { Icon, IconName } from '..'
 import { Badge, BadgeVariant } from './Badge'
 
 const meta: Meta<typeof Badge> = {
@@ -28,33 +29,73 @@ export const BasicUsage: Story = {
   args: {
     variant: 'default',
   },
-  render: (args) => <Badge {...args}>0.0005 ETH</Badge>,
+  render: (args) => (
+    <Badge {...args}>
+      <Icon name={IconName.tag} className="h-3 w-3" />
+      0.0005 ETH
+    </Badge>
+  ),
 }
 
 export const Success: Story = {
-  render: () => <Badge variant="success">0.0005 ETH</Badge>,
+  render: () => (
+    <Badge variant="success">
+      <Icon name={IconName.tag} className="h-3 w-3" />
+      0.0005 ETH
+    </Badge>
+  ),
 }
 
 export const Accent: Story = {
-  render: () => <Badge variant="accent">0.0005 ETH</Badge>,
+  render: () => (
+    <Badge variant="accent">
+      <Icon name={IconName.tag} className="h-3 w-3" />
+      0.0005 ETH
+    </Badge>
+  ),
 }
 
 export const Social: Story = {
-  render: () => <Badge variant="social">0.0005 ETH</Badge>,
+  render: () => (
+    <Badge variant="social">
+      <Icon name={IconName.tag} className="h-3 w-3" />
+      0.0005 ETH
+    </Badge>
+  ),
 }
 
 export const Warning: Story = {
-  render: () => <Badge variant="warning">0.0005 ETH</Badge>,
+  render: () => (
+    <Badge variant="warning">
+      <Icon name={IconName.tag} className="h-3 w-3" />
+      0.0005 ETH
+    </Badge>
+  ),
 }
 
 export const Against: Story = {
-  render: () => <Badge variant="against">0.0005 ETH</Badge>,
+  render: () => (
+    <Badge variant="against">
+      <Icon name={IconName.tag} className="h-3 w-3" />
+      0.0005 ETH
+    </Badge>
+  ),
 }
 
 export const For: Story = {
-  render: () => <Badge variant="for">0.0005 ETH</Badge>,
+  render: () => (
+    <Badge variant="for">
+      <Icon name={IconName.tag} className="h-3 w-3" />
+      0.0005 ETH
+    </Badge>
+  ),
 }
 
 export const Destructive: Story = {
-  render: () => <Badge variant="destructive">0.0005 ETH</Badge>,
+  render: () => (
+    <Badge variant="destructive">
+      <Icon name={IconName.tag} className="h-3 w-3" />
+      0.0005 ETH
+    </Badge>
+  ),
 }

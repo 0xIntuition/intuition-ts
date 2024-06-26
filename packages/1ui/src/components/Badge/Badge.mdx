@@ -1,7 +1,5 @@
 import { Canvas, Controls, Meta, Source, Title } from '@storybook/blocks'
 
-import { Button } from '..'
-
 import * as Stories from './Badge.stories'
 
 <Meta of={Stories} />
@@ -16,7 +14,10 @@ import * as Stories from './Badge.stories'
   code={`
 import { Badge } from '@0xintuition/1ui'
 
-<Badge>0.0005 ETH</Badge>
+<Badge>
+  <Icon name="tag" className="h-3 w-3" />
+  0.0005 ETH
+</Badge>
 `} />
 
 <Canvas of={Stories.BasicUsage} sourceState="none" />
@@ -33,7 +34,10 @@ import { Badge } from '@0xintuition/1ui'
   dark
   language="tsx"
   code={`
-<Badge variant="success">0.0005 ETH</Badge>
+<Badge variant="success">
+  <Icon name="tag" className="h-3 w-3" />
+  0.0005 ETH
+</Badge>
 `}
 />
 
@@ -45,7 +49,10 @@ import { Badge } from '@0xintuition/1ui'
   dark
   language="tsx"
   code={`
-<Badge variant="accent">0.0005 ETH</Badge>
+<Badge variant="accent">
+  <Icon name="tag" className="h-3 w-3" />
+  0.0005 ETH
+</Badge>
 `}
 />
 
@@ -57,7 +64,10 @@ import { Badge } from '@0xintuition/1ui'
   dark
   language="tsx"
   code={`
-<Badge variant="social">0.0005 ETH</Badge>
+<Badge variant="social">
+  <Icon name="tag" className="h-3 w-3" />
+  0.0005 ETH
+</Badge>
 `}
 />
 
@@ -69,7 +79,10 @@ import { Badge } from '@0xintuition/1ui'
   dark
   language="tsx"
   code={`
-<Badge variant="warning">0.0005 ETH</Badge>
+<Badge variant="warning">
+  <Icon name="tag" className="h-3 w-3" />
+  0.0005 ETH
+</Badge>
 `}
 />
 
@@ -81,7 +94,10 @@ import { Badge } from '@0xintuition/1ui'
   dark
   language="tsx"
   code={`
-<Badge variant="against">0.0005 ETH</Badge>
+<Badge variant="against">
+  <Icon name="tag" className="h-3 w-3" />
+  0.0005 ETH
+</Badge>
 `}
 />
 
@@ -93,7 +109,10 @@ import { Badge } from '@0xintuition/1ui'
   dark
   language="tsx"
   code={`
-<Badge variant="for">0.0005 ETH</Badge>
+<Badge variant="for">
+  <Icon name="tag" className="h-3 w-3" />
+  0.0005 ETH
+</Badge>
 `}
 />
 
@@ -105,7 +124,10 @@ import { Badge } from '@0xintuition/1ui'
   dark
   language="tsx"
   code={`
-<Badge variant="destructive">0.0005 ETH</Badge>
+<Badge variant="destructive">
+  <Icon name="tag" className="h-3 w-3" />
+  0.0005 ETH
+</Badge>
 `}
 />
 
