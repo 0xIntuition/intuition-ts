@@ -1,5 +1,6 @@
 import * as React from 'react'
 
+import { CurrencyType, IdentityType } from 'types'
 import { formatWalletAddress } from 'utils/wallet'
 
 import {
@@ -13,7 +14,6 @@ import {
   Text,
   TextVariant,
 } from '..'
-import { CurrencyType, IdentityType } from '../../types'
 
 export interface IdentityContentRowProps
   extends React.HTMLAttributes<HTMLDivElement> {
