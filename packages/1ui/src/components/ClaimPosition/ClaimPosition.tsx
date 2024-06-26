@@ -11,7 +11,6 @@ import {
   Icon,
   IconName,
   PositionValueDisplay,
-  PositionValueVariants,
   TagsContent,
   TagWithValue,
   TagWithValueProps,
@@ -19,13 +18,15 @@ import {
   TextVariant,
   TextWeight,
 } from '..'
-import { IdentityPositionVariant } from './IdentityPosition.utils'
+import { ClaimPositionVariant, PositionVariant } from './ClaimPosition.utils'
 
-export type IdentityPositionVariantType = keyof typeof IdentityPositionVariant
+export type ClaimPositionVariantType = keyof typeof ClaimPositionVariant
+export type PositionVariantType = keyof typeof PositionVariant
 
-export interface IdentityPositionProps
+export interface ClaimPositionProps
   extends React.HTMLAttributes<HTMLDivElement> {
-  variant: IdentityPositionVariantType
+  variant: ClaimPositionVariantType
+  position: PositionVariantType
   amount: number
   currency?: CurrencyType
   feesAccrued: number
@@ -36,8 +37,9 @@ export interface IdentityPositionProps
   tags?: TagWithValueProps[]
 }
 
-const IdentityPosition = ({
+const ClaimPosition = ({
   variant,
+  position,
   amount,
   currency,
   feesAccrued,
@@ -47,18 +49,18 @@ const IdentityPosition = ({
   updatedAt,
   tags,
   ...props
-}: IdentityPositionProps) => {
+}: ClaimPositionProps) => {
   return (
     <div className="w-full flex justify-between" {...props}>
       <div className="flex items-center">
         <Avatar
-          className={`w-16 h-16 mr-4 ${variant === IdentityPositionVariant.identity ? 'rounded-lg' : ''}`}
+          className={`w-16 h-16 mr-4 ${variant === ClaimPositionVariant.claim ? 'rounded-lg' : ''}`}
         >
           <AvatarImage src={avatarSrc} alt={name} />
-          {variant === IdentityPositionVariant.user && (
+          {variant === ClaimPositionVariant.user && (
             <AvatarFallback>{name.slice(0, 2)}</AvatarFallback>
           )}
-          {variant === IdentityPositionVariant.identity && (
+          {variant === ClaimPositionVariant.claim && (
             <AvatarFallback className="rounded-lg">
               <Icon name={IconName.fingerprint} className="h-full w-full" />
             </AvatarFallback>
@@ -103,7 +105,7 @@ const IdentityPosition = ({
 
       <PositionValueDisplay
         value={amount}
-        position={PositionValueVariants.identity}
+        position={position}
         feesAccrued={feesAccrued}
         currency={currency}
       />
@@ -111,4 +113,4 @@ const IdentityPosition = ({
   )
 }
 
-export { IdentityPosition }
+export { ClaimPosition }

@@ -1,0 +1,67 @@
+import { Canvas, Controls, Meta, Source, Title } from '@storybook/blocks'
+
+import { Button } from '..'
+
+import * as Stories from './ClaimPosition.stories'
+
+<Meta of={Stories} />
+
+<Title />
+
+#### An Identity Position component is used to display a position that a user holds on an identity
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { ClaimPosition } from '@0xintuition/1ui'
+
+<ClaimPosition
+  variant="user"
+  position="claimFor"
+  avatarSrc="https://avatars.githubusercontent.com/u/94311139?s=200&v=4"
+  name="John Doe"
+  walletAddress="0x1234567890abcdef1234567890abcdef12345678"
+  amount={1.21}
+  feesAccrued={0.005}
+  updatedAt="2021-10-01T16:00:00Z"
+/>
+`} />
+
+<Canvas of={Stories.UserVariant} sourceState="none" />
+
+## Properties
+
+<Controls />
+
+## Variants
+
+### Entity
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { ClaimPosition } from '@0xintuition/1ui'
+import { Text } from 'components/Text'
+
+<ClaimPosition
+  variant="claim"
+  position="claimAgainst"
+  avatarSrc="https://avatars.githubusercontent.com/u/94311139?s=200&v=4"
+  name="Amazon"
+  walletAddress="0x1234567890abcdef1234567890abcdef12345678"
+  amount={1.21}
+  feesAccrued={0.005}
+  tags={[
+    { label: 'keyboard', value: 34 },
+    { label: 'ergonomic', value: 56 },
+    { label: 'wireless', value: 12 },
+    { label: 'gaming', value: 77 },
+    { label: 'work', value: 11 },
+    { label: 'home', value: 34 },
+  ]}
+/>
+`} />
+
+<Canvas of={Stories.IdentityVariant} sourceState="none" />
