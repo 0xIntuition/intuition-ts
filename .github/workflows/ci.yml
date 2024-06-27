@@ -47,7 +47,7 @@ jobs:
 
       - name: Run Affected Tests
         if: github.event_name == 'pull_request'
-        run: pnpm 1ui:test
+        run: pnpm 1ui:test | tee test-output.txt
 
       - name: Run Affected Builds
         if: github.event_name == 'pull_request'
@@ -62,3 +62,9 @@ jobs:
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           folder: build/storybook/1ui
+
+      - name: Upload Test Output
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-output
+          path: test-output.txt
