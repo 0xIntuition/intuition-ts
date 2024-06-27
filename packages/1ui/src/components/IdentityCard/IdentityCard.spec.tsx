@@ -56,7 +56,7 @@ describe('IdentityCard', () => {
   it('should render appropriate element when given `entity` variant ', () => {
     const { asFragment } = render(
       <IdentityCard
-        variant="entity"
+        variant="non-user"
         name="Intuition"
         value={7.892}
         currency="ETH"
@@ -69,12 +69,18 @@ describe('IdentityCard', () => {
           class="flex gap-2 items-center"
         >
           <span
-            class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full"
+            class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded bg-background border border-border/30"
           >
             <span
               class="flex h-full w-full items-center justify-center bg-inherit"
             >
-              IN
+              <svg
+                class="h-6 w-6 text-primary/30"
+              >
+                <use
+                  href="/src/components/Icon/Icon.sprites.svg#fingerprint"
+                />
+              </svg>
             </span>
           </span>
           <div>
