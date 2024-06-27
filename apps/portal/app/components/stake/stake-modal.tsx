@@ -1,17 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 
-import {
-  Button,
-  Claim,
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  Identity,
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@0xintuition/1ui'
+import { Dialog, DialogContent } from '@0xintuition/1ui'
 import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
 
 import { multivaultAbi } from '@lib/abis/multivault'
@@ -22,17 +11,15 @@ import logger from '@lib/utils/logger'
 import { formatBalance } from '@lib/utils/misc'
 import { useGenericTxState } from '@lib/utils/use-tx-reducer'
 import { Cookie } from '@remix-run/node'
-import { Link, useFetcher, useLocation } from '@remix-run/react'
+import { useFetcher, useLocation } from '@remix-run/react'
 import { useQueryClient } from '@tanstack/react-query'
 import { useAtom } from 'jotai'
-import { ExternalLinkIcon, HelpCircle } from 'lucide-react'
 import { toast } from 'sonner'
 import { SessionUser } from 'types/user'
 import { VaultDetailsType } from 'types/vault'
 import { Abi, Address, decodeEventLog, formatUnits, parseUnits } from 'viem'
 import { useBalance, useBlockNumber } from 'wagmi'
 
-import UserConvictionIcon from '../svg/user-conviction-icon'
 import StakeButton from './stake-button'
 import StakeForm from './stake-form'
 import StakeToast from './stake-toast'
@@ -72,9 +59,6 @@ export default function StakeModal({
   const formRef = useRef(null)
   const [val, setVal] = useState('')
   const [loading, setLoading] = useState(false)
-  const [ethOrConviction, setEthOrConviction] = useState<'conviction' | 'eth'>(
-    'eth',
-  )
   const [lastTxHash, setLastTxHash] = useState<string | undefined>(undefined)
   const { state, dispatch } = useGenericTxState<
     StakeTransactionState,
@@ -83,14 +67,14 @@ export default function StakeModal({
 
   const identityShouldOverride = identity && identity.vault_id !== '0'
 
-  let vault_id: string | undefined
+  let vault_id: string = '0'
   if (identityShouldOverride) {
     vault_id = identity.vault_id
   } else if (claim) {
     vault_id = direction === 'for' ? claim.vault_id : claim.counter_vault_id
   }
 
-  let user_conviction: string | undefined
+  let user_conviction: string = '0'
   if (identityShouldOverride) {
     user_conviction = identity.user_conviction
   } else if (claim) {
@@ -100,7 +84,7 @@ export default function StakeModal({
         : claim.user_conviction_against
   }
 
-  let conviction_price: string | undefined
+  let conviction_price: string = '0'
   if (identityShouldOverride) {
     conviction_price = identity.conviction_price
   } else if (claim) {
@@ -108,6 +92,14 @@ export default function StakeModal({
       direction === 'for'
         ? claim.for_conviction_price
         : claim.against_conviction_price
+  }
+
+  let user_assets: string = '0'
+  if (identityShouldOverride) {
+    user_assets = identity.user_assets
+  } else if (claim) {
+    user_assets =
+      direction === 'for' ? claim.user_assets_for : claim.user_assets_against
   }
 
   const depositHook = useDepositAtom(contract)
@@ -147,7 +139,8 @@ export default function StakeModal({
                   val === ''
                     ? '0'
                     : (
-                        Number(val) * Number(formatUnits(conviction_price, 18))
+                        Number(val) *
+                        Number(formatUnits(BigInt(conviction_price), 18))
                       ).toString(),
                   18,
                 ),
@@ -305,7 +298,7 @@ export default function StakeModal({
       queryClient.invalidateQueries({ queryKey })
   }, [blockNumber, queryClient, queryKey])
 
-  const walletBalance = balance?.formatted ?? ''
+  const walletBalance = formatUnits(balance?.value ?? 0n, 18)
 
   const [latestVaultDetails, setLatestVaultDetails] =
     useState<VaultDetailsType>()
@@ -371,113 +364,24 @@ export default function StakeModal({
       }}
     >
       <DialogContent>
-        <DialogHeader className="py-4">
-          <div className="absolute top-5 flex flex-row items-center gap-2 align-baseline text-primary-400">
-            <h2 className="text-xl text-white/70 font-normal">
-              Stake{' '}
-              {direction
-                ? (direction === 'for' ? 'for' : 'against') + ' Claim'
-                : 'on Identity'}
-            </h2>
-            <TooltipProvider>
-              <Tooltip delayDuration={300}>
-                <TooltipTrigger className="z-50">
-                  <HelpCircle className="h-4 w-4 text-neutral-500 transition-colors duration-300 hover:text-neutral-400" />
-                </TooltipTrigger>
-                <TooltipContent className="max-w-[230px]" side="right">
-                  <div className="mb-2 flex flex-row items-center gap-2">
-                    <div
-                      className={`flex items-center justify-center rounded-full border-[0.5px] p-[3px] ${
-                        direction === 'for'
-                          ? 'border-green-500 bg-green-700 text-green-300'
-                          : direction === 'against'
-                            ? 'border-red-500 bg-red-700 text-red-300'
-                            : 'border-primary-300 text-primary-300'
-                      }`}
-                    >
-                      <UserConvictionIcon
-                        className={`m-auto h-3 w-3 scale-x-[-1] transform pr-[1px]`}
-                      />
-                    </div>
-                    <p className="text-xs font-medium text-primary-300">
-                      {direction ? 'Claim Staking' : 'Identity Staking'}
-                    </p>
-                  </div>
-                  <p className="text-[0.625rem] text-primary-400">
-                    {direction
-                      ? direction === 'for'
-                        ? 'Staking for a claim signifies your conviction about the claim being true. Staking earns you fees as others also stake for the claim.'
-                        : 'Staking against a claim signifies your conviction about the claim being false. Staking earns you fees as others also stake against the claim.'
-                      : 'Staking on an identity signifies your conviction about the relevance of the identity. Staking earns you fees as others also stake on the claim.'}
-                  </p>
-                  <Link
-                    to={
-                      'https://docs.intuition.systems/primitives-and-interactions/interacations/attestations'
-                    }
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    <Button className="mt-2 flex items-center gap-1">
-                      Learn more
-                      <ExternalLinkIcon className="h-3 w-3" />
-                    </Button>
-                  </Link>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          </div>
-        </DialogHeader>
-        <div className="flex flex-col sm:px-5">
-          <div className="flex w-full flex-row items-start justify-start pb-5 pt-[30px]">
-            {modalType === 'identity' ? (
-              <Identity
-                imgSrc={identity?.user?.image ?? identity?.image}
-                variant={identity?.user ? 'user' : 'default'}
-              >
-                {identity?.user?.display_name ?? identity?.display_name}
-              </Identity>
-            ) : (
-              <Claim
-                subject={{
-                  imgSrc: claim?.subject?.user?.image ?? claim?.subject?.image,
-                  label:
-                    claim?.subject?.user?.display_name ??
-                    claim?.subject?.display_name,
-                  variant: claim?.subject?.user ? 'user' : 'default',
-                }}
-                predicate={{
-                  imgSrc: claim?.predicate?.image,
-                  label: claim?.predicate?.display_name,
-                }}
-                object={{
-                  imgSrc: claim?.object?.user?.image ?? claim?.object?.image,
-                  label:
-                    claim?.object?.user?.display_name ??
-                    claim?.object?.display_name,
-                  variant: claim?.object?.user ? 'user' : 'default',
-                }}
-              />
-            )}
-          </div>
-        </div>
-        <div className="border-t border-dashed pt-2.5" />
         <StakeForm
           user={user}
-          vault_id={vault_id ? vault_id : '0'}
-          conviction_price={conviction_price ? conviction_price : '0'}
-          user_conviction={user_conviction ? user_conviction : '0'}
+          walletBalance={walletBalance}
+          identity={identity}
+          claim={claim}
+          conviction_price={latest_conviction_price ?? conviction_price ?? '0'}
+          user_conviction={latest_user_conviction ?? user_conviction ?? '0'}
+          user_assets={user_assets ?? '0'}
           direction={direction ? direction : undefined}
           val={val}
           setVal={setVal}
           mode={mode}
-          ethOrConviction={ethOrConviction}
-          setEthOrConviction={setEthOrConviction}
           dispatch={dispatch}
           state={state}
           fetchReval={fetchReval}
           formRef={formRef}
           isLoading={isLoading}
-          isModal={true}
+          modalType={modalType}
           validationErrors={validationErrors}
           setValidationErrors={setValidationErrors}
           showErrors={showErrors}
@@ -497,7 +401,6 @@ export default function StakeModal({
           user_conviction={latest_user_conviction ?? user_conviction ?? '0'}
           setValidationErrors={setValidationErrors}
           setShowErrors={setShowErrors}
-          ethOrConviction={ethOrConviction}
           conviction_price={latest_conviction_price ?? conviction_price ?? '0'}
         />
       </DialogContent>

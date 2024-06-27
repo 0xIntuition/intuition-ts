@@ -22,7 +22,7 @@ interface StakeButtonProps {
   tosCookie: Cookie
   val: string
   setVal: (val: string) => void
-  mode: string
+  mode: string | undefined
   handleAction: () => void
   handleClose?: () => void
   dispatch: (action: StakeTransactionAction) => void
@@ -32,7 +32,6 @@ interface StakeButtonProps {
   user_conviction: string
   setValidationErrors: (errors: string[]) => void
   setShowErrors: (show: boolean) => void
-  ethOrConviction: 'eth' | 'conviction'
   conviction_price: string
   id?: string
   claimOrIdentity?: string
@@ -51,7 +50,6 @@ const StakeButton: React.FC<StakeButtonProps> = ({
   user_conviction,
   setValidationErrors,
   setShowErrors,
-  ethOrConviction,
   conviction_price,
 }) => {
   const { switchChain } = useSwitchChain()
@@ -64,7 +62,6 @@ const StakeButton: React.FC<StakeButtonProps> = ({
 
   const { address, chain } = useAccount()
 
-  const formattedMinDeposit = formatUnits(BigInt(min_deposit), 18)
   const formattedConvictionPrice = formatUnits(BigInt(conviction_price), 18)
   const formattedUserConviction = formatUnits(BigInt(user_conviction), 18)
 
@@ -128,30 +125,16 @@ const StakeButton: React.FC<StakeButtonProps> = ({
             const errors = []
             if (
               mode === 'deposit' &&
-              +val <
-                (ethOrConviction === 'eth'
-                  ? +formatUnits(BigInt(min_deposit), 18)
-                  : +formattedMinDeposit * +formattedConvictionPrice)
+              +val < +formatUnits(BigInt(min_deposit), 18)
             ) {
               errors.push(
-                `Minimum deposit is ${
-                  ethOrConviction === 'eth'
-                    ? formatBalance(min_deposit, 18, 4)
-                    : (
-                        +formattedMinDeposit * +formattedConvictionPrice
-                      ).toFixed(4)
-                } ${ethOrConviction === 'eth' ? 'ETH' : 'CONV'}`,
+                `Minimum deposit is ${formatBalance(min_deposit, 18, 4)} ETH`,
               )
             }
             if (
               mode === 'deposit'
-                ? ethOrConviction === 'conviction'
-                  ? val > walletBalance
-                  : +val * +formattedConvictionPrice > +walletBalance
-                : val >
-                  (ethOrConviction === 'conviction'
-                    ? formattedUserConviction
-                    : +formattedUserConviction * +formattedConvictionPrice)
+                ? +val * +formattedConvictionPrice > +walletBalance
+                : +val > +formattedUserConviction * +formattedConvictionPrice
             ) {
               errors.push('Insufficient funds')
             }
@@ -172,6 +155,7 @@ const StakeButton: React.FC<StakeButtonProps> = ({
         state.status === 'confirm' ||
         state.status === 'pending'
       }
+      className="w-[200px] m-auto"
     >
       {getButtonText()}
     </Button>

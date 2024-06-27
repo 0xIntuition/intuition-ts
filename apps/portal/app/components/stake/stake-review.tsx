@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 
-import { Badge } from '@0xintuition/1ui'
+import { Badge, Claim, Identity } from '@0xintuition/1ui'
+import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
 
 import { formatDisplayBalance } from '@lib/utils/misc'
 import { Link } from '@remix-run/react'
@@ -17,12 +18,14 @@ import XCircleIcon from '../svg/x-circle-icon'
 
 interface StakeReviewProps {
   val: string
-  mode: string
+  mode: string | undefined
   dispatch: (action: StakeTransactionAction) => void
   state: StakeTransactionState
   direction: 'for' | 'against'
   isError?: boolean
-  isModal?: boolean
+  modalType: 'identity' | 'claim' | null | undefined
+  identity?: IdentityPresenter
+  claim?: ClaimPresenter
 }
 
 export default function StakeReview({
@@ -32,7 +35,9 @@ export default function StakeReview({
   state,
   direction,
   isError,
-  isModal,
+  modalType,
+  identity,
+  claim,
 }: StakeReviewProps) {
   const [statusText, setStatusText] = useState<string>('')
   const [statusIcon, setStatusIcon] = useState<React.ReactNode>(null)
@@ -71,11 +76,9 @@ export default function StakeReview({
   }, [state.status])
   return (
     <>
-      <div className="flex w-full flex-col gap-1 px-2">
+      <div className="flex w-full flex-col gap-5 px-2">
         <div
-          className={`flex h-full w-full flex-col items-center justify-center gap-2 px-2 pt-5 ${
-            isModal ? 'pb-8' : 'pb-4'
-          }`}
+          className={`flex h-full w-full flex-col items-center justify-center gap-2 px-2 pt-5`}
         >
           <div className="flex flex-row gap-2">
             <Link
@@ -130,11 +133,42 @@ export default function StakeReview({
               </AnimatePresence>
             </Badge>
           </div>
-          <span className="text-3xl font-medium text-primary-100">
-            {formatDisplayBalance(Number(val), 2)}{' '}
-            <span className="text-primary-500">
-              {mode === 'deposit' ? 'ETH' : 'CONV'}
-            </span>
+          <span className="text-xl font-medium text-white/70 leading-[30px]">
+            {mode === 'deposit' ? 'Deposit' : 'Redeem'}{' '}
+            {formatDisplayBalance(Number(val), 2)} ETH on{' '}
+            {modalType === 'identity' ? 'identity' : 'claim'}
+          </span>
+          {modalType === 'identity' ? (
+            <Identity
+              imgSrc={identity?.user?.image ?? identity?.image}
+              variant={identity?.user ? 'user' : 'default'}
+            >
+              {identity?.user?.display_name ?? identity?.display_name}
+            </Identity>
+          ) : (
+            <Claim
+              subject={{
+                imgSrc: claim?.subject?.user?.image ?? claim?.subject?.image,
+                label:
+                  claim?.subject?.user?.display_name ??
+                  claim?.subject?.display_name,
+                variant: claim?.subject?.user ? 'user' : 'default',
+              }}
+              predicate={{
+                imgSrc: claim?.predicate?.image,
+                label: claim?.predicate?.display_name,
+              }}
+              object={{
+                imgSrc: claim?.object?.user?.image ?? claim?.object?.image,
+                label:
+                  claim?.object?.user?.display_name ??
+                  claim?.object?.display_name,
+                variant: claim?.object?.user ? 'user' : 'default',
+              }}
+            />
+          )}
+          <span className="text-neutral-50/50 text-base font-normal leading-normal m-auto">
+            Estimated Fees: 0.0001 ETH
           </span>
         </div>
       </div>

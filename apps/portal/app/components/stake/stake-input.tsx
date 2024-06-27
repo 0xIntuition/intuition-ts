@@ -34,42 +34,35 @@ export default function StakeInput({
   }, [])
 
   return (
-    <div className="flex flex-row items-center">
-      <div className="flex w-full flex-col pb-8 pt-2">
-        <div className="flex flex-row items-center overflow-hidden text-center">
-          <Input
-            ref={inputRef}
-            id="position"
-            autoComplete="off"
-            type="text"
-            value={val}
-            onChange={(e) => {
-              e.preventDefault()
-              let inputValue = e.target.value
-              if (inputValue.startsWith('.')) {
-                inputValue = '0' + inputValue
-              }
-              const sanitizedValue = inputValue.replace(/[^0-9.]/g, '')
-              if (sanitizedValue.split('.').length > 2) {
-                return
-              }
-              setVal(sanitizedValue)
-              setShowErrors(false)
-              setValidationErrors([])
-            }}
-            min={'0'}
-            placeholder={'0'}
-            className="rounded-none border-none py-2 text-5xl font-medium text-foreground focus:outline-none focus:ring-0 bg-transparent"
-            disabled={isLoading || !wallet || wallet === ''}
-          />
-          <span
-            className={`flex items-center py-2 text-5xl font-medium text-gray-300 ${
-              val !== '' && '!text-foreground'
+    <div className="flex flex-row items-center justify-center">
+      <div className="flex w-full max-w-md flex-col pt-4 mx-auto">
+        <Input
+          ref={inputRef}
+          id="position"
+          autoComplete="off"
+          type="text"
+          value={val}
+          onChange={(e) => {
+            e.preventDefault()
+            let inputValue = e.target.value
+            if (inputValue.startsWith('.')) {
+              inputValue = '0' + inputValue
             }
-            }`}
-          >
-            ETH
-          </span>
+            const sanitizedValue = inputValue.replace(/[^0-9.]/g, '')
+            if (sanitizedValue.split('.').length > 2) {
+              return
+            }
+            setVal(sanitizedValue)
+            setShowErrors(false)
+            setValidationErrors([])
+          }}
+          min={'0'}
+          placeholder={'0'}
+          className="rounded-none py-2 text-5xl font-semibold text-neutral-50 bg-transparent text-center mx-auto !outline-none !ring-0 !border-none !focus:ring-0 !focus:outline-none !focus:border-none !focus-visible:outline-none"
+          disabled={isLoading || !wallet || wallet === ''}
+        />
+        <div className="text-center text-white/50 text-base font-medium leading-normal pt-3">
+          ETH
         </div>
         <div className={`h-2 px-2 ${!showErrors && 'invisible'}`}>
           <ErrorList errors={validationErrors} />
