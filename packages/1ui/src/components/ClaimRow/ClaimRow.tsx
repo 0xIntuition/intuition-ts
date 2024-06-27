@@ -1,5 +1,6 @@
 import * as React from 'react'
 
+import { ClaimStatus } from 'components/Dataset'
 import { CurrencyType } from 'types'
 
 import { ClaimValueDisplay } from '..'
@@ -19,20 +20,11 @@ const ClaimRow = ({
   children,
   ...props
 }: ClaimRowProps) => {
-  const againstPercentage = (claimsAgainst / (claimsFor + claimsAgainst)) * 100
-
   return (
     <div className="flex justify-between items-center gap-2" {...props}>
-      <div className="flex flex-col justify-between w-[60%]">
-        <div className="flex items-center h-[6px] mb-4">
-          <span
-            className="h-full bg-against block rounded-l-sm"
-            style={{ minWidth: `${againstPercentage}%` }}
-          />
-          <span className="h-full w-full bg-for block rounded-r-sm" />
-        </div>
+      <ClaimStatus claimsFor={claimsFor} claimsAgainst={claimsAgainst}>
         {children}
-      </div>
+      </ClaimStatus>
       <div className="w-[40%]">
         <ClaimValueDisplay
           value={amount}

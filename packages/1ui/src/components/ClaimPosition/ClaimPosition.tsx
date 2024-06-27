@@ -1,5 +1,6 @@
 import * as React from 'react'
 
+import { ClaimStatus } from 'components/Dataset'
 import { CurrencyType } from 'types'
 import { formatDate } from 'utils/date'
 import { formatWalletAddress } from 'utils/wallet'
@@ -65,8 +66,6 @@ const ClaimPosition = ({
   children,
   ...props
 }: ClaimPositionProps) => {
-  const againstPercentage = (claimsAgainst / (claimsFor + claimsAgainst)) * 100
-
   return (
     <div className="w-full flex justify-between" {...props}>
       {variant === ClaimPositionVariant.user && (
@@ -111,16 +110,9 @@ const ClaimPosition = ({
       )}
 
       {variant === ClaimPositionVariant.claim && (
-        <div className="flex flex-col justify-between w-[60%]">
-          <div className="flex items-center h-[6px] mb-4">
-            <span
-              className="h-full bg-against block rounded-l-sm"
-              style={{ minWidth: `${againstPercentage}%` }}
-            />
-            <span className="h-full w-full bg-for block rounded-r-sm" />
-          </div>
+        <ClaimStatus claimsFor={claimsFor} claimsAgainst={claimsAgainst}>
           {children}
-        </div>
+        </ClaimStatus>
       )}
 
       <PositionValueDisplay
