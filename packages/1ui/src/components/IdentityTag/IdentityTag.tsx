@@ -1,41 +1,36 @@
 import * as React from 'react'
 
 import { cva, type VariantProps } from 'class-variance-authority'
+import { Identity } from 'types'
 
 import { Icon, IconName } from '..'
 import { cn } from '../../styles'
 
-export const IdentitySize = {
+export const IdentityTagSize = {
   default: 'default',
   sm: 'sm',
   md: 'md',
   lg: 'lg',
   xl: 'xl',
 } as const
-export type IdentitySizeType = keyof typeof IdentitySize
+export type IdentityTagSizeType = keyof typeof IdentityTagSize
 
-export const IdentityVariant = {
-  default: 'default',
-  user: 'user',
-} as const
-export type IdentityVariantType = keyof typeof IdentityVariant
-
-export const identityVariants = cva(
+export const identityTagVariants = cva(
   'border border-border/20 font-medium py-1 px-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center',
   {
     variants: {
       variant: {
-        [IdentityVariant.default]: '',
-        [IdentityVariant.user]:
+        [Identity.user]:
           'rounded-full [&>span]:rounded-full [&>span]:overflow-hidden',
+        [Identity.nonUser]: '',
       },
       size: {
-        [IdentitySize.default]: 'text-sm [&>span]:h-4 [&>span]:w-4',
-        [IdentitySize.sm]:
+        [IdentityTagSize.default]: 'text-sm [&>span]:h-4 [&>span]:w-4',
+        [IdentityTagSize.sm]:
           'text-base [&>span]:h-[1.375rem] [&>span]:w-[1.375rem]',
-        [IdentitySize.md]: 'text-lg [&>span]:h-6 [&>span]:w-6',
-        [IdentitySize.lg]: 'text-xl [&>span]:h-8 [&>span]:w-8',
-        [IdentitySize.xl]: 'text-2xl [&>span]:h-10 [&>span]:w-10',
+        [IdentityTagSize.md]: 'text-lg [&>span]:h-6 [&>span]:w-6',
+        [IdentityTagSize.lg]: 'text-xl [&>span]:h-8 [&>span]:w-8',
+        [IdentityTagSize.xl]: 'text-2xl [&>span]:h-10 [&>span]:w-10',
       },
       disabled: {
         true: 'disabled:bg-muted disabled:text-muted-foreground disabled:border-muted cursor-not-allowed',
@@ -43,21 +38,21 @@ export const identityVariants = cva(
       },
     },
     defaultVariants: {
-      variant: IdentityVariant.default,
-      size: IdentitySize.default,
+      variant: Identity.user,
+      size: IdentityTagSize.default,
       disabled: false,
     },
   },
 )
 
-export interface IdentityProps
+export interface IdentityTagProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof identityVariants> {
+    VariantProps<typeof identityTagVariants> {
   disabled?: boolean
   imgSrc?: string
 }
 
-const Identity = ({
+const IdentityTag = ({
   className,
   imgSrc,
   variant,
@@ -65,10 +60,13 @@ const Identity = ({
   disabled,
   children,
   ...props
-}: IdentityProps) => {
+}: IdentityTagProps) => {
   return (
     <button
-      className={cn(identityVariants({ variant, size, disabled }), className)}
+      className={cn(
+        identityTagVariants({ variant, size, disabled }),
+        className,
+      )}
       disabled={disabled}
       {...props}
     >
@@ -90,4 +88,4 @@ const Identity = ({
   )
 }
 
-export { Identity }
+export { IdentityTag }

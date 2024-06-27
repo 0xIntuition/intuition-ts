@@ -26,11 +26,17 @@ export const BasicUsage: Story = {
         <Claim
           size="sm"
           subject={{
-            variant: 'default',
+            variant: 'non-user',
             label: '0xintuition',
           }}
-          predicate={{ label: 'is really' }}
-          object={{ label: 'cool' }}
+          predicate={{
+            variant: 'non-user',
+            label: 'is really',
+          }}
+          object={{
+            variant: 'non-user',
+            label: 'cool',
+          }}
         />
       </ClaimRow>
     </div>

@@ -3,7 +3,7 @@ import React from 'react'
 
 // Import Storybook meta and StoryObj type
 import type { Meta, StoryObj } from '@storybook/react'
-import { IdentitySize } from 'components/Identity'
+import { IdentityTagSize } from 'components/IdentityTag'
 
 // Import your actual component
 import { Claim } from './Claim'
@@ -33,7 +33,7 @@ const meta: Meta<typeof Claim> = {
     },
     size: {
       description: 'Size of component',
-      options: Object.values(IdentitySize),
+      options: Object.values(IdentityTagSize),
       table: {
         type: { summary: 'string' },
         defaultValue: { summary: 'default' },
@@ -54,12 +54,15 @@ export const BasicUsage: Story = {
     size: 'md',
     disabled: false,
     subject: {
+      variant: 'non-user',
       label: '0xintution',
     },
     predicate: {
+      variant: 'non-user',
       label: 'is really',
     },
     object: {
+      variant: 'non-user',
       label: 'cool',
     },
   },
@@ -83,9 +86,11 @@ export const User: Story = {
             'https://m.media-amazon.com/images/M/MV5BNDhiMWYzMjgtNTRiYi00ZTA3LThlODctNDRkMDk0NzFkMWI3L2ltYWdlL2ltYWdlXkEyXkFqcGdeQXVyNTg0MTkzMzA@._V1_.jpg',
         }}
         predicate={{
+          variant: 'non-user',
           label: 'likes',
         }}
         object={{
+          variant: 'non-user',
           label: 'pizza',
         }}
       />

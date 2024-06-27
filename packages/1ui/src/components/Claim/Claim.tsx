@@ -1,25 +1,22 @@
-import {
-  Identity,
-  IdentitySize,
-  IdentityVariantType,
-} from 'components/Identity'
+import { IdentityTag, IdentityTagSize } from 'components/IdentityTag'
 import { Separator } from 'components/Separator'
+import { IdentityType } from 'types'
 
 export interface ClaimProps {
-  size: keyof typeof IdentitySize
+  size: keyof typeof IdentityTagSize
   disabled?: boolean
   subject: {
-    variant?: IdentityVariantType
+    variant?: IdentityType
     label: string
     imgSrc?: string
   }
   predicate: {
-    variant?: IdentityVariantType
+    variant?: IdentityType
     label: string
     imgSrc?: string
   }
   object: {
-    variant?: IdentityVariantType
+    variant?: IdentityType
     label: string
     imgSrc?: string
   }
@@ -32,10 +29,10 @@ export const Claim = ({
   disabled,
   size,
 }: ClaimProps) => {
-  const separatorWidth = size === IdentitySize.sm ? 'w-2' : 'w-8'
+  const separatorWidth = size === IdentityTagSize.sm ? 'w-2' : 'w-8'
   return (
     <div className="flex items-center w-full max-w-full group">
-      <Identity
+      <IdentityTag
         variant={subject.variant}
         size={size}
         imgSrc={subject.imgSrc}
@@ -43,10 +40,10 @@ export const Claim = ({
         className="group-hover:border-primary group-hover:bg-primary/20"
       >
         {subject.label}
-      </Identity>
+      </IdentityTag>
       <Separator className={separatorWidth} />
 
-      <Identity
+      <IdentityTag
         variant={predicate.variant}
         size={size}
         imgSrc={predicate.imgSrc}
@@ -54,10 +51,10 @@ export const Claim = ({
         className="group-hover:border-primary group-hover:bg-primary/20"
       >
         {predicate.label}
-      </Identity>
+      </IdentityTag>
       <Separator className={separatorWidth} />
 
-      <Identity
+      <IdentityTag
         variant={object.variant}
         size={size}
         imgSrc={object.imgSrc}
@@ -65,7 +62,7 @@ export const Claim = ({
         className="group-hover:border-primary group-hover:bg-primary/20"
       >
         {object.label}
-      </Identity>
+      </IdentityTag>
     </div>
   )
 }

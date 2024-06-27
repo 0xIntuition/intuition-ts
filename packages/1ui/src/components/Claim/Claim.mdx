@@ -19,11 +19,17 @@ import { Claim } from '@0xintuition/1ui'
 <Claim
   size="md"
   subject={{
-    variant: 'default',
+    variant: 'non-user',
     label: '0xintuition',
   }}
-  predicate={{ label: 'is really' }}
-  object={{ label: 'cool' }}
+  predicate={{
+    variant: 'non-user',
+    label: 'is really',
+  }}
+  object={{
+    variant: 'non-user',
+    label: 'cool',
+  }}
 />
 `} />
 
@@ -52,8 +58,14 @@ import { Claim } from '@0xintuition/1ui'
     label: 'Alice',
     imgSrc: 'https://m.media-amazon.com/images/M/MV5BNDhiMWYzMjgtNTRiYi00ZTA3LThlODctNDRkMDk0NzFkMWI3L2ltYWdlL2ltYWdlXkEyXkFqcGdeQXVyNTg0MTkzMzA@._V1_.jpg',
   }}
-  predicate={{ label: 'likes' }}
-  object={{ label: 'pizza' }}
+  predicate={{
+    variant: 'non-user',
+    label: 'likes',
+  }}
+  object={{
+    variant: 'non-user',
+    label: 'pizza',
+  }}
 
 />
 `} />
