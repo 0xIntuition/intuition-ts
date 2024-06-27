@@ -43,15 +43,15 @@ jobs:
 
       - name: Run Affected Lint
         if: github.event_name == 'pull_request'
-        run: pnpm nx affected -t lint --base=origin/main~1 --head=origin/main --output-style=static --verbose | tee test-output.txt
+        run: pnpm nx affected -t lint --base=${{ github.base_ref }} --head=${{ github.head_ref }}
 
       - name: Run Affected Tests
         if: github.event_name == 'pull_request'
-        run: pnpm nx affected -t test --base=origin/main~1 --head=origin/main --output-style=static --verbose | tee test-output.txt
+        run: pnpm nx affected -t test --base=${{ github.base_ref }} --head=${{ github.head_ref }}
 
       - name: Run Affected Builds
         if: github.event_name == 'pull_request'
-        run: pnpm nx affected -t build --base=origin/main~1 --head=origin/main --output-style=static --verbose
+        run: pnpm nx affected -t build --base=${{ github.base_ref }} --head=${{ github.head_ref }}
 
       - name: Build 1ui Storybook
         if: github.ref == 'refs/heads/main'
@@ -62,9 +62,3 @@ jobs:
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           folder: build/storybook/1ui
-
-      - name: Upload Test Output
-        uses: actions/upload-artifact@v3
-        with:
-          name: test-output
-          path: test-output.txt
