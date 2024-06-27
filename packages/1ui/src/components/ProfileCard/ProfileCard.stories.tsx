@@ -69,7 +69,7 @@ type Story = StoryObj<typeof ProfileCard>
 
 export const BasicUsage: Story = {
   args: {
-    variant: 'user',
+    variant: 'identity',
     avatarSrc: 'https://avatars.githubusercontent.com/u/94311139?s=200&v=4"',
     name: 'John Doe',
     walletAddress: '0x1234567890abcdef1234567890abcdef12345678',
