@@ -109,7 +109,7 @@ describe('ClaimPosition', () => {
             class="w-full flex justify-between"
           >
             <div
-              class="flex flex-col justify-between w-[60%]"
+              class="flex flex-col justify-between"
             >
               <div
                 class="flex items-center h-[6px] mb-4"
