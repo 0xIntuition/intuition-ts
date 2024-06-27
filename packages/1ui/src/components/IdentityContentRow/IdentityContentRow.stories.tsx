@@ -1,7 +1,7 @@
 import React from 'react'
 
 import type { Meta, StoryObj } from '@storybook/react'
-import { Identity } from 'types'
+import { Subject } from 'types'
 
 import { IdentityContentRow } from './IdentityContentRow'
 
@@ -11,7 +11,7 @@ const meta: Meta<typeof IdentityContentRow> = {
   argTypes: {
     variant: {
       description: 'Variant of avatar',
-      options: Object.values(Identity),
+      options: Object.values(Subject),
       table: {
         type: { summary: 'string' },
         defaultValue: { summary: 'user' },

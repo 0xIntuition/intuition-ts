@@ -29,7 +29,7 @@ describe('ProfileCard', () => {
             class="flex items-center space-x-4"
           >
             <span
-              class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full bg-muted"
+              class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full"
             >
               <span
                 class="flex h-full w-full items-center justify-center bg-inherit"
@@ -47,52 +47,6 @@ describe('ProfileCard', () => {
                 class="text-base font-medium text-muted-foreground"
               >
                 0x1234...5678
-              </p>
-            </div>
-          </div>
-          <div
-            class="flex justify-between items-center space-x-4 mt-5"
-          >
-            <div
-              class="flex items-center space-x-1"
-            >
-              <p
-                class="text-base font-medium text-primary-300"
-              >
-                45
-              </p>
-              <p
-                class="text-base font-normal text-muted-foreground"
-              >
-                Following
-              </p>
-            </div>
-            <div
-              class="flex items-center space-x-1"
-            >
-              <p
-                class="text-base font-medium text-primary-300"
-              >
-                123
-              </p>
-              <p
-                class="text-base font-normal text-muted-foreground"
-              >
-                Followers
-              </p>
-            </div>
-            <div
-              class="flex items-center space-x-1"
-            >
-              <p
-                class="text-base font-medium text-success"
-              >
-                671k
-              </p>
-              <p
-                class="text-base font-normal text-muted-foreground"
-              >
-                Points
               </p>
             </div>
           </div>
@@ -133,12 +87,18 @@ describe('ProfileCard', () => {
             class="flex items-center space-x-4"
           >
             <span
-              class="relative flex h-10 w-10 shrink-0 overflow-hidden bg-muted rounded-lg"
+              class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded bg-background border border-border/30"
             >
               <span
                 class="flex h-full w-full items-center justify-center bg-inherit"
               >
-                BL
+                <svg
+                  class="h-6 w-6 text-primary/30"
+                >
+                  <use
+                    href="/src/components/Icon/Icon.sprites.svg#fingerprint"
+                  />
+                </svg>
               </span>
             </span>
             <div>
@@ -199,7 +159,7 @@ describe('ProfileCard', () => {
             class="flex items-center space-x-4"
           >
             <span
-              class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full bg-muted"
+              class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full"
             >
               <span
                 class="flex h-full w-full items-center justify-center bg-inherit"
@@ -217,52 +177,6 @@ describe('ProfileCard', () => {
                 class="text-base font-medium text-muted-foreground"
               >
                 0x1234...5678
-              </p>
-            </div>
-          </div>
-          <div
-            class="flex justify-between items-center space-x-4 mt-5"
-          >
-            <div
-              class="flex items-center space-x-1"
-            >
-              <p
-                class="text-base font-medium text-primary-300"
-              >
-                45
-              </p>
-              <p
-                class="text-base font-normal text-muted-foreground"
-              >
-                Following
-              </p>
-            </div>
-            <div
-              class="flex items-center space-x-1"
-            >
-              <p
-                class="text-base font-medium text-primary-300"
-              >
-                123
-              </p>
-              <p
-                class="text-base font-normal text-muted-foreground"
-              >
-                Followers
-              </p>
-            </div>
-            <div
-              class="flex items-center space-x-1"
-            >
-              <p
-                class="text-base font-medium text-success"
-              >
-                671k
-              </p>
-              <p
-                class="text-base font-normal text-muted-foreground"
-              >
-                Points
               </p>
             </div>
           </div>

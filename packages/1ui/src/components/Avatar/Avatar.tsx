@@ -2,7 +2,7 @@ import * as React from 'react'
 
 import * as AvatarPrimitive from '@radix-ui/react-avatar'
 import { cva, type VariantProps } from 'class-variance-authority'
-import { Identity } from 'types'
+import { Subject } from 'types'
 
 import { Icon, IconName } from '..'
 import { cn } from '../../styles'
@@ -52,12 +52,12 @@ AvatarFallback.displayName = AvatarPrimitive.Fallback.displayName
 const avatarVariants = cva('', {
   variants: {
     variant: {
-      [Identity.user]: 'rounded-full bg-muted',
-      [Identity.entity]: 'rounded bg-background border border-border/30',
+      [Subject.identity]: 'rounded-full bg-muted',
+      [Subject.entity]: 'rounded bg-background border border-border/30',
     },
   },
   defaultVariants: {
-    variant: Identity.user,
+    variant: Subject.identity,
   },
 })
 
@@ -73,7 +73,7 @@ const Avatar = ({ className, variant, src, name }: AvatarProps) => {
     <AvatarContainer className={cn(avatarVariants({ variant }), className)}>
       <AvatarImage src={src} alt={`${name} avatar`} />
       <AvatarFallback className="bg-inherit">
-        {variant === Identity.entity ? (
+        {variant === Subject.entity ? (
           <Icon name={IconName.fingerprint} className="text-primary/30" />
         ) : (
           <>{name?.substring(0, 2).toUpperCase() || `??`}</>
