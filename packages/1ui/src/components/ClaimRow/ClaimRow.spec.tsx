@@ -109,47 +109,51 @@ describe('ClaimRow', () => {
             </div>
           </div>
           <div
-            class="flex flex-col items-end w-[40%]"
+            class="w-[40%]"
           >
-            <p
-              class="text-primary text-lg font-normal"
-            >
-              0.383 ETH
-            </p>
             <div
-              class="flex gap-2 items-center mt-2"
+              class="flex flex-col items-end"
             >
-              <div
-                class="flex gap-1 items-center"
+              <p
+                class="text-primary text-lg font-normal"
               >
-                <svg
-                  class="text-against h-4 w-4"
-                >
-                  <use
-                    href="/src/components/Icon/Icon.sprites.svg#people"
-                  />
-                </svg>
-                <p
-                  class="text-base font-normal text-secondary-foreground"
-                >
-                  234
-                </p>
-              </div>
+                0.383 ETH
+              </p>
               <div
-                class="flex gap-1 items-center"
+                class="flex gap-2 items-center mt-2"
               >
-                <svg
-                  class="text-for h-4 w-4"
+                <div
+                  class="flex gap-1 items-center"
                 >
-                  <use
-                    href="/src/components/Icon/Icon.sprites.svg#people"
-                  />
-                </svg>
-                <p
-                  class="text-base font-normal text-secondary-foreground"
+                  <svg
+                    class="text-against h-4 w-4"
+                  >
+                    <use
+                      href="/src/components/Icon/Icon.sprites.svg#people"
+                    />
+                  </svg>
+                  <p
+                    class="text-base font-normal text-secondary-foreground"
+                  >
+                    234
+                  </p>
+                </div>
+                <div
+                  class="flex gap-1 items-center"
                 >
-                  736
-                </p>
+                  <svg
+                    class="text-for h-4 w-4"
+                  >
+                    <use
+                      href="/src/components/Icon/Icon.sprites.svg#people"
+                    />
+                  </svg>
+                  <p
+                    class="text-base font-normal text-secondary-foreground"
+                  >
+                    736
+                  </p>
+                </div>
               </div>
             </div>
           </div>

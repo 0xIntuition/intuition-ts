@@ -10,13 +10,11 @@ import * as Stories from './Indicators.stories'
 
 ## A list of indicators for Identities, Claims, and Positions
 
-### MonetaryValue
-
 <Source
   dark
   language="tsx"
   code={`
-import { MonetaryValue, FeesAccrued, PositionValueDisplay } from '@0xintuition/1ui'
+import { MonetaryValue, FeesAccrued, PositionValueDisplay, ClaimValueDisplay, IdentityValueDisplay } from '@0xintuition/1ui'
 
 <MonetaryValue value={0.345} currency="ETH" />
 <FeesAccrued value={0.005} currency="ETH" />
@@ -27,6 +25,8 @@ import { MonetaryValue, FeesAccrued, PositionValueDisplay } from '@0xintuition/1
   feesAccrued={0.005}
 />
 <PositionValueDisplay value={0.345} position="identity" feesAccrued={0.005} />
+<ClaimValueDisplay value={0.345} claimsFor={230} claimsAgainst={125} />
+<IdentityValueDisplay value={0.345} currency="ETH" followers={230} />
 `} />
 
 <Canvas of={Stories.IndicatorUsage} sourceState="none" />

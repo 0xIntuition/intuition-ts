@@ -9,7 +9,7 @@ import {
   AvatarImage,
   Icon,
   IconName,
-  MonetaryValue,
+  IdentityValueDisplay,
   TagsContent,
   TagWithValue,
   TagWithValueProps,
@@ -89,22 +89,11 @@ const IdentityContentRow = ({
           </div>
         </div>
 
-        <div className="flex flex-col items-end">
-          <MonetaryValue value={amount} currency={currency} />
-
-          <div className="flex gap-1 items-center">
-            <Icon
-              name={IconName.people}
-              className="text-secondary-foreground h-4 w-4"
-            />
-            <Text
-              variant={TextVariant.body}
-              className="text-secondary-foreground"
-            >
-              {totalFollowers}
-            </Text>
-          </div>
-        </div>
+        <IdentityValueDisplay
+          value={amount}
+          currency={currency}
+          followers={totalFollowers}
+        />
       </div>
       {children}
     </div>
