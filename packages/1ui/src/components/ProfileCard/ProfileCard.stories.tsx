@@ -15,7 +15,7 @@ const meta: Meta<typeof ProfileCard> = {
       options: Object.values(Subject),
       table: {
         type: { summary: 'string' },
-        defaultValue: { summary: 'user' },
+        defaultValue: { summary: 'identity' },
       },
       control: 'select',
     },
@@ -26,7 +26,7 @@ const meta: Meta<typeof ProfileCard> = {
       },
     },
     name: {
-      description: 'Name of the user or entity',
+      description: 'Name of the identity/entity',
       table: {
         type: { summary: 'string' },
       },
