@@ -1,7 +1,6 @@
 import * as React from 'react'
 
-import { PositionVariant } from 'components/ClaimPosition/ClaimPosition.utils'
-import { CurrencyType } from 'types'
+import { ClaimPositionType, CurrencyType } from 'types'
 import { formatDate } from 'utils/date'
 import { formatWalletAddress } from 'utils/wallet'
 
@@ -16,10 +15,8 @@ import {
   TextWeight,
 } from '..'
 
-type PositionVariantType = keyof typeof PositionVariant
-
 interface FollowPositionProps extends React.HTMLAttributes<HTMLDivElement> {
-  position: PositionVariantType
+  position: ClaimPositionType
   amount: number
   name: string
   avatarSrc: string

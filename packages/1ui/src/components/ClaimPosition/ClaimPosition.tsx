@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import { CurrencyType } from 'types'
+import { ClaimPositionType, CurrencyType } from 'types'
 import { formatDate } from 'utils/date'
 import { formatWalletAddress } from 'utils/wallet'
 
@@ -14,14 +14,14 @@ import {
   TextVariant,
   TextWeight,
 } from '..'
-import { ClaimPositionVariant, PositionVariant } from './ClaimPosition.utils'
-
-export type ClaimPositionVariantType = keyof typeof ClaimPositionVariant
-export type PositionVariantType = keyof typeof PositionVariant
+import {
+  ClaimPositionVariant,
+  ClaimPositionVariantType,
+} from './ClaimPosition.utils'
 
 interface CommonProps extends React.HTMLAttributes<HTMLDivElement> {
   variant: ClaimPositionVariantType
-  position: PositionVariantType
+  position: ClaimPositionType
   amount: number
   currency?: CurrencyType
   feesAccrued: number
