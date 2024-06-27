@@ -5,8 +5,6 @@ import { formatWalletAddress } from 'utils/wallet'
 
 import {
   Avatar,
-  Icon,
-  IconName,
   IdentityValueDisplay,
   TagsContent,
   TagWithValue,

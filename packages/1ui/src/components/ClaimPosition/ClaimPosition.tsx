@@ -6,8 +6,6 @@ import { formatWalletAddress } from 'utils/wallet'
 
 import {
   Avatar,
-  AvatarFallback,
-  AvatarImage,
   PositionValueDisplay,
   TagsContent,
   TagWithValue,
@@ -73,10 +71,7 @@ const ClaimPosition = ({
     <div className="w-full flex justify-between" {...props}>
       {variant === ClaimPositionVariant.user && (
         <div className="flex items-center">
-          <Avatar className="w-16 h-16 mr-4">
-            <AvatarImage src={avatarSrc} alt={name} />
-            <AvatarFallback>{name.slice(0, 2)}</AvatarFallback>
-          </Avatar>
+          <Avatar src={avatarSrc} name={name} className="w-16 h-16 mr-4" />
           <div className="flex flex-col">
             <div className="flex items-center mb-1.5">
               <Text variant={TextVariant.bodyLarge} className="mr-1">

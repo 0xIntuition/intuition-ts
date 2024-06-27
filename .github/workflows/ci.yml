@@ -41,6 +41,10 @@ jobs:
       - name: Set Shas
         uses: nrwl/nx-set-shas@v3
 
+      - name: Run Affected Lint
+        if: github.event_name == 'pull_request'
+        run: pnpm nx affected -t lint --base=origin/main~1 --head=origin/main --output-style=static --verbose | tee test-output.txt
+
       - name: Run Affected Tests
         if: github.event_name == 'pull_request'
         run: pnpm nx affected -t test --base=origin/main~1 --head=origin/main --output-style=static --verbose | tee test-output.txt
