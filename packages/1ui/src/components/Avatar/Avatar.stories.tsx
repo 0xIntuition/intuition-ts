@@ -19,7 +19,7 @@ const meta: Meta<typeof Avatar> = {
       options: Object.values(Subject),
       table: {
         type: { summary: 'string' },
-        defaultValue: { summary: 'user' },
+        defaultValue: { summary: 'identity' },
       },
       control: 'select',
     },
@@ -29,7 +29,7 @@ const meta: Meta<typeof Avatar> = {
     },
     name: {
       type: 'string',
-      description: 'Name of the user/entity',
+      description: 'Name of the identity/entity',
     },
   },
 }

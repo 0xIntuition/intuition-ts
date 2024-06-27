@@ -1,0 +1,52 @@
+import { Canvas, Controls, Meta, Source, Title } from '@storybook/blocks'
+
+import * as Stories from './IdentityCard.stories'
+
+<Meta of={Stories} />
+
+<Title />
+
+#### Displays an identity or entity and its key data.
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { IdentityCard } from '@0xintuition/1ui'
+
+<IdentityCard
+  variant="identity"
+  avatarSrc="image.jpg"
+  name="Super Dave"
+  value={4.123}
+  currency="ETH"
+  walletAddress="0x1234567890abcdef1234567890abcdef12345678"
+/>
+`} />
+
+<Canvas of={Stories.BasicUsage} sourceState="none" />
+
+## Properties
+
+<Controls />
+
+## Variants
+
+### Other
+
+<Source
+  dark
+  language="tsx"
+  code={`
+<IdentityCard
+  variant="entity"
+  avatarSrc="https://avatars.githubusercontent.com/u/94311139?s=200&v=4"
+  name="Intuition"
+  value={7.892}
+  currency="ETH"
+  walletAddress="0x1234567890abcdef1234567890abcdef12345678"
+/>
+`}
+/>
+
+<Canvas of={Stories.Entity} sourceState="none" />

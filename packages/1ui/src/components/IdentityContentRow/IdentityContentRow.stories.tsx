@@ -14,7 +14,7 @@ const meta: Meta<typeof IdentityContentRow> = {
       options: Object.values(Subject),
       table: {
         type: { summary: 'string' },
-        defaultValue: { summary: 'user' },
+        defaultValue: { summary: 'identity' },
       },
       control: 'select',
     },
