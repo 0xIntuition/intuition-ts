@@ -22,7 +22,7 @@ describe('Avatar', () => {
     `)
   })
   it('should render appropriate elements when given `entity` variant', () => {
-    const { asFragment } = render(<Avatar variant="entity" name="Test" />)
+    const { asFragment } = render(<Avatar variant="non-user" name="Test" />)
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <span

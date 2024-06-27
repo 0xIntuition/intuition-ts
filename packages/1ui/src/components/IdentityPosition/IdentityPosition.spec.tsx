@@ -9,7 +9,7 @@ describe('IdentityPosition', () => {
   it('should render UI for user variant', () => {
     const { asFragment } = render(
       <IdentityPosition
-        variant="entity"
+        variant="non-user"
         name="John Doe"
         walletAddress="0x1234567890abcdef1234567890abcdef12345678"
         avatarSrc="https://avatars.githubusercontent.com/u/94311139?s=200&v=4"
@@ -94,7 +94,7 @@ describe('IdentityPosition', () => {
     it('should render UI for identity variant', () => {
       const { asFragment } = render(
         <IdentityPosition
-          variant="entity"
+          variant="non-user"
           name="John Doe"
           walletAddress="0x1234567890abcdef1234567890abcdef12345678"
           avatarSrc="https://avatars.githubusercontent.com/u/94311139?s=200&v=4"

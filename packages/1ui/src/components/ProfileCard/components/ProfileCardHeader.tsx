@@ -1,17 +1,17 @@
-import { Subject, SubjectType } from 'types'
+import { Identity, IdentityType } from 'types'
 import { formatWalletAddress } from 'utils/wallet'
 
 import { Avatar, Text } from '../..'
 
 interface ProfileCardHeaderProps {
-  variant?: SubjectType
+  variant?: IdentityType
   avatarSrc: string
   name: string
   walletAddress: string
 }
 
 const ProfileCardHeader = ({
-  variant = Subject.identity,
+  variant = Identity.user,
   avatarSrc,
   name,
   walletAddress,

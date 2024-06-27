@@ -56,7 +56,7 @@ describe('IdentityCard', () => {
   it('should render appropriate element when given `entity` variant ', () => {
     const { asFragment } = render(
       <IdentityCard
-        variant="entity"
+        variant="non-user"
         name="Intuition"
         value={7.892}
         currency="ETH"
