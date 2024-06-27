@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react'
 import { Claim } from 'components/Claim'
 
-import { ClaimStatus } from './components'
+import { ClaimStatus } from './ClaimStatus'
 
 describe('ClaimStatus', () => {
   it('should render the MonetaryValue component', () => {

@@ -12,7 +12,7 @@ const ClaimStatus = ({
 }: ClaimStatusProps) => {
   const againstPercentage = (claimsAgainst / (claimsFor + claimsAgainst)) * 100
   return (
-    <div className="flex flex-col justify-between w-[60%]">
+    <div className="flex flex-col justify-between">
       <div className="flex items-center h-[6px] mb-4">
         <span
           className="h-full bg-against block rounded-l-sm"

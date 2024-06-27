@@ -1,12 +1,8 @@
 import * as React from 'react'
 
-import { ClaimStatus } from 'components/Dataset'
-import { CurrencyType } from 'types'
-import { formatDate } from 'utils/date'
-import { formatWalletAddress } from 'utils/wallet'
-
 import {
   Avatar,
+  ClaimStatus,
   PositionValueDisplay,
   TagsContent,
   TagWithValue,
@@ -14,7 +10,11 @@ import {
   Text,
   TextVariant,
   TextWeight,
-} from '..'
+} from 'components'
+import { CurrencyType } from 'types'
+import { formatDate } from 'utils/date'
+import { formatWalletAddress } from 'utils/wallet'
+
 import { ClaimPositionVariant, PositionVariant } from './ClaimPosition.utils'
 
 export type ClaimPositionVariantType = keyof typeof ClaimPositionVariant
@@ -110,7 +110,11 @@ const ClaimPosition = ({
       )}
 
       {variant === ClaimPositionVariant.claim && (
-        <ClaimStatus claimsFor={claimsFor} claimsAgainst={claimsAgainst}>
+        <ClaimStatus
+          claimsFor={claimsFor}
+          claimsAgainst={claimsAgainst}
+          className="w-[60%]"
+        >
           {children}
         </ClaimStatus>
       )}

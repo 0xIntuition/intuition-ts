@@ -1,9 +1,7 @@
 import * as React from 'react'
 
-import { ClaimStatus } from 'components/Dataset'
+import { ClaimStatus, ClaimValueDisplay } from 'components'
 import { CurrencyType } from 'types'
-
-import { ClaimValueDisplay } from '..'
 
 export interface ClaimRowProps extends React.HTMLAttributes<HTMLDivElement> {
   claimsFor: number
@@ -22,7 +20,11 @@ const ClaimRow = ({
 }: ClaimRowProps) => {
   return (
     <div className="flex justify-between items-center gap-2" {...props}>
-      <ClaimStatus claimsFor={claimsFor} claimsAgainst={claimsAgainst}>
+      <ClaimStatus
+        claimsFor={claimsFor}
+        claimsAgainst={claimsAgainst}
+        className="w-[60%]"
+      >
         {children}
       </ClaimStatus>
       <div className="w-[40%]">
