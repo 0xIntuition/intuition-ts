@@ -2,7 +2,7 @@ import React from 'react'
 
 import type { Meta, StoryObj } from '@storybook/react'
 import { Button } from 'components/Button'
-import { Identity } from 'types'
+import { Subject } from 'types'
 
 import { ProfileCard, ProfileCardProps } from './ProfileCard'
 
@@ -12,7 +12,7 @@ const meta: Meta<typeof ProfileCard> = {
   argTypes: {
     variant: {
       description: 'Variant of avatar',
-      options: Object.values(Identity),
+      options: Object.values(Subject),
       table: {
         type: { summary: 'string' },
         defaultValue: { summary: 'user' },

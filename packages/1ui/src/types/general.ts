@@ -1,6 +1,6 @@
-export const Identity = {
-  user: 'user',
+export const Subject = {
+  identity: 'identity',
   entity: 'entity',
 } as const
 
-export type IdentityType = (typeof Identity)[keyof typeof Identity]
+export type SubjectType = (typeof Subject)[keyof typeof Subject]
