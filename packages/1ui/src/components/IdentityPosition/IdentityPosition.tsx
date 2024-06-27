@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import { CurrencyType, Subject, SubjectType } from 'types'
+import { CurrencyType, Identity, IdentityType } from 'types'
 import { formatDate } from 'utils/date'
 import { formatWalletAddress } from 'utils/wallet'
 
@@ -18,7 +18,7 @@ import {
 
 export interface IdentityPositionProps
   extends React.HTMLAttributes<HTMLDivElement> {
-  variant?: SubjectType
+  variant?: IdentityType
   amount: number
   currency?: CurrencyType
   feesAccrued: number
@@ -30,7 +30,7 @@ export interface IdentityPositionProps
 }
 
 const IdentityPosition = ({
-  variant = Subject.identity,
+  variant = Identity.user,
   amount,
   currency,
   feesAccrued,

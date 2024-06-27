@@ -1,13 +1,13 @@
 import * as React from 'react'
 
-import { Currency, CurrencyType, Subject, SubjectType } from 'types'
+import { Currency, CurrencyType, Identity, IdentityType } from 'types'
 import { formatWalletAddress } from 'utils'
 
 import { Avatar, Badge, BadgeVariant, Text, TextVariant } from '..'
 
 export interface IdentityCardProps
   extends React.HTMLAttributes<HTMLDivElement> {
-  variant?: SubjectType
+  variant?: IdentityType
   avatarSrc?: string
   name: string
   value: number
@@ -16,7 +16,7 @@ export interface IdentityCardProps
 }
 
 const IdentityCard = ({
-  variant = Subject.identity,
+  variant = Identity.user,
   avatarSrc,
   name,
   value,

@@ -1,7 +1,7 @@
 import React from 'react'
 
 import type { Meta, StoryObj } from '@storybook/react'
-import { Currency, Subject } from 'types'
+import { Currency, Identity } from 'types'
 
 import { IdentityCard } from './IdentityCard'
 
@@ -11,10 +11,10 @@ const meta: Meta<typeof IdentityCard> = {
   argTypes: {
     variant: {
       description: 'Variant of avatar',
-      options: Object.values(Subject),
+      options: Object.values(Identity),
       table: {
         type: { summary: 'string' },
-        defaultValue: { summary: 'identity' },
+        defaultValue: { summary: 'user' },
       },
       control: 'select',
     },
@@ -24,11 +24,11 @@ const meta: Meta<typeof IdentityCard> = {
     },
     name: {
       type: 'string',
-      description: 'Name of the identity/entity',
+      description: 'Name of the identity',
     },
     value: {
       type: 'number',
-      description: 'Value associated to identity/entity',
+      description: 'Value associated to identity',
     },
     currency: {
       description: 'Currency of the value provided',
@@ -41,7 +41,7 @@ const meta: Meta<typeof IdentityCard> = {
     },
     walletAddress: {
       type: 'string',
-      description: 'Wallet address of identity/entity',
+      description: 'Wallet address of identity',
     },
   },
 }
@@ -52,7 +52,7 @@ type Story = StoryObj<typeof IdentityCard>
 
 export const BasicUsage: Story = {
   args: {
-    variant: 'identity',
+    variant: 'user',
     avatarSrc:
       'https://m.media-amazon.com/images/M/MV5BNDhiMWYzMjgtNTRiYi00ZTA3LThlODctNDRkMDk0NzFkMWI3L2ltYWdlL2ltYWdlXkEyXkFqcGdeQXVyNTg0MTkzMzA@._V1_.jpg',
     name: 'Super Dave',
@@ -66,7 +66,7 @@ export const BasicUsage: Story = {
 export const Entity: Story = {
   render: () => (
     <IdentityCard
-      variant="entity"
+      variant="non-user"
       avatarSrc="https://avatars.githubusercontent.com/u/94311139?s=200&v=4"
       name="Intuition"
       value={7.892}

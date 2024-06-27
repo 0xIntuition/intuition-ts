@@ -1,7 +1,7 @@
 import React from 'react'
 
 import type { Meta, StoryObj } from '@storybook/react'
-import { Subject } from 'types'
+import { Identity } from 'types'
 
 import { Avatar } from './Avatar'
 
@@ -16,10 +16,10 @@ const meta: Meta<typeof Avatar> = {
   argTypes: {
     variant: {
       description: 'Variant of avatar',
-      options: Object.values(Subject),
+      options: Object.values(Identity),
       table: {
         type: { summary: 'string' },
-        defaultValue: { summary: 'identity' },
+        defaultValue: { summary: 'user' },
       },
       control: 'select',
     },
@@ -29,7 +29,7 @@ const meta: Meta<typeof Avatar> = {
     },
     name: {
       type: 'string',
-      description: 'Name of the identity/entity',
+      description: 'Name of the identity',
     },
   },
 }
@@ -40,7 +40,7 @@ type Story = StoryObj<typeof Avatar>
 
 export const BasicUsage: Story = {
   args: {
-    variant: 'identity',
+    variant: 'user',
     src: 'https://m.media-amazon.com/images/M/MV5BNDhiMWYzMjgtNTRiYi00ZTA3LThlODctNDRkMDk0NzFkMWI3L2ltYWdlL2ltYWdlXkEyXkFqcGdeQXVyNTg0MTkzMzA@._V1_.jpg',
     name: 'Super Dave',
   },
@@ -50,7 +50,7 @@ export const BasicUsage: Story = {
 export const Entity: Story = {
   render: () => (
     <Avatar
-      variant="entity"
+      variant="non-user"
       src="https://avatars.githubusercontent.com/u/94311139?s=200&v=4"
       name="Intuition"
     />
@@ -62,5 +62,5 @@ export const UserFallback: Story = {
 }
 
 export const EntityFallback: Story = {
-  render: () => <Avatar variant="entity" name="Intuition" />,
+  render: () => <Avatar variant="non-user" name="Intuition" />,
 }

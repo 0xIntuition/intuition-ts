@@ -2,7 +2,7 @@ import React from 'react'
 
 import type { Meta, StoryObj } from '@storybook/react'
 import { Button } from 'components/Button'
-import { Subject } from 'types'
+import { Identity } from 'types'
 
 import { ProfileCard, ProfileCardProps } from './ProfileCard'
 
@@ -12,10 +12,10 @@ const meta: Meta<typeof ProfileCard> = {
   argTypes: {
     variant: {
       description: 'Variant of avatar',
-      options: Object.values(Subject),
+      options: Object.values(Identity),
       table: {
         type: { summary: 'string' },
-        defaultValue: { summary: 'identity' },
+        defaultValue: { summary: 'user' },
       },
       control: 'select',
     },
@@ -26,19 +26,19 @@ const meta: Meta<typeof ProfileCard> = {
       },
     },
     name: {
-      description: 'Name of the identity/entity',
+      description: 'Name of the identity',
       table: {
         type: { summary: 'string' },
       },
     },
     walletAddress: {
-      description: 'Wallet address of the user or entity',
+      description: 'Wallet address of the identity',
       table: {
         type: { summary: 'string' },
       },
     },
     stats: {
-      description: 'Statistics related to the user or entity',
+      description: 'Statistics related to the identity',
       table: {
         type: {
           summary:
@@ -54,7 +54,7 @@ const meta: Meta<typeof ProfileCard> = {
       },
     },
     bio: {
-      description: 'Bio or description of the user or entity',
+      description: 'Bio or description of the identity',
       table: {
         type: { summary: 'string' },
         defaultValue: { summary: 'undefined' },
@@ -69,7 +69,7 @@ type Story = StoryObj<typeof ProfileCard>
 
 export const BasicUsage: Story = {
   args: {
-    variant: 'identity',
+    variant: 'user',
     avatarSrc: 'https://avatars.githubusercontent.com/u/94311139?s=200&v=4"',
     name: 'John Doe',
     walletAddress: '0x1234567890abcdef1234567890abcdef12345678',
@@ -98,7 +98,7 @@ export const BasicUsage: Story = {
 
 export const EntityProfile: Story = {
   args: {
-    variant: 'entity',
+    variant: 'non-user',
     avatarSrc: 'https://avatars.githubusercontent.com/u/94311139?s=200&v=4"',
     name: 'Blockchain Corp',
     walletAddress: '0x1234567890abcdef1234567890abcdef12345678',

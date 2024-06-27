@@ -29,7 +29,7 @@ describe('ProfileCard', () => {
             class="flex items-center space-x-4"
           >
             <span
-              class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full"
+              class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full bg-muted"
             >
               <span
                 class="flex h-full w-full items-center justify-center bg-inherit"
@@ -47,6 +47,52 @@ describe('ProfileCard', () => {
                 class="text-base font-medium text-muted-foreground"
               >
                 0x1234...5678
+              </p>
+            </div>
+          </div>
+          <div
+            class="flex justify-between items-center space-x-4 mt-5"
+          >
+            <div
+              class="flex items-center space-x-1"
+            >
+              <p
+                class="text-base font-medium text-primary-300"
+              >
+                45
+              </p>
+              <p
+                class="text-base font-normal text-muted-foreground"
+              >
+                Following
+              </p>
+            </div>
+            <div
+              class="flex items-center space-x-1"
+            >
+              <p
+                class="text-base font-medium text-primary-300"
+              >
+                123
+              </p>
+              <p
+                class="text-base font-normal text-muted-foreground"
+              >
+                Followers
+              </p>
+            </div>
+            <div
+              class="flex items-center space-x-1"
+            >
+              <p
+                class="text-base font-medium text-success"
+              >
+                671k
+              </p>
+              <p
+                class="text-base font-normal text-muted-foreground"
+              >
+                Points
               </p>
             </div>
           </div>
@@ -87,18 +133,12 @@ describe('ProfileCard', () => {
             class="flex items-center space-x-4"
           >
             <span
-              class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded bg-background border border-border/30"
+              class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full"
             >
               <span
                 class="flex h-full w-full items-center justify-center bg-inherit"
               >
-                <svg
-                  class="h-6 w-6 text-primary/30"
-                >
-                  <use
-                    href="/src/components/Icon/Icon.sprites.svg#fingerprint"
-                  />
-                </svg>
+                BL
               </span>
             </span>
             <div>
@@ -122,21 +162,6 @@ describe('ProfileCard', () => {
             >
               Blockchain Corp is a leading company in blockchain technology. Visit our website for more information about how you can benefit from our services.
             </p>
-            <div
-              class="mt-5"
-            >
-              <p
-                class="text-base font-normal text-muted-foreground"
-              >
-                Link
-              </p>
-              <a
-                class="text-primary-300"
-                href="https://blockchaincorp.com"
-              >
-                https://blockchaincorp.com
-              </a>
-            </div>
           </div>
         </div>
       </DocumentFragment>
@@ -159,7 +184,7 @@ describe('ProfileCard', () => {
             class="flex items-center space-x-4"
           >
             <span
-              class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full"
+              class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full bg-muted"
             >
               <span
                 class="flex h-full w-full items-center justify-center bg-inherit"
@@ -177,6 +202,52 @@ describe('ProfileCard', () => {
                 class="text-base font-medium text-muted-foreground"
               >
                 0x1234...5678
+              </p>
+            </div>
+          </div>
+          <div
+            class="flex justify-between items-center space-x-4 mt-5"
+          >
+            <div
+              class="flex items-center space-x-1"
+            >
+              <p
+                class="text-base font-medium text-primary-300"
+              >
+                45
+              </p>
+              <p
+                class="text-base font-normal text-muted-foreground"
+              >
+                Following
+              </p>
+            </div>
+            <div
+              class="flex items-center space-x-1"
+            >
+              <p
+                class="text-base font-medium text-primary-300"
+              >
+                123
+              </p>
+              <p
+                class="text-base font-normal text-muted-foreground"
+              >
+                Followers
+              </p>
+            </div>
+            <div
+              class="flex items-center space-x-1"
+            >
+              <p
+                class="text-base font-medium text-success"
+              >
+                671k
+              </p>
+              <p
+                class="text-base font-normal text-muted-foreground"
+              >
+                Points
               </p>
             </div>
           </div>
