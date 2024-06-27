@@ -20,13 +20,11 @@ const ClaimRow = ({
 }: ClaimRowProps) => {
   return (
     <div className="flex justify-between items-center gap-2" {...props}>
-      <ClaimStatus
-        claimsFor={claimsFor}
-        claimsAgainst={claimsAgainst}
-        className="w-[60%]"
-      >
-        {children}
-      </ClaimStatus>
+      <div className="w-[60%]">
+        <ClaimStatus claimsFor={claimsFor} claimsAgainst={claimsAgainst}>
+          {children}
+        </ClaimStatus>
+      </div>
       <div className="w-[40%]">
         <ClaimValueDisplay
           value={amount}

@@ -109,18 +109,22 @@ describe('ClaimPosition', () => {
             class="w-full flex justify-between"
           >
             <div
-              class="flex flex-col justify-between"
+              class="w-[60%]"
             >
               <div
-                class="flex items-center h-[6px] mb-4"
+                class="flex flex-col justify-between"
               >
-                <span
-                  class="h-full bg-against block rounded-l-sm"
-                  style="min-width: 70%;"
-                />
-                <span
-                  class="h-full w-full bg-for block rounded-r-sm"
-                />
+                <div
+                  class="flex items-center h-[6px] mb-4"
+                >
+                  <span
+                    class="h-full bg-against block rounded-l-sm"
+                    style="min-width: 70%;"
+                  />
+                  <span
+                    class="h-full w-full bg-for block rounded-r-sm"
+                  />
+                </div>
               </div>
             </div>
             <div

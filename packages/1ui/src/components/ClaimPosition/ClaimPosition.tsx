@@ -110,13 +110,15 @@ const ClaimPosition = ({
       )}
 
       {variant === ClaimPositionVariant.claim && (
-        <ClaimStatus
-          claimsFor={claimsFor}
-          claimsAgainst={claimsAgainst}
-          className="w-[60%]"
-        >
-          {children}
-        </ClaimStatus>
+        <div className="w-[60%]">
+          <ClaimStatus
+            claimsFor={claimsFor}
+            claimsAgainst={claimsAgainst}
+            className="w-[60%]"
+          >
+            {children}
+          </ClaimStatus>
+        </div>
       )}
 
       <PositionValueDisplay
