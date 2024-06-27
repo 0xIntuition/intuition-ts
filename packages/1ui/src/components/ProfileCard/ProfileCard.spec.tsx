@@ -112,7 +112,7 @@ describe('ProfileCard', () => {
 
   it('should render with entity type and link', () => {
     const entityProps: ProfileCardProps = {
-      variant: 'entity',
+      variant: 'non-user',
       avatarSrc: 'https://avatars.githubusercontent.com/u/94311139?s=200&v=4',
       name: 'Blockchain Corp',
       walletAddress: '0x1234567890abcdef1234567890abcdef12345678',
@@ -133,12 +133,18 @@ describe('ProfileCard', () => {
             class="flex items-center space-x-4"
           >
             <span
-              class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full"
+              class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded bg-background border border-border/30"
             >
               <span
                 class="flex h-full w-full items-center justify-center bg-inherit"
               >
-                BL
+                <svg
+                  class="h-6 w-6 text-primary/30"
+                >
+                  <use
+                    href="/src/components/Icon/Icon.sprites.svg#fingerprint"
+                  />
+                </svg>
               </span>
             </span>
             <div>
@@ -162,6 +168,21 @@ describe('ProfileCard', () => {
             >
               Blockchain Corp is a leading company in blockchain technology. Visit our website for more information about how you can benefit from our services.
             </p>
+            <div
+              class="mt-5"
+            >
+              <p
+                class="text-base font-normal text-muted-foreground"
+              >
+                Link
+              </p>
+              <a
+                class="text-primary-300"
+                href="https://blockchaincorp.com"
+              >
+                https://blockchaincorp.com
+              </a>
+            </div>
           </div>
         </div>
       </DocumentFragment>
