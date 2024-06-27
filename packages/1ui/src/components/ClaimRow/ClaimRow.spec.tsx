@@ -12,11 +12,17 @@ describe('ClaimRow', () => {
         <Claim
           size="sm"
           subject={{
-            variant: 'default',
+            variant: 'non-user',
             label: '0xintuition',
           }}
-          predicate={{ label: 'is really' }}
-          object={{ label: 'cool' }}
+          predicate={{
+            variant: 'non-user',
+            label: 'is really',
+          }}
+          object={{
+            variant: 'non-user',
+            label: 'cool',
+          }}
         />
       </ClaimRow>,
     )
@@ -66,7 +72,7 @@ describe('ClaimRow', () => {
                 role="none"
               />
               <button
-                class="border border-border/20 font-medium py-1 px-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center rounded-full [&>span]:rounded-full [&>span]:overflow-hidden text-base [&>span]:h-[1.375rem] [&>span]:w-[1.375rem] group-hover:border-primary group-hover:bg-primary/20"
+                class="border border-border/20 font-medium py-1 px-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center text-base [&>span]:h-[1.375rem] [&>span]:w-[1.375rem] group-hover:border-primary group-hover:bg-primary/20"
               >
                 <span>
                   <span
@@ -89,7 +95,7 @@ describe('ClaimRow', () => {
                 role="none"
               />
               <button
-                class="border border-border/20 font-medium py-1 px-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center rounded-full [&>span]:rounded-full [&>span]:overflow-hidden text-base [&>span]:h-[1.375rem] [&>span]:w-[1.375rem] group-hover:border-primary group-hover:bg-primary/20"
+                class="border border-border/20 font-medium py-1 px-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center text-base [&>span]:h-[1.375rem] [&>span]:w-[1.375rem] group-hover:border-primary group-hover:bg-primary/20"
               >
                 <span>
                   <span
