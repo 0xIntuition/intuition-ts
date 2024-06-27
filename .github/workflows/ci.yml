@@ -43,15 +43,15 @@ jobs:
 
       - name: Run Affected Lint
         if: github.event_name == 'pull_request'
-        run: pnpm nx affected -t lint --base=origin/${{ github.base_ref }}~1 --head=${{ github.head_ref }}
+        run: pnpm nx affected -t lint --base=origin/main~1 --head=origin/main
 
       - name: Run Affected Tests
         if: github.event_name == 'pull_request'
-        run: pnpm nx affected -t test --base=origin/${{ github.base_ref }}~1 --head=${{ github.head_ref }}
+        run: pnpm nx affected -t test --base=origin/main~1 --head=origin/main
 
       - name: Run Affected Builds
         if: github.event_name == 'pull_request'
-        run: pnpm nx affected -t build --base=origin/${{ github.base_ref }}~1 --head=${{ github.head_ref }}
+        run: pnpm nx affected -t build --base=origin/main~1 --head=origin/main
 
       - name: Build 1ui Storybook
         if: github.ref == 'refs/heads/main'
