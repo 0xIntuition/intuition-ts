@@ -128,22 +128,22 @@ export default function StakeModal({
             actionType === 'buy'
               ? [user.details?.wallet?.address as `0x${string}`, vault_id]
               : [
-                  parseUnits(val, 18),
+                  parseUnits(
+                    val === ''
+                      ? '0'
+                      : (
+                          Number(val) /
+                          Number(formatUnits(BigInt(conviction_price), 18))
+                        ).toString(),
+                    18,
+                  ),
                   user.details?.wallet?.address as `0x${string}`,
                   vault_id,
                 ],
           value:
             actionType === 'buy'
               ? parseUnits(val === '' ? '0' : val, 18)
-              : parseUnits(
-                  val === ''
-                    ? '0'
-                    : (
-                        Number(val) *
-                        Number(formatUnits(BigInt(conviction_price), 18))
-                      ).toString(),
-                  18,
-                ),
+              : undefined,
         })
         onReceipt(() => {
           fetchReval.submit(formRef.current, {
@@ -306,10 +306,12 @@ export default function StakeModal({
   const {
     conviction_price: latest_conviction_price,
     user_conviction: latest_user_conviction,
+    formatted_entry_fee,
+    formatted_exit_fee,
   } = latestVaultDetails ?? {}
 
   const vaultContractDataFetcher = useFetcher<VaultDetailsType>()
-  const vaultContractDataResourceUrl = `/resources/stake?contract=${contract}&vid=${vault_id}`
+  const vaultContractDataResourceUrl = `/resources/stake?contract=${contract}&vid=${vault_id}&wallet=${user.details?.wallet?.address}`
   const vaultContractDataLoadRef = useRef(vaultContractDataFetcher.load)
 
   useEffect(() => {
@@ -363,7 +365,7 @@ export default function StakeModal({
         handleClose()
       }}
     >
-      <DialogContent>
+      <DialogContent className="max-w-[476px]">
         <StakeForm
           user={user}
           walletBalance={walletBalance}
@@ -372,6 +374,8 @@ export default function StakeModal({
           conviction_price={latest_conviction_price ?? conviction_price ?? '0'}
           user_conviction={latest_user_conviction ?? user_conviction ?? '0'}
           user_assets={user_assets ?? '0'}
+          entry_fee={formatted_entry_fee ?? '0'}
+          exit_fee={formatted_exit_fee ?? '0'}
           direction={direction ? direction : undefined}
           val={val}
           setVal={setVal}

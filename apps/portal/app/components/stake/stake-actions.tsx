@@ -21,9 +21,7 @@ export default function StakeActions({
     <div className="flex flex-row items-center justify-center gap-5">
       <Button
         variant="ghost"
-        className={`flex flex-row items-center justify-start gap-1 border bg-primary-50/3 px-2 py-0.5 text-primary-500 transition-colors duration-300 enabled:hover:border-primary-700 enabled:hover:bg-primary-800 enabled:hover:text-primary-300 disabled:opacity-50 ${
-          action === 'redeem' && 'hidden'
-        }`}
+        className={`${action === 'redeem' && 'hidden'}`}
         onClick={() => {
           setVal('0.0003')
         }}
@@ -32,9 +30,7 @@ export default function StakeActions({
       </Button>
       <Button
         variant="ghost"
-        className={`flex flex-row items-center justify-start gap-1 border bg-primary-50/3 px-2 py-0.5 text-primary-500 transition-colors duration-300 enabled:hover:border-primary-700 enabled:hover:bg-primary-800 enabled:hover:text-primary-300 disabled:opacity-50 ${
-          action === 'deposit' && 'hidden'
-        }`}
+        className={`${action === 'deposit' && 'hidden'}`}
         onClick={() => {
           const maxEth =
             +formatUnits(BigInt(userConviction), 18) *
@@ -46,7 +42,6 @@ export default function StakeActions({
       </Button>
       <Button
         variant="ghost"
-        className="flex flex-row items-center justify-start gap-1 border bg-primary-50/3 px-2 py-0.5 text-primary-500 transition-colors duration-300 enabled:hover:border-primary-700 enabled:hover:bg-primary-800 enabled:hover:text-primary-300 disabled:opacity-50"
         onClick={() => {
           if (action === 'deposit') {
             setVal((+walletBalance * 0.1).toString())
@@ -62,7 +57,6 @@ export default function StakeActions({
       </Button>
       <Button
         variant="ghost"
-        className="flex flex-row items-center justify-start gap-1 border bg-primary-50/3 px-2 py-0.5 text-primary-500 transition-colors duration-300 enabled:hover:border-primary-700 enabled:hover:bg-primary-800 enabled:hover:text-primary-300 disabled:opacity-50"
         onClick={() => {
           if (action === 'deposit') {
             setVal((+walletBalance * 0.5).toString())
@@ -78,7 +72,6 @@ export default function StakeActions({
       </Button>
       <Button
         variant="ghost"
-        className="flex flex-row items-center justify-start gap-1 border bg-primary-50/3 px-2 py-0.5 text-primary-500 transition-colors duration-300 enabled:hover:border-primary-700 enabled:hover:bg-primary-800 enabled:hover:text-primary-300 disabled:opacity-50"
         onClick={() => {
           if (action === 'deposit') {
             setVal(walletBalance)

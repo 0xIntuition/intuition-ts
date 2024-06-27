@@ -81,7 +81,7 @@ const StakeButton: React.FC<StakeButtonProps> = ({
     } else if (chain?.id !== getChainEnvConfig(CURRENT_ENV).chainId) {
       return 'Wrong Network'
     } else {
-      return 'Review'
+      return `Review ${mode === 'deposit' ? 'Deposit' : 'Redeem'}`
     }
   }
 
@@ -155,7 +155,7 @@ const StakeButton: React.FC<StakeButtonProps> = ({
         state.status === 'confirm' ||
         state.status === 'pending'
       }
-      className="w-[200px] m-auto"
+      className="w-[159px] m-auto mt-10"
     >
       {getButtonText()}
     </Button>

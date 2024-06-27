@@ -26,6 +26,8 @@ interface StakeReviewProps {
   modalType: 'identity' | 'claim' | null | undefined
   identity?: IdentityPresenter
   claim?: ClaimPresenter
+  entry_fee: string
+  exit_fee: string
 }
 
 export default function StakeReview({
@@ -38,6 +40,8 @@ export default function StakeReview({
   modalType,
   identity,
   claim,
+  entry_fee,
+  exit_fee,
 }: StakeReviewProps) {
   const [statusText, setStatusText] = useState<string>('')
   const [statusIcon, setStatusIcon] = useState<React.ReactNode>(null)
@@ -133,43 +137,49 @@ export default function StakeReview({
               </AnimatePresence>
             </Badge>
           </div>
-          <span className="text-xl font-medium text-white/70 leading-[30px]">
-            {mode === 'deposit' ? 'Deposit' : 'Redeem'}{' '}
-            {formatDisplayBalance(Number(val), 2)} ETH on{' '}
-            {modalType === 'identity' ? 'identity' : 'claim'}
-          </span>
-          {modalType === 'identity' ? (
-            <Identity
-              imgSrc={identity?.user?.image ?? identity?.image}
-              variant={identity?.user ? 'user' : 'default'}
-            >
-              {identity?.user?.display_name ?? identity?.display_name}
-            </Identity>
-          ) : (
-            <Claim
-              subject={{
-                imgSrc: claim?.subject?.user?.image ?? claim?.subject?.image,
-                label:
-                  claim?.subject?.user?.display_name ??
-                  claim?.subject?.display_name,
-                variant: claim?.subject?.user ? 'user' : 'default',
-              }}
-              predicate={{
-                imgSrc: claim?.predicate?.image,
-                label: claim?.predicate?.display_name,
-              }}
-              object={{
-                imgSrc: claim?.object?.user?.image ?? claim?.object?.image,
-                label:
-                  claim?.object?.user?.display_name ??
-                  claim?.object?.display_name,
-                variant: claim?.object?.user ? 'user' : 'default',
-              }}
-            />
-          )}
-          <span className="text-neutral-50/50 text-base font-normal leading-normal m-auto">
-            Estimated Fees: 0.0001 ETH
-          </span>
+          <div className="gap-5 flex flex-col items-center">
+            <span className="text-xl font-medium text-white/70 leading-[30px]">
+              {mode === 'deposit' ? 'Deposit' : 'Redeem'}{' '}
+              {formatDisplayBalance(Number(val), 2)} ETH on{' '}
+              {modalType === 'identity' ? 'identity' : 'claim'}
+            </span>
+            {modalType === 'identity' ? (
+              <Identity
+                imgSrc={identity?.user?.image ?? identity?.image}
+                variant={identity?.user ? 'user' : 'default'}
+              >
+                {identity?.user?.display_name ?? identity?.display_name}
+              </Identity>
+            ) : (
+              <Claim
+                subject={{
+                  imgSrc: claim?.subject?.user?.image ?? claim?.subject?.image,
+                  label:
+                    claim?.subject?.user?.display_name ??
+                    claim?.subject?.display_name,
+                  variant: claim?.subject?.user ? 'user' : 'default',
+                }}
+                predicate={{
+                  imgSrc: claim?.predicate?.image,
+                  label: claim?.predicate?.display_name,
+                }}
+                object={{
+                  imgSrc: claim?.object?.user?.image ?? claim?.object?.image,
+                  label:
+                    claim?.object?.user?.display_name ??
+                    claim?.object?.display_name,
+                  variant: claim?.object?.user ? 'user' : 'default',
+                }}
+              />
+            )}
+            <span className="text-neutral-50/50 text-base font-normal leading-normal m-auto">
+              Estimated Fees:{' '}
+              {(+val * (mode === 'deposit' ? +entry_fee : +exit_fee)).toFixed(
+                6,
+              )}{' '}
+              ETH
+            </span>
+          </div>
         </div>
       </div>
     </>
