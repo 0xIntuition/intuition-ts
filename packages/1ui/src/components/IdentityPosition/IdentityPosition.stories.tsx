@@ -1,12 +1,24 @@
 import React from 'react'
 
 import type { Meta, StoryObj } from '@storybook/react'
+import { Identity } from 'types'
 
 import { IdentityPosition } from './IdentityPosition'
 
 const meta: Meta<typeof IdentityPosition> = {
   title: 'Components/IdentityPosition',
   component: IdentityPosition,
+  argTypes: {
+    variant: {
+      description: 'Variant of avatar',
+      options: Object.values(Identity),
+      table: {
+        type: { summary: 'string' },
+        defaultValue: { summary: 'user' },
+      },
+      control: 'select',
+    },
+  },
 }
 
 export default meta
@@ -33,7 +45,7 @@ export const UserVariant: Story = {
 
 export const IdentityVariant: Story = {
   args: {
-    variant: 'identity',
+    variant: 'non-user',
     name: 'Amazon',
     walletAddress: '0x1234567890abcdef1234567890abcdef12345678',
     amount: 1.21,

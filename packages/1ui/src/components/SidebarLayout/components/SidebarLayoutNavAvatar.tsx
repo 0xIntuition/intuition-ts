@@ -2,8 +2,6 @@ import { type VariantProps } from 'class-variance-authority'
 
 import {
   Avatar,
-  AvatarFallback,
-  AvatarImage,
   Button,
   buttonVariants,
   Text,
@@ -33,12 +31,7 @@ export const SidebarLayoutNavAvatar = ({
     onClick,
   }
   const AvatarComponent = () => (
-    <Avatar className="h-6 w-6">
-      <AvatarImage src={imageSrc} alt={`${name} avatar`} />
-      <AvatarFallback className="text-xs">
-        {name.substring(0, 2).toUpperCase()}
-      </AvatarFallback>
-    </Avatar>
+    <Avatar className="h-6 w-6" src={imageSrc} name={name} />
   )
   return isCollapsed ? (
     <TooltipProvider>

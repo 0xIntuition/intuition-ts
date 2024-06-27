@@ -1,37 +1,20 @@
 import { Canvas, Controls, Meta, Source, Title } from '@storybook/blocks'
 
-import { Button } from '..'
-
 import * as Stories from './Avatar.stories'
 
 <Meta of={Stories} />
 
 <Title />
 
-#### An image element with a fallback for representing the user.
-
-<Button
-  variant="accent"
-  onClick={() =>
-    window.open(
-      'https://www.radix-ui.com/primitives/docs/components/avatar#api-reference',
-      '_blank',
-    )
-  }
->
-  {'API Reference'}
-</Button>
+#### An image element with a fallback for representing an identity.
 
 <Source
   dark
   language="tsx"
   code={`
-import { Avatar, AvatarFallback, AvatarImage } from '@0xintuition/1ui'
+import { Avatar } from '@0xintuition/1ui'
 
-<Avatar>
-  <AvatarImage src="https://myimage.jpeg" alt="intuition" />
-  <AvatarFallback>IN</AvatarFallback>
-</Avatar>
+<Avatar src="image.jpg" name="Super Dave" />
 `} />
 
 <Canvas of={Stories.BasicUsage} sourceState="none" />
@@ -42,17 +25,42 @@ import { Avatar, AvatarFallback, AvatarImage } from '@0xintuition/1ui'
 
 ## Variants
 
-### Fallback
+### Entity
 
 <Source
   dark
   language="tsx"
   code={`
-<Avatar>
-  <AvatarImage src="broken-link" alt="broken-link" />
-  <AvatarFallback>IN</AvatarFallback>
-</Avatar>
+<Avatar
+  variant="non-user"
+  src="image.jpg"
+  name="Intuition"
+/>
 `}
 />
 
-<Canvas of={Stories.Fallback} sourceState="none" />
+<Canvas of={Stories.Entity} sourceState="none" />
+
+### User Fallback
+
+<Source
+  dark
+  language="tsx"
+  code={`
+<Avatar name="Super Dave" />
+`}
+/>
+
+<Canvas of={Stories.UserFallback} sourceState="none" />
+
+### Entity Fallback
+
+<Source
+  dark
+  language="tsx"
+  code={`
+<Avatar variant="non-user" name="Intuition" />
+`}
+/>
+
+<Canvas of={Stories.EntityFallback} sourceState="none" />

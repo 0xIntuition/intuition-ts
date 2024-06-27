@@ -29,12 +29,12 @@ describe('ProfileCard', () => {
             class="flex items-center space-x-4"
           >
             <span
-              class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full"
+              class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full bg-muted"
             >
               <span
-                class="bg-muted flex h-full w-full items-center justify-center rounded-full"
+                class="flex h-full w-full items-center justify-center bg-inherit"
               >
-                Jo
+                JO
               </span>
             </span>
             <div>
@@ -112,7 +112,7 @@ describe('ProfileCard', () => {
 
   it('should render with entity type and link', () => {
     const entityProps: ProfileCardProps = {
-      variant: 'entity',
+      variant: 'non-user',
       avatarSrc: 'https://avatars.githubusercontent.com/u/94311139?s=200&v=4',
       name: 'Blockchain Corp',
       walletAddress: '0x1234567890abcdef1234567890abcdef12345678',
@@ -133,12 +133,18 @@ describe('ProfileCard', () => {
             class="flex items-center space-x-4"
           >
             <span
-              class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-lg"
+              class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded bg-background border border-border/30"
             >
               <span
-                class="bg-muted flex h-full w-full items-center justify-center rounded-full"
+                class="flex h-full w-full items-center justify-center bg-inherit"
               >
-                Bl
+                <svg
+                  class="h-6 w-6 text-primary/30"
+                >
+                  <use
+                    href="/src/components/Icon/Icon.sprites.svg#fingerprint"
+                  />
+                </svg>
               </span>
             </span>
             <div>
@@ -199,12 +205,12 @@ describe('ProfileCard', () => {
             class="flex items-center space-x-4"
           >
             <span
-              class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full"
+              class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full bg-muted"
             >
               <span
-                class="bg-muted flex h-full w-full items-center justify-center rounded-full"
+                class="flex h-full w-full items-center justify-center bg-inherit"
               >
-                Jo
+                JO
               </span>
             </span>
             <div>

@@ -2,7 +2,7 @@ import React from 'react'
 
 import type { Meta, StoryObj } from '@storybook/react'
 
-import { Avatar, AvatarFallback, AvatarImage, Button, Text } from '..'
+import { Avatar, Button, Text } from '..'
 import { HoverCard, HoverCardContent, HoverCardTrigger } from './HoverCard'
 
 const meta: Meta<typeof HoverCard> = {
@@ -24,10 +24,10 @@ export const BasicUsage: Story = {
         </HoverCardTrigger>
         <HoverCardContent className="w-60">
           <div className="flex gap-4">
-            <Avatar>
-              <AvatarImage src="https://m.media-amazon.com/images/M/MV5BNDhiMWYzMjgtNTRiYi00ZTA3LThlODctNDRkMDk0NzFkMWI3L2ltYWdlL2ltYWdlXkEyXkFqcGdeQXVyNTg0MTkzMzA@._V1_.jpg" />
-              <AvatarFallback>SD</AvatarFallback>
-            </Avatar>
+            <Avatar
+              src="https://m.media-amazon.com/images/M/MV5BNDhiMWYzMjgtNTRiYi00ZTA3LThlODctNDRkMDk0NzFkMWI3L2ltYWdlL2ltYWdlXkEyXkFqcGdeQXVyNTg0MTkzMzA@._V1_.jpg"
+              name="Super Dave"
+            />
             <div>
               <Text variant="body">Super Dave</Text>
               <Text variant="caption" className="text-primary/50">

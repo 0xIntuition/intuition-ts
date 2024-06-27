@@ -1,28 +1,21 @@
 import * as React from 'react'
 
-import { CurrencyType } from 'types'
+import { CurrencyType, Identity, IdentityType } from 'types'
 import { formatWalletAddress } from 'utils/wallet'
 
 import {
   Avatar,
-  AvatarFallback,
-  AvatarImage,
-  Icon,
-  IconName,
-  MonetaryValue,
+  IdentityValueDisplay,
   TagsContent,
   TagWithValue,
   TagWithValueProps,
   Text,
   TextVariant,
 } from '..'
-import { IdentityContentVariant } from './IdentityContentRow.utils'
-
-export type IdentityContentVariantType = keyof typeof IdentityContentVariant
 
 export interface IdentityContentRowProps
   extends React.HTMLAttributes<HTMLDivElement> {
-  variant: IdentityContentVariantType
+  variant?: IdentityType
   amount: number
   currency?: CurrencyType
   name: string
@@ -33,7 +26,7 @@ export interface IdentityContentRowProps
 }
 
 const IdentityContentRow = ({
-  variant,
+  variant = Identity.user,
   amount,
   currency,
   name,
@@ -49,18 +42,11 @@ const IdentityContentRow = ({
       <div className="w-full flex justify-between items-center" {...props}>
         <div className="flex items-center">
           <Avatar
-            className={`w-[64px] h-[64px] mr-4 ${variant === IdentityContentVariant.entity ? 'rounded-lg' : ''}`}
-          >
-            <AvatarImage src={avatarSrc} alt={name} />
-            {variant === IdentityContentVariant.user && (
-              <AvatarFallback>{name.slice(0, 2)}</AvatarFallback>
-            )}
-            {variant === IdentityContentVariant.entity && (
-              <AvatarFallback className="rounded-lg">
-                <Icon name={IconName.fingerprint} className="h-full w-full" />
-              </AvatarFallback>
-            )}
-          </Avatar>
+            variant={variant}
+            src={avatarSrc}
+            name={name}
+            className="w-[64px] h-[64px] mr-4"
+          />
           <div className="flex flex-col">
             <div className="flex items-center mb-1.5">
               <Text variant={TextVariant.bodyLarge} className="mr-1">
@@ -89,22 +75,11 @@ const IdentityContentRow = ({
           </div>
         </div>
 
-        <div className="flex flex-col items-end">
-          <MonetaryValue value={amount} currency={currency} />
-
-          <div className="flex gap-1 items-center">
-            <Icon
-              name={IconName.people}
-              className="text-secondary-foreground h-4 w-4"
-            />
-            <Text
-              variant={TextVariant.body}
-              className="text-secondary-foreground"
-            >
-              {totalFollowers}
-            </Text>
-          </div>
-        </div>
+        <IdentityValueDisplay
+          value={amount}
+          currency={currency}
+          followers={totalFollowers}
+        />
       </div>
       {children}
     </div>

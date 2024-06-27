@@ -1,7 +1,7 @@
 import React from 'react'
 
 import type { Meta, StoryObj } from '@storybook/react'
-import { IdentityVariant } from 'components/Identity'
+import { Identity } from 'types'
 
 import { InfoCard } from './InfoCard'
 
@@ -10,11 +10,11 @@ const meta: Meta<typeof InfoCard> = {
   component: InfoCard,
   argTypes: {
     variant: {
-      description: 'Variant of identity component',
-      options: Object.values(IdentityVariant),
+      description: 'Variant of identity tag component',
+      options: Object.values(Identity),
       table: {
         type: { summary: 'string' },
-        defaultValue: { summary: 'default' },
+        defaultValue: { summary: 'user' },
       },
       control: 'select',
     },

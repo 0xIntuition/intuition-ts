@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react'
+import { Currency } from 'types'
 
-import { Currency } from '../../types'
 import { ClaimStakeCard } from './ClaimStakeCard'
 
 const meta: Meta<typeof ClaimStakeCard> = {

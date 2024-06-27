@@ -1,9 +1,11 @@
 import * as React from 'react'
 
-import { Identity, IdentityVariantType, Text, TextVariant } from '..'
+import { IdentityType } from 'types'
+
+import { IdentityTag, Text, TextVariant } from '..'
 
 export interface InfoCardProps extends React.HTMLAttributes<HTMLDivElement> {
-  variant: IdentityVariantType
+  variant: IdentityType
   username: string
   avatarImgSrc: string
   timestamp: string
@@ -31,9 +33,9 @@ const InfoCard = ({
         Creator
       </Text>
       <div className="flex justify-between items-center gap-1">
-        <Identity variant={variant} imgSrc={avatarImgSrc}>
+        <IdentityTag variant={variant} imgSrc={avatarImgSrc}>
           {username}
-        </Identity>
+        </IdentityTag>
         <span className="bg-muted-foreground h-[2px] w-[2px] block rounded-full" />
         <Text variant={TextVariant.body} className="text-muted-foreground">
           {formattedDate}

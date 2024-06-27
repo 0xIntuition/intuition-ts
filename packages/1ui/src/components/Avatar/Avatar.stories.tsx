@@ -1,8 +1,9 @@
 import React from 'react'
 
 import type { Meta, StoryObj } from '@storybook/react'
+import { Identity } from 'types'
 
-import { Avatar, AvatarFallback, AvatarImage } from './Avatar'
+import { Avatar } from './Avatar'
 
 const meta: Meta<typeof Avatar> = {
   title: 'Components/Avatar',
@@ -13,17 +14,22 @@ const meta: Meta<typeof Avatar> = {
     },
   },
   argTypes: {
-    // eslint-disable-next-line
-    // @ts-ignore
+    variant: {
+      description: 'Variant of avatar',
+      options: Object.values(Identity),
+      table: {
+        type: { summary: 'string' },
+        defaultValue: { summary: 'user' },
+      },
+      control: 'select',
+    },
     src: {
       type: 'string',
-      description: 'Image URL (for AvatarImage)',
-      control: false,
+      description: 'Image source',
     },
-    alt: {
+    name: {
       type: 'string',
-      description: 'Alternate text (for AvatarImage)',
-      control: false,
+      description: 'Name of the identity',
     },
   },
 }
@@ -33,22 +39,28 @@ export default meta
 type Story = StoryObj<typeof Avatar>
 
 export const BasicUsage: Story = {
-  render: (args) => (
-    <Avatar {...args}>
-      <AvatarImage
-        src="https://avatars.githubusercontent.com/u/94311139?s=200&v=4"
-        alt="intuition"
-      />
-      <AvatarFallback>IN</AvatarFallback>
-    </Avatar>
+  args: {
+    variant: 'user',
+    src: 'https://m.media-amazon.com/images/M/MV5BNDhiMWYzMjgtNTRiYi00ZTA3LThlODctNDRkMDk0NzFkMWI3L2ltYWdlL2ltYWdlXkEyXkFqcGdeQXVyNTg0MTkzMzA@._V1_.jpg',
+    name: 'Super Dave',
+  },
+  render: (args) => <Avatar {...args} />,
+}
+
+export const Entity: Story = {
+  render: () => (
+    <Avatar
+      variant="non-user"
+      src="https://avatars.githubusercontent.com/u/94311139?s=200&v=4"
+      name="Intuition"
+    />
   ),
 }
 
-export const Fallback: Story = {
-  render: (args) => (
-    <Avatar {...args}>
-      <AvatarImage src="broken-link" alt="broken-link" />
-      <AvatarFallback>IN</AvatarFallback>
-    </Avatar>
-  ),
+export const UserFallback: Story = {
+  render: () => <Avatar name="Super Dave" />,
+}
+
+export const EntityFallback: Story = {
+  render: () => <Avatar variant="non-user" name="Intuition" />,
 }

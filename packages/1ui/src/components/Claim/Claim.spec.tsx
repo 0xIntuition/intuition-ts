@@ -15,10 +15,11 @@ describe('Claim', () => {
     },
     predicate: {
       label: 'likes',
-      variant: 'default',
+      variant: 'non-user',
     },
     object: {
       label: 'pizza',
+      variant: 'non-user',
     },
   }
 

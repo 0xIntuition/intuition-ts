@@ -2,21 +2,22 @@ import React from 'react'
 
 import type { Meta, StoryObj } from '@storybook/react'
 import { Button } from 'components/Button'
+import { Identity } from 'types'
 
 import { ProfileCard, ProfileCardProps } from './ProfileCard'
-import { ProfileVariant } from './ProfileCard.utils'
 
 const meta: Meta<typeof ProfileCard> = {
   title: 'Components/ProfileCard',
   component: ProfileCard,
   argTypes: {
     variant: {
-      description: 'Type of the profile card (user or entity)',
-      options: Object.keys(ProfileVariant),
-      control: { type: 'radio' },
+      description: 'Variant of avatar',
+      options: Object.values(Identity),
       table: {
-        type: { summary: 'user | entity' },
+        type: { summary: 'string' },
+        defaultValue: { summary: 'user' },
       },
+      control: 'select',
     },
     avatarSrc: {
       description: 'URL of the avatar image',
@@ -25,19 +26,19 @@ const meta: Meta<typeof ProfileCard> = {
       },
     },
     name: {
-      description: 'Name of the user or entity',
+      description: 'Name of the identity',
       table: {
         type: { summary: 'string' },
       },
     },
     walletAddress: {
-      description: 'Wallet address of the user or entity',
+      description: 'Wallet address of the identity',
       table: {
         type: { summary: 'string' },
       },
     },
     stats: {
-      description: 'Statistics related to the user or entity',
+      description: 'Statistics related to the identity',
       table: {
         type: {
           summary:
@@ -53,7 +54,7 @@ const meta: Meta<typeof ProfileCard> = {
       },
     },
     bio: {
-      description: 'Bio or description of the user or entity',
+      description: 'Bio or description of the identity',
       table: {
         type: { summary: 'string' },
         defaultValue: { summary: 'undefined' },
@@ -97,7 +98,7 @@ export const BasicUsage: Story = {
 
 export const EntityProfile: Story = {
   args: {
-    variant: 'entity',
+    variant: 'non-user',
     avatarSrc: 'https://avatars.githubusercontent.com/u/94311139?s=200&v=4"',
     name: 'Blockchain Corp',
     walletAddress: '0x1234567890abcdef1234567890abcdef12345678',

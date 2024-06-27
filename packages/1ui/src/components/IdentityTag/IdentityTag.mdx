@@ -2,7 +2,7 @@ import { Canvas, Controls, Meta, Source, Title } from '@storybook/blocks'
 
 import { Button } from '..'
 
-import * as Stories from './Identity.stories'
+import * as Stories from './IdentityTag.stories'
 
 <Meta of={Stories} />
 
@@ -16,7 +16,7 @@ import * as Stories from './Identity.stories'
   code={`
 import { Identity } from '@0xintuition/1ui'
 
-<Identity>identity name</Identity>
+<Identity imgSrc="image.jpg">super dave</Identity>
 `} />
 
 <Canvas of={Stories.BasicUsage} sourceState="none" />
@@ -35,7 +35,7 @@ import { Identity } from '@0xintuition/1ui'
   code={`
 import { Identity } from '@0xintuition/1ui'
 
-<Identity variant="user">super dave</Identity>
+<Identity variant="non-user">identity name</Identity>
 `} />
 
 <Canvas of={Stories.User} sourceState="none" />
