@@ -70,15 +70,34 @@ const IdentityInputLabel = ({ label }: IdentityInputLabelProps) => (
 
 export interface IdentityInputProps
   extends React.HTMLAttributes<HTMLDivElement> {
-  subject: {
-    label: string
+  showLabels?: boolean
+  primary: {
+    label?: string
+    defaultValue: string
+    selectedValue?: IdentityInputSelectedValueType
+    onClick?: () => void
+  }
+  secondary: {
+    label?: string
+    defaultValue: string
+    selectedValue?: IdentityInputSelectedValueType
+    onClick?: () => void
+  }
+  tertiary: {
+    label?: string
     defaultValue: string
     selectedValue?: IdentityInputSelectedValueType
     onClick?: () => void
   }
 }
 
-const IdentityInput = ({ subject, ...props }: IdentityInputProps) => {
+const IdentityInput = ({
+  showLabels,
+  primary,
+  secondary,
+  tertiary,
+  ...props
+}: IdentityInputProps) => {
   const Divider = () => (
     <span className="h-px w-2.5 flex bg-border/30 self-end mb-[1.2rem]" />
   )
@@ -87,37 +106,37 @@ const IdentityInput = ({ subject, ...props }: IdentityInputProps) => {
     <TooltipProvider>
       <div className="flex items-center" {...props}>
         <div className="flex flex-col gap-2">
-          {subject.label && <IdentityInputLabel label={subject.label} />}
+          {showLabels && <IdentityInputLabel label="Subject" />}
           <IdentityInputButton
-            defaultValue={subject.defaultValue}
+            defaultValue={primary.defaultValue}
             selectedValue={{
-              variant: subject.selectedValue?.variant,
-              imgSrc: subject.selectedValue?.imgSrc,
-              name: subject.selectedValue?.name,
+              variant: primary.selectedValue?.variant,
+              imgSrc: primary.selectedValue?.imgSrc,
+              name: primary.selectedValue?.name,
             }}
           />
         </div>
         <Divider />
         <div className="flex flex-col gap-2">
-          {subject.label && <IdentityInputLabel label={subject.label} />}
+          {showLabels && <IdentityInputLabel label="Predicate" />}
           <IdentityInputButton
-            defaultValue={subject.defaultValue}
+            defaultValue={secondary.defaultValue}
             selectedValue={{
-              variant: subject.selectedValue?.variant,
-              imgSrc: subject.selectedValue?.imgSrc,
-              name: subject.selectedValue?.name,
+              variant: secondary.selectedValue?.variant,
+              imgSrc: secondary.selectedValue?.imgSrc,
+              name: secondary.selectedValue?.name,
             }}
           />
         </div>
         <Divider />
         <div className="flex flex-col gap-2">
-          {subject.label && <IdentityInputLabel label={subject.label} />}
+          {showLabels && <IdentityInputLabel label="Object" />}
           <IdentityInputButton
-            defaultValue={subject.defaultValue}
+            defaultValue={tertiary.defaultValue}
             selectedValue={{
-              variant: subject.selectedValue?.variant,
-              imgSrc: subject.selectedValue?.imgSrc,
-              name: subject.selectedValue?.name,
+              variant: tertiary.selectedValue?.variant,
+              imgSrc: tertiary.selectedValue?.imgSrc,
+              name: tertiary.selectedValue?.name,
             }}
           />
         </div>

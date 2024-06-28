@@ -16,8 +16,16 @@ type Story = StoryObj<typeof IdentityInput>
 export const BasicUsage: Story = {
   render: () => (
     <IdentityInput
-      subject={{
-        label: 'Subject',
+      showLabels
+      primary={{
+        defaultValue: 'Select an identity',
+        selectedValue: { name: 'Super Dave' },
+      }}
+      secondary={{
+        defaultValue: 'Select an identity',
+        selectedValue: { name: 'Super Dave' },
+      }}
+      tertiary={{
         defaultValue: 'Select an identity',
         selectedValue: { name: 'Super Dave' },
       }}
@@ -28,7 +36,15 @@ export const BasicUsage: Story = {
 export const Other: Story = {
   render: () => (
     <IdentityInput
-      subject={{
+      primary={{
+        defaultValue: 'Select an identity',
+        selectedValue: {},
+      }}
+      secondary={{
+        defaultValue: 'Select an identity',
+        selectedValue: {},
+      }}
+      tertiary={{
         defaultValue: 'Select an identity',
         selectedValue: {},
       }}
