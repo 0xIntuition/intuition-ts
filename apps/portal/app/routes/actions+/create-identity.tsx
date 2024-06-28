@@ -10,8 +10,6 @@ import { getPrivyAccessToken } from '@server/privy'
 export async function action({ request, context }: ActionFunctionArgs) {
   logger('Validating create identity form data')
 
-  logger('Request', request)
-
   const formData = await request.formData()
 
   for (const [key, value] of formData.entries()) {

@@ -1,22 +1,24 @@
-import { useTransactionState } from '@lib/hooks/useTransactionReducer'
-import { TransactionActionType, TransactionStateType } from 'types/transaction'
+import { BaseTransactionStateType } from 'types/transaction'
 
-type TransactionStatusProps = {
-  reducer: React.Reducer<TransactionStateType, TransactionActionType>
-  initialState: TransactionStateType
+type TransactionStatusProps<
+  S extends BaseTransactionStateType<TStatus>,
+  A,
+  TStatus,
+> = {
+  state: S
+  dispatch: React.Dispatch<A>
 }
 
-const TransactionStatus: React.FC<TransactionStatusProps> = ({
-  reducer,
-  initialState,
-}) => {
-  const { state } = useTransactionState(reducer, initialState)
-
+const TransactionStatus = <
+  S extends BaseTransactionStateType<TStatus>,
+  A,
+  TStatus,
+>({
+  state,
+}: TransactionStatusProps<S, A, TStatus>) => {
   return (
     <div>
-      <h3>Transaction Status: {state.status}</h3>
-      {state.txHash && <p>Transaction Hash: {state.txHash}</p>}
-      {state.error && <p>Error: {state.error}</p>}
+      <h3>Status: {String(state.status)}</h3>
     </div>
   )
 }

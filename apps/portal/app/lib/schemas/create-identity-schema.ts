@@ -5,7 +5,7 @@ import { DESCRIPTION_MAX_LENGTH, MAX_UPLOAD_SIZE } from '../utils/constants'
 export function createIdentitySchema() {
   return z.object({
     display_name: z
-      .string({ required_error: 'Please enter a identity name.' })
+      .string({ required_error: 'Please enter an identity name.' })
       .min(2, {
         message: 'Identity name must be at least 2 characters.',
       })
@@ -31,7 +31,8 @@ export function createIdentitySchema() {
       .refine((file) => {
         return ['image/jpeg', 'image/png', 'image/gif'].includes(file.type)
       }, 'File must be a .png, .jpg, .jpeg, or .gif')
-      .or(z.string()),
+      .or(z.string())
+      .optional(),
     external_reference: z
       .string()
       .url({

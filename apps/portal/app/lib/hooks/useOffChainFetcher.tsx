@@ -13,9 +13,8 @@ export interface OffChainFetcherData {
 export function useOffChainFetcher() {
   const offChainFetcher = useFetcher<OffChainFetcherData>()
   const lastOffChainSubmission = offChainFetcher.data?.submission
+  logger('offchainfetcher data in hook', offChainFetcher.data)
   const identity = offChainFetcher?.data?.identity
-
-  logger('identity', identity)
 
   return {
     offChainFetcher,

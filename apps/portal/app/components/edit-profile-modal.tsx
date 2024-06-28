@@ -15,6 +15,7 @@ import { IdentityPresenter, UserPresenter } from '@0xintuition/api'
 import { getFormProps, getInputProps, useForm } from '@conform-to/react'
 import { getZodConstraint, parseWithZod } from '@conform-to/zod'
 import { useImageUploadFetcher } from '@lib/hooks/useImageUploadFetcher'
+import { useOffChainFetcher } from '@lib/hooks/useOffChainFetcher'
 import { updateProfileSchema } from '@lib/schemas/update-profile-schema'
 import {
   DESCRIPTION_MAX_LENGTH,
@@ -23,7 +24,7 @@ import {
 } from '@lib/utils/constants'
 import logger from '@lib/utils/logger'
 import { cn, truncateString } from '@lib/utils/misc'
-import { useFetcher, useLocation } from '@remix-run/react'
+import { useLocation } from '@remix-run/react'
 import {
   AlertCircle,
   CircleXIcon,
@@ -156,10 +157,15 @@ export function EditProfileForm({ userObject, onClose }: EditProfileFormProps) {
   const imageUploadFetcher = useImageUploadFetcher()
 
   // off-chain fetcher
-  const offChainFetcher = useFetcher<OffChainFetcherData>()
+  // const offChainFetcher = useFetcher<OffChainFetcherData>()
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const lastOffchainSubmission = offChainFetcher.data as any
-  const userIdentity = offChainFetcher?.data?.userIdentity
+  // const lastOffchainSubmission = offChainFetcher.data as any
+  const {
+    offChainFetcher,
+    lastOffChainSubmission,
+    identity: userIdentity,
+  } = useOffChainFetcher()
+  // const userIdentity = offChainFetcher?.data?.userIdentity
   logger('userIdentity', userIdentity)
 
   const [imageFilename, setImageFilename] = useState<string | null>(null)
@@ -169,7 +175,7 @@ export function EditProfileForm({ userObject, onClose }: EditProfileFormProps) {
 
   const [form, fields] = useForm({
     id: 'update-profile',
-    lastResult: lastOffchainSubmission?.submission,
+    lastResult: lastOffChainSubmission,
     constraint: getZodConstraint(updateProfileSchema()),
     onValidate({ formData }) {
       return parseWithZod(formData, {
@@ -215,11 +221,6 @@ export function EditProfileForm({ userObject, onClose }: EditProfileFormProps) {
       }
     }
   }, [imageUploadFetcher.state, imageUploadFetcher.data, dispatch])
-
-  interface OffChainFetcherData {
-    success: 'success' | 'error'
-    userIdentity: IdentityPresenter
-  }
 
   useEffect(() => {
     if (state.status === 'image-upload-complete') {

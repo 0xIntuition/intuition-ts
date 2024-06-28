@@ -1,7 +1,9 @@
 import { TransactionReceipt } from 'viem'
 
-export type TransactionStateType = {
-  status: TransactionStatusType
+export type TStatus = string
+
+export type BaseTransactionStateType<TStatus> = {
+  status: TStatus
   txHash?: `0x${string}`
   error?: string
 }
@@ -32,40 +34,35 @@ export type TransactionActionType =
   | { type: 'TRANSACTION_HASH'; txHash?: `0x${string}` }
   | { type: 'TRANSACTION_ERROR'; error: string }
 
-export const transactionReducer = (
-  state: TransactionStateType,
-  action: TransactionActionType,
-): TransactionStateType => {
-  switch (action.type) {
-    case 'START_TRANSACTION':
-      return { ...state, status: 'idle' }
-    case 'APPROVE_TRANSACTION':
-      return { ...state, status: 'approve' }
-    case 'REVIEW_TRANSACTION':
-      return { ...state, status: 'review' }
-    case 'CONFIRM_TRANSACTION':
-      return { ...state, status: 'confirm' }
-    case 'TRANSACTION_PENDING':
-      return { ...state, status: 'pending' }
-    case 'TRANSACTION_CONFIRMED':
-      return { ...state, status: 'confirmed' }
-    case 'TRANSACTION_COMPLETE':
-      return {
-        ...state,
-        status: 'complete',
-        txHash: action.txHash,
-      }
-    case 'TRANSACTION_HASH':
-      return { ...state, status: 'hash', txHash: action.txHash }
-    case 'TRANSACTION_ERROR':
-      return { ...state, status: 'error', error: action.error }
-    default:
-      return state
-  }
-}
+export type IdentityTransactionStatusType =
+  | 'idle'
+  | 'preparing-identity'
+  | 'publishing-identity'
+  | 'approve-transaction'
+  | 'transaction-pending'
+  | 'confirm-transaction'
+  | 'transaction-confirmed'
+  | 'complete'
+  | 'hash'
+  | 'error'
 
-export const initialTransactionState: TransactionStateType = {
-  status: 'idle',
-  txHash: `0x${1234}...`,
-  error: undefined,
-}
+export type IdentityTransactionActionType =
+  | { type: 'START_TRANSACTION' }
+  | { type: 'PREPARING_IDENTITY' }
+  | { type: 'PUBLISHING_IDENTITY' }
+  | { type: 'APPROVE_TRANSACTION' }
+  | { type: 'CONFIRM_TRANSACTION' }
+  | { type: 'TRANSACTION_PENDING' }
+  | { type: 'TRANSACTION_CONFIRMED' }
+  | {
+      type: 'TRANSACTION_COMPLETE'
+      txHash?: `0x${string}`
+      txReceipt: TransactionReceipt
+    }
+  | { type: 'TRANSACTION_HASH'; txHash?: `0x${string}` }
+  | { type: 'TRANSACTION_ERROR'; error: string }
+
+export type TransactionStateType =
+  BaseTransactionStateType<TransactionStatusType>
+export type IdentityTransactionStateType =
+  BaseTransactionStateType<IdentityTransactionStatusType>
