@@ -10,9 +10,6 @@ on:
   pull_request_target:
     types: [opened, edited, synchronize, reopened, labeled, unlabeled]
 
-env:
-  AWS_REGION: us-west-2
-
 jobs:
   deploy:
     name: Deploy
@@ -46,7 +43,7 @@ jobs:
             MY_ENV=dev
           fi
 
-          ECR_IMAGE=${{ secrets.AWS_ACCOUNT }}.dkr.ecr.$AWS_REGION.amazonaws.com/portal-$MY_ENV:latest          
+          ECR_IMAGE=${{ secrets.AWS_ACCOUNT }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/portal-$MY_ENV:latest          
           CLUSTER_NAME=systems-intuition-$MY_ENV-cluster
           SERVICE_NAME=portal-intuition-$MY_ENV
 
@@ -55,25 +52,15 @@ jobs:
           echo "SERVICE_NAME=$SERVICE_NAME" >> $GITHUB_ENV
           echo "ECR_IMAGE=$ECR_IMAGE" >> $GITHUB_ENV
 
-          echo "ENV: $MY_ENV"
-          echo "ECS CLUSTER: $CLUSTER_NAME"
-          echo "ECS SERVICE: $SERVICE_NAME"
-          echo "ECR IMAGE: $ECR_IMAGE"
-
       - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '14'
+        uses: actions/checkout@v4
 
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1-node16
+        uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.AWS_REGION }}
+          aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Login to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v1
@@ -82,7 +69,25 @@ jobs:
 
       - name: Build, tag, and push image to AWS ECR
         run: |
-          docker build --platform linux/x86_64 -t ${{ env.ECR_IMAGE }} -f apps/portal/Dockerfile .
+          docker build \
+          --platform linux/x86_64 \
+          -t ${{ env.ECR_IMAGE }} \
+          -f apps/portal/Dockerfile \
+          . \
+          --build-arg ALCHEMY_MAINNET_API_KEY=${{ secrets.ALCHEMY_MAINNET_API_KEY }} \
+          --build-arg ALCHEMY_API_KEY=${{ secrets.ALCHEMY_API_KEY }} \
+          --build-arg ALCHEMY_MAINNET_RPC_URL=${{ secrets.ALCHEMY_MAINNET_RPC_URL }} \
+          --build-arg ALCHEMY_BASE_SEPOLIA_RPC_URL=${{ secrets.ALCHEMY_BASE_SEPOLIA_RPC_URL }} \
+          --build-arg ALCHEMY_BASE_RPC_URL=${{ secrets.ALCHEMY_BASE_RPC_URL }} \
+          --build-arg WALLETCONNECT_PROJECT_ID=${{ secrets.WALLETCONNECT_PROJECT_ID }} \
+          --build-arg SESSION_SECRET=${{ secrets.SESSION_SECRET }} \
+          --build-arg API_URL=${{ secrets.API_URL }} \
+          --build-arg API_KEY=${{ secrets.API_KEY }} \
+          --build-arg PRIVY_APP_ID=${{ secrets.PRIVY_APP_ID }} \
+          --build-arg PRIVY_APP_SECRET=${{ secrets.PRIVY_APP_SECRET }} \
+          --build-arg CLOUDINARY_CLOUD_NAME=${{ secrets.CLOUDINARY_CLOUD_NAME }} \
+          --build-arg CLOUDINARY_API_KEY=${{ secrets.CLOUDINARY_API_KEY }} \
+          --build-arg CLOUDINARY_API_SECRET=${{ secrets.CLOUDINARY_API_SECRET }}
           docker push ${{ env.ECR_IMAGE }}
 
       - name: Install AWS CLI
@@ -103,7 +108,7 @@ jobs:
           container-name: portal
           image: ${{ env.ECR_IMAGE }}
           environment-variables: |
-            AWS_REGION=${{ env.AWS_REGION }}
+            AWS_REGION=${{ secrets.AWS_REGION }}
             AWS_ACCOUNT=${{ secrets.AWS_ACCOUNT }}
 
       - name: Deploy task definition to Amazon ECS
