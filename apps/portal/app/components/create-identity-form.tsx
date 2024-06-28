@@ -1,6 +1,14 @@
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
-import { DialogHeader, Input, Label, Text, Textarea } from '@0xintuition/1ui'
+import {
+  Button,
+  DialogHeader,
+  Input,
+  Label,
+  Text,
+  Textarea,
+  toast,
+} from '@0xintuition/1ui'
 
 import {
   getFormProps,
@@ -9,15 +17,33 @@ import {
   useForm,
 } from '@conform-to/react'
 import { getZodConstraint, parseWithZod } from '@conform-to/zod'
+import { multivaultAbi } from '@lib/abis/multivault'
+import { useCreateIdentity } from '@lib/hooks/useCreateIdentity'
 // import { useImageUploadFetcher } from '@lib/hooks/useImageUploadFetcher'
-import { useOffChainFetcher } from '@lib/hooks/useOffChainFetcher'
+import {
+  OffChainFetcherData,
+  useOffChainFetcher,
+} from '@lib/hooks/useOffChainFetcher'
+import { useTransactionState } from '@lib/hooks/useTransactionReducer'
 import { createIdentitySchema } from '@lib/schemas/create-identity-schema'
-import { updateProfileSchema } from '@lib/schemas/update-profile-schema'
+import { MULTIVAULT_CONTRACT_ADDRESS } from '@lib/utils/constants'
 import logger from '@lib/utils/logger'
 import { truncateString } from '@lib/utils/misc'
-import { CircleXIcon } from 'lucide-react'
+import { useFetcher } from '@remix-run/react'
+import { CreateLoaderData } from '@routes/resources+/create'
+import { AlertCircle, CircleXIcon } from 'lucide-react'
+import {
+  initialTransactionState,
+  TransactionActionType,
+  transactionReducer,
+  // transactionReducerType,
+  TransactionStateType,
+} from 'types/transaction'
+import { toHex } from 'viem'
+import { usePublicClient, useWalletClient } from 'wagmi'
 
 import { ImageChooser } from './image-chooser'
+import Toast from './toast'
 
 interface CreateIdentityFormProps {
   onSuccess?: () => void
@@ -33,7 +59,39 @@ export function CreateIdentityForm({
   const { offChainFetcher, lastOffChainSubmission } = useOffChainFetcher()
   logger('offChainFetcher', offChainFetcher)
 
-  // const [loading, setLoading] = useState(false)
+  const loaderFetcher = useFetcher<CreateLoaderData>()
+  const loaderFetcherUrl = '/resources/create'
+  const loaderFetcherRef = useRef(loaderFetcher.load)
+
+  useEffect(() => {
+    loaderFetcherRef.current = loaderFetcher.load
+  })
+
+  useEffect(() => {
+    loaderFetcherRef.current(loaderFetcherUrl)
+  }, [loaderFetcherUrl])
+
+  const { atomCost: atomCostAmount } =
+    (loaderFetcher.data as CreateLoaderData) ?? {
+      vaultId: BigInt(0),
+      atomCost: BigInt(0),
+      protocolFee: BigInt(0),
+      entryFee: BigInt(0),
+    }
+
+  const atomCost = BigInt(atomCostAmount ? atomCostAmount : 0)
+  const { data: walletClient } = useWalletClient()
+  const publicClient = usePublicClient()
+  const {
+    writeContractAsync: writeCreateIdentity,
+    awaitingWalletConfirmation,
+    awaitingOnChainConfirmation,
+  } = useCreateIdentity()
+  const emitterFetcher = useFetcher()
+
+  const createdIdentity = offChainFetcher?.data?.identity
+
+  const [loading, setLoading] = useState(false)
   const [imageFilename, setImageFilename] = useState<string | null>(null)
   const [imageFilesize, setImageFilesize] = useState<string | null>(null)
   const [previewImage, setPreviewImage] = useState<string | null>(null)
@@ -41,16 +99,204 @@ export function CreateIdentityForm({
     setImageFilename(filename)
     setImageFilesize(filesize)
   }
+  // const [formTouched, setFormTouched] = useState(false) // to disable submit if user hasn't touched form yet
+  // const [formErrors, setFormErrors] = useState<Record<
+  //   string,
+  //   string[]
+  // > | null>() // we need to manage errors manually when using async validation
+
+  const { state, dispatch } = useTransactionState<
+    TransactionStateType,
+    TransactionActionType
+  >(transactionReducer, initialTransactionState)
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     logger('form submitting')
     event.preventDefault()
+    try {
+      if (walletClient) {
+        dispatch({ type: 'START_TRANSACTION' })
+        const formData = new FormData()
+        formData.append('display_name', walletClient.account.address)
+        formData.append('identity_id', walletClient.account.address)
+
+        for (const [key, value] of formData.entries()) {
+          logger(`${key}: ${value}`)
+        }
+
+        try {
+          dispatch({ type: 'START_TRANSACTION' })
+          offChainFetcher.submit(formData, {
+            action: '/actions/create-identity',
+            method: 'post',
+          })
+        } catch (error: unknown) {
+          if (error instanceof Error) {
+            let errorMessage = 'Error in creating offchain identity data.'
+            if (error.message.includes('rejected')) {
+              errorMessage = 'Signature rejected. Try again when you are ready.'
+            }
+            dispatch({
+              type: 'TRANSACTION_ERROR',
+              error: errorMessage,
+            })
+            toast.custom(
+              () => (
+                <Toast
+                  title="Error"
+                  description={errorMessage}
+                  icon={<AlertCircle />}
+                />
+              ),
+              {
+                duration: 5000,
+              },
+            )
+            dispatch({ type: 'APPROVE_TRANSACTION' })
+            return
+          }
+          console.error('Error creating identity', error)
+        }
+
+        setLoading(true)
+      }
+    } catch (error: unknown) {
+      logger(error)
+    }
   }
 
+  // Handle On-Chain Transaction
+  async function handleOnChainCreateIdentity({
+    atomData,
+  }: {
+    atomData: string
+  }) {
+    if (
+      !awaitingOnChainConfirmation &&
+      !awaitingWalletConfirmation &&
+      // user &&
+      publicClient &&
+      atomCost
+    ) {
+      try {
+        dispatch({ type: 'APPROVE_TRANSACTION' })
+
+        const txHash = await writeCreateIdentity({
+          address: MULTIVAULT_CONTRACT_ADDRESS,
+          abi: multivaultAbi,
+          functionName: 'createAtom',
+          args: [toHex(atomData)],
+          value: atomCost,
+        })
+
+        if (txHash) {
+          dispatch({ type: 'TRANSACTION_PENDING' })
+          const receipt = await publicClient.waitForTransactionReceipt({
+            hash: txHash,
+          })
+          logger('receipt', receipt)
+          dispatch({
+            type: 'TRANSACTION_COMPLETE',
+            txHash: txHash,
+            txReceipt: receipt,
+          })
+        }
+      } catch (error) {
+        logger('error', error)
+        setLoading(false)
+        if (error instanceof Error) {
+          let errorMessage = 'Failed transaction'
+          if (error.message.includes('insufficient')) {
+            errorMessage = 'Insufficient funds'
+          }
+          if (error.message.includes('rejected')) {
+            errorMessage = 'Transaction rejected'
+          }
+          dispatch({
+            type: 'TRANSACTION_ERROR',
+            error: errorMessage,
+          })
+          toast.custom(
+            () => (
+              <Toast
+                title="Error"
+                description={errorMessage}
+                icon={<AlertCircle />}
+              />
+            ),
+            {
+              duration: 5000,
+            },
+          )
+          return
+        }
+      }
+    } else {
+      logger(
+        'Cannot initiate on-chain transaction, a transaction is already pending, a wallet is already signing, or a wallet is not connected',
+      )
+    }
+  }
+
+  function handleIdentityTxReceiptReceived() {
+    logger('createdIdentity', createdIdentity)
+    if (createdIdentity) {
+      logger(
+        'Submitting to emitterFetcher with identity_id:',
+        createdIdentity.identity_id,
+      )
+      emitterFetcher.submit(
+        { identity_id: createdIdentity.identity_id },
+        { method: 'post', action: '/actions/create-emitter' },
+      )
+    }
+  }
+
+  useEffect(() => {
+    if (state.status === 'complete') {
+      handleIdentityTxReceiptReceived()
+      logger('complete!')
+    }
+  }, [state.status])
+
+  useEffect(() => {
+    if (
+      offChainFetcher.state === 'idle' &&
+      offChainFetcher.data !== null &&
+      offChainFetcher.data !== undefined
+    ) {
+      const responseData = offChainFetcher.data as OffChainFetcherData
+      logger('responseData', responseData)
+      if (responseData !== null) {
+        if (createdIdentity !== undefined && responseData.identity) {
+          const { identity_id } = responseData.identity
+          // dispatch({
+          //   type: 'OFF_CHAIN_TRANSACTION_COMPLETE',
+          //   offChainReceipt: responseData.identity,
+          // })
+          handleOnChainCreateIdentity({ atomData: identity_id })
+        }
+      }
+      if (offChainFetcher.data === null || offChainFetcher.data === undefined) {
+        console.error('Error in offchain data creation.:', offChainFetcher.data)
+        dispatch({
+          type: 'TRANSACTION_ERROR',
+          error: 'Error in offchain data creation.',
+        })
+      }
+    }
+  }, [offChainFetcher.state, offChainFetcher.data, dispatch])
+
+  useEffect(() => {
+    if (state.status === 'error') {
+      setLoading(false)
+    }
+  }, [state.status])
+
   const [form, fields] = useForm({
-    id: 'update-profile',
+    id: 'create-identity',
     lastResult: lastOffChainSubmission,
-    constraint: getZodConstraint(updateProfileSchema()),
+    constraint: getZodConstraint(createIdentitySchema()),
     onValidate({ formData }) {
       return parseWithZod(formData, {
         schema: createIdentitySchema,
@@ -81,7 +327,7 @@ export function CreateIdentityForm({
           method="post"
           {...getFormProps(form)}
           encType="multipart/form-data"
-          action="" // to be added
+          action="/actions/create-identity"
         >
           <div className="w-full py-1 flex-col justify-start items-start inline-flex gap-9">
             <div className="flex flex-col w-full gap-1.5">
@@ -171,6 +417,14 @@ export function CreateIdentityForm({
                 className="border border-solid border-white/10 bg-neutral-900"
               />
             </div>
+            <Button
+              form={form.id}
+              type="submit"
+              variant="primary"
+              disabled={loading}
+            >
+              Review
+            </Button>
           </div>
         </offChainFetcher.Form>
       </>
