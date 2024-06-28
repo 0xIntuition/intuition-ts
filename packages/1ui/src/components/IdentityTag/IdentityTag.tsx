@@ -8,7 +8,6 @@ import { cn } from '../../styles'
 
 export const IdentityTagSize = {
   default: 'default',
-  sm: 'sm',
   md: 'md',
   lg: 'lg',
   xl: 'xl',
@@ -16,21 +15,19 @@ export const IdentityTagSize = {
 export type IdentityTagSizeType = keyof typeof IdentityTagSize
 
 export const identityTagVariants = cva(
-  'border border-border/20 font-medium py-1 px-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center',
+  'border border-border/20 font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center',
   {
     variants: {
       variant: {
         [Identity.user]:
           'rounded-full [&>span]:rounded-full [&>span]:overflow-hidden',
-        [Identity.nonUser]: '',
+        [Identity.nonUser]: 'rounded-sm',
       },
       size: {
-        [IdentityTagSize.default]: 'text-sm [&>span]:h-4 [&>span]:w-4',
-        [IdentityTagSize.sm]:
-          'text-base [&>span]:h-[1.375rem] [&>span]:w-[1.375rem]',
-        [IdentityTagSize.md]: 'text-lg [&>span]:h-6 [&>span]:w-6',
-        [IdentityTagSize.lg]: 'text-xl [&>span]:h-8 [&>span]:w-8',
-        [IdentityTagSize.xl]: 'text-2xl [&>span]:h-10 [&>span]:w-10',
+        [IdentityTagSize.default]: 'text-base [&>span]:h-6 [&>span]:w-6',
+        [IdentityTagSize.md]: 'text-base [&>span]:h-7 [&>span]:w-7',
+        [IdentityTagSize.lg]: 'text-lg [&>span]:h-8 [&>span]:w-8',
+        [IdentityTagSize.xl]: 'text-xl [&>span]:h-11 [&>span]:w-11',
       },
       disabled: {
         true: 'disabled:bg-muted disabled:text-muted-foreground disabled:border-muted cursor-not-allowed',
