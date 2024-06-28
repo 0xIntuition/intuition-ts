@@ -1,23 +1,5 @@
 FROM docker.io/node:lts-alpine
 
-WORKDIR /app
-
-COPY package.json \
-    project.json \
-	tsconfig* \
-	nx.json \
-	pnpm*.yaml \
-    .eslintrc.base.cjs \
-    .verdaccio \
-	./
-COPY apps/portal ./apps/portal
-COPY packages ./packages
-
-RUN npm install -g pnpm@9.0.6
-RUN npm add --global nx@latest
-RUN pnpm i
-RUN pnpm run portal:build
-
 ARG ALCHEMY_MAINNET_API_KEY=${ALCHEMY_MAINNET_API_KEY}
 ARG ALCHEMY_API_KEY=${ALCHEMY_API_KEY}
 ARG ALCHEMY_MAINNET_RPC_URL=${ALCHEMY_MAINNET_RPC_URL}
@@ -47,6 +29,30 @@ ENV PRIVY_APP_SECRET=${PRIVY_APP_SECRET}
 ENV CLOUDINARY_CLOUD_NAME=${CLOUDINARY_CLOUD_NAME}
 ENV CLOUDINARY_API_KEY=${CLOUDINARY_API_KEY}
 ENV CLOUDINARY_API_SECRET=${CLOUDINARY_API_SECRET}
+
+WORKDIR /app
+
+COPY package.json \
+    project.json \
+	tsconfig* \
+	nx.json \
+	pnpm*.yaml \
+    .eslintrc.base.cjs \
+    .verdaccio \
+	./
+COPY apps/portal ./apps/portal
+COPY packages ./packages
+
+RUN apk add --no-cache \
+	python3 \
+	make \
+	gcc \
+	g++
+
+RUN npm install -g pnpm@9.0.6
+RUN npm add --global nx@latest
+RUN pnpm i
+RUN pnpm run portal:build
 
 ENV NX_REJECT_UNKNOWN_LOCAL_CACHE=0
 
