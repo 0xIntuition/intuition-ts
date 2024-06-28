@@ -7,6 +7,9 @@ type TransactionStatusProps<
 > = {
   state: S
   dispatch: React.Dispatch<A>
+  statusMessages: { [key: string]: string }
+  isTransactionAwaiting: (status: TStatus) => boolean
+  isTransactionProgress: (status: TStatus) => boolean
 }
 
 const TransactionStatus = <
@@ -15,10 +18,24 @@ const TransactionStatus = <
   TStatus,
 >({
   state,
+  statusMessages,
+  isTransactionAwaiting,
+  isTransactionProgress,
 }: TransactionStatusProps<S, A, TStatus>) => {
+  const getStatusMessage = () => {
+    if (isTransactionAwaiting(state.status)) return 'Awaiting'
+    if (isTransactionProgress(state.status)) return 'Progress'
+    if (state.status === 'complete') return 'Success'
+    if (state.status === 'error') return 'Error'
+    return 'Unknown'
+  }
+
   return (
-    <div>
-      <h3>Status: {String(state.status)}</h3>
+    <div className="flex flex-col items-center">
+      <pre>{getStatusMessage()}</pre>
+      <pre>
+        {statusMessages[state.status as unknown as string] || 'Unknown Status'}
+      </pre>
     </div>
   )
 }

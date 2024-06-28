@@ -69,6 +69,8 @@ export function IdentityForm({ onSuccess, onClose }: IdentityFormProps) {
     'approve-transaction',
     'transaction-pending',
     'confirm',
+    'complete',
+    'error',
   ].includes(state.status)
 
   return (
@@ -169,7 +171,28 @@ function CreateIdentityForm({
     'approve-transaction',
     'transaction-pending',
     'confirm',
+    'complete',
+    'error',
   ].includes(state.status)
+
+  const statusMessages = {
+    'preparing-identity': 'Preparing Identity...',
+    'publishing-identity': 'Publishing Identity...',
+    'approve-transaction': 'Approve Transaction...',
+    'transaction-pending': 'Transaction Pending...',
+    confirm: 'Confirming...',
+    complete: 'Transaction Complete',
+    error: 'Transaction Error',
+  }
+
+  const isTransactionAwaiting = (status: string) =>
+    ['approve-transaction'].includes(status)
+  const isTransactionProgress = (status: string) =>
+    [
+      'preparing-identity',
+      'publishing-identity',
+      'transaction-pending',
+    ].includes(status)
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     logger('form submitting')
@@ -399,7 +422,7 @@ function CreateIdentityForm({
       encType="multipart/form-data"
       action="/actions/create-identity"
     >
-      {!isTransactionStarted && state.status !== 'complete' ? (
+      {!isTransactionStarted ? (
         <div className="w-full py-1 flex-col justify-start items-start inline-flex gap-9">
           <div className="flex flex-col w-full gap-1.5">
             <div className="self-stretch flex-col justify-start items-start flex mt-9">
@@ -499,7 +522,13 @@ function CreateIdentityForm({
           </Button>
         </div>
       ) : (
-        <TransactionStatus state={state} dispatch={dispatch} />
+        <TransactionStatus
+          state={state}
+          dispatch={dispatch}
+          statusMessages={statusMessages}
+          isTransactionAwaiting={isTransactionAwaiting}
+          isTransactionProgress={isTransactionProgress}
+        />
       )}
     </offChainFetcher.Form>
   )
