@@ -17,8 +17,43 @@ import {
   IdentitySearchComboboxItem 
 } from '@0xintuition/1ui'
 
-<IdentitySearchCombobox>
-  <IdentitySearchComboboxItem value="1" />
+<IdentitySearchCombobox onCreateIdentityClick={() => doSomething}>
+  <IdentitySearchComboboxItem
+    variant="non-user"
+    name="mech"
+    value={0.039}
+    walletAddress="0x1234567890abcdef1234567890abcdef12345678"
+    socialCount={34}
+    tagCount={34}
+    onClick={() => doSomething}
+  />
+  <IdentitySearchComboboxItem
+    variant="non-user"
+    name="mechanical"
+    value={0.345}
+    walletAddress="0x1234567890abcdef1234567890abcdef12345678"
+    socialCount={34}
+    tagCount={34}
+    onClick={() => doSomething}
+  />
+  <IdentitySearchComboboxItem
+    variant="non-user"
+    name="mechanize"
+    value={0.003}
+    walletAddress="0x1234567890abcdef1234567890abcdef12345678"
+    socialCount={34}
+    tagCount={34}
+    onClick={() => doSomething}
+  />
+  <IdentitySearchComboboxItem
+    variant="non-user"
+    name="mechanist"
+    value={0.019}
+    walletAddress="0x1234567890abcdef1234567890abcdef12345678"
+    socialCount={34}
+    tagCount={34}
+    onClick={() => doSomething}
+  />
 </IdentitySearchCombobox>
 `} />
 
@@ -27,3 +62,54 @@ import {
 ## Properties
 
 <Controls />
+
+## Variants
+
+### Without Create Identity Button
+
+<Source
+  dark
+  language="tsx"
+  code={`
+<IdentitySearchCombobox>
+  <IdentitySearchComboboxItem
+    variant="non-user"
+    name="mech"
+    value={0.039}
+    walletAddress="0x1234567890abcdef1234567890abcdef12345678"
+    socialCount={34}
+    tagCount={34}
+    onClick={() => doSomething}
+  />
+  <IdentitySearchComboboxItem
+    variant="non-user"
+    name="mechanical"
+    value={0.345}
+    walletAddress="0x1234567890abcdef1234567890abcdef12345678"
+    socialCount={34}
+    tagCount={34}
+    onClick={() => doSomething}
+  />
+  <IdentitySearchComboboxItem
+    variant="non-user"
+    name="mechanize"
+    value={0.003}
+    walletAddress="0x1234567890abcdef1234567890abcdef12345678"
+    socialCount={34}
+    tagCount={34}
+    onClick={() => doSomething}
+  />
+  <IdentitySearchComboboxItem
+    variant="non-user"
+    name="mechanist"
+    value={0.019}
+    walletAddress="0x1234567890abcdef1234567890abcdef12345678"
+    socialCount={34}
+    tagCount={34}
+    onClick={() => doSomething}
+  />
+</IdentitySearchCombobox>
+`}
+/>
+
+<Canvas of={Stories.WithoutCreateIdentityButton} sourceState="none" />

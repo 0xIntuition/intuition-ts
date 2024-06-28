@@ -86,4 +86,6 @@ export const IconName = {
   people: 'people',
   tag: 'tag',
   tagFilled: 'tag-filled',
+  trustCircle: 'trust-circle',
+  trustCircleFilled: 'trust-circle-filled',
 } as const

@@ -11,7 +11,7 @@ export interface IdentityCardProps
   avatarSrc?: string
   name: string
   value: number
-  currency: CurrencyType
+  currency?: CurrencyType
   walletAddress: string
 }
 
