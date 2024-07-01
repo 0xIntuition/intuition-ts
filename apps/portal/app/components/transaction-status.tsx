@@ -49,7 +49,7 @@ const TransactionStatus = <
       </pre>
       <pre>{state.status === 'error' && state.error}</pre>
       {state.status === 'complete' && transactionDetail !== undefined && (
-        <div className="flex flex-col gap-1 bg-red-100 items-center gap-2.5">
+        <div className="flex flex-col gap-1 items-center gap-2.5">
           {state.txHash && (
             <Link
               to={`${BLOCK_EXPLORER_URL}/tx/${state.txHash}`}
