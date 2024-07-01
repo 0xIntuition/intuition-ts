@@ -40,7 +40,7 @@ const TransactionStatus = <
   const navigate = useNavigate()
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center justify-center min-h-96">
       <pre>{getStatusMessage()}</pre>
       <pre>
         {statusMessages[state.status as unknown as string] || 'Unknown Status'}

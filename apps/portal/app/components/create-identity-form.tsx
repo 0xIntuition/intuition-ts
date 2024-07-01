@@ -151,13 +151,11 @@ function CreateIdentityForm({
         return
       }
 
-      // Prepare the file to be uploaded via Fetcher
       const formData = new FormData()
       formData.append('image_url', identityImageFile)
 
-      // Use the Fetcher to submit the image to your upload endpoint
       imageUploadFetcher.submit(formData, {
-        action: '/actions/upload-image', // Make sure this matches your server endpoint
+        action: '/actions/upload-image',
         method: 'post',
         encType: 'multipart/form-data',
       })
@@ -225,10 +223,6 @@ function CreateIdentityForm({
     setImageFilesize(filesize)
   }
   const [formTouched, setFormTouched] = useState(false) // to disable submit if user hasn't touched form yet
-  // const [formErrors, setFormErrors] = useState<Record<
-  //   string,
-  //   string[]
-  // > | null>() // we need to manage errors manually when using async validation
 
   const isTransactionStarted = [
     'preparing-identity',
@@ -335,7 +329,6 @@ function CreateIdentityForm({
     }
   }
 
-  // Handle On-Chain Transaction
   async function handleOnChainCreateIdentity({
     atomData,
   }: {
@@ -344,7 +337,6 @@ function CreateIdentityForm({
     if (
       !awaitingOnChainConfirmation &&
       !awaitingWalletConfirmation &&
-      // user &&
       publicClient &&
       atomCost
     ) {
@@ -370,6 +362,7 @@ function CreateIdentityForm({
             type: 'TRANSACTION_COMPLETE',
             txHash: txHash,
             txReceipt: receipt,
+            identityId: transactionResponseData?.id,
           })
         }
       } catch (error) {
@@ -444,10 +437,6 @@ function CreateIdentityForm({
           const { identity_id } = responseData.identity
           setTransactionResponseData(responseData.identity)
           logger('responseData identity', responseData.identity)
-          // dispatch({
-          //   type: 'OFF_CHAIN_TRANSACTION_COMPLETE',
-          //   offChainReceipt: responseData.identity,
-          // })
           logger('onchain create starting. identity_id:', identity_id)
           handleOnChainCreateIdentity({ atomData: identity_id })
         }
@@ -559,8 +548,6 @@ function CreateIdentityForm({
             <Textarea
               {...getInputProps(fields.description, { type: 'text' })}
               placeholder="Tell us about yourself!"
-              // value={description}
-              // onChange={handleDescriptionChange}
               className="h-20 border border-solid border-white/10 bg-neutral-900"
             />
           </div>

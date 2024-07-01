@@ -10,6 +10,7 @@ export type BaseTransactionStateType<TStatus> = {
   description?: string
   externalReference?: string
   error?: string
+  identityId?: string
 }
 
 export type TransactionStatusType =
@@ -72,6 +73,7 @@ export type IdentityTransactionActionType =
       type: 'TRANSACTION_COMPLETE'
       txHash?: `0x${string}`
       txReceipt: TransactionReceipt
+      identityId?: string
     }
   | { type: 'TRANSACTION_HASH'; txHash?: `0x${string}` }
   | { type: 'TRANSACTION_ERROR'; error: string }
