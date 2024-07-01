@@ -55,14 +55,8 @@ export async function action({ request }: ActionFunctionArgs) {
     submission.value.image_url instanceof Blob &&
     submission.value.image_url.size === 0
   ) {
-    // const toastHeaders = await createToastHeaders({
-    //   title: 'Failed HR Meme Approval',
-    //   description: 'Ser, this content is not allowed.',
-    //   type: 'error',
-    // })
     return json({ status: 'error', submission } as const, {
       status: 500,
-      // headers: toastHeaders,
     })
   }
 
@@ -71,14 +65,8 @@ export async function action({ request }: ActionFunctionArgs) {
     Object.keys(submission.value).length === 0 &&
     submission.value.constructor === Object
   ) {
-    // const toastHeaders = await createToastHeaders({
-    //   title: 'Failed to Upload Meme',
-    //   description: "It's gary's fault",
-    //   type: 'error',
-    // })
     return json({ status: 'error', submission } as const, {
       status: 500,
-      // headers: toastHeaders,
     })
   }
   return json({ status: 'ok', submission } as const, {

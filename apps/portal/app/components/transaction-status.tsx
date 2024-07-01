@@ -1,4 +1,7 @@
+import { Button } from '@0xintuition/1ui'
+
 import logger from '@lib/utils/logger'
+import { useNavigate } from '@remix-run/react'
 import { BaseTransactionStateType } from 'types/transaction'
 
 type TransactionStatusProps<
@@ -34,6 +37,7 @@ const TransactionStatus = <
   }
 
   logger('transactionDetail', transactionDetail)
+  const navigate = useNavigate()
 
   return (
     <div className="flex flex-col items-center">
@@ -42,6 +46,17 @@ const TransactionStatus = <
         {statusMessages[state.status as unknown as string] || 'Unknown Status'}
       </pre>
       <pre>{state.status === 'error' && state.error}</pre>
+      {state.status === 'complete' && transactionDetail !== undefined && (
+        <Button
+          type="button"
+          className="mt-16 flex w-56 justify-center gap-4 rounded-full text-primary-950"
+          onClick={() => {
+            navigate(`/app/identity/${transactionDetail}`)
+          }}
+        >
+          View Identity Details
+        </Button>
+      )}
     </div>
   )
 }

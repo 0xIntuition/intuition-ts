@@ -601,7 +601,7 @@ function CreateIdentityForm({
         <TransactionStatus
           state={state}
           dispatch={dispatch}
-          transactionDetail={transactionResponseData?.identity_id}
+          transactionDetail={transactionResponseData?.id}
           statusMessages={statusMessages}
           isTransactionAwaiting={isTransactionAwaiting}
           isTransactionProgress={isTransactionProgress}

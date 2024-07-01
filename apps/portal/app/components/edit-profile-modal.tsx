@@ -299,7 +299,7 @@ export function EditProfileForm({ userObject, onClose }: EditProfileFormProps) {
         setLoading(true)
         dispatch({ type: 'START_IMAGE_UPLOAD' })
         imageUploadFetcher.submit(formData, {
-          action: '/actions/upload',
+          action: '/actions/upload-with-metadata',
           method: 'post',
           encType: 'multipart/form-data',
         })
