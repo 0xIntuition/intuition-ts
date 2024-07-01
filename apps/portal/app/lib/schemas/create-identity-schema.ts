@@ -10,13 +10,9 @@ const urlWithoutHttps = z
   .transform((url) => (url.startsWith('https://') ? url.slice(8) : url))
   .refine(
     (url) => {
-      try {
-        // Add the https:// back temporarily to use the URL constructor for validation
-        new URL('https://' + url)
-        return true
-      } catch {
-        return false
-      }
+      const urlPattern =
+        /^(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,}$/i
+      return urlPattern.test(url)
     },
     {
       message: 'This link is an invalid URL.',
