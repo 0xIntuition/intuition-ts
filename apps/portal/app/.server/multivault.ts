@@ -257,7 +257,7 @@ export async function getIdentityListDetails(
       formatted_atom_creation_fee: formattedAtomCreationFee,
       atom_equity_fee: atomEquityFee.toString(),
       formatted_atom_equity_fee: formattedAtomEquityFee,
-    } as IdentityVaultDetails
+    } as IdentityVaultDetailsType
   })
 
   return Promise.all(identityDetailPromises)

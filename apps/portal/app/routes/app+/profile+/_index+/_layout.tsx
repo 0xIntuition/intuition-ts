@@ -25,15 +25,17 @@ import EditProfileModal from '@components/edit-profile-modal'
 import EditSocialLinksModal from '@components/edit-social-links-modal'
 import { NestedLayout } from '@components/nested-layout'
 import { ProfileSocialAccounts } from '@components/profile-social-accounts'
+import StakeModal from '@components/stake/stake-modal'
 import {
   createIdentityModalAtom,
   editProfileModalAtom,
   editSocialLinksModalAtom,
+  stakeModalAtom,
 } from '@lib/state/store'
 import { userProfileRouteOptions } from '@lib/utils/constants'
 import logger from '@lib/utils/logger'
 import {
-  calculatePercentageGain,
+  calculatePercentageOfTvl,
   formatBalance,
   getAuthHeaders,
   sliceString,
@@ -161,6 +163,8 @@ export default function Profile() {
     createIdentityModalAtom,
   )
 
+  const [stakeModalActive, setStakeModalActive] = useAtom(stakeModalAtom)
+
   const revalidator = useRevalidator()
 
   useEffect(() => {
@@ -219,20 +223,25 @@ export default function Profile() {
             />
             {vaultDetails !== null && user_assets !== '0' ? (
               <PositionCard
-                onButtonClick={() => logger('sell position clicked')}
+                onButtonClick={() =>
+                  setStakeModalActive((prevState) => ({
+                    ...prevState,
+                    mode: 'redeem',
+                    modalType: 'identity',
+                    isOpen: true,
+                  }))
+                }
               >
                 <PositionCardStaked
                   amount={user_assets ? +formatBalance(user_assets, 18, 4) : 0}
                 />
                 <PositionCardOwnership
                   percentOwnership={
-                    userIdentity.user_asset_delta !== null &&
-                    userIdentity.user_assets
-                      ? +calculatePercentageGain(
-                          +userIdentity.user_assets -
-                            +userIdentity.user_asset_delta,
-                          +userIdentity.user_assets,
-                        ).toFixed(1)
+                    userIdentity.user_assets !== null && userIdentity.assets_sum
+                      ? +calculatePercentageOfTvl(
+                          userIdentity.user_assets,
+                          userIdentity.assets_sum,
+                        )
                       : 0
                   }
                 />
@@ -254,7 +263,14 @@ export default function Profile() {
             <StakeCard
               tvl={formatBalance(userIdentity.assets_sum)}
               holders={userIdentity.num_positions}
-              onBuyClick={() => logger('click buy')} // this will open the stake modal
+              onBuyClick={() =>
+                setStakeModalActive((prevState) => ({
+                  ...prevState,
+                  mode: 'deposit',
+                  modalType: 'identity',
+                  isOpen: true,
+                }))
+              }
               onViewAllClick={() => logger('click view all')} // this will navigate to the data-about positions
             />
             <Button
@@ -265,6 +281,7 @@ export default function Profile() {
               Create Identity
             </Button>
           </div>
+
           <EditProfileModal
             userObject={userObject}
             open={editProfileModalActive}
@@ -278,6 +295,21 @@ export default function Profile() {
           <CreateIdentityModal
             open={createIdentityModalActive}
             onClose={() => setCreateIdentityModalActive(false)}
+          />
+          <StakeModal
+            user={user}
+            contract={userIdentity.contract}
+            open={stakeModalActive.isOpen}
+            identity={userIdentity}
+            min_deposit={vaultDetails.min_deposit}
+            modalType={'identity'}
+            onClose={() => {
+              setStakeModalActive((prevState) => ({
+                ...prevState,
+                isOpen: false,
+                mode: undefined,
+              }))
+            }}
           />
         </>
       </div>

@@ -38,6 +38,7 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
   const headers = getAuthHeaders(accessToken !== null ? accessToken : '')
   OpenAPI.HEADERS = headers as Record<string, string>
 
+  console.log('accessToken', accessToken)
   const session = context.get(SessionContext)
   console.log('[LOADER] user', session.get('user'))
   const user = session.get('user')
