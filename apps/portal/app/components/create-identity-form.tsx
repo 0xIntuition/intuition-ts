@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import {
   Button,
   DialogHeader,
+  Icon,
   Input,
   Label,
   Text,
@@ -170,7 +171,11 @@ function CreateIdentityForm({
       setIdentityImageSrc(imageUploadFetcher.data.submission.value.image_url)
       toast.custom(
         () => (
-          <Toast title="success" description="success" icon={<AlertCircle />} />
+          <Toast
+            title="success"
+            description="Successfully uploaded image"
+            icon={<Icon name="checkmark" />}
+          />
         ),
         {
           duration: 5000,
@@ -581,7 +586,7 @@ function CreateIdentityForm({
             disabled={loading || !formTouched}
             className="mx-auto"
           >
-            Review
+            Create
           </Button>
         </div>
       ) : (

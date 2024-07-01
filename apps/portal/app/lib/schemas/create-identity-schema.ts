@@ -2,6 +2,27 @@ import { z } from 'zod'
 
 import { DESCRIPTION_MAX_LENGTH, MAX_UPLOAD_SIZE } from '../utils/constants'
 
+const urlWithoutHttps = z
+  .string()
+  .refine((url) => !url.startsWith('https://'), {
+    message: "You don't need to include the https://",
+  })
+  .transform((url) => (url.startsWith('https://') ? url.slice(8) : url))
+  .refine(
+    (url) => {
+      try {
+        // Add the https:// back temporarily to use the URL constructor for validation
+        new URL('https://' + url)
+        return true
+      } catch {
+        return false
+      }
+    },
+    {
+      message: 'This link is an invalid URL.',
+    },
+  )
+
 export function createIdentitySchema() {
   return z.object({
     display_name: z
@@ -33,15 +54,16 @@ export function createIdentitySchema() {
       }, 'File must be a .png, .jpg, .jpeg, or .gif')
       .or(z.string())
       .optional(),
-    external_reference: z
-      .string()
-      .url({
-        message: 'This link is an invalid URL.',
-      })
-      .refine((url) => !url.startsWith('https://'), {
-        message: "You don't need to include the https://",
-      })
-      .optional(),
+    // external_reference: z
+    //   .string()
+    //   .url({
+    //     message: 'This link is an invalid URL.',
+    //   })
+    //   .refine((url) => !url.startsWith('https://'), {
+    //     message: "You don't need to include the https://",
+    //   })
+    //   .optional(),
+    external_reference: urlWithoutHttps.optional(),
     vault_id: z.string().optional(),
     creator: z.string().optional(),
     contract: z.string().optional(),

@@ -1,7 +1,9 @@
 import { Button } from '@0xintuition/1ui'
 
+import { BLOCK_EXPLORER_URL } from '@lib/utils/constants'
 import logger from '@lib/utils/logger'
-import { useNavigate } from '@remix-run/react'
+import { Link, useNavigate } from '@remix-run/react'
+import { ExternalLinkIcon } from 'lucide-react'
 import { BaseTransactionStateType } from 'types/transaction'
 
 type TransactionStatusProps<
@@ -47,15 +49,26 @@ const TransactionStatus = <
       </pre>
       <pre>{state.status === 'error' && state.error}</pre>
       {state.status === 'complete' && transactionDetail !== undefined && (
-        <Button
-          type="button"
-          className="mt-16 flex w-56 justify-center gap-4 rounded-full text-primary-950"
-          onClick={() => {
-            navigate(`/app/identity/${transactionDetail}`)
-          }}
-        >
-          View Identity Details
-        </Button>
+        <div className="flex flex-col gap-1 bg-red-100 items-center gap-2.5">
+          {state.txHash && (
+            <Link
+              to={`${BLOCK_EXPLORER_URL}/tx/${state.txHash}`}
+              target="_blank"
+              className="flex flex-row items-center gap-1 text-xxs text-blue-500 transition-colors duration-300 hover:text-blue-400"
+            >
+              View on Basescan <ExternalLinkIcon className="h-2.5 w-2.5" />
+            </Link>
+          )}
+          <Button
+            type="button"
+            variant="primary"
+            onClick={() => {
+              navigate(`/app/identity/${transactionDetail}`)
+            }}
+          >
+            View identity
+          </Button>
+        </div>
       )}
     </div>
   )
