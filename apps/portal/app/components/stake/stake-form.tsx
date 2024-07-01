@@ -1,4 +1,11 @@
-import { Badge, Claim, DialogHeader, Icon, Identity } from '@0xintuition/1ui'
+import {
+  Badge,
+  Claim,
+  DialogHeader,
+  DialogTitle,
+  Icon,
+  IdentityTag,
+} from '@0xintuition/1ui'
 import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
 
 import { formatBalance } from '@lib/utils/misc'
@@ -77,42 +84,45 @@ export default function StakeForm({
       {state.status === 'idle' ? (
         <>
           <DialogHeader>
-            <div className="flex flex-row items-center justify-between">
-              {modalType === 'identity' ? (
-                <Identity
-                  imgSrc={identity?.user?.image ?? identity?.image}
-                  variant={identity?.user ? 'user' : 'default'}
-                >
-                  {identity?.user?.display_name ?? identity?.display_name}
-                </Identity>
-              ) : (
-                <Claim
-                  subject={{
-                    imgSrc:
-                      claim?.subject?.user?.image ?? claim?.subject?.image,
-                    label:
-                      claim?.subject?.user?.display_name ??
-                      claim?.subject?.display_name,
-                    variant: claim?.subject?.user ? 'user' : 'default',
-                  }}
-                  predicate={{
-                    imgSrc: claim?.predicate?.image,
-                    label: claim?.predicate?.display_name,
-                  }}
-                  object={{
-                    imgSrc: claim?.object?.user?.image ?? claim?.object?.image,
-                    label:
-                      claim?.object?.user?.display_name ??
-                      claim?.object?.display_name,
-                    variant: claim?.object?.user ? 'user' : 'default',
-                  }}
-                />
-              )}
-              <Badge>
-                <Icon name="wallet" className="h-4 w-4" />
-                {(+walletBalance).toFixed(2)} ETH
-              </Badge>
-            </div>
+            <DialogTitle>
+              <div className="flex flex-row items-center justify-between">
+                {modalType === 'identity' ? (
+                  <IdentityTag
+                    imgSrc={identity?.user?.image ?? identity?.image}
+                    variant={identity?.user ? 'user' : 'non-user'}
+                  >
+                    {identity?.user?.display_name ?? identity?.display_name}
+                  </IdentityTag>
+                ) : (
+                  <Claim
+                    subject={{
+                      imgSrc:
+                        claim?.subject?.user?.image ?? claim?.subject?.image,
+                      label:
+                        claim?.subject?.user?.display_name ??
+                        claim?.subject?.display_name,
+                      variant: claim?.subject?.user ? 'user' : 'default',
+                    }}
+                    predicate={{
+                      imgSrc: claim?.predicate?.image,
+                      label: claim?.predicate?.display_name,
+                    }}
+                    object={{
+                      imgSrc:
+                        claim?.object?.user?.image ?? claim?.object?.image,
+                      label:
+                        claim?.object?.user?.display_name ??
+                        claim?.object?.display_name,
+                      variant: claim?.object?.user ? 'user' : 'default',
+                    }}
+                  />
+                )}
+                <Badge>
+                  <Icon name="wallet" className="h-4 w-4" />
+                  {(+walletBalance).toFixed(2)} ETH
+                </Badge>
+              </div>
+            </DialogTitle>
           </DialogHeader>
           <div className="pt-2.5">
             <div className="flex flex-row items-center justify-center">

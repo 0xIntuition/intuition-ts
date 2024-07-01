@@ -188,9 +188,8 @@ export default function StakeModal({
 
   useEffect(() => {
     let assets = ''
-    let shares = ''
     const receipt = txReceipt
-    const action = mode === 'deposit' ? 'Bought' : 'Sold'
+    const action = mode === 'deposit' ? 'Deposited' : 'Redeemed'
 
     type BuyArgs = {
       sender: Address
@@ -237,16 +236,11 @@ export default function StakeModal({
           mode === 'deposit'
             ? (topics.args as BuyArgs).userAssetsAfterTotalFees.toString()
             : (topics.args as SellArgs).assetsForReceiver.toString()
-        shares =
-          mode === 'deposit'
-            ? (topics.args as BuyArgs).sharesForReceiver.toString()
-            : (topics.args as SellArgs).shares.toString()
 
         toast.custom(() => (
           <StakeToast
             action={action}
             assets={assets}
-            conviction={shares}
             txHash={txReceipt.transactionHash}
           />
         ))

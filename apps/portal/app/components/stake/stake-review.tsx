@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-import { Badge, Claim, Identity } from '@0xintuition/1ui'
+import { Badge, Claim, IdentityTag } from '@0xintuition/1ui'
 import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
 
 import { formatDisplayBalance } from '@lib/utils/misc'
@@ -144,12 +144,12 @@ export default function StakeReview({
               {modalType === 'identity' ? 'identity' : 'claim'}
             </span>
             {modalType === 'identity' ? (
-              <Identity
+              <IdentityTag
                 imgSrc={identity?.user?.image ?? identity?.image}
                 variant={identity?.user ? 'user' : 'default'}
               >
                 {identity?.user?.display_name ?? identity?.display_name}
-              </Identity>
+              </IdentityTag>
             ) : (
               <Claim
                 subject={{
