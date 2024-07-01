@@ -33,7 +33,7 @@ import {
 import { userProfileRouteOptions } from '@lib/utils/constants'
 import logger from '@lib/utils/logger'
 import {
-  calculatePercentageGain,
+  calculatePercentageOfTvl,
   formatBalance,
   getAuthHeaders,
   sliceString,
@@ -233,13 +233,11 @@ export default function Profile() {
                 />
                 <PositionCardOwnership
                   percentOwnership={
-                    userIdentity.user_asset_delta !== null &&
-                    userIdentity.user_assets
-                      ? +calculatePercentageGain(
-                          +userIdentity.user_assets -
-                            +userIdentity.user_asset_delta,
-                          +userIdentity.user_assets,
-                        ).toFixed(1)
+                    userIdentity.user_assets !== null && userIdentity.assets_sum
+                      ? +calculatePercentageOfTvl(
+                          userIdentity.user_assets,
+                          userIdentity.assets_sum,
+                        )
                       : 0
                   }
                 />
@@ -294,7 +292,7 @@ export default function Profile() {
               setStakeModalActive((prevState) => ({
                 ...prevState,
                 isOpen: false,
-                mode: null,
+                mode: undefined,
               }))
             }}
           />
