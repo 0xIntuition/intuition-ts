@@ -209,10 +209,8 @@ function CreateIdentityForm({
           formData.append('image_url', previewImage as string) // add check to this once we allow for null
         }
         if (event.currentTarget.external_reference?.value !== undefined) {
-          formData.append(
-            'external_reference',
-            event.currentTarget.external_reference.value,
-          )
+          const prefixedUrl = `https://${event.currentTarget.external_reference?.value}`
+          formData.append('external_reference', prefixedUrl)
         }
 
         // const submission = parseWithZod(formData, {
@@ -501,14 +499,20 @@ function CreateIdentityForm({
             <Label htmlFor={fields.external_reference.id} hidden>
               Add Link
             </Label>
+
+            <div className="flex items-center overflow-hidden border border-solid border-white/10 bg-neutral-900 rounded-md relative">
+              <span className="font-medium text-secondary-foreground py px-2 border-r border-solid border-white/10">
+                https://
+              </span>
+              <Input
+                {...getInputProps(fields.external_reference, { type: 'text' })}
+                placeholder="Enter an external link"
+                className="border-white/10 bg-neutral-900 rounded-none border-none"
+              />
+            </div>
             <ErrorList
               id={fields.external_reference.errorId}
               errors={fields.external_reference.errors}
-            />
-            <Input
-              {...getInputProps(fields.external_reference, { type: 'text' })}
-              placeholder="Enter an external link"
-              className="border border-solid border-white/10 bg-neutral-900"
             />
           </div>
           <Button

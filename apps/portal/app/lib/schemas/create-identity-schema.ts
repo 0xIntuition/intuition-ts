@@ -38,7 +38,9 @@ export function createIdentitySchema() {
       .url({
         message: 'This link is an invalid URL.',
       })
-      .startsWith('https://', 'The URL must start with https://')
+      .refine((url) => !url.startsWith('https://'), {
+        message: "You don't need to include the https://",
+      })
       .optional(),
     vault_id: z.string().optional(),
     creator: z.string().optional(),
