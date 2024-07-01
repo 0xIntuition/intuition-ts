@@ -1,3 +1,4 @@
+import logger from '@lib/utils/logger'
 import { BaseTransactionStateType } from 'types/transaction'
 
 type TransactionStatusProps<
@@ -10,6 +11,7 @@ type TransactionStatusProps<
   statusMessages: { [key: string]: string }
   isTransactionAwaiting: (status: TStatus) => boolean
   isTransactionProgress: (status: TStatus) => boolean
+  transactionDetail?: string | null
 }
 
 const TransactionStatus = <
@@ -21,6 +23,7 @@ const TransactionStatus = <
   statusMessages,
   isTransactionAwaiting,
   isTransactionProgress,
+  transactionDetail,
 }: TransactionStatusProps<S, A, TStatus>) => {
   const getStatusMessage = () => {
     if (isTransactionAwaiting(state.status)) return 'Awaiting'
@@ -29,6 +32,8 @@ const TransactionStatus = <
     if (state.status === 'error') return 'Transaction Error'
     return 'Unknown'
   }
+
+  logger('transactionDetail', transactionDetail)
 
   return (
     <div className="flex flex-col items-center">

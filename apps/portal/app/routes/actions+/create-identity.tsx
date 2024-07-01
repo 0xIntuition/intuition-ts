@@ -17,7 +17,9 @@ export async function action({ request, context }: ActionFunctionArgs) {
   }
 
   const display_name = formData.get('display_name')
+  const image_url = formData.get('image_url')
   const description = formData.get('description')
+  const external_reference = formData.get('external_reference')
 
   try {
     OpenAPI.BASE = 'https://dev.api.intuition.systems'
@@ -27,7 +29,7 @@ export async function action({ request, context }: ActionFunctionArgs) {
     OpenAPI.HEADERS = headers as Record<string, string>
 
     const session = context.get(SessionContext)
-    console.log('[LOADER] user', session.get('user'))
+    logger('[LOADER] user', session.get('user'))
     const user = session.get('user')
 
     if (!user?.details?.wallet?.address) {
@@ -36,11 +38,22 @@ export async function action({ request, context }: ActionFunctionArgs) {
 
     let identity
     try {
-      const identityParams = {
+      const identityParams: {
+        contract: string
+        creator: string
+        display_name: string
+        external_reference: string
+        description: string
+        image?: string
+      } = {
         contract: MULTIVAULT_CONTRACT_ADDRESS as string,
         creator: user.details.wallet.address as string,
         display_name: display_name as string,
+        external_reference: external_reference as string,
         description: description as string,
+      }
+      if (image_url) {
+        identityParams.image = image_url as string
       }
       logger('Identity params:', identityParams)
       identity = await IdentitiesService.createIdentity({

@@ -6,12 +6,16 @@ interface ImageChooseProps {
   previewImage: string | null
   setPreviewImage: React.Dispatch<React.SetStateAction<string | null>>
   onFileChange: (filename: string, filesize: string, file: File) => void
+  disabled?: boolean
+  setImageFile: React.Dispatch<React.SetStateAction<File | undefined>>
 }
 
 export function ImageChooser({
   previewImage,
   setPreviewImage,
   onFileChange,
+  disabled,
+  setImageFile,
 }: ImageChooseProps) {
   return (
     <div className="flex w-full items-center justify-center gap-3">
@@ -60,6 +64,7 @@ export function ImageChooser({
             onChange={(event) => {
               const file = event.target.files?.[0]
               logger('file', file)
+              setImageFile(file)
 
               if (file) {
                 const reader = new FileReader()
@@ -84,6 +89,7 @@ export function ImageChooser({
             name="image_url"
             type="file"
             accept="image/*"
+            disabled={disabled}
           />
         </label>
       </div>

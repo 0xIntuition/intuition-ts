@@ -116,8 +116,6 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
     }
   }
 
-  logger('userIdentity', userIdentity)
-
   let vaultDetails: VaultDetailsType | null = null
 
   if (userIdentity !== undefined && userIdentity.vault_id) {

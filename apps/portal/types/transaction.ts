@@ -5,6 +5,10 @@ export type TStatus = string
 export type BaseTransactionStateType<TStatus> = {
   status: TStatus
   txHash?: `0x${string}`
+  imageUrl?: string
+  displayName?: string
+  description?: string
+  externalReference?: string
   error?: string
 }
 
@@ -36,6 +40,8 @@ export type TransactionActionType =
 
 export type IdentityTransactionStatusType =
   | 'idle'
+  | 'uploading-image'
+  | 'image-upload-complete'
   | 'preparing-identity'
   | 'publishing-identity'
   | 'approve-transaction'
@@ -48,6 +54,14 @@ export type IdentityTransactionStatusType =
 
 export type IdentityTransactionActionType =
   | { type: 'START_TRANSACTION' }
+  | { type: 'START_IMAGE_UPLOAD' }
+  | {
+      type: 'IMAGE_UPLOAD_COMPLETE'
+      imageUrl: string
+      displayName: string
+      description: string
+      externalReference: string
+    }
   | { type: 'PREPARING_IDENTITY' }
   | { type: 'PUBLISHING_IDENTITY' }
   | { type: 'APPROVE_TRANSACTION' }

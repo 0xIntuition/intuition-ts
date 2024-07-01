@@ -9,17 +9,13 @@ import {
   Textarea,
   toast,
 } from '@0xintuition/1ui'
+import { IdentityPresenter } from '@0xintuition/api'
 
-import {
-  getFormProps,
-  getInputProps,
-  // SubmissionResult,
-  useForm,
-} from '@conform-to/react'
+import { getFormProps, getInputProps, useForm } from '@conform-to/react'
 import { getZodConstraint, parseWithZod } from '@conform-to/zod'
 import { multivaultAbi } from '@lib/abis/multivault'
 import { useCreateIdentity } from '@lib/hooks/useCreateIdentity'
-// import { useImageUploadFetcher } from '@lib/hooks/useImageUploadFetcher'
+import { useImageUploadFetcher } from '@lib/hooks/useImageUploadFetcher'
 import {
   OffChainFetcherData,
   useOffChainFetcher,
@@ -30,7 +26,11 @@ import {
   useTransactionState,
 } from '@lib/hooks/useTransactionReducer'
 import { createIdentitySchema } from '@lib/schemas/create-identity-schema'
-import { MULTIVAULT_CONTRACT_ADDRESS } from '@lib/utils/constants'
+import {
+  ACCEPTED_IMAGE_MIME_TYPES,
+  MAX_UPLOAD_SIZE,
+  MULTIVAULT_CONTRACT_ADDRESS,
+} from '@lib/utils/constants'
 import logger from '@lib/utils/logger'
 import { truncateString } from '@lib/utils/misc'
 import { useFetcher } from '@remix-run/react'
@@ -46,7 +46,7 @@ import { usePublicClient, useWalletClient } from 'wagmi'
 import ErrorList from './error-list'
 import { ImageChooser } from './image-chooser'
 import Toast from './toast'
-import TransactionStatus from './transaction-state'
+import TransactionStatus from './transaction-status'
 
 interface IdentityFormProps {
   onSuccess?: () => void
@@ -60,8 +60,8 @@ export function IdentityForm({ onSuccess, onClose }: IdentityFormProps) {
     IdentityTransactionActionType
   >(identityTransactionReducer, initialIdentityTransactionState)
 
-  // const [transactionResponseData, setTransactionResponseData] =
-  //   React.useState<IdentityPresenter | null>(null)
+  const [transactionResponseData, setTransactionResponseData] =
+    React.useState<IdentityPresenter | null>(null)
 
   const isTransactionStarted = [
     'preparing-identity',
@@ -95,6 +95,8 @@ export function IdentityForm({ onSuccess, onClose }: IdentityFormProps) {
           state={state}
           dispatch={dispatch}
           onClose={onClose}
+          setTransactionResponseData={setTransactionResponseData}
+          transactionResponseData={transactionResponseData}
         />
       </>
     </>
@@ -104,21 +106,28 @@ export function IdentityForm({ onSuccess, onClose }: IdentityFormProps) {
 interface CreateIdentityFormProps {
   state: IdentityTransactionStateType
   dispatch: React.Dispatch<IdentityTransactionActionType>
-  // setTransactionResponseData: React.Dispatch<
-  //   React.SetStateAction<IdentityPresenter | null>
-  // >
+  setTransactionResponseData: React.Dispatch<
+    React.SetStateAction<IdentityPresenter | null>
+  >
+  transactionResponseData: IdentityPresenter | null
   onClose: () => void
 }
 
 function CreateIdentityForm({
   state,
   dispatch,
-  // setTransactionResponseData,
-  // onClose,
+  setTransactionResponseData,
+  transactionResponseData,
 }: CreateIdentityFormProps) {
-  // const imageUploadFetcher = useImageUploadFetcher()
   const { offChainFetcher, lastOffChainSubmission } = useOffChainFetcher()
-
+  const imageUploadFetcher = useImageUploadFetcher()
+  const [imageUploading, setImageUploading] = React.useState(false)
+  const [identityImageSrc, setIdentityImageSrc] = React.useState<
+    string | ArrayBuffer | null
+  >(null)
+  const [identityImageFile, setIdentityImageFile] = useState<File | undefined>(
+    undefined,
+  )
   const loaderFetcher = useFetcher<CreateLoaderData>()
   const loaderFetcherUrl = '/resources/create'
   const loaderFetcherRef = useRef(loaderFetcher.load)
@@ -130,6 +139,62 @@ function CreateIdentityForm({
   useEffect(() => {
     loaderFetcherRef.current(loaderFetcherUrl)
   }, [loaderFetcherUrl])
+
+  useEffect(() => {
+    logger('file changed', identityImageFile)
+    if (identityImageFile) {
+      if (
+        !ACCEPTED_IMAGE_MIME_TYPES.includes(identityImageFile.type) ||
+        identityImageFile.size > MAX_UPLOAD_SIZE
+      ) {
+        console.error('Invalid image file', identityImageFile)
+        return
+      }
+
+      // Prepare the file to be uploaded via Fetcher
+      const formData = new FormData()
+      formData.append('image_url', identityImageFile)
+
+      // Use the Fetcher to submit the image to your upload endpoint
+      imageUploadFetcher.submit(formData, {
+        action: '/actions/upload-image', // Make sure this matches your server endpoint
+        method: 'post',
+        encType: 'multipart/form-data',
+      })
+    }
+  }, [identityImageFile])
+
+  useEffect(() => {
+    if (
+      imageUploadFetcher.data &&
+      imageUploadFetcher.data?.status !== 'error'
+    ) {
+      setIdentityImageSrc(imageUploadFetcher.data.submission.value.image_url)
+      toast.custom(
+        () => (
+          <Toast title="success" description="success" icon={<AlertCircle />} />
+        ),
+        {
+          duration: 5000,
+        },
+      )
+      setImageUploading(false)
+    } else if (
+      imageUploadFetcher.data &&
+      imageUploadFetcher.data.status === 'error'
+    ) {
+      toast.custom(
+        () => (
+          <Toast title="Error" description="error" icon={<AlertCircle />} />
+        ),
+        {
+          duration: 5000,
+        },
+      )
+      setIdentityImageSrc(null)
+      setImageUploading(false)
+    }
+  }, [imageUploadFetcher.data])
 
   const { atomCost: atomCostAmount } =
     (loaderFetcher.data as CreateLoaderData) ?? {
@@ -159,7 +224,7 @@ function CreateIdentityForm({
     setImageFilename(filename)
     setImageFilesize(filesize)
   }
-  // const [formTouched, setFormTouched] = useState(false) // to disable submit if user hasn't touched form yet
+  const [formTouched, setFormTouched] = useState(false) // to disable submit if user hasn't touched form yet
   // const [formErrors, setFormErrors] = useState<Record<
   //   string,
   //   string[]
@@ -205,30 +270,30 @@ function CreateIdentityForm({
         if (event.currentTarget.description.value !== undefined) {
           formData.append('description', event.currentTarget.description.value)
         }
-        if (previewImage !== null) {
-          formData.append('image_url', previewImage as string) // add check to this once we allow for null
+        if (identityImageSrc !== null) {
+          formData.append('image_url', identityImageSrc as string) // add check to this once we allow for null
         }
+
         if (event.currentTarget.external_reference?.value !== undefined) {
           const prefixedUrl = `https://${event.currentTarget.external_reference?.value}`
           formData.append('external_reference', prefixedUrl)
         }
 
-        // const submission = parseWithZod(formData, {
-        //   schema: (intent) => createIdentitySchema(intent),
-        // })
+        // Initial form validation
+        const submission = parseWithZod(formData, {
+          schema: createIdentitySchema(),
+        })
 
-        // if (
-        //   submission.error !== undefined &&
-        //   Object.keys(submission.error).length > 0
-        // ) {
-        //   logger('error', submission.error)
-        //   setFormErrors(submission.error)
-        // }
-        // if (
-        //   submission.error !== undefined &&
-        //   Object.keys(submission.error).length === 0
-        // ) {
-        //   setFormErrors(null)
+        if (
+          submission.status === 'error' &&
+          submission.error !== null &&
+          Object.keys(submission.error).length
+        ) {
+          console.error('Create identity validation errors: ', submission.error)
+        }
+
+        setLoading(true)
+        dispatch({ type: 'START_IMAGE_UPLOAD' })
 
         try {
           logger('try offline submit')
@@ -300,6 +365,7 @@ function CreateIdentityForm({
             hash: txHash,
           })
           logger('receipt', receipt)
+          logger('txHash', txHash)
           dispatch({
             type: 'TRANSACTION_COMPLETE',
             txHash: txHash,
@@ -376,6 +442,8 @@ function CreateIdentityForm({
         if (createdIdentity !== undefined && responseData.identity) {
           logger('responseData', responseData)
           const { identity_id } = responseData.identity
+          setTransactionResponseData(responseData.identity)
+          logger('responseData identity', responseData.identity)
           // dispatch({
           //   type: 'OFF_CHAIN_TRANSACTION_COMPLETE',
           //   offChainReceipt: responseData.identity,
@@ -434,6 +502,9 @@ function CreateIdentityForm({
                     previewImage={previewImage}
                     setPreviewImage={setPreviewImage}
                     onFileChange={handleFileChange}
+                    setImageFile={setIdentityImageFile}
+                    disabled={imageUploading}
+                    {...getInputProps(fields.image_url, { type: 'file' })}
                   />
                 </div>
                 <div className="flex-col justify-start items-start inline-flex">
@@ -471,6 +542,7 @@ function CreateIdentityForm({
               {...getInputProps(fields.display_name, { type: 'text' })}
               placeholder="Enter a display name"
               className="border border-solid border-white/10 bg-neutral-900"
+              onChange={() => setFormTouched(true)}
             />
             <ErrorList
               id={fields.display_name.errorId}
@@ -519,7 +591,8 @@ function CreateIdentityForm({
             form={form.id}
             type="submit"
             variant="primary"
-            disabled={loading}
+            disabled={loading || !formTouched}
+            className="mx-auto"
           >
             Review
           </Button>
@@ -528,6 +601,7 @@ function CreateIdentityForm({
         <TransactionStatus
           state={state}
           dispatch={dispatch}
+          transactionDetail={transactionResponseData?.identity_id}
           statusMessages={statusMessages}
           isTransactionAwaiting={isTransactionAwaiting}
           isTransactionProgress={isTransactionProgress}

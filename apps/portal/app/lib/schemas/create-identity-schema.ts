@@ -48,3 +48,17 @@ export function createIdentitySchema() {
     predicate: z.boolean().optional(),
   })
 }
+
+export function imageUrlSchema() {
+  return z.object({
+    image_url: z
+      .instanceof(File)
+      .refine((file) => {
+        return file.size <= MAX_UPLOAD_SIZE
+      }, 'File size must be less than 3MB')
+      .refine((file) => {
+        return ['image/jpeg', 'image/png', 'image/gif'].includes(file.type)
+      }, 'File must be a .png, .jpg, .jpeg, or .gif')
+      .or(z.string()),
+  })
+}

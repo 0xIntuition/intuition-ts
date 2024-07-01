@@ -196,6 +196,7 @@ export function EditProfileForm({ userObject, onClose }: EditProfileFormProps) {
   useEffect(() => {
     if (imageUploadFetcher.state === 'submitting') {
       dispatch({ type: 'START_IMAGE_UPLOAD' })
+      logger('uploading img')
     }
     if (
       imageUploadFetcher.state === 'idle' &&
