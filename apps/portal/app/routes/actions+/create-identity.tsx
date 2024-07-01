@@ -17,7 +17,6 @@ export async function action({ request, context }: ActionFunctionArgs) {
   }
 
   const display_name = formData.get('display_name')
-  const identity_id = formData.get('identity_id')
   const description = formData.get('description')
 
   try {
@@ -41,10 +40,7 @@ export async function action({ request, context }: ActionFunctionArgs) {
         contract: MULTIVAULT_CONTRACT_ADDRESS as string,
         creator: user.details.wallet.address as string,
         display_name: display_name as string,
-        identity_id: identity_id as string,
         description: description as string,
-        is_user: true,
-        predicate: false,
       }
       logger('Identity params:', identityParams)
       identity = await IdentitiesService.createIdentity({
@@ -63,7 +59,7 @@ export async function action({ request, context }: ActionFunctionArgs) {
     }
 
     if (!identity) {
-      throw new Error('Failed to create identity')
+      throw new Error('Failed to create identity.')
     }
     return json(
       {

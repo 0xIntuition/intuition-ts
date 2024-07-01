@@ -181,8 +181,8 @@ function CreateIdentityForm({
     'approve-transaction': 'Approve Transaction...',
     'transaction-pending': 'Transaction Pending...',
     confirm: 'Confirming...',
-    complete: 'Transaction Complete',
-    error: 'Transaction Error',
+    complete: 'Identity created successfully',
+    error: 'Failed to create identity',
   }
 
   const isTransactionAwaiting = (status: string) =>
@@ -202,7 +202,6 @@ function CreateIdentityForm({
         dispatch({ type: 'PREPARING_IDENTITY' })
         const formData = new FormData()
         formData.append('display_name', event.currentTarget.display_name.value)
-        formData.append('identity_id', walletClient.account.address)
         if (event.currentTarget.description.value !== undefined) {
           formData.append('description', event.currentTarget.description.value)
         }

@@ -25,8 +25,8 @@ const TransactionStatus = <
   const getStatusMessage = () => {
     if (isTransactionAwaiting(state.status)) return 'Awaiting'
     if (isTransactionProgress(state.status)) return 'Progress'
-    if (state.status === 'complete') return 'Success'
-    if (state.status === 'error') return 'Error'
+    if (state.status === 'complete') return 'Transaction Success'
+    if (state.status === 'error') return 'Transaction Error'
     return 'Unknown'
   }
 
@@ -36,6 +36,7 @@ const TransactionStatus = <
       <pre>
         {statusMessages[state.status as unknown as string] || 'Unknown Status'}
       </pre>
+      <pre>{state.status === 'error' && state.error}</pre>
     </div>
   )
 }
