@@ -112,3 +112,27 @@ export const identityRouteOptions = [
     basePath: '/app/identity',
   },
 ]
+
+export const exploreRouteOptions = [
+  {
+    value: 'users',
+    label: 'Users',
+    basePath: '/app/explore',
+  },
+  {
+    value: 'identities',
+    label: 'identities',
+    basePath: '/app/explore',
+  },
+  {
+    value: 'claims',
+    label: 'Claims',
+    basePath: '/app/explore',
+  },
+
+  {
+    value: 'lists',
+    label: 'Lists',
+    basePath: '/app/explore',
+  },
+]
