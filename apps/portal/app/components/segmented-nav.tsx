@@ -40,9 +40,11 @@ export const SegmentedNav = ({ options }: SegmentedNavProps) => {
       }
     } else {
       const basePath = '/app/profile'
-      fullPath = wallet
-        ? `${basePath}/${wallet}${option.value !== 'overview' ? '/' + option.value : ''}`
-        : `${basePath}${option.value !== 'overview' ? '/' + option.value : ''}`
+      console.log('wallet', wallet)
+      fullPath =
+        wallet !== null
+          ? `${basePath}/${wallet}${option.value !== 'overview' ? '/' + option.value : ''}`
+          : `${basePath}${option.value !== 'overview' ? '/' + option.value : ''}`
     }
 
     navigate(fullPath)

@@ -11,27 +11,32 @@ import {
 import {
   ApiError,
   IdentitiesService,
+  IdentityPresenter,
   OpenAPI,
+  UserPresenter,
   UsersService,
   UserTotalsPresenter,
 } from '@0xintuition/api'
 
 import { NestedLayout } from '@components/nested-layout'
-import { userIdentityRouteOptions } from '@lib/utils/constants'
+import StakeModal from '@components/stake/stake-modal'
+import { stakeModalAtom } from '@lib/state/store'
+import { userProfileRouteOptions } from '@lib/utils/constants'
 import logger from '@lib/utils/logger'
 import {
-  calculatePercentageGain,
+  calculatePercentageOfTvl,
   formatBalance,
   getAuthHeaders,
   sliceString,
 } from '@lib/utils/misc'
 import { SessionContext } from '@middleware/session'
 import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
-import { Outlet, useLoaderData, useParams } from '@remix-run/react'
+import { Outlet, useLoaderData } from '@remix-run/react'
 import { getVaultDetails } from '@server/multivault'
 import { getPrivyAccessToken } from '@server/privy'
 import * as blockies from 'blockies-ts'
-import { ExtendedUserPresenter } from 'types/user'
+import { useAtom } from 'jotai'
+import { SessionUser } from 'types/user'
 import { VaultDetailsType } from 'types/vault'
 
 export async function loader({ context, request, params }: LoaderFunctionArgs) {
@@ -43,22 +48,16 @@ export async function loader({ context, request, params }: LoaderFunctionArgs) {
   const session = context.get(SessionContext)
   const user = session.get('user')
 
-  if (!user?.details?.wallet?.address) {
-    return logger('No user found in session')
-  }
+  const wallet = params.wallet
 
-  if (!params.wallet) {
-    return
-  }
-
-  if (params.wallet === user?.details?.wallet?.address) {
-    throw redirect('/app/profile')
+  if (!wallet) {
+    return console.log('Wallet parameter is not defined')
   }
 
   let userIdentity
   try {
     userIdentity = await IdentitiesService.getIdentityById({
-      id: params.wallet,
+      id: wallet,
     })
   } catch (error: unknown) {
     if (error instanceof ApiError) {
@@ -69,32 +68,41 @@ export async function loader({ context, request, params }: LoaderFunctionArgs) {
     }
   }
 
-  let userTotals
-  try {
-    if (
-      !userIdentity ||
-      !userIdentity.creator ||
-      typeof userIdentity.creator.id !== 'string'
-    ) {
-      logger('Invalid or missing creator ID')
-      return
-    }
+  if (!userIdentity) {
+    return redirect('/create')
+  }
 
-    userTotals = await UsersService.getUserTotals({
-      id: userIdentity.creator.id,
+  let userObject
+  try {
+    userObject = await UsersService.getUserByWallet({
+      wallet: wallet,
     })
   } catch (error: unknown) {
     if (error instanceof ApiError) {
-      userTotals = undefined
-      console.log(
-        `${error.name} - ${error.status}: ${error.message} ${error.url}`,
-      )
+      userObject = undefined
+      logger(`${error.name} - ${error.status}: ${error.message} ${error.url}`)
     } else {
       throw error
     }
   }
 
-  logger('userIdentity', userIdentity)
+  if (!userObject) {
+    return logger('No user found in DB')
+  }
+
+  let userTotals
+  try {
+    userTotals = await UsersService.getUserTotals({
+      id: userObject.id,
+    })
+  } catch (error: unknown) {
+    if (error instanceof ApiError) {
+      userTotals = undefined
+      logger(`${error.name} - ${error.status}: ${error.message} ${error.url}`)
+    } else {
+      throw error
+    }
+  }
 
   let vaultDetails: VaultDetailsType | null = null
 
@@ -103,7 +111,7 @@ export async function loader({ context, request, params }: LoaderFunctionArgs) {
       vaultDetails = await getVaultDetails(
         userIdentity.contract,
         userIdentity.vault_id,
-        user.details.wallet.address as `0x${string}`,
+        user?.details?.wallet?.address as `0x${string}`,
       )
     } catch (error) {
       logger('Failed to fetch vaultDetails', error)
@@ -111,68 +119,87 @@ export async function loader({ context, request, params }: LoaderFunctionArgs) {
     }
   }
 
-  return json({ user, userIdentity, userTotals, vaultDetails })
+  return json({
+    wallet,
+    user,
+    userIdentity,
+    userObject,
+    userTotals,
+    vaultDetails,
+  })
 }
 
-export default function PublicProfile() {
-  const { userIdentity, userTotals, vaultDetails } = useLoaderData<{
-    userIdentity: ExtendedUserPresenter
-    userTotals: UserTotalsPresenter
-    vaultDetails: VaultDetailsType
-  }>()
-  const params = useParams()
+export default function Profile() {
+  const { wallet, user, userObject, userIdentity, userTotals, vaultDetails } =
+    useLoaderData<{
+      wallet: string
+      user: SessionUser
+      userIdentity: IdentityPresenter
+      userObject: UserPresenter
+      userTotals: UserTotalsPresenter
+      vaultDetails: VaultDetailsType
+    }>()
 
   const { user_conviction_value: user_assets } = vaultDetails
 
-  const imgSrc = blockies.create({ seed: params.wallet }).toDataURL()
+  const imgSrc = blockies.create({ seed: wallet }).toDataURL()
+
+  const [stakeModalActive, setStakeModalActive] = useAtom(stakeModalAtom)
 
   return (
-    <NestedLayout outlet={Outlet} options={userIdentityRouteOptions}>
+    <NestedLayout outlet={Outlet} options={userProfileRouteOptions}>
       <div className="flex flex-col">
         <>
-          <div className="w-[300px] h-[230px] flex-col justify-start items-start mb-6  inline-flex">
+          <div className="w-[300px] h-[230px] flex-col justify-start items-start gap-5 inline-flex">
             <ProfileCard
               variant="user"
-              avatarSrc={userIdentity.user.image ?? imgSrc}
-              name={userIdentity.user.display_name ?? ''}
+              avatarSrc={userObject.image ?? imgSrc}
+              name={userObject.display_name ?? ''}
               walletAddress={
-                userIdentity.ens_name ??
-                sliceString(userIdentity.user.wallet, 6, 4)
+                userObject.ens_name ?? sliceString(userObject.wallet, 6, 4)
               }
               stats={{
                 numberOfFollowers: userTotals.follower_count,
                 numberOfFollowing: userTotals.followed_count,
                 points: userTotals.user_points,
               }}
-              bio={userIdentity.user.description ?? ''}
+              bio={userObject.description ?? ''}
             >
               <Button
                 variant="secondary"
                 className="w-full"
-                onClick={() => logger('follow functionality')}
+                onClick={() => null}
               >
                 Follow
               </Button>
             </ProfileCard>
-          </div>
-          <div className="flex flex-col gap-6">
-            {/* social links will go here */}
+            {/* <ProfileSocialAccounts
+              privyUser={JSON.parse(JSON.stringify(user))}
+              handleOpenEditSocialLinksModal={() =>
+                setEditSocialLinksModalActive(true)
+              }
+            /> */}
             {vaultDetails !== null && user_assets !== '0' ? (
               <PositionCard
-                onButtonClick={() => logger('sell position clicked')}
+                onButtonClick={() =>
+                  setStakeModalActive((prevState) => ({
+                    ...prevState,
+                    mode: 'redeem',
+                    modalType: 'identity',
+                    isOpen: true,
+                  }))
+                }
               >
                 <PositionCardStaked
                   amount={user_assets ? +formatBalance(user_assets, 18, 4) : 0}
                 />
                 <PositionCardOwnership
                   percentOwnership={
-                    userIdentity.user_asset_delta !== null &&
-                    userIdentity.user_assets
-                      ? +calculatePercentageGain(
-                          +userIdentity.user_assets -
-                            +userIdentity.user_asset_delta,
-                          +userIdentity.user_assets,
-                        ).toFixed(1)
+                    userIdentity.user_assets !== null && userIdentity.assets_sum
+                      ? +calculatePercentageOfTvl(
+                          userIdentity.user_assets,
+                          userIdentity.assets_sum,
+                        )
                       : 0
                   }
                 />
@@ -194,10 +221,33 @@ export default function PublicProfile() {
             <StakeCard
               tvl={formatBalance(userIdentity.assets_sum)}
               holders={userIdentity.num_positions}
-              onBuyClick={() => logger('click buy')} // this will open the stake modal
+              onBuyClick={() =>
+                setStakeModalActive((prevState) => ({
+                  ...prevState,
+                  mode: 'deposit',
+                  modalType: 'identity',
+                  isOpen: true,
+                }))
+              }
               onViewAllClick={() => logger('click view all')} // this will navigate to the data-about positions
             />
           </div>
+
+          <StakeModal
+            user={user}
+            contract={userIdentity.contract}
+            open={stakeModalActive.isOpen}
+            identity={userIdentity}
+            min_deposit={vaultDetails.min_deposit}
+            modalType={'identity'}
+            onClose={() => {
+              setStakeModalActive((prevState) => ({
+                ...prevState,
+                isOpen: false,
+                mode: undefined,
+              }))
+            }}
+          />
         </>
       </div>
     </NestedLayout>

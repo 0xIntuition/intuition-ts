@@ -36,3 +36,11 @@ export const stakeModalAtom = atom<{
   modalType: null,
   mode: undefined,
 })
+
+export const followModalAtom = atom<{
+  isOpen: boolean
+  id: string | null
+}>({
+  isOpen: false,
+  id: null,
+})
