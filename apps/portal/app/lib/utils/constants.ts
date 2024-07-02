@@ -33,6 +33,8 @@ export const BLOCK_EXPLORER_URL =
     ? 'https://basescan.org'
     : 'https://sepolia.basescan.org'
 
+export const CREATE_RESOURCE_ROUTE = '/resources/create'
+
 // Privy Social Accounts
 
 export const verifiedPlatforms: PrivyPlatform[] = [

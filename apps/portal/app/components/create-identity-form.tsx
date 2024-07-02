@@ -62,7 +62,7 @@ export function IdentityForm({ onSuccess, onClose }: IdentityFormProps) {
   >(identityTransactionReducer, initialIdentityTransactionState)
 
   const [transactionResponseData, setTransactionResponseData] =
-    React.useState<IdentityPresenter | null>(null)
+    useState<IdentityPresenter | null>(null)
 
   const isTransactionStarted = [
     'preparing-identity',
