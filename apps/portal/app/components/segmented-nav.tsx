@@ -16,9 +16,13 @@ interface SegmentedNavProps {
 }
 
 export const SegmentedNav = ({ options }: SegmentedNavProps) => {
-  const [selectedTab, setSelectedTab] = useState(options[0].value)
   const navigate = useNavigate()
   const params = useParams()
+  const currentPath = window.location.pathname
+  const initialTab =
+    options.find((option) => currentPath.includes(option.value))?.value ||
+    options[0].value
+  const [selectedTab, setSelectedTab] = useState(initialTab)
 
   const handleTabClick = (option: OptionType) => {
     setSelectedTab(option.value)
