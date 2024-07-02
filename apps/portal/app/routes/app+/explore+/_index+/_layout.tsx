@@ -14,12 +14,9 @@ export default function ExploreClaims() {
   logger('message from profile overview loader', message)
 
   return (
-    <NestedVerticalLayout outlet={Outlet} options={exploreRouteOptions}>
-      <div className="m-8 flex flex-col items-center gap-4">
-        <div className="flex flex-col">Explore Index Route</div>
-        <pre>This is a placeholder for the Explore Index route</pre>
-        <pre>route loader: {message}</pre>
-      </div>
-    </NestedVerticalLayout>
+    <NestedVerticalLayout
+      outlet={Outlet}
+      options={exploreRouteOptions}
+    ></NestedVerticalLayout>
   )
 }
