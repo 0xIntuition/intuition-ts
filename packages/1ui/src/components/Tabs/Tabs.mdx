@@ -46,3 +46,32 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@0xintuition/1ui'
 `} />
 
 <Canvas of={Stories.BasicUsage} sourceState="none" />
+
+## Variants
+
+### Alternate
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@0xintuition/1ui'
+
+<Tabs defaultValue="one">
+  <TabsList>
+    <TabsTrigger variant="alternate" value="one" label="One" />
+    <TabsTrigger variant="alternate" value="two" label="Two" />
+    <TabsTrigger disabled variant="alternate" value="three" label="Three" />
+  </TabsList>
+  <div className="bg-primary/10 rounded-lg p-4">
+    <TabsContent value="one">
+      <p>One</p>
+    </TabsContent>
+    <TabsContent value="two">
+      <p>Two</p>
+    </TabsContent>
+  </div>
+</Tabs>
+`} />
+
+<Canvas of={Stories.AlternateUsage} sourceState="none" />
