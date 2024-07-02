@@ -18,16 +18,13 @@ export const BasicUsage: Story = {
     <IdentityInput
       showLabels
       primary={{
-        defaultValue: 'Select an identity',
         selectedValue: { name: 'Super Dave' },
       }}
       secondary={{
-        defaultValue: 'Select an identity',
-        selectedValue: { name: 'Super Dave' },
+        selectedValue: { name: 'is a', variant: 'non-user' },
       }}
       tertiary={{
-        defaultValue: 'Select an identity',
-        selectedValue: { name: 'Super Dave' },
+        selectedValue: { name: 'daredevil', variant: 'non-user' },
       }}
     />
   ),
@@ -37,15 +34,15 @@ export const Other: Story = {
   render: () => (
     <IdentityInput
       primary={{
-        defaultValue: 'Select an identity',
+        placeholder: 'Select an identity',
         selectedValue: {},
       }}
       secondary={{
-        defaultValue: 'Select an identity',
+        placeholder: 'Select an identity',
         selectedValue: {},
       }}
       tertiary={{
-        defaultValue: 'Select an identity',
+        placeholder: 'Select an identity',
         selectedValue: {},
       }}
     />

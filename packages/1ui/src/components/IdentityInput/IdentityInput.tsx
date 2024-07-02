@@ -26,23 +26,27 @@ type IdentityInputSelectedValueType = {
 
 interface IdentityInputButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  defaultValue: string
+  placeholder: string
   selectedValue: IdentityInputSelectedValueType
 }
 
 const IdentityInputButton = ({
-  defaultValue,
+  placeholder,
   selectedValue,
   ...props
 }: IdentityInputButtonProps) => {
   return selectedValue.name ? (
-    <IdentityTag size={IdentityTagSize.lg} {...props}>
+    <IdentityTag
+      size={IdentityTagSize.lg}
+      variant={selectedValue.variant}
+      {...props}
+    >
       {selectedValue.name.toLowerCase()}
     </IdentityTag>
   ) : (
     <Button variant={ButtonVariant.secondary} size={ButtonSize.lg}>
       <Icon name={IconName.plusLarge} className="h-4 w-4" />
-      {defaultValue}
+      {placeholder}
     </Button>
   )
 }
@@ -72,20 +76,17 @@ export interface IdentityInputProps
   extends React.HTMLAttributes<HTMLDivElement> {
   showLabels?: boolean
   primary: {
-    label?: string
-    defaultValue: string
+    placeholder?: string
     selectedValue?: IdentityInputSelectedValueType
     onClick?: () => void
   }
   secondary: {
-    label?: string
-    defaultValue: string
+    placeholder?: string
     selectedValue?: IdentityInputSelectedValueType
     onClick?: () => void
   }
   tertiary: {
-    label?: string
-    defaultValue: string
+    placeholder?: string
     selectedValue?: IdentityInputSelectedValueType
     onClick?: () => void
   }
@@ -108,7 +109,7 @@ const IdentityInput = ({
         <div className="flex flex-col gap-2">
           {showLabels && <IdentityInputLabel label="Subject" />}
           <IdentityInputButton
-            defaultValue={primary.defaultValue}
+            placeholder={primary.placeholder || 'Add a subject'}
             selectedValue={{
               variant: primary.selectedValue?.variant,
               imgSrc: primary.selectedValue?.imgSrc,
@@ -120,7 +121,7 @@ const IdentityInput = ({
         <div className="flex flex-col gap-2">
           {showLabels && <IdentityInputLabel label="Predicate" />}
           <IdentityInputButton
-            defaultValue={secondary.defaultValue}
+            placeholder={secondary.placeholder || 'Add a predicate'}
             selectedValue={{
               variant: secondary.selectedValue?.variant,
               imgSrc: secondary.selectedValue?.imgSrc,
@@ -132,7 +133,7 @@ const IdentityInput = ({
         <div className="flex flex-col gap-2">
           {showLabels && <IdentityInputLabel label="Object" />}
           <IdentityInputButton
-            defaultValue={tertiary.defaultValue}
+            placeholder={tertiary.placeholder || 'Add an object'}
             selectedValue={{
               variant: tertiary.selectedValue?.variant,
               imgSrc: tertiary.selectedValue?.imgSrc,
