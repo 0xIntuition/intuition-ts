@@ -108,6 +108,8 @@ enum AtomType {
   Unknown
   JSON
   Account
+  Thing
+  ThingPredicate
   Person
   PersonPredicate
   Organization
@@ -121,15 +123,27 @@ enum AtomType {
 type AtomValue @entity {
   id: ID!
   account: Account
+  thing: Thing
   person: Person
   organization: Organization
   book: Book
 }
 
+type Thing @entity {
+  id: ID!
+  atom: Atom!
+  name: String
+  description: String
+  image: String
+  url: String
+}
+
 type Person @entity {
   id: ID!
+  atom: Atom!
   identifier: String
   name: String
+  description: String
   image: String
   email: String
   url: String
@@ -137,8 +151,10 @@ type Person @entity {
 
 type Organization @entity {
   id: ID!
+  atom: Atom!
   identifier: String
   name: String
+  description: String
   image: String
   email: String
   url: String
@@ -146,7 +162,9 @@ type Organization @entity {
 
 type Book @entity {
   id: ID!
+  atom: Atom!
   name: String
+  description: String
   genre: String
   url: String
 }

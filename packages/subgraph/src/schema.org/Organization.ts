@@ -15,6 +15,7 @@ export function createOrganization(
   obj: TypedMap<string, JSONValue>,
 ): void {
   const organization = new Organization(atom.id)
+  organization.atom = atom.id
 
   const identifier = obj.get('identifier')
   if (identifier !== null) {

@@ -1,11 +1,10 @@
-import { TypedMap, JSONValue } from '@graphprotocol/graph-ts'
+import { JSONValue, TypedMap } from '@graphprotocol/graph-ts'
+
 import { Atom, AtomValue, Book } from '../../generated/schema'
 
-export function createBook(
-  atom: Atom,
-  obj: TypedMap<string, JSONValue>,
-): void {
+export function createBook(atom: Atom, obj: TypedMap<string, JSONValue>): void {
   const book = new Book(atom.id)
+  book.atom = atom.id
 
   const name = obj.get('name')
   if (name !== null) {
