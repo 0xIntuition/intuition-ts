@@ -1,5 +1,11 @@
 import { faker } from '@faker-js/faker'
-import { FollowAction, Organization, Person, WithContext } from 'schema-dts'
+import {
+  FollowAction,
+  Organization,
+  Person,
+  Thing,
+  WithContext,
+} from 'schema-dts'
 import { parseEther } from 'viem'
 
 import { ipfs } from './ipfs'
@@ -8,7 +14,15 @@ import { getIntuition, getOrCreateAtom } from './utils'
 async function main() {
   const admin = await getIntuition(0)
 
-  // const followPredicate = await getOrCreateAtom(admin.multivault, 'https://schema.org/FollowAction')
+  const followPredicate = await getOrCreateAtom(
+    admin.multivault,
+    'https://schema.org/FollowAction',
+  )
+  const keywortsPredicate = await getOrCreateAtom(
+    admin.multivault,
+    'https://schema.org/keywords',
+  )
+
   const organizationPredicate = await getOrCreateAtom(
     admin.multivault,
     'https://schema.org/Organization',
@@ -126,6 +140,25 @@ async function main() {
   const downvote = await bob.multivault.depositTriple(
     counterVault,
     parseEther('0.001'),
+  )
+
+  const tagJson: WithContext<Thing> = {
+    '@context': 'https://schema.org',
+    '@type': 'Thing',
+    name: 'ethereum',
+  }
+
+  const ipfs3 = await ipfs.add(JSON.stringify(tagJson))
+  const tagAtom = await bob.multivault.createAtom(`ipfs://${ipfs3.cid}`)
+  console.log(`Created atom: ${tagAtom.vaultId} ${tagJson.name} `)
+
+  const tagTriple = await bob.multivault.createTriple(
+    bobAccountAtom.vaultId,
+    keywortsPredicate,
+    tagAtom.vaultId,
+  )
+  console.log(
+    `Created triple: ${tagTriple.vaultId} https://schema.org/keywords ${tagJson.name} `,
   )
 }
 

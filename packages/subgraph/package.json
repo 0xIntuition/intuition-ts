@@ -12,7 +12,7 @@
     "deploy-local": "graph deploy --node http://localhost:8020/ -l 1 --ipfs http://localhost:5001 0xintuition/subgraph",
     "prepare:dev": "mustache config/anvil.json subgraph.template.yaml > subgraph.yaml && graph codegen",
     "prepare:base": "mustache config/base.json subgraph.template.yaml > subgraph.yaml && graph codegen",
-    "prepare:base-sepolia": "mustache config/base-sepolia.json subgraph.template.yaml > subgraph.yaml graph codegen",
+    "prepare:base-sepolia": "mustache config/base-sepolia.json subgraph.template.yaml > subgraph.yaml && graph codegen",
     "build-and-deploy-prodnets": "pnpm prepare:base && pnpm build && pnpm deploy:base",
     "build-and-deploy-testnets": "pnpm prepare:base-sepolia && pnpm build && pnpm deploy:base-sepolia",
     "update-abi": "jq .abi ../../../intuition-beta-contracts/out/EthMultiVault.sol/EthMultiVault.json > ./abis/EthMultiVault.json",
@@ -23,6 +23,7 @@
     "simulate:likes": "tsx simulation/likes",
     "simulate:follows": "tsx simulation/follows",
     "simulate:signaling": "tsx simulation/signaling",
+    "simulate:pinata": "tsx simulation/signaling-pinata",
     "simulate:json": "tsx simulation/json",
     "simulate:unknown": "tsx simulation/unknown"
   },
@@ -33,6 +34,7 @@
   "devDependencies": {
     "@0xintuition/protocol": "workspace:^",
     "@faker-js/faker": "^8.4.1",
+    "@pinata/sdk": "^2.1.0",
     "kubo-rpc-client": "^4.1.1",
     "mustache": "^4.2.0",
     "rdf-parse": "^2.3.3",
