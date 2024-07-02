@@ -50,7 +50,9 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
       contract: 'placeholder_contract',
       counter_vault_id: 'placeholder_counter_vault_id',
       created_at: new Date().toISOString(),
-      creator: null,
+      creator: {
+        display_name: 'Person',
+      },
       for_assets_sum: '0',
       for_conviction_price: '0',
       for_conviction_sum: '0',
@@ -121,18 +123,18 @@ export default function ClaimDetails() {
             <ClaimStakeCard
               currency="ETH"
               totalTVL={4.928}
-              tvlAgainst={0.567}
-              tvlFor={3.643}
-              amountAgainst={39}
-              amountFor={124}
-              onAgainstBtnClick={() => logger('against buttonn click')}
+              tvlAgainst={+claim.user_assets_against}
+              tvlFor={+claim.user_assets_for}
+              amountAgainst={+claim.against_assets_sum}
+              amountFor={+claim.for_assets_sum}
+              onAgainstBtnClick={() => logger('against button click')}
               onForBtnClick={() => logger('for button clicked')}
             />
             <InfoCard
               variant="user"
-              username="super dave"
-              avatarImgSrc="image.jpg"
-              timestamp="2024-05-10T00:00:00Z"
+              username={claim.creator?.display_name ?? ''}
+              avatarImgSrc={claim.creator?.image ?? ''}
+              timestamp={claim.created_at}
             />
           </div>
         </div>
