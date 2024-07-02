@@ -1,6 +1,5 @@
 import { useEffect, useReducer, useRef, useState } from 'react'
 
-import { Button } from '@0xintuition/1ui'
 import {
   ApiError,
   IdentitiesService,
@@ -11,6 +10,7 @@ import {
 } from '@0xintuition/api'
 
 import EditProfileModal from '@components/edit-profile-modal'
+import SubmitButton from '@components/submit-button'
 import Toast from '@components/toast'
 import { multivaultAbi } from '@lib/abis/multivault'
 import { useCreateIdentity } from '@lib/hooks/useCreateIdentity'
@@ -25,12 +25,12 @@ import { CreateLoaderData } from '@routes/resources+/create'
 import { getPrivyAccessToken } from '@server/privy'
 import * as blockies from 'blockies-ts'
 import { useAtom } from 'jotai'
-import { AlertCircle, Loader2Icon } from 'lucide-react'
+import { AlertCircle } from 'lucide-react'
 import { ClientOnly } from 'remix-utils/client-only'
 import { toast } from 'sonner'
 import { SessionUser } from 'types/user'
 import { toHex, TransactionReceipt } from 'viem'
-import { usePublicClient, useWalletClient } from 'wagmi'
+import { useConnectorClient, usePublicClient } from 'wagmi'
 
 export async function loader({ context, request }: LoaderFunctionArgs) {
   OpenAPI.BASE = 'https://dev.api.intuition.systems'
@@ -80,7 +80,8 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
   }
 
   if (!userObject) {
-    return console.log('No user found in DB')
+    console.log('No user found in DB')
+    return json({ user, userIdentity, userObject })
   }
 
   logger('userObject', userObject)
@@ -212,7 +213,7 @@ export function CreateButton({
   const emitterFetcher = useFetcher()
   logger('createdIdentity', createdIdentity)
 
-  const { data: walletClient } = useWalletClient()
+  const { data: walletClient } = useConnectorClient()
 
   const [loading, setLoading] = useState(false)
 
@@ -406,18 +407,12 @@ export function CreateButton({
 
   return (
     <>
-      <Button variant="primary" disabled={loading} onClick={handleSubmit}>
-        {awaitingWalletConfirmation ||
-        awaitingOnChainConfirmation ||
-        loading ? (
-          <>
-            <Loader2Icon className="animate-spin h-5 w-5 mr-1" />
-            Creating Identity...
-          </>
-        ) : (
-          'Create Identity'
-        )}
-      </Button>
+      <SubmitButton
+        loading={loading}
+        onClick={handleSubmit}
+        buttonText="Create Identity"
+        loadingText="Creating Identity..."
+      />
     </>
   )
 }
