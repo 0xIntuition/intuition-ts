@@ -20,6 +20,7 @@ import {
   UserTotalsPresenter,
 } from '@0xintuition/api'
 
+import CreateClaimModal from '@components/create-claim-modal'
 import CreateIdentityModal from '@components/create-identity-modal'
 import EditProfileModal from '@components/edit-profile-modal'
 import EditSocialLinksModal from '@components/edit-social-links-modal'
@@ -27,6 +28,7 @@ import { NestedLayout } from '@components/nested-layout'
 import { ProfileSocialAccounts } from '@components/profile-social-accounts'
 import StakeModal from '@components/stake/stake-modal'
 import {
+  createClaimModalAtom,
   createIdentityModalAtom,
   editProfileModalAtom,
   editSocialLinksModalAtom,
@@ -163,6 +165,9 @@ export default function Profile() {
     createIdentityModalAtom,
   )
 
+  const [createClaimModalActive, setCreateClaimModalActive] =
+    useAtom(createClaimModalAtom)
+
   const [stakeModalActive, setStakeModalActive] = useAtom(stakeModalAtom)
 
   const revalidator = useRevalidator()
@@ -280,6 +285,13 @@ export default function Profile() {
             >
               Create Identity
             </Button>
+            <Button
+              variant="secondary"
+              className="w-full"
+              onClick={() => setCreateClaimModalActive(true)}
+            >
+              Create Claim
+            </Button>
           </div>
 
           <EditProfileModal
@@ -295,6 +307,10 @@ export default function Profile() {
           <CreateIdentityModal
             open={createIdentityModalActive}
             onClose={() => setCreateIdentityModalActive(false)}
+          />
+          <CreateClaimModal
+            open={createClaimModalActive}
+            onClose={() => setCreateClaimModalActive(false)}
           />
           <StakeModal
             user={user}

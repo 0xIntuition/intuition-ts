@@ -19,6 +19,7 @@ export function atomWithToggle(
 }
 
 export const createIdentityModalAtom = atomWithToggle(false)
+export const createClaimModalAtom = atomWithToggle(false)
 export const editProfileModalAtom = atomWithToggle(false)
 export const editSocialLinksModalAtom = atomWithToggle(false)
 
