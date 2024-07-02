@@ -122,7 +122,7 @@ export default function ClaimDetails() {
 
             <ClaimStakeCard
               currency="ETH"
-              totalTVL={4.928}
+              totalTVL={+claim.assets_sum}
               tvlAgainst={+claim.user_assets_against}
               tvlFor={+claim.user_assets_for}
               amountAgainst={+claim.against_assets_sum}
