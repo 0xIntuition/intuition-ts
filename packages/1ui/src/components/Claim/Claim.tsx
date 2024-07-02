@@ -29,7 +29,7 @@ export const Claim = ({
   disabled,
   size,
 }: ClaimProps) => {
-  const separatorWidth = size === IdentityTagSize.default ? 'w-2' : 'w-4'
+  const separatorWidth = size !== IdentityTagSize.default ? 'w-4' : 'w-2'
   return (
     <div className="flex items-center w-full max-w-full group">
       <IdentityTag
