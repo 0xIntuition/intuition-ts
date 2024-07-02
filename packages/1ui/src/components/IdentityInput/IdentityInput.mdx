@@ -1,21 +1,12 @@
 import { Canvas, Controls, Meta, Source, Title } from '@storybook/blocks'
 
-import { Button } from '..'
-
 import * as Stories from './IdentityInput.stories'
 
 <Meta of={Stories} />
 
 <Title />
 
-#### A short description goes here.
-
-<Button
-  variant="accent"
-  onClick={() => window.open('link_goes_here', '_blank')}
->
-  {'API Reference'}
-</Button>
+#### Allows users to create a claim.
 
 <Source
   dark
@@ -23,7 +14,21 @@ import * as Stories from './IdentityInput.stories'
   code={`
 import { IdentityInput } from '@0xintuition/1ui'
 
-<IdentityInput />
+<IdentityInput
+  showLabels
+  subject={{
+    selectedValue: { name: 'Super Dave' },
+    onClick: () => doSomething,
+  }}
+  predicate={{
+    selectedValue: { name: 'is a', variant: 'non-user' },
+    onClick: () => doSomething,
+  }}
+  object={{
+    selectedValue: { name: 'daredevil', variant: 'non-user' },
+    onClick: () => doSomething,
+  }}
+/>
 `} />
 
 <Canvas of={Stories.BasicUsage} sourceState="none" />
@@ -40,7 +45,23 @@ import { IdentityInput } from '@0xintuition/1ui'
   dark
   language="tsx"
   code={`
-<IdentityInput variant="other">
+<IdentityInput
+  subject={{
+    placeholder: 'Select an identity',
+    selectedValue: {},
+    onClick: () => doSomething,
+  }}
+  predicate={{
+    placeholder: 'Select an identity',
+    selectedValue: {},
+    onClick: () => doSomething,
+  }}
+  object={{
+    placeholder: 'Select an identity',
+    selectedValue: {},
+    onClick: () => doSomething,
+  }}
+/>
 `}
 />
 

@@ -53,9 +53,13 @@ const IdentityInputButton = ({
 
 interface IdentityInputLabelProps {
   label: string
+  tooltipContent: string
 }
 
-const IdentityInputLabel = ({ label }: IdentityInputLabelProps) => (
+const IdentityInputLabel = ({
+  label,
+  tooltipContent,
+}: IdentityInputLabelProps) => (
   <div className="flex gap-1 items-center">
     <Text variant={TextVariant.small} className="text-primary/60">
       {label}
@@ -67,7 +71,7 @@ const IdentityInputLabel = ({ label }: IdentityInputLabelProps) => (
           className="h-4 w-4 text-primary/60"
         />
       </TooltipTrigger>
-      <TooltipContent>Hello</TooltipContent>
+      <TooltipContent>{tooltipContent}</TooltipContent>
     </Tooltip>
   </div>
 )
@@ -75,17 +79,17 @@ const IdentityInputLabel = ({ label }: IdentityInputLabelProps) => (
 export interface IdentityInputProps
   extends React.HTMLAttributes<HTMLDivElement> {
   showLabels?: boolean
-  primary: {
+  subject: {
     placeholder?: string
     selectedValue?: IdentityInputSelectedValueType
     onClick?: () => void
   }
-  secondary: {
+  predicate: {
     placeholder?: string
     selectedValue?: IdentityInputSelectedValueType
     onClick?: () => void
   }
-  tertiary: {
+  object: {
     placeholder?: string
     selectedValue?: IdentityInputSelectedValueType
     onClick?: () => void
@@ -94,9 +98,9 @@ export interface IdentityInputProps
 
 const IdentityInput = ({
   showLabels,
-  primary,
-  secondary,
-  tertiary,
+  subject,
+  predicate,
+  object,
   ...props
 }: IdentityInputProps) => {
   const Divider = () => (
@@ -107,38 +111,56 @@ const IdentityInput = ({
     <TooltipProvider>
       <div className="flex items-center" {...props}>
         <div className="flex flex-col gap-2">
-          {showLabels && <IdentityInputLabel label="Subject" />}
+          {showLabels && (
+            <IdentityInputLabel
+              label="Subject"
+              tooltipContent="Select an identity as a subject"
+            />
+          )}
           <IdentityInputButton
-            placeholder={primary.placeholder || 'Add a subject'}
+            placeholder={subject.placeholder || 'Add a subject'}
             selectedValue={{
-              variant: primary.selectedValue?.variant,
-              imgSrc: primary.selectedValue?.imgSrc,
-              name: primary.selectedValue?.name,
+              variant: subject.selectedValue?.variant,
+              imgSrc: subject.selectedValue?.imgSrc,
+              name: subject.selectedValue?.name,
             }}
+            onClick={subject.onClick}
           />
         </div>
         <Divider />
         <div className="flex flex-col gap-2">
-          {showLabels && <IdentityInputLabel label="Predicate" />}
+          {showLabels && (
+            <IdentityInputLabel
+              label="Predicate"
+              tooltipContent="Select an identity as a predicate"
+            />
+          )}
           <IdentityInputButton
-            placeholder={secondary.placeholder || 'Add a predicate'}
+            placeholder={predicate.placeholder || 'Add a predicate'}
             selectedValue={{
-              variant: secondary.selectedValue?.variant,
-              imgSrc: secondary.selectedValue?.imgSrc,
-              name: secondary.selectedValue?.name,
+              variant: predicate.selectedValue?.variant,
+              imgSrc: predicate.selectedValue?.imgSrc,
+              name: predicate.selectedValue?.name,
             }}
+            onClick={predicate.onClick}
           />
         </div>
         <Divider />
         <div className="flex flex-col gap-2">
-          {showLabels && <IdentityInputLabel label="Object" />}
+          {showLabels && (
+            <IdentityInputLabel
+              label="Object"
+              tooltipContent="Select an identity as an object"
+            />
+          )}
           <IdentityInputButton
-            placeholder={tertiary.placeholder || 'Add an object'}
+            placeholder={object.placeholder || 'Add an object'}
             selectedValue={{
-              variant: tertiary.selectedValue?.variant,
-              imgSrc: tertiary.selectedValue?.imgSrc,
-              name: tertiary.selectedValue?.name,
+              variant: object.selectedValue?.variant,
+              imgSrc: object.selectedValue?.imgSrc,
+              name: object.selectedValue?.name,
             }}
+            onClick={object.onClick}
           />
         </div>
       </div>

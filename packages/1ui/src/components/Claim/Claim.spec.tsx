@@ -31,7 +31,7 @@ describe('Claim', () => {
           class="flex items-center w-full max-w-full group"
         >
           <button
-            class="border border-border/20 font-medium py-1 px-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center rounded-full [&>span]:rounded-full [&>span]:overflow-hidden text-lg [&>span]:h-6 [&>span]:w-6 group-hover:border-primary group-hover:bg-primary/20"
+            class="border border-border/20 font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center rounded-full [&>span]:rounded-full [&>span]:overflow-hidden text-base [&>span]:h-7 [&>span]:w-7 group-hover:border-primary group-hover:bg-primary/20"
           >
             <span>
               <img
@@ -43,12 +43,12 @@ describe('Claim', () => {
             Alice
           </button>
           <div
-            class="shrink-0 bg-border/30 h-[1px] w-8"
+            class="shrink-0 bg-border/30 h-[1px] w-4"
             data-orientation="horizontal"
             role="none"
           />
           <button
-            class="border border-border/20 font-medium py-1 px-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center text-lg [&>span]:h-6 [&>span]:w-6 group-hover:border-primary group-hover:bg-primary/20"
+            class="border border-border/20 font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center rounded-sm text-base [&>span]:h-7 [&>span]:w-7 group-hover:border-primary group-hover:bg-primary/20"
           >
             <span>
               <span
@@ -66,12 +66,12 @@ describe('Claim', () => {
             likes
           </button>
           <div
-            class="shrink-0 bg-border/30 h-[1px] w-8"
+            class="shrink-0 bg-border/30 h-[1px] w-4"
             data-orientation="horizontal"
             role="none"
           />
           <button
-            class="border border-border/20 font-medium py-1 px-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center text-lg [&>span]:h-6 [&>span]:w-6 group-hover:border-primary group-hover:bg-primary/20"
+            class="border border-border/20 font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center rounded-sm text-base [&>span]:h-7 [&>span]:w-7 group-hover:border-primary group-hover:bg-primary/20"
           >
             <span>
               <span
@@ -101,7 +101,7 @@ describe('Claim', () => {
           class="flex items-center w-full max-w-full group"
         >
           <button
-            class="border border-border/20 font-medium py-1 px-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center rounded-full [&>span]:rounded-full [&>span]:overflow-hidden text-lg [&>span]:h-6 [&>span]:w-6 disabled:bg-muted disabled:text-muted-foreground disabled:border-muted cursor-not-allowed group-hover:border-primary group-hover:bg-primary/20"
+            class="border border-border/20 font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center rounded-full [&>span]:rounded-full [&>span]:overflow-hidden text-base [&>span]:h-7 [&>span]:w-7 disabled:bg-muted disabled:text-muted-foreground disabled:border-muted cursor-not-allowed group-hover:border-primary group-hover:bg-primary/20"
             disabled=""
           >
             <span>
@@ -114,12 +114,12 @@ describe('Claim', () => {
             Alice
           </button>
           <div
-            class="shrink-0 bg-border/30 h-[1px] w-8"
+            class="shrink-0 bg-border/30 h-[1px] w-4"
             data-orientation="horizontal"
             role="none"
           />
           <button
-            class="border border-border/20 font-medium py-1 px-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center text-lg [&>span]:h-6 [&>span]:w-6 disabled:bg-muted disabled:text-muted-foreground disabled:border-muted cursor-not-allowed group-hover:border-primary group-hover:bg-primary/20"
+            class="border border-border/20 font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center rounded-sm text-base [&>span]:h-7 [&>span]:w-7 disabled:bg-muted disabled:text-muted-foreground disabled:border-muted cursor-not-allowed group-hover:border-primary group-hover:bg-primary/20"
             disabled=""
           >
             <span>
@@ -138,12 +138,12 @@ describe('Claim', () => {
             likes
           </button>
           <div
-            class="shrink-0 bg-border/30 h-[1px] w-8"
+            class="shrink-0 bg-border/30 h-[1px] w-4"
             data-orientation="horizontal"
             role="none"
           />
           <button
-            class="border border-border/20 font-medium py-1 px-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center text-lg [&>span]:h-6 [&>span]:w-6 disabled:bg-muted disabled:text-muted-foreground disabled:border-muted cursor-not-allowed group-hover:border-primary group-hover:bg-primary/20"
+            class="border border-border/20 font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center rounded-sm text-base [&>span]:h-7 [&>span]:w-7 disabled:bg-muted disabled:text-muted-foreground disabled:border-muted cursor-not-allowed group-hover:border-primary group-hover:bg-primary/20"
             disabled=""
           >
             <span>
@@ -176,7 +176,7 @@ describe('Claim', () => {
           class="flex items-center w-full max-w-full group"
         >
           <button
-            class="border border-border/20 font-medium py-1 px-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center rounded-full [&>span]:rounded-full [&>span]:overflow-hidden text-base [&>span]:h-[1.375rem] [&>span]:w-[1.375rem] group-hover:border-primary group-hover:bg-primary/20"
+            class="border border-border/20 font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center rounded-full [&>span]:rounded-full [&>span]:overflow-hidden group-hover:border-primary group-hover:bg-primary/20"
           >
             <span>
               <img
@@ -188,12 +188,12 @@ describe('Claim', () => {
             Alice
           </button>
           <div
-            class="shrink-0 bg-border/30 h-[1px] w-2"
+            class="shrink-0 bg-border/30 h-[1px] w-4"
             data-orientation="horizontal"
             role="none"
           />
           <button
-            class="border border-border/20 font-medium py-1 px-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center text-base [&>span]:h-[1.375rem] [&>span]:w-[1.375rem] group-hover:border-primary group-hover:bg-primary/20"
+            class="border border-border/20 font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center rounded-sm group-hover:border-primary group-hover:bg-primary/20"
           >
             <span>
               <span
@@ -211,12 +211,12 @@ describe('Claim', () => {
             likes
           </button>
           <div
-            class="shrink-0 bg-border/30 h-[1px] w-2"
+            class="shrink-0 bg-border/30 h-[1px] w-4"
             data-orientation="horizontal"
             role="none"
           />
           <button
-            class="border border-border/20 font-medium py-1 px-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center text-base [&>span]:h-[1.375rem] [&>span]:w-[1.375rem] group-hover:border-primary group-hover:bg-primary/20"
+            class="border border-border/20 font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center rounded-sm group-hover:border-primary group-hover:bg-primary/20"
           >
             <span>
               <span
@@ -246,7 +246,7 @@ describe('Claim', () => {
           class="flex items-center w-full max-w-full group"
         >
           <button
-            class="border border-border/20 font-medium py-1 px-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center rounded-full [&>span]:rounded-full [&>span]:overflow-hidden text-xl [&>span]:h-8 [&>span]:w-8 group-hover:border-primary group-hover:bg-primary/20"
+            class="border border-border/20 font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center rounded-full [&>span]:rounded-full [&>span]:overflow-hidden text-lg [&>span]:h-8 [&>span]:w-8 group-hover:border-primary group-hover:bg-primary/20"
           >
             <span>
               <img
@@ -258,12 +258,12 @@ describe('Claim', () => {
             Alice
           </button>
           <div
-            class="shrink-0 bg-border/30 h-[1px] w-8"
+            class="shrink-0 bg-border/30 h-[1px] w-4"
             data-orientation="horizontal"
             role="none"
           />
           <button
-            class="border border-border/20 font-medium py-1 px-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center text-xl [&>span]:h-8 [&>span]:w-8 group-hover:border-primary group-hover:bg-primary/20"
+            class="border border-border/20 font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center rounded-sm text-lg [&>span]:h-8 [&>span]:w-8 group-hover:border-primary group-hover:bg-primary/20"
           >
             <span>
               <span
@@ -281,12 +281,12 @@ describe('Claim', () => {
             likes
           </button>
           <div
-            class="shrink-0 bg-border/30 h-[1px] w-8"
+            class="shrink-0 bg-border/30 h-[1px] w-4"
             data-orientation="horizontal"
             role="none"
           />
           <button
-            class="border border-border/20 font-medium py-1 px-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center text-xl [&>span]:h-8 [&>span]:w-8 group-hover:border-primary group-hover:bg-primary/20"
+            class="border border-border/20 font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center rounded-sm text-lg [&>span]:h-8 [&>span]:w-8 group-hover:border-primary group-hover:bg-primary/20"
           >
             <span>
               <span

@@ -67,7 +67,7 @@ export const BasicUsage: Story = {
     },
   },
   render: (args) => (
-    <div className="w-[500px]">
+    <div className="w-max margin">
       <Claim {...args} />
     </div>
   ),
@@ -76,7 +76,7 @@ export const BasicUsage: Story = {
 // Example story for the User variant
 export const User: Story = {
   render: () => (
-    <div className="w-[500px]">
+    <div className="w-max margin">
       <Claim
         size="md"
         subject={{

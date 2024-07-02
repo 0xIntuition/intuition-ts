@@ -21,7 +21,6 @@ export const BasicUsage: Story = {
   render: (args) => (
     <ClaimStatus {...args} className="w-[800px]">
       <Claim
-        size="sm"
         subject={{ label: '0xintuition' }}
         predicate={{ label: 'is really' }}
         object={{ label: 'cool' }}

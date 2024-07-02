@@ -24,7 +24,6 @@ export const BasicUsage: Story = {
     <div className="w-[600px]">
       <ClaimRow {...args}>
         <Claim
-          size="sm"
           subject={{
             variant: 'non-user',
             label: '0xintuition',

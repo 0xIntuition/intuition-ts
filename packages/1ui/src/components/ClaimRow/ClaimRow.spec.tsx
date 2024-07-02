@@ -52,7 +52,7 @@ describe('ClaimRow', () => {
                 class="flex items-center w-full max-w-full group"
               >
                 <button
-                  class="border border-border/20 font-medium py-1 px-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center text-base [&>span]:h-[1.375rem] [&>span]:w-[1.375rem] group-hover:border-primary group-hover:bg-primary/20"
+                  class="border border-border/20 font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center rounded-sm group-hover:border-primary group-hover:bg-primary/20"
                 >
                   <span>
                     <span
@@ -70,12 +70,12 @@ describe('ClaimRow', () => {
                   0xintuition
                 </button>
                 <div
-                  class="shrink-0 bg-border/30 h-[1px] w-2"
+                  class="shrink-0 bg-border/30 h-[1px] w-4"
                   data-orientation="horizontal"
                   role="none"
                 />
                 <button
-                  class="border border-border/20 font-medium py-1 px-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center text-base [&>span]:h-[1.375rem] [&>span]:w-[1.375rem] group-hover:border-primary group-hover:bg-primary/20"
+                  class="border border-border/20 font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center rounded-sm group-hover:border-primary group-hover:bg-primary/20"
                 >
                   <span>
                     <span
@@ -93,12 +93,12 @@ describe('ClaimRow', () => {
                   is really
                 </button>
                 <div
-                  class="shrink-0 bg-border/30 h-[1px] w-2"
+                  class="shrink-0 bg-border/30 h-[1px] w-4"
                   data-orientation="horizontal"
                   role="none"
                 />
                 <button
-                  class="border border-border/20 font-medium py-1 px-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center text-base [&>span]:h-[1.375rem] [&>span]:w-[1.375rem] group-hover:border-primary group-hover:bg-primary/20"
+                  class="border border-border/20 font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center rounded-sm group-hover:border-primary group-hover:bg-primary/20"
                 >
                   <span>
                     <span

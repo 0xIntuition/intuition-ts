@@ -14,34 +14,33 @@ export default meta
 type Story = StoryObj<typeof IdentityInput>
 
 export const BasicUsage: Story = {
-  render: () => (
-    <IdentityInput
-      showLabels
-      primary={{
-        selectedValue: { name: 'Super Dave' },
-      }}
-      secondary={{
-        selectedValue: { name: 'is a', variant: 'non-user' },
-      }}
-      tertiary={{
-        selectedValue: { name: 'daredevil', variant: 'non-user' },
-      }}
-    />
-  ),
+  args: {
+    showLabels: true,
+    subject: {
+      selectedValue: { name: 'Super Dave' },
+    },
+    predicate: {
+      selectedValue: { name: 'is a', variant: 'non-user' },
+    },
+    object: {
+      selectedValue: { name: 'daredevil', variant: 'non-user' },
+    },
+  },
+  render: (args) => <IdentityInput {...args} />,
 }
 
 export const Other: Story = {
   render: () => (
     <IdentityInput
-      primary={{
+      subject={{
         placeholder: 'Select an identity',
         selectedValue: {},
       }}
-      secondary={{
+      predicate={{
         placeholder: 'Select an identity',
         selectedValue: {},
       }}
-      tertiary={{
+      object={{
         placeholder: 'Select an identity',
         selectedValue: {},
       }}
