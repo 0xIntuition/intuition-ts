@@ -46,7 +46,6 @@ export const IdentityVariant: Story = {
     <div className="w-[800px]">
       <ClaimPosition {...args}>
         <Claim
-          size="sm"
           subject={{
             variant: 'non-user',
             label: '0xintuition',

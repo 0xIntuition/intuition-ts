@@ -28,7 +28,7 @@ describe('InfoCard', () => {
             class="flex justify-between items-center gap-1"
           >
             <button
-              class="border border-border/20 font-medium py-1 px-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center rounded-full [&>span]:rounded-full [&>span]:overflow-hidden text-sm [&>span]:h-4 [&>span]:w-4"
+              class="border border-border/20 font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center rounded-full [&>span]:rounded-full [&>span]:overflow-hidden text-base [&>span]:h-6 [&>span]:w-6"
             >
               <span>
                 <img

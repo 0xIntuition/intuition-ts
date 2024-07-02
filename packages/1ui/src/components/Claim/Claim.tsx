@@ -3,7 +3,7 @@ import { Separator } from 'components/Separator'
 import { IdentityType } from 'types'
 
 export interface ClaimProps {
-  size: keyof typeof IdentityTagSize
+  size?: keyof typeof IdentityTagSize
   disabled?: boolean
   subject: {
     variant?: IdentityType
@@ -29,7 +29,7 @@ export const Claim = ({
   disabled,
   size,
 }: ClaimProps) => {
-  const separatorWidth = size === IdentityTagSize.sm ? 'w-2' : 'w-8'
+  const separatorWidth = size !== IdentityTagSize.default ? 'w-4' : 'w-2'
   return (
     <div className="flex items-center w-full max-w-full group">
       <IdentityTag

@@ -1,0 +1,68 @@
+import { Canvas, Controls, Meta, Source, Title } from '@storybook/blocks'
+
+import * as Stories from './IdentityInput.stories'
+
+<Meta of={Stories} />
+
+<Title />
+
+#### Allows users to create a claim.
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { IdentityInput } from '@0xintuition/1ui'
+
+<IdentityInput
+  showLabels
+  subject={{
+    selectedValue: { name: 'Super Dave' },
+    onClick: () => doSomething,
+  }}
+  predicate={{
+    selectedValue: { name: 'is a', variant: 'non-user' },
+    onClick: () => doSomething,
+  }}
+  object={{
+    selectedValue: { name: 'daredevil', variant: 'non-user' },
+    onClick: () => doSomething,
+  }}
+/>
+`} />
+
+<Canvas of={Stories.BasicUsage} sourceState="none" />
+
+## Properties
+
+<Controls />
+
+## Variants
+
+### Other
+
+<Source
+  dark
+  language="tsx"
+  code={`
+<IdentityInput
+  subject={{
+    placeholder: 'Select an identity',
+    selectedValue: {},
+    onClick: () => doSomething,
+  }}
+  predicate={{
+    placeholder: 'Select an identity',
+    selectedValue: {},
+    onClick: () => doSomething,
+  }}
+  object={{
+    placeholder: 'Select an identity',
+    selectedValue: {},
+    onClick: () => doSomething,
+  }}
+/>
+`}
+/>
+
+<Canvas of={Stories.Other} sourceState="none" />
