@@ -1,16 +1,23 @@
-import { Button, Claim, Icon, Text } from '@0xintuition/1ui'
+import {
+  Button,
+  Claim,
+  ClaimStakeCard,
+  Icon,
+  InfoCard,
+  Text,
+} from '@0xintuition/1ui'
 import {
   ApiError,
+  ClaimPresenter,
   ClaimSortColumn,
-  ClaimsService,
   OpenAPI,
   SortDirection,
 } from '@0xintuition/api'
 
 import logger from '@lib/utils/logger'
-import { calculateTotalPages, getAuthHeaders } from '@lib/utils/misc'
+import { getAuthHeaders } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
-import { useNavigate } from '@remix-run/react'
+import { useLoaderData, useNavigate } from '@remix-run/react'
 import { getPrivyAccessToken } from '@server/privy'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -30,48 +37,58 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     (searchParams.get('sortBy') as ClaimSortColumn) ?? 'createdAt'
   const direction: SortDirection =
     (searchParams.get('direction') as SortDirection) ?? 'desc'
-  const page = searchParams.get('page')
-    ? parseInt(searchParams.get('page') as string)
-    : 1
-  const limit = searchParams.get('limit') ?? '10'
 
-  let claims
+  let claim
   try {
-    claims = await ClaimsService.searchClaims({
-      vault: id,
-      page: page,
-      limit: Number(limit),
-      offset: 0,
-      sortBy: sortBy,
-      direction: direction,
-    })
+    claim = {
+      against_assets_sum: '0',
+      against_conviction_price: '0',
+      against_conviction_sum: '0',
+      against_num_positions: 0,
+      assets_sum: '0',
+      claim_id: 'placeholder_id',
+      contract: 'placeholder_contract',
+      counter_vault_id: 'placeholder_counter_vault_id',
+      created_at: new Date().toISOString(),
+      creator: null,
+      for_assets_sum: '0',
+      for_conviction_price: '0',
+      for_conviction_sum: '0',
+      for_num_positions: 0,
+      num_positions: 0,
+      object: null,
+      predicate: null,
+      status: 'pending',
+      subject: null,
+      updated_at: new Date().toISOString(),
+      user_assets_against: '0',
+      user_assets_for: '0',
+      user_conviction_against: '0',
+      user_conviction_for: '0',
+      vault_id: 'placeholder_vault_id',
+    }
   } catch (error: unknown) {
     if (error instanceof ApiError) {
-      claims = undefined
+      claim = undefined
       console.log(`${error.name} - ${error.status}: ${error.message}`)
     } else {
       throw error
     }
   }
 
-  const totalPages = calculateTotalPages(claims?.total ?? 0, Number(limit))
-
-  logger('claims', claims)
-
   return json({
-    claims,
+    claim,
     sortBy,
     direction,
-    pagination: {
-      page: Number(page),
-      limit: Number(limit),
-      total: claims?.total,
-      totalPages,
-    },
   })
 }
 export default function ClaimDetails() {
+  const { claim } = useLoaderData<{
+    claim: ClaimPresenter
+  }>()
   const navigate = useNavigate()
+  logger('claim on claim details page', claim)
+
   return (
     <div className="flex flex-col h-screen mx-8">
       <div className="flex items-center gap-6 my-10">
@@ -94,12 +111,28 @@ export default function ClaimDetails() {
           }}
         />
       </div>
-      <div className="flex">
-        <div className="flex-shrink-0 w-1/3 max-w-xs space-y-4 h-screen">
+      <div className="flex gap-8">
+        <div className="flex-shrink-0 w-1/3 max-w-sm space-y-4 h-screen">
           <div className="flex flex-col space-y-4">
             <Text variant="headline" className="text-secondary-foreground">
               Left layout
             </Text>
+            <ClaimStakeCard
+              currency="ETH"
+              totalTVL={4.928}
+              tvlAgainst={0.567}
+              tvlFor={3.643}
+              amountAgainst={39}
+              amountFor={124}
+              onAgainstBtnClick={() => logger('against buttonn click')}
+              onForBtnClick={() => logger('for button clicked')}
+            />
+            <InfoCard
+              variant="user"
+              username="super dave"
+              avatarImgSrc="image.jpg"
+              timestamp="2024-05-10T00:00:00Z"
+            />
           </div>
         </div>
         <div className="flex-grow ml-8">
