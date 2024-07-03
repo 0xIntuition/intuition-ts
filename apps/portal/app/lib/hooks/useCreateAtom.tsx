@@ -5,7 +5,7 @@ import { getChainEnvConfig } from '../utils/environment'
 import { useContractWriteAndWait } from './useContractWriteAndWait'
 import { useMultivaultContract } from './useMultivaultContract'
 
-export const useCreateIdentity = () => {
+export const useCreateAtom = () => {
   const multivault = useMultivaultContract(
     getChainEnvConfig(CURRENT_ENV).chainId.toString(),
   ) as GetContractReturnType

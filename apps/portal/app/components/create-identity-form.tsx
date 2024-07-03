@@ -20,7 +20,7 @@ import {
 } from '@conform-to/react'
 import { getZodConstraint, parseWithZod } from '@conform-to/zod'
 import { multivaultAbi } from '@lib/abis/multivault'
-import { useCreateIdentity } from '@lib/hooks/useCreateIdentity'
+import { useCreateAtom } from '@lib/hooks/useCreateAtom'
 import { useImageUploadFetcher } from '@lib/hooks/useImageUploadFetcher'
 import {
   OffChainFetcherData,
@@ -224,7 +224,7 @@ function CreateIdentityForm({
     writeContractAsync: writeCreateIdentity,
     awaitingWalletConfirmation,
     awaitingOnChainConfirmation,
-  } = useCreateIdentity()
+  } = useCreateAtom()
   const emitterFetcher = useFetcher()
 
   const createdIdentity = offChainFetcher?.data?.identity

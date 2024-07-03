@@ -10,7 +10,7 @@ import {
 } from '@0xintuition/1ui'
 import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
 
-import { getFormProps, useForm } from '@conform-to/react'
+import { getFormProps, SubmissionResult, useForm } from '@conform-to/react'
 import { getZodConstraint, parseWithZod } from '@conform-to/zod'
 import { useLoaderFetcher } from '@lib/hooks/useLoaderFetcher'
 import {
@@ -117,6 +117,7 @@ function CreateClaimForm({
   interface OffChainClaimFetcherData {
     success: 'success' | 'error'
     claim: ClaimPresenter
+    submission: SubmissionResult<string[]> | null
   }
 
   interface GetIdentitiesResponse {
@@ -136,15 +137,17 @@ function CreateClaimForm({
     }
   }, [identitiesFetcher.data])
 
-  // const {
-  //   tripleCreationFeeRaw: tripleCostAmountRaw,
-  //   atomEquityFeeRaw: atomEquityFee,
-  //   atomCost,
-  // } = (feeFetcher.data as CreateLoaderData) ?? {
-  //   tripleCreationFeeRaw: BigInt(0),
-  //   atomEquityFeeRaw: BigInt(0),
-  //   atomCost: BigInt(0),
-  // }
+  const {
+    // tripleCreationFeeRaw: tripleCostAmountRaw,
+    // atomEquityFeeRaw: atomEquityFee,
+    atomCost,
+  } = (feeFetcher.data as CreateLoaderData) ?? {
+    // tripleCreationFeeRaw: BigInt(0),
+    atomEquityFeeRaw: BigInt(0),
+    atomCost: BigInt(0),
+  }
+
+  logger('atomCost', atomCost)
 
   // const feeCalculation =
   //   BigInt(atomEquityFee) * BigInt(3) +
@@ -174,7 +177,7 @@ function CreateClaimForm({
 
   const [form] = useForm({
     id: 'create-claim',
-    lastSubmission: lastOffChainSubmission,
+    lastResult: lastOffChainSubmission,
     constraint: getZodConstraint(createClaimSchema()),
     onValidate({ formData }) {
       return parseWithZod(formData, {
