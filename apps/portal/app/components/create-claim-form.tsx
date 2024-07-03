@@ -36,6 +36,7 @@ import { TransactionActionType, TransactionStateType } from 'types/transaction'
 import { useAccount, usePublicClient, useWalletClient } from 'wagmi'
 
 import Toast from './toast'
+import TransactionStatus from './transaction-status'
 
 interface ClaimFormProps {
   onSuccess?: () => void
@@ -388,6 +389,27 @@ function CreateClaimForm({
     }
   }, [])
 
+  const isTransactionStarted = [
+    'approve',
+    'review',
+    'confirm',
+    'complete',
+    'error',
+  ].includes(state.status)
+
+  const statusMessages = {
+    'approve-transaction': 'Approve Transaction...',
+    'transaction-pending': 'Transaction Pending...',
+    confirm: 'Confirming...',
+    complete: 'Identity created successfully',
+    error: 'Failed to create identity',
+  }
+
+  const isTransactionAwaiting = (status: string) =>
+    ['approve-transaction'].includes(status)
+  const isTransactionProgress = (status: string) =>
+    ['transaction-pending'].includes(status)
+
   return (
     <>
       <claimFetcher.Form
@@ -395,114 +417,130 @@ function CreateClaimForm({
         {...getFormProps(form)}
         action="/actions/create-claim"
       >
-        <>
-          <pre>subject.vault_id: {selectedIdentities.subject?.vault_id}</pre>
-          <pre>
-            predicate.vault_id: {selectedIdentities.predicate?.vault_id}
-          </pre>
-          <pre>object.vault_id: {selectedIdentities.object?.vault_id}</pre>
-        </>
-        <div className="flex flex-col items-center">
-          <div className="my-14">
-            <IdentityInput
-              showLabels
-              subject={{
-                selectedValue: {
-                  name:
-                    truncateString(
-                      selectedIdentities.subject?.display_name ?? '',
-                      7,
-                    ) || 'Subject',
-                },
-                onClick: () => toggleSelectState('subject'),
-              }}
-              predicate={{
-                selectedValue: {
-                  name:
-                    truncateString(
-                      selectedIdentities.predicate?.display_name ?? '',
-                      7,
-                    ) || 'Predicate',
-                  variant: selectedIdentities.predicate?.is_user
-                    ? 'user'
-                    : 'non-user',
-                },
-                onClick: () => toggleSelectState('predicate'),
-              }}
-              object={{
-                selectedValue: {
-                  name:
-                    truncateString(
-                      selectedIdentities.object?.display_name ?? '',
-                      7,
-                    ) || 'Object',
-                },
-                onClick: () => toggleSelectState('object'),
-              }}
-            />
+        {!isTransactionStarted ? (
+          <div className="flex flex-col items-center">
+            <>
+              <pre>
+                subject.vault_id: {selectedIdentities.subject?.vault_id}
+              </pre>
+              <pre>
+                predicate.vault_id: {selectedIdentities.predicate?.vault_id}
+              </pre>
+              <pre>object.vault_id: {selectedIdentities.object?.vault_id}</pre>s
+              <pre>state: {state.status}</pre>
+            </>
+            <div className="my-14">
+              <IdentityInput
+                showLabels
+                subject={{
+                  selectedValue: {
+                    name:
+                      truncateString(
+                        selectedIdentities.subject?.display_name ?? '',
+                        7,
+                      ) || 'Subject',
+                  },
+                  onClick: () => toggleSelectState('subject'),
+                }}
+                predicate={{
+                  selectedValue: {
+                    name:
+                      truncateString(
+                        selectedIdentities.predicate?.display_name ?? '',
+                        7,
+                      ) || 'Predicate',
+                    variant: selectedIdentities.predicate?.is_user
+                      ? 'user'
+                      : 'non-user',
+                  },
+                  onClick: () => toggleSelectState('predicate'),
+                }}
+                object={{
+                  selectedValue: {
+                    name:
+                      truncateString(
+                        selectedIdentities.object?.display_name ?? '',
+                        7,
+                      ) || 'Object',
+                  },
+                  onClick: () => toggleSelectState('object'),
+                }}
+              />
+            </div>
+            <div ref={identitySelectContainerRef}>
+              {identitySelectState.subject && (
+                <IdentitySearchCombobox>
+                  {identities?.map((identity, index) => (
+                    <IdentitySearchComboboxItem
+                      key={index}
+                      variant={identity.is_user === true ? 'user' : 'non-user'}
+                      name={truncateString(identity.display_name, 7)}
+                      value={+identity.assets_sum}
+                      walletAddress={identity.creator_address}
+                      onSelect={() =>
+                        handleIdentitySelection('subject', identity)
+                      }
+                    />
+                  ))}
+                </IdentitySearchCombobox>
+              )}
+              {identitySelectState.predicate && (
+                <IdentitySearchCombobox>
+                  {identities?.map((identity, index) => (
+                    <IdentitySearchComboboxItem
+                      key={index}
+                      variant={identity.is_user === true ? 'user' : 'non-user'}
+                      name={truncateString(identity.display_name, 7)}
+                      value={+identity.assets_sum}
+                      walletAddress={identity.creator_address}
+                      onSelect={() =>
+                        handleIdentitySelection('predicate', identity)
+                      }
+                    />
+                  ))}
+                </IdentitySearchCombobox>
+              )}
+              {identitySelectState.object && (
+                <IdentitySearchCombobox>
+                  {identities?.map((identity, index) => (
+                    <IdentitySearchComboboxItem
+                      key={index}
+                      variant={identity.is_user === true ? 'user' : 'non-user'}
+                      name={truncateString(identity.display_name, 7)}
+                      value={+identity.assets_sum}
+                      walletAddress={identity.creator_address}
+                      onSelect={() =>
+                        handleIdentitySelection('object', identity)
+                      }
+                    />
+                  ))}
+                </IdentitySearchCombobox>
+              )}
+            </div>
+            <Button
+              form={form.id}
+              type="submit"
+              variant="primary"
+              disabled={
+                selectedIdentities.subject === null ||
+                selectedIdentities.predicate === null ||
+                selectedIdentities.object === null
+              }
+              className="mx-auto"
+            >
+              Create
+            </Button>
           </div>
-          <div ref={identitySelectContainerRef}>
-            {identitySelectState.subject && (
-              <IdentitySearchCombobox>
-                {identities?.map((identity, index) => (
-                  <IdentitySearchComboboxItem
-                    key={index}
-                    variant={identity.is_user === true ? 'user' : 'non-user'}
-                    name={truncateString(identity.display_name, 7)}
-                    value={+identity.assets_sum}
-                    walletAddress={identity.creator_address}
-                    onSelect={() =>
-                      handleIdentitySelection('subject', identity)
-                    }
-                  />
-                ))}
-              </IdentitySearchCombobox>
-            )}
-            {identitySelectState.predicate && (
-              <IdentitySearchCombobox>
-                {identities?.map((identity, index) => (
-                  <IdentitySearchComboboxItem
-                    key={index}
-                    variant={identity.is_user === true ? 'user' : 'non-user'}
-                    name={truncateString(identity.display_name, 7)}
-                    value={+identity.assets_sum}
-                    walletAddress={identity.creator_address}
-                    onSelect={() =>
-                      handleIdentitySelection('predicate', identity)
-                    }
-                  />
-                ))}
-              </IdentitySearchCombobox>
-            )}
-            {identitySelectState.object && (
-              <IdentitySearchCombobox>
-                {identities?.map((identity, index) => (
-                  <IdentitySearchComboboxItem
-                    key={index}
-                    variant={identity.is_user === true ? 'user' : 'non-user'}
-                    name={truncateString(identity.display_name, 7)}
-                    value={+identity.assets_sum}
-                    walletAddress={identity.creator_address}
-                    onSelect={() => handleIdentitySelection('object', identity)}
-                  />
-                ))}
-              </IdentitySearchCombobox>
-            )}
-          </div>
-          <Button
-            form={form.id}
-            type="submit"
-            variant="primary"
-            disabled={
-              selectedIdentities.subject === null ||
-              selectedIdentities.predicate === null ||
-              selectedIdentities.object === null
-            }
-            className="mx-auto"
-          >
-            Create
-          </Button>
-        </div>
+        ) : (
+          <TransactionStatus
+            state={state}
+            dispatch={dispatch}
+            transactionDetail={transactionResponseData?.claim_id}
+            statusMessages={statusMessages}
+            isTransactionAwaiting={isTransactionAwaiting}
+            isTransactionProgress={isTransactionProgress}
+          />
+        )}
       </claimFetcher.Form>
     </>
   )
