@@ -22,7 +22,7 @@ export default function CreateClaimModal({
         onClose?.()
       }}
     >
-      <DialogContent className="w-[600px] bg-neutral-950 rounded-xl shadow border border-solid border-black/10">
+      <DialogContent className="bg-neutral-950 rounded-xl shadow border border-solid border-black/10">
         <ClaimForm onClose={onClose} onSuccess={onSuccess} />
       </DialogContent>
     </Dialog>

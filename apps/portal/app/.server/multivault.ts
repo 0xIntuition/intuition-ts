@@ -355,3 +355,9 @@ export async function getAtomCost() {
   const atomCost = (await getMultivaultContract.read.getAtomCost()) as bigint
   return atomCost
 }
+
+export async function getTripleCost() {
+  const tripleCost =
+    (await getMultivaultContract.read.getTripleCost()) as bigint
+  return tripleCost
+}

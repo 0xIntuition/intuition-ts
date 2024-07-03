@@ -1,10 +1,16 @@
 import { json } from '@remix-run/node'
-import { getAtomCost, getFees, getGeneralConfig } from '@server/multivault'
+import {
+  getAtomCost,
+  getFees,
+  getGeneralConfig,
+  getTripleCost,
+} from '@server/multivault'
 
 export type CreateLoaderData = {
   vaultId: string
   atomCost: string
   atomCreationFee: string
+  tripleCost: string
   protocolFee: string
   entryFee: string
   feeDenominator: string
@@ -17,12 +23,22 @@ export async function loader() {
   // Contract reads and is batched via viem public client param
   // See https://viem.sh/docs/clients/public.html#optimization
 
-  const [atomCost, [entryFee, , protocolFee], [, , feeDenominator]] =
-    await Promise.all([getAtomCost(), getFees(), getGeneralConfig()])
+  const [
+    atomCost,
+    tripleCost,
+    [entryFee, , protocolFee],
+    [, , feeDenominator],
+  ] = await Promise.all([
+    getAtomCost(),
+    getTripleCost(),
+    getFees(),
+    getGeneralConfig(),
+  ])
 
   return json({
     vaultId: vid.toString(),
     atomCost: atomCost.toString(),
+    tripleCost: tripleCost.toString(),
     protocolFee: protocolFee.toString(),
     entryFee: entryFee.toString(),
     feeDenominator: feeDenominator.toString(),

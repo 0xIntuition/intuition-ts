@@ -71,6 +71,8 @@ export async function action({ request, context }: ActionFunctionArgs) {
     if (!claim) {
       throw new Error('Failed to create claim.')
     }
+
+    logger('claim', claim)
     return json(
       {
         status: 'success',
