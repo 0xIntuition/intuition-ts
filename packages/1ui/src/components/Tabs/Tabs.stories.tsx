@@ -34,3 +34,30 @@ export const BasicUsage: Story = {
     </div>
   ),
 }
+
+export const AlternateUsage: Story = {
+  render: () => (
+    <div className="w-[500px]">
+      <Tabs defaultValue="one">
+        <TabsList>
+          <TabsTrigger variant="alternate" value="one" label="One" />
+          <TabsTrigger variant="alternate" value="two" label="Two" />
+          <TabsTrigger
+            disabled
+            variant="alternate"
+            value="three"
+            label="Three"
+          />
+        </TabsList>
+        <div className="bg-primary/10 p-4 rounded-lg">
+          <TabsContent value="one">
+            <p>One</p>
+          </TabsContent>
+          <TabsContent value="two">
+            <p>Two</p>
+          </TabsContent>
+        </div>
+      </Tabs>
+    </div>
+  ),
+}

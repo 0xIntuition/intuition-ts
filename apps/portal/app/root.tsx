@@ -26,9 +26,13 @@ import { useEffect } from 'react'
 
 import { Toaster } from '@0xintuition/1ui'
 
+import { CURRENT_ENV } from '@lib/utils/constants'
+import { getChainEnvConfig } from '@lib/utils/environment'
 import { createSessionMiddleware } from '@middleware/session'
 import { ClientOnly } from 'remix-utils/client-only'
+import { baseSepolia } from 'viem/chains'
 import { serverOnly$ } from 'vite-env-only'
+import { useAccount, useSwitchChain } from 'wagmi'
 
 const session = createSessionMiddleware(
   createCookieSessionStorage<SessionData, SessionFlashData>({
@@ -143,6 +147,17 @@ export default function App() {
 }
 
 export function AppLayout() {
+  const { chain } = useAccount()
+  const { switchChain } = useSwitchChain()
+
+  useEffect(() => {
+    if (chain?.id !== baseSepolia.id && switchChain) {
+      switchChain({
+        chainId: getChainEnvConfig(CURRENT_ENV).chainId,
+      })
+    }
+  }, [chain, switchChain])
+
   return (
     <main className="relative flex min-h-screen w-full flex-col justify-between antialiased">
       <Outlet />
