@@ -9,6 +9,7 @@ import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
 
 import { formatBalance } from '@lib/utils/misc'
 import { type FetcherWithComponents } from '@remix-run/react'
+import { HelpCircleIcon } from 'lucide-react'
 import {
   type StakeTransactionAction,
   type StakeTransactionState,
@@ -85,6 +86,17 @@ export default function FollowForm({
             </DialogTitle>
           </DialogHeader>
           <div className="pt-2.5">
+            <div className="w-[396px] h-[46px] flex-col justify-start items-start gap-1 inline-flex">
+              <div className="justify-start items-center gap-1 inline-flex">
+                <div className="text-center text-neutral-50 text-base font-medium leading-normal">
+                  Follow User <HelpCircleIcon className="w-4 h-4" />
+                </div>
+                <div className="w-4 h-4 relative" />
+              </div>
+              <div className="text-center text-neutral-50/50 text-xs font-normal leading-[18px]">
+                Create or strengthen your connection.
+              </div>
+            </div>
             <div className="flex flex-row items-center justify-center">
               <div className="w-[316px] bg-neutral-50/5 rounded-lg border border-neutral-300/10 flex-col justify-start items-start inline-flex">
                 <div className="self-stretch px-5 py-2.5 justify-between items-center inline-flex">

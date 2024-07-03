@@ -21,6 +21,7 @@ import { useBalance, useBlockNumber } from 'wagmi'
 import FollowButton from './follow-button'
 import FollowForm from './follow-form'
 import FollowToast from './follow-toast'
+import UnfollowButton from './unfollow-button'
 
 const initialTxState: StakeTransactionState = {
   status: 'idle',
@@ -54,6 +55,7 @@ export default function FollowModal({
   const fetchReval = useFetcher()
   const formRef = useRef(null)
   const [val, setVal] = useState('')
+  const [mode, setMode] = useState<'follow' | 'unfollow'>('follow')
   const [loading, setLoading] = useState(false)
   const [lastTxHash, setLastTxHash] = useState<string | undefined>(undefined)
   const { state, dispatch } = useGenericTxState<
@@ -153,10 +155,8 @@ export default function FollowModal({
     }
   }
 
-  const handleDeposit = useHandleAction('follow')
-  const handleRedeem = useHandleAction('unfollow')
-
-  const action = mode === 'deposit' ? handleDeposit : handleRedeem
+  const handleFollow = useHandleAction('follow')
+  const handleUnfollow = useHandleAction('unfollow')
 
   useEffect(() => {
     if (isError) {
@@ -212,7 +212,7 @@ export default function FollowModal({
         topics.args.sender === (user?.details?.wallet?.address as `0x${string}`)
       ) {
         assets =
-          mode === 'deposit'
+          mode === 'follow'
             ? (topics.args as BuyArgs).userAssetsAfterTotalFees.toString()
             : (topics.args as SellArgs).assetsForReceiver.toString()
 
@@ -303,15 +303,20 @@ export default function FollowModal({
   const [showErrors, setShowErrors] = useState(false)
   const [validationErrors, setValidationErrors] = useState<string[]>([])
 
-  const handleStakeButtonClick = async () => {
-    if (
-      (mode === 'deposit' && val < formatBalance(min_deposit, 18)) ||
-      +val > (mode === 'deposit' ? +walletBalance : +(user_conviction ?? '0'))
-    ) {
+  const handleFollowButtonClick = async () => {
+    if (val < formatBalance(min_deposit, 18) || +val > +walletBalance) {
       setShowErrors(true)
       return
     }
-    action()
+    handleFollow()
+  }
+
+  const handleUnfollowButtonClick = async () => {
+    if (+val > +(latest_user_conviction ?? user_conviction ?? '0')) {
+      setShowErrors(true)
+      return
+    }
+    handleUnfollow()
   }
 
   const location = useLocation()
@@ -367,16 +372,30 @@ export default function FollowModal({
           tosCookie={tosCookie}
           val={val}
           setVal={setVal}
-          mode={mode}
-          handleAction={handleStakeButtonClick}
+          setMode={setMode}
+          handleAction={handleFollowButtonClick}
           dispatch={dispatch}
           state={state}
           min_deposit={min_deposit}
           walletBalance={walletBalance}
+          setValidationErrors={setValidationErrors}
+          setShowErrors={setShowErrors}
+          conviction_price={latest_conviction_price ?? conviction_price ?? '0'}
+        />
+        <UnfollowButton
+          user={user}
+          tosCookie={tosCookie}
+          val={val}
+          setVal={setVal}
+          setMode={setMode}
+          handleAction={handleUnfollowButtonClick}
+          dispatch={dispatch}
+          state={state}
           user_conviction={latest_user_conviction ?? user_conviction ?? '0'}
           setValidationErrors={setValidationErrors}
           setShowErrors={setShowErrors}
           conviction_price={latest_conviction_price ?? conviction_price ?? '0'}
+          className={`${latest_user_conviction ?? user_conviction >= '0' ? 'hidden' : ''}`}
         />
       </DialogContent>
     </Dialog>

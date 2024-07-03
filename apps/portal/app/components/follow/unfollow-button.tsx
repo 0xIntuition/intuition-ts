@@ -2,10 +2,9 @@ import { useEffect, useState } from 'react'
 
 import { Button, cn } from '@0xintuition/1ui'
 
-import { stakeModalAtom } from '@lib/state/store'
+import { followModalAtom } from '@lib/state/store'
 import { CURRENT_ENV } from '@lib/utils/constants'
 import { getChainEnvConfig } from '@lib/utils/environment'
-import { formatBalance } from '@lib/utils/misc'
 import { Cookie } from '@remix-run/node'
 import { useNavigation } from '@remix-run/react'
 import { useSetAtom } from 'jotai'
@@ -17,7 +16,7 @@ import { SessionUser } from 'types/user'
 import { formatUnits } from 'viem'
 import { useAccount, useSwitchChain } from 'wagmi'
 
-interface FollowButtonProps {
+interface UnfollowButtonProps {
   user: SessionUser
   tosCookie: Cookie
   val: string
@@ -27,8 +26,7 @@ interface FollowButtonProps {
   handleClose?: () => void
   dispatch: (action: StakeTransactionAction) => void
   state: StakeTransactionState
-  min_deposit: string
-  walletBalance: string
+  user_conviction: string
   setValidationErrors: (errors: string[]) => void
   setShowErrors: (show: boolean) => void
   conviction_price: string
@@ -37,15 +35,14 @@ interface FollowButtonProps {
   className?: string
 }
 
-const FollowButton: React.FC<FollowButtonProps> = ({
+const UnfollowButton: React.FC<UnfollowButtonProps> = ({
   val,
   setVal,
   setMode,
   handleAction,
   dispatch,
   state,
-  min_deposit,
-  walletBalance,
+  user_conviction,
   setValidationErrors,
   setShowErrors,
   conviction_price,
@@ -83,7 +80,7 @@ const FollowButton: React.FC<FollowButtonProps> = ({
     }
   }
 
-  const setStakeModalActive = useSetAtom(stakeModalAtom)
+  const setFollwoModalActive = useSetAtom(followModalAtom)
 
   const navigation = useNavigation()
   const [navigationStarted, setNavigationStarted] = useState(false)
@@ -96,11 +93,9 @@ const FollowButton: React.FC<FollowButtonProps> = ({
 
   useEffect(() => {
     if (navigation.state === 'idle' && navigationStarted) {
-      setStakeModalActive({
+      setFollwoModalActive({
         isOpen: false,
         id: null,
-        direction: null,
-        modalType: null,
       })
       setNavigationStarted(false)
     }
@@ -111,7 +106,7 @@ const FollowButton: React.FC<FollowButtonProps> = ({
       variant="primary"
       onClick={(e) => {
         e.preventDefault()
-        setMode('follow')
+        setMode('unfollow')
         if (state.status === 'complete' || state.status === 'confirmed') {
           dispatch({ type: 'START_TRANSACTION' })
           setVal('')
@@ -122,12 +117,7 @@ const FollowButton: React.FC<FollowButtonProps> = ({
             handleSwitch()
           } else if (val !== '') {
             const errors = []
-            if (+val < +formatUnits(BigInt(min_deposit), 18)) {
-              errors.push(
-                `Minimum deposit is ${formatBalance(min_deposit, 18, 4)} ETH`,
-              )
-            }
-            if (+val * +formattedConvictionPrice > +walletBalance) {
+            if (+val * +formattedConvictionPrice > +user_conviction) {
               errors.push('Insufficient funds')
             }
 
@@ -154,4 +144,4 @@ const FollowButton: React.FC<FollowButtonProps> = ({
   )
 }
 
-export default FollowButton
+export default UnfollowButton
