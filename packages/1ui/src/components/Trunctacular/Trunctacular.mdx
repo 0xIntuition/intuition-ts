@@ -1,0 +1,50 @@
+import { Canvas, Controls, Meta, Source, Title } from '@storybook/blocks'
+
+import * as Stories from './Trunctacular.stories'
+
+<Meta of={Stories} />
+
+<Title />
+
+#### A super component that truncates long strings - including wallet addresses - and adds a tooltip to display the full value.
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { Trunctacular } from '@0xintuition/1ui'
+
+<Trunctacular value="reallyReallyLongName" />
+`} />
+
+<Canvas of={Stories.BasicUsage} sourceState="none" />
+
+## Properties
+
+<Controls />
+
+## Variants
+
+### Wallet Usage
+
+<Source
+  dark
+  language="tsx"
+  code={`
+<Trunctacular value="0x1234567890abcdef1234567890abcdef12345678" />
+`}
+/>
+
+<Canvas of={Stories.WalletUsage} sourceState="none" />
+
+### No Truncation/Tooltip
+
+<Source
+  dark
+  language="tsx"
+  code={`
+Trunctacular value="shortName" />
+`}
+/>
+
+<Canvas of={Stories.NoTruncation} sourceState="none" />
