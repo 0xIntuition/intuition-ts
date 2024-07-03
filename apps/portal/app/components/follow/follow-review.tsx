@@ -23,7 +23,6 @@ interface FollowReviewProps {
   state: StakeTransactionState
   direction?: 'for' | 'against'
   isError?: boolean
-  modalType: 'identity' | 'claim' | null | undefined
   identity?: IdentityPresenter
   claim?: ClaimPresenter
   entry_fee: string
@@ -37,7 +36,6 @@ export default function FollowReview({
   state,
   direction,
   isError,
-  modalType,
   claim,
   entry_fee,
   exit_fee,
@@ -142,8 +140,7 @@ export default function FollowReview({
           <div className="gap-5 flex flex-col items-center">
             <span className="text-xl font-medium text-white/70 leading-[30px]">
               {mode === 'deposit' ? 'Deposit' : 'Redeem'}{' '}
-              {formatDisplayBalance(Number(val), 2)} ETH on{' '}
-              {modalType === 'identity' ? 'identity' : 'claim'}
+              {formatDisplayBalance(Number(val), 2)} ETH on follow claim
             </span>
             <Claim
               subject={{
