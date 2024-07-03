@@ -1,7 +1,9 @@
 import * as React from 'react'
 
+import * as LabelPrimitive from '@radix-ui/react-label'
 import * as RadioGroupPrimitive from '@radix-ui/react-radio-group'
 
+import { Label } from '..'
 import { cn } from '../../styles'
 
 const RadioGroup = React.forwardRef<
@@ -10,13 +12,30 @@ const RadioGroup = React.forwardRef<
 >(({ className, ...props }, ref) => {
   return (
     <RadioGroupPrimitive.Root
-      className={cn('grid gap-4', className)}
+      className={cn(
+        'grid bg-primary/5 border border-border/10 rounded-lg w-full',
+        className,
+      )}
       {...props}
       ref={ref}
     />
   )
 })
 RadioGroup.displayName = RadioGroupPrimitive.Root.displayName
+
+interface RadioGroupItemContainerProps
+  extends React.HTMLAttributes<HTMLDivElement> {}
+
+const RadioGroupItemContainer = ({
+  ...props
+}: RadioGroupItemContainerProps) => {
+  return (
+    <div
+      className="px-5 py-4 flex justify-between items-center w-full gap-10"
+      {...props}
+    />
+  )
+}
 
 const RadioGroupItem = React.forwardRef<
   React.ElementRef<typeof RadioGroupPrimitive.Item>,
@@ -39,4 +58,37 @@ const RadioGroupItem = React.forwardRef<
 })
 RadioGroupItem.displayName = RadioGroupPrimitive.Item.displayName
 
-export { RadioGroup, RadioGroupItem }
+interface RadioGroupItemLabelProps
+  extends React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root> {
+  value: string
+  subValue: string
+}
+
+const RadioGroupItemLabel = ({
+  value,
+  subValue,
+  ...props
+}: RadioGroupItemLabelProps) => {
+  return (
+    <Label className="flex items-center gap-2" {...props}>
+      {value}
+      {subValue && (
+        <span className="text-sm text-foreground/30">{subValue}</span>
+      )}
+    </Label>
+  )
+}
+
+const RadioGroupDivider = () => {
+  return (
+    <span className="w-full h-px block bg-gradient-to-r from-border/5 from-10% via-border/20 via-50% to-border/5 to-90%" />
+  )
+}
+
+export {
+  RadioGroup,
+  RadioGroupItemContainer,
+  RadioGroupItem,
+  RadioGroupItemLabel,
+  RadioGroupDivider,
+}
