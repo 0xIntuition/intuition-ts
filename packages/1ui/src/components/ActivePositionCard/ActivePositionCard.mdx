@@ -1,0 +1,50 @@
+import { Canvas, Controls, Meta, Source, Title } from '@storybook/blocks'
+
+import * as Stories from './ActivePositionCard.stories'
+
+<Meta of={Stories} />
+
+<Title />
+
+#### A card that displays a user's active position.
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { ActivePositionCard } from '@0xintuition/1ui'
+
+<ActivePositionCard value={0.567} />
+`} />
+
+<Canvas of={Stories.BasicUsage} sourceState="none" />
+
+## Properties
+
+<Controls />
+
+## Variants
+
+### For
+
+<Source
+  dark
+  language="tsx"
+  code={`
+<ActivePositionCard value={0.567} claimPosition="claimFor" />
+`}
+/>
+
+<Canvas of={Stories.For} sourceState="none" />
+
+### Against
+
+<Source
+  dark
+  language="tsx"
+  code={`
+<ActivePositionCard value={0.567} claimPosition="claimAgainst" />
+`}
+/>
+
+<Canvas of={Stories.Against} sourceState="none" />

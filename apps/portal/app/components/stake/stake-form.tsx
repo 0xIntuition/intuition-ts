@@ -84,14 +84,16 @@ export default function StakeForm({
       {state.status === 'idle' ? (
         <>
           <DialogHeader>
-            <DialogTitle>
-              <div className="flex flex-row items-center justify-between">
+            <DialogTitle className="justify-between">
+              <div className=" flex items-center justify-between w-full mr-2.5">
                 {modalType === 'identity' ? (
                   <IdentityTag
                     imgSrc={identity?.user?.image ?? identity?.image}
                     variant={identity?.user ? 'user' : 'non-user'}
                   >
-                    {identity?.user?.display_name ?? identity?.display_name}
+                    <span className="min-w-20 text-ellipsis">
+                      {identity?.user?.display_name ?? identity?.display_name}
+                    </span>
                   </IdentityTag>
                 ) : (
                   <Claim
@@ -101,7 +103,7 @@ export default function StakeForm({
                       label:
                         claim?.subject?.user?.display_name ??
                         claim?.subject?.display_name,
-                      variant: claim?.subject?.user ? 'user' : 'default',
+                      variant: claim?.subject?.user ? 'user' : 'non-user',
                     }}
                     predicate={{
                       imgSrc: claim?.predicate?.image,
@@ -113,7 +115,7 @@ export default function StakeForm({
                       label:
                         claim?.object?.user?.display_name ??
                         claim?.object?.display_name,
-                      variant: claim?.object?.user ? 'user' : 'default',
+                      variant: claim?.object?.user ? 'user' : 'non-user',
                     }}
                   />
                 )}

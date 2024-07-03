@@ -58,7 +58,7 @@ export default function StakeInput({
           }}
           min={'0'}
           placeholder={'0'}
-          className="text-5xl h-14 font-semibold text-neutral-50 bg-transparent text-center mx-auto !outline-none !ring-0 !border-none !focus:ring-0 !focus:outline-none !focus:border-none !focus-visible:outline-none leading-none py-3 items-center"
+          className="text-5xl h-14 font-semibold text-neutral-50 text-center bg-transparent border-none focus-visible:ring-none"
           disabled={isLoading || !wallet || wallet === ''}
         />
         <div className="text-center text-white/50 text-base font-medium leading-normal pt-3">

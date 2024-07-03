@@ -2,8 +2,13 @@ import React from 'react'
 
 import type { Meta, StoryObj } from '@storybook/react'
 
-import { Label } from '..'
-import { RadioGroup, RadioGroupItem } from './RadioGroup'
+import {
+  RadioGroup,
+  RadioGroupDivider,
+  RadioGroupItem,
+  RadioGroupItemContainer,
+  RadioGroupItemLabel,
+} from './RadioGroup'
 
 const meta: Meta<typeof RadioGroup> = {
   title: 'Components/RadioGroup',
@@ -14,18 +19,47 @@ export default meta
 
 type Story = StoryObj<typeof RadioGroup>
 
+const radioGroupData = [
+  {
+    id: 'minimum',
+    value: 'minimum',
+    displayValue: 'Minimum',
+    displaySubValue: '+0.001 ETH',
+  },
+  {
+    id: 'minimum',
+    value: 'default',
+    displayValue: 'Default',
+    displaySubValue: '+0.01 ETH',
+  },
+  {
+    id: 'minimum',
+    value: 'strong',
+    displayValue: 'Strong',
+    displaySubValue: '+0.05 ETH',
+  },
+]
+
+const numberOfRadioGroupItems = radioGroupData.length
+
 export const BasicUsage: Story = {
-  args: {},
-  render: (args) => (
-    <RadioGroup defaultValue="option-one" {...args}>
-      <div className="flex items-center space-x-2">
-        <RadioGroupItem value="option-one" id="option-one" />
-        <Label htmlFor="option-one">Option One</Label>
-      </div>
-      <div className="flex items-center space-x-2">
-        <RadioGroupItem value="option-two" id="option-two" />
-        <Label htmlFor="option-two">Option Two</Label>
-      </div>
-    </RadioGroup>
+  render: () => (
+    <div className="w-[300px]">
+      <RadioGroup defaultValue={radioGroupData[0].value}>
+        {radioGroupData.map((item, index) => (
+          <div key={index}>
+            <RadioGroupItemContainer>
+              <RadioGroupItemLabel
+                htmlFor={item.id}
+                value={item.displayValue}
+                subValue={item.displaySubValue}
+              />
+              <RadioGroupItem value={item.value} id={item.id} />
+            </RadioGroupItemContainer>
+            {index + 1 < numberOfRadioGroupItems && <RadioGroupDivider />}
+          </div>
+        ))}
+      </RadioGroup>
+    </div>
   ),
 }

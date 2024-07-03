@@ -26,17 +26,51 @@ import * as Stories from './RadioGroup.stories'
   dark
   language="tsx"
   code={`
-import { RadioGroup } from '@0xintuition/1ui'
+import { 
+  RadioGroup,
+  RadioGroupDivider,
+  RadioGroupItem,
+  RadioGroupItemContainer,
+  RadioGroupItemLabel,
+} from '@0xintuition/1ui'
 
-<RadioGroup defaultValue="option-one">
-  <div className="flex items-center space-x-2">
-    <RadioGroupItem value="option-one" id="option-one" />
-    <Label htmlFor="option-one">Option One</Label>
-  </div>
-  <div className="flex items-center space-x-2">
-    <RadioGroupItem value="option-two" id="option-two" />
-    <Label htmlFor="option-two">Option Two</Label>
-  </div>
+const radioGroupData = [
+{
+id: 'minimum',
+value: 'minimum',
+displayValue: 'Minimum',
+displaySubValue: '+0.001 ETH',
+},
+{
+id: 'minimum',
+value: 'default',
+displayValue: 'Default',
+displaySubValue: '+0.01 ETH',
+},
+{
+id: 'minimum',
+value: 'strong',
+displayValue: 'Strong',
+displaySubValue: '+0.05 ETH',
+},
+]
+
+const numberOfRadioGroupItems = radioGroupData.length
+
+<RadioGroup defaultValue={radioGroupData[0].value}>
+  {radioGroupData.map((item, index) => (
+    <div key={index}>
+      <RadioGroupItemContainer>
+        <RadioGroupItemLabel
+          htmlFor={item.id}
+          value={item.displayValue}
+          subValue={item.displaySubValue}
+        />
+        <RadioGroupItem value={item.value} id={item.id} />
+      </RadioGroupItemContainer>
+      {index + 1 < numberOfRadioGroupItems && <RadioGroupDivider />}
+    </div>
+  ))}
 </RadioGroup>
 `} />
 

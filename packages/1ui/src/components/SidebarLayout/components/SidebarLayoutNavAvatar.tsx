@@ -27,7 +27,7 @@ export const SidebarLayoutNavAvatar = ({
 }: SidebarLayoutNavAvatarProps) => {
   const { isCollapsed } = useSidebarLayoutContext()
   const buttonProps = {
-    className: 'w-full',
+    className: 'w-full justify-start',
     onClick,
   }
   const AvatarComponent = () => (

@@ -18,12 +18,16 @@ export const TextVariant = {
   small: 'small',
 }
 
+export type TextVariantType = keyof typeof TextVariant
+
 export const TextWeight = {
   normal: 'normal',
   medium: 'medium',
   semibold: 'semibold',
   bold: 'bold',
 }
+
+export type TextWeightType = keyof typeof TextWeight
 
 const textVariants = cva('text-primary', {
   variants: {

@@ -20,7 +20,7 @@ import {
 
 type IdentityInputSelectedValueType = {
   variant?: IdentityType
-  imgSrc?: string
+  imgSrc?: string | null
   name?: string
 }
 

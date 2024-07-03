@@ -46,7 +46,7 @@ export interface IdentityTagProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof identityTagVariants> {
   disabled?: boolean
-  imgSrc?: string
+  imgSrc?: string | null
 }
 
 const IdentityTag = ({
