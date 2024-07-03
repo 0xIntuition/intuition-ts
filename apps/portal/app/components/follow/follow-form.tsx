@@ -42,8 +42,6 @@ export default function FollowForm({
   walletBalance,
   identity,
   claim,
-  user_conviction,
-  conviction_price,
   user_assets,
   entry_fee,
   exit_fee,
@@ -55,7 +53,6 @@ export default function FollowForm({
   state,
   fetchReval,
   formRef,
-  modalType,
 }: FollowFormProps) {
   return (
     <>
@@ -116,13 +113,7 @@ export default function FollowForm({
               </div>
             </div>
             <div className="rounded-t-lg bg-primary-950/15 px-4 pt-2.5">
-              <FollowActions
-                action={mode}
-                setVal={setVal}
-                walletBalance={walletBalance ?? '0'}
-                userConviction={user_conviction ?? '0'}
-                price={conviction_price ?? '0'}
-              />
+              <FollowActions setVal={setVal} />
             </div>
           </div>
         </>
@@ -134,7 +125,6 @@ export default function FollowForm({
             val={val}
             dispatch={dispatch}
             state={state}
-            modalType={modalType}
             identity={identity}
             claim={claim}
             entry_fee={entry_fee}

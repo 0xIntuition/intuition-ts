@@ -6,7 +6,11 @@ import {
   RadioGroupItemLabel,
 } from '@0xintuition/1ui'
 
-export default function FollowActions() {
+interface FollowActionsProps {
+  setVal: (val: string) => void
+}
+
+export default function FollowActions({ setVal }: FollowActionsProps) {
   const radioGroupData = [
     { id: '0.001', value: 'Minimum', subValue: '+0.001 ETH' },
     { id: '0.01', value: 'Default', subValue: '+0.01 ETH' },
@@ -17,7 +21,7 @@ export default function FollowActions() {
 
   return (
     <div className="flex flex-row items-center justify-center gap-5">
-      <RadioGroup defaultValue={radioGroupData[0].id}>
+      <RadioGroup defaultValue={radioGroupData[0].id} onValueChange={setVal}>
         {radioGroupData.map((item, index) => (
           <div key={index}>
             <RadioGroupItemContainer>
