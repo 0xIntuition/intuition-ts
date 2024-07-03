@@ -86,8 +86,8 @@ const DialogTitle = React.forwardRef<
     )}
     {...props}
   >
-    <div className="w-full">{children}</div>
-    <DialogPrimitive.Close className="self-end hover:text-primary/80">
+    {children}
+    <DialogPrimitive.Close className="hover:text-primary/80">
       <Icon name={IconName.crossLarge} className="h-4 w-4" />
       <span className="sr-only">Close</span>
     </DialogPrimitive.Close>

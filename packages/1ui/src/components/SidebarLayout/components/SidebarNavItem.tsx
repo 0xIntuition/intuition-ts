@@ -31,7 +31,7 @@ export const SidebarNavItem = ({
   const { isCollapsed } = useSidebarLayoutContext()
   const buttonProps = {
     variant,
-    className: 'w-full',
+    className: 'w-full justify-start',
     onClick,
     ...props,
   }
