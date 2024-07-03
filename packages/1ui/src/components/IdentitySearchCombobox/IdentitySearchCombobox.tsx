@@ -62,6 +62,7 @@ export interface IdentitySearchComboboxItemProps extends IdentityCardProps {
   socialCount?: number
   tagCount?: number
   onClick?: () => void
+  onSelect?: () => void
 }
 
 const IdentitySearchComboboxItem = ({
@@ -74,10 +75,12 @@ const IdentitySearchComboboxItem = ({
   socialCount = 0,
   tagCount = 0,
   onClick,
+  onSelect,
 }: IdentitySearchComboboxItemProps) => {
   return (
     <CommandItem
       onClick={onClick}
+      onSelect={onSelect}
       className="border border-transparent rounded-lg aria-selected:bg-primary/10 aria-selected:text-primary hover:border-border/30 px-2 py-4"
     >
       <div className="flex justify-between items-center w-full">
