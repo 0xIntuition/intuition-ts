@@ -8,17 +8,17 @@ export interface ClaimProps {
   subject: {
     variant?: IdentityType
     label: string
-    imgSrc?: string
+    imgSrc?: string | null
   }
   predicate: {
     variant?: IdentityType
     label: string
-    imgSrc?: string
+    imgSrc?: string | null
   }
   object: {
     variant?: IdentityType
     label: string
-    imgSrc?: string
+    imgSrc?: string | null
   }
 }
 
