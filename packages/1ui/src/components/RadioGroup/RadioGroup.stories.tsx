@@ -20,9 +20,24 @@ export default meta
 type Story = StoryObj<typeof RadioGroup>
 
 const radioGroupData = [
-  { id: 'minimum', value: 'Minimum', subValue: '+0.001 ETH' },
-  { id: 'default', value: 'Default', subValue: '+0.01 ETH' },
-  { id: 'strong', value: 'Strong', subValue: '+0.05 ETH' },
+  {
+    id: 'minimum',
+    value: 'minimum',
+    displayValue: 'Minimum',
+    displaySubValue: '+0.001 ETH',
+  },
+  {
+    id: 'minimum',
+    value: 'default',
+    displayValue: 'Default',
+    displaySubValue: '+0.01 ETH',
+  },
+  {
+    id: 'minimum',
+    value: 'strong',
+    displayValue: 'Strong',
+    displaySubValue: '+0.05 ETH',
+  },
 ]
 
 const numberOfRadioGroupItems = radioGroupData.length
@@ -30,16 +45,16 @@ const numberOfRadioGroupItems = radioGroupData.length
 export const BasicUsage: Story = {
   render: () => (
     <div className="w-[300px]">
-      <RadioGroup defaultValue={radioGroupData[0].id}>
+      <RadioGroup defaultValue={radioGroupData[0].value}>
         {radioGroupData.map((item, index) => (
           <div key={index}>
             <RadioGroupItemContainer>
               <RadioGroupItemLabel
                 htmlFor={item.id}
-                value={item.value}
-                subValue={item.subValue}
+                value={item.displayValue}
+                subValue={item.displaySubValue}
               />
-              <RadioGroupItem value={item.id} id={item.id} />
+              <RadioGroupItem value={item.value} id={item.id} />
             </RadioGroupItemContainer>
             {index + 1 < numberOfRadioGroupItems && <RadioGroupDivider />}
           </div>
