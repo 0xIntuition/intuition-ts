@@ -2,7 +2,7 @@ import { Button } from '@0xintuition/1ui'
 
 import { formatUnits } from 'viem'
 
-interface StakeActionsProps {
+interface FollowActionsProps {
   action: string | undefined
   setVal: (val: string) => void
   walletBalance: string
@@ -10,13 +10,13 @@ interface StakeActionsProps {
   price: string
 }
 
-export default function StakeActions({
+export default function FollowActions({
   action,
   setVal,
   walletBalance,
   userConviction,
   price,
-}: StakeActionsProps) {
+}: FollowActionsProps) {
   return (
     <div className="flex flex-row items-center justify-center gap-5">
       <Button

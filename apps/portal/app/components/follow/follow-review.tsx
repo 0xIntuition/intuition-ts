@@ -1,12 +1,6 @@
 import { useEffect, useState } from 'react'
 
-import {
-  Badge,
-  Claim,
-  DialogHeader,
-  DialogTitle,
-  IdentityTag,
-} from '@0xintuition/1ui'
+import { Badge, Claim, DialogHeader, DialogTitle } from '@0xintuition/1ui'
 import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
 
 import { formatDisplayBalance } from '@lib/utils/misc'
@@ -22,12 +16,12 @@ import BackIcon from '../svg/back-icon'
 import CheckCircleIcon from '../svg/check-circle-icon'
 import XCircleIcon from '../svg/x-circle-icon'
 
-interface StakeReviewProps {
+interface FollowReviewProps {
   val: string
   mode: string | undefined
   dispatch: (action: StakeTransactionAction) => void
   state: StakeTransactionState
-  direction: 'for' | 'against'
+  direction?: 'for' | 'against'
   isError?: boolean
   modalType: 'identity' | 'claim' | null | undefined
   identity?: IdentityPresenter
@@ -36,7 +30,7 @@ interface StakeReviewProps {
   exit_fee: string
 }
 
-export default function StakeReview({
+export default function FollowReview({
   val,
   mode,
   dispatch,
@@ -44,11 +38,10 @@ export default function StakeReview({
   direction,
   isError,
   modalType,
-  identity,
   claim,
   entry_fee,
   exit_fee,
-}: StakeReviewProps) {
+}: FollowReviewProps) {
   const [statusText, setStatusText] = useState<string>('')
   const [statusIcon, setStatusIcon] = useState<React.ReactNode>(null)
 
@@ -152,35 +145,26 @@ export default function StakeReview({
               {formatDisplayBalance(Number(val), 2)} ETH on{' '}
               {modalType === 'identity' ? 'identity' : 'claim'}
             </span>
-            {modalType === 'identity' ? (
-              <IdentityTag
-                imgSrc={identity?.user?.image ?? identity?.image}
-                variant={identity?.user ? 'user' : 'default'}
-              >
-                {identity?.user?.display_name ?? identity?.display_name}
-              </IdentityTag>
-            ) : (
-              <Claim
-                subject={{
-                  imgSrc: claim?.subject?.user?.image ?? claim?.subject?.image,
-                  label:
-                    claim?.subject?.user?.display_name ??
-                    claim?.subject?.display_name,
-                  variant: claim?.subject?.user ? 'user' : 'default',
-                }}
-                predicate={{
-                  imgSrc: claim?.predicate?.image,
-                  label: claim?.predicate?.display_name,
-                }}
-                object={{
-                  imgSrc: claim?.object?.user?.image ?? claim?.object?.image,
-                  label:
-                    claim?.object?.user?.display_name ??
-                    claim?.object?.display_name,
-                  variant: claim?.object?.user ? 'user' : 'default',
-                }}
-              />
-            )}
+            <Claim
+              subject={{
+                imgSrc: claim?.subject?.user?.image ?? claim?.subject?.image,
+                label:
+                  claim?.subject?.user?.display_name ??
+                  claim?.subject?.display_name,
+                variant: claim?.subject?.user ? 'user' : 'default',
+              }}
+              predicate={{
+                imgSrc: claim?.predicate?.image,
+                label: claim?.predicate?.display_name,
+              }}
+              object={{
+                imgSrc: claim?.object?.user?.image ?? claim?.object?.image,
+                label:
+                  claim?.object?.user?.display_name ??
+                  claim?.object?.display_name,
+                variant: claim?.object?.user ? 'user' : 'default',
+              }}
+            />
             <span className="text-neutral-50/50 text-base font-normal leading-normal m-auto">
               Estimated Fees:{' '}
               {(+val * (mode === 'deposit' ? +entry_fee : +exit_fee)).toFixed(

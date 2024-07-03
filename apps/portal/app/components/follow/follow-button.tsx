@@ -17,7 +17,7 @@ import { SessionUser } from 'types/user'
 import { formatUnits } from 'viem'
 import { useAccount, useSwitchChain } from 'wagmi'
 
-interface StakeButtonProps {
+interface FollowButtonProps {
   user: SessionUser
   tosCookie: Cookie
   val: string
@@ -38,7 +38,7 @@ interface StakeButtonProps {
   className?: string
 }
 
-const StakeButton: React.FC<StakeButtonProps> = ({
+const FollowButton: React.FC<FollowButtonProps> = ({
   val,
   setVal,
   mode,
@@ -162,4 +162,4 @@ const StakeButton: React.FC<StakeButtonProps> = ({
   )
 }
 
-export default StakeButton
+export default FollowButton

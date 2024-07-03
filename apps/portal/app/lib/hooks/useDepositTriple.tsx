@@ -5,7 +5,7 @@ import { getChainEnvConfig } from '../utils/environment'
 import { useContractWriteAndWait } from './useContractWriteAndWait'
 import { useMultivaultContract } from './useMultivaultContract'
 
-export const useDepositAtom = (contract: string) => {
+export const useDepositTriple = (contract: string) => {
   const multivault = useMultivaultContract(
     contract,
     getChainEnvConfig(CURRENT_ENV).chainId,
@@ -13,6 +13,6 @@ export const useDepositAtom = (contract: string) => {
 
   return useContractWriteAndWait({
     ...multivault,
-    functionName: 'depositAtom',
+    functionName: 'depositTriple',
   })
 }

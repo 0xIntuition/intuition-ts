@@ -13,6 +13,6 @@ export const useRedeemAtom = (contract: string) => {
 
   return useContractWriteAndWait({
     ...multivault,
-    functionName: 'redeemAtom', // since only working with Atoms in Memekek
+    functionName: 'redeemAtom',
   })
 }

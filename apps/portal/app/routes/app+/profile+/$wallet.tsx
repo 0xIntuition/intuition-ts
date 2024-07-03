@@ -72,6 +72,8 @@ export async function loader({ context, request, params }: LoaderFunctionArgs) {
     return redirect('/create')
   }
 
+  console.log('userIdentity', userIdentity)
+
   let userObject
   try {
     userObject = await UsersService.getUserByWallet({

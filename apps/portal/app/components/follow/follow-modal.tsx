@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
 
 import { Dialog, DialogContent } from '@0xintuition/1ui'
-import { IdentityPresenter } from '@0xintuition/api'
+import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
 
 import { multivaultAbi } from '@lib/abis/multivault'
-import { useDepositAtom } from '@lib/hooks/useDepositAtom'
-import { useRedeemAtom } from '@lib/hooks/useRedeemAtom'
+import { useDepositTriple } from '@lib/hooks/useDepositTriple'
+import { useRedeemTriple } from '@lib/hooks/useRedeemTriple'
 import logger from '@lib/utils/logger'
 import { formatBalance } from '@lib/utils/misc'
 import { useGenericTxState } from '@lib/utils/use-tx-reducer'
@@ -18,9 +18,9 @@ import { VaultDetailsType } from 'types/vault'
 import { Abi, Address, decodeEventLog, formatUnits, parseUnits } from 'viem'
 import { useBalance, useBlockNumber } from 'wagmi'
 
-import StakeButton from './follow-button'
-import StakeForm from './follow-form'
-import StakeToast from './follow-toast'
+import FollowButton from './follow-button'
+import FollowForm from './follow-form'
+import FollowToast from './follow-toast'
 
 const initialTxState: StakeTransactionState = {
   status: 'idle',
@@ -34,6 +34,7 @@ interface FollowModalProps {
   contract: string
   open: boolean
   identity: IdentityPresenter
+  claim: ClaimPresenter
   onClose?: () => void
   direction?: 'for' | 'against'
   min_deposit: string
@@ -46,6 +47,7 @@ export default function FollowModal({
   open = false,
   onClose = () => {},
   identity,
+  claim,
   direction,
   min_deposit,
 }: FollowModalProps) {
@@ -59,11 +61,28 @@ export default function FollowModal({
     StakeTransactionAction
   >(stakeTransactionReducer, initialTxState)
 
-  const { vault_id, user_assets, user_conviction, conviction_price } = identity
+  let vault_id: string = '0'
+  vault_id = direction === 'for' ? claim.vault_id : claim.counter_vault_id
 
-  const depositHook = useDepositAtom(contract)
+  let user_conviction: string = '0'
+  user_conviction =
+    direction === 'for'
+      ? claim.user_conviction_for
+      : claim.user_conviction_against
 
-  const redeemHook = useRedeemAtom(contract)
+  let conviction_price: string = '0'
+  conviction_price =
+    direction === 'for'
+      ? claim.for_conviction_price
+      : claim.against_conviction_price
+
+  let user_assets: string = '0'
+  user_assets =
+    direction === 'for' ? claim.user_assets_for : claim.user_assets_against
+
+  const depositHook = useDepositTriple(contract)
+
+  const redeemHook = useRedeemTriple(contract)
 
   const {
     writeContractAsync,
@@ -73,7 +92,7 @@ export default function FollowModal({
     isError,
     onReceipt,
     reset,
-  } = mode === 'deposit' ? depositHook : redeemHook
+  } = mode === 'follow' ? depositHook : redeemHook
 
   const useHandleAction = (actionType: string) => {
     return async () => {
@@ -82,9 +101,10 @@ export default function FollowModal({
         writeContractAsync({
           address: contract as `0x${string}`,
           abi: multivaultAbi as Abi,
-          functionName: actionType === 'buy' ? 'depositAtom' : 'redeemAtom',
+          functionName:
+            actionType === 'follow' ? 'depositTriple' : 'redeemTriple',
           args:
-            actionType === 'buy'
+            actionType === 'follow'
               ? [user.details?.wallet?.address as `0x${string}`, vault_id]
               : [
                   parseUnits(
@@ -100,7 +120,7 @@ export default function FollowModal({
                   vault_id,
                 ],
           value:
-            actionType === 'buy'
+            actionType === 'follow'
               ? parseUnits(val === '' ? '0' : val, 18)
               : undefined,
         })
@@ -133,8 +153,8 @@ export default function FollowModal({
     }
   }
 
-  const handleDeposit = useHandleAction('buy')
-  const handleRedeem = useHandleAction('sell')
+  const handleDeposit = useHandleAction('follow')
+  const handleRedeem = useHandleAction('unfollow')
 
   const action = mode === 'deposit' ? handleDeposit : handleRedeem
 
@@ -148,7 +168,7 @@ export default function FollowModal({
   useEffect(() => {
     let assets = ''
     const receipt = txReceipt
-    const action = mode === 'deposit' ? 'Deposited' : 'Redeemed'
+    const action = mode === 'follow' ? 'Followed' : 'Unfollowed'
 
     type BuyArgs = {
       sender: Address
@@ -197,7 +217,7 @@ export default function FollowModal({
             : (topics.args as SellArgs).assetsForReceiver.toString()
 
         toast.custom(() => (
-          <StakeToast
+          <FollowToast
             action={action}
             assets={assets}
             txHash={txReceipt.transactionHash}
@@ -319,7 +339,7 @@ export default function FollowModal({
       }}
     >
       <DialogContent className="max-w-[476px]">
-        <StakeForm
+        <FollowForm
           user={user}
           walletBalance={walletBalance}
           identity={identity}
@@ -332,19 +352,17 @@ export default function FollowModal({
           direction={direction ? direction : undefined}
           val={val}
           setVal={setVal}
-          mode={mode}
           dispatch={dispatch}
           state={state}
           fetchReval={fetchReval}
           formRef={formRef}
           isLoading={isLoading}
-          modalType={modalType}
           validationErrors={validationErrors}
           setValidationErrors={setValidationErrors}
           showErrors={showErrors}
           setShowErrors={setShowErrors}
         />
-        <StakeButton
+        <FollowButton
           user={user}
           tosCookie={tosCookie}
           val={val}

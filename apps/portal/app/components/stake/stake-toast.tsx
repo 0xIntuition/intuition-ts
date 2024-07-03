@@ -38,7 +38,7 @@ export default function StakeToast({ action, assets, txHash }: ToastProps) {
             </div>
             <div>
               <Link
-                to={`https://optimism-sepolia.blockscout.com/tx/${txHash}`}
+                to={`https://base-sepolia.blockscout.com/tx/${txHash}`}
                 target="_blank"
                 className="flex flex-row items-center gap-1 text-xs text-blue-500 transition-colors duration-300 hover:text-blue-400"
               >
