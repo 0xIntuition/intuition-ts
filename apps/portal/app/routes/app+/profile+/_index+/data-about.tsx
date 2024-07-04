@@ -27,7 +27,6 @@ import {
   PositionPresenter,
   PositionSortColumn,
   PositionsService,
-  SearchPositionsResponse,
   SortDirection,
 } from '@0xintuition/api'
 
@@ -39,11 +38,11 @@ import {
 } from '@lib/utils/misc'
 import { SessionContext } from '@middleware/session'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
-import { useFetcher, useLoaderData, useParams } from '@remix-run/react'
+import { useFetcher, useLoaderData } from '@remix-run/react'
 import { getPrivyAccessToken } from '@server/privy'
 import { formatUnits } from 'viem'
 
-export async function loader({ context, request, params }: LoaderFunctionArgs) {
+export async function loader({ context, request }: LoaderFunctionArgs) {
   OpenAPI.BASE = 'https://dev.api.intuition.systems'
   const accessToken = getPrivyAccessToken(request)
   const headers = getAuthHeaders(accessToken !== null ? accessToken : '')
@@ -123,8 +122,6 @@ export async function loader({ context, request, params }: LoaderFunctionArgs) {
 }
 
 export default function ProfileDataAbout() {
-  const { userIdentity, positions } = useLoaderData<typeof loader>()
-
   return (
     <div className="flex-col justify-start items-start gap-6 flex w-full">
       <PositionsOnIdentity />
@@ -142,15 +139,9 @@ export function PositionsOnIdentity() {
   )
   const [sortBy, setSortBy] = useState(initialData.positionsSortBy)
   const [direction, setDirection] = useState(initialData.positionsDirection)
-  const [isLoading, setIsLoading] = useState(false)
-  const totalPages = calculateTotalPages(
-    initialData.positionsPagination.total,
-    initialData.positionsPagination.limit,
-  )
 
   useEffect(() => {
     if (fetcher.data) {
-      setIsLoading(false)
       setPositions(fetcher.data.positions.data as PositionPresenter[])
     }
   }, [fetcher.data])
@@ -180,11 +171,6 @@ export function PositionsOnIdentity() {
     const params = `?index&page=${newPage}&sortBy=${sortBy}&direction=${direction}`
     fetcher.load(params)
   }
-
-  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc')
-  const [selectedSortBy, setSelectedSortBy] = useState<string>(
-    options[0].sortBy,
-  )
 
   return (
     <>
@@ -241,8 +227,7 @@ export function PositionsOnIdentity() {
               (option) => option.value.toLowerCase() === value,
             )
             if (selectedOption) {
-              setSelectedSortBy(selectedOption.sortBy)
-              handleSortChange(selectedOption.sortBy, sortDirection)
+              handleSortChange(selectedOption.sortBy, 'desc')
             }
           }}
         >
