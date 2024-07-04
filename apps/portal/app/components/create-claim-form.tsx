@@ -3,9 +3,16 @@ import React, { useEffect, useRef, useState } from 'react'
 import {
   Button,
   DialogHeader,
-  IdentityInput,
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
   IdentitySearchCombobox,
   IdentitySearchComboboxItem,
+  IdentityTag,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+  ProfileCard,
   Text,
   toast,
 } from '@0xintuition/1ui'
@@ -28,9 +35,10 @@ import {
   MULTIVAULT_CONTRACT_ADDRESS,
 } from '@lib/utils/constants'
 import logger from '@lib/utils/logger'
-import { truncateString } from '@lib/utils/misc'
+import { formatBalance, sliceString, truncateString } from '@lib/utils/misc'
 import { useFetcher } from '@remix-run/react'
 import { CreateLoaderData } from '@routes/resources+/create'
+import * as blockies from 'blockies-ts'
 import { AlertCircle } from 'lucide-react'
 import { TransactionActionType, TransactionStateType } from 'types/transaction'
 import { useAccount, usePublicClient, useWalletClient } from 'wagmi'
@@ -331,20 +339,6 @@ function CreateClaimForm({
     onSubmit: async (event) => handleSubmit(event),
   })
 
-  const [identitySelectState, setIdentitySelectState] = useState({
-    subject: false,
-    predicate: false,
-    object: false,
-  })
-
-  const toggleSelectState = (field: 'subject' | 'predicate' | 'object') => {
-    setIdentitySelectState((prevState) => ({
-      subject: field === 'subject' ? !prevState.subject : false,
-      predicate: field === 'predicate' ? !prevState.predicate : false,
-      object: field === 'object' ? !prevState.object : false,
-    }))
-  }
-
   const [selectedIdentities, setSelectedIdentities] = useState<{
     subject: IdentityPresenter | null
     predicate: IdentityPresenter | null
@@ -410,6 +404,10 @@ function CreateClaimForm({
   const isTransactionProgress = (status: string) =>
     ['transaction-pending'].includes(status)
 
+  const Divider = () => (
+    <span className="h-px w-2.5 flex bg-border/30 self-end mb-[1.2rem]" />
+  )
+
   return (
     <>
       <claimFetcher.Form
@@ -420,102 +418,277 @@ function CreateClaimForm({
         {!isTransactionStarted ? (
           <div className="flex flex-col items-center">
             <>
-              <pre>
-                subject.vault_id: {selectedIdentities.subject?.vault_id}
-              </pre>
-              <pre>
-                predicate.vault_id: {selectedIdentities.predicate?.vault_id}
-              </pre>
-              <pre>object.vault_id: {selectedIdentities.object?.vault_id}</pre>s
               <pre>state: {state.status}</pre>
             </>
-            <div className="my-14">
-              <IdentityInput
-                showLabels
-                subject={{
-                  selectedValue: {
-                    name:
-                      truncateString(
-                        selectedIdentities.subject?.display_name ?? '',
-                        7,
-                      ) || 'Subject',
-                  },
-                  onClick: () => toggleSelectState('subject'),
-                }}
-                predicate={{
-                  selectedValue: {
-                    name:
-                      truncateString(
-                        selectedIdentities.predicate?.display_name ?? '',
-                        7,
-                      ) || 'Predicate',
-                    variant: selectedIdentities.predicate?.is_user
-                      ? 'user'
-                      : 'non-user',
-                  },
-                  onClick: () => toggleSelectState('predicate'),
-                }}
-                object={{
-                  selectedValue: {
-                    name:
-                      truncateString(
-                        selectedIdentities.object?.display_name ?? '',
-                        7,
-                      ) || 'Object',
-                  },
-                  onClick: () => toggleSelectState('object'),
-                }}
-              />
-            </div>
-            <div ref={identitySelectContainerRef}>
-              {identitySelectState.subject && (
-                <IdentitySearchCombobox>
-                  {identities?.map((identity, index) => (
-                    <IdentitySearchComboboxItem
-                      key={index}
-                      variant={identity.is_user === true ? 'user' : 'non-user'}
-                      name={truncateString(identity.display_name, 7)}
-                      value={+identity.assets_sum}
-                      walletAddress={identity.creator_address}
-                      onSelect={() =>
-                        handleIdentitySelection('subject', identity)
-                      }
-                    />
-                  ))}
-                </IdentitySearchCombobox>
-              )}
-              {identitySelectState.predicate && (
-                <IdentitySearchCombobox>
-                  {identities?.map((identity, index) => (
-                    <IdentitySearchComboboxItem
-                      key={index}
-                      variant={identity.is_user === true ? 'user' : 'non-user'}
-                      name={truncateString(identity.display_name, 7)}
-                      value={+identity.assets_sum}
-                      walletAddress={identity.creator_address}
-                      onSelect={() =>
-                        handleIdentitySelection('predicate', identity)
-                      }
-                    />
-                  ))}
-                </IdentitySearchCombobox>
-              )}
-              {identitySelectState.object && (
-                <IdentitySearchCombobox>
-                  {identities?.map((identity, index) => (
-                    <IdentitySearchComboboxItem
-                      key={index}
-                      variant={identity.is_user === true ? 'user' : 'non-user'}
-                      name={truncateString(identity.display_name, 7)}
-                      value={+identity.assets_sum}
-                      walletAddress={identity.creator_address}
-                      onSelect={() =>
-                        handleIdentitySelection('object', identity)
-                      }
-                    />
-                  ))}
-                </IdentitySearchCombobox>
-              )}
+            <div className="flex items-center my-14">
+              <Popover>
+                <PopoverTrigger asChild>
+                  <div className="flex flex-col gap-2 items-start">
+                    <Text variant="small" className="text-primary/60">
+                      Subject
+                    </Text>
+                    <HoverCard>
+                      <HoverCardTrigger>
+                        <IdentityTag size="lg">
+                          {truncateString(
+                            selectedIdentities.subject?.display_name ?? '',
+                            7,
+                          ) || 'Subject'}
+                        </IdentityTag>
+                      </HoverCardTrigger>
+                      {selectedIdentities.subject && (
+                        <HoverCardContent side="bottom">
+                          <ProfileCard
+                            variant="user"
+                            avatarSrc={
+                              selectedIdentities.subject?.user?.image ??
+                              blockies
+                                .create({
+                                  seed: selectedIdentities.subject?.user
+                                    ?.wallet,
+                                })
+                                .toDataURL()
+                            }
+                            name={
+                              selectedIdentities.subject?.user?.display_name ??
+                              ''
+                            }
+                            walletAddress={
+                              selectedIdentities.subject?.user?.ens_name ??
+                              sliceString(
+                                selectedIdentities.subject?.user?.wallet,
+                                6,
+                                4,
+                              )
+                            }
+                            // stats={{
+                            //   numberOfFollowers:
+                            //     selectedIdentities.subject?.follower_count ?? 0
+                            //   numberOfFollowing:
+                            //     selectedIdentities.subject?.followed_count ?? 0
+                            //   points:
+                            //     selectedIdentities.subject?.user_points,
+                            // }}
+                            bio={
+                              selectedIdentities.subject?.user?.description ??
+                              ''
+                            }
+                          >
+                            <Button
+                              variant="accent"
+                              onClick={() =>
+                                window.open('https://example.com', '_blank')
+                              }
+                            >
+                              Follow
+                            </Button>
+                          </ProfileCard>
+                        </HoverCardContent>
+                      )}
+                    </HoverCard>
+                  </div>
+                </PopoverTrigger>
+                <PopoverContent className="bg-transparent border-none">
+                  <IdentitySearchCombobox>
+                    {identities?.map((identity, index) => (
+                      <IdentitySearchComboboxItem
+                        key={index}
+                        variant={
+                          identity.is_user === true ? 'user' : 'non-user'
+                        }
+                        name={truncateString(identity.display_name, 7)}
+                        value={+formatBalance(identity.assets_sum)}
+                        walletAddress={identity.creator_address}
+                        onSelect={() =>
+                          handleIdentitySelection('subject', identity)
+                        }
+                      />
+                    ))}
+                  </IdentitySearchCombobox>
+                </PopoverContent>
+              </Popover>
+              <Divider />
+              <Popover>
+                <PopoverTrigger asChild>
+                  <div className="flex flex-col gap-2 items-start">
+                    <Text variant="small" className="text-primary/60">
+                      Predicate
+                    </Text>
+                    <HoverCard>
+                      <HoverCardTrigger>
+                        {selectedIdentities.predicate && (
+                          <HoverCardContent side="bottom">
+                            <ProfileCard
+                              variant="user"
+                              avatarSrc={
+                                selectedIdentities.predicate?.user?.image ??
+                                blockies
+                                  .create({
+                                    seed: selectedIdentities.predicate?.user
+                                      ?.wallet,
+                                  })
+                                  .toDataURL()
+                              }
+                              name={
+                                selectedIdentities.predicate?.user
+                                  ?.display_name ?? ''
+                              }
+                              walletAddress={
+                                selectedIdentities.predicate?.user?.ens_name ??
+                                sliceString(
+                                  selectedIdentities.predicate?.user?.wallet,
+                                  6,
+                                  4,
+                                )
+                              }
+                              // stats={{
+                              //   numberOfFollowers:
+                              //     selectedIdentities.subject?.follower_count ?? 0
+                              //   numberOfFollowing:
+                              //     selectedIdentities.subject?.followed_count ?? 0
+                              //   points:
+                              //     selectedIdentities.subject?.user_points,
+                              // }}
+                              bio={
+                                selectedIdentities.predicate?.user
+                                  ?.description ?? ''
+                              }
+                            >
+                              <Button
+                                variant="accent"
+                                onClick={() =>
+                                  window.open('https://example.com', '_blank')
+                                }
+                              >
+                                Follow
+                              </Button>
+                            </ProfileCard>
+                          </HoverCardContent>
+                        )}
+                        <IdentityTag size="lg">
+                          {truncateString(
+                            selectedIdentities.predicate?.display_name ?? '',
+                            7,
+                          ) || 'Predicate'}
+                        </IdentityTag>
+                      </HoverCardTrigger>
+                    </HoverCard>
+                  </div>
+                </PopoverTrigger>
+                <PopoverContent
+                  className="bg-transparent border-none"
+                  side="bottom"
+                  align="center"
+                  sideOffset={5}
+                >
+                  <IdentitySearchCombobox>
+                    {identities?.map((identity, index) => (
+                      <IdentitySearchComboboxItem
+                        key={index}
+                        variant={
+                          identity.is_user === true ? 'user' : 'non-user'
+                        }
+                        name={truncateString(identity.display_name, 7)}
+                        value={+formatBalance(identity.assets_sum)}
+                        walletAddress={identity.creator_address}
+                        onSelect={() =>
+                          handleIdentitySelection('predicate', identity)
+                        }
+                      />
+                    ))}
+                  </IdentitySearchCombobox>
+                </PopoverContent>
+              </Popover>
+              <Divider />
+              <Popover>
+                <PopoverTrigger asChild>
+                  <div className="flex flex-col gap-2 items-start">
+                    <Text variant="small" className="text-primary/60">
+                      Object
+                    </Text>
+                    <HoverCard>
+                      <HoverCardTrigger>
+                        <IdentityTag size="lg">
+                          {truncateString(
+                            selectedIdentities.object?.display_name ?? '',
+                            7,
+                          ) || 'Object'}
+                        </IdentityTag>
+                      </HoverCardTrigger>
+                      {selectedIdentities.subject && (
+                        <HoverCardContent side="bottom">
+                          <ProfileCard
+                            variant="user"
+                            avatarSrc={
+                              selectedIdentities.object?.user?.image ??
+                              blockies
+                                .create({
+                                  seed: selectedIdentities.object?.user?.wallet,
+                                })
+                                .toDataURL()
+                            }
+                            name={
+                              selectedIdentities.object?.user?.display_name ??
+                              ''
+                            }
+                            walletAddress={
+                              selectedIdentities.object?.user?.ens_name ??
+                              sliceString(
+                                selectedIdentities.object?.user?.wallet,
+                                6,
+                                4,
+                              )
+                            }
+                            // stats={{
+                            //   numberOfFollowers:
+                            //     selectedIdentities.subject?.follower_count ?? 0
+                            //   numberOfFollowing:
+                            //     selectedIdentities.subject?.followed_count ?? 0
+                            //   points:
+                            //     selectedIdentities.subject?.user_points,
+                            // }}
+                            bio={
+                              selectedIdentities.object?.user?.description ?? ''
+                            }
+                          >
+                            <Button
+                              variant="accent"
+                              onClick={() =>
+                                window.open('https://example.com', '_blank')
+                              }
+                            >
+                              Follow
+                            </Button>
+                          </ProfileCard>
+                        </HoverCardContent>
+                      )}
+                    </HoverCard>
+                  </div>
+                </PopoverTrigger>
+                <PopoverContent
+                  className="bg-transparent border-none"
+                  side="bottom"
+                  align="center"
+                  sideOffset={5}
+                >
+                  <IdentitySearchCombobox>
+                    {identities?.map((identity, index) => (
+                      <IdentitySearchComboboxItem
+                        key={index}
+                        variant={
+                          identity.is_user === true ? 'user' : 'non-user'
+                        }
+                        name={truncateString(identity.display_name, 7)}
+                        value={+formatBalance(identity.assets_sum)}
+                        walletAddress={identity.creator_address}
+                        onSelect={() =>
+                          handleIdentitySelection('object', identity)
+                        }
+                      />
+                    ))}
+                  </IdentitySearchCombobox>
+                </PopoverContent>
+              </Popover>
             </div>
             <Button
               form={form.id}
