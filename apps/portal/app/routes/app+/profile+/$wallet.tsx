@@ -10,6 +10,8 @@ import {
 } from '@0xintuition/1ui'
 import {
   ApiError,
+  ClaimPresenter,
+  ClaimsService,
   IdentitiesService,
   IdentityPresenter,
   OpenAPI,
@@ -18,9 +20,10 @@ import {
   UserTotalsPresenter,
 } from '@0xintuition/api'
 
+import FollowModal from '@components/follow/follow-modal'
 import { NestedLayout } from '@components/nested-layout'
 import StakeModal from '@components/stake/stake-modal'
-import { stakeModalAtom } from '@lib/state/store'
+import { followModalAtom, stakeModalAtom } from '@lib/state/store'
 import { userProfileRouteOptions } from '@lib/utils/constants'
 import logger from '@lib/utils/logger'
 import {
@@ -106,6 +109,22 @@ export async function loader({ context, request, params }: LoaderFunctionArgs) {
     }
   }
 
+  let followClaim
+  try {
+    followClaim = await ClaimsService.getClaimById({
+      id: '92ced3bd-5535-46ce-8558-71861bfe0b40',
+    })
+  } catch (error: unknown) {
+    if (error instanceof ApiError) {
+      followClaim = undefined
+      logger(`${error.name} - ${error.status}: ${error.message} ${error.url}`)
+    } else {
+      throw error
+    }
+  }
+
+  console.log('followClaim', followClaim)
+
   let vaultDetails: VaultDetailsType | null = null
 
   if (userIdentity !== undefined && userIdentity.vault_id) {
@@ -121,32 +140,62 @@ export async function loader({ context, request, params }: LoaderFunctionArgs) {
     }
   }
 
+  let followVaultDetails: VaultDetailsType | null = null
+
+  if (followClaim && followClaim.vault_id) {
+    try {
+      followVaultDetails = await getVaultDetails(
+        followClaim.contract,
+        followClaim.vault_id,
+        user?.details?.wallet?.address as `0x${string}`,
+      )
+    } catch (error) {
+      logger('Failed to fetch followVaultDetails', error)
+      followVaultDetails = null
+    }
+  }
+
+  console.log('followVaultDetails', followVaultDetails)
+
   return json({
     wallet,
     user,
     userIdentity,
     userObject,
     userTotals,
+    followClaim,
+    followVaultDetails,
     vaultDetails,
   })
 }
 
 export default function Profile() {
-  const { wallet, user, userObject, userIdentity, userTotals, vaultDetails } =
-    useLoaderData<{
-      wallet: string
-      user: SessionUser
-      userIdentity: IdentityPresenter
-      userObject: UserPresenter
-      userTotals: UserTotalsPresenter
-      vaultDetails: VaultDetailsType
-    }>()
+  const {
+    wallet,
+    user,
+    userObject,
+    userIdentity,
+    userTotals,
+    followClaim,
+    followVaultDetails,
+    vaultDetails,
+  } = useLoaderData<{
+    wallet: string
+    user: SessionUser
+    userIdentity: IdentityPresenter
+    userObject: UserPresenter
+    userTotals: UserTotalsPresenter
+    followClaim: ClaimPresenter
+    followVaultDetails: VaultDetailsType
+    vaultDetails: VaultDetailsType
+  }>()
 
   const { user_conviction_value: user_assets } = vaultDetails
 
   const imgSrc = blockies.create({ seed: wallet }).toDataURL()
 
   const [stakeModalActive, setStakeModalActive] = useAtom(stakeModalAtom)
+  const [followModalActive, setFollowModalActive] = useAtom(followModalAtom)
 
   return (
     <NestedLayout outlet={Outlet} options={userProfileRouteOptions}>
@@ -170,9 +219,18 @@ export default function Profile() {
               <Button
                 variant="secondary"
                 className="w-full"
-                onClick={() => null}
+                onClick={() =>
+                  setFollowModalActive((prevState) => ({
+                    ...prevState,
+                    mode: 'redeem',
+                    modalType: 'identity',
+                    isOpen: true,
+                  }))
+                }
               >
-                Follow
+                {followVaultDetails?.user_conviction > '0'
+                  ? `Following · ${formatBalance(followVaultDetails.user_conviction_value, 18, 4)} ETH`
+                  : 'Follow'}
               </Button>
             </ProfileCard>
             {/* <ProfileSocialAccounts
@@ -244,6 +302,21 @@ export default function Profile() {
             modalType={'identity'}
             onClose={() => {
               setStakeModalActive((prevState) => ({
+                ...prevState,
+                isOpen: false,
+                mode: undefined,
+              }))
+            }}
+          />
+          <FollowModal
+            user={user}
+            contract={userIdentity.contract}
+            open={followModalActive.isOpen}
+            identity={userIdentity}
+            claim={followClaim}
+            min_deposit={vaultDetails.min_deposit}
+            onClose={() => {
+              setFollowModalActive((prevState) => ({
                 ...prevState,
                 isOpen: false,
                 mode: undefined,

@@ -49,7 +49,7 @@ export default function FollowModal({
   onClose = () => {},
   identity,
   claim,
-  direction,
+  direction = 'for',
   min_deposit,
 }: FollowModalProps) {
   const fetchReval = useFetcher()
@@ -64,23 +64,45 @@ export default function FollowModal({
   >(stakeTransactionReducer, initialTxState)
 
   let vault_id: string = '0'
-  vault_id = direction === 'for' ? claim.vault_id : claim.counter_vault_id
+  vault_id = claim.vault_id
 
   let user_conviction: string = '0'
-  user_conviction =
-    direction === 'for'
-      ? claim.user_conviction_for
-      : claim.user_conviction_against
+  user_conviction = claim.user_conviction_for
 
   let conviction_price: string = '0'
-  conviction_price =
-    direction === 'for'
-      ? claim.for_conviction_price
-      : claim.against_conviction_price
+  conviction_price = claim.for_conviction_price
 
   let user_assets: string = '0'
-  user_assets =
-    direction === 'for' ? claim.user_assets_for : claim.user_assets_against
+  user_assets = claim.user_assets_for
+
+  const [latestVaultDetails, setLatestVaultDetails] =
+    useState<VaultDetailsType>()
+
+  const {
+    conviction_price: latest_conviction_price,
+    user_conviction: latest_user_conviction,
+    formatted_entry_fee,
+    formatted_exit_fee,
+  } = latestVaultDetails ?? {}
+
+  const vaultContractDataFetcher = useFetcher<VaultDetailsType>()
+  const vaultContractDataResourceUrl = `/resources/stake?contract=${contract}&vid=${vault_id}&wallet=${user.details?.wallet?.address}`
+  const vaultContractDataLoadRef = useRef(vaultContractDataFetcher.load)
+
+  console.log('latestVaultDetails', latestVaultDetails)
+
+  useEffect(() => {
+    vaultContractDataLoadRef.current = vaultContractDataFetcher.load
+  })
+  useEffect(() => {
+    vaultContractDataLoadRef.current(vaultContractDataResourceUrl)
+  }, [])
+
+  useEffect(() => {
+    if (vaultContractDataFetcher.data) {
+      setLatestVaultDetails(vaultContractDataFetcher.data)
+    }
+  }, [vaultContractDataFetcher.data])
 
   const depositHook = useDepositTriple(contract)
 
@@ -99,6 +121,9 @@ export default function FollowModal({
   const useHandleAction = (actionType: string) => {
     return async () => {
       setLoading(true)
+      console.log('actionType', actionType)
+      console.log('vault_id', vault_id)
+      console.log('val', val)
       try {
         writeContractAsync({
           address: contract as `0x${string}`,
@@ -109,15 +134,7 @@ export default function FollowModal({
             actionType === 'follow'
               ? [user.details?.wallet?.address as `0x${string}`, vault_id]
               : [
-                  parseUnits(
-                    val === ''
-                      ? '0'
-                      : (
-                          Number(val) /
-                          Number(formatUnits(BigInt(conviction_price), 18))
-                        ).toString(),
-                    18,
-                  ),
+                  latestVaultDetails?.user_conviction,
                   user.details?.wallet?.address as `0x${string}`,
                   vault_id,
                 ],
@@ -140,10 +157,10 @@ export default function FollowModal({
           logger('error', e)
           let message = 'Failed transaction'
           if (e.message.includes('insufficient')) {
-            message = "Insufficient Funds: Ask your gf's boyfriend for more ETH"
+            message = 'Insufficient funds'
           }
           if (e.message.includes('rejected')) {
-            message = 'Transaction rejected: Are we not so back?'
+            message = 'Transaction rejected'
           }
           dispatch({
             type: 'TRANSACTION_ERROR',
@@ -273,33 +290,6 @@ export default function FollowModal({
 
   const walletBalance = formatUnits(balance?.value ?? 0n, 18)
 
-  const [latestVaultDetails, setLatestVaultDetails] =
-    useState<VaultDetailsType>()
-
-  const {
-    conviction_price: latest_conviction_price,
-    user_conviction: latest_user_conviction,
-    formatted_entry_fee,
-    formatted_exit_fee,
-  } = latestVaultDetails ?? {}
-
-  const vaultContractDataFetcher = useFetcher<VaultDetailsType>()
-  const vaultContractDataResourceUrl = `/resources/stake?contract=${contract}&vid=${vault_id}&wallet=${user.details?.wallet?.address}`
-  const vaultContractDataLoadRef = useRef(vaultContractDataFetcher.load)
-
-  useEffect(() => {
-    vaultContractDataLoadRef.current = vaultContractDataFetcher.load
-  })
-  useEffect(() => {
-    vaultContractDataLoadRef.current(vaultContractDataResourceUrl)
-  }, [])
-
-  useEffect(() => {
-    if (vaultContractDataFetcher.data) {
-      setLatestVaultDetails(vaultContractDataFetcher.data)
-    }
-  }, [vaultContractDataFetcher.data])
-
   const [showErrors, setShowErrors] = useState(false)
   const [validationErrors, setValidationErrors] = useState<string[]>([])
 
@@ -354,7 +344,7 @@ export default function FollowModal({
           user_assets={user_assets ?? '0'}
           entry_fee={formatted_entry_fee ?? '0'}
           exit_fee={formatted_exit_fee ?? '0'}
-          direction={direction ? direction : undefined}
+          direction={direction}
           val={val}
           setVal={setVal}
           dispatch={dispatch}
@@ -385,7 +375,7 @@ export default function FollowModal({
         <UnfollowButton
           user={user}
           tosCookie={tosCookie}
-          val={val}
+          val={user_conviction}
           setVal={setVal}
           setMode={setMode}
           handleAction={handleUnfollowButtonClick}
@@ -395,7 +385,7 @@ export default function FollowModal({
           setValidationErrors={setValidationErrors}
           setShowErrors={setShowErrors}
           conviction_price={latest_conviction_price ?? conviction_price ?? '0'}
-          className={`${latest_user_conviction ?? user_conviction >= '0' ? 'hidden' : ''}`}
+          className={`${user_conviction > '0' ? '' : 'hidden'}`}
         />
       </DialogContent>
     </Dialog>

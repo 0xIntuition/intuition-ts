@@ -49,12 +49,12 @@ export default function FollowReview({
       : state.status === 'pending' || state.status === 'confirm'
         ? 'Attestation in progress'
         : state.status === 'confirmed' || state.status === 'complete'
-          ? mode === 'deposit'
+          ? mode === 'follow'
             ? 'Deposited successfully'
             : 'Redeemed successfully'
           : state.status === 'error'
             ? 'Transaction failed'
-            : mode === 'deposit'
+            : mode === 'follow'
               ? 'Deposit'
               : 'Redeem'
     if (newText !== statusText) {
@@ -139,7 +139,7 @@ export default function FollowReview({
           </div>
           <div className="gap-5 flex flex-col items-center">
             <span className="text-xl font-medium text-white/70 leading-[30px]">
-              {mode === 'deposit' ? 'Deposit' : 'Redeem'}{' '}
+              {mode === 'follow' ? 'Deposit' : 'Redeem'}{' '}
               {formatDisplayBalance(Number(val), 2)} ETH on follow claim
             </span>
             <Claim
@@ -164,9 +164,7 @@ export default function FollowReview({
             />
             <span className="text-neutral-50/50 text-base font-normal leading-normal m-auto">
               Estimated Fees:{' '}
-              {(+val * (mode === 'deposit' ? +entry_fee : +exit_fee)).toFixed(
-                6,
-              )}{' '}
+              {(+val * (mode === 'follow' ? +entry_fee : +exit_fee)).toFixed(6)}{' '}
               ETH
             </span>
           </div>
