@@ -55,6 +55,8 @@ RUN pnpm i
 RUN pnpm run portal:build
 
 ENV NX_REJECT_UNKNOWN_LOCAL_CACHE=0
+ENV PORT=8080
+ENV HOST=0.0.0.0
 
 EXPOSE 8080
 CMD [ "pnpm", "run", "portal:start" ]
