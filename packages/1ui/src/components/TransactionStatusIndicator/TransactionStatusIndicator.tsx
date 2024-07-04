@@ -93,7 +93,11 @@ const TransactionStatusIndicator = ({
         className={cn('w-20 h-20', statusComponentData.iconClass)}
         name={statusComponentData.iconName}
       />
-      <Text variant={TextVariant.headline} weight={TextWeight.medium}>
+      <Text
+        variant={TextVariant.headline}
+        weight={TextWeight.medium}
+        className="text-foreground"
+      >
         {statusComponentData.label}
       </Text>
     </div>
