@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import {
   Button,
@@ -329,13 +329,6 @@ function CreateClaimForm({
   const [form] = useForm({
     id: 'create-claim',
     lastResult: lastOffChainSubmission,
-    // constraint: getZodConstraint(createClaimSchema()),
-    // onValidate({ formData }) {
-    //   return parseWithZod(formData, {
-    //     schema: createClaimSchema,
-    //   })
-    // },
-    // shouldValidate: 'onInput',
     onSubmit: async (event) => handleSubmit(event),
   })
 
@@ -359,29 +352,6 @@ function CreateClaimForm({
     }))
     logger('selected', identity)
   }
-
-  // these allow for closing the comboboxes by clicking outside of the container
-  const identitySelectContainerRef = useRef<HTMLDivElement | null>(null)
-
-  const handleClickOutside = (event: MouseEvent) => {
-    if (
-      identitySelectContainerRef.current &&
-      !identitySelectContainerRef.current.contains(event.target as Node)
-    ) {
-      setIdentitySelectState({
-        subject: false,
-        predicate: false,
-        object: false,
-      })
-    }
-  }
-
-  useEffect(() => {
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-    }
-  }, [])
 
   const isTransactionStarted = [
     'approve',
@@ -439,7 +409,11 @@ function CreateClaimForm({
                       {selectedIdentities.subject && (
                         <HoverCardContent side="bottom">
                           <ProfileCard
-                            variant="user"
+                            variant={
+                              selectedIdentities.subject?.is_user === true
+                                ? 'user'
+                                : 'non-user'
+                            }
                             avatarSrc={
                               selectedIdentities.subject?.user?.image ??
                               blockies
@@ -450,38 +424,51 @@ function CreateClaimForm({
                                 .toDataURL()
                             }
                             name={
-                              selectedIdentities.subject?.user?.display_name ??
-                              ''
+                              selectedIdentities.subject?.is_user === true
+                                ? selectedIdentities.subject?.user
+                                    ?.display_name ?? ''
+                                : selectedIdentities.subject?.display_name
                             }
                             walletAddress={
-                              selectedIdentities.subject?.user?.ens_name ??
-                              sliceString(
-                                selectedIdentities.subject?.user?.wallet,
-                                6,
-                                4,
-                              )
+                              selectedIdentities.subject?.is_user === true
+                                ? selectedIdentities.subject?.user?.ens_name ??
+                                  sliceString(
+                                    selectedIdentities.subject?.user?.wallet,
+                                    6,
+                                    4,
+                                  )
+                                : selectedIdentities.subject?.identity_id
                             }
-                            // stats={{
-                            //   numberOfFollowers:
-                            //     selectedIdentities.subject?.follower_count ?? 0
-                            //   numberOfFollowing:
-                            //     selectedIdentities.subject?.followed_count ?? 0
-                            //   points:
-                            //     selectedIdentities.subject?.user_points,
-                            // }}
+                            stats={
+                              selectedIdentities.subject?.is_user === true
+                                ? {
+                                    numberOfFollowers:
+                                      selectedIdentities.subject
+                                        ?.follower_count ?? 0,
+                                    numberOfFollowing:
+                                      selectedIdentities.subject
+                                        ?.followed_count ?? 0,
+                                    // points:
+                                    //   selectedIdentities.subject?.user
+                                    //     ?.user_points, // no user_points aggregate on the IdentityPresenter or the UserPresenter
+                                  }
+                                : undefined
+                            }
                             bio={
-                              selectedIdentities.subject?.user?.description ??
-                              ''
+                              selectedIdentities.subject?.is_user === true
+                                ? selectedIdentities.subject?.user
+                                    ?.description ?? ''
+                                : selectedIdentities.subject?.description ?? ''
                             }
                           >
-                            <Button
-                              variant="accent"
-                              onClick={() =>
-                                window.open('https://example.com', '_blank')
-                              }
-                            >
-                              Follow
-                            </Button>
+                            {selectedIdentities.subject?.is_user === true && (
+                              <Button
+                                variant="accent"
+                                onClick={() => logger('follow functionality')}
+                              >
+                                Follow
+                              </Button>
+                            )}
                           </ProfileCard>
                         </HoverCardContent>
                       )}
@@ -519,7 +506,11 @@ function CreateClaimForm({
                         {selectedIdentities.predicate && (
                           <HoverCardContent side="bottom">
                             <ProfileCard
-                              variant="user"
+                              variant={
+                                selectedIdentities.predicate?.is_user === true
+                                  ? 'user'
+                                  : 'non-user'
+                              }
                               avatarSrc={
                                 selectedIdentities.predicate?.user?.image ??
                                 blockies
@@ -530,38 +521,55 @@ function CreateClaimForm({
                                   .toDataURL()
                               }
                               name={
-                                selectedIdentities.predicate?.user
-                                  ?.display_name ?? ''
+                                selectedIdentities.predicate?.is_user === true
+                                  ? selectedIdentities.predicate?.user
+                                      ?.display_name ?? ''
+                                  : selectedIdentities.predicate?.display_name
                               }
                               walletAddress={
-                                selectedIdentities.predicate?.user?.ens_name ??
-                                sliceString(
-                                  selectedIdentities.predicate?.user?.wallet,
-                                  6,
-                                  4,
-                                )
+                                selectedIdentities.predicate?.is_user === true
+                                  ? selectedIdentities.predicate?.user
+                                      ?.ens_name ??
+                                    sliceString(
+                                      selectedIdentities.predicate?.user
+                                        ?.wallet,
+                                      6,
+                                      4,
+                                    )
+                                  : selectedIdentities.predicate?.identity_id
                               }
-                              // stats={{
-                              //   numberOfFollowers:
-                              //     selectedIdentities.subject?.follower_count ?? 0
-                              //   numberOfFollowing:
-                              //     selectedIdentities.subject?.followed_count ?? 0
-                              //   points:
-                              //     selectedIdentities.subject?.user_points,
-                              // }}
+                              stats={
+                                selectedIdentities.predicate?.is_user === true
+                                  ? {
+                                      numberOfFollowers:
+                                        selectedIdentities.predicate
+                                          ?.follower_count ?? 0,
+                                      numberOfFollowing:
+                                        selectedIdentities.predicate
+                                          ?.followed_count ?? 0,
+                                      // points:
+                                      //   selectedIdentities.predicate?.user
+                                      //     ?.user_points, // no user_points aggregate on the IdentityPresenter or the UserPresenter
+                                    }
+                                  : undefined
+                              }
                               bio={
-                                selectedIdentities.predicate?.user
-                                  ?.description ?? ''
+                                selectedIdentities.predicate?.is_user === true
+                                  ? selectedIdentities.predicate?.user
+                                      ?.description ?? ''
+                                  : selectedIdentities.predicate?.description ??
+                                    ''
                               }
                             >
-                              <Button
-                                variant="accent"
-                                onClick={() =>
-                                  window.open('https://example.com', '_blank')
-                                }
-                              >
-                                Follow
-                              </Button>
+                              {selectedIdentities.predicate?.is_user ===
+                                true && (
+                                <Button
+                                  variant="accent"
+                                  onClick={() => logger('follow functionality')}
+                                >
+                                  Follow
+                                </Button>
+                              )}
                             </ProfileCard>
                           </HoverCardContent>
                         )}
@@ -615,10 +623,14 @@ function CreateClaimForm({
                           ) || 'Object'}
                         </IdentityTag>
                       </HoverCardTrigger>
-                      {selectedIdentities.subject && (
+                      {selectedIdentities.object && (
                         <HoverCardContent side="bottom">
                           <ProfileCard
-                            variant="user"
+                            variant={
+                              selectedIdentities.object?.is_user === true
+                                ? 'user'
+                                : 'non-user'
+                            }
                             avatarSrc={
                               selectedIdentities.object?.user?.image ??
                               blockies
@@ -628,37 +640,51 @@ function CreateClaimForm({
                                 .toDataURL()
                             }
                             name={
-                              selectedIdentities.object?.user?.display_name ??
-                              ''
+                              selectedIdentities.object?.is_user === true
+                                ? selectedIdentities.object?.user
+                                    ?.display_name ?? ''
+                                : selectedIdentities.object?.display_name
                             }
                             walletAddress={
-                              selectedIdentities.object?.user?.ens_name ??
-                              sliceString(
-                                selectedIdentities.object?.user?.wallet,
-                                6,
-                                4,
-                              )
+                              selectedIdentities.object?.is_user === true
+                                ? selectedIdentities.object?.user?.ens_name ??
+                                  sliceString(
+                                    selectedIdentities.object?.user?.wallet,
+                                    6,
+                                    4,
+                                  )
+                                : selectedIdentities.object?.identity_id
                             }
-                            // stats={{
-                            //   numberOfFollowers:
-                            //     selectedIdentities.subject?.follower_count ?? 0
-                            //   numberOfFollowing:
-                            //     selectedIdentities.subject?.followed_count ?? 0
-                            //   points:
-                            //     selectedIdentities.subject?.user_points,
-                            // }}
+                            stats={
+                              selectedIdentities.object?.is_user === true
+                                ? {
+                                    numberOfFollowers:
+                                      selectedIdentities.object
+                                        ?.follower_count ?? 0,
+                                    numberOfFollowing:
+                                      selectedIdentities.object
+                                        ?.followed_count ?? 0,
+                                    // points:
+                                    //   selectedIdentities.object?.user
+                                    //     ?.user_points, // no user_points aggregate on the IdentityPresenter or the UserPresenter
+                                  }
+                                : undefined
+                            }
                             bio={
-                              selectedIdentities.object?.user?.description ?? ''
+                              selectedIdentities.object?.is_user === true
+                                ? selectedIdentities.object?.user
+                                    ?.description ?? ''
+                                : selectedIdentities.object?.description ?? ''
                             }
                           >
-                            <Button
-                              variant="accent"
-                              onClick={() =>
-                                window.open('https://example.com', '_blank')
-                              }
-                            >
-                              Follow
-                            </Button>
+                            {selectedIdentities.object?.is_user === true && (
+                              <Button
+                                variant="accent"
+                                onClick={() => logger('follow functionality')}
+                              >
+                                Follow
+                              </Button>
+                            )}
                           </ProfileCard>
                         </HoverCardContent>
                       )}

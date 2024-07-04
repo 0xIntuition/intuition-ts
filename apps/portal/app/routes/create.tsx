@@ -13,7 +13,7 @@ import EditProfileModal from '@components/edit-profile-modal'
 import SubmitButton from '@components/submit-button'
 import Toast from '@components/toast'
 import { multivaultAbi } from '@lib/abis/multivault'
-import { useCreateIdentity } from '@lib/hooks/useCreateAtom'
+import { useCreateAtom } from '@lib/hooks/useCreateAtom'
 import { editProfileModalAtom } from '@lib/state/store'
 import { MULTIVAULT_CONTRACT_ADDRESS } from '@lib/utils/constants'
 import logger from '@lib/utils/logger'
@@ -204,7 +204,7 @@ export function CreateButton({
     writeContractAsync: writeCreateIdentity,
     awaitingWalletConfirmation,
     awaitingOnChainConfirmation,
-  } = useCreateIdentity()
+  } = useCreateAtom()
 
   // off-chain fetcher
   const offChainFetcher = useFetcher<OffChainFetcherData>()
