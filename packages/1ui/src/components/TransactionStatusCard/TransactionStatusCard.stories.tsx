@@ -1,27 +1,33 @@
-// Import React
 import React from 'react'
 
-// Import Storybook meta and StoryObj type
 import type { Meta, StoryObj } from '@storybook/react'
+import { TransactionStatus } from 'types'
 
-// Import your actual component
 import { TransactionStatusCard } from './TransactionStatusCard'
 
 // Setup meta for the Storybook
 const meta: Meta<typeof TransactionStatusCard> = {
-  title: 'Components/TransactionStatusCard',
+  title: 'Components/TransactionStatus/TransactionStatusCard',
   component: TransactionStatusCard,
+  argTypes: {
+    status: {
+      description: 'Status of transaction',
+      options: Object.values(TransactionStatus),
+      table: {
+        type: { summary: 'string' },
+      },
+      control: 'select',
+    },
+  },
 }
 
 export default meta
 
-// Define types for your stories
 type Story = StoryObj<typeof TransactionStatusCard>
 
-// Example story for the default state
 export const BasicUsage: Story = {
   args: {
-    // Define default props here, if any
+    status: TransactionStatus.awaiting,
   },
   render: (args) => <TransactionStatusCard {...args} />,
 }

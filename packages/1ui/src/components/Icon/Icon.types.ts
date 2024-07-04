@@ -91,4 +91,5 @@ export const IconName = {
   triangleExclamationFilled: 'triangle-exclamation-filled',
   triangleExclamation: 'triangle-exclamation',
   awaitAction: 'await-action',
+  wallet2: 'wallet-2',
 } as const

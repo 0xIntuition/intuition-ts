@@ -1,21 +1,12 @@
 import { Canvas, Controls, Meta, Source, Title } from '@storybook/blocks'
 
-import { Button } from '..'
-
 import * as Stories from './TransactionStatusCard.stories'
 
 <Meta of={Stories} />
 
 <Title />
 
-#### A short description goes here.
-
-<Button
-  variant="accent"
-  onClick={() => window.open('link_goes_here', '_blank')}
->
-  {'API Reference'}
-</Button>
+#### Displays a card with an icon and label per transaction status.
 
 <Source
   dark
@@ -23,7 +14,7 @@ import * as Stories from './TransactionStatusCard.stories'
   code={`
 import { TransactionStatusCard } from '@0xintuition/1ui'
 
-<TransactionStatusCard />
+<TransactionStatusCard status="awaiting" />
 `} />
 
 <Canvas of={Stories.BasicUsage} sourceState="none" />
