@@ -80,13 +80,15 @@ const TransactionStatusIndicator = ({
   className,
   ...props
 }: TransactionStatusProps) => {
-  const extendedProps = {
-    className: cn('flex flex-col gap-2 justify-center items-center', className),
-    ...props,
-  }
   const statusComponentData = getStatusComponentData(status)
   return (
-    <div {...extendedProps}>
+    <div
+      className={cn(
+        'flex flex-col gap-2 justify-center items-center',
+        className,
+      )}
+      {...props}
+    >
       <Icon
         className={cn('w-20 h-20', statusComponentData.iconClass)}
         name={statusComponentData.iconName}
