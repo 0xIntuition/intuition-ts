@@ -2,30 +2,7 @@ import * as React from 'react'
 
 import { cn } from 'styles'
 
-import { Icon, IconName, IconProps, Text, TextVariant, TextWeight } from '..'
-
-interface TransactionStatusIconProps extends IconProps {}
-
-const TransactionStatusIcon = ({
-  className,
-  ...props
-}: TransactionStatusIconProps) => (
-  <Icon className={cn('w-20 h-20', className)} {...props} />
-)
-
-interface TransactionStatusLabelProps {
-  value: string
-}
-
-const TransactionStatusLabel = ({ value }: TransactionStatusLabelProps) => (
-  <Text
-    variant={TextVariant.headline}
-    weight={TextWeight.medium}
-    className="text-foreground"
-  >
-    {value}
-  </Text>
-)
+import { Icon, IconName, Text, TextVariant, TextWeight } from '..'
 
 export const TransactionStatus = {
   awaiting: 'awaiting',
@@ -110,11 +87,13 @@ const TransactionStatusIndicator = ({
   const statusComponentData = getStatusComponentData(status)
   return (
     <div {...extendedProps}>
-      <TransactionStatusIcon
+      <Icon
+        className={cn('w-20 h-20', statusComponentData.iconClass)}
         name={statusComponentData.iconName}
-        className={statusComponentData.iconClass}
       />
-      <TransactionStatusLabel value={statusComponentData.label} />
+      <Text variant={TextVariant.headline} weight={TextWeight.medium}>
+        {statusComponentData.label}
+      </Text>
     </div>
   )
 }
