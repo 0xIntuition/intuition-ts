@@ -6,9 +6,8 @@ import { cn } from '../../styles'
 import spriteSheet from './Icon.sprites.svg'
 import { IconNameType } from './Icon.types'
 
-export interface IconProps {
+export interface IconProps extends React.SVGProps<SVGSVGElement> {
   name: IconNameType
-  className?: string
 }
 
 const Icon = ({ name, className }: IconProps) => {

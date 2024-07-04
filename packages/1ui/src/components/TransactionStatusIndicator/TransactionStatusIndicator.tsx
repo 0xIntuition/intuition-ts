@@ -2,12 +2,9 @@ import * as React from 'react'
 
 import { cn } from 'styles'
 
-import { Icon, IconName, IconNameType, Text, TextVariant, TextWeight } from '..'
+import { Icon, IconName, IconProps, Text, TextVariant, TextWeight } from '..'
 
-interface TransactionStatusIconProps {
-  name: IconNameType
-  className?: string
-}
+interface TransactionStatusIconProps extends IconProps {}
 
 const TransactionStatusIcon = ({
   className,
@@ -45,7 +42,7 @@ export const TransactionStatus = {
 export type TransactionStatusType =
   (typeof TransactionStatus)[keyof typeof TransactionStatus]
 
-const determineInProgressLabel = (status: TransactionStatusType) => {
+const getInProgressLabel = (status: TransactionStatusType) => {
   switch (status) {
     case TransactionStatus.preparingIdentity:
       return 'Preparing identity...'
@@ -59,6 +56,40 @@ const determineInProgressLabel = (status: TransactionStatusType) => {
       return 'Confirming transaction...'
     default:
       return 'In progress'
+  }
+}
+
+const getStatusComponentData = (status: TransactionStatusType) => {
+  switch (status) {
+    case TransactionStatus.inProgress:
+    case TransactionStatus.preparingIdentity:
+    case TransactionStatus.publishingIdentity:
+    case TransactionStatus.approveTransaction:
+    case TransactionStatus.transactionPending:
+    case TransactionStatus.confirm:
+      return {
+        iconName: IconName.inProgress,
+        iconClass: 'text-accent',
+        label: getInProgressLabel(status),
+      }
+    case TransactionStatus.complete:
+      return {
+        iconName: IconName.circleCheck,
+        iconClass: 'text-success',
+        label: 'Identity created successfully',
+      }
+    case TransactionStatus.error:
+      return {
+        iconName: IconName.triangleExclamation,
+        iconClass: 'text-destructive',
+        label: 'Failed to create identity',
+      }
+    default:
+      return {
+        iconName: IconName.awaitAction,
+        iconClass: 'text-warning',
+        label: 'Awaiting',
+      }
   }
 }
 
@@ -76,53 +107,16 @@ const TransactionStatusIndicator = ({
     className: cn('flex flex-col gap-2 justify-center items-center', className),
     ...props,
   }
-  switch (status) {
-    case TransactionStatus.inProgress:
-    case TransactionStatus.preparingIdentity:
-    case TransactionStatus.publishingIdentity:
-    case TransactionStatus.approveTransaction:
-    case TransactionStatus.transactionPending:
-    case TransactionStatus.confirm:
-      return (
-        <div {...extendedProps}>
-          <TransactionStatusIcon
-            name={IconName.inProgress}
-            className="text-accent"
-          />
-          <TransactionStatusLabel value={determineInProgressLabel(status)} />
-        </div>
-      )
-    case TransactionStatus.complete:
-      return (
-        <div {...extendedProps}>
-          <TransactionStatusIcon
-            name={IconName.circleCheck}
-            className="text-success"
-          />
-          <TransactionStatusLabel value="Identity created successfully" />
-        </div>
-      )
-    case TransactionStatus.error:
-      return (
-        <div {...extendedProps}>
-          <TransactionStatusIcon
-            name={IconName.triangleExclamation}
-            className="text-destructive"
-          />
-          <TransactionStatusLabel value="Failed to create identity" />
-        </div>
-      )
-    default:
-      return (
-        <div {...extendedProps}>
-          <TransactionStatusIcon
-            name={IconName.awaitAction}
-            className="text-warning"
-          />
-          <TransactionStatusLabel value="Awaiting" />
-        </div>
-      )
-  }
+  const statusComponentData = getStatusComponentData(status)
+  return (
+    <div {...extendedProps}>
+      <TransactionStatusIcon
+        name={statusComponentData.iconName}
+        className={statusComponentData.iconClass}
+      />
+      <TransactionStatusLabel value={statusComponentData.label} />
+    </div>
+  )
 }
 
 export { TransactionStatusIndicator }
