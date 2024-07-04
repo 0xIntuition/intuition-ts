@@ -84,6 +84,9 @@ export default function ClaimDetails() {
             label: claim.subject?.is_user
               ? claim.subject?.user?.display_name ?? claim.subject?.display_name
               : claim.subject?.display_name ?? '',
+            imgSrc: claim.subject?.is_user
+              ? claim.subject?.user?.image ?? claim.subject?.image
+              : claim.subject?.image ?? null,
           }}
           predicate={{
             variant: claim.predicate?.is_user ? 'user' : 'non-user',
@@ -91,12 +94,18 @@ export default function ClaimDetails() {
               ? claim.predicate?.user?.display_name ??
                 claim.predicate?.display_name
               : claim.predicate?.display_name ?? '',
+            imgSrc: claim.predicate?.is_user
+              ? claim.predicate?.user?.image ?? claim.predicate?.image
+              : claim.predicate?.image ?? null,
           }}
           object={{
             variant: claim.object?.is_user ? 'user' : 'non-user',
             label: claim.object?.is_user
               ? claim.object?.user?.display_name ?? claim.object?.display_name
               : claim.object?.display_name ?? '',
+            imgSrc: claim.object?.is_user
+              ? claim.object?.user?.image ?? claim.object?.image
+              : claim.object?.image ?? null,
           }}
         />
       </div>
