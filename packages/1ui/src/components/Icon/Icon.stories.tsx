@@ -48,10 +48,9 @@ export const BasicUsage: Story = {
 }
 
 export const AllIcons: Story = {
-  render: (args) => (
+  render: () => (
     <div
       style={{ display: 'flex', gap: '24px', flexWrap: 'wrap', width: '700px' }}
-      {...args}
     >
       {Object.values(IconName).map((iconName, index) => (
         <Icon key={index} name={iconName as IconNameType} />
