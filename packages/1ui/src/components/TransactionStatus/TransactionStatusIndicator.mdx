@@ -1,0 +1,24 @@
+import { Canvas, Controls, Meta, Source, Title } from '@storybook/blocks'
+
+import * as Stories from './TransactionStatusIndicator.stories'
+
+<Meta of={Stories} />
+
+<Title />
+
+#### Displays an icon and label per transaction status.
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { TransactionStatusIndicator } from '@0xintuition/1ui'
+
+<TransactionStatusIndicator status="awaiting" />
+`} />
+
+<Canvas of={Stories.BasicUsage} sourceState="none" />
+
+## Properties
+
+<Controls />

@@ -13,7 +13,6 @@ export const IconName = {
   bubbleAnnotation: 'bubble-annotation',
   calendar: 'calendar',
   checkmark: 'checkmark',
-  checkmarkBottom: 'checkmark-bottom',
   chevronDoubleLeft: 'chevron-double-left',
   chevronDoubleRight: 'chevron-double-right',
   chevronDownSmall: 'chevron-down-small',
@@ -88,4 +87,8 @@ export const IconName = {
   tagFilled: 'tag-filled',
   trustCircle: 'trust-circle',
   trustCircleFilled: 'trust-circle-filled',
+  inProgress: 'in-progress',
+  triangleExclamationFilled: 'triangle-exclamation-filled',
+  triangleExclamation: 'triangle-exclamation',
+  awaitAction: 'await-action',
 } as const
