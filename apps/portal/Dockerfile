@@ -56,4 +56,5 @@ RUN pnpm run portal:build
 
 ENV NX_REJECT_UNKNOWN_LOCAL_CACHE=0
 
-CMD [ "pnpm", "run", "portal:dev" ]
+EXPOSE 8080
+CMD [ "pnpm", "run", "portal:start" ]
