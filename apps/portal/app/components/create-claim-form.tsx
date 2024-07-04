@@ -155,12 +155,7 @@ function CreateClaimForm({
     }
   }, [identitiesFetcher.data])
 
-  const {
-    // tripleCreationFeeRaw: tripleCostAmountRaw,
-    // atomEquityFeeRaw: atomEquityFee,
-    atomCost,
-    tripleCost,
-  } = (feeFetcher.data as CreateLoaderData) ?? {
+  const { atomCost, tripleCost } = (feeFetcher.data as CreateLoaderData) ?? {
     atomEquityFeeRaw: BigInt(0),
     atomCost: BigInt(0),
     tripleCost: BigInt(0),
