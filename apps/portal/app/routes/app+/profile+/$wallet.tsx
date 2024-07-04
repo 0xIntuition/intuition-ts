@@ -324,6 +324,21 @@ export default function Profile() {
             }}
           />
         </>
+        <StakeModal
+          user={user}
+          contract={userIdentity.contract}
+          open={stakeModalActive.isOpen}
+          identity={userIdentity}
+          min_deposit={vaultDetails.min_deposit}
+          modalType={'identity'}
+          onClose={() => {
+            setStakeModalActive((prevState) => ({
+              ...prevState,
+              isOpen: false,
+              mode: undefined,
+            }))
+          }}
+        />
       </div>
     </NestedLayout>
   )
