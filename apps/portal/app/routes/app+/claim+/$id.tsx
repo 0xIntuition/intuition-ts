@@ -10,12 +10,13 @@ import {
   ApiError,
   ClaimPresenter,
   ClaimSortColumn,
+  ClaimsService,
   OpenAPI,
   SortDirection,
 } from '@0xintuition/api'
 
 import logger from '@lib/utils/logger'
-import { getAuthHeaders } from '@lib/utils/misc'
+import { formatBalance, getAuthHeaders } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { useLoaderData, useNavigate } from '@remix-run/react'
 import { getPrivyAccessToken } from '@server/privy'
@@ -23,6 +24,7 @@ import { getPrivyAccessToken } from '@server/privy'
 export async function loader({ request, params }: LoaderFunctionArgs) {
   OpenAPI.BASE = 'https://dev.api.intuition.systems'
   const accessToken = getPrivyAccessToken(request)
+  logger('accessToken', accessToken)
   const headers = getAuthHeaders(accessToken !== null ? accessToken : '')
   OpenAPI.HEADERS = headers as Record<string, string>
   const id = params.id
@@ -40,35 +42,13 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
   let claim
   try {
-    claim = {
-      against_assets_sum: '0',
-      against_conviction_price: '0',
-      against_conviction_sum: '0',
-      against_num_positions: 0,
-      assets_sum: '0',
-      claim_id: 'placeholder_id',
-      contract: 'placeholder_contract',
-      counter_vault_id: 'placeholder_counter_vault_id',
-      created_at: new Date().toISOString(),
-      creator: {
-        display_name: 'Person',
-      },
-      for_assets_sum: '0',
-      for_conviction_price: '0',
-      for_conviction_sum: '0',
-      for_num_positions: 0,
-      num_positions: 0,
-      object: null,
-      predicate: null,
-      status: 'pending',
-      subject: null,
-      updated_at: new Date().toISOString(),
-      user_assets_against: '0',
-      user_assets_for: '0',
-      user_conviction_against: '0',
-      user_conviction_for: '0',
-      vault_id: 'placeholder_vault_id',
+    if (!params.id) {
+      return
     }
+
+    claim = await ClaimsService.getClaimById({
+      id: params.id,
+    })
   } catch (error: unknown) {
     if (error instanceof ApiError) {
       claim = undefined
@@ -100,16 +80,23 @@ export default function ClaimDetails() {
         <Claim
           size="md"
           subject={{
-            variant: 'non-user',
-            label: '0xintuition',
+            variant: claim.subject?.is_user ? 'user' : 'non-user',
+            label: claim.subject?.is_user
+              ? claim.subject?.user?.display_name ?? claim.subject?.display_name
+              : claim.subject?.display_name ?? '',
           }}
           predicate={{
-            variant: 'non-user',
-            label: 'is really',
+            variant: claim.predicate?.is_user ? 'user' : 'non-user',
+            label: claim.predicate?.is_user
+              ? claim.predicate?.user?.display_name ??
+                claim.predicate?.display_name
+              : claim.predicate?.display_name ?? '',
           }}
           object={{
-            variant: 'non-user',
-            label: 'cool',
+            variant: claim.object?.is_user ? 'user' : 'non-user',
+            label: claim.object?.is_user
+              ? claim.object?.user?.display_name ?? claim.object?.display_name
+              : claim.object?.display_name ?? '',
           }}
         />
       </div>
@@ -122,11 +109,11 @@ export default function ClaimDetails() {
 
             <ClaimStakeCard
               currency="ETH"
-              totalTVL={+claim.assets_sum}
-              tvlAgainst={+claim.user_assets_against}
-              tvlFor={+claim.user_assets_for}
-              amountAgainst={+claim.against_assets_sum}
-              amountFor={+claim.for_assets_sum}
+              totalTVL={+formatBalance(claim.assets_sum)}
+              tvlAgainst={+formatBalance(claim.user_assets_against)}
+              tvlFor={+formatBalance(claim.user_assets_for)}
+              amountAgainst={+formatBalance(claim.against_assets_sum)}
+              amountFor={+formatBalance(claim.for_assets_sum)}
               onAgainstBtnClick={() => logger('against button click')}
               onForBtnClick={() => logger('for button clicked')}
             />
