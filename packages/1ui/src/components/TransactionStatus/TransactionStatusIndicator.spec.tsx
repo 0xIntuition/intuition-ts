@@ -80,7 +80,7 @@ describe('TransactionStatusIndicator', () => {
   })
   it('should render appropriate elements when given `success` status', () => {
     const { asFragment } = render(
-      <TransactionStatusIndicator status="success" />,
+      <TransactionStatusIndicator status="complete" />,
     )
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>

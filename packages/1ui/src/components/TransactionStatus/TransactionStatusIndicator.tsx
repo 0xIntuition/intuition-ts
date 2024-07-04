@@ -4,15 +4,23 @@ import { cn } from 'styles'
 
 import { Icon, IconName, IconNameType, Text, TextVariant, TextWeight } from '..'
 
+interface TransactionStatusIconProps {
+  name: IconNameType
+  className?: string
+}
+
 const TransactionStatusIcon = ({
   className,
   ...props
-}: {
-  name: IconNameType
-  className?: string
-}) => <Icon className={cn('w-20 h-20', className)} {...props} />
+}: TransactionStatusIconProps) => (
+  <Icon className={cn('w-20 h-20', className)} {...props} />
+)
 
-const TransactionStatusLabel = ({ value }: { value: string }) => (
+interface TransactionStatusLabelProps {
+  value: string
+}
+
+const TransactionStatusLabel = ({ value }: TransactionStatusLabelProps) => (
   <Text
     variant={TextVariant.headline}
     weight={TextWeight.medium}
@@ -25,12 +33,34 @@ const TransactionStatusLabel = ({ value }: { value: string }) => (
 export const TransactionStatus = {
   awaiting: 'awaiting',
   inProgress: 'in-progress',
-  success: 'success',
+  preparingIdentity: 'preparing-identity',
+  publishingIdentity: 'publishing-identity',
+  approveTransaction: 'approve-transaction',
+  transactionPending: 'transaction-pending',
+  confirm: 'confirm',
+  complete: 'complete',
   error: 'error',
 } as const
 
 export type TransactionStatusType =
   (typeof TransactionStatus)[keyof typeof TransactionStatus]
+
+const determineInProgressLabel = (status: TransactionStatusType) => {
+  switch (status) {
+    case TransactionStatus.preparingIdentity:
+      return 'Preparing identity...'
+    case TransactionStatus.publishingIdentity:
+      return 'Publishing identity...'
+    case TransactionStatus.approveTransaction:
+      return 'Approving transaction...'
+    case TransactionStatus.transactionPending:
+      return 'Transaction pending...'
+    case TransactionStatus.confirm:
+      return 'Confirming transaction...'
+    default:
+      return 'In progress'
+  }
+}
 
 export interface TransactionStatusProps
   extends React.HTMLAttributes<HTMLDivElement> {
@@ -48,16 +78,21 @@ const TransactionStatusIndicator = ({
   }
   switch (status) {
     case TransactionStatus.inProgress:
+    case TransactionStatus.preparingIdentity:
+    case TransactionStatus.publishingIdentity:
+    case TransactionStatus.approveTransaction:
+    case TransactionStatus.transactionPending:
+    case TransactionStatus.confirm:
       return (
         <div {...extendedProps}>
           <TransactionStatusIcon
             name={IconName.inProgress}
             className="text-accent"
           />
-          <TransactionStatusLabel value="In Progress" />
+          <TransactionStatusLabel value={determineInProgressLabel(status)} />
         </div>
       )
-    case TransactionStatus.success:
+    case TransactionStatus.complete:
       return (
         <div {...extendedProps}>
           <TransactionStatusIcon
