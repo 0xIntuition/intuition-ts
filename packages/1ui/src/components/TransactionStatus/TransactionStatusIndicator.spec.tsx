@@ -72,7 +72,132 @@ describe('TransactionStatusIndicator', () => {
           <h6
             class="text-xl font-medium text-foreground"
           >
-            In Progress
+            In progress
+          </h6>
+        </div>
+      </DocumentFragment>
+    `)
+  })
+  it('should render appropriate elements when given `preparing-identity` status', () => {
+    const { asFragment } = render(
+      <TransactionStatusIndicator status="preparing-identity" />,
+    )
+    expect(asFragment()).toMatchInlineSnapshot(`
+      <DocumentFragment>
+        <div
+          class="flex flex-col gap-2 justify-center items-center"
+        >
+          <svg
+            class="w-20 h-20 text-accent"
+          >
+            <use
+              href="/src/components/Icon/Icon.sprites.svg#in-progress"
+            />
+          </svg>
+          <h6
+            class="text-xl font-medium text-foreground"
+          >
+            Preparing identity...
+          </h6>
+        </div>
+      </DocumentFragment>
+    `)
+  })
+  it('should render appropriate elements when given `publishing-identity` status', () => {
+    const { asFragment } = render(
+      <TransactionStatusIndicator status="publishing-identity" />,
+    )
+    expect(asFragment()).toMatchInlineSnapshot(`
+      <DocumentFragment>
+        <div
+          class="flex flex-col gap-2 justify-center items-center"
+        >
+          <svg
+            class="w-20 h-20 text-accent"
+          >
+            <use
+              href="/src/components/Icon/Icon.sprites.svg#in-progress"
+            />
+          </svg>
+          <h6
+            class="text-xl font-medium text-foreground"
+          >
+            Publishing identity...
+          </h6>
+        </div>
+      </DocumentFragment>
+    `)
+  })
+  it('should render appropriate elements when given `approve-transaction` status', () => {
+    const { asFragment } = render(
+      <TransactionStatusIndicator status="approve-transaction" />,
+    )
+    expect(asFragment()).toMatchInlineSnapshot(`
+      <DocumentFragment>
+        <div
+          class="flex flex-col gap-2 justify-center items-center"
+        >
+          <svg
+            class="w-20 h-20 text-accent"
+          >
+            <use
+              href="/src/components/Icon/Icon.sprites.svg#in-progress"
+            />
+          </svg>
+          <h6
+            class="text-xl font-medium text-foreground"
+          >
+            Approving transaction...
+          </h6>
+        </div>
+      </DocumentFragment>
+    `)
+  })
+  it('should render appropriate elements when given `transaction-pending` status', () => {
+    const { asFragment } = render(
+      <TransactionStatusIndicator status="transaction-pending" />,
+    )
+    expect(asFragment()).toMatchInlineSnapshot(`
+      <DocumentFragment>
+        <div
+          class="flex flex-col gap-2 justify-center items-center"
+        >
+          <svg
+            class="w-20 h-20 text-accent"
+          >
+            <use
+              href="/src/components/Icon/Icon.sprites.svg#in-progress"
+            />
+          </svg>
+          <h6
+            class="text-xl font-medium text-foreground"
+          >
+            Transaction pending...
+          </h6>
+        </div>
+      </DocumentFragment>
+    `)
+  })
+  it('should render appropriate elements when given `confirm` status', () => {
+    const { asFragment } = render(
+      <TransactionStatusIndicator status="confirm" />,
+    )
+    expect(asFragment()).toMatchInlineSnapshot(`
+      <DocumentFragment>
+        <div
+          class="flex flex-col gap-2 justify-center items-center"
+        >
+          <svg
+            class="w-20 h-20 text-accent"
+          >
+            <use
+              href="/src/components/Icon/Icon.sprites.svg#in-progress"
+            />
+          </svg>
+          <h6
+            class="text-xl font-medium text-foreground"
+          >
+            Confirming transaction...
           </h6>
         </div>
       </DocumentFragment>
