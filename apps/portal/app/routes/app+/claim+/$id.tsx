@@ -103,10 +103,6 @@ export default function ClaimDetails() {
       <div className="flex gap-8">
         <div className="flex-shrink-0 w-1/3 max-w-sm space-y-4 h-screen">
           <div className="flex flex-col space-y-4 ">
-            <Text variant="headline" className="text-secondary-foreground">
-              Left layout
-            </Text>
-
             <ClaimStakeCard
               currency="ETH"
               totalTVL={+formatBalance(claim.assets_sum)}
