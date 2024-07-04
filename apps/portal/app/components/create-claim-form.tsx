@@ -63,6 +63,7 @@ export function ClaimForm({ onClose }: ClaimFormProps) {
   const isTransactionStarted = [
     'approve',
     'review',
+    'pending',
     'confirm',
     'complete',
     'error',
@@ -160,7 +161,6 @@ function CreateClaimForm({
     atomCost,
     tripleCost,
   } = (feeFetcher.data as CreateLoaderData) ?? {
-    // tripleCreationFeeRaw: BigInt(0),
     atomEquityFeeRaw: BigInt(0),
     atomCost: BigInt(0),
     tripleCost: BigInt(0),
@@ -168,11 +168,6 @@ function CreateClaimForm({
 
   logger('atomCost', atomCost)
   logger('tripleCost', tripleCost)
-
-  // const feeCalculation =
-  //   BigInt(atomEquityFee) * BigInt(3) +
-  //   BigInt(tripleCostAmountRaw) +
-  //   BigInt(atomCost)
 
   const { data: walletClient } = useWalletClient()
   const publicClient = usePublicClient()
@@ -217,7 +212,7 @@ function CreateClaimForm({
             hash: txHash,
           })
           // })
-          // handleClaimTxReceiptReceived(claimTxReceipt)
+
           dispatch({
             type: 'TRANSACTION_COMPLETE',
             txHash: txHash,
@@ -356,23 +351,23 @@ function CreateClaimForm({
   const isTransactionStarted = [
     'approve',
     'review',
+    'pending',
     'confirm',
     'complete',
     'error',
   ].includes(state.status)
 
   const statusMessages = {
-    'approve-transaction': 'Approve Transaction...',
-    'transaction-pending': 'Transaction Pending...',
+    approve: 'Approve Transaction...',
+    pending: 'Transaction Pending...',
     confirm: 'Confirming...',
-    complete: 'Identity created successfully',
-    error: 'Failed to create identity',
+    complete: 'Claim created successfully',
+    error: 'Failed to create claim',
   }
 
   const isTransactionAwaiting = (status: string) =>
-    ['approve-transaction'].includes(status)
-  const isTransactionProgress = (status: string) =>
-    ['transaction-pending'].includes(status)
+    ['approve', 'confirm'].includes(status)
+  const isTransactionProgress = (status: string) => ['pending'].includes(status)
 
   const Divider = () => (
     <span className="h-px w-2.5 flex bg-border/30 self-end mb-[1.2rem]" />
@@ -387,9 +382,6 @@ function CreateClaimForm({
       >
         {!isTransactionStarted ? (
           <div className="flex flex-col items-center">
-            <>
-              <pre>state: {state.status}</pre>
-            </>
             <div className="flex items-center my-14">
               <Popover>
                 <PopoverTrigger asChild>
@@ -732,6 +724,7 @@ function CreateClaimForm({
           </div>
         ) : (
           <TransactionStatus
+            transactionType="claim"
             state={state}
             dispatch={dispatch}
             transactionDetail={transactionResponseData?.claim_id}

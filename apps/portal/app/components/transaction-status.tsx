@@ -17,6 +17,7 @@ type TransactionStatusProps<
   isTransactionAwaiting: (status: TStatus) => boolean
   isTransactionProgress: (status: TStatus) => boolean
   transactionDetail?: string | null
+  transactionType: 'identity' | 'claim' | 'deposit' | 'redeem'
 }
 
 const TransactionStatus = <
@@ -29,6 +30,7 @@ const TransactionStatus = <
   isTransactionAwaiting,
   isTransactionProgress,
   transactionDetail,
+  transactionType,
 }: TransactionStatusProps<S, A, TStatus>) => {
   const getStatusMessage = () => {
     if (isTransactionAwaiting(state.status)) return 'Awaiting'
@@ -47,6 +49,7 @@ const TransactionStatus = <
       <pre>
         {statusMessages[state.status as unknown as string] || 'Unknown Status'}
       </pre>
+
       <pre>{state.status === 'error' && state.error}</pre>
       {state.status === 'complete' && transactionDetail !== undefined && (
         <div className="flex flex-col gap-1 items-center gap-2.5">
@@ -59,15 +62,17 @@ const TransactionStatus = <
               View on Basescan <ExternalLinkIcon className="h-2.5 w-2.5" />
             </Link>
           )}
-          <Button
-            type="button"
-            variant="primary"
-            onClick={() => {
-              navigate(`/app/identity/${transactionDetail}`)
-            }}
-          >
-            View identity
-          </Button>
+          {transactionType !== 'deposit' && transactionType !== 'redeem' && (
+            <Button
+              type="button"
+              variant="primary"
+              onClick={() => {
+                navigate(`/app/${transactionType}/${transactionDetail}`)
+              }}
+            >
+              View {transactionType}
+            </Button>
+          )}
         </div>
       )}
     </div>

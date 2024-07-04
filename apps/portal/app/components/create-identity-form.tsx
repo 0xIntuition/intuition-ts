@@ -602,6 +602,7 @@ function CreateIdentityForm({
         </div>
       ) : (
         <TransactionStatus
+          transactionType="identity"
           state={state}
           dispatch={dispatch}
           transactionDetail={transactionResponseData?.id}
