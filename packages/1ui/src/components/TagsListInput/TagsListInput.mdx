@@ -1,0 +1,20 @@
+import { Canvas, Controls, Meta, Source, Title } from '@storybook/blocks'
+
+import * as Stories from './TagsListInput.stories'
+
+<Meta of={Stories} />
+
+<Title />
+
+#### Displays list of Tags with an input field to add new tags
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { TagsListInput } from '@0xintuition/1ui'
+
+<TagsListInput>HELLO WORLD</TagsListInput>
+`} />
+
+<Canvas of={Stories.BasicUsage} sourceState="none" />
