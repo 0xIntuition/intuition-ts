@@ -3,7 +3,16 @@ import * as React from 'react'
 import { cn } from 'styles'
 import { TransactionStatus, TransactionStatusType } from 'types'
 
-import { Icon, IconName, Text, TextVariant } from '..'
+import {
+  Icon,
+  IconName,
+  Text,
+  TextVariant,
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '..'
 
 const getStatusComponentData = (status: TransactionStatusType) => {
   switch (status) {
@@ -26,6 +35,13 @@ const getStatusComponentData = (status: TransactionStatusType) => {
         label: 'Transaction complete',
       }
     }
+    case TransactionStatus.error: {
+      return {
+        iconName: IconName.triangleExclamation,
+        iconClassName: 'text-destructive',
+        label: 'Transaction failed',
+      }
+    }
     default:
       return {
         iconName: IconName.wallet2,
@@ -35,12 +51,7 @@ const getStatusComponentData = (status: TransactionStatusType) => {
   }
 }
 
-export interface TransactionStatusCardProps
-  extends React.HTMLAttributes<HTMLDivElement> {
-  status: TransactionStatusType
-}
-
-const TransactionStatusCard = ({
+const StatusCardComponent = ({
   status,
   ...props
 }: TransactionStatusCardProps) => {
@@ -48,7 +59,7 @@ const TransactionStatusCard = ({
   const statusComponentData = getStatusComponentData(status)
   return (
     <div
-      className="flex items-center gap-2 bg-primary/5 rounded-md border border-border/5 p-3"
+      className="flex items-center gap-2 bg-primary/10 rounded-md border border-border/10 p-3"
       {...props}
     >
       <Icon
@@ -63,6 +74,30 @@ const TransactionStatusCard = ({
         />
       )}
     </div>
+  )
+}
+
+export interface TransactionStatusCardProps
+  extends React.HTMLAttributes<HTMLDivElement> {
+  status: TransactionStatusType
+}
+
+const TransactionStatusCard = ({
+  status,
+  ...props
+}: TransactionStatusCardProps) => {
+  const extendedProps = { status, ...props }
+  return status === TransactionStatus.awaiting ? (
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger>
+          <StatusCardComponent {...extendedProps} />
+        </TooltipTrigger>
+        <TooltipContent>Approve this transaction in your wallet</TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
+  ) : (
+    <StatusCardComponent {...extendedProps} />
   )
 }
 

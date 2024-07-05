@@ -9,29 +9,33 @@ describe('TransactionStatusCard', () => {
     const { asFragment } = render(<TransactionStatusCard status="awaiting" />)
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
-        <div
-          class="flex items-center gap-2 bg-primary/5 rounded-md border border-border/5 p-3"
+        <button
+          data-state="closed"
         >
-          <svg
-            class="text-warning h-4 w-4"
+          <div
+            class="flex items-center gap-2 bg-primary/10 rounded-md border border-border/10 p-3"
           >
-            <use
-              href="/src/components/Icon/Icon.sprites.svg#wallet-2"
-            />
-          </svg>
-          <p
-            class="text-primary text-base font-normal"
-          >
-            Awaiting wallet approval
-          </p>
-          <svg
-            class="text-primary/20 h-4 w-4"
-          >
-            <use
-              href="/src/components/Icon/Icon.sprites.svg#circle-question-mark"
-            />
-          </svg>
-        </div>
+            <svg
+              class="text-warning h-4 w-4"
+            >
+              <use
+                href="/src/components/Icon/Icon.sprites.svg#wallet-2"
+              />
+            </svg>
+            <p
+              class="text-primary text-base font-normal"
+            >
+              Awaiting wallet approval
+            </p>
+            <svg
+              class="text-primary/20 h-4 w-4"
+            >
+              <use
+                href="/src/components/Icon/Icon.sprites.svg#circle-question-mark"
+              />
+            </svg>
+          </div>
+        </button>
       </DocumentFragment>
     `)
   })
@@ -40,19 +44,19 @@ describe('TransactionStatusCard', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="flex items-center gap-2 bg-primary/5 rounded-md border border-border/5 p-3"
+          class="flex items-center gap-2 bg-primary/10 rounded-md border border-border/10 p-3"
         >
           <svg
-            class="text-warning h-4 w-4"
+            class="text-destructive h-4 w-4"
           >
             <use
-              href="/src/components/Icon/Icon.sprites.svg#wallet-2"
+              href="/src/components/Icon/Icon.sprites.svg#triangle-exclamation"
             />
           </svg>
           <p
             class="text-primary text-base font-normal"
           >
-            Awaiting wallet approval
+            Transaction failed
           </p>
         </div>
       </DocumentFragment>
@@ -65,7 +69,7 @@ describe('TransactionStatusCard', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="flex items-center gap-2 bg-primary/5 rounded-md border border-border/5 p-3"
+          class="flex items-center gap-2 bg-primary/10 rounded-md border border-border/10 p-3"
         >
           <svg
             class="text-accent h-4 w-4"
@@ -90,7 +94,7 @@ describe('TransactionStatusCard', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="flex items-center gap-2 bg-primary/5 rounded-md border border-border/5 p-3"
+          class="flex items-center gap-2 bg-primary/10 rounded-md border border-border/10 p-3"
         >
           <svg
             class="text-accent h-4 w-4"
@@ -115,7 +119,7 @@ describe('TransactionStatusCard', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="flex items-center gap-2 bg-primary/5 rounded-md border border-border/5 p-3"
+          class="flex items-center gap-2 bg-primary/10 rounded-md border border-border/10 p-3"
         >
           <svg
             class="text-accent h-4 w-4"
@@ -140,7 +144,7 @@ describe('TransactionStatusCard', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="flex items-center gap-2 bg-primary/5 rounded-md border border-border/5 p-3"
+          class="flex items-center gap-2 bg-primary/10 rounded-md border border-border/10 p-3"
         >
           <svg
             class="text-accent h-4 w-4"
@@ -165,7 +169,7 @@ describe('TransactionStatusCard', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="flex items-center gap-2 bg-primary/5 rounded-md border border-border/5 p-3"
+          class="flex items-center gap-2 bg-primary/10 rounded-md border border-border/10 p-3"
         >
           <svg
             class="text-accent h-4 w-4"
@@ -188,7 +192,7 @@ describe('TransactionStatusCard', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="flex items-center gap-2 bg-primary/5 rounded-md border border-border/5 p-3"
+          class="flex items-center gap-2 bg-primary/10 rounded-md border border-border/10 p-3"
         >
           <svg
             class="text-accent h-4 w-4"
@@ -211,7 +215,7 @@ describe('TransactionStatusCard', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="flex items-center gap-2 bg-primary/5 rounded-md border border-border/5 p-3"
+          class="flex items-center gap-2 bg-primary/10 rounded-md border border-border/10 p-3"
         >
           <svg
             class="text-success h-4 w-4"
