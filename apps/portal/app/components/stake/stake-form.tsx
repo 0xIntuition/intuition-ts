@@ -8,13 +8,14 @@ import {
   Tabs,
   TabsList,
   TabsTrigger,
+  TransactionStatusCard,
   TransactionStatusIndicator,
 } from '@0xintuition/1ui'
 import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
 
 import { stakeModalAtom } from '@lib/state/store'
 import { formatBalance } from '@lib/utils/misc'
-import { type FetcherWithComponents } from '@remix-run/react'
+import { Link, type FetcherWithComponents } from '@remix-run/react'
 import { useAtom } from 'jotai'
 import { TransactionActionType, TransactionStateType } from 'types/transaction'
 import { SessionUser } from 'types/user'
@@ -211,6 +212,18 @@ export default function StakeForm({
       ) : (
         <>
           <TransactionStatusIndicator status={state.status} />
+          {state.status !== 'complete' ? (
+            <TransactionStatusCard status={state.status} />
+          ) : (
+            <Link
+              to={`https://base-sepolia.blockscout.com/tx/${state.txHash}`}
+              target="_blank"
+              className="flex flex-row items-center gap-1 mx-auto leading-tight text-blue-500 transition-colors duration-300 hover:text-blue-400"
+            >
+              View on Basescan{' '}
+              <Icon name="square-arrow-top-right" className="h-3 w-3" />
+            </Link>
+          )}
         </>
       )}
     </>

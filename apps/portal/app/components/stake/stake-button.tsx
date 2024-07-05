@@ -18,10 +18,9 @@ interface StakeButtonProps {
   user: SessionUser
   tosCookie: Cookie
   val: string
-  setVal: (val: string) => void
   mode: string | undefined
   handleAction: () => void
-  handleClose?: () => void
+  handleClose: () => void
   dispatch: (action: TransactionActionType) => void
   state: TransactionStateType
   min_deposit: string
@@ -37,9 +36,9 @@ interface StakeButtonProps {
 
 const StakeButton: React.FC<StakeButtonProps> = ({
   val,
-  setVal,
   mode,
   handleAction,
+  handleClose,
   dispatch,
   state,
   min_deposit,
@@ -75,7 +74,7 @@ const StakeButton: React.FC<StakeButtonProps> = ({
       state.status === 'transaction-confirmed' ||
       state.status === 'complete'
     ) {
-      return 'Buy More'
+      return 'Close'
     } else if (state.status === 'error') {
       return 'Retry'
     } else if (chain?.id !== getChainEnvConfig(CURRENT_ENV).chainId) {
@@ -117,8 +116,7 @@ const StakeButton: React.FC<StakeButtonProps> = ({
           state.status === 'complete' ||
           state.status === 'transaction-confirmed'
         ) {
-          dispatch({ type: 'START_TRANSACTION' })
-          setVal('')
+          handleClose()
         } else if (state.status === 'review-transaction') {
           dispatch({ type: 'APPROVE_TRANSACTION' })
           handleAction()

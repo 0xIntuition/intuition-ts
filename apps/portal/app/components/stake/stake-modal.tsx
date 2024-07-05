@@ -368,7 +368,12 @@ export default function StakeModal({
     }, 500)
   }
 
-  console.log('state.status', state.status)
+  const isTransactionStarted = [
+    'approve-transaction',
+    'transaction-pending',
+    'awaiting',
+    'confirm',
+  ].includes(state.status)
 
   return (
     <Dialog
@@ -404,22 +409,27 @@ export default function StakeModal({
           showErrors={showErrors}
           setShowErrors={setShowErrors}
         />
-        <StakeButton
-          user={user}
-          tosCookie={tosCookie}
-          val={val}
-          setVal={setVal}
-          mode={mode}
-          handleAction={handleStakeButtonClick}
-          dispatch={dispatch}
-          state={state}
-          min_deposit={min_deposit}
-          walletBalance={walletBalance}
-          user_conviction={latest_user_conviction ?? user_conviction ?? '0'}
-          setValidationErrors={setValidationErrors}
-          setShowErrors={setShowErrors}
-          conviction_price={latest_conviction_price ?? conviction_price ?? '0'}
-        />
+        {!isTransactionStarted && (
+          <StakeButton
+            user={user}
+            tosCookie={tosCookie}
+            val={val}
+            setVal={setVal}
+            mode={mode}
+            handleAction={handleStakeButtonClick}
+            handleClose={handleClose}
+            dispatch={dispatch}
+            state={state}
+            min_deposit={min_deposit}
+            walletBalance={walletBalance}
+            user_conviction={latest_user_conviction ?? user_conviction ?? '0'}
+            setValidationErrors={setValidationErrors}
+            setShowErrors={setShowErrors}
+            conviction_price={
+              latest_conviction_price ?? conviction_price ?? '0'
+            }
+          />
+        )}
       </DialogContent>
     </Dialog>
   )
