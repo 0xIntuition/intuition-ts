@@ -500,6 +500,7 @@ export function ClaimsOnIdentity() {
                     claim.subject?.user?.display_name ??
                     claim.subject?.display_name ??
                     claim.subject?.identity_id,
+                  imgSrc: claim.subject?.image,
                 }}
                 predicate={{
                   variant: claim.predicate?.is_user ? 'user' : 'non-user',
@@ -507,6 +508,7 @@ export function ClaimsOnIdentity() {
                     claim.predicate?.user?.display_name ??
                     claim.predicate?.display_name ??
                     claim.predicate?.identity_id,
+                  imgSrc: claim.predicate?.image,
                 }}
                 object={{
                   variant: claim.object?.is_user ? 'user' : 'non-user',
@@ -514,6 +516,7 @@ export function ClaimsOnIdentity() {
                     claim.object?.user?.display_name ??
                     claim.object?.display_name ??
                     claim.object?.identity_id,
+                  imgSrc: claim.object?.image,
                 }}
               />
             </ClaimRow>
