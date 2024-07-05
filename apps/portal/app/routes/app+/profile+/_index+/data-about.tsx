@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 
 import {
+  Claim,
+  ClaimRow,
   IdentityPosition,
   IdentityTag,
   Input,
@@ -22,6 +24,9 @@ import {
 } from '@0xintuition/1ui'
 import {
   ApiError,
+  ClaimPresenter,
+  ClaimSortColumn,
+  ClaimsService,
   IdentitiesService,
   OpenAPI,
   PositionPresenter,
@@ -73,7 +78,7 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
 
   const url = new URL(request.url)
   const searchParams = new URLSearchParams(url.search)
-  const search = searchParams.get('search')
+  // const search = searchParams.get('search')
   const sortBy = searchParams.get('sortBy') ?? 'UpdatedAt'
   const direction = searchParams.get('direction') ?? 'asc'
   const page = searchParams.get('page')
@@ -104,19 +109,39 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
     }
   }
 
+  let claims
+  try {
+    claims = await ClaimsService.searchClaims({
+      identity: userIdentity?.id,
+      page: page,
+      limit: Number(limit),
+      offset: 0,
+      sortBy: sortBy as ClaimSortColumn,
+      direction: direction as SortDirection,
+    })
+  } catch (error: unknown) {
+    if (error instanceof ApiError) {
+      claims = undefined
+      console.log(`${error.name} - ${error.status}: ${error.message}`)
+    } else {
+      throw error
+    }
+  }
+
   const totalPages = calculateTotalPages(positions?.total ?? 0, Number(limit))
 
-  console.log('positions', positions)
+  console.log('claims', claims)
 
-  console.log('search', search)
-  console.log('sortBy', sortBy)
-  console.log('direction', direction)
-  console.log('page', page)
-  console.log('limit', limit)
+  // console.log('search', search)
+  // console.log('sortBy', sortBy)
+  // console.log('direction', direction)
+  // console.log('page', page)
+  // console.log('limit', limit)
 
   return json({
     userIdentity,
     positions,
+    claims,
     sortBy,
     direction,
     pagination: {
@@ -131,6 +156,7 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
 export default function ProfileDataAbout() {
   return (
     <div className="flex-col justify-start items-start flex w-full">
+      <ClaimsOnIdentity />
       <PositionsOnIdentity />
     </div>
   )
@@ -283,10 +309,224 @@ export function PositionsOnIdentity() {
           </div>
         ))}
       </div>
-      <Pagination className="flex w-full justify-between">
+      <Pagination className="flex w-full justify-between my-4">
         <PaginationSummary
           totalEntries={pagination.total ?? 0}
           label="positions"
+        />
+        <div className="flex">
+          <PaginationRowSelection defaultValue="10" />
+          <PaginationPageCounter
+            currentPage={pagination.page ?? 0}
+            totalPages={pagination.totalPages ?? 0}
+          />
+          <PaginationContent>
+            <PaginationItem>
+              <PaginationFirst
+                href="#"
+                onClick={() => onPageChange(1)}
+                disabled={pagination.page === 1}
+              />
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationPrevious
+                href="#"
+                onClick={() => onPageChange(pagination.page - 1)}
+                disabled={
+                  pagination.page === 1 || pagination.page === undefined
+                }
+              />
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationNext
+                href="#"
+                onClick={() => onPageChange(pagination.page + 1)}
+                disabled={pagination.page === pagination.totalPages}
+              />
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationLast
+                href="#"
+                onClick={() => onPageChange(pagination.totalPages)}
+                disabled={pagination.page === pagination.totalPages}
+              />
+            </PaginationItem>
+          </PaginationContent>
+        </div>
+      </Pagination>
+    </>
+  )
+}
+
+export function ClaimsOnIdentity() {
+  const initialData = useLiveLoader<typeof loader>(['attest'])
+  const { userIdentity, pagination } = initialData
+  const fetcher = useFetcher<typeof loader>()
+  const [claims, setClaims] = useState<ClaimPresenter[]>(
+    initialData.claims?.data ?? [],
+  )
+  const [searchParams, setSearchParams] = useSearchParams()
+
+  console.log('fetcher.data', fetcher.data)
+  useEffect(() => {
+    if (fetcher.data) {
+      setClaims(fetcher.data.claims?.data as ClaimPresenter[])
+    }
+  }, [fetcher.data])
+
+  useEffect(() => {
+    setClaims(initialData.claims?.data as ClaimPresenter[])
+  }, [initialData.positions])
+
+  const options = [
+    { value: 'Updated At', sortBy: 'UpdatedAt' },
+    { value: 'Total ETH', sortBy: 'AssetsSum' },
+  ]
+
+  const handleSortChange = (
+    newSortBy: ClaimSortColumn,
+    newDirection: SortDirection,
+  ) => {
+    setSearchParams({
+      ...Object.fromEntries(searchParams),
+      sortBy: newSortBy,
+      direction: newDirection,
+      page: '1',
+    })
+  }
+
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newSearchValue = event.target.value
+    setSearchParams({
+      ...Object.fromEntries(searchParams),
+      search: newSearchValue,
+      page: '1',
+    })
+  }
+
+  const onPageChange = (newPage: number) => {
+    setSearchParams({
+      ...Object.fromEntries(searchParams),
+      page: newPage.toString(),
+    })
+  }
+
+  return (
+    <>
+      <div className="h-[184px] flex-col justify-start items-start gap-3 flex w-full">
+        <div className="self-stretch justify-between items-center inline-flex">
+          <div className="grow shrink basis-0 text-white text-xl font-medium leading-[30px]">
+            Claims on this Identity
+          </div>
+        </div>
+        <div className="self-stretch justify-start items-start gap-4 inline-flex">
+          <div className="grow shrink basis-0 self-stretch p-6 bg-black rounded-xl border border-neutral-300/20 flex-col justify-start items-start gap-5 inline-flex">
+            <div className="self-stretch justify-start items-start gap-5 inline-flex">
+              <div className="justify-start items-center gap-1.5 flex">
+                <div className="text-white/60 text-sm font-normal leading-tight">
+                  Claims about
+                </div>
+                <IdentityTag
+                  imgSrc={userIdentity?.user?.image ?? userIdentity?.image}
+                  variant={userIdentity?.user ? 'user' : 'non-user'}
+                >
+                  <span className="min-w-20 text-ellipsis">
+                    {userIdentity?.user?.display_name ??
+                      userIdentity?.display_name}
+                  </span>
+                </IdentityTag>
+              </div>
+            </div>
+            <div className="self-stretch justify-between items-start inline-flex">
+              <div className="flex-col justify-start items-end inline-flex">
+                <div className="self-stretch text-white/60 text-xs font-normal leading-[18px]">
+                  Claims
+                </div>
+                <div className="self-stretch text-white text-xl font-medium leading-[30px]">
+                  {initialData.claims?.total ?? 0}
+                </div>
+              </div>
+              <div className="flex-col justify-start items-end inline-flex">
+                <div className="self-stretch text-right text-white/60 text-xs font-normal leading-[18px]">
+                  Total stake across all Claims
+                </div>
+                <div className="self-stretch text-right text-white text-xl font-medium leading-[30px]">
+                  16.25 ETH
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="flex flex-row justify-between w-full mt-6">
+        <Input className="w-[196px]" onChange={handleSearchChange} />
+        <Select
+          onValueChange={(value) => {
+            const selectedOption = options.find(
+              (option) => option.value.toLowerCase() === value,
+            )
+            if (selectedOption) {
+              handleSortChange(selectedOption.sortBy, 'desc')
+            }
+          }}
+        >
+          <SelectTrigger className="w-[200px] rounded-xl border border-primary-600 bg-primary-50/5 text-card-foreground transition-colors duration-150 hover:cursor-pointer hover:border-primary-400 hover:bg-primary-50/10 hover:text-primary-foreground">
+            <SelectValue placeholder={`Sort by`} />
+          </SelectTrigger>
+          <SelectContent>
+            {options.map((option) => (
+              <SelectItem
+                key={option.value.toLowerCase()}
+                value={option.value.toLowerCase()}
+              >
+                {option.value}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+      <div className="mt-6 flex flex-col w-full">
+        {claims?.map((claim) => (
+          <div
+            key={claim.claim_id}
+            className={`grow shrink basis-0 self-stretch p-6 bg-black first:rounded-t-xl last:rounded-b-xl border border-neutral-300/20 flex-col justify-start  gap-5 inline-flex`}
+          >
+            <ClaimRow
+              claimsFor={claim.for_num_positions}
+              claimsAgainst={claim.against_num_positions}
+              amount={+formatBalance(claim.assets_sum, 18, 4)}
+            >
+              <Claim
+                subject={{
+                  variant: claim.subject?.is_user ? 'user' : 'non-user',
+                  label:
+                    claim.subject?.user?.display_name ??
+                    claim.subject?.display_name ??
+                    claim.subject?.identity_id,
+                }}
+                predicate={{
+                  variant: claim.predicate?.is_user ? 'user' : 'non-user',
+                  label:
+                    claim.predicate?.user?.display_name ??
+                    claim.predicate?.display_name ??
+                    claim.predicate?.identity_id,
+                }}
+                object={{
+                  variant: claim.object?.is_user ? 'user' : 'non-user',
+                  label:
+                    claim.object?.user?.display_name ??
+                    claim.object?.display_name ??
+                    claim.object?.identity_id,
+                }}
+              />
+            </ClaimRow>
+          </div>
+        ))}
+      </div>
+      <Pagination className="flex w-full justify-between my-4">
+        <PaginationSummary
+          totalEntries={pagination.total ?? 0}
+          label="claims"
         />
         <div className="flex">
           <PaginationRowSelection defaultValue="10" />
