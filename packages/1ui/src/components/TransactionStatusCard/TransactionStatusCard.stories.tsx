@@ -5,7 +5,6 @@ import { TransactionStatus } from 'types'
 
 import { TransactionStatusCard } from './TransactionStatusCard'
 
-// Setup meta for the Storybook
 const meta: Meta<typeof TransactionStatusCard> = {
   title: 'Components/TransactionStatus/TransactionStatusCard',
   component: TransactionStatusCard,
