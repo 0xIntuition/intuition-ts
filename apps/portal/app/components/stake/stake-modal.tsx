@@ -3,9 +3,11 @@ import { useEffect, useRef, useState } from 'react'
 import { Dialog, DialogContent } from '@0xintuition/1ui'
 import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
 
+import Toast from '@components/toast'
 import { multivaultAbi } from '@lib/abis/multivault'
 import { useDepositAtom } from '@lib/hooks/useDepositAtom'
 import { useRedeemAtom } from '@lib/hooks/useRedeemAtom'
+import { transactionReducer } from '@lib/hooks/useTransactionReducer'
 import { stakeModalAtom } from '@lib/state/store'
 import logger from '@lib/utils/logger'
 import { formatBalance } from '@lib/utils/misc'
@@ -14,17 +16,19 @@ import { Cookie } from '@remix-run/node'
 import { useFetcher, useLocation } from '@remix-run/react'
 import { useQueryClient } from '@tanstack/react-query'
 import { useAtom } from 'jotai'
+import { AlertCircle } from 'lucide-react'
 import { toast } from 'sonner'
+import { TransactionActionType, TransactionStateType } from 'types/transaction'
 import { SessionUser } from 'types/user'
 import { VaultDetailsType } from 'types/vault'
 import { Abi, Address, decodeEventLog, formatUnits, parseUnits } from 'viem'
-import { useBalance, useBlockNumber } from 'wagmi'
+import { useBalance, useBlockNumber, usePublicClient } from 'wagmi'
 
 import StakeButton from './stake-button'
 import StakeForm from './stake-form'
 import StakeToast from './stake-toast'
 
-const initialTxState: StakeTransactionState = {
+const initialTxState: TransactionStateType = {
   status: 'idle',
   txHash: undefined,
   error: undefined,
@@ -61,9 +65,10 @@ export default function StakeModal({
   const [loading, setLoading] = useState(false)
   const [lastTxHash, setLastTxHash] = useState<string | undefined>(undefined)
   const { state, dispatch } = useGenericTxState<
-    StakeTransactionState,
-    StakeTransactionAction
-  >(stakeTransactionReducer, initialTxState)
+    TransactionStateType,
+    TransactionActionType
+  >(transactionReducer, initialTxState)
+  const publicClient = usePublicClient()
 
   const identityShouldOverride = identity && identity.vault_id !== '0'
 
@@ -112,15 +117,13 @@ export default function StakeModal({
     awaitingWalletConfirmation,
     awaitingOnChainConfirmation,
     isError,
-    onReceipt,
     reset,
   } = mode === 'deposit' ? depositHook : redeemHook
 
   const useHandleAction = (actionType: string) => {
     return async () => {
-      setLoading(true)
       try {
-        writeContractAsync({
+        const txHash = await writeContractAsync({
           address: contract as `0x${string}`,
           abi: multivaultAbi as Abi,
           functionName: actionType === 'buy' ? 'depositAtom' : 'redeemAtom',
@@ -145,29 +148,47 @@ export default function StakeModal({
               ? parseUnits(val === '' ? '0' : val, 18)
               : undefined,
         })
-        onReceipt(() => {
-          fetchReval.submit(formRef.current, {
-            method: 'POST',
+
+        if (txHash) {
+          dispatch({ type: 'TRANSACTION_PENDING' })
+          const receipt = await publicClient.waitForTransactionReceipt({
+            hash: txHash,
           })
-          dispatch({ type: 'TRANSACTION_COMPLETE' })
-          setLoading(false)
-          reset()
-        })
-      } catch (e) {
+          logger('receipt', receipt)
+          logger('txHash', txHash)
+          dispatch({
+            type: 'TRANSACTION_COMPLETE',
+            txHash: txHash,
+            txReceipt: receipt,
+          })
+        }
+      } catch (error) {
+        logger('error', error)
         setLoading(false)
-        if (e instanceof Error) {
-          logger('error', e)
-          let message = 'Failed transaction'
-          if (e.message.includes('insufficient')) {
-            message = "Insufficient Funds: Ask your gf's boyfriend for more ETH"
+        if (error instanceof Error) {
+          let errorMessage = 'Failed transaction'
+          if (error.message.includes('insufficient')) {
+            errorMessage = 'Insufficient funds'
           }
-          if (e.message.includes('rejected')) {
-            message = 'Transaction rejected: Are we not so back?'
+          if (error.message.includes('rejected')) {
+            errorMessage = 'Transaction rejected'
           }
           dispatch({
             type: 'TRANSACTION_ERROR',
-            error: message,
+            error: errorMessage,
           })
+          toast.custom(
+            () => (
+              <Toast
+                title="Error"
+                description={errorMessage}
+                icon={<AlertCircle />}
+              />
+            ),
+            {
+              duration: 5000,
+            },
+          )
           return
         }
       }
@@ -251,13 +272,10 @@ export default function StakeModal({
 
   useEffect(() => {
     if (awaitingWalletConfirmation) {
-      dispatch({ type: 'CONFIRM_TRANSACTION' })
+      dispatch({ type: 'APPROVE_TRANSACTION' })
     }
     if (awaitingOnChainConfirmation) {
       dispatch({ type: 'TRANSACTION_PENDING' })
-    }
-    if (txReceipt) {
-      dispatch({ type: 'TRANSACTION_CONFIRMED' })
     }
     if (isError) {
       dispatch({
@@ -269,7 +287,6 @@ export default function StakeModal({
     awaitingWalletConfirmation,
     awaitingOnChainConfirmation,
     isError,
-    txReceipt,
     dispatch,
   ])
 
@@ -278,8 +295,8 @@ export default function StakeModal({
     !!awaitingOnChainConfirmation ||
     loading ||
     state.status === 'confirm' ||
-    state.status === 'pending' ||
-    state.status === 'confirmed'
+    state.status === 'transaction-pending' ||
+    state.status === 'transaction-confirmed'
 
   const queryClient = useQueryClient()
   const { data: blockNumber } = useBlockNumber({ watch: true })
@@ -351,6 +368,8 @@ export default function StakeModal({
     }, 500)
   }
 
+  console.log('state.status', state.status)
+
   return (
     <Dialog
       defaultOpen
@@ -404,60 +423,4 @@ export default function StakeModal({
       </DialogContent>
     </Dialog>
   )
-}
-
-export type StakeTransactionState = {
-  status: StakeTransactionStatus
-  txHash?: `0x${string}`
-  error?: string
-}
-
-export type StakeTransactionStatus =
-  | 'idle'
-  | 'review'
-  | 'confirm'
-  | 'pending'
-  | 'confirmed'
-  | 'complete'
-  | 'hash'
-  | 'error'
-
-export type StakeTransactionAction =
-  | { type: 'START_TRANSACTION' }
-  | { type: 'REVIEW_TRANSACTION' }
-  | { type: 'CONFIRM_TRANSACTION' }
-  | { type: 'TRANSACTION_PENDING' }
-  | { type: 'TRANSACTION_CONFIRMED' }
-  | { type: 'TRANSACTION_COMPLETE'; txHash?: `0x${string}` }
-  | { type: 'TRANSACTION_HASH'; txHash?: `0x${string}` }
-  | { type: 'TRANSACTION_ERROR'; error: string }
-
-const stakeTransactionReducer = (
-  state: StakeTransactionState,
-  action: StakeTransactionAction,
-): StakeTransactionState => {
-  switch (action.type) {
-    case 'START_TRANSACTION':
-      return { ...state, status: 'idle' }
-    case 'REVIEW_TRANSACTION':
-      return { ...state, status: 'review' }
-    case 'CONFIRM_TRANSACTION':
-      return { ...state, status: 'confirm' }
-    case 'TRANSACTION_PENDING':
-      return { ...state, status: 'pending' }
-    case 'TRANSACTION_CONFIRMED':
-      return { ...state, status: 'confirmed' }
-    case 'TRANSACTION_COMPLETE':
-      return {
-        ...state,
-        status: 'complete',
-        txHash: action.txHash,
-      }
-    case 'TRANSACTION_HASH':
-      return { ...state, status: 'hash', txHash: action.txHash }
-    case 'TRANSACTION_ERROR':
-      return { ...state, status: 'error', error: action.error }
-    default:
-      return state
-  }
 }

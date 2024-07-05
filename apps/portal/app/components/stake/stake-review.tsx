@@ -5,22 +5,19 @@ import {
   Claim,
   DialogHeader,
   DialogTitle,
+  Icon,
   IdentityTag,
 } from '@0xintuition/1ui'
 import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
 
 import { formatDisplayBalance } from '@lib/utils/misc'
-import { ArrowLeft } from 'lucide-react'
-import {
-  type StakeTransactionAction,
-  type StakeTransactionState,
-} from 'types/stake-transaction'
+import { TransactionActionType, TransactionStateType } from 'types/transaction'
 
 interface StakeReviewProps {
   val: string
   mode: string | undefined
-  dispatch: (action: StakeTransactionAction) => void
-  state: StakeTransactionState
+  dispatch: (action: TransactionActionType) => void
+  state: TransactionStateType
   direction: 'for' | 'against'
   isError?: boolean
   modalType: 'identity' | 'claim' | null | undefined
@@ -47,9 +44,10 @@ export default function StakeReview({
   useEffect(() => {
     const newText = isError
       ? 'Transaction failed'
-      : state.status === 'pending' || state.status === 'confirm'
+      : state.status === 'transaction-pending' || state.status === 'confirm'
         ? 'Attestation in progress'
-        : state.status === 'confirmed' || state.status === 'complete'
+        : state.status === 'transaction-confirmed' ||
+            state.status === 'complete'
           ? mode === 'deposit'
             ? 'Deposited successfully'
             : 'Redeemed successfully'
@@ -75,7 +73,7 @@ export default function StakeReview({
             variant="ghost"
             size="icon"
           >
-            <ArrowLeft className="h-4 w-4" />
+            <Icon name="arrow-left" className="h-4 w-4" />
           </Button>
         </DialogTitle>
       </DialogHeader>
@@ -83,6 +81,7 @@ export default function StakeReview({
         <div
           className={`flex h-full w-full flex-col items-center justify-center gap-2 px-2 pt-5`}
         >
+          <Icon name="await-action" className="h-10 w-10 text-neutral-50/30" />
           <div className="gap-5 flex flex-col items-center">
             <span className="text-xl font-medium text-white/70 leading-[30px]">
               {mode === 'deposit' ? 'Deposit' : 'Redeem'}{' '}

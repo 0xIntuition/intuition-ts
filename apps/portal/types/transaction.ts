@@ -15,11 +15,11 @@ export type BaseTransactionStateType<TStatus> = {
 
 export type TransactionStatusType =
   | 'idle'
-  | 'approve'
-  | 'review'
+  | 'awaiting'
+  | 'review-transaction'
   | 'confirm'
-  | 'pending'
-  | 'confirmed'
+  | 'transaction-pending'
+  | 'transaction-confirmed'
   | 'complete'
   | 'hash'
   | 'error'

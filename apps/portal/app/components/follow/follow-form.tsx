@@ -11,10 +11,7 @@ import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
 import { formatBalance } from '@lib/utils/misc'
 import { type FetcherWithComponents } from '@remix-run/react'
 import { HelpCircleIcon } from 'lucide-react'
-import {
-  type StakeTransactionAction,
-  type StakeTransactionState,
-} from 'types/stake-transaction'
+import { TransactionActionType, TransactionStateType } from 'types/transaction'
 
 import FollowActions from './follow-actions'
 import FollowReview from './follow-review'
@@ -28,12 +25,11 @@ interface FollowFormProps {
   user_assets: string
   entry_fee: string
   exit_fee: string
-  direction?: 'for' | 'against'
   val: string
   setVal: (val: string) => void
   mode: string | undefined
-  dispatch: (action: StakeTransactionAction) => void
-  state: StakeTransactionState
+  dispatch: (action: TransactionActionType) => void
+  state: TransactionStateType
   fetchReval: FetcherWithComponents<unknown>
   formRef: React.RefObject<HTMLFormElement>
   modalType: 'identity' | 'claim' | null | undefined
@@ -46,7 +42,6 @@ export default function FollowForm({
   user_assets,
   entry_fee,
   exit_fee,
-  direction,
   val,
   setVal,
   mode,
@@ -113,7 +108,6 @@ export default function FollowForm({
         <>
           <FollowReview
             mode={mode}
-            direction={direction}
             val={val}
             dispatch={dispatch}
             state={state}

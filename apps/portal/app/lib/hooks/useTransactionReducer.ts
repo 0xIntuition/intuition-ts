@@ -29,15 +29,15 @@ export const transactionReducer = (
       return { ...state, status: 'idle' }
 
     case 'APPROVE_TRANSACTION':
-      return { ...state, status: 'approve' }
+      return { ...state, status: 'awaiting' }
     case 'REVIEW_TRANSACTION':
-      return { ...state, status: 'review' }
+      return { ...state, status: 'review-transaction' }
     case 'CONFIRM_TRANSACTION':
       return { ...state, status: 'confirm' }
     case 'TRANSACTION_PENDING':
-      return { ...state, status: 'pending' }
+      return { ...state, status: 'transaction-pending' }
     case 'TRANSACTION_CONFIRMED':
-      return { ...state, status: 'confirmed' }
+      return { ...state, status: 'transaction-confirmed' }
     case 'TRANSACTION_COMPLETE':
       return {
         ...state,

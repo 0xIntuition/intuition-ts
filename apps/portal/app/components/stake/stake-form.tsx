@@ -5,15 +5,18 @@ import {
   DialogTitle,
   Icon,
   IdentityTag,
+  Tabs,
+  TabsList,
+  TabsTrigger,
+  TransactionStatusIndicator,
 } from '@0xintuition/1ui'
 import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
 
+import { stakeModalAtom } from '@lib/state/store'
 import { formatBalance } from '@lib/utils/misc'
 import { type FetcherWithComponents } from '@remix-run/react'
-import {
-  type StakeTransactionAction,
-  type StakeTransactionState,
-} from 'types/stake-transaction'
+import { useAtom } from 'jotai'
+import { TransactionActionType, TransactionStateType } from 'types/transaction'
 import { SessionUser } from 'types/user'
 
 import StakeActions from './stake-actions'
@@ -34,8 +37,8 @@ interface StakeFormProps {
   val: string
   setVal: (val: string) => void
   mode: string | undefined
-  dispatch: (action: StakeTransactionAction) => void
-  state: StakeTransactionState
+  dispatch: (action: TransactionActionType) => void
+  state: TransactionStateType
   fetchReval: FetcherWithComponents<unknown>
   formRef: React.RefObject<HTMLFormElement>
   isLoading: boolean
@@ -71,6 +74,7 @@ export default function StakeForm({
   validationErrors,
   setValidationErrors,
 }: StakeFormProps) {
+  const [stakeModalState, setStakeModalState] = useAtom(stakeModalAtom)
   return (
     <>
       <fetchReval.Form
@@ -126,6 +130,28 @@ export default function StakeForm({
               </div>
             </DialogTitle>
           </DialogHeader>
+          <Tabs defaultValue={mode}>
+            <TabsList>
+              <TabsTrigger
+                variant="alternate"
+                value="deposit"
+                label="Deposit"
+                onClick={(e) => {
+                  e.preventDefault()
+                  setStakeModalState({ ...stakeModalState, mode: 'deposit' })
+                }}
+              />
+              <TabsTrigger
+                variant="alternate"
+                value="redeem"
+                label="Redeem"
+                onClick={(e) => {
+                  e.preventDefault()
+                  setStakeModalState({ ...stakeModalState, mode: 'redeem' })
+                }}
+              />
+            </TabsList>
+          </Tabs>
           <div className="pt-2.5">
             <div className="flex flex-row items-center justify-center">
               <div className="w-[316px] bg-neutral-50/5 rounded-lg border border-neutral-300/10 flex-col justify-start items-start inline-flex">
@@ -167,7 +193,7 @@ export default function StakeForm({
             </div>
           </div>
         </>
-      ) : (
+      ) : state.status === 'review-transaction' ? (
         <>
           <StakeReview
             mode={mode}
@@ -181,6 +207,10 @@ export default function StakeForm({
             entry_fee={entry_fee}
             exit_fee={exit_fee}
           />
+        </>
+      ) : (
+        <>
+          <TransactionStatusIndicator status={state.status} />
         </>
       )}
     </>

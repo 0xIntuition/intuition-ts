@@ -5,16 +5,13 @@ import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
 
 import { formatBalance, formatDisplayBalance } from '@lib/utils/misc'
 import { ArrowLeft } from 'lucide-react'
-import {
-  type StakeTransactionAction,
-  type StakeTransactionState,
-} from 'types/stake-transaction'
+import { TransactionActionType, TransactionStateType } from 'types/transaction'
 
 interface FollowReviewProps {
   val: string
   mode: string | undefined
-  dispatch: (action: StakeTransactionAction) => void
-  state: StakeTransactionState
+  dispatch: (action: TransactionActionType) => void
+  state: TransactionStateType
   isError?: boolean
   identity?: IdentityPresenter
   claim?: ClaimPresenter
@@ -39,9 +36,10 @@ export default function FollowReview({
   useEffect(() => {
     const newText = isError
       ? 'Transaction failed'
-      : state.status === 'pending' || state.status === 'confirm'
+      : state.status === 'transaction-pending' || state.status === 'confirm'
         ? 'Attestation in progress'
-        : state.status === 'confirmed' || state.status === 'complete'
+        : state.status === 'transaction-confirmed' ||
+            state.status === 'complete'
           ? mode === 'follow'
             ? 'Deposited successfully'
             : 'Redeemed successfully'
