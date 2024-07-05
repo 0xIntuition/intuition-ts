@@ -20,10 +20,9 @@ interface UnfollowButtonProps {
   user: SessionUser
   tosCookie: Cookie
   val: string
-  setVal: (val: string) => void
   setMode: (mode: 'follow' | 'unfollow') => void
   handleAction: () => void
-  handleClose?: () => void
+  handleClose: () => void
   dispatch: (action: StakeTransactionAction) => void
   state: StakeTransactionState
   user_conviction: string
@@ -37,9 +36,9 @@ interface UnfollowButtonProps {
 
 const UnfollowButton: React.FC<UnfollowButtonProps> = ({
   val,
-  setVal,
   setMode,
   handleAction,
+  handleClose,
   dispatch,
   state,
   user_conviction,
@@ -70,13 +69,13 @@ const UnfollowButton: React.FC<UnfollowButtonProps> = ({
     } else if (state.status === 'pending') {
       return 'Pending'
     } else if (state.status === 'confirmed' || state.status === 'complete') {
-      return 'Buy More'
+      return 'Go to Profile'
     } else if (state.status === 'error') {
       return 'Retry'
     } else if (chain?.id !== getChainEnvConfig(CURRENT_ENV).chainId) {
       return 'Wrong Network'
     } else {
-      return `Follow`
+      return `Unfollow`
     }
   }
 
@@ -103,13 +102,11 @@ const UnfollowButton: React.FC<UnfollowButtonProps> = ({
 
   return (
     <Button
-      variant="primary"
+      variant={`${state.status === 'idle' ? 'destructiveOutline' : 'primary'}`}
       onClick={(e) => {
         e.preventDefault()
-        setMode('unfollow')
         if (state.status === 'complete' || state.status === 'confirmed') {
-          dispatch({ type: 'START_TRANSACTION' })
-          setVal('')
+          handleClose()
         } else if (state.status === 'review') {
           handleAction()
         } else {
@@ -125,6 +122,7 @@ const UnfollowButton: React.FC<UnfollowButtonProps> = ({
               setValidationErrors(errors)
               setShowErrors(true)
             } else {
+              setMode('unfollow')
               dispatch({ type: 'REVIEW_TRANSACTION' })
               setValidationErrors([])
             }

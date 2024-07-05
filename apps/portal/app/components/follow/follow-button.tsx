@@ -21,10 +21,9 @@ interface FollowButtonProps {
   user: SessionUser
   tosCookie: Cookie
   val: string
-  setVal: (val: string) => void
   setMode: (mode: 'follow' | 'unfollow') => void
   handleAction: () => void
-  handleClose?: () => void
+  handleClose: () => void
   dispatch: (action: StakeTransactionAction) => void
   state: StakeTransactionState
   min_deposit: string
@@ -32,6 +31,7 @@ interface FollowButtonProps {
   setValidationErrors: (errors: string[]) => void
   setShowErrors: (show: boolean) => void
   conviction_price: string
+  user_assets: string
   id?: string
   claimOrIdentity?: string
   className?: string
@@ -39,9 +39,9 @@ interface FollowButtonProps {
 
 const FollowButton: React.FC<FollowButtonProps> = ({
   val,
-  setVal,
   setMode,
   handleAction,
+  handleClose,
   dispatch,
   state,
   min_deposit,
@@ -49,6 +49,7 @@ const FollowButton: React.FC<FollowButtonProps> = ({
   setValidationErrors,
   setShowErrors,
   conviction_price,
+  user_assets,
   className,
 }) => {
   const { switchChain } = useSwitchChain()
@@ -63,6 +64,7 @@ const FollowButton: React.FC<FollowButtonProps> = ({
 
   const formattedConvictionPrice = formatUnits(BigInt(conviction_price), 18)
 
+  console.log('val', val)
   const getButtonText = () => {
     if (val === '') {
       return 'Enter an Amount'
@@ -73,13 +75,13 @@ const FollowButton: React.FC<FollowButtonProps> = ({
     } else if (state.status === 'pending') {
       return 'Pending'
     } else if (state.status === 'confirmed' || state.status === 'complete') {
-      return 'Buy More'
+      return 'Go to Profile'
     } else if (state.status === 'error') {
       return 'Retry'
     } else if (chain?.id !== getChainEnvConfig(CURRENT_ENV).chainId) {
       return 'Wrong Network'
     } else {
-      return `Follow`
+      return `${user_assets > '0' ? 'Increase Follow' : 'Follow'}`
     }
   }
 
@@ -111,10 +113,8 @@ const FollowButton: React.FC<FollowButtonProps> = ({
       variant="primary"
       onClick={(e) => {
         e.preventDefault()
-        setMode('follow')
         if (state.status === 'complete' || state.status === 'confirmed') {
-          dispatch({ type: 'START_TRANSACTION' })
-          setVal('')
+          handleClose()
         } else if (state.status === 'review') {
           handleAction()
         } else {
@@ -135,6 +135,7 @@ const FollowButton: React.FC<FollowButtonProps> = ({
               setValidationErrors(errors)
               setShowErrors(true)
             } else {
+              setMode('follow')
               dispatch({ type: 'REVIEW_TRANSACTION' })
               setValidationErrors([])
             }

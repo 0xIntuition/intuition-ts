@@ -54,7 +54,7 @@ export default function FollowModal({
 }: FollowModalProps) {
   const fetchReval = useFetcher()
   const formRef = useRef(null)
-  const [val, setVal] = useState('')
+  const [val, setVal] = useState('0.001')
   const [mode, setMode] = useState<'follow' | 'unfollow'>('follow')
   const [loading, setLoading] = useState(false)
   const [lastTxHash, setLastTxHash] = useState<string | undefined>(undefined)
@@ -81,6 +81,7 @@ export default function FollowModal({
   const {
     conviction_price: latest_conviction_price,
     user_conviction: latest_user_conviction,
+    user_conviction_value: latest_user_conviction_value,
     formatted_entry_fee,
     formatted_exit_fee,
   } = latestVaultDetails ?? {}
@@ -312,8 +313,8 @@ export default function FollowModal({
   const location = useLocation()
 
   useEffect(() => {
-    setVal('')
     dispatch({ type: 'START_TRANSACTION' })
+    setMode('')
   }, [location])
 
   const handleClose = () => {
@@ -321,9 +322,10 @@ export default function FollowModal({
     setTimeout(() => {
       dispatch({ type: 'START_TRANSACTION' })
       reset()
-      setVal('')
     }, 500)
   }
+
+  console.log('state.status', state.status)
 
   return (
     <Dialog
@@ -341,12 +343,13 @@ export default function FollowModal({
           claim={claim}
           conviction_price={latest_conviction_price ?? conviction_price ?? '0'}
           user_conviction={latest_user_conviction ?? user_conviction ?? '0'}
-          user_assets={user_assets ?? '0'}
+          user_assets={latest_user_conviction_value ?? user_assets ?? '0'}
           entry_fee={formatted_entry_fee ?? '0'}
           exit_fee={formatted_exit_fee ?? '0'}
           direction={direction}
           val={val}
           setVal={setVal}
+          mode={mode}
           dispatch={dispatch}
           state={state}
           fetchReval={fetchReval}
@@ -357,36 +360,44 @@ export default function FollowModal({
           showErrors={showErrors}
           setShowErrors={setShowErrors}
         />
-        <FollowButton
-          user={user}
-          tosCookie={tosCookie}
-          val={val}
-          setVal={setVal}
-          setMode={setMode}
-          handleAction={handleFollowButtonClick}
-          dispatch={dispatch}
-          state={state}
-          min_deposit={min_deposit}
-          walletBalance={walletBalance}
-          setValidationErrors={setValidationErrors}
-          setShowErrors={setShowErrors}
-          conviction_price={latest_conviction_price ?? conviction_price ?? '0'}
-        />
-        <UnfollowButton
-          user={user}
-          tosCookie={tosCookie}
-          val={user_conviction}
-          setVal={setVal}
-          setMode={setMode}
-          handleAction={handleUnfollowButtonClick}
-          dispatch={dispatch}
-          state={state}
-          user_conviction={latest_user_conviction ?? user_conviction ?? '0'}
-          setValidationErrors={setValidationErrors}
-          setShowErrors={setShowErrors}
-          conviction_price={latest_conviction_price ?? conviction_price ?? '0'}
-          className={`${user_conviction > '0' ? '' : 'hidden'}`}
-        />
+        <div className="flex flex-row">
+          <UnfollowButton
+            user={user}
+            tosCookie={tosCookie}
+            val={user_conviction}
+            setMode={setMode}
+            handleAction={handleUnfollowButtonClick}
+            handleClose={handleClose}
+            dispatch={dispatch}
+            state={state}
+            user_conviction={latest_user_conviction ?? user_conviction ?? '0'}
+            setValidationErrors={setValidationErrors}
+            setShowErrors={setShowErrors}
+            conviction_price={
+              latest_conviction_price ?? conviction_price ?? '0'
+            }
+            className={`${((latest_user_conviction ?? user_conviction) > '0' && state.status === 'idle') || mode !== 'follow' ? '' : 'hidden'}`}
+          />
+          <FollowButton
+            user={user}
+            tosCookie={tosCookie}
+            val={val}
+            setMode={setMode}
+            handleAction={handleFollowButtonClick}
+            handleClose={handleClose}
+            dispatch={dispatch}
+            state={state}
+            min_deposit={min_deposit}
+            walletBalance={walletBalance}
+            setValidationErrors={setValidationErrors}
+            setShowErrors={setShowErrors}
+            conviction_price={
+              latest_conviction_price ?? conviction_price ?? '0'
+            }
+            user_assets={latest_user_conviction_value ?? user_assets ?? '0'}
+            className={`${mode === 'unfollow' && 'hidden'}`}
+          />
+        </div>
       </DialogContent>
     </Dialog>
   )
