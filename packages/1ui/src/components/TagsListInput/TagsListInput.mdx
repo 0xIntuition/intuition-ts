@@ -8,6 +8,8 @@ import * as Stories from './TagsListInput.stories'
 
 #### Displays list of Tags with an input field to add new tags
 
+<Canvas of={Stories.BasicUsage} sourceState="none" />
+
 <Source
   dark
   language="tsx"
@@ -17,4 +19,52 @@ import { TagsListInput } from '@0xintuition/1ui'
 <TagsListInput>HELLO WORLD</TagsListInput>
 `} />
 
-<Canvas of={Stories.BasicUsage} sourceState="none" />
+#### Trust Circles Variant
+
+<Canvas of={Stories.TrustCirclesVariant} sourceState="shown" />
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { TagsListInput } from '@0xintuition/1ui'
+
+const trustCirclesTags = [
+{ name: 'Tag Name 1', id: '1' },
+{ name: 'Tag Name 2', id: '2' },
+{ name: 'Tag Name 3', id: '3' },
+];
+
+<TagsListInput
+  variant="trustCircles"
+  tags={trustCirclesTags}
+  maxTags={3}
+  onAddTag={() => console.log('Add Tag')}
+  onRemoveTag={(id: string) => console.log('Remove Tag', id)}
+/>
+`} />
+
+#### Tags Variant
+
+<Canvas of={Stories.TagsVariant} sourceState="shown" />
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { TagsListInput } from '@0xintuition/1ui'
+
+const tags = [
+{ name: 'Tag Name 1', id: '1' },
+{ name: 'Tag Name 2', id: '2' },
+{ name: 'Tag Name 3', id: '3' },
+];
+
+<TagsListInput
+  variant="tags"
+  tags={tags}
+  maxTags={5}
+  onAddTag={() => console.log('Add Tag')}
+  onRemoveTag={(id: string) => console.log('Remove Tag', id)}
+/>
+`} />

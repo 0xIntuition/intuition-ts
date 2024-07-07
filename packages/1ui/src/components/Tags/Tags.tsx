@@ -1,6 +1,7 @@
 import * as React from 'react'
 
-import { Button, Tag, TagProps, Text, TextVariant } from '..'
+import { Button, Icon, Tag, TagProps, Text, TextVariant } from 'components'
+
 import { cn } from '../../styles'
 
 export interface TagsProps extends React.HTMLAttributes<HTMLDivElement> {}
@@ -40,17 +41,32 @@ const TagsContent = ({
 export interface TagWithValueProps extends TagProps {
   label?: string
   value?: string | number
+  onRemove?: () => void
 }
 
-const TagWithValue = ({ label, value, ...props }: TagWithValueProps) => {
+const TagWithValue = ({
+  label,
+  value,
+  onRemove,
+  ...props
+}: TagWithValueProps) => {
   return (
-    <Tag {...props}>
+    <Tag {...props} className="flex items-center cursor-default">
       {label}
       {value && (
         <>
-          <span className="h-[2px] w-[2px] bg-primary" />
+          <span className="h-[2px] w-[2px] bg-primary mx-1" />
           {value}
         </>
+      )}
+      {onRemove && (
+        <button
+          onClick={onRemove}
+          className="ml-2 cursor-pointer"
+          aria-label="Remove tag"
+        >
+          <Icon name="cross-large" className="h-3 w-3" />
+        </button>
       )}
     </Tag>
   )
