@@ -3,9 +3,16 @@ import * as React from 'react'
 import { Button, Icon, TagVariant, TagWithValue, Text } from 'components'
 import { cn } from 'styles'
 
+const TAGS_LIST_VARIANTS = {
+  trustCircles: 'trust circles',
+  tags: 'tags',
+} as const
+
+type TagsListVariants = keyof typeof TAGS_LIST_VARIANTS
+
 export interface TagsListInputProps
   extends React.HTMLAttributes<HTMLDivElement> {
-  variant: 'trustCircles' | 'tags'
+  variant: TagsListVariants
   tags: { name: string; id: string }[]
   maxTags: number
   onAddTag: () => void
@@ -27,10 +34,7 @@ export const TagsListInput = ({
 
   return (
     <div className="w-full" {...props}>
-      <div
-        className={cn('flex flex-wrap gap-2.5 items-center', className)}
-        {...props}
-      >
+      <div className={cn('flex flex-wrap gap-2.5 items-center', className)}>
         {tags.map((tag) => (
           <TagWithValue
             key={tag.id}
@@ -40,26 +44,25 @@ export const TagsListInput = ({
           />
         ))}
 
-        <div className="flex items-center gap-2">
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={onAddTag}
-            className="px-2 rounded-full"
-          >
-            <Icon name="plus-small" />
-          </Button>
-          {tags.length === 0 ? (
+        {tags.length === 0 ? (
+          <div className="flex items-center gap-2">
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={onAddTag}
+              className="rounded-full px-2 mr-1"
+            >
+              <Icon name="plus-small" />
+            </Button>
             <Text variant="footnote" className="text-secondary-foreground">
-              {`Add up to ${tagsLeft} ${variant === 'trustCircles' ? 'trust circles' : 'tags'}`}
+              {`Add up to ${tagsLeft} ${TAGS_LIST_VARIANTS[variant]}`}
             </Text>
-          ) : (
-            <Text variant="footnote" className="text-secondary-foreground">
-              {tagsLeft} {variant === 'trustCircles' ? 'trust circles' : 'tags'}{' '}
-              left
-            </Text>
-          )}
-        </div>
+          </div>
+        ) : (
+          <Text variant="footnote" className="text-secondary-foreground">
+            {tagsLeft} {TAGS_LIST_VARIANTS[variant]} left
+          </Text>
+        )}
       </div>
     </div>
   )
