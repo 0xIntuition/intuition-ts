@@ -6,22 +6,13 @@ import * as Stories from './TagsListInput.stories'
 
 <Title />
 
-#### Displays list of Tags with an input field to add new tags
+#### Displays list of Tags or Trust circles with the ability to add more
 
-<Canvas of={Stories.BasicUsage} sourceState="none" />
+<Canvas of={Stories.TrustCirclesVariant} sourceState="none" />
 
-<Source
-  dark
-  language="tsx"
-  code={`
-import { TagsListInput } from '@0xintuition/1ui'
+### Empty State Variant
 
-<TagsListInput>HELLO WORLD</TagsListInput>
-`} />
-
-#### Empty State Variant
-
-<Canvas of={Stories.Stories.EmptyStateVariant} sourceState="shown" />
+<Canvas of={Stories.EmptyStateVariant} />
 
 <Source
   dark
@@ -38,9 +29,9 @@ import { TagsListInput } from '@0xintuition/1ui'
 />
 `} />
 
-#### Trust Circles Variant
+### Trust Circles Variant
 
-<Canvas of={Stories.TrustCirclesVariant} sourceState="shown" />
+<Canvas of={Stories.TrustCirclesVariant} />
 
 <Source
   dark
@@ -63,9 +54,9 @@ const trustCirclesTags = [
 />
 `} />
 
-#### Tags Variant
+### Tags Variant
 
-<Canvas of={Stories.TagsVariant} sourceState="shown" />
+<Canvas of={Stories.TagsVariant} />
 
 <Source
   dark
