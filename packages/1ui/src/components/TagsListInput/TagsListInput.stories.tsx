@@ -17,7 +17,22 @@ const tags = [
   { name: 'Tag Name 1', id: '1' },
   { name: 'Tag Name 2', id: '2' },
   { name: 'Tag Name 3', id: '3' },
+  { name: 'Tag Name 4', id: '4' },
 ]
+
+export const EmptyStateVariant: Story = {
+  render: () => (
+    <div className="w-[400px]">
+      <TagsListInput
+        variant="tags"
+        tags={[]}
+        maxTags={5}
+        onAddTag={() => console.log('Add Tag')}
+        onRemoveTag={(id: string) => console.log('Remove Tag', id)}
+      />
+    </div>
+  ),
+}
 
 export const TrustCirclesVariant: Story = {
   render: () => (
@@ -25,7 +40,7 @@ export const TrustCirclesVariant: Story = {
       <TagsListInput
         variant="trustCircles"
         tags={tags}
-        maxTags={3}
+        maxTags={5}
         onAddTag={() => console.log('Add Tag')}
         onRemoveTag={(id: string) => console.log('Remove Tag', id)}
       />

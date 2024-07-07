@@ -1,15 +1,6 @@
 import * as React from 'react'
 
-import {
-  Button,
-  Icon,
-  Tags,
-  TagsButton,
-  TagsContent,
-  TagVariant,
-  TagWithValue,
-  Text,
-} from 'components'
+import { Button, Icon, TagVariant, TagWithValue, Text } from 'components'
 import { cn } from 'styles'
 
 export interface TagsListInputProps
@@ -37,7 +28,7 @@ export const TagsListInput = ({
   return (
     <div className="w-full" {...props}>
       <div
-        className={cn('flex flex-wrap gap-2 items-center', className)}
+        className={cn('flex flex-wrap gap-2.5 items-center', className)}
         {...props}
       >
         {tags.map((tag) => (
@@ -48,17 +39,26 @@ export const TagsListInput = ({
             variant={tagVariant}
           />
         ))}
-        <div className="flex items-center gap-2 mt-2">
+
+        <div className="flex items-center gap-2">
           <Button
             variant="secondary"
+            size="sm"
             onClick={onAddTag}
-            className="px-2 py-0.5"
+            className="px-2 rounded-full"
           >
             <Icon name="plus-small" />
           </Button>
-          <Text variant="footnote" className="text-secondary-foreground">
-            {`Add up to ${tagsLeft} ${variant === 'trustCircles' ? 'trust circles' : 'tags'}`}
-          </Text>
+          {tags.length === 0 ? (
+            <Text variant="footnote" className="text-secondary-foreground">
+              {`Add up to ${tagsLeft} ${variant === 'trustCircles' ? 'trust circles' : 'tags'}`}
+            </Text>
+          ) : (
+            <Text variant="footnote" className="text-secondary-foreground">
+              {tagsLeft} {variant === 'trustCircles' ? 'trust circles' : 'tags'}{' '}
+              left
+            </Text>
+          )}
         </div>
       </div>
     </div>

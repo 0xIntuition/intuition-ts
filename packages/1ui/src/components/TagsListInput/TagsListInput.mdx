@@ -19,6 +19,25 @@ import { TagsListInput } from '@0xintuition/1ui'
 <TagsListInput>HELLO WORLD</TagsListInput>
 `} />
 
+#### Empty State Variant
+
+<Canvas of={Stories.Stories.EmptyStateVariant} sourceState="shown" />
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { TagsListInput } from '@0xintuition/1ui'
+
+<TagsListInput
+  variant="trustCircles"
+  tags={[]}
+  maxTags={5}
+  onAddTag={() => console.log('Add Tag')}
+  onRemoveTag={(id: string) => console.log('Remove Tag', id)}
+/>
+`} />
+
 #### Trust Circles Variant
 
 <Canvas of={Stories.TrustCirclesVariant} sourceState="shown" />
@@ -38,7 +57,7 @@ const trustCirclesTags = [
 <TagsListInput
   variant="trustCircles"
   tags={trustCirclesTags}
-  maxTags={3}
+  maxTags={5}
   onAddTag={() => console.log('Add Tag')}
   onRemoveTag={(id: string) => console.log('Remove Tag', id)}
 />
