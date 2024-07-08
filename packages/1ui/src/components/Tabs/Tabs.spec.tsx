@@ -40,7 +40,7 @@ describe('Tabs', () => {
             <button
               aria-controls="radix-:r0:-content-one"
               aria-selected="true"
-              class="group inline-flex items-center py-1 px-4 theme-border whitespace-nowrap ring-offset-background transition-all disabled:border-border/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none rounded-2xl w-[180px] hover:bg-primary/5 hover:border-border/10 data-[state=active]:bg-primary/10 mr-2 justify-between"
+              class="group inline-flex items-center py-1 px-4 border border-border/20 whitespace-nowrap ring-offset-background transition-all disabled:border-border/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none rounded-2xl w-[180px] hover:bg-primary/5 hover:border-border/10 data-[state=active]:bg-primary/10 mr-2 justify-between"
               data-orientation="horizontal"
               data-radix-collection-item=""
               data-state="active"
@@ -63,7 +63,7 @@ describe('Tabs', () => {
             <button
               aria-controls="radix-:r0:-content-two"
               aria-selected="false"
-              class="group inline-flex items-center py-1 px-4 theme-border whitespace-nowrap ring-offset-background transition-all disabled:border-border/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none rounded-2xl w-[180px] hover:bg-primary/5 hover:border-border/10 data-[state=active]:bg-primary/10 mr-2 justify-between"
+              class="group inline-flex items-center py-1 px-4 border border-border/20 whitespace-nowrap ring-offset-background transition-all disabled:border-border/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none rounded-2xl w-[180px] hover:bg-primary/5 hover:border-border/10 data-[state=active]:bg-primary/10 mr-2 justify-between"
               data-orientation="horizontal"
               data-radix-collection-item=""
               data-state="inactive"
@@ -86,7 +86,7 @@ describe('Tabs', () => {
             <button
               aria-controls="radix-:r0:-content-three"
               aria-selected="false"
-              class="group inline-flex items-center py-1 px-4 theme-border whitespace-nowrap ring-offset-background transition-all disabled:border-border/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none rounded-2xl w-[180px] hover:bg-primary/5 hover:border-border/10 data-[state=active]:bg-primary/10 mr-2 justify-between"
+              class="group inline-flex items-center py-1 px-4 border border-border/20 whitespace-nowrap ring-offset-background transition-all disabled:border-border/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none rounded-2xl w-[180px] hover:bg-primary/5 hover:border-border/10 data-[state=active]:bg-primary/10 mr-2 justify-between"
               data-disabled=""
               data-orientation="horizontal"
               data-radix-collection-item=""
@@ -192,7 +192,7 @@ describe('Tabs', () => {
             <button
               aria-controls="radix-:r4:-content-one"
               aria-selected="true"
-              class="group inline-flex items-center py-1 px-4 theme-border whitespace-nowrap ring-offset-background transition-all disabled:border-border/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none w-full border-0 border-b-2 data-[state=active]:border-border justify-between"
+              class="group inline-flex items-center py-1 px-4 border-border/20 whitespace-nowrap ring-offset-background transition-all disabled:border-border/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none w-full border-0 border-b-2 data-[state=active]:border-border justify-between"
               data-orientation="horizontal"
               data-radix-collection-item=""
               data-state="active"
@@ -215,7 +215,7 @@ describe('Tabs', () => {
             <button
               aria-controls="radix-:r4:-content-two"
               aria-selected="false"
-              class="group inline-flex items-center py-1 px-4 theme-border whitespace-nowrap ring-offset-background transition-all disabled:border-border/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none w-full border-0 border-b-2 data-[state=active]:border-border justify-between"
+              class="group inline-flex items-center py-1 px-4 border-border/20 whitespace-nowrap ring-offset-background transition-all disabled:border-border/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none w-full border-0 border-b-2 data-[state=active]:border-border justify-between"
               data-orientation="horizontal"
               data-radix-collection-item=""
               data-state="inactive"
@@ -238,7 +238,7 @@ describe('Tabs', () => {
             <button
               aria-controls="radix-:r4:-content-three"
               aria-selected="false"
-              class="group inline-flex items-center py-1 px-4 theme-border whitespace-nowrap ring-offset-background transition-all disabled:border-border/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none w-full border-0 border-b-2 data-[state=active]:border-border justify-between"
+              class="group inline-flex items-center py-1 px-4 border-border/20 whitespace-nowrap ring-offset-background transition-all disabled:border-border/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none w-full border-0 border-b-2 data-[state=active]:border-border justify-between"
               data-disabled=""
               data-orientation="horizontal"
               data-radix-collection-item=""
