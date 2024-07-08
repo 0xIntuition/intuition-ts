@@ -127,13 +127,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     }
   }
 
-  console.log('claims', claims)
-
-  // console.log('search', search)
-  // console.log('sortBy', sortBy)
-  // console.log('direction', direction)
-  // console.log('page', page)
-  // console.log('limit', limit)
+  logger('claims', claims)
 
   return json({
     userIdentity,

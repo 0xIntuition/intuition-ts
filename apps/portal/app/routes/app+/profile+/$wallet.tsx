@@ -24,7 +24,7 @@ import FollowModal from '@components/follow/follow-modal'
 import { NestedLayout } from '@components/nested-layout'
 import StakeModal from '@components/stake/stake-modal'
 import { followModalAtom, stakeModalAtom } from '@lib/state/store'
-import { userProfileRouteOptions } from '@lib/utils/constants'
+import { userIdentityRouteOptions } from '@lib/utils/constants'
 import logger from '@lib/utils/logger'
 import {
   calculatePercentageOfTvl,
@@ -57,6 +57,10 @@ export async function loader({ context, request, params }: LoaderFunctionArgs) {
     return console.log('Wallet parameter is not defined')
   }
 
+  if (wallet === user?.details?.wallet?.address) {
+    throw redirect('/app/profile')
+  }
+
   let userIdentity
   try {
     userIdentity = await IdentitiesService.getIdentityById({
@@ -75,30 +79,20 @@ export async function loader({ context, request, params }: LoaderFunctionArgs) {
     return redirect('/create')
   }
 
-  console.log('userIdentity', userIdentity)
-
-  let userObject
-  try {
-    userObject = await UsersService.getUserByWallet({
-      wallet: wallet,
-    })
-  } catch (error: unknown) {
-    if (error instanceof ApiError) {
-      userObject = undefined
-      logger(`${error.name} - ${error.status}: ${error.message} ${error.url}`)
-    } else {
-      throw error
-    }
-  }
-
-  if (!userObject) {
-    return logger('No user found in DB')
-  }
+  logger('userIdentity', userIdentity)
 
   let userTotals
   try {
+    if (
+      !userIdentity ||
+      !userIdentity.creator ||
+      typeof userIdentity.creator.id !== 'string'
+    ) {
+      logger('Invalid or missing creator ID')
+      return
+    }
     userTotals = await UsersService.getUserTotals({
-      id: userObject.id,
+      id: userIdentity.creator.id,
     })
   } catch (error: unknown) {
     if (error instanceof ApiError) {
@@ -161,7 +155,6 @@ export async function loader({ context, request, params }: LoaderFunctionArgs) {
     wallet,
     user,
     userIdentity,
-    userObject,
     userTotals,
     followClaim,
     followVaultDetails,
@@ -173,7 +166,6 @@ export default function Profile() {
   const {
     wallet,
     user,
-    userObject,
     userIdentity,
     userTotals,
     followClaim,
@@ -190,6 +182,8 @@ export default function Profile() {
     vaultDetails: VaultDetailsType
   }>()
 
+  logger('followVaultDetails', followVaultDetails)
+
   const { user_conviction_value: user_assets } = vaultDetails
 
   const imgSrc = blockies.create({ seed: wallet }).toDataURL()
@@ -198,23 +192,24 @@ export default function Profile() {
   const [followModalActive, setFollowModalActive] = useAtom(followModalAtom)
 
   return (
-    <NestedLayout outlet={Outlet} options={userProfileRouteOptions}>
+    <NestedLayout outlet={Outlet} options={userIdentityRouteOptions}>
       <div className="flex flex-col">
         <>
           <div className="w-[300px] h-[230px] flex-col justify-start items-start gap-5 inline-flex">
             <ProfileCard
               variant="user"
-              avatarSrc={userObject.image ?? imgSrc}
-              name={userObject.display_name ?? ''}
+              avatarSrc={userIdentity?.user?.image ?? imgSrc}
+              name={userIdentity?.user?.display_name ?? ''}
               walletAddress={
-                userObject.ens_name ?? sliceString(userObject.wallet, 6, 4)
+                userIdentity?.user?.ens_name ??
+                sliceString(userIdentity?.user?.wallet, 6, 4)
               }
               stats={{
                 numberOfFollowers: userTotals.follower_count,
                 numberOfFollowing: userTotals.followed_count,
                 points: userTotals.user_points,
               }}
-              bio={userObject.description ?? ''}
+              bio={userIdentity?.user?.description ?? ''}
             >
               <Button
                 variant="secondary"
@@ -228,8 +223,9 @@ export default function Profile() {
                   }))
                 }
               >
-                {followVaultDetails?.user_conviction > '0'
-                  ? `Following · ${formatBalance(followVaultDetails.user_conviction_value, 18, 4)} ETH`
+                {followVaultDetails &&
+                (followVaultDetails?.user_conviction ?? '0') > '0'
+                  ? `Following · ${formatBalance(followVaultDetails.user_conviction_value ?? '0', 18, 4)} ETH`
                   : 'Follow'}
               </Button>
             </ProfileCard>

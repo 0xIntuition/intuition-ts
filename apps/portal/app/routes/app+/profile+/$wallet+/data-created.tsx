@@ -40,7 +40,7 @@ import {
   formatBalance,
   getAuthHeaders,
 } from '@lib/utils/misc'
-import { json, LoaderFunctionArgs } from '@remix-run/node'
+import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
 import { useFetcher, useSearchParams } from '@remix-run/react'
 import { getPrivyAccessToken } from '@server/privy'
 import { formatUnits } from 'viem'
@@ -71,28 +71,22 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
     }
   }
 
-  let userObject
-  try {
-    userObject = await UsersService.getUserByWallet({
-      wallet: wallet,
-    })
-  } catch (error: unknown) {
-    if (error instanceof ApiError) {
-      userObject = undefined
-      logger(`${error.name} - ${error.status}: ${error.message} ${error.url}`)
-    } else {
-      throw error
-    }
-  }
-
-  if (!userObject) {
-    return logger('No user found in DB')
+  if (!userIdentity) {
+    return redirect('/create')
   }
 
   let userTotals
   try {
+    if (
+      !userIdentity ||
+      !userIdentity.creator ||
+      typeof userIdentity.creator.id !== 'string'
+    ) {
+      logger('Invalid or missing creator ID')
+      return
+    }
     userTotals = await UsersService.getUserTotals({
-      id: userObject.id,
+      id: userIdentity.creator.id,
     })
   } catch (error: unknown) {
     if (error instanceof ApiError) {
@@ -157,17 +151,10 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
 
   const totalPages = calculateTotalPages(positions?.total ?? 0, Number(limit))
 
-  console.log('positions', positions)
-
-  // console.log('search', search)
-  // console.log('sortBy', sortBy)
-  // console.log('direction', direction)
-  // console.log('page', page)
-  // console.log('limit', limit)
+  logger('positions', positions)
 
   return json({
     userIdentity,
-    userObject,
     userTotals,
     positions,
     claims,
