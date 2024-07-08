@@ -97,7 +97,7 @@ const ClaimStakeCard = ({
   return (
     <div
       className={cn(
-        'flex flex-col gap-4 border border-border/30 rounded-xl p-5 w-max',
+        'flex flex-col gap-4 theme-border rounded-xl p-5 w-max',
         className,
       )}
       {...props}

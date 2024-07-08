@@ -15,7 +15,7 @@ export const IdentityTagSize = {
 export type IdentityTagSizeType = keyof typeof IdentityTagSize
 
 export const identityTagVariants = cva(
-  'border border-border/20 font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center',
+  'theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center',
   {
     variants: {
       variant: {

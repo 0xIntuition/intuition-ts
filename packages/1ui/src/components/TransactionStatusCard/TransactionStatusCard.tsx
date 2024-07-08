@@ -59,7 +59,7 @@ const StatusCardComponent = ({
   const statusComponentData = getStatusComponentData(status)
   return (
     <div
-      className="flex items-center gap-2 bg-primary/10 rounded-md border border-border/10 p-3"
+      className="flex items-center gap-2 bg-primary/10 rounded-md theme-border p-3"
       {...props}
     >
       <Icon

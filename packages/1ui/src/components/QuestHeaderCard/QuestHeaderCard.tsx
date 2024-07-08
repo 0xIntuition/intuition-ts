@@ -23,7 +23,7 @@ const QuestHeaderCard = ({
     (numberOfCompletedQuests / totalNumberOfQuests) * 100
   return (
     <div
-      className="flex flex-col gap-6 p-6 rounded-xl border border-border/30 bg-gradient-to-r from-against/30"
+      className="flex flex-col gap-6 p-6 rounded-xl theme-border bg-gradient-to-r from-against/30"
       {...props}
     >
       <div className="flex justify-between items-start">

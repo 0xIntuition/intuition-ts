@@ -40,7 +40,7 @@ describe('RadioGroup', () => {
       <DocumentFragment>
         <div
           aria-required="false"
-          class="grid bg-primary/5 border border-border/10 rounded-lg w-full"
+          class="grid bg-primary/5 theme-border rounded-lg w-full"
           dir="ltr"
           role="radiogroup"
           style="outline: none;"

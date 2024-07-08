@@ -25,10 +25,7 @@ const InfoCard = ({
   }).format(new Date(timestamp))
 
   return (
-    <div
-      className="flex flex-col gap-2 border border-border/30 p-5 rounded-lg"
-      {...props}
-    >
+    <div className="flex flex-col gap-2 theme-border p-5 rounded-lg" {...props}>
       <Text variant={TextVariant.caption} className="text-muted-foreground">
         Creator
       </Text>

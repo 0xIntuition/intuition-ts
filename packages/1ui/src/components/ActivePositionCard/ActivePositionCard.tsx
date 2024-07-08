@@ -31,7 +31,7 @@ const ActivePositionCard = ({
 
   return (
     <div
-      className="flex justify-between items-center border border-border/10 rounded-lg bg-primary/5 py-3 px-5 w-full gap-8"
+      className="flex justify-between items-center theme-border rounded-lg bg-primary/5 py-3 px-5 w-full gap-8"
       {...props}
     >
       <Text variant={TextVariant.body} className="text-foreground/50">

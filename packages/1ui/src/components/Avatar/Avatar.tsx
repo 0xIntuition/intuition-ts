@@ -53,7 +53,7 @@ const avatarVariants = cva('', {
   variants: {
     variant: {
       [Identity.user]: 'rounded-full bg-muted',
-      [Identity.nonUser]: 'rounded bg-background border border-border/30',
+      [Identity.nonUser]: 'rounded bg-background theme-border',
     },
   },
   defaultVariants: {
