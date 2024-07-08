@@ -3,24 +3,24 @@ import * as React from 'react'
 import { Button, Icon, TagVariant, TagWithValue, Text } from 'components'
 import { cn } from 'styles'
 
-const TAGS_LIST_VARIANTS = {
+const TagsListVariants = {
   trustCircle: 'trust circle',
   tag: 'tag',
 } as const
 
-type TagsListVariants = keyof typeof TAGS_LIST_VARIANTS
+type TagsListVariantsType = keyof typeof TagsListVariants
 
 export interface TagsListInputProps
   extends React.HTMLAttributes<HTMLDivElement> {
-  variant: TagsListVariants
+  variant: TagsListVariantsType
   tags: { name: string; id: string }[]
   maxTags: number
   onAddTag: () => void
   onRemoveTag: (id: string) => void
 }
 
-const getTagText = (variant: TagsListVariants, count: number) => {
-  const tagText = TAGS_LIST_VARIANTS[variant]
+const getTagText = (variant: TagsListVariantsType, count: number) => {
+  const tagText = TagsListVariants[variant]
   return `${count} ${tagText}${count === 1 ? '' : 's'}`
 }
 
@@ -60,7 +60,7 @@ export const TagsListInput = ({
               <Icon name="plus-small" />
             </Button>
             <Text variant="footnote" className="text-secondary-foreground">
-              {`Add up to ${tagsLeft} ${TAGS_LIST_VARIANTS[variant]}${tagsLeft === 1 ? '' : 's'}`}
+              {`Add up to ${tagsLeft} ${TagsListVariants[variant]}${tagsLeft === 1 ? '' : 's'}`}
             </Text>
           </div>
         ) : (
