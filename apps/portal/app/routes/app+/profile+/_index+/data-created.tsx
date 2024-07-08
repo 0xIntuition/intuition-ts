@@ -54,10 +54,9 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
 
   const session = context.get(SessionContext)
   const user = session.get('user')
-  console.log('accessToken', accessToken)
 
   if (!user?.details?.wallet?.address) {
-    return console.log('No user found in session')
+    return logger('No user found in session')
   }
 
   const userIdentity = await fetchUserIdentity(user.details.wallet.address)
@@ -118,7 +117,7 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
   } catch (error: unknown) {
     if (error instanceof ApiError) {
       positions = undefined
-      console.log(`${error.name} - ${error.status}: ${error.message}`)
+      logger(`${error.name} - ${error.status}: ${error.message}`)
     } else {
       throw error
     }

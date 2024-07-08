@@ -44,7 +44,7 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
   const user = session.get('user')
 
   if (!user?.details?.wallet?.address) {
-    return console.log('No user found in session')
+    return logger('No user found in session')
   }
 
   let userIdentity

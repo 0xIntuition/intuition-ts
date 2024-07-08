@@ -36,6 +36,7 @@ import {
 
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { fetchUserIdentity } from '@lib/utils/fetches'
+import logger from '@lib/utils/logger'
 import {
   calculateTotalPages,
   formatBalance,
@@ -55,10 +56,9 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
 
   const session = context.get(SessionContext)
   const user = session.get('user')
-  console.log('accessToken', accessToken)
 
   if (!user?.details?.wallet?.address) {
-    return console.log('No user found in session')
+    return logger('No user found in session')
   }
 
   const userIdentity = await fetchUserIdentity(user.details.wallet.address)

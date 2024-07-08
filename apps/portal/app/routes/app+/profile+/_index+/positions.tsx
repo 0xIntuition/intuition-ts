@@ -6,6 +6,7 @@ import {
   SortDirection,
 } from '@0xintuition/api'
 
+import logger from '@lib/utils/logger'
 import { calculateTotalPages, getAuthHeaders } from '@lib/utils/misc'
 import { SessionContext } from '@middleware/session'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
@@ -20,10 +21,9 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
 
   const session = context.get(SessionContext)
   const user = session.get('user')
-  console.log('accessToken', accessToken)
 
   if (!user?.details?.wallet?.address) {
-    return console.log('No user found in session')
+    return logger('No user found in session')
   }
 
   const url = new URL(request.url)
