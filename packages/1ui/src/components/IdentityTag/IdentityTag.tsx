@@ -1,7 +1,7 @@
 import * as React from 'react'
 
 import { cva, type VariantProps } from 'class-variance-authority'
-import { Identity } from 'types'
+import { Identity, IdentityType } from 'types'
 
 import { Icon, IconName } from '..'
 import { cn } from '../../styles'
@@ -47,6 +47,7 @@ export interface IdentityTagProps
     VariantProps<typeof identityTagVariants> {
   disabled?: boolean
   imgSrc?: string | null
+  variant?: IdentityType
 }
 
 const IdentityTag = ({
