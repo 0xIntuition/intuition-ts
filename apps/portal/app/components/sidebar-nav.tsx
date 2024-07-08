@@ -147,7 +147,7 @@ export default function SidebarNav({
                 onClick={() => setCreateIdentityModalActive(true)}
               />
               <SidebarLayoutNavFooterItem
-                iconName="bubble-text"
+                iconName="claim"
                 label="Create Claim"
                 onClick={() => setCreateClaimModalActive(true)}
               />
