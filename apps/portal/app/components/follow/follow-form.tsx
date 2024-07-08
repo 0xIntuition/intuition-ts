@@ -5,11 +5,13 @@ import {
   DialogTitle,
   Icon,
   IdentityTag,
+  TransactionStatusCard,
+  TransactionStatusIndicator,
 } from '@0xintuition/1ui'
 import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
 
 import { formatBalance } from '@lib/utils/misc'
-import { type FetcherWithComponents } from '@remix-run/react'
+import { Link, type FetcherWithComponents } from '@remix-run/react'
 import { HelpCircleIcon } from 'lucide-react'
 import { TransactionActionType, TransactionStateType } from 'types/transaction'
 
@@ -32,7 +34,10 @@ interface FollowFormProps {
   state: TransactionStateType
   fetchReval: FetcherWithComponents<unknown>
   formRef: React.RefObject<HTMLFormElement>
-  modalType: 'identity' | 'claim' | null | undefined
+  showErrors: boolean
+  setShowErrors: (show: boolean) => void
+  validationErrors: string[]
+  setValidationErrors: (errors: string[]) => void
 }
 
 export default function FollowForm({
@@ -49,6 +54,10 @@ export default function FollowForm({
   state,
   fetchReval,
   formRef,
+  showErrors,
+  setShowErrors,
+  validationErrors,
+  setValidationErrors,
 }: FollowFormProps) {
   return (
     <>
@@ -100,11 +109,17 @@ export default function FollowForm({
               </div>
             </div>
             <div className="rounded-t-lg bg-primary-950/15 px-4 pt-2.5">
-              <FollowActions setVal={setVal} />
+              <FollowActions
+                setVal={setVal}
+                validationErrors={validationErrors}
+                setValidationErrors={setValidationErrors}
+                showErrors={showErrors}
+                setShowErrors={setShowErrors}
+              />
             </div>
           </div>
         </>
-      ) : (
+      ) : state.status === 'review-transaction' ? (
         <>
           <FollowReview
             mode={mode}
@@ -117,6 +132,22 @@ export default function FollowForm({
             entry_fee={entry_fee}
             exit_fee={exit_fee}
           />
+        </>
+      ) : (
+        <>
+          <TransactionStatusIndicator status={state.status} />
+          {state.status !== 'complete' ? (
+            <TransactionStatusCard status={state.status} />
+          ) : (
+            <Link
+              to={`https://base-sepolia.blockscout.com/tx/${state.txHash}`}
+              target="_blank"
+              className="flex flex-row items-center gap-1 mx-auto leading-tight text-blue-500 transition-colors duration-300 hover:text-blue-400"
+            >
+              View on Basescan{' '}
+              <Icon name="square-arrow-top-right" className="h-3 w-3" />
+            </Link>
+          )}
         </>
       )}
     </>

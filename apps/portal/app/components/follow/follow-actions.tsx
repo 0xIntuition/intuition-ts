@@ -6,11 +6,23 @@ import {
   RadioGroupItemLabel,
 } from '@0xintuition/1ui'
 
+import ErrorList from '@components/error-list'
+
 interface FollowActionsProps {
   setVal: (val: string) => void
+  showErrors: boolean
+  setShowErrors: (show: boolean) => void
+  validationErrors: string[]
+  setValidationErrors: (errors: string[]) => void
 }
 
-export default function FollowActions({ setVal }: FollowActionsProps) {
+export default function FollowActions({
+  setVal,
+  showErrors,
+  setShowErrors,
+  validationErrors,
+  setValidationErrors,
+}: FollowActionsProps) {
   const radioGroupData = [
     { id: '0.001', value: 'Minimum', subValue: '+0.001 ETH' },
     { id: '0.01', value: 'Default', subValue: '+0.01 ETH' },
@@ -21,7 +33,15 @@ export default function FollowActions({ setVal }: FollowActionsProps) {
 
   return (
     <div className="flex flex-row items-center justify-center gap-5">
-      <RadioGroup defaultValue={radioGroupData[0].id} onValueChange={setVal}>
+      <RadioGroup
+        defaultValue={radioGroupData[0].id}
+        onValueChange={setVal}
+        onChange={(e) => {
+          e.preventDefault()
+          setShowErrors(false)
+          setValidationErrors([])
+        }}
+      >
         {radioGroupData.map((item, index) => (
           <div key={index}>
             <RadioGroupItemContainer>
@@ -36,6 +56,9 @@ export default function FollowActions({ setVal }: FollowActionsProps) {
           </div>
         ))}
       </RadioGroup>
+      <div className={`h-2 px-2 ${!showErrors && 'invisible'}`}>
+        <ErrorList errors={validationErrors} />
+      </div>
     </div>
   )
 }

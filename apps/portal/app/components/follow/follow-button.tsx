@@ -6,32 +6,27 @@ import { stakeModalAtom } from '@lib/state/store'
 import { CURRENT_ENV } from '@lib/utils/constants'
 import { getChainEnvConfig } from '@lib/utils/environment'
 import { formatBalance } from '@lib/utils/misc'
-import { Cookie } from '@remix-run/node'
 import { useNavigation } from '@remix-run/react'
 import { useSetAtom } from 'jotai'
-import type {
-  StakeTransactionAction,
-  StakeTransactionState,
-} from 'types/stake-transaction'
+import { TransactionActionType, TransactionStateType } from 'types/transaction'
 import { SessionUser } from 'types/user'
 import { formatUnits } from 'viem'
 import { useAccount, useSwitchChain } from 'wagmi'
 
 interface FollowButtonProps {
   user: SessionUser
-  tosCookie: Cookie
   val: string
   setMode: (mode: 'follow' | 'unfollow') => void
   handleAction: () => void
   handleClose: () => void
-  dispatch: (action: StakeTransactionAction) => void
-  state: StakeTransactionState
+  dispatch: (action: TransactionActionType) => void
+  state: TransactionStateType
   min_deposit: string
   walletBalance: string
-  setValidationErrors: (errors: string[]) => void
-  setShowErrors: (show: boolean) => void
   conviction_price: string
   user_assets: string
+  setValidationErrors: (errors: string[]) => void
+  setShowErrors: (show: boolean) => void
   id?: string
   claimOrIdentity?: string
   className?: string
@@ -46,10 +41,10 @@ const FollowButton: React.FC<FollowButtonProps> = ({
   state,
   min_deposit,
   walletBalance,
-  setValidationErrors,
-  setShowErrors,
   conviction_price,
   user_assets,
+  setValidationErrors,
+  setShowErrors,
   className,
 }) => {
   const { switchChain } = useSwitchChain()
@@ -64,17 +59,20 @@ const FollowButton: React.FC<FollowButtonProps> = ({
 
   const formattedConvictionPrice = formatUnits(BigInt(conviction_price), 18)
 
-  console.log('val', val)
+  console.log('state.status', state.status)
   const getButtonText = () => {
     if (val === '') {
       return 'Enter an Amount'
-    } else if (state.status === 'review') {
+    } else if (state.status === 'review-transaction') {
       return 'Confirm'
-    } else if (state.status === 'confirm') {
+    } else if (state.status === 'awaiting') {
       return 'Continue in Wallet'
-    } else if (state.status === 'pending') {
+    } else if (state.status === 'transaction-pending') {
       return 'Pending'
-    } else if (state.status === 'confirmed' || state.status === 'complete') {
+    } else if (
+      state.status === 'transaction-confirmed' ||
+      state.status === 'complete'
+    ) {
       return 'Go to Profile'
     } else if (state.status === 'error') {
       return 'Retry'
@@ -113,9 +111,12 @@ const FollowButton: React.FC<FollowButtonProps> = ({
       variant="primary"
       onClick={(e) => {
         e.preventDefault()
-        if (state.status === 'complete' || state.status === 'confirmed') {
+        if (
+          state.status === 'complete' ||
+          state.status === 'transaction-confirmed'
+        ) {
           handleClose()
-        } else if (state.status === 'review') {
+        } else if (state.status === 'review-transaction') {
           handleAction()
         } else {
           if (chain?.id !== getChainEnvConfig(CURRENT_ENV).chainId) {
@@ -146,7 +147,8 @@ const FollowButton: React.FC<FollowButtonProps> = ({
         !address ||
         val === '' ||
         state.status === 'confirm' ||
-        state.status === 'pending'
+        state.status === 'transaction-pending' ||
+        state.status === 'awaiting'
       }
       className={cn(`w-[159px] m-auto mt-10`, className)}
     >
