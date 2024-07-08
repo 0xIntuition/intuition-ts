@@ -1,4 +1,4 @@
-FROM docker.io/node:lts-alpine
+FROM docker.io/node:lts-alpine as base
 
 ARG ALCHEMY_MAINNET_API_KEY=${ALCHEMY_MAINNET_API_KEY}
 ARG ALCHEMY_API_KEY=${ALCHEMY_API_KEY}
@@ -50,10 +50,14 @@ RUN apk add --no-cache \
 	g++
 
 RUN npm install -g pnpm@9.0.6
+
+FROM base as build
 RUN npm add --global nx@latest
 RUN pnpm i
 RUN pnpm run portal:build
 
+FROM base
+COPY --from=build /app /app
 ENV NX_REJECT_UNKNOWN_LOCAL_CACHE=0
 ENV PORT=8080
 ENV HOST=0.0.0.0
