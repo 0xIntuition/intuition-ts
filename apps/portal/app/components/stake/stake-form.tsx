@@ -10,6 +10,7 @@ import {
   TabsTrigger,
   TransactionStatusCard,
   TransactionStatusIndicator,
+  Trunctacular,
 } from '@0xintuition/1ui'
 import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
 
@@ -96,9 +97,13 @@ export default function StakeForm({
                     imgSrc={identity?.user?.image ?? identity?.image}
                     variant={identity?.user ? 'user' : 'non-user'}
                   >
-                    <span className="min-w-20 text-ellipsis">
-                      {identity?.user?.display_name ?? identity?.display_name}
-                    </span>
+                    <Trunctacular
+                      value={
+                        identity?.user?.display_name ??
+                        identity?.display_name ??
+                        'Identity'
+                      }
+                    />
                   </IdentityTag>
                 ) : (
                   <Claim
