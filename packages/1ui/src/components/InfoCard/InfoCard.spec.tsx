@@ -17,7 +17,7 @@ describe('InfoCard', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="flex flex-col gap-2 border border-border/30 p-5 rounded-lg"
+          class="flex flex-col gap-2 theme-border p-5 rounded-lg"
         >
           <p
             class="text-sm font-normal text-muted-foreground"
@@ -28,7 +28,7 @@ describe('InfoCard', () => {
             class="flex justify-between items-center gap-1"
           >
             <button
-              class="border border-border/20 font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center rounded-full [&>span]:rounded-full [&>span]:overflow-hidden text-base [&>span]:h-6 [&>span]:w-6"
+              class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center rounded-full [&>span]:rounded-full [&>span]:overflow-hidden text-base [&>span]:h-6 [&>span]:w-6"
             >
               <span>
                 <img

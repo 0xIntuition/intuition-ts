@@ -56,8 +56,8 @@ export async function action({ request }: ActionFunctionArgs) {
     submission.value.image_url.size === 0
   ) {
     // const toastHeaders = await createToastHeaders({
-    //   title: 'Failed HR Meme Approval',
-    //   description: 'Ser, this content is not allowed.',
+    //   title: 'Failed Image Approval',
+    //   description: 'Your image failed approval',
     //   type: 'error',
     // })
     return json({ status: 'error', submission } as const, {
@@ -72,8 +72,8 @@ export async function action({ request }: ActionFunctionArgs) {
     submission.value.constructor === Object
   ) {
     // const toastHeaders = await createToastHeaders({
-    //   title: 'Failed to Upload Meme',
-    //   description: "It's gary's fault",
+    //   title: 'Failed to Upload Image',
+    //   description: "Your image failed to upload.",
     //   type: 'error',
     // })
     return json({ status: 'error', submission } as const, {

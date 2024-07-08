@@ -48,7 +48,7 @@ describe('Command', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="flex h-full w-full flex-col overflow-hidden rounded-md bg-popover text-popover-foreground border border-border/30"
+          class="flex h-full w-full flex-col overflow-hidden rounded-md bg-popover text-popover-foreground theme-border"
           cmdk-root=""
           tabindex="-1"
         >

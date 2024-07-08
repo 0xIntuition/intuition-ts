@@ -22,7 +22,7 @@ const StakeCard = ({
 }: StakeCardProps) => {
   return (
     <div
-      className="flex flex-col gap-2 w-full border border-border/30 px-6 py-4 rounded-lg"
+      className="flex flex-col gap-2 w-full theme-border px-6 py-4 rounded-lg"
       {...props}
     >
       <Text variant="bodyLarge">Stake</Text>

@@ -45,7 +45,7 @@ describe('Table', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="relative w-full overflow-auto  border border-border/30 rounded-lg"
+          class="relative w-full overflow-auto  theme-border rounded-lg"
         >
           <table
             class="w-full caption-bottom text-sm"

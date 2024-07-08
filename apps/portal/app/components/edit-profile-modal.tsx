@@ -241,7 +241,7 @@ export function EditProfileForm({ userObject, onClose }: EditProfileFormProps) {
         onClose()
       } catch (error: unknown) {
         if (error instanceof Error) {
-          let errorMessage = 'Error in creating offchain meme data.'
+          let errorMessage = 'Error in creating offchain identity data.'
           if (error.message.includes('rejected')) {
             errorMessage = 'Signature rejected. Try again when you are ready.'
           }
@@ -322,7 +322,7 @@ export function EditProfileForm({ userObject, onClose }: EditProfileFormProps) {
         onClose()
       } catch (error: unknown) {
         if (error instanceof Error) {
-          let errorMessage = 'Error in creating offchain meme data.'
+          let errorMessage = 'Error in creating offchain identity data.'
           if (error.message.includes('rejected')) {
             errorMessage = 'Signature rejected. Try again when you are ready.'
           }

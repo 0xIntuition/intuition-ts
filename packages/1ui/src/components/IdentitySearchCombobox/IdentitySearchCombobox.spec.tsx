@@ -45,7 +45,7 @@ describe('IdentitySearchCombobox', () => {
           class="min-w-96"
         >
           <div
-            class="flex h-full w-full flex-col overflow-hidden rounded-md bg-popover text-popover-foreground border border-border/30"
+            class="flex h-full w-full flex-col overflow-hidden rounded-md bg-popover text-popover-foreground theme-border"
             cmdk-root=""
             tabindex="-1"
           >
@@ -132,7 +132,7 @@ describe('IdentitySearchCombobox', () => {
                           class="flex gap-2 items-center"
                         >
                           <span
-                            class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded bg-background border border-border/30"
+                            class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded bg-background theme-border"
                           >
                             <span
                               class="flex h-full w-full items-center justify-center bg-inherit"
@@ -224,7 +224,7 @@ describe('IdentitySearchCombobox', () => {
                           class="flex gap-2 items-center"
                         >
                           <span
-                            class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded bg-background border border-border/30"
+                            class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded bg-background theme-border"
                           >
                             <span
                               class="flex h-full w-full items-center justify-center bg-inherit"
@@ -332,7 +332,7 @@ describe('IdentitySearchCombobox', () => {
           class="min-w-96"
         >
           <div
-            class="flex h-full w-full flex-col overflow-hidden rounded-md bg-popover text-popover-foreground border border-border/30"
+            class="flex h-full w-full flex-col overflow-hidden rounded-md bg-popover text-popover-foreground theme-border"
             cmdk-root=""
             tabindex="-1"
           >
@@ -407,7 +407,7 @@ describe('IdentitySearchCombobox', () => {
                           class="flex gap-2 items-center"
                         >
                           <span
-                            class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded bg-background border border-border/30"
+                            class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded bg-background theme-border"
                           >
                             <span
                               class="flex h-full w-full items-center justify-center bg-inherit"
@@ -499,7 +499,7 @@ describe('IdentitySearchCombobox', () => {
                           class="flex gap-2 items-center"
                         >
                           <span
-                            class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded bg-background border border-border/30"
+                            class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded bg-background theme-border"
                           >
                             <span
                               class="flex h-full w-full items-center justify-center bg-inherit"

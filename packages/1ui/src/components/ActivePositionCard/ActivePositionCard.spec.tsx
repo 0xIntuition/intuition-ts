@@ -10,7 +10,7 @@ describe('ActivePositionCard', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="flex justify-between items-center border border-border/10 rounded-lg bg-primary/5 py-3 px-5 w-full gap-8"
+          class="flex justify-between items-center theme-border rounded-lg bg-primary/5 py-3 px-5 w-full gap-8"
         >
           <p
             class="text-base font-normal text-foreground/50"
@@ -37,7 +37,7 @@ describe('ActivePositionCard', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="flex justify-between items-center border border-border/10 rounded-lg bg-primary/5 py-3 px-5 w-full gap-8"
+          class="flex justify-between items-center theme-border rounded-lg bg-primary/5 py-3 px-5 w-full gap-8"
         >
           <p
             class="text-base font-normal text-foreground/50"
@@ -69,7 +69,7 @@ describe('ActivePositionCard', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="flex justify-between items-center border border-border/10 rounded-lg bg-primary/5 py-3 px-5 w-full gap-8"
+          class="flex justify-between items-center theme-border rounded-lg bg-primary/5 py-3 px-5 w-full gap-8"
         >
           <p
             class="text-base font-normal text-foreground/50"

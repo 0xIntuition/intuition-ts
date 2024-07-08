@@ -13,7 +13,7 @@ const RadioGroup = React.forwardRef<
   return (
     <RadioGroupPrimitive.Root
       className={cn(
-        'grid bg-primary/5 border border-border/10 rounded-lg w-full',
+        'grid bg-primary/5 theme-border rounded-lg w-full',
         className,
       )}
       {...props}

@@ -1,0 +1,80 @@
+import { Canvas, Controls, Meta, Source, Title } from '@storybook/blocks'
+
+import * as Stories from './TagsListInput.stories'
+
+<Meta of={Stories} />
+
+<Title />
+
+#### Displays list of Tags or Trust circles with the ability to add more
+
+<Canvas of={Stories.TrustCirclesVariant} sourceState="none" />
+
+### Empty State Variant
+
+<Canvas of={Stories.EmptyStateVariant} />
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { TagsListInput } from '@0xintuition/1ui'
+
+<TagsListInput
+  variant="trustCircle"
+  tags={[]}
+  maxTags={5}
+  onAddTag={() => console.log('Add Tag')}
+  onRemoveTag={(id: string) => console.log('Remove Tag', id)}
+/>
+`} />
+
+### Trust Circles Variant
+
+<Canvas of={Stories.TrustCirclesVariant} />
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { TagsListInput } from '@0xintuition/1ui'
+
+const trustCirclesTags = [
+{ name: 'Tag Name 1', id: '1' },
+{ name: 'Tag Name 2', id: '2' },
+{ name: 'Tag Name 3', id: '3' },
+];
+
+<TagsListInput
+  variant="trustCircle"
+  tags={trustCirclesTags}
+  maxTags={5}
+  onAddTag={() => console.log('Add Tag')}
+  onRemoveTag={(id: string) => console.log('Remove Tag', id)}
+/>
+`} />
+
+### Tags Variant
+
+<Canvas of={Stories.TagsVariant} />
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { TagsListInput } from '@0xintuition/1ui'
+
+const tags = [
+{ name: 'Tag Name 1', id: '1' },
+{ name: 'Tag Name 2', id: '2' },
+{ name: 'Tag Name 3', id: '3' },
+];
+
+<TagsListInput
+  variant="tag"
+  tags={tags}
+  maxTags={5}
+  onAddTag={() => console.log('Add Tag')}
+  onRemoveTag={(id: string) => console.log('Remove Tag', id)}
+/>
+`} />

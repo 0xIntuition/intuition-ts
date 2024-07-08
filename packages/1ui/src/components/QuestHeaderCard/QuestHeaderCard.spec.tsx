@@ -18,7 +18,7 @@ describe('QuestHeaderCard', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="flex flex-col gap-6 p-6 rounded-xl border border-border/30 bg-gradient-to-r from-against/30"
+          class="flex flex-col gap-6 p-6 rounded-xl theme-border bg-gradient-to-r from-against/30"
         >
           <div
             class="flex justify-between items-start"

@@ -133,7 +133,7 @@ describe('ProfileCard', () => {
             class="flex items-center space-x-4"
           >
             <span
-              class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded bg-background border border-border/30"
+              class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded bg-background theme-border"
             >
               <span
                 class="flex h-full w-full items-center justify-center bg-inherit"

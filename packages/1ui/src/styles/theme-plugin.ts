@@ -111,7 +111,7 @@ export const themePlugin = plugin(
     })
 
     addUtilities({
-      // Gradient utility classes
+      // Gradients
       '.primary-gradient-subtle': {
         background: `linear-gradient(${colorMix('primary', 0.1)}, ${colorMix('primary', 0.05)})`,
       },
@@ -120,6 +120,10 @@ export const themePlugin = plugin(
       },
       '.primary-gradient-strong': {
         background: `linear-gradient(${colorMix('primary', 0.8)}, ${colorMix('primary', 0.5)})`,
+      },
+      // Borders
+      '.theme-border': {
+        border: `0.5px solid ${colorMix('border', 0.1)}`,
       },
     })
   },
@@ -137,6 +141,10 @@ export const themePlugin = plugin(
       extend: {
         fontFamily: {
           sans: ['Geist', ...defaultTheme.fontFamily.sans],
+        },
+        borderWidth: {
+          DEFAULT: '0.5px',
+          px: '1px',
         },
         fontSize: {
           xs: ['0.625rem', '1rem'], // small
@@ -215,11 +223,6 @@ export const themePlugin = plugin(
             DEFAULT: colorMix('social'),
             foreground: colorMix('social-foreground'),
           },
-        },
-        borderRadius: {
-          lg: 'var(--radius)',
-          md: 'calc(var(--radius) - 2px)',
-          sm: 'calc(var(--radius) - 4px)',
         },
         keyframes: {
           'accordion-down': {

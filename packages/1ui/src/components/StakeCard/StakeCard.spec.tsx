@@ -17,7 +17,7 @@ describe('StakeCard', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="flex flex-col gap-2 w-full border border-border/30 px-6 py-4 rounded-lg"
+          class="flex flex-col gap-2 w-full theme-border px-6 py-4 rounded-lg"
         >
           <p
             class="text-primary text-lg font-normal"
