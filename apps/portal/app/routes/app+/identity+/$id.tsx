@@ -15,6 +15,8 @@ import {
 import { ApiError, IdentitiesService, OpenAPI } from '@0xintuition/api'
 
 import { NestedLayout } from '@components/nested-layout'
+import StakeModal from '@components/stake/stake-modal'
+import { stakeModalAtom } from '@lib/state/store'
 import { identityRouteOptions } from '@lib/utils/constants'
 import logger from '@lib/utils/logger'
 import {
@@ -28,7 +30,9 @@ import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { Outlet, useLoaderData } from '@remix-run/react'
 import { getVaultDetails } from '@server/multivault'
 import { getPrivyAccessToken } from '@server/privy'
+import { useAtom } from 'jotai'
 import { ExtendedIdentityPresenter } from 'types/identity'
+import { SessionUser } from 'types/user'
 import { VaultDetailsType } from 'types/vault'
 
 export async function loader({ context, request, params }: LoaderFunctionArgs) {
@@ -82,16 +86,19 @@ export async function loader({ context, request, params }: LoaderFunctionArgs) {
   return json({
     identity: identity,
     vaultDetails,
+    user,
   })
 }
 
 export default function IdentityDetails() {
-  const { identity, vaultDetails } = useLoaderData<{
+  const { identity, vaultDetails, user } = useLoaderData<{
     identity: ExtendedIdentityPresenter
     vaultDetails: VaultDetailsType
+    user: SessionUser
   }>()
 
   const user_assets = vaultDetails ? vaultDetails.user_conviction_value : '0'
+  const [stakeModalActive, setStakeModalActive] = useAtom(stakeModalAtom)
 
   return (
     <NestedLayout outlet={Outlet} options={identityRouteOptions}>
@@ -156,12 +163,34 @@ export default function IdentityDetails() {
             </PositionCard>
           ) : null}
           <StakeCard
-            tvl={formatBalance(identity?.assets_sum)}
+            tvl={+formatBalance(identity?.assets_sum)}
             holders={identity?.num_positions}
-            onBuyClick={() => logger('click buy')} // this will open the stake modal
+            onBuyClick={() =>
+              setStakeModalActive((prevState) => ({
+                ...prevState,
+                mode: 'deposit',
+                modalType: 'identity',
+                isOpen: true,
+              }))
+            }
             onViewAllClick={() => logger('click view all')} // this will navigate to the data-about positions
           />
         </div>
+        <StakeModal
+          user={user}
+          contract={identity.contract}
+          open={stakeModalActive.isOpen}
+          identity={identity}
+          min_deposit={vaultDetails.min_deposit}
+          modalType="identity"
+          onClose={() => {
+            setStakeModalActive((prevState) => ({
+              ...prevState,
+              isOpen: false,
+              mode: undefined,
+            }))
+          }}
+        />
       </div>
     </NestedLayout>
   )
