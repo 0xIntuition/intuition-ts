@@ -23,17 +23,16 @@ import {
   ApiError,
   ClaimSortColumn,
   ClaimsService,
-  IdentitiesService,
   OpenAPI,
   PositionPresenter,
   PositionSortColumn,
   PositionsService,
   SortDirection,
-  UsersService,
 } from '@0xintuition/api'
 
 import { DataCreatedHeader } from '@components/profile/data-created-header'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
+import { fetchUserIdentity, fetchUserTotals } from '@lib/utils/fetches'
 import logger from '@lib/utils/logger'
 import {
   calculateTotalPages,
@@ -57,45 +56,22 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
     throw new Error('Wallet is undefined.')
   }
 
-  let userIdentity
-  try {
-    userIdentity = await IdentitiesService.getIdentityById({
-      id: wallet,
-    })
-  } catch (error: unknown) {
-    if (error instanceof ApiError) {
-      userIdentity = undefined
-      logger(`${error.name} - ${error.status}: ${error.message} ${error.url}`)
-    } else {
-      throw error
-    }
+  if (!wallet) {
+    throw new Error('Wallet is undefined.')
   }
+
+  const userIdentity = await fetchUserIdentity(wallet)
 
   if (!userIdentity) {
     return redirect('/create')
   }
 
-  let userTotals
-  try {
-    if (
-      !userIdentity ||
-      !userIdentity.creator ||
-      typeof userIdentity.creator.id !== 'string'
-    ) {
-      logger('Invalid or missing creator ID')
-      return
-    }
-    userTotals = await UsersService.getUserTotals({
-      id: userIdentity.creator.id,
-    })
-  } catch (error: unknown) {
-    if (error instanceof ApiError) {
-      userTotals = undefined
-      logger(`${error.name} - ${error.status}: ${error.message} ${error.url}`)
-    } else {
-      throw error
-    }
+  if (!userIdentity.creator || typeof userIdentity.creator.id !== 'string') {
+    logger('Invalid or missing creator ID')
+    return
   }
+
+  const userTotals = await fetchUserTotals(userIdentity.creator.id)
 
   const url = new URL(request.url)
   const searchParams = new URLSearchParams(url.search)

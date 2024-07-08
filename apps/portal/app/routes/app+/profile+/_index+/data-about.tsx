@@ -27,7 +27,6 @@ import {
   ClaimPresenter,
   ClaimSortColumn,
   ClaimsService,
-  IdentitiesService,
   OpenAPI,
   PositionPresenter,
   PositionSortColumn,
@@ -36,7 +35,7 @@ import {
 } from '@0xintuition/api'
 
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
-import logger from '@lib/utils/logger'
+import { fetchUserIdentity } from '@lib/utils/fetches'
 import {
   calculateTotalPages,
   formatBalance,
@@ -62,19 +61,7 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
     return console.log('No user found in session')
   }
 
-  let userIdentity
-  try {
-    userIdentity = await IdentitiesService.getIdentityById({
-      id: user.details.wallet.address,
-    })
-  } catch (error: unknown) {
-    if (error instanceof ApiError) {
-      userIdentity = undefined
-      logger(`${error.name} - ${error.status}: ${error.message} ${error.url}`)
-    } else {
-      throw error
-    }
-  }
+  const userIdentity = await fetchUserIdentity(user.details.wallet.address)
 
   const url = new URL(request.url)
   const searchParams = new URLSearchParams(url.search)

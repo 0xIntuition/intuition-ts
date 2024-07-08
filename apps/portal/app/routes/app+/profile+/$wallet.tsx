@@ -12,11 +12,8 @@ import {
   ApiError,
   ClaimPresenter,
   ClaimsService,
-  IdentitiesService,
   IdentityPresenter,
   OpenAPI,
-  UserPresenter,
-  UsersService,
   UserTotalsPresenter,
 } from '@0xintuition/api'
 
@@ -25,6 +22,7 @@ import { NestedLayout } from '@components/nested-layout'
 import StakeModal from '@components/stake/stake-modal'
 import { followModalAtom, stakeModalAtom } from '@lib/state/store'
 import { userIdentityRouteOptions } from '@lib/utils/constants'
+import { fetchUserIdentity, fetchUserTotals } from '@lib/utils/fetches'
 import logger from '@lib/utils/logger'
 import {
   calculatePercentageOfTvl,
@@ -61,47 +59,22 @@ export async function loader({ context, request, params }: LoaderFunctionArgs) {
     throw redirect('/app/profile')
   }
 
-  let userIdentity
-  try {
-    userIdentity = await IdentitiesService.getIdentityById({
-      id: wallet,
-    })
-  } catch (error: unknown) {
-    if (error instanceof ApiError) {
-      userIdentity = undefined
-      logger(`${error.name} - ${error.status}: ${error.message} ${error.url}`)
-    } else {
-      throw error
-    }
+  if (!wallet) {
+    throw new Error('Wallet is undefined.')
   }
+
+  const userIdentity = await fetchUserIdentity(wallet)
 
   if (!userIdentity) {
     return redirect('/create')
   }
 
-  logger('userIdentity', userIdentity)
-
-  let userTotals
-  try {
-    if (
-      !userIdentity ||
-      !userIdentity.creator ||
-      typeof userIdentity.creator.id !== 'string'
-    ) {
-      logger('Invalid or missing creator ID')
-      return
-    }
-    userTotals = await UsersService.getUserTotals({
-      id: userIdentity.creator.id,
-    })
-  } catch (error: unknown) {
-    if (error instanceof ApiError) {
-      userTotals = undefined
-      logger(`${error.name} - ${error.status}: ${error.message} ${error.url}`)
-    } else {
-      throw error
-    }
+  if (!userIdentity.creator || typeof userIdentity.creator.id !== 'string') {
+    logger('Invalid or missing creator ID')
+    return
   }
+
+  const userTotals = await fetchUserTotals(userIdentity.creator.id)
 
   let followClaim
   try {
@@ -149,7 +122,7 @@ export async function loader({ context, request, params }: LoaderFunctionArgs) {
     }
   }
 
-  console.log('followVaultDetails', followVaultDetails)
+  logger('followVaultDetails', followVaultDetails)
 
   return json({
     wallet,
@@ -175,7 +148,7 @@ export default function Profile() {
     wallet: string
     user: SessionUser
     userIdentity: IdentityPresenter
-    userObject: UserPresenter
+    // userObject: UserPresenter
     userTotals: UserTotalsPresenter
     followClaim: ClaimPresenter
     followVaultDetails: VaultDetailsType
