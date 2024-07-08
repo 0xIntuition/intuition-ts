@@ -24,7 +24,7 @@ export const EmptyStateVariant: Story = {
   render: () => (
     <div className="w-[400px]">
       <TagsListInput
-        variant="tags"
+        variant="tag"
         tags={[]}
         maxTags={5}
         onAddTag={() => console.log('Add Tag')}
@@ -38,7 +38,7 @@ export const TrustCirclesVariant: Story = {
   render: () => (
     <div className="w-[400px]">
       <TagsListInput
-        variant="trustCircles"
+        variant="trustCircle"
         tags={tags}
         maxTags={5}
         onAddTag={() => console.log('Add Tag')}
@@ -52,7 +52,7 @@ export const TagsVariant: Story = {
   render: () => (
     <div className="w-[400px]">
       <TagsListInput
-        variant="tags"
+        variant="tag"
         tags={tags}
         maxTags={5}
         onAddTag={() => console.log('Add Tag')}

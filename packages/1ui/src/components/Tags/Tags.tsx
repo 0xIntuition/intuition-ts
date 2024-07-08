@@ -51,7 +51,7 @@ const TagWithValue = ({
   ...props
 }: TagWithValueProps) => {
   return (
-    <Tag {...props} className="flex items-center cursor-default">
+    <Tag {...props} className="flex items-center cursor-default pl-2">
       {label}
       {value && (
         <>

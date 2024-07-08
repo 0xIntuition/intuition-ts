@@ -12,7 +12,7 @@ describe('TagsListInput', () => {
   it('should render appropriate element for tags variant', () => {
     const { asFragment } = render(
       <TagsListInput
-        variant="tags"
+        variant="tag"
         tags={tags}
         maxTags={5}
         onAddTag={() => {}}
@@ -28,7 +28,7 @@ describe('TagsListInput', () => {
             class="flex flex-wrap gap-2.5 items-center"
           >
             <button
-              class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 text-base font-normal flex items-center cursor-default"
+              class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 text-base font-normal flex items-center cursor-default pl-2"
             >
               Tag Name 1
             </button>
@@ -45,7 +45,7 @@ describe('TagsListInput', () => {
               </svg>
             </button>
             <button
-              class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 text-base font-normal flex items-center cursor-default"
+              class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 text-base font-normal flex items-center cursor-default pl-2"
             >
               Tag Name 2
             </button>
@@ -62,7 +62,7 @@ describe('TagsListInput', () => {
               </svg>
             </button>
             <button
-              class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 text-base font-normal flex items-center cursor-default"
+              class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 text-base font-normal flex items-center cursor-default pl-2"
             >
               Tag Name 3
             </button>
@@ -92,7 +92,7 @@ describe('TagsListInput', () => {
   it('should render appropriate element for empty state', () => {
     const { asFragment } = render(
       <TagsListInput
-        variant="tags"
+        variant="tag"
         tags={[]}
         maxTags={5}
         onAddTag={() => {}}
@@ -136,7 +136,7 @@ describe('TagsListInput', () => {
   it('should render appropriate element for trustCircles variant', () => {
     const { asFragment } = render(
       <TagsListInput
-        variant="trustCircles"
+        variant="trustCircle"
         tags={tags}
         maxTags={3}
         onAddTag={() => {}}
@@ -152,7 +152,7 @@ describe('TagsListInput', () => {
             class="flex flex-wrap gap-2.5 items-center"
           >
             <button
-              class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-social/10 text-social/90 border-social/40 hover:bg-social/30 hover:text-social hover:border-social/60 text-base font-normal flex items-center cursor-default"
+              class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-social/10 text-social/90 border-social/40 hover:bg-social/30 hover:text-social hover:border-social/60 text-base font-normal flex items-center cursor-default pl-2"
             >
               Tag Name 1
             </button>
@@ -169,7 +169,7 @@ describe('TagsListInput', () => {
               </svg>
             </button>
             <button
-              class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-social/10 text-social/90 border-social/40 hover:bg-social/30 hover:text-social hover:border-social/60 text-base font-normal flex items-center cursor-default"
+              class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-social/10 text-social/90 border-social/40 hover:bg-social/30 hover:text-social hover:border-social/60 text-base font-normal flex items-center cursor-default pl-2"
             >
               Tag Name 2
             </button>
@@ -186,7 +186,7 @@ describe('TagsListInput', () => {
               </svg>
             </button>
             <button
-              class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-social/10 text-social/90 border-social/40 hover:bg-social/30 hover:text-social hover:border-social/60 text-base font-normal flex items-center cursor-default"
+              class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-social/10 text-social/90 border-social/40 hover:bg-social/30 hover:text-social hover:border-social/60 text-base font-normal flex items-center cursor-default pl-2"
             >
               Tag Name 3
             </button>
@@ -216,7 +216,7 @@ describe('TagsListInput', () => {
   it('should render appropriate element for empty state in trustCircles variant', () => {
     const { asFragment } = render(
       <TagsListInput
-        variant="trustCircles"
+        variant="trustCircle"
         tags={[]}
         maxTags={3}
         onAddTag={() => {}}
