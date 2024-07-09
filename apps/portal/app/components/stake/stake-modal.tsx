@@ -12,7 +12,6 @@ import { stakeModalAtom } from '@lib/state/store'
 import logger from '@lib/utils/logger'
 import { formatBalance } from '@lib/utils/misc'
 import { useGenericTxState } from '@lib/utils/use-tx-reducer'
-import { Cookie } from '@remix-run/node'
 import { useFetcher, useLocation } from '@remix-run/react'
 import { useQueryClient } from '@tanstack/react-query'
 import { useAtom } from 'jotai'
@@ -36,26 +35,24 @@ const initialTxState: TransactionStateType = {
 
 interface StakeModalProps {
   user: SessionUser
-  tosCookie: Cookie
   contract: string
   open: boolean
   identity?: IdentityPresenter
   claim?: ClaimPresenter
+  vaultDetails: VaultDetailsType
   onClose?: () => void
   direction?: 'for' | 'against'
-  min_deposit: string
 }
 
 export default function StakeModal({
   user,
-  tosCookie,
   contract,
   open = false,
   onClose = () => {},
   identity,
   claim,
+  vaultDetails,
   direction,
-  min_deposit,
 }: StakeModalProps) {
   const fetchReval = useFetcher()
   const [stakeModalState] = useAtom(stakeModalAtom)
@@ -72,40 +69,21 @@ export default function StakeModal({
 
   const identityShouldOverride = identity && identity.vault_id !== '0'
 
-  let vault_id: string = '0'
+  let vaultId: string
   if (identityShouldOverride) {
-    vault_id = identity.vault_id
+    vaultId = identity.vault_id
   } else if (claim) {
-    vault_id = direction === 'for' ? claim.vault_id : claim.counter_vault_id
+    vaultId = direction === 'for' ? claim.vault_id : claim.counter_vault_id
   }
 
-  let user_conviction: string = '0'
-  if (identityShouldOverride) {
-    user_conviction = identity.user_conviction
-  } else if (claim) {
-    user_conviction =
-      direction === 'for'
-        ? claim.user_conviction_for
-        : claim.user_conviction_against
-  }
-
-  let conviction_price: string = '0'
-  if (identityShouldOverride) {
-    conviction_price = identity.conviction_price
-  } else if (claim) {
-    conviction_price =
-      direction === 'for'
-        ? claim.for_conviction_price
-        : claim.against_conviction_price
-  }
-
-  let user_assets: string = '0'
-  if (identityShouldOverride) {
-    user_assets = identity.user_assets
-  } else if (claim) {
-    user_assets =
-      direction === 'for' ? claim.user_assets_for : claim.user_assets_against
-  }
+  const {
+    conviction_price,
+    user_conviction,
+    user_conviction_value: user_assets,
+    min_deposit,
+    formatted_entry_fee,
+    formatted_exit_fee,
+  } = vaultDetails
 
   const depositHook = useDepositAtom(contract)
 
@@ -129,7 +107,7 @@ export default function StakeModal({
           functionName: actionType === 'buy' ? 'depositAtom' : 'redeemAtom',
           args:
             actionType === 'buy'
-              ? [user.details?.wallet?.address as `0x${string}`, vault_id]
+              ? [user.details?.wallet?.address as `0x${string}`, vaultId]
               : [
                   parseUnits(
                     val === ''
@@ -141,7 +119,7 @@ export default function StakeModal({
                     18,
                   ),
                   user.details?.wallet?.address as `0x${string}`,
-                  vault_id,
+                  vaultId,
                 ],
           value:
             actionType === 'buy'
@@ -160,6 +138,9 @@ export default function StakeModal({
             type: 'TRANSACTION_COMPLETE',
             txHash: txHash,
             txReceipt: receipt,
+          })
+          fetchReval.submit(formRef.current, {
+            method: 'POST',
           })
         }
       } catch (error) {
@@ -311,33 +292,6 @@ export default function StakeModal({
 
   const walletBalance = formatUnits(balance?.value ?? 0n, 18)
 
-  const [latestVaultDetails, setLatestVaultDetails] =
-    useState<VaultDetailsType>()
-
-  const {
-    conviction_price: latest_conviction_price,
-    user_conviction: latest_user_conviction,
-    formatted_entry_fee,
-    formatted_exit_fee,
-  } = latestVaultDetails ?? {}
-
-  const vaultContractDataFetcher = useFetcher<VaultDetailsType>()
-  const vaultContractDataResourceUrl = `/resources/stake?contract=${contract}&vid=${vault_id}&wallet=${user.details?.wallet?.address}`
-  const vaultContractDataLoadRef = useRef(vaultContractDataFetcher.load)
-
-  useEffect(() => {
-    vaultContractDataLoadRef.current = vaultContractDataFetcher.load
-  })
-  useEffect(() => {
-    vaultContractDataLoadRef.current(vaultContractDataResourceUrl)
-  }, [])
-
-  useEffect(() => {
-    if (vaultContractDataFetcher.data) {
-      setLatestVaultDetails(vaultContractDataFetcher.data)
-    }
-  }, [vaultContractDataFetcher.data])
-
   const [showErrors, setShowErrors] = useState(false)
   const [validationErrors, setValidationErrors] = useState<string[]>([])
 
@@ -389,8 +343,8 @@ export default function StakeModal({
           walletBalance={walletBalance}
           identity={identity}
           claim={claim}
-          conviction_price={latest_conviction_price ?? conviction_price ?? '0'}
-          user_conviction={latest_user_conviction ?? user_conviction ?? '0'}
+          conviction_price={conviction_price ?? '0'}
+          user_conviction={user_conviction ?? '0'}
           user_assets={user_assets ?? '0'}
           entry_fee={formatted_entry_fee ?? '0'}
           exit_fee={formatted_exit_fee ?? '0'}
@@ -412,9 +366,7 @@ export default function StakeModal({
         {!isTransactionStarted && (
           <StakeButton
             user={user}
-            tosCookie={tosCookie}
             val={val}
-            setVal={setVal}
             mode={mode}
             handleAction={handleStakeButtonClick}
             handleClose={handleClose}
@@ -422,12 +374,10 @@ export default function StakeModal({
             state={state}
             min_deposit={min_deposit}
             walletBalance={walletBalance}
-            user_conviction={latest_user_conviction ?? user_conviction ?? '0'}
+            user_conviction={user_conviction ?? '0'}
             setValidationErrors={setValidationErrors}
             setShowErrors={setShowErrors}
-            conviction_price={
-              latest_conviction_price ?? conviction_price ?? '0'
-            }
+            conviction_price={conviction_price ?? '0'}
           />
         )}
       </DialogContent>

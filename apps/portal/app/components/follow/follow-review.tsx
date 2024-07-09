@@ -1,10 +1,15 @@
 import { useEffect, useState } from 'react'
 
-import { Button, Claim, DialogHeader, DialogTitle } from '@0xintuition/1ui'
+import {
+  Button,
+  Claim,
+  DialogHeader,
+  DialogTitle,
+  Icon,
+} from '@0xintuition/1ui'
 import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
 
 import { formatBalance, formatDisplayBalance } from '@lib/utils/misc'
-import { ArrowLeft } from 'lucide-react'
 import { TransactionActionType, TransactionStateType } from 'types/transaction'
 
 interface FollowReviewProps {
@@ -13,8 +18,8 @@ interface FollowReviewProps {
   dispatch: (action: TransactionActionType) => void
   state: TransactionStateType
   isError?: boolean
-  identity?: IdentityPresenter
-  claim?: ClaimPresenter
+  identity: IdentityPresenter
+  claim: ClaimPresenter
   user_assets: string
   entry_fee: string
   exit_fee: string
@@ -26,13 +31,13 @@ export default function FollowReview({
   dispatch,
   state,
   isError,
+  identity,
   claim,
   user_assets,
   entry_fee,
   exit_fee,
 }: FollowReviewProps) {
   const [statusText, setStatusText] = useState<string>('')
-  console.log('mode', mode)
   useEffect(() => {
     const newText = isError
       ? 'Transaction failed'
@@ -65,7 +70,7 @@ export default function FollowReview({
             variant="ghost"
             size="icon"
           >
-            <ArrowLeft className="h-4 w-4" />
+            <Icon name="arrow-left" className="h-4 w-4" />
           </Button>
         </DialogTitle>
       </DialogHeader>
@@ -73,6 +78,7 @@ export default function FollowReview({
         <div
           className={`flex h-full w-full flex-col items-center justify-center gap-2 px-2 pt-5`}
         >
+          <Icon name="await-action" className="h-10 w-10 text-neutral-50/30" />
           <div className="gap-5 flex flex-col items-center">
             <span className="text-xl font-medium text-white/70 leading-[30px]">
               {mode === 'follow' ? 'Deposit' : 'Redeem'}{' '}
@@ -87,20 +93,22 @@ export default function FollowReview({
             <Claim
               subject={{
                 imgSrc: claim?.subject?.user?.image ?? claim?.subject?.image,
-                label:
-                  claim?.subject?.user?.display_name ??
-                  claim?.subject?.display_name,
+                label: !claim
+                  ? 'I'
+                  : claim?.subject?.user?.display_name ??
+                    claim?.subject?.display_name,
                 variant: claim?.subject?.user ? 'user' : 'default',
               }}
               predicate={{
                 imgSrc: claim?.predicate?.image,
-                label: claim?.predicate?.display_name,
+                label: !claim ? 'am following' : claim?.predicate?.display_name,
               }}
               object={{
                 imgSrc: claim?.object?.user?.image ?? claim?.object?.image,
-                label:
-                  claim?.object?.user?.display_name ??
-                  claim?.object?.display_name,
+                label: !claim
+                  ? identity?.user?.display_name
+                  : claim?.object?.user?.display_name ??
+                    claim?.object?.display_name,
                 variant: claim?.object?.user ? 'user' : 'default',
               }}
             />

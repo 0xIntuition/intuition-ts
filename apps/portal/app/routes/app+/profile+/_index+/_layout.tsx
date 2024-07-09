@@ -25,6 +25,7 @@ import EditSocialLinksModal from '@components/edit-social-links-modal'
 import { NestedLayout } from '@components/nested-layout'
 import { ProfileSocialAccounts } from '@components/profile-social-accounts'
 import StakeModal from '@components/stake/stake-modal'
+import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import {
   editProfileModalAtom,
   editSocialLinksModalAtom,
@@ -40,12 +41,7 @@ import {
 } from '@lib/utils/misc'
 import { SessionContext } from '@middleware/session'
 import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
-import {
-  Outlet,
-  useLoaderData,
-  useMatches,
-  useRevalidator,
-} from '@remix-run/react'
+import { Outlet, useMatches, useRevalidator } from '@remix-run/react'
 import { getVaultDetails } from '@server/multivault'
 import { getPrivyAccessToken } from '@server/privy'
 import * as blockies from 'blockies-ts'
@@ -131,18 +127,20 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
     }
   }
 
+  console.log('vaultDetails', vaultDetails)
+
   return json({ user, userIdentity, userObject, userTotals, vaultDetails })
 }
 
 export default function Profile() {
   const { user, userObject, userIdentity, userTotals, vaultDetails } =
-    useLoaderData<{
+    useLiveLoader<{
       user: SessionUser
       userIdentity: IdentityPresenter
       userObject: UserPresenter
       userTotals: UserTotalsPresenter
       vaultDetails: VaultDetailsType
-    }>()
+    }>(['attest', 'create'])
 
   const { user_conviction_value: user_assets } = vaultDetails
 
@@ -280,12 +278,11 @@ export default function Profile() {
             onClose={() => setEditSocialLinksModalActive(false)}
           />
           <StakeModal
-            user={user}
+            user={user as SessionUser}
             contract={userIdentity.contract}
             open={stakeModalActive.isOpen}
             identity={userIdentity}
-            min_deposit={vaultDetails.min_deposit}
-            modalType={'identity'}
+            vaultDetails={vaultDetails}
             onClose={() => {
               setStakeModalActive((prevState) => ({
                 ...prevState,
