@@ -24,3 +24,65 @@ import { Input } from '@0xintuition/1ui'
 ## Properties
 
 <Controls />
+
+## Variants
+
+### Start Adornment (Icon)
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { Input } from '@0xintuition/1ui'
+
+<Input
+  type="text"
+  placeholder="Search"
+  startAdornment={IconName.magnifyingGlass}
+/>
+`} />
+
+<Canvas of={Stories.StartAdornmentIcon} sourceState="none" />
+
+### Start Adornment (Text)
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { Input } from '@0xintuition/1ui'
+
+<Input type="text" placeholder="Search" startAdornment="http://" />
+`} />
+
+<Canvas of={Stories.StartAdornmentLabel} sourceState="none" />
+
+### End Adornment (Icon)
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { Input } from '@0xintuition/1ui'
+
+<Input
+  type="number"
+  placeholder="Enter amount..."
+  endAdornment={IconName.ethereum}
+/>
+`} />
+
+<Canvas of={Stories.EndAdornmentIcon} sourceState="none" />
+
+### Start Adornment (Text)
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { Input } from '@0xintuition/1ui'
+
+<Input type="text" placeholder="Search" endAdornment=".com" />
+`} />
+
+<Canvas of={Stories.EndAdornmentLabel} sourceState="none" />
