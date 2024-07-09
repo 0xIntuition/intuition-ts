@@ -23,7 +23,6 @@ import {
   ApiError,
   ClaimSortColumn,
   ClaimsService,
-  IdentitiesService,
   OpenAPI,
   PositionPresenter,
   PositionSortColumn,
@@ -34,6 +33,7 @@ import {
 
 import { DataCreatedHeader } from '@components/profile/data-created-header'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
+import { fetchUserIdentity, fetchUserTotals } from '@lib/utils/fetches'
 import logger from '@lib/utils/logger'
 import {
   calculateTotalPages,
@@ -41,7 +41,7 @@ import {
   getAuthHeaders,
 } from '@lib/utils/misc'
 import { SessionContext } from '@middleware/session'
-import { json, LoaderFunctionArgs } from '@remix-run/node'
+import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
 import { useFetcher, useSearchParams } from '@remix-run/react'
 import { getPrivyAccessToken } from '@server/privy'
 import { formatUnits } from 'viem'
@@ -54,25 +54,12 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
 
   const session = context.get(SessionContext)
   const user = session.get('user')
-  console.log('accessToken', accessToken)
 
   if (!user?.details?.wallet?.address) {
-    return console.log('No user found in session')
+    return logger('No user found in session')
   }
 
-  let userIdentity
-  try {
-    userIdentity = await IdentitiesService.getIdentityById({
-      id: user.details.wallet.address,
-    })
-  } catch (error: unknown) {
-    if (error instanceof ApiError) {
-      userIdentity = undefined
-      logger(`${error.name} - ${error.status}: ${error.message} ${error.url}`)
-    } else {
-      throw error
-    }
-  }
+  const userIdentity = await fetchUserIdentity(user.details.wallet.address)
 
   let userObject
   try {
@@ -92,19 +79,16 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
     return logger('No user found in DB')
   }
 
-  let userTotals
-  try {
-    userTotals = await UsersService.getUserTotals({
-      id: userObject.id,
-    })
-  } catch (error: unknown) {
-    if (error instanceof ApiError) {
-      userTotals = undefined
-      logger(`${error.name} - ${error.status}: ${error.message} ${error.url}`)
-    } else {
-      throw error
-    }
+  if (!userIdentity) {
+    return redirect('/create')
   }
+
+  if (!userIdentity.creator || typeof userIdentity.creator.id !== 'string') {
+    logger('Invalid or missing creator ID')
+    return
+  }
+
+  const userTotals = await fetchUserTotals(userIdentity.creator.id)
 
   const url = new URL(request.url)
   const searchParams = new URLSearchParams(url.search)
@@ -133,7 +117,7 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
   } catch (error: unknown) {
     if (error instanceof ApiError) {
       positions = undefined
-      console.log(`${error.name} - ${error.status}: ${error.message}`)
+      logger(`${error.name} - ${error.status}: ${error.message}`)
     } else {
       throw error
     }

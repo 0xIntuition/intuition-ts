@@ -1,0 +1,119 @@
+import { ColorItem, ColorPalette, Meta } from '@storybook/blocks'
+
+import { themes } from 'styles/themes.ts'
+
+<Meta title="Styles/Themes/Dark" />
+
+# Dark Theme
+
+<ColorPalette>
+  <ColorItem
+    title="Base"
+    colors={{
+      background: themes.dark.background,
+      foreground: themes.dark.foreground,
+    }}
+  />
+  <ColorItem
+    title="Card"
+    colors={{
+      card: themes.dark.card,
+      [`card-foreground`]: themes.dark.cardForeground,
+    }}
+  />
+  <ColorItem
+    title="Popover"
+    colors={{
+      popover: themes.dark.popover,
+      [`popover-foreground`]: themes.dark.popoverForeground,
+    }}
+  />
+  <ColorItem
+    title="Primary"
+    colors={{
+      primary: themes.dark.primary.DEFAULT,
+      [`primary-foreground`]: themes.dark.primaryForeground,
+    }}
+  />
+  <ColorItem
+    title="Secondary"
+    colors={{
+      secondary: themes.dark.secondary,
+      [`secondary-foreground`]: themes.dark.secondaryForeground,
+    }}
+  />
+  <ColorItem
+    title="Muted"
+    colors={{
+      muted: themes.dark.muted,
+      [`muted-foreground`]: themes.dark.mutedForeground,
+    }}
+  />
+  <ColorItem
+    title="Accent"
+    colors={{
+      accent: themes.dark.accent,
+      [`accent-foreground`]: themes.dark.accentForeground,
+    }}
+  />
+  <ColorItem
+    title="Destructive"
+    colors={{
+      destructive: themes.dark.destructive,
+      [`destructive-foreground`]: themes.dark.destructiveForeground,
+    }}
+  />
+  <ColorItem
+    title="Success"
+    colors={{
+      success: themes.dark.success,
+      [`success-foreground`]: themes.dark.successForeground,
+    }}
+  />
+  <ColorItem
+    title="Warning"
+    colors={{
+      warning: themes.dark.warning,
+      [`warning-foreground`]: themes.dark.warningForeground,
+    }}
+  />
+  <ColorItem
+    title="For"
+    colors={{
+      for: themes.dark.for,
+      [`for-foreground`]: themes.dark.forForeground,
+    }}
+  />
+  <ColorItem
+    title="Against"
+    colors={{
+      against: themes.dark.against,
+      [`against-foreground`]: themes.dark.againstForeground,
+    }}
+  />
+  <ColorItem
+    title="Social"
+    colors={{
+      social: themes.dark.social,
+      [`social-foreground`]: themes.dark.socialForeground,
+    }}
+  />
+  <ColorItem
+    title="Border"
+    colors={{
+      border: themes.dark.border,
+    }}
+  />
+  <ColorItem
+    title="Input"
+    colors={{
+      input: themes.dark.input,
+    }}
+  />
+  <ColorItem
+    title="Ring"
+    colors={{
+      ring: themes.dark.ring,
+    }}
+  />
+</ColorPalette>

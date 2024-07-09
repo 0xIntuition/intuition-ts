@@ -2,6 +2,7 @@ import { ApiError, UserPresenter, UsersService } from '@0xintuition/api'
 
 import SidebarNav from '@components/sidebar-nav'
 import { chainalysisOracleAbi } from '@lib/abis/chainalysisOracle'
+import logger from '@lib/utils/logger'
 import { requireAuth } from '@middleware/requireAuth'
 import { SessionContext } from '@middleware/session'
 import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
@@ -16,7 +17,7 @@ export async function loader({ context }: LoaderFunctionArgs) {
   const user = session.get('user')
 
   if (!user?.details?.wallet?.address) {
-    return console.log('No user found in session')
+    return logger('No user found in session')
   }
 
   const isSanctioned = user?.details?.wallet?.address

@@ -23,24 +23,23 @@ import {
   ApiError,
   ClaimSortColumn,
   ClaimsService,
-  IdentitiesService,
   OpenAPI,
   PositionPresenter,
   PositionSortColumn,
   PositionsService,
   SortDirection,
-  UsersService,
 } from '@0xintuition/api'
 
 import { DataCreatedHeader } from '@components/profile/data-created-header'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
+import { fetchUserIdentity, fetchUserTotals } from '@lib/utils/fetches'
 import logger from '@lib/utils/logger'
 import {
   calculateTotalPages,
   formatBalance,
   getAuthHeaders,
 } from '@lib/utils/misc'
-import { json, LoaderFunctionArgs } from '@remix-run/node'
+import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
 import { useFetcher, useSearchParams } from '@remix-run/react'
 import { getPrivyAccessToken } from '@server/privy'
 import { formatUnits } from 'viem'
@@ -57,51 +56,22 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
     throw new Error('Wallet is undefined.')
   }
 
-  let userIdentity
-  try {
-    userIdentity = await IdentitiesService.getIdentityById({
-      id: wallet,
-    })
-  } catch (error: unknown) {
-    if (error instanceof ApiError) {
-      userIdentity = undefined
-      logger(`${error.name} - ${error.status}: ${error.message} ${error.url}`)
-    } else {
-      throw error
-    }
+  if (!wallet) {
+    throw new Error('Wallet is undefined.')
   }
 
-  let userObject
-  try {
-    userObject = await UsersService.getUserByWallet({
-      wallet: wallet,
-    })
-  } catch (error: unknown) {
-    if (error instanceof ApiError) {
-      userObject = undefined
-      logger(`${error.name} - ${error.status}: ${error.message} ${error.url}`)
-    } else {
-      throw error
-    }
+  const userIdentity = await fetchUserIdentity(wallet)
+
+  if (!userIdentity) {
+    return redirect('/create')
   }
 
-  if (!userObject) {
-    return logger('No user found in DB')
+  if (!userIdentity.creator || typeof userIdentity.creator.id !== 'string') {
+    logger('Invalid or missing creator ID')
+    return
   }
 
-  let userTotals
-  try {
-    userTotals = await UsersService.getUserTotals({
-      id: userObject.id,
-    })
-  } catch (error: unknown) {
-    if (error instanceof ApiError) {
-      userTotals = undefined
-      logger(`${error.name} - ${error.status}: ${error.message} ${error.url}`)
-    } else {
-      throw error
-    }
-  }
+  const userTotals = await fetchUserTotals(userIdentity.creator.id)
 
   const url = new URL(request.url)
   const searchParams = new URLSearchParams(url.search)
@@ -157,17 +127,10 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
 
   const totalPages = calculateTotalPages(positions?.total ?? 0, Number(limit))
 
-  console.log('positions', positions)
-
-  // console.log('search', search)
-  // console.log('sortBy', sortBy)
-  // console.log('direction', direction)
-  // console.log('page', page)
-  // console.log('limit', limit)
+  logger('positions', positions)
 
   return json({
     userIdentity,
-    userObject,
     userTotals,
     positions,
     claims,

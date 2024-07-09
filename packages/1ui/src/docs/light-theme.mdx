@@ -1,0 +1,119 @@
+import { ColorItem, ColorPalette, Meta } from '@storybook/blocks'
+
+import { themes } from 'styles/themes.ts'
+
+<Meta title="Styles/Themes/Light" />
+
+# Light Theme
+
+<ColorPalette>
+  <ColorItem
+    title="Base"
+    colors={{
+      background: themes.light.background,
+      foreground: themes.light.foreground,
+    }}
+  />
+  <ColorItem
+    title="Card"
+    colors={{
+      card: themes.light.card,
+      [`card-foreground`]: themes.light.cardForeground,
+    }}
+  />
+  <ColorItem
+    title="Popover"
+    colors={{
+      popover: themes.light.popover,
+      [`popover-foreground`]: themes.light.popoverForeground,
+    }}
+  />
+  <ColorItem
+    title="Primary"
+    colors={{
+      primary: themes.light.primary.DEFAULT,
+      [`primary-foreground`]: themes.light.primaryForeground,
+    }}
+  />
+  <ColorItem
+    title="Secondary"
+    colors={{
+      secondary: themes.light.secondary,
+      [`secondary-foreground`]: themes.light.secondaryForeground,
+    }}
+  />
+  <ColorItem
+    title="Muted"
+    colors={{
+      muted: themes.light.muted,
+      [`muted-foreground`]: themes.light.mutedForeground,
+    }}
+  />
+  <ColorItem
+    title="Accent"
+    colors={{
+      accent: themes.light.accent,
+      [`accent-foreground`]: themes.light.accentForeground,
+    }}
+  />
+  <ColorItem
+    title="Destructive"
+    colors={{
+      destructive: themes.light.destructive,
+      [`destructive-foreground`]: themes.light.destructiveForeground,
+    }}
+  />
+  <ColorItem
+    title="Success"
+    colors={{
+      success: themes.light.success,
+      [`success-foreground`]: themes.light.successForeground,
+    }}
+  />
+  <ColorItem
+    title="Warning"
+    colors={{
+      warning: themes.light.warning,
+      [`warning-foreground`]: themes.light.warningForeground,
+    }}
+  />
+  <ColorItem
+    title="For"
+    colors={{
+      for: themes.light.for,
+      [`for-foreground`]: themes.light.forForeground,
+    }}
+  />
+  <ColorItem
+    title="Against"
+    colors={{
+      against: themes.light.against,
+      [`against-foreground`]: themes.light.againstForeground,
+    }}
+  />
+  <ColorItem
+    title="Social"
+    colors={{
+      social: themes.light.social,
+      [`social-foreground`]: themes.light.socialForeground,
+    }}
+  />
+  <ColorItem
+    title="Border"
+    colors={{
+      border: themes.light.border,
+    }}
+  />
+  <ColorItem
+    title="Input"
+    colors={{
+      input: themes.light.input,
+    }}
+  />
+  <ColorItem
+    title="Ring"
+    colors={{
+      ring: themes.light.ring,
+    }}
+  />
+</ColorPalette>

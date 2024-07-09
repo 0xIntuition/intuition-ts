@@ -12,7 +12,6 @@ import {
 } from '@0xintuition/1ui'
 import {
   ApiError,
-  IdentitiesService,
   IdentityPresenter,
   OpenAPI,
   UserPresenter,
@@ -32,6 +31,7 @@ import {
   stakeModalAtom,
 } from '@lib/state/store'
 import { userProfileRouteOptions } from '@lib/utils/constants'
+import { fetchUserIdentity, fetchUserTotals } from '@lib/utils/fetches'
 import logger from '@lib/utils/logger'
 import {
   calculatePercentageOfTvl,
@@ -59,22 +59,10 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
   const user = session.get('user')
 
   if (!user?.details?.wallet?.address) {
-    return console.log('No user found in session')
+    return logger('No user found in session')
   }
 
-  let userIdentity
-  try {
-    userIdentity = await IdentitiesService.getIdentityById({
-      id: user.details.wallet.address,
-    })
-  } catch (error: unknown) {
-    if (error instanceof ApiError) {
-      userIdentity = undefined
-      logger(`${error.name} - ${error.status}: ${error.message} ${error.url}`)
-    } else {
-      throw error
-    }
-  }
+  const userIdentity = await fetchUserIdentity(user.details.wallet.address)
 
   if (!userIdentity) {
     return redirect('/create')
@@ -98,19 +86,7 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
     return logger('No user found in DB')
   }
 
-  let userTotals
-  try {
-    userTotals = await UsersService.getUserTotals({
-      id: userObject.id,
-    })
-  } catch (error: unknown) {
-    if (error instanceof ApiError) {
-      userTotals = undefined
-      logger(`${error.name} - ${error.status}: ${error.message} ${error.url}`)
-    } else {
-      throw error
-    }
-  }
+  const userTotals = await fetchUserTotals(userObject.id)
 
   let vaultDetails: VaultDetailsType | null = null
 

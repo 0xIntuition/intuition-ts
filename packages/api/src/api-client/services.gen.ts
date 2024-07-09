@@ -71,8 +71,12 @@ import type {
   GetUserByWalletPublicData,
   GetUserByWalletPublicResponse,
   GetUserByWalletResponse,
+  GetUserClaimsData,
+  GetUserClaimsResponse,
+  GetUserIdentitiesData,
   GetUserIdentitiesResponse,
   GetUsersData,
+  GetUsersPositionsData,
   GetUsersPositionsResponse,
   GetUsersResponse,
   GetUserTotalsData,
@@ -1074,24 +1078,96 @@ export class UsersService {
   }
 
   /**
-   * @returns unknown Get identities user has position on
+   * @param data The data for the request.
+   * @param data.direction
+   * @param data.sortBy
+   * @param data.page
+   * @param data.offset
+   * @param data.limit
+   * @param data.user
+   * @param data.showEmptyPosition
+   * @param data.timeframe
+   * @returns unknown Get claims user has position on
    * @throws ApiError
    */
-  public static getUserIdentities(): CancelablePromise<GetUserIdentitiesResponse> {
+  public static getUserClaims(
+    data: GetUserClaimsData = {},
+  ): CancelablePromise<GetUserClaimsResponse> {
     return __request(OpenAPI, {
       method: 'GET',
-      url: '/users/identities',
+      url: '/users/claims',
+      query: {
+        direction: data.direction,
+        sortBy: data.sortBy,
+        page: data.page,
+        offset: data.offset,
+        limit: data.limit,
+        user: data.user,
+        showEmptyPosition: data.showEmptyPosition,
+        timeframe: data.timeframe,
+      },
     })
   }
 
   /**
+   * @param data The data for the request.
+   * @param data.direction
+   * @param data.sortBy
+   * @param data.page
+   * @param data.offset
+   * @param data.limit
+   * @param data.user
+   * @param data.showEmptyPosition
+   * @param data.timeframe
+   * @returns unknown Get identities user has position on
+   * @throws ApiError
+   */
+  public static getUserIdentities(
+    data: GetUserIdentitiesData = {},
+  ): CancelablePromise<GetUserIdentitiesResponse> {
+    return __request(OpenAPI, {
+      method: 'GET',
+      url: '/users/identities',
+      query: {
+        direction: data.direction,
+        sortBy: data.sortBy,
+        page: data.page,
+        offset: data.offset,
+        limit: data.limit,
+        user: data.user,
+        showEmptyPosition: data.showEmptyPosition,
+        timeframe: data.timeframe,
+      },
+    })
+  }
+
+  /**
+   * @param data The data for the request.
+   * @param data.direction
+   * @param data.sortBy
+   * @param data.page
+   * @param data.offset
+   * @param data.limit
+   * @param data.user
+   * @param data.showEmptyPosition
    * @returns unknown Get positions for user
    * @throws ApiError
    */
-  public static getUsersPositions(): CancelablePromise<GetUsersPositionsResponse> {
+  public static getUsersPositions(
+    data: GetUsersPositionsData = {},
+  ): CancelablePromise<GetUsersPositionsResponse> {
     return __request(OpenAPI, {
       method: 'GET',
       url: '/users/positions',
+      query: {
+        direction: data.direction,
+        sortBy: data.sortBy,
+        page: data.page,
+        offset: data.offset,
+        limit: data.limit,
+        user: data.user,
+        showEmptyPosition: data.showEmptyPosition,
+      },
     })
   }
 

@@ -2,7 +2,6 @@ import {
   ApiError,
   ClaimSortColumn,
   ClaimsService,
-  IdentitiesService,
   OpenAPI,
   PositionSortColumn,
   PositionsService,
@@ -12,9 +11,10 @@ import {
 import { ClaimsOnIdentity } from '@components/claims-on-identity'
 import { PositionsOnIdentity } from '@components/positions-on-identity'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
+import { fetchUserIdentity } from '@lib/utils/fetches'
 import logger from '@lib/utils/logger'
 import { calculateTotalPages, getAuthHeaders } from '@lib/utils/misc'
-import { json, LoaderFunctionArgs } from '@remix-run/node'
+import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
 import { getPrivyAccessToken } from '@server/privy'
 import { InitialIdentityData } from 'types/identity'
 
@@ -30,18 +30,10 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     throw new Error('Wallet is undefined.')
   }
 
-  let identity
-  try {
-    identity = await IdentitiesService.getIdentityById({
-      id: wallet,
-    })
-  } catch (error: unknown) {
-    if (error instanceof ApiError) {
-      identity = undefined
-      logger(`${error.name} - ${error.status}: ${error.message} ${error.url}`)
-    } else {
-      throw error
-    }
+  const identity = await fetchUserIdentity(wallet)
+
+  if (!identity) {
+    return redirect('/create')
   }
 
   const url = new URL(request.url)

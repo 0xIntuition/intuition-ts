@@ -20,7 +20,7 @@ export const BasicUsage: Story = {
         <TabsList>
           <TabsTrigger value="one" label="One" totalCount={69} />
           <TabsTrigger value="two" label="Two" totalCount={69} />
-          <TabsTrigger disabled value="three" label="Three" totalCount={69} />
+          <TabsTrigger disabled value="three" label="Three" totalCount={0} />
         </TabsList>
         <div className="bg-primary/10 p-4 rounded-lg">
           <TabsContent value="one">

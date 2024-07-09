@@ -920,6 +920,28 @@ export type User = {
   wallet: string
 }
 
+export type UserClaimQuery = {
+  direction?: SortDirection | null
+  limit?: number | null
+  offset?: number | null
+  page?: number | null
+  showEmptyPosition?: boolean | null
+  sortBy?: SortColumn | null
+  timeframe?: TimeFrame | null
+  user?: Identifier | null
+}
+
+export type UserIdentityQuery = {
+  direction?: SortDirection | null
+  limit?: number | null
+  offset?: number | null
+  page?: number | null
+  showEmptyPosition?: boolean | null
+  sortBy?: SortColumn | null
+  timeframe?: TimeFrame | null
+  user?: Identifier | null
+}
+
 export type UserListQuery = {
   direction?: SortDirection | null
   limit?: number | null
@@ -935,6 +957,16 @@ export type UserPoints = {
   updated_at: string
   user_id?: string | null
   wallet: string
+}
+
+export type UserPositionQuery = {
+  direction?: SortDirection | null
+  limit?: number | null
+  offset?: number | null
+  page?: number | null
+  showEmptyPosition?: boolean | null
+  sortBy?: PositionSortColumn | null
+  user?: Identifier | null
 }
 
 export type UserPresenter = {
@@ -1891,11 +1923,50 @@ export type ReissueApiKeyResponse = {
   wallet: string
 }
 
+export type GetUserClaimsData = {
+  direction?: SortDirection | null
+  limit?: number | null
+  offset?: number | null
+  page?: number | null
+  showEmptyPosition?: boolean | null
+  sortBy?: SortColumn | null
+  timeframe?: TimeFrame | null
+  user?: Identifier | null
+}
+
+export type GetUserClaimsResponse = {
+  data: Array<ClaimPresenter>
+  limit: number
+  page: number
+  total: number
+}
+
+export type GetUserIdentitiesData = {
+  direction?: SortDirection | null
+  limit?: number | null
+  offset?: number | null
+  page?: number | null
+  showEmptyPosition?: boolean | null
+  sortBy?: SortColumn | null
+  timeframe?: TimeFrame | null
+  user?: Identifier | null
+}
+
 export type GetUserIdentitiesResponse = {
   data: Array<IdentityPresenter>
   limit: number
   page: number
   total: number
+}
+
+export type GetUsersPositionsData = {
+  direction?: SortDirection | null
+  limit?: number | null
+  offset?: number | null
+  page?: number | null
+  showEmptyPosition?: boolean | null
+  sortBy?: PositionSortColumn | null
+  user?: Identifier | null
 }
 
 export type GetUsersPositionsResponse = {
@@ -3315,8 +3386,43 @@ export type $OpenApiTs = {
       }
     }
   }
+  '/users/claims': {
+    get: {
+      req: {
+        direction?: SortDirection | null
+        limit?: number | null
+        offset?: number | null
+        page?: number | null
+        showEmptyPosition?: boolean | null
+        sortBy?: SortColumn | null
+        timeframe?: TimeFrame | null
+        user?: Identifier | null
+      }
+      res: {
+        /**
+         * Get claims user has position on
+         */
+        200: {
+          data: Array<ClaimPresenter>
+          limit: number
+          page: number
+          total: number
+        }
+      }
+    }
+  }
   '/users/identities': {
     get: {
+      req: {
+        direction?: SortDirection | null
+        limit?: number | null
+        offset?: number | null
+        page?: number | null
+        showEmptyPosition?: boolean | null
+        sortBy?: SortColumn | null
+        timeframe?: TimeFrame | null
+        user?: Identifier | null
+      }
       res: {
         /**
          * Get identities user has position on
@@ -3332,6 +3438,15 @@ export type $OpenApiTs = {
   }
   '/users/positions': {
     get: {
+      req: {
+        direction?: SortDirection | null
+        limit?: number | null
+        offset?: number | null
+        page?: number | null
+        showEmptyPosition?: boolean | null
+        sortBy?: PositionSortColumn | null
+        user?: Identifier | null
+      }
       res: {
         /**
          * Get positions for user

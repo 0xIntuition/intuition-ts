@@ -12,11 +12,8 @@ import {
   ApiError,
   ClaimPresenter,
   ClaimsService,
-  IdentitiesService,
   IdentityPresenter,
   OpenAPI,
-  UserPresenter,
-  UsersService,
   UserTotalsPresenter,
 } from '@0xintuition/api'
 
@@ -25,7 +22,8 @@ import { NestedLayout } from '@components/nested-layout'
 import StakeModal from '@components/stake/stake-modal'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { followModalAtom, stakeModalAtom } from '@lib/state/store'
-import { userProfileRouteOptions } from '@lib/utils/constants'
+import { userIdentityRouteOptions } from '@lib/utils/constants'
+import { fetchUserIdentity, fetchUserTotals } from '@lib/utils/fetches'
 import logger from '@lib/utils/logger'
 import {
   calculatePercentageOfTvl,
@@ -58,57 +56,26 @@ export async function loader({ context, request, params }: LoaderFunctionArgs) {
     return console.log('Wallet parameter is not defined')
   }
 
-  let userIdentity
-  try {
-    userIdentity = await IdentitiesService.getIdentityById({
-      id: wallet,
-    })
-  } catch (error: unknown) {
-    if (error instanceof ApiError) {
-      userIdentity = undefined
-      logger(`${error.name} - ${error.status}: ${error.message} ${error.url}`)
-    } else {
-      throw error
-    }
+  if (wallet === user?.details?.wallet?.address) {
+    throw redirect('/app/profile')
   }
+
+  if (!wallet) {
+    throw new Error('Wallet is undefined.')
+  }
+
+  const userIdentity = await fetchUserIdentity(wallet)
 
   if (!userIdentity) {
     return redirect('/create')
   }
 
-  console.log('userIdentity', userIdentity)
-
-  let userObject
-  try {
-    userObject = await UsersService.getUserByWallet({
-      wallet: wallet,
-    })
-  } catch (error: unknown) {
-    if (error instanceof ApiError) {
-      userObject = undefined
-      logger(`${error.name} - ${error.status}: ${error.message} ${error.url}`)
-    } else {
-      throw error
-    }
+  if (!userIdentity.creator || typeof userIdentity.creator.id !== 'string') {
+    logger('Invalid or missing creator ID')
+    return
   }
 
-  if (!userObject) {
-    return logger('No user found in DB')
-  }
-
-  let userTotals
-  try {
-    userTotals = await UsersService.getUserTotals({
-      id: userObject.id,
-    })
-  } catch (error: unknown) {
-    if (error instanceof ApiError) {
-      userTotals = undefined
-      logger(`${error.name} - ${error.status}: ${error.message} ${error.url}`)
-    } else {
-      throw error
-    }
-  }
+  const userTotals = await fetchUserTotals(userIdentity.creator.id)
 
   let vaultDetails: VaultDetailsType | null = null
 
@@ -125,45 +92,43 @@ export async function loader({ context, request, params }: LoaderFunctionArgs) {
     }
   }
 
+  console.log('vaultDetails', vaultDetails)
+
   let followClaim: ClaimPresenter | undefined = undefined
   let followVaultDetails: VaultDetailsType | undefined = undefined
 
-  if (userIdentity.follow_claim_id) {
-    try {
-      followClaim = await ClaimsService.getClaimById({
-        id: userIdentity.follow_claim_id,
-      })
-    } catch (error: unknown) {
-      if (error instanceof ApiError) {
-        followClaim = undefined
-        logger(`${error.name} - ${error.status}: ${error.message} ${error.url}`)
-      } else {
-        throw error
-      }
+  try {
+    followClaim = await ClaimsService.getClaimById({
+      id: userIdentity.follow_claim_id,
+    })
+  } catch (error: unknown) {
+    if (error instanceof ApiError) {
+      followClaim = undefined
+      logger(`${error.name} - ${error.status}: ${error.message} ${error.url}`)
+    } else {
+      throw error
     }
-
-    if (followClaim && followClaim.vault_id) {
-      try {
-        followVaultDetails = await getVaultDetails(
-          followClaim.contract,
-          followClaim.vault_id,
-          user?.details?.wallet?.address as `0x${string}`,
-        )
-      } catch (error) {
-        logger('Failed to fetch followVaultDetails', error)
-        followVaultDetails = undefined
-      }
-    }
-  } else {
-    followVaultDetails = undefined
-    followClaim = undefined
   }
+
+  if (followClaim && followClaim.vault_id) {
+    try {
+      followVaultDetails = await getVaultDetails(
+        followClaim.contract,
+        followClaim.vault_id,
+        user?.details?.wallet?.address as `0x${string}`,
+      )
+    } catch (error) {
+      logger('Failed to fetch followVaultDetails', error)
+      followVaultDetails = undefined
+    }
+  }
+
+  logger('followVaultDetails', followVaultDetails)
 
   return json({
     wallet,
     user,
     userIdentity,
-    userObject,
     userTotals,
     followClaim,
     followVaultDetails,
@@ -175,7 +140,6 @@ export default function Profile() {
   const {
     wallet,
     user,
-    userObject,
     userIdentity,
     userTotals,
     followClaim,
@@ -185,7 +149,7 @@ export default function Profile() {
     wallet: string
     user: SessionUser
     userIdentity: IdentityPresenter
-    userObject: UserPresenter
+    // userObject: UserPresenter
     userTotals: UserTotalsPresenter
     followClaim: ClaimPresenter
     followVaultDetails: VaultDetailsType
@@ -195,6 +159,8 @@ export default function Profile() {
   const { user_conviction_value: user_assets = '0', assets_sum = '0' } =
     vaultDetails ?? userIdentity
 
+  logger('followVaultDetails', followVaultDetails)
+
   const { user_asset_delta } = userIdentity
 
   const imgSrc = blockies.create({ seed: wallet }).toDataURL()
@@ -203,23 +169,24 @@ export default function Profile() {
   const [followModalActive, setFollowModalActive] = useAtom(followModalAtom)
 
   return (
-    <NestedLayout outlet={Outlet} options={userProfileRouteOptions}>
+    <NestedLayout outlet={Outlet} options={userIdentityRouteOptions}>
       <div className="flex flex-col">
         <>
           <div className="w-[300px] h-[230px] flex-col justify-start items-start gap-5 inline-flex">
             <ProfileCard
               variant="user"
-              avatarSrc={userObject.image ?? imgSrc}
-              name={userObject.display_name ?? ''}
+              avatarSrc={userIdentity?.user?.image ?? imgSrc}
+              name={userIdentity?.user?.display_name ?? ''}
               walletAddress={
-                userObject.ens_name ?? sliceString(userObject.wallet, 6, 4)
+                userIdentity?.user?.ens_name ??
+                sliceString(userIdentity?.user?.wallet, 6, 4)
               }
               stats={{
                 numberOfFollowers: userTotals.follower_count,
                 numberOfFollowing: userTotals.followed_count,
                 points: userTotals.user_points,
               }}
-              bio={userObject.description ?? ''}
+              bio={userIdentity?.user?.description ?? ''}
             >
               <Button
                 variant="secondary"
@@ -233,8 +200,8 @@ export default function Profile() {
                   }))
                 }
               >
-                {followVaultDetails?.user_conviction &&
-                followVaultDetails?.user_conviction > '0'
+                {followVaultDetails &&
+                (followVaultDetails?.user_conviction ?? '0') > '0'
                   ? `Following · ${formatBalance(followVaultDetails.user_conviction_value ?? '0', 18, 4)} ETH`
                   : 'Follow'}
               </Button>
