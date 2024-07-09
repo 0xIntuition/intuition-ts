@@ -30,14 +30,14 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     throw new Error('Wallet is undefined.')
   }
 
-  let userIdentity
+  let identity
   try {
-    userIdentity = await IdentitiesService.getIdentityById({
+    identity = await IdentitiesService.getIdentityById({
       id: wallet,
     })
   } catch (error: unknown) {
     if (error instanceof ApiError) {
-      userIdentity = undefined
+      identity = undefined
       logger(`${error.name} - ${error.status}: ${error.message} ${error.url}`)
     } else {
       throw error
@@ -82,7 +82,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   let claims
   try {
     claims = await ClaimsService.searchClaims({
-      identity: userIdentity?.id,
+      identity: identity?.id,
       page: page,
       limit: Number(limit),
       offset: 0,
@@ -101,7 +101,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   logger('claims', claims)
 
   return json({
-    userIdentity,
+    identity,
     positions,
     claims,
     sortBy,

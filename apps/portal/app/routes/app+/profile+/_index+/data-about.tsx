@@ -33,14 +33,14 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
     return console.log('No user found in session')
   }
 
-  let userIdentity
+  let identity
   try {
-    userIdentity = await IdentitiesService.getIdentityById({
+    identity = await IdentitiesService.getIdentityById({
       id: user.details.wallet.address,
     })
   } catch (error: unknown) {
     if (error instanceof ApiError) {
-      userIdentity = undefined
+      identity = undefined
       logger(`${error.name} - ${error.status}: ${error.message} ${error.url}`)
     } else {
       throw error
@@ -83,7 +83,7 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
   let claims
   try {
     claims = await ClaimsService.searchClaims({
-      identity: userIdentity?.id,
+      identity: identity?.id,
       page: page,
       limit: Number(limit),
       offset: 0,
@@ -102,7 +102,7 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
   const totalPages = calculateTotalPages(positions?.total ?? 0, Number(limit))
 
   return json({
-    userIdentity,
+    identity,
     positions,
     claims,
     sortBy,
