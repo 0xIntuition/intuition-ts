@@ -104,7 +104,14 @@ export default function StakeModal({
         const txHash = await writeContractAsync({
           address: contract as `0x${string}`,
           abi: multivaultAbi as Abi,
-          functionName: actionType === 'buy' ? 'depositAtom' : 'redeemAtom',
+          functionName:
+            actionType === 'buy'
+              ? claim !== undefined
+                ? 'depositTriple'
+                : 'depositAtom'
+              : claim !== undefined
+                ? 'redeemTriple'
+                : 'redeemAtom',
           args:
             actionType === 'buy'
               ? [user.details?.wallet?.address as `0x${string}`, vaultId]

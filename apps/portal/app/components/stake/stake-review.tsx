@@ -7,6 +7,8 @@ import {
   DialogTitle,
   Icon,
   IdentityTag,
+  Tag,
+  Trunctacular,
 } from '@0xintuition/1ui'
 import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
 
@@ -32,6 +34,7 @@ export default function StakeReview({
   mode,
   dispatch,
   state,
+  direction,
   isError,
   modalType,
   identity,
@@ -65,16 +68,21 @@ export default function StakeReview({
     <>
       <DialogHeader>
         <DialogTitle className="justify-between">
-          <Button
-            onClick={(e) => {
-              e.preventDefault()
-              dispatch({ type: 'START_TRANSACTION' })
-            }}
-            variant="ghost"
-            size="icon"
-          >
-            <Icon name="arrow-left" className="h-4 w-4" />
-          </Button>
+          <div className="flex flex-row gap-2">
+            <Button
+              onClick={(e) => {
+                e.preventDefault()
+                dispatch({ type: 'START_TRANSACTION' })
+              }}
+              variant="ghost"
+              size="icon"
+            >
+              <Icon name="arrow-left" className="h-4 w-4" />
+            </Button>
+            <Tag variant={direction === 'for' ? 'for' : 'against'}>
+              {direction === 'for' ? 'FOR' : 'AGAINST'}
+            </Tag>
+          </div>
         </DialogTitle>
       </DialogHeader>
       <div className="flex w-full flex-col gap-5 px-2">
@@ -99,20 +107,34 @@ export default function StakeReview({
               <Claim
                 subject={{
                   imgSrc: claim?.subject?.user?.image ?? claim?.subject?.image,
-                  label:
-                    claim?.subject?.user?.display_name ??
-                    claim?.subject?.display_name,
+                  label: (
+                    <Trunctacular
+                      value={
+                        claim?.subject?.user?.display_name ??
+                        claim?.subject?.display_name
+                      }
+                    />
+                  ),
                   variant: claim?.subject?.user ? 'user' : 'default',
                 }}
                 predicate={{
                   imgSrc: claim?.predicate?.image,
-                  label: claim?.predicate?.display_name,
+                  label: (
+                    <Trunctacular
+                      value={claim?.predicate?.display_name ?? ''}
+                    />
+                  ),
                 }}
                 object={{
                   imgSrc: claim?.object?.user?.image ?? claim?.object?.image,
-                  label:
-                    claim?.object?.user?.display_name ??
-                    claim?.object?.display_name,
+                  label: (
+                    <Trunctacular
+                      value={
+                        claim?.object?.user?.display_name ??
+                        claim?.object?.display_name
+                      }
+                    />
+                  ),
                   variant: claim?.object?.user ? 'user' : 'default',
                 }}
               />

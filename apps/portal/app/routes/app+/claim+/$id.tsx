@@ -4,6 +4,11 @@ import {
   ClaimStakeCard,
   Icon,
   InfoCard,
+  PositionCard,
+  PositionCardFeesAccrued,
+  PositionCardLastUpdated,
+  PositionCardOwnership,
+  PositionCardStaked,
   Text,
 } from '@0xintuition/1ui'
 import {
@@ -15,13 +20,24 @@ import {
   SortDirection,
 } from '@0xintuition/api'
 
+import StakeModal from '@components/stake/stake-modal'
+import { stakeModalAtom } from '@lib/state/store'
 import logger from '@lib/utils/logger'
-import { formatBalance, getAuthHeaders } from '@lib/utils/misc'
+import {
+  calculatePercentageOfTvl,
+  formatBalance,
+  getAuthHeaders,
+} from '@lib/utils/misc'
+import { SessionContext } from '@middleware/session'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { useLoaderData, useNavigate } from '@remix-run/react'
+import { getVaultDetails } from '@server/multivault'
 import { getPrivyAccessToken } from '@server/privy'
+import { useAtom } from 'jotai'
+import { SessionUser } from 'types/user'
+import { VaultDetailsType } from 'types/vault'
 
-export async function loader({ request, params }: LoaderFunctionArgs) {
+export async function loader({ context, request, params }: LoaderFunctionArgs) {
   OpenAPI.BASE = 'https://dev.api.intuition.systems'
   const accessToken = getPrivyAccessToken(request)
   logger('accessToken', accessToken)
@@ -31,6 +47,13 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
   if (!id) {
     throw new Error('vault_id is undefined.')
+  }
+
+  const session = context.get(SessionContext)
+  const user = session.get('user')
+
+  if (!user?.details?.wallet?.address) {
+    return console.log('No user found in session')
   }
 
   const url = new URL(request.url)
@@ -58,18 +81,64 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     }
   }
 
+  console.log('claim', claim)
+
+  let vaultDetails: VaultDetailsType | null = null
+
+  if (claim !== undefined && claim.vault_id) {
+    try {
+      vaultDetails = await getVaultDetails(
+        claim.contract,
+        claim.vault_id,
+        user.details.wallet.address as `0x${string}`,
+        claim.counter_vault_id,
+      )
+    } catch (error) {
+      logger('Failed to fetch vaultDetails', error)
+      vaultDetails = null
+    }
+  }
+
+  console.log('vaultDetails', vaultDetails)
+
   return json({
+    user,
     claim,
     sortBy,
     direction,
+    vaultDetails,
   })
 }
 export default function ClaimDetails() {
-  const { claim } = useLoaderData<{
+  const { user, claim, vaultDetails } = useLoaderData<{
+    user: SessionUser
     claim: ClaimPresenter
+    vaultDetails: VaultDetailsType
   }>()
   const navigate = useNavigate()
-  logger('claim on claim details page', claim)
+
+  const [stakeModalActive, setStakeModalActive] = useAtom(stakeModalAtom)
+
+  let direction: 'for' | 'against' = 'for'
+  direction =
+    (vaultDetails.user_conviction ?? claim.user_conviction_for) > '0' ||
+    (vaultDetails.user_conviction_against ?? claim.user_conviction_against) ===
+      '0'
+      ? 'for'
+      : 'against'
+
+  let user_assets: string = '0'
+  user_assets =
+    (vaultDetails.user_conviction ?? claim.user_conviction_for) > '0'
+      ? vaultDetails.user_conviction_value ?? claim.user_assets_for
+      : vaultDetails.user_conviction_against_value ?? claim.user_assets_against
+
+  console.log('user_assets', user_assets)
+  let assets_sum: string = '0'
+  assets_sum =
+    (vaultDetails.assets_sum ?? claim.for_assets_sum) > '0'
+      ? vaultDetails.assets_sum ?? claim.for_assets_sum
+      : vaultDetails.against_assets_sum ?? claim.against_assets_sum
 
   return (
     <div className="flex flex-col h-screen mx-8">
@@ -112,15 +181,64 @@ export default function ClaimDetails() {
       <div className="flex gap-8">
         <div className="flex-shrink-0 w-1/3 max-w-sm space-y-4 h-screen">
           <div className="flex flex-col space-y-4 ">
+            {vaultDetails !== null && user_assets !== '0' ? (
+              <PositionCard
+                onButtonClick={() =>
+                  setStakeModalActive((prevState) => ({
+                    ...prevState,
+                    mode: 'redeem',
+                    modalType: 'claim',
+                    direction: direction,
+                    isOpen: true,
+                  }))
+                }
+              >
+                <PositionCardStaked
+                  amount={user_assets ? +formatBalance(user_assets, 18, 4) : 0}
+                />
+                <PositionCardOwnership
+                  percentOwnership={
+                    user_assets !== null && assets_sum
+                      ? +calculatePercentageOfTvl(user_assets, assets_sum)
+                      : 0
+                  }
+                />
+                <PositionCardFeesAccrued amount={0} />
+                <PositionCardLastUpdated timestamp={claim.updated_at} />
+              </PositionCard>
+            ) : null}
             <ClaimStakeCard
               currency="ETH"
-              totalTVL={+formatBalance(claim.assets_sum)}
-              tvlAgainst={+formatBalance(claim.user_assets_against)}
-              tvlFor={+formatBalance(claim.user_assets_for)}
-              amountAgainst={+formatBalance(claim.against_assets_sum)}
-              amountFor={+formatBalance(claim.for_assets_sum)}
-              onAgainstBtnClick={() => logger('against button click')}
-              onForBtnClick={() => logger('for button clicked')}
+              totalTVL={+formatBalance(assets_sum)}
+              tvlAgainst={
+                +formatBalance(
+                  vaultDetails.against_assets_sum ?? claim.against_assets_sum,
+                )
+              }
+              tvlFor={
+                +formatBalance(vaultDetails.assets_sum ?? claim.for_assets_sum)
+              }
+              amountAgainst={+formatBalance(claim.against_num_positions)}
+              amountFor={+formatBalance(claim.for_num_positions)}
+              onAgainstBtnClick={() =>
+                setStakeModalActive((prevState) => ({
+                  ...prevState,
+                  mode: 'deposit',
+                  modalType: 'claim',
+                  direction: 'against',
+                  isOpen: true,
+                }))
+              }
+              onForBtnClick={() =>
+                setStakeModalActive((prevState) => ({
+                  ...prevState,
+                  mode: 'deposit',
+                  modalType: 'claim',
+                  direction: 'for',
+                  isOpen: true,
+                }))
+              }
+              className="w-full"
             />
             <InfoCard
               variant="user"
@@ -132,10 +250,25 @@ export default function ClaimDetails() {
         </div>
         <div className="flex-grow ml-8">
           <Text variant="headline" className="text-secondary-foreground">
-            Positions on this Claim
+            Top Positions
           </Text>
         </div>
       </div>
+      <StakeModal
+        user={user as SessionUser}
+        contract={claim.contract}
+        open={stakeModalActive.isOpen}
+        direction={stakeModalActive.direction}
+        claim={claim}
+        vaultDetails={vaultDetails}
+        onClose={() => {
+          setStakeModalActive((prevState) => ({
+            ...prevState,
+            isOpen: false,
+            mode: undefined,
+          }))
+        }}
+      />
     </div>
   )
 }
