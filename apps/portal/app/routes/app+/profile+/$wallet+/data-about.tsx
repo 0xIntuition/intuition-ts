@@ -1,18 +1,18 @@
 import {
-  ApiError,
   ClaimSortColumn,
-  ClaimsService,
   OpenAPI,
   PositionSortColumn,
-  PositionsService,
   SortDirection,
 } from '@0xintuition/api'
 
 import { ClaimsOnIdentity } from '@components/claims-on-identity'
 import { PositionsOnIdentity } from '@components/positions-on-identity'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
-import { fetchUserIdentity } from '@lib/utils/fetches'
-import logger from '@lib/utils/logger'
+import {
+  fetchClaimsByIdentity,
+  fetchPositionsByIdentity,
+  fetchUserIdentity,
+} from '@lib/utils/fetches'
 import { calculateTotalPages, getAuthHeaders } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
 import { getPrivyAccessToken } from '@server/privy'
@@ -46,51 +46,23 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     : 1
   const limit = searchParams.get('limit') ?? '10'
 
-  let positions
-  try {
-    positions = await PositionsService.searchPositions({
-      identity: wallet,
-      paging: {
-        page: page,
-        limit: Number(limit),
-        offset: 0,
-      },
-      sort: {
-        sortBy: sortBy as PositionSortColumn,
-        direction: direction as SortDirection,
-      },
-    })
-  } catch (error: unknown) {
-    if (error instanceof ApiError) {
-      positions = undefined
-      console.log(`${error.name} - ${error.status}: ${error.message}`)
-    } else {
-      throw error
-    }
-  }
+  const positions = await fetchPositionsByIdentity(
+    wallet,
+    page,
+    Number(limit),
+    sortBy as PositionSortColumn,
+    direction as SortDirection,
+  )
+
+  const claims = await fetchClaimsByIdentity(
+    wallet,
+    page,
+    Number(limit),
+    sortBy as ClaimSortColumn,
+    direction as SortDirection,
+  )
 
   const totalPages = calculateTotalPages(positions?.total ?? 0, Number(limit))
-
-  let claims
-  try {
-    claims = await ClaimsService.searchClaims({
-      identity: identity?.id,
-      page: page,
-      limit: Number(limit),
-      offset: 0,
-      sortBy: sortBy as ClaimSortColumn,
-      direction: direction as SortDirection,
-    })
-  } catch (error: unknown) {
-    if (error instanceof ApiError) {
-      claims = undefined
-      logger(`${error.name} - ${error.status}: ${error.message}`)
-    } else {
-      throw error
-    }
-  }
-
-  logger('claims', claims)
 
   return json({
     identity,

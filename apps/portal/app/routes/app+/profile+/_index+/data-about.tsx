@@ -1,17 +1,18 @@
 import {
-  ApiError,
   ClaimSortColumn,
-  ClaimsService,
   OpenAPI,
   PositionSortColumn,
-  PositionsService,
   SortDirection,
 } from '@0xintuition/api'
 
 import { ClaimsOnIdentity } from '@components/claims-on-identity'
 import { PositionsOnIdentity } from '@components/positions-on-identity'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
-import { fetchUserIdentity } from '@lib/utils/fetches'
+import {
+  fetchClaimsByIdentity,
+  fetchPositionsByIdentity,
+  fetchUserIdentity,
+} from '@lib/utils/fetches'
 import logger from '@lib/utils/logger'
 import { calculateTotalPages, getAuthHeaders } from '@lib/utils/misc'
 import { SessionContext } from '@middleware/session'
@@ -44,47 +45,21 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
     : 1
   const limit = searchParams.get('limit') ?? '10'
 
-  let positions
-  try {
-    positions = await PositionsService.searchPositions({
-      identity: user.details.wallet.address,
-      paging: {
-        page: page,
-        limit: Number(limit),
-        offset: 0,
-      },
-      sort: {
-        sortBy: sortBy as PositionSortColumn,
-        direction: direction as SortDirection,
-      },
-    })
-  } catch (error: unknown) {
-    if (error instanceof ApiError) {
-      positions = undefined
-      console.log(`${error.name} - ${error.status}: ${error.message}`)
-    } else {
-      throw error
-    }
-  }
+  const positions = await fetchPositionsByIdentity(
+    user.details.wallet.address,
+    page,
+    Number(limit),
+    sortBy as PositionSortColumn,
+    direction as SortDirection,
+  )
 
-  let claims
-  try {
-    claims = await ClaimsService.searchClaims({
-      identity: identity?.id,
-      page: page,
-      limit: Number(limit),
-      offset: 0,
-      sortBy: sortBy as ClaimSortColumn,
-      direction: direction as SortDirection,
-    })
-  } catch (error: unknown) {
-    if (error instanceof ApiError) {
-      claims = undefined
-      console.log(`${error.name} - ${error.status}: ${error.message}`)
-    } else {
-      throw error
-    }
-  }
+  const claims = await fetchClaimsByIdentity(
+    user.details.wallet.address,
+    page,
+    Number(limit),
+    sortBy as ClaimSortColumn,
+    direction as SortDirection,
+  )
 
   const totalPages = calculateTotalPages(positions?.total ?? 0, Number(limit))
 
