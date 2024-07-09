@@ -3,7 +3,7 @@ name: Deploy apps/portal
 on:
   push:
     branches:
-      - ENG-2003-devops
+      - eng-2347-troubleshoot-deployment-issues
 
   workflow_dispatch:
 
