@@ -9,7 +9,6 @@ import {
   PositionCardLastUpdated,
   PositionCardOwnership,
   PositionCardStaked,
-  Text,
 } from '@0xintuition/1ui'
 import {
   ApiError,
@@ -20,6 +19,7 @@ import {
   SortDirection,
 } from '@0xintuition/api'
 
+import { NestedLayout } from '@components/nested-layout'
 import StakeModal from '@components/stake/stake-modal'
 import { stakeModalAtom } from '@lib/state/store'
 import logger from '@lib/utils/logger'
@@ -30,7 +30,7 @@ import {
 } from '@lib/utils/misc'
 import { SessionContext } from '@middleware/session'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
-import { useLoaderData, useNavigate } from '@remix-run/react'
+import { Outlet, useLoaderData, useNavigate } from '@remix-run/react'
 import { getVaultDetails } from '@server/multivault'
 import { getPrivyAccessToken } from '@server/privy'
 import { useAtom } from 'jotai'
@@ -140,8 +140,11 @@ export default function ClaimDetails() {
       ? vaultDetails.assets_sum ?? claim.for_assets_sum
       : vaultDetails.against_assets_sum ?? claim.against_assets_sum
 
+  console.log('user_assets', user_assets)
+  console.log('assets_sum', assets_sum)
+
   return (
-    <div className="flex flex-col h-screen mx-8">
+    <>
       <div className="flex items-center gap-6 my-10">
         <Button variant="secondary" onClick={() => navigate('/app/claims')}>
           <Icon name="arrow-left" />
@@ -178,9 +181,9 @@ export default function ClaimDetails() {
           }}
         />
       </div>
-      <div className="flex gap-8">
-        <div className="flex-shrink-0 w-1/3 max-w-sm space-y-4 h-screen">
-          <div className="flex flex-col space-y-4 ">
+      <NestedLayout outlet={Outlet}>
+        <div className="flex flex-col">
+          <div className="w-[300px] h-[230px] flex-col justify-start items-start gap-5 inline-flex">
             {vaultDetails !== null && user_assets !== '0' ? (
               <PositionCard
                 onButtonClick={() =>
@@ -199,7 +202,13 @@ export default function ClaimDetails() {
                 <PositionCardOwnership
                   percentOwnership={
                     user_assets !== null && assets_sum
-                      ? +calculatePercentageOfTvl(user_assets, assets_sum)
+                      ? +calculatePercentageOfTvl(
+                          user_assets,
+                          (
+                            +vaultDetails.assets_sum +
+                            +(vaultDetails.against_assets_sum ?? '0')
+                          ).toString(),
+                        )
                       : 0
                   }
                 />
@@ -253,7 +262,6 @@ export default function ClaimDetails() {
                 (vaultDetails.user_conviction ?? claim.user_conviction_for) >
                 '0'
               }
-              className="w-full"
             />
             <InfoCard
               variant="user"
@@ -263,27 +271,22 @@ export default function ClaimDetails() {
             />
           </div>
         </div>
-        <div className="flex-grow ml-8">
-          <Text variant="headline" className="text-secondary-foreground">
-            Top Positions
-          </Text>
-        </div>
-      </div>
-      <StakeModal
-        user={user as SessionUser}
-        contract={claim.contract}
-        open={stakeModalActive.isOpen}
-        direction={stakeModalActive.direction}
-        claim={claim}
-        vaultDetails={vaultDetails}
-        onClose={() => {
-          setStakeModalActive((prevState) => ({
-            ...prevState,
-            isOpen: false,
-            mode: undefined,
-          }))
-        }}
-      />
-    </div>
+        <StakeModal
+          user={user as SessionUser}
+          contract={claim.contract}
+          open={stakeModalActive.isOpen}
+          direction={stakeModalActive.direction}
+          claim={claim}
+          vaultDetails={vaultDetails}
+          onClose={() => {
+            setStakeModalActive((prevState) => ({
+              ...prevState,
+              isOpen: false,
+              mode: undefined,
+            }))
+          }}
+        />
+      </NestedLayout>
+    </>
   )
 }

@@ -5,7 +5,7 @@ import { OptionType, SegmentedNav } from './segmented-nav'
 interface NestedLayoutProps {
   children: React.ReactNode
   outlet: typeof Outlet
-  options: OptionType[]
+  options?: OptionType[]
 }
 
 export function NestedLayout({
@@ -19,9 +19,11 @@ export function NestedLayout({
         <div className="flex flex-col items-center space-y-4">{children}</div>
       </div>
       <div className="flex-grow p-4 ml-8 h-screen overflow-scroll">
-        <div className="flex flex-row justify-end">
-          <SegmentedNav options={options} />
-        </div>
+        {options && (
+          <div className="flex flex-row justify-end">
+            <SegmentedNav options={options} />
+          </div>
+        )}
         <OutletComponent />
       </div>
     </div>
