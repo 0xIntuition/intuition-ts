@@ -10,15 +10,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@0xintuition/1ui'
-import {
-  ClaimPresenter,
-  ClaimSortColumn,
-  SortDirection,
-} from '@0xintuition/api'
+import { ClaimPresenter, ClaimSortColumn } from '@0xintuition/api'
 
+import { useSearchAndSortParamsHandler } from '@lib/hooks/useSearchAndSortParams'
 import logger from '@lib/utils/logger'
 import { formatBalance } from '@lib/utils/misc'
-import { useFetcher, useSearchParams } from '@remix-run/react'
+import { useFetcher } from '@remix-run/react'
 import { loader } from 'app/root'
 import { InitialIdentityData } from 'types/identity'
 
@@ -35,7 +32,6 @@ export function ClaimsOnIdentity({
   const [claims, setClaims] = useState<ClaimPresenter[]>(
     initialData.claims?.data ?? [],
   )
-  const [searchParams, setSearchParams] = useSearchParams()
 
   logger('fetcher.data', fetcher.data)
   useEffect(() => {
@@ -53,33 +49,8 @@ export function ClaimsOnIdentity({
     { value: 'Total ETH', sortBy: 'AssetsSum' },
   ]
 
-  const handleSortChange = (
-    newSortBy: ClaimSortColumn,
-    newDirection: SortDirection,
-  ) => {
-    setSearchParams({
-      ...Object.fromEntries(searchParams),
-      sortBy: newSortBy,
-      direction: newDirection,
-      page: '1',
-    })
-  }
-
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newSearchValue = event.target.value
-    setSearchParams({
-      ...Object.fromEntries(searchParams),
-      search: newSearchValue,
-      page: '1',
-    })
-  }
-
-  const onPageChange = (newPage: number) => {
-    setSearchParams({
-      ...Object.fromEntries(searchParams),
-      page: newPage.toString(),
-    })
-  }
+  const { handleSortChange, handleSearchChange, onPageChange } =
+    useSearchAndSortParamsHandler<ClaimSortColumn>()
 
   return (
     <>
@@ -97,7 +68,7 @@ export function ClaimsOnIdentity({
               (option) => option.value.toLowerCase() === value,
             )
             if (selectedOption) {
-              handleSortChange(selectedOption.sortBy, 'desc')
+              handleSortChange(selectedOption.sortBy as ClaimSortColumn, 'desc')
             }
           }}
         >
@@ -133,7 +104,8 @@ export function ClaimsOnIdentity({
                   label:
                     claim.subject?.user?.display_name ??
                     claim.subject?.display_name ??
-                    claim.subject?.identity_id,
+                    claim.subject?.identity_id ??
+                    '',
                   imgSrc: claim.subject?.image,
                 }}
                 predicate={{
@@ -141,7 +113,8 @@ export function ClaimsOnIdentity({
                   label:
                     claim.predicate?.user?.display_name ??
                     claim.predicate?.display_name ??
-                    claim.predicate?.identity_id,
+                    claim.predicate?.identity_id ??
+                    '',
                   imgSrc: claim.predicate?.image,
                 }}
                 object={{
@@ -149,7 +122,8 @@ export function ClaimsOnIdentity({
                   label:
                     claim.object?.user?.display_name ??
                     claim.object?.display_name ??
-                    claim.object?.identity_id,
+                    claim.object?.identity_id ??
+                    '',
                   imgSrc: claim.object?.image,
                 }}
               />

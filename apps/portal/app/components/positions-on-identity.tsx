@@ -10,16 +10,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@0xintuition/1ui'
-import {
-  PositionPresenter,
-  PositionSortColumn,
-  SortDirection,
-} from '@0xintuition/api'
+import { PositionPresenter, PositionSortColumn } from '@0xintuition/api'
 
 import { PaginationComponent } from '@components/pagination-component'
+import { useSearchAndSortParamsHandler } from '@lib/hooks/useSearchAndSortParams'
 import logger from '@lib/utils/logger'
 import { formatBalance } from '@lib/utils/misc'
-import { useFetcher, useSearchParams } from '@remix-run/react'
+import { useFetcher } from '@remix-run/react'
 import { loader } from 'app/root'
 import { InitialIdentityData } from 'types/identity'
 import { formatUnits } from 'viem'
@@ -31,10 +28,10 @@ export function PositionsOnIdentity({
 }) {
   const { identity, pagination } = initialData
   const fetcher = useFetcher<typeof loader>()
+  logger('fetcher', fetcher)
   const [positions, setPositions] = useState<PositionPresenter[]>(
     initialData.positions?.data ?? [],
   )
-  const [searchParams, setSearchParams] = useSearchParams()
 
   useEffect(() => {
     if (fetcher.data) {
@@ -52,33 +49,8 @@ export function PositionsOnIdentity({
     { value: 'Total ETH', sortBy: 'Assets' },
   ]
 
-  const handleSortChange = (
-    newSortBy: PositionSortColumn,
-    newDirection: SortDirection,
-  ) => {
-    setSearchParams({
-      ...Object.fromEntries(searchParams),
-      sortBy: newSortBy,
-      direction: newDirection,
-      page: '1',
-    })
-  }
-
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newSearchValue = event.target.value
-    setSearchParams({
-      ...Object.fromEntries(searchParams),
-      search: newSearchValue,
-      page: '1',
-    })
-  }
-
-  const onPageChange = (newPage: number) => {
-    setSearchParams({
-      ...Object.fromEntries(searchParams),
-      page: newPage.toString(),
-    })
-  }
+  const { handleSortChange, handleSearchChange, onPageChange } =
+    useSearchAndSortParamsHandler<PositionSortColumn>()
 
   return (
     <>
@@ -134,7 +106,10 @@ export function PositionsOnIdentity({
               (option) => option.value.toLowerCase() === value,
             )
             if (selectedOption) {
-              handleSortChange(selectedOption.sortBy, 'desc')
+              handleSortChange(
+                selectedOption.sortBy as PositionSortColumn,
+                'desc',
+              )
             }
           }}
         >
@@ -161,10 +136,10 @@ export function PositionsOnIdentity({
           >
             <IdentityPosition
               variant="user"
-              avatarSrc={position.user?.image}
-              name={position.user?.display_name}
-              walletAddress={position.user?.wallet}
-              amount={formatBalance(BigInt(position.assets), 18, 4)}
+              avatarSrc={position.user?.image ?? ''}
+              name={position.user?.display_name ?? ''}
+              walletAddress={position.user?.wallet ?? ''}
+              amount={+formatBalance(BigInt(position.assets), 18, 4)}
               feesAccrued={Number(
                 formatUnits(BigInt(+position.assets - +position.value), 18),
               )}
