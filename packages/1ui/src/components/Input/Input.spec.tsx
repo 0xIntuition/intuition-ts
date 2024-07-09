@@ -64,7 +64,7 @@ describe('Input', () => {
           class="flex justify-between gap-2 items-center h-10 px-3 bg-primary/10 theme-border rounded-md text-base"
         >
           <div
-            class="border-0 border-r border-border/10 py-2 min-w-16"
+            class="border-0 border-border/10 py-2 min-w-16 border-r"
           >
             <p
               class="text-base font-medium text-secondary-foreground/80"
@@ -96,7 +96,7 @@ describe('Input', () => {
             type="number"
           />
           <div
-            class="border-0 border-l border-border/10 py-2 min-w-16 text-right"
+            class="border-0 border-border/10 py-2 min-w-16 border-l text-right"
           >
             <p
               class="text-base font-medium text-secondary-foreground/80"
@@ -123,7 +123,7 @@ describe('Input', () => {
             type="text"
           />
           <div
-            class="border-0 border-l border-border/10 py-2 min-w-16 text-right"
+            class="border-0 border-border/10 py-2 min-w-16 border-l text-right"
           >
             <p
               class="text-base font-medium text-secondary-foreground/80"
