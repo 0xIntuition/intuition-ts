@@ -1,10 +1,22 @@
-import { ApiError, IdentitiesService, UsersService } from '@0xintuition/api'
+import {
+  ApiError,
+  CancelablePromise,
+  GetIdentityByIdResponse,
+  GetUserTotalsResponse,
+  IdentitiesService,
+  UsersService,
+} from '@0xintuition/api'
 
 import logger from './logger'
 
-export async function fetchUserIdentity(wallet: string) {
+export async function fetchUserIdentity(
+  wallet: string,
+): Promise<GetIdentityByIdResponse | undefined> {
   try {
-    return await IdentitiesService.getIdentityById({ id: wallet })
+    const result = await IdentitiesService.getIdentityById({ id: wallet })
+    return new CancelablePromise<GetIdentityByIdResponse | undefined>(
+      (resolve) => resolve(result),
+    )
   } catch (error: unknown) {
     if (error instanceof ApiError) {
       logger(`${error.name} - ${error.status}: ${error.message} ${error.url}`)
@@ -17,7 +29,10 @@ export async function fetchUserIdentity(wallet: string) {
 
 export async function fetchUserTotals(creatorId: string) {
   try {
-    return await UsersService.getUserTotals({ id: creatorId })
+    const result = await UsersService.getUserTotals({ id: creatorId })
+    return new CancelablePromise<GetUserTotalsResponse | undefined>((resolve) =>
+      resolve(result),
+    )
   } catch (error: unknown) {
     if (error instanceof ApiError) {
       logger(`${error.name} - ${error.status}: ${error.message} ${error.url}`)
