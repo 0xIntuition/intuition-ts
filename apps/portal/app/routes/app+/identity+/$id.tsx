@@ -12,12 +12,13 @@ import {
   TagsContent,
   TagWithValue,
 } from '@0xintuition/1ui'
-import { ApiError, IdentitiesService, OpenAPI } from '@0xintuition/api'
+import { OpenAPI } from '@0xintuition/api'
 
 import { NestedLayout } from '@components/nested-layout'
 import StakeModal from '@components/stake/stake-modal'
 import { stakeModalAtom } from '@lib/state/store'
 import { identityRouteOptions } from '@lib/utils/constants'
+import { fetchUserIdentity } from '@lib/utils/fetches'
 import logger from '@lib/utils/logger'
 import {
   calculatePercentageGain,
@@ -52,21 +53,13 @@ export async function loader({ context, request, params }: LoaderFunctionArgs) {
     return
   }
 
-  let identity
-  try {
-    identity = await IdentitiesService.getIdentityById({
-      id: params.id,
-    })
-  } catch (error: unknown) {
-    if (error instanceof ApiError) {
-      identity = undefined
-      logger(`${error.name} - ${error.status}: ${error.message} ${error.url}`)
-    } else {
-      throw error
-    }
-  }
+  const identity = await fetchUserIdentity(params.id)
 
   logger('identity', identity)
+
+  if (!identity) {
+    return null
+  }
 
   let vaultDetails: VaultDetailsType | null = null
 
@@ -82,6 +75,8 @@ export async function loader({ context, request, params }: LoaderFunctionArgs) {
       vaultDetails = null
     }
   }
+
+  logger('vaultDetails', vaultDetails)
 
   return json({
     identity: identity,
@@ -177,12 +172,11 @@ export default function IdentityDetails() {
           />
         </div>
         <StakeModal
-          user={user}
+          user={user as SessionUser}
           contract={identity.contract}
           open={stakeModalActive.isOpen}
           identity={identity}
-          min_deposit={vaultDetails.min_deposit}
-          modalType="identity"
+          vaultDetails={vaultDetails}
           onClose={() => {
             setStakeModalActive((prevState) => ({
               ...prevState,
