@@ -13,34 +13,40 @@ export interface InputProps
 const isValueAnIconName = (value: string) =>
   Object.values(IconName).includes(value as IconNameType)
 
-const InputIconAdornment = ({ name }: { name: string }) => (
-  <Icon name={name as IconNameType} className="text-secondary-foreground/80" />
-)
-
-const InputTextAdornment = ({ value }: { value: string }) => (
-  <Text
-    variant={TextVariant.body}
-    weight={TextWeight.medium}
-    className="text-secondary-foreground/80"
-  >
-    {value}
-  </Text>
-)
+const Adornment = ({
+  position,
+  value,
+}: {
+  position: 'start' | 'end'
+  value: IconNameType | string
+}) => {
+  return isValueAnIconName(value) ? (
+    <Icon
+      name={value as IconNameType}
+      className="text-secondary-foreground/80"
+    />
+  ) : (
+    <div
+      className={`border-0 border-border/10 py-2 min-w-16 ${position === 'start' ? 'border-r' : 'border-l text-right'}`}
+    >
+      <Text
+        variant={TextVariant.body}
+        weight={TextWeight.medium}
+        className="text-secondary-foreground/80"
+      >
+        {value}
+      </Text>
+    </div>
+  )
+}
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ({ startAdornment, endAdornment, className, type, ...props }, ref) => {
-    const rootTextAdornmentContainerClassName =
-      'border-0 border-border/10 py-2 min-w-16'
     return (
       <div className="flex justify-between gap-2 items-center h-10 px-3 bg-primary/10 theme-border rounded-md text-base">
-        {startAdornment &&
-          (isValueAnIconName(startAdornment) ? (
-            <InputIconAdornment name={startAdornment} />
-          ) : (
-            <div className={`${rootTextAdornmentContainerClassName} border-r`}>
-              <InputTextAdornment value={startAdornment} />
-            </div>
-          ))}
+        {startAdornment && (
+          <Adornment position="start" value={startAdornment} />
+        )}
         <input
           type={type}
           className={cn(
@@ -50,16 +56,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           ref={ref}
           {...props}
         />
-        {endAdornment &&
-          (isValueAnIconName(endAdornment) ? (
-            <InputIconAdornment name={endAdornment} />
-          ) : (
-            <div
-              className={`${rootTextAdornmentContainerClassName} border-l text-right`}
-            >
-              <InputTextAdornment value={endAdornment} />
-            </div>
-          ))}
+        {endAdornment && <Adornment position="end" value={endAdornment} />}
       </div>
     )
   },
