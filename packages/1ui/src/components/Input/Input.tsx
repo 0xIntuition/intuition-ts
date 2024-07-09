@@ -1,22 +1,63 @@
 import * as React from 'react'
 
-import { cn } from '../../styles'
+import { cn } from 'styles'
+
+import { Icon, IconName, IconNameType, Text, TextVariant, TextWeight } from '..'
 
 export interface InputProps
-  extends React.InputHTMLAttributes<HTMLInputElement> {}
+  extends React.InputHTMLAttributes<HTMLInputElement> {
+  startAdornment?: IconNameType | string
+  endAdornment?: IconNameType | string
+}
+
+const isValueAnIconName = (value: string) =>
+  Object.values(IconName).includes(value as IconNameType)
+
+const Adornment = ({
+  position,
+  value,
+}: {
+  position: 'start' | 'end'
+  value: IconNameType | string
+}) => {
+  return isValueAnIconName(value) ? (
+    <Icon
+      name={value as IconNameType}
+      className="text-secondary-foreground/80"
+    />
+  ) : (
+    <div
+      className={`border-0 border-border/10 py-2 min-w-16 ${position === 'start' ? 'border-r' : 'border-l text-right'}`}
+    >
+      <Text
+        variant={TextVariant.body}
+        weight={TextWeight.medium}
+        className="text-secondary-foreground/80"
+      >
+        {value}
+      </Text>
+    </div>
+  )
+}
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type, ...props }, ref) => {
+  ({ startAdornment, endAdornment, className, type, ...props }, ref) => {
     return (
-      <input
-        type={type}
-        className={cn(
-          'flex h-10 w-full rounded-md border border-input/30 bg-primary/10 px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
-          className,
+      <div className="flex justify-between gap-2 items-center h-10 px-3 bg-primary/10 theme-border rounded-md text-base">
+        {startAdornment && (
+          <Adornment position="start" value={startAdornment} />
         )}
-        ref={ref}
-        {...props}
-      />
+        <input
+          type={type}
+          className={cn(
+            'flex w-full px-2 bg-transparent ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-[0.5px] focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
+            className,
+          )}
+          ref={ref}
+          {...props}
+        />
+        {endAdornment && <Adornment position="end" value={endAdornment} />}
+      </div>
     )
   },
 )

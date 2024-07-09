@@ -40,7 +40,7 @@ export default defineConfig({
     tsconfigPaths(),
   ],
   server: {
-    port: 3000,
+    port: 8080,
   },
   build: {
     target: 'ES2022',
