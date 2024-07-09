@@ -228,6 +228,7 @@ export function PositionsOnClaim() {
       <div className="flex flex-row justify-between w-full mt-6">
         <Input
           className="w-[196px]"
+          startAdornment="magnifying-glass"
           placeholder="Search"
           onChange={handleSearchChange}
         />
