@@ -125,39 +125,38 @@ export async function loader({ context, request, params }: LoaderFunctionArgs) {
     }
   }
 
+  console.log('vaultDetails', vaultDetails)
+
   let followClaim: ClaimPresenter | undefined = undefined
   let followVaultDetails: VaultDetailsType | undefined = undefined
 
-  if (userIdentity.follow_claim_id) {
-    try {
-      followClaim = await ClaimsService.getClaimById({
-        id: userIdentity.follow_claim_id,
-      })
-    } catch (error: unknown) {
-      if (error instanceof ApiError) {
-        followClaim = undefined
-        logger(`${error.name} - ${error.status}: ${error.message} ${error.url}`)
-      } else {
-        throw error
-      }
+  try {
+    followClaim = await ClaimsService.getClaimById({
+      id: userIdentity.follow_claim_id,
+    })
+  } catch (error: unknown) {
+    if (error instanceof ApiError) {
+      followClaim = undefined
+      logger(`${error.name} - ${error.status}: ${error.message} ${error.url}`)
+    } else {
+      throw error
     }
-
-    if (followClaim && followClaim.vault_id) {
-      try {
-        followVaultDetails = await getVaultDetails(
-          followClaim.contract,
-          followClaim.vault_id,
-          user?.details?.wallet?.address as `0x${string}`,
-        )
-      } catch (error) {
-        logger('Failed to fetch followVaultDetails', error)
-        followVaultDetails = undefined
-      }
-    }
-  } else {
-    followVaultDetails = undefined
-    followClaim = undefined
   }
+
+  if (followClaim && followClaim.vault_id) {
+    try {
+      followVaultDetails = await getVaultDetails(
+        followClaim.contract,
+        followClaim.vault_id,
+        user?.details?.wallet?.address as `0x${string}`,
+      )
+    } catch (error) {
+      logger('Failed to fetch followVaultDetails', error)
+      followVaultDetails = undefined
+    }
+  }
+
+  console.log('followVaultDetails', followVaultDetails)
 
   return json({
     wallet,
