@@ -54,12 +54,12 @@ export interface TabsTriggerProps
 const TabsTrigger = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.Trigger>,
   TabsTriggerProps
->(({ variant, label, totalCount, className, ...props }, ref) => (
+>(({ variant, label, totalCount = null, className, ...props }, ref) => (
   <TabsPrimitive.Trigger
     ref={ref}
     className={cn(
       cn(tabsTriggerVariants({ variant })),
-      totalCount ? 'justify-between' : 'justify-center',
+      totalCount !== null ? 'justify-between' : 'justify-center',
       className,
     )}
     {...props}

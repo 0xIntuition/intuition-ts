@@ -162,7 +162,7 @@ describe('Tabs', () => {
             variant="alternate"
             value="three"
             label="Three"
-            totalCount={69}
+            totalCount={0}
           />
         </TabsList>
         <div className="bg-primary/10 p-4 rounded-lg">
@@ -257,7 +257,7 @@ describe('Tabs', () => {
               <p
                 class="text-base font-normal text-muted-foreground group-disabled:text-muted"
               >
-                69
+                0
               </p>
             </button>
           </div>
