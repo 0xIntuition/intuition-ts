@@ -1,6 +1,5 @@
 import {
   ApiError,
-  CancelablePromise,
   GetIdentityByIdResponse,
   GetUserTotalsResponse,
   IdentitiesService,
@@ -13,10 +12,7 @@ export async function fetchUserIdentity(
   wallet: string,
 ): Promise<GetIdentityByIdResponse | undefined> {
   try {
-    const result = await IdentitiesService.getIdentityById({ id: wallet })
-    return new CancelablePromise<GetIdentityByIdResponse | undefined>(
-      (resolve) => resolve(result),
-    )
+    return await IdentitiesService.getIdentityById({ id: wallet })
   } catch (error: unknown) {
     if (error instanceof ApiError) {
       logger(`${error.name} - ${error.status}: ${error.message} ${error.url}`)
@@ -27,12 +23,11 @@ export async function fetchUserIdentity(
   }
 }
 
-export async function fetchUserTotals(creatorId: string) {
+export async function fetchUserTotals(
+  creatorId: string,
+): Promise<GetUserTotalsResponse | undefined> {
   try {
-    const result = await UsersService.getUserTotals({ id: creatorId })
-    return new CancelablePromise<GetUserTotalsResponse | undefined>((resolve) =>
-      resolve(result),
-    )
+    return await UsersService.getUserTotals({ id: creatorId })
   } catch (error: unknown) {
     if (error instanceof ApiError) {
       logger(`${error.name} - ${error.status}: ${error.message} ${error.url}`)
