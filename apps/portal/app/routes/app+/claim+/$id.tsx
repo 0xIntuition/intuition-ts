@@ -209,7 +209,14 @@ export default function ClaimDetails() {
             ) : null}
             <ClaimStakeCard
               currency="ETH"
-              totalTVL={+formatBalance(assets_sum)}
+              totalTVL={
+                +formatBalance(
+                  +vaultDetails.assets_sum +
+                    +(vaultDetails.against_assets_sum
+                      ? vaultDetails.against_assets_sum
+                      : '0'),
+                )
+              }
               tvlAgainst={
                 +formatBalance(
                   vaultDetails.against_assets_sum ?? claim.against_assets_sum,
@@ -237,6 +244,14 @@ export default function ClaimDetails() {
                   direction: 'for',
                   isOpen: true,
                 }))
+              }
+              disableForBtn={
+                (vaultDetails.user_conviction_against ??
+                  claim.user_conviction_against) > '0'
+              }
+              disableAgainstBtn={
+                (vaultDetails.user_conviction ?? claim.user_conviction_for) >
+                '0'
               }
               className="w-full"
             />
