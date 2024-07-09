@@ -81,8 +81,6 @@ export async function loader({ context, request, params }: LoaderFunctionArgs) {
     }
   }
 
-  console.log('claim', claim)
-
   let vaultDetails: VaultDetailsType | null = null
 
   if (claim !== undefined && claim.vault_id) {
@@ -98,8 +96,6 @@ export async function loader({ context, request, params }: LoaderFunctionArgs) {
       vaultDetails = null
     }
   }
-
-  console.log('vaultDetails', vaultDetails)
 
   return json({
     user,
@@ -133,15 +129,11 @@ export default function ClaimDetails() {
       ? vaultDetails.user_conviction_value ?? claim.user_assets_for
       : vaultDetails.user_conviction_against_value ?? claim.user_assets_against
 
-  console.log('user_assets', user_assets)
   let assets_sum: string = '0'
   assets_sum =
     (vaultDetails.assets_sum ?? claim.for_assets_sum) > '0'
       ? vaultDetails.assets_sum ?? claim.for_assets_sum
       : vaultDetails.against_assets_sum ?? claim.against_assets_sum
-
-  console.log('user_assets', user_assets)
-  console.log('assets_sum', assets_sum)
 
   return (
     <>

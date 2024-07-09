@@ -111,7 +111,6 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     }
   }
 
-  console.log('positions', positions)
   const totalPages = calculateTotalPages(positions?.total ?? 0, Number(limit))
 
   return json({
