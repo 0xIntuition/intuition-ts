@@ -16,6 +16,7 @@ import {
   SortDirection,
 } from '@0xintuition/api'
 
+import logger from '@lib/utils/logger'
 import { formatBalance } from '@lib/utils/misc'
 import { useFetcher, useSearchParams } from '@remix-run/react'
 import { loader } from 'app/root'
@@ -29,14 +30,14 @@ export function ClaimsOnIdentity({
 }: {
   initialData: InitialIdentityData
 }) {
-  const { userIdentity, pagination } = initialData
+  const { identity, pagination } = initialData
   const fetcher = useFetcher<typeof loader>()
   const [claims, setClaims] = useState<ClaimPresenter[]>(
     initialData.claims?.data ?? [],
   )
   const [searchParams, setSearchParams] = useSearchParams()
 
-  console.log('fetcher.data', fetcher.data)
+  logger('fetcher.data', fetcher.data)
   useEffect(() => {
     if (fetcher.data) {
       setClaims(fetcher.data.claims?.data as ClaimPresenter[])
@@ -84,7 +85,7 @@ export function ClaimsOnIdentity({
     <>
       <DataAboutHeader
         title="Claims on this Identity"
-        userIdentity={userIdentity}
+        userIdentity={identity}
         totalClaims={initialData.claims?.total}
         totalStake={16.25} // TODO: Where does this come from?
       />

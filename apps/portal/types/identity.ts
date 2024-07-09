@@ -10,8 +10,8 @@ export type ExtendedIdentityPresenter = IdentityPresenter & {
   followed_count: number
 }
 
-export type InitialUserIdentityData = {
-  userIdentity: GetIdentityByIdResponse | undefined
+export type InitialIdentityData = {
+  identity: GetIdentityByIdResponse | undefined
   positions: SearchPositionsResponse | undefined
   claims: SearchClaimsResponse | undefined
   sortBy: string

@@ -17,6 +17,7 @@ import {
 } from '@0xintuition/api'
 
 import { PaginationComponent } from '@components/pagination-component'
+import logger from '@lib/utils/logger'
 import { formatBalance } from '@lib/utils/misc'
 import { useFetcher, useSearchParams } from '@remix-run/react'
 import { loader } from 'app/root'
@@ -28,7 +29,7 @@ export function PositionsOnIdentity({
 }: {
   initialData: InitialIdentityData
 }) {
-  const { userIdentity, pagination } = initialData
+  const { identity, pagination } = initialData
   const fetcher = useFetcher<typeof loader>()
   const [positions, setPositions] = useState<PositionPresenter[]>(
     initialData.positions?.data ?? [],
@@ -37,6 +38,7 @@ export function PositionsOnIdentity({
 
   useEffect(() => {
     if (fetcher.data) {
+      logger('fetcher.data', fetcher.data)
       setPositions(fetcher.data.positions?.data as PositionPresenter[])
     }
   }, [fetcher.data])
@@ -94,12 +96,11 @@ export function PositionsOnIdentity({
                   Positions staked on
                 </div>
                 <IdentityTag
-                  imgSrc={userIdentity?.user?.image ?? userIdentity?.image}
-                  variant={userIdentity?.user ? 'user' : 'non-user'}
+                  imgSrc={identity?.user?.image ?? identity?.image}
+                  variant={identity?.user ? 'user' : 'non-user'}
                 >
                   <span className="min-w-20 text-ellipsis">
-                    {userIdentity?.user?.display_name ??
-                      userIdentity?.display_name}
+                    {identity?.user?.display_name ?? identity?.display_name}
                   </span>
                 </IdentityTag>
               </div>
@@ -110,7 +111,7 @@ export function PositionsOnIdentity({
                   Total stake
                 </div>
                 <div className="self-stretch text-white text-xl font-medium leading-[30px]">
-                  {formatBalance(userIdentity?.assets_sum ?? '0', 18, 4)} ETH
+                  {formatBalance(identity?.assets_sum ?? '0', 18, 4)} ETH
                 </div>
               </div>
               <div className="flex-col justify-start items-end inline-flex">
@@ -118,7 +119,7 @@ export function PositionsOnIdentity({
                   Positions
                 </div>
                 <div className="self-stretch text-right text-white text-xl font-medium leading-[30px]">
-                  {userIdentity?.num_positions}
+                  {identity?.num_positions}
                 </div>
               </div>
             </div>
