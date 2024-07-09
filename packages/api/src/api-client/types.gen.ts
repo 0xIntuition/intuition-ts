@@ -401,7 +401,10 @@ export type IdentityPresenter = {
   creator_id?: string | null
   description?: string | null
   display_name: string
+  entity_type?: string | null
   external_reference?: string | null
+  follow_claim_id?: string | null
+  follow_vault_id: string
   followed_count?: number | null
   follower_count?: number | null
   id: string
@@ -417,6 +420,7 @@ export type IdentityPresenter = {
   tag_count?: number | null
   tags?: Array<TagEmbeddedPresenter> | null
   updated_at: string
+  url?: string | null
   user?: UserPresenter | null
   user_asset_delta: string
   user_assets: string
@@ -825,6 +829,7 @@ export type TagEmbeddedPresenter = {
   display_name: string
   num_positions: number
   vault_id: string
+  weight: string
 }
 
 export type TimeFrame =
@@ -915,6 +920,28 @@ export type User = {
   wallet: string
 }
 
+export type UserClaimQuery = {
+  direction?: SortDirection | null
+  limit?: number | null
+  offset?: number | null
+  page?: number | null
+  showEmptyPosition?: boolean | null
+  sortBy?: SortColumn | null
+  timeframe?: TimeFrame | null
+  user?: Identifier | null
+}
+
+export type UserIdentityQuery = {
+  direction?: SortDirection | null
+  limit?: number | null
+  offset?: number | null
+  page?: number | null
+  showEmptyPosition?: boolean | null
+  sortBy?: SortColumn | null
+  timeframe?: TimeFrame | null
+  user?: Identifier | null
+}
+
 export type UserListQuery = {
   direction?: SortDirection | null
   limit?: number | null
@@ -930,6 +957,16 @@ export type UserPoints = {
   updated_at: string
   user_id?: string | null
   wallet: string
+}
+
+export type UserPositionQuery = {
+  direction?: SortDirection | null
+  limit?: number | null
+  offset?: number | null
+  page?: number | null
+  showEmptyPosition?: boolean | null
+  sortBy?: PositionSortColumn | null
+  user?: Identifier | null
 }
 
 export type UserPresenter = {
@@ -1308,6 +1345,8 @@ export type UpdateIdentityData = {
     description?: string | null
     display_name?: string | null
     external_reference?: string | null
+    follow_claim_id?: string | null
+    follow_vault_id: string
     identity_id?: Identifier | null
     image?: string | null
     status?: Status | null
@@ -1324,7 +1363,10 @@ export type UpdateIdentityResponse = {
   creator_id?: string | null
   description?: string | null
   display_name: string
+  entity_type?: string | null
   external_reference?: string | null
+  follow_claim_id?: string | null
+  follow_vault_id: string
   id: string
   identity_hash: string
   identity_id: string
@@ -1335,6 +1377,7 @@ export type UpdateIdentityResponse = {
   semantic?: string | null
   status: Status
   updated_at: string
+  url?: string | null
   vault_id: string
   vault_uuid?: string | null
 }
@@ -1346,6 +1389,7 @@ export type CreateIdentityData = {
     creator_uuid?: string | null
     description?: string | null
     display_name: string
+    entity_type?: string | null
     external_reference?: string | null
     identity_hash?: string | null
     identity_id?: IdentityId | null
@@ -1353,6 +1397,7 @@ export type CreateIdentityData = {
     is_contract?: boolean
     is_user?: boolean
     predicate?: boolean
+    url?: string | null
     vault_id?: Identifier | null
     vault_uuid?: string | null
   }
@@ -1372,7 +1417,10 @@ export type CreateIdentityResponse = {
   creator_id?: string | null
   description?: string | null
   display_name: string
+  entity_type?: string | null
   external_reference?: string | null
+  follow_claim_id?: string | null
+  follow_vault_id: string
   followed_count?: number | null
   follower_count?: number | null
   id: string
@@ -1388,6 +1436,7 @@ export type CreateIdentityResponse = {
   tag_count?: number | null
   tags?: Array<TagEmbeddedPresenter> | null
   updated_at: string
+  url?: string | null
   user?: UserPresenter | null
   user_asset_delta: string
   user_assets: string
@@ -1401,6 +1450,9 @@ export type SearchIdentityData = {
   description?: string | null
   direction?: SortDirection | null
   displayName?: string | null
+  followedBy?: string | null
+  follows?: string | null
+  hasTag?: string | null
   identityId?: IdentityId | null
   isContract?: boolean | null
   isUser?: boolean | null
@@ -1443,7 +1495,10 @@ export type GetIdentityByIdResponse = {
   creator_id?: string | null
   description?: string | null
   display_name: string
+  entity_type?: string | null
   external_reference?: string | null
+  follow_claim_id?: string | null
+  follow_vault_id: string
   followed_count?: number | null
   follower_count?: number | null
   id: string
@@ -1459,12 +1514,76 @@ export type GetIdentityByIdResponse = {
   tag_count?: number | null
   tags?: Array<TagEmbeddedPresenter> | null
   updated_at: string
+  url?: string | null
   user?: UserPresenter | null
   user_asset_delta: string
   user_assets: string
   user_conviction: string
   vault_id: string
   vault_uuid?: string | null
+}
+
+export type GetIdentityFollowedData = {
+  direction?: SortDirection | null
+  /**
+   * sql id
+   */
+  id: string
+  limit?: number | null
+  offset?: number | null
+  page?: number | null
+  sortBy?: SortColumn | null
+  timeframe?: TimeFrame | null
+  userWallet?: string | null
+}
+
+export type GetIdentityFollowedResponse = {
+  data: Array<IdentityPresenter>
+  limit: number
+  page: number
+  total: number
+}
+
+export type GetIdentityFollowersData = {
+  direction?: SortDirection | null
+  /**
+   * sql id
+   */
+  id: string
+  limit?: number | null
+  offset?: number | null
+  page?: number | null
+  sortBy?: SortColumn | null
+  timeframe?: TimeFrame | null
+  userWallet?: string | null
+}
+
+export type GetIdentityFollowersResponse = {
+  data: Array<IdentityPresenter>
+  limit: number
+  page: number
+  total: number
+}
+
+export type GetIdentityTagsData = {
+  direction?: SortDirection | null
+  /**
+   * sql id
+   */
+  id: string
+  limit?: number | null
+  offset?: number | null
+  page?: number | null
+  sortBy?: SortColumn | null
+  timeframe?: TimeFrame | null
+  userWallet?: string | null
+}
+
+export type GetIdentityTagsResponse = {
+  data: Array<IdentityPresenter>
+  limit: number
+  page: number
+  total: number
 }
 
 export type SetFollowPredicateData = {
@@ -1804,11 +1923,50 @@ export type ReissueApiKeyResponse = {
   wallet: string
 }
 
+export type GetUserClaimsData = {
+  direction?: SortDirection | null
+  limit?: number | null
+  offset?: number | null
+  page?: number | null
+  showEmptyPosition?: boolean | null
+  sortBy?: SortColumn | null
+  timeframe?: TimeFrame | null
+  user?: Identifier | null
+}
+
+export type GetUserClaimsResponse = {
+  data: Array<ClaimPresenter>
+  limit: number
+  page: number
+  total: number
+}
+
+export type GetUserIdentitiesData = {
+  direction?: SortDirection | null
+  limit?: number | null
+  offset?: number | null
+  page?: number | null
+  showEmptyPosition?: boolean | null
+  sortBy?: SortColumn | null
+  timeframe?: TimeFrame | null
+  user?: Identifier | null
+}
+
 export type GetUserIdentitiesResponse = {
   data: Array<IdentityPresenter>
   limit: number
   page: number
   total: number
+}
+
+export type GetUsersPositionsData = {
+  direction?: SortDirection | null
+  limit?: number | null
+  offset?: number | null
+  page?: number | null
+  showEmptyPosition?: boolean | null
+  sortBy?: PositionSortColumn | null
+  user?: Identifier | null
 }
 
 export type GetUsersPositionsResponse = {
@@ -2482,6 +2640,8 @@ export type $OpenApiTs = {
           description?: string | null
           display_name?: string | null
           external_reference?: string | null
+          follow_claim_id?: string | null
+          follow_vault_id: string
           identity_id?: Identifier | null
           image?: string | null
           status?: Status | null
@@ -2501,7 +2661,10 @@ export type $OpenApiTs = {
           creator_id?: string | null
           description?: string | null
           display_name: string
+          entity_type?: string | null
           external_reference?: string | null
+          follow_claim_id?: string | null
+          follow_vault_id: string
           id: string
           identity_hash: string
           identity_id: string
@@ -2512,6 +2675,7 @@ export type $OpenApiTs = {
           semantic?: string | null
           status: Status
           updated_at: string
+          url?: string | null
           vault_id: string
           vault_uuid?: string | null
         }
@@ -2527,6 +2691,7 @@ export type $OpenApiTs = {
           creator_uuid?: string | null
           description?: string | null
           display_name: string
+          entity_type?: string | null
           external_reference?: string | null
           identity_hash?: string | null
           identity_id?: IdentityId | null
@@ -2534,6 +2699,7 @@ export type $OpenApiTs = {
           is_contract?: boolean
           is_user?: boolean
           predicate?: boolean
+          url?: string | null
           vault_id?: Identifier | null
           vault_uuid?: string | null
         }
@@ -2556,7 +2722,10 @@ export type $OpenApiTs = {
           creator_id?: string | null
           description?: string | null
           display_name: string
+          entity_type?: string | null
           external_reference?: string | null
+          follow_claim_id?: string | null
+          follow_vault_id: string
           followed_count?: number | null
           follower_count?: number | null
           id: string
@@ -2572,6 +2741,7 @@ export type $OpenApiTs = {
           tag_count?: number | null
           tags?: Array<TagEmbeddedPresenter> | null
           updated_at: string
+          url?: string | null
           user?: UserPresenter | null
           user_asset_delta: string
           user_assets: string
@@ -2589,6 +2759,9 @@ export type $OpenApiTs = {
         description?: string | null
         direction?: SortDirection | null
         displayName?: string | null
+        followedBy?: string | null
+        follows?: string | null
+        hasTag?: string | null
         identityId?: IdentityId | null
         isContract?: boolean | null
         isUser?: boolean | null
@@ -2641,7 +2814,10 @@ export type $OpenApiTs = {
           creator_id?: string | null
           description?: string | null
           display_name: string
+          entity_type?: string | null
           external_reference?: string | null
+          follow_claim_id?: string | null
+          follow_vault_id: string
           followed_count?: number | null
           follower_count?: number | null
           id: string
@@ -2657,12 +2833,97 @@ export type $OpenApiTs = {
           tag_count?: number | null
           tags?: Array<TagEmbeddedPresenter> | null
           updated_at: string
+          url?: string | null
           user?: UserPresenter | null
           user_asset_delta: string
           user_assets: string
           user_conviction: string
           vault_id: string
           vault_uuid?: string | null
+        }
+      }
+    }
+  }
+  '/identity/{id}/followed': {
+    get: {
+      req: {
+        direction?: SortDirection | null
+        /**
+         * sql id
+         */
+        id: string
+        limit?: number | null
+        offset?: number | null
+        page?: number | null
+        sortBy?: SortColumn | null
+        timeframe?: TimeFrame | null
+        userWallet?: string | null
+      }
+      res: {
+        /**
+         * Get paginated list of identities following this one
+         */
+        200: {
+          data: Array<IdentityPresenter>
+          limit: number
+          page: number
+          total: number
+        }
+      }
+    }
+  }
+  '/identity/{id}/followers': {
+    get: {
+      req: {
+        direction?: SortDirection | null
+        /**
+         * sql id
+         */
+        id: string
+        limit?: number | null
+        offset?: number | null
+        page?: number | null
+        sortBy?: SortColumn | null
+        timeframe?: TimeFrame | null
+        userWallet?: string | null
+      }
+      res: {
+        /**
+         * Get paginated list of identity's followers
+         */
+        200: {
+          data: Array<IdentityPresenter>
+          limit: number
+          page: number
+          total: number
+        }
+      }
+    }
+  }
+  '/identity/{id}/tags': {
+    get: {
+      req: {
+        direction?: SortDirection | null
+        /**
+         * sql id
+         */
+        id: string
+        limit?: number | null
+        offset?: number | null
+        page?: number | null
+        sortBy?: SortColumn | null
+        timeframe?: TimeFrame | null
+        userWallet?: string | null
+      }
+      res: {
+        /**
+         * Get paginated list of identity's tags
+         */
+        200: {
+          data: Array<IdentityPresenter>
+          limit: number
+          page: number
+          total: number
         }
       }
     }
@@ -3125,8 +3386,43 @@ export type $OpenApiTs = {
       }
     }
   }
+  '/users/claims': {
+    get: {
+      req: {
+        direction?: SortDirection | null
+        limit?: number | null
+        offset?: number | null
+        page?: number | null
+        showEmptyPosition?: boolean | null
+        sortBy?: SortColumn | null
+        timeframe?: TimeFrame | null
+        user?: Identifier | null
+      }
+      res: {
+        /**
+         * Get claims user has position on
+         */
+        200: {
+          data: Array<ClaimPresenter>
+          limit: number
+          page: number
+          total: number
+        }
+      }
+    }
+  }
   '/users/identities': {
     get: {
+      req: {
+        direction?: SortDirection | null
+        limit?: number | null
+        offset?: number | null
+        page?: number | null
+        showEmptyPosition?: boolean | null
+        sortBy?: SortColumn | null
+        timeframe?: TimeFrame | null
+        user?: Identifier | null
+      }
       res: {
         /**
          * Get identities user has position on
@@ -3142,6 +3438,15 @@ export type $OpenApiTs = {
   }
   '/users/positions': {
     get: {
+      req: {
+        direction?: SortDirection | null
+        limit?: number | null
+        offset?: number | null
+        page?: number | null
+        showEmptyPosition?: boolean | null
+        sortBy?: PositionSortColumn | null
+        user?: Identifier | null
+      }
       res: {
         /**
          * Get positions for user

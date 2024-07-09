@@ -6,7 +6,6 @@ import { stakeModalAtom } from '@lib/state/store'
 import { CURRENT_ENV } from '@lib/utils/constants'
 import { getChainEnvConfig } from '@lib/utils/environment'
 import { formatBalance } from '@lib/utils/misc'
-import { Cookie } from '@remix-run/node'
 import { useNavigation } from '@remix-run/react'
 import { useSetAtom } from 'jotai'
 import { TransactionActionType, TransactionStateType } from 'types/transaction'
@@ -16,7 +15,6 @@ import { useAccount, useSwitchChain } from 'wagmi'
 
 interface StakeButtonProps {
   user: SessionUser
-  tosCookie: Cookie
   val: string
   mode: string | undefined
   handleAction: () => void
@@ -66,7 +64,7 @@ const StakeButton: React.FC<StakeButtonProps> = ({
       return 'Enter an Amount'
     } else if (state.status === 'review-transaction') {
       return 'Confirm'
-    } else if (state.status === 'confirm') {
+    } else if (state.status === 'awaiting') {
       return 'Continue in Wallet'
     } else if (state.status === 'transaction-pending') {
       return 'Pending'
@@ -155,7 +153,8 @@ const StakeButton: React.FC<StakeButtonProps> = ({
         !address ||
         val === '' ||
         state.status === 'confirm' ||
-        state.status === 'transaction-pending'
+        state.status === 'transaction-pending' ||
+        state.status === 'awaiting'
       }
       className="w-[159px] m-auto mt-10"
     >

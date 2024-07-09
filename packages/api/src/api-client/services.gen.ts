@@ -46,8 +46,14 @@ import type {
   GetIdentitiesResponse,
   GetIdentityByIdData,
   GetIdentityByIdResponse,
+  GetIdentityFollowedData,
+  GetIdentityFollowedResponse,
+  GetIdentityFollowersData,
+  GetIdentityFollowersResponse,
   GetIdentityPositionsData,
   GetIdentityPositionsResponse,
+  GetIdentityTagsData,
+  GetIdentityTagsResponse,
   GetLinkedAccountByIdData,
   GetLinkedAccountByIdResponse,
   GetLinkedAccountsByUserData,
@@ -65,8 +71,12 @@ import type {
   GetUserByWalletPublicData,
   GetUserByWalletPublicResponse,
   GetUserByWalletResponse,
+  GetUserClaimsData,
+  GetUserClaimsResponse,
+  GetUserIdentitiesData,
   GetUserIdentitiesResponse,
   GetUsersData,
+  GetUsersPositionsData,
   GetUsersPositionsResponse,
   GetUsersResponse,
   GetUserTotalsData,
@@ -500,6 +510,9 @@ export class IdentitiesService {
    * @param data.predicate
    * @param data.isUser
    * @param data.isContract
+   * @param data.hasTag
+   * @param data.follows
+   * @param data.followedBy
    * @param data.timeframe
    * @param data.identityId
    * @param data.description
@@ -526,6 +539,9 @@ export class IdentitiesService {
         predicate: data.predicate,
         isUser: data.isUser,
         isContract: data.isContract,
+        hasTag: data.hasTag,
+        follows: data.follows,
+        followedBy: data.followedBy,
         timeframe: data.timeframe,
         identityId: data.identityId,
         description: data.description,
@@ -548,6 +564,108 @@ export class IdentitiesService {
       url: '/identity/{id}',
       path: {
         id: data.id,
+      },
+    })
+  }
+
+  /**
+   * @param data The data for the request.
+   * @param data.id sql id
+   * @param data.direction
+   * @param data.sortBy
+   * @param data.page
+   * @param data.offset
+   * @param data.limit
+   * @param data.userWallet
+   * @param data.timeframe
+   * @returns unknown Get paginated list of identities following this one
+   * @throws ApiError
+   */
+  public static getIdentityFollowed(
+    data: GetIdentityFollowedData,
+  ): CancelablePromise<GetIdentityFollowedResponse> {
+    return __request(OpenAPI, {
+      method: 'GET',
+      url: '/identity/{id}/followed',
+      path: {
+        id: data.id,
+      },
+      query: {
+        direction: data.direction,
+        sortBy: data.sortBy,
+        page: data.page,
+        offset: data.offset,
+        limit: data.limit,
+        userWallet: data.userWallet,
+        timeframe: data.timeframe,
+      },
+    })
+  }
+
+  /**
+   * @param data The data for the request.
+   * @param data.id sql id
+   * @param data.direction
+   * @param data.sortBy
+   * @param data.page
+   * @param data.offset
+   * @param data.limit
+   * @param data.userWallet
+   * @param data.timeframe
+   * @returns unknown Get paginated list of identity's followers
+   * @throws ApiError
+   */
+  public static getIdentityFollowers(
+    data: GetIdentityFollowersData,
+  ): CancelablePromise<GetIdentityFollowersResponse> {
+    return __request(OpenAPI, {
+      method: 'GET',
+      url: '/identity/{id}/followers',
+      path: {
+        id: data.id,
+      },
+      query: {
+        direction: data.direction,
+        sortBy: data.sortBy,
+        page: data.page,
+        offset: data.offset,
+        limit: data.limit,
+        userWallet: data.userWallet,
+        timeframe: data.timeframe,
+      },
+    })
+  }
+
+  /**
+   * @param data The data for the request.
+   * @param data.id sql id
+   * @param data.direction
+   * @param data.sortBy
+   * @param data.page
+   * @param data.offset
+   * @param data.limit
+   * @param data.userWallet
+   * @param data.timeframe
+   * @returns unknown Get paginated list of identity's tags
+   * @throws ApiError
+   */
+  public static getIdentityTags(
+    data: GetIdentityTagsData,
+  ): CancelablePromise<GetIdentityTagsResponse> {
+    return __request(OpenAPI, {
+      method: 'GET',
+      url: '/identity/{id}/tags',
+      path: {
+        id: data.id,
+      },
+      query: {
+        direction: data.direction,
+        sortBy: data.sortBy,
+        page: data.page,
+        offset: data.offset,
+        limit: data.limit,
+        userWallet: data.userWallet,
+        timeframe: data.timeframe,
       },
     })
   }
@@ -960,24 +1078,96 @@ export class UsersService {
   }
 
   /**
-   * @returns unknown Get identities user has position on
+   * @param data The data for the request.
+   * @param data.direction
+   * @param data.sortBy
+   * @param data.page
+   * @param data.offset
+   * @param data.limit
+   * @param data.user
+   * @param data.showEmptyPosition
+   * @param data.timeframe
+   * @returns unknown Get claims user has position on
    * @throws ApiError
    */
-  public static getUserIdentities(): CancelablePromise<GetUserIdentitiesResponse> {
+  public static getUserClaims(
+    data: GetUserClaimsData = {},
+  ): CancelablePromise<GetUserClaimsResponse> {
     return __request(OpenAPI, {
       method: 'GET',
-      url: '/users/identities',
+      url: '/users/claims',
+      query: {
+        direction: data.direction,
+        sortBy: data.sortBy,
+        page: data.page,
+        offset: data.offset,
+        limit: data.limit,
+        user: data.user,
+        showEmptyPosition: data.showEmptyPosition,
+        timeframe: data.timeframe,
+      },
     })
   }
 
   /**
+   * @param data The data for the request.
+   * @param data.direction
+   * @param data.sortBy
+   * @param data.page
+   * @param data.offset
+   * @param data.limit
+   * @param data.user
+   * @param data.showEmptyPosition
+   * @param data.timeframe
+   * @returns unknown Get identities user has position on
+   * @throws ApiError
+   */
+  public static getUserIdentities(
+    data: GetUserIdentitiesData = {},
+  ): CancelablePromise<GetUserIdentitiesResponse> {
+    return __request(OpenAPI, {
+      method: 'GET',
+      url: '/users/identities',
+      query: {
+        direction: data.direction,
+        sortBy: data.sortBy,
+        page: data.page,
+        offset: data.offset,
+        limit: data.limit,
+        user: data.user,
+        showEmptyPosition: data.showEmptyPosition,
+        timeframe: data.timeframe,
+      },
+    })
+  }
+
+  /**
+   * @param data The data for the request.
+   * @param data.direction
+   * @param data.sortBy
+   * @param data.page
+   * @param data.offset
+   * @param data.limit
+   * @param data.user
+   * @param data.showEmptyPosition
    * @returns unknown Get positions for user
    * @throws ApiError
    */
-  public static getUsersPositions(): CancelablePromise<GetUsersPositionsResponse> {
+  public static getUsersPositions(
+    data: GetUsersPositionsData = {},
+  ): CancelablePromise<GetUsersPositionsResponse> {
     return __request(OpenAPI, {
       method: 'GET',
       url: '/users/positions',
+      query: {
+        direction: data.direction,
+        sortBy: data.sortBy,
+        page: data.page,
+        offset: data.offset,
+        limit: data.limit,
+        user: data.user,
+        showEmptyPosition: data.showEmptyPosition,
+      },
     })
   }
 

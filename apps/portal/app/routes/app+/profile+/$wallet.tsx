@@ -20,6 +20,7 @@ import {
 import FollowModal from '@components/follow/follow-modal'
 import { NestedLayout } from '@components/nested-layout'
 import StakeModal from '@components/stake/stake-modal'
+import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { followModalAtom, stakeModalAtom } from '@lib/state/store'
 import { userIdentityRouteOptions } from '@lib/utils/constants'
 import { fetchUserIdentity, fetchUserTotals } from '@lib/utils/fetches'
@@ -32,7 +33,7 @@ import {
 } from '@lib/utils/misc'
 import { SessionContext } from '@middleware/session'
 import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
-import { Outlet, useLoaderData } from '@remix-run/react'
+import { Outlet } from '@remix-run/react'
 import { getVaultDetails } from '@server/multivault'
 import { getPrivyAccessToken } from '@server/privy'
 import * as blockies from 'blockies-ts'
@@ -76,22 +77,6 @@ export async function loader({ context, request, params }: LoaderFunctionArgs) {
 
   const userTotals = await fetchUserTotals(userIdentity.creator.id)
 
-  let followClaim
-  try {
-    followClaim = await ClaimsService.getClaimById({
-      id: '92ced3bd-5535-46ce-8558-71861bfe0b40',
-    })
-  } catch (error: unknown) {
-    if (error instanceof ApiError) {
-      followClaim = undefined
-      logger(`${error.name} - ${error.status}: ${error.message} ${error.url}`)
-    } else {
-      throw error
-    }
-  }
-
-  console.log('followClaim', followClaim)
-
   let vaultDetails: VaultDetailsType | null = null
 
   if (userIdentity !== undefined && userIdentity.vault_id) {
@@ -107,7 +92,23 @@ export async function loader({ context, request, params }: LoaderFunctionArgs) {
     }
   }
 
-  let followVaultDetails: VaultDetailsType | null = null
+  console.log('vaultDetails', vaultDetails)
+
+  let followClaim: ClaimPresenter | undefined = undefined
+  let followVaultDetails: VaultDetailsType | undefined = undefined
+
+  try {
+    followClaim = await ClaimsService.getClaimById({
+      id: userIdentity.follow_claim_id,
+    })
+  } catch (error: unknown) {
+    if (error instanceof ApiError) {
+      followClaim = undefined
+      logger(`${error.name} - ${error.status}: ${error.message} ${error.url}`)
+    } else {
+      throw error
+    }
+  }
 
   if (followClaim && followClaim.vault_id) {
     try {
@@ -118,7 +119,7 @@ export async function loader({ context, request, params }: LoaderFunctionArgs) {
       )
     } catch (error) {
       logger('Failed to fetch followVaultDetails', error)
-      followVaultDetails = null
+      followVaultDetails = undefined
     }
   }
 
@@ -144,7 +145,7 @@ export default function Profile() {
     followClaim,
     followVaultDetails,
     vaultDetails,
-  } = useLoaderData<{
+  } = useLiveLoader<{
     wallet: string
     user: SessionUser
     userIdentity: IdentityPresenter
@@ -153,11 +154,14 @@ export default function Profile() {
     followClaim: ClaimPresenter
     followVaultDetails: VaultDetailsType
     vaultDetails: VaultDetailsType
-  }>()
+  }>(['attest', 'create'])
+
+  const { user_conviction_value: user_assets = '0', assets_sum = '0' } =
+    vaultDetails ?? userIdentity
 
   logger('followVaultDetails', followVaultDetails)
 
-  const { user_conviction_value: user_assets } = vaultDetails
+  const { user_asset_delta } = userIdentity
 
   const imgSrc = blockies.create({ seed: wallet }).toDataURL()
 
@@ -224,23 +228,15 @@ export default function Profile() {
                 />
                 <PositionCardOwnership
                   percentOwnership={
-                    userIdentity.user_assets !== null && userIdentity.assets_sum
-                      ? +calculatePercentageOfTvl(
-                          userIdentity.user_assets,
-                          userIdentity.assets_sum,
-                        )
+                    user_assets !== null && assets_sum
+                      ? +calculatePercentageOfTvl(user_assets, assets_sum)
                       : 0
                   }
                 />
                 <PositionCardFeesAccrued
                   amount={
-                    userIdentity.user_asset_delta
-                      ? +formatBalance(
-                          +userIdentity.user_assets -
-                            +userIdentity.user_asset_delta,
-                          18,
-                          5,
-                        )
+                    user_asset_delta
+                      ? +formatBalance(+user_assets - +user_asset_delta, 18, 5)
                       : 0
                   }
                 />
@@ -248,7 +244,7 @@ export default function Profile() {
               </PositionCard>
             ) : null}
             <StakeCard
-              tvl={+formatBalance(userIdentity.assets_sum)}
+              tvl={+formatBalance(assets_sum ?? '0')}
               holders={userIdentity.num_positions}
               onBuyClick={() =>
                 setStakeModalActive((prevState) => ({
@@ -263,12 +259,11 @@ export default function Profile() {
           </div>
 
           <StakeModal
-            user={user}
+            user={user as SessionUser}
             contract={userIdentity.contract}
             open={stakeModalActive.isOpen}
             identity={userIdentity}
-            min_deposit={vaultDetails.min_deposit}
-            modalType={'identity'}
+            vaultDetails={vaultDetails}
             onClose={() => {
               setStakeModalActive((prevState) => ({
                 ...prevState,
@@ -278,12 +273,12 @@ export default function Profile() {
             }}
           />
           <FollowModal
-            user={user}
+            user={user as SessionUser}
             contract={userIdentity.contract}
             open={followModalActive.isOpen}
             identity={userIdentity}
             claim={followClaim}
-            min_deposit={vaultDetails.min_deposit}
+            vaultDetails={followVaultDetails}
             onClose={() => {
               setFollowModalActive((prevState) => ({
                 ...prevState,
@@ -293,21 +288,6 @@ export default function Profile() {
             }}
           />
         </>
-        <StakeModal
-          user={user}
-          contract={userIdentity.contract}
-          open={stakeModalActive.isOpen}
-          identity={userIdentity}
-          min_deposit={vaultDetails.min_deposit}
-          modalType={'identity'}
-          onClose={() => {
-            setStakeModalActive((prevState) => ({
-              ...prevState,
-              isOpen: false,
-              mode: undefined,
-            }))
-          }}
-        />
       </div>
     </NestedLayout>
   )
