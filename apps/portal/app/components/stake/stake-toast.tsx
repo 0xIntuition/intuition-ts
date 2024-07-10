@@ -3,6 +3,8 @@ import { cn, formatBalance } from '@lib/utils/misc'
 import { Link } from '@remix-run/react'
 import { ExternalLinkIcon } from 'lucide-react'
 
+import { BLOCK_EXPLORER_URL } from '@lib/utils/constants';
+
 interface ToastProps {
   action: string
   assets: string
@@ -38,7 +40,7 @@ export default function StakeToast({ action, assets, txHash }: ToastProps) {
             </div>
             <div>
               <Link
-                to={`https://base-sepolia.blockscout.com/tx/${txHash}`}
+                to={`${BLOCK_EXPLORER_URL}/tx/${txHash}`}
                 target="_blank"
                 className="flex flex-row items-center gap-1 text-xs text-blue-500 transition-colors duration-300 hover:text-blue-400"
               >

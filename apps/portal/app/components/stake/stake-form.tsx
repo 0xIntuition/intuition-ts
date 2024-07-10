@@ -26,6 +26,8 @@ import StakeActions from './stake-actions'
 import StakeInput from './stake-input'
 import StakeReview from './stake-review'
 
+import { BLOCK_EXPLORER_URL } from '@lib/utils/constants';
+
 interface StakeFormProps {
   user: SessionUser
   walletBalance: string
@@ -222,7 +224,7 @@ export default function StakeForm({
             <TransactionStatusCard status={state.status} />
           ) : (
             <Link
-              to={`https://base-sepolia.blockscout.com/tx/${state.txHash}`}
+              to={`${BLOCK_EXPLORER_URL}/tx/${state.txHash}`}
               target="_blank"
               className="flex flex-row items-center gap-1 mx-auto leading-tight text-blue-500 transition-colors duration-300 hover:text-blue-400"
             >

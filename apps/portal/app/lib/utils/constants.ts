@@ -126,7 +126,7 @@ export const exploreRouteOptions = [
   },
   {
     value: 'identities',
-    label: 'identities',
+    label: 'Identities',
     basePath: '/app/explore',
   },
   {
