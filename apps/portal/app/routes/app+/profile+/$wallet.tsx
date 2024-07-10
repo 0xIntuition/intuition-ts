@@ -33,7 +33,7 @@ import {
 } from '@lib/utils/misc'
 import { SessionContext } from '@middleware/session'
 import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
-import { Outlet } from '@remix-run/react'
+import { Outlet, useNavigate } from '@remix-run/react'
 import { getVaultDetails } from '@server/multivault'
 import { getPrivyAccessToken } from '@server/privy'
 import * as blockies from 'blockies-ts'
@@ -152,6 +152,7 @@ export default function Profile() {
     followVaultDetails: VaultDetailsType
     vaultDetails: VaultDetailsType
   }>(['attest', 'create'])
+  const navigate = useNavigate()
 
   const { user_assets = '0', assets_sum = '0' } = vaultDetails
     ? vaultDetails
@@ -250,7 +251,9 @@ export default function Profile() {
                   isOpen: true,
                 }))
               }
-              onViewAllClick={() => logger('click view all')} // this will navigate to the data-about positions
+              onViewAllClick={() =>
+                navigate(`/app/profile/${wallet}/data-about`)
+              }
             />
           </div>
 
