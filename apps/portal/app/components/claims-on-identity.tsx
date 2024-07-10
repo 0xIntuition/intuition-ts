@@ -50,17 +50,17 @@ export function ClaimsOnIdentity({
         title="Claims on this Identity"
         userIdentity={identity}
         totalClaims={initialData.claims?.total}
-        totalStake={16.25} // TODO: Where does this come from?
+        totalStake={16.25} // TODO: Where does this come from? -- [ENG-2502]
       />
       <div className="flex flex-row justify-between w-full mt-6">
-        <Input className="w-[196px]" onChange={handleSearchChange} />
+        <Input className="w-48" onChange={handleSearchChange} />
         <SortSelect options={options} handleSortChange={handleSortChange} />
       </div>
       <div className="mt-6 flex flex-col w-full">
         {claims?.map((claim) => (
           <div
             key={claim.claim_id}
-            className={`grow shrink basis-0 self-stretch p-6 bg-black first:rounded-t-xl last:rounded-b-xl border border-neutral-300/20 flex-col justify-start  gap-5 inline-flex`}
+            className="grow shrink basis-0 self-stretch p-6 bg-background first:rounded-t-xl last:rounded-b-xl theme-border flex-col justify-start gap-5 inline-flex"
           >
             <ClaimRow
               claimsFor={claim.for_num_positions}
@@ -69,7 +69,9 @@ export function ClaimsOnIdentity({
             >
               <Claim
                 subject={{
-                  variant: claim.subject?.is_user ? 'user' : 'non-user',
+                  variant: claim.subject?.is_user
+                    ? Identity.user
+                    : Identity.nonUser,
                   label:
                     claim.subject?.user?.display_name ??
                     claim.subject?.display_name ??
