@@ -77,7 +77,6 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
 
   const userTotals = await fetchUserTotals(userIdentity.creator.id)
 
-  logger('userIdentity', userIdentity)
   if (!userIdentity.follow_claim_id) {
     return logger('No follow claim ID')
   }
@@ -115,8 +114,6 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
     }
   }
 
-  console.log('followers', followers)
-
   const followersTotalPages = calculateTotalPages(
     followers?.total ?? 0,
     Number(followersLimit),
@@ -148,8 +145,6 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
       throw error
     }
   }
-
-  console.log('following', following)
 
   const followingTotalPages = calculateTotalPages(
     following?.total ?? 0,

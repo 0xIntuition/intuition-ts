@@ -99,8 +99,6 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
     }
   }
 
-  console.log('identites', identities)
-
   const identitiesTotalPages = calculateTotalPages(
     identities?.total ?? 0,
     Number(identitiesLimit),
@@ -127,7 +125,7 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
   } catch (error: unknown) {
     if (error instanceof ApiError) {
       claims = undefined
-      console.log(`${error.name} - ${error.status}: ${error.message}`)
+      logger(`${error.name} - ${error.status}: ${error.message}`)
     } else {
       throw error
     }
@@ -241,6 +239,10 @@ export function PositionsOnIdentities() {
     })
   }
 
+  if (!userIdentity || !identities) {
+    return null
+  }
+
   return (
     <>
       <DataCreatedHeader userIdentity={userIdentity} userTotals={userTotals} />
@@ -285,10 +287,8 @@ export function PositionsOnIdentities() {
             <IdentityPosition
               variant={identity.is_user ? 'user' : 'non-user'}
               avatarSrc={identity.user?.image ?? identity.image ?? ''}
-              name={identity.user?.display_name ?? identity.display_name ?? ''}
-              walletAddress={
-                identity.user?.wallet ?? identity.identity_id ?? ''
-              }
+              name={identity.user?.display_name ?? identity.display_name}
+              walletAddress={identity.user?.wallet ?? identity.identity_id}
               amount={+formatBalance(BigInt(identity.user_assets), 18, 4)}
               feesAccrued={
                 identity.user_asset_delta
@@ -312,8 +312,8 @@ export function PositionsOnIdentities() {
         <div className="flex">
           <PaginationRowSelection defaultValue="10" />
           <PaginationPageCounter
-            currentPage={pagination.page ?? 0}
-            totalPages={pagination.totalPages ?? 0}
+            currentPage={pagination.page}
+            totalPages={pagination.totalPages}
           />
           <PaginationContent>
             <PaginationItem>
@@ -397,6 +397,10 @@ export function PositionsOnClaims() {
     })
   }
 
+  if (!userIdentity || !claims) {
+    return null
+  }
+
   return (
     <>
       <DataCreatedHeader userIdentity={userIdentity} userTotals={userTotals} />
@@ -467,8 +471,8 @@ export function PositionsOnClaims() {
         <div className="flex">
           <PaginationRowSelection defaultValue="10" />
           <PaginationPageCounter
-            currentPage={pagination.page ?? 0}
-            totalPages={pagination.totalPages ?? 0}
+            currentPage={pagination.page}
+            totalPages={pagination.totalPages}
           />
           <PaginationContent>
             <PaginationItem>

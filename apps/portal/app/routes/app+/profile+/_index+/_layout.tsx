@@ -41,7 +41,12 @@ import {
 } from '@lib/utils/misc'
 import { SessionContext } from '@middleware/session'
 import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
-import { Outlet, useMatches, useRevalidator } from '@remix-run/react'
+import {
+  Outlet,
+  useMatches,
+  useNavigate,
+  useRevalidator,
+} from '@remix-run/react'
 import { getVaultDetails } from '@server/multivault'
 import { getPrivyAccessToken } from '@server/privy'
 import * as blockies from 'blockies-ts'
@@ -52,7 +57,6 @@ import { VaultDetailsType } from 'types/vault'
 export async function loader({ context, request }: LoaderFunctionArgs) {
   OpenAPI.BASE = 'https://dev.api.intuition.systems'
   const accessToken = getPrivyAccessToken(request)
-  logger('accessToken', accessToken)
   const headers = getAuthHeaders(accessToken !== null ? accessToken : '')
   OpenAPI.HEADERS = headers as Record<string, string>
 
@@ -133,6 +137,7 @@ export default function Profile() {
   const [stakeModalActive, setStakeModalActive] = useAtom(stakeModalAtom)
 
   const revalidator = useRevalidator()
+  const navigate = useNavigate()
 
   useEffect(() => {
     setEditProfileModalActive(false)
@@ -153,6 +158,10 @@ export default function Profile() {
 
   if (excludedPaths.includes(currentPath)) {
     return <Outlet />
+  }
+
+  if (!userIdentity && !userObject) {
+    return null
   }
 
   return (
@@ -238,10 +247,9 @@ export default function Profile() {
                   isOpen: true,
                 }))
               }
-              onViewAllClick={() => logger('click view all')} // this will navigate to the data-about positions
+              onViewAllClick={() => navigate('/app/profile/data-about')}
             />
           </div>
-
           <EditProfileModal
             userObject={userObject}
             open={editProfileModalActive}

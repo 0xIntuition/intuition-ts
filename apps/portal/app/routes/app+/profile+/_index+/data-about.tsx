@@ -109,7 +109,7 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
   } catch (error: unknown) {
     if (error instanceof ApiError) {
       positions = undefined
-      console.log(`${error.name} - ${error.status}: ${error.message}`)
+      logger(`${error.name} - ${error.status}: ${error.message}`)
     } else {
       throw error
     }
@@ -142,7 +142,7 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
   } catch (error: unknown) {
     if (error instanceof ApiError) {
       claims = undefined
-      console.log(`${error.name} - ${error.status}: ${error.message}`)
+      logger(`${error.name} - ${error.status}: ${error.message}`)
     } else {
       throw error
     }
@@ -230,6 +230,10 @@ export function PositionsOnIdentity() {
     })
   }
 
+  if (!userIdentity || !positions) {
+    return null
+  }
+
   return (
     <>
       <div className="h-[184px] flex-col justify-start items-start gap-3 flex w-full">
@@ -246,12 +250,12 @@ export function PositionsOnIdentity() {
                   Positions staked on
                 </div>
                 <IdentityTag
-                  imgSrc={userIdentity?.user?.image ?? userIdentity?.image}
-                  variant={userIdentity?.user ? 'user' : 'non-user'}
+                  imgSrc={userIdentity.user?.image ?? userIdentity?.image}
+                  variant={userIdentity.user ? 'user' : 'non-user'}
                 >
                   <span className="min-w-20 text-ellipsis">
-                    {userIdentity?.user?.display_name ??
-                      userIdentity?.display_name}
+                    {userIdentity.user?.display_name ??
+                      userIdentity.display_name}
                   </span>
                 </IdentityTag>
               </div>
@@ -262,7 +266,7 @@ export function PositionsOnIdentity() {
                   Total stake
                 </div>
                 <div className="self-stretch text-white text-xl font-medium leading-[30px]">
-                  {formatBalance(userIdentity?.assets_sum ?? '0', 18, 4)} ETH
+                  {formatBalance(userIdentity.assets_sum, 18, 4)} ETH
                 </div>
               </div>
               <div className="flex-col justify-start items-end inline-flex">
@@ -270,7 +274,7 @@ export function PositionsOnIdentity() {
                   Positions
                 </div>
                 <div className="self-stretch text-right text-white text-xl font-medium leading-[30px]">
-                  {userIdentity?.num_positions}
+                  {userIdentity.num_positions}
                 </div>
               </div>
             </div>
@@ -335,8 +339,8 @@ export function PositionsOnIdentity() {
         <div className="flex">
           <PaginationRowSelection defaultValue="10" />
           <PaginationPageCounter
-            currentPage={pagination.page ?? 0}
-            totalPages={pagination.totalPages ?? 0}
+            currentPage={pagination.page}
+            totalPages={pagination.totalPages}
           />
           <PaginationContent>
             <PaginationItem>
@@ -421,6 +425,10 @@ export function ClaimsOnIdentity() {
       ...Object.fromEntries(searchParams),
       claimsPage: newPage.toString(),
     })
+  }
+
+  if (!userIdentity || !claims) {
+    return null
   }
 
   return (
@@ -514,8 +522,8 @@ export function ClaimsOnIdentity() {
         <div className="flex">
           <PaginationRowSelection defaultValue="10" />
           <PaginationPageCounter
-            currentPage={pagination.page ?? 0}
-            totalPages={pagination.totalPages ?? 0}
+            currentPage={pagination.page}
+            totalPages={pagination.totalPages}
           />
           <PaginationContent>
             <PaginationItem>
