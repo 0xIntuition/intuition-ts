@@ -1,10 +1,12 @@
 import { PrivyPlatform } from 'types/privy'
-import { base, baseSepolia } from 'viem/chains'
+import { baseSepolia } from 'viem/chains'
 
 export const CURRENT_ENV = process.env.NODE_ENV
 
 export const DEFAULT_CHAIN_ID =
-  CURRENT_ENV === 'production' ? base.id.toString() : baseSepolia.id.toString()
+  CURRENT_ENV === 'production'
+    ? baseSepolia.id.toString()
+    : baseSepolia.id.toString()
 
 export const DEFAULT_VERIFIER = function (): void {
   throw new Error('verify function must be implemented')

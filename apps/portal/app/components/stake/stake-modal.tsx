@@ -69,21 +69,47 @@ export default function StakeModal({
 
   const identityShouldOverride = identity && identity.vault_id !== '0'
 
-  let vaultId: string
+  let vaultId: string = '0'
   if (identityShouldOverride) {
     vaultId = identity.vault_id
   } else if (claim) {
     vaultId = direction === 'for' ? claim.vault_id : claim.counter_vault_id
   }
 
-  const {
-    conviction_price,
-    user_conviction,
-    user_conviction_value: user_assets,
-    min_deposit,
-    formatted_entry_fee,
-    formatted_exit_fee,
-  } = vaultDetails
+  let user_assets: string = '0'
+  if (identityShouldOverride) {
+    user_assets = vaultDetails.user_conviction_value ?? identity.user_assets
+  } else if (claim) {
+    user_assets =
+      direction === 'for'
+        ? vaultDetails.user_conviction_value ?? claim.user_assets_for
+        : vaultDetails.user_conviction_against_value ??
+          claim.user_assets_against
+  }
+
+  let user_conviction: string = '0'
+  if (identityShouldOverride) {
+    user_conviction = vaultDetails.user_conviction ?? identity.user_conviction
+  } else if (claim) {
+    user_conviction =
+      direction === 'for'
+        ? vaultDetails.user_conviction ?? claim.user_conviction_for
+        : vaultDetails.user_conviction_against ?? claim.user_conviction_against
+  }
+
+  let conviction_price: string = '0'
+  if (identityShouldOverride) {
+    conviction_price =
+      vaultDetails.conviction_price ?? identity.conviction_price
+  } else if (claim) {
+    conviction_price =
+      direction === 'for'
+        ? vaultDetails.conviction_price ?? claim.for_conviction_price
+        : vaultDetails.against_conviction_price ??
+          claim.against_conviction_price
+  }
+
+  const { min_deposit, formatted_entry_fee, formatted_exit_fee } = vaultDetails
 
   const depositHook = useDepositAtom(contract)
 
@@ -104,7 +130,14 @@ export default function StakeModal({
         const txHash = await writeContractAsync({
           address: contract as `0x${string}`,
           abi: multivaultAbi as Abi,
-          functionName: actionType === 'buy' ? 'depositAtom' : 'redeemAtom',
+          functionName:
+            actionType === 'buy'
+              ? claim !== undefined
+                ? 'depositTriple'
+                : 'depositAtom'
+              : claim !== undefined
+                ? 'redeemTriple'
+                : 'redeemAtom',
           args:
             actionType === 'buy'
               ? [user.details?.wallet?.address as `0x${string}`, vaultId]

@@ -9,10 +9,10 @@ const alchemyRpcUrlSepolia =
     ? window.ENV?.ALCHEMY_BASE_SEPOLIA_RPC_URL
     : process.env.ALCHEMY_BASE_SEPOLIA_RPC_URL
 
-const alchemyRpcUrlMainnet =
-  typeof window !== 'undefined'
-    ? window.ENV?.ALCHEMY_BASE_RPC_URL
-    : process.env.ALCHEMY_BASE_RPC_URL
+// const alchemyRpcUrlMainnet =
+//   typeof window !== 'undefined'
+//     ? window.ENV?.ALCHEMY_BASE_RPC_URL
+//     : process.env.ALCHEMY_BASE_RPC_URL
 
 const multiVaultContractAddress =
   typeof window !== 'undefined'
@@ -47,10 +47,10 @@ export const getChainEnvConfig = (env: string): ChainConfig => {
       contractAddress: multiVaultContractAddress as `0x${string}`,
     },
     production: {
-      chainId: base.id,
-      name: base.name,
-      alchemyRpcUrl: alchemyRpcUrlMainnet,
-      contractAddress: multiVaultContractAddress as `0x${string}`,
+      chainId: baseSepolia.id,
+      name: baseSepolia.name,
+      alchemyRpcUrl: alchemyRpcUrlSepolia,
+      contractAddress: multiVaultContractAddress as `0x${string}`, // TODO: temporarily seting the envs to be the same -- revisit in [ENG-2407]
     },
   }
 

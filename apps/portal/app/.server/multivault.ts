@@ -23,6 +23,7 @@ export async function getVaultDetails(
   contract: string,
   vid: string,
   wallet?: Address,
+  counterVault?: string,
 ) {
   const multiVaultContract = createMultiVaultContract(contract)
 
@@ -53,12 +54,42 @@ export async function getVaultDetails(
       args: [],
     },
   ]
+
   const coreContractConfigsLength = coreContractConfigs.length
+
   if (wallet) {
     coreContractConfigs.push({
       ...multiVaultContract,
       functionName: 'getVaultStateForUser',
       args: [vid, wallet],
+    })
+  }
+
+  if (counterVault) {
+    coreContractConfigs.push(
+      {
+        ...multiVaultContract,
+        functionName: 'tripleConfig',
+        args: [],
+      },
+      {
+        ...multiVaultContract,
+        functionName: 'vaults',
+        args: [counterVault],
+      },
+      {
+        ...multiVaultContract,
+        functionName: 'currentSharePrice',
+        args: [counterVault],
+      },
+    )
+  }
+
+  if (wallet && counterVault) {
+    coreContractConfigs.push({
+      ...multiVaultContract,
+      functionName: 'getVaultStateForUser',
+      args: [counterVault, wallet],
     })
   }
 
@@ -92,7 +123,7 @@ export async function getVaultDetails(
   const formattedExitFee =
     +formatUnits(exitFee, 18) / +formatUnits(feeDenominator, 18)
 
-  const currentIndex = coreContractConfigsLength
+  let currentIndex = coreContractConfigsLength
 
   let userConviction: string = '',
     formattedUserConviction: string = '',
@@ -104,6 +135,52 @@ export async function getVaultDetails(
     formattedUserConviction = formatUnits(BigInt(userConviction), 18)
     userConvictionValue = resp[currentIndex].result[1].toString()
     formattedUserConvictionValue = formatUnits(BigInt(userConvictionValue), 18)
+    currentIndex++
+  }
+
+  let tripleCreationFee,
+    formattedTripleCreationFee,
+    atomEquityFee,
+    formattedAtomEquityFee,
+    totalAssetsAgainst,
+    formattedTotalAssetsAgainst,
+    totalConvictionAgainst,
+    formattedTotalConvictionAgainst,
+    convictionPriceAgainst,
+    formattedConvictionPriceAgainst
+
+  if (counterVault) {
+    tripleCreationFee = resp[currentIndex].result[0] as bigint
+    formattedTripleCreationFee = formatUnits(tripleCreationFee, 18)
+    atomEquityFee = resp[currentIndex].result[1] as bigint
+    formattedAtomEquityFee = formatUnits(atomEquityFee, 18)
+    currentIndex++
+    totalAssetsAgainst = resp[currentIndex].result[0] as bigint
+    formattedTotalAssetsAgainst = formatUnits(totalAssetsAgainst, 18)
+    totalConvictionAgainst = resp[currentIndex].result[1] as bigint
+    formattedTotalConvictionAgainst = formatUnits(totalConvictionAgainst, 18)
+    currentIndex++
+    convictionPriceAgainst = resp[currentIndex].result as bigint
+    formattedConvictionPriceAgainst = formatUnits(convictionPriceAgainst, 18)
+    currentIndex++
+  }
+
+  let userConvictionAgainst,
+    formattedUserConvictionAgainst,
+    userConvictionValueAgainst,
+    formattedUserConvictionValueAgainst
+
+  if (wallet && counterVault) {
+    userConvictionAgainst = resp[currentIndex].result[0].toString()
+    formattedUserConvictionAgainst = formatUnits(
+      BigInt(userConvictionAgainst),
+      18,
+    )
+    userConvictionValueAgainst = resp[currentIndex].result[1].toString()
+    formattedUserConvictionValueAgainst = formatUnits(
+      BigInt(userConvictionValueAgainst),
+      18,
+    )
   }
 
   return {
@@ -136,6 +213,32 @@ export async function getVaultDetails(
           formatted_user_conviction: formattedUserConviction,
           user_conviction_value: userConvictionValue?.toString(),
           formatted_user_conviction_value: formattedUserConvictionValue,
+        }
+      : {}),
+    ...(counterVault
+      ? {
+          isTriple: true,
+          triple_creation_fee: tripleCreationFee?.toString(),
+          formatted_triple_creation_fee: formattedTripleCreationFee,
+          atom_equity_fee: atomEquityFee?.toString(),
+          formatted_atom_equity_fee: formattedAtomEquityFee,
+          against_assets_sum: totalAssetsAgainst?.toString(),
+          formatted_against_assets_sum: formattedTotalAssetsAgainst,
+          against_conviction_sum: totalConvictionAgainst?.toString(),
+          formatted_against_conviction_sum: formattedTotalConvictionAgainst,
+          against_conviction_price: convictionPriceAgainst?.toString(),
+          formatted_against_conviction_price: formattedConvictionPriceAgainst,
+          ...(wallet
+            ? {
+                user_conviction_against: userConvictionAgainst?.toString(),
+                formatted_user_conviction_against:
+                  formattedUserConvictionAgainst,
+                user_conviction_against_value:
+                  userConvictionValueAgainst?.toString(),
+                formatted_user_conviction_against_value:
+                  formattedUserConvictionValueAgainst,
+              }
+            : {}),
         }
       : {}),
   } as VaultDetailsType

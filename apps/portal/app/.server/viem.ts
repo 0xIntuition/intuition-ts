@@ -9,27 +9,27 @@ import {
   PublicClient,
   type Abi,
 } from 'viem'
-import { base, baseSepolia, mainnet } from 'viem/chains'
+import { baseSepolia, mainnet } from 'viem/chains'
 
 export const publicClient: PublicClient = createPublicClient({
   batch: {
     multicall: true,
   },
-  chain: CURRENT_ENV === 'production' ? base : baseSepolia,
+  chain: CURRENT_ENV === 'production' ? baseSepolia : baseSepolia, // TODO:  temporarily making these both the same until we sort out envs -- revisit in [ENG-2407]
   transport: http(
     CURRENT_ENV === 'production'
-      ? process.env.ALCHEMY_BASE_RPC_URL
+      ? process.env.ALCHEMY_BASE_SEPOLIA_RPC_URL // TODO: temporarily making these both the same until we sort out envs -- revisit in [ENG-2407]
       : process.env.ALCHEMY_BASE_SEPOLIA_RPC_URL,
-    {
-      fetchOptions: {
-        headers: {
-          Origin:
-            CURRENT_ENV === 'production'
-              ? process.env.PRODUCTION_ORIGIN_URL!
-              : process.env.STAGING_ORIGIN_URL!,
-        },
-      },
-    },
+    // {
+    //   fetchOptions: {
+    //     headers: {
+    //       Origin:
+    //         CURRENT_ENV === 'production'
+    //           ? process.env.PRODUCTION_ORIGIN_URL!
+    //           : process.env.STAGING_ORIGIN_URL!,
+    //     },
+    //   },
+    // }, // TODO: omitting these headers to reduce troubleshooting area for now -- revisit in [ENG-2407]
   ),
 }) as PublicClient
 

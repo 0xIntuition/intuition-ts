@@ -26,14 +26,14 @@ export const editSocialLinksModalAtom = atomWithToggle(false)
 export const stakeModalAtom = atom<{
   isOpen: boolean
   id: string | null
-  direction?: 'for' | 'against' | null
-  modalType?: 'identity' | 'claim' | null
+  direction?: 'for' | 'against'
+  modalType?: 'identity' | 'claim'
   mode?: 'deposit' | 'redeem'
 }>({
   isOpen: false,
   id: null,
-  direction: null,
-  modalType: null,
+  direction: undefined,
+  modalType: undefined,
   mode: undefined,
 })
 
