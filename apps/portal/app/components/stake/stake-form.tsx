@@ -16,6 +16,7 @@ import {
 import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
 
 import { stakeModalAtom } from '@lib/state/store'
+import { BLOCK_EXPLORER_URL } from '@lib/utils/constants'
 import { formatBalance } from '@lib/utils/misc'
 import { Link, type FetcherWithComponents } from '@remix-run/react'
 import { useAtom } from 'jotai'
@@ -25,8 +26,6 @@ import { SessionUser } from 'types/user'
 import StakeActions from './stake-actions'
 import StakeInput from './stake-input'
 import StakeReview from './stake-review'
-
-import { BLOCK_EXPLORER_URL } from '@lib/utils/constants';
 
 interface StakeFormProps {
   user: SessionUser

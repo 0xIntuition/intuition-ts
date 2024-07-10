@@ -438,7 +438,7 @@ export default function Profile() {
           <div className="h-[37px] flex-col justify-start items-start gap-6 flex">
             <div className="self-stretch h-[37px] flex-col justify-start items-start gap-2.5 flex">
               <div className="self-stretch text-white text-3xl font-semibold">
-                Create your profile identity
+                Create Your Decentralized Identifier
               </div>
             </div>
           </div>
@@ -476,12 +476,15 @@ export default function Profile() {
             <div className="grow shrink basis-0 self-stretch flex-col justify-start items-start gap-6 inline-flex">
               <div className="self-stretch h-[74px] flex-col justify-start items-start gap-2.5 flex">
                 <div className="self-stretch text-white text-base font-medium leading-normal">
-                  Enhanced Visibility
+                  Welcome to the world of Intuition.
                 </div>
                 <div className="self-stretch text-white/40 text-sm font-normal leading-tight">
-                  By creating a profile identity, you increase your visibility
-                  on the Intuition Portal, making it easier for others to find
-                  and connect with you within the community.
+                  By completing this step, you'll create an 'Atom' for your
+                  Ethereum address - a universally referenceable node in the
+                  Intuition Trust Graph, representative of you. With this,
+                  you'll be able to make claims about things, and will allow
+                  claims to be made about you - taking the first step in your
+                  journey towards better intuition in all of your interactions.
                 </div>
               </div>
             </div>

@@ -10,6 +10,7 @@ import {
 } from '@0xintuition/1ui'
 import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
 
+import { BLOCK_EXPLORER_URL } from '@lib/utils/constants'
 import { formatBalance } from '@lib/utils/misc'
 import { Link, type FetcherWithComponents } from '@remix-run/react'
 import { HelpCircleIcon } from 'lucide-react'
@@ -17,8 +18,6 @@ import { TransactionActionType, TransactionStateType } from 'types/transaction'
 
 import FollowActions from './follow-actions'
 import FollowReview from './follow-review'
-
-import { BLOCK_EXPLORER_URL } from '@lib/utils/constants';
 
 interface FollowFormProps {
   walletBalance: string

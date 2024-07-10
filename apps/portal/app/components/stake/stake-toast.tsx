@@ -1,9 +1,8 @@
 import CheckCircleIcon from '@components/svg/check-circle-icon'
+import { BLOCK_EXPLORER_URL } from '@lib/utils/constants'
 import { cn, formatBalance } from '@lib/utils/misc'
 import { Link } from '@remix-run/react'
 import { ExternalLinkIcon } from 'lucide-react'
-
-import { BLOCK_EXPLORER_URL } from '@lib/utils/constants';
 
 interface ToastProps {
   action: string
