@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 
 import {
-  ClaimPosition,
+  ClaimPositionRow,
   Input,
   Pagination,
   PaginationContent,
@@ -266,7 +266,7 @@ export function PositionsOnClaim() {
             key={position.id}
             className={`grow shrink basis-0 self-stretch p-6 bg-black first:rounded-t-xl last:rounded-b-xl border border-neutral-300/20 flex-col justify-start items-start gap-5 inline-flex`}
           >
-            <ClaimPosition
+            <ClaimPositionRow
               variant="user"
               avatarSrc={position.user?.image ?? ''}
               name={position.user?.display_name ?? ''}
