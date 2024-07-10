@@ -97,7 +97,7 @@ export default function IdentityDetails() {
     user: SessionUser
   }>()
 
-  const user_assets = vaultDetails ? vaultDetails.user_conviction_value : '0'
+  const user_assets = vaultDetails ? vaultDetails.user_assets : '0'
   const [stakeModalActive, setStakeModalActive] = useAtom(stakeModalAtom)
 
   return (
@@ -177,12 +177,11 @@ export default function IdentityDetails() {
           />
         </div>
         <StakeModal
-          user={user}
+          user={user as SessionUser}
           contract={identity.contract}
           open={stakeModalActive.isOpen}
           identity={identity}
-          min_deposit={vaultDetails.min_deposit}
-          modalType="identity"
+          vaultDetails={vaultDetails}
           onClose={() => {
             setStakeModalActive((prevState) => ({
               ...prevState,

@@ -96,20 +96,33 @@ export default function FollowReview({
                 label: !claim
                   ? 'I'
                   : claim?.subject?.user?.display_name ??
-                    claim?.subject?.display_name,
-                variant: claim?.subject?.user ? 'user' : 'default',
+                    claim?.subject?.display_name ??
+                    '',
+                variant: 'non-user',
               }}
               predicate={{
                 imgSrc: claim?.predicate?.image,
-                label: !claim ? 'am following' : claim?.predicate?.display_name,
+                label: !claim
+                  ? 'am following'
+                  : claim?.predicate?.display_name ?? '',
+                variant: 'non-user',
               }}
               object={{
-                imgSrc: claim?.object?.user?.image ?? claim?.object?.image,
+                imgSrc: !claim
+                  ? identity?.user?.image
+                  : claim?.object?.user?.image ?? claim?.object?.image,
                 label: !claim
-                  ? identity?.user?.display_name
+                  ? identity?.user?.display_name ?? ''
                   : claim?.object?.user?.display_name ??
-                    claim?.object?.display_name,
-                variant: claim?.object?.user ? 'user' : 'default',
+                    claim?.object?.display_name ??
+                    '',
+                variant: !claim
+                  ? identity?.user
+                    ? 'user'
+                    : 'default'
+                  : claim?.object?.user
+                    ? 'user'
+                    : 'default',
               }}
             />
             <span className="text-neutral-50/50 text-base font-normal leading-normal m-auto">

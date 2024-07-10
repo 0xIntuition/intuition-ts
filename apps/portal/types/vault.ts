@@ -43,8 +43,8 @@ export type IdentityVaultDetailsType = {
   formatted_atom_creation_fee: string
   user_conviction?: string
   formatted_user_conviction?: string
-  user_conviction_value?: string
-  formatted_user_conviction_value?: string
+  user_assets?: string
+  formatted_user_assets?: string
 }
 
 export type VaultDetailsType = {
@@ -56,8 +56,8 @@ export type VaultDetailsType = {
   formatted_conviction_price: string
   user_conviction?: string
   formatted_user_conviction?: string
-  user_conviction_value?: string
-  formatted_user_conviction_value?: string
+  user_assets?: string
+  formatted_user_assets?: string
   against_assets_sum?: string
   formatted_against_assets_sum?: string
   against_conviction_sum?: string
@@ -66,8 +66,8 @@ export type VaultDetailsType = {
   formatted_against_conviction_price?: string
   user_conviction_against?: string
   formatted_user_conviction_against?: string
-  user_conviction_against_value?: string
-  formatted_user_conviction_against_value?: string
+  user_assets_against?: string
+  formatted_user_assets_against?: string
   entry_fee: string
   formatted_entry_fee: string
   exit_fee: string
