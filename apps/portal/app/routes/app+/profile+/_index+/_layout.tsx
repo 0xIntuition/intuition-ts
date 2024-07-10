@@ -227,7 +227,7 @@ export default function Profile() {
               </PositionCard>
             ) : null}
             <StakeCard
-              tvl={formatBalance(userIdentity.assets_sum)}
+              tvl={+formatBalance(userIdentity.assets_sum)}
               holders={userIdentity.num_positions}
               onBuyClick={() =>
                 setStakeModalActive((prevState) => ({
