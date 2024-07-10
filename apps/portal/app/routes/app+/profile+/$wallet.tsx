@@ -53,21 +53,17 @@ export async function loader({ context, request, params }: LoaderFunctionArgs) {
   const wallet = params.wallet
 
   if (!wallet) {
-    return console.log('Wallet parameter is not defined')
+    throw new Error('Wallet is undefined.')
   }
 
   if (wallet === user?.details?.wallet?.address) {
     throw redirect('/app/profile')
   }
 
-  if (!wallet) {
-    throw new Error('Wallet is undefined.')
-  }
-
   const userIdentity = await fetchUserIdentity(wallet)
 
   if (!userIdentity) {
-    return redirect('/create')
+    return logger('No user identity found')
   }
 
   if (!userIdentity.creator || typeof userIdentity.creator.id !== 'string') {
@@ -77,7 +73,11 @@ export async function loader({ context, request, params }: LoaderFunctionArgs) {
 
   const userTotals = await fetchUserTotals(userIdentity.creator.id)
 
-  let vaultDetails: VaultDetailsType | null = null
+  if (!userTotals) {
+    return logger('No user totals found')
+  }
+
+  let vaultDetails: VaultDetailsType | undefined = undefined
 
   if (userIdentity !== undefined && userIdentity.vault_id) {
     try {
@@ -88,11 +88,9 @@ export async function loader({ context, request, params }: LoaderFunctionArgs) {
       )
     } catch (error) {
       logger('Failed to fetch vaultDetails', error)
-      vaultDetails = null
+      vaultDetails = undefined
     }
   }
-
-  console.log('vaultDetails', vaultDetails)
 
   let followClaim: ClaimPresenter | undefined = undefined
   let followVaultDetails: VaultDetailsType | undefined = undefined
@@ -112,8 +110,6 @@ export async function loader({ context, request, params }: LoaderFunctionArgs) {
     }
   }
 
-  console.log('followClaim', followClaim)
-
   if (userIdentity.user && followClaim && followClaim.vault_id) {
     try {
       followVaultDetails = await getVaultDetails(
@@ -126,8 +122,6 @@ export async function loader({ context, request, params }: LoaderFunctionArgs) {
       followVaultDetails = undefined
     }
   }
-
-  logger('followVaultDetails', followVaultDetails)
 
   return json({
     wallet,
@@ -162,8 +156,6 @@ export default function Profile() {
   const { user_assets = '0', assets_sum = '0' } = vaultDetails
     ? vaultDetails
     : userIdentity
-
-  logger('followVaultDetails', followVaultDetails)
 
   const { user_asset_delta } = userIdentity
 

@@ -75,7 +75,6 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
 
   const userTotals = await fetchUserTotals(userIdentity.creator.id)
 
-  logger('userIdentity', userIdentity)
   if (!userIdentity.follow_claim_id) {
     return logger('No follow claim ID')
   }
@@ -113,8 +112,6 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
     }
   }
 
-  console.log('followers', followers)
-
   const followersTotalPages = calculateTotalPages(
     followers?.total ?? 0,
     Number(followersLimit),
@@ -146,8 +143,6 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
       throw error
     }
   }
-
-  console.log('following', following)
 
   const followingTotalPages = calculateTotalPages(
     following?.total ?? 0,
@@ -296,6 +291,10 @@ export function FollowersOnIdentity() {
     })
   }
 
+  if (!followers) {
+    return null
+  }
+
   return (
     <>
       <div className="flex flex-row justify-between w-full mt-6">
@@ -339,10 +338,8 @@ export function FollowersOnIdentity() {
             <IdentityPosition
               variant={follower.is_user ? 'user' : 'non-user'}
               avatarSrc={follower.user?.image ?? follower.image ?? ''}
-              name={follower.user?.display_name ?? follower.display_name ?? ''}
-              walletAddress={
-                follower.user?.wallet ?? follower.identity_id ?? ''
-              }
+              name={follower.user?.display_name ?? follower.display_name}
+              walletAddress={follower.user?.wallet ?? follower.identity_id}
               amount={+formatBalance(BigInt(follower.user_assets), 18, 4)}
               feesAccrued={
                 follower.user_asset_delta
@@ -448,6 +445,10 @@ export function FollowingOnIdentity() {
     })
   }
 
+  if (!following) {
+    return null
+  }
+
   return (
     <>
       <div className="flex flex-row justify-between w-full mt-6">
@@ -491,10 +492,8 @@ export function FollowingOnIdentity() {
             <IdentityPosition
               variant={follower.is_user ? 'user' : 'non-user'}
               avatarSrc={follower.user?.image ?? follower.image ?? ''}
-              name={follower.user?.display_name ?? follower.display_name ?? ''}
-              walletAddress={
-                follower.user?.wallet ?? follower.identity_id ?? ''
-              }
+              name={follower.user?.display_name ?? follower.display_name}
+              walletAddress={follower.user?.wallet ?? follower.identity_id}
               amount={+formatBalance(BigInt(follower.user_assets), 18, 4)}
               feesAccrued={
                 follower.user_asset_delta
