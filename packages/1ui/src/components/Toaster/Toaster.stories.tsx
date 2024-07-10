@@ -101,7 +101,11 @@ export const Error: Story = {
   render: (args) => (
     <>
       <Toaster {...args} />
-      <Button size="lg" variant="destructive">
+      <Button
+        size="lg"
+        variant="destructive"
+        onClick={() => toast.success('I am an error toast!')}
+      >
         Launch toast
       </Button>
     </>
