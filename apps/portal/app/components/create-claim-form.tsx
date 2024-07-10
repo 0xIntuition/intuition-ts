@@ -62,9 +62,11 @@ export function ClaimForm({ onClose }: ClaimFormProps) {
 
   const isTransactionStarted = [
     'approve',
-    'review',
-    'pending',
+    'awaiting',
     'confirm',
+    'review-transaction',
+    'transaction-pending',
+    'transaction-confirmed',
     'complete',
     'error',
   ].includes(state.status)
@@ -345,16 +347,18 @@ function CreateClaimForm({
 
   const isTransactionStarted = [
     'approve',
-    'review',
-    'pending',
+    'awaiting',
     'confirm',
+    'review-transaction',
+    'transaction-pending',
+    'transaction-confirmed',
     'complete',
     'error',
   ].includes(state.status)
 
   const statusMessages = {
     approve: 'Approve Transaction...',
-    pending: 'Transaction Pending...',
+    'transaction-pending': 'Transaction Pending...',
     confirm: 'Confirming...',
     complete: 'Claim created successfully',
     error: 'Failed to create claim',
@@ -362,7 +366,8 @@ function CreateClaimForm({
 
   const isTransactionAwaiting = (status: string) =>
     ['approve', 'confirm'].includes(status)
-  const isTransactionProgress = (status: string) => ['pending'].includes(status)
+  const isTransactionProgress = (status: string) =>
+    ['transaction-pending'].includes(status)
 
   const Divider = () => (
     <span className="h-px w-2.5 flex bg-border/30 self-end mb-[1.2rem]" />
