@@ -3,12 +3,12 @@ import React from 'react'
 import { render } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 
-import { ClaimPosition } from './ClaimPosition'
+import { ClaimPositionRow } from './ClaimPositionRow'
 
-describe('ClaimPosition', () => {
+describe('ClaimPositionRow', () => {
   it('should render UI for user variant', () => {
     const { asFragment } = render(
-      <ClaimPosition
+      <ClaimPositionRow
         variant="user"
         position="claimFor"
         name="John Doe"
@@ -91,10 +91,10 @@ describe('ClaimPosition', () => {
       </DocumentFragment>
     `)
   })
-  describe('ClaimPosition', () => {
+  describe('ClaimPositionRow', () => {
     it('should render UI for identity variant', () => {
       const { asFragment } = render(
-        <ClaimPosition
+        <ClaimPositionRow
           variant="claim"
           position="claimAgainst"
           claimsFor={30}

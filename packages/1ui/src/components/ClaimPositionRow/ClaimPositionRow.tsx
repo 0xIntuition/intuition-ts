@@ -16,12 +16,12 @@ import { formatDate } from 'utils/date'
 import { formatWalletAddress } from 'utils/wallet'
 
 import {
-  ClaimPositionVariant,
-  ClaimPositionVariantType,
-} from './ClaimPosition.utils'
+  ClaimPositionRowVariant,
+  ClaimPositionRowVariantType,
+} from './ClaimPositionRow.utils'
 
 interface CommonProps extends React.HTMLAttributes<HTMLDivElement> {
-  variant: ClaimPositionVariantType
+  variant: ClaimPositionRowVariantType
   position: ClaimPositionType
   amount: number
   currency?: CurrencyType
@@ -48,9 +48,9 @@ interface ClaimVariantProps extends CommonProps {
   walletAddress?: never
 }
 
-type ClaimPositionProps = UserVariantProps | ClaimVariantProps
+type ClaimPositionRowProps = UserVariantProps | ClaimVariantProps
 
-const ClaimPosition = ({
+const ClaimPositionRow = ({
   variant,
   position,
   claimsFor = 0,
@@ -65,10 +65,10 @@ const ClaimPosition = ({
   tags,
   children,
   ...props
-}: ClaimPositionProps) => {
+}: ClaimPositionRowProps) => {
   return (
     <div className="w-full flex justify-between" {...props}>
-      {variant === ClaimPositionVariant.user && (
+      {variant === ClaimPositionRowVariant.user && (
         <div className="flex items-center">
           <Avatar src={avatarSrc} name={name} className="w-16 h-16 mr-4" />
           <div className="flex flex-col">
@@ -109,7 +109,7 @@ const ClaimPosition = ({
         </div>
       )}
 
-      {variant === ClaimPositionVariant.claim && (
+      {variant === ClaimPositionRowVariant.claim && (
         <div className="w-[60%]">
           <ClaimStatus
             claimsFor={claimsFor}
@@ -131,4 +131,4 @@ const ClaimPosition = ({
   )
 }
 
-export { ClaimPosition }
+export { ClaimPositionRow }
