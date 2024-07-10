@@ -6,6 +6,7 @@ import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
+  Icon,
   IdentitySearchCombobox,
   IdentitySearchComboboxItem,
   IdentityTag,
@@ -15,6 +16,8 @@ import {
   ProfileCard,
   Text,
   toast,
+  TransactionStatusCard,
+  TransactionStatusIndicator,
 } from '@0xintuition/1ui'
 import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
 
@@ -30,13 +33,14 @@ import {
 } from '@lib/hooks/useTransactionReducer'
 import { createClaimSchema } from '@lib/schemas/create-claim-schema'
 import {
+  BLOCK_EXPLORER_URL,
   CREATE_RESOURCE_ROUTE,
   GET_IDENTITIES_RESOURCE_ROUTE,
   MULTIVAULT_CONTRACT_ADDRESS,
 } from '@lib/utils/constants'
 import logger from '@lib/utils/logger'
 import { formatBalance, sliceString, truncateString } from '@lib/utils/misc'
-import { useFetcher } from '@remix-run/react'
+import { Link, useFetcher, useNavigate } from '@remix-run/react'
 import { CreateLoaderData } from '@routes/resources+/create'
 import * as blockies from 'blockies-ts'
 import { AlertCircle } from 'lucide-react'
@@ -44,7 +48,6 @@ import { TransactionActionType, TransactionStateType } from 'types/transaction'
 import { useAccount, usePublicClient, useWalletClient } from 'wagmi'
 
 import Toast from './toast'
-import TransactionStatus from './transaction-status'
 
 interface ClaimFormProps {
   onSuccess?: () => void
@@ -134,6 +137,8 @@ function CreateClaimForm({
     atomCostAmount,
     tripleCostAmount,
   )
+
+  const navigate = useNavigate()
   interface OffChainClaimFetcherData {
     success: 'success' | 'error'
     claim: ClaimPresenter
@@ -195,7 +200,7 @@ function CreateClaimForm({
       address
     ) {
       try {
-        dispatch({ type: 'CONFIRM_TRANSACTION' })
+        dispatch({ type: 'APPROVE_TRANSACTION' })
         const txHash = await writeCreateTriple({
           address: MULTIVAULT_CONTRACT_ADDRESS,
           abi: multivaultAbi,
@@ -355,19 +360,6 @@ function CreateClaimForm({
     'complete',
     'error',
   ].includes(state.status)
-
-  const statusMessages = {
-    approve: 'Approve Transaction...',
-    'transaction-pending': 'Transaction Pending...',
-    confirm: 'Confirming...',
-    complete: 'Claim created successfully',
-    error: 'Failed to create claim',
-  }
-
-  const isTransactionAwaiting = (status: string) =>
-    ['approve', 'confirm'].includes(status)
-  const isTransactionProgress = (status: string) =>
-    ['transaction-pending'].includes(status)
 
   const Divider = () => (
     <span className="h-px w-2.5 flex bg-border/30 self-end mb-[1.2rem]" />
@@ -723,15 +715,38 @@ function CreateClaimForm({
             </Button>
           </div>
         ) : (
-          <TransactionStatus
-            transactionType="claim"
-            state={state}
-            dispatch={dispatch}
-            transactionDetail={transactionResponseData?.claim_id}
-            statusMessages={statusMessages}
-            isTransactionAwaiting={isTransactionAwaiting}
-            isTransactionProgress={isTransactionProgress}
-          />
+          <div className="flex flex-col items-center justify-center min-h-96">
+            <TransactionStatusIndicator status={state.status} />
+            {state.status !== 'complete' ? (
+              <TransactionStatusCard status={state.status} />
+            ) : (
+              <div className="flex flex-col gap-1 items-center gap-2.5">
+                {state.txHash && transactionResponseData !== null && (
+                  <div className="flex flex-col items-center">
+                    <Link
+                      to={`${BLOCK_EXPLORER_URL}/tx/${state.txHash}`}
+                      target="_blank"
+                      className="flex flex-row items-center gap-1 text-xxs text-blue-500 transition-colors duration-300 hover:text-blue-400"
+                    >
+                      View on Basescan
+                      <Icon name="square-arrow-top-right" className="h-3 w-3" />
+                    </Link>
+                    <Button
+                      type="button"
+                      variant="primary"
+                      onClick={() => {
+                        navigate(
+                          `/app/claim/${transactionResponseData.claim_id}`,
+                        )
+                      }}
+                    >
+                      View claim
+                    </Button>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
         )}
       </claimFetcher.Form>
     </>
