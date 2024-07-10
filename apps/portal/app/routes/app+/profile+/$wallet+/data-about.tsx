@@ -38,13 +38,13 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
   const url = new URL(request.url)
   const searchParams = new URLSearchParams(url.search)
-  // const search = searchParams.get('search')
-  const sortBy = searchParams.get('sortBy') ?? 'UpdatedAt'
-  const direction = searchParams.get('direction') ?? 'asc'
-  const page = searchParams.get('page')
-    ? parseInt(searchParams.get('page') as string)
+  const positionsSearch = searchParams.get('positionsSearch')
+  const positionsSortBy = searchParams.get('positionsSortBy') ?? 'Assets'
+  const positionsDirection = searchParams.get('positionsDirection') ?? 'desc'
+  const positionsPage = searchParams.get('positionsPage')
+    ? parseInt(searchParams.get('positionsPage') as string)
     : 1
-  const limit = searchParams.get('limit') ?? '10'
+  const positionsLimit = searchParams.get('positionsLimit') ?? '10'
 
   const positions = await fetchPositionsByIdentity(
     wallet,
@@ -62,7 +62,18 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     direction as SortDirection,
   )
 
-  const totalPages = calculateTotalPages(positions?.total ?? 0, Number(limit))
+  const positionsTotalPages = calculateTotalPages(
+    positions?.total ?? 0,
+    Number(positionsLimit),
+  )
+
+  const claimsSearch = searchParams.get('claimsSearch')
+  const claimsSortBy = searchParams.get('claimsSortBy') ?? 'AssetsSum'
+  const claimsDirection = searchParams.get('claimsDirection') ?? 'desc'
+  const claimsPage = searchParams.get('claimsPage')
+    ? parseInt(searchParams.get('claimsPage') as string)
+    : 1
+  const claimsLimit = searchParams.get('claimsLimit') ?? '10'
 
   return json({
     identity,
@@ -74,7 +85,16 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
       page: Number(page),
       limit: Number(limit),
       total: positions?.total,
-      totalPages,
+      totalPages: positionsTotalPages,
+    },
+    claims: claims?.data,
+    claimsSortBy,
+    claimsDirection,
+    claimsPagination: {
+      page: Number(claimsPage),
+      limit: Number(claimsLimit),
+      total: claims?.total,
+      totalPages: claimsTotalPages,
     },
   })
 }
