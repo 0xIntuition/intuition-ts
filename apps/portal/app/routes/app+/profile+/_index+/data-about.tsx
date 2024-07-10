@@ -1,5 +1,3 @@
-import { useEffect, useState } from 'react'
-
 import {
   Claim,
   ClaimRow,
@@ -24,12 +22,10 @@ import {
 } from '@0xintuition/1ui'
 import {
   ApiError,
-  ClaimPresenter,
   ClaimSortColumn,
   ClaimsService,
   IdentityPositionsService,
   OpenAPI,
-  PositionPresenter,
   PositionSortColumn,
   SortDirection,
 } from '@0xintuition/api'
@@ -45,7 +41,7 @@ import {
 } from '@lib/utils/misc'
 import { SessionContext } from '@middleware/session'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
-import { useFetcher, useSearchParams } from '@remix-run/react'
+import { useSearchParams } from '@remix-run/react'
 import { getPrivyAccessToken } from '@server/privy'
 import { formatUnits } from 'viem'
 
@@ -66,13 +62,13 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
 
   const url = new URL(request.url)
   const searchParams = new URLSearchParams(url.search)
-  const search = searchParams.get('search')
-  const sortBy = searchParams.get('sortBy') ?? 'UpdatedAt'
-  const direction = searchParams.get('direction') ?? 'asc'
-  const page = searchParams.get('page')
-    ? parseInt(searchParams.get('page') as string)
+  const positionsSearch = searchParams.get('positionsSearch')
+  const positionsSortBy = searchParams.get('positionsSortBy') ?? 'Assets'
+  const positionsDirection = searchParams.get('positionsDirection') ?? 'desc'
+  const positionsPage = searchParams.get('positionsPage')
+    ? parseInt(searchParams.get('positionsPage') as string)
     : 1
-  const limit = searchParams.get('limit') ?? '10'
+  const positionsLimit = searchParams.get('positionsLimit') ?? '10'
 
   // const positions = await fetchPositionsByIdentity(
   //   user.details.wallet.address,
@@ -94,12 +90,12 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
   try {
     positions = await IdentityPositionsService.getIdentityPositions({
       id: user.details.wallet.address,
-      page: page,
-      limit: Number(limit),
+      page: positionsPage,
+      limit: Number(positionsLimit),
       offset: 0,
-      sortBy: sortBy as PositionSortColumn,
-      direction: direction as SortDirection,
-      creator: search,
+      sortBy: positionsSortBy as PositionSortColumn,
+      direction: positionsDirection as SortDirection,
+      creator: positionsSearch,
     })
   } catch (error: unknown) {
     if (error instanceof ApiError) {
@@ -110,17 +106,29 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
     }
   }
 
+  const positionsTotalPages = calculateTotalPages(
+    positions?.total ?? 0,
+    Number(positionsLimit),
+  )
+
+  const claimsSearch = searchParams.get('claimsSearch')
+  const claimsSortBy = searchParams.get('claimsSortBy') ?? 'AssetsSum'
+  const claimsDirection = searchParams.get('claimsDirection') ?? 'desc'
+  const claimsPage = searchParams.get('claimsPage')
+    ? parseInt(searchParams.get('claimsPage') as string)
+    : 1
+  const claimsLimit = searchParams.get('claimsLimit') ?? '10'
+
   let claims
   try {
     claims = await ClaimsService.searchClaims({
       identity: userIdentity?.id,
-      page: page,
-      limit: Number(limit),
+      page: claimsPage,
+      limit: Number(claimsLimit),
       offset: 0,
-      sortBy: sortBy as ClaimSortColumn,
-      direction: direction as SortDirection,
-      object: search,
-      predicate: search,
+      sortBy: claimsSortBy as ClaimSortColumn,
+      direction: claimsDirection as SortDirection,
+      displayName: claimsSearch,
     })
   } catch (error: unknown) {
     if (error instanceof ApiError) {
@@ -131,19 +139,30 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
     }
   }
 
-  const totalPages = calculateTotalPages(positions?.total ?? 0, Number(limit))
+  const claimsTotalPages = calculateTotalPages(
+    claims?.total ?? 0,
+    Number(claimsLimit),
+  )
 
   return json({
     userIdentity,
-    positions,
-    claims,
-    sortBy,
-    direction,
-    pagination: {
-      page: Number(page),
-      limit: Number(limit),
+    positions: positions?.data,
+    positionsSortBy,
+    positionsDirection,
+    positionsPagination: {
+      page: Number(positionsPage),
+      limit: Number(positionsLimit),
       total: positions?.total,
-      totalPages,
+      totalPages: positionsTotalPages,
+    },
+    claims: claims?.data,
+    claimsSortBy,
+    claimsDirection,
+    claimsPagination: {
+      page: Number(claimsPage),
+      limit: Number(claimsLimit),
+      total: claims?.total,
+      totalPages: claimsTotalPages,
     },
   })
 }
@@ -161,28 +180,17 @@ export default function ProfileDataAbout() {
 }
 
 export function PositionsOnIdentity() {
-  const initialData = useLiveLoader<typeof loader>(['attest'])
-  const { userIdentity, pagination } = initialData
-  const fetcher = useFetcher<typeof loader>()
-  const [positions, setPositions] = useState<PositionPresenter[]>(
-    initialData.positions?.data ?? [],
-  )
+  const {
+    userIdentity,
+    positions,
+    positionsPagination: pagination,
+  } = useLiveLoader<typeof loader>(['attest'])
   const [searchParams, setSearchParams] = useSearchParams()
 
-  console.log('fetcher.data', fetcher.data)
-  useEffect(() => {
-    if (fetcher.data) {
-      setPositions(fetcher.data.positions?.data as PositionPresenter[])
-    }
-  }, [fetcher.data])
-
-  useEffect(() => {
-    setPositions(initialData.positions?.data as PositionPresenter[])
-  }, [initialData.positions])
-
   const options = [
-    { value: 'Updated At', sortBy: 'UpdatedAt' },
     { value: 'Total ETH', sortBy: 'Assets' },
+    { value: 'Updated At', sortBy: 'UpdatedAt' },
+    { value: 'Created At', sortBy: 'CreatedAt' },
   ]
 
   const handleSortChange = (
@@ -191,9 +199,9 @@ export function PositionsOnIdentity() {
   ) => {
     setSearchParams({
       ...Object.fromEntries(searchParams),
-      sortBy: newSortBy,
-      direction: newDirection,
-      page: '1',
+      positionsSortBy: newSortBy,
+      positionsDirection: newDirection,
+      positionsPage: '1',
     })
   }
 
@@ -201,15 +209,15 @@ export function PositionsOnIdentity() {
     const newSearchValue = event.target.value
     setSearchParams({
       ...Object.fromEntries(searchParams),
-      search: newSearchValue,
-      page: '1',
+      positionsSearch: newSearchValue,
+      positionsPage: '1',
     })
   }
 
   const onPageChange = (newPage: number) => {
     setSearchParams({
       ...Object.fromEntries(searchParams),
-      page: newPage.toString(),
+      positionsPage: newPage.toString(),
     })
   }
 
@@ -360,27 +368,22 @@ export function PositionsOnIdentity() {
 }
 
 export function ClaimsOnIdentity() {
-  const initialData = useLiveLoader<typeof loader>(['attest'])
-  const { userIdentity, pagination } = initialData
-  const fetcher = useFetcher<typeof loader>()
-  const [claims, setClaims] = useState<ClaimPresenter[]>(
-    initialData.claims?.data ?? [],
-  )
+  const {
+    userIdentity,
+    claims,
+    claimsPagination: pagination,
+  } = useLiveLoader<typeof loader>(['attest'])
   const [searchParams, setSearchParams] = useSearchParams()
 
-  useEffect(() => {
-    if (fetcher.data) {
-      setClaims(fetcher.data.claims?.data as ClaimPresenter[])
-    }
-  }, [fetcher.data])
-
-  useEffect(() => {
-    setClaims(initialData.claims?.data as ClaimPresenter[])
-  }, [initialData.positions])
-
   const options = [
-    { value: 'Updated At', sortBy: 'UpdatedAt' },
     { value: 'Total ETH', sortBy: 'AssetsSum' },
+    { value: 'ETH For', sortBy: 'ForAssetsSum' },
+    { value: 'ETH Against', sortBy: 'AgainstAssetsSum' },
+    { value: 'Total Positions', sortBy: 'NumPositions' },
+    { value: 'Positions For', sortBy: 'ForNumPositions' },
+    { value: 'Positions Against', sortBy: 'AgainstNumPositions' },
+    { value: 'Updated At', sortBy: 'UpdatedAt' },
+    { value: 'Created At', sortBy: 'CreatedAt' },
   ]
 
   const handleSortChange = (
@@ -389,9 +392,9 @@ export function ClaimsOnIdentity() {
   ) => {
     setSearchParams({
       ...Object.fromEntries(searchParams),
-      sortBy: newSortBy,
-      direction: newDirection,
-      page: '1',
+      claimsSortBy: newSortBy,
+      claimsDirection: newDirection,
+      claimsPage: '1',
     })
   }
 
@@ -399,15 +402,15 @@ export function ClaimsOnIdentity() {
     const newSearchValue = event.target.value
     setSearchParams({
       ...Object.fromEntries(searchParams),
-      search: newSearchValue,
-      page: '1',
+      claimsSearch: newSearchValue,
+      claimsPage: '1',
     })
   }
 
   const onPageChange = (newPage: number) => {
     setSearchParams({
       ...Object.fromEntries(searchParams),
-      page: newPage.toString(),
+      claimsPage: newPage.toString(),
     })
   }
 
@@ -416,7 +419,7 @@ export function ClaimsOnIdentity() {
       <DataAboutHeader
         title="Claims on this Identity"
         userIdentity={userIdentity}
-        totalClaims={initialData.claims?.total}
+        totalClaims={pagination?.total}
         totalStake={16.25} // TODO: Where does this come from? -- Vital: This should be the total amount of ETH across all of the claims. It's hardcoded for now.
       />
       <div className="flex flex-row justify-between w-full mt-6">
