@@ -1,13 +1,11 @@
-import { Identity, IdentityPosition } from '@0xintuition/1ui'
-import { PositionPresenter, PositionSortColumn } from '@0xintuition/api'
+import { IdentityPosition } from '@0xintuition/1ui'
+import { IdentityPresenter, SortColumn } from '@0xintuition/api'
 
 import { PaginationComponent } from '@components/pagination-component'
+import { SearchAndSort } from '@components/search-and-sort'
+import { SortOption } from '@components/sort-select'
 import { useSearchAndSortParamsHandler } from '@lib/hooks/useSearchAndSortParams'
 import { formatBalance } from '@lib/utils/misc'
-import { formatUnits } from 'viem'
-
-import { SearchAndSort } from './search-and-sort'
-import { SortOption } from './sort-select'
 
 interface PaginationType {
   totalEntries: number | undefined
@@ -16,21 +14,22 @@ interface PaginationType {
   limit: number
 }
 
-export function PositionsOnIdentity({
-  positions,
+export function FollowingOnIdentity({
+  following,
   pagination,
 }: {
-  positions: PositionPresenter[]
+  following: IdentityPresenter[]
   pagination: PaginationType
 }) {
-  const options: SortOption<PositionSortColumn>[] = [
-    { value: 'Total ETH', sortBy: 'Assets' },
+  const options: SortOption<SortColumn>[] = [
+    { value: 'Position Amount', sortBy: 'UserAssets' },
+    { value: 'Total ETH', sortBy: 'AssetsSum' },
     { value: 'Updated At', sortBy: 'UpdatedAt' },
     { value: 'Created At', sortBy: 'CreatedAt' },
   ]
 
   const { handleSortChange, handleSearchChange, onPageChange, onLimitChange } =
-    useSearchAndSortParamsHandler<PositionSortColumn>('positions')
+    useSearchAndSortParamsHandler<SortColumn>('following')
 
   return (
     <>
@@ -40,21 +39,29 @@ export function PositionsOnIdentity({
         handleSearchChange={handleSearchChange}
       />
       <div className="mt-6 flex flex-col w-full">
-        {positions?.map((position) => (
+        {following?.map((follower) => (
           <div
-            key={position.id}
+            key={follower.id}
             className={`grow shrink basis-0 self-stretch p-6 bg-black first:rounded-t-xl last:rounded-b-xl border border-neutral-300/20 flex-col justify-start items-start gap-5 inline-flex`}
           >
             <IdentityPosition
-              variant={Identity.user}
-              avatarSrc={position.user?.image ?? ''}
-              name={position.user?.display_name ?? ''}
-              walletAddress={position.user?.wallet ?? ''}
-              amount={+formatBalance(BigInt(position.assets), 18, 4)}
-              feesAccrued={Number(
-                formatUnits(BigInt(+position.assets - +position.value), 18),
-              )}
-              updatedAt={position.updated_at}
+              variant={follower.is_user ? 'user' : 'non-user'}
+              avatarSrc={follower.user?.image ?? follower.image ?? ''}
+              name={follower.user?.display_name ?? follower.display_name ?? ''}
+              walletAddress={
+                follower.user?.wallet ?? follower.identity_id ?? ''
+              }
+              amount={+formatBalance(BigInt(follower.user_assets), 18, 4)}
+              feesAccrued={
+                follower.user_asset_delta
+                  ? +formatBalance(
+                      +follower.user_assets - +follower.user_asset_delta,
+                      18,
+                      5,
+                    )
+                  : 0
+              }
+              updatedAt={follower.updated_at}
             />
           </div>
         ))}

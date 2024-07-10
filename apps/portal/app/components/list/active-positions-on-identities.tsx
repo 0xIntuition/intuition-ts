@@ -1,13 +1,12 @@
 import { Identity, IdentityPosition } from '@0xintuition/1ui'
-import { PositionPresenter, PositionSortColumn } from '@0xintuition/api'
+import { IdentityPresenter, SortColumn } from '@0xintuition/api'
 
 import { PaginationComponent } from '@components/pagination-component'
 import { useSearchAndSortParamsHandler } from '@lib/hooks/useSearchAndSortParams'
 import { formatBalance } from '@lib/utils/misc'
-import { formatUnits } from 'viem'
 
-import { SearchAndSort } from './search-and-sort'
-import { SortOption } from './sort-select'
+import { SearchAndSort } from '../search-and-sort'
+import { SortOption } from '../sort-select'
 
 interface PaginationType {
   totalEntries: number | undefined
@@ -16,21 +15,22 @@ interface PaginationType {
   limit: number
 }
 
-export function PositionsOnIdentity({
-  positions,
+export function ActivePositionsOnIdentities({
+  identities,
   pagination,
 }: {
-  positions: PositionPresenter[]
+  identities: IdentityPresenter[]
   pagination: PaginationType
 }) {
-  const options: SortOption<PositionSortColumn>[] = [
-    { value: 'Total ETH', sortBy: 'Assets' },
+  const options: SortOption<SortColumn>[] = [
+    { value: 'Position Amount', sortBy: 'UserAssets' },
+    { value: 'Total ETH', sortBy: 'AssetsSum' },
     { value: 'Updated At', sortBy: 'UpdatedAt' },
     { value: 'Created At', sortBy: 'CreatedAt' },
   ]
 
   const { handleSortChange, handleSearchChange, onPageChange, onLimitChange } =
-    useSearchAndSortParamsHandler<PositionSortColumn>('positions')
+    useSearchAndSortParamsHandler<SortColumn>('identities')
 
   return (
     <>
@@ -40,21 +40,27 @@ export function PositionsOnIdentity({
         handleSearchChange={handleSearchChange}
       />
       <div className="mt-6 flex flex-col w-full">
-        {positions?.map((position) => (
+        {identities?.map((identity) => (
           <div
-            key={position.id}
+            key={identity.id}
             className={`grow shrink basis-0 self-stretch p-6 bg-black first:rounded-t-xl last:rounded-b-xl border border-neutral-300/20 flex-col justify-start items-start gap-5 inline-flex`}
           >
             <IdentityPosition
-              variant={Identity.user}
-              avatarSrc={position.user?.image ?? ''}
-              name={position.user?.display_name ?? ''}
-              walletAddress={position.user?.wallet ?? ''}
-              amount={+formatBalance(BigInt(position.assets), 18, 4)}
-              feesAccrued={Number(
-                formatUnits(BigInt(+position.assets - +position.value), 18),
-              )}
-              updatedAt={position.updated_at}
+              variant={identity.is_user ? Identity.user : Identity.nonUser}
+              avatarSrc={identity.user?.image ?? identity.image ?? ''}
+              name={identity.user?.display_name ?? identity.display_name}
+              walletAddress={identity.user?.wallet ?? identity.identity_id}
+              amount={+formatBalance(BigInt(identity.user_assets), 18, 4)}
+              feesAccrued={
+                identity.user_asset_delta
+                  ? +formatBalance(
+                      +identity.user_assets - +identity.user_asset_delta,
+                      18,
+                      5,
+                    )
+                  : 0
+              }
+              updatedAt={identity.updated_at}
             />
           </div>
         ))}

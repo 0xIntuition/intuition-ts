@@ -1,61 +1,48 @@
-import { useEffect, useState } from 'react'
-
-import { Claim, ClaimRow, Identity, Input } from '@0xintuition/1ui'
+import { Claim, ClaimRow, Identity } from '@0xintuition/1ui'
 import { ClaimPresenter, ClaimSortColumn } from '@0xintuition/api'
 
 import { useSearchAndSortParamsHandler } from '@lib/hooks/useSearchAndSortParams'
-import logger from '@lib/utils/logger'
 import { formatBalance } from '@lib/utils/misc'
-import { useFetcher } from '@remix-run/react'
-import { loader } from 'app/root'
-import { InitialIdentityData } from 'types/identity'
 
 import { PaginationComponent } from './pagination-component'
-import DataAboutHeader from './profile/data-about-header'
-import { SortOption, SortSelect } from './sort-select'
+import { SearchAndSort } from './search-and-sort'
+import { SortOption } from './sort-select'
+
+interface PaginationType {
+  totalEntries: number | undefined
+  currentPage: number
+  totalPages: number
+  limit: number
+}
 
 export function ClaimsOnIdentity({
-  initialData,
+  claims,
+  pagination,
 }: {
-  initialData: InitialIdentityData
+  claims: ClaimPresenter[]
+  pagination: PaginationType
 }) {
-  const { identity, pagination } = initialData
-  const fetcher = useFetcher<typeof loader>()
-  const [claims, setClaims] = useState<ClaimPresenter[]>(
-    initialData.claims?.data ?? [],
-  )
-
-  logger('fetcher.data', fetcher.data)
-  useEffect(() => {
-    if (fetcher.data) {
-      setClaims(fetcher.data.claims?.data as ClaimPresenter[])
-    }
-  }, [fetcher.data])
-
-  useEffect(() => {
-    setClaims(initialData.claims?.data as ClaimPresenter[])
-  }, [initialData.positions])
-
   const options: SortOption<ClaimSortColumn>[] = [
-    { value: 'Updated At', sortBy: 'UpdatedAt' },
     { value: 'Total ETH', sortBy: 'AssetsSum' },
+    { value: 'ETH For', sortBy: 'ForAssetsSum' },
+    { value: 'ETH Against', sortBy: 'AgainstAssetsSum' },
+    { value: 'Total Positions', sortBy: 'NumPositions' },
+    { value: 'Positions For', sortBy: 'ForNumPositions' },
+    { value: 'Positions Against', sortBy: 'AgainstNumPositions' },
+    { value: 'Updated At', sortBy: 'UpdatedAt' },
+    { value: 'Created At', sortBy: 'CreatedAt' },
   ]
 
-  const { handleSortChange, handleSearchChange, onPageChange } =
-    useSearchAndSortParamsHandler<ClaimSortColumn>()
+  const { handleSortChange, handleSearchChange, onPageChange, onLimitChange } =
+    useSearchAndSortParamsHandler<ClaimSortColumn>('claims')
 
   return (
     <>
-      <DataAboutHeader
-        title="Claims on this Identity"
-        userIdentity={identity}
-        totalClaims={initialData.claims?.total}
-        totalStake={16.25} // TODO: Where does this come from? -- [ENG-2502]
+      <SearchAndSort
+        options={options}
+        handleSortChange={handleSortChange}
+        handleSearchChange={handleSearchChange}
       />
-      <div className="flex flex-row justify-between w-full mt-6">
-        <Input className="w-48" onChange={handleSearchChange} />
-        <SortSelect options={options} handleSortChange={handleSortChange} />
-      </div>
       <div className="mt-6 flex flex-col w-full">
         {claims?.map((claim) => (
           <div
@@ -103,10 +90,12 @@ export function ClaimsOnIdentity({
         ))}
       </div>
       <PaginationComponent
-        totalEntries={pagination.total ?? 0}
-        currentPage={pagination.page ?? 0}
+        totalEntries={pagination.totalEntries ?? 0}
+        currentPage={pagination.currentPage ?? 0}
         totalPages={pagination.totalPages ?? 0}
+        limit={pagination.limit ?? 0}
         onPageChange={onPageChange}
+        onLimitChange={onLimitChange}
         label="claims"
       />
     </>

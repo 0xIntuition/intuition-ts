@@ -13,8 +13,9 @@ interface ConnectionsHeaderProps {
   variant: ConnectionsHeaderVariantType
   subject: IdentityPresenter
   predicate: IdentityPresenter
-  object: IdentityPresenter | string
-  total: string
+  object: IdentityPresenter | null
+  totalFollowers: number
+  totalStake: string
 }
 
 export const ConnectionsHeader: React.FC<ConnectionsHeaderProps> = ({
@@ -22,7 +23,8 @@ export const ConnectionsHeader: React.FC<ConnectionsHeaderProps> = ({
   subject,
   predicate,
   object,
-  total,
+  totalFollowers,
+  totalStake = '0',
 }) => {
   return (
     <div className="flex flex-col w-full gap-3">
@@ -38,7 +40,7 @@ export const ConnectionsHeader: React.FC<ConnectionsHeaderProps> = ({
                 {variant === 'followers' ? 'Followers' : 'Following'}
               </Text>
               <div className="text-white text-xl font-medium">
-                {total ?? '0'}
+                {totalFollowers ?? '0'}
               </div>
             </div>
             <div className="flex flex-col items-start">
@@ -52,7 +54,7 @@ export const ConnectionsHeader: React.FC<ConnectionsHeaderProps> = ({
                   : 'Total stake'}
               </Text>
               {/*TODO: Add actual value when BE updates presenter */}
-              <MonetaryValue value={+total} currency="ETH" />
+              <MonetaryValue value={+totalStake} currency="ETH" />
             </div>
           </div>
           <div className="flex flex-col items-end">
@@ -75,7 +77,7 @@ export const ConnectionsHeader: React.FC<ConnectionsHeaderProps> = ({
                 imgSrc: predicate?.image ?? '',
               }}
               object={
-                typeof object === 'string'
+                object === null
                   ? {
                       variant: 'user',
                       label: '?',
