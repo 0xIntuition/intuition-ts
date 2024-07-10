@@ -35,11 +35,6 @@ type Atom @entity {
 
   vault: Vault!
 
-  "todo"
-  totalSignal: BigInt!
-
-  signals: [Signal!]!
-
   activePositionsCount: Int
   allPositionsCount: Int
 

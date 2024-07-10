@@ -37,10 +37,6 @@ export function handleAtomCreated(event: AtomCreated): void {
   vault.save()
   atom.vault = vault.id
 
-  // TODO: do we need to update the total signal?
-  atom.totalSignal = vault.totalShares
-  atom.signals = []
-
   atom.creator = account.id
   atom.wallet = wallet.id
   atom.uri = event.params.atomData.toString()
@@ -250,7 +246,7 @@ export function handleFeesTransferred(event: FeesTransferred): void {
   account.save()
 
   let receiver = loadOrCreateAccount(event.params.protocolVault.toHexString())
-  receiver.label = 'Protocol vault'
+  receiver.label = 'Protocol fee vault'
   receiver.type = 'ProtocolVault'
   receiver.save()
 
