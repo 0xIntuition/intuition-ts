@@ -60,6 +60,15 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
 
   const userIdentity = await fetchUserIdentity(user.details.wallet.address)
 
+  if (!userIdentity) {
+    return logger('No user identity found')
+  }
+
+  if (!userIdentity.creator || typeof userIdentity.creator.id !== 'string') {
+    logger('Invalid or missing creator ID')
+    return
+  }
+
   const url = new URL(request.url)
   const searchParams = new URLSearchParams(url.search)
   const positionsSearch = searchParams.get('positionsSearch')

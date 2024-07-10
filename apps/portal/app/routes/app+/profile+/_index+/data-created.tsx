@@ -61,7 +61,7 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
   const userIdentity = await fetchUserIdentity(user.details.wallet.address)
 
   if (!userIdentity) {
-    return redirect('/create')
+    return logger('No user identity found')
   }
 
   if (!userIdentity.creator || typeof userIdentity.creator.id !== 'string') {
@@ -456,37 +456,6 @@ export function PositionsOnClaims() {
                 )
               }
               feesAccrued={0}
-              name={
-                <Claim
-                  subject={{
-                    variant: claim.subject?.is_user ? 'user' : 'non-user',
-                    label:
-                      claim.subject?.user?.display_name ??
-                      claim.subject?.display_name ??
-                      claim.subject?.identity_id ??
-                      '',
-                    imgSrc: claim.subject?.image ?? '',
-                  }}
-                  predicate={{
-                    variant: claim.predicate?.is_user ? 'user' : 'non-user',
-                    label:
-                      claim.predicate?.user?.display_name ??
-                      claim.predicate?.display_name ??
-                      claim.predicate?.identity_id ??
-                      '',
-                    imgSrc: claim.predicate?.image ?? '',
-                  }}
-                  object={{
-                    variant: claim.object?.is_user ? 'user' : 'non-user',
-                    label:
-                      claim.object?.user?.display_name ??
-                      claim.object?.display_name ??
-                      claim.object?.identity_id ??
-                      '',
-                    imgSrc: claim.object?.image ?? '',
-                  }}
-                />
-              }
             />
           </div>
         ))}
