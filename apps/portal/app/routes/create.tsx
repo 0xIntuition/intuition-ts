@@ -479,12 +479,13 @@ export default function Profile() {
                   Welcome to the world of Intuition.
                 </div>
                 <div className="self-stretch text-white/40 text-sm font-normal leading-tight">
-                  By completing this step, you'll create an 'Atom' for your
-                  Ethereum address - a universally referenceable node in the
-                  Intuition Trust Graph, representative of you. With this,
-                  you'll be able to make claims about things, and will allow
-                  claims to be made about you - taking the first step in your
-                  journey towards better intuition in all of your interactions.
+                  By completing this step, you&#39;ll create an &#39;Atom&#39;
+                  for your Ethereum address - a universally referenceable node
+                  in the Intuition Trust Graph, representative of you. With
+                  this, you&#39;ll be able to make claims about things, and will
+                  allow claims to be made about you - taking the first step in
+                  your journey towards better intuition in all of your
+                  interactions.
                 </div>
               </div>
             </div>
