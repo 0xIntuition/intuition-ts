@@ -13,7 +13,6 @@ export default function ExploreClaims() {
   return (
     <div className="m-8 flex flex-col items-center gap-4">
       <div className="flex flex-col">Explore Index Route</div>
-      <pre>THIS IS A TEST</pre>
       <pre>This is a placeholder for the Explore Index route</pre>
       <pre>route loader: {message}</pre>
     </div>

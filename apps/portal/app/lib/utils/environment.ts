@@ -50,7 +50,7 @@ export const getChainEnvConfig = (env: string): ChainConfig => {
       chainId: baseSepolia.id,
       name: baseSepolia.name,
       alchemyRpcUrl: alchemyRpcUrlSepolia,
-      contractAddress: multiVaultContractAddress as `0x${string}`, // temporarily seting the envs to be the same
+      contractAddress: multiVaultContractAddress as `0x${string}`, // TODO: temporarily seting the envs to be the same -- revisit in [ENG-2407]
     },
   }
 

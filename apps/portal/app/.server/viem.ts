@@ -15,10 +15,10 @@ export const publicClient: PublicClient = createPublicClient({
   batch: {
     multicall: true,
   },
-  chain: CURRENT_ENV === 'production' ? baseSepolia : baseSepolia, // temporarily making these both the same until we sort out envs
+  chain: CURRENT_ENV === 'production' ? baseSepolia : baseSepolia, // TODO:  temporarily making these both the same until we sort out envs -- revisit in [ENG-2407]
   transport: http(
     CURRENT_ENV === 'production'
-      ? process.env.ALCHEMY_BASE_SEPOLIA_RPC_URL // temporarily making these both the same until we sort out envs
+      ? process.env.ALCHEMY_BASE_SEPOLIA_RPC_URL // TODO: temporarily making these both the same until we sort out envs -- revisit in [ENG-2407]
       : process.env.ALCHEMY_BASE_SEPOLIA_RPC_URL,
     // {
     //   fetchOptions: {
@@ -29,7 +29,7 @@ export const publicClient: PublicClient = createPublicClient({
     //           : process.env.STAGING_ORIGIN_URL!,
     //     },
     //   },
-    // }, // omitting these headers to reduce troubleshooting area for now
+    // }, // TODO: omitting these headers to reduce troubleshooting area for now -- revisit in [ENG-2407]
   ),
 }) as PublicClient
 

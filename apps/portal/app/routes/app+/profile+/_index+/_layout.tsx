@@ -103,8 +103,6 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
     }
   }
 
-  console.log('vaultDetails', vaultDetails)
-
   return json({ user, userIdentity, userObject, userTotals, vaultDetails })
 }
 
