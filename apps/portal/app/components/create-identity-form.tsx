@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import {
   Button,
   DialogHeader,
+  DialogTitle,
   Icon,
   Input,
   Label,
@@ -84,17 +85,15 @@ export function IdentityForm({ onSuccess, onClose }: IdentityFormProps) {
       <>
         {!isTransactionStarted && (
           <DialogHeader className="py-4">
-            <div className="absolute top-5 flex flex-row items-center gap-2 align-baseline text-primary-400">
-              <div className="flex flex-col gap-1">
-                <Text variant="headline" className="text-foreground-secondary">
-                  Create Identity
-                </Text>
-                <Text variant="footnote" className="text-foreground-secondary">
-                  Begin the process of establishing a new digital representation
-                  within the blockchain network.
-                </Text>
-              </div>
-            </div>
+            <DialogTitle>
+              <Text variant="headline" className="text-foreground-secondary">
+                Create Identity
+              </Text>
+            </DialogTitle>
+            <Text variant="caption" className="text-foreground/50 w-full">
+              Begin the process of establishing a new digital representation
+              within the blockchain network.
+            </Text>
           </DialogHeader>
         )}
         <CreateIdentityForm
@@ -495,7 +494,7 @@ function CreateIdentityForm({
       {!isTransactionStarted ? (
         <div className="w-full py-1 flex-col justify-start items-start inline-flex gap-9">
           <div className="flex flex-col w-full gap-1.5">
-            <div className="self-stretch flex-col justify-start items-start flex mt-9">
+            <div className="self-stretch flex-col justify-start items-start flex">
               <Text variant="caption" className="text-secondary-foreground/90">
                 Identity Display Picture
               </Text>
