@@ -25,7 +25,10 @@
     "simulate:signaling": "tsx simulation/signaling",
     "simulate:pinata": "tsx simulation/signaling-pinata",
     "simulate:json": "tsx simulation/json",
-    "simulate:unknown": "tsx simulation/unknown"
+    "simulate:unknown": "tsx simulation/unknown",
+    "testnet:deposit": "tsx testnet/deposit",
+    "testnet:redeem": "tsx testnet/redeem",
+    "testnet:predicates": "tsx testnet/create-predicate-atoms"
   },
   "dependencies": {
     "@graphprotocol/graph-cli": "0.71.2",
@@ -40,6 +43,6 @@
     "rdf-parse": "^2.3.3",
     "schema-dts": "^1.1.2",
     "tsx": "^4.10.5",
-    "viem": "^2.9.29"
+    "viem": "2.9.29"
   }
 }
