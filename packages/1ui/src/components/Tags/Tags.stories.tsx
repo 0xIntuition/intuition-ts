@@ -5,7 +5,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 import { Tags, TagsButton, TagsContent, TagWithValue } from './Tags'
 
 const meta: Meta<typeof Tags> = {
-  title: 'Components/Tags',
+  title: 'Components/Tags/Tags',
   component: Tags,
 }
 

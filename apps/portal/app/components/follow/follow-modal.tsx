@@ -76,16 +76,13 @@ export default function FollowModal({
   vault_id = claim ? claim.vault_id : '0'
 
   const {
-    conviction_price,
-    user_conviction,
-    user_conviction_value: user_assets,
-    min_deposit,
-    formatted_entry_fee,
-    formatted_exit_fee,
-  } = vaultDetails
-
-  logger('user_conviction', user_conviction)
-  logger('latest_user_conviction', user_conviction)
+    conviction_price = '0',
+    user_conviction = '0',
+    user_assets = '0',
+    min_deposit = '0',
+    formatted_entry_fee = '0',
+    formatted_exit_fee = '0',
+  } = vaultDetails ? vaultDetails : {}
 
   const depositHook = useDepositTriple(contract)
 
@@ -113,6 +110,8 @@ export default function FollowModal({
     atomCost: BigInt(0),
     tripleCost: BigInt(0),
   }
+
+  console.log('claim', claim)
 
   const useHandleAction = (actionType: string) => {
     return async () => {

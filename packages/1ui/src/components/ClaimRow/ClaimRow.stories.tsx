@@ -6,7 +6,7 @@ import { Claim } from '..'
 import { ClaimRow } from './ClaimRow'
 
 const meta: Meta<typeof ClaimRow> = {
-  title: 'Components/ClaimRow',
+  title: 'Components/Claim/ClaimRow',
   component: ClaimRow,
 }
 

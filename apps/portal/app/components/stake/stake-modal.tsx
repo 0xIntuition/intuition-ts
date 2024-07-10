@@ -78,13 +78,12 @@ export default function StakeModal({
 
   let user_assets: string = '0'
   if (identityShouldOverride) {
-    user_assets = vaultDetails.user_conviction_value ?? identity.user_assets
+    user_assets = vaultDetails.user_assets ?? identity.user_assets
   } else if (claim) {
     user_assets =
       direction === 'for'
-        ? vaultDetails.user_conviction_value ?? claim.user_assets_for
-        : vaultDetails.user_conviction_against_value ??
-          claim.user_assets_against
+        ? vaultDetails.user_assets ?? claim.user_assets_for
+        : vaultDetails.user_assets_against ?? claim.user_assets_against
   }
 
   let user_conviction: string = '0'
@@ -160,7 +159,7 @@ export default function StakeModal({
               : undefined,
         })
 
-        if (txHash) {
+        if (publicClient && txHash) {
           dispatch({ type: 'TRANSACTION_PENDING' })
           const receipt = await publicClient.waitForTransactionReceipt({
             hash: txHash,

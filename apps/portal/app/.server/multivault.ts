@@ -211,8 +211,8 @@ export async function getVaultDetails(
       ? {
           user_conviction: userConviction.toString(),
           formatted_user_conviction: formattedUserConviction,
-          user_conviction_value: userConvictionValue?.toString(),
-          formatted_user_conviction_value: formattedUserConvictionValue,
+          user_assets: userConvictionValue?.toString(),
+          formatted_user_assets: formattedUserConvictionValue,
         }
       : {}),
     ...(counterVault
@@ -233,9 +233,8 @@ export async function getVaultDetails(
                 user_conviction_against: userConvictionAgainst?.toString(),
                 formatted_user_conviction_against:
                   formattedUserConvictionAgainst,
-                user_conviction_against_value:
-                  userConvictionValueAgainst?.toString(),
-                formatted_user_conviction_against_value:
+                user_assets_against: userConvictionValueAgainst?.toString(),
+                formatted_user_assets_against:
                   formattedUserConvictionValueAgainst,
               }
             : {}),
@@ -337,8 +336,8 @@ export async function getIdentityListDetails(
       formatted_conviction_price: formattedConvictionPrice,
       user_conviction: userConviction,
       formatted_user_conviction: formattedUserConviction,
-      user_conviction_value: userConvictionValue,
-      formatted_user_conviction_value: formattedUserConvictionValue,
+      user_assets: userConvictionValue,
+      formatted_user_assets: formattedUserConvictionValue,
 
       entry_fee: entryFee.toString(),
       formatted_entry_fee: formattedEntryFee,

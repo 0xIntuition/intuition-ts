@@ -126,8 +126,8 @@ export default function ClaimDetails() {
   let user_assets: string = '0'
   user_assets =
     (vaultDetails.user_conviction ?? claim.user_conviction_for) > '0'
-      ? vaultDetails.user_conviction_value ?? claim.user_assets_for
-      : vaultDetails.user_conviction_against_value ?? claim.user_assets_against
+      ? vaultDetails.user_assets ?? claim.user_assets_for
+      : vaultDetails.user_assets_against ?? claim.user_assets_against
 
   let assets_sum: string = '0'
   assets_sum =

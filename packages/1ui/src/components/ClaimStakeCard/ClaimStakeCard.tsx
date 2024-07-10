@@ -151,19 +151,19 @@ const ClaimStakeCard = ({
       <div className="flex justify-between items-center gap-4 w-max mt-2">
         <Button
           variant={ButtonVariant.against}
-          size={ButtonSize.lg}
+          size={ButtonSize.md}
           disabled={disableAgainstBtn || !onAgainstBtnClick}
           onClick={onAgainstBtnClick}
-          className="w-36"
+          className="w-32"
         >
           Deposit Against
         </Button>
         <Button
           variant={ButtonVariant.for}
-          size={ButtonSize.lg}
+          size={ButtonSize.md}
           disabled={disableForBtn || !onForBtnClick}
           onClick={onForBtnClick}
-          className="w-36"
+          className="w-32"
         >
           Deposit For
         </Button>

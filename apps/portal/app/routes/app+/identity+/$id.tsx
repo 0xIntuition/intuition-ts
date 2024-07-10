@@ -92,7 +92,7 @@ export default function IdentityDetails() {
     user: SessionUser
   }>()
 
-  const user_assets = vaultDetails ? vaultDetails.user_conviction_value : '0'
+  const user_assets = vaultDetails ? vaultDetails.user_assets : '0'
   const [stakeModalActive, setStakeModalActive] = useAtom(stakeModalAtom)
 
   return (

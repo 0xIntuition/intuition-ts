@@ -97,25 +97,29 @@ export async function loader({ context, request, params }: LoaderFunctionArgs) {
   let followClaim: ClaimPresenter | undefined = undefined
   let followVaultDetails: VaultDetailsType | undefined = undefined
 
-  try {
-    followClaim = await ClaimsService.getClaimById({
-      id: userIdentity.follow_claim_id,
-    })
-  } catch (error: unknown) {
-    if (error instanceof ApiError) {
-      followClaim = undefined
-      logger(`${error.name} - ${error.status}: ${error.message} ${error.url}`)
-    } else {
-      throw error
+  if (userIdentity.follow_claim_id) {
+    try {
+      followClaim = await ClaimsService.getClaimById({
+        id: userIdentity.follow_claim_id,
+      })
+    } catch (error: unknown) {
+      if (error instanceof ApiError) {
+        followClaim = undefined
+        logger(`${error.name} - ${error.status}: ${error.message} ${error.url}`)
+      } else {
+        throw error
+      }
     }
   }
 
-  if (followClaim && followClaim.vault_id) {
+  console.log('followClaim', followClaim)
+
+  if (userIdentity.user && followClaim && followClaim.vault_id) {
     try {
       followVaultDetails = await getVaultDetails(
         followClaim.contract,
         followClaim.vault_id,
-        user?.details?.wallet?.address as `0x${string}`,
+        userIdentity.user.wallet as `0x${string}`,
       )
     } catch (error) {
       logger('Failed to fetch followVaultDetails', error)
@@ -149,15 +153,15 @@ export default function Profile() {
     wallet: string
     user: SessionUser
     userIdentity: IdentityPresenter
-    // userObject: UserPresenter
     userTotals: UserTotalsPresenter
     followClaim: ClaimPresenter
     followVaultDetails: VaultDetailsType
     vaultDetails: VaultDetailsType
   }>(['attest', 'create'])
 
-  const { user_conviction_value: user_assets = '0', assets_sum = '0' } =
-    vaultDetails ?? userIdentity
+  const { user_assets = '0', assets_sum = '0' } = vaultDetails
+    ? vaultDetails
+    : userIdentity
 
   logger('followVaultDetails', followVaultDetails)
 
@@ -202,7 +206,7 @@ export default function Profile() {
               >
                 {followVaultDetails &&
                 (followVaultDetails?.user_conviction ?? '0') > '0'
-                  ? `Following · ${formatBalance(followVaultDetails.user_conviction_value ?? '0', 18, 4)} ETH`
+                  ? `Following · ${formatBalance(followVaultDetails.user_assets ?? '0', 18, 4)} ETH`
                   : 'Follow'}
               </Button>
             </ProfileCard>

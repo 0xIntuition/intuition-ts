@@ -5,7 +5,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 import { IdentityInput } from './IdentityInput'
 
 const meta: Meta<typeof IdentityInput> = {
-  title: 'Components/IdentityInput',
+  title: 'Components/Identity/IdentityInput',
   component: IdentityInput,
 }
 

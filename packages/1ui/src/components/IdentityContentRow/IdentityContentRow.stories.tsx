@@ -6,7 +6,7 @@ import { Identity } from 'types'
 import { IdentityContentRow } from './IdentityContentRow'
 
 const meta: Meta<typeof IdentityContentRow> = {
-  title: 'Components/IdentityContentRow',
+  title: 'Components/Identity/IdentityContentRow',
   component: IdentityContentRow,
   argTypes: {
     variant: {
