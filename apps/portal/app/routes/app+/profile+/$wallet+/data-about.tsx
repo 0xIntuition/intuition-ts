@@ -13,8 +13,8 @@ import DataAboutHeader from '@components/profile/data-about-header'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import {
   fetchClaimsAboutIdentity,
+  fetchIdentity,
   fetchPositionsOnIdentity,
-  fetchUserIdentity,
 } from '@lib/utils/fetches'
 import {
   calculateTotalPages,
@@ -36,7 +36,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     throw new Error('Wallet is undefined.')
   }
 
-  const userIdentity = await fetchUserIdentity(wallet)
+  const userIdentity = await fetchIdentity(wallet)
 
   if (!userIdentity) {
     return redirect('/create')

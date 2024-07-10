@@ -18,7 +18,7 @@ import { NestedLayout } from '@components/nested-layout'
 import StakeModal from '@components/stake/stake-modal'
 import { stakeModalAtom } from '@lib/state/store'
 import { identityRouteOptions } from '@lib/utils/constants'
-import { fetchUserIdentity } from '@lib/utils/fetches'
+import { fetchIdentity } from '@lib/utils/fetches'
 import logger from '@lib/utils/logger'
 import {
   calculatePercentageGain,
@@ -53,7 +53,7 @@ export async function loader({ context, request, params }: LoaderFunctionArgs) {
     return
   }
 
-  const identity = await fetchUserIdentity(params.id)
+  const identity = await fetchIdentity(params.id)
 
   logger('identity', identity)
 

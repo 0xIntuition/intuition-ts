@@ -31,7 +31,7 @@ import {
   stakeModalAtom,
 } from '@lib/state/store'
 import { userProfileRouteOptions } from '@lib/utils/constants'
-import { fetchUserIdentity, fetchUserTotals } from '@lib/utils/fetches'
+import { fetchIdentity, fetchUserTotals } from '@lib/utils/fetches'
 import logger from '@lib/utils/logger'
 import {
   calculatePercentageOfTvl,
@@ -68,7 +68,7 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
     return logger('No user found in session')
   }
 
-  const userIdentity = await fetchUserIdentity(user.details.wallet.address)
+  const userIdentity = await fetchIdentity(user.details.wallet.address)
 
   if (!userIdentity) {
     return redirect('/create')

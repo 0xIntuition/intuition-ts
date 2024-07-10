@@ -25,9 +25,9 @@ import {
 } from '@components/profile/connections-header'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import {
+  fetchIdentity,
   fetchIdentityFollowers,
   fetchIdentityFollowing,
-  fetchUserIdentity,
 } from '@lib/utils/fetches'
 import logger from '@lib/utils/logger'
 import { calculateTotalPages, getAuthHeaders } from '@lib/utils/misc'
@@ -46,7 +46,7 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
     throw new Error('Wallet is undefined.')
   }
 
-  const userIdentity = await fetchUserIdentity(wallet)
+  const userIdentity = await fetchIdentity(wallet)
 
   if (!userIdentity) {
     return redirect('/create')

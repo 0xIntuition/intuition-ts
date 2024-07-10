@@ -15,7 +15,7 @@ import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import {
   fetchClaimsWithUserPosition,
   fetchIdentitiesWithUserPosition,
-  fetchUserIdentity,
+  fetchIdentity,
   fetchUserTotals,
 } from '@lib/utils/fetches'
 import logger from '@lib/utils/logger'
@@ -37,7 +37,7 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
     return logger('No user found in session')
   }
 
-  const userIdentity = await fetchUserIdentity(user.details.wallet.address)
+  const userIdentity = await fetchIdentity(user.details.wallet.address)
 
   if (!userIdentity) {
     return logger('No user identity found')

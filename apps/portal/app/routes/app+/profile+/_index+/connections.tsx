@@ -25,9 +25,9 @@ import {
 } from '@components/profile/connections-header'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import {
+  fetchIdentity,
   fetchIdentityFollowers,
   fetchIdentityFollowing,
-  fetchUserIdentity,
 } from '@lib/utils/fetches'
 import logger from '@lib/utils/logger'
 import { calculateTotalPages, getAuthHeaders } from '@lib/utils/misc'
@@ -48,7 +48,7 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
     return logger('No user found in session')
   }
 
-  const userIdentity = await fetchUserIdentity(user.details.wallet.address)
+  const userIdentity = await fetchIdentity(user.details.wallet.address)
 
   if (!userIdentity) {
     return redirect('/create')

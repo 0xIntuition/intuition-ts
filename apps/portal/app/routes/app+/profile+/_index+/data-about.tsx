@@ -13,8 +13,8 @@ import DataAboutHeader from '@components/profile/data-about-header'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import {
   fetchClaimsAboutIdentity,
+  fetchIdentity,
   fetchPositionsOnIdentity,
-  fetchUserIdentity,
 } from '@lib/utils/fetches'
 import logger from '@lib/utils/logger'
 import {
@@ -39,7 +39,7 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
     return logger('No user found in session')
   }
 
-  const userIdentity = await fetchUserIdentity(user.details.wallet.address)
+  const userIdentity = await fetchIdentity(user.details.wallet.address)
 
   if (!userIdentity) {
     return logger('No user identity found')

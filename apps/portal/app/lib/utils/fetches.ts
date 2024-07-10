@@ -19,11 +19,11 @@ import {
 
 import logger from './logger'
 
-export async function fetchUserIdentity(
-  wallet: string,
+export async function fetchIdentity(
+  id: string,
 ): Promise<GetIdentityByIdResponse | null> {
   try {
-    return await IdentitiesService.getIdentityById({ id: wallet })
+    return await IdentitiesService.getIdentityById({ id: id })
   } catch (error: unknown) {
     if (error instanceof ApiError) {
       logger(`${error.name} - ${error.status}: ${error.message} ${error.url}`)

@@ -23,7 +23,7 @@ import StakeModal from '@components/stake/stake-modal'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { followModalAtom, stakeModalAtom } from '@lib/state/store'
 import { userIdentityRouteOptions } from '@lib/utils/constants'
-import { fetchUserIdentity, fetchUserTotals } from '@lib/utils/fetches'
+import { fetchIdentity, fetchUserTotals } from '@lib/utils/fetches'
 import logger from '@lib/utils/logger'
 import {
   calculatePercentageOfTvl,
@@ -60,7 +60,7 @@ export async function loader({ context, request, params }: LoaderFunctionArgs) {
     throw redirect('/app/profile')
   }
 
-  const userIdentity = await fetchUserIdentity(wallet)
+  const userIdentity = await fetchIdentity(wallet)
 
   if (!userIdentity) {
     return logger('No user identity found')
