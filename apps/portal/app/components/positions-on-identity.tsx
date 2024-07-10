@@ -1,6 +1,11 @@
 import { useEffect, useState } from 'react'
 
-import { IdentityPosition, IdentityTag, Input } from '@0xintuition/1ui'
+import {
+  Identity,
+  IdentityPosition,
+  IdentityTag,
+  Input,
+} from '@0xintuition/1ui'
 import { PositionPresenter, PositionSortColumn } from '@0xintuition/api'
 
 import { PaginationComponent } from '@components/pagination-component'
@@ -102,7 +107,7 @@ export function PositionsOnIdentity({
             className={`grow shrink basis-0 self-stretch p-6 bg-black first:rounded-t-xl last:rounded-b-xl border border-neutral-300/20 flex-col justify-start items-start gap-5 inline-flex`}
           >
             <IdentityPosition
-              variant="user"
+              variant={Identity.user}
               avatarSrc={position.user?.image ?? ''}
               name={position.user?.display_name ?? ''}
               walletAddress={position.user?.wallet ?? ''}

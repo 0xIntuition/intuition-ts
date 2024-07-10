@@ -116,7 +116,7 @@ export default function Profile() {
       vaultDetails: VaultDetailsType
     }>(['attest', 'create'])
 
-  const { user_assets } = vaultDetails
+  const user_assets = vaultDetails?.user_assets ?? ''
 
   const imgSrc = blockies
     .create({ seed: user?.details?.wallet?.address })

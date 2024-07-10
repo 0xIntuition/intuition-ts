@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-import { Claim, ClaimRow, Input } from '@0xintuition/1ui'
+import { Claim, ClaimRow, Identity, Input } from '@0xintuition/1ui'
 import { ClaimPresenter, ClaimSortColumn } from '@0xintuition/api'
 
 import { useSearchAndSortParamsHandler } from '@lib/hooks/useSearchAndSortParams'
