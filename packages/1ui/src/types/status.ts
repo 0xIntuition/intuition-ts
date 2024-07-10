@@ -12,3 +12,12 @@ export const TransactionStatus = {
 
 export type TransactionStatusType =
   (typeof TransactionStatus)[keyof typeof TransactionStatus]
+
+export const QuestStatus = {
+  notStarted: 'not-started',
+  inProgress: 'in-progress',
+  claimable: 'claimable',
+  completed: 'completed',
+} as const
+
+export type QuestStatusType = (typeof QuestStatus)[keyof typeof QuestStatus]
