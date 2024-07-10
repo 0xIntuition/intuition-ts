@@ -2,7 +2,7 @@ import { Canvas, Controls, Meta, Source, Title } from '@storybook/blocks'
 
 import { Button } from '..'
 
-import * as Stories from './ClaimPosition.stories'
+import * as Stories from './ClaimPositionRow.stories'
 
 <Meta of={Stories} />
 
@@ -14,9 +14,9 @@ import * as Stories from './ClaimPosition.stories'
   dark
   language="tsx"
   code={`
-import { ClaimPosition } from '@0xintuition/1ui'
+import { ClaimPositionRow } from '@0xintuition/1ui'
 
-<ClaimPosition
+<ClaimPositionRow
   variant="user"
   position="claimFor"
   avatarSrc="https://avatars.githubusercontent.com/u/94311139?s=200&v=4"
@@ -42,10 +42,10 @@ import { ClaimPosition } from '@0xintuition/1ui'
   dark
   language="tsx"
   code={`
-import { ClaimPosition } from '@0xintuition/1ui'
+import { ClaimPositionRow } from '@0xintuition/1ui'
 import { Text } from 'components/Text'
 
-<ClaimPosition
+<ClaimPositionRow
   variant="claim"
   position="claimAgainst"
   claimsFor={30}
@@ -56,3 +56,4 @@ import { Text } from 'components/Text'
 `} />
 
 <Canvas of={Stories.IdentityVariant} sourceState="none" />
+./ClaimPositionRow.stories

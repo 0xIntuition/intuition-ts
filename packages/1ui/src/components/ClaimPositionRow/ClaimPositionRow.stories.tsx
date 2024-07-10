@@ -3,16 +3,16 @@ import React from 'react'
 import type { Meta, StoryObj } from '@storybook/react'
 import { Claim } from 'components'
 
-import { ClaimPosition } from './ClaimPosition'
+import { ClaimPositionRow } from './ClaimPositionRow'
 
-const meta: Meta<typeof ClaimPosition> = {
-  title: 'Components/Claim/ClaimPosition',
-  component: ClaimPosition,
+const meta: Meta<typeof ClaimPositionRow> = {
+  title: 'Components/Claim/ClaimPositionRow',
+  component: ClaimPositionRow,
 }
 
 export default meta
 
-type Story = StoryObj<typeof ClaimPosition>
+type Story = StoryObj<typeof ClaimPositionRow>
 
 // Example story for the default state
 export const UserVariant: Story = {
@@ -28,7 +28,7 @@ export const UserVariant: Story = {
   },
   render: (args) => (
     <div className="w-[800px]">
-      <ClaimPosition {...args}></ClaimPosition>
+      <ClaimPositionRow {...args}></ClaimPositionRow>
     </div>
   ),
 }
@@ -44,7 +44,7 @@ export const IdentityVariant: Story = {
   },
   render: (args) => (
     <div className="w-[800px]">
-      <ClaimPosition {...args}>
+      <ClaimPositionRow {...args}>
         <Claim
           subject={{
             variant: 'non-user',
@@ -59,7 +59,7 @@ export const IdentityVariant: Story = {
             label: 'cool',
           }}
         />
-      </ClaimPosition>
+      </ClaimPositionRow>
     </div>
   ),
 }
