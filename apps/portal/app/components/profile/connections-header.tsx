@@ -1,6 +1,5 @@
 import { Claim, MonetaryValue, Text } from '@0xintuition/1ui'
-
-import { formatBalance } from '@lib/utils/misc'
+import { IdentityPresenter } from '@0xintuition/api'
 
 export const ConnectionsHeaderVariants = {
   followers: 'followers',
@@ -12,23 +11,19 @@ export type ConnectionsHeaderVariantType =
 
 interface ConnectionsHeaderProps {
   variant: ConnectionsHeaderVariantType
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  userIdentity: any
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  userTotals: any
+  subject: IdentityPresenter
+  predicate: IdentityPresenter
+  object: IdentityPresenter | string
+  total: string
 }
 
 export const ConnectionsHeader: React.FC<ConnectionsHeaderProps> = ({
   variant,
-  userIdentity,
-  userTotals,
+  subject,
+  predicate,
+  object,
+  total,
 }) => {
-  const totalPositionValue = +formatBalance(
-    userTotals?.total_position_value ?? '0',
-    18,
-    4,
-  )
-
   return (
     <div className="flex flex-col w-full gap-3">
       <div className="p-6 bg-black rounded-xl border border-neutral-300/20 flex flex-col gap-5">
@@ -43,7 +38,7 @@ export const ConnectionsHeader: React.FC<ConnectionsHeaderProps> = ({
                 {variant === 'followers' ? 'Followers' : 'Following'}
               </Text>
               <div className="text-white text-xl font-medium">
-                {userTotals?.total_positions ?? '0'}
+                {total ?? '0'}
               </div>
             </div>
             <div className="flex flex-col items-start">
@@ -56,7 +51,8 @@ export const ConnectionsHeader: React.FC<ConnectionsHeaderProps> = ({
                   ? 'Total stake in the Follow Claim'
                   : 'Total stake'}
               </Text>
-              <MonetaryValue value={totalPositionValue} currency="ETH" />
+              {/*TODO: Add actual value when BE updates presenter */}
+              <MonetaryValue value={+total} currency="ETH" />
             </div>
           </div>
           <div className="flex flex-col items-end">
@@ -67,20 +63,30 @@ export const ConnectionsHeader: React.FC<ConnectionsHeaderProps> = ({
             >
               Follow Claim
             </Text>
-            {/* TODO: Insert actual values here */}
             <Claim
               subject={{
                 variant: 'non-user',
-                label: userIdentity?.name,
+                label: subject?.display_name ?? subject?.identity_id ?? '',
+                imgSrc: subject?.image ?? '',
               }}
               predicate={{
                 variant: 'non-user',
-                label: 'is really',
+                label: predicate?.display_name ?? predicate?.identity_id ?? '',
+                imgSrc: predicate?.image ?? '',
               }}
-              object={{
-                variant: 'non-user',
-                label: 'cool',
-              }}
+              object={
+                typeof object === 'string'
+                  ? {
+                      variant: 'user',
+                      label: '?',
+                      imgSrc: '',
+                    }
+                  : {
+                      variant: 'user',
+                      label: object?.user?.display_name ?? '',
+                      imgSrc: object?.user?.image ?? '',
+                    }
+              }
             />
           </div>
         </div>
