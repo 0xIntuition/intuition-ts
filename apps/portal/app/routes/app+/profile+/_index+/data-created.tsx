@@ -1,5 +1,4 @@
 import {
-  Claim,
   ClaimPosition,
   IdentityPosition,
   Input,
@@ -41,7 +40,7 @@ import {
   getAuthHeaders,
 } from '@lib/utils/misc'
 import { SessionContext } from '@middleware/session'
-import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
+import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { useSearchParams } from '@remix-run/react'
 import { getPrivyAccessToken } from '@server/privy'
 
