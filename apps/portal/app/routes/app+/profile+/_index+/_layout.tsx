@@ -116,8 +116,6 @@ export default function Profile() {
       vaultDetails: VaultDetailsType
     }>(['attest', 'create'])
 
-  console.log('test in client', user, vaultDetails)
-
   const user_assets = vaultDetails?.user_conviction_value ?? ''
 
   const imgSrc = blockies
