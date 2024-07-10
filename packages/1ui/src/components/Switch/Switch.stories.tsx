@@ -6,7 +6,7 @@ import { Switch } from '.'
 import { Label } from '..'
 
 const meta: Meta<typeof Switch> = {
-  title: 'Components/Switch',
+  title: 'Components/Form Elements/Switch',
   component: Switch,
 }
 

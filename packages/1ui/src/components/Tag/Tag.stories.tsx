@@ -6,7 +6,7 @@ import { Icon, IconName } from '..'
 import { Tag, TagSize, TagVariant } from './Tag'
 
 const meta: Meta<typeof Tag> = {
-  title: 'Components/Tag',
+  title: 'Components/Tags/Tag',
   component: Tag,
   argTypes: {
     variant: {

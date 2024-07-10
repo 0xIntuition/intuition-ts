@@ -10,7 +10,7 @@ import { Claim } from './Claim'
 
 // Setup meta for the Storybook
 const meta: Meta<typeof Claim> = {
-  title: 'Components/Claim',
+  title: 'Components/Claim/Claim',
   component: Claim,
   argTypes: {
     subject: {

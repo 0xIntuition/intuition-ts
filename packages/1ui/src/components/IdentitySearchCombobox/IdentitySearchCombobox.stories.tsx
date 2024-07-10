@@ -8,7 +8,7 @@ import {
 } from './IdentitySearchCombobox'
 
 const meta: Meta<typeof IdentitySearchCombobox> = {
-  title: 'Components/IdentitySearchCombobox',
+  title: 'Components/Identity/IdentitySearchCombobox',
   component: IdentitySearchCombobox,
   // eslint-disable-next-line
   // @ts-ignore

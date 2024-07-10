@@ -5,7 +5,7 @@ import { ClaimStatus } from './ClaimStatus'
 
 // Setup meta for the Storybook
 const meta: Meta = {
-  title: 'Components/Dataset/ClaimStatus',
+  title: 'Components/Claim/ClaimStatus',
   component: ClaimStatus,
 }
 
