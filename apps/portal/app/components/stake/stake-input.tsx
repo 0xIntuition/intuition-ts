@@ -58,7 +58,7 @@ export default function StakeInput({
           }}
           min={'0'}
           placeholder={'0'}
-          className="text-6xl h-14 font-semibold text-neutral-50 [&>input]:text-center bg-transparent !border-none"
+          className="text-6xl h-14 font-semibold text-neutral-50 [&>input]:text-center bg-transparent border-none"
           disabled={isLoading || !wallet || wallet === ''}
         />
         <Text
