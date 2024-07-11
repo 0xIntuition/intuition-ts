@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import { cn } from '../../styles'
+import { cn } from 'styles'
 
 export interface ProgressBarProps extends React.HTMLAttributes<HTMLDivElement> {
   percentage: number
