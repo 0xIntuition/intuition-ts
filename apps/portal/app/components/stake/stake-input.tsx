@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react'
 
-import { Input } from '@0xintuition/1ui'
+import { Input, Text } from '@0xintuition/1ui'
 
 import ErrorList from '../error-list'
 
@@ -58,12 +58,15 @@ export default function StakeInput({
           }}
           min={'0'}
           placeholder={'0'}
-          className="text-5xl h-14 font-semibold text-neutral-50 text-center bg-transparent border-none focus-visible:ring-none"
+          className="text-5xl h-14 font-semibold text-neutral-50 text-center ![&<div]-bg-transparent border-none focus-visible:ring-none"
           disabled={isLoading || !wallet || wallet === ''}
         />
-        <div className="text-center text-white/50 text-base font-medium leading-normal pt-3">
+        <Text
+          weight="medium"
+          className="text-center text-white/50 leading-normal pt-3"
+        >
           ETH
-        </div>
+        </Text>
         <div className={`h-2 px-2 ${!showErrors && 'invisible'}`}>
           <ErrorList errors={validationErrors} />
         </div>
