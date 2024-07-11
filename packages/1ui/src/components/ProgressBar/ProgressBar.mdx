@@ -1,0 +1,28 @@
+import { Canvas, Controls, Meta, Source, Title } from '@storybook/blocks'
+
+import * as Stories from './ProgressBar.stories'
+
+<Meta of={Stories} />
+
+<Title />
+
+#### Progress bar to percentage progress
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { ProgressBar } from '@0xintuition/1ui'
+
+<ProgressBar
+  percentage={50}
+  primaryClassName={'bg-primary'}
+  secondaryClassName={'bg-muted'}
+/>
+`} />
+
+<Canvas of={Stories.BasicUsage} sourceState="none" />
+
+## Properties
+
+<Controls />
