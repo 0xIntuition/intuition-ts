@@ -40,73 +40,74 @@ describe('ClaimStatus', () => {
               class="h-full w-full bg-for block rounded-r-sm"
             />
           </div>
-          <button
+          <div
             class="flex items-center w-full max-w-full group"
-          />
-          <button
-            class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center rounded-sm group-hover:border-primary group-hover:bg-primary/20"
           >
-            <span>
-              <span
-                class="bg-primary/15 p-[10%] flex justify-center items-center h-full w-full"
-              >
-                <svg
-                  class="h-full w-full"
+            <button
+              class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center rounded-sm group-hover:border-primary group-hover:bg-primary/20"
+            >
+              <span>
+                <span
+                  class="bg-primary/15 p-[10%] flex justify-center items-center h-full w-full"
                 >
-                  <use
-                    href="/src/components/Icon/Icon.sprites.svg#fingerprint"
-                  />
-                </svg>
+                  <svg
+                    class="h-full w-full"
+                  >
+                    <use
+                      href="/src/components/Icon/Icon.sprites.svg#fingerprint"
+                    />
+                  </svg>
+                </span>
               </span>
-            </span>
-            0xintuition
-          </button>
-          <div
-            class="shrink-0 bg-border/20 h-[1px] w-4 group-hover:bg-primary"
-            data-orientation="horizontal"
-            role="none"
-          />
-          <button
-            class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center rounded-sm group-hover:border-primary group-hover:bg-primary/20"
-          >
-            <span>
-              <span
-                class="bg-primary/15 p-[10%] flex justify-center items-center h-full w-full"
-              >
-                <svg
-                  class="h-full w-full"
+              0xintuition
+            </button>
+            <div
+              class="shrink-0 bg-border/20 h-[1px] w-4 group-hover:bg-primary"
+              data-orientation="horizontal"
+              role="none"
+            />
+            <button
+              class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center rounded-sm group-hover:border-primary group-hover:bg-primary/20"
+            >
+              <span>
+                <span
+                  class="bg-primary/15 p-[10%] flex justify-center items-center h-full w-full"
                 >
-                  <use
-                    href="/src/components/Icon/Icon.sprites.svg#fingerprint"
-                  />
-                </svg>
+                  <svg
+                    class="h-full w-full"
+                  >
+                    <use
+                      href="/src/components/Icon/Icon.sprites.svg#fingerprint"
+                    />
+                  </svg>
+                </span>
               </span>
-            </span>
-            is really
-          </button>
-          <div
-            class="shrink-0 bg-border/20 h-[1px] w-4 group-hover:bg-primary"
-            data-orientation="horizontal"
-            role="none"
-          />
-          <button
-            class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center rounded-sm group-hover:border-primary group-hover:bg-primary/20"
-          >
-            <span>
-              <span
-                class="bg-primary/15 p-[10%] flex justify-center items-center h-full w-full"
-              >
-                <svg
-                  class="h-full w-full"
+              is really
+            </button>
+            <div
+              class="shrink-0 bg-border/20 h-[1px] w-4 group-hover:bg-primary"
+              data-orientation="horizontal"
+              role="none"
+            />
+            <button
+              class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center rounded-sm group-hover:border-primary group-hover:bg-primary/20"
+            >
+              <span>
+                <span
+                  class="bg-primary/15 p-[10%] flex justify-center items-center h-full w-full"
                 >
-                  <use
-                    href="/src/components/Icon/Icon.sprites.svg#fingerprint"
-                  />
-                </svg>
+                  <svg
+                    class="h-full w-full"
+                  >
+                    <use
+                      href="/src/components/Icon/Icon.sprites.svg#fingerprint"
+                    />
+                  </svg>
+                </span>
               </span>
-            </span>
-            cool
-          </button>
+              cool
+            </button>
+          </div>
         </div>
       </DocumentFragment>
     `)
