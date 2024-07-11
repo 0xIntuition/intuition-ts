@@ -12,7 +12,7 @@ export function NestedVerticalLayout({
   options,
 }: NestedVerticalLayoutProps) {
   return (
-    <div className="flex flex-col items-center mx-8 my-10 h-screen">
+    <div className="flex flex-col items-center px-8 py-10 h-screen overflow-y-scroll">
       <SegmentedNav options={options} />
       <div className="w-full">
         <OutletComponent />
