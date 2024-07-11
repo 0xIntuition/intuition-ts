@@ -23,18 +23,29 @@ export interface IdentitySearchComboboxProps
   identities: IdentityPresenter[]
   onIdentityClick?: (identity: IdentityPresenter) => void
   onCreateIdentityClick?: () => void
+  value?: string
+  onValueChange?: (value: string) => void
+  onInput?: (event: React.FormEvent<HTMLInputElement>) => void
 }
 
 const IdentitySearchCombobox = ({
   onIdentityClick = () => {},
   onCreateIdentityClick,
   identities,
+  onValueChange,
+  onInput,
+  value,
   ...props
 }: IdentitySearchComboboxProps) => {
   return (
     <div className="min-w-96" {...props}>
-      <Command>
-        <CommandInput placeholder="Search for an identity..." />
+      <Command shouldFilter={false}>
+        <CommandInput
+          placeholder="Search for an identity..."
+          value={value}
+          onValueChange={onValueChange}
+          onInput={onInput}
+        />
         {onCreateIdentityClick && (
           <Button
             variant={ButtonVariant.text}
@@ -47,8 +58,9 @@ const IdentitySearchCombobox = ({
           </Button>
         )}
         <CommandList>
+          <pre>length: {identities.length}</pre>
           <CommandEmpty>No results found.</CommandEmpty>
-          <CommandGroup>
+          <CommandGroup key={identities.length}>
             {identities.map((identity, index) => {
               const {
                 display_name: name,

@@ -45,7 +45,7 @@ import {
   SEARCH_IDENTITIES_RESOURCE_ROUTE,
 } from '@lib/utils/constants'
 import logger from '@lib/utils/logger'
-import { formatBalance, sliceString, truncateString } from '@lib/utils/misc'
+import { sliceString, truncateString } from '@lib/utils/misc'
 import { Link, useFetcher, useNavigate } from '@remix-run/react'
 import { CreateLoaderData } from '@routes/resources+/create'
 import * as blockies from 'blockies-ts'
@@ -55,7 +55,6 @@ import { useAccount, usePublicClient, useWalletClient } from 'wagmi'
 
 import ErrorList from './error-list'
 import { IdentitySearchCombobox } from './identity/identity-search-combo-box'
-import { IdentitySearchComboboxItem } from './identity/identity-search-combo-box-item'
 import Toast from './toast'
 
 interface ClaimFormProps {
@@ -500,8 +499,8 @@ function CreateClaimForm({
                     onIdentityClick={(identity) =>
                       handleIdentitySelection('subject', identity)
                     }
-                    value={searchValue}
-                    onValueChange={setSearchValue}
+                    onValueChange={setSearchQuery}
+                    onInput={handleInput}
                   />
                 </PopoverContent>
               </Popover>
@@ -744,7 +743,7 @@ function CreateClaimForm({
           </div>
         ) : (
           <div className="flex flex-col items-center justify-center min-h-96">
-            <TransactionStatusIndicator status={state.status} />
+            <TransactionStatusIndicator status={state.status} type="claim" />
             {state.status !== 'complete' ? (
               <TransactionStatusCard status={state.status} />
             ) : (
