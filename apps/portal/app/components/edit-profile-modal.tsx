@@ -6,6 +6,7 @@ import {
   Dialog,
   DialogContent,
   DialogHeader,
+  Icon,
   Input,
   Label,
   Textarea,
@@ -25,13 +26,6 @@ import {
 import logger from '@lib/utils/logger'
 import { cn, truncateString } from '@lib/utils/misc'
 import { useLocation } from '@remix-run/react'
-import {
-  AlertCircle,
-  CircleXIcon,
-  HelpCircle,
-  Loader2Icon,
-  Upload,
-} from 'lucide-react'
 import { toast } from 'sonner'
 
 import ErrorList from './error-list'
@@ -254,7 +248,12 @@ export function EditProfileForm({ userObject, onClose }: EditProfileFormProps) {
               <Toast
                 title="Error"
                 description={errorMessage}
-                icon={<AlertCircle />}
+                icon={
+                  <Icon
+                    name="triangle-exclamation"
+                    className="h-3 w-3 text-destructive"
+                  />
+                }
               />
             ),
             {
@@ -335,7 +334,12 @@ export function EditProfileForm({ userObject, onClose }: EditProfileFormProps) {
               <Toast
                 title="Error"
                 description={errorMessage}
-                icon={<AlertCircle />}
+                icon={
+                  <Icon
+                    name="triangle-exclamation"
+                    className="h-3 w-3 text-destructive"
+                  />
+                }
               />
             ),
             {
@@ -377,7 +381,10 @@ export function EditProfileForm({ userObject, onClose }: EditProfileFormProps) {
             <h2 className="text-xl text-white/70 font-normal">
               {isCreateRoute ? 'Create Profile' : 'Update Profile'}
             </h2>
-            <HelpCircle className="h-4 w-4 text-neutral-500 transition-colors duration-300 hover:text-neutral-400" />
+            <Icon
+              name="circle-question-mark"
+              className="h-4 w-4 text-neutral-500 transition-colors duration-300 hover:text-neutral-400"
+            />
           </div>
         </DialogHeader>
 
@@ -423,7 +430,10 @@ export function EditProfileForm({ userObject, onClose }: EditProfileFormProps) {
                   }}
                   className={`${previewImage === null ? 'hidden' : 'block'}`}
                 >
-                  <CircleXIcon className="h-6 w-6 relative text-neutral-700 hover:text-neutral-600 transition-colors duration-300" />
+                  <Icon
+                    name="circle-x"
+                    className="h-6 w-6 relative text-neutral-700 hover:text-neutral-600 transition-colors duration-300"
+                  />
                 </button>
               </div>
             </div>
@@ -499,13 +509,19 @@ export function EditProfileForm({ userObject, onClose }: EditProfileFormProps) {
             {loading ? (
               isCreateRoute ? (
                 <>
-                  <Loader2Icon className="animate-spin h-5 w-5 mr-1" /> Creating
-                  Profile...
+                  <Icon
+                    name="in-progress"
+                    className="animate-spin h-5 w-5 mr-1"
+                  />{' '}
+                  Creating Profile...
                 </>
               ) : (
                 <>
-                  <Loader2Icon className="animate-spin h-5 w-5 mr-1" /> Updating
-                  Profile...
+                  <Icon
+                    name="in-progress"
+                    className="animate-spin h-5 w-5 mr-1"
+                  />{' '}
+                  Updating Profile...
                 </>
               )
             ) : isCreateRoute ? (
@@ -565,7 +581,10 @@ function ImageChooser({
               <div className="flex flex-row">
                 <div className="flex h-full w-full items-center justify-center overflow-hidden rounded-md h-[60px] w-[60px]">
                   <div className="pointer-events-pointer inset-0 flex items-center justify-center">
-                    <Upload className="h-6 w-6 text-neutral-700" />
+                    <Icon
+                      name="arrow-out-of-box"
+                      className="h-6 w-6 text-neutral-700"
+                    />
                   </div>
                 </div>
               </div>

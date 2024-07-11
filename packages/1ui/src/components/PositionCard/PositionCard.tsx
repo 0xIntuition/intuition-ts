@@ -13,7 +13,6 @@ const PositionCard = ({ children, onButtonClick }: PositionCardProps) => {
       <div className="w-full grid grid-cols-2 gap-5">{children}</div>
 
       <Button
-        size="lg"
         variant="destructiveOutline"
         onClick={onButtonClick}
         className="w-full mt-5"

@@ -1,22 +1,28 @@
 import {
+  ClaimPresenter,
   ClaimSortColumn,
   OpenAPI,
+  PositionPresenter,
   PositionSortColumn,
   SortDirection,
 } from '@0xintuition/api'
 
 import { ClaimsOnIdentity } from '@components/claims-on-identity'
 import { PositionsOnIdentity } from '@components/positions-on-identity'
+import DataAboutHeader from '@components/profile/data-about-header'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import {
-  fetchClaimsByIdentity,
-  fetchPositionsByIdentity,
-  fetchUserIdentity,
+  fetchClaimsAboutIdentity,
+  fetchIdentity,
+  fetchPositionsOnIdentity,
 } from '@lib/utils/fetches'
-import { calculateTotalPages, getAuthHeaders } from '@lib/utils/misc'
+import {
+  calculateTotalPages,
+  formatBalance,
+  getAuthHeaders,
+} from '@lib/utils/misc'
 import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
 import { getPrivyAccessToken } from '@server/privy'
-import { InitialIdentityData } from 'types/identity'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   OpenAPI.BASE = 'https://dev.api.intuition.systems'
@@ -30,62 +36,110 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     throw new Error('Wallet is undefined.')
   }
 
-  const identity = await fetchUserIdentity(wallet)
+  const userIdentity = await fetchIdentity(wallet)
 
-  if (!identity) {
+  if (!userIdentity) {
     return redirect('/create')
   }
 
   const url = new URL(request.url)
   const searchParams = new URLSearchParams(url.search)
-  // const search = searchParams.get('search')
-  const sortBy = searchParams.get('sortBy') ?? 'UpdatedAt'
-  const direction = searchParams.get('direction') ?? 'asc'
-  const page = searchParams.get('page')
-    ? parseInt(searchParams.get('page') as string)
+  const positionsSearch = searchParams.get('positionsSearch')
+  const positionsSortBy = searchParams.get('positionsSortBy') ?? 'Assets'
+  const positionsDirection = searchParams.get('positionsDirection') ?? 'desc'
+  const positionsPage = searchParams.get('positionsPage')
+    ? parseInt(searchParams.get('positionsPage') as string)
     : 1
-  const limit = searchParams.get('limit') ?? '10'
+  const positionsLimit = searchParams.get('positionsLimit') ?? '10'
 
-  const positions = await fetchPositionsByIdentity(
+  const positions = await fetchPositionsOnIdentity(
     wallet,
-    page,
-    Number(limit),
-    sortBy as PositionSortColumn,
-    direction as SortDirection,
+    positionsPage,
+    Number(positionsLimit),
+    positionsSortBy as PositionSortColumn,
+    positionsDirection as SortDirection,
+    positionsSearch,
   )
 
-  const claims = await fetchClaimsByIdentity(
-    wallet,
-    page,
-    Number(limit),
-    sortBy as ClaimSortColumn,
-    direction as SortDirection,
+  const positionsTotalPages = calculateTotalPages(
+    positions?.total ?? 0,
+    Number(positionsLimit),
   )
 
-  const totalPages = calculateTotalPages(positions?.total ?? 0, Number(limit))
+  const claimsSearch = searchParams.get('claimsSearch')
+  const claimsSortBy = searchParams.get('claimsSortBy') ?? 'AssetsSum'
+  const claimsDirection = searchParams.get('claimsDirection') ?? 'desc'
+  const claimsPage = searchParams.get('claimsPage')
+    ? parseInt(searchParams.get('claimsPage') as string)
+    : 1
+  const claimsLimit = searchParams.get('claimsLimit') ?? '10'
+
+  const claims = await fetchClaimsAboutIdentity(
+    wallet,
+    claimsPage,
+    Number(claimsLimit),
+    claimsSortBy as ClaimSortColumn,
+    claimsDirection as SortDirection,
+    claimsSearch,
+  )
+
+  const claimsTotalPages = calculateTotalPages(
+    claims?.total ?? 0,
+    Number(claimsLimit),
+  )
 
   return json({
-    identity,
-    positions,
-    claims,
-    sortBy,
-    direction,
-    pagination: {
-      page: Number(page),
-      limit: Number(limit),
-      total: positions?.total,
-      totalPages,
+    userIdentity,
+    positions: positions?.data as PositionPresenter[],
+    positionsSortBy,
+    positionsDirection,
+    positionsPagination: {
+      currentPage: Number(positionsPage),
+      limit: Number(positionsLimit),
+      totalEntries: positions?.total ?? 0,
+      totalPages: positionsTotalPages,
+    },
+    claims: claims?.data as ClaimPresenter[],
+    claimsSortBy,
+    claimsDirection,
+    claimsPagination: {
+      currentPage: Number(claimsPage),
+      limit: Number(claimsLimit),
+      totalEntries: claims?.total ?? 0,
+      totalPages: claimsTotalPages,
     },
   })
 }
 
 export default function ProfileDataAbout() {
-  const initialData = useLiveLoader<typeof loader>(['attest'])
-
+  const {
+    userIdentity,
+    positions,
+    positionsPagination,
+    claims,
+    claimsPagination,
+  } = useLiveLoader<typeof loader>(['attest'])
   return (
     <div className="flex-col justify-start items-start flex w-full">
-      <ClaimsOnIdentity initialData={initialData as InitialIdentityData} />
-      <PositionsOnIdentity initialData={initialData as InitialIdentityData} />
+      <DataAboutHeader
+        variant="claims"
+        title="Claims about this Identity"
+        userIdentity={userIdentity}
+        totalClaims={claimsPagination.totalEntries}
+        totalStake={0} //TODO: Add total stake across all claims once BE implements
+      />
+      <ClaimsOnIdentity claims={claims} pagination={claimsPagination} />
+      <DataAboutHeader
+        variant="positions"
+        title="Positions on this Identity"
+        userIdentity={userIdentity}
+        totalPositions={userIdentity.num_positions}
+        totalStake={+formatBalance(userIdentity.assets_sum, 18, 4)}
+      />
+      <PositionsOnIdentity
+        positions={positions}
+        pagination={positionsPagination}
+      />
     </div>
   )
 }

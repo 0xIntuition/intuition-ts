@@ -40,7 +40,6 @@ import { VaultDetailsType } from 'types/vault'
 export async function loader({ context, request, params }: LoaderFunctionArgs) {
   OpenAPI.BASE = 'https://dev.api.intuition.systems'
   const accessToken = getPrivyAccessToken(request)
-  logger('accessToken', accessToken)
   const headers = getAuthHeaders(accessToken !== null ? accessToken : '')
   OpenAPI.HEADERS = headers as Record<string, string>
   const id = params.id

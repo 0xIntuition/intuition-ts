@@ -1,17 +1,30 @@
 import { FeesAccrued, IdentityTag, MonetaryValue, Text } from '@0xintuition/1ui'
+import { IdentityPresenter, UserTotalsPresenter } from '@0xintuition/api'
 
 import { formatBalance } from '@lib/utils/misc'
 
+export const DataCreatedHeaderVariants = {
+  identities: 'identities',
+  claims: 'claims',
+} as const
+
+export type DataCreatedHeaderVariantType =
+  (typeof DataCreatedHeaderVariants)[keyof typeof DataCreatedHeaderVariants]
+
 interface DataCreatedHeaderProps {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  userIdentity: any
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  userTotals: any
+  variant: DataCreatedHeaderVariantType
+  userIdentity: IdentityPresenter
+  userTotals: UserTotalsPresenter
+  totalClaims?: number
+  totalIdentities?: number
 }
 
 export const DataCreatedHeader: React.FC<DataCreatedHeaderProps> = ({
+  variant,
   userIdentity,
   userTotals,
+  totalClaims,
+  totalIdentities,
 }) => {
   const totalPositionValue = +formatBalance(
     userTotals?.total_position_value ?? '0',
@@ -30,7 +43,7 @@ export const DataCreatedHeader: React.FC<DataCreatedHeaderProps> = ({
             weight="regular"
             className="text-secondary-foreground"
           >
-            Identities staked on by
+            {variant === 'identities' ? 'Identities' : 'Claims'} staked on by
           </Text>
           <IdentityTag
             imgSrc={userIdentity?.user?.image ?? userIdentity?.image}
@@ -49,10 +62,10 @@ export const DataCreatedHeader: React.FC<DataCreatedHeaderProps> = ({
                 weight="regular"
                 className="text-secondary-foreground"
               >
-                Identities
+                {variant === 'identities' ? 'Identities' : 'Claims'}
               </Text>
               <div className="text-white text-xl font-medium">
-                {userTotals?.total_positions ?? '0'}
+                {variant === 'identities' ? totalIdentities : totalClaims}
               </div>
             </div>
             <div className="flex flex-col items-start">

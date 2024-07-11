@@ -4,15 +4,17 @@ import {
   DialogHeader,
   DialogTitle,
   Icon,
+  Identity,
   IdentityTag,
+  Text,
   TransactionStatusCard,
   TransactionStatusIndicator,
 } from '@0xintuition/1ui'
 import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
 
+import { BLOCK_EXPLORER_URL } from '@lib/utils/constants'
 import { formatBalance } from '@lib/utils/misc'
 import { Link, type FetcherWithComponents } from '@remix-run/react'
-import { HelpCircleIcon } from 'lucide-react'
 import { TransactionActionType, TransactionStateType } from 'types/transaction'
 
 import FollowActions from './follow-actions'
@@ -22,8 +24,6 @@ interface FollowFormProps {
   walletBalance: string
   identity: IdentityPresenter
   claim: ClaimPresenter
-  user_conviction: string
-  conviction_price: string
   user_assets: string
   entry_fee: string
   exit_fee: string
@@ -73,10 +73,10 @@ export default function FollowForm({
         <>
           <DialogHeader>
             <DialogTitle className="justify-between">
-              <div className=" flex items-center justify-between w-full mr-2.5">
+              <div className="flex items-center justify-between w-full mr-2.5">
                 <IdentityTag
                   imgSrc={identity?.user?.image ?? identity?.image}
-                  variant={identity?.user ? 'user' : 'non-user'}
+                  variant={identity?.user ? Identity.user : Identity.nonUser}
                 >
                   {identity?.user?.display_name ?? identity?.display_name}
                 </IdentityTag>
@@ -87,28 +87,31 @@ export default function FollowForm({
               </div>
             </DialogTitle>
           </DialogHeader>
-          <div className="pt-2.5">
+          <div className="h-full w-full flex-col pt-5 px-10 pb-10 gap-5 inline-flex">
             <div className="flex-col justify-center items-start gap-1 inline-flex">
-              <div className="justify-center items-center gap-1 inline-flex">
-                <div className="text-center text-neutral-50 text-base font-medium leading-normal flex items-center gap-2">
+              <div className="justify-center items-center gap-2 inline-flex">
+                <Text variant="base" weight="medium">
                   Follow User{' '}
-                  <HelpCircleIcon className="w-4 h-4 relative text-neutral-50/30" />
-                </div>
+                </Text>
+                <Icon
+                  name="circle-question-mark"
+                  className="w-4 h-4 relative text-neutral-50/30"
+                />
                 <div className="w-4 h-4 relative" />
               </div>
-              <div className="text-center text-neutral-50/50 text-xs font-normal leading-[18px]">
+              <Text variant="small" className="text-neutral-50/50">
                 Create or strengthen your connection.
-              </div>
+              </Text>
             </div>
-            <div className="flex flex-row items-center justify-center mt-4">
-              <div className="w-[396px] bg-neutral-50/5 rounded-lg border border-neutral-300/10 flex-col justify-start items-start inline-flex">
+            <div className="flex flex-row items-center justify-center">
+              <div className="w-full bg-neutral-50/5 rounded-lg border border-neutral-300/10 flex-col justify-start items-start inline-flex">
                 <ActivePositionCard
                   value={Number(formatBalance(user_assets, 18, 4))}
                   claimPosition={`${user_assets > '0' ? 'claimFor' : ''}`}
                 />
               </div>
             </div>
-            <div className="rounded-t-lg bg-primary-950/15 px-4 pt-2.5">
+            <div className="rounded-t-lg bg-primary-950/15 w-full">
               <FollowActions
                 setVal={setVal}
                 validationErrors={validationErrors}
@@ -135,19 +138,23 @@ export default function FollowForm({
         </>
       ) : (
         <>
-          <TransactionStatusIndicator status={state.status} />
-          {state.status !== 'complete' ? (
-            <TransactionStatusCard status={state.status} />
-          ) : (
-            <Link
-              to={`https://base-sepolia.blockscout.com/tx/${state.txHash}`}
-              target="_blank"
-              className="flex flex-row items-center gap-1 mx-auto leading-tight text-blue-500 transition-colors duration-300 hover:text-blue-400"
-            >
-              View on Basescan{' '}
-              <Icon name="square-arrow-top-right" className="h-3 w-3" />
-            </Link>
-          )}
+          <div className="flex-grow flex flex-col justify-center items-center h-full">
+            <div className="flex flex-col justify-center items-center gap-10">
+              <TransactionStatusIndicator status={state.status} />
+              {state.status !== 'complete' ? (
+                <TransactionStatusCard status={state.status} />
+              ) : (
+                <Link
+                  to={`${BLOCK_EXPLORER_URL}/tx/${state.txHash}`}
+                  target="_blank"
+                  className="flex flex-row items-center gap-1 mx-auto text-base text-blue-500 transition-colors duration-300 hover:text-blue-400"
+                >
+                  View on Basescan{' '}
+                  <Icon name="square-arrow-top-right" className="h-3 w-3" />
+                </Link>
+              )}
+            </div>
+          </div>
         </>
       )}
     </>

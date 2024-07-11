@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import {
   Button,
   DialogHeader,
+  DialogTitle,
   Icon,
   Input,
   Label,
@@ -41,12 +42,11 @@ import logger from '@lib/utils/logger'
 import { truncateString } from '@lib/utils/misc'
 import { useFetcher } from '@remix-run/react'
 import { CreateLoaderData } from '@routes/resources+/create'
-import { AlertCircle, CircleXIcon } from 'lucide-react'
 import {
   IdentityTransactionActionType,
   IdentityTransactionStateType,
 } from 'types/transaction'
-import { toHex } from 'viem'
+import { parseUnits, toHex } from 'viem'
 import { usePublicClient, useWalletClient } from 'wagmi'
 
 import ErrorList from './error-list'
@@ -84,17 +84,15 @@ export function IdentityForm({ onSuccess, onClose }: IdentityFormProps) {
       <>
         {!isTransactionStarted && (
           <DialogHeader className="py-4">
-            <div className="absolute top-5 flex flex-row items-center gap-2 align-baseline text-primary-400">
-              <div className="flex flex-col gap-1">
-                <Text variant="headline" className="text-foreground-secondary">
-                  Create Identity
-                </Text>
-                <Text variant="footnote" className="text-foreground-secondary">
-                  Begin the process of establishing a new digital representation
-                  within the blockchain network.
-                </Text>
-              </div>
-            </div>
+            <DialogTitle>
+              <Text variant="headline" className="text-foreground-secondary">
+                Create Identity
+              </Text>
+            </DialogTitle>
+            <Text variant="caption" className="text-foreground/50 w-full">
+              Begin the process of establishing a new digital representation
+              within the blockchain network.
+            </Text>
           </DialogHeader>
         )}
         <CreateIdentityForm
@@ -129,6 +127,7 @@ function CreateIdentityForm({
   dispatch,
   setTransactionResponseData,
   transactionResponseData,
+  onClose,
 }: CreateIdentityFormProps) {
   const { offChainFetcher, lastOffChainSubmission } = useOffChainFetcher()
   const imageUploadFetcher = useImageUploadFetcher()
@@ -139,6 +138,7 @@ function CreateIdentityForm({
   const [identityImageFile, setIdentityImageFile] = useState<File | undefined>(
     undefined,
   )
+  const [initialDeposit, setInitialDeposit] = useState<string>('0')
   const loaderFetcher = useFetcher<CreateLoaderData>()
   const loaderFetcherUrl = '/resources/create'
   const loaderFetcherRef = useRef(loaderFetcher.load)
@@ -198,7 +198,16 @@ function CreateIdentityForm({
     ) {
       toast.custom(
         () => (
-          <Toast title="Error" description="error" icon={<AlertCircle />} />
+          <Toast
+            title="Error"
+            description="error"
+            icon={
+              <Icon
+                name="triangle-exclamation"
+                className="h-3 w-3 text-destructive"
+              />
+            }
+          />
         ),
         {
           duration: 5000,
@@ -271,7 +280,6 @@ function CreateIdentityForm({
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    logger('form submitting')
     try {
       if (walletClient) {
         dispatch({ type: 'PREPARING_IDENTITY' })
@@ -287,6 +295,10 @@ function CreateIdentityForm({
         if (event.currentTarget.external_reference?.value !== undefined) {
           const prefixedUrl = `https://${event.currentTarget.external_reference?.value}`
           formData.append('external_reference', prefixedUrl)
+        }
+
+        if (event.currentTarget.initial_deposit?.value !== undefined) {
+          setInitialDeposit(event.currentTarget.initial_deposit.value)
         }
 
         // Initial form validation
@@ -324,7 +336,12 @@ function CreateIdentityForm({
                 <Toast
                   title="Error"
                   description={errorMessage}
-                  icon={<AlertCircle />}
+                  icon={
+                    <Icon
+                      name="triangle-exclamation"
+                      className="h-3 w-3 text-destructive"
+                    />
+                  }
                 />
               ),
               {
@@ -364,7 +381,9 @@ function CreateIdentityForm({
           abi: multivaultAbi,
           functionName: 'createAtom',
           args: [toHex(atomData)],
-          value: atomCost,
+          value:
+            BigInt(atomCost) +
+            parseUnits(initialDeposit === '' ? '0' : initialDeposit, 18),
         })
 
         if (txHash) {
@@ -401,7 +420,12 @@ function CreateIdentityForm({
               <Toast
                 title="Error"
                 description={errorMessage}
-                icon={<AlertCircle />}
+                icon={
+                  <Icon
+                    name="triangle-exclamation"
+                    className="h-3 w-3 text-destructive"
+                  />
+                }
               />
             ),
             {
@@ -454,7 +478,9 @@ function CreateIdentityForm({
           setTransactionResponseData(responseData.identity)
           logger('responseData identity', responseData.identity)
           logger('onchain create starting. identity_id:', identity_id)
-          handleOnChainCreateIdentity({ atomData: identity_id })
+          handleOnChainCreateIdentity({
+            atomData: identity_id,
+          })
         }
       }
       if (offChainFetcher.data === null || offChainFetcher.data === undefined) {
@@ -495,9 +521,9 @@ function CreateIdentityForm({
       {!isTransactionStarted ? (
         <div className="w-full py-1 flex-col justify-start items-start inline-flex gap-9">
           <div className="flex flex-col w-full gap-1.5">
-            <div className="self-stretch flex-col justify-start items-start flex mt-9">
+            <div className="self-stretch flex-col justify-start items-start flex">
               <Text variant="caption" className="text-secondary-foreground/90">
-                Identity Display Picture
+                Identity Display Picture (Optional)
               </Text>
             </div>
             <div className="self-stretch h-[100px] px-9 py-2.5 bg-neutral-900 rounded-lg border border-solid border-white/10 justify-between items-center inline-flex">
@@ -531,7 +557,10 @@ function CreateIdentityForm({
                   }}
                   className={`${previewImage === null ? 'hidden' : 'block'}`}
                 >
-                  <CircleXIcon className="h-6 w-6 relative text-neutral-700 hover:text-neutral-600 transition-colors duration-300" />
+                  <Icon
+                    name="circle-x"
+                    className="h-6 w-6 relative text-neutral-700 hover:text-neutral-600 transition-colors duration-300"
+                  />
                 </button>
               </div>
             </div>
@@ -546,7 +575,6 @@ function CreateIdentityForm({
             <Input
               {...getInputProps(fields.display_name, { type: 'text' })}
               placeholder="Enter a display name"
-              className="border border-solid border-white/10 bg-neutral-900"
               onChange={() => setFormTouched(true)}
             />
             <ErrorList
@@ -556,38 +584,48 @@ function CreateIdentityForm({
           </div>
           <div className="flex flex-col w-full gap-1.5">
             <Text variant="caption" className="text-secondary-foreground/90">
-              Identity Description
+              Identity Description (Optional)
             </Text>
             <Label htmlFor={fields.description.id} hidden>
-              Identity Description
+              Identity Description (Optional)
             </Label>
             <Textarea
               {...getInputProps(fields.description, { type: 'text' })}
               placeholder="Tell us about yourself!"
-              className="h-20 border border-solid border-white/10 bg-neutral-900"
             />
           </div>
           <div className="flex flex-col w-full gap-1.5">
             <Text variant="caption" className="text-secondary-foreground/90">
-              Add Link
+              Add Link (Optional)
             </Text>
             <Label htmlFor={fields.external_reference.id} hidden>
-              Add Link
+              Add Link (Optional)
             </Label>
-
-            <div className="flex items-center overflow-hidden border border-solid border-white/10 bg-neutral-900 rounded-md relative">
-              <span className="font-medium text-secondary-foreground py px-2 border-r border-solid border-white/10">
-                https://
-              </span>
-              <Input
-                {...getInputProps(fields.external_reference, { type: 'text' })}
-                placeholder="Enter an external link"
-                className="border-white/10 bg-neutral-900 rounded-none border-none"
-              />
-            </div>
+            <Input
+              {...getInputProps(fields.external_reference, { type: 'text' })}
+              placeholder="Enter an external link"
+              startAdornment="http://"
+            />
             <ErrorList
               id={fields.external_reference.errorId}
               errors={fields.external_reference.errors}
+            />
+          </div>
+          <div className="flex flex-col w-full gap-1.5">
+            <Text variant="caption" className="text-secondary-foreground/90">
+              Initial Deposit (Optional)
+            </Text>
+            <Label htmlFor={fields.initial_deposit.id} hidden>
+              Initial Deposit (Optional)
+            </Label>
+            <Input
+              {...getInputProps(fields.initial_deposit, { type: 'text' })}
+              placeholder="0"
+              startAdornment="ETH"
+            />
+            <ErrorList
+              id={fields.initial_deposit.errorId}
+              errors={fields.initial_deposit.errors}
             />
           </div>
           <Button
@@ -605,6 +643,7 @@ function CreateIdentityForm({
           transactionType="identity"
           state={state}
           dispatch={dispatch}
+          onClose={onClose}
           transactionDetail={transactionResponseData?.id}
           statusMessages={statusMessages}
           isTransactionAwaiting={isTransactionAwaiting}

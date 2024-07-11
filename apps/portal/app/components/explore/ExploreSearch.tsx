@@ -1,23 +1,14 @@
 import * as React from 'react'
 
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandList,
-  IdentityInput,
-  IdentitySearchCombobox,
-  IdentitySearchComboboxItem,
-  Separator,
-  Text,
-} from '@0xintuition/1ui'
+import { IdentityInput, Separator, Text } from '@0xintuition/1ui'
 import { IdentityPresenter } from '@0xintuition/api'
+
+import { IdentitySearchCombobox } from '@components/identity/identity-search-combo-box'
 
 export interface ExploreSearchProps
   extends React.HTMLAttributes<HTMLDivElement> {
   variant: 'user' | 'identity' | 'claim' | 'tag'
-  identities: any[]
+  identities: IdentityPresenter[]
   onCreateIdentityClick?: () => void
 }
 
@@ -25,7 +16,6 @@ const ExploreSearch = ({
   variant,
   identities,
   onCreateIdentityClick = undefined,
-  children,
   ...props
 }: ExploreSearchProps) => {
   return (
@@ -33,41 +23,19 @@ const ExploreSearch = ({
       {/* User variant */}
       {variant === 'user' && (
         <IdentitySearchCombobox
+          identities={identities}
           placeholder="Search by a username or address"
           onCreateIdentityClick={onCreateIdentityClick}
-        >
-          {identities.map((identity, index) => (
-            <IdentitySearchComboboxItem
-              key={index}
-              variant={identity.variant}
-              name={identity.name}
-              value={identity.value}
-              walletAddress={identity.walletAddress}
-              socialCount={identity.socialCount}
-              tagCount={identity.tagCount}
-            />
-          ))}
-        </IdentitySearchCombobox>
+        />
       )}
 
       {/* Identity variant */}
       {variant === 'identity' && (
         <IdentitySearchCombobox
+          identities={identities}
           placeholder="Search by Identity"
           onCreateIdentityClick={onCreateIdentityClick}
-        >
-          {identities.map((identity, index) => (
-            <IdentitySearchComboboxItem
-              key={index}
-              variant={identity.variant}
-              name={identity.name}
-              value={identity.value}
-              walletAddress={identity.walletAddress}
-              socialCount={identity.socialCount}
-              tagCount={identity.tagCount}
-            />
-          ))}
-        </IdentitySearchCombobox>
+        />
         // TODO: Add tags here
       )}
 
@@ -112,13 +80,11 @@ const ExploreSearch = ({
 
       {/* Tag variant */}
       {variant === 'tag' && (
-        <Command>
-          <CommandInput placeholder="Search by list" />
-          <CommandList>
-            <CommandEmpty>No results found.</CommandEmpty>
-            <CommandGroup>{children}</CommandGroup>
-          </CommandList>
-        </Command>
+        <IdentitySearchCombobox
+          identities={identities}
+          placeholder="Search by list"
+          onCreateIdentityClick={onCreateIdentityClick}
+        />
       )}
     </div>
   )

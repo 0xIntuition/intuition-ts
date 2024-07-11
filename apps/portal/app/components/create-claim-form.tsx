@@ -3,22 +3,31 @@ import React, { useEffect, useState } from 'react'
 import {
   Button,
   DialogHeader,
+  DialogTitle,
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
-  IdentitySearchCombobox,
-  IdentitySearchComboboxItem,
+  Icon,
   IdentityTag,
+  Input,
+  Label,
   Popover,
   PopoverContent,
   PopoverTrigger,
   ProfileCard,
   Text,
   toast,
+  TransactionStatusCard,
+  TransactionStatusIndicator,
 } from '@0xintuition/1ui'
 import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
 
-import { getFormProps, SubmissionResult, useForm } from '@conform-to/react'
+import {
+  getFormProps,
+  getInputProps,
+  SubmissionResult,
+  useForm,
+} from '@conform-to/react'
 import { parseWithZod } from '@conform-to/zod'
 import { multivaultAbi } from '@lib/abis/multivault'
 import { useCreateTriple } from '@lib/hooks/useCreateTriple'
@@ -30,21 +39,23 @@ import {
 } from '@lib/hooks/useTransactionReducer'
 import { createClaimSchema } from '@lib/schemas/create-claim-schema'
 import {
+  BLOCK_EXPLORER_URL,
   CREATE_RESOURCE_ROUTE,
   GET_IDENTITIES_RESOURCE_ROUTE,
   MULTIVAULT_CONTRACT_ADDRESS,
 } from '@lib/utils/constants'
 import logger from '@lib/utils/logger'
-import { formatBalance, sliceString, truncateString } from '@lib/utils/misc'
-import { useFetcher } from '@remix-run/react'
+import { sliceString, truncateString } from '@lib/utils/misc'
+import { Link, useFetcher, useNavigate } from '@remix-run/react'
 import { CreateLoaderData } from '@routes/resources+/create'
 import * as blockies from 'blockies-ts'
-import { AlertCircle } from 'lucide-react'
 import { TransactionActionType, TransactionStateType } from 'types/transaction'
+import { parseUnits } from 'viem'
 import { useAccount, usePublicClient, useWalletClient } from 'wagmi'
 
+import ErrorList from './error-list'
+import { IdentitySearchCombobox } from './identity/identity-search-combo-box'
 import Toast from './toast'
-import TransactionStatus from './transaction-status'
 
 interface ClaimFormProps {
   onSuccess?: () => void
@@ -62,9 +73,11 @@ export function ClaimForm({ onClose }: ClaimFormProps) {
 
   const isTransactionStarted = [
     'approve',
-    'review',
-    'pending',
+    'awaiting',
     'confirm',
+    'review-transaction',
+    'transaction-pending',
+    'transaction-confirmed',
     'complete',
     'error',
   ].includes(state.status)
@@ -74,16 +87,14 @@ export function ClaimForm({ onClose }: ClaimFormProps) {
       <>
         {!isTransactionStarted && (
           <DialogHeader className="py-4">
-            <div className="absolute top-5 flex flex-row items-center gap-2 align-baseline text-primary-400">
-              <div className="flex flex-col gap-1">
-                <Text variant="headline" className="text-foreground-secondary">
-                  Make a claim about an identity{' '}
-                </Text>
-                <Text variant="caption" className="text-foreground-secondary">
-                  Additional text about this.
-                </Text>
-              </div>
-            </div>
+            <DialogTitle>
+              <Text variant="headline" className="text-foreground-secondary">
+                Make a claim about an identity
+              </Text>
+            </DialogTitle>
+            <Text variant="caption" className="text-foreground/50 w-full">
+              Additional text about this.
+            </Text>
           </DialogHeader>
         )}
         <CreateClaimForm
@@ -113,6 +124,7 @@ function CreateClaimForm({
   dispatch,
   setTransactionResponseData,
   transactionResponseData,
+  onClose,
 }: CreateClaimFormProps) {
   const feeFetcher = useLoaderFetcher<CreateLoaderData>(CREATE_RESOURCE_ROUTE)
   const { atomCost: atomCostAmount, tripleCost: tripleCostAmount } =
@@ -123,6 +135,8 @@ function CreateClaimForm({
       protocolFee: BigInt(0),
       entryFee: BigInt(0),
     }
+  const [initialDeposit, setInitialDeposit] = useState<string>('0')
+
   logger(
     'items',
     state,
@@ -132,6 +146,8 @@ function CreateClaimForm({
     atomCostAmount,
     tripleCostAmount,
   )
+
+  const navigate = useNavigate()
   interface OffChainClaimFetcherData {
     success: 'success' | 'error'
     claim: ClaimPresenter
@@ -193,20 +209,21 @@ function CreateClaimForm({
       address
     ) {
       try {
-        dispatch({ type: 'CONFIRM_TRANSACTION' })
+        dispatch({ type: 'APPROVE_TRANSACTION' })
         const txHash = await writeCreateTriple({
           address: MULTIVAULT_CONTRACT_ADDRESS,
           abi: multivaultAbi,
           functionName: 'createTriple',
           args: [subjectVaultId, predicateVaultId, objectVaultId],
-          value: BigInt(tripleCost),
+          value:
+            BigInt(tripleCost) +
+            parseUnits(initialDeposit === '' ? '0' : initialDeposit, 18),
         })
         dispatch({ type: 'TRANSACTION_PENDING' })
         if (txHash) {
           const receipt = await publicClient.waitForTransactionReceipt({
             hash: txHash,
           })
-          // })
 
           dispatch({
             type: 'TRANSACTION_COMPLETE',
@@ -231,7 +248,16 @@ function CreateClaimForm({
           })
           toast.custom(
             () => (
-              <Toast title="Error" description="error" icon={<AlertCircle />} />
+              <Toast
+                title="Error"
+                description="error"
+                icon={
+                  <Icon
+                    name="triangle-exclamation"
+                    className="h-3 w-3 text-destructive"
+                  />
+                }
+              />
             ),
             {
               duration: 5000,
@@ -280,7 +306,6 @@ function CreateClaimForm({
   }, [claimFetcher.state, claimFetcher.data, dispatch])
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    logger('form submit')
     event.preventDefault()
     try {
       if (
@@ -296,6 +321,11 @@ function CreateClaimForm({
         const submission = parseWithZod(formData, {
           schema: createClaimSchema,
         })
+
+        if (event.currentTarget.initial_deposit?.value !== undefined) {
+          setInitialDeposit(event.currentTarget.initial_deposit.value)
+        }
+
         logger('submission', submission)
 
         if (
@@ -316,7 +346,7 @@ function CreateClaimForm({
     }
   }
 
-  const [form] = useForm({
+  const [form, fields] = useForm({
     id: 'create-claim',
     lastResult: lastOffChainSubmission,
     onSubmit: async (event) => handleSubmit(event),
@@ -345,24 +375,14 @@ function CreateClaimForm({
 
   const isTransactionStarted = [
     'approve',
-    'review',
-    'pending',
+    'awaiting',
     'confirm',
+    'review-transaction',
+    'transaction-pending',
+    'transaction-confirmed',
     'complete',
     'error',
   ].includes(state.status)
-
-  const statusMessages = {
-    approve: 'Approve Transaction...',
-    pending: 'Transaction Pending...',
-    confirm: 'Confirming...',
-    complete: 'Claim created successfully',
-    error: 'Failed to create claim',
-  }
-
-  const isTransactionAwaiting = (status: string) =>
-    ['approve', 'confirm'].includes(status)
-  const isTransactionProgress = (status: string) => ['pending'].includes(status)
 
   const Divider = () => (
     <span className="h-px w-2.5 flex bg-border/30 self-end mb-[1.2rem]" />
@@ -376,8 +396,8 @@ function CreateClaimForm({
         action="/actions/create-claim"
       >
         {!isTransactionStarted ? (
-          <div className="flex flex-col items-center">
-            <div className="flex items-center my-14">
+          <div className="flex flex-col items-center gap-14">
+            <div className="flex items-center">
               <Popover>
                 <PopoverTrigger asChild>
                   <div className="flex flex-col gap-2 items-start">
@@ -462,23 +482,13 @@ function CreateClaimForm({
                     </HoverCard>
                   </div>
                 </PopoverTrigger>
-                <PopoverContent className="bg-transparent border-none">
-                  <IdentitySearchCombobox>
-                    {identities?.map((identity, index) => (
-                      <IdentitySearchComboboxItem
-                        key={index}
-                        variant={
-                          identity.is_user === true ? 'user' : 'non-user'
-                        }
-                        name={truncateString(identity.display_name, 7)}
-                        value={+formatBalance(identity.assets_sum)}
-                        walletAddress={identity.creator_address}
-                        onSelect={() =>
-                          handleIdentitySelection('subject', identity)
-                        }
-                      />
-                    ))}
-                  </IdentitySearchCombobox>
+                <PopoverContent className="bg-transparent">
+                  <IdentitySearchCombobox
+                    identities={identities}
+                    onIdentityClick={(identity) =>
+                      handleIdentitySelection('subject', identity)
+                    }
+                  />
                 </PopoverContent>
               </Popover>
               <Divider />
@@ -576,22 +586,12 @@ function CreateClaimForm({
                   align="center"
                   sideOffset={5}
                 >
-                  <IdentitySearchCombobox>
-                    {identities?.map((identity, index) => (
-                      <IdentitySearchComboboxItem
-                        key={index}
-                        variant={
-                          identity.is_user === true ? 'user' : 'non-user'
-                        }
-                        name={truncateString(identity.display_name, 7)}
-                        value={+formatBalance(identity.assets_sum)}
-                        walletAddress={identity.creator_address}
-                        onSelect={() =>
-                          handleIdentitySelection('predicate', identity)
-                        }
-                      />
-                    ))}
-                  </IdentitySearchCombobox>
+                  <IdentitySearchCombobox
+                    identities={identities}
+                    onIdentityClick={(identity) =>
+                      handleIdentitySelection('predicate', identity)
+                    }
+                  />
                 </PopoverContent>
               </Popover>
               <Divider />
@@ -684,24 +684,31 @@ function CreateClaimForm({
                   align="center"
                   sideOffset={5}
                 >
-                  <IdentitySearchCombobox>
-                    {identities?.map((identity, index) => (
-                      <IdentitySearchComboboxItem
-                        key={index}
-                        variant={
-                          identity.is_user === true ? 'user' : 'non-user'
-                        }
-                        name={truncateString(identity.display_name, 7)}
-                        value={+formatBalance(identity.assets_sum)}
-                        walletAddress={identity.creator_address}
-                        onSelect={() =>
-                          handleIdentitySelection('object', identity)
-                        }
-                      />
-                    ))}
-                  </IdentitySearchCombobox>
+                  <IdentitySearchCombobox
+                    identities={identities}
+                    onIdentityClick={(identity) =>
+                      handleIdentitySelection('object', identity)
+                    }
+                  />
                 </PopoverContent>
               </Popover>
+            </div>
+            <div className="flex flex-col w-full gap-1.5">
+              <Text variant="caption" className="text-secondary-foreground/90">
+                Initial Deposit (Optional)
+              </Text>
+              <Label htmlFor={fields.initial_deposit.id} hidden>
+                Initial Deposit (Optional)
+              </Label>
+              <Input
+                {...getInputProps(fields.initial_deposit, { type: 'text' })}
+                placeholder="0"
+                startAdornment="ETH"
+              />
+              <ErrorList
+                id={fields.initial_deposit.errorId}
+                errors={fields.initial_deposit.errors}
+              />
             </div>
             <Button
               form={form.id}
@@ -714,19 +721,43 @@ function CreateClaimForm({
               }
               className="mx-auto"
             >
-              Create
+              Create claim
             </Button>
           </div>
         ) : (
-          <TransactionStatus
-            transactionType="claim"
-            state={state}
-            dispatch={dispatch}
-            transactionDetail={transactionResponseData?.claim_id}
-            statusMessages={statusMessages}
-            isTransactionAwaiting={isTransactionAwaiting}
-            isTransactionProgress={isTransactionProgress}
-          />
+          <div className="flex flex-col items-center justify-center min-h-96">
+            <TransactionStatusIndicator status={state.status} />
+            {state.status !== 'complete' ? (
+              <TransactionStatusCard status={state.status} />
+            ) : (
+              <div className="flex flex-col gap-1 items-center gap-2.5">
+                {state.txHash && transactionResponseData !== null && (
+                  <div className="flex flex-col items-center">
+                    <Link
+                      to={`${BLOCK_EXPLORER_URL}/tx/${state.txHash}`}
+                      target="_blank"
+                      className="flex flex-row items-center gap-1 text-xxs text-blue-500 transition-colors duration-300 hover:text-blue-400"
+                    >
+                      View on Basescan
+                      <Icon name="square-arrow-top-right" className="h-3 w-3" />
+                    </Link>
+                    <Button
+                      type="button"
+                      variant="primary"
+                      onClick={() => {
+                        navigate(
+                          `/app/claim/${transactionResponseData.claim_id}`,
+                          onClose(),
+                        )
+                      }}
+                    >
+                      View claim
+                    </Button>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
         )}
       </claimFetcher.Form>
     </>

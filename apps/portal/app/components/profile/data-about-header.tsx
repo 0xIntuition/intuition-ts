@@ -1,19 +1,31 @@
 import React from 'react'
 
 import { IdentityTag, MonetaryValue, Text } from '@0xintuition/1ui' // Adjust the import path as needed
+import { IdentityPresenter } from '@0xintuition/api'
+
+export const DataAboutHeaderVariants = {
+  positions: 'positions',
+  claims: 'claims',
+} as const
+
+export type DataAboutHeaderVariantType =
+  (typeof DataAboutHeaderVariants)[keyof typeof DataAboutHeaderVariants]
 
 interface DataAboutHeaderProps {
+  variant: DataAboutHeaderVariantType
   title: string
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  userIdentity: any
+  userIdentity: IdentityPresenter
   totalClaims?: number
+  totalPositions?: number
   totalStake: number
 }
 
 const DataAboutHeader: React.FC<DataAboutHeaderProps> = ({
+  variant,
   title,
   userIdentity,
   totalClaims,
+  totalPositions,
   totalStake,
 }) => {
   return (
@@ -34,7 +46,7 @@ const DataAboutHeader: React.FC<DataAboutHeaderProps> = ({
             weight="regular"
             className="text-secondary-foreground"
           >
-            Claims about
+            {variant === 'claims' ? 'Claims about' : 'Positions staked on'}
           </Text>
           <IdentityTag
             imgSrc={userIdentity?.user?.image ?? userIdentity?.image}
@@ -52,10 +64,10 @@ const DataAboutHeader: React.FC<DataAboutHeaderProps> = ({
               weight="regular"
               className="text-secondary-foreground"
             >
-              Claims
+              {variant === 'claims' ? 'Claims' : 'Positions'}
             </Text>
             <div className="text-white text-xl font-medium leading-[30px]">
-              {totalClaims ?? 0}
+              {variant === 'claims' ? totalClaims ?? 0 : totalPositions ?? 0}
             </div>
           </div>
           <div className="flex flex-col items-end">
@@ -64,7 +76,7 @@ const DataAboutHeader: React.FC<DataAboutHeaderProps> = ({
               weight="regular"
               className="text-secondary-foreground"
             >
-              Total stake across all Claims
+              Total stake {variant === 'claims' && 'across all Claims'}
             </Text>
             <MonetaryValue value={totalStake} currency="ETH" />
           </div>

@@ -108,6 +108,9 @@ export const themePlugin = plugin(
         '@apply bg-background text-foreground': {},
         'font-feature-settings': '"rlig" 1, "calt" 1',
       },
+      '.theme-border': {
+        '@apply border border-border/10': {},
+      },
     })
 
     addUtilities({
@@ -120,10 +123,6 @@ export const themePlugin = plugin(
       },
       '.primary-gradient-strong': {
         background: `linear-gradient(${colorMix('primary', 0.8)}, ${colorMix('primary', 0.5)})`,
-      },
-      // Borders
-      '.theme-border': {
-        border: `0.5px solid ${colorMix('border', 0.1)}`,
       },
     })
   },

@@ -1,0 +1,24 @@
+import { Canvas, Controls, Meta, Source, Title } from '@storybook/blocks'
+
+import * as Stories from './QuestStatusCard.stories'
+
+<Meta of={Stories} />
+
+<Title />
+
+#### Displays a card with an icon and label per quest status with an optional tooltip.
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { QuestStatusCard } from '@0xintuition/1ui'
+
+<QuestStatusCard status="not-started" tooltip="Example text" />
+`} />
+
+<Canvas of={Stories.BasicUsage} sourceState="none" />
+
+## Properties
+
+<Controls />

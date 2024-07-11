@@ -23,7 +23,7 @@ import StakeModal from '@components/stake/stake-modal'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { followModalAtom, stakeModalAtom } from '@lib/state/store'
 import { userIdentityRouteOptions } from '@lib/utils/constants'
-import { fetchUserIdentity, fetchUserTotals } from '@lib/utils/fetches'
+import { fetchIdentity, fetchUserTotals } from '@lib/utils/fetches'
 import logger from '@lib/utils/logger'
 import {
   calculatePercentageOfTvl,
@@ -33,7 +33,7 @@ import {
 } from '@lib/utils/misc'
 import { SessionContext } from '@middleware/session'
 import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
-import { Outlet } from '@remix-run/react'
+import { Outlet, useNavigate } from '@remix-run/react'
 import { getVaultDetails } from '@server/multivault'
 import { getPrivyAccessToken } from '@server/privy'
 import * as blockies from 'blockies-ts'
@@ -50,24 +50,24 @@ export async function loader({ context, request, params }: LoaderFunctionArgs) {
   const session = context.get(SessionContext)
   const user = session.get('user')
 
+  if (!user?.details?.wallet?.address) {
+    return logger('No user found in session')
+  }
+
   const wallet = params.wallet
 
   if (!wallet) {
-    return console.log('Wallet parameter is not defined')
+    throw new Error('Wallet is undefined.')
   }
 
   if (wallet === user?.details?.wallet?.address) {
     throw redirect('/app/profile')
   }
 
-  if (!wallet) {
-    throw new Error('Wallet is undefined.')
-  }
-
-  const userIdentity = await fetchUserIdentity(wallet)
+  const userIdentity = await fetchIdentity(wallet)
 
   if (!userIdentity) {
-    return redirect('/create')
+    return logger('No user identity found')
   }
 
   if (!userIdentity.creator || typeof userIdentity.creator.id !== 'string') {
@@ -77,7 +77,11 @@ export async function loader({ context, request, params }: LoaderFunctionArgs) {
 
   const userTotals = await fetchUserTotals(userIdentity.creator.id)
 
-  let vaultDetails: VaultDetailsType | null = null
+  if (!userTotals) {
+    return logger('No user totals found')
+  }
+
+  let vaultDetails: VaultDetailsType | undefined = undefined
 
   if (userIdentity !== undefined && userIdentity.vault_id) {
     try {
@@ -88,11 +92,9 @@ export async function loader({ context, request, params }: LoaderFunctionArgs) {
       )
     } catch (error) {
       logger('Failed to fetch vaultDetails', error)
-      vaultDetails = null
+      vaultDetails = undefined
     }
   }
-
-  console.log('vaultDetails', vaultDetails)
 
   let followClaim: ClaimPresenter | undefined = undefined
   let followVaultDetails: VaultDetailsType | undefined = undefined
@@ -112,22 +114,18 @@ export async function loader({ context, request, params }: LoaderFunctionArgs) {
     }
   }
 
-  console.log('followClaim', followClaim)
-
   if (userIdentity.user && followClaim && followClaim.vault_id) {
     try {
       followVaultDetails = await getVaultDetails(
         followClaim.contract,
         followClaim.vault_id,
-        userIdentity.user.wallet as `0x${string}`,
+        user.details.wallet.address as `0x${string}`,
       )
     } catch (error) {
       logger('Failed to fetch followVaultDetails', error)
       followVaultDetails = undefined
     }
   }
-
-  logger('followVaultDetails', followVaultDetails)
 
   return json({
     wallet,
@@ -158,12 +156,9 @@ export default function Profile() {
     followVaultDetails: VaultDetailsType
     vaultDetails: VaultDetailsType
   }>(['attest', 'create'])
+  const navigate = useNavigate()
 
-  const { user_assets = '0', assets_sum = '0' } = vaultDetails
-    ? vaultDetails
-    : userIdentity
-
-  logger('followVaultDetails', followVaultDetails)
+  const { user_assets, assets_sum } = vaultDetails ? vaultDetails : userIdentity
 
   const { user_asset_delta } = userIdentity
 
@@ -205,7 +200,7 @@ export default function Profile() {
                 }
               >
                 {followVaultDetails &&
-                (followVaultDetails?.user_conviction ?? '0') > '0'
+                (followVaultDetails.user_conviction ?? '0') > '0'
                   ? `Following · ${formatBalance(followVaultDetails.user_assets ?? '0', 18, 4)} ETH`
                   : 'Follow'}
               </Button>
@@ -258,7 +253,9 @@ export default function Profile() {
                   isOpen: true,
                 }))
               }
-              onViewAllClick={() => logger('click view all')} // this will navigate to the data-about positions
+              onViewAllClick={() =>
+                navigate(`/app/profile/${wallet}/data-about`)
+              }
             />
           </div>
 

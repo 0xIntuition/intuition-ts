@@ -1,19 +1,28 @@
-import { ClaimSortColumn, PositionSortColumn } from '@0xintuition/api'
+import {
+  ClaimSortColumn,
+  PositionSortColumn,
+  SortColumn,
+} from '@0xintuition/api'
 
 import { useSearchParams } from '@remix-run/react'
 
-type SortColumn = PositionSortColumn | ClaimSortColumn
+type SortColumnType = PositionSortColumn | ClaimSortColumn | SortColumn
 type SortDirection = 'asc' | 'desc'
 
-export const useSearchAndSortParamsHandler = <T extends SortColumn>() => {
+export const useSearchAndSortParamsHandler = <T extends SortColumnType>(
+  prefix?: string,
+) => {
   const [searchParams, setSearchParams] = useSearchParams()
+
+  const getParamName = (name: string) =>
+    prefix ? `${prefix}${name.charAt(0).toUpperCase() + name.slice(1)}` : name
 
   const handleSortChange = (newSortBy: T, newDirection: SortDirection) => {
     setSearchParams({
       ...Object.fromEntries(searchParams),
-      sortBy: newSortBy,
-      direction: newDirection,
-      page: '1',
+      [getParamName('sortBy')]: newSortBy,
+      [getParamName('direction')]: newDirection,
+      [getParamName('page')]: '1',
     })
   }
 
@@ -21,17 +30,24 @@ export const useSearchAndSortParamsHandler = <T extends SortColumn>() => {
     const newSearchValue = event.target.value
     setSearchParams({
       ...Object.fromEntries(searchParams),
-      search: newSearchValue,
-      page: '1',
+      [getParamName('search')]: newSearchValue,
+      [getParamName('page')]: '1',
     })
   }
 
   const onPageChange = (newPage: number) => {
     setSearchParams({
       ...Object.fromEntries(searchParams),
-      page: newPage.toString(),
+      [getParamName('page')]: newPage.toString(),
     })
   }
 
-  return { handleSortChange, handleSearchChange, onPageChange }
+  const onLimitChange = (newLimit: number) => {
+    setSearchParams({
+      ...Object.fromEntries(searchParams),
+      [getParamName('limit')]: newLimit.toString(),
+    })
+  }
+
+  return { handleSortChange, handleSearchChange, onPageChange, onLimitChange }
 }

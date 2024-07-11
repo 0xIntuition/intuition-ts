@@ -6,6 +6,8 @@ import {
   DialogHeader,
   DialogTitle,
   Icon,
+  Identity,
+  Text,
 } from '@0xintuition/1ui'
 import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
 
@@ -38,6 +40,7 @@ export default function FollowReview({
   exit_fee,
 }: FollowReviewProps) {
   const [statusText, setStatusText] = useState<string>('')
+
   useEffect(() => {
     const newText = isError
       ? 'Transaction failed'
@@ -74,13 +77,14 @@ export default function FollowReview({
           </Button>
         </DialogTitle>
       </DialogHeader>
-      <div className="flex w-full flex-col gap-5 px-2">
-        <div
-          className={`flex h-full w-full flex-col items-center justify-center gap-2 px-2 pt-5`}
-        >
-          <Icon name="await-action" className="h-10 w-10 text-neutral-50/30" />
+      <div className="flex flex-grow flex-col justify-center items-center h-[358px]">
+        <div className="flex flex-col justify-center items-center gap-5">
+          <Icon name="await-action" className="h-20 w-20 text-neutral-50/30" />
           <div className="gap-5 flex flex-col items-center">
-            <span className="text-xl font-medium text-white/70 leading-[30px]">
+            <Text
+              variant="headline"
+              weight="medium text-white/70 leading-[30x]"
+            >
               {mode === 'follow' ? 'Deposit' : 'Redeem'}{' '}
               {formatDisplayBalance(
                 mode === 'unfollow'
@@ -89,7 +93,7 @@ export default function FollowReview({
                 2,
               )}{' '}
               ETH on follow claim
-            </span>
+            </Text>
             <Claim
               subject={{
                 imgSrc: claim?.subject?.user?.image ?? claim?.subject?.image,
@@ -98,14 +102,14 @@ export default function FollowReview({
                   : claim?.subject?.user?.display_name ??
                     claim?.subject?.display_name ??
                     '',
-                variant: 'non-user',
+                variant: Identity.nonUser,
               }}
               predicate={{
                 imgSrc: claim?.predicate?.image,
                 label: !claim
                   ? 'am following'
                   : claim?.predicate?.display_name ?? '',
-                variant: 'non-user',
+                variant: Identity.nonUser,
               }}
               object={{
                 imgSrc: !claim
@@ -118,21 +122,25 @@ export default function FollowReview({
                     '',
                 variant: !claim
                   ? identity?.user
-                    ? 'user'
-                    : 'default'
+                    ? Identity.user
+                    : Identity.nonUser
                   : claim?.object?.user
-                    ? 'user'
-                    : 'default',
+                    ? Identity.user
+                    : Identity.nonUser,
               }}
             />
-            <span className="text-neutral-50/50 text-base font-normal leading-normal m-auto">
+            <Text
+              variant="base"
+              weight="normal"
+              className="m-auto text-neutral-50/50 leading-normal"
+            >
               Estimated Fees:{' '}
               {(
                 (mode === 'follow' ? +val : +formatBalance(user_assets, 18)) *
                 (mode === 'follow' ? +entry_fee : +exit_fee)
               ).toFixed(6)}{' '}
               ETH
-            </span>
+            </Text>
           </div>
         </div>
       </div>

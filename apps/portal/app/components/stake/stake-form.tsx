@@ -5,6 +5,7 @@ import {
   DialogHeader,
   DialogTitle,
   Icon,
+  Identity,
   IdentityTag,
   Tabs,
   TabsList,
@@ -16,6 +17,8 @@ import {
 import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
 
 import { stakeModalAtom } from '@lib/state/store'
+import { BLOCK_EXPLORER_URL } from '@lib/utils/constants'
+import logger from '@lib/utils/logger'
 import { formatBalance } from '@lib/utils/misc'
 import { Link, type FetcherWithComponents } from '@remix-run/react'
 import { useAtom } from 'jotai'
@@ -78,6 +81,7 @@ export default function StakeForm({
   setValidationErrors,
 }: StakeFormProps) {
   const [stakeModalState, setStakeModalState] = useAtom(stakeModalAtom)
+  logger('direction', direction)
   return (
     <>
       <fetchReval.Form
@@ -96,7 +100,7 @@ export default function StakeForm({
                 {modalType === 'identity' ? (
                   <IdentityTag
                     imgSrc={identity?.user?.image ?? identity?.image}
-                    variant={identity?.user ? 'user' : 'non-user'}
+                    variant={identity?.user ? Identity.user : Identity.nonUser}
                   >
                     <Trunctacular
                       value={
@@ -111,36 +115,28 @@ export default function StakeForm({
                     subject={{
                       imgSrc:
                         claim?.subject?.user?.image ?? claim?.subject?.image,
-                      label: (
-                        <Trunctacular
-                          value={
-                            claim?.subject?.user?.display_name ??
-                            claim?.subject?.display_name
-                          }
-                        />
-                      ),
-                      variant: claim?.subject?.user ? 'user' : 'non-user',
+                      label:
+                        claim?.subject?.user?.display_name ??
+                        claim?.subject?.display_name ??
+                        '',
+                      variant: claim?.subject?.user
+                        ? Identity.user
+                        : Identity.nonUser,
                     }}
                     predicate={{
                       imgSrc: claim?.predicate?.image,
-                      label: (
-                        <Trunctacular
-                          value={claim?.predicate?.display_name ?? ''}
-                        />
-                      ),
+                      label: claim?.predicate?.display_name ?? '',
                     }}
                     object={{
                       imgSrc:
                         claim?.object?.user?.image ?? claim?.object?.image,
-                      label: (
-                        <Trunctacular
-                          value={
-                            claim?.object?.user?.display_name ??
-                            claim?.object?.display_name
-                          }
-                        />
-                      ),
-                      variant: claim?.object?.user ? 'user' : 'non-user',
+                      label:
+                        claim?.object?.user?.display_name ??
+                        claim?.object?.display_name ??
+                        '',
+                      variant: claim?.object?.user
+                        ? Identity.user
+                        : Identity.nonUser,
                     }}
                   />
                 )}
@@ -151,52 +147,60 @@ export default function StakeForm({
               </div>
             </DialogTitle>
           </DialogHeader>
-          <Tabs defaultValue={mode}>
-            <TabsList>
-              <TabsTrigger
-                variant="alternate"
-                value="deposit"
-                label="Deposit"
-                onClick={(e) => {
-                  e.preventDefault()
-                  setStakeModalState({ ...stakeModalState, mode: 'deposit' })
-                }}
+          <div className="h-full w-full flex-col pt-5 px-10 pb-10 gap-5 inline-flex">
+            <Tabs defaultValue={mode}>
+              <TabsList>
+                <TabsTrigger
+                  variant="alternate"
+                  value="deposit"
+                  label="Deposit"
+                  onClick={(e) => {
+                    e.preventDefault()
+                    setStakeModalState({ ...stakeModalState, mode: 'deposit' })
+                  }}
+                />
+                <TabsTrigger
+                  variant="alternate"
+                  value="redeem"
+                  label="Redeem"
+                  onClick={(e) => {
+                    e.preventDefault()
+                    setStakeModalState({ ...stakeModalState, mode: 'redeem' })
+                  }}
+                />
+              </TabsList>
+            </Tabs>
+            <div className="pt-2.5">
+              <ActivePositionCard
+                value={Number(formatBalance(user_assets, 18, 4))}
+                claimPosition={
+                  direction !== undefined
+                    ? direction === 'for'
+                      ? 'claimFor'
+                      : 'claimAgainst'
+                    : undefined
+                }
               />
-              <TabsTrigger
-                variant="alternate"
-                value="redeem"
-                label="Redeem"
-                onClick={(e) => {
-                  e.preventDefault()
-                  setStakeModalState({ ...stakeModalState, mode: 'redeem' })
-                }}
-              />
-            </TabsList>
-          </Tabs>
-          <div className="pt-2.5">
-            <ActivePositionCard
-              value={Number(formatBalance(user_assets, 18, 4))}
-              claimPosition={`${direction === 'for' ? 'claimFor' : 'claimAgainst'}`}
-            />
-            <div className="rounded-t-lg bg-primary-950/15 px-4 pt-2.5">
-              <StakeInput
-                val={val}
-                setVal={setVal}
-                wallet={user.details?.wallet?.address ?? ''}
-                isLoading={isLoading}
-                validationErrors={validationErrors}
-                setValidationErrors={setValidationErrors}
-                showErrors={showErrors}
-                setShowErrors={setShowErrors}
-              />
-              <div className="flex h-3 flex-col items-start justify-center gap-2 self-stretch" />
-              <StakeActions
-                action={mode}
-                setVal={setVal}
-                walletBalance={walletBalance ?? '0'}
-                userConviction={user_conviction ?? '0'}
-                price={conviction_price ?? '0'}
-              />
+              <div className="rounded-t-lg bg-primary-950/15 px-4 pt-2.5">
+                <StakeInput
+                  val={val}
+                  setVal={setVal}
+                  wallet={user.details?.wallet?.address ?? ''}
+                  isLoading={isLoading}
+                  validationErrors={validationErrors}
+                  setValidationErrors={setValidationErrors}
+                  showErrors={showErrors}
+                  setShowErrors={setShowErrors}
+                />
+                <div className="flex h-3 flex-col items-start justify-center gap-2 self-stretch" />
+                <StakeActions
+                  action={mode}
+                  setVal={setVal}
+                  walletBalance={walletBalance ?? '0'}
+                  userConviction={user_conviction ?? '0'}
+                  price={conviction_price ?? '0'}
+                />
+              </div>
             </div>
           </div>
         </>
@@ -217,19 +221,23 @@ export default function StakeForm({
         </>
       ) : (
         <>
-          <TransactionStatusIndicator status={state.status} />
-          {state.status !== 'complete' ? (
-            <TransactionStatusCard status={state.status} />
-          ) : (
-            <Link
-              to={`https://base-sepolia.blockscout.com/tx/${state.txHash}`}
-              target="_blank"
-              className="flex flex-row items-center gap-1 mx-auto leading-tight text-blue-500 transition-colors duration-300 hover:text-blue-400"
-            >
-              View on Basescan{' '}
-              <Icon name="square-arrow-top-right" className="h-3 w-3" />
-            </Link>
-          )}
+          <div className="flex-grow flex flex-col justify-center items-center h-full">
+            <div className="flex flex-col justify-center items-center gap-10">
+              <TransactionStatusIndicator status={state.status} />
+              {state.status !== 'complete' ? (
+                <TransactionStatusCard status={state.status} />
+              ) : (
+                <Link
+                  to={`${BLOCK_EXPLORER_URL}/tx/${state.txHash}`}
+                  target="_blank"
+                  className="flex flex-row items-center gap-1 mx-auto leading-tight text-blue-500 transition-colors duration-300 hover:text-blue-400"
+                >
+                  View on Basescan{' '}
+                  <Icon name="square-arrow-top-right" className="h-3 w-3" />
+                </Link>
+              )}
+            </div>
+          </div>
         </>
       )}
     </>

@@ -1,0 +1,32 @@
+import { Canvas, Controls, Meta, Source, Title } from '@storybook/blocks'
+
+import * as Stories from './QuestSetProgressCard.stories'
+
+<Meta of={Stories} />
+
+<Title />
+
+#### A card to show a user's latest progress on a quest set.
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { QuestSetProgressCard } from '@0xintuition/1ui'
+
+<QuestSetProgressCard
+  image={
+    'https://m.media-amazon.com/images/M/MV5BNDhiMWYzMjgtNTRiYi00ZTA3LThlODctNDRkMDk0NzFkMWI3L2ltYWdlL2ltYWdlXkEyXkFqcGdeQXVyNTg0MTkzMzA@._V1_.jpg'
+  }
+  title={'Tutorial Island: The Primitive Elements'}
+  numberQuests={10}
+  numberCompletedQuests={5}
+  onButtonClick={() => console.log('Button clicked')}
+/>
+`} />
+
+<Canvas of={Stories.BasicUsage} sourceState="none" />
+
+## Properties
+
+<Controls />

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 
-import { Dialog, DialogContent } from '@0xintuition/1ui'
+import { Dialog, DialogContent, DialogFooter, Icon } from '@0xintuition/1ui'
 import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
 
 import Toast from '@components/toast'
@@ -17,7 +17,6 @@ import { useGenericTxState } from '@lib/utils/use-tx-reducer'
 import { useFetcher, useLocation } from '@remix-run/react'
 import { CreateLoaderData } from '@routes/resources+/create'
 import { useQueryClient } from '@tanstack/react-query'
-import { AlertCircle } from 'lucide-react'
 import { toast } from 'sonner'
 import { TransactionActionType, TransactionStateType } from 'types/transaction'
 import { SessionUser } from 'types/user'
@@ -50,10 +49,10 @@ export default function FollowModal({
   user,
   contract,
   open = false,
-  onClose = () => {},
   identity,
   claim,
   vaultDetails,
+  onClose = () => {},
 }: FollowModalProps) {
   const fetchReval = useFetcher()
   const formRef = useRef(null)
@@ -110,8 +109,6 @@ export default function FollowModal({
     atomCost: BigInt(0),
     tripleCost: BigInt(0),
   }
-
-  console.log('claim', claim)
 
   const useHandleAction = (actionType: string) => {
     return async () => {
@@ -177,7 +174,12 @@ export default function FollowModal({
               <Toast
                 title="Error"
                 description={errorMessage}
-                icon={<AlertCircle />}
+                icon={
+                  <Icon
+                    name="triangle-exclamation"
+                    className="h-3 w-3 text-destructive"
+                  />
+                }
               />
             ),
             {
@@ -340,32 +342,31 @@ export default function FollowModal({
         handleClose()
       }}
     >
-      <DialogContent className="max-w-[476px]">
-        <FollowForm
-          walletBalance={walletBalance}
-          identity={identity}
-          claim={claim}
-          conviction_price={conviction_price ?? '0'}
-          user_conviction={user_conviction ?? '0'}
-          user_assets={user_assets ?? '0'}
-          entry_fee={formatted_entry_fee ?? '0'}
-          exit_fee={formatted_exit_fee ?? '0'}
-          val={val}
-          setVal={setVal}
-          mode={mode}
-          dispatch={dispatch}
-          state={state}
-          fetchReval={fetchReval}
-          formRef={formRef}
-          validationErrors={validationErrors}
-          setValidationErrors={setValidationErrors}
-          showErrors={showErrors}
-          setShowErrors={setShowErrors}
-        />
+      <DialogContent className="flex flex-col w-[476px] h-[500px] gap-0">
+        <div className="flex-grow">
+          <FollowForm
+            walletBalance={walletBalance}
+            identity={identity}
+            claim={claim}
+            user_assets={user_assets ?? '0'}
+            entry_fee={formatted_entry_fee ?? '0'}
+            exit_fee={formatted_exit_fee ?? '0'}
+            val={val}
+            setVal={setVal}
+            mode={mode}
+            dispatch={dispatch}
+            state={state}
+            fetchReval={fetchReval}
+            formRef={formRef}
+            validationErrors={validationErrors}
+            setValidationErrors={setValidationErrors}
+            showErrors={showErrors}
+            setShowErrors={setShowErrors}
+          />
+        </div>
         {!isTransactionStarted && (
-          <div className="flex flex-row">
+          <DialogFooter className="!justify-center !items-center gap-5">
             <UnfollowButton
-              user={user}
               setMode={setMode}
               handleAction={handleUnfollowButtonClick}
               handleClose={handleClose}
@@ -375,7 +376,6 @@ export default function FollowModal({
               className={`${(user_conviction && user_conviction > '0' && state.status === 'idle') || mode !== 'follow' ? '' : 'hidden'}`}
             />
             <FollowButton
-              user={user}
               val={val}
               setMode={setMode}
               handleAction={handleFollowButtonClick}
@@ -390,7 +390,7 @@ export default function FollowModal({
               setShowErrors={setShowErrors}
               className={`${mode === 'unfollow' && 'hidden'}`}
             />
-          </div>
+          </DialogFooter>
         )}
       </DialogContent>
     </Dialog>

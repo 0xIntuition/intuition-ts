@@ -1,7 +1,8 @@
-import CheckCircleIcon from '@components/svg/check-circle-icon'
+import { Icon, Text } from '@0xintuition/1ui'
+
+import { BLOCK_EXPLORER_URL } from '@lib/utils/constants'
 import { cn, formatBalance } from '@lib/utils/misc'
 import { Link } from '@remix-run/react'
-import { ExternalLinkIcon } from 'lucide-react'
 
 interface ToastProps {
   action: string
@@ -17,32 +18,32 @@ export default function StakeToast({ action, assets, txHash }: ToastProps) {
     >
       <div className="flex h-full w-full items-center justify-start gap-4">
         <div className="flex flex-shrink-0">
-          <CheckCircleIcon className="h-6 w-6 text-success" />
+          <Icon name="circle-check" className="h-6 w-6 text-success" />
         </div>
         <div className="flex w-full flex-1">
           <div className="space-y-0">
-            <div className={cn('text-sm font-bold', 'text-accent-foreground')}>
+            <Text variant="base" weight="bold">
               Transaction Successful
-            </div>
-            <div
-              className={cn(
-                'text-xs font-semibold',
-                'text-accent-foreground/50',
-              )}
+            </Text>
+            <Text
+              variant="footnote"
+              weight="semibold"
+              className="text-white/50"
             >
               {action}{' '}
-              <span className="font-bold">
+              <Text variant="footnote" weight="bold">
                 {formatBalance(BigInt(assets), 18, 6)}
-              </span>{' '}
+              </Text>{' '}
               ETH
-            </div>
+            </Text>
             <div>
               <Link
-                to={`https://base-sepolia.blockscout.com/tx/${txHash}`}
+                to={`${BLOCK_EXPLORER_URL}/tx/${txHash}`}
                 target="_blank"
                 className="flex flex-row items-center gap-1 text-xs text-blue-500 transition-colors duration-300 hover:text-blue-400"
               >
-                View on Explorer <ExternalLinkIcon className="h-2.5 w-2.5" />
+                View on Explorer{' '}
+                <Icon name="square-arrow-top-right" className="h-2.5 w-2.5" />
               </Link>
             </div>
           </div>

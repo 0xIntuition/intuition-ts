@@ -6,7 +6,7 @@ import {
   type PropsWithChildren,
 } from 'react'
 
-import { Button } from '@0xintuition/1ui'
+import { Button, Icon } from '@0xintuition/1ui'
 
 import Container from '@components/container'
 import { cn } from '@lib/utils/misc'
@@ -15,7 +15,6 @@ import { Link, redirect, useFetcher } from '@remix-run/react'
 import { onboardingModalCookie } from '@server/onboarding'
 import type { EmblaCarouselType, EmblaOptionsType } from 'embla-carousel'
 import useEmblaCarousel from 'embla-carousel-react'
-import { ArrowRight, ExternalLink, PlayCircleIcon } from 'lucide-react'
 
 export async function action({ request }: ActionFunctionArgs) {
   const redirectUrl = (await request.formData()).get('redirectUrl')
@@ -49,7 +48,8 @@ export default function IntroRoute() {
       button: (
         <Link to="https://docs.intuition.systems/introduction" target="_blank">
           <SlideButton>
-            <PlayCircleIcon className="h-4 w-4 relative" /> Watch the tutorial
+            <Icon name="play-circle" className="h-4 w-4 relative" /> Watch the
+            tutorial
           </SlideButton>
         </Link>
       ),
@@ -64,7 +64,8 @@ export default function IntroRoute() {
           target="_blank"
         >
           <SlideButton>
-            Learn more <ExternalLink className="h-4 w-4 relative" />
+            Learn more{' '}
+            <Icon name="square-arrow-top-right" className="h-4 w-4 relative" />
           </SlideButton>
         </Link>
       ),
@@ -79,7 +80,8 @@ export default function IntroRoute() {
           target="_blank"
         >
           <SlideButton>
-            Learn more <ExternalLink className="h-4 w-4 relative" />
+            Learn more{' '}
+            <Icon name="square-arrow-top-right" className="h-4 w-4 relative" />
           </SlideButton>
         </Link>
       ),
@@ -94,7 +96,8 @@ export default function IntroRoute() {
           target="_blank"
         >
           <SlideButton>
-            Learn more <ExternalLink className="h-4 w-4 relative" />
+            Learn more{' '}
+            <Icon name="square-arrow-top-right" className="h-4 w-4 relative" />
           </SlideButton>
         </Link>
       ),
@@ -109,7 +112,8 @@ export default function IntroRoute() {
           target="_blank"
         >
           <SlideButton>
-            Learn more <ExternalLink className="h-4 w-4 relative" />
+            Learn more{' '}
+            <Icon name="square-arrow-top-right" className="h-4 w-4 relative" />
           </SlideButton>
         </Link>
       ),
@@ -124,7 +128,8 @@ export default function IntroRoute() {
           target="_blank"
         >
           <SlideButton>
-            Learn more <ExternalLink className="h-4 w-4" />
+            Learn more{' '}
+            <Icon name="square-arrow-top-right" className="h-4 w-4" />
           </SlideButton>
         </Link>
       ),
@@ -143,7 +148,7 @@ export default function IntroRoute() {
     <Container>
       <div className="px-5">
         <Button variant="navigation" className="ml-auto" onClick={onGetStarted}>
-          Skip <ArrowRight className="h-4 w-4" />
+          Skip <Icon name="arrow-right" className="h-4 w-4" />
         </Button>
       </div>
       <Carousel

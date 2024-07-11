@@ -9,12 +9,10 @@ import { formatBalance } from '@lib/utils/misc'
 import { useNavigation } from '@remix-run/react'
 import { useSetAtom } from 'jotai'
 import { TransactionActionType, TransactionStateType } from 'types/transaction'
-import { SessionUser } from 'types/user'
 import { formatUnits } from 'viem'
 import { useAccount, useSwitchChain } from 'wagmi'
 
 interface FollowButtonProps {
-  user: SessionUser
   val: string
   setMode: (mode: 'follow' | 'unfollow') => void
   handleAction: () => void
@@ -27,8 +25,6 @@ interface FollowButtonProps {
   user_assets: string
   setValidationErrors: (errors: string[]) => void
   setShowErrors: (show: boolean) => void
-  id?: string
-  claimOrIdentity?: string
   className?: string
 }
 
@@ -99,8 +95,6 @@ const FollowButton: React.FC<FollowButtonProps> = ({
       setStakeModalActive({
         isOpen: false,
         id: null,
-        direction: null,
-        modalType: null,
       })
       setNavigationStarted(false)
     }
@@ -150,7 +144,7 @@ const FollowButton: React.FC<FollowButtonProps> = ({
         state.status === 'transaction-pending' ||
         state.status === 'awaiting'
       }
-      className={cn(`w-[159px] m-auto mt-10`, className)}
+      className={cn(`w-40`, className)}
     >
       {getButtonText()}
     </Button>
