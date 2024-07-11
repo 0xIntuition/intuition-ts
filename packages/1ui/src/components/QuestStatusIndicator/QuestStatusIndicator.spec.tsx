@@ -8,8 +8,7 @@ describe('QuestStatusIndicator', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="relative"
-          style="width: 58px; height: 64px;"
+          class="relative w-[58px] h-[64px]"
         >
           <svg
             fill="none"
@@ -44,8 +43,7 @@ describe('QuestStatusIndicator', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="relative"
-          style="width: 58px; height: 64px;"
+          class="relative w-[58px] h-[64px]"
         >
           <svg
             fill="none"
@@ -80,8 +78,7 @@ describe('QuestStatusIndicator', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="relative"
-          style="width: 58px; height: 64px;"
+          class="relative w-[58px] h-[64px]"
         >
           <svg
             fill="none"
@@ -116,8 +113,7 @@ describe('QuestStatusIndicator', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="relative"
-          style="width: 58px; height: 64px;"
+          class="relative w-[58px] h-[64px]"
         >
           <svg
             fill="none"
