@@ -21,7 +21,7 @@ import { identityRouteOptions } from '@lib/utils/constants'
 import { fetchIdentity } from '@lib/utils/fetches'
 import logger from '@lib/utils/logger'
 import {
-  calculatePercentageGain,
+  calculatePercentageOfTvl,
   formatBalance,
   getAuthHeaders,
   sliceString,
@@ -93,7 +93,7 @@ export default function IdentityDetails() {
   }>()
   const navigate = useNavigate()
 
-  const user_assets = vaultDetails ? vaultDetails.user_assets : '0'
+  const { user_assets, assets_sum } = vaultDetails ? vaultDetails : identity
   const [stakeModalActive, setStakeModalActive] = useAtom(stakeModalAtom)
 
   return (
@@ -136,11 +136,8 @@ export default function IdentityDetails() {
               />
               <PositionCardOwnership
                 percentOwnership={
-                  identity.user_asset_delta !== null && identity.user_assets
-                    ? +calculatePercentageGain(
-                        +identity.user_assets - +identity.user_asset_delta,
-                        +identity.user_assets,
-                      ).toFixed(1)
+                  user_assets !== null && assets_sum
+                    ? +calculatePercentageOfTvl(user_assets ?? '0', assets_sum)
                     : 0
                 }
               />

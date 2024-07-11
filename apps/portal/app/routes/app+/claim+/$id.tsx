@@ -108,6 +108,7 @@ export default function ClaimDetails() {
       navigate(-1)
     }
   }
+
   const [stakeModalActive, setStakeModalActive] = useAtom(stakeModalAtom)
 
   let direction: 'for' | 'against' = 'for'

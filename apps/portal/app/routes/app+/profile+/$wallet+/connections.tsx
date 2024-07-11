@@ -9,7 +9,6 @@ import {
 } from '@0xintuition/1ui'
 import {
   ClaimPresenter,
-  ClaimsService,
   IdentityPresenter,
   OpenAPI,
   SortColumn,
@@ -25,6 +24,7 @@ import {
 } from '@components/profile/connections-header'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import {
+  fetchClaim,
   fetchIdentity,
   fetchIdentityFollowers,
   fetchIdentityFollowing,
@@ -33,6 +33,7 @@ import logger from '@lib/utils/logger'
 import { calculateTotalPages, getAuthHeaders } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
 import { getPrivyAccessToken } from '@server/privy'
+import { PaginationType } from 'types/pagination'
 
 export async function loader({ params, request }: LoaderFunctionArgs) {
   OpenAPI.BASE = 'https://dev.api.intuition.systems'
@@ -56,80 +57,87 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
     return logger('Invalid or missing creator ID')
   }
 
-  if (!userIdentity.follow_claim_id) {
-    return logger('No follow claim ID')
+  if (userIdentity.follow_claim_id) {
+    const followClaim = await fetchClaim(userIdentity.follow_claim_id)
+    const url = new URL(request.url)
+    const searchParams = new URLSearchParams(url.search)
+    // const followersSearch = searchParams.get('followersSearch') TODO: Add search once BE implements
+    const followersSortBy = searchParams.get('followersSortBy') ?? 'UserAssets'
+    const followersDirection = searchParams.get('followersDirection') ?? 'desc'
+    const followersPage = searchParams.get('followersPage')
+      ? parseInt(searchParams.get('followersPage') as string)
+      : 1
+    const followersLimit = searchParams.get('limit') ?? '10'
+
+    const followers = await fetchIdentityFollowers(
+      userIdentity.id,
+      followersPage,
+      Number(followersLimit),
+      followersSortBy as SortColumn,
+      followersDirection as SortDirection,
+    )
+
+    const followersTotalPages = calculateTotalPages(
+      followers?.total ?? 0,
+      Number(followersLimit),
+    )
+
+    // const followingSearch = searchParams.get('followingSearch') TODO: Add search once BE implements
+    const followingSortBy = searchParams.get('followingSortBy') ?? 'UserAssets'
+    const followingDirection = searchParams.get('followingDirection') ?? 'desc'
+    const followingPage = searchParams.get('followingPage')
+      ? parseInt(searchParams.get('followingPage') as string)
+      : 1
+    const followingLimit = searchParams.get('limit') ?? '10'
+
+    const following = await fetchIdentityFollowing(
+      userIdentity.id,
+      followingPage,
+      Number(followingLimit),
+      followingSortBy as SortColumn,
+      followingDirection as SortDirection,
+    )
+
+    const followingTotalPages = calculateTotalPages(
+      following?.total ?? 0,
+      Number(followingLimit),
+    )
+
+    return json({
+      userIdentity,
+      followClaim,
+      followers: followers?.data as IdentityPresenter[],
+      followersSortBy,
+      followersDirection,
+      followersPagination: {
+        currentPage: Number(followersPage),
+        limit: Number(followersLimit),
+        totalEntries: followers?.total ?? 0,
+        totalPages: followersTotalPages,
+      },
+      following: following?.data as IdentityPresenter[],
+      followingSortBy,
+      followingDirection,
+      followingPagination: {
+        currentPage: Number(followingPage),
+        limit: Number(followingLimit),
+        totalEntries: following?.total ?? 0,
+        totalPages: followingTotalPages,
+      },
+    })
   }
-
-  const followClaim = await ClaimsService.getClaimById({
-    id: userIdentity.follow_claim_id,
-  })
-
-  const url = new URL(request.url)
-  const searchParams = new URLSearchParams(url.search)
-  // const followersSearch = searchParams.get('followersSearch') TODO: Add search once BE implements
-  const followersSortBy = searchParams.get('followersSortBy') ?? 'UserAssets'
-  const followersDirection = searchParams.get('followersDirection') ?? 'desc'
-  const followersPage = searchParams.get('followersPage')
-    ? parseInt(searchParams.get('followersPage') as string)
-    : 1
-  const followersLimit = searchParams.get('limit') ?? '10'
-
-  const followers = await fetchIdentityFollowers(
-    userIdentity.id,
-    followersPage,
-    Number(followersLimit),
-    followersSortBy as SortColumn,
-    followersDirection as SortDirection,
-  )
-
-  const followersTotalPages = calculateTotalPages(
-    followers?.total ?? 0,
-    Number(followersLimit),
-  )
-
-  // const followingSearch = searchParams.get('followingSearch') TODO: Add search once BE implements
-  const followingSortBy = searchParams.get('followingSortBy') ?? 'UserAssets'
-  const followingDirection = searchParams.get('followingDirection') ?? 'desc'
-  const followingPage = searchParams.get('followingPage')
-    ? parseInt(searchParams.get('followingPage') as string)
-    : 1
-  const followingLimit = searchParams.get('limit') ?? '10'
-
-  const following = await fetchIdentityFollowing(
-    userIdentity.id,
-    followingPage,
-    Number(followingLimit),
-    followingSortBy as SortColumn,
-    followingDirection as SortDirection,
-  )
-
-  const followingTotalPages = calculateTotalPages(
-    following?.total ?? 0,
-    Number(followingLimit),
-  )
 
   return json({
     userIdentity,
-    followClaim,
-    followers: followers?.data as IdentityPresenter[],
-    followersSortBy,
-    followersDirection,
-    followersPagination: {
-      currentPage: Number(followersPage),
-      limit: Number(followersLimit),
-      totalEntries: followers?.total ?? 0,
-      totalPages: followersTotalPages,
-    },
-    following: following?.data as IdentityPresenter[],
-    followingSortBy,
-    followingDirection,
-    followingPagination: {
-      currentPage: Number(followingPage),
-      limit: Number(followingLimit),
-      totalEntries: following?.total ?? 0,
-      totalPages: followingTotalPages,
-    },
   })
+}
+
+interface LoaderData {
+  followClaim: ClaimPresenter
+  followers: IdentityPresenter[]
+  followersPagination: PaginationType
+  following: IdentityPresenter[]
+  followingPagination: PaginationType
 }
 
 const TabContent = ({
@@ -168,7 +176,16 @@ export default function ProfileConnections() {
     followersPagination,
     following,
     followingPagination,
-  } = useLiveLoader<typeof loader>(['attest'])
+  } = useLiveLoader<LoaderData>(['attest'])
+
+  if (!followClaim) {
+    return (
+      <Text>
+        This user has no follow claim yet. A follow claim will be created when
+        the first person follows them.
+      </Text>
+    )
+  }
   return (
     <div className="flex flex-col items-center w-full mt-10">
       <Text

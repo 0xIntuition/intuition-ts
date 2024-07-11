@@ -65,7 +65,7 @@ export function ActivePositionsOnClaims({
               }
               feesAccrued={0} // TODO: Update once BE adds deltas to the data output
               onClick={() => {
-                navigate(`/app/profile/${claim.claim_id}`)
+                navigate(`/app/claim/${claim.claim_id}`)
               }}
               className="hover:cursor-pointer"
             />
