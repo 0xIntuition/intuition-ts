@@ -35,13 +35,13 @@ export function ActivePositionsOnClaims({
     useSearchAndSortParamsHandler<SortColumn>('claims')
 
   return (
-    <>
+    <div className="flex flex-col w-full gap-6">
       <SearchAndSort
         options={options}
         handleSortChange={handleSortChange}
         handleSearchChange={handleSearchChange}
       />
-      <div className="mt-6 flex flex-col w-full">
+      <div className="flex flex-col w-full">
         {claims?.map((claim) => (
           <div
             key={claim.claim_id}
@@ -81,6 +81,6 @@ export function ActivePositionsOnClaims({
         onLimitChange={onLimitChange}
         label="positions"
       />
-    </>
+    </div>
   )
 }

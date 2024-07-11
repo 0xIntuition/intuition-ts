@@ -35,13 +35,13 @@ export function PositionsOnIdentity({
     useSearchAndSortParamsHandler<PositionSortColumn>('positions')
 
   return (
-    <>
+    <div className="flex flex-col w-full gap-6">
       <SearchAndSort
         options={options}
         handleSortChange={handleSortChange}
         handleSearchChange={handleSearchChange}
       />
-      <div className="mt-6 flex flex-col w-full">
+      <div className="flex flex-col w-full">
         {positions?.map((position) => (
           <div
             key={position.id}
@@ -74,6 +74,6 @@ export function PositionsOnIdentity({
         onLimitChange={onLimitChange}
         label="positions"
       />
-    </>
+    </div>
   )
 }

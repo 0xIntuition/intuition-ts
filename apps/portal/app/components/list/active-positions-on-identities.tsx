@@ -35,13 +35,13 @@ export function ActivePositionsOnIdentities({
     useSearchAndSortParamsHandler<SortColumn>('identities')
 
   return (
-    <>
+    <div className="flex flex-col w-full gap-6">
       <SearchAndSort
         options={options}
         handleSortChange={handleSortChange}
         handleSearchChange={handleSearchChange}
       />
-      <div className="mt-6 flex flex-col w-full gap-5">
+      <div className="flex flex-col w-full gap-5">
         {identities?.map((identity) => (
           <div
             key={identity.id}
@@ -84,6 +84,6 @@ export function ActivePositionsOnIdentities({
           label="positions"
         />
       </div>
-    </>
+    </div>
   )
 }

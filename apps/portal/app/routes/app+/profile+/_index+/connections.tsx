@@ -16,8 +16,7 @@ import {
   SortDirection,
 } from '@0xintuition/api'
 
-import { FollowersOnIdentity } from '@components/list/identity-followers'
-import { FollowingOnIdentity } from '@components/list/identity-following'
+import { FollowList } from '@components/list/follow'
 import {
   ConnectionsHeader,
   ConnectionsHeaderVariants,
@@ -200,9 +199,10 @@ export default function ProfileConnections() {
             claim={followClaim}
             variant={ConnectionsHeaderVariants.followers}
           >
-            <FollowersOnIdentity
-              followers={followers}
+            <FollowList
+              identities={followers}
               pagination={followersPagination}
+              paramPrefix="followers"
             />
           </TabContent>
           <TabContent
@@ -210,9 +210,10 @@ export default function ProfileConnections() {
             claim={followClaim}
             variant={ConnectionsHeaderVariants.following}
           >
-            <FollowingOnIdentity
-              following={following}
+            <FollowList
+              identities={following}
               pagination={followingPagination}
+              paramPrefix="following"
             />
           </TabContent>
         </Tabs>
