@@ -11,6 +11,8 @@ import {
   IdentitySearchCombobox,
   IdentitySearchComboboxItem,
   IdentityTag,
+  Input,
+  Label,
   Popover,
   PopoverContent,
   PopoverTrigger,
@@ -22,7 +24,12 @@ import {
 } from '@0xintuition/1ui'
 import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
 
-import { getFormProps, SubmissionResult, useForm } from '@conform-to/react'
+import {
+  getFormProps,
+  getInputProps,
+  SubmissionResult,
+  useForm,
+} from '@conform-to/react'
 import { parseWithZod } from '@conform-to/zod'
 import { multivaultAbi } from '@lib/abis/multivault'
 import { useCreateTriple } from '@lib/hooks/useCreateTriple'
@@ -45,8 +52,10 @@ import { Link, useFetcher, useNavigate } from '@remix-run/react'
 import { CreateLoaderData } from '@routes/resources+/create'
 import * as blockies from 'blockies-ts'
 import { TransactionActionType, TransactionStateType } from 'types/transaction'
+import { parseUnits } from 'viem'
 import { useAccount, usePublicClient, useWalletClient } from 'wagmi'
 
+import ErrorList from './error-list'
 import Toast from './toast'
 
 interface ClaimFormProps {
@@ -126,6 +135,8 @@ function CreateClaimForm({
       protocolFee: BigInt(0),
       entryFee: BigInt(0),
     }
+  const [initialDeposit, setInitialDeposit] = useState<string>('0')
+
   logger(
     'items',
     state,
@@ -204,14 +215,15 @@ function CreateClaimForm({
           abi: multivaultAbi,
           functionName: 'createTriple',
           args: [subjectVaultId, predicateVaultId, objectVaultId],
-          value: BigInt(tripleCost),
+          value:
+            BigInt(tripleCost) +
+            parseUnits(initialDeposit === '' ? '0' : initialDeposit, 18),
         })
         dispatch({ type: 'TRANSACTION_PENDING' })
         if (txHash) {
           const receipt = await publicClient.waitForTransactionReceipt({
             hash: txHash,
           })
-          // })
 
           dispatch({
             type: 'TRANSACTION_COMPLETE',
@@ -294,7 +306,6 @@ function CreateClaimForm({
   }, [claimFetcher.state, claimFetcher.data, dispatch])
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    logger('form submit')
     event.preventDefault()
     try {
       if (
@@ -310,6 +321,11 @@ function CreateClaimForm({
         const submission = parseWithZod(formData, {
           schema: createClaimSchema,
         })
+
+        if (event.currentTarget.initial_deposit?.value !== undefined) {
+          setInitialDeposit(event.currentTarget.initial_deposit.value)
+        }
+
         logger('submission', submission)
 
         if (
@@ -330,7 +346,7 @@ function CreateClaimForm({
     }
   }
 
-  const [form] = useForm({
+  const [form, fields] = useForm({
     id: 'create-claim',
     lastResult: lastOffChainSubmission,
     onSubmit: async (event) => handleSubmit(event),
@@ -380,8 +396,8 @@ function CreateClaimForm({
         action="/actions/create-claim"
       >
         {!isTransactionStarted ? (
-          <div className="flex flex-col items-center">
-            <div className="flex items-center my-14">
+          <div className="flex flex-col items-center gap-14">
+            <div className="flex items-center">
               <Popover>
                 <PopoverTrigger asChild>
                   <div className="flex flex-col gap-2 items-start">
@@ -706,6 +722,23 @@ function CreateClaimForm({
                   </IdentitySearchCombobox>
                 </PopoverContent>
               </Popover>
+            </div>
+            <div className="flex flex-col w-full gap-1.5">
+              <Text variant="caption" className="text-secondary-foreground/90">
+                Initial Deposit (Optional)
+              </Text>
+              <Label htmlFor={fields.initial_deposit.id} hidden>
+                Initial Deposit (Optional)
+              </Label>
+              <Input
+                {...getInputProps(fields.initial_deposit, { type: 'text' })}
+                placeholder="0"
+                startAdornment="ETH"
+              />
+              <ErrorList
+                id={fields.initial_deposit.errorId}
+                errors={fields.initial_deposit.errors}
+              />
             </div>
             <Button
               form={form.id}

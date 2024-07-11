@@ -279,7 +279,6 @@ function CreateIdentityForm({
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    logger('form submitting')
     try {
       if (walletClient) {
         dispatch({ type: 'PREPARING_IDENTITY' })
