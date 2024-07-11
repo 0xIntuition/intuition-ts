@@ -3,7 +3,13 @@ import * as React from 'react'
 import { cva, type VariantProps } from 'class-variance-authority'
 import { Identity, IdentityType } from 'types'
 
-import { Icon, IconName } from '..'
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+  Icon,
+  IconName,
+} from '..'
 import { cn } from '../../styles'
 
 export const IdentityTagSize = {
@@ -42,15 +48,7 @@ export const identityTagVariants = cva(
   },
 )
 
-export interface IdentityTagProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof identityTagVariants> {
-  disabled?: boolean
-  imgSrc?: string | null
-  variant?: IdentityType
-}
-
-const IdentityTag = ({
+const IdentityTagButton = ({
   className,
   imgSrc,
   variant,
@@ -83,6 +81,31 @@ const IdentityTag = ({
       </span>
       {children}
     </button>
+  )
+}
+
+export interface IdentityTagProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+    VariantProps<typeof identityTagVariants> {
+  disabled?: boolean
+  imgSrc?: string | null
+  variant?: IdentityType
+  hoverCardContent?: React.ReactNode | null
+}
+
+const IdentityTag = ({
+  hoverCardContent = null,
+  ...props
+}: IdentityTagProps) => {
+  return hoverCardContent ? (
+    <HoverCard>
+      <HoverCardTrigger>
+        <IdentityTagButton {...props} />
+      </HoverCardTrigger>
+      <HoverCardContent>{hoverCardContent}</HoverCardContent>
+    </HoverCard>
+  ) : (
+    <IdentityTagButton {...props} />
   )
 }
 

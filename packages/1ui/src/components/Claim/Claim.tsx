@@ -1,5 +1,8 @@
+import React from 'react'
+
 import { IdentityTag, IdentityTagSize } from 'components/IdentityTag'
 import { Separator } from 'components/Separator'
+import { cn } from 'styles'
 import { IdentityType } from 'types'
 
 export interface ClaimProps {
@@ -20,6 +23,7 @@ export interface ClaimProps {
     label: string
     imgSrc?: string | null
   }
+  onClick?: () => void
 }
 
 export const Claim = ({
@@ -31,7 +35,7 @@ export const Claim = ({
 }: ClaimProps) => {
   const separatorWidth = size !== IdentityTagSize.default ? 'w-4' : 'w-2'
   return (
-    <div className="flex items-center w-full max-w-full group">
+    <button className="flex items-center w-full max-w-full group">
       <IdentityTag
         variant={subject.variant}
         size={size}
@@ -41,7 +45,7 @@ export const Claim = ({
       >
         {subject.label}
       </IdentityTag>
-      <Separator className={separatorWidth} />
+      <Separator className={cn(separatorWidth, 'group-hover:bg-primary')} />
 
       <IdentityTag
         variant={predicate.variant}
@@ -52,7 +56,7 @@ export const Claim = ({
       >
         {predicate.label}
       </IdentityTag>
-      <Separator className={separatorWidth} />
+      <Separator className={cn(separatorWidth, 'group-hover:bg-primary')} />
 
       <IdentityTag
         variant={object.variant}
@@ -63,6 +67,6 @@ export const Claim = ({
       >
         {object.label}
       </IdentityTag>
-    </div>
+    </button>
   )
 }
