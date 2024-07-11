@@ -462,7 +462,6 @@ function CreateIdentityForm({
           logger('onchain create starting. identity_id:', identity_id)
           handleOnChainCreateIdentity({
             atomData: identity_id,
-            initialDeposit: formData.get('initial_deposit') as string,
           })
         }
       }
