@@ -50,7 +50,7 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
 
   const url = new URL(request.url)
   const searchParams = new URLSearchParams(url.search)
-  // const identitiesSearch = searchParams.get('identitiesSearch') TODO: Add search once BE implements
+  const identitiesSearch = searchParams.get('identitiesSearch')
   const identitiesSortBy = searchParams.get('identitiesSortBy') ?? 'UserAssets'
   const identitiesDirection = searchParams.get('identitiesDirection') ?? 'desc'
   const identitiesPage = searchParams.get('identitiesPage')
@@ -64,7 +64,7 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
     Number(identitiesLimit),
     identitiesSortBy as SortColumn,
     identitiesDirection as SortDirection,
-    // identitiesSearch,
+    identitiesSearch,
   )
 
   const identitiesTotalPages = calculateTotalPages(
@@ -72,7 +72,7 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
     Number(identitiesLimit),
   )
 
-  // const claimsSearch = searchParams.get('claimsSearch') TODO: Add search once BE implements
+  const claimsSearch = searchParams.get('claimsSearch')
   const claimsSortBy = searchParams.get('claimsSortBy') ?? 'AssetsSum'
   const claimsDirection = searchParams.get('claimsDirection') ?? 'desc'
   const claimsPage = searchParams.get('claimsPage')
@@ -86,7 +86,7 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
     Number(claimsLimit),
     claimsSortBy as SortColumn,
     claimsDirection as SortDirection,
-    // claimsSearch,
+    claimsSearch,
   )
 
   const claimsTotalPages = calculateTotalPages(

@@ -13,8 +13,10 @@ export type ActivityPresenter = {
   atom_creation_fee: string
   block_hash: string
   block_number: string
+  claim?: ClaimPresenter | null
   contract: string
   created_at: string
+  creator?: UserPresenter | null
   cumulative_gas_used: string
   effective_gas_price: string
   entry_fee: string
@@ -26,6 +28,7 @@ export type ActivityPresenter = {
   gas_price: string
   gas_used: string
   id: string
+  identity?: IdentityPresenter | null
   input_data?: InputData | null
   logs?: Array<LogType> | null
   max_fee_per_gas: string
@@ -181,6 +184,18 @@ export const ClaimSortColumn = {
   FOR_ASSETS_SUM: 'ForAssetsSum',
   AGAINST_ASSETS_SUM: 'AgainstAssetsSum',
 } as const
+
+export type ClaimSummaryPresenter = {
+  against_assets_sum: string
+  against_conviction_sum: string
+  against_num_positions: number
+  assets_sum: string
+  for_assets_sum: string
+  for_conviction_sum: string
+  for_num_positions: number
+  num_positions: number
+  total: number
+}
 
 export type Combinator = 'and' | 'or'
 
@@ -922,6 +937,7 @@ export type User = {
 
 export type UserClaimQuery = {
   direction?: SortDirection | null
+  displayName?: string | null
   limit?: number | null
   offset?: number | null
   page?: number | null
@@ -933,6 +949,7 @@ export type UserClaimQuery = {
 
 export type UserIdentityQuery = {
   direction?: SortDirection | null
+  displayName?: string | null
   limit?: number | null
   offset?: number | null
   page?: number | null
@@ -1087,8 +1104,10 @@ export type GetActivityByIdResponse = {
   atom_creation_fee: string
   block_hash: string
   block_number: string
+  claim?: ClaimPresenter | null
   contract: string
   created_at: string
+  creator?: UserPresenter | null
   cumulative_gas_used: string
   effective_gas_price: string
   entry_fee: string
@@ -1100,6 +1119,7 @@ export type GetActivityByIdResponse = {
   gas_price: string
   gas_used: string
   id: string
+  identity?: IdentityPresenter | null
   input_data?: InputData | null
   logs?: Array<LogType> | null
   max_fee_per_gas: string
@@ -1243,6 +1263,37 @@ export type SearchClaimsResponse = {
   data: Array<ClaimPresenter>
   limit: number
   page: number
+  total: number
+}
+
+export type ClaimSummaryData = {
+  againstUser?: Identifier | null
+  counterVault?: Identifier | null
+  creator?: Identifier | null
+  direction?: SortDirection | null
+  displayName?: string | null
+  forUser?: Identifier | null
+  identity?: Identifier | null
+  limit?: number | null
+  object?: Identifier | null
+  offset?: number | null
+  page?: number | null
+  predicate?: Identifier | null
+  sortBy?: ClaimSortColumn | null
+  status?: Status | null
+  subject?: Identifier | null
+  vault?: Identifier | null
+}
+
+export type ClaimSummaryResponse = {
+  against_assets_sum: string
+  against_conviction_sum: string
+  against_num_positions: number
+  assets_sum: string
+  for_assets_sum: string
+  for_conviction_sum: string
+  for_num_positions: number
+  num_positions: number
   total: number
 }
 
@@ -1925,6 +1976,7 @@ export type ReissueApiKeyResponse = {
 
 export type GetUserClaimsData = {
   direction?: SortDirection | null
+  displayName?: string | null
   limit?: number | null
   offset?: number | null
   page?: number | null
@@ -1943,6 +1995,7 @@ export type GetUserClaimsResponse = {
 
 export type GetUserIdentitiesData = {
   direction?: SortDirection | null
+  displayName?: string | null
   limit?: number | null
   offset?: number | null
   page?: number | null
@@ -2307,8 +2360,10 @@ export type $OpenApiTs = {
           atom_creation_fee: string
           block_hash: string
           block_number: string
+          claim?: ClaimPresenter | null
           contract: string
           created_at: string
+          creator?: UserPresenter | null
           cumulative_gas_used: string
           effective_gas_price: string
           entry_fee: string
@@ -2320,6 +2375,7 @@ export type $OpenApiTs = {
           gas_price: string
           gas_used: string
           id: string
+          identity?: IdentityPresenter | null
           input_data?: InputData | null
           logs?: Array<LogType> | null
           max_fee_per_gas: string
@@ -2515,6 +2571,44 @@ export type $OpenApiTs = {
           data: Array<ClaimPresenter>
           limit: number
           page: number
+          total: number
+        }
+      }
+    }
+  }
+  '/claims/summary': {
+    get: {
+      req: {
+        againstUser?: Identifier | null
+        counterVault?: Identifier | null
+        creator?: Identifier | null
+        direction?: SortDirection | null
+        displayName?: string | null
+        forUser?: Identifier | null
+        identity?: Identifier | null
+        limit?: number | null
+        object?: Identifier | null
+        offset?: number | null
+        page?: number | null
+        predicate?: Identifier | null
+        sortBy?: ClaimSortColumn | null
+        status?: Status | null
+        subject?: Identifier | null
+        vault?: Identifier | null
+      }
+      res: {
+        /**
+         * Summary of claim values based on query
+         */
+        200: {
+          against_assets_sum: string
+          against_conviction_sum: string
+          against_num_positions: number
+          assets_sum: string
+          for_assets_sum: string
+          for_conviction_sum: string
+          for_num_positions: number
+          num_positions: number
           total: number
         }
       }
@@ -3390,6 +3484,7 @@ export type $OpenApiTs = {
     get: {
       req: {
         direction?: SortDirection | null
+        displayName?: string | null
         limit?: number | null
         offset?: number | null
         page?: number | null
@@ -3415,6 +3510,7 @@ export type $OpenApiTs = {
     get: {
       req: {
         direction?: SortDirection | null
+        displayName?: string | null
         limit?: number | null
         offset?: number | null
         page?: number | null

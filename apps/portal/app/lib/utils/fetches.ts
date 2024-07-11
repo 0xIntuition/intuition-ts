@@ -109,7 +109,7 @@ export async function fetchIdentitiesWithUserPosition(
   limit: number,
   sortBy: SortColumn,
   direction: SortDirection,
-  // search: string | null, TODO: Add search once BE implements
+  search: string | null,
 ): Promise<GetUserIdentitiesResponse | null> {
   try {
     return await UsersService.getUserIdentities({
@@ -118,6 +118,7 @@ export async function fetchIdentitiesWithUserPosition(
       limit: Number(limit),
       sortBy: sortBy as SortColumn,
       direction: direction as SortDirection,
+      displayName: search,
     })
   } catch (error: unknown) {
     if (error instanceof ApiError) {
@@ -135,7 +136,7 @@ export async function fetchClaimsWithUserPosition(
   limit: number,
   sortBy: SortColumn,
   direction: SortDirection,
-  // search: string | null, TODO: Add search once BE implements
+  search: string | null,
 ): Promise<SearchClaimsResponse | null> {
   try {
     return await UsersService.getUserClaims({
@@ -144,6 +145,7 @@ export async function fetchClaimsWithUserPosition(
       limit: Number(limit),
       sortBy: sortBy as SortColumn,
       direction: direction as SortDirection,
+      displayName: search,
     })
   } catch (error: unknown) {
     if (error instanceof ApiError) {
