@@ -398,7 +398,7 @@ function CreateClaimForm({
         {!isTransactionStarted ? (
           <div className="flex flex-col items-center gap-14">
             <div className="flex items-center">
-              <Popover>
+              <Popover className>
                 <PopoverTrigger asChild>
                   <div className="flex flex-col gap-2 items-start">
                     <Text variant="small" className="text-primary/60">
@@ -482,7 +482,7 @@ function CreateClaimForm({
                     </HoverCard>
                   </div>
                 </PopoverTrigger>
-                <PopoverContent className="bg-transparent border-none">
+                <PopoverContent className="bg-transparent">
                   <IdentitySearchCombobox>
                     {identities?.map((identity, index) => (
                       <IdentitySearchComboboxItem
@@ -751,7 +751,7 @@ function CreateClaimForm({
               }
               className="mx-auto"
             >
-              Create
+              Create claim
             </Button>
           </div>
         ) : (
