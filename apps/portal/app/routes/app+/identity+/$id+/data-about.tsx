@@ -8,7 +8,7 @@ import {
   SortDirection,
 } from '@0xintuition/api'
 
-import { ClaimsAboutIdentity } from '@components/list/claims-about-identity'
+import { ClaimsList as ClaimsAboutIdentity } from '@components/list/claims'
 import { PositionsOnIdentity } from '@components/list/positions-on-identity'
 import DataAboutHeader from '@components/profile/data-about-header'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
