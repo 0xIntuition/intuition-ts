@@ -1,4 +1,4 @@
-import { IdentityPosition } from '@0xintuition/1ui'
+import { ClaimPositionRow } from '@0xintuition/1ui'
 import { IdentityPresenter, SortColumn } from '@0xintuition/api'
 
 import { PaginationComponent } from '@components/pagination-component'
@@ -44,8 +44,9 @@ export function FollowingOnIdentity({
             key={follower.id}
             className={`grow shrink basis-0 self-stretch p-6 bg-black first:rounded-t-xl last:rounded-b-xl border border-neutral-300/20 flex-col justify-start items-start gap-5 inline-flex`}
           >
-            <IdentityPosition
-              variant={follower.is_user ? 'user' : 'non-user'}
+            <ClaimPositionRow
+              variant={'user'}
+              position={'claimFor'}
               avatarSrc={follower.user?.image ?? follower.image ?? ''}
               name={follower.user?.display_name ?? follower.display_name ?? ''}
               walletAddress={
