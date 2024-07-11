@@ -26,10 +26,12 @@ import {
 
 export interface IdentitySearchComboboxProps
   extends React.HTMLAttributes<HTMLDivElement> {
+  placeholder?: string
   onCreateIdentityClick?: () => void
 }
 
 const IdentitySearchCombobox = ({
+  placeholder = 'Search for an identity...',
   onCreateIdentityClick = undefined,
   children,
   ...props
@@ -37,7 +39,7 @@ const IdentitySearchCombobox = ({
   return (
     <div className="min-w-96" {...props}>
       <Command>
-        <CommandInput placeholder="Search for an identity..." />
+        <CommandInput placeholder={placeholder} />
         {onCreateIdentityClick !== undefined && (
           <Button
             variant={ButtonVariant.text}

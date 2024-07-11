@@ -7,8 +7,8 @@ import {
   CommandInput,
   CommandList,
   IdentityInput,
-  SegmentedControl,
-  SegmentedControlItem,
+  IdentitySearchCombobox,
+  IdentitySearchComboboxItem,
   Separator,
   Text,
 } from '@0xintuition/1ui'
@@ -17,60 +17,58 @@ import { IdentityPresenter } from '@0xintuition/api'
 export interface ExploreSearchProps
   extends React.HTMLAttributes<HTMLDivElement> {
   variant: 'user' | 'identity' | 'claim' | 'tag'
-  identities: IdentityPresenter[]
+  identities: any[]
   onCreateIdentityClick?: () => void
 }
 
 const ExploreSearch = ({
   variant,
+  identities,
   onCreateIdentityClick = undefined,
   children,
   ...props
 }: ExploreSearchProps) => {
-  const tabOptions = [
-    { value: 'overview', label: 'Overview' },
-    { value: 'claims', label: 'Claims' },
-    { value: 'positions', label: 'Positions' },
-    { value: 'activity', label: 'Activity' },
-  ]
-
-  const [selectedTab, setSelectedTab] = React.useState(tabOptions[0].value)
-
   return (
     <div className="min-w-96 flex flex-col items-center" {...props}>
-      <SegmentedControl>
-        {tabOptions.map((option, index) => (
-          <SegmentedControlItem
-            key={index}
-            isActive={selectedTab === option.value}
-            onClick={() => setSelectedTab(option.value)}
-            className="mb-5"
-          >
-            {option.label}
-          </SegmentedControlItem>
-        ))}
-      </SegmentedControl>
-
       {/* User variant */}
       {variant === 'user' && (
-        <Command>
-          <CommandInput placeholder="Search by a username or address" />
-          <CommandList>
-            <CommandEmpty>No results found.</CommandEmpty>
-            <CommandGroup>{children}</CommandGroup>
-          </CommandList>
-        </Command>
+        <IdentitySearchCombobox
+          placeholder="Search by a username or address"
+          onCreateIdentityClick={onCreateIdentityClick}
+        >
+          {identities.map((identity, index) => (
+            <IdentitySearchComboboxItem
+              key={index}
+              variant={identity.variant}
+              name={identity.name}
+              value={identity.value}
+              walletAddress={identity.walletAddress}
+              socialCount={identity.socialCount}
+              tagCount={identity.tagCount}
+            />
+          ))}
+        </IdentitySearchCombobox>
       )}
 
       {/* Identity variant */}
       {variant === 'identity' && (
-        <Command>
-          <CommandInput placeholder="Search by Identity" />
-          <CommandList>
-            <CommandEmpty>No results found.</CommandEmpty>
-            <CommandGroup>{children}</CommandGroup>
-          </CommandList>
-        </Command>
+        <IdentitySearchCombobox
+          placeholder="Search by Identity"
+          onCreateIdentityClick={onCreateIdentityClick}
+        >
+          {identities.map((identity, index) => (
+            <IdentitySearchComboboxItem
+              key={index}
+              variant={identity.variant}
+              name={identity.name}
+              value={identity.value}
+              walletAddress={identity.walletAddress}
+              socialCount={identity.socialCount}
+              tagCount={identity.tagCount}
+            />
+          ))}
+        </IdentitySearchCombobox>
+        // TODO: Add tags here
       )}
 
       {/* Claim variant */}

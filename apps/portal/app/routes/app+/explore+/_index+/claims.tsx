@@ -1,3 +1,4 @@
+import { ExploreSearch } from '@components/explore/ExploreSearch'
 import logger from '@lib/utils/logger'
 import { json } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
@@ -14,9 +15,7 @@ export default function ExploreClaims() {
 
   return (
     <div className="m-8 flex flex-col items-center gap-4">
-      <div className="flex flex-col">Explore Claims Route</div>
-      <pre>This is a placeholder for the Explore Claims route</pre>
-      <pre>route loader: {message}</pre>
+      <ExploreSearch variant="claim" identities={[]} />
     </div>
   )
 }
