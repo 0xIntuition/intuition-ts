@@ -50,16 +50,8 @@ export function createIdentitySchema() {
       }, 'File must be a .png, .jpg, .jpeg, or .gif')
       .or(z.string())
       .optional(),
-    // external_reference: z
-    //   .string()
-    //   .url({
-    //     message: 'This link is an invalid URL.',
-    //   })
-    //   .refine((url) => !url.startsWith('https://'), {
-    //     message: "You don't need to include the https://",
-    //   })
-    //   .optional(),
     external_reference: urlWithoutHttps.optional(),
+    initial_deposit: z.string().optional(),
     vault_id: z.string().optional(),
     creator: z.string().optional(),
     contract: z.string().optional(),
