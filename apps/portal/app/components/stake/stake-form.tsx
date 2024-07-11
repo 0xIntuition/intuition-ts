@@ -17,6 +17,7 @@ import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
 
 import { stakeModalAtom } from '@lib/state/store'
 import { BLOCK_EXPLORER_URL } from '@lib/utils/constants'
+import logger from '@lib/utils/logger'
 import { formatBalance } from '@lib/utils/misc'
 import { Link, type FetcherWithComponents } from '@remix-run/react'
 import { useAtom } from 'jotai'
@@ -79,6 +80,7 @@ export default function StakeForm({
   setValidationErrors,
 }: StakeFormProps) {
   const [stakeModalState, setStakeModalState] = useAtom(stakeModalAtom)
+  logger('direction', direction)
   return (
     <>
       <fetchReval.Form
@@ -180,7 +182,13 @@ export default function StakeForm({
             <div className="pt-2.5">
               <ActivePositionCard
                 value={Number(formatBalance(user_assets, 18, 4))}
-                claimPosition={`${direction === 'for' ? 'claimFor' : 'claimAgainst'}`}
+                claimPosition={
+                  direction !== undefined
+                    ? direction === 'for'
+                      ? 'claimFor'
+                      : 'claimAgainst'
+                    : undefined
+                }
               />
               <div className="rounded-t-lg bg-primary-950/15 px-4 pt-2.5">
                 <StakeInput
