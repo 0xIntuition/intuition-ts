@@ -103,7 +103,6 @@ const FollowButton: React.FC<FollowButtonProps> = ({
   return (
     <Button
       variant="primary"
-      size="lg"
       onClick={(e) => {
         e.preventDefault()
         if (

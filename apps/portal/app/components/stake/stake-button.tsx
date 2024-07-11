@@ -98,8 +98,6 @@ const StakeButton: React.FC<StakeButtonProps> = ({
       setStakeModalActive({
         isOpen: false,
         id: null,
-        direction: null,
-        modalType: null,
       })
       setNavigationStarted(false)
     }
@@ -156,7 +154,7 @@ const StakeButton: React.FC<StakeButtonProps> = ({
         state.status === 'transaction-pending' ||
         state.status === 'awaiting'
       }
-      className="w-[159px] m-auto mt-10"
+      className="w-40"
     >
       {getButtonText()}
     </Button>

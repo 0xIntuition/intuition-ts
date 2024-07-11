@@ -8,6 +8,7 @@ import {
   Icon,
   IdentityTag,
   Tag,
+  Text,
   Trunctacular,
 } from '@0xintuition/1ui'
 import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
@@ -85,17 +86,18 @@ export default function StakeReview({
           </div>
         </DialogTitle>
       </DialogHeader>
-      <div className="flex w-full flex-col gap-5 px-2">
-        <div
-          className={`flex h-full w-full flex-col items-center justify-center gap-2 px-2 pt-5`}
-        >
+      <div className="flex flex-grow flex-col justify-center items-center h-[358px]">
+        <div className="flex flex-col justify-center items-center gap-5">
           <Icon name="await-action" className="h-10 w-10 text-neutral-50/30" />
           <div className="gap-5 flex flex-col items-center">
-            <span className="text-xl font-medium text-white/70 leading-[30px]">
+            <Text
+              variant="headline"
+              weight="medium text-white/70 leading-[30x]"
+            >
               {mode === 'deposit' ? 'Deposit' : 'Redeem'}{' '}
               {formatDisplayBalance(Number(val), 2)} ETH on{' '}
               {modalType === 'identity' ? 'identity' : 'claim'}
-            </span>
+            </Text>
             {modalType === 'identity' ? (
               <IdentityTag
                 imgSrc={identity?.user?.image ?? identity?.image}
@@ -111,7 +113,8 @@ export default function StakeReview({
                     <Trunctacular
                       value={
                         claim?.subject?.user?.display_name ??
-                        claim?.subject?.display_name
+                        claim?.subject?.display_name ??
+                        ''
                       }
                     />
                   ),
@@ -131,7 +134,8 @@ export default function StakeReview({
                     <Trunctacular
                       value={
                         claim?.object?.user?.display_name ??
-                        claim?.object?.display_name
+                        claim?.object?.display_name ??
+                        ''
                       }
                     />
                   ),
@@ -139,13 +143,17 @@ export default function StakeReview({
                 }}
               />
             )}
-            <span className="text-neutral-50/50 text-base font-normal leading-normal m-auto">
+            <Text
+              variant="base"
+              weight="normal"
+              className="m-auto text-neutral-50/50 leading-normal"
+            >
               Estimated Fees:{' '}
               {(+val * (mode === 'deposit' ? +entry_fee : +exit_fee)).toFixed(
                 6,
               )}{' '}
               ETH
-            </span>
+            </Text>
           </div>
         </div>
       </div>
