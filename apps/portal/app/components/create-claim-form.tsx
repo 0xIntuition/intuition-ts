@@ -44,7 +44,6 @@ import { formatBalance, sliceString, truncateString } from '@lib/utils/misc'
 import { Link, useFetcher, useNavigate } from '@remix-run/react'
 import { CreateLoaderData } from '@routes/resources+/create'
 import * as blockies from 'blockies-ts'
-import { AlertCircle } from 'lucide-react'
 import { TransactionActionType, TransactionStateType } from 'types/transaction'
 import { useAccount, usePublicClient, useWalletClient } from 'wagmi'
 
@@ -237,7 +236,16 @@ function CreateClaimForm({
           })
           toast.custom(
             () => (
-              <Toast title="Error" description="error" icon={<AlertCircle />} />
+              <Toast
+                title="Error"
+                description="error"
+                icon={
+                  <Icon
+                    name="triangle-exclamation"
+                    className="h-3 w-3 text-destructive"
+                  />
+                }
+              />
             ),
             {
               duration: 5000,

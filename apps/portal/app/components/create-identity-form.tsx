@@ -42,7 +42,6 @@ import logger from '@lib/utils/logger'
 import { truncateString } from '@lib/utils/misc'
 import { useFetcher } from '@remix-run/react'
 import { CreateLoaderData } from '@routes/resources+/create'
-import { AlertCircle, CircleXIcon } from 'lucide-react'
 import {
   IdentityTransactionActionType,
   IdentityTransactionStateType,
@@ -198,7 +197,16 @@ function CreateIdentityForm({
     ) {
       toast.custom(
         () => (
-          <Toast title="Error" description="error" icon={<AlertCircle />} />
+          <Toast
+            title="Error"
+            description="error"
+            icon={
+              <Icon
+                name="triangle-exclamation"
+                className="h-3 w-3 text-destructive"
+              />
+            }
+          />
         ),
         {
           duration: 5000,
@@ -328,7 +336,12 @@ function CreateIdentityForm({
                 <Toast
                   title="Error"
                   description={errorMessage}
-                  icon={<AlertCircle />}
+                  icon={
+                    <Icon
+                      name="triangle-exclamation"
+                      className="h-3 w-3 text-destructive"
+                    />
+                  }
                 />
               ),
               {
@@ -407,7 +420,12 @@ function CreateIdentityForm({
               <Toast
                 title="Error"
                 description={errorMessage}
-                icon={<AlertCircle />}
+                icon={
+                  <Icon
+                    name="triangle-exclamation"
+                    className="h-3 w-3 text-destructive"
+                  />
+                }
               />
             ),
             {
@@ -539,7 +557,10 @@ function CreateIdentityForm({
                   }}
                   className={`${previewImage === null ? 'hidden' : 'block'}`}
                 >
-                  <CircleXIcon className="h-6 w-6 relative text-neutral-700 hover:text-neutral-600 transition-colors duration-300" />
+                  <Icon
+                    name="circle-x"
+                    className="h-6 w-6 relative text-neutral-700 hover:text-neutral-600 transition-colors duration-300"
+                  />
                 </button>
               </div>
             </div>

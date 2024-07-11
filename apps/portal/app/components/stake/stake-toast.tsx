@@ -1,8 +1,8 @@
-import CheckCircleIcon from '@components/svg/check-circle-icon'
+import { Icon } from '@0xintuition/1ui'
+
 import { BLOCK_EXPLORER_URL } from '@lib/utils/constants'
 import { cn, formatBalance } from '@lib/utils/misc'
 import { Link } from '@remix-run/react'
-import { ExternalLinkIcon } from 'lucide-react'
 
 interface ToastProps {
   action: string
@@ -18,7 +18,7 @@ export default function StakeToast({ action, assets, txHash }: ToastProps) {
     >
       <div className="flex h-full w-full items-center justify-start gap-4">
         <div className="flex flex-shrink-0">
-          <CheckCircleIcon className="h-6 w-6 text-success" />
+          <Icon name="circle-check" className="h-6 w-6 text-success" />
         </div>
         <div className="flex w-full flex-1">
           <div className="space-y-0">
@@ -43,7 +43,8 @@ export default function StakeToast({ action, assets, txHash }: ToastProps) {
                 target="_blank"
                 className="flex flex-row items-center gap-1 text-xs text-blue-500 transition-colors duration-300 hover:text-blue-400"
               >
-                View on Explorer <ExternalLinkIcon className="h-2.5 w-2.5" />
+                View on Explorer{' '}
+                <Icon name="square-arrow-top-right" className="h-2.5 w-2.5" />
               </Link>
             </div>
           </div>

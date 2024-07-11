@@ -1,9 +1,8 @@
 import { useState } from 'react'
 
-import { Button } from '@0xintuition/1ui'
+import { Button, Icon } from '@0xintuition/1ui'
 
 import { useLogin, User } from '@privy-io/react-auth'
-import { Loader2Icon } from 'lucide-react'
 
 interface PrivyLoginButtonProps {
   handleLogin: (
@@ -36,7 +35,7 @@ export default function PrivyLoginButton({
     <Button onClick={handleClick} variant="primary" disabled={loading}>
       {loading ? (
         <>
-          <Loader2Icon className="animate-spin h-5 w-5 mr-1" />
+          <Icon name="in-progress" className="animate-spin h-5 w-5 mr-1" />
           Logging In...
         </>
       ) : (
