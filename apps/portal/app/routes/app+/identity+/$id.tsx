@@ -28,7 +28,7 @@ import {
 } from '@lib/utils/misc'
 import { SessionContext } from '@middleware/session'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
-import { Outlet, useLoaderData } from '@remix-run/react'
+import { Outlet, useLoaderData, useNavigate } from '@remix-run/react'
 import { getVaultDetails } from '@server/multivault'
 import { getPrivyAccessToken } from '@server/privy'
 import { useAtom } from 'jotai'
@@ -91,6 +91,7 @@ export default function IdentityDetails() {
     vaultDetails: VaultDetailsType
     user: SessionUser
   }>()
+  const navigate = useNavigate()
 
   const user_assets = vaultDetails ? vaultDetails.user_assets : '0'
   const [stakeModalActive, setStakeModalActive] = useAtom(stakeModalAtom)
@@ -168,7 +169,9 @@ export default function IdentityDetails() {
                 isOpen: true,
               }))
             }
-            onViewAllClick={() => logger('click view all')} // this will navigate to the data-about positions
+            onViewAllClick={() =>
+              navigate(`/app/identity/${identity.identity_id}/data-about`)
+            }
           />
         </div>
         <StakeModal

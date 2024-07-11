@@ -13,13 +13,18 @@ import { ActivePositionsOnIdentities } from '@components/list/active-positions-o
 import { DataCreatedHeader } from '@components/profile/data-created-header'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import {
+  fetchClaimsSummary,
   fetchClaimsWithUserPosition,
   fetchIdentitiesWithUserPosition,
   fetchIdentity,
   fetchUserTotals,
 } from '@lib/utils/fetches'
 import logger from '@lib/utils/logger'
-import { calculateTotalPages, getAuthHeaders } from '@lib/utils/misc'
+import {
+  calculateTotalPages,
+  formatBalance,
+  getAuthHeaders,
+} from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { getPrivyAccessToken } from '@server/privy'
 
@@ -89,6 +94,8 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
     claimsSearch,
   )
 
+  const claimsSummary = await fetchClaimsSummary(wallet)
+
   const claimsTotalPages = calculateTotalPages(
     claims?.total ?? 0,
     Number(claimsLimit),
@@ -107,6 +114,7 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
       totalPages: identitiesTotalPages,
     },
     claims: claims?.data as ClaimPresenter[],
+    claimsSummary,
     claimsSortBy,
     claimsDirection,
     claimsPagination: {
@@ -125,6 +133,7 @@ export default function ProfileDataCreated() {
     identities,
     identitiesPagination,
     claims,
+    claimsSummary,
     claimsPagination,
   } = useLiveLoader<typeof loader>(['attest'])
   return (
@@ -165,6 +174,9 @@ export default function ProfileDataCreated() {
             userIdentity={userIdentity}
             userTotals={userTotals}
             totalClaims={claimsPagination.totalEntries}
+            totalStakeOnClaims={
+              +formatBalance(claimsSummary?.assets_sum ?? 0, 18, 4)
+            }
           />
           <ActivePositionsOnClaims
             claims={claims}

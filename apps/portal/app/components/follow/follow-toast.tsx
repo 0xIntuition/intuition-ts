@@ -28,7 +28,7 @@ export default function FollowToast({ action, assets, txHash }: ToastProps) {
             <Text
               variant="footnote"
               weight="semibold"
-              className="text-white/50"
+              className="text-white/50 inline"
             >
               {action}{' '}
               <Text variant="footnote" weight="bold">

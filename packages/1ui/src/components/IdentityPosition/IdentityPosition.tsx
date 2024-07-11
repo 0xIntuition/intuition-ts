@@ -1,5 +1,6 @@
 import * as React from 'react'
 
+import { cn } from 'styles'
 import { CurrencyType, Identity, IdentityType } from 'types'
 import { formatDate } from 'utils/date'
 import { formatWalletAddress } from 'utils/wallet'
@@ -39,10 +40,11 @@ const IdentityPosition = ({
   avatarSrc,
   updatedAt,
   tags,
+  className,
   ...props
 }: IdentityPositionProps) => {
   return (
-    <div className="w-full flex justify-between" {...props}>
+    <div className={cn(`w-full flex justify-between`, className)} {...props}>
       <div className="flex items-center">
         <Avatar
           variant={variant}

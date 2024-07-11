@@ -4,6 +4,7 @@ import { IdentityPresenter, SortColumn } from '@0xintuition/api'
 import { PaginationComponent } from '@components/pagination-component'
 import { useSearchAndSortParamsHandler } from '@lib/hooks/useSearchAndSortParams'
 import { formatBalance } from '@lib/utils/misc'
+import { useNavigate } from '@remix-run/react'
 
 import { SearchAndSort } from '../search-and-sort'
 import { SortOption } from '../sort-select'
@@ -22,6 +23,7 @@ export function ActivePositionsOnIdentities({
   identities: IdentityPresenter[]
   pagination: PaginationType
 }) {
+  const navigate = useNavigate()
   const options: SortOption<SortColumn>[] = [
     { value: 'Position Amount', sortBy: 'UserAssets' },
     { value: 'Total ETH', sortBy: 'AssetsSum' },
@@ -39,7 +41,7 @@ export function ActivePositionsOnIdentities({
         handleSortChange={handleSortChange}
         handleSearchChange={handleSearchChange}
       />
-      <div className="mt-6 flex flex-col w-full">
+      <div className="mt-6 flex flex-col w-full gap-5">
         {identities?.map((identity) => (
           <div
             key={identity.id}
@@ -61,19 +63,27 @@ export function ActivePositionsOnIdentities({
                   : 0
               }
               updatedAt={identity.updated_at}
+              onClick={() => {
+                navigate(
+                  identity.is_user
+                    ? `/app/profile/${identity.identity_id}`
+                    : `/app/identity/${identity.identity_id}`,
+                )
+              }}
+              className="hover:cursor-pointer"
             />
           </div>
         ))}
+        <PaginationComponent
+          totalEntries={pagination.totalEntries ?? 0}
+          currentPage={pagination.currentPage ?? 0}
+          totalPages={pagination.totalPages ?? 0}
+          limit={pagination.limit ?? 0}
+          onPageChange={onPageChange}
+          onLimitChange={onLimitChange}
+          label="positions"
+        />
       </div>
-      <PaginationComponent
-        totalEntries={pagination.totalEntries ?? 0}
-        currentPage={pagination.currentPage ?? 0}
-        totalPages={pagination.totalPages ?? 0}
-        limit={pagination.limit ?? 0}
-        onPageChange={onPageChange}
-        onLimitChange={onLimitChange}
-        label="positions"
-      />
     </>
   )
 }

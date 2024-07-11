@@ -15,6 +15,7 @@ interface DataCreatedHeaderProps {
   variant: DataCreatedHeaderVariantType
   userIdentity: IdentityPresenter
   userTotals: UserTotalsPresenter
+  totalStakeOnClaims?: number
   totalClaims?: number
   totalIdentities?: number
 }
@@ -23,6 +24,7 @@ export const DataCreatedHeader: React.FC<DataCreatedHeaderProps> = ({
   variant,
   userIdentity,
   userTotals,
+  totalStakeOnClaims,
   totalClaims,
   totalIdentities,
 }) => {
@@ -76,7 +78,14 @@ export const DataCreatedHeader: React.FC<DataCreatedHeaderProps> = ({
               >
                 Total Staked
               </Text>
-              <MonetaryValue value={totalPositionValue} currency="ETH" />
+              <MonetaryValue
+                value={
+                  variant === 'identities'
+                    ? totalPositionValue
+                    : totalStakeOnClaims
+                }
+                currency="ETH"
+              />
             </div>
           </div>
           <div className="flex flex-col items-end">

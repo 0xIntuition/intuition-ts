@@ -1,5 +1,6 @@
 import * as React from 'react'
 
+import { cn } from 'styles'
 import { CurrencyType, Identity, IdentityType } from 'types'
 import { formatWalletAddress } from 'utils/wallet'
 
@@ -35,11 +36,15 @@ const IdentityContentRow = ({
   totalFollowers,
   tags,
   children,
+  className,
   ...props
 }: IdentityContentRowProps) => {
   return (
     <div className="w-full mb-4">
-      <div className="w-full flex justify-between items-center" {...props}>
+      <div
+        className={cn(`w-full flex justify-between items-center`, className)}
+        {...props}
+      >
         <div className="flex items-center">
           <Avatar
             variant={variant}

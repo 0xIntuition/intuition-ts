@@ -6,6 +6,7 @@ import { SearchAndSort } from '@components/search-and-sort'
 import { SortOption } from '@components/sort-select'
 import { useSearchAndSortParamsHandler } from '@lib/hooks/useSearchAndSortParams'
 import { formatBalance } from '@lib/utils/misc'
+import { useNavigate } from '@remix-run/react'
 
 interface PaginationType {
   totalEntries: number | undefined
@@ -21,6 +22,7 @@ export function FollowingOnIdentity({
   following: IdentityPresenter[]
   pagination: PaginationType
 }) {
+  const navigate = useNavigate()
   const options: SortOption<SortColumn>[] = [
     { value: 'Position Amount', sortBy: 'UserAssets' },
     { value: 'Total ETH', sortBy: 'AssetsSum' },
@@ -63,6 +65,14 @@ export function FollowingOnIdentity({
                   : 0
               }
               updatedAt={follower.updated_at}
+              onClick={() => {
+                navigate(
+                  follower.is_user
+                    ? `/app/profile/${follower.identity_id}`
+                    : `/app/identity/${follower.identity_id}`,
+                )
+              }}
+              className="hover:cursor-pointer"
             />
           </div>
         ))}

@@ -18,7 +18,6 @@ import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
 
 import { stakeModalAtom } from '@lib/state/store'
 import { BLOCK_EXPLORER_URL } from '@lib/utils/constants'
-import logger from '@lib/utils/logger'
 import { formatBalance } from '@lib/utils/misc'
 import { Link, type FetcherWithComponents } from '@remix-run/react'
 import { useAtom } from 'jotai'
@@ -81,7 +80,7 @@ export default function StakeForm({
   setValidationErrors,
 }: StakeFormProps) {
   const [stakeModalState, setStakeModalState] = useAtom(stakeModalAtom)
-  logger('direction', direction)
+
   return (
     <>
       <fetchReval.Form
@@ -223,7 +222,10 @@ export default function StakeForm({
         <>
           <div className="flex-grow flex flex-col justify-center items-center h-full">
             <div className="flex flex-col justify-center items-center gap-10">
-              <TransactionStatusIndicator status={state.status} />
+              <TransactionStatusIndicator
+                status={state.status}
+                type={mode === 'deposit' ? 'deposit' : 'redeem'}
+              />
               {state.status !== 'complete' ? (
                 <TransactionStatusCard status={state.status} />
               ) : (

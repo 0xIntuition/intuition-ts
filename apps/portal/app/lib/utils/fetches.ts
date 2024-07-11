@@ -1,7 +1,11 @@
 import {
   ApiError,
+  ClaimPositionsService,
   ClaimSortColumn,
   ClaimsService,
+  ClaimSummaryResponse,
+  GetClaimByIdResponse,
+  GetClaimPositionsResponse,
   GetIdentityByIdResponse,
   GetIdentityFollowedResponse,
   GetIdentityFollowersResponse,
@@ -24,6 +28,21 @@ export async function fetchIdentity(
 ): Promise<GetIdentityByIdResponse | null> {
   try {
     return await IdentitiesService.getIdentityById({ id: id })
+  } catch (error: unknown) {
+    if (error instanceof ApiError) {
+      logger(`${error.name} - ${error.status}: ${error.message} ${error.url}`)
+      return null
+    } else {
+      throw error
+    }
+  }
+}
+
+export async function fetchClaim(
+  id: string,
+): Promise<GetClaimByIdResponse | null> {
+  try {
+    return await ClaimsService.getClaimById({ id: id })
   } catch (error: unknown) {
     if (error instanceof ApiError) {
       logger(`${error.name} - ${error.status}: ${error.message} ${error.url}`)
@@ -59,6 +78,33 @@ export async function fetchPositionsOnIdentity(
 ): Promise<SearchPositionsResponse | null> {
   try {
     return await IdentityPositionsService.getIdentityPositions({
+      id: id,
+      page: page,
+      limit: limit,
+      sortBy: sortBy,
+      direction: direction,
+      creator: search,
+    })
+  } catch (error: unknown) {
+    if (error instanceof ApiError) {
+      logger(`${error.name} - ${error.status}: ${error.message} ${error.url}`)
+      return null
+    } else {
+      throw error
+    }
+  }
+}
+
+export async function fetchPositionsOnClaim(
+  id: string,
+  page: number,
+  limit: number,
+  sortBy: PositionSortColumn,
+  direction: SortDirection,
+  search: string | null,
+): Promise<GetClaimPositionsResponse | null> {
+  try {
+    return await ClaimPositionsService.getClaimPositions({
       id: id,
       page: page,
       limit: limit,
@@ -198,6 +244,23 @@ export async function fetchIdentityFollowing(
       limit: Number(limit),
       sortBy: sortBy as SortColumn,
       direction: direction as SortDirection,
+    })
+  } catch (error: unknown) {
+    if (error instanceof ApiError) {
+      logger(`${error.name} - ${error.status}: ${error.message} ${error.url}`)
+      return null
+    } else {
+      throw error
+    }
+  }
+}
+
+export async function fetchClaimsSummary(
+  id: string,
+): Promise<ClaimSummaryResponse | null> {
+  try {
+    return await ClaimsService.claimSummary({
+      identity: id,
     })
   } catch (error: unknown) {
     if (error instanceof ApiError) {

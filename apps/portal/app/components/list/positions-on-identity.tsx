@@ -4,10 +4,11 @@ import { PositionPresenter, PositionSortColumn } from '@0xintuition/api'
 import { PaginationComponent } from '@components/pagination-component'
 import { useSearchAndSortParamsHandler } from '@lib/hooks/useSearchAndSortParams'
 import { formatBalance } from '@lib/utils/misc'
+import { useNavigate } from '@remix-run/react'
 import { formatUnits } from 'viem'
 
-import { SearchAndSort } from './search-and-sort'
-import { SortOption } from './sort-select'
+import { SearchAndSort } from '../search-and-sort'
+import { SortOption } from '../sort-select'
 
 interface PaginationType {
   totalEntries: number | undefined
@@ -23,6 +24,7 @@ export function PositionsOnIdentity({
   positions: PositionPresenter[]
   pagination: PaginationType
 }) {
+  const navigate = useNavigate()
   const options: SortOption<PositionSortColumn>[] = [
     { value: 'Total ETH', sortBy: 'Assets' },
     { value: 'Updated At', sortBy: 'UpdatedAt' },
@@ -55,6 +57,10 @@ export function PositionsOnIdentity({
                 formatUnits(BigInt(+position.assets - +position.value), 18),
               )}
               updatedAt={position.updated_at}
+              onClick={() => {
+                navigate(`/app/identity/${position.user?.wallet}`)
+              }}
+              className="hover:cursor-pointer"
             />
           </div>
         ))}

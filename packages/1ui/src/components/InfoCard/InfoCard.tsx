@@ -1,5 +1,6 @@
 import * as React from 'react'
 
+import { cn } from 'styles'
 import { IdentityType } from 'types'
 
 import { IdentityTag, Text, TextVariant } from '..'
@@ -16,6 +17,7 @@ const InfoCard = ({
   username,
   avatarImgSrc,
   timestamp,
+  className,
   ...props
 }: InfoCardProps) => {
   const formattedDate = new Intl.DateTimeFormat('en-US', {
@@ -25,7 +27,13 @@ const InfoCard = ({
   }).format(new Date(timestamp))
 
   return (
-    <div className="flex flex-col gap-2 theme-border p-5 rounded-lg" {...props}>
+    <div
+      className={cn(
+        `flex flex-col gap-2 theme-border p-5 rounded-lg`,
+        className,
+      )}
+      {...props}
+    >
       <Text variant={TextVariant.caption} className="text-muted-foreground">
         Creator
       </Text>

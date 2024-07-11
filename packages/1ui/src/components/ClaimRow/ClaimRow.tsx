@@ -1,6 +1,7 @@
 import * as React from 'react'
 
 import { ClaimStatus, ClaimValueDisplay } from 'components'
+import { cn } from 'styles'
 import { CurrencyType } from 'types'
 
 export interface ClaimRowProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -16,10 +17,14 @@ const ClaimRow = ({
   amount,
   currency,
   children,
+  className,
   ...props
 }: ClaimRowProps) => {
   return (
-    <div className="flex justify-between items-center gap-2" {...props}>
+    <div
+      className={cn(`flex justify-between items-center gap-2`, className)}
+      {...props}
+    >
       <div className="w-[60%]">
         <ClaimStatus claimsFor={claimsFor} claimsAgainst={claimsAgainst}>
           {children}

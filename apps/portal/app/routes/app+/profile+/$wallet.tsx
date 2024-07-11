@@ -228,14 +228,21 @@ export default function Profile() {
                 <PositionCardOwnership
                   percentOwnership={
                     user_assets !== null && assets_sum
-                      ? +calculatePercentageOfTvl(user_assets, assets_sum)
+                      ? +calculatePercentageOfTvl(
+                          user_assets ?? '0',
+                          assets_sum,
+                        )
                       : 0
                   }
                 />
                 <PositionCardFeesAccrued
                   amount={
                     user_asset_delta
-                      ? +formatBalance(+user_assets - +user_asset_delta, 18, 5)
+                      ? +formatBalance(
+                          +(user_assets ?? '0') - +user_asset_delta,
+                          18,
+                          5,
+                        )
                       : 0
                   }
                 />
@@ -269,7 +276,6 @@ export default function Profile() {
               setStakeModalActive((prevState) => ({
                 ...prevState,
                 isOpen: false,
-                mode: undefined,
               }))
             }}
           />

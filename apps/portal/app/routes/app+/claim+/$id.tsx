@@ -11,10 +11,8 @@ import {
   PositionCardStaked,
 } from '@0xintuition/1ui'
 import {
-  ApiError,
   ClaimPresenter,
   ClaimSortColumn,
-  ClaimsService,
   OpenAPI,
   SortDirection,
 } from '@0xintuition/api'
@@ -22,6 +20,7 @@ import {
 import { NestedLayout } from '@components/nested-layout'
 import StakeModal from '@components/stake/stake-modal'
 import { stakeModalAtom } from '@lib/state/store'
+import { fetchClaim } from '@lib/utils/fetches'
 import logger from '@lib/utils/logger'
 import {
   calculatePercentageOfTvl,
@@ -30,7 +29,12 @@ import {
 } from '@lib/utils/misc'
 import { SessionContext } from '@middleware/session'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
-import { Outlet, useLoaderData, useNavigate } from '@remix-run/react'
+import {
+  Outlet,
+  useLoaderData,
+  useLocation,
+  useNavigate,
+} from '@remix-run/react'
 import { getVaultDetails } from '@server/multivault'
 import { getPrivyAccessToken } from '@server/privy'
 import { useAtom } from 'jotai'
@@ -62,27 +66,11 @@ export async function loader({ context, request, params }: LoaderFunctionArgs) {
   const direction: SortDirection =
     (searchParams.get('direction') as SortDirection) ?? 'desc'
 
-  let claim
-  try {
-    if (!params.id) {
-      return
-    }
-
-    claim = await ClaimsService.getClaimById({
-      id: params.id,
-    })
-  } catch (error: unknown) {
-    if (error instanceof ApiError) {
-      claim = undefined
-      console.log(`${error.name} - ${error.status}: ${error.message}`)
-    } else {
-      throw error
-    }
-  }
+  const claim = await fetchClaim(id)
 
   let vaultDetails: VaultDetailsType | null = null
 
-  if (claim !== undefined && claim.vault_id) {
+  if (claim && claim.vault_id) {
     try {
       vaultDetails = await getVaultDetails(
         claim.contract,
@@ -111,7 +99,15 @@ export default function ClaimDetails() {
     vaultDetails: VaultDetailsType
   }>()
   const navigate = useNavigate()
-
+  const location = useLocation()
+  const from = location.state?.from
+  const goBack = () => {
+    if (from) {
+      navigate(from)
+    } else {
+      navigate(-1)
+    }
+  }
   const [stakeModalActive, setStakeModalActive] = useAtom(stakeModalAtom)
 
   let direction: 'for' | 'against' = 'for'
@@ -136,8 +132,8 @@ export default function ClaimDetails() {
 
   return (
     <>
-      <div className="flex items-center gap-6 my-10">
-        <Button variant="secondary" onClick={() => navigate('/app/claims')}>
+      <div className="flex items-center gap-6 mx-8 my-10">
+        <Button variant="secondary" size="icon" onClick={() => goBack}>
           <Icon name="arrow-left" />
         </Button>
         <Claim
@@ -259,6 +255,10 @@ export default function ClaimDetails() {
               username={claim.creator?.display_name ?? ''}
               avatarImgSrc={claim.creator?.image ?? ''}
               timestamp={claim.created_at}
+              onClick={() => {
+                navigate(`/app/profile/${claim.creator?.wallet}`)
+              }}
+              className="hover:cursor-pointer w-full"
             />
           </div>
         </div>

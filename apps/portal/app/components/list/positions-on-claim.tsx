@@ -1,12 +1,14 @@
 import { ClaimPositionRow } from '@0xintuition/1ui'
-import { IdentityPresenter, SortColumn } from '@0xintuition/api'
+import { PositionPresenter, SortColumn } from '@0xintuition/api'
 
 import { PaginationComponent } from '@components/pagination-component'
-import { SearchAndSort } from '@components/search-and-sort'
-import { SortOption } from '@components/sort-select'
 import { useSearchAndSortParamsHandler } from '@lib/hooks/useSearchAndSortParams'
 import { formatBalance } from '@lib/utils/misc'
 import { useNavigate } from '@remix-run/react'
+import { formatUnits } from 'viem'
+
+import { SearchAndSort } from '../search-and-sort'
+import { SortOption } from '../sort-select'
 
 interface PaginationType {
   totalEntries: number | undefined
@@ -15,11 +17,11 @@ interface PaginationType {
   limit: number
 }
 
-export function FollowersOnIdentity({
-  followers,
+export function PositionsOnClaim({
+  positions,
   pagination,
 }: {
-  followers: IdentityPresenter[]
+  positions: PositionPresenter[]
   pagination: PaginationType
 }) {
   const navigate = useNavigate()
@@ -31,7 +33,7 @@ export function FollowersOnIdentity({
   ]
 
   const { handleSortChange, handleSearchChange, onPageChange, onLimitChange } =
-    useSearchAndSortParamsHandler<SortColumn>('followers')
+    useSearchAndSortParamsHandler<SortColumn>('claims')
 
   return (
     <>
@@ -41,36 +43,26 @@ export function FollowersOnIdentity({
         handleSearchChange={handleSearchChange}
       />
       <div className="mt-6 flex flex-col w-full">
-        {followers?.map((follower) => (
+        {positions?.map((position) => (
           <div
-            key={follower.id}
+            key={position.id}
             className={`grow shrink basis-0 self-stretch p-6 bg-black first:rounded-t-xl last:rounded-b-xl border border-neutral-300/20 flex-col justify-start items-start gap-5 inline-flex`}
           >
             <ClaimPositionRow
-              variant={'user'}
-              position={'claimFor'}
-              avatarSrc={follower.user?.image ?? follower.image ?? ''}
-              name={follower.user?.display_name ?? follower.display_name ?? ''}
-              walletAddress={
-                follower.user?.wallet ?? follower.identity_id ?? ''
+              variant="user"
+              avatarSrc={position.user?.image ?? ''}
+              name={position.user?.display_name ?? ''}
+              walletAddress={position.user?.wallet ?? ''}
+              amount={+formatBalance(BigInt(position.assets), 18, 4)}
+              position={
+                position.direction === 'for' ? 'claimFor' : 'claimAgainst'
               }
-              amount={+formatBalance(BigInt(follower.user_assets), 18, 4)}
-              feesAccrued={
-                follower.user_asset_delta
-                  ? +formatBalance(
-                      +follower.user_assets - +follower.user_asset_delta,
-                      18,
-                      5,
-                    )
-                  : 0
-              }
-              updatedAt={follower.updated_at}
+              feesAccrued={Number(
+                formatUnits(BigInt(+position.assets - +position.value), 18),
+              )}
+              updatedAt={position.updated_at}
               onClick={() => {
-                navigate(
-                  follower.is_user
-                    ? `/app/profile/${follower.identity_id}`
-                    : `/app/identity/${follower.identity_id}`,
-                )
+                navigate(`/app/profile/${position.user?.wallet}`)
               }}
               className="hover:cursor-pointer"
             />

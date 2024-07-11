@@ -11,6 +11,7 @@ import {
   TextVariant,
   TextWeight,
 } from 'components'
+import { cn } from 'styles'
 import { ClaimPositionType, CurrencyType } from 'types'
 import { formatDate } from 'utils/date'
 import { formatWalletAddress } from 'utils/wallet'
@@ -64,10 +65,11 @@ const ClaimPositionRow = ({
   updatedAt,
   tags,
   children,
+  className,
   ...props
 }: ClaimPositionRowProps) => {
   return (
-    <div className="w-full flex justify-between" {...props}>
+    <div className={cn(`w-full flex justify-between`, className)} {...props}>
       {variant === ClaimPositionRowVariant.user && (
         <div className="flex items-center">
           <Avatar src={avatarSrc} name={name} className="w-16 h-16 mr-4" />

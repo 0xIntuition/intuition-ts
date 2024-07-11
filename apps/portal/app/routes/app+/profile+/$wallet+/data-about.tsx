@@ -7,12 +7,13 @@ import {
   SortDirection,
 } from '@0xintuition/api'
 
-import { ClaimsOnIdentity } from '@components/claims-on-identity'
-import { PositionsOnIdentity } from '@components/positions-on-identity'
+import { ClaimsAboutIdentity } from '@components/list/claims-about-identity'
+import { PositionsOnIdentity } from '@components/list/positions-on-identity'
 import DataAboutHeader from '@components/profile/data-about-header'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import {
   fetchClaimsAboutIdentity,
+  fetchClaimsSummary,
   fetchIdentity,
   fetchPositionsOnIdentity,
 } from '@lib/utils/fetches'
@@ -75,7 +76,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const claimsLimit = searchParams.get('claimsLimit') ?? '10'
 
   const claims = await fetchClaimsAboutIdentity(
-    wallet,
+    userIdentity.id,
     claimsPage,
     Number(claimsLimit),
     claimsSortBy as ClaimSortColumn,
@@ -87,6 +88,8 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     claims?.total ?? 0,
     Number(claimsLimit),
   )
+
+  const claimsSummary = await fetchClaimsSummary(userIdentity.id)
 
   return json({
     userIdentity,
@@ -100,6 +103,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
       totalPages: positionsTotalPages,
     },
     claims: claims?.data as ClaimPresenter[],
+    claimsSummary,
     claimsSortBy,
     claimsDirection,
     claimsPagination: {
@@ -117,6 +121,7 @@ export default function ProfileDataAbout() {
     positions,
     positionsPagination,
     claims,
+    claimsSummary,
     claimsPagination,
   } = useLiveLoader<typeof loader>(['attest'])
   return (
@@ -126,9 +131,9 @@ export default function ProfileDataAbout() {
         title="Claims about this Identity"
         userIdentity={userIdentity}
         totalClaims={claimsPagination.totalEntries}
-        totalStake={0} //TODO: Add total stake across all claims once BE implements
+        totalStake={+formatBalance(claimsSummary?.assets_sum ?? 0, 18, 4)}
       />
-      <ClaimsOnIdentity claims={claims} pagination={claimsPagination} />
+      <ClaimsAboutIdentity claims={claims} pagination={claimsPagination} />
       <DataAboutHeader
         variant="positions"
         title="Positions on this Identity"

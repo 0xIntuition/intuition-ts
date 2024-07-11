@@ -3,10 +3,11 @@ import { ClaimPresenter, ClaimSortColumn } from '@0xintuition/api'
 
 import { useSearchAndSortParamsHandler } from '@lib/hooks/useSearchAndSortParams'
 import { formatBalance } from '@lib/utils/misc'
+import { useNavigate } from '@remix-run/react'
 
-import { PaginationComponent } from './pagination-component'
-import { SearchAndSort } from './search-and-sort'
-import { SortOption } from './sort-select'
+import { PaginationComponent } from '../pagination-component'
+import { SearchAndSort } from '../search-and-sort'
+import { SortOption } from '../sort-select'
 
 interface PaginationType {
   totalEntries: number | undefined
@@ -15,13 +16,14 @@ interface PaginationType {
   limit: number
 }
 
-export function ClaimsOnIdentity({
+export function ClaimsAboutIdentity({
   claims,
   pagination,
 }: {
   claims: ClaimPresenter[]
   pagination: PaginationType
 }) {
+  const navigate = useNavigate()
   const options: SortOption<ClaimSortColumn>[] = [
     { value: 'Total ETH', sortBy: 'AssetsSum' },
     { value: 'ETH For', sortBy: 'ForAssetsSum' },
@@ -53,6 +55,10 @@ export function ClaimsOnIdentity({
               claimsFor={claim.for_num_positions}
               claimsAgainst={claim.against_num_positions}
               amount={+formatBalance(claim.assets_sum, 18, 4)}
+              onClick={() => {
+                navigate(`/app/claim/${claim.claim_id}`)
+              }}
+              className="hover:cursor-pointer"
             >
               <Claim
                 subject={{

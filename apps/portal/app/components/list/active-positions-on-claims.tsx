@@ -4,6 +4,7 @@ import { ClaimPresenter, SortColumn } from '@0xintuition/api'
 import { PaginationComponent } from '@components/pagination-component'
 import { useSearchAndSortParamsHandler } from '@lib/hooks/useSearchAndSortParams'
 import { formatBalance } from '@lib/utils/misc'
+import { useNavigate } from '@remix-run/react'
 
 import { SearchAndSort } from '../search-and-sort'
 import { SortOption } from '../sort-select'
@@ -22,6 +23,7 @@ export function ActivePositionsOnClaims({
   claims: ClaimPresenter[]
   pagination: PaginationType
 }) {
+  const navigate = useNavigate()
   const options: SortOption<SortColumn>[] = [
     { value: 'Position Amount', sortBy: 'UserAssets' },
     { value: 'Total ETH', sortBy: 'AssetsSum' },
@@ -62,6 +64,10 @@ export function ActivePositionsOnClaims({
                 )
               }
               feesAccrued={0} // TODO: Update once BE adds deltas to the data output
+              onClick={() => {
+                navigate(`/app/profile/${claim.claim_id}`)
+              }}
+              className="hover:cursor-pointer"
             />
           </div>
         ))}
