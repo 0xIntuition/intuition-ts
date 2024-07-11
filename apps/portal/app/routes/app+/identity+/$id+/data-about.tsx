@@ -144,7 +144,11 @@ export default function ProfileDataAbout() {
           totalClaims={claimsPagination.totalEntries}
           totalStake={+formatBalance(claimsSummary?.assets_sum ?? 0, 18, 4)}
         />
-        <ClaimsAboutIdentity claims={claims} pagination={claimsPagination} />
+        <ClaimsAboutIdentity
+          claims={claims}
+          pagination={claimsPagination}
+          paramPrefix="claims"
+        />
       </div>
       <div className="flex flex-col py-4 w-full">
         <DataAboutHeader

@@ -6,7 +6,7 @@ import {
 } from '@0xintuition/api'
 
 import { ExploreIdentities } from '@components/list/explore-identities'
-import { fetchUsers } from '@lib/utils/fetches'
+import { fetchUserIdentities } from '@lib/utils/fetches'
 import logger from '@lib/utils/logger'
 import { calculateTotalPages, getAuthHeaders } from '@lib/utils/misc'
 import { SessionContext } from '@middleware/session'
@@ -39,7 +39,7 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
     : 1
   const limit = searchParams.get('limit') ?? '10'
 
-  const identities = await fetchUsers(
+  const identities = await fetchUserIdentities(
     page,
     Number(limit),
     sortBy as SortColumn,
@@ -48,6 +48,7 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
   )
 
   const totalPages = calculateTotalPages(identities?.total ?? 0, Number(limit))
+  logger('identities', identities)
 
   return json({
     identities: identities?.data as IdentityPresenter[],
@@ -59,7 +60,6 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
       totalEntries: identities?.total ?? 0,
       totalPages,
     },
-    user,
   })
 }
 

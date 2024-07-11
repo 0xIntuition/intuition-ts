@@ -141,7 +141,11 @@ export default function ProfileDataAbout() {
         totalClaims={claimsPagination.totalEntries}
         totalStake={+formatBalance(claimsSummary?.assets_sum ?? 0, 18, 4)}
       />
-      <ClaimsAboutIdentity claims={claims} pagination={claimsPagination} />
+      <ClaimsAboutIdentity
+        claims={claims}
+        pagination={claimsPagination}
+        paramPrefix="claims"
+      />
       <DataAboutHeader
         variant="positions"
         title="Positions on this Identity"

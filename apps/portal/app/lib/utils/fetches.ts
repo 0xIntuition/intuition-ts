@@ -54,7 +54,7 @@ export async function fetchClaim(
   }
 }
 
-export async function fetchUsers(
+export async function fetchUserIdentities(
   page: number,
   limit: number,
   sortBy: SortColumn,
