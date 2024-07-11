@@ -119,7 +119,11 @@ export default function IdentityDetails() {
                 ))}
               </TagsContent>
             )}
-            <TagsButton onClick={() => setTagsModalActive(true)} />
+            <TagsButton
+              onClick={() => {
+                setTagsModalActive({ isOpen: true, mode: 'add' })
+              }}
+            />
           </Tags>
           {vaultDetails !== null && user_assets !== '0' ? (
             <PositionCard onButtonClick={() => logger('sell position clicked')}>
@@ -179,8 +183,15 @@ export default function IdentityDetails() {
           }}
         />
         <TagsModal
-          open={tagsModalActive}
-          onClose={() => setTagsModalActive(false)}
+          identity={identity}
+          open={tagsModalActive.isOpen}
+          mode={tagsModalActive.mode}
+          onClose={() =>
+            setTagsModalActive({
+              ...tagsModalActive,
+              isOpen: false,
+            })
+          }
         />
       </div>
     </NestedLayout>
