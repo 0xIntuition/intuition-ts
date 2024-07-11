@@ -1,19 +1,7 @@
-import * as React from 'react'
-
-import { CommandGroup } from 'cmdk'
-import { Currency, Identity } from 'types'
-
 import {
   Badge,
   BadgeVariant,
-  Button,
-  ButtonSize,
-  ButtonVariant,
-  Command,
-  CommandEmpty,
-  CommandInput,
   CommandItem,
-  CommandList,
   Icon,
   IconName,
   IdentityCard,
@@ -22,41 +10,7 @@ import {
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '..'
-
-export interface IdentitySearchComboboxProps
-  extends React.HTMLAttributes<HTMLDivElement> {
-  onCreateIdentityClick?: () => void
-}
-
-const IdentitySearchCombobox = ({
-  onCreateIdentityClick = undefined,
-  children,
-  ...props
-}: IdentitySearchComboboxProps) => {
-  return (
-    <div className="min-w-96" {...props}>
-      <Command>
-        <CommandInput placeholder="Search for an identity..." />
-        {onCreateIdentityClick !== undefined && (
-          <Button
-            variant={ButtonVariant.text}
-            size={ButtonSize.lg}
-            className="gap-1.5 font-light justify-start p-3 border-border/30 border-0 border-b"
-            onClick={onCreateIdentityClick}
-          >
-            <Icon name={IconName.plusLarge} className="h-4 w-4" />
-            Create a new identity
-          </Button>
-        )}
-        <CommandList>
-          <CommandEmpty>No results found.</CommandEmpty>
-          <CommandGroup>{children}</CommandGroup>
-        </CommandList>
-      </Command>
-    </div>
-  )
-}
+} from '@0xintuition/1ui'
 
 export interface IdentitySearchComboboxItemProps extends IdentityCardProps {
   socialCount?: number
@@ -66,11 +20,11 @@ export interface IdentitySearchComboboxItemProps extends IdentityCardProps {
 }
 
 const IdentitySearchComboboxItem = ({
-  variant = Identity.user,
+  variant = 'user',
   avatarSrc,
   name,
   value,
-  currency = Currency.ETH,
+  currency = 'ETH',
   walletAddress,
   socialCount = 0,
   tagCount = 0,
@@ -123,4 +77,4 @@ const IdentitySearchComboboxItem = ({
   )
 }
 
-export { IdentitySearchCombobox, IdentitySearchComboboxItem }
+export { IdentitySearchComboboxItem }

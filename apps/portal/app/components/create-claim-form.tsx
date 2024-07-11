@@ -8,8 +8,6 @@ import {
   HoverCardContent,
   HoverCardTrigger,
   Icon,
-  IdentitySearchCombobox,
-  IdentitySearchComboboxItem,
   IdentityTag,
   Input,
   Label,
@@ -47,7 +45,7 @@ import {
   MULTIVAULT_CONTRACT_ADDRESS,
 } from '@lib/utils/constants'
 import logger from '@lib/utils/logger'
-import { formatBalance, sliceString, truncateString } from '@lib/utils/misc'
+import { sliceString, truncateString } from '@lib/utils/misc'
 import { Link, useFetcher, useNavigate } from '@remix-run/react'
 import { CreateLoaderData } from '@routes/resources+/create'
 import * as blockies from 'blockies-ts'
@@ -56,6 +54,7 @@ import { parseUnits } from 'viem'
 import { useAccount, usePublicClient, useWalletClient } from 'wagmi'
 
 import ErrorList from './error-list'
+import { IdentitySearchCombobox } from './identity/identity-search-combo-box'
 import Toast from './toast'
 
 interface ClaimFormProps {
@@ -399,7 +398,7 @@ function CreateClaimForm({
         {!isTransactionStarted ? (
           <div className="flex flex-col items-center gap-14">
             <div className="flex items-center">
-              <Popover className>
+              <Popover>
                 <PopoverTrigger asChild>
                   <div className="flex flex-col gap-2 items-start">
                     <Text variant="small" className="text-primary/60">
@@ -484,22 +483,12 @@ function CreateClaimForm({
                   </div>
                 </PopoverTrigger>
                 <PopoverContent className="bg-transparent">
-                  <IdentitySearchCombobox>
-                    {identities?.map((identity, index) => (
-                      <IdentitySearchComboboxItem
-                        key={index}
-                        variant={
-                          identity.is_user === true ? 'user' : 'non-user'
-                        }
-                        name={truncateString(identity.display_name, 7)}
-                        value={+formatBalance(identity.assets_sum)}
-                        walletAddress={identity.creator_address}
-                        onSelect={() =>
-                          handleIdentitySelection('subject', identity)
-                        }
-                      />
-                    ))}
-                  </IdentitySearchCombobox>
+                  <IdentitySearchCombobox
+                    identities={identities}
+                    onIdentityClick={(identity) =>
+                      handleIdentitySelection('subject', identity)
+                    }
+                  />
                 </PopoverContent>
               </Popover>
               <Divider />
@@ -597,22 +586,12 @@ function CreateClaimForm({
                   align="center"
                   sideOffset={5}
                 >
-                  <IdentitySearchCombobox>
-                    {identities?.map((identity, index) => (
-                      <IdentitySearchComboboxItem
-                        key={index}
-                        variant={
-                          identity.is_user === true ? 'user' : 'non-user'
-                        }
-                        name={truncateString(identity.display_name, 7)}
-                        value={+formatBalance(identity.assets_sum)}
-                        walletAddress={identity.creator_address}
-                        onSelect={() =>
-                          handleIdentitySelection('predicate', identity)
-                        }
-                      />
-                    ))}
-                  </IdentitySearchCombobox>
+                  <IdentitySearchCombobox
+                    identities={identities}
+                    onIdentityClick={(identity) =>
+                      handleIdentitySelection('predicate', identity)
+                    }
+                  />
                 </PopoverContent>
               </Popover>
               <Divider />
@@ -705,22 +684,12 @@ function CreateClaimForm({
                   align="center"
                   sideOffset={5}
                 >
-                  <IdentitySearchCombobox>
-                    {identities?.map((identity, index) => (
-                      <IdentitySearchComboboxItem
-                        key={index}
-                        variant={
-                          identity.is_user === true ? 'user' : 'non-user'
-                        }
-                        name={truncateString(identity.display_name, 7)}
-                        value={+formatBalance(identity.assets_sum)}
-                        walletAddress={identity.creator_address}
-                        onSelect={() =>
-                          handleIdentitySelection('object', identity)
-                        }
-                      />
-                    ))}
-                  </IdentitySearchCombobox>
+                  <IdentitySearchCombobox
+                    identities={identities}
+                    onIdentityClick={(identity) =>
+                      handleIdentitySelection('object', identity)
+                    }
+                  />
                 </PopoverContent>
               </Popover>
             </div>

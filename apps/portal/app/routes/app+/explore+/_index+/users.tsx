@@ -1,3 +1,5 @@
+import { IdentitySearchCombobox } from '@components/identity/identity-search-combo-box'
+import { FAKE_IDENTITIES } from '@lib/utils/fake-data'
 import logger from '@lib/utils/logger'
 import { json } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
@@ -15,8 +17,8 @@ export default function ExploreUsers() {
   return (
     <div className="m-8 flex flex-col items-center gap-4">
       <div className="flex flex-col">Explore Users Route</div>
-      <pre>This is a placeholder for the Explore Users route</pre>
-      <pre>route loader: {message}</pre>
+      {/* Replace the fake identities */}
+      <IdentitySearchCombobox identities={FAKE_IDENTITIES} />
     </div>
   )
 }
