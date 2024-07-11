@@ -21,3 +21,14 @@ export const QuestStatus = {
 } as const
 
 export type QuestStatusType = (typeof QuestStatus)[keyof typeof QuestStatus]
+export const Transaction = {
+  identity: 'identity',
+  claim: 'claim',
+  deposit: 'deposit',
+  redeem: 'redeem',
+  tag: 'tag',
+  follow: 'follow',
+  unfollow: 'unfollow',
+}
+
+export type TransactionType = (typeof Transaction)[keyof typeof Transaction]

@@ -1,72 +1,25 @@
 import * as React from 'react'
 
+import { Loader2Icon } from 'lucide-react'
 import { cn } from 'styles'
-import { TransactionStatus, TransactionStatusType } from 'types'
+import { TransactionStatusType, TransactionType } from 'types'
 
 import { Icon, IconName, Text, TextVariant, TextWeight } from '..'
-
-const getInProgressLabel = (status: TransactionStatusType) => {
-  switch (status) {
-    case TransactionStatus.preparingIdentity:
-      return 'Preparing identity...'
-    case TransactionStatus.publishingIdentity:
-      return 'Publishing identity...'
-    case TransactionStatus.approveTransaction:
-      return 'Approving transaction...'
-    case TransactionStatus.transactionPending:
-      return 'Transaction pending...'
-    case TransactionStatus.confirm:
-      return 'Confirming transaction...'
-    default:
-      return 'In progress'
-  }
-}
-
-const getStatusComponentData = (status: TransactionStatusType) => {
-  switch (status) {
-    case TransactionStatus.inProgress:
-    case TransactionStatus.preparingIdentity:
-    case TransactionStatus.publishingIdentity:
-    case TransactionStatus.approveTransaction:
-    case TransactionStatus.transactionPending:
-    case TransactionStatus.confirm:
-      return {
-        iconName: IconName.inProgress,
-        iconClass: 'text-accent',
-        label: getInProgressLabel(status),
-      }
-    case TransactionStatus.complete:
-      return {
-        iconName: IconName.circleCheck,
-        iconClass: 'text-success',
-        label: 'Identity created successfully',
-      }
-    case TransactionStatus.error:
-      return {
-        iconName: IconName.triangleExclamation,
-        iconClass: 'text-destructive',
-        label: 'Failed to create identity',
-      }
-    default:
-      return {
-        iconName: IconName.awaitAction,
-        iconClass: 'text-warning',
-        label: 'Awaiting',
-      }
-  }
-}
+import { getStatusComponentData } from './TransactionStatusIndicator.utils'
 
 export interface TransactionStatusProps
   extends React.HTMLAttributes<HTMLDivElement> {
   status: TransactionStatusType
+  type: TransactionType
 }
 
 const TransactionStatusIndicator = ({
   status,
+  type,
   className,
   ...props
 }: TransactionStatusProps) => {
-  const statusComponentData = getStatusComponentData(status)
+  const statusComponentData = getStatusComponentData(status, type)
   return (
     <div
       className={cn(
@@ -75,10 +28,20 @@ const TransactionStatusIndicator = ({
       )}
       {...props}
     >
-      <Icon
-        className={cn('w-20 h-20', statusComponentData.iconClass)}
-        name={statusComponentData.iconName}
-      />
+      {statusComponentData.iconName === IconName.inProgress ? (
+        <Loader2Icon
+          className={cn(
+            `w-20 h-20 animate-spin`,
+            statusComponentData.iconClass,
+          )}
+        />
+      ) : (
+        <Icon
+          className={cn('w-20 h-20', statusComponentData.iconClass)}
+          name={statusComponentData.iconName}
+        />
+      )}
+
       <Text
         variant={TextVariant.headline}
         weight={TextWeight.medium}
