@@ -17,6 +17,7 @@ type TransactionStatusProps<
   isTransactionProgress: (status: TStatus) => boolean
   transactionDetail?: string | null
   transactionType: 'identity' | 'claim' | 'deposit' | 'redeem'
+  onClose: () => void
 }
 
 const TransactionStatus = <
@@ -30,6 +31,7 @@ const TransactionStatus = <
   isTransactionProgress,
   transactionDetail,
   transactionType,
+  onClose,
 }: TransactionStatusProps<S, A, TStatus>) => {
   const getStatusMessage = () => {
     if (isTransactionAwaiting(state.status)) return 'Awaiting'
@@ -68,6 +70,7 @@ const TransactionStatus = <
               variant="primary"
               onClick={() => {
                 navigate(`/app/${transactionType}/${transactionDetail}`)
+                onClose()
               }}
             >
               View {transactionType}

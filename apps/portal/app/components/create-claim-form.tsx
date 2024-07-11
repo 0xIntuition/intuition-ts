@@ -116,6 +116,7 @@ function CreateClaimForm({
   dispatch,
   setTransactionResponseData,
   transactionResponseData,
+  onClose,
 }: CreateClaimFormProps) {
   const feeFetcher = useLoaderFetcher<CreateLoaderData>(CREATE_RESOURCE_ROUTE)
   const { atomCost: atomCostAmount, tripleCost: tripleCostAmount } =
@@ -744,6 +745,7 @@ function CreateClaimForm({
                       onClick={() => {
                         navigate(
                           `/app/claim/${transactionResponseData.claim_id}`,
+                          onClose(),
                         )
                       }}
                     >

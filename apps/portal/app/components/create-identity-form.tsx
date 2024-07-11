@@ -127,6 +127,7 @@ function CreateIdentityForm({
   dispatch,
   setTransactionResponseData,
   transactionResponseData,
+  onClose,
 }: CreateIdentityFormProps) {
   const { offChainFetcher, lastOffChainSubmission } = useOffChainFetcher()
   const imageUploadFetcher = useImageUploadFetcher()
@@ -643,6 +644,7 @@ function CreateIdentityForm({
           transactionType="identity"
           state={state}
           dispatch={dispatch}
+          onClose={onClose}
           transactionDetail={transactionResponseData?.id}
           statusMessages={statusMessages}
           isTransactionAwaiting={isTransactionAwaiting}
