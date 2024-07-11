@@ -39,6 +39,7 @@ export default function FollowReview({
   exit_fee,
 }: FollowReviewProps) {
   const [statusText, setStatusText] = useState<string>('')
+
   useEffect(() => {
     const newText = isError
       ? 'Transaction failed'
@@ -75,9 +76,9 @@ export default function FollowReview({
           </Button>
         </DialogTitle>
       </DialogHeader>
-      <div className="h-full px-10 pb-10 flex-col justify-center items-center gap-5 inline-flex">
-        <div className="self-stretch flex-col justify-center items-center gap-5 flex">
-          <Icon name="await-action" className="h-10 w-10 text-neutral-50/30" />
+      <div className="flex flex-grow flex-col justify-center items-center h-[358px]">
+        <div className="flex flex-col justify-center items-center gap-5">
+          <Icon name="await-action" className="h-16 w-16 text-neutral-50/30" />
           <div className="gap-5 flex flex-col items-center">
             <Text
               variant="headline"
