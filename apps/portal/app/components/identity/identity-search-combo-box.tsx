@@ -39,7 +39,7 @@ const IdentitySearchCombobox = ({
           <Button
             variant={ButtonVariant.text}
             size={ButtonSize.lg}
-            className="gap-1.5 font-light justify-start p-3 border-border/30 border-0 border-b"
+            className="gap-1.5 font-light justify-start p-3 theme-border border-0 border-b"
             onClick={onCreateIdentityClick}
           >
             <Icon name={IconName.plusLarge} className="h-4 w-4" />
