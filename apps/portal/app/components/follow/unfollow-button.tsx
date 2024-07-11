@@ -84,7 +84,6 @@ const UnfollowButton: React.FC<UnfollowButtonProps> = ({
   return (
     <Button
       variant={`${state.status === 'idle' ? 'destructiveOutline' : 'primary'}`}
-      size="lg"
       onClick={(e) => {
         e.preventDefault()
         if (

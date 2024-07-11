@@ -6,6 +6,7 @@ import {
   DialogHeader,
   DialogTitle,
   Icon,
+  Identity,
   Text,
 } from '@0xintuition/1ui'
 import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
@@ -78,7 +79,7 @@ export default function FollowReview({
       </DialogHeader>
       <div className="flex flex-grow flex-col justify-center items-center h-[358px]">
         <div className="flex flex-col justify-center items-center gap-5">
-          <Icon name="await-action" className="h-16 w-16 text-neutral-50/30" />
+          <Icon name="await-action" className="h-20 w-20 text-neutral-50/30" />
           <div className="gap-5 flex flex-col items-center">
             <Text
               variant="headline"
@@ -101,14 +102,14 @@ export default function FollowReview({
                   : claim?.subject?.user?.display_name ??
                     claim?.subject?.display_name ??
                     '',
-                variant: 'non-user',
+                variant: Identity.nonUser,
               }}
               predicate={{
                 imgSrc: claim?.predicate?.image,
                 label: !claim
                   ? 'am following'
                   : claim?.predicate?.display_name ?? '',
-                variant: 'non-user',
+                variant: Identity.nonUser,
               }}
               object={{
                 imgSrc: !claim
@@ -121,11 +122,11 @@ export default function FollowReview({
                     '',
                 variant: !claim
                   ? identity?.user
-                    ? 'user'
-                    : 'default'
+                    ? Identity.user
+                    : Identity.nonUser
                   : claim?.object?.user
-                    ? 'user'
-                    : 'default',
+                    ? Identity.user
+                    : Identity.nonUser,
               }}
             />
             <Text

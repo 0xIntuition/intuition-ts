@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 
-import { Dialog, DialogContent, Icon } from '@0xintuition/1ui'
+import { Dialog, DialogContent, DialogFooter, Icon } from '@0xintuition/1ui'
 import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
 
 import Toast from '@components/toast'
@@ -373,48 +373,52 @@ export default function StakeModal({
         handleClose()
       }}
     >
-      <DialogContent className="max-w-[476px]">
-        <StakeForm
-          user={user}
-          walletBalance={walletBalance}
-          identity={identity}
-          claim={claim}
-          conviction_price={conviction_price ?? '0'}
-          user_conviction={user_conviction ?? '0'}
-          user_assets={user_assets ?? '0'}
-          entry_fee={formatted_entry_fee ?? '0'}
-          exit_fee={formatted_exit_fee ?? '0'}
-          direction={direction ? direction : undefined}
-          val={val}
-          setVal={setVal}
-          mode={mode}
-          dispatch={dispatch}
-          state={state}
-          fetchReval={fetchReval}
-          formRef={formRef}
-          isLoading={isLoading}
-          modalType={modalType}
-          validationErrors={validationErrors}
-          setValidationErrors={setValidationErrors}
-          showErrors={showErrors}
-          setShowErrors={setShowErrors}
-        />
-        {!isTransactionStarted && (
-          <StakeButton
+      <DialogContent className="flex flex-col w-[476px] h-[500px] gap-0">
+        <div className="flex-grow">
+          <StakeForm
             user={user}
+            walletBalance={walletBalance}
+            identity={identity}
+            claim={claim}
+            conviction_price={conviction_price ?? '0'}
+            user_conviction={user_conviction ?? '0'}
+            user_assets={user_assets ?? '0'}
+            entry_fee={formatted_entry_fee ?? '0'}
+            exit_fee={formatted_exit_fee ?? '0'}
+            direction={direction ? direction : undefined}
             val={val}
+            setVal={setVal}
             mode={mode}
-            handleAction={handleStakeButtonClick}
-            handleClose={handleClose}
             dispatch={dispatch}
             state={state}
-            min_deposit={min_deposit}
-            walletBalance={walletBalance}
-            user_conviction={user_conviction ?? '0'}
+            fetchReval={fetchReval}
+            formRef={formRef}
+            isLoading={isLoading}
+            modalType={modalType}
+            validationErrors={validationErrors}
             setValidationErrors={setValidationErrors}
+            showErrors={showErrors}
             setShowErrors={setShowErrors}
-            conviction_price={conviction_price ?? '0'}
           />
+        </div>
+        {!isTransactionStarted && (
+          <DialogFooter className="!justify-center !items-center gap-5">
+            <StakeButton
+              user={user}
+              val={val}
+              mode={mode}
+              handleAction={handleStakeButtonClick}
+              handleClose={handleClose}
+              dispatch={dispatch}
+              state={state}
+              min_deposit={min_deposit}
+              walletBalance={walletBalance}
+              user_conviction={user_conviction ?? '0'}
+              setValidationErrors={setValidationErrors}
+              setShowErrors={setShowErrors}
+              conviction_price={conviction_price ?? '0'}
+            />
+          </DialogFooter>
         )}
       </DialogContent>
     </Dialog>

@@ -1,7 +1,7 @@
 import React from 'react'
 
 import type { Meta, StoryObj } from '@storybook/react'
-import { TransactionStatus } from 'types'
+import { Transaction, TransactionStatus } from 'types'
 
 import { TransactionStatusIndicator } from './TransactionStatusIndicator'
 
@@ -17,6 +17,14 @@ const meta: Meta<typeof TransactionStatusIndicator> = {
       },
       control: 'select',
     },
+    type: {
+      description: 'Type of transaction',
+      options: Object.values(Transaction),
+      table: {
+        type: { summary: 'string' },
+      },
+      control: 'select',
+    },
   },
 }
 
@@ -27,6 +35,7 @@ type Story = StoryObj<typeof TransactionStatusIndicator>
 export const BasicUsage: Story = {
   args: {
     status: TransactionStatus.awaiting,
+    type: Transaction.identity,
   },
   render: (args) => <TransactionStatusIndicator {...args} />,
 }

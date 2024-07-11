@@ -1,4 +1,4 @@
-import { Button } from '@0xintuition/1ui'
+import { Button, Text } from '@0xintuition/1ui'
 
 import { formatUnits } from 'viem'
 
@@ -26,7 +26,7 @@ export default function StakeActions({
           setVal('0.0003')
         }}
       >
-        <span className="text-xxs">Min</span>
+        <Text variant="small">Min</Text>
       </Button>
       <Button
         variant="ghost"
@@ -38,7 +38,7 @@ export default function StakeActions({
           setVal((maxEth * 0.05).toString())
         }}
       >
-        <span className="text-xxs">5%</span>
+        <Text variant="small">5%</Text>
       </Button>
       <Button
         variant="ghost"
@@ -53,7 +53,7 @@ export default function StakeActions({
           }
         }}
       >
-        <span className="text-xxs">10%</span>
+        <Text variant="small">10%</Text>
       </Button>
       <Button
         variant="ghost"
@@ -68,7 +68,7 @@ export default function StakeActions({
           }
         }}
       >
-        <span className="text-xxs">50%</span>
+        <Text variant="small">50%</Text>
       </Button>
       <Button
         variant="ghost"
@@ -84,7 +84,7 @@ export default function StakeActions({
           }
         }}
       >
-        <span className="text-xxs">Max</span>
+        <Text variant="small">Max</Text>
       </Button>
     </div>
   )

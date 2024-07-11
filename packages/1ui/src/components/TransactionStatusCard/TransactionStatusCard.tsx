@@ -1,5 +1,6 @@
 import * as React from 'react'
 
+import { Loader2Icon } from 'lucide-react'
 import { cn } from 'styles'
 import { TransactionStatus, TransactionStatusType } from 'types'
 
@@ -62,10 +63,21 @@ const StatusCardComponent = ({
       className="flex items-center gap-2 bg-primary/10 rounded-md theme-border p-3"
       {...props}
     >
-      <Icon
-        className={cn(statusComponentData.iconClassName, rootIconClassName)}
-        name={statusComponentData.iconName}
-      />
+      {statusComponentData.iconName === IconName.inProgress ? (
+        <Loader2Icon
+          className={cn(
+            `animate-spin`,
+            rootIconClassName,
+            statusComponentData.iconClassName,
+          )}
+        />
+      ) : (
+        <Icon
+          className={cn(statusComponentData.iconClassName, rootIconClassName)}
+          name={statusComponentData.iconName}
+        />
+      )}
+
       <Text variant={TextVariant.body}>{statusComponentData.label}</Text>
       {status === TransactionStatus.awaiting && (
         <Icon

@@ -1,4 +1,4 @@
-import { Icon } from '@0xintuition/1ui'
+import { Icon, Text } from '@0xintuition/1ui'
 
 import { BLOCK_EXPLORER_URL } from '@lib/utils/constants'
 import { cn, formatBalance } from '@lib/utils/misc'
@@ -22,21 +22,20 @@ export default function StakeToast({ action, assets, txHash }: ToastProps) {
         </div>
         <div className="flex w-full flex-1">
           <div className="space-y-0">
-            <div className={cn('text-sm font-bold', 'text-accent-foreground')}>
+            <Text variant="base" weight="bold">
               Transaction Successful
-            </div>
-            <div
-              className={cn(
-                'text-xs font-semibold',
-                'text-accent-foreground/50',
-              )}
+            </Text>
+            <Text
+              variant="footnote"
+              weight="semibold"
+              className="text-white/50"
             >
               {action}{' '}
-              <span className="font-bold">
+              <Text variant="footnote" weight="bold">
                 {formatBalance(BigInt(assets), 18, 6)}
-              </span>{' '}
+              </Text>{' '}
               ETH
-            </div>
+            </Text>
             <div>
               <Link
                 to={`${BLOCK_EXPLORER_URL}/tx/${txHash}`}
