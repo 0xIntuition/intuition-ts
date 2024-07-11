@@ -1,10 +1,9 @@
 import * as React from 'react'
 
-import { CommandGroup } from 'cmdk'
-
 import {
   Command,
   CommandEmpty,
+  CommandGroup,
   CommandInput,
   CommandList,
   IdentityInput,
@@ -12,13 +11,13 @@ import {
   SegmentedControlItem,
   Separator,
   Text,
-} from '..'
+} from '@0xintuition/1ui'
+import { IdentityPresenter } from '@0xintuition/api'
 
 export interface ExploreSearchProps
   extends React.HTMLAttributes<HTMLDivElement> {
   variant: 'user' | 'identity' | 'claim' | 'tag'
-  // TODO: Fix this
-  identities: any[]
+  identities: IdentityPresenter[]
   onCreateIdentityClick?: () => void
 }
 
