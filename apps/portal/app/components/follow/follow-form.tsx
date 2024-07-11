@@ -23,8 +23,6 @@ interface FollowFormProps {
   walletBalance: string
   identity: IdentityPresenter
   claim: ClaimPresenter
-  user_conviction: string
-  conviction_price: string
   user_assets: string
   entry_fee: string
   exit_fee: string

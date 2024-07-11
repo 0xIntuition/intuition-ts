@@ -6,6 +6,7 @@ import {
   DialogHeader,
   DialogTitle,
   Icon,
+  Text,
 } from '@0xintuition/1ui'
 import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
 
@@ -78,7 +79,10 @@ export default function FollowReview({
         <div className="self-stretch flex-col justify-center items-center gap-5 flex">
           <Icon name="await-action" className="h-10 w-10 text-neutral-50/30" />
           <div className="gap-5 flex flex-col items-center">
-            <span className="text-xl font-medium text-white/70 leading-[30px]">
+            <Text
+              variant="headline"
+              weight="medium text-white/70 leading-[30x]"
+            >
               {mode === 'follow' ? 'Deposit' : 'Redeem'}{' '}
               {formatDisplayBalance(
                 mode === 'unfollow'
@@ -87,7 +91,7 @@ export default function FollowReview({
                 2,
               )}{' '}
               ETH on follow claim
-            </span>
+            </Text>
             <Claim
               subject={{
                 imgSrc: claim?.subject?.user?.image ?? claim?.subject?.image,
@@ -123,14 +127,18 @@ export default function FollowReview({
                     : 'default',
               }}
             />
-            <span className="text-neutral-50/50 text-base font-normal leading-normal m-auto">
+            <Text
+              variant="base"
+              weight="normal"
+              className="m-auto text-neutral-50/50 leading-normal"
+            >
               Estimated Fees:{' '}
               {(
                 (mode === 'follow' ? +val : +formatBalance(user_assets, 18)) *
                 (mode === 'follow' ? +entry_fee : +exit_fee)
               ).toFixed(6)}{' '}
               ETH
-            </span>
+            </Text>
           </div>
         </div>
       </div>

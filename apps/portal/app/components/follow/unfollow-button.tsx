@@ -8,19 +8,15 @@ import { getChainEnvConfig } from '@lib/utils/environment'
 import { useNavigation } from '@remix-run/react'
 import { useSetAtom } from 'jotai'
 import { TransactionActionType, TransactionStateType } from 'types/transaction'
-import { SessionUser } from 'types/user'
 import { useAccount, useSwitchChain } from 'wagmi'
 
 interface UnfollowButtonProps {
-  user: SessionUser
   setMode: (mode: 'follow' | 'unfollow') => void
   handleAction: () => void
   handleClose: () => void
   dispatch: (action: TransactionActionType) => void
   state: TransactionStateType
   user_conviction: string
-  id?: string
-  claimOrIdentity?: string
   className?: string
 }
 

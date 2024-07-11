@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 
-import { Dialog, DialogContent, DialogFooter } from '@0xintuition/1ui'
+import { Dialog, DialogContent, DialogFooter, Icon } from '@0xintuition/1ui'
 import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
 
 import Toast from '@components/toast'
@@ -17,7 +17,6 @@ import { useGenericTxState } from '@lib/utils/use-tx-reducer'
 import { useFetcher, useLocation } from '@remix-run/react'
 import { CreateLoaderData } from '@routes/resources+/create'
 import { useQueryClient } from '@tanstack/react-query'
-import { AlertCircle } from 'lucide-react'
 import { toast } from 'sonner'
 import { TransactionActionType, TransactionStateType } from 'types/transaction'
 import { SessionUser } from 'types/user'
@@ -50,10 +49,10 @@ export default function FollowModal({
   user,
   contract,
   open = false,
-  onClose = () => {},
   identity,
   claim,
   vaultDetails,
+  onClose = () => {},
 }: FollowModalProps) {
   const fetchReval = useFetcher()
   const formRef = useRef(null)
@@ -175,7 +174,12 @@ export default function FollowModal({
               <Toast
                 title="Error"
                 description={errorMessage}
-                icon={<AlertCircle />}
+                icon={
+                  <Icon
+                    name="triangle-exclamation"
+                    className="h-3 w-3 text-destructive"
+                  />
+                }
               />
             ),
             {
@@ -344,8 +348,6 @@ export default function FollowModal({
             walletBalance={walletBalance}
             identity={identity}
             claim={claim}
-            conviction_price={conviction_price ?? '0'}
-            user_conviction={user_conviction ?? '0'}
             user_assets={user_assets ?? '0'}
             entry_fee={formatted_entry_fee ?? '0'}
             exit_fee={formatted_exit_fee ?? '0'}
@@ -365,7 +367,6 @@ export default function FollowModal({
         {!isTransactionStarted && (
           <DialogFooter className="!justify-center !items-center gap-5">
             <UnfollowButton
-              user={user}
               setMode={setMode}
               handleAction={handleUnfollowButtonClick}
               handleClose={handleClose}
@@ -375,7 +376,6 @@ export default function FollowModal({
               className={`${(user_conviction && user_conviction > '0' && state.status === 'idle') || mode !== 'follow' ? '' : 'hidden'}`}
             />
             <FollowButton
-              user={user}
               val={val}
               setMode={setMode}
               handleAction={handleFollowButtonClick}
