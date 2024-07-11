@@ -74,10 +74,8 @@ export default function FollowReview({
           </Button>
         </DialogTitle>
       </DialogHeader>
-      <div className="flex w-full flex-col gap-5 px-2">
-        <div
-          className={`flex h-full w-full flex-col items-center justify-center gap-2 px-2 pt-5`}
-        >
+      <div className="h-full px-10 pb-10 flex-col justify-center items-center gap-5 inline-flex">
+        <div className="self-stretch flex-col justify-center items-center gap-5 flex">
           <Icon name="await-action" className="h-10 w-10 text-neutral-50/30" />
           <div className="gap-5 flex flex-col items-center">
             <span className="text-xl font-medium text-white/70 leading-[30px]">

@@ -50,6 +50,10 @@ export async function loader({ context, request, params }: LoaderFunctionArgs) {
   const session = context.get(SessionContext)
   const user = session.get('user')
 
+  if (!user?.details?.wallet?.address) {
+    return logger('No user found in session')
+  }
+
   const wallet = params.wallet
 
   if (!wallet) {
@@ -115,7 +119,7 @@ export async function loader({ context, request, params }: LoaderFunctionArgs) {
       followVaultDetails = await getVaultDetails(
         followClaim.contract,
         followClaim.vault_id,
-        userIdentity.user.wallet as `0x${string}`,
+        user.details.wallet.address as `0x${string}`,
       )
     } catch (error) {
       logger('Failed to fetch followVaultDetails', error)
@@ -154,9 +158,7 @@ export default function Profile() {
   }>(['attest', 'create'])
   const navigate = useNavigate()
 
-  const { user_assets = '0', assets_sum = '0' } = vaultDetails
-    ? vaultDetails
-    : userIdentity
+  const { user_assets, assets_sum } = vaultDetails ? vaultDetails : userIdentity
 
   const { user_asset_delta } = userIdentity
 
@@ -198,7 +200,7 @@ export default function Profile() {
                 }
               >
                 {followVaultDetails &&
-                (followVaultDetails?.user_conviction ?? '0') > '0'
+                (followVaultDetails.user_conviction ?? '0') > '0'
                   ? `Following · ${formatBalance(followVaultDetails.user_assets ?? '0', 18, 4)} ETH`
                   : 'Follow'}
               </Button>

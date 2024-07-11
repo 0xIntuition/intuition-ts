@@ -99,8 +99,6 @@ const FollowButton: React.FC<FollowButtonProps> = ({
       setStakeModalActive({
         isOpen: false,
         id: null,
-        direction: null,
-        modalType: null,
       })
       setNavigationStarted(false)
     }
@@ -109,6 +107,7 @@ const FollowButton: React.FC<FollowButtonProps> = ({
   return (
     <Button
       variant="primary"
+      size="lg"
       onClick={(e) => {
         e.preventDefault()
         if (
@@ -150,7 +149,7 @@ const FollowButton: React.FC<FollowButtonProps> = ({
         state.status === 'transaction-pending' ||
         state.status === 'awaiting'
       }
-      className={cn(`w-[159px] m-auto mt-10`, className)}
+      className={cn(`w-40`, className)}
     >
       {getButtonText()}
     </Button>

@@ -88,6 +88,7 @@ const UnfollowButton: React.FC<UnfollowButtonProps> = ({
   return (
     <Button
       variant={`${state.status === 'idle' ? 'destructiveOutline' : 'primary'}`}
+      size="lg"
       onClick={(e) => {
         e.preventDefault()
         if (
@@ -112,7 +113,7 @@ const UnfollowButton: React.FC<UnfollowButtonProps> = ({
         state.status === 'transaction-pending' ||
         state.status === 'awaiting'
       }
-      className={cn(`w-[159px] m-auto mt-10`, className)}
+      className={cn(`w-40`, className)}
     >
       {getButtonText()}
     </Button>

@@ -32,7 +32,7 @@ export default function FollowActions({
   const numberOfRadioGroupItems = radioGroupData.length
 
   return (
-    <div className="flex flex-row items-center justify-center gap-5">
+    <div className="flex flex-col items-center justify-center">
       <RadioGroup
         defaultValue={radioGroupData[0].id}
         onValueChange={setVal}
