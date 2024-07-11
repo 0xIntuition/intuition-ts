@@ -1,9 +1,8 @@
-import { Button } from '@0xintuition/1ui'
+import { Button, Icon } from '@0xintuition/1ui'
 
 import { BLOCK_EXPLORER_URL } from '@lib/utils/constants'
 import logger from '@lib/utils/logger'
 import { Link, useNavigate } from '@remix-run/react'
-import { ExternalLinkIcon } from 'lucide-react'
 import { BaseTransactionStateType } from 'types/transaction'
 
 type TransactionStatusProps<
@@ -59,7 +58,8 @@ const TransactionStatus = <
               target="_blank"
               className="flex flex-row items-center gap-1 text-xxs text-blue-500 transition-colors duration-300 hover:text-blue-400"
             >
-              View on Basescan <ExternalLinkIcon className="h-2.5 w-2.5" />
+              View on Basescan{' '}
+              <Icon name="square-arrow-top-right" className="h-2.5 w-2.5" />
             </Link>
           )}
           {transactionType !== 'deposit' && transactionType !== 'redeem' && (

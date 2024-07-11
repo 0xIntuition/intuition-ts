@@ -1,12 +1,11 @@
 import { useEffect } from 'react'
 
-import { toast as showToast, Toaster } from '@0xintuition/1ui'
+import { Icon, toast as showToast, Toaster } from '@0xintuition/1ui'
 
 import { BLOCK_EXPLORER_URL } from '@lib/utils/constants'
 import { cn } from '@lib/utils/misc'
 import { Link } from '@remix-run/react'
 import { type Toast } from '@server/toast'
-import { ExternalLinkIcon } from 'lucide-react'
 
 export function IntuitionToaster({ toast }: { toast?: Toast | null }) {
   return (
@@ -76,7 +75,8 @@ export default function Toast({
                 target="_blank"
                 className="flex flex-row items-center gap-1 text-xs text-blue-500 transition-colors duration-300 hover:text-blue-400"
               >
-                View on Explorer <ExternalLinkIcon className="h-2.5 w-2.5" />
+                View on Explorer{' '}
+                <Icon name="square-arrow-top-right" className="h-2.5 w-2.5" />
               </Link>
             )}
           </div>

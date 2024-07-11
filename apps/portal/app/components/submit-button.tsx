@@ -1,10 +1,9 @@
 import React from 'react'
 
-import { Button } from '@0xintuition/1ui'
+import { Button, Icon } from '@0xintuition/1ui'
 
 import { CURRENT_ENV } from '@lib/utils/constants'
 import { getChainEnvConfig } from '@lib/utils/environment'
-import { Loader2Icon } from 'lucide-react'
 import { baseSepolia } from 'viem/chains'
 import { useAccount, useSwitchChain } from 'wagmi'
 
@@ -40,7 +39,7 @@ const SubmitButton: React.FC<SubmitButtonProps> = ({
     >
       {loading ? (
         <>
-          <Loader2Icon className="animate-spin h-5 w-5 mr-1" />
+          <Icon name="in-progress" className="animate-spin h-5 w-5 mr-1" />
           {loadingText}
         </>
       ) : !correctChain ? (

@@ -1,10 +1,9 @@
-import { Button } from '@0xintuition/1ui'
+import { Button, Icon } from '@0xintuition/1ui'
 
 import { chainalysisOracleAbi } from '@lib/abis/chainalysisOracle'
 import { SessionContext } from '@middleware/session'
 import { LoaderFunctionArgs, redirect } from '@remix-run/node'
 import { mainnetClient } from '@server/viem'
-import { SquareX } from 'lucide-react'
 
 export async function loader({ context }: LoaderFunctionArgs) {
   const session = context.get(SessionContext)
@@ -29,7 +28,7 @@ export default function Sanctioned() {
     <div className="mt-16 flex h-full w-full flex-col items-center">
       <div className="flex w-[92vw] max-w-[728px] flex-col p-16 max-w-xl gap-2.5">
         <div className="flex items-center text-secondary-foreground/70 gap-2">
-          <SquareX />
+          <Icon name="square-x" />
           <span>Access Restricted</span>
         </div>
         <h2 className="text-white text-semibold text-3xl lg:text-4xl">

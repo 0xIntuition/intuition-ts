@@ -1,5 +1,6 @@
 import { useEffect, useReducer, useRef, useState } from 'react'
 
+import { Icon } from '@0xintuition/1ui'
 import {
   ApiError,
   IdentitiesService,
@@ -25,7 +26,6 @@ import { CreateLoaderData } from '@routes/resources+/create'
 import { getPrivyAccessToken } from '@server/privy'
 import * as blockies from 'blockies-ts'
 import { useAtom } from 'jotai'
-import { AlertCircle } from 'lucide-react'
 import { ClientOnly } from 'remix-utils/client-only'
 import { toast } from 'sonner'
 import { SessionUser } from 'types/user'
@@ -278,7 +278,12 @@ export function CreateButton({
               <Toast
                 title="Error"
                 description={errorMessage}
-                icon={<AlertCircle />}
+                icon={
+                  <Icon
+                    name="triangle-exclamation"
+                    className="h-3 w-3 text-destructive"
+                  />
+                }
               />
             ),
             {
@@ -385,7 +390,12 @@ export function CreateButton({
                 <Toast
                   title="Error"
                   description={errorMessage}
-                  icon={<AlertCircle />}
+                  icon={
+                    <Icon
+                      name="triangle-exclamation"
+                      className="h-3 w-3 text-destructive"
+                    />
+                  }
                 />
               ),
               {
