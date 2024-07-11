@@ -22,6 +22,7 @@ export const createIdentityModalAtom = atomWithToggle(false)
 export const createClaimModalAtom = atomWithToggle(false)
 export const editProfileModalAtom = atomWithToggle(false)
 export const editSocialLinksModalAtom = atomWithToggle(false)
+export const tagsModalAtom = atomWithToggle(false)
 
 export const stakeModalAtom = atom<{
   isOpen: boolean
