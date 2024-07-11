@@ -35,7 +35,7 @@ export default function StakeInput({
 
   return (
     <div className="flex flex-row items-center justify-center">
-      <div className="flex w-full max-w-md flex-col pt-4 mx-auto">
+      <div className="flex w-full max-w-md flex-col pt-5 mx-auto">
         <Input
           ref={inputRef}
           id="position"
@@ -58,12 +58,12 @@ export default function StakeInput({
           }}
           min={'0'}
           placeholder={'0'}
-          className="text-5xl h-14 font-semibold text-neutral-50 text-center ![&<div]-bg-transparent border-none focus-visible:ring-none"
+          className="text-6xl h-14 font-semibold text-neutral-50 [&>input]:text-center bg-transparent !border-none"
           disabled={isLoading || !wallet || wallet === ''}
         />
         <Text
           weight="medium"
-          className="text-center text-white/50 leading-normal pt-3"
+          className="text-center text-white/50 leading-normal pt-5"
         >
           ETH
         </Text>

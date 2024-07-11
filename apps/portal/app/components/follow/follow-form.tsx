@@ -4,6 +4,7 @@ import {
   DialogHeader,
   DialogTitle,
   Icon,
+  Identity,
   IdentityTag,
   Text,
   TransactionStatusCard,
@@ -75,7 +76,7 @@ export default function FollowForm({
               <div className="flex items-center justify-between w-full mr-2.5">
                 <IdentityTag
                   imgSrc={identity?.user?.image ?? identity?.image}
-                  variant={identity?.user ? 'user' : 'non-user'}
+                  variant={identity?.user ? Identity.user : Identity.nonUser}
                 >
                   {identity?.user?.display_name ?? identity?.display_name}
                 </IdentityTag>

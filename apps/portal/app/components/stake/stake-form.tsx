@@ -5,6 +5,7 @@ import {
   DialogHeader,
   DialogTitle,
   Icon,
+  Identity,
   IdentityTag,
   Tabs,
   TabsList,
@@ -99,7 +100,7 @@ export default function StakeForm({
                 {modalType === 'identity' ? (
                   <IdentityTag
                     imgSrc={identity?.user?.image ?? identity?.image}
-                    variant={identity?.user ? 'user' : 'non-user'}
+                    variant={identity?.user ? Identity.user : Identity.nonUser}
                   >
                     <Trunctacular
                       value={
@@ -114,38 +115,28 @@ export default function StakeForm({
                     subject={{
                       imgSrc:
                         claim?.subject?.user?.image ?? claim?.subject?.image,
-                      label: (
-                        <Trunctacular
-                          value={
-                            claim?.subject?.user?.display_name ??
-                            claim?.subject?.display_name ??
-                            ''
-                          }
-                        />
-                      ),
-                      variant: claim?.subject?.user ? 'user' : 'non-user',
+                      label:
+                        claim?.subject?.user?.display_name ??
+                        claim?.subject?.display_name ??
+                        '',
+                      variant: claim?.subject?.user
+                        ? Identity.user
+                        : Identity.nonUser,
                     }}
                     predicate={{
                       imgSrc: claim?.predicate?.image,
-                      label: (
-                        <Trunctacular
-                          value={claim?.predicate?.display_name ?? ''}
-                        />
-                      ),
+                      label: claim?.predicate?.display_name ?? '',
                     }}
                     object={{
                       imgSrc:
                         claim?.object?.user?.image ?? claim?.object?.image,
-                      label: (
-                        <Trunctacular
-                          value={
-                            claim?.object?.user?.display_name ??
-                            claim?.object?.display_name ??
-                            ''
-                          }
-                        />
-                      ),
-                      variant: claim?.object?.user ? 'user' : 'non-user',
+                      label:
+                        claim?.object?.user?.display_name ??
+                        claim?.object?.display_name ??
+                        '',
+                      variant: claim?.object?.user
+                        ? Identity.user
+                        : Identity.nonUser,
                     }}
                   />
                 )}

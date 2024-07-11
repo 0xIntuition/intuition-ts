@@ -6,10 +6,10 @@ import {
   DialogHeader,
   DialogTitle,
   Icon,
+  Identity,
   IdentityTag,
   Tag,
   Text,
-  Trunctacular,
 } from '@0xintuition/1ui'
 import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
 
@@ -80,15 +80,17 @@ export default function StakeReview({
             >
               <Icon name="arrow-left" className="h-4 w-4" />
             </Button>
-            <Tag variant={direction === 'for' ? 'for' : 'against'}>
-              {direction === 'for' ? 'FOR' : 'AGAINST'}
-            </Tag>
+            {direction !== undefined && (
+              <Tag variant={direction === 'for' ? 'for' : 'against'}>
+                {direction === 'for' ? 'FOR' : 'AGAINST'}
+              </Tag>
+            )}
           </div>
         </DialogTitle>
       </DialogHeader>
       <div className="flex flex-grow flex-col justify-center items-center h-[358px]">
         <div className="flex flex-col justify-center items-center gap-5">
-          <Icon name="await-action" className="h-10 w-10 text-neutral-50/30" />
+          <Icon name="await-action" className="h-20 w-20 text-neutral-50/30" />
           <div className="gap-5 flex flex-col items-center">
             <Text
               variant="headline"
@@ -101,7 +103,7 @@ export default function StakeReview({
             {modalType === 'identity' ? (
               <IdentityTag
                 imgSrc={identity?.user?.image ?? identity?.image}
-                variant={identity?.user ? 'user' : 'default'}
+                variant={identity?.user ? Identity.user : Identity.nonUser}
               >
                 {identity?.user?.display_name ?? identity?.display_name}
               </IdentityTag>
@@ -109,37 +111,27 @@ export default function StakeReview({
               <Claim
                 subject={{
                   imgSrc: claim?.subject?.user?.image ?? claim?.subject?.image,
-                  label: (
-                    <Trunctacular
-                      value={
-                        claim?.subject?.user?.display_name ??
-                        claim?.subject?.display_name ??
-                        ''
-                      }
-                    />
-                  ),
-                  variant: claim?.subject?.user ? 'user' : 'default',
+                  label:
+                    claim?.subject?.user?.display_name ??
+                    claim?.subject?.display_name ??
+                    '',
+                  variant: claim?.subject?.user
+                    ? Identity.user
+                    : Identity.nonUser,
                 }}
                 predicate={{
                   imgSrc: claim?.predicate?.image,
-                  label: (
-                    <Trunctacular
-                      value={claim?.predicate?.display_name ?? ''}
-                    />
-                  ),
+                  label: claim?.predicate?.display_name ?? '',
                 }}
                 object={{
                   imgSrc: claim?.object?.user?.image ?? claim?.object?.image,
-                  label: (
-                    <Trunctacular
-                      value={
-                        claim?.object?.user?.display_name ??
-                        claim?.object?.display_name ??
-                        ''
-                      }
-                    />
-                  ),
-                  variant: claim?.object?.user ? 'user' : 'default',
+                  label:
+                    claim?.object?.user?.display_name ??
+                    claim?.object?.display_name ??
+                    '',
+                  variant: claim?.object?.user
+                    ? Identity.user
+                    : Identity.nonUser,
                 }}
               />
             )}
