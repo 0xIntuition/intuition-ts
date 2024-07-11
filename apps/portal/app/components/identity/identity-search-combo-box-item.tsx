@@ -10,7 +10,54 @@ import {
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
+<<<<<<< HEAD:apps/portal/app/components/identity/identity-search-combo-box-item.tsx
 } from '@0xintuition/1ui'
+=======
+} from '..'
+
+export interface IdentitySearchComboboxProps
+  extends React.HTMLAttributes<HTMLDivElement> {
+  onCreateIdentityClick?: () => void
+  value?: string
+  onValueChange?: (value: string) => void
+}
+
+const IdentitySearchCombobox = ({
+  onCreateIdentityClick = undefined,
+  children,
+  onValueChange,
+  value,
+  ...props
+}: IdentitySearchComboboxProps) => {
+  return (
+    <div className="min-w-96" {...props}>
+      <pre>search value: {value}</pre>
+      <Command>
+        <CommandInput
+          placeholder="Search for an identity..."
+          value={value}
+          onValueChange={onValueChange}
+        />
+        {onCreateIdentityClick !== undefined && (
+          <Button
+            variant={ButtonVariant.text}
+            size={ButtonSize.lg}
+            className="gap-1.5 font-light justify-start p-3 border-border/30 border-0 border-b"
+            onClick={onCreateIdentityClick}
+          >
+            <Icon name={IconName.plusLarge} className="h-4 w-4" />
+            Create a new identity
+          </Button>
+        )}
+        <CommandList>
+          <CommandEmpty>No results found.</CommandEmpty>
+          <CommandGroup>{children}</CommandGroup>
+        </CommandList>
+      </Command>
+    </div>
+  )
+}
+>>>>>>> f26ada00 (Connects the parent search input state to the cmdk):packages/1ui/src/components/IdentitySearchCombobox/IdentitySearchCombobox.tsx
 
 export interface IdentitySearchComboboxItemProps extends IdentityCardProps {
   socialCount?: number

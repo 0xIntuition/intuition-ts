@@ -388,6 +388,8 @@ function CreateClaimForm({
     <span className="h-px w-2.5 flex bg-border/30 self-end mb-[1.2rem]" />
   )
 
+  const [searchValue, setSearchValue] = useState('test')
+
   return (
     <>
       <claimFetcher.Form
@@ -395,6 +397,7 @@ function CreateClaimForm({
         {...getFormProps(form)}
         action="/actions/create-claim"
       >
+        <pre>search value: {searchValue}</pre>
         {!isTransactionStarted ? (
           <div className="flex flex-col items-center gap-14">
             <div className="flex items-center">
@@ -488,6 +491,8 @@ function CreateClaimForm({
                     onIdentityClick={(identity) =>
                       handleIdentitySelection('subject', identity)
                     }
+                    value={searchValue}
+                    onValueChange={setSearchValue}
                   />
                 </PopoverContent>
               </Popover>
