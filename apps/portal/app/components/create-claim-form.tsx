@@ -41,11 +41,11 @@ import { createClaimSchema } from '@lib/schemas/create-claim-schema'
 import {
   BLOCK_EXPLORER_URL,
   CREATE_RESOURCE_ROUTE,
-  GET_IDENTITIES_RESOURCE_ROUTE,
   MULTIVAULT_CONTRACT_ADDRESS,
+  SEARCH_IDENTITIES_RESOURCE_ROUTE,
 } from '@lib/utils/constants'
 import logger from '@lib/utils/logger'
-import { sliceString, truncateString } from '@lib/utils/misc'
+import { formatBalance, sliceString, truncateString } from '@lib/utils/misc'
 import { Link, useFetcher, useNavigate } from '@remix-run/react'
 import { CreateLoaderData } from '@routes/resources+/create'
 import * as blockies from 'blockies-ts'
@@ -55,6 +55,7 @@ import { useAccount, usePublicClient, useWalletClient } from 'wagmi'
 
 import ErrorList from './error-list'
 import { IdentitySearchCombobox } from './identity/identity-search-combo-box'
+import { IdentitySearchComboboxItem } from './identity/identity-search-combo-box-item'
 import Toast from './toast'
 
 interface ClaimFormProps {
@@ -154,22 +155,33 @@ function CreateClaimForm({
     submission: SubmissionResult<string[]> | null
   }
 
-  interface GetIdentitiesResponse {
-    identities: IdentityPresenter[]
+  const [searchQuery, setSearchQuery] = useState('')
+
+  const handleInput = async (event: React.FormEvent<HTMLInputElement>) => {
+    event.preventDefault()
+    const value = (event.target as HTMLInputElement).value
+    setSearchQuery(value)
   }
 
-  const [identities, setIdentities] = useState<IdentityPresenter[]>([])
-
-  const identitiesFetcher = useLoaderFetcher<GetIdentitiesResponse>(
-    GET_IDENTITIES_RESOURCE_ROUTE,
-  )
+  const [identities, setIdentities] = React.useState<IdentityPresenter[]>([])
+  const identitiesFetcher = useFetcher<IdentityPresenter[]>()
 
   useEffect(() => {
-    const data = identitiesFetcher.data as GetIdentitiesResponse
-    if (data && data.identities) {
-      setIdentities(data.identities)
+    logger('identitiesFetcher.data changed:', identitiesFetcher.data)
+    if (identitiesFetcher.data) {
+      setIdentities(identitiesFetcher.data)
     }
   }, [identitiesFetcher.data])
+
+  useEffect(() => {
+    logger('searchQuery changed:', searchQuery)
+    if (searchQuery) {
+      const searchParam = `?search=${encodeURIComponent(searchQuery)}`
+      identitiesFetcher.load(
+        `${SEARCH_IDENTITIES_RESOURCE_ROUTE}${searchParam}`,
+      )
+    }
+  }, [searchQuery, SEARCH_IDENTITIES_RESOURCE_ROUTE])
 
   const { atomCost, tripleCost } = (feeFetcher.data as CreateLoaderData) ?? {
     atomEquityFeeRaw: BigInt(0),
@@ -388,8 +400,6 @@ function CreateClaimForm({
     <span className="h-px w-2.5 flex bg-border/30 self-end mb-[1.2rem]" />
   )
 
-  const [searchValue, setSearchValue] = useState('test')
-
   return (
     <>
       <claimFetcher.Form
@@ -397,7 +407,6 @@ function CreateClaimForm({
         {...getFormProps(form)}
         action="/actions/create-claim"
       >
-        <pre>search value: {searchValue}</pre>
         {!isTransactionStarted ? (
           <div className="flex flex-col items-center gap-14">
             <div className="flex items-center">
@@ -596,6 +605,8 @@ function CreateClaimForm({
                     onIdentityClick={(identity) =>
                       handleIdentitySelection('predicate', identity)
                     }
+                    onValueChange={setSearchQuery}
+                    onInput={handleInput}
                   />
                 </PopoverContent>
               </Popover>
@@ -694,6 +705,8 @@ function CreateClaimForm({
                     onIdentityClick={(identity) =>
                       handleIdentitySelection('object', identity)
                     }
+                    onValueChange={setSearchQuery}
+                    onInput={handleInput}
                   />
                 </PopoverContent>
               </Popover>
