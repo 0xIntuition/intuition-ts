@@ -9,13 +9,13 @@ export interface ExploreSearchProps
   extends React.HTMLAttributes<HTMLDivElement> {
   variant: 'user' | 'identity' | 'claim' | 'tag'
   identities: IdentityPresenter[]
-  onCreateIdentityClick?: () => void
+  onChange?: () => void
 }
 
 const ExploreSearch = ({
   variant,
   identities,
-  onCreateIdentityClick = undefined,
+  onChange,
   ...props
 }: ExploreSearchProps) => {
   return (
@@ -25,7 +25,6 @@ const ExploreSearch = ({
         <IdentitySearchCombobox
           identities={identities}
           placeholder="Search by a username or address"
-          onCreateIdentityClick={onCreateIdentityClick}
         />
       )}
 
@@ -34,7 +33,6 @@ const ExploreSearch = ({
         <IdentitySearchCombobox
           identities={identities}
           placeholder="Search by Identity"
-          onCreateIdentityClick={onCreateIdentityClick}
         />
         // TODO: Add tags here
       )}
@@ -83,7 +81,6 @@ const ExploreSearch = ({
         <IdentitySearchCombobox
           identities={identities}
           placeholder="Search by list"
-          onCreateIdentityClick={onCreateIdentityClick}
         />
       )}
     </div>

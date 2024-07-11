@@ -17,7 +17,11 @@ export default function ExploreUsers() {
   return (
     <div className="m-8 flex flex-col items-center gap-4">
       <div className="flex flex-col">Explore Users Route</div>
-      <ExploreSearch variant="user" identities={FAKE_IDENTITIES} />
+      <ExploreSearch
+        variant="user"
+        identities={FAKE_IDENTITIES}
+        onChange={() => {}}
+      />
     </div>
   )
 }
