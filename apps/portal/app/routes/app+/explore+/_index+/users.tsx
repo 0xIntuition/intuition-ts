@@ -5,6 +5,7 @@ import {
   SortDirection,
 } from '@0xintuition/api'
 
+import { ExploreSearch } from '@components/explore/ExploreSearch'
 import { IdentitiesList } from '@components/list/identities'
 import { fetchUserIdentities } from '@lib/utils/fetches'
 import logger from '@lib/utils/logger'
@@ -68,6 +69,7 @@ export default function ExploreUsers() {
 
   return (
     <div className="m-8 flex flex-col items-center gap-4">
+      <ExploreSearch variant="user" className="mb-12" />
       <IdentitiesList identities={identities} pagination={pagination} />
     </div>
   )

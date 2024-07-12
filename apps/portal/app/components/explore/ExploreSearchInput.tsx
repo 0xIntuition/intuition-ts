@@ -28,9 +28,10 @@ const ExploreSearchInput = ({
   return (
     <Form
       method="get"
-      onChange={handleChange}
+      onChange={(event: React.ChangeEvent<HTMLFormElement>) =>
+        handleChange(event)
+      }
       className="flex items-center rounded-lg p-5 border border-1 theme-border bg-card/70"
-      {...props}
     >
       <Input
         type="text"
@@ -38,6 +39,7 @@ const ExploreSearchInput = ({
         placeholder={placeholder}
         endAdornment="arrow-corner-down-left"
         className="w-full min-w-[610px] bg-card/70 rounded-lg border-none focus:ring-0 focus:outline-none"
+        {...props}
       />
     </Form>
   )
