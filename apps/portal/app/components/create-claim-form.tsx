@@ -496,11 +496,12 @@ function CreateClaimForm({
                 <PopoverContent className="bg-transparent">
                   <IdentitySearchCombobox
                     identities={identities}
-                    onIdentityClick={(identity) =>
+                    onIdentitySelect={(identity) =>
                       handleIdentitySelection('subject', identity)
                     }
                     onValueChange={setSearchQuery}
                     onInput={handleInput}
+                    shouldFilter={false}
                   />
                 </PopoverContent>
               </Popover>
@@ -601,11 +602,12 @@ function CreateClaimForm({
                 >
                   <IdentitySearchCombobox
                     identities={identities}
-                    onIdentityClick={(identity) =>
+                    onIdentitySelect={(identity) =>
                       handleIdentitySelection('predicate', identity)
                     }
                     onValueChange={setSearchQuery}
                     onInput={handleInput}
+                    shouldFilter={false}
                   />
                 </PopoverContent>
               </Popover>
@@ -701,11 +703,12 @@ function CreateClaimForm({
                 >
                   <IdentitySearchCombobox
                     identities={identities}
-                    onIdentityClick={(identity) =>
+                    onIdentitySelect={(identity) =>
                       handleIdentitySelection('object', identity)
                     }
                     onValueChange={setSearchQuery}
                     onInput={handleInput}
+                    shouldFilter={false}
                   />
                 </PopoverContent>
               </Popover>

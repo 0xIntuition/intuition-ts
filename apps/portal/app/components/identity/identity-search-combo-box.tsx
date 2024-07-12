@@ -22,24 +22,28 @@ export interface IdentitySearchComboboxProps
   extends React.HTMLAttributes<HTMLDivElement> {
   identities: IdentityPresenter[]
   onIdentityClick?: (identity: IdentityPresenter) => void
+  onIdentitySelect?: (identity: IdentityPresenter) => void
   onCreateIdentityClick?: () => void
   value?: string
   onValueChange?: (value: string) => void
   onInput?: (event: React.FormEvent<HTMLInputElement>) => void
+  shouldFilter?: boolean
 }
 
 const IdentitySearchCombobox = ({
   onIdentityClick = () => {},
+  onIdentitySelect = () => {},
   onCreateIdentityClick,
   identities,
   onValueChange,
   onInput,
   value,
+  shouldFilter,
   ...props
 }: IdentitySearchComboboxProps) => {
   return (
     <div className="min-w-96" {...props}>
-      <Command shouldFilter={false}>
+      <Command shouldFilter={shouldFilter}>
         <CommandInput
           placeholder="Search for an identity..."
           value={value}
@@ -82,6 +86,7 @@ const IdentitySearchCombobox = ({
                   socialCount={socialCount || 0}
                   tagCount={tagCount || 0}
                   onClick={() => onIdentityClick(identity)}
+                  onSelect={() => onIdentitySelect(identity)}
                 />
               )
             })}
