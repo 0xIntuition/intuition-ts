@@ -110,30 +110,26 @@ const FollowButton: React.FC<FollowButtonProps> = ({
           handleClose()
         } else if (state.status === 'review-transaction') {
           handleAction()
-        } else {
-          // TODO: Clean up logic [ENG-2576]
-          // eslint-disable-next-line no-lonely-if
-          if (chain?.id !== getChainEnvConfig(CURRENT_ENV).chainId) {
-            handleSwitch()
-          } else if (val !== '') {
-            const errors = []
-            if (+val < +formatUnits(BigInt(min_deposit), 18)) {
-              errors.push(
-                `Minimum deposit is ${formatBalance(min_deposit, 18, 4)} ETH`,
-              )
-            }
-            if (+val * +formattedConvictionPrice > +walletBalance) {
-              errors.push('Insufficient funds')
-            }
+        } else if (chain?.id !== getChainEnvConfig(CURRENT_ENV).chainId) {
+          handleSwitch()
+        } else if (val !== '') {
+          const errors = []
+          if (+val < +formatUnits(BigInt(min_deposit), 18)) {
+            errors.push(
+              `Minimum deposit is ${formatBalance(min_deposit, 18, 4)} ETH`,
+            )
+          }
+          if (+val * +formattedConvictionPrice > +walletBalance) {
+            errors.push('Insufficient funds')
+          }
 
-            if (errors.length > 0) {
-              setValidationErrors(errors)
-              setShowErrors(true)
-            } else {
-              setMode('follow')
-              dispatch({ type: 'REVIEW_TRANSACTION' })
-              setValidationErrors([])
-            }
+          if (errors.length > 0) {
+            setValidationErrors(errors)
+            setShowErrors(true)
+          } else {
+            setMode('follow')
+            dispatch({ type: 'REVIEW_TRANSACTION' })
+            setValidationErrors([])
           }
         }
       }}

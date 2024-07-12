@@ -92,15 +92,11 @@ const UnfollowButton: React.FC<UnfollowButtonProps> = ({
           handleClose()
         } else if (state.status === 'review-transaction') {
           handleAction()
-        } else {
-          // TODO: Clean up logic [ENG-2576]
-          // eslint-disable-next-line no-lonely-if
-          if (chain?.id !== getChainEnvConfig(CURRENT_ENV).chainId) {
-            handleSwitch()
-          } else if (user_conviction !== '') {
-            setMode('unfollow')
-            dispatch({ type: 'REVIEW_TRANSACTION' })
-          }
+        } else if (chain?.id !== getChainEnvConfig(CURRENT_ENV).chainId) {
+          handleSwitch()
+        } else if (user_conviction !== '') {
+          setMode('unfollow')
+          dispatch({ type: 'REVIEW_TRANSACTION' })
         }
       }}
       disabled={
