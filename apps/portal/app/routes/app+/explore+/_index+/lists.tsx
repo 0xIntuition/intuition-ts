@@ -15,7 +15,7 @@ export default function ExploreLists() {
 
   return (
     <div className="m-8 flex flex-col items-center gap-4">
-      <ExploreSearch variant="tag" identities={[]} />
+      <ExploreSearch variant="tag" />
     </div>
   )
 }

@@ -18,7 +18,7 @@ const ExploreSearch = ({ variant, ...props }: ExploreSearchProps) => {
       {/* Identity variant */}
       {variant === 'identity' && (
         <ExploreSearchInput searchParam="identity" />
-        // TODO: Add tags here
+        // TODO: Alexander to adds the Tags component with ComboBox here
       )}
 
       {/* Claim variant */}
