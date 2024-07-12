@@ -19,7 +19,7 @@ import {
   UserTotalsPresenter,
 } from '@0xintuition/api'
 
-import EditProfileModal from '@components/edit-profile-modal'
+import EditProfileModal from '@components/edit-profile/modal'
 import EditSocialLinksModal from '@components/edit-social-links-modal'
 import { NestedLayout } from '@components/nested-layout'
 import { ProfileSocialAccounts } from '@components/profile-social-accounts'

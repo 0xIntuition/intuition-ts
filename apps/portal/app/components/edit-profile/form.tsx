@@ -1,138 +1,44 @@
 import * as React from 'react'
-import { useEffect, useReducer, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import {
   Button,
-  Dialog,
-  DialogContent,
   DialogHeader,
   Icon,
   Input,
   Label,
   Textarea,
 } from '@0xintuition/1ui'
-import { IdentityPresenter, UserPresenter } from '@0xintuition/api'
+import { UserPresenter } from '@0xintuition/api'
 
 import { getFormProps, getInputProps, useForm } from '@conform-to/react'
 import { getZodConstraint, parseWithZod } from '@conform-to/zod'
 import { useImageUploadFetcher } from '@lib/hooks/useImageUploadFetcher'
 import { useOffChainFetcher } from '@lib/hooks/useOffChainFetcher'
+import {
+  identityTransactionReducer,
+  initialIdentityTransactionState,
+  useTransactionState,
+} from '@lib/hooks/useTransactionReducer'
 import { updateProfileSchema } from '@lib/schemas/update-profile-schema'
 import {
+  ACCEPTED_IMAGE_MIME_TYPES,
   DESCRIPTION_MAX_LENGTH,
   MAX_NAME_LENGTH,
   MAX_UPLOAD_SIZE,
 } from '@lib/utils/constants'
 import logger from '@lib/utils/logger'
-import { cn, truncateString } from '@lib/utils/misc'
+import { truncateString } from '@lib/utils/misc'
 import { useLocation } from '@remix-run/react'
 import { toast } from 'sonner'
+import {
+  IdentityTransactionActionType,
+  IdentityTransactionStateType,
+} from 'types/transaction'
 
-import ErrorList from './error-list'
-import Toast from './toast'
-
-export interface EditProfileModalProps {
-  userObject: UserPresenter
-  open?: boolean
-  onClose: () => void
-  onSuccess?: () => void
-}
-
-export default function EditProfileModal({
-  userObject,
-  open,
-  onClose,
-  onSuccess,
-}: EditProfileModalProps) {
-  return (
-    <Dialog
-      open={open}
-      onOpenChange={() => {
-        onClose?.()
-      }}
-    >
-      <DialogContent className="w-[600px] bg-neutral-950 rounded-xl shadow border border-solid border-black/10">
-        <EditProfileForm
-          userObject={userObject}
-          onSuccess={onSuccess}
-          onClose={onClose}
-        />
-      </DialogContent>
-    </Dialog>
-  )
-}
-
-// State
-type TransactionAction =
-  | { type: 'START_TRANSACTION' }
-  | { type: 'START_IMAGE_UPLOAD' }
-  | {
-      type: 'IMAGE_UPLOAD_COMPLETE'
-      imageUrl: string
-      displayName: string
-      description: string
-    }
-  | { type: 'START_OFF_CHAIN_TRANSACTION' }
-  | {
-      type: 'OFF_CHAIN_TRANSACTION_COMPLETE'
-      offChainReceipt: IdentityPresenter
-    }
-  | { type: 'TRANSACTION_ERROR'; error: string }
-
-type TransactionState = {
-  status: TxState
-  displayName?: string
-  imageUrl?: string
-  description?: string
-  offChainReceipt?: IdentityPresenter
-  error?: string
-}
-
-type TxState =
-  | 'idle'
-  | 'uploading-image'
-  | 'image-upload-complete'
-  | 'sending-off-chain-transaction'
-  | 'off-chain-transaction-complete'
-  | 'transaction-complete'
-  | 'transaction-error'
-
-function transactionReducer(
-  state: TransactionState,
-  action: TransactionAction,
-): TransactionState {
-  switch (action.type) {
-    case 'START_TRANSACTION':
-      return { ...state, status: 'idle' }
-    case 'START_IMAGE_UPLOAD':
-      return { ...state, status: 'uploading-image' }
-    case 'IMAGE_UPLOAD_COMPLETE':
-      return {
-        ...state,
-        status: 'image-upload-complete',
-        displayName: action.displayName,
-        imageUrl: action.imageUrl,
-        description: action.description,
-      }
-    case 'START_OFF_CHAIN_TRANSACTION':
-      return { ...state, status: 'sending-off-chain-transaction' }
-    case 'OFF_CHAIN_TRANSACTION_COMPLETE':
-      return {
-        ...state,
-        status: 'off-chain-transaction-complete',
-        offChainReceipt: action.offChainReceipt,
-      }
-    case 'TRANSACTION_ERROR':
-      return { ...state, status: 'transaction-error', error: action.error }
-    default:
-      return state
-  }
-}
-
-const initialState: TransactionState = {
-  status: 'idle',
-  error: undefined,
-}
+import ErrorList from '../error-list'
+import { ImageChooser } from '../image-chooser'
+import Toast from '../toast'
 
 interface EditProfileFormProps {
   userObject: UserPresenter
@@ -141,26 +47,21 @@ interface EditProfileFormProps {
 }
 
 export function EditProfileForm({ userObject, onClose }: EditProfileFormProps) {
-  const [state, dispatch] = useReducer(transactionReducer, initialState)
+  const { state, dispatch } = useTransactionState<
+    IdentityTransactionStateType,
+    IdentityTransactionActionType
+  >(identityTransactionReducer, initialIdentityTransactionState)
+
   const location = useLocation()
   const isCreateRoute = location.pathname.includes('create')
 
-  // image upload fetcher
-  // const uploadFetcher = useFetcher<UploadApiResponse>()
+  const [identityImageFile, setIdentityImageFile] = useState<File | undefined>(
+    undefined,
+  )
 
   const imageUploadFetcher = useImageUploadFetcher()
 
-  // off-chain fetcher
-  // const offChainFetcher = useFetcher<OffChainFetcherData>()
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  // const lastOffchainSubmission = offChainFetcher.data as any
-  const {
-    offChainFetcher,
-    lastOffChainSubmission,
-    identity: userIdentity,
-  } = useOffChainFetcher()
-  // const userIdentity = offChainFetcher?.data?.userIdentity
-  logger('userIdentity', userIdentity)
+  const { offChainFetcher, lastOffChainSubmission } = useOffChainFetcher()
 
   const [imageFilename, setImageFilename] = useState<string | null>(null)
   const [imageFilesize, setImageFilesize] = useState<string | null>(null)
@@ -185,6 +86,27 @@ export function EditProfileForm({ userObject, onClose }: EditProfileFormProps) {
     setImageFilename(filename)
     setImageFilesize(filesize)
   }
+
+  useEffect(() => {
+    if (identityImageFile) {
+      if (
+        !ACCEPTED_IMAGE_MIME_TYPES.includes(identityImageFile.type) ||
+        identityImageFile.size > MAX_UPLOAD_SIZE
+      ) {
+        console.error('Invalid image file', identityImageFile)
+        return
+      }
+
+      const formData = new FormData()
+      formData.append('image_url', identityImageFile)
+
+      imageUploadFetcher.submit(formData, {
+        action: '/actions/upload-image',
+        method: 'post',
+        encType: 'multipart/form-data',
+      })
+    }
+  }, [identityImageFile])
 
   // Handle Triggering Image Upload
   useEffect(() => {
@@ -212,6 +134,7 @@ export function EditProfileForm({ userObject, onClose }: EditProfileFormProps) {
           imageUrl: data.submission.payload.image_url ?? '',
           displayName: data.submission.payload.display_name ?? '',
           description: data.submission.payload.description ?? '',
+          externalReference: '',
         })
       }
     }
@@ -266,12 +189,6 @@ export function EditProfileForm({ userObject, onClose }: EditProfileFormProps) {
       }
     }
   }, [imageUploadFetcher.state, imageUploadFetcher.data, state])
-
-  useEffect(() => {
-    if (state.status === 'transaction-error') {
-      setLoading(false)
-    }
-  }, [state.status])
 
   // Handle Initial Form Submit
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -402,13 +319,15 @@ export function EditProfileForm({ userObject, onClose }: EditProfileFormProps) {
                 </div>
               </div>
             </div>
-            <div className="self-stretch h-[100px] px-9 py-2.5 bg-neutral-900 rounded-lg border border-solid border-white/10 justify-between items-center inline-flex">
+            <div className="self-stretch h-[100px] px-9 py-2.5 border border-input/30 bg-primary/10 rounded-md justify-between items-center inline-flex">
               <div className="justify-start items-center gap-[18px] flex">
                 <div className="w-[60px] h-[60px] rounded-xl justify-center items-center flex">
                   <ImageChooser
                     previewImage={previewImage}
                     setPreviewImage={setPreviewImage}
                     onFileChange={handleFileChange}
+                    setImageFile={setIdentityImageFile}
+                    {...getInputProps(fields.image_url, { type: 'file' })}
                   />
                 </div>
                 <div className="flex-col justify-start items-start inline-flex">
@@ -466,7 +385,7 @@ export function EditProfileForm({ userObject, onClose }: EditProfileFormProps) {
               placeholder="Enter a display name"
               value={displayName}
               onChange={handleDisplayNameChange}
-              className="border border-solid border-white/10 bg-neutral-900"
+              className="w-full"
             />
             <div className="self-stretch p-2.5 rounded-lg justify-center items-center gap-2.5 inline-flex">
               <div className="grow shrink basis-0 text-right text-white/50 text-xs font-normal leading-[18px]">
@@ -490,11 +409,11 @@ export function EditProfileForm({ userObject, onClose }: EditProfileFormProps) {
               placeholder="Tell us about yourself!"
               value={description}
               onChange={handleDescriptionChange}
-              className="h-20 border border-solid border-white/10 bg-neutral-900"
+              className="h-20"
             />
             <div className="self-stretch p-2.5 rounded-lg justify-center items-center gap-2.5 inline-flex">
               <div className="grow shrink basis-0 text-right text-white/50 text-xs font-normal leading-[18px]">
-                {DESCRIPTION_MAX_LENGTH} characters left
+                Max {DESCRIPTION_MAX_LENGTH} characters
               </div>
             </div>
           </div>
@@ -533,97 +452,5 @@ export function EditProfileForm({ userObject, onClose }: EditProfileFormProps) {
         </offChainFetcher.Form>
       </>
     </>
-  )
-}
-
-interface ImageChooseProps {
-  previewImage: string | null
-  setPreviewImage: React.Dispatch<React.SetStateAction<string | null>>
-  onFileChange: (filename: string, filesize: string, file: File) => void
-}
-
-function ImageChooser({
-  previewImage,
-  setPreviewImage,
-  onFileChange,
-}: ImageChooseProps) {
-  return (
-    <div className="flex w-full items-center justify-center gap-3">
-      <div className="relative w-full">
-        <label
-          htmlFor="image-input"
-          className={cn(
-            'group left-0 flex h-[60px] w-[60px] w-full cursor-pointer rounded-lg focus-within:ring-2 focus-within:ring-ring border border-solid border-neutral-700',
-            {
-              'opacity-40 focus-within:opacity-100 hover:opacity-100':
-                !previewImage,
-            },
-          )}
-        >
-          <div
-            className={cn(
-              'relative flex items-center justify-center overflow-hidden',
-              {
-                'mx-auto w-auto': previewImage,
-                'w-full': !previewImage,
-              },
-            )}
-          >
-            {previewImage ? (
-              <div className="flex h-[60px] w-[60px] items-center justify-center overflow-hidden rounded-lg">
-                <img
-                  src={previewImage}
-                  className="h-full w-full object-cover object-position-center shadow-md"
-                  alt="Avatar preview"
-                />
-              </div>
-            ) : (
-              <div className="flex flex-row">
-                <div className="flex h-full w-full items-center justify-center overflow-hidden rounded-md h-[60px] w-[60px]">
-                  <div className="pointer-events-pointer inset-0 flex items-center justify-center">
-                    <Icon
-                      name="arrow-out-of-box"
-                      className="h-6 w-6 text-neutral-700"
-                    />
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-          <input
-            id="image-input"
-            aria-label="Image"
-            className="absolute left-0 w-full cursor-pointer opacity-0"
-            onChange={(event) => {
-              const file = event.target.files?.[0]
-              console.log('file', file)
-
-              if (file) {
-                const reader = new FileReader()
-                reader.onloadend = () => {
-                  setPreviewImage(reader.result as string)
-                }
-                reader.readAsDataURL(file)
-                const filesizeKB = file.size / 1024
-                let formattedSize = ''
-                if (filesizeKB >= 1024) {
-                  const filesizeMB = filesizeKB / 1024
-                  formattedSize = `${filesizeMB.toFixed(2)} MB`
-                } else {
-                  formattedSize = `${Math.round(filesizeKB)} KB`
-                }
-
-                onFileChange(file.name, formattedSize, file)
-              } else {
-                setPreviewImage(null)
-              }
-            }}
-            name="image_url"
-            type="file"
-            accept="image/*"
-          />
-        </label>
-      </div>
-    </div>
   )
 }

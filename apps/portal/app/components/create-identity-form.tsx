@@ -526,7 +526,7 @@ function CreateIdentityForm({
                 Identity Display Picture (Optional)
               </Text>
             </div>
-            <div className="self-stretch h-[100px] px-9 py-2.5 bg-neutral-900 rounded-lg border border-solid border-white/10 justify-between items-center inline-flex">
+            <div className="self-stretch h-[100px] px-9 py-2.5 border border-input/30 bg-primary/10 rounded-md justify-between items-center inline-flex">
               <div className="justify-start items-center gap-[18px] flex">
                 <div className="w-[60px] h-[60px] rounded-xl justify-center items-center flex">
                   <ImageChooser
