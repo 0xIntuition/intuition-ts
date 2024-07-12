@@ -17,11 +17,12 @@ export default function ExploreUsers() {
   return (
     <div className="m-8 flex flex-col items-center gap-4">
       <div className="flex flex-col">Explore Users Route</div>
-      <ExploreSearch
-        variant="user"
-        identities={FAKE_IDENTITIES}
-        onChange={() => {}}
-      />
+      <ExploreSearch variant="user" />
+
+      {/* Just listing the Identities here for now */}
+      {FAKE_IDENTITIES.map((identity) => (
+        <p key={identity.id}>{identity.display_name}</p>
+      ))}
     </div>
   )
 }

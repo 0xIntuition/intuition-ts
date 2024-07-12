@@ -1,39 +1,23 @@
 import * as React from 'react'
 
 import { IdentityInput, Separator, Text } from '@0xintuition/1ui'
-import { IdentityPresenter } from '@0xintuition/api'
 
-import { IdentitySearchCombobox } from '@components/identity/identity-search-combo-box'
+import { ExploreSearchInput } from './ExploreSearchInput'
 
 export interface ExploreSearchProps
   extends React.HTMLAttributes<HTMLDivElement> {
   variant: 'user' | 'identity' | 'claim' | 'tag'
-  identities: IdentityPresenter[]
-  onChange?: () => void
 }
 
-const ExploreSearch = ({
-  variant,
-  identities,
-  onChange,
-  ...props
-}: ExploreSearchProps) => {
+const ExploreSearch = ({ variant, ...props }: ExploreSearchProps) => {
   return (
     <div className="min-w-96 flex flex-col items-center" {...props}>
       {/* User variant */}
-      {variant === 'user' && (
-        <IdentitySearchCombobox
-          identities={identities}
-          placeholder="Search by a username or address"
-        />
-      )}
+      {variant === 'user' && <ExploreSearchInput searchParam="user" />}
 
       {/* Identity variant */}
       {variant === 'identity' && (
-        <IdentitySearchCombobox
-          identities={identities}
-          placeholder="Search by Identity"
-        />
+        <ExploreSearchInput searchParam="identity" />
         // TODO: Add tags here
       )}
 
@@ -77,12 +61,7 @@ const ExploreSearch = ({
       )}
 
       {/* Tag variant */}
-      {variant === 'tag' && (
-        <IdentitySearchCombobox
-          identities={identities}
-          placeholder="Search by list"
-        />
-      )}
+      {variant === 'tag' && <ExploreSearchInput searchParam="tag" />}
     </div>
   )
 }
