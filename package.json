@@ -85,7 +85,6 @@
     "jest-environment-node": "^29.4.1",
     "jsdom": "~22.1.0",
     "nx": "19.1.0",
-    "postinstall": "^0.10.3",
     "prettier": "^3.2.5",
     "prettier-plugin-tailwindcss": "^0.5.5",
     "pretty-quick": "^4.0.0",
