@@ -9,6 +9,7 @@ import {
 } from '@0xintuition/1ui'
 import {
   ClaimPresenter,
+  ClaimSummaryPresenter,
   IdentityPresenter,
   OpenAPI,
   SortColumn,
@@ -16,8 +17,6 @@ import {
   UserTotalsPresenter,
 } from '@0xintuition/api'
 
-import { ActivePositionsOnClaims } from '@components/list/active-positions-on-claims'
-import { ActivePositionsOnIdentities } from '@components/list/active-positions-on-identities'
 import {
   DataCreatedHeader,
   DataCreatedHeaderVariants,
@@ -32,13 +31,10 @@ import {
   fetchUserTotals,
 } from '@lib/utils/fetches'
 import logger from '@lib/utils/logger'
-import {
-  calculateTotalPages,
-  formatBalance,
-  getAuthHeaders,
-} from '@lib/utils/misc'
+import { calculateTotalPages, getAuthHeaders } from '@lib/utils/misc'
 import { SessionContext } from '@middleware/session'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
+import { Outlet, useNavigate } from '@remix-run/react'
 import { getPrivyAccessToken } from '@server/privy'
 
 export async function loader({ context, request }: LoaderFunctionArgs) {
@@ -140,47 +136,36 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
   })
 }
 
-const TabContent = ({
-  value,
-  userIdentity,
-  userTotals,
-  totalResults,
-  totalStake,
-  variant,
-  children,
-}: {
-  value: string
+export type DataCreatedLoaderData = {
   userIdentity: IdentityPresenter
   userTotals: UserTotalsPresenter
-  totalResults: number
-  totalStake: number
-  variant: DataCreatedHeaderVariantType
-  children?: ReactNode
-}) => {
-  return (
-    <TabsContent value={value} className="w-full">
-      <DataCreatedHeader
-        variant={variant}
-        userIdentity={userIdentity}
-        userTotals={userTotals}
-        totalResults={totalResults}
-        totalStake={totalStake}
-      />
-      {children}
-    </TabsContent>
-  )
+  identities: IdentityPresenter[]
+  identitiesSortBy: string
+  identitiesDirection: string
+  identitiesPagination: {
+    currentPage: number
+    limit: number
+    totalEntries: number
+    totalPages: number
+  }
+  claims: ClaimPresenter[]
+  claimsSummary: ClaimSummaryPresenter
+  claimsSortBy: string
+  claimsDirection: string
+  claimsPagination: {
+    currentPage: number
+    limit: number
+    totalEntries: number
+    totalPages: number
+  }
 }
 
 export default function ProfileDataCreated() {
-  const {
-    userIdentity,
-    userTotals,
-    identities,
-    identitiesPagination,
-    claims,
-    claimsSummary,
-    claimsPagination,
-  } = useLiveLoader<typeof loader>(['attest'])
+  const { identitiesPagination, claimsPagination } = useLiveLoader<
+    typeof loader
+  >(['attest'])
+  const navigate = useNavigate()
+
   return (
     <div className="flex-col justify-start items-start flex w-full">
       <div className="self-stretch justify-between items-center inline-flex mb-6">
@@ -201,42 +186,54 @@ export default function ProfileDataCreated() {
             value={DataCreatedHeaderVariants.identities}
             label="Identities"
             totalCount={identitiesPagination.totalEntries}
+            onClick={(e) => {
+              e.preventDefault()
+              navigate('/app/profile/data-created/identities')
+            }}
           />
           <TabsTrigger
             value={DataCreatedHeaderVariants.claims}
             label="Claims"
             totalCount={claimsPagination.totalEntries}
+            onClick={(e) => {
+              e.preventDefault()
+              navigate('/app/profile/data-created/claims')
+            }}
           />
         </TabsList>
-        <TabContent
-          value={DataCreatedHeaderVariants.identities}
-          userIdentity={userIdentity}
-          userTotals={userTotals}
-          totalResults={identitiesPagination.totalEntries}
-          totalStake={
-            +formatBalance(userTotals?.total_position_value ?? '0', 18, 4)
-          }
-          variant={DataCreatedHeaderVariants.identities}
-        >
-          <ActivePositionsOnIdentities
-            identities={identities}
-            pagination={identitiesPagination}
-          />
-        </TabContent>
-        <TabContent
-          value={DataCreatedHeaderVariants.claims}
-          userIdentity={userIdentity}
-          userTotals={userTotals}
-          totalResults={claimsPagination.totalEntries}
-          totalStake={+formatBalance(claimsSummary?.assets_sum ?? '0', 18, 4)}
-          variant={DataCreatedHeaderVariants.claims}
-        >
-          <ActivePositionsOnClaims
-            claims={claims}
-            pagination={claimsPagination}
-          />
-        </TabContent>
+        <Outlet />
       </Tabs>
     </div>
+  )
+}
+
+export const TabContent = ({
+  value,
+  userIdentity,
+  userTotals,
+  totalResults,
+  totalStake,
+  variant,
+  children,
+}: {
+  value: string
+  userIdentity: IdentityPresenter
+  userTotals: UserTotalsPresenter
+  totalResults: number
+  totalStake: number
+  variant: DataCreatedHeaderVariantType
+  children?: ReactNode
+}) => {
+  return (
+    <>
+      <DataCreatedHeader
+        variant={variant}
+        userIdentity={userIdentity}
+        userTotals={userTotals}
+        totalResults={totalResults}
+        totalStake={totalStake}
+      />
+      {children}
+    </>
   )
 }

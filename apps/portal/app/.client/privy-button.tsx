@@ -9,8 +9,7 @@ import {
   Trunctacular,
 } from '@0xintuition/1ui'
 
-import logger from '@lib/utils/logger'
-import { usePrivy, useWallets } from '@privy-io/react-auth'
+import { usePrivy } from '@privy-io/react-auth'
 import { NavLink, useNavigate } from '@remix-run/react'
 import { useDisconnect } from 'wagmi'
 
@@ -23,10 +22,6 @@ export function PrivyButton({
 
   const navigate = useNavigate()
   const { disconnect } = useDisconnect()
-  const { wallets } = useWallets()
-  const chainId = wallets?.[0]?.chainId
-
-  logger('chainId', chainId)
 
   // Disable login when Privy is not ready or the user is already authenticated
   const disableLogin = !ready || (ready && authenticated)
