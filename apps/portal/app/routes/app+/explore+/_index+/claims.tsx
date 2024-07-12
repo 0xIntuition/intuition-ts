@@ -65,7 +65,7 @@ export default function ExploreClaims() {
       <ClaimsList
         claims={claims}
         pagination={claimsPagination}
-        isExplore={true}
+        enableSearch={false}
       />
     </div>
   )

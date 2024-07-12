@@ -12,12 +12,12 @@ export function ClaimsList({
   claims,
   pagination,
   paramPrefix,
-  isExplore = false,
+  enableSearch = false,
 }: {
   claims: ClaimPresenter[]
   pagination: PaginationType
   paramPrefix?: string
-  isExplore?: boolean
+  enableSearch?: boolean
 }) {
   const navigate = useNavigate()
   const options: SortOption<ClaimSortColumn>[] = [
@@ -35,7 +35,7 @@ export function ClaimsList({
       paginationLabel="claims"
       options={options}
       paramPrefix={paramPrefix}
-      isExplore={isExplore}
+      enableSearch={enableSearch}
     >
       {claims?.map((claim) => (
         <div
