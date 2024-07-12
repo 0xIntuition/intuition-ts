@@ -43,8 +43,13 @@ export default function IntroRoute() {
   const SLIDES = [
     {
       video: '',
-      title: 'Title',
-      text: 'Celiac kitsch lyft enamel pin photo booth kinfolk subway tile, neutra before they sold out ramps. JOMO enamel pin pinterest banjo swag viral DIY sartorial.',
+      title: 'A New Internet.',
+      text: (
+        <>
+          At Intuition, we believe we can do things differently. We refuse to accept the status quo.<br />
+          The ways of today will not be the ways of tomorrow.
+        </>
+      ),      
       button: (
         <Link to="https://docs.intuition.systems/introduction" target="_blank">
           <SlideButton>
@@ -56,8 +61,13 @@ export default function IntroRoute() {
     },
     {
       video: '',
-      title: 'Title',
-      text: 'Celiac kitsch lyft enamel pin photo booth kinfolk subway tile, neutra before they sold out ramps. JOMO enamel pin pinterest banjo swag viral DIY sartorial.',
+      title: 'True Interoperability.',
+      text: (
+        <>
+          Our vision for the future of digital experience is decentralized and agent-centric.<br />
+          A communal, interoperable bazaar. A democratized commons for coordination.<br />
+        </>
+      ),      
       button: (
         <Link
           to="https://docs.intuition.systems/primitives-and-interactions/primitives/identities"
@@ -72,8 +82,13 @@ export default function IntroRoute() {
     },
     {
       video: '',
-      title: 'Title',
-      text: 'Celiac kitsch lyft enamel pin photo booth kinfolk subway tile, neutra before they sold out ramps. JOMO enamel pin pinterest banjo swag viral DIY sartorial.',
+      title: 'A New Set of Primitives.',
+      text: (
+        <>
+          To achieve this vision, Intuition introduces a new set of digital primitives, enabled by blockchain technology.<br />
+          These primitives allow for the discrete capturing, structuring, referenceability of information.<br />
+        </>
+      ),  
       button: (
         <Link
           to="https://docs.intuition.systems/primitives-and-interactions/primitives/claims"
@@ -88,8 +103,13 @@ export default function IntroRoute() {
     },
     {
       video: '',
-      title: 'Title',
-      text: 'Celiac kitsch lyft enamel pin photo booth kinfolk subway tile, neutra before they sold out ramps. JOMO enamel pin pinterest banjo swag viral DIY sartorial.',
+      title: 'Reimagining the way we D.R.E.A.M.',
+      text: (
+        <>
+          This functionality unlocks new possibilities for the way Data can be Refined, Expressed, And Monetized - <br />
+          allowing value to more easily flow to the edges of the system: to you, the user.<br />
+        </>
+      ),  
       button: (
         <Link
           to="https://docs.intuition.systems/primitives-and-interactions/interacations/attestations"
@@ -104,8 +124,13 @@ export default function IntroRoute() {
     },
     {
       video: '',
-      title: 'Title',
-      text: 'Celiac kitsch lyft enamel pin photo booth kinfolk subway tile, neutra before they sold out ramps. JOMO enamel pin pinterest banjo swag viral DIY sartorial.',
+      title: 'A Trustful Interaction Layer.',
+      text: (
+        <>
+          The Intuition System helps to make the layers of the decentralized web that cannot yet be made trustless, trustful.<br />
+          We hope to bring more trust to all of your interactions, to help you better decision-make in your everyday life.<br />
+        </>
+      ),        
       button: (
         <Link
           to="https://docs.intuition.systems/primitives-and-interactions/interacations/query"
@@ -120,8 +145,34 @@ export default function IntroRoute() {
     },
     {
       video: '',
-      title: 'Title',
-      text: 'Celiac kitsch lyft enamel pin photo booth kinfolk subway tile, neutra before they sold out ramps. JOMO enamel pin pinterest banjo swag viral DIY sartorial.',
+      title: 'The Portal',
+      text: (
+        <>
+          The Portal is the initial explorer for the Intuition ecosystem, and a place to gain familiarity with the primitives.<br />
+          We hope The Portal will be merely the first step in your exploration of the Intuition ecosystem.<br />
+        </>
+      ),      
+      button: (
+        <Link
+          to="https://docs.intuition.systems/learn-more/faq"
+          target="_blank"
+        >
+          <SlideButton>
+            Learn more{' '}
+            <Icon name="square-arrow-top-right" className="h-4 w-4" />
+          </SlideButton>
+        </Link>
+      ),
+    },
+    {
+      video: '',
+      title: 'Welcome Aboard.',
+      text: (
+        <>
+          Thank you for being here early.<br />
+          We are extremely grateful for the opportunity to build and grow alongside you in this attempt to change the world.<br />
+        </>
+      ),      
       button: (
         <Link
           to="https://docs.intuition.systems/learn-more/faq"
