@@ -148,7 +148,7 @@ export default function FollowModal({
           logger('txHash', txHash)
           dispatch({
             type: 'TRANSACTION_COMPLETE',
-            txHash: txHash,
+            txHash,
             txReceipt: receipt!,
           })
           fetchReval.submit(formRef.current, {

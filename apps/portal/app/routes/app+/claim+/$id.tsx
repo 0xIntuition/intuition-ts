@@ -179,7 +179,7 @@ export default function ClaimDetails() {
                     ...prevState,
                     mode: 'redeem',
                     modalType: 'claim',
-                    direction: direction,
+                    direction,
                     isOpen: true,
                   }))
                 }

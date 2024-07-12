@@ -79,7 +79,7 @@ export async function loader({ context, request, params }: LoaderFunctionArgs) {
   logger('vaultDetails', vaultDetails)
 
   return json({
-    identity: identity,
+    identity,
     vaultDetails,
     user,
   })

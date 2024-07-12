@@ -240,7 +240,7 @@ function CreateClaimForm({
 
           dispatch({
             type: 'TRANSACTION_COMPLETE',
-            txHash: txHash,
+            txHash,
             txReceipt: receipt,
           })
         }

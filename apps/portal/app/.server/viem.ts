@@ -61,5 +61,5 @@ export const multiVaultContract = {
 } as const
 
 export const getEnsName = async (address: `0x${string}`) => {
-  return await mainnetClient.getEnsName({ address: address })
+  return await mainnetClient.getEnsName({ address })
 }

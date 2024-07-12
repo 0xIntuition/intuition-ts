@@ -378,7 +378,7 @@ function CreateIdentityForm({
           logger('txHash', txHash)
           dispatch({
             type: 'TRANSACTION_COMPLETE',
-            txHash: txHash,
+            txHash,
             txReceipt: receipt,
             identityId: transactionResponseData?.id,
           })

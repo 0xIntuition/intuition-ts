@@ -55,9 +55,8 @@ const UnfollowButton: React.FC<UnfollowButtonProps> = ({
       return 'Retry'
     } else if (chain?.id !== getChainEnvConfig(CURRENT_ENV).chainId) {
       return 'Wrong Network'
-    } else {
-      return `Unfollow`
     }
+    return `Unfollow`
   }
 
   const setFollwoModalActive = useSetAtom(followModalAtom)
@@ -94,6 +93,8 @@ const UnfollowButton: React.FC<UnfollowButtonProps> = ({
         } else if (state.status === 'review-transaction') {
           handleAction()
         } else {
+          // TODO: Clean up logic [ENG-2576]
+          // eslint-disable-next-line no-lonely-if
           if (chain?.id !== getChainEnvConfig(CURRENT_ENV).chainId) {
             handleSwitch()
           } else if (user_conviction !== '') {

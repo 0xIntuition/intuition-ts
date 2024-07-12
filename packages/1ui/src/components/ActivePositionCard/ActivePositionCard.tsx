@@ -22,7 +22,7 @@ const ActivePositionCard = ({
     label: 'FOR',
   }
 
-  if (claimPosition == ClaimPosition.claimAgainst) {
+  if (claimPosition === ClaimPosition.claimAgainst) {
     badgeData = {
       variant: TagVariant.against,
       label: 'AGAINST',

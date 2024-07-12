@@ -254,7 +254,7 @@ export function CreateButton({
           logger('receipt', receipt)
           dispatch({
             type: 'ON_CHAIN_TRANSACTION_COMPLETE',
-            txHash: txHash,
+            txHash,
             txReceipt: receipt,
           })
         }

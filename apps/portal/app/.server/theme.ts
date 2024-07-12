@@ -17,7 +17,6 @@ export function getTheme(request: Request): Theme | undefined {
 export function setTheme(theme?: Theme) {
   if (theme) {
     return cookie.serialize(cookieName, theme, { path: '/' })
-  } else {
-    return cookie.serialize(cookieName, '', { path: '/', maxAge: 0 })
   }
+  return cookie.serialize(cookieName, '', { path: '/', maxAge: 0 })
 }

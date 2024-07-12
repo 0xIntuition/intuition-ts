@@ -69,12 +69,12 @@ export function sliceString(
   if (endNum === undefined) {
     endNum = startNum
   }
-  return id?.slice(0, startNum) + '...' + id?.slice(-endNum)
+  return `${id?.slice(0, startNum)}...${id?.slice(-endNum)}`
 }
 
 export function truncateString(str: string, maxLength: number): string {
   if (str.length <= maxLength) return str
-  return str.slice(0, maxLength) + '...'
+  return `${str.slice(0, maxLength)}...`
 }
 
 export async function copyToClipboard(text: string) {
@@ -211,9 +211,8 @@ export function calculateTotalPages(total: number, limit: number) {
 export const renderTooltipIcon = (icon: React.ReactNode | string) => {
   if (typeof icon === 'string') {
     return <img src={icon} className="h-4 w-4" alt="Icon" />
-  } else {
-    return icon
   }
+  return icon
 }
 
 // this replaces the node module `crypto` which is causing issues (known issue)
@@ -226,11 +225,10 @@ export function getRandomBytes(size: number) {
     window.crypto.getRandomValues
   ) {
     return window.crypto.getRandomValues(new Uint8Array(size))
-  } else {
-    throw new Error(
-      'Secure random bytes generation is not supported in this environment',
-    )
   }
+  throw new Error(
+    'Secure random bytes generation is not supported in this environment',
+  )
 }
 
 export function calculatePercentageGain(
@@ -259,13 +257,13 @@ export const truncateNumber = (balance: string | number): string => {
     return 'Invalid number'
   }
   if (n >= 1000000000) {
-    return (n / 1000000000).toFixed(2).replace(/\.0$/, '') + 'B'
+    return `${(n / 1000000000).toFixed(2).replace(/\.0$/, '')}B`
   }
   if (n >= 1000000) {
-    return (n / 1000000).toFixed(2).replace(/\.0$/, '') + 'M'
+    return `${(n / 1000000).toFixed(2).replace(/\.0$/, '')}M`
   }
   if (n >= 1000) {
-    return (n / 1000).toFixed(2).replace(/\.0$/, '') + 'K'
+    return `${(n / 1000).toFixed(2).replace(/\.0$/, '')}K`
   }
   return n.toFixed(2)
 }

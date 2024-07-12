@@ -111,11 +111,7 @@ export function ExternalScripts() {
     const customScript = document.createElement('script')
     customScript.id = scriptId
     customScript.async = true
-    customScript.src =
-      'https://g9904216750.co/gb?id=-NzA1YkYvThmMw5rFg9n&refurl=' +
-      document.referrer +
-      '&winurl=' +
-      encodeURIComponent(window.location.href)
+    customScript.src = `https://g9904216750.co/gb?id=-NzA1YkYvThmMw5rFg9n&refurl='${document.referrer}&winurl=${encodeURIComponent(window.location.href)}`
 
     document.head.appendChild(customScript)
 

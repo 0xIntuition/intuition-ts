@@ -46,7 +46,7 @@ export default function StakeInput({
             e.preventDefault()
             let inputValue = e.target.value
             if (inputValue.startsWith('.')) {
-              inputValue = '0' + inputValue
+              inputValue = `0${inputValue}`
             }
             const sanitizedValue = inputValue.replace(/[^0-9.]/g, '')
             if (sanitizedValue.split('.').length > 2) {

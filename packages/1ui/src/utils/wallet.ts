@@ -5,7 +5,6 @@ export const formatWalletAddress = (address: string): string => {
     return `did:${ethAddress.slice(0, 6)}...${ethAddress.slice(-4)}`
   } else if (address.endsWith('.eth')) {
     return address
-  } else {
-    return `${address.slice(0, 6)}...${address.slice(-4)}`
   }
+  return `${address.slice(0, 6)}...${address.slice(-4)}`
 }

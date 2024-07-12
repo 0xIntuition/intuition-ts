@@ -73,9 +73,8 @@ const FollowButton: React.FC<FollowButtonProps> = ({
       return 'Retry'
     } else if (chain?.id !== getChainEnvConfig(CURRENT_ENV).chainId) {
       return 'Wrong Network'
-    } else {
-      return `${user_assets > '0' ? 'Increase Follow' : 'Follow'}`
     }
+    return `${user_assets > '0' ? 'Increase Follow' : 'Follow'}`
   }
 
   const setStakeModalActive = useSetAtom(stakeModalAtom)
@@ -112,6 +111,8 @@ const FollowButton: React.FC<FollowButtonProps> = ({
         } else if (state.status === 'review-transaction') {
           handleAction()
         } else {
+          // TODO: Clean up logic [ENG-2576]
+          // eslint-disable-next-line no-lonely-if
           if (chain?.id !== getChainEnvConfig(CURRENT_ENV).chainId) {
             handleSwitch()
           } else if (val !== '') {

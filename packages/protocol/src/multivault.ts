@@ -35,7 +35,7 @@ export class Multivault {
 
     if (address === undefined && deployment === undefined) {
       throw new Error(
-        'Multivault not deployed on chain: ' + this.client.public.chain.id,
+        `Multivault not deployed on chain: ${this.client.public.chain.id}`,
       )
     }
     this.contract = getContract({

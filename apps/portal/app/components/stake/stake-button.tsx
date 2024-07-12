@@ -77,9 +77,8 @@ const StakeButton: React.FC<StakeButtonProps> = ({
       return 'Retry'
     } else if (chain?.id !== getChainEnvConfig(CURRENT_ENV).chainId) {
       return 'Wrong Network'
-    } else {
-      return `Review ${mode === 'deposit' ? 'Deposit' : 'Redeem'}`
     }
+    return `Review ${mode === 'deposit' ? 'Deposit' : 'Redeem'}`
   }
 
   const setStakeModalActive = useSetAtom(stakeModalAtom)
@@ -117,6 +116,8 @@ const StakeButton: React.FC<StakeButtonProps> = ({
           dispatch({ type: 'APPROVE_TRANSACTION' })
           handleAction()
         } else {
+          // TODO: Clean up logic [ENG-2576]
+          // eslint-disable-next-line no-lonely-if
           if (chain?.id !== getChainEnvConfig(CURRENT_ENV).chainId) {
             handleSwitch()
           } else if (val !== '') {

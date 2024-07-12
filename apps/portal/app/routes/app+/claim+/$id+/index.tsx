@@ -84,7 +84,7 @@ export default function ClaimOverview() {
   useEffect(() => {
     setSearchParams({
       ...Object.fromEntries(searchParams),
-      positionDirection: positionDirection,
+      positionDirection,
       page: '1',
     })
   }, [positionDirection])

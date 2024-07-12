@@ -54,7 +54,7 @@ export async function action({ request, context }: ActionFunctionArgs) {
 
       profile = await UsersService.updateUser({
         id: id as string,
-        requestBody: requestBody,
+        requestBody,
       })
       logger('Profile updated:', profile)
     } catch (error: unknown) {

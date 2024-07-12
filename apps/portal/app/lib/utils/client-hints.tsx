@@ -37,7 +37,7 @@ function getCookieValue(cookieString: string, name: ClientHintNames) {
   const value = cookieString
     .split(';')
     .map((c) => c.trim())
-    .find((c) => c.startsWith(hint.cookieName + '='))
+    .find((c) => c.startsWith(`${hint.cookieName}=`))
     ?.split('=')[1]
 
   return value ? decodeURIComponent(value) : null

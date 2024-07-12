@@ -79,9 +79,9 @@ export async function loader({ context, request, params }: LoaderFunctionArgs) {
     return logger('No user totals found')
   }
 
-  let vaultDetails: VaultDetailsType | undefined = undefined
+  let vaultDetails: VaultDetailsType | null = null
 
-  if (userIdentity !== undefined && userIdentity.vault_id) {
+  if (userIdentity !== null && userIdentity.vault_id) {
     try {
       vaultDetails = await getVaultDetails(
         userIdentity.contract,
@@ -90,12 +90,12 @@ export async function loader({ context, request, params }: LoaderFunctionArgs) {
       )
     } catch (error) {
       logger('Failed to fetch vaultDetails', error)
-      vaultDetails = undefined
+      vaultDetails = null
     }
   }
 
   let followClaim: ClaimPresenter | null = null
-  let followVaultDetails: VaultDetailsType | undefined = undefined
+  let followVaultDetails: VaultDetailsType | null = null
 
   if (userIdentity.follow_claim_id) {
     followClaim = await fetchClaim(userIdentity.follow_claim_id)
@@ -110,7 +110,7 @@ export async function loader({ context, request, params }: LoaderFunctionArgs) {
       )
     } catch (error) {
       logger('Failed to fetch followVaultDetails', error)
-      followVaultDetails = undefined
+      followVaultDetails = null
     }
   }
 

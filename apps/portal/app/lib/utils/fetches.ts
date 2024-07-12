@@ -28,14 +28,13 @@ export async function fetchIdentity(
   id: string,
 ): Promise<GetIdentityByIdResponse | null> {
   try {
-    return await IdentitiesService.getIdentityById({ id: id })
+    return await IdentitiesService.getIdentityById({ id })
   } catch (error: unknown) {
     if (error instanceof ApiError) {
       logger(`${error.name} - ${error.status}: ${error.message} ${error.url}`)
       return null
-    } else {
-      throw error
     }
+    throw error
   }
 }
 
@@ -43,14 +42,13 @@ export async function fetchClaim(
   id: string,
 ): Promise<GetClaimByIdResponse | null> {
   try {
-    return await ClaimsService.getClaimById({ id: id })
+    return await ClaimsService.getClaimById({ id })
   } catch (error: unknown) {
     if (error instanceof ApiError) {
       logger(`${error.name} - ${error.status}: ${error.message} ${error.url}`)
       return null
-    } else {
-      throw error
     }
+    throw error
   }
 }
 
@@ -63,10 +61,10 @@ export async function fetchUserIdentities(
 ): Promise<SearchIdentityResponse | null> {
   try {
     return await IdentitiesService.searchIdentity({
-      page: page,
-      limit: limit,
-      sortBy: sortBy,
-      direction: direction,
+      page,
+      limit,
+      sortBy,
+      direction,
       displayName: search,
       isUser: true,
     })
@@ -74,9 +72,8 @@ export async function fetchUserIdentities(
     if (error instanceof ApiError) {
       logger(`${error.name} - ${error.status}: ${error.message} ${error.url}`)
       return null
-    } else {
-      throw error
     }
+    throw error
   }
 }
 
@@ -89,9 +86,8 @@ export async function fetchUserTotals(
     if (error instanceof ApiError) {
       logger(`${error.name} - ${error.status}: ${error.message} ${error.url}`)
       return null
-    } else {
-      throw error
     }
+    throw error
   }
 }
 
@@ -104,10 +100,10 @@ export async function fetchIdentities(
 ): Promise<SearchIdentityResponse | null> {
   try {
     return await IdentitiesService.searchIdentity({
-      page: page,
-      limit: limit,
-      sortBy: sortBy,
-      direction: direction,
+      page,
+      limit,
+      sortBy,
+      direction,
       displayName: search,
       isUser: false,
     })
@@ -115,9 +111,8 @@ export async function fetchIdentities(
     if (error instanceof ApiError) {
       logger(`${error.name} - ${error.status}: ${error.message} ${error.url}`)
       return null
-    } else {
-      throw error
     }
+    throw error
   }
 }
 
@@ -131,20 +126,19 @@ export async function fetchPositionsOnIdentity(
 ): Promise<SearchPositionsResponse | null> {
   try {
     return await IdentityPositionsService.getIdentityPositions({
-      id: id,
-      page: page,
-      limit: limit,
-      sortBy: sortBy,
-      direction: direction,
+      id,
+      page,
+      limit,
+      sortBy,
+      direction,
       creator: search,
     })
   } catch (error: unknown) {
     if (error instanceof ApiError) {
       logger(`${error.name} - ${error.status}: ${error.message} ${error.url}`)
       return null
-    } else {
-      throw error
     }
+    throw error
   }
 }
 
@@ -157,19 +151,18 @@ export async function fetchClaims(
 ): Promise<SearchClaimsResponse | null> {
   try {
     return await ClaimsService.searchClaims({
-      page: page,
-      limit: limit,
-      sortBy: sortBy,
-      direction: direction,
+      page,
+      limit,
+      sortBy,
+      direction,
       displayName: search,
     })
   } catch (error: unknown) {
     if (error instanceof ApiError) {
       logger(`${error.name} - ${error.status}: ${error.message} ${error.url}`)
       return null
-    } else {
-      throw error
     }
+    throw error
   }
 }
 
@@ -183,20 +176,19 @@ export async function fetchPositionsOnClaim(
 ): Promise<GetClaimPositionsResponse | null> {
   try {
     return await ClaimPositionsService.getClaimPositions({
-      id: id,
-      page: page,
-      limit: limit,
-      sortBy: sortBy,
-      direction: direction,
+      id,
+      page,
+      limit,
+      sortBy,
+      direction,
       creator: search,
     })
   } catch (error: unknown) {
     if (error instanceof ApiError) {
       logger(`${error.name} - ${error.status}: ${error.message} ${error.url}`)
       return null
-    } else {
-      throw error
     }
+    throw error
   }
 }
 
@@ -211,19 +203,18 @@ export async function fetchClaimsAboutIdentity(
   try {
     return await ClaimsService.searchClaims({
       identity: id,
-      page: page,
-      limit: limit,
-      sortBy: sortBy,
-      direction: direction,
+      page,
+      limit,
+      sortBy,
+      direction,
       displayName: search,
     })
   } catch (error: unknown) {
     if (error instanceof ApiError) {
       logger(`${error.name} - ${error.status}: ${error.message} ${error.url}`)
       return null
-    } else {
-      throw error
     }
+    throw error
   }
 }
 
@@ -238,7 +229,7 @@ export async function fetchIdentitiesWithUserPosition(
   try {
     return await UsersService.getUserIdentities({
       user: id,
-      page: page,
+      page,
       limit: Number(limit),
       sortBy: sortBy as SortColumn,
       direction: direction as SortDirection,
@@ -248,9 +239,8 @@ export async function fetchIdentitiesWithUserPosition(
     if (error instanceof ApiError) {
       logger(`${error.name} - ${error.status}: ${error.message} ${error.url}`)
       return null
-    } else {
-      throw error
     }
+    throw error
   }
 }
 
@@ -265,7 +255,7 @@ export async function fetchClaimsWithUserPosition(
   try {
     return await UsersService.getUserClaims({
       user: id,
-      page: page,
+      page,
       limit: Number(limit),
       sortBy: sortBy as SortColumn,
       direction: direction as SortDirection,
@@ -275,9 +265,8 @@ export async function fetchClaimsWithUserPosition(
     if (error instanceof ApiError) {
       logger(`${error.name} - ${error.status}: ${error.message} ${error.url}`)
       return null
-    } else {
-      throw error
     }
+    throw error
   }
 }
 
@@ -291,7 +280,7 @@ export async function fetchIdentityFollowers(
 ): Promise<GetIdentityFollowersResponse | null> {
   try {
     return await IdentitiesService.getIdentityFollowers({
-      id: id,
+      id,
       page,
       limit: Number(limit),
       sortBy: sortBy as SortColumn,
@@ -301,9 +290,8 @@ export async function fetchIdentityFollowers(
     if (error instanceof ApiError) {
       logger(`${error.name} - ${error.status}: ${error.message} ${error.url}`)
       return null
-    } else {
-      throw error
     }
+    throw error
   }
 }
 
@@ -317,7 +305,7 @@ export async function fetchIdentityFollowing(
 ): Promise<GetIdentityFollowedResponse | null> {
   try {
     return await IdentitiesService.getIdentityFollowed({
-      id: id,
+      id,
       page,
       limit: Number(limit),
       sortBy: sortBy as SortColumn,
@@ -327,9 +315,8 @@ export async function fetchIdentityFollowing(
     if (error instanceof ApiError) {
       logger(`${error.name} - ${error.status}: ${error.message} ${error.url}`)
       return null
-    } else {
-      throw error
     }
+    throw error
   }
 }
 
@@ -344,8 +331,7 @@ export async function fetchClaimsSummary(
     if (error instanceof ApiError) {
       logger(`${error.name} - ${error.status}: ${error.message} ${error.url}`)
       return null
-    } else {
-      throw error
     }
+    throw error
   }
 }
