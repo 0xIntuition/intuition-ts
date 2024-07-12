@@ -129,7 +129,7 @@ describe('TransactionStatusIndicator Utils', () => {
         ),
       ).toEqual({
         iconName: IconName.inProgress,
-        iconClass: 'text-accent',
+        iconClass: 'text-accent animate-spin',
         label: `In progress`,
       })
     })
@@ -141,7 +141,7 @@ describe('TransactionStatusIndicator Utils', () => {
         ),
       ).toEqual({
         iconName: IconName.inProgress,
-        iconClass: 'text-accent',
+        iconClass: 'text-accent animate-spin',
         label: `Preparing identity...`,
       })
     })

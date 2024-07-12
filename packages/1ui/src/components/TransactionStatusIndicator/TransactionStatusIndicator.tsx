@@ -1,10 +1,9 @@
 import * as React from 'react'
 
-import { Loader2Icon } from 'lucide-react'
 import { cn } from 'styles'
 import { TransactionStatusType, TransactionType } from 'types'
 
-import { Icon, IconName, Text, TextVariant, TextWeight } from '..'
+import { Icon, Text, TextVariant, TextWeight } from '..'
 import { getStatusComponentData } from './TransactionStatusIndicator.utils'
 
 export interface TransactionStatusProps
@@ -28,20 +27,10 @@ const TransactionStatusIndicator = ({
       )}
       {...props}
     >
-      {statusComponentData.iconName === IconName.inProgress ? (
-        <Loader2Icon
-          className={cn(
-            `w-20 h-20 animate-spin`,
-            statusComponentData.iconClass,
-          )}
-        />
-      ) : (
-        <Icon
-          className={cn('w-20 h-20', statusComponentData.iconClass)}
-          name={statusComponentData.iconName}
-        />
-      )}
-
+      <Icon
+        className={cn('w-20 h-20', statusComponentData.iconClass)}
+        name={statusComponentData.iconName}
+      />
       <Text
         variant={TextVariant.headline}
         weight={TextWeight.medium}
