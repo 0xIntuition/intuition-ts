@@ -52,5 +52,3 @@ export function TransactionState({
     </div>
   )
 }
-
-export default TransactionState

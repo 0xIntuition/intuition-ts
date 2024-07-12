@@ -10,6 +10,7 @@ import {
   Text,
   Textarea,
   toast,
+  TransactionStatusType,
 } from '@0xintuition/1ui'
 import { IdentityPresenter } from '@0xintuition/api'
 
@@ -40,7 +41,7 @@ import {
 } from '@lib/utils/constants'
 import logger from '@lib/utils/logger'
 import { truncateString } from '@lib/utils/misc'
-import { useFetcher } from '@remix-run/react'
+import { useFetcher, useNavigate } from '@remix-run/react'
 import { CreateLoaderData } from '@routes/resources+/create'
 import {
   IdentityTransactionActionType,
@@ -52,7 +53,7 @@ import { usePublicClient, useWalletClient } from 'wagmi'
 import ErrorList from './error-list'
 import { ImageChooser } from './image-chooser'
 import Toast from './toast'
-import TransactionStatus from './transaction-status'
+import { TransactionState } from './transaction-state'
 
 interface IdentityFormProps {
   onSuccess?: () => void
@@ -130,6 +131,7 @@ function CreateIdentityForm({
   onClose,
 }: CreateIdentityFormProps) {
   const { offChainFetcher, lastOffChainSubmission } = useOffChainFetcher()
+  const navigate = useNavigate()
   const imageUploadFetcher = useImageUploadFetcher()
   const [imageUploading, setImageUploading] = React.useState(false)
   const [identityImageSrc, setIdentityImageSrc] = React.useState<
@@ -258,25 +260,6 @@ function CreateIdentityForm({
     'complete',
     'error',
   ].includes(state.status)
-
-  const statusMessages = {
-    'preparing-identity': 'Preparing Identity...',
-    'publishing-identity': 'Publishing Identity...',
-    'approve-transaction': 'Approve Transaction...',
-    'transaction-pending': 'Transaction Pending...',
-    confirm: 'Confirming...',
-    complete: 'Identity created successfully',
-    error: 'Failed to create identity',
-  }
-
-  const isTransactionAwaiting = (status: string) =>
-    ['approve-transaction'].includes(status)
-  const isTransactionProgress = (status: string) =>
-    [
-      'preparing-identity',
-      'publishing-identity',
-      'transaction-pending',
-    ].includes(status)
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -639,16 +622,27 @@ function CreateIdentityForm({
           </Button>
         </div>
       ) : (
-        <TransactionStatus
-          transactionType="identity"
-          state={state}
-          dispatch={dispatch}
-          onClose={onClose}
-          transactionDetail={transactionResponseData?.id}
-          statusMessages={statusMessages}
-          isTransactionAwaiting={isTransactionAwaiting}
-          isTransactionProgress={isTransactionProgress}
-        />
+        <div className="flex flex-col items-center justify-center min-h-96">
+          <TransactionState
+            status={state.status as TransactionStatusType}
+            txHash={state.txHash}
+            type="identity"
+            successButton={
+              transactionResponseData && (
+                <Button
+                  type="button"
+                  variant="primary"
+                  onClick={() => {
+                    navigate(`/app/identity/${transactionResponseData.id}`)
+                    onClose()
+                  }}
+                >
+                  View identity
+                </Button>
+              )
+            }
+          />
+        </div>
       )}
     </offChainFetcher.Form>
   )
