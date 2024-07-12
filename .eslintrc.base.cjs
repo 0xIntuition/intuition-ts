@@ -35,6 +35,7 @@ module.exports = {
         eqeqeq: 'error',
         yoda: 'error',
         curly: 'error',
+        semi: ['error', 'never'],
         'no-else-return': 'error',
         'react/prop-types': 'off',
         'prettier/prettier': 'error',
@@ -48,6 +49,8 @@ module.exports = {
         'no-lonely-if': 'error',
         'no-unneeded-ternary': 'error',
         'no-confusing-arrow': 'error',
+        'no-extra-semi': 'error',
+        'dot-notation': 'error',
       },
       settings: {
         react: {

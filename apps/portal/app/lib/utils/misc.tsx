@@ -96,7 +96,7 @@ export function getAuthHeaders(token?: string) {
   }
 
   if (token) {
-    headers['authorization'] = `Bearer ${token}`
+    headers.authorization = `Bearer ${token}`
   }
 
   if (!token) {
