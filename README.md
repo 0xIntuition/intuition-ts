@@ -41,15 +41,6 @@ Each package will have more detailed instructions, but you should clone the enti
 - Clone the monorepo from the root: `git@github.com:0xIntuition/intuition-ts.git`
 - Follow individual instructions for each app and package
 
-#### Installing dependencies and setting up [Husky](https://typicode.github.io/husky/)
-
-Run the following commands:
-
-```
-pnpm install
-pnpm prepare // initialize Husky
-```
-
 ### Environment variables
 
 Please read [Nx's env variable definition guide](https://nx.dev/recipes/tips-n-tricks/define-environment-variables) to see how we organize our env variables. Each app/package will have the following files that reflects the three configurations we have.
