@@ -15,7 +15,7 @@ export function createPerson(
   obj: TypedMap<string, JSONValue>,
 ): void {
   const person = new Person(atom.id)
-  person.atom = atom.id
+  person.atom_id = atom.id
 
   const identifier = obj.get('identifier')
   if (identifier !== null) {
@@ -45,12 +45,12 @@ export function createPerson(
 
   const value = new AtomValue(atom.id)
 
-  value.person = person.id
+  value.person_id = person.id
   value.save()
 
   atom.emoji = '👤'
   atom.type = 'Person'
-  atom.value = value.id
+  atom.value_id = value.id
   atom.label = person.name
   atom.image = person.image
 }

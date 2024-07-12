@@ -15,7 +15,7 @@ export function createOrganization(
   obj: TypedMap<string, JSONValue>,
 ): void {
   const organization = new Organization(atom.id)
-  organization.atom = atom.id
+  organization.atom_id = atom.id
 
   const identifier = obj.get('identifier')
   if (identifier !== null) {
@@ -45,12 +45,12 @@ export function createOrganization(
 
   const value = new AtomValue(atom.id)
 
-  value.organization = organization.id
+  value.organization_id = organization.id
   value.save()
 
   atom.emoji = '🏢'
   atom.type = 'Organization'
-  atom.value = value.id
+  atom.value_id = value.id
   atom.label = organization.name
   atom.image = organization.image
 }

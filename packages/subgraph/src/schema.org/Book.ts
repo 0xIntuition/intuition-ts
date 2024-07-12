@@ -4,7 +4,7 @@ import { Atom, AtomValue, Book } from '../../generated/schema'
 
 export function createBook(atom: Atom, obj: TypedMap<string, JSONValue>): void {
   const book = new Book(atom.id)
-  book.atom = atom.id
+  book.atom_id = atom.id
 
   const name = obj.get('name')
   if (name !== null) {
@@ -25,11 +25,11 @@ export function createBook(atom: Atom, obj: TypedMap<string, JSONValue>): void {
 
   const value = new AtomValue(atom.id)
 
-  value.book = book.id
+  value.book_id = book.id
   value.save()
 
   atom.emoji = '📚'
   atom.type = 'Book'
-  atom.value = value.id
+  atom.value_id = value.id
   atom.label = book.name
 }

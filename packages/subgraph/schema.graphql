@@ -1,14 +1,14 @@
 type Event @entity(immutable: true) {
   id: Bytes!
   type: EventType!
-  atom: Atom
-  triple: Triple
-  deposit: Deposit
-  redemption: Redemption
-  feeTransfer: FeeTransfer
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
+  atom_id: Atom
+  triple_id: Triple
+  deposit_id: Deposit
+  redemption_id: Redemption
+  fee_transfer_id: FeeTransfer
+  block_number: BigInt!
+  block_timestamp: BigInt!
+  transaction_hash: Bytes!
 }
 
 enum EventType {
@@ -21,8 +21,8 @@ enum EventType {
 
 type Atom @entity {
   id: ID!
-  creator: Account!
-  wallet: Account!
+  creator_id: Account!
+  wallet_id: Account!
   uri: String!
   data: String!
 
@@ -31,35 +31,35 @@ type Atom @entity {
   label: String
   image: String
 
-  value: AtomValue
+  value_id: AtomValue
 
-  vault: Vault!
+  vault_id: Vault!
 
-  activePositionsCount: Int
-  allPositionsCount: Int
+  active_positions_count: Int
+  all_positions_count: Int
 
-  isSubject: [Triple!]! @derivedFrom(field: "subject")
-  isPredicate: [Triple!]! @derivedFrom(field: "predicate")
-  isObject: [Triple!]! @derivedFrom(field: "object")
+  isSubject: [Triple!]! @derivedFrom(field: "subject_id")
+  isPredicate: [Triple!]! @derivedFrom(field: "predicate_id")
+  isObject: [Triple!]! @derivedFrom(field: "object_id")
 
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
+  block_number: BigInt!
+  block_timestamp: BigInt!
+  transaction_hash: Bytes!
 }
 
 type Account @entity {
   id: ID!
   label: String
   image: String
-  atom: Atom
+  atom_id: Atom
   type: AccountType!
-  createdAtoms: [Atom!]! @derivedFrom(field: "creator")
-  createdTriples: [Triple!]! @derivedFrom(field: "creator")
-  feeTransfers: [FeeTransfer!]! @derivedFrom(field: "sender")
-  deposits: [Deposit!]! @derivedFrom(field: "sender")
-  redemptions: [Redemption!]! @derivedFrom(field: "sender")
-  positions: [Position!]! @derivedFrom(field: "account")
-  signals: [Signal!]! @derivedFrom(field: "account")
+  createdAtoms: [Atom!]! @derivedFrom(field: "creator_id")
+  createdTriples: [Triple!]! @derivedFrom(field: "creator_id")
+  feeTransfers: [FeeTransfer!]! @derivedFrom(field: "sender_id")
+  deposits: [Deposit!]! @derivedFrom(field: "sender_id")
+  redemptions: [Redemption!]! @derivedFrom(field: "sender_id")
+  positions: [Position!]! @derivedFrom(field: "account_id")
+  signals: [Signal!]! @derivedFrom(field: "account_id")
 }
 
 enum AccountType {
@@ -70,33 +70,33 @@ enum AccountType {
 
 type Triple @entity {
   id: String!
-  creator: Account!
-  subject: Atom!
-  predicate: Atom!
-  object: Atom!
+  creator_id: Account!
+  subject_id: Atom!
+  predicate_id: Atom!
+  object_id: Atom!
 
-  vault: Vault!
-  inverseVault: Vault!
+  vault_id: Vault!
+  counter_vault_id: Vault!
 
   positions: [Position!]!
-  positionsCount: Int!
+  positions_count: Int!
 
-  inversePositions: [Position!]!
-  inversePositionsCount: Int!
+  inverse_positions: [Position!]!
+  inverse_positions_count: Int!
 
-  activePositionsCount: Int
-  allPositionsCount: Int
+  active_positions_count: Int
+  all_positions_count: Int
 
   "vault.totalShares + inverseVault.totalShares"
   tvl: BigInt!
 
   "vault.totalShares - inverseVault.totalShares"
-  totalSignal: BigInt!
+  total_signal: BigInt!
   signals: [Signal!]!
 
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
+  block_number: BigInt!
+  block_timestamp: BigInt!
+  transaction_hash: Bytes!
 }
 
 enum AtomType {
@@ -117,16 +117,16 @@ enum AtomType {
 
 type AtomValue @entity {
   id: ID!
-  account: Account
-  thing: Thing
-  person: Person
-  organization: Organization
-  book: Book
+  account_id: Account
+  thing_id: Thing
+  person_id: Person
+  organization_id: Organization
+  book_id: Book
 }
 
 type Thing @entity {
   id: ID!
-  atom: Atom!
+  atom_id: Atom!
   name: String
   description: String
   image: String
@@ -135,7 +135,7 @@ type Thing @entity {
 
 type Person @entity {
   id: ID!
-  atom: Atom!
+  atom_id: Atom!
   identifier: String
   name: String
   description: String
@@ -146,7 +146,7 @@ type Person @entity {
 
 type Organization @entity {
   id: ID!
-  atom: Atom!
+  atom_id: Atom!
   identifier: String
   name: String
   description: String
@@ -157,7 +157,7 @@ type Organization @entity {
 
 type Book @entity {
   id: ID!
-  atom: Atom!
+  atom_id: Atom!
   name: String
   description: String
   genre: String
@@ -168,93 +168,93 @@ type Deposit @entity(immutable: true) {
   id: Bytes!
 
   "initializer of the deposit"
-  sender: Account!
+  sender_id: Account!
 
   "beneficiary of the minted shares"
-  receiver: Account!
+  receiver_id: Account!
 
   "total shares held by the receiver in the vault"
-  receiverTotalSharesInVault: BigInt!
+  receiver_total_shares_in_vault: BigInt!
 
   "total assets that go towards minting shares for the receiver"
-  senderAssetsAfterTotalFees: BigInt!
+  sender_assets_after_total_fees: BigInt!
 
   "total shares transferred"
-  sharesForReceiver: BigInt!
+  shares_for_receiver: BigInt!
 
   "fee amount collected for entering the vault"
-  entryFee: BigInt!
+  entry_fee: BigInt!
 
   "vault being deposited into"
-  vault: Vault!
+  vault_id: Vault!
 
   "whether the vault is a triple vault or not"
-  isTriple: Boolean!
+  is_triple: Boolean!
 
   "whether the receiver is an atom wallet or not"
-  isAtomWallet: Boolean!
+  is_atom_wallet: Boolean!
 
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
+  block_number: BigInt!
+  block_timestamp: BigInt!
+  transaction_hash: Bytes!
 }
 
 type FeeTransfer @entity(immutable: true) {
   id: Bytes!
-  sender: Account!
-  receiver: Account!
+  sender_id: Account!
+  receiver_id: Account!
   amount: BigInt!
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
+  block_number: BigInt!
+  block_timestamp: BigInt!
+  transaction_hash: Bytes!
 }
 
 type Redemption @entity(immutable: true) {
   id: Bytes!
 
   "initializer of the withdrawal (owner of the shares)"
-  sender: Account!
+  sender_id: Account!
 
   "beneficiary of the withdrawn assets (can be different from the sender)"
-  receiver: Account!
+  receiver_id: Account!
 
   "total shares held by the sender in the vault"
-  senderTotalSharesInVault: BigInt!
+  sender_total_shares_in_vault: BigInt!
 
   "quantity of assets withdrawn by the receiver"
-  assetsForReceiver: BigInt!
+  assets_for_receiver: BigInt!
 
   "quantity of shares redeemed"
-  sharesRedeemedBySender: BigInt!
+  shares_redeemed_by_sender: BigInt!
 
   "total fee amount collected for exiting the vault"
-  exitFee: BigInt!
+  exit_fee: BigInt!
 
   "vault being redeemed from"
-  vault: Vault!
+  vault_id: Vault!
 
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
+  block_number: BigInt!
+  block_timestamp: BigInt!
+  transaction_hash: Bytes!
 }
 
 type Vault @entity {
   id: ID!
-  atom: Atom
-  triple: Triple
-  inverse: Vault
+  atom_id: Atom
+  triple_id: Triple
+  counter_id: Vault
 
-  totalShares: BigInt!
+  total_shares: BigInt!
 
-  deposits: [Deposit!]! @derivedFrom(field: "vault")
-  redemptions: [Redemption!]! @derivedFrom(field: "vault")
-  positions: [Position!]! @derivedFrom(field: "vault")
+  deposits: [Deposit!]! @derivedFrom(field: "vault_id")
+  redemptions: [Redemption!]! @derivedFrom(field: "vault_id")
+  positions: [Position!]! @derivedFrom(field: "vault_id")
 }
 
 type Position @entity {
   id: ID!
-  account: Account!
-  vault: Vault!
+  account_id: Account!
+  vault_id: Vault!
   shares: BigInt!
 }
 
@@ -264,33 +264,33 @@ type Signal @entity {
   delta: BigInt!
 
   "atom or triple (delta / tvl)"
-  relativeStrength: BigInt!
+  relative_strength: BigInt!
 
-  account: Account!
-  atom: Atom
-  triple: Triple
-  deposit: Deposit
-  redemption: Redemption
+  account_id: Account!
+  atom_id: Atom
+  triple_id: Triple
+  deposit_id: Deposit
+  redemption_id: Redemption
 
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
+  block_number: BigInt!
+  block_timestamp: BigInt!
+  transaction_hash: Bytes!
 }
 
 type AtomSignalData @entity(timeseries: true) {
   id: Int8!
   timestamp: Timestamp!
-  atom: Atom!
-  account: Account!
+  atom_id: Atom!
+  account_id: Account!
   delta: BigInt!
 }
 
-type SignalStats
-  @aggregation(intervals: ["hour", "day"], source: "AtomSignalData") {
-  id: Int8!
-  timestamp: Timestamp!
-  atom: Atom!
-  account: Account!
-  totalSignal: BigInt! @aggregate(fn: "sum", arg: "delta")
-  count: Int8! @aggregate(fn: "count", cumulative: true)
-}
+# type SignalStats
+#   @aggregation(intervals: ["hour", "day"], source: "AtomSignalData") {
+#   id: Int8!
+#   timestamp: Timestamp!
+#   atom: Atom!
+#   account: Account!
+#   totalSignal: BigInt! @aggregate(fn: "sum", arg: "delta")
+#   count: Int8! @aggregate(fn: "count", cumulative: true)
+# }
