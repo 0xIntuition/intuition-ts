@@ -15,7 +15,7 @@ describe('TransactionStatusIndicator', () => {
           class="flex flex-col gap-2 justify-center items-center"
         >
           <svg
-            class="w-20 h-20 text-warning animate-spin"
+            class="w-20 h-20 text-warning"
           >
             <use
               href="/src/components/Icon/Icon.sprites.svg#await-action"

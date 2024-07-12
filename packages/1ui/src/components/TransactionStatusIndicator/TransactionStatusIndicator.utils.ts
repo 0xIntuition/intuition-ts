@@ -97,7 +97,7 @@ export const getStatusComponentData = (
     default:
       return {
         iconName: IconName.awaitAction,
-        iconClass: 'text-warning animate-spin',
+        iconClass: 'text-warning',
         label: 'Awaiting',
       }
   }
