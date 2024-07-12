@@ -1,13 +1,15 @@
 import { Icon, IconName } from 'components/Icon'
 import { Text } from 'components/Text'
 import { cn } from 'styles'
-import { QuestCriteriaStatus, QuestCriteriaStatusType } from 'types'
+import {
+  QuestCriteriaStatus,
+  QuestCriteriaStatusType,
+  QuestCriteriaType,
+} from 'types'
 
 interface QuestCriteriaDisplayProps
-  extends React.HTMLAttributes<HTMLDivElement> {
-  questCriteria: string
-  questCriteriaStatus: QuestCriteriaStatusType
-}
+  extends React.HTMLAttributes<HTMLDivElement>,
+    QuestCriteriaType {}
 
 const getStatusComponentData = (status: QuestCriteriaStatusType) => {
   switch (status) {
@@ -39,11 +41,10 @@ const getStatusComponentData = (status: QuestCriteriaStatusType) => {
 }
 
 const QuestCriteriaDisplay = ({
-  questCriteria,
-  questCriteriaStatus,
+  criteria,
+  status,
 }: QuestCriteriaDisplayProps) => {
-  const { iconName, iconClass, criteriaClass } =
-    getStatusComponentData(questCriteriaStatus)
+  const { iconName, iconClass, criteriaClass } = getStatusComponentData(status)
   return (
     <Text
       variant="body"
@@ -51,7 +52,7 @@ const QuestCriteriaDisplay = ({
       className={cn(criteriaClass, 'flex items-center gap-2')}
     >
       <Icon name={iconName} className={cn('w-4 h-4', iconClass)} />
-      {questCriteria}
+      {criteria}
     </Text>
   )
 }
