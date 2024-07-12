@@ -68,7 +68,9 @@ export function ActivePositionsOnClaims({
                 imgSrc: claim.subject?.image,
               }}
               predicate={{
-                variant: claim.predicate?.is_user ? 'user' : 'non-user',
+                variant: claim.predicate?.is_user
+                  ? Identity.user
+                  : Identity.nonUser,
                 label:
                   claim.predicate?.user?.display_name ??
                   claim.predicate?.display_name ??
@@ -77,7 +79,9 @@ export function ActivePositionsOnClaims({
                 imgSrc: claim.predicate?.image,
               }}
               object={{
-                variant: claim.object?.is_user ? 'user' : 'non-user',
+                variant: claim.object?.is_user
+                  ? Identity.user
+                  : Identity.nonUser,
                 label:
                   claim.object?.user?.display_name ??
                   claim.object?.display_name ??
