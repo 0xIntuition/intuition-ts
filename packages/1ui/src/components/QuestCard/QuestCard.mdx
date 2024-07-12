@@ -1,0 +1,42 @@
+import { Canvas, Controls, Meta, Source, Title } from '@storybook/blocks'
+
+import { Button } from '..'
+
+import * as Stories from './QuestCard.stories'
+
+<Meta of={Stories} />
+
+<Title />
+
+#### Quest card to show on a quest set detail page
+
+<Button
+  variant="accent"
+  onClick={() => window.open('link_goes_here', '_blank')}
+>
+  {'API Reference'}
+</Button>
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { QuestCard } from '@0xintuition/1ui'
+
+<QuestCard
+  questStatus="not-started"
+  questCriteriaStatus="not-started"
+  image="https://m.media-amazon.com/images/M/MV5BNDhiMWYzMjgtNTRiYi00ZTA3LThlODctNDRkMDk0NzFkMWI3L2ltYWdlL2ltYWdlXkEyXkFqcGdeQXVyNTg0MTkzMzA@._V1_.jpg"
+  title="Tutorial Island: The Primitive Elements"
+  description="This is a description of the quest set"
+  label="Chapter 1"
+  points={200}
+  questCriteria="Complete the tutorial"
+/>
+`} />
+
+<Canvas of={Stories.BasicUsage} sourceState="none" />
+
+## Properties
+
+<Controls />
