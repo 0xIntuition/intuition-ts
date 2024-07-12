@@ -1,14 +1,12 @@
 import { ClaimPositionRow } from '@0xintuition/1ui'
 import { ClaimPresenter, SortColumn } from '@0xintuition/api'
 
-import { PaginationComponent } from '@components/pagination-component'
-import { useSearchAndSortParamsHandler } from '@lib/hooks/useSearchAndSortParams'
 import { formatBalance } from '@lib/utils/misc'
 import { useNavigate } from '@remix-run/react'
 import { PaginationType } from 'types/pagination'
 
-import { SearchAndSort } from '../search-and-sort'
 import { SortOption } from '../sort-select'
+import { List } from './list'
 
 export function ActivePositionsOnClaims({
   claims,
@@ -25,56 +23,39 @@ export function ActivePositionsOnClaims({
     { value: 'Created At', sortBy: 'CreatedAt' },
   ]
 
-  const { handleSortChange, handleSearchChange, onPageChange, onLimitChange } =
-    useSearchAndSortParamsHandler<SortColumn>('claims')
-
   return (
-    <div className="flex flex-col w-full gap-6">
-      <SearchAndSort
-        options={options}
-        handleSortChange={handleSortChange}
-        handleSearchChange={handleSearchChange}
-      />
-      <div className="flex flex-col w-full">
-        {claims?.map((claim) => (
-          <div
-            key={claim.claim_id}
-            className={`grow shrink basis-0 self-stretch p-6 bg-black first:rounded-t-xl last:rounded-b-xl border border-neutral-300/20 flex-col justify-start items-start gap-5 inline-flex`}
-          >
-            <ClaimPositionRow
-              variant="claim"
-              position={
-                claim.user_assets_for > '0' ? 'claimFor' : 'claimAgainst'
-              }
-              claimsFor={claim.for_num_positions}
-              claimsAgainst={claim.against_num_positions}
-              amount={
-                +formatBalance(
-                  claim.user_assets_for > '0'
-                    ? claim.user_assets_for
-                    : claim.user_assets_against,
-                  18,
-                  5,
-                )
-              }
-              feesAccrued={0} // TODO: Update once BE adds deltas to the data output
-              onClick={() => {
-                navigate(`/app/claim/${claim.claim_id}`)
-              }}
-              className="hover:cursor-pointer"
-            />
-          </div>
-        ))}
-      </div>
-      <PaginationComponent
-        totalEntries={pagination.totalEntries ?? 0}
-        currentPage={pagination.currentPage ?? 0}
-        totalPages={pagination.totalPages ?? 0}
-        limit={pagination.limit ?? 0}
-        onPageChange={onPageChange}
-        onLimitChange={onLimitChange}
-        label="positions"
-      />
-    </div>
+    <List<SortColumn>
+      pagination={pagination}
+      options={options}
+      paramPrefix="claims"
+    >
+      {claims?.map((claim) => (
+        <div
+          key={claim.claim_id}
+          className={`grow shrink basis-0 self-stretch p-6 bg-black first:rounded-t-xl last:rounded-b-xl border border-neutral-300/20 flex-col justify-start items-start gap-5 inline-flex`}
+        >
+          <ClaimPositionRow
+            variant="claim"
+            position={claim.user_assets_for > '0' ? 'claimFor' : 'claimAgainst'}
+            claimsFor={claim.for_num_positions}
+            claimsAgainst={claim.against_num_positions}
+            amount={
+              +formatBalance(
+                claim.user_assets_for > '0'
+                  ? claim.user_assets_for
+                  : claim.user_assets_against,
+                18,
+                5,
+              )
+            }
+            feesAccrued={0} // TODO: Update once BE adds deltas to the data output
+            onClick={() => {
+              navigate(`/app/claim/${claim.claim_id}`)
+            }}
+            className="hover:cursor-pointer"
+          />
+        </div>
+      ))}
+    </List>
   )
 }

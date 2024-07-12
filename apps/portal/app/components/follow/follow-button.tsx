@@ -55,7 +55,6 @@ const FollowButton: React.FC<FollowButtonProps> = ({
 
   const formattedConvictionPrice = formatUnits(BigInt(conviction_price), 18)
 
-  console.log('state.status', state.status)
   const getButtonText = () => {
     if (val === '') {
       return 'Enter an Amount'

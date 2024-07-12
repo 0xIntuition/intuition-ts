@@ -5,7 +5,7 @@ import {
   SortDirection,
 } from '@0xintuition/api'
 
-import { ExploreIdentities } from '@components/list/explore-identities'
+import { IdentitiesList } from '@components/list/identities'
 import { fetchIdentities } from '@lib/utils/fetches'
 import logger from '@lib/utils/logger'
 import { calculateTotalPages, getAuthHeaders } from '@lib/utils/misc'
@@ -63,12 +63,12 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
   })
 }
 
-export default function Identities() {
+export default function ExploreIdentities() {
   const { identities, pagination } = useLoaderData<typeof loader>()
 
   return (
     <div className="m-8 flex flex-col items-center gap-4">
-      <ExploreIdentities identities={identities} pagination={pagination} />
+      <IdentitiesList identities={identities} pagination={pagination} />
     </div>
   )
 }
