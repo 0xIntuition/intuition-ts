@@ -21,9 +21,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   const url = new URL(request.url)
   const searchParams = new URLSearchParams(url.search)
-  const search = searchParams.get('search')
-  const sortBy = searchParams.get('sortBy') ?? 'AssetsSum'
-  const direction = searchParams.get('direction') ?? 'desc'
+  const search = searchParams.get('claim')
+  const sortBy: ClaimSortColumn =
+    (searchParams.get('sortBy') as ClaimSortColumn) ?? 'AssetsSum'
+  const direction: SortDirection =
+    (searchParams.get('direction') as SortDirection) ?? 'desc'
   const page = searchParams.get('page')
     ? parseInt(searchParams.get('page') as string)
     : 1
@@ -60,7 +62,11 @@ export default function ExploreClaims() {
   return (
     <div className="m-8 flex flex-col items-center gap-4">
       <ExploreSearch variant="claim" className="mb-12" />
-      <ClaimsList claims={claims} pagination={claimsPagination} />
+      <ClaimsList
+        claims={claims}
+        pagination={claimsPagination}
+        isExplore={true}
+      />
     </div>
   )
 }

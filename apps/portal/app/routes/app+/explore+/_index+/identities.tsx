@@ -30,9 +30,9 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
 
   const url = new URL(request.url)
   const searchParams = new URLSearchParams(url.search)
-  const search = searchParams.get('search')
+  const search = searchParams.get('identity')
   const sortBy: SortColumn =
-    (searchParams.get('sortBy') as SortColumn) ?? 'createdAt'
+    (searchParams.get('sortBy') as SortColumn) ?? 'AssetsSum'
   const direction: SortDirection =
     (searchParams.get('direction') as SortDirection) ?? 'desc'
   const page = searchParams.get('page')
