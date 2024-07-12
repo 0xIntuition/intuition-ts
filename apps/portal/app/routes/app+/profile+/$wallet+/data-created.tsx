@@ -1,4 +1,12 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@0xintuition/1ui'
+import { ReactNode } from 'react'
+
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+  Text,
+} from '@0xintuition/1ui'
 import {
   ClaimPresenter,
   IdentityPresenter,
@@ -10,7 +18,11 @@ import {
 
 import { ActivePositionsOnClaims } from '@components/list/active-positions-on-claims'
 import { ActivePositionsOnIdentities } from '@components/list/active-positions-on-identities'
-import { DataCreatedHeader } from '@components/profile/data-created-header'
+import {
+  DataCreatedHeader,
+  DataCreatedHeaderVariants,
+  DataCreatedHeaderVariantType,
+} from '@components/profile/data-created-header'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import {
   fetchClaimsSummary,
@@ -126,6 +138,37 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
   })
 }
 
+const TabContent = ({
+  value,
+  userIdentity,
+  userTotals,
+  totalResults,
+  totalStake,
+  variant,
+  children,
+}: {
+  value: string
+  userIdentity: IdentityPresenter
+  userTotals: UserTotalsPresenter
+  totalResults: number
+  totalStake: number
+  variant: DataCreatedHeaderVariantType
+  children?: ReactNode
+}) => {
+  return (
+    <TabsContent value={value} className="w-full">
+      <DataCreatedHeader
+        variant={variant}
+        userIdentity={userIdentity}
+        userTotals={userTotals}
+        totalResults={totalResults}
+        totalStake={totalStake}
+      />
+      {children}
+    </TabsContent>
+  )
+}
+
 export default function ProfileDataCreated() {
   const {
     userIdentity,
@@ -138,51 +181,59 @@ export default function ProfileDataCreated() {
   } = useLiveLoader<typeof loader>(['attest'])
   return (
     <div className="flex-col justify-start items-start flex w-full">
-      <div className="self-stretch justify-between items-center inline-flex mb-4">
-        <div className="grow shrink basis-0 text-white text-xl font-medium leading-[30px]">
+      <div className="self-stretch justify-between items-center inline-flex mb-6">
+        <Text
+          variant="headline"
+          weight="medium"
+          className="theme-secondary-foreground w-full"
+        >
           Active Positions
-        </div>
+        </Text>
       </div>
-      <Tabs defaultValue="identities" className="w-full">
-        <TabsList>
+      <Tabs
+        defaultValue={DataCreatedHeaderVariants.identities}
+        className="w-full"
+      >
+        <TabsList className="mb-4">
           <TabsTrigger
-            value="identities"
+            value={DataCreatedHeaderVariants.identities}
             label="Identities"
             totalCount={identitiesPagination.totalEntries}
           />
           <TabsTrigger
-            value="claims"
+            value={DataCreatedHeaderVariants.claims}
             label="Claims"
             totalCount={claimsPagination.totalEntries}
           />
         </TabsList>
-        <TabsContent value="identities" className="w-full">
-          <DataCreatedHeader
-            variant="identities"
-            userIdentity={userIdentity}
-            userTotals={userTotals}
-            totalIdentities={identitiesPagination.totalEntries}
-          />
+        <TabContent
+          value={DataCreatedHeaderVariants.identities}
+          userIdentity={userIdentity}
+          userTotals={userTotals}
+          totalResults={identitiesPagination.totalEntries}
+          totalStake={
+            +formatBalance(userTotals?.total_position_value ?? '0', 18, 4)
+          }
+          variant={DataCreatedHeaderVariants.identities}
+        >
           <ActivePositionsOnIdentities
             identities={identities}
             pagination={identitiesPagination}
           />
-        </TabsContent>
-        <TabsContent value="claims">
-          <DataCreatedHeader
-            variant="claims"
-            userIdentity={userIdentity}
-            userTotals={userTotals}
-            totalClaims={claimsPagination.totalEntries}
-            totalStakeOnClaims={
-              +formatBalance(claimsSummary?.assets_sum ?? 0, 18, 4)
-            }
-          />
+        </TabContent>
+        <TabContent
+          value={DataCreatedHeaderVariants.claims}
+          userIdentity={userIdentity}
+          userTotals={userTotals}
+          totalResults={claimsPagination.totalEntries}
+          totalStake={+formatBalance(claimsSummary?.assets_sum ?? '0', 18, 4)}
+          variant={DataCreatedHeaderVariants.claims}
+        >
           <ActivePositionsOnClaims
             claims={claims}
             pagination={claimsPagination}
           />
-        </TabsContent>
+        </TabContent>
       </Tabs>
     </div>
   )

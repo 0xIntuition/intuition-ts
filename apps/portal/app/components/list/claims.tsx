@@ -30,6 +30,7 @@ export function ClaimsList({
   return (
     <List<ClaimSortColumn>
       pagination={pagination}
+      paginationLabel="claims"
       options={options}
       paramPrefix={paramPrefix}
     >

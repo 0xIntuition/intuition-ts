@@ -27,6 +27,7 @@ export function PositionsOnClaim({
   return (
     <List<SortColumn>
       pagination={pagination}
+      paginationLabel="positions"
       options={options}
       paramPrefix="claims"
     >

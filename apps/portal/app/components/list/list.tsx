@@ -18,11 +18,13 @@ type SortColumnType = SortColumn | PositionSortColumn | ClaimSortColumn
 export function List<T extends SortColumnType>({
   children,
   pagination,
+  paginationLabel,
   options,
   paramPrefix,
 }: {
   children: ReactNode
   pagination: PaginationType
+  paginationLabel: string
   options: SortOption<T>[]
   paramPrefix?: string
 }) {
@@ -45,7 +47,7 @@ export function List<T extends SortColumnType>({
           limit={pagination.limit ?? 0}
           onPageChange={onPageChange}
           onLimitChange={onLimitChange}
-          label="claims"
+          label={paginationLabel}
         />
       </div>
     </>

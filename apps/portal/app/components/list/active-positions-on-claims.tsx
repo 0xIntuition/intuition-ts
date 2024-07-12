@@ -25,6 +25,7 @@ export function ActivePositionsOnClaims({
 
   return (
     <List<SortColumn>
+      paginationLabel="positions"
       pagination={pagination}
       options={options}
       paramPrefix="claims"

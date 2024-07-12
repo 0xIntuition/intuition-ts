@@ -28,6 +28,7 @@ export function FollowList({
   return (
     <List<SortColumn>
       pagination={pagination}
+      paginationLabel={paramPrefix ?? ''}
       options={options}
       paramPrefix={paramPrefix}
     >

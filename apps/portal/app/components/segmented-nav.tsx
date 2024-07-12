@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-import { SegmentedControl, SegmentedControlItem, Text } from '@0xintuition/1ui'
+import { SegmentedControl, SegmentedControlItem } from '@0xintuition/1ui'
 
 import { useNavigate, useParams } from '@remix-run/react'
 
@@ -58,7 +58,7 @@ export const SegmentedNav = ({ options }: SegmentedNavProps) => {
           isActive={selectedTab === option.value}
           onClick={() => handleTabClick(option)}
         >
-          <Text variant="small">{option.label}</Text>
+          {option.label}
         </SegmentedControlItem>
       ))}
     </SegmentedControl>

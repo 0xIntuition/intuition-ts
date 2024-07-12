@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-import { Tabs, TabsList, TabsTrigger } from '@0xintuition/1ui'
+import { Tabs, TabsList, TabsTrigger, Text } from '@0xintuition/1ui'
 import {
   OpenAPI,
   PositionPresenter,
@@ -91,46 +91,46 @@ export default function ClaimOverview() {
 
   return (
     <div className="flex-col justify-start items-start flex w-full">
-      <div className="flex-col justify-start items-start gap-3 flex w-full">
-        <div className="self-stretch justify-between items-center inline-flex">
-          <div className="grow shrink basis-0 text-white text-xl font-medium leading-[30px]">
-            Positions on this Claim
-          </div>
-        </div>
+      <div className="self-stretch justify-between items-center inline-flex mb-6">
+        <Text
+          variant="headline"
+          weight="medium"
+          className="theme-secondary-foreground w-full"
+        >
+          Positions on this Claim
+        </Text>
       </div>
-      <div className="flex flex-row w-full mt-6">
-        <Tabs defaultValue="">
-          <TabsList>
-            <TabsTrigger
-              value=""
-              label="All"
-              totalCount={claim?.num_positions}
-              onClick={(e) => {
-                e.preventDefault()
-                setPositionDirection('all')
-              }}
-            />
-            <TabsTrigger
-              value="for"
-              label="For"
-              totalCount={claim?.for_num_positions}
-              onClick={(e) => {
-                e.preventDefault()
-                setPositionDirection('for')
-              }}
-            />
-            <TabsTrigger
-              value="against"
-              label="Against"
-              totalCount={claim?.against_num_positions}
-              onClick={(e) => {
-                e.preventDefault()
-                setPositionDirection('against')
-              }}
-            />
-          </TabsList>
-        </Tabs>
-      </div>
+      <Tabs defaultValue="">
+        <TabsList>
+          <TabsTrigger
+            value=""
+            label="All"
+            totalCount={claim?.num_positions}
+            onClick={(e) => {
+              e.preventDefault()
+              setPositionDirection('all')
+            }}
+          />
+          <TabsTrigger
+            value="for"
+            label="For"
+            totalCount={claim?.for_num_positions}
+            onClick={(e) => {
+              e.preventDefault()
+              setPositionDirection('for')
+            }}
+          />
+          <TabsTrigger
+            value="against"
+            label="Against"
+            totalCount={claim?.against_num_positions}
+            onClick={(e) => {
+              e.preventDefault()
+              setPositionDirection('against')
+            }}
+          />
+        </TabsList>
+      </Tabs>
       <PositionsOnClaim positions={positions} pagination={pagination} />
     </div>
   )

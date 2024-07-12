@@ -26,6 +26,7 @@ export function IdentitiesList({
   return (
     <List<SortColumn>
       pagination={pagination}
+      paginationLabel="identities"
       options={options}
       paramPrefix={paramPrefix}
     >

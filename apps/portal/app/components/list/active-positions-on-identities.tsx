@@ -26,6 +26,7 @@ export function ActivePositionsOnIdentities({
   return (
     <List<SortColumn>
       pagination={pagination}
+      paginationLabel="positions"
       options={options}
       paramPrefix="identities"
     >

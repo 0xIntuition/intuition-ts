@@ -133,30 +133,34 @@ export default function ProfileDataAbout() {
     claimsPagination,
   } = useLiveLoader<typeof loader>(['attest'])
   return (
-    <div className="flex-col justify-start items-start flex w-full">
-      <DataAboutHeader
-        variant="claims"
-        title="Claims about this Identity"
-        userIdentity={userIdentity}
-        totalClaims={claimsPagination.totalEntries}
-        totalStake={+formatBalance(claimsSummary?.assets_sum ?? 0, 18, 4)}
-      />
-      <ClaimsAboutIdentity
-        claims={claims}
-        pagination={claimsPagination}
-        paramPrefix="claims"
-      />
-      <DataAboutHeader
-        variant="positions"
-        title="Positions on this Identity"
-        userIdentity={userIdentity}
-        totalPositions={userIdentity.num_positions}
-        totalStake={+formatBalance(userIdentity.assets_sum, 18, 4)}
-      />
-      <PositionsOnIdentity
-        positions={positions}
-        pagination={positionsPagination}
-      />
+    <div className="flex-col justify-start items-start flex w-full gap-6">
+      <div className="flex flex-col w-full pb-4">
+        <DataAboutHeader
+          variant="claims"
+          title="Claims about this Identity"
+          userIdentity={userIdentity}
+          totalClaims={claimsPagination.totalEntries}
+          totalStake={+formatBalance(claimsSummary?.assets_sum ?? 0, 18, 4)}
+        />
+        <ClaimsAboutIdentity
+          claims={claims}
+          pagination={claimsPagination}
+          paramPrefix="claims"
+        />
+      </div>
+      <div className="flex flex-col pt-4 w-full">
+        <DataAboutHeader
+          variant="positions"
+          title="Positions on this Identity"
+          userIdentity={userIdentity}
+          totalPositions={userIdentity.num_positions}
+          totalStake={+formatBalance(userIdentity.assets_sum, 18, 4)}
+        />
+        <PositionsOnIdentity
+          positions={positions}
+          pagination={positionsPagination}
+        />
+      </div>
     </div>
   )
 }

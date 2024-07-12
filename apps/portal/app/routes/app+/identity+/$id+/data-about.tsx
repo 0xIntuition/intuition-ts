@@ -135,8 +135,8 @@ export default function ProfileDataAbout() {
     claimsPagination,
   } = useLiveLoader<typeof loader>(['attest'])
   return (
-    <div className="flex-col justify-start items-start flex w-full">
-      <div className="flex flex-col py-4 w-full">
+    <div className="flex-col justify-start items-start flex w-full gap-6">
+      <div className="flex flex-col w-full pb-4">
         <DataAboutHeader
           variant="claims"
           title="Claims about this Identity"
@@ -150,7 +150,7 @@ export default function ProfileDataAbout() {
           paramPrefix="claims"
         />
       </div>
-      <div className="flex flex-col py-4 w-full">
+      <div className="flex flex-col pt-4 w-full">
         <DataAboutHeader
           variant="positions"
           title="Positions on this Identity"

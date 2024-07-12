@@ -26,6 +26,7 @@ export function PositionsOnIdentity({
   return (
     <List<PositionSortColumn>
       pagination={pagination}
+      paginationLabel="positions"
       options={options}
       paramPrefix="positions"
     >
