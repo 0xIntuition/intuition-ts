@@ -43,7 +43,9 @@ export function invariant(
 }
 
 export function getErrorMessage(error: unknown) {
-  if (typeof error === 'string') return error
+  if (typeof error === 'string') {
+    return error
+  }
   if (
     error &&
     typeof error === 'object' &&
@@ -73,7 +75,9 @@ export function sliceString(
 }
 
 export function truncateString(str: string, maxLength: number): string {
-  if (str.length <= maxLength) return str
+  if (str.length <= maxLength) {
+    return str
+  }
   return `${str.slice(0, maxLength)}...`
 }
 
@@ -115,7 +119,9 @@ export function useUpdateQueryStringValueWithoutNavigation(
   React.useEffect(() => {
     const currentSearchParams = new URLSearchParams(window.location.search)
     const oldQuery = currentSearchParams.get(queryKey) ?? ''
-    if (queryValue === oldQuery) return
+    if (queryValue === oldQuery) {
+      return
+    }
 
     if (queryValue) {
       currentSearchParams.set(queryKey, queryValue)
@@ -142,7 +148,9 @@ export function combineHeaders(
 ) {
   const combined = new Headers()
   for (const header of headers) {
-    if (!header) continue
+    if (!header) {
+      continue
+    }
     for (const [key, value] of new Headers(header).entries()) {
       combined.append(key, value)
     }
@@ -155,7 +163,9 @@ export const formatBalance = (
   decimals = 18,
   precision?: number,
 ): string => {
-  if (!balance) return '0'
+  if (!balance) {
+    return '0'
+  }
 
   const n = Number(balance.toString()) / 10 ** decimals
   let result: string
@@ -236,7 +246,9 @@ export function calculatePercentageGain(
   totalValue: number,
 ): number {
   const originalValue = totalValue - delta
-  if (originalValue === 0) return 0
+  if (originalValue === 0) {
+    return 0
+  }
   return (delta / originalValue) * 100
 }
 

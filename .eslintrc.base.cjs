@@ -34,6 +34,7 @@ module.exports = {
       rules: {
         eqeqeq: 'error',
         yoda: 'error',
+        curly: 'error',
         'no-else-return': 'error',
         'react/prop-types': 'off',
         'prettier/prettier': 'error',

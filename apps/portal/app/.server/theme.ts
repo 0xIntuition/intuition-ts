@@ -8,7 +8,9 @@ export function getTheme(request: Request): Theme | undefined {
   const cookieHeader = request.headers.get('Cookie')
   const parsed = cookieHeader && cookie.parse(cookieHeader)[cookieName]
 
-  if (themesList.includes(parsed as Theme)) return parsed as Theme
+  if (themesList.includes(parsed as Theme)) {
+    return parsed as Theme
+  }
 
   return undefined
 }

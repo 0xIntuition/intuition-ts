@@ -260,12 +260,16 @@ const usePrevNextButtons = (
   const [nextBtnDisabled, setNextBtnDisabled] = useState(true)
 
   const onPrevButtonClick = useCallback(() => {
-    if (!emblaApi) return
+    if (!emblaApi) {
+      return
+    }
     emblaApi.scrollPrev()
   }, [emblaApi])
 
   const onNextButtonClick = useCallback(() => {
-    if (!emblaApi) return
+    if (!emblaApi) {
+      return
+    }
     emblaApi.scrollNext()
   }, [emblaApi])
 
@@ -275,7 +279,9 @@ const usePrevNextButtons = (
   }, [])
 
   useEffect(() => {
-    if (!emblaApi) return
+    if (!emblaApi) {
+      return
+    }
 
     onSelect(emblaApi)
     emblaApi.on('reInit', onSelect)
@@ -349,7 +355,9 @@ const useDotButton = (
 
   const onDotButtonClick = useCallback(
     (index: number) => {
-      if (!emblaApi) return
+      if (!emblaApi) {
+        return
+      }
       emblaApi.scrollTo(index)
     },
     [emblaApi],
@@ -364,7 +372,9 @@ const useDotButton = (
   }, [])
 
   useEffect(() => {
-    if (!emblaApi) return
+    if (!emblaApi) {
+      return
+    }
 
     onInit(emblaApi)
     onSelect(emblaApi)

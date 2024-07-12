@@ -37,7 +37,9 @@ export const action: ActionFunction = async ({ request, context }) => {
           throw error
         }
       }
-      if (identity?.status === 'complete') break
+      if (identity?.status === 'complete') {
+        break
+      }
       attempts++
     } while (attempts < 10)
 
