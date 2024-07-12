@@ -155,7 +155,6 @@ function CreateClaimForm({
   }
 
   const [searchQuery, setSearchQuery] = useState('')
-  // const [isPopoverOpen, setIsPopoverOpen] = useState(true)
   const [isSubjectPopoverOpen, setIsSubjectPopoverOpen] = useState(true)
   const [isPredicatePopoverOpen, setIsPredicatePopoverOpen] = useState(true)
   const [isObjectPopoverOpen, setIsObjectPopoverOpen] = useState(true)
@@ -395,6 +394,17 @@ function CreateClaimForm({
       setIsObjectPopoverOpen(false)
     }
   }
+
+  useEffect(() => {
+    if (
+      !isSubjectPopoverOpen &&
+      !isPredicatePopoverOpen &&
+      !isObjectPopoverOpen
+    ) {
+      setSearchQuery('')
+      setIdentities([])
+    }
+  }, [isSubjectPopoverOpen, isPredicatePopoverOpen, isObjectPopoverOpen])
 
   const isTransactionStarted = [
     'approve',
