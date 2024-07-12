@@ -54,7 +54,7 @@ import { useAccount, usePublicClient, useWalletClient } from 'wagmi'
 import ErrorList from './error-list'
 import { IdentitySearchCombobox } from './identity/identity-search-combo-box'
 import Toast from './toast'
-import TransactionState from './transaction-state'
+import { TransactionState } from './transaction-state'
 
 interface ClaimFormProps {
   onSuccess?: () => void

@@ -30,9 +30,9 @@ export function TransactionState({
       {status !== 'complete' ? (
         <TransactionStatusCard status={status} />
       ) : (
-        <div className="flex flex-col gap-1 items-center gap-2.5">
+        <div className="flex flex-col items-center">
           {txHash && (
-            <div className="flex flex-col items-center">
+            <div className="flex flex-col items-center mt-2.5">
               <Link
                 to={`${BLOCK_EXPLORER_URL}/tx/${txHash}`}
                 target="_blank"
@@ -41,7 +41,7 @@ export function TransactionState({
                 View on Basescan
                 <Icon name="square-arrow-top-right" className="h-3 w-3" />
               </Link>
-              {successButton}
+              <div className="mt-10">{successButton}</div>
             </div>
           )}
         </div>
