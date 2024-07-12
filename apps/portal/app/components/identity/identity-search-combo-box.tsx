@@ -62,7 +62,6 @@ const IdentitySearchCombobox = ({
           </Button>
         )}
         <CommandList>
-          <pre>length: {identities.length}</pre>
           <CommandEmpty>No results found.</CommandEmpty>
           <CommandGroup key={identities.length}>
             {identities.map((identity, index) => {

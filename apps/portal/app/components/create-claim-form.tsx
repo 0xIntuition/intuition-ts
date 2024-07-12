@@ -155,6 +155,10 @@ function CreateClaimForm({
   }
 
   const [searchQuery, setSearchQuery] = useState('')
+  // const [isPopoverOpen, setIsPopoverOpen] = useState(true)
+  const [isSubjectPopoverOpen, setIsSubjectPopoverOpen] = useState(true)
+  const [isPredicatePopoverOpen, setIsPredicatePopoverOpen] = useState(true)
+  const [isObjectPopoverOpen, setIsObjectPopoverOpen] = useState(true)
 
   const handleInput = async (event: React.FormEvent<HTMLInputElement>) => {
     event.preventDefault()
@@ -381,7 +385,15 @@ function CreateClaimForm({
       ...prevState,
       [identityType]: identity,
     }))
-    logger('selected', identity)
+    setSearchQuery('')
+    setIdentities([])
+    if (identityType === 'subject') {
+      setIsSubjectPopoverOpen(false)
+    } else if (identityType === 'predicate') {
+      setIsPredicatePopoverOpen(false)
+    } else if (identityType === 'object') {
+      setIsObjectPopoverOpen(false)
+    }
   }
 
   const isTransactionStarted = [
@@ -409,7 +421,10 @@ function CreateClaimForm({
         {!isTransactionStarted ? (
           <div className="flex flex-col items-center gap-14">
             <div className="flex items-center">
-              <Popover>
+              <Popover
+                open={isSubjectPopoverOpen}
+                onOpenChange={setIsSubjectPopoverOpen}
+              >
                 <PopoverTrigger asChild>
                   <div className="flex flex-col gap-2 items-start">
                     <Text variant="small" className="text-primary/60">
@@ -506,7 +521,10 @@ function CreateClaimForm({
                 </PopoverContent>
               </Popover>
               <Divider />
-              <Popover>
+              <Popover
+                open={isPredicatePopoverOpen}
+                onOpenChange={setIsPredicatePopoverOpen}
+              >
                 <PopoverTrigger asChild>
                   <div className="flex flex-col gap-2 items-start">
                     <Text variant="small" className="text-primary/60">
@@ -612,7 +630,10 @@ function CreateClaimForm({
                 </PopoverContent>
               </Popover>
               <Divider />
-              <Popover>
+              <Popover
+                open={isObjectPopoverOpen}
+                onOpenChange={setIsObjectPopoverOpen}
+              >
                 <PopoverTrigger asChild>
                   <div className="flex flex-col gap-2 items-start">
                     <Text variant="small" className="text-primary/60">
