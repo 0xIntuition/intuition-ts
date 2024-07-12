@@ -5,17 +5,11 @@ import { PaginationComponent } from '@components/pagination-component'
 import { useSearchAndSortParamsHandler } from '@lib/hooks/useSearchAndSortParams'
 import { formatBalance } from '@lib/utils/misc'
 import { useNavigate } from '@remix-run/react'
+import { PaginationType } from 'types/pagination'
 import { formatUnits } from 'viem'
 
 import { SearchAndSort } from '../search-and-sort'
 import { SortOption } from '../sort-select'
-
-interface PaginationType {
-  totalEntries: number | undefined
-  currentPage: number
-  totalPages: number
-  limit: number
-}
 
 export function PositionsOnClaim({
   positions,

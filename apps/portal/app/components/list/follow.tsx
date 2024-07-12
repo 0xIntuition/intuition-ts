@@ -7,13 +7,7 @@ import { SortOption } from '@components/sort-select'
 import { useSearchAndSortParamsHandler } from '@lib/hooks/useSearchAndSortParams'
 import { formatBalance } from '@lib/utils/misc'
 import { useNavigate } from '@remix-run/react'
-
-interface PaginationType {
-  totalEntries: number | undefined
-  currentPage: number
-  totalPages: number
-  limit: number
-}
+import { PaginationType } from 'types/pagination'
 
 export function FollowList({
   identities,
