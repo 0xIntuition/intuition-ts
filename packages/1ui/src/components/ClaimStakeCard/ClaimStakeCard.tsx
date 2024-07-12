@@ -97,14 +97,14 @@ const ClaimStakeCard = ({
   return (
     <div
       className={cn(
-        'flex flex-col gap-4 theme-border rounded-xl p-5 w-max',
+        'flex flex-col gap-4 theme-border rounded-xl p-5 w-full',
         className,
       )}
       {...props}
     >
       <Text variant={TextVariant.bodyLarge}>Stake</Text>
       <div className="grid justify-center items-center">
-        <div className="col-[1] row-[1] block w-max">
+        <div className="col-[1] row-[1] block w-full">
           <PieChart
             variant={PieChartVariant.forVsAgainst}
             size={PieChartSize.lg}
@@ -148,13 +148,13 @@ const ClaimStakeCard = ({
           value={amountFor}
         />
       </div>
-      <div className="flex justify-between items-center gap-4 w-max mt-2">
+      <div className="flex justify-between items-center gap-4 w-full mt-2">
         <Button
           variant={ButtonVariant.against}
           size={ButtonSize.md}
           disabled={disableAgainstBtn || !onAgainstBtnClick}
           onClick={onAgainstBtnClick}
-          className="w-32"
+          className="w-full"
         >
           Deposit Against
         </Button>
@@ -163,7 +163,7 @@ const ClaimStakeCard = ({
           size={ButtonSize.md}
           disabled={disableForBtn || !onForBtnClick}
           onClick={onForBtnClick}
-          className="w-32"
+          className="w-full"
         >
           Deposit For
         </Button>

@@ -109,7 +109,7 @@ export const themePlugin = plugin(
         'font-feature-settings': '"rlig" 1, "calt" 1',
       },
       '.theme-border': {
-        '@apply border border-border/10': {},
+        '@apply border border-border/20': {},
       },
     })
 

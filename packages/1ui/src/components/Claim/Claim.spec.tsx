@@ -43,7 +43,7 @@ describe('Claim', () => {
             Alice
           </button>
           <div
-            class="shrink-0 bg-border/30 h-[1px] w-4"
+            class="shrink-0 bg-border/20 h-[1px] w-4 group-hover:bg-primary"
             data-orientation="horizontal"
             role="none"
           />
@@ -66,7 +66,7 @@ describe('Claim', () => {
             likes
           </button>
           <div
-            class="shrink-0 bg-border/30 h-[1px] w-4"
+            class="shrink-0 bg-border/20 h-[1px] w-4 group-hover:bg-primary"
             data-orientation="horizontal"
             role="none"
           />
@@ -114,7 +114,7 @@ describe('Claim', () => {
             Alice
           </button>
           <div
-            class="shrink-0 bg-border/30 h-[1px] w-4"
+            class="shrink-0 bg-border/20 h-[1px] w-4 group-hover:bg-primary"
             data-orientation="horizontal"
             role="none"
           />
@@ -138,7 +138,7 @@ describe('Claim', () => {
             likes
           </button>
           <div
-            class="shrink-0 bg-border/30 h-[1px] w-4"
+            class="shrink-0 bg-border/20 h-[1px] w-4 group-hover:bg-primary"
             data-orientation="horizontal"
             role="none"
           />
@@ -188,7 +188,7 @@ describe('Claim', () => {
             Alice
           </button>
           <div
-            class="shrink-0 bg-border/30 h-[1px] w-4"
+            class="shrink-0 bg-border/20 h-[1px] w-4 group-hover:bg-primary"
             data-orientation="horizontal"
             role="none"
           />
@@ -211,7 +211,7 @@ describe('Claim', () => {
             likes
           </button>
           <div
-            class="shrink-0 bg-border/30 h-[1px] w-4"
+            class="shrink-0 bg-border/20 h-[1px] w-4 group-hover:bg-primary"
             data-orientation="horizontal"
             role="none"
           />
@@ -258,7 +258,7 @@ describe('Claim', () => {
             Alice
           </button>
           <div
-            class="shrink-0 bg-border/30 h-[1px] w-4"
+            class="shrink-0 bg-border/20 h-[1px] w-4 group-hover:bg-primary"
             data-orientation="horizontal"
             role="none"
           />
@@ -281,7 +281,7 @@ describe('Claim', () => {
             likes
           </button>
           <div
-            class="shrink-0 bg-border/30 h-[1px] w-4"
+            class="shrink-0 bg-border/20 h-[1px] w-4 group-hover:bg-primary"
             data-orientation="horizontal"
             role="none"
           />

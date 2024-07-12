@@ -12,6 +12,8 @@ import type {
   AlchemyWebhookResponse,
   AuthData,
   AuthResponse,
+  ClaimSummaryData,
+  ClaimSummaryResponse,
   CreateClaimData,
   CreateClaimResponse,
   CreateIdentityData,
@@ -366,6 +368,54 @@ export class ClaimsService {
     return __request(OpenAPI, {
       method: 'GET',
       url: '/claims/search',
+      query: {
+        direction: data.direction,
+        sortBy: data.sortBy,
+        page: data.page,
+        offset: data.offset,
+        limit: data.limit,
+        creator: data.creator,
+        subject: data.subject,
+        identity: data.identity,
+        object: data.object,
+        predicate: data.predicate,
+        vault: data.vault,
+        displayName: data.displayName,
+        counterVault: data.counterVault,
+        status: data.status,
+        forUser: data.forUser,
+        againstUser: data.againstUser,
+      },
+    })
+  }
+
+  /**
+   * @param data The data for the request.
+   * @param data.direction
+   * @param data.sortBy
+   * @param data.page
+   * @param data.offset
+   * @param data.limit
+   * @param data.creator
+   * @param data.subject
+   * @param data.identity
+   * @param data.object
+   * @param data.predicate
+   * @param data.vault
+   * @param data.displayName
+   * @param data.counterVault
+   * @param data.status
+   * @param data.forUser
+   * @param data.againstUser
+   * @returns unknown Summary of claim values based on query
+   * @throws ApiError
+   */
+  public static claimSummary(
+    data: ClaimSummaryData = {},
+  ): CancelablePromise<ClaimSummaryResponse> {
+    return __request(OpenAPI, {
+      method: 'GET',
+      url: '/claims/summary',
       query: {
         direction: data.direction,
         sortBy: data.sortBy,
@@ -1085,6 +1135,7 @@ export class UsersService {
    * @param data.offset
    * @param data.limit
    * @param data.user
+   * @param data.displayName
    * @param data.showEmptyPosition
    * @param data.timeframe
    * @returns unknown Get claims user has position on
@@ -1103,6 +1154,7 @@ export class UsersService {
         offset: data.offset,
         limit: data.limit,
         user: data.user,
+        displayName: data.displayName,
         showEmptyPosition: data.showEmptyPosition,
         timeframe: data.timeframe,
       },
@@ -1117,6 +1169,7 @@ export class UsersService {
    * @param data.offset
    * @param data.limit
    * @param data.user
+   * @param data.displayName
    * @param data.showEmptyPosition
    * @param data.timeframe
    * @returns unknown Get identities user has position on
@@ -1135,6 +1188,7 @@ export class UsersService {
         offset: data.offset,
         limit: data.limit,
         user: data.user,
+        displayName: data.displayName,
         showEmptyPosition: data.showEmptyPosition,
         timeframe: data.timeframe,
       },

@@ -1,5 +1,4 @@
 import {
-  Button,
   PositionCard,
   PositionCardFeesAccrued,
   PositionCardLastUpdated,
@@ -16,19 +15,20 @@ import { OpenAPI } from '@0xintuition/api'
 
 import { NestedLayout } from '@components/nested-layout'
 import StakeModal from '@components/stake/stake-modal'
-import { stakeModalAtom } from '@lib/state/store'
+import TagsModal from '@components/tags/tags-modal'
+import { stakeModalAtom, tagsModalAtom } from '@lib/state/store'
 import { identityRouteOptions } from '@lib/utils/constants'
 import { fetchIdentity } from '@lib/utils/fetches'
 import logger from '@lib/utils/logger'
 import {
-  calculatePercentageGain,
+  calculatePercentageOfTvl,
   formatBalance,
   getAuthHeaders,
   sliceString,
 } from '@lib/utils/misc'
 import { SessionContext } from '@middleware/session'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
-import { Outlet, useLoaderData } from '@remix-run/react'
+import { Outlet, useLoaderData, useNavigate } from '@remix-run/react'
 import { getVaultDetails } from '@server/multivault'
 import { getPrivyAccessToken } from '@server/privy'
 import { useAtom } from 'jotai'
@@ -91,9 +91,11 @@ export default function IdentityDetails() {
     vaultDetails: VaultDetailsType
     user: SessionUser
   }>()
+  const navigate = useNavigate()
 
-  const user_assets = vaultDetails ? vaultDetails.user_assets : '0'
+  const { user_assets, assets_sum } = vaultDetails ? vaultDetails : identity
   const [stakeModalActive, setStakeModalActive] = useAtom(stakeModalAtom)
+  const [tagsModalActive, setTagsModalActive] = useAtom(tagsModalAtom)
 
   return (
     <NestedLayout outlet={Outlet} options={identityRouteOptions}>
@@ -105,17 +107,9 @@ export default function IdentityDetails() {
             name={identity?.display_name ?? ''}
             walletAddress={sliceString(identity?.identity_id, 6, 4)}
             bio={identity?.description ?? ''}
-          >
-            <Button
-              variant="secondary"
-              className="w-full"
-              onClick={() => logger('follow functionality')}
-            >
-              Follow
-            </Button>
-          </ProfileCard>
-          {identity?.tags !== null && (
-            <Tags>
+          />
+          <Tags>
+            {identity?.tags && identity?.tags.length > 0 && (
               <TagsContent numberOfTags={identity?.tag_count ?? 0}>
                 {identity?.tags?.map((tag, index) => (
                   <TagWithValue
@@ -125,9 +119,13 @@ export default function IdentityDetails() {
                   />
                 ))}
               </TagsContent>
-              <TagsButton onClick={() => 'add tags clicked'} />
-            </Tags>
-          )}
+            )}
+            <TagsButton
+              onClick={() => {
+                setTagsModalActive({ isOpen: true, mode: 'add' })
+              }}
+            />
+          </Tags>
           {vaultDetails !== null && user_assets !== '0' ? (
             <PositionCard onButtonClick={() => logger('sell position clicked')}>
               <PositionCardStaked
@@ -135,11 +133,8 @@ export default function IdentityDetails() {
               />
               <PositionCardOwnership
                 percentOwnership={
-                  identity.user_asset_delta !== null && identity.user_assets
-                    ? +calculatePercentageGain(
-                        +identity.user_assets - +identity.user_asset_delta,
-                        +identity.user_assets,
-                      ).toFixed(1)
+                  user_assets !== null && assets_sum
+                    ? +calculatePercentageOfTvl(user_assets ?? '0', assets_sum)
                     : 0
                 }
               />
@@ -168,7 +163,9 @@ export default function IdentityDetails() {
                 isOpen: true,
               }))
             }
-            onViewAllClick={() => logger('click view all')} // this will navigate to the data-about positions
+            onViewAllClick={() =>
+              navigate(`/app/identity/${identity.identity_id}/data-about`)
+            }
           />
         </div>
         <StakeModal
@@ -184,6 +181,17 @@ export default function IdentityDetails() {
               mode: undefined,
             }))
           }}
+        />
+        <TagsModal
+          identity={identity}
+          open={tagsModalActive.isOpen}
+          mode={tagsModalActive.mode}
+          onClose={() =>
+            setTagsModalActive({
+              ...tagsModalActive,
+              isOpen: false,
+            })
+          }
         />
       </div>
     </NestedLayout>

@@ -10,7 +10,7 @@ describe('Separator', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="shrink-0 bg-border/30 h-[1px] w-full"
+          class="shrink-0 bg-border/20 h-[1px] w-full"
           data-orientation="horizontal"
           role="none"
         />
@@ -22,7 +22,7 @@ describe('Separator', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="shrink-0 bg-border/30 h-full w-[1px]"
+          class="shrink-0 bg-border/20 h-full w-[1px]"
           data-orientation="vertical"
           role="none"
         />

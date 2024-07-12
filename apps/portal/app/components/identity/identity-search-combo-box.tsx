@@ -23,20 +23,35 @@ export interface IdentitySearchComboboxProps
   identities: IdentityPresenter[]
   placeholder?: string
   onIdentityClick?: (identity: IdentityPresenter) => void
+  onIdentitySelect?: (identity: IdentityPresenter) => void
   onCreateIdentityClick?: () => void
+  value?: string
+  onValueChange?: (value: string) => void
+  onInput?: (event: React.FormEvent<HTMLInputElement>) => void
+  shouldFilter?: boolean
 }
 
 const IdentitySearchCombobox = ({
-  identities,
   placeholder = 'Search for an identity...',
   onIdentityClick = () => {},
+  onIdentitySelect = () => {},
   onCreateIdentityClick,
+  identities,
+  onValueChange,
+  onInput,
+  value,
+  shouldFilter,
   ...props
 }: IdentitySearchComboboxProps) => {
   return (
     <div className="min-w-96" {...props}>
-      <Command>
-        <CommandInput placeholder={placeholder} />
+      <Command shouldFilter={shouldFilter}>
+        <CommandInput
+          placeholder={placeholder}
+          value={value}
+          onValueChange={onValueChange}
+          onInput={onInput}
+        />
         {onCreateIdentityClick && (
           <Button
             variant={ButtonVariant.text}
@@ -50,7 +65,7 @@ const IdentitySearchCombobox = ({
         )}
         <CommandList>
           <CommandEmpty>No results found.</CommandEmpty>
-          <CommandGroup>
+          <CommandGroup key={identities.length}>
             {identities.map((identity, index) => {
               const {
                 display_name: name,
@@ -72,6 +87,7 @@ const IdentitySearchCombobox = ({
                   socialCount={socialCount || 0}
                   tagCount={tagCount || 0}
                   onClick={() => onIdentityClick(identity)}
+                  onSelect={() => onIdentitySelect(identity)}
                 />
               )
             })}

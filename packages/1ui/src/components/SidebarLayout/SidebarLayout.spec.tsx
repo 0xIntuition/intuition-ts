@@ -169,46 +169,10 @@ describe('SidebarLayout', () => {
               class="bg-background border-border/30 z-10 flex h-4 w-3 items-center justify-center rounded-sm border"
             >
               <svg
-                class="lucide lucide-grip-vertical h-2.5 w-2.5"
-                fill="none"
-                height="24"
-                stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                viewBox="0 0 24 24"
-                width="24"
-                xmlns="http://www.w3.org/2000/svg"
+                class="h-3 w-3"
               >
-                <circle
-                  cx="9"
-                  cy="12"
-                  r="1"
-                />
-                <circle
-                  cx="9"
-                  cy="5"
-                  r="1"
-                />
-                <circle
-                  cx="9"
-                  cy="19"
-                  r="1"
-                />
-                <circle
-                  cx="15"
-                  cy="12"
-                  r="1"
-                />
-                <circle
-                  cx="15"
-                  cy="5"
-                  r="1"
-                />
-                <circle
-                  cx="15"
-                  cy="19"
-                  r="1"
+                <use
+                  href="/src/components/Icon/Icon.sprites.svg#dot-grid"
                 />
               </svg>
             </div>

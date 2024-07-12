@@ -209,19 +209,10 @@ describe('Button', () => {
           class="flex justify-center items-center gap-2 text-sm font-medium border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted bg-primary text-primary-foreground border-primary hover:bg-primary/80 rounded-full shadow-md-subtle px-3 py-1"
         >
           <svg
-            class="lucide lucide-loader-circle h-6 w-6 animate-spin"
-            fill="none"
-            height="24"
-            stroke="currentColor"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            viewBox="0 0 24 24"
-            width="24"
-            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6 animate-spin"
           >
-            <path
-              d="M21 12a9 9 0 1 1-6.219-8.56"
+            <use
+              href="/src/components/Icon/Icon.sprites.svg#in-progress"
             />
           </svg>
           Text

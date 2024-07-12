@@ -13,8 +13,10 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   const url = new URL(request.url)
   const searchQuery = url.searchParams.get('search') || ''
-
-  const response = await IdentitiesService.searchIdentity(searchQuery)
+  logger('[search-identities] searchQuery', searchQuery)
+  const response = await IdentitiesService.searchIdentity({
+    displayName: searchQuery,
+  })
   const data = response.data
 
   if (data) {

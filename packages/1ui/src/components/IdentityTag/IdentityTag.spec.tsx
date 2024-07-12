@@ -190,4 +190,35 @@ describe('Identity', () => {
       </DocumentFragment>
     `)
   })
+  it('should render appropriate element when given hoverCardContent', () => {
+    const { asFragment } = render(
+      <IdentityTag hoverCardContent={<div>test</div>}>something</IdentityTag>,
+    )
+    expect(asFragment()).toMatchInlineSnapshot(`
+      <DocumentFragment>
+        <a
+          data-state="closed"
+        >
+          <button
+            class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center rounded-full [&>span]:rounded-full [&>span]:overflow-hidden text-base [&>span]:h-6 [&>span]:w-6"
+          >
+            <span>
+              <span
+                class="bg-primary/15 p-[10%] flex justify-center items-center h-full w-full"
+              >
+                <svg
+                  class="h-full w-full"
+                >
+                  <use
+                    href="/src/components/Icon/Icon.sprites.svg#fingerprint"
+                  />
+                </svg>
+              </span>
+            </span>
+            something
+          </button>
+        </a>
+      </DocumentFragment>
+    `)
+  })
 })

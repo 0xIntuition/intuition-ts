@@ -27,7 +27,7 @@ import { Identity } from '@0xintuition/1ui'
 
 ## Variants
 
-### User
+### Non User
 
 <Source
   dark
@@ -38,4 +38,26 @@ import { Identity } from '@0xintuition/1ui'
 <Identity variant="non-user">identity name</Identity>
 `} />
 
-<Canvas of={Stories.User} sourceState="none" />
+<Canvas of={Stories.NonUser} sourceState="none" />
+
+### User With Hover Card
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { Identity } from '@0xintuition/1ui'
+
+<IdentityTag
+  variant="user"
+  hoverCardContent={
+    <div>
+      <p>Some more info...</p>
+    </div>
+  }
+>
+  identity name
+</IdentityTag>
+`} />
+
+<Canvas of={Stories.HoverCard} sourceState="none" />

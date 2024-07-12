@@ -70,7 +70,7 @@ describe('ClaimRow', () => {
                   0xintuition
                 </button>
                 <div
-                  class="shrink-0 bg-border/30 h-[1px] w-4"
+                  class="shrink-0 bg-border/20 h-[1px] w-4 group-hover:bg-primary"
                   data-orientation="horizontal"
                   role="none"
                 />
@@ -93,7 +93,7 @@ describe('ClaimRow', () => {
                   is really
                 </button>
                 <div
-                  class="shrink-0 bg-border/30 h-[1px] w-4"
+                  class="shrink-0 bg-border/20 h-[1px] w-4 group-hover:bg-primary"
                   data-orientation="horizontal"
                   role="none"
                 />

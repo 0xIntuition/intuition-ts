@@ -1,6 +1,6 @@
-import { GripVertical } from 'lucide-react'
 import * as ResizablePrimitive from 'react-resizable-panels'
 
+import { Icon, IconName } from '..'
 import { cn } from '../../styles'
 
 const ResizablePanelGroup = ({
@@ -34,7 +34,7 @@ const ResizableHandle = ({
   >
     {withHandle && (
       <div className="bg-background border-border/30 z-10 flex h-4 w-3 items-center justify-center rounded-sm border">
-        <GripVertical className="h-2.5 w-2.5" />
+        <Icon name={IconName.dotGrid} className="h-3 w-3" />
       </div>
     )}
   </ResizablePrimitive.PanelResizeHandle>

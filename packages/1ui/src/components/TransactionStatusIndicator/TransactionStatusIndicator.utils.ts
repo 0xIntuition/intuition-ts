@@ -79,7 +79,7 @@ export const getStatusComponentData = (
     case TransactionStatus.confirm:
       return {
         iconName: IconName.inProgress,
-        iconClass: 'text-accent',
+        iconClass: 'text-accent animate-spin',
         label: getInProgressLabel(status),
       }
     case TransactionStatus.complete:

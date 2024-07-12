@@ -1,6 +1,5 @@
 import * as React from 'react'
 
-import { Loader2Icon } from 'lucide-react'
 import { cn } from 'styles'
 import { TransactionStatus, TransactionStatusType } from 'types'
 
@@ -25,7 +24,7 @@ const getStatusComponentData = (status: TransactionStatusType) => {
     case TransactionStatus.confirm: {
       return {
         iconName: IconName.inProgress,
-        iconClassName: 'text-accent',
+        iconClassName: 'text-accent animate-spin',
         label: 'Submitting transaction',
       }
     }
@@ -63,21 +62,10 @@ const StatusCardComponent = ({
       className="flex items-center gap-2 bg-primary/10 rounded-md theme-border p-3"
       {...props}
     >
-      {statusComponentData.iconName === IconName.inProgress ? (
-        <Loader2Icon
-          className={cn(
-            `animate-spin`,
-            rootIconClassName,
-            statusComponentData.iconClassName,
-          )}
-        />
-      ) : (
-        <Icon
-          className={cn(statusComponentData.iconClassName, rootIconClassName)}
-          name={statusComponentData.iconName}
-        />
-      )}
-
+      <Icon
+        className={cn(statusComponentData.iconClassName, rootIconClassName)}
+        name={statusComponentData.iconName}
+      />
       <Text variant={TextVariant.body}>{statusComponentData.label}</Text>
       {status === TransactionStatus.awaiting && (
         <Icon

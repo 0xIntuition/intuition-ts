@@ -16,8 +16,7 @@ import {
   SortDirection,
 } from '@0xintuition/api'
 
-import { FollowersOnIdentity } from '@components/list/identity-followers'
-import { FollowingOnIdentity } from '@components/list/identity-following'
+import { FollowList } from '@components/list/follow'
 import {
   ConnectionsHeader,
   ConnectionsHeaderVariants,
@@ -30,7 +29,11 @@ import {
   fetchIdentityFollowing,
 } from '@lib/utils/fetches'
 import logger from '@lib/utils/logger'
-import { calculateTotalPages, getAuthHeaders } from '@lib/utils/misc'
+import {
+  calculateTotalPages,
+  formatBalance,
+  getAuthHeaders,
+} from '@lib/utils/misc'
 import { SessionContext } from '@middleware/session'
 import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
 import { getPrivyAccessToken } from '@server/privy'
@@ -137,11 +140,13 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
 const TabContent = ({
   value,
   claim,
+  totalStake,
   variant,
   children,
 }: {
   value: string
   claim: ClaimPresenter
+  totalStake: string
   variant: ConnectionsHeaderVariantType
   children?: ReactNode
 }) => {
@@ -149,13 +154,13 @@ const TabContent = ({
     return null
   }
   return (
-    <TabsContent value={value}>
+    <TabsContent value={value} className="w-full">
       <ConnectionsHeader
         variant={variant}
         subject={claim.subject}
         predicate={claim.predicate}
         object={variant === 'followers' ? claim.object : null}
-        totalStake={'3.5467'} // TODO: Add total stake once BE implements
+        totalStake={totalStake}
         totalFollowers={claim.num_positions}
       />
       {children}
@@ -172,51 +177,57 @@ export default function ProfileConnections() {
     followingPagination,
   } = useLiveLoader<typeof loader>(['attest'])
   return (
-    <div className="flex flex-col items-center w-full mt-10">
-      <Text
-        variant="headline"
-        weight="medium"
-        className="theme-secondary-foreground w-full mb-3"
-      >
-        Connections
-      </Text>
-
-      <div className="w-full">
-        <Tabs defaultValue={ConnectionsHeaderVariants.followers}>
-          <TabsList>
-            <TabsTrigger
-              value={ConnectionsHeaderVariants.followers}
-              label="Followers"
-              totalCount={followingPagination.totalEntries}
-            />
-            <TabsTrigger
-              value={ConnectionsHeaderVariants.following}
-              label="Following"
-              totalCount={followingPagination.totalEntries}
-            />
-          </TabsList>
-          <TabContent
-            value={ConnectionsHeaderVariants.followers}
-            claim={followClaim}
-            variant={ConnectionsHeaderVariants.followers}
-          >
-            <FollowersOnIdentity
-              followers={followers}
-              pagination={followersPagination}
-            />
-          </TabContent>
-          <TabContent
-            value={ConnectionsHeaderVariants.following}
-            claim={followClaim}
-            variant={ConnectionsHeaderVariants.following}
-          >
-            <FollowingOnIdentity
-              following={following}
-              pagination={followingPagination}
-            />
-          </TabContent>
-        </Tabs>
+    <div className="flex-col justify-start items-start flex w-full">
+      <div className="self-stretch justify-between items-center inline-flex mb-6">
+        <Text
+          variant="headline"
+          weight="medium"
+          className="theme-secondary-foreground w-full"
+        >
+          Connections
+        </Text>
       </div>
+      <Tabs
+        defaultValue={ConnectionsHeaderVariants.followers}
+        className="w-full"
+      >
+        <TabsList className="mb-4">
+          <TabsTrigger
+            value={ConnectionsHeaderVariants.followers}
+            label="Followers"
+            totalCount={followingPagination.totalEntries}
+          />
+          <TabsTrigger
+            value={ConnectionsHeaderVariants.following}
+            label="Following"
+            totalCount={followingPagination.totalEntries}
+          />
+        </TabsList>
+        <TabContent
+          value={ConnectionsHeaderVariants.followers}
+          claim={followClaim}
+          totalStake={formatBalance(followClaim.assets_sum, 18, 4)}
+          variant={ConnectionsHeaderVariants.followers}
+        >
+          <FollowList
+            identities={followers}
+            pagination={followersPagination}
+            paramPrefix="followers"
+          />
+        </TabContent>
+        <TabContent
+          value={ConnectionsHeaderVariants.following}
+          claim={followClaim}
+          totalStake={formatBalance(followClaim.assets_sum, 18, 4)}
+          variant={ConnectionsHeaderVariants.following}
+        >
+          <FollowList
+            identities={following}
+            pagination={followingPagination}
+            paramPrefix="following"
+          />
+        </TabContent>
+      </Tabs>
     </div>
   )
 }

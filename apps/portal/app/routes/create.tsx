@@ -10,7 +10,7 @@ import {
   UsersService,
 } from '@0xintuition/api'
 
-import EditProfileModal from '@components/edit-profile-modal'
+import EditProfileModal from '@components/edit-profile/modal'
 import SubmitButton from '@components/submit-button'
 import Toast from '@components/toast'
 import { multivaultAbi } from '@lib/abis/multivault'

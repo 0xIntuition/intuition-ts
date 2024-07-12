@@ -46,6 +46,23 @@ export const BasicUsage: Story = {
   render: (args) => <IdentityTag {...args} />,
 }
 
-export const User: Story = {
+export const NonUser: Story = {
   render: () => <IdentityTag variant="non-user">identity name</IdentityTag>,
+}
+
+export const HoverCard: Story = {
+  render: () => (
+    <div className="h-[200px]">
+      <IdentityTag
+        variant="user"
+        hoverCardContent={
+          <div>
+            <p>Some more info...</p>
+          </div>
+        }
+      >
+        identity name
+      </IdentityTag>
+    </div>
+  ),
 }

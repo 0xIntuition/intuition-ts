@@ -140,7 +140,10 @@ export default function FollowForm({
         <>
           <div className="flex-grow flex flex-col justify-center items-center h-full">
             <div className="flex flex-col justify-center items-center gap-10">
-              <TransactionStatusIndicator status={state.status} />
+              <TransactionStatusIndicator
+                status={state.status}
+                type={mode === 'follow' ? 'follow' : 'unfollow'}
+              />
               {state.status !== 'complete' ? (
                 <TransactionStatusCard status={state.status} />
               ) : (

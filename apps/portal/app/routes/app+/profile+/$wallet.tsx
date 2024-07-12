@@ -9,9 +9,7 @@ import {
   StakeCard,
 } from '@0xintuition/1ui'
 import {
-  ApiError,
   ClaimPresenter,
-  ClaimsService,
   IdentityPresenter,
   OpenAPI,
   UserTotalsPresenter,
@@ -23,7 +21,7 @@ import StakeModal from '@components/stake/stake-modal'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { followModalAtom, stakeModalAtom } from '@lib/state/store'
 import { userIdentityRouteOptions } from '@lib/utils/constants'
-import { fetchIdentity, fetchUserTotals } from '@lib/utils/fetches'
+import { fetchClaim, fetchIdentity, fetchUserTotals } from '@lib/utils/fetches'
 import logger from '@lib/utils/logger'
 import {
   calculatePercentageOfTvl,
@@ -96,22 +94,11 @@ export async function loader({ context, request, params }: LoaderFunctionArgs) {
     }
   }
 
-  let followClaim: ClaimPresenter | undefined = undefined
+  let followClaim: ClaimPresenter | null = null
   let followVaultDetails: VaultDetailsType | undefined = undefined
 
   if (userIdentity.follow_claim_id) {
-    try {
-      followClaim = await ClaimsService.getClaimById({
-        id: userIdentity.follow_claim_id,
-      })
-    } catch (error: unknown) {
-      if (error instanceof ApiError) {
-        followClaim = undefined
-        logger(`${error.name} - ${error.status}: ${error.message} ${error.url}`)
-      } else {
-        throw error
-      }
-    }
+    followClaim = await fetchClaim(userIdentity.follow_claim_id)
   }
 
   if (userIdentity.user && followClaim && followClaim.vault_id) {
@@ -228,14 +215,21 @@ export default function Profile() {
                 <PositionCardOwnership
                   percentOwnership={
                     user_assets !== null && assets_sum
-                      ? +calculatePercentageOfTvl(user_assets, assets_sum)
+                      ? +calculatePercentageOfTvl(
+                          user_assets ?? '0',
+                          assets_sum,
+                        )
                       : 0
                   }
                 />
                 <PositionCardFeesAccrued
                   amount={
                     user_asset_delta
-                      ? +formatBalance(+user_assets - +user_asset_delta, 18, 5)
+                      ? +formatBalance(
+                          +(user_assets ?? '0') - +user_asset_delta,
+                          18,
+                          5,
+                        )
                       : 0
                   }
                 />
@@ -269,7 +263,6 @@ export default function Profile() {
               setStakeModalActive((prevState) => ({
                 ...prevState,
                 isOpen: false,
-                mode: undefined,
               }))
             }}
           />

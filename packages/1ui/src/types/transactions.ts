@@ -1,10 +1,13 @@
 export const TransactionStatus = {
+  idle: 'idle',
   awaiting: 'awaiting',
   inProgress: 'in-progress',
   preparingIdentity: 'preparing-identity',
   publishingIdentity: 'publishing-identity',
   approveTransaction: 'approve-transaction',
+  reviewTransaction: 'review-transaction',
   transactionPending: 'transaction-pending',
+  transactionConfirmed: 'transaction-confirmed',
   confirm: 'confirm',
   complete: 'complete',
   error: 'error',

@@ -37,6 +37,7 @@ export const BLOCK_EXPLORER_URL =
 
 export const CREATE_RESOURCE_ROUTE = '/resources/create'
 export const GET_IDENTITIES_RESOURCE_ROUTE = '/resources/get-identities'
+export const SEARCH_IDENTITIES_RESOURCE_ROUTE = '/resources/search-identities'
 
 // Privy Social Accounts
 

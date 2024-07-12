@@ -7,12 +7,13 @@ import {
   SortDirection,
 } from '@0xintuition/api'
 
-import { ClaimsOnIdentity } from '@components/claims-on-identity'
-import { PositionsOnIdentity } from '@components/positions-on-identity'
+import { ClaimsList as ClaimsAboutIdentity } from '@components/list/claims'
+import { PositionsOnIdentity } from '@components/list/positions-on-identity'
 import DataAboutHeader from '@components/profile/data-about-header'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import {
   fetchClaimsAboutIdentity,
+  fetchClaimsSummary,
   fetchIdentity,
   fetchPositionsOnIdentity,
 } from '@lib/utils/fetches'
@@ -96,6 +97,8 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
     Number(claimsLimit),
   )
 
+  const claimsSummary = await fetchClaimsSummary(userIdentity.id)
+
   return json({
     userIdentity,
     positions: positions?.data as PositionPresenter[],
@@ -108,6 +111,7 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
       totalPages: positionsTotalPages,
     },
     claims: claims?.data as ClaimPresenter[],
+    claimsSummary,
     claimsSortBy,
     claimsDirection,
     claimsPagination: {
@@ -125,29 +129,38 @@ export default function ProfileDataAbout() {
     positions,
     positionsPagination,
     claims,
+    claimsSummary,
     claimsPagination,
   } = useLiveLoader<typeof loader>(['attest'])
   return (
-    <div className="flex-col justify-start items-start flex w-full">
-      <DataAboutHeader
-        variant="claims"
-        title="Claims about this Identity"
-        userIdentity={userIdentity}
-        totalClaims={claimsPagination.totalEntries}
-        totalStake={0} //TODO: Add total stake across all claims once BE implements
-      />
-      <ClaimsOnIdentity claims={claims} pagination={claimsPagination} />
-      <DataAboutHeader
-        variant="positions"
-        title="Positions on this Identity"
-        userIdentity={userIdentity}
-        totalPositions={userIdentity.num_positions}
-        totalStake={+formatBalance(userIdentity.assets_sum, 18, 4)}
-      />
-      <PositionsOnIdentity
-        positions={positions}
-        pagination={positionsPagination}
-      />
+    <div className="flex-col justify-start items-start flex w-full gap-6">
+      <div className="flex flex-col w-full pb-4">
+        <DataAboutHeader
+          variant="claims"
+          title="Claims about this Identity"
+          userIdentity={userIdentity}
+          totalClaims={claimsPagination.totalEntries}
+          totalStake={+formatBalance(claimsSummary?.assets_sum ?? 0, 18, 4)}
+        />
+        <ClaimsAboutIdentity
+          claims={claims}
+          pagination={claimsPagination}
+          paramPrefix="claims"
+        />
+      </div>
+      <div className="flex flex-col pt-4 w-full">
+        <DataAboutHeader
+          variant="positions"
+          title="Positions on this Identity"
+          userIdentity={userIdentity}
+          totalPositions={userIdentity.num_positions}
+          totalStake={+formatBalance(userIdentity.assets_sum, 18, 4)}
+        />
+        <PositionsOnIdentity
+          positions={positions}
+          pagination={positionsPagination}
+        />
+      </div>
     </div>
   )
 }

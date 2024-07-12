@@ -166,7 +166,7 @@ export default function SidebarNav({
               )}
             </SidebarLayoutNavFooter>
           </SidebarLayoutNav>
-          <SidebarLayoutContent className="justify-start">
+          <SidebarLayoutContent className="justify-start h-screen min-h-screen overflow-y-scroll">
             {children}
           </SidebarLayoutContent>
         </SidebarLayout>

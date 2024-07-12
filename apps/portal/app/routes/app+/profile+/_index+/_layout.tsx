@@ -19,7 +19,7 @@ import {
   UserTotalsPresenter,
 } from '@0xintuition/api'
 
-import EditProfileModal from '@components/edit-profile-modal'
+import EditProfileModal from '@components/edit-profile/modal'
 import EditSocialLinksModal from '@components/edit-social-links-modal'
 import { NestedLayout } from '@components/nested-layout'
 import { ProfileSocialAccounts } from '@components/profile-social-accounts'
@@ -122,7 +122,9 @@ export default function Profile() {
       vaultDetails: VaultDetailsType
     }>(['attest', 'create'])
 
-  const user_assets = vaultDetails?.user_assets ?? ''
+  const { user_assets, assets_sum } = vaultDetails ? vaultDetails : userIdentity
+
+  const { user_asset_delta } = userIdentity
 
   const imgSrc = blockies
     .create({ seed: user?.details?.wallet?.address })
@@ -214,20 +216,19 @@ export default function Profile() {
                 />
                 <PositionCardOwnership
                   percentOwnership={
-                    userIdentity.user_assets !== null && userIdentity.assets_sum
+                    user_assets !== null && assets_sum
                       ? +calculatePercentageOfTvl(
-                          userIdentity.user_assets,
-                          userIdentity.assets_sum,
+                          user_assets ?? '0',
+                          assets_sum,
                         )
                       : 0
                   }
                 />
                 <PositionCardFeesAccrued
                   amount={
-                    userIdentity.user_asset_delta
+                    user_asset_delta
                       ? +formatBalance(
-                          +userIdentity.user_assets -
-                            +userIdentity.user_asset_delta,
+                          +(user_assets ?? 0) - +user_asset_delta,
                           18,
                           5,
                         )
@@ -238,7 +239,7 @@ export default function Profile() {
               </PositionCard>
             ) : null}
             <StakeCard
-              tvl={+formatBalance(userIdentity.assets_sum)}
+              tvl={+formatBalance(assets_sum)}
               holders={userIdentity.num_positions}
               onBuyClick={() =>
                 setStakeModalActive((prevState) => ({
@@ -271,7 +272,6 @@ export default function Profile() {
               setStakeModalActive((prevState) => ({
                 ...prevState,
                 isOpen: false,
-                mode: undefined,
               }))
             }}
           />

@@ -5,10 +5,13 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+  Text,
+  Trunctacular,
 } from '@0xintuition/1ui'
 
+import logger from '@lib/utils/logger'
 import { usePrivy, useWallets } from '@privy-io/react-auth'
-import { NavLink } from '@remix-run/react'
+import { NavLink, useNavigate } from '@remix-run/react'
 import { useDisconnect } from 'wagmi'
 
 export function PrivyButton({
@@ -18,9 +21,12 @@ export function PrivyButton({
 }) {
   const { ready, authenticated, login, logout, user: privyUser } = usePrivy()
 
+  const navigate = useNavigate()
   const { disconnect } = useDisconnect()
   const { wallets } = useWallets()
   const chainId = wallets?.[0]?.chainId
+
+  logger('chainId', chainId)
 
   // Disable login when Privy is not ready or the user is already authenticated
   const disableLogin = !ready || (ready && authenticated)
@@ -52,25 +58,30 @@ export function PrivyButton({
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="center" className="bg-popover w-48">
-            <DropdownMenuItem className="flex items-center gap-2">
-              <NavLink to={`/profile`} className="font-semibold">
+            <DropdownMenuItem className="flex items-center gap-2" disabled>
+              <div className="space-y-1">
+                <Text
+                  variant="footnote"
+                  weight="medium"
+                  className="text-secondary-foreground"
+                >
+                  Signed in as:
+                </Text>
+                <Trunctacular value={privyUser?.wallet?.address ?? ''} />
+              </div>
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              className="cursor-pointer justify-start"
+              onSelect={(e) => {
+                e.preventDefault()
+                navigate('/app/profile')
+              }}
+            >
+              <NavLink to={`/app/profile`} className="font-semibold">
                 <div className="space-y-1">
-                  <div className="text-secondary-foreground text-sm font-normal">
-                    Signed in as:
-                  </div>
-                  {privyUser?.wallet?.address}
+                  <Text>View Profile</Text>
                 </div>
               </NavLink>
-            </DropdownMenuItem>
-            <DropdownMenuItem className="flex items-center gap-2">
-              <div className="space-y-1">
-                <div className="text-secondary-foreground text-sm font-normal">
-                  Connected to:
-                </div>
-                <div className="flex flex-row items-center gap-1">
-                  {chainId}
-                </div>
-              </div>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem
@@ -80,7 +91,9 @@ export function PrivyButton({
               }}
               className="cursor-pointer justify-start"
             >
-              <span>Logout</span>
+              <div className="space-y-1">
+                <Text>Logout</Text>
+              </div>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

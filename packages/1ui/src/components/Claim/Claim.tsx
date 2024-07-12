@@ -1,5 +1,6 @@
 import { IdentityTag, IdentityTagSize } from 'components/IdentityTag'
 import { Separator } from 'components/Separator'
+import { cn } from 'styles'
 import { IdentityType } from 'types'
 
 export interface ClaimProps {
@@ -41,7 +42,7 @@ export const Claim = ({
       >
         {subject.label}
       </IdentityTag>
-      <Separator className={separatorWidth} />
+      <Separator className={cn(separatorWidth, 'group-hover:bg-primary')} />
 
       <IdentityTag
         variant={predicate.variant}
@@ -52,7 +53,7 @@ export const Claim = ({
       >
         {predicate.label}
       </IdentityTag>
-      <Separator className={separatorWidth} />
+      <Separator className={cn(separatorWidth, 'group-hover:bg-primary')} />
 
       <IdentityTag
         variant={object.variant}

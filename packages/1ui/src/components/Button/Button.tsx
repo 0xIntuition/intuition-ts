@@ -2,8 +2,8 @@ import * as React from 'react'
 
 import { Slot } from '@radix-ui/react-slot'
 import { cva, type VariantProps } from 'class-variance-authority'
-import { Loader2Icon } from 'lucide-react'
 
+import { Icon, IconName } from '..'
 import { cn } from '../../styles'
 
 export const ButtonVariant = {
@@ -108,7 +108,9 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         {...props}
       >
-        {isLoading && <Loader2Icon className="h-6 w-6 animate-spin" />}
+        {isLoading && (
+          <Icon name={IconName.inProgress} className="h-6 w-6 animate-spin" />
+        )}
         {props.children}
       </Comp>
     )
