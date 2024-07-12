@@ -17,8 +17,7 @@ import {
   ProfileCard,
   Text,
   toast,
-  TransactionStatusCard,
-  TransactionStatusIndicator,
+  TransactionStatusType,
 } from '@0xintuition/1ui'
 import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
 
@@ -39,14 +38,13 @@ import {
 } from '@lib/hooks/useTransactionReducer'
 import { createClaimSchema } from '@lib/schemas/create-claim-schema'
 import {
-  BLOCK_EXPLORER_URL,
   CREATE_RESOURCE_ROUTE,
   MULTIVAULT_CONTRACT_ADDRESS,
   SEARCH_IDENTITIES_RESOURCE_ROUTE,
 } from '@lib/utils/constants'
 import logger from '@lib/utils/logger'
 import { sliceString, truncateString } from '@lib/utils/misc'
-import { Link, useFetcher, useNavigate } from '@remix-run/react'
+import { useFetcher, useNavigate } from '@remix-run/react'
 import { CreateLoaderData } from '@routes/resources+/create'
 import * as blockies from 'blockies-ts'
 import { TransactionActionType, TransactionStateType } from 'types/transaction'
@@ -56,6 +54,7 @@ import { useAccount, usePublicClient, useWalletClient } from 'wagmi'
 import ErrorList from './error-list'
 import { IdentitySearchCombobox } from './identity/identity-search-combo-box'
 import Toast from './toast'
+import TransactionState from './transaction-state'
 
 interface ClaimFormProps {
   onSuccess?: () => void
@@ -777,37 +776,25 @@ function CreateClaimForm({
           </div>
         ) : (
           <div className="flex flex-col items-center justify-center min-h-96">
-            <TransactionStatusIndicator status={state.status} type="claim" />
-            {state.status !== 'complete' ? (
-              <TransactionStatusCard status={state.status} />
-            ) : (
-              <div className="flex flex-col gap-1 items-center gap-2.5">
-                {state.txHash && transactionResponseData !== null && (
-                  <div className="flex flex-col items-center">
-                    <Link
-                      to={`${BLOCK_EXPLORER_URL}/tx/${state.txHash}`}
-                      target="_blank"
-                      className="flex flex-row items-center gap-1 text-xxs text-blue-500 transition-colors duration-300 hover:text-blue-400"
-                    >
-                      View on Basescan
-                      <Icon name="square-arrow-top-right" className="h-3 w-3" />
-                    </Link>
-                    <Button
-                      type="button"
-                      variant="primary"
-                      onClick={() => {
-                        navigate(
-                          `/app/claim/${transactionResponseData.claim_id}`,
-                          onClose(),
-                        )
-                      }}
-                    >
-                      View claim
-                    </Button>
-                  </div>
-                )}
-              </div>
-            )}
+            <TransactionState
+              status={state.status as TransactionStatusType}
+              txHash={state.txHash}
+              type="claim"
+              successButton={
+                transactionResponseData && (
+                  <Button
+                    type="button"
+                    variant="primary"
+                    onClick={() => {
+                      navigate(`/app/claim/${transactionResponseData.claim_id}`)
+                      onClose()
+                    }}
+                  >
+                    View claim
+                  </Button>
+                )
+              }
+            />
           </div>
         )}
       </claimFetcher.Form>
