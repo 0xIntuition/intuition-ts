@@ -18,7 +18,7 @@ const ExploreSearch = ({ variant, ...props }: ExploreSearchProps) => {
       {/* Identity variant */}
       {variant === 'identity' && (
         <ExploreSearchInput searchParam="identity" />
-        // TODO: Alexander to adds the Tags component with ComboBox here
+        // TODO: Alexander to adds the Tags component with ComboBox here ENG-2574
       )}
 
       {/* Claim variant */}
@@ -39,7 +39,7 @@ const ExploreSearch = ({ variant, ...props }: ExploreSearchProps) => {
             Need help? Learn more about claims
           </Text>
           <Separator className="mb-7" />
-          {/* TODO: Implement functionality */}
+          {/* TODO: Implement search in ENG-2575 */}
           <IdentityInput
             subject={{
               placeholder: 'Select an identity',
@@ -56,6 +56,7 @@ const ExploreSearch = ({ variant, ...props }: ExploreSearchProps) => {
               selectedValue: {},
               onClick: () => {},
             }}
+            showLabels
           />
         </>
       )}

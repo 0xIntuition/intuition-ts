@@ -5,6 +5,7 @@ import {
   SortDirection,
 } from '@0xintuition/api'
 
+import { ExploreSearch } from '@components/explore/ExploreSearch'
 import { ClaimsList } from '@components/list/claims'
 import { fetchClaims } from '@lib/utils/fetches'
 import { calculateTotalPages, getAuthHeaders } from '@lib/utils/misc'
@@ -58,6 +59,7 @@ export default function ExploreClaims() {
   const { claims, claimsPagination } = useLoaderData<typeof loader>()
   return (
     <div className="m-8 flex flex-col items-center gap-4">
+      <ExploreSearch variant="claim" className="mb-12" />
       <ClaimsList claims={claims} pagination={claimsPagination} />
     </div>
   )
