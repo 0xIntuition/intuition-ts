@@ -17,12 +17,6 @@ const meta: Meta<typeof QuestStatusCard> = {
       },
       control: 'select',
     },
-    tooltip: {
-      description: 'Tooltip content',
-      table: {
-        type: { summary: 'string' },
-      },
-    },
   },
 }
 

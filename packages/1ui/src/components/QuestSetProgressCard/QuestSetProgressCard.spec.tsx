@@ -6,7 +6,7 @@ describe('QuestSetProgressCard', () => {
   it('should render appropriate elements', () => {
     const { asFragment } = render(
       <QuestSetProgressCard
-        image={
+        imgSrc={
           'https://m.media-amazon.com/images/M/MV5BNDhiMWYzMjgtNTRiYi00ZTA3LThlODctNDRkMDk0NzFkMWI3L2ltYWdlL2ltYWdlXkEyXkFqcGdeQXVyNTg0MTkzMzA@._V1_.jpg'
         }
         title={'Tutorial Island: The Primitive Elements'}

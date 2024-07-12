@@ -6,7 +6,7 @@ import { Text } from 'components/Text'
 
 export interface QuestSetProgressCardProps
   extends React.HTMLAttributes<HTMLDivElement> {
-  image: string
+  imgSrc: string
   title: string
   numberQuests: number
   numberCompletedQuests: number
@@ -14,7 +14,7 @@ export interface QuestSetProgressCardProps
 }
 
 const QuestSetProgressCard = ({
-  image,
+  imgSrc,
   title,
   numberQuests,
   numberCompletedQuests,
@@ -28,7 +28,7 @@ const QuestSetProgressCard = ({
       {...props}
     >
       <img
-        src={image}
+        src={imgSrc}
         alt={title}
         className="object-cover w-52 h-52 rounded-l-lg theme-border"
       />
