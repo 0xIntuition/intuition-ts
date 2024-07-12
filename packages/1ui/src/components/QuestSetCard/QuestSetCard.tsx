@@ -5,7 +5,7 @@ import { Text } from 'components/Text'
 
 export interface QuestSetCardProps
   extends React.HTMLAttributes<HTMLDivElement> {
-  image: string
+  imgSrc: string
   title: string
   description: string
   numberQuests: number
@@ -13,7 +13,7 @@ export interface QuestSetCardProps
 }
 
 const QuestSetCard = ({
-  image,
+  imgSrc,
   title,
   description,
   numberQuests,
@@ -27,7 +27,7 @@ const QuestSetCard = ({
       {...props}
     >
       <img
-        src={image}
+        src={imgSrc}
         alt={title}
         className="object-cover w-full h-auto rounded-lg theme-border"
       />

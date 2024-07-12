@@ -12,7 +12,7 @@ import {
 } from './components'
 
 export interface QuestCardProps extends React.HTMLAttributes<HTMLDivElement> {
-  image: string
+  imgSrc: string
   title: string
   description: string
   questStatus: QuestStatusType
@@ -23,7 +23,7 @@ export interface QuestCardProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const QuestCard = ({
-  image,
+  imgSrc,
   title,
   description,
   questStatus,
@@ -43,7 +43,7 @@ const QuestCard = ({
     >
       <div
         className="w-52 h-52 flex-shrink-0 relative"
-        style={{ backgroundImage: `url(${image})` }}
+        style={{ backgroundImage: `url(${imgSrc})` }}
       >
         <div className="absolute top-2.5 left-2.5 ">
           <Text

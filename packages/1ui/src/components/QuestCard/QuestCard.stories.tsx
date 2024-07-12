@@ -15,24 +15,6 @@ const meta: Meta<typeof QuestCard> = {
       control: { type: 'select' },
       options: Object.values(QuestCriteriaStatus),
     },
-    image: {
-      control: { type: 'text' },
-    },
-    title: {
-      control: { type: 'text' },
-    },
-    description: {
-      control: { type: 'text' },
-    },
-    label: {
-      control: { type: 'text' },
-    },
-    points: {
-      control: { type: 'number' },
-    },
-    questCriteria: {
-      control: { type: 'text' },
-    },
   },
 }
 
@@ -44,7 +26,7 @@ export const BasicUsage: Story = {
   args: {
     questStatus: 'not-started',
     questCriteriaStatus: 'not-started',
-    image:
+    imgSrc:
       'https://m.media-amazon.com/images/M/MV5BNDhiMWYzMjgtNTRiYi00ZTA3LThlODctNDRkMDk0NzFkMWI3L2ltYWdlL2ltYWdlXkEyXkFqcGdeQXVyNTg0MTkzMzA@._V1_.jpg',
     title: 'Tutorial Island: The Primitive Elements',
     description: 'This is a description of the quest set',

@@ -7,7 +7,7 @@ describe('QuestCard', () => {
   it('should render appropriate element', () => {
     const { asFragment } = render(
       <QuestCard
-        image="https://via.placeholder.com/150"
+        imgSrc="https://via.placeholder.com/150"
         title="Quest Title"
         description="Quest Description"
         questStatus={QuestStatus.notStarted}
@@ -129,7 +129,7 @@ describe('QuestCard', () => {
   it('should render appropriate elements when quest status is not started', () => {
     const { asFragment } = render(
       <QuestCard
-        image="https://via.placeholder.com/150"
+        imgSrc="https://via.placeholder.com/150"
         title="Quest Title"
         description="Quest Description"
         questStatus={QuestStatus.notStarted}
@@ -251,7 +251,7 @@ describe('QuestCard', () => {
   it('should render appropriate elements when quest status is in progress', () => {
     const { asFragment } = render(
       <QuestCard
-        image="https://via.placeholder.com/150"
+        imgSrc="https://via.placeholder.com/150"
         title="Quest Title"
         description="Quest Description"
         questStatus={QuestStatus.inProgress}
@@ -373,7 +373,7 @@ describe('QuestCard', () => {
   it('should render appropriate elements when quest status is claimable', () => {
     const { asFragment } = render(
       <QuestCard
-        image="https://via.placeholder.com/150"
+        imgSrc="https://via.placeholder.com/150"
         title="Quest Title"
         description="Quest Description"
         questStatus={QuestStatus.claimable}
@@ -495,7 +495,7 @@ describe('QuestCard', () => {
   it('should render appropriate elements when quest status is completed', () => {
     const { asFragment } = render(
       <QuestCard
-        image="https://via.placeholder.com/150"
+        imgSrc="https://via.placeholder.com/150"
         title="Quest Title"
         description="Quest Description"
         questStatus={QuestStatus.completed}
@@ -617,7 +617,7 @@ describe('QuestCard', () => {
   it('should render appropriate elements when quest status is disabled', () => {
     const { asFragment } = render(
       <QuestCard
-        image="https://via.placeholder.com/150"
+        imgSrc="https://via.placeholder.com/150"
         title="Quest Title"
         description="Quest Description"
         questStatus={QuestStatus.disabled}
@@ -740,7 +740,7 @@ describe('QuestCard', () => {
   it('should render appropriate elements when quest criteria status is not started', () => {
     const { asFragment } = render(
       <QuestCard
-        image="https://via.placeholder.com/150"
+        imgSrc="https://via.placeholder.com/150"
         title="Quest Title"
         description="Quest Description"
         questStatus={QuestStatus.notStarted}
@@ -862,7 +862,7 @@ describe('QuestCard', () => {
   it('should render appropriate elements when quest criteria status is partially fulfilled', () => {
     const { asFragment } = render(
       <QuestCard
-        image="https://via.placeholder.com/150"
+        imgSrc="https://via.placeholder.com/150"
         title="Quest Title"
         description="Quest Description"
         questStatus={QuestStatus.notStarted}
@@ -984,7 +984,7 @@ describe('QuestCard', () => {
   it('should render appropriate elements when quest criteria status is fulfilled', () => {
     const { asFragment } = render(
       <QuestCard
-        image="https://via.placeholder.com/150"
+        imgSrc="https://via.placeholder.com/150"
         title="Quest Title"
         description="Quest Description"
         questStatus={QuestStatus.notStarted}
