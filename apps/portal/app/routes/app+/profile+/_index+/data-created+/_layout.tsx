@@ -1,12 +1,6 @@
 import { ReactNode } from 'react'
 
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-  Text,
-} from '@0xintuition/1ui'
+import { Tabs, TabsList, TabsTrigger, Text } from '@0xintuition/1ui'
 import {
   ClaimPresenter,
   ClaimSummaryPresenter,
@@ -208,7 +202,6 @@ export default function ProfileDataCreated() {
 }
 
 export const TabContent = ({
-  value,
   userIdentity,
   userTotals,
   totalResults,
