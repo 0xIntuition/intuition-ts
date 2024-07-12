@@ -1,4 +1,4 @@
-import { ClaimPositionRow } from '@0xintuition/1ui'
+import { Claim, ClaimPositionRow, Identity } from '@0xintuition/1ui'
 import { ClaimPresenter, SortColumn } from '@0xintuition/api'
 
 import { formatBalance } from '@lib/utils/misc'
@@ -54,7 +54,39 @@ export function ActivePositionsOnClaims({
               navigate(`/app/claim/${claim.claim_id}`)
             }}
             className="hover:cursor-pointer"
-          />
+          >
+            <Claim
+              subject={{
+                variant: claim.subject?.is_user
+                  ? Identity.user
+                  : Identity.nonUser,
+                label:
+                  claim.subject?.user?.display_name ??
+                  claim.subject?.display_name ??
+                  claim.subject?.identity_id ??
+                  '',
+                imgSrc: claim.subject?.image,
+              }}
+              predicate={{
+                variant: claim.predicate?.is_user ? 'user' : 'non-user',
+                label:
+                  claim.predicate?.user?.display_name ??
+                  claim.predicate?.display_name ??
+                  claim.predicate?.identity_id ??
+                  '',
+                imgSrc: claim.predicate?.image,
+              }}
+              object={{
+                variant: claim.object?.is_user ? 'user' : 'non-user',
+                label:
+                  claim.object?.user?.display_name ??
+                  claim.object?.display_name ??
+                  claim.object?.identity_id ??
+                  '',
+                imgSrc: claim.object?.image,
+              }}
+            />
+          </ClaimPositionRow>
         </div>
       ))}
     </List>
