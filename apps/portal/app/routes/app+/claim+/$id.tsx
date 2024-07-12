@@ -133,7 +133,7 @@ export default function ClaimDetails() {
 
   return (
     <>
-      <div className="flex items-center gap-6 mx-8 my-10">
+      <div className="flex items-center gap-6 mx-8 mt-10">
         <Button variant="secondary" size="icon" onClick={() => goBack}>
           <Icon name="arrow-left" />
         </Button>
