@@ -222,7 +222,7 @@ export default function StakeForm({
           <TransactionState
             status={state.status as TransactionStatusType}
             txHash={state.txHash}
-            type="stake"
+            type="deposit"
           />
         </div>
         // <>
