@@ -10,6 +10,7 @@ import {
 
 import { BLOCK_EXPLORER_URL } from '@lib/utils/constants'
 import { Link } from '@remix-run/react'
+import clsx from 'clsx'
 
 interface TransactionStateProps {
   status: TransactionStatusType
@@ -26,7 +27,9 @@ export function TransactionState({
 }: TransactionStateProps) {
   return (
     <div className="flex flex-col items-center justify-center min-h-96">
-      <TransactionStatusIndicator status={status} type={type} />
+      <div className={clsx({ 'mb-10': status !== 'complete' })}>
+        <TransactionStatusIndicator status={status} type={type} />
+      </div>
       {status !== 'complete' ? (
         <TransactionStatusCard status={status} />
       ) : (
