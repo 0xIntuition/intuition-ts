@@ -14,8 +14,12 @@ export const useSearchAndSortParamsHandler = <T extends SortColumnType>(
 ) => {
   const [searchParams, setSearchParams] = useSearchParams()
 
-  const getParamName = (name: string) =>
-    prefix ? `${prefix}${name.charAt(0).toUpperCase() + name.slice(1)}` : name
+  const getParamName = (name: string) => {
+    if (prefix) {
+      return `${prefix}${name.charAt(0).toUpperCase()}${name.slice(1)}`
+    }
+    return name
+  }
 
   const handleSortChange = (newSortBy: T, newDirection: SortDirection) => {
     setSearchParams({

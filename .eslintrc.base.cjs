@@ -45,6 +45,8 @@ module.exports = {
         'object-shorthand': 'error',
         'no-undef-init': 'error',
         'no-lonely-if': 'error',
+        'no-unneeded-ternary': 'error',
+        'no-confusing-arrow': 'error',
       },
       settings: {
         react: {
