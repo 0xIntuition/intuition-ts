@@ -12,16 +12,11 @@ export interface ExploreSearchProps
 const ExploreSearch = ({ variant, ...props }: ExploreSearchProps) => {
   return (
     <div className="min-w-96 flex flex-col items-center" {...props}>
-      {/* User variant */}
-      {variant === 'user' && <ExploreSearchInput searchParam="user" />}
-
-      {/* Identity variant */}
-      {variant === 'identity' && (
-        <ExploreSearchInput searchParam="identity" />
+      {['user', 'identity', 'tag'].includes(variant) && (
         // TODO: Alexander to adds the Tags component with ComboBox here ENG-2574
+        <ExploreSearchInput searchParam={variant} />
       )}
 
-      {/* Claim variant */}
       {variant === 'claim' && (
         <>
           <Text
@@ -60,9 +55,6 @@ const ExploreSearch = ({ variant, ...props }: ExploreSearchProps) => {
           />
         </>
       )}
-
-      {/* Tag variant */}
-      {variant === 'tag' && <ExploreSearchInput searchParam="tag" />}
     </div>
   )
 }
