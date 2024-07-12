@@ -116,7 +116,7 @@ describe('QuestCard', () => {
               Start Quest
             </button>
             <p
-              class="text-sm font-normal text-muted-foreground"
+              class="text-base font-normal text-muted-foreground"
             >
               +100 Points
             </p>
@@ -238,7 +238,7 @@ describe('QuestCard', () => {
               Start Quest
             </button>
             <p
-              class="text-sm font-normal text-muted-foreground"
+              class="text-base font-normal text-muted-foreground"
             >
               +100 Points
             </p>
@@ -360,7 +360,7 @@ describe('QuestCard', () => {
               Continue Quest
             </button>
             <p
-              class="text-sm font-normal text-muted-foreground"
+              class="text-base font-normal text-muted-foreground"
             >
               +100 Points
             </p>
@@ -482,7 +482,7 @@ describe('QuestCard', () => {
               Continue Quest
             </button>
             <p
-              class="text-sm font-normal text-foreground"
+              class="text-base font-normal text-foreground"
             >
               +100 Points
             </p>
@@ -604,7 +604,7 @@ describe('QuestCard', () => {
               Completed
             </button>
             <p
-              class="text-sm font-normal text-success"
+              class="text-base font-normal text-success"
             >
               +100 Points
             </p>
@@ -727,7 +727,7 @@ describe('QuestCard', () => {
               Locked
             </button>
             <p
-              class="text-sm font-normal text-muted-foreground"
+              class="text-base font-normal text-muted-foreground"
             >
               +100 Points
             </p>
@@ -849,7 +849,7 @@ describe('QuestCard', () => {
               Start Quest
             </button>
             <p
-              class="text-sm font-normal text-muted-foreground"
+              class="text-base font-normal text-muted-foreground"
             >
               +100 Points
             </p>
@@ -971,7 +971,7 @@ describe('QuestCard', () => {
               Start Quest
             </button>
             <p
-              class="text-sm font-normal text-muted-foreground"
+              class="text-base font-normal text-muted-foreground"
             >
               +100 Points
             </p>
@@ -1093,7 +1093,7 @@ describe('QuestCard', () => {
               Start Quest
             </button>
             <p
-              class="text-sm font-normal text-muted-foreground"
+              class="text-base font-normal text-muted-foreground"
             >
               +100 Points
             </p>
