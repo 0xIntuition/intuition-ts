@@ -222,31 +222,9 @@ export default function StakeForm({
           <TransactionState
             status={state.status as TransactionStatusType}
             txHash={state.txHash}
-            type="deposit"
+            type={mode === 'deposit' ? 'deposit' : 'redeem'}
           />
         </div>
-        // <>
-        //   <div className="flex-grow flex flex-col justify-center items-center h-full">
-        //     <div className="flex flex-col justify-center items-center gap-10">
-        //       <TransactionStatusIndicator
-        //         status={state.status}
-        //         type={mode === 'deposit' ? 'deposit' : 'redeem'}
-        //       />
-        //       {state.status !== 'complete' ? (
-        //         <TransactionStatusCard status={state.status} />
-        //       ) : (
-        //         <Link
-        //           to={`${BLOCK_EXPLORER_URL}/tx/${state.txHash}`}
-        //           target="_blank"
-        //           className="flex flex-row items-center gap-1 mx-auto leading-tight text-blue-500 transition-colors duration-300 hover:text-blue-400"
-        //         >
-        //           View on Basescan{' '}
-        //           <Icon name="square-arrow-top-right" className="h-3 w-3" />
-        //         </Link>
-        //       )}
-        //     </div>
-        //   </div>
-        // </>
       )}
     </>
   )

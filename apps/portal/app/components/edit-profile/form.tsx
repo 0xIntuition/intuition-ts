@@ -357,7 +357,7 @@ export function EditProfileForm({ userObject, onClose }: EditProfileFormProps) {
               </div>
             </div>
             <div className="self-stretch p-2.5 rounded-lg justify-center items-center gap-2.5 inline-flex">
-              <div className="grow shrink basis-0 text-right text-white/50 text-xs font-normal leading-[18px]">
+              <div className="grow shrink basis-0 text-right text-secondary-foreground text-xs font-normal leading-[18px]">
                 {fields.image_url.errors ? (
                   <ErrorList
                     id={fields.image_url.errorId}
@@ -388,7 +388,7 @@ export function EditProfileForm({ userObject, onClose }: EditProfileFormProps) {
               className="w-full"
             />
             <div className="self-stretch p-2.5 rounded-lg justify-center items-center gap-2.5 inline-flex">
-              <div className="grow shrink basis-0 text-right text-white/50 text-xs font-normal leading-[18px]">
+              <div className="grow shrink basis-0 text-right text-secondary-foreground text-xs font-normal leading-[18px]">
                 Max {MAX_NAME_LENGTH} characters
               </div>
             </div>
@@ -412,7 +412,7 @@ export function EditProfileForm({ userObject, onClose }: EditProfileFormProps) {
               className="h-20"
             />
             <div className="self-stretch p-2.5 rounded-lg justify-center items-center gap-2.5 inline-flex">
-              <div className="grow shrink basis-0 text-right text-white/50 text-xs font-normal leading-[18px]">
+              <div className="grow shrink basis-0 text-right text-secondary-foreground text-xs font-normal leading-[18px]">
                 Max {DESCRIPTION_MAX_LENGTH} characters
               </div>
             </div>

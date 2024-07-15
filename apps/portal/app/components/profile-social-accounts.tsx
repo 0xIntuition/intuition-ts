@@ -41,7 +41,7 @@ function LinkSocialAccounts({
 }) {
   return (
     <div className="flex flex-col items-center gap-5 border border-solid border-white/10 px-5 py-6 text-center max-w-xl rounded-lg bg-black/60">
-      <p className="font-medium text-sm text-white/50">
+      <p className="font-medium text-sm text-secondary-foreground">
         Strengthen your profile&apos;s credibility by linking your social
         accounts. This enhances trustworthiness. Verified accounts offer
         additional authenticity.
