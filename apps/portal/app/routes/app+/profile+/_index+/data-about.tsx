@@ -23,24 +23,23 @@ import {
   formatBalance,
   getAuthHeaders,
 } from '@lib/utils/misc'
-import { SessionContext } from '@middleware/session'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
+import { getUserWallet } from '@server/auth'
 import { getPrivyAccessToken } from '@server/privy'
 
-export async function loader({ context, request }: LoaderFunctionArgs) {
+export async function loader({ request }: LoaderFunctionArgs) {
+  const userWallet = await getUserWallet(request)
+
   OpenAPI.BASE = 'https://dev.api.intuition.systems'
   const accessToken = getPrivyAccessToken(request)
   const headers = getAuthHeaders(accessToken !== null ? accessToken : '')
   OpenAPI.HEADERS = headers as Record<string, string>
 
-  const session = context.get(SessionContext)
-  const user = session.get('user')
-
-  if (!user?.details?.wallet?.address) {
+  if (!userWallet) {
     return logger('No user found in session')
   }
 
-  const userIdentity = await fetchIdentity(user.details.wallet.address)
+  const userIdentity = await fetchIdentity(userWallet)
 
   if (!userIdentity) {
     return logger('No user identity found')
@@ -62,7 +61,7 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
   const positionsLimit = searchParams.get('positionsLimit') ?? '10'
 
   const positions = await fetchPositionsOnIdentity(
-    user.details.wallet.address,
+    userWallet,
     positionsPage,
     Number(positionsLimit),
     positionsSortBy as PositionSortColumn,

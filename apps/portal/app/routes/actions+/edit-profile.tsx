@@ -1,13 +1,17 @@
 import { ApiError, OpenAPI, UsersService } from '@0xintuition/api'
 
 import logger from '@lib/utils/logger'
-import { getAuthHeaders } from '@lib/utils/misc'
-import { SessionContext } from '@middleware/session'
+import { getAuthHeaders, invariant } from '@lib/utils/misc'
 import { json, type ActionFunctionArgs } from '@remix-run/node'
+import { getUser, getUserWallet } from '@server/auth'
 import { getPrivyAccessToken } from '@server/privy'
 
-export async function action({ request, context }: ActionFunctionArgs) {
+export async function action({ request }: ActionFunctionArgs) {
   logger('Validating create identity form data')
+  const user = await getUser(request)
+  invariant(user, 'User not found')
+  invariant(user.wallet?.address, 'User wallet not found')
+  const wallet = user.wallet?.address
 
   logger('Request', request)
 
@@ -28,10 +32,7 @@ export async function action({ request, context }: ActionFunctionArgs) {
     const headers = getAuthHeaders(accessToken !== null ? accessToken : '')
     OpenAPI.HEADERS = headers as Record<string, string>
 
-    const session = context.get(SessionContext)
-    const user = session.get('user')
-
-    if (!user?.details?.wallet?.address) {
+    if (!wallet) {
       throw new Error('User wallet address is undefined')
     }
 
@@ -43,7 +44,7 @@ export async function action({ request, context }: ActionFunctionArgs) {
         description: string
         image?: string
       } = {
-        privy_id: user.details.id as string,
+        privy_id: user.id as string,
         display_name: display_name as string,
         description: description as string,
       }

@@ -1,7 +1,6 @@
 import { vitePlugin as remix } from '@remix-run/dev'
 import { installGlobals } from '@remix-run/node'
 import autoprefixer from 'autoprefixer'
-import { expressDevServer } from 'remix-express-dev-server'
 import { flatRoutes } from 'remix-flat-routes'
 import tailwindcss from 'tailwindcss'
 import { defineConfig } from 'vite'

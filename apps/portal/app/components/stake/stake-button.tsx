@@ -9,12 +9,10 @@ import { formatBalance } from '@lib/utils/misc'
 import { useNavigation } from '@remix-run/react'
 import { useSetAtom } from 'jotai'
 import { TransactionActionType, TransactionStateType } from 'types/transaction'
-import { SessionUser } from 'types/user'
 import { formatUnits } from 'viem'
 import { useAccount, useSwitchChain } from 'wagmi'
 
 interface StakeButtonProps {
-  user: SessionUser
   val: string
   mode: string | undefined
   handleAction: () => void

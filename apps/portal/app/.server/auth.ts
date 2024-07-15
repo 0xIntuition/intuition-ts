@@ -66,3 +66,8 @@ export async function getUser(request: Request) {
   invariant(userId, 'No userId provided by Privy')
   return await getPrivyUserById(userId)
 }
+
+export async function getUserWallet(request: Request) {
+  const user = await getUser(request)
+  return user.wallet?.address
+}

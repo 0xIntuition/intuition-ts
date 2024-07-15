@@ -26,26 +26,21 @@ import {
   getAuthHeaders,
   sliceString,
 } from '@lib/utils/misc'
-import { SessionContext } from '@middleware/session'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { Outlet, useLoaderData, useNavigate } from '@remix-run/react'
 import { getVaultDetails } from '@server/multivault'
 import { getPrivyAccessToken } from '@server/privy'
 import { useAtom } from 'jotai'
 import { ExtendedIdentityPresenter } from 'types/identity'
-import { SessionUser } from 'types/user'
 import { VaultDetailsType } from 'types/vault'
 
-export async function loader({ context, request, params }: LoaderFunctionArgs) {
-  OpenAPI.BASE = 'https://dev.api.intuition.systems'
+export async function loader({ request, params }: LoaderFunctionArgs) {
+  const wallet = (OpenAPI.BASE = 'https://dev.api.intuition.systems')
   const accessToken = getPrivyAccessToken(request)
   const headers = getAuthHeaders(accessToken !== null ? accessToken : '')
   OpenAPI.HEADERS = headers as Record<string, string>
 
-  const session = context.get(SessionContext)
-  const user = session.get('user')
-
-  if (!user?.details?.wallet?.address) {
+  if (!wallet) {
     return logger('No user found in session')
   }
 
@@ -68,7 +63,7 @@ export async function loader({ context, request, params }: LoaderFunctionArgs) {
       vaultDetails = await getVaultDetails(
         identity.contract,
         identity.vault_id,
-        user.details.wallet.address as `0x${string}`,
+        wallet as `0x${string}`,
       )
     } catch (error) {
       logger('Failed to fetch vaultDetails:', error)
@@ -81,15 +76,15 @@ export async function loader({ context, request, params }: LoaderFunctionArgs) {
   return json({
     identity,
     vaultDetails,
-    user,
+    wallet,
   })
 }
 
 export default function IdentityDetails() {
-  const { identity, vaultDetails, user } = useLoaderData<{
+  const { identity, vaultDetails, wallet } = useLoaderData<{
     identity: ExtendedIdentityPresenter
     vaultDetails: VaultDetailsType
-    user: SessionUser
+    wallet: string
   }>()
   const navigate = useNavigate()
 
@@ -169,7 +164,7 @@ export default function IdentityDetails() {
           />
         </div>
         <StakeModal
-          user={user as SessionUser}
+          userWallet={wallet}
           contract={identity.contract}
           open={stakeModalActive.isOpen}
           identity={identity}

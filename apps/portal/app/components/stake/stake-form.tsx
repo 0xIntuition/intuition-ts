@@ -22,14 +22,13 @@ import { formatBalance } from '@lib/utils/misc'
 import { Link, type FetcherWithComponents } from '@remix-run/react'
 import { useAtom } from 'jotai'
 import { TransactionActionType, TransactionStateType } from 'types/transaction'
-import { SessionUser } from 'types/user'
 
 import StakeActions from './stake-actions'
 import StakeInput from './stake-input'
 import StakeReview from './stake-review'
 
 interface StakeFormProps {
-  user: SessionUser
+  userWallet: string
   walletBalance: string
   identity?: IdentityPresenter
   claim?: ClaimPresenter
@@ -55,7 +54,7 @@ interface StakeFormProps {
 }
 
 export default function StakeForm({
-  user,
+  userWallet,
   walletBalance,
   identity,
   claim,
@@ -184,7 +183,7 @@ export default function StakeForm({
                 <StakeInput
                   val={val}
                   setVal={setVal}
-                  wallet={user.details?.wallet?.address ?? ''}
+                  wallet={userWallet ?? ''}
                   isLoading={isLoading}
                   validationErrors={validationErrors}
                   setValidationErrors={setValidationErrors}

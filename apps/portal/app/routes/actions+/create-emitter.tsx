@@ -5,14 +5,12 @@ import {
 } from '@0xintuition/api'
 
 import logger from '@lib/utils/logger'
-import { SessionContext } from '@middleware/session'
 import { json, type ActionFunction } from '@remix-run/node'
+import { getUserWallet } from '@server/auth'
 import { emitter } from '@server/emitter'
 
-export const action: ActionFunction = async ({ request, context }) => {
-  const session = context.get(SessionContext)
-  console.log('[LOADER] user', session.get('user'))
-  const user = session.get('user')
+export const action: ActionFunction = async ({ request }) => {
+  const wallet = await getUserWallet(request)
 
   const formData = await request.formData()
   const identity_id = formData.get('identity_id')
@@ -51,7 +49,7 @@ export const action: ActionFunction = async ({ request, context }) => {
       emitter.emit('create-identity')
       eventEmitted = true
     }
-    return json({ user, identity, success: true })
+    return json({ wallet, identity, success: true })
   }
 
   return json({ success: false }, { status: 400 })

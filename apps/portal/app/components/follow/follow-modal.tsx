@@ -36,7 +36,7 @@ const initialTxState: TransactionStateType = {
 }
 
 interface FollowModalProps {
-  user: SessionUser
+  userWallet: string
   contract: string
   open: boolean
   identity: IdentityPresenter
@@ -46,7 +46,7 @@ interface FollowModalProps {
 }
 
 export default function FollowModal({
-  user,
+  userWallet,
   contract,
   open = false,
   identity,
@@ -126,12 +126,8 @@ export default function FollowModal({
             claim === undefined
               ? [iVaultId, followVaultId, userVaultId]
               : actionType === 'follow'
-                ? [user.details?.wallet?.address as `0x${string}`, vault_id]
-                : [
-                    user_conviction,
-                    user.details?.wallet?.address as `0x${string}`,
-                    vault_id,
-                  ],
+                ? [userWallet as `0x${string}`, vault_id]
+                : [user_conviction, userWallet as `0x${string}`, vault_id],
           value:
             claim === undefined
               ? BigInt(tripleCost) + parseUnits(val === '' ? '0' : val, 18)
@@ -244,9 +240,7 @@ export default function FollowModal({
         args: EventLogArgs
       }
 
-      if (
-        topics.args.sender === (user?.details?.wallet?.address as `0x${string}`)
-      ) {
+      if (topics.args.sender === (userWallet as `0x${string}`)) {
         assets =
           mode === 'follow'
             ? (topics.args as BuyArgs).userAssetsAfterTotalFees.toString()
@@ -262,7 +256,7 @@ export default function FollowModal({
         setLastTxHash(txReceipt.transactionHash)
       }
     }
-  }, [txReceipt, user.details?.wallet?.address, mode, reset, lastTxHash])
+  }, [txReceipt, userWallet, mode, reset, lastTxHash])
 
   useEffect(() => {
     if (awaitingWalletConfirmation) {
@@ -287,7 +281,7 @@ export default function FollowModal({
   const queryClient = useQueryClient()
   const { data: blockNumber } = useBlockNumber({ watch: true })
   const { data: balance, queryKey } = useBalance({
-    address: user.details?.wallet?.address as `0x${string}`,
+    address: userWallet as `0x${string}`,
   })
 
   useEffect(() => {

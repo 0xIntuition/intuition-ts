@@ -3,14 +3,13 @@ import { ApiError, IdentitiesService, OpenAPI } from '@0xintuition/api'
 import { MULTIVAULT_CONTRACT_ADDRESS } from '@lib/utils/constants'
 import logger from '@lib/utils/logger'
 import { getAuthHeaders } from '@lib/utils/misc'
-import { SessionContext } from '@middleware/session'
 import { json, type ActionFunctionArgs } from '@remix-run/node'
+import { getUserWallet } from '@server/auth'
 import { getPrivyAccessToken } from '@server/privy'
 
-export async function action({ request, context }: ActionFunctionArgs) {
+export async function action({ request }: ActionFunctionArgs) {
+  const wallet = await getUserWallet(request)
   logger('Validating create identity form data')
-
-  logger('Request', request)
 
   const formData = await request.formData()
 
@@ -29,11 +28,7 @@ export async function action({ request, context }: ActionFunctionArgs) {
     logger('create headers', headers)
     OpenAPI.HEADERS = headers as Record<string, string>
 
-    const session = context.get(SessionContext)
-    console.log('[LOADER] user', session.get('user'))
-    const user = session.get('user')
-
-    if (!user?.details?.wallet?.address) {
+    if (!wallet) {
       throw new Error('User wallet address is undefined')
     }
 
@@ -41,7 +36,7 @@ export async function action({ request, context }: ActionFunctionArgs) {
     try {
       const identityParams = {
         contract: MULTIVAULT_CONTRACT_ADDRESS as string,
-        creator: user.details.wallet.address as string,
+        creator: wallet as string,
         display_name: display_name as string,
         identity_id: identity_id as string,
         description: description as string,

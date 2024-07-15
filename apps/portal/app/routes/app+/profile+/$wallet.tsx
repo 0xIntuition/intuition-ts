@@ -29,26 +29,23 @@ import {
   getAuthHeaders,
   sliceString,
 } from '@lib/utils/misc'
-import { SessionContext } from '@middleware/session'
 import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
 import { Outlet, useNavigate } from '@remix-run/react'
+import { getUserWallet } from '@server/auth'
 import { getVaultDetails } from '@server/multivault'
 import { getPrivyAccessToken } from '@server/privy'
 import * as blockies from 'blockies-ts'
 import { useAtom } from 'jotai'
-import { SessionUser } from 'types/user'
 import { VaultDetailsType } from 'types/vault'
 
-export async function loader({ context, request, params }: LoaderFunctionArgs) {
+export async function loader({ request, params }: LoaderFunctionArgs) {
+  const userWallet = await getUserWallet(request)
   OpenAPI.BASE = 'https://dev.api.intuition.systems'
   const accessToken = getPrivyAccessToken(request)
   const headers = getAuthHeaders(accessToken !== null ? accessToken : '')
   OpenAPI.HEADERS = headers as Record<string, string>
 
-  const session = context.get(SessionContext)
-  const user = session.get('user')
-
-  if (!user?.details?.wallet?.address) {
+  if (!userWallet) {
     return logger('No user found in session')
   }
 
@@ -58,7 +55,7 @@ export async function loader({ context, request, params }: LoaderFunctionArgs) {
     throw new Error('Wallet is undefined.')
   }
 
-  if (wallet === user?.details?.wallet?.address) {
+  if (wallet === userWallet) {
     throw redirect('/app/profile')
   }
 
@@ -86,7 +83,7 @@ export async function loader({ context, request, params }: LoaderFunctionArgs) {
       vaultDetails = await getVaultDetails(
         userIdentity.contract,
         userIdentity.vault_id,
-        user?.details?.wallet?.address as `0x${string}`,
+        userWallet as `0x${string}`,
       )
     } catch (error) {
       logger('Failed to fetch vaultDetails', error)
@@ -106,7 +103,7 @@ export async function loader({ context, request, params }: LoaderFunctionArgs) {
       followVaultDetails = await getVaultDetails(
         followClaim.contract,
         followClaim.vault_id,
-        user.details.wallet.address as `0x${string}`,
+        userWallet as `0x${string}`,
       )
     } catch (error) {
       logger('Failed to fetch followVaultDetails', error)
@@ -116,7 +113,7 @@ export async function loader({ context, request, params }: LoaderFunctionArgs) {
 
   return json({
     wallet,
-    user,
+    userWallet,
     userIdentity,
     userTotals,
     followClaim,
@@ -128,7 +125,7 @@ export async function loader({ context, request, params }: LoaderFunctionArgs) {
 export default function Profile() {
   const {
     wallet,
-    user,
+    userWallet,
     userIdentity,
     userTotals,
     followClaim,
@@ -136,7 +133,7 @@ export default function Profile() {
     vaultDetails,
   } = useLiveLoader<{
     wallet: string
-    user: SessionUser
+    userWallet: string
     userIdentity: IdentityPresenter
     userTotals: UserTotalsPresenter
     followClaim: ClaimPresenter
@@ -254,7 +251,7 @@ export default function Profile() {
           </div>
 
           <StakeModal
-            user={user as SessionUser}
+            userWallet={userWallet}
             contract={userIdentity.contract}
             open={stakeModalActive.isOpen}
             identity={userIdentity}
@@ -267,7 +264,7 @@ export default function Profile() {
             }}
           />
           <FollowModal
-            user={user as SessionUser}
+            userWallet={userWallet}
             contract={userIdentity.contract}
             open={followModalActive.isOpen}
             identity={userIdentity}

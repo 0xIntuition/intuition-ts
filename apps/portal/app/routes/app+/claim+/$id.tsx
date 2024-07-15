@@ -27,7 +27,6 @@ import {
   formatBalance,
   getAuthHeaders,
 } from '@lib/utils/misc'
-import { SessionContext } from '@middleware/session'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import {
   Outlet,
@@ -35,13 +34,15 @@ import {
   useLocation,
   useNavigate,
 } from '@remix-run/react'
+import { getUserWallet } from '@server/auth'
 import { getVaultDetails } from '@server/multivault'
 import { getPrivyAccessToken } from '@server/privy'
 import { useAtom } from 'jotai'
-import { SessionUser } from 'types/user'
 import { VaultDetailsType } from 'types/vault'
 
-export async function loader({ context, request, params }: LoaderFunctionArgs) {
+export async function loader({ request, params }: LoaderFunctionArgs) {
+  const wallet = await getUserWallet(request)
+
   OpenAPI.BASE = 'https://dev.api.intuition.systems'
   const accessToken = getPrivyAccessToken(request)
   const headers = getAuthHeaders(accessToken !== null ? accessToken : '')
@@ -52,10 +53,7 @@ export async function loader({ context, request, params }: LoaderFunctionArgs) {
     throw new Error('vault_id is undefined.')
   }
 
-  const session = context.get(SessionContext)
-  const user = session.get('user')
-
-  if (!user?.details?.wallet?.address) {
+  if (!wallet) {
     return console.log('No user found in session')
   }
 
@@ -75,7 +73,7 @@ export async function loader({ context, request, params }: LoaderFunctionArgs) {
       vaultDetails = await getVaultDetails(
         claim.contract,
         claim.vault_id,
-        user.details.wallet.address as `0x${string}`,
+        wallet as `0x${string}`,
         claim.counter_vault_id,
       )
     } catch (error) {
@@ -85,7 +83,7 @@ export async function loader({ context, request, params }: LoaderFunctionArgs) {
   }
 
   return json({
-    user,
+    wallet,
     claim,
     sortBy,
     direction,
@@ -93,8 +91,8 @@ export async function loader({ context, request, params }: LoaderFunctionArgs) {
   })
 }
 export default function ClaimDetails() {
-  const { user, claim, vaultDetails } = useLoaderData<{
-    user: SessionUser
+  const { wallet, claim, vaultDetails } = useLoaderData<{
+    wallet: string
     claim: ClaimPresenter
     vaultDetails: VaultDetailsType
   }>()
@@ -264,7 +262,7 @@ export default function ClaimDetails() {
           </div>
         </div>
         <StakeModal
-          user={user as SessionUser}
+          userWallet={wallet}
           contract={claim.contract}
           open={stakeModalActive.isOpen}
           direction={stakeModalActive.direction}
