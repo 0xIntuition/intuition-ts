@@ -73,7 +73,10 @@ export default function PersonalActivityFeed() {
 
   return (
     <div className="m-8 flex flex-col items-center gap-4">
-      <ActivityList activities={userActivity} pagination={pagination} />
+      <ActivityList
+        activities={userActivity as ActivityPresenter[]}
+        pagination={pagination}
+      />
     </div>
   )
 }

@@ -72,7 +72,10 @@ export default function GlobalActivityFeed() {
 
   return (
     <div className="m-8 flex flex-col items-center gap-4">
-      <ActivityList activities={globalActivity} pagination={pagination} />
+      <ActivityList
+        activities={globalActivity as ActivityPresenter[]}
+        pagination={pagination}
+      />
     </div>
   )
 }
