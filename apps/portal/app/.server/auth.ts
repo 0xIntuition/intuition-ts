@@ -1,7 +1,6 @@
 import { redirect } from '@remix-run/node'
 import { getPrivyUserById, verifyPrivyAccessToken } from './privy'
 import { combineHeaders, invariant } from '@lib/utils/misc'
-import { commitUserSession, getUserSession, setUserSession } from './user'
 
 export async function getUserId(request: Request) {
   const verifiedClaims = await verifyPrivyAccessToken(request)
@@ -65,20 +64,5 @@ export async function logout(
 export async function getUser(request: Request) {
   const userId = await getUserId(request)
   invariant(userId, 'No userId provided by Privy')
-  const user = await getPrivyUserById(userId)
-
-  // check if there is a user in userSessionStorage
-  const userSession = await getUserSession(request)
-
-  // check if userDetails is the same object as userSession
-  const requiresUpdate = deepCompare(user, userSession) || !userSession
-  if (requiresUpdate) {
-    console.log("Requires user detail update")
-    await setUserSession(request, user)
-  }
-  return user
-}
-
-export function deepCompare(a: any, b: any) {
-  return JSON.stringify(a) === JSON.stringify(b)
+  return await getPrivyUserById(userId)
 }
