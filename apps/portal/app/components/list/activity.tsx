@@ -54,7 +54,7 @@ function ActivityItem({
             size="lg"
             imgSrc={activity.creator?.image ?? ''}
           >
-            {activity.creator?.display_name ?? ''}
+            {activity.creator?.display_name ?? activity.creator?.wallet ?? ''}
           </IdentityTag>
           <Text>{message}</Text>
         </div>
