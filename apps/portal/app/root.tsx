@@ -28,25 +28,9 @@ import { Toaster } from '@0xintuition/1ui'
 
 import { CURRENT_ENV } from '@lib/utils/constants'
 import { getChainEnvConfig } from '@lib/utils/environment'
-import { createSessionMiddleware } from '@middleware/session'
 import { ClientOnly } from 'remix-utils/client-only'
 import { baseSepolia } from 'viem/chains'
-import { serverOnly$ } from 'vite-env-only'
 import { useAccount, useSwitchChain } from 'wagmi'
-
-const session = createSessionMiddleware(
-  createCookieSessionStorage<SessionData, SessionFlashData>({
-    cookie: {
-      name: '__session',
-      path: '/',
-      httpOnly: true, // for security reasons, make this cookie http only
-      sameSite: 'lax',
-      secrets: ['s3cret1'],
-      secure: process.env.NODE_ENV === 'production', // enable this in prod only
-    },
-  }),
-)
-export const middleware = serverOnly$([session])
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
   return [

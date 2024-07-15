@@ -21,7 +21,6 @@ export default defineConfig({
     },
   },
   plugins: [
-    expressDevServer(),
     envOnly(),
     remix({
       future: { unstable_singleFetch: true },
