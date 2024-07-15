@@ -7,7 +7,6 @@ import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
 import { Outlet, useLoaderData } from '@remix-run/react'
 import { requireUserWallet } from '@server/auth'
 import { mainnetClient } from '@server/viem'
-import { serverOnly$ } from 'vite-env-only'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const wallet = await requireUserWallet(request)

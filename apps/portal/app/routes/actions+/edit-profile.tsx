@@ -3,12 +3,12 @@ import { ApiError, OpenAPI, UsersService } from '@0xintuition/api'
 import logger from '@lib/utils/logger'
 import { getAuthHeaders, invariant } from '@lib/utils/misc'
 import { json, type ActionFunctionArgs } from '@remix-run/node'
-import { getUser, requireUserWallet } from '@server/auth'
+import { requireUser } from '@server/auth'
 import { getPrivyAccessToken } from '@server/privy'
 
 export async function action({ request }: ActionFunctionArgs) {
   logger('Validating create identity form data')
-  const user = await getUser(request)
+  const user = await requireUser(request)
   invariant(user, 'User not found')
   invariant(user.wallet?.address, 'User wallet not found')
   const wallet = user.wallet?.address

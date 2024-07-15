@@ -48,7 +48,7 @@ import {
   useNavigate,
   useRevalidator,
 } from '@remix-run/react'
-import { getUser } from '@server/auth'
+import { requireUser } from '@server/auth'
 import { getVaultDetails } from '@server/multivault'
 import { getPrivyAccessToken } from '@server/privy'
 import * as blockies from 'blockies-ts'
@@ -56,7 +56,7 @@ import { useAtom } from 'jotai'
 import { VaultDetailsType } from 'types/vault'
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  const user = await getUser(request)
+  const user = await requireUser(request)
   invariant(user, 'User not found')
   invariant(user.wallet?.address, 'User wallet not found')
   const userWallet = user.wallet?.address
