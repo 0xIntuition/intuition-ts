@@ -70,8 +70,6 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
   const url = new URL(request.url)
   const searchParams = new URLSearchParams(url.search)
 
-  console.log('userTotals', userTotals)
-
   const activeIdentitiesSearch = searchParams.get('activeIdentitiesSearch')
   const activeIdentitiesSortBy =
     searchParams.get('activeIdentitiesSortBy') ?? 'UserAssets'
