@@ -10,7 +10,7 @@ import { ActivityPresenter, SortColumn } from '@0xintuition/api'
 
 import { formatBalance } from '@lib/utils/misc'
 import { useNavigate } from '@remix-run/react'
-import moment from 'moment'
+import { formatDistance } from 'date-fns'
 import { PaginationType } from 'types/pagination'
 
 import { List } from './list'
@@ -59,7 +59,7 @@ function ActivityItem({
           <Text>{message}</Text>
         </div>
         <Text className="text-secondary-foreground">
-          {moment(activity.timestamp).fromNow()}
+          {formatDistance(new Date(activity.timestamp), new Date())} ago
         </Text>
       </div>
       <div className="flex w-full px-6">

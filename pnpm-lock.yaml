@@ -258,6 +258,9 @@ importers:
       cookie:
         specifier: ^0.6.0
         version: 0.6.0
+      date-fns:
+        specifier: ^3.6.0
+        version: 3.6.0
       did-session:
         specifier: ^3.1.0
         version: 3.1.0(bufferutil@4.0.8)(typescript@5.4.5)(utf-8-validate@6.0.4)(zod@3.23.8)
@@ -279,9 +282,6 @@ importers:
       jotai:
         specifier: ^2.8.3
         version: 2.8.3(@types/react@18.3.1)(react@18.3.1)
-      moment:
-        specifier: ^2.30.1
-        version: 2.30.1
       morgan:
         specifier: ^1.10.0
         version: 1.10.0
@@ -6088,6 +6088,9 @@ packages:
     resolution: {integrity: sha512-fnULvOpxnC5/Vg3NCiWelDsLiUc9bRwAPs/+LfTLNvetFCtCTN+yQz15C/fs4AwX1R9K5GLtLfn8QW+dWisaAw==}
     engines: {node: '>=0.11'}
 
+  date-fns@3.6.0:
+    resolution: {integrity: sha512-fRHTG8g/Gif+kSh50gaGEdToemgfj74aRX3swtiouboip5JDLAyDE9F11nHMIcvOaXeOC6D7SpNhi7uFyB7Uww==}
+
   dateformat@4.6.3:
     resolution: {integrity: sha512-2P0p0pFGzHS5EMnhdxQi7aJN+iMheud0UhG4dlE1DLAlvL8JHjJJTX/CSm4JXwV0Ka5nGk3zC5mcb5bUQUxxMA==}
 
@@ -8837,9 +8840,6 @@ packages:
 
   modern-ahocorasick@1.0.1:
     resolution: {integrity: sha512-yoe+JbhTClckZ67b2itRtistFKf8yPYelHLc7e5xAwtNAXxM6wJTUx2C7QeVSJFDzKT7bCIFyBVybPMKvmB9AA==}
-
-  moment@2.30.1:
-    resolution: {integrity: sha512-uEmtNhbDOrWPFS+hdjFCBfy9f2YoyzRpwcl+DqpC6taX21FzsTLQVbMV/W7PzNSX6x/bhC1zA3c2UQ5NzH6how==}
 
   morgan@1.10.0:
     resolution: {integrity: sha512-AbegBVI4sh6El+1gNwvD5YIck7nSA36weD7xvIxG4in80j/UoK8AEGaWnnz8v1GxonMCltmlNs5ZKbGvl9b1XQ==}
@@ -20091,6 +20091,8 @@ snapshots:
     dependencies:
       '@babel/runtime': 7.24.7
 
+  date-fns@3.6.0: {}
+
   dateformat@4.6.3: {}
 
   dayjs@1.11.10: {}
@@ -23879,8 +23881,6 @@ snapshots:
       ufo: 1.5.3
 
   modern-ahocorasick@1.0.1: {}
-
-  moment@2.30.1: {}
 
   morgan@1.10.0:
     dependencies:
