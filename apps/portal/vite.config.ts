@@ -11,7 +11,7 @@ import tsconfigPaths from 'vite-tsconfig-paths'
 
 import { themePreset } from '../../packages/1ui/src/styles/index'
 
-installGlobals({ nativeFetch: true })
+installGlobals()
 
 export default defineConfig({
   css: {
@@ -22,7 +22,6 @@ export default defineConfig({
   plugins: [
     envOnly(),
     remix({
-      future: { unstable_singleFetch: true },
       ignoredRouteFiles: ['**/.*'],
       routes: async (defineRoutes) => {
         return flatRoutes('routes', defineRoutes, {
