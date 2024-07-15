@@ -1,7 +1,9 @@
+import { platform } from 'os'
+
 import {
   Button,
   Icon,
-  IconName,
+  IconNameType,
   SocialLinks,
   SocialLinksBadge,
   SocialLinksButton,
@@ -9,10 +11,17 @@ import {
 
 import { useSocialLinking } from '@lib/hooks/usePrivySocialLinking'
 import { verifiedPlatforms } from '@lib/utils/constants'
-import { PrivyPlatform } from 'types/privy'
-import { SessionUser } from 'types/user'
+import logger from '@lib/utils/logger'
+import { Discord, Farcaster, Github, Twitter } from '@privy-io/react-auth'
+import { PlatformUserDetails, PrivyPlatform } from 'types/privy'
+import { ExtendedPrivyUser } from 'types/user'
+import { $ } from 'vitest/dist/reporters-yx5ZTtEV.js'
 
-export function PrivyVerifiedLinks({ privyUser }: { privyUser: SessionUser }) {
+export function PrivyVerifiedLinks({
+  privyUser,
+}: {
+  privyUser: ExtendedPrivyUser
+}) {
   const {
     handleLink,
     handleUnlink,
@@ -23,13 +32,37 @@ export function PrivyVerifiedLinks({ privyUser }: { privyUser: SessionUser }) {
     return null
   }
   const renderLinkItem = (platform: PrivyPlatform) => {
-    const isConnected = Boolean(privyUser.details?.[platform.platformPrivyName])
+    const isConnected = Boolean(privyUser[platform.platformPrivyName])
+    logger('privyUser', privyUser)
+    logger(
+      'privyUser[platform.platformPrivyName',
+      privyUser[platform.platformPrivyName],
+    )
+    logger(`${platform.platformPrivyName} : ${isConnected}`)
 
     const handleUnlinkWrapper = () => {
-      const userDetails = privyUser.details?.[platform.platformPrivyName]
+      const userDetails:
+        | PlatformUserDetails
+        | (Twitter & PlatformUserDetails)
+        | (Github & PlatformUserDetails)
+        | (Farcaster & PlatformUserDetails)
+        | Discord
+        | undefined = privyUser[platform.platformPrivyName]
+
+      function isFarcasterUserDetails(
+        userDetails:
+          | PlatformUserDetails
+          | Twitter
+          | Github
+          | Farcaster
+          | Discord
+          | undefined,
+      ): userDetails is Farcaster {
+        return !!userDetails && 'fid' in userDetails
+      }
 
       return new Promise<void>((resolve, reject) => {
-        if (platform.platformPrivyName === 'farcaster' && userDetails?.fid) {
+        if (isFarcasterUserDetails(userDetails)) {
           handleUnlink(platform.unlinkMethod, undefined, userDetails.fid)
             .then(resolve)
             .catch(reject)
@@ -48,7 +81,9 @@ export function PrivyVerifiedLinks({ privyUser }: { privyUser: SessionUser }) {
     return (
       <VerifiedLinkItem
         key={platform.platformPrivyName}
-        platformDisplayName={platform.platformDisplayName}
+        platformDisplayName={
+          platform.platformDisplayName as VerifiedLinkItemProps['platformDisplayName']
+        }
         platformIcon={platform.platformIcon}
         isConnected={isConnected}
         privyUser={privyUser}
@@ -74,11 +109,11 @@ interface VerifiedLinkItemProps {
     | 'calendly'
     | 'medium'
     | 'github'
-  platformIcon: IconName
+  platformIcon: IconNameType
   linkMethod: () => Promise<void>
   unlinkMethod: () => Promise<void>
   isConnected: boolean
-  privyUser: SessionUser | null
+  privyUser: ExtendedPrivyUser | null
   platform: PrivyPlatform
 }
 
@@ -99,9 +134,7 @@ export function VerifiedLinkItem({
         </div>
         {isConnected ? (
           <span className="font-medium text-sm">
-            {(privyUser &&
-              (privyUser as SessionUser).details?.[platform.platformPrivyName]
-                ?.username) ??
+            {(privyUser && privyUser[platform.platformPrivyName]?.username) ??
               platformDisplayName}
           </span>
         ) : (
@@ -129,7 +162,7 @@ export function VerifiedLinkBadges({
   privyUser,
   handleOpenEditSocialLinksModal,
 }: {
-  privyUser: SessionUser
+  privyUser: ExtendedPrivyUser
   handleOpenEditSocialLinksModal: () => void
 }) {
   return (
@@ -139,9 +172,7 @@ export function VerifiedLinkBadges({
           return null
         }
 
-        const isConnected = Boolean(
-          privyUser.details?.[platform.platformPrivyName],
-        )
+        const isConnected = Boolean(privyUser[platform.platformPrivyName])
 
         return isConnected ? (
           <SocialLinksBadge
@@ -149,9 +180,7 @@ export function VerifiedLinkBadges({
             platform={platform.platformUiName}
             isVerified={isConnected}
             username={
-              (privyUser &&
-                (privyUser as SessionUser).details?.[platform.platformPrivyName]
-                  ?.username) ??
+              (privyUser && privyUser[platform.platformPrivyName]?.username) ??
               platform.platformDisplayName
             }
           />

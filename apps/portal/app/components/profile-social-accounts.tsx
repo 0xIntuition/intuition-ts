@@ -2,35 +2,42 @@ import { Button } from '@0xintuition/1ui'
 
 import { VerifiedLinkBadges } from '@client/privy-verified-links'
 import { verifiedPlatforms } from '@lib/utils/constants'
-import { SessionUser } from 'types/user'
+import logger from '@lib/utils/logger'
+import { ExtendedPrivyUser } from 'types/user'
 
 // if the user has not linked any accounts, render the Link CTA version
 // if the user has linked at least one account, render the Edit CTA version
 
 interface ProfileSocialAccountProps {
-  privyUser: SessionUser
+  privyUser: ExtendedPrivyUser
 
   handleOpenEditSocialLinksModal: () => void
 }
 
 export function ProfileSocialAccounts({
   privyUser,
-
   handleOpenEditSocialLinksModal,
 }: ProfileSocialAccountProps) {
   const hasLinkedAccounts = verifiedPlatforms.some((platform) =>
-    Boolean(privyUser.details?.[platform.platformPrivyName]),
+    Boolean(privyUser[platform.platformPrivyName]),
   )
+  logger('[social modal] privyUser:', privyUser)
+  logger('hasLinkedAccounts', hasLinkedAccounts)
 
-  return hasLinkedAccounts ? (
-    <EditSocialAccounts
-      privyUser={privyUser}
-      handleOpenEditSocialLinksModal={handleOpenEditSocialLinksModal}
-    />
-  ) : (
-    <LinkSocialAccounts
-      handleOpenEditSocialLinksModal={handleOpenEditSocialLinksModal}
-    />
+  return (
+    <div>
+      <pre>hasLinkedAccounts: {hasLinkedAccounts ? 'true' : 'false'}</pre>
+      {hasLinkedAccounts ? (
+        <EditSocialAccounts
+          privyUser={privyUser}
+          handleOpenEditSocialLinksModal={handleOpenEditSocialLinksModal}
+        />
+      ) : (
+        <LinkSocialAccounts
+          handleOpenEditSocialLinksModal={handleOpenEditSocialLinksModal}
+        />
+      )}
+    </div>
   )
 }
 
@@ -57,7 +64,7 @@ function EditSocialAccounts({
   privyUser,
   handleOpenEditSocialLinksModal,
 }: {
-  privyUser: SessionUser
+  privyUser: ExtendedPrivyUser
   handleOpenEditSocialLinksModal: () => void
 }) {
   if (!privyUser) {
