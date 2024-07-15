@@ -5,6 +5,7 @@ import {
   SortDirection,
 } from '@0xintuition/api'
 
+import { ActivityList } from '@components/list/activity'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { fetchGlobalActivity } from '@lib/utils/fetches'
 import logger from '@lib/utils/logger'
@@ -64,13 +65,14 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
 }
 
 export default function GlobalActivityFeed() {
-  const { globalActivity } = useLiveLoader<typeof loader>(['attest', 'create'])
+  const { globalActivity, pagination } = useLiveLoader<typeof loader>([
+    'attest',
+    'create',
+  ])
 
   return (
     <div className="m-8 flex flex-col items-center gap-4">
-      <div className="flex flex-col">GlobalActivity Feed</div>
-      <pre>This is a placeholder for the Global Activity Feed</pre>
-      {JSON.stringify(globalActivity)}
+      <ActivityList activities={globalActivity} pagination={pagination} />
     </div>
   )
 }

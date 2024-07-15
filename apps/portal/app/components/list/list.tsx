@@ -26,7 +26,7 @@ export function List<T extends SortColumnType>({
   children: ReactNode
   pagination: PaginationType
   paginationLabel: string
-  options: SortOption<T>[]
+  options?: SortOption<T>[]
   paramPrefix?: string
   enableSearch?: boolean
 }) {
@@ -36,7 +36,7 @@ export function List<T extends SortColumnType>({
   return (
     <>
       <div className="flex flex-col w-full gap-6">
-        {enableSearch && (
+        {enableSearch && options && (
           <SearchAndSort
             options={options}
             handleSortChange={handleSortChange}

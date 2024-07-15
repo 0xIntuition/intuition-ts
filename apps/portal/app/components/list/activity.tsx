@@ -1,0 +1,170 @@
+import {
+  Claim,
+  ClaimRow,
+  Identity,
+  IdentityContentRow,
+  IdentityTag,
+  Text,
+} from '@0xintuition/1ui'
+import { ActivityPresenter, SortColumn } from '@0xintuition/api'
+
+import { formatBalance } from '@lib/utils/misc'
+import { useNavigate } from '@remix-run/react'
+import moment from 'moment'
+import { PaginationType } from 'types/pagination'
+
+import { List } from './list'
+
+export function ActivityList({
+  activities,
+  pagination,
+  paramPrefix,
+}: {
+  activities: ActivityPresenter[]
+  pagination: PaginationType
+  paramPrefix?: string
+}) {
+  const navigate = useNavigate()
+
+  return (
+    <List<SortColumn>
+      pagination={pagination}
+      paginationLabel="identities"
+      paramPrefix={paramPrefix}
+      enableSearch={false}
+    >
+      {activities?.map((activity) => {
+        if (activity.identity) {
+          console.log('activity.identity', activity.identity)
+        }
+        return (
+          <div
+            key={activity.id}
+            className={`grow shrink basis-0 self-stretch p-6 bg-black first:rounded-t-xl last:rounded-b-xl border border-neutral-300/20 flex-col justify-start items-start gap-5 inline-flex w-full`}
+          >
+            <div className="flex flex-row items-center justify-between min-w-full">
+              <div className="flex flex-row items-center gap-2">
+                <IdentityTag
+                  variant={Identity.user}
+                  size="lg"
+                  imgSrc={activity.creator?.image ?? ''}
+                >
+                  {activity.creator?.display_name ?? ''}
+                </IdentityTag>
+                <Text>
+                  {activity.event_type === 'createAtom'
+                    ? 'created an identity'
+                    : activity.event_type === 'createTriple'
+                      ? 'created a claim'
+                      : activity.event_type === 'depositAtom'
+                        ? `deposited ${formatBalance(activity.value, 18, 4)} ETH on an identity`
+                        : activity.event_type === 'redeemAtom'
+                          ? `redeemed ${formatBalance(activity.value, 18, 4)} ETH from an identity`
+                          : activity.event_type === 'depositTriple'
+                            ? `deposited ${formatBalance(activity.value, 18, 4)} ETH on a claim`
+                            : activity.event_type === 'redeemTriple'
+                              ? `redeemed ${formatBalance(activity.value, 18, 4)} ETH from a claim`
+                              : ''}
+                </Text>
+              </div>
+              <Text className="text-secondary-foreground">
+                {moment(activity.timestamp).fromNow()}
+              </Text>
+            </div>
+            <div className="flex w-full px-6">
+              {activity.identity && (
+                <IdentityContentRow
+                  variant={
+                    activity.identity.is_user ? Identity.user : Identity.nonUser
+                  }
+                  avatarSrc={
+                    activity.identity.user?.image ??
+                    activity.identity.image ??
+                    ''
+                  }
+                  name={
+                    activity.identity.user?.display_name ??
+                    activity.identity.display_name
+                  }
+                  walletAddress={
+                    activity.identity.user?.wallet ??
+                    activity.identity.identity_id
+                  }
+                  amount={
+                    +formatBalance(
+                      BigInt(activity.identity.user_assets ?? '0'),
+                      18,
+                      4,
+                    )
+                  }
+                  totalFollowers={activity.identity.num_positions}
+                  onClick={() => {
+                    if (activity.identity) {
+                      navigate(
+                        activity.identity.is_user
+                          ? `/app/profile/${activity.identity.identity_id}`
+                          : `/app/identity/${activity.identity.identity_id}`,
+                      )
+                    }
+                  }}
+                  className="hover:cursor-pointer"
+                />
+              )}
+              {activity.claim && (
+                <div className="flex flex-row w-full">
+                  <ClaimRow
+                    claimsFor={activity.claim.for_num_positions}
+                    claimsAgainst={activity.claim.against_num_positions}
+                    amount={+formatBalance(activity.claim.assets_sum, 18, 4)}
+                    onClick={() => {
+                      if (activity.claim) {
+                        navigate(`/app/claim/${activity.claim.claim_id}`)
+                      }
+                    }}
+                    className="hover:cursor-pointer w-full"
+                  >
+                    <Claim
+                      subject={{
+                        variant: activity.claim.subject?.is_user
+                          ? Identity.user
+                          : Identity.nonUser,
+                        label:
+                          activity.claim.subject?.user?.display_name ??
+                          activity.claim.subject?.display_name ??
+                          activity.claim.subject?.identity_id ??
+                          '',
+                        imgSrc: activity.claim.subject?.image,
+                      }}
+                      predicate={{
+                        variant: activity.claim.predicate?.is_user
+                          ? Identity.user
+                          : Identity.nonUser,
+                        label:
+                          activity.claim.predicate?.user?.display_name ??
+                          activity.claim.predicate?.display_name ??
+                          activity.claim.predicate?.identity_id ??
+                          '',
+                        imgSrc: activity.claim.predicate?.image,
+                      }}
+                      object={{
+                        variant: activity.claim.object?.is_user
+                          ? Identity.user
+                          : Identity.nonUser,
+                        label:
+                          activity.claim.object?.user?.display_name ??
+                          activity.claim.object?.display_name ??
+                          activity.claim.object?.identity_id ??
+                          '',
+                        imgSrc: activity.claim.object?.image,
+                      }}
+                    />
+                  </ClaimRow>
+                </div>
+              )}
+            </div>
+          </div>
+        )
+      })}
+    </List>
+  )
+}
