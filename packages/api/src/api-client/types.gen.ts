@@ -354,6 +354,17 @@ export type ExternalReferenceQuery = {
   userValue?: string | null
 }
 
+export type FollowQuery = {
+  direction?: SortDirection | null
+  displayName?: string | null
+  limit?: number | null
+  offset?: number | null
+  page?: number | null
+  sortBy?: SortColumn | null
+  timeframe?: TimeFrame | null
+  userWallet?: string | null
+}
+
 export type Identifier = number | string
 
 export type IdentityAttribute =
@@ -1575,17 +1586,17 @@ export type GetIdentityByIdResponse = {
 }
 
 export type GetIdentityFollowedData = {
-  direction?: SortDirection | null
+  direction: SortDirection | null
   /**
    * sql id
    */
   id: string
-  limit?: number | null
-  offset?: number | null
-  page?: number | null
-  sortBy?: SortColumn | null
-  timeframe?: TimeFrame | null
-  userWallet?: string | null
+  limit: number | null
+  offset: number | null
+  page: number | null
+  sortBy: SortColumn | null
+  timeframe: TimeFrame | null
+  userWallet: string | null
 }
 
 export type GetIdentityFollowedResponse = {
@@ -1596,17 +1607,17 @@ export type GetIdentityFollowedResponse = {
 }
 
 export type GetIdentityFollowersData = {
-  direction?: SortDirection | null
+  direction: SortDirection | null
   /**
    * sql id
    */
   id: string
-  limit?: number | null
-  offset?: number | null
-  page?: number | null
-  sortBy?: SortColumn | null
-  timeframe?: TimeFrame | null
-  userWallet?: string | null
+  limit: number | null
+  offset: number | null
+  page: number | null
+  sortBy: SortColumn | null
+  timeframe: TimeFrame | null
+  userWallet: string | null
 }
 
 export type GetIdentityFollowersResponse = {
@@ -1617,17 +1628,17 @@ export type GetIdentityFollowersResponse = {
 }
 
 export type GetIdentityTagsData = {
-  direction?: SortDirection | null
+  direction: SortDirection | null
   /**
    * sql id
    */
   id: string
-  limit?: number | null
-  offset?: number | null
-  page?: number | null
-  sortBy?: SortColumn | null
-  timeframe?: TimeFrame | null
-  userWallet?: string | null
+  limit: number | null
+  offset: number | null
+  page: number | null
+  sortBy: SortColumn | null
+  timeframe: TimeFrame | null
+  userWallet: string | null
 }
 
 export type GetIdentityTagsResponse = {
@@ -2941,17 +2952,17 @@ export type $OpenApiTs = {
   '/identity/{id}/followed': {
     get: {
       req: {
-        direction?: SortDirection | null
+        direction: SortDirection | null
         /**
          * sql id
          */
         id: string
-        limit?: number | null
-        offset?: number | null
-        page?: number | null
-        sortBy?: SortColumn | null
-        timeframe?: TimeFrame | null
-        userWallet?: string | null
+        limit: number | null
+        offset: number | null
+        page: number | null
+        sortBy: SortColumn | null
+        timeframe: TimeFrame | null
+        userWallet: string | null
       }
       res: {
         /**
@@ -2969,17 +2980,17 @@ export type $OpenApiTs = {
   '/identity/{id}/followers': {
     get: {
       req: {
-        direction?: SortDirection | null
+        direction: SortDirection | null
         /**
          * sql id
          */
         id: string
-        limit?: number | null
-        offset?: number | null
-        page?: number | null
-        sortBy?: SortColumn | null
-        timeframe?: TimeFrame | null
-        userWallet?: string | null
+        limit: number | null
+        offset: number | null
+        page: number | null
+        sortBy: SortColumn | null
+        timeframe: TimeFrame | null
+        userWallet: string | null
       }
       res: {
         /**
@@ -2997,17 +3008,17 @@ export type $OpenApiTs = {
   '/identity/{id}/tags': {
     get: {
       req: {
-        direction?: SortDirection | null
+        direction: SortDirection | null
         /**
          * sql id
          */
         id: string
-        limit?: number | null
-        offset?: number | null
-        page?: number | null
-        sortBy?: SortColumn | null
-        timeframe?: TimeFrame | null
-        userWallet?: string | null
+        limit: number | null
+        offset: number | null
+        page: number | null
+        sortBy: SortColumn | null
+        timeframe: TimeFrame | null
+        userWallet: string | null
       }
       res: {
         /**

@@ -142,3 +142,16 @@ export const exploreRouteOptions = [
     basePath: '/app/explore',
   },
 ]
+
+export const activityRouteOptions = [
+  {
+    value: 'global',
+    label: 'Global Activity',
+    basePath: '/app/activity',
+  },
+  {
+    value: 'personal',
+    label: 'Your Activity',
+    basePath: '/app/activity',
+  },
+]

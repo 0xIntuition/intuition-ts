@@ -1,9 +1,11 @@
 import {
+  ActivitiesService,
   ApiError,
   ClaimPositionsService,
   ClaimSortColumn,
   ClaimsService,
   ClaimSummaryResponse,
+  GetActivitiesResponse,
   GetClaimByIdResponse,
   GetClaimPositionsResponse,
   GetIdentityByIdResponse,
@@ -326,6 +328,52 @@ export async function fetchClaimsSummary(
   try {
     return await ClaimsService.claimSummary({
       identity: id,
+    })
+  } catch (error: unknown) {
+    if (error instanceof ApiError) {
+      logger(`${error.name} - ${error.status}: ${error.message} ${error.url}`)
+      return null
+    }
+    throw error
+  }
+}
+
+export async function fetchGlobalActivity(
+  page: number,
+  limit: number,
+  sortBy: SortColumn,
+  direction: SortDirection,
+): Promise<GetActivitiesResponse | null> {
+  try {
+    return await ActivitiesService.getActivities({
+      page,
+      limit,
+      sortBy,
+      direction,
+    })
+  } catch (error: unknown) {
+    if (error instanceof ApiError) {
+      logger(`${error.name} - ${error.status}: ${error.message} ${error.url}`)
+      return null
+    }
+    throw error
+  }
+}
+
+export async function fetchUserActivity(
+  page: number,
+  limit: number,
+  sortBy: SortColumn,
+  direction: SortDirection,
+  fromAddress: string,
+): Promise<GetActivitiesResponse | null> {
+  try {
+    return await ActivitiesService.getActivities({
+      page,
+      limit,
+      sortBy,
+      direction,
+      fromAddress,
     })
   } catch (error: unknown) {
     if (error instanceof ApiError) {

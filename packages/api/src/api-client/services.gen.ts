@@ -639,8 +639,6 @@ export class IdentitiesService {
       url: '/identity/{id}/followed',
       path: {
         id: data.id,
-      },
-      query: {
         direction: data.direction,
         sortBy: data.sortBy,
         page: data.page,
@@ -673,8 +671,6 @@ export class IdentitiesService {
       url: '/identity/{id}/followers',
       path: {
         id: data.id,
-      },
-      query: {
         direction: data.direction,
         sortBy: data.sortBy,
         page: data.page,
@@ -707,8 +703,6 @@ export class IdentitiesService {
       url: '/identity/{id}/tags',
       path: {
         id: data.id,
-      },
-      query: {
         direction: data.direction,
         sortBy: data.sortBy,
         page: data.page,
