@@ -83,6 +83,10 @@ import type {
   GetUsersResponse,
   GetUserTotalsData,
   GetUserTotalsResponse,
+  IdentitySummaryData,
+  IdentitySummaryResponse,
+  PositionSummaryData,
+  PositionSummaryResponse,
   RedeemInviteCodeData,
   RedeemInviteCodeResponse,
   RefreshData,
@@ -602,6 +606,60 @@ export class IdentitiesService {
 
   /**
    * @param data The data for the request.
+   * @param data.direction
+   * @param data.sortBy
+   * @param data.page
+   * @param data.offset
+   * @param data.limit
+   * @param data.displayName
+   * @param data.creator
+   * @param data.userWallet
+   * @param data.status
+   * @param data.predicate
+   * @param data.isUser
+   * @param data.isContract
+   * @param data.hasTag
+   * @param data.follows
+   * @param data.followedBy
+   * @param data.timeframe
+   * @param data.identityId
+   * @param data.description
+   * @param data.linkedAccountUsername
+   * @returns unknown Summary of identity values based on query
+   * @throws ApiError
+   */
+  public static identitySummary(
+    data: IdentitySummaryData = {},
+  ): CancelablePromise<IdentitySummaryResponse> {
+    return __request(OpenAPI, {
+      method: 'GET',
+      url: '/identity/summary',
+      query: {
+        direction: data.direction,
+        sortBy: data.sortBy,
+        page: data.page,
+        offset: data.offset,
+        limit: data.limit,
+        displayName: data.displayName,
+        creator: data.creator,
+        userWallet: data.userWallet,
+        status: data.status,
+        predicate: data.predicate,
+        isUser: data.isUser,
+        isContract: data.isContract,
+        hasTag: data.hasTag,
+        follows: data.follows,
+        followedBy: data.followedBy,
+        timeframe: data.timeframe,
+        identityId: data.identityId,
+        description: data.description,
+        linkedAccountUsername: data.linkedAccountUsername,
+      },
+    })
+  }
+
+  /**
+   * @param data The data for the request.
    * @param data.id sql id,identity_id string, or vault number
    * @returns unknown Get single identity by id
    * @throws ApiError
@@ -982,6 +1040,40 @@ export class PositionsService {
     return __request(OpenAPI, {
       method: 'GET',
       url: '/positions/search',
+      query: {
+        creator: data.creator,
+        vault_uuid: data.vaultUuid,
+        status: data.status,
+        conviction: data.conviction,
+        claim: data.claim,
+        identity: data.identity,
+        vault: data.vault,
+        paging: data.paging,
+        sort: data.sort,
+      },
+    })
+  }
+
+  /**
+   * @param data The data for the request.
+   * @param data.paging
+   * @param data.sort
+   * @param data.creator
+   * @param data.vaultUuid
+   * @param data.status
+   * @param data.conviction
+   * @param data.claim
+   * @param data.identity
+   * @param data.vault
+   * @returns unknown Summary of summary values based on query
+   * @throws ApiError
+   */
+  public static positionSummary(
+    data: PositionSummaryData,
+  ): CancelablePromise<PositionSummaryResponse> {
+    return __request(OpenAPI, {
+      method: 'GET',
+      url: '/positions/summary',
       query: {
         creator: data.creator,
         vault_uuid: data.vaultUuid,

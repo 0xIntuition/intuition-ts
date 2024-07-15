@@ -460,6 +460,16 @@ export type IdentitySort = {
   sortBy?: SortColumn | null
 }
 
+export type IdentitySummaryPresenter = {
+  assets: string
+  followed_count: number
+  follower_count: number
+  num_positions: number
+  tag_count: number
+  total: number
+  user_assets: string
+}
+
 export type IdsQuery = {
   combinator?: Combinator | null
   comparator?: VecComparators | null
@@ -699,6 +709,14 @@ export const PositionSortColumn = {
   ASSETS: 'Assets',
 } as const
 
+export type PositionSummaryPresenter = {
+  assets: string
+  conviction: string
+  fee: string
+  total: number
+  value: string
+}
+
 export type PredicateNameQuery = {
   combinator?: Combinator | null
   comparator?: StringComparators | null
@@ -852,8 +870,14 @@ export type SubjectVaultIdQuery = {
 }
 
 export type TagEmbeddedPresenter = {
+  description?: string | null
   display_name: string
+  identity_id: string
+  image?: string | null
   num_positions: number
+  num_tagged_identities: number
+  total_assets: string
+  url?: string | null
   vault_id: string
   weight: string
 }
@@ -1536,6 +1560,38 @@ export type SearchIdentityResponse = {
   total: number
 }
 
+export type IdentitySummaryData = {
+  creator?: Identifier | null
+  description?: string | null
+  direction?: SortDirection | null
+  displayName?: string | null
+  followedBy?: string | null
+  follows?: string | null
+  hasTag?: string | null
+  identityId?: IdentityId | null
+  isContract?: boolean | null
+  isUser?: boolean | null
+  limit?: number | null
+  linkedAccountUsername?: string | null
+  offset?: number | null
+  page?: number | null
+  predicate?: boolean | null
+  sortBy?: SortColumn | null
+  status?: Status | null
+  timeframe?: TimeFrame | null
+  userWallet?: string | null
+}
+
+export type IdentitySummaryResponse = {
+  assets: string
+  followed_count: number
+  follower_count: number
+  num_positions: number
+  tag_count: number
+  total: number
+  user_assets: string
+}
+
 export type GetIdentityByIdData = {
   /**
    * sql id,identity_id string, or vault number
@@ -1868,6 +1924,26 @@ export type SearchPositionsResponse = {
   limit: number
   page: number
   total: number
+}
+
+export type PositionSummaryData = {
+  claim?: Identifier | null
+  conviction?: number | null
+  creator?: Identifier | null
+  identity?: Identifier | null
+  paging: PaginatedRequest
+  sort: PositionSort
+  status?: Status | null
+  vault?: Identifier | null
+  vaultUuid?: string | null
+}
+
+export type PositionSummaryResponse = {
+  assets: string
+  conviction: string
+  fee: string
+  total: number
+  value: string
 }
 
 export type GetPositionByIdData = {
@@ -2893,6 +2969,45 @@ export type $OpenApiTs = {
       }
     }
   }
+  '/identity/summary': {
+    get: {
+      req: {
+        creator?: Identifier | null
+        description?: string | null
+        direction?: SortDirection | null
+        displayName?: string | null
+        followedBy?: string | null
+        follows?: string | null
+        hasTag?: string | null
+        identityId?: IdentityId | null
+        isContract?: boolean | null
+        isUser?: boolean | null
+        limit?: number | null
+        linkedAccountUsername?: string | null
+        offset?: number | null
+        page?: number | null
+        predicate?: boolean | null
+        sortBy?: SortColumn | null
+        status?: Status | null
+        timeframe?: TimeFrame | null
+        userWallet?: string | null
+      }
+      res: {
+        /**
+         * Summary of identity values based on query
+         */
+        200: {
+          assets: string
+          followed_count: number
+          follower_count: number
+          num_positions: number
+          tag_count: number
+          total: number
+          user_assets: string
+        }
+      }
+    }
+  }
   '/identity/{id}': {
     get: {
       req: {
@@ -3327,6 +3442,33 @@ export type $OpenApiTs = {
           limit: number
           page: number
           total: number
+        }
+      }
+    }
+  }
+  '/positions/summary': {
+    get: {
+      req: {
+        claim?: Identifier | null
+        conviction?: number | null
+        creator?: Identifier | null
+        identity?: Identifier | null
+        paging: PaginatedRequest
+        sort: PositionSort
+        status?: Status | null
+        vault?: Identifier | null
+        vaultUuid?: string | null
+      }
+      res: {
+        /**
+         * Summary of summary values based on query
+         */
+        200: {
+          assets: string
+          conviction: string
+          fee: string
+          total: number
+          value: string
         }
       }
     }
