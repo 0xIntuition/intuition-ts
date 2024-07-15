@@ -24,10 +24,12 @@ import {
   calculatePercentageOfTvl,
   formatBalance,
   getAuthHeaders,
+  invariant,
   sliceString,
 } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { Outlet, useLoaderData, useNavigate } from '@remix-run/react'
+import { getUser } from '@server/auth'
 import { getVaultDetails } from '@server/multivault'
 import { getPrivyAccessToken } from '@server/privy'
 import { useAtom } from 'jotai'
@@ -35,12 +37,16 @@ import { ExtendedIdentityPresenter } from 'types/identity'
 import { VaultDetailsType } from 'types/vault'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
-  const wallet = (OpenAPI.BASE = 'https://dev.api.intuition.systems')
+  const user = await getUser(request)
+  invariant(user, 'User not found')
+  invariant(user.wallet?.address, 'User wallet not found')
+  const userWallet = user.wallet?.address
+  OpenAPI.BASE = 'https://dev.api.intuition.systems'
   const accessToken = getPrivyAccessToken(request)
   const headers = getAuthHeaders(accessToken !== null ? accessToken : '')
   OpenAPI.HEADERS = headers as Record<string, string>
 
-  if (!wallet) {
+  if (!userWallet) {
     return logger('No user found in session')
   }
 
@@ -58,12 +64,13 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
   let vaultDetails: VaultDetailsType | null = null
 
+  logger('[identity id] wallet:', userWallet)
   if (identity !== undefined && identity.vault_id) {
     try {
       vaultDetails = await getVaultDetails(
         identity.contract,
         identity.vault_id,
-        wallet as `0x${string}`,
+        userWallet as `0x${string}`,
       )
     } catch (error) {
       logger('Failed to fetch vaultDetails:', error)
@@ -71,20 +78,18 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     }
   }
 
-  logger('vaultDetails', vaultDetails)
-
   return json({
     identity,
     vaultDetails,
-    wallet,
+    userWallet,
   })
 }
 
 export default function IdentityDetails() {
-  const { identity, vaultDetails, wallet } = useLoaderData<{
+  const { identity, vaultDetails, userWallet } = useLoaderData<{
     identity: ExtendedIdentityPresenter
     vaultDetails: VaultDetailsType
-    wallet: string
+    userWallet: string
   }>()
   const navigate = useNavigate()
 
@@ -164,7 +169,7 @@ export default function IdentityDetails() {
           />
         </div>
         <StakeModal
-          userWallet={wallet}
+          userWallet={userWallet}
           contract={identity.contract}
           open={stakeModalActive.isOpen}
           identity={identity}
