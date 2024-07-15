@@ -12,10 +12,12 @@ export function IdentitiesList({
   identities,
   pagination,
   paramPrefix,
+  enableSearch = false,
 }: {
   identities: IdentityPresenter[]
   pagination: PaginationType
   paramPrefix?: string
+  enableSearch?: boolean
 }) {
   const navigate = useNavigate()
   const options: SortOption<SortColumn>[] = [
@@ -29,7 +31,7 @@ export function IdentitiesList({
       paginationLabel="identities"
       options={options}
       paramPrefix={paramPrefix}
-      enableSearch={false}
+      enableSearch={enableSearch}
     >
       {identities?.map((identity) => (
         <div

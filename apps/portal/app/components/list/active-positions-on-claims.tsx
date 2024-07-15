@@ -28,7 +28,7 @@ export function ActivePositionsOnClaims({
       paginationLabel="positions"
       pagination={pagination}
       options={options}
-      paramPrefix="claims"
+      paramPrefix="activeClaims"
     >
       {claims?.map((claim) => (
         <div

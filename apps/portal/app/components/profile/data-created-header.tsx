@@ -4,8 +4,10 @@ import { IdentityPresenter, UserTotalsPresenter } from '@0xintuition/api'
 import { formatBalance } from '@lib/utils/misc'
 
 export const DataCreatedHeaderVariants = {
-  identities: 'identities',
-  claims: 'claims',
+  activeIdentities: 'activeIdentities',
+  activeClaims: 'activeClaims',
+  createdIdentities: 'createdIdentities',
+  createdClaims: 'createdClaims',
 } as const
 
 export type DataCreatedHeaderVariantType =
@@ -43,7 +45,12 @@ export const DataCreatedHeader: React.FC<DataCreatedHeaderProps> = ({
             weight="regular"
             className="text-secondary-foreground"
           >
-            {variant === 'identities' ? 'Identities' : 'Claims'} staked on by
+            {variant === 'activeIdentities' || variant === 'createdIdentities'
+              ? 'Identities'
+              : 'Claims'}{' '}
+            {variant === 'activeIdentities' || variant === 'activeClaims'
+              ? 'staked on by'
+              : 'created by'}
           </Text>
           <IdentityTag
             imgSrc={userIdentity?.user?.image ?? userIdentity?.image}
@@ -62,7 +69,10 @@ export const DataCreatedHeader: React.FC<DataCreatedHeaderProps> = ({
                 weight="regular"
                 className="text-secondary-foreground"
               >
-                {variant === 'identities' ? 'Identities' : 'Claims'}
+                {variant === 'activeIdentities' ||
+                variant === 'createdIdentities'
+                  ? 'Identities'
+                  : 'Claims'}
               </Text>
               <div className="text-white text-xl font-medium">
                 {totalResults}

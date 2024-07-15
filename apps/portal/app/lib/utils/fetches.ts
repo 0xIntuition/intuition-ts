@@ -15,6 +15,7 @@ import {
   GetUserTotalsResponse,
   IdentitiesService,
   IdentityPositionsService,
+  IdentitySummaryResponse,
   PositionSortColumn,
   SearchClaimsResponse,
   SearchIdentityResponse,
@@ -220,6 +221,59 @@ export async function fetchClaimsAboutIdentity(
   }
 }
 
+export async function fetchIdentitiesCreatedByUser(
+  page: number,
+  limit: number,
+  sortBy: SortColumn,
+  direction: SortDirection,
+  creator: string,
+  search: string | null,
+): Promise<SearchIdentityResponse | null> {
+  try {
+    return await IdentitiesService.searchIdentity({
+      page,
+      limit,
+      sortBy,
+      direction,
+      displayName: search,
+      creator,
+      isUser: false,
+    })
+  } catch (error: unknown) {
+    if (error instanceof ApiError) {
+      logger(`${error.name} - ${error.status}: ${error.message} ${error.url}`)
+      return null
+    }
+    throw error
+  }
+}
+
+export async function fetchClaimsCreatedByUser(
+  page: number,
+  limit: number,
+  sortBy: ClaimSortColumn,
+  direction: SortDirection,
+  creator: string,
+  search: string | null,
+): Promise<SearchClaimsResponse | null> {
+  try {
+    return await ClaimsService.searchClaims({
+      page,
+      limit,
+      sortBy,
+      direction,
+      creator,
+      displayName: search,
+    })
+  } catch (error: unknown) {
+    if (error instanceof ApiError) {
+      logger(`${error.name} - ${error.status}: ${error.message} ${error.url}`)
+      return null
+    }
+    throw error
+  }
+}
+
 export async function fetchIdentitiesWithUserPosition(
   id: string,
   page: number,
@@ -328,6 +382,38 @@ export async function fetchClaimsSummary(
   try {
     return await ClaimsService.claimSummary({
       identity: id,
+    })
+  } catch (error: unknown) {
+    if (error instanceof ApiError) {
+      logger(`${error.name} - ${error.status}: ${error.message} ${error.url}`)
+      return null
+    }
+    throw error
+  }
+}
+
+export async function fetchCreatedClaimsSummary(
+  wallet: string,
+): Promise<ClaimSummaryResponse | null> {
+  try {
+    return await ClaimsService.claimSummary({
+      creator: wallet,
+    })
+  } catch (error: unknown) {
+    if (error instanceof ApiError) {
+      logger(`${error.name} - ${error.status}: ${error.message} ${error.url}`)
+      return null
+    }
+    throw error
+  }
+}
+
+export async function fetchCreatedIdentitiesSummary(
+  wallet: string,
+): Promise<IdentitySummaryResponse | null> {
+  try {
+    return await IdentitiesService.identitySummary({
+      creator: wallet,
     })
   } catch (error: unknown) {
     if (error instanceof ApiError) {

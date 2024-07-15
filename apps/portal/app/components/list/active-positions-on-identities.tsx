@@ -28,7 +28,7 @@ export function ActivePositionsOnIdentities({
       pagination={pagination}
       paginationLabel="positions"
       options={options}
-      paramPrefix="identities"
+      paramPrefix="activeIdentities"
     >
       {identities?.map((identity) => (
         <div
