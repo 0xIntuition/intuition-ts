@@ -3,7 +3,7 @@ import { ApiError, OpenAPI, UsersService } from '@0xintuition/api'
 import logger from '@lib/utils/logger'
 import { getAuthHeaders, invariant } from '@lib/utils/misc'
 import { json, type ActionFunctionArgs } from '@remix-run/node'
-import { getUser, getUserWallet } from '@server/auth'
+import { getUser, requireUserWallet } from '@server/auth'
 import { getPrivyAccessToken } from '@server/privy'
 
 export async function action({ request }: ActionFunctionArgs) {

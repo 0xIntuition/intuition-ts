@@ -5,12 +5,12 @@ import { chainalysisOracleAbi } from '@lib/abis/chainalysisOracle'
 import logger from '@lib/utils/logger'
 import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
 import { Outlet, useLoaderData } from '@remix-run/react'
-import { getUserWallet } from '@server/auth'
+import { requireUserWallet } from '@server/auth'
 import { mainnetClient } from '@server/viem'
 import { serverOnly$ } from 'vite-env-only'
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  const wallet = await getUserWallet(request)
+  const wallet = await requireUserWallet(request)
 
   if (!wallet) {
     return logger('No user found in session')

@@ -6,11 +6,11 @@ import {
 
 import logger from '@lib/utils/logger'
 import { json, type ActionFunction } from '@remix-run/node'
-import { getUserWallet } from '@server/auth'
+import { requireUserWallet } from '@server/auth'
 import { emitter } from '@server/emitter'
 
 export const action: ActionFunction = async ({ request }) => {
-  const wallet = await getUserWallet(request)
+  const wallet = await requireUserWallet(request)
 
   const formData = await request.formData()
   const identity_id = formData.get('identity_id')

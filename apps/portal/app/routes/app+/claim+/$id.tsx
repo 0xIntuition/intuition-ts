@@ -34,14 +34,14 @@ import {
   useLocation,
   useNavigate,
 } from '@remix-run/react'
-import { getUserWallet } from '@server/auth'
+import { requireUserWallet } from '@server/auth'
 import { getVaultDetails } from '@server/multivault'
 import { getPrivyAccessToken } from '@server/privy'
 import { useAtom } from 'jotai'
 import { VaultDetailsType } from 'types/vault'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
-  const wallet = await getUserWallet(request)
+  const wallet = await requireUserWallet(request)
 
   OpenAPI.BASE = 'https://dev.api.intuition.systems'
   const accessToken = getPrivyAccessToken(request)

@@ -2,11 +2,11 @@ import { Button, Icon } from '@0xintuition/1ui'
 
 import { chainalysisOracleAbi } from '@lib/abis/chainalysisOracle'
 import { LoaderFunctionArgs, redirect } from '@remix-run/node'
-import { getUserWallet } from '@server/auth'
+import { requireUserWallet } from '@server/auth'
 import { mainnetClient } from '@server/viem'
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  const wallet = await getUserWallet(request)
+  const wallet = await requireUserWallet(request)
 
   const isSanctioned = wallet
     ? ((await mainnetClient.readContract({

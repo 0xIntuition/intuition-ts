@@ -1,6 +1,8 @@
 import { redirect } from '@remix-run/node'
 import { getPrivyUserById, verifyPrivyAccessToken } from './privy'
 import { combineHeaders, invariant } from '@lib/utils/misc'
+import { getRedirectToUrl } from '@lib/utils/redirect'
+import { RedirectTo } from 'types/navigation'
 
 export async function getUserId(request: Request) {
   const verifiedClaims = await verifyPrivyAccessToken(request)
@@ -10,35 +12,52 @@ export async function getUserId(request: Request) {
   return verifiedClaims.userId
 }
 
-export async function getUserById(userId: string) {
-  const user = await getPrivyUserById(userId)
-  return user
+export async function getUser(request: Request) {
+  const userId = await getUserId(request)
+  invariant(userId, 'No userId provided by Privy')
+  return await getPrivyUserById(userId)
+}
+
+export async function getUserWallet(request: Request) {
+  const user = await getUser(request)
+  return user.wallet?.address
 }
 
 export async function requireUserId(
   request: Request,
-  { redirectTo }: { redirectTo?: string | null } = {},
+  { redirectTo }: RedirectTo = {},
 ) {
   const userId = await getUserId(request)
   if (!userId) {
-    const requestUrl = new URL(request.url)
-    redirectTo =
-      redirectTo === null
-        ? null
-        : redirectTo ?? `${requestUrl.pathname}${requestUrl.search}`
-    const loginParams = redirectTo ? new URLSearchParams({ redirectTo }) : null
-    const loginRedirect = ['/login', loginParams?.toString()]
-      .filter(Boolean)
-      .join('?')
-    throw redirect(loginRedirect)
+    const redirectUrl = await getRedirectToUrl(request, '/playground', { redirectTo })
+    throw redirect(redirectUrl)
   }
   return userId
 }
 
-export async function requireAnonymous(request: Request) {
+export async function requireUser(request: Request, { redirectTo }: RedirectTo = {}) {
+  const user = await getUser(request)
+  if (!user) {
+    const redirectUrl = await getRedirectToUrl(request, '/playground', { redirectTo })
+    throw redirect(redirectUrl)
+  }
+  return user
+}
+
+export async function requireUserWallet(request: Request, { redirectTo }: RedirectTo = {}) {
+  const wallet = await getUserWallet(request)
+  if (!wallet) {
+    const redirectUrl = await getRedirectToUrl(request, '/playground', { redirectTo })
+    throw redirect(redirectUrl)
+  }
+  return wallet
+}
+
+export async function requireAnonymous(request: Request, { redirectTo }: RedirectTo = {}) {
   const userId = await getUserId(request)
   if (userId) {
-    throw redirect('/playground')
+    const redirectUrl = await getRedirectToUrl(request, '/playground', { redirectTo })
+    throw redirect(redirectUrl)
   }
 }
 
@@ -52,7 +71,7 @@ export async function logout(
   },
   responseInit?: ResponseInit,
 ) {
-  // 1. Clear any session
+  // TODO: ENG-0000: Clear any session/cookies + properly handle redirect
   throw redirect(redirectTo, {
     ...responseInit,
     headers: combineHeaders(
@@ -61,13 +80,3 @@ export async function logout(
   })
 }
 
-export async function getUser(request: Request) {
-  const userId = await getUserId(request)
-  invariant(userId, 'No userId provided by Privy')
-  return await getPrivyUserById(userId)
-}
-
-export async function getUserWallet(request: Request) {
-  const user = await getUser(request)
-  return user.wallet?.address
-}

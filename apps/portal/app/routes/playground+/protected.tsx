@@ -3,17 +3,10 @@ import { Text } from '@0xintuition/1ui'
 import PrivyLogoutButton from '@client/privy-logout-button'
 import { ActionFunctionArgs, json, LoaderFunctionArgs } from '@remix-run/node'
 import { useLoaderData, useSubmit } from '@remix-run/react'
-import {
-  getUser,
-  getUserById,
-  getUserId,
-  logout,
-  requireUserId,
-} from '@server/auth'
+import { logout, requireUser } from '@server/auth'
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  const userId = await requireUserId(request)
-  const user = await getUser(request)
+  const user = await requireUser(request)
   return json({ message: 'hack the planet', user })
 }
 
