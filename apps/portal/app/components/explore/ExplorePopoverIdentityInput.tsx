@@ -27,7 +27,6 @@ interface ExplorePopoverIdentityInputProps {
     type: 'subject' | 'predicate' | 'object',
     identity: IdentityPresenter,
   ) => void
-  searchQuery: string
   setSearchQuery: (query: string) => void
   identities: IdentityPresenter[]
   handleInput: (value: string) => void

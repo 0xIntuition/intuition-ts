@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import { Separator, Text } from '@0xintuition/1ui'
+import { IdentityInput, Separator, Text } from '@0xintuition/1ui'
 import { IdentityPresenter } from '@0xintuition/api'
 
 import { useNavigate } from '@remix-run/react'
@@ -11,10 +11,6 @@ export interface ExploreSearchClaimInputProps
   extends React.HTMLAttributes<HTMLDivElement> {
   identities?: IdentityPresenter[]
 }
-
-const Divider = () => (
-  <span className="h-px w-2.5 flex bg-border/30 self-end mb-[1.2rem]" />
-)
 
 const ExploreSearchClaimInput = ({
   identities = [],
@@ -29,15 +25,18 @@ const ExploreSearchClaimInput = ({
     predicate: null,
     object: null,
   })
+  const [popoverType, setPopoverType] = React.useState<
+    'subject' | 'predicate' | 'object' | null
+  >(null)
   const [searchQuery, setSearchQuery] = React.useState<string>('')
 
   const handleIdentitySelection = (
     type: 'subject' | 'predicate' | 'object',
     identity: IdentityPresenter,
   ) => {
-    console.log('identity', identity)
     const updatedIdentities = { ...selectedIdentities, [type]: identity }
     setSelectedIdentities(updatedIdentities)
+    setPopoverType(null) // Close the popover after selection
     updateQueryParams(updatedIdentities)
   }
 
@@ -71,7 +70,7 @@ const ExploreSearchClaimInput = ({
   }
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col items-center">
       <Text
         variant="bodyLarge"
         weight="regular"
@@ -87,40 +86,64 @@ const ExploreSearchClaimInput = ({
         Need help? Learn more about claims
       </Text>
       <Separator className="mb-7" />
-      <div className="flex items-center gap-4">
+      <IdentityInput
+        showLabels
+        subject={{
+          placeholder: 'Select an identity',
+          selectedValue: selectedIdentities.subject
+            ? {
+                variant: selectedIdentities.subject.is_user
+                  ? 'user'
+                  : 'non-user',
+                imgSrc: selectedIdentities.subject.user?.image ?? null,
+                name: selectedIdentities.subject.display_name,
+              }
+            : { name: '' },
+          onClick: () => {
+            console.log('subject clicked')
+            setPopoverType('subject')
+          },
+        }}
+        predicate={{
+          placeholder: 'Select an identity',
+          selectedValue: selectedIdentities.predicate
+            ? {
+                variant: selectedIdentities.predicate.is_user
+                  ? 'user'
+                  : 'non-user',
+                imgSrc: selectedIdentities.predicate.user?.image ?? null,
+                name: selectedIdentities.predicate.display_name,
+              }
+            : { name: '' },
+          onClick: () => setPopoverType('predicate'),
+        }}
+        object={{
+          placeholder: 'Select an identity',
+          selectedValue: selectedIdentities.object
+            ? {
+                variant: selectedIdentities.object.is_user
+                  ? 'user'
+                  : 'non-user',
+                imgSrc: selectedIdentities.object.user?.image ?? null,
+                name: selectedIdentities.object.display_name,
+              }
+            : { name: '' },
+          onClick: () => setPopoverType('object'),
+        }}
+      />
+      {popoverType && (
         <ExplorePopoverIdentityInput
-          label="Subject"
-          identityType="subject"
-          selectedIdentity={selectedIdentities.subject}
-          onIdentitySelect={handleIdentitySelection}
-          searchQuery={searchQuery}
+          label={popoverType}
+          identityType={popoverType}
+          selectedIdentity={selectedIdentities[popoverType]}
+          onIdentitySelect={(type, identity) =>
+            handleIdentitySelection(type, identity)
+          }
           setSearchQuery={setSearchQuery}
           identities={identities}
           handleInput={handleInput}
         />
-        <Divider />
-        <ExplorePopoverIdentityInput
-          label="Predicate"
-          identityType="predicate"
-          selectedIdentity={selectedIdentities.predicate}
-          onIdentitySelect={handleIdentitySelection}
-          searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
-          identities={identities}
-          handleInput={handleInput}
-        />
-        <Divider />
-        <ExplorePopoverIdentityInput
-          label="Object"
-          identityType="object"
-          selectedIdentity={selectedIdentities.object}
-          onIdentitySelect={handleIdentitySelection}
-          searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
-          identities={identities}
-          handleInput={handleInput}
-        />
-      </div>
+      )}
     </div>
   )
 }
