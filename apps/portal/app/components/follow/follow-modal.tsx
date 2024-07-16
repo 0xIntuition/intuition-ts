@@ -73,6 +73,8 @@ export default function FollowModal({
   let vault_id: string = '0'
   vault_id = claim ? claim.vault_id : '0'
 
+  console.log('claim', claim)
+
   const {
     conviction_price = '0',
     user_conviction = '0',
@@ -95,11 +97,7 @@ export default function FollowModal({
     awaitingOnChainConfirmation,
     isError,
     reset,
-  } = claim === undefined
-    ? createHook
-    : mode === 'follow'
-      ? depositHook
-      : redeemHook
+  } = claim === null ? createHook : mode === 'follow' ? depositHook : redeemHook
 
   const feeFetcher = useLoaderFetcher<CreateLoaderData>(CREATE_RESOURCE_ROUTE)
 
@@ -116,19 +114,19 @@ export default function FollowModal({
           address: contract as `0x${string}`,
           abi: multivaultAbi as Abi,
           functionName:
-            claim === undefined
+            claim === null
               ? 'createTriple'
               : actionType === 'follow'
                 ? 'depositTriple'
                 : 'redeemTriple',
           args:
-            claim === undefined
+            claim === null
               ? [iVaultId, followVaultId, userVaultId]
               : actionType === 'follow'
                 ? [userWallet as `0x${string}`, vault_id]
                 : [user_conviction, userWallet as `0x${string}`, vault_id],
           value:
-            claim === undefined
+            claim === null
               ? BigInt(tripleCost) + parseUnits(val === '' ? '0' : val, 18)
               : actionType === 'follow'
                 ? parseUnits(val === '' ? '0' : val, 18)
