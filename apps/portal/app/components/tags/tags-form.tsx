@@ -13,8 +13,9 @@ import {
   TransactionStatusType,
   Trunctacular,
 } from '@0xintuition/1ui'
-import { IdentityPresenter } from '@0xintuition/api'
+import { IdentityPresenter, TagEmbeddedPresenter } from '@0xintuition/api'
 
+import { IdentitySearchCombobox } from '@components/identity/identity-search-combo-box'
 import { TransactionState } from '@components/transaction-state'
 import {
   initialTransactionState,
@@ -116,6 +117,16 @@ export function TagsForm({ identity, mode, onClose }: TagsFormProps) {
                       subjectVaultId={identity.vault_id}
                       invalidTags={invalidTags}
                       setInvalidTags={setInvalidTags}
+                    />
+                  </TabsContent>
+                </div>
+                <div className="my-8">
+                  <TabsContent value="view">
+                    <IdentitySearchCombobox
+                      identities={
+                        (identity.tags as TagEmbeddedPresenter[]) || []
+                      }
+                      shouldFilter={true}
                     />
                   </TabsContent>
                 </div>
