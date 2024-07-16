@@ -12,18 +12,20 @@ import {
 } from '@0xintuition/1ui'
 import {
   ClaimPresenter,
-  ClaimSortColumn,
   OpenAPI,
+  PositionPresenter,
+  PositionSortColumn,
   SortDirection,
 } from '@0xintuition/api'
 
 import { NestedLayout } from '@components/nested-layout'
 import StakeModal from '@components/stake/stake-modal'
 import { stakeModalAtom } from '@lib/state/store'
-import { fetchClaim } from '@lib/utils/fetches'
+import { fetchClaim, fetchPositionsOnClaim } from '@lib/utils/fetches'
 import logger from '@lib/utils/logger'
 import {
   calculatePercentageOfTvl,
+  calculateTotalPages,
   formatBalance,
   getAuthHeaders,
 } from '@lib/utils/misc'
@@ -57,13 +59,6 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     return console.log('No user found in session')
   }
 
-  const url = new URL(request.url)
-  const searchParams = new URLSearchParams(url.search)
-  const sortBy: ClaimSortColumn =
-    (searchParams.get('sortBy') as ClaimSortColumn) ?? 'createdAt'
-  const direction: SortDirection =
-    (searchParams.get('direction') as SortDirection) ?? 'desc'
-
   const claim = await fetchClaim(id)
 
   let vaultDetails: VaultDetailsType | null = null
@@ -82,20 +77,68 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     }
   }
 
+  const url = new URL(request.url)
+  const searchParams = new URLSearchParams(url.search)
+  const search = searchParams.get('search')
+  const sortBy: PositionSortColumn =
+    (searchParams.get('sortBy') as PositionSortColumn) ?? 'createdAt'
+  const direction: SortDirection =
+    (searchParams.get('direction') as SortDirection) ?? 'desc'
+  const positionDirection: string =
+    searchParams.get('positionDirection') ?? 'all'
+  const page = searchParams.get('page')
+    ? parseInt(searchParams.get('page') as string)
+    : 1
+  const limit = searchParams.get('limit') ?? '10'
+
+  const positions = await fetchPositionsOnClaim(
+    positionDirection === 'for'
+      ? claim?.vault_id ?? id
+      : positionDirection === 'against'
+        ? claim?.counter_vault_id ?? id
+        : id,
+    page,
+    Number(limit),
+    sortBy as PositionSortColumn,
+    direction as SortDirection,
+    search,
+  )
+
+  const totalPages = calculateTotalPages(positions?.total ?? 0, Number(limit))
+
   return json({
     wallet,
     claim,
+    positions: positions?.data as PositionPresenter[],
     sortBy,
     direction,
+    pagination: {
+      currentPage: Number(page),
+      limit: Number(limit),
+      totalEntries: positions?.total ?? 0,
+      totalPages,
+    },
     vaultDetails,
   })
 }
+
+export type ClaimLoaderData = {
+  wallet: string
+  claim: ClaimPresenter
+  positions: PositionPresenter[]
+  sortBy: PositionSortColumn
+  direction: SortDirection
+  pagination: {
+    currentPage: number
+    limit: number
+    totalEntries: number
+    totalPages: number
+  }
+  vaultDetails: VaultDetailsType
+}
+
 export default function ClaimDetails() {
-  const { wallet, claim, vaultDetails } = useLoaderData<{
-    wallet: string
-    claim: ClaimPresenter
-    vaultDetails: VaultDetailsType
-  }>()
+  const { wallet, claim, vaultDetails } = useLoaderData<ClaimLoaderData>()
   const navigate = useNavigate()
   const location = useLocation()
   const from = location.state?.from

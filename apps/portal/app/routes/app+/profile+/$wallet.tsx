@@ -70,7 +70,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     return
   }
 
-  const userTotals = await fetchUserTotals(userIdentity.creator.id)
+  const userTotals = await fetchUserTotals(wallet)
 
   if (!userTotals) {
     return logger('No user totals found')
@@ -120,6 +120,16 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     followVaultDetails,
     vaultDetails,
   })
+}
+
+export type ProfileLoaderData = {
+  wallet: string
+  userWallet: string
+  userIdentity: IdentityPresenter
+  userTotals: UserTotalsPresenter
+  followClaim: ClaimPresenter
+  followVaultDetails: VaultDetailsType
+  vaultDetails: VaultDetailsType
 }
 
 export default function Profile() {

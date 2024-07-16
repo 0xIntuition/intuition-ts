@@ -14,7 +14,6 @@ import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import {
   fetchClaimsAboutIdentity,
   fetchClaimsSummary,
-  fetchIdentity,
   fetchPositionsOnIdentity,
 } from '@lib/utils/fetches'
 import {
@@ -22,8 +21,11 @@ import {
   formatBalance,
   getAuthHeaders,
 } from '@lib/utils/misc'
-import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
+import { json, LoaderFunctionArgs } from '@remix-run/node'
+import { useRouteLoaderData } from '@remix-run/react'
 import { getPrivyAccessToken } from '@server/privy'
+
+import { ProfileLoaderData } from '../$wallet'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   OpenAPI.BASE = 'https://dev.api.intuition.systems'
@@ -35,12 +37,6 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
   if (!wallet) {
     throw new Error('Wallet is undefined.')
-  }
-
-  const userIdentity = await fetchIdentity(wallet)
-
-  if (!userIdentity) {
-    return redirect('/create')
   }
 
   const url = new URL(request.url)
@@ -76,7 +72,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const claimsLimit = searchParams.get('claimsLimit') ?? '10'
 
   const claims = await fetchClaimsAboutIdentity(
-    userIdentity.id,
+    wallet,
     claimsPage,
     Number(claimsLimit),
     claimsSortBy as ClaimSortColumn,
@@ -89,10 +85,9 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     Number(claimsLimit),
   )
 
-  const claimsSummary = await fetchClaimsSummary(userIdentity.id)
+  const claimsSummary = await fetchClaimsSummary(wallet)
 
   return json({
-    userIdentity,
     positions: positions?.data as PositionPresenter[],
     positionsSortBy,
     positionsDirection,
@@ -117,13 +112,20 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
 export default function ProfileDataAbout() {
   const {
-    userIdentity,
     positions,
     positionsPagination,
     claims,
     claimsSummary,
     claimsPagination,
   } = useLiveLoader<typeof loader>(['attest'])
+
+  const { userIdentity } =
+    useRouteLoaderData<ProfileLoaderData>('routes/app+/profile+/$wallet') ?? {}
+
+  if (!userIdentity) {
+    return null
+  }
+
   return (
     <div className="flex-col justify-start items-start flex w-full gap-6">
       <div className="flex flex-col w-full pb-4">

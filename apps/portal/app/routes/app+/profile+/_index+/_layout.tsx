@@ -13,7 +13,6 @@ import {
 import {
   IdentityPresenter,
   OpenAPI,
-  UserPresenter,
   UserTotalsPresenter,
 } from '@0xintuition/api'
 
@@ -29,11 +28,7 @@ import {
   stakeModalAtom,
 } from '@lib/state/store'
 import { userProfileRouteOptions } from '@lib/utils/constants'
-import {
-  fetchIdentity,
-  fetchUserTotals,
-  getUserByWallet,
-} from '@lib/utils/fetches'
+import { fetchIdentity, fetchUserTotals } from '@lib/utils/fetches'
 import logger from '@lib/utils/logger'
 import {
   calculatePercentageOfTvl,
@@ -75,14 +70,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     return redirect('/create')
   }
 
-  const userObject = await getUserByWallet(userWallet)
-
-  if (!userObject) {
-    logger('No user found in DB')
-    return
-  }
-
-  const userTotals = await fetchUserTotals(userObject.id)
+  const userTotals = await fetchUserTotals(userWallet)
 
   let vaultDetails: VaultDetailsType | null = null
 
@@ -103,22 +91,22 @@ export async function loader({ request }: LoaderFunctionArgs) {
     privyUser: user,
     userWallet,
     userIdentity,
-    userObject,
     userTotals,
     vaultDetails,
   })
 }
 
+export type ProfileLoaderData = {
+  privyUser: User
+  userWallet: string
+  userIdentity: IdentityPresenter
+  userTotals: UserTotalsPresenter
+  vaultDetails: VaultDetailsType
+}
+
 export default function Profile() {
   const { privyUser, userWallet, userIdentity, userTotals, vaultDetails } =
-    useLiveLoader<{
-      privyUser: User
-      userWallet: string
-      userIdentity: IdentityPresenter
-      userObject: UserPresenter
-      userTotals: UserTotalsPresenter
-      vaultDetails: VaultDetailsType
-    }>(['attest', 'create'])
+    useLiveLoader<ProfileLoaderData>(['attest', 'create'])
 
   const { user_assets, assets_sum } = vaultDetails ? vaultDetails : userIdentity
 
@@ -150,6 +138,8 @@ export default function Profile() {
   }, [editProfileModalActive])
 
   const matches = useMatches()
+  console.log('matches', matches)
+
   const currentPath = matches[matches.length - 1].pathname
 
   // List of paths that should not use the ProfileLayout

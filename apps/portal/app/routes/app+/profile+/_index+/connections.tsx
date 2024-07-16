@@ -69,6 +69,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   const url = new URL(request.url)
   const searchParams = new URLSearchParams(url.search)
+
   // const followersSearch = searchParams.get('followersSearch') TODO: Add search once BE implements
   const followersSortBy = searchParams.get('followersSortBy') ?? 'UserAssets'
   const followersDirection = searchParams.get('followersDirection') ?? 'desc'

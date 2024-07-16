@@ -14,7 +14,6 @@ import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import {
   fetchClaimsAboutIdentity,
   fetchClaimsSummary,
-  fetchIdentity,
   fetchPositionsOnIdentity,
 } from '@lib/utils/fetches'
 import logger from '@lib/utils/logger'
@@ -24,8 +23,11 @@ import {
   getAuthHeaders,
 } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
+import { useRouteLoaderData } from '@remix-run/react'
 import { requireUserWallet } from '@server/auth'
 import { getPrivyAccessToken } from '@server/privy'
+
+import { ProfileLoaderData } from './_layout'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const userWallet = await requireUserWallet(request)
@@ -37,17 +39,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   if (!userWallet) {
     return logger('No user found in session')
-  }
-
-  const userIdentity = await fetchIdentity(userWallet)
-
-  if (!userIdentity) {
-    return logger('No user identity found')
-  }
-
-  if (!userIdentity.creator || typeof userIdentity.creator.id !== 'string') {
-    logger('Invalid or missing creator ID')
-    return
   }
 
   const url = new URL(request.url)
@@ -83,7 +74,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const claimsLimit = searchParams.get('claimsLimit') ?? '10'
 
   const claims = await fetchClaimsAboutIdentity(
-    userIdentity.id,
+    userWallet,
     claimsPage,
     Number(claimsLimit),
     claimsSortBy as ClaimSortColumn,
@@ -96,10 +87,9 @@ export async function loader({ request }: LoaderFunctionArgs) {
     Number(claimsLimit),
   )
 
-  const claimsSummary = await fetchClaimsSummary(userIdentity.id)
+  const claimsSummary = await fetchClaimsSummary(userWallet)
 
   return json({
-    userIdentity,
     positions: positions?.data as PositionPresenter[],
     positionsSortBy,
     positionsDirection,
@@ -124,13 +114,22 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 export default function ProfileDataAbout() {
   const {
-    userIdentity,
     positions,
     positionsPagination,
     claims,
     claimsSummary,
     claimsPagination,
   } = useLiveLoader<typeof loader>(['attest'])
+
+  const { userIdentity } =
+    useRouteLoaderData<ProfileLoaderData>(
+      'routes/app+/profile+/_index+/_layout',
+    ) ?? {}
+
+  if (!userIdentity) {
+    return null
+  }
+
   return (
     <div className="flex-col justify-start items-start flex w-full gap-6">
       <div className="flex flex-col w-full pb-4">

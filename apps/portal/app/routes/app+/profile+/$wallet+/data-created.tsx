@@ -35,17 +35,17 @@ import {
   fetchCreatedIdentitiesSummary,
   fetchIdentitiesCreatedByUser,
   fetchIdentitiesWithUserPosition,
-  fetchIdentity,
-  fetchUserTotals,
 } from '@lib/utils/fetches'
-import logger from '@lib/utils/logger'
 import {
   calculateTotalPages,
   formatBalance,
   getAuthHeaders,
 } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
+import { useRouteLoaderData } from '@remix-run/react'
 import { getPrivyAccessToken } from '@server/privy'
+
+import { ProfileLoaderData } from '../$wallet'
 
 export async function loader({ params, request }: LoaderFunctionArgs) {
   OpenAPI.BASE = 'https://dev.api.intuition.systems'
@@ -58,19 +58,6 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
   if (!wallet) {
     throw new Error('Wallet is undefined.')
   }
-
-  const userIdentity = await fetchIdentity(wallet)
-
-  if (!userIdentity) {
-    return logger('No user identity found')
-  }
-
-  if (!userIdentity.creator || typeof userIdentity.creator.id !== 'string') {
-    logger('Invalid or missing creator ID')
-    return
-  }
-
-  const userTotals = await fetchUserTotals(userIdentity.creator.id)
 
   const url = new URL(request.url)
   const searchParams = new URLSearchParams(url.search)
@@ -169,8 +156,6 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
   const createdClaimsSummary = await fetchCreatedClaimsSummary(wallet)
 
   return json({
-    userIdentity,
-    userTotals: userTotals as UserTotalsPresenter,
     activeIdentities: activeIdentities?.data as IdentityPresenter[],
     activeIdentitiesSortBy,
     activeIdentitiesDirection,
@@ -246,8 +231,6 @@ const TabContent = ({
 
 export default function ProfileDataCreated() {
   const {
-    userIdentity,
-    userTotals,
     activeIdentities,
     activeIdentitiesPagination,
     createdIdentities,
@@ -260,6 +243,14 @@ export default function ProfileDataCreated() {
     createdClaimsSummary,
     createdClaimsPagination,
   } = useLiveLoader<typeof loader>(['attest'])
+
+  const { userIdentity, userTotals } =
+    useRouteLoaderData<ProfileLoaderData>('routes/app+/profile+/$wallet') ?? {}
+
+  if (!userIdentity || !userTotals) {
+    return null
+  }
+
   return (
     <>
       <div className="flex-col justify-start items-start flex w-full">

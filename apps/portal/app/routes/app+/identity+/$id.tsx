@@ -56,15 +56,12 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
   const identity = await fetchIdentity(params.id)
 
-  logger('identity', identity)
-
   if (!identity) {
     return null
   }
 
   let vaultDetails: VaultDetailsType | null = null
 
-  logger('[identity id] wallet:', userWallet)
   if (identity !== undefined && identity.vault_id) {
     try {
       vaultDetails = await getVaultDetails(
@@ -85,12 +82,15 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   })
 }
 
+export type IdentityLoaderData = {
+  identity: ExtendedIdentityPresenter
+  vaultDetails: VaultDetailsType
+  userWallet: string
+}
+
 export default function IdentityDetails() {
-  const { identity, vaultDetails, userWallet } = useLoaderData<{
-    identity: ExtendedIdentityPresenter
-    vaultDetails: VaultDetailsType
-    userWallet: string
-  }>()
+  const { identity, vaultDetails, userWallet } =
+    useLoaderData<IdentityLoaderData>()
   const navigate = useNavigate()
 
   const { user_assets, assets_sum } = vaultDetails ? vaultDetails : identity

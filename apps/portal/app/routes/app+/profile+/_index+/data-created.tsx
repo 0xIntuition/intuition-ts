@@ -35,8 +35,6 @@ import {
   fetchCreatedIdentitiesSummary,
   fetchIdentitiesCreatedByUser,
   fetchIdentitiesWithUserPosition,
-  fetchIdentity,
-  fetchUserTotals,
 } from '@lib/utils/fetches'
 import logger from '@lib/utils/logger'
 import {
@@ -45,8 +43,11 @@ import {
   getAuthHeaders,
 } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
+import { useRouteLoaderData } from '@remix-run/react'
 import { requireUserWallet } from '@server/auth'
 import { getPrivyAccessToken } from '@server/privy'
+
+import { ProfileLoaderData } from './_layout'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const userWallet = await requireUserWallet(request)
@@ -59,16 +60,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
     return logger('No user found in session')
   }
 
-  const userIdentity = await fetchIdentity(userWallet)
-
-  if (!userIdentity) {
-    return logger('No user identity found')
-  }
-  if (!userIdentity.creator || typeof userIdentity.creator.id !== 'string') {
-    logger('Invalid or missing creator ID')
-    return
-  }
-  const userTotals = await fetchUserTotals(userIdentity.creator.id)
   const url = new URL(request.url)
   const searchParams = new URLSearchParams(url.search)
 
@@ -167,8 +158,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const createdClaimsSummary = await fetchCreatedClaimsSummary(userWallet)
 
   return json({
-    userIdentity,
-    userTotals: userTotals as UserTotalsPresenter,
     activeIdentities: activeIdentities?.data as IdentityPresenter[],
     activeIdentitiesSortBy,
     activeIdentitiesDirection,
@@ -244,8 +233,6 @@ const TabContent = ({
 
 export default function ProfileDataCreated() {
   const {
-    userIdentity,
-    userTotals,
     activeIdentities,
     activeIdentitiesPagination,
     createdIdentities,
@@ -258,6 +245,16 @@ export default function ProfileDataCreated() {
     createdClaimsSummary,
     createdClaimsPagination,
   } = useLiveLoader<typeof loader>(['attest'])
+
+  const { userIdentity, userTotals } =
+    useRouteLoaderData<ProfileLoaderData>(
+      'routes/app+/profile+/_index+/_layout',
+    ) ?? {}
+
+  if (!userIdentity || !userTotals) {
+    return null
+  }
+
   return (
     <>
       <div className="flex-col justify-start items-start flex w-full">

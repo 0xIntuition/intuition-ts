@@ -60,6 +60,7 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
     const followClaim = await fetchClaim(userIdentity.follow_claim_id)
     const url = new URL(request.url)
     const searchParams = new URLSearchParams(url.search)
+
     // const followersSearch = searchParams.get('followersSearch') TODO: Add search once BE implements
     const followersSortBy = searchParams.get('followersSortBy') ?? 'UserAssets'
     const followersDirection = searchParams.get('followersDirection') ?? 'desc'
