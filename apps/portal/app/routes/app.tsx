@@ -1,7 +1,8 @@
-import { ApiError, UserPresenter, UsersService } from '@0xintuition/api'
+import { UserPresenter } from '@0xintuition/api'
 
 import SidebarNav from '@components/sidebar-nav'
 import { chainalysisOracleAbi } from '@lib/abis/chainalysisOracle'
+import { getUserByWallet } from '@lib/utils/fetches'
 import logger from '@lib/utils/logger'
 import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
 import { Outlet, useLoaderData } from '@remix-run/react'
@@ -28,25 +29,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     return redirect('/sanctioned')
   }
 
-  let userObject
-  try {
-    userObject = await UsersService.getUserByWallet({
-      wallet,
-    })
-  } catch (error: unknown) {
-    if (error instanceof ApiError) {
-      userObject = undefined
-      console.log(
-        `${error.name} - ${error.status}: ${error.message} ${error.url}`,
-      )
-    } else {
-      throw error
-    }
-  }
-
-  if (!userObject) {
-    return console.log('No user found in DB')
-  }
+  const userObject = await getUserByWallet(wallet)
 
   return json({
     userObject,
