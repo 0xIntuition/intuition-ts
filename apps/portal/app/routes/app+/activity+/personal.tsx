@@ -9,21 +9,23 @@ import { ActivityList } from '@components/list/activity'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { fetchUserActivity } from '@lib/utils/fetches'
 import logger from '@lib/utils/logger'
-import { calculateTotalPages, getAuthHeaders } from '@lib/utils/misc'
-import { SessionContext } from '@middleware/session'
+import { calculateTotalPages, getAuthHeaders, invariant } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
+import { requireUser } from '@server/auth'
 import { getPrivyAccessToken } from '@server/privy'
 
-export async function loader({ context, request }: LoaderFunctionArgs) {
+export async function loader({ request }: LoaderFunctionArgs) {
+  const user = await requireUser(request)
+  invariant(user, 'User not found')
+  invariant(user.wallet?.address, 'User wallet not found')
+  const userWallet = user.wallet?.address
+
   OpenAPI.BASE = 'https://dev.api.intuition.systems'
   const accessToken = getPrivyAccessToken(request)
   const headers = getAuthHeaders(accessToken !== null ? accessToken : '')
   OpenAPI.HEADERS = headers as Record<string, string>
 
-  const session = context.get(SessionContext)
-  const user = session.get('user')
-
-  if (!user?.details?.wallet?.address) {
+  if (!userWallet) {
     return logger('No user found in session')
   }
 
@@ -43,7 +45,7 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
     Number(limit),
     sortBy as SortColumn,
     direction as SortDirection,
-    user?.details?.wallet?.address,
+    userWallet,
   )
 
   const totalPages = calculateTotalPages(

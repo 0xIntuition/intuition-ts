@@ -17,7 +17,6 @@ import { useQueryClient } from '@tanstack/react-query'
 import { useAtom } from 'jotai'
 import { toast } from 'sonner'
 import { TransactionActionType, TransactionStateType } from 'types/transaction'
-import { SessionUser } from 'types/user'
 import { VaultDetailsType } from 'types/vault'
 import { Abi, Address, decodeEventLog, formatUnits, parseUnits } from 'viem'
 import { useBalance, useBlockNumber, usePublicClient } from 'wagmi'
@@ -33,7 +32,7 @@ const initialTxState: TransactionStateType = {
 }
 
 interface StakeModalProps {
-  user: SessionUser
+  userWallet: string
   contract: string
   open: boolean
   identity?: IdentityPresenter
@@ -44,7 +43,7 @@ interface StakeModalProps {
 }
 
 export default function StakeModal({
-  user,
+  userWallet,
   contract,
   open = false,
   onClose = () => {},
@@ -138,7 +137,7 @@ export default function StakeModal({
                 : 'redeemAtom',
           args:
             actionType === 'buy'
-              ? [user.details?.wallet?.address as `0x${string}`, vaultId]
+              ? [userWallet as `0x${string}`, vaultId]
               : [
                   parseUnits(
                     val === ''
@@ -149,7 +148,7 @@ export default function StakeModal({
                         ).toString(),
                     18,
                   ),
-                  user.details?.wallet?.address as `0x${string}`,
+                  userWallet as `0x${string}`,
                   vaultId,
                 ],
           value:
@@ -267,9 +266,7 @@ export default function StakeModal({
         args: EventLogArgs
       }
 
-      if (
-        topics.args.sender === (user?.details?.wallet?.address as `0x${string}`)
-      ) {
+      if (topics.args.sender === (userWallet as `0x${string}`)) {
         assets =
           mode === 'deposit'
             ? (topics.args as BuyArgs).userAssetsAfterTotalFees.toString()
@@ -285,7 +282,7 @@ export default function StakeModal({
         setLastTxHash(txReceipt.transactionHash)
       }
     }
-  }, [txReceipt, user.details?.wallet?.address, mode, reset, lastTxHash])
+  }, [txReceipt, userWallet, mode, reset, lastTxHash])
 
   useEffect(() => {
     if (awaitingWalletConfirmation) {
@@ -318,7 +315,7 @@ export default function StakeModal({
   const queryClient = useQueryClient()
   const { data: blockNumber } = useBlockNumber({ watch: true })
   const { data: balance, queryKey } = useBalance({
-    address: user.details?.wallet?.address as `0x${string}`,
+    address: userWallet as `0x${string}`,
   })
 
   useEffect(() => {
@@ -377,7 +374,7 @@ export default function StakeModal({
       <DialogContent className="flex flex-col w-[476px] h-[500px] gap-0">
         <div className="flex-grow">
           <StakeForm
-            user={user}
+            userWallet={userWallet}
             walletBalance={walletBalance}
             identity={identity}
             claim={claim}
@@ -405,7 +402,6 @@ export default function StakeModal({
         {!isTransactionStarted && (
           <DialogFooter className="!justify-center !items-center gap-5">
             <StakeButton
-              user={user}
               val={val}
               mode={mode}
               handleAction={handleStakeButtonClick}

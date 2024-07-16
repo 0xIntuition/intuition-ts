@@ -28,7 +28,7 @@ export default function StakeToast({ action, assets, txHash }: ToastProps) {
             <Text
               variant="footnote"
               weight="semibold"
-              className="text-white/50"
+              className="text-secondary-foreground inline-flex gap-1"
             >
               {action}{' '}
               <Text variant="footnote" weight="bold">

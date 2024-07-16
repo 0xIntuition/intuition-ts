@@ -10,21 +10,20 @@ import { IdentitiesList } from '@components/list/identities'
 import { fetchIdentities } from '@lib/utils/fetches'
 import logger from '@lib/utils/logger'
 import { calculateTotalPages, getAuthHeaders } from '@lib/utils/misc'
-import { SessionContext } from '@middleware/session'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
+import { requireUserWallet } from '@server/auth'
 import { getPrivyAccessToken } from '@server/privy'
 
-export async function loader({ context, request }: LoaderFunctionArgs) {
+export async function loader({ request }: LoaderFunctionArgs) {
+  const wallet = await requireUserWallet(request)
+
   OpenAPI.BASE = 'https://dev.api.intuition.systems'
   const accessToken = getPrivyAccessToken(request)
   const headers = getAuthHeaders(accessToken !== null ? accessToken : '')
   OpenAPI.HEADERS = headers as Record<string, string>
 
-  const session = context.get(SessionContext)
-  const user = session.get('user')
-
-  if (!user?.details?.wallet?.address) {
+  if (!wallet) {
     return logger('No user found in session')
   }
 
@@ -60,7 +59,6 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
       totalEntries: identities?.total ?? 0,
       totalPages,
     },
-    user,
   })
 }
 
