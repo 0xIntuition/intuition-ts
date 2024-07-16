@@ -1,11 +1,9 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 
 import { usePrivy } from '@privy-io/react-auth'
 import { useRevalidator } from '@remix-run/react'
 
-export interface PrivyRevalidateProps {}
-
-export default function PrivyRevalidate({}: PrivyRevalidateProps) {
+export default function PrivyRevalidate() {
   const { ready, authenticated, user: privyUser } = usePrivy()
   const { revalidate } = useRevalidator()
 

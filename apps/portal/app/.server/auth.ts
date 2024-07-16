@@ -1,4 +1,6 @@
+import logger from '@lib/utils/logger'
 import { combineHeaders, getAuthHeaders } from '@lib/utils/misc'
+import { getRedirectToUrl } from '@lib/utils/redirect'
 import { redirect } from '@remix-run/node'
 import {
   getPrivyAccessToken,
@@ -9,9 +11,7 @@ import {
 } from '@server/privy'
 import { RedirectTo } from 'types/navigation'
 
-import logger from '@lib/utils/logger';
-import { OpenAPI } from '@0xintuition/api';
-import { getRedirectToUrl } from '@lib/utils/redirect';
+import { OpenAPI } from '@0xintuition/api'
 
 const DEFAULT_REDIRECT_URL = '/login'
 
@@ -23,9 +23,7 @@ export async function getUserId(request: Request) {
   return verifiedClaims.userId
 }
 
-export async function getUser(
-  request: Request,
-) {
+export async function getUser(request: Request) {
   const userId = await getUserId(request)
   if (!userId) {
     return null
@@ -87,10 +85,8 @@ export async function requireAnonymous(
 
 export async function logout(
   {
-    request,
     redirectTo = '/',
   }: {
-    request: Request
     redirectTo?: string
   },
   responseInit?: ResponseInit,
@@ -116,7 +112,11 @@ export async function handlePrivyRedirect(request: Request, redirectTo: Redirect
     // Do not redirect or interrupt the flow.
     return
   } else if (!accessToken && !sessionToken) {
-    const redirectUrl = await getRedirectToUrl(request, DEFAULT_REDIRECT_URL, redirectTo)
+    const redirectUrl = await getRedirectToUrl(
+      request,
+      DEFAULT_REDIRECT_URL,
+      redirectTo,
+    )
     throw redirect(redirectUrl)
   } else if (!accessToken && sessionToken) {
     // TODO: handle /refresh where we redirect and client-side getAccessToken with privy-react

@@ -47,5 +47,9 @@ export async function isOAuthInProgress(requestUrl: string) {
   // Check if privy_oauth_code, privy_oauth_state, or privy_oauth_provider are in query params
   // these parameters are a required component of Privy's OAuth login flow and applying a redirect will destructively erase them.
   const url = new URL(requestUrl)
-  return url.searchParams.has('privy_oauth_code') || url.searchParams.has('privy_oauth_state') || url.searchParams.has('privy_oauth_provider')
+  return (
+    url.searchParams.has('privy_oauth_code') ||
+    url.searchParams.has('privy_oauth_state') ||
+    url.searchParams.has('privy_oauth_provider')
+  )
 }
