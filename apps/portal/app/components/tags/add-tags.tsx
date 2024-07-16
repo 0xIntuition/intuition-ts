@@ -9,10 +9,11 @@ import {
 } from '@0xintuition/1ui'
 import { IdentityPresenter } from '@0xintuition/api'
 
-import { IdentitySearchCombobox } from '@components/identity/identity-search-combo-box'
+import { IdentitySearchCombobox, IdentitySearchCombobox } from '@components/identity/identity-search-combo-box'
 import { SEARCH_IDENTITIES_RESOURCE_ROUTE } from '@lib/utils/constants'
 import logger from '@lib/utils/logger'
-import { useFetcher } from '@remix-run/react'
+import { useIdentityServerSearch } from '@lib/hooks/useIdentityServerSearch'
+
 
 interface AddTagsProps {
   selectedTags?: IdentityPresenter[] | []
@@ -26,33 +27,8 @@ export function AddTags({ selectedTags, onAddTag, onRemoveTag }: AddTagsProps) {
     id: tag.vault_id,
   }))
 
-  const [searchQuery, setSearchQuery] = useState('')
+  const { searchQuery, setSearchQuery, identities, handleInput } = useIdentityServerSearch()
 
-  const handleInput = async (event: React.FormEvent<HTMLInputElement>) => {
-    event.preventDefault()
-    const value = (event.target as HTMLInputElement).value
-    setSearchQuery(value)
-  }
-
-  const [identities, setIdentities] = useState<IdentityPresenter[]>([])
-  const identitiesFetcher = useFetcher<IdentityPresenter[]>()
-
-  useEffect(() => {
-    logger('identitiesFetcher.data changed:', identitiesFetcher.data)
-    if (identitiesFetcher.data) {
-      setIdentities(identitiesFetcher.data)
-    }
-  }, [identitiesFetcher.data])
-
-  useEffect(() => {
-    logger('searchQuery changed:', searchQuery)
-    if (searchQuery) {
-      const searchParam = `?search=${encodeURIComponent(searchQuery)}`
-      identitiesFetcher.load(
-        `${SEARCH_IDENTITIES_RESOURCE_ROUTE}${searchParam}`,
-      )
-    }
-  }, [searchQuery, SEARCH_IDENTITIES_RESOURCE_ROUTE])
 
   return (
     <div className="flex flex-col">
