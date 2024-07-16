@@ -1,14 +1,21 @@
 import * as React from 'react'
 
+import { IdentityPresenter } from '@0xintuition/api'
+
 import { ExploreSearchClaimInput } from './ExploreSearchClaimInput'
 import { ExploreSearchInput } from './ExploreSearchInput'
 
 export interface ExploreSearchProps
   extends React.HTMLAttributes<HTMLDivElement> {
   variant: 'user' | 'identity' | 'claim' | 'tag'
+  identities?: IdentityPresenter[]
 }
 
-const ExploreSearch = ({ variant, ...props }: ExploreSearchProps) => {
+const ExploreSearch = ({
+  variant,
+  identities,
+  ...props
+}: ExploreSearchProps) => {
   return (
     <div className="min-w-96 flex flex-col items-center" {...props}>
       {['user', 'identity', 'tag'].includes(variant) && (
@@ -16,7 +23,9 @@ const ExploreSearch = ({ variant, ...props }: ExploreSearchProps) => {
         <ExploreSearchInput searchParam={variant} />
       )}
 
-      {variant === 'claim' && <ExploreSearchClaimInput />}
+      {variant === 'claim' && (
+        <ExploreSearchClaimInput identities={identities} />
+      )}
     </div>
   )
 }

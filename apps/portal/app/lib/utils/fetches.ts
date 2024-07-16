@@ -110,19 +110,19 @@ export async function fetchUserTotals(
 }
 
 export async function fetchIdentities(
-  page: number,
-  limit: number,
-  sortBy: SortColumn,
-  direction: SortDirection,
-  search: string | null,
+  page?: number,
+  limit?: number,
+  sortBy?: SortColumn,
+  direction?: SortDirection,
+  search?: string | null,
 ): Promise<SearchIdentityResponse | null> {
   try {
     return await IdentitiesService.searchIdentity({
-      page,
-      limit,
-      sortBy,
-      direction,
-      displayName: search,
+      page: page ?? 1,
+      limit: limit ?? 10,
+      sortBy: sortBy ?? 'AssetsSum',
+      direction: direction ?? 'desc',
+      displayName: search ?? null,
       isUser: false,
     })
   } catch (error: unknown) {
