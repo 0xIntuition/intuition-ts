@@ -67,10 +67,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const headers = getAuthHeaders(accessToken !== null ? accessToken : '')
   OpenAPI.HEADERS = headers as Record<string, string>
 
-  if (!userWallet) {
-    return logger('No user found in session')
-  }
-
   const userIdentity = await fetchIdentity(userWallet)
 
   if (!userIdentity) {
