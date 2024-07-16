@@ -3,7 +3,7 @@ name: Deploy apps/portal
 on:
   push:
     branches:
-      - main
+      - joji/fix-deploy
 
   workflow_dispatch:
 
