@@ -46,8 +46,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
     Number(limit),
   )
 
-  console.log('claims', claims)
-
   return json({
     identities: identities?.data,
     claims: claims?.data as ClaimPresenter[],
