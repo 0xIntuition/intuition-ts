@@ -29,6 +29,7 @@ export function PrivyButton({
   async function handleSignout() {
     logout()
     disconnect()
+    navigate('/login')
   }
 
   if (!ready) {
