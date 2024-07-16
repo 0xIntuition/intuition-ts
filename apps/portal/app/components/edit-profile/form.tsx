@@ -1,4 +1,3 @@
-import * as React from 'react'
 import { useEffect, useState } from 'react'
 
 import {
@@ -11,6 +10,9 @@ import {
 } from '@0xintuition/1ui'
 import { UserPresenter } from '@0xintuition/api'
 
+import ErrorList from '@components/error-list'
+import { ImageChooser } from '@components/image-chooser'
+import Toast from '@components/toast'
 import { getFormProps, getInputProps, useForm } from '@conform-to/react'
 import { getZodConstraint, parseWithZod } from '@conform-to/zod'
 import { useImageUploadFetcher } from '@lib/hooks/useImageUploadFetcher'
@@ -22,7 +24,6 @@ import {
 } from '@lib/hooks/useTransactionReducer'
 import { updateProfileSchema } from '@lib/schemas/update-profile-schema'
 import {
-  ACCEPTED_IMAGE_MIME_TYPES,
   DESCRIPTION_MAX_LENGTH,
   MAX_NAME_LENGTH,
   MAX_UPLOAD_SIZE,
@@ -35,10 +36,6 @@ import {
   IdentityTransactionActionType,
   IdentityTransactionStateType,
 } from 'types/transaction'
-
-import ErrorList from '../error-list'
-import { ImageChooser } from '../image-chooser'
-import Toast from '../toast'
 
 interface EditProfileFormProps {
   userObject: UserPresenter
@@ -55,19 +52,17 @@ export function EditProfileForm({ userObject, onClose }: EditProfileFormProps) {
   const location = useLocation()
   const isCreateRoute = location.pathname.includes('create')
 
-  const [identityImageFile, setIdentityImageFile] = useState<File | undefined>(
-    undefined,
-  )
-
   const imageUploadFetcher = useImageUploadFetcher()
 
   const { offChainFetcher, lastOffChainSubmission } = useOffChainFetcher()
 
+  const [imageFile, setImageFile] = useState<File | undefined>(undefined)
+  console.log('imageFile', imageFile)
   const [imageFilename, setImageFilename] = useState<string | null>(null)
   const [imageFilesize, setImageFilesize] = useState<string | null>(null)
+
   const [displayName, setDisplayName] = useState(userObject.display_name ?? '')
   const [description, setDescription] = useState(userObject.description ?? '')
-
   const [form, fields] = useForm({
     id: 'update-profile',
     lastResult: lastOffChainSubmission,
@@ -87,27 +82,6 @@ export function EditProfileForm({ userObject, onClose }: EditProfileFormProps) {
     setImageFilesize(filesize)
   }
 
-  useEffect(() => {
-    if (identityImageFile) {
-      if (
-        !ACCEPTED_IMAGE_MIME_TYPES.includes(identityImageFile.type) ||
-        identityImageFile.size > MAX_UPLOAD_SIZE
-      ) {
-        console.error('Invalid image file', identityImageFile)
-        return
-      }
-
-      const formData = new FormData()
-      formData.append('image_url', identityImageFile)
-
-      imageUploadFetcher.submit(formData, {
-        action: '/actions/upload-image',
-        method: 'post',
-        encType: 'multipart/form-data',
-      })
-    }
-  }, [identityImageFile])
-
   // Handle Triggering Image Upload
   useEffect(() => {
     if (imageUploadFetcher.state === 'submitting') {
@@ -121,7 +95,6 @@ export function EditProfileForm({ userObject, onClose }: EditProfileFormProps) {
     ) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const data = imageUploadFetcher.data as any
-
       if (typeof data.submission.payload.image_url !== 'string') {
         logger('Transaction Error')
         dispatch({
@@ -134,7 +107,7 @@ export function EditProfileForm({ userObject, onClose }: EditProfileFormProps) {
           imageUrl: data.submission.payload.image_url ?? '',
           displayName: data.submission.payload.display_name ?? '',
           description: data.submission.payload.description ?? '',
-          externalReference: '',
+          externalReference: data.submission.payload.external_reference ?? '',
         })
       }
     }
@@ -148,7 +121,6 @@ export function EditProfileForm({ userObject, onClose }: EditProfileFormProps) {
       formData.append('image_url', state.imageUrl ?? '')
       formData.append('display_name', state.displayName ?? '')
       formData.append('description', state.description ?? '')
-
       // Submit the off-chain transaction
       try {
         offChainFetcher.submit(formData, {
@@ -190,6 +162,12 @@ export function EditProfileForm({ userObject, onClose }: EditProfileFormProps) {
     }
   }, [imageUploadFetcher.state, imageUploadFetcher.data, state])
 
+  useEffect(() => {
+    if (state.status === 'error') {
+      setLoading(false)
+    }
+  }, [state.status])
+
   // Handle Initial Form Submit
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     console.log('Form submitting')
@@ -198,12 +176,10 @@ export function EditProfileForm({ userObject, onClose }: EditProfileFormProps) {
       try {
         dispatch({ type: 'START_TRANSACTION' })
         const formData = new FormData(event.currentTarget)
-
         // Initial form validation
         const submission = parseWithZod(formData, {
           schema: updateProfileSchema(),
         })
-
         if (
           submission.status === 'error' &&
           submission.error !== null &&
@@ -211,7 +187,6 @@ export function EditProfileForm({ userObject, onClose }: EditProfileFormProps) {
         ) {
           console.error('Update profile validation errors: ', submission.error)
         }
-
         setLoading(true)
         dispatch({ type: 'START_IMAGE_UPLOAD' })
         imageUploadFetcher.submit(formData, {
@@ -226,11 +201,9 @@ export function EditProfileForm({ userObject, onClose }: EditProfileFormProps) {
       try {
         dispatch({ type: 'START_TRANSACTION' })
         const formData = new FormData(event.currentTarget)
-
         console.log('previewImage', previewImage)
         formData.append('id', userObject.id ?? '')
         formData.append('image_url', previewImage ?? '')
-
         offChainFetcher.submit(formData, {
           action: '/actions/edit-profile',
           method: 'post',
@@ -269,27 +242,23 @@ export function EditProfileForm({ userObject, onClose }: EditProfileFormProps) {
       }
     }
   }
-
   // Handle display name input changes
   const handleDisplayNameChange = (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     setDisplayName(event.target.value)
   }
-
   // Handle description input changes
   const handleDescriptionChange = (
     event: React.ChangeEvent<HTMLTextAreaElement>,
   ) => {
     setDescription(event.target.value)
   }
-
   useEffect(() => {
     if (userObject.image) {
       setPreviewImage(userObject.image)
     }
   }, [userObject.image])
-
   return (
     <>
       <>
@@ -326,8 +295,7 @@ export function EditProfileForm({ userObject, onClose }: EditProfileFormProps) {
                     previewImage={previewImage}
                     setPreviewImage={setPreviewImage}
                     onFileChange={handleFileChange}
-                    setImageFile={setIdentityImageFile}
-                    {...getInputProps(fields.image_url, { type: 'file' })}
+                    setImageFile={setImageFile}
                   />
                 </div>
                 <div className="flex-col justify-start items-start inline-flex">
