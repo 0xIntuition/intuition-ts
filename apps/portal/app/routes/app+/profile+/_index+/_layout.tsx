@@ -18,6 +18,7 @@ import {
   UserTotalsPresenter,
 } from '@0xintuition/api'
 
+import PrivyRevalidate from '@client/privy-revalidate'
 import EditProfileModal from '@components/edit-profile/modal'
 import EditSocialLinksModal from '@components/edit-social-links-modal'
 import { NestedLayout } from '@components/nested-layout'
@@ -291,6 +292,7 @@ export default function Profile() {
               }))
             }}
           />
+          <PrivyRevalidate />
         </>
       </div>
     </NestedLayout>

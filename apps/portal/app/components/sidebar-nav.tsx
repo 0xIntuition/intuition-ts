@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 
 import {
+  formatWalletAddress,
   IconNameType,
   SidebarLayout,
   SidebarLayoutContent,
@@ -18,7 +19,7 @@ import { UserPresenter } from '@0xintuition/api'
 
 import { PrivyButton } from '@client/privy-button'
 import { createClaimModalAtom, createIdentityModalAtom } from '@lib/state/store'
-import { useNavigate } from '@remix-run/react'
+import { useNavigate, useSubmit } from '@remix-run/react'
 import * as blockies from 'blockies-ts'
 import { useAtom } from 'jotai'
 
@@ -56,6 +57,7 @@ export default function SidebarNav({
   children: React.ReactNode
   userObject: UserPresenter
 }) {
+  const submit = useSubmit()
   const navigate = useNavigate()
   const [isPrivyButtonLoaded, setIsPrivyButtonLoaded] = useState(false)
 
@@ -71,6 +73,18 @@ export default function SidebarNav({
     useAtom(createClaimModalAtom)
 
   const imgSrc = blockies.create({ seed: userObject?.wallet }).toDataURL()
+
+  function onLogout() {
+    submit(null, {
+      action: '/actions/logout',
+      method: 'post',
+    })
+  }
+  const userName =
+    userObject?.display_name ||
+    userObject?.ens_name ||
+    formatWalletAddress(userObject?.wallet) ||
+    'Account'
 
   return (
     <>
@@ -157,9 +171,10 @@ export default function SidebarNav({
                   triggerComponent={
                     <SidebarLayoutNavAvatar
                       imageSrc={userObject.image ?? imgSrc}
-                      name="Account"
+                      name={userName}
                     />
                   }
+                  onLogout={onLogout}
                 />
               ) : (
                 <div className="h-20" />
