@@ -16,6 +16,7 @@ export interface TagsListInputProps
   tags: { name: string; id: string }[]
   maxTags: number
   onAddTag: () => void
+  // onAddTag?: (identity: IdentityPresenter) => void
   onRemoveTag: (id: string) => void
 }
 

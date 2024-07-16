@@ -3,9 +3,9 @@ import {
   DialogTitle,
   IdentityTag,
   Tabs,
+  TabsContent,
   TabsList,
   TabsTrigger,
-  // Text,
   Trunctacular,
 } from '@0xintuition/1ui'
 import { IdentityPresenter } from '@0xintuition/api'
@@ -17,6 +17,8 @@ import {
 } from '@lib/hooks/useTransactionReducer'
 import logger from '@lib/utils/logger'
 import { TransactionActionType, TransactionStateType } from 'types/transaction'
+
+import { AddTags } from './add-tags'
 
 // import { useFetcher } from '@remix-run/react'
 
@@ -78,6 +80,11 @@ export function TagsForm({ identity, mode, onClose }: TagsFormProps) {
                 />
                 <TabsTrigger variant="alternate" value="add" label="Add tags" />
               </TabsList>
+              <div className="my-10">
+                <TabsContent value="add">
+                  <AddTags />
+                </TabsContent>
+              </div>
             </Tabs>
           </>
         )}
