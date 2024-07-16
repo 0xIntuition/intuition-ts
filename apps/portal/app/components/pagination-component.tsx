@@ -21,7 +21,7 @@ interface PaginationComponentProps {
   onPageChange: (newPage: number) => void
   onLimitChange: (newLimit: number) => void
   label: string
-  listContainerRef: React.RefObject<HTMLDivElement> // Add the ref prop
+  listContainerRef: React.RefObject<HTMLDivElement>
 }
 
 export function PaginationComponent({
