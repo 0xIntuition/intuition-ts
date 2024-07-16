@@ -13,8 +13,17 @@ export async function getUserId(request: Request) {
   return verifiedClaims.userId
 }
 
-export async function getUser(request: Request) {
+export async function getUser(
+  request: Request,
+  { redirectTo }: RedirectTo = {},
+) {
   const userId = await getUserId(request)
+  if (!userId) {
+    const redirectUrl = await getRedirectToUrl(request, '/login', {
+      redirectTo,
+    })
+    throw redirect(redirectUrl)
+  }
   invariant(userId, 'No userId provided by Privy')
   return await getPrivyUserById(userId)
 }
