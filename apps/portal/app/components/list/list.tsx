@@ -1,4 +1,4 @@
-import { ReactNode } from 'react'
+import { ReactNode, useRef } from 'react'
 
 import {
   ClaimSortColumn,
@@ -33,9 +33,11 @@ export function List<T extends SortColumnType>({
   const { handleSortChange, handleSearchChange, onPageChange, onLimitChange } =
     useSearchAndSortParamsHandler<T>(paramPrefix)
 
+  const listContainerRef = useRef<HTMLDivElement>(null)
+
   return (
     <>
-      <div className="flex flex-col w-full gap-6">
+      <div className="flex flex-col w-full gap-6" ref={listContainerRef}>
         {enableSearch && options && (
           <SearchAndSort
             options={options}
@@ -52,6 +54,7 @@ export function List<T extends SortColumnType>({
           onPageChange={onPageChange}
           onLimitChange={onLimitChange}
           label={paginationLabel}
+          listContainerRef={listContainerRef}
         />
       </div>
     </>

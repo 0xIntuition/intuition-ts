@@ -1,3 +1,5 @@
+import { useEffect } from 'react'
+
 import {
   Pagination,
   PaginationContent,
@@ -19,6 +21,7 @@ interface PaginationComponentProps {
   onPageChange: (newPage: number) => void
   onLimitChange: (newLimit: number) => void
   label: string
+  listContainerRef: React.RefObject<HTMLDivElement> // Add the ref prop
 }
 
 export function PaginationComponent({
@@ -29,7 +32,17 @@ export function PaginationComponent({
   onPageChange,
   onLimitChange,
   label,
+  listContainerRef,
 }: PaginationComponentProps) {
+  useEffect(() => {
+    if (listContainerRef.current) {
+      listContainerRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      })
+    }
+  }, [currentPage, listContainerRef])
+
   return (
     <Pagination className="flex w-full justify-between">
       <PaginationSummary totalEntries={totalEntries} label={label} />
