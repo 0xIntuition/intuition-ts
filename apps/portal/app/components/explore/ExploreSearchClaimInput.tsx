@@ -3,9 +3,10 @@ import * as React from 'react'
 import { Separator, Text } from '@0xintuition/1ui'
 import { IdentityPresenter } from '@0xintuition/api'
 
+import { pascalCaseString } from '@lib/utils/misc'
 import { useNavigate } from '@remix-run/react'
 
-import { IdentityInput } from '../identity-input'
+import { IdentityInput, IdentityInputButtonProps } from '../identity-input'
 
 export interface ExploreSearchClaimInputProps
   extends React.HTMLAttributes<HTMLDivElement> {
@@ -77,6 +78,25 @@ const ExploreSearchClaimInput = ({
     setPopoverOpen({ ...popoverOpen, [type]: isOpen })
   }
 
+  const identityInputProps = (
+    type: 'subject' | 'predicate' | 'object',
+  ): IdentityInputButtonProps => ({
+    label: pascalCaseString(type),
+    placeholder: `Select an identity`,
+    selectedValue: selectedIdentities[type]
+      ? {
+          variant: selectedIdentities[type]!.is_user ? 'user' : 'non-user',
+          imgSrc: selectedIdentities[type]!.user?.image ?? null,
+          name: selectedIdentities[type]!.display_name,
+        }
+      : { name: '' },
+    onClick: () => handleOpenChange(type, !popoverOpen[type]),
+    isPopoverOpen: popoverOpen[type],
+    identities,
+    onIdentitySelect: (identity: IdentityPresenter) =>
+      handleIdentitySelection(type, identity),
+  })
+
   return (
     <div className="flex flex-col items-center">
       <Text
@@ -96,57 +116,9 @@ const ExploreSearchClaimInput = ({
       <Separator className="mb-7" />
       <IdentityInput
         showLabels
-        subject={{
-          placeholder: 'Select an identity',
-          selectedValue: selectedIdentities.subject
-            ? {
-                variant: selectedIdentities.subject.is_user
-                  ? 'user'
-                  : 'non-user',
-                imgSrc: selectedIdentities.subject.user?.image ?? null,
-                name: selectedIdentities.subject.display_name,
-              }
-            : { name: '' },
-          onClick: () => handleOpenChange('subject', !popoverOpen.subject),
-          isPopoverOpen: popoverOpen.subject,
-          identities,
-          onIdentitySelect: (identity: IdentityPresenter) =>
-            handleIdentitySelection('subject', identity),
-        }}
-        predicate={{
-          placeholder: 'Select an identity',
-          selectedValue: selectedIdentities.predicate
-            ? {
-                variant: selectedIdentities.predicate.is_user
-                  ? 'user'
-                  : 'non-user',
-                imgSrc: selectedIdentities.predicate.user?.image ?? null,
-                name: selectedIdentities.predicate.display_name,
-              }
-            : { name: '' },
-          onClick: () => handleOpenChange('predicate', !popoverOpen.predicate),
-          isPopoverOpen: popoverOpen.predicate,
-          identities,
-          onIdentitySelect: (identity: IdentityPresenter) =>
-            handleIdentitySelection('predicate', identity),
-        }}
-        object={{
-          placeholder: 'Select an identity',
-          selectedValue: selectedIdentities.object
-            ? {
-                variant: selectedIdentities.object.is_user
-                  ? 'user'
-                  : 'non-user',
-                imgSrc: selectedIdentities.object.user?.image ?? null,
-                name: selectedIdentities.object.display_name,
-              }
-            : { name: '' },
-          onClick: () => handleOpenChange('object', !popoverOpen.object),
-          isPopoverOpen: popoverOpen.object,
-          identities,
-          onIdentitySelect: (identity: IdentityPresenter) =>
-            handleIdentitySelection('object', identity),
-        }}
+        subject={identityInputProps('subject')}
+        predicate={identityInputProps('predicate')}
+        object={identityInputProps('object')}
       />
     </div>
   )

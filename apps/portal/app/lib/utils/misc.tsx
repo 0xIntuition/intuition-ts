@@ -58,6 +58,10 @@ export function getErrorMessage(error: unknown) {
   return 'Unknown Error'
 }
 
+export function pascalCaseString(str: string): string {
+  return str.replace(/^[a-z]/, (chr) => chr.toUpperCase())
+}
+
 export function sliceString(
   id: string | undefined,
   startNum: number,

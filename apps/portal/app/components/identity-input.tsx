@@ -29,12 +29,13 @@ type IdentityInputSelectedValueType = {
   name?: string
 }
 
-interface IdentityInputButtonProps
+export interface IdentityInputButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   placeholder: string
+  label: string
   selectedValue: IdentityInputSelectedValueType
-  onOpen?: () => void
   isPopoverOpen: boolean
+  onClick?: () => void
   identities: IdentityPresenter[]
   onIdentitySelect: (identity: IdentityPresenter) => void
 }
@@ -42,14 +43,14 @@ interface IdentityInputButtonProps
 const IdentityInputButton = ({
   placeholder,
   selectedValue,
-  onOpen,
   isPopoverOpen,
+  onClick,
   identities,
   onIdentitySelect,
   ...props
-}: IdentityInputButtonProps) => {
-  return (
-    <Popover open={isPopoverOpen} onOpenChange={onOpen}>
+}: IdentityInputButtonProps) => (
+  <div className="flex flex-col gap-2 items-start">
+    <Popover open={isPopoverOpen} onOpenChange={onClick}>
       <PopoverTrigger asChild>
         {selectedValue.name ? (
           <IdentityTag
@@ -74,8 +75,8 @@ const IdentityInputButton = ({
         />
       </PopoverContent>
     </Popover>
-  )
-}
+  </div>
+)
 
 interface IdentityInputLabelProps {
   label: string
@@ -105,30 +106,9 @@ const IdentityInputLabel = ({
 export interface IdentityInputProps
   extends React.HTMLAttributes<HTMLDivElement> {
   showLabels?: boolean
-  subject: {
-    placeholder?: string
-    selectedValue?: IdentityInputSelectedValueType
-    onClick?: () => void
-    isPopoverOpen: boolean
-    identities: IdentityPresenter[]
-    onIdentitySelect: (identity: IdentityPresenter) => void
-  }
-  predicate: {
-    placeholder?: string
-    selectedValue?: IdentityInputSelectedValueType
-    onClick?: () => void
-    isPopoverOpen: boolean
-    identities: IdentityPresenter[]
-    onIdentitySelect: (identity: IdentityPresenter) => void
-  }
-  object: {
-    placeholder?: string
-    selectedValue?: IdentityInputSelectedValueType
-    onClick?: () => void
-    isPopoverOpen: boolean
-    identities: IdentityPresenter[]
-    onIdentitySelect: (identity: IdentityPresenter) => void
-  }
+  subject: IdentityInputButtonProps
+  predicate: IdentityInputButtonProps
+  object: IdentityInputButtonProps
 }
 
 const IdentityInput = ({
@@ -142,71 +122,26 @@ const IdentityInput = ({
     <span className="h-px w-2.5 flex bg-border/30 self-end mb-[1.2rem]" />
   )
 
+  const renderIdentityInput = (inputProps: IdentityInputButtonProps) => (
+    <div className="flex flex-col gap-2">
+      {showLabels && (
+        <IdentityInputLabel
+          label={inputProps.label}
+          tooltipContent={`Select an identity as a ${inputProps.label.toLowerCase()}`}
+        />
+      )}
+      <IdentityInputButton {...inputProps} />
+    </div>
+  )
+
   return (
     <TooltipProvider>
       <div className="flex items-center" {...props}>
-        <div className="flex flex-col gap-2">
-          {showLabels && (
-            <IdentityInputLabel
-              label="Subject"
-              tooltipContent="Select an identity as a subject"
-            />
-          )}
-          <IdentityInputButton
-            placeholder={subject.placeholder || 'Add a subject'}
-            selectedValue={{
-              variant: subject.selectedValue?.variant,
-              imgSrc: subject.selectedValue?.imgSrc,
-              name: subject.selectedValue?.name,
-            }}
-            onOpen={subject.onClick}
-            isPopoverOpen={subject.isPopoverOpen}
-            identities={subject.identities}
-            onIdentitySelect={subject.onIdentitySelect}
-          />
-        </div>
+        {renderIdentityInput(subject)}
         <Divider />
-        <div className="flex flex-col gap-2">
-          {showLabels && (
-            <IdentityInputLabel
-              label="Predicate"
-              tooltipContent="Select an identity as a predicate"
-            />
-          )}
-          <IdentityInputButton
-            placeholder={predicate.placeholder || 'Add a predicate'}
-            selectedValue={{
-              variant: predicate.selectedValue?.variant,
-              imgSrc: predicate.selectedValue?.imgSrc,
-              name: predicate.selectedValue?.name,
-            }}
-            onOpen={predicate.onClick}
-            isPopoverOpen={predicate.isPopoverOpen}
-            identities={predicate.identities}
-            onIdentitySelect={predicate.onIdentitySelect}
-          />
-        </div>
+        {renderIdentityInput(predicate)}
         <Divider />
-        <div className="flex flex-col gap-2">
-          {showLabels && (
-            <IdentityInputLabel
-              label="Object"
-              tooltipContent="Select an identity as an object"
-            />
-          )}
-          <IdentityInputButton
-            placeholder={object.placeholder || 'Add an object'}
-            selectedValue={{
-              variant: object.selectedValue?.variant,
-              imgSrc: object.selectedValue?.imgSrc,
-              name: object.selectedValue?.name,
-            }}
-            onOpen={object.onClick}
-            isPopoverOpen={object.isPopoverOpen}
-            identities={object.identities}
-            onIdentitySelect={object.onIdentitySelect}
-          />
-        </div>
+        {renderIdentityInput(object)}
       </div>
     </TooltipProvider>
   )
