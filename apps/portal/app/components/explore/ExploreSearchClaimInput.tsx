@@ -20,20 +20,31 @@ const ExploreSearchClaimInput = ({
   identities = [],
 }: ExploreSearchClaimInputProps) => {
   const submit = useSubmit()
-  const [selectedIdentities, setSelectedIdentities] = React.useState({
+  const [selectedIdentities, setSelectedIdentities] = React.useState<{
+    subject: IdentityPresenter | null
+    predicate: IdentityPresenter | null
+    object: IdentityPresenter | null
+  }>({
     subject: null,
     predicate: null,
     object: null,
   })
-  const [searchQuery, setSearchQuery] = React.useState('')
+  const [searchQuery, setSearchQuery] = React.useState<string>('')
 
-  const handleIdentitySelection = (type: string, identity: any) => {
+  const handleIdentitySelection = (
+    type: 'subject' | 'predicate' | 'object',
+    identity: IdentityPresenter,
+  ) => {
     const updatedIdentities = { ...selectedIdentities, [type]: identity }
     setSelectedIdentities(updatedIdentities)
     updateQueryParams(updatedIdentities)
   }
 
-  const updateQueryParams = (identities: any) => {
+  const updateQueryParams = (identities: {
+    subject: IdentityPresenter | null
+    predicate: IdentityPresenter | null
+    object: IdentityPresenter | null
+  }) => {
     const params = new URLSearchParams()
     if (identities.subject) {
       params.set('subject', identities.subject.id)

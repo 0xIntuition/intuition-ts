@@ -11,7 +11,7 @@ export interface ExploreSearchProps
   identities?: IdentityPresenter[]
 }
 
-const ExploreSearch = ({
+const ExploreSearch: React.FC<ExploreSearchProps> = ({
   variant,
   identities,
   ...props

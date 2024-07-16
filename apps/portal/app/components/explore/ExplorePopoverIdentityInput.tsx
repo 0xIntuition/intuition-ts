@@ -22,15 +22,20 @@ import * as blockies from 'blockies-ts'
 interface ExplorePopoverIdentityInputProps {
   label: string
   identityType: 'subject' | 'predicate' | 'object'
-  selectedIdentity: IdentityPresenter
-  onIdentitySelect: (type: string, identity: IdentityPresenter) => void
+  selectedIdentity: IdentityPresenter | null
+  onIdentitySelect: (
+    type: 'subject' | 'predicate' | 'object',
+    identity: IdentityPresenter,
+  ) => void
   searchQuery: string
   setSearchQuery: (query: string) => void
   identities: IdentityPresenter[]
-  handleInput: (e: React.ChangeEvent<HTMLInputElement>) => void
+  handleInput: (value: string) => void
 }
 
-export const ExplorePopoverIdentityInput = ({
+export const ExplorePopoverIdentityInput: React.FC<
+  ExplorePopoverIdentityInputProps
+> = ({
   label,
   identityType,
   selectedIdentity,
@@ -38,7 +43,7 @@ export const ExplorePopoverIdentityInput = ({
   setSearchQuery,
   identities,
   handleInput,
-}: ExplorePopoverIdentityInputProps) => {
+}) => {
   const [isPopoverOpen, setIsPopoverOpen] = React.useState(false)
 
   return (
@@ -58,43 +63,41 @@ export const ExplorePopoverIdentityInput = ({
             {selectedIdentity && (
               <HoverCardContent side="bottom">
                 <ProfileCard
-                  variant={
-                    selectedIdentity?.is_user === true ? 'user' : 'non-user'
-                  }
+                  variant={selectedIdentity.is_user ? 'user' : 'non-user'}
                   avatarSrc={
-                    selectedIdentity?.user?.image ??
+                    selectedIdentity.user?.image ??
                     blockies
-                      .create({ seed: selectedIdentity?.user?.wallet })
+                      .create({ seed: selectedIdentity.user?.wallet })
                       .toDataURL()
                   }
                   name={
-                    selectedIdentity?.is_user === true
-                      ? selectedIdentity?.user?.display_name ?? ''
-                      : selectedIdentity?.display_name
+                    selectedIdentity.is_user
+                      ? selectedIdentity.user?.display_name ?? ''
+                      : selectedIdentity.display_name
                   }
                   walletAddress={
-                    selectedIdentity?.is_user === true
-                      ? selectedIdentity?.user?.ens_name ??
-                        sliceString(selectedIdentity?.user?.wallet, 6, 4)
-                      : selectedIdentity?.identity_id
+                    selectedIdentity.is_user
+                      ? selectedIdentity.user?.ens_name ??
+                        sliceString(selectedIdentity.user?.wallet, 6, 4)
+                      : selectedIdentity.identity_id
                   }
                   stats={
-                    selectedIdentity?.is_user === true
+                    selectedIdentity.is_user
                       ? {
                           numberOfFollowers:
-                            selectedIdentity?.follower_count ?? 0,
+                            selectedIdentity.follower_count ?? 0,
                           numberOfFollowing:
-                            selectedIdentity?.followed_count ?? 0,
+                            selectedIdentity.followed_count ?? 0,
                         }
                       : undefined
                   }
                   bio={
-                    selectedIdentity?.is_user === true
-                      ? selectedIdentity?.user?.description ?? ''
-                      : selectedIdentity?.description ?? ''
+                    selectedIdentity.is_user
+                      ? selectedIdentity.user?.description ?? ''
+                      : selectedIdentity.description ?? ''
                   }
                 >
-                  {selectedIdentity?.is_user === true && (
+                  {selectedIdentity.is_user && (
                     <Button
                       variant="accent"
                       onClick={() => logger('follow functionality')}
