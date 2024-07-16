@@ -1,11 +1,11 @@
 import * as React from 'react'
 
-import { IdentityInput, Separator, Text } from '@0xintuition/1ui'
+import { Separator, Text } from '@0xintuition/1ui'
 import { IdentityPresenter } from '@0xintuition/api'
 
 import { useNavigate } from '@remix-run/react'
 
-import { ExplorePopoverIdentityInput } from './ExplorePopoverIdentityInput'
+import { IdentityInput } from '../identity-input'
 
 export interface ExploreSearchClaimInputProps
   extends React.HTMLAttributes<HTMLDivElement> {
@@ -25,10 +25,15 @@ const ExploreSearchClaimInput = ({
     predicate: null,
     object: null,
   })
-  const [popoverType, setPopoverType] = React.useState<
-    'subject' | 'predicate' | 'object' | null
-  >(null)
-  const [searchQuery, setSearchQuery] = React.useState<string>('')
+  const [popoverOpen, setPopoverOpen] = React.useState<{
+    subject: boolean
+    predicate: boolean
+    object: boolean
+  }>({
+    subject: false,
+    predicate: false,
+    object: false,
+  })
 
   const handleIdentitySelection = (
     type: 'subject' | 'predicate' | 'object',
@@ -36,7 +41,7 @@ const ExploreSearchClaimInput = ({
   ) => {
     const updatedIdentities = { ...selectedIdentities, [type]: identity }
     setSelectedIdentities(updatedIdentities)
-    setPopoverType(null) // Close the popover after selection
+    setPopoverOpen({ ...popoverOpen, [type]: false }) // Close the popover after selection
     updateQueryParams(updatedIdentities)
   }
 
@@ -65,8 +70,11 @@ const ExploreSearchClaimInput = ({
     navigate(newUrl, { replace: true })
   }
 
-  const handleInput = (value: string) => {
-    setSearchQuery(value)
+  const handleOpenChange = (
+    type: 'subject' | 'predicate' | 'object',
+    isOpen: boolean,
+  ) => {
+    setPopoverOpen({ ...popoverOpen, [type]: isOpen })
   }
 
   return (
@@ -99,10 +107,11 @@ const ExploreSearchClaimInput = ({
                 name: selectedIdentities.subject.display_name,
               }
             : { name: '' },
-          onClick: () => {
-            console.log('subject clicked')
-            setPopoverType('subject')
-          },
+          onClick: () => handleOpenChange('subject', !popoverOpen.subject),
+          isPopoverOpen: popoverOpen.subject,
+          identities,
+          onIdentitySelect: (identity: IdentityPresenter) =>
+            handleIdentitySelection('subject', identity),
         }}
         predicate={{
           placeholder: 'Select an identity',
@@ -115,7 +124,11 @@ const ExploreSearchClaimInput = ({
                 name: selectedIdentities.predicate.display_name,
               }
             : { name: '' },
-          onClick: () => setPopoverType('predicate'),
+          onClick: () => handleOpenChange('predicate', !popoverOpen.predicate),
+          isPopoverOpen: popoverOpen.predicate,
+          identities,
+          onIdentitySelect: (identity: IdentityPresenter) =>
+            handleIdentitySelection('predicate', identity),
         }}
         object={{
           placeholder: 'Select an identity',
@@ -128,22 +141,13 @@ const ExploreSearchClaimInput = ({
                 name: selectedIdentities.object.display_name,
               }
             : { name: '' },
-          onClick: () => setPopoverType('object'),
+          onClick: () => handleOpenChange('object', !popoverOpen.object),
+          isPopoverOpen: popoverOpen.object,
+          identities,
+          onIdentitySelect: (identity: IdentityPresenter) =>
+            handleIdentitySelection('object', identity),
         }}
       />
-      {popoverType && (
-        <ExplorePopoverIdentityInput
-          label={popoverType}
-          identityType={popoverType}
-          selectedIdentity={selectedIdentities[popoverType]}
-          onIdentitySelect={(type, identity) =>
-            handleIdentitySelection(type, identity)
-          }
-          setSearchQuery={setSearchQuery}
-          identities={identities}
-          handleInput={handleInput}
-        />
-      )}
     </div>
   )
 }
