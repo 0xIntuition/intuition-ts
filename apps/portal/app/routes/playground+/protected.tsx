@@ -19,7 +19,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
 export default function Protected() {
   const submit = useSubmit()
-  const { message, user } = useLoaderData<typeof loader>()
+  const { user } = useLoaderData<typeof loader>()
 
   function handleLogout() {
     submit('playground/protected', {

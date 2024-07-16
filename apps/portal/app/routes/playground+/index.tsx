@@ -1,7 +1,4 @@
-import { Text } from '@0xintuition/1ui'
-
 import PrivyLoginButton from '@client/privy-login-button'
-import PrivyLogoutButton from '@client/privy-logout-button'
 import { User as PrivyUser } from '@privy-io/react-auth'
 import {
   ActionFunctionArgs,
@@ -9,7 +6,7 @@ import {
   LoaderFunctionArgs,
   redirect,
 } from '@remix-run/node'
-import { useLoaderData, useSubmit } from '@remix-run/react'
+import { useSubmit } from '@remix-run/react'
 import { verifyPrivyAccessToken } from '@server/privy'
 import { parse } from 'cookie'
 
@@ -35,8 +32,6 @@ export async function action({ request }: ActionFunctionArgs) {
 }
 
 export default function Login() {
-  const { message, claims } = useLoaderData<typeof loader>()
-
   const submit = useSubmit()
 
   function handleLogin(

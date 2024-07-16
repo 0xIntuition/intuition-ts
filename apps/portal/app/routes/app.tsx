@@ -31,7 +31,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   let userObject
   try {
     userObject = await UsersService.getUserByWallet({
-      wallet: wallet,
+      wallet,
     })
   } catch (error: unknown) {
     if (error instanceof ApiError) {

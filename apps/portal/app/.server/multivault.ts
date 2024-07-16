@@ -1,4 +1,3 @@
-import logger from '@lib/utils/logger'
 import {
   createMultiVaultContract,
   getMultivaultContract,

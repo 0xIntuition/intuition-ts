@@ -2,7 +2,6 @@ import { Button } from '@0xintuition/1ui'
 
 import { VerifiedLinkBadges } from '@client/privy-verified-links'
 import { verifiedPlatforms } from '@lib/utils/constants'
-import logger from '@lib/utils/logger'
 import { ExtendedPrivyUser } from 'types/user'
 
 // if the user has not linked any accounts, render the Link CTA version
@@ -21,12 +20,9 @@ export function ProfileSocialAccounts({
   const hasLinkedAccounts = verifiedPlatforms.some((platform) =>
     Boolean(privyUser[platform.platformPrivyName]),
   )
-  logger('[social modal] privyUser:', privyUser)
-  logger('hasLinkedAccounts', hasLinkedAccounts)
 
   return (
     <div>
-      <pre>hasLinkedAccounts: {hasLinkedAccounts ? 'true' : 'false'}</pre>
       {hasLinkedAccounts ? (
         <EditSocialAccounts
           privyUser={privyUser}

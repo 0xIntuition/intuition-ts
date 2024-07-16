@@ -29,7 +29,7 @@ import {
 } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { Outlet, useLoaderData, useNavigate } from '@remix-run/react'
-import { getUser, requireUser } from '@server/auth'
+import { requireUser } from '@server/auth'
 import { getVaultDetails } from '@server/multivault'
 import { getPrivyAccessToken } from '@server/privy'
 import { useAtom } from 'jotai'

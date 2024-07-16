@@ -1,5 +1,3 @@
-import { platform } from 'os'
-
 import {
   Button,
   Icon,
@@ -15,7 +13,6 @@ import logger from '@lib/utils/logger'
 import { Discord, Farcaster, Github, Twitter } from '@privy-io/react-auth'
 import { PlatformUserDetails, PrivyPlatform } from 'types/privy'
 import { ExtendedPrivyUser } from 'types/user'
-import { $ } from 'vitest/dist/reporters-yx5ZTtEV.js'
 
 export function PrivyVerifiedLinks({
   privyUser,
