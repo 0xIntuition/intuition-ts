@@ -13,6 +13,7 @@ import {
 import {
   IdentityPresenter,
   OpenAPI,
+  UserPresenter,
   UserTotalsPresenter,
 } from '@0xintuition/api'
 
@@ -28,15 +29,20 @@ import {
   stakeModalAtom,
 } from '@lib/state/store'
 import { userProfileRouteOptions } from '@lib/utils/constants'
-import { fetchIdentity, fetchUserTotals } from '@lib/utils/fetches'
+import {
+  fetchIdentity,
+  fetchUserTotals,
+  getUserByWallet,
+} from '@lib/utils/fetches'
 import logger from '@lib/utils/logger'
 import {
   calculatePercentageOfTvl,
   formatBalance,
   getAuthHeaders,
+  invariant,
   sliceString,
 } from '@lib/utils/misc'
-import { SessionContext } from '@middleware/session'
+import { User } from '@privy-io/react-auth'
 import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
 import {
   Outlet,
@@ -44,34 +50,39 @@ import {
   useNavigate,
   useRevalidator,
 } from '@remix-run/react'
+import { requireUser } from '@server/auth'
 import { getVaultDetails } from '@server/multivault'
 import { getPrivyAccessToken } from '@server/privy'
 import * as blockies from 'blockies-ts'
 import { useAtom } from 'jotai'
-import { SessionUser } from 'types/user'
 import { VaultDetailsType } from 'types/vault'
 
-export async function loader({ context, request }: LoaderFunctionArgs) {
+export async function loader({ request }: LoaderFunctionArgs) {
+  const user = await requireUser(request)
+  invariant(user, 'User not found')
+  invariant(user.wallet?.address, 'User wallet not found')
+  const userWallet = user.wallet?.address
+
   OpenAPI.BASE = 'https://dev.api.intuition.systems'
   const accessToken = getPrivyAccessToken(request)
   logger('accessToken', accessToken)
   const headers = getAuthHeaders(accessToken !== null ? accessToken : '')
   OpenAPI.HEADERS = headers as Record<string, string>
 
-  const session = context.get(SessionContext)
-  const user = session.get('user')
-
-  if (!user?.details?.wallet?.address) {
-    return logger('No user found in session')
-  }
-
-  const userIdentity = await fetchIdentity(user.details.wallet.address)
+  const userIdentity = await fetchIdentity(userWallet)
 
   if (!userIdentity) {
     return redirect('/create')
   }
 
-  const userTotals = await fetchUserTotals(userIdentity.identity_id)
+  const userObject = await getUserByWallet(userWallet)
+
+  if (!userObject) {
+    logger('No user found in DB')
+    return
+  }
+
+  const userTotals = await fetchUserTotals(userObject.id)
 
   let vaultDetails: VaultDetailsType | null = null
 
@@ -80,7 +91,7 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
       vaultDetails = await getVaultDetails(
         userIdentity.contract,
         userIdentity.vault_id,
-        user.details.wallet.address as `0x${string}`,
+        userWallet as `0x${string}`,
       )
     } catch (error) {
       logger('Failed to fetch vaultDetails', error)
@@ -88,24 +99,32 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
     }
   }
 
-  return json({ user, userIdentity, userTotals, vaultDetails })
+  return json({
+    privyUser: user,
+    userWallet,
+    userIdentity,
+    userObject,
+    userTotals,
+    vaultDetails,
+  })
 }
 
 export default function Profile() {
-  const { user, userIdentity, userTotals, vaultDetails } = useLiveLoader<{
-    user: SessionUser
-    userIdentity: IdentityPresenter
-    userTotals: UserTotalsPresenter
-    vaultDetails: VaultDetailsType
-  }>(['attest', 'create'])
+  const { privyUser, userWallet, userIdentity, userTotals, vaultDetails } =
+    useLiveLoader<{
+      privyUser: User
+      userWallet: string
+      userIdentity: IdentityPresenter
+      userObject: UserPresenter
+      userTotals: UserTotalsPresenter
+      vaultDetails: VaultDetailsType
+    }>(['attest', 'create'])
 
   const { user_assets, assets_sum } = vaultDetails ? vaultDetails : userIdentity
 
   const { user_asset_delta } = userIdentity
 
-  const imgSrc = blockies
-    .create({ seed: user?.details?.wallet?.address })
-    .toDataURL()
+  const imgSrc = blockies.create({ seed: userWallet }).toDataURL()
 
   const [editProfileModalActive, setEditProfileModalActive] =
     useAtom(editProfileModalAtom)
@@ -173,7 +192,7 @@ export default function Profile() {
               </Button>
             </ProfileCard>
             <ProfileSocialAccounts
-              privyUser={JSON.parse(JSON.stringify(user))}
+              privyUser={JSON.parse(JSON.stringify(privyUser))}
               handleOpenEditSocialLinksModal={() =>
                 setEditSocialLinksModalActive(true)
               }
@@ -236,12 +255,12 @@ export default function Profile() {
             onClose={() => setEditProfileModalActive(false)}
           />
           <EditSocialLinksModal
-            privyUser={JSON.parse(JSON.stringify(user))}
+            privyUser={JSON.parse(JSON.stringify(privyUser))}
             open={editSocialLinksModalActive}
             onClose={() => setEditSocialLinksModalActive(false)}
           />
           <StakeModal
-            user={user as SessionUser}
+            userWallet={userWallet}
             contract={userIdentity.contract}
             open={stakeModalActive.isOpen}
             identity={userIdentity}

@@ -44,21 +44,23 @@ import {
   formatBalance,
   getAuthHeaders,
 } from '@lib/utils/misc'
-import { SessionContext } from '@middleware/session'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
+import { requireUserWallet } from '@server/auth'
 import { getPrivyAccessToken } from '@server/privy'
 
-export async function loader({ context, request }: LoaderFunctionArgs) {
+export async function loader({ request }: LoaderFunctionArgs) {
+  const userWallet = await requireUserWallet(request)
   OpenAPI.BASE = 'https://dev.api.intuition.systems'
   const accessToken = getPrivyAccessToken(request)
   const headers = getAuthHeaders(accessToken !== null ? accessToken : '')
   OpenAPI.HEADERS = headers as Record<string, string>
-  const session = context.get(SessionContext)
-  const user = session.get('user')
-  if (!user?.details?.wallet?.address) {
+
+  if (!userWallet) {
     return logger('No user found in session')
   }
-  const userIdentity = await fetchIdentity(user.details.wallet.address)
+
+  const userIdentity = await fetchIdentity(userWallet)
+
   if (!userIdentity) {
     return logger('No user identity found')
   }
@@ -81,7 +83,7 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
   const activeIdentitiesLimit =
     searchParams.get('activeIdentitiesLimit') ?? '10'
   const activeIdentities = await fetchIdentitiesWithUserPosition(
-    user.details.wallet.address,
+    userWallet,
     activeIdentitiesPage,
     Number(activeIdentitiesLimit),
     activeIdentitiesSortBy as SortColumn,
@@ -102,7 +104,7 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
     : 1
   const activeClaimsLimit = searchParams.get('activeClaimsLimit') ?? '10'
   const activeClaims = await fetchClaimsWithUserPosition(
-    user.details.wallet.address,
+    userWallet,
     activeClaimsPage,
     Number(activeClaimsLimit),
     activeClaimsSortBy as SortColumn,
@@ -113,9 +115,7 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
     activeClaims?.total ?? 0,
     Number(activeClaimsLimit),
   )
-  const activeClaimsSummary = await fetchClaimsSummary(
-    user.details.wallet.address,
-  )
+  const activeClaimsSummary = await fetchClaimsSummary(userWallet)
 
   const createdIdentitiesSearch = searchParams.get('createdIdentitiesSearch')
   const createdIdentitiesSortBy =
@@ -132,7 +132,7 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
     Number(createdIdentitiesLimit),
     createdIdentitiesSortBy as SortColumn,
     createdIdentitiesDirection as SortDirection,
-    user.details.wallet.address,
+    userWallet,
     createdIdentitiesSearch,
   )
   const createdIdentitiesTotalPages = calculateTotalPages(
@@ -140,9 +140,8 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
     Number(createdIdentitiesLimit),
   )
 
-  const createdIdentitiesSummary = await fetchCreatedIdentitiesSummary(
-    user.details.wallet.address,
-  )
+  const createdIdentitiesSummary =
+    await fetchCreatedIdentitiesSummary(userWallet)
 
   const createdClaimsSearch = searchParams.get('createdClaimsSearch')
   const createdClaimsSortBy =
@@ -158,16 +157,14 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
     Number(createdClaimsLimit),
     createdClaimsSortBy as ClaimSortColumn,
     createdClaimsDirection as SortDirection,
-    user.details.wallet.address,
+    userWallet,
     createdClaimsSearch,
   )
   const createdClaimsTotalPages = calculateTotalPages(
     createdClaims?.total ?? 0,
     Number(createdClaimsLimit),
   )
-  const createdClaimsSummary = await fetchCreatedClaimsSummary(
-    user.details.wallet.address,
-  )
+  const createdClaimsSummary = await fetchCreatedClaimsSummary(userWallet)
 
   return json({
     userIdentity,

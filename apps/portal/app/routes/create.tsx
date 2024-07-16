@@ -19,38 +19,36 @@ import { editProfileModalAtom } from '@lib/state/store'
 import { MULTIVAULT_CONTRACT_ADDRESS } from '@lib/utils/constants'
 import logger from '@lib/utils/logger'
 import { getAuthHeaders, sliceString } from '@lib/utils/misc'
-import { SessionContext } from '@middleware/session'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { useFetcher, useLoaderData, useNavigate } from '@remix-run/react'
 import { CreateLoaderData } from '@routes/resources+/create'
+import { requireUserWallet } from '@server/auth'
 import { getPrivyAccessToken } from '@server/privy'
 import * as blockies from 'blockies-ts'
 import { useAtom } from 'jotai'
 import { ClientOnly } from 'remix-utils/client-only'
 import { toast } from 'sonner'
-import { SessionUser } from 'types/user'
 import { toHex, TransactionReceipt } from 'viem'
 import { useConnectorClient, usePublicClient } from 'wagmi'
 
-export async function loader({ context, request }: LoaderFunctionArgs) {
+export async function loader({ request }: LoaderFunctionArgs) {
+  const wallet = await requireUserWallet(request)
+
   OpenAPI.BASE = 'https://dev.api.intuition.systems'
   const accessToken = getPrivyAccessToken(request)
   const headers = getAuthHeaders(accessToken !== null ? accessToken : '')
   OpenAPI.HEADERS = headers as Record<string, string>
 
   console.log('accessToken', accessToken)
-  const session = context.get(SessionContext)
-  console.log('[LOADER] user', session.get('user'))
-  const user = session.get('user')
 
-  if (!user?.details?.wallet?.address) {
+  if (!wallet) {
     return logger('No user found in session')
   }
 
   let userIdentity
   try {
     userIdentity = await IdentitiesService.getIdentityById({
-      id: user.details.wallet.address,
+      id: wallet,
     })
   } catch (error: unknown) {
     if (error instanceof ApiError) {
@@ -66,7 +64,7 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
   let userObject
   try {
     userObject = await UsersService.getUserByWallet({
-      wallet: user.details.wallet.address,
+      wallet,
     })
   } catch (error: unknown) {
     if (error instanceof ApiError) {
@@ -81,12 +79,12 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
 
   if (!userObject) {
     console.log('No user found in DB')
-    return json({ user, userIdentity, userObject })
+    return json({ wallet, userIdentity, userObject })
   }
 
   logger('userObject', userObject)
 
-  return json({ user, userIdentity, userObject })
+  return json({ wallet, userIdentity, userObject })
 }
 
 // State
@@ -175,7 +173,7 @@ interface CreateButtonWrapperProps {
 export function CreateButton({
   setEditProfileModalActive,
 }: CreateButtonWrapperProps) {
-  const { user } = useLoaderData<{ user: SessionUser }>()
+  const { wallet } = useLoaderData<{ wallet: string }>()
   const loaderFetcher = useFetcher<CreateLoaderData>()
   const loaderFetcherUrl = '/resources/create'
   const loaderFetcherRef = useRef(loaderFetcher.load)
@@ -231,7 +229,7 @@ export function CreateButton({
     if (
       !awaitingOnChainConfirmation &&
       !awaitingWalletConfirmation &&
-      user &&
+      wallet &&
       publicClient &&
       atomCost
     ) {
@@ -428,13 +426,11 @@ export function CreateButton({
 }
 
 export default function Profile() {
-  const { user, userObject } = useLoaderData<{
-    user: SessionUser
+  const { wallet, userObject } = useLoaderData<{
+    wallet: string
     userObject: UserPresenter
   }>()
-  const imgSrc = blockies
-    .create({ seed: user?.details?.wallet?.address })
-    .toDataURL()
+  const imgSrc = blockies.create({ seed: wallet }).toDataURL()
 
   const [editProfileModalActive, setEditProfileModalActive] =
     useAtom(editProfileModalAtom)
@@ -465,7 +461,7 @@ export default function Profile() {
                 <div className="flex-col justify-start items-start gap-[3px] inline-flex">
                   <div className="justify-start items-end gap-1.5 inline-flex">
                     <div className="text-neutral-200 text-base font-medium leading-normal">
-                      {sliceString(user?.details?.wallet?.address, 6, 4)}
+                      {sliceString(wallet, 6, 4)}
                     </div>
                     <div className="w-[0px] self-stretch pb-0.5 justify-start items-end gap-2.5 flex">
                       <div></div>

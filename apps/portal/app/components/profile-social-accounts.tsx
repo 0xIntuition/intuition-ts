@@ -2,35 +2,38 @@ import { Button } from '@0xintuition/1ui'
 
 import { VerifiedLinkBadges } from '@client/privy-verified-links'
 import { verifiedPlatforms } from '@lib/utils/constants'
-import { SessionUser } from 'types/user'
+import { ExtendedPrivyUser } from 'types/user'
 
 // if the user has not linked any accounts, render the Link CTA version
 // if the user has linked at least one account, render the Edit CTA version
 
 interface ProfileSocialAccountProps {
-  privyUser: SessionUser
+  privyUser: ExtendedPrivyUser
 
   handleOpenEditSocialLinksModal: () => void
 }
 
 export function ProfileSocialAccounts({
   privyUser,
-
   handleOpenEditSocialLinksModal,
 }: ProfileSocialAccountProps) {
   const hasLinkedAccounts = verifiedPlatforms.some((platform) =>
-    Boolean(privyUser.details?.[platform.platformPrivyName]),
+    Boolean(privyUser[platform.platformPrivyName]),
   )
 
-  return hasLinkedAccounts ? (
-    <EditSocialAccounts
-      privyUser={privyUser}
-      handleOpenEditSocialLinksModal={handleOpenEditSocialLinksModal}
-    />
-  ) : (
-    <LinkSocialAccounts
-      handleOpenEditSocialLinksModal={handleOpenEditSocialLinksModal}
-    />
+  return (
+    <div>
+      {hasLinkedAccounts ? (
+        <EditSocialAccounts
+          privyUser={privyUser}
+          handleOpenEditSocialLinksModal={handleOpenEditSocialLinksModal}
+        />
+      ) : (
+        <LinkSocialAccounts
+          handleOpenEditSocialLinksModal={handleOpenEditSocialLinksModal}
+        />
+      )}
+    </div>
   )
 }
 
@@ -41,7 +44,7 @@ function LinkSocialAccounts({
 }) {
   return (
     <div className="flex flex-col items-center gap-5 border border-solid border-white/10 px-5 py-6 text-center max-w-xl rounded-lg bg-black/60">
-      <p className="font-medium text-sm text-white/50">
+      <p className="font-medium text-sm text-secondary-foreground">
         Strengthen your profile&apos;s credibility by linking your social
         accounts. This enhances trustworthiness. Verified accounts offer
         additional authenticity.
@@ -57,7 +60,7 @@ function EditSocialAccounts({
   privyUser,
   handleOpenEditSocialLinksModal,
 }: {
-  privyUser: SessionUser
+  privyUser: ExtendedPrivyUser
   handleOpenEditSocialLinksModal: () => void
 }) {
   if (!privyUser) {

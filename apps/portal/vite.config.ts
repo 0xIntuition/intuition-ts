@@ -1,7 +1,6 @@
 import { vitePlugin as remix } from '@remix-run/dev'
 import { installGlobals } from '@remix-run/node'
 import autoprefixer from 'autoprefixer'
-import { expressDevServer } from 'remix-express-dev-server'
 import { flatRoutes } from 'remix-flat-routes'
 import tailwindcss from 'tailwindcss'
 import { defineConfig } from 'vite'
@@ -12,7 +11,7 @@ import tsconfigPaths from 'vite-tsconfig-paths'
 
 import { themePreset } from '../../packages/1ui/src/styles/index'
 
-installGlobals({ nativeFetch: true })
+installGlobals()
 
 export default defineConfig({
   css: {
@@ -21,10 +20,8 @@ export default defineConfig({
     },
   },
   plugins: [
-    expressDevServer(),
     envOnly(),
     remix({
-      future: { unstable_singleFetch: true },
       ignoredRouteFiles: ['**/.*'],
       routes: async (defineRoutes) => {
         return flatRoutes('routes', defineRoutes, {

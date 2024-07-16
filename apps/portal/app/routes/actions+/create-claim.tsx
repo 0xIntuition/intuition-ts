@@ -3,12 +3,12 @@ import { ApiError, ClaimsService, OpenAPI } from '@0xintuition/api'
 import { MULTIVAULT_CONTRACT_ADDRESS } from '@lib/utils/constants'
 import logger from '@lib/utils/logger'
 import { getAuthHeaders } from '@lib/utils/misc'
-import { SessionContext } from '@middleware/session'
 import { ActionFunctionArgs, json } from '@remix-run/node'
+import { requireUserWallet } from '@server/auth'
 import { getPrivyAccessToken } from '@server/privy'
 
-export async function action({ request, context }: ActionFunctionArgs) {
-  logger('Create claim action route')
+export async function action({ request }: ActionFunctionArgs) {
+  const wallet = await requireUserWallet(request)
 
   const formData = await request.formData()
   for (const [key, value] of formData.entries()) {
@@ -31,10 +31,7 @@ export async function action({ request, context }: ActionFunctionArgs) {
     const headers = getAuthHeaders(accessToken !== null ? accessToken : '')
     OpenAPI.HEADERS = headers as Record<string, string>
 
-    const session = context.get(SessionContext)
-    const user = session.get('user')
-
-    if (!user?.details?.wallet?.address) {
+    if (!wallet) {
       throw new Error('User wallet address is undefined')
     }
 
@@ -50,7 +47,7 @@ export async function action({ request, context }: ActionFunctionArgs) {
         subject: subject_id as string,
         predicate: predicate_id as string,
         object: object_id as string,
-        creator: user.details.wallet.address as string,
+        creator: wallet as string,
         contract: MULTIVAULT_CONTRACT_ADDRESS as string,
       }
       logger('[CREATE CLAIM ACTION] Claim params:', claimParams)

@@ -44,7 +44,7 @@ export function TransactionState({
                 View on Basescan
                 <Icon name="square-arrow-top-right" className="h-3 w-3" />
               </Link>
-              <div className="mt-10">{successButton}</div>
+              {successButton && <div className="mt-10">{successButton}</div>}
             </div>
           )}
         </div>

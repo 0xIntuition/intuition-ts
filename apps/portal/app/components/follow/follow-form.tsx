@@ -7,14 +7,13 @@ import {
   Identity,
   IdentityTag,
   Text,
-  TransactionStatusCard,
-  TransactionStatusIndicator,
+  TransactionStatusType,
 } from '@0xintuition/1ui'
 import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
 
-import { BLOCK_EXPLORER_URL } from '@lib/utils/constants'
+import { TransactionState } from '@components/transaction-state'
 import { formatBalance } from '@lib/utils/misc'
-import { Link, type FetcherWithComponents } from '@remix-run/react'
+import { type FetcherWithComponents } from '@remix-run/react'
 import { TransactionActionType, TransactionStateType } from 'types/transaction'
 
 import FollowActions from './follow-actions'
@@ -137,28 +136,13 @@ export default function FollowForm({
           />
         </>
       ) : (
-        <>
-          <div className="flex-grow flex flex-col justify-center items-center h-full">
-            <div className="flex flex-col justify-center items-center gap-10">
-              <TransactionStatusIndicator
-                status={state.status}
-                type={mode === 'follow' ? 'follow' : 'unfollow'}
-              />
-              {state.status !== 'complete' ? (
-                <TransactionStatusCard status={state.status} />
-              ) : (
-                <Link
-                  to={`${BLOCK_EXPLORER_URL}/tx/${state.txHash}`}
-                  target="_blank"
-                  className="flex flex-row items-center gap-1 mx-auto text-base text-blue-500 transition-colors duration-300 hover:text-blue-400"
-                >
-                  View on Basescan{' '}
-                  <Icon name="square-arrow-top-right" className="h-3 w-3" />
-                </Link>
-              )}
-            </div>
-          </div>
-        </>
+        <div className="flex flex-col items-center justify-center min-h-96">
+          <TransactionState
+            status={state.status as TransactionStatusType}
+            txHash={state.txHash}
+            type={mode === 'follow' ? 'follow' : 'unfollow'}
+          />
+        </div>
       )}
     </>
   )

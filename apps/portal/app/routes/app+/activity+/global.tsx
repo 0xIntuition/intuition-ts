@@ -10,22 +10,14 @@ import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { fetchGlobalActivity } from '@lib/utils/fetches'
 import logger from '@lib/utils/logger'
 import { calculateTotalPages, getAuthHeaders } from '@lib/utils/misc'
-import { SessionContext } from '@middleware/session'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { getPrivyAccessToken } from '@server/privy'
 
-export async function loader({ context, request }: LoaderFunctionArgs) {
+export async function loader({ request }: LoaderFunctionArgs) {
   OpenAPI.BASE = 'https://dev.api.intuition.systems'
   const accessToken = getPrivyAccessToken(request)
   const headers = getAuthHeaders(accessToken !== null ? accessToken : '')
   OpenAPI.HEADERS = headers as Record<string, string>
-
-  const session = context.get(SessionContext)
-  const user = session.get('user')
-
-  if (!user?.details?.wallet?.address) {
-    return logger('No user found in session')
-  }
 
   const url = new URL(request.url)
   const searchParams = new URLSearchParams(url.search)
