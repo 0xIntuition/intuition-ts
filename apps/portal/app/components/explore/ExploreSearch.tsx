@@ -1,7 +1,6 @@
 import * as React from 'react'
 
-import { IdentityInput, Separator, Text } from '@0xintuition/1ui'
-
+import { ExploreSearchClaimInput } from './ExploreSearchClaimInput'
 import { ExploreSearchInput } from './ExploreSearchInput'
 
 export interface ExploreSearchProps
@@ -17,44 +16,7 @@ const ExploreSearch = ({ variant, ...props }: ExploreSearchProps) => {
         <ExploreSearchInput searchParam={variant} />
       )}
 
-      {variant === 'claim' && (
-        <>
-          <Text
-            variant="bodyLarge"
-            weight="regular"
-            className="mb-2.5 text-secondary-foreground"
-          >
-            Select any combination of identities to find matching claims
-          </Text>
-          <Text
-            variant="caption"
-            weight="regular"
-            className="mb-2.5 text-secondary-foreground"
-          >
-            Need help? Learn more about claims
-          </Text>
-          <Separator className="mb-7" />
-          {/* TODO: Implement search in ENG-2575 */}
-          <IdentityInput
-            subject={{
-              placeholder: 'Select an identity',
-              selectedValue: {},
-              onClick: () => {},
-            }}
-            predicate={{
-              placeholder: 'Select an identity',
-              selectedValue: {},
-              onClick: () => {},
-            }}
-            object={{
-              placeholder: 'Select an identity',
-              selectedValue: {},
-              onClick: () => {},
-            }}
-            showLabels
-          />
-        </>
-      )}
+      {variant === 'claim' && <ExploreSearchClaimInput />}
     </div>
   )
 }
