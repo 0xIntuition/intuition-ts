@@ -1,3 +1,5 @@
+import { useState } from 'react'
+
 import {
   DialogHeader,
   DialogTitle,
@@ -33,6 +35,8 @@ export function TagsForm({ identity, mode, onClose }: TagsFormProps) {
   logger('identity', identity)
   logger('onClose', onClose)
   // const tagsForm = useFetcher()
+
+  const [selectedTags, setSelectedTags] = useState<IdentityPresenter[]>([])
 
   const { state } = useTransactionState<
     TransactionStateType,

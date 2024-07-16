@@ -1,5 +1,3 @@
-import React, { useEffect, useState } from 'react'
-
 import {
   Popover,
   PopoverContent,
@@ -9,16 +7,14 @@ import {
 } from '@0xintuition/1ui'
 import { IdentityPresenter } from '@0xintuition/api'
 
-import { IdentitySearchCombobox, IdentitySearchCombobox } from '@components/identity/identity-search-combo-box'
-import { SEARCH_IDENTITIES_RESOURCE_ROUTE } from '@lib/utils/constants'
-import logger from '@lib/utils/logger'
+import { IdentitySearchCombobox } from '@components/identity/identity-search-combo-box'
 import { useIdentityServerSearch } from '@lib/hooks/useIdentityServerSearch'
-
+import logger from '@lib/utils/logger'
 
 interface AddTagsProps {
-  selectedTags?: IdentityPresenter[] | []
-  onAddTag?: (newTag: IdentityPresenter) => void
-  onRemoveTag?: (id: string) => void
+  selectedTags: IdentityPresenter[]
+  onAddTag: (newTag: IdentityPresenter) => void
+  onRemoveTag: (id: string) => void
 }
 
 export function AddTags({ selectedTags, onAddTag, onRemoveTag }: AddTagsProps) {
@@ -27,22 +23,31 @@ export function AddTags({ selectedTags, onAddTag, onRemoveTag }: AddTagsProps) {
     id: tag.vault_id,
   }))
 
-  const { searchQuery, setSearchQuery, identities, handleInput } = useIdentityServerSearch()
+  const { setSearchQuery, identities, handleInput } = useIdentityServerSearch()
 
+  const handleAddTag = (newTag: IdentityPresenter) => {
+    setTags((prevTags) => [...prevTags, newTag])
+    if (onAddTag) onAddTag(newTag)
+  }
+
+  const handleRemoveTag = (id: string) => {
+    setTags((prevTags) => prevTags.filter((tag) => tag.vault_id !== id))
+    if (onRemoveTag) onRemoveTag(id)
+  }
 
   return (
     <div className="flex flex-col">
+      <div className="mb-8 gap-1">
+        <Text variant="body" className="text-primary/70">
+          Add tags to this identity
+        </Text>
+        <Text variant="caption" className="text-primary/50">
+          Select up to 5 tags to add to this identity.
+        </Text>
+      </div>
+      s
       <Popover>
-        <PopoverTrigger asChild>
-          <div className="mb-8 gap-1">
-            <Text variant="body" className="text-primary/70">
-              Add tags to this identity
-            </Text>
-            <Text variant="caption" className="text-primary/50">
-              Select up to 5 tags to add to this identity.
-            </Text>
-          </div>
-        </PopoverTrigger>
+        <PopoverTrigger asChild></PopoverTrigger>
         <PopoverContent
           className="bg-transparent border-none"
           side="bottom"
@@ -58,13 +63,13 @@ export function AddTags({ selectedTags, onAddTag, onRemoveTag }: AddTagsProps) {
           />
         </PopoverContent>
       </Popover>
-      {/* <TagsListInput
+      <TagsListInput
         variant="tag"
         tags={formattedTags}
         maxTags={5}
-        onAddTag={onAddTag}
-        onRemoveTag={onRemoveTag}
-      /> */}
+        onAddTag={handleAddTag}
+        onRemoveTag={handleRemoveTag}
+      />
     </div>
   )
 }
