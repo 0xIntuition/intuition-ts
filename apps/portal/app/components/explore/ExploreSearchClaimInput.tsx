@@ -36,6 +36,31 @@ const ExploreSearchClaimInput = ({
     object: false,
   })
 
+  // TODO: Uncomment this once fetchIdentity is working
+  // Fetch identities based on URL parameters
+  // React.useEffect(() => {
+  //   const params = new URLSearchParams(location.search)
+  //   const subjectId = params.get('subject')
+  //   const predicateId = params.get('predicate')
+  //   const objectId = params.get('object')
+
+  //   const fetchIdentities = async () => {
+  //     const newSelectedIdentities = { ...selectedIdentities }
+  //     if (subjectId) {
+  //       newSelectedIdentities.subject = await fetchIdentity(subjectId)
+  //     }
+  //     if (predicateId) {
+  //       newSelectedIdentities.predicate = await fetchIdentity(predicateId)
+  //     }
+  //     if (objectId) {
+  //       newSelectedIdentities.object = await fetchIdentity(objectId)
+  //     }
+  //     setSelectedIdentities(newSelectedIdentities)
+  //   }
+
+  //   fetchIdentities()
+  // }, [location.search])
+
   const handleIdentitySelection = (
     type: 'subject' | 'predicate' | 'object',
     identity: IdentityPresenter,
@@ -98,7 +123,7 @@ const ExploreSearchClaimInput = ({
   })
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col">
       <Text
         variant="bodyLarge"
         weight="regular"
@@ -111,8 +136,15 @@ const ExploreSearchClaimInput = ({
         weight="regular"
         className="mb-2.5 text-secondary-foreground"
       >
-        Need help? Learn more about claims
+        Need help?{' '}
+        <a
+          href="https://intutition.systems"
+          className="text-primary/50 underline"
+        >
+          Learn more about claims
+        </a>
       </Text>
+
       <Separator className="mb-7" />
       <IdentityInput
         showLabels

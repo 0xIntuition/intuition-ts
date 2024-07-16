@@ -61,7 +61,11 @@ const IdentityInputButton = ({
             {selectedValue.name.toLowerCase()}
           </IdentityTag>
         ) : (
-          <Button variant={ButtonVariant.secondary} size={ButtonSize.lg}>
+          <Button
+            variant={ButtonVariant.secondary}
+            size={ButtonSize.lg}
+            {...props}
+          >
             <Icon name={IconName.plusLarge} className="h-4 w-4" />
             {placeholder}
           </Button>
