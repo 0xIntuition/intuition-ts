@@ -18,6 +18,7 @@ export function useSocialLinking(verifiedPlatforms: PrivyPlatform[]) {
   const { revalidate } = useRevalidator()
   const { linkTwitter, linkGithub, linkFarcaster } = useLinkAccount({
     onSuccess: (user, linkMethod, linkedAccount) => {
+      logger('revalidate', revalidate)
       logger('Link successful:', user, linkMethod, linkedAccount)
       toast.success('Account link successful.')
       revalidate()
@@ -68,7 +69,7 @@ export function useSocialLinking(verifiedPlatforms: PrivyPlatform[]) {
         await unlinkMethodsByFid[
           unlinkMethodName as keyof typeof unlinkMethodsByFid
         ](fid)
-        console.log('Unlink successful. privyUser:', privyUser)
+        logger('Unlink successful. privyUser:', privyUser)
         revalidate()
       } catch (error) {
         console.error('Unlink failed', error)
@@ -81,7 +82,7 @@ export function useSocialLinking(verifiedPlatforms: PrivyPlatform[]) {
         await unlinkMethodsBySubject[
           unlinkMethodName as keyof typeof unlinkMethodsBySubject
         ](subject)
-        console.log('Unlink successful. privyUser:', privyUser)
+        logger('Unlink successful. privyUser:', privyUser)
         revalidate()
       } catch (error) {
         console.error('Unlink failed', error)

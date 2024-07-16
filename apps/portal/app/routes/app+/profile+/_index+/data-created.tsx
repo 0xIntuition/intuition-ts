@@ -37,24 +37,22 @@ import {
   formatBalance,
   getAuthHeaders,
 } from '@lib/utils/misc'
-import { SessionContext } from '@middleware/session'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
+import { requireUserWallet } from '@server/auth'
 import { getPrivyAccessToken } from '@server/privy'
 
-export async function loader({ context, request }: LoaderFunctionArgs) {
+export async function loader({ request }: LoaderFunctionArgs) {
+  const userWallet = await requireUserWallet(request)
   OpenAPI.BASE = 'https://dev.api.intuition.systems'
   const accessToken = getPrivyAccessToken(request)
   const headers = getAuthHeaders(accessToken !== null ? accessToken : '')
   OpenAPI.HEADERS = headers as Record<string, string>
 
-  const session = context.get(SessionContext)
-  const user = session.get('user')
-
-  if (!user?.details?.wallet?.address) {
+  if (!userWallet) {
     return logger('No user found in session')
   }
 
-  const userIdentity = await fetchIdentity(user.details.wallet.address)
+  const userIdentity = await fetchIdentity(userWallet)
 
   if (!userIdentity) {
     return logger('No user identity found')
@@ -78,7 +76,7 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
   const identitiesLimit = searchParams.get('limit') ?? '10'
 
   const identities = await fetchIdentitiesWithUserPosition(
-    user.details.wallet.address,
+    userWallet,
     identitiesPage,
     Number(identitiesLimit),
     identitiesSortBy as SortColumn,
@@ -100,7 +98,7 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
   const claimsLimit = searchParams.get('claimsLimit') ?? '10'
 
   const claims = await fetchClaimsWithUserPosition(
-    user.details.wallet.address,
+    userWallet,
     claimsPage,
     Number(claimsLimit),
     claimsSortBy as SortColumn,
@@ -113,7 +111,7 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
     Number(claimsLimit),
   )
 
-  const claimsSummary = await fetchClaimsSummary(user.details.wallet.address)
+  const claimsSummary = await fetchClaimsSummary(userWallet)
 
   return json({
     userIdentity,

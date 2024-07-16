@@ -426,14 +426,13 @@ function CreateIdentityForm({
   }
 
   function handleIdentityTxReceiptReceived() {
-    logger('createdIdentity', createdIdentity)
     if (createdIdentity) {
       logger(
         'Submitting to emitterFetcher with identity_id:',
-        createdIdentity.identity_id,
+        createdIdentity.id,
       )
       emitterFetcher.submit(
-        { identity_id: createdIdentity.identity_id },
+        { identity_id: createdIdentity.id },
         { method: 'post', action: '/actions/create-emitter' },
       )
     }

@@ -10,10 +10,10 @@ import {
 } from '@0xintuition/1ui'
 
 import { PrivyVerifiedLinks } from '@client/privy-verified-links'
-import { SessionUser } from 'types/user'
+import { ExtendedPrivyUser } from 'types/user'
 
 export interface EditSocialLinksModalProps {
-  privyUser: SessionUser
+  privyUser: ExtendedPrivyUser
   open?: boolean
   onClose: () => void
 }

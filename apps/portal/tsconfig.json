@@ -15,11 +15,15 @@
       "@styles/*": ["app/styles/*"],
       "@server/*": ["app/.server/*"],
       "@client/*": ["app/.client/*"],
-      "@middleware/*": ["app/middleware/*"],
       "@images/*": ["./src/images/*"]
     },
     "outDir": "./build"
   },
-  "include": ["**/*.ts", "**/*.tsx", "tailwind.config.js"],
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    "tailwind.config.js",
+    "app/.server/auth.ts"
+  ],
   "exclude": ["node_modules", "dist"]
 }
