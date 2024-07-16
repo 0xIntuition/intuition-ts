@@ -38,6 +38,14 @@ export function TagsForm({ identity, mode, onClose }: TagsFormProps) {
 
   const [selectedTags, setSelectedTags] = useState<IdentityPresenter[]>([])
 
+  const handleAddTag = (newTag: IdentityPresenter) => {
+    setSelectedTags((prevTags) => [...prevTags, newTag])
+  }
+
+  const handleRemoveTag = (id: string) => {
+    setSelectedTags((prevTags) => prevTags.filter((tag) => tag.vault_id !== id))
+  }
+
   const { state } = useTransactionState<
     TransactionStateType,
     TransactionActionType
@@ -86,7 +94,11 @@ export function TagsForm({ identity, mode, onClose }: TagsFormProps) {
               </TabsList>
               <div className="my-10">
                 <TabsContent value="add">
-                  <AddTags />
+                  <AddTags
+                    selectedTags={selectedTags}
+                    onAddTag={handleAddTag}
+                    onRemoveTag={handleRemoveTag}
+                  />
                 </TabsContent>
               </div>
             </Tabs>

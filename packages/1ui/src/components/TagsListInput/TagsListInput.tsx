@@ -16,8 +16,8 @@ export interface TagsListInputProps
   tags: { name: string; id: string }[]
   maxTags: number
   onAddTag: () => void
-  // onAddTag?: (identity: IdentityPresenter) => void
   onRemoveTag: (id: string) => void
+  PopoverTriggerComponent: React.ComponentType<{ children: React.ReactNode }>
 }
 
 const getTagText = (variant: TagsListVariantsType, count: number) => {
@@ -32,6 +32,7 @@ export const TagsListInput = ({
   onAddTag,
   onRemoveTag,
   className,
+  PopoverTriggerComponent,
   ...props
 }: TagsListInputProps) => {
   const tagsLeft = maxTags - tags.length
@@ -52,14 +53,16 @@ export const TagsListInput = ({
 
         {tags.length === 0 ? (
           <div className="flex items-center gap-2">
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={onAddTag}
-              className="rounded-full px-2 mr-1"
-            >
-              <Icon name="plus-small" />
-            </Button>
+            <PopoverTriggerComponent>
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={onAddTag}
+                className="rounded-full px-2 mr-1"
+              >
+                <Icon name="plus-small" />
+              </Button>
+            </PopoverTriggerComponent>
             <Text variant="footnote" className="text-secondary-foreground">
               {`Add up to ${tagsLeft} ${TagsListVariants[variant]}${tagsLeft === 1 ? '' : 's'}`}
             </Text>

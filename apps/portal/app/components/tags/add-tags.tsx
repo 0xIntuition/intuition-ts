@@ -1,4 +1,7 @@
+import { useState } from 'react'
+
 import {
+  Button,
   Popover,
   PopoverContent,
   PopoverTrigger,
@@ -10,6 +13,7 @@ import { IdentityPresenter } from '@0xintuition/api'
 import { IdentitySearchCombobox } from '@components/identity/identity-search-combo-box'
 import { useIdentityServerSearch } from '@lib/hooks/useIdentityServerSearch'
 import logger from '@lib/utils/logger'
+import identities from '@routes/app+/explore+/_index+/identities'
 
 interface AddTagsProps {
   selectedTags: IdentityPresenter[]
@@ -24,16 +28,7 @@ export function AddTags({ selectedTags, onAddTag, onRemoveTag }: AddTagsProps) {
   }))
 
   const { setSearchQuery, identities, handleInput } = useIdentityServerSearch()
-
-  const handleAddTag = (newTag: IdentityPresenter) => {
-    setTags((prevTags) => [...prevTags, newTag])
-    if (onAddTag) onAddTag(newTag)
-  }
-
-  const handleRemoveTag = (id: string) => {
-    setTags((prevTags) => prevTags.filter((tag) => tag.vault_id !== id))
-    if (onRemoveTag) onRemoveTag(id)
-  }
+  const [isPopoverOpen, setIsPopoverOpen] = useState(false)
 
   return (
     <div className="flex flex-col">
@@ -45,14 +40,13 @@ export function AddTags({ selectedTags, onAddTag, onRemoveTag }: AddTagsProps) {
           Select up to 5 tags to add to this identity.
         </Text>
       </div>
-      s
-      <Popover>
-        <PopoverTrigger asChild></PopoverTrigger>
+      <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
         <PopoverContent
           className="bg-transparent border-none"
           side="bottom"
           align="center"
           sideOffset={5}
+          style={{ zIndex: 1000 }} // Adjust the z-index as necessary
         >
           <IdentitySearchCombobox
             identities={identities}
@@ -62,14 +56,15 @@ export function AddTags({ selectedTags, onAddTag, onRemoveTag }: AddTagsProps) {
             shouldFilter={false}
           />
         </PopoverContent>
+        <TagsListInput
+          variant="tag"
+          tags={formattedTags}
+          maxTags={5}
+          onAddTag={() => setIsPopoverOpen(true)}
+          onRemoveTag={onRemoveTag}
+          PopoverTriggerComponent={PopoverTrigger}
+        />
       </Popover>
-      <TagsListInput
-        variant="tag"
-        tags={formattedTags}
-        maxTags={5}
-        onAddTag={handleAddTag}
-        onRemoveTag={handleRemoveTag}
-      />
     </div>
   )
 }
