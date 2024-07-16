@@ -3,7 +3,7 @@ import * as React from 'react'
 import { Separator, Text } from '@0xintuition/1ui'
 import { IdentityPresenter } from '@0xintuition/api'
 
-import { Form, useSubmit } from '@remix-run/react'
+import { useNavigate } from '@remix-run/react'
 
 import { ExplorePopoverIdentityInput } from './ExplorePopoverIdentityInput'
 
@@ -19,7 +19,7 @@ const Divider = () => (
 const ExploreSearchClaimInput = ({
   identities = [],
 }: ExploreSearchClaimInputProps) => {
-  const submit = useSubmit()
+  const navigate = useNavigate()
   const [selectedIdentities, setSelectedIdentities] = React.useState<{
     subject: IdentityPresenter | null
     predicate: IdentityPresenter | null
@@ -35,6 +35,7 @@ const ExploreSearchClaimInput = ({
     type: 'subject' | 'predicate' | 'object',
     identity: IdentityPresenter,
   ) => {
+    console.log('identity', identity)
     const updatedIdentities = { ...selectedIdentities, [type]: identity }
     setSelectedIdentities(updatedIdentities)
     updateQueryParams(updatedIdentities)
@@ -45,18 +46,24 @@ const ExploreSearchClaimInput = ({
     predicate: IdentityPresenter | null
     object: IdentityPresenter | null
   }) => {
-    const params = new URLSearchParams()
+    const params = new URLSearchParams(window.location.search)
     if (identities.subject) {
       params.set('subject', identities.subject.id)
+    } else {
+      params.delete('subject')
     }
     if (identities.predicate) {
       params.set('predicate', identities.predicate.id)
+    } else {
+      params.delete('predicate')
     }
     if (identities.object) {
       params.set('object', identities.object.id)
+    } else {
+      params.delete('object')
     }
-    const action = `?${params.toString()}`
-    submit(new FormData(), { action, method: 'get' })
+    const newUrl = `${window.location.pathname}?${params.toString()}`
+    navigate(newUrl, { replace: true })
   }
 
   const handleInput = (value: string) => {
@@ -64,7 +71,7 @@ const ExploreSearchClaimInput = ({
   }
 
   return (
-    <Form method="get" className="flex flex-col items-center">
+    <div className="flex flex-col">
       <Text
         variant="bodyLarge"
         weight="regular"
@@ -114,7 +121,7 @@ const ExploreSearchClaimInput = ({
           handleInput={handleInput}
         />
       </div>
-    </Form>
+    </div>
   )
 }
 
