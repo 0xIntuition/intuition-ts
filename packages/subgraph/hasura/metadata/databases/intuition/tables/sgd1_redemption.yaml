@@ -2,11 +2,6 @@ table:
   name: redemption
   schema: sgd1
 configuration:
-  column_config:
-    block$:
-      custom_name: block_
-  custom_column_names:
-    block$: block_
   custom_name: redemption
   custom_root_fields:
     select: redemptions

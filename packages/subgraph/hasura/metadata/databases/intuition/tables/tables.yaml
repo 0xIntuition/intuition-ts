@@ -1,6 +1,5 @@
 - "!include sgd1_account.yaml"
 - "!include sgd1_atom.yaml"
-- "!include sgd1_atom_signal_data.yaml"
 - "!include sgd1_atom_value.yaml"
 - "!include sgd1_book.yaml"
 - "!include sgd1_deposit.yaml"

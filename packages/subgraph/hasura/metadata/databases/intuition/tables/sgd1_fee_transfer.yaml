@@ -2,11 +2,6 @@ table:
   name: fee_transfer
   schema: sgd1
 configuration:
-  column_config:
-    block$:
-      custom_name: block_
-  custom_column_names:
-    block$: block_
   custom_name: feeTransfer
   custom_root_fields:
     select: feeTransfers

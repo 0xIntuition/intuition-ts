@@ -1,4 +1,4 @@
-type Event @entity(immutable: true) {
+type Event @entity {
   id: Bytes!
   type: EventType!
   atom_id: Atom
@@ -34,9 +34,6 @@ type Atom @entity {
   value_id: AtomValue
 
   vault_id: Vault!
-
-  active_positions_count: Int
-  all_positions_count: Int
 
   asSubject: [Triple!]! @derivedFrom(field: "subject_id")
   asPredicate: [Triple!]! @derivedFrom(field: "predicate_id")
@@ -78,21 +75,8 @@ type Triple @entity {
   vault_id: Vault!
   counter_vault_id: Vault!
 
-  positions: [Position!]!
-  positions_count: Int!
-
-  inverse_positions: [Position!]!
-  inverse_positions_count: Int!
-
-  active_positions_count: Int
-  all_positions_count: Int
-
   "vault.totalShares + inverseVault.totalShares"
   tvl: BigInt!
-
-  "vault.totalShares - inverseVault.totalShares"
-  total_signal: BigInt!
-  signals: [Signal!]!
 
   block_number: BigInt!
   block_timestamp: BigInt!
@@ -164,7 +148,7 @@ type Book @entity {
   url: String
 }
 
-type Deposit @entity(immutable: true) {
+type Deposit @entity {
   id: Bytes!
 
   "initializer of the deposit"
@@ -199,7 +183,7 @@ type Deposit @entity(immutable: true) {
   transaction_hash: Bytes!
 }
 
-type FeeTransfer @entity(immutable: true) {
+type FeeTransfer @entity {
   id: Bytes!
   sender_id: Account!
   receiver_id: Account!
@@ -209,7 +193,7 @@ type FeeTransfer @entity(immutable: true) {
   transaction_hash: Bytes!
 }
 
-type Redemption @entity(immutable: true) {
+type Redemption @entity {
   id: Bytes!
 
   "initializer of the withdrawal (owner of the shares)"

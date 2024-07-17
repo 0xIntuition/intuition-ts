@@ -77,8 +77,6 @@ select_permissions:
   - role: anonymous
     permission:
       columns:
-        - active_positions_count
-        - all_positions_count
         - block_number
         - block_range
         - block_timestamp

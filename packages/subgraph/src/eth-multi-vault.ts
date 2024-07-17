@@ -81,28 +81,20 @@ export function handleTripleCreated(event: TripleCreated): void {
   triple.vault_id = vault.id
 
   //@ts-ignore
-  let invarseVaultId = BigInt.fromI32(2)
+  let counterVaultId = BigInt.fromI32(2)
     .pow(255 as u8)
     .times(BigInt.fromI32(2))
     .minus(BigInt.fromI32(1))
     .minus(event.params.vaultID)
     .toString()
 
-  let counter_vault = loadOrCreateVault(invarseVaultId)
+  let counter_vault = loadOrCreateVault(counterVaultId)
   counter_vault.triple_id = triple.id
   counter_vault.total_shares = BigInt.fromI32(0)
   counter_vault.save()
   triple.counter_vault_id = counter_vault.id
 
-  triple.positions_count = 0
-  triple.inverse_positions_count = 0
-  triple.active_positions_count = 0
-  triple.all_positions_count = 0
   triple.tvl = vault.total_shares.plus(counter_vault.total_shares)
-  triple.total_signal = triple.tvl
-  triple.signals = []
-  triple.positions = []
-  triple.inverse_positions = []
 
   triple.creator_id = account.id
   triple.subject_id = event.params.subjectId.toString()
