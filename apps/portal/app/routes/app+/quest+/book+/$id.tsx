@@ -1,4 +1,5 @@
 import {
+  ProgressCard,
   QuestCard,
   QuestCriteriaStatus,
   QuestStatus,
@@ -25,8 +26,8 @@ export default function Quests() {
   }
 
   return (
-    <div className="px-10 w-full max-w-7xl mx-auto flex flex-col gap-10 pb-40">
-      <div className="space-y-20">
+    <div className="px-10 w-full max-w-7xl mx-auto flex flex-col gap-10 pb-20 h-full overflow-y-scroll">
+      <div className="space-y-10 mb-5">
         <img
           src={questPlaceholder}
           alt="Quest Placeholder"
@@ -43,18 +44,18 @@ export default function Quests() {
             you uncover the truth about your digital identity? Each task unlocks
             new learnings and earns you points.
           </Text>
-        </div>
-      </div>
-      <div className="mb-10">
-        <div className="bg-warning/5 rounded-lg theme-border p-5 flex justify-center align-items h-[160px] border-warning/30 text-warning/30 text-bold border-dashed">
-          Quest Progress Card
+          <ProgressCard
+            title="Quest Progress"
+            numberCompleted={5}
+            numberTotal={10}
+          />
         </div>
       </div>
       <div className="space-y-5">
         <Text variant="headline">Chapters</Text>
 
         <ul className="flex flex-col gap-10">
-          {[...Array(2)].map((_, i) => (
+          {[...Array(5)].map((_, i) => (
             <Link to={`/app/quest/chapter/${i}`} key={`${i}-quest-card`}>
               <li>
                 <QuestCard
