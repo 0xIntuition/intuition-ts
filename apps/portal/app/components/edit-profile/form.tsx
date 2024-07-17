@@ -24,6 +24,7 @@ import {
 } from '@lib/hooks/useTransactionReducer'
 import { updateProfileSchema } from '@lib/schemas/update-profile-schema'
 import {
+  ACCEPTED_IMAGE_MIME_TYPES,
   DESCRIPTION_MAX_LENGTH,
   MAX_NAME_LENGTH,
   MAX_UPLOAD_SIZE,
@@ -113,6 +114,22 @@ export function EditProfileForm({ userObject, onClose }: EditProfileFormProps) {
   }, [imageUploadFetcher.state, imageUploadFetcher.data, dispatch])
 
   useEffect(() => {
+    logger('file changed', imageFile)
+    if (imageFile) {
+      if (
+        !ACCEPTED_IMAGE_MIME_TYPES.includes(imageFile.type) ||
+        imageFile.size > MAX_UPLOAD_SIZE
+      ) {
+        console.error('Invalid image file', imageFile)
+        return
+      }
+
+      const formData = new FormData()
+      formData.append('image_url', imageFile)
+    }
+  }, [imageFile])
+
+  useEffect(() => {
     if (state.status === 'image-upload-complete') {
       // Prepare the formData or payload for the off-chain transaction
       const formData = new FormData()
@@ -169,7 +186,6 @@ export function EditProfileForm({ userObject, onClose }: EditProfileFormProps) {
 
   // Handle Initial Form Submit
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    console.log('Form submitting')
     event.preventDefault()
     if (userObject.image !== previewImage) {
       try {
@@ -200,7 +216,6 @@ export function EditProfileForm({ userObject, onClose }: EditProfileFormProps) {
       try {
         dispatch({ type: 'START_TRANSACTION' })
         const formData = new FormData(event.currentTarget)
-        console.log('previewImage', previewImage)
         formData.append('id', userObject.id ?? '')
         formData.append('image_url', previewImage ?? '')
         offChainFetcher.submit(formData, {
