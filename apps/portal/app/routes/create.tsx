@@ -1,4 +1,4 @@
-import { useEffect, useReducer, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import { Icon } from '@0xintuition/1ui'
 import {
@@ -15,6 +15,11 @@ import SubmitButton from '@components/submit-button'
 import Toast from '@components/toast'
 import { multivaultAbi } from '@lib/abis/multivault'
 import { useCreateAtom } from '@lib/hooks/useCreateAtom'
+import {
+  identityTransactionReducer,
+  initialIdentityTransactionState,
+  useTransactionState,
+} from '@lib/hooks/useTransactionReducer'
 import { editProfileModalAtom } from '@lib/state/store'
 import { MULTIVAULT_CONTRACT_ADDRESS } from '@lib/utils/constants'
 import logger from '@lib/utils/logger'
@@ -28,7 +33,11 @@ import * as blockies from 'blockies-ts'
 import { useAtom } from 'jotai'
 import { ClientOnly } from 'remix-utils/client-only'
 import { toast } from 'sonner'
-import { toHex, TransactionReceipt } from 'viem'
+import {
+  IdentityTransactionActionType,
+  IdentityTransactionStateType,
+} from 'types/transaction'
+import { toHex } from 'viem'
 import { useConnectorClient, usePublicClient } from 'wagmi'
 
 export async function loader({ request }: LoaderFunctionArgs) {
@@ -38,8 +47,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const accessToken = getPrivyAccessToken(request)
   const headers = getAuthHeaders(accessToken !== null ? accessToken : '')
   OpenAPI.HEADERS = headers as Record<string, string>
-
-  console.log('accessToken', accessToken)
 
   if (!wallet) {
     return logger('No user found in session')
@@ -63,7 +70,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   let userObject
   try {
-    userObject = await UsersService.getUserByWallet({
+    userObject = await UsersService.getUserByWalletPublic({
       wallet,
     })
   } catch (error: unknown) {
@@ -82,88 +89,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     return json({ wallet, userIdentity, userObject })
   }
 
-  logger('userObject', userObject)
-
   return json({ wallet, userIdentity, userObject })
-}
-
-// State
-type TransactionAction =
-  | { type: 'START_TRANSACTION' }
-  | { type: 'START_ON_CHAIN_TRANSACTION' }
-  | { type: 'SIGNING_WALLET' }
-  | { type: 'ON_CHAIN_TRANSACTION_PENDING' }
-  | {
-      type: 'ON_CHAIN_TRANSACTION_COMPLETE'
-      txHash: `0x${string}`
-      txReceipt: TransactionReceipt
-    }
-  | { type: 'START_OFF_CHAIN_TRANSACTION' }
-  | {
-      type: 'OFF_CHAIN_TRANSACTION_COMPLETE'
-      offChainReceipt: IdentityPresenter
-    }
-  | { type: 'TRANSACTION_ERROR'; error: string }
-
-type TransactionState = {
-  status: TxState
-  imageUrl?: string
-  description?: string
-  txHash?: `0x${string}`
-  txReceipt?: TransactionReceipt
-  offChainReceipt?: IdentityPresenter
-  error?: string
-}
-
-type TxState =
-  | 'idle'
-  | 'sending-on-chain-transaction'
-  | 'signing-wallet'
-  | 'on-chain-transaction-pending'
-  | 'on-chain-transaction-complete'
-  | 'sending-off-chain-transaction'
-  | 'off-chain-transaction-complete'
-  | 'transaction-complete'
-  | 'transaction-error'
-
-function transactionReducer(
-  state: TransactionState,
-  action: TransactionAction,
-): TransactionState {
-  switch (action.type) {
-    case 'START_TRANSACTION':
-      return { ...state, status: 'idle' }
-    case 'START_ON_CHAIN_TRANSACTION':
-      return { ...state, status: 'sending-on-chain-transaction' }
-    case 'SIGNING_WALLET':
-      return { ...state, status: 'signing-wallet' }
-    case 'ON_CHAIN_TRANSACTION_PENDING':
-      return { ...state, status: 'on-chain-transaction-pending' }
-    case 'ON_CHAIN_TRANSACTION_COMPLETE':
-      return {
-        ...state,
-        status: 'on-chain-transaction-complete',
-        txHash: action.txHash,
-        txReceipt: action.txReceipt,
-      }
-    case 'START_OFF_CHAIN_TRANSACTION':
-      return { ...state, status: 'sending-off-chain-transaction' }
-    case 'OFF_CHAIN_TRANSACTION_COMPLETE':
-      return {
-        ...state,
-        status: 'off-chain-transaction-complete',
-        offChainReceipt: action.offChainReceipt,
-      }
-    case 'TRANSACTION_ERROR':
-      return { ...state, status: 'transaction-error', error: action.error }
-    default:
-      return state
-  }
-}
-
-const initialState: TransactionState = {
-  status: 'idle',
-  error: undefined,
 }
 
 interface CreateButtonWrapperProps {
@@ -177,7 +103,10 @@ export function CreateButton({
   const loaderFetcher = useFetcher<CreateLoaderData>()
   const loaderFetcherUrl = '/resources/create'
   const loaderFetcherRef = useRef(loaderFetcher.load)
-  const [state, dispatch] = useReducer(transactionReducer, initialState)
+  const { state, dispatch } = useTransactionState<
+    IdentityTransactionStateType,
+    IdentityTransactionActionType
+  >(identityTransactionReducer, initialIdentityTransactionState)
 
   useEffect(() => {
     loaderFetcherRef.current = loaderFetcher.load
@@ -234,7 +163,7 @@ export function CreateButton({
       atomCost
     ) {
       try {
-        dispatch({ type: 'SIGNING_WALLET' })
+        dispatch({ type: 'APPROVE_TRANSACTION' })
 
         const txHash = await writeCreateIdentity({
           address: MULTIVAULT_CONTRACT_ADDRESS,
@@ -245,13 +174,13 @@ export function CreateButton({
         })
 
         if (txHash) {
-          dispatch({ type: 'ON_CHAIN_TRANSACTION_PENDING' })
+          dispatch({ type: 'TRANSACTION_PENDING' })
           const receipt = await publicClient.waitForTransactionReceipt({
             hash: txHash,
           })
           logger('receipt', receipt)
           dispatch({
-            type: 'ON_CHAIN_TRANSACTION_COMPLETE',
+            type: 'TRANSACTION_COMPLETE',
             txHash,
             txReceipt: receipt,
           })
@@ -313,7 +242,7 @@ export function CreateButton({
   }
 
   useEffect(() => {
-    if (state.status === 'on-chain-transaction-complete') {
+    if (state.status === 'complete') {
       handleIdentityTxReceiptReceived()
       setEditProfileModalActive(true)
     }
@@ -326,13 +255,11 @@ export function CreateButton({
       offChainFetcher.data !== undefined
     ) {
       const responseData = offChainFetcher.data as OffChainFetcherData
-      console.log('responseData', responseData)
       if (responseData !== null) {
         if (createdIdentity !== undefined && responseData.identity) {
           const { identity_id } = responseData.identity
           dispatch({
-            type: 'OFF_CHAIN_TRANSACTION_COMPLETE',
-            offChainReceipt: responseData.identity,
+            type: 'PUBLISHING_IDENTITY',
           })
           handleOnChainCreateIdentity({ atomData: identity_id })
         }
@@ -348,7 +275,7 @@ export function CreateButton({
   }, [offChainFetcher.state, offChainFetcher.data, dispatch])
 
   useEffect(() => {
-    if (state.status === 'transaction-error') {
+    if (state.status === 'error') {
       setLoading(false)
     }
   }, [state.status])
@@ -368,7 +295,7 @@ export function CreateButton({
         }
 
         try {
-          dispatch({ type: 'START_OFF_CHAIN_TRANSACTION' })
+          dispatch({ type: 'PREPARING_IDENTITY' })
           offChainFetcher.submit(formData, {
             action: '/actions/create-profile',
             method: 'post',
@@ -400,7 +327,7 @@ export function CreateButton({
                 duration: 5000,
               },
             )
-            dispatch({ type: 'START_ON_CHAIN_TRANSACTION' })
+            dispatch({ type: 'START_TRANSACTION' })
             return
           }
           console.error('Error creating identity', error)

@@ -44,7 +44,7 @@ import {
 
 interface EditProfileFormProps {
   userObject: UserPresenter
-  setUserObject: (userObject: UserPresenter) => void
+  setUserObject?: (userObject: UserPresenter) => void
   onSuccess?: () => void
   onClose: () => void
 }
@@ -78,8 +78,13 @@ export function EditProfileForm({
   const [imageFilename, setImageFilename] = useState<string | null>(null)
   const [imageFilesize, setImageFilesize] = useState<string | null>(null)
 
-  const [displayName, setDisplayName] = useState(userObject.display_name ?? '')
-  const [description, setDescription] = useState(userObject.description ?? '')
+  const [displayName, setDisplayName] = useState(
+    userObject.display_name ? userObject.display_name : '',
+  )
+
+  const [description, setDescription] = useState(
+    userObject.description ? userObject.description : '',
+  )
   const [form, fields] = useForm({
     id: 'update-profile',
     lastResult: lastOffChainSubmission,
@@ -275,8 +280,8 @@ export function EditProfileForm({
 
   useEffect(() => {
     if (offChainFetcher.data) {
-      setUserObject(offChainFetcher.data.profile)
-      onClose()
+      setUserObject?.(offChainFetcher.data.profile)
+      onClose?.()
       setLoading(false)
     }
   }, [offChainFetcher.data, onClose])

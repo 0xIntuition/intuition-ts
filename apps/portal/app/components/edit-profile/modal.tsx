@@ -6,7 +6,7 @@ import { EditProfileForm } from './form'
 export interface EditProfileModalProps {
   userObject: UserPresenter
   open?: boolean
-  setUserObject: (userObject: UserPresenter) => void
+  setUserObject?: (userObject: UserPresenter) => void
   onClose: () => void
   onSuccess?: () => void
 }
