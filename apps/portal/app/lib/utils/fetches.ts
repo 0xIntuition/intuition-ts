@@ -32,7 +32,7 @@ export async function getUserByWallet(
   wallet: string,
 ): Promise<GetUserByWalletResponse | null> {
   try {
-    return await UsersService.getUserByWallet({ wallet })
+    return await UsersService.getUserByWalletPublic({ wallet })
   } catch (error: unknown) {
     if (error instanceof ApiError) {
       logger(`${error.name} - ${error.status}: ${error.message} ${error.url}`)

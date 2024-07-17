@@ -1,15 +1,12 @@
 import * as React from 'react'
 
+import { QuestCriteriaDisplay, QuestPointsDisplay } from 'components'
 import { QuestStatusIndicator } from 'components/QuestStatusIndicator'
 import { Text } from 'components/Text'
 import { cn } from 'styles'
 import { QuestCriteriaStatusType, QuestStatus, QuestStatusType } from 'types'
 
-import {
-  QuestCardButton,
-  QuestCriteriaDisplay,
-  QuestPointsDisplay,
-} from './components'
+import { QuestCardButton } from './components'
 
 export interface QuestCardProps extends React.HTMLAttributes<HTMLDivElement> {
   imgSrc: string
@@ -72,8 +69,8 @@ const QuestCard = ({
           </Text>
         </div>
         <QuestCriteriaDisplay
-          questCriteria={questCriteria}
-          questCriteriaStatus={questCriteriaStatus}
+          criteria={questCriteria}
+          status={questCriteriaStatus}
         />
       </div>
       <div className="flex flex-col gap-2 items-center p-6">

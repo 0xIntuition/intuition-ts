@@ -17,6 +17,7 @@ export interface IdentitySearchComboboxItemProps extends IdentityCardProps {
   tagCount?: number
   onClick?: () => void
   onSelect?: () => void
+  disabled?: boolean
 }
 
 const IdentitySearchComboboxItem = ({
@@ -30,12 +31,14 @@ const IdentitySearchComboboxItem = ({
   tagCount = 0,
   onClick,
   onSelect,
+  disabled,
 }: IdentitySearchComboboxItemProps) => {
   return (
     <CommandItem
       onClick={onClick}
       onSelect={onSelect}
       className="border border-transparent rounded-lg aria-selected:bg-primary/10 aria-selected:text-primary hover:border-border/30 px-2 py-4"
+      disabled={disabled}
     >
       <div className="flex justify-between items-center w-full">
         <IdentityCard

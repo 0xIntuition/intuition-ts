@@ -16,3 +16,8 @@ export const QuestCriteriaStatus = {
 
 export type QuestCriteriaStatusType =
   (typeof QuestCriteriaStatus)[keyof typeof QuestCriteriaStatus]
+
+export type QuestCriteriaType = {
+  status: QuestCriteriaStatusType
+  criteria: string
+}
