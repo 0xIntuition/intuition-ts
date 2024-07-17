@@ -29,6 +29,7 @@ export function AddTags({ selectedTags, onAddTag, onRemoveTag }: AddTagsProps) {
       !selectedTags.some((tag) => tag.vault_id === identity.vault_id),
   )
 
+  // this is for testing using the identity_id of tags that exist on the identity already
   const testIdentityTags = [
     'QmNrF6pE3RNXwFNbBCmvJMBBGKbe1yhK1E6YRPsAU23saj',
     'QmVfxo1di6CsaJaVGodnUS6gcGPLahYowHwA6UEUiRqG5v',
@@ -53,6 +54,7 @@ export function AddTags({ selectedTags, onAddTag, onRemoveTag }: AddTagsProps) {
             onIdentitySelect={(identity) => {
               logger('tag', identity)
               onAddTag(identity)
+              setSearchQuery('')
             }}
             onValueChange={setSearchQuery}
             onInput={handleInput}

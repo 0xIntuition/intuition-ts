@@ -18,6 +18,7 @@ export interface IdentitySearchComboboxItemProps extends IdentityCardProps {
   onClick?: () => void
   onSelect?: () => void
   disabled?: boolean
+  seleced?: boolean
 }
 
 const IdentitySearchComboboxItem = ({

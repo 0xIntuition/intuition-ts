@@ -21,7 +21,7 @@ import { IdentitySearchComboboxItem } from './identity-search-combo-box-item'
 export interface IdentitySearchComboboxProps
   extends React.HTMLAttributes<HTMLDivElement> {
   identities: IdentityPresenter[]
-  existingIdentityIds: string[]
+  existingIdentityIds?: string[]
   placeholder?: string
   onIdentityClick?: (identity: IdentityPresenter) => void
   onIdentitySelect?: (identity: IdentityPresenter) => void
@@ -31,6 +31,9 @@ export interface IdentitySearchComboboxProps
   onInput?: (event: React.FormEvent<HTMLInputElement>) => void
   shouldFilter?: boolean
 }
+
+// TODO: [ENG-2670] - determine why there are more selected identities showing when overriding default search
+// TODO: [ENG-2511] - determine what is causing mouse scrolling to be unavailable when overriding default search
 
 const IdentitySearchCombobox = ({
   placeholder = 'Search for an identity...',
@@ -79,7 +82,7 @@ const IdentitySearchCombobox = ({
                 identity_id,
               } = identity
               const variant = isUser ? 'user' : 'non-user'
-              const isDisabled = existingIdentityIds.includes(identity_id)
+              const isDisabled = existingIdentityIds?.includes(identity_id)
 
               return (
                 <IdentitySearchComboboxItem

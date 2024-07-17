@@ -40,6 +40,7 @@ export function TagsForm({ identity, mode, onClose }: TagsFormProps) {
 
   const handleAddTag = (newTag: IdentityPresenter) => {
     setSelectedTags((prevTags) => [...prevTags, newTag])
+    logger('selectedTags', selectedTags)
   }
 
   const handleRemoveTag = (id: string) => {

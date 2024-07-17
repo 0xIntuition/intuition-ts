@@ -1,13 +1,6 @@
 import * as React from 'react'
 
-import {
-  Button,
-  cn,
-  Icon,
-  TagVariant,
-  TagWithValue,
-  Text,
-} from '@0xintuition/1ui'
+import { Button, cn, Icon, TagWithValue, Text } from '@0xintuition/1ui'
 
 const TagsListVariants = {
   trustCircle: 'trust circle',
@@ -42,8 +35,10 @@ export const TagsListInputPortal = ({
   ...props
 }: TagsListInputProps) => {
   const tagsLeft = maxTags - tags.length
-  const tagVariant =
-    variant === 'trustCircle' ? TagVariant.social : TagVariant.primary
+
+  // removing this for now -- need to tweak now that it's in Portal
+  // const tagVariant =
+  //   variant === 'trustCircle' ? TagVariant.social : TagVariant.primary
 
   return (
     <div className="w-full" {...props}>
@@ -53,10 +48,9 @@ export const TagsListInputPortal = ({
             key={tag.id}
             label={tag.name}
             onRemove={() => onRemoveTag(tag.id)}
-            variant={tagVariant}
           />
         ))}
-        {tags.length <= 5 ? (
+        {tags.length < 5 ? (
           <div className="flex items-center gap-2">
             <PopoverTriggerComponent>
               <Button
