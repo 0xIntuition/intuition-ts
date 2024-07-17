@@ -2,6 +2,7 @@ import * as React from 'react'
 
 import { IdentityPresenter } from '@0xintuition/api'
 
+import { ExploreSearchClaimInput } from './ExploreSearchClaimInput'
 import { ExploreSearchForm } from './ExploreSearchForm/ExploreSearchForm'
 
 export interface ExploreSearchProps
