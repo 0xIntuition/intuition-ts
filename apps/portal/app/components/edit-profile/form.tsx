@@ -57,7 +57,6 @@ export function EditProfileForm({ userObject, onClose }: EditProfileFormProps) {
   const { offChainFetcher, lastOffChainSubmission } = useOffChainFetcher()
 
   const [imageFile, setImageFile] = useState<File | undefined>(undefined)
-  console.log('imageFile', imageFile)
   const [imageFilename, setImageFilename] = useState<string | null>(null)
   const [imageFilesize, setImageFilesize] = useState<string | null>(null)
 
