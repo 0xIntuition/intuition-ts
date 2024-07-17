@@ -1,0 +1,20 @@
+import { Canvas, Controls, Meta, Source, Title } from '@storybook/blocks'
+
+import * as Stories from './Skeleton.stories'
+
+<Meta of={Stories} />
+
+<Title />
+
+#### Skeleton component for fallback UI
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { Skeleton } from '@0xintuition/1ui'
+
+<Skeleton />
+`} />
+
+<Canvas of={Stories.BasicUsage} sourceState="none" />
