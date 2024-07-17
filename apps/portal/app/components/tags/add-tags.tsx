@@ -13,7 +13,6 @@ interface AddTagsProps {
   selectedTags: IdentityPresenter[]
   onAddTag: (newTag: IdentityPresenter) => void
   onRemoveTag: (id: string) => void
-  // dispatch: (action: TransactionActionType) => void
 }
 
 export function AddTags({ selectedTags, onAddTag, onRemoveTag }: AddTagsProps) {
@@ -37,6 +36,12 @@ export function AddTags({ selectedTags, onAddTag, onRemoveTag }: AddTagsProps) {
     'QmZndE239C65EhKXpX1funQH5XGaMSpaX9cwWC7DA2kBnY',
   ]
 
+  const handleIdentitySelect = (identity: IdentityPresenter) => {
+    logger('tag', identity)
+    onAddTag(identity)
+    setSearchQuery('')
+  }
+
   return (
     <div className="flex flex-col">
       <div className="mb-8 gap-1">
@@ -52,11 +57,7 @@ export function AddTags({ selectedTags, onAddTag, onRemoveTag }: AddTagsProps) {
           <IdentitySearchCombobox
             identities={filteredIdentities}
             existingIdentityIds={testIdentityTags}
-            onIdentitySelect={(identity) => {
-              logger('tag', identity)
-              onAddTag(identity)
-              setSearchQuery('')
-            }}
+            onIdentitySelect={handleIdentitySelect}
             onValueChange={setSearchQuery}
             onInput={handleInput}
             shouldFilter={false}
