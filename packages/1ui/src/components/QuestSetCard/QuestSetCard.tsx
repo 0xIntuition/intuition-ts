@@ -2,6 +2,7 @@ import * as React from 'react'
 
 import { ProgressBar } from 'components/ProgressBar'
 import { Text } from 'components/Text'
+import { cn } from 'styles'
 import { getProgressPercentage } from 'utils/progress'
 
 export interface QuestSetCardProps
@@ -11,6 +12,7 @@ export interface QuestSetCardProps
   description: string
   numberQuests: number
   numberCompletedQuests: number
+  disabled?: boolean
 }
 
 const QuestSetCard = ({
@@ -19,6 +21,7 @@ const QuestSetCard = ({
   description,
   numberQuests,
   numberCompletedQuests,
+  disabled,
   ...props
 }: QuestSetCardProps) => {
   const progressPercentage = getProgressPercentage(
@@ -28,7 +31,10 @@ const QuestSetCard = ({
 
   return (
     <div
-      className="flex flex-col justify-center align-center theme-border rounded-lg p-8 gap-5"
+      className={cn(
+        'bg-popover flex flex-col justify-center align-center theme-border rounded-lg p-8 gap-5',
+        disabled && 'cursor-not-allowed opacity-50',
+      )}
       {...props}
     >
       <img
