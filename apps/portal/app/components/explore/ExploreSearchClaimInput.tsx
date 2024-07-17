@@ -3,8 +3,9 @@ import * as React from 'react'
 import { Separator, Text } from '@0xintuition/1ui'
 import { IdentityPresenter } from '@0xintuition/api'
 
+import { fetchIdentity } from '@lib/utils/fetches'
 import { pascalCaseString } from '@lib/utils/misc'
-import { useNavigate } from '@remix-run/react'
+import { useLocation, useNavigate } from '@remix-run/react'
 
 import { IdentityInput, IdentityInputButtonProps } from '../identity-input'
 
@@ -17,6 +18,7 @@ const ExploreSearchClaimInput = ({
   identities = [],
 }: ExploreSearchClaimInputProps) => {
   const navigate = useNavigate()
+  const location = useLocation()
   const [selectedIdentities, setSelectedIdentities] = React.useState<{
     subject: IdentityPresenter | null
     predicate: IdentityPresenter | null
@@ -38,28 +40,28 @@ const ExploreSearchClaimInput = ({
 
   // TODO: Uncomment this once fetchIdentity is working
   // Fetch identities based on URL parameters
-  // React.useEffect(() => {
-  //   const params = new URLSearchParams(location.search)
-  //   const subjectId = params.get('subject')
-  //   const predicateId = params.get('predicate')
-  //   const objectId = params.get('object')
+  React.useEffect(() => {
+    const params = new URLSearchParams(location.search)
+    const subjectId = params.get('subject')
+    const predicateId = params.get('predicate')
+    const objectId = params.get('object')
 
-  //   const fetchIdentities = async () => {
-  //     const newSelectedIdentities = { ...selectedIdentities }
-  //     if (subjectId) {
-  //       newSelectedIdentities.subject = await fetchIdentity(subjectId)
-  //     }
-  //     if (predicateId) {
-  //       newSelectedIdentities.predicate = await fetchIdentity(predicateId)
-  //     }
-  //     if (objectId) {
-  //       newSelectedIdentities.object = await fetchIdentity(objectId)
-  //     }
-  //     setSelectedIdentities(newSelectedIdentities)
-  //   }
+    const fetchIdentities = async () => {
+      const newSelectedIdentities = { ...selectedIdentities }
+      if (subjectId) {
+        newSelectedIdentities.subject = await fetchIdentity(subjectId)
+      }
+      if (predicateId) {
+        newSelectedIdentities.predicate = await fetchIdentity(predicateId)
+      }
+      if (objectId) {
+        newSelectedIdentities.object = await fetchIdentity(objectId)
+      }
+      setSelectedIdentities(newSelectedIdentities)
+    }
 
-  //   fetchIdentities()
-  // }, [location.search])
+    fetchIdentities()
+  }, [location.search])
 
   const handleIdentitySelection = (
     type: 'subject' | 'predicate' | 'object',
@@ -78,17 +80,17 @@ const ExploreSearchClaimInput = ({
   }) => {
     const params = new URLSearchParams(window.location.search)
     if (identities.subject) {
-      params.set('subject', identities.subject.id)
+      params.set('subject', identities.subject.identity_id)
     } else {
       params.delete('subject')
     }
     if (identities.predicate) {
-      params.set('predicate', identities.predicate.id)
+      params.set('predicate', identities.predicate.identity_id)
     } else {
       params.delete('predicate')
     }
     if (identities.object) {
-      params.set('object', identities.object.id)
+      params.set('object', identities.object.identity_id)
     } else {
       params.delete('object')
     }
