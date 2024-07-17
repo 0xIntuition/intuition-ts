@@ -13,7 +13,6 @@ type Story = StoryObj<typeof ProgressCard>
 
 export const BasicUsage: Story = {
   args: {
-    // Define default props here, if any
     numberTotal: 10,
     numberCompleted: 5,
   },
