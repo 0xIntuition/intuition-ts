@@ -20,7 +20,7 @@ const ExploreSearchInput = ({
       type="text"
       name={searchParam}
       placeholder={placeholder}
-      defaultValue={initialValue}
+      defaultValue={initialValue || undefined}
       className="w-full min-w-[610px] bg-card/70 rounded-lg border-none focus:ring-0 focus:outline-none [&>input]:text-lg pl-px"
       {...props}
     />

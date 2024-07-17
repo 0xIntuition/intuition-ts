@@ -3,16 +3,15 @@ import { IdentityPresenter } from '@0xintuition/api'
 import { TagType } from 'types/tags'
 
 export const isClickOutsideOfTagsInteractionZone = (
-  tagsContainerRef: React.MutableRefObject<null>,
-  popoverContentRef: React.MutableRefObject<null>,
+  tagsContainerRef: React.RefObject<HTMLDivElement>,
+  popoverContentRef: React.RefObject<HTMLDivElement>,
   target: EventTarget | null,
 ) =>
+  target &&
   tagsContainerRef.current &&
-  // @ts-ignore - ref current value incorrectly being thought of as type 'never'
-  !tagsContainerRef.current.contains(target) &&
+  !tagsContainerRef.current.contains(target as Node) &&
   popoverContentRef.current &&
-  // @ts-ignore - ref current value incorrectly being thought of as type 'never'
-  !popoverContentRef.current.contains(target)
+  !popoverContentRef.current.contains(target as Node)
 
 export const isTagAlreadySelected = (
   selection: IdentityPresenter,

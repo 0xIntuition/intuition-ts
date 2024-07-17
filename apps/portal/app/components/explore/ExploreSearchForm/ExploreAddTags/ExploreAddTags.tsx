@@ -6,10 +6,10 @@ import {
   PopoverTrigger,
   TagsListInput,
 } from '@0xintuition/1ui'
-import { IdentityPresenter } from '@0xintuition/api'
+import { IdentityPresenter, SortColumn, SortDirection } from '@0xintuition/api'
 
 import { IdentitySearchCombobox } from '@components/identity/identity-search-combo-box'
-import { FAKE_IDENTITIES } from '@lib/utils/fake-data'
+import { fetchIdentities, fetchIdentity } from '@lib/utils/fetches'
 import { TagType } from 'types/tags'
 
 import {
@@ -19,8 +19,8 @@ import {
 } from './ExploreAddTags.utils'
 
 const ExploreAddTags = ({ initialValue }: { initialValue?: string | null }) => {
-  const tagsContainerRef = React.useRef(null)
-  const popoverContentRef = React.useRef(null)
+  const tagsContainerRef = React.useRef<HTMLDivElement>(null)
+  const popoverContentRef = React.useRef<HTMLDivElement>(null)
   const [isPopoverOpen, setIsPopoverOpen] = React.useState(false)
   const [selectedTags, setSelectedTags] = React.useState<TagType[]>([])
   const [identityResults, setIdentityResults] = React.useState<
@@ -32,15 +32,26 @@ const ExploreAddTags = ({ initialValue }: { initialValue?: string | null }) => {
   const [formElementValue, setFormElementValue] = React.useState('')
 
   React.useEffect(() => {
-    // initialize with url param data
+    async function fetchTagData(id: string) {
+      return await fetchIdentity(id)
+    }
+
     if (initialValue) {
       const initialValueArray = initialValue.split(',')
-      console.log(initialValueArray)
-      // initialValueArray?.forEach((id) =>
-      //   setSelectedTags([...selectedTags, { name: 'fake', id }]),
-      // )
+      const initialSelectedTags: TagType[] = []
+      initialValueArray?.forEach((id) => {
+        fetchTagData(id).then((result) => {
+          if (result) {
+            initialSelectedTags.push({
+              name: result.display_name,
+              id: result.id,
+            })
+          }
+        })
+      })
+      setSelectedTags(initialSelectedTags)
     }
-    // add click event listener to manage popover state
+
     document.addEventListener('click', (event) => {
       if (
         isPopoverOpen &&
@@ -53,7 +64,9 @@ const ExploreAddTags = ({ initialValue }: { initialValue?: string | null }) => {
         setIsPopoverOpen(false)
       }
     })
-  })
+    // Only run this block once on load
+    // eslint-disable-next-line
+  }, [])
 
   React.useEffect(() => {
     const selectedTagIds: string[] = []
@@ -63,6 +76,7 @@ const ExploreAddTags = ({ initialValue }: { initialValue?: string | null }) => {
 
   return (
     <div ref={tagsContainerRef}>
+      {/* Add hidden input element to feed parent form */}
       <input
         className="hidden"
         type="text"
@@ -84,16 +98,30 @@ const ExploreAddTags = ({ initialValue }: { initialValue?: string | null }) => {
           }}
         />
         <PopoverTrigger className="block" />
-        <PopoverContent className="w-max border-none" ref={popoverContentRef}>
+        <PopoverContent
+          className="w-max border-none bg-transparent pt-1"
+          ref={popoverContentRef}
+        >
           <IdentitySearchCombobox
             placeholder="Search for a tag..."
             identities={displayResults}
-            onKeyDown={() => {
-              // TODO: Search for tags when functionality is available [ENG-2519]
-              setIdentityResults(FAKE_IDENTITIES) // keep original results in case a tag is de-selected
-              setDisplayResults(
-                filterSearchResults(selectedTags, identityResults),
+            onKeyDown={async (event) => {
+              const target = event.target as HTMLInputElement
+              // TODO: Update logic when functionality is available [ENG-2519]
+              const searchResults = await fetchIdentities(
+                undefined,
+                20,
+                SortColumn.DISPLAY_NAME,
+                SortDirection.ASC,
+                target.value,
               )
+              if (searchResults?.data) {
+                // keep original results in case a tag is de-selected
+                setIdentityResults(searchResults.data)
+                setDisplayResults(
+                  filterSearchResults(selectedTags, identityResults),
+                )
+              }
             }}
             onIdentitySelect={(selection: IdentityPresenter) => {
               if (!isTagAlreadySelected(selection, selectedTags)) {
