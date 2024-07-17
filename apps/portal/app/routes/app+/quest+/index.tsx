@@ -66,7 +66,7 @@ export default function Quests() {
         </div>
         <div className="space-y-5">
           <Text variant="headline">Your Inventory</Text>
-          <div className="bg-warning/5 rounded-lg theme-border p-5 flex justify-center align-items h-[360px] border-warning/30 border-dashed text-warning/30 text-bold">
+          <div className="bg-warning/5 rounded-lg theme-border p-5 flex justify-center align-items h-96 border-warning/30 border-dashed text-warning/30 text-bold">
             Relics
           </div>
         </div>
