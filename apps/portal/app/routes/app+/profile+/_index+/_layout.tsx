@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 import {
   Button,
@@ -124,6 +124,10 @@ export default function Profile() {
 
   const { user_asset_delta } = userIdentity
 
+  const [userObject, setUserObject] = useState<
+    UserPresenter | null | undefined
+  >(userIdentity.user)
+
   const imgSrc = blockies.create({ seed: userWallet }).toDataURL()
 
   const [editProfileModalActive, setEditProfileModalActive] =
@@ -159,7 +163,7 @@ export default function Profile() {
     return <Outlet />
   }
 
-  if (!userIdentity.user) {
+  if (!userObject) {
     return null
   }
 
@@ -170,18 +174,17 @@ export default function Profile() {
           <div className="w-[300px] h-[230px] flex-col justify-start items-start gap-5 inline-flex">
             <ProfileCard
               variant="user"
-              avatarSrc={userIdentity.user.image ?? imgSrc}
-              name={userIdentity.user.display_name ?? ''}
+              avatarSrc={userObject.image ?? imgSrc}
+              name={userObject.display_name ?? ''}
               walletAddress={
-                userIdentity.user.ens_name ??
-                sliceString(userIdentity.user.wallet, 6, 4)
+                userObject.ens_name ?? sliceString(userObject.wallet, 6, 4)
               }
               stats={{
                 numberOfFollowers: userTotals.follower_count,
                 numberOfFollowing: userTotals.followed_count,
                 points: userTotals.user_points,
               }}
-              bio={userIdentity.user.description ?? ''}
+              bio={userObject.description ?? ''}
             >
               <Button
                 variant="secondary"
@@ -250,7 +253,8 @@ export default function Profile() {
             />
           </div>
           <EditProfileModal
-            userObject={userIdentity.user}
+            userObject={userObject}
+            setUserObject={setUserObject}
             open={editProfileModalActive}
             onClose={() => setEditProfileModalActive(false)}
           />

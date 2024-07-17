@@ -13,10 +13,14 @@ import { UserPresenter } from '@0xintuition/api'
 import ErrorList from '@components/error-list'
 import { ImageChooser } from '@components/image-chooser'
 import Toast from '@components/toast'
-import { getFormProps, getInputProps, useForm } from '@conform-to/react'
+import {
+  getFormProps,
+  getInputProps,
+  SubmissionResult,
+  useForm,
+} from '@conform-to/react'
 import { getZodConstraint, parseWithZod } from '@conform-to/zod'
 import { useImageUploadFetcher } from '@lib/hooks/useImageUploadFetcher'
-import { useOffChainFetcher } from '@lib/hooks/useOffChainFetcher'
 import {
   identityTransactionReducer,
   initialIdentityTransactionState,
@@ -31,7 +35,7 @@ import {
 } from '@lib/utils/constants'
 import logger from '@lib/utils/logger'
 import { truncateString } from '@lib/utils/misc'
-import { useLocation } from '@remix-run/react'
+import { useFetcher, useLocation } from '@remix-run/react'
 import { toast } from 'sonner'
 import {
   IdentityTransactionActionType,
@@ -40,11 +44,22 @@ import {
 
 interface EditProfileFormProps {
   userObject: UserPresenter
+  setUserObject: (userObject: UserPresenter) => void
   onSuccess?: () => void
   onClose: () => void
 }
 
-export function EditProfileForm({ userObject, onClose }: EditProfileFormProps) {
+interface OffChainFetcherData {
+  success: 'success' | 'error'
+  profile: UserPresenter
+  submission: SubmissionResult<string[]> | null
+}
+
+export function EditProfileForm({
+  userObject,
+  setUserObject,
+  onClose,
+}: EditProfileFormProps) {
   const { state, dispatch } = useTransactionState<
     IdentityTransactionStateType,
     IdentityTransactionActionType
@@ -55,7 +70,8 @@ export function EditProfileForm({ userObject, onClose }: EditProfileFormProps) {
 
   const imageUploadFetcher = useImageUploadFetcher()
 
-  const { offChainFetcher, lastOffChainSubmission } = useOffChainFetcher()
+  const offChainFetcher = useFetcher<OffChainFetcherData>()
+  const lastOffChainSubmission = offChainFetcher.data?.submission
 
   const [imageFile, setImageFile] = useState<File | undefined>(undefined)
   const [imageFilename, setImageFilename] = useState<string | null>(null)
@@ -143,7 +159,6 @@ export function EditProfileForm({ userObject, onClose }: EditProfileFormProps) {
           action: '/actions/edit-profile',
           method: 'post',
         })
-        onClose()
       } catch (error: unknown) {
         if (error instanceof Error) {
           let errorMessage = 'Error in creating offchain identity data.'
@@ -190,6 +205,7 @@ export function EditProfileForm({ userObject, onClose }: EditProfileFormProps) {
     if (userObject.image !== previewImage) {
       try {
         dispatch({ type: 'START_TRANSACTION' })
+        setLoading(true)
         const formData = new FormData(event.currentTarget)
         // Initial form validation
         const submission = parseWithZod(formData, {
@@ -215,6 +231,7 @@ export function EditProfileForm({ userObject, onClose }: EditProfileFormProps) {
     } else {
       try {
         dispatch({ type: 'START_TRANSACTION' })
+        setLoading(true)
         const formData = new FormData(event.currentTarget)
         formData.append('id', userObject.id ?? '')
         formData.append('image_url', previewImage ?? '')
@@ -222,7 +239,6 @@ export function EditProfileForm({ userObject, onClose }: EditProfileFormProps) {
           action: '/actions/edit-profile',
           method: 'post',
         })
-        onClose()
       } catch (error: unknown) {
         if (error instanceof Error) {
           let errorMessage = 'Error in creating offchain identity data.'
@@ -256,6 +272,7 @@ export function EditProfileForm({ userObject, onClose }: EditProfileFormProps) {
       }
     }
   }
+
   // Handle display name input changes
   const handleDisplayNameChange = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -273,6 +290,15 @@ export function EditProfileForm({ userObject, onClose }: EditProfileFormProps) {
       setPreviewImage(userObject.image)
     }
   }, [userObject.image])
+
+  useEffect(() => {
+    if (offChainFetcher.data) {
+      setUserObject(offChainFetcher.data.profile)
+      onClose()
+      setLoading(false)
+    }
+  }, [offChainFetcher.data, onClose])
+
   return (
     <>
       <>
