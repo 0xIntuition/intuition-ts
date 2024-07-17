@@ -42,7 +42,7 @@ const QuestCard = ({
         className="w-52 h-52 flex-shrink-0 relative"
         style={{ backgroundImage: `url(${imgSrc})` }}
       >
-        <div className="absolute top-2.5 left-2.5 ">
+        <div className="absolute top-2.5 left-2.5">
           <Text
             variant="body"
             className="text-foreground/70 bg-background/70 backdrop-blur-md px-2 py-1 rounded-md theme-border"
@@ -50,7 +50,7 @@ const QuestCard = ({
             {label}
           </Text>
         </div>
-        <div className="w-full h-full bg-cover bg-center"></div>
+        <div className="w-full h-full bg-cover bg-center border-r border-border/10"></div>
       </div>
       <div className="flex flex-col justify-center -ml-[29px] z-10">
         <QuestStatusIndicator status={questStatus} />

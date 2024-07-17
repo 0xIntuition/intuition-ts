@@ -1,19 +1,77 @@
+import {
+  QuestCard,
+  QuestCriteriaStatus,
+  QuestStatus,
+  Text,
+} from '@0xintuition/1ui'
+
+import questPlaceholder from '@assets/quest-placeholder.png'
+import questThumbnailPlaceholder from '@assets/quest-thumbnail-placeholder.png'
 import { json } from '@remix-run/node'
-import { Link, useLoaderData } from '@remix-run/react'
+import { Link } from '@remix-run/react'
 
 export async function loader() {
-  return json({
-    message: 'Quest Book Route',
-  })
+  return json({})
 }
 
 export default function Quests() {
-  const { message } = useLoaderData<typeof loader>()
+  function pickRandomQuestStatus() {
+    const statuses = Object.values(QuestStatus)
+    return statuses[Math.floor(Math.random() * statuses.length)]
+  }
+  function pickRandomQuestCriteriaStatus() {
+    const statuses = Object.values(QuestCriteriaStatus)
+    return statuses[Math.floor(Math.random() * statuses.length)]
+  }
 
   return (
-    <div className="m-8 flex flex-col items-center gap-4">
-      <Link to="/app/quest/chapter/1">Go to Chapter 1</Link>
-      <div className="flex flex-col">{message}</div>
+    <div className="px-10 w-full max-w-7xl mx-auto flex flex-col gap-10 pb-40">
+      <div className="space-y-20">
+        <img
+          src={questPlaceholder}
+          alt="Quest Placeholder"
+          className="object-cover w-full h-[350px] border-x border-b border-border/20 rounded-b-lg"
+        />
+        <div className="flex flex-col gap-5">
+          <Text variant="heading4" weight="medium">
+            Quest Title
+          </Text>
+          <Text variant="bodyLarge" className="text-foreground/50">
+            The island of identity beckons. But what secrets will you uncover?
+            As you explore the shores of your digital self, you&apos;ll discover
+            hidden coves of knowledge and secrets waiting to be uncovered. Will
+            you uncover the truth about your digital identity? Each task unlocks
+            new learnings and earns you points.
+          </Text>
+        </div>
+      </div>
+      <div className="mb-10">
+        <div className="bg-warning/5 rounded-lg theme-border p-5 flex justify-center align-items h-[160px] border-warning/30 text-warning/30 text-bold border-dashed">
+          Quest Progress Card
+        </div>
+      </div>
+      <div className="space-y-5">
+        <Text variant="headline">Chapters</Text>
+
+        <ul className="flex flex-col gap-10">
+          {[...Array(2)].map((_, i) => (
+            <Link to={`/app/quest/chapter/${i}`} key={`${i}-quest-card`}>
+              <li>
+                <QuestCard
+                  imgSrc={questThumbnailPlaceholder}
+                  title="Create Identity"
+                  description="1 Sentence Summary. I'm baby blue bottle shabby chic cred, meggings cliche ugh migas."
+                  questStatus={pickRandomQuestStatus()}
+                  label={`Chapter ${i + 1}`}
+                  points={69}
+                  questCriteria={'Placeholder for quest criteria'}
+                  questCriteriaStatus={pickRandomQuestCriteriaStatus()}
+                />
+              </li>
+            </Link>
+          ))}
+        </ul>
+      </div>
     </div>
   )
 }
