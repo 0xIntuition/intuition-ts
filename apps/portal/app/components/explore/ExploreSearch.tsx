@@ -18,7 +18,6 @@ const ExploreSearch: React.FC<ExploreSearchProps> = ({
   return (
     <div className="min-w-96 flex flex-col items-center" {...props}>
       {['user', 'identity', 'tag'].includes(variant) && (
-        // TODO: Alexander to adds the Tags component with ComboBox here ENG-2574
         <ExploreSearchForm searchParam={variant} />
       )}
 

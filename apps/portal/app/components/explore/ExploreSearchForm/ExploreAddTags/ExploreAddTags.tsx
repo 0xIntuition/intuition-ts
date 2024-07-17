@@ -18,7 +18,7 @@ import {
   isTagAlreadySelected,
 } from './ExploreAddTags.utils'
 
-const ExploreAddTags = () => {
+const ExploreAddTags = ({ initialValue }: { initialValue?: string | null }) => {
   const tagsContainerRef = React.useRef(null)
   const popoverContentRef = React.useRef(null)
   const [isPopoverOpen, setIsPopoverOpen] = React.useState(false)
@@ -29,8 +29,18 @@ const ExploreAddTags = () => {
   const [displayResults, setDisplayResults] = React.useState<
     IdentityPresenter[]
   >([])
+  const [formElementValue, setFormElementValue] = React.useState('')
 
   React.useEffect(() => {
+    // initialize with url param data
+    if (initialValue) {
+      const initialValueArray = initialValue.split(',')
+      console.log(initialValueArray)
+      // initialValueArray?.forEach((id) =>
+      //   setSelectedTags([...selectedTags, { name: 'fake', id }]),
+      // )
+    }
+    // add click event listener to manage popover state
     document.addEventListener('click', (event) => {
       if (
         isPopoverOpen &&
@@ -45,8 +55,20 @@ const ExploreAddTags = () => {
     })
   })
 
+  React.useEffect(() => {
+    const selectedTagIds: string[] = []
+    selectedTags.forEach((tag) => selectedTagIds.push(tag.id))
+    setFormElementValue(selectedTagIds.toString())
+  }, [selectedTags])
+
   return (
     <div ref={tagsContainerRef}>
+      <input
+        className="hidden"
+        type="text"
+        name="tags"
+        value={formElementValue}
+      />
       <Popover open={isPopoverOpen}>
         <TagsListInput
           variant="tag"

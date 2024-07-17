@@ -2,7 +2,7 @@ import * as React from 'react'
 
 import { Separator } from '@0xintuition/1ui'
 
-import { Form, useSubmit } from '@remix-run/react'
+import { Form, useSearchParams, useSubmit } from '@remix-run/react'
 
 import { ExploreAddTags } from './ExploreAddTags/ExploreAddTags'
 import { ExploreSearchInput } from './ExploreSearchInput/ExploreSearchInput'
@@ -16,11 +16,13 @@ const ExploreSearchForm = ({
   searchParam,
   inputPlaceholder = 'Search by a username or address',
 }: ExploreSearchFormProps) => {
+  const [searchParams] = useSearchParams()
   const submit = useSubmit()
   const handleChange = (event: React.ChangeEvent<HTMLFormElement>) => {
     const formData = new FormData(event.currentTarget)
+    const tagIds = formData.get('tags') as string
     const query = formData.get(searchParam) as string
-    const params = new URLSearchParams({ [searchParam]: query })
+    const params = new URLSearchParams({ [searchParam]: query, tags: tagIds })
     const action = `?${params.toString()}`
     submit(event.currentTarget, { action, method: 'get' })
   }
@@ -36,9 +38,10 @@ const ExploreSearchForm = ({
       <ExploreSearchInput
         searchParam={searchParam}
         placeholder={inputPlaceholder}
+        initialValue={searchParams.get(searchParam)}
       />
       <Separator className="my-5 in-out-gradient-strong" />
-      <ExploreAddTags />
+      <ExploreAddTags initialValue={searchParams.get('tags')} />
     </Form>
   )
 }
