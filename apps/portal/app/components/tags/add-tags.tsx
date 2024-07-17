@@ -13,6 +13,7 @@ interface AddTagsProps {
   selectedTags: IdentityPresenter[]
   onAddTag: (newTag: IdentityPresenter) => void
   onRemoveTag: (id: string) => void
+  // dispatch: (action: TransactionActionType) => void
 }
 
 export function AddTags({ selectedTags, onAddTag, onRemoveTag }: AddTagsProps) {

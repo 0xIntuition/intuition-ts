@@ -1,6 +1,8 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import {
+  Button,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   IdentityTag,
@@ -8,6 +10,7 @@ import {
   TabsContent,
   TabsList,
   TabsTrigger,
+  Text,
   Trunctacular,
 } from '@0xintuition/1ui'
 import { IdentityPresenter } from '@0xintuition/api'
@@ -36,7 +39,31 @@ export function TagsForm({ identity, mode, onClose }: TagsFormProps) {
   logger('onClose', onClose)
   // const tagsForm = useFetcher()
 
+  const { state, dispatch } = useTransactionState<
+    TransactionStateType,
+    TransactionActionType
+  >(transactionReducer, initialTransactionState)
+
+  // const [transactionResponseData, setTransactionResponseData] =
+  //   useState<ClaimPresenter | null>(null)
+
+  const isTransactionStarted = [
+    'approve',
+    'awaiting',
+    'confirm',
+    'transaction-pending',
+    'transaction-confirmed',
+    'complete',
+    'error',
+  ].includes(state.status)
+
   const [selectedTags, setSelectedTags] = useState<IdentityPresenter[]>([])
+
+  useEffect(() => {
+    if (selectedTags.length > 0) {
+      dispatch({ type: 'REVIEW_TRANSACTION' })
+    }
+  })
 
   const handleAddTag = (newTag: IdentityPresenter) => {
     setSelectedTags((prevTags) => [...prevTags, newTag])
@@ -46,22 +73,6 @@ export function TagsForm({ identity, mode, onClose }: TagsFormProps) {
   const handleRemoveTag = (id: string) => {
     setSelectedTags((prevTags) => prevTags.filter((tag) => tag.vault_id !== id))
   }
-
-  const { state } = useTransactionState<
-    TransactionStateType,
-    TransactionActionType
-  >(transactionReducer, initialTransactionState)
-
-  const isTransactionStarted = [
-    'approve',
-    'awaiting',
-    'confirm',
-    'review-transaction',
-    'transaction-pending',
-    'transaction-confirmed',
-    'complete',
-    'error',
-  ].includes(state.status)
 
   return (
     <>
@@ -103,6 +114,24 @@ export function TagsForm({ identity, mode, onClose }: TagsFormProps) {
                 </TabsContent>
               </div>
             </Tabs>
+            <DialogFooter className="!justify-center !items-center gap-5">
+              <div className="flex flex-col items-center gap-1">
+                <Button
+                  variant="primary"
+                  disabled={state.status !== 'review-transaction'}
+                >
+                  {state.status === 'review-transaction'
+                    ? 'Review'
+                    : 'Add Tags'}
+                </Button>
+                <Text
+                  variant="footnote"
+                  className="text-secondary-foreground/30"
+                >
+                  0.03 ETH {/* TODO: [ENG-2519] placeholder for actual cost */}
+                </Text>
+              </div>
+            </DialogFooter>
           </>
         )}
       </>

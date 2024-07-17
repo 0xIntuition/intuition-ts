@@ -671,7 +671,7 @@ export class IdentitiesService {
       method: 'GET',
       url: '/identity/{id}',
       path: {
-        id: data.id,
+        id: data.id.toString().toLowerCase(),
       },
     })
   }
@@ -1370,7 +1370,7 @@ export class UsersService {
       method: 'GET',
       url: '/users/wallet/{wallet}/private',
       path: {
-        wallet: data.wallet,
+        wallet: data.wallet.toLowerCase(),
       },
     })
   }
