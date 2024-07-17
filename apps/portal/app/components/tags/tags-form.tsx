@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 import {
   Button,
@@ -10,7 +10,6 @@ import {
   TabsContent,
   TabsList,
   TabsTrigger,
-  Text,
   Trunctacular,
 } from '@0xintuition/1ui'
 import { IdentityPresenter } from '@0xintuition/api'
@@ -24,6 +23,7 @@ import logger from '@lib/utils/logger'
 import { TransactionActionType, TransactionStateType } from 'types/transaction'
 
 import { AddTags } from './add-tags'
+import TagsReview from './tags-review'
 
 // import { useFetcher } from '@remix-run/react'
 
@@ -59,12 +59,6 @@ export function TagsForm({ identity, mode, onClose }: TagsFormProps) {
 
   const [selectedTags, setSelectedTags] = useState<IdentityPresenter[]>([])
 
-  useEffect(() => {
-    if (selectedTags.length > 0) {
-      dispatch({ type: 'REVIEW_TRANSACTION' })
-    }
-  })
-
   const handleAddTag = (newTag: IdentityPresenter) => {
     setSelectedTags((prevTags) => [...prevTags, newTag])
     logger('selectedTags', selectedTags)
@@ -76,65 +70,67 @@ export function TagsForm({ identity, mode, onClose }: TagsFormProps) {
 
   return (
     <>
-      <>
-        {!isTransactionStarted && (
-          <>
-            <DialogHeader className="py-4">
-              <DialogTitle>
-                <IdentityTag
-                  imgSrc={identity?.user?.image ?? identity?.image}
-                  variant={identity?.user ? 'user' : 'non-user'}
-                >
-                  <Trunctacular
-                    value={
-                      identity?.user?.display_name ??
-                      identity?.display_name ??
-                      'Identity'
-                    }
+      {!isTransactionStarted && (
+        <>
+          {state.status === 'idle' && (
+            <>
+              <DialogHeader className="py-4">
+                <DialogTitle>
+                  <IdentityTag
+                    imgSrc={identity?.user?.image ?? identity?.image}
+                    variant={identity?.user ? 'user' : 'non-user'}
+                  >
+                    <Trunctacular
+                      value={
+                        identity?.user?.display_name ??
+                        identity?.display_name ??
+                        'Identity'
+                      }
+                    />
+                  </IdentityTag>
+                </DialogTitle>
+              </DialogHeader>
+              <Tabs defaultValue={mode}>
+                <TabsList>
+                  <TabsTrigger
+                    variant="alternate"
+                    value="view"
+                    label="View tags"
                   />
-                </IdentityTag>
-              </DialogTitle>
-            </DialogHeader>
-            <Tabs defaultValue={mode}>
-              <TabsList>
-                <TabsTrigger
-                  variant="alternate"
-                  value="view"
-                  label="View tags"
-                />
-                <TabsTrigger variant="alternate" value="add" label="Add tags" />
-              </TabsList>
-              <div className="my-10">
-                <TabsContent value="add">
-                  <AddTags
-                    selectedTags={selectedTags}
-                    onAddTag={handleAddTag}
-                    onRemoveTag={handleRemoveTag}
+                  <TabsTrigger
+                    variant="alternate"
+                    value="add"
+                    label="Add tags"
                   />
-                </TabsContent>
-              </div>
-            </Tabs>
-            <DialogFooter className="!justify-center !items-center gap-5">
-              <div className="flex flex-col items-center gap-1">
-                <Button
-                  variant="primary"
-                  disabled={state.status !== 'review-transaction'}
-                >
-                  {state.status === 'review-transaction'
-                    ? 'Review'
-                    : 'Add Tags'}
-                </Button>
-                <Text
-                  variant="footnote"
-                  className="text-secondary-foreground/30"
-                >
-                  0.03 ETH {/* TODO: [ENG-2519] placeholder for actual cost */}
-                </Text>
-              </div>
-            </DialogFooter>
-          </>
-        )}
-      </>
+                </TabsList>
+                <div className="my-10">
+                  <TabsContent value="add">
+                    <AddTags
+                      selectedTags={selectedTags}
+                      onAddTag={handleAddTag}
+                      onRemoveTag={handleRemoveTag}
+                    />
+                  </TabsContent>
+                </div>
+              </Tabs>
+              <DialogFooter className="!justify-center !items-center mt-20">
+                <div className="flex flex-col items-center gap-1">
+                  <Button
+                    variant="primary"
+                    disabled={selectedTags.length === 0}
+                    onClick={() => dispatch({ type: 'REVIEW_TRANSACTION' })}
+                  >
+                    Add Tags
+                  </Button>
+                </div>
+              </DialogFooter>
+            </>
+          )}
+          {state.status === 'review-transaction' && (
+            <TagsReview state={state} dispatch={dispatch} tags={selectedTags} />
+          )}
+        </>
+      )}
     </>
   )
 }
