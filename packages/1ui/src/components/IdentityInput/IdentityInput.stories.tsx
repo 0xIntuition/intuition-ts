@@ -35,14 +35,23 @@ export const Other: Story = {
       subject={{
         placeholder: 'Select an identity',
         selectedValue: {},
+        onClick: () => {
+          console.log('subject clicked')
+        },
       }}
       predicate={{
         placeholder: 'Select an identity',
         selectedValue: {},
+        onClick: () => {
+          console.log('predicate clicked')
+        },
       }}
       object={{
         placeholder: 'Select an identity',
         selectedValue: {},
+        onClick: () => {
+          console.log('object clicked')
+        },
       }}
     />
   ),
