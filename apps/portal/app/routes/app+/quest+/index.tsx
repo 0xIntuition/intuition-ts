@@ -134,7 +134,7 @@ function UserHeader() {
           <Skeleton className="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full" />
           <div className="flex flex-col gap-2">
             <Skeleton className="h-4 w-20" />
-            <Skeleton className="h-[.875rem] w-16" />
+            <Skeleton className="h-3.5 w-16" />
           </div>
         </div>
       }
