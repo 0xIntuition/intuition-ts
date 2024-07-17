@@ -30,9 +30,7 @@ const ExploreSearchForm = ({
   return (
     <Form
       method="get"
-      onChange={(event: React.ChangeEvent<HTMLFormElement>) =>
-        handleChange(event)
-      }
+      onChange={handleChange}
       className="flex flex-col rounded-lg p-5 border border-1 theme-border bg-card/70"
     >
       <ExploreSearchInput
