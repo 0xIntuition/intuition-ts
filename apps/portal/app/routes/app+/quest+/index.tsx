@@ -12,15 +12,13 @@ import { ProfileCardHeader } from '@0xintuition/1ui/src/components/ProfileCard/c
 import { GetUserByWalletResponse } from '@0xintuition/api'
 
 import questPlaceholder from '@assets/quest-placeholder.png'
+import { QUEST_LOG_DESCRIPTION } from '@lib/utils/constants/quest'
 import { getUserByWallet } from '@lib/utils/fetches'
 import { invariant } from '@lib/utils/misc'
 import { defer, LoaderFunctionArgs } from '@remix-run/node'
 import { Await, Link, useLoaderData } from '@remix-run/react'
 import { requireUserWallet } from '@server/auth'
 import { isAddress } from 'viem'
-
-const QUEST_LOG_DESCRIPTION =
-  'Something inside you stirs, urging you to rekindle and reclaim humanity’s lost intuition...'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const userWallet = await requireUserWallet(request)
