@@ -6,14 +6,9 @@ export const isClickOutsideOfTagsInteractionZone = (
   tagsContainerRef: React.RefObject<HTMLDivElement>,
   popoverContentRef: React.RefObject<HTMLDivElement>,
   target: EventTarget | null,
-) => {
-  console.log(!tagsContainerRef.current?.contains(target as Node))
-  console.log(!popoverContentRef.current?.contains(target as Node))
-  return (
-    !tagsContainerRef.current?.contains(target as Node) &&
-    !popoverContentRef.current?.contains(target as Node)
-  )
-}
+) =>
+  !tagsContainerRef.current?.contains(target as Node) &&
+  !popoverContentRef.current?.contains(target as Node)
 
 export const isTagAlreadySelected = (
   selection: IdentityPresenter,
