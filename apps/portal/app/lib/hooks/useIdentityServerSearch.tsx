@@ -32,8 +32,8 @@ export function useIdentityServerSearch() {
         `${SEARCH_IDENTITIES_RESOURCE_ROUTE}${searchParam}`,
       )
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     // Ignoring identitiesFetcher to prevent loop
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchQuery, SEARCH_IDENTITIES_RESOURCE_ROUTE])
 
   return { setSearchQuery, identities, handleInput }

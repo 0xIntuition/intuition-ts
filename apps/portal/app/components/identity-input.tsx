@@ -22,6 +22,7 @@ import {
 import { IdentityPresenter } from '@0xintuition/api'
 
 import { IdentitySearchCombobox } from '@components/identity/identity-search-combo-box'
+import { useIdentityServerSearch } from '@lib/hooks/useIdentityServerSearch'
 
 type IdentityInputSelectedValueType = {
   variant?: IdentityType
@@ -48,39 +49,53 @@ const IdentityInputButton = ({
   identities,
   onIdentitySelect,
   ...props
-}: IdentityInputButtonProps) => (
-  <div className="flex flex-col gap-2 items-start">
-    <Popover open={isPopoverOpen} onOpenChange={onClick}>
-      <PopoverTrigger asChild>
-        {selectedValue.name ? (
-          <IdentityTag
-            size={IdentityTagSize.lg}
-            variant={selectedValue.variant}
-            {...props}
-          >
-            {selectedValue.name.toLowerCase()}
-          </IdentityTag>
-        ) : (
-          <Button
-            variant={ButtonVariant.secondary}
-            size={ButtonSize.lg}
-            {...props}
-          >
-            <Icon name={IconName.plusLarge} className="h-4 w-4" />
-            {placeholder}
-          </Button>
-        )}
-      </PopoverTrigger>
-      <PopoverContent className="bg-transparent">
-        <IdentitySearchCombobox
-          identities={identities}
-          onIdentitySelect={onIdentitySelect}
-          shouldFilter={false}
-        />
-      </PopoverContent>
-    </Popover>
-  </div>
-)
+}: IdentityInputButtonProps) => {
+  const {
+    setSearchQuery,
+    identities: filteredIdentities,
+    handleInput,
+  } = useIdentityServerSearch()
+
+  const identitiesToList = filteredIdentities.length
+    ? filteredIdentities
+    : identities
+
+  return (
+    <div className="flex flex-col gap-2 items-start">
+      <Popover open={isPopoverOpen} onOpenChange={onClick}>
+        <PopoverTrigger asChild>
+          {selectedValue.name ? (
+            <IdentityTag
+              size={IdentityTagSize.lg}
+              variant={selectedValue.variant}
+              {...props}
+            >
+              {selectedValue.name.toLowerCase()}
+            </IdentityTag>
+          ) : (
+            <Button
+              variant={ButtonVariant.secondary}
+              size={ButtonSize.lg}
+              {...props}
+            >
+              <Icon name={IconName.plusLarge} className="h-4 w-4" />
+              {placeholder}
+            </Button>
+          )}
+        </PopoverTrigger>
+        <PopoverContent className="bg-transparent">
+          <IdentitySearchCombobox
+            identities={identitiesToList}
+            onIdentitySelect={onIdentitySelect}
+            onValueChange={setSearchQuery}
+            onInput={handleInput}
+            shouldFilter={false}
+          />
+        </PopoverContent>
+      </Popover>
+    </div>
+  )
+}
 
 interface IdentityInputLabelProps {
   label: string
