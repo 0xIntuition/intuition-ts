@@ -15,7 +15,8 @@ const ProgressCard = ({
   numberCompleted,
   ...props
 }: ProgressCardProps) => {
-  const progressPercentage = (numberCompleted / numberTotal) * 100
+  const progressPercentage =
+    numberTotal > 0 ? (numberCompleted / numberTotal) * 100 : 0
 
   return (
     <div
