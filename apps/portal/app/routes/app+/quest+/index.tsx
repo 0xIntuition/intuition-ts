@@ -34,7 +34,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 export default function Quests() {
   return (
-    <div className="p-10 w-full max-w-7xl mx-auto flex flex-col gap-5">
+    <div className="p-10 w-full max-w-7xl mx-auto flex flex-col gap-5 overflow-y-scroll h-full">
       <div className="flex flex-col gap-5">
         <div className="flex items-center justify-between">
           <UserHeader />
@@ -84,7 +84,7 @@ export default function Quests() {
           <ul className="grid grid-cols-1 gap-10 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2">
             {[...Array(2)].map((_, i) => (
               <Link to={`/app/quest/book/${i}`} key={`${i}-quest-card`}>
-                <li className="col-span-1">
+                <li className="col-span-1 h-full">
                   <QuestSetCard
                     disabled={i === 1}
                     imgSrc={questPlaceholder}
