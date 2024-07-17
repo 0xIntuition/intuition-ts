@@ -1,0 +1,32 @@
+table:
+  name: fee_transfer
+  schema: sgd1
+configuration:
+  column_config:
+    block$:
+      custom_name: block_
+  custom_column_names:
+    block$: block_
+  custom_name: feeTransfer
+  custom_root_fields:
+    select: feeTransfers
+    select_by_pk: feeTransfer
+object_relationships:
+  - name: receiver
+    using:
+      manual_configuration:
+        column_mapping:
+          receiver_id: id
+        insertion_order: null
+        remote_table:
+          name: account
+          schema: sgd1
+  - name: sender
+    using:
+      manual_configuration:
+        column_mapping:
+          sender_id: id
+        insertion_order: null
+        remote_table:
+          name: account
+          schema: sgd1

@@ -1,31 +1,34 @@
 table:
-  name: atom
+  name: deposit
   schema: sgd1
 configuration:
-  column_config: {}
-  custom_column_names: {}
-  custom_name: atom
+  column_config:
+    block$:
+      custom_name: block_
+  custom_column_names:
+    block$: block_
+  custom_name: deposit
   custom_root_fields:
-    select: atoms
-    select_by_pk: atom
+    select: deposits
+    select_by_pk: deposit
 object_relationships:
-  - name: creator
+  - name: receiver
     using:
       manual_configuration:
         column_mapping:
-          creator_id: id
+          receiver_id: id
         insertion_order: null
         remote_table:
           name: account
           schema: sgd1
-  - name: value
+  - name: sender
     using:
       manual_configuration:
         column_mapping:
-          value_id: id
+          sender_id: id
         insertion_order: null
         remote_table:
-          name: atom_value
+          name: account
           schema: sgd1
   - name: vault
     using:
@@ -35,13 +38,4 @@ object_relationships:
         insertion_order: null
         remote_table:
           name: vault
-          schema: sgd1
-  - name: wallet
-    using:
-      manual_configuration:
-        column_mapping:
-          wallet_id: id
-        insertion_order: null
-        remote_table:
-          name: account
           schema: sgd1

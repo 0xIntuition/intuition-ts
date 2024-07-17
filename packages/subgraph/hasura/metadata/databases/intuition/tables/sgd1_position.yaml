@@ -1,0 +1,29 @@
+table:
+  name: position
+  schema: sgd1
+configuration:
+  column_config: {}
+  custom_column_names: {}
+  custom_name: position
+  custom_root_fields:
+    select: positions
+    select_by_pk: position
+object_relationships:
+  - name: account
+    using:
+      manual_configuration:
+        column_mapping:
+          account_id: id
+        insertion_order: null
+        remote_table:
+          name: account
+          schema: sgd1
+  - name: vault
+    using:
+      manual_configuration:
+        column_mapping:
+          vault_id: id
+        insertion_order: null
+        remote_table:
+          name: vault
+          schema: sgd1

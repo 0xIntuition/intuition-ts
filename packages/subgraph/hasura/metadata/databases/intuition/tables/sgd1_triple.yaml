@@ -1,14 +1,23 @@
 table:
-  name: atom
+  name: triple
   schema: sgd1
 configuration:
   column_config: {}
   custom_column_names: {}
-  custom_name: atom
+  custom_name: triple
   custom_root_fields:
-    select: atoms
-    select_by_pk: atom
+    select: triples
+    select_by_pk: triple
 object_relationships:
+  - name: counterVault
+    using:
+      manual_configuration:
+        column_mapping:
+          counter_vault_id: id
+        insertion_order: null
+        remote_table:
+          name: vault
+          schema: sgd1
   - name: creator
     using:
       manual_configuration:
@@ -18,14 +27,32 @@ object_relationships:
         remote_table:
           name: account
           schema: sgd1
-  - name: value
+  - name: object
     using:
       manual_configuration:
         column_mapping:
-          value_id: id
+          object_id: id
         insertion_order: null
         remote_table:
-          name: atom_value
+          name: atom
+          schema: sgd1
+  - name: predicate
+    using:
+      manual_configuration:
+        column_mapping:
+          predicate_id: id
+        insertion_order: null
+        remote_table:
+          name: atom
+          schema: sgd1
+  - name: subject
+    using:
+      manual_configuration:
+        column_mapping:
+          subject_id: id
+        insertion_order: null
+        remote_table:
+          name: atom
           schema: sgd1
   - name: vault
     using:
@@ -35,13 +62,4 @@ object_relationships:
         insertion_order: null
         remote_table:
           name: vault
-          schema: sgd1
-  - name: wallet
-    using:
-      manual_configuration:
-        column_mapping:
-          wallet_id: id
-        insertion_order: null
-        remote_table:
-          name: account
           schema: sgd1

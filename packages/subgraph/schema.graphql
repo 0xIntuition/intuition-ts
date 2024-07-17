@@ -242,8 +242,6 @@ type Vault @entity {
   id: ID!
   atom_id: Atom
   triple_id: Triple
-  counter_id: Vault
-
   total_shares: BigInt!
 
   deposits: [Deposit!]! @derivedFrom(field: "vault_id")

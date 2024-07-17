@@ -1,47 +1,56 @@
 table:
-  name: atom
+  name: signal
   schema: sgd1
 configuration:
   column_config: {}
   custom_column_names: {}
-  custom_name: atom
+  custom_name: signal
   custom_root_fields:
-    select: atoms
-    select_by_pk: atom
+    select: signals
+    select_by_pk: signal
 object_relationships:
-  - name: creator
+  - name: account
     using:
       manual_configuration:
         column_mapping:
-          creator_id: id
+          account_id: id
         insertion_order: null
         remote_table:
           name: account
           schema: sgd1
-  - name: value
+  - name: atom
     using:
       manual_configuration:
         column_mapping:
-          value_id: id
+          atom_id: id
         insertion_order: null
         remote_table:
-          name: atom_value
+          name: atom
           schema: sgd1
-  - name: vault
+  - name: deposit
     using:
       manual_configuration:
         column_mapping:
-          vault_id: id
+          deposit_id: id
         insertion_order: null
         remote_table:
-          name: vault
+          name: deposit
           schema: sgd1
-  - name: wallet
+  - name: redemption
     using:
       manual_configuration:
         column_mapping:
-          wallet_id: id
+          redemption_id: id
         insertion_order: null
         remote_table:
-          name: account
+          name: redemption
+          schema: sgd1
+  - name: triple
+    using:
+      manual_configuration:
+        column_mapping:
+          triple_id: id
+        insertion_order: null
+        remote_table:
+          name: triple
           schema: sgd1
