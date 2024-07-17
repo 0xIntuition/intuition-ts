@@ -21,6 +21,7 @@ import { IdentitySearchComboboxItem } from './identity-search-combo-box-item'
 export interface IdentitySearchComboboxProps
   extends React.HTMLAttributes<HTMLDivElement> {
   identities: IdentityPresenter[]
+  existingIdentityIds: string[]
   placeholder?: string
   onIdentityClick?: (identity: IdentityPresenter) => void
   onIdentitySelect?: (identity: IdentityPresenter) => void
@@ -37,6 +38,7 @@ const IdentitySearchCombobox = ({
   onIdentitySelect = () => {},
   onCreateIdentityClick,
   identities,
+  existingIdentityIds,
   onValueChange,
   onInput,
   value,
@@ -74,8 +76,10 @@ const IdentitySearchCombobox = ({
                 follower_count: socialCount,
                 tag_count: tagCount,
                 is_user: isUser,
+                identity_id,
               } = identity
               const variant = isUser ? 'user' : 'non-user'
+              const isDisabled = existingIdentityIds.includes(identity_id)
 
               return (
                 <IdentitySearchComboboxItem
@@ -88,6 +92,7 @@ const IdentitySearchCombobox = ({
                   tagCount={tagCount || 0}
                   onClick={() => onIdentityClick(identity)}
                   onSelect={() => onIdentitySelect(identity)}
+                  disabled={isDisabled}
                 />
               )
             })}

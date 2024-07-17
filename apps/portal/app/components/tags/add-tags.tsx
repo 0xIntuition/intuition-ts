@@ -1,19 +1,13 @@
 import { useState } from 'react'
 
-import {
-  Button,
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-  TagsListInput,
-  Text,
-} from '@0xintuition/1ui'
+import { Popover, PopoverContent, PopoverTrigger, Text } from '@0xintuition/1ui'
 import { IdentityPresenter } from '@0xintuition/api'
 
 import { IdentitySearchCombobox } from '@components/identity/identity-search-combo-box'
 import { useIdentityServerSearch } from '@lib/hooks/useIdentityServerSearch'
 import logger from '@lib/utils/logger'
-import identities from '@routes/app+/explore+/_index+/identities'
+
+import { TagsListInputPortal } from './tags-list-input-portal'
 
 interface AddTagsProps {
   selectedTags: IdentityPresenter[]
@@ -30,6 +24,17 @@ export function AddTags({ selectedTags, onAddTag, onRemoveTag }: AddTagsProps) {
   const { setSearchQuery, identities, handleInput } = useIdentityServerSearch()
   const [isPopoverOpen, setIsPopoverOpen] = useState(false)
 
+  const filteredIdentities = identities.filter(
+    (identity) =>
+      !selectedTags.some((tag) => tag.vault_id === identity.vault_id),
+  )
+
+  const testIdentityTags = [
+    'QmNrF6pE3RNXwFNbBCmvJMBBGKbe1yhK1E6YRPsAU23saj',
+    'QmVfxo1di6CsaJaVGodnUS6gcGPLahYowHwA6UEUiRqG5v',
+    'QmZndE239C65EhKXpX1funQH5XGaMSpaX9cwWC7DA2kBnY',
+  ]
+
   return (
     <div className="flex flex-col">
       <div className="mb-8 gap-1">
@@ -41,22 +46,20 @@ export function AddTags({ selectedTags, onAddTag, onRemoveTag }: AddTagsProps) {
         </Text>
       </div>
       <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
-        <PopoverContent
-          className="bg-transparent border-none"
-          side="bottom"
-          align="center"
-          sideOffset={5}
-          style={{ zIndex: 1000 }} // Adjust the z-index as necessary
-        >
+        <PopoverContent className="bg-transparent border-none">
           <IdentitySearchCombobox
-            identities={identities}
-            onIdentitySelect={(identity) => logger('tag', identity)}
+            identities={filteredIdentities}
+            existingIdentityIds={testIdentityTags}
+            onIdentitySelect={(identity) => {
+              logger('tag', identity)
+              onAddTag(identity)
+            }}
             onValueChange={setSearchQuery}
             onInput={handleInput}
             shouldFilter={false}
           />
         </PopoverContent>
-        <TagsListInput
+        <TagsListInputPortal
           variant="tag"
           tags={formattedTags}
           maxTags={5}

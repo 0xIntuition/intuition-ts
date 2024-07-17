@@ -1,7 +1,13 @@
 import * as React from 'react'
 
-import { Button, Icon, TagVariant, TagWithValue, Text } from 'components'
-import { cn } from 'styles'
+import {
+  Button,
+  cn,
+  Icon,
+  TagVariant,
+  TagWithValue,
+  Text,
+} from '@0xintuition/1ui'
 
 const TagsListVariants = {
   trustCircle: 'trust circle',
@@ -17,6 +23,7 @@ export interface TagsListInputProps
   maxTags: number
   onAddTag: () => void
   onRemoveTag: (id: string) => void
+  PopoverTriggerComponent: React.ComponentType<{ children: React.ReactNode }>
 }
 
 const getTagText = (variant: TagsListVariantsType, count: number) => {
@@ -24,14 +31,14 @@ const getTagText = (variant: TagsListVariantsType, count: number) => {
   return `${count} ${tagText}${count === 1 ? '' : 's'}`
 }
 
-export const TagsListInput = ({
+export const TagsListInputPortal = ({
   variant,
   tags,
   maxTags,
   onAddTag,
   onRemoveTag,
   className,
-
+  PopoverTriggerComponent,
   ...props
 }: TagsListInputProps) => {
   const tagsLeft = maxTags - tags.length
@@ -49,18 +56,18 @@ export const TagsListInput = ({
             variant={tagVariant}
           />
         ))}
-
-        {tags.length === 0 ? (
+        {tags.length <= 5 ? (
           <div className="flex items-center gap-2">
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={onAddTag}
-              className="rounded-full px-2 mr-1"
-            >
-              <Icon name="plus-small" />
-            </Button>
-
+            <PopoverTriggerComponent>
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={onAddTag}
+                className="rounded-full px-2 mr-1"
+              >
+                <Icon name="plus-small" />
+              </Button>
+            </PopoverTriggerComponent>
             <Text variant="footnote" className="text-secondary-foreground">
               {`Add up to ${tagsLeft} ${TagsListVariants[variant]}${tagsLeft === 1 ? '' : 's'}`}
             </Text>
