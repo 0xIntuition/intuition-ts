@@ -141,12 +141,11 @@ function UserHeader() {
     >
       <Await resolve={userProfile}>
         {(userProfile) => {
-          const avatarSrc = userProfile?.image ?? ''
           return (
             <ProfileCardHeader
-              avatarSrc={avatarSrc}
               name={getUserName(userProfile)}
               walletAddress={userWallet}
+              avatarSrc={userProfile?.image ?? undefined}
             />
           )
         }}
