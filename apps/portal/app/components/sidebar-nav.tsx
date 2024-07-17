@@ -43,7 +43,7 @@ const sidebarNavRoutes: SidebarNavRoute[] = [
     iconName: 'magnifying-glass',
   },
   {
-    route: '/app/quests',
+    route: '/app/quest',
     label: 'Quests',
     iconName: 'crystal-ball',
   },
