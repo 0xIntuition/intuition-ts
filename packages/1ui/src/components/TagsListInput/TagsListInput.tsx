@@ -31,7 +31,6 @@ export const TagsListInput = ({
   onAddTag,
   onRemoveTag,
   className,
-
   ...props
 }: TagsListInputProps) => {
   const tagsLeft = maxTags - tags.length
