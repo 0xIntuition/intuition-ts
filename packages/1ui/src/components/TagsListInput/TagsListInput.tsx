@@ -59,7 +59,6 @@ export const TagsListInput = ({
             >
               <Icon name="plus-small" />
             </Button>
-
             <Text variant="footnote" className="text-secondary-foreground">
               {`Add up to ${tagsLeft} ${TagsListVariants[variant]}${tagsLeft === 1 ? '' : 's'}`}
             </Text>
