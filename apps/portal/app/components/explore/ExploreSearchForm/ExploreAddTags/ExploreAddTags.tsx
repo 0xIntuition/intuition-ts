@@ -26,6 +26,7 @@ const ExploreAddTags = ({ initialValue }: { initialValue?: string | null }) => {
   const [selectedTags, setSelectedTags] = React.useState<TagType[]>([])
   const [formElementValue, setFormElementValue] = React.useState('')
 
+  // TODO: FIX THIS
   React.useEffect(() => {
     async function fetchTagData(id: string) {
       return await fetchIdentity(id)
