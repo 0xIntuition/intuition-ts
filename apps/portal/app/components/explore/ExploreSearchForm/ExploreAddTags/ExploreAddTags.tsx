@@ -74,6 +74,14 @@ const ExploreAddTags = ({ initialValue }: { initialValue?: string | null }) => {
     setFormElementValue(selectedTagIds.toString())
   }, [selectedTags])
 
+  const handleTagSelectionChange = (
+    selectedTags: TagType[],
+    results: IdentityPresenter[],
+  ) => {
+    setSelectedTags(selectedTags)
+    setDisplayResults(filterSearchResults(selectedTags, results))
+  }
+
   return (
     <div ref={tagsContainerRef}>
       {/* Add hidden input element to feed parent form */}
@@ -91,10 +99,7 @@ const ExploreAddTags = ({ initialValue }: { initialValue?: string | null }) => {
           onAddTag={() => setIsPopoverOpen(true)}
           onRemoveTag={(id: string) => {
             const updatedTagsList = selectedTags.filter((tag) => tag.id !== id)
-            setSelectedTags(updatedTagsList)
-            setDisplayResults(
-              filterSearchResults(updatedTagsList, identityResults),
-            )
+            handleTagSelectionChange(updatedTagsList, identityResults)
           }}
         />
         <PopoverTrigger className="block" />
@@ -110,7 +115,7 @@ const ExploreAddTags = ({ initialValue }: { initialValue?: string | null }) => {
               // TODO: Update logic when functionality is available [ENG-2519]
               const searchResults = await fetchIdentities(
                 undefined,
-                20,
+                20, // TODO: Determine appropriate results limit [ENG-2519]
                 SortColumn.DISPLAY_NAME,
                 SortDirection.ASC,
                 target.value,
@@ -129,11 +134,9 @@ const ExploreAddTags = ({ initialValue }: { initialValue?: string | null }) => {
                   ...selectedTags,
                   { name: selection.display_name, id: selection.id },
                 ]
-                setSelectedTags(updatedTagsList)
-                setDisplayResults(
-                  filterSearchResults(updatedTagsList, displayResults),
-                )
+                handleTagSelectionChange(updatedTagsList, displayResults)
               }
+              // TODO: Determine whether we should be launching a toast should this hit an else [ENG-2519]
             }}
           />
         </PopoverContent>
