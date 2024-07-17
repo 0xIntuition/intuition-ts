@@ -73,3 +73,29 @@ array_relationships:
         remote_table:
           name: triple
           schema: sgd1
+select_permissions:
+  - role: anonymous
+    permission:
+      columns:
+        - active_positions_count
+        - all_positions_count
+        - block_number
+        - block_range
+        - block_timestamp
+        - creator_id
+        - data
+        - emoji
+        - id
+        - image
+        - label
+        - transaction_hash
+        - type
+        - uri
+        - value_id
+        - vault_id
+        - vid
+        - wallet_id
+      filter: {}
+      limit: 100
+      allow_aggregations: true
+    comment: ""

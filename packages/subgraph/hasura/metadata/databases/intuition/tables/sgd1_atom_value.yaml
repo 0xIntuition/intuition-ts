@@ -54,3 +54,19 @@ object_relationships:
         remote_table:
           name: thing
           schema: sgd1
+select_permissions:
+  - role: anonymous
+    permission:
+      columns:
+        - vid
+        - block_range
+        - account_id
+        - book_id
+        - id
+        - organization_id
+        - person_id
+        - thing_id
+      filter: {}
+      limit: 100
+      allow_aggregations: true
+    comment: ""

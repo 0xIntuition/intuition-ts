@@ -54,3 +54,24 @@ object_relationships:
         remote_table:
           name: triple
           schema: sgd1
+select_permissions:
+  - role: anonymous
+    permission:
+      columns:
+        - vid
+        - deposit_id
+        - id
+        - redemption_id
+        - transaction_hash
+        - block_range
+        - block_number
+        - block_timestamp
+        - delta
+        - relative_strength
+        - account_id
+        - atom_id
+        - triple_id
+      filter: {}
+      limit: 100
+      allow_aggregations: true
+    comment: ""

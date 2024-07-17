@@ -27,3 +27,17 @@ object_relationships:
         remote_table:
           name: vault
           schema: sgd1
+select_permissions:
+  - role: anonymous
+    permission:
+      columns:
+        - vid
+        - block_range
+        - shares
+        - account_id
+        - id
+        - vault_id
+      filter: {}
+      limit: 100
+      allow_aggregations: true
+    comment: ""

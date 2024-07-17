@@ -46,3 +46,17 @@ array_relationships:
         remote_table:
           name: redemption
           schema: sgd1
+select_permissions:
+  - role: anonymous
+    permission:
+      columns:
+        - vid
+        - block_range
+        - total_shares
+        - atom_id
+        - id
+        - triple_id
+      filter: {}
+      limit: 100
+      allow_aggregations: true
+    comment: ""

@@ -39,3 +39,25 @@ object_relationships:
         remote_table:
           name: vault
           schema: sgd1
+select_permissions:
+  - role: anonymous
+    permission:
+      columns:
+        - block_number
+        - block_timestamp
+        - entry_fee
+        - id
+        - is_atom_wallet
+        - is_triple
+        - receiver_id
+        - receiver_total_shares_in_vault
+        - sender_assets_after_total_fees
+        - sender_id
+        - shares_for_receiver
+        - transaction_hash
+        - vault_id
+        - vid
+      filter: {}
+      limit: 100
+      allow_aggregations: true
+    comment: ""

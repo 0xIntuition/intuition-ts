@@ -20,3 +20,22 @@ object_relationships:
         remote_table:
           name: atom
           schema: sgd1
+select_permissions:
+  - role: anonymous
+    permission:
+      columns:
+        - atom_id
+        - block_number
+        - block_timestamp
+        - deposit_id
+        - fee_transfer_id
+        - id
+        - redemption_id
+        - transaction_hash
+        - triple_id
+        - type
+        - vid
+      filter: {}
+      limit: 100
+      allow_aggregations: true
+    comment: ""

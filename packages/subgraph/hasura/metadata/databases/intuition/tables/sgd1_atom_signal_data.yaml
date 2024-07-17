@@ -9,3 +9,18 @@ configuration:
     block$: block_
   custom_name: atom_signal_data
   custom_root_fields: {}
+select_permissions:
+  - role: anonymous
+    permission:
+      columns:
+        - id
+        - vid
+        - block$
+        - delta
+        - account_id
+        - atom_id
+        - timestamp
+      filter: {}
+      limit: 100
+      allow_aggregations: true
+    comment: ""

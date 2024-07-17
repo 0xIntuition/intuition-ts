@@ -30,3 +30,19 @@ object_relationships:
         remote_table:
           name: account
           schema: sgd1
+select_permissions:
+  - role: anonymous
+    permission:
+      columns:
+        - amount
+        - block_number
+        - block_timestamp
+        - id
+        - receiver_id
+        - sender_id
+        - transaction_hash
+        - vid
+      filter: {}
+      limit: 100
+      allow_aggregations: true
+    comment: ""

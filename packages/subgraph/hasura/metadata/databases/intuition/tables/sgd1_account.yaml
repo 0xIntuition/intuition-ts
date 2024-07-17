@@ -82,3 +82,18 @@ array_relationships:
         remote_table:
           name: signal
           schema: sgd1
+select_permissions:
+  - role: anonymous
+    permission:
+      columns:
+        - type
+        - vid
+        - block_range
+        - atom_id
+        - id
+        - image
+        - label
+      filter: {}
+      limit: 100
+      allow_aggregations: true
+    comment: ""

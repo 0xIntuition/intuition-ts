@@ -95,12 +95,13 @@ services:
       ## enable the console served by server
       HASURA_GRAPHQL_ENABLE_CONSOLE: 'true' # set to "false" to disable console
       ## enable debugging mode. It is recommended to disable this in production
+      HASURA_GRAPHQL_UNAUTHORIZED_ROLE: 'anonymous'
       HASURA_GRAPHQL_DEV_MODE: 'true'
       HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup, http-log, webhook-log, websocket-log, query-log
       ## uncomment next line to run console offline (i.e load console assets from server instead of CDN)
       # HASURA_GRAPHQL_CONSOLE_ASSETS_DIR: /srv/console-assets
       ## uncomment next line to set an admin secret
-      # HASURA_GRAPHQL_ADMIN_SECRET: myadminsecretkey
+      HASURA_GRAPHQL_ADMIN_SECRET: myadminsecretkey
       HASURA_GRAPHQL_METADATA_DEFAULTS: '{"backend_configs":{"dataconnector":{"athena":{"uri":"http://data-connector-agent:8083/api/v1/athena"},"mariadb":{"uri":"http://data-connector-agent:8083/api/v1/mariadb"},"mysql8":{"uri":"http://data-connector-agent:8083/api/v1/mysql"},"oracle":{"uri":"http://data-connector-agent:8083/api/v1/oracle"},"snowflake":{"uri":"http://data-connector-agent:8083/api/v1/snowflake"}}}}'
     depends_on:
       data-connector-agent:

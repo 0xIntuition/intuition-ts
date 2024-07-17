@@ -63,3 +63,32 @@ object_relationships:
         remote_table:
           name: vault
           schema: sgd1
+select_permissions:
+  - role: anonymous
+    permission:
+      columns:
+        - inverse_positions
+        - positions
+        - signals
+        - vid
+        - transaction_hash
+        - block_range
+        - active_positions_count
+        - all_positions_count
+        - inverse_positions_count
+        - positions_count
+        - block_number
+        - block_timestamp
+        - total_signal
+        - tvl
+        - counter_vault_id
+        - creator_id
+        - id
+        - object_id
+        - predicate_id
+        - subject_id
+        - vault_id
+      filter: {}
+      limit: 100
+      allow_aggregations: true
+    comment: ""
