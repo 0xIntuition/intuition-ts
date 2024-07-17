@@ -45,3 +45,31 @@ object_relationships:
         remote_table:
           name: account
           schema: sgd1
+array_relationships:
+  - name: asObject
+    using:
+      manual_configuration:
+        column_mapping:
+          id: object_id
+        insertion_order: null
+        remote_table:
+          name: triple
+          schema: sgd1
+  - name: asPredicate
+    using:
+      manual_configuration:
+        column_mapping:
+          id: predicate_id
+        insertion_order: null
+        remote_table:
+          name: triple
+          schema: sgd1
+  - name: asSubject
+    using:
+      manual_configuration:
+        column_mapping:
+          id: subject_id
+        insertion_order: null
+        remote_table:
+          name: triple
+          schema: sgd1

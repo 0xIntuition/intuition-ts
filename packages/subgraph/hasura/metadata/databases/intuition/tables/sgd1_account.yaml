@@ -18,3 +18,67 @@ object_relationships:
         remote_table:
           name: atom
           schema: sgd1
+array_relationships:
+  - name: createdAtoms
+    using:
+      manual_configuration:
+        column_mapping:
+          id: creator_id
+        insertion_order: null
+        remote_table:
+          name: atom
+          schema: sgd1
+  - name: createdTriples
+    using:
+      manual_configuration:
+        column_mapping:
+          id: creator_id
+        insertion_order: null
+        remote_table:
+          name: triple
+          schema: sgd1
+  - name: deposits
+    using:
+      manual_configuration:
+        column_mapping:
+          id: sender_id
+        insertion_order: null
+        remote_table:
+          name: deposit
+          schema: sgd1
+  - name: feeTransfers
+    using:
+      manual_configuration:
+        column_mapping:
+          id: sender_id
+        insertion_order: null
+        remote_table:
+          name: fee_transfer
+          schema: sgd1
+  - name: positions
+    using:
+      manual_configuration:
+        column_mapping:
+          id: account_id
+        insertion_order: null
+        remote_table:
+          name: position
+          schema: sgd1
+  - name: redemptions
+    using:
+      manual_configuration:
+        column_mapping:
+          id: sender_id
+        insertion_order: null
+        remote_table:
+          name: redemption
+          schema: sgd1
+  - name: signals
+    using:
+      manual_configuration:
+        column_mapping:
+          id: account_id
+        insertion_order: null
+        remote_table:
+          name: signal
+          schema: sgd1

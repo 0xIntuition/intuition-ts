@@ -38,9 +38,9 @@ type Atom @entity {
   active_positions_count: Int
   all_positions_count: Int
 
-  isSubject: [Triple!]! @derivedFrom(field: "subject_id")
-  isPredicate: [Triple!]! @derivedFrom(field: "predicate_id")
-  isObject: [Triple!]! @derivedFrom(field: "object_id")
+  asSubject: [Triple!]! @derivedFrom(field: "subject_id")
+  asPredicate: [Triple!]! @derivedFrom(field: "predicate_id")
+  asObject: [Triple!]! @derivedFrom(field: "object_id")
 
   block_number: BigInt!
   block_timestamp: BigInt!
