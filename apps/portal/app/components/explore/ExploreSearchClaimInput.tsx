@@ -6,6 +6,7 @@ import { IdentityPresenter } from '@0xintuition/api'
 import { fetchIdentity } from '@lib/utils/fetches'
 import { pascalCaseString } from '@lib/utils/misc'
 import { useLocation, useNavigate } from '@remix-run/react'
+import { Identity, IdentityType } from 'types/identity'
 
 import { IdentityInput, IdentityInputButtonProps } from '../identity-input'
 
@@ -38,13 +39,13 @@ const ExploreSearchClaimInput = ({
     object: false,
   })
 
-  // TODO: Uncomment this once fetchIdentity is working
+  // TODO: Uncomment this once fetchIdentity is working - ENG-2675
   // Fetch identities based on URL parameters
   React.useEffect(() => {
     const params = new URLSearchParams(location.search)
-    const subjectId = params.get('subject')
-    const predicateId = params.get('predicate')
-    const objectId = params.get('object')
+    const subjectId = params.get(Identity.Subject)
+    const predicateId = params.get(Identity.Predicate)
+    const objectId = params.get(Identity.Object)
 
     const fetchIdentities = async () => {
       const newSelectedIdentities = { ...selectedIdentities }
@@ -64,7 +65,7 @@ const ExploreSearchClaimInput = ({
   }, [location.search])
 
   const handleIdentitySelection = (
-    type: 'subject' | 'predicate' | 'object',
+    type: IdentityType,
     identity: IdentityPresenter,
   ) => {
     const updatedIdentities = { ...selectedIdentities, [type]: identity }
@@ -80,33 +81,30 @@ const ExploreSearchClaimInput = ({
   }) => {
     const params = new URLSearchParams(window.location.search)
     if (identities.subject) {
-      params.set('subject', identities.subject.identity_id)
+      params.set(Identity.Subject, identities.subject.identity_id)
     } else {
-      params.delete('subject')
+      params.delete(Identity.Subject)
     }
     if (identities.predicate) {
-      params.set('predicate', identities.predicate.identity_id)
+      params.set(Identity.Predicate, identities.predicate.identity_id)
     } else {
-      params.delete('predicate')
+      params.delete(Identity.Predicate)
     }
     if (identities.object) {
-      params.set('object', identities.object.identity_id)
+      params.set(Identity.Object, identities.object.identity_id)
     } else {
-      params.delete('object')
+      params.delete(Identity.Object)
     }
     const newUrl = `${window.location.pathname}?${params.toString()}`
     navigate(newUrl, { replace: true })
   }
 
-  const handleOpenChange = (
-    type: 'subject' | 'predicate' | 'object',
-    isOpen: boolean,
-  ) => {
+  const handleOpenChange = (type: IdentityType, isOpen: boolean) => {
     setPopoverOpen({ ...popoverOpen, [type]: isOpen })
   }
 
   const identityInputProps = (
-    type: 'subject' | 'predicate' | 'object',
+    type: IdentityType,
   ): IdentityInputButtonProps => ({
     label: pascalCaseString(type),
     placeholder: `Select an identity`,
@@ -150,9 +148,9 @@ const ExploreSearchClaimInput = ({
       <Separator className="mb-7" />
       <IdentityInput
         showLabels
-        subject={identityInputProps('subject')}
-        predicate={identityInputProps('predicate')}
-        object={identityInputProps('object')}
+        subject={identityInputProps(Identity.Subject)}
+        predicate={identityInputProps(Identity.Predicate)}
+        object={identityInputProps(Identity.Object)}
       />
     </div>
   )

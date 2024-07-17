@@ -47,6 +47,7 @@ import { sliceString, truncateString } from '@lib/utils/misc'
 import { useFetcher, useNavigate } from '@remix-run/react'
 import { CreateLoaderData } from '@routes/resources+/create'
 import * as blockies from 'blockies-ts'
+import { Identity, IdentityType } from 'types/identity'
 import { TransactionActionType, TransactionStateType } from 'types/transaction'
 import { parseUnits } from 'viem'
 import { useAccount, usePublicClient, useWalletClient } from 'wagmi'
@@ -376,7 +377,7 @@ function CreateClaimForm({
   })
 
   const handleIdentitySelection = (
-    identityType: 'subject' | 'predicate' | 'object',
+    identityType: IdentityType,
     identity: IdentityPresenter,
   ) => {
     setSelectedIdentities((prevState) => ({
@@ -385,11 +386,11 @@ function CreateClaimForm({
     }))
     setSearchQuery('')
     setIdentities([])
-    if (identityType === 'subject') {
+    if (identityType === Identity.Subject) {
       setIsSubjectPopoverOpen(false)
-    } else if (identityType === 'predicate') {
+    } else if (identityType === Identity.Predicate) {
       setIsPredicatePopoverOpen(false)
-    } else if (identityType === 'object') {
+    } else if (identityType === Identity.Object) {
       setIsObjectPopoverOpen(false)
     }
   }
