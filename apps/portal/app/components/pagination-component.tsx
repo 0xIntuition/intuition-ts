@@ -21,7 +21,7 @@ interface PaginationComponentProps {
   onPageChange: (newPage: number) => void
   onLimitChange: (newLimit: number) => void
   label: string
-  listContainerRef: React.RefObject<HTMLDivElement>
+  listContainerRef?: React.RefObject<HTMLDivElement>
 }
 
 export function PaginationComponent({
@@ -35,7 +35,7 @@ export function PaginationComponent({
   listContainerRef,
 }: PaginationComponentProps) {
   useEffect(() => {
-    if (listContainerRef.current) {
+    if (listContainerRef && listContainerRef.current) {
       listContainerRef.current.scrollIntoView({
         behavior: 'smooth',
         block: 'start',
