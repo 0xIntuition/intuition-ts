@@ -3,6 +3,7 @@ import React from 'react'
 import { ProgressBar } from 'components/ProgressBar'
 import { Text, TextVariant } from 'components/Text'
 import { cn } from 'styles'
+import { getProgressPercentage } from 'utils/progress'
 
 export interface ProgressCardProps
   extends React.HTMLAttributes<HTMLDivElement> {
@@ -15,8 +16,7 @@ const ProgressCard = ({
   numberCompleted,
   ...props
 }: ProgressCardProps) => {
-  const progressPercentage =
-    numberTotal > 0 ? (numberCompleted / numberTotal) * 100 : 0
+  const progressPercentage = getProgressPercentage(numberCompleted, numberTotal)
 
   return (
     <div
