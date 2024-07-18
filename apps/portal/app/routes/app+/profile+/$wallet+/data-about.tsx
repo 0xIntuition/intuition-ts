@@ -1,7 +1,6 @@
 import {
   ClaimPresenter,
   ClaimSortColumn,
-  OpenAPI,
   PositionPresenter,
   PositionSortColumn,
   SortDirection,
@@ -17,22 +16,14 @@ import {
   fetchIdentity,
   fetchPositionsOnIdentity,
 } from '@lib/utils/fetches'
-import {
-  calculateTotalPages,
-  formatBalance,
-  getAuthHeaders,
-} from '@lib/utils/misc'
+import { calculateTotalPages, formatBalance } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
-import { getPrivyAccessToken } from '@server/privy'
+import { setupApiWithWallet } from '@server/auth'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
-  OpenAPI.BASE = 'https://dev.api.intuition.systems'
-  const accessToken = getPrivyAccessToken(request)
-  const headers = getAuthHeaders(accessToken !== null ? accessToken : '')
-  OpenAPI.HEADERS = headers as Record<string, string>
+  await setupApiWithWallet(request)
 
   const wallet = params.wallet
-
   if (!wallet) {
     throw new Error('Wallet is undefined.')
   }

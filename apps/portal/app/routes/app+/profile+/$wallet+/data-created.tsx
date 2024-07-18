@@ -11,7 +11,6 @@ import {
   ClaimPresenter,
   ClaimSortColumn,
   IdentityPresenter,
-  OpenAPI,
   SortColumn,
   SortDirection,
   UserTotalsPresenter,
@@ -39,32 +38,22 @@ import {
   fetchUserTotals,
 } from '@lib/utils/fetches'
 import logger from '@lib/utils/logger'
-import {
-  calculateTotalPages,
-  formatBalance,
-  getAuthHeaders,
-} from '@lib/utils/misc'
+import { calculateTotalPages, formatBalance } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
-import { getPrivyAccessToken } from '@server/privy'
+import { setupApiWithWallet } from '@server/auth'
 
 export async function loader({ params, request }: LoaderFunctionArgs) {
-  OpenAPI.BASE = 'https://dev.api.intuition.systems'
-  const accessToken = getPrivyAccessToken(request)
-  const headers = getAuthHeaders(accessToken !== null ? accessToken : '')
-  OpenAPI.HEADERS = headers as Record<string, string>
+  await setupApiWithWallet(request)
 
   const wallet = params.wallet
-
   if (!wallet) {
     throw new Error('Wallet is undefined.')
   }
 
   const userIdentity = await fetchIdentity(wallet)
-
   if (!userIdentity) {
     return logger('No user identity found')
   }
-
   if (!userIdentity.creator || typeof userIdentity.creator.id !== 'string') {
     logger('Invalid or missing creator ID')
     return
