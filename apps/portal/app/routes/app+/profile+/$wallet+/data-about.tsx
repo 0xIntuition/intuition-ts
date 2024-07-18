@@ -138,6 +138,7 @@ export default function ProfileDataAbout() {
           claims={claims}
           pagination={claimsPagination}
           paramPrefix="claims"
+          enableSearch
         />
       </div>
       <div className="flex flex-col pt-4 w-full">
