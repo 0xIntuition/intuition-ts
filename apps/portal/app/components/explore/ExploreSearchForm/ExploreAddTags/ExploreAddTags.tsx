@@ -1,6 +1,7 @@
 import * as React from 'react'
 
 import {
+  Input,
   Popover,
   PopoverContent,
   PopoverTrigger,
@@ -10,7 +11,8 @@ import { IdentityPresenter } from '@0xintuition/api'
 
 import { IdentitySearchCombobox } from '@components/identity/identity-search-combo-box'
 import { useIdentityServerSearch } from '@lib/hooks/useIdentityServerSearch'
-import { fetchIdentity } from '@lib/utils/fetches'
+import { GET_IDENTITIES_BY_IDS_RESOURCE_ROUTE } from '@lib/utils/constants'
+import { useFetcher } from '@remix-run/react'
 import { TagType } from 'types/tags'
 
 import {
@@ -26,34 +28,38 @@ const ExploreAddTags = ({
   initialValue?: string | null
 }) => {
   const { setSearchQuery, identities, handleInput } = useIdentityServerSearch()
+  const identityFetcher = useFetcher<IdentityPresenter[]>()
   const tagsContainerRef = React.useRef<HTMLDivElement>(null)
   const popoverContentRef = React.useRef<HTMLDivElement>(null)
   const [isPopoverOpen, setIsPopoverOpen] = React.useState(false)
   const [selectedTags, setSelectedTags] = React.useState<TagType[]>([])
-  const [formElementValue, setFormElementValue] = React.useState('')
+  const inputElementRef = React.useRef<HTMLInputElement>(null)
 
   React.useEffect(() => {
-    async function populateSelectedTags(initialValue: string) {
-      const selectedTags = []
-      const initialValueArray = initialValue.split(',')
-      initialValueArray.forEach(async (id) => {
-        const result = await fetchIdentity(id)
-        if (result) {
-          selectedTags.push({ name: result.display_name, id: result.id })
-        }
-        console.log(result)
-      })
-    }
-
     if (initialValue) {
-      populateSelectedTags(initialValue)
+      const searchParam = `?id=${encodeURIComponent(initialValue)}`
+      identityFetcher.load(
+        `${GET_IDENTITIES_BY_IDS_RESOURCE_ROUTE}${searchParam}`,
+      )
     }
     // Only run this block once on load
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   React.useEffect(() => {
-    document.addEventListener('click', (event) => {
+    const initialSelectedTags: TagType[] = []
+    const result = identityFetcher.data
+    result?.forEach((result) =>
+      initialSelectedTags.push({
+        name: result.display_name,
+        id: result.id,
+      }),
+    )
+    setSelectedTags(initialSelectedTags)
+  }, [identityFetcher.data])
+
+  React.useEffect(() => {
+    const handleClickEvent = (event: MouseEvent) => {
       if (
         isPopoverOpen &&
         isClickOutsideOfTagsInteractionZone(
@@ -64,24 +70,29 @@ const ExploreAddTags = ({
       ) {
         setIsPopoverOpen(false)
       }
-    })
+    }
+    document.addEventListener('click', handleClickEvent)
+    return () => window.removeEventListener('click', handleClickEvent)
   })
 
   React.useEffect(() => {
     const selectedTagIds: string[] = []
     selectedTags.forEach((tag) => selectedTagIds.push(tag.id))
-    setFormElementValue(selectedTagIds.toString())
+    // trigger input value change and onChange event to update parent form
+    inputElementRef.current?.setAttribute('value', selectedTagIds.toString())
+    const event = new Event('input', { bubbles: true })
+    inputElementRef.current?.dispatchEvent(event)
   }, [selectedTags])
 
   return (
     <div ref={tagsContainerRef}>
       {/* Add hidden input element to feed parent form */}
-      <input
-        readOnly
+      <Input
+        ref={inputElementRef}
         className="hidden"
         type="text"
         name={inputId}
-        value={formElementValue}
+        onChange={() => console.log('ONCHANGE')}
       />
       <Popover open={isPopoverOpen}>
         <TagsListInput
