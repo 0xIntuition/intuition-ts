@@ -78,11 +78,26 @@ describe('TagsListInput', () => {
                 />
               </svg>
             </button>
-            <p
-              class="text-sm font-normal text-secondary-foreground"
+            <div
+              class="flex items-center gap-2"
             >
-              2 tags left
-            </p>
+              <button
+                class="flex justify-center items-center gap-2 text-sm font-medium border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted primary-gradient-subtle text-primary/60 border-primary/10 hover:text-primary disabled:from-muted disabled:to-muted shadow-md-subtle rounded-full px-2 mr-1"
+              >
+                <svg
+                  class="h-6 w-6"
+                >
+                  <use
+                    href="/src/components/Icon/Icon.sprites.svg#plus-small"
+                  />
+                </svg>
+              </button>
+              <p
+                class="text-sm font-normal text-secondary-foreground"
+              >
+                2 tags left
+              </p>
+            </div>
           </div>
         </div>
       </DocumentFragment>
@@ -202,11 +217,26 @@ describe('TagsListInput', () => {
                 />
               </svg>
             </button>
-            <p
-              class="text-sm font-normal text-secondary-foreground"
+            <div
+              class="flex items-center gap-2"
             >
-              0 trust circles left
-            </p>
+              <button
+                class="flex justify-center items-center gap-2 text-sm font-medium border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted primary-gradient-subtle text-primary/60 border-primary/10 hover:text-primary disabled:from-muted disabled:to-muted shadow-md-subtle rounded-full px-2 mr-1"
+              >
+                <svg
+                  class="h-6 w-6"
+                >
+                  <use
+                    href="/src/components/Icon/Icon.sprites.svg#plus-small"
+                  />
+                </svg>
+              </button>
+              <p
+                class="text-sm font-normal text-secondary-foreground"
+              >
+                0 trust circles left
+              </p>
+            </div>
           </div>
         </div>
       </DocumentFragment>
