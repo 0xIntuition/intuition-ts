@@ -32,7 +32,7 @@ export const ACCEPTED_IMAGE_TYPES = ['jpeg', 'jpg', 'png']
 
 export const BLOCK_EXPLORER_URL =
   CURRENT_ENV === 'production'
-    ? 'https://basescan.org'
+    ? 'https://sepolia.basescan.org'
     : 'https://sepolia.basescan.org'
 
 export const CREATE_RESOURCE_ROUTE = '/resources/create'
