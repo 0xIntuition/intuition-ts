@@ -1,0 +1,31 @@
+import { Canvas, Controls, Meta, Source, Title } from '@storybook/blocks'
+
+import * as Stories from './ListIdentityCard.stories'
+
+<Meta of={Stories} />
+
+<Title />
+
+#### A card component to display identity information
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { ListIdentityCard } from '@0xintuition/1ui'
+
+<ListIdentityCard
+  displayName="Best Crypto Portfolio Trackers"
+  imgSrc="https://avatars.githubusercontent.com/u/94311139?s=200&v=4"
+  identitiesCount={45}
+  savedAmount="0.047"
+  onSaveClick={() => alert('Best Crypto Portfolio Trackers saved!')}
+  isSaved={true}
+/>
+`} />
+
+<Canvas of={Stories.BasicUsage} sourceState="none" />
+
+## Properties
+
+<Controls />
