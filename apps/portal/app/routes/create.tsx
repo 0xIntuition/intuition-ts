@@ -5,7 +5,6 @@ import {
   ApiError,
   IdentitiesService,
   IdentityPresenter,
-  OpenAPI,
   UserPresenter,
   UsersService,
 } from '@0xintuition/api'
@@ -23,12 +22,11 @@ import {
 import { editProfileModalAtom } from '@lib/state/store'
 import { MULTIVAULT_CONTRACT_ADDRESS } from '@lib/utils/constants'
 import logger from '@lib/utils/logger'
-import { getAuthHeaders, sliceString } from '@lib/utils/misc'
+import { sliceString } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { useFetcher, useLoaderData, useNavigate } from '@remix-run/react'
 import { CreateLoaderData } from '@routes/resources+/create'
-import { requireUserWallet } from '@server/auth'
-import { getPrivyAccessToken } from '@server/privy'
+import { setupApiWithWallet } from '@server/auth'
 import * as blockies from 'blockies-ts'
 import { useAtom } from 'jotai'
 import { ClientOnly } from 'remix-utils/client-only'
@@ -41,16 +39,7 @@ import { toHex } from 'viem'
 import { useConnectorClient, usePublicClient } from 'wagmi'
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  const wallet = await requireUserWallet(request)
-
-  OpenAPI.BASE = 'https://dev.api.intuition.systems'
-  const accessToken = getPrivyAccessToken(request)
-  const headers = getAuthHeaders(accessToken !== null ? accessToken : '')
-  OpenAPI.HEADERS = headers as Record<string, string>
-
-  if (!wallet) {
-    return logger('No user found in session')
-  }
+  const wallet = await setupApiWithWallet(request)
 
   let userIdentity
   try {
