@@ -111,15 +111,21 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export default function Profile() {
-  const { privyUser, userWallet, userIdentity, userTotals, vaultDetails } =
-    useLiveLoader<{
-      privyUser: User
-      userWallet: string
-      userIdentity: IdentityPresenter
-      userObject: UserPresenter
-      userTotals: UserTotalsPresenter
-      vaultDetails: VaultDetailsType
-    }>(['attest', 'create'])
+  const {
+    userObject: user,
+    privyUser,
+    userWallet,
+    userIdentity,
+    userTotals,
+    vaultDetails,
+  } = useLiveLoader<{
+    privyUser: User
+    userWallet: string
+    userIdentity: IdentityPresenter
+    userObject: UserPresenter
+    userTotals: UserTotalsPresenter
+    vaultDetails: VaultDetailsType
+  }>(['attest', 'create'])
 
   const { user_assets, assets_sum } = vaultDetails ? vaultDetails : userIdentity
 
@@ -127,7 +133,7 @@ export default function Profile() {
 
   const [userObject, setUserObject] = useState<
     UserPresenter | null | undefined
-  >(userIdentity.user)
+  >(userIdentity.user ?? user)
 
   const imgSrc = blockies.create({ seed: userWallet }).toDataURL()
 
