@@ -34,7 +34,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 export default function Quests() {
   return (
-    <div className="p-10 w-full max-w-7xl mx-auto flex flex-col gap-5 overflow-y-scroll h-full">
+    <div className="p-10 w-full max-w-7xl mx-auto flex flex-col gap-5">
       <div className="flex flex-col gap-5">
         <div className="flex items-center justify-between">
           <UserHeader />

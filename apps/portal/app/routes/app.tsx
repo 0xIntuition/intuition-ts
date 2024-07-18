@@ -41,7 +41,7 @@ export default function Index() {
     userObject: UserPresenter
   }>()
   return (
-    <div className="flex items-start gap-4 h-screen min-h-screen">
+    <div className="flex items-start h-screen min-h-screen">
       <SidebarNav userObject={userObject}>
         <Outlet />
       </SidebarNav>

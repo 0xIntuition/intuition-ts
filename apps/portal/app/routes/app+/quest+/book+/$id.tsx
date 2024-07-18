@@ -26,7 +26,7 @@ export default function Quests() {
   }
 
   return (
-    <div className="px-10 w-full max-w-7xl mx-auto flex flex-col gap-10 pb-20 h-full overflow-y-scroll">
+    <div className="px-10 w-full max-w-7xl mx-auto flex flex-col gap-10">
       <div className="space-y-10 mb-5">
         <img
           src={questPlaceholder}
@@ -51,13 +51,13 @@ export default function Quests() {
           />
         </div>
       </div>
-      <div className="space-y-5">
+      <div className="flex flex-col gap-5">
         <Text variant="headline">Chapters</Text>
 
-        <ul className="flex flex-col gap-10">
+        <div className="flex flex-col gap-10">
           {[...Array(5)].map((_, i) => (
             <Link to={`/app/quest/chapter/${i}`} key={`${i}-quest-card`}>
-              <li>
+              <div>
                 <QuestCard
                   imgSrc={questThumbnailPlaceholder}
                   title="Create Identity"
@@ -68,10 +68,10 @@ export default function Quests() {
                   questCriteria={'Placeholder for quest criteria'}
                   questCriteriaStatus={pickRandomQuestCriteriaStatus()}
                 />
-              </li>
+              </div>
             </Link>
           ))}
-        </ul>
+        </div>
       </div>
     </div>
   )
