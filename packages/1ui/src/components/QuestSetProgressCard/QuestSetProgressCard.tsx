@@ -3,6 +3,7 @@ import * as React from 'react'
 import { Button } from 'components/Button'
 import { ProgressBar } from 'components/ProgressBar'
 import { Text } from 'components/Text'
+import { getProgressPercentage } from 'utils/progress'
 
 export interface QuestSetProgressCardProps
   extends React.HTMLAttributes<HTMLDivElement> {
@@ -21,7 +22,10 @@ const QuestSetProgressCard = ({
   onButtonClick,
   ...props
 }: QuestSetProgressCardProps) => {
-  const progressPercentage = (numberCompletedQuests / numberQuests) * 100
+  const progressPercentage = getProgressPercentage(
+    numberCompletedQuests,
+    numberQuests,
+  )
   return (
     <div
       className="flex align-center w-full theme-border rounded-lg"

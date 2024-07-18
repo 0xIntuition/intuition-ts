@@ -111,6 +111,14 @@ export const themePlugin = plugin(
       '.theme-border': {
         '@apply border border-border/20': {},
       },
+      '.in-out-gradient': {
+        '@apply bg-gradient-to-r from-border/5 from-10% via-border/20 via-50% to-border/5 to-90%':
+          {},
+      },
+      '.in-out-gradient-strong': {
+        '@apply bg-gradient-to-r from-transparent from-10% via-border/20 via-50% to-transparent to-90%':
+          {},
+      },
     })
 
     addUtilities({

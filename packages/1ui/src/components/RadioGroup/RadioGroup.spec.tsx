@@ -83,7 +83,7 @@ describe('RadioGroup', () => {
               </button>
             </div>
             <span
-              class="w-full h-px block bg-gradient-to-r from-border/5 from-10% via-border/20 via-50% to-border/5 to-90%"
+              class="w-full h-px block in-out-gradient"
             />
           </div>
           <div>
@@ -114,7 +114,7 @@ describe('RadioGroup', () => {
               />
             </div>
             <span
-              class="w-full h-px block bg-gradient-to-r from-border/5 from-10% via-border/20 via-50% to-border/5 to-90%"
+              class="w-full h-px block in-out-gradient"
             />
           </div>
           <div>

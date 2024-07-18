@@ -1,4 +1,3 @@
-import * as React from 'react'
 import { useEffect, useState } from 'react'
 
 import {
@@ -11,10 +10,17 @@ import {
 } from '@0xintuition/1ui'
 import { UserPresenter } from '@0xintuition/api'
 
-import { getFormProps, getInputProps, useForm } from '@conform-to/react'
+import ErrorList from '@components/error-list'
+import { ImageChooser } from '@components/image-chooser'
+import Toast from '@components/toast'
+import {
+  getFormProps,
+  getInputProps,
+  SubmissionResult,
+  useForm,
+} from '@conform-to/react'
 import { getZodConstraint, parseWithZod } from '@conform-to/zod'
 import { useImageUploadFetcher } from '@lib/hooks/useImageUploadFetcher'
-import { useOffChainFetcher } from '@lib/hooks/useOffChainFetcher'
 import {
   identityTransactionReducer,
   initialIdentityTransactionState,
@@ -29,24 +35,32 @@ import {
 } from '@lib/utils/constants'
 import logger from '@lib/utils/logger'
 import { truncateString } from '@lib/utils/misc'
-import { useLocation } from '@remix-run/react'
+import { useFetcher, useLocation } from '@remix-run/react'
 import { toast } from 'sonner'
 import {
   IdentityTransactionActionType,
   IdentityTransactionStateType,
 } from 'types/transaction'
 
-import ErrorList from '../error-list'
-import { ImageChooser } from '../image-chooser'
-import Toast from '../toast'
-
 interface EditProfileFormProps {
   userObject: UserPresenter
+  setUserObject?: (userObject: UserPresenter) => void
   onSuccess?: () => void
   onClose: () => void
 }
 
-export function EditProfileForm({ userObject, onClose }: EditProfileFormProps) {
+interface OffChainFetcherData {
+  success: 'success' | 'error'
+  profile: UserPresenter
+  submission: SubmissionResult<string[]> | null
+}
+
+// TODO: [ENG-2691] - This will be refactored along with the create identity form. This form is based on that, so it will be refactored in the same way.
+export function EditProfileForm({
+  userObject,
+  setUserObject,
+  onClose,
+}: EditProfileFormProps) {
   const { state, dispatch } = useTransactionState<
     IdentityTransactionStateType,
     IdentityTransactionActionType
@@ -55,19 +69,22 @@ export function EditProfileForm({ userObject, onClose }: EditProfileFormProps) {
   const location = useLocation()
   const isCreateRoute = location.pathname.includes('create')
 
-  const [identityImageFile, setIdentityImageFile] = useState<File | undefined>(
-    undefined,
-  )
-
   const imageUploadFetcher = useImageUploadFetcher()
 
-  const { offChainFetcher, lastOffChainSubmission } = useOffChainFetcher()
+  const offChainFetcher = useFetcher<OffChainFetcherData>()
+  const lastOffChainSubmission = offChainFetcher.data?.submission
 
+  const [imageFile, setImageFile] = useState<File | undefined>(undefined)
   const [imageFilename, setImageFilename] = useState<string | null>(null)
   const [imageFilesize, setImageFilesize] = useState<string | null>(null)
-  const [displayName, setDisplayName] = useState(userObject.display_name ?? '')
-  const [description, setDescription] = useState(userObject.description ?? '')
 
+  const [displayName, setDisplayName] = useState(
+    userObject.display_name ? userObject.display_name : '',
+  )
+
+  const [description, setDescription] = useState(
+    userObject.description ? userObject.description : '',
+  )
   const [form, fields] = useForm({
     id: 'update-profile',
     lastResult: lastOffChainSubmission,
@@ -87,26 +104,40 @@ export function EditProfileForm({ userObject, onClose }: EditProfileFormProps) {
     setImageFilesize(filesize)
   }
 
-  useEffect(() => {
-    if (identityImageFile) {
-      if (
-        !ACCEPTED_IMAGE_MIME_TYPES.includes(identityImageFile.type) ||
-        identityImageFile.size > MAX_UPLOAD_SIZE
-      ) {
-        console.error('Invalid image file', identityImageFile)
-        return
+  const handleError = (
+    error: unknown,
+    dispatch: React.Dispatch<IdentityTransactionActionType>,
+  ) => {
+    if (error instanceof Error) {
+      let errorMessage = 'Error in creating user identity data.'
+      if (error.message.includes('rejected')) {
+        errorMessage = 'Signature rejected. Try again when you are ready.'
       }
-
-      const formData = new FormData()
-      formData.append('image_url', identityImageFile)
-
-      imageUploadFetcher.submit(formData, {
-        action: '/actions/upload-image',
-        method: 'post',
-        encType: 'multipart/form-data',
+      dispatch({
+        type: 'TRANSACTION_ERROR',
+        error: errorMessage,
       })
+      toast.custom(
+        () => (
+          <Toast
+            title="Error"
+            description={errorMessage}
+            icon={
+              <Icon
+                name="triangle-exclamation"
+                className="h-3 w-3 text-destructive"
+              />
+            }
+          />
+        ),
+        {
+          duration: 5000,
+        },
+      )
+      return
     }
-  }, [identityImageFile])
+    console.error('Error creating identity', error)
+  }
 
   // Handle Triggering Image Upload
   useEffect(() => {
@@ -121,7 +152,6 @@ export function EditProfileForm({ userObject, onClose }: EditProfileFormProps) {
     ) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const data = imageUploadFetcher.data as any
-
       if (typeof data.submission.payload.image_url !== 'string') {
         logger('Transaction Error')
         dispatch({
@@ -134,11 +164,27 @@ export function EditProfileForm({ userObject, onClose }: EditProfileFormProps) {
           imageUrl: data.submission.payload.image_url ?? '',
           displayName: data.submission.payload.display_name ?? '',
           description: data.submission.payload.description ?? '',
-          externalReference: '',
+          externalReference: data.submission.payload.external_reference ?? '',
         })
       }
     }
   }, [imageUploadFetcher.state, imageUploadFetcher.data, dispatch])
+
+  useEffect(() => {
+    logger('file changed', imageFile)
+    if (imageFile) {
+      if (
+        !ACCEPTED_IMAGE_MIME_TYPES.includes(imageFile.type) ||
+        imageFile.size > MAX_UPLOAD_SIZE
+      ) {
+        console.error('Invalid image file', imageFile)
+        return
+      }
+
+      const formData = new FormData()
+      formData.append('image_url', imageFile)
+    }
+  }, [imageFile])
 
   useEffect(() => {
     if (state.status === 'image-upload-complete') {
@@ -148,62 +194,36 @@ export function EditProfileForm({ userObject, onClose }: EditProfileFormProps) {
       formData.append('image_url', state.imageUrl ?? '')
       formData.append('display_name', state.displayName ?? '')
       formData.append('description', state.description ?? '')
-
       // Submit the off-chain transaction
       try {
         offChainFetcher.submit(formData, {
           action: '/actions/edit-profile',
           method: 'post',
         })
-        onClose()
       } catch (error: unknown) {
-        if (error instanceof Error) {
-          let errorMessage = 'Error in creating offchain identity data.'
-          if (error.message.includes('rejected')) {
-            errorMessage = 'Signature rejected. Try again when you are ready.'
-          }
-          dispatch({
-            type: 'TRANSACTION_ERROR',
-            error: errorMessage,
-          })
-          toast.custom(
-            () => (
-              <Toast
-                title="Error"
-                description={errorMessage}
-                icon={
-                  <Icon
-                    name="triangle-exclamation"
-                    className="h-3 w-3 text-destructive"
-                  />
-                }
-              />
-            ),
-            {
-              duration: 5000,
-            },
-          )
-          return
-        }
-        console.error('Error creating identity', error)
+        handleError(error, dispatch)
       }
     }
   }, [imageUploadFetcher.state, imageUploadFetcher.data, state])
 
+  useEffect(() => {
+    if (state.status === 'error') {
+      setLoading(false)
+    }
+  }, [state.status])
+
   // Handle Initial Form Submit
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    console.log('Form submitting')
     event.preventDefault()
     if (userObject.image !== previewImage) {
       try {
         dispatch({ type: 'START_TRANSACTION' })
+        setLoading(true)
         const formData = new FormData(event.currentTarget)
-
         // Initial form validation
         const submission = parseWithZod(formData, {
           schema: updateProfileSchema(),
         })
-
         if (
           submission.status === 'error' &&
           submission.error !== null &&
@@ -211,7 +231,6 @@ export function EditProfileForm({ userObject, onClose }: EditProfileFormProps) {
         ) {
           console.error('Update profile validation errors: ', submission.error)
         }
-
         setLoading(true)
         dispatch({ type: 'START_IMAGE_UPLOAD' })
         imageUploadFetcher.submit(formData, {
@@ -220,52 +239,21 @@ export function EditProfileForm({ userObject, onClose }: EditProfileFormProps) {
           encType: 'multipart/form-data',
         })
       } catch (error: unknown) {
-        logger(error)
+        handleError(error, dispatch)
       }
     } else {
       try {
         dispatch({ type: 'START_TRANSACTION' })
+        setLoading(true)
         const formData = new FormData(event.currentTarget)
-
-        console.log('previewImage', previewImage)
         formData.append('id', userObject.id ?? '')
         formData.append('image_url', previewImage ?? '')
-
         offChainFetcher.submit(formData, {
           action: '/actions/edit-profile',
           method: 'post',
         })
-        onClose()
       } catch (error: unknown) {
-        if (error instanceof Error) {
-          let errorMessage = 'Error in creating offchain identity data.'
-          if (error.message.includes('rejected')) {
-            errorMessage = 'Signature rejected. Try again when you are ready.'
-          }
-          dispatch({
-            type: 'TRANSACTION_ERROR',
-            error: errorMessage,
-          })
-          toast.custom(
-            () => (
-              <Toast
-                title="Error"
-                description={errorMessage}
-                icon={
-                  <Icon
-                    name="triangle-exclamation"
-                    className="h-3 w-3 text-destructive"
-                  />
-                }
-              />
-            ),
-            {
-              duration: 5000,
-            },
-          )
-          return
-        }
-        console.error('Error creating identity', error)
+        handleError(error, dispatch)
       }
     }
   }
@@ -289,6 +277,14 @@ export function EditProfileForm({ userObject, onClose }: EditProfileFormProps) {
       setPreviewImage(userObject.image)
     }
   }, [userObject.image])
+
+  useEffect(() => {
+    if (offChainFetcher.data) {
+      setUserObject?.(offChainFetcher.data.profile)
+      onClose?.()
+      setLoading(false)
+    }
+  }, [offChainFetcher.data, onClose])
 
   return (
     <>
@@ -326,8 +322,7 @@ export function EditProfileForm({ userObject, onClose }: EditProfileFormProps) {
                     previewImage={previewImage}
                     setPreviewImage={setPreviewImage}
                     onFileChange={handleFileChange}
-                    setImageFile={setIdentityImageFile}
-                    {...getInputProps(fields.image_url, { type: 'file' })}
+                    setImageFile={setImageFile}
                   />
                 </div>
                 <div className="flex-col justify-start items-start inline-flex">

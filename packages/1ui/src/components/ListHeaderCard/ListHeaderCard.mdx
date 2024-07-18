@@ -1,0 +1,39 @@
+import { Canvas, Controls, Meta, Source, Title } from '@storybook/blocks'
+
+import * as Stories from './ListHeaderCard.stories'
+
+<Meta of={Stories} />
+
+<Title />
+
+#### A header card for lists
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { ListHeaderCard } from '@0xintuition/1ui'
+
+<ListHeaderCard label="Identities" value={35}>
+  <Claim
+    subject={{
+      variant: 'non-user',
+      label: '0xintuition',
+    }}
+    predicate={{
+      variant: 'non-user',
+      label: 'is really',
+    }}
+    object={{
+      variant: 'non-user',
+      label: 'cool',
+    }}
+  />
+</ListHeaderCard>
+`} />
+
+<Canvas of={Stories.BasicUsage} sourceState="none" />
+
+## Properties
+
+<Controls />

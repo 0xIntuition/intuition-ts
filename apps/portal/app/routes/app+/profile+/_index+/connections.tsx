@@ -138,12 +138,14 @@ export async function loader({ request }: LoaderFunctionArgs) {
 const TabContent = ({
   value,
   claim,
+  totalFollowers,
   totalStake,
   variant,
   children,
 }: {
   value: string
   claim: ClaimPresenter
+  totalFollowers: number | null | undefined
   totalStake: string
   variant: ConnectionsHeaderVariantType
   children?: ReactNode
@@ -159,7 +161,7 @@ const TabContent = ({
         predicate={claim.predicate}
         object={variant === 'followers' ? claim.object : null}
         totalStake={totalStake}
-        totalFollowers={claim.num_positions}
+        totalFollowers={totalFollowers ?? 0}
       />
       {children}
     </TabsContent>
@@ -168,12 +170,23 @@ const TabContent = ({
 
 export default function ProfileConnections() {
   const {
+    userIdentity,
     followClaim,
     followers,
     followersPagination,
     following,
     followingPagination,
   } = useLiveLoader<typeof loader>(['attest'])
+
+  if (!followClaim) {
+    return (
+      <Text>
+        This user has no follow claim yet. A follow claim will be created when
+        the first person follows them.
+      </Text>
+    )
+  }
+
   return (
     <div className="flex-col justify-start items-start flex w-full">
       <div className="self-stretch justify-between items-center inline-flex mb-6">
@@ -204,6 +217,7 @@ export default function ProfileConnections() {
         <TabContent
           value={ConnectionsHeaderVariants.followers}
           claim={followClaim}
+          totalFollowers={userIdentity.follower_count}
           totalStake={formatBalance(followClaim.assets_sum, 18, 4)}
           variant={ConnectionsHeaderVariants.followers}
         >
@@ -216,7 +230,8 @@ export default function ProfileConnections() {
         <TabContent
           value={ConnectionsHeaderVariants.following}
           claim={followClaim}
-          totalStake={formatBalance(followClaim.assets_sum, 18, 4)}
+          totalFollowers={userIdentity.followed_count}
+          totalStake={'0'} //TODO: Update this value when it is available. See ENG-2708
           variant={ConnectionsHeaderVariants.following}
         >
           <FollowList

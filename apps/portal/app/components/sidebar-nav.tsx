@@ -43,7 +43,7 @@ const sidebarNavRoutes: SidebarNavRoute[] = [
     iconName: 'magnifying-glass',
   },
   {
-    route: '/app/quests',
+    route: '/app/quest',
     label: 'Quests',
     iconName: 'crystal-ball',
   },
@@ -75,7 +75,7 @@ export default function SidebarNav({
   return (
     <>
       <SidebarLayoutProvider>
-        <SidebarLayout>
+        <SidebarLayout className="h-screen">
           <SidebarLayoutNav collapsedSize={4} minSize={4} maxSize={15}>
             <SidebarLayoutNavHeader>
               <SidebarLayoutNavHeaderButton
@@ -166,7 +166,7 @@ export default function SidebarNav({
               )}
             </SidebarLayoutNavFooter>
           </SidebarLayoutNav>
-          <SidebarLayoutContent className="justify-start h-screen min-h-screen overflow-y-scroll">
+          <SidebarLayoutContent className="h-full w-full min-h-screen overflow-y-scroll">
             {children}
           </SidebarLayoutContent>
         </SidebarLayout>

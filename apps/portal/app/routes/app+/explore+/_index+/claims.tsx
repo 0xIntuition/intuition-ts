@@ -7,7 +7,7 @@ import {
 
 import { ExploreSearch } from '@components/explore/ExploreSearch'
 import { ClaimsList } from '@components/list/claims'
-import { fetchClaims } from '@lib/utils/fetches'
+import { fetchClaims, fetchIdentities } from '@lib/utils/fetches'
 import { calculateTotalPages, getAuthHeaders } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
@@ -39,14 +39,15 @@ export async function loader({ request }: LoaderFunctionArgs) {
     search,
   )
 
+  const identities = await fetchIdentities()
+
   const claimsTotalPages = calculateTotalPages(
     claims?.total ?? 0,
     Number(limit),
   )
 
-  console.log('claims', claims)
-
   return json({
+    identities: identities?.data,
     claims: claims?.data as ClaimPresenter[],
     claimsPagination: {
       currentPage: Number(page),
@@ -58,10 +59,15 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export default function ExploreClaims() {
-  const { claims, claimsPagination } = useLoaderData<typeof loader>()
+  const { claims, identities, claimsPagination } =
+    useLoaderData<typeof loader>()
   return (
     <div className="m-8 flex flex-col items-center gap-4">
-      <ExploreSearch variant="claim" className="mb-12" />
+      <ExploreSearch
+        variant="claim"
+        className="mb-12"
+        identities={identities}
+      />
       <ClaimsList
         claims={claims}
         pagination={claimsPagination}

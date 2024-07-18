@@ -6,6 +6,7 @@ import { EditProfileForm } from './form'
 export interface EditProfileModalProps {
   userObject: UserPresenter
   open?: boolean
+  setUserObject?: (userObject: UserPresenter) => void
   onClose: () => void
   onSuccess?: () => void
 }
@@ -13,20 +14,25 @@ export interface EditProfileModalProps {
 export default function EditProfileModal({
   userObject,
   open,
+  setUserObject,
   onClose,
-  onSuccess,
 }: EditProfileModalProps) {
   return (
     <Dialog
       open={open}
-      onOpenChange={() => {
-        onClose?.()
+      onOpenChange={(isOpen) => {
+        if (!isOpen) {
+          onClose?.()
+        }
       }}
     >
       <DialogContent className="w-[600px] bg-neutral-950 rounded-xl shadow border border-solid border-black/10">
         <EditProfileForm
           userObject={userObject}
-          onSuccess={onSuccess}
+          setUserObject={setUserObject}
+          onSuccess={() => {
+            onClose()
+          }}
           onClose={onClose}
         />
       </DialogContent>

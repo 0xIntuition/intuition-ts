@@ -15,7 +15,8 @@
       "@styles/*": ["app/styles/*"],
       "@server/*": ["app/.server/*"],
       "@client/*": ["app/.client/*"],
-      "@images/*": ["./src/images/*"]
+      "@images/*": ["./src/images/*"],
+      "@assets/*": ["app/assets/*"]
     },
     "outDir": "./build"
   },

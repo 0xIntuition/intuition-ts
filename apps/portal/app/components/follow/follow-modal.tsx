@@ -95,11 +95,7 @@ export default function FollowModal({
     awaitingOnChainConfirmation,
     isError,
     reset,
-  } = claim === undefined
-    ? createHook
-    : mode === 'follow'
-      ? depositHook
-      : redeemHook
+  } = !claim ? createHook : mode === 'follow' ? depositHook : redeemHook
 
   const feeFetcher = useLoaderFetcher<CreateLoaderData>(CREATE_RESOURCE_ROUTE)
 
@@ -115,24 +111,21 @@ export default function FollowModal({
         const txHash = await writeContractAsync({
           address: contract as `0x${string}`,
           abi: multivaultAbi as Abi,
-          functionName:
-            claim === undefined
-              ? 'createTriple'
-              : actionType === 'follow'
-                ? 'depositTriple'
-                : 'redeemTriple',
-          args:
-            claim === undefined
-              ? [iVaultId, followVaultId, userVaultId]
-              : actionType === 'follow'
-                ? [userWallet as `0x${string}`, vault_id]
-                : [user_conviction, userWallet as `0x${string}`, vault_id],
-          value:
-            claim === undefined
-              ? BigInt(tripleCost) + parseUnits(val === '' ? '0' : val, 18)
-              : actionType === 'follow'
-                ? parseUnits(val === '' ? '0' : val, 18)
-                : undefined,
+          functionName: !claim
+            ? 'createTriple'
+            : actionType === 'follow'
+              ? 'depositTriple'
+              : 'redeemTriple',
+          args: !claim
+            ? [iVaultId, followVaultId, userVaultId]
+            : actionType === 'follow'
+              ? [userWallet as `0x${string}`, vault_id]
+              : [user_conviction, userWallet as `0x${string}`, vault_id],
+          value: !claim
+            ? BigInt(tripleCost) + parseUnits(val === '' ? '0' : val, 18)
+            : actionType === 'follow'
+              ? parseUnits(val === '' ? '0' : val, 18)
+              : undefined,
         })
         if (txHash) {
           dispatch({ type: 'TRANSACTION_PENDING' })

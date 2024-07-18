@@ -21,6 +21,18 @@ describe('Trunctacular', () => {
       </DocumentFragment>
     `)
   })
+  it('should render appropriate elements when given string that starts with 0x', () => {
+    const { asFragment } = render(<Trunctacular value="0xUser" />)
+    expect(asFragment()).toMatchInlineSnapshot(`
+      <DocumentFragment>
+        <p
+          class="text-primary text-base font-normal"
+        >
+          0xUser
+        </p>
+      </DocumentFragment>
+    `)
+  })
   it('should render appropriate elements when given wallet address value', () => {
     const { asFragment } = render(
       <Trunctacular value="0x1234567890abcdef1234567890abcdef12345678" />,
@@ -47,6 +59,23 @@ describe('Trunctacular', () => {
           class="text-primary text-base font-normal"
         >
           shortName
+        </p>
+      </DocumentFragment>
+    `)
+  })
+  it('should render appropriate elements when given custom maxStringLength', () => {
+    const { asFragment } = render(
+      <Trunctacular
+        value="ReallyLongNameThatKeepsOnGoing"
+        maxStringLength={60}
+      />,
+    )
+    expect(asFragment()).toMatchInlineSnapshot(`
+      <DocumentFragment>
+        <p
+          class="text-primary text-base font-normal"
+        >
+          ReallyLongNameThatKeepsOnGoing
         </p>
       </DocumentFragment>
     `)

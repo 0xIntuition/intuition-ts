@@ -27,7 +27,7 @@ describe('QuestCard', () => {
             style="background-image: url(https://via.placeholder.com/150);"
           >
             <div
-              class="absolute top-2.5 left-2.5 "
+              class="absolute top-2.5 left-2.5"
             >
               <p
                 class="text-base font-normal text-foreground/70 bg-background/70 backdrop-blur-md px-2 py-1 rounded-md theme-border"
@@ -36,7 +36,7 @@ describe('QuestCard', () => {
               </p>
             </div>
             <div
-              class="w-full h-full bg-cover bg-center"
+              class="w-full h-full bg-cover bg-center border-r border-border/10"
             />
           </div>
           <div
@@ -116,7 +116,7 @@ describe('QuestCard', () => {
               Start Quest
             </button>
             <p
-              class="text-sm font-normal text-muted-foreground"
+              class="text-base font-normal text-muted-foreground"
             >
               +100 Points
             </p>
@@ -149,7 +149,7 @@ describe('QuestCard', () => {
             style="background-image: url(https://via.placeholder.com/150);"
           >
             <div
-              class="absolute top-2.5 left-2.5 "
+              class="absolute top-2.5 left-2.5"
             >
               <p
                 class="text-base font-normal text-foreground/70 bg-background/70 backdrop-blur-md px-2 py-1 rounded-md theme-border"
@@ -158,7 +158,7 @@ describe('QuestCard', () => {
               </p>
             </div>
             <div
-              class="w-full h-full bg-cover bg-center"
+              class="w-full h-full bg-cover bg-center border-r border-border/10"
             />
           </div>
           <div
@@ -238,7 +238,7 @@ describe('QuestCard', () => {
               Start Quest
             </button>
             <p
-              class="text-sm font-normal text-muted-foreground"
+              class="text-base font-normal text-muted-foreground"
             >
               +100 Points
             </p>
@@ -271,7 +271,7 @@ describe('QuestCard', () => {
             style="background-image: url(https://via.placeholder.com/150);"
           >
             <div
-              class="absolute top-2.5 left-2.5 "
+              class="absolute top-2.5 left-2.5"
             >
               <p
                 class="text-base font-normal text-foreground/70 bg-background/70 backdrop-blur-md px-2 py-1 rounded-md theme-border"
@@ -280,7 +280,7 @@ describe('QuestCard', () => {
               </p>
             </div>
             <div
-              class="w-full h-full bg-cover bg-center"
+              class="w-full h-full bg-cover bg-center border-r border-border/10"
             />
           </div>
           <div
@@ -360,7 +360,7 @@ describe('QuestCard', () => {
               Continue Quest
             </button>
             <p
-              class="text-sm font-normal text-muted-foreground"
+              class="text-base font-normal text-muted-foreground"
             >
               +100 Points
             </p>
@@ -393,7 +393,7 @@ describe('QuestCard', () => {
             style="background-image: url(https://via.placeholder.com/150);"
           >
             <div
-              class="absolute top-2.5 left-2.5 "
+              class="absolute top-2.5 left-2.5"
             >
               <p
                 class="text-base font-normal text-foreground/70 bg-background/70 backdrop-blur-md px-2 py-1 rounded-md theme-border"
@@ -402,7 +402,7 @@ describe('QuestCard', () => {
               </p>
             </div>
             <div
-              class="w-full h-full bg-cover bg-center"
+              class="w-full h-full bg-cover bg-center border-r border-border/10"
             />
           </div>
           <div
@@ -482,7 +482,7 @@ describe('QuestCard', () => {
               Continue Quest
             </button>
             <p
-              class="text-sm font-normal text-foreground"
+              class="text-base font-normal text-foreground"
             >
               +100 Points
             </p>
@@ -515,7 +515,7 @@ describe('QuestCard', () => {
             style="background-image: url(https://via.placeholder.com/150);"
           >
             <div
-              class="absolute top-2.5 left-2.5 "
+              class="absolute top-2.5 left-2.5"
             >
               <p
                 class="text-base font-normal text-foreground/70 bg-background/70 backdrop-blur-md px-2 py-1 rounded-md theme-border"
@@ -524,7 +524,7 @@ describe('QuestCard', () => {
               </p>
             </div>
             <div
-              class="w-full h-full bg-cover bg-center"
+              class="w-full h-full bg-cover bg-center border-r border-border/10"
             />
           </div>
           <div
@@ -604,7 +604,7 @@ describe('QuestCard', () => {
               Completed
             </button>
             <p
-              class="text-sm font-normal text-success"
+              class="text-base font-normal text-success"
             >
               +100 Points
             </p>
@@ -637,7 +637,7 @@ describe('QuestCard', () => {
             style="background-image: url(https://via.placeholder.com/150);"
           >
             <div
-              class="absolute top-2.5 left-2.5 "
+              class="absolute top-2.5 left-2.5"
             >
               <p
                 class="text-base font-normal text-foreground/70 bg-background/70 backdrop-blur-md px-2 py-1 rounded-md theme-border"
@@ -646,7 +646,7 @@ describe('QuestCard', () => {
               </p>
             </div>
             <div
-              class="w-full h-full bg-cover bg-center"
+              class="w-full h-full bg-cover bg-center border-r border-border/10"
             />
           </div>
           <div
@@ -727,7 +727,7 @@ describe('QuestCard', () => {
               Locked
             </button>
             <p
-              class="text-sm font-normal text-muted-foreground"
+              class="text-base font-normal text-muted-foreground"
             >
               +100 Points
             </p>
@@ -760,7 +760,7 @@ describe('QuestCard', () => {
             style="background-image: url(https://via.placeholder.com/150);"
           >
             <div
-              class="absolute top-2.5 left-2.5 "
+              class="absolute top-2.5 left-2.5"
             >
               <p
                 class="text-base font-normal text-foreground/70 bg-background/70 backdrop-blur-md px-2 py-1 rounded-md theme-border"
@@ -769,7 +769,7 @@ describe('QuestCard', () => {
               </p>
             </div>
             <div
-              class="w-full h-full bg-cover bg-center"
+              class="w-full h-full bg-cover bg-center border-r border-border/10"
             />
           </div>
           <div
@@ -849,7 +849,7 @@ describe('QuestCard', () => {
               Start Quest
             </button>
             <p
-              class="text-sm font-normal text-muted-foreground"
+              class="text-base font-normal text-muted-foreground"
             >
               +100 Points
             </p>
@@ -882,7 +882,7 @@ describe('QuestCard', () => {
             style="background-image: url(https://via.placeholder.com/150);"
           >
             <div
-              class="absolute top-2.5 left-2.5 "
+              class="absolute top-2.5 left-2.5"
             >
               <p
                 class="text-base font-normal text-foreground/70 bg-background/70 backdrop-blur-md px-2 py-1 rounded-md theme-border"
@@ -891,7 +891,7 @@ describe('QuestCard', () => {
               </p>
             </div>
             <div
-              class="w-full h-full bg-cover bg-center"
+              class="w-full h-full bg-cover bg-center border-r border-border/10"
             />
           </div>
           <div
@@ -971,7 +971,7 @@ describe('QuestCard', () => {
               Start Quest
             </button>
             <p
-              class="text-sm font-normal text-muted-foreground"
+              class="text-base font-normal text-muted-foreground"
             >
               +100 Points
             </p>
@@ -1004,7 +1004,7 @@ describe('QuestCard', () => {
             style="background-image: url(https://via.placeholder.com/150);"
           >
             <div
-              class="absolute top-2.5 left-2.5 "
+              class="absolute top-2.5 left-2.5"
             >
               <p
                 class="text-base font-normal text-foreground/70 bg-background/70 backdrop-blur-md px-2 py-1 rounded-md theme-border"
@@ -1013,7 +1013,7 @@ describe('QuestCard', () => {
               </p>
             </div>
             <div
-              class="w-full h-full bg-cover bg-center"
+              class="w-full h-full bg-cover bg-center border-r border-border/10"
             />
           </div>
           <div
@@ -1093,7 +1093,7 @@ describe('QuestCard', () => {
               Start Quest
             </button>
             <p
-              class="text-sm font-normal text-muted-foreground"
+              class="text-base font-normal text-muted-foreground"
             >
               +100 Points
             </p>

@@ -28,7 +28,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   const url = new URL(request.url)
   const searchParams = new URLSearchParams(url.search)
-  const search = searchParams.get('user')
+  const displayNameQuery = searchParams.get('user')
+  const hasTagQuery = searchParams.get('tagIds')
   const sortBy: SortColumn =
     (searchParams.get('sortBy') as SortColumn) ?? 'UpdatedAt'
   const direction: SortDirection =
@@ -43,7 +44,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
     Number(limit),
     sortBy as SortColumn,
     direction as SortDirection,
-    search,
+    displayNameQuery,
+    hasTagQuery,
   )
 
   const totalPages = calculateTotalPages(identities?.total ?? 0, Number(limit))

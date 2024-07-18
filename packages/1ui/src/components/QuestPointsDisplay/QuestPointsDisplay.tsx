@@ -43,8 +43,8 @@ const QuestPointsDisplay = ({
   const { statusClass } = getStatusComponentData(questStatus)
 
   return (
-    <Text variant="caption" weight="normal" className={cn(statusClass)}>
-      +{points} Points
+    <Text variant="body" weight="normal" className={cn(statusClass)}>
+      {`${points > 0 ? '+' : ''}${points} Points`}
     </Text>
   )
 }

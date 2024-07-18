@@ -23,6 +23,7 @@ import {
   SearchPositionsResponse,
   SortColumn,
   SortDirection,
+  TimeFrame,
   UsersService,
 } from '@0xintuition/api'
 
@@ -30,13 +31,15 @@ import logger from './logger'
 
 export async function getUserByWallet(
   wallet: string,
-): Promise<GetUserByWalletResponse | null> {
+): Promise<GetUserByWalletResponse> {
   try {
     return await UsersService.getUserByWalletPublic({ wallet })
   } catch (error: unknown) {
     if (error instanceof ApiError) {
       logger(`${error.name} - ${error.status}: ${error.message} ${error.url}`)
-      return null
+      throw new Response(error.message, {
+        status: error.status,
+      })
     }
     throw error
   }
@@ -75,7 +78,8 @@ export async function fetchUserIdentities(
   limit: number,
   sortBy: SortColumn,
   direction: SortDirection,
-  search: string | null,
+  displayName: string | null,
+  hasTag: string | null,
 ): Promise<SearchIdentityResponse | null> {
   try {
     return await IdentitiesService.searchIdentity({
@@ -83,7 +87,8 @@ export async function fetchUserIdentities(
       limit,
       sortBy,
       direction,
-      displayName: search,
+      displayName: displayName ?? null,
+      hasTag: hasTag ?? null,
       isUser: true,
     })
   } catch (error: unknown) {
@@ -110,19 +115,21 @@ export async function fetchUserTotals(
 }
 
 export async function fetchIdentities(
-  page: number,
-  limit: number,
-  sortBy: SortColumn,
-  direction: SortDirection,
-  search: string | null,
+  page?: number,
+  limit?: number,
+  sortBy?: SortColumn,
+  direction?: SortDirection,
+  displayName?: string | null,
+  hasTag?: string | null,
 ): Promise<SearchIdentityResponse | null> {
   try {
     return await IdentitiesService.searchIdentity({
-      page,
-      limit,
-      sortBy,
-      direction,
-      displayName: search,
+      page: page ?? 1,
+      limit: limit ?? 10,
+      sortBy: sortBy ?? 'AssetsSum',
+      direction: direction ?? 'desc',
+      displayName: displayName ?? null,
+      hasTag: hasTag ?? null,
       isUser: false,
     })
   } catch (error: unknown) {
@@ -344,18 +351,24 @@ export async function fetchClaimsWithUserPosition(
 export async function fetchIdentityFollowers(
   id: string,
   page: number,
-  limit: number,
-  sortBy: SortColumn,
-  direction: SortDirection,
+  limit?: number,
+  sortBy?: SortColumn,
+  direction?: SortDirection,
+  offset?: number,
+  timeframe?: TimeFrame,
+  userWallet?: string,
   // search: string | null, TODO: Add search once BE implements
 ): Promise<GetIdentityFollowersResponse | null> {
   try {
     return await IdentitiesService.getIdentityFollowers({
       id,
       page,
-      limit: Number(limit),
-      sortBy: sortBy as SortColumn,
-      direction: direction as SortDirection,
+      limit: limit ? Number(limit) : null,
+      sortBy: sortBy ? (sortBy as SortColumn) : null,
+      direction: direction ? (direction as SortDirection) : null,
+      offset: offset ? Number(offset) : null,
+      timeframe: timeframe ? (timeframe as TimeFrame) : null,
+      userWallet: userWallet ? userWallet : null,
     })
   } catch (error: unknown) {
     if (error instanceof ApiError) {
@@ -369,18 +382,24 @@ export async function fetchIdentityFollowers(
 export async function fetchIdentityFollowing(
   id: string,
   page: number,
-  limit: number,
-  sortBy: SortColumn,
-  direction: SortDirection,
+  limit?: number,
+  sortBy?: SortColumn,
+  direction?: SortDirection,
+  offset?: number,
+  timeframe?: TimeFrame,
+  userWallet?: string,
   // search: string | null, TODO: Add search once BE implements
 ): Promise<GetIdentityFollowedResponse | null> {
   try {
     return await IdentitiesService.getIdentityFollowed({
       id,
       page,
-      limit: Number(limit),
-      sortBy: sortBy as SortColumn,
-      direction: direction as SortDirection,
+      limit: limit ? Number(limit) : null,
+      sortBy: sortBy ? (sortBy as SortColumn) : null,
+      direction: direction ? (direction as SortDirection) : null,
+      offset: offset ? Number(offset) : null,
+      timeframe: timeframe ? (timeframe as TimeFrame) : null,
+      userWallet: userWallet ? userWallet : null,
     })
   } catch (error: unknown) {
     if (error instanceof ApiError) {
