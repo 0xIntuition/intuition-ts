@@ -1,15 +1,11 @@
-import { IdentitiesService, IdentityPresenter, OpenAPI } from '@0xintuition/api'
+import { IdentitiesService, IdentityPresenter } from '@0xintuition/api'
 
 import logger from '@lib/utils/logger'
-import { getAuthHeaders } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
-import { getPrivyAccessToken } from '@server/privy'
+import { setupApiWithWallet } from '@server/auth'
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  OpenAPI.BASE = 'https://dev.api.intuition.systems'
-  const accessToken = getPrivyAccessToken(request)
-  const headers = getAuthHeaders(accessToken !== null ? accessToken : '')
-  OpenAPI.HEADERS = headers as Record<string, string>
+  await setupApiWithWallet(request)
 
   const url = new URL(request.url)
   const idQuery = url.searchParams.get('id') || ''
