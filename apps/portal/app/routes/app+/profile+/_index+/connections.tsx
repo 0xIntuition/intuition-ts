@@ -177,6 +177,16 @@ export default function ProfileConnections() {
     following,
     followingPagination,
   } = useLiveLoader<typeof loader>(['attest'])
+
+  if (!followClaim) {
+    return (
+      <Text>
+        This user has no follow claim yet. A follow claim will be created when
+        the first person follows them.
+      </Text>
+    )
+  }
+
   return (
     <div className="flex-col justify-start items-start flex w-full">
       <div className="self-stretch justify-between items-center inline-flex mb-6">
