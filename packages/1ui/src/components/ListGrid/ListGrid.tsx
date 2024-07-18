@@ -67,7 +67,10 @@ const ListGrid: React.FC<ListGridProps> = ({
               >
                 {identity.isSaved ? (
                   <>
-                    <Icon name="bookmark-filled" className="w-3 h-3 mr-2" />
+                    <Icon
+                      name="bookmark-filled"
+                      className="w-3 h-3 text-primary"
+                    />
                     Saved · {identity.savedAmount} ETH
                   </>
                 ) : (
