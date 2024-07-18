@@ -1,4 +1,8 @@
 import {
+  Button,
+  ButtonVariant,
+  Icon,
+  IconName,
   ProgressCard,
   QuestCard,
   QuestCriteriaStatus,
@@ -34,6 +38,13 @@ export default function Quests() {
           className="object-cover w-full h-[350px] border-x border-b border-border/20 rounded-b-lg"
         />
         <div className="flex flex-col gap-5">
+          <Link to="/app/quest">
+            <Button variant={ButtonVariant.secondary} className="w-fit">
+              <div className="flex items-center gap-2">
+                <Icon name={IconName.arrowLeft} />
+              </div>
+            </Button>
+          </Link>
           <Text variant="heading4" weight="medium">
             Quest Title
           </Text>
