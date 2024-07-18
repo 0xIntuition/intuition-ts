@@ -34,7 +34,7 @@ export function PaginationComponent({
   label,
   listContainerRef,
 }: PaginationComponentProps) {
-  const [userInteracted, setUserInteracted] = useState(false)
+  const [hasUserInteracted, setHasUserInteracted] = useState(false)
   const prevPageRef = useRef(currentPage)
 
   useEffect(() => {
