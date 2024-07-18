@@ -23,6 +23,8 @@ export function IdentitiesList({
   const options: SortOption<SortColumn>[] = [
     { value: 'Total ETH', sortBy: 'AssetsSum' },
     { value: 'Total Positions', sortBy: 'NumPositions' },
+    { value: 'Updated At', sortBy: 'UpdatedAt' },
+    { value: 'Created At', sortBy: 'CreatedAt' },
   ]
 
   return (

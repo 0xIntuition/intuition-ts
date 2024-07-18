@@ -27,6 +27,8 @@ export function ClaimsList({
     { value: 'Total Positions', sortBy: 'NumPositions' },
     { value: 'Positions For', sortBy: 'ForNumPositions' },
     { value: 'Positions Against', sortBy: 'AgainstNumPositions' },
+    { value: 'Updated At', sortBy: 'UpdatedAt' },
+    { value: 'Created At', sortBy: 'CreatedAt' },
   ]
 
   return (
