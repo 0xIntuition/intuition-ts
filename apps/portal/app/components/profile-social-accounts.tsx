@@ -21,19 +21,19 @@ export function ProfileSocialAccounts({
     Boolean(privyUser[platform.platformPrivyName]),
   )
 
+  if (hasLinkedAccounts) {
+    return (
+      <EditSocialAccounts
+        privyUser={privyUser}
+        handleOpenEditSocialLinksModal={handleOpenEditSocialLinksModal}
+      />
+    )
+  }
+
   return (
-    <>
-      {hasLinkedAccounts ? (
-        <EditSocialAccounts
-          privyUser={privyUser}
-          handleOpenEditSocialLinksModal={handleOpenEditSocialLinksModal}
-        />
-      ) : (
-        <LinkSocialAccounts
-          handleOpenEditSocialLinksModal={handleOpenEditSocialLinksModal}
-        />
-      )}
-    </>
+    <LinkSocialAccounts
+      handleOpenEditSocialLinksModal={handleOpenEditSocialLinksModal}
+    />
   )
 }
 
