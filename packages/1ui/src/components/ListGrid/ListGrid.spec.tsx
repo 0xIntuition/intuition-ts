@@ -30,73 +30,69 @@ describe('ListGrid', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="grid gap-[7.5rem] theme-border"
+          class="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8"
         >
           <div
-            class="theme-border p-4 rounded-xl"
+            class="theme-border p-8 rounded-xl flex flex-col items-center justify-between"
+            style="height: 18rem;"
           >
-            <img
-              alt="Best Crypto Portfolio Trackers"
-              class="w-full h-32 object-cover rounded-t-xl"
-              src="path/to/image1.png"
-            />
             <div
-              class="p-4"
+              class="text-center flex-grow flex flex-col justify-between items-center"
             >
-              <h2
-                class="text-xl font-bold"
+              <p
+                class="text-lg font-medium text-primary/80 mb-2"
               >
                 Best Crypto Portfolio Trackers
-              </h2>
-              <p
-                class="text-muted-foreground"
-              >
-                45 identities
               </p>
               <p
-                class="text-muted-foreground"
+                class="text-base font-normal text-secondary/50 mb-2"
               >
                 45 identities
-              </p>
-              <p
-                class="text-muted-foreground"
-              >
-                Saved: 0.047 ETH
               </p>
             </div>
+            <button
+              class="flex justify-center items-center gap-2 text-sm font-medium border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted primary-gradient-subtle text-primary/60 border-primary/10 rounded-lg hover:text-primary disabled:from-muted disabled:to-muted shadow-md-subtle px-3 py-1 mt-4 w-full"
+            >
+              <svg
+                class="w-3 h-3"
+              >
+                <use
+                  href="/src/components/Icon/Icon.sprites.svg#bookmark-filled"
+                />
+              </svg>
+              Saved · 0.047 ETH
+            </button>
           </div>
           <div
-            class="theme-border p-4 rounded-xl"
+            class="theme-border p-8 rounded-xl flex flex-col items-center justify-between"
+            style="height: 18rem;"
           >
-            <img
-              alt="Top Decentralized Finance Platforms"
-              class="w-full h-32 object-cover rounded-t-xl"
-              src="path/to/image2.png"
-            />
             <div
-              class="p-4"
+              class="text-center flex-grow flex flex-col justify-between items-center"
             >
-              <h2
-                class="text-xl font-bold"
+              <p
+                class="text-lg font-medium text-primary/80 mb-2"
               >
                 Top Decentralized Finance Platforms
-              </h2>
-              <p
-                class="text-muted-foreground"
-              >
-                45 identities
               </p>
               <p
-                class="text-muted-foreground"
+                class="text-base font-normal text-secondary/50 mb-2"
               >
                 45 identities
-              </p>
-              <p
-                class="text-muted-foreground"
-              >
-                Saved: 0.047 ETH
               </p>
             </div>
+            <button
+              class="flex justify-center items-center gap-2 text-sm font-medium border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted primary-gradient-subtle text-primary/60 border-primary/10 rounded-lg hover:text-primary disabled:from-muted disabled:to-muted shadow-md-subtle px-3 py-1 mt-4 w-full"
+            >
+              <svg
+                class="w-3 h-3"
+              >
+                <use
+                  href="/src/components/Icon/Icon.sprites.svg#bookmark-filled"
+                />
+              </svg>
+              Saved · 0.047 ETH
+            </button>
           </div>
         </div>
       </DocumentFragment>
