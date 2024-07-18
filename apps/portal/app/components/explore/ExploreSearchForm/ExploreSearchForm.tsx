@@ -16,13 +16,15 @@ const ExploreSearchForm = ({
   searchParam,
   inputPlaceholder = 'Search by a username or address',
 }: ExploreSearchFormProps) => {
+  const tagsInputId = 'tags'
   const [searchParams] = useSearchParams()
   const submit = useSubmit()
+
   const handleChange = (event: React.ChangeEvent<HTMLFormElement>) => {
     const formData = new FormData(event.currentTarget)
-    const tagIds = formData.get('tags') as string
+    const tagIds = formData.get(tagsInputId) as string
     const query = formData.get(searchParam) as string
-    const params = new URLSearchParams({ [searchParam]: query, tags: tagIds })
+    const params = new URLSearchParams({ [searchParam]: query, tagIds })
     const action = `?${params.toString()}`
     submit(event.currentTarget, { action, method: 'get' })
   }
@@ -39,7 +41,10 @@ const ExploreSearchForm = ({
         initialValue={searchParams.get(searchParam)}
       />
       <Separator className="my-5 in-out-gradient-strong" />
-      <ExploreAddTags initialValue={searchParams.get('tags')} />
+      <ExploreAddTags
+        inputId={tagsInputId}
+        initialValue={searchParams.get(tagsInputId)}
+      />
     </Form>
   )
 }

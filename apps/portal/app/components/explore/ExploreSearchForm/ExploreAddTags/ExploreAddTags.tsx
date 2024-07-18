@@ -18,7 +18,13 @@ import {
   isTagAlreadySelected,
 } from './ExploreAddTags.utils'
 
-const ExploreAddTags = ({ initialValue }: { initialValue?: string | null }) => {
+const ExploreAddTags = ({
+  inputId,
+  initialValue,
+}: {
+  inputId: string
+  initialValue?: string | null
+}) => {
   const { setSearchQuery, identities, handleInput } = useIdentityServerSearch()
   const tagsContainerRef = React.useRef<HTMLDivElement>(null)
   const popoverContentRef = React.useRef<HTMLDivElement>(null)
@@ -26,29 +32,24 @@ const ExploreAddTags = ({ initialValue }: { initialValue?: string | null }) => {
   const [selectedTags, setSelectedTags] = React.useState<TagType[]>([])
   const [formElementValue, setFormElementValue] = React.useState('')
 
-  // TODO: FIX THIS
   React.useEffect(() => {
-    async function fetchTagData(id: string) {
-      return await fetchIdentity(id)
+    async function populateSelectedTags(initialValue: string) {
+      const selectedTags = []
+      const initialValueArray = initialValue.split(',')
+      initialValueArray.forEach(async (id) => {
+        const result = await fetchIdentity(id)
+        if (result) {
+          selectedTags.push({ name: result.display_name, id: result.id })
+        }
+        console.log(result)
+      })
     }
 
     if (initialValue) {
-      const initialValueArray = initialValue.split(',')
-      const initialSelectedTags: TagType[] = []
-      initialValueArray?.forEach((id) => {
-        fetchTagData(id).then((result) => {
-          if (result) {
-            initialSelectedTags.push({
-              name: result.display_name,
-              id: result.id,
-            })
-          }
-        })
-      })
-      setSelectedTags(initialSelectedTags)
+      populateSelectedTags(initialValue)
     }
     // Only run this block once on load
-    // eslint-disable-next-line
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   React.useEffect(() => {
@@ -76,9 +77,10 @@ const ExploreAddTags = ({ initialValue }: { initialValue?: string | null }) => {
     <div ref={tagsContainerRef}>
       {/* Add hidden input element to feed parent form */}
       <input
+        readOnly
         className="hidden"
         type="text"
-        name="tags"
+        name={inputId}
         value={formElementValue}
       />
       <Popover open={isPopoverOpen}>
