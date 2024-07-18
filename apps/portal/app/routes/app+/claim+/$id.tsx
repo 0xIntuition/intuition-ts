@@ -135,8 +135,8 @@ export default function ClaimDetails() {
   const userConviction =
     vaultDetails.user_conviction ?? claim.user_conviction_for
   const directionTagVariant =
-    userConviction > '0' ? TagVariant.for : TagVariant.against
-  const directionTagText = userConviction > '0' ? 'FOR' : 'AGAINST'
+    +userConviction > 0 ? TagVariant.for : TagVariant.against
+  const directionTagText = +userConviction > 0 ? 'FOR' : 'AGAINST'
 
   return (
     <>
