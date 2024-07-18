@@ -18,7 +18,7 @@ export function NestedLayout({
       <div className="flex pl-6 pr-10 py-10 w-1/3 max-w-xs flex-shrink-0 min-h-screen">
         <div className="flex flex-col items-center">{children}</div>
       </div>
-      <div className="flex flex-col flex-grow h-screen min-h-screen gap-8 overflow-y-scroll pr-10 py-10">
+      <div className="flex flex-col flex-grow h-screen min-h-screen gap-8 pr-10 py-10">
         {options && (
           <div className="flex flex-row justify-end">
             <SegmentedNav options={options} />

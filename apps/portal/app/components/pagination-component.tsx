@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import {
   Pagination,
@@ -34,14 +34,28 @@ export function PaginationComponent({
   label,
   listContainerRef,
 }: PaginationComponentProps) {
+  const [userInteracted, setUserInteracted] = useState(false)
+  const prevPageRef = useRef(currentPage)
+
   useEffect(() => {
-    if (listContainerRef && listContainerRef.current) {
+    if (
+      userInteracted &&
+      prevPageRef.current !== currentPage &&
+      listContainerRef &&
+      listContainerRef.current
+    ) {
       listContainerRef.current.scrollIntoView({
         behavior: 'smooth',
         block: 'start',
       })
     }
-  }, [currentPage, listContainerRef])
+    prevPageRef.current = currentPage
+  }, [listContainerRef, currentPage, userInteracted])
+
+  const handlePageChange = (newPage: number) => {
+    setUserInteracted(true)
+    onPageChange(newPage)
+  }
 
   return (
     <Pagination className="flex w-full justify-between">
@@ -49,7 +63,10 @@ export function PaginationComponent({
       <div className="flex">
         <PaginationRowSelection
           defaultValue={limit.toString()}
-          onValueChange={(newLimit) => onLimitChange(Number(newLimit))}
+          onValueChange={(newLimit) => {
+            setUserInteracted(true)
+            onLimitChange(Number(newLimit))
+          }}
         />
         <PaginationPageCounter
           currentPage={currentPage}
@@ -58,25 +75,25 @@ export function PaginationComponent({
         <PaginationContent>
           <PaginationItem>
             <PaginationFirst
-              onClick={() => onPageChange(1)}
+              onClick={() => handlePageChange(1)}
               disabled={currentPage === 1}
             />
           </PaginationItem>
           <PaginationItem>
             <PaginationPrevious
-              onClick={() => onPageChange(currentPage - 1)}
+              onClick={() => handlePageChange(currentPage - 1)}
               disabled={currentPage === 1 || currentPage === undefined}
             />
           </PaginationItem>
           <PaginationItem>
             <PaginationNext
-              onClick={() => onPageChange(currentPage + 1)}
+              onClick={() => handlePageChange(currentPage + 1)}
               disabled={currentPage === totalPages}
             />
           </PaginationItem>
           <PaginationItem>
             <PaginationLast
-              onClick={() => onPageChange(totalPages)}
+              onClick={() => handlePageChange(totalPages)}
               disabled={currentPage === totalPages}
             />
           </PaginationItem>
