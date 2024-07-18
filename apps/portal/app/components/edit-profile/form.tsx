@@ -98,6 +98,41 @@ export function EditProfileForm({
     setImageFilesize(filesize)
   }
 
+  const handleError = (
+    error: unknown,
+    dispatch: React.Dispatch<IdentityTransactionActionType>,
+  ) => {
+    if (error instanceof Error) {
+      let errorMessage = 'Error in creating user identity data.'
+      if (error.message.includes('rejected')) {
+        errorMessage = 'Signature rejected. Try again when you are ready.'
+      }
+      dispatch({
+        type: 'TRANSACTION_ERROR',
+        error: errorMessage,
+      })
+      toast.custom(
+        () => (
+          <Toast
+            title="Error"
+            description={errorMessage}
+            icon={
+              <Icon
+                name="triangle-exclamation"
+                className="h-3 w-3 text-destructive"
+              />
+            }
+          />
+        ),
+        {
+          duration: 5000,
+        },
+      )
+      return
+    }
+    console.error('Error creating identity', error)
+  }
+
   // Handle Triggering Image Upload
   useEffect(() => {
     if (imageUploadFetcher.state === 'submitting') {
@@ -160,35 +195,7 @@ export function EditProfileForm({
           method: 'post',
         })
       } catch (error: unknown) {
-        if (error instanceof Error) {
-          let errorMessage = 'Error in creating offchain identity data.'
-          if (error.message.includes('rejected')) {
-            errorMessage = 'Signature rejected. Try again when you are ready.'
-          }
-          dispatch({
-            type: 'TRANSACTION_ERROR',
-            error: errorMessage,
-          })
-          toast.custom(
-            () => (
-              <Toast
-                title="Error"
-                description={errorMessage}
-                icon={
-                  <Icon
-                    name="triangle-exclamation"
-                    className="h-3 w-3 text-destructive"
-                  />
-                }
-              />
-            ),
-            {
-              duration: 5000,
-            },
-          )
-          return
-        }
-        console.error('Error creating identity', error)
+        handleError(error, dispatch)
       }
     }
   }, [imageUploadFetcher.state, imageUploadFetcher.data, state])
@@ -226,7 +233,7 @@ export function EditProfileForm({
           encType: 'multipart/form-data',
         })
       } catch (error: unknown) {
-        logger(error)
+        handleError(error, dispatch)
       }
     } else {
       try {
@@ -240,35 +247,7 @@ export function EditProfileForm({
           method: 'post',
         })
       } catch (error: unknown) {
-        if (error instanceof Error) {
-          let errorMessage = 'Error in creating offchain identity data.'
-          if (error.message.includes('rejected')) {
-            errorMessage = 'Signature rejected. Try again when you are ready.'
-          }
-          dispatch({
-            type: 'TRANSACTION_ERROR',
-            error: errorMessage,
-          })
-          toast.custom(
-            () => (
-              <Toast
-                title="Error"
-                description={errorMessage}
-                icon={
-                  <Icon
-                    name="triangle-exclamation"
-                    className="h-3 w-3 text-destructive"
-                  />
-                }
-              />
-            ),
-            {
-              duration: 5000,
-            },
-          )
-          return
-        }
-        console.error('Error creating identity', error)
+        handleError(error, dispatch)
       }
     }
   }
@@ -279,12 +258,14 @@ export function EditProfileForm({
   ) => {
     setDisplayName(event.target.value)
   }
+
   // Handle description input changes
   const handleDescriptionChange = (
     event: React.ChangeEvent<HTMLTextAreaElement>,
   ) => {
     setDescription(event.target.value)
   }
+
   useEffect(() => {
     if (userObject.image) {
       setPreviewImage(userObject.image)
