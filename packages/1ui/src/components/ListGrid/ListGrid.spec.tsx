@@ -36,6 +36,21 @@ describe('ListGrid', () => {
             class="theme-border p-8 rounded-xl flex flex-col items-center justify-between"
             style="height: 18rem;"
           >
+            <span
+              class="relative flex shrink-0 overflow-hidden rounded bg-background theme-border mb-4 w-16 h-16"
+            >
+              <span
+                class="flex h-full w-full items-center justify-center bg-inherit"
+              >
+                <svg
+                  class="h-6 w-6 text-primary/30"
+                >
+                  <use
+                    href="/src/components/Icon/Icon.sprites.svg#fingerprint"
+                  />
+                </svg>
+              </span>
+            </span>
             <div
               class="text-center flex-grow flex flex-col justify-between items-center"
             >
@@ -60,6 +75,21 @@ describe('ListGrid', () => {
             class="theme-border p-8 rounded-xl flex flex-col items-center justify-between"
             style="height: 18rem;"
           >
+            <span
+              class="relative flex shrink-0 overflow-hidden rounded bg-background theme-border mb-4 w-16 h-16"
+            >
+              <span
+                class="flex h-full w-full items-center justify-center bg-inherit"
+              >
+                <svg
+                  class="h-6 w-6 text-primary/30"
+                >
+                  <use
+                    href="/src/components/Icon/Icon.sprites.svg#fingerprint"
+                  />
+                </svg>
+              </span>
+            </span>
             <div
               class="text-center flex-grow flex flex-col justify-between items-center"
             >

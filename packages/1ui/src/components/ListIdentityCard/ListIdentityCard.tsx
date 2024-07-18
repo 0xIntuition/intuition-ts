@@ -4,6 +4,7 @@ import { Avatar } from 'components/Avatar'
 import { Button } from 'components/Button'
 import { Icon } from 'components/Icon'
 import { Text, TextVariant, TextWeight } from 'components/Text'
+import { Currency, CurrencyType } from 'types'
 
 export interface ListIdentityCardProps {
   displayName: string
@@ -12,6 +13,7 @@ export interface ListIdentityCardProps {
   savedAmount: string
   onSaveClick?: () => void
   isSaved?: boolean
+  currency?: CurrencyType
 }
 
 export const ListIdentityCard: React.FC<ListIdentityCardProps> = ({
@@ -21,6 +23,7 @@ export const ListIdentityCard: React.FC<ListIdentityCardProps> = ({
   savedAmount,
   onSaveClick,
   isSaved,
+  currency = Currency.ETH,
 }) => {
   return (
     <div
@@ -53,10 +56,12 @@ export const ListIdentityCard: React.FC<ListIdentityCardProps> = ({
               name="bookmark-filled"
               className="w-3 h-3 text-primary mr-2"
             />
-            Saved · {savedAmount} ETH
+            Saved · {savedAmount} {currency}
           </>
         ) : (
-          <>Saved: {savedAmount} ETH</>
+          <>
+            Saved: {savedAmount} {currency}
+          </>
         )}
       </Button>
     </div>
