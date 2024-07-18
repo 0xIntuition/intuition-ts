@@ -26,7 +26,7 @@ const ListGrid: React.FC<ListGridProps> = ({
 }) => {
   return (
     <div
-      className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8"
+      className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-7"
       {...props}
     >
       {identities

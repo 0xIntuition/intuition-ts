@@ -30,7 +30,7 @@ describe('ListGrid', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8"
+          class="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-7"
         >
           <div
             class="theme-border p-8 rounded-xl flex flex-col items-center justify-between"
@@ -53,14 +53,7 @@ describe('ListGrid', () => {
             <button
               class="flex justify-center items-center gap-2 text-sm font-medium border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted primary-gradient-subtle text-primary/60 border-primary/10 rounded-lg hover:text-primary disabled:from-muted disabled:to-muted shadow-md-subtle px-3 py-1 mt-4 w-full"
             >
-              <svg
-                class="w-3 h-3"
-              >
-                <use
-                  href="/src/components/Icon/Icon.sprites.svg#bookmark-filled"
-                />
-              </svg>
-              Saved · 0.047 ETH
+              Saved: 0.047 ETH
             </button>
           </div>
           <div
@@ -84,14 +77,7 @@ describe('ListGrid', () => {
             <button
               class="flex justify-center items-center gap-2 text-sm font-medium border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted primary-gradient-subtle text-primary/60 border-primary/10 rounded-lg hover:text-primary disabled:from-muted disabled:to-muted shadow-md-subtle px-3 py-1 mt-4 w-full"
             >
-              <svg
-                class="w-3 h-3"
-              >
-                <use
-                  href="/src/components/Icon/Icon.sprites.svg#bookmark-filled"
-                />
-              </svg>
-              Saved · 0.047 ETH
+              Saved: 0.047 ETH
             </button>
           </div>
         </div>
