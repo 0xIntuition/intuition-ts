@@ -22,7 +22,7 @@ export function ProfileSocialAccounts({
   )
 
   return (
-    <div>
+    <>
       {hasLinkedAccounts ? (
         <EditSocialAccounts
           privyUser={privyUser}
@@ -33,7 +33,7 @@ export function ProfileSocialAccounts({
           handleOpenEditSocialLinksModal={handleOpenEditSocialLinksModal}
         />
       )}
-    </div>
+    </>
   )
 }
 
