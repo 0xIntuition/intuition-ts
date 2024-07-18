@@ -41,8 +41,7 @@ export function PaginationComponent({
     if (
       userInteracted &&
       prevPageRef.current !== currentPage &&
-      listContainerRef &&
-      listContainerRef.current
+      listContainerRef?.current
     ) {
       listContainerRef.current.scrollIntoView({
         behavior: 'smooth',
