@@ -11,6 +11,7 @@ export interface IdentityDisplay {
   identitiesCount: number
   savedAmount: string
   onSaveClick?: () => void
+  isSaved?: boolean
 }
 
 export interface ListGridProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -64,10 +65,14 @@ const ListGrid: React.FC<ListGridProps> = ({
                 className="mt-4 w-full"
                 onClick={identity.onSaveClick}
               >
-                <>
-                  <Icon name="bookmark-filled" className="w-3 h-3" />
-                  Saved · {identity.savedAmount} ETH
-                </>
+                {identity.isSaved ? (
+                  <>
+                    <Icon name="bookmark-filled" className="w-3 h-3 mr-2" />
+                    Saved · {identity.savedAmount} ETH
+                  </>
+                ) : (
+                  <>Saved: {identity.savedAmount} ETH</>
+                )}
               </Button>
             </div>
           ))

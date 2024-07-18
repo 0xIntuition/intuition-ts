@@ -22,6 +22,7 @@ export const BasicUsage: Story = {
         identitiesCount: 45,
         savedAmount: '0.047',
         onSaveClick: () => alert('Best Crypto Portfolio Trackers saved!'),
+        isSaved: true,
       },
       {
         displayName: 'Top Decentralized Finance Platforms',
@@ -29,6 +30,7 @@ export const BasicUsage: Story = {
         identitiesCount: 45,
         savedAmount: '0.047',
         onSaveClick: () => alert('Top Decentralized Finance Platforms saved!'),
+        isSaved: false,
       },
       {
         displayName: 'Best Crypto Portfolio Trackers',
@@ -36,6 +38,7 @@ export const BasicUsage: Story = {
         identitiesCount: 45,
         savedAmount: '0.047',
         onSaveClick: () => alert('Best Crypto Portfolio Trackers saved!'),
+        isSaved: true,
       },
       {
         displayName: 'Top Decentralized Finance Platforms',
@@ -43,6 +46,7 @@ export const BasicUsage: Story = {
         identitiesCount: 45,
         savedAmount: '0.047',
         onSaveClick: () => alert('Top Decentralized Finance Platforms saved!'),
+        isSaved: false,
       },
     ],
   },
@@ -56,7 +60,11 @@ export const BasicUsage: Story = {
 export const UsageWithChildren: Story = {
   args: {
     children: [
-      <div key="1" className="flex flex-col items-center">
+      <div
+        key="1"
+        className="flex flex-col items-center"
+        style={{ height: '18rem' }}
+      >
         <img
           src="https://avatars.githubusercontent.com/u/94311139?s=200&v=4"
           alt="Best Crypto Portfolio Trackers"
@@ -69,7 +77,11 @@ export const UsageWithChildren: Story = {
           <p className="text-secondary/50 mb-2">45 identities</p>
         </div>
       </div>,
-      <div key="2" className="flex flex-col items-center">
+      <div
+        key="2"
+        className="flex flex-col items-center"
+        style={{ height: '18rem' }}
+      >
         <img
           src="https://avatars.githubusercontent.com/u/94311139?s=200&v=4"
           alt="Decentralized Finance Platforms"
