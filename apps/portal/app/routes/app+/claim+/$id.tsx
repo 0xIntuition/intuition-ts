@@ -132,6 +132,12 @@ export default function ClaimDetails() {
       ? vaultDetails.assets_sum ?? claim.for_assets_sum
       : vaultDetails.against_assets_sum ?? claim.against_assets_sum
 
+  const userConviction =
+    vaultDetails.user_conviction ?? claim.user_conviction_for
+  const directionTagVariant =
+    userConviction > '0' ? TagVariant.for : TagVariant.against
+  const directionTagText = userConviction > '0' ? 'FOR' : 'AGAINST'
+
   return (
     <>
       <div className="flex items-center gap-6 mx-8 mt-10">
@@ -191,19 +197,8 @@ export default function ClaimDetails() {
                       user_assets ? +formatBalance(user_assets, 18, 4) : 0
                     }
                   />
-                  <Tag
-                    variant={
-                      (vaultDetails.user_conviction ??
-                        claim.user_conviction_for) > '0'
-                        ? TagVariant.for
-                        : TagVariant.against
-                    }
-                    size={TagSize.sm}
-                  >
-                    {(vaultDetails.user_conviction ??
-                      claim.user_conviction_for) > '0'
-                      ? 'FOR'
-                      : 'AGAINST'}
+                  <Tag variant={directionTagVariant} size={TagSize.sm}>
+                    {directionTagText}
                   </Tag>
                 </div>
                 <PositionCardOwnership
