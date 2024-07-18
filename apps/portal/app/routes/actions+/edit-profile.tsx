@@ -1,15 +1,9 @@
-import {
-  ApiError,
-  OpenAPI,
-  UserPresenter,
-  UsersService,
-} from '@0xintuition/api'
+import { ApiError, UserPresenter, UsersService } from '@0xintuition/api'
 
 import logger from '@lib/utils/logger'
-import { getAuthHeaders, invariant } from '@lib/utils/misc'
+import { invariant } from '@lib/utils/misc'
 import { json, type ActionFunctionArgs } from '@remix-run/node'
-import { requireUser } from '@server/auth'
-import { getPrivyAccessToken } from '@server/privy'
+import { requireUser, setupApiWithWallet } from '@server/auth'
 
 export type EditProfileActionData = {
   status: 'success' | 'error'
@@ -19,12 +13,10 @@ export type EditProfileActionData = {
 
 export async function action({ request }: ActionFunctionArgs) {
   logger('Validating create identity form data')
+  await setupApiWithWallet(request)
   const user = await requireUser(request)
   invariant(user, 'User not found')
   invariant(user.wallet?.address, 'User wallet not found')
-  const wallet = user.wallet?.address
-
-  logger('Request', request)
 
   const formData = await request.formData()
 
@@ -38,15 +30,6 @@ export async function action({ request }: ActionFunctionArgs) {
   const description = formData.get('description')
 
   try {
-    OpenAPI.BASE = 'https://dev.api.intuition.systems'
-    const accessToken = getPrivyAccessToken(request)
-    const headers = getAuthHeaders(accessToken !== null ? accessToken : '')
-    OpenAPI.HEADERS = headers as Record<string, string>
-
-    if (!wallet) {
-      throw new Error('User wallet address is undefined')
-    }
-
     let profile
     try {
       const requestBody: {

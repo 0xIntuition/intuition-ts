@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 
 import { Tabs, TabsList, TabsTrigger, Text } from '@0xintuition/1ui'
 import {
-  OpenAPI,
   PositionPresenter,
   PositionSortColumn,
   SortDirection,
@@ -11,16 +10,13 @@ import {
 import { PositionsOnClaim } from '@components/list/positions-on-claim'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { fetchClaim, fetchPositionsOnClaim } from '@lib/utils/fetches'
-import { calculateTotalPages, getAuthHeaders } from '@lib/utils/misc'
+import { calculateTotalPages } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { useSearchParams } from '@remix-run/react'
-import { getPrivyAccessToken } from '@server/privy'
+import { setupApiWithWallet } from '@server/auth'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
-  OpenAPI.BASE = 'https://dev.api.intuition.systems'
-  const accessToken = getPrivyAccessToken(request)
-  const headers = getAuthHeaders(accessToken !== null ? accessToken : '')
-  OpenAPI.HEADERS = headers as Record<string, string>
+  await setupApiWithWallet(request)
 
   const id = params.id
 

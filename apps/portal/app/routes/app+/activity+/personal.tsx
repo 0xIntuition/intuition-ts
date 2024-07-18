@@ -1,33 +1,19 @@
-import {
-  ActivityPresenter,
-  OpenAPI,
-  SortColumn,
-  SortDirection,
-} from '@0xintuition/api'
+import { ActivityPresenter, SortColumn, SortDirection } from '@0xintuition/api'
 
 import { ActivityList } from '@components/list/activity'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { fetchUserActivity } from '@lib/utils/fetches'
 import logger from '@lib/utils/logger'
-import { calculateTotalPages, getAuthHeaders, invariant } from '@lib/utils/misc'
+import { calculateTotalPages, invariant } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
-import { requireUser } from '@server/auth'
-import { getPrivyAccessToken } from '@server/privy'
+import { requireUser, setupApiWithWallet } from '@server/auth'
 
 export async function loader({ request }: LoaderFunctionArgs) {
+  await setupApiWithWallet(request)
   const user = await requireUser(request)
   invariant(user, 'User not found')
   invariant(user.wallet?.address, 'User wallet not found')
   const userWallet = user.wallet?.address
-
-  OpenAPI.BASE = 'https://dev.api.intuition.systems'
-  const accessToken = getPrivyAccessToken(request)
-  const headers = getAuthHeaders(accessToken !== null ? accessToken : '')
-  OpenAPI.HEADERS = headers as Record<string, string>
-
-  if (!userWallet) {
-    return logger('No user found in session')
-  }
 
   const url = new URL(request.url)
   const searchParams = new URLSearchParams(url.search)

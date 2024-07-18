@@ -16,7 +16,6 @@ import {
 import {
   ClaimPresenter,
   ClaimSortColumn,
-  OpenAPI,
   SortDirection,
 } from '@0xintuition/api'
 
@@ -25,11 +24,7 @@ import StakeModal from '@components/stake/stake-modal'
 import { stakeModalAtom } from '@lib/state/store'
 import { fetchClaim } from '@lib/utils/fetches'
 import logger from '@lib/utils/logger'
-import {
-  calculatePercentageOfTvl,
-  formatBalance,
-  getAuthHeaders,
-} from '@lib/utils/misc'
+import { calculatePercentageOfTvl, formatBalance } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import {
   Outlet,
@@ -37,27 +32,17 @@ import {
   useLocation,
   useNavigate,
 } from '@remix-run/react'
-import { requireUserWallet } from '@server/auth'
+import { setupApiWithWallet } from '@server/auth'
 import { getVaultDetails } from '@server/multivault'
-import { getPrivyAccessToken } from '@server/privy'
 import { useAtom } from 'jotai'
 import { VaultDetailsType } from 'types/vault'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
-  const wallet = await requireUserWallet(request)
+  const wallet = await setupApiWithWallet(request)
 
-  OpenAPI.BASE = 'https://dev.api.intuition.systems'
-  const accessToken = getPrivyAccessToken(request)
-  const headers = getAuthHeaders(accessToken !== null ? accessToken : '')
-  OpenAPI.HEADERS = headers as Record<string, string>
   const id = params.id
-
   if (!id) {
     throw new Error('vault_id is undefined.')
-  }
-
-  if (!wallet) {
-    return console.log('No user found in session')
   }
 
   const url = new URL(request.url)
