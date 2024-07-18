@@ -27,14 +27,13 @@ export const ListIdentityCard: React.FC<ListIdentityCardProps> = ({
       className="theme-border p-8 rounded-xl flex flex-col items-center justify-between"
       style={{ height: '18rem' }}
     >
-      {imgSrc && (
-        <Avatar
-          variant="non-user"
-          src={imgSrc}
-          name={displayName}
-          className="mb-4 w-16 h-16"
-        />
-      )}
+      <Avatar
+        variant="non-user"
+        src={imgSrc}
+        name={displayName}
+        className="mb-4 w-16 h-16"
+      />
+
       <div className="text-center flex-grow flex flex-col justify-between items-center">
         <Text
           variant={TextVariant.bodyLarge}
