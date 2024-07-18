@@ -1,0 +1,51 @@
+import { Canvas, Controls, Meta, Source, Title } from '@storybook/blocks'
+
+import * as Stories from './ListGrid.stories'
+
+<Meta of={Stories} />
+
+<Title />
+
+#### A grid layout to display a list of identities or other data
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { ListGrid } from '@0xintuition/1ui'
+
+const simpleIdentities = [
+{
+displayName: 'Best Crypto Portfolio Trackers',
+image: 'https://avatars.githubusercontent.com/u/94311139?s=200&v=4"',
+identitiesCount: 45,
+savedAmount: '0.047',
+},
+{
+displayName: 'Top Decentralized Finance Platforms',
+image: 'https://avatars.githubusercontent.com/u/94311139?s=200&v=4"',
+identitiesCount: 45,
+savedAmount: '0.047',
+},
+{
+displayName: 'Best Crypto Portfolio Trackers',
+image: 'https://avatars.githubusercontent.com/u/94311139?s=200&v=4"',
+identitiesCount: 45,
+savedAmount: '0.047',
+},
+{
+displayName: 'Top Decentralized Finance Platforms',
+image: 'https://avatars.githubusercontent.com/u/94311139?s=200&v=4"',
+identitiesCount: 45,
+savedAmount: '0.047',
+},
+],
+
+<ListGrid identities={simpleIdentities} className="my-custom-class" />
+`} />
+
+<Canvas of={Stories.BasicUsage} sourceState="none" />
+
+## Properties
+
+<Controls />
