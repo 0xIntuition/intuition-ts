@@ -31,9 +31,9 @@ const ExploreAddTags = ({
   const identityFetcher = useFetcher<IdentityPresenter[]>()
   const tagsContainerRef = React.useRef<HTMLDivElement>(null)
   const popoverContentRef = React.useRef<HTMLDivElement>(null)
+  const inputElementRef = React.useRef<HTMLInputElement>(null)
   const [isPopoverOpen, setIsPopoverOpen] = React.useState(false)
   const [selectedTags, setSelectedTags] = React.useState<TagType[]>([])
-  const inputElementRef = React.useRef<HTMLInputElement>(null)
 
   React.useEffect(() => {
     if (initialValue) {
@@ -92,7 +92,6 @@ const ExploreAddTags = ({
         className="hidden"
         type="text"
         name={inputId}
-        onChange={() => console.log('ONCHANGE')}
       />
       <Popover open={isPopoverOpen}>
         <TagsListInput
