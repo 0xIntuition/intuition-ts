@@ -75,45 +75,13 @@ export default function Quests() {
             points={quest.points}
           />
         </div>
-        {questContent.body && (
-          <div className="flex flex-col gap-5 py-5">
-            <MDXContent
-              code={questContent.body}
-              components={{
-                h1: (props) => (
-                  <Text variant="headline" weight="medium" {...props} />
-                ),
-                p: (props) => (
-                  <Text
-                    variant="bodyLarge"
-                    className="text-foreground/50"
-                    {...props}
-                  />
-                ),
-              }}
-            />
-          </div>
-        )}
+        {questContent.body && <MDXContentWrapper code={questContent.body} />}
         <div className="bg-warning/5 rounded-lg theme-border p-5 flex justify-center align-items h-96 border-warning/30 border-dashed text-warning/30 text-bold">
           Quest Activity
         </div>
         {questClosing.body && (
           <div className="flex flex-col gap-5 py-5">
-            <MDXContent
-              code={questClosing.body}
-              components={{
-                h1: (props) => (
-                  <Text variant="headline" weight="medium" {...props} />
-                ),
-                p: (props) => (
-                  <Text
-                    variant="bodyLarge"
-                    className="text-foreground/50"
-                    {...props}
-                  />
-                ),
-              }}
-            />
+            <MDXContentWrapper code={questClosing.body} />
           </div>
         )}
 
@@ -126,6 +94,26 @@ export default function Quests() {
           </Text>
         </div>
       </div>
+    </div>
+  )
+}
+
+export function MDXContentWrapper({ code }: { code: string }) {
+  return (
+    <div className="flex flex-col gap-5 py-5">
+      <MDXContent
+        code={code}
+        components={{
+          h1: (props) => <Text variant="headline" weight="medium" {...props} />,
+          p: (props) => (
+            <Text
+              variant="bodyLarge"
+              className="text-foreground/50"
+              {...props}
+            />
+          ),
+        }}
+      />
     </div>
   )
 }
