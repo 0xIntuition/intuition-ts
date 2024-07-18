@@ -39,7 +39,7 @@ export function PaginationComponent({
 
   useEffect(() => {
     if (
-      userInteracted &&
+      hasUserInteracted &&
       prevPageRef.current !== currentPage &&
       listContainerRef?.current
     ) {
@@ -49,10 +49,10 @@ export function PaginationComponent({
       })
     }
     prevPageRef.current = currentPage
-  }, [listContainerRef, currentPage, userInteracted])
+  }, [listContainerRef, currentPage, hasUserInteracted])
 
   const handlePageChange = (newPage: number) => {
-    setUserInteracted(true)
+    setHasUserInteracted(true)
     onPageChange(newPage)
   }
 
@@ -63,7 +63,7 @@ export function PaginationComponent({
         <PaginationRowSelection
           defaultValue={limit.toString()}
           onValueChange={(newLimit) => {
-            setUserInteracted(true)
+            setHasUserInteracted(true)
             onLimitChange(Number(newLimit))
           }}
         />
