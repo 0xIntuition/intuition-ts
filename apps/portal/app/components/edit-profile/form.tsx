@@ -55,6 +55,7 @@ interface OffChainFetcherData {
   submission: SubmissionResult<string[]> | null
 }
 
+// TODO: [ENG-2691] - This will be refactored along with the create identity form. This form is based on that, so it will be refactored in the same way.
 export function EditProfileForm({
   userObject,
   setUserObject,
