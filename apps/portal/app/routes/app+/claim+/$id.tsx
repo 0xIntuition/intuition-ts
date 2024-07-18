@@ -9,6 +9,9 @@ import {
   PositionCardLastUpdated,
   PositionCardOwnership,
   PositionCardStaked,
+  Tag,
+  TagSize,
+  TagVariant,
 } from '@0xintuition/1ui'
 import {
   ClaimPresenter,
@@ -182,9 +185,27 @@ export default function ClaimDetails() {
                   }))
                 }
               >
-                <PositionCardStaked
-                  amount={user_assets ? +formatBalance(user_assets, 18, 4) : 0}
-                />
+                <div>
+                  <PositionCardStaked
+                    amount={
+                      user_assets ? +formatBalance(user_assets, 18, 4) : 0
+                    }
+                  />
+                  <Tag
+                    variant={
+                      (vaultDetails.user_conviction ??
+                        claim.user_conviction_for) > '0'
+                        ? TagVariant.for
+                        : TagVariant.against
+                    }
+                    size={TagSize.sm}
+                  >
+                    {(vaultDetails.user_conviction ??
+                      claim.user_conviction_for) > '0'
+                      ? 'FOR'
+                      : 'AGAINST'}
+                  </Tag>
+                </div>
                 <PositionCardOwnership
                   percentOwnership={
                     user_assets !== null && assets_sum
