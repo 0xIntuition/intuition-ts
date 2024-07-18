@@ -5,7 +5,7 @@ import { Avatar, Text } from '../..'
 
 interface ProfileCardHeaderProps {
   variant?: IdentityType
-  avatarSrc: string
+  avatarSrc?: string
   name: string
   walletAddress: string
 }

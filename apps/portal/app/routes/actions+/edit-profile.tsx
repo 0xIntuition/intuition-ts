@@ -1,10 +1,21 @@
-import { ApiError, OpenAPI, UsersService } from '@0xintuition/api'
+import {
+  ApiError,
+  OpenAPI,
+  UserPresenter,
+  UsersService,
+} from '@0xintuition/api'
 
 import logger from '@lib/utils/logger'
 import { getAuthHeaders, invariant } from '@lib/utils/misc'
 import { json, type ActionFunctionArgs } from '@remix-run/node'
 import { requireUser } from '@server/auth'
 import { getPrivyAccessToken } from '@server/privy'
+
+export type EditProfileActionData = {
+  status: 'success' | 'error'
+  profile?: UserPresenter
+  error?: string
+}
 
 export async function action({ request }: ActionFunctionArgs) {
   logger('Validating create identity form data')
@@ -76,7 +87,7 @@ export async function action({ request }: ActionFunctionArgs) {
       {
         status: 'success',
         profile,
-      } as const,
+      } as EditProfileActionData,
       {
         status: 200,
       },
@@ -88,7 +99,7 @@ export async function action({ request }: ActionFunctionArgs) {
         {
           status: 'error',
           error: `An error occurred: ${error}`,
-        } as const,
+        } as EditProfileActionData,
         {
           status: 500,
         },

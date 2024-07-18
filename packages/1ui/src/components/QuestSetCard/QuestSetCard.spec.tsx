@@ -18,7 +18,7 @@ describe('QuestSetCard', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="flex flex-col justify-center align-center theme-border rounded-lg p-8 gap-5"
+          class="bg-popover flex flex-col justify-center align-center theme-border rounded-lg p-8 gap-5 h-full"
         >
           <img
             alt="Tutorial Island: The Primitive Elements"
@@ -26,51 +26,135 @@ describe('QuestSetCard', () => {
             src="https://m.media-amazon.com/images/M/MV5BNDhiMWYzMjgtNTRiYi00ZTA3LThlODctNDRkMDk0NzFkMWI3L2ltYWdlL2ltYWdlXkEyXkFqcGdeQXVyNTg0MTkzMzA@._V1_.jpg"
           />
           <div
-            class="space-y-2.5"
-          >
-            <h6
-              class="text-primary text-xl font-medium"
-            >
-              Tutorial Island: The Primitive Elements
-            </h6>
-            <p
-              class="text-lg text-foreground/70"
-            >
-              This is a description of the quest set
-            </p>
-          </div>
-          <div
-            class="flex flex-col"
+            class="flex flex-col justify-between h-full"
           >
             <div
-              class="flex items-center justify-between py-2.5"
+              class="space-y-2.5"
             >
-              <p
-                class="text-lg text-muted-foreground"
+              <h6
+                class="text-primary text-xl font-medium"
               >
-                50% Complete
-              </p>
+                Tutorial Island: The Primitive Elements
+              </h6>
               <p
-                class="text-lg text-muted-foreground"
+                class="text-lg text-foreground/70"
               >
-                <span
-                  class="text-primary"
-                >
-                  5
-                </span>
-                 / 10
+                This is a description of the quest set
               </p>
             </div>
             <div
-              class="flex items-center h-[6px] mb-4"
+              class="flex flex-col"
             >
-              <span
-                class="h-full block rounded-l-sm bg-primary"
-                style="min-width: 50%;"
-              />
-              <span
-                class="h-full w-full block rounded-r-sm bg-muted"
-              />
+              <div
+                class="flex items-center justify-between py-2.5"
+              >
+                <p
+                  class="text-lg text-muted-foreground"
+                >
+                  50% Complete
+                </p>
+                <p
+                  class="text-lg text-muted-foreground"
+                >
+                  <span
+                    class="text-primary"
+                  >
+                    5
+                  </span>
+                   / 10
+                </p>
+              </div>
+              <div
+                class="flex items-center h-[6px] mb-4"
+              >
+                <span
+                  class="h-full block rounded-l-sm bg-primary"
+                  style="min-width: 50%;"
+                />
+                <span
+                  class="h-full w-full block rounded-r-sm bg-muted"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </DocumentFragment>
+    `)
+  })
+
+  it('should render appropriate elements when disabled', () => {
+    const { asFragment } = render(
+      <QuestSetCard
+        imgSrc={
+          'https://m.media-amazon.com/images/M/MV5BNDhiMWYzMjgtNTRiYi00ZTA3LThlODctNDRkMDk0NzFkMWI3L2ltYWdlL2ltYWdlXkEyXkFqcGdeQXVyNTg0MTkzMzA@._V1_.jpg'
+        }
+        title={'Tutorial Island: The Primitive Elements'}
+        description={'This is a description of the quest set'}
+        numberQuests={10}
+        numberCompletedQuests={5}
+        disabled={true}
+      />,
+    )
+    expect(asFragment()).toMatchInlineSnapshot(`
+      <DocumentFragment>
+        <div
+          class="bg-popover flex flex-col justify-center align-center theme-border rounded-lg p-8 gap-5 h-full cursor-not-allowed opacity-50"
+        >
+          <img
+            alt="Tutorial Island: The Primitive Elements"
+            class="object-cover w-full h-auto rounded-lg theme-border"
+            src="https://m.media-amazon.com/images/M/MV5BNDhiMWYzMjgtNTRiYi00ZTA3LThlODctNDRkMDk0NzFkMWI3L2ltYWdlL2ltYWdlXkEyXkFqcGdeQXVyNTg0MTkzMzA@._V1_.jpg"
+          />
+          <div
+            class="flex flex-col justify-between h-full"
+          >
+            <div
+              class="space-y-2.5"
+            >
+              <h6
+                class="text-primary text-xl font-medium"
+              >
+                Tutorial Island: The Primitive Elements
+              </h6>
+              <p
+                class="text-lg text-foreground/70"
+              >
+                This is a description of the quest set
+              </p>
+            </div>
+            <div
+              class="flex flex-col"
+            >
+              <div
+                class="flex items-center justify-between py-2.5"
+              >
+                <p
+                  class="text-lg text-muted-foreground"
+                >
+                  50% Complete
+                </p>
+                <p
+                  class="text-lg text-muted-foreground"
+                >
+                  <span
+                    class="text-primary"
+                  >
+                    5
+                  </span>
+                   / 10
+                </p>
+              </div>
+              <div
+                class="flex items-center h-[6px] mb-4"
+              >
+                <span
+                  class="h-full block rounded-l-sm bg-primary"
+                  style="min-width: 50%;"
+                />
+                <span
+                  class="h-full w-full block rounded-r-sm bg-muted"
+                />
+              </div>
             </div>
           </div>
         </div>
