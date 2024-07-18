@@ -181,18 +181,6 @@ function CreateIdentityForm({
       imageUploadFetcher.data?.status !== 'error'
     ) {
       setIdentityImageSrc(imageUploadFetcher.data.submission.value.image_url)
-      toast.custom(
-        () => (
-          <Toast
-            title="success"
-            description="Successfully uploaded image"
-            icon={<Icon name="checkmark" />}
-          />
-        ),
-        {
-          duration: 5000,
-        },
-      )
       setImageUploading(false)
     } else if (
       imageUploadFetcher.data &&
