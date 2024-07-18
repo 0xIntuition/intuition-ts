@@ -3,7 +3,7 @@ import * as React from 'react'
 import { IdentityPresenter } from '@0xintuition/api'
 
 import { ExploreSearchClaimInput } from './ExploreSearchClaimInput'
-import { ExploreSearchInput } from './ExploreSearchInput'
+import { ExploreSearchForm } from './ExploreSearchForm/ExploreSearchForm'
 
 export interface ExploreSearchProps
   extends React.HTMLAttributes<HTMLDivElement> {
@@ -19,8 +19,7 @@ const ExploreSearch: React.FC<ExploreSearchProps> = ({
   return (
     <div className="min-w-96 flex flex-col items-center" {...props}>
       {['user', 'identity', 'tag'].includes(variant) && (
-        // TODO: Alexander to adds the Tags component with ComboBox here ENG-2574
-        <ExploreSearchInput searchParam={variant} />
+        <ExploreSearchForm searchParam={variant} />
       )}
 
       {variant === 'claim' && (

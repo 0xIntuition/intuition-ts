@@ -78,7 +78,8 @@ export async function fetchUserIdentities(
   limit: number,
   sortBy: SortColumn,
   direction: SortDirection,
-  search: string | null,
+  displayName: string | null,
+  hasTag: string | null,
 ): Promise<SearchIdentityResponse | null> {
   try {
     return await IdentitiesService.searchIdentity({
@@ -86,7 +87,8 @@ export async function fetchUserIdentities(
       limit,
       sortBy,
       direction,
-      displayName: search,
+      displayName: displayName ?? null,
+      hasTag: hasTag ?? null,
       isUser: true,
     })
   } catch (error: unknown) {
@@ -117,7 +119,8 @@ export async function fetchIdentities(
   limit?: number,
   sortBy?: SortColumn,
   direction?: SortDirection,
-  search?: string | null,
+  displayName?: string | null,
+  hasTag?: string | null,
 ): Promise<SearchIdentityResponse | null> {
   try {
     return await IdentitiesService.searchIdentity({
@@ -125,7 +128,8 @@ export async function fetchIdentities(
       limit: limit ?? 10,
       sortBy: sortBy ?? 'AssetsSum',
       direction: direction ?? 'desc',
-      displayName: search ?? null,
+      displayName: displayName ?? null,
+      hasTag: hasTag ?? null,
       isUser: false,
     })
   } catch (error: unknown) {
