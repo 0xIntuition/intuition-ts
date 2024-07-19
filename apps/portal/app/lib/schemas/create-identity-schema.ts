@@ -11,7 +11,7 @@ const urlWithoutHttps = z
   .refine(
     (url) => {
       const urlPattern =
-        /^(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,}(\/[^\s]*)?$/i
+        /^(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,}(\/[^\s]*)?(\?[^\s]*)?$/i
       return urlPattern.test(url)
     },
     {
