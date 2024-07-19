@@ -2,82 +2,73 @@ import logger from '@lib/utils/logger'
 import { combineHeaders, getAuthHeaders } from '@lib/utils/misc'
 import { getRedirectToUrl } from '@lib/utils/redirect'
 import { redirect } from '@remix-run/node'
+import { RedirectOptions } from 'types/navigation'
+
 import {
   getPrivyAccessToken,
   getPrivySessionToken,
   getPrivyUserById,
   isOAuthInProgress,
   verifyPrivyAccessToken,
-} from '@server/privy'
-import { RedirectTo } from 'types/navigation'
-
+} from './privy'
+import { User } from '@privy-io/server-auth'
 import { OpenAPI } from '@0xintuition/api'
 
-export async function getUserId(request: Request) {
+export async function getUserId(request: Request): Promise<string | null> {
   const verifiedClaims = await verifyPrivyAccessToken(request)
-  if (!verifiedClaims) {
-    return null
-  }
-  return verifiedClaims.userId
+  return verifiedClaims?.userId ?? null
 }
 
-export async function getUser(request: Request) {
+export async function getUser(request: Request): Promise<User | null> {
   const userId = await getUserId(request)
-  if (!userId) {
-    return null
-  }
-  const user = await getPrivyUserById(userId!)
-  return user
+  return userId ? await getPrivyUserById(userId) : null
 }
 
-export async function getUserWallet(request: Request) {
+export async function getUserWallet(request: Request): Promise<string | null> {
   const user = await getUser(request)
-  if (!user) {
-    return null
-  }
-  return user.wallet?.address
+  return user?.wallet?.address ?? null
 }
 
 export async function requireUserId(
   request: Request,
-  { redirectTo }: RedirectTo = {},
-) {
+  options: RedirectOptions = {},
+): Promise<string> {
   const userId = await getUserId(request)
   if (!userId) {
-    return await handlePrivyRedirect({ request, redirectTo: { redirectTo } })
+    throw await handlePrivyRedirect({ request, options })
   }
   return userId
 }
 
 export async function requireUser(
   request: Request,
-  { redirectTo }: RedirectTo = {},
-) {
+  options: RedirectOptions = {},
+): Promise<User> {
   const user = await getUser(request)
   if (!user) {
-    return await handlePrivyRedirect({ request, redirectTo: { redirectTo } })
+    throw await handlePrivyRedirect({ request, options })
   }
   return user
 }
 
 export async function requireUserWallet(
   request: Request,
-  { redirectTo }: RedirectTo = {},
-) {
+  options: RedirectOptions = {},
+): Promise<string> {
   const wallet = await getUserWallet(request)
   if (!wallet) {
-    return await handlePrivyRedirect({ request, redirectTo: { redirectTo } })
+    throw await handlePrivyRedirect({ request, options })
   }
   return wallet
 }
 
 export async function requireAnonymous(
   request: Request,
-  { redirectTo }: RedirectTo = {},
-) {
+  options: RedirectOptions = {},
+): Promise<void> {
   const userId = await getUserId(request)
   if (userId) {
-    return await handlePrivyRedirect({ request, redirectTo: { redirectTo } })
+    throw await handlePrivyRedirect({ request, options })
   }
 }
 
@@ -105,11 +96,11 @@ export async function setupAPI(request: Request) {
 export async function handlePrivyRedirect({
   request,
   path = '/',
-  redirectTo = {},
+  options = {},
 }: {
   request: Request
   path?: string
-  redirectTo?: RedirectTo
+  options?: RedirectOptions
 }) {
   const accessToken = getPrivyAccessToken(request)
   const sessionToken = getPrivySessionToken(request)
@@ -118,7 +109,7 @@ export async function handlePrivyRedirect({
     // Do not redirect or interrupt the flow.
     return
   } else if (!accessToken || !sessionToken) {
-    const redirectUrl = await getRedirectToUrl(request, path, redirectTo)
+    const redirectUrl = await getRedirectToUrl(request, path, options)
     throw redirect(redirectUrl)
   }
   logger('Hit end of handlePrivyRedirect', accessToken, sessionToken, isOAuth)

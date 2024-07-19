@@ -1,3 +1,3 @@
-export type RedirectTo = {
-  redirectTo?: string | null
+export type RedirectOptions = {
+  redirectTo?: string
 }

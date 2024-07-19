@@ -21,12 +21,10 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   if (!sessionToken) {
     throw redirect('/login')
-  }
-
-  if (!accessToken && sessionToken) {
+  } else {
     // if there is no access token, but there is a session token
     // Load the client to refresh the user's session if it's valid
-    return json({ redirectTo })
+    return json({})
   }
 }
 
