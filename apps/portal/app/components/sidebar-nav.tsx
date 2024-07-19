@@ -22,6 +22,7 @@ import { createClaimModalAtom, createIdentityModalAtom } from '@lib/state/store'
 import { useNavigate, useSubmit } from '@remix-run/react'
 import * as blockies from 'blockies-ts'
 import { useAtom } from 'jotai'
+import { isAddress } from 'viem'
 
 import CreateClaimModal from './create-claim-modal'
 import CreateIdentityModal from './create-identity-modal'
@@ -80,11 +81,12 @@ export default function SidebarNav({
       method: 'post',
     })
   }
-  const userName =
+  const username =
     userObject?.display_name ||
     userObject?.ens_name ||
-    formatWalletAddress(userObject?.wallet) ||
-    'Account'
+    isAddress(userObject?.wallet)
+      ? formatWalletAddress(userObject?.wallet)
+      : 'Profile'
 
   return (
     <>
@@ -171,7 +173,7 @@ export default function SidebarNav({
                   triggerComponent={
                     <SidebarLayoutNavAvatar
                       imageSrc={userObject.image ?? imgSrc}
-                      name={userName}
+                      name={username}
                     />
                   }
                   onLogout={onLogout}
