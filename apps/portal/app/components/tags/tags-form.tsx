@@ -2,9 +2,12 @@ import { useState } from 'react'
 
 import {
   Button,
+  Button,
   DialogFooter,
   DialogHeader,
   DialogTitle,
+  Identity,
+  IdentityCard,
   IdentityTag,
   Tabs,
   TabsContent,
@@ -13,9 +16,8 @@ import {
   TransactionStatusType,
   Trunctacular,
 } from '@0xintuition/1ui'
-import { IdentityPresenter, TagEmbeddedPresenter } from '@0xintuition/api'
+import { IdentityPresenter } from '@0xintuition/api'
 
-import { IdentitySearchCombobox } from '@components/identity/identity-search-combo-box'
 import { TransactionState } from '@components/transaction-state'
 import {
   initialTransactionState,
@@ -28,6 +30,7 @@ import { TransactionActionType, TransactionStateType } from 'types/transaction'
 
 import { AddTags } from './add-tags'
 import TagsReview from './tags-review'
+import { TagSearchCombobox } from './tags-search-combo-box'
 
 interface TagsFormProps {
   identity: IdentityPresenter
@@ -70,6 +73,8 @@ export function TagsForm({ identity, mode, onClose }: TagsFormProps) {
     setSelectedTags((prevTags) => prevTags.filter((tag) => tag.vault_id !== id))
     setInvalidTags((prev) => prev.filter((tagId) => tagId !== id))
   }
+
+  logger('tags on incoming identity', identity.tags)
 
   return (
     <>
@@ -120,14 +125,12 @@ export function TagsForm({ identity, mode, onClose }: TagsFormProps) {
                     />
                   </TabsContent>
                 </div>
-                <div className="my-8">
+                <div className="my-10">
                   <TabsContent value="view">
-                    <IdentitySearchCombobox
-                      identities={
-                        (identity.tags as TagEmbeddedPresenter[]) || []
-                      }
+                    <TagSearchCombobox
+                      tags={identity.tags || []}
                       shouldFilter={true}
-                    />
+                      />
                   </TabsContent>
                 </div>
               </Tabs>

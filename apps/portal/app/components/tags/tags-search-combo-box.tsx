@@ -1,24 +1,16 @@
 import * as React from 'react'
 
 import {
-  Button,
-  ButtonSize,
-  ButtonVariant,
   Command,
   CommandEmpty,
   CommandGroup,
   CommandInput,
   CommandList,
-  Icon,
-  IconName,
+  CommandList,
   Identity,
 } from '@0xintuition/1ui'
 import { TagEmbeddedPresenter } from '@0xintuition/api'
 
-import {
-  IdentitySearchCombobox,
-  IdentitySearchComboboxProps,
-} from '@components/identity/identity-search-combo-box'
 import { IdentitySearchComboboxItem } from '@components/identity/identity-search-combo-box-item'
 import { formatBalance, truncateString } from '@lib/utils/misc'
 
@@ -36,29 +28,19 @@ const TagSearchCombobox = ({
 }: TagSearchComboboxProps) => {
   return (
     <div className="min-w-96" {...props}>
-      <Command>
+      <Command className="border-none">
         <CommandInput placeholder={placeholder} />
         <CommandList>
           <CommandEmpty>No results found.</CommandEmpty>
+
           <CommandGroup key={tags.length}>
             {tags.map((tag, index) => {
               const {
                 display_name: name,
                 total_assets: value,
                 num_tagged_identities: tagCount,
+                identity_id: walletAddress,
               } = tag
-
-              // description?: string | null | undefined;
-              // display_name: string;
-              // identity_id: string;
-              // image?: string | null | undefined;
-              // num_positions: number;
-              // num_tagged_identities: number;
-              // total_assets: string;
-              // url?: string | null | undefined;
-              // vault_id: string;
-              // weight: string;
-
               return (
                 <IdentitySearchComboboxItem
                   key={index}
@@ -66,7 +48,6 @@ const TagSearchCombobox = ({
                   name={truncateString(name, 7)}
                   value={+formatBalance(value)}
                   walletAddress={walletAddress}
-                  socialCount={socialCount || 0}
                   tagCount={tagCount || 0}
                 />
               )
