@@ -41,8 +41,8 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     (searchParams.get('sortBy') as PositionSortColumn) ?? 'CreatedAt'
   const direction: SortDirection =
     (searchParams.get('direction') as SortDirection) ?? 'desc'
-  const positionDirection: VaultType | undefined =
-    (searchParams.get('positionDirection') as VaultType) || undefined
+  const positionDirection: VaultType | null =
+    (searchParams.get('positionDirection') as VaultType) || null
   const page = searchParams.get('page')
     ? parseInt(searchParams.get('page') as string)
     : 1
@@ -83,9 +83,9 @@ export default function ClaimOverview() {
     'create',
   ])
   const [searchParams, setSearchParams] = useSearchParams()
-  const [positionDirection, setPositionDirection] = useState<
-    VaultType | undefined
-  >(undefined)
+  const [positionDirection, setPositionDirection] = useState<VaultType | null>(
+    null,
+  )
 
   useEffect(() => {
     setSearchParams({
