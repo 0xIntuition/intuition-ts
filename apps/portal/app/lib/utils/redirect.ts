@@ -1,4 +1,5 @@
 import { RedirectOptions } from 'types/navigation'
+
 import { invariant } from './misc'
 
 const DEFAULT_REDIRECT_TO = '/'

@@ -1,6 +1,9 @@
+import { OpenAPI } from '@0xintuition/api'
+
 import logger from '@lib/utils/logger'
 import { combineHeaders, getAuthHeaders } from '@lib/utils/misc'
 import { getRedirectToUrl } from '@lib/utils/redirect'
+import { User } from '@privy-io/server-auth'
 import { redirect } from '@remix-run/node'
 import { RedirectOptions } from 'types/navigation'
 
@@ -11,8 +14,6 @@ import {
   isOAuthInProgress,
   verifyPrivyAccessToken,
 } from './privy'
-import { User } from '@privy-io/server-auth'
-import { OpenAPI } from '@0xintuition/api'
 
 export async function getUserId(request: Request): Promise<string | null> {
   const verifiedClaims = await verifyPrivyAccessToken(request)
@@ -86,13 +87,6 @@ export async function logout(
   })
 }
 
-export async function setupAPI(request: Request) {
-  OpenAPI.BASE = 'https://dev.api.intuition.systems'
-  const accessToken = getPrivyAccessToken(request)
-  const headers = getAuthHeaders(accessToken !== null ? accessToken : '')
-  OpenAPI.HEADERS = headers as Record<string, string>
-}
-
 export async function handlePrivyRedirect({
   request,
   path = '/',
@@ -114,4 +108,11 @@ export async function handlePrivyRedirect({
   }
   logger('Hit end of handlePrivyRedirect', accessToken, sessionToken, isOAuth)
   return
+}
+
+export async function setupAPI(request: Request) {
+  OpenAPI.BASE = 'https://dev.api.intuition.systems'
+  const accessToken = getPrivyAccessToken(request)
+  const headers = getAuthHeaders(accessToken !== null ? accessToken : '')
+  OpenAPI.HEADERS = headers as Record<string, string>
 }
