@@ -1,6 +1,5 @@
 import { OpenAPI } from '@0xintuition/api'
 
-import logger from '@lib/utils/logger'
 import { combineHeaders, getAuthHeaders, invariant } from '@lib/utils/misc'
 import { getRedirectToUrl } from '@lib/utils/redirect'
 import { redirect } from '@remix-run/node'
@@ -110,17 +109,9 @@ export async function logout(
   })
 }
 
-export async function setupApiWithWallet(request: Request) {
-  const wallet = await requireUserWallet(request)
+export async function setupAPI(request: Request) {
   OpenAPI.BASE = 'https://dev.api.intuition.systems'
   const accessToken = getPrivyAccessToken(request)
   const headers = getAuthHeaders(accessToken !== null ? accessToken : '')
   OpenAPI.HEADERS = headers as Record<string, string>
-
-  if (!wallet) {
-    logger('No user found in session')
-    throw new Error('No user found in session')
-  }
-
-  return wallet
 }

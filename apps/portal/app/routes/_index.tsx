@@ -1,10 +1,13 @@
 import { LoaderFunctionArgs, redirect } from '@remix-run/node'
 import { Link, useLoaderData } from '@remix-run/react'
+import { setupAPI } from '@server/auth'
 import { onboardingModalCookie } from '@server/onboarding'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const cookieHeader = request.headers.get('Cookie')
   const cookie = await onboardingModalCookie.parse(cookieHeader)
+
+  setupAPI(request)
 
   if (!cookie) {
     return redirect('/intro')
