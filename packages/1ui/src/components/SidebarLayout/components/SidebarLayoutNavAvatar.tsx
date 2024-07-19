@@ -46,7 +46,7 @@ export const SidebarLayoutNavAvatar = ({
       </Tooltip>
     </TooltipProvider>
   ) : (
-    <div className="flex justify-start items-center font-medium border bg-transparent text-secondary-foreground/70 border-transparent rounded-lg hover:text-secondary-foreground hover:border-border/20 aria-selected:bg-primary/10 aria-selected:text-secondary-foreground/80 px-4 py-2 gap-3 text-base w-full">
+    <div className="flex items-center font-medium border disabled:bg-muted disabled:border-muted bg-transparent text-secondary-foreground/70 border-transparent rounded-lg hover:text-secondary-foreground hover:border-border/20 aria-selected:bg-primary/10 aria-selected:text-secondary-foreground/80 disabled:text-muted-foreground px-4 py-2 gap-3 text-base w-full justify-start">
       {/* TODO: See Above */}
       <AvatarComponent />
       {name}

@@ -136,7 +136,7 @@ describe('SidebarLayout', () => {
                   </svg>
                   Settings
                 </button>
-                <button
+                <div
                   class="flex items-center font-medium border disabled:bg-muted disabled:border-muted bg-transparent text-secondary-foreground/70 border-transparent rounded-lg hover:text-secondary-foreground hover:border-border/20 aria-selected:bg-primary/10 aria-selected:text-secondary-foreground/80 disabled:text-muted-foreground px-4 py-2 gap-3 text-base w-full justify-start"
                 >
                   <span
@@ -149,7 +149,7 @@ describe('SidebarLayout', () => {
                     </span>
                   </span>
                   Super Dave
-                </button>
+                </div>
               </div>
             </div>
           </div>
