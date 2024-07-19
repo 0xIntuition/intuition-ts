@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 
-import { UserPresenter } from '@0xintuition/api'
+import { UserPresenter, UsersService } from '@0xintuition/api'
 
 import SidebarNav from '@components/sidebar-nav'
 import { fetchWrapper, invariant } from '@lib/utils/misc'

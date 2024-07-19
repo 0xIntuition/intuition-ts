@@ -61,7 +61,7 @@ describe('PositionCard', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="flex flex-col justify-start items-start w-[320px] p-5 theme-border rounded-xl"
+          class="flex flex-col justify-start items-start w-full min-w-80 p-5 theme-border rounded-xl"
         >
           <div
             class="flex flex-col mb-4"

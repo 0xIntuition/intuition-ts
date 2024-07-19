@@ -23,7 +23,7 @@ describe('ProfileCard', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="flex flex-col justify-center items-start w-[320px] rounded-lg box-border"
+          class="flex flex-col justify-center items-start w-full min-w-80 rounded-lg box-border"
         >
           <div
             class="flex items-center space-x-4"
@@ -127,7 +127,7 @@ describe('ProfileCard', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="flex flex-col justify-center items-start w-[320px] rounded-lg box-border"
+          class="flex flex-col justify-center items-start w-full min-w-80 rounded-lg box-border"
         >
           <div
             class="flex items-center space-x-4"
@@ -199,7 +199,7 @@ describe('ProfileCard', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="flex flex-col justify-center items-start w-[320px] rounded-lg box-border"
+          class="flex flex-col justify-center items-start w-full min-w-80 rounded-lg box-border"
         >
           <div
             class="flex items-center space-x-4"
