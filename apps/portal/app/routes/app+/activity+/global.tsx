@@ -1,13 +1,18 @@
-import { ActivityPresenter, SortColumn, SortDirection } from '@0xintuition/api'
+import {
+  ActivitiesService,
+  ActivityPresenter,
+  SortColumn,
+  SortDirection,
+} from '@0xintuition/api'
 
 import { ActivityList } from '@components/list/activity'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { NO_WALLET_ERROR } from '@lib/utils/errors'
-import { fetchGlobalActivity } from '@lib/utils/fetches'
 import logger from '@lib/utils/logger'
-import { calculateTotalPages, invariant } from '@lib/utils/misc'
+import { calculateTotalPages, fetchWrapper, invariant } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { requireUserWallet } from '@server/auth'
+import { PaginationType } from 'types/pagination'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const wallet = await requireUserWallet(request)
@@ -24,12 +29,12 @@ export async function loader({ request }: LoaderFunctionArgs) {
     : 1
   const limit = searchParams.get('limit') ?? '10'
 
-  const globalActivity = await fetchGlobalActivity(
+  const globalActivity = await fetchWrapper(ActivitiesService.getActivities, {
     page,
-    Number(limit),
-    sortBy as SortColumn,
-    direction as SortDirection,
-  )
+    limit: Number(limit),
+    sortBy: sortBy as SortColumn,
+    direction: direction as SortDirection,
+  })
 
   const totalPages = calculateTotalPages(
     globalActivity?.total ?? 0,
@@ -60,7 +65,7 @@ export default function GlobalActivityFeed() {
     <div className="m-8 flex flex-col items-center gap-4">
       <ActivityList
         activities={globalActivity as ActivityPresenter[]}
-        pagination={pagination}
+        pagination={pagination as PaginationType}
       />
     </div>
   )

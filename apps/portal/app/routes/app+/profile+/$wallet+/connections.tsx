@@ -9,6 +9,8 @@ import {
 } from '@0xintuition/1ui'
 import {
   ClaimPresenter,
+  ClaimsService,
+  IdentitiesService,
   IdentityPresenter,
   SortColumn,
   SortDirection,
@@ -22,14 +24,13 @@ import {
 } from '@components/profile/connections-header'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { NO_WALLET_ERROR } from '@lib/utils/errors'
-import {
-  fetchClaim,
-  fetchIdentity,
-  fetchIdentityFollowers,
-  fetchIdentityFollowing,
-} from '@lib/utils/fetches'
 import logger from '@lib/utils/logger'
-import { calculateTotalPages, formatBalance, invariant } from '@lib/utils/misc'
+import {
+  calculateTotalPages,
+  fetchWrapper,
+  formatBalance,
+  invariant,
+} from '@lib/utils/misc'
 import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
 import { requireUserWallet } from '@server/auth'
 import { PaginationType } from 'types/pagination'
@@ -43,7 +44,9 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
     throw new Error('Wallet is undefined.')
   }
 
-  const userIdentity = await fetchIdentity(wallet)
+  const userIdentity = await fetchWrapper(IdentitiesService.getIdentityById, {
+    id: wallet,
+  })
 
   if (!userIdentity) {
     return redirect('/create')
@@ -54,7 +57,9 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
   }
 
   if (userIdentity.follow_claim_id) {
-    const followClaim = await fetchClaim(userIdentity.follow_claim_id)
+    const followClaim = await fetchWrapper(ClaimsService.getClaimById, {
+      id: userIdentity.follow_claim_id,
+    })
     const url = new URL(request.url)
     const searchParams = new URLSearchParams(url.search)
     // const followersSearch = searchParams.get('followersSearch') TODO: Add search once BE implements
@@ -65,12 +70,18 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
       : 1
     const followersLimit = searchParams.get('limit') ?? '10'
 
-    const followers = await fetchIdentityFollowers(
-      userIdentity.id,
-      followersPage,
-      Number(followersLimit),
-      followersSortBy as SortColumn,
-      followersDirection as SortDirection,
+    const followers = await fetchWrapper(
+      IdentitiesService.getIdentityFollowers,
+      {
+        id: userIdentity.id,
+        page: followersPage,
+        limit: Number(followersLimit),
+        sortBy: followersSortBy as SortColumn,
+        direction: followersDirection as SortDirection,
+        offset: null,
+        timeframe: null,
+        userWallet: null,
+      },
     )
 
     const followersTotalPages = calculateTotalPages(
@@ -86,12 +97,18 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
       : 1
     const followingLimit = searchParams.get('limit') ?? '10'
 
-    const following = await fetchIdentityFollowing(
-      userIdentity.id,
-      followingPage,
-      Number(followingLimit),
-      followingSortBy as SortColumn,
-      followingDirection as SortDirection,
+    const following = await fetchWrapper(
+      IdentitiesService.getIdentityFollowed,
+      {
+        id: userIdentity.id,
+        page: followersPage,
+        limit: Number(followersLimit),
+        sortBy: followersSortBy as SortColumn,
+        direction: followersDirection as SortDirection,
+        offset: null,
+        timeframe: null,
+        userWallet: null,
+      },
     )
 
     const followingTotalPages = calculateTotalPages(

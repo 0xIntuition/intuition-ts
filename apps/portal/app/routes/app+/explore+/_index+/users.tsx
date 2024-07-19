@@ -1,11 +1,15 @@
-import { IdentityPresenter, SortColumn, SortDirection } from '@0xintuition/api'
+import {
+  IdentitiesService,
+  IdentityPresenter,
+  SortColumn,
+  SortDirection,
+} from '@0xintuition/api'
 
 import { ExploreSearch } from '@components/explore/ExploreSearch'
 import { IdentitiesList } from '@components/list/identities'
 import { NO_WALLET_ERROR } from '@lib/utils/errors'
-import { fetchUserIdentities } from '@lib/utils/fetches'
 import logger from '@lib/utils/logger'
-import { calculateTotalPages, invariant } from '@lib/utils/misc'
+import { calculateTotalPages, fetchWrapper, invariant } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 import { requireUserWallet } from '@server/auth'
@@ -27,14 +31,14 @@ export async function loader({ request }: LoaderFunctionArgs) {
     : 1
   const limit = searchParams.get('limit') ?? '10'
 
-  const identities = await fetchUserIdentities(
+  const identities = await fetchWrapper(IdentitiesService.searchIdentity, {
     page,
-    Number(limit),
-    sortBy as SortColumn,
-    direction as SortDirection,
-    displayNameQuery,
-    hasTagQuery,
-  )
+    limit: Number(limit),
+    sortBy: sortBy as SortColumn,
+    direction: direction as SortDirection,
+    displayName: displayNameQuery,
+    hasTag: hasTagQuery,
+  })
 
   const totalPages = calculateTotalPages(identities?.total ?? 0, Number(limit))
   logger('identities', identities)

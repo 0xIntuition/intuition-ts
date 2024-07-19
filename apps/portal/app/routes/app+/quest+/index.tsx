@@ -9,12 +9,11 @@ import {
   Text,
 } from '@0xintuition/1ui'
 import { ProfileCardHeader } from '@0xintuition/1ui/src/components/ProfileCard/components'
-import { GetUserByWalletResponse } from '@0xintuition/api'
+import { GetUserByWalletResponse, UsersService } from '@0xintuition/api'
 
 import questPlaceholder from '@assets/quest-placeholder.png'
 import { QUEST_LOG_DESCRIPTION } from '@lib/utils/constants/quest'
-import { getUserByWallet } from '@lib/utils/fetches'
-import { invariant } from '@lib/utils/misc'
+import { fetchWrapper, invariant } from '@lib/utils/misc'
 import { defer, LoaderFunctionArgs } from '@remix-run/node'
 import { Await, Link, useLoaderData } from '@remix-run/react'
 import { requireUserWallet } from '@server/auth'
@@ -24,7 +23,9 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const userWallet = await requireUserWallet(request)
   invariant(userWallet, 'Unauthorized')
 
-  const userProfile = getUserByWallet(userWallet)
+  const userProfile = await fetchWrapper(UsersService.getUserByWalletPublic, {
+    wallet: userWallet,
+  })
 
   return defer({
     userWallet,

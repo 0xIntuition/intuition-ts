@@ -10,6 +10,7 @@ import {
 } from '@0xintuition/1ui'
 import {
   ClaimPresenter,
+  IdentitiesService,
   IdentityPresenter,
   UserTotalsPresenter,
 } from '@0xintuition/api'
@@ -21,10 +22,10 @@ import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { followModalAtom, stakeModalAtom } from '@lib/state/store'
 import { userIdentityRouteOptions } from '@lib/utils/constants'
 import { NO_WALLET_ERROR } from '@lib/utils/errors'
-import { fetchClaim, fetchIdentity, fetchUserTotals } from '@lib/utils/fetches'
 import logger from '@lib/utils/logger'
 import {
   calculatePercentageOfTvl,
+  fetchWrapper,
   formatBalance,
   invariant,
   sliceString,
@@ -51,7 +52,9 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     throw redirect('/app/profile')
   }
 
-  const userIdentity = await fetchIdentity(wallet)
+  const userIdentity = await fetchWrapper(IdentitiesService.getIdentityById, {
+    id: wallet,
+  })
 
   if (!userIdentity) {
     return logger('No user identity found')

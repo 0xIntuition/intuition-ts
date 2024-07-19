@@ -23,7 +23,7 @@ import { editProfileModalAtom } from '@lib/state/store'
 import { MULTIVAULT_CONTRACT_ADDRESS } from '@lib/utils/constants'
 import { NO_WALLET_ERROR } from '@lib/utils/errors'
 import logger from '@lib/utils/logger'
-import { invariant, sliceString } from '@lib/utils/misc'
+import { fetchWrapper, invariant, sliceString } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { useFetcher, useLoaderData, useNavigate } from '@remix-run/react'
 import { CreateLoaderData } from '@routes/resources+/create'
@@ -59,21 +59,9 @@ export async function loader({ request }: LoaderFunctionArgs) {
     }
   }
 
-  let userObject
-  try {
-    userObject = await UsersService.getUserByWalletPublic({
-      wallet,
-    })
-  } catch (error: unknown) {
-    if (error instanceof ApiError) {
-      userObject = undefined
-      console.log(
-        `${error.name} - ${error.status}: ${error.message} ${error.url}`,
-      )
-    } else {
-      throw error
-    }
-  }
+  const userObject = await fetchWrapper(UsersService.getUserByWalletPublic, {
+    wallet,
+  })
 
   if (!userObject) {
     console.log('No user found in DB')

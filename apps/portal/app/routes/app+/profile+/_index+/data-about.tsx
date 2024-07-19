@@ -1,6 +1,9 @@
 import {
   ClaimPresenter,
   ClaimSortColumn,
+  ClaimsService,
+  IdentitiesService,
+  IdentityPositionsService,
   PositionPresenter,
   PositionSortColumn,
   SortDirection,
@@ -11,14 +14,13 @@ import { PositionsOnIdentity } from '@components/list/positions-on-identity'
 import DataAboutHeader from '@components/profile/data-about-header'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { NO_WALLET_ERROR } from '@lib/utils/errors'
-import {
-  fetchClaimsAboutIdentity,
-  fetchClaimsSummary,
-  fetchIdentity,
-  fetchPositionsOnIdentity,
-} from '@lib/utils/fetches'
 import logger from '@lib/utils/logger'
-import { calculateTotalPages, formatBalance, invariant } from '@lib/utils/misc'
+import {
+  calculateTotalPages,
+  fetchWrapper,
+  formatBalance,
+  invariant,
+} from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { requireUserWallet } from '@server/auth'
 
@@ -26,7 +28,9 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const userWallet = await requireUserWallet(request)
   invariant(userWallet, NO_WALLET_ERROR)
 
-  const userIdentity = await fetchIdentity(userWallet)
+  const userIdentity = await fetchWrapper(IdentitiesService.getIdentityById, {
+    id: userWallet,
+  })
 
   if (!userIdentity) {
     return logger('No user identity found')
@@ -47,13 +51,16 @@ export async function loader({ request }: LoaderFunctionArgs) {
     : 1
   const positionsLimit = searchParams.get('positionsLimit') ?? '10'
 
-  const positions = await fetchPositionsOnIdentity(
-    userWallet,
-    positionsPage,
-    Number(positionsLimit),
-    positionsSortBy as PositionSortColumn,
-    positionsDirection as SortDirection,
-    positionsSearch,
+  const positions = await fetchWrapper(
+    IdentityPositionsService.getIdentityPositions,
+    {
+      id: userWallet,
+      page: positionsPage,
+      limit: Number(positionsLimit),
+      sortBy: positionsSortBy as PositionSortColumn,
+      direction: positionsDirection as SortDirection,
+      creator: positionsSearch,
+    },
   )
 
   const positionsTotalPages = calculateTotalPages(
@@ -69,21 +76,23 @@ export async function loader({ request }: LoaderFunctionArgs) {
     : 1
   const claimsLimit = searchParams.get('claimsLimit') ?? '10'
 
-  const claims = await fetchClaimsAboutIdentity(
-    userIdentity.id,
-    claimsPage,
-    Number(claimsLimit),
-    claimsSortBy as ClaimSortColumn,
-    claimsDirection as SortDirection,
-    claimsSearch,
-  )
+  const claims = await fetchWrapper(ClaimsService.searchClaims, {
+    identity: userIdentity.id,
+    page: claimsPage,
+    limit: Number(claimsLimit),
+    sortBy: claimsSortBy as ClaimSortColumn,
+    direction: claimsDirection as SortDirection,
+    displayName: claimsSearch,
+  })
 
   const claimsTotalPages = calculateTotalPages(
     claims?.total ?? 0,
     Number(claimsLimit),
   )
 
-  const claimsSummary = await fetchClaimsSummary(userIdentity.id)
+  const claimsSummary = await fetchWrapper(ClaimsService.claimSummary, {
+    identity: userIdentity.id,
+  })
 
   return json({
     userIdentity,

@@ -11,8 +11,10 @@ import {
   StakeCard,
 } from '@0xintuition/1ui'
 import {
+  IdentitiesService,
   IdentityPresenter,
   UserPresenter,
+  UsersService,
   UserTotalsPresenter,
 } from '@0xintuition/api'
 
@@ -29,14 +31,10 @@ import {
 } from '@lib/state/store'
 import { userProfileRouteOptions } from '@lib/utils/constants'
 import { NO_WALLET_ERROR } from '@lib/utils/errors'
-import {
-  fetchIdentity,
-  fetchUserTotals,
-  getUserByWallet,
-} from '@lib/utils/fetches'
 import logger from '@lib/utils/logger'
 import {
   calculatePercentageOfTvl,
+  fetchWrapper,
   formatBalance,
   invariant,
   sliceString,
@@ -64,21 +62,27 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const wallet = await requireUserWallet(request)
   invariant(wallet, NO_WALLET_ERROR)
 
-  const userIdentity = await fetchIdentity(userWallet)
+  const userIdentity = await fetchWrapper(IdentitiesService.getIdentityById, {
+    id: userWallet,
+  })
   logger('userIdentity', userIdentity)
 
   if (!userIdentity) {
     return redirect('/create')
   }
 
-  const userObject = await getUserByWallet(userWallet)
+  const userObject = await fetchWrapper(UsersService.getUserByWalletPublic, {
+    wallet: userWallet,
+  })
 
   if (!userObject) {
     logger('No user found in DB')
     return
   }
 
-  const userTotals = await fetchUserTotals(userObject.id)
+  const userTotals = await fetchWrapper(UsersService.getUserTotals, {
+    id: userObject.id,
+  })
 
   let vaultDetails: VaultDetailsType | null = null
 

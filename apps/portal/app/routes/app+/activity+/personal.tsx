@@ -1,11 +1,15 @@
-import { ActivityPresenter, SortColumn, SortDirection } from '@0xintuition/api'
+import {
+  ActivitiesService,
+  ActivityPresenter,
+  SortColumn,
+  SortDirection,
+} from '@0xintuition/api'
 
 import { ActivityList } from '@components/list/activity'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { NO_WALLET_ERROR } from '@lib/utils/errors'
-import { fetchUserActivity } from '@lib/utils/fetches'
 import logger from '@lib/utils/logger'
-import { calculateTotalPages, invariant } from '@lib/utils/misc'
+import { calculateTotalPages, fetchWrapper, invariant } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { requireUser, requireUserWallet } from '@server/auth'
 
@@ -29,13 +33,13 @@ export async function loader({ request }: LoaderFunctionArgs) {
     : 1
   const limit = searchParams.get('limit') ?? '10'
 
-  const userActivity = await fetchUserActivity(
+  const userActivity = await fetchWrapper(ActivitiesService.getActivities, {
     page,
-    Number(limit),
-    sortBy as SortColumn,
-    direction as SortDirection,
-    userWallet,
-  )
+    limit: Number(limit),
+    sortBy: sortBy as SortColumn,
+    direction: direction as SortDirection,
+    fromAddress: userWallet,
+  })
 
   const totalPages = calculateTotalPages(
     userActivity?.total ?? 0,

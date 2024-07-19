@@ -11,6 +11,7 @@ import {
   TagsContent,
   TagWithValue,
 } from '@0xintuition/1ui'
+import { IdentitiesService } from '@0xintuition/api'
 
 import { NestedLayout } from '@components/nested-layout'
 import StakeModal from '@components/stake/stake-modal'
@@ -18,10 +19,10 @@ import TagsModal from '@components/tags/tags-modal'
 import { stakeModalAtom, tagsModalAtom } from '@lib/state/store'
 import { identityRouteOptions } from '@lib/utils/constants'
 import { NO_WALLET_ERROR } from '@lib/utils/errors'
-import { fetchIdentity } from '@lib/utils/fetches'
 import logger from '@lib/utils/logger'
 import {
   calculatePercentageOfTvl,
+  fetchWrapper,
   formatBalance,
   invariant,
   sliceString,
@@ -46,7 +47,9 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     return
   }
 
-  const identity = await fetchIdentity(params.id)
+  const identity = await fetchWrapper(IdentitiesService.getIdentityById, {
+    id: params.id,
+  })
 
   logger('identity', identity)
 

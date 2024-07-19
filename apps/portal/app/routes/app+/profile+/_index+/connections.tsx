@@ -10,6 +10,7 @@ import {
 import {
   ClaimPresenter,
   ClaimsService,
+  IdentitiesService,
   IdentityPresenter,
   SortColumn,
   SortDirection,
@@ -23,13 +24,13 @@ import {
 } from '@components/profile/connections-header'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { NO_WALLET_ERROR } from '@lib/utils/errors'
-import {
-  fetchIdentity,
-  fetchIdentityFollowers,
-  fetchIdentityFollowing,
-} from '@lib/utils/fetches'
 import logger from '@lib/utils/logger'
-import { calculateTotalPages, formatBalance, invariant } from '@lib/utils/misc'
+import {
+  calculateTotalPages,
+  fetchWrapper,
+  formatBalance,
+  invariant,
+} from '@lib/utils/misc'
 import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
 import { requireUserWallet } from '@server/auth'
 
@@ -37,7 +38,9 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const userWallet = await requireUserWallet(request)
   invariant(userWallet, NO_WALLET_ERROR)
 
-  const userIdentity = await fetchIdentity(userWallet)
+  const userIdentity = await fetchWrapper(IdentitiesService.getIdentityById, {
+    id: userWallet,
+  })
 
   if (!userIdentity) {
     return redirect('/create')
@@ -65,13 +68,16 @@ export async function loader({ request }: LoaderFunctionArgs) {
     : 1
   const followersLimit = searchParams.get('limit') ?? '10'
 
-  const followers = await fetchIdentityFollowers(
-    userIdentity.id,
-    followersPage,
-    Number(followersLimit),
-    followersSortBy as SortColumn,
-    followersDirection as SortDirection,
-  )
+  const followers = await fetchWrapper(IdentitiesService.getIdentityFollowers, {
+    id: userIdentity.id,
+    page: followersPage,
+    limit: Number(followersLimit),
+    sortBy: followersSortBy as SortColumn,
+    direction: followersDirection as SortDirection,
+    offset: null,
+    timeframe: null,
+    userWallet: null,
+  })
 
   const followersTotalPages = calculateTotalPages(
     followers?.total ?? 0,
@@ -86,13 +92,16 @@ export async function loader({ request }: LoaderFunctionArgs) {
     : 1
   const followingLimit = searchParams.get('limit') ?? '10'
 
-  const following = await fetchIdentityFollowing(
-    userIdentity.id,
-    followingPage,
-    Number(followingLimit),
-    followingSortBy as SortColumn,
-    followingDirection as SortDirection,
-  )
+  const following = await fetchWrapper(IdentitiesService.getIdentityFollowed, {
+    id: userIdentity.id,
+    page: followersPage,
+    limit: Number(followersLimit),
+    sortBy: followersSortBy as SortColumn,
+    direction: followersDirection as SortDirection,
+    offset: null,
+    timeframe: null,
+    userWallet: null,
+  })
 
   const followingTotalPages = calculateTotalPages(
     following?.total ?? 0,

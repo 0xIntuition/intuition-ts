@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react'
 
 import { Tabs, TabsList, TabsTrigger, Text } from '@0xintuition/1ui'
 import {
+  ClaimPositionsService,
+  ClaimsService,
   PositionPresenter,
   PositionSortColumn,
   SortDirection,
@@ -10,11 +12,11 @@ import {
 import { PositionsOnClaim } from '@components/list/positions-on-claim'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { NO_WALLET_ERROR } from '@lib/utils/errors'
-import { fetchClaim, fetchPositionsOnClaim } from '@lib/utils/fetches'
-import { calculateTotalPages, invariant } from '@lib/utils/misc'
+import { calculateTotalPages, fetchWrapper, invariant } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { useSearchParams } from '@remix-run/react'
 import { requireUserWallet } from '@server/auth'
+import { PaginationType } from 'types/pagination'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const wallet = await requireUserWallet(request)
@@ -26,7 +28,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     throw new Error('Claim ID is undefined.')
   }
 
-  const claim = await fetchClaim(id)
+  const claim = await fetchWrapper(ClaimsService.getClaimById, { id })
 
   const url = new URL(request.url)
   const searchParams = new URLSearchParams(url.search)
@@ -42,17 +44,23 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     : 1
   const limit = searchParams.get('limit') ?? '10'
 
-  const positions = await fetchPositionsOnClaim(
+  const positionId =
     positionDirection === 'for'
       ? claim?.vault_id ?? id
       : positionDirection === 'against'
         ? claim?.counter_vault_id ?? id
-        : id,
-    page,
-    Number(limit),
-    sortBy as PositionSortColumn,
-    direction as SortDirection,
-    search,
+        : id
+
+  const positions = await fetchWrapper(
+    ClaimPositionsService.getClaimPositions,
+    {
+      id: positionId,
+      page,
+      limit: Number(limit),
+      sortBy: sortBy as PositionSortColumn,
+      direction: direction as SortDirection,
+      search,
+    },
   )
 
   const totalPages = calculateTotalPages(positions?.total ?? 0, Number(limit))
@@ -129,7 +137,10 @@ export default function ClaimOverview() {
           />
         </TabsList>
       </Tabs>
-      <PositionsOnClaim positions={positions} pagination={pagination} />
+      <PositionsOnClaim
+        positions={positions}
+        pagination={pagination as PaginationType}
+      />
     </div>
   )
 }

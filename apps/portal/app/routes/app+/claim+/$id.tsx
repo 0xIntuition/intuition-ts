@@ -16,6 +16,7 @@ import {
 import {
   ClaimPresenter,
   ClaimSortColumn,
+  ClaimsService,
   SortDirection,
 } from '@0xintuition/api'
 
@@ -23,10 +24,10 @@ import { NestedLayout } from '@components/nested-layout'
 import StakeModal from '@components/stake/stake-modal'
 import { stakeModalAtom } from '@lib/state/store'
 import { NO_WALLET_ERROR } from '@lib/utils/errors'
-import { fetchClaim } from '@lib/utils/fetches'
 import logger from '@lib/utils/logger'
 import {
   calculatePercentageOfTvl,
+  fetchWrapper,
   formatBalance,
   invariant,
 } from '@lib/utils/misc'
@@ -58,7 +59,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const direction: SortDirection =
     (searchParams.get('direction') as SortDirection) ?? 'desc'
 
-  const claim = await fetchClaim(id)
+  const claim = await fetchWrapper(ClaimsService.getClaimById, { id })
 
   let vaultDetails: VaultDetailsType | null = null
 

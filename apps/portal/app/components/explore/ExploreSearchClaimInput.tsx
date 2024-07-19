@@ -1,10 +1,9 @@
 import * as React from 'react'
 
 import { Separator, Text } from '@0xintuition/1ui'
-import { IdentityPresenter } from '@0xintuition/api'
+import { IdentitiesService, IdentityPresenter } from '@0xintuition/api'
 
-import { fetchIdentity } from '@lib/utils/fetches'
-import { pascalCaseString } from '@lib/utils/misc'
+import { fetchWrapper, pascalCaseString } from '@lib/utils/misc'
 import { useLocation, useNavigate } from '@remix-run/react'
 import { Identity, IdentityType } from 'types/identity'
 
@@ -50,18 +49,29 @@ const ExploreSearchClaimInput = ({
     const fetchIdentities = async () => {
       const newSelectedIdentities = { ...selectedIdentities }
       if (subjectId) {
-        newSelectedIdentities.subject = await fetchIdentity(subjectId)
+        newSelectedIdentities.subject = await fetchWrapper(
+          IdentitiesService.getIdentityById,
+          { id: subjectId },
+        )
       }
       if (predicateId) {
-        newSelectedIdentities.predicate = await fetchIdentity(predicateId)
+        newSelectedIdentities.predicate = await fetchWrapper(
+          IdentitiesService.getIdentityById,
+          { id: predicateId },
+        )
       }
       if (objectId) {
-        newSelectedIdentities.object = await fetchIdentity(objectId)
+        newSelectedIdentities.object = await fetchWrapper(
+          IdentitiesService.getIdentityById,
+          { id: objectId },
+        )
       }
       setSelectedIdentities(newSelectedIdentities)
     }
 
     fetchIdentities()
+    // only listen for location.search changes
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.search])
 
   const handleIdentitySelection = (
