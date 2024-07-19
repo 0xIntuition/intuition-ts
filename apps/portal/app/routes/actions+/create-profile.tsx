@@ -9,6 +9,8 @@ import { requireUserWallet } from '@server/auth'
 
 export async function action({ request }: ActionFunctionArgs) {
   logger('Validating create identity form data')
+  const wallet = await requireUserWallet(request)
+  invariant(wallet, NO_WALLET_ERROR)
 
   const formData = await request.formData()
 
@@ -21,9 +23,6 @@ export async function action({ request }: ActionFunctionArgs) {
   const description = formData.get('description')
 
   try {
-    const wallet = await requireUserWallet(request)
-    invariant(wallet, NO_WALLET_ERROR)
-
     let identity
     try {
       const identityParams = {

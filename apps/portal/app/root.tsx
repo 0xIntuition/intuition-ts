@@ -23,6 +23,7 @@ import { Toaster } from '@0xintuition/1ui'
 
 import { CURRENT_ENV } from '@lib/utils/constants'
 import { getChainEnvConfig } from '@lib/utils/environment'
+import { setupAPI } from '@server/auth'
 import { ClientOnly } from 'remix-utils/client-only'
 import { baseSepolia } from 'viem/chains'
 import { useAccount, useSwitchChain } from 'wagmi'
@@ -35,6 +36,8 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 }
 
 export async function loader({ request }: LoaderFunctionArgs) {
+  setupAPI(request)
+
   return json({
     env: getEnv(),
     requestInfo: {

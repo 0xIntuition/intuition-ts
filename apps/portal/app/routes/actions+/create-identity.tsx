@@ -8,8 +8,10 @@ import { json, type ActionFunctionArgs } from '@remix-run/node'
 import { requireUserWallet } from '@server/auth'
 
 export async function action({ request }: ActionFunctionArgs) {
-  const formData = await request.formData()
+  const wallet = await requireUserWallet(request)
+  invariant(wallet, NO_WALLET_ERROR)
 
+  const formData = await request.formData()
   for (const [key, value] of formData.entries()) {
     logger(`${key}: ${value}`)
   }
@@ -20,9 +22,6 @@ export async function action({ request }: ActionFunctionArgs) {
   const external_reference = formData.get('external_reference')
 
   try {
-    const wallet = await requireUserWallet(request)
-    invariant(wallet, NO_WALLET_ERROR)
-
     let identity
     try {
       const identityParams: {

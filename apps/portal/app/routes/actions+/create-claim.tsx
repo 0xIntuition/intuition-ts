@@ -8,6 +8,9 @@ import { ActionFunctionArgs, json } from '@remix-run/node'
 import { requireUserWallet } from '@server/auth'
 
 export async function action({ request }: ActionFunctionArgs) {
+  const wallet = await requireUserWallet(request)
+  invariant(wallet, NO_WALLET_ERROR)
+
   const formData = await request.formData()
   for (const [key, value] of formData.entries()) {
     logger(`${key}: ${value}`)
@@ -24,9 +27,6 @@ export async function action({ request }: ActionFunctionArgs) {
   const object_id = formData.get('object_id')
 
   try {
-    const wallet = await requireUserWallet(request)
-    invariant(wallet, NO_WALLET_ERROR)
-
     let claim
     try {
       const claimParams: {
