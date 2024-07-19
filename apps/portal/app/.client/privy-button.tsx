@@ -20,13 +20,10 @@ export function PrivyButton({
   triggerComponent?: React.ReactNode
   onLogout?: () => void
 }) {
-  const { ready, authenticated, login, logout, user: privyUser } = usePrivy()
+  const { ready, authenticated, logout, user: privyUser } = usePrivy()
 
   const navigate = useNavigate()
   const { disconnect } = useDisconnect()
-
-  // Disable login when Privy is not ready or the user is already authenticated
-  const disableLogin = !ready || (ready && authenticated)
 
   async function handleSignout() {
     await logout()
@@ -36,14 +33,6 @@ export function PrivyButton({
 
   if (!ready) {
     return null
-  }
-
-  if (ready && !authenticated) {
-    return (
-      <Button disabled={disableLogin} onClick={login} variant="primary">
-        Log in
-      </Button>
-    )
   }
 
   if (ready && authenticated && privyUser !== null) {
