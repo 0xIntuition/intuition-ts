@@ -2,7 +2,6 @@ import { type VariantProps } from 'class-variance-authority'
 
 import {
   Avatar,
-  Button,
   buttonVariants,
   Text,
   TextVariant,
@@ -23,13 +22,12 @@ export interface SidebarLayoutNavAvatarProps
 export const SidebarLayoutNavAvatar = ({
   imageSrc,
   name,
-  onClick,
 }: SidebarLayoutNavAvatarProps) => {
   const { isCollapsed } = useSidebarLayoutContext()
-  const buttonProps = {
-    className: 'w-full justify-start',
-    onClick,
-  }
+  // const buttonProps = {
+  //   className: 'w-full justify-start',
+  //   onClick,
+  // }
   const AvatarComponent = () => (
     <Avatar className="h-6 w-6" src={imageSrc} name={name} />
   )
@@ -37,9 +35,10 @@ export const SidebarLayoutNavAvatar = ({
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>
-          <Button variant="navigation" size="iconLg" {...buttonProps}>
+          <div className="flex justify-start items-center gap-2 text-sm font-medium border bg-transparent text-secondary-foreground/70 border-transparent rounded-lg  hover:text-secondary-foreground hover:border-border/20 aria-selected:bg-primary/10 aria-selected:text-secondary-foreground/80 p-2 w-full">
+            {/* TODO: Had to remove the Button component here because it was causing an error, applied same styling to div. See ENG-2698 */}
             <AvatarComponent />
-          </Button>
+          </div>
         </TooltipTrigger>
         <TooltipContent side="right" sideOffset={16}>
           <Text variant={TextVariant.body}>{name}</Text>
@@ -47,9 +46,10 @@ export const SidebarLayoutNavAvatar = ({
       </Tooltip>
     </TooltipProvider>
   ) : (
-    <Button variant="navigation" size="lg" {...buttonProps}>
+    <div className="flex justify-start items-center font-medium border bg-transparent text-secondary-foreground/70 border-transparent rounded-lg hover:text-secondary-foreground hover:border-border/20 aria-selected:bg-primary/10 aria-selected:text-secondary-foreground/80 px-4 py-2 gap-3 text-base w-full">
+      {/* TODO: See Above */}
       <AvatarComponent />
       {name}
-    </Button>
+    </div>
   )
 }
