@@ -31,8 +31,6 @@ export async function action({ request }: ActionFunctionArgs) {
         display_name: display_name as string,
         identity_id: identity_id as string,
         description: description as string,
-        is_user: true,
-        predicate: false,
       }
       logger('Identity params:', identityParams)
       identity = await IdentitiesService.createIdentity({

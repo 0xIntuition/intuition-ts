@@ -308,6 +308,7 @@ export default function FollowModal({
 
   const handleClose = () => {
     onClose()
+    setMode('follow')
     setTimeout(() => {
       dispatch({ type: 'START_TRANSACTION' })
       reset()

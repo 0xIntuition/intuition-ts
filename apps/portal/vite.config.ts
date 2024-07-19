@@ -1,3 +1,4 @@
+import contentCollections from '@content-collections/remix-vite'
 import { vitePlugin as remix } from '@remix-run/dev'
 import { installGlobals } from '@remix-run/node'
 import autoprefixer from 'autoprefixer'
@@ -35,6 +36,7 @@ export default defineConfig({
       },
     }),
     tsconfigPaths(),
+    contentCollections(),
   ],
   server: {
     port: 8080,
@@ -43,6 +45,10 @@ export default defineConfig({
     target: 'ES2022',
   },
   ssr: {
-    noExternal: ['@privy-io/react-auth', '@privy-io/wagmi'],
+    noExternal: [
+      '@privy-io/react-auth',
+      '@privy-io/wagmi',
+      '@content-collections/mdx',
+    ],
   },
 })
