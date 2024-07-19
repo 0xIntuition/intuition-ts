@@ -10,10 +10,12 @@ import {
 import {
   ClaimPresenter,
   ClaimSortColumn,
+  ClaimsService,
+  IdentitiesService,
   IdentityPresenter,
-  OpenAPI,
   SortColumn,
   SortDirection,
+  UsersService,
   UserTotalsPresenter,
 } from '@0xintuition/api'
 
@@ -27,40 +29,27 @@ import {
   DataCreatedHeaderVariantType,
 } from '@components/profile/data-created-header'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
-import {
-  fetchClaimsCreatedByUser,
-  fetchClaimsSummary,
-  fetchClaimsWithUserPosition,
-  fetchCreatedClaimsSummary,
-  fetchCreatedIdentitiesSummary,
-  fetchIdentitiesCreatedByUser,
-  fetchIdentitiesWithUserPosition,
-  fetchIdentity,
-  fetchUserTotals,
-} from '@lib/utils/fetches'
+import { NO_WALLET_ERROR } from '@lib/utils/errors'
 import logger from '@lib/utils/logger'
 import {
   calculateTotalPages,
+  fetchWrapper,
   formatBalance,
-  getAuthHeaders,
+  invariant,
 } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { requireUserWallet } from '@server/auth'
-import { getPrivyAccessToken } from '@server/privy'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const userWallet = await requireUserWallet(request)
-  OpenAPI.BASE = 'https://dev.api.intuition.systems'
-  const accessToken = getPrivyAccessToken(request)
-  const headers = getAuthHeaders(accessToken !== null ? accessToken : '')
-  OpenAPI.HEADERS = headers as Record<string, string>
+  invariant(userWallet, NO_WALLET_ERROR)
 
-  if (!userWallet) {
-    return logger('No user found in session')
-  }
-
-  const userIdentity = await fetchIdentity(userWallet)
-
+  const userIdentity = await fetchWrapper({
+    method: IdentitiesService.getIdentityById,
+    args: {
+      id: userWallet,
+    },
+  })
   if (!userIdentity) {
     return logger('No user identity found')
   }
@@ -68,7 +57,14 @@ export async function loader({ request }: LoaderFunctionArgs) {
     logger('Invalid or missing creator ID')
     return
   }
-  const userTotals = await fetchUserTotals(userIdentity.creator.id)
+
+  const userTotals = await fetchWrapper({
+    method: UsersService.getUserTotals,
+    args: {
+      id: userIdentity.creator.id,
+    },
+  })
+
   const url = new URL(request.url)
   const searchParams = new URLSearchParams(url.search)
 
@@ -82,14 +78,19 @@ export async function loader({ request }: LoaderFunctionArgs) {
     : 1
   const activeIdentitiesLimit =
     searchParams.get('activeIdentitiesLimit') ?? '10'
-  const activeIdentities = await fetchIdentitiesWithUserPosition(
-    userWallet,
-    activeIdentitiesPage,
-    Number(activeIdentitiesLimit),
-    activeIdentitiesSortBy as SortColumn,
-    activeIdentitiesDirection as SortDirection,
-    activeIdentitiesSearch,
-  )
+
+  const activeIdentities = await fetchWrapper({
+    method: UsersService.getUserIdentities,
+    args: {
+      user: userWallet,
+      page: activeIdentitiesPage,
+      limit: Number(activeIdentitiesLimit),
+      sortBy: activeIdentitiesSortBy as SortColumn,
+      direction: activeIdentitiesDirection as SortDirection,
+      displayName: activeIdentitiesSearch,
+    },
+  })
+
   const activeIdentitiesTotalPages = calculateTotalPages(
     activeIdentities?.total ?? 0,
     Number(activeIdentitiesLimit),
@@ -103,19 +104,30 @@ export async function loader({ request }: LoaderFunctionArgs) {
     ? parseInt(searchParams.get('activeClaimsPage') as string)
     : 1
   const activeClaimsLimit = searchParams.get('activeClaimsLimit') ?? '10'
-  const activeClaims = await fetchClaimsWithUserPosition(
-    userWallet,
-    activeClaimsPage,
-    Number(activeClaimsLimit),
-    activeClaimsSortBy as SortColumn,
-    activeClaimsDirection as SortDirection,
-    activeClaimsSearch,
-  )
+
+  const activeClaims = await fetchWrapper({
+    method: UsersService.getUserClaims,
+    args: {
+      user: userWallet,
+      page: activeClaimsPage,
+      limit: Number(activeClaimsLimit),
+      sortBy: activeClaimsSortBy as SortColumn,
+      direction: activeClaimsDirection as SortDirection,
+      displayName: activeClaimsSearch,
+    },
+  })
+
   const activeClaimsTotalPages = calculateTotalPages(
     activeClaims?.total ?? 0,
     Number(activeClaimsLimit),
   )
-  const activeClaimsSummary = await fetchClaimsSummary(userWallet)
+
+  const activeClaimsSummary = await fetchWrapper({
+    method: ClaimsService.claimSummary,
+    args: {
+      identity: userWallet,
+    },
+  })
 
   const createdIdentitiesSearch = searchParams.get('createdIdentitiesSearch')
   const createdIdentitiesSortBy =
@@ -127,21 +139,28 @@ export async function loader({ request }: LoaderFunctionArgs) {
     : 1
   const createdIdentitiesLimit =
     searchParams.get('createdIdentitiesLimit') ?? '10'
-  const createdIdentities = await fetchIdentitiesCreatedByUser(
-    createdIdentitiesPage,
-    Number(createdIdentitiesLimit),
-    createdIdentitiesSortBy as SortColumn,
-    createdIdentitiesDirection as SortDirection,
-    userWallet,
-    createdIdentitiesSearch,
-  )
+
+  const createdIdentities = await fetchWrapper({
+    method: IdentitiesService.searchIdentity,
+    args: {
+      page: createdIdentitiesPage,
+      limit: Number(createdIdentitiesLimit),
+      sortBy: createdIdentitiesSortBy as SortColumn,
+      direction: createdIdentitiesDirection as SortDirection,
+      creator: userWallet,
+      displayName: createdIdentitiesSearch,
+    },
+  })
+
   const createdIdentitiesTotalPages = calculateTotalPages(
     createdIdentities?.total ?? 0,
     Number(createdIdentitiesLimit),
   )
 
-  const createdIdentitiesSummary =
-    await fetchCreatedIdentitiesSummary(userWallet)
+  const createdIdentitiesSummary = await fetchWrapper({
+    method: IdentitiesService.identitySummary,
+    args: { creator: userWallet },
+  })
 
   const createdClaimsSearch = searchParams.get('createdClaimsSearch')
   const createdClaimsSortBy =
@@ -152,19 +171,30 @@ export async function loader({ request }: LoaderFunctionArgs) {
     ? parseInt(searchParams.get('createdClaimsPage') as string)
     : 1
   const createdClaimsLimit = searchParams.get('createdClaimsLimit') ?? '10'
-  const createdClaims = await fetchClaimsCreatedByUser(
-    createdClaimsPage,
-    Number(createdClaimsLimit),
-    createdClaimsSortBy as ClaimSortColumn,
-    createdClaimsDirection as SortDirection,
-    userWallet,
-    createdClaimsSearch,
-  )
+
+  const createdClaims = await fetchWrapper({
+    method: ClaimsService.searchClaims,
+    args: {
+      page: createdClaimsPage,
+      limit: Number(createdClaimsLimit),
+      sortBy: createdClaimsSortBy as ClaimSortColumn,
+      direction: createdClaimsDirection as SortDirection,
+      creator: userWallet,
+      displayName: createdClaimsSearch,
+    },
+  })
+
   const createdClaimsTotalPages = calculateTotalPages(
     createdClaims?.total ?? 0,
     Number(createdClaimsLimit),
   )
-  const createdClaimsSummary = await fetchCreatedClaimsSummary(userWallet)
+
+  const createdClaimsSummary = await fetchWrapper({
+    method: ClaimsService.claimSummary,
+    args: {
+      creator: userWallet,
+    },
+  })
 
   return json({
     userIdentity,

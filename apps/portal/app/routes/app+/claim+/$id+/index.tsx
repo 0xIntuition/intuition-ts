@@ -2,25 +2,26 @@ import { useEffect, useState } from 'react'
 
 import { Tabs, TabsList, TabsTrigger, Text } from '@0xintuition/1ui'
 import {
-  OpenAPI,
+  ClaimPositionsService,
+  ClaimsService,
   PositionPresenter,
   PositionSortColumn,
   SortDirection,
+  VaultType,
 } from '@0xintuition/api'
 
 import { PositionsOnClaim } from '@components/list/positions-on-claim'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
-import { fetchClaim, fetchPositionsOnClaim } from '@lib/utils/fetches'
-import { calculateTotalPages, getAuthHeaders } from '@lib/utils/misc'
+import { NO_WALLET_ERROR } from '@lib/utils/errors'
+import { calculateTotalPages, fetchWrapper, invariant } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { useSearchParams } from '@remix-run/react'
-import { getPrivyAccessToken } from '@server/privy'
+import { requireUserWallet } from '@server/auth'
+import { PaginationType } from 'types/pagination'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
-  OpenAPI.BASE = 'https://dev.api.intuition.systems'
-  const accessToken = getPrivyAccessToken(request)
-  const headers = getAuthHeaders(accessToken !== null ? accessToken : '')
-  OpenAPI.HEADERS = headers as Record<string, string>
+  const wallet = await requireUserWallet(request)
+  invariant(wallet, NO_WALLET_ERROR)
 
   const id = params.id
 
@@ -28,34 +29,37 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     throw new Error('Claim ID is undefined.')
   }
 
-  const claim = await fetchClaim(id)
+  const claim = await fetchWrapper({
+    method: ClaimsService.getClaimById,
+    args: { id },
+  })
 
   const url = new URL(request.url)
   const searchParams = new URLSearchParams(url.search)
   const search = searchParams.get('search')
   const sortBy: PositionSortColumn =
-    (searchParams.get('sortBy') as PositionSortColumn) ?? 'createdAt'
+    (searchParams.get('sortBy') as PositionSortColumn) ?? 'CreatedAt'
   const direction: SortDirection =
     (searchParams.get('direction') as SortDirection) ?? 'desc'
-  const positionDirection: string =
-    searchParams.get('positionDirection') ?? 'all'
+  const positionDirection: VaultType | null =
+    (searchParams.get('positionDirection') as VaultType) || null
   const page = searchParams.get('page')
     ? parseInt(searchParams.get('page') as string)
     : 1
   const limit = searchParams.get('limit') ?? '10'
 
-  const positions = await fetchPositionsOnClaim(
-    positionDirection === 'for'
-      ? claim?.vault_id ?? id
-      : positionDirection === 'against'
-        ? claim?.counter_vault_id ?? id
-        : id,
-    page,
-    Number(limit),
-    sortBy as PositionSortColumn,
-    direction as SortDirection,
-    search,
-  )
+  const positions = await fetchWrapper({
+    method: ClaimPositionsService.getClaimPositions,
+    args: {
+      id,
+      page,
+      limit: Number(limit),
+      sortBy: sortBy as PositionSortColumn,
+      direction: direction as SortDirection,
+      creator: search,
+      positionDirection,
+    },
+  })
 
   const totalPages = calculateTotalPages(positions?.total ?? 0, Number(limit))
 
@@ -79,12 +83,14 @@ export default function ClaimOverview() {
     'create',
   ])
   const [searchParams, setSearchParams] = useSearchParams()
-  const [positionDirection, setPositionDirection] = useState<string>('all')
+  const [positionDirection, setPositionDirection] = useState<VaultType | null>(
+    null,
+  )
 
   useEffect(() => {
     setSearchParams({
       ...Object.fromEntries(searchParams),
-      positionDirection,
+      ...(positionDirection && { positionDirection }),
       page: '1',
     })
   }, [positionDirection])
@@ -100,15 +106,18 @@ export default function ClaimOverview() {
           Positions on this Claim
         </Text>
       </div>
-      <Tabs defaultValue="">
+      <Tabs defaultValue="all">
         <TabsList>
           <TabsTrigger
-            value=""
+            value="all"
             label="All"
             totalCount={claim?.num_positions}
             onClick={(e) => {
               e.preventDefault()
-              setPositionDirection('all')
+              const newParams = new URLSearchParams(searchParams)
+              newParams.delete('positionDirection')
+              newParams.set('page', '1')
+              setSearchParams(newParams)
             }}
           />
           <TabsTrigger
@@ -131,7 +140,10 @@ export default function ClaimOverview() {
           />
         </TabsList>
       </Tabs>
-      <PositionsOnClaim positions={positions} pagination={pagination} />
+      <PositionsOnClaim
+        positions={positions}
+        pagination={pagination as PaginationType}
+      />
     </div>
   )
 }

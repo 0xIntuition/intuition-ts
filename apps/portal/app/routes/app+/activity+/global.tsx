@@ -1,23 +1,22 @@
 import {
+  ActivitiesService,
   ActivityPresenter,
-  OpenAPI,
   SortColumn,
   SortDirection,
 } from '@0xintuition/api'
 
 import { ActivityList } from '@components/list/activity'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
-import { fetchGlobalActivity } from '@lib/utils/fetches'
+import { NO_WALLET_ERROR } from '@lib/utils/errors'
 import logger from '@lib/utils/logger'
-import { calculateTotalPages, getAuthHeaders } from '@lib/utils/misc'
+import { calculateTotalPages, fetchWrapper, invariant } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
-import { getPrivyAccessToken } from '@server/privy'
+import { requireUserWallet } from '@server/auth'
+import { PaginationType } from 'types/pagination'
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  OpenAPI.BASE = 'https://dev.api.intuition.systems'
-  const accessToken = getPrivyAccessToken(request)
-  const headers = getAuthHeaders(accessToken !== null ? accessToken : '')
-  OpenAPI.HEADERS = headers as Record<string, string>
+  const wallet = await requireUserWallet(request)
+  invariant(wallet, NO_WALLET_ERROR)
 
   const url = new URL(request.url)
   const searchParams = new URLSearchParams(url.search)
@@ -30,12 +29,15 @@ export async function loader({ request }: LoaderFunctionArgs) {
     : 1
   const limit = searchParams.get('limit') ?? '10'
 
-  const globalActivity = await fetchGlobalActivity(
-    page,
-    Number(limit),
-    sortBy as SortColumn,
-    direction as SortDirection,
-  )
+  const globalActivity = await fetchWrapper({
+    method: ActivitiesService.getActivities,
+    args: {
+      page,
+      limit: Number(limit),
+      sortBy: sortBy as SortColumn,
+      direction: direction as SortDirection,
+    },
+  })
 
   const totalPages = calculateTotalPages(
     globalActivity?.total ?? 0,
@@ -66,7 +68,7 @@ export default function GlobalActivityFeed() {
     <div className="m-8 flex flex-col items-center gap-4">
       <ActivityList
         activities={globalActivity as ActivityPresenter[]}
-        pagination={pagination}
+        pagination={pagination as PaginationType}
       />
     </div>
   )

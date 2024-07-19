@@ -12,8 +12,12 @@ import type {
   AlchemyWebhookResponse,
   AuthData,
   AuthResponse,
+  CheckQuestStatusData,
+  CheckQuestStatusResponse,
   ClaimSummaryData,
   ClaimSummaryResponse,
+  CompleteQuestData,
+  CompleteQuestResponse,
   CreateClaimData,
   CreateClaimResponse,
   CreateIdentityData,
@@ -26,6 +30,8 @@ import type {
   CreateLinkedAccountResponse,
   CreatePositionData,
   CreatePositionResponse,
+  CreateQuestData,
+  CreateQuestResponse,
   CreateUserData,
   CreateUserResponse,
   DeactivateLinkedAccountData,
@@ -99,20 +105,26 @@ import type {
   RunDynamicQueryResponse,
   SearchClaimsData,
   SearchClaimsResponse,
+  SearchData,
   SearchIdentityData,
   SearchIdentityResponse,
   SearchPositionsData,
   SearchPositionsResponse,
+  SearchResponse,
   SetFollowPredicateData,
   SetFollowPredicateResponse,
   SetTagPredicateData,
   SetTagPredicateResponse,
+  StartQuestData,
+  StartQuestResponse,
   UpdateClaimData,
   UpdateClaimResponse,
   UpdateIdentityData,
   UpdateIdentityResponse,
   UpdatePositionData,
   UpdatePositionResponse,
+  UpdateQuestData,
+  UpdateQuestResponse,
   UpdateUserData,
   UpdateUserEnsData,
   UpdateUserEnsResponse,
@@ -275,6 +287,7 @@ export class ClaimPositionsService {
    * @param data.userWallet
    * @param data.timeframe
    * @param data.creator
+   * @param data.positionDirection
    * @returns unknown Get all claim positions
    * @throws ApiError
    */
@@ -296,6 +309,7 @@ export class ClaimPositionsService {
         userWallet: data.userWallet,
         timeframe: data.timeframe,
         creator: data.creator,
+        positionDirection: data.positionDirection,
       },
     })
   }
@@ -825,6 +839,7 @@ export class IdentityPositionsService {
    * @param data.userWallet
    * @param data.timeframe
    * @param data.creator
+   * @param data.positionDirection
    * @returns unknown Get all identity positions
    * @throws ApiError
    */
@@ -846,6 +861,7 @@ export class IdentityPositionsService {
         userWallet: data.userWallet,
         timeframe: data.timeframe,
         creator: data.creator,
+        positionDirection: data.positionDirection,
       },
     })
   }
@@ -1025,12 +1041,15 @@ export class PositionsService {
    * @param data.paging
    * @param data.sort
    * @param data.creator
+   * @param data.creatorId
+   * @param data.vaultType
    * @param data.vaultUuid
    * @param data.status
    * @param data.conviction
    * @param data.claim
    * @param data.identity
    * @param data.vault
+   * @param data.parentTable
    * @returns unknown Search positions in paginated list
    * @throws ApiError
    */
@@ -1042,6 +1061,8 @@ export class PositionsService {
       url: '/positions/search',
       query: {
         creator: data.creator,
+        creator_id: data.creatorId,
+        vault_type: data.vaultType,
         vault_uuid: data.vaultUuid,
         status: data.status,
         conviction: data.conviction,
@@ -1050,6 +1071,7 @@ export class PositionsService {
         vault: data.vault,
         paging: data.paging,
         sort: data.sort,
+        parent_table: data.parentTable,
       },
     })
   }
@@ -1059,12 +1081,15 @@ export class PositionsService {
    * @param data.paging
    * @param data.sort
    * @param data.creator
+   * @param data.creatorId
+   * @param data.vaultType
    * @param data.vaultUuid
    * @param data.status
    * @param data.conviction
    * @param data.claim
    * @param data.identity
    * @param data.vault
+   * @param data.parentTable
    * @returns unknown Summary of summary values based on query
    * @throws ApiError
    */
@@ -1076,6 +1101,8 @@ export class PositionsService {
       url: '/positions/summary',
       query: {
         creator: data.creator,
+        creator_id: data.creatorId,
+        vault_type: data.vaultType,
         vault_uuid: data.vaultUuid,
         status: data.status,
         conviction: data.conviction,
@@ -1084,6 +1111,7 @@ export class PositionsService {
         vault: data.vault,
         paging: data.paging,
         sort: data.sort,
+        parent_table: data.parentTable,
       },
     })
   }
@@ -1154,6 +1182,125 @@ export class QueryBuilderService {
       url: '/query_builder',
       body: data.requestBody,
       mediaType: 'application/json',
+    })
+  }
+}
+
+export class QuestsService {
+  /**
+   * Endpoint to create a new quest. It receives a [`NewQuest`] and
+   * returns a [`Quest`] when suceeded
+   * @param data The data for the request.
+   * @param data.requestBody
+   * @returns unknown Create a new quest
+   * @throws ApiError
+   */
+  public static createQuest(
+    data: CreateQuestData,
+  ): CancelablePromise<CreateQuestResponse> {
+    return __request(OpenAPI, {
+      method: 'POST',
+      url: '/quest',
+      body: data.requestBody,
+      mediaType: 'application/json',
+    })
+  }
+
+  /**
+   * This endpoint updates a quest. It receives a [`UpdateQuest`] and
+   * returns a [`Quest`] when suceeded
+   * @param data The data for the request.
+   * @param data.questId Quest SQL id
+   * @param data.requestBody
+   * @returns unknown Update an already existing quest
+   * @throws ApiError
+   */
+  public static updateQuest(
+    data: UpdateQuestData,
+  ): CancelablePromise<UpdateQuestResponse> {
+    return __request(OpenAPI, {
+      method: 'PUT',
+      url: '/quest/{quest_id}',
+      path: {
+        quest_id: data.questId,
+      },
+      body: data.requestBody,
+      mediaType: 'application/json',
+    })
+  }
+}
+
+export class UserQuestsService {
+  /**
+   * @param data The data for the request.
+   * @param data.requestBody
+   * @returns unknown Filter quests
+   * @throws ApiError
+   */
+  public static search(data: SearchData): CancelablePromise<SearchResponse> {
+    return __request(OpenAPI, {
+      method: 'POST',
+      url: '/user_quest/search',
+      body: data.requestBody,
+      mediaType: 'application/json',
+    })
+  }
+
+  /**
+   * @param data The data for the request.
+   * @param data.questId Quest SQL id
+   * @returns string Check if user is eligible to complete the quest, returning the quest status
+   * @throws ApiError
+   */
+  public static checkQuestStatus(
+    data: CheckQuestStatusData,
+  ): CancelablePromise<CheckQuestStatusResponse> {
+    return __request(OpenAPI, {
+      method: 'GET',
+      url: '/user_quest/{quest_id}/check',
+      path: {
+        quest_id: data.questId,
+      },
+    })
+  }
+
+  /**
+   * @param data The data for the request.
+   * @param data.questId Quest SQL id
+   * @param data.userId User SQL id
+   * @returns unknown Complete a quest for an user
+   * @throws ApiError
+   */
+  public static completeQuest(
+    data: CompleteQuestData,
+  ): CancelablePromise<CompleteQuestResponse> {
+    return __request(OpenAPI, {
+      method: 'POST',
+      url: '/user_quest/{quest_id}/complete/{user_id}',
+      path: {
+        quest_id: data.questId,
+        user_id: data.userId,
+      },
+    })
+  }
+
+  /**
+   * @param data The data for the request.
+   * @param data.questId Quest SQL id
+   * @param data.userId User SQL id
+   * @returns unknown Start a quest for an user
+   * @throws ApiError
+   */
+  public static startQuest(
+    data: StartQuestData,
+  ): CancelablePromise<StartQuestResponse> {
+    return __request(OpenAPI, {
+      method: 'POST',
+      url: '/user_quest/{quest_id}/start/{user_id}',
+      path: {
+        quest_id: data.questId,
+        user_id: data.userId,
+      },
     })
   }
 }

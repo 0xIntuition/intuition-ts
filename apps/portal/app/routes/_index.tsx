@@ -1,42 +1,33 @@
-import { LoaderFunctionArgs, redirect } from '@remix-run/node'
-import { Link, useLoaderData } from '@remix-run/react'
+import PrivyRefresh from '@client/privy-refresh'
+import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
 import { onboardingModalCookie } from '@server/onboarding'
+import { getPrivyTokens } from '@server/privy'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const cookieHeader = request.headers.get('Cookie')
   const cookie = await onboardingModalCookie.parse(cookieHeader)
+  const redirectTo = new URL(request.url).searchParams.get('redirectTo')
 
   if (!cookie) {
-    return redirect('/intro')
+    throw redirect('/intro')
+  }
+  const { accessToken, sessionToken } = getPrivyTokens(request)
+  if (accessToken) {
+    if (redirectTo) {
+      throw redirect(redirectTo)
+    }
+    throw redirect('/app/profile')
   }
 
-  return redirect('/login')
+  if (!sessionToken) {
+    throw redirect('/login')
+  } else {
+    // if there is no access token, but there is a session token
+    // Load the client to refresh the user's session if it's valid
+    return json({})
+  }
 }
 
 export default function Index() {
-  const { error } = useLoaderData<typeof loader>()
-
-  return (
-    <div style={{ fontFamily: 'system-ui, sans-serif', lineHeight: '1.8' }}>
-      <h1>Welcome to Intuition</h1>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      <ul>
-        <li>
-          <Link to="/login">Login</Link>
-        </li>
-        <li>
-          <Link to="/app">App</Link>
-        </li>
-        <li>
-          <Link to="/app/profile">Profile</Link>
-        </li>
-        <li>
-          <Link to="/restricted">Restricted (Geoblocked)</Link>
-        </li>
-        <li>
-          <Link to="/app/test">Test</Link>
-        </li>
-      </ul>
-    </div>
-  )
+  return <PrivyRefresh />
 }

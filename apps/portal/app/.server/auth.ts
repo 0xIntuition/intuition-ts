@@ -1,90 +1,75 @@
-import { combineHeaders, invariant } from '@lib/utils/misc'
+import { OpenAPI } from '@0xintuition/api'
+
+import logger from '@lib/utils/logger'
+import { combineHeaders, getAuthHeaders } from '@lib/utils/misc'
 import { getRedirectToUrl } from '@lib/utils/redirect'
+import { User } from '@privy-io/server-auth'
 import { redirect } from '@remix-run/node'
-import { RedirectTo } from 'types/navigation'
+import { RedirectOptions } from 'types/navigation'
 
-import { getPrivyUserById, verifyPrivyAccessToken } from './privy'
+import {
+  getPrivyAccessToken,
+  getPrivySessionToken,
+  getPrivyUserById,
+  isOAuthInProgress,
+  verifyPrivyAccessToken,
+} from './privy'
 
-export async function getUserId(request: Request) {
+export async function getUserId(request: Request): Promise<string | null> {
   const verifiedClaims = await verifyPrivyAccessToken(request)
-  if (!verifiedClaims) {
-    return null
-  }
-  return verifiedClaims.userId
+  return verifiedClaims?.userId ?? null
 }
 
-export async function getUser(
-  request: Request,
-  { redirectTo }: RedirectTo = {},
-) {
+export async function getUser(request: Request): Promise<User | null> {
   const userId = await getUserId(request)
-  if (!userId) {
-    const redirectUrl = await getRedirectToUrl(request, '/login', {
-      redirectTo,
-    })
-    throw redirect(redirectUrl)
-  }
-  invariant(userId, 'No userId provided by Privy')
-  return await getPrivyUserById(userId)
+  return userId ? await getPrivyUserById(userId) : null
 }
 
-export async function getUserWallet(request: Request) {
+export async function getUserWallet(request: Request): Promise<string | null> {
   const user = await getUser(request)
-  return user.wallet?.address
+  return user?.wallet?.address ?? null
 }
 
 export async function requireUserId(
   request: Request,
-  { redirectTo }: RedirectTo = {},
-) {
+  options: RedirectOptions = {},
+): Promise<string> {
   const userId = await getUserId(request)
   if (!userId) {
-    const redirectUrl = await getRedirectToUrl(request, '/playground', {
-      redirectTo,
-    })
-    throw redirect(redirectUrl)
+    throw await handlePrivyRedirect({ request, options })
   }
   return userId
 }
 
 export async function requireUser(
   request: Request,
-  { redirectTo }: RedirectTo = {},
-) {
+  options: RedirectOptions = {},
+): Promise<User> {
   const user = await getUser(request)
   if (!user) {
-    const redirectUrl = await getRedirectToUrl(request, '/playground', {
-      redirectTo,
-    })
-    throw redirect(redirectUrl)
+    throw await handlePrivyRedirect({ request, options })
   }
   return user
 }
 
 export async function requireUserWallet(
   request: Request,
-  { redirectTo }: RedirectTo = {},
-) {
+  options: RedirectOptions = {},
+): Promise<string> {
   const wallet = await getUserWallet(request)
   if (!wallet) {
-    const redirectUrl = await getRedirectToUrl(request, '/playground', {
-      redirectTo,
-    })
-    throw redirect(redirectUrl)
+    throw await handlePrivyRedirect({ request, options })
   }
   return wallet
 }
 
 export async function requireAnonymous(
   request: Request,
-  { redirectTo }: RedirectTo = {},
-) {
+  options: RedirectOptions = {},
+): Promise<void> {
   const userId = await getUserId(request)
   if (userId) {
-    const redirectUrl = await getRedirectToUrl(request, '/playground', {
-      redirectTo,
-    })
-    throw redirect(redirectUrl)
+    throw await handlePrivyRedirect({ request, options })
   }
 }
 
@@ -92,14 +77,42 @@ export async function logout(
   {
     redirectTo = '/',
   }: {
-    request: Request
     redirectTo?: string
   },
   responseInit?: ResponseInit,
 ) {
-  // TODO: ENG-0000: Clear any session/cookies + properly handle redirect
   throw redirect(redirectTo, {
     ...responseInit,
     headers: combineHeaders(responseInit?.headers),
   })
+}
+
+export async function handlePrivyRedirect({
+  request,
+  path = '/',
+  options = {},
+}: {
+  request: Request
+  path?: string
+  options?: RedirectOptions
+}) {
+  const accessToken = getPrivyAccessToken(request)
+  const sessionToken = getPrivySessionToken(request)
+  const isOAuth = await isOAuthInProgress(request.url)
+  if (isOAuth) {
+    // Do not redirect or interrupt the flow.
+    return
+  } else if (!accessToken || !sessionToken) {
+    const redirectUrl = await getRedirectToUrl(request, path, options)
+    throw redirect(redirectUrl)
+  }
+  logger('Hit end of handlePrivyRedirect', accessToken, sessionToken, isOAuth)
+  return
+}
+
+export async function setupAPI(request: Request) {
+  OpenAPI.BASE = 'https://dev.api.intuition.systems'
+  const accessToken = getPrivyAccessToken(request)
+  const headers = getAuthHeaders(accessToken !== null ? accessToken : '')
+  OpenAPI.HEADERS = headers as Record<string, string>
 }

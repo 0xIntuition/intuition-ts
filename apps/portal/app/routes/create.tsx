@@ -5,7 +5,6 @@ import {
   ApiError,
   IdentitiesService,
   IdentityPresenter,
-  OpenAPI,
   UserPresenter,
   UsersService,
 } from '@0xintuition/api'
@@ -22,13 +21,13 @@ import {
 } from '@lib/hooks/useTransactionReducer'
 import { editProfileModalAtom } from '@lib/state/store'
 import { MULTIVAULT_CONTRACT_ADDRESS } from '@lib/utils/constants'
+import { NO_WALLET_ERROR } from '@lib/utils/errors'
 import logger from '@lib/utils/logger'
-import { getAuthHeaders, sliceString } from '@lib/utils/misc'
+import { fetchWrapper, invariant, sliceString } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { useFetcher, useLoaderData, useNavigate } from '@remix-run/react'
 import { CreateLoaderData } from '@routes/resources+/create'
 import { requireUserWallet } from '@server/auth'
-import { getPrivyAccessToken } from '@server/privy'
 import * as blockies from 'blockies-ts'
 import { useAtom } from 'jotai'
 import { ClientOnly } from 'remix-utils/client-only'
@@ -42,15 +41,7 @@ import { useConnectorClient, usePublicClient } from 'wagmi'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const wallet = await requireUserWallet(request)
-
-  OpenAPI.BASE = 'https://dev.api.intuition.systems'
-  const accessToken = getPrivyAccessToken(request)
-  const headers = getAuthHeaders(accessToken !== null ? accessToken : '')
-  OpenAPI.HEADERS = headers as Record<string, string>
-
-  if (!wallet) {
-    return logger('No user found in session')
-  }
+  invariant(wallet, NO_WALLET_ERROR)
 
   let userIdentity
   try {
@@ -68,21 +59,12 @@ export async function loader({ request }: LoaderFunctionArgs) {
     }
   }
 
-  let userObject
-  try {
-    userObject = await UsersService.getUserByWalletPublic({
+  const userObject = await fetchWrapper({
+    method: UsersService.getUserByWalletPublic,
+    args: {
       wallet,
-    })
-  } catch (error: unknown) {
-    if (error instanceof ApiError) {
-      userObject = undefined
-      console.log(
-        `${error.name} - ${error.status}: ${error.message} ${error.url}`,
-      )
-    } else {
-      throw error
-    }
-  }
+    },
+  })
 
   if (!userObject) {
     console.log('No user found in DB')

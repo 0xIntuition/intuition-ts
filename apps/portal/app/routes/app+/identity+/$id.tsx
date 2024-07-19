@@ -11,27 +11,26 @@ import {
   TagsContent,
   TagWithValue,
 } from '@0xintuition/1ui'
-import { OpenAPI } from '@0xintuition/api'
+import { IdentitiesService } from '@0xintuition/api'
 
 import { NestedLayout } from '@components/nested-layout'
 import StakeModal from '@components/stake/stake-modal'
 import TagsModal from '@components/tags/tags-modal'
 import { stakeModalAtom, tagsModalAtom } from '@lib/state/store'
 import { identityRouteOptions } from '@lib/utils/constants'
-import { fetchIdentity } from '@lib/utils/fetches'
+import { NO_WALLET_ERROR } from '@lib/utils/errors'
 import logger from '@lib/utils/logger'
 import {
   calculatePercentageOfTvl,
+  fetchWrapper,
   formatBalance,
-  getAuthHeaders,
   invariant,
   sliceString,
 } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { Outlet, useLoaderData, useNavigate } from '@remix-run/react'
-import { requireUser } from '@server/auth'
+import { requireUser, requireUserWallet } from '@server/auth'
 import { getVaultDetails } from '@server/multivault'
-import { getPrivyAccessToken } from '@server/privy'
 import { useAtom } from 'jotai'
 import { ExtendedIdentityPresenter } from 'types/identity'
 import { VaultDetailsType } from 'types/vault'
@@ -40,21 +39,20 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const user = await requireUser(request)
   invariant(user, 'User not found')
   invariant(user.wallet?.address, 'User wallet not found')
-  const userWallet = user.wallet?.address
-  OpenAPI.BASE = 'https://dev.api.intuition.systems'
-  const accessToken = getPrivyAccessToken(request)
-  const headers = getAuthHeaders(accessToken !== null ? accessToken : '')
-  OpenAPI.HEADERS = headers as Record<string, string>
 
-  if (!userWallet) {
-    return logger('No user found in session')
-  }
+  const userWallet = await requireUserWallet(request)
+  invariant(userWallet, NO_WALLET_ERROR)
 
   if (!params.id) {
     return
   }
 
-  const identity = await fetchIdentity(params.id)
+  const identity = await fetchWrapper({
+    method: IdentitiesService.getIdentityById,
+    args: {
+      id: params.id,
+    },
+  })
 
   logger('identity', identity)
 
@@ -99,101 +97,99 @@ export default function IdentityDetails() {
 
   return (
     <NestedLayout outlet={Outlet} options={identityRouteOptions}>
-      <div className="flex flex-col">
-        <div className="w-[300px] h-[230px] flex-col justify-start items-start  inline-flex gap-6">
-          <ProfileCard
-            variant="non-user"
-            avatarSrc={identity?.image ?? ''}
-            name={identity?.display_name ?? ''}
-            walletAddress={sliceString(identity?.identity_id, 6, 4)}
-            bio={identity?.description ?? ''}
+      <div className="flex-col justify-start items-start inline-flex gap-6">
+        <ProfileCard
+          variant="non-user"
+          avatarSrc={identity?.image ?? ''}
+          name={identity?.display_name ?? ''}
+          walletAddress={sliceString(identity?.identity_id, 6, 4)}
+          bio={identity?.description ?? ''}
+        />
+        <Tags>
+          {identity?.tags && identity?.tags.length > 0 && (
+            <TagsContent numberOfTags={identity?.tag_count ?? 0}>
+              {identity?.tags?.map((tag, index) => (
+                <TagWithValue
+                  key={index}
+                  label={tag.display_name}
+                  value={tag.num_positions}
+                />
+              ))}
+            </TagsContent>
+          )}
+          <TagsButton
+            onClick={() => {
+              setTagsModalActive({ isOpen: true, mode: 'add' })
+            }}
           />
-          <Tags>
-            {identity?.tags && identity?.tags.length > 0 && (
-              <TagsContent numberOfTags={identity?.tag_count ?? 0}>
-                {identity?.tags?.map((tag, index) => (
-                  <TagWithValue
-                    key={index}
-                    label={tag.display_name}
-                    value={tag.num_positions}
-                  />
-                ))}
-              </TagsContent>
-            )}
-            <TagsButton
-              onClick={() => {
-                setTagsModalActive({ isOpen: true, mode: 'add' })
-              }}
+        </Tags>
+        {vaultDetails !== null && user_assets !== '0' ? (
+          <PositionCard onButtonClick={() => logger('sell position clicked')}>
+            <PositionCardStaked
+              amount={user_assets ? +formatBalance(user_assets, 18, 4) : 0}
             />
-          </Tags>
-          {vaultDetails !== null && user_assets !== '0' ? (
-            <PositionCard onButtonClick={() => logger('sell position clicked')}>
-              <PositionCardStaked
-                amount={user_assets ? +formatBalance(user_assets, 18, 4) : 0}
-              />
-              <PositionCardOwnership
-                percentOwnership={
-                  user_assets !== null && assets_sum
-                    ? +calculatePercentageOfTvl(user_assets ?? '0', assets_sum)
-                    : 0
-                }
-              />
-              <PositionCardFeesAccrued
-                amount={
-                  identity.user_asset_delta
-                    ? +formatBalance(
-                        +identity.user_assets - +identity.user_asset_delta,
-                        18,
-                        5,
-                      )
-                    : 0
-                }
-              />
-              <PositionCardLastUpdated timestamp={identity.updated_at} />
-            </PositionCard>
-          ) : null}
-          <StakeCard
-            tvl={+formatBalance(identity?.assets_sum)}
-            holders={identity?.num_positions}
-            onBuyClick={() =>
-              setStakeModalActive((prevState) => ({
-                ...prevState,
-                mode: 'deposit',
-                modalType: 'identity',
-                isOpen: true,
-              }))
-            }
-            onViewAllClick={() =>
-              navigate(`/app/identity/${identity.identity_id}/data-about`)
-            }
-          />
-        </div>
-        <StakeModal
-          userWallet={userWallet}
-          contract={identity.contract}
-          open={stakeModalActive.isOpen}
-          identity={identity}
-          vaultDetails={vaultDetails}
-          onClose={() => {
+            <PositionCardOwnership
+              percentOwnership={
+                user_assets !== null && assets_sum
+                  ? +calculatePercentageOfTvl(user_assets ?? '0', assets_sum)
+                  : 0
+              }
+            />
+            <PositionCardFeesAccrued
+              amount={
+                identity.user_asset_delta
+                  ? +formatBalance(
+                      +identity.user_assets - +identity.user_asset_delta,
+                      18,
+                      5,
+                    )
+                  : 0
+              }
+            />
+            <PositionCardLastUpdated timestamp={identity.updated_at} />
+          </PositionCard>
+        ) : null}
+        <StakeCard
+          tvl={+formatBalance(identity?.assets_sum)}
+          holders={identity?.num_positions}
+          onBuyClick={() =>
             setStakeModalActive((prevState) => ({
               ...prevState,
-              isOpen: false,
-              mode: undefined,
+              mode: 'deposit',
+              modalType: 'identity',
+              isOpen: true,
             }))
-          }}
-        />
-        <TagsModal
-          identity={identity}
-          open={tagsModalActive.isOpen}
-          mode={tagsModalActive.mode}
-          onClose={() =>
-            setTagsModalActive({
-              ...tagsModalActive,
-              isOpen: false,
-            })
+          }
+          onViewAllClick={() =>
+            navigate(`/app/identity/${identity.identity_id}/data-about`)
           }
         />
       </div>
+      <StakeModal
+        userWallet={userWallet}
+        contract={identity.contract}
+        open={stakeModalActive.isOpen}
+        identity={identity}
+        vaultDetails={vaultDetails}
+        onClose={() => {
+          setStakeModalActive((prevState) => ({
+            ...prevState,
+            isOpen: false,
+            mode: undefined,
+          }))
+        }}
+      />
+      <TagsModal
+        identity={identity}
+        open={tagsModalActive.isOpen}
+        mode={tagsModalActive.mode}
+        onClose={() =>
+          setTagsModalActive({
+            ...tagsModalActive,
+            isOpen: false,
+          })
+        }
+      />
     </NestedLayout>
   )
 }

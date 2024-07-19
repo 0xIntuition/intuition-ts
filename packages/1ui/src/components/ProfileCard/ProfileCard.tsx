@@ -31,7 +31,7 @@ const ProfileCard = ({
   children,
 }: ProfileCardProps) => {
   return (
-    <div className="flex flex-col justify-center items-start w-[300px] rounded-lg box-border">
+    <div className="flex flex-col justify-center items-start w-full min-w-80 rounded-lg box-border">
       <ProfileCardHeader
         variant={variant}
         avatarSrc={avatarSrc}

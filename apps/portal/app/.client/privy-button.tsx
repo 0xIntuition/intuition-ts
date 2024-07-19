@@ -15,8 +15,10 @@ import { useDisconnect } from 'wagmi'
 
 export function PrivyButton({
   triggerComponent,
+  onLogout,
 }: {
   triggerComponent?: React.ReactNode
+  onLogout?: () => void
 }) {
   const { ready, authenticated, login, logout, user: privyUser } = usePrivy()
 
@@ -27,8 +29,9 @@ export function PrivyButton({
   const disableLogin = !ready || (ready && authenticated)
 
   async function handleSignout() {
-    logout()
+    await logout()
     disconnect()
+    onLogout?.()
   }
 
   if (!ready) {

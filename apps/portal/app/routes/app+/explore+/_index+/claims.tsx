@@ -1,23 +1,22 @@
 import {
   ClaimPresenter,
   ClaimSortColumn,
-  OpenAPI,
+  ClaimsService,
+  IdentitiesService,
   SortDirection,
 } from '@0xintuition/api'
 
 import { ExploreSearch } from '@components/explore/ExploreSearch'
 import { ClaimsList } from '@components/list/claims'
-import { fetchClaims, fetchIdentities } from '@lib/utils/fetches'
-import { calculateTotalPages, getAuthHeaders } from '@lib/utils/misc'
+import { NO_WALLET_ERROR } from '@lib/utils/errors'
+import { calculateTotalPages, fetchWrapper, invariant } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
-import { getPrivyAccessToken } from '@server/privy'
+import { requireUserWallet } from '@server/auth'
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  OpenAPI.BASE = 'https://dev.api.intuition.systems'
-  const accessToken = getPrivyAccessToken(request)
-  const headers = getAuthHeaders(accessToken !== null ? accessToken : '')
-  OpenAPI.HEADERS = headers as Record<string, string>
+  const wallet = await requireUserWallet(request)
+  invariant(wallet, NO_WALLET_ERROR)
 
   const url = new URL(request.url)
   const searchParams = new URLSearchParams(url.search)
@@ -31,15 +30,26 @@ export async function loader({ request }: LoaderFunctionArgs) {
     : 1
   const limit = searchParams.get('limit') ?? '10'
 
-  const claims = await fetchClaims(
-    page,
-    Number(limit),
-    sortBy as ClaimSortColumn,
-    direction as SortDirection,
-    search,
-  )
+  const claims = await fetchWrapper({
+    method: ClaimsService.searchClaims,
+    args: {
+      page,
+      limit: Number(limit),
+      sortBy: sortBy as ClaimSortColumn,
+      direction: direction as SortDirection,
+      displayName: search,
+    },
+  })
 
-  const identities = await fetchIdentities()
+  const identities = await fetchWrapper({
+    method: IdentitiesService.searchIdentity,
+    args: {
+      page: 1,
+      limit: 10,
+      sortBy: 'AssetsSum',
+      direction: 'desc',
+    },
+  })
 
   const claimsTotalPages = calculateTotalPages(
     claims?.total ?? 0,

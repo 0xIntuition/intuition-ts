@@ -13,10 +13,5 @@ export default function ActivityLayout() {
   const { message } = useLoaderData<typeof loader>()
   logger('message from activity route loader', message)
 
-  return (
-    <NestedVerticalLayout
-      outlet={Outlet}
-      options={activityRouteOptions}
-    ></NestedVerticalLayout>
-  )
+  return <NestedVerticalLayout outlet={Outlet} options={activityRouteOptions} />
 }
