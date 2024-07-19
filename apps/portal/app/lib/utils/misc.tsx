@@ -293,7 +293,7 @@ export const fetchWrapper = async <T, A>({
 }: {
   method: (arg: A) => Promise<T>
   args: A
-}): Promise<T | null> => {
+}): Promise<T> => {
   try {
     return await method(args)
   } catch (error: unknown) {
