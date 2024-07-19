@@ -107,6 +107,7 @@ export default function IdentityDetails() {
             name={identity?.display_name ?? ''}
             walletAddress={sliceString(identity?.identity_id, 6, 4)}
             bio={identity?.description ?? ''}
+            link={identity?.external_reference ?? ''}
           />
           <Tags>
             {identity?.tags && identity?.tags.length > 0 && (
