@@ -9,6 +9,7 @@ import {
   UsersService,
 } from '@0xintuition/api'
 
+import PrivyLogout from '@client/privy-logout'
 import EditProfileModal from '@components/edit-profile/modal'
 import SubmitButton from '@components/submit-button'
 import Toast from '@components/toast'
@@ -380,9 +381,12 @@ export default function Profile() {
               </div>
               <ClientOnly>
                 {() => (
-                  <CreateButton
-                    setEditProfileModalActive={setEditProfileModalActive}
-                  />
+                  <>
+                    <CreateButton
+                      setEditProfileModalActive={setEditProfileModalActive}
+                    />
+                    <PrivyLogout wallet={wallet} />
+                  </>
                 )}
               </ClientOnly>
             </div>

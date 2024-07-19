@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 
 import { UserPresenter, UsersService } from '@0xintuition/api'
 
+import PrivyLogout from '@client/privy-logout'
 import SidebarNav from '@components/sidebar-nav'
 import { fetchWrapper, invariant } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
@@ -27,25 +28,28 @@ export async function loader({ request }: LoaderFunctionArgs) {
   })
 
   return json({
+    wallet,
     userObject,
   })
 }
 
 export default function Index() {
-  const { userObject } = useLoaderData<{
+  const { wallet, userObject } = useLoaderData<{
+    wallet: string
     userObject: UserPresenter
   }>()
-
   const { pathname } = useLocation()
 
   useEffect(() => {
     window.scrollTo(0, 0)
   }, [pathname])
+
   return (
     <div className="flex items-start h-screen">
       <SidebarNav userObject={userObject}>
         <Outlet />
       </SidebarNav>
+      <PrivyLogout wallet={wallet} />
     </div>
   )
 }
