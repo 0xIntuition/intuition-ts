@@ -1399,6 +1399,7 @@ export type GetClaimPositionsData = {
   limit?: number | null
   offset?: number | null
   page?: number | null
+  positionDirection?: VaultType | null
   sortBy?: PositionSortColumn | null
   timeframe?: TimeFrame | null
   userWallet?: string | null
@@ -1923,6 +1924,7 @@ export type GetIdentityPositionsData = {
   limit?: number | null
   offset?: number | null
   page?: number | null
+  positionDirection?: VaultType | null
   sortBy?: PositionSortColumn | null
   timeframe?: TimeFrame | null
   userWallet?: string | null
@@ -2857,6 +2859,7 @@ export type $OpenApiTs = {
         limit?: number | null
         offset?: number | null
         page?: number | null
+        positionDirection?: VaultType | null
         sortBy?: PositionSortColumn | null
         timeframe?: TimeFrame | null
         userWallet?: string | null
@@ -3497,6 +3500,7 @@ export type $OpenApiTs = {
         limit?: number | null
         offset?: number | null
         page?: number | null
+        positionDirection?: VaultType | null
         sortBy?: PositionSortColumn | null
         timeframe?: TimeFrame | null
         userWallet?: string | null

@@ -287,6 +287,7 @@ export class ClaimPositionsService {
    * @param data.userWallet
    * @param data.timeframe
    * @param data.creator
+   * @param data.positionDirection
    * @returns unknown Get all claim positions
    * @throws ApiError
    */
@@ -308,6 +309,7 @@ export class ClaimPositionsService {
         userWallet: data.userWallet,
         timeframe: data.timeframe,
         creator: data.creator,
+        positionDirection: data.positionDirection,
       },
     })
   }
@@ -837,6 +839,7 @@ export class IdentityPositionsService {
    * @param data.userWallet
    * @param data.timeframe
    * @param data.creator
+   * @param data.positionDirection
    * @returns unknown Get all identity positions
    * @throws ApiError
    */
@@ -858,6 +861,7 @@ export class IdentityPositionsService {
         userWallet: data.userWallet,
         timeframe: data.timeframe,
         creator: data.creator,
+        positionDirection: data.positionDirection,
       },
     })
   }

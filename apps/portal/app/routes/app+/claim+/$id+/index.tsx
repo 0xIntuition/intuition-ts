@@ -7,6 +7,7 @@ import {
   PositionPresenter,
   PositionSortColumn,
   SortDirection,
+  VaultType,
 } from '@0xintuition/api'
 
 import { PositionsOnClaim } from '@components/list/positions-on-claim'
@@ -37,32 +38,26 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const searchParams = new URLSearchParams(url.search)
   const search = searchParams.get('search')
   const sortBy: PositionSortColumn =
-    (searchParams.get('sortBy') as PositionSortColumn) ?? 'createdAt'
+    (searchParams.get('sortBy') as PositionSortColumn) ?? 'CreatedAt'
   const direction: SortDirection =
     (searchParams.get('direction') as SortDirection) ?? 'desc'
-  const positionDirection: string =
-    searchParams.get('positionDirection') ?? 'all'
+  const positionDirection: VaultType | undefined =
+    (searchParams.get('positionDirection') as VaultType) || undefined
   const page = searchParams.get('page')
     ? parseInt(searchParams.get('page') as string)
     : 1
   const limit = searchParams.get('limit') ?? '10'
 
-  const positionId =
-    positionDirection === 'for'
-      ? claim?.vault_id ?? id
-      : positionDirection === 'against'
-        ? claim?.counter_vault_id ?? id
-        : id
-
   const positions = await fetchWrapper({
     method: ClaimPositionsService.getClaimPositions,
     args: {
-      id: positionId,
+      id,
       page,
       limit: Number(limit),
       sortBy: sortBy as PositionSortColumn,
       direction: direction as SortDirection,
       creator: search,
+      positionDirection,
     },
   })
 
@@ -88,12 +83,14 @@ export default function ClaimOverview() {
     'create',
   ])
   const [searchParams, setSearchParams] = useSearchParams()
-  const [positionDirection, setPositionDirection] = useState<string>('all')
+  const [positionDirection, setPositionDirection] = useState<
+    VaultType | undefined
+  >(undefined)
 
   useEffect(() => {
     setSearchParams({
       ...Object.fromEntries(searchParams),
-      positionDirection,
+      ...(positionDirection && { positionDirection }),
       page: '1',
     })
   }, [positionDirection])
@@ -109,15 +106,18 @@ export default function ClaimOverview() {
           Positions on this Claim
         </Text>
       </div>
-      <Tabs defaultValue="">
+      <Tabs defaultValue="all">
         <TabsList>
           <TabsTrigger
-            value=""
+            value="all"
             label="All"
             totalCount={claim?.num_positions}
             onClick={(e) => {
               e.preventDefault()
-              setPositionDirection('all')
+              const newParams = new URLSearchParams(searchParams)
+              newParams.delete('positionDirection')
+              newParams.set('page', '1')
+              setSearchParams(newParams)
             }}
           />
           <TabsTrigger

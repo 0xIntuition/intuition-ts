@@ -55,7 +55,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const url = new URL(request.url)
   const searchParams = new URLSearchParams(url.search)
   const sortBy: ClaimSortColumn =
-    (searchParams.get('sortBy') as ClaimSortColumn) ?? 'createdAt'
+    (searchParams.get('sortBy') as ClaimSortColumn) ?? 'CreatedAt'
   const direction: SortDirection =
     (searchParams.get('direction') as SortDirection) ?? 'desc'
 
