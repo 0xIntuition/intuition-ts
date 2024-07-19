@@ -40,7 +40,11 @@ describe('Claim', () => {
                 src="https://m.media-amazon.com/images/M/MV5BNDhiMWYzMjgtNTRiYi00ZTA3LThlODctNDRkMDk0NzFkMWI3L2ltYWdlL2ltYWdlXkEyXkFqcGdeQXVyNTg0MTkzMzA@._V1_.jpg"
               />
             </span>
-            Alice
+            <p
+              class="text-primary text-base font-normal"
+            >
+              Alice
+            </p>
           </button>
           <div
             class="shrink-0 bg-border/20 h-[1px] w-4 group-hover:bg-primary"
@@ -63,7 +67,11 @@ describe('Claim', () => {
                 </svg>
               </span>
             </span>
-            likes
+            <p
+              class="text-primary text-base font-normal"
+            >
+              likes
+            </p>
           </button>
           <div
             class="shrink-0 bg-border/20 h-[1px] w-4 group-hover:bg-primary"
@@ -86,7 +94,11 @@ describe('Claim', () => {
                 </svg>
               </span>
             </span>
-            pizza
+            <p
+              class="text-primary text-base font-normal"
+            >
+              pizza
+            </p>
           </button>
         </div>
       </DocumentFragment>
@@ -111,7 +123,11 @@ describe('Claim', () => {
                 src="https://m.media-amazon.com/images/M/MV5BNDhiMWYzMjgtNTRiYi00ZTA3LThlODctNDRkMDk0NzFkMWI3L2ltYWdlL2ltYWdlXkEyXkFqcGdeQXVyNTg0MTkzMzA@._V1_.jpg"
               />
             </span>
-            Alice
+            <p
+              class="text-primary text-base font-normal"
+            >
+              Alice
+            </p>
           </button>
           <div
             class="shrink-0 bg-border/20 h-[1px] w-4 group-hover:bg-primary"
@@ -135,7 +151,11 @@ describe('Claim', () => {
                 </svg>
               </span>
             </span>
-            likes
+            <p
+              class="text-primary text-base font-normal"
+            >
+              likes
+            </p>
           </button>
           <div
             class="shrink-0 bg-border/20 h-[1px] w-4 group-hover:bg-primary"
@@ -159,7 +179,11 @@ describe('Claim', () => {
                 </svg>
               </span>
             </span>
-            pizza
+            <p
+              class="text-primary text-base font-normal"
+            >
+              pizza
+            </p>
           </button>
         </div>
       </DocumentFragment>
@@ -185,7 +209,11 @@ describe('Claim', () => {
                 src="https://m.media-amazon.com/images/M/MV5BNDhiMWYzMjgtNTRiYi00ZTA3LThlODctNDRkMDk0NzFkMWI3L2ltYWdlL2ltYWdlXkEyXkFqcGdeQXVyNTg0MTkzMzA@._V1_.jpg"
               />
             </span>
-            Alice
+            <p
+              class="text-primary text-base font-normal"
+            >
+              Alice
+            </p>
           </button>
           <div
             class="shrink-0 bg-border/20 h-[1px] w-4 group-hover:bg-primary"
@@ -208,7 +236,11 @@ describe('Claim', () => {
                 </svg>
               </span>
             </span>
-            likes
+            <p
+              class="text-primary text-base font-normal"
+            >
+              likes
+            </p>
           </button>
           <div
             class="shrink-0 bg-border/20 h-[1px] w-4 group-hover:bg-primary"
@@ -231,7 +263,11 @@ describe('Claim', () => {
                 </svg>
               </span>
             </span>
-            pizza
+            <p
+              class="text-primary text-base font-normal"
+            >
+              pizza
+            </p>
           </button>
         </div>
       </DocumentFragment>
@@ -255,7 +291,11 @@ describe('Claim', () => {
                 src="https://m.media-amazon.com/images/M/MV5BNDhiMWYzMjgtNTRiYi00ZTA3LThlODctNDRkMDk0NzFkMWI3L2ltYWdlL2ltYWdlXkEyXkFqcGdeQXVyNTg0MTkzMzA@._V1_.jpg"
               />
             </span>
-            Alice
+            <p
+              class="text-primary text-base font-normal"
+            >
+              Alice
+            </p>
           </button>
           <div
             class="shrink-0 bg-border/20 h-[1px] w-4 group-hover:bg-primary"
@@ -278,7 +318,11 @@ describe('Claim', () => {
                 </svg>
               </span>
             </span>
-            likes
+            <p
+              class="text-primary text-base font-normal"
+            >
+              likes
+            </p>
           </button>
           <div
             class="shrink-0 bg-border/20 h-[1px] w-4 group-hover:bg-primary"
@@ -301,7 +345,11 @@ describe('Claim', () => {
                 </svg>
               </span>
             </span>
-            pizza
+            <p
+              class="text-primary text-base font-normal"
+            >
+              pizza
+            </p>
           </button>
         </div>
       </DocumentFragment>
