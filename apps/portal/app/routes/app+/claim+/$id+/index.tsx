@@ -62,7 +62,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
       limit: Number(limit),
       sortBy: sortBy as PositionSortColumn,
       direction: direction as SortDirection,
-      search,
+      creator: search,
     },
   })
 

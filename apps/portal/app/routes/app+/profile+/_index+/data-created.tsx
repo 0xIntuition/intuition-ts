@@ -159,7 +159,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   const createdIdentitiesSummary = await fetchWrapper({
     method: IdentitiesService.identitySummary,
-    arg: { creator: userWallet },
+    args: { creator: userWallet },
   })
 
   const createdClaimsSearch = searchParams.get('createdClaimsSearch')
