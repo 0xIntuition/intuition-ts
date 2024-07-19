@@ -1,20 +1,22 @@
 import { useEffect } from 'react'
 
-import logger from '@lib/utils/logger'
 import { usePrivy } from '@privy-io/react-auth'
 import { useRevalidator } from '@remix-run/react'
 
 export default function PrivyRefresh() {
-  const { ready, authenticated, user: privyUser } = usePrivy()
+  const { ready, getAccessToken } = usePrivy()
   const { revalidate } = useRevalidator()
 
   useEffect(() => {
-    // if privyUser has changed, revalidate the page
-    if (ready && authenticated && privyUser) {
-      logger('Detected privy user change')
-      revalidate()
+    async function refresh() {
+      if (ready) {
+        await getAccessToken()
+        revalidate()
+      }
     }
-  }, [ready, privyUser, revalidate])
+
+    refresh()
+  }, [ready, revalidate])
 
   return <div />
 }
