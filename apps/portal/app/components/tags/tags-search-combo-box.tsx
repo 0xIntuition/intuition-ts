@@ -6,7 +6,6 @@ import {
   CommandGroup,
   CommandInput,
   CommandList,
-  CommandList,
   Identity,
 } from '@0xintuition/1ui'
 import { TagEmbeddedPresenter } from '@0xintuition/api'
@@ -32,7 +31,6 @@ const TagSearchCombobox = ({
         <CommandInput placeholder={placeholder} />
         <CommandList>
           <CommandEmpty>No results found.</CommandEmpty>
-
           <CommandGroup key={tags.length}>
             {tags.map((tag, index) => {
               const {

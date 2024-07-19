@@ -2,12 +2,9 @@ import { useState } from 'react'
 
 import {
   Button,
-  Button,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  Identity,
-  IdentityCard,
   IdentityTag,
   Tabs,
   TabsContent,
@@ -130,7 +127,7 @@ export function TagsForm({ identity, mode, onClose }: TagsFormProps) {
                     <TagSearchCombobox
                       tags={identity.tags || []}
                       shouldFilter={true}
-                      />
+                    />
                   </TabsContent>
                 </div>
               </Tabs>
