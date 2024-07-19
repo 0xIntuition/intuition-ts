@@ -1,5 +1,6 @@
 import { IdentityTag, IdentityTagSize } from 'components/IdentityTag'
 import { Separator } from 'components/Separator'
+import { Trunctacular } from 'components/Trunctacular'
 import { cn } from 'styles'
 import { IdentityType } from 'types'
 
@@ -40,7 +41,7 @@ export const Claim = ({
         disabled={disabled}
         className="group-hover:border-primary group-hover:bg-primary/20"
       >
-        {subject.label}
+        <Trunctacular value={subject.label} />
       </IdentityTag>
       <Separator className={cn(separatorWidth, 'group-hover:bg-primary')} />
 
@@ -51,7 +52,7 @@ export const Claim = ({
         disabled={disabled}
         className="group-hover:border-primary group-hover:bg-primary/20"
       >
-        {predicate.label}
+        <Trunctacular value={predicate.label} />
       </IdentityTag>
       <Separator className={cn(separatorWidth, 'group-hover:bg-primary')} />
 
@@ -62,7 +63,7 @@ export const Claim = ({
         disabled={disabled}
         className="group-hover:border-primary group-hover:bg-primary/20"
       >
-        {object.label}
+        <Trunctacular value={object.label} />
       </IdentityTag>
     </div>
   )
