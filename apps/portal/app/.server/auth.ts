@@ -13,8 +13,6 @@ import { RedirectTo } from 'types/navigation'
 
 import { OpenAPI } from '@0xintuition/api'
 
-const DEFAULT_REDIRECT_URL = '/login'
-
 export async function getUserId(request: Request) {
   const verifiedClaims = await verifyPrivyAccessToken(request)
   if (!verifiedClaims) {
@@ -46,7 +44,7 @@ export async function requireUserId(
 ) {
   const userId = await getUserId(request)
   if (!userId) {
-    return await handlePrivyRedirect(request, { redirectTo })
+    return await handlePrivyRedirect({ request, redirectTo: { redirectTo } })
   }
   return userId
 }
@@ -57,7 +55,7 @@ export async function requireUser(
 ) {
   const user = await getUser(request)
   if (!user) {
-    return await handlePrivyRedirect(request, { redirectTo })
+    return await handlePrivyRedirect({ request, redirectTo: { redirectTo } })
   }
   return user
 }
@@ -68,7 +66,7 @@ export async function requireUserWallet(
 ) {
   const wallet = await getUserWallet(request)
   if (!wallet) {
-    return await handlePrivyRedirect(request, { redirectTo })
+    return await handlePrivyRedirect({ request, redirectTo: { redirectTo } })
   }
   return wallet
 }
@@ -79,7 +77,7 @@ export async function requireAnonymous(
 ) {
   const userId = await getUserId(request)
   if (userId) {
-    return await handlePrivyRedirect(request, { redirectTo })
+    return await handlePrivyRedirect({ request, redirectTo: { redirectTo } })
   }
 }
 
@@ -104,24 +102,24 @@ export async function setupAPI(request: Request) {
   OpenAPI.HEADERS = headers as Record<string, string>
 }
 
-export async function handlePrivyRedirect(request: Request, redirectTo: RedirectTo = {}) {
+export async function handlePrivyRedirect({
+  request,
+  path = '/',
+  redirectTo = {},
+}: {
+  request: Request
+  path?: string
+  redirectTo?: RedirectTo
+}) {
   const accessToken = getPrivyAccessToken(request)
   const sessionToken = getPrivySessionToken(request)
   const isOAuth = await isOAuthInProgress(request.url)
   if (isOAuth) {
     // Do not redirect or interrupt the flow.
     return
-  } else if (!accessToken && !sessionToken) {
-    const redirectUrl = await getRedirectToUrl(
-      request,
-      DEFAULT_REDIRECT_URL,
-      redirectTo,
-    )
+  } else if (!accessToken || !sessionToken) {
+    const redirectUrl = await getRedirectToUrl(request, path, redirectTo)
     throw redirect(redirectUrl)
-  } else if (!accessToken && sessionToken) {
-    // TODO: handle /refresh where we redirect and client-side getAccessToken with privy-react
-    logger('Refreshing session')
-    return
   }
   logger('Hit end of handlePrivyRedirect', accessToken, sessionToken, isOAuth)
   return

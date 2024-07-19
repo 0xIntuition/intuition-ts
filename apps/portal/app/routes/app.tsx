@@ -1,31 +1,19 @@
 import { UserPresenter, UsersService } from '@0xintuition/api'
 
 import SidebarNav from '@components/sidebar-nav'
-import { chainalysisOracleAbi } from '@lib/abis/chainalysisOracle'
-import logger from '@lib/utils/logger'
-import { fetchWrapper } from '@lib/utils/misc'
+import { fetchWrapper, invariant } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
 import { Outlet, useLoaderData } from '@remix-run/react'
 import { requireUserWallet } from '@server/auth'
-import { mainnetClient } from '@server/viem'
+import { isSanctioned } from '@server/ofac'
+import { Address } from 'viem'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const wallet = await requireUserWallet(request)
+  invariant(wallet, 'Unauthorized')
 
-  if (!wallet) {
-    return logger('No user found in session')
-  }
-
-  const isSanctioned = wallet
-    ? ((await mainnetClient.readContract({
-        address: '0x40C57923924B5c5c5455c48D93317139ADDaC8fb',
-        abi: chainalysisOracleAbi,
-        functionName: 'isSanctioned',
-        args: [wallet],
-      })) as boolean)
-    : false
-
-  if (isSanctioned) {
+  const isWalletSanctioned = await isSanctioned(wallet as Address)
+  if (isWalletSanctioned) {
     return redirect('/sanctioned')
   }
 

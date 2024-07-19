@@ -20,6 +20,7 @@ import './styles/globals.css'
 import { useEffect } from 'react'
 
 import { Toaster } from '@0xintuition/1ui'
+import { OpenAPI } from '@0xintuition/api'
 
 import { CURRENT_ENV } from '@lib/utils/constants'
 import { getChainEnvConfig } from '@lib/utils/environment'

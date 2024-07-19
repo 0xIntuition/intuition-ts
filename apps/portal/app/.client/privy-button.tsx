@@ -29,7 +29,7 @@ export function PrivyButton({
   const disableLogin = !ready || (ready && authenticated)
 
   async function handleSignout() {
-    logout()
+    await logout()
     disconnect()
     onLogout?.()
   }

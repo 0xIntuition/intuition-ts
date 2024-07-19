@@ -38,9 +38,22 @@ export const getPrivyAccessToken = (req: Request): string | null => {
   return authToken
 }
 
+// get session token from cookie
 export const getPrivySessionToken = (req: Request): string | null => {
   const cookies = parse(req.headers.get('Cookie') ?? '')
   return cookies['privy-session']
+}
+
+export const getPrivyTokens = (
+  req: Request,
+): {
+  accessToken: string | null
+  sessionToken: string | null
+} => {
+  return {
+    accessToken: getPrivyAccessToken(req),
+    sessionToken: getPrivySessionToken(req),
+  }
 }
 
 export async function isOAuthInProgress(requestUrl: string) {
