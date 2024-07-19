@@ -13,10 +13,5 @@ export default function ExploreClaims() {
   const { message } = useLoaderData<typeof loader>()
   logger('message from profile overview loader', message)
 
-  return (
-    <NestedVerticalLayout
-      outlet={Outlet}
-      options={exploreRouteOptions}
-    ></NestedVerticalLayout>
-  )
+  return <NestedVerticalLayout outlet={Outlet} options={exploreRouteOptions} />
 }

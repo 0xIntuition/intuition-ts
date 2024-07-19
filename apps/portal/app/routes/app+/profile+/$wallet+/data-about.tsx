@@ -1,7 +1,9 @@
 import {
   ClaimPresenter,
   ClaimSortColumn,
-  OpenAPI,
+  ClaimsService,
+  IdentitiesService,
+  IdentityPositionsService,
   PositionPresenter,
   PositionSortColumn,
   SortDirection,
@@ -11,33 +13,32 @@ import { ClaimsList as ClaimsAboutIdentity } from '@components/list/claims'
 import { PositionsOnIdentity } from '@components/list/positions-on-identity'
 import DataAboutHeader from '@components/profile/data-about-header'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
-import {
-  fetchClaimsAboutIdentity,
-  fetchClaimsSummary,
-  fetchIdentity,
-  fetchPositionsOnIdentity,
-} from '@lib/utils/fetches'
+import { NO_WALLET_ERROR } from '@lib/utils/errors'
 import {
   calculateTotalPages,
+  fetchWrapper,
   formatBalance,
-  getAuthHeaders,
+  invariant,
 } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
-import { getPrivyAccessToken } from '@server/privy'
+import { requireUserWallet } from '@server/auth'
+import { PaginationType } from 'types/pagination'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
-  OpenAPI.BASE = 'https://dev.api.intuition.systems'
-  const accessToken = getPrivyAccessToken(request)
-  const headers = getAuthHeaders(accessToken !== null ? accessToken : '')
-  OpenAPI.HEADERS = headers as Record<string, string>
+  const userWallet = await requireUserWallet(request)
+  invariant(userWallet, NO_WALLET_ERROR)
 
   const wallet = params.wallet
-
   if (!wallet) {
     throw new Error('Wallet is undefined.')
   }
 
-  const userIdentity = await fetchIdentity(wallet)
+  const userIdentity = await fetchWrapper({
+    method: IdentitiesService.getIdentityById,
+    args: {
+      id: wallet,
+    },
+  })
 
   if (!userIdentity) {
     return redirect('/create')
@@ -53,14 +54,17 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     : 1
   const positionsLimit = searchParams.get('positionsLimit') ?? '10'
 
-  const positions = await fetchPositionsOnIdentity(
-    wallet,
-    positionsPage,
-    Number(positionsLimit),
-    positionsSortBy as PositionSortColumn,
-    positionsDirection as SortDirection,
-    positionsSearch,
-  )
+  const positions = await fetchWrapper({
+    method: IdentityPositionsService.getIdentityPositions,
+    args: {
+      id: wallet,
+      page: positionsPage,
+      limit: Number(positionsLimit),
+      sortBy: positionsSortBy as PositionSortColumn,
+      direction: positionsDirection as SortDirection,
+      creator: positionsSearch,
+    },
+  })
 
   const positionsTotalPages = calculateTotalPages(
     positions?.total ?? 0,
@@ -75,21 +79,29 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     : 1
   const claimsLimit = searchParams.get('claimsLimit') ?? '10'
 
-  const claims = await fetchClaimsAboutIdentity(
-    userIdentity.id,
-    claimsPage,
-    Number(claimsLimit),
-    claimsSortBy as ClaimSortColumn,
-    claimsDirection as SortDirection,
-    claimsSearch,
-  )
+  const claims = await fetchWrapper({
+    method: ClaimsService.searchClaims,
+    args: {
+      identity: userIdentity.id,
+      page: claimsPage,
+      limit: Number(claimsLimit),
+      sortBy: claimsSortBy as ClaimSortColumn,
+      direction: claimsDirection as SortDirection,
+      displayName: claimsSearch,
+    },
+  })
 
   const claimsTotalPages = calculateTotalPages(
     claims?.total ?? 0,
     Number(claimsLimit),
   )
 
-  const claimsSummary = await fetchClaimsSummary(userIdentity.id)
+  const claimsSummary = await fetchWrapper({
+    method: ClaimsService.claimSummary,
+    args: {
+      identity: userIdentity.id,
+    },
+  })
 
   return json({
     userIdentity,
@@ -136,7 +148,7 @@ export default function ProfileDataAbout() {
         />
         <ClaimsAboutIdentity
           claims={claims}
-          pagination={claimsPagination}
+          pagination={claimsPagination as PaginationType}
           paramPrefix="claims"
           enableSearch
         />
@@ -151,7 +163,7 @@ export default function ProfileDataAbout() {
         />
         <PositionsOnIdentity
           positions={positions}
-          pagination={positionsPagination}
+          pagination={positionsPagination as PaginationType}
         />
       </div>
     </div>

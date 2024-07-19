@@ -1,30 +1,22 @@
 import {
+  IdentitiesService,
   IdentityPresenter,
-  OpenAPI,
   SortColumn,
   SortDirection,
 } from '@0xintuition/api'
 
 import { ExploreSearch } from '@components/explore/ExploreSearch'
 import { IdentitiesList } from '@components/list/identities'
-import { fetchUserIdentities } from '@lib/utils/fetches'
+import { NO_WALLET_ERROR } from '@lib/utils/errors'
 import logger from '@lib/utils/logger'
-import { calculateTotalPages, getAuthHeaders } from '@lib/utils/misc'
+import { calculateTotalPages, fetchWrapper, invariant } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 import { requireUserWallet } from '@server/auth'
-import { getPrivyAccessToken } from '@server/privy'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const wallet = await requireUserWallet(request)
-  OpenAPI.BASE = 'https://dev.api.intuition.systems'
-  const accessToken = getPrivyAccessToken(request)
-  const headers = getAuthHeaders(accessToken !== null ? accessToken : '')
-  OpenAPI.HEADERS = headers as Record<string, string>
-
-  if (!wallet) {
-    return logger('No user found in session')
-  }
+  invariant(wallet, NO_WALLET_ERROR)
 
   const url = new URL(request.url)
   const searchParams = new URLSearchParams(url.search)
@@ -39,14 +31,17 @@ export async function loader({ request }: LoaderFunctionArgs) {
     : 1
   const limit = searchParams.get('limit') ?? '10'
 
-  const identities = await fetchUserIdentities(
-    page,
-    Number(limit),
-    sortBy as SortColumn,
-    direction as SortDirection,
-    displayNameQuery,
-    hasTagQuery,
-  )
+  const identities = await fetchWrapper({
+    method: IdentitiesService.searchIdentity,
+    args: {
+      page,
+      limit: Number(limit),
+      sortBy: sortBy as SortColumn,
+      direction: direction as SortDirection,
+      displayName: displayNameQuery,
+      hasTag: hasTagQuery,
+    },
+  })
 
   const totalPages = calculateTotalPages(identities?.total ?? 0, Number(limit))
   logger('identities', identities)

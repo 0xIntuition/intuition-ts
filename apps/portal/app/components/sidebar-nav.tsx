@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 
 import {
+  formatWalletAddress,
   IconNameType,
   SidebarLayout,
   SidebarLayoutContent,
@@ -18,9 +19,10 @@ import { UserPresenter } from '@0xintuition/api'
 
 import { PrivyButton } from '@client/privy-button'
 import { createClaimModalAtom, createIdentityModalAtom } from '@lib/state/store'
-import { useNavigate } from '@remix-run/react'
+import { useNavigate, useSubmit } from '@remix-run/react'
 import * as blockies from 'blockies-ts'
 import { useAtom } from 'jotai'
+import { isAddress } from 'viem'
 
 import CreateClaimModal from './create-claim-modal'
 import CreateIdentityModal from './create-identity-modal'
@@ -56,6 +58,7 @@ export default function SidebarNav({
   children: React.ReactNode
   userObject: UserPresenter
 }) {
+  const submit = useSubmit()
   const navigate = useNavigate()
   const [isPrivyButtonLoaded, setIsPrivyButtonLoaded] = useState(false)
 
@@ -71,6 +74,19 @@ export default function SidebarNav({
     useAtom(createClaimModalAtom)
 
   const imgSrc = blockies.create({ seed: userObject?.wallet }).toDataURL()
+
+  function onLogout() {
+    submit(null, {
+      action: '/actions/logout',
+      method: 'post',
+    })
+  }
+  const username =
+    userObject?.display_name ||
+    userObject?.ens_name ||
+    isAddress(userObject?.wallet)
+      ? formatWalletAddress(userObject?.wallet)
+      : 'Profile'
 
   return (
     <>
@@ -157,9 +173,10 @@ export default function SidebarNav({
                   triggerComponent={
                     <SidebarLayoutNavAvatar
                       imageSrc={userObject.image ?? imgSrc}
-                      name="Account"
+                      name={username}
                     />
                   }
+                  onLogout={onLogout}
                 />
               ) : (
                 <div className="h-20" />
@@ -167,6 +184,7 @@ export default function SidebarNav({
             </SidebarLayoutNavFooter>
           </SidebarLayoutNav>
           <SidebarLayoutContent className="h-full w-full min-h-screen overflow-y-scroll">
+            {/* TODO: overflow-y-scroll on SidebarLayoutContent is causing scroll issues all over the app. Discussion is needed to fix this. */}
             {children}
           </SidebarLayoutContent>
         </SidebarLayout>

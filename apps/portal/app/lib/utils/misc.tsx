@@ -1,10 +1,13 @@
 import React from 'react'
 
 import { Theme } from '@0xintuition/1ui'
+import { ApiError } from '@0xintuition/api'
 
 import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 import { formatUnits } from 'viem'
+
+import logger from './logger'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -282,4 +285,21 @@ export const truncateNumber = (balance: string | number): string => {
     return `${(n / 1000).toFixed(2).replace(/\.0$/, '')}K`
   }
   return n.toFixed(2)
+}
+
+export const fetchWrapper = async <T, A>({
+  method,
+  args,
+}: {
+  method: (arg: A) => Promise<T>
+  args: A
+}): Promise<T> => {
+  try {
+    return await method(args)
+  } catch (error: unknown) {
+    if (error instanceof ApiError) {
+      logger(`${error.name} - ${error.status}: ${error.message} ${error.url}`)
+    }
+    throw error
+  }
 }

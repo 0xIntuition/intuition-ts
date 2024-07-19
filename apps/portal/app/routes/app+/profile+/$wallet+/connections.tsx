@@ -9,8 +9,9 @@ import {
 } from '@0xintuition/1ui'
 import {
   ClaimPresenter,
+  ClaimsService,
+  IdentitiesService,
   IdentityPresenter,
-  OpenAPI,
   SortColumn,
   SortDirection,
 } from '@0xintuition/api'
@@ -22,35 +23,33 @@ import {
   ConnectionsHeaderVariantType,
 } from '@components/profile/connections-header'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
-import {
-  fetchClaim,
-  fetchIdentity,
-  fetchIdentityFollowers,
-  fetchIdentityFollowing,
-} from '@lib/utils/fetches'
+import { NO_WALLET_ERROR } from '@lib/utils/errors'
 import logger from '@lib/utils/logger'
 import {
   calculateTotalPages,
+  fetchWrapper,
   formatBalance,
-  getAuthHeaders,
+  invariant,
 } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
-import { getPrivyAccessToken } from '@server/privy'
+import { requireUserWallet } from '@server/auth'
 import { PaginationType } from 'types/pagination'
 
 export async function loader({ params, request }: LoaderFunctionArgs) {
-  OpenAPI.BASE = 'https://dev.api.intuition.systems'
-  const accessToken = getPrivyAccessToken(request)
-  const headers = getAuthHeaders(accessToken !== null ? accessToken : '')
-  OpenAPI.HEADERS = headers as Record<string, string>
+  const userWallet = await requireUserWallet(request)
+  invariant(userWallet, NO_WALLET_ERROR)
 
   const wallet = params.wallet
-
   if (!wallet) {
     throw new Error('Wallet is undefined.')
   }
 
-  const userIdentity = await fetchIdentity(wallet)
+  const userIdentity = await fetchWrapper({
+    method: IdentitiesService.getIdentityById,
+    args: {
+      id: wallet,
+    },
+  })
 
   if (!userIdentity) {
     return redirect('/create')
@@ -61,7 +60,12 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
   }
 
   if (userIdentity.follow_claim_id) {
-    const followClaim = await fetchClaim(userIdentity.follow_claim_id)
+    const followClaim = await fetchWrapper({
+      method: ClaimsService.getClaimById,
+      args: {
+        id: userIdentity.follow_claim_id,
+      },
+    })
     const url = new URL(request.url)
     const searchParams = new URLSearchParams(url.search)
     // const followersSearch = searchParams.get('followersSearch') TODO: Add search once BE implements
@@ -72,13 +76,19 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
       : 1
     const followersLimit = searchParams.get('limit') ?? '10'
 
-    const followers = await fetchIdentityFollowers(
-      userIdentity.id,
-      followersPage,
-      Number(followersLimit),
-      followersSortBy as SortColumn,
-      followersDirection as SortDirection,
-    )
+    const followers = await fetchWrapper({
+      method: IdentitiesService.getIdentityFollowers,
+      args: {
+        id: userIdentity.id,
+        page: followersPage,
+        limit: Number(followersLimit),
+        sortBy: followersSortBy as SortColumn,
+        direction: followersDirection as SortDirection,
+        offset: null,
+        timeframe: null,
+        userWallet: null,
+      },
+    })
 
     const followersTotalPages = calculateTotalPages(
       followers?.total ?? 0,
@@ -93,13 +103,19 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
       : 1
     const followingLimit = searchParams.get('limit') ?? '10'
 
-    const following = await fetchIdentityFollowing(
-      userIdentity.id,
-      followingPage,
-      Number(followingLimit),
-      followingSortBy as SortColumn,
-      followingDirection as SortDirection,
-    )
+    const following = await fetchWrapper({
+      method: IdentitiesService.getIdentityFollowed,
+      args: {
+        id: userIdentity.id,
+        page: followersPage,
+        limit: Number(followersLimit),
+        sortBy: followersSortBy as SortColumn,
+        direction: followersDirection as SortDirection,
+        offset: null,
+        timeframe: null,
+        userWallet: null,
+      },
+    })
 
     const followingTotalPages = calculateTotalPages(
       following?.total ?? 0,
@@ -215,7 +231,7 @@ export default function ProfileConnections() {
           <TabsTrigger
             value={ConnectionsHeaderVariants.followers}
             label="Followers"
-            totalCount={followingPagination.totalEntries}
+            totalCount={followersPagination.totalEntries}
           />
           <TabsTrigger
             value={ConnectionsHeaderVariants.following}

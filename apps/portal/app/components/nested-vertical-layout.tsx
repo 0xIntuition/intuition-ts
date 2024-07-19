@@ -1,6 +1,4 @@
-import { useEffect } from 'react'
-
-import { Outlet, useLocation } from '@remix-run/react'
+import { Outlet } from '@remix-run/react'
 
 import { OptionType, SegmentedNav } from './segmented-nav'
 
@@ -13,19 +11,10 @@ export function NestedVerticalLayout({
   outlet: OutletComponent,
   options,
 }: NestedVerticalLayoutProps) {
-  const location = useLocation()
-
-  useEffect(() => {
-    const container = document.querySelector('.scroll-container')
-    if (container) {
-      container.scrollTo(0, 0)
-    }
-  }, [location.pathname])
-
   return (
-    <div className="flex flex-col flex-grow h-screen min-h-screen gap-8 overflow-y-scroll px-72 py-10 items-center scroll-container">
+    <div className="flex flex-col flex-grow gap-8 py-10 items-center">
       <SegmentedNav options={options} />
-      <div className="w-full">
+      <div className="w-2/3">
         <OutletComponent />
       </div>
     </div>

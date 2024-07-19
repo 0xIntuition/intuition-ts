@@ -1,35 +1,30 @@
-import { UserPresenter } from '@0xintuition/api'
+import { useEffect } from 'react'
+
+import { UserPresenter, UsersService } from '@0xintuition/api'
 
 import SidebarNav from '@components/sidebar-nav'
-import { chainalysisOracleAbi } from '@lib/abis/chainalysisOracle'
-import { getUserByWallet } from '@lib/utils/fetches'
-import logger from '@lib/utils/logger'
+import { fetchWrapper, invariant } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
-import { Outlet, useLoaderData } from '@remix-run/react'
+import { Outlet, useLoaderData, useLocation } from '@remix-run/react'
 import { requireUserWallet } from '@server/auth'
-import { mainnetClient } from '@server/viem'
+import { isSanctioned } from '@server/ofac'
+import { Address } from 'viem'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const wallet = await requireUserWallet(request)
+  invariant(wallet, 'Unauthorized')
 
-  if (!wallet) {
-    return logger('No user found in session')
-  }
-
-  const isSanctioned = wallet
-    ? ((await mainnetClient.readContract({
-        address: '0x40C57923924B5c5c5455c48D93317139ADDaC8fb',
-        abi: chainalysisOracleAbi,
-        functionName: 'isSanctioned',
-        args: [wallet],
-      })) as boolean)
-    : false
-
-  if (isSanctioned) {
+  const isWalletSanctioned = await isSanctioned(wallet as Address)
+  if (isWalletSanctioned) {
     return redirect('/sanctioned')
   }
 
-  const userObject = await getUserByWallet(wallet)
+  const userObject = await fetchWrapper({
+    method: UsersService.getUserByWalletPublic,
+    args: {
+      wallet,
+    },
+  })
 
   return json({
     userObject,
@@ -40,8 +35,14 @@ export default function Index() {
   const { userObject } = useLoaderData<{
     userObject: UserPresenter
   }>()
+
+  const { pathname } = useLocation()
+
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [pathname])
   return (
-    <div className="flex items-start h-screen min-h-screen">
+    <div className="flex items-start h-screen">
       <SidebarNav userObject={userObject}>
         <Outlet />
       </SidebarNav>

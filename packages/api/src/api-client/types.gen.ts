@@ -623,6 +623,22 @@ export type NewPosition = {
   vault_uuid?: string | null
 }
 
+export type NewQuest = {
+  closing_content?: string | null
+  condition: QuestCondition
+  content?: string | null
+  description?: string | null
+  points?: number
+  summary?: string | null
+  title?: string | null
+}
+
+export type NewUserQuest = {
+  point_multiplier?: number | null
+  quest_id: string
+  user_id: string
+}
+
 export type NumericComparators = 'eq' | 'lte' | 'lt' | 'gt' | 'gte' | 'notEq'
 
 export const NumericComparators = {
@@ -730,6 +746,105 @@ export type PredicateVaultIdQuery = {
   options?: number | null
   userValue?: JsonNum | null
 }
+
+export type Quest = {
+  closing_content?: string | null
+  condition: QuestCondition
+  content?: string | null
+  created_at: string
+  description?: string | null
+  id: string
+  points: number
+  summary?: string | null
+  title?: string | null
+  updated_at: string
+}
+
+/**
+ * This enum represents the conditions that we can handle for quests
+ */
+export type QuestCondition =
+  | 'always_true'
+  | 'counter_stake_claim'
+  | 'create_atom'
+  | 'create_claim'
+  | 'create_follow_claim'
+  | 'create_tag_claim'
+  | 'stake_claim'
+  | 'stake_identity'
+
+/**
+ * This enum represents the conditions that we can handle for quests
+ */
+export const QuestCondition = {
+  ALWAYS_TRUE: 'always_true',
+  COUNTER_STAKE_CLAIM: 'counter_stake_claim',
+  CREATE_ATOM: 'create_atom',
+  CREATE_CLAIM: 'create_claim',
+  CREATE_FOLLOW_CLAIM: 'create_follow_claim',
+  CREATE_TAG_CLAIM: 'create_tag_claim',
+  STAKE_CLAIM: 'stake_claim',
+  STAKE_IDENTITY: 'stake_identity',
+} as const
+
+export type QuestPaginatedResponse = {
+  data: Array<QuestPresenter>
+  limit: number
+  page: number
+  total: number
+}
+
+export type QuestPresenter = {
+  closing_content?: string | null
+  condition: QuestCondition
+  content?: string | null
+  created_at: string
+  date_completed?: string | null
+  date_started?: string | null
+  description?: string | null
+  id: string
+  points: number
+  progress: number
+  status: QuestStatus
+  summary?: string | null
+  title?: string | null
+  updated_at: string
+}
+
+export type QuestQuery = {
+  closingContent?: string | null
+  content?: string | null
+  description?: string | null
+  direction?: SortDirection | null
+  limit?: number | null
+  offset?: number | null
+  page?: number | null
+  sortBy?: QuestSortColumn | null
+  summary?: string | null
+  title?: string | null
+  userId?: string | null
+}
+
+export type QuestSort = {
+  direction?: SortDirection | null
+  sortBy?: QuestSortColumn | null
+}
+
+export type QuestSortColumn = 'CreatedAt' | 'Points'
+
+export const QuestSortColumn = {
+  CREATED_AT: 'CreatedAt',
+  POINTS: 'Points',
+} as const
+
+export type QuestStatus = 'NotStarted' | 'Started' | 'Completed' | 'WithDrawn'
+
+export const QuestStatus = {
+  NOT_STARTED: 'NotStarted',
+  STARTED: 'Started',
+  COMPLETED: 'Completed',
+  WITH_DRAWN: 'WithDrawn',
+} as const
 
 export type RedeemAtom = {
   id: string
@@ -942,6 +1057,15 @@ export type UpdatePosition = {
   vault_uuid?: string | null
 }
 
+export type UpdateQuest = {
+  closing_content?: string | null
+  content?: string | null
+  description?: string | null
+  points?: number | null
+  summary?: string | null
+  title?: string | null
+}
+
 export type UpsertUser = {
   api_key?: string | null
   description?: string | null
@@ -1032,6 +1156,57 @@ export type UserPresenter = {
   wallet: string
 }
 
+export type UserQuest = {
+  date_completed?: string | null
+  date_started: string
+  id: string
+  point_multiplier: number
+  progress: number
+  quest_id: string
+  status: QuestStatus
+  user_id: string
+}
+
+export type UserQuestPaginatedResponse = {
+  data: Array<UserQuest>
+  limit: number
+  page: number
+  total: number
+}
+
+export type UserQuestQuery = {
+  direction?: SortDirection | null
+  limit?: number | null
+  offset?: number | null
+  page?: number | null
+  questId?: string | null
+  sortBy?: UserQuestSortColumn | null
+  status?: QuestStatus | null
+  userId?: string | null
+}
+
+export type UserQuestSort = {
+  direction?: SortDirection | null
+  sortBy?: UserQuestSortColumn | null
+}
+
+export type UserQuestSortColumn =
+  | 'DateStarted'
+  | 'DateCompleted'
+  | 'Status'
+  | 'Progress'
+  | 'UserId'
+  | 'QuestId'
+
+export const UserQuestSortColumn = {
+  DATE_STARTED: 'DateStarted',
+  DATE_COMPLETED: 'DateCompleted',
+  STATUS: 'Status',
+  PROGRESS: 'Progress',
+  USER_ID: 'UserId',
+  QUEST_ID: 'QuestId',
+} as const
+
 export type UserTotalPaginatedResponse = {
   data: Array<UserTotalsPresenter>
   limit: number
@@ -1055,7 +1230,15 @@ export type UserTotalsPresenter = {
   total_exit_fees: string
   total_identities: number
   total_position_value: string
+  total_position_value_against_claims: string
+  total_position_value_for_claims: string
+  total_position_value_on_claims: string
+  total_position_value_on_identities: string
   total_positions: number
+  total_positions_against_claims: number
+  total_positions_for_claims: number
+  total_positions_on_claims: number
+  total_positions_on_identities: number
   total_protocol_fee_paid: string
   updated_at?: string | null
   user_points: number
@@ -1216,6 +1399,7 @@ export type GetClaimPositionsData = {
   limit?: number | null
   offset?: number | null
   page?: number | null
+  positionDirection?: VaultType | null
   sortBy?: PositionSortColumn | null
   timeframe?: TimeFrame | null
   userWallet?: string | null
@@ -1740,6 +1924,7 @@ export type GetIdentityPositionsData = {
   limit?: number | null
   offset?: number | null
   page?: number | null
+  positionDirection?: VaultType | null
   sortBy?: PositionSortColumn | null
   timeframe?: TimeFrame | null
   userWallet?: string | null
@@ -1911,11 +2096,14 @@ export type SearchPositionsData = {
   claim?: Identifier | null
   conviction?: number | null
   creator?: Identifier | null
+  creatorId?: string | null
   identity?: Identifier | null
   paging: PaginatedRequest
+  parentTable?: ParentTable | null
   sort: PositionSort
   status?: Status | null
   vault?: Identifier | null
+  vaultType?: VaultType | null
   vaultUuid?: string | null
 }
 
@@ -1930,11 +2118,14 @@ export type PositionSummaryData = {
   claim?: Identifier | null
   conviction?: number | null
   creator?: Identifier | null
+  creatorId?: string | null
   identity?: Identifier | null
   paging: PaginatedRequest
+  parentTable?: ParentTable | null
   sort: PositionSort
   status?: Status | null
   vault?: Identifier | null
+  vaultType?: VaultType | null
   vaultUuid?: string | null
 }
 
@@ -2009,6 +2200,112 @@ export type RunDynamicQueryResponse =
   | IdentityPaginatedResponse
   | ClaimPaginatedResponse
   | PositionPaginatedResponse
+
+export type CreateQuestData = {
+  requestBody: NewQuest
+}
+
+export type CreateQuestResponse = {
+  closing_content?: string | null
+  condition: QuestCondition
+  content?: string | null
+  created_at: string
+  description?: string | null
+  id: string
+  points: number
+  summary?: string | null
+  title?: string | null
+  updated_at: string
+}
+
+export type UpdateQuestData = {
+  /**
+   * Quest SQL id
+   */
+  questId: string
+  requestBody: UpdateQuest
+}
+
+export type UpdateQuestResponse = {
+  closing_content?: string | null
+  condition: QuestCondition
+  content?: string | null
+  created_at: string
+  description?: string | null
+  id: string
+  points: number
+  summary?: string | null
+  title?: string | null
+  updated_at: string
+}
+
+export type SearchData = {
+  requestBody: UserQuestQuery
+}
+
+export type SearchResponse = {
+  data: Array<UserQuest>
+  limit: number
+  page: number
+  total: number
+}
+
+export type CheckQuestStatusData = {
+  /**
+   * Quest SQL id
+   */
+  questId: string
+}
+
+export type CheckQuestStatusResponse =
+  | 'NotStarted'
+  | 'Started'
+  | 'Completed'
+  | 'WithDrawn'
+
+export type CompleteQuestData = {
+  /**
+   * Quest SQL id
+   */
+  questId: string
+  /**
+   * User SQL id
+   */
+  userId: string
+}
+
+export type CompleteQuestResponse = {
+  date_completed?: string | null
+  date_started: string
+  id: string
+  point_multiplier: number
+  progress: number
+  quest_id: string
+  status: QuestStatus
+  user_id: string
+}
+
+export type StartQuestData = {
+  /**
+   * Quest SQL id
+   */
+  questId: string
+  /**
+   * User SQL id
+   */
+  userId: string
+}
+
+export type StartQuestResponse = {
+  date_completed?: string | null
+  date_started: string
+  id: string
+  point_multiplier: number
+  progress: number
+  quest_id: string
+  status: QuestStatus
+  user_id: string
+}
 
 export type GetUsersData = {
   direction?: SortDirection | null
@@ -2372,7 +2669,15 @@ export type GetUserTotalsResponse = {
   total_exit_fees: string
   total_identities: number
   total_position_value: string
+  total_position_value_against_claims: string
+  total_position_value_for_claims: string
+  total_position_value_on_claims: string
+  total_position_value_on_identities: string
   total_positions: number
+  total_positions_against_claims: number
+  total_positions_for_claims: number
+  total_positions_on_claims: number
+  total_positions_on_identities: number
   total_protocol_fee_paid: string
   updated_at?: string | null
   user_points: number
@@ -2554,6 +2859,7 @@ export type $OpenApiTs = {
         limit?: number | null
         offset?: number | null
         page?: number | null
+        positionDirection?: VaultType | null
         sortBy?: PositionSortColumn | null
         timeframe?: TimeFrame | null
         userWallet?: string | null
@@ -3194,6 +3500,7 @@ export type $OpenApiTs = {
         limit?: number | null
         offset?: number | null
         page?: number | null
+        positionDirection?: VaultType | null
         sortBy?: PositionSortColumn | null
         timeframe?: TimeFrame | null
         userWallet?: string | null
@@ -3426,11 +3733,14 @@ export type $OpenApiTs = {
         claim?: Identifier | null
         conviction?: number | null
         creator?: Identifier | null
+        creatorId?: string | null
         identity?: Identifier | null
         paging: PaginatedRequest
+        parentTable?: ParentTable | null
         sort: PositionSort
         status?: Status | null
         vault?: Identifier | null
+        vaultType?: VaultType | null
         vaultUuid?: string | null
       }
       res: {
@@ -3452,11 +3762,14 @@ export type $OpenApiTs = {
         claim?: Identifier | null
         conviction?: number | null
         creator?: Identifier | null
+        creatorId?: string | null
         identity?: Identifier | null
         paging: PaginatedRequest
+        parentTable?: ParentTable | null
         sort: PositionSort
         status?: Status | null
         vault?: Identifier | null
+        vaultType?: VaultType | null
         vaultUuid?: string | null
       }
       res: {
@@ -3559,6 +3872,150 @@ export type $OpenApiTs = {
           | IdentityPaginatedResponse
           | ClaimPaginatedResponse
           | PositionPaginatedResponse
+      }
+    }
+  }
+  '/quest': {
+    post: {
+      req: {
+        requestBody: NewQuest
+      }
+      res: {
+        /**
+         * Create a new quest
+         */
+        200: {
+          closing_content?: string | null
+          condition: QuestCondition
+          content?: string | null
+          created_at: string
+          description?: string | null
+          id: string
+          points: number
+          summary?: string | null
+          title?: string | null
+          updated_at: string
+        }
+      }
+    }
+  }
+  '/quest/{quest_id}': {
+    put: {
+      req: {
+        /**
+         * Quest SQL id
+         */
+        questId: string
+        requestBody: UpdateQuest
+      }
+      res: {
+        /**
+         * Update an already existing quest
+         */
+        200: {
+          closing_content?: string | null
+          condition: QuestCondition
+          content?: string | null
+          created_at: string
+          description?: string | null
+          id: string
+          points: number
+          summary?: string | null
+          title?: string | null
+          updated_at: string
+        }
+      }
+    }
+  }
+  '/user_quest/search': {
+    post: {
+      req: {
+        requestBody: UserQuestQuery
+      }
+      res: {
+        /**
+         * Filter quests
+         */
+        200: {
+          data: Array<UserQuest>
+          limit: number
+          page: number
+          total: number
+        }
+      }
+    }
+  }
+  '/user_quest/{quest_id}/check': {
+    get: {
+      req: {
+        /**
+         * Quest SQL id
+         */
+        questId: string
+      }
+      res: {
+        /**
+         * Check if user is eligible to complete the quest, returning the quest status
+         */
+        200: 'NotStarted' | 'Started' | 'Completed' | 'WithDrawn'
+      }
+    }
+  }
+  '/user_quest/{quest_id}/complete/{user_id}': {
+    post: {
+      req: {
+        /**
+         * Quest SQL id
+         */
+        questId: string
+        /**
+         * User SQL id
+         */
+        userId: string
+      }
+      res: {
+        /**
+         * Complete a quest for an user
+         */
+        200: {
+          date_completed?: string | null
+          date_started: string
+          id: string
+          point_multiplier: number
+          progress: number
+          quest_id: string
+          status: QuestStatus
+          user_id: string
+        }
+      }
+    }
+  }
+  '/user_quest/{quest_id}/start/{user_id}': {
+    post: {
+      req: {
+        /**
+         * Quest SQL id
+         */
+        questId: string
+        /**
+         * User SQL id
+         */
+        userId: string
+      }
+      res: {
+        /**
+         * Start a quest for an user
+         */
+        200: {
+          date_completed?: string | null
+          date_started: string
+          id: string
+          point_multiplier: number
+          progress: number
+          quest_id: string
+          status: QuestStatus
+          user_id: string
+        }
       }
     }
   }
@@ -4043,7 +4500,15 @@ export type $OpenApiTs = {
           total_exit_fees: string
           total_identities: number
           total_position_value: string
+          total_position_value_against_claims: string
+          total_position_value_for_claims: string
+          total_position_value_on_claims: string
+          total_position_value_on_identities: string
           total_positions: number
+          total_positions_against_claims: number
+          total_positions_for_claims: number
+          total_positions_on_claims: number
+          total_positions_on_identities: number
           total_protocol_fee_paid: string
           updated_at?: string | null
           user_points: number

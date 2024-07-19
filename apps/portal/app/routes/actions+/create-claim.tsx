@@ -1,14 +1,15 @@
-import { ApiError, ClaimsService, OpenAPI } from '@0xintuition/api'
+import { ApiError, ClaimsService } from '@0xintuition/api'
 
 import { MULTIVAULT_CONTRACT_ADDRESS } from '@lib/utils/constants'
+import { NO_WALLET_ERROR } from '@lib/utils/errors'
 import logger from '@lib/utils/logger'
-import { getAuthHeaders } from '@lib/utils/misc'
+import { invariant } from '@lib/utils/misc'
 import { ActionFunctionArgs, json } from '@remix-run/node'
 import { requireUserWallet } from '@server/auth'
-import { getPrivyAccessToken } from '@server/privy'
 
 export async function action({ request }: ActionFunctionArgs) {
   const wallet = await requireUserWallet(request)
+  invariant(wallet, NO_WALLET_ERROR)
 
   const formData = await request.formData()
   for (const [key, value] of formData.entries()) {
@@ -26,15 +27,6 @@ export async function action({ request }: ActionFunctionArgs) {
   const object_id = formData.get('object_id')
 
   try {
-    OpenAPI.BASE = 'https://dev.api.intuition.systems'
-    const accessToken = getPrivyAccessToken(request)
-    const headers = getAuthHeaders(accessToken !== null ? accessToken : '')
-    OpenAPI.HEADERS = headers as Record<string, string>
-
-    if (!wallet) {
-      throw new Error('User wallet address is undefined')
-    }
-
     let claim
     try {
       const claimParams: {

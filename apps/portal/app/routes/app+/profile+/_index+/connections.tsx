@@ -10,8 +10,8 @@ import {
 import {
   ClaimPresenter,
   ClaimsService,
+  IdentitiesService,
   IdentityPresenter,
-  OpenAPI,
   SortColumn,
   SortDirection,
 } from '@0xintuition/api'
@@ -23,33 +23,27 @@ import {
   ConnectionsHeaderVariantType,
 } from '@components/profile/connections-header'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
-import {
-  fetchIdentity,
-  fetchIdentityFollowers,
-  fetchIdentityFollowing,
-} from '@lib/utils/fetches'
+import { NO_WALLET_ERROR } from '@lib/utils/errors'
 import logger from '@lib/utils/logger'
 import {
   calculateTotalPages,
+  fetchWrapper,
   formatBalance,
-  getAuthHeaders,
+  invariant,
 } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
 import { requireUserWallet } from '@server/auth'
-import { getPrivyAccessToken } from '@server/privy'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const userWallet = await requireUserWallet(request)
-  OpenAPI.BASE = 'https://dev.api.intuition.systems'
-  const accessToken = getPrivyAccessToken(request)
-  const headers = getAuthHeaders(accessToken !== null ? accessToken : '')
-  OpenAPI.HEADERS = headers as Record<string, string>
+  invariant(userWallet, NO_WALLET_ERROR)
 
-  if (!userWallet) {
-    return logger('No user found in session')
-  }
-
-  const userIdentity = await fetchIdentity(userWallet)
+  const userIdentity = await fetchWrapper({
+    method: IdentitiesService.getIdentityById,
+    args: {
+      id: userWallet,
+    },
+  })
 
   if (!userIdentity) {
     return redirect('/create')
@@ -77,13 +71,19 @@ export async function loader({ request }: LoaderFunctionArgs) {
     : 1
   const followersLimit = searchParams.get('limit') ?? '10'
 
-  const followers = await fetchIdentityFollowers(
-    userIdentity.id,
-    followersPage,
-    Number(followersLimit),
-    followersSortBy as SortColumn,
-    followersDirection as SortDirection,
-  )
+  const followers = await fetchWrapper({
+    method: IdentitiesService.getIdentityFollowers,
+    args: {
+      id: userIdentity.id,
+      page: followersPage,
+      limit: Number(followersLimit),
+      sortBy: followersSortBy as SortColumn,
+      direction: followersDirection as SortDirection,
+      offset: null,
+      timeframe: null,
+      userWallet: null,
+    },
+  })
 
   const followersTotalPages = calculateTotalPages(
     followers?.total ?? 0,
@@ -98,13 +98,19 @@ export async function loader({ request }: LoaderFunctionArgs) {
     : 1
   const followingLimit = searchParams.get('limit') ?? '10'
 
-  const following = await fetchIdentityFollowing(
-    userIdentity.id,
-    followingPage,
-    Number(followingLimit),
-    followingSortBy as SortColumn,
-    followingDirection as SortDirection,
-  )
+  const following = await fetchWrapper({
+    method: IdentitiesService.getIdentityFollowed,
+    args: {
+      id: userIdentity.id,
+      page: followersPage,
+      limit: Number(followersLimit),
+      sortBy: followersSortBy as SortColumn,
+      direction: followersDirection as SortDirection,
+      offset: null,
+      timeframe: null,
+      userWallet: null,
+    },
+  })
 
   const followingTotalPages = calculateTotalPages(
     following?.total ?? 0,
@@ -206,7 +212,7 @@ export default function ProfileConnections() {
           <TabsTrigger
             value={ConnectionsHeaderVariants.followers}
             label="Followers"
-            totalCount={followingPagination.totalEntries}
+            totalCount={followersPagination.totalEntries}
           />
           <TabsTrigger
             value={ConnectionsHeaderVariants.following}
