@@ -17,6 +17,7 @@ export interface TagsListInputProps
   onAddTag: () => void
   onRemoveTag: (id: string) => void
   PopoverTriggerComponent: React.ComponentType<{ children: React.ReactNode }>
+  invalidTags: string[]
 }
 
 const getTagText = (variant: TagsListVariantsType, count: number) => {
@@ -32,6 +33,7 @@ export const TagsListInputPortal = ({
   onRemoveTag,
   className,
   PopoverTriggerComponent,
+  invalidTags,
   ...props
 }: TagsListInputProps) => {
   const tagsLeft = maxTags - tags.length
@@ -47,6 +49,7 @@ export const TagsListInputPortal = ({
           <TagWithValue
             key={tag.id}
             label={tag.name}
+            className={`tag ${invalidTags.includes(tag.id) ? 'border-red-500 hover:border-red-500' : ''}`}
             onRemove={() => onRemoveTag(tag.id)}
           />
         ))}

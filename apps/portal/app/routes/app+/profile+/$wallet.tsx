@@ -169,8 +169,6 @@ export default function Profile() {
                 onClick={() =>
                   setFollowModalActive((prevState) => ({
                     ...prevState,
-                    mode: 'redeem',
-                    modalType: 'identity',
                     isOpen: true,
                   }))
                 }
@@ -241,7 +239,6 @@ export default function Profile() {
               }
             />
           </div>
-
           <StakeModal
             userWallet={userWallet}
             contract={userIdentity.contract}
@@ -266,7 +263,6 @@ export default function Profile() {
               setFollowModalActive((prevState) => ({
                 ...prevState,
                 isOpen: false,
-                mode: undefined,
               }))
             }}
           />

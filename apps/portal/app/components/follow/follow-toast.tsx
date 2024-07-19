@@ -31,9 +31,9 @@ export default function FollowToast({ action, assets, txHash }: ToastProps) {
               className="text-secondary-foreground inline-flex gap-1"
             >
               {action}{' '}
-              <Text variant="footnote" weight="bold">
+              <span className="text-sm font-bold">
                 {formatBalance(BigInt(assets), 18, 6)}
-              </Text>{' '}
+              </span>{' '}
               ETH
             </Text>
             <Link

@@ -40,6 +40,7 @@ export const GET_IDENTITIES_BY_IDS_RESOURCE_ROUTE =
   '/resources/get-identities-by-ids'
 export const GET_IDENTITIES_RESOURCE_ROUTE = '/resources/get-identities'
 export const SEARCH_IDENTITIES_RESOURCE_ROUTE = '/resources/search-identities'
+export const TAG_RESOURCE_ROUTE = '/resources/tag'
 
 // Privy Social Accounts
 
@@ -157,3 +158,10 @@ export const activityRouteOptions = [
     basePath: '/app/activity',
   },
 ]
+
+// SPECIAL ATOMS
+
+export const LIST_OBJECT_VAULT_ID_TESTNET = 175 // used in testnet list claim as object
+export const TAG_PREDICATE_VAULT_ID_TESTNET = 176 // used in testnet tag claim as predicate
+export const I_PREDICATE_VAULT_ID_TESTNET = 19
+export const AM_WATCHING_VAULT_ID_TESTNET = 194
