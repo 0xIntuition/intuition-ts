@@ -47,8 +47,11 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     return
   }
 
-  const identity = await fetchWrapper(IdentitiesService.getIdentityById, {
-    id: params.id,
+  const identity = await fetchWrapper({
+    method: IdentitiesService.getIdentityById,
+    args: {
+      id: params.id,
+    },
   })
 
   logger('identity', identity)

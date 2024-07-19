@@ -54,8 +54,11 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     throw redirect('/app/profile')
   }
 
-  const userIdentity = await fetchWrapper(IdentitiesService.getIdentityById, {
-    id: wallet,
+  const userIdentity = await fetchWrapper({
+    method: IdentitiesService.getIdentityById,
+    args: {
+      id: wallet,
+    },
   })
 
   if (!userIdentity) {
@@ -67,8 +70,11 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     return
   }
 
-  const userTotals = await fetchWrapper(UsersService.getUserTotals, {
-    id: userIdentity.creator.id,
+  const userTotals = await fetchWrapper({
+    method: UsersService.getUserTotals,
+    args: {
+      id: userIdentity.creator.id,
+    },
   })
 
   if (!userTotals) {
@@ -94,8 +100,11 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   let followVaultDetails: VaultDetailsType | null = null
 
   if (userIdentity.follow_claim_id) {
-    followClaim = await fetchWrapper(ClaimsService.getClaimById, {
-      id: userIdentity.follow_claim_id,
+    followClaim = await fetchWrapper({
+      method: ClaimsService.getClaimById,
+      args: {
+        id: userIdentity.follow_claim_id,
+      },
     })
   }
 

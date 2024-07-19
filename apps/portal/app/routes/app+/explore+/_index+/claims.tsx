@@ -30,19 +30,25 @@ export async function loader({ request }: LoaderFunctionArgs) {
     : 1
   const limit = searchParams.get('limit') ?? '10'
 
-  const claims = await fetchWrapper(ClaimsService.searchClaims, {
-    page,
-    limit: Number(limit),
-    sortBy: sortBy as ClaimSortColumn,
-    direction: direction as SortDirection,
-    search,
+  const claims = await fetchWrapper({
+    method: ClaimsService.searchClaims,
+    args: {
+      page,
+      limit: Number(limit),
+      sortBy: sortBy as ClaimSortColumn,
+      direction: direction as SortDirection,
+      displayName: search,
+    },
   })
 
-  const identities = await fetchWrapper(IdentitiesService.searchIdentity, {
-    page: 1,
-    limit: 10,
-    sortBy: 'AssetsSum',
-    direction: 'desc',
+  const identities = await fetchWrapper({
+    method: IdentitiesService.searchIdentity,
+    args: {
+      page: 1,
+      limit: 10,
+      sortBy: 'AssetsSum',
+      direction: 'desc',
+    },
   })
 
   const claimsTotalPages = calculateTotalPages(

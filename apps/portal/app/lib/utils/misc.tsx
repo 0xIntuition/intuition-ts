@@ -287,12 +287,15 @@ export const truncateNumber = (balance: string | number): string => {
   return n.toFixed(2)
 }
 
-export const fetchWrapper = async <T, A>(
-  methodToExecute: (arg: A) => Promise<T>,
-  methodArg: A,
-): Promise<T | null> => {
+export const fetchWrapper = async <T, A>({
+  method,
+  args,
+}: {
+  method: (arg: A) => Promise<T>
+  args: A
+}): Promise<T | null> => {
   try {
-    return await methodToExecute(methodArg)
+    return await method(args)
   } catch (error: unknown) {
     if (error instanceof ApiError) {
       logger(`${error.name} - ${error.status}: ${error.message} ${error.url}`)

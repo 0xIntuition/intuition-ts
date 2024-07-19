@@ -44,8 +44,11 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
     throw new Error('Wallet is undefined.')
   }
 
-  const userIdentity = await fetchWrapper(IdentitiesService.getIdentityById, {
-    id: wallet,
+  const userIdentity = await fetchWrapper({
+    method: IdentitiesService.getIdentityById,
+    args: {
+      id: wallet,
+    },
   })
 
   if (!userIdentity) {
@@ -57,8 +60,11 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
   }
 
   if (userIdentity.follow_claim_id) {
-    const followClaim = await fetchWrapper(ClaimsService.getClaimById, {
-      id: userIdentity.follow_claim_id,
+    const followClaim = await fetchWrapper({
+      method: ClaimsService.getClaimById,
+      args: {
+        id: userIdentity.follow_claim_id,
+      },
     })
     const url = new URL(request.url)
     const searchParams = new URLSearchParams(url.search)
@@ -70,9 +76,9 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
       : 1
     const followersLimit = searchParams.get('limit') ?? '10'
 
-    const followers = await fetchWrapper(
-      IdentitiesService.getIdentityFollowers,
-      {
+    const followers = await fetchWrapper({
+      method: IdentitiesService.getIdentityFollowers,
+      args: {
         id: userIdentity.id,
         page: followersPage,
         limit: Number(followersLimit),
@@ -82,7 +88,7 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
         timeframe: null,
         userWallet: null,
       },
-    )
+    })
 
     const followersTotalPages = calculateTotalPages(
       followers?.total ?? 0,
@@ -97,9 +103,9 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
       : 1
     const followingLimit = searchParams.get('limit') ?? '10'
 
-    const following = await fetchWrapper(
-      IdentitiesService.getIdentityFollowed,
-      {
+    const following = await fetchWrapper({
+      method: IdentitiesService.getIdentityFollowed,
+      args: {
         id: userIdentity.id,
         page: followersPage,
         limit: Number(followersLimit),
@@ -109,7 +115,7 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
         timeframe: null,
         userWallet: null,
       },
-    )
+    })
 
     const followingTotalPages = calculateTotalPages(
       following?.total ?? 0,

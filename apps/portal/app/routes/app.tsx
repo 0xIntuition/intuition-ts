@@ -29,8 +29,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
     return redirect('/sanctioned')
   }
 
-  const userObject = await fetchWrapper(UsersService.getUserByWalletPublic, {
-    wallet,
+  const userObject = await fetchWrapper({
+    method: UsersService.getUserByWalletPublic,
+    args: {
+      wallet,
+    },
   })
 
   return json({

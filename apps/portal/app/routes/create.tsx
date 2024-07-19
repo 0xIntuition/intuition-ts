@@ -59,8 +59,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
     }
   }
 
-  const userObject = await fetchWrapper(UsersService.getUserByWalletPublic, {
-    wallet,
+  const userObject = await fetchWrapper({
+    method: UsersService.getUserByWalletPublic,
+    args: {
+      wallet,
+    },
   })
 
   if (!userObject) {

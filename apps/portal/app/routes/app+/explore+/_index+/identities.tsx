@@ -31,13 +31,16 @@ export async function loader({ request }: LoaderFunctionArgs) {
     : 1
   const limit = searchParams.get('limit') ?? '10'
 
-  const identities = await fetchWrapper(IdentitiesService.searchIdentity, {
-    page,
-    limit: Number(limit),
-    sortBy: sortBy as SortColumn,
-    direction: direction as SortDirection,
-    displayName: displayNameQuery,
-    hasTag: hasTagQuery,
+  const identities = await fetchWrapper({
+    method: IdentitiesService.searchIdentity,
+    args: {
+      page,
+      limit: Number(limit),
+      sortBy: sortBy as SortColumn,
+      direction: direction as SortDirection,
+      displayName: displayNameQuery,
+      hasTag: hasTagQuery,
+    },
   })
 
   const totalPages = calculateTotalPages(identities?.total ?? 0, Number(limit))

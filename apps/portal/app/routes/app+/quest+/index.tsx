@@ -23,8 +23,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const userWallet = await requireUserWallet(request)
   invariant(userWallet, 'Unauthorized')
 
-  const userProfile = await fetchWrapper(UsersService.getUserByWalletPublic, {
-    wallet: userWallet,
+  const userProfile = await fetchWrapper({
+    method: UsersService.getUserByWalletPublic,
+    args: {
+      wallet: userWallet,
+    },
   })
 
   return defer({
@@ -142,7 +145,7 @@ function UserHeader() {
         {(userProfile) => {
           return (
             <ProfileCardHeader
-              name={getUserName(userProfile)}
+              name={getUserName(userProfile as GetUserByWalletResponse)}
               walletAddress={userWallet}
               avatarSrc={userProfile?.image ?? undefined}
             />

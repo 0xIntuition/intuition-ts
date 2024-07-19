@@ -38,8 +38,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const userWallet = await requireUserWallet(request)
   invariant(userWallet, NO_WALLET_ERROR)
 
-  const userIdentity = await fetchWrapper(IdentitiesService.getIdentityById, {
-    id: userWallet,
+  const userIdentity = await fetchWrapper({
+    method: IdentitiesService.getIdentityById,
+    args: {
+      id: userWallet,
+    },
   })
 
   if (!userIdentity) {
@@ -68,15 +71,18 @@ export async function loader({ request }: LoaderFunctionArgs) {
     : 1
   const followersLimit = searchParams.get('limit') ?? '10'
 
-  const followers = await fetchWrapper(IdentitiesService.getIdentityFollowers, {
-    id: userIdentity.id,
-    page: followersPage,
-    limit: Number(followersLimit),
-    sortBy: followersSortBy as SortColumn,
-    direction: followersDirection as SortDirection,
-    offset: null,
-    timeframe: null,
-    userWallet: null,
+  const followers = await fetchWrapper({
+    method: IdentitiesService.getIdentityFollowers,
+    args: {
+      id: userIdentity.id,
+      page: followersPage,
+      limit: Number(followersLimit),
+      sortBy: followersSortBy as SortColumn,
+      direction: followersDirection as SortDirection,
+      offset: null,
+      timeframe: null,
+      userWallet: null,
+    },
   })
 
   const followersTotalPages = calculateTotalPages(
@@ -92,15 +98,18 @@ export async function loader({ request }: LoaderFunctionArgs) {
     : 1
   const followingLimit = searchParams.get('limit') ?? '10'
 
-  const following = await fetchWrapper(IdentitiesService.getIdentityFollowed, {
-    id: userIdentity.id,
-    page: followersPage,
-    limit: Number(followersLimit),
-    sortBy: followersSortBy as SortColumn,
-    direction: followersDirection as SortDirection,
-    offset: null,
-    timeframe: null,
-    userWallet: null,
+  const following = await fetchWrapper({
+    method: IdentitiesService.getIdentityFollowed,
+    args: {
+      id: userIdentity.id,
+      page: followersPage,
+      limit: Number(followersLimit),
+      sortBy: followersSortBy as SortColumn,
+      direction: followersDirection as SortDirection,
+      offset: null,
+      timeframe: null,
+      userWallet: null,
+    },
   })
 
   const followingTotalPages = calculateTotalPages(

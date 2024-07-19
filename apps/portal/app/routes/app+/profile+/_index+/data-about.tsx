@@ -28,8 +28,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const userWallet = await requireUserWallet(request)
   invariant(userWallet, NO_WALLET_ERROR)
 
-  const userIdentity = await fetchWrapper(IdentitiesService.getIdentityById, {
-    id: userWallet,
+  const userIdentity = await fetchWrapper({
+    method: IdentitiesService.getIdentityById,
+    args: {
+      id: userWallet,
+    },
   })
 
   if (!userIdentity) {
@@ -51,9 +54,9 @@ export async function loader({ request }: LoaderFunctionArgs) {
     : 1
   const positionsLimit = searchParams.get('positionsLimit') ?? '10'
 
-  const positions = await fetchWrapper(
-    IdentityPositionsService.getIdentityPositions,
-    {
+  const positions = await fetchWrapper({
+    method: IdentityPositionsService.getIdentityPositions,
+    args: {
       id: userWallet,
       page: positionsPage,
       limit: Number(positionsLimit),
@@ -61,7 +64,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
       direction: positionsDirection as SortDirection,
       creator: positionsSearch,
     },
-  )
+  })
 
   const positionsTotalPages = calculateTotalPages(
     positions?.total ?? 0,
@@ -76,13 +79,16 @@ export async function loader({ request }: LoaderFunctionArgs) {
     : 1
   const claimsLimit = searchParams.get('claimsLimit') ?? '10'
 
-  const claims = await fetchWrapper(ClaimsService.searchClaims, {
-    identity: userIdentity.id,
-    page: claimsPage,
-    limit: Number(claimsLimit),
-    sortBy: claimsSortBy as ClaimSortColumn,
-    direction: claimsDirection as SortDirection,
-    displayName: claimsSearch,
+  const claims = await fetchWrapper({
+    method: ClaimsService.searchClaims,
+    args: {
+      identity: userIdentity.id,
+      page: claimsPage,
+      limit: Number(claimsLimit),
+      sortBy: claimsSortBy as ClaimSortColumn,
+      direction: claimsDirection as SortDirection,
+      displayName: claimsSearch,
+    },
   })
 
   const claimsTotalPages = calculateTotalPages(
@@ -90,8 +96,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
     Number(claimsLimit),
   )
 
-  const claimsSummary = await fetchWrapper(ClaimsService.claimSummary, {
-    identity: userIdentity.id,
+  const claimsSummary = await fetchWrapper({
+    method: ClaimsService.claimSummary,
+    args: {
+      identity: userIdentity.id,
+    },
   })
 
   return json({

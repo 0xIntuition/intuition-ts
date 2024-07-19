@@ -29,11 +29,14 @@ export async function loader({ request }: LoaderFunctionArgs) {
     : 1
   const limit = searchParams.get('limit') ?? '10'
 
-  const globalActivity = await fetchWrapper(ActivitiesService.getActivities, {
-    page,
-    limit: Number(limit),
-    sortBy: sortBy as SortColumn,
-    direction: direction as SortDirection,
+  const globalActivity = await fetchWrapper({
+    method: ActivitiesService.getActivities,
+    args: {
+      page,
+      limit: Number(limit),
+      sortBy: sortBy as SortColumn,
+      direction: direction as SortDirection,
+    },
   })
 
   const totalPages = calculateTotalPages(

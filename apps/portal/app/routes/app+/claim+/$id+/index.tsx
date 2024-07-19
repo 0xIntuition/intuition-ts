@@ -28,7 +28,10 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     throw new Error('Claim ID is undefined.')
   }
 
-  const claim = await fetchWrapper(ClaimsService.getClaimById, { id })
+  const claim = await fetchWrapper({
+    method: ClaimsService.getClaimById,
+    args: { id },
+  })
 
   const url = new URL(request.url)
   const searchParams = new URLSearchParams(url.search)
@@ -51,9 +54,9 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
         ? claim?.counter_vault_id ?? id
         : id
 
-  const positions = await fetchWrapper(
-    ClaimPositionsService.getClaimPositions,
-    {
+  const positions = await fetchWrapper({
+    method: ClaimPositionsService.getClaimPositions,
+    args: {
       id: positionId,
       page,
       limit: Number(limit),
@@ -61,7 +64,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
       direction: direction as SortDirection,
       search,
     },
-  )
+  })
 
   const totalPages = calculateTotalPages(positions?.total ?? 0, Number(limit))
 

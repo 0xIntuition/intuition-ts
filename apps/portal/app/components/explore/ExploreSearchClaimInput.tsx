@@ -49,22 +49,22 @@ const ExploreSearchClaimInput = ({
     const fetchIdentities = async () => {
       const newSelectedIdentities = { ...selectedIdentities }
       if (subjectId) {
-        newSelectedIdentities.subject = await fetchWrapper(
-          IdentitiesService.getIdentityById,
-          { id: subjectId },
-        )
+        newSelectedIdentities.subject = await fetchWrapper({
+          method: IdentitiesService.getIdentityById,
+          args: { id: subjectId },
+        })
       }
       if (predicateId) {
-        newSelectedIdentities.predicate = await fetchWrapper(
-          IdentitiesService.getIdentityById,
-          { id: predicateId },
-        )
+        newSelectedIdentities.predicate = await fetchWrapper({
+          method: IdentitiesService.getIdentityById,
+          args: { id: predicateId },
+        })
       }
       if (objectId) {
-        newSelectedIdentities.object = await fetchWrapper(
-          IdentitiesService.getIdentityById,
-          { id: objectId },
-        )
+        newSelectedIdentities.object = await fetchWrapper({
+          method: IdentitiesService.getIdentityById,
+          args: { id: objectId },
+        })
       }
       setSelectedIdentities(newSelectedIdentities)
     }

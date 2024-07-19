@@ -62,8 +62,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const wallet = await requireUserWallet(request)
   invariant(wallet, NO_WALLET_ERROR)
 
-  const userIdentity = await fetchWrapper(IdentitiesService.getIdentityById, {
-    id: userWallet,
+  const userIdentity = await fetchWrapper({
+    method: IdentitiesService.getIdentityById,
+    args: {
+      id: userWallet,
+    },
   })
   logger('userIdentity', userIdentity)
 
@@ -71,8 +74,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
     return redirect('/create')
   }
 
-  const userObject = await fetchWrapper(UsersService.getUserByWalletPublic, {
-    wallet: userWallet,
+  const userObject = await fetchWrapper({
+    method: UsersService.getUserByWalletPublic,
+    args: {
+      wallet: userWallet,
+    },
   })
 
   if (!userObject) {
@@ -80,8 +86,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
     return
   }
 
-  const userTotals = await fetchWrapper(UsersService.getUserTotals, {
-    id: userObject.id,
+  const userTotals = await fetchWrapper({
+    method: UsersService.getUserTotals,
+    args: {
+      id: userObject.id,
+    },
   })
 
   let vaultDetails: VaultDetailsType | null = null

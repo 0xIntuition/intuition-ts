@@ -59,7 +59,10 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const direction: SortDirection =
     (searchParams.get('direction') as SortDirection) ?? 'desc'
 
-  const claim = await fetchWrapper(ClaimsService.getClaimById, { id })
+  const claim = await fetchWrapper({
+    method: ClaimsService.getClaimById,
+    args: { id },
+  })
 
   let vaultDetails: VaultDetailsType | null = null
 
