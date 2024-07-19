@@ -21,11 +21,6 @@
     },
     "outDir": "./build"
   },
-  "include": [
-    "**/*.ts",
-    "**/*.tsx",
-    "tailwind.config.js",
-    "app/.server/auth.ts"
-  ],
+  "include": ["**/*.ts", "**/*.tsx", "tailwind.config.js"],
   "exclude": ["node_modules", "dist"]
 }
