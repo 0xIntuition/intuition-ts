@@ -1,4 +1,4 @@
-import { IdentitiesService, OpenAPI } from '@0xintuition/api'
+import { IdentitiesService, IdentityPresenter, OpenAPI } from '@0xintuition/api'
 
 import logger from '@lib/utils/logger'
 import { getAuthHeaders } from '@lib/utils/misc'
@@ -12,16 +12,16 @@ export async function loader({ request }: LoaderFunctionArgs) {
   OpenAPI.HEADERS = headers as Record<string, string>
 
   const url = new URL(request.url)
-  const searchQuery = url.searchParams.get('search') || ''
-  logger('[search-identities] searchQuery', searchQuery)
-  const response = await IdentitiesService.searchIdentity({
-    displayName: searchQuery,
-  })
-  const data = response.data
-  if (data) {
-    logger('data', data)
-    logger('search data length', data.length, searchQuery)
-  }
+  const idQuery = url.searchParams.get('id') || ''
+  logger('[get-identities-by-ids] idQuery', idQuery)
+  const idQueryArray = idQuery.split(',')
 
-  return json(data ?? [])
+  const result: IdentityPresenter[] = []
+  for (const id of idQueryArray) {
+    await IdentitiesService.getIdentityById({
+      id,
+    }).then((response) => result.push(response))
+  }
+  logger('[get-identities-by-ids route] identityResponse:', result)
+  return json(result ?? [])
 }

@@ -15,23 +15,27 @@ import {
 export interface TrunctacularProps
   extends React.HTMLAttributes<HTMLParagraphElement> {
   value: string
+  maxStringLength?: number
   variant?: TextVariantType
   weight?: TextWeightType
 }
 
-const isValueWalletAddress = (value: string) => value.substring(0, 2) === '0x'
-const isLongString = (value: string) => value.length > 12
+const isValueWalletAddress = (value: string) =>
+  value.substring(0, 2) === '0x' && value.length === 42
+const isLongString = (value: string, maxStringLength: number) =>
+  value.length > maxStringLength
 const truncateStringValue = (value: string) => `${value.substring(0, 11)}...`
 
 const Trunctacular = ({
   value,
+  maxStringLength = 12,
   variant,
   weight,
   ...props
 }: TrunctacularProps) => {
   const textProps = { variant, weight, ...props }
 
-  if (isValueWalletAddress(value) || isLongString(value)) {
+  if (isValueWalletAddress(value) || isLongString(value, maxStringLength)) {
     return (
       <TooltipProvider>
         <Tooltip>

@@ -70,6 +70,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   OpenAPI.HEADERS = headers as Record<string, string>
 
   const userIdentity = await fetchIdentity(userWallet)
+  logger('userIdentity', userIdentity)
 
   if (!userIdentity) {
     return redirect('/create')

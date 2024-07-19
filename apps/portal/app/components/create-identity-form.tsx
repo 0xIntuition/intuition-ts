@@ -59,9 +59,7 @@ interface IdentityFormProps {
   onSuccess?: () => void
   onClose: () => void
 }
-export function IdentityForm({ onSuccess, onClose }: IdentityFormProps) {
-  logger(onClose, onSuccess)
-
+export function IdentityForm({ onClose }: IdentityFormProps) {
   const { state, dispatch } = useTransactionState<
     IdentityTransactionStateType,
     IdentityTransactionActionType
@@ -181,18 +179,6 @@ function CreateIdentityForm({
       imageUploadFetcher.data?.status !== 'error'
     ) {
       setIdentityImageSrc(imageUploadFetcher.data.submission.value.image_url)
-      toast.custom(
-        () => (
-          <Toast
-            title="success"
-            description="Successfully uploaded image"
-            icon={<Icon name="checkmark" />}
-          />
-        ),
-        {
-          duration: 5000,
-        },
-      )
       setImageUploading(false)
     } else if (
       imageUploadFetcher.data &&
@@ -546,6 +532,10 @@ function CreateIdentityForm({
                 </button>
               </div>
             </div>
+            <ErrorList
+              id={fields.image_url.errorId}
+              errors={fields.image_url.errors}
+            />
           </div>
           <div className="flex flex-col w-full gap-1.5">
             <Text variant="caption" className="text-secondary-foreground/90">
@@ -632,7 +622,9 @@ function CreateIdentityForm({
                   type="button"
                   variant="primary"
                   onClick={() => {
-                    navigate(`/app/identity/${transactionResponseData.id}`)
+                    navigate(
+                      `/app/identity/${transactionResponseData.identity_id}`,
+                    )
                     onClose()
                   }}
                 >

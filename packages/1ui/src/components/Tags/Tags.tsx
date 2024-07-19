@@ -42,16 +42,21 @@ export interface TagWithValueProps extends TagProps {
   label?: string
   value?: string | number
   onRemove?: () => void
+  className?: string | undefined
 }
 
 const TagWithValue = ({
   label,
   value,
   onRemove,
+  className,
   ...props
 }: TagWithValueProps) => {
   return (
-    <Tag {...props} className="flex items-center cursor-default pl-2">
+    <Tag
+      {...props}
+      className={cn('flex items-center cursor-default pl-2', className)}
+    >
       {label}
       {value && (
         <>

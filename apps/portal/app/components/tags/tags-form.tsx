@@ -10,22 +10,23 @@ import {
   TabsContent,
   TabsList,
   TabsTrigger,
+  TransactionStatusType,
   Trunctacular,
 } from '@0xintuition/1ui'
 import { IdentityPresenter } from '@0xintuition/api'
 
+import { TransactionState } from '@components/transaction-state'
 import {
   initialTransactionState,
   transactionReducer,
   useTransactionState,
 } from '@lib/hooks/useTransactionReducer'
 import logger from '@lib/utils/logger'
+import { useNavigate } from '@remix-run/react'
 import { TransactionActionType, TransactionStateType } from 'types/transaction'
 
 import { AddTags } from './add-tags'
 import TagsReview from './tags-review'
-
-// import { useFetcher } from '@remix-run/react'
 
 interface TagsFormProps {
   identity: IdentityPresenter
@@ -35,17 +36,16 @@ interface TagsFormProps {
 }
 
 export function TagsForm({ identity, mode, onClose }: TagsFormProps) {
-  logger('identity', identity)
-  logger('onClose', onClose)
-  // const tagsForm = useFetcher()
+  const navigate = useNavigate()
+
+  const existingTagIds = identity.tags
+    ? identity.tags.map((tag) => tag.identity_id)
+    : []
 
   const { state, dispatch } = useTransactionState<
     TransactionStateType,
     TransactionActionType
   >(transactionReducer, initialTransactionState)
-
-  // const [transactionResponseData, setTransactionResponseData] =
-  //   useState<ClaimPresenter | null>(null)
 
   const isTransactionStarted = [
     'approve',
@@ -58,6 +58,7 @@ export function TagsForm({ identity, mode, onClose }: TagsFormProps) {
   ].includes(state.status)
 
   const [selectedTags, setSelectedTags] = useState<IdentityPresenter[]>([])
+  const [invalidTags, setInvalidTags] = useState<string[]>([])
 
   const handleAddTag = (newTag: IdentityPresenter) => {
     setSelectedTags((prevTags) => [...prevTags, newTag])
@@ -66,6 +67,7 @@ export function TagsForm({ identity, mode, onClose }: TagsFormProps) {
 
   const handleRemoveTag = (id: string) => {
     setSelectedTags((prevTags) => prevTags.filter((tag) => tag.vault_id !== id))
+    setInvalidTags((prev) => prev.filter((tagId) => tagId !== id))
   }
 
   return (
@@ -107,8 +109,13 @@ export function TagsForm({ identity, mode, onClose }: TagsFormProps) {
                   <TabsContent value="add">
                     <AddTags
                       selectedTags={selectedTags}
+                      existingTagIds={existingTagIds}
                       onAddTag={handleAddTag}
+                      dispatch={dispatch}
                       onRemoveTag={handleRemoveTag}
+                      subjectVaultId={identity.vault_id}
+                      invalidTags={invalidTags}
+                      setInvalidTags={setInvalidTags}
                     />
                   </TabsContent>
                 </div>
@@ -117,7 +124,9 @@ export function TagsForm({ identity, mode, onClose }: TagsFormProps) {
                 <div className="flex flex-col items-center gap-1">
                   <Button
                     variant="primary"
-                    disabled={selectedTags.length === 0}
+                    disabled={
+                      selectedTags.length === 0 || invalidTags.length !== 0
+                    }
                     onClick={() => dispatch({ type: 'REVIEW_TRANSACTION' })}
                   >
                     Add Tags
@@ -127,9 +136,36 @@ export function TagsForm({ identity, mode, onClose }: TagsFormProps) {
             </>
           )}
           {state.status === 'review-transaction' && (
-            <TagsReview state={state} dispatch={dispatch} tags={selectedTags} />
+            <TagsReview
+              dispatch={dispatch}
+              subjectVaultId={identity.vault_id}
+              tags={selectedTags}
+            />
           )}
         </>
+      )}
+      {isTransactionStarted && (
+        <div className="flex flex-col items-center justify-center min-h-96">
+          <TransactionState
+            status={state.status as TransactionStatusType}
+            txHash={state.txHash}
+            type="tag"
+            successButton={
+              state.status === 'complete' && (
+                <Button
+                  type="button"
+                  variant="primary"
+                  onClick={() => {
+                    navigate(`/app/identity/${identity.identity_id}`)
+                    onClose()
+                  }}
+                >
+                  View identity
+                </Button>
+              )
+            }
+          />
+        </div>
       )}
     </>
   )
