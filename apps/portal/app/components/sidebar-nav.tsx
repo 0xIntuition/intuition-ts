@@ -184,6 +184,7 @@ export default function SidebarNav({
             </SidebarLayoutNavFooter>
           </SidebarLayoutNav>
           <SidebarLayoutContent className="h-full w-full min-h-screen overflow-y-scroll">
+            {/* TODO: overflow-y-scroll on SidebarLayoutContent is causing scroll issues all over the app. Discussion is needed to fix this. */}
             {children}
           </SidebarLayoutContent>
         </SidebarLayout>

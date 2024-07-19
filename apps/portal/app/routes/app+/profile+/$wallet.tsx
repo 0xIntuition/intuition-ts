@@ -163,129 +163,120 @@ export default function Profile() {
 
   return (
     <NestedLayout outlet={Outlet} options={userIdentityRouteOptions}>
-      <div className="flex flex-col">
-        <>
-          <div className="w-[300px] h-[230px] flex-col justify-start items-start gap-5 inline-flex">
-            <ProfileCard
-              variant="user"
-              avatarSrc={userIdentity?.user?.image ?? imgSrc}
-              name={userIdentity?.user?.display_name ?? ''}
-              walletAddress={
-                userIdentity?.user?.ens_name ??
-                sliceString(userIdentity?.user?.wallet, 6, 4)
-              }
-              stats={{
-                numberOfFollowers: userTotals.follower_count,
-                numberOfFollowing: userTotals.followed_count,
-                points: userTotals.user_points,
-              }}
-              bio={userIdentity?.user?.description ?? ''}
-            >
-              <Button
-                variant="secondary"
-                className="w-full"
-                onClick={() =>
-                  setFollowModalActive((prevState) => ({
-                    ...prevState,
-                    isOpen: true,
-                  }))
-                }
-              >
-                {followVaultDetails &&
-                (followVaultDetails.user_conviction ?? '0') > '0'
-                  ? `Following · ${formatBalance(followVaultDetails.user_assets ?? '0', 18, 4)} ETH`
-                  : 'Follow'}
-              </Button>
-            </ProfileCard>
-            {/* <ProfileSocialAccounts
+      <div className="flex-col justify-start items-start gap-5 inline-flex">
+        <ProfileCard
+          variant="user"
+          avatarSrc={userIdentity?.user?.image ?? imgSrc}
+          name={userIdentity?.user?.display_name ?? ''}
+          walletAddress={
+            userIdentity?.user?.ens_name ??
+            sliceString(userIdentity?.user?.wallet, 6, 4)
+          }
+          stats={{
+            numberOfFollowers: userTotals.follower_count,
+            numberOfFollowing: userTotals.followed_count,
+            points: userTotals.user_points,
+          }}
+          bio={userIdentity?.user?.description ?? ''}
+        >
+          <Button
+            variant="secondary"
+            className="w-full"
+            onClick={() =>
+              setFollowModalActive((prevState) => ({
+                ...prevState,
+                isOpen: true,
+              }))
+            }
+          >
+            {followVaultDetails &&
+            (followVaultDetails.user_conviction ?? '0') > '0'
+              ? `Following · ${formatBalance(followVaultDetails.user_assets ?? '0', 18, 4)} ETH`
+              : 'Follow'}
+          </Button>
+        </ProfileCard>
+        {/* <ProfileSocialAccounts
               privyUser={JSON.parse(JSON.stringify(user))}
               handleOpenEditSocialLinksModal={() =>
                 setEditSocialLinksModalActive(true)
               }
             /> */}
-            {vaultDetails !== null && user_assets !== '0' ? (
-              <PositionCard
-                onButtonClick={() =>
-                  setStakeModalActive((prevState) => ({
-                    ...prevState,
-                    mode: 'redeem',
-                    modalType: 'identity',
-                    isOpen: true,
-                  }))
-                }
-              >
-                <PositionCardStaked
-                  amount={user_assets ? +formatBalance(user_assets, 18, 4) : 0}
-                />
-                <PositionCardOwnership
-                  percentOwnership={
-                    user_assets !== null && assets_sum
-                      ? +calculatePercentageOfTvl(
-                          user_assets ?? '0',
-                          assets_sum,
-                        )
-                      : 0
-                  }
-                />
-                <PositionCardFeesAccrued
-                  amount={
-                    user_asset_delta
-                      ? +formatBalance(
-                          +(user_assets ?? '0') - +user_asset_delta,
-                          18,
-                          5,
-                        )
-                      : 0
-                  }
-                />
-                <PositionCardLastUpdated timestamp={userIdentity.updated_at} />
-              </PositionCard>
-            ) : null}
-            <StakeCard
-              tvl={+formatBalance(assets_sum ?? '0')}
-              holders={userIdentity.num_positions}
-              onBuyClick={() =>
-                setStakeModalActive((prevState) => ({
-                  ...prevState,
-                  mode: 'deposit',
-                  modalType: 'identity',
-                  isOpen: true,
-                }))
-              }
-              onViewAllClick={() =>
-                navigate(`/app/profile/${wallet}/data-about`)
-              }
-            />
-          </div>
-          <StakeModal
-            userWallet={userWallet}
-            contract={userIdentity.contract}
-            open={stakeModalActive.isOpen}
-            identity={userIdentity}
-            vaultDetails={vaultDetails}
-            onClose={() => {
+        {vaultDetails !== null && user_assets !== '0' ? (
+          <PositionCard
+            onButtonClick={() =>
               setStakeModalActive((prevState) => ({
                 ...prevState,
-                isOpen: false,
+                mode: 'redeem',
+                modalType: 'identity',
+                isOpen: true,
               }))
-            }}
-          />
-          <FollowModal
-            userWallet={userWallet}
-            contract={userIdentity.contract}
-            open={followModalActive.isOpen}
-            identity={userIdentity}
-            claim={followClaim}
-            vaultDetails={followVaultDetails}
-            onClose={() => {
-              setFollowModalActive((prevState) => ({
-                ...prevState,
-                isOpen: false,
-              }))
-            }}
-          />
-        </>
+            }
+          >
+            <PositionCardStaked
+              amount={user_assets ? +formatBalance(user_assets, 18, 4) : 0}
+            />
+            <PositionCardOwnership
+              percentOwnership={
+                user_assets !== null && assets_sum
+                  ? +calculatePercentageOfTvl(user_assets ?? '0', assets_sum)
+                  : 0
+              }
+            />
+            <PositionCardFeesAccrued
+              amount={
+                user_asset_delta
+                  ? +formatBalance(
+                      +(user_assets ?? '0') - +user_asset_delta,
+                      18,
+                      5,
+                    )
+                  : 0
+              }
+            />
+            <PositionCardLastUpdated timestamp={userIdentity.updated_at} />
+          </PositionCard>
+        ) : null}
+        <StakeCard
+          tvl={+formatBalance(assets_sum ?? '0')}
+          holders={userIdentity.num_positions}
+          onBuyClick={() =>
+            setStakeModalActive((prevState) => ({
+              ...prevState,
+              mode: 'deposit',
+              modalType: 'identity',
+              isOpen: true,
+            }))
+          }
+          onViewAllClick={() => navigate(`/app/profile/${wallet}/data-about`)}
+        />
       </div>
+      <StakeModal
+        userWallet={userWallet}
+        contract={userIdentity.contract}
+        open={stakeModalActive.isOpen}
+        identity={userIdentity}
+        vaultDetails={vaultDetails}
+        onClose={() => {
+          setStakeModalActive((prevState) => ({
+            ...prevState,
+            isOpen: false,
+          }))
+        }}
+      />
+      <FollowModal
+        userWallet={userWallet}
+        contract={userIdentity.contract}
+        open={followModalActive.isOpen}
+        identity={userIdentity}
+        claim={followClaim}
+        vaultDetails={followVaultDetails}
+        onClose={() => {
+          setFollowModalActive((prevState) => ({
+            ...prevState,
+            isOpen: false,
+          }))
+        }}
+      />
     </NestedLayout>
   )
 }
