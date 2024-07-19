@@ -1,9 +1,11 @@
 import { ApiError, ClaimsService } from '@0xintuition/api'
 
 import { MULTIVAULT_CONTRACT_ADDRESS } from '@lib/utils/constants'
+import { NO_WALLET_ERROR } from '@lib/utils/errors'
 import logger from '@lib/utils/logger'
+import { invariant } from '@lib/utils/misc'
 import { ActionFunctionArgs, json } from '@remix-run/node'
-import { setupApiWithWallet } from '@server/auth'
+import { requireUserWallet } from '@server/auth'
 
 export async function action({ request }: ActionFunctionArgs) {
   const formData = await request.formData()
@@ -22,7 +24,8 @@ export async function action({ request }: ActionFunctionArgs) {
   const object_id = formData.get('object_id')
 
   try {
-    const wallet = await setupApiWithWallet(request)
+    const wallet = await requireUserWallet(request)
+    invariant(wallet, NO_WALLET_ERROR)
 
     let claim
     try {

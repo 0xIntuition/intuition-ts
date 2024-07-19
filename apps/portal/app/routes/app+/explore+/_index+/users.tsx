@@ -2,15 +2,17 @@ import { IdentityPresenter, SortColumn, SortDirection } from '@0xintuition/api'
 
 import { ExploreSearch } from '@components/explore/ExploreSearch'
 import { IdentitiesList } from '@components/list/identities'
+import { NO_WALLET_ERROR } from '@lib/utils/errors'
 import { fetchUserIdentities } from '@lib/utils/fetches'
 import logger from '@lib/utils/logger'
-import { calculateTotalPages } from '@lib/utils/misc'
+import { calculateTotalPages, invariant } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
-import { setupApiWithWallet } from '@server/auth'
+import { requireUserWallet } from '@server/auth'
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  await setupApiWithWallet(request)
+  const wallet = await requireUserWallet(request)
+  invariant(wallet, NO_WALLET_ERROR)
 
   const url = new URL(request.url)
   const searchParams = new URLSearchParams(url.search)

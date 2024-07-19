@@ -11,6 +11,7 @@ import { ClaimsList as ClaimsAboutIdentity } from '@components/list/claims'
 import { PositionsOnIdentity } from '@components/list/positions-on-identity'
 import DataAboutHeader from '@components/profile/data-about-header'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
+import { NO_WALLET_ERROR } from '@lib/utils/errors'
 import {
   fetchClaimsAboutIdentity,
   fetchClaimsSummary,
@@ -18,12 +19,13 @@ import {
   fetchPositionsOnIdentity,
 } from '@lib/utils/fetches'
 import logger from '@lib/utils/logger'
-import { calculateTotalPages, formatBalance } from '@lib/utils/misc'
+import { calculateTotalPages, formatBalance, invariant } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
-import { setupApiWithWallet } from '@server/auth'
+import { requireUserWallet } from '@server/auth'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
-  await setupApiWithWallet(request)
+  const wallet = await requireUserWallet(request)
+  invariant(wallet, NO_WALLET_ERROR)
 
   const id = params.id
 

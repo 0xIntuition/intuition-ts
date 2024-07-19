@@ -6,14 +6,16 @@ import {
 
 import { ExploreSearch } from '@components/explore/ExploreSearch'
 import { ClaimsList } from '@components/list/claims'
+import { NO_WALLET_ERROR } from '@lib/utils/errors'
 import { fetchClaims, fetchIdentities } from '@lib/utils/fetches'
-import { calculateTotalPages } from '@lib/utils/misc'
+import { calculateTotalPages, invariant } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
-import { setupApiWithWallet } from '@server/auth'
+import { requireUserWallet } from '@server/auth'
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  await setupApiWithWallet(request)
+  const wallet = await requireUserWallet(request)
+  invariant(wallet, NO_WALLET_ERROR)
 
   const url = new URL(request.url)
   const searchParams = new URLSearchParams(url.search)

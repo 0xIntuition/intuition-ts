@@ -20,28 +20,31 @@ import StakeModal from '@components/stake/stake-modal'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { followModalAtom, stakeModalAtom } from '@lib/state/store'
 import { userIdentityRouteOptions } from '@lib/utils/constants'
+import { NO_WALLET_ERROR } from '@lib/utils/errors'
 import { fetchClaim, fetchIdentity, fetchUserTotals } from '@lib/utils/fetches'
 import logger from '@lib/utils/logger'
 import {
   calculatePercentageOfTvl,
   formatBalance,
+  invariant,
   sliceString,
 } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
 import { Outlet, useNavigate } from '@remix-run/react'
-import { setupApiWithWallet } from '@server/auth'
+import { requireUserWallet } from '@server/auth'
 import { getVaultDetails } from '@server/multivault'
 import * as blockies from 'blockies-ts'
 import { useAtom } from 'jotai'
 import { VaultDetailsType } from 'types/vault'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
-  const userWallet = await setupApiWithWallet(request)
+  const userWallet = await requireUserWallet(request)
+  invariant(userWallet, NO_WALLET_ERROR)
 
   const wallet = params.wallet
 
   if (!wallet) {
-    throw new Error('Wallet is undefined.')
+    throw new Error('Wallet is undefined in params')
   }
 
   if (wallet === userWallet) {

@@ -9,14 +9,16 @@ import {
 
 import { PositionsOnClaim } from '@components/list/positions-on-claim'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
+import { NO_WALLET_ERROR } from '@lib/utils/errors'
 import { fetchClaim, fetchPositionsOnClaim } from '@lib/utils/fetches'
-import { calculateTotalPages } from '@lib/utils/misc'
+import { calculateTotalPages, invariant } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { useSearchParams } from '@remix-run/react'
-import { setupApiWithWallet } from '@server/auth'
+import { requireUserWallet } from '@server/auth'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
-  await setupApiWithWallet(request)
+  const wallet = await requireUserWallet(request)
+  invariant(wallet, NO_WALLET_ERROR)
 
   const id = params.id
 

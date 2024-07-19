@@ -22,9 +22,14 @@ import {
 import { NestedLayout } from '@components/nested-layout'
 import StakeModal from '@components/stake/stake-modal'
 import { stakeModalAtom } from '@lib/state/store'
+import { NO_WALLET_ERROR } from '@lib/utils/errors'
 import { fetchClaim } from '@lib/utils/fetches'
 import logger from '@lib/utils/logger'
-import { calculatePercentageOfTvl, formatBalance } from '@lib/utils/misc'
+import {
+  calculatePercentageOfTvl,
+  formatBalance,
+  invariant,
+} from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import {
   Outlet,
@@ -32,13 +37,14 @@ import {
   useLocation,
   useNavigate,
 } from '@remix-run/react'
-import { setupApiWithWallet } from '@server/auth'
+import { requireUserWallet } from '@server/auth'
 import { getVaultDetails } from '@server/multivault'
 import { useAtom } from 'jotai'
 import { VaultDetailsType } from 'types/vault'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
-  const wallet = await setupApiWithWallet(request)
+  const wallet = await requireUserWallet(request)
+  invariant(wallet, NO_WALLET_ERROR)
 
   const id = params.id
   if (!id) {

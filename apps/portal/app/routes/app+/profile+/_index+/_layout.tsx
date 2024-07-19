@@ -28,6 +28,7 @@ import {
   stakeModalAtom,
 } from '@lib/state/store'
 import { userProfileRouteOptions } from '@lib/utils/constants'
+import { NO_WALLET_ERROR } from '@lib/utils/errors'
 import {
   fetchIdentity,
   fetchUserTotals,
@@ -48,7 +49,7 @@ import {
   useNavigate,
   useRevalidator,
 } from '@remix-run/react'
-import { requireUser, setupApiWithWallet } from '@server/auth'
+import { requireUser, requireUserWallet } from '@server/auth'
 import { getVaultDetails } from '@server/multivault'
 import * as blockies from 'blockies-ts'
 import { useAtom } from 'jotai'
@@ -60,7 +61,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
   invariant(user.wallet?.address, 'User wallet not found')
   const userWallet = user.wallet?.address
 
-  await setupApiWithWallet(request)
+  const wallet = await requireUserWallet(request)
+  invariant(wallet, NO_WALLET_ERROR)
 
   const userIdentity = await fetchIdentity(userWallet)
 

@@ -21,6 +21,7 @@ import {
   ConnectionsHeaderVariantType,
 } from '@components/profile/connections-header'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
+import { NO_WALLET_ERROR } from '@lib/utils/errors'
 import {
   fetchClaim,
   fetchIdentity,
@@ -28,13 +29,14 @@ import {
   fetchIdentityFollowing,
 } from '@lib/utils/fetches'
 import logger from '@lib/utils/logger'
-import { calculateTotalPages, formatBalance } from '@lib/utils/misc'
+import { calculateTotalPages, formatBalance, invariant } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
-import { setupApiWithWallet } from '@server/auth'
+import { requireUserWallet } from '@server/auth'
 import { PaginationType } from 'types/pagination'
 
 export async function loader({ params, request }: LoaderFunctionArgs) {
-  await setupApiWithWallet(request)
+  const userWallet = await requireUserWallet(request)
+  invariant(userWallet, NO_WALLET_ERROR)
 
   const wallet = params.wallet
   if (!wallet) {

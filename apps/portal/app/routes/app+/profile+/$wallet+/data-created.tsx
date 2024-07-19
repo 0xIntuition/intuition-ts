@@ -26,6 +26,7 @@ import {
   DataCreatedHeaderVariantType,
 } from '@components/profile/data-created-header'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
+import { NO_WALLET_ERROR } from '@lib/utils/errors'
 import {
   fetchClaimsCreatedByUser,
   fetchClaimsSummary,
@@ -38,22 +39,16 @@ import {
   fetchUserTotals,
 } from '@lib/utils/fetches'
 import logger from '@lib/utils/logger'
-import { calculateTotalPages, formatBalance } from '@lib/utils/misc'
+import { calculateTotalPages, formatBalance, invariant } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
-import { setupApiWithWallet } from '@server/auth'
 
 export async function loader({ params, request }: LoaderFunctionArgs) {
-  await setupApiWithWallet(request)
-
   const wallet = params.wallet
-  if (!wallet) {
-    throw new Error('Wallet is undefined.')
-  }
+  invariant(wallet, NO_WALLET_ERROR)
 
   const userIdentity = await fetchIdentity(wallet)
-  if (!userIdentity) {
-    return logger('No user identity found')
-  }
+  invariant(userIdentity, 'No identity found for wallet')
+
   if (!userIdentity.creator || typeof userIdentity.creator.id !== 'string') {
     logger('Invalid or missing creator ID')
     return
