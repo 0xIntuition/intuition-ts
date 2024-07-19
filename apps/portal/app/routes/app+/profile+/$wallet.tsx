@@ -10,8 +10,10 @@ import {
 } from '@0xintuition/1ui'
 import {
   ClaimPresenter,
+  ClaimsService,
   IdentitiesService,
   IdentityPresenter,
+  UsersService,
   UserTotalsPresenter,
 } from '@0xintuition/api'
 
@@ -65,7 +67,9 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     return
   }
 
-  const userTotals = await fetchUserTotals(userIdentity.creator.id)
+  const userTotals = await fetchWrapper(UsersService.getUserTotals, {
+    id: userIdentity.creator.id,
+  })
 
   if (!userTotals) {
     return logger('No user totals found')
@@ -90,7 +94,9 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   let followVaultDetails: VaultDetailsType | null = null
 
   if (userIdentity.follow_claim_id) {
-    followClaim = await fetchClaim(userIdentity.follow_claim_id)
+    followClaim = await fetchWrapper(ClaimsService.getClaimById, {
+      id: userIdentity.follow_claim_id,
+    })
   }
 
   if (userIdentity.user && followClaim && followClaim.vault_id) {
