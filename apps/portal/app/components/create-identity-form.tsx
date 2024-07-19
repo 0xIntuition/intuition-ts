@@ -532,6 +532,10 @@ function CreateIdentityForm({
                 </button>
               </div>
             </div>
+            <ErrorList
+              id={fields.image_url.errorId}
+              errors={fields.image_url.errors}
+            />
           </div>
           <div className="flex flex-col w-full gap-1.5">
             <Text variant="caption" className="text-secondary-foreground/90">
