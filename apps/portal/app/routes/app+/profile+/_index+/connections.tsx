@@ -212,7 +212,7 @@ export default function ProfileConnections() {
           <TabsTrigger
             value={ConnectionsHeaderVariants.followers}
             label="Followers"
-            totalCount={followingPagination.totalEntries}
+            totalCount={followersPagination.totalEntries}
           />
           <TabsTrigger
             value={ConnectionsHeaderVariants.following}
