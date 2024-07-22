@@ -43,11 +43,15 @@ const ExploreSearchForm = ({
         placeholder={inputPlaceholder}
         initialValue={searchParams.get(searchParam)}
       />
-      <Separator className="my-5 in-out-gradient-strong" />
-      <ExploreAddTags
-        inputId={tagsInputId}
-        initialValue={searchParams.get(tagsInputId)}
-      />
+      {searchParam === 'identity' && (
+        <>
+          <Separator className="my-5 in-out-gradient-strong" />
+          <ExploreAddTags
+            inputId={tagsInputId}
+            initialValue={searchParams.get(tagsInputId)}
+          />
+        </>
+      )}
     </Form>
   )
 }
