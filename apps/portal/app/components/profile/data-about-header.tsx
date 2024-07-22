@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { ReactNode } from 'react'
 
-import { IdentityTag, MonetaryValue, Text } from '@0xintuition/1ui' // Adjust the import path as needed
+import { IdentityTag, Text } from '@0xintuition/1ui' // Adjust the import path as needed
 import { IdentityPresenter } from '@0xintuition/api'
 
 export const DataAboutHeaderVariants = {
@@ -15,9 +15,9 @@ interface DataAboutHeaderProps {
   variant: DataAboutHeaderVariantType
   title: string
   userIdentity: IdentityPresenter
-  totalClaims?: number
-  totalPositions?: number
-  totalStake: number
+  totalClaims?: number | ReactNode
+  totalPositions?: number | ReactNode
+  totalStake: number | ReactNode
 }
 
 const DataAboutHeader: React.FC<DataAboutHeaderProps> = ({
@@ -78,7 +78,9 @@ const DataAboutHeader: React.FC<DataAboutHeaderProps> = ({
             >
               Total stake {variant === 'claims' && 'across all Claims'}
             </Text>
-            <MonetaryValue value={totalStake} currency="ETH" />
+            <div className="text-white text-xl font-medium leading-[30px] items-center">
+              {totalStake} ETH
+            </div>
           </div>
         </div>
       </div>
