@@ -49,7 +49,7 @@ describe('IdentityInput', () => {
               </button>
             </div>
             <button
-              class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center rounded-full [&>span]:rounded-full [&>span]:overflow-hidden text-lg [&>span]:h-8 [&>span]:w-8"
+              class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center rounded-full [&>span]:rounded-full [&>span]:overflow-hidden text-lg [&>span:first]:h-8 [&>span]:w-8"
             >
               <span>
                 <span
@@ -94,7 +94,7 @@ describe('IdentityInput', () => {
               </button>
             </div>
             <button
-              class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center rounded-sm text-lg [&>span]:h-8 [&>span]:w-8"
+              class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center rounded-sm text-lg [&>span:first]:h-8 [&>span]:w-8"
             >
               <span>
                 <span
@@ -139,7 +139,7 @@ describe('IdentityInput', () => {
               </button>
             </div>
             <button
-              class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center rounded-sm text-lg [&>span]:h-8 [&>span]:w-8"
+              class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center rounded-sm text-lg [&>span:first]:h-8 [&>span]:w-8"
             >
               <span>
                 <span

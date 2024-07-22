@@ -30,10 +30,10 @@ export const identityTagVariants = cva(
         [Identity.nonUser]: 'rounded-sm',
       },
       size: {
-        [IdentityTagSize.default]: 'text-base [&>span]:h-6 [&>span]:w-6',
-        [IdentityTagSize.md]: 'text-base [&>span]:h-7 [&>span]:w-7',
-        [IdentityTagSize.lg]: 'text-lg [&>span]:h-8 [&>span]:w-8',
-        [IdentityTagSize.xl]: 'text-xl [&>span]:h-11 [&>span]:w-11',
+        [IdentityTagSize.default]: 'text-base [&>span:first]:h-6 [&>span]:w-6',
+        [IdentityTagSize.md]: 'text-base [&>span:first]:h-7 [&>span]:w-7',
+        [IdentityTagSize.lg]: 'text-lg [&>span:first]:h-8 [&>span]:w-8',
+        [IdentityTagSize.xl]: 'text-xl [&>span:first]:h-11 [&>span]:w-11',
       },
       disabled: {
         true: 'disabled:bg-muted disabled:text-muted-foreground disabled:border-muted cursor-not-allowed',
@@ -71,7 +71,7 @@ const IdentityTagButton = ({
           <img
             src={imgSrc}
             alt="identity avatar"
-            className="h-full w-full rounded-full"
+            className="h-full rounded-full aspect-square"
           />
         ) : (
           <span className="bg-primary/15 p-[10%] flex justify-center items-center h-full w-full">
