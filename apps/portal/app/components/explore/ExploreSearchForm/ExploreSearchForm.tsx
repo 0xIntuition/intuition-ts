@@ -14,7 +14,11 @@ export interface ExploreSearchFormProps {
 
 const ExploreSearchForm = ({
   searchParam,
-  inputPlaceholder = 'Search by a username or address',
+  inputPlaceholder = searchParam === 'user'
+    ? 'Search by a username or address'
+    : searchParam === 'identity'
+      ? 'Search by identity'
+      : 'Search',
 }: ExploreSearchFormProps) => {
   const tagsInputId = 'tagIds'
   const [searchParams] = useSearchParams()
