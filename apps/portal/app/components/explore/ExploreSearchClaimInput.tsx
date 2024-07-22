@@ -1,10 +1,11 @@
 import * as React from 'react'
 
 import { Separator, Text } from '@0xintuition/1ui'
-import { IdentitiesService, IdentityPresenter } from '@0xintuition/api'
+import { IdentityPresenter } from '@0xintuition/api'
 
-import { fetchWrapper, pascalCaseString } from '@lib/utils/misc'
-import { useLocation, useNavigate } from '@remix-run/react'
+import { GET_IDENTITIES_BY_IDS_RESOURCE_ROUTE } from '@lib/utils/constants'
+import { pascalCaseString } from '@lib/utils/misc'
+import { useFetcher, useLocation, useNavigate } from '@remix-run/react'
 import { Identity, IdentityType } from 'types/identity'
 
 import { IdentityInput, IdentityInputButtonProps } from '../identity-input'
@@ -37,42 +38,72 @@ const ExploreSearchClaimInput = ({
     predicate: false,
     object: false,
   })
+  const identityFetcher = useFetcher<IdentityPresenter[]>()
 
-  // TODO: Uncomment this once fetchIdentity is working - ENG-2675
-  // Fetch identities based on URL parameters
   React.useEffect(() => {
+    const newSelectedIdentities = { ...selectedIdentities }
+
     const params = new URLSearchParams(location.search)
     const subjectId = params.get(Identity.Subject)
     const predicateId = params.get(Identity.Predicate)
     const objectId = params.get(Identity.Object)
 
-    const fetchIdentities = async () => {
+    if (subjectId) {
+      const searchParam = `?id=${encodeURIComponent(subjectId)}`
+      identityFetcher.load(
+        `${GET_IDENTITIES_BY_IDS_RESOURCE_ROUTE}${searchParam}`,
+      )
+      newSelectedIdentities.subject = identityFetcher.data?.[0] ?? null
+      console.log(
+        'newSelectedIdentities.subject',
+        newSelectedIdentities.subject,
+      )
+    }
+    if (predicateId) {
+      const searchParam = `?id=${encodeURIComponent(predicateId)}`
+      identityFetcher.load(
+        `${GET_IDENTITIES_BY_IDS_RESOURCE_ROUTE}${searchParam}`,
+      )
+      newSelectedIdentities.predicate = identityFetcher.data?.[0] ?? null
+      console.log(
+        'newSelectedIdentities.predicate',
+        newSelectedIdentities.predicate,
+      )
+    }
+    if (objectId) {
+      const searchParam = `?id=${encodeURIComponent(objectId)}`
+      identityFetcher.load(
+        `${GET_IDENTITIES_BY_IDS_RESOURCE_ROUTE}${searchParam}`,
+      )
+      newSelectedIdentities.object = identityFetcher.data?.[0] ?? null
+      console.log('newSelectedIdentities.object', newSelectedIdentities.object)
+    }
+    console.log('newSelectedIdentities', newSelectedIdentities)
+    setSelectedIdentities(newSelectedIdentities)
+  }, [location.search, identityFetcher.load])
+
+  React.useEffect(() => {
+    if (identityFetcher.data) {
+      const params = new URLSearchParams(location.search)
+      const subjectId = params.get(Identity.Subject)
+      const predicateId = params.get(Identity.Predicate)
+      const objectId = params.get(Identity.Object)
+
       const newSelectedIdentities = { ...selectedIdentities }
+
       if (subjectId) {
-        newSelectedIdentities.subject = await fetchWrapper({
-          method: IdentitiesService.getIdentityById,
-          args: { id: subjectId },
-        })
+        newSelectedIdentities.subject = identityFetcher.data?.[0] ?? null
       }
       if (predicateId) {
-        newSelectedIdentities.predicate = await fetchWrapper({
-          method: IdentitiesService.getIdentityById,
-          args: { id: predicateId },
-        })
+        newSelectedIdentities.predicate = identityFetcher.data?.[0] ?? null
       }
       if (objectId) {
-        newSelectedIdentities.object = await fetchWrapper({
-          method: IdentitiesService.getIdentityById,
-          args: { id: objectId },
-        })
+        newSelectedIdentities.object = identityFetcher.data?.[0] ?? null
       }
+
       setSelectedIdentities(newSelectedIdentities)
     }
-
-    fetchIdentities()
-    // only listen for location.search changes
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location.search])
+  }, [identityFetcher.data, location.search])
 
   const handleIdentitySelection = (
     type: IdentityType,
@@ -80,7 +111,7 @@ const ExploreSearchClaimInput = ({
   ) => {
     const updatedIdentities = { ...selectedIdentities, [type]: identity }
     setSelectedIdentities(updatedIdentities)
-    setPopoverOpen({ ...popoverOpen, [type]: false }) // Close the popover after selection
+    setPopoverOpen({ ...popoverOpen, [type]: false })
     updateQueryParams(updatedIdentities)
   }
 
