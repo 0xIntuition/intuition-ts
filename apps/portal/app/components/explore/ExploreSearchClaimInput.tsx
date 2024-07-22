@@ -38,61 +38,45 @@ const ExploreSearchClaimInput = ({
     predicate: false,
     object: false,
   })
+
   const subjectFetcher = useFetcher<IdentityPresenter[]>()
   const predicateFetcher = useFetcher<IdentityPresenter[]>()
   const objectFetcher = useFetcher<IdentityPresenter[]>()
 
+  const fetchIdentityById = (
+    id: string | null,
+    fetcher: ReturnType<typeof useFetcher>,
+  ) => {
+    if (id) {
+      const searchParam = `?id=${encodeURIComponent(id)}`
+      fetcher.load(`${GET_IDENTITIES_BY_IDS_RESOURCE_ROUTE}${searchParam}`)
+    }
+  }
+
   React.useEffect(() => {
     const params = new URLSearchParams(location.search)
-    const subjectId = params.get(Identity.Subject)
-    const predicateId = params.get(Identity.Predicate)
-    const objectId = params.get(Identity.Object)
-
-    if (subjectId) {
-      const searchParam = `?id=${encodeURIComponent(subjectId)}`
-      subjectFetcher.load(
-        `${GET_IDENTITIES_BY_IDS_RESOURCE_ROUTE}${searchParam}`,
-      )
-    }
-    if (predicateId) {
-      const searchParam = `?id=${encodeURIComponent(predicateId)}`
-      predicateFetcher.load(
-        `${GET_IDENTITIES_BY_IDS_RESOURCE_ROUTE}${searchParam}`,
-      )
-    }
-    if (objectId) {
-      const searchParam = `?id=${encodeURIComponent(objectId)}`
-      objectFetcher.load(
-        `${GET_IDENTITIES_BY_IDS_RESOURCE_ROUTE}${searchParam}`,
-      )
-    }
+    fetchIdentityById(params.get(Identity.Subject), subjectFetcher)
+    fetchIdentityById(params.get(Identity.Predicate), predicateFetcher)
+    fetchIdentityById(params.get(Identity.Object), objectFetcher)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.search])
 
   React.useEffect(() => {
-    const params = new URLSearchParams(location.search)
-    const subjectId = params.get(Identity.Subject)
-    const predicateId = params.get(Identity.Predicate)
-    const objectId = params.get(Identity.Object)
-
     const newSelectedIdentities = { ...selectedIdentities }
 
-    if (subjectId && subjectFetcher.data) {
-      newSelectedIdentities.subject = subjectFetcher.data?.[0] ?? null
+    if (subjectFetcher.data) {
+      newSelectedIdentities.subject = subjectFetcher.data[0] ?? null
     }
-    if (predicateId && predicateFetcher.data) {
-      newSelectedIdentities.predicate = predicateFetcher.data?.[0] ?? null
+    if (predicateFetcher.data) {
+      newSelectedIdentities.predicate = predicateFetcher.data[0] ?? null
     }
-    if (objectId && objectFetcher.data) {
-      newSelectedIdentities.object = objectFetcher.data?.[0] ?? null
+    if (objectFetcher.data) {
+      newSelectedIdentities.object = objectFetcher.data[0] ?? null
     }
 
     setSelectedIdentities(newSelectedIdentities)
-  }, [
-    subjectFetcher.data,
-    predicateFetcher.data,
-    objectFetcher.data,
-    location.search,
-  ])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [subjectFetcher.data, predicateFetcher.data, objectFetcher.data])
 
   const handleIdentitySelection = (
     type: IdentityType,
