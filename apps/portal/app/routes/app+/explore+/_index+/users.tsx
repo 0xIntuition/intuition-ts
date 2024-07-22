@@ -29,7 +29,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
       sortBy,
       direction,
       displayName,
-      hasTag,
       isUser: true,
     },
   })

@@ -31,6 +31,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
       direction,
       displayName,
       hasTag,
+      isUser: false,
     },
   })
 
