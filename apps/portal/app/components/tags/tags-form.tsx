@@ -38,6 +38,7 @@ interface TagsFormProps {
 
 export function TagsForm({ identity, mode, onClose }: TagsFormProps) {
   const navigate = useNavigate()
+  const [currentTab, setCurrentTab] = useState(mode)
 
   const existingTagIds = identity.tags
     ? identity.tags.map((tag) => tag.identity_id)
@@ -74,7 +75,7 @@ export function TagsForm({ identity, mode, onClose }: TagsFormProps) {
   logger('tags on incoming identity', identity.tags)
 
   return (
-    <>
+    <div className="flex flex-col h-full">
       {!isTransactionStarted && (
         <>
           {state.status === 'idle' && (
@@ -95,8 +96,14 @@ export function TagsForm({ identity, mode, onClose }: TagsFormProps) {
                   </IdentityTag>
                 </DialogTitle>
               </DialogHeader>
-              <Tabs defaultValue={mode}>
-                <TabsList>
+              <Tabs
+                defaultValue={mode}
+                onValueChange={(value) =>
+                  setCurrentTab(value as 'view' | 'add')
+                }
+                className="flex flex-col flex-grow"
+              >
+                <TabsList className="pb-10">
                   <TabsTrigger
                     variant="alternate"
                     value="view"
@@ -108,8 +115,8 @@ export function TagsForm({ identity, mode, onClose }: TagsFormProps) {
                     label="Add tags"
                   />
                 </TabsList>
-                <div className="my-10">
-                  <TabsContent value="add">
+                <div className="flex-grow overflow-y-auto">
+                  <TabsContent value="add" className="h-full">
                     <AddTags
                       selectedTags={selectedTags}
                       existingTagIds={existingTagIds}
@@ -121,9 +128,7 @@ export function TagsForm({ identity, mode, onClose }: TagsFormProps) {
                       setInvalidTags={setInvalidTags}
                     />
                   </TabsContent>
-                </div>
-                <div className="my-10">
-                  <TabsContent value="view">
+                  <TabsContent value="view" className="h-full">
                     <TagSearchCombobox
                       tags={identity.tags || []}
                       shouldFilter={true}
@@ -131,19 +136,23 @@ export function TagsForm({ identity, mode, onClose }: TagsFormProps) {
                   </TabsContent>
                 </div>
               </Tabs>
-              <DialogFooter className="!justify-center !items-center mt-20">
-                <div className="flex flex-col items-center gap-1">
-                  <Button
-                    variant="primary"
-                    disabled={
-                      selectedTags.length === 0 || invalidTags.length !== 0
-                    }
-                    onClick={() => dispatch({ type: 'REVIEW_TRANSACTION' })}
-                  >
-                    Add Tags
-                  </Button>
+              {currentTab === 'add' && (
+                <div className="mt-auto py-4 bg-neutral-950">
+                  <DialogFooter className="!justify-center !items-center">
+                    <div className="flex flex-col items-center gap-1">
+                      <Button
+                        variant="primary"
+                        disabled={
+                          selectedTags.length === 0 || invalidTags.length !== 0
+                        }
+                        onClick={() => dispatch({ type: 'REVIEW_TRANSACTION' })}
+                      >
+                        Add Tags
+                      </Button>
+                    </div>
+                  </DialogFooter>
                 </div>
-              </DialogFooter>
+              )}
             </>
           )}
           {state.status === 'review-transaction' && (
@@ -156,7 +165,7 @@ export function TagsForm({ identity, mode, onClose }: TagsFormProps) {
         </>
       )}
       {isTransactionStarted && (
-        <div className="flex flex-col items-center justify-center min-h-96">
+        <div className="flex flex-col items-center justify-center flex-grow">
           <TransactionState
             status={state.status as TransactionStatusType}
             txHash={state.txHash}
@@ -178,6 +187,6 @@ export function TagsForm({ identity, mode, onClose }: TagsFormProps) {
           />
         </div>
       )}
-    </>
+    </div>
   )
 }
