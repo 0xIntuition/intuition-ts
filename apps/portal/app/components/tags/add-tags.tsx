@@ -92,7 +92,7 @@ export function AddTags({
   }, [tagFetcher.state, tagFetcher.data, setInvalidTags])
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col min-h-36">
       <div className="mb-8 gap-1">
         <Text variant="body" className="text-primary/70">
           Add tags to this identity
