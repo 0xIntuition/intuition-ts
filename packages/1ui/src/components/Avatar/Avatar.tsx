@@ -74,7 +74,10 @@ const Avatar = ({ className, variant, src, name }: AvatarProps) => {
       <AvatarImage src={src} alt={`${name} avatar`} />
       <AvatarFallback className="bg-inherit">
         {variant === Identity.nonUser ? (
-          <Icon name={IconName.fingerprint} className="text-primary/30" />
+          <Icon
+            name={IconName.fingerprint}
+            className="text-primary/30 w-[80%] h-[80%]"
+          />
         ) : (
           <>{name?.substring(0, 2).toUpperCase() || `??`}</>
         )}
