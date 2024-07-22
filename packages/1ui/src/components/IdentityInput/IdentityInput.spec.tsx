@@ -51,17 +51,13 @@ describe('IdentityInput', () => {
             <button
               class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center rounded-full [&>span]:rounded-full [&>span]:overflow-hidden text-lg [&>span]:h-8 [&>span]:w-8"
             >
-              <span>
+              <span
+                class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square rounded-full bg-muted"
+              >
                 <span
-                  class="bg-primary/15 p-[10%] flex justify-center items-center h-full w-full"
+                  class="flex h-full w-full items-center justify-center bg-inherit"
                 >
-                  <svg
-                    class="h-full w-full"
-                  >
-                    <use
-                      href="/src/components/Icon/Icon.sprites.svg#fingerprint"
-                    />
-                  </svg>
+                  ID
                 </span>
               </span>
               super dave
@@ -96,12 +92,14 @@ describe('IdentityInput', () => {
             <button
               class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center rounded-sm text-lg [&>span]:h-8 [&>span]:w-8"
             >
-              <span>
+              <span
+                class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square rounded bg-background theme-border"
+              >
                 <span
-                  class="bg-primary/15 p-[10%] flex justify-center items-center h-full w-full"
+                  class="flex h-full w-full items-center justify-center bg-inherit"
                 >
                   <svg
-                    class="h-full w-full"
+                    class="h-6 w-6 text-primary/30"
                   >
                     <use
                       href="/src/components/Icon/Icon.sprites.svg#fingerprint"
@@ -141,12 +139,14 @@ describe('IdentityInput', () => {
             <button
               class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center rounded-sm text-lg [&>span]:h-8 [&>span]:w-8"
             >
-              <span>
+              <span
+                class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square rounded bg-background theme-border"
+              >
                 <span
-                  class="bg-primary/15 p-[10%] flex justify-center items-center h-full w-full"
+                  class="flex h-full w-full items-center justify-center bg-inherit"
                 >
                   <svg
-                    class="h-full w-full"
+                    class="h-6 w-6 text-primary/30"
                   >
                     <use
                       href="/src/components/Icon/Icon.sprites.svg#fingerprint"

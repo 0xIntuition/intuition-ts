@@ -1,15 +1,11 @@
-import {
-  IdentitiesService,
-  IdentityPresenter,
-  SortColumn,
-  SortDirection,
-} from '@0xintuition/api'
+import { IdentitiesService, IdentityPresenter } from '@0xintuition/api'
 
 import { ExploreSearch } from '@components/explore/ExploreSearch'
 import { IdentitiesList } from '@components/list/identities'
 import { NO_WALLET_ERROR } from '@lib/utils/errors'
 import logger from '@lib/utils/logger'
 import { calculateTotalPages, fetchWrapper, invariant } from '@lib/utils/misc'
+import { getStandardPageParams } from '@lib/utils/params'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 import { requireUserWallet } from '@server/auth'
@@ -20,30 +16,25 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   const url = new URL(request.url)
   const searchParams = new URLSearchParams(url.search)
-  const displayNameQuery = searchParams.get('user')
-  const hasTagQuery = searchParams.get('tagIds')
-  const sortBy: SortColumn =
-    (searchParams.get('sortBy') as SortColumn) ?? 'UpdatedAt'
-  const direction: SortDirection =
-    (searchParams.get('direction') as SortDirection) ?? 'desc'
-  const page = searchParams.get('page')
-    ? parseInt(searchParams.get('page') as string)
-    : 1
-  const limit = searchParams.get('limit') ?? '10'
+  const { page, limit, sortBy, direction } = getStandardPageParams({
+    searchParams,
+  })
+  const displayName = searchParams.get('user') || null
+  const hasTag = searchParams.get('tagIds') || null
 
   const identities = await fetchWrapper({
     method: IdentitiesService.searchIdentity,
     args: {
       page,
-      limit: Number(limit),
-      sortBy: sortBy as SortColumn,
-      direction: direction as SortDirection,
-      displayName: displayNameQuery,
-      hasTag: hasTagQuery,
+      limit,
+      sortBy,
+      direction,
+      displayName,
+      hasTag,
     },
   })
 
-  const totalPages = calculateTotalPages(identities?.total ?? 0, Number(limit))
+  const totalPages = calculateTotalPages(identities?.total ?? 0, limit)
   logger('identities', identities)
 
   return json({
@@ -51,8 +42,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
     sortBy,
     direction,
     pagination: {
-      currentPage: Number(page),
-      limit: Number(limit),
+      currentPage: page,
+      limit,
       totalEntries: identities?.total ?? 0,
       totalPages,
     },

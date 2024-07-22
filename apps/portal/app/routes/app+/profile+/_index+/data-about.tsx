@@ -2,11 +2,11 @@ import {
   ClaimPresenter,
   ClaimSortColumn,
   ClaimsService,
+  Identifier,
   IdentitiesService,
   IdentityPositionsService,
   PositionPresenter,
   PositionSortColumn,
-  SortDirection,
 } from '@0xintuition/api'
 
 import { ClaimsList as ClaimsAboutIdentity } from '@components/list/claims'
@@ -21,6 +21,7 @@ import {
   formatBalance,
   invariant,
 } from '@lib/utils/misc'
+import { getStandardPageParams } from '@lib/utils/params'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { requireUserWallet } from '@server/auth'
 
@@ -46,22 +47,29 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   const url = new URL(request.url)
   const searchParams = new URLSearchParams(url.search)
-  const positionsSearch = searchParams.get('positionsSearch')
-  const positionsSortBy = searchParams.get('positionsSortBy') ?? 'Assets'
-  const positionsDirection = searchParams.get('positionsDirection') ?? 'desc'
-  const positionsPage = searchParams.get('positionsPage')
-    ? parseInt(searchParams.get('positionsPage') as string)
-    : 1
-  const positionsLimit = searchParams.get('positionsLimit') ?? '10'
+
+  const {
+    page: positionsPage,
+    limit: positionsLimit,
+    sortBy: positionsSortBy,
+    direction: positionsDirection,
+  } = getStandardPageParams({
+    searchParams,
+    paramPrefix: 'positions',
+    defaultSortByValue: PositionSortColumn.ASSETS,
+  })
+
+  const positionsSearch =
+    (searchParams.get('positionsSearch') as Identifier) || null
 
   const positions = await fetchWrapper({
     method: IdentityPositionsService.getIdentityPositions,
     args: {
       id: userWallet,
       page: positionsPage,
-      limit: Number(positionsLimit),
+      limit: positionsLimit,
       sortBy: positionsSortBy as PositionSortColumn,
-      direction: positionsDirection as SortDirection,
+      direction: positionsDirection,
       creator: positionsSearch,
     },
   })
@@ -71,22 +79,23 @@ export async function loader({ request }: LoaderFunctionArgs) {
     Number(positionsLimit),
   )
 
-  const claimsSearch = searchParams.get('claimsSearch')
-  const claimsSortBy = searchParams.get('claimsSortBy') ?? 'AssetsSum'
-  const claimsDirection = searchParams.get('claimsDirection') ?? 'desc'
-  const claimsPage = searchParams.get('claimsPage')
-    ? parseInt(searchParams.get('claimsPage') as string)
-    : 1
-  const claimsLimit = searchParams.get('claimsLimit') ?? '10'
+  const {
+    page: claimsPage,
+    limit: claimsLimit,
+    sortBy: claimsSortBy,
+    direction: claimsDirection,
+  } = getStandardPageParams({ searchParams, paramPrefix: 'claims' })
+
+  const claimsSearch = (searchParams.get('claimsSearch') as string) || null
 
   const claims = await fetchWrapper({
     method: ClaimsService.searchClaims,
     args: {
       identity: userIdentity.id,
       page: claimsPage,
-      limit: Number(claimsLimit),
+      limit: claimsLimit,
       sortBy: claimsSortBy as ClaimSortColumn,
-      direction: claimsDirection as SortDirection,
+      direction: claimsDirection,
       displayName: claimsSearch,
     },
   })
