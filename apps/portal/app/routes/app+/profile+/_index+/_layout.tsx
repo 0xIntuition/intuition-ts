@@ -63,13 +63,17 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const wallet = await requireUserWallet(request)
   invariant(wallet, NO_WALLET_ERROR)
 
-  const userIdentity = await fetchWrapper({
-    method: IdentitiesService.getIdentityById,
-    args: {
-      id: userWallet,
-    },
-  })
-  logger('userIdentity', userIdentity)
+  let userIdentity
+  try {
+    userIdentity = await fetchWrapper({
+      method: IdentitiesService.getIdentityById,
+      args: { id: userWallet },
+    })
+    logger('userIdentity', userIdentity)
+  } catch (error) {
+    logger('Error fetching userIdentity', error)
+    return redirect('/create')
+  }
 
   if (!userIdentity) {
     return redirect('/create')

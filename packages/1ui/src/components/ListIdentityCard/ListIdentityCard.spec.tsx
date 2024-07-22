@@ -23,13 +23,13 @@ describe('ListIdentityCard', () => {
           style="height: 18rem;"
         >
           <span
-            class="relative flex shrink-0 overflow-hidden rounded bg-background theme-border mb-4 w-16 h-16"
+            class="relative flex shrink-0 overflow-hidden aspect-square rounded bg-background theme-border mb-4 w-16 h-16"
           >
             <span
               class="flex h-full w-full items-center justify-center bg-inherit"
             >
               <svg
-                class="h-6 w-6 text-primary/30"
+                class="text-primary/30 w-[80%] h-[80%]"
               >
                 <use
                   href="/src/components/Icon/Icon.sprites.svg#fingerprint"
