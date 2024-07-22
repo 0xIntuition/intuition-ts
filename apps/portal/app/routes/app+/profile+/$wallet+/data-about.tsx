@@ -14,13 +14,13 @@ import { PositionsOnIdentity } from '@components/list/positions-on-identity'
 import DataAboutHeader from '@components/profile/data-about-header'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { NO_WALLET_ERROR } from '@lib/utils/errors'
-import { getStandardPageParams } from '@lib/utils/loader'
 import {
   calculateTotalPages,
   fetchWrapper,
   formatBalance,
   invariant,
 } from '@lib/utils/misc'
+import { getStandardPageParams } from '@lib/utils/params'
 import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
 import { requireUserWallet } from '@server/auth'
 import { PaginationType } from 'types/pagination'

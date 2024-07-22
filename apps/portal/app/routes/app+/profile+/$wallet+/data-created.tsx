@@ -29,7 +29,6 @@ import {
 } from '@components/profile/data-created-header'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { NO_WALLET_ERROR } from '@lib/utils/errors'
-import { getStandardPageParams } from '@lib/utils/loader'
 import logger from '@lib/utils/logger'
 import {
   calculateTotalPages,
@@ -37,6 +36,7 @@ import {
   formatBalance,
   invariant,
 } from '@lib/utils/misc'
+import { getStandardPageParams } from '@lib/utils/params'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 
 export async function loader({ params, request }: LoaderFunctionArgs) {

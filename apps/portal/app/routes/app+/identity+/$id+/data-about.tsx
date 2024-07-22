@@ -15,7 +15,6 @@ import { PositionsOnIdentity } from '@components/list/positions-on-identity'
 import DataAboutHeader from '@components/profile/data-about-header'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { NO_WALLET_ERROR } from '@lib/utils/errors'
-import { getStandardPageParams } from '@lib/utils/loader'
 import logger from '@lib/utils/logger'
 import {
   calculateTotalPages,
@@ -23,6 +22,7 @@ import {
   formatBalance,
   invariant,
 } from '@lib/utils/misc'
+import { getStandardPageParams } from '@lib/utils/params'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { requireUserWallet } from '@server/auth'
 

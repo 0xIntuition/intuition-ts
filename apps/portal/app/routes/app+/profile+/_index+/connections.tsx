@@ -23,7 +23,6 @@ import {
 } from '@components/profile/connections-header'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { NO_WALLET_ERROR } from '@lib/utils/errors'
-import { getStandardPageParams } from '@lib/utils/loader'
 import logger from '@lib/utils/logger'
 import {
   calculateTotalPages,
@@ -31,6 +30,7 @@ import {
   formatBalance,
   invariant,
 } from '@lib/utils/misc'
+import { getStandardPageParams } from '@lib/utils/params'
 import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
 import { requireUserWallet } from '@server/auth'
 
