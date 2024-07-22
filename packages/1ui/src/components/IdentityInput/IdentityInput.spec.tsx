@@ -99,7 +99,7 @@ describe('IdentityInput', () => {
                   class="flex h-full w-full items-center justify-center bg-inherit"
                 >
                   <svg
-                    class="h-6 w-6 text-primary/30"
+                    class="text-primary/30 w-[80%] h-[80%]"
                   >
                     <use
                       href="/src/components/Icon/Icon.sprites.svg#fingerprint"
@@ -146,7 +146,7 @@ describe('IdentityInput', () => {
                   class="flex h-full w-full items-center justify-center bg-inherit"
                 >
                   <svg
-                    class="h-6 w-6 text-primary/30"
+                    class="text-primary/30 w-[80%] h-[80%]"
                   >
                     <use
                       href="/src/components/Icon/Icon.sprites.svg#fingerprint"
