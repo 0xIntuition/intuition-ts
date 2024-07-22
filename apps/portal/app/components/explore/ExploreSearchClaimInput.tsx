@@ -38,11 +38,11 @@ const ExploreSearchClaimInput = ({
     predicate: false,
     object: false,
   })
-  const identityFetcher = useFetcher<IdentityPresenter[]>()
+  const subjectFetcher = useFetcher<IdentityPresenter[]>()
+  const predicateFetcher = useFetcher<IdentityPresenter[]>()
+  const objectFetcher = useFetcher<IdentityPresenter[]>()
 
   React.useEffect(() => {
-    const newSelectedIdentities = { ...selectedIdentities }
-
     const params = new URLSearchParams(location.search)
     const subjectId = params.get(Identity.Subject)
     const predicateId = params.get(Identity.Predicate)
@@ -50,60 +50,49 @@ const ExploreSearchClaimInput = ({
 
     if (subjectId) {
       const searchParam = `?id=${encodeURIComponent(subjectId)}`
-      identityFetcher.load(
+      subjectFetcher.load(
         `${GET_IDENTITIES_BY_IDS_RESOURCE_ROUTE}${searchParam}`,
-      )
-      newSelectedIdentities.subject = identityFetcher.data?.[0] ?? null
-      console.log(
-        'newSelectedIdentities.subject',
-        newSelectedIdentities.subject,
       )
     }
     if (predicateId) {
       const searchParam = `?id=${encodeURIComponent(predicateId)}`
-      identityFetcher.load(
+      predicateFetcher.load(
         `${GET_IDENTITIES_BY_IDS_RESOURCE_ROUTE}${searchParam}`,
-      )
-      newSelectedIdentities.predicate = identityFetcher.data?.[0] ?? null
-      console.log(
-        'newSelectedIdentities.predicate',
-        newSelectedIdentities.predicate,
       )
     }
     if (objectId) {
       const searchParam = `?id=${encodeURIComponent(objectId)}`
-      identityFetcher.load(
+      objectFetcher.load(
         `${GET_IDENTITIES_BY_IDS_RESOURCE_ROUTE}${searchParam}`,
       )
-      newSelectedIdentities.object = identityFetcher.data?.[0] ?? null
-      console.log('newSelectedIdentities.object', newSelectedIdentities.object)
     }
-    console.log('newSelectedIdentities', newSelectedIdentities)
-    setSelectedIdentities(newSelectedIdentities)
-  }, [location.search, identityFetcher.load])
+  }, [location.search])
 
   React.useEffect(() => {
-    if (identityFetcher.data) {
-      const params = new URLSearchParams(location.search)
-      const subjectId = params.get(Identity.Subject)
-      const predicateId = params.get(Identity.Predicate)
-      const objectId = params.get(Identity.Object)
+    const params = new URLSearchParams(location.search)
+    const subjectId = params.get(Identity.Subject)
+    const predicateId = params.get(Identity.Predicate)
+    const objectId = params.get(Identity.Object)
 
-      const newSelectedIdentities = { ...selectedIdentities }
+    const newSelectedIdentities = { ...selectedIdentities }
 
-      if (subjectId) {
-        newSelectedIdentities.subject = identityFetcher.data?.[0] ?? null
-      }
-      if (predicateId) {
-        newSelectedIdentities.predicate = identityFetcher.data?.[0] ?? null
-      }
-      if (objectId) {
-        newSelectedIdentities.object = identityFetcher.data?.[0] ?? null
-      }
-
-      setSelectedIdentities(newSelectedIdentities)
+    if (subjectId && subjectFetcher.data) {
+      newSelectedIdentities.subject = subjectFetcher.data?.[0] ?? null
     }
-  }, [identityFetcher.data, location.search])
+    if (predicateId && predicateFetcher.data) {
+      newSelectedIdentities.predicate = predicateFetcher.data?.[0] ?? null
+    }
+    if (objectId && objectFetcher.data) {
+      newSelectedIdentities.object = objectFetcher.data?.[0] ?? null
+    }
+
+    setSelectedIdentities(newSelectedIdentities)
+  }, [
+    subjectFetcher.data,
+    predicateFetcher.data,
+    objectFetcher.data,
+    location.search,
+  ])
 
   const handleIdentitySelection = (
     type: IdentityType,
