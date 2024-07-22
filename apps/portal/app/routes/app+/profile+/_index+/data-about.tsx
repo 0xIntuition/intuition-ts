@@ -1,9 +1,12 @@
 import {
   ClaimPresenter,
+  ClaimSortColumn,
   ClaimsService,
+  Identifier,
   IdentitiesService,
   IdentityPositionsService,
   PositionPresenter,
+  PositionSortColumn,
 } from '@0xintuition/api'
 
 import { ClaimsList as ClaimsAboutIdentity } from '@components/list/claims'
@@ -11,7 +14,7 @@ import { PositionsOnIdentity } from '@components/list/positions-on-identity'
 import DataAboutHeader from '@components/profile/data-about-header'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { NO_WALLET_ERROR } from '@lib/utils/errors'
-import { getClaimsPageParams, getPositionPageParams } from '@lib/utils/loader'
+import { getStandardPageParams } from '@lib/utils/loader'
 import logger from '@lib/utils/logger'
 import {
   calculateTotalPages,
@@ -50,8 +53,14 @@ export async function loader({ request }: LoaderFunctionArgs) {
     limit: positionsLimit,
     sortBy: positionsSortBy,
     direction: positionsDirection,
-    creator: positionsSearch,
-  } = getPositionPageParams({ searchParams })
+  } = getStandardPageParams({
+    searchParams,
+    paramPrefix: 'positions',
+    defaultSortByValue: PositionSortColumn.ASSETS,
+  })
+
+  const positionsSearch =
+    (searchParams.get('positionsSearch') as Identifier) || null
 
   const positions = await fetchWrapper({
     method: IdentityPositionsService.getIdentityPositions,
@@ -59,7 +68,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
       id: userWallet,
       page: positionsPage,
       limit: positionsLimit,
-      sortBy: positionsSortBy,
+      sortBy: positionsSortBy as PositionSortColumn,
       direction: positionsDirection,
       creator: positionsSearch,
     },
@@ -75,8 +84,9 @@ export async function loader({ request }: LoaderFunctionArgs) {
     limit: claimsLimit,
     sortBy: claimsSortBy,
     direction: claimsDirection,
-    displayName: claimsSearch,
-  } = getClaimsPageParams({ searchParams })
+  } = getStandardPageParams({ searchParams, paramPrefix: 'claims' })
+
+  const claimsSearch = (searchParams.get('claimsSearch') as string) || null
 
   const claims = await fetchWrapper({
     method: ClaimsService.searchClaims,
@@ -84,7 +94,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
       identity: userIdentity.id,
       page: claimsPage,
       limit: claimsLimit,
-      sortBy: claimsSortBy,
+      sortBy: claimsSortBy as ClaimSortColumn,
       direction: claimsDirection,
       displayName: claimsSearch,
     },

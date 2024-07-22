@@ -41,11 +41,9 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     searchParams,
     defaultSortByValue: PositionSortColumn.CREATED_AT,
   })
-  const search = searchParams.get('search')
-  // TODO: REMOVE THIS!
-  console.log(`search: ${search}`)
-  // const positionDirection: string =
-  //   searchParams.get('positionDirection') ?? 'all'
+  const creator = searchParams.get('search')
+  const positionDirection =
+    (searchParams.get('positionDirection') as VaultType) || null
 
   const positions = await fetchWrapper({
     method: ClaimPositionsService.getClaimPositions,
@@ -55,7 +53,8 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
       limit,
       sortBy: sortBy as PositionSortColumn,
       direction,
-      creator: search,
+      creator,
+      positionDirection,
     },
   })
 

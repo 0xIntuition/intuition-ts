@@ -1,8 +1,4 @@
-import {
-  IdentitiesService,
-  IdentityPresenter,
-  SortColumn,
-} from '@0xintuition/api'
+import { IdentitiesService, IdentityPresenter } from '@0xintuition/api'
 
 import { ExploreSearch } from '@components/explore/ExploreSearch'
 import { IdentitiesList } from '@components/list/identities'
@@ -31,7 +27,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     args: {
       page,
       limit,
-      sortBy: sortBy as SortColumn,
+      sortBy,
       direction,
       displayName,
       hasTag,

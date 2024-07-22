@@ -1,6 +1,5 @@
 import {
   ClaimSortColumn,
-  Identifier,
   PositionSortColumn,
   SortColumn,
   SortDirection,
@@ -31,12 +30,12 @@ export const getStandardPageParams = ({
   paramPrefix?: string
   defaultPageValue?: number
   defaultLimitValue?: number
-  defaultSortByValue?: SortColumn | ClaimSortColumn
+  defaultSortByValue?: SortColumn | ClaimSortColumn | PositionSortColumn
   defaultDirectionValue?: SortDirection
 }): {
   page: number
   limit: number
-  sortBy: SortColumn | ClaimSortColumn
+  sortBy: SortColumn
   direction: SortDirection
 } => {
   const getParamProps = { searchParams, paramPrefix }
@@ -47,80 +46,7 @@ export const getStandardPageParams = ({
   return {
     page: pageValue ? Number(pageValue) : defaultPageValue,
     limit: Number(limitValue) || defaultLimitValue,
-    sortBy: (sortByValue as SortColumn | ClaimSortColumn) || defaultSortByValue,
+    sortBy: (sortByValue as SortColumn) || defaultSortByValue,
     direction: (directionValue as SortDirection) || defaultDirectionValue,
-  }
-}
-
-export const getPositionPageParams = ({
-  searchParams,
-}: {
-  searchParams: URLSearchParams
-}): {
-  page: number
-  limit: number
-  sortBy: PositionSortColumn
-  direction: SortDirection
-  creator: Identifier
-} => {
-  const pageParam = 'positionsPage'
-  return {
-    page: searchParams.get(pageParam) ? Number(searchParams.get(pageParam)) : 1,
-    limit: Number(searchParams.get('positionsLimit')) ?? 10,
-    sortBy:
-      (searchParams.get('positionsSortBy') as PositionSortColumn) ??
-      PositionSortColumn.ASSETS,
-    direction:
-      (searchParams.get('positionsDirection') as SortDirection) ??
-      SortDirection.DESC,
-    creator: searchParams.get('positionsSearch') as Identifier,
-  }
-}
-
-export const getClaimsPageParams = ({
-  searchParams,
-}: {
-  searchParams: URLSearchParams
-}): {
-  page: number
-  limit: number
-  sortBy: ClaimSortColumn
-  direction: SortDirection
-  displayName: string
-} => {
-  const pageParam = 'claimsPage'
-  return {
-    page: searchParams.get(pageParam) ? Number(searchParams.get(pageParam)) : 1,
-    limit: Number(searchParams.get('claimsLimit')) ?? 10,
-    sortBy:
-      (searchParams.get('claimsSortBy') as ClaimSortColumn) ??
-      ClaimSortColumn.ASSETS_SUM,
-    direction:
-      (searchParams.get('claimsDirection') as SortDirection) ??
-      SortDirection.DESC,
-    displayName: searchParams.get('claimsSearch') as string,
-  }
-}
-
-export const getFollowPageParams = ({
-  searchParams,
-}: {
-  searchParams: URLSearchParams
-}): {
-  page: number
-  limit: number
-  sortBy: SortColumn
-  direction: SortDirection
-} => {
-  const pageParam = 'followersPage'
-  return {
-    page: searchParams.get(pageParam) ? Number(searchParams.get(pageParam)) : 1,
-    limit: Number(searchParams.get('limit')) ?? 10,
-    sortBy:
-      (searchParams.get('followersSortBy') as SortColumn) ??
-      SortColumn.USER_ASSETS,
-    direction:
-      (searchParams.get('followersDirection') as SortDirection) ??
-      SortDirection.DESC,
   }
 }

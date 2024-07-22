@@ -12,6 +12,7 @@ import {
   ClaimsService,
   IdentitiesService,
   IdentityPresenter,
+  SortColumn,
 } from '@0xintuition/api'
 
 import { FollowList } from '@components/list/follow'
@@ -22,7 +23,7 @@ import {
 } from '@components/profile/connections-header'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { NO_WALLET_ERROR } from '@lib/utils/errors'
-import { getFollowPageParams } from '@lib/utils/loader'
+import { getStandardPageParams } from '@lib/utils/loader'
 import logger from '@lib/utils/logger'
 import {
   calculateTotalPages,
@@ -68,8 +69,10 @@ export async function loader({ request }: LoaderFunctionArgs) {
     limit: followersLimit,
     sortBy: followersSortBy,
     direction: followersDirection,
-  } = getFollowPageParams({
+  } = getStandardPageParams({
     searchParams,
+    paramPrefix: 'followers',
+    defaultSortByValue: SortColumn.USER_ASSETS,
   })
 
   // const followersSearch = searchParams.get('followersSearch') TODO: Add search once BE implements
@@ -98,8 +101,10 @@ export async function loader({ request }: LoaderFunctionArgs) {
     limit: followingLimit,
     sortBy: followingSortBy,
     direction: followingDirection,
-  } = getFollowPageParams({
+  } = getStandardPageParams({
     searchParams,
+    paramPrefix: 'following',
+    defaultSortByValue: SortColumn.USER_ASSETS,
   })
 
   // const followingSearch = searchParams.get('followingSearch') TODO: Add search once BE implements

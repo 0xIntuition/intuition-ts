@@ -14,7 +14,6 @@ import {
   IdentitiesService,
   IdentityPresenter,
   SortColumn,
-  SortDirection,
   UsersService,
   UserTotalsPresenter,
 } from '@0xintuition/api'
@@ -30,6 +29,7 @@ import {
 } from '@components/profile/data-created-header'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { NO_WALLET_ERROR } from '@lib/utils/errors'
+import { getStandardPageParams } from '@lib/utils/loader'
 import logger from '@lib/utils/logger'
 import {
   calculateTotalPages,
@@ -67,25 +67,27 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
   const url = new URL(request.url)
   const searchParams = new URLSearchParams(url.search)
 
+  const {
+    page: activeIdentitiesPage,
+    limit: activeIdentitiesLimit,
+    sortBy: activeIdentitiesSortBy,
+    direction: activeIdentitiesDirection,
+  } = getStandardPageParams({
+    searchParams,
+    paramPrefix: 'activeIdentities',
+    defaultSortByValue: SortColumn.USER_ASSETS,
+  })
+
   const activeIdentitiesSearch = searchParams.get('activeIdentitiesSearch')
-  const activeIdentitiesSortBy =
-    searchParams.get('activeIdentitiesSortBy') ?? 'UserAssets'
-  const activeIdentitiesDirection =
-    searchParams.get('activeIdentitiesDirection') ?? 'desc'
-  const activeIdentitiesPage = searchParams.get('activeIdentitiesPage')
-    ? parseInt(searchParams.get('activeIdentitiesPage') as string)
-    : 1
-  const activeIdentitiesLimit =
-    searchParams.get('activeIdentitiesLimit') ?? '10'
 
   const activeIdentities = await fetchWrapper({
     method: UsersService.getUserIdentities,
     args: {
       user: wallet,
       page: activeIdentitiesPage,
-      limit: Number(activeIdentitiesLimit),
-      sortBy: activeIdentitiesSortBy as SortColumn,
-      direction: activeIdentitiesDirection as SortDirection,
+      limit: activeIdentitiesLimit,
+      sortBy: activeIdentitiesSortBy,
+      direction: activeIdentitiesDirection,
       displayName: activeIdentitiesSearch,
     },
   })
@@ -94,24 +96,27 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
     activeIdentities?.total ?? 0,
     Number(activeIdentitiesLimit),
   )
+
+  const {
+    page: activeClaimsPage,
+    limit: activeClaimsLimit,
+    sortBy: activeClaimsSortBy,
+    direction: activeClaimsDirection,
+  } = getStandardPageParams({
+    searchParams,
+    paramPrefix: 'activeClaims',
+  })
+
   const activeClaimsSearch = searchParams.get('activeClaimsSearch')
-  const activeClaimsSortBy =
-    searchParams.get('activeClaimsSortBy') ?? 'AssetsSum'
-  const activeClaimsDirection =
-    searchParams.get('activeClaimsDirection') ?? 'desc'
-  const activeClaimsPage = searchParams.get('activeClaimsPage')
-    ? parseInt(searchParams.get('activeClaimsPage') as string)
-    : 1
-  const activeClaimsLimit = searchParams.get('activeClaimsLimit') ?? '10'
 
   const activeClaims = await fetchWrapper({
     method: UsersService.getUserClaims,
     args: {
       user: wallet,
       page: activeClaimsPage,
-      limit: Number(activeClaimsLimit),
-      sortBy: activeClaimsSortBy as SortColumn,
-      direction: activeClaimsDirection as SortDirection,
+      limit: activeClaimsLimit,
+      sortBy: activeClaimsSortBy,
+      direction: activeClaimsDirection,
       displayName: activeClaimsSearch,
     },
   })
@@ -128,24 +133,26 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
     },
   })
 
+  const {
+    page: createdIdentitiesPage,
+    limit: createdIdentitiesLimit,
+    sortBy: createdIdentitiesSortBy,
+    direction: createdIdentitiesDirection,
+  } = getStandardPageParams({
+    searchParams,
+    paramPrefix: 'createdIdentities',
+    defaultSortByValue: SortColumn.USER_ASSETS,
+  })
+
   const createdIdentitiesSearch = searchParams.get('createdIdentitiesSearch')
-  const createdIdentitiesSortBy =
-    searchParams.get('createdIdentitiesSortBy') ?? 'UserAssets'
-  const createdIdentitiesDirection =
-    searchParams.get('createdIdentitiesDirection') ?? 'desc'
-  const createdIdentitiesPage = searchParams.get('createdIdentitiesPage')
-    ? parseInt(searchParams.get('createdIdentitiesPage') as string)
-    : 1
-  const createdIdentitiesLimit =
-    searchParams.get('createdIdentitiesLimit') ?? '10'
 
   const createdIdentities = await fetchWrapper({
     method: IdentitiesService.searchIdentity,
     args: {
       page: createdIdentitiesPage,
-      limit: Number(createdIdentitiesLimit),
-      sortBy: createdIdentitiesSortBy as SortColumn,
-      direction: createdIdentitiesDirection as SortDirection,
+      limit: createdIdentitiesLimit,
+      sortBy: createdIdentitiesSortBy,
+      direction: createdIdentitiesDirection,
       creator: wallet,
       displayName: createdIdentitiesSearch,
     },
@@ -161,23 +168,25 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
     args: { creator: wallet },
   })
 
+  const {
+    page: createdClaimsPage,
+    limit: createdClaimsLimit,
+    sortBy: createdClaimsSortBy,
+    direction: createdClaimsDirection,
+  } = getStandardPageParams({
+    searchParams,
+    paramPrefix: 'createdClaims',
+  })
+
   const createdClaimsSearch = searchParams.get('createdClaimsSearch')
-  const createdClaimsSortBy =
-    searchParams.get('createdClaimsSortBy') ?? 'AssetsSum'
-  const createdClaimsDirection =
-    searchParams.get('createdClaimsDirection') ?? 'desc'
-  const createdClaimsPage = searchParams.get('createdClaimsPage')
-    ? parseInt(searchParams.get('createdClaimsPage') as string)
-    : 1
-  const createdClaimsLimit = searchParams.get('createdClaimsLimit') ?? '10'
 
   const createdClaims = await fetchWrapper({
     method: ClaimsService.searchClaims,
     args: {
       page: createdClaimsPage,
-      limit: Number(createdClaimsLimit),
+      limit: createdClaimsLimit,
       sortBy: createdClaimsSortBy as ClaimSortColumn,
-      direction: createdClaimsDirection as SortDirection,
+      direction: createdClaimsDirection,
       creator: wallet,
       displayName: createdClaimsSearch,
     },
