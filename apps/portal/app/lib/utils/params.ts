@@ -13,10 +13,16 @@ const getParam = ({
   searchParams: URLSearchParams
   paramName: string
   paramPrefix?: string
-}) =>
-  searchParams.get(
-    `${paramPrefix}${paramName.charAt(0).toUpperCase() + paramName.slice(1)}`,
-  ) ?? searchParams.get(paramName)
+}) => {
+  if (paramPrefix) {
+    return (
+      searchParams.get(
+        `${paramPrefix}${paramName.charAt(0).toUpperCase() + paramName.slice(1)}`,
+      ) || searchParams.get(paramName)
+    )
+  }
+  return searchParams.get(paramName)
+}
 
 export const getStandardPageParams = ({
   searchParams,
