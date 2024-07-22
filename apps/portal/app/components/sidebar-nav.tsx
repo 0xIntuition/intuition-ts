@@ -81,12 +81,13 @@ export default function SidebarNav({
       method: 'post',
     })
   }
+
   const username =
     userObject?.display_name ||
     userObject?.ens_name ||
-    isAddress(userObject?.wallet)
-      ? formatWalletAddress(userObject?.wallet)
-      : 'Profile'
+    (userObject?.wallet && isAddress(userObject.wallet)
+      ? formatWalletAddress(userObject.wallet)
+      : 'Profile')
 
   return (
     <>
