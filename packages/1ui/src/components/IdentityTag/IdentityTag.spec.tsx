@@ -10,19 +10,15 @@ describe('Identity', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <button
-          class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center rounded-full [&>span]:rounded-full [&>span]:overflow-hidden text-base [&>span:first]:h-6 [&>span]:w-6"
+          class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center rounded-full [&>span]:rounded-full [&>span]:overflow-hidden text-base [&>span]:h-6 [&>span]:w-6"
         >
-          <span>
+          <span
+            class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square rounded-full bg-muted"
+          >
             <span
-              class="bg-primary/15 p-[10%] flex justify-center items-center h-full w-full"
+              class="flex h-full w-full items-center justify-center bg-inherit"
             >
-              <svg
-                class="h-full w-full"
-              >
-                <use
-                  href="/src/components/Icon/Icon.sprites.svg#fingerprint"
-                />
-              </svg>
+              ID
             </span>
           </span>
           something
@@ -35,20 +31,16 @@ describe('Identity', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <button
-          class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center rounded-full [&>span]:rounded-full [&>span]:overflow-hidden text-base [&>span:first]:h-6 [&>span]:w-6 disabled:bg-muted disabled:text-muted-foreground disabled:border-muted cursor-not-allowed"
+          class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center rounded-full [&>span]:rounded-full [&>span]:overflow-hidden text-base [&>span]:h-6 [&>span]:w-6 disabled:bg-muted disabled:text-muted-foreground disabled:border-muted cursor-not-allowed"
           disabled=""
         >
-          <span>
+          <span
+            class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square rounded-full bg-muted"
+          >
             <span
-              class="bg-primary/15 p-[10%] flex justify-center items-center h-full w-full"
+              class="flex h-full w-full items-center justify-center bg-inherit"
             >
-              <svg
-                class="h-full w-full"
-              >
-                <use
-                  href="/src/components/Icon/Icon.sprites.svg#fingerprint"
-                />
-              </svg>
+              ID
             </span>
           </span>
           something
@@ -68,14 +60,22 @@ describe('Identity', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <button
-          class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center rounded-sm text-base [&>span:first]:h-6 [&>span]:w-6"
+          class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center rounded-sm text-base [&>span]:h-6 [&>span]:w-6"
         >
-          <span>
-            <img
-              alt="identity avatar"
-              class="h-full rounded-full aspect-square"
-              src="https://m.media-amazon.com/images/M/MV5BNDhiMWYzMjgtNTRiYi00ZTA3LThlODctNDRkMDk0NzFkMWI3L2ltYWdlL2ltYWdlXkEyXkFqcGdeQXVyNTg0MTkzMzA@._V1_.jpg"
-            />
+          <span
+            class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square rounded bg-background theme-border"
+          >
+            <span
+              class="flex h-full w-full items-center justify-center bg-inherit"
+            >
+              <svg
+                class="h-6 w-6 text-primary/30"
+              >
+                <use
+                  href="/src/components/Icon/Icon.sprites.svg#fingerprint"
+                />
+              </svg>
+            </span>
           </span>
           something
         </button>
@@ -91,17 +91,13 @@ describe('Identity', () => {
         <button
           class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center rounded-full [&>span]:rounded-full [&>span]:overflow-hidden"
         >
-          <span>
+          <span
+            class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square rounded-full bg-muted"
+          >
             <span
-              class="bg-primary/15 p-[10%] flex justify-center items-center h-full w-full"
+              class="flex h-full w-full items-center justify-center bg-inherit"
             >
-              <svg
-                class="h-full w-full"
-              >
-                <use
-                  href="/src/components/Icon/Icon.sprites.svg#fingerprint"
-                />
-              </svg>
+              ID
             </span>
           </span>
           something
@@ -116,19 +112,15 @@ describe('Identity', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <button
-          class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center rounded-full [&>span]:rounded-full [&>span]:overflow-hidden text-base [&>span:first]:h-7 [&>span]:w-7"
+          class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center rounded-full [&>span]:rounded-full [&>span]:overflow-hidden text-base [&>span]:h-7 [&>span]:w-7"
         >
-          <span>
+          <span
+            class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square rounded-full bg-muted"
+          >
             <span
-              class="bg-primary/15 p-[10%] flex justify-center items-center h-full w-full"
+              class="flex h-full w-full items-center justify-center bg-inherit"
             >
-              <svg
-                class="h-full w-full"
-              >
-                <use
-                  href="/src/components/Icon/Icon.sprites.svg#fingerprint"
-                />
-              </svg>
+              ID
             </span>
           </span>
           something
@@ -143,19 +135,15 @@ describe('Identity', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <button
-          class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center rounded-full [&>span]:rounded-full [&>span]:overflow-hidden text-lg [&>span:first]:h-8 [&>span]:w-8"
+          class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center rounded-full [&>span]:rounded-full [&>span]:overflow-hidden text-lg [&>span]:h-8 [&>span]:w-8"
         >
-          <span>
+          <span
+            class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square rounded-full bg-muted"
+          >
             <span
-              class="bg-primary/15 p-[10%] flex justify-center items-center h-full w-full"
+              class="flex h-full w-full items-center justify-center bg-inherit"
             >
-              <svg
-                class="h-full w-full"
-              >
-                <use
-                  href="/src/components/Icon/Icon.sprites.svg#fingerprint"
-                />
-              </svg>
+              ID
             </span>
           </span>
           something
@@ -170,19 +158,15 @@ describe('Identity', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <button
-          class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center rounded-full [&>span]:rounded-full [&>span]:overflow-hidden text-lg [&>span:first]:h-8 [&>span]:w-8"
+          class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center rounded-full [&>span]:rounded-full [&>span]:overflow-hidden text-lg [&>span]:h-8 [&>span]:w-8"
         >
-          <span>
+          <span
+            class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square rounded-full bg-muted"
+          >
             <span
-              class="bg-primary/15 p-[10%] flex justify-center items-center h-full w-full"
+              class="flex h-full w-full items-center justify-center bg-inherit"
             >
-              <svg
-                class="h-full w-full"
-              >
-                <use
-                  href="/src/components/Icon/Icon.sprites.svg#fingerprint"
-                />
-              </svg>
+              ID
             </span>
           </span>
           something
@@ -200,19 +184,15 @@ describe('Identity', () => {
           data-state="closed"
         >
           <button
-            class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center rounded-full [&>span]:rounded-full [&>span]:overflow-hidden text-base [&>span:first]:h-6 [&>span]:w-6"
+            class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center rounded-full [&>span]:rounded-full [&>span]:overflow-hidden text-base [&>span]:h-6 [&>span]:w-6"
           >
-            <span>
+            <span
+              class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square rounded-full bg-muted"
+            >
               <span
-                class="bg-primary/15 p-[10%] flex justify-center items-center h-full w-full"
+                class="flex h-full w-full items-center justify-center bg-inherit"
               >
-                <svg
-                  class="h-full w-full"
-                >
-                  <use
-                    href="/src/components/Icon/Icon.sprites.svg#fingerprint"
-                  />
-                </svg>
+                ID
               </span>
             </span>
             something

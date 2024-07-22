@@ -20,7 +20,7 @@ describe('IdentityCard', () => {
           class="flex gap-2 items-center"
         >
           <span
-            class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full bg-muted"
+            class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square rounded-full bg-muted"
           >
             <span
               class="flex h-full w-full items-center justify-center bg-inherit"
@@ -69,7 +69,7 @@ describe('IdentityCard', () => {
           class="flex gap-2 items-center"
         >
           <span
-            class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded bg-background theme-border"
+            class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square rounded bg-background theme-border"
           >
             <span
               class="flex h-full w-full items-center justify-center bg-inherit"

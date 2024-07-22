@@ -37,7 +37,7 @@ describe('ListGrid', () => {
             style="height: 18rem;"
           >
             <span
-              class="relative flex shrink-0 overflow-hidden rounded bg-background theme-border mb-4 w-16 h-16"
+              class="relative flex shrink-0 overflow-hidden aspect-square rounded bg-background theme-border mb-4 w-16 h-16"
             >
               <span
                 class="flex h-full w-full items-center justify-center bg-inherit"
@@ -76,7 +76,7 @@ describe('ListGrid', () => {
             style="height: 18rem;"
           >
             <span
-              class="relative flex shrink-0 overflow-hidden rounded bg-background theme-border mb-4 w-16 h-16"
+              class="relative flex shrink-0 overflow-hidden aspect-square rounded bg-background theme-border mb-4 w-16 h-16"
             >
               <span
                 class="flex h-full w-full items-center justify-center bg-inherit"

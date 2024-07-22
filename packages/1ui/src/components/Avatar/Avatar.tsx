@@ -49,7 +49,7 @@ const AvatarFallback = React.forwardRef<
 ))
 AvatarFallback.displayName = AvatarPrimitive.Fallback.displayName
 
-const avatarVariants = cva('', {
+const avatarVariants = cva('aspect-square', {
   variants: {
     variant: {
       [Identity.user]: 'rounded-full bg-muted',

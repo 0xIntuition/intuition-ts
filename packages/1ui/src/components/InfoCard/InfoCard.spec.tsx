@@ -28,14 +28,16 @@ describe('InfoCard', () => {
             class="flex justify-between items-center gap-1"
           >
             <button
-              class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center rounded-full [&>span]:rounded-full [&>span]:overflow-hidden text-base [&>span:first]:h-6 [&>span]:w-6"
+              class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center rounded-full [&>span]:rounded-full [&>span]:overflow-hidden text-base [&>span]:h-6 [&>span]:w-6"
             >
-              <span>
-                <img
-                  alt="identity avatar"
-                  class="h-full rounded-full aspect-square"
-                  src="image.jpg"
-                />
+              <span
+                class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square rounded-full bg-muted"
+              >
+                <span
+                  class="flex h-full w-full items-center justify-center bg-inherit"
+                >
+                  ID
+                </span>
               </span>
               super dave
             </button>
