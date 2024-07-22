@@ -3,12 +3,12 @@ import {
   ClaimSortColumn,
   ClaimsService,
   IdentitiesService,
-  SortDirection,
 } from '@0xintuition/api'
 
 import { ExploreSearch } from '@components/explore/ExploreSearch'
 import { ClaimsList } from '@components/list/claims'
 import { NO_WALLET_ERROR } from '@lib/utils/errors'
+import { getStandardPageParams } from '@lib/utils/loader'
 import { calculateTotalPages, fetchWrapper, invariant } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
@@ -20,24 +20,19 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   const url = new URL(request.url)
   const searchParams = new URLSearchParams(url.search)
-  const search = searchParams.get('claim')
-  const sortBy: ClaimSortColumn =
-    (searchParams.get('sortBy') as ClaimSortColumn) ?? 'AssetsSum'
-  const direction: SortDirection =
-    (searchParams.get('direction') as SortDirection) ?? 'desc'
-  const page = searchParams.get('page')
-    ? parseInt(searchParams.get('page') as string)
-    : 1
-  const limit = searchParams.get('limit') ?? '10'
+  const { page, limit, sortBy, direction } = getStandardPageParams({
+    searchParams,
+  })
+  const displayName = searchParams.get('claim') || null
 
   const claims = await fetchWrapper({
     method: ClaimsService.searchClaims,
     args: {
       page,
-      limit: Number(limit),
+      limit,
       sortBy: sortBy as ClaimSortColumn,
-      direction: direction as SortDirection,
-      displayName: search,
+      direction,
+      displayName,
     },
   })
 
@@ -51,17 +46,14 @@ export async function loader({ request }: LoaderFunctionArgs) {
     },
   })
 
-  const claimsTotalPages = calculateTotalPages(
-    claims?.total ?? 0,
-    Number(limit),
-  )
+  const claimsTotalPages = calculateTotalPages(claims?.total ?? 0, limit)
 
   return json({
     identities: identities?.data,
     claims: claims?.data as ClaimPresenter[],
     claimsPagination: {
-      currentPage: Number(page),
-      limit: Number(limit),
+      currentPage: page,
+      limit,
       totalEntries: claims?.total ?? 0,
       totalPages: claimsTotalPages,
     },

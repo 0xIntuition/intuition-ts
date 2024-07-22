@@ -2,12 +2,12 @@ import {
   ActivitiesService,
   ActivityPresenter,
   SortColumn,
-  SortDirection,
 } from '@0xintuition/api'
 
 import { ActivityList } from '@components/list/activity'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { NO_WALLET_ERROR } from '@lib/utils/errors'
+import { getStandardPageParams } from '@lib/utils/loader'
 import logger from '@lib/utils/logger'
 import { calculateTotalPages, fetchWrapper, invariant } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
@@ -24,22 +24,19 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   const url = new URL(request.url)
   const searchParams = new URLSearchParams(url.search)
-  const sortBy: SortColumn =
-    (searchParams.get('sortBy') as SortColumn) ?? 'CreatedAt'
-  const direction: SortDirection =
-    (searchParams.get('direction') as SortDirection) ?? 'desc'
-  const page = searchParams.get('page')
-    ? parseInt(searchParams.get('page') as string)
-    : 1
-  const limit = searchParams.get('limit') ?? '10'
+
+  const { page, limit, sortBy, direction } = getStandardPageParams({
+    searchParams,
+    defaultSortByValue: SortColumn.CREATED_AT,
+  })
 
   const userActivity = await fetchWrapper({
     method: ActivitiesService.getActivities,
     args: {
       page,
-      limit: Number(limit),
+      limit,
       sortBy: sortBy as SortColumn,
-      direction: direction as SortDirection,
+      direction,
       fromAddress: userWallet,
     },
   })

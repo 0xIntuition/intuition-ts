@@ -2,12 +2,12 @@ import {
   IdentitiesService,
   IdentityPresenter,
   SortColumn,
-  SortDirection,
 } from '@0xintuition/api'
 
 import { ExploreSearch } from '@components/explore/ExploreSearch'
 import { IdentitiesList } from '@components/list/identities'
 import { NO_WALLET_ERROR } from '@lib/utils/errors'
+import { getStandardPageParams } from '@lib/utils/loader'
 import { calculateTotalPages, fetchWrapper, invariant } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
@@ -20,38 +20,33 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   const url = new URL(request.url)
   const searchParams = new URLSearchParams(url.search)
-  const displayNameQuery = searchParams.get('identity')
-  const hasTagQuery = searchParams.get('tagIds')
-  const sortBy: SortColumn =
-    (searchParams.get('sortBy') as SortColumn) ?? 'AssetsSum'
-  const direction: SortDirection =
-    (searchParams.get('direction') as SortDirection) ?? 'desc'
-  const page = searchParams.get('page')
-    ? parseInt(searchParams.get('page') as string)
-    : 1
-  const limit = searchParams.get('limit') ?? '10'
+  const { page, limit, sortBy, direction } = getStandardPageParams({
+    searchParams,
+  })
+  const displayName = searchParams.get('identity') || null
+  const hasTag = searchParams.get('tagIds') || null
 
   const identities = await fetchWrapper({
     method: IdentitiesService.searchIdentity,
     args: {
       page,
-      limit: Number(limit),
+      limit,
       sortBy: sortBy as SortColumn,
-      direction: direction as SortDirection,
-      displayName: displayNameQuery,
-      hasTag: hasTagQuery,
+      direction,
+      displayName,
+      hasTag,
     },
   })
 
-  const totalPages = calculateTotalPages(identities?.total ?? 0, Number(limit))
+  const totalPages = calculateTotalPages(identities?.total ?? 0, limit)
 
   return json({
     identities: identities?.data as IdentityPresenter[],
     sortBy,
     direction,
     pagination: {
-      currentPage: Number(page),
-      limit: Number(limit),
+      currentPage: page,
+      limit,
       totalEntries: identities?.total ?? 0,
       totalPages,
     },

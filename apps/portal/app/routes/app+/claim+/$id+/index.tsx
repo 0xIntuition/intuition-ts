@@ -6,13 +6,13 @@ import {
   ClaimsService,
   PositionPresenter,
   PositionSortColumn,
-  SortDirection,
   VaultType,
 } from '@0xintuition/api'
 
 import { PositionsOnClaim } from '@components/list/positions-on-claim'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { NO_WALLET_ERROR } from '@lib/utils/errors'
+import { getStandardPageParams } from '@lib/utils/loader'
 import { calculateTotalPages, fetchWrapper, invariant } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { useSearchParams } from '@remix-run/react'
@@ -36,28 +36,26 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
   const url = new URL(request.url)
   const searchParams = new URLSearchParams(url.search)
+
+  const { page, limit, sortBy, direction } = getStandardPageParams({
+    searchParams,
+    defaultSortByValue: PositionSortColumn.CREATED_AT,
+  })
   const search = searchParams.get('search')
-  const sortBy: PositionSortColumn =
-    (searchParams.get('sortBy') as PositionSortColumn) ?? 'CreatedAt'
-  const direction: SortDirection =
-    (searchParams.get('direction') as SortDirection) ?? 'desc'
-  const positionDirection: VaultType | null =
-    (searchParams.get('positionDirection') as VaultType) || null
-  const page = searchParams.get('page')
-    ? parseInt(searchParams.get('page') as string)
-    : 1
-  const limit = searchParams.get('limit') ?? '10'
+  // TODO: REMOVE THIS!
+  console.log(`search: ${search}`)
+  // const positionDirection: string =
+  //   searchParams.get('positionDirection') ?? 'all'
 
   const positions = await fetchWrapper({
     method: ClaimPositionsService.getClaimPositions,
     args: {
       id,
       page,
-      limit: Number(limit),
+      limit,
       sortBy: sortBy as PositionSortColumn,
-      direction: direction as SortDirection,
+      direction,
       creator: search,
-      positionDirection,
     },
   })
 

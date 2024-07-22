@@ -12,8 +12,6 @@ import {
   ClaimsService,
   IdentitiesService,
   IdentityPresenter,
-  SortColumn,
-  SortDirection,
 } from '@0xintuition/api'
 
 import { FollowList } from '@components/list/follow'
@@ -24,6 +22,7 @@ import {
 } from '@components/profile/connections-header'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { NO_WALLET_ERROR } from '@lib/utils/errors'
+import { getFollowPageParams } from '@lib/utils/loader'
 import logger from '@lib/utils/logger'
 import {
   calculateTotalPages,
@@ -63,22 +62,26 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   const url = new URL(request.url)
   const searchParams = new URLSearchParams(url.search)
+
+  const {
+    page: followersPage,
+    limit: followersLimit,
+    sortBy: followersSortBy,
+    direction: followersDirection,
+  } = getFollowPageParams({
+    searchParams,
+  })
+
   // const followersSearch = searchParams.get('followersSearch') TODO: Add search once BE implements
-  const followersSortBy = searchParams.get('followersSortBy') ?? 'UserAssets'
-  const followersDirection = searchParams.get('followersDirection') ?? 'desc'
-  const followersPage = searchParams.get('followersPage')
-    ? parseInt(searchParams.get('followersPage') as string)
-    : 1
-  const followersLimit = searchParams.get('limit') ?? '10'
 
   const followers = await fetchWrapper({
     method: IdentitiesService.getIdentityFollowers,
     args: {
       id: userIdentity.id,
       page: followersPage,
-      limit: Number(followersLimit),
-      sortBy: followersSortBy as SortColumn,
-      direction: followersDirection as SortDirection,
+      limit: followersLimit,
+      sortBy: followersSortBy,
+      direction: followersDirection,
       offset: null,
       timeframe: null,
       userWallet: null,
@@ -90,22 +93,25 @@ export async function loader({ request }: LoaderFunctionArgs) {
     Number(followersLimit),
   )
 
+  const {
+    page: followingPage,
+    limit: followingLimit,
+    sortBy: followingSortBy,
+    direction: followingDirection,
+  } = getFollowPageParams({
+    searchParams,
+  })
+
   // const followingSearch = searchParams.get('followingSearch') TODO: Add search once BE implements
-  const followingSortBy = searchParams.get('followingSortBy') ?? 'UserAssets'
-  const followingDirection = searchParams.get('followingDirection') ?? 'desc'
-  const followingPage = searchParams.get('followingPage')
-    ? parseInt(searchParams.get('followingPage') as string)
-    : 1
-  const followingLimit = searchParams.get('limit') ?? '10'
 
   const following = await fetchWrapper({
     method: IdentitiesService.getIdentityFollowed,
     args: {
       id: userIdentity.id,
       page: followersPage,
-      limit: Number(followersLimit),
-      sortBy: followersSortBy as SortColumn,
-      direction: followersDirection as SortDirection,
+      limit: followersLimit,
+      sortBy: followersSortBy,
+      direction: followersDirection,
       offset: null,
       timeframe: null,
       userWallet: null,
