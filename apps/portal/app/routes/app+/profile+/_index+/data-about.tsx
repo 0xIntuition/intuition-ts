@@ -29,6 +29,12 @@ import { defer, LoaderFunctionArgs } from '@remix-run/node'
 import { Await } from '@remix-run/react'
 import { requireUserWallet } from '@server/auth'
 
+const simulateError = (shouldError: boolean) => {
+  if (shouldError) {
+    throw new Error('Simulated error')
+  }
+}
+
 export async function loader({ request }: LoaderFunctionArgs) {
   const userWallet = await requireUserWallet(request)
   invariant(userWallet, NO_WALLET_ERROR)
@@ -108,30 +114,57 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   return defer({
     userIdentity,
-    positions: positionsPromise.then((positions) => ({
-      data: positions.data as PositionPresenter[],
-      pagination: {
-        currentPage: Number(positionsPage),
-        limit: Number(positionsLimit),
-        totalEntries: positions.total,
-        totalPages: calculateTotalPages(
-          positions.total,
-          Number(positionsLimit),
-        ),
-      },
-    })),
-    positionsSortBy,
-    positionsDirection,
-    claims: claimsPromise.then((claims) => ({
-      data: claims.data as ClaimPresenter[],
-      pagination: {
-        currentPage: Number(claimsPage),
-        limit: Number(claimsLimit),
-        totalEntries: claims.total,
-        totalPages: calculateTotalPages(claims.total, Number(claimsLimit)),
-      },
-    })),
-    claimsSummary: claimsSummaryPromise,
+    positions: positionsPromise
+      .then((positions) => ({
+        data: positions.data as PositionPresenter[],
+        pagination: {
+          currentPage: Number(positionsPage),
+          limit: Number(positionsLimit),
+          totalEntries: positions.total,
+          totalPages: calculateTotalPages(
+            positions.total,
+            Number(positionsLimit),
+          ),
+        },
+      }))
+      .catch((error) => {
+        console.error('Error fetching positions:', error)
+        return {
+          data: [] as PositionPresenter[],
+          pagination: {
+            currentPage: 1,
+            limit: 10,
+            totalEntries: 0,
+            totalPages: 0,
+          },
+        }
+      }),
+    claims: claimsPromise
+      .then((claims) => ({
+        data: claims.data as ClaimPresenter[],
+        pagination: {
+          currentPage: Number(claimsPage),
+          limit: Number(claimsLimit),
+          totalEntries: claims.total,
+          totalPages: calculateTotalPages(claims.total, Number(claimsLimit)),
+        },
+      }))
+      .catch((error) => {
+        console.error('Error fetching claims:', error)
+        return {
+          data: [] as ClaimPresenter[],
+          pagination: {
+            currentPage: 1,
+            limit: 10,
+            totalEntries: 0,
+            totalPages: 0,
+          },
+        }
+      }),
+    claimsSummary: claimsSummaryPromise.catch((error) => {
+      console.error('Error fetching claim summary:', error)
+      return null
+    }),
     claimsSortBy,
     claimsDirection,
   })
@@ -141,6 +174,9 @@ export default function ProfileDataAbout() {
   const { userIdentity, positions, claims, claimsSummary } = useLiveLoader<
     typeof loader
   >(['attest'])
+
+  const simulatePositionsError = true
+  const simulateClaimsError = true
 
   return (
     <div className="flex-col justify-start items-start flex w-full gap-6">
@@ -158,22 +194,28 @@ export default function ProfileDataAbout() {
           }
           totalStake={
             <Suspense fallback={<Skeleton className="h-6 w-6 inline-flex" />}>
-              <Await resolve={claimsSummary.then((cs) => +cs?.assets_sum ?? 0)}>
-                {(totalStake) => +formatBalance(totalStake ?? 0, 18, 4)}
+              <Await resolve={claimsSummary}>
+                {(cs) => {
+                  const assetsSum = cs?.assets_sum ?? 0
+                  return `${formatBalance(assetsSum, 18, 4)} ETH`
+                }}
               </Await>
             </Suspense>
           }
         />
         <Suspense fallback={<Skeleton className="w-full h-28 mt-6" />}>
-          <Await resolve={claims}>
-            {(resolvedClaims) => (
-              <ClaimsAboutIdentity
-                claims={resolvedClaims.data}
-                pagination={resolvedClaims.pagination}
-                paramPrefix="claims"
-                enableSearch
-              />
-            )}
+          <Await resolve={claims} errorElement={<ErrorDisplay />}>
+            {(resolvedClaims) => {
+              simulateError(simulateClaimsError)
+              return (
+                <ClaimsAboutIdentity
+                  claims={resolvedClaims.data}
+                  pagination={resolvedClaims.pagination}
+                  paramPrefix="claims"
+                  enableSearch
+                />
+              )
+            }}
           </Await>
         </Suspense>
       </div>
@@ -186,16 +228,25 @@ export default function ProfileDataAbout() {
           totalStake={+formatBalance(userIdentity.assets_sum, 18, 4)}
         />
         <Suspense fallback={<Skeleton className="w-full h-28 mt-6" />}>
-          <Await resolve={positions}>
-            {(resolvedPositions) => (
-              <PositionsOnIdentity
-                positions={resolvedPositions.data}
-                pagination={resolvedPositions.pagination}
-              />
-            )}
+          <Await resolve={positions} errorElement={<ErrorDisplay />}>
+            {(resolvedPositions) => {
+              simulateError(simulatePositionsError)
+              return (
+                <PositionsOnIdentity
+                  positions={resolvedPositions.data}
+                  pagination={resolvedPositions.pagination}
+                />
+              )
+            }}
           </Await>
         </Suspense>
       </div>
     </div>
+  )
+}
+
+function ErrorDisplay() {
+  return (
+    <div>An error occurred while loading data. Please try again later.</div>
   )
 }

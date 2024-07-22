@@ -79,7 +79,7 @@ const DataAboutHeader: React.FC<DataAboutHeaderProps> = ({
               Total stake {variant === 'claims' && 'across all Claims'}
             </Text>
             <div className="text-white text-xl font-medium leading-[30px] items-center">
-              {totalStake} ETH
+              {totalStake}
             </div>
           </div>
         </div>
