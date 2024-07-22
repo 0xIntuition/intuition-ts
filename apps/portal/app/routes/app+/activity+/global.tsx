@@ -31,7 +31,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     args: {
       page,
       limit,
-      sortBy: sortBy as SortColumn,
+      sortBy,
       direction,
     },
   })
