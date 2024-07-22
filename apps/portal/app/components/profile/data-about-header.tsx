@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react'
 
-import { IdentityTag, Text } from '@0xintuition/1ui' // Adjust the import path as needed
+import { IdentityTag, Text } from '@0xintuition/1ui'
 import { IdentityPresenter } from '@0xintuition/api'
 
 export const DataAboutHeaderVariants = {
