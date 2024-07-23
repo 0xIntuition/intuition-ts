@@ -30,7 +30,7 @@ export async function deployAndInit(): Promise<Address> {
     args: [
       {
         admin: ALICE,
-        protocolVault: ALICE,
+        protocolMultisig: ALICE,
         feeDenominator: 10000n, // Common denominator for fee
         minDeposit: parseEther('0.0003'), // Minimum deposit amount in wei
         minShare: 10000n, // Minimum share amount (e.g., for vault initialization)
