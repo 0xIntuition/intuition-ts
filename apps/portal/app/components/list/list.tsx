@@ -6,12 +6,13 @@ import {
   SortColumn,
 } from '@0xintuition/api'
 
+import { Search } from '@components/search'
+import { Sort } from '@components/sort'
 import { SortOption } from '@components/sort-select'
 import { useSearchAndSortParamsHandler } from '@lib/hooks/useSearchAndSortParams'
 import { PaginationType } from 'types/pagination'
 
 import { PaginationComponent } from '../pagination-component'
-import { SearchAndSort } from '../search-and-sort'
 
 type SortColumnType = SortColumn | PositionSortColumn | ClaimSortColumn
 
@@ -22,6 +23,7 @@ export function List<T extends SortColumnType>({
   options,
   paramPrefix,
   enableSearch = true,
+  enableSort = true,
 }: {
   children: ReactNode
   pagination: PaginationType
@@ -29,6 +31,7 @@ export function List<T extends SortColumnType>({
   options?: SortOption<T>[]
   paramPrefix?: string
   enableSearch?: boolean
+  enableSort?: boolean
 }) {
   const { handleSortChange, handleSearchChange, onPageChange, onLimitChange } =
     useSearchAndSortParamsHandler<T>(paramPrefix)
@@ -38,13 +41,14 @@ export function List<T extends SortColumnType>({
   return (
     <>
       <div className="flex flex-col w-full gap-6" ref={listContainerRef}>
-        {enableSearch && options && (
-          <SearchAndSort
-            options={options}
-            handleSortChange={handleSortChange}
-            handleSearchChange={handleSearchChange}
-          />
-        )}
+        <div
+          className={`flex flex-row w-full mt-6 ${enableSearch ? 'justify-between' : 'justify-end'}`}
+        >
+          {enableSearch && <Search handleSearchChange={handleSearchChange} />}
+          {enableSort && options && (
+            <Sort options={options} handleSortChange={handleSortChange} />
+          )}
+        </div>
         <div className="flex flex-col w-full">{children}</div>
         <PaginationComponent
           totalEntries={pagination.totalEntries ?? 0}
