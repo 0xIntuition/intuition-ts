@@ -82,6 +82,7 @@ export const IconName = {
   calendly: 'calendly',
   medium: 'medium',
   github: 'github',
+  inboxEmpty: 'inbox-empty',
   people: 'people',
   tag: 'tag',
   tagFilled: 'tag-filled',

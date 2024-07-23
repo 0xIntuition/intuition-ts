@@ -1001,5 +1001,11 @@
     <symbol id="file-text" viewBox="0 0 24 24" fill="none">
       <path d="M8.75 13.25H12.25M8.75 17.25H15.25M12.75 3.25309V9.25H18.7461M4.75 2.75H12.75L19.25 9.25V21.25H4.75V2.75Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="square"/>
     </symbol>
+    <!-- inbox-empty -->
+    <symbol id="inbox-empty" viewBox="0 0 24 24" fill="none">
+      <path d="M2 12.75H8.4125L9.95 14.75H14.05L15.5875 12.75H22M22.25 12.75L18.15 4.75H5.85L1.75 12.75V19.25H22.25V12.75Z" stroke="currentColor" stroke-width="1.5"/>
+    </symbol>
   </defs>
 </svg>
+
+
