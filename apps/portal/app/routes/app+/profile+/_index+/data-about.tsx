@@ -1,137 +1,53 @@
 import { Suspense } from 'react'
 
 import { Skeleton } from '@0xintuition/1ui'
-import {
-  ClaimPresenter,
-  ClaimSortColumn,
-  ClaimsService,
-  ClaimSummaryResponse,
-  Identifier,
-  IdentitiesService,
-  IdentityPositionsService,
-  PositionPresenter,
-  PositionSortColumn,
-} from '@0xintuition/api'
 
 import { ClaimsList as ClaimsAboutIdentity } from '@components/list/claims'
 import { PositionsOnIdentity } from '@components/list/positions-on-identity'
 import DataAboutHeader from '@components/profile/data-about-header'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
-import { NO_WALLET_ERROR } from '@lib/utils/errors'
-import { fetchWrapper, formatBalance, invariant } from '@lib/utils/misc'
-import { getStandardPageParams } from '@lib/utils/params'
+import {
+  getClaimsAboutIdentity,
+  getClaimSummaryAboutIdentity,
+} from '@lib/services/claims'
+import { getPositionsOnIdentity } from '@lib/services/positions'
+import { NO_USER_IDENTITY_ERROR, NO_WALLET_ERROR } from '@lib/utils/errors'
+import { DataErrorDisplay, formatBalance, invariant } from '@lib/utils/misc'
 import { defer, LoaderFunctionArgs } from '@remix-run/node'
-import { Await } from '@remix-run/react'
+import { Await, useRouteLoaderData } from '@remix-run/react'
 import { requireUserWallet } from '@server/auth'
 
-async function getPositions(userWallet: string, searchParams: URLSearchParams) {
-  const { page, limit, sortBy, direction } = getStandardPageParams({
-    searchParams,
-    paramPrefix: 'positions',
-    defaultSortByValue: PositionSortColumn.ASSETS,
-  })
-  const positionsSearch =
-    (searchParams.get('positionsSearch') as Identifier) || null
-
-  const positions = await fetchWrapper({
-    method: IdentityPositionsService.getIdentityPositions,
-    args: {
-      id: userWallet,
-      page,
-      limit,
-      sortBy: sortBy as PositionSortColumn,
-      direction,
-      creator: positionsSearch,
-    },
-  })
-
-  return {
-    data: positions.data as PositionPresenter[],
-    pagination: {
-      currentPage: Number(page),
-      limit: Number(limit),
-      totalEntries: positions.total,
-      totalPages: Math.ceil(positions.total / Number(limit)),
-    },
-  }
-}
-
-async function getClaims(
-  userIdentityId: string,
-  searchParams: URLSearchParams,
-) {
-  const { page, limit, sortBy, direction } = getStandardPageParams({
-    searchParams,
-    paramPrefix: 'claims',
-  })
-  const claimsSearch = (searchParams.get('claimsSearch') as string) || null
-
-  const claims = await fetchWrapper({
-    method: ClaimsService.searchClaims,
-    args: {
-      identity: userIdentityId,
-      page,
-      limit,
-      sortBy: sortBy as ClaimSortColumn,
-      direction,
-      displayName: claimsSearch,
-    },
-  })
-
-  return {
-    data: claims.data as ClaimPresenter[],
-    pagination: {
-      currentPage: Number(page),
-      limit: Number(limit),
-      totalEntries: claims.total,
-      totalPages: Math.ceil(claims.total / Number(limit)),
-    },
-  }
-}
-
-async function getClaimSummary(userIdentityId: string) {
-  const claimSummary = await fetchWrapper({
-    method: ClaimsService.claimSummary,
-    args: {
-      identity: userIdentityId,
-    },
-  })
-
-  return claimSummary as ClaimSummaryResponse
-}
+import { ProfileLoaderData } from './_layout'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const userWallet = await requireUserWallet(request)
   invariant(userWallet, NO_WALLET_ERROR)
 
-  const userIdentity = await fetchWrapper({
-    method: IdentitiesService.getIdentityById,
-    args: { id: userWallet },
-  })
-
-  if (!userIdentity) {
-    throw new Error('No user identity found')
-  }
-
-  if (!userIdentity.creator || typeof userIdentity.creator.id !== 'string') {
-    throw new Error('Invalid or missing creator ID')
-  }
-
   const url = new URL(request.url)
   const searchParams = new URLSearchParams(url.search)
 
   return defer({
-    userIdentity,
-    positions: getPositions(userWallet, searchParams),
-    claims: getClaims(userIdentity.id, searchParams),
-    claimsSummary: getClaimSummary(userIdentity.id),
+    positions: getPositionsOnIdentity({ identityId: userWallet, searchParams }),
+    claims: getClaimsAboutIdentity({
+      identityId: userWallet,
+      searchParams,
+    }),
+    claimsSummary: getClaimSummaryAboutIdentity({
+      identityId: userWallet,
+    }),
   })
 }
 
 export default function ProfileDataAbout() {
-  const { userIdentity, positions, claims, claimsSummary } = useLiveLoader<
-    typeof loader
-  >(['attest'])
+  const { positions, claims, claimsSummary } = useLiveLoader<typeof loader>([
+    'attest',
+  ])
+
+  const { userIdentity } =
+    useRouteLoaderData<ProfileLoaderData>(
+      'routes/app+/profile+/_index+/_layout',
+    ) ?? {}
+  invariant(userIdentity, NO_USER_IDENTITY_ERROR)
 
   return (
     <div className="flex-col justify-start items-start flex w-full gap-6">
@@ -156,7 +72,10 @@ export default function ProfileDataAbout() {
           }
         />
         <Suspense fallback={<Skeleton className="w-full h-28 mt-6" />}>
-          <Await resolve={claims} errorElement={<ErrorDisplay />}>
+          <Await
+            resolve={claims}
+            errorElement={<DataErrorDisplay dataType={'claims'} />}
+          >
             {(resolvedClaims) => (
               <ClaimsAboutIdentity
                 claims={resolvedClaims.data}
@@ -177,7 +96,10 @@ export default function ProfileDataAbout() {
           totalStake={+formatBalance(userIdentity.assets_sum, 18, 4)}
         />
         <Suspense fallback={<Skeleton className="w-full h-28 mt-6" />}>
-          <Await resolve={positions} errorElement={<ErrorDisplay />}>
+          <Await
+            resolve={positions}
+            errorElement={<DataErrorDisplay dataType={'positions'} />}
+          >
             {(resolvedPositions) => (
               <PositionsOnIdentity
                 positions={resolvedPositions.data}
@@ -188,11 +110,5 @@ export default function ProfileDataAbout() {
         </Suspense>
       </div>
     </div>
-  )
-}
-
-function ErrorDisplay() {
-  return (
-    <div>An error occurred while loading data. Please try again later.</div>
   )
 }

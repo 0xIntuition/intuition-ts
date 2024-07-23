@@ -66,9 +66,13 @@ const DataAboutHeader: React.FC<DataAboutHeaderProps> = ({
             >
               {variant === 'claims' ? 'Claims' : 'Positions'}
             </Text>
-            <div className="text-white text-xl font-medium leading-[30px]">
+            <Text
+              variant="headline"
+              weight="medium"
+              className="leading-[30px] items-center"
+            >
               {variant === 'claims' ? totalClaims ?? 0 : totalPositions ?? 0}
-            </div>
+            </Text>
           </div>
           <div className="flex flex-col items-end">
             <Text
@@ -78,9 +82,13 @@ const DataAboutHeader: React.FC<DataAboutHeaderProps> = ({
             >
               Total stake {variant === 'claims' && 'across all Claims'}
             </Text>
-            <div className="text-white text-xl font-medium leading-[30px] items-center">
+            <Text
+              variant="headline"
+              weight="medium"
+              className="leading-[30px] items-center"
+            >
               {totalStake}
-            </div>
+            </Text>
           </div>
         </div>
       </div>

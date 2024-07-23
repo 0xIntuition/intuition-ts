@@ -123,6 +123,15 @@ export async function loader({ request }: LoaderFunctionArgs) {
   })
 }
 
+export interface ProfileLoaderData {
+  privyUser: User
+  userWallet: string
+  userIdentity: IdentityPresenter
+  userObject: UserPresenter
+  userTotals: UserTotalsPresenter
+  vaultDetails: VaultDetailsType
+}
+
 export default function Profile() {
   const {
     userObject: user,
