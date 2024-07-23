@@ -19,7 +19,7 @@ import { getTheme } from '@server/theme'
 
 import './styles/globals.css'
 
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 
 import { Text, Toaster } from '@0xintuition/1ui'
 
