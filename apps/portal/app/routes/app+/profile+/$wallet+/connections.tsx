@@ -52,7 +52,7 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
     return logger('Invalid or missing creator ID')
   }
 
-  const connectionsData = await getConnectionsData(userIdentity, request)
+  const connectionsData = await getConnectionsData({ userIdentity, request })
 
   return json({
     userIdentity,
