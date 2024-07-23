@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Theme } from '@0xintuition/1ui'
+import { Text, Theme } from '@0xintuition/1ui'
 import { ApiError } from '@0xintuition/api'
 
 import { clsx, type ClassValue } from 'clsx'
@@ -302,4 +302,12 @@ export const fetchWrapper = async <T, A>({
     }
     throw error
   }
+}
+
+export function DataErrorDisplay({ dataType }: { dataType: string }) {
+  return (
+    <Text>
+      An error occurred while loading {dataType} data. Please try again.
+    </Text>
+  )
 }

@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { ReactNode } from 'react'
 
-import { IdentityTag, MonetaryValue, Text } from '@0xintuition/1ui' // Adjust the import path as needed
+import { IdentityTag, Text } from '@0xintuition/1ui'
 import { IdentityPresenter } from '@0xintuition/api'
 
 export const DataAboutHeaderVariants = {
@@ -15,9 +15,9 @@ interface DataAboutHeaderProps {
   variant: DataAboutHeaderVariantType
   title: string
   userIdentity: IdentityPresenter
-  totalClaims?: number
-  totalPositions?: number
-  totalStake: number
+  totalClaims?: number | ReactNode
+  totalPositions?: number | ReactNode
+  totalStake: number | ReactNode
 }
 
 const DataAboutHeader: React.FC<DataAboutHeaderProps> = ({
@@ -28,6 +28,26 @@ const DataAboutHeader: React.FC<DataAboutHeaderProps> = ({
   totalPositions,
   totalStake,
 }) => {
+  // TODO: Implement this once we figure out why MonetaryValue is not rendering currency type and we are able to add custom styling for the text
+  // const renderTotalStake = () => {
+  //   if (React.isValidElement(totalStake)) {
+  //     return totalStake
+  //   }
+  //   if (typeof totalStake === 'number') {
+  //     return <MonetaryValue value={totalStake} currency="ETH" className="text-xl font-medium leading-[30px] items-center" />
+  //   }
+  //   return (
+  //     <Text
+  //       variant="headline"
+  //       weight="medium"
+  //       className="leading-[30px] items-center"
+  //     >
+  //       {totalStake}
+  //       {typeof totalStake !== 'undefined' && ' ETH'}
+  //     </Text>
+  //   )
+  // }
+
   return (
     <div className="flex flex-col w-full gap-3">
       <div className="flex justify-between items-center w-full">
@@ -66,9 +86,13 @@ const DataAboutHeader: React.FC<DataAboutHeaderProps> = ({
             >
               {variant === 'claims' ? 'Claims' : 'Positions'}
             </Text>
-            <div className="text-white text-xl font-medium leading-[30px]">
+            <Text
+              variant="headline"
+              weight="medium"
+              className="leading-[30px] items-center"
+            >
               {variant === 'claims' ? totalClaims ?? 0 : totalPositions ?? 0}
-            </div>
+            </Text>
           </div>
           <div className="flex flex-col items-end">
             <Text
@@ -78,7 +102,9 @@ const DataAboutHeader: React.FC<DataAboutHeaderProps> = ({
             >
               Total stake {variant === 'claims' && 'across all Claims'}
             </Text>
-            <MonetaryValue value={totalStake} currency="ETH" />
+            <Text variant="headline" weight="medium" className="items-end">
+              {totalStake}
+            </Text>
           </div>
         </div>
       </div>

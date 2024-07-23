@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 
 import { usePrivy } from '@privy-io/react-auth'
 import { useSubmit } from '@remix-run/react'

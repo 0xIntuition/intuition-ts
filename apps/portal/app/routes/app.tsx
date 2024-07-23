@@ -2,7 +2,6 @@ import { useEffect } from 'react'
 
 import { UserPresenter, UsersService } from '@0xintuition/api'
 
-import PrivyLogout from '@client/privy-logout'
 import SidebarNav from '@components/sidebar-nav'
 import { fetchWrapper, invariant } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
@@ -34,7 +33,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export default function Index() {
-  const { wallet, userObject } = useLoaderData<{
+  const { userObject } = useLoaderData<{
     wallet: string
     userObject: UserPresenter
   }>()
@@ -49,7 +48,10 @@ export default function Index() {
       <SidebarNav userObject={userObject}>
         <Outlet />
       </SidebarNav>
-      <PrivyLogout wallet={wallet} />
+      {/* 
+      TODO: Fix constant logout issue [ENG-2776]
+      <PrivyLogout wallet={wallet} /> 
+      */}
     </div>
   )
 }
