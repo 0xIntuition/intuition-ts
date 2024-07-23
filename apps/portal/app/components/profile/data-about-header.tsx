@@ -28,6 +28,26 @@ const DataAboutHeader: React.FC<DataAboutHeaderProps> = ({
   totalPositions,
   totalStake,
 }) => {
+  // TODO: Implement this once we figure out why MonetaryValue is not rendering currency type and we are able to add custom styling for the text
+  // const renderTotalStake = () => {
+  //   if (React.isValidElement(totalStake)) {
+  //     return totalStake
+  //   }
+  //   if (typeof totalStake === 'number') {
+  //     return <MonetaryValue value={totalStake} currency="ETH" />
+  //   }
+  //   return (
+  //     <Text
+  //       variant="headline"
+  //       weight="medium"
+  //       className="leading-[30px] items-center"
+  //     >
+  //       {totalStake}
+  //       {typeof totalStake !== 'undefined' && ' ETH'}
+  //     </Text>
+  //   )
+  // }
+
   return (
     <div className="flex flex-col w-full gap-3">
       <div className="flex justify-between items-center w-full">
