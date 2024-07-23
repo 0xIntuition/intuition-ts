@@ -49,11 +49,8 @@ export async function getClaimSummaryAboutIdentity({
 }: {
   identityId: string
 }) {
-  const claimSummary = await fetchWrapper({
-    method: ClaimsService.claimSummary,
-    args: {
-      identity: identityId,
-    },
+  const claimSummary = await ClaimsService.claimSummary({
+    identity: identityId,
   })
 
   return claimSummary as ClaimSummaryResponse
