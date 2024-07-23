@@ -1,18 +1,21 @@
 import { Suspense } from 'react'
 
 import { Skeleton } from '@0xintuition/1ui'
+import { ClaimsService } from '@0xintuition/api'
 
 import { ClaimsList as ClaimsAboutIdentity } from '@components/list/claims'
 import { PositionsOnIdentity } from '@components/list/positions-on-identity'
 import DataAboutHeader from '@components/profile/data-about-header'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
-import {
-  getClaimsAboutIdentity,
-  getClaimSummaryAboutIdentity,
-} from '@lib/services/claims'
+import { getClaimsAboutIdentity } from '@lib/services/claims'
 import { getPositionsOnIdentity } from '@lib/services/positions'
 import { NO_USER_IDENTITY_ERROR, NO_WALLET_ERROR } from '@lib/utils/errors'
-import { DataErrorDisplay, formatBalance, invariant } from '@lib/utils/misc'
+import {
+  DataErrorDisplay,
+  fetchWrapper,
+  formatBalance,
+  invariant,
+} from '@lib/utils/misc'
 import { defer, LoaderFunctionArgs } from '@remix-run/node'
 import { Await, useRouteLoaderData } from '@remix-run/react'
 import { requireUserWallet } from '@server/auth'
@@ -32,8 +35,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
       identityId: userWallet,
       searchParams,
     }),
-    claimsSummary: getClaimSummaryAboutIdentity({
-      identityId: userWallet,
+    claimsSummary: fetchWrapper({
+      method: ClaimsService.claimSummary,
+      args: {
+        identity: userWallet,
+      },
     }),
   })
 }

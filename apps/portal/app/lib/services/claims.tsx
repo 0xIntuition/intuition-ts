@@ -2,7 +2,6 @@ import {
   ClaimPresenter,
   ClaimSortColumn,
   ClaimsService,
-  ClaimSummaryResponse,
 } from '@0xintuition/api'
 
 import { fetchWrapper } from '@lib/utils/misc'
@@ -42,16 +41,4 @@ export async function getClaimsAboutIdentity({
       totalPages: Math.ceil(claims.total / Number(limit)),
     },
   }
-}
-
-export async function getClaimSummaryAboutIdentity({
-  identityId,
-}: {
-  identityId: string
-}) {
-  const claimSummary = await ClaimsService.claimSummary({
-    identity: identityId,
-  })
-
-  return claimSummary as ClaimSummaryResponse
 }
