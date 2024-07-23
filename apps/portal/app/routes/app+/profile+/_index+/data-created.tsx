@@ -12,7 +12,6 @@ import {
   ClaimsService,
   IdentitiesService,
   IdentityPresenter,
-  UsersService,
   UserTotalsPresenter,
 } from '@0xintuition/api'
 
@@ -26,9 +25,17 @@ import {
   DataCreatedHeaderVariantType,
 } from '@components/profile/data-created-header'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
-import { getUserClaims, getUserIdentities } from '@lib/services/users'
-import { NO_USER_IDENTITY_ERROR, NO_WALLET_ERROR } from '@lib/utils/errors'
-import logger from '@lib/utils/logger'
+import {
+  getCreatedClaims,
+  getCreatedIdentities,
+  getUserClaims,
+  getUserIdentities,
+} from '@lib/services/users'
+import {
+  NO_USER_IDENTITY_ERROR,
+  NO_USER_TOTALS_ERROR,
+  NO_WALLET_ERROR,
+} from '@lib/utils/errors'
 import {
   DataErrorDisplay,
   fetchWrapper,
@@ -45,33 +52,10 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const userWallet = await requireUserWallet(request)
   invariant(userWallet, NO_WALLET_ERROR)
 
-  const userIdentity = await fetchWrapper({
-    method: IdentitiesService.getIdentityById,
-    args: {
-      id: userWallet,
-    },
-  })
-  if (!userIdentity) {
-    return logger('No user identity found')
-  }
-  if (!userIdentity.creator || typeof userIdentity.creator.id !== 'string') {
-    logger('Invalid or missing creator ID')
-    return
-  }
-
-  const userTotals = await fetchWrapper({
-    method: UsersService.getUserTotals,
-    args: {
-      id: userIdentity.creator.id,
-    },
-  })
-
   const url = new URL(request.url)
   const searchParams = new URLSearchParams(url.search)
 
   return defer({
-    userIdentity,
-    userTotals,
     activeIdentities: getUserIdentities({ userWallet, searchParams }),
     activeClaims: getUserClaims({ userWallet, searchParams }),
     activeClaimsSummary: fetchWrapper({
@@ -80,14 +64,14 @@ export async function loader({ request }: LoaderFunctionArgs) {
         identity: userWallet,
       },
     }),
-    createdIdentities: getUserIdentities({ userWallet, searchParams }),
+    createdIdentities: getCreatedIdentities({ userWallet, searchParams }),
     createdIdentitiesSummary: fetchWrapper({
       method: IdentitiesService.identitySummary,
       args: {
-        creator: userIdentity.creator.id,
+        creator: userWallet,
       },
     }),
-    createdClaims: getUserClaims({ userWallet, searchParams }),
+    createdClaims: getCreatedClaims({ userWallet, searchParams }),
     createdClaimsSummary: fetchWrapper({
       method: ClaimsService.claimSummary,
       args: {
@@ -131,7 +115,6 @@ const TabContent = ({
 
 export default function ProfileDataCreated() {
   const {
-    userTotals,
     activeIdentities,
     createdIdentities,
     createdIdentitiesSummary,
@@ -141,11 +124,12 @@ export default function ProfileDataCreated() {
     createdClaimsSummary,
   } = useLiveLoader<typeof loader>(['attest'])
 
-  const { userIdentity } =
+  const { userIdentity, userTotals } =
     useRouteLoaderData<ProfileLoaderData>(
       'routes/app+/profile+/_index+/_layout',
     ) ?? {}
   invariant(userIdentity, NO_USER_IDENTITY_ERROR)
+  invariant(userTotals, NO_USER_TOTALS_ERROR)
 
   return (
     <>

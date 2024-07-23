@@ -1,4 +1,12 @@
-import { SortColumn, UsersService } from '@0xintuition/api'
+import {
+  ClaimPresenter,
+  ClaimSortColumn,
+  ClaimsService,
+  IdentitiesService,
+  IdentityPresenter,
+  SortColumn,
+  UsersService,
+} from '@0xintuition/api'
 
 import { fetchWrapper } from '@lib/utils/misc'
 import { getStandardPageParams } from '@lib/utils/params'
@@ -13,10 +21,9 @@ export async function getUserIdentities({
   const { page, limit, sortBy, direction } = getStandardPageParams({
     searchParams,
     paramPrefix: 'activeIdentities',
-    defaultSortByValue: SortColumn.USER_ASSETS,
   })
-
-  const search = searchParams.get('activeIdentitiesSearch')
+  const identitiesSearch =
+    (searchParams.get('activeIdentitiesSearch') as string) || null
 
   const result = await fetchWrapper({
     method: UsersService.getUserIdentities,
@@ -26,7 +33,7 @@ export async function getUserIdentities({
       limit,
       sortBy,
       direction,
-      displayName: search,
+      displayName: identitiesSearch,
     },
   })
 
@@ -37,6 +44,43 @@ export async function getUserIdentities({
       limit: Number(limit),
       totalEntries: result?.total ?? 0,
       totalPages: Math.ceil((result?.total ?? 0) / Number(limit)),
+    },
+  }
+}
+
+export async function getCreatedIdentities({
+  userWallet,
+  searchParams,
+}: {
+  userWallet: string
+  searchParams: URLSearchParams
+}) {
+  const { page, limit, sortBy, direction } = getStandardPageParams({
+    searchParams,
+    paramPrefix: 'createdIdentities',
+  })
+  const identitiesSearch =
+    (searchParams.get('identitiesSearch') as string) || null
+
+  const identities = await fetchWrapper({
+    method: IdentitiesService.searchIdentity,
+    args: {
+      page,
+      limit,
+      sortBy: sortBy as SortColumn,
+      direction,
+      creator: userWallet,
+      displayName: identitiesSearch,
+    },
+  })
+
+  return {
+    data: identities.data as IdentityPresenter[],
+    pagination: {
+      currentPage: Number(page),
+      limit: Number(limit),
+      totalEntries: identities.total,
+      totalPages: Math.ceil(identities.total / Number(limit)),
     },
   }
 }
@@ -52,8 +96,8 @@ export async function getUserClaims({
     searchParams,
     paramPrefix: 'activeClaims',
   })
-
-  const search = searchParams.get('activeClaimsSearch')
+  const claimsSearch =
+    (searchParams.get('activeClaimsSearch') as string) || null
 
   const result = await fetchWrapper({
     method: UsersService.getUserClaims,
@@ -63,7 +107,7 @@ export async function getUserClaims({
       limit,
       sortBy,
       direction,
-      displayName: search,
+      displayName: claimsSearch,
     },
   })
 
@@ -74,6 +118,42 @@ export async function getUserClaims({
       limit: Number(limit),
       totalEntries: result?.total ?? 0,
       totalPages: Math.ceil((result?.total ?? 0) / Number(limit)),
+    },
+  }
+}
+
+export async function getCreatedClaims({
+  userWallet,
+  searchParams,
+}: {
+  userWallet: string
+  searchParams: URLSearchParams
+}) {
+  const { page, limit, sortBy, direction } = getStandardPageParams({
+    searchParams,
+    paramPrefix: 'createdClaims',
+  })
+  const claimsSearch = (searchParams.get('claimsSearch') as string) || null
+
+  const claims = await fetchWrapper({
+    method: ClaimsService.searchClaims,
+    args: {
+      page,
+      limit,
+      sortBy: sortBy as ClaimSortColumn,
+      direction,
+      creator: userWallet,
+      displayName: claimsSearch,
+    },
+  })
+
+  return {
+    data: claims.data as ClaimPresenter[],
+    pagination: {
+      currentPage: Number(page),
+      limit: Number(limit),
+      totalEntries: claims.total,
+      totalPages: Math.ceil(claims.total / Number(limit)),
     },
   }
 }
