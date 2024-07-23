@@ -75,7 +75,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     createdClaimsSummary: fetchWrapper({
       method: ClaimsService.claimSummary,
       args: {
-        identity: userWallet,
+        creator: userWallet,
       },
     }),
   })
