@@ -48,7 +48,10 @@ export default function Index() {
       <SidebarNav userObject={userObject}>
         <Outlet />
       </SidebarNav>
-      {/* <PrivyLogout wallet={wallet} /> */}
+      {/* 
+      TODO: Fix constant logout issue [ENG-2776]
+      <PrivyLogout wallet={wallet} /> 
+      */}
     </div>
   )
 }
