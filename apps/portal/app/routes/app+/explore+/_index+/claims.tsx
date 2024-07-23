@@ -78,6 +78,7 @@ export default function ExploreClaims() {
         claims={claims}
         pagination={claimsPagination}
         enableSearch={false}
+        enableSort={true}
       />
     </div>
   )

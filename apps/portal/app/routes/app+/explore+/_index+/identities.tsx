@@ -8,7 +8,6 @@ import { getStandardPageParams } from '@lib/utils/params'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 import { requireUserWallet } from '@server/auth'
-import { PaginationType } from 'types/pagination'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const wallet = await requireUserWallet(request)
@@ -58,7 +57,9 @@ export default function ExploreIdentities() {
       <ExploreSearch variant="identity" className="mb-12" />
       <IdentitiesList
         identities={identities}
-        pagination={pagination as PaginationType}
+        pagination={pagination}
+        enableSearch={false}
+        enableSort={true}
       />
     </div>
   )

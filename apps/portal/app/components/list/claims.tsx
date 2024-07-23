@@ -13,11 +13,13 @@ export function ClaimsList({
   pagination,
   paramPrefix,
   enableSearch = false,
+  enableSort = false,
 }: {
   claims: ClaimPresenter[]
   pagination: PaginationType
   paramPrefix?: string
   enableSearch?: boolean
+  enableSort?: boolean
 }) {
   const navigate = useNavigate()
   const options: SortOption<ClaimSortColumn>[] = [
@@ -38,6 +40,7 @@ export function ClaimsList({
       options={options}
       paramPrefix={paramPrefix}
       enableSearch={enableSearch}
+      enableSort={enableSort}
     >
       {claims?.map((claim) => (
         <div
