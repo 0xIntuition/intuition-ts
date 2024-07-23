@@ -9,9 +9,11 @@ export default function PrivyLogout({ wallet }: { wallet: string }) {
   const submit = useSubmit()
   const { logout } = usePrivy()
   const { disconnect } = useDisconnect()
+
   useEffect(() => {
+    let mounted = true
     const handleLogout = async () => {
-      if (address !== wallet) {
+      if (mounted && address && address !== wallet) {
         await logout()
         disconnect()
         submit(null, {
@@ -21,7 +23,10 @@ export default function PrivyLogout({ wallet }: { wallet: string }) {
       }
     }
     handleLogout()
+    return () => {
+      mounted = false
+    }
   }, [address, wallet, submit, logout, disconnect])
 
-  return <div></div>
+  return null
 }
