@@ -58,6 +58,7 @@ const ExploreSearchClaimInput = ({
     fetchIdentityById(params.get(Identity.Subject), subjectFetcher)
     fetchIdentityById(params.get(Identity.Predicate), predicateFetcher)
     fetchIdentityById(params.get(Identity.Object), objectFetcher)
+    // omits the fetchers from the exhaustive deps
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.search])
 
@@ -75,6 +76,7 @@ const ExploreSearchClaimInput = ({
     }
 
     setSelectedIdentities(newSelectedIdentities)
+    // omits the fetchers data from the exhaustive deps
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [subjectFetcher.data, predicateFetcher.data, objectFetcher.data])
 

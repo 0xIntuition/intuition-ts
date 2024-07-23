@@ -23,7 +23,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const { page, limit, sortBy, direction } = getStandardPageParams({
     searchParams,
   })
-  // const displayName = searchParams.get('claim') || null
   const subjectVaultId = searchParams.get('subject') || null
   const predicateVaultId = searchParams.get('predicate') || null
   const objectVaultId = searchParams.get('object') || null
@@ -35,7 +34,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
       limit,
       sortBy: sortBy as ClaimSortColumn,
       direction,
-      // displayName,
       subject: subjectVaultId,
       predicate: predicateVaultId,
       object: objectVaultId,

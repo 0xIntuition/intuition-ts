@@ -65,13 +65,15 @@ const IdentityInputButton = ({
       <Popover open={isPopoverOpen} onOpenChange={onClick}>
         <PopoverTrigger asChild>
           {selectedValue.name ? (
-            <IdentityTag
-              size={IdentityTagSize.lg}
-              variant={selectedValue.variant}
-              {...props}
-            >
-              {selectedValue.name.toLowerCase()}
-            </IdentityTag>
+            <button onClick={onClick} className="cursor-pointer">
+              <IdentityTag
+                size={IdentityTagSize.lg}
+                variant={selectedValue.variant}
+                {...props}
+              >
+                {selectedValue.name.toLowerCase()}
+              </IdentityTag>
+            </button>
           ) : (
             <Button
               variant={ButtonVariant.secondary}
