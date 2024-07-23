@@ -43,7 +43,7 @@ export function FollowList({
             avatarSrc={identity.user?.image ?? identity.image ?? ''}
             name={identity.user?.display_name ?? identity.display_name ?? ''}
             walletAddress={identity.user?.wallet ?? identity.identity_id ?? ''}
-            amount={+formatBalance(BigInt(identity.user_assets), 18, 4)}
+            amount={+formatBalance(BigInt(identity.user_assets || ''), 18, 4)}
             feesAccrued={
               identity.user_asset_delta
                 ? +formatBalance(
