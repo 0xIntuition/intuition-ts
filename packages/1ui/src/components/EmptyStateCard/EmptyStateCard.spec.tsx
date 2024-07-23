@@ -20,14 +20,14 @@ describe('EmptyStateCard', () => {
           class="flex flex-col justify-center items-center p-6 theme-border rounded-lg min-h-52"
         >
           <svg
-            class="w-12 h-12 mb-4 text-muted-foreground"
+            class="w-12 h-12 mb-4"
           >
             <use
               href="/src/components/Icon/Icon.sprites.svg#inbox-empty"
             />
           </svg>
           <p
-            class="text-sm font-normal text-white mb-5"
+            class="text-sm font-normal text-muted-foreground mb-5"
           >
             No data available
           </p>
