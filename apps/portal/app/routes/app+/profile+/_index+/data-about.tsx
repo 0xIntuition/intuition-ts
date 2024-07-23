@@ -5,6 +5,7 @@ import {
   ClaimPresenter,
   ClaimSortColumn,
   ClaimsService,
+  ClaimSummaryResponse,
   Identifier,
   IdentitiesService,
   IdentityPositionsService,
@@ -17,22 +18,86 @@ import { PositionsOnIdentity } from '@components/list/positions-on-identity'
 import DataAboutHeader from '@components/profile/data-about-header'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { NO_WALLET_ERROR } from '@lib/utils/errors'
-import logger from '@lib/utils/logger'
-import {
-  calculateTotalPages,
-  fetchWrapper,
-  formatBalance,
-  invariant,
-} from '@lib/utils/misc'
+import { fetchWrapper, formatBalance, invariant } from '@lib/utils/misc'
 import { getStandardPageParams } from '@lib/utils/params'
 import { defer, LoaderFunctionArgs } from '@remix-run/node'
 import { Await } from '@remix-run/react'
 import { requireUserWallet } from '@server/auth'
 
-const simulateError = (shouldError: boolean) => {
-  if (shouldError) {
-    throw new Error('Simulated error')
+async function getPositions(userWallet: string, searchParams: URLSearchParams) {
+  const { page, limit, sortBy, direction } = getStandardPageParams({
+    searchParams,
+    paramPrefix: 'positions',
+    defaultSortByValue: PositionSortColumn.ASSETS,
+  })
+  const positionsSearch =
+    (searchParams.get('positionsSearch') as Identifier) || null
+
+  const positions = await fetchWrapper({
+    method: IdentityPositionsService.getIdentityPositions,
+    args: {
+      id: userWallet,
+      page,
+      limit,
+      sortBy: sortBy as PositionSortColumn,
+      direction,
+      creator: positionsSearch,
+    },
+  })
+
+  return {
+    data: positions.data as PositionPresenter[],
+    pagination: {
+      currentPage: Number(page),
+      limit: Number(limit),
+      totalEntries: positions.total,
+      totalPages: Math.ceil(positions.total / Number(limit)),
+    },
   }
+}
+
+async function getClaims(
+  userIdentityId: string,
+  searchParams: URLSearchParams,
+) {
+  const { page, limit, sortBy, direction } = getStandardPageParams({
+    searchParams,
+    paramPrefix: 'claims',
+  })
+  const claimsSearch = (searchParams.get('claimsSearch') as string) || null
+
+  const claims = await fetchWrapper({
+    method: ClaimsService.searchClaims,
+    args: {
+      identity: userIdentityId,
+      page,
+      limit,
+      sortBy: sortBy as ClaimSortColumn,
+      direction,
+      displayName: claimsSearch,
+    },
+  })
+
+  return {
+    data: claims.data as ClaimPresenter[],
+    pagination: {
+      currentPage: Number(page),
+      limit: Number(limit),
+      totalEntries: claims.total,
+      totalPages: Math.ceil(claims.total / Number(limit)),
+    },
+  }
+}
+
+async function getClaimSummary(userIdentityId: string) {
+  const claimSummary = await fetchWrapper({
+    method: ClaimsService.claimSummary,
+    args: {
+      identity: userIdentityId,
+    },
+  })
+
+  return claimSummary as ClaimSummaryResponse
 }
 
 export async function loader({ request }: LoaderFunctionArgs) {
@@ -41,132 +106,25 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   const userIdentity = await fetchWrapper({
     method: IdentitiesService.getIdentityById,
-    args: {
-      id: userWallet,
-    },
+    args: { id: userWallet },
   })
 
   if (!userIdentity) {
-    return logger('No user identity found')
+    throw new Error('No user identity found')
   }
 
   if (!userIdentity.creator || typeof userIdentity.creator.id !== 'string') {
-    logger('Invalid or missing creator ID')
-    return
+    throw new Error('Invalid or missing creator ID')
   }
 
   const url = new URL(request.url)
   const searchParams = new URLSearchParams(url.search)
 
-  const {
-    page: positionsPage,
-    limit: positionsLimit,
-    sortBy: positionsSortBy,
-    direction: positionsDirection,
-  } = getStandardPageParams({
-    searchParams,
-    paramPrefix: 'positions',
-    defaultSortByValue: PositionSortColumn.ASSETS,
-  })
-
-  const positionsSearch =
-    (searchParams.get('positionsSearch') as Identifier) || null
-
-  const positionsPromise = fetchWrapper({
-    method: IdentityPositionsService.getIdentityPositions,
-    args: {
-      id: userWallet,
-      page: positionsPage,
-      limit: positionsLimit,
-      sortBy: positionsSortBy as PositionSortColumn,
-      direction: positionsDirection,
-      creator: positionsSearch,
-    },
-  })
-
-  const {
-    page: claimsPage,
-    limit: claimsLimit,
-    sortBy: claimsSortBy,
-    direction: claimsDirection,
-  } = getStandardPageParams({ searchParams, paramPrefix: 'claims' })
-
-  const claimsSearch = (searchParams.get('claimsSearch') as string) || null
-
-  const claimsPromise = fetchWrapper({
-    method: ClaimsService.searchClaims,
-    args: {
-      identity: userIdentity.id,
-      page: claimsPage,
-      limit: claimsLimit,
-      sortBy: claimsSortBy as ClaimSortColumn,
-      direction: claimsDirection,
-      displayName: claimsSearch,
-    },
-  })
-
-  const claimsSummaryPromise = fetchWrapper({
-    method: ClaimsService.claimSummary,
-    args: {
-      identity: userIdentity.id,
-    },
-  })
-
   return defer({
     userIdentity,
-    positions: positionsPromise
-      .then((positions) => ({
-        data: positions.data as PositionPresenter[],
-        pagination: {
-          currentPage: Number(positionsPage),
-          limit: Number(positionsLimit),
-          totalEntries: positions.total,
-          totalPages: calculateTotalPages(
-            positions.total,
-            Number(positionsLimit),
-          ),
-        },
-      }))
-      .catch((error) => {
-        console.error('Error fetching positions:', error)
-        return {
-          data: [] as PositionPresenter[],
-          pagination: {
-            currentPage: 1,
-            limit: 10,
-            totalEntries: 0,
-            totalPages: 0,
-          },
-        }
-      }),
-    claims: claimsPromise
-      .then((claims) => ({
-        data: claims.data as ClaimPresenter[],
-        pagination: {
-          currentPage: Number(claimsPage),
-          limit: Number(claimsLimit),
-          totalEntries: claims.total,
-          totalPages: calculateTotalPages(claims.total, Number(claimsLimit)),
-        },
-      }))
-      .catch((error) => {
-        console.error('Error fetching claims:', error)
-        return {
-          data: [] as ClaimPresenter[],
-          pagination: {
-            currentPage: 1,
-            limit: 10,
-            totalEntries: 0,
-            totalPages: 0,
-          },
-        }
-      }),
-    claimsSummary: claimsSummaryPromise.catch((error) => {
-      console.error('Error fetching claim summary:', error)
-      return null
-    }),
-    claimsSortBy,
-    claimsDirection,
+    positions: getPositions(userWallet, searchParams),
+    claims: getClaims(userIdentity.id, searchParams),
+    claimsSummary: getClaimSummary(userIdentity.id),
   })
 }
 
@@ -174,9 +132,6 @@ export default function ProfileDataAbout() {
   const { userIdentity, positions, claims, claimsSummary } = useLiveLoader<
     typeof loader
   >(['attest'])
-
-  const simulatePositionsError = true
-  const simulateClaimsError = true
 
   return (
     <div className="flex-col justify-start items-start flex w-full gap-6">
@@ -187,35 +142,29 @@ export default function ProfileDataAbout() {
           userIdentity={userIdentity}
           totalClaims={
             <Suspense fallback={<Skeleton className="h-6 w-6 inline-flex" />}>
-              <Await resolve={claims.then((c) => c.pagination.totalEntries)}>
-                {(totalClaims) => totalClaims}
+              <Await resolve={claims}>
+                {(resolvedClaims) => resolvedClaims.pagination.totalEntries}
               </Await>
             </Suspense>
           }
           totalStake={
-            <Suspense fallback={<Skeleton className="h-6 w-6 inline-flex" />}>
+            <Suspense fallback={<Skeleton className="h-6 w-14 inline-flex" />}>
               <Await resolve={claimsSummary}>
-                {(cs) => {
-                  const assetsSum = cs?.assets_sum ?? 0
-                  return `${formatBalance(assetsSum, 18, 4)} ETH`
-                }}
+                {(cs) => `${formatBalance(cs?.assets_sum ?? 0, 18, 4)} ETH`}
               </Await>
             </Suspense>
           }
         />
         <Suspense fallback={<Skeleton className="w-full h-28 mt-6" />}>
           <Await resolve={claims} errorElement={<ErrorDisplay />}>
-            {(resolvedClaims) => {
-              simulateError(simulateClaimsError)
-              return (
-                <ClaimsAboutIdentity
-                  claims={resolvedClaims.data}
-                  pagination={resolvedClaims.pagination}
-                  paramPrefix="claims"
-                  enableSearch
-                />
-              )
-            }}
+            {(resolvedClaims) => (
+              <ClaimsAboutIdentity
+                claims={resolvedClaims.data}
+                pagination={resolvedClaims.pagination}
+                paramPrefix="claims"
+                enableSearch
+              />
+            )}
           </Await>
         </Suspense>
       </div>
@@ -229,15 +178,12 @@ export default function ProfileDataAbout() {
         />
         <Suspense fallback={<Skeleton className="w-full h-28 mt-6" />}>
           <Await resolve={positions} errorElement={<ErrorDisplay />}>
-            {(resolvedPositions) => {
-              simulateError(simulatePositionsError)
-              return (
-                <PositionsOnIdentity
-                  positions={resolvedPositions.data}
-                  pagination={resolvedPositions.pagination}
-                />
-              )
-            }}
+            {(resolvedPositions) => (
+              <PositionsOnIdentity
+                positions={resolvedPositions.data}
+                pagination={resolvedPositions.pagination}
+              />
+            )}
           </Await>
         </Suspense>
       </div>
