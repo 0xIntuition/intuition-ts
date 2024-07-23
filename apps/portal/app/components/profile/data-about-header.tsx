@@ -34,7 +34,7 @@ const DataAboutHeader: React.FC<DataAboutHeaderProps> = ({
   //     return totalStake
   //   }
   //   if (typeof totalStake === 'number') {
-  //     return <MonetaryValue value={totalStake} currency="ETH" />
+  //     return <MonetaryValue value={totalStake} currency="ETH" className="text-xl font-medium leading-[30px] items-center" />
   //   }
   //   return (
   //     <Text
