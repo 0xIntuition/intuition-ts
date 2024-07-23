@@ -73,17 +73,17 @@ describe('SidebarLayout', () => {
             data-panel-collapsible="true"
             data-panel-group-id=":r0:"
             data-panel-id=":r1:"
-            data-panel-size="30.0"
-            style="flex-basis: 0px; flex-grow: 30; flex-shrink: 1; overflow: hidden;"
+            data-panel-size="50.0"
+            style="flex-basis: 0px; flex-grow: 50; flex-shrink: 1; overflow: hidden;"
           >
             <div
               class="from-primary/10 to-primary/2 flex h-full flex-col items-center bg-gradient-to-b"
             >
               <div
-                class="border-primary/30 flex w-full items-center gap-2 border-0 border-b-[1px] p-4"
+                class="border-border/20 flex w-full items-center border-0 border-b-[1px] py-4 px-6"
               >
                 <button
-                  class="flex gap-2 items-center"
+                  class="flex gap-3 items-center"
                 >
                   <span>
                     imgLogo
@@ -136,7 +136,7 @@ describe('SidebarLayout', () => {
                   </svg>
                   Settings
                 </button>
-                <button
+                <div
                   class="flex items-center font-medium border disabled:bg-muted disabled:border-muted bg-transparent text-secondary-foreground/70 border-transparent rounded-lg hover:text-secondary-foreground hover:border-border/20 aria-selected:bg-primary/10 aria-selected:text-secondary-foreground/80 disabled:text-muted-foreground px-4 py-2 gap-3 text-base w-full justify-start"
                 >
                   <span
@@ -149,12 +149,12 @@ describe('SidebarLayout', () => {
                     </span>
                   </span>
                   Super Dave
-                </button>
+                </div>
               </div>
             </div>
           </div>
           <div
-            class="border-border/30 focus-visible:ring-ring relative flex w-px items-center justify-center border after:absolute after:inset-y-0 after:left-1/2 after:w-1 after:-translate-x-1/2 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-offset-1 data-[panel-group-direction=vertical]:h-px data-[panel-group-direction=vertical]:w-full data-[panel-group-direction=vertical]:after:left-0 data-[panel-group-direction=vertical]:after:h-1 data-[panel-group-direction=vertical]:after:w-full data-[panel-group-direction=vertical]:after:-translate-y-1/2 data-[panel-group-direction=vertical]:after:translate-x-0 [&[data-panel-group-direction=vertical]>div]:rotate-90"
+            class="border-border/20 focus-visible:ring-ring relative flex w-px items-center justify-center border after:absolute after:inset-y-0 after:left-1/2 after:w-1 after:-translate-x-1/2 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-offset-1 data-[panel-group-direction=vertical]:h-px data-[panel-group-direction=vertical]:w-full data-[panel-group-direction=vertical]:after:left-0 data-[panel-group-direction=vertical]:after:h-1 data-[panel-group-direction=vertical]:after:w-full data-[panel-group-direction=vertical]:after:-translate-y-1/2 data-[panel-group-direction=vertical]:after:translate-x-0 [&[data-panel-group-direction=vertical]>div]:rotate-90"
             data-panel-group-direction="horizontal"
             data-panel-group-id=":r0:"
             data-panel-resize-handle-enabled="true"
@@ -166,7 +166,7 @@ describe('SidebarLayout', () => {
             tabindex="0"
           >
             <div
-              class="bg-background border-border/30 z-10 flex h-4 w-3 items-center justify-center rounded-sm border"
+              class="bg-background border-border/20 z-10 flex h-4 w-3 items-center justify-center rounded-sm border"
             >
               <svg
                 class="h-3 w-3"

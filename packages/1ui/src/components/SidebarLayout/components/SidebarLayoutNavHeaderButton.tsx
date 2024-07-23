@@ -13,7 +13,7 @@ export const SidebarLayoutNavHeaderButton = ({
 }: SidebarLayoutNavHeaderButtonProps) => {
   const { isCollapsed } = useSidebarLayoutContext()
   return (
-    <button className="flex gap-2 items-center" {...props}>
+    <button className="flex gap-3 items-center" {...props}>
       {imgLogo}
       {!isCollapsed && textLogo}
     </button>

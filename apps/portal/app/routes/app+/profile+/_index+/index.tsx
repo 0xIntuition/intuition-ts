@@ -29,7 +29,7 @@ export default function ProfileOverview() {
         subtitle={userQuests.currentQuest.subtitle}
         numberOfCompletedQuests={userQuests.questsCompleted}
         totalNumberOfQuests={userQuests.totalQuests}
-        onButtonClick={() => navigate('/app/quests')}
+        onButtonClick={() => navigate('/app/quest')}
       />
       <h2 className="font-medium text-xl text-secondary-foreground">About</h2>
       <h2 className="font-medium text-xl text-secondary-foreground">

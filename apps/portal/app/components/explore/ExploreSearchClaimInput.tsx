@@ -58,6 +58,7 @@ const ExploreSearchClaimInput = ({
     fetchIdentityById(params.get(Identity.Subject), subjectFetcher)
     fetchIdentityById(params.get(Identity.Predicate), predicateFetcher)
     fetchIdentityById(params.get(Identity.Object), objectFetcher)
+    // omits the fetchers from the exhaustive deps
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.search])
 
@@ -75,6 +76,7 @@ const ExploreSearchClaimInput = ({
     }
 
     setSelectedIdentities(newSelectedIdentities)
+    // omits the fetchers data from the exhaustive deps
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [subjectFetcher.data, predicateFetcher.data, objectFetcher.data])
 
@@ -95,17 +97,17 @@ const ExploreSearchClaimInput = ({
   }) => {
     const params = new URLSearchParams(window.location.search)
     if (identities.subject) {
-      params.set(Identity.Subject, identities.subject.identity_id)
+      params.set(Identity.Subject, identities.subject.id)
     } else {
       params.delete(Identity.Subject)
     }
     if (identities.predicate) {
-      params.set(Identity.Predicate, identities.predicate.identity_id)
+      params.set(Identity.Predicate, identities.predicate.id)
     } else {
       params.delete(Identity.Predicate)
     }
     if (identities.object) {
-      params.set(Identity.Object, identities.object.identity_id)
+      params.set(Identity.Object, identities.object.id)
     } else {
       params.delete(Identity.Object)
     }

@@ -77,7 +77,7 @@ const ExploreAddTags = ({
 
   React.useEffect(() => {
     const selectedTagIds: string[] = []
-    selectedTags.forEach((tag) => selectedTagIds.push(tag.id))
+    selectedTags.forEach((tag) => selectedTagIds.push(tag.name))
     // trigger input value change and onChange event to update parent form
     inputElementRef.current?.setAttribute('value', selectedTagIds.toString())
     const event = new Event('input', { bubbles: true })
@@ -117,7 +117,10 @@ const ExploreAddTags = ({
               if (!isTagAlreadySelected(selection, selectedTags)) {
                 setSelectedTags([
                   ...selectedTags,
-                  { name: selection.display_name, id: selection.id },
+                  {
+                    name: selection.display_name,
+                    id: selection.id,
+                  },
                 ])
               }
             }}

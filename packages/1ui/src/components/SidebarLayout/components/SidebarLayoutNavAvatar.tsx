@@ -1,9 +1,9 @@
-import { type VariantProps } from 'class-variance-authority'
-
 import {
   Avatar,
-  Button,
+  ButtonSize,
+  ButtonVariant,
   buttonVariants,
+  cn,
   Text,
   TextVariant,
   Tooltip,
@@ -14,22 +14,17 @@ import {
 import { useSidebarLayoutContext } from './SidebarLayoutProvider'
 
 export interface SidebarLayoutNavAvatarProps
-  extends VariantProps<typeof buttonVariants> {
+  extends React.HTMLAttributes<HTMLDivElement> {
   imageSrc: string
   name: string
-  onClick?: () => void
 }
 
 export const SidebarLayoutNavAvatar = ({
   imageSrc,
   name,
-  onClick,
 }: SidebarLayoutNavAvatarProps) => {
+  const containerBaseClass = 'w-full justify-start'
   const { isCollapsed } = useSidebarLayoutContext()
-  const buttonProps = {
-    className: 'w-full justify-start',
-    onClick,
-  }
   const AvatarComponent = () => (
     <Avatar className="h-6 w-6" src={imageSrc} name={name} />
   )
@@ -37,9 +32,17 @@ export const SidebarLayoutNavAvatar = ({
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>
-          <Button variant="navigation" size="iconLg" {...buttonProps}>
+          <div
+            className={cn(
+              buttonVariants({
+                variant: ButtonVariant.navigation,
+                size: ButtonSize.iconLg,
+              }),
+              containerBaseClass,
+            )}
+          >
             <AvatarComponent />
-          </Button>
+          </div>
         </TooltipTrigger>
         <TooltipContent side="right" sideOffset={16}>
           <Text variant={TextVariant.body}>{name}</Text>
@@ -47,9 +50,17 @@ export const SidebarLayoutNavAvatar = ({
       </Tooltip>
     </TooltipProvider>
   ) : (
-    <Button variant="navigation" size="lg" {...buttonProps}>
+    <div
+      className={cn(
+        buttonVariants({
+          variant: ButtonVariant.navigation,
+          size: ButtonSize.lg,
+        }),
+        containerBaseClass,
+      )}
+    >
       <AvatarComponent />
       {name}
-    </Button>
+    </div>
   )
 }

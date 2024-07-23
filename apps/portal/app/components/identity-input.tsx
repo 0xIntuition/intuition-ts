@@ -63,7 +63,7 @@ const IdentityInputButton = ({
   return (
     <div className="flex flex-col gap-2 items-start">
       <Popover open={isPopoverOpen} onOpenChange={onClick}>
-        <PopoverTrigger asChild>
+        <PopoverTrigger>
           {selectedValue.name ? (
             <IdentityTag
               size={IdentityTagSize.lg}
@@ -83,7 +83,7 @@ const IdentityInputButton = ({
             </Button>
           )}
         </PopoverTrigger>
-        <PopoverContent className="bg-transparent">
+        <PopoverContent className="bg-transparent border-0 w-max p-0">
           <IdentitySearchCombobox
             identities={identitiesToList}
             onIdentitySelect={onIdentitySelect}

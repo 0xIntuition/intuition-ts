@@ -45,7 +45,7 @@ export function IdentitiesList({
             avatarSrc={identity.user?.image ?? identity.image ?? ''}
             name={identity.user?.display_name ?? identity.display_name}
             walletAddress={identity.user?.wallet ?? identity.identity_id}
-            amount={+formatBalance(BigInt(identity.user_assets), 18, 4)}
+            amount={+formatBalance(BigInt(identity.user_assets || ''), 18, 4)}
             totalFollowers={identity.num_positions}
             onClick={() => {
               navigate(

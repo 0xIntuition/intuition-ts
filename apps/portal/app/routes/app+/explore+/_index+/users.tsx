@@ -20,7 +20,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
     searchParams,
   })
   const displayName = searchParams.get('user') || null
-  const hasTag = searchParams.get('tagIds') || null
 
   const identities = await fetchWrapper({
     method: IdentitiesService.searchIdentity,
@@ -30,7 +29,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
       sortBy,
       direction,
       displayName,
-      hasTag,
       isUser: true,
     },
   })

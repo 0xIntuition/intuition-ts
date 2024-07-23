@@ -23,7 +23,9 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const { page, limit, sortBy, direction } = getStandardPageParams({
     searchParams,
   })
-  const displayName = searchParams.get('claim') || null
+  const subjectId = searchParams.get('subject') || null
+  const predicateId = searchParams.get('predicate') || null
+  const objectId = searchParams.get('object') || null
 
   const claims = await fetchWrapper({
     method: ClaimsService.searchClaims,
@@ -32,7 +34,9 @@ export async function loader({ request }: LoaderFunctionArgs) {
       limit,
       sortBy: sortBy as ClaimSortColumn,
       direction,
-      displayName,
+      subject: subjectId,
+      predicate: predicateId,
+      object: objectId,
     },
   })
 
