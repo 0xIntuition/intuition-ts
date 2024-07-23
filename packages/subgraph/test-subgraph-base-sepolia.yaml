@@ -1,5 +1,5 @@
 apiVersion: 3
-name: simon-subgraph-base-sepolia
+name: neon-subgraph-base-sepolia
 status: ACTIVE
 sources:
   base_sepolia_account:
