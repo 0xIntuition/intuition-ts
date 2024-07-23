@@ -9,10 +9,8 @@ import {
 } from '@0xintuition/1ui'
 import {
   ClaimPresenter,
-  ClaimsService,
   IdentitiesService,
   IdentityPresenter,
-  SortColumn,
 } from '@0xintuition/api'
 
 import { FollowList } from '@components/list/follow'
@@ -22,15 +20,10 @@ import {
   ConnectionsHeaderVariantType,
 } from '@components/profile/connections-header'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
+import { getConnectionsData } from '@lib/services/connections'
 import { NO_WALLET_ERROR } from '@lib/utils/errors'
 import logger from '@lib/utils/logger'
-import {
-  calculateTotalPages,
-  fetchWrapper,
-  formatBalance,
-  invariant,
-} from '@lib/utils/misc'
-import { getStandardPageParams } from '@lib/utils/params'
+import { fetchWrapper, formatBalance, invariant } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
 import { requireUserWallet } from '@server/auth'
 import { PaginationType } from 'types/pagination'
@@ -54,106 +47,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
     return logger('Invalid or missing creator ID')
   }
 
-  if (userIdentity.follow_claim_id) {
-    const followClaim = await fetchWrapper({
-      method: ClaimsService.getClaimById,
-      args: {
-        id: userIdentity.follow_claim_id,
-      },
-    })
-    const url = new URL(request.url)
-    const searchParams = new URLSearchParams(url.search)
-
-    const {
-      page: followersPage,
-      limit: followersLimit,
-      sortBy: followersSortBy,
-      direction: followersDirection,
-    } = getStandardPageParams({
-      searchParams,
-      paramPrefix: 'followers',
-      defaultSortByValue: SortColumn.USER_ASSETS,
-    })
-
-    // const followersSearch = searchParams.get('followersSearch') TODO: Add search once BE implements
-
-    const followers = await fetchWrapper({
-      method: IdentitiesService.getIdentityFollowers,
-      args: {
-        id: userIdentity.id,
-        page: followersPage,
-        limit: followersLimit,
-        sortBy: followersSortBy,
-        direction: followersDirection,
-        offset: null,
-        timeframe: null,
-        userWallet: null,
-      },
-    })
-
-    const followersTotalPages = calculateTotalPages(
-      followers?.total ?? 0,
-      Number(followersLimit),
-    )
-
-    const {
-      page: followingPage,
-      limit: followingLimit,
-      sortBy: followingSortBy,
-      direction: followingDirection,
-    } = getStandardPageParams({
-      searchParams,
-      paramPrefix: 'following',
-      defaultSortByValue: SortColumn.USER_ASSETS,
-    })
-
-    // const followingSearch = searchParams.get('followingSearch') TODO: Add search once BE implements
-
-    const following = await fetchWrapper({
-      method: IdentitiesService.getIdentityFollowed,
-      args: {
-        id: userIdentity.id,
-        page: followingPage,
-        limit: followingLimit,
-        sortBy: followingSortBy,
-        direction: followingDirection,
-        offset: null,
-        timeframe: null,
-        userWallet: null,
-      },
-    })
-
-    const followingTotalPages = calculateTotalPages(
-      following?.total ?? 0,
-      Number(followingLimit),
-    )
-
-    return json({
-      userIdentity,
-      followClaim,
-      followers: followers?.data as IdentityPresenter[],
-      followersSortBy,
-      followersDirection,
-      followersPagination: {
-        currentPage: Number(followersPage),
-        limit: Number(followersLimit),
-        totalEntries: followers?.total ?? 0,
-        totalPages: followersTotalPages,
-      },
-      following: following?.data as IdentityPresenter[],
-      followingSortBy,
-      followingDirection,
-      followingPagination: {
-        currentPage: Number(followingPage),
-        limit: Number(followingLimit),
-        totalEntries: following?.total ?? 0,
-        totalPages: followingTotalPages,
-      },
-    })
-  }
+  const connectionsData = await getConnectionsData(userIdentity, request)
 
   return json({
     userIdentity,
+    ...connectionsData,
   })
 }
 
