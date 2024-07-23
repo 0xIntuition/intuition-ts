@@ -178,6 +178,7 @@ export default function ProfileDataCreated() {
                   </Await>
                 </Suspense>
               }
+              disabled={activeIdentities === undefined}
             />
             <TabsTrigger
               value={DataCreatedHeaderVariants.activeClaims}
@@ -191,6 +192,7 @@ export default function ProfileDataCreated() {
                   </Await>
                 </Suspense>
               }
+              disabled={activeClaims === undefined}
             />
           </TabsList>
           <TabContent
@@ -306,6 +308,7 @@ export default function ProfileDataCreated() {
                   </Await>
                 </Suspense>
               }
+              disabled={createdIdentities === undefined}
             />
             <TabsTrigger
               value={DataCreatedHeaderVariants.createdClaims}
@@ -319,6 +322,7 @@ export default function ProfileDataCreated() {
                   </Await>
                 </Suspense>
               }
+              disabled={createdClaims === undefined}
             />
           </TabsList>
           <TabContent
