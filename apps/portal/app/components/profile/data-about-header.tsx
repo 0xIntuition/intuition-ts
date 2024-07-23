@@ -102,11 +102,7 @@ const DataAboutHeader: React.FC<DataAboutHeaderProps> = ({
             >
               Total stake {variant === 'claims' && 'across all Claims'}
             </Text>
-            <Text
-              variant="headline"
-              weight="medium"
-              className="leading-[30px] items-center"
-            >
+            <Text variant="headline" weight="medium" className="items-end">
               {totalStake}
             </Text>
           </div>
