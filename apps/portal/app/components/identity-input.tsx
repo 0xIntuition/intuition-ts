@@ -63,17 +63,15 @@ const IdentityInputButton = ({
   return (
     <div className="flex flex-col gap-2 items-start">
       <Popover open={isPopoverOpen} onOpenChange={onClick}>
-        <PopoverTrigger asChild>
+        <PopoverTrigger>
           {selectedValue.name ? (
-            <button onClick={onClick} className="cursor-pointer">
-              <IdentityTag
-                size={IdentityTagSize.lg}
-                variant={selectedValue.variant}
-                {...props}
-              >
-                {selectedValue.name.toLowerCase()}
-              </IdentityTag>
-            </button>
+            <IdentityTag
+              size={IdentityTagSize.lg}
+              variant={selectedValue.variant}
+              {...props}
+            >
+              {selectedValue.name.toLowerCase()}
+            </IdentityTag>
           ) : (
             <Button
               variant={ButtonVariant.secondary}
@@ -85,7 +83,7 @@ const IdentityInputButton = ({
             </Button>
           )}
         </PopoverTrigger>
-        <PopoverContent className="bg-transparent">
+        <PopoverContent className="bg-transparent border-0 w-max p-0">
           <IdentitySearchCombobox
             identities={identitiesToList}
             onIdentitySelect={onIdentitySelect}

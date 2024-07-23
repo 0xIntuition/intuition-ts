@@ -97,17 +97,17 @@ const ExploreSearchClaimInput = ({
   }) => {
     const params = new URLSearchParams(window.location.search)
     if (identities.subject) {
-      params.set(Identity.Subject, identities.subject.vault_id)
+      params.set(Identity.Subject, identities.subject.id)
     } else {
       params.delete(Identity.Subject)
     }
     if (identities.predicate) {
-      params.set(Identity.Predicate, identities.predicate.vault_id)
+      params.set(Identity.Predicate, identities.predicate.id)
     } else {
       params.delete(Identity.Predicate)
     }
     if (identities.object) {
-      params.set(Identity.Object, identities.object.vault_id)
+      params.set(Identity.Object, identities.object.id)
     } else {
       params.delete(Identity.Object)
     }
