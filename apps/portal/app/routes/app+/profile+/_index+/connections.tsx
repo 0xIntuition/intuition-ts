@@ -33,6 +33,7 @@ import {
 import { getStandardPageParams } from '@lib/utils/params'
 import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
 import { requireUserWallet } from '@server/auth'
+import { PaginationType } from 'types/pagination'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const userWallet = await requireUserWallet(request)
@@ -53,103 +54,116 @@ export async function loader({ request }: LoaderFunctionArgs) {
     return logger('Invalid or missing creator ID')
   }
 
-  if (!userIdentity.follow_claim_id) {
-    return logger('No follow claim ID')
+  if (userIdentity.follow_claim_id) {
+    const followClaim = await fetchWrapper({
+      method: ClaimsService.getClaimById,
+      args: {
+        id: userIdentity.follow_claim_id,
+      },
+    })
+    const url = new URL(request.url)
+    const searchParams = new URLSearchParams(url.search)
+
+    const {
+      page: followersPage,
+      limit: followersLimit,
+      sortBy: followersSortBy,
+      direction: followersDirection,
+    } = getStandardPageParams({
+      searchParams,
+      paramPrefix: 'followers',
+      defaultSortByValue: SortColumn.USER_ASSETS,
+    })
+
+    // const followersSearch = searchParams.get('followersSearch') TODO: Add search once BE implements
+
+    const followers = await fetchWrapper({
+      method: IdentitiesService.getIdentityFollowers,
+      args: {
+        id: userIdentity.id,
+        page: followersPage,
+        limit: followersLimit,
+        sortBy: followersSortBy,
+        direction: followersDirection,
+        offset: null,
+        timeframe: null,
+        userWallet: null,
+      },
+    })
+
+    const followersTotalPages = calculateTotalPages(
+      followers?.total ?? 0,
+      Number(followersLimit),
+    )
+
+    const {
+      page: followingPage,
+      limit: followingLimit,
+      sortBy: followingSortBy,
+      direction: followingDirection,
+    } = getStandardPageParams({
+      searchParams,
+      paramPrefix: 'following',
+      defaultSortByValue: SortColumn.USER_ASSETS,
+    })
+
+    // const followingSearch = searchParams.get('followingSearch') TODO: Add search once BE implements
+
+    const following = await fetchWrapper({
+      method: IdentitiesService.getIdentityFollowed,
+      args: {
+        id: userIdentity.id,
+        page: followingPage,
+        limit: followingLimit,
+        sortBy: followingSortBy,
+        direction: followingDirection,
+        offset: null,
+        timeframe: null,
+        userWallet: null,
+      },
+    })
+
+    const followingTotalPages = calculateTotalPages(
+      following?.total ?? 0,
+      Number(followingLimit),
+    )
+
+    return json({
+      userIdentity,
+      followClaim,
+      followers: followers?.data as IdentityPresenter[],
+      followersSortBy,
+      followersDirection,
+      followersPagination: {
+        currentPage: Number(followersPage),
+        limit: Number(followersLimit),
+        totalEntries: followers?.total ?? 0,
+        totalPages: followersTotalPages,
+      },
+      following: following?.data as IdentityPresenter[],
+      followingSortBy,
+      followingDirection,
+      followingPagination: {
+        currentPage: Number(followingPage),
+        limit: Number(followingLimit),
+        totalEntries: following?.total ?? 0,
+        totalPages: followingTotalPages,
+      },
+    })
   }
-
-  const followClaim = await ClaimsService.getClaimById({
-    id: userIdentity.follow_claim_id,
-  })
-
-  const url = new URL(request.url)
-  const searchParams = new URLSearchParams(url.search)
-
-  const {
-    page: followersPage,
-    limit: followersLimit,
-    sortBy: followersSortBy,
-    direction: followersDirection,
-  } = getStandardPageParams({
-    searchParams,
-    paramPrefix: 'followers',
-    defaultSortByValue: SortColumn.USER_ASSETS,
-  })
-
-  // const followersSearch = searchParams.get('followersSearch') TODO: Add search once BE implements
-
-  const followers = await fetchWrapper({
-    method: IdentitiesService.getIdentityFollowers,
-    args: {
-      id: userIdentity.id,
-      page: followersPage,
-      limit: followersLimit,
-      sortBy: followersSortBy,
-      direction: followersDirection,
-      offset: null,
-      timeframe: null,
-      userWallet: null,
-    },
-  })
-
-  const followersTotalPages = calculateTotalPages(
-    followers?.total ?? 0,
-    Number(followersLimit),
-  )
-
-  const {
-    page: followingPage,
-    limit: followingLimit,
-    sortBy: followingSortBy,
-    direction: followingDirection,
-  } = getStandardPageParams({
-    searchParams,
-    paramPrefix: 'following',
-    defaultSortByValue: SortColumn.USER_ASSETS,
-  })
-
-  // const followingSearch = searchParams.get('followingSearch') TODO: Add search once BE implements
-
-  const following = await fetchWrapper({
-    method: IdentitiesService.getIdentityFollowed,
-    args: {
-      id: userIdentity.id,
-      page: followersPage,
-      limit: followersLimit,
-      sortBy: followersSortBy,
-      direction: followersDirection,
-      offset: null,
-      timeframe: null,
-      userWallet: null,
-    },
-  })
-
-  const followingTotalPages = calculateTotalPages(
-    following?.total ?? 0,
-    Number(followingLimit),
-  )
 
   return json({
     userIdentity,
-    followClaim,
-    followers: followers?.data as IdentityPresenter[],
-    followersSortBy,
-    followersDirection,
-    followersPagination: {
-      currentPage: Number(followersPage),
-      limit: Number(followersLimit),
-      totalEntries: followers?.total ?? 0,
-      totalPages: followersTotalPages,
-    },
-    following: following?.data as IdentityPresenter[],
-    followingSortBy,
-    followingDirection,
-    followingPagination: {
-      currentPage: Number(followingPage),
-      limit: Number(followingLimit),
-      totalEntries: following?.total ?? 0,
-      totalPages: followingTotalPages,
-    },
   })
+}
+
+interface LoaderData {
+  userIdentity: IdentityPresenter
+  followClaim: ClaimPresenter
+  followers: IdentityPresenter[]
+  followersPagination: PaginationType
+  following: IdentityPresenter[]
+  followingPagination: PaginationType
 }
 
 const TabContent = ({
@@ -193,7 +207,7 @@ export default function ProfileConnections() {
     followersPagination,
     following,
     followingPagination,
-  } = useLiveLoader<typeof loader>(['attest'])
+  } = useLiveLoader<LoaderData>(['attest'])
 
   if (!followClaim) {
     return (
