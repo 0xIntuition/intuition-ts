@@ -19,8 +19,8 @@ interface DataCreatedHeaderProps extends React.HTMLAttributes<HTMLDivElement> {
   variant: DataCreatedHeaderVariantType
   userIdentity: IdentityPresenter
   userTotals: UserTotalsPresenter
-  totalStake: number
-  totalResults: number
+  totalStake: number | ReactNode
+  totalResults: number | ReactNode
 }
 
 export const DataCreatedHeader: React.FC<DataCreatedHeaderProps> = ({
@@ -89,7 +89,9 @@ export const DataCreatedHeader: React.FC<DataCreatedHeaderProps> = ({
               >
                 Total Staked
               </Text>
-              <MonetaryValue value={totalStake} currency="ETH" />
+              <Text variant="headline" weight="medium" className="items-end">
+                {totalStake}
+              </Text>
             </div>
           </div>
           <div className="flex flex-col items-end">
