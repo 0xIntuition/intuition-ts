@@ -8,10 +8,13 @@ import {
 import { calculateTotalPages, fetchWrapper } from '@lib/utils/misc'
 import { getStandardPageParams } from '@lib/utils/params'
 
-export async function getConnectionsData(
-  userIdentity: IdentityPresenter,
-  request: Request,
-) {
+export async function getConnectionsData({
+  userIdentity,
+  request,
+}: {
+  userIdentity: IdentityPresenter
+  request: Request
+}) {
   if (userIdentity.follow_claim_id) {
     const followClaim = await fetchWrapper({
       method: ClaimsService.getClaimById,
