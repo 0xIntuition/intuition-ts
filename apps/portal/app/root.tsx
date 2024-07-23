@@ -3,6 +3,7 @@ import { ClientHintCheck, getHints } from '@lib/utils/client-hints'
 import { useNonce } from '@lib/utils/nonce-provider'
 import { json, LoaderFunctionArgs, type MetaFunction } from '@remix-run/node'
 import {
+  isRouteErrorResponse,
   Links,
   Meta,
   Outlet,
@@ -10,6 +11,7 @@ import {
   ScrollRestoration,
   useLoaderData,
   useLocation,
+  useRouteError,
 } from '@remix-run/react'
 import { useTheme } from '@routes/actions+/set-theme'
 import { getEnv } from '@server/env'
@@ -17,12 +19,13 @@ import { getTheme } from '@server/theme'
 
 import './styles/globals.css'
 
-import { useEffect } from 'react'
+import React, { useEffect } from 'react'
 
-import { Toaster } from '@0xintuition/1ui'
+import { Text, Toaster } from '@0xintuition/1ui'
 
 import { CURRENT_ENV } from '@lib/utils/constants'
 import { getChainEnvConfig } from '@lib/utils/environment'
+import logger from '@lib/utils/logger'
 import { setupAPI } from '@server/auth'
 import { ClientOnly } from 'remix-utils/client-only'
 import { baseSepolia } from 'viem/chains'
@@ -57,13 +60,13 @@ export function Document({
   theme = 'system',
 }: {
   children: React.ReactNode
-  nonce: string
+  nonce?: string
   theme?: string
 }) {
   return (
     <html lang="en" data-theme="dark">
       <head>
-        <ClientHintCheck nonce={nonce} />
+        {nonce && <ClientHintCheck nonce={nonce} />}
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta />
@@ -141,4 +144,38 @@ export function AppLayout() {
       <Outlet />
     </main>
   )
+}
+
+// TODO: Update styling/messaging [ENG-2772]
+export function ErrorBoundary() {
+  const error = useRouteError()
+  let title = '404'
+  let description = 'Page Not Found'
+
+  logger('ROOT ERROR BOUNDARY: \n', error)
+
+  const ErrorMessage = ({
+    title,
+    description,
+  }: {
+    title: string
+    description: string
+  }) => (
+    <Document>
+      <div className="flex flex-col items-center justify-center h-[90vh]">
+        <Text variant="heading1">{title}</Text>
+        <Text variant="heading4">{description}</Text>
+      </div>
+    </Document>
+  )
+
+  if (isRouteErrorResponse(error)) {
+    title = error.status.toString()
+    description = error.statusText
+  } else if (error instanceof Error) {
+    title = 'Error'
+    description = 'Something went wrong...'
+  }
+
+  return <ErrorMessage title={title} description={description} />
 }
