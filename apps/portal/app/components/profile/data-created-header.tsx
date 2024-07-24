@@ -1,6 +1,13 @@
 import React from 'react'
 
-import { FeesAccrued, IdentityTag, MonetaryValue, Text } from '@0xintuition/1ui'
+import {
+  FeesAccrued,
+  IdentityTag,
+  MonetaryValue,
+  Text,
+  TextVariant,
+  TextWeight,
+} from '@0xintuition/1ui'
 import { IdentityPresenter, UserTotalsPresenter } from '@0xintuition/api'
 
 import { formatBalance } from '@lib/utils/misc'
@@ -19,8 +26,8 @@ interface DataCreatedHeaderProps extends React.HTMLAttributes<HTMLDivElement> {
   variant: DataCreatedHeaderVariantType
   userIdentity: IdentityPresenter
   userTotals: UserTotalsPresenter
-  totalStake: number | ReactNode
-  totalResults: number | ReactNode
+  totalStake: number
+  totalResults: number
 }
 
 export const DataCreatedHeader: React.FC<DataCreatedHeaderProps> = ({
@@ -59,9 +66,7 @@ export const DataCreatedHeader: React.FC<DataCreatedHeaderProps> = ({
             imgSrc={userIdentity?.user?.image ?? userIdentity?.image}
             variant={userIdentity?.user ? 'user' : 'non-user'}
           >
-            <span className="min-w-20 text-ellipsis">
-              {userIdentity?.user?.display_name ?? userIdentity?.display_name}
-            </span>
+            {userIdentity?.user?.display_name ?? userIdentity?.display_name}
           </IdentityTag>
         </div>
         <div className="flex justify-between items-start">
@@ -77,9 +82,9 @@ export const DataCreatedHeader: React.FC<DataCreatedHeaderProps> = ({
                   ? 'Identities'
                   : 'Claims'}
               </Text>
-              <div className="text-white text-xl font-medium">
+              <Text variant={TextVariant.headline} weight={TextWeight.medium}>
                 {totalResults}
-              </div>
+              </Text>
             </div>
             <div className="flex flex-col items-start">
               <Text
@@ -89,9 +94,7 @@ export const DataCreatedHeader: React.FC<DataCreatedHeaderProps> = ({
               >
                 Total Staked
               </Text>
-              <Text variant="headline" weight="medium" className="items-end">
-                {totalStake}
-              </Text>
+              <MonetaryValue value={totalStake} currency="ETH" />
             </div>
           </div>
           <div className="flex flex-col items-end">
