@@ -23,13 +23,13 @@ export const SidebarLayoutNavAvatar = ({
   imageSrc,
   name,
 }: SidebarLayoutNavAvatarProps) => {
-  const containerBaseClass = 'w-full justify-start'
+  const containerBaseClass = 'w-full'
   const { isCollapsed } = useSidebarLayoutContext()
   const AvatarComponent = () => (
     <Avatar className="h-6 w-6" src={imageSrc} name={name} />
   )
   return isCollapsed ? (
-    <TooltipProvider>
+    <TooltipProvider delayDuration={0}>
       <Tooltip>
         <TooltipTrigger asChild>
           <div
@@ -39,6 +39,7 @@ export const SidebarLayoutNavAvatar = ({
                 size: ButtonSize.iconLg,
               }),
               containerBaseClass,
+              'justify-center',
             )}
           >
             <AvatarComponent />
@@ -57,6 +58,7 @@ export const SidebarLayoutNavAvatar = ({
           size: ButtonSize.lg,
         }),
         containerBaseClass,
+        'justify-start',
       )}
     >
       <AvatarComponent />

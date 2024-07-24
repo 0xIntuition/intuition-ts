@@ -31,15 +31,15 @@ export const SidebarNavItem = ({
   const { isCollapsed } = useSidebarLayoutContext()
   const buttonProps = {
     variant,
-    className: 'w-full justify-start',
+    className: 'w-full justify-start truncate',
     onClick,
     ...props,
   }
   return isCollapsed ? (
-    <TooltipProvider>
+    <TooltipProvider delayDuration={0}>
       <Tooltip>
         <TooltipTrigger asChild>
-          <Button size="iconLg" {...buttonProps}>
+          <Button size="iconLg" {...buttonProps} className="justify-center">
             <Icon name={iconName} />
           </Button>
         </TooltipTrigger>

@@ -74,8 +74,8 @@ const buttonVariants = cva(
       size: {
         [ButtonSize.default]: 'px-3 py-1',
         [ButtonSize.md]: 'px-4 py-1.5',
-        [ButtonSize.lg]: 'px-4 py-2 gap-3 text-base',
-        [ButtonSize.xl]: 'px-5 py-2.5 gap-5 text-lg',
+        [ButtonSize.lg]: 'px-4 py-2 gap-2 text-base',
+        [ButtonSize.xl]: 'px-5 py-2.5 gap-4 text-lg',
         [ButtonSize.icon]: 'p-1',
         [ButtonSize.iconMd]: 'p-1.5',
         [ButtonSize.iconLg]: 'p-2',

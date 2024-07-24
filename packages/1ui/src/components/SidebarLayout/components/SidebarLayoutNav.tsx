@@ -44,7 +44,8 @@ export const SidebarLayoutNav = ({
         onCollapse={() => updateIsCollapsedValues(true)}
         onExpand={() => updateIsCollapsedValues(false)}
         className={cn(
-          isCollapsed && 'min-w-[50px] transition-all duration-300 ease-in-out',
+          isCollapsed &&
+            `min-w-[${minSize}rem] transition-all duration-300 ease-in-out`,
         )}
         {...props}
       >

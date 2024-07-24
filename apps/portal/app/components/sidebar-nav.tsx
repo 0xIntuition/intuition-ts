@@ -98,7 +98,7 @@ export default function SidebarNav({
     <>
       <SidebarLayoutProvider>
         <SidebarLayout className="h-screen">
-          <SidebarLayoutNav collapsedSize={4} minSize={12} maxSize={15}>
+          <SidebarLayoutNav collapsedSize={5} minSize={16} maxSize={18}>
             <SidebarLayoutNavHeader>
               <SidebarLayoutNavHeaderButton
                 imgLogo={
