@@ -7,7 +7,7 @@ import { ExploreSearchForm } from './ExploreSearchForm/ExploreSearchForm'
 
 export interface ExploreSearchProps
   extends React.HTMLAttributes<HTMLDivElement> {
-  variant: 'user' | 'identity' | 'claim' | 'tag'
+  variant: 'user' | 'identity' | 'claim' | 'tag' | 'list'
   identities?: IdentityPresenter[]
 }
 
@@ -18,7 +18,7 @@ const ExploreSearch: React.FC<ExploreSearchProps> = ({
 }: ExploreSearchProps) => {
   return (
     <div className="min-w-96 flex flex-col items-center" {...props}>
-      {['user', 'identity', 'tag'].includes(variant) && (
+      {['user', 'identity', 'tag', 'list'].includes(variant) && (
         <ExploreSearchForm searchParam={variant} />
       )}
 
