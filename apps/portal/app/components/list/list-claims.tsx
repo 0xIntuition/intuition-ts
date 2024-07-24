@@ -39,7 +39,6 @@ export function ListClaimsList({
     user_assets_for: claim.user_assets_for,
     claim_id: claim.claim_id,
   }))
-  logger('claimData', claimData)
 
   const listContainerRef = useRef<HTMLDivElement>(null)
   const { handleSortChange, onPageChange, onLimitChange } =
@@ -66,8 +65,8 @@ export function ListClaimsList({
                     identitiesCount={claim.object.tag_count ?? 0}
                     isSaved={claim.user_assets_for !== '0'}
                     savedAmount={claim.user_assets_for}
-                    onSaveClick={() =>
-                      logger('save list clicked', claim.claim_id)
+                    onSaveClick={
+                      () => logger('save list clicked', claim.claim_id) // TODO: [ENG-2662] - add the functionality once in place
                     }
                   />
                 ),

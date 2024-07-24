@@ -8,7 +8,6 @@ import { ExploreSearch } from '@components/explore/ExploreSearch'
 import { ListClaimsList } from '@components/list/list-claims'
 import { TAG_PREDICATE_VAULT_ID_TESTNET } from '@lib/utils/constants'
 import { NO_WALLET_ERROR } from '@lib/utils/errors'
-import logger from '@lib/utils/logger'
 import { calculateTotalPages, fetchWrapper, invariant } from '@lib/utils/misc'
 import { getStandardPageParams } from '@lib/utils/params'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
@@ -40,8 +39,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   const totalPages = calculateTotalPages(listClaims?.total ?? 0, limit)
 
-  logger('list claims', listClaims?.total)
-  logger('totalPages', totalPages)
   return json({
     listClaims: listClaims?.data as ClaimPresenter[],
     sortBy,
@@ -64,7 +61,6 @@ export default function ExploreLists() {
       <ListClaimsList
         listClaims={listClaims}
         pagination={pagination}
-        enableSearch={false}
         enableSort={true}
       />
     </div>
