@@ -1,11 +1,12 @@
 import { Suspense } from 'react'
 
-import { Skeleton } from '@0xintuition/1ui'
+import { Text } from '@0xintuition/1ui'
 import { ClaimsService } from '@0xintuition/api'
 
 import { ClaimsList as ClaimsAboutIdentity } from '@components/list/claims'
 import { PositionsOnIdentity } from '@components/list/positions-on-identity'
 import DataAboutHeader from '@components/profile/data-about-header'
+import { DataHeaderSkeleton, PaginatedListSkeleton } from '@components/skeleton'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { getClaimsAboutIdentity } from '@lib/services/claims'
 import { getPositionsOnIdentity } from '@lib/services/positions'
@@ -58,30 +59,31 @@ export default function ProfileDataAbout() {
   return (
     <div className="flex-col justify-start items-start flex w-full gap-6">
       <div className="flex flex-col w-full pb-4">
-        <DataAboutHeader
-          variant="claims"
-          title="Claims about this Identity"
-          userIdentity={userIdentity}
-          totalClaims={
-            <Suspense fallback={<Skeleton className="h-6 w-6 inline-flex" />}>
-              <Await resolve={claims}>
-                {(resolvedClaims) => resolvedClaims.pagination.totalEntries}
-              </Await>
-            </Suspense>
-          }
-          totalStake={
-            <Suspense fallback={<Skeleton className="h-6 w-14 inline-flex" />}>
-              <Await resolve={claimsSummary}>
-                {(cs) => `${formatBalance(cs?.assets_sum ?? 0, 18, 4)} ETH`}
-              </Await>
-            </Suspense>
-          }
-        />
-        <Suspense fallback={<Skeleton className="w-full h-28 mt-6" />}>
-          <Await
-            resolve={claims}
-            errorElement={<DataErrorDisplay dataType={'claims'} />}
+        <div className="flex justify-between items-center w-full">
+          <Text
+            variant="headline"
+            weight="medium"
+            className="theme-secondary-foreground pb-3"
           >
+            Claims about this Identity
+          </Text>
+        </div>
+        <Suspense fallback={<DataHeaderSkeleton />}>
+          <Await resolve={Promise.all([claims, claimsSummary])}>
+            {([resolvedClaims, resolvedClaimsSummary]) => (
+              <DataAboutHeader
+                variant="claims"
+                userIdentity={userIdentity}
+                totalClaims={resolvedClaims.pagination.totalEntries}
+                totalStake={
+                  +formatBalance(resolvedClaimsSummary?.assets_sum ?? 0, 18, 4)
+                }
+              />
+            )}
+          </Await>
+        </Suspense>
+        <Suspense fallback={<PaginatedListSkeleton />}>
+          <Await resolve={claims} errorElement={<DataErrorDisplay />}>
             {(resolvedClaims) => (
               <ClaimsAboutIdentity
                 claims={resolvedClaims.data}
@@ -95,18 +97,29 @@ export default function ProfileDataAbout() {
         </Suspense>
       </div>
       <div className="flex flex-col pt-4 w-full">
-        <DataAboutHeader
-          variant="positions"
-          title="Positions on this Identity"
-          userIdentity={userIdentity}
-          totalPositions={userIdentity.num_positions}
-          totalStake={+formatBalance(userIdentity.assets_sum, 18, 4)}
-        />
-        <Suspense fallback={<Skeleton className="w-full h-28 mt-6" />}>
-          <Await
-            resolve={positions}
-            errorElement={<DataErrorDisplay dataType={'positions'} />}
+        <div className="flex justify-between items-center w-full">
+          <Text
+            variant="headline"
+            weight="medium"
+            className="theme-secondary-foreground pb-3"
           >
+            Positions on this Identity
+          </Text>
+        </div>
+        <Suspense fallback={<DataHeaderSkeleton />}>
+          <Await resolve={positions}>
+            {(resolvedPositions) => (
+              <DataAboutHeader
+                variant="positions"
+                userIdentity={userIdentity}
+                totalPositions={resolvedPositions.pagination.totalEntries}
+                totalStake={+formatBalance(userIdentity.assets_sum, 18, 4)}
+              />
+            )}
+          </Await>
+        </Suspense>
+        <Suspense fallback={<PaginatedListSkeleton />}>
+          <Await resolve={positions} errorElement={<DataErrorDisplay />}>
             {(resolvedPositions) => (
               <PositionsOnIdentity
                 positions={resolvedPositions.data}

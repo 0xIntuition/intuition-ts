@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Text, Theme } from '@0xintuition/1ui'
+import { Icon, IconName, Text, Theme } from '@0xintuition/1ui'
 import { ApiError } from '@0xintuition/api'
 
 import { clsx, type ClassValue } from 'clsx'
@@ -304,10 +304,25 @@ export const fetchWrapper = async <T, A>({
   }
 }
 
-export function DataErrorDisplay({ dataType }: { dataType: string }) {
+export interface DataErrorDisplayProps
+  extends React.HTMLAttributes<HTMLDivElement> {
+  message?: string
+}
+
+export const DataErrorDisplay = ({
+  message = 'An error occured',
+  children,
+}: DataErrorDisplayProps) => {
   return (
-    <Text>
-      An error occurred while loading {dataType} data. Please try again.
-    </Text>
+    <div className="flex flex-col justify-center items-center p-6 theme-destructive rounded-lg min-h-52">
+      <Icon
+        name={IconName.triangleExclamation}
+        className="w-12 h-12 mb-4 text-destructive"
+      />
+      <Text variant="caption" className="text-muted-foreground mb-5">
+        {message}
+      </Text>
+      {children}
+    </div>
   )
 }
