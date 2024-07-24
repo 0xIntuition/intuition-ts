@@ -1,9 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 
-import { Dialog, DialogContent, DialogFooter, Icon } from '@0xintuition/1ui'
+import { Dialog, DialogContent, DialogFooter, toast } from '@0xintuition/1ui'
 import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
 
-import Toast from '@components/toast'
 import { multivaultAbi } from '@lib/abis/multivault'
 import { useDepositAtom } from '@lib/hooks/useDepositAtom'
 import { useRedeemAtom } from '@lib/hooks/useRedeemAtom'
@@ -15,7 +14,6 @@ import { useGenericTxState } from '@lib/utils/use-tx-reducer'
 import { useFetcher, useLocation } from '@remix-run/react'
 import { useQueryClient } from '@tanstack/react-query'
 import { useAtom } from 'jotai'
-import { toast } from 'sonner'
 import { TransactionActionType, TransactionStateType } from 'types/transaction'
 import { VaultDetailsType } from 'types/vault'
 import { Abi, Address, decodeEventLog, formatUnits, parseUnits } from 'viem'
@@ -188,23 +186,7 @@ export default function StakeModal({
             type: 'TRANSACTION_ERROR',
             error: errorMessage,
           })
-          toast.custom(
-            () => (
-              <Toast
-                title="Error"
-                description={errorMessage}
-                icon={
-                  <Icon
-                    name="triangle-exclamation"
-                    className="h-3 w-3 text-destructive"
-                  />
-                }
-              />
-            ),
-            {
-              duration: 5000,
-            },
-          )
+          toast.error(errorMessage)
           return
         }
       }

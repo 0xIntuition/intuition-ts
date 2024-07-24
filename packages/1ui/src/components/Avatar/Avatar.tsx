@@ -76,7 +76,7 @@ const Avatar = ({ className, variant, src, name }: AvatarProps) => {
         {variant === Identity.nonUser ? (
           <Icon
             name={IconName.fingerprint}
-            className="text-primary/30 w-[80%] h-[80%]"
+            className="text-primary/30 w-[80%] h-[80%] max-w-8 max-h-8"
           />
         ) : (
           <>{name?.substring(0, 2).toUpperCase() || `??`}</>

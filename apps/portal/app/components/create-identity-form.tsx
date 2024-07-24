@@ -39,6 +39,7 @@ import {
   MAX_UPLOAD_SIZE,
   MULTIVAULT_CONTRACT_ADDRESS,
 } from '@lib/utils/constants'
+import { GENERIC_ERROR_MSG } from '@lib/utils/errors'
 import logger from '@lib/utils/logger'
 import { truncateString } from '@lib/utils/misc'
 import { useFetcher, useNavigate } from '@remix-run/react'
@@ -52,7 +53,6 @@ import { usePublicClient, useWalletClient } from 'wagmi'
 
 import ErrorList from './error-list'
 import { ImageChooser } from './image-chooser'
-import Toast from './toast'
 import { TransactionState } from './transaction-state'
 
 interface IdentityFormProps {
@@ -184,23 +184,7 @@ function CreateIdentityForm({
       imageUploadFetcher.data &&
       imageUploadFetcher.data.status === 'error'
     ) {
-      toast.custom(
-        () => (
-          <Toast
-            title="Error"
-            description="error"
-            icon={
-              <Icon
-                name="triangle-exclamation"
-                className="h-3 w-3 text-destructive"
-              />
-            }
-          />
-        ),
-        {
-          duration: 5000,
-        },
-      )
+      toast.error(GENERIC_ERROR_MSG)
       setIdentityImageSrc(null)
       setImageUploading(false)
     }
@@ -300,23 +284,7 @@ function CreateIdentityForm({
               type: 'TRANSACTION_ERROR',
               error: errorMessage,
             })
-            toast.custom(
-              () => (
-                <Toast
-                  title="Error"
-                  description={errorMessage}
-                  icon={
-                    <Icon
-                      name="triangle-exclamation"
-                      className="h-3 w-3 text-destructive"
-                    />
-                  }
-                />
-              ),
-              {
-                duration: 5000,
-              },
-            )
+            toast.error(errorMessage)
             dispatch({ type: 'START_TRANSACTION' })
             return
           }
@@ -384,23 +352,7 @@ function CreateIdentityForm({
             type: 'TRANSACTION_ERROR',
             error: errorMessage,
           })
-          toast.custom(
-            () => (
-              <Toast
-                title="Error"
-                description={errorMessage}
-                icon={
-                  <Icon
-                    name="triangle-exclamation"
-                    className="h-3 w-3 text-destructive"
-                  />
-                }
-              />
-            ),
-            {
-              duration: 5000,
-            },
-          )
+          toast.error(errorMessage)
           return
         }
       }

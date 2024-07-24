@@ -115,7 +115,7 @@ export default function App() {
 
   return (
     <Document nonce={nonce} theme={theme}>
-      <Toaster />
+      <Toaster position="top-right" />
       <ClientOnly>
         {() => (
           <Providers privyAppId={env.PRIVY_APP_ID}>

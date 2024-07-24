@@ -104,7 +104,7 @@ export const Error: Story = {
       <Button
         size="lg"
         variant="destructive"
-        onClick={() => toast.success('I am an error toast!')}
+        onClick={() => toast.error('I am an error toast!')}
       >
         Launch toast
       </Button>
