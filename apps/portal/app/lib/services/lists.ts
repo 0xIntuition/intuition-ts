@@ -145,3 +145,21 @@ export async function getListIdentities({
     },
   }
 }
+
+export async function getListIdentitiesCount({
+  objectId,
+}: {
+  objectId: string
+}) {
+  const listIdentities = await fetchWrapper({
+    method: ClaimsService.searchClaims,
+    args: {
+      predicate: TAG_PREDICATE_ID_TESTNET,
+      object: objectId,
+      page: 1,
+      limit: 1,
+    },
+  })
+
+  return listIdentities.total
+}

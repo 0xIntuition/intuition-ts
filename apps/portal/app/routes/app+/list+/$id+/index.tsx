@@ -5,7 +5,7 @@ import { ClaimPresenter, ClaimsService } from '@0xintuition/api'
 
 import { IdentitiesList } from '@components/list/identities'
 import { DataHeaderSkeleton, PaginatedListSkeleton } from '@components/skeleton'
-import { getListIdentities } from '@lib/services/lists'
+import { getListIdentities, getListIdentitiesCount } from '@lib/services/lists'
 import { NO_CLAIM_ERROR, NO_PARAM_ID_ERROR } from '@lib/utils/errors'
 import logger from '@lib/utils/logger'
 import { DataErrorDisplay, fetchWrapper, invariant } from '@lib/utils/misc'
@@ -26,16 +26,22 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
   invariant(claim.object?.id, NO_PARAM_ID_ERROR)
 
+  const totalIdentitiesCount = getListIdentitiesCount({
+    objectId: claim.object.id,
+  })
+
   return defer({
     listIdentities: getListIdentities({
       objectId: claim.object.id,
       searchParams,
     }),
+    totalIdentitiesCount,
   })
 }
 
 export default function ListOverview() {
-  const { listIdentities } = useLoaderData<typeof loader>()
+  const { listIdentities, totalIdentitiesCount } =
+    useLoaderData<typeof loader>()
   const { claim } =
     useRouteLoaderData<{ claim: ClaimPresenter }>('routes/app+/list+/$id') ?? {}
   invariant(claim, NO_CLAIM_ERROR)
@@ -46,11 +52,11 @@ export default function ListOverview() {
     <div className="flex-col justify-start items-start flex w-full gap-6">
       <div className="flex flex-col w-full pb-4">
         <Suspense fallback={<DataHeaderSkeleton />}>
-          <Await resolve={listIdentities} errorElement={<></>}>
-            {(resolvedListIdentities) => (
+          <Await resolve={totalIdentitiesCount} errorElement={<></>}>
+            {(resolvedtotalIdentitiesCount) => (
               <ListHeaderCard
                 label="Identities"
-                value={resolvedListIdentities.pagination.totalEntries}
+                value={resolvedtotalIdentitiesCount}
               >
                 <Claim
                   size="md"
