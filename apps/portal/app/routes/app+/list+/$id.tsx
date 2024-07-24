@@ -3,13 +3,13 @@ import {
   ClaimPresenter,
   ClaimSortColumn,
   ClaimsService,
-  IdentityPresenter,
   PositionSortColumn,
 } from '@0xintuition/api'
 
+import { ListIdentityDisplayCard } from '@components/list/list-identity-display-card'
 import { NestedLayout } from '@components/nested-layout'
 import { TAG_PREDICATE_VAULT_ID_TESTNET } from '@lib/utils/constants'
-import { NO_PARAMS_ID_ERROR } from '@lib/utils/errors'
+import { NO_PARAM_ID_ERROR } from '@lib/utils/errors'
 import logger from '@lib/utils/logger'
 import { fetchWrapper, invariant, sliceString } from '@lib/utils/misc'
 import { getStandardPageParams } from '@lib/utils/params'
@@ -23,7 +23,7 @@ import {
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const id = params.id
-  invariant(id, NO_PARAMS_ID_ERROR)
+  invariant(id, NO_PARAM_ID_ERROR)
 
   const claim = await fetchWrapper({
     method: ClaimsService.getClaimById,
@@ -62,7 +62,6 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   logger('list claim', claim)
   logger('tag claims', tagClaims)
   return json({
-    identity,
     claim,
   })
 }
@@ -95,23 +94,38 @@ export default function ListDetails() {
         </Button>
       </div>
       <NestedLayout outlet={Outlet}>
-        <ProfileCard
-          variant="non-user"
-          avatarSrc={claim.object?.image ?? ''}
-          name={claim.object?.display_name ?? ''}
-          walletAddress={sliceString(claim.object?.identity_id, 6, 4)}
-          bio={claim.object?.description ?? ''}
-        />
-        <InfoCard
-          variant="user"
-          username={claim.creator?.display_name ?? ''}
-          avatarImgSrc={claim.creator?.image ?? ''}
-          timestamp={claim.created_at}
-          onClick={() => {
-            navigate(`/app/profile/${claim.creator?.wallet}`)
-          }}
-          className="hover:cursor-pointer w-full"
-        />
+        <div className="flex flex-col item-center gap-6">
+          <ProfileCard
+            variant="non-user"
+            avatarSrc={claim.object?.image ?? ''}
+            name={claim.object?.display_name ?? ''}
+            walletAddress={sliceString(claim.object?.identity_id, 6, 4)}
+            bio={claim.object?.description ?? ''}
+          />
+          <ListIdentityDisplayCard
+            displayName={claim.object?.display_name ?? ''}
+            avatarImgSrc={claim.object?.image ?? ''}
+          />
+          <InfoCard
+            variant="user"
+            username={claim.creator?.display_name ?? ''}
+            avatarImgSrc={claim.creator?.image ?? ''}
+            timestamp={claim.created_at}
+            onClick={() => {
+              navigate(`/app/profile/${claim.creator?.wallet}`)
+            }}
+            className="hover:cursor-pointer w-full"
+          />
+          <Button
+            variant="secondary"
+            onClick={() => {
+              navigate(`/app/identity/${claim.object?.id}`)
+            }}
+          >
+            View identity
+            <Icon name="arrow-up-right" />
+          </Button>
+        </div>
       </NestedLayout>
     </>
   )

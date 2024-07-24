@@ -1,16 +1,15 @@
 import { Claim, ListHeaderCard } from '@0xintuition/1ui'
 import { ClaimsService } from '@0xintuition/api'
 
-import DataAboutHeader from '@components/profile/data-about-header'
-import { NO_PARAMS_ID_ERROR } from '@lib/utils/errors'
+import { NO_PARAM_ID_ERROR } from '@lib/utils/errors'
 import logger from '@lib/utils/logger'
-import { fetchWrapper, formatBalance, invariant } from '@lib/utils/misc'
+import { fetchWrapper, invariant } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 
-export async function loader({ request, params }: LoaderFunctionArgs) {
+export async function loader({ params }: LoaderFunctionArgs) {
   const id = params.id
-  invariant(id, NO_PARAMS_ID_ERROR)
+  invariant(id, NO_PARAM_ID_ERROR)
 
   const claim = await fetchWrapper({
     method: ClaimsService.getClaimById,
