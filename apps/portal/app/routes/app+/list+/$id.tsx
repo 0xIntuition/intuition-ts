@@ -1,18 +1,11 @@
 import { Button, Icon, InfoCard, ProfileCard } from '@0xintuition/1ui'
-import {
-  ClaimPresenter,
-  ClaimSortColumn,
-  ClaimsService,
-  PositionSortColumn,
-} from '@0xintuition/api'
+import { ClaimPresenter, ClaimsService } from '@0xintuition/api'
 
 import { ListIdentityDisplayCard } from '@components/list/list-identity-display-card'
 import { NestedLayout } from '@components/nested-layout'
-import { TAG_PREDICATE_VAULT_ID_TESTNET } from '@lib/utils/constants'
 import { NO_PARAM_ID_ERROR } from '@lib/utils/errors'
 import logger from '@lib/utils/logger'
 import { fetchWrapper, invariant, sliceString } from '@lib/utils/misc'
-import { getStandardPageParams } from '@lib/utils/params'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import {
   Outlet,
@@ -21,7 +14,7 @@ import {
   useNavigate,
 } from '@remix-run/react'
 
-export async function loader({ request, params }: LoaderFunctionArgs) {
+export async function loader({ params }: LoaderFunctionArgs) {
   const id = params.id
   invariant(id, NO_PARAM_ID_ERROR)
 
@@ -30,37 +23,6 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     args: { id },
   })
 
-  const url = new URL(request.url)
-  const searchParams = new URLSearchParams(url.search)
-
-  const { page, limit, sortBy, direction } = getStandardPageParams({
-    searchParams,
-    defaultSortByValue: PositionSortColumn.CREATED_AT,
-  })
-
-  invariant(claim.subject?.vault_id, 'Claim subject id is missing')
-  invariant(claim.object?.vault_id, 'Claim object or id is missing')
-
-  const tagClaims = await fetchWrapper({
-    method: ClaimsService.searchClaims,
-    args: {
-      page,
-      limit,
-      sortBy: sortBy as ClaimSortColumn,
-      direction,
-      subject: claim.subject.id,
-      predicate: TAG_PREDICATE_VAULT_ID_TESTNET,
-      // object: 'b5f6cf04-0d3f-4d19-9716-a42c6afb400e',
-      object: claim.object.id,
-    },
-  })
-
-  logger('subj', claim.subject.vault_id)
-  logger('pred', TAG_PREDICATE_VAULT_ID_TESTNET)
-  logger('obj', id)
-
-  logger('list claim', claim)
-  logger('tag claims', tagClaims)
   return json({
     claim,
   })

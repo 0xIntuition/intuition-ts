@@ -97,3 +97,46 @@ export async function getUserSavedLists({
     },
   }
 }
+
+export async function getListIdentities({
+  objectId,
+  searchParams,
+}: {
+  objectId: string
+  searchParams: URLSearchParams
+}) {
+  const { page, limit, sortBy, direction } = getStandardPageParams({
+    searchParams,
+    paramPrefix: 'claims',
+    defaultSortByValue: ClaimSortColumn.ASSETS_SUM,
+  })
+  const displayName = searchParams.get('search') || null
+
+  const listIdentities = await fetchWrapper({
+    method: ClaimsService.searchClaims,
+    args: {
+      page,
+      limit,
+      sortBy: sortBy as ClaimSortColumn,
+      direction,
+      predicate: TAG_PREDICATE_ID_TESTNET,
+      object: objectId,
+      displayName,
+    },
+  })
+
+  const totalPages = calculateTotalPages(listIdentities?.total ?? 0, limit)
+
+  logger('getListIdentities', listIdentities.total)
+
+  return {
+    listIdentities: listIdentities.data as ClaimPresenter[],
+    pagination: {
+      currentPage: Number(page),
+      limit: Number(limit),
+      totalEntries: listIdentities.total,
+
+      totalPages,
+    },
+  }
+}

@@ -1,4 +1,4 @@
-import { IdentityTag, Text } from '@0xintuition/1ui'
+import { Identity, IdentityTag, Text } from '@0xintuition/1ui'
 
 export function ListIdentityDisplayCard({
   displayName,
@@ -13,7 +13,7 @@ export function ListIdentityDisplayCard({
         Tag Identity
       </Text>
       <div className="flex justify-between items-center gap-1">
-        <IdentityTag variant="nonUser" imgSrc={avatarImgSrc}>
+        <IdentityTag variant={Identity.nonUser} imgSrc={avatarImgSrc}>
           {displayName}
         </IdentityTag>
       </div>
