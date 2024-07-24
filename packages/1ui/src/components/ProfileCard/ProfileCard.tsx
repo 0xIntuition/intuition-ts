@@ -31,7 +31,7 @@ const ProfileCard = ({
   children,
 }: ProfileCardProps) => {
   return (
-    <div className="flex flex-col justify-center items-start w-full min-w-80 rounded-lg box-border">
+    <div className="flex flex-col justify-center items-start w-full min-w-80 rounded-lg box-border gap-2.5">
       <ProfileCardHeader
         variant={variant}
         avatarSrc={avatarSrc}
@@ -39,7 +39,7 @@ const ProfileCard = ({
         walletAddress={walletAddress}
       />
       {variant === Identity.user && (
-        <div className="flex justify-between items-center space-x-4 mt-5">
+        <div className="flex justify-start items-center gap-4 pt-1">
           <ProfileCardStatItem
             value={stats?.numberOfFollowing ?? 0}
             label="Following"
@@ -57,13 +57,19 @@ const ProfileCard = ({
           )}
         </div>
       )}
-      <div className="mt-5">
-        <Text variant="body" weight="medium" className="text-primary-300">
-          {bio}
-        </Text>
+      <div>
+        {bio && (
+          <Text
+            variant="body"
+            weight="medium"
+            className="text-primary-300 pt-2.5"
+          >
+            {bio}
+          </Text>
+        )}
 
         {variant === Identity.nonUser && link && (
-          <div className="mt-5">
+          <div className="">
             <Text variant="body" className="text-muted-foreground">
               Link
             </Text>
@@ -73,9 +79,7 @@ const ProfileCard = ({
           </div>
         )}
       </div>
-      {children && (
-        <div className="flex justify-center w-full mt-5">{children}</div>
-      )}
+      {children && <div className="flex justify-center w-full">{children}</div>}
     </div>
   )
 }
