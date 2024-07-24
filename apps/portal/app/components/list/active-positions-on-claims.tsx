@@ -29,7 +29,7 @@ export function ActivePositionsOnClaims({
   ]
 
   if (!claims.length) {
-    return <EmptyStateCard message="No active claim positions found." />
+    return <EmptyStateCard message="No positions found." />
   }
 
   return (

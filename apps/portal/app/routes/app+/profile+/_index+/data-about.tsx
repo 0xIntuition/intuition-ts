@@ -1,22 +1,18 @@
 import { Suspense } from 'react'
 
-import { Text } from '@0xintuition/1ui'
+import { ErrorStateCard, Text } from '@0xintuition/1ui'
 import { ClaimsService } from '@0xintuition/api'
 
 import { ClaimsList as ClaimsAboutIdentity } from '@components/list/claims'
 import { PositionsOnIdentity } from '@components/list/positions-on-identity'
 import DataAboutHeader from '@components/profile/data-about-header'
+import { RevalidateButton } from '@components/revalidate-button'
 import { DataHeaderSkeleton, PaginatedListSkeleton } from '@components/skeleton'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { getClaimsAboutIdentity } from '@lib/services/claims'
 import { getPositionsOnIdentity } from '@lib/services/positions'
 import { NO_USER_IDENTITY_ERROR, NO_WALLET_ERROR } from '@lib/utils/errors'
-import {
-  DataErrorDisplay,
-  fetchWrapper,
-  formatBalance,
-  invariant,
-} from '@lib/utils/misc'
+import { fetchWrapper, formatBalance, invariant } from '@lib/utils/misc'
 import { defer, LoaderFunctionArgs } from '@remix-run/node'
 import { Await, useRouteLoaderData } from '@remix-run/react'
 import { requireUserWallet } from '@server/auth'
@@ -86,7 +82,14 @@ export default function ProfileDataAbout() {
           </Await>
         </Suspense>
         <Suspense fallback={<PaginatedListSkeleton />}>
-          <Await resolve={claims} errorElement={<DataErrorDisplay />}>
+          <Await
+            resolve={claims}
+            errorElement={
+              <ErrorStateCard>
+                <RevalidateButton />
+              </ErrorStateCard>
+            }
+          >
             {(resolvedClaims) => (
               <ClaimsAboutIdentity
                 claims={resolvedClaims.data}
@@ -122,7 +125,14 @@ export default function ProfileDataAbout() {
           </Await>
         </Suspense>
         <Suspense fallback={<PaginatedListSkeleton />}>
-          <Await resolve={positions} errorElement={<DataErrorDisplay />}>
+          <Await
+            resolve={positions}
+            errorElement={
+              <ErrorStateCard>
+                <RevalidateButton />
+              </ErrorStateCard>
+            }
+          >
             {(resolvedPositions) => (
               <PositionsOnIdentity
                 positions={resolvedPositions.data}
