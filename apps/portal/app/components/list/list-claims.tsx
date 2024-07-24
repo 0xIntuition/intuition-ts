@@ -72,17 +72,17 @@ export function ListClaimsList({
                 ),
             )}
           </ListGrid>
+          <PaginationComponent
+            totalEntries={pagination.totalEntries ?? 0}
+            currentPage={pagination.currentPage ?? 0}
+            totalPages={pagination.totalPages ?? 0}
+            limit={pagination.limit ?? 0}
+            onPageChange={onPageChange}
+            onLimitChange={onLimitChange}
+            label="lists"
+            listContainerRef={listContainerRef}
+          />
         </div>
-        <PaginationComponent
-          totalEntries={pagination.totalEntries ?? 0}
-          currentPage={pagination.currentPage ?? 0}
-          totalPages={pagination.totalPages ?? 0}
-          limit={pagination.limit ?? 0}
-          onPageChange={onPageChange}
-          onLimitChange={onLimitChange}
-          label="lists"
-          listContainerRef={listContainerRef}
-        />
       </div>
     </>
   )
