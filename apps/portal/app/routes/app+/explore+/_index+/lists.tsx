@@ -63,9 +63,9 @@ export default function ExploreLists() {
       <ExploreSearch variant="list" />
       <ListClaimsList
         listClaims={listClaims}
-        // pagination={pagination}
-        // enableSearch={false}
-        // enableSort={true}
+        pagination={pagination}
+        enableSearch={false}
+        enableSort={true}
       />
     </div>
   )
