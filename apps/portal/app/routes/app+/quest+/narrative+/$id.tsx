@@ -4,18 +4,20 @@ import {
   Icon,
   IconName,
   ProgressCard,
-  QuestCard,
-  QuestCriteriaStatus,
-  QuestStatus,
   Text,
 } from '@0xintuition/1ui'
-import { QuestsService, UserQuest, UserQuestsService } from '@0xintuition/api'
+import {
+  QuestsService,
+  QuestStatus,
+  UserQuest,
+  UserQuestsService,
+} from '@0xintuition/api'
 
-import questPlaceholder from '@assets/quest-placeholder.png'
-import questThumbnailPlaceholder from '@assets/quest-thumbnail-placeholder.png'
+import { QuestCard } from '@components/quest/quest-card'
 import { STANDARD_QUEST_SET } from '@lib/utils/constants/quest'
 import logger from '@lib/utils/logger'
 import { fetchWrapper, invariant } from '@lib/utils/misc'
+import { getQuestCriteria, getQuestImage } from '@lib/utils/quest'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { Link, useLoaderData } from '@remix-run/react'
 import { requireUserId } from '@server/auth'
@@ -57,15 +59,15 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   })
   const numQuests = quests.length
   const numCompletedQuests = Object.values(questToUserQuestMap).filter(
-    (userQuest) => userQuest.status === QuestStatus.completed,
+    (userQuest) => userQuest.status === QuestStatus.COMPLETED,
   ).length
   logger('User Quest Map', questToUserQuestMap)
 
-  return json({ quests, questToUserQuestMap, numQuests, numCompletedQuests })
+  return json({ quests, numQuests, numCompletedQuests })
 }
 
 export default function Quests() {
-  const { quests, questToUserQuestMap, numQuests, numCompletedQuests } =
+  const { quests, numQuests, numCompletedQuests } =
     useLoaderData<typeof loader>()
 
   return (
@@ -103,22 +105,29 @@ export default function Quests() {
         <Text variant="headline">Chapters</Text>
 
         <div className="flex flex-col gap-10">
-          {[...Array(5)].map((_, i) => (
-            <Link to={`/app/quest/chapter/${i}`} key={`${i}-quest-card`}>
-              <div>
-                <QuestCard
-                  imgSrc={questThumbnailPlaceholder}
-                  title="Create Identity"
-                  description="1 Sentence Summary. I'm baby blue bottle shabby chic cred, meggings cliche ugh migas."
-                  questStatus={pickRandomQuestStatus()}
-                  label={`Chapter ${i + 1}`}
-                  points={69}
-                  questCriteria={'Placeholder for quest criteria'}
-                  questCriteriaStatus={pickRandomQuestCriteriaStatus()}
-                />
-              </div>
-            </Link>
-          ))}
+          {quests.map((quest, i) => {
+            // check if userQuestMap is empty, if it is, the quest hasnt started
+
+            return (
+              <Link
+                to={`/app/quest/chapter/${quest.id}`}
+                key={`${quest.id}-quest-card`}
+              >
+                <div>
+                  <QuestCard
+                    imgSrc={getQuestImage(quest.id)} // TODO: Replace me post image population
+                    title={quest.title ?? ''}
+                    description={quest.description ?? ''}
+                    questStatus={quest.status}
+                    label={`Chapter ${i + 1}`} // TODO: Replace me post position population
+                    points={quest.points}
+                    questCriteria={getQuestCriteria(quest.condition)}
+                    disabled={false} // TODO: Replace me post quest dependency population
+                  />
+                </div>
+              </Link>
+            )
+          })}
         </div>
       </div>
     </div>
