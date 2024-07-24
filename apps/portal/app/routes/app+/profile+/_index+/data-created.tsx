@@ -1,7 +1,6 @@
 import { ReactNode, Suspense } from 'react'
 
 import {
-  Skeleton,
   Tabs,
   TabsContent,
   TabsList,
@@ -24,6 +23,11 @@ import {
   DataCreatedHeaderVariants,
   DataCreatedHeaderVariantType,
 } from '@components/profile/data-created-header'
+import {
+  DataHeaderSkeleton,
+  PaginatedListSkeleton,
+  TabsSkeleton,
+} from '@components/skeleton'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import {
   getCreatedClaims,
@@ -36,12 +40,7 @@ import {
   NO_USER_TOTALS_ERROR,
   NO_WALLET_ERROR,
 } from '@lib/utils/errors'
-import {
-  DataErrorDisplay,
-  fetchWrapper,
-  formatBalance,
-  invariant,
-} from '@lib/utils/misc'
+import { fetchWrapper, formatBalance, invariant } from '@lib/utils/misc'
 import { defer, LoaderFunctionArgs } from '@remix-run/node'
 import { Await, useRouteLoaderData } from '@remix-run/react'
 import { requireUserWallet } from '@server/auth'
@@ -93,8 +92,8 @@ const TabContent = ({
   value: string
   userIdentity: IdentityPresenter
   userTotals: UserTotalsPresenter
-  totalResults: number | ReactNode
-  totalStake: number | ReactNode
+  totalResults: number
+  totalStake: number
   variant: DataCreatedHeaderVariantType
   children?: ReactNode
 }) => {
@@ -147,120 +146,95 @@ export default function ProfileDataCreated() {
           defaultValue={DataCreatedHeaderVariants.activeIdentities}
           className="w-full"
         >
-          <TabsList className="mb-4">
-            <TabsTrigger
-              value={DataCreatedHeaderVariants.activeIdentities}
-              label="Identities"
-              totalCount={
-                <Suspense
-                  fallback={<Skeleton className="h-6 w-6 inline-flex" />}
-                >
-                  <Await resolve={activeIdentities}>
-                    {(resolvedIdentities) =>
-                      resolvedIdentities.pagination.totalEntries
+          <Suspense fallback={<TabsSkeleton numOfTabs={2} />}>
+            <Await
+              resolve={Promise.all([
+                activeIdentities,
+                activeClaims,
+                activeClaimsSummary,
+              ])}
+            >
+              {([resolvedIdentities, resolvedClaims]) => (
+                <TabsList className="mb-4">
+                  <TabsTrigger
+                    value={DataCreatedHeaderVariants.activeIdentities}
+                    label="Identities"
+                    totalCount={resolvedIdentities.pagination.totalEntries}
+                    disabled={activeIdentities === undefined}
+                  />
+                  <TabsTrigger
+                    value={DataCreatedHeaderVariants.activeClaims}
+                    label="Claims"
+                    totalCount={resolvedClaims.pagination.totalEntries}
+                    disabled={activeClaims === undefined}
+                  />
+                </TabsList>
+              )}
+            </Await>
+          </Suspense>
+          <Suspense
+            fallback={
+              <>
+                <DataHeaderSkeleton />
+                <PaginatedListSkeleton />
+              </>
+            }
+          >
+            <Await
+              resolve={Promise.all([
+                activeIdentities,
+                activeClaims,
+                activeClaimsSummary,
+              ])}
+            >
+              {([
+                resolvedIdentities,
+                resolvedClaims,
+                resolvedActiveClaimsSummary,
+              ]) => (
+                <>
+                  <TabContent
+                    value={DataCreatedHeaderVariants.activeIdentities}
+                    userIdentity={userIdentity}
+                    userTotals={userTotals}
+                    totalResults={resolvedIdentities.pagination.totalEntries}
+                    totalStake={
+                      +formatBalance(
+                        userTotals.total_position_value ?? '0',
+                        18,
+                        4,
+                      )
                     }
-                  </Await>
-                </Suspense>
-              }
-              disabled={activeIdentities === undefined}
-            />
-            <TabsTrigger
-              value={DataCreatedHeaderVariants.activeClaims}
-              label="Claims"
-              totalCount={
-                <Suspense
-                  fallback={<Skeleton className="h-6 w-6 inline-flex" />}
-                >
-                  <Await resolve={activeClaims}>
-                    {(resolvedClaims) => resolvedClaims.pagination.totalEntries}
-                  </Await>
-                </Suspense>
-              }
-              disabled={activeClaims === undefined}
-            />
-          </TabsList>
-          <TabContent
-            value={DataCreatedHeaderVariants.activeIdentities}
-            userIdentity={userIdentity}
-            userTotals={userTotals}
-            totalResults={
-              <Suspense fallback={<Skeleton className="h-6 w-6 inline-flex" />}>
-                <Await resolve={activeIdentities}>
-                  {(resolvedIdentities) =>
-                    resolvedIdentities.pagination.totalEntries
-                  }
-                </Await>
-              </Suspense>
-            }
-            totalStake={
-              <Suspense
-                fallback={<Skeleton className="h-6 w-14 inline-flex" />}
-              >
-                <Await resolve={userTotals}>
-                  {(resolvedTotals) =>
-                    +formatBalance(
-                      resolvedTotals?.total_position_value ?? '0',
-                      18,
-                      4,
-                    )
-                  }
-                </Await>
-              </Suspense>
-            }
-            variant={DataCreatedHeaderVariants.activeIdentities}
-          >
-            <Suspense fallback={<Skeleton className="w-full h-28 mt-6" />}>
-              <Await
-                resolve={activeIdentities}
-                errorElement={
-                  <DataErrorDisplay dataType={'active identities'} />
-                }
-              >
-                {(resolvedIdentities) => (
-                  <ActivePositionsOnIdentities
-                    identities={resolvedIdentities.data}
-                    pagination={resolvedIdentities.pagination}
-                  />
-                )}
-              </Await>
-            </Suspense>
-          </TabContent>
-          <TabContent
-            value={DataCreatedHeaderVariants.activeClaims}
-            userIdentity={userIdentity}
-            userTotals={userTotals}
-            totalResults={
-              <Suspense fallback={<Skeleton className="h-6 w-6 inline-flex" />}>
-                <Await resolve={activeClaims}>
-                  {(resolvedClaims) => resolvedClaims.pagination.totalEntries}
-                </Await>
-              </Suspense>
-            }
-            totalStake={
-              <Suspense
-                fallback={<Skeleton className="h-6 w-14 inline-flex" />}
-              >
-                <Await resolve={activeClaimsSummary}>
-                  {(cs) => +formatBalance(cs?.assets_sum ?? '0', 18, 4)}
-                </Await>
-              </Suspense>
-            }
-            variant={DataCreatedHeaderVariants.activeClaims}
-          >
-            <Suspense fallback={<Skeleton className="w-full h-28 mt-6" />}>
-              <Await
-                resolve={activeClaims}
-                errorElement={<DataErrorDisplay dataType={'active claims'} />}
-              >
-                {(resolvedClaims) => (
-                  <ActivePositionsOnClaims
-                    claims={resolvedClaims.data}
-                    pagination={resolvedClaims.pagination}
-                  />
-                )}
-              </Await>
-            </Suspense>
-          </TabContent>
+                    variant={DataCreatedHeaderVariants.activeIdentities}
+                  >
+                    <ActivePositionsOnIdentities
+                      identities={resolvedIdentities.data}
+                      pagination={resolvedIdentities.pagination}
+                    />
+                  </TabContent>
+                  <TabContent
+                    value={DataCreatedHeaderVariants.activeClaims}
+                    userIdentity={userIdentity}
+                    userTotals={userTotals}
+                    totalResults={resolvedClaims.pagination.totalEntries}
+                    totalStake={
+                      +formatBalance(
+                        resolvedActiveClaimsSummary?.assets_sum ?? '0',
+                        18,
+                        4,
+                      )
+                    }
+                    variant={DataCreatedHeaderVariants.activeClaims}
+                  >
+                    <ActivePositionsOnClaims
+                      claims={resolvedClaims.data}
+                      pagination={resolvedClaims.pagination}
+                    />
+                  </TabContent>
+                </>
+              )}
+            </Await>
+          </Suspense>
         </Tabs>
       </div>
       <div className="flex-col justify-start items-start flex w-full">
@@ -277,120 +251,97 @@ export default function ProfileDataCreated() {
           defaultValue={DataCreatedHeaderVariants.createdIdentities}
           className="w-full"
         >
-          <TabsList className="mb-4">
-            <TabsTrigger
-              value={DataCreatedHeaderVariants.createdIdentities}
-              label="Identities"
-              totalCount={
-                <Suspense
-                  fallback={<Skeleton className="h-6 w-6 inline-flex" />}
-                >
-                  <Await resolve={createdIdentities}>
-                    {(resolvedIdentities) =>
-                      resolvedIdentities.pagination.totalEntries
+          <Suspense fallback={<TabsSkeleton numOfTabs={2} />}>
+            <Await resolve={Promise.all([createdIdentities, createdClaims])}>
+              {([resolvedIdentities, resolvedClaims]) => (
+                <TabsList className="mb-4">
+                  <TabsTrigger
+                    value={DataCreatedHeaderVariants.createdIdentities}
+                    label="Identities"
+                    totalCount={resolvedIdentities.pagination.totalEntries}
+                    disabled={createdIdentities === undefined}
+                  />
+                  <TabsTrigger
+                    value={DataCreatedHeaderVariants.createdClaims}
+                    label="Claims"
+                    totalCount={resolvedClaims.pagination.totalEntries}
+                    disabled={createdClaims === undefined}
+                  />
+                </TabsList>
+              )}
+            </Await>
+          </Suspense>
+          <Suspense
+            fallback={
+              <>
+                <DataHeaderSkeleton />
+                <PaginatedListSkeleton />
+              </>
+            }
+          >
+            <Await
+              resolve={Promise.all([
+                createdIdentities,
+                createdIdentitiesSummary,
+                createdClaims,
+                createdClaimsSummary,
+              ])}
+            >
+              {([
+                resolvedIdentities,
+                resolvedIdentitiesSummary,
+                resolvedClaims,
+                resolvedClaimsSummary,
+              ]) => (
+                <>
+                  <TabContent
+                    value={DataCreatedHeaderVariants.createdIdentities}
+                    userIdentity={userIdentity}
+                    userTotals={userTotals}
+                    totalResults={resolvedIdentities.pagination.totalEntries}
+                    totalStake={
+                      +formatBalance(
+                        resolvedIdentitiesSummary?.assets ?? '0',
+                        18,
+                        4,
+                      )
                     }
-                  </Await>
-                </Suspense>
-              }
-              disabled={createdIdentities === undefined}
-            />
-            <TabsTrigger
-              value={DataCreatedHeaderVariants.createdClaims}
-              label="Claims"
-              totalCount={
-                <Suspense
-                  fallback={<Skeleton className="h-6 w-6 inline-flex" />}
-                >
-                  <Await resolve={createdClaims}>
-                    {(resolvedClaims) => resolvedClaims.pagination.totalEntries}
-                  </Await>
-                </Suspense>
-              }
-              disabled={createdClaims === undefined}
-            />
-          </TabsList>
-          <TabContent
-            value={DataCreatedHeaderVariants.createdIdentities}
-            userIdentity={userIdentity}
-            userTotals={userTotals}
-            totalResults={
-              <Suspense fallback={<Skeleton className="h-6 w-6 inline-flex" />}>
-                <Await resolve={createdIdentities}>
-                  {(resolvedIdentities) =>
-                    resolvedIdentities.pagination.totalEntries
-                  }
-                </Await>
-              </Suspense>
-            }
-            totalStake={
-              <Suspense
-                fallback={<Skeleton className="h-6 w-14 inline-flex" />}
-              >
-                <Await resolve={createdIdentitiesSummary}>
-                  {(summary) => +formatBalance(summary?.assets ?? '0', 18, 4)}
-                </Await>
-              </Suspense>
-            }
-            variant={DataCreatedHeaderVariants.createdIdentities}
-          >
-            <Suspense fallback={<Skeleton className="w-full h-28 mt-6" />}>
-              <Await
-                resolve={createdIdentities}
-                errorElement={
-                  <DataErrorDisplay dataType={'created identities'} />
-                }
-              >
-                {(resolvedIdentities) => (
-                  <IdentitiesList
-                    identities={resolvedIdentities.data}
-                    pagination={resolvedIdentities.pagination}
-                    paramPrefix="createdIdentities"
-                    enableSearch
-                  />
-                )}
-              </Await>
-            </Suspense>
-          </TabContent>
-          <TabContent
-            value={DataCreatedHeaderVariants.createdClaims}
-            userIdentity={userIdentity}
-            userTotals={userTotals}
-            totalResults={
-              <Suspense fallback={<Skeleton className="h-6 w-6 inline-flex" />}>
-                <Await resolve={createdClaims}>
-                  {(resolvedClaims) => resolvedClaims.pagination.totalEntries}
-                </Await>
-              </Suspense>
-            }
-            totalStake={
-              <Suspense
-                fallback={<Skeleton className="h-6 w-14 inline-flex" />}
-              >
-                <Await resolve={createdClaimsSummary}>
-                  {(summary) =>
-                    +formatBalance(summary?.assets_sum ?? '0', 18, 4)
-                  }
-                </Await>
-              </Suspense>
-            }
-            variant={DataCreatedHeaderVariants.createdClaims}
-          >
-            <Suspense fallback={<Skeleton className="w-full h-28 mt-6" />}>
-              <Await
-                resolve={createdClaims}
-                errorElement={<DataErrorDisplay dataType={'created claims'} />}
-              >
-                {(resolvedClaims) => (
-                  <ClaimsList
-                    claims={resolvedClaims.data}
-                    pagination={resolvedClaims.pagination}
-                    paramPrefix="createdClaims"
-                    enableSearch
-                  />
-                )}
-              </Await>
-            </Suspense>
-          </TabContent>
+                    variant={DataCreatedHeaderVariants.createdIdentities}
+                  >
+                    <IdentitiesList
+                      identities={resolvedIdentities.data}
+                      pagination={resolvedIdentities.pagination}
+                      paramPrefix="createdIdentities"
+                      enableSearch
+                      enableSort
+                    />
+                  </TabContent>
+                  <TabContent
+                    value={DataCreatedHeaderVariants.createdClaims}
+                    userIdentity={userIdentity}
+                    userTotals={userTotals}
+                    totalResults={resolvedClaims.pagination.totalEntries}
+                    totalStake={
+                      +formatBalance(
+                        resolvedClaimsSummary?.assets_sum ?? '0',
+                        18,
+                        4,
+                      )
+                    }
+                    variant={DataCreatedHeaderVariants.createdClaims}
+                  >
+                    <ClaimsList
+                      claims={resolvedClaims.data}
+                      pagination={resolvedClaims.pagination}
+                      paramPrefix="createdClaims"
+                      enableSearch
+                      enableSort
+                    />
+                  </TabContent>
+                </>
+              )}
+            </Await>
+          </Suspense>
         </Tabs>
       </div>
     </>

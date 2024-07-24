@@ -57,11 +57,11 @@ export default function ProfileDataAbout() {
   return (
     <div className="flex-col justify-start items-start flex w-full gap-6">
       <div className="flex flex-col w-full pb-4">
-        <div className="flex justify-between items-center w-full">
+        <div className="self-stretch justify-between items-center inline-flex mb-6">
           <Text
             variant="headline"
             weight="medium"
-            className="text-secondary-foreground pb-3"
+            className="theme-secondary-foreground w-full"
           >
             Claims about this Identity
           </Text>
@@ -105,11 +105,11 @@ export default function ProfileDataAbout() {
         </Suspense>
       </div>
       <div className="flex flex-col pt-4 w-full">
-        <div className="flex justify-between items-center w-full">
+        <div className="self-stretch justify-between items-center inline-flex mb-6">
           <Text
             variant="headline"
             weight="medium"
-            className="theme-secondary-foreground pb-3"
+            className="theme-secondary-foreground w-full"
           >
             Positions on this Identity
           </Text>
