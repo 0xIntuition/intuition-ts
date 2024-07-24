@@ -1,3 +1,5 @@
+import React from 'react'
+
 import { FeesAccrued, IdentityTag, MonetaryValue, Text } from '@0xintuition/1ui'
 import { IdentityPresenter, UserTotalsPresenter } from '@0xintuition/api'
 
@@ -13,7 +15,7 @@ export const DataCreatedHeaderVariants = {
 export type DataCreatedHeaderVariantType =
   (typeof DataCreatedHeaderVariants)[keyof typeof DataCreatedHeaderVariants]
 
-interface DataCreatedHeaderProps {
+interface DataCreatedHeaderProps extends React.HTMLAttributes<HTMLDivElement> {
   variant: DataCreatedHeaderVariantType
   userIdentity: IdentityPresenter
   userTotals: UserTotalsPresenter
@@ -27,6 +29,7 @@ export const DataCreatedHeader: React.FC<DataCreatedHeaderProps> = ({
   userTotals,
   totalStake,
   totalResults,
+  ...props
 }) => {
   const totalPositionValue = +formatBalance(
     userTotals?.total_position_value ?? '0',
@@ -37,7 +40,7 @@ export const DataCreatedHeader: React.FC<DataCreatedHeaderProps> = ({
   const feesAccrued = totalDelta - totalPositionValue
 
   return (
-    <div className="h-46 flex flex-col w-full gap-3">
+    <div className="h-46 flex flex-col w-full gap-3" {...props}>
       <div className="p-6 bg-black rounded-xl border border-neutral-300/20 flex flex-col gap-5">
         <div className="flex gap-1.5 items-center">
           <Text

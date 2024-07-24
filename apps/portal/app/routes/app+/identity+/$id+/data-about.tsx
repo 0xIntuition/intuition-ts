@@ -154,6 +154,7 @@ export default function ProfileDataAbout() {
           userIdentity={identity}
           totalClaims={claimsPagination.totalEntries}
           totalStake={+formatBalance(claimsSummary?.assets_sum ?? 0, 18, 4)}
+          className="mb-6"
         />
         <ClaimsAboutIdentity
           claims={claims}
@@ -168,6 +169,7 @@ export default function ProfileDataAbout() {
           userIdentity={identity}
           totalPositions={identity.num_positions}
           totalStake={+formatBalance(identity.assets_sum, 18, 4)}
+          className="mb-6"
         />
         <PositionsOnIdentity
           positions={positions}
