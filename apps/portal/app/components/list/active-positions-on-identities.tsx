@@ -1,4 +1,4 @@
-import { Identity, IdentityPosition } from '@0xintuition/1ui'
+import { EmptyStateCard, Identity, IdentityPosition } from '@0xintuition/1ui'
 import { IdentityPresenter, SortColumn } from '@0xintuition/api'
 
 import { formatBalance } from '@lib/utils/misc'
@@ -23,6 +23,10 @@ export function ActivePositionsOnIdentities({
     { value: 'Created At', sortBy: 'CreatedAt' },
   ]
 
+  if (!identities.length) {
+    return <EmptyStateCard message="No active identity positions found." />
+  }
+
   return (
     <List<SortColumn>
       pagination={pagination}
@@ -30,7 +34,7 @@ export function ActivePositionsOnIdentities({
       options={options}
       paramPrefix="activeIdentities"
     >
-      {identities?.map((identity) => (
+      {identities.map((identity) => (
         <div
           key={identity.id}
           className={`grow shrink basis-0 self-stretch p-6 bg-black first:rounded-t-xl last:rounded-b-xl border border-neutral-300/20 flex-col justify-start items-start gap-5 inline-flex`}

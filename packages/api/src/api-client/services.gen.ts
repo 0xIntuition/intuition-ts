@@ -36,6 +36,8 @@ import type {
   CreateUserResponse,
   DeactivateLinkedAccountData,
   DeactivateLinkedAccountResponse,
+  DeleteQuestData,
+  DeleteQuestResponse,
   DeleteUserData,
   DeleteUserResponse,
   GetActivitiesData,
@@ -68,9 +70,13 @@ import type {
   GetLinkedAccountsByUserResponse,
   GetLinkedAccountsData,
   GetLinkedAccountsResponse,
+  GetPendingIdentitiesData,
+  GetPendingIdentitiesResponse,
   GetPositionByIdData,
   GetPositionByIdResponse,
   GetQueryStructureResponse,
+  GetQuestData,
+  GetQuestResponse,
   GetUserByIdData,
   GetUserByIdPublicData,
   GetUserByIdPublicResponse,
@@ -83,6 +89,8 @@ import type {
   GetUserClaimsResponse,
   GetUserIdentitiesData,
   GetUserIdentitiesResponse,
+  GetUserQuestByIdData,
+  GetUserQuestByIdResponse,
   GetUsersData,
   GetUsersPositionsData,
   GetUsersPositionsResponse,
@@ -91,6 +99,7 @@ import type {
   GetUserTotalsResponse,
   IdentitySummaryData,
   IdentitySummaryResponse,
+  IntegrationHealthcheckResponse,
   PositionSummaryData,
   PositionSummaryResponse,
   RedeemInviteCodeData,
@@ -110,6 +119,8 @@ import type {
   SearchIdentityResponse,
   SearchPositionsData,
   SearchPositionsResponse,
+  SearchQuestsData,
+  SearchQuestsResponse,
   SearchResponse,
   SetFollowPredicateData,
   SetFollowPredicateResponse,
@@ -375,8 +386,6 @@ export class ClaimsService {
    * @param data.displayName
    * @param data.counterVault
    * @param data.status
-   * @param data.forUser
-   * @param data.againstUser
    * @returns unknown Search claims in paginated list
    * @throws ApiError
    */
@@ -401,8 +410,6 @@ export class ClaimsService {
         displayName: data.displayName,
         counterVault: data.counterVault,
         status: data.status,
-        forUser: data.forUser,
-        againstUser: data.againstUser,
       },
     })
   }
@@ -423,8 +430,6 @@ export class ClaimsService {
    * @param data.displayName
    * @param data.counterVault
    * @param data.status
-   * @param data.forUser
-   * @param data.againstUser
    * @returns unknown Summary of claim values based on query
    * @throws ApiError
    */
@@ -449,8 +454,6 @@ export class ClaimsService {
         displayName: data.displayName,
         counterVault: data.counterVault,
         status: data.status,
-        forUser: data.forUser,
-        againstUser: data.againstUser,
       },
     })
   }
@@ -528,6 +531,36 @@ export class IdentitiesService {
 
   /**
    * @param data The data for the request.
+   * @param data.direction
+   * @param data.sortBy
+   * @param data.page
+   * @param data.offset
+   * @param data.limit
+   * @param data.userWallet
+   * @param data.timeframe
+   * @returns unknown Get all pending identities in paginated list
+   * @throws ApiError
+   */
+  public static getPendingIdentities(
+    data: GetPendingIdentitiesData = {},
+  ): CancelablePromise<GetPendingIdentitiesResponse> {
+    return __request(OpenAPI, {
+      method: 'GET',
+      url: '/identities/pending',
+      query: {
+        direction: data.direction,
+        sortBy: data.sortBy,
+        page: data.page,
+        offset: data.offset,
+        limit: data.limit,
+        userWallet: data.userWallet,
+        timeframe: data.timeframe,
+      },
+    })
+  }
+
+  /**
+   * @param data The data for the request.
    * @param data.id Identity sql id
    * @param data.requestBody
    * @returns unknown Update an identity
@@ -584,7 +617,6 @@ export class IdentitiesService {
    * @param data.timeframe
    * @param data.identityId
    * @param data.description
-   * @param data.linkedAccountUsername
    * @returns unknown Search identities in paginated list
    * @throws ApiError
    */
@@ -613,7 +645,6 @@ export class IdentitiesService {
         timeframe: data.timeframe,
         identityId: data.identityId,
         description: data.description,
-        linkedAccountUsername: data.linkedAccountUsername,
       },
     })
   }
@@ -638,7 +669,6 @@ export class IdentitiesService {
    * @param data.timeframe
    * @param data.identityId
    * @param data.description
-   * @param data.linkedAccountUsername
    * @returns unknown Summary of identity values based on query
    * @throws ApiError
    */
@@ -667,7 +697,6 @@ export class IdentitiesService {
         timeframe: data.timeframe,
         identityId: data.identityId,
         description: data.description,
-        linkedAccountUsername: data.linkedAccountUsername,
       },
     })
   }
@@ -863,6 +892,19 @@ export class IdentityPositionsService {
         creator: data.creator,
         positionDirection: data.positionDirection,
       },
+    })
+  }
+}
+
+export class StatusService {
+  /**
+   * @returns unknown return details on api integration health
+   * @throws ApiError
+   */
+  public static integrationHealthcheck(): CancelablePromise<IntegrationHealthcheckResponse> {
+    return __request(OpenAPI, {
+      method: 'POST',
+      url: '/integration/healthcheck',
     })
   }
 }
@@ -1207,6 +1249,45 @@ export class QuestsService {
   }
 
   /**
+   * This endpoint returns the quests that match the informed values and
+   * return them when suceeded
+   * @param data The data for the request.
+   * @param data.requestBody
+   * @returns unknown Return information about quests
+   * @throws ApiError
+   */
+  public static searchQuests(
+    data: SearchQuestsData,
+  ): CancelablePromise<SearchQuestsResponse> {
+    return __request(OpenAPI, {
+      method: 'POST',
+      url: '/quest/search',
+      body: data.requestBody,
+      mediaType: 'application/json',
+    })
+  }
+
+  /**
+   * This endpoint get a quest by the id and returns a [`Quest`] object
+   * when suceeded
+   * @param data The data for the request.
+   * @param data.questId Quest SQL id
+   * @returns unknown Return information about a quest
+   * @throws ApiError
+   */
+  public static getQuest(
+    data: GetQuestData,
+  ): CancelablePromise<GetQuestResponse> {
+    return __request(OpenAPI, {
+      method: 'GET',
+      url: '/quest/{quest_id}',
+      path: {
+        quest_id: data.questId,
+      },
+    })
+  }
+
+  /**
    * This endpoint updates a quest. It receives a [`UpdateQuest`] and
    * returns a [`Quest`] when suceeded
    * @param data The data for the request.
@@ -1226,6 +1307,25 @@ export class QuestsService {
       },
       body: data.requestBody,
       mediaType: 'application/json',
+    })
+  }
+
+  /**
+   * This is an admin endpoint to delete `quests`
+   * @param data The data for the request.
+   * @param data.questId Quest SQL id
+   * @returns unknown Delete the informed quest
+   * @throws ApiError
+   */
+  public static deleteQuest(
+    data: DeleteQuestData,
+  ): CancelablePromise<DeleteQuestResponse> {
+    return __request(OpenAPI, {
+      method: 'DELETE',
+      url: '/quest/{quest_id}',
+      path: {
+        quest_id: data.questId,
+      },
     })
   }
 }
@@ -1300,6 +1400,24 @@ export class UserQuestsService {
       path: {
         quest_id: data.questId,
         user_id: data.userId,
+      },
+    })
+  }
+
+  /**
+   * @param data The data for the request.
+   * @param data.userQuestId User quest SQL id
+   * @returns unknown Search user quest for user
+   * @throws ApiError
+   */
+  public static getUserQuestById(
+    data: GetUserQuestByIdData,
+  ): CancelablePromise<GetUserQuestByIdResponse> {
+    return __request(OpenAPI, {
+      method: 'GET',
+      url: '/user_quest/{user_quest_id}',
+      path: {
+        user_quest_id: data.userQuestId,
       },
     })
   }

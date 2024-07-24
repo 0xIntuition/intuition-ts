@@ -1,6 +1,7 @@
 import {
   Claim,
   ClaimRow,
+  EmptyStateCard,
   Identity,
   IdentityContentRow,
   IdentityTag,
@@ -23,8 +24,6 @@ type EventMessages = {
   depositTriple: (value: string) => string
   redeemTriple: (value: string) => string
 }
-
-// ... existing code ...
 
 function ActivityItem({
   activity,
@@ -165,15 +164,6 @@ export function ActivityList({
 }) {
   const navigate = useNavigate()
 
-  type EventMessages = {
-    createAtom: string
-    createTriple: string
-    depositAtom: (value: string) => string
-    redeemAtom: (value: string) => string
-    depositTriple: (value: string) => string
-    redeemTriple: (value: string) => string
-  }
-
   const eventMessages: EventMessages = {
     createAtom: 'created an identity',
     createTriple: 'created a claim',
@@ -187,6 +177,10 @@ export function ActivityList({
       `redeemed ${formatBalance(value, 18, 4)} ETH from a claim`,
   }
 
+  if (!activities.length) {
+    return <EmptyStateCard message="No activities found." />
+  }
+
   return (
     <List<SortColumn>
       pagination={pagination}
@@ -194,7 +188,7 @@ export function ActivityList({
       paramPrefix={paramPrefix}
       enableSearch={false}
     >
-      {activities?.map((activity) => (
+      {activities.map((activity) => (
         <ActivityItem
           key={activity.id}
           activity={activity}

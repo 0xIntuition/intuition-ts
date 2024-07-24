@@ -1,9 +1,11 @@
-import * as React from 'react'
+import {
+  Button,
+  getProgressPercentage,
+  ProgressBar,
+  Text,
+} from '@0xintuition/1ui'
 
-import { Button } from 'components/Button'
-import { ProgressBar } from 'components/ProgressBar'
-import { Text } from 'components/Text'
-import { getProgressPercentage } from 'utils/progress'
+import { Link } from '@remix-run/react'
 
 export interface QuestSetProgressCardProps
   extends React.HTMLAttributes<HTMLDivElement> {
@@ -11,7 +13,7 @@ export interface QuestSetProgressCardProps
   title: string
   numberQuests: number
   numberCompletedQuests: number
-  onButtonClick: () => void
+  to: string
 }
 
 const QuestSetProgressCard = ({
@@ -19,7 +21,7 @@ const QuestSetProgressCard = ({
   title,
   numberQuests,
   numberCompletedQuests,
-  onButtonClick,
+  to,
   ...props
 }: QuestSetProgressCardProps) => {
   const progressPercentage = getProgressPercentage(
@@ -58,9 +60,11 @@ const QuestSetProgressCard = ({
           </div>
           <ProgressBar percentage={progressPercentage} />
           <div className="flex w-full justify-end">
-            <Button variant="secondary" size="md" onClick={onButtonClick}>
-              Continue
-            </Button>
+            <Link to={to} prefetch="intent">
+              <Button variant="secondary" size="md">
+                Continue
+              </Button>
+            </Link>
           </div>
         </div>
       </div>

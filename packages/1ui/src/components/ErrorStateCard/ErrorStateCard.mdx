@@ -1,0 +1,41 @@
+import { Canvas, Controls, Meta, Source, Title } from '@storybook/blocks'
+
+import * as Stories from './ErrorStateCard.stories'
+
+<Meta of={Stories} />
+
+<Title />
+
+#### A display card to show an error state
+
+<Canvas of={Stories.BasicUsage} sourceState="none" />
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { ErrorStateCard } from '@0xintuition/1ui'
+
+<ErrorStateCard message="An error occured" />
+`} />
+
+## Variants
+
+### With Children
+
+<Canvas of={Stories.WithChildren} sourceState="none" />
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { ErrorStateCard, Button } from '@0xintuition/1ui'
+
+<ErrorStateCard message="An error occured">
+  <Button>Retry</Button>
+</ErrorStateCard>
+`} />
+
+## Properties
+
+<Controls />

@@ -1,4 +1,9 @@
-import { Claim, ClaimPositionRow, Identity } from '@0xintuition/1ui'
+import {
+  Claim,
+  ClaimPositionRow,
+  EmptyStateCard,
+  Identity,
+} from '@0xintuition/1ui'
 import { ClaimPresenter, SortColumn } from '@0xintuition/api'
 
 import { formatBalance } from '@lib/utils/misc'
@@ -23,6 +28,10 @@ export function ActivePositionsOnClaims({
     { value: 'Created At', sortBy: 'CreatedAt' },
   ]
 
+  if (!claims.length) {
+    return <EmptyStateCard message="No active claim positions found." />
+  }
+
   return (
     <List<SortColumn>
       paginationLabel="positions"
@@ -30,7 +39,7 @@ export function ActivePositionsOnClaims({
       options={options}
       paramPrefix="activeClaims"
     >
-      {claims?.map((claim) => (
+      {claims.map((claim) => (
         <div
           key={claim.claim_id}
           className={`grow shrink basis-0 self-stretch p-6 bg-black first:rounded-t-xl last:rounded-b-xl border border-neutral-300/20 flex-col justify-start items-start gap-5 inline-flex`}

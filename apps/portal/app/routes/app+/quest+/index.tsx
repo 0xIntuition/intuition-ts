@@ -2,8 +2,6 @@ import { Suspense } from 'react'
 
 import {
   formatWalletAddress,
-  QuestSetCard,
-  QuestSetProgressCard,
   Separator,
   Skeleton,
   Text,
@@ -11,12 +9,18 @@ import {
 import { ProfileCardHeader } from '@0xintuition/1ui/src/components/ProfileCard/components'
 import { GetUserByWalletResponse, UsersService } from '@0xintuition/api'
 
-import questPlaceholder from '@assets/quest-placeholder.png'
-import { QUEST_LOG_DESCRIPTION } from '@lib/utils/constants/quest'
+import { QuestSetCard } from '@components/quest/quest-set-card'
+import { QuestSetProgressCard } from '@components/quest/quest-set-progress-card'
+import {
+  COMING_SOON_QUEST_SET,
+  QUEST_LOG_DESCRIPTION,
+  STANDARD_QUEST_SET,
+} from '@lib/utils/constants/quest'
 import { fetchWrapper, invariant } from '@lib/utils/misc'
 import { defer, LoaderFunctionArgs } from '@remix-run/node'
 import { Await, Link, useLoaderData } from '@remix-run/react'
 import { requireUserWallet } from '@server/auth'
+import { fetchQuestNarrativeProgress } from '@server/quest'
 import { isAddress } from 'viem'
 
 export async function loader({ request }: LoaderFunctionArgs) {
@@ -30,13 +34,18 @@ export async function loader({ request }: LoaderFunctionArgs) {
     },
   })
 
+  const standardQuestsProgress = fetchQuestNarrativeProgress('Standard')
+
   return defer({
     userWallet,
     userProfile,
+    standardQuestsProgress,
   })
 }
 
 export default function Quests() {
+  const { standardQuestsProgress } = useLoaderData<typeof loader>()
+
   return (
     <div className="p-10 w-full max-w-7xl mx-auto flex flex-col gap-5">
       <div className="flex flex-col gap-5">
@@ -54,15 +63,19 @@ export default function Quests() {
               </div>
             </div>
             <div className="flex-1">
-              <QuestSetProgressCard
-                imgSrc={questPlaceholder}
-                title={'Tutorial Island: The Primitive Elements'}
-                numberQuests={10}
-                numberCompletedQuests={5}
-                onButtonClick={function (): void {
-                  throw new Error('Function not implemented.')
-                }}
-              />
+              <Suspense fallback={<Skeleton className="h-full w-full" />}>
+                <Await resolve={standardQuestsProgress}>
+                  {(progress) => (
+                    <QuestSetProgressCard
+                      imgSrc={STANDARD_QUEST_SET.imgSrc}
+                      title={STANDARD_QUEST_SET.title}
+                      numberQuests={progress.numQuests}
+                      numberCompletedQuests={progress.numCompletedQuests}
+                      to={STANDARD_QUEST_SET.navigatePath}
+                    />
+                  )}
+                </Await>
+              </Suspense>
             </div>
           </div>
         </div>
@@ -86,26 +99,33 @@ export default function Quests() {
             </Text>
           </div>
           <ul className="grid grid-cols-1 gap-10 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2">
-            {[...Array(2)].map((_, i) => (
-              <Link to={`/app/quest/book/${i}`} key={`${i}-quest-card`}>
-                <li className="col-span-1 h-full">
-                  <QuestSetCard
-                    disabled={i === 1}
-                    imgSrc={questPlaceholder}
-                    title={
-                      i === 1
-                        ? 'Coming soon'
-                        : 'Tutorial Island: The Primitive Elements'
-                    }
-                    description={
-                      'Something inside you stirs, urging you to rekindle and reclaim humanity’s lost intuition...'
-                    }
-                    numberQuests={12}
-                    numberCompletedQuests={0}
-                  />
-                </li>
-              </Link>
-            ))}
+            <Suspense fallback={<Skeleton className="h-full w-full" />}>
+              <Await resolve={standardQuestsProgress}>
+                {(progress) => (
+                  <Link to={STANDARD_QUEST_SET.navigatePath} prefetch="intent">
+                    <li className="col-span-1 h-full">
+                      <QuestSetCard
+                        imgSrc={STANDARD_QUEST_SET.imgSrc}
+                        title={STANDARD_QUEST_SET.title}
+                        description={STANDARD_QUEST_SET.description}
+                        numberQuests={progress.numQuests}
+                        numberCompletedQuests={progress.numCompletedQuests}
+                      />
+                    </li>
+                  </Link>
+                )}
+              </Await>
+            </Suspense>
+            <li className="col-span-1 h-full">
+              <QuestSetCard
+                disabled
+                imgSrc={COMING_SOON_QUEST_SET.imgSrc}
+                title={COMING_SOON_QUEST_SET.title}
+                description={COMING_SOON_QUEST_SET.description}
+                numberQuests={0}
+                numberCompletedQuests={0}
+              />
+            </li>
           </ul>
         </div>
       </div>

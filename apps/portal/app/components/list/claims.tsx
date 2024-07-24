@@ -1,4 +1,4 @@
-import { Claim, ClaimRow, Identity } from '@0xintuition/1ui'
+import { Claim, ClaimRow, EmptyStateCard, Identity } from '@0xintuition/1ui'
 import { ClaimPresenter, ClaimSortColumn } from '@0xintuition/api'
 
 import { formatBalance } from '@lib/utils/misc'
@@ -33,6 +33,10 @@ export function ClaimsList({
     { value: 'Created At', sortBy: 'CreatedAt' },
   ]
 
+  if (!claims.length) {
+    return <EmptyStateCard message="No claims found." />
+  }
+
   return (
     <List<ClaimSortColumn>
       pagination={pagination}
@@ -42,7 +46,7 @@ export function ClaimsList({
       enableSearch={enableSearch}
       enableSort={enableSort}
     >
-      {claims?.map((claim) => (
+      {claims.map((claim) => (
         <div
           key={claim.claim_id}
           className="grow shrink basis-0 self-stretch p-6 bg-background first:rounded-t-xl last:rounded-b-xl theme-border flex-col justify-start gap-5 inline-flex"

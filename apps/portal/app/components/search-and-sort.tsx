@@ -15,7 +15,7 @@ export function SearchAndSort<T>({
   handleSearchChange,
 }: SearchAndSortProps<T>) {
   return (
-    <div className="flex flex-row justify-between w-full mt-6">
+    <div className="flex flex-row justify-between w-full">
       <Input
         className="w-48"
         onChange={handleSearchChange}

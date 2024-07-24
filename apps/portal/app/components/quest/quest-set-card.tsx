@@ -1,9 +1,4 @@
-import * as React from 'react'
-
-import { ProgressBar } from 'components/ProgressBar'
-import { Text } from 'components/Text'
-import { cn } from 'styles'
-import { getProgressPercentage } from 'utils/progress'
+import { cn, getProgressPercentage, ProgressBar, Text } from '@0xintuition/1ui'
 
 export interface QuestSetCardProps
   extends React.HTMLAttributes<HTMLDivElement> {

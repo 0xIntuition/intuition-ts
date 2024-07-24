@@ -275,6 +275,7 @@ const TabContent = ({
         userTotals={userTotals}
         totalResults={totalResults}
         totalStake={totalStake}
+        className="mb-6"
       />
       {children}
     </TabsContent>
