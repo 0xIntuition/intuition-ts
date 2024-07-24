@@ -28,7 +28,7 @@ export function PositionsOnClaim({
       pagination={pagination}
       paginationLabel="positions"
       options={options}
-      paramPrefix="claims"
+      paramPrefix="positions"
     >
       {!positions.length ? (
         <EmptyStateCard message="No positions found." />

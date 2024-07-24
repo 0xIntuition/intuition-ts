@@ -88,6 +88,7 @@ export default function ProfileDataAbout() {
                 pagination={resolvedClaims.pagination}
                 paramPrefix="claims"
                 enableSearch
+                enableSort
               />
             )}
           </Await>

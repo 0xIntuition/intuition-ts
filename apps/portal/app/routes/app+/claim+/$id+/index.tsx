@@ -40,27 +40,21 @@ export default function ClaimOverview() {
     'create',
   ])
   const [searchParams, setSearchParams] = useSearchParams()
-  const [positionDirection, setPositionDirection] = useState<VaultType | null>(
-    null,
-  )
   const [isNavigating, setIsNavigating] = useState(false)
 
   const { state } = useNavigation()
-  useEffect(() => {
-    setIsNavigating(true)
-    setSearchParams({
-      ...Object.fromEntries(searchParams),
-      ...(positionDirection && { positionDirection }),
-      page: '1',
-    })
-  }, [positionDirection])
 
   function handleTabChange(value: VaultType | null) {
-    setPositionDirection(value)
     const newParams = new URLSearchParams(searchParams)
-    newParams.delete('positionDirection')
+    if (value === null) {
+      newParams.delete('positionDirection')
+    } else {
+      newParams.set('positionDirection', value)
+    }
+    newParams.delete('positionsSearch')
     newParams.set('page', '1')
-    setPositionDirection(value)
+    setSearchParams(newParams)
+    setIsNavigating(true)
   }
 
   useEffect(() => {

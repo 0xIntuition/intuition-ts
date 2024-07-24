@@ -1,4 +1,5 @@
 import PrivyRefresh from '@client/privy-refresh'
+import logger from '@lib/utils/logger'
 import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
 import { onboardingModalCookie } from '@server/onboarding'
 import { getPrivyTokens } from '@server/privy'
@@ -13,7 +14,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   }
   const { accessToken, sessionToken } = getPrivyTokens(request)
   if (accessToken) {
-    console.log('accessToken', accessToken)
+    logger('accessToken', accessToken)
     if (redirectTo) {
       throw redirect(redirectTo)
     }

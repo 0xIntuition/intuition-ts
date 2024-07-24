@@ -67,7 +67,7 @@ export async function getPositionsOnClaim({
     paramPrefix: 'positions',
     defaultSortByValue: PositionSortColumn.CREATED_AT,
   })
-  const creator = searchParams.get('search')
+  const creator = searchParams.get('positionsSearch')
   const positionDirection =
     (searchParams.get('positionDirection') as VaultType) || null
 
