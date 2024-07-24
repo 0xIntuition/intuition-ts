@@ -37,15 +37,15 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const searchParams = new URLSearchParams(url.search)
 
   return defer({
-    positions: getPositionsOnIdentity({ identityId: userWallet, searchParams }),
+    positions: getPositionsOnIdentity({ identityId: wallet, searchParams }),
     claims: getClaimsAboutIdentity({
-      identityId: userWallet,
+      identityId: wallet,
       searchParams,
     }),
     claimsSummary: fetchWrapper({
       method: ClaimsService.claimSummary,
       args: {
-        identity: userWallet,
+        identity: wallet,
       },
     }),
   })
