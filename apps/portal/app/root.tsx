@@ -11,6 +11,7 @@ import {
   ScrollRestoration,
   useLoaderData,
   useLocation,
+  useNavigate,
   useRouteError,
 } from '@remix-run/react'
 import { useTheme } from '@routes/actions+/set-theme'
@@ -21,10 +22,12 @@ import './styles/globals.css'
 
 import { useEffect } from 'react'
 
-import { Text, Toaster } from '@0xintuition/1ui'
+import { Button, Text, Toaster } from '@0xintuition/1ui'
 
 import { GlobalLoading } from '@components/global-loading'
 import { CURRENT_ENV } from '@lib/utils/constants'
+import { SUPPORT_EMAIL_ADDRESS } from '@lib/utils/constants/emails'
+import { PATH } from '@lib/utils/constants/paths'
 import { getChainEnvConfig } from '@lib/utils/environment'
 import logger from '@lib/utils/logger'
 import { setupAPI } from '@server/auth'
@@ -148,36 +151,87 @@ export function AppLayout() {
   )
 }
 
-// TODO: Update styling/messaging [ENG-2772]
 export function ErrorBoundary() {
   const error = useRouteError()
-  let title = '404'
-  let description = 'Page Not Found'
+  let statusCode = 404
+  let title = 'Error'
+  let description = 'Something went wrong...'
 
-  logger('ROOT ERROR BOUNDARY: \n', error)
+  logger('ROOT ERROR BOUNDARY:', error)
 
   const ErrorMessage = ({
+    statusCode,
     title,
     description,
   }: {
+    statusCode: number
     title: string
     description: string
-  }) => (
-    <Document>
-      <div className="flex flex-col items-center justify-center h-[90vh]">
-        <Text variant="heading1">{title}</Text>
-        <Text variant="heading4">{description}</Text>
-      </div>
-    </Document>
-  )
-
-  if (isRouteErrorResponse(error)) {
-    title = error.status.toString()
-    description = error.statusText
-  } else if (error instanceof Error) {
-    title = 'Error'
-    description = 'Something went wrong...'
+  }) => {
+    const navigate = useNavigate()
+    const descriptionArray = description.split('\n')
+    return (
+      <Document>
+        <div className="flex h-[100vh] w-full items-center justify-center gap-12">
+          <div className="flex flex-col max-w-[500px] gap-2">
+            <Text variant="heading1" weight="medium">
+              {title}
+            </Text>
+            <div className="flex flex-col">
+              {descriptionArray?.map((content, index) => (
+                <Text
+                  variant="bodyLarge"
+                  className="text-secondary/30"
+                  key={index}
+                >
+                  {content}
+                </Text>
+              ))}
+            </div>
+            <div className="flex gap-6 mt-5">
+              <Button
+                variant="primary"
+                size="lg"
+                onClick={() => navigate(PATH.ROOT)}
+              >
+                Back to home
+              </Button>
+              <Button
+                variant="ghost"
+                size="lg"
+                className="rounded-full"
+                onClick={() =>
+                  (window.location.href = `mailto:${SUPPORT_EMAIL_ADDRESS}`)
+                }
+              >
+                Contact Support
+              </Button>
+            </div>
+          </div>
+          <Text variant="heading1" weight="bold" className="text-9xl">
+            {statusCode}
+          </Text>
+        </div>
+      </Document>
+    )
   }
 
-  return <ErrorMessage title={title} description={description} />
+  if (isRouteErrorResponse(error)) {
+    statusCode = error.status
+    if (error.status === 404) {
+      title = 'Page not found'
+      description = `Unfortunately, the page you are looking for does not exist.\n If you believe this is a mistake, please let us know and we'll get it sorted out.`
+    } else {
+      title = error.statusText
+      description = error.data
+    }
+  }
+
+  return (
+    <ErrorMessage
+      statusCode={statusCode}
+      title={title}
+      description={description}
+    />
+  )
 }
