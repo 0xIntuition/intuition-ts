@@ -1,6 +1,6 @@
 import { SegmentedControl, SegmentedControlItem } from '@0xintuition/1ui'
 
-import { NavLink, useNavigate, useParams } from '@remix-run/react'
+import { NavLink, useParams } from '@remix-run/react'
 
 export interface OptionType {
   value: string
@@ -14,7 +14,6 @@ interface SegmentedNavProps {
 }
 
 export const SegmentedNav = ({ options }: SegmentedNavProps) => {
-  const navigate = useNavigate()
   const params = useParams()
 
   const getPath = (option: OptionType) => {
@@ -28,10 +27,6 @@ export const SegmentedNav = ({ options }: SegmentedNavProps) => {
     )
   }
 
-  const handleTabClick = (option: OptionType) => {
-    navigate(getPath(option))
-  }
-
   return (
     <SegmentedControl className="w-fit">
       {options.map((option, index) => (
@@ -40,10 +35,6 @@ export const SegmentedNav = ({ options }: SegmentedNavProps) => {
           to={getPath(option)}
           prefetch="intent"
           end={option.value === 'overview'}
-          onClick={(e) => {
-            e.preventDefault()
-            handleTabClick(option)
-          }}
         >
           {({ isActive }) => (
             <SegmentedControlItem isActive={isActive}>
