@@ -105,7 +105,6 @@ export default function ClaimDetails() {
     }
   }
 
-  logger('claim', claim)
   const [stakeModalActive, setStakeModalActive] = useAtom(stakeModalAtom)
 
   let direction: 'for' | 'against' = 'for'
