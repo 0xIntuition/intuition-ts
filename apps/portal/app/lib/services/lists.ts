@@ -2,6 +2,7 @@ import {
   ClaimPresenter,
   ClaimSortColumn,
   ClaimsService,
+  IdentityPresenter,
   UsersService,
 } from '@0xintuition/api'
 
@@ -127,10 +128,14 @@ export async function getListIdentities({
 
   const totalPages = calculateTotalPages(listIdentities?.total ?? 0, limit)
 
+  const listIdentitiesSubjects = listIdentities.data.map(
+    (claim) => claim.subject,
+  ) as IdentityPresenter[]
+
   logger('getListIdentities', listIdentities.total)
 
   return {
-    listIdentities: listIdentities.data as ClaimPresenter[],
+    listIdentities: listIdentitiesSubjects as IdentityPresenter[],
     pagination: {
       currentPage: Number(page),
       limit: Number(limit),

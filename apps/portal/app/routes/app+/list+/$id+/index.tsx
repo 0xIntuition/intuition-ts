@@ -3,11 +3,12 @@ import { Suspense } from 'react'
 import { Claim, ListHeaderCard } from '@0xintuition/1ui'
 import { ClaimPresenter, ClaimsService } from '@0xintuition/api'
 
-import { DataHeaderSkeleton } from '@components/skeleton'
+import { IdentitiesList } from '@components/list/identities'
+import { DataHeaderSkeleton, PaginatedListSkeleton } from '@components/skeleton'
 import { getListIdentities } from '@lib/services/lists'
 import { NO_CLAIM_ERROR, NO_PARAM_ID_ERROR } from '@lib/utils/errors'
 import logger from '@lib/utils/logger'
-import { fetchWrapper, invariant } from '@lib/utils/misc'
+import { DataErrorDisplay, fetchWrapper, invariant } from '@lib/utils/misc'
 import { defer, LoaderFunctionArgs } from '@remix-run/node'
 import { Await, useLoaderData, useRouteLoaderData } from '@remix-run/react'
 
@@ -80,6 +81,18 @@ export default function ListOverview() {
                   }}
                 />
               </ListHeaderCard>
+            )}
+          </Await>
+        </Suspense>
+        <Suspense fallback={<PaginatedListSkeleton />}>
+          <Await resolve={listIdentities} errorElement={<DataErrorDisplay />}>
+            {(resolvedListIdentities) => (
+              <IdentitiesList
+                identities={resolvedListIdentities.listIdentities}
+                pagination={resolvedListIdentities.pagination}
+                enableSearch={true}
+                enableSort={true}
+              />
             )}
           </Await>
         </Suspense>
