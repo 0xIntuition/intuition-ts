@@ -22,7 +22,7 @@ import './styles/globals.css'
 
 import { useEffect } from 'react'
 
-import { Button, Text, Toaster } from '@0xintuition/1ui'
+import { Button, Icon, Text, Toaster } from '@0xintuition/1ui'
 
 import { GlobalLoading } from '@components/global-loading'
 import { CURRENT_ENV } from '@lib/utils/constants'
@@ -30,6 +30,7 @@ import { SUPPORT_EMAIL_ADDRESS } from '@lib/utils/constants/emails'
 import { PATH } from '@lib/utils/constants/paths'
 import { getChainEnvConfig } from '@lib/utils/environment'
 import logger from '@lib/utils/logger'
+import { cn } from '@lib/utils/misc'
 import { setupAPI } from '@server/auth'
 import { ClientOnly } from 'remix-utils/client-only'
 import { baseSepolia } from 'viem/chains'
@@ -153,9 +154,12 @@ export function AppLayout() {
 
 export function ErrorBoundary() {
   const error = useRouteError()
-  let statusCode = 404
-  let title = 'Error'
-  let description = 'Something went wrong...'
+  let statusCode = null
+  let title: string | React.ReactNode = (
+    <Icon name="circle-x" className="h-20 w-20" />
+  )
+  // @ts-ignore this may be an Error thrown by a loader, in that case we want to display the message thrown
+  let description = error?.message || 'Something went wrong...'
 
   logger('ROOT ERROR BOUNDARY:', error)
 
@@ -164,8 +168,8 @@ export function ErrorBoundary() {
     title,
     description,
   }: {
-    statusCode: number
-    title: string
+    statusCode: number | null
+    title: string | React.ReactNode
     description: string
   }) => {
     const navigate = useNavigate()
@@ -173,14 +177,22 @@ export function ErrorBoundary() {
     return (
       <Document>
         <div className="flex h-[100vh] w-full items-center justify-center gap-12">
-          <div className="flex flex-col max-w-[500px] gap-2">
-            <Text variant="heading1" weight="medium">
+          <div
+            className={cn(
+              'flex flex-col max-w-[500px] gap-2',
+              !statusCode && 'items-center [&>div]:text-center',
+            )}
+          >
+            <Text
+              variant={statusCode ? 'heading1' : 'heading3'}
+              weight="medium"
+            >
               {title}
             </Text>
             <div className="flex flex-col">
               {descriptionArray?.map((content, index) => (
                 <Text
-                  variant="bodyLarge"
+                  variant={statusCode ? 'bodyLarge' : 'headline'}
                   className="text-secondary/30"
                   key={index}
                 >
@@ -208,9 +220,11 @@ export function ErrorBoundary() {
               </Button>
             </div>
           </div>
-          <Text variant="heading1" weight="bold" className="text-9xl">
-            {statusCode}
-          </Text>
+          {statusCode && (
+            <Text variant="heading1" weight="bold" className="text-9xl">
+              {statusCode}
+            </Text>
+          )}
         </div>
       </Document>
     )
