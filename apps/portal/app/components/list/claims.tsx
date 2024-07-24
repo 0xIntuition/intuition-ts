@@ -34,7 +34,7 @@ export function ClaimsList({
   ]
 
   if (!claims.length) {
-    return <EmptyStateCard message="No claims to see here." />
+    return <EmptyStateCard message="No claims found." />
   }
 
   return (
