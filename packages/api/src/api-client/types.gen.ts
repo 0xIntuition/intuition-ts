@@ -11,6 +11,8 @@ export type ActivityPresenter = {
   admin?: string | null
   atom_cost: string
   atom_creation_fee: string
+  atom_deposit_fraction_for_triple: string
+  atom_deposit_fraction_on_triple_creation: string
   block_hash: string
   block_number: string
   claim?: ClaimPresenter | null
@@ -44,6 +46,7 @@ export type ActivityPresenter = {
   total_assets: string
   total_shares: string
   transaction_hash?: string | null
+  triple_creation_protocol_fee: string
   value: string
   vault_assets: string
   vault_balance: string
@@ -610,10 +613,12 @@ export type NewLinkedAccount = {
 
 export type NewPosition = {
   assets: string
+  claim_id?: string | null
   contract: string
   creator: string
   creator_id?: string | null
   fee: string
+  identity_id?: string | null
   parent_table: ParentTable
   share_price: string
   shares: string
@@ -624,11 +629,17 @@ export type NewPosition = {
 }
 
 export type NewQuest = {
+  active: boolean
   closing_content?: string | null
   condition: QuestCondition
   content?: string | null
+  depends_on_narrative?: QuestNarrative | null
+  depends_on_quest?: string | null
   description?: string | null
+  image: InputFile
+  narrative: QuestNarrative
   points?: number
+  position?: number | null
   summary?: string | null
   title?: string | null
 }
@@ -690,6 +701,7 @@ export type PositionPaginatedResponse = {
 
 export type PositionPresenter = {
   assets: string
+  claim_id?: string | null
   contract: string
   conviction: string
   created_at: string
@@ -697,6 +709,7 @@ export type PositionPresenter = {
   direction: VaultType
   fee: string
   id: string
+  identity_id?: string | null
   parent_table: ParentTable
   share_price: string
   total?: number | null
@@ -748,13 +761,19 @@ export type PredicateVaultIdQuery = {
 }
 
 export type Quest = {
+  active: boolean
   closing_content?: string | null
   condition: QuestCondition
   content?: string | null
   created_at: string
+  depends_on_narrative?: QuestNarrative | null
+  depends_on_quest?: string | null
   description?: string | null
   id: string
+  image: string
+  narrative: QuestNarrative
   points: number
+  position?: number | null
   summary?: string | null
   title?: string | null
   updated_at: string
@@ -787,6 +806,24 @@ export const QuestCondition = {
   STAKE_IDENTITY: 'stake_identity',
 } as const
 
+/**
+ * This enum is a direct map to the `quest_narrative` SQL enum. It describes the
+ * existing narratives, so every time the SQL enum is updated we need to manually
+ * update this enum to keep matching the values
+ */
+export type QuestNarrative = 'Standard' | 'Onboarding' | 'Test'
+
+/**
+ * This enum is a direct map to the `quest_narrative` SQL enum. It describes the
+ * existing narratives, so every time the SQL enum is updated we need to manually
+ * update this enum to keep matching the values
+ */
+export const QuestNarrative = {
+  STANDARD: 'Standard',
+  ONBOARDING: 'Onboarding',
+  TEST: 'Test',
+} as const
+
 export type QuestPaginatedResponse = {
   data: Array<QuestPresenter>
   limit: number
@@ -804,6 +841,7 @@ export type QuestPresenter = {
   description?: string | null
   id: string
   points: number
+  position?: number | null
   progress: number
   status: QuestStatus
   summary?: string | null
@@ -812,14 +850,20 @@ export type QuestPresenter = {
 }
 
 export type QuestQuery = {
+  active?: boolean | null
   closingContent?: string | null
   content?: string | null
+  dependsOnNarrative?: QuestNarrative | null
+  dependsOnQuest?: string | null
   description?: string | null
   direction?: SortDirection | null
   limit?: number | null
+  narrative?: QuestNarrative | null
   offset?: number | null
   page?: number | null
+  position?: number | null
   sortBy?: QuestSortColumn | null
+  status?: QuestStatus | null
   summary?: string | null
   title?: string | null
   userId?: string | null
@@ -830,20 +874,27 @@ export type QuestSort = {
   sortBy?: QuestSortColumn | null
 }
 
-export type QuestSortColumn = 'CreatedAt' | 'Points'
+export type QuestSortColumn = 'CreatedAt' | 'Points' | 'Position'
 
 export const QuestSortColumn = {
   CREATED_AT: 'CreatedAt',
   POINTS: 'Points',
+  POSITION: 'Position',
 } as const
 
-export type QuestStatus = 'NotStarted' | 'Started' | 'Completed' | 'WithDrawn'
+export type QuestStatus =
+  | 'NotStarted'
+  | 'Started'
+  | 'Completed'
+  | 'WithDrawn'
+  | 'Claimable'
 
 export const QuestStatus = {
   NOT_STARTED: 'NotStarted',
   STARTED: 'Started',
   COMPLETED: 'Completed',
   WITH_DRAWN: 'WithDrawn',
+  CLAIMABLE: 'Claimable',
 } as const
 
 export type RedeemAtom = {
@@ -991,6 +1042,7 @@ export type TagEmbeddedPresenter = {
   image?: string | null
   num_positions: number
   num_tagged_identities: number
+  subject_id: string
   total_assets: string
   url?: string | null
   vault_id: string
@@ -1058,10 +1110,17 @@ export type UpdatePosition = {
 }
 
 export type UpdateQuest = {
+  active?: boolean | null
   closing_content?: string | null
+  condition?: QuestCondition | null
   content?: string | null
+  depends_on_narrative?: QuestNarrative | null
+  depends_on_quest?: string | null
   description?: string | null
+  image?: string | null
+  narrative?: QuestNarrative | null
   points?: number | null
+  position?: number | null
   summary?: string | null
   title?: string | null
 }
@@ -1162,6 +1221,8 @@ export type UserQuest = {
   id: string
   point_multiplier: number
   progress: number
+  quest_completion_object_id?: string | null
+  quest_condition: QuestCondition
   quest_id: string
   status: QuestStatus
   user_id: string
@@ -1177,6 +1238,7 @@ export type UserQuestPaginatedResponse = {
 export type UserQuestQuery = {
   direction?: SortDirection | null
   limit?: number | null
+  narrative?: QuestNarrative | null
   offset?: number | null
   page?: number | null
   questId?: string | null
@@ -1320,6 +1382,8 @@ export type GetActivityByIdResponse = {
   admin?: string | null
   atom_cost: string
   atom_creation_fee: string
+  atom_deposit_fraction_for_triple: string
+  atom_deposit_fraction_on_triple_creation: string
   block_hash: string
   block_number: string
   claim?: ClaimPresenter | null
@@ -1353,6 +1417,7 @@ export type GetActivityByIdResponse = {
   total_assets: string
   total_shares: string
   transaction_hash?: string | null
+  triple_creation_protocol_fee: string
   value: string
   vault_assets: string
   vault_balance: string
@@ -1460,12 +1525,10 @@ export type CreateClaimResponse = {
 }
 
 export type SearchClaimsData = {
-  againstUser?: Identifier | null
   counterVault?: Identifier | null
   creator?: Identifier | null
   direction?: SortDirection | null
   displayName?: string | null
-  forUser?: Identifier | null
   identity?: Identifier | null
   limit?: number | null
   object?: Identifier | null
@@ -1486,12 +1549,10 @@ export type SearchClaimsResponse = {
 }
 
 export type ClaimSummaryData = {
-  againstUser?: Identifier | null
   counterVault?: Identifier | null
   creator?: Identifier | null
   direction?: SortDirection | null
   displayName?: string | null
-  forUser?: Identifier | null
   identity?: Identifier | null
   limit?: number | null
   object?: Identifier | null
@@ -1617,9 +1678,15 @@ export type UpdateIdentityData = {
     external_reference?: string | null
     follow_claim_id?: string | null
     follow_vault_id: string
+    followed_count?: number | null
+    follower_count?: number | null
     identity_id?: Identifier | null
     image?: string | null
+    num_positions?: number | null
     status?: Status | null
+    tag_count?: number | null
+    user_display_name?: string | null
+    user_ens_name?: string | null
     vault_id?: Identifier | null
     vault_uuid?: string | null
   }
@@ -1637,17 +1704,23 @@ export type UpdateIdentityResponse = {
   external_reference?: string | null
   follow_claim_id?: string | null
   follow_vault_id: string
+  followed_count: number
+  follower_count: number
   id: string
   identity_hash: string
   identity_id: string
   image?: string | null
   is_contract: boolean
   is_user: boolean
+  num_positions: number
   predicate: boolean
   semantic?: string | null
   status: Status
+  tag_count: number
   updated_at: string
   url?: string | null
+  user_display_name?: string | null
+  user_ens_name?: string | null
   vault_id: string
   vault_uuid?: string | null
 }
@@ -1727,7 +1800,6 @@ export type SearchIdentityData = {
   isContract?: boolean | null
   isUser?: boolean | null
   limit?: number | null
-  linkedAccountUsername?: string | null
   offset?: number | null
   page?: number | null
   predicate?: boolean | null
@@ -1756,7 +1828,6 @@ export type IdentitySummaryData = {
   isContract?: boolean | null
   isUser?: boolean | null
   limit?: number | null
-  linkedAccountUsername?: string | null
   offset?: number | null
   page?: number | null
   predicate?: boolean | null
@@ -2075,6 +2146,7 @@ export type CreatePositionData = {
 
 export type CreatePositionResponse = {
   assets: string
+  claim_id?: string | null
   contract: string
   conviction: string
   created_at: string
@@ -2082,6 +2154,7 @@ export type CreatePositionResponse = {
   creator_id?: string | null
   fee: string
   id: string
+  identity_id?: string | null
   parent_table: ParentTable
   share_price: string
   status: Status
@@ -2146,6 +2219,7 @@ export type GetPositionByIdData = {
 
 export type GetPositionByIdResponse = {
   assets: string
+  claim_id?: string | null
   contract: string
   conviction: string
   created_at: string
@@ -2153,6 +2227,7 @@ export type GetPositionByIdResponse = {
   creator_id?: string | null
   fee: string
   id: string
+  identity_id?: string | null
   parent_table: ParentTable
   share_price: string
   status: Status
@@ -2173,6 +2248,7 @@ export type UpdatePositionData = {
 
 export type UpdatePositionResponse = {
   assets: string
+  claim_id?: string | null
   contract: string
   conviction: string
   created_at: string
@@ -2180,6 +2256,7 @@ export type UpdatePositionResponse = {
   creator_id?: string | null
   fee: string
   id: string
+  identity_id?: string | null
   parent_table: ParentTable
   share_price: string
   status: Status
@@ -2206,13 +2283,56 @@ export type CreateQuestData = {
 }
 
 export type CreateQuestResponse = {
+  active: boolean
   closing_content?: string | null
   condition: QuestCondition
   content?: string | null
   created_at: string
+  depends_on_narrative?: QuestNarrative | null
+  depends_on_quest?: string | null
   description?: string | null
   id: string
+  image: string
+  narrative: QuestNarrative
   points: number
+  position?: number | null
+  summary?: string | null
+  title?: string | null
+  updated_at: string
+}
+
+export type SearchQuestsData = {
+  requestBody: QuestQuery
+}
+
+export type SearchQuestsResponse = {
+  data: Array<QuestPresenter>
+  limit: number
+  page: number
+  total: number
+}
+
+export type GetQuestData = {
+  /**
+   * Quest SQL id
+   */
+  questId: string
+}
+
+export type GetQuestResponse = {
+  active: boolean
+  closing_content?: string | null
+  condition: QuestCondition
+  content?: string | null
+  created_at: string
+  depends_on_narrative?: QuestNarrative | null
+  depends_on_quest?: string | null
+  description?: string | null
+  id: string
+  image: string
+  narrative: QuestNarrative
+  points: number
+  position?: number | null
   summary?: string | null
   title?: string | null
   updated_at: string
@@ -2227,13 +2347,45 @@ export type UpdateQuestData = {
 }
 
 export type UpdateQuestResponse = {
+  active: boolean
   closing_content?: string | null
   condition: QuestCondition
   content?: string | null
   created_at: string
+  depends_on_narrative?: QuestNarrative | null
+  depends_on_quest?: string | null
   description?: string | null
   id: string
+  image: string
+  narrative: QuestNarrative
   points: number
+  position?: number | null
+  summary?: string | null
+  title?: string | null
+  updated_at: string
+}
+
+export type DeleteQuestData = {
+  /**
+   * Quest SQL id
+   */
+  questId: string
+}
+
+export type DeleteQuestResponse = {
+  active: boolean
+  closing_content?: string | null
+  condition: QuestCondition
+  content?: string | null
+  created_at: string
+  depends_on_narrative?: QuestNarrative | null
+  depends_on_quest?: string | null
+  description?: string | null
+  id: string
+  image: string
+  narrative: QuestNarrative
+  points: number
+  position?: number | null
   summary?: string | null
   title?: string | null
   updated_at: string
@@ -2262,6 +2414,7 @@ export type CheckQuestStatusResponse =
   | 'Started'
   | 'Completed'
   | 'WithDrawn'
+  | 'Claimable'
 
 export type CompleteQuestData = {
   /**
@@ -2280,6 +2433,8 @@ export type CompleteQuestResponse = {
   id: string
   point_multiplier: number
   progress: number
+  quest_completion_object_id?: string | null
+  quest_condition: QuestCondition
   quest_id: string
   status: QuestStatus
   user_id: string
@@ -2302,6 +2457,28 @@ export type StartQuestResponse = {
   id: string
   point_multiplier: number
   progress: number
+  quest_completion_object_id?: string | null
+  quest_condition: QuestCondition
+  quest_id: string
+  status: QuestStatus
+  user_id: string
+}
+
+export type GetUserQuestByIdData = {
+  /**
+   * User quest SQL id
+   */
+  userQuestId: string
+}
+
+export type GetUserQuestByIdResponse = {
+  date_completed?: string | null
+  date_started: string
+  id: string
+  point_multiplier: number
+  progress: number
+  quest_completion_object_id?: string | null
+  quest_condition: QuestCondition
   quest_id: string
   status: QuestStatus
   user_id: string
@@ -2750,6 +2927,8 @@ export type $OpenApiTs = {
           admin?: string | null
           atom_cost: string
           atom_creation_fee: string
+          atom_deposit_fraction_for_triple: string
+          atom_deposit_fraction_on_triple_creation: string
           block_hash: string
           block_number: string
           claim?: ClaimPresenter | null
@@ -2783,6 +2962,7 @@ export type $OpenApiTs = {
           total_assets: string
           total_shares: string
           transaction_hash?: string | null
+          triple_creation_protocol_fee: string
           value: string
           vault_assets: string
           vault_balance: string
@@ -2939,12 +3119,10 @@ export type $OpenApiTs = {
   '/claims/search': {
     get: {
       req: {
-        againstUser?: Identifier | null
         counterVault?: Identifier | null
         creator?: Identifier | null
         direction?: SortDirection | null
         displayName?: string | null
-        forUser?: Identifier | null
         identity?: Identifier | null
         limit?: number | null
         object?: Identifier | null
@@ -2972,12 +3150,10 @@ export type $OpenApiTs = {
   '/claims/summary': {
     get: {
       req: {
-        againstUser?: Identifier | null
         counterVault?: Identifier | null
         creator?: Identifier | null
         direction?: SortDirection | null
         displayName?: string | null
-        forUser?: Identifier | null
         identity?: Identifier | null
         limit?: number | null
         object?: Identifier | null
@@ -3129,9 +3305,15 @@ export type $OpenApiTs = {
           external_reference?: string | null
           follow_claim_id?: string | null
           follow_vault_id: string
+          followed_count?: number | null
+          follower_count?: number | null
           identity_id?: Identifier | null
           image?: string | null
+          num_positions?: number | null
           status?: Status | null
+          tag_count?: number | null
+          user_display_name?: string | null
+          user_ens_name?: string | null
           vault_id?: Identifier | null
           vault_uuid?: string | null
         }
@@ -3152,17 +3334,23 @@ export type $OpenApiTs = {
           external_reference?: string | null
           follow_claim_id?: string | null
           follow_vault_id: string
+          followed_count: number
+          follower_count: number
           id: string
           identity_hash: string
           identity_id: string
           image?: string | null
           is_contract: boolean
           is_user: boolean
+          num_positions: number
           predicate: boolean
           semantic?: string | null
           status: Status
+          tag_count: number
           updated_at: string
           url?: string | null
+          user_display_name?: string | null
+          user_ens_name?: string | null
           vault_id: string
           vault_uuid?: string | null
         }
@@ -3253,7 +3441,6 @@ export type $OpenApiTs = {
         isContract?: boolean | null
         isUser?: boolean | null
         limit?: number | null
-        linkedAccountUsername?: string | null
         offset?: number | null
         page?: number | null
         predicate?: boolean | null
@@ -3289,7 +3476,6 @@ export type $OpenApiTs = {
         isContract?: boolean | null
         isUser?: boolean | null
         limit?: number | null
-        linkedAccountUsername?: string | null
         offset?: number | null
         page?: number | null
         predicate?: boolean | null
@@ -3708,6 +3894,7 @@ export type $OpenApiTs = {
          */
         200: {
           assets: string
+          claim_id?: string | null
           contract: string
           conviction: string
           created_at: string
@@ -3715,6 +3902,7 @@ export type $OpenApiTs = {
           creator_id?: string | null
           fee: string
           id: string
+          identity_id?: string | null
           parent_table: ParentTable
           share_price: string
           status: Status
@@ -3800,6 +3988,7 @@ export type $OpenApiTs = {
          */
         200: {
           assets: string
+          claim_id?: string | null
           contract: string
           conviction: string
           created_at: string
@@ -3807,6 +3996,7 @@ export type $OpenApiTs = {
           creator_id?: string | null
           fee: string
           id: string
+          identity_id?: string | null
           parent_table: ParentTable
           share_price: string
           status: Status
@@ -3832,6 +4022,7 @@ export type $OpenApiTs = {
          */
         200: {
           assets: string
+          claim_id?: string | null
           contract: string
           conviction: string
           created_at: string
@@ -3839,6 +4030,7 @@ export type $OpenApiTs = {
           creator_id?: string | null
           fee: string
           id: string
+          identity_id?: string | null
           parent_table: ParentTable
           share_price: string
           status: Status
@@ -3885,13 +4077,19 @@ export type $OpenApiTs = {
          * Create a new quest
          */
         200: {
+          active: boolean
           closing_content?: string | null
           condition: QuestCondition
           content?: string | null
           created_at: string
+          depends_on_narrative?: QuestNarrative | null
+          depends_on_quest?: string | null
           description?: string | null
           id: string
+          image: string
+          narrative: QuestNarrative
           points: number
+          position?: number | null
           summary?: string | null
           title?: string | null
           updated_at: string
@@ -3899,7 +4097,56 @@ export type $OpenApiTs = {
       }
     }
   }
+  '/quest/search': {
+    post: {
+      req: {
+        requestBody: QuestQuery
+      }
+      res: {
+        /**
+         * Return information about quests
+         */
+        200: {
+          data: Array<QuestPresenter>
+          limit: number
+          page: number
+          total: number
+        }
+      }
+    }
+  }
   '/quest/{quest_id}': {
+    get: {
+      req: {
+        /**
+         * Quest SQL id
+         */
+        questId: string
+      }
+      res: {
+        /**
+         * Return information about a quest
+         */
+        200: {
+          active: boolean
+          closing_content?: string | null
+          condition: QuestCondition
+          content?: string | null
+          created_at: string
+          depends_on_narrative?: QuestNarrative | null
+          depends_on_quest?: string | null
+          description?: string | null
+          id: string
+          image: string
+          narrative: QuestNarrative
+          points: number
+          position?: number | null
+          summary?: string | null
+          title?: string | null
+          updated_at: string
+        }
+      }
+    }
     put: {
       req: {
         /**
@@ -3913,13 +4160,50 @@ export type $OpenApiTs = {
          * Update an already existing quest
          */
         200: {
+          active: boolean
           closing_content?: string | null
           condition: QuestCondition
           content?: string | null
           created_at: string
+          depends_on_narrative?: QuestNarrative | null
+          depends_on_quest?: string | null
           description?: string | null
           id: string
+          image: string
+          narrative: QuestNarrative
           points: number
+          position?: number | null
+          summary?: string | null
+          title?: string | null
+          updated_at: string
+        }
+      }
+    }
+    delete: {
+      req: {
+        /**
+         * Quest SQL id
+         */
+        questId: string
+      }
+      res: {
+        /**
+         * Delete the informed quest
+         */
+        200: {
+          active: boolean
+          closing_content?: string | null
+          condition: QuestCondition
+          content?: string | null
+          created_at: string
+          depends_on_narrative?: QuestNarrative | null
+          depends_on_quest?: string | null
+          description?: string | null
+          id: string
+          image: string
+          narrative: QuestNarrative
+          points: number
+          position?: number | null
           summary?: string | null
           title?: string | null
           updated_at: string
@@ -3957,7 +4241,7 @@ export type $OpenApiTs = {
         /**
          * Check if user is eligible to complete the quest, returning the quest status
          */
-        200: 'NotStarted' | 'Started' | 'Completed' | 'WithDrawn'
+        200: 'NotStarted' | 'Started' | 'Completed' | 'WithDrawn' | 'Claimable'
       }
     }
   }
@@ -3983,6 +4267,8 @@ export type $OpenApiTs = {
           id: string
           point_multiplier: number
           progress: number
+          quest_completion_object_id?: string | null
+          quest_condition: QuestCondition
           quest_id: string
           status: QuestStatus
           user_id: string
@@ -4012,6 +4298,35 @@ export type $OpenApiTs = {
           id: string
           point_multiplier: number
           progress: number
+          quest_completion_object_id?: string | null
+          quest_condition: QuestCondition
+          quest_id: string
+          status: QuestStatus
+          user_id: string
+        }
+      }
+    }
+  }
+  '/user_quest/{user_quest_id}': {
+    get: {
+      req: {
+        /**
+         * User quest SQL id
+         */
+        userQuestId: string
+      }
+      res: {
+        /**
+         * Search user quest for user
+         */
+        200: {
+          date_completed?: string | null
+          date_started: string
+          id: string
+          point_multiplier: number
+          progress: number
+          quest_completion_object_id?: string | null
+          quest_condition: QuestCondition
           quest_id: string
           status: QuestStatus
           user_id: string
