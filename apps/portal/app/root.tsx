@@ -23,6 +23,7 @@ import { useEffect } from 'react'
 
 import { Text, Toaster } from '@0xintuition/1ui'
 
+import { GlobalLoading } from '@components/global-loading'
 import { CURRENT_ENV } from '@lib/utils/constants'
 import { getChainEnvConfig } from '@lib/utils/environment'
 import logger from '@lib/utils/logger'
@@ -115,6 +116,7 @@ export default function App() {
 
   return (
     <Document nonce={nonce} theme={theme}>
+      <GlobalLoading />
       <Toaster position="top-right" />
       <ClientOnly>
         {() => (
