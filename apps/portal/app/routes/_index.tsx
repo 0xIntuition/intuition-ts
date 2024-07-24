@@ -13,6 +13,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   }
   const { accessToken, sessionToken } = getPrivyTokens(request)
   if (accessToken) {
+    console.log('accessToken', accessToken)
     if (redirectTo) {
       throw redirect(redirectTo)
     }
