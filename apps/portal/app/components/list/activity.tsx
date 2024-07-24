@@ -1,6 +1,7 @@
 import {
   Claim,
   ClaimRow,
+  EmptyStateCard,
   Identity,
   IdentityContentRow,
   IdentityTag,
@@ -165,15 +166,6 @@ export function ActivityList({
 }) {
   const navigate = useNavigate()
 
-  type EventMessages = {
-    createAtom: string
-    createTriple: string
-    depositAtom: (value: string) => string
-    redeemAtom: (value: string) => string
-    depositTriple: (value: string) => string
-    redeemTriple: (value: string) => string
-  }
-
   const eventMessages: EventMessages = {
     createAtom: 'created an identity',
     createTriple: 'created a claim',
@@ -194,14 +186,18 @@ export function ActivityList({
       paramPrefix={paramPrefix}
       enableSearch={false}
     >
-      {activities?.map((activity) => (
-        <ActivityItem
-          key={activity.id}
-          activity={activity}
-          eventMessages={eventMessages}
-          navigate={navigate}
-        />
-      ))}
+      {!activities.length ? (
+        <EmptyStateCard message="No activities found." />
+      ) : (
+        activities.map((activity) => (
+          <ActivityItem
+            key={activity.id}
+            activity={activity}
+            eventMessages={eventMessages}
+            navigate={navigate}
+          />
+        ))
+      )}
     </List>
   )
 }
