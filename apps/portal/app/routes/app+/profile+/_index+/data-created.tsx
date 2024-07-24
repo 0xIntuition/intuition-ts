@@ -1,6 +1,7 @@
 import { ReactNode, Suspense } from 'react'
 
 import {
+  ErrorStateCard,
   Tabs,
   TabsContent,
   TabsList,
@@ -23,6 +24,7 @@ import {
   DataCreatedHeaderVariants,
   DataCreatedHeaderVariantType,
 } from '@components/profile/data-created-header'
+import { RevalidateButton } from '@components/revalidate-button'
 import {
   DataHeaderSkeleton,
   PaginatedListSkeleton,
@@ -153,6 +155,7 @@ export default function ProfileDataCreated() {
                 activeClaims,
                 activeClaimsSummary,
               ])}
+              errorElement={<></>}
             >
               {([resolvedIdentities, resolvedClaims]) => (
                 <TabsList className="mb-4">
@@ -186,6 +189,11 @@ export default function ProfileDataCreated() {
                 activeClaims,
                 activeClaimsSummary,
               ])}
+              errorElement={
+                <ErrorStateCard>
+                  <RevalidateButton />
+                </ErrorStateCard>
+              }
             >
               {([
                 resolvedIdentities,
@@ -252,7 +260,10 @@ export default function ProfileDataCreated() {
           className="w-full"
         >
           <Suspense fallback={<TabsSkeleton numOfTabs={2} />}>
-            <Await resolve={Promise.all([createdIdentities, createdClaims])}>
+            <Await
+              resolve={Promise.all([createdIdentities, createdClaims])}
+              errorElement={<></>}
+            >
               {([resolvedIdentities, resolvedClaims]) => (
                 <TabsList className="mb-4">
                   <TabsTrigger
@@ -286,6 +297,11 @@ export default function ProfileDataCreated() {
                 createdClaims,
                 createdClaimsSummary,
               ])}
+              errorElement={
+                <ErrorStateCard>
+                  <RevalidateButton />
+                </ErrorStateCard>
+              }
             >
               {([
                 resolvedIdentities,
