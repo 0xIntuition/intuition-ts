@@ -7,8 +7,11 @@ import {
   Text,
 } from '@0xintuition/1ui'
 import {
+  QuestPresenter,
+  QuestSortColumn,
   QuestsService,
   QuestStatus,
+  SortDirection,
   UserQuest,
   UserQuestsService,
 } from '@0xintuition/api'
@@ -17,7 +20,7 @@ import { QuestCard } from '@components/quest/quest-card'
 import { STANDARD_QUEST_SET } from '@lib/utils/constants/quest'
 import logger from '@lib/utils/logger'
 import { fetchWrapper, invariant } from '@lib/utils/misc'
-import { getQuestCriteria, getQuestImage } from '@lib/utils/quest'
+import { getQuestCriteria } from '@lib/utils/quest'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { Link, useLoaderData } from '@remix-run/react'
 import { requireUserId } from '@server/auth'
@@ -35,6 +38,8 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
         requestBody: {
           narrative: 'Standard',
           active: true,
+          sortBy: QuestSortColumn.POSITION,
+          direction: SortDirection.ASC,
         },
       },
     })
@@ -58,17 +63,38 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     questToUserQuestMap.set(userQuest.id, userQuest)
   })
   const numQuests = quests.length
-  const numCompletedQuests = Object.values(questToUserQuestMap).filter(
-    (userQuest) => userQuest.status === QuestStatus.COMPLETED,
-  ).length
-  logger('User Quest Map', questToUserQuestMap)
 
-  return json({ quests, numQuests, numCompletedQuests })
+  const completedQuestsMap = new Map<string, boolean>()
+  quests.forEach((quest) => {
+    const userQuest = questToUserQuestMap.get(quest.id)
+    completedQuestsMap.set(
+      quest.id,
+      userQuest?.status === QuestStatus.COMPLETED,
+    )
+  })
+  // derive number of completed quests from completedQuestsMap
+  const numCompletedQuests = Object.values(completedQuestsMap).filter(
+    (completed) => completed,
+  ).length
+
+  return json({
+    quests,
+    numQuests,
+    numCompletedQuests,
+    completedQuestsMap: Object.fromEntries(completedQuestsMap),
+  })
 }
 
 export default function Quests() {
-  const { quests, numQuests, numCompletedQuests } =
+  const { quests, numQuests, numCompletedQuests, completedQuestsMap } =
     useLoaderData<typeof loader>()
+
+  function isQuestAvailable(quest: QuestPresenter) {
+    if (!quest.depends_on_quest) {
+      return true
+    }
+    return completedQuestsMap[quest.depends_on_quest] ?? false
+  }
 
   return (
     <div className="px-10 w-full max-w-7xl mx-auto flex flex-col gap-10">
@@ -105,24 +131,25 @@ export default function Quests() {
         <Text variant="headline">Chapters</Text>
 
         <div className="flex flex-col gap-10">
-          {quests.map((quest, i) => {
+          {quests.map((quest) => {
             // check if userQuestMap is empty, if it is, the quest hasnt started
-
+            const available = isQuestAvailable(quest)
             return (
               <Link
                 to={`/app/quest/chapter/${quest.id}`}
                 key={`${quest.id}-quest-card`}
+                className={`${available ? 'cursor-pointer' : 'cursor-not-allowed'}`}
               >
                 <div>
                   <QuestCard
-                    imgSrc={getQuestImage(quest.id)} // TODO: Replace me post image population
+                    imgSrc={quest.image}
                     title={quest.title ?? ''}
                     description={quest.description ?? ''}
                     questStatus={quest.status}
-                    label={`Chapter ${i + 1}`} // TODO: Replace me post position population
+                    label={`Chapter ${quest.position}`}
                     points={quest.points}
                     questCriteria={getQuestCriteria(quest.condition)}
-                    disabled={false} // TODO: Replace me post quest dependency population
+                    disabled={!available}
                   />
                 </div>
               </Link>

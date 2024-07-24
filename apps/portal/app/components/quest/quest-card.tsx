@@ -35,7 +35,7 @@ const QuestCard = ({
     <div
       className={cn(
         'flex items-stretch theme-border rounded-lg overflow-hidden relative h-full',
-        disabled && 'opacity-70',
+        disabled && 'opacity-50',
       )}
       {...props}
     >
