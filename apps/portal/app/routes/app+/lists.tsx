@@ -3,7 +3,6 @@ import { Suspense, useEffect, useState } from 'react'
 import {
   Button,
   Icon,
-  Skeleton,
   Tabs,
   TabsContent,
   TabsList,
@@ -12,6 +11,10 @@ import {
 } from '@0xintuition/1ui'
 
 import { ListClaimsList } from '@components/list/list-claims'
+import {
+  ListClaimsSkeletonLayout,
+  TabsSkeleton,
+} from '@components/list/list-skeletons'
 import { getUserCreatedLists, getUserSavedLists } from '@lib/services/lists'
 import { NO_WALLET_ERROR } from '@lib/utils/errors'
 import logger from '@lib/utils/logger'
@@ -56,6 +59,7 @@ export default function ListsRoute() {
   const [isNavigating, setIsNavigating] = useState(false)
 
   const { state } = useNavigation()
+  const defaultTab = searchParams.get('tab') || 'saved'
 
   function handleTabChange(value: 'saved' | 'created') {
     const newParams = new URLSearchParams(searchParams)
@@ -111,7 +115,7 @@ export default function ListsRoute() {
           </Button>
         </div>
       </div>
-      <Tabs defaultValue="saved">
+      <Tabs defaultValue={defaultTab}>
         <Suspense fallback={<TabsSkeleton />}>
           <Await
             resolve={Promise.all([savedListClaims, userCreatedListClaims])}
@@ -205,32 +209,6 @@ export default function ListsRoute() {
           </Await>
         </Suspense>
       </Tabs>
-    </div>
-  )
-}
-
-function ListClaimsSkeletonLayout({ totalItems = 8 }: { totalItems?: number }) {
-  return (
-    <div className="flex flex-col w-full gap-5 my-5">
-      <div className="flex items-center justify-between mb-4">
-        <Skeleton className="w-64 h-10" />
-        <Skeleton className="w-44 h-10" />
-      </div>
-      <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 auto-rows-fr gap-7">
-        {[...Array(totalItems)].map((_, index) => (
-          <Skeleton key={index} className="w-full aspect-[3/2]" />
-        ))}
-      </div>
-      <Skeleton className="w-full h-10 mt-4" />
-    </div>
-  )
-}
-
-function TabsSkeleton() {
-  return (
-    <div className="flex items-center gap-2.5 mb-5">
-      <Skeleton className="w-44 h-10" />
-      <Skeleton className="w-44 h-10" />
     </div>
   )
 }
