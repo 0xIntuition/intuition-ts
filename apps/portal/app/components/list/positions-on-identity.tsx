@@ -1,4 +1,4 @@
-import { Identity, IdentityPosition } from '@0xintuition/1ui'
+import { EmptyStateCard, Identity, IdentityPosition } from '@0xintuition/1ui'
 import { PositionPresenter, PositionSortColumn } from '@0xintuition/api'
 
 import { formatBalance } from '@lib/utils/misc'
@@ -22,6 +22,10 @@ export function PositionsOnIdentity({
     { value: 'Updated At', sortBy: 'UpdatedAt' },
     { value: 'Created At', sortBy: 'CreatedAt' },
   ]
+
+  if (!positions.length) {
+    return <EmptyStateCard message="No positions found on this identity." />
+  }
 
   return (
     <List<PositionSortColumn>
