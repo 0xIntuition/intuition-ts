@@ -29,7 +29,7 @@ function GlobalLoading() {
       role="progressbar"
       aria-hidden={navigation.state === 'idle'}
       aria-valuetext={navigation.state !== 'idle' ? 'Loading' : undefined}
-      className="fixed inset-x-0 left-0 top-0 z-50 h-1"
+      className="fixed inset-x-0 left-0 top-0 z-50 h-px"
     >
       <div
         className={cn(

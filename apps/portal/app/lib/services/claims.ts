@@ -35,10 +35,10 @@ export async function getClaimsAboutIdentity({
   return {
     data: claims.data as ClaimPresenter[],
     pagination: {
-      currentPage: Number(page),
-      limit: Number(limit),
+      currentPage: page,
+      limit,
       totalEntries: claims.total,
-      totalPages: Math.ceil(claims.total / Number(limit)),
+      totalPages: Math.ceil(claims.total / limit),
     },
   }
 }
