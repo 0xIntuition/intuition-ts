@@ -61,7 +61,7 @@ export default function ProfileDataAbout() {
           <Text
             variant="headline"
             weight="medium"
-            className="theme-secondary-foreground pb-3"
+            className="text-secondary-foreground pb-3"
           >
             Claims about this Identity
           </Text>
