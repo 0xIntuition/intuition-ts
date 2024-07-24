@@ -29,7 +29,7 @@ export function ActivePositionsOnClaims({
   ]
 
   if (!claims.length) {
-    return <EmptyStateCard message="No claim positions found by this user." />
+    return <EmptyStateCard message="No active claim positions found." />
   }
 
   return (
@@ -39,7 +39,7 @@ export function ActivePositionsOnClaims({
       options={options}
       paramPrefix="activeClaims"
     >
-      {claims?.map((claim) => (
+      {claims.map((claim) => (
         <div
           key={claim.claim_id}
           className={`grow shrink basis-0 self-stretch p-6 bg-black first:rounded-t-xl last:rounded-b-xl border border-neutral-300/20 flex-col justify-start items-start gap-5 inline-flex`}

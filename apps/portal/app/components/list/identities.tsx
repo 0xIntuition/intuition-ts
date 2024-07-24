@@ -42,7 +42,7 @@ export function IdentitiesList({
       enableSearch={enableSearch}
       enableSort={enableSort}
     >
-      {identities?.map((identity) => (
+      {identities.map((identity) => (
         <div
           key={identity.id}
           className={`grow shrink basis-0 self-stretch p-6 bg-black first:rounded-t-xl last:rounded-b-xl border border-neutral-300/20 flex-col justify-start items-start gap-5 inline-flex`}

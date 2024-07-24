@@ -1,4 +1,4 @@
-import { ClaimPositionRow, Identity } from '@0xintuition/1ui'
+import { ClaimPositionRow, EmptyStateCard, Identity } from '@0xintuition/1ui'
 import { IdentityPresenter, SortColumn } from '@0xintuition/api'
 
 import { SortOption } from '@components/sort-select'
@@ -25,6 +25,10 @@ export function FollowList({
     { value: 'Created At', sortBy: 'CreatedAt' },
   ]
 
+  if (!identities.length) {
+    return <EmptyStateCard message="No users found." />
+  }
+
   return (
     <List<SortColumn>
       pagination={pagination}
@@ -32,7 +36,7 @@ export function FollowList({
       options={options}
       paramPrefix={paramPrefix}
     >
-      {identities?.map((identity) => (
+      {identities.map((identity) => (
         <div
           key={identity.id}
           className={`grow shrink basis-0 self-stretch p-6 bg-black first:rounded-t-xl last:rounded-b-xl border border-neutral-300/20 flex-col justify-start items-start gap-5 inline-flex`}
