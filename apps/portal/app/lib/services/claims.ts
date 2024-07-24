@@ -32,8 +32,6 @@ export async function getClaimsAboutIdentity({
     },
   })
 
-  console.log('claims', claims)
-
   return {
     data: claims.data as ClaimPresenter[],
     pagination: {
