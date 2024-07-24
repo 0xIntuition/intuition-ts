@@ -40,10 +40,10 @@ export async function getUserIdentities({
   return {
     data: result?.data,
     pagination: {
-      currentPage: Number(page),
-      limit: Number(limit),
+      currentPage: page,
+      limit,
       totalEntries: result?.total ?? 0,
-      totalPages: Math.ceil((result?.total ?? 0) / Number(limit)),
+      totalPages: Math.ceil((result?.total ?? 0) / limit),
     },
   }
 }
@@ -77,10 +77,10 @@ export async function getCreatedIdentities({
   return {
     data: identities.data as IdentityPresenter[],
     pagination: {
-      currentPage: Number(page),
-      limit: Number(limit),
+      currentPage: page,
+      limit,
       totalEntries: identities.total,
-      totalPages: Math.ceil(identities.total / Number(limit)),
+      totalPages: Math.ceil(identities.total / limit),
     },
   }
 }
@@ -114,10 +114,10 @@ export async function getUserClaims({
   return {
     data: result?.data,
     pagination: {
-      currentPage: Number(page),
-      limit: Number(limit),
+      currentPage: page,
+      limit,
       totalEntries: result?.total ?? 0,
-      totalPages: Math.ceil((result?.total ?? 0) / Number(limit)),
+      totalPages: Math.ceil((result?.total ?? 0) / limit),
     },
   }
 }
@@ -150,10 +150,10 @@ export async function getCreatedClaims({
   return {
     data: claims.data as ClaimPresenter[],
     pagination: {
-      currentPage: Number(page),
-      limit: Number(limit),
+      currentPage: page,
+      limit,
       totalEntries: claims.total,
-      totalPages: Math.ceil(claims.total / Number(limit)),
+      totalPages: Math.ceil(claims.total / limit),
     },
   }
 }

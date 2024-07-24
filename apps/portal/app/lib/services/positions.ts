@@ -42,10 +42,10 @@ export async function getPositionsOnIdentity({
   return {
     data: positions.data as PositionPresenter[],
     pagination: {
-      currentPage: Number(page),
-      limit: Number(limit),
+      currentPage: page,
+      limit,
       totalEntries: positions.total,
-      totalPages: Math.ceil(positions.total / Number(limit)),
+      totalPages: Math.ceil(positions.total / limit),
     },
   }
 }
@@ -89,10 +89,10 @@ export async function getPositionsOnClaim({
     sortBy: sortBy as PositionSortColumn,
     direction,
     pagination: {
-      currentPage: Number(page),
-      limit: Number(limit),
+      currentPage: page,
+      limit,
       totalEntries: positions.total,
-      totalPages: calculateTotalPages(positions.total ?? 0, Number(limit)),
+      totalPages: calculateTotalPages(positions.total ?? 0, limit),
     },
   }
 }
