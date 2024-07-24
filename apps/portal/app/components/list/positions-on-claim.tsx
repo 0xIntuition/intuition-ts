@@ -33,7 +33,7 @@ export function PositionsOnClaim({
       {!positions.length ? (
         <EmptyStateCard message="No positions found." />
       ) : (
-        positions?.map((position) => (
+        positions.map((position) => (
           <div
             key={position.id}
             className={`grow shrink basis-0 self-stretch p-6 bg-black first:rounded-t-xl last:rounded-b-xl border border-neutral-300/20 flex-col justify-start items-start gap-5 inline-flex`}
