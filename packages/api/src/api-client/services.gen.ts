@@ -70,6 +70,8 @@ import type {
   GetLinkedAccountsByUserResponse,
   GetLinkedAccountsData,
   GetLinkedAccountsResponse,
+  GetPendingIdentitiesData,
+  GetPendingIdentitiesResponse,
   GetPositionByIdData,
   GetPositionByIdResponse,
   GetQueryStructureResponse,
@@ -97,6 +99,7 @@ import type {
   GetUserTotalsResponse,
   IdentitySummaryData,
   IdentitySummaryResponse,
+  IntegrationHealthcheckResponse,
   PositionSummaryData,
   PositionSummaryResponse,
   RedeemInviteCodeData,
@@ -528,6 +531,36 @@ export class IdentitiesService {
 
   /**
    * @param data The data for the request.
+   * @param data.direction
+   * @param data.sortBy
+   * @param data.page
+   * @param data.offset
+   * @param data.limit
+   * @param data.userWallet
+   * @param data.timeframe
+   * @returns unknown Get all pending identities in paginated list
+   * @throws ApiError
+   */
+  public static getPendingIdentities(
+    data: GetPendingIdentitiesData = {},
+  ): CancelablePromise<GetPendingIdentitiesResponse> {
+    return __request(OpenAPI, {
+      method: 'GET',
+      url: '/identities/pending',
+      query: {
+        direction: data.direction,
+        sortBy: data.sortBy,
+        page: data.page,
+        offset: data.offset,
+        limit: data.limit,
+        userWallet: data.userWallet,
+        timeframe: data.timeframe,
+      },
+    })
+  }
+
+  /**
+   * @param data The data for the request.
    * @param data.id Identity sql id
    * @param data.requestBody
    * @returns unknown Update an identity
@@ -859,6 +892,19 @@ export class IdentityPositionsService {
         creator: data.creator,
         positionDirection: data.positionDirection,
       },
+    })
+  }
+}
+
+export class StatusService {
+  /**
+   * @returns unknown return details on api integration health
+   * @throws ApiError
+   */
+  public static integrationHealthcheck(): CancelablePromise<IntegrationHealthcheckResponse> {
+    return __request(OpenAPI, {
+      method: 'POST',
+      url: '/integration/healthcheck',
     })
   }
 }

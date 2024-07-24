@@ -454,6 +454,8 @@ export type IdentityPresenter = {
   user_asset_delta: string
   user_assets: string
   user_conviction: string
+  user_display_name?: string | null
+  user_ens_name?: string | null
   vault_id: string
   vault_uuid?: string | null
 }
@@ -502,6 +504,12 @@ export type InputData =
   | 'NoOp'
 
 export type InputFile = string
+
+export type IntegrationStatus = {
+  alchemy_tx_parsed?: string | null
+  alchemy_tx_received?: string | null
+  cloudinary_cache?: string | null
+}
 
 export type InviteCodesResponse = {
   invite_codes: Array<string>
@@ -832,14 +840,19 @@ export type QuestPaginatedResponse = {
 }
 
 export type QuestPresenter = {
+  active: boolean
   closing_content?: string | null
   condition: QuestCondition
   content?: string | null
   created_at: string
   date_completed?: string | null
   date_started?: string | null
+  depends_on_narrative?: QuestNarrative | null
+  depends_on_quest?: string | null
   description?: string | null
   id: string
+  image: string
+  narrative: QuestNarrative
   points: number
   position?: number | null
   progress: number
@@ -1281,6 +1294,7 @@ export type UserTotalsPresenter = {
   description?: string | null
   display_name?: string | null
   ens_name?: string | null
+  followed_assets: string
   followed_count: number
   follower_count: number
   id?: string | null
@@ -1665,6 +1679,23 @@ export type GetIdentitiesResponse = {
   total: number
 }
 
+export type GetPendingIdentitiesData = {
+  direction?: SortDirection | null
+  limit?: number | null
+  offset?: number | null
+  page?: number | null
+  sortBy?: SortColumn | null
+  timeframe?: TimeFrame | null
+  userWallet?: string | null
+}
+
+export type GetPendingIdentitiesResponse = {
+  data: Array<IdentityPresenter>
+  limit: number
+  page: number
+  total: number
+}
+
 export type UpdateIdentityData = {
   /**
    * Identity sql id
@@ -1784,6 +1815,8 @@ export type CreateIdentityResponse = {
   user_asset_delta: string
   user_assets: string
   user_conviction: string
+  user_display_name?: string | null
+  user_ens_name?: string | null
   vault_id: string
   vault_uuid?: string | null
 }
@@ -1892,6 +1925,8 @@ export type GetIdentityByIdResponse = {
   user_asset_delta: string
   user_assets: string
   user_conviction: string
+  user_display_name?: string | null
+  user_ens_name?: string | null
   vault_id: string
   vault_uuid?: string | null
 }
@@ -2006,6 +2041,12 @@ export type GetIdentityPositionsResponse = {
   limit: number
   page: number
   total: number
+}
+
+export type IntegrationHealthcheckResponse = {
+  alchemy_tx_parsed?: string | null
+  alchemy_tx_received?: string | null
+  cloudinary_cache?: string | null
 }
 
 export type CreateInviteCodesData = {
@@ -2835,6 +2876,7 @@ export type GetUserTotalsResponse = {
   description?: string | null
   display_name?: string | null
   ens_name?: string | null
+  followed_assets: string
   followed_count: number
   follower_count: number
   id?: string | null
@@ -3290,6 +3332,30 @@ export type $OpenApiTs = {
       }
     }
   }
+  '/identities/pending': {
+    get: {
+      req: {
+        direction?: SortDirection | null
+        limit?: number | null
+        offset?: number | null
+        page?: number | null
+        sortBy?: SortColumn | null
+        timeframe?: TimeFrame | null
+        userWallet?: string | null
+      }
+      res: {
+        /**
+         * Get all pending identities in paginated list
+         */
+        200: {
+          data: Array<IdentityPresenter>
+          limit: number
+          page: number
+          total: number
+        }
+      }
+    }
+  }
   '/identities/{id}': {
     put: {
       req: {
@@ -3421,6 +3487,8 @@ export type $OpenApiTs = {
           user_asset_delta: string
           user_assets: string
           user_conviction: string
+          user_display_name?: string | null
+          user_ens_name?: string | null
           vault_id: string
           vault_uuid?: string | null
         }
@@ -3550,6 +3618,8 @@ export type $OpenApiTs = {
           user_asset_delta: string
           user_assets: string
           user_conviction: string
+          user_display_name?: string | null
+          user_ens_name?: string | null
           vault_id: string
           vault_uuid?: string | null
         }
@@ -3700,6 +3770,20 @@ export type $OpenApiTs = {
           limit: number
           page: number
           total: number
+        }
+      }
+    }
+  }
+  '/integration/healthcheck': {
+    post: {
+      res: {
+        /**
+         * return details on api integration health
+         */
+        200: {
+          alchemy_tx_parsed?: string | null
+          alchemy_tx_received?: string | null
+          cloudinary_cache?: string | null
         }
       }
     }
@@ -4804,6 +4888,7 @@ export type $OpenApiTs = {
           description?: string | null
           display_name?: string | null
           ens_name?: string | null
+          followed_assets: string
           followed_count: number
           follower_count: number
           id?: string | null
