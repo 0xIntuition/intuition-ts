@@ -7,7 +7,6 @@ import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
-  Icon,
   IdentityTag,
   Input,
   Label,
@@ -42,6 +41,7 @@ import {
   MULTIVAULT_CONTRACT_ADDRESS,
   SEARCH_IDENTITIES_RESOURCE_ROUTE,
 } from '@lib/utils/constants'
+import { GENERIC_ERROR_MSG } from '@lib/utils/errors'
 import logger from '@lib/utils/logger'
 import { sliceString, truncateString } from '@lib/utils/misc'
 import { useFetcher, useNavigate } from '@remix-run/react'
@@ -54,7 +54,6 @@ import { useAccount, usePublicClient, useWalletClient } from 'wagmi'
 
 import ErrorList from './error-list'
 import { IdentitySearchCombobox } from './identity/identity-search-combo-box'
-import Toast from './toast'
 import { TransactionState } from './transaction-state'
 
 interface ClaimFormProps {
@@ -260,23 +259,7 @@ function CreateClaimForm({
             type: 'TRANSACTION_ERROR',
             error: errorMessage,
           })
-          toast.custom(
-            () => (
-              <Toast
-                title="Error"
-                description="error"
-                icon={
-                  <Icon
-                    name="triangle-exclamation"
-                    className="h-3 w-3 text-destructive"
-                  />
-                }
-              />
-            ),
-            {
-              duration: 5000,
-            },
-          )
+          toast.error(GENERIC_ERROR_MSG)
           return
         }
       }

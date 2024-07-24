@@ -11,7 +11,6 @@ import {
 } from '@0xintuition/1ui'
 import { IdentityPresenter } from '@0xintuition/api'
 
-import Toast from '@components/toast'
 import { multivaultAbi } from '@lib/abis/multivault'
 import { useBatchCreateTriple } from '@lib/hooks/useBatchCreateTriple'
 import { useLoaderFetcher } from '@lib/hooks/useLoaderFetcher'
@@ -19,6 +18,7 @@ import {
   CREATE_RESOURCE_ROUTE,
   MULTIVAULT_CONTRACT_ADDRESS,
 } from '@lib/utils/constants'
+import { GENERIC_ERROR_MSG } from '@lib/utils/errors'
 import logger from '@lib/utils/logger'
 import { CreateLoaderData } from '@routes/resources+/create'
 import { TransactionActionType } from 'types/transaction'
@@ -117,23 +117,7 @@ export default function TagsReview({
             type: 'TRANSACTION_ERROR',
             error: errorMessage,
           })
-          toast.custom(
-            () => (
-              <Toast
-                title="Error"
-                description="error"
-                icon={
-                  <Icon
-                    name="triangle-exclamation"
-                    className="h-3 w-3 text-destructive"
-                  />
-                }
-              />
-            ),
-            {
-              duration: 5000,
-            },
-          )
+          toast.error(GENERIC_ERROR_MSG)
           return
         }
       }

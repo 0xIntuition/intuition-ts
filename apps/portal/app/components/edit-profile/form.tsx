@@ -7,12 +7,12 @@ import {
   Input,
   Label,
   Textarea,
+  toast,
 } from '@0xintuition/1ui'
 import { UserPresenter } from '@0xintuition/api'
 
 import ErrorList from '@components/error-list'
 import { ImageChooser } from '@components/image-chooser'
-import Toast from '@components/toast'
 import {
   getFormProps,
   getInputProps,
@@ -36,7 +36,6 @@ import {
 import logger from '@lib/utils/logger'
 import { truncateString } from '@lib/utils/misc'
 import { useFetcher, useLocation } from '@remix-run/react'
-import { toast } from 'sonner'
 import {
   IdentityTransactionActionType,
   IdentityTransactionStateType,
@@ -117,23 +116,7 @@ export function EditProfileForm({
         type: 'TRANSACTION_ERROR',
         error: errorMessage,
       })
-      toast.custom(
-        () => (
-          <Toast
-            title="Error"
-            description={errorMessage}
-            icon={
-              <Icon
-                name="triangle-exclamation"
-                className="h-3 w-3 text-destructive"
-              />
-            }
-          />
-        ),
-        {
-          duration: 5000,
-        },
-      )
+      toast.error(errorMessage)
       return
     }
     console.error('Error creating identity', error)

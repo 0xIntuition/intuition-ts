@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 
-import { Icon } from '@0xintuition/1ui'
+import { toast } from '@0xintuition/1ui'
 import {
   ApiError,
   IdentitiesService,
@@ -12,7 +12,6 @@ import {
 import PrivyLogout from '@client/privy-logout'
 import EditProfileModal from '@components/edit-profile/modal'
 import SubmitButton from '@components/submit-button'
-import Toast from '@components/toast'
 import { multivaultAbi } from '@lib/abis/multivault'
 import { useCreateAtom } from '@lib/hooks/useCreateAtom'
 import {
@@ -32,7 +31,6 @@ import { requireUserWallet } from '@server/auth'
 import * as blockies from 'blockies-ts'
 import { useAtom } from 'jotai'
 import { ClientOnly } from 'remix-utils/client-only'
-import { toast } from 'sonner'
 import {
   IdentityTransactionActionType,
   IdentityTransactionStateType,
@@ -183,23 +181,7 @@ export function CreateButton({
             type: 'TRANSACTION_ERROR',
             error: errorMessage,
           })
-          toast.custom(
-            () => (
-              <Toast
-                title="Error"
-                description={errorMessage}
-                icon={
-                  <Icon
-                    name="triangle-exclamation"
-                    className="h-3 w-3 text-destructive"
-                  />
-                }
-              />
-            ),
-            {
-              duration: 5000,
-            },
-          )
+          toast.error(errorMessage)
           return
         }
       }
@@ -293,23 +275,7 @@ export function CreateButton({
               type: 'TRANSACTION_ERROR',
               error: errorMessage,
             })
-            toast.custom(
-              () => (
-                <Toast
-                  title="Error"
-                  description={errorMessage}
-                  icon={
-                    <Icon
-                      name="triangle-exclamation"
-                      className="h-3 w-3 text-destructive"
-                    />
-                  }
-                />
-              ),
-              {
-                duration: 5000,
-              },
-            )
+            toast.error(errorMessage)
             dispatch({ type: 'START_TRANSACTION' })
             return
           }
