@@ -1,4 +1,4 @@
-import { Button, ButtonSize, ButtonVariant, cn } from '@0xintuition/1ui'
+import { Button, ButtonSize, ButtonVariant } from '@0xintuition/1ui'
 
 import { useRevalidator } from '@remix-run/react'
 
