@@ -1,6 +1,9 @@
+import { Suspense, useEffect, useState } from 'react'
+
 import {
   Button,
   Icon,
+  Skeleton,
   Tabs,
   TabsContent,
   TabsList,
@@ -14,13 +17,20 @@ import {
 } from '@0xintuition/api'
 
 import { ListClaimsList } from '@components/list/list-claims'
+import { getUserCreatedLists, getUserSavedLists } from '@lib/services/lists'
 import { TAG_PREDICATE_VAULT_ID_TESTNET } from '@lib/utils/constants'
 import { NO_WALLET_ERROR } from '@lib/utils/errors'
 import logger from '@lib/utils/logger'
 import { calculateTotalPages, fetchWrapper, invariant } from '@lib/utils/misc'
 import { getStandardPageParams } from '@lib/utils/params'
-import { json, LoaderFunctionArgs } from '@remix-run/node'
-import { useLoaderData, useNavigate } from '@remix-run/react'
+import { defer, json, LoaderFunctionArgs } from '@remix-run/node'
+import {
+  Await,
+  useLoaderData,
+  useNavigate,
+  useNavigation,
+  useSearchParams,
+} from '@remix-run/react'
 import { requireUserWallet } from '@server/auth'
 
 export async function loader({ request }: LoaderFunctionArgs) {
@@ -29,41 +39,45 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   const url = new URL(request.url)
   const searchParams = new URLSearchParams(url.search)
-  const { page, limit, sortBy, direction } = getStandardPageParams({
-    searchParams,
-  })
-  const displayName = searchParams.get('list') || null
 
-  const listClaims = await fetchWrapper({
-    method: ClaimsService.searchClaims,
-    args: {
-      page,
-      limit,
-      sortBy: sortBy as ClaimSortColumn,
-      direction,
-      displayName,
-      predicate: TAG_PREDICATE_VAULT_ID_TESTNET,
-    },
-  })
-
-  const totalPages = calculateTotalPages(listClaims?.total ?? 0, limit)
-
-  return json({
-    listClaims: listClaims?.data as ClaimPresenter[],
-    sortBy,
-    direction,
-    pagination: {
-      currentPage: page,
-      limit,
-      totalEntries: listClaims?.total ?? 0,
-      totalPages,
-    },
+  return defer({
+    userCreatedListClaims: getUserCreatedLists({
+      userWallet: wallet,
+      searchParams,
+    }),
+    savedListClaims: getUserSavedLists({
+      userWallet: wallet,
+      searchParams,
+    }),
   })
 }
 
 export default function ListsRoute() {
-  const { listClaims, pagination } = useLoaderData<typeof loader>()
+  const { userCreatedListClaims, savedListClaims } =
+    useLoaderData<typeof loader>()
+  logger('userCreatedListClaims', userCreatedListClaims)
+  logger('savedListClaims', savedListClaims)
   const navigate = useNavigate()
+
+  const [searchParams, setSearchParams] = useSearchParams()
+  const [isNavigating, setIsNavigating] = useState(false)
+
+  const { state } = useNavigation()
+
+  function handleTabChange(value: 'saved' | 'created') {
+    const newParams = new URLSearchParams(searchParams)
+    newParams.set('tab', value)
+    newParams.delete('search')
+    newParams.set('page', '1')
+    setSearchParams(newParams)
+    setIsNavigating(true)
+  }
+
+  useEffect(() => {
+    if (state === 'idle') {
+      setIsNavigating(false)
+    }
+  }, [state])
 
   return (
     <div className="m-8 flex flex-col">
@@ -105,39 +119,50 @@ export default function ListsRoute() {
         </div>
       </div>
       <Tabs defaultValue="saved">
-        <TabsList>
-          <TabsTrigger
-            value="saved"
-            label="Saved"
-            // totalCount={resolvedClaim?.num_positions}
-            // onClick={(e) => {
-            //   e.preventDefault()
-            //   handleTabChange(null)
-            // }}
-          />
-          {/* <ListClaimsList
-            listClaims={listClaims}
-            pagination={pagination}
-            enableSort={true}
-            enableSearch={true}
-          /> */}
-          <TabsTrigger
-            value="created"
-            label="Created"
-            // totalCount={resolvedClaim?.for_num_positions}
-            // onClick={(e) => {
-            //   e.preventDefault()
-            //   handleTabChange('for')
-            // }}
-          />
-          {/* <ListClaimsList
-            listClaims={listClaims}
-            pagination={pagination}
-            enableSort={true}
-            enableSearch={true}
-          /> */}
-        </TabsList>
-        <TabsContent value="saved">
+        <Suspense fallback={<TabsSkeleton />}>
+          <Await
+            resolve={Promise.all([savedListClaims, userCreatedListClaims])}
+          >
+            {([savedListClaims, userCreatedListClaims]) => (
+              <TabsList>
+                <TabsTrigger
+                  value="saved"
+                  label="Saved"
+                  totalCount={savedListClaims?.pagination.totalEntries}
+                  onClick={(e) => {
+                    e.preventDefault()
+                    handleTabChange('saved')
+                  }}
+                />
+                <TabsTrigger
+                  value="created"
+                  label="Created"
+                  totalCount={userCreatedListClaims?.pagination.totalEntries}
+                  onClick={(e) => {
+                    e.preventDefault()
+                    handleTabChange('created')
+                  }}
+                />
+              </TabsList>
+            )}
+          </Await>
+        </Suspense>
+      </Tabs>
+    </div>
+  )
+}
+
+function TabsSkeleton() {
+  return (
+    <div className="flex items-center gap-2.5 mb-5">
+      <Skeleton className="w-44 h-10" />
+      <Skeleton className="w-44 h-10" />
+    </div>
+  )
+}
+
+{
+  /* <TabsContent value="saved">
           <ListClaimsList
             listClaims={listClaims}
             pagination={pagination}
@@ -152,8 +177,5 @@ export default function ListsRoute() {
             enableSort={true}
             enableSearch={true}
           />
-        </TabsContent>
-      </Tabs>
-    </div>
-  )
+        </TabsContent> */
 }
