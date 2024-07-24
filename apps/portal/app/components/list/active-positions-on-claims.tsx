@@ -1,4 +1,9 @@
-import { Claim, ClaimPositionRow, Identity } from '@0xintuition/1ui'
+import {
+  Claim,
+  ClaimPositionRow,
+  EmptyStateCard,
+  Identity,
+} from '@0xintuition/1ui'
 import { ClaimPresenter, SortColumn } from '@0xintuition/api'
 
 import { formatBalance } from '@lib/utils/misc'

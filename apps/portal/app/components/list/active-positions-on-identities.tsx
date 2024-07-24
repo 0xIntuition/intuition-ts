@@ -1,4 +1,4 @@
-import { Identity, IdentityPosition } from '@0xintuition/1ui'
+import { EmptyStateCard, Identity, IdentityPosition } from '@0xintuition/1ui'
 import { IdentityPresenter, SortColumn } from '@0xintuition/api'
 
 import { formatBalance } from '@lib/utils/misc'
