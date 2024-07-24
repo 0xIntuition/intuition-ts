@@ -51,8 +51,8 @@ export async function getUserCreatedLists({
   return {
     userCreatedListClaims: userCreatedListClaims.data as ClaimPresenter[],
     pagination: {
-      currentPage: Number(page),
-      limit: Number(limit),
+      currentPage: page,
+      limit,
       totalEntries: userCreatedListClaims.total,
 
       totalPages,
@@ -91,8 +91,8 @@ export async function getUserSavedLists({
   return {
     savedListClaims: savedListClaims.data as ClaimPresenter[],
     pagination: {
-      currentPage: Number(page),
-      limit: Number(limit),
+      currentPage: page,
+      limit,
       totalEntries: savedListClaims.total,
       totalPages,
     },

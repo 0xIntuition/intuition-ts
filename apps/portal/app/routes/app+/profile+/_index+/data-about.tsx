@@ -1,22 +1,18 @@
 import { Suspense } from 'react'
 
-import { Text } from '@0xintuition/1ui'
+import { ErrorStateCard, Text } from '@0xintuition/1ui'
 import { ClaimsService } from '@0xintuition/api'
 
 import { ClaimsList as ClaimsAboutIdentity } from '@components/list/claims'
 import { PositionsOnIdentity } from '@components/list/positions-on-identity'
 import DataAboutHeader from '@components/profile/data-about-header'
+import { RevalidateButton } from '@components/revalidate-button'
 import { DataHeaderSkeleton, PaginatedListSkeleton } from '@components/skeleton'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { getClaimsAboutIdentity } from '@lib/services/claims'
 import { getPositionsOnIdentity } from '@lib/services/positions'
 import { NO_USER_IDENTITY_ERROR, NO_WALLET_ERROR } from '@lib/utils/errors'
-import {
-  DataErrorDisplay,
-  fetchWrapper,
-  formatBalance,
-  invariant,
-} from '@lib/utils/misc'
+import { fetchWrapper, formatBalance, invariant } from '@lib/utils/misc'
 import { defer, LoaderFunctionArgs } from '@remix-run/node'
 import { Await, useRouteLoaderData } from '@remix-run/react'
 import { requireUserWallet } from '@server/auth'
@@ -59,11 +55,11 @@ export default function ProfileDataAbout() {
   return (
     <div className="flex-col justify-start items-start flex w-full gap-6">
       <div className="flex flex-col w-full pb-4">
-        <div className="flex justify-between items-center w-full">
+        <div className="self-stretch justify-between items-center inline-flex mb-6">
           <Text
             variant="headline"
             weight="medium"
-            className="theme-secondary-foreground pb-3"
+            className="theme-secondary-foreground w-full"
           >
             Claims about this Identity
           </Text>
@@ -86,7 +82,14 @@ export default function ProfileDataAbout() {
           </Await>
         </Suspense>
         <Suspense fallback={<PaginatedListSkeleton />}>
-          <Await resolve={claims} errorElement={<DataErrorDisplay />}>
+          <Await
+            resolve={claims}
+            errorElement={
+              <ErrorStateCard>
+                <RevalidateButton />
+              </ErrorStateCard>
+            }
+          >
             {(resolvedClaims) => (
               <ClaimsAboutIdentity
                 claims={resolvedClaims.data}
@@ -100,11 +103,11 @@ export default function ProfileDataAbout() {
         </Suspense>
       </div>
       <div className="flex flex-col pt-4 w-full">
-        <div className="flex justify-between items-center w-full">
+        <div className="self-stretch justify-between items-center inline-flex mb-6">
           <Text
             variant="headline"
             weight="medium"
-            className="theme-secondary-foreground pb-3"
+            className="theme-secondary-foreground w-full"
           >
             Positions on this Identity
           </Text>
@@ -122,7 +125,14 @@ export default function ProfileDataAbout() {
           </Await>
         </Suspense>
         <Suspense fallback={<PaginatedListSkeleton />}>
-          <Await resolve={positions} errorElement={<DataErrorDisplay />}>
+          <Await
+            resolve={positions}
+            errorElement={
+              <ErrorStateCard>
+                <RevalidateButton />
+              </ErrorStateCard>
+            }
+          >
             {(resolvedPositions) => (
               <PositionsOnIdentity
                 positions={resolvedPositions.data}

@@ -24,7 +24,7 @@ export function ActivePositionsOnIdentities({
   ]
 
   if (!identities.length) {
-    return <EmptyStateCard message="No active identity positions found." />
+    return <EmptyStateCard message="No positions found." />
   }
 
   return (
