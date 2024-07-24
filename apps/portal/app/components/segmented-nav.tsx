@@ -1,8 +1,6 @@
-import { useState } from 'react'
-
 import { SegmentedControl, SegmentedControlItem } from '@0xintuition/1ui'
 
-import { Link, useLocation, useNavigate, useParams } from '@remix-run/react'
+import { NavLink, useNavigate, useParams } from '@remix-run/react'
 
 export interface OptionType {
   value: string
@@ -18,11 +16,6 @@ interface SegmentedNavProps {
 export const SegmentedNav = ({ options }: SegmentedNavProps) => {
   const navigate = useNavigate()
   const params = useParams()
-  const location = useLocation()
-  const initialTab =
-    options.find((option) => location.pathname.includes(option.value))?.value ||
-    options[0].value
-  const [selectedTab, setSelectedTab] = useState(initialTab)
 
   const getPath = (option: OptionType) => {
     const { wallet, id } = params
@@ -36,26 +29,28 @@ export const SegmentedNav = ({ options }: SegmentedNavProps) => {
   }
 
   const handleTabClick = (option: OptionType) => {
-    setSelectedTab(option.value)
     navigate(getPath(option))
   }
 
   return (
     <SegmentedControl className="w-fit">
       {options.map((option, index) => (
-        <Link
+        <NavLink
           key={index}
           to={getPath(option)}
           prefetch="intent"
+          end={option.value === 'overview'}
           onClick={(e) => {
             e.preventDefault()
             handleTabClick(option)
           }}
         >
-          <SegmentedControlItem isActive={selectedTab === option.value}>
-            {option.label}
-          </SegmentedControlItem>
-        </Link>
+          {({ isActive }) => (
+            <SegmentedControlItem isActive={isActive}>
+              {option.label}
+            </SegmentedControlItem>
+          )}
+        </NavLink>
       ))}
     </SegmentedControl>
   )
