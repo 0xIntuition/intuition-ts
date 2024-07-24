@@ -46,7 +46,7 @@ export function ClaimsList({
       enableSearch={enableSearch}
       enableSort={enableSort}
     >
-      {claims?.map((claim) => (
+      {claims.map((claim) => (
         <div
           key={claim.claim_id}
           className="grow shrink basis-0 self-stretch p-6 bg-background first:rounded-t-xl last:rounded-b-xl theme-border flex-col justify-start gap-5 inline-flex"

@@ -42,33 +42,29 @@ export function IdentitiesList({
       enableSearch={enableSearch}
       enableSort={enableSort}
     >
-      {!identities.length ? (
-        <EmptyStateCard message="No identities found." />
-      ) : (
-        identities.map((identity) => (
-          <div
-            key={identity.id}
-            className="grow shrink basis-0 self-stretch p-6 bg-black first:rounded-t-xl last:rounded-b-xl border border-neutral-300/20 flex-col justify-start items-start gap-5 inline-flex"
-          >
-            <IdentityContentRow
-              variant={identity.is_user ? Identity.user : Identity.nonUser}
-              avatarSrc={identity.user?.image ?? identity.image ?? ''}
-              name={identity.user?.display_name ?? identity.display_name}
-              walletAddress={identity.user?.wallet ?? identity.identity_id}
-              amount={+formatBalance(BigInt(identity.user_assets || ''), 18, 4)}
-              totalFollowers={identity.num_positions}
-              onClick={() => {
-                navigate(
-                  identity.is_user
-                    ? `/app/profile/${identity.identity_id}`
-                    : `/app/identity/${identity.identity_id}`,
-                )
-              }}
-              className="hover:cursor-pointer"
-            />
-          </div>
-        ))
-      )}
+      {identities.map((identity) => (
+        <div
+          key={identity.id}
+          className={`grow shrink basis-0 self-stretch p-6 bg-black first:rounded-t-xl last:rounded-b-xl border border-neutral-300/20 flex-col justify-start items-start gap-5 inline-flex`}
+        >
+          <IdentityContentRow
+            variant={identity.is_user ? Identity.user : Identity.nonUser}
+            avatarSrc={identity.user?.image ?? identity.image ?? ''}
+            name={identity.user?.display_name ?? identity.display_name}
+            walletAddress={identity.user?.wallet ?? identity.identity_id}
+            amount={+formatBalance(BigInt(identity.user_assets || ''), 18, 4)}
+            totalFollowers={identity.num_positions}
+            onClick={() => {
+              navigate(
+                identity.is_user
+                  ? `/app/profile/${identity.identity_id}`
+                  : `/app/identity/${identity.identity_id}`,
+              )
+            }}
+            className="hover:cursor-pointer"
+          />
+        </div>
+      ))}
     </List>
   )
 }

@@ -25,8 +25,6 @@ type EventMessages = {
   redeemTriple: (value: string) => string
 }
 
-// ... existing code ...
-
 function ActivityItem({
   activity,
   eventMessages,
@@ -179,6 +177,10 @@ export function ActivityList({
       `redeemed ${formatBalance(value, 18, 4)} ETH from a claim`,
   }
 
+  if (!activities.length) {
+    return <EmptyStateCard message="No activities found." />
+  }
+
   return (
     <List<SortColumn>
       pagination={pagination}
@@ -186,18 +188,14 @@ export function ActivityList({
       paramPrefix={paramPrefix}
       enableSearch={false}
     >
-      {!activities.length ? (
-        <EmptyStateCard message="No activities found." />
-      ) : (
-        activities.map((activity) => (
-          <ActivityItem
-            key={activity.id}
-            activity={activity}
-            eventMessages={eventMessages}
-            navigate={navigate}
-          />
-        ))
-      )}
+      {activities.map((activity) => (
+        <ActivityItem
+          key={activity.id}
+          activity={activity}
+          eventMessages={eventMessages}
+          navigate={navigate}
+        />
+      ))}
     </List>
   )
 }
