@@ -50,7 +50,7 @@ export default function ListsRoute() {
   const [isNavigating, setIsNavigating] = useState(false)
 
   const { state } = useNavigation()
-  const defaultTab = searchParams.get('tab') || 'saved'
+  const defaultTab = searchParams.get('tab') || 'created'
 
   function handleTabChange(value: 'saved' | 'created') {
     const newParams = new URLSearchParams(searchParams)
