@@ -24,7 +24,7 @@ export function PositionsOnIdentity({
   ]
 
   if (!positions.length) {
-    return <EmptyStateCard message="No positions found on this identity." />
+    return <EmptyStateCard message="No positions found." />
   }
 
   return (

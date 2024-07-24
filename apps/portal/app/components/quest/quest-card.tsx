@@ -1,22 +1,23 @@
-import * as React from 'react'
+import {
+  cn,
+  QuestPointsDisplay,
+  QuestStatusIndicator,
+  Text,
+} from '@0xintuition/1ui'
+import { QuestStatus } from '@0xintuition/api'
 
-import { QuestCriteriaDisplay, QuestPointsDisplay } from 'components'
-import { QuestStatusIndicator } from 'components/QuestStatusIndicator'
-import { Text } from 'components/Text'
-import { cn } from 'styles'
-import { QuestCriteriaStatusType, QuestStatus, QuestStatusType } from 'types'
-
-import { QuestCardButton } from './components'
+import { QuestCardButton } from './quest-card-button'
+import { QuestCriteriaDisplay } from './quest-criteria-display'
 
 export interface QuestCardProps extends React.HTMLAttributes<HTMLDivElement> {
   imgSrc: string
   title: string
   description: string
-  questStatus: QuestStatusType
+  questStatus: QuestStatus
   label: string
   points: number
   questCriteria: string
-  questCriteriaStatus: QuestCriteriaStatusType
+  disabled: boolean
 }
 
 const QuestCard = ({
@@ -27,19 +28,19 @@ const QuestCard = ({
   label,
   points,
   questCriteria,
-  questCriteriaStatus,
+  disabled = false,
   ...props
 }: QuestCardProps) => {
   return (
     <div
       className={cn(
         'flex items-stretch theme-border rounded-lg overflow-hidden relative h-full',
-        questStatus === QuestStatus.disabled && 'opacity-70',
+        disabled && 'opacity-50',
       )}
       {...props}
     >
       <div
-        className="w-52 h-52 flex-shrink-0 relative"
+        className="w-52 h-52 flex-shrink-0 relative bg-center bg-cover"
         style={{ backgroundImage: `url(${imgSrc})` }}
       >
         <div className="absolute top-2.5 left-2.5">
@@ -68,13 +69,10 @@ const QuestCard = ({
             {description}
           </Text>
         </div>
-        <QuestCriteriaDisplay
-          criteria={questCriteria}
-          status={questCriteriaStatus}
-        />
+        <QuestCriteriaDisplay criteria={questCriteria} status={questStatus} />
       </div>
       <div className="flex flex-col gap-2 items-center p-6">
-        <QuestCardButton questStatus={questStatus} />
+        <QuestCardButton questStatus={questStatus} disabled={disabled} />
         <QuestPointsDisplay points={points} questStatus={questStatus} />
       </div>
     </div>

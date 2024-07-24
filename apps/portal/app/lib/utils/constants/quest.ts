@@ -11,7 +11,7 @@ export const STANDARD_QUEST_SET: QuestSet = {
   description: 'Learn the core elements of the Intuition System',
   summary:
     'Complete the chapters below to learn the core primitives that make up the Intuition system.',
-  navigatePath: '/app/quest/book/0',
+  navigatePath: '/app/quest/narrative/0',
 }
 
 export const COMING_SOON_QUEST_SET: QuestSet = {
