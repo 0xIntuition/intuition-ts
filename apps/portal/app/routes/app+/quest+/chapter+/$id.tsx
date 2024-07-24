@@ -12,9 +12,8 @@ import questPlaceholder from '@assets/quest-placeholder.png'
 import { QuestCriteriaCard } from '@components/quest/quest-criteria-card'
 import QuestStatusCard from '@components/quest/quest-status-card'
 import { MDXContent } from '@content-collections/mdx/react'
-import logger from '@lib/utils/logger'
 import { fetchWrapper, invariant } from '@lib/utils/misc'
-import { getQuestContentBySlug } from '@lib/utils/quest'
+import { getQuestContentBySlug, getQuestCriteria } from '@lib/utils/quest'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { Link, useLoaderData } from '@remix-run/react'
 import { requireUserId } from '@server/auth'
@@ -31,8 +30,6 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
       questId: id,
     },
   })
-  logger('Fetched quest', quest)
-
   const status = await fetchWrapper({
     method: UserQuestsService.checkQuestStatus,
     args: {
@@ -64,14 +61,13 @@ export default function Quests() {
     questContent2,
     status,
   } = useLoaderData<typeof loader>()
-  // const questContent = getQuestContentBySlug(quest.id)
 
   return (
     <div className="px-10 w-full max-w-7xl mx-auto flex flex-col gap-10">
       <div className="flex flex-col gap-10 mb-5">
         <img
-          src={questPlaceholder}
-          alt="Quest Placeholder"
+          src={quest.image ?? questPlaceholder}
+          alt={'quest hero'}
           className="object-cover w-full h-[350px] border-x border-b border-border/20 rounded-b-lg"
         />
         <div className="flex flex-col gap-10">
@@ -91,7 +87,7 @@ export default function Quests() {
 
           {questIntro?.body && <MDXLoreWrapper code={questIntro.body} />}
           <QuestCriteriaCard
-            criteria={quest.condition}
+            criteria={getQuestCriteria(quest.condition)}
             questStatus={status}
             points={quest.points}
           />
@@ -105,9 +101,24 @@ export default function Quests() {
             <MDXContentWrapper code={questClosing.body} />
           </div>
         )}
+        {questContent2 && (
+          <div className="flex flex-col gap-5 py-5">
+            <MDXLoreWrapper code={questContent2.body} />
+          </div>
+        )}
+
+        {questContent2 && (
+          <div className="bg-warning/5 rounded-lg theme-border p-5 flex justify-center align-items h-96 border-warning/30 border-dashed text-warning/30 text-bold">
+            Quest Activity 2
+          </div>
+        )}
 
         <div className="flex flex-col items-center justify-center w-full gap-2 pb-20">
-          <Button variant={ButtonVariant.primary} size={ButtonSize.lg}>
+          <Button
+            variant={ButtonVariant.primary}
+            size={ButtonSize.lg}
+            disabled={status !== QuestStatus.CLAIMABLE}
+          >
             Complete Quest
           </Button>
           <Text variant="bodyLarge" className="text-foreground/50">
