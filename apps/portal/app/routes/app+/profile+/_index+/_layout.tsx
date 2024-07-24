@@ -1,3 +1,4 @@
+import { NO_WALLET_ERROR, userProfileRouteOptions } from 'constants'
 import React, { useEffect, useState } from 'react'
 
 import {
@@ -30,8 +31,6 @@ import {
   editSocialLinksModalAtom,
   stakeModalAtom,
 } from '@lib/state/store'
-import { userProfileRouteOptions } from '@lib/utils/constants'
-import { NO_WALLET_ERROR } from '@lib/utils/errors'
 import logger from '@lib/utils/logger'
 import {
   calculatePercentageOfTvl,

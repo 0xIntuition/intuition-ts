@@ -1,3 +1,9 @@
+import {
+  ACCEPTED_IMAGE_MIME_TYPES,
+  DESCRIPTION_MAX_LENGTH,
+  MAX_NAME_LENGTH,
+  MAX_UPLOAD_SIZE,
+} from 'constants'
 import { useEffect, useState } from 'react'
 
 import {
@@ -27,12 +33,6 @@ import {
   useTransactionState,
 } from '@lib/hooks/useTransactionReducer'
 import { updateProfileSchema } from '@lib/schemas/update-profile-schema'
-import {
-  ACCEPTED_IMAGE_MIME_TYPES,
-  DESCRIPTION_MAX_LENGTH,
-  MAX_NAME_LENGTH,
-  MAX_UPLOAD_SIZE,
-} from '@lib/utils/constants'
 import logger from '@lib/utils/logger'
 import { truncateString } from '@lib/utils/misc'
 import { useFetcher, useLocation } from '@remix-run/react'

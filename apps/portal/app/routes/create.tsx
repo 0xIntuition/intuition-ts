@@ -1,3 +1,4 @@
+import { MULTIVAULT_CONTRACT_ADDRESS, NO_WALLET_ERROR } from 'constants'
 import { useEffect, useRef, useState } from 'react'
 
 import { toast } from '@0xintuition/1ui'
@@ -12,7 +13,6 @@ import {
 import PrivyLogout from '@client/privy-logout'
 import EditProfileModal from '@components/edit-profile/modal'
 import SubmitButton from '@components/submit-button'
-import { MULTIVAULT_CONTRACT_ADDRESS, NO_WALLET_ERROR } from '@constants'
 import { multivaultAbi } from '@lib/abis/multivault'
 import { useCreateAtom } from '@lib/hooks/useCreateAtom'
 import {
@@ -33,7 +33,7 @@ import { ClientOnly } from 'remix-utils/client-only'
 import {
   IdentityTransactionActionType,
   IdentityTransactionStateType,
-} from 'types/transaction'
+} from 'types'
 import { toHex } from 'viem'
 import { useConnectorClient, usePublicClient } from 'wagmi'
 

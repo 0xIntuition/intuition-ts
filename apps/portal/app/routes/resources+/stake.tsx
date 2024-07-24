@@ -1,4 +1,5 @@
-import { MULTIVAULT_CONTRACT_ADDRESS } from '@lib/utils/constants'
+import { MULTIVAULT_CONTRACT_ADDRESS } from 'constants'
+
 import logger from '@lib/utils/logger'
 import { json, type LoaderFunctionArgs } from '@remix-run/node'
 import { getVaultDetails } from '@server/multivault'

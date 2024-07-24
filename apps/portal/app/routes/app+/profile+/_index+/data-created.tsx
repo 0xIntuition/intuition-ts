@@ -1,3 +1,8 @@
+import {
+  NO_USER_IDENTITY_ERROR,
+  NO_USER_TOTALS_ERROR,
+  NO_WALLET_ERROR,
+} from 'constants'
 import { ReactNode, Suspense } from 'react'
 
 import {
@@ -37,11 +42,6 @@ import {
   getUserClaims,
   getUserIdentities,
 } from '@lib/services/users'
-import {
-  NO_USER_IDENTITY_ERROR,
-  NO_USER_TOTALS_ERROR,
-  NO_WALLET_ERROR,
-} from '@lib/utils/errors'
 import { fetchWrapper, formatBalance, invariant } from '@lib/utils/misc'
 import { defer, LoaderFunctionArgs } from '@remix-run/node'
 import { Await, useRouteLoaderData } from '@remix-run/react'

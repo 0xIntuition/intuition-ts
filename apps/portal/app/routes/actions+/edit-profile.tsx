@@ -1,6 +1,7 @@
+import { NO_WALLET_ERROR } from 'constants'
+
 import { ApiError, UserPresenter, UsersService } from '@0xintuition/api'
 
-import { NO_WALLET_ERROR } from '@constants/errors'
 import logger from '@lib/utils/logger'
 import { invariant } from '@lib/utils/misc'
 import { json, type ActionFunctionArgs } from '@remix-run/node'

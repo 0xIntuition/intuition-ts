@@ -1,9 +1,9 @@
+import { CURRENT_ENV } from 'constants'
 import { useEffect, useState } from 'react'
 
 import { Button, cn } from '@0xintuition/1ui'
 
 import { followModalAtom } from '@lib/state/store'
-import { CURRENT_ENV } from '@lib/utils/constants'
 import { getChainEnvConfig } from '@lib/utils/environment'
 import { useNavigation } from '@remix-run/react'
 import { useSetAtom } from 'jotai'

@@ -1,4 +1,4 @@
-import { IdentityPresenter } from 'types'
+import { IdentityPresenter, Status } from '@0xintuition/api'
 
 const FAKE_IDENTITIES: IdentityPresenter[] = [
   {
@@ -39,7 +39,7 @@ const FAKE_IDENTITIES: IdentityPresenter[] = [
     num_positions: 1,
     predicate: false,
     semantic: null,
-    status: 'active',
+    status: Status.PENDING,
     tag_count: 5,
     tags: null,
     updated_at: '2023-07-01T00:00:00Z',
@@ -98,7 +98,7 @@ const FAKE_IDENTITIES: IdentityPresenter[] = [
     num_positions: 2,
     predicate: false,
     semantic: null,
-    status: 'active',
+    status: Status.PENDING,
     tag_count: 10,
     tags: null,
     updated_at: '2023-07-02T00:00:00Z',
@@ -148,7 +148,7 @@ const FAKE_IDENTITIES: IdentityPresenter[] = [
     num_positions: 3,
     predicate: false,
     semantic: null,
-    status: 'active',
+    status: Status.PENDING,
     tag_count: 15,
     tags: null,
     updated_at: '2023-07-03T00:00:00Z',

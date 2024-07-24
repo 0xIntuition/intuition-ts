@@ -20,14 +20,12 @@ import { getTheme } from '@server/theme'
 
 import './styles/globals.css'
 
+import { CURRENT_ENV, PATH, SUPPORT_EMAIL_ADDRESS } from 'constants'
 import { useEffect } from 'react'
 
 import { Button, Icon, Text, Toaster } from '@0xintuition/1ui'
 
 import { GlobalLoading } from '@components/global-loading'
-import { CURRENT_ENV } from '@lib/utils/constants'
-import { SUPPORT_EMAIL_ADDRESS } from '@lib/utils/constants/emails'
-import { PATH } from '@lib/utils/constants/paths'
 import { getChainEnvConfig } from '@lib/utils/environment'
 import logger from '@lib/utils/logger'
 import { cn } from '@lib/utils/misc'

@@ -1,3 +1,4 @@
+import { TAG_PREDICATE_VAULT_ID_TESTNET, TAG_RESOURCE_ROUTE } from 'constants'
 import { useEffect, useState } from 'react'
 
 import { Popover, PopoverContent, PopoverTrigger, Text } from '@0xintuition/1ui'
@@ -7,10 +8,6 @@ import ErrorList from '@components/error-list'
 import { IdentitySearchCombobox } from '@components/identity/identity-search-combo-box'
 import { useIdentityServerSearch } from '@lib/hooks/useIdentityServerSearch'
 import { createIdentityModalAtom } from '@lib/state/store'
-import {
-  TAG_PREDICATE_VAULT_ID_TESTNET,
-  TAG_RESOURCE_ROUTE,
-} from '@lib/utils/constants'
 import logger from '@lib/utils/logger'
 import { useFetcher } from '@remix-run/react'
 import { TagLoaderData } from '@routes/resources+/tag'

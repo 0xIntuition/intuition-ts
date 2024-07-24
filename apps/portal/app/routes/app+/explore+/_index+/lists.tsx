@@ -1,3 +1,5 @@
+import { NO_WALLET_ERROR, TAG_PREDICATE_VAULT_ID_TESTNET } from 'constants'
+
 import {
   ClaimPresenter,
   ClaimSortColumn,
@@ -6,8 +8,6 @@ import {
 
 import { ExploreSearch } from '@components/explore/ExploreSearch'
 import { ListClaimsList } from '@components/list/list-claims'
-import { TAG_PREDICATE_VAULT_ID_TESTNET } from '@lib/utils/constants'
-import { NO_WALLET_ERROR } from '@lib/utils/errors'
 import { calculateTotalPages, fetchWrapper, invariant } from '@lib/utils/misc'
 import { getStandardPageParams } from '@lib/utils/params'
 import { json, LoaderFunctionArgs } from '@remix-run/node'

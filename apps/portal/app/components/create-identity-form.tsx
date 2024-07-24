@@ -1,3 +1,9 @@
+import {
+  ACCEPTED_IMAGE_MIME_TYPES,
+  GENERIC_ERROR_MSG,
+  MAX_UPLOAD_SIZE,
+  MULTIVAULT_CONTRACT_ADDRESS,
+} from 'constants'
 import React, { useEffect, useRef, useState } from 'react'
 
 import {
@@ -34,12 +40,6 @@ import {
   useTransactionState,
 } from '@lib/hooks/useTransactionReducer'
 import { createIdentitySchema } from '@lib/schemas/create-identity-schema'
-import {
-  ACCEPTED_IMAGE_MIME_TYPES,
-  MAX_UPLOAD_SIZE,
-  MULTIVAULT_CONTRACT_ADDRESS,
-} from '@lib/utils/constants'
-import { GENERIC_ERROR_MSG } from '@lib/utils/errors'
 import logger from '@lib/utils/logger'
 import { truncateString } from '@lib/utils/misc'
 import { useFetcher, useNavigate } from '@remix-run/react'

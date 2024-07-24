@@ -1,4 +1,5 @@
-import { CURRENT_ENV } from '@constants'
+import { CURRENT_ENV } from 'constants'
+
 import { createConfig } from '@privy-io/wagmi'
 import { base, baseSepolia, mainnet } from 'viem/chains'
 import { Config, http } from 'wagmi'

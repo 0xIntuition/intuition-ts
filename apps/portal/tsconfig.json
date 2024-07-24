@@ -17,8 +17,7 @@
       "@client/*": ["app/.client/*"],
       "@images/*": ["./src/images/*"],
       "@assets/*": ["app/assets/*"],
-      "content-collections": ["./.content-collections/generated"],
-      "@constants/*": ["constants/*"]
+      "content-collections": ["./.content-collections/generated"]
     },
     "outDir": "./build"
   },

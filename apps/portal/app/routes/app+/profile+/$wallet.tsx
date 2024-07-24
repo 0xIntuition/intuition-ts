@@ -1,3 +1,5 @@
+import { NO_WALLET_ERROR, userIdentityRouteOptions } from 'constants'
+
 import {
   Button,
   PositionCard,
@@ -22,8 +24,6 @@ import { NestedLayout } from '@components/nested-layout'
 import StakeModal from '@components/stake/stake-modal'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { followModalAtom, stakeModalAtom } from '@lib/state/store'
-import { userIdentityRouteOptions } from '@lib/utils/constants'
-import { NO_WALLET_ERROR } from '@lib/utils/errors'
 import logger from '@lib/utils/logger'
 import {
   calculatePercentageOfTvl,

@@ -1,6 +1,7 @@
+import { MAX_UPLOAD_SIZE } from 'constants'
+
 import { parseWithZod } from '@conform-to/zod'
 import { createIdentitySchema } from '@lib/schemas/create-identity-schema'
-import { MAX_UPLOAD_SIZE } from '@lib/utils/constants'
 import logger from '@lib/utils/logger'
 import {
   unstable_composeUploadHandlers as composeUploadHandlers,
