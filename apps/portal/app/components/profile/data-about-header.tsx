@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react'
 
-import { IdentityTag, Text } from '@0xintuition/1ui'
+import { IdentityTag, Text, Trunctacular } from '@0xintuition/1ui'
 import { IdentityPresenter } from '@0xintuition/api'
 
 export const DataAboutHeaderVariants = {
@@ -11,7 +11,7 @@ export const DataAboutHeaderVariants = {
 export type DataAboutHeaderVariantType =
   (typeof DataAboutHeaderVariants)[keyof typeof DataAboutHeaderVariants]
 
-interface DataAboutHeaderProps {
+interface DataAboutHeaderProps extends React.HTMLAttributes<HTMLDivElement> {
   variant: DataAboutHeaderVariantType
   title: string
   userIdentity: IdentityPresenter
@@ -27,6 +27,7 @@ const DataAboutHeader: React.FC<DataAboutHeaderProps> = ({
   totalClaims,
   totalPositions,
   totalStake,
+  ...props
 }) => {
   // TODO: Implement this once we figure out why MonetaryValue is not rendering currency type and we are able to add custom styling for the text
   // const renderTotalStake = () => {
@@ -49,12 +50,12 @@ const DataAboutHeader: React.FC<DataAboutHeaderProps> = ({
   // }
 
   return (
-    <div className="flex flex-col w-full gap-3">
+    <div className="flex flex-col w-full gap-3" {...props}>
       <div className="flex justify-between items-center w-full">
         <Text
           variant="headline"
           weight="medium"
-          className="theme-secondary-foreground"
+          className="theme-secondary-foreground mb-3"
         >
           {title}
         </Text>
@@ -72,9 +73,12 @@ const DataAboutHeader: React.FC<DataAboutHeaderProps> = ({
             imgSrc={userIdentity?.user?.image ?? userIdentity?.image}
             variant={userIdentity?.user ? 'user' : 'non-user'}
           >
-            <span className="min-w-20 text-ellipsis">
-              {userIdentity?.user?.display_name ?? userIdentity?.display_name}
-            </span>
+            <Trunctacular
+              value={
+                userIdentity?.user?.display_name ?? userIdentity?.display_name
+              }
+              maxStringLength={40}
+            />
           </IdentityTag>
         </div>
         <div className="flex justify-between w-full">
