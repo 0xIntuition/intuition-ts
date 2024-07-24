@@ -7,7 +7,6 @@ import {
 
 import {
   AM_WATCHING_DISPLAY_NAME_TESTNET,
-  AM_WATCHING_ID_TESTNET,
   TAG_PREDICATE_ID_TESTNET,
 } from '@lib/utils/constants'
 import logger from '@lib/utils/logger'
@@ -47,7 +46,7 @@ export async function getUserCreatedLists({
   logger('userCreatedListClaims', userCreatedListClaims.total)
 
   return {
-    data: userCreatedListClaims.data as ClaimPresenter[],
+    userCreatedListClaims: userCreatedListClaims.data as ClaimPresenter[],
     pagination: {
       currentPage: Number(page),
       limit: Number(limit),

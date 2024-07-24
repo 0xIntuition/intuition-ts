@@ -10,20 +10,13 @@ import {
   TabsTrigger,
   Text,
 } from '@0xintuition/1ui'
-import {
-  ClaimPresenter,
-  ClaimSortColumn,
-  ClaimsService,
-} from '@0xintuition/api'
 
 import { ListClaimsList } from '@components/list/list-claims'
 import { getUserCreatedLists, getUserSavedLists } from '@lib/services/lists'
-import { TAG_PREDICATE_VAULT_ID_TESTNET } from '@lib/utils/constants'
 import { NO_WALLET_ERROR } from '@lib/utils/errors'
 import logger from '@lib/utils/logger'
-import { calculateTotalPages, fetchWrapper, invariant } from '@lib/utils/misc'
-import { getStandardPageParams } from '@lib/utils/params'
-import { defer, json, LoaderFunctionArgs } from '@remix-run/node'
+import { invariant } from '@lib/utils/misc'
+import { defer, LoaderFunctionArgs } from '@remix-run/node'
 import {
   Await,
   useLoaderData,
@@ -124,30 +117,111 @@ export default function ListsRoute() {
             resolve={Promise.all([savedListClaims, userCreatedListClaims])}
           >
             {([savedListClaims, userCreatedListClaims]) => (
-              <TabsList>
-                <TabsTrigger
-                  value="saved"
-                  label="Saved"
-                  totalCount={savedListClaims?.pagination.totalEntries}
-                  onClick={(e) => {
-                    e.preventDefault()
-                    handleTabChange('saved')
-                  }}
-                />
-                <TabsTrigger
-                  value="created"
-                  label="Created"
-                  totalCount={userCreatedListClaims?.pagination.totalEntries}
-                  onClick={(e) => {
-                    e.preventDefault()
-                    handleTabChange('created')
-                  }}
-                />
-              </TabsList>
+              <>
+                <TabsList>
+                  <TabsTrigger
+                    value="saved"
+                    label="Saved"
+                    totalCount={savedListClaims?.pagination.totalEntries}
+                    onClick={(e) => {
+                      e.preventDefault()
+                      handleTabChange('saved')
+                    }}
+                  />
+                  <TabsTrigger
+                    value="created"
+                    label="Created"
+                    totalCount={userCreatedListClaims?.pagination.totalEntries}
+                    onClick={(e) => {
+                      e.preventDefault()
+                      handleTabChange('created')
+                    }}
+                  />
+                </TabsList>
+                <TabsContent value="saved">
+                  {isNavigating ? (
+                    <ListClaimsSkeletonLayout
+                      totalItems={savedListClaims?.pagination.totalEntries || 6}
+                    />
+                  ) : (
+                    <Suspense
+                      fallback={
+                        <ListClaimsSkeletonLayout
+                          totalItems={
+                            savedListClaims?.pagination.totalEntries || 6
+                          }
+                        />
+                      }
+                    >
+                      <Await resolve={savedListClaims}>
+                        {(resolvedSavedListClaims) => (
+                          <ListClaimsList
+                            listClaims={resolvedSavedListClaims.savedListClaims}
+                            pagination={resolvedSavedListClaims.pagination}
+                            enableSort={true}
+                            enableSearch={true}
+                          />
+                        )}
+                      </Await>
+                    </Suspense>
+                  )}
+                </TabsContent>
+                <TabsContent value="created">
+                  {isNavigating ? (
+                    <ListClaimsSkeletonLayout
+                      totalItems={
+                        userCreatedListClaims?.pagination.totalEntries
+                      }
+                    />
+                  ) : (
+                    <Suspense
+                      fallback={
+                        <ListClaimsSkeletonLayout
+                          totalItems={
+                            userCreatedListClaims?.pagination.totalEntries
+                          }
+                        />
+                      }
+                    >
+                      <Await resolve={userCreatedListClaims}>
+                        {(resolvedUserCreatedListClaims) => (
+                          <ListClaimsList
+                            listClaims={
+                              resolvedUserCreatedListClaims.userCreatedListClaims
+                            }
+                            pagination={
+                              resolvedUserCreatedListClaims.pagination
+                            }
+                            enableSort={true}
+                            enableSearch={true}
+                          />
+                        )}
+                      </Await>
+                    </Suspense>
+                  )}
+                </TabsContent>
+              </>
             )}
           </Await>
         </Suspense>
       </Tabs>
+    </div>
+  )
+}
+
+function ListClaimsSkeletonLayout({ totalItems = 8 }: { totalItems?: number }) {
+  return (
+    <div className="flex flex-col w-full gap-5 my-5">
+      <div className="flex items-center justify-between mb-4">
+        <Skeleton className="w-64 h-10" />
+        <Skeleton className="w-44 h-10" />
+      </div>
+      <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 auto-rows-fr gap-7">
+        {[...Array(totalItems)].map((_, index) => (
+          <Skeleton key={index} className="w-full aspect-[3/2]" />
+        ))}
+      </div>
+      <Skeleton className="w-full h-10 mt-4" />
     </div>
   )
 }
@@ -159,23 +233,4 @@ function TabsSkeleton() {
       <Skeleton className="w-44 h-10" />
     </div>
   )
-}
-
-{
-  /* <TabsContent value="saved">
-          <ListClaimsList
-            listClaims={listClaims}
-            pagination={pagination}
-            enableSort={true}
-            enableSearch={true}
-          />
-        </TabsContent>
-        <TabsContent value="created">
-          <ListClaimsList
-            listClaims={listClaims}
-            pagination={pagination}
-            enableSort={true}
-            enableSearch={true}
-          />
-        </TabsContent> */
 }
