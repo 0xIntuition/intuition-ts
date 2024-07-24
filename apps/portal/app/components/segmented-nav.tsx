@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 import { SegmentedControl, SegmentedControlItem } from '@0xintuition/1ui'
 
-import { useLocation, useParams } from '@remix-run/react'
+import { useNavigate, useParams } from '@remix-run/react'
 
 export interface OptionType {
   value: string
@@ -16,36 +16,38 @@ interface SegmentedNavProps {
 }
 
 export const SegmentedNav = ({ options }: SegmentedNavProps) => {
+  const navigate = useNavigate()
   const params = useParams()
-  const location = useLocation()
-  const [selectedTab, setSelectedTab] = useState('')
+  const currentPath = window.location.pathname
+  const initialTab =
+    options.find((option) => currentPath.includes(option.value))?.value ||
+    options[0].value
+  const [selectedTab, setSelectedTab] = useState(initialTab)
 
-  useEffect(() => {
-    const currentTab =
-      options.find((option) => location.pathname.includes(option.value))
-        ?.value || options[0].value
-    setSelectedTab(currentTab)
-  }, [location.pathname, options])
-
-  const getFullPath = (option: OptionType) => {
-    const wallet = params.wallet || ''
-    const id = params.id || ''
+  const handleTabClick = (option: OptionType) => {
+    setSelectedTab(option.value)
+    const wallet = params.wallet || null
+    const id = params.id || null
+    let fullPath
 
     if (option.path) {
-      return option.path
-    }
-
-    if (option.basePath) {
-      const suffix = option.value !== 'overview' ? `/${option.value}` : ''
+      fullPath = option.path
+    } else if (option.basePath) {
       if (option.basePath.includes('/identity')) {
-        return `${option.basePath}${id ? `/${id}` : ''}${suffix}`
+        fullPath = `${option.basePath}${id ? `/${id}` : ''}${option.value !== 'overview' ? `/${option.value}` : ''}`
+      } else {
+        fullPath = `${option.basePath}${wallet ? `/${wallet}` : ''}${option.value !== 'overview' ? `/${option.value}` : ''}`
       }
-      return `${option.basePath}${wallet ? `/${wallet}` : ''}${suffix}`
+    } else {
+      const basePath = '/app/profile'
+      console.log('wallet', wallet)
+      fullPath =
+        wallet !== null
+          ? `${basePath}/${wallet}${option.value !== 'overview' ? `/${option.value}` : ''}`
+          : `${basePath}${option.value !== 'overview' ? `/${option.value}` : ''}`
     }
 
-    const basePath = '/app/profile'
-    const suffix = option.value !== 'overview' ? `/${option.value}` : ''
-    return wallet ? `${basePath}/${wallet}${suffix}` : `${basePath}${suffix}`
+    navigate(fullPath)
   }
 
   return (
@@ -54,8 +56,7 @@ export const SegmentedNav = ({ options }: SegmentedNavProps) => {
         <SegmentedControlItem
           key={index}
           isActive={selectedTab === option.value}
-          to={getFullPath(option)}
-          onClick={() => setSelectedTab(option.value)}
+          onClick={() => handleTabClick(option)}
         >
           {option.label}
         </SegmentedControlItem>
