@@ -1,5 +1,7 @@
 import * as React from 'react'
 
+import { Link } from '@remix-run/react'
+
 import { cn } from '../../styles'
 
 export interface SegmentedControlProps
@@ -10,7 +12,7 @@ const SegmentedControl = ({ className, ...props }: SegmentedControlProps) => {
     <ul
       role="tablist"
       className={cn(
-        'rounded-full flex border p-px border-border/30 primary-gradient-subtle',
+        'rounded-full flex border border-border/30 primary-gradient-subtle items-center',
         className,
       )}
       {...props}
@@ -19,26 +21,41 @@ const SegmentedControl = ({ className, ...props }: SegmentedControlProps) => {
 }
 
 export interface SegmentedControlItemProps
-  extends React.HTMLAttributes<HTMLButtonElement> {
+  extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
   isActive?: boolean
+  to?: string
+  href?: string
 }
 
 const SegmentedControlItem = ({
   className,
   isActive,
+  to,
+  href,
+  children,
   ...props
 }: SegmentedControlItemProps) => {
+  const commonProps = {
+    role: 'tab',
+    'aria-selected': isActive,
+    className: cn(
+      'rounded-full border border-transparent transition duration-300 ease-in-out hover:border-border/30 aria-selected:border-border/30 py-2 px-3 aria-selected:bg-background',
+      className,
+    ),
+    ...props,
+  }
+
   return (
     <li>
-      <button
-        role="tab"
-        aria-selected={isActive}
-        className={cn(
-          'rounded-full border border-transparent transition duration-300 ease-in-out hover:border-border/30 aria-selected:border-border/30 py-2 px-3 aria-selected:bg-background',
-          className,
-        )}
-        {...props}
-      />
+      {to ? (
+        <Link to={to} prefetch="intent" {...commonProps}>
+          {children}
+        </Link>
+      ) : (
+        <a href={href} {...commonProps}>
+          {children}
+        </a>
+      )}
     </li>
   )
 }
