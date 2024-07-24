@@ -5,6 +5,7 @@ import {
 } from '@0xintuition/api'
 
 import { ExploreSearch } from '@components/explore/ExploreSearch'
+import { ListClaimsList } from '@components/list/list-claims'
 import {
   I_PREDICATE_VAULT_ID_TESTNET,
   TAG_PREDICATE_VAULT_ID_TESTNET,
@@ -59,17 +60,16 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 export default function ExploreLists() {
   const { listClaims, pagination } = useLoaderData<typeof loader>()
-  logger('list claims', listClaims)
 
   return (
     <div className="m-8 flex flex-col items-center gap-4">
       <ExploreSearch variant="tag" />
       <ListClaimsList
-      lists={listClaims}
-      pagination={pagination}
-      enableSearch={false}
-      enableSort={true}
-      >
+        listClaims={listClaims}
+        // pagination={pagination}
+        // enableSearch={false}
+        // enableSort={true}
+      />
     </div>
   )
 }
