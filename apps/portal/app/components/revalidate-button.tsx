@@ -15,7 +15,7 @@ export function RevalidateButton({ className }: RevalidateButtonProps) {
       size={ButtonSize.md}
       onClick={() => revalidator.revalidate()}
       disabled={revalidator.state === 'loading'}
-      className={cn(className)}
+      className={className}
     >
       {revalidator.state === 'loading' ? 'Retrying...' : 'Retry'}
     </Button>
