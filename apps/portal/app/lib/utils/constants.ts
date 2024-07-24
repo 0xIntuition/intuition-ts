@@ -164,4 +164,7 @@ export const activityRouteOptions = [
 export const LIST_OBJECT_VAULT_ID_TESTNET = 175 // used in testnet list claim as object
 export const TAG_PREDICATE_VAULT_ID_TESTNET = 176 // used in testnet tag claim as predicate
 export const I_PREDICATE_VAULT_ID_TESTNET = 19
-export const AM_WATCHING_VAULT_ID_TESTNET = 194
+export const AM_WATCHING_VAULT_ID_TESTNET = 264
+
+export const TAG_PREDICATE_ID_TESTNET = '8af2e266-ffdd-4a46-bcf8-69bd27e995d4'
+export const AM_WATCHING_ID_TESTNET = 'e2237e27-cc80-4dec-abf8-ae1755c101f0'

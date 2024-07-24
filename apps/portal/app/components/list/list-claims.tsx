@@ -4,6 +4,7 @@ import { ListGrid } from '@0xintuition/1ui'
 import { ClaimPresenter, ClaimSortColumn } from '@0xintuition/api'
 
 import { PaginationComponent } from '@components/pagination-component'
+import { Search } from '@components/search'
 import { Sort } from '@components/sort'
 import { useSearchAndSortParamsHandler } from '@lib/hooks/useSearchAndSortParams'
 import logger from '@lib/utils/logger'
@@ -16,11 +17,13 @@ export function ListClaimsList({
   listClaims,
   pagination,
   paramPrefix,
+  enableSearch = false,
   enableSort = false,
 }: {
   listClaims: ClaimPresenter[]
   pagination: PaginationType
   paramPrefix?: string
+  enableSearch?: boolean
   enableSort?: boolean
 }) {
   const options: SortOption<ClaimSortColumn>[] = [
@@ -41,14 +44,17 @@ export function ListClaimsList({
   }))
 
   const listContainerRef = useRef<HTMLDivElement>(null)
-  const { handleSortChange, onPageChange, onLimitChange } =
+  const { handleSearchChange, handleSortChange, onPageChange, onLimitChange } =
     useSearchAndSortParamsHandler(paramPrefix)
 
   return (
     <>
       <div className="flex flex-col w-full">
         <div className="flex flex-col w-full gap-6" ref={listContainerRef}>
-          <div className="flex flex-row w-full mt-6 justify-end">
+          <div
+            className={`flex flex-row w-full mt-6 ${enableSearch ? 'justify-between' : 'justify-end'}`}
+          >
+            {enableSearch && <Search handleSearchChange={handleSearchChange} />}
             {enableSort && options && (
               <Sort options={options} handleSortChange={handleSortChange} />
             )}
