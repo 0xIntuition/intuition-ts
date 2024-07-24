@@ -12,6 +12,7 @@ import {
 import PrivyLogout from '@client/privy-logout'
 import EditProfileModal from '@components/edit-profile/modal'
 import SubmitButton from '@components/submit-button'
+import { MULTIVAULT_CONTRACT_ADDRESS, NO_WALLET_ERROR } from '@constants'
 import { multivaultAbi } from '@lib/abis/multivault'
 import { useCreateAtom } from '@lib/hooks/useCreateAtom'
 import {
@@ -20,8 +21,6 @@ import {
   useTransactionState,
 } from '@lib/hooks/useTransactionReducer'
 import { editProfileModalAtom } from '@lib/state/store'
-import { MULTIVAULT_CONTRACT_ADDRESS } from '@lib/utils/constants'
-import { NO_WALLET_ERROR } from '@lib/utils/errors'
 import logger from '@lib/utils/logger'
 import { fetchWrapper, invariant, sliceString } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'

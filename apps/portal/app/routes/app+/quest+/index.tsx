@@ -9,13 +9,14 @@ import {
 import { ProfileCardHeader } from '@0xintuition/1ui/src/components/ProfileCard/components'
 import { GetUserByWalletResponse, UsersService } from '@0xintuition/api'
 
+import questPlaceholder from '@assets/quest-placeholder.png'
 import { QuestSetCard } from '@components/quest/quest-set-card'
 import { QuestSetProgressCard } from '@components/quest/quest-set-progress-card'
 import {
   COMING_SOON_QUEST_SET,
   QUEST_LOG_DESCRIPTION,
   STANDARD_QUEST_SET,
-} from '@lib/utils/constants/quest'
+} from '@constants'
 import { fetchWrapper, invariant } from '@lib/utils/misc'
 import { defer, LoaderFunctionArgs } from '@remix-run/node'
 import { Await, Link, useLoaderData } from '@remix-run/react'

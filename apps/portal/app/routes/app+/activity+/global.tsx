@@ -5,8 +5,8 @@ import {
 } from '@0xintuition/api'
 
 import { ActivityList } from '@components/list/activity'
+import { NO_WALLET_ERROR } from '@constants'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
-import { NO_WALLET_ERROR } from '@lib/utils/errors'
 import logger from '@lib/utils/logger'
 import { calculateTotalPages, fetchWrapper, invariant } from '@lib/utils/misc'
 import { getStandardPageParams } from '@lib/utils/params'
