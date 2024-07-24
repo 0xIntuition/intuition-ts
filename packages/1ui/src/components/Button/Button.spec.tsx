@@ -182,7 +182,7 @@ describe('Button', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <button
-          class="flex justify-center items-center font-medium border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted bg-primary text-primary-foreground border-primary hover:bg-primary/80 rounded-full shadow-md-subtle px-4 py-2 gap-3 text-base"
+          class="flex justify-center items-center font-medium border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted bg-primary text-primary-foreground border-primary hover:bg-primary/80 rounded-full shadow-md-subtle px-4 py-2 gap-2 text-base"
         >
           Text
         </button>
@@ -194,7 +194,7 @@ describe('Button', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <button
-          class="flex justify-center items-center font-medium border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted bg-primary text-primary-foreground border-primary hover:bg-primary/80 rounded-full shadow-md-subtle px-5 py-2.5 gap-5 text-lg"
+          class="flex justify-center items-center font-medium border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted bg-primary text-primary-foreground border-primary hover:bg-primary/80 rounded-full shadow-md-subtle px-5 py-2.5 gap-4 text-lg"
         >
           Text
         </button>

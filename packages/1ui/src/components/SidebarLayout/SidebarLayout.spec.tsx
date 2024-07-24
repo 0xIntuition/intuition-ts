@@ -97,7 +97,7 @@ describe('SidebarLayout', () => {
                 class="flex w-full flex-col gap-2 p-2"
               >
                 <button
-                  class="flex items-center font-medium border disabled:bg-muted disabled:border-muted bg-transparent text-secondary-foreground/70 border-transparent rounded-lg hover:text-secondary-foreground hover:border-border/20 aria-selected:bg-primary/10 aria-selected:text-secondary-foreground/80 disabled:text-muted-foreground px-4 py-2 gap-3 text-base w-full justify-start"
+                  class="flex items-center font-medium border disabled:bg-muted disabled:border-muted bg-transparent text-secondary-foreground/70 border-transparent rounded-lg hover:text-secondary-foreground hover:border-border/20 aria-selected:bg-primary/10 aria-selected:text-secondary-foreground/80 disabled:text-muted-foreground px-4 py-2 gap-2 text-base w-full justify-start truncate"
                 >
                   <svg
                     class="h-6 w-6"
@@ -109,7 +109,7 @@ describe('SidebarLayout', () => {
                   Explore This
                 </button>
                 <button
-                  class="flex items-center font-medium border disabled:bg-muted disabled:border-muted bg-transparent text-secondary-foreground/70 border-transparent rounded-lg hover:text-secondary-foreground hover:border-border/20 aria-selected:bg-primary/10 aria-selected:text-secondary-foreground/80 disabled:text-muted-foreground px-4 py-2 gap-3 text-base w-full justify-start"
+                  class="flex items-center font-medium border disabled:bg-muted disabled:border-muted bg-transparent text-secondary-foreground/70 border-transparent rounded-lg hover:text-secondary-foreground hover:border-border/20 aria-selected:bg-primary/10 aria-selected:text-secondary-foreground/80 disabled:text-muted-foreground px-4 py-2 gap-2 text-base w-full justify-start truncate"
                 >
                   <svg
                     class="h-6 w-6"
@@ -122,10 +122,10 @@ describe('SidebarLayout', () => {
                 </button>
               </div>
               <div
-                class="flex h-full w-full flex-col justify-end gap-2 p-2"
+                class="flex h-full w-full flex-col justify-end gap-2 p-2 mb-4"
               >
                 <button
-                  class="flex items-center font-medium border disabled:bg-muted disabled:border-muted bg-transparent text-secondary-foreground/70 border-transparent rounded-lg hover:text-secondary-foreground hover:border-border/20 aria-selected:bg-primary/10 aria-selected:text-secondary-foreground/80 disabled:text-muted-foreground px-4 py-2 gap-3 text-base w-full justify-start"
+                  class="flex items-center font-medium border disabled:bg-muted disabled:border-muted bg-transparent text-secondary-foreground/70 border-transparent rounded-lg hover:text-secondary-foreground hover:border-border/20 aria-selected:bg-primary/10 aria-selected:text-secondary-foreground/80 disabled:text-muted-foreground px-4 py-2 gap-2 text-base w-full justify-start truncate"
                 >
                   <svg
                     class="h-6 w-6"
@@ -137,7 +137,7 @@ describe('SidebarLayout', () => {
                   Settings
                 </button>
                 <div
-                  class="flex items-center font-medium border disabled:bg-muted disabled:border-muted bg-transparent text-secondary-foreground/70 border-transparent rounded-lg hover:text-secondary-foreground hover:border-border/20 aria-selected:bg-primary/10 aria-selected:text-secondary-foreground/80 disabled:text-muted-foreground px-4 py-2 gap-3 text-base w-full justify-start"
+                  class="flex items-center font-medium border disabled:bg-muted disabled:border-muted bg-transparent text-secondary-foreground/70 border-transparent rounded-lg hover:text-secondary-foreground hover:border-border/20 aria-selected:bg-primary/10 aria-selected:text-secondary-foreground/80 disabled:text-muted-foreground px-4 py-2 gap-2 text-base w-full justify-start"
                 >
                   <span
                     class="relative flex shrink-0 overflow-hidden aspect-square rounded-full bg-muted h-6 w-6"
@@ -186,7 +186,7 @@ describe('SidebarLayout', () => {
             style="flex-basis: 0px; flex-grow: 70; flex-shrink: 1; overflow: hidden;"
           >
             <div
-              class="flex h-full items-center justify-center p-3"
+              class="flex h-full items-center justify-center py-3 px-1"
             >
               Content goes here.
             </div>
