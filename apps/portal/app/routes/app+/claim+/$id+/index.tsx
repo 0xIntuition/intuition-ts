@@ -1,9 +1,10 @@
 import { Suspense, useEffect, useState } from 'react'
 
-import { Skeleton, Tabs, TabsList, TabsTrigger, Text } from '@0xintuition/1ui'
+import { Tabs, TabsList, TabsTrigger, Text } from '@0xintuition/1ui'
 import { ClaimsService, VaultType } from '@0xintuition/api'
 
 import { PositionsOnClaim } from '@components/list/positions-on-claim'
+import { PaginatedListSkeleton, TabsSkeleton } from '@components/skeleton'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { getPositionsOnClaim } from '@lib/services/positions'
 import { NO_PARAM_ID_ERROR, NO_WALLET_ERROR } from '@lib/utils/errors'
@@ -75,7 +76,7 @@ export default function ClaimOverview() {
         </Text>
       </div>
       <Tabs defaultValue="all">
-        <Suspense fallback={<TabsSkeleton />}>
+        <Suspense fallback={<TabsSkeleton numOfTabs={3} />}>
           <Await resolve={claim}>
             {(resolvedClaim) => (
               <TabsList>
@@ -111,9 +112,9 @@ export default function ClaimOverview() {
           </Await>
         </Suspense>
       </Tabs>
-      <Suspense fallback={<PositionsSkeletonLayout />}>
+      <Suspense fallback={<PaginatedListSkeleton />}>
         {isNavigating ? (
-          <PositionsSkeletonLayout />
+          <PaginatedListSkeleton />
         ) : (
           <Await resolve={positionsData}>
             {(resolvedPositionsData) => (
@@ -125,29 +126,6 @@ export default function ClaimOverview() {
           </Await>
         )}
       </Suspense>
-    </div>
-  )
-}
-
-function PositionsSkeletonLayout() {
-  return (
-    <div className="flex flex-col w-full gap-5 my-5">
-      <div className="flex items-center justify-between">
-        <Skeleton className="w-44 h-10" />
-        <Skeleton className="w-44 h-10" />
-      </div>
-      <Skeleton className="w-full h-56" />
-      <Skeleton className="w-full h-10" />
-    </div>
-  )
-}
-
-function TabsSkeleton() {
-  return (
-    <div className="flex items-center gap-2.5 mb-5">
-      <Skeleton className="w-44 h-10" />
-      <Skeleton className="w-44 h-10" />
-      <Skeleton className="w-44 h-10" />
     </div>
   )
 }
