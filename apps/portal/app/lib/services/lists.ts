@@ -25,6 +25,7 @@ export async function getUserCreatedLists({
     paramPrefix: 'claims',
     defaultSortByValue: ClaimSortColumn.ASSETS_SUM,
   })
+  const displayName = searchParams.get('search') || null
 
   const userCreatedListClaims = await fetchWrapper({
     method: ClaimsService.searchClaims,
@@ -35,6 +36,7 @@ export async function getUserCreatedLists({
       direction,
       creator: userWallet,
       predicate: TAG_PREDICATE_ID_TESTNET,
+      displayName,
     },
   })
 
