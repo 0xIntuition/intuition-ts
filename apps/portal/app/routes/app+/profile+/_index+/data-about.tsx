@@ -69,7 +69,10 @@ export default function ProfileDataAbout() {
           </Text>
         </div>
         <Suspense fallback={<DataHeaderSkeleton />}>
-          <Await resolve={Promise.all([claims, claimsSummary])}>
+          <Await
+            resolve={Promise.all([claims, claimsSummary])}
+            errorElement={<></>}
+          >
             {([resolvedClaims, resolvedClaimsSummary]) => (
               <DataAboutHeader
                 variant="claims"
@@ -107,7 +110,7 @@ export default function ProfileDataAbout() {
           </Text>
         </div>
         <Suspense fallback={<DataHeaderSkeleton />}>
-          <Await resolve={positions}>
+          <Await resolve={positions} errorElement={<></>}>
             {(resolvedPositions) => (
               <DataAboutHeader
                 variant="positions"

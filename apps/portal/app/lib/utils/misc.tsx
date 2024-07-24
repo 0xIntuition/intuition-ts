@@ -314,12 +314,12 @@ export const DataErrorDisplay = ({
   children,
 }: DataErrorDisplayProps) => {
   return (
-    <div className="flex flex-col justify-center items-center p-6 theme-destructive rounded-lg min-h-52">
+    <div className="flex flex-col justify-center items-center p-6 theme-border border-destructive/50 rounded-lg min-h-52 bg-destructive/10">
       <Icon
         name={IconName.triangleExclamation}
         className="w-12 h-12 mb-4 text-destructive"
       />
-      <Text variant="caption" className="text-muted-foreground mb-5">
+      <Text variant="caption" className="text-foreground mb-5">
         {message}
       </Text>
       {children}

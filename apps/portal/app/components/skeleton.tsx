@@ -2,7 +2,7 @@ import { Skeleton } from '@0xintuition/1ui'
 
 export function DataHeaderSkeleton() {
   return (
-    <div className="flex flex-col w-full rounded-xl border border-neutral-300/20">
+    <div className="flex flex-col w-full">
       <Skeleton className="w-full h-36" />
     </div>
   )
