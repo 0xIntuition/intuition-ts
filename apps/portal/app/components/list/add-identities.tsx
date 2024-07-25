@@ -57,6 +57,7 @@ export function AddIdentities({
         (identityToAdd) => identityToAdd.vault_id === identity.vault_id,
       ),
   )
+
   const tagFetcher = useFetcher<TagLoaderData>()
 
   const handleIdentitySelect = (identity: IdentityPresenter) => {

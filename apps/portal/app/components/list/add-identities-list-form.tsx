@@ -6,6 +6,7 @@ import {
   DialogHeader,
   DialogTitle,
   IdentityTag,
+  TransactionStatusType,
   Trunctacular,
 } from '@0xintuition/1ui'
 import { IdentityPresenter } from '@0xintuition/api'
@@ -16,11 +17,7 @@ import {
   transactionReducer,
   useTransactionState,
 } from '@lib/hooks/useTransactionReducer'
-import {
-  TransactionActionType,
-  TransactionStateType,
-  TransactionStatusType,
-} from 'types/transaction'
+import { TransactionActionType, TransactionStateType } from 'types/transaction'
 
 import { AddIdentities } from './add-identities'
 import AddIdentitiesReview from './add-identities-review'
@@ -35,7 +32,7 @@ interface AddIdentitiesListFormProps {
 export function AddIdentitiesListForm({
   identity,
   // claimId,
-  // onClose,
+  onClose,
 }: AddIdentitiesListFormProps) {
   const { state, dispatch } = useTransactionState<
     TransactionStateType,
@@ -49,6 +46,7 @@ export function AddIdentitiesListForm({
     'transaction-pending',
     'transaction-confirmed',
     'complete',
+    'hash',
     'error',
   ].includes(state.status)
 
@@ -145,6 +143,19 @@ export function AddIdentitiesListForm({
             status={state.status as TransactionStatusType}
             txHash={state.txHash}
             type="list"
+            successButton={
+              state.status === 'complete' && (
+                <Button
+                  type="button"
+                  variant="primary"
+                  onClick={() => {
+                    onClose()
+                  }}
+                >
+                  Close
+                </Button>
+              )
+            }
           />
         </div>
       )}
