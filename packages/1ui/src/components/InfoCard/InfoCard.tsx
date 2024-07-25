@@ -1,7 +1,7 @@
 import * as React from 'react'
 
 import { cn } from 'styles'
-import { IdentityType } from 'types'
+import { Identity, IdentityType } from 'types'
 
 import { IdentityTag, Text, TextVariant } from '..'
 
@@ -13,7 +13,7 @@ export interface InfoCardProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const InfoCard = ({
-  variant,
+  variant = Identity.user,
   username,
   avatarImgSrc,
   timestamp,

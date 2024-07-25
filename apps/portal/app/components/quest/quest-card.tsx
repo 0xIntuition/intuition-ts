@@ -1,5 +1,3 @@
-import { MouseEventHandler } from 'react'
-
 import { cn, Text } from '@0xintuition/1ui'
 import { QuestStatus } from '@0xintuition/api'
 

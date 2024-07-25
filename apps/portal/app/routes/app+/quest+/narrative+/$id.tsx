@@ -7,7 +7,6 @@ import {
   Text,
 } from '@0xintuition/1ui'
 import {
-  IdentitiesService,
   QuestPresenter,
   QuestSortColumn,
   QuestsService,
@@ -95,7 +94,6 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 export async function action({ request }: ActionFunctionArgs) {
   const user = await requireUser(request)
   invariant(user, 'Unauthorized')
-  console.log(user)
 
   const formData = await request.formData()
   const questId = String(formData.get('questId'))
@@ -105,27 +103,11 @@ export async function action({ request }: ActionFunctionArgs) {
   const questStatus = formData.get('questStatus') as QuestStatus
   invariant(questStatus, 'questStatus is required')
 
-  let userIdentity
-  try {
-    userIdentity = await fetchWrapper({
-      method: IdentitiesService.getIdentityById,
-      args: { id: user.wallet?.address! },
-    })
-  } catch (error) {
-    logger('Error fetching userIdentity', error)
-    return redirect('/create')
-  }
-
-  if (!userIdentity) {
-    return redirect('/create')
-  }
-
   // start quest
   if (questStatus === QuestStatus.NOT_STARTED) {
     const { status } = await fetchWrapper({
       method: UserQuestsService.startQuest,
       args: {
-        userId: userIdentity.creator_id!,
         questId,
       },
     })
@@ -143,7 +125,7 @@ export default function Quests() {
     questToUserQuestMap,
   } = useLoaderData<typeof loader>()
   const submit = useSubmit()
-  console.log(JSON.stringify(questToUserQuestMap, null, 2))
+  logger('questToUserQuestMap', JSON.stringify(questToUserQuestMap, null, 2)) // TODO: Remove after testing all quests
 
   function isQuestAvailable(quest: QuestPresenter) {
     if (!quest.depends_on_quest) {
@@ -169,7 +151,6 @@ export default function Quests() {
     formData.append('questId', questId)
     formData.append('redirectTo', redirectTo)
     formData.append('questStatus', status)
-    console.log('submit')
     submit(formData, { method: 'post' })
   }
 
@@ -225,7 +206,6 @@ export default function Quests() {
                 disabled={!available}
                 handleClick={(e) => {
                   e.preventDefault()
-                  console.log('clicked', quest)
                   handleClick({
                     questId: quest.id,
                     redirectTo: `${quest.narrative === 'Standard' ? '1' : '2'}-${
@@ -242,3 +222,19 @@ export default function Quests() {
     </div>
   )
 }
+
+// if (userQuest && userQuest.quest_completion_object_id) {
+//   try {
+//     const updatedUserQuest = await fetchWrapper({
+//       method: UserQuestsService.completeQuest,
+//       args: {
+//         questId: id,
+//       },
+//     })
+//     if (updatedUserQuest.status === QuestStatus.COMPLETED) {
+//       return json({ success: true, updatedUserQuest })
+//     }
+//   } catch (error) {
+//     logger('Error completing quest', error)
+//     return json({ success: false, error: 'Error completing quest' })
+//   }

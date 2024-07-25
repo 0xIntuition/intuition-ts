@@ -90,7 +90,7 @@ export function IdentityForm({
         onSuccess?.(transactionResponseData)
       }
     }
-  }, [state.status, onSuccess, transactionResponseData])
+  }, [state.status, transactionResponseData])
 
   return (
     <>

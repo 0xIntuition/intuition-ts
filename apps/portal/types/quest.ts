@@ -5,3 +5,11 @@ export type QuestSet = {
   summary: string
   navigatePath: string
 }
+
+export const MDXContentVariant = {
+  LORE: 'lore',
+  DEFAULT: 'default',
+}
+
+export type MDXContentVariantType =
+  (typeof MDXContentVariant)[keyof typeof MDXContentVariant]
