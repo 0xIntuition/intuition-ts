@@ -13,10 +13,15 @@ import {
 } from '@0xintuition/1ui'
 import { IdentitiesService, IdentityPresenter } from '@0xintuition/api'
 
+import SaveListModal from '@components/list/save-list-modal'
 import { NestedLayout } from '@components/nested-layout'
 import StakeModal from '@components/stake/stake-modal'
 import TagsModal from '@components/tags/tags-modal'
-import { stakeModalAtom, tagsModalAtom } from '@lib/state/store'
+import {
+  saveListModalAtom,
+  stakeModalAtom,
+  tagsModalAtom,
+} from '@lib/state/store'
 import logger from '@lib/utils/logger'
 import {
   calculatePercentageOfTvl,
@@ -99,6 +104,8 @@ export default function IdentityDetails() {
   const { user_assets, assets_sum } = vaultDetails ? vaultDetails : identity
   const [stakeModalActive, setStakeModalActive] = useAtom(stakeModalAtom)
   const [tagsModalActive, setTagsModalActive] = useAtom(tagsModalAtom)
+  const [saveListModalActive, setSaveListModalActive] =
+    useAtom(saveListModalAtom)
 
   return (
     <NestedLayout outlet={Outlet} options={identityRouteOptions}>
@@ -113,11 +120,14 @@ export default function IdentityDetails() {
         <Tags>
           {identity?.tags && identity?.tags.length > 0 && (
             <TagsContent numberOfTags={identity?.tag_count ?? 0}>
-              {identity?.tags?.map((tag, index) => (
+              {identity?.tags?.map((tag) => (
                 <TagWithValue
-                  key={index}
+                  key={tag.identity_id}
                   label={tag.display_name}
                   value={tag.num_positions}
+                  onStake={() => {
+                    setSaveListModalActive({ isOpen: true, id: tag.vault_id })
+                  }}
                 />
               ))}
             </TagsContent>
@@ -191,6 +201,17 @@ export default function IdentityDetails() {
         onClose={() =>
           setTagsModalActive({
             ...tagsModalActive,
+            isOpen: false,
+          })
+        }
+      />
+      <SaveListModal
+        identity={identity}
+        userWallet={userWallet}
+        open={saveListModalActive.isOpen}
+        onClose={() =>
+          setSaveListModalActive({
+            ...saveListModalActive,
             isOpen: false,
           })
         }

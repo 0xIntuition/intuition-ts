@@ -60,3 +60,11 @@ export const addIdentitiesListModalAtom = atom<{
   isOpen: false,
   id: null,
 })
+
+export const saveListModalAtom = atom<{
+  isOpen: boolean
+  id: string | null
+}>({
+  isOpen: false,
+  id: null,
+})
