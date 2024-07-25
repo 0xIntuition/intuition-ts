@@ -5,6 +5,7 @@ import {
   DialogHeader,
   DialogTitle,
   Icon,
+  IconName,
   Input,
   Label,
   Text,
@@ -56,10 +57,15 @@ import { ImageChooser } from './image-chooser'
 import { TransactionState } from './transaction-state'
 
 interface IdentityFormProps {
-  onSuccess?: () => void
+  onSuccess?: (identity: IdentityPresenter) => void
   onClose: () => void
+  successAction?: 'view' | 'close'
 }
-export function IdentityForm({ onClose }: IdentityFormProps) {
+export function IdentityForm({
+  onClose,
+  onSuccess,
+  successAction = 'view',
+}: IdentityFormProps) {
   const { state, dispatch } = useTransactionState<
     IdentityTransactionStateType,
     IdentityTransactionActionType
@@ -78,13 +84,25 @@ export function IdentityForm({ onClose }: IdentityFormProps) {
     'error',
   ].includes(state.status)
 
+  useEffect(() => {
+    if (state.status === 'complete') {
+      if (transactionResponseData) {
+        onSuccess?.(transactionResponseData)
+      }
+    }
+  }, [state.status, onSuccess, transactionResponseData])
+
   return (
     <>
       <>
         {!isTransactionStarted && (
-          <DialogHeader className="py-4">
+          <DialogHeader className="pb-1">
             <DialogTitle>
-              <Text variant="headline" className="text-foreground-secondary">
+              <Text
+                variant="headline"
+                className="text-foreground flex items-center gap-2"
+              >
+                <Icon name={IconName.fingerprint} className="w-6 h-6" />
                 Create Identity
               </Text>
             </DialogTitle>
@@ -100,6 +118,7 @@ export function IdentityForm({ onClose }: IdentityFormProps) {
           onClose={onClose}
           setTransactionResponseData={setTransactionResponseData}
           transactionResponseData={transactionResponseData}
+          successAction={successAction}
         />
       </>
     </>
@@ -114,6 +133,7 @@ interface CreateIdentityFormProps {
   >
   transactionResponseData: IdentityPresenter | null
   onClose: () => void
+  successAction: 'view' | 'close'
 }
 export interface OffChainIdentityFetcherData {
   success: 'success' | 'error'
@@ -127,6 +147,7 @@ function CreateIdentityForm({
   setTransactionResponseData,
   transactionResponseData,
   onClose,
+  successAction,
 }: CreateIdentityFormProps) {
   const { offChainFetcher, lastOffChainSubmission } = useOffChainFetcher()
   const navigate = useNavigate()
@@ -439,11 +460,28 @@ function CreateIdentityForm({
       action="/actions/create-identity"
     >
       {!isTransactionStarted ? (
-        <div className="w-full py-1 flex-col justify-start items-start inline-flex gap-9">
+        <div className="w-full flex-col justify-start items-start inline-flex gap-7">
+          <div className="flex flex-col w-full gap-1.5">
+            <Text variant="caption" className="text-foreground/70">
+              Name <span className="text-destructive">*</span>
+            </Text>
+            <Label htmlFor={fields.display_name.id} hidden>
+              Name
+            </Label>
+            <Input
+              {...getInputProps(fields.display_name, { type: 'text' })}
+              placeholder="Enter a display name"
+              onChange={() => setFormTouched(true)}
+            />
+            <ErrorList
+              id={fields.display_name.errorId}
+              errors={fields.display_name.errors}
+            />
+          </div>
           <div className="flex flex-col w-full gap-1.5">
             <div className="self-stretch flex-col justify-start items-start flex">
-              <Text variant="caption" className="text-secondary-foreground/90">
-                Identity Display Picture (Optional)
+              <Text variant="caption" className="text-foreground/70">
+                Image <span className="text-foreground/50">(Optional)</span>
               </Text>
             </div>
             <div className="self-stretch h-[100px] px-9 py-2.5 border border-input/30 bg-primary/10 rounded-md justify-between items-center inline-flex">
@@ -489,41 +527,25 @@ function CreateIdentityForm({
               errors={fields.image_url.errors}
             />
           </div>
+
           <div className="flex flex-col w-full gap-1.5">
-            <Text variant="caption" className="text-secondary-foreground/90">
-              Identity Name
-            </Text>
-            <Label htmlFor={fields.display_name.id} hidden>
-              Identity Name
-            </Label>
-            <Input
-              {...getInputProps(fields.display_name, { type: 'text' })}
-              placeholder="Enter a display name"
-              onChange={() => setFormTouched(true)}
-            />
-            <ErrorList
-              id={fields.display_name.errorId}
-              errors={fields.display_name.errors}
-            />
-          </div>
-          <div className="flex flex-col w-full gap-1.5">
-            <Text variant="caption" className="text-secondary-foreground/90">
-              Identity Description (Optional)
+            <Text variant="caption" className="text-foreground/70">
+              Description <span className="text-foreground/50">(Optional)</span>
             </Text>
             <Label htmlFor={fields.description.id} hidden>
-              Identity Description (Optional)
+              Description <span className="text-foreground/50">(Optional)</span>
             </Label>
             <Textarea
               {...getInputProps(fields.description, { type: 'text' })}
-              placeholder="Tell us about yourself!"
+              placeholder="Enter a description"
             />
           </div>
           <div className="flex flex-col w-full gap-1.5">
-            <Text variant="caption" className="text-secondary-foreground/90">
-              Add Link (Optional)
+            <Text variant="caption" className="text-foreground/70">
+              Add Link <span className="text-foreground/50">(Optional)</span>
             </Text>
             <Label htmlFor={fields.external_reference.id} hidden>
-              Add Link (Optional)
+              Add Link <span className="text-foreground/50">(Optional)</span>
             </Label>
             <Input
               {...getInputProps(fields.external_reference, { type: 'text' })}
@@ -536,8 +558,9 @@ function CreateIdentityForm({
             />
           </div>
           <div className="flex flex-col w-full gap-1.5">
-            <Text variant="caption" className="text-secondary-foreground/90">
-              Initial Deposit (Optional)
+            <Text variant="caption" className="text-foreground/70">
+              Initial Deposit{' '}
+              <span className="text-foreground/50">(Optional)</span>
             </Text>
             <Label htmlFor={fields.initial_deposit.id} hidden>
               Initial Deposit (Optional)
@@ -556,6 +579,7 @@ function CreateIdentityForm({
             form={form.id}
             type="submit"
             variant="primary"
+            size="lg"
             disabled={loading || !formTouched}
             className="mx-auto"
           >
@@ -573,14 +597,17 @@ function CreateIdentityForm({
                 <Button
                   type="button"
                   variant="primary"
+                  size="lg"
                   onClick={() => {
-                    navigate(
-                      `/app/identity/${transactionResponseData.identity_id}`,
-                    )
+                    if (successAction === 'view') {
+                      navigate(
+                        `/app/identity/${transactionResponseData.identity_id}`,
+                      )
+                    }
                     onClose()
                   }}
                 >
-                  View identity
+                  {successAction === 'view' ? 'View identity' : 'Close'}
                 </Button>
               )
             }
