@@ -15,13 +15,13 @@ describe('SegmentedControl', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <ul
-          class="rounded-full flex border p-px border-border/30 primary-gradient-subtle"
+          class="rounded-full flex items-center gap-1 border p-px border-border/20 primary-gradient-subtle"
           role="tablist"
         >
           <li>
             <button
               aria-selected="true"
-              class="rounded-full border border-transparent transition duration-300 ease-in-out hover:border-border/30 aria-selected:border-border/30 py-2 px-3 aria-selected:bg-background"
+              class="rounded-full border border-transparent transition duration-300 ease-in-out hover:border-border/30 aria-selected:border-border/30 py-1 px-3 aria-selected:bg-background text-base"
               role="tab"
             >
               One
@@ -29,7 +29,7 @@ describe('SegmentedControl', () => {
           </li>
           <li>
             <button
-              class="rounded-full border border-transparent transition duration-300 ease-in-out hover:border-border/30 aria-selected:border-border/30 py-2 px-3 aria-selected:bg-background"
+              class="rounded-full border border-transparent transition duration-300 ease-in-out hover:border-border/30 aria-selected:border-border/30 py-1 px-3 aria-selected:bg-background text-base"
               role="tab"
             >
               Two
