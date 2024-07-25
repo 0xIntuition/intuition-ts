@@ -27,14 +27,27 @@ import logger from '@lib/utils/logger'
 // import { useFetcher } from '@remix-run/react'
 // import { TagLoaderData } from '@routes/resources+/tag'
 import { useAtom } from 'jotai'
+import { TransactionActionType } from 'types/transaction'
 
 // import { TransactionActionType } from 'types/transaction'
 
-export function AddIdentities() {
-  const [identitiesToAdd, setIdentitiesToAdd] = useState<IdentityPresenter[]>(
-    [],
-  )
+interface AddIdentitiesProps {
+  selectedIdentities: IdentityPresenter[]
+  // existingTagIds: string[]
+  onAddIdentity: (newTag: IdentityPresenter) => void
+  onRemoveIdentity: (index: number) => void
+  maxIdentitiesToAdd: number
+  // subjectVaultId: string
+  // invalidTags: string[]
+  // setInvalidTags: React.Dispatch<React.SetStateAction<string[]>>
+}
 
+export function AddIdentities({
+  selectedIdentities,
+  onAddIdentity,
+  onRemoveIdentity,
+  maxIdentitiesToAdd,
+}: AddIdentitiesProps) {
   const [, setCreateIdentityModalActive] = useAtom(createIdentityModalAtom)
 
   const { setSearchQuery, identities, handleInput } = useIdentityServerSearch()
@@ -42,21 +55,10 @@ export function AddIdentities() {
 
   const filteredIdentities = identities.filter(
     (identity) =>
-      !identitiesToAdd.some(
+      !selectedIdentities.some(
         (identityToAdd) => identityToAdd.vault_id === identity.vault_id,
       ),
   )
-
-  const MAX_IDENTITIES_TO_ADD = 5
-  const addIdentity = (selectedIdentity: IdentityPresenter) => {
-    if (identitiesToAdd.length < MAX_IDENTITIES_TO_ADD) {
-      setIdentitiesToAdd([...identitiesToAdd, selectedIdentity])
-    }
-  }
-
-  const removeIdentity = (index: number) => {
-    setIdentitiesToAdd(identitiesToAdd.filter((_, i) => i !== index))
-  }
 
   return (
     <div className="flex flex-col min-h-36">
@@ -70,7 +72,7 @@ export function AddIdentities() {
       </div>
       <Separator />
       <div className="mt-4 space-y-2">
-        {identitiesToAdd.map((identity, index) => (
+        {selectedIdentities.map((identity, index) => (
           <div
             className="flex items-center justify-between gap-2.5"
             key={identity.id}
@@ -90,21 +92,21 @@ export function AddIdentities() {
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => removeIdentity(index)}
+              onClick={() => onRemoveIdentity(index)}
               className="border-none"
             >
               <Icon name="cross-large" className="h-4 w-4" />
             </Button>
           </div>
         ))}
-        {identitiesToAdd.length < MAX_IDENTITIES_TO_ADD && (
+        {selectedIdentities.length < maxIdentitiesToAdd && (
           <div className="flex flex-row items-center gap-3">
             <Text
               variant="body"
               weight="medium"
               className="text-secondary-foreground/30 w-2"
             >
-              {identitiesToAdd.length + 1}.
+              {selectedIdentities.length + 1}.
             </Text>
             <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
               <PopoverTrigger asChild>
@@ -120,7 +122,7 @@ export function AddIdentities() {
                   }
                   identities={filteredIdentities}
                   // existingIdentityIds={identities.map((id) => id.vault_id)}
-                  onIdentitySelect={addIdentity}
+                  onIdentitySelect={onAddIdentity}
                   onValueChange={setSearchQuery}
                   onInput={handleInput}
                   shouldFilter={false}

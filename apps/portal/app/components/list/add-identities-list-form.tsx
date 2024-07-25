@@ -1,3 +1,5 @@
+import { useState } from 'react'
+
 import {
   DialogHeader,
   DialogTitle,
@@ -41,6 +43,22 @@ export function AddIdentitiesListForm({
     'error',
   ].includes(state.status)
 
+  const [selectedIdentities, setSelectedIdentities] = useState<
+    IdentityPresenter[]
+  >([])
+
+  const MAX_IDENTITIES_TO_ADD = 5
+
+  const handleAddIdentity = (selectedIdentity: IdentityPresenter) => {
+    if (selectedIdentities.length < MAX_IDENTITIES_TO_ADD) {
+      setSelectedIdentities([...selectedIdentities, selectedIdentity])
+    }
+  }
+
+  const handleRemoveIdentity = (index: number) => {
+    setSelectedIdentities(selectedIdentities.filter((_, i) => i !== index))
+  }
+
   return (
     <div className="flex flex-col h-full">
       {!isTransactionStarted && (
@@ -63,7 +81,12 @@ export function AddIdentitiesListForm({
                   </IdentityTag>
                 </DialogTitle>
               </DialogHeader>
-              <AddIdentities />
+              <AddIdentities
+                selectedIdentities={selectedIdentities}
+                onAddIdentity={handleAddIdentity}
+                onRemoveIdentity={handleRemoveIdentity}
+                maxIdentitiesToAdd={MAX_IDENTITIES_TO_ADD}
+              />
             </div>
           )}
         </>
