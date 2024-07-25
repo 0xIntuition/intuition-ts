@@ -1,6 +1,6 @@
 import { useRef } from 'react'
 
-import { ListGrid } from '@0xintuition/1ui'
+import { EmptyStateCard, ListGrid } from '@0xintuition/1ui'
 import { ClaimPresenter, ClaimSortColumn } from '@0xintuition/api'
 
 import { PaginationComponent } from '@components/pagination-component'
@@ -47,49 +47,51 @@ export function ListClaimsList({
   const { handleSearchChange, handleSortChange, onPageChange, onLimitChange } =
     useSearchAndSortParamsHandler(paramPrefix)
 
+  if (!claimData) {
+    return <EmptyStateCard message="No lists found." />
+  }
+
   return (
-    <>
-      <div className="flex flex-col w-full">
-        <div className="flex flex-col w-full gap-6" ref={listContainerRef}>
-          <div
-            className={`flex flex-row w-full mt-6 ${enableSearch ? 'justify-between' : 'justify-end'}`}
-          >
-            {enableSearch && <Search handleSearchChange={handleSearchChange} />}
-            {enableSort && options && (
-              <Sort options={options} handleSortChange={handleSortChange} />
-            )}
-          </div>
-          <ListGrid>
-            {claimData.map(
-              (claim, index) =>
-                claim &&
-                claim.object && (
-                  <ListIdentityCardPortal
-                    key={claim.claim_id || index}
-                    displayName={claim.object.display_name ?? undefined}
-                    imgSrc={claim.object?.image ?? undefined}
-                    identitiesCount={claim.object.tag_count ?? 0}
-                    isSaved={claim.user_assets_for !== '0'}
-                    savedAmount={claim.user_assets_for}
-                    onSaveClick={
-                      () => logger('save list clicked', claim.claim_id) // TODO: [ENG-2662] - add the functionality once in place
-                    }
-                  />
-                ),
-            )}
-          </ListGrid>
-          <PaginationComponent
-            totalEntries={pagination.totalEntries ?? 0}
-            currentPage={pagination.currentPage ?? 0}
-            totalPages={pagination.totalPages ?? 0}
-            limit={pagination.limit ?? 0}
-            onPageChange={onPageChange}
-            onLimitChange={onLimitChange}
-            label="lists"
-            listContainerRef={listContainerRef}
-          />
+    <div className="flex flex-col w-full">
+      <div className="flex flex-col w-full gap-6" ref={listContainerRef}>
+        <div
+          className={`flex flex-row w-full mt-6 ${enableSearch ? 'justify-between' : 'justify-end'}`}
+        >
+          {enableSearch && <Search handleSearchChange={handleSearchChange} />}
+          {enableSort && options && (
+            <Sort options={options} handleSortChange={handleSortChange} />
+          )}
         </div>
+        <ListGrid>
+          {claimData.map(
+            (claim, index) =>
+              claim &&
+              claim.object && (
+                <ListIdentityCardPortal
+                  key={claim.claim_id || index}
+                  displayName={claim.object.display_name ?? undefined}
+                  imgSrc={claim.object?.image ?? undefined}
+                  identitiesCount={claim.object.tag_count ?? 0}
+                  isSaved={claim.user_assets_for !== '0'}
+                  savedAmount={claim.user_assets_for}
+                  onSaveClick={
+                    () => logger('save list clicked', claim.claim_id) // TODO: [ENG-2662] - add the functionality once in place
+                  }
+                />
+              ),
+          )}
+        </ListGrid>
+        <PaginationComponent
+          totalEntries={pagination.totalEntries ?? 0}
+          currentPage={pagination.currentPage ?? 0}
+          totalPages={pagination.totalPages ?? 0}
+          limit={pagination.limit ?? 0}
+          onPageChange={onPageChange}
+          onLimitChange={onLimitChange}
+          label="lists"
+          listContainerRef={listContainerRef}
+        />
       </div>
-    </>
+    </div>
   )
 }
