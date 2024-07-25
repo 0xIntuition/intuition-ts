@@ -501,7 +501,7 @@ function CreateClaimForm({
                     </HoverCard>
                   </div>
                 </PopoverTrigger>
-                <PopoverContent className="bg-transparent">
+                <PopoverContent className="bg-transparent border-none">
                   <IdentitySearchCombobox
                     identities={identities}
                     onIdentitySelect={(identity) =>
