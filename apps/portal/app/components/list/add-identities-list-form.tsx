@@ -49,6 +49,10 @@ export function AddIdentitiesListForm({
 
   const MAX_IDENTITIES_TO_ADD = 5
 
+  const existingIdentityIds = identity.tags
+    ? identity.tags.map((tag) => tag.identity_id)
+    : []
+
   const handleAddIdentity = (selectedIdentity: IdentityPresenter) => {
     if (selectedIdentities.length < MAX_IDENTITIES_TO_ADD) {
       setSelectedIdentities([...selectedIdentities, selectedIdentity])

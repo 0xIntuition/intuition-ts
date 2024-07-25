@@ -85,7 +85,11 @@ export function AddIdentities({
               >
                 {index + 1}.
               </Text>
-              <IdentityTag size={IdentityTagSize.md} variant={Identity.nonUser}>
+              <IdentityTag
+                size={IdentityTagSize.md}
+                variant={Identity.nonUser}
+                imgSrc={identity.image ?? ''}
+              >
                 <Trunctacular value={identity.display_name} />
               </IdentityTag>
             </div>
@@ -121,7 +125,7 @@ export function AddIdentities({
                     setCreateIdentityModalActive(true)
                   }
                   identities={filteredIdentities}
-                  // existingIdentityIds={identities.map((id) => id.vault_id)}
+                  existingIdentityIds={identities.map((id) => id.vault_id)}
                   onIdentitySelect={onAddIdentity}
                   onValueChange={setSearchQuery}
                   onInput={handleInput}
