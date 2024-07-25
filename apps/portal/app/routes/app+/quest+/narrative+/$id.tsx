@@ -1,5 +1,3 @@
-import { STANDARD_QUEST_SET } from 'constants'
-
 import {
   Button,
   ButtonVariant,
@@ -25,6 +23,7 @@ import { getQuestCriteria } from '@lib/utils/quest'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { Link, useLoaderData } from '@remix-run/react'
 import { requireUserId } from '@server/auth'
+import { STANDARD_QUEST_SET } from 'consts'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const id = params.id

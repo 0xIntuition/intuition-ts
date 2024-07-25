@@ -1,4 +1,3 @@
-import { BLOCK_EXPLORER_URL } from 'constants'
 import React from 'react'
 
 import {
@@ -11,6 +10,7 @@ import {
 
 import { Link } from '@remix-run/react'
 import clsx from 'clsx'
+import { BLOCK_EXPLORER_URL } from 'consts'
 
 interface TransactionStateProps {
   status: TransactionStatusType

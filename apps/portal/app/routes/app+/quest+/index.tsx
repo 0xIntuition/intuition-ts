@@ -1,8 +1,3 @@
-import {
-  COMING_SOON_QUEST_SET,
-  QUEST_LOG_DESCRIPTION,
-  STANDARD_QUEST_SET,
-} from 'constants'
 import { Suspense } from 'react'
 
 import {
@@ -21,6 +16,11 @@ import { defer, LoaderFunctionArgs } from '@remix-run/node'
 import { Await, Link, useLoaderData } from '@remix-run/react'
 import { requireUserWallet } from '@server/auth'
 import { fetchQuestNarrativeProgress } from '@server/quest'
+import {
+  COMING_SOON_QUEST_SET,
+  QUEST_LOG_DESCRIPTION,
+  STANDARD_QUEST_SET,
+} from 'consts'
 import { isAddress } from 'viem'
 
 export async function loader({ request }: LoaderFunctionArgs) {

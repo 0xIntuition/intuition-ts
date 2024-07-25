@@ -1,9 +1,4 @@
 import {
-  AM_WATCHING_DISPLAY_NAME_TESTNET,
-  TAG_PREDICATE_ID_TESTNET,
-} from 'constants'
-
-import {
   ClaimPresenter,
   ClaimSortColumn,
   ClaimsService,
@@ -14,6 +9,10 @@ import {
 import logger from '@lib/utils/logger'
 import { calculateTotalPages, fetchWrapper } from '@lib/utils/misc'
 import { getStandardPageParams } from '@lib/utils/params'
+import {
+  AM_WATCHING_DISPLAY_NAME_TESTNET,
+  TAG_PREDICATE_ID_TESTNET,
+} from 'consts'
 
 export async function getUserCreatedLists({
   userWallet,

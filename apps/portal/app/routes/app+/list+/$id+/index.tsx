@@ -1,4 +1,3 @@
-import { NO_CLAIM_ERROR, NO_PARAM_ID_ERROR } from 'constants'
 import { Suspense } from 'react'
 
 import { Claim, ListHeaderCard } from '@0xintuition/1ui'
@@ -11,6 +10,7 @@ import logger from '@lib/utils/logger'
 import { DataErrorDisplay, fetchWrapper, invariant } from '@lib/utils/misc'
 import { defer, LoaderFunctionArgs } from '@remix-run/node'
 import { Await, useLoaderData, useRouteLoaderData } from '@remix-run/react'
+import { NO_CLAIM_ERROR, NO_PARAM_ID_ERROR } from 'consts'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const id = params.id

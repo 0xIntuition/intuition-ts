@@ -1,5 +1,3 @@
-import { MAX_UPLOAD_SIZE } from 'constants'
-
 import { parseWithZod } from '@conform-to/zod'
 import { createIdentitySchema } from '@lib/schemas/create-identity-schema'
 import logger from '@lib/utils/logger'
@@ -12,6 +10,7 @@ import {
   type UploadHandler,
 } from '@remix-run/node'
 import { uploadImage } from '@server/cloudinary'
+import { MAX_UPLOAD_SIZE } from 'consts'
 
 interface CloudinaryResponse {
   secure_url: string

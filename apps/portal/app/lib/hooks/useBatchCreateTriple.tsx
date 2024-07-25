@@ -1,5 +1,4 @@
-import { CURRENT_ENV } from 'constants'
-
+import { CURRENT_ENV } from 'consts'
 import type { GetContractReturnType } from 'viem'
 
 import { getChainEnvConfig } from '../utils/environment'

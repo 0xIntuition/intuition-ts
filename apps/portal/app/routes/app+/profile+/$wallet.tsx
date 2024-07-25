@@ -1,5 +1,3 @@
-import { NO_WALLET_ERROR, userIdentityRouteOptions } from 'constants'
-
 import {
   Button,
   PositionCard,
@@ -37,6 +35,7 @@ import { Outlet, useNavigate } from '@remix-run/react'
 import { requireUserWallet } from '@server/auth'
 import { getVaultDetails } from '@server/multivault'
 import * as blockies from 'blockies-ts'
+import { NO_WALLET_ERROR, userIdentityRouteOptions } from 'consts'
 import { useAtom } from 'jotai'
 import { VaultDetailsType } from 'types/vault'
 

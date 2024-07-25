@@ -1,4 +1,3 @@
-import { CURRENT_ENV } from 'constants'
 import { useEffect, useState } from 'react'
 
 import { Button } from '@0xintuition/1ui'
@@ -7,6 +6,7 @@ import { stakeModalAtom } from '@lib/state/store'
 import { getChainEnvConfig } from '@lib/utils/environment'
 import { formatBalance } from '@lib/utils/misc'
 import { useNavigation } from '@remix-run/react'
+import { CURRENT_ENV } from 'consts'
 import { useSetAtom } from 'jotai'
 import { TransactionActionType, TransactionStateType } from 'types/transaction'
 import { formatUnits } from 'viem'

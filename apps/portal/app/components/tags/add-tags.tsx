@@ -1,4 +1,3 @@
-import { TAG_PREDICATE_VAULT_ID_TESTNET, TAG_RESOURCE_ROUTE } from 'constants'
 import { useEffect, useState } from 'react'
 
 import { Popover, PopoverContent, PopoverTrigger, Text } from '@0xintuition/1ui'
@@ -11,6 +10,7 @@ import { createIdentityModalAtom } from '@lib/state/store'
 import logger from '@lib/utils/logger'
 import { useFetcher } from '@remix-run/react'
 import { TagLoaderData } from '@routes/resources+/tag'
+import { TAG_PREDICATE_VAULT_ID_TESTNET, TAG_RESOURCE_ROUTE } from 'consts'
 import { useAtom } from 'jotai'
 import { TransactionActionType } from 'types/transaction'
 

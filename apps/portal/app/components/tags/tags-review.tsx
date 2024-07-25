@@ -1,10 +1,4 @@
 import {
-  CREATE_RESOURCE_ROUTE,
-  GENERIC_ERROR_MSG,
-  MULTIVAULT_CONTRACT_ADDRESS,
-} from 'constants'
-
-import {
   Button,
   DialogFooter,
   DialogHeader,
@@ -22,6 +16,11 @@ import { useBatchCreateTriple } from '@lib/hooks/useBatchCreateTriple'
 import { useLoaderFetcher } from '@lib/hooks/useLoaderFetcher'
 import logger from '@lib/utils/logger'
 import { CreateLoaderData } from '@routes/resources+/create'
+import {
+  CREATE_RESOURCE_ROUTE,
+  GENERIC_ERROR_MSG,
+  MULTIVAULT_CONTRACT_ADDRESS,
+} from 'consts'
 import { TransactionActionType } from 'types/transaction'
 import { formatUnits } from 'viem'
 import { useAccount, usePublicClient, useWalletClient } from 'wagmi'

@@ -1,4 +1,3 @@
-import { CREATE_RESOURCE_ROUTE } from 'constants'
 import { useEffect, useRef, useState } from 'react'
 
 import { Dialog, DialogContent, DialogFooter, toast } from '@0xintuition/1ui'
@@ -16,6 +15,7 @@ import { useGenericTxState } from '@lib/utils/use-tx-reducer'
 import { useFetcher, useLocation } from '@remix-run/react'
 import { CreateLoaderData } from '@routes/resources+/create'
 import { useQueryClient } from '@tanstack/react-query'
+import { CREATE_RESOURCE_ROUTE } from 'consts'
 import { TransactionActionType, TransactionStateType } from 'types/transaction'
 import { VaultDetailsType } from 'types/vault'
 import { Abi, Address, decodeEventLog, formatUnits, parseUnits } from 'viem'

@@ -1,9 +1,3 @@
-import {
-  CREATE_RESOURCE_ROUTE,
-  GENERIC_ERROR_MSG,
-  MULTIVAULT_CONTRACT_ADDRESS,
-  SEARCH_IDENTITIES_RESOURCE_ROUTE,
-} from 'constants'
 import React, { useEffect, useState } from 'react'
 
 import {
@@ -47,6 +41,12 @@ import { sliceString, truncateString } from '@lib/utils/misc'
 import { useFetcher, useNavigate } from '@remix-run/react'
 import { CreateLoaderData } from '@routes/resources+/create'
 import * as blockies from 'blockies-ts'
+import {
+  CREATE_RESOURCE_ROUTE,
+  GENERIC_ERROR_MSG,
+  MULTIVAULT_CONTRACT_ADDRESS,
+  SEARCH_IDENTITIES_RESOURCE_ROUTE,
+} from 'consts'
 import { Identity, IdentityType } from 'types/identity'
 import { TransactionActionType, TransactionStateType } from 'types/transaction'
 import { parseUnits } from 'viem'

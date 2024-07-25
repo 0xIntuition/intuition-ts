@@ -1,4 +1,3 @@
-import { NO_WALLET_ERROR } from 'constants'
 import { ReactNode } from 'react'
 
 import {
@@ -26,6 +25,7 @@ import logger from '@lib/utils/logger'
 import { fetchWrapper, formatBalance, invariant } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
 import { requireUserWallet } from '@server/auth'
+import { NO_WALLET_ERROR } from 'consts'
 import { PaginationType } from 'types/pagination'
 
 export async function loader({ request }: LoaderFunctionArgs) {

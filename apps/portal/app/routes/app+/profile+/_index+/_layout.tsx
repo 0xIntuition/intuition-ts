@@ -1,4 +1,3 @@
-import { NO_WALLET_ERROR, userProfileRouteOptions } from 'constants'
 import React, { useEffect, useState } from 'react'
 
 import {
@@ -50,6 +49,7 @@ import {
 import { requireUser, requireUserWallet } from '@server/auth'
 import { getVaultDetails } from '@server/multivault'
 import * as blockies from 'blockies-ts'
+import { NO_WALLET_ERROR, userProfileRouteOptions } from 'consts'
 import { useAtom } from 'jotai'
 import { VaultDetailsType } from 'types/vault'
 
