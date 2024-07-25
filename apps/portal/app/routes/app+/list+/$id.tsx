@@ -47,6 +47,7 @@ export default function ListDetails() {
     claim: ClaimPresenter
   }>()
 
+  logger('claim on list route', claim)
   const [addIdentitiesListModalActive, setAddIdentitiesListModalActive] =
     useAtom(addIdentitiesListModalAtom)
   const navigate = useNavigate()

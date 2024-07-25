@@ -6,10 +6,8 @@ import {
   Icon,
   Identity,
   IdentityTag,
-  IdentityTag,
   IdentityTagSize,
   Tags,
-  TagWithValue,
   Text,
   toast,
   Trunctacular,
@@ -27,7 +25,7 @@ import {
   MULTIVAULT_CONTRACT_ADDRESS,
 } from 'consts'
 import { TransactionActionType } from 'types/transaction'
-import { formatUnits } from 'viem'
+import { formatUnits, parseUnits } from 'viem'
 import { useAccount, usePublicClient, useWalletClient } from 'wagmi'
 
 import { createIdentityArrays } from './list-utils'
@@ -45,9 +43,12 @@ export default function AddIdentitiesReview({
 }: AddIdentitiesReviewProps) {
   const feeFetcher = useLoaderFetcher<CreateLoaderData>(CREATE_RESOURCE_ROUTE)
 
-  const { tripleCost } = (feeFetcher.data as CreateLoaderData) ?? {
+  const { tripleCost, minDeposit } = (feeFetcher.data as CreateLoaderData) ?? {
     tripleCost: BigInt(0),
+    minDeposit: BigInt(0),
   }
+  logger('minDeposit', minDeposit)
+  logger('tripleCost', formatUnits(BigInt(tripleCost), 18))
 
   const { data: walletClient } = useWalletClient()
   const publicClient = usePublicClient()
@@ -94,7 +95,9 @@ export default function AddIdentitiesReview({
             predicateHasTagVaultIds,
             objectIdentityVaultIds,
           ],
-          value: BigInt(tripleCost) * BigInt(subjectIdentityVaultIds.length),
+          value:
+            BigInt(tripleCost) * BigInt(objectIdentityVaultIds.length) +
+            BigInt(minDeposit) * BigInt(objectIdentityVaultIds.length),
         })
         dispatch({ type: 'TRANSACTION_PENDING' })
         if (txHash) {
@@ -108,6 +111,7 @@ export default function AddIdentitiesReview({
           })
         }
       } catch (error) {
+        logger('ERROR', error)
         console.error('error', error)
         if (error instanceof Error) {
           let errorMessage = 'Error in onchain transaction.'
@@ -168,8 +172,7 @@ export default function AddIdentitiesReview({
                   variant={Identity.nonUser}
                   imgSrc={identity.image ?? ''}
                 >
-                 <Trunctacular value={identity.display_name} />
-
+                  <Trunctacular value={identity.display_name} />
                 </IdentityTag>
               ))}
             </div>

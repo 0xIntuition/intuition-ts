@@ -14,6 +14,7 @@ export type CreateLoaderData = {
   protocolFee: string
   entryFee: string
   feeDenominator: string
+  minDeposit: string
 }
 
 export async function loader() {
@@ -27,7 +28,7 @@ export async function loader() {
     atomCost,
     tripleCost,
     [entryFee, , protocolFee],
-    [, , feeDenominator],
+    [, , feeDenominator, minDeposit],
   ] = await Promise.all([
     getAtomCost(),
     getTripleCost(),
@@ -42,5 +43,6 @@ export async function loader() {
     protocolFee: protocolFee.toString(),
     entryFee: entryFee.toString(),
     feeDenominator: feeDenominator.toString(),
+    minDeposit: minDeposit.toString(),
   } as CreateLoaderData)
 }

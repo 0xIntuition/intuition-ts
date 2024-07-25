@@ -10,6 +10,7 @@ import {
 } from '@0xintuition/1ui'
 import { IdentityPresenter } from '@0xintuition/api'
 
+import { TransactionState } from '@components/transaction-state'
 import {
   initialTransactionState,
   transactionReducer,
@@ -17,7 +18,11 @@ import {
 } from '@lib/hooks/useTransactionReducer'
 import logger from '@lib/utils/logger'
 import { useFetcher } from '@remix-run/react'
-import { TransactionActionType, TransactionStateType } from 'types/transaction'
+import {
+  TransactionActionType,
+  TransactionStateType,
+  TransactionStatusType,
+} from 'types/transaction'
 
 import { AddIdentities } from './add-identities'
 import AddIdentitiesReview from './add-identities-review'
@@ -135,6 +140,15 @@ export function AddIdentitiesListForm({
             />
           )}
         </>
+      )}
+      {isTransactionStarted && (
+        <div className="flex flex-col items-center justify-center flex-grow">
+          <TransactionState
+            status={state.status as TransactionStatusType}
+            txHash={state.txHash}
+            type="list"
+          />
+        </div>
       )}
     </div>
   )
