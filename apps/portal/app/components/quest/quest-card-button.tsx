@@ -1,7 +1,8 @@
 import { Button, Icon, IconName } from '@0xintuition/1ui'
 import { QuestStatus } from '@0xintuition/api'
 
-interface QuestCardButtonProps extends React.HTMLAttributes<HTMLDivElement> {
+interface QuestCardButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   questStatus: QuestStatus
   disabled?: boolean
 }
@@ -48,10 +49,11 @@ const getStatusComponentData = (
 const QuestCardButton = ({
   questStatus,
   disabled = false,
+  ...props
 }: QuestCardButtonProps) => {
   const { iconName, text } = getStatusComponentData(questStatus, disabled)
   return (
-    <Button variant="secondary" size="lg" disabled={disabled}>
+    <Button variant="secondary" size="lg" disabled={disabled} {...props}>
       <Icon name={iconName} className="w-5 h-5" />
       {text}
     </Button>

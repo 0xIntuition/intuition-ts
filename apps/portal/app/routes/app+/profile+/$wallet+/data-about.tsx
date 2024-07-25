@@ -8,11 +8,12 @@ import { PositionsOnIdentity } from '@components/list/positions-on-identity'
 import DataAboutHeader from '@components/profile/data-about-header'
 import { RevalidateButton } from '@components/revalidate-button'
 import { DataHeaderSkeleton, PaginatedListSkeleton } from '@components/skeleton'
+import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { getClaimsAboutIdentity } from '@lib/services/claims'
 import { getPositionsOnIdentity } from '@lib/services/positions'
 import { fetchWrapper, formatBalance, invariant } from '@lib/utils/misc'
 import { defer, LoaderFunctionArgs } from '@remix-run/node'
-import { Await, useLoaderData, useRouteLoaderData } from '@remix-run/react'
+import { Await, useRouteLoaderData } from '@remix-run/react'
 import { requireUserWallet } from '@server/auth'
 import {
   NO_PARAM_ID_ERROR,
@@ -48,7 +49,9 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 }
 
 export default function ProfileDataAbout() {
-  const { positions, claims, claimsSummary } = useLoaderData<typeof loader>()
+  const { positions, claims, claimsSummary } = useLiveLoader<typeof loader>([
+    'attest',
+  ])
 
   const { userIdentity } =
     useRouteLoaderData<ProfileLoaderData>('routes/app+/profile+/$wallet') ?? {}
@@ -105,11 +108,11 @@ export default function ProfileDataAbout() {
         </Suspense>
       </div>
       <div className="flex flex-col pt-4 w-full">
-        <div className="self-stretch justify-between items-center inline-flex mb-6">
+        <div className="self-stretch justify-between items-center inline-flex">
           <Text
             variant="headline"
             weight="medium"
-            className="theme-secondary-foreground w-full"
+            className="theme-secondary-foreground w-full mb-6"
           >
             Positions on this Identity
           </Text>

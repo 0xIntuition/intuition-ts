@@ -21,7 +21,7 @@ const getStatusComponentData = (status: QuestStatus) => {
       }
     case QuestStatus.CLAIMABLE:
       return {
-        iconName: IconName.circleCheck,
+        iconName: IconName.awaitAction,
         iconClass: 'text-success',
         bgClass: 'fill-muted',
       }

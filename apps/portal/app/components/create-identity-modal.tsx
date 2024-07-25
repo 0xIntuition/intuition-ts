@@ -1,17 +1,20 @@
 import { Dialog, DialogContent } from '@0xintuition/1ui'
+import { IdentityPresenter } from '@0xintuition/api'
 
 import { IdentityForm } from './create-identity-form'
 
 export interface CreateIdentityModalProps {
   open?: boolean
   onClose: () => void
-  onSuccess?: () => void
+  onSuccess?: (identity: IdentityPresenter) => void
+  successAction?: 'view' | 'close'
 }
 
-export default function CreateProfileModal({
+export default function CreateIdentityModal({
   open,
   onClose,
   onSuccess,
+  successAction = 'view',
 }: CreateIdentityModalProps) {
   return (
     <Dialog
@@ -20,8 +23,12 @@ export default function CreateProfileModal({
         onClose?.()
       }}
     >
-      <DialogContent className="w-[600px] bg-neutral-950 rounded-xl shadow border border-solid border-black/10">
-        <IdentityForm onClose={onClose} onSuccess={onSuccess} />
+      <DialogContent className="w-[600px] bg-neutral-950 rounded-lg shadow theme-border">
+        <IdentityForm
+          onClose={onClose}
+          onSuccess={onSuccess}
+          successAction={successAction}
+        />
       </DialogContent>
     </Dialog>
   )

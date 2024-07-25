@@ -1367,8 +1367,7 @@ export class UserQuestsService {
   /**
    * @param data The data for the request.
    * @param data.questId Quest SQL id
-   * @param data.userId User SQL id
-   * @returns unknown Complete a quest for an user
+   * @returns unknown Complete a quest for the authenticated user
    * @throws ApiError
    */
   public static completeQuest(
@@ -1376,10 +1375,9 @@ export class UserQuestsService {
   ): CancelablePromise<CompleteQuestResponse> {
     return __request(OpenAPI, {
       method: 'POST',
-      url: '/user_quest/{quest_id}/complete/{user_id}',
+      url: '/user_quest/{quest_id}/complete',
       path: {
         quest_id: data.questId,
-        user_id: data.userId,
       },
     })
   }
@@ -1387,8 +1385,7 @@ export class UserQuestsService {
   /**
    * @param data The data for the request.
    * @param data.questId Quest SQL id
-   * @param data.userId User SQL id
-   * @returns unknown Start a quest for an user
+   * @returns unknown Start a quest for the authenticated user
    * @throws ApiError
    */
   public static startQuest(
@@ -1396,10 +1393,9 @@ export class UserQuestsService {
   ): CancelablePromise<StartQuestResponse> {
     return __request(OpenAPI, {
       method: 'POST',
-      url: '/user_quest/{quest_id}/start/{user_id}',
+      url: '/user_quest/{quest_id}/start',
       path: {
         quest_id: data.questId,
-        user_id: data.userId,
       },
     })
   }

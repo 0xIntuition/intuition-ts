@@ -25,7 +25,7 @@ describe('InfoCard', () => {
             Creator
           </p>
           <div
-            class="flex justify-between items-center gap-1"
+            class="flex justify-start items-center gap-1"
           >
             <button
               class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center rounded-full [&>span]:rounded-full [&>span]:overflow-hidden text-base [&>span]:h-6 [&>span]:w-6"

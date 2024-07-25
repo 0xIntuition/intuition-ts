@@ -2462,10 +2462,6 @@ export type CompleteQuestData = {
    * Quest SQL id
    */
   questId: string
-  /**
-   * User SQL id
-   */
-  userId: string
 }
 
 export type CompleteQuestResponse = {
@@ -2486,10 +2482,6 @@ export type StartQuestData = {
    * Quest SQL id
    */
   questId: string
-  /**
-   * User SQL id
-   */
-  userId: string
 }
 
 export type StartQuestResponse = {
@@ -4329,21 +4321,17 @@ export type $OpenApiTs = {
       }
     }
   }
-  '/user_quest/{quest_id}/complete/{user_id}': {
+  '/user_quest/{quest_id}/complete': {
     post: {
       req: {
         /**
          * Quest SQL id
          */
         questId: string
-        /**
-         * User SQL id
-         */
-        userId: string
       }
       res: {
         /**
-         * Complete a quest for an user
+         * Complete a quest for the authenticated user
          */
         200: {
           date_completed?: string | null
@@ -4360,21 +4348,17 @@ export type $OpenApiTs = {
       }
     }
   }
-  '/user_quest/{quest_id}/start/{user_id}': {
+  '/user_quest/{quest_id}/start': {
     post: {
       req: {
         /**
          * Quest SQL id
          */
         questId: string
-        /**
-         * User SQL id
-         */
-        userId: string
       }
       res: {
         /**
-         * Start a quest for an user
+         * Start a quest for the authenticated user
          */
         200: {
           date_completed?: string | null

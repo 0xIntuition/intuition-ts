@@ -1,7 +1,7 @@
 import * as React from 'react'
 
 import { cn } from 'styles'
-import { IdentityType } from 'types'
+import { Identity, IdentityType } from 'types'
 
 import { IdentityTag, Text, TextVariant } from '..'
 
@@ -13,7 +13,7 @@ export interface InfoCardProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const InfoCard = ({
-  variant,
+  variant = Identity.user,
   username,
   avatarImgSrc,
   timestamp,
@@ -37,7 +37,7 @@ const InfoCard = ({
       <Text variant={TextVariant.caption} className="text-muted-foreground">
         Creator
       </Text>
-      <div className="flex justify-between items-center gap-1">
+      <div className="flex justify-start items-center gap-1">
         <IdentityTag variant={variant} imgSrc={avatarImgSrc}>
           {username}
         </IdentityTag>
