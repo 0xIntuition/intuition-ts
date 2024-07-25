@@ -20,7 +20,6 @@ import { getTheme } from '@server/theme'
 
 import './styles/globals.css'
 
-import { CURRENT_ENV, PATH, SUPPORT_EMAIL_ADDRESS } from 'constants'
 import { useEffect } from 'react'
 
 import { Button, Icon, Text, Toaster } from '@0xintuition/1ui'
@@ -30,6 +29,7 @@ import { getChainEnvConfig } from '@lib/utils/environment'
 import logger from '@lib/utils/logger'
 import { cn } from '@lib/utils/misc'
 import { setupAPI } from '@server/auth'
+import { CURRENT_ENV, PATH, SUPPORT_EMAIL_ADDRESS } from 'consts'
 import { ClientOnly } from 'remix-utils/client-only'
 import { baseSepolia } from 'viem/chains'
 import { useAccount, useSwitchChain } from 'wagmi'

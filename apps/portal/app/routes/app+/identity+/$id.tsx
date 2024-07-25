@@ -1,5 +1,3 @@
-import { identityRouteOptions, NO_WALLET_ERROR } from 'constants'
-
 import {
   PositionCard,
   PositionCardFeesAccrued,
@@ -31,6 +29,7 @@ import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { Outlet, useLoaderData, useNavigate } from '@remix-run/react'
 import { requireUser, requireUserWallet } from '@server/auth'
 import { getVaultDetails } from '@server/multivault'
+import { identityRouteOptions, NO_WALLET_ERROR } from 'consts'
 import { useAtom } from 'jotai'
 import { ExtendedIdentityPresenter } from 'types/identity'
 import { VaultDetailsType } from 'types/vault'

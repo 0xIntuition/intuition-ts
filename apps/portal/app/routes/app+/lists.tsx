@@ -1,4 +1,3 @@
-import { NO_WALLET_ERROR } from 'constants'
 import { Suspense, useEffect, useState } from 'react'
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@0xintuition/1ui'
@@ -20,6 +19,7 @@ import {
   useSearchParams,
 } from '@remix-run/react'
 import { requireUserWallet } from '@server/auth'
+import { NO_WALLET_ERROR } from 'consts'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const wallet = await requireUserWallet(request)

@@ -1,6 +1,6 @@
-import { TAG_PREDICATE_VAULT_ID_TESTNET } from 'constants'
-
 import { IdentityPresenter } from '@0xintuition/api'
+
+import { TAG_PREDICATE_VAULT_ID_TESTNET } from 'consts'
 
 export const createTagArrays = (
   tags: IdentityPresenter[],

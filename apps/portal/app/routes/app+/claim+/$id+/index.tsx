@@ -1,4 +1,3 @@
-import { NO_PARAM_ID_ERROR, NO_WALLET_ERROR } from 'constants'
 import { Suspense, useEffect, useState } from 'react'
 
 import { Tabs, TabsList, TabsTrigger, Text } from '@0xintuition/1ui'
@@ -12,6 +11,7 @@ import { fetchWrapper, invariant } from '@lib/utils/misc'
 import { defer, LoaderFunctionArgs } from '@remix-run/node'
 import { Await, useNavigation, useSearchParams } from '@remix-run/react'
 import { requireUserWallet } from '@server/auth'
+import { NO_PARAM_ID_ERROR, NO_WALLET_ERROR } from 'consts'
 import { PaginationType } from 'types/pagination'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {

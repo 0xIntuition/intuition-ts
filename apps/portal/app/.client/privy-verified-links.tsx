@@ -1,5 +1,3 @@
-import { verifiedPlatforms } from 'constants'
-
 import {
   Button,
   Icon,
@@ -12,6 +10,7 @@ import {
 import { useSocialLinking } from '@lib/hooks/usePrivySocialLinking'
 import logger from '@lib/utils/logger'
 import { Discord, Farcaster, Github, Twitter } from '@privy-io/react-auth'
+import { verifiedPlatforms } from 'consts'
 import { ExtendedPrivyUser, PlatformUserDetails, PrivyPlatform } from 'types'
 
 export function PrivyVerifiedLinks({

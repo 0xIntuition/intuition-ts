@@ -1,4 +1,3 @@
-import { CURRENT_ENV } from 'constants'
 import { useEffect, useState } from 'react'
 
 import { Button, cn } from '@0xintuition/1ui'
@@ -6,6 +5,7 @@ import { Button, cn } from '@0xintuition/1ui'
 import { followModalAtom } from '@lib/state/store'
 import { getChainEnvConfig } from '@lib/utils/environment'
 import { useNavigation } from '@remix-run/react'
+import { CURRENT_ENV } from 'consts'
 import { useSetAtom } from 'jotai'
 import { TransactionActionType, TransactionStateType } from 'types/transaction'
 import { useAccount, useSwitchChain } from 'wagmi'

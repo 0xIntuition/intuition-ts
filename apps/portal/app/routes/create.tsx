@@ -1,4 +1,3 @@
-import { MULTIVAULT_CONTRACT_ADDRESS, NO_WALLET_ERROR } from 'constants'
 import { useEffect, useRef, useState } from 'react'
 
 import { toast } from '@0xintuition/1ui'
@@ -28,6 +27,7 @@ import { useFetcher, useLoaderData, useNavigate } from '@remix-run/react'
 import { CreateLoaderData } from '@routes/resources+/create'
 import { requireUserWallet } from '@server/auth'
 import * as blockies from 'blockies-ts'
+import { MULTIVAULT_CONTRACT_ADDRESS, NO_WALLET_ERROR } from 'consts'
 import { useAtom } from 'jotai'
 import { ClientOnly } from 'remix-utils/client-only'
 import {

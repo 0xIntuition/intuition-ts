@@ -1,9 +1,3 @@
-import {
-  ACCEPTED_IMAGE_MIME_TYPES,
-  GENERIC_ERROR_MSG,
-  MAX_UPLOAD_SIZE,
-  MULTIVAULT_CONTRACT_ADDRESS,
-} from 'constants'
 import React, { useEffect, useRef, useState } from 'react'
 
 import {
@@ -44,6 +38,12 @@ import logger from '@lib/utils/logger'
 import { truncateString } from '@lib/utils/misc'
 import { useFetcher, useNavigate } from '@remix-run/react'
 import { CreateLoaderData } from '@routes/resources+/create'
+import {
+  ACCEPTED_IMAGE_MIME_TYPES,
+  GENERIC_ERROR_MSG,
+  MAX_UPLOAD_SIZE,
+  MULTIVAULT_CONTRACT_ADDRESS,
+} from 'consts'
 import {
   IdentityTransactionActionType,
   IdentityTransactionStateType,

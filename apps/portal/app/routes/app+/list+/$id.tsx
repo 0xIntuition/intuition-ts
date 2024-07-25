@@ -1,5 +1,3 @@
-import { NO_PARAM_ID_ERROR } from 'constants'
-
 import { Button, Icon, InfoCard, ProfileCard } from '@0xintuition/1ui'
 import { ClaimPresenter, ClaimsService } from '@0xintuition/api'
 
@@ -14,6 +12,7 @@ import {
   useLocation,
   useNavigate,
 } from '@remix-run/react'
+import { NO_PARAM_ID_ERROR } from 'consts'
 
 export async function loader({ params }: LoaderFunctionArgs) {
   const id = params.id
