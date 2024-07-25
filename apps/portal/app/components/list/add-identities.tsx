@@ -1,24 +1,61 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
-import { Button, Icon, Separator, Text } from '@0xintuition/1ui'
+import {
+  Button,
+  Icon,
+  Identity,
+  IdentityTag,
+  IdentityTagSize,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+  Separator,
+  Text,
+  Trunctacular,
+} from '@0xintuition/1ui'
 import { IdentityPresenter } from '@0xintuition/api'
 
-export function AddIdentities() {
-  const [identities, setIdentities] = useState<IdentityPresenter[]>([])
+// import ErrorList from '@components/error-list'
+import { IdentitySearchCombobox } from '@components/identity/identity-search-combo-box'
+import { useIdentityServerSearch } from '@lib/hooks/useIdentityServerSearch'
+import { createIdentityModalAtom } from '@lib/state/store'
+// import {
+//   TAG_PREDICATE_VAULT_ID_TESTNET,
+//   TAG_RESOURCE_ROUTE,
+// } from '@lib/utils/constants'
+import logger from '@lib/utils/logger'
+// import { useFetcher } from '@remix-run/react'
+// import { TagLoaderData } from '@routes/resources+/tag'
+import { useAtom } from 'jotai'
 
-  const addIdentity = () => {
-    if (identities.length < MAX_IDENTITIES_TO_ADD) {
-      setIdentities([
-        ...identities,
-        { id: '', displayName: '' } as IdentityPresenter,
-      ])
+// import { TransactionActionType } from 'types/transaction'
+
+export function AddIdentities() {
+  const [identitiesToAdd, setIdentitiesToAdd] = useState<IdentityPresenter[]>(
+    [],
+  )
+
+  const [, setCreateIdentityModalActive] = useAtom(createIdentityModalAtom)
+
+  const { setSearchQuery, identities, handleInput } = useIdentityServerSearch()
+  const [isPopoverOpen, setIsPopoverOpen] = useState(false)
+
+  const filteredIdentities = identities.filter(
+    (identity) =>
+      !identitiesToAdd.some(
+        (identityToAdd) => identityToAdd.vault_id === identity.vault_id,
+      ),
+  )
+
+  const MAX_IDENTITIES_TO_ADD = 5
+  const addIdentity = (selectedIdentity: IdentityPresenter) => {
+    if (identitiesToAdd.length < MAX_IDENTITIES_TO_ADD) {
+      setIdentitiesToAdd([...identitiesToAdd, selectedIdentity])
     }
   }
 
-  const MAX_IDENTITIES_TO_ADD = 5
-
   const removeIdentity = (index: number) => {
-    setIdentities(identities.filter((_, i) => i !== index))
+    setIdentitiesToAdd(identitiesToAdd.filter((_, i) => i !== index))
   }
 
   return (
@@ -33,31 +70,63 @@ export function AddIdentities() {
       </div>
       <Separator />
       <div className="mt-4 space-y-2">
-        {identities.map((identity, index) => (
-          <div key={index}>
-            <div className="flex items-center space-x-2">
-              <Text>{index + 1}.</Text>
-              <div className="flex-grow bg-gray-700 rounded-md p-2">
-                Identity {index + 1}
-              </div>
-              <Button onClick={() => removeIdentity(index)}>X</Button>
+        {identitiesToAdd.map((identity, index) => (
+          <div
+            className="flex items-center justify-between gap-2.5"
+            key={identity.id}
+          >
+            <div className="flex items-center gap-3 flex-1">
+              <Text
+                variant="body"
+                weight="medium"
+                className="text-secondary-foreground/30 w-2"
+              >
+                {index + 1}.
+              </Text>
+              <IdentityTag size={IdentityTagSize.md} variant={Identity.nonUser}>
+                <Trunctacular value={identity.display_name} />
+              </IdentityTag>
             </div>
-            {index < identities.length - 1 && <Separator className="my-2" />}
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => removeIdentity(index)}
+              className="border-none"
+            >
+              <Icon name="cross-large" className="h-4 w-4" />
+            </Button>
           </div>
         ))}
-        {identities.length < MAX_IDENTITIES_TO_ADD && (
-          <div className="flex flex-row items-center gap-2.5">
+        {identitiesToAdd.length < MAX_IDENTITIES_TO_ADD && (
+          <div className="flex flex-row items-center gap-3">
             <Text
               variant="body"
               weight="medium"
-              className="text-secondary-foreground/30"
+              className="text-secondary-foreground/30 w-2"
             >
-              {identities.length + 1}.
+              {identitiesToAdd.length + 1}.
             </Text>
-            <Button onClick={addIdentity} variant="secondary">
-              <Icon name="plus-small" />
-              Select Identity
-            </Button>
+            <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
+              <PopoverTrigger asChild>
+                <Button variant="secondary">
+                  <Icon name="plus-small" />
+                  Select Identity
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="bg-transparent border-0 w-max p-0">
+                <IdentitySearchCombobox
+                  onCreateIdentityClick={() =>
+                    setCreateIdentityModalActive(true)
+                  }
+                  identities={filteredIdentities}
+                  // existingIdentityIds={identities.map((id) => id.vault_id)}
+                  onIdentitySelect={addIdentity}
+                  onValueChange={setSearchQuery}
+                  onInput={handleInput}
+                  shouldFilter={false}
+                />
+              </PopoverContent>
+            </Popover>
           </div>
         )}
       </div>
