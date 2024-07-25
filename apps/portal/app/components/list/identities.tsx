@@ -1,7 +1,6 @@
 import { EmptyStateCard, Identity, IdentityContentRow } from '@0xintuition/1ui'
 import { IdentityPresenter, SortColumn } from '@0xintuition/api'
 
-import logger from '@lib/utils/logger'
 import { formatBalance } from '@lib/utils/misc'
 import { useNavigate } from '@remix-run/react'
 import { PaginationType } from 'types/pagination'
@@ -29,9 +28,9 @@ export function IdentitiesList({
     { value: 'Updated At', sortBy: 'UpdatedAt' },
     { value: 'Created At', sortBy: 'CreatedAt' },
   ]
-  logger('identities', identities)
+
   if (!identities.length) {
-    return <EmptyStateCard message="No identities found by this user." />
+    return <EmptyStateCard message="No identities found." />
   }
 
   return (
@@ -59,7 +58,7 @@ export function IdentitiesList({
               navigate(
                 identity.is_user
                   ? `/app/profile/${identity.identity_id}`
-                  : `/app/identity/${identity.identity_id}`,
+                  : `/app/identity/${identity.id}`,
               )
             }}
             className="hover:cursor-pointer"

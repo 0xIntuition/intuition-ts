@@ -16,6 +16,53 @@ import { PaginationType } from 'types/pagination'
 
 import { List } from './list'
 
+export function ActivityList({
+  activities,
+  pagination,
+  paramPrefix,
+}: {
+  activities: ActivityPresenter[]
+  pagination: PaginationType
+  paramPrefix?: string
+}) {
+  const navigate = useNavigate()
+
+  const eventMessages: EventMessages = {
+    createAtom: 'created an identity',
+    createTriple: 'created a claim',
+    depositAtom: (value: string) =>
+      `deposited ${formatBalance(value, 18, 4)} ETH on an identity`,
+    redeemAtom: (value: string) =>
+      `redeemed ${formatBalance(value, 18, 4)} ETH from an identity`,
+    depositTriple: (value: string) =>
+      `deposited ${formatBalance(value, 18, 4)} ETH on a claim`,
+    redeemTriple: (value: string) =>
+      `redeemed ${formatBalance(value, 18, 4)} ETH from a claim`,
+  }
+
+  if (!activities.length) {
+    return <EmptyStateCard message="No activities found." />
+  }
+
+  return (
+    <List<SortColumn>
+      pagination={pagination}
+      paginationLabel="identities"
+      paramPrefix={paramPrefix}
+      enableSearch={false}
+    >
+      {activities.map((activity) => (
+        <ActivityItem
+          key={activity.id}
+          activity={activity}
+          eventMessages={eventMessages}
+          navigate={navigate}
+        />
+      ))}
+    </List>
+  )
+}
+
 type EventMessages = {
   createAtom: string
   createTriple: string
@@ -150,52 +197,5 @@ function ActivityItem({
         )}
       </div>
     </div>
-  )
-}
-
-export function ActivityList({
-  activities,
-  pagination,
-  paramPrefix,
-}: {
-  activities: ActivityPresenter[]
-  pagination: PaginationType
-  paramPrefix?: string
-}) {
-  const navigate = useNavigate()
-
-  const eventMessages: EventMessages = {
-    createAtom: 'created an identity',
-    createTriple: 'created a claim',
-    depositAtom: (value: string) =>
-      `deposited ${formatBalance(value, 18, 4)} ETH on an identity`,
-    redeemAtom: (value: string) =>
-      `redeemed ${formatBalance(value, 18, 4)} ETH from an identity`,
-    depositTriple: (value: string) =>
-      `deposited ${formatBalance(value, 18, 4)} ETH on a claim`,
-    redeemTriple: (value: string) =>
-      `redeemed ${formatBalance(value, 18, 4)} ETH from a claim`,
-  }
-
-  if (!activities.length) {
-    return <EmptyStateCard message="No activities found." />
-  }
-
-  return (
-    <List<SortColumn>
-      pagination={pagination}
-      paginationLabel="identities"
-      paramPrefix={paramPrefix}
-      enableSearch={false}
-    >
-      {activities.map((activity) => (
-        <ActivityItem
-          key={activity.id}
-          activity={activity}
-          eventMessages={eventMessages}
-          navigate={navigate}
-        />
-      ))}
-    </List>
   )
 }

@@ -59,7 +59,7 @@ export function ActivePositionsOnIdentities({
               navigate(
                 identity.is_user
                   ? `/app/profile/${identity.identity_id}`
-                  : `/app/identity/${identity.identity_id}`,
+                  : `/app/identity/${identity.id}`,
               )
             }}
             className="hover:cursor-pointer"
