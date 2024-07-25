@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 import {
   Button,
@@ -16,8 +16,6 @@ import {
   transactionReducer,
   useTransactionState,
 } from '@lib/hooks/useTransactionReducer'
-import logger from '@lib/utils/logger'
-import { useFetcher } from '@remix-run/react'
 import {
   TransactionActionType,
   TransactionStateType,
@@ -36,8 +34,8 @@ interface AddIdentitiesListFormProps {
 
 export function AddIdentitiesListForm({
   identity,
-  claimId,
-  onClose,
+  // claimId,
+  // onClose,
 }: AddIdentitiesListFormProps) {
   const { state, dispatch } = useTransactionState<
     TransactionStateType,

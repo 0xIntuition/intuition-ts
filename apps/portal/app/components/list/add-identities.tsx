@@ -16,24 +16,14 @@ import {
 import { IdentityPresenter } from '@0xintuition/api'
 
 import ErrorList from '@components/error-list'
-// import ErrorList from '@components/error-list'
 import { IdentitySearchCombobox } from '@components/identity/identity-search-combo-box'
 import { useIdentityServerSearch } from '@lib/hooks/useIdentityServerSearch'
 import { createIdentityModalAtom } from '@lib/state/store'
-// import {
-//   TAG_PREDICATE_VAULT_ID_TESTNET,
-//   TAG_RESOURCE_ROUTE,
-// } from '@lib/utils/constants'
 import logger from '@lib/utils/logger'
 import { useFetcher } from '@remix-run/react'
 import { TagLoaderData } from '@routes/resources+/tag'
 import { TAG_PREDICATE_VAULT_ID_TESTNET, TAG_RESOURCE_ROUTE } from 'consts'
-// import { useFetcher } from '@remix-run/react'
-// import { TagLoaderData } from '@routes/resources+/tag'
 import { useAtom } from 'jotai'
-import { TransactionActionType } from 'types/transaction'
-
-// import { TransactionActionType } from 'types/transaction'
 
 interface AddIdentitiesProps {
   objectVaultId: string

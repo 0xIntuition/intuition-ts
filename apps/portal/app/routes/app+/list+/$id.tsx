@@ -1,10 +1,4 @@
-import {
-  Button,
-  Icon,
-  IdentityType,
-  InfoCard,
-  ProfileCard,
-} from '@0xintuition/1ui'
+import { Button, Icon, InfoCard, ProfileCard } from '@0xintuition/1ui'
 import {
   ClaimPresenter,
   ClaimsService,
@@ -23,7 +17,6 @@ import {
   useLoaderData,
   useLocation,
   useNavigate,
-  useRouteLoaderData,
 } from '@remix-run/react'
 import { NO_PARAM_ID_ERROR } from 'consts'
 import { useAtom } from 'jotai'

@@ -25,7 +25,7 @@ import {
   MULTIVAULT_CONTRACT_ADDRESS,
 } from 'consts'
 import { TransactionActionType } from 'types/transaction'
-import { formatUnits, parseUnits } from 'viem'
+import { formatUnits } from 'viem'
 import { useAccount, usePublicClient, useWalletClient } from 'wagmi'
 
 import { createIdentityArrays } from './list-utils'

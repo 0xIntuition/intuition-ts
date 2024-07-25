@@ -7,7 +7,7 @@ import { PaginationComponent } from '@components/pagination-component'
 import { Search } from '@components/search'
 import { Sort } from '@components/sort'
 import { useSearchAndSortParamsHandler } from '@lib/hooks/useSearchAndSortParams'
-import logger from '@lib/utils/logger'
+import { useNavigate } from '@remix-run/react'
 import { PaginationType } from 'types/pagination'
 
 import { SortOption } from '../sort-select'
@@ -26,6 +26,7 @@ export function ListClaimsList({
   enableSearch?: boolean
   enableSort?: boolean
 }) {
+  const navigate = useNavigate()
   const options: SortOption<ClaimSortColumn>[] = [
     { value: 'Total ETH', sortBy: 'AssetsSum' },
     { value: 'ETH For', sortBy: 'ForAssetsSum' },
@@ -74,9 +75,7 @@ export function ListClaimsList({
                   identitiesCount={claim.object.tag_count ?? 0}
                   isSaved={claim.user_assets_for !== '0'}
                   savedAmount={claim.user_assets_for}
-                  onSaveClick={
-                    () => logger('save list clicked', claim.claim_id) // TODO: [ENG-2662] - add the functionality once in place
-                  }
+                  onViewClick={() => navigate(`/app/list/${claim.claim_id}`)}
                 />
               ),
           )}
