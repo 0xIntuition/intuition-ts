@@ -158,7 +158,7 @@ export default function AddIdentitiesReview({
             weight="medium"
             className="text-secondary-foreground/70"
           >
-            Review your Tags
+            Review your Identities
           </Text>
         </div>
         <div className="items-center">
