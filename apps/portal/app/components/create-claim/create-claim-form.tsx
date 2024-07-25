@@ -41,12 +41,6 @@ import {
   useTransactionState,
 } from '@lib/hooks/useTransactionReducer'
 import { createClaimSchema } from '@lib/schemas/create-claim-schema'
-import {
-  CREATE_RESOURCE_ROUTE,
-  MULTIVAULT_CONTRACT_ADDRESS,
-  SEARCH_IDENTITIES_RESOURCE_ROUTE,
-} from '@lib/utils/constants'
-import { GENERIC_ERROR_MSG } from '@lib/utils/errors'
 import logger from '@lib/utils/logger'
 import { sliceString, truncateString } from '@lib/utils/misc'
 import {
@@ -56,6 +50,12 @@ import {
 } from '@remix-run/react'
 import { CreateLoaderData } from '@routes/resources+/create'
 import * as blockies from 'blockies-ts'
+import {
+  CREATE_RESOURCE_ROUTE,
+  GENERIC_ERROR_MSG,
+  MULTIVAULT_CONTRACT_ADDRESS,
+  SEARCH_IDENTITIES_RESOURCE_ROUTE,
+} from 'consts'
 import { Identity, IdentityType } from 'types/identity'
 import { TransactionActionType, TransactionStateType } from 'types/transaction'
 import { parseUnits } from 'viem'
