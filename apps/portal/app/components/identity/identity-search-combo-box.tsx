@@ -9,6 +9,7 @@ import {
   CommandGroup,
   CommandInput,
   CommandList,
+  EmptyStateCard,
   Icon,
   IconName,
 } from '@0xintuition/1ui'
@@ -69,7 +70,12 @@ const IdentitySearchCombobox = ({
           </Button>
         )}
         <CommandList>
-          <CommandEmpty>No results found.</CommandEmpty>
+          <CommandEmpty>
+            <EmptyStateCard
+              message="No identities found."
+              className="border-none"
+            />
+          </CommandEmpty>
           <CommandGroup key={identities.length}>
             {identities.map((identity, index) => {
               const {

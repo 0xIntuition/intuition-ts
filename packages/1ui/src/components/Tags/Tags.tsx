@@ -33,7 +33,11 @@ const TagsContent = ({
       {...props}
     >
       {children}
-      <Text variant={TextVariant.body}>+ {numberOfTagsNotDisplayed} more</Text>
+      {numberOfTagsNotDisplayed > 0 && (
+        <Text variant={TextVariant.body}>
+          + {numberOfTagsNotDisplayed} more
+        </Text>
+      )}
     </div>
   )
 }
