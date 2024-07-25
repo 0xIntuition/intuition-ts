@@ -174,10 +174,10 @@ export function ErrorBoundary() {
     const descriptionArray = description.split('\n')
     return (
       <Document>
-        <div className="flex h-[100vh] w-full items-center justify-center gap-12">
+        <div className="flex h-[100vh] w-full items-center justify-center gap-12 max-[900px]:flex-col-reverse max-[900px]:gap-2">
           <div
             className={cn(
-              'flex flex-col max-w-[500px] gap-2',
+              'flex flex-col max-w-[500px] gap-2 max-[900px]:items-center max-[900px]:text-center',
               !statusCode && 'items-center [&>div]:text-center',
             )}
           >
@@ -187,7 +187,7 @@ export function ErrorBoundary() {
             >
               {title}
             </Text>
-            <div className="flex flex-col">
+            <div className="flex flex-col max-[900px]:text-center">
               {descriptionArray?.map((content, index) => (
                 <Text
                   variant={statusCode ? 'bodyLarge' : 'headline'}
@@ -198,7 +198,7 @@ export function ErrorBoundary() {
                 </Text>
               ))}
             </div>
-            <div className="flex gap-6 mt-5">
+            <div className="flex gap-6 mt-5 max-[400px]:flex-col">
               <Button
                 variant="primary"
                 size="lg"
