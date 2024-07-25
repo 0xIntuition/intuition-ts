@@ -222,19 +222,3 @@ export default function Quests() {
     </div>
   )
 }
-
-// if (userQuest && userQuest.quest_completion_object_id) {
-//   try {
-//     const updatedUserQuest = await fetchWrapper({
-//       method: UserQuestsService.completeQuest,
-//       args: {
-//         questId: id,
-//       },
-//     })
-//     if (updatedUserQuest.status === QuestStatus.COMPLETED) {
-//       return json({ success: true, updatedUserQuest })
-//     }
-//   } catch (error) {
-//     logger('Error completing quest', error)
-//     return json({ success: false, error: 'Error completing quest' })
-//   }
