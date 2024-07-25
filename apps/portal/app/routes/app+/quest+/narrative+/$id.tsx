@@ -7,6 +7,7 @@ import {
   Text,
 } from '@0xintuition/1ui'
 import {
+  IdentitiesService,
   QuestPresenter,
   QuestSortColumn,
   QuestsService,
@@ -20,9 +21,14 @@ import { QuestCard } from '@components/quest/quest-card'
 import logger from '@lib/utils/logger'
 import { fetchWrapper, invariant } from '@lib/utils/misc'
 import { getQuestCriteria } from '@lib/utils/quest'
-import { json, LoaderFunctionArgs } from '@remix-run/node'
-import { Link, useLoaderData } from '@remix-run/react'
-import { requireUserId } from '@server/auth'
+import {
+  ActionFunctionArgs,
+  json,
+  LoaderFunctionArgs,
+  redirect,
+} from '@remix-run/node'
+import { Link, useLoaderData, useSubmit } from '@remix-run/react'
+import { requireUser, requireUserId } from '@server/auth'
 import { STANDARD_QUEST_SET } from 'consts'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -44,7 +50,6 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
       },
     })
   ).data
-  logger('Fetched quest', quests)
 
   const userQuests = (
     await fetchWrapper({
@@ -57,10 +62,11 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
       },
     })
   ).data
+  logger('Fetched user quests', userQuests)
   // create a mapping of questId to userQuests
   const questToUserQuestMap = new Map<string, UserQuest>()
   userQuests.forEach((userQuest) => {
-    questToUserQuestMap.set(userQuest.id, userQuest)
+    questToUserQuestMap.set(userQuest.quest_id, userQuest)
   })
   const numQuests = quests.length
 
@@ -81,19 +87,90 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     quests,
     numQuests,
     numCompletedQuests,
+    questToUserQuestMap: Object.fromEntries(questToUserQuestMap),
     completedQuestsMap: Object.fromEntries(completedQuestsMap),
   })
 }
 
+export async function action({ request }: ActionFunctionArgs) {
+  const user = await requireUser(request)
+  invariant(user, 'Unauthorized')
+  console.log(user)
+
+  const formData = await request.formData()
+  const questId = String(formData.get('questId'))
+  invariant(questId, 'questId is required')
+  const redirectTo = String(formData.get('redirectTo'))
+  invariant(redirectTo, 'redirectTo is required')
+  const questStatus = formData.get('questStatus') as QuestStatus
+  invariant(questStatus, 'questStatus is required')
+
+  let userIdentity
+  try {
+    userIdentity = await fetchWrapper({
+      method: IdentitiesService.getIdentityById,
+      args: { id: user.wallet?.address! },
+    })
+  } catch (error) {
+    logger('Error fetching userIdentity', error)
+    return redirect('/create')
+  }
+
+  if (!userIdentity) {
+    return redirect('/create')
+  }
+
+  // start quest
+  if (questStatus === QuestStatus.NOT_STARTED) {
+    const { status } = await fetchWrapper({
+      method: UserQuestsService.startQuest,
+      args: {
+        userId: userIdentity.creator_id!,
+        questId,
+      },
+    })
+    logger('Started quest', questId, status)
+  }
+  return redirect(`/app/quest/chapter/${redirectTo}`)
+}
+
 export default function Quests() {
-  const { quests, numQuests, numCompletedQuests, completedQuestsMap } =
-    useLoaderData<typeof loader>()
+  const {
+    quests,
+    numQuests,
+    numCompletedQuests,
+    completedQuestsMap,
+    questToUserQuestMap,
+  } = useLoaderData<typeof loader>()
+  const submit = useSubmit()
+  console.log(JSON.stringify(questToUserQuestMap, null, 2))
 
   function isQuestAvailable(quest: QuestPresenter) {
     if (!quest.depends_on_quest) {
       return true
     }
     return completedQuestsMap[quest.depends_on_quest] ?? false
+  }
+
+  function getUserQuestStatus(quest: QuestPresenter) {
+    return questToUserQuestMap[quest.id]?.status
+  }
+
+  async function handleClick({
+    questId,
+    redirectTo,
+    status,
+  }: {
+    questId: string
+    redirectTo: string
+    status: QuestStatus
+  }) {
+    const formData = new FormData()
+    formData.append('questId', questId)
+    formData.append('redirectTo', redirectTo)
+    formData.append('questStatus', status)
+    console.log('submit')
+    submit(formData, { method: 'post' })
   }
 
   return (
@@ -134,25 +211,30 @@ export default function Quests() {
           {quests.map((quest) => {
             // check if userQuestMap is empty, if it is, the quest hasnt started
             const available = isQuestAvailable(quest)
+            const userQuestStatus = getUserQuestStatus(quest)
             return (
-              <Link
-                to={`/app/quest/chapter/${quest.id}`}
+              <QuestCard
                 key={`${quest.id}-quest-card`}
-                className={`${available ? 'cursor-pointer' : 'cursor-not-allowed'}`}
-              >
-                <div>
-                  <QuestCard
-                    imgSrc={quest.image}
-                    title={quest.title ?? ''}
-                    description={quest.description ?? ''}
-                    questStatus={quest.status}
-                    label={`Chapter ${quest.position}`}
-                    points={quest.points}
-                    questCriteria={getQuestCriteria(quest.condition)}
-                    disabled={!available}
-                  />
-                </div>
-              </Link>
+                imgSrc={quest.image}
+                title={quest.title ?? ''}
+                description={quest.description ?? ''}
+                questStatus={userQuestStatus}
+                label={`Chapter ${quest.position}`}
+                points={quest.points}
+                questCriteria={getQuestCriteria(quest.condition)}
+                disabled={!available}
+                handleClick={(e) => {
+                  e.preventDefault()
+                  console.log('clicked', quest)
+                  handleClick({
+                    questId: quest.id,
+                    redirectTo: `${quest.narrative === 'Standard' ? '1' : '2'}-${
+                      quest.position
+                    }-${quest.condition}`,
+                    status: userQuestStatus,
+                  })
+                }}
+              />
             )
           })}
         </div>
