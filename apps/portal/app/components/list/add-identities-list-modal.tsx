@@ -1,6 +1,8 @@
 import { Dialog, DialogContent } from '@0xintuition/1ui'
 import { IdentityPresenter } from '@0xintuition/api'
 
+import { AddIdentitiesListForm } from './add-identities-list-form'
+
 export interface AddIdentitiesListModalProps {
   identity: IdentityPresenter
   open?: boolean
@@ -22,15 +24,11 @@ export default function AddIdentitiesListModal({
       }}
     >
       <DialogContent className="bg-neutral-950 rounded-xl shadow border border-solid border-black/10 h-[550px] overflow-hidden flex flex-col">
-        <div>
-          <pre>test</pre>
-        </div>
-        {/* <TagsForm
+        <AddIdentitiesListForm
           identity={identity}
-          mode={mode}
           onClose={onClose}
           onSuccess={onSuccess}
-        /> */}
+        />
       </DialogContent>
     </Dialog>
   )
