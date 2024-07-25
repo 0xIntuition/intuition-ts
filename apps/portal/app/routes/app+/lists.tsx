@@ -1,3 +1,4 @@
+import { NO_WALLET_ERROR } from 'constants'
 import { Suspense, useEffect, useState } from 'react'
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@0xintuition/1ui'
@@ -9,7 +10,6 @@ import {
   TabsSkeleton,
 } from '@components/list/list-skeletons'
 import { getUserCreatedLists, getUserSavedLists } from '@lib/services/lists'
-import { NO_WALLET_ERROR } from '@lib/utils/errors'
 import logger from '@lib/utils/logger'
 import { invariant } from '@lib/utils/misc'
 import { defer, LoaderFunctionArgs } from '@remix-run/node'

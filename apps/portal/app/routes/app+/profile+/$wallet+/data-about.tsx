@@ -6,11 +6,7 @@ import {
 import { Suspense } from 'react'
 
 import { ErrorStateCard, Text } from '@0xintuition/1ui'
-import {
-  ClaimPresenter,
-  ClaimsService,
-  PositionPresenter,
-} from '@0xintuition/api'
+import { ClaimsService } from '@0xintuition/api'
 
 import { ClaimsList as ClaimsAboutIdentity } from '@components/list/claims'
 import { PositionsOnIdentity } from '@components/list/positions-on-identity'
