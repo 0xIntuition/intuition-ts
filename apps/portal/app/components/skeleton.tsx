@@ -33,8 +33,10 @@ export function TabsSkeleton({ numOfTabs }: { numOfTabs: number }) {
 
 export function ActivitySkeleton() {
   return (
-    <div className="flex flex-col w-full">
-      <Skeleton className="w-full h-[564px]" />
+    <div className="flex flex-col w-full gap-5">
+      <Skeleton className="w-full h-40" />
+      <Skeleton className="w-full h-40" />
+      <Skeleton className="w-full h-40" />
     </div>
   )
 }
