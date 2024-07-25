@@ -1,16 +1,16 @@
 import * as React from 'react'
 
-import { QuestCriteriaDisplay } from 'components/QuestCriteriaDisplay'
-import { QuestPointsDisplay } from 'components/QuestPointsDisplay'
-import { Text } from 'components/Text'
-import { cn } from 'styles'
-import { QuestCriteriaType, QuestStatusType } from 'types'
+import { cn, Text } from '@0xintuition/1ui'
+import { QuestStatus } from '@0xintuition/api'
+
+import { QuestCriteriaDisplay } from './quest-criteria-display'
+import { QuestPointsDisplay } from './quest-points-display'
 
 export interface QuestCriteriaCardProps
   extends React.HTMLAttributes<HTMLDivElement> {
-  criteria: QuestCriteriaType
+  criteria: string
   points: number
-  questStatus: QuestStatusType
+  questStatus: QuestStatus
 }
 const QuestCriteriaCard = ({
   criteria,
@@ -29,7 +29,7 @@ const QuestCriteriaCard = ({
           Tasks
         </Text>
         <div className="space-y-2">
-          <QuestCriteriaDisplay {...criteria} />
+          <QuestCriteriaDisplay criteria={criteria} status={questStatus} />
         </div>
       </div>
       <div className="space-y-2.5">

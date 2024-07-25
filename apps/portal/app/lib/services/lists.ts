@@ -2,6 +2,7 @@ import {
   ClaimPresenter,
   ClaimSortColumn,
   ClaimsService,
+  IdentityPresenter,
   UsersService,
 } from '@0xintuition/api'
 
@@ -96,4 +97,69 @@ export async function getUserSavedLists({
       totalPages,
     },
   }
+}
+
+export async function getListIdentities({
+  objectId,
+  searchParams,
+}: {
+  objectId: string
+  searchParams: URLSearchParams
+}) {
+  const { page, limit, sortBy, direction } = getStandardPageParams({
+    searchParams,
+    paramPrefix: 'claims',
+    defaultSortByValue: ClaimSortColumn.ASSETS_SUM,
+  })
+  const displayName = searchParams.get('search') || null
+
+  const listIdentities = await fetchWrapper({
+    method: ClaimsService.searchClaims,
+    args: {
+      page,
+      limit,
+      sortBy: sortBy as ClaimSortColumn,
+      direction,
+      predicate: TAG_PREDICATE_ID_TESTNET,
+      object: objectId,
+      displayName,
+    },
+  })
+
+  const totalPages = calculateTotalPages(listIdentities?.total ?? 0, limit)
+
+  const listIdentitiesSubjects = listIdentities.data.map(
+    (claim) => claim.subject,
+  ) as IdentityPresenter[]
+
+  logger('getListIdentities', listIdentities.total)
+
+  return {
+    listIdentities: listIdentitiesSubjects as IdentityPresenter[],
+    pagination: {
+      currentPage: Number(page),
+      limit: Number(limit),
+      totalEntries: listIdentities.total,
+
+      totalPages,
+    },
+  }
+}
+
+export async function getListIdentitiesCount({
+  objectId,
+}: {
+  objectId: string
+}) {
+  const listIdentities = await fetchWrapper({
+    method: ClaimsService.searchClaims,
+    args: {
+      predicate: TAG_PREDICATE_ID_TESTNET,
+      object: objectId,
+      page: 1,
+      limit: 1,
+    },
+  })
+
+  return listIdentities.total
 }

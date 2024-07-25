@@ -1,9 +1,7 @@
 import * as React from 'react'
 
-import { cn } from 'styles'
-import { QuestStatus, QuestStatusType } from 'types'
-
 import {
+  cn,
   Icon,
   IconName,
   Text,
@@ -12,47 +10,48 @@ import {
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '..'
+} from '@0xintuition/1ui'
+import { QuestStatus } from '@0xintuition/api'
 
-const getInProgressLabel = (status: QuestStatusType) => {
+const getInProgressLabel = (status: QuestStatus) => {
   switch (status) {
-    case QuestStatus.notStarted:
+    case QuestStatus.NOT_STARTED:
       return 'Not Started'
-    case QuestStatus.inProgress:
+    case QuestStatus.STARTED:
       return 'In Progress'
-    case QuestStatus.claimable:
+    case QuestStatus.CLAIMABLE:
       return 'Ready to Claim'
-    case QuestStatus.completed:
+    case QuestStatus.COMPLETED:
       return 'Complete'
     default:
       return 'Not Started'
   }
 }
 
-const getStatusComponentData = (status: QuestStatusType) => {
+const getStatusComponentData = (status: QuestStatus) => {
   switch (status) {
-    case QuestStatus.notStarted:
+    case QuestStatus.NOT_STARTED:
       return {
         iconName: IconName.awaitAction,
         iconClass: 'text-muted-foreground',
         bgClass: 'bg-primary/10',
         label: getInProgressLabel(status),
       }
-    case QuestStatus.inProgress:
+    case QuestStatus.STARTED:
       return {
         iconName: IconName.awaitAction,
         iconClass: 'text-warning',
         bgClass: 'bg-warning/20',
         label: getInProgressLabel(status),
       }
-    case QuestStatus.claimable:
+    case QuestStatus.CLAIMABLE:
       return {
         iconName: IconName.circleCheck,
         iconClass: 'text-success',
         bgClass: 'bg-primary/10',
         label: getInProgressLabel(status),
       }
-    case QuestStatus.completed:
+    case QuestStatus.COMPLETED:
       return {
         iconName: IconName.circleCheckFilled,
         iconClass: 'text-success',
@@ -64,7 +63,7 @@ const getStatusComponentData = (status: QuestStatusType) => {
         iconName: IconName.awaitAction,
         iconClass: 'text-muted-foreground',
         bgClass: 'bg-primary/10',
-        label: getInProgressLabel('not-started'),
+        label: getInProgressLabel(QuestStatus.NOT_STARTED),
       }
   }
 }
@@ -107,7 +106,7 @@ const QuestStatusCardComponent = ({
 
 export interface QuestStatusCardProps
   extends React.HTMLAttributes<HTMLDivElement> {
-  status: QuestStatusType
+  status: QuestStatus
   tooltip?: string
 }
 
@@ -131,4 +130,4 @@ const QuestStatusCard = ({
   )
 }
 
-export { QuestStatusCard }
+export default QuestStatusCard

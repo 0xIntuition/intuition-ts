@@ -1,33 +1,30 @@
-import { Text } from 'components/Text'
-import { cn } from 'styles'
-import { QuestStatus, QuestStatusType } from 'types'
+import * as React from 'react'
+
+import { cn, Text } from '@0xintuition/1ui'
+import { QuestStatus } from '@0xintuition/api'
 
 interface QuestPointsDisplayProps extends React.HTMLAttributes<HTMLDivElement> {
   points: number
-  questStatus: QuestStatusType
+  questStatus: QuestStatus
 }
 
-const getStatusComponentData = (status: QuestStatusType) => {
+const getStatusComponentData = (status: QuestStatus) => {
   switch (status) {
-    case QuestStatus.notStarted:
+    case QuestStatus.NOT_STARTED:
       return {
         statusClass: 'text-muted-foreground',
       }
-    case QuestStatus.inProgress:
+    case QuestStatus.STARTED:
       return {
         statusClass: 'text-muted-foreground',
       }
-    case QuestStatus.claimable:
+    case QuestStatus.CLAIMABLE:
       return {
         statusClass: 'text-foreground',
       }
-    case QuestStatus.completed:
+    case QuestStatus.COMPLETED:
       return {
         statusClass: 'text-success',
-      }
-    case QuestStatus.disabled:
-      return {
-        statusClass: 'text-muted-foreground',
       }
     default:
       return {

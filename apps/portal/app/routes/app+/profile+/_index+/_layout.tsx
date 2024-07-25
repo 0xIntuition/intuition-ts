@@ -69,7 +69,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
       method: IdentitiesService.getIdentityById,
       args: { id: userWallet },
     })
-    logger('userIdentity', userIdentity)
   } catch (error) {
     logger('Error fetching userIdentity', error)
     return redirect('/create')

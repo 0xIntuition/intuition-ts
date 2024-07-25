@@ -1,13 +1,10 @@
-import {
-  cn,
-  QuestPointsDisplay,
-  QuestStatusIndicator,
-  Text,
-} from '@0xintuition/1ui'
+import { cn, Text } from '@0xintuition/1ui'
 import { QuestStatus } from '@0xintuition/api'
 
 import { QuestCardButton } from './quest-card-button'
 import { QuestCriteriaDisplay } from './quest-criteria-display'
+import { QuestPointsDisplay } from './quest-points-display'
+import { QuestStatusIndicator } from './quest-status-indicator'
 
 export interface QuestCardProps extends React.HTMLAttributes<HTMLDivElement> {
   imgSrc: string
