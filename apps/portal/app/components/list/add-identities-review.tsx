@@ -47,8 +47,6 @@ export default function AddIdentitiesReview({
     tripleCost: BigInt(0),
     minDeposit: BigInt(0),
   }
-  logger('minDeposit', minDeposit)
-  logger('tripleCost', formatUnits(BigInt(tripleCost), 18))
 
   const { data: walletClient } = useWalletClient()
   const publicClient = usePublicClient()
@@ -67,7 +65,8 @@ export default function AddIdentitiesReview({
   } = createIdentityArrays(identitiesToAdd, objectVaultId)
 
   const estimatedFees = formatUnits(
-    BigInt(tripleCost) * BigInt(subjectIdentityVaultIds.length),
+    BigInt(tripleCost) * BigInt(subjectIdentityVaultIds.length) +
+      BigInt(minDeposit) * BigInt(objectIdentityVaultIds.length),
     18,
   )
 
@@ -134,7 +133,7 @@ export default function AddIdentitiesReview({
   }
 
   return (
-    <>
+    <div className="flex flex-col h-full">
       <DialogHeader>
         <DialogTitle className="justify-between">
           <div className="flex flex-row gap-2">
@@ -184,13 +183,15 @@ export default function AddIdentitiesReview({
           </Text>
         )}
       </div>
-      <DialogFooter className="!justify-center !items-center">
-        <div className="flex flex-col items-center gap-1">
-          <Button variant="primary" onClick={handleOnChainCreateTags}>
-            Confirm
-          </Button>
-        </div>
-      </DialogFooter>
-    </>
+      <div className="mt-auto py-4 bg-neutral-950">
+        <DialogFooter className="!justify-center !items-center">
+          <div className="flex flex-col items-center gap-1 ">
+            <Button variant="primary" onClick={handleOnChainCreateTags}>
+              Confirm
+            </Button>
+          </div>
+        </DialogFooter>
+      </div>
+    </div>
   )
 }

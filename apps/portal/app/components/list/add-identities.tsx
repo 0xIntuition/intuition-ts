@@ -32,7 +32,6 @@ interface AddIdentitiesProps {
   onAddIdentity: (newTag: IdentityPresenter) => void
   onRemoveIdentity: (id: string) => void
   maxIdentitiesToAdd: number
-  // subjectVaultId: string
   invalidIdentities: string[]
   setInvalidIdentities: React.Dispatch<React.SetStateAction<string[]>>
 }
@@ -81,13 +80,10 @@ export function AddIdentities({
     if (tagFetcher.state === 'idle' && tagFetcher.data !== undefined) {
       const result = tagFetcher.data.result
       if (result === '0') {
-        logger('in fetcher: valid')
-
         setInvalidIdentities((prev) =>
           prev.filter((id) => id !== tagFetcher?.data?.subjectId),
         )
       } else {
-        logger('in fetcher: invalid')
         setInvalidIdentities((prev) => {
           const subjectId = tagFetcher?.data?.subjectId
           return subjectId
@@ -176,7 +172,7 @@ export function AddIdentities({
                     setCreateIdentityModalActive(true)
                   }
                   identities={filteredIdentities}
-                  // existingIdentityIds={identities.map((id) => id.vault_id)}
+                  // existingIdentityIds={identities.map((id) => id.vault_id)} // TODO: [ENG-2822] - Disable existing identities in combobox
                   onIdentitySelect={handleIdentitySelect}
                   onValueChange={setSearchQuery}
                   onInput={handleInput}
