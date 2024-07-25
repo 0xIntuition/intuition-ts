@@ -47,7 +47,7 @@ export function ListClaimsList({
   const { handleSearchChange, handleSortChange, onPageChange, onLimitChange } =
     useSearchAndSortParamsHandler(paramPrefix)
 
-  if (!claimData) {
+  if (!claimData.length) {
     return <EmptyStateCard message="No lists found." />
   }
 
