@@ -11,7 +11,7 @@ import {
   TagsContent,
   TagWithValue,
 } from '@0xintuition/1ui'
-import { IdentitiesService } from '@0xintuition/api'
+import { IdentitiesService, IdentityPresenter } from '@0xintuition/api'
 
 import { NestedLayout } from '@components/nested-layout'
 import StakeModal from '@components/stake/stake-modal'
@@ -81,6 +81,12 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     vaultDetails,
     userWallet,
   })
+}
+
+export interface IdentityLoaderData {
+  identity: IdentityPresenter
+  vaultDetails: VaultDetailsType
+  userWallet: string
 }
 
 export default function IdentityDetails() {

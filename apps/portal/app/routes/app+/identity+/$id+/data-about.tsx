@@ -1,30 +1,27 @@
-import {
-  ClaimPresenter,
-  ClaimSortColumn,
-  ClaimsService,
-  Identifier,
-  IdentitiesService,
-  IdentityPositionsService,
-  IdentityPresenter,
-  PositionPresenter,
-  PositionSortColumn,
-} from '@0xintuition/api'
+import { Suspense } from 'react'
+
+import { ErrorStateCard, Text } from '@0xintuition/1ui'
+import { ClaimsService } from '@0xintuition/api'
 
 import { ClaimsList as ClaimsAboutIdentity } from '@components/list/claims'
 import { PositionsOnIdentity } from '@components/list/positions-on-identity'
 import DataAboutHeader from '@components/profile/data-about-header'
+import { RevalidateButton } from '@components/revalidate-button'
+import { DataHeaderSkeleton, PaginatedListSkeleton } from '@components/skeleton'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
-import { NO_WALLET_ERROR } from '@lib/utils/errors'
-import logger from '@lib/utils/logger'
+import { getClaimsAboutIdentity } from '@lib/services/claims'
+import { getPositionsOnIdentity } from '@lib/services/positions'
 import {
-  calculateTotalPages,
-  fetchWrapper,
-  formatBalance,
-  invariant,
-} from '@lib/utils/misc'
-import { getStandardPageParams } from '@lib/utils/params'
-import { json, LoaderFunctionArgs } from '@remix-run/node'
+  NO_IDENTITY_ERROR,
+  NO_PARAM_ID_ERROR,
+  NO_WALLET_ERROR,
+} from '@lib/utils/errors'
+import { fetchWrapper, formatBalance, invariant } from '@lib/utils/misc'
+import { defer, LoaderFunctionArgs } from '@remix-run/node'
+import { Await, useRouteLoaderData } from '@remix-run/react'
 import { requireUserWallet } from '@server/auth'
+
+import { IdentityLoaderData } from '../$id'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const wallet = await requireUserWallet(request)
@@ -32,149 +29,124 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
   const id = params.id
 
-  if (!id) {
-    throw new Error('Identity id is undefined.')
-  }
-
-  const identity = await fetchWrapper({
-    method: IdentitiesService.getIdentityById,
-    args: { id },
-  })
-
-  if (!identity) {
-    return logger('Identity not found')
-  }
+  invariant(id, NO_PARAM_ID_ERROR)
 
   const url = new URL(request.url)
   const searchParams = new URLSearchParams(url.search)
 
-  const {
-    page: positionsPage,
-    limit: positionsLimit,
-    sortBy: positionsSortBy,
-    direction: positionsDirection,
-  } = getStandardPageParams({
-    searchParams,
-    paramPrefix: 'positions',
-    defaultSortByValue: PositionSortColumn.ASSETS,
-  })
-
-  const positionsSearch =
-    (searchParams.get('positionsSearch') as Identifier) || null
-
-  const positions = await fetchWrapper({
-    method: IdentityPositionsService.getIdentityPositions,
-    args: {
-      id,
-      page: positionsPage,
-      limit: positionsLimit,
-      sortBy: positionsSortBy as PositionSortColumn,
-      direction: positionsDirection,
-      creator: positionsSearch,
-    },
-  })
-
-  const positionsTotalPages = calculateTotalPages(
-    positions?.total ?? 0,
-    positionsLimit,
-  )
-
-  const {
-    page: claimsPage,
-    limit: claimsLimit,
-    sortBy: claimsSortBy,
-    direction: claimsDirection,
-  } = getStandardPageParams({ searchParams, paramPrefix: 'claims' })
-
-  const claimsSearch = (searchParams.get('claimsSearch') as string) || null
-
-  const claims = await fetchWrapper({
-    method: ClaimsService.searchClaims,
-    args: {
-      identity: identity.id,
-      page: claimsPage,
-      limit: claimsLimit,
-      sortBy: claimsSortBy as ClaimSortColumn,
-      direction: claimsDirection,
-      displayName: claimsSearch,
-    },
-  })
-
-  const claimsTotalPages = calculateTotalPages(
-    claims?.total ?? 0,
-    Number(claimsLimit),
-  )
-
-  const claimsSummary = await fetchWrapper({
-    method: ClaimsService.claimSummary,
-    args: {
-      identity: identity.id,
-    },
-  })
-
-  return json({
-    identity: identity as IdentityPresenter,
-    positions: positions?.data as PositionPresenter[],
-    positionsSortBy,
-    positionsDirection,
-    positionsPagination: {
-      currentPage: Number(positionsPage),
-      limit: Number(positionsLimit),
-      totalEntries: positions?.total ?? 0,
-      totalPages: positionsTotalPages,
-    },
-    claims: claims?.data as ClaimPresenter[],
-    claimsSummary,
-    claimsSortBy,
-    claimsDirection,
-    claimsPagination: {
-      currentPage: Number(claimsPage),
-      limit: Number(claimsLimit),
-      totalEntries: claims?.total ?? 0,
-      totalPages: claimsTotalPages,
-    },
+  return defer({
+    positions: getPositionsOnIdentity({ identityId: id, searchParams }),
+    claims: getClaimsAboutIdentity({
+      identityId: id,
+      searchParams,
+    }),
+    claimsSummary: fetchWrapper({
+      method: ClaimsService.claimSummary,
+      args: {
+        identity: id,
+      },
+    }),
   })
 }
 
 export default function ProfileDataAbout() {
-  const {
-    identity,
-    positions,
-    positionsPagination,
-    claims,
-    claimsSummary,
-    claimsPagination,
-  } = useLiveLoader<typeof loader>(['attest'])
+  const { positions, claims, claimsSummary } = useLiveLoader<typeof loader>([
+    'attest',
+  ])
+
+  const { identity } =
+    useRouteLoaderData<IdentityLoaderData>('routes/app+/identity+/$id') ?? {}
+  invariant(identity, NO_IDENTITY_ERROR)
+
   return (
     <div className="flex-col justify-start items-start flex w-full gap-6">
       <div className="flex flex-col w-full pb-4">
-        <DataAboutHeader
-          variant="claims"
-          title="Claims about this Identity"
-          userIdentity={identity}
-          totalClaims={claimsPagination.totalEntries}
-          totalStake={+formatBalance(claimsSummary?.assets_sum ?? 0, 18, 4)}
-          className="mb-6"
-        />
-        <ClaimsAboutIdentity
-          claims={claims}
-          pagination={claimsPagination}
-          paramPrefix="claims"
-        />
+        <div className="self-stretch justify-between items-center inline-flex mb-6">
+          <Text
+            variant="headline"
+            weight="medium"
+            className="theme-secondary-foreground w-full"
+          >
+            Claims about this Identity
+          </Text>
+        </div>
+        <Suspense fallback={<DataHeaderSkeleton />}>
+          <Await
+            resolve={Promise.all([claims, claimsSummary])}
+            errorElement={<></>}
+          >
+            {([resolvedClaims, resolvedClaimsSummary]) => (
+              <DataAboutHeader
+                variant="claims"
+                userIdentity={identity}
+                totalClaims={resolvedClaims.pagination.totalEntries}
+                totalStake={
+                  +formatBalance(resolvedClaimsSummary?.assets_sum ?? 0, 18, 4)
+                }
+              />
+            )}
+          </Await>
+        </Suspense>
+        <Suspense fallback={<PaginatedListSkeleton />}>
+          <Await
+            resolve={claims}
+            errorElement={
+              <ErrorStateCard>
+                <RevalidateButton />
+              </ErrorStateCard>
+            }
+          >
+            {(resolvedClaims) => (
+              <ClaimsAboutIdentity
+                claims={resolvedClaims.data}
+                pagination={resolvedClaims.pagination}
+                paramPrefix="claims"
+                enableSearch
+                enableSort
+              />
+            )}
+          </Await>
+        </Suspense>
       </div>
       <div className="flex flex-col pt-4 w-full">
-        <DataAboutHeader
-          variant="positions"
-          title="Positions on this Identity"
-          userIdentity={identity}
-          totalPositions={identity.num_positions}
-          totalStake={+formatBalance(identity.assets_sum, 18, 4)}
-          className="mb-6"
-        />
-        <PositionsOnIdentity
-          positions={positions}
-          pagination={positionsPagination}
-        />
+        <div className="self-stretch justify-between items-center inline-flex mb-6">
+          <Text
+            variant="headline"
+            weight="medium"
+            className="theme-secondary-foreground w-full"
+          >
+            Positions on this Identity
+          </Text>
+        </div>
+        <Suspense fallback={<DataHeaderSkeleton />}>
+          <Await resolve={positions} errorElement={<></>}>
+            {(resolvedPositions) => (
+              <DataAboutHeader
+                variant="positions"
+                userIdentity={identity}
+                totalPositions={resolvedPositions.pagination.totalEntries}
+                totalStake={+formatBalance(identity.assets_sum, 18, 4)}
+              />
+            )}
+          </Await>
+        </Suspense>
+        <Suspense fallback={<PaginatedListSkeleton />}>
+          <Await
+            resolve={positions}
+            errorElement={
+              <ErrorStateCard>
+                <RevalidateButton />
+              </ErrorStateCard>
+            }
+          >
+            {(resolvedPositions) => (
+              <PositionsOnIdentity
+                positions={resolvedPositions.data}
+                pagination={resolvedPositions.pagination}
+              />
+            )}
+          </Await>
+        </Suspense>
       </div>
     </div>
   )
