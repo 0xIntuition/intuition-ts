@@ -263,7 +263,7 @@ const getCreateActivityComponentData = (status: QuestStatus) => {
     case QuestStatus.STARTED:
       return {
         iconName: IconName.awaitAction,
-        iconClass: 'text-warning',
+        iconClass: 'text-muted-foreground',
         containerClass: 'bg-primary/5 border border-accent/20 border-dashed',
       }
     case QuestStatus.CLAIMABLE:
