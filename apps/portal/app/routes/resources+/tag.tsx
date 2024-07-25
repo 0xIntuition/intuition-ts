@@ -4,6 +4,7 @@ import { getTripleHashFromAtoms, getTriplesByHash } from '@server/multivault'
 
 export type TagLoaderData = {
   result: string
+  subjectId: string
   objectId: string
 }
 
@@ -35,7 +36,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
     logger('Result for actual hash:', getTriplesByHashResult.toString())
 
-    return json({ result: getTriplesByHashResult.toString(), objectId })
+    return json({
+      result: getTriplesByHashResult.toString(),
+      subjectId,
+      objectId,
+    })
   } catch (error) {
     console.error('Error fetching triple hash:', error)
     return json({ error: 'Error fetching triple hash' }, { status: 500 })

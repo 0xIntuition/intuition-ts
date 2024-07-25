@@ -66,12 +66,15 @@ export function AddIdentitiesListForm({
     }
   }
 
-  const handleRemoveIdentity = (index: number) => {
-    setSelectedIdentities(selectedIdentities.filter((_, i) => i !== index))
+  const handleRemoveIdentity = (vaultId: string) => {
+    setSelectedIdentities(
+      selectedIdentities.filter((identity) => identity.vault_id !== vaultId),
+    )
+    setInvalidIdentities((prev) =>
+      prev.filter((invalidId) => invalidId !== vaultId),
+    )
   }
 
-  logger('existingIdentities', existingIdentityIds)
-  logger('base identity', identity)
   return (
     <div className="flex flex-col h-full">
       {!isTransactionStarted && (
