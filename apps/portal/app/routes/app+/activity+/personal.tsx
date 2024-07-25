@@ -1,17 +1,19 @@
-import {
-  ActivitiesService,
-  ActivityPresenter,
-  SortColumn,
-} from '@0xintuition/api'
+import { Suspense } from 'react'
+
+import { ErrorStateCard } from '@0xintuition/1ui'
+import { ActivityPresenter } from '@0xintuition/api'
 
 import { ActivityList } from '@components/list/activity'
+import { RevalidateButton } from '@components/revalidate-button'
+import { ActivitySkeleton } from '@components/skeleton'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
-import logger from '@lib/utils/logger'
-import { calculateTotalPages, fetchWrapper, invariant } from '@lib/utils/misc'
-import { getStandardPageParams } from '@lib/utils/params'
-import { json, LoaderFunctionArgs } from '@remix-run/node'
+import { getActivity } from '@lib/services/activity'
+import { NO_WALLET_ERROR } from '@lib/utils/errors'
+import { invariant } from '@lib/utils/misc'
+import { defer, LoaderFunctionArgs } from '@remix-run/node'
+import { Await } from '@remix-run/react'
 import { requireUser, requireUserWallet } from '@server/auth'
-import { NO_WALLET_ERROR } from 'consts'
+import { PaginationType } from 'types/pagination'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const wallet = await requireUserWallet(request)
@@ -25,53 +27,36 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url)
   const searchParams = new URLSearchParams(url.search)
 
-  const { page, limit, sortBy, direction } = getStandardPageParams({
-    searchParams,
-    defaultSortByValue: SortColumn.CREATED_AT,
-  })
-
-  const userActivity = await fetchWrapper({
-    method: ActivitiesService.getActivities,
-    args: {
-      page,
-      limit,
-      sortBy,
-      direction,
+  return defer({
+    activity: getActivity({
+      searchParams,
       fromAddress: userWallet,
-    },
-  })
-
-  const totalPages = calculateTotalPages(
-    userActivity?.total ?? 0,
-    Number(limit),
-  )
-  logger('userActivity', userActivity)
-
-  return json({
-    userActivity: userActivity?.data as ActivityPresenter[],
-    sortBy,
-    direction,
-    pagination: {
-      currentPage: Number(page),
-      limit: Number(limit),
-      totalEntries: userActivity?.total ?? 0,
-      totalPages,
-    },
+    }),
   })
 }
 
 export default function PersonalActivityFeed() {
-  const { userActivity, pagination } = useLiveLoader<typeof loader>([
-    'attest',
-    'create',
-  ])
+  const { activity } = useLiveLoader<typeof loader>(['attest', 'create'])
 
   return (
     <div className="m-8 flex flex-col items-center gap-4">
-      <ActivityList
-        activities={userActivity as ActivityPresenter[]}
-        pagination={pagination}
-      />
+      <Suspense fallback={<ActivitySkeleton />}>
+        <Await
+          resolve={Promise.all([activity])}
+          errorElement={
+            <ErrorStateCard>
+              <RevalidateButton />
+            </ErrorStateCard>
+          }
+        >
+          {([resolvedActivity]) => (
+            <ActivityList
+              activities={resolvedActivity.activity as ActivityPresenter[]}
+              pagination={resolvedActivity.pagination as PaginationType}
+            />
+          )}
+        </Await>
+      </Suspense>
     </div>
   )
 }

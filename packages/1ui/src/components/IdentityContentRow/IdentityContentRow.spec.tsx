@@ -37,7 +37,7 @@ describe('IdentityContentRow', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="w-full mb-4"
+          class="w-full"
         >
           <div
             class="w-full flex justify-between items-center"

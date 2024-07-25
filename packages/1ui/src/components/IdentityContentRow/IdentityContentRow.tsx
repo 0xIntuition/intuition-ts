@@ -40,7 +40,7 @@ const IdentityContentRow = ({
   ...props
 }: IdentityContentRowProps) => {
   return (
-    <div className="w-full mb-4">
+    <div className="w-full">
       <div
         className={cn(`w-full flex justify-between items-center`, className)}
         {...props}

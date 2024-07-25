@@ -1,7 +1,12 @@
 import {
+  Button,
+  ButtonSize,
+  ButtonVariant,
   Claim,
   ClaimRow,
   EmptyStateCard,
+  Icon,
+  IconName,
   Identity,
   IdentityContentRow,
   IdentityTag,
@@ -10,7 +15,7 @@ import {
 import { ActivityPresenter, SortColumn } from '@0xintuition/api'
 
 import { formatBalance } from '@lib/utils/misc'
-import { useNavigate } from '@remix-run/react'
+import { Link, useNavigate } from '@remix-run/react'
 import { formatDistance } from 'date-fns'
 import { PaginationType } from 'types/pagination'
 
@@ -91,7 +96,7 @@ function ActivityItem({
   return (
     <div
       key={activity.id}
-      className={`grow shrink basis-0 self-stretch p-6 bg-black first:rounded-t-xl last:rounded-b-xl border border-neutral-300/20 flex-col justify-start items-start gap-5 inline-flex w-full`}
+      className={`grow shrink basis-0 self-stretch p-6 bg-black rounded-xl my-4 border border-neutral-300/20 flex-col justify-start items-start gap-5 inline-flex w-full`}
     >
       <div className="flex flex-row items-center justify-between min-w-full">
         <div className="flex flex-row items-center gap-2">
@@ -108,44 +113,62 @@ function ActivityItem({
           {formatDistance(new Date(activity.timestamp), new Date())} ago
         </Text>
       </div>
-      <div className="flex w-full px-6">
+      <div className="flex w-full">
         {activity.identity && (
-          <IdentityContentRow
-            variant={
-              activity.identity.is_user ? Identity.user : Identity.nonUser
-            }
-            avatarSrc={
-              activity.identity.user?.image ?? activity.identity.image ?? ''
-            }
-            name={
-              activity.identity.user?.display_name ??
-              activity.identity.display_name
-            }
-            walletAddress={
-              activity.identity.user?.wallet ?? activity.identity.identity_id
-            }
-            amount={
-              +formatBalance(
-                BigInt(activity.identity.user_assets ?? '0'),
-                18,
-                4,
-              )
-            }
-            totalFollowers={activity.identity.num_positions}
-            onClick={() => {
-              if (activity.identity) {
-                navigate(
-                  activity.identity.is_user
-                    ? `/app/profile/${activity.identity.identity_id}`
-                    : `/app/identity/${activity.identity.identity_id}`,
+          <div className="hover:cursor-pointer bg-secondary-foreground/10 pl-12 pr-6 py-4 rounded-xl flex flex-row w-full gap-6 items-center">
+            <IdentityContentRow
+              variant={
+                activity.identity.is_user ? Identity.user : Identity.nonUser
+              }
+              avatarSrc={
+                activity.identity.user?.image ?? activity.identity.image ?? ''
+              }
+              name={
+                activity.identity.user?.display_name ??
+                activity.identity.display_name
+              }
+              walletAddress={
+                activity.identity.user?.wallet ?? activity.identity.identity_id
+              }
+              amount={
+                +formatBalance(
+                  BigInt(activity.identity.user_assets ?? '0'),
+                  18,
+                  4,
                 )
               }
-            }}
-            className="hover:cursor-pointer"
-          />
+              totalFollowers={activity.identity.num_positions}
+              onClick={() => {
+                if (activity.identity) {
+                  navigate(
+                    activity.identity.is_user
+                      ? `/app/profile/${activity.identity.identity_id}`
+                      : `/app/identity/${activity.identity.identity_id}`,
+                  )
+                }
+              }}
+            />
+            <Link
+              to={
+                activity.identity.is_user
+                  ? `/app/profile/${activity.identity.identity_id}`
+                  : `/app/identity/${activity.identity.id}`
+              }
+              prefetch="intent"
+            >
+              <Button
+                variant={ButtonVariant.secondary}
+                size={ButtonSize.md}
+                className="w-40 h-fit"
+              >
+                View Identity{' '}
+                <Icon name={IconName.arrowUpRightFromCircleIcon} />
+              </Button>
+            </Link>
+          </div>
         )}
         {activity.claim && (
-          <div className="flex flex-row w-full">
+          <div className="hover:cursor-pointer bg-secondary-foreground/10 pl-12 pr-6 py-4 rounded-xl flex flex-row w-full gap-6 items-center">
             <ClaimRow
               claimsFor={activity.claim.for_num_positions}
               claimsAgainst={activity.claim.against_num_positions}
@@ -193,6 +216,18 @@ function ActivityItem({
                 }}
               />
             </ClaimRow>
+            <Link
+              to={`/app/claim/${activity.claim.claim_id}`}
+              prefetch="intent"
+            >
+              <Button
+                variant={ButtonVariant.secondary}
+                size={ButtonSize.md}
+                className="w-40 h-fit"
+              >
+                View Claim <Icon name={IconName.arrowUpRightFromCircleIcon} />
+              </Button>
+            </Link>
           </div>
         )}
       </div>
