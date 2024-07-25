@@ -125,11 +125,13 @@ export default function Quests() {
     logger('Activity success', identity)
     if (userQuest) {
       logger('Submitting fetcher', identity.id, userQuest.id)
+      // TODO: Handle persisting of quest details
       fetcher.load(`/resources/get-quest-status?userQuestId=${userQuest.id}`)
     }
   }
 
   function handleCompleteQuest() {
+    // TODO: Handle completion action
     logger('Completing quest', userQuest?.id)
   }
 
