@@ -2,7 +2,6 @@ import { ReactNode, Suspense } from 'react'
 
 import {
   ErrorStateCard,
-  Skeleton,
   Tabs,
   TabsContent,
   TabsList,
@@ -17,14 +16,22 @@ import {
   ConnectionsHeaderVariants,
   ConnectionsHeaderVariantType,
 } from '@components/profile/connections-header'
-import { RevalidateButton } from '@components/revalidate-button'
+import {
+  DataHeaderSkeleton,
+  PaginatedListSkeleton,
+  TabsSkeleton,
+} from '@components/skeleton'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { getConnectionsData } from '@lib/services/connections'
 import { formatBalance, invariant } from '@lib/utils/misc'
 import { defer, LoaderFunctionArgs } from '@remix-run/node'
 import { Await, useRouteLoaderData } from '@remix-run/react'
 import { requireUserWallet } from '@server/auth'
-import { NO_USER_IDENTITY_ERROR, NO_WALLET_ERROR } from 'consts'
+import {
+  NO_USER_IDENTITY_ERROR,
+  NO_USER_TOTALS_ERROR,
+  NO_WALLET_ERROR,
+} from 'consts'
 
 import { ProfileLoaderData } from './_layout'
 
@@ -72,7 +79,6 @@ const TabContent = ({
 
 export default function ProfileConnections() {
   const { connectionsData } = useLiveLoader<typeof loader>(['attest'])
-
   const { userIdentity } =
     useRouteLoaderData<ProfileLoaderData>(
       'routes/app+/profile+/_index+/_layout',
@@ -90,33 +96,10 @@ export default function ProfileConnections() {
           Connections
         </Text>
       </div>
-      <Suspense fallback={<Skeleton className="w-full h-28" />}>
-        <Await
-          resolve={connectionsData}
-          errorElement={
-            <ErrorStateCard>
-              <RevalidateButton />
-            </ErrorStateCard>
-          }
-        >
-          {(resolvedConnectionsData) => {
-            if (!resolvedConnectionsData) {
-              return (
-                <Text>
-                  This user has no follow claim yet. A follow claim will be
-                  created when the first person follows them.
-                </Text>
-              )
-            }
-            return (
-              <ConnectionsContent
-                userIdentity={userIdentity}
-                connectionsData={resolvedConnectionsData}
-              />
-            )
-          }}
-        </Await>
-      </Suspense>
+      <ConnectionsContent
+        userIdentity={userIdentity}
+        connectionsData={connectionsData}
+      />
     </div>
   )
 }
@@ -126,56 +109,99 @@ function ConnectionsContent({
   connectionsData,
 }: {
   userIdentity: IdentityPresenter
-  connectionsData: NonNullable<Awaited<ReturnType<typeof getConnectionsData>>>
+  connectionsData: Promise<NonNullable<
+    Awaited<ReturnType<typeof getConnectionsData>>
+  > | null>
 }) {
-  const {
-    followClaim,
-    followers,
-    followersPagination,
-    following,
-    followingPagination,
-  } = connectionsData
+  const { userTotals } =
+    useRouteLoaderData<ProfileLoaderData>(
+      'routes/app+/profile+/_index+/_layout',
+    ) ?? {}
+  invariant(userTotals, NO_USER_TOTALS_ERROR)
 
   return (
-    <Tabs defaultValue={ConnectionsHeaderVariants.followers} className="w-full">
-      <TabsList className="mb-4">
-        <TabsTrigger
-          value={ConnectionsHeaderVariants.followers}
-          label="Followers"
-          totalCount={followersPagination.totalEntries}
-        />
-        <TabsTrigger
-          value={ConnectionsHeaderVariants.following}
-          label="Following"
-          totalCount={followingPagination.totalEntries}
-        />
-      </TabsList>
-      <TabContent
-        value={ConnectionsHeaderVariants.followers}
-        claim={followClaim}
-        totalFollowers={userIdentity.follower_count}
-        totalStake={formatBalance(followClaim.assets_sum, 18, 4)}
-        variant={ConnectionsHeaderVariants.followers}
+    <Suspense
+      fallback={
+        <>
+          <TabsSkeleton numOfTabs={2} />
+          <DataHeaderSkeleton />
+          <PaginatedListSkeleton />
+        </>
+      }
+    >
+      <Await
+        resolve={connectionsData}
+        errorElement={
+          <ErrorStateCard
+            message="This user has no follow claim yet. A follow claim will be
+                created when the first person follows them."
+          />
+        }
       >
-        <FollowList
-          identities={followers}
-          pagination={followersPagination}
-          paramPrefix="followers"
-        />
-      </TabContent>
-      <TabContent
-        value={ConnectionsHeaderVariants.following}
-        claim={followClaim}
-        totalFollowers={userIdentity.followed_count}
-        totalStake={'0'} //TODO: Update this value when it is available. See ENG-2708
-        variant={ConnectionsHeaderVariants.following}
-      >
-        <FollowList
-          identities={following}
-          pagination={followingPagination}
-          paramPrefix="following"
-        />
-      </TabContent>
-    </Tabs>
+        {(resolvedConnectionsData) => {
+          if (!resolvedConnectionsData) {
+            return (
+              <Text>
+                This user has no follow claim yet. A follow claim will be
+                created when the first person follows them.
+              </Text>
+            )
+          }
+          const {
+            followClaim,
+            followers,
+            followersPagination,
+            following,
+            followingPagination,
+          } = resolvedConnectionsData
+
+          return (
+            <Tabs
+              defaultValue={ConnectionsHeaderVariants.followers}
+              className="w-full"
+            >
+              <TabsList className="mb-4">
+                <TabsTrigger
+                  value={ConnectionsHeaderVariants.followers}
+                  label="Followers"
+                  totalCount={followingPagination.totalEntries}
+                />
+                <TabsTrigger
+                  value={ConnectionsHeaderVariants.following}
+                  label="Following"
+                  totalCount={followersPagination.totalEntries}
+                />
+              </TabsList>
+              <TabContent
+                value={ConnectionsHeaderVariants.followers}
+                claim={followClaim}
+                totalFollowers={userIdentity.follower_count}
+                totalStake={formatBalance(followClaim.assets_sum, 18, 4)}
+                variant={ConnectionsHeaderVariants.followers}
+              >
+                <FollowList
+                  identities={followers}
+                  pagination={followersPagination}
+                  paramPrefix="followers"
+                />
+              </TabContent>
+              <TabContent
+                value={ConnectionsHeaderVariants.following}
+                claim={followClaim}
+                totalFollowers={userIdentity.followed_count}
+                totalStake={formatBalance(userTotals.followed_assets, 18, 4)}
+                variant={ConnectionsHeaderVariants.following}
+              >
+                <FollowList
+                  identities={following}
+                  pagination={followingPagination}
+                  paramPrefix="following"
+                />
+              </TabContent>
+            </Tabs>
+          )
+        }}
+      </Await>
+    </Suspense>
   )
 }
