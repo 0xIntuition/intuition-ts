@@ -24,7 +24,9 @@ export function NestedLayout({
             <SegmentedNav options={options} />
           </div>
         )}
-        <OutletComponent />
+        <div className="pb-10">
+          <OutletComponent />
+        </div>
       </div>
     </div>
   )
