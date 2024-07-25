@@ -73,6 +73,7 @@ export function AddIdentities({
     logger('selected identity', identity)
     onAddIdentity(identity)
     setSearchQuery('')
+    setIsPopoverOpen(false)
 
     const searchParams = new URLSearchParams({
       subjectId: identity.vault_id,
