@@ -1,3 +1,5 @@
+import { NO_WALLET_ERROR } from 'constants'
+
 import {
   Button,
   Claim,
@@ -23,7 +25,6 @@ import {
 import { NestedLayout } from '@components/nested-layout'
 import StakeModal from '@components/stake/stake-modal'
 import { stakeModalAtom } from '@lib/state/store'
-import { NO_WALLET_ERROR } from '@lib/utils/errors'
 import logger from '@lib/utils/logger'
 import {
   calculatePercentageOfTvl,

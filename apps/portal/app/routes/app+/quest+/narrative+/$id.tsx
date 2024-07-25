@@ -1,3 +1,5 @@
+import { STANDARD_QUEST_SET } from 'constants'
+
 import {
   Button,
   ButtonVariant,
@@ -17,7 +19,6 @@ import {
 } from '@0xintuition/api'
 
 import { QuestCard } from '@components/quest/quest-card'
-import { STANDARD_QUEST_SET } from '@lib/utils/constants/quest'
 import logger from '@lib/utils/logger'
 import { fetchWrapper, invariant } from '@lib/utils/misc'
 import { getQuestCriteria } from '@lib/utils/quest'

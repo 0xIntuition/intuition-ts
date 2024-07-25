@@ -1,6 +1,7 @@
+import { NO_WALLET_ERROR } from 'constants'
+
 import { IdentitiesService } from '@0xintuition/api'
 
-import { NO_WALLET_ERROR } from '@lib/utils/errors'
 import logger from '@lib/utils/logger'
 import { invariant } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'

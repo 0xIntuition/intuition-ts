@@ -1,3 +1,4 @@
+import { NO_WALLET_ERROR } from 'constants'
 import { ReactNode } from 'react'
 
 import {
@@ -21,7 +22,6 @@ import {
 } from '@components/profile/connections-header'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { getConnectionsData } from '@lib/services/connections'
-import { NO_WALLET_ERROR } from '@lib/utils/errors'
 import logger from '@lib/utils/logger'
 import { fetchWrapper, formatBalance, invariant } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'

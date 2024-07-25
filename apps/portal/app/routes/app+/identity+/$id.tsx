@@ -1,3 +1,5 @@
+import { identityRouteOptions, NO_WALLET_ERROR } from 'constants'
+
 import {
   PositionCard,
   PositionCardFeesAccrued,
@@ -17,8 +19,6 @@ import { NestedLayout } from '@components/nested-layout'
 import StakeModal from '@components/stake/stake-modal'
 import TagsModal from '@components/tags/tags-modal'
 import { stakeModalAtom, tagsModalAtom } from '@lib/state/store'
-import { identityRouteOptions } from '@lib/utils/constants'
-import { NO_WALLET_ERROR } from '@lib/utils/errors'
 import logger from '@lib/utils/logger'
 import {
   calculatePercentageOfTvl,

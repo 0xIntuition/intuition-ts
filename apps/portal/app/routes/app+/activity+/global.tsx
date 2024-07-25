@@ -1,3 +1,5 @@
+import { NO_WALLET_ERROR } from 'constants'
+
 import {
   ActivitiesService,
   ActivityPresenter,
@@ -6,7 +8,6 @@ import {
 
 import { ActivityList } from '@components/list/activity'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
-import { NO_WALLET_ERROR } from '@lib/utils/errors'
 import logger from '@lib/utils/logger'
 import { calculateTotalPages, fetchWrapper, invariant } from '@lib/utils/misc'
 import { getStandardPageParams } from '@lib/utils/params'

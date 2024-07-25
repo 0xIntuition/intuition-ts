@@ -1,7 +1,7 @@
+import { MULTIVAULT_CONTRACT_ADDRESS, NO_WALLET_ERROR } from 'constants'
+
 import { ApiError, ClaimsService } from '@0xintuition/api'
 
-import { MULTIVAULT_CONTRACT_ADDRESS } from '@lib/utils/constants'
-import { NO_WALLET_ERROR } from '@lib/utils/errors'
 import logger from '@lib/utils/logger'
 import { invariant } from '@lib/utils/misc'
 import { ActionFunctionArgs, json } from '@remix-run/node'

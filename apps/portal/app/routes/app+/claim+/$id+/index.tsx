@@ -1,3 +1,4 @@
+import { NO_PARAM_ID_ERROR, NO_WALLET_ERROR } from 'constants'
 import { Suspense, useEffect, useState } from 'react'
 
 import { Tabs, TabsList, TabsTrigger, Text } from '@0xintuition/1ui'
@@ -7,7 +8,6 @@ import { PositionsOnClaim } from '@components/list/positions-on-claim'
 import { PaginatedListSkeleton, TabsSkeleton } from '@components/skeleton'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { getPositionsOnClaim } from '@lib/services/positions'
-import { NO_PARAM_ID_ERROR, NO_WALLET_ERROR } from '@lib/utils/errors'
 import { fetchWrapper, invariant } from '@lib/utils/misc'
 import { defer, LoaderFunctionArgs } from '@remix-run/node'
 import { Await, useNavigation, useSearchParams } from '@remix-run/react'

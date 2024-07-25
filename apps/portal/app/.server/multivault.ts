@@ -8,7 +8,7 @@ import {
   IdentityVaultDetailsType,
   MultivaultConfig,
   VaultDetailsType,
-} from 'types/vault'
+} from 'types'
 import { formatUnits, parseUnits, type Address } from 'viem'
 
 interface MulticallResponse {

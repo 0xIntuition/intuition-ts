@@ -5,7 +5,7 @@ import { combineHeaders, getAuthHeaders } from '@lib/utils/misc'
 import { getRedirectToUrl } from '@lib/utils/redirect'
 import { User } from '@privy-io/server-auth'
 import { redirect } from '@remix-run/node'
-import { RedirectOptions } from 'types/navigation'
+import { RedirectOptions } from 'types'
 
 import {
   getPrivyAccessToken,

@@ -1,3 +1,4 @@
+import { NO_USER_IDENTITY_ERROR, NO_WALLET_ERROR } from 'constants'
 import { Suspense } from 'react'
 
 import { ErrorStateCard, Text } from '@0xintuition/1ui'
@@ -11,7 +12,6 @@ import { DataHeaderSkeleton, PaginatedListSkeleton } from '@components/skeleton'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { getClaimsAboutIdentity } from '@lib/services/claims'
 import { getPositionsOnIdentity } from '@lib/services/positions'
-import { NO_USER_IDENTITY_ERROR, NO_WALLET_ERROR } from '@lib/utils/errors'
 import { fetchWrapper, formatBalance, invariant } from '@lib/utils/misc'
 import { defer, LoaderFunctionArgs } from '@remix-run/node'
 import { Await, useRouteLoaderData } from '@remix-run/react'

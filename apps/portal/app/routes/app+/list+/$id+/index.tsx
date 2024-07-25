@@ -1,3 +1,4 @@
+import { NO_CLAIM_ERROR, NO_PARAM_ID_ERROR } from 'constants'
 import { Suspense } from 'react'
 
 import { Claim, ListHeaderCard } from '@0xintuition/1ui'
@@ -6,7 +7,6 @@ import { ClaimPresenter, ClaimsService } from '@0xintuition/api'
 import { IdentitiesList } from '@components/list/identities'
 import { DataHeaderSkeleton, PaginatedListSkeleton } from '@components/skeleton'
 import { getListIdentities, getListIdentitiesCount } from '@lib/services/lists'
-import { NO_CLAIM_ERROR, NO_PARAM_ID_ERROR } from '@lib/utils/errors'
 import logger from '@lib/utils/logger'
 import { DataErrorDisplay, fetchWrapper, invariant } from '@lib/utils/misc'
 import { defer, LoaderFunctionArgs } from '@remix-run/node'

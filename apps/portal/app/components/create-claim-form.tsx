@@ -1,3 +1,9 @@
+import {
+  CREATE_RESOURCE_ROUTE,
+  GENERIC_ERROR_MSG,
+  MULTIVAULT_CONTRACT_ADDRESS,
+  SEARCH_IDENTITIES_RESOURCE_ROUTE,
+} from 'constants'
 import React, { useEffect, useState } from 'react'
 
 import {
@@ -36,12 +42,6 @@ import {
   useTransactionState,
 } from '@lib/hooks/useTransactionReducer'
 import { createClaimSchema } from '@lib/schemas/create-claim-schema'
-import {
-  CREATE_RESOURCE_ROUTE,
-  MULTIVAULT_CONTRACT_ADDRESS,
-  SEARCH_IDENTITIES_RESOURCE_ROUTE,
-} from '@lib/utils/constants'
-import { GENERIC_ERROR_MSG } from '@lib/utils/errors'
 import logger from '@lib/utils/logger'
 import { sliceString, truncateString } from '@lib/utils/misc'
 import { useFetcher, useNavigate } from '@remix-run/react'

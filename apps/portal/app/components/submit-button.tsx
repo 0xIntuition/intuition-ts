@@ -1,8 +1,8 @@
+import { CURRENT_ENV } from 'constants'
 import React from 'react'
 
 import { Button, Icon } from '@0xintuition/1ui'
 
-import { CURRENT_ENV } from '@lib/utils/constants'
 import { getChainEnvConfig } from '@lib/utils/environment'
 import { baseSepolia } from 'viem/chains'
 import { useAccount, useSwitchChain } from 'wagmi'

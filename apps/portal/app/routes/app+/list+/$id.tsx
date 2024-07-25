@@ -1,9 +1,10 @@
+import { NO_PARAM_ID_ERROR } from 'constants'
+
 import { Button, Icon, InfoCard, ProfileCard } from '@0xintuition/1ui'
 import { ClaimPresenter, ClaimsService } from '@0xintuition/api'
 
 import { ListIdentityDisplayCard } from '@components/list/list-identity-display-card'
 import { NestedLayout } from '@components/nested-layout'
-import { NO_PARAM_ID_ERROR } from '@lib/utils/errors'
 import logger from '@lib/utils/logger'
 import { fetchWrapper, invariant, sliceString } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'

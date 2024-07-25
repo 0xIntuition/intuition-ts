@@ -1,3 +1,4 @@
+import { CREATE_RESOURCE_ROUTE } from 'constants'
 import { useEffect, useRef, useState } from 'react'
 
 import { Dialog, DialogContent, DialogFooter, toast } from '@0xintuition/1ui'
@@ -9,7 +10,6 @@ import { useDepositTriple } from '@lib/hooks/useDepositTriple'
 import { useLoaderFetcher } from '@lib/hooks/useLoaderFetcher'
 import { useRedeemTriple } from '@lib/hooks/useRedeemTriple'
 import { transactionReducer } from '@lib/hooks/useTransactionReducer'
-import { CREATE_RESOURCE_ROUTE } from '@lib/utils/constants'
 import logger from '@lib/utils/logger'
 import { formatBalance } from '@lib/utils/misc'
 import { useGenericTxState } from '@lib/utils/use-tx-reducer'

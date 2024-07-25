@@ -1,6 +1,7 @@
+import { CURRENT_ENV } from 'constants'
+
 import { type GetContractReturnType } from 'viem'
 
-import { CURRENT_ENV } from '../utils/constants'
 import { getChainEnvConfig } from '../utils/environment'
 import { useContractWriteAndWait } from './useContractWriteAndWait'
 import { useMultivaultContract } from './useMultivaultContract'

@@ -1,6 +1,6 @@
-import { z } from 'zod'
+import { DESCRIPTION_MAX_LENGTH, MAX_UPLOAD_SIZE } from 'constants'
 
-import { DESCRIPTION_MAX_LENGTH, MAX_UPLOAD_SIZE } from '../utils/constants'
+import { z } from 'zod'
 
 const urlWithoutHttps = z
   .string()

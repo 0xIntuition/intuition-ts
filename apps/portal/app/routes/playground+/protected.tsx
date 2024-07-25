@@ -1,7 +1,7 @@
 import { Text } from '@0xintuition/1ui'
 
 import PrivyLogoutButton from '@client/privy-logout-button'
-import { ActionFunctionArgs, json, LoaderFunctionArgs } from '@remix-run/node'
+import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { useLoaderData, useSubmit } from '@remix-run/react'
 import { logout, requireUser } from '@server/auth'
 
@@ -10,9 +10,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
   return json({ message: 'hack the planet', user })
 }
 
-export async function action({ request }: ActionFunctionArgs) {
+export async function action() {
   return await logout({
-    request,
     redirectTo: '/playground',
   })
 }
