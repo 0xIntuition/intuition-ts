@@ -25,7 +25,7 @@ export function TabsSkeleton({ numOfTabs }: { numOfTabs: number }) {
   return (
     <div className="flex items-center gap-2.5 mb-5">
       {Array.from({ length: numOfTabs }).map((_, index) => (
-        <Skeleton key={index} className="w-24 h-10 rounded" />
+        <Skeleton key={index} className="w-44 h-10 rounded" />
       ))}
     </div>
   )

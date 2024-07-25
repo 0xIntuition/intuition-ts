@@ -1,20 +1,48 @@
 import {
+  ClaimPresenter,
   ClaimsService,
   IdentitiesService,
   IdentityPresenter,
   SortColumn,
+  SortDirection,
 } from '@0xintuition/api'
 
 import { calculateTotalPages, fetchWrapper } from '@lib/utils/misc'
 import { getStandardPageParams } from '@lib/utils/params'
 
+interface PaginationData {
+  currentPage: number
+  limit: number
+  totalEntries: number
+  totalPages: number
+}
+
+export interface ConnectionsData {
+  followClaim: ClaimPresenter
+  followers: IdentityPresenter[]
+  followersSortBy: SortColumn
+  followersDirection: SortDirection
+  followersPagination: PaginationData
+  following: IdentityPresenter[]
+  followingSortBy: SortColumn
+  followingDirection: SortDirection
+  followingPagination: PaginationData
+}
+
 export async function getConnectionsData({
-  userIdentity,
+  userWallet,
   request,
 }: {
-  userIdentity: IdentityPresenter
+  userWallet: string
   request: Request
-}) {
+}): Promise<ConnectionsData | null> {
+  const userIdentity = await fetchWrapper({
+    method: IdentitiesService.getIdentityById,
+    args: {
+      id: userWallet,
+    },
+  })
+
   if (userIdentity.follow_claim_id) {
     const followClaim = await fetchWrapper({
       method: ClaimsService.getClaimById,

@@ -1,17 +1,14 @@
-import { ReactNode } from 'react'
+import { ReactNode, Suspense } from 'react'
 
 import {
+  ErrorStateCard,
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
   Text,
 } from '@0xintuition/1ui'
-import {
-  ClaimPresenter,
-  IdentitiesService,
-  IdentityPresenter,
-} from '@0xintuition/api'
+import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
 
 import { FollowList } from '@components/list/follow'
 import {
@@ -19,49 +16,32 @@ import {
   ConnectionsHeaderVariants,
   ConnectionsHeaderVariantType,
 } from '@components/profile/connections-header'
+import {
+  DataHeaderSkeleton,
+  PaginatedListSkeleton,
+  TabsSkeleton,
+} from '@components/skeleton'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { getConnectionsData } from '@lib/services/connections'
-import logger from '@lib/utils/logger'
-import { fetchWrapper, formatBalance, invariant } from '@lib/utils/misc'
-import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
+import { formatBalance, invariant } from '@lib/utils/misc'
+import { defer, LoaderFunctionArgs } from '@remix-run/node'
+import { Await, useRouteLoaderData } from '@remix-run/react'
 import { requireUserWallet } from '@server/auth'
-import { NO_WALLET_ERROR } from 'consts'
-import { PaginationType } from 'types/pagination'
+import {
+  NO_USER_IDENTITY_ERROR,
+  NO_USER_TOTALS_ERROR,
+  NO_WALLET_ERROR,
+} from 'consts'
+
+import { ProfileLoaderData } from './_layout'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const userWallet = await requireUserWallet(request)
   invariant(userWallet, NO_WALLET_ERROR)
 
-  const userIdentity = await fetchWrapper({
-    method: IdentitiesService.getIdentityById,
-    args: {
-      id: userWallet,
-    },
+  return defer({
+    connectionsData: getConnectionsData({ userWallet, request }),
   })
-
-  if (!userIdentity) {
-    return redirect('/create')
-  }
-
-  if (!userIdentity.creator || typeof userIdentity.creator.id !== 'string') {
-    return logger('Invalid or missing creator ID')
-  }
-
-  const connectionsData = await getConnectionsData({ userIdentity, request })
-
-  return json({
-    userIdentity,
-    ...connectionsData,
-  })
-}
-
-interface LoaderData {
-  userIdentity: IdentityPresenter
-  followClaim: ClaimPresenter
-  followers: IdentityPresenter[]
-  followersPagination: PaginationType
-  following: IdentityPresenter[]
-  followingPagination: PaginationType
 }
 
 const TabContent = ({
@@ -98,23 +78,12 @@ const TabContent = ({
 }
 
 export default function ProfileConnections() {
-  const {
-    userIdentity,
-    followClaim,
-    followers,
-    followersPagination,
-    following,
-    followingPagination,
-  } = useLiveLoader<LoaderData>(['attest'])
-
-  if (!followClaim) {
-    return (
-      <Text>
-        This user has no follow claim yet. A follow claim will be created when
-        the first person follows them.
-      </Text>
-    )
-  }
+  const { connectionsData } = useLiveLoader<typeof loader>(['attest'])
+  const { userIdentity } =
+    useRouteLoaderData<ProfileLoaderData>(
+      'routes/app+/profile+/_index+/_layout',
+    ) ?? {}
+  invariant(userIdentity, NO_USER_IDENTITY_ERROR)
 
   return (
     <div className="flex-col justify-start items-start flex w-full">
@@ -127,49 +96,112 @@ export default function ProfileConnections() {
           Connections
         </Text>
       </div>
-      <Tabs
-        defaultValue={ConnectionsHeaderVariants.followers}
-        className="w-full"
-      >
-        <TabsList className="mb-4">
-          <TabsTrigger
-            value={ConnectionsHeaderVariants.followers}
-            label="Followers"
-            totalCount={followersPagination.totalEntries}
-          />
-          <TabsTrigger
-            value={ConnectionsHeaderVariants.following}
-            label="Following"
-            totalCount={followingPagination.totalEntries}
-          />
-        </TabsList>
-        <TabContent
-          value={ConnectionsHeaderVariants.followers}
-          claim={followClaim}
-          totalFollowers={userIdentity.follower_count}
-          totalStake={formatBalance(followClaim.assets_sum, 18, 4)}
-          variant={ConnectionsHeaderVariants.followers}
-        >
-          <FollowList
-            identities={followers}
-            pagination={followersPagination}
-            paramPrefix="followers"
-          />
-        </TabContent>
-        <TabContent
-          value={ConnectionsHeaderVariants.following}
-          claim={followClaim}
-          totalFollowers={userIdentity.followed_count}
-          totalStake={'0'} //TODO: Update this value when it is available. See ENG-2708
-          variant={ConnectionsHeaderVariants.following}
-        >
-          <FollowList
-            identities={following}
-            pagination={followingPagination}
-            paramPrefix="following"
-          />
-        </TabContent>
-      </Tabs>
+      <ConnectionsContent
+        userIdentity={userIdentity}
+        connectionsData={connectionsData}
+      />
     </div>
+  )
+}
+
+function ConnectionsContent({
+  userIdentity,
+  connectionsData,
+}: {
+  userIdentity: IdentityPresenter
+  connectionsData: Promise<NonNullable<
+    Awaited<ReturnType<typeof getConnectionsData>>
+  > | null>
+}) {
+  const { userTotals } =
+    useRouteLoaderData<ProfileLoaderData>(
+      'routes/app+/profile+/_index+/_layout',
+    ) ?? {}
+  invariant(userTotals, NO_USER_TOTALS_ERROR)
+
+  return (
+    <Suspense
+      fallback={
+        <>
+          <TabsSkeleton numOfTabs={2} />
+          <DataHeaderSkeleton />
+          <PaginatedListSkeleton />
+        </>
+      }
+    >
+      <Await
+        resolve={connectionsData}
+        errorElement={
+          <ErrorStateCard
+            message="This user has no follow claim yet. A follow claim will be
+                created when the first person follows them."
+          />
+        }
+      >
+        {(resolvedConnectionsData) => {
+          if (!resolvedConnectionsData) {
+            return (
+              <Text>
+                This user has no follow claim yet. A follow claim will be
+                created when the first person follows them.
+              </Text>
+            )
+          }
+          const {
+            followClaim,
+            followers,
+            followersPagination,
+            following,
+            followingPagination,
+          } = resolvedConnectionsData
+
+          return (
+            <Tabs
+              defaultValue={ConnectionsHeaderVariants.followers}
+              className="w-full"
+            >
+              <TabsList className="mb-4">
+                <TabsTrigger
+                  value={ConnectionsHeaderVariants.followers}
+                  label="Followers"
+                  totalCount={followingPagination.totalEntries}
+                />
+                <TabsTrigger
+                  value={ConnectionsHeaderVariants.following}
+                  label="Following"
+                  totalCount={followersPagination.totalEntries}
+                />
+              </TabsList>
+              <TabContent
+                value={ConnectionsHeaderVariants.followers}
+                claim={followClaim}
+                totalFollowers={userIdentity.follower_count}
+                totalStake={formatBalance(followClaim.assets_sum, 18, 4)}
+                variant={ConnectionsHeaderVariants.followers}
+              >
+                <FollowList
+                  identities={followers}
+                  pagination={followersPagination}
+                  paramPrefix="followers"
+                />
+              </TabContent>
+              <TabContent
+                value={ConnectionsHeaderVariants.following}
+                claim={followClaim}
+                totalFollowers={userIdentity.followed_count}
+                totalStake={formatBalance(userTotals.followed_assets, 18, 4)}
+                variant={ConnectionsHeaderVariants.following}
+              >
+                <FollowList
+                  identities={following}
+                  pagination={followingPagination}
+                  paramPrefix="following"
+                />
+              </TabContent>
+            </Tabs>
+          )
+        }}
+      </Await>
+    </Suspense>
   )
 }
