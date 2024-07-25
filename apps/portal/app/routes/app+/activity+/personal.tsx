@@ -8,11 +8,11 @@ import { RevalidateButton } from '@components/revalidate-button'
 import { ActivitySkeleton } from '@components/skeleton'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { getActivity } from '@lib/services/activity'
-import { NO_WALLET_ERROR } from '@lib/utils/errors'
 import { invariant } from '@lib/utils/misc'
 import { defer, LoaderFunctionArgs } from '@remix-run/node'
 import { Await } from '@remix-run/react'
 import { requireUser, requireUserWallet } from '@server/auth'
+import { NO_WALLET_ERROR } from 'consts'
 import { PaginationType } from 'types/pagination'
 
 export async function loader({ request }: LoaderFunctionArgs) {
