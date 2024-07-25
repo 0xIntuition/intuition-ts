@@ -1,4 +1,10 @@
-import { Button, Icon, InfoCard, ProfileCard } from '@0xintuition/1ui'
+import {
+  Button,
+  Icon,
+  IdentityType,
+  InfoCard,
+  ProfileCard,
+} from '@0xintuition/1ui'
 import {
   ClaimPresenter,
   ClaimsService,
@@ -9,6 +15,7 @@ import AddIdentitiesListModal from '@components/list/add-identities-list-modal'
 import { ListIdentityDisplayCard } from '@components/list/list-identity-display-card'
 import { NestedLayout } from '@components/nested-layout'
 import { addIdentitiesListModalAtom } from '@lib/state/store'
+import logger from '@lib/utils/logger'
 import { fetchWrapper, invariant, sliceString } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import {
@@ -16,6 +23,7 @@ import {
   useLoaderData,
   useLocation,
   useNavigate,
+  useRouteLoaderData,
 } from '@remix-run/react'
 import { NO_PARAM_ID_ERROR } from 'consts'
 import { useAtom } from 'jotai'
@@ -106,6 +114,7 @@ export default function ListDetails() {
         </div>
         <AddIdentitiesListModal
           identity={claim.object as IdentityPresenter}
+          claimId={claim.claim_id}
           open={addIdentitiesListModalActive.isOpen}
           onClose={() =>
             setAddIdentitiesListModalActive({

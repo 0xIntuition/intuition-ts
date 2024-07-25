@@ -32,21 +32,25 @@ import { TransactionActionType } from 'types/transaction'
 // import { TransactionActionType } from 'types/transaction'
 
 interface AddIdentitiesProps {
+  objectVaultId: string
   selectedIdentities: IdentityPresenter[]
   // existingTagIds: string[]
   onAddIdentity: (newTag: IdentityPresenter) => void
   onRemoveIdentity: (index: number) => void
   maxIdentitiesToAdd: number
   // subjectVaultId: string
-  // invalidTags: string[]
-  // setInvalidTags: React.Dispatch<React.SetStateAction<string[]>>
+  invalidIdentities: string[]
+  setInvalidIdentities: React.Dispatch<React.SetStateAction<string[]>>
 }
 
 export function AddIdentities({
+  objectVaultId,
   selectedIdentities,
   onAddIdentity,
   onRemoveIdentity,
   maxIdentitiesToAdd,
+  invalidIdentities,
+  setInvalidIdentities,
 }: AddIdentitiesProps) {
   const [, setCreateIdentityModalActive] = useAtom(createIdentityModalAtom)
 
@@ -125,7 +129,7 @@ export function AddIdentities({
                     setCreateIdentityModalActive(true)
                   }
                   identities={filteredIdentities}
-                  existingIdentityIds={identities.map((id) => id.vault_id)}
+                  // existingIdentityIds={identities.map((id) => id.vault_id)}
                   onIdentitySelect={onAddIdentity}
                   onValueChange={setSearchQuery}
                   onInput={handleInput}

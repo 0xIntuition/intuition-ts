@@ -1,6 +1,8 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import {
+  Button,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   IdentityTag,
@@ -13,19 +15,22 @@ import {
   transactionReducer,
   useTransactionState,
 } from '@lib/hooks/useTransactionReducer'
+import logger from '@lib/utils/logger'
+import { useFetcher } from '@remix-run/react'
 import { TransactionActionType, TransactionStateType } from 'types/transaction'
 
 import { AddIdentities } from './add-identities'
 
 interface AddIdentitiesListFormProps {
   identity: IdentityPresenter
+  claimId: string
   onSuccess?: () => void
   onClose: () => void
 }
 
 export function AddIdentitiesListForm({
   identity,
-
+  claimId,
   onClose,
 }: AddIdentitiesListFormProps) {
   const { state, dispatch } = useTransactionState<
@@ -53,6 +58,8 @@ export function AddIdentitiesListForm({
     ? identity.tags.map((tag) => tag.identity_id)
     : []
 
+  const [invalidIdentities, setInvalidIdentities] = useState<string[]>([])
+
   const handleAddIdentity = (selectedIdentity: IdentityPresenter) => {
     if (selectedIdentities.length < MAX_IDENTITIES_TO_ADD) {
       setSelectedIdentities([...selectedIdentities, selectedIdentity])
@@ -63,6 +70,8 @@ export function AddIdentitiesListForm({
     setSelectedIdentities(selectedIdentities.filter((_, i) => i !== index))
   }
 
+  logger('existingIdentities', existingIdentityIds)
+  logger('base identity', identity)
   return (
     <div className="flex flex-col h-full">
       {!isTransactionStarted && (
@@ -86,13 +95,32 @@ export function AddIdentitiesListForm({
                 </DialogTitle>
               </DialogHeader>
               <AddIdentities
+                objectVaultId={identity.vault_id}
                 selectedIdentities={selectedIdentities}
                 onAddIdentity={handleAddIdentity}
                 onRemoveIdentity={handleRemoveIdentity}
                 maxIdentitiesToAdd={MAX_IDENTITIES_TO_ADD}
+                invalidIdentities={invalidIdentities}
+                setInvalidIdentities={setInvalidIdentities}
               />
             </div>
           )}
+          <div className="mt-auto py-4 bg-neutral-950">
+            <DialogFooter className="!justify-center !items-center">
+              <div className="flex flex-col items-center gap-1">
+                <Button
+                  variant="primary"
+                  disabled={
+                    selectedIdentities.length === 0 ||
+                    invalidIdentities.length !== 0
+                  }
+                  onClick={() => dispatch({ type: 'REVIEW_TRANSACTION' })}
+                >
+                  Add Identities
+                </Button>
+              </div>
+            </DialogFooter>
+          </div>
         </>
       )}
     </div>

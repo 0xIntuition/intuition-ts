@@ -45,8 +45,6 @@ export default function ListOverview() {
   const { claim } =
     useRouteLoaderData<{ claim: ClaimPresenter }>('routes/app+/list+/$id') ?? {}
   invariant(claim, NO_CLAIM_ERROR)
-  logger('claim on index from routeloader', claim)
-  logger('listIdentities', listIdentities)
 
   return (
     <div className="flex-col justify-start items-start flex w-full gap-6">
