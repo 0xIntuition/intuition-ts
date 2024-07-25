@@ -52,3 +52,11 @@ export const followModalAtom = atom<{
   isOpen: false,
   id: null,
 })
+
+export const addIdentitiesListModalAtom = atom<{
+  isOpen: boolean
+  id: string | null
+}>({
+  isOpen: false,
+  id: null,
+})

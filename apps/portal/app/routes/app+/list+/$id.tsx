@@ -1,9 +1,14 @@
 import { Button, Icon, InfoCard, ProfileCard } from '@0xintuition/1ui'
-import { ClaimPresenter, ClaimsService } from '@0xintuition/api'
+import {
+  ClaimPresenter,
+  ClaimsService,
+  IdentityPresenter,
+} from '@0xintuition/api'
 
+import AddIdentitiesListModal from '@components/list/add-identities-list-modal'
 import { ListIdentityDisplayCard } from '@components/list/list-identity-display-card'
 import { NestedLayout } from '@components/nested-layout'
-import logger from '@lib/utils/logger'
+import { addIdentitiesListModalAtom } from '@lib/state/store'
 import { fetchWrapper, invariant, sliceString } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import {
@@ -13,6 +18,7 @@ import {
   useNavigate,
 } from '@remix-run/react'
 import { NO_PARAM_ID_ERROR } from 'consts'
+import { useAtom } from 'jotai'
 
 export async function loader({ params }: LoaderFunctionArgs) {
   const id = params.id
@@ -33,6 +39,8 @@ export default function ListDetails() {
     claim: ClaimPresenter
   }>()
 
+  const [addIdentitiesListModalActive, setAddIdentitiesListModalActive] =
+    useAtom(addIdentitiesListModalAtom)
   const navigate = useNavigate()
   const location = useLocation()
   const from = location.state?.from
@@ -50,7 +58,15 @@ export default function ListDetails() {
         <Button variant="secondary" size="icon" onClick={() => goBack}>
           <Icon name="arrow-left" />
         </Button>
-        <Button variant="primary" onClick={() => logger('add to list clicked')}>
+        <Button
+          variant="primary"
+          onClick={() => {
+            setAddIdentitiesListModalActive({
+              isOpen: true,
+              id: claim?.object?.id ?? null,
+            })
+          }}
+        >
           <Icon name="plus-small" />
           Add to list
         </Button>
@@ -88,6 +104,16 @@ export default function ListDetails() {
             <Icon name="arrow-up-right" />
           </Button>
         </div>
+        <AddIdentitiesListModal
+          identity={claim.object as IdentityPresenter}
+          open={addIdentitiesListModalActive.isOpen}
+          onClose={() =>
+            setAddIdentitiesListModalActive({
+              ...addIdentitiesListModalActive,
+              isOpen: false,
+            })
+          }
+        />
       </NestedLayout>
     </>
   )
