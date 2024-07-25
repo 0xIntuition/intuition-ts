@@ -25,7 +25,7 @@ import { PATHS } from 'consts'
 import { useAtom } from 'jotai'
 import { isAddress } from 'viem'
 
-import CreateClaimModal from './create-claim-modal'
+import CreateClaimModal from './create-claim/create-claim-modal'
 import CreateIdentityModal from './create-identity-modal'
 
 interface SidebarNavRoute {
@@ -201,7 +201,6 @@ export default function SidebarNav({
             </SidebarLayoutNavFooter>
           </SidebarLayoutNav>
           <SidebarLayoutContent className="h-full w-full min-h-screen overflow-y-scroll">
-            {/* TODO: overflow-y-scroll on SidebarLayoutContent is causing scroll issues all over the app. Discussion is needed to fix this. */}
             {children}
           </SidebarLayoutContent>
         </SidebarLayout>

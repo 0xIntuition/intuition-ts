@@ -80,6 +80,8 @@ const IdentitySearchCombobox = ({
             {identities.map((identity, index) => {
               const {
                 display_name: name,
+                user,
+                image,
                 assets_sum: value,
                 creator_address: walletAddress,
                 follower_count: socialCount,
@@ -94,7 +96,8 @@ const IdentitySearchCombobox = ({
                 <IdentitySearchComboboxItem
                   key={index}
                   variant={variant}
-                  name={truncateString(name, 7)}
+                  name={truncateString(user?.display_name ?? name, 7)}
+                  avatarSrc={user?.image ?? image ?? undefined}
                   value={+formatBalance(value)}
                   walletAddress={walletAddress}
                   socialCount={socialCount || 0}
