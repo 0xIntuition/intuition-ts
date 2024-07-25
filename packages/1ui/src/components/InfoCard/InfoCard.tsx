@@ -37,7 +37,7 @@ const InfoCard = ({
       <Text variant={TextVariant.caption} className="text-muted-foreground">
         Creator
       </Text>
-      <div className="flex justify-between items-center gap-1">
+      <div className="flex justify-start items-center gap-1">
         <IdentityTag variant={variant} imgSrc={avatarImgSrc}>
           {username}
         </IdentityTag>
