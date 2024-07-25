@@ -48,7 +48,9 @@ import {
 import {
   IdentityTransactionActionType,
   IdentityTransactionStateType,
-} from 'types/transaction'
+  TransactionSuccessAction,
+  TransactionSuccessActionType,
+} from 'types'
 import { parseUnits, toHex } from 'viem'
 import { usePublicClient, useWalletClient } from 'wagmi'
 
@@ -59,12 +61,12 @@ import { TransactionState } from './transaction-state'
 interface IdentityFormProps {
   onSuccess?: (identity: IdentityPresenter) => void
   onClose: () => void
-  successAction?: 'view' | 'close'
+  successAction?: TransactionSuccessActionType
 }
 export function IdentityForm({
   onClose,
   onSuccess,
-  successAction = 'view',
+  successAction = TransactionSuccessAction.VIEW,
 }: IdentityFormProps) {
   const { state, dispatch } = useTransactionState<
     IdentityTransactionStateType,
@@ -133,7 +135,7 @@ interface CreateIdentityFormProps {
   >
   transactionResponseData: IdentityPresenter | null
   onClose: () => void
-  successAction: 'view' | 'close'
+  successAction: TransactionSuccessActionType
 }
 export interface OffChainIdentityFetcherData {
   success: 'success' | 'error'
@@ -599,7 +601,7 @@ function CreateIdentityForm({
                   variant="primary"
                   size="lg"
                   onClick={() => {
-                    if (successAction === 'view') {
+                    if (successAction === TransactionSuccessAction.VIEW) {
                       navigate(
                         `/app/identity/${transactionResponseData.identity_id}`,
                       )
@@ -607,7 +609,9 @@ function CreateIdentityForm({
                     onClose()
                   }}
                 >
-                  {successAction === 'view' ? 'View identity' : 'Close'}
+                  {successAction === TransactionSuccessAction.VIEW
+                    ? 'View identity'
+                    : 'Close'}
                 </Button>
               )
             }

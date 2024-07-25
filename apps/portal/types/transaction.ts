@@ -82,3 +82,11 @@ export type TransactionStateType =
   BaseTransactionStateType<TransactionStatusType>
 export type IdentityTransactionStateType =
   BaseTransactionStateType<IdentityTransactionStatusType>
+
+export const TransactionSuccessAction = {
+  VIEW: 'view',
+  CLOSE: 'close',
+}
+
+export type TransactionSuccessActionType =
+  (typeof TransactionSuccessAction)[keyof typeof TransactionSuccessAction]
