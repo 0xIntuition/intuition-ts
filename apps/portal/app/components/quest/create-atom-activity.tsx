@@ -91,7 +91,6 @@ export default function CreateAtomActivity({
               username={identity.creator?.display_name ?? ''}
               avatarImgSrc={identity.creator?.image ?? ''}
               timestamp={identity.created_at}
-              onClick={() => {}}
               className="p-0 border-none"
             />
           </div>
