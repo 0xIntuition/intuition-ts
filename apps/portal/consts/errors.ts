@@ -7,3 +7,10 @@ export const GENERIC_ERROR_MSG = 'An error occurred'
 export const NO_CLAIM_ERROR = 'No claim found'
 export const NO_USER_TOTALS_ERROR = 'No user totals found'
 export const NO_CONNECTIONS_DATA_ERROR = 'No connections data found'
+export const ERROR_PROCESSING_TRANSACTION = 'Error processing transaction'
+export const ERROR_IN_ONCHAIN_TRANSACTION = 'Error in onchain transaction'
+export const INSUFFICIENT_FUNDS_ERROR =
+  'Insufficient funds. Please add more ETH to your wallet and try again.'
+export const TRANSACTION_REJECTED_ERROR =
+  'Transaction rejected. Try again when you are ready.'
+export const TRANSACTION_REVERTED_ERROR = 'Transaction reverted'

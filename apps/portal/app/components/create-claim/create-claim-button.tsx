@@ -7,6 +7,7 @@ import { createClaimModalAtom } from '@lib/state/store'
 import { getChainEnvConfig } from '@lib/utils/environment'
 import { useNavigate, useNavigation } from '@remix-run/react'
 import { CURRENT_ENV } from 'consts'
+import { TRANSACTION_ACTIONS, TRANSACTION_STATUS } from 'consts/transaction'
 import { useSetAtom } from 'jotai'
 import { TransactionActionType, TransactionStateType } from 'types/transaction'
 import { Chain } from 'viem'
@@ -56,27 +57,27 @@ const getButtonText = (
   state: TransactionStateType,
   chain: Chain | undefined,
   claimExists: boolean,
-) => {
-  if (state.status === 'review-transaction') {
-    return 'Create Claim'
-  }
-  if (state.status === 'awaiting') {
-    return 'Continue in Wallet'
-  }
-  if (state.status === 'transaction-pending') {
-    return 'Pending'
-  }
-  if (state.status === 'transaction-confirmed' || state.status === 'complete') {
-    return 'View Claim'
-  }
-  if (state.status === 'error') {
-    return 'Retry'
-  }
-  if (chain?.id !== getChainEnvConfig(CURRENT_ENV).chainId) {
-    return 'Wrong Network'
-  }
-  if (claimExists) {
-    return 'Claim Exists'
+): string => {
+  switch (state.status) {
+    case TRANSACTION_STATUS.REVIEW_TRANSACTION:
+      return 'Create Claim'
+    case TRANSACTION_STATUS.APPROVE_TRANSACTION:
+      return 'Continue in Wallet'
+    case TRANSACTION_STATUS.TRANSACTION_PENDING:
+      return 'Pending'
+    case TRANSACTION_STATUS.TRANSACTION_CONFIRMED:
+    case TRANSACTION_STATUS.COMPLETE:
+      return 'View Claim'
+    case TRANSACTION_STATUS.ERROR:
+      return 'Retry'
+    default:
+      if (chain?.id !== getChainEnvConfig(CURRENT_ENV).chainId) {
+        return 'Wrong Network'
+      }
+      if (claimExists) {
+        return 'Claim Exists'
+      }
+      return 'Review'
   }
   return 'Review'
 }
@@ -100,18 +101,21 @@ const CreateClaimButton: React.FC<CreateClaimButtonProps> = ({
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault()
     if (
-      state.status === 'complete' ||
-      state.status === 'transaction-confirmed'
+      state.status === TRANSACTION_STATUS.COMPLETE ||
+      state.status === TRANSACTION_STATUS.TRANSACTION_CONFIRMED
     ) {
       navigate(`/app/claim/${claim_id}`)
       handleClose()
-      dispatch({ type: 'START_TRANSACTION' })
-    } else if (state.status === 'review-transaction') {
+      dispatch({ type: TRANSACTION_ACTIONS.START_TRANSACTION })
+    } else if (state.status === TRANSACTION_STATUS.REVIEW_TRANSACTION) {
       handleAction()
     } else if (chain?.id !== getChainEnvConfig(CURRENT_ENV).chainId) {
       switchChain?.({ chainId: getChainEnvConfig(CURRENT_ENV).chainId })
-    } else if (state.status === 'idle' || state.status === 'error') {
-      dispatch({ type: 'REVIEW_TRANSACTION' })
+    } else if (
+      state.status === TRANSACTION_STATUS.IDLE ||
+      state.status === TRANSACTION_STATUS.ERROR
+    ) {
+      dispatch({ type: TRANSACTION_ACTIONS.REVIEW_TRANSACTION })
     } else {
       handleAction()
     }
@@ -119,11 +123,15 @@ const CreateClaimButton: React.FC<CreateClaimButtonProps> = ({
 
   const isDisabled =
     !address ||
-    (claimExists && state.status !== 'complete') ||
-    selectedIdentities.subject === null ||
-    selectedIdentities.predicate === null ||
-    selectedIdentities.object === null ||
-    ['confirm', 'transaction-pending', 'awaiting'].includes(state.status)
+    (claimExists && state.status !== TRANSACTION_STATUS.COMPLETE) ||
+    !selectedIdentities.subject ||
+    !selectedIdentities.predicate ||
+    !selectedIdentities.object ||
+    [
+      TRANSACTION_STATUS.CONFIRM,
+      TRANSACTION_STATUS.TRANSACTION_PENDING,
+      TRANSACTION_STATUS.APPROVE_TRANSACTION,
+    ].includes(state.status)
 
   return (
     <Button

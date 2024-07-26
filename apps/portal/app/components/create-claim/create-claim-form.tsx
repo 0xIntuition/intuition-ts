@@ -6,13 +6,13 @@ import {
   DialogTitle,
   Text,
   TransactionStatus,
-  TransactionStatusType,
 } from '@0xintuition/1ui'
 
 import { usePopoverStates } from '@lib/hooks/usePopoverStates'
 import { FetcherWithComponents } from '@remix-run/react'
 import { CreateClaimFeesType } from '@routes/resources+/create-claim'
 import { CLAIM_ACTIONS } from 'consts/claims'
+import { TransactionStatusType } from 'consts/transaction'
 import { TransactionActionType, TransactionStateType } from 'types'
 
 import { ClaimAction, ClaimState } from '../../lib/hooks/useClaimState'
@@ -116,7 +116,10 @@ export function CreateClaimForm({
                     isLoading={isLoading}
                     showErrors={claimState.showErrors}
                     setShowErrors={(show) =>
-                      claimDispatch({ type: 'SET_SHOW_ERRORS', payload: show })
+                      claimDispatch({
+                        type: CLAIM_ACTIONS.SET_SHOW_ERRORS,
+                        payload: show,
+                      })
                     }
                     validationErrors={claimState.validationErrors}
                     setValidationErrors={(errors) =>

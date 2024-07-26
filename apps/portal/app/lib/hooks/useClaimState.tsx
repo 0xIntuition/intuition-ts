@@ -24,11 +24,7 @@ export interface ClaimState {
 
 export const initialClaimState: ClaimState = {
   createdClaim: null,
-  selectedIdentities: {
-    subject: undefined,
-    predicate: undefined,
-    object: undefined,
-  },
+  selectedIdentities: {},
   claimExists: false,
   initialDeposit: '0',
   searchQuery: '',

@@ -16,6 +16,7 @@ import { IdentityPresenter } from '@0xintuition/api'
 
 import { formatBalance } from '@lib/utils/misc'
 import { CreateClaimFeesType } from '@routes/resources+/create-claim'
+import { TRANSACTION_ACTIONS } from 'consts/transaction'
 import { TransactionActionType } from 'types/transaction'
 import { formatUnits } from 'viem'
 
@@ -84,7 +85,9 @@ const CreateClaimReview: React.FC<CreateClaimReviewProps> = ({
       <DialogHeader>
         <DialogTitle>
           <Button
-            onClick={() => dispatch({ type: 'START_TRANSACTION' })}
+            onClick={() =>
+              dispatch({ type: TRANSACTION_ACTIONS.START_TRANSACTION })
+            }
             variant="ghost"
             size="icon"
           >

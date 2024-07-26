@@ -18,11 +18,21 @@ import { TagLoaderData } from '@routes/resources+/tag'
 import { useQueryClient } from '@tanstack/react-query'
 import {
   CREATE_CLAIM_RESOURCE_ROUTE,
+  ERROR_IN_ONCHAIN_TRANSACTION,
+  ERROR_PROCESSING_TRANSACTION,
   GENERIC_ERROR_MSG,
+  INSUFFICIENT_FUNDS_ERROR,
   MULTIVAULT_CONTRACT_ADDRESS,
   SEARCH_IDENTITIES_RESOURCE_ROUTE,
+  TRANSACTION_REJECTED_ERROR,
+  TRANSACTION_REVERTED_ERROR,
 } from 'consts'
 import { CLAIM_ACTIONS } from 'consts/claims'
+import {
+  TRANSACTION_ACTIONS,
+  TRANSACTION_RECEIPT_STATUS,
+  TRANSACTION_STATUS,
+} from 'consts/transaction'
 import { formatUnits, parseUnits } from 'viem'
 import { useBalance, useBlockNumber, usePublicClient } from 'wagmi'
 
@@ -80,9 +90,9 @@ export default function CreateClaimModal({
   const isLoading =
     !!awaitingWalletConfirmation ||
     !!awaitingOnChainConfirmation ||
-    transactionState.status === 'confirm' ||
-    transactionState.status === 'transaction-pending' ||
-    transactionState.status === 'transaction-confirmed'
+    transactionState.status === TRANSACTION_STATUS.CONFIRM ||
+    transactionState.status === TRANSACTION_STATUS.TRANSACTION_PENDING ||
+    transactionState.status === TRANSACTION_STATUS.TRANSACTION_CONFIRMED
 
   useEffect(() => {
     if (open && claimFetcher.data?.claim && !claimState.createdClaim) {
@@ -101,15 +111,15 @@ export default function CreateClaimModal({
 
   useEffect(() => {
     if (awaitingWalletConfirmation) {
-      transactionDispatch({ type: 'APPROVE_TRANSACTION' })
+      transactionDispatch({ type: TRANSACTION_ACTIONS.APPROVE_TRANSACTION })
     }
     if (awaitingOnChainConfirmation) {
-      transactionDispatch({ type: 'TRANSACTION_PENDING' })
+      transactionDispatch({ type: TRANSACTION_ACTIONS.TRANSACTION_PENDING })
     }
     if (isError) {
       transactionDispatch({
-        type: 'TRANSACTION_ERROR',
-        error: 'Error processing transaction',
+        type: TRANSACTION_ACTIONS.TRANSACTION_ERROR,
+        error: ERROR_PROCESSING_TRANSACTION,
       })
     }
   }, [awaitingWalletConfirmation, awaitingOnChainConfirmation, isError])
@@ -168,7 +178,7 @@ export default function CreateClaimModal({
 
   useEffect(() => {
     claimDispatch({ type: CLAIM_ACTIONS.RESET })
-    transactionDispatch({ type: 'START_TRANSACTION' })
+    transactionDispatch({ type: TRANSACTION_ACTIONS.START_TRANSACTION })
   }, [location])
 
   const handleCreateTriple = async () => {
@@ -193,20 +203,20 @@ export default function CreateClaimModal({
       })
 
       if (publicClient && txHash) {
-        transactionDispatch({ type: 'TRANSACTION_PENDING' })
+        transactionDispatch({ type: TRANSACTION_ACTIONS.TRANSACTION_PENDING })
         const receipt = await publicClient.waitForTransactionReceipt({
           hash: txHash,
         })
 
-        if (receipt.status === 'reverted') {
+        if (receipt.status === TRANSACTION_RECEIPT_STATUS.REVERTED) {
           transactionDispatch({
-            type: 'TRANSACTION_ERROR',
-            error: 'Transaction reverted',
+            type: TRANSACTION_ACTIONS.TRANSACTION_ERROR,
+            error: TRANSACTION_REVERTED_ERROR,
           })
           toast.error('Transaction reverted. Please try again.')
         } else {
           transactionDispatch({
-            type: 'TRANSACTION_COMPLETE',
+            type: TRANSACTION_ACTIONS.TRANSACTION_COMPLETE,
             txHash,
             txReceipt: receipt,
           })
@@ -218,16 +228,15 @@ export default function CreateClaimModal({
     } catch (error) {
       console.error('error', error)
       if (error instanceof Error) {
-        let errorMessage = 'Error in onchain transaction.'
+        let errorMessage = ERROR_IN_ONCHAIN_TRANSACTION
         if (error.message.includes('insufficient')) {
-          errorMessage =
-            'Insufficient funds. Please add more ETH to your wallet and try again.'
+          errorMessage = INSUFFICIENT_FUNDS_ERROR
         }
         if (error.message.includes('rejected')) {
-          errorMessage = 'Transaction rejected. Try again when you are ready.'
+          errorMessage = TRANSACTION_REJECTED_ERROR
         }
         transactionDispatch({
-          type: 'TRANSACTION_ERROR',
+          type: TRANSACTION_ACTIONS.TRANSACTION_ERROR,
           error: errorMessage,
         })
         toast.error(GENERIC_ERROR_MSG)
@@ -236,7 +245,7 @@ export default function CreateClaimModal({
   }
 
   const handleCreateButtonClick = async () => {
-    transactionDispatch({ type: 'APPROVE_TRANSACTION' })
+    transactionDispatch({ type: TRANSACTION_ACTIONS.APPROVE_TRANSACTION })
     claimDispatch({ type: CLAIM_ACTIONS.SET_CREATED_CLAIM, payload: null })
     const formData = new FormData()
     formData.append(
@@ -249,7 +258,7 @@ export default function CreateClaimModal({
     )
     formData.append('object_id', claimState.selectedIdentities.object?.id ?? '')
     formData.append('initial_deposit', claimState.initialDeposit)
-    if (transactionState.status === 'review-transaction') {
+    if (transactionState.status === TRANSACTION_STATUS.REVIEW_TRANSACTION) {
       claimFetcher.submit(formData, {
         action: '/actions/create-claim',
         method: 'post',
@@ -260,7 +269,7 @@ export default function CreateClaimModal({
   const handleClose = () => {
     onClose()
     setTimeout(() => {
-      transactionDispatch({ type: 'START_TRANSACTION' })
+      transactionDispatch({ type: TRANSACTION_ACTIONS.START_TRANSACTION })
       reset()
       claimDispatch({ type: CLAIM_ACTIONS.RESET })
       claimFetcher.data = null
@@ -273,15 +282,14 @@ export default function CreateClaimModal({
   }
 
   const isTransactionStarted = [
-    'approve-transaction',
-    'transaction-pending',
-    'awaiting',
-    'confirm',
+    TRANSACTION_STATUS.APPROVE_TRANSACTION,
+    TRANSACTION_STATUS.TRANSACTION_PENDING,
+    TRANSACTION_STATUS.CONFIRM,
   ].includes(transactionState.status)
 
   useEffect(() => {
     if (open) {
-      transactionDispatch({ type: 'START_TRANSACTION' })
+      transactionDispatch({ type: TRANSACTION_ACTIONS.START_TRANSACTION })
       reset()
       claimDispatch({ type: CLAIM_ACTIONS.RESET })
       claimFetcher.data = null
