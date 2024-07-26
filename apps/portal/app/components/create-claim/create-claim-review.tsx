@@ -42,27 +42,28 @@ const InfoTooltip: React.FC<{ content: React.ReactNode }> = ({ content }) => (
 )
 
 const calculateFees = (initialDeposit: string, fees: CreateClaimFeesType) => {
-  const atomFractionOnDepositDecimal =
-    +fees.atomDepositFractionOnDeposit / +fees.feeDenominator
-  const atomFractionDistributionOnDepositDecimal =
-    atomFractionOnDepositDecimal * +initialDeposit
-  const atomFractionDistributionOnCreationDecimal = formatUnits(
-    BigInt(fees.atomDepositFractionOnCreation),
-    18,
-  )
+  const epsilon = 1e-18
   const tripleCostDecimal = +formatUnits(BigInt(fees.tripleCost), 18)
   const tripleCreationFeeDecimal = +formatUnits(
     BigInt(fees.tripleCreationFee),
     18,
   )
+  const atomFractionOnDepositDecimal =
+    +fees.atomDepositFractionOnDeposit / +fees.feeDenominator
+  const atomFractionDistributionOnDepositDecimal =
+    atomFractionOnDepositDecimal * +initialDeposit + tripleCreationFeeDecimal
+  const atomFractionDistributionOnCreationDecimal = formatUnits(
+    BigInt(fees.atomDepositFractionOnCreation),
+    18,
+  )
 
   return {
     totalFees:
-      +initialDeposit > 0
+      +initialDeposit > epsilon
         ? atomFractionDistributionOnDepositDecimal + tripleCreationFeeDecimal
         : tripleCostDecimal,
     atomFractionDistribution:
-      +initialDeposit > 0
+      +initialDeposit > epsilon
         ? atomFractionDistributionOnDepositDecimal.toFixed(4)
         : atomFractionDistributionOnCreationDecimal,
     tripleCreationFee: formatBalance(fees.tripleCreationFee, 18, 4),
