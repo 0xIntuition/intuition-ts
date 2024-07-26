@@ -185,7 +185,7 @@ export default function Profile() {
   if (!userObject) {
     return null
   }
-
+  logger('userIdentity', userIdentity)
   return (
     <NestedLayout outlet={Outlet} options={userProfileRouteOptions}>
       <div className="flex-col justify-start items-start gap-5 inline-flex">

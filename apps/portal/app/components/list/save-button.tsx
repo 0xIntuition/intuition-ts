@@ -68,7 +68,7 @@ const SaveButton: React.FC<SaveButtonProps> = ({
       state.status === 'transaction-confirmed' ||
       state.status === 'complete'
     ) {
-      return 'Go to Profile'
+      return 'Go to Tag'
     } else if (state.status === 'error') {
       return 'Retry'
     } else if (chain?.id !== getChainEnvConfig(CURRENT_ENV).chainId) {

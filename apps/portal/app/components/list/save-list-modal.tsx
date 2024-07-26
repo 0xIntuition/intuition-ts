@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 
-import { Dialog, DialogContent, DialogFooter, toast } from '@0xintuition/1ui'
+import { Dialog, DialogContent, DialogContent, DialogFooter, toast } from '@0xintuition/1ui'
 import {
   ClaimPresenter,
   IdentityPresenter,

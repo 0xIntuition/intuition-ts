@@ -50,7 +50,7 @@ const UnsaveButton: React.FC<UnsaveButtonProps> = ({
       state.status === 'transaction-confirmed' ||
       state.status === 'complete'
     ) {
-      return 'Go to Profile'
+      return 'Go to Tag'
     } else if (state.status === 'error') {
       return 'Retry'
     } else if (chain?.id !== getChainEnvConfig(CURRENT_ENV).chainId) {
@@ -95,7 +95,7 @@ const UnsaveButton: React.FC<UnsaveButtonProps> = ({
         } else if (chain?.id !== getChainEnvConfig(CURRENT_ENV).chainId) {
           handleSwitch()
         } else if (user_conviction !== '') {
-          setMode('unfollow')
+          setMode('unsave')
           dispatch({ type: 'REVIEW_TRANSACTION' })
         }
       }}

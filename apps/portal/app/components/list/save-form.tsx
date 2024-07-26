@@ -16,6 +16,7 @@ import {
 } from '@0xintuition/api'
 
 import { TransactionState } from '@components/transaction-state'
+import logger from '@lib/utils/logger'
 import { formatBalance } from '@lib/utils/misc'
 import { type FetcherWithComponents } from '@remix-run/react'
 import { TransactionActionType, TransactionStateType } from 'types/transaction'
@@ -64,6 +65,7 @@ export default function SaveForm({
   validationErrors,
   setValidationErrors,
 }: SaveFormProps) {
+  logger('user_assets', user_assets)
   return (
     <>
       <fetchReval.Form

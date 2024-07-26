@@ -107,6 +107,8 @@ export default function IdentityDetails() {
   }>()
   const navigate = useNavigate()
 
+  logger('identity', identity)
+
   const { user_assets, assets_sum } = vaultDetails ? vaultDetails : identity
   const [stakeModalActive, setStakeModalActive] = useAtom(stakeModalAtom)
   const [tagsModalActive, setTagsModalActive] = useAtom(tagsModalAtom)
