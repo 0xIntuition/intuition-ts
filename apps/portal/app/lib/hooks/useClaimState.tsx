@@ -5,13 +5,14 @@ import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
 import { useFetcher } from '@remix-run/react'
 import { TagLoaderData } from '@routes/resources+/tag'
 import { SEARCH_IDENTITIES_RESOURCE_ROUTE } from 'consts'
+import { CLAIM_ACTIONS } from 'consts/claims'
 
 export interface ClaimState {
   createdClaim: ClaimPresenter | null
   selectedIdentities: {
-    subject: IdentityPresenter | null
-    predicate: IdentityPresenter | null
-    object: IdentityPresenter | null
+    subject?: IdentityPresenter
+    predicate?: IdentityPresenter
+    object?: IdentityPresenter
   }
   claimExists: boolean
   initialDeposit: string
@@ -24,9 +25,9 @@ export interface ClaimState {
 export const initialClaimState: ClaimState = {
   createdClaim: null,
   selectedIdentities: {
-    subject: null,
-    predicate: null,
-    object: null,
+    subject: undefined,
+    predicate: undefined,
+    object: undefined,
   },
   claimExists: false,
   initialDeposit: '0',
@@ -37,38 +38,41 @@ export const initialClaimState: ClaimState = {
 }
 
 export type ClaimAction =
-  | { type: 'SET_CREATED_CLAIM'; payload: ClaimPresenter | null }
   | {
-      type: 'SET_SELECTED_IDENTITIES'
+      type: typeof CLAIM_ACTIONS.SET_CREATED_CLAIM
+      payload: ClaimPresenter | null
+    }
+  | {
+      type: typeof CLAIM_ACTIONS.SET_SELECTED_IDENTITIES
       payload: ClaimState['selectedIdentities']
     }
-  | { type: 'SET_CLAIM_EXISTS'; payload: boolean }
-  | { type: 'SET_SEARCH_QUERY'; payload: string }
-  | { type: 'SET_IDENTITIES'; payload: IdentityPresenter[] }
-  | { type: 'SET_INITIAL_DEPOSIT'; payload: string }
-  | { type: 'SET_SHOW_ERRORS'; payload: boolean }
-  | { type: 'SET_VALIDATION_ERRORS'; payload: string[] }
-  | { type: 'RESET' }
+  | { type: typeof CLAIM_ACTIONS.SET_CLAIM_EXISTS; payload: boolean }
+  | { type: typeof CLAIM_ACTIONS.SET_SEARCH_QUERY; payload: string }
+  | { type: typeof CLAIM_ACTIONS.SET_IDENTITIES; payload: IdentityPresenter[] }
+  | { type: typeof CLAIM_ACTIONS.SET_INITIAL_DEPOSIT; payload: string }
+  | { type: typeof CLAIM_ACTIONS.SET_SHOW_ERRORS; payload: boolean }
+  | { type: typeof CLAIM_ACTIONS.SET_VALIDATION_ERRORS; payload: string[] }
+  | { type: typeof CLAIM_ACTIONS.RESET }
 
 function claimReducer(state: ClaimState, action: ClaimAction): ClaimState {
   switch (action.type) {
-    case 'SET_CREATED_CLAIM':
+    case CLAIM_ACTIONS.SET_CREATED_CLAIM:
       return { ...state, createdClaim: action.payload }
-    case 'SET_SELECTED_IDENTITIES':
+    case CLAIM_ACTIONS.SET_SELECTED_IDENTITIES:
       return { ...state, selectedIdentities: action.payload }
-    case 'SET_CLAIM_EXISTS':
+    case CLAIM_ACTIONS.SET_CLAIM_EXISTS:
       return { ...state, claimExists: action.payload }
-    case 'SET_INITIAL_DEPOSIT':
+    case CLAIM_ACTIONS.SET_INITIAL_DEPOSIT:
       return { ...state, initialDeposit: action.payload }
-    case 'SET_SEARCH_QUERY':
+    case CLAIM_ACTIONS.SET_SEARCH_QUERY:
       return { ...state, searchQuery: action.payload }
-    case 'SET_IDENTITIES':
+    case CLAIM_ACTIONS.SET_IDENTITIES:
       return { ...state, identities: action.payload }
-    case 'SET_SHOW_ERRORS':
+    case CLAIM_ACTIONS.SET_SHOW_ERRORS:
       return { ...state, showErrors: action.payload }
-    case 'SET_VALIDATION_ERRORS':
+    case CLAIM_ACTIONS.SET_VALIDATION_ERRORS:
       return { ...state, validationErrors: action.payload }
-    case 'RESET':
+    case CLAIM_ACTIONS.RESET:
       return {
         ...initialClaimState,
       }
@@ -96,7 +100,10 @@ export default function useClaimState() {
 
   useEffect(() => {
     if (identitiesFetcher.data) {
-      claimDispatch({ type: 'SET_IDENTITIES', payload: identitiesFetcher.data })
+      claimDispatch({
+        type: CLAIM_ACTIONS.SET_IDENTITIES,
+        payload: identitiesFetcher.data,
+      })
     }
   }, [identitiesFetcher.data])
 
@@ -115,7 +122,7 @@ export default function useClaimState() {
   useEffect(() => {
     if (claimChecker.data) {
       claimDispatch({
-        type: 'SET_CLAIM_EXISTS',
+        type: CLAIM_ACTIONS.SET_CLAIM_EXISTS,
         payload: claimChecker.data.result !== '0',
       })
     }
