@@ -255,15 +255,17 @@ export default function CreateClaimModal({
 
   const handleClose = () => {
     onClose()
-    transactionDispatch({ type: 'START_TRANSACTION' })
-    reset()
-    claimDispatch({ type: 'RESET' })
-    claimFetcher.data = null
-    claimChecker.data = null
-    identitiesFetcher.data = null
-    setSearchQuery('')
-    setIdentities([])
-    claimDispatch({ type: 'SET_CREATED_CLAIM', payload: null })
+    setTimeout(() => {
+      transactionDispatch({ type: 'START_TRANSACTION' })
+      reset()
+      claimDispatch({ type: 'RESET' })
+      claimFetcher.data = null
+      claimChecker.data = null
+      identitiesFetcher.data = null
+      setSearchQuery('')
+      setIdentities([])
+      claimDispatch({ type: 'SET_CREATED_CLAIM', payload: null })
+    }, 500)
   }
 
   const isTransactionStarted = [
