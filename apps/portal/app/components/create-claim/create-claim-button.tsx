@@ -103,9 +103,9 @@ const CreateClaimButton: React.FC<CreateClaimButtonProps> = ({
       state.status === 'complete' ||
       state.status === 'transaction-confirmed'
     ) {
+      navigate(`/app/claim/${claim_id}`)
       handleClose()
       dispatch({ type: 'START_TRANSACTION' })
-      navigate(`/app/claim/${claim_id}`)
     } else if (state.status === 'review-transaction') {
       handleAction()
     } else if (chain?.id !== getChainEnvConfig(CURRENT_ENV).chainId) {
