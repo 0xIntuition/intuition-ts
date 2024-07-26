@@ -7,7 +7,7 @@ import {
   TagEmbeddedPresenter,
 } from '@0xintuition/api'
 
-import { multivaultAbi, multivaultAbi } from '@lib/abis/multivault'
+import { multivaultAbi } from '@lib/abis/multivault'
 import { useCreateTriple } from '@lib/hooks/useCreateTriple'
 import { useDepositTriple } from '@lib/hooks/useDepositTriple'
 import { useRedeemTriple } from '@lib/hooks/useRedeemTriple'
@@ -19,6 +19,7 @@ import { useFetcher, useLocation } from '@remix-run/react'
 import { ClaimLoaderData } from '@routes/resources+/search-claims-by-ids'
 import { useQueryClient } from '@tanstack/react-query'
 import {
+  GET_VAULT_DETAILS_RESOURCE_ROUTE,
   SEARCH_CLAIMS_BY_IDS_RESOURCE_ROUTE,
   TAG_PREDICATE_VAULT_ID_TESTNET,
 } from 'consts'
@@ -118,8 +119,8 @@ export default function SaveListModal({
 
     fetchClaim()
 
-    if (claimFetcher.data && claimFetcher.data.length > 0) {
-      logger('claimFetcher', claimFetcher.data)
+    if (claimFetcher.data) {
+      logger('claimFetcher data', claimFetcher.data)
       const fetchedClaimResponse = claimFetcher.data[0] as unknown as {
         vault_id: string
       }
@@ -133,9 +134,9 @@ export default function SaveListModal({
 
   useEffect(() => {
     const fetchVaultDetails = () => {
-      if (fetchedClaimVaultId) {
+      if (fetchedClaimVaultId !== null) {
         vaultDetailsFetcher.load(
-          `/resources/vault-details?contract=${identity.contract}&vaultId=${fetchedClaimVaultId}`,
+          `${GET_VAULT_DETAILS_RESOURCE_ROUTE}?contract=${identity.contract}&vaultId=${fetchedClaimVaultId}`,
         )
       }
     }
