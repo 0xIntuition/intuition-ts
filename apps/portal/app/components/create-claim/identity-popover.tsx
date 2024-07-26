@@ -15,6 +15,7 @@ import {
 } from '@0xintuition/1ui'
 import { IdentityPresenter } from '@0xintuition/api'
 
+import { usePopoverStates } from '@lib/hooks/usePopoverStates'
 import { sliceString, truncateString } from '@lib/utils/misc'
 import * as blockies from 'blockies-ts'
 import {
@@ -53,49 +54,52 @@ export const IdentityPopovers: React.FC<IdentityPopoversProps> = ({
   handleIdentitySelection,
   setSearchQuery,
   handleInput,
-  popoverStates,
-}) => (
-  <div className="flex items-center w-full m-auto justify-center">
-    <IdentityPopover
-      type={ClaimIdentity.Subject}
-      isOpen={popoverStates.isSubjectPopoverOpen}
-      setIsOpen={popoverStates.setIsSubjectPopoverOpen}
-      selectedIdentity={selectedIdentities.subject}
-      identities={identities}
-      onIdentitySelect={(identity) =>
-        handleIdentitySelection(ClaimIdentity.Subject, identity)
-      }
-      setSearchQuery={setSearchQuery}
-      handleInput={handleInput}
-    />
-    <Divider />
-    <IdentityPopover
-      type={ClaimIdentity.Predicate}
-      isOpen={popoverStates.isPredicatePopoverOpen}
-      setIsOpen={popoverStates.setIsPredicatePopoverOpen}
-      selectedIdentity={selectedIdentities.predicate}
-      identities={identities}
-      onIdentitySelect={(identity) =>
-        handleIdentitySelection(ClaimIdentity.Predicate, identity)
-      }
-      setSearchQuery={setSearchQuery}
-      handleInput={handleInput}
-    />
-    <Divider />
-    <IdentityPopover
-      type={ClaimIdentity.Object}
-      isOpen={popoverStates.isObjectPopoverOpen}
-      setIsOpen={popoverStates.setIsObjectPopoverOpen}
-      selectedIdentity={selectedIdentities.object}
-      identities={identities}
-      onIdentitySelect={(identity) =>
-        handleIdentitySelection(ClaimIdentity.Object, identity)
-      }
-      setSearchQuery={setSearchQuery}
-      handleInput={handleInput}
-    />
-  </div>
-)
+}) => {
+  const popoverStates = usePopoverStates()
+
+  return (
+    <div className="flex items-center w-full m-auto justify-center">
+      <IdentityPopover
+        type={ClaimIdentity.Subject}
+        isOpen={popoverStates.isSubjectPopoverOpen}
+        setIsOpen={popoverStates.setIsSubjectPopoverOpen}
+        selectedIdentity={selectedIdentities.subject}
+        identities={identities}
+        onIdentitySelect={(identity) =>
+          handleIdentitySelection(ClaimIdentity.Subject, identity)
+        }
+        setSearchQuery={setSearchQuery}
+        handleInput={handleInput}
+      />
+      <Divider />
+      <IdentityPopover
+        type={ClaimIdentity.Predicate}
+        isOpen={popoverStates.isPredicatePopoverOpen}
+        setIsOpen={popoverStates.setIsPredicatePopoverOpen}
+        selectedIdentity={selectedIdentities.predicate}
+        identities={identities}
+        onIdentitySelect={(identity) =>
+          handleIdentitySelection(ClaimIdentity.Predicate, identity)
+        }
+        setSearchQuery={setSearchQuery}
+        handleInput={handleInput}
+      />
+      <Divider />
+      <IdentityPopover
+        type={ClaimIdentity.Object}
+        isOpen={popoverStates.isObjectPopoverOpen}
+        setIsOpen={popoverStates.setIsObjectPopoverOpen}
+        selectedIdentity={selectedIdentities.object}
+        identities={identities}
+        onIdentitySelect={(identity) =>
+          handleIdentitySelection(ClaimIdentity.Object, identity)
+        }
+        setSearchQuery={setSearchQuery}
+        handleInput={handleInput}
+      />
+    </div>
+  )
+}
 
 interface IdentityPopoverProps {
   type: ClaimIdentityType
