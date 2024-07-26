@@ -119,7 +119,7 @@ const CreateClaimButton: React.FC<CreateClaimButtonProps> = ({
 
   const isDisabled =
     !address ||
-    claimExists ||
+    (claimExists && state.status !== 'complete') ||
     selectedIdentities.subject === null ||
     selectedIdentities.predicate === null ||
     selectedIdentities.object === null ||

@@ -71,12 +71,6 @@ function claimReducer(state: ClaimState, action: ClaimAction): ClaimState {
     case 'RESET':
       return {
         ...initialClaimState,
-        selectedIdentities: {
-          subject: null,
-          predicate: null,
-          object: null,
-        },
-        createdClaim: null,
       }
     default:
       return state

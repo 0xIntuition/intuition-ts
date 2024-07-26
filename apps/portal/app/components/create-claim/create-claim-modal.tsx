@@ -292,8 +292,8 @@ export default function CreateClaimModal({
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="flex flex-col min-w-[640px] h-[468px] gap-0">
-        <div className="flex-grow">
+      <DialogContent className="flex flex-col min-w-[640px] h-[468px]">
+        <div className="flex-grow overflow-y-auto">
           <CreateClaimForm
             fetchReval={fetchReval}
             formRef={formRef}
