@@ -104,7 +104,7 @@ export interface TagsButtonProps
 const TagsButton = ({ ...props }: TagsButtonProps) => {
   return (
     <Button variant="secondary" {...props}>
-      Add tags
+      Add new tags
     </Button>
   )
 }
