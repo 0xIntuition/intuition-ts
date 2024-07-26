@@ -11,6 +11,7 @@ export const TransactionStatus = {
   confirm: 'confirm',
   complete: 'complete',
   error: 'error',
+  hash: 'hash',
 } as const
 
 export type TransactionStatusType =
