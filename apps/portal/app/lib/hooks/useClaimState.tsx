@@ -10,9 +10,9 @@ import { CLAIM_ACTIONS } from 'consts/claims'
 export interface ClaimState {
   createdClaim: ClaimPresenter | null
   selectedIdentities: {
-    subject?: IdentityPresenter
-    predicate?: IdentityPresenter
-    object?: IdentityPresenter
+    subject: IdentityPresenter | null
+    predicate: IdentityPresenter | null
+    object: IdentityPresenter | null
   }
   claimExists: boolean
   initialDeposit: string
@@ -25,9 +25,9 @@ export interface ClaimState {
 export const initialClaimState: ClaimState = {
   createdClaim: null,
   selectedIdentities: {
-    subject: undefined,
-    predicate: undefined,
-    object: undefined,
+    subject: null,
+    predicate: null,
+    object: null,
   },
   claimExists: false,
   initialDeposit: '0',
