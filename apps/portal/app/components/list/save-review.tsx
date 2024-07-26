@@ -9,7 +9,11 @@ import {
   Identity,
   Text,
 } from '@0xintuition/1ui'
-import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
+import {
+  ClaimPresenter,
+  IdentityPresenter,
+  TagEmbeddedPresenter,
+} from '@0xintuition/api'
 
 import { formatBalance, formatDisplayBalance } from '@lib/utils/misc'
 import { TransactionActionType, TransactionStateType } from 'types/transaction'
@@ -20,6 +24,7 @@ interface SaveReviewProps {
   dispatch: (action: TransactionActionType) => void
   state: TransactionStateType
   isError?: boolean
+  tag: TagEmbeddedPresenter
   identity: IdentityPresenter
   claim: ClaimPresenter
   user_assets: string
@@ -33,6 +38,7 @@ export default function SaveReview({
   dispatch,
   state,
   isError,
+  tag,
   identity,
   claim,
   user_assets,
@@ -85,48 +91,30 @@ export default function SaveReview({
               variant="headline"
               weight="medium text-white/70 leading-[30x]"
             >
-              {mode === 'follow' ? 'Deposit' : 'Redeem'}{' '}
+              {mode === 'save' ? 'Deposit' : 'Redeem'}{' '}
               {formatDisplayBalance(
-                mode === 'unfollow'
+                mode === 'unsave'
                   ? Number(formatBalance(user_assets, 18, 4))
                   : Number(val),
                 2,
               )}{' '}
-              ETH on follow claim
+              ETH on save claim
             </Text>
             <Claim
               subject={{
-                imgSrc: claim?.subject?.user?.image ?? claim?.subject?.image,
-                label: !claim
-                  ? 'I'
-                  : claim?.subject?.user?.display_name ??
-                    claim?.subject?.display_name ??
-                    '',
+                imgSrc: identity.image,
+                label: identity.display_name,
                 variant: Identity.nonUser,
               }}
               predicate={{
                 imgSrc: claim?.predicate?.image,
-                label: !claim
-                  ? 'am following'
-                  : claim?.predicate?.display_name ?? '',
+                label: 'has tag',
                 variant: Identity.nonUser,
               }}
               object={{
-                imgSrc: !claim
-                  ? identity?.user?.image
-                  : claim?.object?.user?.image ?? claim?.object?.image,
-                label: !claim
-                  ? identity?.user?.display_name ?? ''
-                  : claim?.object?.user?.display_name ??
-                    claim?.object?.display_name ??
-                    '',
-                variant: !claim
-                  ? identity?.user
-                    ? Identity.user
-                    : Identity.nonUser
-                  : claim?.object?.user
-                    ? Identity.user
-                    : Identity.nonUser,
+                imgSrc: tag.image,
+                label: tag.display_name,
+                variant: Identity.nonUser,
               }}
             />
             <Text
@@ -136,8 +124,8 @@ export default function SaveReview({
             >
               Estimated Fees:{' '}
               {(
-                (mode === 'follow' ? +val : +formatBalance(user_assets, 18)) *
-                (mode === 'follow' ? +entry_fee : +exit_fee)
+                (mode === 'save' ? +val : +formatBalance(user_assets, 18)) *
+                (mode === 'save' ? +entry_fee : +exit_fee)
               ).toFixed(6)}{' '}
               ETH
             </Text>

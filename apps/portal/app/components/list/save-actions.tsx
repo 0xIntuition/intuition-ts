@@ -8,7 +8,7 @@ import {
 
 import ErrorList from '@components/error-list'
 
-interface SaveActions {
+interface SaveActionsProps {
   setVal: (val: string) => void
   showErrors: boolean
   setShowErrors: (show: boolean) => void
@@ -22,7 +22,7 @@ export default function SaveActions({
   setShowErrors,
   validationErrors,
   setValidationErrors,
-}: FollowActionsProps) {
+}: SaveActionsProps) {
   const radioGroupData = [
     { id: '0.001', value: 'Minimum', subValue: '+0.001 ETH' },
     { id: '0.01', value: 'Default', subValue: '+0.01 ETH' },

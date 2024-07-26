@@ -1,13 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
 
+import { Dialog, DialogContent, DialogFooter, toast } from '@0xintuition/1ui'
 import {
-  Button,
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  toast,
-} from '@0xintuition/1ui'
-import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
+  ClaimPresenter,
+  IdentityPresenter,
+  TagEmbeddedPresenter,
+} from '@0xintuition/api'
 
 import { multivaultAbi } from '@lib/abis/multivault'
 import { useCreateTriple } from '@lib/hooks/useCreateTriple'
@@ -42,6 +40,7 @@ interface SaveListModalProps {
   userWallet: string
   contract?: string
   open: boolean
+  tag: TagEmbeddedPresenter
   identity: IdentityPresenter
   claim?: ClaimPresenter
   vaultDetails?: VaultDetailsType
@@ -52,6 +51,7 @@ export default function SaveListModal({
   userWallet,
   contract,
   open = false,
+  tag,
   identity,
   claim,
   vaultDetails,
@@ -72,10 +72,12 @@ export default function SaveListModal({
 
   const iVaultId = '47'
   const followVaultId = '48'
-  const userVaultId = identity.vault_id
+  const tagVaultId = tag.vault_id
 
-  let vault_id: string = '0'
-  vault_id = claim ? claim.vault_id : '0'
+  logger('tag', tag)
+  // let vault_id: string = '0'
+  // vault_id = claim ? claim.vault_id : '0'
+  const vault_id = '0'
 
   const {
     conviction_price = '0',
@@ -86,9 +88,9 @@ export default function SaveListModal({
     formatted_exit_fee = '0',
   } = vaultDetails ? vaultDetails : {}
 
-  const depositHook = useDepositTriple(contract)
+  const depositHook = useDepositTriple(identity.contract)
 
-  const redeemHook = useRedeemTriple(contract)
+  const redeemHook = useRedeemTriple(identity.contract)
 
   const createHook = useCreateTriple()
 
@@ -121,13 +123,13 @@ export default function SaveListModal({
               ? 'depositTriple'
               : 'redeemTriple',
           args: !claim
-            ? [iVaultId, followVaultId, userVaultId]
-            : actionType === 'follow'
+            ? [iVaultId, followVaultId, tagVaultId]
+            : actionType === 'save'
               ? [userWallet as `0x${string}`, vault_id]
               : [user_conviction, userWallet as `0x${string}`, vault_id],
           value: !claim
             ? BigInt(tripleCost) + parseUnits(val === '' ? '0' : val, 18)
-            : actionType === 'follow'
+            : actionType === 'save'
               ? parseUnits(val === '' ? '0' : val, 18)
               : undefined,
         })
@@ -322,6 +324,7 @@ export default function SaveListModal({
         <div className="flex-grow">
           <SaveForm
             walletBalance={walletBalance}
+            tag={tag}
             identity={identity}
             claim={claim}
             user_assets={user_assets ?? '0'}
@@ -342,7 +345,6 @@ export default function SaveListModal({
         </div>
         {!isTransactionStarted && (
           <DialogFooter className="!justify-center !items-center gap-5">
-            <Button>Save</Button>
             <UnsaveButton
               setMode={setMode}
               handleAction={handleUnsaveButtonClick}
@@ -350,7 +352,7 @@ export default function SaveListModal({
               dispatch={dispatch}
               state={state}
               user_conviction={user_conviction ?? '0'}
-              className={`${(user_conviction && user_conviction > '0' && state.status === 'idle') || mode !== 'follow' ? '' : 'hidden'}`}
+              className={`${(user_conviction && user_conviction > '0' && state.status === 'idle') || mode !== 'save' ? '' : 'hidden'}`}
             />
             <SaveButton
               val={val}

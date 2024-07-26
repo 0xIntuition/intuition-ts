@@ -1,3 +1,5 @@
+import { useState } from 'react'
+
 import {
   PositionCard,
   PositionCardFeesAccrued,
@@ -11,7 +13,11 @@ import {
   TagsContent,
   TagWithValue,
 } from '@0xintuition/1ui'
-import { IdentitiesService, IdentityPresenter } from '@0xintuition/api'
+import {
+  IdentitiesService,
+  IdentityPresenter,
+  TagEmbeddedPresenter,
+} from '@0xintuition/api'
 
 import SaveListModal from '@components/list/save-list-modal'
 import { NestedLayout } from '@components/nested-layout'
@@ -106,6 +112,7 @@ export default function IdentityDetails() {
   const [tagsModalActive, setTagsModalActive] = useAtom(tagsModalAtom)
   const [saveListModalActive, setSaveListModalActive] =
     useAtom(saveListModalAtom)
+  const [selectedTag, setSelectedTag] = useState<TagEmbeddedPresenter>()
 
   return (
     <NestedLayout outlet={Outlet} options={identityRouteOptions}>
@@ -126,6 +133,7 @@ export default function IdentityDetails() {
                   label={tag.display_name}
                   value={tag.num_positions}
                   onStake={() => {
+                    setSelectedTag(tag)
                     setSaveListModalActive({ isOpen: true, id: tag.vault_id })
                   }}
                 />
@@ -205,17 +213,20 @@ export default function IdentityDetails() {
           })
         }
       />
-      <SaveListModal
-        identity={identity}
-        userWallet={userWallet}
-        open={saveListModalActive.isOpen}
-        onClose={() =>
-          setSaveListModalActive({
-            ...saveListModalActive,
-            isOpen: false,
-          })
-        }
-      />
+      {selectedTag && (
+        <SaveListModal
+          tag={selectedTag}
+          identity={identity}
+          userWallet={userWallet}
+          open={saveListModalActive.isOpen}
+          onClose={() =>
+            setSaveListModalActive({
+              ...saveListModalActive,
+              isOpen: false,
+            })
+          }
+        />
+      )}
     </NestedLayout>
   )
 }

@@ -9,9 +9,12 @@ import {
   Text,
   TransactionStatusType,
 } from '@0xintuition/1ui'
-import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
+import {
+  ClaimPresenter,
+  IdentityPresenter,
+  TagEmbeddedPresenter,
+} from '@0xintuition/api'
 
-import FollowActions from '@components/follow/follow-actions'
 import { TransactionState } from '@components/transaction-state'
 import { formatBalance } from '@lib/utils/misc'
 import { type FetcherWithComponents } from '@remix-run/react'
@@ -19,10 +22,10 @@ import { TransactionActionType, TransactionStateType } from 'types/transaction'
 
 import SaveActions from './save-actions'
 import SaveReview from './save-review'
-import FollowReview from './save-review'
 
 interface SaveFormProps {
   walletBalance: string
+  tag: TagEmbeddedPresenter
   identity: IdentityPresenter
   claim: ClaimPresenter
   user_assets: string
@@ -44,6 +47,7 @@ interface SaveFormProps {
 export default function SaveForm({
   walletBalance,
   identity,
+  tag,
   claim,
   user_assets,
   entry_fee,
@@ -59,7 +63,7 @@ export default function SaveForm({
   setShowErrors,
   validationErrors,
   setValidationErrors,
-}: FollowFormProps) {
+}: SaveFormProps) {
   return (
     <>
       <fetchReval.Form
@@ -75,11 +79,8 @@ export default function SaveForm({
           <DialogHeader>
             <DialogTitle className="justify-between">
               <div className="flex items-center justify-between w-full mr-2.5">
-                <IdentityTag
-                  imgSrc={identity?.user?.image ?? identity?.image}
-                  variant={identity?.user ? Identity.user : Identity.nonUser}
-                >
-                  {identity?.user?.display_name ?? identity?.display_name}
+                <IdentityTag imgSrc={tag?.image} variant={Identity.nonUser}>
+                  {tag?.display_name}
                 </IdentityTag>
                 <Badge>
                   <Icon name="wallet" className="h-4 w-4" />
@@ -92,7 +93,7 @@ export default function SaveForm({
             <div className="flex-col justify-center items-start gap-1 inline-flex">
               <div className="justify-center items-center gap-2 inline-flex">
                 <Text variant="base" weight="medium">
-                  Follow User{' '}
+                  Save List
                 </Text>
                 <Icon
                   name="circle-question-mark"
@@ -101,7 +102,7 @@ export default function SaveForm({
                 <div className="w-4 h-4 relative" />
               </div>
               <Text variant="small" className="text-neutral-50/50">
-                Create or strengthen your connection.
+                Save this list by staking
               </Text>
             </div>
             <div className="flex flex-row items-center justify-center">
@@ -113,7 +114,7 @@ export default function SaveForm({
               </div>
             </div>
             <div className="rounded-t-lg bg-primary-950/15 w-full">
-              <FollowActions
+              <SaveActions
                 setVal={setVal}
                 validationErrors={validationErrors}
                 setValidationErrors={setValidationErrors}
@@ -125,11 +126,12 @@ export default function SaveForm({
         </>
       ) : state.status === 'review-transaction' ? (
         <>
-          <FollowReview
+          <SaveReview
             mode={mode}
             val={val}
             dispatch={dispatch}
             state={state}
+            tag={tag}
             identity={identity}
             claim={claim}
             user_assets={user_assets}
@@ -142,7 +144,7 @@ export default function SaveForm({
           <TransactionState
             status={state.status as TransactionStatusType}
             txHash={state.txHash}
-            type={mode === 'follow' ? 'follow' : 'unfollow'}
+            type={mode === 'save' ? 'save' : 'unsave'}
           />
         </div>
       )}

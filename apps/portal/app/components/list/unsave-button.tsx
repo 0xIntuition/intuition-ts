@@ -2,8 +2,7 @@ import { useEffect, useState } from 'react'
 
 import { Button, cn } from '@0xintuition/1ui'
 
-import UnfollowButton from '@components/follow/unfollow-button'
-import { followModalAtom, savelistModalAtom } from '@lib/state/store'
+import { saveListModalAtom } from '@lib/state/store'
 import { getChainEnvConfig } from '@lib/utils/environment'
 import { useNavigation } from '@remix-run/react'
 import { CURRENT_ENV } from 'consts'
@@ -12,7 +11,7 @@ import { TransactionActionType, TransactionStateType } from 'types/transaction'
 import { useAccount, useSwitchChain } from 'wagmi'
 
 interface UnsaveButtonProps {
-  setMode: (mode: 'follow' | 'unfollow') => void
+  setMode: (mode: 'save' | 'unsave') => void
   handleAction: () => void
   handleClose: () => void
   dispatch: (action: TransactionActionType) => void
@@ -57,10 +56,10 @@ const UnsaveButton: React.FC<UnsaveButtonProps> = ({
     } else if (chain?.id !== getChainEnvConfig(CURRENT_ENV).chainId) {
       return 'Wrong Network'
     }
-    return `Unfollow`
+    return `Unsave`
   }
 
-  const setSaveListModalActive = useSetAtom(savelistModalAtom)
+  const setSaveListModalActive = useSetAtom(saveListModalAtom)
 
   const navigation = useNavigation()
   const [navigationStarted, setNavigationStarted] = useState(false)

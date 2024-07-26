@@ -14,7 +14,7 @@ import { useAccount, useSwitchChain } from 'wagmi'
 
 interface SaveButtonProps {
   val: string
-  setMode: (mode: 'follow' | 'unfollow') => void
+  setMode: (mode: 'save' | 'unsave') => void
   handleAction: () => void
   handleClose: () => void
   dispatch: (action: TransactionActionType) => void
@@ -74,7 +74,7 @@ const SaveButton: React.FC<SaveButtonProps> = ({
     } else if (chain?.id !== getChainEnvConfig(CURRENT_ENV).chainId) {
       return 'Wrong Network'
     }
-    return `${user_assets > '0' ? 'Increase Follow' : 'Follow'}`
+    return `${user_assets > '0' ? 'Increase Stake' : 'Save'}`
   }
 
   const setStakeModalActive = useSetAtom(stakeModalAtom)
@@ -127,7 +127,7 @@ const SaveButton: React.FC<SaveButtonProps> = ({
             setValidationErrors(errors)
             setShowErrors(true)
           } else {
-            setMode('follow')
+            setMode('save')
             dispatch({ type: 'REVIEW_TRANSACTION' })
             setValidationErrors([])
           }
