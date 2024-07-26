@@ -18,8 +18,13 @@ import { formatBalance } from '@lib/utils/misc'
 import { useGenericTxState } from '@lib/utils/use-tx-reducer'
 import { useFetcher, useLocation } from '@remix-run/react'
 import { CreateLoaderData } from '@routes/resources+/create'
+import { ClaimLoaderData } from '@routes/resources+/search-claims-by-ids'
 import { useQueryClient } from '@tanstack/react-query'
-import { CREATE_RESOURCE_ROUTE } from 'consts'
+import {
+  CREATE_RESOURCE_ROUTE,
+  SEARCH_CLAIMS_BY_IDS_RESOURCE_ROUTE,
+  TAG_PREDICATE_VAULT_ID_TESTNET,
+} from 'consts'
 import { TransactionActionType, TransactionStateType } from 'types/transaction'
 import { VaultDetailsType } from 'types/vault'
 import { Abi, Address, decodeEventLog, formatUnits, parseUnits } from 'viem'
@@ -70,14 +75,13 @@ export default function SaveListModal({
   >(transactionReducer, initialTxState)
   const publicClient = usePublicClient()
 
-  const iVaultId = '47'
-  const followVaultId = '48'
-  const tagVaultId = tag.vault_id
+  // const iVaultId = '47'
+  // const followVaultId = '48'
+  // const tagVaultId = tag.vault_id
 
-  logger('tag', tag)
-  // let vault_id: string = '0'
-  // vault_id = claim ? claim.vault_id : '0'
-  const vault_id = '0'
+  // const subjectVaultId = identity.vault_id
+  // const hasTagPredicateVaultId = TAG_PREDICATE_ID_TESTNET
+  // const objectTagVaultId = tag.vault_id
 
   const {
     conviction_price = '0',
@@ -111,22 +115,52 @@ export default function SaveListModal({
     tripleCost: BigInt(0),
   }
 
+  const [fetchedClaimVaultId, setFetchedClaimVaultId] = useState<string | null>(
+    null,
+  )
+
+  const claimFetcher = useFetcher<ClaimLoaderData[]>()
+
+  useEffect(() => {
+    const fetchClaim = () => {
+      const searchParams = new URLSearchParams({
+        subject: identity.vault_id,
+        predicate: TAG_PREDICATE_VAULT_ID_TESTNET.toString(),
+        object: tag.vault_id,
+      })
+
+      const finalUrl = `${SEARCH_CLAIMS_BY_IDS_RESOURCE_ROUTE}?${searchParams.toString()}`
+
+      claimFetcher.load(finalUrl)
+    }
+
+    fetchClaim()
+
+    if (claimFetcher.data && claimFetcher.data.length > 0) {
+      logger('claimFetcher', claimFetcher.data)
+      const fetchedClaimResponse = claimFetcher.data[0] as unknown as {
+        vault_id: string
+      }
+      setFetchedClaimVaultId(fetchedClaimResponse.vault_id)
+    }
+  }, [identity.vault_id, tag.vault_id])
+
   const useHandleAction = (actionType: string) => {
     return async () => {
       try {
         const txHash = await writeContractAsync({
           address: contract as `0x${string}`,
           abi: multivaultAbi as Abi,
-          functionName: !claim
-            ? 'createTriple'
-            : actionType === 'follow'
-              ? 'depositTriple'
-              : 'redeemTriple',
-          args: !claim
-            ? [iVaultId, followVaultId, tagVaultId]
-            : actionType === 'save'
-              ? [userWallet as `0x${string}`, vault_id]
-              : [user_conviction, userWallet as `0x${string}`, vault_id],
+          functionName:
+            actionType === 'save' ? 'depositTriple' : 'redeemTriple',
+          args:
+            actionType === 'save'
+              ? [userWallet as `0x${string}`, fetchedClaimVaultId]
+              : [
+                  user_conviction,
+                  userWallet as `0x${string}`,
+                  fetchedClaimVaultId,
+                ],
           value: !claim
             ? BigInt(tripleCost) + parseUnits(val === '' ? '0' : val, 18)
             : actionType === 'save'

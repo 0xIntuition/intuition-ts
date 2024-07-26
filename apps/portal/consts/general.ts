@@ -43,6 +43,8 @@ export const GET_IDENTITIES_BY_IDS_RESOURCE_ROUTE =
 export const GET_IDENTITIES_RESOURCE_ROUTE = '/resources/get-identities'
 export const SEARCH_IDENTITIES_RESOURCE_ROUTE = '/resources/search-identities'
 export const TAG_RESOURCE_ROUTE = '/resources/tag'
+export const SEARCH_CLAIMS_BY_IDS_RESOURCE_ROUTE =
+  '/resources/search-claims-by-ids'
 
 // Privy Social Accounts
 
