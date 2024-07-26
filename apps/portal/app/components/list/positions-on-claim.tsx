@@ -24,7 +24,7 @@ export function PositionsOnClaim({
   ]
 
   if (!positions.length) {
-    return <EmptyStateCard className="w-full" message="No positions found." /> // Not sure why this was not filling it's parent but it is now. lol
+    return <EmptyStateCard message="No positions found." />
   }
 
   return (
