@@ -17,17 +17,17 @@ describe('EmptyStateCard', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="flex flex-col justify-center items-center p-6 theme-border rounded-lg min-h-52"
+          class="flex flex-col justify-center items-center p-6 theme-border rounded-lg min-h-64 w-full gap-2"
         >
           <svg
-            class="w-12 h-12 mb-4"
+            class="w-12 h-12"
           >
             <use
               href="/src/components/Icon/Icon.sprites.svg#inbox-empty"
             />
           </svg>
           <p
-            class="text-sm font-normal text-muted-foreground mb-5"
+            class="text-base font-normal text-muted-foreground"
           >
             No data available
           </p>
