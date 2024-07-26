@@ -92,7 +92,7 @@ const CreateClaimReview: React.FC<CreateClaimReviewProps> = ({
           </Button>
         </DialogTitle>
       </DialogHeader>
-      <div className="flex flex-col items-center justify-center h-[358px]">
+      <div className="flex flex-col items-center justify-center m-auto">
         <Icon name="await-action" className="h-20 w-20 text-neutral-50/30" />
         <div className="flex flex-col items-center gap-5 mt-5">
           <Text variant="headline" weight="medium" className="text-white/70">

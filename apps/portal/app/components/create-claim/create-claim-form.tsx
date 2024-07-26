@@ -132,16 +132,18 @@ export function CreateClaimForm({
         )
       case 'review-transaction':
         return (
-          <CreateClaimReview
-            dispatch={dispatch}
-            selectedIdentities={selectedIdentities}
-            initialDeposit={claimState.initialDeposit}
-            fees={fees}
-          />
+          <div className="h-full flex flex-col">
+            <CreateClaimReview
+              dispatch={dispatch}
+              selectedIdentities={selectedIdentities}
+              initialDeposit={claimState.initialDeposit}
+              fees={fees}
+            />
+          </div>
         )
       default:
         return (
-          <div className="flex flex-col items-center justify-center min-h-96">
+          <div className="flex flex-col items-center justify-center flex-grow">
             <TransactionState
               status={state.status as TransactionStatusType}
               txHash={state.txHash}
@@ -153,7 +155,7 @@ export function CreateClaimForm({
   }
 
   return (
-    <>
+    <div className="flex flex-col h-full">
       <fetchReval.Form
         hidden
         ref={formRef}
@@ -163,6 +165,6 @@ export function CreateClaimForm({
         <input type="hidden" name="eventName" value="create" />
       </fetchReval.Form>
       {renderContent()}
-    </>
+    </div>
   )
 }
