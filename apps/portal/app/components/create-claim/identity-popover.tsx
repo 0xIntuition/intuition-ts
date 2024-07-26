@@ -27,9 +27,9 @@ import { IdentitySearchCombobox } from '../identity/identity-search-combo-box'
 
 interface IdentityPopoversProps {
   selectedIdentities: {
-    subject: IdentityPresenter | null
-    predicate: IdentityPresenter | null
-    object: IdentityPresenter | null
+    subject?: IdentityPresenter
+    predicate?: IdentityPresenter
+    object?: IdentityPresenter
   }
   identities: IdentityPresenter[]
   handleIdentitySelection: (
@@ -124,26 +124,26 @@ export const IdentityPopover: React.FC<IdentityPopoverProps> = ({
 }) => {
   const renderProfileCard = (identity: IdentityPresenter) => (
     <ProfileCard
-      variant={identity?.is_user === true ? Identity.user : Identity.nonUser}
+      variant={identity?.is_user ? Identity.user : Identity.nonUser}
       avatarSrc={
         identity?.user?.image ??
         identity?.image ??
         blockies.create({ seed: identity?.user?.wallet }).toDataURL()
       }
       name={truncateString(
-        identity?.is_user === true
+        identity?.is_user
           ? identity?.user?.display_name ?? ''
           : identity?.display_name ?? '',
         18,
       )}
       walletAddress={
-        identity?.is_user === true
+        identity?.is_user
           ? identity?.user?.ens_name ??
             sliceString(identity?.user?.wallet, 6, 4)
           : identity?.identity_id
       }
       stats={
-        identity?.is_user === true
+        identity?.is_user
           ? {
               numberOfFollowers: identity?.follower_count ?? 0,
               numberOfFollowing: identity?.followed_count ?? 0,
@@ -151,7 +151,7 @@ export const IdentityPopover: React.FC<IdentityPopoverProps> = ({
           : undefined
       }
       bio={
-        identity?.is_user === true
+        identity?.is_user
           ? identity?.user?.description ?? ''
           : identity?.description ?? ''
       }

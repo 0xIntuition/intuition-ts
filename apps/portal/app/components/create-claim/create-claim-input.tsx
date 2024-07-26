@@ -19,10 +19,10 @@ interface CreateClaimInputProps {
   setVal: (value: string) => void
   wallet: string
   walletBalance: string
-  isLoading: boolean
-  showErrors: boolean
+  isLoading?: boolean
+  showErrors?: boolean
   setShowErrors: (show: boolean) => void
-  validationErrors: string[]
+  validationErrors?: string[]
   setValidationErrors: (errors: string[]) => void
 }
 

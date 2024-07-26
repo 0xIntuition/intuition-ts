@@ -22,9 +22,9 @@ import { formatUnits } from 'viem'
 interface CreateClaimReviewProps {
   dispatch: (action: TransactionActionType) => void
   selectedIdentities: {
-    subject: IdentityPresenter | null
-    predicate: IdentityPresenter | null
-    object: IdentityPresenter | null
+    subject?: IdentityPresenter
+    predicate?: IdentityPresenter
+    object?: IdentityPresenter
   }
   initialDeposit: string
   fees: CreateClaimFeesType

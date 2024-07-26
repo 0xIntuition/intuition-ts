@@ -22,6 +22,7 @@ import {
   MULTIVAULT_CONTRACT_ADDRESS,
   SEARCH_IDENTITIES_RESOURCE_ROUTE,
 } from 'consts'
+import { CLAIM_ACTIONS } from 'consts/claims'
 import { formatUnits, parseUnits } from 'viem'
 import { useBalance, useBlockNumber, usePublicClient } from 'wagmi'
 
@@ -86,7 +87,7 @@ export default function CreateClaimModal({
   useEffect(() => {
     if (open && claimFetcher.data?.claim && !claimState.createdClaim) {
       claimDispatch({
-        type: 'SET_CREATED_CLAIM',
+        type: CLAIM_ACTIONS.SET_CREATED_CLAIM,
         payload: claimFetcher.data.claim,
       })
     }
@@ -136,7 +137,10 @@ export default function CreateClaimModal({
 
   useEffect(() => {
     if (identitiesFetcher.data) {
-      claimDispatch({ type: 'SET_IDENTITIES', payload: identitiesFetcher.data })
+      claimDispatch({
+        type: CLAIM_ACTIONS.SET_IDENTITIES,
+        payload: identitiesFetcher.data,
+      })
     }
   }, [identitiesFetcher.data])
 
@@ -156,14 +160,14 @@ export default function CreateClaimModal({
   useEffect(() => {
     if (claimChecker.data) {
       claimDispatch({
-        type: 'SET_CLAIM_EXISTS',
+        type: CLAIM_ACTIONS.SET_CLAIM_EXISTS,
         payload: claimChecker.data.result !== '0',
       })
     }
   }, [claimChecker.data])
 
   useEffect(() => {
-    claimDispatch({ type: 'RESET' })
+    claimDispatch({ type: CLAIM_ACTIONS.RESET })
     transactionDispatch({ type: 'START_TRANSACTION' })
   }, [location])
 
@@ -233,7 +237,7 @@ export default function CreateClaimModal({
 
   const handleCreateButtonClick = async () => {
     transactionDispatch({ type: 'APPROVE_TRANSACTION' })
-    claimDispatch({ type: 'SET_CREATED_CLAIM', payload: null })
+    claimDispatch({ type: CLAIM_ACTIONS.SET_CREATED_CLAIM, payload: null })
     const formData = new FormData()
     formData.append(
       'subject_id',
@@ -258,13 +262,13 @@ export default function CreateClaimModal({
     setTimeout(() => {
       transactionDispatch({ type: 'START_TRANSACTION' })
       reset()
-      claimDispatch({ type: 'RESET' })
+      claimDispatch({ type: CLAIM_ACTIONS.RESET })
       claimFetcher.data = null
       claimChecker.data = null
       identitiesFetcher.data = null
       setSearchQuery('')
       setIdentities([])
-      claimDispatch({ type: 'SET_CREATED_CLAIM', payload: null })
+      claimDispatch({ type: CLAIM_ACTIONS.SET_CREATED_CLAIM, payload: null })
     }, 500)
   }
 
@@ -279,14 +283,14 @@ export default function CreateClaimModal({
     if (open) {
       transactionDispatch({ type: 'START_TRANSACTION' })
       reset()
-      claimDispatch({ type: 'RESET' })
+      claimDispatch({ type: CLAIM_ACTIONS.RESET })
       claimFetcher.data = null
       claimChecker.data = null
       identitiesFetcher.data = null
       feeFetcher.load(CREATE_CLAIM_RESOURCE_ROUTE)
       setSearchQuery('')
       setIdentities([])
-      claimDispatch({ type: 'SET_CREATED_CLAIM', payload: null })
+      claimDispatch({ type: CLAIM_ACTIONS.SET_CREATED_CLAIM, payload: null })
     }
   }, [open])
 

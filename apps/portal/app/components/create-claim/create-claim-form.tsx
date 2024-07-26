@@ -5,12 +5,14 @@ import {
   DialogHeader,
   DialogTitle,
   Text,
+  TransactionStatus,
   TransactionStatusType,
 } from '@0xintuition/1ui'
 
 import { usePopoverStates } from '@lib/hooks/usePopoverStates'
 import { FetcherWithComponents } from '@remix-run/react'
 import { CreateClaimFeesType } from '@routes/resources+/create-claim'
+import { CLAIM_ACTIONS } from 'consts/claims'
 import { TransactionActionType, TransactionStateType } from 'types'
 
 import { ClaimAction, ClaimState } from '../../lib/hooks/useClaimState'
@@ -32,7 +34,7 @@ interface CreateClaimFormProps {
   claimState: ClaimState
   claimDispatch: React.Dispatch<ClaimAction>
   fees: CreateClaimFeesType
-  isLoading: boolean
+  isLoading?: boolean
 }
 
 export function CreateClaimForm({
@@ -46,7 +48,7 @@ export function CreateClaimForm({
   claimState,
   claimDispatch,
   fees,
-  isLoading,
+  isLoading = false,
 }: CreateClaimFormProps) {
   const popoverStates = usePopoverStates()
 
@@ -59,14 +61,14 @@ export function CreateClaimForm({
 
   useEffect(() => {
     claimDispatch({
-      type: 'SET_SELECTED_IDENTITIES',
+      type: CLAIM_ACTIONS.SET_SELECTED_IDENTITIES,
       payload: selectedIdentities,
     })
   }, [selectedIdentities, claimDispatch])
 
   const renderContent = () => {
     switch (state.status) {
-      case 'idle':
+      case TransactionStatus.idle:
         return (
           <>
             <DialogHeader>
@@ -95,7 +97,7 @@ export function CreateClaimForm({
                       const query = event.currentTarget.value
                       if (query.trim() !== '') {
                         claimDispatch({
-                          type: 'SET_SEARCH_QUERY',
+                          type: CLAIM_ACTIONS.SET_SEARCH_QUERY,
                           payload: query,
                         })
                       }
@@ -105,7 +107,7 @@ export function CreateClaimForm({
                     val={claimState.initialDeposit}
                     setVal={(value) =>
                       claimDispatch({
-                        type: 'SET_INITIAL_DEPOSIT',
+                        type: CLAIM_ACTIONS.SET_INITIAL_DEPOSIT,
                         payload: value,
                       })
                     }
@@ -119,7 +121,7 @@ export function CreateClaimForm({
                     validationErrors={claimState.validationErrors}
                     setValidationErrors={(errors) =>
                       claimDispatch({
-                        type: 'SET_VALIDATION_ERRORS',
+                        type: CLAIM_ACTIONS.SET_VALIDATION_ERRORS,
                         payload: errors,
                       })
                     }
@@ -130,7 +132,7 @@ export function CreateClaimForm({
             </div>
           </>
         )
-      case 'review-transaction':
+      case TransactionStatus.reviewTransaction:
         return (
           <div className="h-full flex flex-col">
             <CreateClaimReview
