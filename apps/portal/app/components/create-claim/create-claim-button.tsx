@@ -7,13 +7,8 @@ import { createClaimModalAtom } from '@lib/state/store'
 import { getChainEnvConfig } from '@lib/utils/environment'
 import { useNavigate, useNavigation } from '@remix-run/react'
 import { CURRENT_ENV } from 'consts'
-import { TRANSACTION_STATUS } from 'consts/transaction'
 import { useSetAtom } from 'jotai'
-import {
-  TransactionActionType,
-  TransactionStateType,
-  TransactionStatusType,
-} from 'types/transaction'
+import { TransactionActionType, TransactionStateType } from 'types/transaction'
 import { Chain } from 'viem'
 import { useAccount, useSwitchChain } from 'wagmi'
 
@@ -24,9 +19,9 @@ interface CreateClaimButtonProps {
   state: TransactionStateType
   claim_id: string
   selectedIdentities: {
-    subject: IdentityPresenter | null
-    predicate: IdentityPresenter | null
-    object: IdentityPresenter | null
+    subject?: IdentityPresenter
+    predicate?: IdentityPresenter
+    object?: IdentityPresenter
   }
   claimExists: boolean
 }
@@ -58,31 +53,32 @@ const useNavigationEffect = (
 }
 
 const getButtonText = (
-  state: { status: TransactionStatusType },
+  state: TransactionStateType,
   chain: Chain | undefined,
   claimExists: boolean,
-): string => {
-  switch (state.status) {
-    case TRANSACTION_STATUS.REVIEW_TRANSACTION:
-      return 'Create Claim'
-    case TRANSACTION_STATUS.AWAITING:
-      return 'Continue in Wallet'
-    case TRANSACTION_STATUS.TRANSACTION_PENDING:
-      return 'Pending'
-    case TRANSACTION_STATUS.TRANSACTION_CONFIRMED:
-    case TRANSACTION_STATUS.COMPLETE:
-      return 'View Claim'
-    case TRANSACTION_STATUS.ERROR:
-      return 'Retry'
-    default:
-      if (chain?.id !== getChainEnvConfig(CURRENT_ENV).chainId) {
-        return 'Wrong Network'
-      }
-      if (claimExists) {
-        return 'Claim Exists'
-      }
-      return 'Review'
+) => {
+  if (state.status === 'review-transaction') {
+    return 'Create Claim'
   }
+  if (state.status === 'awaiting') {
+    return 'Continue in Wallet'
+  }
+  if (state.status === 'transaction-pending') {
+    return 'Pending'
+  }
+  if (state.status === 'transaction-confirmed' || state.status === 'complete') {
+    return 'View Claim'
+  }
+  if (state.status === 'error') {
+    return 'Retry'
+  }
+  if (chain?.id !== getChainEnvConfig(CURRENT_ENV).chainId) {
+    return 'Wrong Network'
+  }
+  if (claimExists) {
+    return 'Claim Exists'
+  }
+  return 'Review'
 }
 
 const CreateClaimButton: React.FC<CreateClaimButtonProps> = ({

@@ -8,11 +8,11 @@ import { Identity, IdentityType } from 'types'
 
 export function useIdentitySelection() {
   const [selectedIdentities, setSelectedIdentities] = useState<
-    Record<IdentityType, IdentityPresenter | null>
+    Record<IdentityType, IdentityPresenter | undefined>
   >({
-    [Identity.Subject]: null,
-    [Identity.Predicate]: null,
-    [Identity.Object]: null,
+    [Identity.Subject]: undefined,
+    [Identity.Predicate]: undefined,
+    [Identity.Object]: undefined,
   })
   const [searchQuery, setSearchQuery] = useState('')
   const [identities, setIdentities] = useState<IdentityPresenter[]>([])

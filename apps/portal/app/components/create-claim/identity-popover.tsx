@@ -105,7 +105,7 @@ interface IdentityPopoverProps {
   type: ClaimIdentityType
   isOpen: boolean
   setIsOpen: (isOpen: boolean) => void
-  selectedIdentity: IdentityPresenter | null
+  selectedIdentity?: IdentityPresenter
   identities: IdentityPresenter[]
   onIdentitySelect: (identity: IdentityPresenter) => void
   setSearchQuery: (query: string) => void
