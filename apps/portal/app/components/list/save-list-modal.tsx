@@ -385,8 +385,7 @@ export default function SaveListModal({
             tag={tag}
             identity={identity}
             claim={claim}
-            // user_assets={vaultDetails?.user_assets ?? '0'}
-            user_assets={vaultDetailsFetcher.data?.user_assets ?? '0'}
+            user_assets={vaultDetails?.user_assets ?? '0'}
             entry_fee={vaultDetails?.formatted_entry_fee ?? '0'}
             exit_fee={vaultDetails?.formatted_exit_fee ?? '0'}
             val={val}

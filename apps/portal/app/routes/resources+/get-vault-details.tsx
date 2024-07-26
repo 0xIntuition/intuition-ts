@@ -23,7 +23,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
       userWallet as `0x${string}`,
     )
     logger('vaultDetails', vaultDetails)
-    return json({ vaultDetails })
+    // return json({ vaultDetails })
+    return json(vaultDetails)
   } catch (error) {
     logger('Failed to fetch vaultDetails', error)
     return json({ error: 'Failed to fetch vault details' }, { status: 500 })
