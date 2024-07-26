@@ -475,6 +475,12 @@ export async function getTripleCost() {
   return tripleCost
 }
 
+export async function getTripleConfig() {
+  const tripleConfig =
+    (await getMultivaultContract.read.tripleConfig()) as bigint[]
+  return tripleConfig
+}
+
 export async function getTripleHashFromAtoms({
   subjectId,
   predicateId,

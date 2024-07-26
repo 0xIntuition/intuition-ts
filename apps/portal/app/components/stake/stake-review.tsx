@@ -1,5 +1,3 @@
-import { useEffect, useState } from 'react'
-
 import {
   Button,
   Claim,
@@ -34,37 +32,13 @@ export default function StakeReview({
   val,
   mode,
   dispatch,
-  state,
   direction,
-  isError,
   modalType,
   identity,
   claim,
   entry_fee,
   exit_fee,
 }: StakeReviewProps) {
-  const [statusText, setStatusText] = useState<string>('')
-
-  useEffect(() => {
-    const newText = isError
-      ? 'Transaction failed'
-      : state.status === 'transaction-pending' || state.status === 'confirm'
-        ? 'Attestation in progress'
-        : state.status === 'transaction-confirmed' ||
-            state.status === 'complete'
-          ? mode === 'deposit'
-            ? 'Deposited successfully'
-            : 'Redeemed successfully'
-          : state.status === 'error'
-            ? 'Transaction failed'
-            : mode === 'deposit'
-              ? 'Deposit'
-              : 'Redeem'
-    if (newText !== statusText) {
-      setStatusText(newText)
-    }
-  }, [isError, state.status, mode, statusText])
-
   return (
     <>
       <DialogHeader>

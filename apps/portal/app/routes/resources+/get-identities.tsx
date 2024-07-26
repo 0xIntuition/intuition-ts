@@ -1,6 +1,5 @@
 import { IdentitiesService } from '@0xintuition/api'
 
-import logger from '@lib/utils/logger'
 import { invariant } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { requireUserWallet } from '@server/auth'
@@ -17,7 +16,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
     sortBy: 'IdentityId',
     direction: 'asc',
   })
-  logger('[get-identities route] identitiesResponse:', identitiesResponse)
   return json({
     identities: identitiesResponse.data,
   })

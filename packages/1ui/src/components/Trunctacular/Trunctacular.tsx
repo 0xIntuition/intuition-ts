@@ -18,6 +18,7 @@ export interface TrunctacularProps
   maxStringLength?: number
   variant?: TextVariantType
   weight?: TextWeightType
+  disableTooltip?: boolean
 }
 
 const isValueWalletAddress = (value: string) =>
@@ -31,20 +32,25 @@ const Trunctacular = ({
   maxStringLength = 12,
   variant,
   weight,
+  disableTooltip = false,
   ...props
 }: TrunctacularProps) => {
   const textProps = { variant, weight, ...props }
+  const content = isValueWalletAddress(value)
+    ? formatWalletAddress(value)
+    : isLongString(value, maxStringLength)
+      ? truncateStringValue(value)
+      : value
 
-  if (isValueWalletAddress(value) || isLongString(value, maxStringLength)) {
+  if (
+    (isValueWalletAddress(value) || isLongString(value, maxStringLength)) &&
+    !disableTooltip
+  ) {
     return (
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger>
-            <Text {...textProps}>
-              {isValueWalletAddress(value)
-                ? formatWalletAddress(value)
-                : truncateStringValue(value)}
-            </Text>
+            <Text {...textProps}>{content}</Text>
           </TooltipTrigger>
           <TooltipContent>{value}</TooltipContent>
         </Tooltip>
@@ -52,7 +58,7 @@ const Trunctacular = ({
     )
   }
 
-  return <Text {...textProps}>{value}</Text>
+  return <Text {...textProps}>{content}</Text>
 }
 
 export { Trunctacular }

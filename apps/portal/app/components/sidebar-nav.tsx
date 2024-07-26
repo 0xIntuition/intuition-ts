@@ -210,6 +210,7 @@ export default function SidebarNav({
       />
       <CreateClaimModal
         open={createClaimModalActive}
+        userWallet={userObject.wallet}
         onClose={() => setCreateClaimModalActive(false)}
       />
     </>
