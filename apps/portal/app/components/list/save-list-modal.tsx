@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 
-import { Dialog, DialogContent, DialogContent, DialogFooter, toast } from '@0xintuition/1ui'
+import { Dialog, DialogContent, DialogFooter, toast } from '@0xintuition/1ui'
 import {
   ClaimPresenter,
   IdentityPresenter,
@@ -46,7 +46,7 @@ interface SaveListModalProps {
   tag: TagEmbeddedPresenter
   identity: IdentityPresenter
   claim?: ClaimPresenter
-  // vaultDetails?: VaultDetailsType
+
   onClose?: () => void
 }
 
@@ -57,7 +57,7 @@ export default function SaveListModal({
   tag,
   identity,
   claim,
-  // vaultDetails,
+
   onClose = () => {},
 }: SaveListModalProps) {
   const fetchReval = useFetcher()
@@ -72,6 +72,8 @@ export default function SaveListModal({
     TransactionActionType
   >(transactionReducer, initialTxState)
   const publicClient = usePublicClient()
+
+  const [isLoading, setIsLoading] = useState(true)
 
   const depositHook = useDepositTriple(identity.contract)
 
@@ -93,16 +95,17 @@ export default function SaveListModal({
   )
   const [vaultDetails, setVaultDetails] = useState<VaultDetailsType>()
 
-  const {
-    conviction_price = '0',
-    user_conviction = '0',
-    user_assets = '0',
-    min_deposit = '0',
-    formatted_entry_fee = '0',
-    formatted_exit_fee = '0',
-  } = vaultDetails ? vaultDetails : {}
+  // const {
+  //   conviction_price = '0',
+  //   user_conviction = '0',
+  //   user_assets = '0',
+  //   min_deposit = '0',
+  //   formatted_entry_fee = '0',
+  //   formatted_exit_fee = '0',
+  // } = vaultDetails ? vaultDetails : {}
 
   const claimFetcher = useFetcher<ClaimLoaderData[]>()
+  const vaultDetailsFetcher = useFetcher<VaultDetailsType>()
 
   useEffect(() => {
     const fetchClaim = () => {
@@ -118,49 +121,49 @@ export default function SaveListModal({
     }
 
     fetchClaim()
+    // omits the fetcher from the exhaustive deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [identity.vault_id, tag.vault_id])
 
-    if (claimFetcher.data) {
-      logger('claimFetcher data', claimFetcher.data)
+  useEffect(() => {
+    if (
+      claimFetcher.state === 'idle' &&
+      claimFetcher.data !== null &&
+      claimFetcher.data !== undefined
+    ) {
       const fetchedClaimResponse = claimFetcher.data[0] as unknown as {
         vault_id: string
       }
       setFetchedClaimVaultId(fetchedClaimResponse.vault_id)
     }
-    // doesn't include the claimFetcher dep to avoid a loop
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [identity.vault_id, tag.vault_id])
-
-  const vaultDetailsFetcher = useFetcher<VaultDetailsType>()
+  }, [claimFetcher.state, claimFetcher.data])
 
   useEffect(() => {
-    const fetchVaultDetails = () => {
-      if (fetchedClaimVaultId !== null) {
-        vaultDetailsFetcher.load(
-          `${GET_VAULT_DETAILS_RESOURCE_ROUTE}?contract=${identity.contract}&vaultId=${fetchedClaimVaultId}`,
-        )
-      }
+    if (fetchedClaimVaultId !== null) {
+      const finalUrl = `${GET_VAULT_DETAILS_RESOURCE_ROUTE}?contract=${identity.contract}&vaultId=${fetchedClaimVaultId}`
+      vaultDetailsFetcher.load(finalUrl)
     }
-
-    fetchVaultDetails()
-
-    if (vaultDetailsFetcher.data) {
-      logger('vaultDetailsFetcher', vaultDetailsFetcher.data)
-      setVaultDetails(vaultDetailsFetcher.data)
-    }
-
-    // doesn't include the vaultDetailsFetcher dep to avoid a loop
+    // omits the fetcher from the exhaustive deps
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fetchedClaimVaultId, identity.contract])
+
+  useEffect(() => {
+    if (vaultDetailsFetcher.state === 'idle' && vaultDetailsFetcher.data) {
+      logger('vaultDetailsFetcher', vaultDetailsFetcher.data)
+      setVaultDetails(vaultDetailsFetcher.data)
+      setIsLoading(false)
+    }
+  }, [vaultDetailsFetcher.state, vaultDetailsFetcher.data])
 
   const useHandleAction = (actionType: string) => {
     return async () => {
       try {
         logger('contract', contract)
         logger('fetchedClaimVaultId', fetchedClaimVaultId)
-        if (!contract || !fetchedClaimVaultId) {
+        logger('fetched vaultDetails', vaultDetails)
+        if (!contract || !fetchedClaimVaultId || !vaultDetails) {
           throw new Error('Missing required parameters')
         }
-        logger('fetchedClaimVaultId', fetchedClaimVaultId)
         const txHash = await writeContractAsync({
           address: contract as `0x${string}`,
           abi: multivaultAbi as Abi,
@@ -170,7 +173,7 @@ export default function SaveListModal({
             actionType === 'save'
               ? [userWallet as `0x${string}`, fetchedClaimVaultId]
               : [
-                  user_conviction,
+                  vaultDetails.user_conviction,
                   userWallet as `0x${string}`,
                   fetchedClaimVaultId,
                 ],
@@ -321,7 +324,13 @@ export default function SaveListModal({
   const walletBalance = formatUnits(balance?.value ?? 0n, 18)
 
   const handleSaveButtonClick = async () => {
-    if (val < formatBalance(min_deposit, 18) || +val > +walletBalance) {
+    if (!vaultDetails) {
+      throw new Error('Missing required parameters')
+    }
+    if (
+      val < formatBalance(vaultDetails.min_deposit, 18) ||
+      +val > +walletBalance
+    ) {
       setShowErrors(true)
       return
     }
@@ -329,7 +338,10 @@ export default function SaveListModal({
   }
 
   const handleUnsaveButtonClick = async () => {
-    if (+val > +(user_conviction ?? '0')) {
+    if (!vaultDetails) {
+      throw new Error('Missing required parameters')
+    }
+    if (+val > +(vaultDetails.user_conviction ?? '0')) {
       setShowErrors(true)
       return
     }
@@ -373,9 +385,10 @@ export default function SaveListModal({
             tag={tag}
             identity={identity}
             claim={claim}
-            user_assets={user_assets ?? '0'}
-            entry_fee={formatted_entry_fee ?? '0'}
-            exit_fee={formatted_exit_fee ?? '0'}
+            // user_assets={vaultDetails?.user_assets ?? '0'}
+            user_assets={vaultDetailsFetcher.data?.user_assets ?? '0'}
+            entry_fee={vaultDetails?.formatted_entry_fee ?? '0'}
+            exit_fee={vaultDetails?.formatted_exit_fee ?? '0'}
             val={val}
             setVal={setVal}
             mode={mode}
@@ -389,7 +402,7 @@ export default function SaveListModal({
             setShowErrors={setShowErrors}
           />
         </div>
-        {!isTransactionStarted && (
+        {!isTransactionStarted && !isLoading && (
           <DialogFooter className="!justify-center !items-center gap-5">
             <UnsaveButton
               setMode={setMode}
@@ -397,8 +410,8 @@ export default function SaveListModal({
               handleClose={handleClose}
               dispatch={dispatch}
               state={state}
-              user_conviction={user_conviction ?? '0'}
-              className={`${(user_conviction && user_conviction > '0' && state.status === 'idle') || mode !== 'save' ? '' : 'hidden'}`}
+              user_conviction={vaultDetails?.user_conviction ?? '0'}
+              className={`${(vaultDetails?.user_conviction && vaultDetails?.user_conviction > '0' && state.status === 'idle') || mode !== 'save' ? '' : 'hidden'}`}
             />
             <SaveButton
               val={val}
@@ -407,10 +420,10 @@ export default function SaveListModal({
               handleClose={handleClose}
               dispatch={dispatch}
               state={state}
-              min_deposit={min_deposit}
+              min_deposit={vaultDetails?.min_deposit ?? '0'}
               walletBalance={walletBalance}
-              conviction_price={conviction_price ?? '0'}
-              user_assets={user_assets ?? '0'}
+              conviction_price={vaultDetails?.conviction_price ?? '0'}
+              user_assets={vaultDetails?.user_assets ?? '0'}
               setValidationErrors={setValidationErrors}
               setShowErrors={setShowErrors}
               className={`${mode === 'unsave' && 'hidden'}`}

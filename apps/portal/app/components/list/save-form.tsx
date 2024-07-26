@@ -65,7 +65,7 @@ export default function SaveForm({
   validationErrors,
   setValidationErrors,
 }: SaveFormProps) {
-  logger('user_assets', user_assets)
+  logger('user_assets in save form', user_assets)
   return (
     <>
       <fetchReval.Form

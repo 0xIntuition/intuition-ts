@@ -64,8 +64,6 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     },
   })
 
-  logger('identity', identity)
-
   if (!identity) {
     return null
   }
