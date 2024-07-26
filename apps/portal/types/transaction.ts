@@ -1,10 +1,3 @@
-import { TransactionStatusType } from '@0xintuition/1ui'
-
-import {
-  IDENTITY_TRANSACTION_ACTIONS,
-  IdentityTransactionStatusType,
-  TRANSACTION_ACTIONS,
-} from 'consts/transaction'
 import { TransactionReceipt } from 'viem'
 
 export type TStatus = string
@@ -20,36 +13,70 @@ export type BaseTransactionStateType<TStatus> = {
   identityId?: string
 }
 
+export type TransactionStatusType =
+  | 'idle'
+  | 'awaiting'
+  | 'review-transaction'
+  | 'confirm'
+  | 'transaction-pending'
+  | 'transaction-confirmed'
+  | 'complete'
+  | 'hash'
+  | 'error'
+
 export type TransactionActionType =
-  | { type: typeof TRANSACTION_ACTIONS.START_TRANSACTION }
-  | { type: typeof TRANSACTION_ACTIONS.APPROVE_TRANSACTION }
-  | { type: typeof TRANSACTION_ACTIONS.REVIEW_TRANSACTION }
-  | { type: typeof TRANSACTION_ACTIONS.CONFIRM_TRANSACTION }
-  | { type: typeof TRANSACTION_ACTIONS.TRANSACTION_PENDING }
-  | { type: typeof TRANSACTION_ACTIONS.TRANSACTION_CONFIRMED }
+  | { type: 'START_TRANSACTION' }
+  | { type: 'APPROVE_TRANSACTION' }
+  | { type: 'REVIEW_TRANSACTION' }
+  | { type: 'CONFIRM_TRANSACTION' }
+  | { type: 'TRANSACTION_PENDING' }
+  | { type: 'TRANSACTION_CONFIRMED' }
   | {
-      type: typeof TRANSACTION_ACTIONS.TRANSACTION_COMPLETE
+      type: 'TRANSACTION_COMPLETE'
       txHash?: `0x${string}`
       txReceipt: TransactionReceipt
     }
-  | {
-      type: typeof TRANSACTION_ACTIONS.TRANSACTION_HASH
-      txHash?: `0x${string}`
-    }
-  | { type: typeof TRANSACTION_ACTIONS.TRANSACTION_ERROR; error: string }
+  | { type: 'TRANSACTION_HASH'; txHash?: `0x${string}` }
+  | { type: 'TRANSACTION_ERROR'; error: string }
+
+export type IdentityTransactionStatusType =
+  | 'idle'
+  | 'uploading-image'
+  | 'image-upload-complete'
+  | 'preparing-identity'
+  | 'publishing-identity'
+  | 'approve-transaction'
+  | 'transaction-pending'
+  | 'confirm-transaction'
+  | 'transaction-confirmed'
+  | 'complete'
+  | 'hash'
+  | 'error'
 
 export type IdentityTransactionActionType =
-  | TransactionActionType
-  | { type: typeof IDENTITY_TRANSACTION_ACTIONS.START_IMAGE_UPLOAD }
+  | { type: 'START_TRANSACTION' }
+  | { type: 'START_IMAGE_UPLOAD' }
   | {
-      type: typeof IDENTITY_TRANSACTION_ACTIONS.IMAGE_UPLOAD_COMPLETE
+      type: 'IMAGE_UPLOAD_COMPLETE'
       imageUrl: string
       displayName: string
       description: string
       externalReference: string
     }
-  | { type: typeof IDENTITY_TRANSACTION_ACTIONS.PREPARING_IDENTITY }
-  | { type: typeof IDENTITY_TRANSACTION_ACTIONS.PUBLISHING_IDENTITY }
+  | { type: 'PREPARING_IDENTITY' }
+  | { type: 'PUBLISHING_IDENTITY' }
+  | { type: 'APPROVE_TRANSACTION' }
+  | { type: 'CONFIRM_TRANSACTION' }
+  | { type: 'TRANSACTION_PENDING' }
+  | { type: 'TRANSACTION_CONFIRMED' }
+  | {
+      type: 'TRANSACTION_COMPLETE'
+      txHash?: `0x${string}`
+      txReceipt: TransactionReceipt
+      identityId?: string
+    }
+  | { type: 'TRANSACTION_HASH'; txHash?: `0x${string}` }
+  | { type: 'TRANSACTION_ERROR'; error: string }
 
 export type TransactionStateType =
   BaseTransactionStateType<TransactionStatusType>
@@ -59,7 +86,7 @@ export type IdentityTransactionStateType =
 export const TransactionSuccessAction = {
   VIEW: 'view',
   CLOSE: 'close',
-} as const
+}
 
 export type TransactionSuccessActionType =
   (typeof TransactionSuccessAction)[keyof typeof TransactionSuccessAction]
