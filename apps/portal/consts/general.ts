@@ -45,6 +45,7 @@ export const SEARCH_IDENTITIES_RESOURCE_ROUTE = '/resources/search-identities'
 export const TAG_RESOURCE_ROUTE = '/resources/tag'
 export const SEARCH_CLAIMS_BY_IDS_RESOURCE_ROUTE =
   '/resources/search-claims-by-ids'
+export const GET_VAULT_DETAILS_RESOURCE_ROUTE = '/resources/get-vault-details'
 
 // Privy Social Accounts
 

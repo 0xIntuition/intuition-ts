@@ -7,21 +7,18 @@ import {
   TagEmbeddedPresenter,
 } from '@0xintuition/api'
 
-import { multivaultAbi } from '@lib/abis/multivault'
+import { multivaultAbi, multivaultAbi } from '@lib/abis/multivault'
 import { useCreateTriple } from '@lib/hooks/useCreateTriple'
 import { useDepositTriple } from '@lib/hooks/useDepositTriple'
-import { useLoaderFetcher } from '@lib/hooks/useLoaderFetcher'
 import { useRedeemTriple } from '@lib/hooks/useRedeemTriple'
 import { transactionReducer } from '@lib/hooks/useTransactionReducer'
 import logger from '@lib/utils/logger'
 import { formatBalance } from '@lib/utils/misc'
 import { useGenericTxState } from '@lib/utils/use-tx-reducer'
 import { useFetcher, useLocation } from '@remix-run/react'
-import { CreateLoaderData } from '@routes/resources+/create'
 import { ClaimLoaderData } from '@routes/resources+/search-claims-by-ids'
 import { useQueryClient } from '@tanstack/react-query'
 import {
-  CREATE_RESOURCE_ROUTE,
   SEARCH_CLAIMS_BY_IDS_RESOURCE_ROUTE,
   TAG_PREDICATE_VAULT_ID_TESTNET,
 } from 'consts'
@@ -48,7 +45,7 @@ interface SaveListModalProps {
   tag: TagEmbeddedPresenter
   identity: IdentityPresenter
   claim?: ClaimPresenter
-  vaultDetails?: VaultDetailsType
+  // vaultDetails?: VaultDetailsType
   onClose?: () => void
 }
 
@@ -59,7 +56,7 @@ export default function SaveListModal({
   tag,
   identity,
   claim,
-  vaultDetails,
+  // vaultDetails,
   onClose = () => {},
 }: SaveListModalProps) {
   const fetchReval = useFetcher()
@@ -74,23 +71,6 @@ export default function SaveListModal({
     TransactionActionType
   >(transactionReducer, initialTxState)
   const publicClient = usePublicClient()
-
-  // const iVaultId = '47'
-  // const followVaultId = '48'
-  // const tagVaultId = tag.vault_id
-
-  // const subjectVaultId = identity.vault_id
-  // const hasTagPredicateVaultId = TAG_PREDICATE_ID_TESTNET
-  // const objectTagVaultId = tag.vault_id
-
-  const {
-    conviction_price = '0',
-    user_conviction = '0',
-    user_assets = '0',
-    min_deposit = '0',
-    formatted_entry_fee = '0',
-    formatted_exit_fee = '0',
-  } = vaultDetails ? vaultDetails : {}
 
   const depositHook = useDepositTriple(identity.contract)
 
@@ -107,17 +87,19 @@ export default function SaveListModal({
     reset,
   } = !claim ? createHook : mode === 'save' ? depositHook : redeemHook
 
-  const feeFetcher = useLoaderFetcher<CreateLoaderData>(CREATE_RESOURCE_ROUTE)
-
-  const { tripleCost } = (feeFetcher.data as CreateLoaderData) ?? {
-    atomEquityFeeRaw: BigInt(0),
-    atomCost: BigInt(0),
-    tripleCost: BigInt(0),
-  }
-
   const [fetchedClaimVaultId, setFetchedClaimVaultId] = useState<string | null>(
     null,
   )
+  const [vaultDetails, setVaultDetails] = useState<VaultDetailsType>()
+
+  const {
+    conviction_price = '0',
+    user_conviction = '0',
+    user_assets = '0',
+    min_deposit = '0',
+    formatted_entry_fee = '0',
+    formatted_exit_fee = '0',
+  } = vaultDetails ? vaultDetails : {}
 
   const claimFetcher = useFetcher<ClaimLoaderData[]>()
 
@@ -143,11 +125,41 @@ export default function SaveListModal({
       }
       setFetchedClaimVaultId(fetchedClaimResponse.vault_id)
     }
+    // doesn't include the claimFetcher dep to avoid a loop
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [identity.vault_id, tag.vault_id])
+
+  const vaultDetailsFetcher = useFetcher<VaultDetailsType>()
+
+  useEffect(() => {
+    const fetchVaultDetails = () => {
+      if (fetchedClaimVaultId) {
+        vaultDetailsFetcher.load(
+          `/resources/vault-details?contract=${identity.contract}&vaultId=${fetchedClaimVaultId}`,
+        )
+      }
+    }
+
+    fetchVaultDetails()
+
+    if (vaultDetailsFetcher.data) {
+      logger('vaultDetailsFetcher', vaultDetailsFetcher.data)
+      setVaultDetails(vaultDetailsFetcher.data)
+    }
+
+    // doesn't include the vaultDetailsFetcher dep to avoid a loop
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fetchedClaimVaultId, identity.contract])
 
   const useHandleAction = (actionType: string) => {
     return async () => {
       try {
+        logger('contract', contract)
+        logger('fetchedClaimVaultId', fetchedClaimVaultId)
+        if (!contract || !fetchedClaimVaultId) {
+          throw new Error('Missing required parameters')
+        }
+        logger('fetchedClaimVaultId', fetchedClaimVaultId)
         const txHash = await writeContractAsync({
           address: contract as `0x${string}`,
           abi: multivaultAbi as Abi,
@@ -161,9 +173,8 @@ export default function SaveListModal({
                   userWallet as `0x${string}`,
                   fetchedClaimVaultId,
                 ],
-          value: !claim
-            ? BigInt(tripleCost) + parseUnits(val === '' ? '0' : val, 18)
-            : actionType === 'save'
+          value:
+            actionType === 'save'
               ? parseUnits(val === '' ? '0' : val, 18)
               : undefined,
         })
