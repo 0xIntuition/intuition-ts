@@ -17,7 +17,7 @@ const EmptyStateCard = ({
   return (
     <div
       className={cn(
-        `flex flex-col justify-center items-center p-6 theme-border rounded-lg min-h-52`,
+        `w-full flex flex-col justify-center items-center p-6 theme-border rounded-lg min-h-52`,
         className,
       )}
     >
