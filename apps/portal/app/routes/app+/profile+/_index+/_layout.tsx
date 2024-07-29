@@ -11,6 +11,7 @@ import {
   StakeCard,
 } from '@0xintuition/1ui'
 import {
+  ApiError,
   IdentitiesService,
   IdentityPresenter,
   UserPresenter,
@@ -69,12 +70,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
       args: { id: userWallet },
     })
   } catch (error) {
+    if (error instanceof ApiError && error.status === 404) {
+      throw redirect('/create')
+    }
     logger('Error fetching userIdentity', error)
     throw error
-  }
-
-  if (!userIdentity) {
-    return redirect('/create')
   }
 
   const userObject = await fetchWrapper({
@@ -83,11 +83,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
       wallet: userWallet,
     },
   })
-
-  if (!userObject) {
-    logger('No user found in DB')
-    return
-  }
 
   const userTotals = await fetchWrapper({
     method: UsersService.getUserTotals,

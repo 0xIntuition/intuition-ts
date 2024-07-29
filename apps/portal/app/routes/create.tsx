@@ -2,8 +2,6 @@ import { useEffect, useRef, useState } from 'react'
 
 import { toast } from '@0xintuition/1ui'
 import {
-  ApiError,
-  IdentitiesService,
   IdentityPresenter,
   UserPresenter,
   UsersService,
@@ -41,22 +39,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const wallet = await requireUserWallet(request)
   invariant(wallet, NO_WALLET_ERROR)
 
-  let userIdentity
-  try {
-    userIdentity = await IdentitiesService.getIdentityById({
-      id: wallet,
-    })
-  } catch (error: unknown) {
-    if (error instanceof ApiError) {
-      userIdentity = undefined
-      console.log(
-        `${error.name} - ${error.status}: ${error.message} ${error.url}`,
-      )
-    } else {
-      throw error
-    }
-  }
-
   const userObject = await fetchWrapper({
     method: UsersService.getUserByWalletPublic,
     args: {
@@ -66,10 +48,10 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   if (!userObject) {
     console.log('No user found in DB')
-    return json({ wallet, userIdentity, userObject })
+    return json({ wallet, userObject })
   }
 
-  return json({ wallet, userIdentity, userObject })
+  return json({ wallet, userObject })
 }
 
 interface CreateButtonWrapperProps {
