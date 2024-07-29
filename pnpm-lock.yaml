@@ -249,6 +249,9 @@ importers:
       blockies-ts:
         specifier: ^1.0.0
         version: 1.0.0
+      class-variance-authority:
+        specifier: ^0.7.0
+        version: 0.7.0
       cloudinary:
         specifier: ^2.2.0
         version: 2.2.0

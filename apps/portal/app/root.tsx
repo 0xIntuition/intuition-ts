@@ -25,6 +25,7 @@ import { useEffect } from 'react'
 import { Button, Icon, Text, Toaster } from '@0xintuition/1ui'
 
 import { GlobalLoading } from '@components/global-loading'
+import NavigationButton from '@components/navigation-link'
 import { getChainEnvConfig } from '@lib/utils/environment'
 import logger from '@lib/utils/logger'
 import { cn } from '@lib/utils/misc'
@@ -199,13 +200,9 @@ export function ErrorBoundary() {
               ))}
             </div>
             <div className="flex gap-6 mt-5 max-[400px]:flex-col">
-              <Button
-                variant="primary"
-                size="lg"
-                onClick={() => navigate(PATHS.ROOT)}
-              >
+              <NavigationButton variant="primary" size="lg" to={PATHS.ROOT}>
                 Back to home
-              </Button>
+              </NavigationButton>
               <Button
                 variant="ghost"
                 size="lg"
