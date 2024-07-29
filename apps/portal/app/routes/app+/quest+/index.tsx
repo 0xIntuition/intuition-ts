@@ -44,6 +44,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   })
 }
 
+// TODO: Remove this once we are getting the data from BE.
 const mockReferralData = {
   points: 2100,
   inviteCodes: [
