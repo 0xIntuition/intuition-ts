@@ -17,17 +17,17 @@ describe('EmptyStateCard', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="flex flex-col justify-center items-center p-6 theme-border border-destructive/50 rounded-lg min-h-52"
+          class="flex flex-col justify-center items-center p-6 theme-border border-destructive/50 rounded-lg min-h-52 w-full gap-4"
         >
           <svg
-            class="w-12 h-12 mb-4 text-destructive"
+            class="w-12 h-12 text-destructive"
           >
             <use
               href="/src/components/Icon/Icon.sprites.svg#triangle-exclamation"
             />
           </svg>
           <p
-            class="text-sm font-normal text-muted-foreground mb-5"
+            class="text-sm font-normal text-muted-foreground"
           >
             An error occured
           </p>
