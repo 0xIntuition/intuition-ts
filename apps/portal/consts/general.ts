@@ -1,3 +1,4 @@
+import { PATHS } from 'consts'
 import { PrivyPlatform } from 'types/privy'
 import { baseSepolia } from 'viem/chains'
 
@@ -74,51 +75,51 @@ export const verifiedPlatforms: PrivyPlatform[] = [
 // Routes
 
 export const userProfileRouteOptions = [
-  { value: 'overview', label: 'Overview', path: '/app/profile/' },
-  { value: 'data-about', label: 'Data About', path: '/app/profile/data-about' },
+  { value: 'overview', label: 'Overview', path: PATHS.PROFILE_OVERVIEW },
+  { value: 'data-about', label: 'Data About', path: PATHS.PROFILE_DATA_ABOUT },
   {
     value: 'data-created',
     label: 'Data Created',
-    path: '/app/profile/data-created',
+    path: PATHS.PROFILE_DATA_CREATED,
   },
   {
     value: 'connections',
     label: 'Connections',
-    path: '/app/profile/connections',
+    path: PATHS.PROFILE_CONNECTIONS,
   },
 ]
 
 export const userIdentityRouteOptions = [
-  { value: 'overview', label: 'Overview', basePath: '/app/profile' },
+  { value: 'overview', label: 'Overview', basePath: PATHS.PROFILE_OVERVIEW },
   {
     value: 'data-about',
     label: 'Data About',
-    basePath: '/app/profile',
+    basePath: PATHS.PROFILE_OVERVIEW,
   },
   {
     value: 'data-created',
     label: 'Data Created',
-    basePath: '/app/profile',
+    basePath: PATHS.PROFILE_OVERVIEW,
   },
   {
     value: 'connections',
     label: 'Connections',
-    basePath: '/app/profile',
+    basePath: PATHS.PROFILE_OVERVIEW,
   },
 ]
 
 export const identityRouteOptions = [
-  { value: 'overview', label: 'Overview', basePath: '/app/identity' },
+  { value: 'overview', label: 'Overview', basePath: PATHS.IDENTITY },
   {
     value: 'data-about',
     label: 'Data About',
-    basePath: '/app/identity',
+    basePath: PATHS.IDENTITY,
   },
 
   {
     value: 'tags',
     label: 'Tags',
-    basePath: '/app/identity',
+    basePath: PATHS.IDENTITY,
   },
 ]
 
@@ -126,23 +127,23 @@ export const exploreRouteOptions = [
   {
     value: 'users',
     label: 'Users',
-    basePath: '/app/explore',
+    basePath: PATHS.EXPLORE,
   },
   {
     value: 'identities',
     label: 'Identities',
-    basePath: '/app/explore',
+    basePath: PATHS.EXPLORE,
   },
   {
     value: 'claims',
     label: 'Claims',
-    basePath: '/app/explore',
+    basePath: PATHS.EXPLORE,
   },
 
   {
     value: 'lists',
     label: 'Lists',
-    basePath: '/app/explore',
+    basePath: PATHS.EXPLORE,
   },
 ]
 
@@ -150,12 +151,12 @@ export const activityRouteOptions = [
   {
     value: 'global',
     label: 'Global Activity',
-    basePath: '/app/activity',
+    basePath: PATHS.ACTIVITY,
   },
   {
     value: 'personal',
     label: 'Your Activity',
-    basePath: '/app/activity',
+    basePath: PATHS.ACTIVITY,
   },
 ]
 

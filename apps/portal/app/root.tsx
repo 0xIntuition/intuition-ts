@@ -29,7 +29,7 @@ import { getChainEnvConfig } from '@lib/utils/environment'
 import logger from '@lib/utils/logger'
 import { cn } from '@lib/utils/misc'
 import { setupAPI } from '@server/auth'
-import { CURRENT_ENV, PATH, SUPPORT_EMAIL_ADDRESS } from 'consts'
+import { CURRENT_ENV, PATHS, SUPPORT_EMAIL_ADDRESS } from 'consts'
 import { ClientOnly } from 'remix-utils/client-only'
 import { baseSepolia } from 'viem/chains'
 import { useAccount, useSwitchChain } from 'wagmi'
@@ -202,7 +202,7 @@ export function ErrorBoundary() {
               <Button
                 variant="primary"
                 size="lg"
-                onClick={() => navigate(PATH.ROOT)}
+                onClick={() => navigate(PATHS.ROOT)}
               >
                 Back to home
               </Button>
