@@ -27,7 +27,7 @@ import { useFetcher, useLoaderData, useNavigate } from '@remix-run/react'
 import { CreateLoaderData } from '@routes/resources+/create'
 import { requireUserWallet } from '@server/auth'
 import * as blockies from 'blockies-ts'
-import { MULTIVAULT_CONTRACT_ADDRESS, NO_WALLET_ERROR } from 'consts'
+import { MULTIVAULT_CONTRACT_ADDRESS, NO_WALLET_ERROR, PATHS } from 'consts'
 import { useAtom } from 'jotai'
 import { ClientOnly } from 'remix-utils/client-only'
 import {
@@ -381,7 +381,7 @@ export default function Profile() {
         open={editProfileModalActive}
         onClose={() => {
           setEditProfileModalActive(false)
-          navigate('/app/profile')
+          navigate(PATHS.PROFILE)
         }}
       />
     </>

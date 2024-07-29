@@ -8,13 +8,14 @@ import {
 } from '@remix-run/node'
 import { useLoaderData, useSubmit } from '@remix-run/react'
 import { verifyPrivyAccessToken } from '@server/privy'
+import { PATHS } from 'consts'
 import { parse } from 'cookie'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const authTokenClaims = await verifyPrivyAccessToken(request)
   if (authTokenClaims) {
     console.log('[Loader] User is already authenticated, redirecting to home')
-    throw redirect('/app/profile')
+    throw redirect(PATHS.PROFILE)
   }
   return json({ authTokenClaims })
 }
@@ -25,7 +26,7 @@ export async function action({ request }: ActionFunctionArgs) {
   const userId = formData.get('userId') // not necessary but just to show its being properly passed to the action post privy-auth
   console.log('[Action] userId', userId)
 
-  const redirectUrl = url.searchParams.get('redirectTo') ?? '/app/profile'
+  const redirectUrl = url.searchParams.get('redirectTo') ?? PATHS.PROFILE
   console.log('[Action] Redirecting to', redirectUrl)
   const cookies = parse(request.headers.get('cookie') ?? '')
   const privyToken = cookies['privy-token'] // not necessary but just to show its being properly set by privy post auth

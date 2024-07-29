@@ -21,6 +21,7 @@ import { PrivyButton } from '@client/privy-button'
 import { createClaimModalAtom, createIdentityModalAtom } from '@lib/state/store'
 import { NavLink, useNavigate, useSubmit } from '@remix-run/react'
 import * as blockies from 'blockies-ts'
+import { PATHS } from 'consts'
 import { useAtom } from 'jotai'
 import { isAddress } from 'viem'
 
@@ -35,7 +36,7 @@ interface SidebarNavRoute {
 
 const sidebarNavRoutes: SidebarNavRoute[] = [
   {
-    route: '/app/profile',
+    route: PATHS.PROFILE,
     label: 'Home',
     iconName: 'home-door',
   },

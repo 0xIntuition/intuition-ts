@@ -11,6 +11,7 @@ import {
 
 import { usePrivy } from '@privy-io/react-auth'
 import { NavLink, useNavigate } from '@remix-run/react'
+import { PATHS } from 'consts'
 import { useDisconnect } from 'wagmi'
 
 export function PrivyButton({
@@ -61,7 +62,7 @@ export function PrivyButton({
               className="cursor-pointer justify-start"
               onSelect={(e) => {
                 e.preventDefault()
-                navigate('/app/profile')
+                navigate(PATHS.PROFILE)
               }}
             >
               <NavLink to={`/app/profile`} className="font-semibold">

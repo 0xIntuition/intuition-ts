@@ -1,6 +1,7 @@
 import { SegmentedControl, SegmentedControlItem } from '@0xintuition/1ui'
 
 import { NavLink, useParams } from '@remix-run/react'
+import { PATHS } from 'consts'
 
 export interface OptionType {
   value: string
@@ -18,7 +19,7 @@ export const SegmentedNav = ({ options }: SegmentedNavProps) => {
 
   const getPath = (option: OptionType) => {
     const { wallet, id } = params
-    const basePath = option.basePath || '/app/profile'
+    const basePath = option.basePath || PATHS.PROFILE
     const idOrWallet = option.basePath?.includes('/identity') ? id : wallet
     const suffix = option.value !== 'overview' ? `/${option.value}` : ''
 

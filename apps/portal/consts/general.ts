@@ -75,7 +75,7 @@ export const verifiedPlatforms: PrivyPlatform[] = [
 // Routes
 
 export const userProfileRouteOptions = [
-  { value: 'overview', label: 'Overview', path: PATHS.PROFILE_OVERVIEW },
+  { value: 'overview', label: 'Overview', path: PATHS.PROFILE },
   { value: 'data-about', label: 'Data About', path: PATHS.PROFILE_DATA_ABOUT },
   {
     value: 'data-created',
@@ -90,21 +90,21 @@ export const userProfileRouteOptions = [
 ]
 
 export const userIdentityRouteOptions = [
-  { value: 'overview', label: 'Overview', basePath: PATHS.PROFILE_OVERVIEW },
+  { value: 'overview', label: 'Overview', basePath: PATHS.PROFILE },
   {
     value: 'data-about',
     label: 'Data About',
-    basePath: PATHS.PROFILE_OVERVIEW,
+    basePath: PATHS.PROFILE,
   },
   {
     value: 'data-created',
     label: 'Data Created',
-    basePath: PATHS.PROFILE_OVERVIEW,
+    basePath: PATHS.PROFILE,
   },
   {
     value: 'connections',
     label: 'Connections',
-    basePath: PATHS.PROFILE_OVERVIEW,
+    basePath: PATHS.PROFILE,
   },
 ]
 
