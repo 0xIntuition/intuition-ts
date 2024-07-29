@@ -70,7 +70,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     })
   } catch (error) {
     logger('Error fetching userIdentity', error)
-    return redirect('/create')
+    throw error
   }
 
   if (!userIdentity) {
