@@ -10,6 +10,7 @@ import {
 } from '@0xintuition/1ui'
 
 import { CopyComponent } from '@components/copy'
+import { useCopy } from '@lib/hooks/useCopy'
 
 interface ReferralRowProps {
   code: string
@@ -26,6 +27,13 @@ export const ReferralRow: React.FC<ReferralRowProps> = ({
   isActivated,
   identity,
 }) => {
+  const { copy } = useCopy()
+
+  const handleCopy = () => {
+    if (!isActivated) {
+      copy(code)
+    }
+  }
   return (
     <div className="flex justify-between items-center">
       <CopyComponent text={code} disabled={isActivated} />
@@ -38,7 +46,7 @@ export const ReferralRow: React.FC<ReferralRowProps> = ({
       ) : (
         <Button
           variant={ButtonVariant.secondary}
-          onClick={() => navigator.clipboard.writeText(code)}
+          onClick={handleCopy}
           disabled={isActivated}
           className="gap-2"
         >

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 
 import {
   Button,
@@ -9,6 +9,8 @@ import {
   TextVariant,
   TextWeight,
 } from '@0xintuition/1ui'
+
+import { useCopy } from '@lib/hooks/useCopy'
 
 interface CopyComponentProps extends React.HTMLAttributes<HTMLButtonElement> {
   text: string
@@ -21,13 +23,11 @@ export const CopyComponent: React.FC<CopyComponentProps> = ({
   className,
   ...props
 }) => {
-  const [copied, setCopied] = useState(false)
+  const { copied, copy } = useCopy()
 
   const handleCopy = () => {
     if (!disabled) {
-      navigator.clipboard.writeText(text)
-      setCopied(true)
-      setTimeout(() => setCopied(false), 2000)
+      copy(text)
     }
   }
 
