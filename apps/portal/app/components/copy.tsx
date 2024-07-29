@@ -50,7 +50,7 @@ export const CopyComponent: React.FC<CopyComponentProps> = ({
       </Text>
       <Icon
         name={copied ? IconName.checkmark : IconName.copy}
-        className={`h-4 w-4 ${copied ? 'text-success' : 'text-primary'}`}
+        className={`h-4 w-4 ${copied ? 'text-success' : disabled ? 'text-muted-foreground' : 'text-primary'}`}
       />
     </Button>
   )

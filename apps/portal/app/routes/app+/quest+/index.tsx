@@ -67,11 +67,11 @@ const mockReferralData = {
       },
     },
     {
-      code: 'T3R7F',
+      code: 'T3R7F9',
       isActivated: false,
     },
     {
-      code: 'L2P8X',
+      code: 'L2P8X6',
       isActivated: false,
     },
   ],

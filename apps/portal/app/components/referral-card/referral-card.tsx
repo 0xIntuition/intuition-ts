@@ -9,8 +9,7 @@ import {
   TextWeight,
 } from '@0xintuition/1ui'
 
-import { ReferralPointsDisplay } from '@components/referral-card/referral-points-display'
-
+import { ReferralPointsDisplay } from './referral-points-display'
 import { ReferralRow } from './referral-row'
 
 interface ReferralCardProps {
