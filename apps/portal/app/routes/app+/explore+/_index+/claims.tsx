@@ -69,11 +69,7 @@ export default function ExploreClaims() {
     useLoaderData<typeof loader>()
   return (
     <div className="m-8 flex flex-col items-center gap-4">
-      <ExploreSearch
-        variant="claim"
-        className="mb-12"
-        identities={identities}
-      />
+      <ExploreSearch variant="claim" identities={identities} />
       <ClaimsList
         claims={claims}
         pagination={claimsPagination}

@@ -17,7 +17,7 @@ const ExploreSearch: React.FC<ExploreSearchProps> = ({
   ...props
 }: ExploreSearchProps) => {
   return (
-    <div className="min-w-96 flex flex-col items-center" {...props}>
+    <div className="min-w-96 flex flex-col items-center mb-12" {...props}>
       {['user', 'identity', 'tag', 'list'].includes(variant) && (
         <ExploreSearchForm searchParam={variant} />
       )}

@@ -54,7 +54,7 @@ export default function ExploreUsers() {
 
   return (
     <div className="m-8 flex flex-col items-center gap-4">
-      <ExploreSearch variant="user" className="mb-12" />
+      <ExploreSearch variant="user" />
       <IdentitiesList
         identities={identities}
         pagination={pagination}
