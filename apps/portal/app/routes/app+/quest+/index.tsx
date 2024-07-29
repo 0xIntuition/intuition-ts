@@ -11,6 +11,7 @@ import { GetUserByWalletResponse, UsersService } from '@0xintuition/api'
 
 import { QuestSetCard } from '@components/quest/quest-set-card'
 import { QuestSetProgressCard } from '@components/quest/quest-set-progress-card'
+import { ReferralCard } from '@components/referral-card/referral-card'
 import { fetchWrapper, invariant } from '@lib/utils/misc'
 import { defer, LoaderFunctionArgs } from '@remix-run/node'
 import { Await, Link, useLoaderData } from '@remix-run/react'
@@ -41,6 +42,38 @@ export async function loader({ request }: LoaderFunctionArgs) {
     userProfile,
     standardQuestsProgress,
   })
+}
+
+const mockReferralData = {
+  points: 2100,
+  inviteCodes: [
+    {
+      code: 'M9W5B',
+      isActivated: true,
+      identity: {
+        id: '1',
+        name: 'Sophie Nélisse',
+        avatarUrl: 'https://example.com/avatar1.jpg',
+      },
+    },
+    {
+      code: 'H6K9Q1',
+      isActivated: true,
+      identity: {
+        id: '2',
+        name: 'Mia Rodriguez',
+        avatarUrl: 'https://example.com/avatar2.jpg',
+      },
+    },
+    {
+      code: 'T3R7F',
+      isActivated: false,
+    },
+    {
+      code: 'L2P8X',
+      isActivated: false,
+    },
+  ],
 }
 
 export default function Quests() {
@@ -87,9 +120,10 @@ export default function Quests() {
         </div>
         <div className="space-y-5">
           <Text variant="headline">Referrals</Text>
-          <div className="bg-warning/5 rounded-lg theme-border p-5 flex justify-center align-items h-[360px] border-warning/30 text-warning/30 text-bold border-dashed">
-            Invites
-          </div>
+          <ReferralCard
+            points={mockReferralData.points}
+            inviteCodes={mockReferralData.inviteCodes}
+          />
         </div>
         <div className="flex flex-col gap-10">
           <div className="space-y-5">

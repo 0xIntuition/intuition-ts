@@ -43,6 +43,7 @@ export const IconName = {
   floppyDisk1: 'floppy-disk-1',
   floppyDisk2: 'floppy-disk-2',
   folder: 'folder',
+  gift: 'gift',
   graduateCap: 'graduate-cap',
   group: 'group',
   layoutGrid: 'layout-grid',
