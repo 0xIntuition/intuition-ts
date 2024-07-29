@@ -46,12 +46,18 @@ describe('IdentityContentRow', () => {
               class="flex items-center"
             >
               <span
-                class="relative flex shrink-0 overflow-hidden aspect-square rounded-full bg-muted w-[64px] h-[64px] mr-4"
+                class="relative flex shrink-0 overflow-hidden aspect-square bg-background theme-border rounded-full w-[64px] h-[64px] mr-4"
               >
                 <span
                   class="flex h-full w-full items-center justify-center bg-inherit"
                 >
-                  JO
+                  <svg
+                    class="text-primary/30 w-[80%] h-[80%] max-w-8 max-h-8"
+                  >
+                    <use
+                      href="/src/components/Icon/Icon.sprites.svg#crypto-punk"
+                    />
+                  </svg>
                 </span>
               </span>
               <div

@@ -140,12 +140,18 @@ describe('SidebarLayout', () => {
                   class="flex items-center font-medium border disabled:bg-muted disabled:border-muted bg-transparent text-secondary-foreground/70 border-transparent rounded-lg hover:text-secondary-foreground hover:border-border/20 aria-selected:bg-primary/10 aria-selected:text-secondary-foreground/80 disabled:text-muted-foreground px-4 py-2 gap-2 text-base w-full justify-start"
                 >
                   <span
-                    class="relative flex shrink-0 overflow-hidden aspect-square rounded-full bg-muted h-6 w-6"
+                    class="relative flex shrink-0 overflow-hidden aspect-square bg-background theme-border rounded-full h-6 w-6"
                   >
                     <span
                       class="flex h-full w-full items-center justify-center bg-inherit"
                     >
-                      SU
+                      <svg
+                        class="text-primary/30 w-[80%] h-[80%] max-w-8 max-h-8"
+                      >
+                        <use
+                          href="/src/components/Icon/Icon.sprites.svg#crypto-punk"
+                        />
+                      </svg>
                     </span>
                   </span>
                   Super Dave

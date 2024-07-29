@@ -55,7 +55,7 @@ describe('ClaimRow', () => {
                   class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center rounded-sm group-hover:border-primary group-hover:bg-primary/20"
                 >
                   <span
-                    class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square rounded bg-background theme-border"
+                    class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square bg-background theme-border rounded"
                   >
                     <span
                       class="flex h-full w-full items-center justify-center bg-inherit"
@@ -84,7 +84,7 @@ describe('ClaimRow', () => {
                   class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center rounded-sm group-hover:border-primary group-hover:bg-primary/20"
                 >
                   <span
-                    class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square rounded bg-background theme-border"
+                    class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square bg-background theme-border rounded"
                   >
                     <span
                       class="flex h-full w-full items-center justify-center bg-inherit"
@@ -113,7 +113,7 @@ describe('ClaimRow', () => {
                   class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center rounded-sm group-hover:border-primary group-hover:bg-primary/20"
                 >
                   <span
-                    class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square rounded bg-background theme-border"
+                    class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square bg-background theme-border rounded"
                   >
                     <span
                       class="flex h-full w-full items-center justify-center bg-inherit"

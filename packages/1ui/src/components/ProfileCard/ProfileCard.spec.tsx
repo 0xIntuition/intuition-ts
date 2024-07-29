@@ -29,12 +29,18 @@ describe('ProfileCard', () => {
             class="flex items-center space-x-4"
           >
             <span
-              class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square rounded-full bg-muted"
+              class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square bg-background theme-border rounded-full"
             >
               <span
                 class="flex h-full w-full items-center justify-center bg-inherit"
               >
-                JO
+                <svg
+                  class="text-primary/30 w-[80%] h-[80%] max-w-8 max-h-8"
+                >
+                  <use
+                    href="/src/components/Icon/Icon.sprites.svg#crypto-punk"
+                  />
+                </svg>
               </span>
             </span>
             <div>
@@ -131,7 +137,7 @@ describe('ProfileCard', () => {
             class="flex items-center space-x-4"
           >
             <span
-              class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square rounded bg-background theme-border"
+              class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square bg-background theme-border rounded"
             >
               <span
                 class="flex h-full w-full items-center justify-center bg-inherit"
@@ -201,12 +207,18 @@ describe('ProfileCard', () => {
             class="flex items-center space-x-4"
           >
             <span
-              class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square rounded-full bg-muted"
+              class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square bg-background theme-border rounded-full"
             >
               <span
                 class="flex h-full w-full items-center justify-center bg-inherit"
               >
-                JO
+                <svg
+                  class="text-primary/30 w-[80%] h-[80%] max-w-8 max-h-8"
+                >
+                  <use
+                    href="/src/components/Icon/Icon.sprites.svg#crypto-punk"
+                  />
+                </svg>
               </span>
             </span>
             <div>

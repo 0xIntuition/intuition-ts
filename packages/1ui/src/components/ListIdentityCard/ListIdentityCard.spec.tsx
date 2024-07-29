@@ -23,7 +23,7 @@ describe('ListIdentityCard', () => {
           style="height: 18rem;"
         >
           <span
-            class="relative flex shrink-0 overflow-hidden aspect-square rounded bg-background theme-border mb-4 w-16 h-16"
+            class="relative flex shrink-0 overflow-hidden aspect-square bg-background theme-border rounded mb-4 w-16 h-16"
           >
             <span
               class="flex h-full w-full items-center justify-center bg-inherit"

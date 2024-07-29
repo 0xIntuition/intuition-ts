@@ -27,7 +27,7 @@ describe('IdentityPosition', () => {
             class="flex items-center"
           >
             <span
-              class="relative flex shrink-0 overflow-hidden aspect-square rounded bg-background theme-border w-16 h-16 mr-4"
+              class="relative flex shrink-0 overflow-hidden aspect-square bg-background theme-border rounded w-16 h-16 mr-4"
             >
               <span
                 class="flex h-full w-full items-center justify-center bg-inherit"
@@ -119,7 +119,7 @@ describe('IdentityPosition', () => {
               class="flex items-center"
             >
               <span
-                class="relative flex shrink-0 overflow-hidden aspect-square rounded bg-background theme-border w-16 h-16 mr-4"
+                class="relative flex shrink-0 overflow-hidden aspect-square bg-background theme-border rounded w-16 h-16 mr-4"
               >
                 <span
                   class="flex h-full w-full items-center justify-center bg-inherit"
