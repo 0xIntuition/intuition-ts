@@ -417,6 +417,7 @@ function CreateClaimForm({
               <Popover
                 open={isSubjectPopoverOpen}
                 onOpenChange={setIsSubjectPopoverOpen}
+                modal={true}
               >
                 <PopoverTrigger asChild>
                   <div className="flex flex-col gap-2 items-start">
