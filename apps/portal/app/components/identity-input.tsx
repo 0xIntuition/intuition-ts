@@ -18,6 +18,7 @@ import {
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
+  Trunctacular,
 } from '@0xintuition/1ui'
 import { IdentityPresenter } from '@0xintuition/api'
 
@@ -68,9 +69,10 @@ const IdentityInputButton = ({
             <IdentityTag
               size={IdentityTagSize.lg}
               variant={selectedValue.variant}
+              className="min-w-32"
               {...props}
             >
-              {selectedValue.name.toLowerCase()}
+              <Trunctacular value={selectedValue.name.toLowerCase()} />
             </IdentityTag>
           ) : (
             <Button
@@ -155,7 +157,7 @@ const IdentityInput = ({
 
   return (
     <TooltipProvider>
-      <div className="flex items-center" {...props}>
+      <div className="flex justify-center items-center w-full" {...props}>
         {renderIdentityInput(subject)}
         <Divider />
         {renderIdentityInput(predicate)}

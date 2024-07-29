@@ -139,7 +139,7 @@ const ExploreSearchClaimInput = ({
   })
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col w-full">
       <Text
         variant="bodyLarge"
         weight="regular"
