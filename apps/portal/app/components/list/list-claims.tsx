@@ -56,7 +56,7 @@ export function ListClaimsList({
     <div className="flex flex-col w-full">
       <div className="flex flex-col w-full gap-6" ref={listContainerRef}>
         <div
-          className={`flex flex-row w-full mt-6 ${enableSearch ? 'justify-between' : 'justify-end'}`}
+          className={`flex flex-row w-full ${enableSearch ? 'justify-between' : 'justify-end'}`}
         >
           {enableSearch && <Search handleSearchChange={handleSearchChange} />}
           {enableSort && options && (

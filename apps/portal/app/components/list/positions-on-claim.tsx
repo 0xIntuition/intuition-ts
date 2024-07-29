@@ -1,4 +1,4 @@
-import { ClaimPositionRow, EmptyStateCard } from '@0xintuition/1ui'
+import { ClaimPositionRow } from '@0xintuition/1ui'
 import { PositionPresenter, PositionSortColumn } from '@0xintuition/api'
 
 import { formatBalance } from '@lib/utils/misc'
@@ -22,10 +22,6 @@ export function PositionsOnClaim({
     { value: 'Updated At', sortBy: PositionSortColumn.UPDATED_AT },
     { value: 'Created At', sortBy: PositionSortColumn.CREATED_AT },
   ]
-
-  if (!positions.length) {
-    return <EmptyStateCard message="No positions found." />
-  }
 
   return (
     <List<PositionSortColumn>

@@ -4,7 +4,6 @@ import {
   ButtonVariant,
   Claim,
   ClaimRow,
-  EmptyStateCard,
   Icon,
   IconName,
   Identity,
@@ -45,16 +44,13 @@ export function ActivityList({
       `redeemed ${formatBalance(value, 18, 4)} ETH from a claim`,
   }
 
-  if (!activities.length) {
-    return <EmptyStateCard message="No activities found." />
-  }
-
   return (
     <List<SortColumn>
       pagination={pagination}
-      paginationLabel="identities"
+      paginationLabel="activities"
       paramPrefix={paramPrefix}
       enableSearch={false}
+      enableSort={false}
     >
       {activities.map((activity) => (
         <ActivityItem
@@ -96,7 +92,7 @@ function ActivityItem({
   return (
     <div
       key={activity.id}
-      className={`grow shrink basis-0 self-stretch p-6 bg-black rounded-xl my-4 border border-neutral-300/20 flex-col justify-start items-start gap-5 inline-flex w-full`}
+      className={`grow shrink basis-0 self-stretch p-6 bg-black rounded-xl border border-neutral-300/20 flex-col justify-start items-start gap-5 inline-flex w-full my-6 first:mt-0 last:mb-0`}
     >
       <div className="flex flex-row items-center justify-between min-w-full">
         <div className="flex flex-row items-center gap-2">

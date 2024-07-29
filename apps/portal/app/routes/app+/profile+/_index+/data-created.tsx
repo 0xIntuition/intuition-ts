@@ -100,14 +100,13 @@ const TabContent = ({
   children?: ReactNode
 }) => {
   return (
-    <TabsContent value={value} className="w-full">
+    <TabsContent value={value} className="flex flex-col w-full gap-6">
       <DataCreatedHeader
         variant={variant}
         userIdentity={userIdentity}
         userTotals={userTotals}
         totalResults={totalResults}
         totalStake={totalStake}
-        className="mb-6"
       />
       {children}
     </TabsContent>
@@ -133,9 +132,9 @@ export default function ProfileDataCreated() {
   invariant(userTotals, NO_USER_TOTALS_ERROR)
 
   return (
-    <>
-      <div className="flex-col justify-start items-start flex w-full">
-        <div className="self-stretch justify-between items-center inline-flex mb-6">
+    <div className="flex-col justify-start items-start flex w-full gap-6">
+      <div className="flex flex-col w-full gap-6">
+        <div className="self-stretch justify-between items-center inline-flex">
           <Text
             variant="headline"
             weight="medium"
@@ -158,7 +157,7 @@ export default function ProfileDataCreated() {
               errorElement={<></>}
             >
               {([resolvedIdentities, resolvedClaims]) => (
-                <TabsList className="mb-4">
+                <TabsList className="mb-6">
                   <TabsTrigger
                     value={DataCreatedHeaderVariants.activeIdentities}
                     label="Identities"
@@ -177,10 +176,10 @@ export default function ProfileDataCreated() {
           </Suspense>
           <Suspense
             fallback={
-              <>
+              <div className="flex flex-col w-full gap-6">
                 <DataHeaderSkeleton />
                 <PaginatedListSkeleton />
-              </>
+              </div>
             }
           >
             <Await
@@ -245,8 +244,8 @@ export default function ProfileDataCreated() {
           </Suspense>
         </Tabs>
       </div>
-      <div className="flex-col justify-start items-start flex w-full">
-        <div className="self-stretch justify-between items-center inline-flex mb-6">
+      <div className="flex flex-col w-full gap-6">
+        <div className="self-stretch justify-between items-center inline-flex">
           <Text
             variant="headline"
             weight="medium"
@@ -265,7 +264,7 @@ export default function ProfileDataCreated() {
               errorElement={<></>}
             >
               {([resolvedIdentities, resolvedClaims]) => (
-                <TabsList className="mb-4">
+                <TabsList className="mb-6">
                   <TabsTrigger
                     value={DataCreatedHeaderVariants.createdIdentities}
                     label="Identities"
@@ -284,10 +283,10 @@ export default function ProfileDataCreated() {
           </Suspense>
           <Suspense
             fallback={
-              <>
+              <div className="flex flex-col w-full gap-6">
                 <DataHeaderSkeleton />
                 <PaginatedListSkeleton />
-              </>
+              </div>
             }
           >
             <Await
@@ -360,6 +359,6 @@ export default function ProfileDataCreated() {
           </Suspense>
         </Tabs>
       </div>
-    </>
+    </div>
   )
 }

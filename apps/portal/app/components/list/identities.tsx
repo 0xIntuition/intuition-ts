@@ -1,4 +1,4 @@
-import { EmptyStateCard, Identity, IdentityContentRow } from '@0xintuition/1ui'
+import { Identity, IdentityContentRow } from '@0xintuition/1ui'
 import { IdentityPresenter, SortColumn } from '@0xintuition/api'
 
 import { formatBalance } from '@lib/utils/misc'
@@ -28,10 +28,6 @@ export function IdentitiesList({
     { value: 'Updated At', sortBy: 'UpdatedAt' },
     { value: 'Created At', sortBy: 'CreatedAt' },
   ]
-
-  if (!identities.length) {
-    return <EmptyStateCard message="No identities found." />
-  }
 
   return (
     <List<SortColumn>

@@ -1,7 +1,7 @@
 import { ReactNode, Suspense } from 'react'
 
 import {
-  ErrorStateCard,
+  EmptyStateCard,
   Tabs,
   TabsContent,
   TabsList,
@@ -68,7 +68,7 @@ const TabContent = ({
     return null
   }
   return (
-    <TabsContent value={value} className="w-full">
+    <TabsContent value={value} className="flex flex-col w-full gap-6">
       <ConnectionsHeader
         variant={variant}
         subject={claim.subject}
@@ -89,8 +89,8 @@ export default function ProfileConnections() {
   invariant(userIdentity, NO_USER_IDENTITY_ERROR)
 
   return (
-    <div className="flex-col justify-start items-start flex w-full">
-      <div className="self-stretch justify-between items-center inline-flex mb-6">
+    <div className="flex flex-col w-full gap-6">
+      <div className="self-stretch justify-between items-center inline-flex">
         <Text
           variant="headline"
           weight="medium"
@@ -123,29 +123,22 @@ function ConnectionsContent({
   return (
     <Suspense
       fallback={
-        <>
+        <div className="flex flex-col w-full gap-6">
           <TabsSkeleton numOfTabs={2} />
           <DataHeaderSkeleton />
           <PaginatedListSkeleton />
-        </>
+        </div>
       }
     >
-      <Await
-        resolve={connectionsData}
-        errorElement={
-          <ErrorStateCard
-            message="This user has no follow claim yet. A follow claim will be
-                created when the first person follows them."
-          />
-        }
-      >
+      <Await resolve={connectionsData} errorElement={<></>}>
         {(resolvedConnectionsData) => {
           if (!resolvedConnectionsData) {
             return (
-              <Text>
-                This user has no follow claim yet. A follow claim will be
-                created when the first person follows them.
-              </Text>
+              <EmptyStateCard
+                message={
+                  'This user has no follow claim yet. A follow claim will be created when the first person follows them.'
+                }
+              />
             )
           }
           const {
@@ -161,7 +154,7 @@ function ConnectionsContent({
               defaultValue={ConnectionsHeaderVariants.followers}
               className="w-full"
             >
-              <TabsList className="mb-4">
+              <TabsList className="mb-6">
                 <TabsTrigger
                   value={ConnectionsHeaderVariants.followers}
                   label="Followers"

@@ -12,7 +12,7 @@ export default function ExploreClaims() {
   logger('message from profile overview loader', message)
 
   return (
-    <div className="m-8 flex flex-col items-center gap-4">
+    <div className="m-8 flex flex-col items-center gap-6">
       <div className="flex flex-col">Explore Index Route</div>
       <pre>This is a placeholder for the Explore Index route</pre>
       <pre>route loader: {message}</pre>
