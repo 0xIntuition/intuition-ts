@@ -11,7 +11,6 @@ import {
   ScrollRestoration,
   useLoaderData,
   useLocation,
-  useNavigate,
   useRouteError,
 } from '@remix-run/react'
 import { useTheme } from '@routes/actions+/set-theme'
@@ -155,10 +154,9 @@ export function ErrorBoundary() {
   const error = useRouteError()
   let statusCode = null
   let title: string | React.ReactNode = (
-    <Icon name="circle-x" className="h-20 w-20" />
+    <Icon name="circle-x" className="h-20 w-20 text-destructive" />
   )
-  // @ts-ignore this may be an Error thrown by a loader, in that case we want to display the message thrown
-  let description = error?.message || 'Something went wrong...'
+  let description = 'Something went wrong...'
 
   logger('ROOT ERROR BOUNDARY:', error)
 
@@ -171,7 +169,6 @@ export function ErrorBoundary() {
     title: string | React.ReactNode
     description: string
   }) => {
-    const navigate = useNavigate()
     const descriptionArray = description.split('\n')
     return (
       <Document>
@@ -179,7 +176,7 @@ export function ErrorBoundary() {
           <div
             className={cn(
               'flex flex-col max-w-[500px] gap-2 max-[900px]:items-center max-[900px]:text-center',
-              !statusCode && 'items-center [&>div]:text-center',
+              !statusCode && 'items-center [&>div]:text-center gap-4',
             )}
           >
             <Text
