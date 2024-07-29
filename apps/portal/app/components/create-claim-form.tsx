@@ -40,7 +40,6 @@ import logger from '@lib/utils/logger'
 import { sliceString, truncateString } from '@lib/utils/misc'
 import { useFetcher, useNavigate } from '@remix-run/react'
 import { CreateLoaderData } from '@routes/resources+/create'
-import * as blockies from 'blockies-ts'
 import {
   CREATE_RESOURCE_ROUTE,
   GENERIC_ERROR_MSG,
@@ -442,13 +441,7 @@ function CreateClaimForm({
                                 : 'non-user'
                             }
                             avatarSrc={
-                              selectedIdentities.subject?.user?.image ??
-                              blockies
-                                .create({
-                                  seed: selectedIdentities.subject?.user
-                                    ?.wallet,
-                                })
-                                .toDataURL()
+                              selectedIdentities.subject?.user?.image ?? ''
                             }
                             name={
                               selectedIdentities.subject?.is_user === true
@@ -535,13 +528,7 @@ function CreateClaimForm({
                                   : 'non-user'
                               }
                               avatarSrc={
-                                selectedIdentities.predicate?.user?.image ??
-                                blockies
-                                  .create({
-                                    seed: selectedIdentities.predicate?.user
-                                      ?.wallet,
-                                  })
-                                  .toDataURL()
+                                selectedIdentities.predicate?.user?.image ?? ''
                               }
                               name={
                                 selectedIdentities.predicate?.is_user === true
@@ -651,12 +638,7 @@ function CreateClaimForm({
                                 : 'non-user'
                             }
                             avatarSrc={
-                              selectedIdentities.object?.user?.image ??
-                              blockies
-                                .create({
-                                  seed: selectedIdentities.object?.user?.wallet,
-                                })
-                                .toDataURL()
+                              selectedIdentities.object?.user?.image ?? ''
                             }
                             name={
                               selectedIdentities.object?.is_user === true

@@ -34,7 +34,6 @@ import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
 import { Outlet, useNavigate } from '@remix-run/react'
 import { requireUserWallet } from '@server/auth'
 import { getVaultDetails } from '@server/multivault'
-import * as blockies from 'blockies-ts'
 import { NO_WALLET_ERROR, PATHS, userIdentityRouteOptions } from 'consts'
 import { useAtom } from 'jotai'
 import { VaultDetailsType } from 'types/vault'
@@ -155,8 +154,6 @@ export default function Profile() {
 
   const { user_asset_delta } = userIdentity
 
-  const imgSrc = blockies.create({ seed: wallet }).toDataURL()
-
   const [stakeModalActive, setStakeModalActive] = useAtom(stakeModalAtom)
   const [followModalActive, setFollowModalActive] = useAtom(followModalAtom)
 
@@ -165,7 +162,7 @@ export default function Profile() {
       <div className="flex-col justify-start items-start gap-5 inline-flex">
         <ProfileCard
           variant="user"
-          avatarSrc={userIdentity?.user?.image ?? imgSrc}
+          avatarSrc={userIdentity?.user?.image ?? ''}
           name={userIdentity?.user?.display_name ?? ''}
           walletAddress={
             userIdentity?.user?.ens_name ??

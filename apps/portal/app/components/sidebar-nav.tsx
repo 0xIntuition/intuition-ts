@@ -20,7 +20,6 @@ import { UserPresenter } from '@0xintuition/api'
 import { PrivyButton } from '@client/privy-button'
 import { createClaimModalAtom, createIdentityModalAtom } from '@lib/state/store'
 import { NavLink, useNavigate, useSubmit } from '@remix-run/react'
-import * as blockies from 'blockies-ts'
 import { PATHS } from 'consts'
 import { useAtom } from 'jotai'
 import { isAddress } from 'viem'
@@ -83,8 +82,6 @@ export default function SidebarNav({
 
   const [createClaimModalActive, setCreateClaimModalActive] =
     useAtom(createClaimModalAtom)
-
-  const imgSrc = blockies.create({ seed: userObject?.wallet }).toDataURL()
 
   function onLogout() {
     submit(null, {
@@ -189,7 +186,7 @@ export default function SidebarNav({
                 <PrivyButton
                   triggerComponent={
                     <SidebarLayoutNavAvatar
-                      imageSrc={userObject.image ?? imgSrc}
+                      imageSrc={userObject.image ?? ''}
                       name={username}
                     />
                   }

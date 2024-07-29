@@ -49,7 +49,6 @@ import {
 } from '@remix-run/react'
 import { requireUser, requireUserWallet } from '@server/auth'
 import { getVaultDetails } from '@server/multivault'
-import * as blockies from 'blockies-ts'
 import { NO_WALLET_ERROR, PATHS, userProfileRouteOptions } from 'consts'
 import { useAtom } from 'jotai'
 import { VaultDetailsType } from 'types/vault'
@@ -150,8 +149,6 @@ export default function Profile() {
     UserPresenter | null | undefined
   >(userIdentity.user ?? user)
 
-  const imgSrc = blockies.create({ seed: userWallet }).toDataURL()
-
   const [editProfileModalActive, setEditProfileModalActive] =
     useAtom(editProfileModalAtom)
 
@@ -194,7 +191,7 @@ export default function Profile() {
       <div className="flex-col justify-start items-start gap-5 inline-flex">
         <ProfileCard
           variant="user"
-          avatarSrc={userObject.image ?? imgSrc}
+          avatarSrc={userObject.image ?? ''}
           name={userObject.display_name ?? ''}
           walletAddress={
             userObject.ens_name ?? sliceString(userObject.wallet, 6, 4)

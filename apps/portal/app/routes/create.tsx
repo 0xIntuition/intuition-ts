@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 
-import { toast } from '@0xintuition/1ui'
+import { Avatar, toast } from '@0xintuition/1ui'
 import {
   IdentityPresenter,
   UserPresenter,
@@ -24,7 +24,6 @@ import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { useFetcher, useLoaderData, useNavigate } from '@remix-run/react'
 import { CreateLoaderData } from '@routes/resources+/create'
 import { requireUserWallet } from '@server/auth'
-import * as blockies from 'blockies-ts'
 import { MULTIVAULT_CONTRACT_ADDRESS, NO_WALLET_ERROR, PATHS } from 'consts'
 import { useAtom } from 'jotai'
 import { ClientOnly } from 'remix-utils/client-only'
@@ -287,7 +286,6 @@ export default function Profile() {
     wallet: string
     userObject: UserPresenter
   }>()
-  const imgSrc = blockies.create({ seed: wallet }).toDataURL()
 
   const [editProfileModalActive, setEditProfileModalActive] =
     useAtom(editProfileModalAtom)
@@ -309,11 +307,7 @@ export default function Profile() {
             <div className="w-[552px] justify-between items-center inline-flex">
               <div className="grow shrink basis-0 h-16 justify-start items-center gap-[18px] flex">
                 <div className="w-[70px] pr-1.5 justify-start items-center flex">
-                  <img
-                    className="w-16 h-16 relative rounded-full border border-neutral-700"
-                    src={imgSrc}
-                    alt="Avatar"
-                  />
+                  <Avatar name="" src="" />
                 </div>
                 <div className="flex-col justify-start items-start gap-[3px] inline-flex">
                   <div className="justify-start items-end gap-1.5 inline-flex">
