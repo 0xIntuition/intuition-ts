@@ -2,6 +2,7 @@ import { z } from 'zod'
 
 const schema = z.object({
   NODE_ENV: z.enum(['production', 'development', 'test'] as const),
+  API_URL: z.string(),
   WALLETCONNECT_PROJECT_ID: z.string(),
   ALCHEMY_MAINNET_RPC_URL: z.string(),
   ALCHEMY_BASE_SEPOLIA_RPC_URL: z.string(),
@@ -44,6 +45,7 @@ export function init() {
 export function getEnv() {
   return {
     MODE: process.env.NODE_ENV,
+    API_URL: process.env.API_URL,
     WALLETCONNECT_PROJECT_ID: process.env.WALLETCONNECT_PROJECT_ID,
     ALCHEMY_MAINNET_RPC_URL: process.env.ALCHEMY_MAINNET_RPC_URL,
     ALCHEMY_BASE_SEPOLIA_RPC_URL: process.env.ALCHEMY_BASE_SEPOLIA_RPC_URL,

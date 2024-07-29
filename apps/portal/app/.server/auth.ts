@@ -111,7 +111,10 @@ export async function handlePrivyRedirect({
 }
 
 export async function setupAPI(request: Request) {
-  OpenAPI.BASE = 'https://dev.api.intuition.systems'
+  const apiUrl =
+    typeof window !== 'undefined' ? window.ENV?.API_URL : process.env.API_URL
+
+  OpenAPI.BASE = apiUrl
   const accessToken = getPrivyAccessToken(request)
   const headers = getAuthHeaders(accessToken !== null ? accessToken : '')
   OpenAPI.HEADERS = headers as Record<string, string>
