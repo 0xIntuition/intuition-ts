@@ -41,7 +41,7 @@ export const ReferralCard: React.FC<ReferralCardProps> = ({
         <ReferralPointsDisplay points={points} label="Referral Points" />
       </div>
       <Separator />
-      <div className="flex flex-col p-4 gap-4">
+      <div className="flex flex-col gap-4">
         {inviteCodes.map((invite) => (
           <ReferralRow
             key={invite.code}

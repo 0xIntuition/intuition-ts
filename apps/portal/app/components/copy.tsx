@@ -34,7 +34,7 @@ export const CopyComponent: React.FC<CopyComponentProps> = ({
   return (
     <Button
       variant={ButtonVariant.text}
-      className={`uppercase gap-2 ${className}`}
+      className={`uppercase gap-2 pl-0 ${className}`}
       disabled={disabled}
       onClick={handleCopy}
       onKeyDown={(e) => e.key === 'Enter' && handleCopy()}
