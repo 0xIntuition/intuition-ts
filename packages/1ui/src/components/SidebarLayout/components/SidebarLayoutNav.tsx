@@ -27,13 +27,16 @@ export const SidebarLayoutNav = ({
   collapsedSize = 7.5,
   ...props
 }) => {
-  const { isCollapsed, setIsCollapsed } = useSidebarLayoutContext()
+  const { isMobileView, isCollapsed, setIsCollapsed } =
+    useSidebarLayoutContext()
 
   const updateIsCollapsedValues = (newValue: boolean) => {
     setIsCollapsed(newValue)
     localStorage.setItem(SIDEBAR_LOCAL_STORAGE_VARIABLE, newValue.toString())
   }
-  return (
+  return isMobileView ? (
+    <div {...props} />
+  ) : (
     <>
       <ResizablePanel
         defaultSize={isCollapsed ? collapsedSize : maxSize}

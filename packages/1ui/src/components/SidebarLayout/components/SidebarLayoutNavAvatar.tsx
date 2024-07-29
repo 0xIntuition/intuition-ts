@@ -24,11 +24,11 @@ export const SidebarLayoutNavAvatar = ({
   name,
 }: SidebarLayoutNavAvatarProps) => {
   const containerBaseClass = 'w-full'
-  const { isCollapsed } = useSidebarLayoutContext()
+  const { isMobileView, isCollapsed } = useSidebarLayoutContext()
   const AvatarComponent = () => (
     <Avatar className="h-6 w-6" src={imageSrc} name={name} />
   )
-  return isCollapsed ? (
+  return isCollapsed && !isMobileView ? (
     <TooltipProvider delayDuration={0}>
       <Tooltip>
         <TooltipTrigger asChild>

@@ -1,7 +1,10 @@
-import { ResizablePanelGroup } from '../../../'
+import { ResizablePanelGroup, useSidebarLayoutContext } from '../../../'
 
 export const SidebarLayout = ({ ...props }) => {
-  return (
+  const { isMobileView } = useSidebarLayoutContext()
+  return isMobileView ? (
+    <div {...props} />
+  ) : (
     <ResizablePanelGroup
       direction="horizontal"
       {...props}

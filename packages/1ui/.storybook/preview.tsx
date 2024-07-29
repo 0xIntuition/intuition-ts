@@ -1,3 +1,4 @@
+import { INITIAL_VIEWPORTS, MINIMAL_VIEWPORTS } from '@storybook/addon-viewport'
 import type { Preview } from '@storybook/react'
 
 import { themeDecorator } from './decorators'
@@ -19,7 +20,6 @@ const preview: Preview = {
       },
     },
     backgrounds: {
-      default: 'dark',
       values: [
         { name: 'dark', value: palette.black.base },
         { name: 'light', value: palette.white.base },
@@ -33,6 +33,12 @@ const preview: Preview = {
     },
     docs: {
       page: DocumentationTemplate,
+    },
+    viewport: {
+      viewports: {
+        ...INITIAL_VIEWPORTS,
+        ...MINIMAL_VIEWPORTS,
+      },
     },
   },
 }

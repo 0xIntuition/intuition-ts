@@ -28,14 +28,14 @@ export const SidebarNavItem = ({
   onClick,
   ...props
 }: SidebarNavItemProps) => {
-  const { isCollapsed } = useSidebarLayoutContext()
+  const { isMobileView, isCollapsed } = useSidebarLayoutContext()
   const buttonProps = {
     variant,
     className: 'w-full justify-start truncate',
     onClick,
     ...props,
   }
-  return isCollapsed ? (
+  return isCollapsed && !isMobileView ? (
     <TooltipProvider delayDuration={0}>
       <Tooltip>
         <TooltipTrigger asChild>

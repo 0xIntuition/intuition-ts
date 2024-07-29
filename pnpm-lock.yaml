@@ -476,6 +476,9 @@ importers:
       '@storybook/addon-onboarding':
         specifier: ^8.0.9
         version: 8.1.7(react@18.3.1)
+      '@storybook/addon-viewport':
+        specifier: ^8.0.9
+        version: 8.1.7
       '@storybook/blocks':
         specifier: ^8.0.9
         version: 8.1.7(@types/react-dom@18.3.0)(@types/react@18.3.1)(encoding@0.1.13)(prettier@3.3.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
