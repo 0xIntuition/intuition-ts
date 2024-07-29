@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Text } from '@0xintuition/1ui'
+import { Text, TextVariant, TextWeight } from '@0xintuition/1ui'
 
 import { truncateNumber } from '@lib/utils/misc'
 
@@ -15,10 +15,10 @@ export const ReferralPointsDisplay: React.FC<ReferralPointsDisplayProps> = ({
 }) => {
   return (
     <div className="flex flex-col items-end">
-      <Text variant="caption" className="text-muted-foreground">
+      <Text variant={TextVariant.caption} className="text-muted-foreground">
         {label}
       </Text>
-      <Text variant="bodyLarge" className="text-primary">
+      <Text variant={TextVariant.heading5} weight={TextWeight.bold}>
         {truncateNumber(points)}
       </Text>
     </div>

@@ -31,10 +31,10 @@ export const ReferralCard: React.FC<ReferralCardProps> = ({
   inviteCodes,
 }) => {
   return (
-    <div className="flex flex-col bg-black theme-border rounded-lg p-8 gap-4">
+    <div className="flex flex-col theme-border rounded-lg p-8 gap-4">
       <div className="flex justify-between items-center">
         <div className="flex">
-          <Icon name={IconName.gift} className="h-4 w-4 text-white" />
+          <Icon name={IconName.gift} className="h-4 w-4 text-primary" />
           <Text variant={TextVariant.bodyLarge} weight={TextWeight.medium}>
             Earn +1000 points each time a friend activates your invite code.
           </Text>

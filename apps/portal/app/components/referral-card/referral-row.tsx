@@ -1,6 +1,13 @@
 import React from 'react'
 
-import { Button, Icon, IconName, Identity, IdentityTag } from '@0xintuition/1ui'
+import {
+  Button,
+  ButtonVariant,
+  Icon,
+  IconName,
+  Identity,
+  IdentityTag,
+} from '@0xintuition/1ui'
 
 import { CopyComponent } from '@components/copy'
 
@@ -30,13 +37,13 @@ export const ReferralRow: React.FC<ReferralRowProps> = ({
         />
       ) : (
         <Button
-          variant="secondary"
+          variant={ButtonVariant.secondary}
           onClick={() => navigator.clipboard.writeText(code)}
           disabled={isActivated}
           className="gap-2"
         >
-          <Icon name={IconName.chainLink} className="fill-white h-4 w-4" /> Copy
-          Code
+          <Icon name={IconName.chainLink} className="fill-primary h-4 w-4" />
+          Copy Code
         </Button>
       )}
     </div>
