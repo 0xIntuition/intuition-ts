@@ -41,22 +41,22 @@ const sidebarNavRoutes: SidebarNavRoute[] = [
     iconName: 'home-door',
   },
   {
-    route: '/app/explore',
+    route: PATHS.EXPLORE,
     label: 'Explore',
     iconName: 'magnifying-glass',
   },
   {
-    route: '/app/lists',
+    route: PATHS.LISTS,
     label: 'Lists',
     iconName: 'tag',
   },
   {
-    route: '/app/activity',
+    route: PATHS.ACTIVITY,
     label: 'Activity',
     iconName: 'calendar',
   },
   {
-    route: '/app/quest',
+    route: PATHS.QUEST,
     label: 'Quest',
     iconName: 'crystal-ball',
   },

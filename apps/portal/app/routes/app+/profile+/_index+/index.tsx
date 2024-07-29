@@ -2,6 +2,7 @@ import { QuestHeaderCard } from '@0xintuition/1ui'
 
 import { json } from '@remix-run/node'
 import { useLoaderData, useNavigate } from '@remix-run/react'
+import { PATHS } from 'consts'
 
 export async function loader() {
   const mockUserQuestsData = {
@@ -29,7 +30,7 @@ export default function ProfileOverview() {
         subtitle={userQuests.currentQuest.subtitle}
         numberOfCompletedQuests={userQuests.questsCompleted}
         totalNumberOfQuests={userQuests.totalQuests}
-        onButtonClick={() => navigate('/app/quest')}
+        onButtonClick={() => navigate(PATHS.QUEST)}
       />
       <h2 className="font-medium text-xl text-secondary-foreground">About</h2>
       <h2 className="font-medium text-xl text-secondary-foreground">

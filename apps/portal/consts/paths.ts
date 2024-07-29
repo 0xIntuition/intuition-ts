@@ -1,11 +1,19 @@
 export const PATHS = {
   ROOT: '/',
-  // Profile paths
-  PROFILE: '/app/profile',
-  PROFILE_DATA_ABOUT: '/app/profile/data-about',
-  PROFILE_DATA_CREATED: '/app/profile/data-created',
-  PROFILE_CONNECTIONS: '/app/profile/connections',
+  // Root paths
   IDENTITY: '/app/identity',
   EXPLORE: '/app/explore',
   ACTIVITY: '/app/activity',
+  PROFILE: '/app/profile',
+  QUEST: '/app/quest',
+  LISTS: '/app/lists',
+  // Profile
+  PROFILE_CREATE: '/app/profile/create',
+  PROFILE_DATA_ABOUT: '/app/profile/data-about',
+  PROFILE_DATA_CREATED: '/app/profile/data-created',
+  PROFILE_CONNECTIONS: '/app/profile/connections',
+  // Explore
+  EXPLORE_USERS: '/app/explore/users',
+  // Activity
+  GLOBAL_ACTIVITY: '/app/activity/global',
 }

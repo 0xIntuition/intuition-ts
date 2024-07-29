@@ -1,6 +1,7 @@
-import { PATHS } from 'consts'
 import { PrivyPlatform } from 'types/privy'
 import { baseSepolia } from 'viem/chains'
+
+import { PATHS } from './paths'
 
 export const CURRENT_ENV = process.env.NODE_ENV
 

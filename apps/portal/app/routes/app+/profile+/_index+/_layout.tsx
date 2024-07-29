@@ -49,7 +49,7 @@ import {
 import { requireUser, requireUserWallet } from '@server/auth'
 import { getVaultDetails } from '@server/multivault'
 import * as blockies from 'blockies-ts'
-import { NO_WALLET_ERROR, userProfileRouteOptions } from 'consts'
+import { NO_WALLET_ERROR, PATHS, userProfileRouteOptions } from 'consts'
 import { useAtom } from 'jotai'
 import { VaultDetailsType } from 'types/vault'
 
@@ -184,7 +184,7 @@ export default function Profile() {
   const currentPath = matches[matches.length - 1].pathname
 
   // List of paths that should not use the ProfileLayout
-  const excludedPaths = ['/app/profile/create']
+  const excludedPaths = [PATHS.PROFILE_CREATE]
 
   if (excludedPaths.includes(currentPath)) {
     return <Outlet />
@@ -271,7 +271,7 @@ export default function Profile() {
               isOpen: true,
             }))
           }
-          onViewAllClick={() => navigate('/app/profile/data-about')}
+          onViewAllClick={() => navigate(PATHS.PROFILE_DATA_ABOUT)}
         />
       </div>
       <EditProfileModal

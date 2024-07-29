@@ -1,9 +1,10 @@
 import logger from '@lib/utils/logger'
 import { redirect } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
+import { PATHS } from 'consts'
 
 export async function loader() {
-  return redirect('/app/explore/users')
+  return redirect(PATHS.EXPLORE_USERS)
 }
 
 export default function ExploreClaims() {
