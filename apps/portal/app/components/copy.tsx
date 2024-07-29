@@ -25,18 +25,18 @@ export const CopyComponent: React.FC<CopyComponentProps> = ({
 
   return (
     <div
-      className={`uppercase flex items-center cursor-pointer ${disabled ? 'opacity-50 cursor-not-allowed' : ''} ${className}`}
+      className={`uppercase flex items-center cursor-pointer gap-2 ${disabled ? 'opacity-50 cursor-not-allowed' : ''} ${className}`}
       onClick={handleCopy}
       onKeyDown={(e) => e.key === 'Enter' && handleCopy()}
       tabIndex={0}
       role="button"
       {...props}
     >
-      <Icon
-        name={copied ? IconName.checkmark : IconName.squarePlus}
-        className="mr-2"
-      />
       {text}
+      <Icon
+        name={copied ? IconName.checkmark : IconName.copy}
+        className="h-4 w-4"
+      />
     </div>
   )
 }

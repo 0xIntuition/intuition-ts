@@ -33,8 +33,10 @@ export const ReferralRow: React.FC<ReferralRowProps> = ({
           variant="secondary"
           onClick={() => navigator.clipboard.writeText(code)}
           disabled={isActivated}
+          className="gap-2"
         >
-          <Icon name={IconName.circle} /> Copy Code
+          <Icon name={IconName.chainLink} className="fill-white h-4 w-4" /> Copy
+          Code
         </Button>
       )}
     </div>

@@ -275,16 +275,19 @@ export const truncateNumber = (balance: string | number): string => {
     console.error('Invalid number input:', balance)
     return 'Invalid number'
   }
+  const format = (num: number, divisor: number, suffix: string) =>
+    `${(num / divisor).toFixed(2).replace(/\.?0+$/, '')}${suffix}`
+
   if (n >= 1000000000) {
-    return `${(n / 1000000000).toFixed(2).replace(/\.0$/, '')}B`
+    return format(n, 1000000000, 'B')
   }
   if (n >= 1000000) {
-    return `${(n / 1000000).toFixed(2).replace(/\.0$/, '')}M`
+    return format(n, 1000000, 'M')
   }
   if (n >= 1000) {
-    return `${(n / 1000).toFixed(2).replace(/\.0$/, '')}K`
+    return format(n, 1000, 'K')
   }
-  return n.toFixed(2)
+  return n.toFixed(2).replace(/\.?0+$/, '')
 }
 
 export const fetchWrapper = async <T, A>({

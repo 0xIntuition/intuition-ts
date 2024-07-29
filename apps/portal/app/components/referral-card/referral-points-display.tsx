@@ -2,6 +2,8 @@ import React from 'react'
 
 import { Text } from '@0xintuition/1ui'
 
+import { truncateNumber } from '@lib/utils/misc'
+
 interface ReferralPointsDisplayProps {
   points: number
   label: string
@@ -17,7 +19,7 @@ export const ReferralPointsDisplay: React.FC<ReferralPointsDisplayProps> = ({
         {label}
       </Text>
       <Text variant="bodyLarge" className="text-primary">
-        {points.toLocaleString()}
+        {truncateNumber(points)}
       </Text>
     </div>
   )
