@@ -7,6 +7,7 @@ import {
 
 import AddIdentitiesListModal from '@components/list/add-identities-list-modal'
 import { ListIdentityDisplayCard } from '@components/list/list-identity-display-card'
+import NavigationButton from '@components/navigation-link'
 import { NestedLayout } from '@components/nested-layout'
 import { addIdentitiesListModalAtom } from '@lib/state/store'
 import logger from '@lib/utils/logger'
@@ -46,20 +47,13 @@ export default function ListDetails() {
   const navigate = useNavigate()
   const location = useLocation()
   const from = location.state?.from
-  const goBack = () => {
-    if (from) {
-      navigate(from)
-    } else {
-      navigate(-1)
-    }
-  }
 
   return (
     <>
       <div className="flex items-center justify-between gap-6 mx-8 mt-10">
-        <Button variant="secondary" size="icon" onClick={() => goBack}>
+        <NavigationButton variant="secondary" size="icon" to={from ?? -1}>
           <Icon name="arrow-left" />
-        </Button>
+        </NavigationButton>
         <Button
           variant="primary"
           onClick={() => {

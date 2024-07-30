@@ -1,5 +1,4 @@
 import {
-  Button,
   Claim,
   ClaimStakeCard,
   Icon,
@@ -21,6 +20,7 @@ import {
   SortDirection,
 } from '@0xintuition/api'
 
+import NavigationButton from '@components/navigation-link'
 import { NestedLayout } from '@components/nested-layout'
 import StakeModal from '@components/stake/stake-modal'
 import { stakeModalAtom } from '@lib/state/store'
@@ -98,13 +98,6 @@ export default function ClaimDetails() {
   const navigate = useNavigate()
   const location = useLocation()
   const from = location.state?.from
-  const goBack = () => {
-    if (from) {
-      navigate(from)
-    } else {
-      navigate(-1)
-    }
-  }
 
   const [stakeModalActive, setStakeModalActive] = useAtom(stakeModalAtom)
 
@@ -137,9 +130,9 @@ export default function ClaimDetails() {
   return (
     <>
       <div className="flex items-center gap-6 mx-8 mt-10">
-        <Button variant="secondary" size="icon" onClick={() => goBack}>
+        <NavigationButton variant="secondary" size="icon" to={from ?? -1}>
           <Icon name="arrow-left" />
-        </Button>
+        </NavigationButton>
         <Claim
           size="md"
           subject={{
