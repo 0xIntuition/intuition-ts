@@ -6,15 +6,8 @@ import {
   ButtonVariant,
   Icon,
   IconName,
-  Identity,
-  InfoCard,
-  ProfileCard,
 } from '@0xintuition/1ui'
-import {
-  ClaimPresenter,
-  IdentityPresenter,
-  QuestStatus,
-} from '@0xintuition/api'
+import { ClaimPresenter, QuestStatus } from '@0xintuition/api'
 
 import ActivityContainer from '../activity-container'
 import { ClaimWithHoverable } from '../detail/claim-with-hoverable'
