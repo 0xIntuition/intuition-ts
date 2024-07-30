@@ -154,7 +154,7 @@ export function ErrorBoundary() {
   const error = useRouteError()
   let statusCode = null
   let title: string | React.ReactNode = (
-    <Icon name="circle-x" className="h-20 w-20 text-destructive" />
+    <Icon name="circle-x" className="h-20 w-20" />
   )
   let description = 'Something went wrong...'
 
