@@ -9,7 +9,7 @@ import {
   UserQuestsService,
 } from '@0xintuition/api'
 
-import CreateClaimModal from '@components/create-claim-modal'
+import CreateClaimModal from '@components/create-claim/create-claim-modal'
 import CreateClaimActivity from '@components/quest/activities/create-claim-activity'
 import {
   Header,
@@ -42,6 +42,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   const user = await requireUser(request)
   invariant(user, 'Unauthorized')
+  const wallet = user.wallet?.address
+  invariant(wallet, 'Wallet is required')
 
   const quest = await fetchWrapper({
     method: QuestsService.getQuest,
@@ -67,6 +69,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     })
   }
   return json({
+    wallet,
     quest,
     userQuest,
     claim,
@@ -104,7 +107,7 @@ export async function action({ request }: ActionFunctionArgs) {
 }
 
 export default function Quests() {
-  const { quest, userQuest, claim } = useLoaderData<typeof loader>()
+  const { wallet, quest, userQuest, claim } = useLoaderData<typeof loader>()
   const { introBody, mainBody, closingBody } = useQuestMdxContent(quest.id)
   const [activityModalOpen, setActivityModalOpen] = useState(false)
   const fetcher = useFetcher<CheckQuestSuccessLoaderData>()
@@ -187,6 +190,7 @@ export default function Quests() {
         </div>
       </div>
       <CreateClaimModal
+        wallet={wallet}
         successAction="close"
         onClose={handleCloseActivityModal}
         open={activityModalOpen}
