@@ -1,10 +1,14 @@
+import { ReactNode, useEffect, useState } from 'react'
+
 import { type VariantProps } from 'class-variance-authority'
 
 import {
   Button,
+  ButtonVariant,
   buttonVariants,
   Icon,
   IconNameType,
+  Skeleton,
   Text,
   TextVariant,
   Tooltip,
@@ -16,7 +20,7 @@ import { useSidebarLayoutContext } from './SidebarLayoutProvider'
 
 export interface SidebarNavItemProps
   extends VariantProps<typeof buttonVariants> {
-  iconName: IconNameType
+  iconName: IconNameType | ReactNode
   label: string
   onClick?: () => void
 }
@@ -24,23 +28,38 @@ export interface SidebarNavItemProps
 export const SidebarNavItem = ({
   iconName,
   label,
-  variant,
   onClick,
   ...props
 }: SidebarNavItemProps) => {
   const { isCollapsed } = useSidebarLayoutContext()
+  const [showLoader, setShowLoader] = useState(true)
   const buttonProps = {
-    variant,
+    variant: ButtonVariant.navigation,
     className: 'w-full justify-start truncate',
     onClick,
     ...props,
   }
-  return isCollapsed ? (
+
+  const ImageComponent =
+    typeof iconName === 'string' ? (
+      <Icon name={iconName as IconNameType} />
+    ) : (
+      iconName
+    )
+
+  useEffect(() => {
+    setShowLoader(true)
+    setTimeout(() => setShowLoader(false), 300)
+  }, [isCollapsed])
+
+  return showLoader ? (
+    <Skeleton className="w-full h-10" />
+  ) : isCollapsed ? (
     <TooltipProvider delayDuration={0}>
       <Tooltip>
-        <TooltipTrigger asChild>
+        <TooltipTrigger asChild className="m-auto">
           <Button size="iconLg" {...buttonProps} className="justify-center">
-            <Icon name={iconName} />
+            {ImageComponent}
           </Button>
         </TooltipTrigger>
         <TooltipContent side="right" sideOffset={16}>
@@ -50,7 +69,7 @@ export const SidebarNavItem = ({
     </TooltipProvider>
   ) : (
     <Button size="lg" {...buttonProps}>
-      <Icon name={iconName} />
+      {ImageComponent}
       {label}
     </Button>
   )

@@ -15,7 +15,7 @@ export const SidebarLayoutNavHeaderButton = ({
   return (
     <button className="flex gap-3 items-center" {...props}>
       {imgLogo}
-      {!isCollapsed && textLogo}
+      {!isCollapsed && <span className="transition-opacity">{textLogo}</span>}
     </button>
   )
 }

@@ -39,7 +39,7 @@ export const SidebarLayoutNavAvatar = ({
                 size: ButtonSize.iconLg,
               }),
               containerBaseClass,
-              'justify-center',
+              'justify-center w-fit m-auto',
             )}
           >
             <AvatarComponent />

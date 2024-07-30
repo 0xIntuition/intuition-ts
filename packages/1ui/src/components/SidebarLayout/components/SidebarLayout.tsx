@@ -1,10 +1,5 @@
-import { ResizablePanelGroup } from '../../../'
-
-export const SidebarLayout = ({ ...props }) => {
-  return (
-    <ResizablePanelGroup
-      direction="horizontal"
-      {...props}
-    ></ResizablePanelGroup>
-  )
+export const SidebarLayout = ({
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) => {
+  return <div className="flex h-full w-full" {...props}></div>
 }

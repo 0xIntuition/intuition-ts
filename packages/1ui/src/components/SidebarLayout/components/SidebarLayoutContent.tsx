@@ -1,12 +1,8 @@
-import { ResizablePanel } from '../../../'
+import { cn } from 'styles'
 
-export const SidebarLayoutContent = ({ ...props }) => {
-  return (
-    <ResizablePanel defaultSize={70}>
-      <div
-        className="flex h-full items-center justify-center py-3 px-1"
-        {...props}
-      ></div>
-    </ResizablePanel>
-  )
+export const SidebarLayoutContent = ({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) => {
+  return <div className={cn('h-full w-full', className)} {...props} />
 }
