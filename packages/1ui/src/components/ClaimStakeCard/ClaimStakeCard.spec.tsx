@@ -117,13 +117,13 @@ describe('ClaimStakeCard', () => {
                 <p
                   class="text-sm font-medium text-muted-foreground"
                 >
-                  TVL Against
+                  Holders
                 </p>
               </div>
               <p
-                class="text-primary text-lg font-normal text-left"
+                class="text-primary text-lg font-medium text-left"
               >
-                39 ETH
+                39
               </p>
             </div>
             <div>
@@ -136,13 +136,13 @@ describe('ClaimStakeCard', () => {
                 <p
                   class="text-sm font-medium text-muted-foreground"
                 >
-                  TVL For
+                  Holders
                 </p>
               </div>
               <p
-                class="text-primary text-lg font-normal text-right"
+                class="text-primary text-lg font-medium text-right"
               >
-                124 ETH
+                124
               </p>
             </div>
           </div>
@@ -274,13 +274,13 @@ describe('ClaimStakeCard', () => {
                 <p
                   class="text-sm font-medium text-muted-foreground"
                 >
-                  TVL Against
+                  Holders
                 </p>
               </div>
               <p
-                class="text-primary text-lg font-normal text-left"
+                class="text-primary text-lg font-medium text-left"
               >
-                39 ETH
+                39
               </p>
             </div>
             <div>
@@ -293,13 +293,13 @@ describe('ClaimStakeCard', () => {
                 <p
                   class="text-sm font-medium text-muted-foreground"
                 >
-                  TVL For
+                  Holders
                 </p>
               </div>
               <p
-                class="text-primary text-lg font-normal text-right"
+                class="text-primary text-lg font-medium text-right"
               >
-                124 ETH
+                124
               </p>
             </div>
           </div>
