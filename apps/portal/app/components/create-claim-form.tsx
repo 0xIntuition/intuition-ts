@@ -46,7 +46,7 @@ import {
   MULTIVAULT_CONTRACT_ADDRESS,
   SEARCH_IDENTITIES_RESOURCE_ROUTE,
 } from 'consts'
-import { SemanticComponent, SemanticComponentType } from 'types/identity'
+import { ClaimElement, ClaimElementType } from 'types'
 import { TransactionActionType, TransactionStateType } from 'types/transaction'
 import { parseUnits } from 'viem'
 import { useAccount, usePublicClient, useWalletClient } from 'wagmi'
@@ -361,7 +361,7 @@ function CreateClaimForm({
   })
 
   const handleIdentitySelection = (
-    identityType: SemanticComponentType,
+    identityType: ClaimElementType,
     identity: IdentityPresenter,
   ) => {
     setSelectedIdentities((prevState) => ({
@@ -370,11 +370,11 @@ function CreateClaimForm({
     }))
     setSearchQuery('')
     setIdentities([])
-    if (identityType === SemanticComponent.Subject) {
+    if (identityType === ClaimElement.Subject) {
       setIsSubjectPopoverOpen(false)
-    } else if (identityType === SemanticComponent.Predicate) {
+    } else if (identityType === ClaimElement.Predicate) {
       setIsPredicatePopoverOpen(false)
-    } else if (identityType === SemanticComponent.Object) {
+    } else if (identityType === ClaimElement.Object) {
       setIsObjectPopoverOpen(false)
     }
   }

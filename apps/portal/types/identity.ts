@@ -22,12 +22,3 @@ export type InitialIdentityData = {
     totalPages: number
   }
 }
-
-export const SemanticComponent = {
-  Subject: 'subject',
-  Predicate: 'predicate',
-  Object: 'object',
-} as const
-
-export type SemanticComponentType =
-  (typeof SemanticComponent)[keyof typeof SemanticComponent]

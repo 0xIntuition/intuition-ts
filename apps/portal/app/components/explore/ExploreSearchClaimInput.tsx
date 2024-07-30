@@ -6,7 +6,7 @@ import { IdentityPresenter } from '@0xintuition/api'
 import { pascalCaseString } from '@lib/utils/misc'
 import { useFetcher, useLocation, useNavigate } from '@remix-run/react'
 import { GET_IDENTITIES_BY_IDS_RESOURCE_ROUTE } from 'consts'
-import { SemanticComponent, SemanticComponentType } from 'types/identity'
+import { ClaimElement, ClaimElementType } from 'types'
 
 import { IdentityInput, IdentityInputButtonProps } from '../identity-input'
 
@@ -55,9 +55,9 @@ const ExploreSearchClaimInput = ({
 
   React.useEffect(() => {
     const params = new URLSearchParams(location.search)
-    fetchIdentityById(params.get(SemanticComponent.Subject), subjectFetcher)
-    fetchIdentityById(params.get(SemanticComponent.Predicate), predicateFetcher)
-    fetchIdentityById(params.get(SemanticComponent.Object), objectFetcher)
+    fetchIdentityById(params.get(ClaimElement.Subject), subjectFetcher)
+    fetchIdentityById(params.get(ClaimElement.Predicate), predicateFetcher)
+    fetchIdentityById(params.get(ClaimElement.Object), objectFetcher)
     // omits the fetchers from the exhaustive deps
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.search])
@@ -81,7 +81,7 @@ const ExploreSearchClaimInput = ({
   }, [subjectFetcher.data, predicateFetcher.data, objectFetcher.data])
 
   const handleIdentitySelection = (
-    type: SemanticComponentType,
+    type: ClaimElementType,
     identity: IdentityPresenter,
   ) => {
     const updatedIdentities = { ...selectedIdentities, [type]: identity }
@@ -97,30 +97,30 @@ const ExploreSearchClaimInput = ({
   }) => {
     const params = new URLSearchParams(window.location.search)
     if (identities.subject) {
-      params.set(SemanticComponent.Subject, identities.subject.id)
+      params.set(ClaimElement.Subject, identities.subject.id)
     } else {
-      params.delete(SemanticComponent.Subject)
+      params.delete(ClaimElement.Subject)
     }
     if (identities.predicate) {
-      params.set(SemanticComponent.Predicate, identities.predicate.id)
+      params.set(ClaimElement.Predicate, identities.predicate.id)
     } else {
-      params.delete(SemanticComponent.Predicate)
+      params.delete(ClaimElement.Predicate)
     }
     if (identities.object) {
-      params.set(SemanticComponent.Object, identities.object.id)
+      params.set(ClaimElement.Object, identities.object.id)
     } else {
-      params.delete(SemanticComponent.Object)
+      params.delete(ClaimElement.Object)
     }
     const newUrl = `${window.location.pathname}?${params.toString()}`
     navigate(newUrl, { replace: true })
   }
 
-  const handleOpenChange = (type: SemanticComponentType, isOpen: boolean) => {
+  const handleOpenChange = (type: ClaimElementType, isOpen: boolean) => {
     setPopoverOpen({ ...popoverOpen, [type]: isOpen })
   }
 
   const identityInputProps = (
-    type: SemanticComponentType,
+    type: ClaimElementType,
   ): IdentityInputButtonProps => ({
     label: pascalCaseString(type),
     placeholder: `Select an identity`,
@@ -164,9 +164,9 @@ const ExploreSearchClaimInput = ({
       <Separator className="mb-7" />
       <IdentityInput
         showLabels
-        subject={identityInputProps(SemanticComponent.Subject)}
-        predicate={identityInputProps(SemanticComponent.Predicate)}
-        object={identityInputProps(SemanticComponent.Object)}
+        subject={identityInputProps(ClaimElement.Subject)}
+        predicate={identityInputProps(ClaimElement.Predicate)}
+        object={identityInputProps(ClaimElement.Object)}
       />
     </div>
   )
