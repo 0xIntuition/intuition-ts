@@ -32,6 +32,7 @@ export default function CreateClaimModal({
           onClose={onClose}
           onSuccess={onSuccess}
           successAction={successAction}
+          wallet={wallet}
         />
       </DialogContent>
     </Dialog>
