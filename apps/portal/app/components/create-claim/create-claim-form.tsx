@@ -6,19 +6,10 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
   Icon,
   IconName,
-  Identity,
-  IdentityTag,
   Input,
   Label,
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-  ProfileCard,
   Text,
   toast,
   Tooltip,
@@ -26,10 +17,10 @@ import {
   TooltipProvider,
   TooltipTrigger,
   TransactionStatusType,
-  Trunctacular,
 } from '@0xintuition/1ui'
 import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
 
+import { IdentityPopover } from '@components/create-claim/create-claim-popovers'
 import CreateClaimReview from '@components/create-claim/create-claim-review'
 import {
   getFormProps,
@@ -48,7 +39,6 @@ import {
 } from '@lib/hooks/useTransactionReducer'
 import { createClaimSchema } from '@lib/schemas/create-claim-schema'
 import logger from '@lib/utils/logger'
-import { sliceString, truncateString } from '@lib/utils/misc'
 import { useFetcher, useNavigate } from '@remix-run/react'
 import { CreateClaimLoaderData } from '@routes/resources+/create-claim'
 import { TagLoaderData } from '@routes/resources+/tag'
@@ -70,9 +60,8 @@ import {
   useWalletClient,
 } from 'wagmi'
 
-import ErrorList from './error-list'
-import { IdentitySearchCombobox } from './identity/identity-search-combo-box'
-import { TransactionState } from './transaction-state'
+import ErrorList from '../error-list'
+import { TransactionState } from '../transaction-state'
 
 interface ClaimFormProps {
   wallet: string
@@ -615,128 +604,5 @@ function CreateClaimForm({
         )}
       </claimFetcher.Form>
     </>
-  )
-}
-
-interface IdentityPopoverProps {
-  type: ClaimElementType
-  isObjectPopoverOpen: boolean
-  setIsObjectPopoverOpen: (isOpen: boolean) => void
-  selectedIdentity?: IdentityPresenter | null
-  identities: IdentityPresenter[]
-  handleIdentitySelection: (
-    identityType: ClaimElementType,
-    identity: IdentityPresenter,
-  ) => void
-  setSearchQuery: (query: string) => void
-  handleInput: (event: React.FormEvent<HTMLInputElement>) => Promise<void>
-}
-
-export const IdentityPopover: React.FC<IdentityPopoverProps> = ({
-  type,
-  isObjectPopoverOpen,
-  setIsObjectPopoverOpen,
-  selectedIdentity,
-  identities,
-  handleIdentitySelection,
-  setSearchQuery,
-  handleInput,
-}) => {
-  return (
-    <Popover
-      open={isObjectPopoverOpen}
-      onOpenChange={setIsObjectPopoverOpen}
-      modal={isObjectPopoverOpen}
-    >
-      <PopoverTrigger asChild>
-        <div className="flex flex-col gap-2 w-45">
-          <Text variant="small" className="text-primary/60">
-            {type}
-          </Text>
-          <HoverCard openDelay={100} closeDelay={100}>
-            <HoverCardTrigger className="w-full">
-              <IdentityTag
-                size="lg"
-                variant={
-                  selectedIdentity?.is_user ? Identity.user : Identity.nonUser
-                }
-                imgSrc={
-                  selectedIdentity?.user?.image ?? selectedIdentity?.image
-                }
-                className="w-full"
-              >
-                <Trunctacular
-                  maxStringLength={20}
-                  variant="bodyLarge"
-                  value={
-                    (selectedIdentity?.user?.display_name ??
-                      selectedIdentity?.display_name ??
-                      '') ||
-                    type
-                  }
-                  disableTooltip
-                />
-              </IdentityTag>
-            </HoverCardTrigger>
-            {selectedIdentity && (
-              <HoverCardContent side="bottom" className="w-80">
-                <ProfileCard
-                  variant={
-                    selectedIdentity.is_user === true
-                      ? Identity.user
-                      : Identity.nonUser
-                  }
-                  avatarSrc={
-                    selectedIdentity.user?.image ?? selectedIdentity.image ?? ''
-                  }
-                  name={truncateString(
-                    selectedIdentity.user?.display_name ??
-                      selectedIdentity.display_name,
-                    18,
-                  )}
-                  walletAddress={
-                    selectedIdentity.is_user === true
-                      ? selectedIdentity.user?.ens_name ??
-                        sliceString(selectedIdentity.user?.wallet, 6, 4)
-                      : selectedIdentity.identity_id
-                  }
-                  stats={
-                    selectedIdentity.is_user === true
-                      ? {
-                          numberOfFollowers:
-                            selectedIdentity.follower_count ?? 0,
-                          numberOfFollowing:
-                            selectedIdentity.followed_count ?? 0,
-                        }
-                      : undefined
-                  }
-                  bio={
-                    selectedIdentity.is_user === true
-                      ? selectedIdentity.user?.description ?? ''
-                      : selectedIdentity.description ?? ''
-                  }
-                ></ProfileCard>
-              </HoverCardContent>
-            )}
-          </HoverCard>
-        </div>
-      </PopoverTrigger>
-      <PopoverContent
-        className="bg-transparent border-none"
-        side="bottom"
-        align="center"
-        sideOffset={5}
-      >
-        <IdentitySearchCombobox
-          identities={identities}
-          onIdentitySelect={(identity) =>
-            handleIdentitySelection(type, identity)
-          }
-          onValueChange={setSearchQuery}
-          onInput={handleInput}
-          shouldFilter={false}
-        />
-      </PopoverContent>
-    </Popover>
   )
 }

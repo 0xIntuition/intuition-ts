@@ -2,8 +2,6 @@ import { Dialog, DialogContent } from '@0xintuition/1ui'
 
 import { ClaimForm } from './create-claim-form'
 
-// import { ClaimForm } from './create-identity-form'
-
 export interface CreateClaimModalProps {
   open?: boolean
   wallet: string
