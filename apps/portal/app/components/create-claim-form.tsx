@@ -181,6 +181,7 @@ function CreateClaimForm({
         `${SEARCH_IDENTITIES_RESOURCE_ROUTE}${searchParam}`,
       )
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchQuery, SEARCH_IDENTITIES_RESOURCE_ROUTE])
 
   const { atomCost, tripleCost } = (feeFetcher.data as CreateLoaderData) ?? {
@@ -299,6 +300,7 @@ function CreateClaimForm({
         })
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [claimFetcher.state, claimFetcher.data, dispatch])
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
