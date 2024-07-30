@@ -3,6 +3,7 @@ import {
   Claim,
   ClaimStakeCard,
   Icon,
+  Identity,
   InfoCard,
   PositionCard,
   PositionCardFeesAccrued,
@@ -142,7 +143,7 @@ export default function ClaimDetails() {
         <Claim
           size="md"
           subject={{
-            variant: claim.subject?.is_user ? 'user' : 'non-user',
+            variant: claim.subject?.is_user ? Identity.user : Identity.nonUser,
             label: claim.subject?.is_user
               ? claim.subject?.user?.display_name ?? claim.subject?.display_name
               : claim.subject?.display_name ?? '',
@@ -151,7 +152,9 @@ export default function ClaimDetails() {
               : claim.subject?.image ?? null,
           }}
           predicate={{
-            variant: claim.predicate?.is_user ? 'user' : 'non-user',
+            variant: claim.predicate?.is_user
+              ? Identity.user
+              : Identity.nonUser,
             label: claim.predicate?.is_user
               ? claim.predicate?.user?.display_name ??
                 claim.predicate?.display_name
@@ -161,7 +164,7 @@ export default function ClaimDetails() {
               : claim.predicate?.image ?? null,
           }}
           object={{
-            variant: claim.object?.is_user ? 'user' : 'non-user',
+            variant: claim.object?.is_user ? Identity.user : Identity.nonUser,
             label: claim.object?.is_user
               ? claim.object?.user?.display_name ?? claim.object?.display_name
               : claim.object?.display_name ?? '',
@@ -228,8 +231,8 @@ export default function ClaimDetails() {
             tvlFor={
               +formatBalance(vaultDetails.assets_sum ?? claim.for_assets_sum)
             }
-            amountAgainst={+formatBalance(claim.against_num_positions)}
-            amountFor={+formatBalance(claim.for_num_positions)}
+            amountAgainst={claim.against_num_positions}
+            amountFor={claim.for_num_positions}
             onAgainstBtnClick={() =>
               setStakeModalActive((prevState) => ({
                 ...prevState,
@@ -257,7 +260,7 @@ export default function ClaimDetails() {
             }
           />
           <InfoCard
-            variant="user"
+            variant={Identity.user}
             username={claim.creator?.display_name ?? ''}
             avatarImgSrc={claim.creator?.image ?? ''}
             timestamp={claim.created_at}

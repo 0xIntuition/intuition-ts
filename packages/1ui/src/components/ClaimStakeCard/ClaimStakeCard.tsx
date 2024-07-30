@@ -51,15 +51,25 @@ const ClaimStakeCardDataSet = ({
           weight={TextWeight.medium}
           className="text-muted-foreground"
         >
-          {isVariantFor ? 'TVL For' : 'TVL Against'}
+          {!currency ? 'Holders' : isVariantFor ? 'TVL For' : 'TVL Against'}
         </Text>
       </div>
-      <MonetaryValue
-        variant={TextVariant.bodyLarge}
-        value={value}
-        currency={currency}
-        className={isVariantFor ? 'text-right' : 'text-left'}
-      />
+      {currency ? (
+        <MonetaryValue
+          variant={TextVariant.bodyLarge}
+          value={value}
+          currency={currency}
+          className={isVariantFor ? 'text-right' : 'text-left'}
+        />
+      ) : (
+        <Text
+          variant={TextVariant.bodyLarge}
+          weight={TextWeight.medium}
+          className={isVariantFor ? 'text-right' : 'text-left'}
+        >
+          {value}
+        </Text>
+      )}
     </div>
   )
 }
