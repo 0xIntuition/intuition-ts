@@ -1,16 +1,27 @@
-import { cn } from 'styles'
-
+import { Button, ButtonSize, ButtonVariant, Icon, IconName } from '../..'
 import { useSidebarLayoutContext } from './SidebarLayoutProvider'
 
-export const SidebarLayoutNavHeader = ({ ...props }) => {
-  const { isCollapsed } = useSidebarLayoutContext()
+export const SidebarLayoutNavHeader = ({
+  children,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) => {
+  const { isMobileView, isCollapsed, setIsCollapsed } =
+    useSidebarLayoutContext()
   return (
     <div
-      className={cn(
-        'border-border/20 flex w-full items-center border-0 border-b-[1px] py-4',
-        isCollapsed ? 'justify-center' : 'px-6',
-      )}
+      className="border-border/20 flex w-full items-center border-0 border-b-[1px] p-2"
       {...props}
-    ></div>
+    >
+      {children}
+      {isMobileView && (
+        <Button
+          variant={ButtonVariant.text}
+          size={ButtonSize.icon}
+          onClick={() => setIsCollapsed(!isCollapsed)}
+        >
+          <Icon name={IconName.anchor} />
+        </Button>
+      )}
+    </div>
   )
 }

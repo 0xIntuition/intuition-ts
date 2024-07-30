@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useState } from 'react'
+import { ReactNode } from 'react'
 
 import { type VariantProps } from 'class-variance-authority'
 
@@ -8,7 +8,6 @@ import {
   buttonVariants,
   Icon,
   IconNameType,
-  Skeleton,
   Text,
   TextVariant,
   Tooltip,
@@ -17,6 +16,7 @@ import {
   TooltipTrigger,
 } from '../..'
 import { useSidebarLayoutContext } from './SidebarLayoutProvider'
+import { TimedLoaderComponent } from './TimedLoaderComponent'
 
 export interface SidebarNavItemProps
   extends VariantProps<typeof buttonVariants> {
@@ -31,8 +31,7 @@ export const SidebarNavItem = ({
   onClick,
   ...props
 }: SidebarNavItemProps) => {
-  const { isCollapsed } = useSidebarLayoutContext()
-  const [showLoader, setShowLoader] = useState(true)
+  const { isMobileView, isCollapsed } = useSidebarLayoutContext()
   const buttonProps = {
     variant: ButtonVariant.navigation,
     className: 'w-full justify-start truncate',
@@ -47,30 +46,33 @@ export const SidebarNavItem = ({
       iconName
     )
 
-  useEffect(() => {
-    setShowLoader(true)
-    setTimeout(() => setShowLoader(false), 300)
-  }, [isCollapsed])
-
-  return showLoader ? (
-    <Skeleton className="w-full h-10" />
-  ) : isCollapsed ? (
-    <TooltipProvider delayDuration={0}>
-      <Tooltip>
-        <TooltipTrigger asChild className="m-auto">
-          <Button size="iconLg" {...buttonProps} className="justify-center">
+  return (
+    <TimedLoaderComponent
+      componentToRender={
+        isCollapsed && !isMobileView ? (
+          <TooltipProvider delayDuration={0}>
+            <Tooltip>
+              <TooltipTrigger asChild className="m-auto">
+                <Button
+                  size="iconLg"
+                  {...buttonProps}
+                  className="justify-center"
+                >
+                  {ImageComponent}
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="right" sideOffset={16}>
+                <Text variant={TextVariant.body}>{label}</Text>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        ) : (
+          <Button size="lg" {...buttonProps}>
             {ImageComponent}
+            {label}
           </Button>
-        </TooltipTrigger>
-        <TooltipContent side="right" sideOffset={16}>
-          <Text variant={TextVariant.body}>{label}</Text>
-        </TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
-  ) : (
-    <Button size="lg" {...buttonProps}>
-      {ImageComponent}
-      {label}
-    </Button>
+        )
+      }
+    />
   )
 }
