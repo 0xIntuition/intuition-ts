@@ -39,7 +39,7 @@ export function Header({ title, questStatus }: IHeaderProps) {
 }
 
 export interface MDXContentViewProps {
-  body?: string
+  body?: string | null
   variant?: MDXContentVariantType
   shouldDisplay?: boolean
 }
