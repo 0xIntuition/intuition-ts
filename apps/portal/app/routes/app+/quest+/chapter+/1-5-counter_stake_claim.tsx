@@ -191,7 +191,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
     )
   }
 
-  const questClosing = getQuestContentBySlug(`${quest.id}-closing`)
   return json({
     quest,
     userQuest,
@@ -275,7 +274,7 @@ export default function Quests() {
       modalType: 'claim',
       mode: 'redeem',
     }))
-    logger('Selling position', position)
+    logger('redeem claim', claim)
   }
   function handleSellIdentityClick(identity: IdentityPresenter) {
     setStakeModalActive((prevState) => ({
@@ -285,6 +284,7 @@ export default function Quests() {
       modalType: 'identity',
       mode: 'redeem',
     }))
+    logger('redeem identity', identity)
   }
 
   function handleCloseActivityModal() {
