@@ -23,7 +23,7 @@ import { useAtom } from 'jotai'
 import { isAddress } from 'viem'
 
 import CreateClaimModal from './create-claim/create-claim-modal'
-import CreateIdentityModal from './create-identity-modal'
+import CreateIdentityModal from './create-identity/create-identity-modal'
 
 interface SidebarNavRoute {
   route: string

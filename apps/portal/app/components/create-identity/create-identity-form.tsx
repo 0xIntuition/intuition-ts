@@ -15,6 +15,9 @@ import {
 } from '@0xintuition/1ui'
 import { IdentityPresenter } from '@0xintuition/api'
 
+import ErrorList from '@components/error-list'
+import { ImageChooser } from '@components/image-chooser'
+import { TransactionState } from '@components/transaction-state'
 import WrongNetworkButton from '@components/wrong-network-button'
 import {
   getFormProps,
@@ -58,10 +61,6 @@ import {
 } from 'app/types'
 import { parseUnits, toHex } from 'viem'
 import { useAccount, usePublicClient, useWalletClient } from 'wagmi'
-
-import ErrorList from './error-list'
-import { ImageChooser } from './image-chooser'
-import { TransactionState } from './transaction-state'
 
 interface IdentityFormProps {
   onSuccess?: (identity: IdentityPresenter) => void
@@ -113,7 +112,7 @@ export function IdentityForm({
                 Create Identity
               </Text>
             </DialogTitle>
-            <Text variant="caption" className="text-foreground/50 w-full">
+            <Text variant="caption" className="text-muted-foreground w-full">
               Begin the process of establishing a new digital representation
               within the blockchain network.
             </Text>
@@ -517,11 +516,11 @@ function CreateIdentityForm({
           </div>
           <div className="flex flex-col w-full gap-1.5">
             <div className="self-stretch flex-col justify-start items-start flex">
-              <Text variant="caption" className="text-foreground/70">
-                Image <span className="text-foreground/50">(Optional)</span>
+              <Text variant="caption" className="text-secondary-foreground">
+                Image
               </Text>
             </div>
-            <div className="self-stretch h-[100px] px-9 py-2.5 border border-input/30 bg-primary/10 rounded-md justify-between items-center inline-flex">
+            <div className="self-stretch h-[100px] px-9 py-2.5 theme-border bg-primary/10 rounded-md justify-between items-center inline-flex">
               <div className="justify-start items-center gap-[18px] flex">
                 <div className="w-[60px] h-[60px] rounded-xl justify-center items-center flex">
                   <ImageChooser
@@ -564,29 +563,45 @@ function CreateIdentityForm({
               errors={fields.image_url.errors}
             />
           </div>
-
           <div className="flex flex-col w-full gap-1.5">
-            <Text variant="caption" className="text-foreground/70">
-              Description <span className="text-foreground/50">(Optional)</span>
+            <Text variant="caption" className="text-secondary-foreground">
+              Display Name
             </Text>
-            <Label htmlFor={fields.description.id} hidden>
-              Description <span className="text-foreground/50">(Optional)</span>
+            <Label htmlFor={fields.display_name.id} hidden>
+              Display Name
             </Label>
-            <Textarea
-              {...getInputProps(fields.description, { type: 'text' })}
-              placeholder="Enter a description"
+            <Input
+              {...getInputProps(fields.display_name, { type: 'text' })}
+              placeholder="Enter display name here"
+              onChange={() => setFormTouched(true)}
+            />
+            <ErrorList
+              id={fields.display_name.errorId}
+              errors={fields.display_name.errors}
             />
           </div>
           <div className="flex flex-col w-full gap-1.5">
-            <Text variant="caption" className="text-foreground/70">
-              Add Link <span className="text-foreground/50">(Optional)</span>
+            <Text variant="caption" className="text-secondary-foreground">
+              Description
+            </Text>
+            <Label htmlFor={fields.description.id} hidden>
+              Description
+            </Label>
+            <Textarea
+              {...getInputProps(fields.description, { type: 'text' })}
+              placeholder="Enter description here"
+            />
+          </div>
+          <div className="flex flex-col w-full gap-1.5">
+            <Text variant="caption" className="text-secondary-foreground">
+              Add Link
             </Text>
             <Label htmlFor={fields.external_reference.id} hidden>
-              Add Link <span className="text-foreground/50">(Optional)</span>
+              Add Link
             </Label>
             <Input
               {...getInputProps(fields.external_reference, { type: 'text' })}
-              placeholder="Enter an external link"
+              placeholder="www.url.com"
               startAdornment="http://"
             />
             <ErrorList
@@ -595,12 +610,11 @@ function CreateIdentityForm({
             />
           </div>
           <div className="flex flex-col w-full gap-1.5">
-            <Text variant="caption" className="text-foreground/70">
-              Initial Deposit{' '}
-              <span className="text-foreground/50">(Optional)</span>
+            <Text variant="caption" className="text-secondary-foreground">
+              Initial Deposit
             </Text>
             <Label htmlFor={fields.initial_deposit.id} hidden>
-              Initial Deposit (Optional)
+              Initial Deposit
             </Label>
             <Input
               {...getInputProps(fields.initial_deposit, { type: 'text' })}
