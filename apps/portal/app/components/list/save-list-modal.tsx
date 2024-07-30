@@ -391,39 +391,41 @@ export default function SaveListModal({
           />
         </div>
         <DialogFooter className="!justify-center !items-center gap-5">
-          {!isTransactionStarted && !isLoading ? (
-            <>
-              <UnsaveButton
-                setMode={setMode}
-                handleAction={handleUnsaveButtonClick}
-                handleClose={handleClose}
-                dispatch={dispatch}
-                state={state}
-                user_conviction={vaultDetails?.user_conviction ?? '0'}
-                className={`${(vaultDetails?.user_conviction && vaultDetails?.user_conviction > '0' && state.status === 'idle') || mode !== 'save' ? '' : 'hidden'}`}
-              />
-              <SaveButton
-                val={val}
-                setMode={setMode}
-                handleAction={handleSaveButtonClick}
-                handleClose={handleClose}
-                dispatch={dispatch}
-                state={state}
-                min_deposit={vaultDetails?.min_deposit ?? '0'}
-                walletBalance={walletBalance}
-                conviction_price={vaultDetails?.conviction_price ?? '0'}
-                user_assets={vaultDetails?.user_assets ?? '0'}
-                setValidationErrors={setValidationErrors}
-                setShowErrors={setShowErrors}
-                className={`${mode === 'unsave' && 'hidden'}`}
-              />
-            </>
-          ) : (
-            <>
-              <Skeleton className="h-7 w-40" />
-              <Skeleton className="h-7 w-40" />
-            </>
-          )}
+          {!isTransactionStarted ? (
+            isLoading ? (
+              <>
+                <Skeleton className="h-7 w-40" />
+                <Skeleton className="h-7 w-40" />
+              </>
+            ) : (
+              <>
+                <UnsaveButton
+                  setMode={setMode}
+                  handleAction={handleUnsaveButtonClick}
+                  handleClose={handleClose}
+                  dispatch={dispatch}
+                  state={state}
+                  user_conviction={vaultDetails?.user_conviction ?? '0'}
+                  className={`${(vaultDetails?.user_conviction && vaultDetails?.user_conviction > '0' && state.status === 'idle') || mode !== 'save' ? '' : 'hidden'}`}
+                />
+                <SaveButton
+                  val={val}
+                  setMode={setMode}
+                  handleAction={handleSaveButtonClick}
+                  handleClose={handleClose}
+                  dispatch={dispatch}
+                  state={state}
+                  min_deposit={vaultDetails?.min_deposit ?? '0'}
+                  walletBalance={walletBalance}
+                  conviction_price={vaultDetails?.conviction_price ?? '0'}
+                  user_assets={vaultDetails?.user_assets ?? '0'}
+                  setValidationErrors={setValidationErrors}
+                  setShowErrors={setShowErrors}
+                  className={`${mode === 'unsave' && 'hidden'}`}
+                />
+              </>
+            )
+          ) : null}
         </DialogFooter>
       </DialogContent>
     </Dialog>
