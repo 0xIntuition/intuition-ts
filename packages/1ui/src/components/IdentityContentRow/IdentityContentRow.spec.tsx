@@ -46,7 +46,7 @@ describe('IdentityContentRow', () => {
               class="flex items-center"
             >
               <span
-                class="relative flex shrink-0 overflow-hidden aspect-square bg-background theme-border rounded-full w-[64px] h-[64px] mr-4"
+                class="relative flex shrink-0 overflow-hidden aspect-square bg-background theme-border rounded-full mr-4 w-[64px] h-[64px]"
               >
                 <span
                   class="flex h-full w-full items-center justify-center bg-inherit"
@@ -63,16 +63,20 @@ describe('IdentityContentRow', () => {
               <div
                 class="flex flex-col"
               >
-                <p
-                  class="text-primary text-lg font-normal mb-1"
+                <div
+                  class="mb-1 flex flex-col"
                 >
-                  John Doe
-                </p>
-                <p
-                  class="text-base font-normal text-secondary-foreground mb-1"
-                >
-                  0x1234...5678
-                </p>
+                  <p
+                    class="text-primary text-lg font-normal mr-2"
+                  >
+                    John Doe
+                  </p>
+                  <p
+                    class="text-base font-normal text-secondary-foreground"
+                  >
+                    0x1234...5678
+                  </p>
+                </div>
               </div>
             </div>
             <div
