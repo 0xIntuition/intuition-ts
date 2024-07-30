@@ -253,7 +253,7 @@ type CarouselProps = {
   slides: {
     video: string
     title: string
-    text: string
+    text: React.ReactNode
     button: React.ReactNode
   }[]
   options: EmblaOptionsType
