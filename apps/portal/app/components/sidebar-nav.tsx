@@ -46,7 +46,7 @@ const sidebarNavRoutes: SidebarNavRoute[] = [
     iconName: 'magnifying-glass',
   },
   {
-    route: PATHS.LISTS,
+    route: PATHS.EXPLORE_LISTS,
     label: 'Lists',
     iconName: 'tag',
   },
