@@ -31,8 +31,8 @@ export function getQuestCriteria(condition: QuestCondition) {
 
 export const QuestRouteId = {
   CREATE_ATOM: '1-1-create_atom',
-  CREATE_CLAIM: '1-2-create_claim',
-  STAKE_IDENTITY: '1-3-stake_identity',
+  STAKE_IDENTITY: '1-2-stake_identity',
+  CREATE_CLAIM: '1-3-create_claim',
   STAKE_CLAIM: '1-4-stake_claim',
   COUNTER_STAKE_CLAIM: '1-5-counter_stake_claim',
   ALWAYS_TRUE: '1-6-always_true',
@@ -45,7 +45,7 @@ export function getQuestId(routeId: string) {
     case QuestRouteId.CREATE_ATOM:
       return 'b4b7e0ed-a69a-4a0a-bf9b-8bf0afe979f9'
     case QuestRouteId.STAKE_IDENTITY:
-      return '3b5315bb-f29b-4320-9997-6928b4bbf3e'
+      return '3b5315bb-f29b-4320-9997-6928b4bbf3e9'
     case QuestRouteId.CREATE_CLAIM:
       return 'dacdd63d-f978-433e-aeb0-54d165e8f936'
     case QuestRouteId.STAKE_CLAIM:
