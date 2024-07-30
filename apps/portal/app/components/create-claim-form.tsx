@@ -46,7 +46,7 @@ import {
   MULTIVAULT_CONTRACT_ADDRESS,
   SEARCH_IDENTITIES_RESOURCE_ROUTE,
 } from 'consts'
-import { Identity, IdentityType } from 'types/identity'
+import { ClaimElement, ClaimElementType } from 'types'
 import { TransactionActionType, TransactionStateType } from 'types/transaction'
 import { parseUnits } from 'viem'
 import { useAccount, usePublicClient, useWalletClient } from 'wagmi'
@@ -181,6 +181,7 @@ function CreateClaimForm({
         `${SEARCH_IDENTITIES_RESOURCE_ROUTE}${searchParam}`,
       )
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchQuery, SEARCH_IDENTITIES_RESOURCE_ROUTE])
 
   const { atomCost, tripleCost } = (feeFetcher.data as CreateLoaderData) ?? {
@@ -299,6 +300,7 @@ function CreateClaimForm({
         })
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [claimFetcher.state, claimFetcher.data, dispatch])
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -359,7 +361,7 @@ function CreateClaimForm({
   })
 
   const handleIdentitySelection = (
-    identityType: IdentityType,
+    identityType: ClaimElementType,
     identity: IdentityPresenter,
   ) => {
     setSelectedIdentities((prevState) => ({
@@ -368,11 +370,11 @@ function CreateClaimForm({
     }))
     setSearchQuery('')
     setIdentities([])
-    if (identityType === Identity.Subject) {
+    if (identityType === ClaimElement.Subject) {
       setIsSubjectPopoverOpen(false)
-    } else if (identityType === Identity.Predicate) {
+    } else if (identityType === ClaimElement.Predicate) {
       setIsPredicatePopoverOpen(false)
-    } else if (identityType === Identity.Object) {
+    } else if (identityType === ClaimElement.Object) {
       setIsObjectPopoverOpen(false)
     }
   }

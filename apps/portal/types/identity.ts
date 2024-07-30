@@ -22,11 +22,3 @@ export type InitialIdentityData = {
     totalPages: number
   }
 }
-
-export const Identity = {
-  Subject: 'subject',
-  Predicate: 'predicate',
-  Object: 'object',
-} as const
-
-export type IdentityType = (typeof Identity)[keyof typeof Identity]
