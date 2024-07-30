@@ -10,9 +10,7 @@ import {
   QuestNarrative,
   QuestPresenter,
   QuestStatus,
-  UserQuest,
   UserQuestsService,
-  UsersService,
 } from '@0xintuition/api'
 
 import { QuestCard } from '@components/quest/quest-card'
