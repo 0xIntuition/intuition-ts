@@ -24,5 +24,7 @@ export const COMING_SOON_QUEST_SET: QuestSet = {
 
 export const FALLBACK_IDENTITY_ID = '0160563f-45da-4f17-928a-69b54339c97d'
 
+export const FALLBACK_CLAIM_ID = '19ac84b0-4db2-403c-a236-e09a60ce02da'
+
 export const FALLBACK_QUEST_PLACEHOLDER_IMAGE =
   'https://res.cloudinary.com/dfpwy9nyv/image/upload/f_auto,q_auto/v1/Portal%20Assets/quests/quest-placeholder'
