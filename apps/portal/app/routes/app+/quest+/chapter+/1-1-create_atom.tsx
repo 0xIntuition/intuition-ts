@@ -80,7 +80,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
             method: IdentitiesService.getPendingIdentities,
             args: {
               direction: SortDirection.ASC,
-              userWallet: user.wallet?.address!,
+              userWallet: user.wallet?.address,
               sortBy: SortColumn.CREATED_AT,
               page: 1,
               limit: 10,

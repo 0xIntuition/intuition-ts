@@ -22,17 +22,17 @@ const RETRY_DELAY = 3000
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await requireUser(request)
   invariant(user, 'Unauthorized')
+  invariant(user.wallet?.address, 'User wallet address is required')
   const { id: userId } = await fetchWrapper({
     method: UsersService.getUserByWalletPublic,
     args: {
-      wallet: user.wallet?.address!,
+      wallet: user.wallet?.address,
     },
   })
 
   const url = new URL(request.url)
   const userQuestId = url.searchParams.get('userQuestId')
   invariant(userQuestId, 'userQuestId is required')
-  logger('Checking quest success for userQuestId', userQuestId)
 
   let attempts = 0
 
