@@ -23,10 +23,11 @@ export type InitialIdentityData = {
   }
 }
 
-export const Identity = {
+export const SemanticComponent = {
   Subject: 'subject',
   Predicate: 'predicate',
   Object: 'object',
 } as const
 
-export type IdentityType = (typeof Identity)[keyof typeof Identity]
+export type SemanticComponentType =
+  (typeof SemanticComponent)[keyof typeof SemanticComponent]
