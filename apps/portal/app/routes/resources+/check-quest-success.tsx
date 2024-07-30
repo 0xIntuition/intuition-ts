@@ -59,9 +59,12 @@ export async function loader({ request }: LoaderFunctionArgs) {
         userQuest.quest_completion_object_id,
         status,
       )
-      if (status === QuestStatus.CLAIMABLE) {
+      if (
+        status === QuestStatus.CLAIMABLE ||
+        status === QuestStatus.COMPLETED
+      ) {
         logger(
-          'quest_completion_object_Id found & status is claimable',
+          'quest_completion_object_Id found & status is claimable/completed',
           userQuest.quest_completion_object_id,
         )
         return json({
