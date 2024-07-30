@@ -282,7 +282,7 @@ const Carousel: React.FC<CarouselProps> = (props) => {
     <div className="mx-auto w-[600px]">
       <div className="overflow-hidden" ref={emblaRef}>
         <div className="flex touch-pan-y">
-          {slides.map((slide, index) => (
+          {slides?.map((slide, index) => (
             <div className="w-full flex-none" key={index}>
               <div className="w-full flex-col justify-start items-center gap-3.5 inline-flex">
                 <div className="text-center text-white/90 text-3xl font-semibold">
