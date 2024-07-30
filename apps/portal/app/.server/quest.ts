@@ -44,6 +44,7 @@ export async function getQuestsProgress({
 }> {
   const user = await requireUser(request)
   invariant(user, 'User not found')
+  invariant(user.wallet?.address, 'User wallet address is required')
 
   const { narrative, active, sortBy, direction } = options
   const quests = (
@@ -64,7 +65,7 @@ export async function getQuestsProgress({
   const { id: userId } = await fetchWrapper({
     method: UsersService.getUserByWalletPublic,
     args: {
-      wallet: user.wallet?.address!,
+      wallet: user.wallet?.address,
     },
   })
 
