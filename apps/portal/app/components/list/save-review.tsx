@@ -9,11 +9,7 @@ import {
   Identity,
   Text,
 } from '@0xintuition/1ui'
-import {
-  ClaimPresenter,
-  IdentityPresenter,
-  TagEmbeddedPresenter,
-} from '@0xintuition/api'
+import { IdentityPresenter, TagEmbeddedPresenter } from '@0xintuition/api'
 
 import { formatBalance, formatDisplayBalance } from '@lib/utils/misc'
 import { TransactionActionType, TransactionStateType } from 'types/transaction'
@@ -26,7 +22,6 @@ interface SaveReviewProps {
   isError?: boolean
   tag: TagEmbeddedPresenter
   identity: IdentityPresenter
-  claim: ClaimPresenter
   user_assets: string
   entry_fee: string
   exit_fee: string
@@ -40,7 +35,6 @@ export default function SaveReview({
   isError,
   tag,
   identity,
-  claim,
   user_assets,
   entry_fee,
   exit_fee,
@@ -107,7 +101,6 @@ export default function SaveReview({
                 variant: Identity.nonUser,
               }}
               predicate={{
-                imgSrc: claim?.predicate?.image,
                 label: 'has tag',
                 variant: Identity.nonUser,
               }}

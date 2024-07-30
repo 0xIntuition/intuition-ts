@@ -1,14 +1,15 @@
 import { useEffect, useRef, useState } from 'react'
 
-import { Dialog, DialogContent, DialogFooter, toast } from '@0xintuition/1ui'
 import {
-  ClaimPresenter,
-  IdentityPresenter,
-  TagEmbeddedPresenter,
-} from '@0xintuition/api'
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  Skeleton,
+  toast,
+} from '@0xintuition/1ui'
+import { IdentityPresenter, TagEmbeddedPresenter } from '@0xintuition/api'
 
 import { multivaultAbi } from '@lib/abis/multivault'
-import { useCreateTriple } from '@lib/hooks/useCreateTriple'
 import { useDepositTriple } from '@lib/hooks/useDepositTriple'
 import { useRedeemTriple } from '@lib/hooks/useRedeemTriple'
 import { transactionReducer } from '@lib/hooks/useTransactionReducer'
@@ -45,7 +46,6 @@ interface SaveListModalProps {
   open: boolean
   tag: TagEmbeddedPresenter
   identity: IdentityPresenter
-  claim?: ClaimPresenter
 
   onClose?: () => void
 }
@@ -56,7 +56,6 @@ export default function SaveListModal({
   open = false,
   tag,
   identity,
-  claim,
 
   onClose = () => {},
 }: SaveListModalProps) {
@@ -79,8 +78,6 @@ export default function SaveListModal({
 
   const redeemHook = useRedeemTriple(identity.contract)
 
-  const createHook = useCreateTriple()
-
   const {
     writeContractAsync,
     receipt: txReceipt,
@@ -88,21 +85,12 @@ export default function SaveListModal({
     awaitingOnChainConfirmation,
     isError,
     reset,
-  } = !claim ? createHook : mode === 'save' ? depositHook : redeemHook
+  } = mode === 'save' ? depositHook : redeemHook
 
   const [fetchedClaimVaultId, setFetchedClaimVaultId] = useState<string | null>(
     null,
   )
   const [vaultDetails, setVaultDetails] = useState<VaultDetailsType>()
-
-  // const {
-  //   conviction_price = '0',
-  //   user_conviction = '0',
-  //   user_assets = '0',
-  //   min_deposit = '0',
-  //   formatted_entry_fee = '0',
-  //   formatted_exit_fee = '0',
-  // } = vaultDetails ? vaultDetails : {}
 
   const claimFetcher = useFetcher<ClaimLoaderData[]>()
   const vaultDetailsFetcher = useFetcher<VaultDetailsType>()
@@ -319,7 +307,7 @@ export default function SaveListModal({
     if (blockNumber && blockNumber % 5n === 0n) {
       queryClient.invalidateQueries({ queryKey })
     }
-  }, [blockNumber, queryClient, queryKey])
+  }, [blockNumber, queryClient, queryKey, open])
 
   const walletBalance = formatUnits(balance?.value ?? 0n, 18)
 
@@ -352,6 +340,8 @@ export default function SaveListModal({
 
   useEffect(() => {
     dispatch({ type: 'START_TRANSACTION' })
+    // avoids adding dispatch since we only want to re-render on this single type
+    // eslint-disable-line react-hooks/exhaustive-deps
   }, [location])
 
   const handleClose = () => {
@@ -384,7 +374,6 @@ export default function SaveListModal({
             walletBalance={walletBalance}
             tag={tag}
             identity={identity}
-            claim={claim}
             user_assets={vaultDetails?.user_assets ?? '0'}
             entry_fee={vaultDetails?.formatted_entry_fee ?? '0'}
             exit_fee={vaultDetails?.formatted_exit_fee ?? '0'}
@@ -401,34 +390,41 @@ export default function SaveListModal({
             setShowErrors={setShowErrors}
           />
         </div>
-        {!isTransactionStarted && !isLoading && (
-          <DialogFooter className="!justify-center !items-center gap-5">
-            <UnsaveButton
-              setMode={setMode}
-              handleAction={handleUnsaveButtonClick}
-              handleClose={handleClose}
-              dispatch={dispatch}
-              state={state}
-              user_conviction={vaultDetails?.user_conviction ?? '0'}
-              className={`${(vaultDetails?.user_conviction && vaultDetails?.user_conviction > '0' && state.status === 'idle') || mode !== 'save' ? '' : 'hidden'}`}
-            />
-            <SaveButton
-              val={val}
-              setMode={setMode}
-              handleAction={handleSaveButtonClick}
-              handleClose={handleClose}
-              dispatch={dispatch}
-              state={state}
-              min_deposit={vaultDetails?.min_deposit ?? '0'}
-              walletBalance={walletBalance}
-              conviction_price={vaultDetails?.conviction_price ?? '0'}
-              user_assets={vaultDetails?.user_assets ?? '0'}
-              setValidationErrors={setValidationErrors}
-              setShowErrors={setShowErrors}
-              className={`${mode === 'unsave' && 'hidden'}`}
-            />
-          </DialogFooter>
-        )}
+        <DialogFooter className="!justify-center !items-center gap-5">
+          {!isTransactionStarted && !isLoading ? (
+            <>
+              <UnsaveButton
+                setMode={setMode}
+                handleAction={handleUnsaveButtonClick}
+                handleClose={handleClose}
+                dispatch={dispatch}
+                state={state}
+                user_conviction={vaultDetails?.user_conviction ?? '0'}
+                className={`${(vaultDetails?.user_conviction && vaultDetails?.user_conviction > '0' && state.status === 'idle') || mode !== 'save' ? '' : 'hidden'}`}
+              />
+              <SaveButton
+                val={val}
+                setMode={setMode}
+                handleAction={handleSaveButtonClick}
+                handleClose={handleClose}
+                dispatch={dispatch}
+                state={state}
+                min_deposit={vaultDetails?.min_deposit ?? '0'}
+                walletBalance={walletBalance}
+                conviction_price={vaultDetails?.conviction_price ?? '0'}
+                user_assets={vaultDetails?.user_assets ?? '0'}
+                setValidationErrors={setValidationErrors}
+                setShowErrors={setShowErrors}
+                className={`${mode === 'unsave' && 'hidden'}`}
+              />
+            </>
+          ) : (
+            <>
+              <Skeleton className="h-7 w-40" />
+              <Skeleton className="h-7 w-40" />
+            </>
+          )}
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   )
