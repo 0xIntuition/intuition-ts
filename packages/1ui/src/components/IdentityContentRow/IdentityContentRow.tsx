@@ -26,6 +26,34 @@ export interface IdentityContentRowProps
   tags?: TagWithValueProps[]
 }
 
+interface NameAndAddressProps {
+  name: string
+  walletAddress: string
+  hasTags: boolean
+}
+
+const NameAndAddress = ({
+  name,
+  walletAddress,
+  hasTags,
+}: NameAndAddressProps) => {
+  return (
+    <div
+      className={cn(
+        'mb-1 flex',
+        hasTags ? 'flex-row items-center' : 'flex-col',
+      )}
+    >
+      <Text variant={TextVariant.bodyLarge} className="mr-2">
+        {name}
+      </Text>
+      <Text variant={TextVariant.body} className="text-secondary-foreground">
+        {formatWalletAddress(walletAddress)}
+      </Text>
+    </div>
+  )
+}
+
 const IdentityContentRow = ({
   variant = Identity.user,
   amount,
@@ -39,6 +67,8 @@ const IdentityContentRow = ({
   className,
   ...props
 }: IdentityContentRowProps) => {
+  const hasTags = !!(tags && tags.length > 0)
+
   return (
     <div className="w-full">
       <div
@@ -50,21 +80,15 @@ const IdentityContentRow = ({
             variant={variant}
             src={avatarSrc}
             name={name}
-            className="w-[64px] h-[64px] mr-4"
+            className="mr-4 w-[64px] h-[64px]"
           />
           <div className="flex flex-col">
-            <div className="flex items-center mb-1.5">
-              <Text variant={TextVariant.bodyLarge} className="mr-1">
-                {name}
-              </Text>
-              <Text
-                variant={TextVariant.body}
-                className="text-secondary-foreground"
-              >
-                {formatWalletAddress(walletAddress)}
-              </Text>
-            </div>
-            {tags && tags.length > 0 && (
+            <NameAndAddress
+              name={name}
+              walletAddress={walletAddress}
+              hasTags={hasTags}
+            />
+            {hasTags && (
               <div className="flex gap-2 mt-1">
                 <TagsContent numberOfTags={tags.length}>
                   {tags.slice(0, 4).map((tag, index) => (
