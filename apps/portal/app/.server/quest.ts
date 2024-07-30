@@ -12,7 +12,7 @@ import {
 
 import { User } from 'types'
 
-import { fetchWrapper, invariant } from './../lib/utils/misc'
+import { fetchWrapper, invariant } from '@lib/utils/misc'
 import { requireUser } from './auth'
 
 export interface QuestProgressProps {
