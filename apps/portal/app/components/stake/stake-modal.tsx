@@ -37,6 +37,12 @@ interface StakeModalProps {
   claim?: ClaimPresenter
   vaultDetails: VaultDetailsType
   onClose?: () => void
+  onSuccess?: (args: {
+    identity?: IdentityPresenter
+    claim?: ClaimPresenter
+    vaultDetails: VaultDetailsType
+    direction?: 'for' | 'against'
+  }) => void
   direction?: 'for' | 'against'
 }
 
@@ -49,6 +55,7 @@ export default function StakeModal({
   claim,
   vaultDetails,
   direction,
+  onSuccess,
 }: StakeModalProps) {
   const fetchReval = useFetcher()
   const [stakeModalState] = useAtom(stakeModalAtom)
@@ -166,6 +173,12 @@ export default function StakeModal({
             type: 'TRANSACTION_COMPLETE',
             txHash,
             txReceipt: receipt,
+          })
+          onSuccess?.({
+            identity,
+            claim,
+            vaultDetails,
+            direction,
           })
           fetchReval.submit(formRef.current, {
             method: 'POST',
@@ -353,7 +366,7 @@ export default function StakeModal({
         handleClose()
       }}
     >
-      <DialogContent className="flex flex-col w-[476px] h-[500px] gap-0">
+      <DialogContent className="flex flex-col w-[480px] h-auto gap-2.5 p-5">
         <div className="flex-grow">
           <StakeForm
             userWallet={userWallet}
