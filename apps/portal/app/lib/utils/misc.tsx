@@ -106,10 +106,6 @@ export function getAuthHeaders(token?: string) {
     headers.authorization = `Bearer ${token}`
   }
 
-  if (!token) {
-    headers['x-api-key'] = process.env.API_KEY as string
-  }
-
   return headers
 }
 
