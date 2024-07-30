@@ -616,8 +616,6 @@ function CreateClaimForm({
                     type="button"
                     variant="primary"
                     onClick={() => {
-                      navigate(`/app/claim/${transactionResponseData.claim_id}`)
-
                       if (successAction === TransactionSuccessAction.VIEW) {
                         navigate(
                           `/app/claim/${transactionResponseData.claim_id}`,
