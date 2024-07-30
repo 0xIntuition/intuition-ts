@@ -14,6 +14,7 @@ export const PATHS = {
   PROFILE_CONNECTIONS: '/app/profile/connections',
   // Explore
   EXPLORE_USERS: '/app/explore/users',
+  EXPLORE_LISTS: '/app/explore/lists',
   // Activity
   GLOBAL_ACTIVITY: '/app/activity/global',
 }
