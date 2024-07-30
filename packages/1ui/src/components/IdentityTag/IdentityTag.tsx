@@ -15,13 +15,13 @@ export const IdentityTagSize = {
 export type IdentityTagSizeType = keyof typeof IdentityTagSize
 
 export const identityTagVariants = cva(
-  'theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center',
+  'theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center',
   {
     variants: {
       variant: {
         [Identity.user]:
           'rounded-full [&>span]:rounded-full [&>span]:overflow-hidden',
-        [Identity.nonUser]: 'rounded-sm',
+        [Identity.nonUser]: 'rounded-md',
       },
       size: {
         [IdentityTagSize.default]: 'text-base [&>span]:h-6 [&>span]:w-6',
@@ -80,7 +80,7 @@ const IdentityTag = ({
   ...props
 }: IdentityTagProps) => {
   return hoverCardContent ? (
-    <HoverCard>
+    <HoverCard openDelay={100} closeDelay={0}>
       <HoverCardTrigger>
         <IdentityTagButton {...props} />
       </HoverCardTrigger>

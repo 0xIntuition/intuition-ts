@@ -1,11 +1,12 @@
-import React from 'react'
+import React, { HTMLAttributes } from 'react'
 
 import { Text } from 'components/Text'
+import { cn } from 'styles'
 import { Identity, IdentityType } from 'types'
 
 import { ProfileCardHeader, ProfileCardStatItem } from './components'
 
-export interface ProfileCardProps {
+export interface ProfileCardProps extends HTMLAttributes<HTMLDivElement> {
   variant?: IdentityType
   avatarSrc: string
   name: string
@@ -29,9 +30,16 @@ const ProfileCard = ({
   link,
   bio,
   children,
+  ...props
 }: ProfileCardProps) => {
   return (
-    <div className="flex flex-col justify-center items-start w-full min-w-80 rounded-lg box-border gap-2.5">
+    <div
+      className={cn(
+        'flex flex-col justify-center items-start w-full min-w-80 rounded-lg gap-2.5',
+        props.className,
+      )}
+      {...props}
+    >
       <ProfileCardHeader
         variant={variant}
         avatarSrc={avatarSrc}
@@ -39,7 +47,7 @@ const ProfileCard = ({
         walletAddress={walletAddress}
       />
       {variant === Identity.user && (
-        <div className="flex justify-start items-center gap-4 pt-1">
+        <div className="flex justify-start items-center gap-4 pt-2">
           <ProfileCardStatItem
             value={stats?.numberOfFollowing ?? 0}
             label="Following"
