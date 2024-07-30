@@ -38,6 +38,7 @@ export const BLOCK_EXPLORER_URL =
     : 'https://sepolia.basescan.org'
 
 export const CREATE_RESOURCE_ROUTE = '/resources/create'
+export const CREATE_CLAIM_RESOURCE_ROUTE = '/resources/create-claim'
 export const GET_IDENTITIES_BY_IDS_RESOURCE_ROUTE =
   '/resources/get-identities-by-ids'
 export const GET_IDENTITIES_RESOURCE_ROUTE = '/resources/get-identities'

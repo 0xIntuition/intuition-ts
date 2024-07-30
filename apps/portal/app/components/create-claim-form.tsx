@@ -1,12 +1,17 @@
 import React, { useEffect, useState } from 'react'
 
 import {
+  Badge,
   Button,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
+  Icon,
+  IconName,
+  Identity,
   IdentityTag,
   Input,
   Label,
@@ -16,10 +21,16 @@ import {
   ProfileCard,
   Text,
   toast,
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
   TransactionStatusType,
+  Trunctacular,
 } from '@0xintuition/1ui'
 import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
 
+import CreateClaimReview from '@components/create-claim/create-claim-review'
 import {
   getFormProps,
   getInputProps,
@@ -39,28 +50,37 @@ import { createClaimSchema } from '@lib/schemas/create-claim-schema'
 import logger from '@lib/utils/logger'
 import { sliceString, truncateString } from '@lib/utils/misc'
 import { useFetcher, useNavigate } from '@remix-run/react'
-import { CreateLoaderData } from '@routes/resources+/create'
+import { CreateClaimLoaderData } from '@routes/resources+/create-claim'
+import { TagLoaderData } from '@routes/resources+/tag'
+import { useQueryClient } from '@tanstack/react-query'
 import {
-  CREATE_RESOURCE_ROUTE,
+  CREATE_CLAIM_RESOURCE_ROUTE,
   GENERIC_ERROR_MSG,
   MULTIVAULT_CONTRACT_ADDRESS,
   SEARCH_IDENTITIES_RESOURCE_ROUTE,
 } from 'consts'
 import { ClaimElement, ClaimElementType } from 'types'
 import { TransactionActionType, TransactionStateType } from 'types/transaction'
-import { parseUnits } from 'viem'
-import { useAccount, usePublicClient, useWalletClient } from 'wagmi'
+import { formatUnits, parseUnits } from 'viem'
+import {
+  useAccount,
+  useBalance,
+  useBlockNumber,
+  usePublicClient,
+  useWalletClient,
+} from 'wagmi'
 
 import ErrorList from './error-list'
 import { IdentitySearchCombobox } from './identity/identity-search-combo-box'
 import { TransactionState } from './transaction-state'
 
 interface ClaimFormProps {
+  wallet: string
   onSuccess?: () => void
   onClose: () => void
 }
 
-export function ClaimForm({ onClose }: ClaimFormProps) {
+export function ClaimForm({ wallet, onClose }: ClaimFormProps) {
   const { state, dispatch } = useTransactionState<
     TransactionStateType,
     TransactionActionType
@@ -81,33 +101,37 @@ export function ClaimForm({ onClose }: ClaimFormProps) {
   ].includes(state.status)
 
   return (
-    <>
-      <>
-        {!isTransactionStarted && (
-          <DialogHeader className="py-4">
-            <DialogTitle>
-              <Text variant="headline" className="text-foreground-secondary">
-                Make a claim about an identity
-              </Text>
-            </DialogTitle>
-            <Text variant="caption" className="text-foreground/50 w-full">
+    <div className="flex flex-col h-full">
+      {!isTransactionStarted && (
+        <DialogHeader>
+          <DialogTitle>
+            <Text variant="headline" className="text-foreground-secondary">
+              Make a claim about an identity
+            </Text>
+          </DialogTitle>
+          <DialogDescription className="items-start w-full">
+            <Text variant="caption" className="text-foreground/50">
               Additional text about this.
             </Text>
-          </DialogHeader>
-        )}
+          </DialogDescription>
+        </DialogHeader>
+      )}
+      <div className="flex-grow">
         <CreateClaimForm
+          wallet={wallet}
           state={state}
           dispatch={dispatch}
           onClose={onClose}
           setTransactionResponseData={setTransactionResponseData}
           transactionResponseData={transactionResponseData}
         />
-      </>
-    </>
+      </div>
+    </div>
   )
 }
 
 interface CreateClaimFormProps {
+  wallet: string
   state: TransactionStateType
   dispatch: React.Dispatch<TransactionActionType>
   setTransactionResponseData: React.Dispatch<
@@ -118,32 +142,19 @@ interface CreateClaimFormProps {
 }
 
 function CreateClaimForm({
+  wallet,
   state,
   dispatch,
   setTransactionResponseData,
   transactionResponseData,
   onClose,
 }: CreateClaimFormProps) {
-  const feeFetcher = useLoaderFetcher<CreateLoaderData>(CREATE_RESOURCE_ROUTE)
-  const { atomCost: atomCostAmount, tripleCost: tripleCostAmount } =
-    (feeFetcher.data as CreateLoaderData) ?? {
-      vaultId: BigInt(0),
-      atomCost: BigInt(0),
-      tripleCost: BigInt(0),
-      protocolFee: BigInt(0),
-      entryFee: BigInt(0),
-    }
-  const [initialDeposit, setInitialDeposit] = useState<string>('0')
-
-  logger(
-    'items',
-    state,
-    dispatch,
-    setTransactionResponseData,
-    transactionResponseData,
-    atomCostAmount,
-    tripleCostAmount,
+  const feeFetcher = useLoaderFetcher<CreateClaimLoaderData>(
+    CREATE_CLAIM_RESOURCE_ROUTE,
   )
+  const { fees } = (feeFetcher.data as CreateClaimLoaderData) ?? {}
+
+  const [initialDeposit, setInitialDeposit] = useState<string>('0')
 
   const navigate = useNavigate()
   interface OffChainClaimFetcherData {
@@ -153,9 +164,10 @@ function CreateClaimForm({
   }
 
   const [searchQuery, setSearchQuery] = useState('')
-  const [isSubjectPopoverOpen, setIsSubjectPopoverOpen] = useState(true)
-  const [isPredicatePopoverOpen, setIsPredicatePopoverOpen] = useState(true)
-  const [isObjectPopoverOpen, setIsObjectPopoverOpen] = useState(true)
+  const [isSubjectPopoverOpen, setIsSubjectPopoverOpen] = useState(false)
+  const [isPredicatePopoverOpen, setIsPredicatePopoverOpen] = useState(false)
+  const [isObjectPopoverOpen, setIsObjectPopoverOpen] = useState(false)
+  const [claimExists, setClaimExists] = useState(false)
 
   const handleInput = async (event: React.FormEvent<HTMLInputElement>) => {
     event.preventDefault()
@@ -183,15 +195,6 @@ function CreateClaimForm({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchQuery, SEARCH_IDENTITIES_RESOURCE_ROUTE])
-
-  const { atomCost, tripleCost } = (feeFetcher.data as CreateLoaderData) ?? {
-    atomEquityFeeRaw: BigInt(0),
-    atomCost: BigInt(0),
-    tripleCost: BigInt(0),
-  }
-
-  logger('atomCost', atomCost)
-  logger('tripleCost', tripleCost)
 
   const { data: walletClient } = useWalletClient()
   const publicClient = usePublicClient()
@@ -229,8 +232,11 @@ function CreateClaimForm({
           functionName: 'createTriple',
           args: [subjectVaultId, predicateVaultId, objectVaultId],
           value:
-            BigInt(tripleCost) +
-            parseUnits(initialDeposit === '' ? '0' : initialDeposit, 18),
+            (fees?.tripleCost ? BigInt(fees.tripleCost) : 0n) +
+            parseUnits(
+              initialDeposit && initialDeposit !== '' ? initialDeposit : '0',
+              18,
+            ),
         })
         dispatch({ type: 'TRANSACTION_PENDING' })
         if (txHash) {
@@ -390,16 +396,39 @@ function CreateClaimForm({
     }
   }, [isSubjectPopoverOpen, isPredicatePopoverOpen, isObjectPopoverOpen])
 
-  const isTransactionStarted = [
-    'approve',
-    'awaiting',
-    'confirm',
-    'review-transaction',
-    'transaction-pending',
-    'transaction-confirmed',
-    'complete',
-    'error',
-  ].includes(state.status)
+  const queryClient = useQueryClient()
+  const { data: blockNumber } = useBlockNumber({ watch: true })
+  const { data: balance, queryKey } = useBalance({
+    address: wallet as `0x${string}`,
+  })
+
+  const walletBalance = formatUnits(balance?.value ?? 0n, 18)
+
+  useEffect(() => {
+    if (blockNumber && blockNumber % 5n === 0n) {
+      queryClient.invalidateQueries({ queryKey })
+    }
+  }, [blockNumber, queryClient, queryKey])
+
+  const claimChecker = useFetcher<TagLoaderData>()
+
+  useEffect(() => {
+    if (
+      selectedIdentities.subject &&
+      selectedIdentities.predicate &&
+      selectedIdentities.object
+    ) {
+      claimChecker.load(
+        `/resources/tag?subjectId=${selectedIdentities.subject.vault_id}&predicateId=${selectedIdentities.predicate.vault_id}&objectId=${selectedIdentities.object.vault_id}`,
+      )
+    }
+  }, [selectedIdentities])
+
+  useEffect(() => {
+    if (claimChecker.data && claimChecker.data.result !== '0') {
+      setClaimExists(true)
+    }
+  }, [claimChecker.data])
 
   const Divider = () => (
     <span className="h-px w-2.5 flex bg-border/30 self-end mb-[1.2rem]" />
@@ -411,337 +440,155 @@ function CreateClaimForm({
         method="post"
         {...getFormProps(form)}
         action="/actions/create-claim"
+        className="h-full flex flex-col"
       >
-        {!isTransactionStarted ? (
-          <div className="flex flex-col items-center gap-14">
-            <div className="flex items-center">
-              <Popover
-                open={isSubjectPopoverOpen}
-                onOpenChange={setIsSubjectPopoverOpen}
-                modal={true}
-              >
-                <PopoverTrigger asChild>
-                  <div className="flex flex-col gap-2 items-start">
-                    <Text variant="small" className="text-primary/60">
-                      Subject
-                    </Text>
-                    <HoverCard>
-                      <HoverCardTrigger>
-                        <IdentityTag size="lg">
-                          {truncateString(
-                            selectedIdentities.subject?.display_name ?? '',
-                            7,
-                          ) || 'Subject'}
-                        </IdentityTag>
-                      </HoverCardTrigger>
-                      {selectedIdentities.subject && (
-                        <HoverCardContent side="bottom">
-                          <ProfileCard
-                            variant={
-                              selectedIdentities.subject?.is_user === true
-                                ? 'user'
-                                : 'non-user'
-                            }
-                            avatarSrc={
-                              selectedIdentities.subject?.user?.image ?? ''
-                            }
-                            name={
-                              selectedIdentities.subject?.is_user === true
-                                ? selectedIdentities.subject?.user
-                                    ?.display_name ?? ''
-                                : selectedIdentities.subject?.display_name
-                            }
-                            walletAddress={
-                              selectedIdentities.subject?.is_user === true
-                                ? selectedIdentities.subject?.user?.ens_name ??
-                                  sliceString(
-                                    selectedIdentities.subject?.user?.wallet,
-                                    6,
-                                    4,
-                                  )
-                                : selectedIdentities.subject?.identity_id
-                            }
-                            stats={
-                              selectedIdentities.subject?.is_user === true
-                                ? {
-                                    numberOfFollowers:
-                                      selectedIdentities.subject
-                                        ?.follower_count ?? 0,
-                                    numberOfFollowing:
-                                      selectedIdentities.subject
-                                        ?.followed_count ?? 0,
-                                    // points:
-                                    //   selectedIdentities.subject?.user
-                                    //     ?.user_points, // no user_points aggregate on the IdentityPresenter or the UserPresenter
-                                  }
-                                : undefined
-                            }
-                            bio={
-                              selectedIdentities.subject?.is_user === true
-                                ? selectedIdentities.subject?.user
-                                    ?.description ?? ''
-                                : selectedIdentities.subject?.description ?? ''
-                            }
-                          >
-                            {selectedIdentities.subject?.is_user === true && (
-                              <Button
-                                variant="accent"
-                                onClick={() => logger('follow functionality')}
-                              >
-                                Follow
-                              </Button>
-                            )}
-                          </ProfileCard>
-                        </HoverCardContent>
-                      )}
-                    </HoverCard>
-                  </div>
-                </PopoverTrigger>
-                <PopoverContent className="bg-transparent">
-                  <IdentitySearchCombobox
+        {state.status === 'idle' ? (
+          <div className="flex flex-col items-center justify-between h-full">
+            <div className="flex-grow flex items-center justify-center">
+              <div className="flex flex-col items-center gap-14">
+                <div className="flex items-center">
+                  <IdentityPopover
+                    type={ClaimElement.Subject}
+                    isObjectPopoverOpen={isSubjectPopoverOpen}
+                    setIsObjectPopoverOpen={setIsSubjectPopoverOpen}
+                    selectedIdentity={selectedIdentities.subject}
                     identities={identities}
-                    onIdentitySelect={(identity) =>
-                      handleIdentitySelection('subject', identity)
-                    }
-                    onValueChange={setSearchQuery}
-                    onInput={handleInput}
-                    shouldFilter={false}
+                    handleIdentitySelection={(
+                      identityType: ClaimElementType,
+                      identity: IdentityPresenter,
+                    ) => handleIdentitySelection(identityType, identity)}
+                    setSearchQuery={setSearchQuery}
+                    handleInput={handleInput}
                   />
-                </PopoverContent>
-              </Popover>
-              <Divider />
-              <Popover
-                open={isPredicatePopoverOpen}
-                onOpenChange={setIsPredicatePopoverOpen}
-              >
-                <PopoverTrigger asChild>
-                  <div className="flex flex-col gap-2 items-start">
-                    <Text variant="small" className="text-primary/60">
-                      Predicate
-                    </Text>
-                    <HoverCard>
-                      <HoverCardTrigger>
-                        {selectedIdentities.predicate && (
-                          <HoverCardContent side="bottom">
-                            <ProfileCard
-                              variant={
-                                selectedIdentities.predicate?.is_user === true
-                                  ? 'user'
-                                  : 'non-user'
-                              }
-                              avatarSrc={
-                                selectedIdentities.predicate?.user?.image ?? ''
-                              }
-                              name={
-                                selectedIdentities.predicate?.is_user === true
-                                  ? selectedIdentities.predicate?.user
-                                      ?.display_name ?? ''
-                                  : selectedIdentities.predicate?.display_name
-                              }
-                              walletAddress={
-                                selectedIdentities.predicate?.is_user === true
-                                  ? selectedIdentities.predicate?.user
-                                      ?.ens_name ??
-                                    sliceString(
-                                      selectedIdentities.predicate?.user
-                                        ?.wallet,
-                                      6,
-                                      4,
-                                    )
-                                  : selectedIdentities.predicate?.identity_id
-                              }
-                              stats={
-                                selectedIdentities.predicate?.is_user === true
-                                  ? {
-                                      numberOfFollowers:
-                                        selectedIdentities.predicate
-                                          ?.follower_count ?? 0,
-                                      numberOfFollowing:
-                                        selectedIdentities.predicate
-                                          ?.followed_count ?? 0,
-                                      // points:
-                                      //   selectedIdentities.predicate?.user
-                                      //     ?.user_points, // no user_points aggregate on the IdentityPresenter or the UserPresenter
-                                    }
-                                  : undefined
-                              }
-                              bio={
-                                selectedIdentities.predicate?.is_user === true
-                                  ? selectedIdentities.predicate?.user
-                                      ?.description ?? ''
-                                  : selectedIdentities.predicate?.description ??
-                                    ''
-                              }
-                            >
-                              {selectedIdentities.predicate?.is_user ===
-                                true && (
-                                <Button
-                                  variant="accent"
-                                  onClick={() => logger('follow functionality')}
-                                >
-                                  Follow
-                                </Button>
-                              )}
-                            </ProfileCard>
-                          </HoverCardContent>
-                        )}
-                        <IdentityTag size="lg">
-                          {truncateString(
-                            selectedIdentities.predicate?.display_name ?? '',
-                            7,
-                          ) || 'Predicate'}
-                        </IdentityTag>
-                      </HoverCardTrigger>
-                    </HoverCard>
-                  </div>
-                </PopoverTrigger>
-                <PopoverContent
-                  className="bg-transparent border-none"
-                  side="bottom"
-                  align="center"
-                  sideOffset={5}
-                >
-                  <IdentitySearchCombobox
+                  <Divider />
+                  <IdentityPopover
+                    type={ClaimElement.Predicate}
+                    isObjectPopoverOpen={isPredicatePopoverOpen}
+                    setIsObjectPopoverOpen={setIsPredicatePopoverOpen}
+                    selectedIdentity={selectedIdentities.predicate}
                     identities={identities}
-                    onIdentitySelect={(identity) =>
-                      handleIdentitySelection('predicate', identity)
-                    }
-                    onValueChange={setSearchQuery}
-                    onInput={handleInput}
-                    shouldFilter={false}
+                    handleIdentitySelection={(
+                      identityType: ClaimElementType,
+                      identity: IdentityPresenter,
+                    ) => handleIdentitySelection(identityType, identity)}
+                    setSearchQuery={setSearchQuery}
+                    handleInput={handleInput}
                   />
-                </PopoverContent>
-              </Popover>
-              <Divider />
-              <Popover
-                open={isObjectPopoverOpen}
-                onOpenChange={setIsObjectPopoverOpen}
-              >
-                <PopoverTrigger asChild>
-                  <div className="flex flex-col gap-2 items-start">
-                    <Text variant="small" className="text-primary/60">
-                      Object
-                    </Text>
-                    <HoverCard>
-                      <HoverCardTrigger>
-                        <IdentityTag size="lg">
-                          {truncateString(
-                            selectedIdentities.object?.display_name ?? '',
-                            7,
-                          ) || 'Object'}
-                        </IdentityTag>
-                      </HoverCardTrigger>
-                      {selectedIdentities.object && (
-                        <HoverCardContent side="bottom">
-                          <ProfileCard
-                            variant={
-                              selectedIdentities.object?.is_user === true
-                                ? 'user'
-                                : 'non-user'
-                            }
-                            avatarSrc={
-                              selectedIdentities.object?.user?.image ?? ''
-                            }
-                            name={
-                              selectedIdentities.object?.is_user === true
-                                ? selectedIdentities.object?.user
-                                    ?.display_name ?? ''
-                                : selectedIdentities.object?.display_name
-                            }
-                            walletAddress={
-                              selectedIdentities.object?.is_user === true
-                                ? selectedIdentities.object?.user?.ens_name ??
-                                  sliceString(
-                                    selectedIdentities.object?.user?.wallet,
-                                    6,
-                                    4,
-                                  )
-                                : selectedIdentities.object?.identity_id
-                            }
-                            stats={
-                              selectedIdentities.object?.is_user === true
-                                ? {
-                                    numberOfFollowers:
-                                      selectedIdentities.object
-                                        ?.follower_count ?? 0,
-                                    numberOfFollowing:
-                                      selectedIdentities.object
-                                        ?.followed_count ?? 0,
-                                    // points:
-                                    //   selectedIdentities.object?.user
-                                    //     ?.user_points, // no user_points aggregate on the IdentityPresenter or the UserPresenter
-                                  }
-                                : undefined
-                            }
-                            bio={
-                              selectedIdentities.object?.is_user === true
-                                ? selectedIdentities.object?.user
-                                    ?.description ?? ''
-                                : selectedIdentities.object?.description ?? ''
-                            }
-                          >
-                            {selectedIdentities.object?.is_user === true && (
-                              <Button
-                                variant="accent"
-                                onClick={() => logger('follow functionality')}
-                              >
-                                Follow
-                              </Button>
-                            )}
-                          </ProfileCard>
-                        </HoverCardContent>
-                      )}
-                    </HoverCard>
-                  </div>
-                </PopoverTrigger>
-                <PopoverContent
-                  className="bg-transparent border-none"
-                  side="bottom"
-                  align="center"
-                  sideOffset={5}
-                >
-                  <IdentitySearchCombobox
+                  <Divider />
+                  <IdentityPopover
+                    type={ClaimElement.Object}
+                    isObjectPopoverOpen={isObjectPopoverOpen}
+                    setIsObjectPopoverOpen={setIsObjectPopoverOpen}
+                    selectedIdentity={selectedIdentities.object}
                     identities={identities}
-                    onIdentitySelect={(identity) =>
-                      handleIdentitySelection('object', identity)
-                    }
-                    onValueChange={setSearchQuery}
-                    onInput={handleInput}
-                    shouldFilter={false}
+                    handleIdentitySelection={(
+                      identityType: ClaimElementType,
+                      identity: IdentityPresenter,
+                    ) => handleIdentitySelection(identityType, identity)}
+                    setSearchQuery={setSearchQuery}
+                    handleInput={handleInput}
                   />
-                </PopoverContent>
-              </Popover>
+                </div>
+                <div className="flex flex-row items-center justify-center">
+                  <div className="flex w-full max-w-md flex-col mx-auto">
+                    <div className="flex flex-row items-center justify-between mb-1">
+                      <div className="inline-flex gap-1">
+                        <Label htmlFor={fields.initial_deposit.id} hidden>
+                          Initial Deposit
+                        </Label>
+                        <Text
+                          variant="caption"
+                          className="text-secondary-foreground/90"
+                        >
+                          Initial Deposit
+                        </Text>
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger>
+                              <Icon
+                                name={IconName.circleQuestionMark}
+                                className="text-secondary-foreground/90 h-4 w-4"
+                              />
+                            </TooltipTrigger>
+                            <TooltipContent className="max-w-60">
+                              No initial deposit is required to create a claim.
+                              However, you will need to spend small amount of
+                              ETH to cover the fees.
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      </div>
+                      <Badge className="bg-transparent">
+                        <Icon name="wallet" className="h-4 w-4" />
+                        {(+walletBalance).toFixed(2)} ETH
+                      </Badge>
+                    </div>
+                    <Input
+                      {...getInputProps(fields.initial_deposit, {
+                        type: 'text',
+                      })}
+                      placeholder="0"
+                      startAdornment="ETH"
+                    />
+                    <ErrorList
+                      id={fields.initial_deposit.errorId}
+                      errors={fields.initial_deposit.errors}
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
-            <div className="flex flex-col w-full gap-1.5">
-              <Text variant="caption" className="text-secondary-foreground/90">
-                Initial Deposit (Optional)
-              </Text>
-              <Label htmlFor={fields.initial_deposit.id} hidden>
-                Initial Deposit (Optional)
-              </Label>
-              <Input
-                {...getInputProps(fields.initial_deposit, { type: 'text' })}
-                placeholder="0"
-                startAdornment="ETH"
-              />
-              <ErrorList
-                id={fields.initial_deposit.errorId}
-                errors={fields.initial_deposit.errors}
-              />
+            <div className="mt-auto">
+              <Button
+                type="button"
+                variant="primary"
+                onClick={(e) => {
+                  e.preventDefault()
+                  dispatch({ type: 'REVIEW_TRANSACTION' })
+                }}
+                disabled={
+                  !address ||
+                  (claimExists && state.status !== 'idle') ||
+                  selectedIdentities.subject === null ||
+                  selectedIdentities.predicate === null ||
+                  selectedIdentities.object === null ||
+                  ['confirm', 'transaction-pending', 'awaiting'].includes(
+                    state.status,
+                  )
+                }
+                className="w-40 mx-auto"
+              >
+                {claimExists ? 'Claim Exists' : 'Review'}
+              </Button>
             </div>
-            <Button
-              form={form.id}
-              type="submit"
-              variant="primary"
-              disabled={
-                selectedIdentities.subject === null ||
-                selectedIdentities.predicate === null ||
-                selectedIdentities.object === null
-              }
-              className="mx-auto"
-            >
-              Create claim
-            </Button>
+          </div>
+        ) : state.status === 'review-transaction' ? (
+          <div className="h-full flex flex-col">
+            <CreateClaimReview
+              dispatch={dispatch}
+              selectedIdentities={selectedIdentities}
+              initialDeposit={initialDeposit}
+              fees={fees}
+            />
+            <div className="mt-auto">
+              <Button
+                form={form.id}
+                type="submit"
+                variant="primary"
+                disabled={
+                  !address ||
+                  selectedIdentities.subject === null ||
+                  selectedIdentities.predicate === null ||
+                  selectedIdentities.object === null ||
+                  ['confirm', 'transaction-pending', 'awaiting'].includes(
+                    state.status,
+                  )
+                }
+                className="w-40 mx-auto"
+              >
+                Create Claim
+              </Button>
+            </div>
           </div>
         ) : (
           <div className="flex flex-col items-center justify-center min-h-96">
@@ -759,7 +606,7 @@ function CreateClaimForm({
                       onClose()
                     }}
                   >
-                    View claim
+                    View Claim
                   </Button>
                 )
               }
@@ -768,5 +615,128 @@ function CreateClaimForm({
         )}
       </claimFetcher.Form>
     </>
+  )
+}
+
+interface IdentityPopoverProps {
+  type: ClaimElementType
+  isObjectPopoverOpen: boolean
+  setIsObjectPopoverOpen: (isOpen: boolean) => void
+  selectedIdentity?: IdentityPresenter | null
+  identities: IdentityPresenter[]
+  handleIdentitySelection: (
+    identityType: ClaimElementType,
+    identity: IdentityPresenter,
+  ) => void
+  setSearchQuery: (query: string) => void
+  handleInput: (event: React.FormEvent<HTMLInputElement>) => Promise<void>
+}
+
+export const IdentityPopover: React.FC<IdentityPopoverProps> = ({
+  type,
+  isObjectPopoverOpen,
+  setIsObjectPopoverOpen,
+  selectedIdentity,
+  identities,
+  handleIdentitySelection,
+  setSearchQuery,
+  handleInput,
+}) => {
+  return (
+    <Popover
+      open={isObjectPopoverOpen}
+      onOpenChange={setIsObjectPopoverOpen}
+      modal={isObjectPopoverOpen}
+    >
+      <PopoverTrigger asChild>
+        <div className="flex flex-col gap-2 w-45">
+          <Text variant="small" className="text-primary/60">
+            {type}
+          </Text>
+          <HoverCard openDelay={100} closeDelay={100}>
+            <HoverCardTrigger className="w-full">
+              <IdentityTag
+                size="lg"
+                variant={
+                  selectedIdentity?.is_user ? Identity.user : Identity.nonUser
+                }
+                imgSrc={
+                  selectedIdentity?.user?.image ?? selectedIdentity?.image
+                }
+                className="w-full"
+              >
+                <Trunctacular
+                  maxStringLength={20}
+                  variant="bodyLarge"
+                  value={
+                    (selectedIdentity?.user?.display_name ??
+                      selectedIdentity?.display_name ??
+                      '') ||
+                    type
+                  }
+                  disableTooltip
+                />
+              </IdentityTag>
+            </HoverCardTrigger>
+            {selectedIdentity && (
+              <HoverCardContent side="bottom" className="w-80">
+                <ProfileCard
+                  variant={
+                    selectedIdentity.is_user === true
+                      ? Identity.user
+                      : Identity.nonUser
+                  }
+                  avatarSrc={
+                    selectedIdentity.user?.image ?? selectedIdentity.image ?? ''
+                  }
+                  name={truncateString(
+                    selectedIdentity.user?.display_name ??
+                      selectedIdentity.display_name,
+                    18,
+                  )}
+                  walletAddress={
+                    selectedIdentity.is_user === true
+                      ? selectedIdentity.user?.ens_name ??
+                        sliceString(selectedIdentity.user?.wallet, 6, 4)
+                      : selectedIdentity.identity_id
+                  }
+                  stats={
+                    selectedIdentity.is_user === true
+                      ? {
+                          numberOfFollowers:
+                            selectedIdentity.follower_count ?? 0,
+                          numberOfFollowing:
+                            selectedIdentity.followed_count ?? 0,
+                        }
+                      : undefined
+                  }
+                  bio={
+                    selectedIdentity.is_user === true
+                      ? selectedIdentity.user?.description ?? ''
+                      : selectedIdentity.description ?? ''
+                  }
+                ></ProfileCard>
+              </HoverCardContent>
+            )}
+          </HoverCard>
+        </div>
+      </PopoverTrigger>
+      <PopoverContent
+        className="bg-transparent border-none"
+        side="bottom"
+        align="center"
+        sideOffset={5}
+      >
+        <IdentitySearchCombobox
+          identities={identities}
+          onIdentitySelect={(identity) =>
+            handleIdentitySelection(type, identity)
+          }
+          onValueChange={setSearchQuery}
+          onInput={handleInput}
+          shouldFilter={false}
+        />
+      </PopoverContent>
+    </Popover>
   )
 }

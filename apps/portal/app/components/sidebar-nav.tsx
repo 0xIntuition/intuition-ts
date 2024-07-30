@@ -209,6 +209,7 @@ export default function SidebarNav({
       />
       <CreateClaimModal
         open={createClaimModalActive}
+        wallet={userObject.wallet}
         onClose={() => setCreateClaimModalActive(false)}
       />
     </>
