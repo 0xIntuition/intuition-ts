@@ -53,29 +53,38 @@ const IdentityContentRow = ({
             className="w-[64px] h-[64px] mr-4"
           />
           <div className="flex flex-col">
-            <div className="flex items-center mb-1.5">
-              <Text variant={TextVariant.bodyLarge} className="mr-1">
-                {name}
-              </Text>
+            <Text variant={TextVariant.bodyLarge} className="mb-1">
+              {name}
+            </Text>
+            {tags && tags.length > 0 ? (
+              <>
+                <div className="flex items-center mb-1.5">
+                  <Text
+                    variant={TextVariant.body}
+                    className="text-secondary-foreground"
+                  >
+                    {formatWalletAddress(walletAddress)}
+                  </Text>
+                </div>
+                <div className="flex gap-2 mt-1">
+                  <TagsContent numberOfTags={tags.length}>
+                    {tags.slice(0, 4).map((tag, index) => (
+                      <TagWithValue
+                        label={tag.label}
+                        value={tag.value}
+                        key={index}
+                      />
+                    ))}
+                  </TagsContent>
+                </div>
+              </>
+            ) : (
               <Text
                 variant={TextVariant.body}
-                className="text-secondary-foreground"
+                className="text-secondary-foreground mb-1"
               >
                 {formatWalletAddress(walletAddress)}
               </Text>
-            </div>
-            {tags && tags.length > 0 && (
-              <div className="flex gap-2 mt-1">
-                <TagsContent numberOfTags={tags.length}>
-                  {tags.slice(0, 4).map((tag, index) => (
-                    <TagWithValue
-                      label={tag.label}
-                      value={tag.value}
-                      key={index}
-                    />
-                  ))}
-                </TagsContent>
-              </div>
             )}
           </div>
         </div>

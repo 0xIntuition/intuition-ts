@@ -63,20 +63,16 @@ describe('IdentityContentRow', () => {
               <div
                 class="flex flex-col"
               >
-                <div
-                  class="flex items-center mb-1.5"
+                <p
+                  class="text-primary text-lg font-normal mb-1"
                 >
-                  <p
-                    class="text-primary text-lg font-normal mr-1"
-                  >
-                    John Doe
-                  </p>
-                  <p
-                    class="text-base font-normal text-secondary-foreground"
-                  >
-                    0x1234...5678
-                  </p>
-                </div>
+                  John Doe
+                </p>
+                <p
+                  class="text-base font-normal text-secondary-foreground mb-1"
+                >
+                  0x1234...5678
+                </p>
               </div>
             </div>
             <div
