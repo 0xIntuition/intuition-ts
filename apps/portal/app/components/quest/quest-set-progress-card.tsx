@@ -61,8 +61,16 @@ const QuestSetProgressCard = ({
           <ProgressBar percentage={progressPercentage} />
           <div className="flex w-full justify-end">
             <Link to={to} prefetch="intent">
-              <Button variant="secondary" size="md">
-                Continue
+              <Button
+                variant="secondary"
+                size="md"
+                disabled={progressPercentage === 100}
+              >
+                {progressPercentage === 0
+                  ? 'Get Started'
+                  : progressPercentage === 100
+                    ? 'Completed'
+                    : 'Continue'}
               </Button>
             </Link>
           </div>
