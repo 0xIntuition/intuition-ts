@@ -15,6 +15,7 @@ import {
 } from '@0xintuition/1ui'
 import { IdentityPresenter } from '@0xintuition/api'
 
+import CreateIdentityReview from '@components/create-identity/create-identity-review'
 import ErrorList from '@components/error-list'
 import { ImageChooser } from '@components/image-chooser'
 import { TransactionState } from '@components/transaction-state'
@@ -81,6 +82,7 @@ export function IdentityForm({
     useState<IdentityPresenter | null>(null)
 
   const isTransactionStarted = [
+    'review-transaction',
     'preparing-identity',
     'publishing-identity',
     'approve-transaction',
@@ -219,17 +221,11 @@ function CreateIdentityForm({
     }
   }, [imageUploadFetcher.data])
 
-  const { atomCost: atomCostAmount } =
-    (loaderFetcher.data as CreateLoaderData) ?? {
-      vaultId: BigInt(0),
-      atomCost: BigInt(0),
-      protocolFee: BigInt(0),
-      entryFee: BigInt(0),
-    }
+  const fees = loaderFetcher.data as CreateLoaderData
 
-  const atomCost = BigInt(atomCostAmount ? atomCostAmount : 0)
   const { data: walletClient } = useWalletClient()
   const publicClient = usePublicClient()
+  const { address } = useAccount()
   const {
     writeContractAsync: writeCreateIdentity,
     awaitingWalletConfirmation,
@@ -249,16 +245,6 @@ function CreateIdentityForm({
     setImageFilesize(filesize)
   }
   const [formTouched, setFormTouched] = useState(false) // to disable submit if user hasn't touched form yet
-
-  const isTransactionStarted = [
-    'preparing-identity',
-    'publishing-identity',
-    'approve-transaction',
-    'transaction-pending',
-    'confirm',
-    'complete',
-    'error',
-  ].includes(state.status)
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -341,7 +327,7 @@ function CreateIdentityForm({
       !awaitingOnChainConfirmation &&
       !awaitingWalletConfirmation &&
       publicClient &&
-      atomCost
+      fees.atomCost
     ) {
       try {
         dispatch({ type: 'APPROVE_TRANSACTION' })
@@ -352,7 +338,7 @@ function CreateIdentityForm({
           functionName: 'createAtom',
           args: [toHex(atomData)],
           value:
-            BigInt(atomCost) +
+            BigInt(fees.atomCost) +
             parseUnits(initialDeposit === '' ? '0' : initialDeposit, 18),
         })
 
@@ -467,6 +453,15 @@ function CreateIdentityForm({
 
   const { chain } = useAccount()
   const isWrongNetwork = chain?.id !== getChainEnvConfig(CURRENT_ENV).chainId
+  const reviewIdentity = {
+    imageUrl: state.imageUrl,
+    displayName: state.displayName,
+    description: state.description,
+    externalReference: state.externalReference,
+    initialDeposit,
+  }
+
+  console.log('reviewIdentity', reviewIdentity)
 
   return (
     <offChainFetcher.Form
@@ -475,7 +470,7 @@ function CreateIdentityForm({
       encType="multipart/form-data"
       action="/actions/create-identity"
     >
-      {!isTransactionStarted ? (
+      {state.status === 'idle' ? (
         <div className="w-full flex-col justify-start items-start inline-flex gap-7">
           <div className="flex flex-col w-full gap-1.5">
             <Text variant="caption" className="text-foreground/70">
@@ -630,16 +625,55 @@ function CreateIdentityForm({
             <WrongNetworkButton />
           ) : (
             <Button
-              form={form.id}
-              type="submit"
+              type="button"
               variant="primary"
-              size="lg"
-              disabled={loading || (!formTouched && !isWrongNetwork)}
-              className="mx-auto"
+              onClick={() => {
+                dispatch({ type: 'REVIEW_TRANSACTION' })
+              }}
+              disabled={
+                !address ||
+                loading ||
+                !formTouched ||
+                ['confirm', 'transaction-pending', 'awaiting'].includes(
+                  state.status,
+                )
+              }
+              className="w-40 mx-auto"
             >
-              Create
+              Review
             </Button>
           )}
+        </div>
+      ) : state.status === 'review-transaction' ? (
+        <div className="h-full flex flex-col">
+          <CreateIdentityReview
+            dispatch={dispatch}
+            identity={reviewIdentity}
+            initialDeposit={initialDeposit}
+            fees={fees}
+          />
+          <div className="mt-auto">
+            {isWrongNetwork ? (
+              <WrongNetworkButton />
+            ) : (
+              <Button
+                form={form.id}
+                type="submit"
+                variant="primary"
+                disabled={
+                  !address ||
+                  loading ||
+                  !formTouched ||
+                  ['confirm', 'transaction-pending', 'awaiting'].includes(
+                    state.status,
+                  )
+                }
+                className="w-40 mx-auto"
+              >
+                Create Identity
+              </Button>
+            )}
+          </div>
         </div>
       ) : (
         <div className="flex flex-col items-center justify-center min-h-96">

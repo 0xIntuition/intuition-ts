@@ -77,6 +77,8 @@ export const identityTransactionReducer = (
         description: action.description,
         externalReference: action.externalReference,
       }
+    case 'REVIEW_TRANSACTION':
+      return { ...state, status: 'review-transaction' }
     case 'PREPARING_IDENTITY':
       return { ...state, status: 'preparing-identity' }
     case 'PUBLISHING_IDENTITY':

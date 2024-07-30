@@ -40,6 +40,7 @@ export type IdentityTransactionActionType =
       description: string
       externalReference: string
     }
+  | { type: 'REVIEW_TRANSACTION' }
   | { type: 'PREPARING_IDENTITY' }
   | { type: 'PUBLISHING_IDENTITY' }
   | { type: 'APPROVE_TRANSACTION' }
