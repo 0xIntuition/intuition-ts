@@ -134,7 +134,6 @@ export default function Quests() {
   const { quest, userQuest, identity } = useLoaderData<typeof loader>()
   const [activityModalOpen, setActivityModalOpen] = useState(false)
   const fetcher = useFetcher<CheckQuestSuccessLoaderData>()
-  const [loading, setLoading] = useState(false)
   const { revalidate } = useRevalidator()
   const { introBody, mainBody, closingBody } = useQuestMdxContent(quest?.id)
 
@@ -150,14 +149,12 @@ export default function Quests() {
     logger('Activity success', identity)
     if (userQuest) {
       logger('Submitting fetcher', identity.id, userQuest.id)
-      setLoading(true)
       fetcher.load(`/resources/check-quest-success?userQuestId=${userQuest.id}`)
     }
   }
 
   useEffect(() => {
     if (fetcher.state === 'idle' && fetcher.data) {
-      setLoading(false)
       if (fetcher.data.success) {
         logger('Loaded fetcher data, revalidating')
         revalidate()
@@ -184,6 +181,11 @@ export default function Quests() {
           status={userQuest?.status ?? QuestStatus.NOT_STARTED}
           identity={identity}
           handleClick={handleOpenActivityModal}
+          isLoading={fetcher.state !== 'idle'}
+          isDisabled={
+            userQuest?.status === QuestStatus.CLAIMABLE ||
+            fetcher.state !== 'idle'
+          }
         />
         <MDXContentView
           body={closingBody}
@@ -201,12 +203,7 @@ export default function Quests() {
               type="submit"
               variant={ButtonVariant.primary}
               size={ButtonSize.lg}
-              isLoading={loading || fetcher.state !== 'idle'}
-              disabled={
-                userQuest?.status !== QuestStatus.CLAIMABLE ||
-                loading ||
-                fetcher.state !== 'idle'
-              }
+              disabled={userQuest?.status !== QuestStatus.CLAIMABLE}
             >
               {userQuest?.status === QuestStatus.COMPLETED
                 ? 'Complete'

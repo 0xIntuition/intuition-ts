@@ -18,6 +18,8 @@ export interface CreateAtomActivityProps
   extends React.HTMLAttributes<HTMLDivElement> {
   status: QuestStatus
   identity?: IdentityPresenter | null
+  isLoading?: boolean
+  isDisabled?: boolean
   handleClick: () => void
 }
 
@@ -25,6 +27,8 @@ export default function CreateAtomActivity({
   status,
   identity,
   handleClick,
+  isLoading = false,
+  isDisabled = false,
   ...props
 }: CreateAtomActivityProps) {
   return (
@@ -51,8 +55,10 @@ export default function CreateAtomActivity({
           variant={ButtonVariant.secondary}
           size={ButtonSize.lg}
           onClick={handleClick}
+          isLoading={isLoading}
+          disabled={isDisabled || isLoading}
         >
-          <Icon name={IconName.fingerprint} />
+          {!isLoading && <Icon name={IconName.fingerprint} />}
           Create Identity
         </Button>
       )}
