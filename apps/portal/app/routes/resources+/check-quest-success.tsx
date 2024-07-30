@@ -34,8 +34,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const userQuestId = url.searchParams.get('userQuestId')
   invariant(userQuestId, 'userQuestId is required')
 
-  let attempts = 0
-
   const userQuest = await fetchWrapper({
     method: UserQuestsService.getUserQuestById,
     args: {
@@ -43,7 +41,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
     },
   })
 
-  // poll n number of times
+  let attempts = 0
+
   while (attempts < RETRY_LIMIT) {
     try {
       const status = await fetchWrapper({
@@ -59,6 +58,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
         userQuest.quest_completion_object_id,
         status,
       )
+
       if (
         status === QuestStatus.CLAIMABLE ||
         status === QuestStatus.COMPLETED
@@ -73,11 +73,14 @@ export async function loader({ request }: LoaderFunctionArgs) {
           success: true,
         } as CheckQuestSuccessLoaderData)
       }
+
       attempts++
       await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY))
     } catch (error) {
       if (error instanceof ApiError && error.status === 404) {
         logger('UserQuest not found, retrying...')
+        attempts++
+        await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY))
       } else {
         throw error
       }

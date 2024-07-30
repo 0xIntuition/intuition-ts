@@ -116,7 +116,7 @@ export default function StakeIdentityActivity({
             disabled={isLoading || disabled}
             isLoading={isLoading}
           >
-            Deposit For
+            {isLoading ? 'Loading...' : 'Deposit For'}
           </Button>
         </div>
       )}
