@@ -3,20 +3,20 @@ import { useMemo } from 'react'
 import { getQuestContentBySlug } from '@lib/utils/quest'
 
 interface MdxContent {
-  introBody: string | undefined
-  mainBody: string | undefined
-  mainBody2: string | undefined
-  closingBody: string | undefined
+  introBody?: string | null
+  mainBody?: string | null
+  mainBody2?: string | null
+  closingBody?: string | null
 }
 
 export function useQuestMdxContent(questId?: string): MdxContent {
   return useMemo(() => {
     if (!questId) {
       return {
-        introBody: undefined,
-        mainBody: undefined,
-        mainBody2: undefined,
-        closingBody: undefined,
+        introBody: null,
+        mainBody: null,
+        mainBody2: null,
+        closingBody: null,
       }
     }
 
