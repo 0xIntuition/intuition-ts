@@ -98,7 +98,11 @@ export function AddTags({
           Select up to 5 tags to add to this identity.
         </Text>
       </div>
-      <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
+      <Popover
+        open={isPopoverOpen}
+        onOpenChange={setIsPopoverOpen}
+        modal={true}
+      >
         <PopoverContent className="bg-transparent border-none">
           <IdentitySearchCombobox
             onCreateIdentityClick={() => setCreateIdentityModalActive(true)}

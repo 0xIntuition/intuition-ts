@@ -159,7 +159,11 @@ export function AddIdentities({
             >
               {selectedIdentities.length + 1}.
             </Text>
-            <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
+            <Popover
+              open={isPopoverOpen}
+              onOpenChange={setIsPopoverOpen}
+              modal={true}
+            >
               <PopoverTrigger asChild>
                 <Button variant="secondary">
                   <Icon name="plus-small" />
