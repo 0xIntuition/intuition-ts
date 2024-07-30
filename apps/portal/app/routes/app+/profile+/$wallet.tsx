@@ -48,7 +48,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     throw new Error('Wallet is undefined in params')
   }
 
-  if (wallet === userWallet) {
+  if (wallet.toLowerCase() === userWallet.toLowerCase()) {
     throw redirect(PATHS.PROFILE)
   }
 
