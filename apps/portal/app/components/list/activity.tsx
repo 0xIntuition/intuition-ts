@@ -120,7 +120,7 @@ function ActivityItem({
                 activity.identity.user?.image ?? activity.identity.image ?? ''
               }
               name={
-                activity.identity.user?.display_name ??
+                activity.identity.user_display_name ??
                 activity.identity.display_name
               }
               walletAddress={
@@ -128,7 +128,7 @@ function ActivityItem({
               }
               amount={
                 +formatBalance(
-                  BigInt(activity.identity.user_assets ?? '0'),
+                  BigInt(activity.identity.assets_sum ?? '0'),
                   18,
                   4,
                 )
@@ -182,7 +182,7 @@ function ActivityItem({
                     ? Identity.user
                     : Identity.nonUser,
                   label:
-                    activity.claim.subject?.user?.display_name ??
+                    activity.claim.subject?.user_display_name ??
                     activity.claim.subject?.display_name ??
                     activity.claim.subject?.identity_id ??
                     '',
@@ -193,7 +193,7 @@ function ActivityItem({
                     ? Identity.user
                     : Identity.nonUser,
                   label:
-                    activity.claim.predicate?.user?.display_name ??
+                    activity.claim.predicate?.user_display_name ??
                     activity.claim.predicate?.display_name ??
                     activity.claim.predicate?.identity_id ??
                     '',
@@ -204,7 +204,7 @@ function ActivityItem({
                     ? Identity.user
                     : Identity.nonUser,
                   label:
-                    activity.claim.object?.user?.display_name ??
+                    activity.claim.object?.user_display_name ??
                     activity.claim.object?.display_name ??
                     activity.claim.object?.identity_id ??
                     '',
