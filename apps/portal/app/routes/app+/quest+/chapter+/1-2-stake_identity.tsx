@@ -175,7 +175,6 @@ export default function Quests() {
   const { introBody, mainBody, closingBody } = useQuestMdxContent(quest?.id)
 
   const fetcher = useFetcher<CheckQuestSuccessLoaderData>()
-  const [isLoading, setIsLoading] = useState(false)
   const { revalidate } = useRevalidator()
 
   function handleDepositActivityClick() {
@@ -214,7 +213,6 @@ export default function Quests() {
   }) {
     logger('Activity success', args.identity)
     const { identity } = args
-    setIsLoading(true)
     if (userQuest) {
       logger('Submitting fetcher', identity?.id, userQuest.id)
       fetcher.load(`/resources/check-quest-success?userQuestId=${userQuest.id}`)
@@ -254,10 +252,9 @@ export default function Quests() {
           vaultDetails={vaultDetails}
           handleDepositIdentityClick={handleDepositActivityClick}
           handleRedeemIdentityClick={handleRedeemActivityClick}
-          isLoading={isLoading || fetcher.state !== 'idle'}
+          isLoading={fetcher.state !== 'idle'}
           disabled={
             userQuest?.status === QuestStatus.CLAIMABLE ||
-            isLoading ||
             fetcher.state !== 'idle'
           }
         />
