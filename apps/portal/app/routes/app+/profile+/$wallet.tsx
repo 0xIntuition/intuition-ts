@@ -33,12 +33,7 @@ import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
 import { Outlet, useNavigate } from '@remix-run/react'
 import { requireUserWallet } from '@server/auth'
 import { getVaultDetails } from '@server/multivault'
-import {
-  BLOCK_EXPLORER_URL,
-  NO_WALLET_ERROR,
-  PATHS,
-  userIdentityRouteOptions,
-} from 'consts'
+import { NO_WALLET_ERROR, PATHS, userIdentityRouteOptions } from 'consts'
 import { useAtom } from 'jotai'
 import { VaultDetailsType } from 'types/vault'
 
@@ -179,7 +174,6 @@ export default function Profile() {
             points: userTotals.user_points,
           }}
           bio={userIdentity?.user?.description ?? ''}
-          ipfsLink={`${BLOCK_EXPLORER_URL}/address/${userIdentity.identity_id}`}
         >
           <Button
             variant="secondary"

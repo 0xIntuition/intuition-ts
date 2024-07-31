@@ -40,12 +40,7 @@ import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { Outlet, useLoaderData, useNavigate } from '@remix-run/react'
 import { requireUser, requireUserWallet } from '@server/auth'
 import { getVaultDetails } from '@server/multivault'
-import {
-  identityRouteOptions,
-  IPFS_GATEWAY_URL,
-  NO_WALLET_ERROR,
-  PATHS,
-} from 'consts'
+import { identityRouteOptions, NO_WALLET_ERROR, PATHS } from 'consts'
 import { useAtom } from 'jotai'
 import { ExtendedIdentityPresenter } from 'types/identity'
 import { VaultDetailsType } from 'types/vault'
@@ -130,7 +125,7 @@ export default function IdentityDetails() {
           name={identity?.display_name ?? ''}
           walletAddress={identity?.identity_id}
           bio={identity?.description ?? ''}
-          ipfsLink={`${IPFS_GATEWAY_URL}/${identity?.identity_id?.replace('ipfs://', '')}`}
+          link={identity?.external_reference ?? ''}
         />
         <Tags>
           {identity?.tags && identity?.tags.length > 0 && (

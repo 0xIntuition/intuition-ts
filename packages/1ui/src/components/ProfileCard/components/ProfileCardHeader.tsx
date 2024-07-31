@@ -1,5 +1,5 @@
 import { Identity, IdentityType } from 'types'
-import { formatWalletAddress } from 'utils'
+import { formatWalletAddress } from 'utils/wallet'
 
 import { Avatar, Text } from '../..'
 

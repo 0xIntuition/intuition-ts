@@ -48,12 +48,7 @@ import {
 } from '@remix-run/react'
 import { requireUser, requireUserWallet } from '@server/auth'
 import { getVaultDetails } from '@server/multivault'
-import {
-  BLOCK_EXPLORER_URL,
-  NO_WALLET_ERROR,
-  PATHS,
-  userProfileRouteOptions,
-} from 'consts'
+import { NO_WALLET_ERROR, PATHS, userProfileRouteOptions } from 'consts'
 import { useAtom } from 'jotai'
 import { VaultDetailsType } from 'types/vault'
 
@@ -204,7 +199,6 @@ export default function Profile() {
             points: userTotals.user_points,
           }}
           bio={userObject.description ?? ''}
-          ipfsLink={`${BLOCK_EXPLORER_URL}/address/${userObject.wallet}`}
         >
           <Button
             variant="secondary"
