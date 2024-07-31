@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react'
+
 import {
   ClaimPresenter,
   ClaimSortColumn,
@@ -9,7 +11,7 @@ import { ListClaimsList } from '@components/list/list-claims'
 import { calculateTotalPages, fetchWrapper, invariant } from '@lib/utils/misc'
 import { getStandardPageParams } from '@lib/utils/params'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
-import { useLoaderData } from '@remix-run/react'
+import { useLoaderData, useSearchParams, useSubmit } from '@remix-run/react'
 import { requireUserWallet } from '@server/auth'
 import { NO_WALLET_ERROR, TAG_PREDICATE_VAULT_ID_TESTNET } from 'consts'
 
@@ -52,15 +54,47 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export default function ExploreLists() {
-  const { listClaims, pagination } = useLoaderData<typeof loader>()
+  const submit = useSubmit()
+  const { listClaims, pagination, sortBy, direction } =
+    useLoaderData<typeof loader>()
+  // const [currentPage, setCurrentPage] = useState(pagination.currentPage)
+  const [searchParams] = useSearchParams()
+
+  const currentPage = Number(searchParams.get('page') || '1')
+
+  const [accumulatedClaims, setAccumulatedClaims] = useState<ClaimPresenter[]>(
+    [],
+  )
+
+  useEffect(() => {
+    if (currentPage === 1) {
+      setAccumulatedClaims(listClaims)
+    } else {
+      setAccumulatedClaims((prev) => [...prev, ...listClaims])
+    }
+  }, [listClaims, currentPage])
+
+  const handleLoadMore = () => {
+    const nextPage = currentPage + 1
+    submit(
+      {
+        page: nextPage.toString(),
+        limit: pagination.limit.toString(),
+        sortBy,
+        direction,
+      },
+      { method: 'get', replace: true },
+    )
+  }
 
   return (
     <div className="m-8 flex flex-col items-center gap-6 w-full">
       <ExploreSearch variant="list" />
       <ListClaimsList
-        listClaims={listClaims}
-        pagination={pagination}
+        listClaims={accumulatedClaims}
+        pagination={{ ...pagination, currentPage }}
         enableSort={true}
+        onLoadMore={handleLoadMore}
       />
     </div>
   )

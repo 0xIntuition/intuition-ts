@@ -1,9 +1,8 @@
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 
-import { EmptyStateCard, ListGrid } from '@0xintuition/1ui'
+import { Button, EmptyStateCard, ListGrid } from '@0xintuition/1ui'
 import { ClaimPresenter, ClaimSortColumn } from '@0xintuition/api'
 
-import { PaginationComponent } from '@components/pagination-component'
 import { Search } from '@components/search'
 import { Sort } from '@components/sort'
 import { useSearchAndSortParamsHandler } from '@lib/hooks/useSearchAndSortParams'
@@ -19,12 +18,14 @@ export function ListClaimsList({
   paramPrefix,
   enableSearch = false,
   enableSort = false,
+  onLoadMore,
 }: {
   listClaims: ClaimPresenter[]
   pagination: PaginationType
   paramPrefix?: string
   enableSearch?: boolean
   enableSort?: boolean
+  onLoadMore: () => void
 }) {
   const navigate = useNavigate()
   const options: SortOption<ClaimSortColumn>[] = [
@@ -37,19 +38,33 @@ export function ListClaimsList({
     { value: 'Updated At', sortBy: 'UpdatedAt' },
     { value: 'Created At', sortBy: 'CreatedAt' },
   ]
+  const [isLoading, setIsLoading] = useState(false)
 
-  const claimData = listClaims.map((claim) => ({
+  const uniqueClaimData = Array.from(
+    new Map(
+      listClaims.map((claim) => [
+        claim.object?.display_name || 'unknown',
+        claim,
+      ]),
+    ).values(),
+  ).map((claim) => ({
     object: claim.object,
     user_assets_for: claim.user_assets_for,
     claim_id: claim.claim_id,
   }))
 
   const listContainerRef = useRef<HTMLDivElement>(null)
-  const { handleSearchChange, handleSortChange, onPageChange, onLimitChange } =
+  const { handleSearchChange, handleSortChange } =
     useSearchAndSortParamsHandler(paramPrefix)
 
-  if (!claimData.length) {
+  if (!uniqueClaimData.length) {
     return <EmptyStateCard message="No lists found." />
+  }
+
+  const handleLoadMore = async () => {
+    setIsLoading(true)
+    await onLoadMore()
+    setIsLoading(false)
   }
 
   return (
@@ -64,7 +79,7 @@ export function ListClaimsList({
           )}
         </div>
         <ListGrid>
-          {claimData.map(
+          {uniqueClaimData.map(
             (claim, index) =>
               claim &&
               claim.object && (
@@ -80,16 +95,13 @@ export function ListClaimsList({
               ),
           )}
         </ListGrid>
-        <PaginationComponent
-          totalEntries={pagination.totalEntries ?? 0}
-          currentPage={pagination.currentPage ?? 0}
-          totalPages={pagination.totalPages ?? 0}
-          limit={pagination.limit ?? 0}
-          onPageChange={onPageChange}
-          onLimitChange={onLimitChange}
-          label="lists"
-          listContainerRef={listContainerRef}
-        />
+        {pagination.currentPage < pagination.totalPages && (
+          <div className="flex justify-center mt-4">
+            <Button onClick={handleLoadMore} disabled={isLoading}>
+              {isLoading ? 'Loading...' : 'Load More'}
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   )
