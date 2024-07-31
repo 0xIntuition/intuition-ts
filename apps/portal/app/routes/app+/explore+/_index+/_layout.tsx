@@ -1,4 +1,4 @@
-import { NestedVerticalLayout } from '@components/nested-vertical-layout'
+import { NestedTabs } from '@components/nested-tabs'
 import logger from '@lib/utils/logger'
 import { json, Outlet, useLoaderData } from '@remix-run/react'
 import FullPageLayout from 'app/layouts/full-page-layout'
@@ -16,7 +16,7 @@ export default function ExploreLayout() {
 
   return (
     <FullPageLayout>
-      <NestedVerticalLayout outlet={Outlet} options={exploreRouteOptions} />
+      <NestedTabs outlet={Outlet} options={exploreRouteOptions} />
     </FullPageLayout>
   )
 }
