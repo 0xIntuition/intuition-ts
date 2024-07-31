@@ -28,7 +28,6 @@ const Copy: React.FC<CopyProps> = ({
       className={`uppercase gap-2 pl-0 ${className}`}
       disabled={disabled}
       onClick={handleCopy}
-      tabIndex={0}
       {...props}
     >
       <Icon

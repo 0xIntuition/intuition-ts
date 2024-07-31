@@ -68,7 +68,6 @@ describe('ProfileCard', () => {
                 </a>
                 <button
                   class="flex justify-center items-center text-sm font-medium border disabled:text-muted-foreground bg-transparent border-transparent hover:text-primary disabled:border-transparent disabled:bg-transparent shadow-md-subtle px-3 py-1 uppercase gap-2 pl-0 text-muted-foreground"
-                  tabindex="0"
                 >
                   <svg
                     class="h-4 w-4 text-primary"
@@ -202,7 +201,6 @@ describe('ProfileCard', () => {
                 </a>
                 <button
                   class="flex justify-center items-center text-sm font-medium border disabled:text-muted-foreground bg-transparent border-transparent hover:text-primary disabled:border-transparent disabled:bg-transparent shadow-md-subtle px-3 py-1 uppercase gap-2 pl-0 text-muted-foreground"
-                  tabindex="0"
                 >
                   <svg
                     class="h-4 w-4 text-primary"
@@ -282,7 +280,6 @@ describe('ProfileCard', () => {
                 </a>
                 <button
                   class="flex justify-center items-center text-sm font-medium border disabled:text-muted-foreground bg-transparent border-transparent hover:text-primary disabled:border-transparent disabled:bg-transparent shadow-md-subtle px-3 py-1 uppercase gap-2 pl-0 text-muted-foreground"
-                  tabindex="0"
                 >
                   <svg
                     class="h-4 w-4 text-primary"
