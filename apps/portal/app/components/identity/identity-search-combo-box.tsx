@@ -121,7 +121,7 @@ const IdentitySearchCombobox = ({
                     >
                       <ProfileCard
                         variant={
-                          identity.is_user === true ? 'user' : 'non-user'
+                          identity.is_user ? 'user' : 'non-user'
                         }
                         avatarSrc={identity.user?.image ?? identity.image ?? ''}
                         name={truncateString(
