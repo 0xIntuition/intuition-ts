@@ -37,7 +37,6 @@ import {
   fetchWrapper,
   formatBalance,
   invariant,
-  sliceString,
 } from '@lib/utils/misc'
 import { User } from '@privy-io/react-auth'
 import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
@@ -50,7 +49,12 @@ import {
 import { requireUser, requireUserWallet } from '@server/auth'
 import { getVaultDetails } from '@server/multivault'
 import TwoPanelLayout from 'app/layouts/two-panel-layout'
-import { NO_WALLET_ERROR, PATHS, userProfileRouteOptions } from 'consts'
+import {
+  BLOCK_EXPLORER_URL,
+  NO_WALLET_ERROR,
+  PATHS,
+  userProfileRouteOptions,
+} from 'consts'
 import { useAtom } from 'jotai'
 import { VaultDetailsType } from 'types/vault'
 
@@ -184,15 +188,14 @@ export default function Profile() {
         variant="user"
         avatarSrc={userObject.image ?? ''}
         name={userObject.display_name ?? ''}
-        walletAddress={
-          userObject.ens_name ?? sliceString(userObject.wallet, 6, 4)
-        }
+        walletAddress={userObject.ens_name ?? userObject.wallet}
         stats={{
           numberOfFollowers: userTotals.follower_count,
           numberOfFollowing: userTotals.followed_count,
           points: userTotals.user_points,
         }}
         bio={userObject.description ?? ''}
+        ipfsLink={`${BLOCK_EXPLORER_URL}/address/${userObject.wallet}`}
       >
         <Button
           variant="secondary"

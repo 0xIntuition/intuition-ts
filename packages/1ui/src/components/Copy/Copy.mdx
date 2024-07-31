@@ -1,0 +1,43 @@
+import { Canvas, Controls, Meta, Source, Title } from '@storybook/blocks'
+
+import { Button } from '..'
+
+import * as Stories from './Copy.stories'
+
+<Meta of={Stories} />
+
+<Title />
+
+#### Copies text that is fed into it as a prop.
+
+<Button
+  variant="accent"
+  onClick={() => window.open('link_goes_here', '_blank')}
+>
+  {'API Reference'}
+</Button>
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { Copy } from '@0xintuition/1ui'
+
+<Copy text="Text to copy" />
+`} />
+
+<Canvas of={Stories.BasicUsage} sourceState="none" />
+
+## Properties
+
+<Controls />
+
+## Variants
+
+### Default
+
+<Canvas of={Stories.Default} sourceState="none" />
+
+### Disabled
+
+<Canvas of={Stories.Disabled} sourceState="none" />

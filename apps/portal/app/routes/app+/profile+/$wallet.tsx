@@ -28,13 +28,17 @@ import {
   fetchWrapper,
   formatBalance,
   invariant,
-  sliceString,
 } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
 import { Outlet, useNavigate } from '@remix-run/react'
 import { requireUserWallet } from '@server/auth'
 import { getVaultDetails } from '@server/multivault'
-import { NO_WALLET_ERROR, PATHS, userIdentityRouteOptions } from 'consts'
+import {
+  BLOCK_EXPLORER_URL,
+  NO_WALLET_ERROR,
+  PATHS,
+  userIdentityRouteOptions,
+} from 'consts'
 import { useAtom } from 'jotai'
 import { VaultDetailsType } from 'types/vault'
 
@@ -166,7 +170,8 @@ export default function Profile() {
           name={userIdentity?.user?.display_name ?? ''}
           walletAddress={
             userIdentity?.user?.ens_name ??
-            sliceString(userIdentity?.user?.wallet, 6, 4)
+            userIdentity?.user?.wallet ??
+            userIdentity.identity_id
           }
           stats={{
             numberOfFollowers: userTotals.follower_count,
@@ -174,6 +179,7 @@ export default function Profile() {
             points: userTotals.user_points,
           }}
           bio={userIdentity?.user?.description ?? ''}
+          ipfsLink={`${BLOCK_EXPLORER_URL}/address/${userIdentity.identity_id}`}
         >
           <Button
             variant="secondary"

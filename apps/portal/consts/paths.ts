@@ -2,6 +2,7 @@ export const PATHS = {
   ROOT: '/',
   // Root paths
   IDENTITY: '/app/identity',
+  CLAIM: '/app/claim',
   EXPLORE: '/app/explore',
   ACTIVITY: '/app/activity',
   PROFILE: '/app/profile',

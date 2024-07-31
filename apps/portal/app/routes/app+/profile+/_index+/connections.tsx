@@ -24,8 +24,8 @@ import {
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { getConnectionsData } from '@lib/services/connections'
 import { formatBalance, invariant } from '@lib/utils/misc'
-import { defer, LoaderFunctionArgs } from '@remix-run/node'
-import { Await, useRouteLoaderData } from '@remix-run/react'
+import { defer, LoaderFunctionArgs, redirect } from '@remix-run/node'
+import { Await, useRouteLoaderData, useSearchParams } from '@remix-run/react'
 import { requireUserWallet } from '@server/auth'
 import {
   NO_USER_IDENTITY_ERROR,
@@ -38,6 +38,12 @@ import { ProfileLoaderData } from './_layout'
 export async function loader({ request }: LoaderFunctionArgs) {
   const userWallet = await requireUserWallet(request)
   invariant(userWallet, NO_WALLET_ERROR)
+
+  const url = new URL(request.url)
+  if (!url.searchParams.get('tab')) {
+    url.searchParams.set('tab', ConnectionsHeaderVariants.followers)
+    return redirect(url.toString())
+  }
 
   return defer({
     connectionsData: getConnectionsData({ userWallet, request }),
@@ -78,12 +84,19 @@ const TabContent = ({
 }
 
 export default function ProfileConnections() {
+  const [searchParams, setSearchParams] = useSearchParams()
+  const tab = searchParams.get('tab') || 'followers'
+
   const { connectionsData } = useLiveLoader<typeof loader>(['attest'])
   const { userIdentity } =
     useRouteLoaderData<ProfileLoaderData>(
       'routes/app+/profile+/_index+/_layout',
     ) ?? {}
   invariant(userIdentity, NO_USER_IDENTITY_ERROR)
+
+  const handleTabChange = (value: string) => {
+    setSearchParams({ tab: value })
+  }
 
   return (
     <div className="flex flex-col w-full gap-6">
@@ -99,6 +112,8 @@ export default function ProfileConnections() {
       <ConnectionsContent
         userIdentity={userIdentity}
         connectionsData={connectionsData}
+        tab={tab}
+        onTabChange={handleTabChange}
       />
     </div>
   )
@@ -107,11 +122,15 @@ export default function ProfileConnections() {
 function ConnectionsContent({
   userIdentity,
   connectionsData,
+  tab,
+  onTabChange,
 }: {
   userIdentity: IdentityPresenter
   connectionsData: Promise<NonNullable<
     Awaited<ReturnType<typeof getConnectionsData>>
   > | null>
+  tab: string
+  onTabChange: (value: string) => void
 }) {
   const { userTotals } =
     useRouteLoaderData<ProfileLoaderData>(
@@ -149,20 +168,17 @@ function ConnectionsContent({
           } = resolvedConnectionsData
 
           return (
-            <Tabs
-              defaultValue={ConnectionsHeaderVariants.followers}
-              className="w-full"
-            >
+            <Tabs value={tab} onValueChange={onTabChange} className="w-full">
               <TabsList className="mb-6">
                 <TabsTrigger
                   value={ConnectionsHeaderVariants.followers}
                   label="Followers"
-                  totalCount={followingPagination.totalEntries}
+                  totalCount={followersPagination.totalEntries}
                 />
                 <TabsTrigger
                   value={ConnectionsHeaderVariants.following}
                   label="Following"
-                  totalCount={followersPagination.totalEntries}
+                  totalCount={followingPagination.totalEntries}
                 />
               </TabsList>
               <TabContent
@@ -175,7 +191,7 @@ function ConnectionsContent({
                 <FollowList
                   identities={followers}
                   pagination={followersPagination}
-                  paramPrefix="followers"
+                  paramPrefix={ConnectionsHeaderVariants.followers}
                 />
               </TabContent>
               <TabContent
@@ -188,7 +204,7 @@ function ConnectionsContent({
                 <FollowList
                   identities={following}
                   pagination={followingPagination}
-                  paramPrefix="following"
+                  paramPrefix={ConnectionsHeaderVariants.following}
                 />
               </TabContent>
             </Tabs>
