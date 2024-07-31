@@ -12,7 +12,7 @@ export const SidebarLayoutNavBody = ({
       className={cn(
         'h-full w-full p-2',
         isMobileView &&
-          'fixed top-[4.25rem] left-0 bg-background overflow-auto',
+          'fixed top-[3.45rem] left-0 right-0 bottom-0 bg-background overflow-none z-50 h-auto',
         isMobileView && isCollapsed && 'collapse',
         className,
       )}

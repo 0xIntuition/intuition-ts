@@ -12,7 +12,6 @@ import {
   TooltipTrigger,
 } from '../../../'
 import { useSidebarLayoutContext } from './SidebarLayoutProvider'
-import { TimedLoaderComponent } from './TimedLoaderComponent'
 
 export interface SidebarLayoutNavAvatarProps
   extends React.HTMLAttributes<HTMLDivElement> {
@@ -25,51 +24,51 @@ export const SidebarLayoutNavAvatar = ({
   name,
 }: SidebarLayoutNavAvatarProps) => {
   const containerBaseClass = 'w-full'
-  const { isMobileView, isCollapsed } = useSidebarLayoutContext()
+  const { isMobileView, isCollapsed, setIsCollapsed } =
+    useSidebarLayoutContext()
   const AvatarComponent = () => (
-    <Avatar className="h-6 w-6" src={imageSrc} name={name} />
+    <Avatar
+      className="h-6 w-6"
+      src={imageSrc}
+      name={name}
+      onClick={() => setIsCollapsed(true)}
+    />
   )
-  return (
-    <TimedLoaderComponent
-      componentToRender={
-        isCollapsed && !isMobileView ? (
-          <TooltipProvider delayDuration={0}>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <div
-                  className={cn(
-                    buttonVariants({
-                      variant: ButtonVariant.navigation,
-                      size: ButtonSize.iconLg,
-                    }),
-                    containerBaseClass,
-                    'justify-center w-fit m-auto',
-                  )}
-                >
-                  <AvatarComponent />
-                </div>
-              </TooltipTrigger>
-              <TooltipContent side="right" sideOffset={16}>
-                <Text variant={TextVariant.body}>{name}</Text>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        ) : (
+  return isCollapsed && !isMobileView ? (
+    <TooltipProvider delayDuration={0}>
+      <Tooltip>
+        <TooltipTrigger asChild>
           <div
             className={cn(
               buttonVariants({
                 variant: ButtonVariant.navigation,
-                size: ButtonSize.lg,
+                size: ButtonSize.iconLg,
               }),
               containerBaseClass,
-              'justify-start',
+              'justify-center w-fit m-auto',
             )}
           >
             <AvatarComponent />
-            {name}
           </div>
-        )
-      }
-    />
+        </TooltipTrigger>
+        <TooltipContent side="right" sideOffset={16}>
+          <Text variant={TextVariant.body}>{name}</Text>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
+  ) : (
+    <div
+      className={cn(
+        buttonVariants({
+          variant: ButtonVariant.navigation,
+          size: ButtonSize.lg,
+        }),
+        containerBaseClass,
+        'justify-start',
+      )}
+    >
+      <AvatarComponent />
+      {name}
+    </div>
   )
 }

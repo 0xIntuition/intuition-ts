@@ -23,8 +23,8 @@ export const SidebarLayoutNav = ({
   return (
     <div
       className={cn(
-        'theme-border border-0 border-r-px transition-all duration-300 ease-in-out',
-        isMobileView && 'relative top-0',
+        'theme-border border-0',
+        !isMobileView && 'border-r-px transition-all duration-300 ease-in-out',
         className,
       )}
       style={{
@@ -43,8 +43,11 @@ export const SidebarLayoutNav = ({
           onClick={toggleIsCollapsedValues}
         >
           <Icon
-            name={isCollapsed ? IconName.chevronRight : IconName.chevronLeft}
-            className="w-6 h-6"
+            name={IconName.chevronLeft}
+            className={cn(
+              'w-6 h-6 transition-all duration-300 ease-in-out ',
+              isCollapsed && 'rotate-180',
+            )}
           />
         </Button>
       )}

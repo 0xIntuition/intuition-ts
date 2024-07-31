@@ -19,7 +19,7 @@ export const SidebarLayoutNavHeader = ({
           size={ButtonSize.icon}
           onClick={() => setIsCollapsed(!isCollapsed)}
         >
-          <Icon name={IconName.anchor} />
+          <Icon name={isCollapsed ? IconName.anchor : IconName.crossLarge} />
         </Button>
       )}
     </div>
