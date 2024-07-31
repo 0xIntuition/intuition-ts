@@ -174,6 +174,7 @@ export default function Profile() {
             points: userTotals.user_points,
           }}
           bio={userIdentity?.user?.description ?? ''}
+          ipfsLink={`https://sepolia.basescan.org/address/${userIdentity.identity_id}`}
         >
           <Button
             variant="secondary"

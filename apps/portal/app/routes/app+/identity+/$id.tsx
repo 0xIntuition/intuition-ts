@@ -125,7 +125,8 @@ export default function IdentityDetails() {
           name={identity?.display_name ?? ''}
           walletAddress={identity?.identity_id}
           bio={identity?.description ?? ''}
-          link={identity?.external_reference ?? ''}
+          ipfsLink={`https://ipfs.io/ipfs/${identity?.identity_id?.replace('ipfs://', '')}`}
+          externalLink={identity?.external_reference ?? ''}
         />
         <Tags>
           {identity?.tags && identity?.tags.length > 0 && (
