@@ -13,7 +13,11 @@ export const SidebarLayoutContent = ({
   ...props
 }: SidebarLayoutContentProps) => {
   const containerRef = useRef<HTMLDivElement>(null)
-  useEffect(() => containerRef.current?.scrollTo(0, 0), [currentPathname])
+  useEffect(() => {
+    if (currentPathname) {
+      containerRef.current?.scrollTo(0, 0)
+    }
+  }, [currentPathname])
   return (
     <div
       ref={containerRef}

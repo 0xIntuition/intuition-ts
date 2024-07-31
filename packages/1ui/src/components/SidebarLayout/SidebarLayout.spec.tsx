@@ -61,7 +61,7 @@ describe('SidebarLayout', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="flex h-full w-full"
+          class="flex h-full w-full overflow-x-hidden"
         >
           <div
             class="theme-border border-0 border-r-px transition-all duration-300 ease-in-out"
@@ -166,7 +166,7 @@ describe('SidebarLayout', () => {
             </button>
           </div>
           <div
-            class="h-full w-full"
+            class="h-full w-full overflow-y-auto overflow-x-hidden"
           >
             Content goes here.
           </div>

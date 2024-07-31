@@ -42,7 +42,7 @@ export const SidebarLayoutNavAvatar = ({
             className={cn(
               buttonVariants({
                 variant: ButtonVariant.navigation,
-                size: ButtonSize.iconLg,
+                size: isMobileView ? ButtonSize.iconXl : ButtonSize.iconLg,
               }),
               containerBaseClass,
               'justify-center w-fit m-auto',
@@ -61,7 +61,7 @@ export const SidebarLayoutNavAvatar = ({
       className={cn(
         buttonVariants({
           variant: ButtonVariant.navigation,
-          size: ButtonSize.lg,
+          size: isMobileView ? ButtonSize.xl : ButtonSize.lg,
         }),
         containerBaseClass,
         'justify-start',

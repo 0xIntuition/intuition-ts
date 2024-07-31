@@ -4,6 +4,7 @@ import { type VariantProps } from 'class-variance-authority'
 
 import {
   Button,
+  ButtonSize,
   ButtonVariant,
   buttonVariants,
   Icon,
@@ -54,7 +55,11 @@ export const SidebarNavItem = ({
     <TooltipProvider delayDuration={0}>
       <Tooltip>
         <TooltipTrigger asChild className="m-auto">
-          <Button size="iconLg" {...buttonProps} className="justify-center">
+          <Button
+            size={isMobileView ? ButtonSize.iconXl : ButtonSize.iconLg}
+            {...buttonProps}
+            className="justify-center"
+          >
             {ImageComponent}
           </Button>
         </TooltipTrigger>
@@ -64,7 +69,10 @@ export const SidebarNavItem = ({
       </Tooltip>
     </TooltipProvider>
   ) : (
-    <Button size="lg" {...buttonProps}>
+    <Button
+      size={isMobileView ? ButtonSize.xl : ButtonSize.lg}
+      {...buttonProps}
+    >
       {ImageComponent}
       {label}
     </Button>
