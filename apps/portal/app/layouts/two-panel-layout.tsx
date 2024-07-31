@@ -15,8 +15,8 @@ const TwoPanelLayout: React.FC<TwoPanelLayoutProps> = ({
   return (
     <div className="w-full h-full flex flex-col">
       <main className="w-full flex flex-grow px-7 gap-7">
-        <div className="w-1/3">{leftPanel}</div>
-        <div className="w-2/3">{rightPanel}</div>
+        <div className="w-[320px]">{leftPanel}</div>
+        <div className="flex-1">{rightPanel}</div>
       </main>
       {children}
     </div>
