@@ -81,7 +81,7 @@ const IdentitySearchCombobox = ({
             />
           </CommandEmpty>
           <CommandGroup key={identities.length}>
-            {identities.map((identity, index) => {
+            {identities.map((identity) => {
               const {
                 display_name: name,
                 user,
@@ -103,7 +103,7 @@ const IdentitySearchCombobox = ({
                       key={identity.id}
                       variant={variant}
                       name={truncateString(user?.display_name ?? name, 7)}
-                      avatarSrc={user?.image ?? image ?? undefined}
+                      avatarSrc={user?.image ?? image ?? ''}
                       value={+formatBalance(value)}
                       walletAddress={walletAddress}
                       socialCount={socialCount || 0}
@@ -120,9 +120,7 @@ const IdentitySearchCombobox = ({
                       className="w-80"
                     >
                       <ProfileCard
-                        variant={
-                          identity.is_user ? 'user' : 'non-user'
-                        }
+                        variant={identity.is_user ? 'user' : 'non-user'}
                         avatarSrc={identity.user?.image ?? identity.image ?? ''}
                         name={truncateString(
                           identity.user?.display_name ?? identity.display_name,
