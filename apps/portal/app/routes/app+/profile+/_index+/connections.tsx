@@ -24,7 +24,7 @@ import {
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { getConnectionsData } from '@lib/services/connections'
 import { formatBalance, invariant } from '@lib/utils/misc'
-import { defer, LoaderFunctionArgs } from '@remix-run/node'
+import { defer, LoaderFunctionArgs, redirect } from '@remix-run/node'
 import { Await, useRouteLoaderData, useSearchParams } from '@remix-run/react'
 import { requireUserWallet } from '@server/auth'
 import {
@@ -38,6 +38,12 @@ import { ProfileLoaderData } from './_layout'
 export async function loader({ request }: LoaderFunctionArgs) {
   const userWallet = await requireUserWallet(request)
   invariant(userWallet, NO_WALLET_ERROR)
+
+  const url = new URL(request.url)
+  if (!url.searchParams.get('tab')) {
+    url.searchParams.set('tab', ConnectionsHeaderVariants.followers)
+    return redirect(url.toString())
+  }
 
   return defer({
     connectionsData: getConnectionsData({ userWallet, request }),
@@ -162,12 +168,7 @@ function ConnectionsContent({
           } = resolvedConnectionsData
 
           return (
-            <Tabs
-              defaultValue={ConnectionsHeaderVariants.followers}
-              value={tab}
-              onValueChange={onTabChange}
-              className="w-full"
-            >
+            <Tabs value={tab} onValueChange={onTabChange} className="w-full">
               <TabsList className="mb-6">
                 <TabsTrigger
                   value={ConnectionsHeaderVariants.followers}
