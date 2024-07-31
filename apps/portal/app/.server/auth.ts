@@ -111,6 +111,7 @@ export async function handlePrivyRedirect({
 }
 
 export async function setupAPI(request: Request) {
+  logger('setupAPI start')
   const apiUrl =
     typeof window !== 'undefined' ? window.ENV?.API_URL : process.env.API_URL
 
@@ -118,4 +119,7 @@ export async function setupAPI(request: Request) {
   const accessToken = getPrivyAccessToken(request)
   const headers = getAuthHeaders(accessToken !== null ? accessToken : '')
   OpenAPI.HEADERS = headers as Record<string, string>
+  logger('accessToken from setupAPI', accessToken)
+  logger('headers from setupAPI', headers)
+  logger('setupAPI end')
 }
