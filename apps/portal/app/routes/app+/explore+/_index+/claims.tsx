@@ -68,7 +68,7 @@ export default function ExploreClaims() {
   const { claims, identities, claimsPagination } =
     useLoaderData<typeof loader>()
   return (
-    <div className="m-8 flex flex-col items-center gap-6">
+    <div className="w-full flex flex-col items-center gap-6">
       <ExploreSearch variant="claim" identities={identities} />
       <ClaimsList
         claims={claims}

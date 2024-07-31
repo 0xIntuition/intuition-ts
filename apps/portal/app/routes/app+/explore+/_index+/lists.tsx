@@ -55,7 +55,7 @@ export default function ExploreLists() {
   const { listClaims, pagination } = useLoaderData<typeof loader>()
 
   return (
-    <div className="m-8 flex flex-col items-center gap-6 w-full">
+    <div className="w-full flex flex-col items-center gap-6 w-full">
       <ExploreSearch variant="list" />
       <ListClaimsList
         listClaims={listClaims}
