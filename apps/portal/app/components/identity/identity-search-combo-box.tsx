@@ -100,7 +100,7 @@ const IdentitySearchCombobox = ({
                 <HoverCard openDelay={100} closeDelay={100} key={identity.id}>
                   <HoverCardTrigger className="w-full">
                     <IdentitySearchComboboxItem
-                      key={index}
+                      key={identity.id}
                       variant={variant}
                       name={truncateString(user?.display_name ?? name, 7)}
                       avatarSrc={user?.image ?? image ?? undefined}
