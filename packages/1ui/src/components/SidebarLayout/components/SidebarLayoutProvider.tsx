@@ -32,18 +32,16 @@ export const SidebarLayoutProvider = ({ ...props }) => {
 
   React.useEffect(() => {
     const eventListenerType = 'resize'
-    // TODO: Figure out why resize listener is not working
-    // TODO: Finalize the width at which to set mobile view
     const handleScreenResize = () => {
       console.log('screen resized')
       const isMobileSizing = window.innerWidth < 1000
       setIsMobileView(isMobileSizing)
       isMobileSizing && setIsCollapsed(true)
     }
-    console.log(window)
     window.addEventListener(eventListenerType, handleScreenResize)
     handleScreenResize() // call once to initialize value
-    return window.removeEventListener(eventListenerType, handleScreenResize)
+    return () =>
+      window.removeEventListener(eventListenerType, handleScreenResize)
   }, [])
 
   return (
