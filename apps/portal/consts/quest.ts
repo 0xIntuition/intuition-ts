@@ -21,3 +21,5 @@ export const COMING_SOON_QUEST_SET: QuestSet = {
   summary: 'Our interns are hard at work.',
   navigatePath: '',
 }
+
+export const FALLBACK_IDENTITY_ID = '0160563f-45da-4f17-928a-69b54339c97d'

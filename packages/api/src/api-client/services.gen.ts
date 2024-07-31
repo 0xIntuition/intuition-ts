@@ -64,6 +64,8 @@ import type {
   GetIdentityPositionsResponse,
   GetIdentityTagsData,
   GetIdentityTagsResponse,
+  GetInviteCodesByUserData,
+  GetInviteCodesByUserResponse,
   GetLinkedAccountByIdData,
   GetLinkedAccountByIdResponse,
   GetLinkedAccountsByUserData,
@@ -91,10 +93,14 @@ import type {
   GetUserIdentitiesResponse,
   GetUserQuestByIdData,
   GetUserQuestByIdResponse,
+  GetUserQuestByQuestIdData,
+  GetUserQuestByQuestIdResponse,
   GetUsersData,
   GetUsersPositionsData,
   GetUsersPositionsResponse,
   GetUsersResponse,
+  GetUserTagsData,
+  GetUserTagsResponse,
   GetUserTotalsData,
   GetUserTotalsResponse,
   IdentitySummaryData,
@@ -1333,6 +1339,24 @@ export class QuestsService {
 export class UserQuestsService {
   /**
    * @param data The data for the request.
+   * @param data.questId
+   * @returns unknown Get the user quest associated with the quest id and the user
+   * @throws ApiError
+   */
+  public static getUserQuestByQuestId(
+    data: GetUserQuestByQuestIdData,
+  ): CancelablePromise<GetUserQuestByQuestIdResponse> {
+    return __request(OpenAPI, {
+      method: 'GET',
+      url: '/user_quest/quest/{quest_id}',
+      path: {
+        quest_id: data.questId,
+      },
+    })
+  }
+
+  /**
+   * @param data The data for the request.
    * @param data.requestBody
    * @returns unknown Filter quests
    * @throws ApiError
@@ -1717,6 +1741,24 @@ export class UsersService {
    * @returns unknown Invite codes created for user
    * @throws ApiError
    */
+  public static getInviteCodesByUser(
+    data: GetInviteCodesByUserData,
+  ): CancelablePromise<GetInviteCodesByUserResponse> {
+    return __request(OpenAPI, {
+      method: 'GET',
+      url: '/users/{id}/invite_codes',
+      path: {
+        id: data.id,
+      },
+    })
+  }
+
+  /**
+   * @param data The data for the request.
+   * @param data.id User sql id
+   * @returns unknown Invite codes created for user
+   * @throws ApiError
+   */
   public static createInviteCodesByUser(
     data: CreateInviteCodesByUserData,
   ): CancelablePromise<CreateInviteCodesByUserResponse> {
@@ -1780,6 +1822,24 @@ export class UsersService {
     return __request(OpenAPI, {
       method: 'GET',
       url: '/users/{id}/private',
+      path: {
+        id: data.id,
+      },
+    })
+  }
+
+  /**
+   * @param data The data for the request.
+   * @param data.id User sql id or wallet
+   * @returns unknown get identities tagged by user
+   * @throws ApiError
+   */
+  public static getUserTags(
+    data: GetUserTagsData,
+  ): CancelablePromise<GetUserTagsResponse> {
+    return __request(OpenAPI, {
+      method: 'GET',
+      url: '/users/{id}/tags',
       path: {
         id: data.id,
       },

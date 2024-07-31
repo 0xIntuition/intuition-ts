@@ -2,18 +2,15 @@ import { useEffect, useState } from 'react'
 
 import { Button, ButtonSize, ButtonVariant } from '@0xintuition/1ui'
 import {
-  ApiError,
-  IdentitiesService,
-  IdentityPresenter,
+  ClaimPresenter,
+  ClaimsService,
   QuestsService,
   QuestStatus,
-  SortColumn,
-  SortDirection,
   UserQuestsService,
 } from '@0xintuition/api'
 
-import CreateIdentityModal from '@components/create-identity-modal'
-import CreateAtomActivity from '@components/quest/create-atom-activity'
+import CreateClaimModal from '@components/create-claim/create-claim-modal'
+import CreateClaimActivity from '@components/quest/activities/create-claim-activity'
 import {
   Header,
   Hero,
@@ -37,7 +34,7 @@ import { CheckQuestSuccessLoaderData } from '@routes/resources+/check-quest-succ
 import { requireUser, requireUserId } from '@server/auth'
 import { MDXContentVariant } from 'types'
 
-const ROUTE_ID = QuestRouteId.CREATE_ATOM
+const ROUTE_ID = QuestRouteId.CREATE_CLAIM
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const id = getQuestId(ROUTE_ID)
@@ -45,6 +42,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   const user = await requireUser(request)
   invariant(user, 'Unauthorized')
+  const wallet = user.wallet?.address
+  invariant(wallet, 'Wallet is required')
 
   const quest = await fetchWrapper({
     method: QuestsService.getQuest,
@@ -60,49 +59,20 @@ export async function loader({ request }: LoaderFunctionArgs) {
   })
   logger('Fetched user quest', userQuest)
 
-  let identity: IdentityPresenter | undefined
+  let claim: ClaimPresenter | undefined
   if (userQuest && userQuest.quest_completion_object_id) {
-    try {
-      identity = await fetchWrapper({
-        method: IdentitiesService.getIdentityById,
-        args: {
-          id: userQuest.quest_completion_object_id,
-        },
-      })
-    } catch (error) {
-      // if error is APIError and status is 404
-      if (error instanceof ApiError && error.status === 404) {
-        logger(
-          'Identity not found and status is claimable, check pending identities for user wallet',
-        )
-        const pendingIdentities = (
-          await fetchWrapper({
-            method: IdentitiesService.getPendingIdentities,
-            args: {
-              direction: SortDirection.ASC,
-              userWallet: user.wallet?.address,
-              sortBy: SortColumn.CREATED_AT,
-              page: 1,
-              limit: 10,
-              offset: 0,
-            },
-          })
-        ).data
-        if (pendingIdentities.length > 0) {
-          // check if identity is pending
-          identity = pendingIdentities.find(
-            (identity) => identity.id === userQuest.quest_completion_object_id,
-          )
-        }
-      }
-    }
-    logger('Fetched identity', identity)
+    claim = await fetchWrapper({
+      method: ClaimsService.getClaimById,
+      args: {
+        id: userQuest.quest_completion_object_id,
+      },
+    })
   }
-
   return json({
+    wallet,
     quest,
     userQuest,
-    identity,
+    claim,
   })
 }
 
@@ -121,6 +91,12 @@ export async function action({ request }: ActionFunctionArgs) {
       },
     })
     if (updatedUserQuest.status === QuestStatus.COMPLETED) {
+      await fetchWrapper({
+        method: UserQuestsService.checkQuestStatus,
+        args: {
+          questId,
+        },
+      })
       return json({ success: true })
     }
   } catch (error) {
@@ -131,11 +107,11 @@ export async function action({ request }: ActionFunctionArgs) {
 }
 
 export default function Quests() {
-  const { quest, userQuest, identity } = useLoaderData<typeof loader>()
+  const { wallet, quest, userQuest, claim } = useLoaderData<typeof loader>()
+  const { introBody, mainBody, closingBody } = useQuestMdxContent(quest.id)
   const [activityModalOpen, setActivityModalOpen] = useState(false)
   const fetcher = useFetcher<CheckQuestSuccessLoaderData>()
   const { revalidate } = useRevalidator()
-  const { introBody, mainBody, closingBody } = useQuestMdxContent(quest?.id)
 
   function handleOpenActivityModal() {
     setActivityModalOpen(true)
@@ -145,18 +121,20 @@ export default function Quests() {
     setActivityModalOpen(false)
   }
 
-  function handleActivitySuccess(identity: IdentityPresenter) {
-    logger('Activity success', identity)
+  function handleActivitySuccess(claim: ClaimPresenter) {
+    logger('Activity success', claim)
     if (userQuest) {
-      logger('Submitting fetcher', identity.id, userQuest.id)
+      logger('Submitting fetcher', claim.claim_id, userQuest.id)
       fetcher.load(`/resources/check-quest-success?userQuestId=${userQuest.id}`)
     }
   }
 
   useEffect(() => {
     if (fetcher.state === 'idle' && fetcher.data) {
+      logger('Fetched fetcher', fetcher.data)
       if (fetcher.data.success) {
-        logger('Loaded fetcher data, revalidating')
+        logger('Detected quest completion object id')
+        logger('Revalidating')
         revalidate()
       }
     }
@@ -177,15 +155,10 @@ export default function Quests() {
           />
         </div>
         <MDXContentView body={mainBody} />
-        <CreateAtomActivity
+        <CreateClaimActivity
+          claim={claim}
           status={userQuest?.status ?? QuestStatus.NOT_STARTED}
-          identity={identity}
           handleClick={handleOpenActivityModal}
-          isLoading={fetcher.state !== 'idle'}
-          isDisabled={
-            userQuest?.status === QuestStatus.CLAIMABLE ||
-            fetcher.state !== 'idle'
-          }
         />
         <MDXContentView
           body={closingBody}
@@ -216,7 +189,8 @@ export default function Quests() {
           />
         </div>
       </div>
-      <CreateIdentityModal
+      <CreateClaimModal
+        wallet={wallet}
         successAction="close"
         onClose={handleCloseActivityModal}
         open={activityModalOpen}

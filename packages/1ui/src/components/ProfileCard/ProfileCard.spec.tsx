@@ -23,7 +23,7 @@ describe('ProfileCard', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="flex flex-col justify-center items-start w-full min-w-80 rounded-lg box-border gap-2.5"
+          class="flex flex-col justify-center items-start w-full min-w-80 rounded-lg gap-2.5"
         >
           <div
             class="flex items-center space-x-4"
@@ -57,7 +57,7 @@ describe('ProfileCard', () => {
             </div>
           </div>
           <div
-            class="flex justify-start items-center gap-4 pt-1"
+            class="flex justify-start items-center gap-4 pt-2"
           >
             <div
               class="flex items-center space-x-1"
@@ -131,7 +131,7 @@ describe('ProfileCard', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="flex flex-col justify-center items-start w-full min-w-80 rounded-lg box-border gap-2.5"
+          class="flex flex-col justify-center items-start w-full min-w-80 rounded-lg gap-2.5"
         >
           <div
             class="flex items-center space-x-4"
@@ -201,7 +201,7 @@ describe('ProfileCard', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="flex flex-col justify-center items-start w-full min-w-80 rounded-lg box-border gap-2.5"
+          class="flex flex-col justify-center items-start w-full min-w-80 rounded-lg gap-2.5"
         >
           <div
             class="flex items-center space-x-4"
@@ -235,7 +235,7 @@ describe('ProfileCard', () => {
             </div>
           </div>
           <div
-            class="flex justify-start items-center gap-4 pt-1"
+            class="flex justify-start items-center gap-4 pt-2"
           >
             <div
               class="flex items-center space-x-1"

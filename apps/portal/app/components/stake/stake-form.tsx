@@ -92,8 +92,8 @@ export default function StakeForm({
       {state.status === 'idle' ? (
         <>
           <DialogHeader>
-            <DialogTitle className="justify-between">
-              <div className=" flex items-center justify-between w-full mr-2.5">
+            <DialogTitle>
+              <div className="flex items-center justify-between w-full pr-2.5">
                 {modalType === 'identity' ? (
                   <IdentityTag
                     imgSrc={identity?.user?.image ?? identity?.image}
@@ -137,14 +137,16 @@ export default function StakeForm({
                     }}
                   />
                 )}
-                <Badge>
+                <Badge className="flex items-center gap-2">
                   <Icon name="wallet" className="h-4 w-4" />
-                  {(+walletBalance).toFixed(2)} ETH
+                  <span className="text-sm text-nowrap">
+                    {(+walletBalance).toFixed(2)} ETH
+                  </span>
                 </Badge>
               </div>
             </DialogTitle>
           </DialogHeader>
-          <div className="h-full w-full flex-col pt-5 px-10 pb-10 gap-5 inline-flex">
+          <div className="h-full w-full flex-col pt-5 px-10 pb-10 gap-5 inline-">
             <Tabs defaultValue={mode}>
               <TabsList>
                 <TabsTrigger
@@ -169,7 +171,7 @@ export default function StakeForm({
             </Tabs>
             <div className="pt-2.5">
               <ActivePositionCard
-                value={Number(formatBalance(user_assets, 18, 4))}
+                value={Number(formatBalance(user_assets, 18, 6))}
                 claimPosition={
                   direction !== undefined
                     ? direction === 'for'
@@ -178,7 +180,7 @@ export default function StakeForm({
                     : undefined
                 }
               />
-              <div className="rounded-t-lg bg-primary-950/15 px-4 pt-2.5">
+              <div className="rounded-t-lg bg-primary-950/15 px-4 pt-5">
                 <StakeInput
                   val={val}
                   setVal={setVal}
