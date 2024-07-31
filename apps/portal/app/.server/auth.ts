@@ -123,6 +123,6 @@ export async function setupAPI(request: Request) {
 }
 
 export async function logAPI() {
-  console.log("OpenAPI Base", OpenAPI.BASE)
-  console.log("OpenAPI Headers", OpenAPI.HEADERS)
+  console.log('OpenAPI Base', OpenAPI.BASE)
+  console.log('OpenAPI Headers', OpenAPI.HEADERS)
 }
