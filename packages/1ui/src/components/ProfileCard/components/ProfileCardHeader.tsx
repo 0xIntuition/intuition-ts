@@ -17,8 +17,6 @@ const ProfileCardHeader = ({
   walletAddress,
   ipfsLink,
 }: ProfileCardHeaderProps) => {
-  console.log('ipfsLink', ipfsLink)
-
   return (
     <div className="flex items-center space-x-4">
       <Avatar variant={variant} src={avatarSrc} name={name} />
