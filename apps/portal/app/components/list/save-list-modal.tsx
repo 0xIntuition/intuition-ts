@@ -371,7 +371,6 @@ export default function SaveListModal({
       <DialogContent className="flex flex-col w-[476px] h-[500px] gap-0">
         <div className="flex-grow">
           <SaveForm
-            walletBalance={walletBalance}
             tag={tag}
             identity={identity}
             user_assets={vaultDetails?.user_assets ?? '0'}

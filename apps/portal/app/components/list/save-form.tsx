@@ -1,6 +1,5 @@
 import {
   ActivePositionCard,
-  Badge,
   DialogHeader,
   DialogTitle,
   Icon,
@@ -21,7 +20,6 @@ import SaveActions from './save-actions'
 import SaveReview from './save-review'
 
 interface SaveFormProps {
-  walletBalance: string
   tag: TagEmbeddedPresenter
   identity: IdentityPresenter
   user_assets: string
@@ -41,7 +39,6 @@ interface SaveFormProps {
 }
 
 export default function SaveForm({
-  walletBalance,
   identity,
   tag,
   user_assets,
@@ -74,32 +71,53 @@ export default function SaveForm({
         <>
           <DialogHeader>
             <DialogTitle className="justify-between">
-              <div className="flex items-center justify-between w-full mr-2.5">
-                <IdentityTag imgSrc={tag?.image} variant={Identity.nonUser}>
-                  {tag?.display_name}
-                </IdentityTag>
-                <Badge>
-                  <Icon name="wallet" className="h-4 w-4" />
-                  {(+walletBalance).toFixed(2)} ETH
-                </Badge>
+              <div className="flex-col justify-center items-start gap-1 inline-flex">
+                <div className="justify-center items-center gap-2 inline-flex">
+                  <Text variant="base" weight="medium">
+                    Save identity to your list
+                  </Text>
+                  <Icon
+                    name="circle-question-mark"
+                    className="w-4 h-4 relative text-neutral-50/30"
+                  />
+                  {/* // TODO: [ENG-2525] -- add tooltip and content */}
+                  <div className="w-4 h-4 relative" />
+                </div>
+                <Text variant="small" className="text-neutral-50/50">
+                  Save this identity to your list by staking on the claim.
+                </Text>
               </div>
             </DialogTitle>
           </DialogHeader>
           <div className="h-full w-full flex-col pt-5 px-10 pb-10 gap-5 inline-flex">
-            <div className="flex-col justify-center items-start gap-1 inline-flex">
-              <div className="justify-center items-center gap-2 inline-flex">
-                <Text variant="base" weight="medium">
-                  Save List
+            <div className="flex items-center w-full mr-2.5 gap-5 ">
+              <div className="flex flex-col gap-1">
+                <Text
+                  variant="caption"
+                  weight="regular"
+                  className="text-neutral-50/50"
+                >
+                  List:
                 </Text>
-                <Icon
-                  name="circle-question-mark"
-                  className="w-4 h-4 relative text-neutral-50/30"
-                />
-                <div className="w-4 h-4 relative" />
+                <IdentityTag imgSrc={tag?.image} variant={Identity.nonUser}>
+                  {tag?.display_name}
+                </IdentityTag>
               </div>
-              <Text variant="small" className="text-neutral-50/50">
-                Save this list by staking
-              </Text>
+              <div className="flex flex-col gap-1">
+                <Text
+                  variant="caption"
+                  weight="regular"
+                  className="text-neutral-50/50"
+                >
+                  Identity:
+                </Text>
+                <IdentityTag
+                  imgSrc={identity?.image}
+                  variant={Identity.nonUser}
+                >
+                  {identity?.display_name}
+                </IdentityTag>
+              </div>
             </div>
             <div className="flex flex-row items-center justify-center">
               <div className="w-full bg-neutral-50/5 rounded-lg border border-neutral-300/10 flex-col justify-start items-start inline-flex">
