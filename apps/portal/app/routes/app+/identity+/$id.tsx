@@ -51,6 +51,7 @@ import { ExtendedIdentityPresenter } from 'types/identity'
 import { VaultDetailsType } from 'types/vault'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
+  console.log('[$ID] -- START')
   const user = await requireUser(request)
   invariant(user, 'User not found')
   invariant(user.wallet?.address, 'User wallet not found')
@@ -91,6 +92,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     }
   }
 
+  console.log('[$ID] -- END')
   return json({
     identity,
     vaultDetails,

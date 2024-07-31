@@ -6,10 +6,12 @@ import { calculateTotalPages, fetchWrapper, invariant } from '@lib/utils/misc'
 import { getStandardPageParams } from '@lib/utils/params'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
-import { requireUserWallet } from '@server/auth'
+import { logAPI, requireUserWallet } from '@server/auth'
 import { NO_WALLET_ERROR } from 'consts'
 
 export async function loader({ request }: LoaderFunctionArgs) {
+  console.log('[EXPLORE IDENTITIES] -- START')
+  logAPI()
   const wallet = await requireUserWallet(request)
   invariant(wallet, NO_WALLET_ERROR)
 
@@ -34,6 +36,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     },
   })
 
+  console.log('[EXPORE IDENTITIES] -- END')
   const totalPages = calculateTotalPages(identities?.total ?? 0, limit)
 
   return json({

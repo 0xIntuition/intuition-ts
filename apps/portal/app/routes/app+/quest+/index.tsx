@@ -212,6 +212,7 @@ function UserHeader() {
               name={getUserName(userProfile as GetUserByWalletResponse)}
               walletAddress={userWallet}
               avatarSrc={userProfile?.image ?? undefined}
+              ipfsLink={''}
             />
           )
         }}
