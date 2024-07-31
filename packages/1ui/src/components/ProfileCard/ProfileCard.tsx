@@ -16,7 +16,8 @@ export interface ProfileCardProps extends HTMLAttributes<HTMLDivElement> {
     numberOfFollowing?: number
     points?: number
   }
-  link?: string
+  ipfsLink: string
+  externalLink?: string
   bio?: string
   children?: React.ReactNode
 }
@@ -27,7 +28,8 @@ const ProfileCard = ({
   name,
   walletAddress,
   stats,
-  link,
+  ipfsLink,
+  externalLink,
   bio,
   children,
   ...props
@@ -45,6 +47,7 @@ const ProfileCard = ({
         avatarSrc={avatarSrc}
         name={name}
         walletAddress={walletAddress}
+        ipfsLink={ipfsLink}
       />
       {variant === Identity.user && (
         <div className="flex justify-start items-center gap-4 pt-2">
@@ -76,13 +79,13 @@ const ProfileCard = ({
           </Text>
         )}
 
-        {variant === Identity.nonUser && link && (
+        {variant === Identity.nonUser && externalLink && (
           <div className="">
             <Text variant="body" className="text-muted-foreground">
               Link
             </Text>
-            <a href={link} className="text-primary-300">
-              {link}
+            <a href={externalLink} className="text-primary-300">
+              {externalLink}
             </a>
           </div>
         )}
