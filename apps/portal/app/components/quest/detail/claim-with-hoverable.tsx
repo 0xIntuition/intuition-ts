@@ -10,6 +10,7 @@ import {
 import { IdentityPresenter } from '@0xintuition/api'
 
 import { sliceString } from '@lib/utils/misc'
+import { BLOCK_EXPLORER_URL, IPFS_GATEWAY_URL } from 'consts'
 
 export interface ClaimWithHoverableProps {
   size?: keyof typeof IdentityTagSize
@@ -81,6 +82,11 @@ export const IdentityWithHoverable = ({
               identity?.is_user
                 ? identity?.user?.description ?? ''
                 : identity?.description ?? ''
+            }
+            ipfsLink={
+              identity.is_user === true
+                ? `${BLOCK_EXPLORER_URL}/address/${identity.identity_id}`
+                : `${IPFS_GATEWAY_URL}/${identity?.identity_id?.replace('ipfs://', '')}`
             }
           />
         </div>

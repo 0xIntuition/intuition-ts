@@ -20,6 +20,7 @@ import {
 import { IdentityPresenter } from '@0xintuition/api'
 
 import { formatBalance, sliceString, truncateString } from '@lib/utils/misc'
+import { BLOCK_EXPLORER_URL, IPFS_GATEWAY_URL } from 'consts'
 
 import { IdentitySearchComboboxItem } from './identity-search-combo-box-item'
 
@@ -144,6 +145,11 @@ const IdentitySearchCombobox = ({
                           identity.is_user === true
                             ? identity.user?.description ?? ''
                             : identity.description ?? ''
+                        }
+                        ipfsLink={
+                          identity.is_user === true
+                            ? `${BLOCK_EXPLORER_URL}/address/${identity.identity_id}`
+                            : `${IPFS_GATEWAY_URL}/${identity?.identity_id?.replace('ipfs://', '')}`
                         }
                       ></ProfileCard>
                     </HoverCardContent>

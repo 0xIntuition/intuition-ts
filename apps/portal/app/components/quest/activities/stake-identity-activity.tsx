@@ -23,6 +23,7 @@ import {
   formatBalance,
   sliceString,
 } from '@lib/utils/misc'
+import { BLOCK_EXPLORER_URL, IPFS_GATEWAY_URL } from 'consts'
 import { VaultDetailsType } from 'types'
 
 import ActivityContainer from '../activity-container'
@@ -100,6 +101,11 @@ export default function StakeIdentityActivity({
               name={identity?.display_name ?? ''}
               walletAddress={sliceString(identity?.identity_id, 6, 4)}
               bio={identity?.description ?? ''}
+              ipfsLink={
+                identity.is_user === true
+                  ? `${BLOCK_EXPLORER_URL}/address/${identity.identity_id}`
+                  : `${IPFS_GATEWAY_URL}/${identity?.identity_id?.replace('ipfs://', '')}`
+              }
             />
             <InfoCard
               variant={Identity.user}
