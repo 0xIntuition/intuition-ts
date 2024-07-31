@@ -602,9 +602,7 @@ function CreateIdentityForm({
                   size="lg"
                   onClick={() => {
                     if (successAction === TransactionSuccessAction.VIEW) {
-                      navigate(
-                        `/app/identity/${transactionResponseData.identity_id}`,
-                      )
+                      navigate(`/app/identity/${transactionResponseData.id}`)
                     }
                     onClose()
                   }}

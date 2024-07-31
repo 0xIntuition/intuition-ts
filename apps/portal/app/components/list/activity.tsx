@@ -139,7 +139,7 @@ function ActivityItem({
                   navigate(
                     activity.identity.is_user
                       ? `/app/profile/${activity.identity.identity_id}`
-                      : `/app/identity/${activity.identity.identity_id}`,
+                      : `/app/identity/${activity.identity.id}`,
                   )
                 }
               }}

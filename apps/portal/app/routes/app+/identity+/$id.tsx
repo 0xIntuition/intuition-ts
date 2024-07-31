@@ -186,7 +186,7 @@ export default function IdentityDetails() {
             }))
           }
           onViewAllClick={() =>
-            navigate(`/app/identity/${identity.identity_id}/data-about`)
+            navigate(`/app/identity/${identity.id}/data-about`)
           }
         />
       </div>
