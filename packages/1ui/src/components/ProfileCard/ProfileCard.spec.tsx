@@ -54,7 +54,7 @@ describe('ProfileCard', () => {
               >
                 0x1234...5678
               </p>
-                          </div>
+            </div>
           </div>
           <div
             class="flex justify-start items-center gap-4 pt-2"
@@ -132,7 +132,6 @@ describe('ProfileCard', () => {
       <DocumentFragment>
         <div
           class="flex flex-col justify-center items-start w-full min-w-80 rounded-lg gap-2.5"
-          link="https://blockchaincorp.com"
         >
           <div
             class="flex items-center space-x-4"
@@ -158,35 +157,11 @@ describe('ProfileCard', () => {
               >
                 Blockchain Corp
               </h6>
-              <div
-                class="flex flex-row gap-1 items-center"
+              <p
+                class="text-base font-medium text-muted-foreground"
               >
-                <a
-                  rel="noopener noreferrer"
-                  target="_blank"
-                >
-                  <button
-                    data-state="closed"
-                  >
-                    <p
-                      class="text-base font-medium text-muted-foreground"
-                    >
-                      0x1234...5678
-                    </p>
-                  </button>
-                </a>
-                <button
-                  class="flex justify-center items-center text-sm font-medium border disabled:text-muted-foreground bg-transparent border-transparent hover:text-primary disabled:border-transparent disabled:bg-transparent shadow-md-subtle px-3 py-1 uppercase gap-2 pl-0 text-muted-foreground"
-                >
-                  <svg
-                    class="h-4 w-4 text-primary"
-                  >
-                    <use
-                      href="/src/components/Icon/Icon.sprites.svg#copy"
-                    />
-                  </svg>
-                </button>
-              </div>
+                0x1234...5678
+              </p>
             </div>
           </div>
           <div>
@@ -195,6 +170,21 @@ describe('ProfileCard', () => {
             >
               Blockchain Corp is a leading company in blockchain technology. Visit our website for more information about how you can benefit from our services.
             </p>
+            <div
+              class=""
+            >
+              <p
+                class="text-base font-normal text-muted-foreground"
+              >
+                Link
+              </p>
+              <a
+                class="text-primary-300"
+                href="https://blockchaincorp.com"
+              >
+                https://blockchaincorp.com
+              </a>
+            </div>
           </div>
         </div>
       </DocumentFragment>
@@ -237,35 +227,11 @@ describe('ProfileCard', () => {
               >
                 John Doe
               </h6>
-              <div
-                class="flex flex-row gap-1 items-center"
+              <p
+                class="text-base font-medium text-muted-foreground"
               >
-                <a
-                  rel="noopener noreferrer"
-                  target="_blank"
-                >
-                  <button
-                    data-state="closed"
-                  >
-                    <p
-                      class="text-base font-medium text-muted-foreground"
-                    >
-                      0x1234...5678
-                    </p>
-                  </button>
-                </a>
-                <button
-                  class="flex justify-center items-center text-sm font-medium border disabled:text-muted-foreground bg-transparent border-transparent hover:text-primary disabled:border-transparent disabled:bg-transparent shadow-md-subtle px-3 py-1 uppercase gap-2 pl-0 text-muted-foreground"
-                >
-                  <svg
-                    class="h-4 w-4 text-primary"
-                  >
-                    <use
-                      href="/src/components/Icon/Icon.sprites.svg#copy"
-                    />
-                  </svg>
-                </button>
-              </div>
+                0x1234...5678
+              </p>
             </div>
           </div>
           <div
