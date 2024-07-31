@@ -114,6 +114,7 @@ const CreateClaimReview: React.FC<CreateClaimReviewProps> = ({
             predicate={{
               imgSrc: selectedIdentities.predicate?.image,
               label: selectedIdentities.predicate?.display_name ?? '',
+              variant: Identity.nonUser,
             }}
             object={{
               imgSrc:

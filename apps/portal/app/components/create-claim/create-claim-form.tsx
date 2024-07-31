@@ -411,13 +411,21 @@ function CreateClaimForm({
         `/resources/tag?subjectId=${selectedIdentities.subject.vault_id}&predicateId=${selectedIdentities.predicate.vault_id}&objectId=${selectedIdentities.object.vault_id}`,
       )
     }
-  }, [selectedIdentities])
+  }, [
+    selectedIdentities.subject,
+    selectedIdentities.object,
+    selectedIdentities.predicate,
+  ])
 
   useEffect(() => {
-    if (claimChecker.data && claimChecker.data.result !== '0') {
-      setClaimExists(true)
+    if (claimChecker.data) {
+      setClaimExists(claimChecker.data.result !== '0')
     }
-  }, [claimChecker.data])
+  }, [claimChecker.data, selectedIdentities])
+
+  console.log('selectedIdentities', selectedIdentities)
+  console.log('claimChecker.data', claimChecker.data)
+  console.log('claimExists', claimExists)
 
   const Divider = () => (
     <span className="h-px w-2.5 flex bg-border/30 self-end mb-[1.2rem]" />
@@ -429,8 +437,9 @@ function CreateClaimForm({
         method="post"
         {...getFormProps(form)}
         action="/actions/create-claim"
-        className="h-full flex flex-col"
-      >
+        hidden
+      />
+      <div className="h-full flex flex-col">
         {state.status === 'idle' ? (
           <div className="flex flex-col items-center justify-between h-full">
             <div className="flex-grow flex items-center justify-center">
@@ -537,7 +546,7 @@ function CreateClaimForm({
                 }}
                 disabled={
                   !address ||
-                  (claimExists && state.status !== 'idle') ||
+                  claimExists ||
                   selectedIdentities.subject === null ||
                   selectedIdentities.predicate === null ||
                   selectedIdentities.object === null ||
@@ -602,7 +611,7 @@ function CreateClaimForm({
             />
           </div>
         )}
-      </claimFetcher.Form>
+      </div>
     </>
   )
 }

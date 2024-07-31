@@ -10,12 +10,16 @@ import {
   CommandInput,
   CommandList,
   EmptyStateCard,
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
   Icon,
   IconName,
+  ProfileCard,
 } from '@0xintuition/1ui'
 import { IdentityPresenter } from '@0xintuition/api'
 
-import { formatBalance, truncateString } from '@lib/utils/misc'
+import { formatBalance, sliceString, truncateString } from '@lib/utils/misc'
 
 import { IdentitySearchComboboxItem } from './identity-search-combo-box-item'
 
@@ -93,19 +97,60 @@ const IdentitySearchCombobox = ({
               const isDisabled = existingIdentityIds?.includes(identity_id)
 
               return (
-                <IdentitySearchComboboxItem
-                  key={index}
-                  variant={variant}
-                  name={truncateString(user?.display_name ?? name, 7)}
-                  avatarSrc={user?.image ?? image ?? undefined}
-                  value={+formatBalance(value)}
-                  walletAddress={walletAddress}
-                  socialCount={socialCount || 0}
-                  tagCount={tagCount || 0}
-                  onClick={() => onIdentityClick(identity)}
-                  onSelect={() => onIdentitySelect(identity)}
-                  disabled={isDisabled}
-                />
+                <HoverCard openDelay={100} closeDelay={100} key={identity.id}>
+                  <HoverCardTrigger className="w-full">
+                    <IdentitySearchComboboxItem
+                      key={index}
+                      variant={variant}
+                      name={truncateString(user?.display_name ?? name, 7)}
+                      avatarSrc={user?.image ?? image ?? undefined}
+                      value={+formatBalance(value)}
+                      walletAddress={walletAddress}
+                      socialCount={socialCount || 0}
+                      tagCount={tagCount || 0}
+                      onClick={() => onIdentityClick(identity)}
+                      onSelect={() => onIdentitySelect(identity)}
+                      disabled={isDisabled}
+                    />
+                  </HoverCardTrigger>
+                  {identity && (
+                    <HoverCardContent
+                      side="right"
+                      sideOffset={16}
+                      className="w-80"
+                    >
+                      <ProfileCard
+                        variant={
+                          identity.is_user === true ? 'user' : 'non-user'
+                        }
+                        avatarSrc={identity.user?.image ?? identity.image ?? ''}
+                        name={truncateString(
+                          identity.user?.display_name ?? identity.display_name,
+                          18,
+                        )}
+                        walletAddress={
+                          identity.is_user === true
+                            ? identity.user?.ens_name ??
+                              sliceString(identity.user?.wallet, 6, 4)
+                            : identity.identity_id
+                        }
+                        stats={
+                          identity.is_user === true
+                            ? {
+                                numberOfFollowers: identity.follower_count ?? 0,
+                                numberOfFollowing: identity.followed_count ?? 0,
+                              }
+                            : undefined
+                        }
+                        bio={
+                          identity.is_user === true
+                            ? identity.user?.description ?? ''
+                            : identity.description ?? ''
+                        }
+                      ></ProfileCard>
+                    </HoverCardContent>
+                  )}
+                </HoverCard>
               )
             })}
           </CommandGroup>
