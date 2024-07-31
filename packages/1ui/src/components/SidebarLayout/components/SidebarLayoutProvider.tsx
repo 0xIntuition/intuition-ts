@@ -3,16 +3,16 @@ import * as React from 'react'
 import { SIDEBAR_LOCAL_STORAGE_VARIABLE } from '../constants'
 
 interface ISidebarLayoutContext {
-  isMobileView: boolean | undefined
+  isMobileView?: boolean
   setIsMobileView: React.Dispatch<React.SetStateAction<boolean>>
-  isCollapsed: boolean | undefined
+  isCollapsed?: boolean
   setIsCollapsed: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const SidebarLayoutContext = React.createContext<ISidebarLayoutContext>({
-  isMobileView: undefined,
+  isMobileView: false,
   setIsMobileView: () => {},
-  isCollapsed: undefined,
+  isCollapsed: false,
   setIsCollapsed: () => {},
 })
 
