@@ -17,7 +17,7 @@ import { UserPresenter } from '@0xintuition/api'
 
 import { PrivyButton } from '@client/privy-button'
 import { createClaimModalAtom, createIdentityModalAtom } from '@lib/state/store'
-import { NavLink, useNavigate, useSubmit } from '@remix-run/react'
+import { NavLink, useLocation, useNavigate, useSubmit } from '@remix-run/react'
 import { PATHS } from 'consts'
 import { useAtom } from 'jotai'
 import { isAddress } from 'viem'
@@ -68,6 +68,7 @@ export default function SidebarNav({
 }) {
   const submit = useSubmit()
   const navigate = useNavigate()
+  const location = useLocation()
   const [isPrivyButtonLoaded, setIsPrivyButtonLoaded] = useState(false)
 
   useEffect(() => {
@@ -196,8 +197,7 @@ export default function SidebarNav({
               </div>
             </SidebarLayoutNavBody>
           </SidebarLayoutNav>
-          <SidebarLayoutContent className="h-full w-full min-h-screen overflow-y-scroll">
-            {/* TODO: overflow-y-scroll on SidebarLayoutContent is causing scroll issues all over the app. Discussion is needed to fix this. */}
+          <SidebarLayoutContent currentPathname={location.pathname}>
             {children}
           </SidebarLayoutContent>
         </SidebarLayout>

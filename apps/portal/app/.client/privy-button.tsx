@@ -7,6 +7,7 @@ import {
   DropdownMenuTrigger,
   Text,
   Trunctacular,
+  useSidebarLayoutContext,
 } from '@0xintuition/1ui'
 
 import { usePrivy } from '@privy-io/react-auth'
@@ -22,6 +23,7 @@ export function PrivyButton({
   onLogout?: () => void
 }) {
   const { ready, authenticated, logout, user: privyUser } = usePrivy()
+  const { isMobileView, setIsCollapsed } = useSidebarLayoutContext()
 
   const navigate = useNavigate()
   const { disconnect } = useDisconnect()
@@ -65,7 +67,12 @@ export function PrivyButton({
                 navigate(PATHS.PROFILE)
               }}
             >
-              <NavLink to={`/app/profile`} className="font-semibold">
+              <NavLink
+                to={`/app/profile`}
+                className="font-semibold"
+                // dismiss nav menu programmatically
+                onClick={() => isMobileView && setIsCollapsed(true)}
+              >
                 <div className="space-y-1">
                   <Text>View Profile</Text>
                 </div>

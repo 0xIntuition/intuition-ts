@@ -121,4 +121,5 @@ export const IconName = {
   homeDoor: 'home-door',
   claim: 'claim',
   fileText: 'file-text',
+  hamburger: 'hamburger',
 } as const

@@ -33,7 +33,6 @@ export const SidebarLayoutProvider = ({ ...props }) => {
   React.useEffect(() => {
     const eventListenerType = 'resize'
     const handleScreenResize = () => {
-      console.log('screen resized')
       const isMobileSizing = window.innerWidth < 1000
       setIsMobileView(isMobileSizing)
       isMobileSizing && setIsCollapsed(true)

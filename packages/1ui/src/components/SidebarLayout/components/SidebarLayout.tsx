@@ -9,7 +9,7 @@ export const SidebarLayout = ({
   return (
     <div
       className={cn(
-        'flex h-full w-full',
+        'flex h-full w-full overflow-x-hidden',
         isMobileView && 'flex-col',
         isMobileView && !isCollapsed && 'overflow-hidden',
       )}
