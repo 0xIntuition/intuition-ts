@@ -14,16 +14,16 @@ import { IdentityPresenter } from '@0xintuition/api'
 
 import { IdentitySearchCombobox } from '@components/identity/identity-search-combo-box'
 import { sliceString, truncateString } from '@lib/utils/misc'
-import { IdentityType } from 'types'
+import { ClaimElementType } from 'types'
 
 interface IdentityPopoverProps {
-  type: IdentityType
+  type: ClaimElementType
   isObjectPopoverOpen: boolean
   setIsObjectPopoverOpen: (isOpen: boolean) => void
   selectedIdentity?: IdentityPresenter | null
   identities: IdentityPresenter[]
   handleIdentitySelection: (
-    identityType: IdentityType,
+    identityType: ClaimElementType,
     identity: IdentityPresenter,
   ) => void
   setSearchQuery: (query: string) => void
