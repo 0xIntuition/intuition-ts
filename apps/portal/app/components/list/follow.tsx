@@ -4,6 +4,7 @@ import { IdentityPresenter, SortColumn } from '@0xintuition/api'
 import { SortOption } from '@components/sort-select'
 import { formatBalance } from '@lib/utils/misc'
 import { useNavigate } from '@remix-run/react'
+import { PATHS } from 'consts'
 import { PaginationType } from 'types/pagination'
 
 import { List } from './list'
@@ -57,8 +58,8 @@ export function FollowList({
             onClick={() => {
               navigate(
                 identity.is_user
-                  ? `/app/profile/${identity.identity_id}`
-                  : `/app/identity/${identity.id}`,
+                  ? `${PATHS.PROFILE}/${identity.identity_id}`
+                  : `${PATHS.IDENTITY}/${identity.id}`,
               )
             }}
             className="hover:cursor-pointer"

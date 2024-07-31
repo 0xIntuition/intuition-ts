@@ -42,6 +42,7 @@ import { CreateLoaderData } from '@routes/resources+/create'
 import {
   ACCEPTED_IMAGE_MIME_TYPES,
   GENERIC_ERROR_MSG,
+  IPFS_GATEWAY_URL,
   MAX_UPLOAD_SIZE,
   MULTIVAULT_CONTRACT_ADDRESS,
   PATHS,
@@ -595,7 +596,7 @@ function CreateIdentityForm({
             status={state.status as TransactionStatusType}
             txHash={state.txHash}
             type="identity"
-            ipfsLink={`https://ipfs.io/ipfs/${transactionResponseData?.identity_id?.replace('ipfs://', '')}`}
+            ipfsLink={`${IPFS_GATEWAY_URL}/${transactionResponseData?.identity_id?.replace('ipfs://', '')}`}
             successButton={
               transactionResponseData && (
                 <Button

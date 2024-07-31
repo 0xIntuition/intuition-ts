@@ -15,6 +15,7 @@ import { ActivityPresenter, SortColumn } from '@0xintuition/api'
 
 import { formatBalance } from '@lib/utils/misc'
 import { Link, useNavigate } from '@remix-run/react'
+import { PATHS } from 'consts'
 import { formatDistance } from 'date-fns'
 import { PaginationType } from 'types/pagination'
 
@@ -138,8 +139,8 @@ function ActivityItem({
                 if (activity.identity) {
                   navigate(
                     activity.identity.is_user
-                      ? `/app/profile/${activity.identity.identity_id}`
-                      : `/app/identity/${activity.identity.id}`,
+                      ? `${PATHS.PROFILE}/${activity.identity.identity_id}`
+                      : `${PATHS.IDENTITY}/${activity.identity.id}`,
                   )
                 }
               }}
@@ -147,8 +148,8 @@ function ActivityItem({
             <Link
               to={
                 activity.identity.is_user
-                  ? `/app/profile/${activity.identity.identity_id}`
-                  : `/app/identity/${activity.identity.id}`
+                  ? `${PATHS.PROFILE}/${activity.identity.identity_id}`
+                  : `${PATHS.IDENTITY}/${activity.identity.id}`
               }
               prefetch="intent"
             >
@@ -171,7 +172,7 @@ function ActivityItem({
               amount={+formatBalance(activity.claim.assets_sum, 18, 4)}
               onClick={() => {
                 if (activity.claim) {
-                  navigate(`/app/claim/${activity.claim.claim_id}`)
+                  navigate(`${PATHS.CLAIM}/${activity.claim.claim_id}`)
                 }
               }}
               className="hover:cursor-pointer w-full"
@@ -213,7 +214,7 @@ function ActivityItem({
               />
             </ClaimRow>
             <Link
-              to={`/app/claim/${activity.claim.claim_id}`}
+              to={`${PATHS.PROFILE}/${activity.claim.claim_id}`}
               prefetch="intent"
             >
               <Button

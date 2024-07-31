@@ -23,6 +23,7 @@ import {
 } from '@lib/hooks/useTransactionReducer'
 import logger from '@lib/utils/logger'
 import { useNavigate } from '@remix-run/react'
+import { PATHS } from 'consts'
 import { TransactionActionType, TransactionStateType } from 'types/transaction'
 
 import { AddTags } from './add-tags'
@@ -176,7 +177,7 @@ export function TagsForm({ identity, mode, onClose }: TagsFormProps) {
                   type="button"
                   variant="primary"
                   onClick={() => {
-                    navigate(`/app/identity/${identity.id}`)
+                    navigate(`${PATHS.IDENTITY}/${identity.id}`)
                     onClose()
                   }}
                 >
