@@ -32,14 +32,20 @@ export default function PrivyLoginButton({
   }
 
   return (
-    <Button onClick={handleClick} variant="primary" disabled={loading}>
+    <Button
+      onClick={handleClick}
+      variant="primary"
+      size="xl"
+      disabled={loading}
+      className="px-10"
+    >
       {loading ? (
         <>
           <Icon name="in-progress" className="animate-spin h-5 w-5 mr-1" />
-          Logging In...
+          Connecting...
         </>
       ) : (
-        'Log in'
+        'Connect'
       )}
     </Button>
   )
