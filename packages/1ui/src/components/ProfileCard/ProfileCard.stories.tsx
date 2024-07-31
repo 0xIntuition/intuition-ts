@@ -46,14 +46,7 @@ const meta: Meta<typeof ProfileCard> = {
         },
       },
     },
-    ipfsLink: {
-      description: 'Link related IPFS document',
-      table: {
-        type: { summary: 'string' },
-        defaultValue: { summary: 'undefined' },
-      },
-    },
-    externalLink: {
+    link: {
       description: 'Link related to the entity (optional)',
       table: {
         type: { summary: 'string' },
@@ -112,9 +105,7 @@ export const EntityProfile: Story = {
     stats: {
       numberOfFollowers: 300,
     },
-    ipfsLink:
-      'https://ipfs.io/ipfs/QmYch4WMF5p7yxjEcuZJxNa7AFR1ZeQhCRsn9xG7P3koXo',
-    externalLink: 'https://blockchaincorp.com',
+    link: 'https://blockchaincorp.com',
     bio: 'Blockchain Corp is a leading company in blockchain technology. Visit our website for more information about how you can benefit from our services.',
   },
   render: (args: ProfileCardProps) => (

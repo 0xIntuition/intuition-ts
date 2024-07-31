@@ -1,5 +1,3 @@
-import * as React from 'react'
-
 import { formatWalletAddress } from 'utils'
 
 import {
@@ -20,13 +18,11 @@ export interface TrunctacularProps
   weight?: TextWeightType
   disableTooltip?: boolean
 }
-
 const isValueWalletAddress = (value: string) =>
   value.substring(0, 2) === '0x' && value.length === 42
 const isLongString = (value: string, maxStringLength: number) =>
   value.length > maxStringLength
-const truncateStringValue = (value: string, maxLength: number) =>
-  `${value.substring(0, maxLength - 3)}...`
+const truncateStringValue = (value: string) => `${value.substring(0, 11)}...`
 
 const Trunctacular = ({
   value,
@@ -40,7 +36,7 @@ const Trunctacular = ({
   const content = isValueWalletAddress(value)
     ? formatWalletAddress(value)
     : isLongString(value, maxStringLength)
-      ? truncateStringValue(value, maxStringLength)
+      ? truncateStringValue(value)
       : value
 
   if (
@@ -58,8 +54,6 @@ const Trunctacular = ({
       </TooltipProvider>
     )
   }
-
   return <Text {...textProps}>{content}</Text>
 }
-
 export { Trunctacular }

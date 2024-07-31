@@ -49,37 +49,12 @@ describe('ProfileCard', () => {
               >
                 John Doe
               </h6>
-              <div
-                class="flex flex-row gap-1 items-center"
+              <p
+                class="text-base font-medium text-muted-foreground"
               >
-                <a
-                  rel="noopener noreferrer"
-                  target="_blank"
-                >
-                  <button
-                    data-state="closed"
-                  >
-                    <p
-                      class="text-base font-medium text-muted-foreground"
-                    >
-                      0x1234...5678
-                    </p>
-                  </button>
-                </a>
-                <button
-                  class="flex justify-center items-center text-sm font-medium border disabled:text-muted-foreground bg-transparent border-transparent hover:text-primary disabled:border-transparent disabled:bg-transparent shadow-md-subtle px-3 py-1 uppercase gap-2 pl-0 text-muted-foreground"
-                  tabindex="0"
-                >
-                  <svg
-                    class="h-4 w-4 text-primary"
-                  >
-                    <use
-                      href="/src/components/Icon/Icon.sprites.svg#copy"
-                    />
-                  </svg>
-                </button>
-              </div>
-            </div>
+                0x1234...5678
+              </p>
+                          </div>
           </div>
           <div
             class="flex justify-start items-center gap-4 pt-2"
@@ -202,7 +177,6 @@ describe('ProfileCard', () => {
                 </a>
                 <button
                   class="flex justify-center items-center text-sm font-medium border disabled:text-muted-foreground bg-transparent border-transparent hover:text-primary disabled:border-transparent disabled:bg-transparent shadow-md-subtle px-3 py-1 uppercase gap-2 pl-0 text-muted-foreground"
-                  tabindex="0"
                 >
                   <svg
                     class="h-4 w-4 text-primary"
@@ -282,7 +256,6 @@ describe('ProfileCard', () => {
                 </a>
                 <button
                   class="flex justify-center items-center text-sm font-medium border disabled:text-muted-foreground bg-transparent border-transparent hover:text-primary disabled:border-transparent disabled:bg-transparent shadow-md-subtle px-3 py-1 uppercase gap-2 pl-0 text-muted-foreground"
-                  tabindex="0"
                 >
                   <svg
                     class="h-4 w-4 text-primary"
