@@ -19,7 +19,7 @@ import {
   useLocation,
   useNavigate,
 } from '@remix-run/react'
-import { NO_PARAM_ID_ERROR } from 'consts'
+import { BLOCK_EXPLORER_URL, IPFS_GATEWAY_URL, NO_PARAM_ID_ERROR } from 'consts'
 import { useAtom } from 'jotai'
 
 export async function loader({ params }: LoaderFunctionArgs) {
@@ -75,6 +75,11 @@ export default function ListDetails() {
             name={claim.object?.display_name ?? ''}
             walletAddress={sliceString(claim.object?.identity_id, 6, 4)}
             bio={claim.object?.description ?? ''}
+            ipfsLink={
+              claim.object?.is_user === true
+                ? `${BLOCK_EXPLORER_URL}/address/${claim.object?.identity_id}`
+                : `${IPFS_GATEWAY_URL}/${claim.object?.identity_id?.replace('ipfs://', '')}`
+            }
           />
           <ListIdentityDisplayCard
             displayName={claim.object?.display_name ?? ''}
