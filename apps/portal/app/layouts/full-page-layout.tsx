@@ -5,7 +5,11 @@ interface FullPageLayoutProps {
 }
 
 const FullPageLayout: React.FC<FullPageLayoutProps> = ({ children }) => {
-  return <div className="flex flex-col items-center">{children}</div>
+  return (
+    <div className="w-full h-full flex flex-col items-center px-40">
+      {children}
+    </div>
+  )
 }
 
 export default FullPageLayout

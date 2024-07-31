@@ -22,8 +22,8 @@ import {
 import PrivyRevalidate from '@client/privy-revalidate'
 import EditProfileModal from '@components/edit-profile/modal'
 import EditSocialLinksModal from '@components/edit-social-links-modal'
-import { NestedLayout } from '@components/nested-layout'
 import { ProfileSocialAccounts } from '@components/profile-social-accounts'
+import { SegmentedNav } from '@components/segmented-nav'
 import StakeModal from '@components/stake/stake-modal'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import {
@@ -49,6 +49,7 @@ import {
 } from '@remix-run/react'
 import { requireUser, requireUserWallet } from '@server/auth'
 import { getVaultDetails } from '@server/multivault'
+import TwoPanelLayout from 'app/layouts/two-panel-layout'
 import { NO_WALLET_ERROR, PATHS, userProfileRouteOptions } from 'consts'
 import { useAtom } from 'jotai'
 import { VaultDetailsType } from 'types/vault'
@@ -132,30 +133,19 @@ export default function Profile() {
     userIdentity,
     userTotals,
     vaultDetails,
-  } = useLiveLoader<{
-    privyUser: User
-    userWallet: string
-    userIdentity: IdentityPresenter
-    userObject: UserPresenter
-    userTotals: UserTotalsPresenter
-    vaultDetails: VaultDetailsType
-  }>(['attest', 'create'])
+  } = useLiveLoader<ProfileLoaderData>(['attest', 'create'])
 
   const { user_assets, assets_sum } = vaultDetails ? vaultDetails : userIdentity
-
   const { user_asset_delta } = userIdentity
 
   const [userObject, setUserObject] = useState<
     UserPresenter | null | undefined
   >(userIdentity.user ?? user)
-
   const [editProfileModalActive, setEditProfileModalActive] =
     useAtom(editProfileModalAtom)
-
   const [editSocialLinksModalActive, setEditSocialLinksModalActive] = useAtom(
     editSocialLinksModalAtom,
   )
-
   const [stakeModalActive, setStakeModalActive] = useAtom(stakeModalAtom)
 
   const revalidator = useRevalidator()
@@ -185,87 +175,99 @@ export default function Profile() {
   if (!userObject) {
     return null
   }
+
   logger('userIdentity', userIdentity)
-  return (
-    <NestedLayout outlet={Outlet} options={userProfileRouteOptions}>
-      <div className="flex-col justify-start items-start gap-5 inline-flex">
-        <ProfileCard
-          variant="user"
-          avatarSrc={userObject.image ?? ''}
-          name={userObject.display_name ?? ''}
-          walletAddress={
-            userObject.ens_name ?? sliceString(userObject.wallet, 6, 4)
-          }
-          stats={{
-            numberOfFollowers: userTotals.follower_count,
-            numberOfFollowing: userTotals.followed_count,
-            points: userTotals.user_points,
-          }}
-          bio={userObject.description ?? ''}
+
+  const leftPanel = (
+    <div className="flex-col justify-start items-start gap-5 inline-flex">
+      <ProfileCard
+        variant="user"
+        avatarSrc={userObject.image ?? ''}
+        name={userObject.display_name ?? ''}
+        walletAddress={
+          userObject.ens_name ?? sliceString(userObject.wallet, 6, 4)
+        }
+        stats={{
+          numberOfFollowers: userTotals.follower_count,
+          numberOfFollowing: userTotals.followed_count,
+          points: userTotals.user_points,
+        }}
+        bio={userObject.description ?? ''}
+      >
+        <Button
+          variant="secondary"
+          className="w-full"
+          onClick={() => setEditProfileModalActive(true)}
         >
-          <Button
-            variant="secondary"
-            className="w-full"
-            onClick={() => setEditProfileModalActive(true)}
-          >
-            Edit Profile
-          </Button>
-        </ProfileCard>
-        <ProfileSocialAccounts
-          privyUser={JSON.parse(JSON.stringify(privyUser))}
-          handleOpenEditSocialLinksModal={() =>
-            setEditSocialLinksModalActive(true)
-          }
-        />
-        {vaultDetails !== null && user_assets !== '0' ? (
-          <PositionCard
-            onButtonClick={() =>
-              setStakeModalActive((prevState) => ({
-                ...prevState,
-                mode: 'redeem',
-                modalType: 'identity',
-                isOpen: true,
-              }))
-            }
-          >
-            <PositionCardStaked
-              amount={user_assets ? +formatBalance(user_assets, 18, 4) : 0}
-            />
-            <PositionCardOwnership
-              percentOwnership={
-                user_assets !== null && assets_sum
-                  ? +calculatePercentageOfTvl(user_assets ?? '0', assets_sum)
-                  : 0
-              }
-            />
-            <PositionCardFeesAccrued
-              amount={
-                user_asset_delta
-                  ? +formatBalance(
-                      +(user_assets ?? 0) - +user_asset_delta,
-                      18,
-                      5,
-                    )
-                  : 0
-              }
-            />
-            <PositionCardLastUpdated timestamp={userIdentity.updated_at} />
-          </PositionCard>
-        ) : null}
-        <StakeCard
-          tvl={+formatBalance(assets_sum)}
-          holders={userIdentity.num_positions}
-          onBuyClick={() =>
+          Edit Profile
+        </Button>
+      </ProfileCard>
+      <ProfileSocialAccounts
+        privyUser={JSON.parse(JSON.stringify(privyUser))}
+        handleOpenEditSocialLinksModal={() =>
+          setEditSocialLinksModalActive(true)
+        }
+      />
+      {vaultDetails !== null && user_assets !== '0' ? (
+        <PositionCard
+          onButtonClick={() =>
             setStakeModalActive((prevState) => ({
               ...prevState,
-              mode: 'deposit',
+              mode: 'redeem',
               modalType: 'identity',
               isOpen: true,
             }))
           }
-          onViewAllClick={() => navigate(PATHS.PROFILE_DATA_ABOUT)}
-        />
+        >
+          <PositionCardStaked
+            amount={user_assets ? +formatBalance(user_assets, 18, 4) : 0}
+          />
+          <PositionCardOwnership
+            percentOwnership={
+              user_assets !== null && assets_sum
+                ? +calculatePercentageOfTvl(user_assets ?? '0', assets_sum)
+                : 0
+            }
+          />
+          <PositionCardFeesAccrued
+            amount={
+              user_asset_delta
+                ? +formatBalance(+(user_assets ?? 0) - +user_asset_delta, 18, 5)
+                : 0
+            }
+          />
+          <PositionCardLastUpdated timestamp={userIdentity.updated_at} />
+        </PositionCard>
+      ) : null}
+      <StakeCard
+        tvl={+formatBalance(assets_sum)}
+        holders={userIdentity.num_positions}
+        onBuyClick={() =>
+          setStakeModalActive((prevState) => ({
+            ...prevState,
+            mode: 'deposit',
+            modalType: 'identity',
+            isOpen: true,
+          }))
+        }
+        onViewAllClick={() => navigate(PATHS.PROFILE_DATA_ABOUT)}
+      />
+    </div>
+  )
+
+  const rightPanel = (
+    <>
+      <div className="flex flex-row justify-end">
+        <SegmentedNav options={userProfileRouteOptions} />
       </div>
+      <div className="pb-10">
+        <Outlet />
+      </div>
+    </>
+  )
+
+  return (
+    <TwoPanelLayout leftPanel={leftPanel} rightPanel={rightPanel}>
       <EditProfileModal
         userObject={userObject}
         setUserObject={setUserObject}
@@ -291,6 +293,6 @@ export default function Profile() {
         }}
       />
       <PrivyRevalidate />
-    </NestedLayout>
+    </TwoPanelLayout>
   )
 }
