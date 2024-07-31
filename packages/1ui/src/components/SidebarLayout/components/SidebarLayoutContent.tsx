@@ -4,7 +4,7 @@ import { cn } from 'styles'
 
 interface SidebarLayoutContentProps
   extends React.HTMLAttributes<HTMLDivElement> {
-  currentPathname: string
+  currentPathname?: string
 }
 
 export const SidebarLayoutContent = ({
