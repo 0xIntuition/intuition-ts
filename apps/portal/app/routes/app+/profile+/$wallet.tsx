@@ -28,7 +28,6 @@ import {
   fetchWrapper,
   formatBalance,
   invariant,
-  sliceString,
 } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
 import { Outlet, useNavigate } from '@remix-run/react'
@@ -166,7 +165,8 @@ export default function Profile() {
           name={userIdentity?.user?.display_name ?? ''}
           walletAddress={
             userIdentity?.user?.ens_name ??
-            sliceString(userIdentity?.user?.wallet, 6, 4)
+            userIdentity?.user?.wallet ??
+            userIdentity.identity_id
           }
           stats={{
             numberOfFollowers: userTotals.follower_count,
@@ -174,6 +174,7 @@ export default function Profile() {
             points: userTotals.user_points,
           }}
           bio={userIdentity?.user?.description ?? ''}
+          ipfsLink={`https://sepolia.basescan.org/address/${userIdentity.identity_id}`}
         >
           <Button
             variant="secondary"

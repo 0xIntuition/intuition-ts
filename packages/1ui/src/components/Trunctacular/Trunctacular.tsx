@@ -25,7 +25,8 @@ const isValueWalletAddress = (value: string) =>
   value.substring(0, 2) === '0x' && value.length === 42
 const isLongString = (value: string, maxStringLength: number) =>
   value.length > maxStringLength
-const truncateStringValue = (value: string) => `${value.substring(0, 11)}...`
+const truncateStringValue = (value: string, maxLength: number) =>
+  `${value.substring(0, maxLength - 3)}...`
 
 const Trunctacular = ({
   value,
@@ -39,7 +40,7 @@ const Trunctacular = ({
   const content = isValueWalletAddress(value)
     ? formatWalletAddress(value)
     : isLongString(value, maxStringLength)
-      ? truncateStringValue(value)
+      ? truncateStringValue(value, maxStringLength)
       : value
 
   if (

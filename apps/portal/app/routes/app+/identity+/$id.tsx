@@ -1,6 +1,7 @@
 import { useState } from 'react'
 
 import {
+  Identity,
   PositionCard,
   PositionCardFeesAccrued,
   PositionCardLastUpdated,
@@ -34,7 +35,6 @@ import {
   fetchWrapper,
   formatBalance,
   invariant,
-  sliceString,
 } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { Outlet, useLoaderData, useNavigate } from '@remix-run/react'
@@ -120,11 +120,12 @@ export default function IdentityDetails() {
     <NestedLayout outlet={Outlet} options={identityRouteOptions}>
       <div className="flex-col justify-start items-start inline-flex gap-6">
         <ProfileCard
-          variant="non-user"
+          variant={Identity.nonUser}
           avatarSrc={identity?.image ?? ''}
           name={identity?.display_name ?? ''}
-          walletAddress={sliceString(identity?.identity_id, 6, 4)}
+          walletAddress={identity?.identity_id}
           bio={identity?.description ?? ''}
+          ipfsLink={`https://ipfs.io/ipfs/${identity?.identity_id?.replace('ipfs://', '')}`}
         />
         <Tags>
           {identity?.tags && identity?.tags.length > 0 && (

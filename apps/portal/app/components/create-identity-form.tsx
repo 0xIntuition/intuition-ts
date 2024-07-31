@@ -594,6 +594,7 @@ function CreateIdentityForm({
             status={state.status as TransactionStatusType}
             txHash={state.txHash}
             type="identity"
+            ipfsLink={`https://ipfs.io/ipfs/${transactionResponseData?.identity_id?.replace('ipfs://', '')}`}
             successButton={
               transactionResponseData && (
                 <Button
@@ -608,7 +609,7 @@ function CreateIdentityForm({
                   }}
                 >
                   {successAction === TransactionSuccessAction.VIEW
-                    ? 'View identity'
+                    ? 'View Identity'
                     : 'Close'}
                 </Button>
               )

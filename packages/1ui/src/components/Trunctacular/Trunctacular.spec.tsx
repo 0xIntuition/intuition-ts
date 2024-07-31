@@ -15,7 +15,7 @@ describe('Trunctacular', () => {
           <p
             class="text-primary text-base font-normal"
           >
-            reallyReall...
+            reallyRea...
           </p>
         </button>
       </DocumentFragment>
