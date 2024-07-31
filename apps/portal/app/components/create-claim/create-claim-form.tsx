@@ -423,10 +423,6 @@ function CreateClaimForm({
     }
   }, [claimChecker.data, selectedIdentities])
 
-  console.log('selectedIdentities', selectedIdentities)
-  console.log('claimChecker.data', claimChecker.data)
-  console.log('claimExists', claimExists)
-
   const Divider = () => (
     <span className="h-px w-2.5 flex bg-border/30 self-end mb-[1.2rem]" />
   )
