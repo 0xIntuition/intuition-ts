@@ -44,6 +44,7 @@ import {
   GENERIC_ERROR_MSG,
   MAX_UPLOAD_SIZE,
   MULTIVAULT_CONTRACT_ADDRESS,
+  PATHS,
 } from 'consts'
 import {
   IdentityTransactionActionType,
@@ -603,7 +604,9 @@ function CreateIdentityForm({
                   size="lg"
                   onClick={() => {
                     if (successAction === TransactionSuccessAction.VIEW) {
-                      navigate(`/app/identity/${transactionResponseData.id}`)
+                      navigate(
+                        `${PATHS.IDENTITY}/${transactionResponseData.id}`,
+                      )
                     }
                     onClose()
                   }}

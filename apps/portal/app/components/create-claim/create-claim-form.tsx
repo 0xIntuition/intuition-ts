@@ -47,6 +47,7 @@ import {
   CREATE_CLAIM_RESOURCE_ROUTE,
   GENERIC_ERROR_MSG,
   MULTIVAULT_CONTRACT_ADDRESS,
+  PATHS,
   SEARCH_IDENTITIES_RESOURCE_ROUTE,
 } from 'consts'
 import { ClaimElement, ClaimElementType } from 'types'
@@ -623,7 +624,7 @@ function CreateClaimForm({
                     onClick={() => {
                       if (successAction === TransactionSuccessAction.VIEW) {
                         navigate(
-                          `/app/claim/${transactionResponseData.claim_id}`,
+                          `${PATHS.CLAIM}/${transactionResponseData.claim_id}`,
                         )
                       }
 
