@@ -14,6 +14,7 @@ import { IdentityPresenter } from '@0xintuition/api'
 
 import { IdentitySearchCombobox } from '@components/identity/identity-search-combo-box'
 import { sliceString, truncateString } from '@lib/utils/misc'
+import { BLOCK_EXPLORER_URL, IPFS_GATEWAY_URL } from 'consts'
 import { ClaimElementType } from 'types'
 
 interface IdentityPopoverProps {
@@ -108,6 +109,11 @@ export const IdentityPopover: React.FC<IdentityPopoverProps> = ({
                     selectedIdentity.is_user === true
                       ? selectedIdentity.user?.description ?? ''
                       : selectedIdentity.description ?? ''
+                  }
+                  ipfsLink={
+                    selectedIdentity.is_user === true
+                      ? `${BLOCK_EXPLORER_URL}/address/${selectedIdentity.identity_id}`
+                      : `${IPFS_GATEWAY_URL}/${selectedIdentity?.identity_id?.replace('ipfs://', '')}`
                   }
                 ></ProfileCard>
               </HoverCardContent>

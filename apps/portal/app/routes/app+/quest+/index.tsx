@@ -22,6 +22,7 @@ import { Await, Link, useLoaderData } from '@remix-run/react'
 import { requireUserWallet } from '@server/auth'
 import { getQuestsProgress } from '@server/quest'
 import {
+  BLOCK_EXPLORER_URL,
   COMING_SOON_QUEST_SET,
   QUEST_LOG_DESCRIPTION,
   STANDARD_QUEST_SET,
@@ -212,6 +213,7 @@ function UserHeader() {
               name={getUserName(userProfile as GetUserByWalletResponse)}
               walletAddress={userWallet}
               avatarSrc={userProfile?.image ?? undefined}
+              ipfsLink={`${BLOCK_EXPLORER_URL}/address/${userProfile.wallet}`}
             />
           )
         }}

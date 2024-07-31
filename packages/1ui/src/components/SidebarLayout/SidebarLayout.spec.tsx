@@ -166,7 +166,7 @@ describe('SidebarLayout', () => {
             </button>
           </div>
           <div
-            class="h-full w-full overflow-y-auto overflow-x-hidden"
+            class="h-full w-full overflow-y-auto overflow-x-hidden flex justify-center"
           >
             Content goes here.
           </div>

@@ -16,6 +16,7 @@ import { requireUserWallet } from '@server/auth'
 import { NO_WALLET_ERROR, TAG_PREDICATE_VAULT_ID_TESTNET } from 'consts'
 
 export async function loader({ request }: LoaderFunctionArgs) {
+  console.log('[EXPLORE LISTS] -- START')
   const wallet = await requireUserWallet(request)
   invariant(wallet, NO_WALLET_ERROR)
 
@@ -40,6 +41,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   const totalPages = calculateTotalPages(listClaims?.total ?? 0, limit)
 
+  console.log('[EXPLORE LISTS] -- END')
   return json({
     listClaims: listClaims?.data as ClaimPresenter[],
     sortBy,
@@ -88,7 +90,7 @@ export default function ExploreLists() {
   }
 
   return (
-    <div className="m-8 flex flex-col items-center gap-6 w-full">
+    <div className="w-full flex flex-col items-center gap-6 w-full">
       <ExploreSearch variant="list" />
       <ListClaimsList
         listClaims={accumulatedClaims}

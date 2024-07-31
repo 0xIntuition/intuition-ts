@@ -11,7 +11,7 @@ export default function IdentityOverview() {
   const { message } = useLoaderData<typeof loader>()
 
   return (
-    <div className="m-8 flex flex-col items-center gap-4">
+    <div className="w-full flex flex-col items-center gap-4">
       <div className="flex flex-col">Identity Overview Route</div>
       <div>{message}</div>
     </div>

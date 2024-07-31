@@ -22,7 +22,7 @@ export const SidebarLayoutContent = ({
     <div
       ref={containerRef}
       className={cn(
-        'h-full w-full overflow-y-auto overflow-x-hidden',
+        'h-full w-full overflow-y-auto overflow-x-hidden flex justify-center',
         className,
       )}
       {...props}
