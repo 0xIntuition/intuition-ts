@@ -122,7 +122,7 @@ export async function setupAPI(request: Request) {
   console.log('[SETUP API] -- END')
 }
 
-export async function logAPI() {
-  console.log('OpenAPI Base', OpenAPI.BASE)
-  console.log('OpenAPI Headers', OpenAPI.HEADERS)
+export function logAPI() {
+  console.log('OpenAPI Base', JSON.stringify(OpenAPI.BASE, null, 2))
+  console.log('OpenAPI Headers', JSON.stringify(OpenAPI.HEADERS, null, 2))
 }
