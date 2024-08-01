@@ -1,5 +1,4 @@
 import Providers from '@client/providers'
-import { useUpdateApiHeaders } from '@lib/hooks/useUpdateApiHeaders'
 import { ClientHintCheck, getHints } from '@lib/utils/client-hints'
 import { useNonce } from '@lib/utils/nonce-provider'
 import { json, LoaderFunctionArgs, type MetaFunction } from '@remix-run/node'
@@ -44,10 +43,8 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 }
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  console.log('[ROOT] -- START')
   setupAPI(request)
 
-  console.log('[ROOT] -- END')
   return json({
     env: getEnv(),
     requestInfo: {
@@ -119,7 +116,6 @@ function App() {
   const nonce = useNonce()
   const theme = useTheme()
   const { env } = useLoaderData<typeof loader>()
-  useUpdateApiHeaders()
 
   return (
     <Document nonce={nonce} theme={theme}>
@@ -206,12 +202,12 @@ export function ErrorBoundary() {
               ))}
             </div>
             <div className="flex gap-6 mt-5 max-sm:flex-col">
-              <NavigationButton variant="primary" size="max-lg" to={PATHS.ROOT}>
+              <NavigationButton variant="primary" size="lg" to={PATHS.ROOT}>
                 Back to home
               </NavigationButton>
               <Button
                 variant="ghost"
-                size="max-lg"
+                size="lg"
                 className="rounded-full"
                 onClick={() =>
                   (window.location.href = `mailto:${SUPPORT_EMAIL_ADDRESS}`)

@@ -4,8 +4,6 @@ import { useLoaderData } from '@remix-run/react'
 import { PATHS } from 'consts'
 
 export async function loader() {
-  console.log('[EXPLORE INDEX] -- START')
-  console.log('[EXPLORE INDEX] -- END')
   return redirect(PATHS.EXPLORE_USERS)
 }
 
