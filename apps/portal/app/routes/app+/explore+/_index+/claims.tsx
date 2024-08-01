@@ -71,7 +71,7 @@ export default function ExploreClaims() {
   const { claims, identities, claimsPagination } =
     useLoaderData<typeof loader>()
   return (
-    <div className="w-full flex flex-col items-center gap-6">
+    <>
       <ExploreSearch variant="claim" identities={identities} />
       <ClaimsList
         claims={claims}
@@ -79,6 +79,6 @@ export default function ExploreClaims() {
         enableSearch={false}
         enableSort={true}
       />
-    </div>
+    </>
   )
 }

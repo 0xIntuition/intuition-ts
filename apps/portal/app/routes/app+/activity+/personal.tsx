@@ -39,7 +39,7 @@ export default function PersonalActivityFeed() {
   const { activity } = useLiveLoader<typeof loader>(['attest', 'create'])
 
   return (
-    <div className="mx-8 flex flex-col items-center gap-6">
+    <>
       <Suspense fallback={<ActivitySkeleton />}>
         <Await
           resolve={Promise.all([activity])}
@@ -57,6 +57,6 @@ export default function PersonalActivityFeed() {
           )}
         </Await>
       </Suspense>
-    </div>
+    </>
   )
 }

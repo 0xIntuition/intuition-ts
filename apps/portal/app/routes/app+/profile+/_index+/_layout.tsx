@@ -180,8 +180,6 @@ export default function Profile() {
     return null
   }
 
-  logger('userIdentity', userIdentity)
-
   const leftPanel = (
     <div className="flex-col justify-start items-start gap-5 inline-flex">
       <ProfileCard
@@ -260,7 +258,7 @@ export default function Profile() {
 
   const rightPanel = (
     <>
-      <div className="flex flex-row justify-end">
+      <div className="flex flex-row justify-end mb-6">
         <SegmentedNav options={userProfileRouteOptions} />
       </div>
       <div className="pb-10">
