@@ -4,7 +4,6 @@ import { useEffect } from 'react'
 
 import { OpenAPI } from '@0xintuition/api'
 
-import logger from '@lib/utils/logger'
 import { getAuthHeaders } from '@lib/utils/misc'
 import { useLocation, useMatches } from '@remix-run/react'
 
@@ -15,7 +14,7 @@ export function useUpdateApiHeaders() {
   useEffect(() => {
     const updateHeaders = async () => {
       const accessToken = localStorage.getItem('privy:token')
-      logger('accessToken from useUpdateApiHeaders', accessToken)
+      console.log('accessToken from useUpdateApiHeaders', accessToken)
 
       if (accessToken) {
         const headers = getAuthHeaders(accessToken)
