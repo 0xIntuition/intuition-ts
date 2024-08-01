@@ -214,7 +214,7 @@ function ActivityItem({
               />
             </ClaimRow>
             <Link
-              to={`${PATHS.PROFILE}/${activity.claim.claim_id}`}
+              to={`${PATHS.CLAIM}/${activity.claim.claim_id}`}
               prefetch="intent"
             >
               <Button
