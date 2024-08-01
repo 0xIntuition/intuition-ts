@@ -130,7 +130,7 @@ describe('Tags', () => {
           <button
             class="flex justify-center items-center gap-2 text-sm font-medium border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted primary-gradient-subtle text-primary/60 border-primary/10 rounded-lg hover:text-primary disabled:from-muted disabled:to-muted shadow-md-subtle px-3 py-1"
           >
-            Add new tags
+            View all tags
           </button>
         </div>
       </DocumentFragment>
@@ -256,7 +256,7 @@ describe('Tags', () => {
           <button
             class="flex justify-center items-center gap-2 text-sm font-medium border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted primary-gradient-subtle text-primary/60 border-primary/10 rounded-lg hover:text-primary disabled:from-muted disabled:to-muted shadow-md-subtle px-3 py-1"
           >
-            Add new tags
+            View all tags
           </button>
         </div>
       </DocumentFragment>
