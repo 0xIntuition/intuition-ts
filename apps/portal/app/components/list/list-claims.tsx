@@ -19,13 +19,15 @@ export function ListClaimsList({
   enableSearch = false,
   enableSort = false,
   onLoadMore,
+  columns,
 }: {
   listClaims: ClaimPresenter[]
   pagination: PaginationType
   paramPrefix?: string
   enableSearch?: boolean
   enableSort?: boolean
-  onLoadMore: () => void
+  onLoadMore?: () => void
+  columns?: number
 }) {
   const navigate = useNavigate()
   const options: SortOption<ClaimSortColumn>[] = [
@@ -78,7 +80,7 @@ export function ListClaimsList({
             <Sort options={options} handleSortChange={handleSortChange} />
           )}
         </div>
-        <ListGrid>
+        <ListGrid columns={columns}>
           {uniqueClaimData.map(
             (claim, index) =>
               claim &&

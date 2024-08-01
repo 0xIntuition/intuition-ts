@@ -3,15 +3,17 @@ import {
   ClaimSortColumn,
   ClaimsService,
   IdentityPresenter,
+  PositionSortColumn,
   UsersService,
 } from '@0xintuition/api'
 
 import logger from '@lib/utils/logger'
-import { calculateTotalPages } from '@lib/utils/misc'
+import { calculateTotalPages, invariant } from '@lib/utils/misc'
 import { getStandardPageParams } from '@lib/utils/params'
 import { fetchWrapper } from '@server/api'
+import { requireUser } from '@server/auth'
 import {
-  AM_WATCHING_DISPLAY_NAME_TESTNET,
+  TAG_PREDICATE_DISPLAY_NAME_TESTNET,
   TAG_PREDICATE_ID_TESTNET,
 } from 'consts'
 
@@ -65,17 +67,26 @@ export async function getUserCreatedLists({
 
 export async function getUserSavedLists({
   request,
-  userWallet,
   searchParams,
 }: {
   request: Request
-  userWallet: string
   searchParams: URLSearchParams
 }) {
+  const user = await requireUser(request)
+  invariant(user, 'User not found')
+  invariant(user.wallet?.address, 'User wallet address is required')
+
   const { page, limit, sortBy, direction } = getStandardPageParams({
     searchParams,
-    paramPrefix: 'claims',
-    defaultSortByValue: ClaimSortColumn.ASSETS_SUM,
+    paramPrefix: 'positions',
+    defaultSortByValue: PositionSortColumn.CREATED_AT,
+  })
+
+  const { id: userId } = await fetchWrapper(request, {
+    method: UsersService.getUserByWalletPublic,
+    args: {
+      wallet: user.wallet?.address,
+    },
   })
 
   const savedListClaims = await fetchWrapper(request, {
@@ -85,13 +96,13 @@ export async function getUserSavedLists({
       limit,
       sortBy,
       direction,
-      displayName: AM_WATCHING_DISPLAY_NAME_TESTNET,
-      user: userWallet,
+      displayName: TAG_PREDICATE_DISPLAY_NAME_TESTNET,
+      user: userId,
     },
   })
 
   const totalPages = calculateTotalPages(savedListClaims?.total ?? 0, limit)
-  logger('savedListClaims', savedListClaims.total)
+  logger('savedListClaims', savedListClaims)
 
   return {
     savedListClaims: savedListClaims.data as ClaimPresenter[],

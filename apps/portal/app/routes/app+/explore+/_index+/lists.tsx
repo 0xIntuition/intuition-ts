@@ -94,6 +94,7 @@ export default function ExploreLists() {
       <ListClaimsList
         listClaims={accumulatedClaims}
         pagination={{ ...pagination, currentPage }}
+        enableSearch={false}
         enableSort={true}
         onLoadMore={handleLoadMore}
       />
