@@ -8,10 +8,11 @@ import {
 
 import { ExploreSearch } from '@components/explore/ExploreSearch'
 import { ListClaimsList } from '@components/list/list-claims'
-import { calculateTotalPages, fetchWrapper, invariant } from '@lib/utils/misc'
+import { calculateTotalPages, invariant } from '@lib/utils/misc'
 import { getStandardPageParams } from '@lib/utils/params'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { useLoaderData, useSearchParams, useSubmit } from '@remix-run/react'
+import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
 import { NO_WALLET_ERROR, TAG_PREDICATE_VAULT_ID_TESTNET } from 'consts'
 
@@ -27,7 +28,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   })
   const displayName = searchParams.get('list') || null
 
-  const listClaims = await fetchWrapper({
+  const listClaims = await fetchWrapper(request, {
     method: ClaimsService.searchClaims,
     args: {
       page,

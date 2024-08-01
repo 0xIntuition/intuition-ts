@@ -6,9 +6,10 @@ import { ClaimPresenter, ClaimsService } from '@0xintuition/api'
 import { IdentitiesList } from '@components/list/identities'
 import { DataHeaderSkeleton, PaginatedListSkeleton } from '@components/skeleton'
 import { getListIdentities, getListIdentitiesCount } from '@lib/services/lists'
-import { DataErrorDisplay, fetchWrapper, invariant } from '@lib/utils/misc'
+import { DataErrorDisplay, invariant } from '@lib/utils/misc'
 import { defer, LoaderFunctionArgs } from '@remix-run/node'
 import { Await, useLoaderData, useRouteLoaderData } from '@remix-run/react'
+import { fetchWrapper } from '@server/api'
 import { NO_CLAIM_ERROR, NO_PARAM_ID_ERROR } from 'consts'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -18,7 +19,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const url = new URL(request.url)
   const searchParams = new URLSearchParams(url.search)
 
-  const claim = await fetchWrapper({
+  const claim = await fetchWrapper(request, {
     method: ClaimsService.getClaimById,
     args: { id },
   })
@@ -26,11 +27,13 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   invariant(claim.object?.id, NO_PARAM_ID_ERROR)
 
   const totalIdentitiesCount = getListIdentitiesCount({
+    request,
     objectId: claim.object.id,
   })
 
   return defer({
     listIdentities: getListIdentities({
+      request,
       objectId: claim.object.id,
       searchParams,
     }),
@@ -54,6 +57,7 @@ export default function ListOverview() {
               <ListHeaderCard
                 label="Identities"
                 value={resolvedtotalIdentitiesCount}
+                className="mb-6"
               >
                 <Claim
                   size="md"

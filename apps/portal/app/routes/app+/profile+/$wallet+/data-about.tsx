@@ -11,9 +11,10 @@ import { DataHeaderSkeleton, PaginatedListSkeleton } from '@components/skeleton'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { getClaimsAboutIdentity } from '@lib/services/claims'
 import { getPositionsOnIdentity } from '@lib/services/positions'
-import { fetchWrapper, formatBalance, invariant } from '@lib/utils/misc'
+import { formatBalance, invariant } from '@lib/utils/misc'
 import { defer, LoaderFunctionArgs } from '@remix-run/node'
 import { Await, useRouteLoaderData } from '@remix-run/react'
+import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
 import {
   NO_PARAM_ID_ERROR,
@@ -34,12 +35,17 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const searchParams = new URLSearchParams(url.search)
 
   return defer({
-    positions: getPositionsOnIdentity({ identityId: wallet, searchParams }),
-    claims: getClaimsAboutIdentity({
+    positions: getPositionsOnIdentity({
+      request,
       identityId: wallet,
       searchParams,
     }),
-    claimsSummary: fetchWrapper({
+    claims: getClaimsAboutIdentity({
+      request,
+      identityId: wallet,
+      searchParams,
+    }),
+    claimsSummary: fetchWrapper(request, {
       method: ClaimsService.claimSummary,
       args: {
         identity: wallet,
@@ -59,7 +65,7 @@ export default function ProfileDataAbout() {
 
   return (
     <div className="flex-col justify-start items-start flex w-full gap-6">
-      <div className="flex flex-col w-full pb-4 gap-6">
+      <div className="flex flex-col w-full gap-6">
         <div className="self-stretch justify-between items-center inline-flex">
           <Text
             variant="headline"

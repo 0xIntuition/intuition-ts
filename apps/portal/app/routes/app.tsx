@@ -3,9 +3,10 @@ import { useEffect } from 'react'
 import { UserPresenter, UsersService } from '@0xintuition/api'
 
 import PrivyLogout from '@client/privy-logout'
-import { fetchWrapper, invariant } from '@lib/utils/misc'
+import { invariant } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
 import { Outlet, useLoaderData, useLocation } from '@remix-run/react'
+import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
 import { isSanctioned } from '@server/ofac'
 import RootLayout from 'app/layouts/root-layout'
@@ -20,7 +21,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     return redirect('/sanctioned')
   }
 
-  const userObject = await fetchWrapper({
+  const userObject = await fetchWrapper(request, {
     method: UsersService.getUserByWalletPublic,
     args: {
       wallet,

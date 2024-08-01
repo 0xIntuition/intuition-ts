@@ -11,10 +11,11 @@ import { QuestsService, QuestStatus, UserQuestsService } from '@0xintuition/api'
 import { QuestCriteriaCard } from '@components/quest/quest-criteria-card'
 import QuestStatusCard from '@components/quest/quest-status-card'
 import { MDXContent } from '@content-collections/mdx/react'
-import { fetchWrapper, invariant } from '@lib/utils/misc'
+import { invariant } from '@lib/utils/misc'
 import { getQuestContentBySlug, getQuestCriteria } from '@lib/utils/quest'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { Link, useLoaderData } from '@remix-run/react'
+import { fetchWrapper } from '@server/api'
 import { requireUserId } from '@server/auth'
 import { FALLBACK_QUEST_PLACEHOLDER_IMAGE } from 'consts'
 
@@ -24,13 +25,13 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const userId = await requireUserId(request)
   invariant(userId, 'Unauthorized')
 
-  const quest = await fetchWrapper({
+  const quest = await fetchWrapper(request, {
     method: QuestsService.getQuest,
     args: {
       questId: id,
     },
   })
-  const status = await fetchWrapper({
+  const status = await fetchWrapper(request, {
     method: UserQuestsService.checkQuestStatus,
     args: {
       questId: id,

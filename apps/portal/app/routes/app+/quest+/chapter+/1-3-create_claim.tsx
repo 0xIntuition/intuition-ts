@@ -21,7 +21,7 @@ import { QuestCriteriaCard } from '@components/quest/quest-criteria-card'
 import { QuestPointsDisplay } from '@components/quest/quest-points-display'
 import { useQuestMdxContent } from '@lib/hooks/useQuestMdxContent'
 import logger from '@lib/utils/logger'
-import { fetchWrapper, invariant } from '@lib/utils/misc'
+import { invariant } from '@lib/utils/misc'
 import { getQuestCriteria, getQuestId, QuestRouteId } from '@lib/utils/quest'
 import { ActionFunctionArgs, json, LoaderFunctionArgs } from '@remix-run/node'
 import {
@@ -31,6 +31,7 @@ import {
   useRevalidator,
 } from '@remix-run/react'
 import { CheckQuestSuccessLoaderData } from '@routes/resources+/check-quest-success'
+import { fetchWrapper } from '@server/api'
 import { requireUser, requireUserId } from '@server/auth'
 import { MDXContentVariant } from 'types'
 
@@ -45,13 +46,13 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const wallet = user.wallet?.address
   invariant(wallet, 'Wallet is required')
 
-  const quest = await fetchWrapper({
+  const quest = await fetchWrapper(request, {
     method: QuestsService.getQuest,
     args: {
       questId: id,
     },
   })
-  const userQuest = await fetchWrapper({
+  const userQuest = await fetchWrapper(request, {
     method: UserQuestsService.getUserQuestByQuestId,
     args: {
       questId: id,
@@ -61,7 +62,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   let claim: ClaimPresenter | undefined
   if (userQuest && userQuest.quest_completion_object_id) {
-    claim = await fetchWrapper({
+    claim = await fetchWrapper(request, {
       method: ClaimsService.getClaimById,
       args: {
         id: userQuest.quest_completion_object_id,
@@ -84,14 +85,14 @@ export async function action({ request }: ActionFunctionArgs) {
   const questId = formData.get('questId') as string
 
   try {
-    const updatedUserQuest = await fetchWrapper({
+    const updatedUserQuest = await fetchWrapper(request, {
       method: UserQuestsService.completeQuest,
       args: {
         questId,
       },
     })
     if (updatedUserQuest.status === QuestStatus.COMPLETED) {
-      await fetchWrapper({
+      await fetchWrapper(request, {
         method: UserQuestsService.checkQuestStatus,
         args: {
           questId,

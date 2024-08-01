@@ -37,9 +37,10 @@ import {
   getUserClaims,
   getUserIdentities,
 } from '@lib/services/users'
-import { fetchWrapper, formatBalance, invariant } from '@lib/utils/misc'
+import { formatBalance, invariant } from '@lib/utils/misc'
 import { defer, LoaderFunctionArgs } from '@remix-run/node'
 import { Await, useRouteLoaderData } from '@remix-run/react'
+import { fetchWrapper } from '@server/api'
 import {
   NO_USER_IDENTITY_ERROR,
   NO_USER_TOTALS_ERROR,
@@ -56,26 +57,35 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
   const searchParams = new URLSearchParams(url.search)
 
   return defer({
-    activeIdentities: getUserIdentities({ userWallet: wallet, searchParams }),
-    activeClaims: getUserClaims({ userWallet: wallet, searchParams }),
-    activeClaimsSummary: fetchWrapper({
+    activeIdentities: getUserIdentities({
+      request,
+      userWallet: wallet,
+      searchParams,
+    }),
+    activeClaims: getUserClaims({ request, userWallet: wallet, searchParams }),
+    activeClaimsSummary: fetchWrapper(request, {
       method: ClaimsService.claimSummary,
       args: {
         identity: wallet,
       },
     }),
     createdIdentities: getCreatedIdentities({
+      request,
       userWallet: wallet,
       searchParams,
     }),
-    createdIdentitiesSummary: fetchWrapper({
+    createdIdentitiesSummary: fetchWrapper(request, {
       method: IdentitiesService.identitySummary,
       args: {
         creator: wallet,
       },
     }),
-    createdClaims: getCreatedClaims({ userWallet: wallet, searchParams }),
-    createdClaimsSummary: fetchWrapper({
+    createdClaims: getCreatedClaims({
+      request,
+      userWallet: wallet,
+      searchParams,
+    }),
+    createdClaimsSummary: fetchWrapper(request, {
       method: ClaimsService.claimSummary,
       args: {
         creator: wallet,

@@ -26,7 +26,6 @@ import { stakeModalAtom } from '@lib/state/store'
 import logger from '@lib/utils/logger'
 import {
   calculatePercentageOfTvl,
-  fetchWrapper,
   formatBalance,
   invariant,
 } from '@lib/utils/misc'
@@ -37,8 +36,10 @@ import {
   useLocation,
   useNavigate,
 } from '@remix-run/react'
+import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
 import { getVaultDetails } from '@server/multivault'
+import FullPageLayout from 'app/layouts/full-page-layout'
 import TwoPanelLayout from 'app/layouts/two-panel-layout'
 import { NO_WALLET_ERROR } from 'consts'
 import { useAtom } from 'jotai'
@@ -60,7 +61,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const direction: SortDirection =
     (searchParams.get('direction') as SortDirection) ?? 'desc'
 
-  const claim = await fetchWrapper({
+  const claim = await fetchWrapper(request, {
     method: ClaimsService.getClaimById,
     args: { id },
   })
@@ -128,7 +129,7 @@ export default function ClaimDetails() {
   const directionTagText = +userConviction > 0 ? 'FOR' : 'AGAINST'
 
   const ClaimWithNav = () => (
-    <div className="flex mb-4 px-7">
+    <div className="flex justify-between items-center w-full mb-6">
       <NavigationButton variant="secondary" size="icon" to={from ?? -1}>
         <Icon name="arrow-left" />
       </NavigationButton>
@@ -265,25 +266,24 @@ export default function ClaimDetails() {
   const rightPanel = <Outlet />
 
   return (
-    <div className="w-full flex flex-col">
+    <FullPageLayout>
       <ClaimWithNav />
-      <TwoPanelLayout leftPanel={leftPanel} rightPanel={rightPanel}>
-        <StakeModal
-          userWallet={wallet}
-          contract={claim.contract}
-          open={stakeModalActive.isOpen}
-          direction={stakeModalActive.direction}
-          claim={claim}
-          vaultDetails={vaultDetails}
-          onClose={() => {
-            setStakeModalActive((prevState) => ({
-              ...prevState,
-              isOpen: false,
-              mode: undefined,
-            }))
-          }}
-        />
-      </TwoPanelLayout>
-    </div>
+      <TwoPanelLayout leftPanel={leftPanel} rightPanel={rightPanel} />
+      <StakeModal
+        userWallet={wallet}
+        contract={claim.contract}
+        open={stakeModalActive.isOpen}
+        direction={stakeModalActive.direction}
+        claim={claim}
+        vaultDetails={vaultDetails}
+        onClose={() => {
+          setStakeModalActive((prevState) => ({
+            ...prevState,
+            isOpen: false,
+            mode: undefined,
+          }))
+        }}
+      />
+    </FullPageLayout>
   )
 }

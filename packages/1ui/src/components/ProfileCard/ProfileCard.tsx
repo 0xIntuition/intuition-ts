@@ -79,16 +79,18 @@ const ProfileCard = ({
           </Text>
         )}
 
-        {variant === Identity.nonUser && externalLink && (
-          <div className="">
-            <Text variant="body" className="text-muted-foreground">
-              Link
-            </Text>
-            <a href={externalLink} className="text-primary-300">
-              {externalLink}
-            </a>
-          </div>
-        )}
+        {variant === Identity.nonUser &&
+          externalLink &&
+          externalLink !== 'https://' && (
+            <div className="">
+              <Text variant="body" className="text-muted-foreground">
+                Link
+              </Text>
+              <a href={externalLink} className="text-primary-300">
+                {externalLink}
+              </a>
+            </div>
+          )}
       </div>
       {children && <div className="flex justify-center w-full">{children}</div>}
     </div>

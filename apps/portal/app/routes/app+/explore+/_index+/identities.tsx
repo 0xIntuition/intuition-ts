@@ -2,10 +2,11 @@ import { IdentitiesService, IdentityPresenter } from '@0xintuition/api'
 
 import { ExploreSearch } from '@components/explore/ExploreSearch'
 import { IdentitiesList } from '@components/list/identities'
-import { calculateTotalPages, fetchWrapper, invariant } from '@lib/utils/misc'
+import { calculateTotalPages, invariant } from '@lib/utils/misc'
 import { getStandardPageParams } from '@lib/utils/params'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
+import { fetchWrapper } from '@server/api'
 import { logAPI, requireUserWallet } from '@server/auth'
 import { NO_WALLET_ERROR } from 'consts'
 
@@ -23,7 +24,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const displayName = searchParams.get('identity') || null
   const hasTag = searchParams.get('tagIds') || null
 
-  const identities = await fetchWrapper({
+  const identities = await fetchWrapper(request, {
     method: IdentitiesService.searchIdentity,
     args: {
       page,

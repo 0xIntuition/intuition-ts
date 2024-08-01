@@ -51,7 +51,7 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
   }
 
   return defer({
-    connectionsData: getConnectionsData({ userWallet: wallet, request }),
+    connectionsData: getConnectionsData({ request, userWallet: wallet }),
   })
 }
 
