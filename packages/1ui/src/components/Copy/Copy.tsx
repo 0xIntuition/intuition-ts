@@ -2,6 +2,7 @@ import { useState } from 'react'
 
 import { Button, ButtonVariant } from 'components/Button'
 import { Icon, IconName } from 'components/Icon'
+import { cn } from 'styles'
 
 interface CopyProps extends React.HTMLAttributes<HTMLButtonElement> {
   text: string
@@ -25,14 +26,14 @@ const Copy: React.FC<CopyProps> = ({
   return (
     <Button
       variant={ButtonVariant.text}
-      className={`p-0 h-4 w-4 ${className}`}
+      className={`p-0 h-4 w-4 text-primary/60 hover:text-primary ${className}`}
       disabled={disabled}
       onClick={handleCopy}
       {...props}
     >
       <Icon
         name={copied ? IconName.checkmark : IconName.copy}
-        className={`h-4 w-4 ${copied ? 'text-success' : disabled ? 'text-muted-foreground' : 'text-primary'}`}
+        className={cn(`h-4 w-4`, copied && 'text-success')}
       />
     </Button>
   )

@@ -34,7 +34,7 @@ const ProfileCardHeader = ({
               maxStringLength={24}
             />
           </a>
-          <Copy text={walletAddress} className="text-muted-foreground" />
+          <Copy text={walletAddress} />
         </div>
       </div>
     </div>
