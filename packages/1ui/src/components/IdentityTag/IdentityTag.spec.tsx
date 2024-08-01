@@ -94,14 +94,14 @@ describe('Identity', () => {
       </DocumentFragment>
     `)
   })
-  it('should render appropriate element when given `sm` size', () => {
+  it('should render appropriate element when given `md` size', () => {
     const { asFragment } = render(
-      <IdentityTag size="sm">something</IdentityTag>,
+      <IdentityTag size="md">something</IdentityTag>,
     )
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <button
-          class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center rounded-full [&>span]:rounded-full [&>span]:overflow-hidden"
+          class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center rounded-full [&>span]:rounded-full [&>span]:overflow-hidden text-base [&>span]:h-7 [&>span]:w-7"
         >
           <span
             class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square bg-background theme-border rounded-full"
@@ -183,12 +183,12 @@ describe('Identity', () => {
   })
   it('should render appropriate element when given `xl` size', () => {
     const { asFragment } = render(
-      <IdentityTag size="lg">something</IdentityTag>,
+      <IdentityTag size="xl">something</IdentityTag>,
     )
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <button
-          class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center rounded-full [&>span]:rounded-full [&>span]:overflow-hidden text-lg [&>span]:h-8 [&>span]:w-8"
+          class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center rounded-full [&>span]:rounded-full [&>span]:overflow-hidden text-xl [&>span]:h-11 [&>span]:w-11"
         >
           <span
             class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square bg-background theme-border rounded-full"
