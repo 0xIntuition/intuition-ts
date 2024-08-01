@@ -20,13 +20,6 @@ Sentry.init({
       useLocation,
       useMatches,
     }),
-    Sentry.requestDataIntegration({
-      include: {
-        headers: true,
-        data: true,
-        cookies: true,
-      },
-    }),
   ],
   // Set tracesSampleRate to 1.0 to capture 100%
   // of transactions for tracing.
@@ -43,6 +36,7 @@ Sentry.init({
   replaysSessionSampleRate: 0.1,
   replaysOnErrorSampleRate: 1.0,
 })
+
 startTransition(() => {
   hydrateRoot(
     document,
