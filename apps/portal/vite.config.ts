@@ -54,6 +54,12 @@ export default defineConfig({
   build: {
     target: 'ES2022',
     sourcemap: true,
+    cssMinify: process.env.NODE_ENV === 'production',
+    assetsInlineLimit: (source: string) => {
+      if (source.endsWith('sprite.svg')) {
+        return false
+      }
+    },
   },
   ssr: {
     noExternal: [
