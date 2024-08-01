@@ -149,7 +149,6 @@ describe('ProfileCard', () => {
       stats: {
         numberOfFollowers: 300,
       },
-      link: 'https://blockchaincorp.com',
       ipfsLink: 'https://ipfs.io/ipfs/QmZKfjJ8v',
       bio: 'Blockchain Corp is a leading company in blockchain technology. Visit our website for more information about how you can benefit from our services.',
     }
@@ -159,7 +158,6 @@ describe('ProfileCard', () => {
       <DocumentFragment>
         <div
           class="flex flex-col justify-center items-start w-full min-w-80 rounded-lg gap-2.5"
-          link="https://blockchaincorp.com"
         >
           <div
             class="flex items-center space-x-4"
