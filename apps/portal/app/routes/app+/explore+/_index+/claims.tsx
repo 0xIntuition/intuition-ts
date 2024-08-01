@@ -12,12 +12,10 @@ import { getStandardPageParams } from '@lib/utils/params'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
-import { logAPI, requireUserWallet } from '@server/auth'
+import { requireUserWallet } from '@server/auth'
 import { NO_WALLET_ERROR } from 'consts'
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  console.log('[EXPLORE CLAIMS] -- START')
-  logAPI()
   const wallet = await requireUserWallet(request)
   invariant(wallet, NO_WALLET_ERROR)
 
@@ -55,7 +53,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   const claimsTotalPages = calculateTotalPages(claims?.total ?? 0, limit)
 
-  console.log('[EXPLORE CLAIMS] -- END')
   return json({
     identities: identities?.data,
     claims: claims?.data as ClaimPresenter[],

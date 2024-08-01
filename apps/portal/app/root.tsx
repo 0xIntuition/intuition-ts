@@ -44,10 +44,8 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 }
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  console.log('[ROOT] -- START')
   setupAPI(request)
 
-  console.log('[ROOT] -- END')
   return json({
     env: getEnv(),
     requestInfo: {
