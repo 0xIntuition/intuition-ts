@@ -111,24 +111,25 @@ export async function handlePrivyRedirect({
 }
 
 export async function setupAPI(request: Request) {
-  console.log('[SETUP API] -- START')
+  logger('[SETUP API] -- START')
   const apiUrl =
     typeof window !== 'undefined' ? window.ENV?.API_URL : process.env.API_URL
 
   OpenAPI.BASE = apiUrl
   const accessToken = getPrivyAccessToken(request)
-  console.log('[SETUP API] Access Token:', truncateToken(accessToken))
+  logger('[SETUP API] Access Token:', truncateToken(accessToken))
   const headers = getAuthHeaders(accessToken ?? '')
-  console.log('[SETUP API] Headers:', truncateHeaders(headers))
+  logger('[SETUP API] Headers:', truncateHeaders(headers))
   OpenAPI.HEADERS = headers as Record<string, string>
-  console.log('[SETUP API] -- END')
+  logger('[SETUP API] -- END')
 }
 
 export function logAPI() {
-  console.log('OpenAPI Base', JSON.stringify(OpenAPI.BASE, null, 2))
-  console.log('OpenAPI Headers', JSON.stringify(OpenAPI.HEADERS, null, 2))
+  logger('OpenAPI Base', JSON.stringify(OpenAPI.BASE, null, 2))
+  logger('OpenAPI Headers', JSON.stringify(OpenAPI.HEADERS, null, 2))
 }
 
+// these are temporary helpers to not expose access token to the logs
 function truncateToken(token: string | null): string {
   if (!token) {
     return 'null'
