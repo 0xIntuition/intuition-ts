@@ -111,18 +111,53 @@ export async function handlePrivyRedirect({
 }
 
 export async function setupAPI(request: Request) {
-  console.log('[SETUP API] -- START')
+  logger('[SETUP API] -- START')
   const apiUrl =
     typeof window !== 'undefined' ? window.ENV?.API_URL : process.env.API_URL
 
   OpenAPI.BASE = apiUrl
   const accessToken = getPrivyAccessToken(request)
+  logger('[SETUP API] Access Token:', truncateToken(accessToken))
+  const headers = getAuthHeaders(accessToken ?? '')
+  logger('[SETUP API] Headers:', truncateHeaders(headers))
+
+  if (typeof window !== 'undefined') {
+    // Client-side
+    const accessToken = localStorage.getItem('privy:token')
+    const headers = getAuthHeaders(accessToken || '')
+    OpenAPI.HEADERS = headers as Record<string, string>
+  } else if (request) {
+    // Server-side
+    const accessToken = getPrivyAccessToken(request)
+    const headers = getAuthHeaders(accessToken || '')
+    OpenAPI.HEADERS = headers as Record<string, string>
+  }
+}
+
+export function updateClientAPIHeaders(accessToken: string | null) {
   const headers = getAuthHeaders(accessToken !== null ? accessToken : '')
+
   OpenAPI.HEADERS = headers as Record<string, string>
-  console.log('[SETUP API] -- END')
+  logger('[SETUP API] -- END')
 }
 
 export function logAPI() {
-  console.log('OpenAPI Base', JSON.stringify(OpenAPI.BASE, null, 2))
-  console.log('OpenAPI Headers', JSON.stringify(OpenAPI.HEADERS, null, 2))
+  logger('OpenAPI Base', JSON.stringify(OpenAPI.BASE, null, 2))
+  logger('OpenAPI Headers', JSON.stringify(OpenAPI.HEADERS, null, 2))
+}
+
+// these are temporary helpers to not expose access token to the logs
+function truncateToken(token: string | null): string {
+  if (!token) {
+    return 'null'
+  }
+  return token.length > 8 ? `${token.slice(0, 4)}...${token.slice(-4)}` : token
+}
+
+function truncateHeaders(
+  headers: Record<string, string>,
+): Record<string, string> {
+  return Object.fromEntries(
+    Object.entries(headers).map(([key, value]) => [key, truncateToken(value)]),
+  )
 }

@@ -56,7 +56,7 @@ export default function ExploreUsers() {
   const { identities, pagination } = useLoaderData<typeof loader>()
 
   return (
-    <div className="w-full flex flex-col items-center gap-6">
+    <>
       <ExploreSearch variant="user" />
       <IdentitiesList
         identities={identities}
@@ -64,6 +64,6 @@ export default function ExploreUsers() {
         enableSearch={false}
         enableSort={true}
       />
-    </div>
+    </>
   )
 }

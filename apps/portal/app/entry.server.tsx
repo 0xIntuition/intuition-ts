@@ -1,3 +1,5 @@
+import * as Sentry from '@sentry/remix'
+
 /**
  * By default, Remix will handle generating the HTTP Response for you.
  * You are free to delete this file if you'd like to, but if you ever want it revealed again, you can run `npx remix reveal` ✨
@@ -12,6 +14,13 @@ import { createReadableStreamFromReadable } from '@remix-run/node'
 import { RemixServer } from '@remix-run/react'
 import { isbot } from 'isbot'
 import { renderToPipeableStream } from 'react-dom/server'
+
+export const handleError = Sentry.wrapHandleErrorWithSentry(
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  (error, { request }) => {
+    // Custom handleError implementation
+  },
+)
 
 const ABORT_DELAY = 5_000
 

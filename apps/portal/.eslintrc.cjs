@@ -27,14 +27,7 @@ module.exports = {
     {
       files: ['*.json'],
       parser: 'jsonc-eslint-parser',
-      rules: {
-        '@nx/dependency-checks': [
-          'error',
-          {
-            checkObsoleteDependencies: false,
-          },
-        ],
-      },
+      rules: {},
     },
   ],
 }

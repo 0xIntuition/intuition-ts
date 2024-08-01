@@ -31,7 +31,7 @@ export default function GlobalActivityFeed() {
   const { activity } = useLiveLoader<typeof loader>(['attest', 'create'])
 
   return (
-    <div className="mx-8 flex flex-col items-center">
+    <>
       <Suspense fallback={<ActivitySkeleton />}>
         <Await
           resolve={Promise.all([activity])}
@@ -49,6 +49,6 @@ export default function GlobalActivityFeed() {
           )}
         </Await>
       </Suspense>
-    </div>
+    </>
   )
 }
