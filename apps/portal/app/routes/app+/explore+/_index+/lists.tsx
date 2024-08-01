@@ -90,7 +90,7 @@ export default function ExploreLists() {
   }
 
   return (
-    <div className="w-full flex flex-col items-center gap-6 w-full">
+    <>
       <ExploreSearch variant="list" />
       <ListClaimsList
         listClaims={accumulatedClaims}
@@ -98,6 +98,6 @@ export default function ExploreLists() {
         enableSort={true}
         onLoadMore={handleLoadMore}
       />
-    </div>
+    </>
   )
 }
