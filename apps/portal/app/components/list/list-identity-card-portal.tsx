@@ -44,8 +44,11 @@ export const ListIdentityCardPortal: React.FC<ListIdentityCardPortalProps> = ({
           weight={TextWeight.medium}
           className="text-primary/80 mb-2"
         >
-          {displayName}
+          {displayName.length > 20
+            ? `${displayName.substring(0, 17)}...`
+            : displayName}
         </Text>
+
         <Text variant={TextVariant.body} className="text-secondary/50 mb-2">
           {identitiesCount} identities
         </Text>
