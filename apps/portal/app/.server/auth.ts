@@ -116,7 +116,21 @@ export async function setupAPI(request: Request) {
     typeof window !== 'undefined' ? window.ENV?.API_URL : process.env.API_URL
 
   OpenAPI.BASE = apiUrl
-  const accessToken = getPrivyAccessToken(request)
+
+  if (typeof window !== 'undefined') {
+    // Client-side
+    const accessToken = localStorage.getItem('privy:token')
+    const headers = getAuthHeaders(accessToken || '')
+    OpenAPI.HEADERS = headers as Record<string, string>
+  } else if (request) {
+    // Server-side
+    const accessToken = getPrivyAccessToken(request)
+    const headers = getAuthHeaders(accessToken || '')
+    OpenAPI.HEADERS = headers as Record<string, string>
+  }
+}
+
+export function updateClientAPIHeaders(accessToken: string | null) {
   const headers = getAuthHeaders(accessToken !== null ? accessToken : '')
   OpenAPI.HEADERS = headers as Record<string, string>
   console.log('[SETUP API] -- END')

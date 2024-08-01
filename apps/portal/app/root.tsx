@@ -14,6 +14,7 @@ import {
   useRouteError,
 } from '@remix-run/react'
 import { useTheme } from '@routes/actions+/set-theme'
+import { captureRemixErrorBoundaryError, withSentry } from '@sentry/remix'
 import { getEnv } from '@server/env'
 import { getTheme } from '@server/theme'
 
@@ -25,6 +26,7 @@ import { Button, Icon, Text, Toaster } from '@0xintuition/1ui'
 
 import { GlobalLoading } from '@components/global-loading'
 import NavigationButton from '@components/navigation-link'
+import { useUpdateApiHeaders } from '@lib/hooks/useUpdateApiHeaders'
 import { getChainEnvConfig } from '@lib/utils/environment'
 import logger from '@lib/utils/logger'
 import { cn } from '@lib/utils/misc'
@@ -113,10 +115,11 @@ export function ExternalScripts() {
   return null // this component doesn't render anything itself
 }
 
-export default function App() {
+function App() {
   const nonce = useNonce()
   const theme = useTheme()
   const { env } = useLoaderData<typeof loader>()
+  useUpdateApiHeaders()
 
   return (
     <Document nonce={nonce} theme={theme}>
@@ -132,6 +135,10 @@ export default function App() {
     </Document>
   )
 }
+
+export default withSentry(App, {
+  wrapWithErrorBoundary: process.env.NODE_ENV === 'production',
+})
 
 export function AppLayout() {
   const { chain } = useAccount()
@@ -234,6 +241,8 @@ export function ErrorBoundary() {
       description = error.data
     }
   }
+
+  captureRemixErrorBoundaryError(error)
 
   return (
     <ErrorMessage
