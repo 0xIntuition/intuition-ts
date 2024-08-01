@@ -1,6 +1,7 @@
 import { useState } from 'react'
 
 import {
+  Identity,
   PositionCard,
   PositionCardFeesAccrued,
   PositionCardLastUpdated,
@@ -34,18 +35,23 @@ import {
   fetchWrapper,
   formatBalance,
   invariant,
-  sliceString,
 } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { Outlet, useLoaderData, useNavigate } from '@remix-run/react'
 import { requireUser, requireUserWallet } from '@server/auth'
 import { getVaultDetails } from '@server/multivault'
-import { identityRouteOptions, NO_WALLET_ERROR } from 'consts'
+import {
+  identityRouteOptions,
+  IPFS_GATEWAY_URL,
+  NO_WALLET_ERROR,
+  PATHS,
+} from 'consts'
 import { useAtom } from 'jotai'
 import { ExtendedIdentityPresenter } from 'types/identity'
 import { VaultDetailsType } from 'types/vault'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
+  console.log('[$ID] -- START')
   const user = await requireUser(request)
   invariant(user, 'User not found')
   invariant(user.wallet?.address, 'User wallet not found')
@@ -86,6 +92,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     }
   }
 
+  console.log('[$ID] -- END')
   return json({
     identity,
     vaultDetails,
@@ -120,11 +127,13 @@ export default function IdentityDetails() {
     <NestedLayout outlet={Outlet} options={identityRouteOptions}>
       <div className="flex-col justify-start items-start inline-flex gap-6">
         <ProfileCard
-          variant="non-user"
+          variant={Identity.nonUser}
           avatarSrc={identity?.image ?? ''}
           name={identity?.display_name ?? ''}
-          walletAddress={sliceString(identity?.identity_id, 6, 4)}
+          walletAddress={identity?.identity_id}
           bio={identity?.description ?? ''}
+          ipfsLink={`${IPFS_GATEWAY_URL}/${identity?.identity_id?.replace('ipfs://', '')}`}
+          externalLink={identity?.external_reference ?? ''}
         />
         <Tags>
           {identity?.tags && identity?.tags.length > 0 && (
@@ -186,7 +195,7 @@ export default function IdentityDetails() {
             }))
           }
           onViewAllClick={() =>
-            navigate(`/app/identity/${identity.identity_id}/data-about`)
+            navigate(`${PATHS.IDENTITY}/${identity.id}/data-about`)
           }
         />
       </div>

@@ -1,12 +1,31 @@
-import { ResizablePanel } from '../../../'
+import { useEffect, useRef } from 'react'
 
-export const SidebarLayoutContent = ({ ...props }) => {
+import { cn } from 'styles'
+
+interface SidebarLayoutContentProps
+  extends React.HTMLAttributes<HTMLDivElement> {
+  currentPathname?: string
+}
+
+export const SidebarLayoutContent = ({
+  currentPathname,
+  className,
+  ...props
+}: SidebarLayoutContentProps) => {
+  const containerRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    if (currentPathname) {
+      containerRef.current?.scrollTo(0, 0)
+    }
+  }, [currentPathname])
   return (
-    <ResizablePanel defaultSize={70}>
-      <div
-        className="flex h-full items-center justify-center py-3 px-1"
-        {...props}
-      ></div>
-    </ResizablePanel>
+    <div
+      ref={containerRef}
+      className={cn(
+        'h-full w-full overflow-y-auto overflow-x-hidden flex justify-center',
+        className,
+      )}
+      {...props}
+    />
   )
 }

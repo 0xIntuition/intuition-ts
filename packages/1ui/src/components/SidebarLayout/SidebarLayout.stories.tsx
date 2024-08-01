@@ -7,13 +7,11 @@ import {
   SidebarLayoutContent,
   SidebarLayoutNav,
   SidebarLayoutNavAvatar,
-  SidebarLayoutNavFooter,
-  SidebarLayoutNavFooterItem,
+  SidebarLayoutNavBody,
   SidebarLayoutNavHeader,
   SidebarLayoutNavHeaderButton,
-  SidebarLayoutNavItem,
-  SidebarLayoutNavItems,
   SidebarLayoutProvider,
+  SidebarNavItem,
 } from '.'
 
 const meta: Meta<typeof SidebarLayout> = {
@@ -86,32 +84,36 @@ export const BasicUsage: Story = {
                 }
               />
             </SidebarLayoutNavHeader>
-            <SidebarLayoutNavItems>
-              <SidebarLayoutNavItem
-                iconName="crystal-ball"
-                label="Explore This"
-                onClick={() => null}
-              />
-              <SidebarLayoutNavItem
-                iconName="megaphone"
-                label="Explore That"
-                onClick={() => null}
-              />
-            </SidebarLayoutNavItems>
-            <SidebarLayoutNavFooter>
-              <SidebarLayoutNavFooterItem
-                iconName="settings-gear"
-                label="Settings"
-                onClick={() => null}
-              />
-              <SidebarLayoutNavAvatar
-                imageSrc="https://m.media-amazon.com/images/M/MV5BNDhiMWYzMjgtNTRiYi00ZTA3LThlODctNDRkMDk0NzFkMWI3L2ltYWdlL2ltYWdlXkEyXkFqcGdeQXVyNTg0MTkzMzA@._V1_.jpg"
-                name="Super Dave"
-                onClick={() => null}
-              />
-            </SidebarLayoutNavFooter>
+            <SidebarLayoutNavBody className="flex flex-col justify-between">
+              <div className="flex flex-col gap-px">
+                <SidebarNavItem
+                  iconName="crystal-ball"
+                  label="Explore This"
+                  onClick={() => null}
+                />
+                <SidebarNavItem
+                  iconName="megaphone"
+                  label="Explore That"
+                  onClick={() => null}
+                />
+              </div>
+              <div className="flex flex-col gap-px">
+                <SidebarNavItem
+                  iconName="settings-gear"
+                  label="Settings"
+                  onClick={() => null}
+                />
+                <SidebarLayoutNavAvatar
+                  imageSrc="https://m.media-amazon.com/images/M/MV5BNDhiMWYzMjgtNTRiYi00ZTA3LThlODctNDRkMDk0NzFkMWI3L2ltYWdlL2ltYWdlXkEyXkFqcGdeQXVyNTg0MTkzMzA@._V1_.jpg"
+                  name="Super Dave"
+                  onClick={() => null}
+                />
+              </div>
+            </SidebarLayoutNavBody>
           </SidebarLayoutNav>
-          <SidebarLayoutContent>Content goes here.</SidebarLayoutContent>
+          <SidebarLayoutContent className="p-6 flex justify-center items-center">
+            Content goes here.
+          </SidebarLayoutContent>
         </SidebarLayout>
       </SidebarLayoutProvider>
     </div>

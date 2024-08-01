@@ -7,7 +7,11 @@ import {
   Text,
 } from '@0xintuition/1ui'
 import { ProfileCardHeader } from '@0xintuition/1ui/src/components/ProfileCard/components'
-import { GetUserByWalletResponse, UsersService } from '@0xintuition/api'
+import {
+  GetUserByWalletResponse,
+  QuestNarrative,
+  UsersService,
+} from '@0xintuition/api'
 
 import { QuestSetCard } from '@components/quest/quest-set-card'
 import { QuestSetProgressCard } from '@components/quest/quest-set-progress-card'
@@ -16,8 +20,9 @@ import { fetchWrapper, invariant } from '@lib/utils/misc'
 import { defer, LoaderFunctionArgs } from '@remix-run/node'
 import { Await, Link, useLoaderData } from '@remix-run/react'
 import { requireUserWallet } from '@server/auth'
-import { fetchQuestNarrativeProgress } from '@server/quest'
+import { getQuestsProgress } from '@server/quest'
 import {
+  BLOCK_EXPLORER_URL,
   COMING_SOON_QUEST_SET,
   QUEST_LOG_DESCRIPTION,
   STANDARD_QUEST_SET,
@@ -28,19 +33,24 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const userWallet = await requireUserWallet(request)
   invariant(userWallet, 'Unauthorized')
 
-  const userProfile = await fetchWrapper({
+  const userProfile = fetchWrapper({
     method: UsersService.getUserByWalletPublic,
     args: {
       wallet: userWallet,
     },
   })
 
-  const standardQuestsProgress = fetchQuestNarrativeProgress('Standard')
+  const details = getQuestsProgress({
+    request,
+    options: {
+      narrative: QuestNarrative.STANDARD,
+    },
+  })
 
   return defer({
+    details,
     userWallet,
     userProfile,
-    standardQuestsProgress,
   })
 }
 
@@ -78,7 +88,7 @@ const mockReferralData = {
 }
 
 export default function Quests() {
-  const { standardQuestsProgress } = useLoaderData<typeof loader>()
+  const { details } = useLoaderData<typeof loader>()
 
   return (
     <div className="p-10 w-full max-w-7xl mx-auto flex flex-col gap-5">
@@ -89,28 +99,26 @@ export default function Quests() {
         <Separator className="mb-5" />
       </div>
       <div className="flex flex-col gap-16">
-        <div>
-          <div className="flex gap-10">
-            <div className="flex-shrink-0 min-w-[256px] w-1/3">
-              <div className="bg-warning/5 rounded-lg theme-border p-5 flex justify-center align-items h-full border-warning/30 text-warning/30 text-bold border-dashed">
-                Points
-              </div>
+        <div className="flex gap-10">
+          <div className="flex-shrink-0 min-w-[256px] w-1/3">
+            <div className="bg-warning/5 rounded-lg theme-border p-5 flex justify-center align-items h-full border-warning/30 text-warning/30 text-bold border-dashed">
+              Points
             </div>
-            <div className="flex-1">
-              <Suspense fallback={<Skeleton className="h-full w-full" />}>
-                <Await resolve={standardQuestsProgress}>
-                  {(progress) => (
-                    <QuestSetProgressCard
-                      imgSrc={STANDARD_QUEST_SET.imgSrc}
-                      title={STANDARD_QUEST_SET.title}
-                      numberQuests={progress.numQuests}
-                      numberCompletedQuests={progress.numCompletedQuests}
-                      to={STANDARD_QUEST_SET.navigatePath}
-                    />
-                  )}
-                </Await>
-              </Suspense>
-            </div>
+          </div>
+          <div className="flex-1">
+            <Suspense fallback={<Skeleton className="h-52 w-full" />}>
+              <Await resolve={details}>
+                {(resolvedDetails) => (
+                  <QuestSetProgressCard
+                    imgSrc={STANDARD_QUEST_SET.imgSrc}
+                    title={STANDARD_QUEST_SET.title}
+                    numberQuests={resolvedDetails.numQuests}
+                    numberCompletedQuests={resolvedDetails.numCompletedQuests}
+                    to={STANDARD_QUEST_SET.navigatePath}
+                  />
+                )}
+              </Await>
+            </Suspense>
           </div>
         </div>
         <div className="space-y-5">
@@ -135,16 +143,18 @@ export default function Quests() {
           </div>
           <ul className="grid grid-cols-1 gap-10 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2">
             <Suspense fallback={<Skeleton className="h-full w-full" />}>
-              <Await resolve={standardQuestsProgress}>
-                {(progress) => (
+              <Await resolve={details}>
+                {(resolvedDetails) => (
                   <Link to={STANDARD_QUEST_SET.navigatePath} prefetch="intent">
                     <li className="col-span-1 h-full">
                       <QuestSetCard
                         imgSrc={STANDARD_QUEST_SET.imgSrc}
                         title={STANDARD_QUEST_SET.title}
                         description={STANDARD_QUEST_SET.description}
-                        numberQuests={progress.numQuests}
-                        numberCompletedQuests={progress.numCompletedQuests}
+                        numberQuests={resolvedDetails.numQuests}
+                        numberCompletedQuests={
+                          resolvedDetails.numCompletedQuests
+                        }
                       />
                     </li>
                   </Link>
@@ -203,6 +213,7 @@ function UserHeader() {
               name={getUserName(userProfile as GetUserByWalletResponse)}
               walletAddress={userWallet}
               avatarSrc={userProfile?.image ?? undefined}
+              ipfsLink={`${BLOCK_EXPLORER_URL}/address/${userProfile.wallet}`}
             />
           )
         }}

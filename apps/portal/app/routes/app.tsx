@@ -3,12 +3,12 @@ import { useEffect } from 'react'
 import { UserPresenter, UsersService } from '@0xintuition/api'
 
 import PrivyLogout from '@client/privy-logout'
-import SidebarNav from '@components/sidebar-nav'
 import { fetchWrapper, invariant } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
 import { Outlet, useLoaderData, useLocation } from '@remix-run/react'
 import { requireUserWallet } from '@server/auth'
 import { isSanctioned } from '@server/ofac'
+import RootLayout from 'app/layouts/root-layout'
 import { Address } from 'viem'
 
 export async function loader({ request }: LoaderFunctionArgs) {
@@ -33,7 +33,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   })
 }
 
-export default function Index() {
+export default function App() {
   const { wallet, userObject } = useLoaderData<{
     wallet: string
     userObject: UserPresenter
@@ -45,11 +45,9 @@ export default function Index() {
   }, [pathname])
 
   return (
-    <div className="flex items-start h-screen">
-      <SidebarNav userObject={userObject}>
-        <Outlet />
-      </SidebarNav>
+    <RootLayout userObject={userObject}>
+      <Outlet />
       <PrivyLogout wallet={wallet} />
-    </div>
+    </RootLayout>
   )
 }

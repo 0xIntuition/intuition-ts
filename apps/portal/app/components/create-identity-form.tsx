@@ -42,8 +42,10 @@ import { CreateLoaderData } from '@routes/resources+/create'
 import {
   ACCEPTED_IMAGE_MIME_TYPES,
   GENERIC_ERROR_MSG,
+  IPFS_GATEWAY_URL,
   MAX_UPLOAD_SIZE,
   MULTIVAULT_CONTRACT_ADDRESS,
+  PATHS,
 } from 'consts'
 import {
   IdentityTransactionActionType,
@@ -594,6 +596,7 @@ function CreateIdentityForm({
             status={state.status as TransactionStatusType}
             txHash={state.txHash}
             type="identity"
+            ipfsLink={`${IPFS_GATEWAY_URL}/${transactionResponseData?.identity_id?.replace('ipfs://', '')}`}
             successButton={
               transactionResponseData && (
                 <Button
@@ -603,14 +606,14 @@ function CreateIdentityForm({
                   onClick={() => {
                     if (successAction === TransactionSuccessAction.VIEW) {
                       navigate(
-                        `/app/identity/${transactionResponseData.identity_id}`,
+                        `${PATHS.IDENTITY}/${transactionResponseData.id}`,
                       )
                     }
                     onClose()
                   }}
                 >
                   {successAction === TransactionSuccessAction.VIEW
-                    ? 'View identity'
+                    ? 'View Identity'
                     : 'Close'}
                 </Button>
               )

@@ -1,11 +1,12 @@
-import React from 'react'
+import React, { HTMLAttributes } from 'react'
 
 import { Text } from 'components/Text'
+import { cn } from 'styles'
 import { Identity, IdentityType } from 'types'
 
 import { ProfileCardHeader, ProfileCardStatItem } from './components'
 
-export interface ProfileCardProps {
+export interface ProfileCardProps extends HTMLAttributes<HTMLDivElement> {
   variant?: IdentityType
   avatarSrc: string
   name: string
@@ -15,7 +16,8 @@ export interface ProfileCardProps {
     numberOfFollowing?: number
     points?: number
   }
-  link?: string
+  ipfsLink: string
+  externalLink?: string
   bio?: string
   children?: React.ReactNode
 }
@@ -26,20 +28,29 @@ const ProfileCard = ({
   name,
   walletAddress,
   stats,
-  link,
+  ipfsLink,
+  externalLink,
   bio,
   children,
+  ...props
 }: ProfileCardProps) => {
   return (
-    <div className="flex flex-col justify-center items-start w-full min-w-80 rounded-lg box-border gap-2.5">
+    <div
+      className={cn(
+        'flex flex-col justify-center items-start w-full min-w-80 rounded-lg gap-2.5',
+        props.className,
+      )}
+      {...props}
+    >
       <ProfileCardHeader
         variant={variant}
         avatarSrc={avatarSrc}
         name={name}
         walletAddress={walletAddress}
+        ipfsLink={ipfsLink}
       />
       {variant === Identity.user && (
-        <div className="flex justify-start items-center gap-4 pt-1">
+        <div className="flex justify-start items-center gap-4 pt-2">
           <ProfileCardStatItem
             value={stats?.numberOfFollowing ?? 0}
             label="Following"
@@ -68,13 +79,13 @@ const ProfileCard = ({
           </Text>
         )}
 
-        {variant === Identity.nonUser && link && (
+        {variant === Identity.nonUser && externalLink && (
           <div className="">
             <Text variant="body" className="text-muted-foreground">
               Link
             </Text>
-            <a href={link} className="text-primary-300">
-              {link}
+            <a href={externalLink} className="text-primary-300">
+              {externalLink}
             </a>
           </div>
         )}

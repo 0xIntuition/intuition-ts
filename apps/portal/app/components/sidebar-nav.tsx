@@ -7,19 +7,17 @@ import {
   SidebarLayoutContent,
   SidebarLayoutNav,
   SidebarLayoutNavAvatar,
-  SidebarLayoutNavFooter,
-  SidebarLayoutNavFooterItem,
+  SidebarLayoutNavBody,
   SidebarLayoutNavHeader,
   SidebarLayoutNavHeaderButton,
-  SidebarLayoutNavItem,
-  SidebarLayoutNavItems,
   SidebarLayoutProvider,
+  SidebarNavItem,
 } from '@0xintuition/1ui'
 import { UserPresenter } from '@0xintuition/api'
 
 import { PrivyButton } from '@client/privy-button'
 import { createClaimModalAtom, createIdentityModalAtom } from '@lib/state/store'
-import { NavLink, useNavigate, useSubmit } from '@remix-run/react'
+import { NavLink, useLocation, useNavigate, useSubmit } from '@remix-run/react'
 import { PATHS } from 'consts'
 import { useAtom } from 'jotai'
 import { isAddress } from 'viem'
@@ -70,6 +68,7 @@ export default function SidebarNav({
 }) {
   const submit = useSubmit()
   const navigate = useNavigate()
+  const location = useLocation()
   const [isPrivyButtonLoaded, setIsPrivyButtonLoaded] = useState(false)
 
   useEffect(() => {
@@ -100,8 +99,8 @@ export default function SidebarNav({
   return (
     <>
       <SidebarLayoutProvider>
-        <SidebarLayout className="h-screen">
-          <SidebarLayoutNav collapsedSize={5} minSize={16} maxSize={18}>
+        <SidebarLayout>
+          <SidebarLayoutNav>
             <SidebarLayoutNavHeader>
               <SidebarLayoutNavHeaderButton
                 imgLogo={
@@ -155,50 +154,50 @@ export default function SidebarNav({
                 onClick={() => navigate('/')}
               />
             </SidebarLayoutNavHeader>
-            <SidebarLayoutNavItems>
-              {sidebarNavRoutes.map((sidebarNavItem) => (
-                <NavLink
-                  key={sidebarNavItem.label}
-                  to={sidebarNavItem.route}
-                  prefetch="intent"
-                >
-                  <SidebarLayoutNavItem
-                    key={sidebarNavItem.label}
-                    iconName={sidebarNavItem.iconName}
-                    label={sidebarNavItem.label}
-                  />
-                </NavLink>
-              ))}
-            </SidebarLayoutNavItems>
-            <SidebarLayoutNavFooter>
-              <SidebarLayoutNavFooterItem
-                iconName="fingerprint"
-                label="Create Identity"
-                onClick={() => setCreateIdentityModalActive(true)}
-              />
-              <SidebarLayoutNavFooterItem
-                iconName="claim"
-                label="Create Claim"
-                onClick={() => setCreateClaimModalActive(true)}
-              />
-
-              {isPrivyButtonLoaded ? (
-                <PrivyButton
-                  triggerComponent={
-                    <SidebarLayoutNavAvatar
-                      imageSrc={userObject.image ?? ''}
-                      name={username}
+            <SidebarLayoutNavBody className="flex flex-col justify-between">
+              <div className="flex flex-col gap-px">
+                {sidebarNavRoutes.map((sidebarNavItem, index) => (
+                  <NavLink
+                    key={`nav-item-${index}`}
+                    to={sidebarNavItem.route}
+                    prefetch="intent"
+                  >
+                    <SidebarNavItem
+                      iconName={sidebarNavItem.iconName}
+                      label={sidebarNavItem.label}
                     />
-                  }
-                  onLogout={onLogout}
+                  </NavLink>
+                ))}
+              </div>
+              <div className="flex flex-col gap-px">
+                <SidebarNavItem
+                  iconName="fingerprint"
+                  label="Create Identity"
+                  onClick={() => setCreateIdentityModalActive(true)}
                 />
-              ) : (
-                <div className="h-20" />
-              )}
-            </SidebarLayoutNavFooter>
+                <SidebarNavItem
+                  iconName="claim"
+                  label="Create Claim"
+                  onClick={() => setCreateClaimModalActive(true)}
+                />
+
+                {isPrivyButtonLoaded ? (
+                  <PrivyButton
+                    triggerComponent={
+                      <SidebarLayoutNavAvatar
+                        imageSrc={userObject.image ?? ''}
+                        name={username}
+                      />
+                    }
+                    onLogout={onLogout}
+                  />
+                ) : (
+                  <div className="h-20" />
+                )}
+              </div>
+            </SidebarLayoutNavBody>
           </SidebarLayoutNav>
-          <SidebarLayoutContent className="h-full w-full min-h-screen overflow-y-scroll">
-            {/* TODO: overflow-y-scroll on SidebarLayoutContent is causing scroll issues all over the app. Discussion is needed to fix this. */}
+          <SidebarLayoutContent currentPathname={location.pathname}>
             {children}
           </SidebarLayoutContent>
         </SidebarLayout>

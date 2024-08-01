@@ -1,10 +1,19 @@
-import { ResizablePanelGroup } from '../../../'
+import { cn } from 'styles'
 
-export const SidebarLayout = ({ ...props }) => {
+import { useSidebarLayoutContext } from './SidebarLayoutProvider'
+
+export const SidebarLayout = ({
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) => {
+  const { isMobileView, isCollapsed } = useSidebarLayoutContext()
   return (
-    <ResizablePanelGroup
-      direction="horizontal"
+    <div
+      className={cn(
+        'flex h-full w-full overflow-x-hidden',
+        isMobileView && 'flex-col',
+        isMobileView && !isCollapsed && 'overflow-hidden',
+      )}
       {...props}
-    ></ResizablePanelGroup>
+    ></div>
   )
 }

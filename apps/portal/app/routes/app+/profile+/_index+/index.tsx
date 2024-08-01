@@ -24,7 +24,7 @@ export default function ProfileOverview() {
   const navigate = useNavigate()
 
   return (
-    <div className="flex flex-col gap-10 mt-10">
+    <div className="flex flex-col gap-10">
       <QuestHeaderCard
         title={userQuests.currentQuest.title}
         subtitle={userQuests.currentQuest.subtitle}

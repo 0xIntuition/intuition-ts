@@ -74,6 +74,16 @@ export type AtomCreated = {
   vault_id: string
 }
 
+export type BatchCreateAtom = {
+  atoms_data: Array<Blob | File>
+}
+
+export type BatchCreateTriple = {
+  object_ids: string
+  predicate_ids: string
+  subject_ids: string
+}
+
 export type ClaimAttribute =
   | {
       vaultId: VaultIdQuery
@@ -311,7 +321,9 @@ export const EnumComparators = {
 
 export type Event =
   | 'createAtom'
+  | 'batchCreateAtom'
   | 'createAtomCompressed'
+  | 'batchCreateTriple'
   | 'createTriple'
   | 'currentSharePrice'
   | 'deployAtomWallet'
@@ -331,7 +343,9 @@ export type Event =
 
 export const Event = {
   CREATE_ATOM: 'createAtom',
+  BATCH_CREATE_ATOM: 'batchCreateAtom',
   CREATE_ATOM_COMPRESSED: 'createAtomCompressed',
+  BATCH_CREATE_TRIPLE: 'batchCreateTriple',
   CREATE_TRIPLE: 'createTriple',
   CURRENT_SHARE_PRICE: 'currentSharePrice',
   DEPLOY_ATOM_WALLET: 'deployAtomWallet',
@@ -487,7 +501,13 @@ export type InputData =
       CreateAtom: CreateAtom
     }
   | {
+      BatchCreateAtom: BatchCreateAtom
+    }
+  | {
       CreateTriple: CreateTriple
+    }
+  | {
+      BatchCreateTriple: BatchCreateTriple
     }
   | {
       DepositAtom: DepositAtom
@@ -511,8 +531,19 @@ export type IntegrationStatus = {
   cloudinary_cache?: string | null
 }
 
+export type InviteCodePresenter = {
+  created_at: string
+  id: string
+  invite_code: string
+  invited_by?: string | null
+  redeemed: boolean
+  redeemed_by?: string | null
+  redeemer?: UserPresenter | null
+  updated_at: string
+}
+
 export type InviteCodesResponse = {
-  invite_codes: Array<string>
+  invite_codes: Array<InviteCodePresenter>
 }
 
 export type IsCompleteQuery = {
@@ -590,11 +621,17 @@ export type NewClaim = {
   creator: string
   creator_id?: string | null
   object: Identifier
+  object_display_name?: string | null
   object_id?: string | null
+  object_identity_id?: string | null
   predicate: Identifier
+  predicate_display_name?: string | null
   predicate_id?: string | null
+  predicate_identity_id?: string | null
   subject: Identifier
+  subject_display_name?: string | null
   subject_id?: string | null
+  subject_identity_id?: string | null
   vault_id?: Identifier | null
   vault_uuid?: string | null
 }
@@ -1093,10 +1130,13 @@ export type TripleCreated = {
 }
 
 export type UpdateClaim = {
+  against_num_positions?: number | null
   counter_vault_id?: Identifier | null
   counter_vault_uuid?: string | null
   creator: string
   creator_id?: string | null
+  for_num_positions?: number | null
+  num_positions?: number | null
   object?: Identifier | null
   object_id?: string | null
   predicate?: Identifier | null
@@ -1251,9 +1291,9 @@ export type UserQuestPaginatedResponse = {
 export type UserQuestQuery = {
   direction?: SortDirection | null
   limit?: number | null
-  narrative?: QuestNarrative | null
   offset?: number | null
   page?: number | null
+  questCondition?: QuestCondition | null
   questId?: string | null
   sortBy?: UserQuestSortColumn | null
   status?: QuestStatus | null
@@ -2050,7 +2090,7 @@ export type IntegrationHealthcheckResponse = {
 }
 
 export type CreateInviteCodesData = {
-  requestBody: NewPosition
+  requestBody: NewInviteCodes
 }
 
 export type CreateInviteCodesResponse = unknown
@@ -2432,6 +2472,23 @@ export type DeleteQuestResponse = {
   updated_at: string
 }
 
+export type GetUserQuestByQuestIdData = {
+  questId: string
+}
+
+export type GetUserQuestByQuestIdResponse = {
+  date_completed?: string | null
+  date_started: string
+  id: string
+  point_multiplier: number
+  progress: number
+  quest_completion_object_id?: string | null
+  quest_condition: QuestCondition
+  quest_id: string
+  status: QuestStatus
+  user_id: string
+}
+
 export type SearchData = {
   requestBody: UserQuestQuery
 }
@@ -2778,6 +2835,17 @@ export type UpdateUserEnsResponse = {
   wallet: string
 }
 
+export type GetInviteCodesByUserData = {
+  /**
+   * User sql id
+   */
+  id: string
+}
+
+export type GetInviteCodesByUserResponse = {
+  invite_codes: Array<InviteCodePresenter>
+}
+
 export type CreateInviteCodesByUserData = {
   /**
    * User sql id
@@ -2786,7 +2854,7 @@ export type CreateInviteCodesByUserData = {
 }
 
 export type CreateInviteCodesByUserResponse = {
-  invite_codes: Array<string>
+  invite_codes: Array<InviteCodePresenter>
 }
 
 export type GetLinkedAccountsByUserData = {
@@ -2848,6 +2916,20 @@ export type GetUserByIdResponse = {
   role: Role
   updated_at: string
   wallet: string
+}
+
+export type GetUserTagsData = {
+  /**
+   * User sql id or wallet
+   */
+  id: Identifier
+}
+
+export type GetUserTagsResponse = {
+  data: Array<IdentityPresenter>
+  limit: number
+  page: number
+  total: number
 }
 
 export type GetUserTotalsData = {
@@ -3783,7 +3865,7 @@ export type $OpenApiTs = {
   '/invite_codes': {
     post: {
       req: {
-        requestBody: NewPosition
+        requestBody: NewInviteCodes
       }
       res: {
         /**
@@ -4287,6 +4369,30 @@ export type $OpenApiTs = {
       }
     }
   }
+  '/user_quest/quest/{quest_id}': {
+    get: {
+      req: {
+        questId: string
+      }
+      res: {
+        /**
+         * Get the user quest associated with the quest id and the user
+         */
+        200: {
+          date_completed?: string | null
+          date_started: string
+          id: string
+          point_multiplier: number
+          progress: number
+          quest_completion_object_id?: string | null
+          quest_condition: QuestCondition
+          quest_id: string
+          status: QuestStatus
+          user_id: string
+        }
+      }
+    }
+  }
   '/user_quest/search': {
     post: {
       req: {
@@ -4750,6 +4856,22 @@ export type $OpenApiTs = {
     }
   }
   '/users/{id}/invite_codes': {
+    get: {
+      req: {
+        /**
+         * User sql id
+         */
+        id: string
+      }
+      res: {
+        /**
+         * Invite codes created for user
+         */
+        200: {
+          invite_codes: Array<InviteCodePresenter>
+        }
+      }
+    }
     post: {
       req: {
         /**
@@ -4762,7 +4884,7 @@ export type $OpenApiTs = {
          * Invite codes created for user
          */
         200: {
-          invite_codes: Array<string>
+          invite_codes: Array<InviteCodePresenter>
         }
       }
     }
@@ -4845,6 +4967,27 @@ export type $OpenApiTs = {
           role: Role
           updated_at: string
           wallet: string
+        }
+      }
+    }
+  }
+  '/users/{id}/tags': {
+    get: {
+      req: {
+        /**
+         * User sql id or wallet
+         */
+        id: Identifier
+      }
+      res: {
+        /**
+         * get identities tagged by user
+         */
+        200: {
+          data: Array<IdentityPresenter>
+          limit: number
+          page: number
+          total: number
         }
       }
     }

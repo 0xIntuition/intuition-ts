@@ -10,12 +10,17 @@ import {
   CommandInput,
   CommandList,
   EmptyStateCard,
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
   Icon,
   IconName,
+  ProfileCard,
 } from '@0xintuition/1ui'
 import { IdentityPresenter } from '@0xintuition/api'
 
-import { formatBalance, truncateString } from '@lib/utils/misc'
+import { formatBalance, sliceString, truncateString } from '@lib/utils/misc'
+import { BLOCK_EXPLORER_URL, IPFS_GATEWAY_URL } from 'consts'
 
 import { IdentitySearchComboboxItem } from './identity-search-combo-box-item'
 
@@ -77,7 +82,7 @@ const IdentitySearchCombobox = ({
             />
           </CommandEmpty>
           <CommandGroup key={identities.length}>
-            {identities.map((identity, index) => {
+            {identities.map((identity) => {
               const {
                 display_name: name,
                 user,
@@ -93,19 +98,63 @@ const IdentitySearchCombobox = ({
               const isDisabled = existingIdentityIds?.includes(identity_id)
 
               return (
-                <IdentitySearchComboboxItem
-                  key={index}
-                  variant={variant}
-                  name={truncateString(user?.display_name ?? name, 7)}
-                  avatarSrc={user?.image ?? image ?? undefined}
-                  value={+formatBalance(value)}
-                  walletAddress={walletAddress}
-                  socialCount={socialCount || 0}
-                  tagCount={tagCount || 0}
-                  onClick={() => onIdentityClick(identity)}
-                  onSelect={() => onIdentitySelect(identity)}
-                  disabled={isDisabled}
-                />
+                <HoverCard openDelay={100} closeDelay={100} key={identity.id}>
+                  <HoverCardTrigger className="w-full">
+                    <IdentitySearchComboboxItem
+                      key={identity.id}
+                      variant={variant}
+                      name={truncateString(user?.display_name ?? name, 7)}
+                      avatarSrc={user?.image ?? image ?? ''}
+                      value={+formatBalance(value)}
+                      walletAddress={walletAddress}
+                      socialCount={socialCount || 0}
+                      tagCount={tagCount || 0}
+                      onClick={() => onIdentityClick(identity)}
+                      onSelect={() => onIdentitySelect(identity)}
+                      disabled={isDisabled}
+                    />
+                  </HoverCardTrigger>
+                  {identity && (
+                    <HoverCardContent
+                      side="right"
+                      sideOffset={16}
+                      className="w-80"
+                    >
+                      <ProfileCard
+                        variant={identity.is_user ? 'user' : 'non-user'}
+                        avatarSrc={identity.user?.image ?? identity.image ?? ''}
+                        name={truncateString(
+                          identity.user?.display_name ?? identity.display_name,
+                          18,
+                        )}
+                        walletAddress={
+                          identity.is_user === true
+                            ? identity.user?.ens_name ??
+                              sliceString(identity.user?.wallet, 6, 4)
+                            : identity.identity_id
+                        }
+                        stats={
+                          identity.is_user === true
+                            ? {
+                                numberOfFollowers: identity.follower_count ?? 0,
+                                numberOfFollowing: identity.followed_count ?? 0,
+                              }
+                            : undefined
+                        }
+                        bio={
+                          identity.is_user === true
+                            ? identity.user?.description ?? ''
+                            : identity.description ?? ''
+                        }
+                        ipfsLink={
+                          identity.is_user === true
+                            ? `${BLOCK_EXPLORER_URL}/address/${identity.identity_id}`
+                            : `${IPFS_GATEWAY_URL}/${identity?.identity_id?.replace('ipfs://', '')}`
+                        }
+                      ></ProfileCard>
+                    </HoverCardContent>
+                  )}
+                </HoverCard>
               )
             })}
           </CommandGroup>

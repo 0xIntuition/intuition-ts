@@ -8,7 +8,7 @@ import * as Stories from './SidebarLayout.stories'
 
 <Title />
 
-#### A two-panel layout with a built in resizable side nav.
+#### A two-panel layout with a built in collapsible side panel.
 
 <Source
   dark
@@ -19,13 +19,11 @@ import {
   SidebarLayoutContent,
   SidebarLayoutNav,
   SidebarLayoutNavAvatar,
-  SidebarLayoutNavFooter,
-  SidebarLayoutNavFooterItem,
+  SidebarLayoutNavBody,
   SidebarLayoutNavHeader,
   SidebarLayoutNavHeaderButton,
-  SidebarLayoutNavItem,
-  SidebarLayoutNavItems,
-  SidebarLayoutProvider, 
+  SidebarLayoutProvider,
+  SidebarNavItem,
 } from '@0xintuition/1ui'
 
 <SidebarLayoutProvider>
@@ -34,36 +32,38 @@ import {
       <SidebarLayoutNavHeader>
         <SidebarLayoutNavHeaderButton imgLogo={<svg />} textLogo={<svg />} />
       </SidebarLayoutNavHeader>
-      <SidebarLayoutNavItems>
-        <SidebarLayoutNavItem
-          iconName="crystal-ball"
-          label="Explore This"
-          onClick={() => doSomething}
-        />
-        <SidebarLayoutNavItem
-          iconName="megaphone"
-          label="Explore That"
-          onClick={() => doSomething}
-        />
-      </SidebarLayoutNavItems>
-      <SidebarLayoutNavFooter>
-        <SidebarLayoutNavFooterItem
-          iconName="settings-gear"
-          label="Settings"
-          onClick={() => doSomething}
-        />
-        <SidebarLayoutNavAvatar
-          imageSrc="image.jpg"
-          name="Super Dave"
-          onClick={() => doSomething}
-        />
-      </SidebarLayoutNavFooter>
+      <SidebarLayoutNavBody className="flex flex-col justify-between">
+        <div className="flex flex-col gap-px">
+          <SidebarNavItem
+            iconName="crystal-ball"
+            label="Explore This"
+            onClick={() => null}
+          />
+          <SidebarNavItem
+            iconName="megaphone"
+            label="Explore That"
+            onClick={() => null}
+          />
+        </div>
+        <div className="flex flex-col gap-px">
+          <SidebarNavItem
+            iconName="settings-gear"
+            label="Settings"
+            onClick={() => null}
+          />
+          <SidebarLayoutNavAvatar
+            imageSrc="https://m.media-amazon.com/images/M/MV5BNDhiMWYzMjgtNTRiYi00ZTA3LThlODctNDRkMDk0NzFkMWI3L2ltYWdlL2ltYWdlXkEyXkFqcGdeQXVyNTg0MTkzMzA@._V1_.jpg"
+            name="Super Dave"
+            onClick={() => null}
+          />
+        </div>
+      </SidebarLayoutNavBody>
     </SidebarLayoutNav>
-    <SidebarLayoutContent>Content goes here.</SidebarLayoutContent>
+    <SidebarLayoutContent className="flex items-center justify-center p-6">
+      Content goes here.
+    </SidebarLayoutContent>
   </SidebarLayout>
 </SidebarLayoutProvider>
 `} />
-
-`SidebarLayoutNav` leverages the same properties as [ResizablePanel](/docs/components-resizable--docs).
 
 <Canvas of={Stories.BasicUsage} sourceState="none" />

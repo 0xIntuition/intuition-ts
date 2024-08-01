@@ -2,21 +2,19 @@ import { Outlet } from '@remix-run/react'
 
 import { OptionType, SegmentedNav } from './segmented-nav'
 
-interface NestedVerticalLayoutProps {
+interface NestedTabsProps {
   outlet: typeof Outlet
   options: OptionType[]
 }
 
-export function NestedVerticalLayout({
+export function NestedTabs({
   outlet: OutletComponent,
   options,
-}: NestedVerticalLayoutProps) {
+}: NestedTabsProps) {
   return (
-    <div className="flex flex-col flex-grow gap-2 py-10 items-center">
+    <div className="w-full flex flex-col items-center flex-grow gap-6">
       <SegmentedNav options={options} />
-      <div className="w-2/3">
-        <OutletComponent />
-      </div>
+      <OutletComponent />
     </div>
   )
 }

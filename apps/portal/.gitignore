@@ -4,3 +4,8 @@ node_modules
 /build
 .env
 /.content-collections
+# Sentry Config File
+.sentryclirc
+
+# Sentry Config File
+.env.sentry-build-plugin

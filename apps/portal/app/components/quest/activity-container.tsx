@@ -44,6 +44,7 @@ export interface ActivityContainerProps
 export default function ActivityContainer({
   status,
   children,
+  className,
   ...props
 }: ActivityContainerProps) {
   const { iconName, iconClass, containerClass } =
@@ -53,13 +54,14 @@ export default function ActivityContainer({
       className={cn(
         'rounded-lg p-5 flex flex-col w-full justify-center items-center gap-5',
         containerClass,
+        className,
       )}
       {...props}
     >
       <div className="w-full justify-start flex items-center">
         <Icon className={cn(iconClass, 'h-6 w-6')} name={iconName} />
       </div>
-      <div className="pb-12">{children}</div>
+      <div className="pb-5">{children}</div>
     </div>
   )
 }

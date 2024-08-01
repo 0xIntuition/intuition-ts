@@ -47,10 +47,16 @@ import {
   CREATE_CLAIM_RESOURCE_ROUTE,
   GENERIC_ERROR_MSG,
   MULTIVAULT_CONTRACT_ADDRESS,
+  PATHS,
   SEARCH_IDENTITIES_RESOURCE_ROUTE,
 } from 'consts'
 import { ClaimElement, ClaimElementType } from 'types'
-import { TransactionActionType, TransactionStateType } from 'types/transaction'
+import {
+  TransactionActionType,
+  TransactionStateType,
+  TransactionSuccessAction,
+  TransactionSuccessActionType,
+} from 'types/transaction'
 import { formatUnits, parseUnits } from 'viem'
 import {
   useAccount,
@@ -65,11 +71,17 @@ import { TransactionState } from '../transaction-state'
 
 interface ClaimFormProps {
   wallet: string
-  onSuccess?: () => void
+  onSuccess?: (claim: ClaimPresenter) => void
   onClose: () => void
+  successAction?: TransactionSuccessActionType
 }
 
-export function ClaimForm({ wallet, onClose }: ClaimFormProps) {
+export function ClaimForm({
+  wallet,
+  onClose,
+  onSuccess,
+  successAction = TransactionSuccessAction.VIEW,
+}: ClaimFormProps) {
   const { state, dispatch } = useTransactionState<
     TransactionStateType,
     TransactionActionType
@@ -111,6 +123,8 @@ export function ClaimForm({ wallet, onClose }: ClaimFormProps) {
           state={state}
           dispatch={dispatch}
           onClose={onClose}
+          onSuccess={onSuccess}
+          successAction={successAction}
           setTransactionResponseData={setTransactionResponseData}
           transactionResponseData={transactionResponseData}
         />
@@ -127,6 +141,8 @@ interface CreateClaimFormProps {
     React.SetStateAction<ClaimPresenter | null>
   >
   transactionResponseData: ClaimPresenter | null
+  onSuccess?: (claim: ClaimPresenter) => void
+  successAction?: TransactionSuccessActionType
   onClose: () => void
 }
 
@@ -137,6 +153,8 @@ function CreateClaimForm({
   setTransactionResponseData,
   transactionResponseData,
   onClose,
+  onSuccess,
+  successAction = TransactionSuccessAction.VIEW,
 }: CreateClaimFormProps) {
   const feeFetcher = useLoaderFetcher<CreateClaimLoaderData>(
     CREATE_CLAIM_RESOURCE_ROUTE,
@@ -411,13 +429,25 @@ function CreateClaimForm({
         `/resources/tag?subjectId=${selectedIdentities.subject.vault_id}&predicateId=${selectedIdentities.predicate.vault_id}&objectId=${selectedIdentities.object.vault_id}`,
       )
     }
-  }, [selectedIdentities])
+  }, [
+    selectedIdentities.subject,
+    selectedIdentities.object,
+    selectedIdentities.predicate,
+  ])
 
   useEffect(() => {
-    if (claimChecker.data && claimChecker.data.result !== '0') {
-      setClaimExists(true)
+    if (claimChecker.data) {
+      setClaimExists(claimChecker.data.result !== '0')
     }
-  }, [claimChecker.data])
+  }, [claimChecker.data, selectedIdentities])
+
+  useEffect(() => {
+    if (state.status === 'complete') {
+      if (transactionResponseData) {
+        onSuccess?.(transactionResponseData)
+      }
+    }
+  }, [state.status, transactionResponseData])
 
   const Divider = () => (
     <span className="h-px w-2.5 flex bg-border/30 self-end mb-[1.2rem]" />
@@ -429,8 +459,9 @@ function CreateClaimForm({
         method="post"
         {...getFormProps(form)}
         action="/actions/create-claim"
-        className="h-full flex flex-col"
-      >
+        hidden
+      />
+      <div className="h-full flex flex-col">
         {state.status === 'idle' ? (
           <div className="flex flex-col items-center justify-between h-full">
             <div className="flex-grow flex items-center justify-center">
@@ -537,7 +568,7 @@ function CreateClaimForm({
                 }}
                 disabled={
                   !address ||
-                  (claimExists && state.status !== 'idle') ||
+                  claimExists ||
                   selectedIdentities.subject === null ||
                   selectedIdentities.predicate === null ||
                   selectedIdentities.object === null ||
@@ -591,18 +622,25 @@ function CreateClaimForm({
                     type="button"
                     variant="primary"
                     onClick={() => {
-                      navigate(`/app/claim/${transactionResponseData.claim_id}`)
+                      if (successAction === TransactionSuccessAction.VIEW) {
+                        navigate(
+                          `${PATHS.CLAIM}/${transactionResponseData.claim_id}`,
+                        )
+                      }
+
                       onClose()
                     }}
                   >
-                    View Claim
+                    {successAction === TransactionSuccessAction.VIEW
+                      ? 'View claim'
+                      : 'Close'}
                   </Button>
                 )
               }
             />
           </div>
         )}
-      </claimFetcher.Form>
+      </div>
     </>
   )
 }

@@ -37,6 +37,8 @@ export const BLOCK_EXPLORER_URL =
     ? 'https://sepolia.basescan.org'
     : 'https://sepolia.basescan.org'
 
+export const IPFS_GATEWAY_URL = 'https://ipfs.io/ipfs'
+
 export const CREATE_RESOURCE_ROUTE = '/resources/create'
 export const CREATE_CLAIM_RESOURCE_ROUTE = '/resources/create-claim'
 export const GET_IDENTITIES_BY_IDS_RESOURCE_ROUTE =
@@ -176,3 +178,7 @@ export const TAG_PREDICATE_ID_TESTNET = '8af2e266-ffdd-4a46-bcf8-69bd27e995d4'
 export const AM_WATCHING_ID_TESTNET = 'e2237e27-cc80-4dec-abf8-ae1755c101f0'
 
 export const AM_WATCHING_DISPLAY_NAME_TESTNET = 'am watching'
+
+// So generally, we consider the DSN safe to be shared publicly. Of course, you don't want to unnecessarily share the DSN for any backend projects you have, but there is no real way of hiding the DSN in the frontend (except for maybe obscuring it, but security by obscurity is no real security). https://github.com/getsentry/sentry-javascript/issues/5640#issuecomment-1229960048
+export const SENTRY_DSN =
+  'https://de49927453262eeb56a313be2d02c052@o4507699051560960.ingest.us.sentry.io/4507699076399104'

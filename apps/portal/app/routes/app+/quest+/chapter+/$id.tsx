@@ -8,7 +8,6 @@ import {
 } from '@0xintuition/1ui'
 import { QuestsService, QuestStatus, UserQuestsService } from '@0xintuition/api'
 
-import questPlaceholder from '@assets/quest-placeholder.png'
 import { QuestCriteriaCard } from '@components/quest/quest-criteria-card'
 import QuestStatusCard from '@components/quest/quest-status-card'
 import { MDXContent } from '@content-collections/mdx/react'
@@ -17,6 +16,7 @@ import { getQuestContentBySlug, getQuestCriteria } from '@lib/utils/quest'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { Link, useLoaderData } from '@remix-run/react'
 import { requireUserId } from '@server/auth'
+import { FALLBACK_QUEST_PLACEHOLDER_IMAGE } from 'consts'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const id = params.id
@@ -66,7 +66,7 @@ export default function Quests() {
     <div className="px-10 w-full max-w-7xl mx-auto flex flex-col gap-10">
       <div className="flex flex-col gap-10 mb-5">
         <img
-          src={quest.image ?? questPlaceholder}
+          src={quest.image ?? FALLBACK_QUEST_PLACEHOLDER_IMAGE}
           alt={'quest hero'}
           className="object-cover w-full h-[350px] border-x border-b border-border/20 rounded-b-lg"
         />

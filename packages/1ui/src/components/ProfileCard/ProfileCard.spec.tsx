@@ -15,6 +15,7 @@ describe('ProfileCard', () => {
       numberOfFollowing: 45,
       points: 671234,
     },
+    ipfsLink: 'https://ipfs.io/ipfs/QmZKfjJ8v',
     bio: 'John Doe is a blockchain enthusiast. He loves to learn new things and share his knowledge with others. He is also a contributor to various open-source projects.',
   }
 
@@ -23,7 +24,7 @@ describe('ProfileCard', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="flex flex-col justify-center items-start w-full min-w-80 rounded-lg box-border gap-2.5"
+          class="flex flex-col justify-center items-start w-full min-w-80 rounded-lg gap-2.5"
         >
           <div
             class="flex items-center space-x-4"
@@ -49,15 +50,40 @@ describe('ProfileCard', () => {
               >
                 John Doe
               </h6>
-              <p
-                class="text-base font-medium text-muted-foreground"
+              <div
+                class="flex flex-row gap-1 items-center"
               >
-                0x1234...5678
-              </p>
+                <a
+                  href="https://ipfs.io/ipfs/QmZKfjJ8v"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  <button
+                    data-state="closed"
+                  >
+                    <p
+                      class="text-base font-medium text-muted-foreground"
+                    >
+                      0x1234...5678
+                    </p>
+                  </button>
+                </a>
+                <button
+                  class="flex justify-center items-center text-sm font-medium border disabled:text-muted-foreground bg-transparent border-transparent hover:text-primary disabled:border-transparent disabled:bg-transparent shadow-md-subtle px-3 py-1 uppercase gap-2 pl-0 text-muted-foreground"
+                >
+                  <svg
+                    class="h-4 w-4 text-primary"
+                  >
+                    <use
+                      href="/src/components/Icon/Icon.sprites.svg#copy"
+                    />
+                  </svg>
+                </button>
+              </div>
             </div>
           </div>
           <div
-            class="flex justify-start items-center gap-4 pt-1"
+            class="flex justify-start items-center gap-4 pt-2"
           >
             <div
               class="flex items-center space-x-1"
@@ -123,7 +149,7 @@ describe('ProfileCard', () => {
       stats: {
         numberOfFollowers: 300,
       },
-      link: 'https://blockchaincorp.com',
+      ipfsLink: 'https://ipfs.io/ipfs/QmZKfjJ8v',
       bio: 'Blockchain Corp is a leading company in blockchain technology. Visit our website for more information about how you can benefit from our services.',
     }
 
@@ -131,7 +157,7 @@ describe('ProfileCard', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="flex flex-col justify-center items-start w-full min-w-80 rounded-lg box-border gap-2.5"
+          class="flex flex-col justify-center items-start w-full min-w-80 rounded-lg gap-2.5"
         >
           <div
             class="flex items-center space-x-4"
@@ -157,11 +183,36 @@ describe('ProfileCard', () => {
               >
                 Blockchain Corp
               </h6>
-              <p
-                class="text-base font-medium text-muted-foreground"
+              <div
+                class="flex flex-row gap-1 items-center"
               >
-                0x1234...5678
-              </p>
+                <a
+                  href="https://ipfs.io/ipfs/QmZKfjJ8v"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  <button
+                    data-state="closed"
+                  >
+                    <p
+                      class="text-base font-medium text-muted-foreground"
+                    >
+                      0x1234...5678
+                    </p>
+                  </button>
+                </a>
+                <button
+                  class="flex justify-center items-center text-sm font-medium border disabled:text-muted-foreground bg-transparent border-transparent hover:text-primary disabled:border-transparent disabled:bg-transparent shadow-md-subtle px-3 py-1 uppercase gap-2 pl-0 text-muted-foreground"
+                >
+                  <svg
+                    class="h-4 w-4 text-primary"
+                  >
+                    <use
+                      href="/src/components/Icon/Icon.sprites.svg#copy"
+                    />
+                  </svg>
+                </button>
+              </div>
             </div>
           </div>
           <div>
@@ -170,21 +221,6 @@ describe('ProfileCard', () => {
             >
               Blockchain Corp is a leading company in blockchain technology. Visit our website for more information about how you can benefit from our services.
             </p>
-            <div
-              class=""
-            >
-              <p
-                class="text-base font-normal text-muted-foreground"
-              >
-                Link
-              </p>
-              <a
-                class="text-primary-300"
-                href="https://blockchaincorp.com"
-              >
-                https://blockchaincorp.com
-              </a>
-            </div>
           </div>
         </div>
       </DocumentFragment>
@@ -201,7 +237,7 @@ describe('ProfileCard', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="flex flex-col justify-center items-start w-full min-w-80 rounded-lg box-border gap-2.5"
+          class="flex flex-col justify-center items-start w-full min-w-80 rounded-lg gap-2.5"
         >
           <div
             class="flex items-center space-x-4"
@@ -227,15 +263,40 @@ describe('ProfileCard', () => {
               >
                 John Doe
               </h6>
-              <p
-                class="text-base font-medium text-muted-foreground"
+              <div
+                class="flex flex-row gap-1 items-center"
               >
-                0x1234...5678
-              </p>
+                <a
+                  href="https://ipfs.io/ipfs/QmZKfjJ8v"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  <button
+                    data-state="closed"
+                  >
+                    <p
+                      class="text-base font-medium text-muted-foreground"
+                    >
+                      0x1234...5678
+                    </p>
+                  </button>
+                </a>
+                <button
+                  class="flex justify-center items-center text-sm font-medium border disabled:text-muted-foreground bg-transparent border-transparent hover:text-primary disabled:border-transparent disabled:bg-transparent shadow-md-subtle px-3 py-1 uppercase gap-2 pl-0 text-muted-foreground"
+                >
+                  <svg
+                    class="h-4 w-4 text-primary"
+                  >
+                    <use
+                      href="/src/components/Icon/Icon.sprites.svg#copy"
+                    />
+                  </svg>
+                </button>
+              </div>
             </div>
           </div>
           <div
-            class="flex justify-start items-center gap-4 pt-1"
+            class="flex justify-start items-center gap-4 pt-2"
           >
             <div
               class="flex items-center space-x-1"

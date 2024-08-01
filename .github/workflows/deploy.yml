@@ -84,7 +84,11 @@ jobs:
           --build-arg PRIVY_APP_SECRET=${{ secrets.PRIVY_APP_SECRET }} \
           --build-arg CLOUDINARY_CLOUD_NAME=${{ secrets.CLOUDINARY_CLOUD_NAME }} \
           --build-arg CLOUDINARY_API_KEY=${{ secrets.CLOUDINARY_API_KEY }} \
-          --build-arg CLOUDINARY_API_SECRET=${{ secrets.CLOUDINARY_API_SECRET }}
+          --build-arg CLOUDINARY_API_SECRET=${{ secrets.CLOUDINARY_API_SECRET }} \
+          --build-arg SENTRY_DSN=${{ secrets.SENTRY_DSN }} \
+          --build-arg SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }} \
+          --build-arg SENTRY_ORG=${{ secrets.SENTRY_ORG }} \
+          --build-arg SENTRY_PROJECT=${{ secrets.SENTRY_PROJECT }}
           docker push ${{ env.ECR_IMAGE }}
 
       - name: Install AWS CLI

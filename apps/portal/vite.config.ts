@@ -1,6 +1,7 @@
 import contentCollections from '@content-collections/remix-vite'
 import { vitePlugin as remix } from '@remix-run/dev'
 import { installGlobals } from '@remix-run/node'
+import { sentryVitePlugin } from '@sentry/vite-plugin'
 import autoprefixer from 'autoprefixer'
 import { flatRoutes } from 'remix-flat-routes'
 import tailwindcss from 'tailwindcss'
@@ -37,12 +38,28 @@ export default defineConfig({
     }),
     tsconfigPaths(),
     contentCollections(),
+    process.env.SENTRY_AUTH_TOKEN
+      ? sentryVitePlugin({
+          disable: process.env.NODE_ENV !== 'production',
+          authToken: process.env.SENTRY_AUTH_TOKEN,
+          org: process.env.SENTRY_ORG,
+          project: process.env.SENTRY_PROJECT,
+          release: { inject: false },
+        })
+      : null,
   ],
   server: {
     port: 8080,
   },
   build: {
     target: 'ES2022',
+    sourcemap: true,
+    cssMinify: process.env.NODE_ENV === 'production',
+    assetsInlineLimit: (source: string) => {
+      if (source.endsWith('sprite.svg')) {
+        return false
+      }
+    },
   },
   ssr: {
     noExternal: [
