@@ -1,4 +1,4 @@
-import { ApiError } from '@0xintuition/api'
+import { ApiError, InviteCodesService } from '@0xintuition/api'
 
 import logger from '@lib/utils/logger'
 import { invariant } from '@lib/utils/misc'
@@ -26,9 +26,12 @@ export async function action({ request }: ActionFunctionArgs) {
         invite_code: invite_code as string,
       }
       logger('Invite code params:', inviteCodeParams)
-      // identity = await InviteCodesService.redeemInviteCode({
-      //   requestBody: inviteCodeParams,
-      // })
+      identity = await InviteCodesService.redeemInviteCode({
+        requestBody: {
+          invite_code: inviteCodeParams,
+          wallet,
+        },
+      })
       logger('Identity created:', identity)
     } catch (error: unknown) {
       if (error instanceof ApiError) {
