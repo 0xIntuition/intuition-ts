@@ -18,8 +18,9 @@ import { getZodConstraint, parseWithZod } from '@conform-to/zod'
 import { useInviteCodeFetcher } from '@lib/hooks/useInviteCodeFetcher'
 import { inviteCodeSchema } from '@lib/schemas/create-identity-schema'
 import logger from '@lib/utils/logger'
-import { fetchWrapper, invariant } from '@lib/utils/misc'
+import { invariant } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
+import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
 import { NO_WALLET_ERROR } from 'consts'
 
@@ -33,7 +34,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   //   throw redirect(PATHS.PROFILE)
   // }
 
-  const userObject = await fetchWrapper({
+  const userObject = await fetchWrapper(request, {
     method: UsersService.getUserByWalletPublic,
     args: {
       wallet,
