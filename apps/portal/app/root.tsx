@@ -1,4 +1,5 @@
 import Providers from '@client/providers'
+import { useUpdateApiHeaders } from '@lib/hooks/useUpdateApiHeaders'
 import { ClientHintCheck, getHints } from '@lib/utils/client-hints'
 import { useNonce } from '@lib/utils/nonce-provider'
 import { json, LoaderFunctionArgs, type MetaFunction } from '@remix-run/node'
@@ -26,7 +27,6 @@ import { Button, Icon, Text, Toaster } from '@0xintuition/1ui'
 
 import { GlobalLoading } from '@components/global-loading'
 import NavigationButton from '@components/navigation-link'
-import { useUpdateApiHeaders } from '@lib/hooks/useUpdateApiHeaders'
 import { getChainEnvConfig } from '@lib/utils/environment'
 import logger from '@lib/utils/logger'
 import { cn } from '@lib/utils/misc'
