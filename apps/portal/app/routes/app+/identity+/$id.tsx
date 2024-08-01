@@ -213,18 +213,17 @@ export default function IdentityDetails() {
     </div>
   )
 
+  const rightPanel = (
+    <>
+      <div className="flex flex-row justify-end mb-6">
+        <SegmentedNav options={identityRouteOptions} />
+      </div>
+      <Outlet />
+    </>
+  )
+
   return (
-    <TwoPanelLayout
-      leftPanel={leftPanel}
-      rightPanel={
-        <>
-          <div className="flex flex-row justify-end mb-6">
-            <SegmentedNav options={identityRouteOptions} />
-          </div>
-          <Outlet />
-        </>
-      }
-    >
+    <TwoPanelLayout leftPanel={leftPanel} rightPanel={rightPanel}>
       <StakeModal
         userWallet={userWallet}
         contract={identity.contract}
