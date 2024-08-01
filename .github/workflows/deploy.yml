@@ -88,7 +88,7 @@ jobs:
           --build-arg SENTRY_DSN=${{ secrets.SENTRY_DSN }} \
           --build-arg SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }} \
           --build-arg SENTRY_ORG=${{ secrets.SENTRY_ORG }} \
-          --build-arg SENTRY_PROJECT=${{ secrets.SENTRY_PROJECT }} \
+          --build-arg SENTRY_PROJECT=${{ secrets.SENTRY_PROJECT }}
           docker push ${{ env.ECR_IMAGE }}
 
       - name: Install AWS CLI
