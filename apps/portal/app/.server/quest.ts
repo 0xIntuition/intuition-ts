@@ -10,7 +10,8 @@ import {
   UsersService,
 } from '@0xintuition/api'
 
-import { fetchWrapper, invariant } from '@lib/utils/misc'
+import { invariant } from '@lib/utils/misc'
+import { fetchWrapper } from '@server/api'
 import { User } from 'types'
 
 import { requireUser } from './auth'
@@ -48,7 +49,7 @@ export async function getQuestsProgress({
 
   const { narrative, active, sortBy, direction } = options
   const quests = (
-    await fetchWrapper({
+    await fetchWrapper(request, {
       method: QuestsService.searchQuests,
       args: {
         requestBody: {
@@ -62,7 +63,7 @@ export async function getQuestsProgress({
   ).data
   invariant(quests, 'Failed to fetch quests')
 
-  const { id: userId } = await fetchWrapper({
+  const { id: userId } = await fetchWrapper(request, {
     method: UsersService.getUserByWalletPublic,
     args: {
       wallet: user.wallet?.address,
@@ -70,7 +71,7 @@ export async function getQuestsProgress({
   })
 
   const userQuests = (
-    await fetchWrapper({
+    await fetchWrapper(request, {
       method: UserQuestsService.search,
       args: {
         requestBody: {

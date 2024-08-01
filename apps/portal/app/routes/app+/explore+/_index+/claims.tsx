@@ -7,16 +7,16 @@ import {
 
 import { ExploreSearch } from '@components/explore/ExploreSearch'
 import { ClaimsList } from '@components/list/claims'
-import { calculateTotalPages, fetchWrapper, invariant } from '@lib/utils/misc'
+import { calculateTotalPages, invariant } from '@lib/utils/misc'
 import { getStandardPageParams } from '@lib/utils/params'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
-import { logAPI, requireUserWallet, setupAPI } from '@server/auth'
+import { fetchWrapper } from '@server/api'
+import { logAPI, requireUserWallet } from '@server/auth'
 import { NO_WALLET_ERROR } from 'consts'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   console.log('[EXPLORE CLAIMS] -- START')
-  await setupAPI(request)
   logAPI()
   const wallet = await requireUserWallet(request)
   invariant(wallet, NO_WALLET_ERROR)
@@ -30,7 +30,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const predicateId = searchParams.get('predicate') || null
   const objectId = searchParams.get('object') || null
 
-  const claims = await fetchWrapper({
+  const claims = await fetchWrapper(request, {
     method: ClaimsService.searchClaims,
     args: {
       page,
@@ -43,7 +43,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     },
   })
 
-  const identities = await fetchWrapper({
+  const identities = await fetchWrapper(request, {
     method: IdentitiesService.searchIdentity,
     args: {
       page: 1,

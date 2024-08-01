@@ -7,8 +7,9 @@ import {
   SortDirection,
 } from '@0xintuition/api'
 
-import { calculateTotalPages, fetchWrapper } from '@lib/utils/misc'
+import { calculateTotalPages } from '@lib/utils/misc'
 import { getStandardPageParams } from '@lib/utils/params'
+import { fetchWrapper } from '@server/api'
 
 interface PaginationData {
   currentPage: number
@@ -30,13 +31,13 @@ export interface ConnectionsData {
 }
 
 export async function getConnectionsData({
-  userWallet,
   request,
+  userWallet,
 }: {
-  userWallet: string
   request: Request
+  userWallet: string
 }): Promise<ConnectionsData | null> {
-  const userIdentity = await fetchWrapper({
+  const userIdentity = await fetchWrapper(request, {
     method: IdentitiesService.getIdentityById,
     args: {
       id: userWallet,
@@ -44,7 +45,7 @@ export async function getConnectionsData({
   })
 
   if (userIdentity.follow_claim_id) {
-    const followClaim = await fetchWrapper({
+    const followClaim = await fetchWrapper(request, {
       method: ClaimsService.getClaimById,
       args: {
         id: userIdentity.follow_claim_id,
@@ -59,7 +60,7 @@ export async function getConnectionsData({
       defaultSortByValue: SortColumn.USER_ASSETS,
     })
 
-    const followers = await fetchWrapper({
+    const followers = await fetchWrapper(request, {
       method: IdentitiesService.getIdentityFollowers,
       args: {
         id: userIdentity.id,
@@ -81,7 +82,7 @@ export async function getConnectionsData({
       defaultSortByValue: SortColumn.USER_ASSETS,
     })
 
-    const following = await fetchWrapper({
+    const following = await fetchWrapper(request, {
       method: IdentitiesService.getIdentityFollowed,
       args: {
         id: userIdentity.id,

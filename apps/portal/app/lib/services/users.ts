@@ -8,13 +8,15 @@ import {
   UsersService,
 } from '@0xintuition/api'
 
-import { fetchWrapper } from '@lib/utils/misc'
 import { getStandardPageParams } from '@lib/utils/params'
+import { fetchWrapper } from '@server/api'
 
 export async function getUserIdentities({
+  request,
   userWallet,
   searchParams,
 }: {
+  request: Request
   userWallet: string
   searchParams: URLSearchParams
 }) {
@@ -25,7 +27,7 @@ export async function getUserIdentities({
   const identitiesSearch =
     (searchParams.get('activeIdentitiesSearch') as string) || null
 
-  const result = await fetchWrapper({
+  const result = await fetchWrapper(request, {
     method: UsersService.getUserIdentities,
     args: {
       user: userWallet,
@@ -49,9 +51,11 @@ export async function getUserIdentities({
 }
 
 export async function getCreatedIdentities({
+  request,
   userWallet,
   searchParams,
 }: {
+  request: Request
   userWallet: string
   searchParams: URLSearchParams
 }) {
@@ -62,7 +66,7 @@ export async function getCreatedIdentities({
   const identitiesSearch =
     (searchParams.get('identitiesSearch') as string) || null
 
-  const identities = await fetchWrapper({
+  const identities = await fetchWrapper(request, {
     method: IdentitiesService.searchIdentity,
     args: {
       page,
@@ -86,9 +90,11 @@ export async function getCreatedIdentities({
 }
 
 export async function getUserClaims({
+  request,
   userWallet,
   searchParams,
 }: {
+  request: Request
   userWallet: string
   searchParams: URLSearchParams
 }) {
@@ -99,7 +105,7 @@ export async function getUserClaims({
   const claimsSearch =
     (searchParams.get('activeClaimsSearch') as string) || null
 
-  const result = await fetchWrapper({
+  const result = await fetchWrapper(request, {
     method: UsersService.getUserClaims,
     args: {
       user: userWallet,
@@ -123,9 +129,11 @@ export async function getUserClaims({
 }
 
 export async function getCreatedClaims({
+  request,
   userWallet,
   searchParams,
 }: {
+  request: Request
   userWallet: string
   searchParams: URLSearchParams
 }) {
@@ -135,7 +143,7 @@ export async function getCreatedClaims({
   })
   const claimsSearch = (searchParams.get('claimsSearch') as string) || null
 
-  const claims = await fetchWrapper({
+  const claims = await fetchWrapper(request, {
     method: ClaimsService.searchClaims,
     args: {
       page,

@@ -7,10 +7,9 @@ import { requireUserWallet, setupAPI } from '@server/auth'
 import { MULTIVAULT_CONTRACT_ADDRESS, NO_WALLET_ERROR } from 'consts'
 
 export async function action({ request }: ActionFunctionArgs) {
+  await setupAPI(request)
   const wallet = await requireUserWallet(request)
   invariant(wallet, NO_WALLET_ERROR)
-
-  await setupAPI(request)
 
   const formData = await request.formData()
   for (const [key, value] of formData.entries()) {

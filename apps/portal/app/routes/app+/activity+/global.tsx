@@ -23,7 +23,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const searchParams = new URLSearchParams(url.search)
 
   return defer({
-    activity: getActivity({ searchParams }),
+    activity: getActivity({ request, searchParams }),
   })
 }
 

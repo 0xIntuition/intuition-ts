@@ -15,7 +15,7 @@ import {
 
 import { QuestCard } from '@components/quest/quest-card'
 import logger from '@lib/utils/logger'
-import { fetchWrapper, invariant } from '@lib/utils/misc'
+import { invariant } from '@lib/utils/misc'
 import { getQuestCriteria } from '@lib/utils/quest'
 import {
   ActionFunctionArgs,
@@ -24,6 +24,7 @@ import {
   redirect,
 } from '@remix-run/node'
 import { Link, useLoaderData, useSubmit } from '@remix-run/react'
+import { fetchWrapper } from '@server/api'
 import { requireUser } from '@server/auth'
 import { getQuestsProgress } from '@server/quest'
 import { STANDARD_QUEST_SET } from 'consts'
@@ -60,7 +61,7 @@ export async function action({ request }: ActionFunctionArgs) {
   // start quest
   if (questStatus === QuestStatus.NOT_STARTED && available) {
     logger('Starting quest', questId)
-    const { status } = await fetchWrapper({
+    const { status } = await fetchWrapper(request, {
       method: UserQuestsService.startQuest,
       args: {
         questId,

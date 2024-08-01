@@ -16,9 +16,10 @@ import {
 import { QuestSetCard } from '@components/quest/quest-set-card'
 import { QuestSetProgressCard } from '@components/quest/quest-set-progress-card'
 import { ReferralCard } from '@components/referral-card/referral-card'
-import { fetchWrapper, invariant } from '@lib/utils/misc'
+import { invariant } from '@lib/utils/misc'
 import { defer, LoaderFunctionArgs } from '@remix-run/node'
 import { Await, Link, useLoaderData } from '@remix-run/react'
+import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
 import { getQuestsProgress } from '@server/quest'
 import {
@@ -33,7 +34,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const userWallet = await requireUserWallet(request)
   invariant(userWallet, 'Unauthorized')
 
-  const userProfile = fetchWrapper({
+  const userProfile = fetchWrapper(request, {
     method: UsersService.getUserByWalletPublic,
     args: {
       wallet: userWallet,

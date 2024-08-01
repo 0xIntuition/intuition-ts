@@ -25,12 +25,12 @@ import { followModalAtom, stakeModalAtom } from '@lib/state/store'
 import logger from '@lib/utils/logger'
 import {
   calculatePercentageOfTvl,
-  fetchWrapper,
   formatBalance,
   invariant,
 } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
 import { Outlet, useNavigate } from '@remix-run/react'
+import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
 import { getVaultDetails } from '@server/multivault'
 import TwoPanelLayout from 'app/layouts/two-panel-layout'
@@ -57,7 +57,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     throw redirect(PATHS.PROFILE)
   }
 
-  const userIdentity = await fetchWrapper({
+  const userIdentity = await fetchWrapper(request, {
     method: IdentitiesService.getIdentityById,
     args: {
       id: wallet,
@@ -73,7 +73,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     return
   }
 
-  const userTotals = await fetchWrapper({
+  const userTotals = await fetchWrapper(request, {
     method: UsersService.getUserTotals,
     args: {
       id: userIdentity.creator.id,
@@ -103,7 +103,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   let followVaultDetails: VaultDetailsType | null = null
 
   if (userIdentity.follow_claim_id) {
-    followClaim = await fetchWrapper({
+    followClaim = await fetchWrapper(request, {
       method: ClaimsService.getClaimById,
       args: {
         id: userIdentity.follow_claim_id,

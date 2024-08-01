@@ -19,10 +19,11 @@ import {
 } from '@lib/hooks/useTransactionReducer'
 import { editProfileModalAtom } from '@lib/state/store'
 import logger from '@lib/utils/logger'
-import { fetchWrapper, invariant, sliceString } from '@lib/utils/misc'
+import { invariant, sliceString } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { useFetcher, useLoaderData, useNavigate } from '@remix-run/react'
 import { CreateLoaderData } from '@routes/resources+/create'
+import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
 import { MULTIVAULT_CONTRACT_ADDRESS, NO_WALLET_ERROR, PATHS } from 'consts'
 import { useAtom } from 'jotai'
@@ -38,7 +39,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const wallet = await requireUserWallet(request)
   invariant(wallet, NO_WALLET_ERROR)
 
-  const userObject = await fetchWrapper({
+  const userObject = await fetchWrapper(request, {
     method: UsersService.getUserByWalletPublic,
     args: {
       wallet,

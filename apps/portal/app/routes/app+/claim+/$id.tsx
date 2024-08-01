@@ -26,7 +26,6 @@ import { stakeModalAtom } from '@lib/state/store'
 import logger from '@lib/utils/logger'
 import {
   calculatePercentageOfTvl,
-  fetchWrapper,
   formatBalance,
   invariant,
 } from '@lib/utils/misc'
@@ -37,6 +36,7 @@ import {
   useLocation,
   useNavigate,
 } from '@remix-run/react'
+import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
 import { getVaultDetails } from '@server/multivault'
 import FullPageLayout from 'app/layouts/full-page-layout'
@@ -61,7 +61,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const direction: SortDirection =
     (searchParams.get('direction') as SortDirection) ?? 'desc'
 
-  const claim = await fetchWrapper({
+  const claim = await fetchWrapper(request, {
     method: ClaimsService.getClaimById,
     args: { id },
   })

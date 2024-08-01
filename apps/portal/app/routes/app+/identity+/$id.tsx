@@ -34,12 +34,12 @@ import {
 import logger from '@lib/utils/logger'
 import {
   calculatePercentageOfTvl,
-  fetchWrapper,
   formatBalance,
   invariant,
 } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { Outlet, useLoaderData, useNavigate } from '@remix-run/react'
+import { fetchWrapper } from '@server/api'
 import { requireUser, requireUserWallet } from '@server/auth'
 import { getVaultDetails } from '@server/multivault'
 import TwoPanelLayout from 'app/layouts/two-panel-layout'
@@ -66,7 +66,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     return
   }
 
-  const identity = await fetchWrapper({
+  const identity = await fetchWrapper(request, {
     method: IdentitiesService.getIdentityById,
     args: {
       id: params.id,

@@ -6,7 +6,7 @@ import {
 
 import logger from '@lib/utils/logger'
 import { json, type ActionFunction } from '@remix-run/node'
-import { requireUserWallet } from '@server/auth'
+import { requireUserWallet, setupAPI } from '@server/auth'
 import { emitter } from '@server/emitter'
 
 const RETRY_LIMIT = 10
@@ -43,6 +43,7 @@ async function fetchIdentityWithRetry(
 }
 
 export const action: ActionFunction = async ({ request }) => {
+  await setupAPI(request)
   const wallet = await requireUserWallet(request)
 
   const formData = await request.formData()

@@ -34,7 +34,6 @@ import {
 import logger from '@lib/utils/logger'
 import {
   calculatePercentageOfTvl,
-  fetchWrapper,
   formatBalance,
   invariant,
 } from '@lib/utils/misc'
@@ -46,6 +45,7 @@ import {
   useNavigate,
   useRevalidator,
 } from '@remix-run/react'
+import { fetchWrapper } from '@server/api'
 import { requireUser, requireUserWallet } from '@server/auth'
 import { getVaultDetails } from '@server/multivault'
 import TwoPanelLayout from 'app/layouts/two-panel-layout'
@@ -69,7 +69,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   let userIdentity
   try {
-    userIdentity = await fetchWrapper({
+    userIdentity = await fetchWrapper(request, {
       method: IdentitiesService.getIdentityById,
       args: { id: userWallet },
     })
@@ -81,14 +81,14 @@ export async function loader({ request }: LoaderFunctionArgs) {
     throw error
   }
 
-  const userObject = await fetchWrapper({
+  const userObject = await fetchWrapper(request, {
     method: UsersService.getUserByWalletPublic,
     args: {
       wallet: userWallet,
     },
   })
 
-  const userTotals = await fetchWrapper({
+  const userTotals = await fetchWrapper(request, {
     method: UsersService.getUserTotals,
     args: {
       id: userObject.id,

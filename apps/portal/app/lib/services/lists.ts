@@ -7,17 +7,20 @@ import {
 } from '@0xintuition/api'
 
 import logger from '@lib/utils/logger'
-import { calculateTotalPages, fetchWrapper } from '@lib/utils/misc'
+import { calculateTotalPages } from '@lib/utils/misc'
 import { getStandardPageParams } from '@lib/utils/params'
+import { fetchWrapper } from '@server/api'
 import {
   AM_WATCHING_DISPLAY_NAME_TESTNET,
   TAG_PREDICATE_ID_TESTNET,
 } from 'consts'
 
 export async function getUserCreatedLists({
+  request,
   userWallet,
   searchParams,
 }: {
+  request: Request
   userWallet: string
   searchParams: URLSearchParams
 }) {
@@ -28,7 +31,7 @@ export async function getUserCreatedLists({
   })
   const displayName = searchParams.get('search') || null
 
-  const userCreatedListClaims = await fetchWrapper({
+  const userCreatedListClaims = await fetchWrapper(request, {
     method: ClaimsService.searchClaims,
     args: {
       page,
@@ -61,9 +64,11 @@ export async function getUserCreatedLists({
 }
 
 export async function getUserSavedLists({
+  request,
   userWallet,
   searchParams,
 }: {
+  request: Request
   userWallet: string
   searchParams: URLSearchParams
 }) {
@@ -73,7 +78,7 @@ export async function getUserSavedLists({
     defaultSortByValue: ClaimSortColumn.ASSETS_SUM,
   })
 
-  const savedListClaims = await fetchWrapper({
+  const savedListClaims = await fetchWrapper(request, {
     method: UsersService.getUserClaims,
     args: {
       page,
@@ -100,9 +105,11 @@ export async function getUserSavedLists({
 }
 
 export async function getListIdentities({
+  request,
   objectId,
   searchParams,
 }: {
+  request: Request
   objectId: string
   searchParams: URLSearchParams
 }) {
@@ -113,7 +120,7 @@ export async function getListIdentities({
   })
   const displayName = searchParams.get('search') || null
 
-  const listIdentities = await fetchWrapper({
+  const listIdentities = await fetchWrapper(request, {
     method: ClaimsService.searchClaims,
     args: {
       page,
@@ -147,11 +154,13 @@ export async function getListIdentities({
 }
 
 export async function getListIdentitiesCount({
+  request,
   objectId,
 }: {
+  request: Request
   objectId: string
 }) {
-  const listIdentities = await fetchWrapper({
+  const listIdentities = await fetchWrapper(request, {
     method: ClaimsService.searchClaims,
     args: {
       predicate: TAG_PREDICATE_ID_TESTNET,

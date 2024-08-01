@@ -6,8 +6,9 @@ import {
 } from '@0xintuition/api'
 
 import logger from '@lib/utils/logger'
-import { fetchWrapper, invariant } from '@lib/utils/misc'
+import { invariant } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
+import { fetchWrapper } from '@server/api'
 import { requireUser } from '@server/auth'
 
 export type CheckQuestSuccessLoaderData = {
@@ -23,7 +24,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const user = await requireUser(request)
   invariant(user, 'Unauthorized')
   invariant(user.wallet?.address, 'User wallet address is required')
-  const { id: userId } = await fetchWrapper({
+  const { id: userId } = await fetchWrapper(request, {
     method: UsersService.getUserByWalletPublic,
     args: {
       wallet: user.wallet?.address,
@@ -34,7 +35,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const userQuestId = url.searchParams.get('userQuestId')
   invariant(userQuestId, 'userQuestId is required')
 
-  const userQuest = await fetchWrapper({
+  const userQuest = await fetchWrapper(request, {
     method: UserQuestsService.getUserQuestById,
     args: {
       userQuestId,
@@ -45,7 +46,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   while (attempts < RETRY_LIMIT) {
     try {
-      const status = await fetchWrapper({
+      const status = await fetchWrapper(request, {
         method: UserQuestsService.checkQuestStatus,
         args: {
           questId: userQuest.quest_id,

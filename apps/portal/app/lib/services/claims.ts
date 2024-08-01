@@ -4,13 +4,15 @@ import {
   ClaimsService,
 } from '@0xintuition/api'
 
-import { fetchWrapper } from '@lib/utils/misc'
 import { getStandardPageParams } from '@lib/utils/params'
+import { fetchWrapper } from '@server/api'
 
 export async function getClaimsAboutIdentity({
+  request,
   identityId,
   searchParams,
 }: {
+  request: Request
   identityId: string
   searchParams: URLSearchParams
 }) {
@@ -20,7 +22,7 @@ export async function getClaimsAboutIdentity({
   })
   const claimsSearch = (searchParams.get('claimsSearch') as string) || null
 
-  const claims = await fetchWrapper({
+  const claims = await fetchWrapper(request, {
     method: ClaimsService.searchClaims,
     args: {
       identity: identityId,

@@ -7,9 +7,10 @@ import { PositionsOnClaim } from '@components/list/positions-on-claim'
 import { PaginatedListSkeleton, TabsSkeleton } from '@components/skeleton'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { getPositionsOnClaim } from '@lib/services/positions'
-import { fetchWrapper, invariant } from '@lib/utils/misc'
+import { invariant } from '@lib/utils/misc'
 import { defer, LoaderFunctionArgs } from '@remix-run/node'
 import { Await, useNavigation, useSearchParams } from '@remix-run/react'
+import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
 import { NO_PARAM_ID_ERROR, NO_WALLET_ERROR } from 'consts'
 import { PaginationType } from 'types/pagination'
@@ -25,10 +26,11 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
   return defer({
     positionsData: getPositionsOnClaim({
+      request,
       claimId: id,
       searchParams,
     }),
-    claim: fetchWrapper({
+    claim: fetchWrapper(request, {
       method: ClaimsService.getClaimById,
       args: { id },
     }),

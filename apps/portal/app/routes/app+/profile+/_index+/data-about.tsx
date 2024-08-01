@@ -11,9 +11,10 @@ import { DataHeaderSkeleton, PaginatedListSkeleton } from '@components/skeleton'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { getClaimsAboutIdentity } from '@lib/services/claims'
 import { getPositionsOnIdentity } from '@lib/services/positions'
-import { fetchWrapper, formatBalance, invariant } from '@lib/utils/misc'
+import { formatBalance, invariant } from '@lib/utils/misc'
 import { defer, LoaderFunctionArgs } from '@remix-run/node'
 import { Await, useRouteLoaderData } from '@remix-run/react'
+import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
 import { NO_USER_IDENTITY_ERROR, NO_WALLET_ERROR } from 'consts'
 
@@ -27,12 +28,17 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const searchParams = new URLSearchParams(url.search)
 
   return defer({
-    positions: getPositionsOnIdentity({ identityId: userWallet, searchParams }),
-    claims: getClaimsAboutIdentity({
+    positions: getPositionsOnIdentity({
+      request,
       identityId: userWallet,
       searchParams,
     }),
-    claimsSummary: fetchWrapper({
+    claims: getClaimsAboutIdentity({
+      request,
+      identityId: userWallet,
+      searchParams,
+    }),
+    claimsSummary: fetchWrapper(request, {
       method: ClaimsService.claimSummary,
       args: {
         identity: userWallet,

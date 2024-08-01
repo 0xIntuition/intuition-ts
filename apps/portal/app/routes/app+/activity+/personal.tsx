@@ -29,6 +29,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   return defer({
     activity: getActivity({
+      request,
       searchParams,
       fromAddress: userWallet,
     }),

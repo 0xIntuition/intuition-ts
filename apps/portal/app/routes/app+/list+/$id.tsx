@@ -10,7 +10,7 @@ import { ListIdentityDisplayCard } from '@components/list/list-identity-display-
 import NavigationButton from '@components/navigation-link'
 import { addIdentitiesListModalAtom } from '@lib/state/store'
 import logger from '@lib/utils/logger'
-import { fetchWrapper, invariant, sliceString } from '@lib/utils/misc'
+import { invariant, sliceString } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import {
   Outlet,
@@ -18,16 +18,17 @@ import {
   useLocation,
   useNavigate,
 } from '@remix-run/react'
+import { fetchWrapper } from '@server/api'
 import FullPageLayout from 'app/layouts/full-page-layout'
 import TwoPanelLayout from 'app/layouts/two-panel-layout'
 import { BLOCK_EXPLORER_URL, IPFS_GATEWAY_URL, NO_PARAM_ID_ERROR } from 'consts'
 import { useAtom } from 'jotai'
 
-export async function loader({ params }: LoaderFunctionArgs) {
+export async function loader({ request, params }: LoaderFunctionArgs) {
   const id = params.id
   invariant(id, NO_PARAM_ID_ERROR)
 
-  const claim = await fetchWrapper({
+  const claim = await fetchWrapper(request, {
     method: ClaimsService.getClaimById,
     args: { id },
   })
