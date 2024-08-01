@@ -1,6 +1,7 @@
 import { useState } from 'react'
 
 import {
+  Icon,
   Identity,
   PositionCard,
   PositionCardFeesAccrued,
@@ -9,6 +10,7 @@ import {
   PositionCardStaked,
   ProfileCard,
   StakeCard,
+  Tag,
   Tags,
   TagsButton,
   TagsContent,
@@ -51,7 +53,7 @@ import { ExtendedIdentityPresenter } from 'types/identity'
 import { VaultDetailsType } from 'types/vault'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
-  console.log('[$ID] -- START')
+  logger('[$ID] -- START')
   const user = await requireUser(request)
   invariant(user, 'User not found')
   invariant(user.wallet?.address, 'User wallet not found')
@@ -92,7 +94,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     }
   }
 
-  console.log('[$ID] -- END')
+  logger('[$ID] -- END')
   return json({
     identity,
     vaultDetails,
@@ -151,9 +153,19 @@ export default function IdentityDetails() {
               ))}
             </TagsContent>
           )}
-          <TagsButton
+          <Tag
+            className="w-fit border-dashed"
             onClick={() => {
               setTagsModalActive({ isOpen: true, mode: 'add' })
+            }}
+          >
+            <Icon name="plus-small" className="w-5 h-5" />
+            Add tags
+          </Tag>
+
+          <TagsButton
+            onClick={() => {
+              setTagsModalActive({ isOpen: true, mode: 'view' })
             }}
           />
         </Tags>
