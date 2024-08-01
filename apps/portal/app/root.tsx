@@ -206,12 +206,12 @@ export function ErrorBoundary() {
               ))}
             </div>
             <div className="flex gap-6 mt-5 max-sm:flex-col">
-              <NavigationButton variant="primary" size="max-lg" to={PATHS.ROOT}>
+              <NavigationButton variant="primary" size="lg" to={PATHS.ROOT}>
                 Back to home
               </NavigationButton>
               <Button
                 variant="ghost"
-                size="max-lg"
+                size="lg"
                 className="rounded-full"
                 onClick={() =>
                   (window.location.href = `mailto:${SUPPORT_EMAIL_ADDRESS}`)
