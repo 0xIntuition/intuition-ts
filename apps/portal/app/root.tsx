@@ -26,6 +26,7 @@ import { Button, Icon, Text, Toaster } from '@0xintuition/1ui'
 
 import { GlobalLoading } from '@components/global-loading'
 import NavigationButton from '@components/navigation-link'
+import { useUpdateApiHeaders } from '@lib/hooks/useUpdateApiHeaders'
 import { getChainEnvConfig } from '@lib/utils/environment'
 import logger from '@lib/utils/logger'
 import { cn } from '@lib/utils/misc'
@@ -118,6 +119,7 @@ function App() {
   const nonce = useNonce()
   const theme = useTheme()
   const { env } = useLoaderData<typeof loader>()
+  useUpdateApiHeaders()
 
   return (
     <Document nonce={nonce} theme={theme}>
