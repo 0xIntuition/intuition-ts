@@ -1,5 +1,4 @@
 import Providers from '@client/providers'
-import { useUpdateApiHeaders } from '@lib/hooks/useUpdateApiHeaders'
 import { ClientHintCheck, getHints } from '@lib/utils/client-hints'
 import { useNonce } from '@lib/utils/nonce-provider'
 import { json, LoaderFunctionArgs, type MetaFunction } from '@remix-run/node'
@@ -117,7 +116,6 @@ function App() {
   const nonce = useNonce()
   const theme = useTheme()
   const { env } = useLoaderData<typeof loader>()
-  useUpdateApiHeaders()
 
   return (
     <Document nonce={nonce} theme={theme}>
