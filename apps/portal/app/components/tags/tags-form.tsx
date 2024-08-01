@@ -10,7 +10,6 @@ import {
   TabsContent,
   TabsList,
   TabsTrigger,
-  TransactionStatusType,
   Trunctacular,
 } from '@0xintuition/1ui'
 import { IdentityPresenter } from '@0xintuition/api'
@@ -168,7 +167,7 @@ export function TagsForm({ identity, mode, onClose }: TagsFormProps) {
       {isTransactionStarted && (
         <div className="flex flex-col items-center justify-center flex-grow">
           <TransactionState
-            status={state.status as TransactionStatusType}
+            status={state.status}
             txHash={state.txHash}
             type="tag"
             successButton={

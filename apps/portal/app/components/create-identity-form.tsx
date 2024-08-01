@@ -11,7 +11,6 @@ import {
   Text,
   Textarea,
   toast,
-  TransactionStatusType,
 } from '@0xintuition/1ui'
 import { IdentityPresenter } from '@0xintuition/api'
 
@@ -593,7 +592,7 @@ function CreateIdentityForm({
       ) : (
         <div className="flex flex-col items-center justify-center min-h-96">
           <TransactionState
-            status={state.status as TransactionStatusType}
+            status={state.status}
             txHash={state.txHash}
             type="identity"
             ipfsLink={`${IPFS_GATEWAY_URL}/${transactionResponseData?.identity_id?.replace('ipfs://', '')}`}

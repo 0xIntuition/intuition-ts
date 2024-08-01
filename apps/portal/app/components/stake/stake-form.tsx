@@ -10,7 +10,6 @@ import {
   Tabs,
   TabsList,
   TabsTrigger,
-  TransactionStatusType,
   Trunctacular,
 } from '@0xintuition/1ui'
 import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
@@ -221,7 +220,7 @@ export default function StakeForm({
       ) : (
         <div className="flex flex-col items-center justify-center min-h-96">
           <TransactionState
-            status={state.status as TransactionStatusType}
+            status={state.status}
             txHash={state.txHash}
             type={mode === 'deposit' ? 'deposit' : 'redeem'}
           />
