@@ -181,10 +181,10 @@ export function ErrorBoundary() {
     const descriptionArray = description.split('\n')
     return (
       <Document>
-        <div className="flex h-[100vh] w-full items-center justify-center gap-12 max-[900px]:flex-col-reverse max-[900px]:gap-2">
+        <div className="flex h-[100vh] w-full items-center justify-center gap-12 max-lg:flex-col-reverse max-lg:gap-2">
           <div
             className={cn(
-              'flex flex-col max-w-[500px] gap-2 max-[900px]:items-center max-[900px]:text-center',
+              'flex flex-col max-w-[500px] gap-2 max-lg:items-center max-lg:text-center',
               !statusCode && 'items-center [&>div]:text-center gap-4',
             )}
           >
@@ -194,7 +194,7 @@ export function ErrorBoundary() {
             >
               {title}
             </Text>
-            <div className="flex flex-col max-[900px]:text-center">
+            <div className="flex flex-col max-lg:text-center">
               {descriptionArray?.map((content, index) => (
                 <Text
                   variant={statusCode ? 'bodyLarge' : 'headline'}
@@ -205,13 +205,13 @@ export function ErrorBoundary() {
                 </Text>
               ))}
             </div>
-            <div className="flex gap-6 mt-5 max-[400px]:flex-col">
-              <NavigationButton variant="primary" size="lg" to={PATHS.ROOT}>
+            <div className="flex gap-6 mt-5 max-sm:flex-col">
+              <NavigationButton variant="primary" size="max-lg" to={PATHS.ROOT}>
                 Back to home
               </NavigationButton>
               <Button
                 variant="ghost"
-                size="lg"
+                size="max-lg"
                 className="rounded-full"
                 onClick={() =>
                   (window.location.href = `mailto:${SUPPORT_EMAIL_ADDRESS}`)

@@ -40,7 +40,7 @@ const ExploreSearchForm = ({
     <Form
       method="get"
       onChange={handleChange}
-      className="flex flex-col rounded-lg p-5 border border-1 theme-border bg-card/70"
+      className="flex flex-col rounded-lg p-5 border border-1 theme-border bg-card/70 gap-4"
     >
       <ExploreSearchInput
         searchParam={searchParam}
