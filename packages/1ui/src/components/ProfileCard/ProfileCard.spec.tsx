@@ -15,6 +15,7 @@ describe('ProfileCard', () => {
       numberOfFollowing: 45,
       points: 671234,
     },
+    ipfsLink: 'https://ipfs.io/ipfs/QmZKfjJ8v',
     bio: 'John Doe is a blockchain enthusiast. He loves to learn new things and share his knowledge with others. He is also a contributor to various open-source projects.',
   }
 
@@ -53,6 +54,7 @@ describe('ProfileCard', () => {
                 class="flex flex-row gap-1 items-center"
               >
                 <a
+                  href="https://ipfs.io/ipfs/QmZKfjJ8v"
                   rel="noopener noreferrer"
                   target="_blank"
                 >
@@ -147,7 +149,7 @@ describe('ProfileCard', () => {
       stats: {
         numberOfFollowers: 300,
       },
-      link: 'https://blockchaincorp.com',
+      ipfsLink: 'https://ipfs.io/ipfs/QmZKfjJ8v',
       bio: 'Blockchain Corp is a leading company in blockchain technology. Visit our website for more information about how you can benefit from our services.',
     }
 
@@ -156,7 +158,6 @@ describe('ProfileCard', () => {
       <DocumentFragment>
         <div
           class="flex flex-col justify-center items-start w-full min-w-80 rounded-lg gap-2.5"
-          link="https://blockchaincorp.com"
         >
           <div
             class="flex items-center space-x-4"
@@ -186,6 +187,7 @@ describe('ProfileCard', () => {
                 class="flex flex-row gap-1 items-center"
               >
                 <a
+                  href="https://ipfs.io/ipfs/QmZKfjJ8v"
                   rel="noopener noreferrer"
                   target="_blank"
                 >
@@ -265,6 +267,7 @@ describe('ProfileCard', () => {
                 class="flex flex-row gap-1 items-center"
               >
                 <a
+                  href="https://ipfs.io/ipfs/QmZKfjJ8v"
                   rel="noopener noreferrer"
                   target="_blank"
                 >

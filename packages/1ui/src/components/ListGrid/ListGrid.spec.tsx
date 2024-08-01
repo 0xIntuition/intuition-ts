@@ -11,19 +11,16 @@ describe('ListGrid', () => {
         identities={[
           {
             displayName: 'Best Crypto Portfolio Trackers',
-            description: '45 identities',
-            image: 'path/to/image1.png',
+            imgSrc: 'path/to/image1.png',
             identitiesCount: 45,
             savedAmount: '0.047',
           },
           {
             displayName: 'Top Decentralized Finance Platforms',
-            description: '45 identities',
-            image: 'path/to/image2.png',
+            imgSrc: 'path/to/image2.png',
             identitiesCount: 45,
             savedAmount: '0.047',
           },
-          // Add more identities as needed
         ]}
       />,
     )
