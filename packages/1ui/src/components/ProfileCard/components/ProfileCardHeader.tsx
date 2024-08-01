@@ -1,6 +1,6 @@
 import { Identity, IdentityType } from 'types'
 
-import { Avatar, Copy, Text, Trunctacular } from '../..'
+import { Avatar, Copy, Text, toast, Trunctacular } from '../..'
 
 interface ProfileCardHeaderProps {
   variant?: IdentityType
@@ -34,7 +34,11 @@ const ProfileCardHeader = ({
               maxStringLength={24}
             />
           </a>
-          <Copy text={walletAddress} />
+          <Copy
+            text={walletAddress}
+            // launch toast if they have a toaster setup in consuming app
+            onCopy={() => toast?.success('Copied to clipboard!')}
+          />
         </div>
       </div>
     </div>

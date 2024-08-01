@@ -7,11 +7,13 @@ import { cn } from 'styles'
 interface CopyProps extends React.HTMLAttributes<HTMLButtonElement> {
   text: string
   disabled?: boolean
+  onCopy?: () => void
 }
 
 const Copy: React.FC<CopyProps> = ({
   text,
   disabled = false,
+  onCopy,
   className,
   ...props
 }) => {
@@ -20,6 +22,7 @@ const Copy: React.FC<CopyProps> = ({
   const handleCopy = () => {
     navigator.clipboard.writeText(text)
     setCopied(true)
+    onCopy && onCopy()
     setTimeout(() => setCopied(false), 2000)
   }
 
@@ -27,7 +30,7 @@ const Copy: React.FC<CopyProps> = ({
     <Button
       variant={ButtonVariant.text}
       className={`p-0 h-4 w-4 text-primary/60 hover:text-primary ${className}`}
-      disabled={disabled}
+      disabled={disabled || copied}
       onClick={handleCopy}
       {...props}
     >
