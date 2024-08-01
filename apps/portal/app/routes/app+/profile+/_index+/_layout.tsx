@@ -258,7 +258,7 @@ export default function Profile() {
 
   const rightPanel = (
     <>
-      <div className="flex flex-row justify-end">
+      <div className="flex flex-row justify-end mb-6">
         <SegmentedNav options={userProfileRouteOptions} />
       </div>
       <div className="pb-10">

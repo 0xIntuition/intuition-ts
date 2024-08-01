@@ -12,7 +12,7 @@ export function NestedTabs({
   options,
 }: NestedTabsProps) {
   return (
-    <div className="w-full flex flex-col items-center flex-grow gap-4">
+    <div className="w-full flex flex-col items-center flex-grow gap-6">
       <SegmentedNav options={options} />
       <OutletComponent />
     </div>

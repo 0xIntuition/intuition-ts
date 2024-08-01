@@ -93,9 +93,9 @@ function ActivityItem({
   return (
     <div
       key={activity.id}
-      className={`grow shrink basis-0 self-stretch p-6 bg-black rounded-xl border border-neutral-300/20 flex-col justify-start items-start gap-5 inline-flex w-full my-6 first:mt-0 last:mb-0`}
+      className={`p-6 bg-black rounded-xl theme-border mb-6 last:mb-0 flex flex-col w-full`}
     >
-      <div className="flex flex-row items-center justify-between min-w-full">
+      <div className="flex flex-row items-center justify-between min-w-full mb-4">
         <div className="flex flex-row items-center gap-2">
           <IdentityTag
             variant={Identity.user}
@@ -112,7 +112,7 @@ function ActivityItem({
       </div>
       <div className="flex w-full">
         {activity.identity && (
-          <div className="hover:cursor-pointer bg-secondary-foreground/10 pl-12 pr-6 py-4 rounded-xl flex flex-row w-full gap-6 items-center">
+          <div className="hover:cursor-pointer bg-secondary-foreground/10 px-6 py-4 rounded-xl flex flex-row w-full gap-6 items-center justify-between">
             <IdentityContentRow
               variant={
                 activity.identity.is_user ? Identity.user : Identity.nonUser
@@ -121,7 +121,7 @@ function ActivityItem({
                 activity.identity.user?.image ?? activity.identity.image ?? ''
               }
               name={
-                activity.identity.user?.display_name ??
+                activity.identity.user_display_name ??
                 activity.identity.display_name
               }
               walletAddress={
@@ -129,7 +129,7 @@ function ActivityItem({
               }
               amount={
                 +formatBalance(
-                  BigInt(activity.identity.user_assets ?? '0'),
+                  BigInt(activity.identity.assets_sum ?? '0'),
                   18,
                   4,
                 )
@@ -165,7 +165,7 @@ function ActivityItem({
           </div>
         )}
         {activity.claim && (
-          <div className="hover:cursor-pointer bg-secondary-foreground/10 pl-12 pr-6 py-4 rounded-xl flex flex-row w-full gap-6 items-center">
+          <div className="hover:cursor-pointer bg-secondary-foreground/10 px-6 py-4 rounded-xl flex flex-row w-full gap-6 items-center">
             <ClaimRow
               claimsFor={activity.claim.for_num_positions}
               claimsAgainst={activity.claim.against_num_positions}
@@ -183,7 +183,7 @@ function ActivityItem({
                     ? Identity.user
                     : Identity.nonUser,
                   label:
-                    activity.claim.subject?.user?.display_name ??
+                    activity.claim.subject?.user_display_name ??
                     activity.claim.subject?.display_name ??
                     activity.claim.subject?.identity_id ??
                     '',
@@ -194,7 +194,7 @@ function ActivityItem({
                     ? Identity.user
                     : Identity.nonUser,
                   label:
-                    activity.claim.predicate?.user?.display_name ??
+                    activity.claim.predicate?.user_display_name ??
                     activity.claim.predicate?.display_name ??
                     activity.claim.predicate?.identity_id ??
                     '',
@@ -205,7 +205,7 @@ function ActivityItem({
                     ? Identity.user
                     : Identity.nonUser,
                   label:
-                    activity.claim.object?.user?.display_name ??
+                    activity.claim.object?.user_display_name ??
                     activity.claim.object?.display_name ??
                     activity.claim.object?.identity_id ??
                     '',
