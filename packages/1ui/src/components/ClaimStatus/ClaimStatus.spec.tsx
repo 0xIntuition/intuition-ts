@@ -40,7 +40,7 @@ describe('ClaimStatus', () => {
             />
           </div>
           <div
-            class="flex items-center w-full max-w-full group"
+            class="flex items-center w-full max-w-max group"
           >
             <button
               class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center rounded-md text-base [&>span]:h-6 [&>span]:w-6 group-hover:border-primary group-hover:bg-primary/20"
