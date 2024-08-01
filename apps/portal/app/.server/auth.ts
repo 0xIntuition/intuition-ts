@@ -117,7 +117,9 @@ export async function setupAPI(request: Request) {
 
   OpenAPI.BASE = apiUrl
   const accessToken = getPrivyAccessToken(request)
-  const headers = getAuthHeaders(accessToken !== null ? accessToken : '')
+  console.log('[SETUP API] Access Token:', truncateToken(accessToken))
+  const headers = getAuthHeaders(accessToken ?? '')
+  console.log('[SETUP API] Headers:', truncateHeaders(headers))
   OpenAPI.HEADERS = headers as Record<string, string>
   console.log('[SETUP API] -- END')
 }
@@ -125,4 +127,19 @@ export async function setupAPI(request: Request) {
 export function logAPI() {
   console.log('OpenAPI Base', JSON.stringify(OpenAPI.BASE, null, 2))
   console.log('OpenAPI Headers', JSON.stringify(OpenAPI.HEADERS, null, 2))
+}
+
+function truncateToken(token: string | null): string {
+  if (!token) {
+    return 'null'
+  }
+  return token.length > 8 ? `${token.slice(0, 4)}...${token.slice(-4)}` : token
+}
+
+function truncateHeaders(
+  headers: Record<string, string>,
+): Record<string, string> {
+  return Object.fromEntries(
+    Object.entries(headers).map(([key, value]) => [key, truncateToken(value)]),
+  )
 }
