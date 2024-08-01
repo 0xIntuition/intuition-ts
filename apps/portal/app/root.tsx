@@ -134,7 +134,9 @@ function App() {
   )
 }
 
-export default withSentry(App)
+export default withSentry(App, {
+  wrapWithErrorBoundary: process.env.NODE_ENV === 'production',
+})
 
 export function AppLayout() {
   const { chain } = useAccount()
