@@ -30,7 +30,7 @@
     },
     "@nx/remix:build": {
       "cache": true,
-      "dependsOn": ["^build"],
+      "dependsOn": ["^build", "typecheck"],
       "inputs": ["default", "^default"]
     }
   },
