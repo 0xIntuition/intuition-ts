@@ -20,10 +20,7 @@ Sentry.init({
       useLocation,
       useMatches,
     }),
-    // Replay is only available in the client
-    Sentry.replayIntegration(),
   ],
-
   // Set tracesSampleRate to 1.0 to capture 100%
   // of transactions for tracing.
   tracesSampleRate: 1.0,
