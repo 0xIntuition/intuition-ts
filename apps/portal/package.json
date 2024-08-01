@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "build": "remix vite:build --emptyOutDir",
-    "dev": "concurrently \"remix vite:dev\" \"content-collections watch\"",
+    "dev": "remix vite:dev",
     "start": "NODE_OPTIONS='--import ./instrumentation.server.mjs' PORT=8080 remix-serve ./build/server/index.js",
     "lint:fix": "pnpm lint --fix"
   },
@@ -70,7 +70,6 @@
     "@typescript-eslint/eslint-plugin": "^6.7.4",
     "@typescript-eslint/parser": "^6.7.4",
     "autoprefixer": "^10.4.19",
-    "concurrently": "^8.2.2",
     "eslint": "^8.38.0",
     "eslint-import-resolver-typescript": "^3.6.1",
     "eslint-plugin-jsx-a11y": "^6.7.1",
