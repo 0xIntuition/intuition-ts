@@ -115,10 +115,6 @@ export async function setupAPI(request: Request) {
     typeof window !== 'undefined' ? window.ENV?.API_URL : process.env.API_URL
 
   OpenAPI.BASE = apiUrl
-  const accessToken = getPrivyAccessToken(request)
-  logger('[SETUP API] Access Token:', truncateToken(accessToken))
-  const headers = getAuthHeaders(accessToken ?? '')
-  logger('[SETUP API] Headers:', truncateHeaders(headers))
 
   if (typeof window !== 'undefined') {
     const accessToken = localStorage.getItem('privy:token')
@@ -136,20 +132,4 @@ export function updateClientAPIHeaders(accessToken: string | null) {
 
   OpenAPI.HEADERS = headers as Record<string, string>
   logger('[SETUP API] -- END')
-}
-
-// these are temporary helpers to not expose access token to the logs
-function truncateToken(token: string | null): string {
-  if (!token) {
-    return 'null'
-  }
-  return token.length > 8 ? `${token.slice(0, 4)}...${token.slice(-4)}` : token
-}
-
-function truncateHeaders(
-  headers: Record<string, string>,
-): Record<string, string> {
-  return Object.fromEntries(
-    Object.entries(headers).map(([key, value]) => [key, truncateToken(value)]),
-  )
 }
