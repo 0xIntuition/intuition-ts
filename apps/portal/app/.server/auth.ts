@@ -132,6 +132,7 @@ export async function setupAPI(request: Request) {
     const headers = getAuthHeaders(accessToken || '')
     OpenAPI.HEADERS = headers as Record<string, string>
   }
+  console.log('[SETUP API] -- END', OpenAPI.HEADERS)
 }
 
 export function updateClientAPIHeaders(accessToken: string | null) {

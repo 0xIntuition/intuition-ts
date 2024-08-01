@@ -3,12 +3,14 @@ import { ApiError, ClaimsService } from '@0xintuition/api'
 import logger from '@lib/utils/logger'
 import { invariant } from '@lib/utils/misc'
 import { ActionFunctionArgs, json } from '@remix-run/node'
-import { requireUserWallet } from '@server/auth'
+import { requireUserWallet, setupAPI } from '@server/auth'
 import { MULTIVAULT_CONTRACT_ADDRESS, NO_WALLET_ERROR } from 'consts'
 
 export async function action({ request }: ActionFunctionArgs) {
   const wallet = await requireUserWallet(request)
   invariant(wallet, NO_WALLET_ERROR)
+
+  await setupAPI(request)
 
   const formData = await request.formData()
   for (const [key, value] of formData.entries()) {

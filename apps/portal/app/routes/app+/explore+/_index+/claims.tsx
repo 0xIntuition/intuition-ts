@@ -11,11 +11,12 @@ import { calculateTotalPages, fetchWrapper, invariant } from '@lib/utils/misc'
 import { getStandardPageParams } from '@lib/utils/params'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
-import { logAPI, requireUserWallet } from '@server/auth'
+import { logAPI, requireUserWallet, setupAPI } from '@server/auth'
 import { NO_WALLET_ERROR } from 'consts'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   console.log('[EXPLORE CLAIMS] -- START')
+  await setupAPI(request)
   logAPI()
   const wallet = await requireUserWallet(request)
   invariant(wallet, NO_WALLET_ERROR)
