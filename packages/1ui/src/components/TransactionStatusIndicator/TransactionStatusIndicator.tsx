@@ -1,9 +1,9 @@
 import * as React from 'react'
 
 import { cn } from 'styles'
-import { TransactionStatusType, TransactionType } from 'types'
 
 import { Icon, Text, TextVariant, TextWeight } from '..'
+import { TransactionStatusType, TransactionType } from '../../types'
 import { getStatusComponentData } from './TransactionStatusIndicator.utils'
 
 export interface TransactionStatusProps

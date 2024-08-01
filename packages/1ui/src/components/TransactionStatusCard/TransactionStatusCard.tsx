@@ -1,7 +1,6 @@
 import * as React from 'react'
 
 import { cn } from 'styles'
-import { TransactionStatus, TransactionStatusType } from 'types'
 
 import {
   Icon,
@@ -13,6 +12,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '..'
+import { TransactionStatus, TransactionStatusType } from '../../types'
 
 const getStatusComponentData = (status: TransactionStatusType) => {
   switch (status) {
