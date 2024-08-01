@@ -21,7 +21,6 @@ import {
 } from '@0xintuition/api'
 
 import NavigationButton from '@components/navigation-link'
-import { NestedLayout } from '@components/nested-layout'
 import StakeModal from '@components/stake/stake-modal'
 import { stakeModalAtom } from '@lib/state/store'
 import logger from '@lib/utils/logger'
@@ -40,6 +39,7 @@ import {
 } from '@remix-run/react'
 import { requireUserWallet } from '@server/auth'
 import { getVaultDetails } from '@server/multivault'
+import TwoPanelLayout from 'app/layouts/two-panel-layout'
 import { NO_WALLET_ERROR } from 'consts'
 import { useAtom } from 'jotai'
 import { VaultDetailsType } from 'types/vault'
@@ -127,142 +127,147 @@ export default function ClaimDetails() {
     +userConviction > 0 ? TagVariant.for : TagVariant.against
   const directionTagText = +userConviction > 0 ? 'FOR' : 'AGAINST'
 
+  const ClaimWithNav = () => (
+    <div className="flex mb-4 px-7">
+      <NavigationButton variant="secondary" size="icon" to={from ?? -1}>
+        <Icon name="arrow-left" />
+      </NavigationButton>
+      <Claim
+        size="md"
+        subject={{
+          variant: claim.subject?.is_user ? Identity.user : Identity.nonUser,
+          label: claim.subject?.is_user
+            ? claim.subject?.user?.display_name ?? claim.subject?.display_name
+            : claim.subject?.display_name ?? '',
+          imgSrc: claim.subject?.is_user
+            ? claim.subject?.user?.image ?? claim.subject?.image
+            : claim.subject?.image ?? null,
+        }}
+        predicate={{
+          variant: claim.predicate?.is_user ? Identity.user : Identity.nonUser,
+          label: claim.predicate?.is_user
+            ? claim.predicate?.user?.display_name ??
+              claim.predicate?.display_name
+            : claim.predicate?.display_name ?? '',
+          imgSrc: claim.predicate?.is_user
+            ? claim.predicate?.user?.image ?? claim.predicate?.image
+            : claim.predicate?.image ?? null,
+        }}
+        object={{
+          variant: claim.object?.is_user ? Identity.user : Identity.nonUser,
+          label: claim.object?.is_user
+            ? claim.object?.user?.display_name ?? claim.object?.display_name
+            : claim.object?.display_name ?? '',
+          imgSrc: claim.object?.is_user
+            ? claim.object?.user?.image ?? claim.object?.image
+            : claim.object?.image ?? null,
+        }}
+      />
+    </div>
+  )
+
+  const leftPanel = (
+    <div className="w-full flex-col justify-start items-start gap-5 inline-flex">
+      {vaultDetails !== null && user_assets !== '0' ? (
+        <PositionCard
+          onButtonClick={() =>
+            setStakeModalActive((prevState) => ({
+              ...prevState,
+              mode: 'redeem',
+              modalType: 'claim',
+              direction,
+              isOpen: true,
+            }))
+          }
+        >
+          <div>
+            <PositionCardStaked
+              amount={user_assets ? +formatBalance(user_assets, 18, 4) : 0}
+            />
+            <Tag variant={directionTagVariant} size={TagSize.sm}>
+              {directionTagText}
+            </Tag>
+          </div>
+          <PositionCardOwnership
+            percentOwnership={
+              user_assets !== null && assets_sum
+                ? +calculatePercentageOfTvl(
+                    user_assets,
+                    (
+                      +vaultDetails.assets_sum +
+                      +(vaultDetails.against_assets_sum ?? '0')
+                    ).toString(),
+                  )
+                : 0
+            }
+          />
+          <PositionCardFeesAccrued amount={0} />
+          <PositionCardLastUpdated timestamp={claim.updated_at} />
+        </PositionCard>
+      ) : null}
+      <ClaimStakeCard
+        currency="ETH"
+        totalTVL={
+          +formatBalance(
+            +vaultDetails.assets_sum +
+              +(vaultDetails.against_assets_sum
+                ? vaultDetails.against_assets_sum
+                : '0'),
+          )
+        }
+        tvlAgainst={
+          +formatBalance(
+            vaultDetails.against_assets_sum ?? claim.against_assets_sum,
+          )
+        }
+        tvlFor={+formatBalance(vaultDetails.assets_sum ?? claim.for_assets_sum)}
+        amountAgainst={claim.against_num_positions}
+        amountFor={claim.for_num_positions}
+        onAgainstBtnClick={() =>
+          setStakeModalActive((prevState) => ({
+            ...prevState,
+            mode: 'deposit',
+            modalType: 'claim',
+            direction: 'against',
+            isOpen: true,
+          }))
+        }
+        onForBtnClick={() =>
+          setStakeModalActive((prevState) => ({
+            ...prevState,
+            mode: 'deposit',
+            modalType: 'claim',
+            direction: 'for',
+            isOpen: true,
+          }))
+        }
+        disableForBtn={
+          (vaultDetails.user_conviction_against ??
+            claim.user_conviction_against) > '0'
+        }
+        disableAgainstBtn={
+          (vaultDetails.user_conviction ?? claim.user_conviction_for) > '0'
+        }
+      />
+      <InfoCard
+        variant={Identity.user}
+        username={claim.creator?.display_name ?? ''}
+        avatarImgSrc={claim.creator?.image ?? ''}
+        timestamp={claim.created_at}
+        onClick={() => {
+          navigate(`/app/profile/${claim.creator?.wallet}`)
+        }}
+        className="hover:cursor-pointer w-full"
+      />
+    </div>
+  )
+
+  const rightPanel = <Outlet />
+
   return (
-    <>
-      <div className="flex items-center gap-6 mx-8 mt-10">
-        <NavigationButton variant="secondary" size="icon" to={from ?? -1}>
-          <Icon name="arrow-left" />
-        </NavigationButton>
-        <Claim
-          size="md"
-          subject={{
-            variant: claim.subject?.is_user ? Identity.user : Identity.nonUser,
-            label: claim.subject?.is_user
-              ? claim.subject?.user?.display_name ?? claim.subject?.display_name
-              : claim.subject?.display_name ?? '',
-            imgSrc: claim.subject?.is_user
-              ? claim.subject?.user?.image ?? claim.subject?.image
-              : claim.subject?.image ?? null,
-          }}
-          predicate={{
-            variant: claim.predicate?.is_user
-              ? Identity.user
-              : Identity.nonUser,
-            label: claim.predicate?.is_user
-              ? claim.predicate?.user?.display_name ??
-                claim.predicate?.display_name
-              : claim.predicate?.display_name ?? '',
-            imgSrc: claim.predicate?.is_user
-              ? claim.predicate?.user?.image ?? claim.predicate?.image
-              : claim.predicate?.image ?? null,
-          }}
-          object={{
-            variant: claim.object?.is_user ? Identity.user : Identity.nonUser,
-            label: claim.object?.is_user
-              ? claim.object?.user?.display_name ?? claim.object?.display_name
-              : claim.object?.display_name ?? '',
-            imgSrc: claim.object?.is_user
-              ? claim.object?.user?.image ?? claim.object?.image
-              : claim.object?.image ?? null,
-          }}
-        />
-      </div>
-      <NestedLayout outlet={Outlet}>
-        <div className="w-full flex-col justify-start items-start gap-5 inline-flex">
-          {vaultDetails !== null && user_assets !== '0' ? (
-            <PositionCard
-              onButtonClick={() =>
-                setStakeModalActive((prevState) => ({
-                  ...prevState,
-                  mode: 'redeem',
-                  modalType: 'claim',
-                  direction,
-                  isOpen: true,
-                }))
-              }
-            >
-              <div>
-                <PositionCardStaked
-                  amount={user_assets ? +formatBalance(user_assets, 18, 4) : 0}
-                />
-                <Tag variant={directionTagVariant} size={TagSize.sm}>
-                  {directionTagText}
-                </Tag>
-              </div>
-              <PositionCardOwnership
-                percentOwnership={
-                  user_assets !== null && assets_sum
-                    ? +calculatePercentageOfTvl(
-                        user_assets,
-                        (
-                          +vaultDetails.assets_sum +
-                          +(vaultDetails.against_assets_sum ?? '0')
-                        ).toString(),
-                      )
-                    : 0
-                }
-              />
-              <PositionCardFeesAccrued amount={0} />
-              <PositionCardLastUpdated timestamp={claim.updated_at} />
-            </PositionCard>
-          ) : null}
-          <ClaimStakeCard
-            currency="ETH"
-            totalTVL={
-              +formatBalance(
-                +vaultDetails.assets_sum +
-                  +(vaultDetails.against_assets_sum
-                    ? vaultDetails.against_assets_sum
-                    : '0'),
-              )
-            }
-            tvlAgainst={
-              +formatBalance(
-                vaultDetails.against_assets_sum ?? claim.against_assets_sum,
-              )
-            }
-            tvlFor={
-              +formatBalance(vaultDetails.assets_sum ?? claim.for_assets_sum)
-            }
-            amountAgainst={claim.against_num_positions}
-            amountFor={claim.for_num_positions}
-            onAgainstBtnClick={() =>
-              setStakeModalActive((prevState) => ({
-                ...prevState,
-                mode: 'deposit',
-                modalType: 'claim',
-                direction: 'against',
-                isOpen: true,
-              }))
-            }
-            onForBtnClick={() =>
-              setStakeModalActive((prevState) => ({
-                ...prevState,
-                mode: 'deposit',
-                modalType: 'claim',
-                direction: 'for',
-                isOpen: true,
-              }))
-            }
-            disableForBtn={
-              (vaultDetails.user_conviction_against ??
-                claim.user_conviction_against) > '0'
-            }
-            disableAgainstBtn={
-              (vaultDetails.user_conviction ?? claim.user_conviction_for) > '0'
-            }
-          />
-          <InfoCard
-            variant={Identity.user}
-            username={claim.creator?.display_name ?? ''}
-            avatarImgSrc={claim.creator?.image ?? ''}
-            timestamp={claim.created_at}
-            onClick={() => {
-              navigate(`/app/profile/${claim.creator?.wallet}`)
-            }}
-            className="hover:cursor-pointer w-full"
-          />
-        </div>
+    <div className="w-full flex flex-col">
+      <ClaimWithNav />
+      <TwoPanelLayout leftPanel={leftPanel} rightPanel={rightPanel}>
         <StakeModal
           userWallet={wallet}
           contract={claim.contract}
@@ -278,7 +283,7 @@ export default function ClaimDetails() {
             }))
           }}
         />
-      </NestedLayout>
-    </>
+      </TwoPanelLayout>
+    </div>
   )
 }
