@@ -59,7 +59,7 @@ export default function ProfileDataAbout() {
 
   return (
     <div className="flex-col justify-start items-start flex w-full gap-6">
-      <div className="flex flex-col w-full pb-4 gap-6">
+      <div className="flex flex-col w-full gap-6">
         <div className="self-stretch justify-between items-center inline-flex">
           <Text
             variant="headline"

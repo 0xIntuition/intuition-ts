@@ -33,7 +33,7 @@ export const Claim = ({
 }: ClaimProps) => {
   const separatorWidth = size !== IdentityTagSize.default ? 'w-4' : 'w-2'
   return (
-    <div className="flex items-center w-full max-w-full group">
+    <div className="flex items-center w-full max-w-max group">
       <IdentityTag
         variant={subject.variant}
         size={size}

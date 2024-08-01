@@ -65,8 +65,8 @@ export default function ClaimOverview() {
   }, [state])
 
   return (
-    <div className="flex-col justify-start items-start flex w-full">
-      <div className="self-stretch justify-between items-center inline-flex mb-6">
+    <div className="flex-col justify-start items-start flex w-full gap-4">
+      <div className="self-stretch justify-between items-center inline-flex mb-2">
         <Text
           variant="headline"
           weight="medium"

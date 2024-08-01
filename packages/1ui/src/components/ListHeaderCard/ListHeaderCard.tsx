@@ -1,5 +1,7 @@
 import * as React from 'react'
 
+import { cn } from 'styles'
+
 import { ClaimProps, Text, TextVariant, TextWeight } from '..'
 
 export interface ListHeaderCardProps
@@ -13,11 +15,15 @@ const ListHeaderCard: React.FC<ListHeaderCardProps> = ({
   label,
   value,
   children,
+  className,
   ...props
 }) => {
   return (
     <div
-      className="flex items-center justify-between w-full p-6 theme-border rounded-xl"
+      className={cn(
+        'flex items-center justify-between w-full p-6 theme-border rounded-xl',
+        className,
+      )}
       {...props}
     >
       <div className="flex flex-col">

@@ -54,6 +54,7 @@ export default function ListOverview() {
               <ListHeaderCard
                 label="Identities"
                 value={resolvedtotalIdentitiesCount}
+                className="mb-6"
               >
                 <Claim
                   size="md"

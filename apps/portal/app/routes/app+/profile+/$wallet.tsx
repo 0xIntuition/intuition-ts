@@ -18,7 +18,7 @@ import {
 } from '@0xintuition/api'
 
 import FollowModal from '@components/follow/follow-modal'
-import { NestedLayout } from '@components/nested-layout'
+import { SegmentedNav } from '@components/segmented-nav'
 import StakeModal from '@components/stake/stake-modal'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { followModalAtom, stakeModalAtom } from '@lib/state/store'
@@ -33,6 +33,7 @@ import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
 import { Outlet, useNavigate } from '@remix-run/react'
 import { requireUserWallet } from '@server/auth'
 import { getVaultDetails } from '@server/multivault'
+import TwoPanelLayout from 'app/layouts/two-panel-layout'
 import {
   BLOCK_EXPLORER_URL,
   NO_WALLET_ERROR,
@@ -162,96 +163,115 @@ export default function Profile() {
   const [followModalActive, setFollowModalActive] = useAtom(followModalAtom)
 
   return (
-    <NestedLayout outlet={Outlet} options={userIdentityRouteOptions}>
-      <div className="flex-col justify-start items-start gap-5 inline-flex">
-        <ProfileCard
-          variant="user"
-          avatarSrc={userIdentity?.user?.image ?? ''}
-          name={userIdentity?.user?.display_name ?? ''}
-          walletAddress={
-            userIdentity?.user?.ens_name ??
-            userIdentity?.user?.wallet ??
-            userIdentity.identity_id
-          }
-          stats={{
-            numberOfFollowers: userTotals.follower_count,
-            numberOfFollowing: userTotals.followed_count,
-            points: userTotals.user_points,
-          }}
-          bio={userIdentity?.user?.description ?? ''}
-          ipfsLink={`${BLOCK_EXPLORER_URL}/address/${userIdentity.identity_id}`}
-        >
-          <Button
-            variant="secondary"
-            className="w-full"
-            onClick={() =>
-              setFollowModalActive((prevState) => ({
-                ...prevState,
-                isOpen: true,
-              }))
+    <>
+      <TwoPanelLayout
+        leftPanel={
+          <div className="flex-col justify-start items-start gap-5 inline-flex">
+            <ProfileCard
+              variant="user"
+              avatarSrc={userIdentity?.user?.image ?? ''}
+              name={userIdentity?.user?.display_name ?? ''}
+              walletAddress={
+                userIdentity?.user?.ens_name ??
+                userIdentity?.user?.wallet ??
+                userIdentity.identity_id
+              }
+              stats={{
+                numberOfFollowers: userTotals.follower_count,
+                numberOfFollowing: userTotals.followed_count,
+                points: userTotals.user_points,
+              }}
+              bio={userIdentity?.user?.description ?? ''}
+              ipfsLink={`${BLOCK_EXPLORER_URL}/address/${userIdentity.identity_id}`}
+            >
+              <Button
+                variant="secondary"
+                className="w-full"
+                onClick={() =>
+                  setFollowModalActive((prevState) => ({
+                    ...prevState,
+                    isOpen: true,
+                  }))
+                }
+              >
+                {followVaultDetails &&
+                (followVaultDetails.user_conviction ?? '0') > '0'
+                  ? `Following · ${formatBalance(followVaultDetails.user_assets ?? '0', 18, 4)} ETH`
+                  : 'Follow'}
+              </Button>
+            </ProfileCard>
+            {/* TODO: Determine whether we need this or not */}
+            {/* <ProfileSocialAccounts
+            privyUser={JSON.parse(JSON.stringify(user))}
+            handleOpenEditSocialLinksModal={() =>
+              setEditSocialLinksModalActive(true)
             }
-          >
-            {followVaultDetails &&
-            (followVaultDetails.user_conviction ?? '0') > '0'
-              ? `Following · ${formatBalance(followVaultDetails.user_assets ?? '0', 18, 4)} ETH`
-              : 'Follow'}
-          </Button>
-        </ProfileCard>
-        {/* <ProfileSocialAccounts
-              privyUser={JSON.parse(JSON.stringify(user))}
-              handleOpenEditSocialLinksModal={() =>
-                setEditSocialLinksModalActive(true)
+          /> */}
+            {vaultDetails !== null && user_assets !== '0' ? (
+              <PositionCard
+                onButtonClick={() =>
+                  setStakeModalActive((prevState) => ({
+                    ...prevState,
+                    mode: 'redeem',
+                    modalType: 'identity',
+                    isOpen: true,
+                  }))
+                }
+              >
+                <PositionCardStaked
+                  amount={user_assets ? +formatBalance(user_assets, 18, 4) : 0}
+                />
+                <PositionCardOwnership
+                  percentOwnership={
+                    user_assets !== null && assets_sum
+                      ? +calculatePercentageOfTvl(
+                          user_assets ?? '0',
+                          assets_sum,
+                        )
+                      : 0
+                  }
+                />
+                <PositionCardFeesAccrued
+                  amount={
+                    user_asset_delta
+                      ? +formatBalance(
+                          +(user_assets ?? '0') - +user_asset_delta,
+                          18,
+                          5,
+                        )
+                      : 0
+                  }
+                />
+                <PositionCardLastUpdated timestamp={userIdentity.updated_at} />
+              </PositionCard>
+            ) : null}
+            <StakeCard
+              tvl={+formatBalance(assets_sum ?? '0')}
+              holders={userIdentity.num_positions}
+              onBuyClick={() =>
+                setStakeModalActive((prevState) => ({
+                  ...prevState,
+                  mode: 'deposit',
+                  modalType: 'identity',
+                  isOpen: true,
+                }))
               }
-            /> */}
-        {vaultDetails !== null && user_assets !== '0' ? (
-          <PositionCard
-            onButtonClick={() =>
-              setStakeModalActive((prevState) => ({
-                ...prevState,
-                mode: 'redeem',
-                modalType: 'identity',
-                isOpen: true,
-              }))
-            }
-          >
-            <PositionCardStaked
-              amount={user_assets ? +formatBalance(user_assets, 18, 4) : 0}
-            />
-            <PositionCardOwnership
-              percentOwnership={
-                user_assets !== null && assets_sum
-                  ? +calculatePercentageOfTvl(user_assets ?? '0', assets_sum)
-                  : 0
+              onViewAllClick={() =>
+                navigate(`/app/profile/${wallet}/data-about`)
               }
             />
-            <PositionCardFeesAccrued
-              amount={
-                user_asset_delta
-                  ? +formatBalance(
-                      +(user_assets ?? '0') - +user_asset_delta,
-                      18,
-                      5,
-                    )
-                  : 0
-              }
-            />
-            <PositionCardLastUpdated timestamp={userIdentity.updated_at} />
-          </PositionCard>
-        ) : null}
-        <StakeCard
-          tvl={+formatBalance(assets_sum ?? '0')}
-          holders={userIdentity.num_positions}
-          onBuyClick={() =>
-            setStakeModalActive((prevState) => ({
-              ...prevState,
-              mode: 'deposit',
-              modalType: 'identity',
-              isOpen: true,
-            }))
-          }
-          onViewAllClick={() => navigate(`/app/profile/${wallet}/data-about`)}
-        />
-      </div>
+          </div>
+        }
+        rightPanel={
+          <>
+            <div className="flex flex-row justify-end mb-6">
+              <SegmentedNav options={userIdentityRouteOptions} />
+            </div>
+            <Outlet />
+          </>
+        }
+      />
+
       <StakeModal
         userWallet={userWallet}
         contract={userIdentity.contract}
@@ -279,6 +299,6 @@ export default function Profile() {
           }))
         }}
       />
-    </NestedLayout>
+    </>
   )
 }
