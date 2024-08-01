@@ -14,6 +14,7 @@ import {
   useRouteError,
 } from '@remix-run/react'
 import { useTheme } from '@routes/actions+/set-theme'
+import { captureRemixErrorBoundaryError, withSentry } from '@sentry/remix'
 import { getEnv } from '@server/env'
 import { getTheme } from '@server/theme'
 
@@ -113,7 +114,7 @@ export function ExternalScripts() {
   return null // this component doesn't render anything itself
 }
 
-export default function App() {
+function App() {
   const nonce = useNonce()
   const theme = useTheme()
   const { env } = useLoaderData<typeof loader>()
@@ -132,6 +133,10 @@ export default function App() {
     </Document>
   )
 }
+
+export default withSentry(App, {
+  wrapWithErrorBoundary: process.env.NODE_ENV === 'production',
+})
 
 export function AppLayout() {
   const { chain } = useAccount()
@@ -234,6 +239,8 @@ export function ErrorBoundary() {
       description = error.data
     }
   }
+
+  captureRemixErrorBoundaryError(error)
 
   return (
     <ErrorMessage

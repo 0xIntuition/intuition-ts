@@ -1,8 +1,8 @@
 import { Button, ButtonVariant, Icon, IconName, Text } from '@0xintuition/1ui'
 import { QuestStatus } from '@0xintuition/api'
 
-import questPlaceholder from '@assets/quest-placeholder.png'
 import { Link } from '@remix-run/react'
+import { FALLBACK_QUEST_PLACEHOLDER_IMAGE } from 'consts'
 import { MDXContentVariant, MDXContentVariantType } from 'types'
 
 import MDXContentWrapper from '../mdx-content-wrapper'
@@ -15,7 +15,7 @@ export interface IHeroProps {
 export function Hero({ imgSrc }: IHeroProps) {
   return (
     <img
-      src={imgSrc ?? questPlaceholder}
+      src={imgSrc ?? FALLBACK_QUEST_PLACEHOLDER_IMAGE}
       alt={'quest hero'}
       className="object-cover w-full h-[350px] border-x border-b border-border/20 rounded-b-lg"
     />
