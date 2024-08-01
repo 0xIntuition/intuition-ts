@@ -8,7 +8,7 @@ import {
 
 import { ExploreSearch } from '@components/explore/ExploreSearch'
 import { ListClaimsList } from '@components/list/list-claims'
-import { calculateTotalPages, invariant } from '@lib/utils/misc'
+import { calculateTotalPages, invariant, loadMore } from '@lib/utils/misc'
 import { getStandardPageParams } from '@lib/utils/params'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { useLoaderData, useSearchParams, useSubmit } from '@remix-run/react'
@@ -75,18 +75,13 @@ export default function ExploreLists() {
     }
   }, [listClaims, currentPage])
 
-  const handleLoadMore = () => {
-    const nextPage = currentPage + 1
-    submit(
-      {
-        page: nextPage.toString(),
-        limit: pagination.limit.toString(),
-        sortBy,
-        direction,
-      },
-      { method: 'get', replace: true },
-    )
-  }
+  const handleLoadMore = loadMore({
+    currentPage,
+    pagination,
+    sortBy,
+    direction,
+    submit,
+  })
 
   return (
     <>

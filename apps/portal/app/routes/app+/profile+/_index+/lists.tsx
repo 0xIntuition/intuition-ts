@@ -43,7 +43,7 @@ export default function ProfileLists() {
           My Lists
         </Text>
       </div>
-      <Suspense fallback={<ListClaimsSkeletonLayout totalItems={8} />}>
+      <Suspense fallback={<ListClaimsSkeletonLayout totalItems={6} />}>
         <Await resolve={savedListClaims}>
           {(resolvedSavedListClaims) => (
             <ListClaimsList
@@ -52,6 +52,7 @@ export default function ProfileLists() {
               enableSort={true}
               enableSearch={false}
               columns={3}
+              onLoadMore={handleLoadMore}
             />
           )}
         </Await>
@@ -59,27 +60,3 @@ export default function ProfileLists() {
     </div>
   )
 }
-
-// function ListsContent({savedListClaims}: {savedListClaims: ClaimPresenter[] }) {
-//   return (
-//     <Suspense
-//     fallback={
-//       <ListClaimsSkeletonLayout
-//         totalItems={
-//           savedListClaims?.pagination.totalEntries || 6
-//         }
-//       />
-//     }
-//   >
-//     <Await resolve={savedListClaims}>
-//       {(resolvedSavedListClaims) => (
-//         <ListClaimsList
-//           listClaims={resolvedSavedListClaims.savedListClaims}
-//           pagination={resolvedSavedListClaims.pagination}
-//           enableSort={true}
-//           enableSearch={true}
-//         />
-//       )}
-//     </Await>
-//   </Suspense>
-// }

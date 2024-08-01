@@ -51,8 +51,6 @@ export async function getUserCreatedLists({
     limit,
   )
 
-  logger('userCreatedListClaims', userCreatedListClaims.total)
-
   return {
     userCreatedListClaims: userCreatedListClaims.data as ClaimPresenter[],
     pagination: {
