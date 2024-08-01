@@ -23,7 +23,7 @@ export const SidebarLayoutNav = ({
   return (
     <div
       className={cn(
-        'theme-border border-0 h-screen',
+        'theme-border border-0',
         !isMobileView && 'border-r-px transition-all duration-300 ease-in-out',
         className,
       )}
