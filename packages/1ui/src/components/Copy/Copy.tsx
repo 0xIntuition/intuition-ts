@@ -25,7 +25,7 @@ const Copy: React.FC<CopyProps> = ({
   return (
     <Button
       variant={ButtonVariant.text}
-      className={`uppercase gap-2 pl-0 ${className}`}
+      className={`p-0 h-4 w-4 ${className}`}
       disabled={disabled}
       onClick={handleCopy}
       {...props}
