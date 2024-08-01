@@ -84,7 +84,7 @@ export const identityTransactionReducer = (
     case 'APPROVE_TRANSACTION':
       return { ...state, status: 'approve-transaction' }
     case 'CONFIRM_TRANSACTION':
-      return { ...state, status: 'confirm-transaction' }
+      return { ...state, status: 'confirm' }
     case 'TRANSACTION_PENDING':
       return { ...state, status: 'transaction-pending' }
     case 'TRANSACTION_CONFIRMED':
