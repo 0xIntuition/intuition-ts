@@ -2,11 +2,11 @@ import { Suspense } from 'react'
 
 import {
   formatWalletAddress,
+  ProfileCardHeader,
   Separator,
   Skeleton,
   Text,
 } from '@0xintuition/1ui'
-import { ProfileCardHeader } from '@0xintuition/1ui/src/components/ProfileCard/components'
 import {
   GetUserByWalletResponse,
   QuestNarrative,
