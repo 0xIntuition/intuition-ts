@@ -206,8 +206,8 @@ function ActivityItem({
                 }}
                 predicate={{
                   variant: activity.claim.predicate?.is_user
-                    ? 'user'
-                    : 'non-user',
+                    ? Identity.user
+                    : Identity.nonUser,
                   label:
                     activity.claim.predicate?.user?.display_name ??
                     activity.claim.predicate?.display_name ??

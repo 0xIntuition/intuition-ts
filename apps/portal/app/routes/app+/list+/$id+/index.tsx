@@ -179,7 +179,7 @@ export default function ListOverview() {
                       : claim.predicate?.description,
                     ipfsLink:
                       claim.predicate?.is_user === true
-                        ? `${BLOCK_EXPLORER_URL}/${claim.predicate?.identity_id}`
+                        ? `${BLOCK_EXPLORER_URL}/address/${claim.predicate?.identity_id}`
                         : `${IPFS_GATEWAY_URL}/${claim.predicate?.identity_id?.replace('ipfs://', '')}`,
                     link:
                       claim.predicate?.is_user === true
@@ -202,7 +202,7 @@ export default function ListOverview() {
                       : claim.object?.description,
                     ipfsLink:
                       claim.object?.is_user === true
-                        ? `${BLOCK_EXPLORER_URL}/${claim.object?.identity_id}`
+                        ? `${BLOCK_EXPLORER_URL}/address/${claim.object?.identity_id}`
                         : `${IPFS_GATEWAY_URL}/${claim.object?.identity_id?.replace('ipfs://', '')}`,
                     link:
                       claim.object?.is_user === true

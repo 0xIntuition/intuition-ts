@@ -16,6 +16,7 @@ import { IdentityPresenter } from '@0xintuition/api'
 
 import { formatBalance } from '@lib/utils/misc'
 import { CreateClaimFeesType } from '@routes/resources+/create-claim'
+import { BLOCK_EXPLORER_URL, IPFS_GATEWAY_URL, PATHS } from 'consts'
 import { TransactionActionType } from 'types/transaction'
 import { formatUnits } from 'viem'
 
@@ -100,33 +101,77 @@ const CreateClaimReview: React.FC<CreateClaimReviewProps> = ({
           </Text>
           <Claim
             subject={{
-              imgSrc:
-                selectedIdentities.subject?.user?.image ??
-                selectedIdentities.subject?.image,
+              variant: selectedIdentities.subject?.is_user
+                ? Identity.user
+                : Identity.nonUser,
               label:
                 selectedIdentities.subject?.user?.display_name ??
                 selectedIdentities.subject?.display_name ??
+                selectedIdentities.subject?.identity_id ??
                 '',
-              variant: selectedIdentities.subject?.user
-                ? Identity.user
-                : Identity.nonUser,
+              imgSrc: selectedIdentities.subject?.is_user
+                ? selectedIdentities.subject?.user?.image
+                : selectedIdentities.subject?.image,
+              id: selectedIdentities.subject?.identity_id,
+              description: selectedIdentities.subject?.is_user
+                ? selectedIdentities.subject?.user?.description
+                : selectedIdentities.subject?.description,
+              ipfsLink:
+                selectedIdentities.subject?.is_user === true
+                  ? `${BLOCK_EXPLORER_URL}/address/${selectedIdentities.subject?.identity_id}`
+                  : `${IPFS_GATEWAY_URL}/${selectedIdentities.subject?.identity_id?.replace('ipfs://', '')}`,
+              link:
+                selectedIdentities.subject?.is_user === true
+                  ? `${PATHS.PROFILE}/${selectedIdentities.subject?.identity_id}`
+                  : `${PATHS.IDENTITY}/${selectedIdentities.subject?.identity_id?.replace('ipfs://', '')}`,
             }}
             predicate={{
-              imgSrc: selectedIdentities.predicate?.image,
-              label: selectedIdentities.predicate?.display_name ?? '',
-              variant: Identity.nonUser,
+              variant: selectedIdentities.predicate?.is_user
+                ? 'user'
+                : 'non-user',
+              label:
+                selectedIdentities.predicate?.user?.display_name ??
+                selectedIdentities.predicate?.display_name ??
+                selectedIdentities.predicate?.identity_id ??
+                '',
+              imgSrc: selectedIdentities.predicate?.is_user
+                ? selectedIdentities.predicate?.user?.image
+                : selectedIdentities.predicate?.image,
+              id: selectedIdentities.predicate?.identity_id,
+              description: selectedIdentities.predicate?.is_user
+                ? selectedIdentities.predicate?.user?.description
+                : selectedIdentities.predicate?.description,
+              ipfsLink:
+                selectedIdentities.predicate?.is_user === true
+                  ? `${BLOCK_EXPLORER_URL}/address/${selectedIdentities.predicate?.identity_id}`
+                  : `${IPFS_GATEWAY_URL}/${selectedIdentities.predicate?.identity_id?.replace('ipfs://', '')}`,
+              link:
+                selectedIdentities.predicate?.is_user === true
+                  ? `${PATHS.PROFILE}/${selectedIdentities.predicate?.identity_id}`
+                  : `${PATHS.IDENTITY}/${selectedIdentities.predicate?.identity_id?.replace('ipfs://', '')}`,
             }}
             object={{
-              imgSrc:
-                selectedIdentities.object?.user?.image ??
-                selectedIdentities.object?.image,
+              variant: selectedIdentities.object?.is_user ? 'user' : 'non-user',
               label:
                 selectedIdentities.object?.user?.display_name ??
                 selectedIdentities.object?.display_name ??
+                selectedIdentities.object?.identity_id ??
                 '',
-              variant: selectedIdentities.object?.user
-                ? Identity.user
-                : Identity.nonUser,
+              imgSrc: selectedIdentities.object?.is_user
+                ? selectedIdentities.object?.user?.image
+                : selectedIdentities.object?.image,
+              id: selectedIdentities.object?.identity_id,
+              description: selectedIdentities.object?.is_user
+                ? selectedIdentities.object?.user?.description
+                : selectedIdentities.object?.description,
+              ipfsLink:
+                selectedIdentities.object?.is_user === true
+                  ? `${BLOCK_EXPLORER_URL}/address/${selectedIdentities.object?.identity_id}`
+                  : `${IPFS_GATEWAY_URL}/${selectedIdentities.object?.identity_id?.replace('ipfs://', '')}`,
+              link:
+                selectedIdentities.object?.is_user === true
+                  ? `${PATHS.PROFILE}/${selectedIdentities.object?.identity_id}`
+                  : `${PATHS.IDENTITY}/${selectedIdentities.object?.identity_id?.replace('ipfs://', '')}`,
             }}
           />
           <Text

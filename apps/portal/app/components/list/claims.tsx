@@ -72,7 +72,7 @@ export function ClaimsList({
                   : claim.subject?.description,
                 ipfsLink:
                   claim.subject?.is_user === true
-                    ? `${BLOCK_EXPLORER_URL}/${claim.subject?.identity_id}`
+                    ? `${BLOCK_EXPLORER_URL}/address/${claim.subject?.identity_id}`
                     : `${IPFS_GATEWAY_URL}/${claim.subject?.identity_id?.replace('ipfs://', '')}`,
                 link:
                   claim.subject?.is_user === true
@@ -80,7 +80,9 @@ export function ClaimsList({
                     : `${PATHS.IDENTITY}/${claim.subject?.identity_id?.replace('ipfs://', '')}`,
               }}
               predicate={{
-                variant: claim.predicate?.is_user ? 'user' : 'non-user',
+                variant: claim.predicate?.is_user
+                  ? Identity.user
+                  : Identity.nonUser,
                 label:
                   claim.predicate?.user?.display_name ??
                   claim.predicate?.display_name ??
@@ -95,7 +97,7 @@ export function ClaimsList({
                   : claim.predicate?.description,
                 ipfsLink:
                   claim.predicate?.is_user === true
-                    ? `${BLOCK_EXPLORER_URL}/${claim.predicate?.identity_id}`
+                    ? `${BLOCK_EXPLORER_URL}/address/${claim.predicate?.identity_id}`
                     : `${IPFS_GATEWAY_URL}/${claim.predicate?.identity_id?.replace('ipfs://', '')}`,
                 link:
                   claim.predicate?.is_user === true
@@ -118,7 +120,7 @@ export function ClaimsList({
                   : claim.object?.description,
                 ipfsLink:
                   claim.object?.is_user === true
-                    ? `${BLOCK_EXPLORER_URL}/${claim.object?.identity_id}`
+                    ? `${BLOCK_EXPLORER_URL}/address/${claim.object?.identity_id}`
                     : `${IPFS_GATEWAY_URL}/${claim.object?.identity_id?.replace('ipfs://', '')}`,
                 link:
                   claim.object?.is_user === true

@@ -24,7 +24,8 @@ describe('ProfileCard', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="flex flex-col justify-center items-start w-full min-w-80 rounded-lg gap-2.5 max-lg:min-w-max max-lg:items-center"
+          class="flex flex-col justify-center items-start w-full min-w-80 rounded-lg gap-2.5"
+          walletaddress="0x1234567890abcdef1234567890abcdef12345678"
         >
           <div
             class="flex items-center space-x-4"
@@ -52,34 +53,7 @@ describe('ProfileCard', () => {
               </h6>
               <div
                 class="flex flex-row gap-1 items-center"
-              >
-                <a
-                  href="https://ipfs.io/ipfs/QmZKfjJ8v"
-                  rel="noopener noreferrer"
-                  target="_blank"
-                >
-                  <button
-                    data-state="closed"
-                  >
-                    <p
-                      class="text-base font-medium text-muted-foreground"
-                    >
-                      0x1234...5678
-                    </p>
-                  </button>
-                </a>
-                <button
-                  class="flex justify-center items-center gap-2 text-sm font-medium border disabled:text-muted-foreground bg-transparent border-transparent disabled:border-transparent disabled:bg-transparent shadow-md-subtle p-0 h-4 w-4 text-primary/60 hover:text-primary undefined"
-                >
-                  <svg
-                    class="h-4 w-4"
-                  >
-                    <use
-                      href="/src/components/Icon/Icon.sprites.svg#copy"
-                    />
-                  </svg>
-                </button>
-              </div>
+              />
             </div>
           </div>
           <div
@@ -157,7 +131,8 @@ describe('ProfileCard', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="flex flex-col justify-center items-start w-full min-w-80 rounded-lg gap-2.5 max-lg:min-w-max max-lg:items-center"
+          class="flex flex-col justify-center items-start w-full min-w-80 rounded-lg gap-2.5"
+          walletaddress="0x1234567890abcdef1234567890abcdef12345678"
         >
           <div
             class="flex items-center space-x-4"
@@ -185,34 +160,7 @@ describe('ProfileCard', () => {
               </h6>
               <div
                 class="flex flex-row gap-1 items-center"
-              >
-                <a
-                  href="https://ipfs.io/ipfs/QmZKfjJ8v"
-                  rel="noopener noreferrer"
-                  target="_blank"
-                >
-                  <button
-                    data-state="closed"
-                  >
-                    <p
-                      class="text-base font-medium text-muted-foreground"
-                    >
-                      0x1234...5678
-                    </p>
-                  </button>
-                </a>
-                <button
-                  class="flex justify-center items-center gap-2 text-sm font-medium border disabled:text-muted-foreground bg-transparent border-transparent disabled:border-transparent disabled:bg-transparent shadow-md-subtle p-0 h-4 w-4 text-primary/60 hover:text-primary undefined"
-                >
-                  <svg
-                    class="h-4 w-4"
-                  >
-                    <use
-                      href="/src/components/Icon/Icon.sprites.svg#copy"
-                    />
-                  </svg>
-                </button>
-              </div>
+              />
             </div>
           </div>
           <div>
@@ -237,7 +185,8 @@ describe('ProfileCard', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="flex flex-col justify-center items-start w-full min-w-80 rounded-lg gap-2.5 max-lg:min-w-max max-lg:items-center"
+          class="flex flex-col justify-center items-start w-full min-w-80 rounded-lg gap-2.5"
+          walletaddress="0x1234567890abcdef1234567890abcdef12345678"
         >
           <div
             class="flex items-center space-x-4"
@@ -265,34 +214,7 @@ describe('ProfileCard', () => {
               </h6>
               <div
                 class="flex flex-row gap-1 items-center"
-              >
-                <a
-                  href="https://ipfs.io/ipfs/QmZKfjJ8v"
-                  rel="noopener noreferrer"
-                  target="_blank"
-                >
-                  <button
-                    data-state="closed"
-                  >
-                    <p
-                      class="text-base font-medium text-muted-foreground"
-                    >
-                      0x1234...5678
-                    </p>
-                  </button>
-                </a>
-                <button
-                  class="flex justify-center items-center gap-2 text-sm font-medium border disabled:text-muted-foreground bg-transparent border-transparent disabled:border-transparent disabled:bg-transparent shadow-md-subtle p-0 h-4 w-4 text-primary/60 hover:text-primary undefined"
-                >
-                  <svg
-                    class="h-4 w-4"
-                  >
-                    <use
-                      href="/src/components/Icon/Icon.sprites.svg#copy"
-                    />
-                  </svg>
-                </button>
-              </div>
+              />
             </div>
           </div>
           <div
