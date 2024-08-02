@@ -106,10 +106,12 @@ export async function getUserSavedLists({
 export async function getListIdentities({
   request,
   objectId,
+  creator,
   searchParams,
 }: {
   request: Request
   objectId: string
+  creator?: string
   searchParams: URLSearchParams
 }) {
   const { page, limit, sortBy, direction } = getStandardPageParams({
@@ -129,6 +131,7 @@ export async function getListIdentities({
       predicate: TAG_PREDICATE_ID_TESTNET,
       object: objectId,
       displayName,
+      creator,
     },
   })
 
@@ -155,15 +158,18 @@ export async function getListIdentities({
 export async function getListIdentitiesCount({
   request,
   objectId,
+  creator,
 }: {
   request: Request
   objectId: string
+  creator?: string
 }) {
   const listIdentities = await fetchWrapper(request, {
     method: ClaimsService.searchClaims,
     args: {
       predicate: TAG_PREDICATE_ID_TESTNET,
       object: objectId,
+      creator,
       page: 1,
       limit: 1,
     },
