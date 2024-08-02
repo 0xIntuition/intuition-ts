@@ -3,6 +3,7 @@
   "version": "0.3.0",
   "description": "Design system",
   "main": "src/index.js",
+  "types": "src/index.d.ts",
   "scripts": {
     "dev": "tsup --watch",
     "lint:fix": "pnpm lint --fix",

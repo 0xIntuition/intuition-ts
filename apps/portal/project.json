@@ -18,9 +18,8 @@
       }
     },
     "typecheck": {
-      "executor": "nx:run-commands",
+      "command": "tsc -b tsconfig.json",
       "options": {
-        "command": "tsc --noEmit -p ./tsconfig.json",
         "cwd": "apps/portal"
       }
     }
