@@ -72,8 +72,7 @@ const TabsTrigger = React.forwardRef<
           'text-primary/30 group-data-[state=active]:text-primary',
       )}
     >
-      {label}{' '}
-      {/* No changes needed here, ReactNode will be rendered correctly */}
+      {label}
     </Text>
     <Text
       variant={TextVariant.body}
