@@ -24,6 +24,7 @@ export function ListClaimsList<T extends SortColumnType = ClaimSortColumn>({
   onLoadMore,
   columns,
   sortOptions,
+  sourceUserAddress,
 }: {
   listClaims: ClaimPresenter[]
   pagination: PaginationType
@@ -33,6 +34,7 @@ export function ListClaimsList<T extends SortColumnType = ClaimSortColumn>({
   onLoadMore?: () => void
   columns?: number
   sortOptions?: SortOption<T>[]
+  sourceUserAddress?: string
 }) {
   const navigate = useNavigate()
   const defaultOptions: SortOption<ClaimSortColumn>[] = [
@@ -105,7 +107,11 @@ export function ListClaimsList<T extends SortColumnType = ClaimSortColumn>({
                   identitiesCount={claim.object.tag_count ?? 0}
                   isSaved={claim.user_assets_for !== '0'}
                   savedAmount={claim.user_assets_for}
-                  onViewClick={() => navigate(`/app/list/${claim.claim_id}`)}
+                  onViewClick={() =>
+                    navigate(
+                      `/app/list/${claim.claim_id}${sourceUserAddress ? `?user=${sourceUserAddress}` : ''}`,
+                    )
+                  }
                 />
               ),
           )}

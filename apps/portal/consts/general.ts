@@ -118,6 +118,11 @@ export const userIdentityRouteOptions = [
     label: 'Connections',
     basePath: PATHS.PROFILE,
   },
+  {
+    value: 'lists',
+    label: 'Lists',
+    basePath: PATHS.PROFILE,
+  },
 ]
 
 export const identityRouteOptions = [
