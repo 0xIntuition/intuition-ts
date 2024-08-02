@@ -8,8 +8,7 @@
     "build": "remix vite:build --emptyOutDir",
     "dev": "remix vite:dev",
     "start": "NODE_OPTIONS='--import ./instrumentation.server.mjs' PORT=8080 remix-serve ./build/server/index.js",
-    "lint:fix": "pnpm lint --fix",
-    "typecheck": "tsc --noEmit -p ./tsconfig.json"
+    "lint:fix": "pnpm lint --fix"
   },
   "repository": {
     "type": "git",

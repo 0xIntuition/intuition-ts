@@ -22,5 +22,5 @@
     "outDir": "./build"
   },
   "include": ["**/*.ts", "**/*.tsx", "tailwind.config.js"],
-  "exclude": ["node_modules", "dist", "**/packages/**/*"]
+  "exclude": ["node_modules", "build", "content-collections"]
 }
