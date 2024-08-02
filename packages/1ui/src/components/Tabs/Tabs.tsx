@@ -47,7 +47,7 @@ export interface TabsTriggerProps
   extends PrimitiveButtonProps,
     VariantProps<typeof tabsTriggerVariants> {
   value: string
-  label: string
+  label: React.ReactNode // Updated to accept ReactNode
   totalCount?: number
 }
 
@@ -72,7 +72,8 @@ const TabsTrigger = React.forwardRef<
           'text-primary/30 group-data-[state=active]:text-primary',
       )}
     >
-      {label}
+      {label}{' '}
+      {/* No changes needed here, ReactNode will be rendered correctly */}
     </Text>
     <Text
       variant={TextVariant.body}
