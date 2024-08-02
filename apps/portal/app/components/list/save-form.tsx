@@ -122,7 +122,7 @@ export default function SaveForm({
               <div className="w-full bg-neutral-50/5 rounded-lg border border-neutral-300/10 flex-col justify-start items-start inline-flex">
                 <ActivePositionCard
                   value={Number(formatBalance(user_assets, 18, 4))}
-                  claimPosition={`${user_assets > '0' ? 'claimFor' : ''}`}
+                  claimPosition={user_assets > '0' ? 'claimFor' : null}
                 />
               </div>
             </div>

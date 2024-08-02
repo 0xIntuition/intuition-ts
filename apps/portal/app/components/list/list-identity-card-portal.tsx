@@ -3,7 +3,6 @@ import {
   Button,
   CurrencyType,
   Icon,
-  Identity,
   Text,
   TextVariant,
   TextWeight,
@@ -32,7 +31,7 @@ export const ListIdentityCardPortal: React.FC<ListIdentityCardPortalProps> = ({
       style={{ height: '18rem' }}
     >
       <Avatar
-        variant={Identity.nonUser as unknown as number}
+        variant="non-user"
         src={imgSrc}
         name={displayName}
         className="mb-4 w-16 h-16"
