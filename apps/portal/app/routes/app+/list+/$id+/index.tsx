@@ -1,16 +1,21 @@
 import { Suspense, useEffect, useState } from 'react'
+import * as React from 'react'
 
 import {
+  Avatar,
   Claim,
+  IdentityTag,
+  IdentityTagButton,
   ListHeaderCard,
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
 } from '@0xintuition/1ui'
-import { ClaimPresenter, ClaimsService } from '@0xintuition/api'
+import { ClaimPresenter, ClaimsService, UsersService } from '@0xintuition/api'
 
 import { IdentitiesList } from '@components/list/identities'
+import { ListTabIdentityDisplay } from '@components/list/list-tab-identity-display'
 import { DataHeaderSkeleton, PaginatedListSkeleton } from '@components/skeleton'
 import { getListIdentities, getListIdentitiesCount } from '@lib/services/lists'
 import { invariant } from '@lib/utils/misc'
@@ -38,6 +43,22 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const searchParams = new URLSearchParams(url.search)
   const paramWallet = searchParams.get('user')
 
+  const userObject = await fetchWrapper(request, {
+    method: UsersService.getUserByWalletPublic,
+    args: {
+      wallet,
+    },
+  })
+
+  const additionalUserObject = paramWallet
+    ? await fetchWrapper(request, {
+        method: UsersService.getUserByWalletPublic,
+        args: {
+          wallet: paramWallet,
+        },
+      })
+    : null
+
   const claim = await fetchWrapper(request, {
     method: ClaimsService.getClaimById,
     args: { id },
@@ -57,6 +78,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   })
 
   return defer({
+    userObject,
     globalListIdentities: getListIdentities({
       request,
       objectId: claim.object.id,
@@ -85,6 +107,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
           creator: paramWallet,
         })
       : null,
+    additionalUserObject, // Add this to the returned data
   })
 }
 
@@ -96,6 +119,8 @@ export default function ListOverview() {
     totalGlobalIdentitiesCount,
     totalUserIdentitiesCount,
     additionalTotalUserIdentitiesCount,
+    userObject,
+    additionalUserObject, // Destructure the additional user object
   } = useLoaderData<typeof loader>()
   const { claim } =
     useRouteLoaderData<{ claim: ClaimPresenter }>('routes/app+/list+/$id') ?? {}
@@ -173,18 +198,21 @@ export default function ListOverview() {
                 globalListIdentities,
                 userListIdentities,
                 additionalUserListIdentities,
+                userObject,
               ])}
             >
               {([
                 globalListIdentities,
                 userListIdentities,
                 additionalUserListIdentities,
+                userObject,
               ]) => (
                 <>
                   <TabsList>
                     <TabsTrigger
                       value="global"
                       label="Global"
+                      totalCount={4}
                       // totalCount={
                       //   totalGlobalIdentitiesCount?.pagination.totalEntries
                       // }
@@ -195,8 +223,17 @@ export default function ListOverview() {
                     />
                     <TabsTrigger
                       value="you"
-                      label="You"
-                      // totalCount={totalUserIdentitiesCount}
+                      // label="You"
+                      // label={<IdentityTag imgSrc="image.jpg">You</IdentityTag>}
+                      // totalCount={totalUserEntries?.pagination.totalEntries}
+                      totalCount={4}
+                      label={
+                        <React.Suspense fallback={<div>Loading...</div>}>
+                          <ListTabIdentityDisplay imgSrc={userObject.image}>
+                            You
+                          </ListTabIdentityDisplay>
+                        </React.Suspense>
+                      }
                       onClick={(e) => {
                         e.preventDefault()
                         handleTabChange('you')
@@ -204,9 +241,19 @@ export default function ListOverview() {
                     />
                     {userWalletAddress && (
                       <TabsTrigger
+                        className="text-left"
+                        totalCount={4}
                         value="additional"
-                        label="Additional"
-                        // totalCount={additionalTotalUserIdentitiesCount}
+                        label={
+                          <Suspense fallback={<div>Loading...</div>}>
+                            <ListTabIdentityDisplay
+                              imgSrc={additionalUserObject?.image}
+                            >
+                              {additionalUserObject?.display_name ??
+                                'Additional'}
+                            </ListTabIdentityDisplay>
+                          </Suspense>
+                        }
                         onClick={(e) => {
                           e.preventDefault()
                           handleTabChange('additional')
