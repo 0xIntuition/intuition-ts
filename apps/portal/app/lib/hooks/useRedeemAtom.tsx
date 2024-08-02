@@ -13,6 +13,7 @@ export const useRedeemAtom = (contract: string) => {
 
   return useContractWriteAndWait({
     ...multivault,
+    // @ts-ignore TODO: Fix type for useContractWriteAndWait
     functionName: 'redeemAtom',
   })
 }

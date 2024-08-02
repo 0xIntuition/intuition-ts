@@ -6,7 +6,6 @@ import {
   DialogHeader,
   DialogTitle,
   IdentityTag,
-  TransactionStatusType,
   Trunctacular,
 } from '@0xintuition/1ui'
 import { IdentityPresenter } from '@0xintuition/api'
@@ -140,7 +139,7 @@ export function AddIdentitiesListForm({
       {isTransactionStarted && (
         <div className="flex flex-col items-center justify-center flex-grow">
           <TransactionState
-            status={state.status as TransactionStatusType}
+            status={state.status}
             txHash={state.txHash}
             type="list"
             successButton={

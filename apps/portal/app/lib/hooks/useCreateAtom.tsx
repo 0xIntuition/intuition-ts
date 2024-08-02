@@ -12,6 +12,7 @@ export const useCreateAtom = () => {
 
   return useContractWriteAndWait({
     ...multivault,
+    // @ts-ignore TODO: Fix type for useContractWriteAndWait
     functionName: 'createAtom',
   })
 }

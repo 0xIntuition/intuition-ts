@@ -1,3 +1,5 @@
+import { TransactionStatusType } from '@0xintuition/1ui'
+
 import { TransactionReceipt } from 'viem'
 
 export type TStatus = string
@@ -13,17 +15,6 @@ export type BaseTransactionStateType<TStatus> = {
   identityId?: string
 }
 
-export type TransactionStatusType =
-  | 'idle'
-  | 'awaiting'
-  | 'review-transaction'
-  | 'confirm'
-  | 'transaction-pending'
-  | 'transaction-confirmed'
-  | 'complete'
-  | 'hash'
-  | 'error'
-
 export type TransactionActionType =
   | { type: 'START_TRANSACTION' }
   | { type: 'APPROVE_TRANSACTION' }
@@ -38,20 +29,6 @@ export type TransactionActionType =
     }
   | { type: 'TRANSACTION_HASH'; txHash?: `0x${string}` }
   | { type: 'TRANSACTION_ERROR'; error: string }
-
-export type IdentityTransactionStatusType =
-  | 'idle'
-  | 'uploading-image'
-  | 'image-upload-complete'
-  | 'preparing-identity'
-  | 'publishing-identity'
-  | 'approve-transaction'
-  | 'transaction-pending'
-  | 'confirm-transaction'
-  | 'transaction-confirmed'
-  | 'complete'
-  | 'hash'
-  | 'error'
 
 export type IdentityTransactionActionType =
   | { type: 'START_TRANSACTION' }
@@ -81,7 +58,7 @@ export type IdentityTransactionActionType =
 export type TransactionStateType =
   BaseTransactionStateType<TransactionStatusType>
 export type IdentityTransactionStateType =
-  BaseTransactionStateType<IdentityTransactionStatusType>
+  BaseTransactionStateType<TransactionStatusType>
 
 export const TransactionSuccessAction = {
   VIEW: 'view',

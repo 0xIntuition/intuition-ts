@@ -12,6 +12,7 @@ export const useCreateTriple = () => {
 
   return useContractWriteAndWait({
     ...multivault,
+    // @ts-ignore TODO: Fix type for useContractWriteAndWait
     functionName: 'createTriple',
   })
 }

@@ -13,6 +13,7 @@ export const useRedeemTriple = (contract: string) => {
 
   return useContractWriteAndWait({
     ...multivault,
+    // @ts-ignore TODO: Fix type for useContractWriteAndWait
     functionName: 'redeemTriple',
   })
 }
