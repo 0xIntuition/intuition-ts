@@ -5,30 +5,39 @@ import { ClaimPresenter, ClaimSortColumn } from '@0xintuition/api'
 
 import { Search } from '@components/search'
 import { Sort } from '@components/sort'
-import { useSearchAndSortParamsHandler } from '@lib/hooks/useSearchAndSortParams'
+import {
+  SortColumnType,
+  useSearchAndSortParamsHandler,
+} from '@lib/hooks/useSearchAndSortParams'
 import { useNavigate } from '@remix-run/react'
 import { PaginationType } from 'types/pagination'
 
 import { SortOption } from '../sort-select'
 import { ListIdentityCardPortal } from './list-identity-card-portal'
 
-export function ListClaimsList({
+export function ListClaimsList<T extends SortColumnType = ClaimSortColumn>({
   listClaims,
   pagination,
   paramPrefix,
   enableSearch = false,
   enableSort = false,
   onLoadMore,
+  columns,
+  sortOptions,
+  sourceUserAddress,
 }: {
   listClaims: ClaimPresenter[]
   pagination: PaginationType
   paramPrefix?: string
   enableSearch?: boolean
   enableSort?: boolean
-  onLoadMore: () => void
+  onLoadMore?: () => void
+  columns?: number
+  sortOptions?: SortOption<T>[]
+  sourceUserAddress?: string
 }) {
   const navigate = useNavigate()
-  const options: SortOption<ClaimSortColumn>[] = [
+  const defaultOptions: SortOption<ClaimSortColumn>[] = [
     { value: 'Total ETH', sortBy: 'AssetsSum' },
     { value: 'ETH For', sortBy: 'ForAssetsSum' },
     { value: 'ETH Against', sortBy: 'AgainstAssetsSum' },
@@ -38,6 +47,9 @@ export function ListClaimsList({
     { value: 'Updated At', sortBy: 'UpdatedAt' },
     { value: 'Created At', sortBy: 'CreatedAt' },
   ]
+
+  const options = sortOptions || defaultOptions
+
   const [isLoading, setIsLoading] = useState(false)
 
   const uniqueClaimData = Array.from(
@@ -62,9 +74,11 @@ export function ListClaimsList({
   }
 
   const handleLoadMore = async () => {
-    setIsLoading(true)
-    await onLoadMore()
-    setIsLoading(false)
+    if (onLoadMore) {
+      setIsLoading(true)
+      await onLoadMore()
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -74,11 +88,14 @@ export function ListClaimsList({
           className={`flex flex-row w-full ${enableSearch ? 'justify-between' : 'justify-end'}`}
         >
           {enableSearch && <Search handleSearchChange={handleSearchChange} />}
-          {enableSort && options && (
-            <Sort options={options} handleSortChange={handleSortChange} />
+          {enableSort && options && options.length > 0 && (
+            <Sort
+              options={options as SortOption<T>[]}
+              handleSortChange={handleSortChange}
+            />
           )}
         </div>
-        <ListGrid>
+        <ListGrid columns={columns}>
           {uniqueClaimData.map(
             (claim, index) =>
               claim &&
@@ -90,7 +107,11 @@ export function ListClaimsList({
                   identitiesCount={claim.object.tag_count ?? 0}
                   isSaved={claim.user_assets_for !== '0'}
                   savedAmount={claim.user_assets_for}
-                  onViewClick={() => navigate(`/app/list/${claim.claim_id}`)}
+                  onViewClick={() =>
+                    navigate(
+                      `/app/list/${claim.claim_id}${sourceUserAddress ? `?user=${sourceUserAddress}` : ''}`,
+                    )
+                  }
                 />
               ),
           )}

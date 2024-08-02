@@ -1,4 +1,3 @@
-import logger from '@lib/utils/logger'
 import {
   createMultiVaultContract,
   getMultivaultContract,
@@ -492,7 +491,7 @@ export async function getTripleHashFromAtoms({
       predicateId,
       objectId,
     ])
-  logger('in fn', tripleHashFromAtoms)
+
   return tripleHashFromAtoms as `0x${string}`
 }
 
@@ -500,10 +499,9 @@ export async function getTriplesByHash({ hash }: TripleHash): Promise<bigint> {
   if (!hash.startsWith('0x') || hash.length !== 66) {
     throw new Error('Invalid hash format. Expected 0x-prefixed 32-byte hash.')
   }
-  console.log('Querying contract with hash:', hash)
   const result = (await getMultivaultContract.read.triplesByHash([
     hash,
   ])) as bigint
-  console.log('Raw result from contract:', result)
+
   return result
 }

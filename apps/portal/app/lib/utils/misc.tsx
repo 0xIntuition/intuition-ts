@@ -2,6 +2,7 @@ import React from 'react'
 
 import { Icon, IconName, Text, Theme } from '@0xintuition/1ui'
 
+import { SubmitFunction } from '@remix-run/react'
 import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 import { formatUnits } from 'viem'
@@ -304,4 +305,35 @@ export const DataErrorDisplay = ({
       {children}
     </div>
   )
+}
+
+interface LoadMoreParams {
+  currentPage: number
+  pagination: {
+    limit: number
+  }
+  sortBy: string
+  direction: string
+  submit: SubmitFunction
+}
+
+export function loadMore({
+  currentPage,
+  pagination,
+  sortBy,
+  direction,
+  submit,
+}: LoadMoreParams): () => void {
+  return () => {
+    const nextPage = currentPage + 1
+    submit(
+      {
+        page: nextPage.toString(),
+        limit: pagination.limit.toString(),
+        sortBy,
+        direction,
+      },
+      { method: 'get', replace: true },
+    )
+  }
 }

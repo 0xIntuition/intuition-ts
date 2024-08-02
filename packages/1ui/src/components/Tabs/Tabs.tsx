@@ -47,7 +47,7 @@ export interface TabsTriggerProps
   extends PrimitiveButtonProps,
     VariantProps<typeof tabsTriggerVariants> {
   value: string
-  label: string
+  label: React.ReactNode // Updated to accept ReactNode
   totalCount?: number
 }
 

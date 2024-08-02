@@ -28,13 +28,13 @@ describe('ClaimRow', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="flex justify-between items-center gap-2"
+          class="flex justify-between items-center gap-2 max-md:flex-col"
         >
           <div
-            class="w-[60%]"
+            class="w-[60%] max-md:w-full"
           >
             <div
-              class="flex flex-col justify-between"
+              class="flex flex-col justify-between max-md:w-full max-md:justify-center"
             >
               <div
                 class="flex items-center h-[6px] mb-4"
@@ -48,7 +48,7 @@ describe('ClaimRow', () => {
                 />
               </div>
               <div
-                class="flex items-center w-full max-w-max group"
+                class="flex items-center w-full max-w-max group max-md:m-auto max-sm:flex-col"
               >
                 <button
                   class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center rounded-md text-base [&>span]:h-6 [&>span]:w-6 group-hover:border-primary group-hover:bg-primary/20"
@@ -75,7 +75,7 @@ describe('ClaimRow', () => {
                   </p>
                 </button>
                 <div
-                  class="shrink-0 bg-border/20 h-[1px] w-4 group-hover:bg-primary"
+                  class="shrink-0 bg-border/20 h-[1px] w-4 group-hover:bg-primary max-sm:w-px max-sm:h-2"
                   data-orientation="horizontal"
                   role="none"
                 />
@@ -104,7 +104,7 @@ describe('ClaimRow', () => {
                   </p>
                 </button>
                 <div
-                  class="shrink-0 bg-border/20 h-[1px] w-4 group-hover:bg-primary"
+                  class="shrink-0 bg-border/20 h-[1px] w-4 group-hover:bg-primary max-sm:w-px max-sm:h-2"
                   data-orientation="horizontal"
                   role="none"
                 />
@@ -136,10 +136,10 @@ describe('ClaimRow', () => {
             </div>
           </div>
           <div
-            class="w-[40%]"
+            class="w-[40%] max-md:w-full"
           >
             <div
-              class="flex flex-col items-end"
+              class="flex flex-col items-end max-md:flex-row max-md:justify-between max-md:items-center"
             >
               <p
                 class="text-primary text-lg font-normal"
@@ -147,7 +147,7 @@ describe('ClaimRow', () => {
                 0.383 ETH
               </p>
               <div
-                class="flex gap-2 items-center mt-2"
+                class="flex gap-2 items-center mt-2 max-md:mt-0"
               >
                 <div
                   class="flex gap-1 items-center"

@@ -1,5 +1,4 @@
 import Providers from '@client/providers'
-import { useUpdateApiHeaders } from '@lib/hooks/useUpdateApiHeaders'
 import { ClientHintCheck, getHints } from '@lib/utils/client-hints'
 import { useNonce } from '@lib/utils/nonce-provider'
 import { json, LoaderFunctionArgs, type MetaFunction } from '@remix-run/node'
@@ -23,15 +22,14 @@ import './styles/globals.css'
 
 import { useEffect } from 'react'
 
-import { Button, Icon, Text, Toaster } from '@0xintuition/1ui'
+import { Icon, Toaster } from '@0xintuition/1ui'
 
+import { ErrorPage } from '@components/error-page'
 import { GlobalLoading } from '@components/global-loading'
-import NavigationButton from '@components/navigation-link'
 import { getChainEnvConfig } from '@lib/utils/environment'
 import logger from '@lib/utils/logger'
-import { cn } from '@lib/utils/misc'
 import { setupAPI } from '@server/auth'
-import { CURRENT_ENV, PATHS, SUPPORT_EMAIL_ADDRESS } from 'consts'
+import { CURRENT_ENV } from 'consts'
 import { ClientOnly } from 'remix-utils/client-only'
 import { baseSepolia } from 'viem/chains'
 import { useAccount, useSwitchChain } from 'wagmi'
@@ -44,10 +42,8 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 }
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  console.log('[ROOT] -- START')
   setupAPI(request)
 
-  console.log('[ROOT] -- END')
   return json({
     env: getEnv(),
     requestInfo: {
@@ -119,7 +115,6 @@ function App() {
   const nonce = useNonce()
   const theme = useTheme()
   const { env } = useLoaderData<typeof loader>()
-  useUpdateApiHeaders()
 
   return (
     <Document nonce={nonce} theme={theme}>
@@ -169,68 +164,6 @@ export function ErrorBoundary() {
 
   logger('ROOT ERROR BOUNDARY:', error)
 
-  const ErrorMessage = ({
-    statusCode,
-    title,
-    description,
-  }: {
-    statusCode: number | null
-    title: string | React.ReactNode
-    description: string
-  }) => {
-    const descriptionArray = description.split('\n')
-    return (
-      <Document>
-        <div className="flex h-[100vh] w-full items-center justify-center gap-12 max-lg:flex-col-reverse max-lg:gap-2">
-          <div
-            className={cn(
-              'flex flex-col max-w-[500px] gap-2 max-lg:items-center max-lg:text-center',
-              !statusCode && 'items-center [&>div]:text-center gap-4',
-            )}
-          >
-            <Text
-              variant={statusCode ? 'heading1' : 'heading3'}
-              weight="medium"
-            >
-              {title}
-            </Text>
-            <div className="flex flex-col max-lg:text-center">
-              {descriptionArray?.map((content, index) => (
-                <Text
-                  variant={statusCode ? 'bodyLarge' : 'headline'}
-                  className="text-secondary/30"
-                  key={index}
-                >
-                  {content}
-                </Text>
-              ))}
-            </div>
-            <div className="flex gap-6 mt-5 max-sm:flex-col">
-              <NavigationButton variant="primary" size="max-lg" to={PATHS.ROOT}>
-                Back to home
-              </NavigationButton>
-              <Button
-                variant="ghost"
-                size="max-lg"
-                className="rounded-full"
-                onClick={() =>
-                  (window.location.href = `mailto:${SUPPORT_EMAIL_ADDRESS}`)
-                }
-              >
-                Contact Support
-              </Button>
-            </div>
-          </div>
-          {statusCode && (
-            <Text variant="heading1" weight="bold" className="text-9xl">
-              {statusCode}
-            </Text>
-          )}
-        </div>
-      </Document>
-    )
-  }
-
   if (isRouteErrorResponse(error)) {
     statusCode = error.status
     if (error.status === 404) {
@@ -245,10 +178,12 @@ export function ErrorBoundary() {
   captureRemixErrorBoundaryError(error)
 
   return (
-    <ErrorMessage
-      statusCode={statusCode}
-      title={title}
-      description={description}
-    />
+    <Document>
+      <ErrorPage
+        statusCode={statusCode}
+        title={title}
+        description={description}
+      />
+    </Document>
   )
 }

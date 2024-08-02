@@ -28,7 +28,7 @@ describe('Claim', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="flex items-center w-full max-w-max group"
+          class="flex items-center w-full max-w-max group max-md:m-auto max-sm:flex-col"
         >
           <button
             class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center rounded-full [&>span]:rounded-full [&>span]:overflow-hidden text-base [&>span]:h-7 [&>span]:w-7 group-hover:border-primary group-hover:bg-primary/20"
@@ -55,7 +55,7 @@ describe('Claim', () => {
             </p>
           </button>
           <div
-            class="shrink-0 bg-border/20 h-[1px] w-4 group-hover:bg-primary"
+            class="shrink-0 bg-border/20 h-[1px] w-4 group-hover:bg-primary max-sm:w-px max-sm:h-2"
             data-orientation="horizontal"
             role="none"
           />
@@ -84,7 +84,7 @@ describe('Claim', () => {
             </p>
           </button>
           <div
-            class="shrink-0 bg-border/20 h-[1px] w-4 group-hover:bg-primary"
+            class="shrink-0 bg-border/20 h-[1px] w-4 group-hover:bg-primary max-sm:w-px max-sm:h-2"
             data-orientation="horizontal"
             role="none"
           />
@@ -122,7 +122,7 @@ describe('Claim', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="flex items-center w-full max-w-max group"
+          class="flex items-center w-full max-w-max group max-md:m-auto max-sm:flex-col"
         >
           <button
             class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center rounded-full [&>span]:rounded-full [&>span]:overflow-hidden text-base [&>span]:h-7 [&>span]:w-7 disabled:bg-muted disabled:text-muted-foreground disabled:border-muted cursor-not-allowed group-hover:border-primary group-hover:bg-primary/20"
@@ -150,7 +150,7 @@ describe('Claim', () => {
             </p>
           </button>
           <div
-            class="shrink-0 bg-border/20 h-[1px] w-4 group-hover:bg-primary"
+            class="shrink-0 bg-border/20 h-[1px] w-4 group-hover:bg-primary max-sm:w-px max-sm:h-2"
             data-orientation="horizontal"
             role="none"
           />
@@ -180,7 +180,7 @@ describe('Claim', () => {
             </p>
           </button>
           <div
-            class="shrink-0 bg-border/20 h-[1px] w-4 group-hover:bg-primary"
+            class="shrink-0 bg-border/20 h-[1px] w-4 group-hover:bg-primary max-sm:w-px max-sm:h-2"
             data-orientation="horizontal"
             role="none"
           />
@@ -221,7 +221,7 @@ describe('Claim', () => {
     expect(smFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="flex items-center w-full max-w-max group"
+          class="flex items-center w-full max-w-max group max-md:m-auto max-sm:flex-col"
         >
           <button
             class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center rounded-full [&>span]:rounded-full [&>span]:overflow-hidden text-xl [&>span]:h-11 [&>span]:w-11 group-hover:border-primary group-hover:bg-primary/20"
@@ -248,7 +248,7 @@ describe('Claim', () => {
             </p>
           </button>
           <div
-            class="shrink-0 bg-border/20 h-[1px] w-4 group-hover:bg-primary"
+            class="shrink-0 bg-border/20 h-[1px] w-4 group-hover:bg-primary max-sm:w-px max-sm:h-2"
             data-orientation="horizontal"
             role="none"
           />
@@ -277,7 +277,7 @@ describe('Claim', () => {
             </p>
           </button>
           <div
-            class="shrink-0 bg-border/20 h-[1px] w-4 group-hover:bg-primary"
+            class="shrink-0 bg-border/20 h-[1px] w-4 group-hover:bg-primary max-sm:w-px max-sm:h-2"
             data-orientation="horizontal"
             role="none"
           />
@@ -315,7 +315,7 @@ describe('Claim', () => {
     expect(lgFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="flex items-center w-full max-w-max group"
+          class="flex items-center w-full max-w-max group max-md:m-auto max-sm:flex-col"
         >
           <button
             class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center rounded-full [&>span]:rounded-full [&>span]:overflow-hidden text-lg [&>span]:h-8 [&>span]:w-8 group-hover:border-primary group-hover:bg-primary/20"
@@ -342,7 +342,7 @@ describe('Claim', () => {
             </p>
           </button>
           <div
-            class="shrink-0 bg-border/20 h-[1px] w-4 group-hover:bg-primary"
+            class="shrink-0 bg-border/20 h-[1px] w-4 group-hover:bg-primary max-sm:w-px max-sm:h-2"
             data-orientation="horizontal"
             role="none"
           />
@@ -371,7 +371,7 @@ describe('Claim', () => {
             </p>
           </button>
           <div
-            class="shrink-0 bg-border/20 h-[1px] w-4 group-hover:bg-primary"
+            class="shrink-0 bg-border/20 h-[1px] w-4 group-hover:bg-primary max-sm:w-px max-sm:h-2"
             data-orientation="horizontal"
             role="none"
           />

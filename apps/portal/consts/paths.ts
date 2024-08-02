@@ -13,6 +13,7 @@ export const PATHS = {
   PROFILE_DATA_ABOUT: '/app/profile/data-about',
   PROFILE_DATA_CREATED: '/app/profile/data-created',
   PROFILE_CONNECTIONS: '/app/profile/connections',
+  PROFILE_LISTS: '/app/profile/lists',
   // Explore
   EXPLORE_USERS: '/app/explore/users',
   EXPLORE_LISTS: '/app/explore/lists',

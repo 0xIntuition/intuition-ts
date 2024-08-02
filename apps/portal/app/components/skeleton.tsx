@@ -2,7 +2,7 @@ import { Skeleton } from '@0xintuition/1ui'
 
 export function DataHeaderSkeleton() {
   return (
-    <div className="flex flex-col w-full">
+    <div className="flex flex-col w-full gap-3">
       <Skeleton className="w-full h-36" />
     </div>
   )
@@ -11,9 +11,9 @@ export function DataHeaderSkeleton() {
 export function PaginatedListSkeleton() {
   return (
     <div className="flex flex-col w-full gap-6">
-      <div className="flex items-center justify-between">
-        <Skeleton className="w-44 h-10" />
-        <Skeleton className="w-44 h-10" />
+      <div className="flex items-center justify-between max-sm:flex-col max-sm:gap-3">
+        <Skeleton className="w-44 h-10 max-sm:w-full" />
+        <Skeleton className="w-44 h-10 max-sm:w-full" />
       </div>
       <Skeleton className="w-full h-56" />
       <Skeleton className="w-full h-10" />

@@ -33,7 +33,7 @@ export const Claim = ({
 }: ClaimProps) => {
   const separatorWidth = size !== IdentityTagSize.default ? 'w-4' : 'w-2'
   return (
-    <div className="flex items-center w-full max-w-max group">
+    <div className="flex items-center w-full max-w-max group max-md:m-auto max-sm:flex-col">
       <IdentityTag
         variant={subject.variant}
         size={size}
@@ -43,7 +43,12 @@ export const Claim = ({
       >
         <Trunctacular value={subject.label} />
       </IdentityTag>
-      <Separator className={cn(separatorWidth, 'group-hover:bg-primary')} />
+      <Separator
+        className={cn(
+          separatorWidth,
+          'group-hover:bg-primary max-sm:w-px max-sm:h-2',
+        )}
+      />
 
       <IdentityTag
         variant={predicate.variant}
@@ -54,7 +59,12 @@ export const Claim = ({
       >
         <Trunctacular value={predicate.label} />
       </IdentityTag>
-      <Separator className={cn(separatorWidth, 'group-hover:bg-primary')} />
+      <Separator
+        className={cn(
+          separatorWidth,
+          'group-hover:bg-primary max-sm:w-px max-sm:h-2',
+        )}
+      />
 
       <IdentityTag
         variant={object.variant}

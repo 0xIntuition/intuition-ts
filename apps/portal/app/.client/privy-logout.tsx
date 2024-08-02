@@ -14,7 +14,6 @@ export default function PrivyLogout({ wallet }: { wallet: string }) {
     let mounted = true
     const handleLogout = async () => {
       if (mounted && address && address !== wallet && isConnected && ready) {
-        console.log('[privy-logout useEffect firing')
         await logout()
         disconnect()
         submit(null, {

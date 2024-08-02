@@ -48,7 +48,7 @@ describe('ListHeaderCard', () => {
             class="flex items-center"
           >
             <div
-              class="flex items-center w-full max-w-max group"
+              class="flex items-center w-full max-w-max group max-md:m-auto max-sm:flex-col"
             >
               <button
                 class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center rounded-md text-base [&>span]:h-6 [&>span]:w-6 group-hover:border-primary group-hover:bg-primary/20"
@@ -75,7 +75,7 @@ describe('ListHeaderCard', () => {
                 </p>
               </button>
               <div
-                class="shrink-0 bg-border/20 h-[1px] w-4 group-hover:bg-primary"
+                class="shrink-0 bg-border/20 h-[1px] w-4 group-hover:bg-primary max-sm:w-px max-sm:h-2"
                 data-orientation="horizontal"
                 role="none"
               />
@@ -104,7 +104,7 @@ describe('ListHeaderCard', () => {
                 </p>
               </button>
               <div
-                class="shrink-0 bg-border/20 h-[1px] w-4 group-hover:bg-primary"
+                class="shrink-0 bg-border/20 h-[1px] w-4 group-hover:bg-primary max-sm:w-px max-sm:h-2"
                 data-orientation="horizontal"
                 role="none"
               />

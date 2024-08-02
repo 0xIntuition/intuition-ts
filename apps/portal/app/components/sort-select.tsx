@@ -31,7 +31,7 @@ export function SortSelect<T>({
         }
       }}
     >
-      <SelectTrigger className="w-52 rounded-xl border border-primary-600 bg-primary-50/5 text-card-foreground transition-colors duration-150 hover:cursor-pointer hover:border-primary-400 hover:bg-primary-50/10 hover:text-primary-foreground">
+      <SelectTrigger className="w-52 rounded-xl border border-primary-600 bg-primary-50/5 text-card-foreground transition-colors duration-150 hover:cursor-pointer hover:border-primary-400 hover:bg-primary-50/10 hover:text-primary-foreground max-lg:w-full">
         <SelectValue placeholder={`Sort by`} />
       </SelectTrigger>
       <SelectContent>

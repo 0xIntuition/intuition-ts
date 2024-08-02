@@ -181,7 +181,7 @@ export default function Profile() {
   }
 
   const leftPanel = (
-    <div className="flex-col justify-start items-start gap-5 inline-flex">
+    <div className="flex-col justify-start items-start gap-5 inline-flex max-lg:w-full">
       <ProfileCard
         variant="user"
         avatarSrc={userObject.image ?? ''}
@@ -258,12 +258,10 @@ export default function Profile() {
 
   const rightPanel = (
     <>
-      <div className="flex flex-row justify-end mb-6">
+      <div className="flex flex-row justify-end mb-6 max-lg:justify-center">
         <SegmentedNav options={userProfileRouteOptions} />
       </div>
-      <div className="pb-10">
-        <Outlet />
-      </div>
+      <Outlet />
     </>
   )
 

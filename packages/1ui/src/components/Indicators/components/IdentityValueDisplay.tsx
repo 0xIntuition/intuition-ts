@@ -17,7 +17,7 @@ const IdentityValueDisplay = ({
   followers,
 }: IdentityValueDisplayProps) => {
   return (
-    <div className="flex flex-col items-end">
+    <div className="flex flex-col items-end max-sm:flex-row max-sm:justify-between max-sm:items-center max-sm:w-full">
       <MonetaryValue value={value} currency={currency} />
 
       <div className="flex gap-1 items-center">

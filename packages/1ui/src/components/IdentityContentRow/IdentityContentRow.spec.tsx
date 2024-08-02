@@ -40,7 +40,7 @@ describe('IdentityContentRow', () => {
           class="w-full"
         >
           <div
-            class="w-full flex justify-between items-center"
+            class="w-full flex justify-between items-center max-sm:flex-col max-sm:gap-3"
           >
             <div
               class="flex items-center"
@@ -80,7 +80,7 @@ describe('IdentityContentRow', () => {
               </div>
             </div>
             <div
-              class="flex flex-col items-end"
+              class="flex flex-col items-end max-sm:flex-row max-sm:justify-between max-sm:items-center max-sm:w-full"
             >
               <p
                 class="text-primary text-lg font-normal"

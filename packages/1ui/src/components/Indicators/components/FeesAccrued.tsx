@@ -15,8 +15,8 @@ const FeesAccrued = ({
   const amountClass = value > 0 ? 'text-success' : ''
   return (
     <Text
-      variant={TextVariant.body}
-      weight={TextWeight.medium}
+      variant={TextVariant.bodyLarge}
+      weight={TextWeight.normal}
       className={amountClass}
       {...props}
     >

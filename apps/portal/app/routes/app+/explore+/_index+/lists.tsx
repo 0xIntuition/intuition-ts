@@ -8,7 +8,7 @@ import {
 
 import { ExploreSearch } from '@components/explore/ExploreSearch'
 import { ListClaimsList } from '@components/list/list-claims'
-import { calculateTotalPages, invariant } from '@lib/utils/misc'
+import { calculateTotalPages, invariant, loadMore } from '@lib/utils/misc'
 import { getStandardPageParams } from '@lib/utils/params'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { useLoaderData, useSearchParams, useSubmit } from '@remix-run/react'
@@ -17,7 +17,6 @@ import { requireUserWallet } from '@server/auth'
 import { NO_WALLET_ERROR, TAG_PREDICATE_VAULT_ID_TESTNET } from 'consts'
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  console.log('[EXPLORE LISTS] -- START')
   const wallet = await requireUserWallet(request)
   invariant(wallet, NO_WALLET_ERROR)
 
@@ -42,7 +41,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   const totalPages = calculateTotalPages(listClaims?.total ?? 0, limit)
 
-  console.log('[EXPLORE LISTS] -- END')
   return json({
     listClaims: listClaims?.data as ClaimPresenter[],
     sortBy,
@@ -77,18 +75,13 @@ export default function ExploreLists() {
     }
   }, [listClaims, currentPage])
 
-  const handleLoadMore = () => {
-    const nextPage = currentPage + 1
-    submit(
-      {
-        page: nextPage.toString(),
-        limit: pagination.limit.toString(),
-        sortBy,
-        direction,
-      },
-      { method: 'get', replace: true },
-    )
-  }
+  const handleLoadMore = loadMore({
+    currentPage,
+    pagination,
+    sortBy,
+    direction,
+    submit,
+  })
 
   return (
     <>
@@ -96,6 +89,7 @@ export default function ExploreLists() {
       <ListClaimsList
         listClaims={accumulatedClaims}
         pagination={{ ...pagination, currentPage }}
+        enableSearch={false}
         enableSort={true}
         onLoadMore={handleLoadMore}
       />
