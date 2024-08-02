@@ -1,7 +1,6 @@
-import { ClaimRow, Identity } from '@0xintuition/1ui'
+import { Claim, ClaimRow, Identity } from '@0xintuition/1ui'
 import { ClaimPresenter, ClaimSortColumn } from '@0xintuition/api'
 
-import { Claim } from '@components/claim'
 import { formatBalance } from '@lib/utils/misc'
 import { BLOCK_EXPLORER_URL, IPFS_GATEWAY_URL, PATHS } from 'consts'
 import { PaginationType } from 'types/pagination'
