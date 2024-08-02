@@ -38,7 +38,7 @@ const PositionValueDisplay = ({
     return null
   }
   return (
-    <div className="flex items-center justify-start gap-2 max-sm:m-auto">
+    <div className="flex items-center justify-start gap-2 max-sm:justify-between">
       <div className="h-full flex flex-col pt-1">{renderBadge()}</div>
       <div className="h-full flex flex-col items-end">
         <MonetaryValue value={value} currency={currency} />

@@ -10,7 +10,7 @@ const SegmentedControl = ({ className, ...props }: SegmentedControlProps) => {
     <ul
       role="tablist"
       className={cn(
-        'rounded-full flex items-center gap-1 border p-px border-border/20 primary-gradient-subtle',
+        'rounded-full flex items-center gap-1 border p-px border-border/20 primary-gradient-subtle max-sm:overflow-x-auto max-sm:rounded-lg max-sm:p-3',
         className,
       )}
       {...props}
@@ -34,7 +34,7 @@ const SegmentedControlItem = ({
         role="tab"
         aria-selected={isActive}
         className={cn(
-          'rounded-full border border-transparent transition duration-300 ease-in-out hover:border-border/30 aria-selected:border-border/30 py-1 px-3 aria-selected:bg-background text-base',
+          'rounded-full border border-transparent transition duration-300 ease-in-out hover:border-border/30 aria-selected:border-border/30 py-1 px-3 aria-selected:bg-background text-base max-sm:text-nowrap',
           className,
         )}
         {...props}

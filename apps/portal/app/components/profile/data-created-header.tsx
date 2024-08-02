@@ -69,9 +69,9 @@ export const DataCreatedHeader: React.FC<DataCreatedHeaderProps> = ({
             {userIdentity?.user?.display_name ?? userIdentity?.display_name}
           </IdentityTag>
         </div>
-        <div className="flex justify-between items-start">
-          <div className="flex gap-10">
-            <div className="flex flex-col items-start">
+        <div className="flex justify-between items-start max-sm:gap-5 max-sm:justify-center">
+          <div className="flex gap-10 max-sm:gap-5">
+            <div className="flex flex-col items-start max-sm:items-center">
               <Text
                 variant="caption"
                 weight="regular"
@@ -86,7 +86,7 @@ export const DataCreatedHeader: React.FC<DataCreatedHeaderProps> = ({
                 {totalResults}
               </Text>
             </div>
-            <div className="flex flex-col items-start">
+            <div className="flex flex-col items-start max-sm:items-center">
               <Text
                 variant="caption"
                 weight="regular"
@@ -97,7 +97,7 @@ export const DataCreatedHeader: React.FC<DataCreatedHeaderProps> = ({
               <MonetaryValue value={totalStake} currency="ETH" />
             </div>
           </div>
-          <div className="flex flex-col items-end">
+          <div className="flex flex-col items-end max-sm:items-center">
             <Text
               variant="caption"
               weight="regular"
