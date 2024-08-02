@@ -1,12 +1,19 @@
 import { Suspense, useEffect, useState } from 'react'
 
-import { Claim, ListHeaderCard } from '@0xintuition/1ui'
+import {
+  Claim,
+  ListHeaderCard,
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from '@0xintuition/1ui'
 import { ClaimPresenter, ClaimsService } from '@0xintuition/api'
 
 import { IdentitiesList } from '@components/list/identities'
 import { DataHeaderSkeleton, PaginatedListSkeleton } from '@components/skeleton'
 import { getListIdentities, getListIdentitiesCount } from '@lib/services/lists'
-import { DataErrorDisplay, invariant } from '@lib/utils/misc'
+import { invariant } from '@lib/utils/misc'
 import { defer, LoaderFunctionArgs } from '@remix-run/node'
 import {
   Await,
@@ -82,8 +89,14 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 }
 
 export default function ListOverview() {
-  const { globalListIdentities, totalGlobalIdentitiesCount } =
-    useLoaderData<typeof loader>()
+  const {
+    globalListIdentities,
+    userListIdentities,
+    additionalUserListIdentities,
+    totalGlobalIdentitiesCount,
+    totalUserIdentitiesCount,
+    additionalTotalUserIdentitiesCount,
+  } = useLoaderData<typeof loader>()
   const { claim } =
     useRouteLoaderData<{ claim: ClaimPresenter }>('routes/app+/list+/$id') ?? {}
   invariant(claim, NO_CLAIM_ERROR)
@@ -153,21 +166,117 @@ export default function ListOverview() {
             )}
           </Await>
         </Suspense>
-        <Suspense fallback={<PaginatedListSkeleton />}>
-          <Await
-            resolve={globalListIdentities}
-            errorElement={<DataErrorDisplay />}
-          >
-            {(resolvedListIdentities) => (
-              <IdentitiesList
-                identities={resolvedListIdentities.listIdentities}
-                pagination={resolvedListIdentities.pagination}
-                enableSearch={true}
-                enableSort={true}
-              />
-            )}
-          </Await>
-        </Suspense>
+        <Tabs defaultValue={defaultTab}>
+          <Suspense fallback={<PaginatedListSkeleton />}>
+            <Await
+              resolve={Promise.all([
+                globalListIdentities,
+                userListIdentities,
+                additionalUserListIdentities,
+              ])}
+            >
+              {([
+                globalListIdentities,
+                userListIdentities,
+                additionalUserListIdentities,
+              ]) => (
+                <>
+                  <TabsList>
+                    <TabsTrigger
+                      value="global"
+                      label="Global"
+                      // totalCount={
+                      //   totalGlobalIdentitiesCount?.pagination.totalEntries
+                      // }
+                      onClick={(e) => {
+                        e.preventDefault()
+                        handleTabChange('global')
+                      }}
+                    />
+                    <TabsTrigger
+                      value="you"
+                      label="You"
+                      // totalCount={totalUserIdentitiesCount}
+                      onClick={(e) => {
+                        e.preventDefault()
+                        handleTabChange('you')
+                      }}
+                    />
+                    {userWalletAddress && (
+                      <TabsTrigger
+                        value="additional"
+                        label="Additional"
+                        // totalCount={additionalTotalUserIdentitiesCount}
+                        onClick={(e) => {
+                          e.preventDefault()
+                          handleTabChange('additional')
+                        }}
+                      />
+                    )}
+                  </TabsList>
+                  <TabsContent value="global">
+                    {isNavigating ? (
+                      <PaginatedListSkeleton />
+                    ) : (
+                      <Suspense fallback={<PaginatedListSkeleton />}>
+                        <Await resolve={globalListIdentities}>
+                          {(resolvedListIdentities) => (
+                            <IdentitiesList
+                              identities={resolvedListIdentities.listIdentities}
+                              pagination={resolvedListIdentities.pagination}
+                              enableSearch={true}
+                              enableSort={true}
+                            />
+                          )}
+                        </Await>
+                      </Suspense>
+                    )}
+                  </TabsContent>
+                  <TabsContent value="you">
+                    {isNavigating ? (
+                      <PaginatedListSkeleton />
+                    ) : (
+                      <Suspense fallback={<PaginatedListSkeleton />}>
+                        <Await resolve={userListIdentities}>
+                          {(resolvedListIdentities) => (
+                            <IdentitiesList
+                              identities={resolvedListIdentities.listIdentities}
+                              pagination={resolvedListIdentities.pagination}
+                              enableSearch={true}
+                              enableSort={true}
+                            />
+                          )}
+                        </Await>
+                      </Suspense>
+                    )}
+                  </TabsContent>
+                  {userWalletAddress && (
+                    <TabsContent value="additional">
+                      {isNavigating ? (
+                        <PaginatedListSkeleton />
+                      ) : (
+                        <Suspense fallback={<PaginatedListSkeleton />}>
+                          <Await resolve={additionalUserListIdentities}>
+                            {(resolvedListIdentities) => (
+                              <IdentitiesList
+                                identities={
+                                  resolvedListIdentities.listIdentities
+                                }
+                                pagination={resolvedListIdentities.pagination}
+                                enableSearch={true}
+                                enableSort={true}
+                              />
+                            )}
+                          </Await>
+                        </Suspense>
+                      )}
+                    </TabsContent>
+                  )}
+                </>
+              )}
+            </Await>
+          </Suspense>
+        </Tabs>
       </div>
     </div>
   )
