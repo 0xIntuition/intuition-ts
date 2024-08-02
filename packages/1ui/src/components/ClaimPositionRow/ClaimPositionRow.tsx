@@ -69,12 +69,18 @@ const ClaimPositionRow = ({
   ...props
 }: ClaimPositionRowProps) => {
   return (
-    <div className={cn(`w-full flex justify-between`, className)} {...props}>
+    <div
+      className={cn(
+        `w-full flex justify-between max-sm:flex-col max-sm:gap-2`,
+        className,
+      )}
+      {...props}
+    >
       {variant === ClaimPositionRowVariant.user && (
-        <div className="flex items-center">
+        <div className="flex items-center max-sm:justify-center">
           <Avatar src={avatarSrc} name={name} className="w-16 h-16 mr-4" />
           <div className="flex flex-col">
-            <div className="flex items-center mb-1.5">
+            <div className="flex items-center mb-1.5 max-sm:flex-col max-sm:gap-px max-sm:items-start">
               <Text variant={TextVariant.bodyLarge} className="mr-1">
                 {name}
               </Text>
@@ -112,11 +118,11 @@ const ClaimPositionRow = ({
       )}
 
       {variant === ClaimPositionRowVariant.claim && (
-        <div className="w-[60%]">
+        <div className="w-[60%] max-sm:w-full">
           <ClaimStatus
             claimsFor={claimsFor}
             claimsAgainst={claimsAgainst}
-            className="w-[60%]"
+            className="w-[60%] max-sm:w-full"
           >
             {children}
           </ClaimStatus>

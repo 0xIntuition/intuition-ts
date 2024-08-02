@@ -152,7 +152,13 @@ export default function ProfileDataCreated() {
           defaultValue={DataCreatedHeaderVariants.activeIdentities}
           className="w-full"
         >
-          <Suspense fallback={<TabsSkeleton numOfTabs={2} />}>
+          <Suspense
+            fallback={
+              <div className="mb-3">
+                <TabsSkeleton numOfTabs={2} />
+              </div>
+            }
+          >
             <Await
               resolve={Promise.all([
                 activeIdentities,

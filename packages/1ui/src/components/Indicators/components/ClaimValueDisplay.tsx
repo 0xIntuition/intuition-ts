@@ -18,13 +18,13 @@ const ClaimValueDisplay = ({
   claimsAgainst,
 }: ClaimValueDisplayProps) => {
   return (
-    <div className="flex flex-col items-end">
+    <div className="flex flex-col items-end max-md:flex-row max-md:justify-between max-md:items-center">
       <MonetaryValue
         variant={TextVariant.bodyLarge}
         value={value}
         currency={currency}
       />
-      <div className="flex gap-2 items-center mt-2">
+      <div className="flex gap-2 items-center mt-2 max-md:mt-0">
         <div className="flex gap-1 items-center">
           <Icon name={IconName.people} className="text-against h-4 w-4" />
           <Text

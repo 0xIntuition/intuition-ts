@@ -22,15 +22,18 @@ const ClaimRow = ({
 }: ClaimRowProps) => {
   return (
     <div
-      className={cn(`flex justify-between items-center gap-2`, className)}
+      className={cn(
+        `flex justify-between items-center gap-2 max-md:flex-col`,
+        className,
+      )}
       {...props}
     >
-      <div className="w-[60%]">
+      <div className="w-[60%] max-md:w-full">
         <ClaimStatus claimsFor={claimsFor} claimsAgainst={claimsAgainst}>
           {children}
         </ClaimStatus>
       </div>
-      <div className="w-[40%]">
+      <div className="w-[40%] max-md:w-full">
         <ClaimValueDisplay
           value={amount}
           currency={currency}

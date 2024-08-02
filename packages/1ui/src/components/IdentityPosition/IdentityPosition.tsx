@@ -44,7 +44,13 @@ const IdentityPosition = ({
   ...props
 }: IdentityPositionProps) => {
   return (
-    <div className={cn(`w-full flex justify-between`, className)} {...props}>
+    <div
+      className={cn(
+        `w-full flex justify-between max-sm:flex-col max-sm:items-center`,
+        className,
+      )}
+      {...props}
+    >
       <div className="flex items-center">
         <Avatar
           variant={variant}
@@ -53,7 +59,7 @@ const IdentityPosition = ({
           className="w-16 h-16 mr-4"
         />
         <div className="flex flex-col">
-          <div className="flex items-center mb-1.5">
+          <div className="flex items-center mb-1.5 max-sm:flex-col max-sm:gap-px max-sm:items-start">
             <Text variant={TextVariant.bodyLarge} className="mr-1">
               {name}
             </Text>

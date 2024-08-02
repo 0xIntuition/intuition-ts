@@ -163,7 +163,7 @@ export default function Profile() {
   const [followModalActive, setFollowModalActive] = useAtom(followModalAtom)
 
   const leftPanel = (
-    <div className="flex-col justify-start items-start gap-5 inline-flex">
+    <div className="flex-col justify-start items-start gap-5 inline-flex max-lg:w-full">
       <ProfileCard
         variant="user"
         avatarSrc={userIdentity?.user?.image ?? ''}
@@ -257,7 +257,7 @@ export default function Profile() {
 
   const rightPanel = (
     <>
-      <div className="flex flex-row justify-end mb-6">
+      <div className="flex flex-row justify-end mb-6 max-lg:justify-center">
         <SegmentedNav options={userIdentityRouteOptions} />
       </div>
       <Outlet />

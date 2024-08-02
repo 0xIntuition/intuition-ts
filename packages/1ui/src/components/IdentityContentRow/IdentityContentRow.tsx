@@ -72,7 +72,10 @@ const IdentityContentRow = ({
   return (
     <div className="w-full">
       <div
-        className={cn(`w-full flex justify-between items-center`, className)}
+        className={cn(
+          `w-full flex justify-between items-center max-sm:flex-col max-sm:gap-3`,
+          className,
+        )}
         {...props}
       >
         <div className="flex items-center">

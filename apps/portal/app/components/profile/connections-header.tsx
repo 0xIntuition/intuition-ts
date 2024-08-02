@@ -29,9 +29,9 @@ export const ConnectionsHeader: React.FC<ConnectionsHeaderProps> = ({
   return (
     <div className="flex flex-col w-full gap-3">
       <div className="p-6 bg-black rounded-xl border border-neutral-300/20 flex flex-col gap-5">
-        <div className="flex justify-between items-start">
-          <div className="flex gap-10">
-            <div className="flex flex-col items-start">
+        <div className="flex justify-between items-center max-sm:flex-col max-sm:gap-3">
+          <div className="flex gap-10 max-sm:flex-col max-sm:gap-3 max-sm:m-auto">
+            <div className="flex flex-col items-start max-sm:items-center">
               <Text
                 variant="caption"
                 weight="regular"
@@ -43,7 +43,7 @@ export const ConnectionsHeader: React.FC<ConnectionsHeaderProps> = ({
                 {totalFollowers ?? '0'}
               </div>
             </div>
-            <div className="flex flex-col items-start">
+            <div className="flex flex-col items-start max-sm:items-center">
               <Text
                 variant="caption"
                 weight="regular"
@@ -57,7 +57,7 @@ export const ConnectionsHeader: React.FC<ConnectionsHeaderProps> = ({
               <MonetaryValue value={+totalStake} currency="ETH" />
             </div>
           </div>
-          <div className="flex flex-col items-end">
+          <div className="flex flex-col items-end max-sm:items-center max-sm:m-auto gap-2">
             <Text
               variant="caption"
               weight="regular"

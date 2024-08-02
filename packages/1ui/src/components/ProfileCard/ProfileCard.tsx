@@ -37,7 +37,7 @@ const ProfileCard = ({
   return (
     <div
       className={cn(
-        'flex flex-col justify-center items-start w-full min-w-80 rounded-lg gap-2.5',
+        'flex flex-col justify-center items-start w-full min-w-80 rounded-lg gap-2.5 max-lg:min-w-max  max-lg:items-center',
         props.className,
       )}
       {...props}

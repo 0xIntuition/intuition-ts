@@ -21,7 +21,7 @@ describe('IdentityPosition', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="w-full flex justify-between"
+          class="w-full flex justify-between max-sm:flex-col max-sm:items-center"
         >
           <div
             class="flex items-center"
@@ -45,7 +45,7 @@ describe('IdentityPosition', () => {
               class="flex flex-col"
             >
               <div
-                class="flex items-center mb-1.5"
+                class="flex items-center mb-1.5 max-sm:flex-col max-sm:gap-px max-sm:items-start"
               >
                 <p
                   class="text-primary text-lg font-normal mr-1"
@@ -66,7 +66,7 @@ describe('IdentityPosition', () => {
             </div>
           </div>
           <div
-            class="flex items-center justify-start gap-2"
+            class="flex items-center justify-start gap-2 max-sm:m-auto"
           >
             <div
               class="h-full flex flex-col pt-1"
@@ -113,7 +113,7 @@ describe('IdentityPosition', () => {
       expect(asFragment()).toMatchInlineSnapshot(`
         <DocumentFragment>
           <div
-            class="w-full flex justify-between"
+            class="w-full flex justify-between max-sm:flex-col max-sm:items-center"
           >
             <div
               class="flex items-center"
@@ -137,7 +137,7 @@ describe('IdentityPosition', () => {
                 class="flex flex-col"
               >
                 <div
-                  class="flex items-center mb-1.5"
+                  class="flex items-center mb-1.5 max-sm:flex-col max-sm:gap-px max-sm:items-start"
                 >
                   <p
                     class="text-primary text-lg font-normal mr-1"
@@ -202,7 +202,7 @@ describe('IdentityPosition', () => {
               </div>
             </div>
             <div
-              class="flex items-center justify-start gap-2"
+              class="flex items-center justify-start gap-2 max-sm:m-auto"
             >
               <div
                 class="h-full flex flex-col pt-1"

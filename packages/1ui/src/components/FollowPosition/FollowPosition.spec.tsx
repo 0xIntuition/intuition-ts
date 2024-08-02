@@ -66,7 +66,7 @@ describe('FollowPosition', () => {
             </div>
           </div>
           <div
-            class="flex items-center justify-start gap-2"
+            class="flex items-center justify-start gap-2 max-sm:m-auto"
           >
             <div
               class="h-full flex flex-col pt-1"
