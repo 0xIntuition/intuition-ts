@@ -1,5 +1,4 @@
 import { Suspense, useEffect, useState } from 'react'
-import * as React from 'react'
 
 import {
   Claim,
