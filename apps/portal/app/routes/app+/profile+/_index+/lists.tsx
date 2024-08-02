@@ -30,7 +30,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   })
 
   return defer({
-    savedListClaims: getUserSavedLists({ request, searchParams }),
+    savedListClaims: getUserSavedLists({ request, userWallet, searchParams }),
     page,
     limit,
     sortBy,

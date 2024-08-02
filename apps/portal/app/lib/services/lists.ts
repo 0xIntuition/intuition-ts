@@ -8,10 +8,9 @@ import {
 } from '@0xintuition/api'
 
 import logger from '@lib/utils/logger'
-import { calculateTotalPages, invariant } from '@lib/utils/misc'
+import { calculateTotalPages } from '@lib/utils/misc'
 import { getStandardPageParams } from '@lib/utils/params'
 import { fetchWrapper } from '@server/api'
-import { requireUser } from '@server/auth'
 import {
   TAG_PREDICATE_DISPLAY_NAME_TESTNET,
   TAG_PREDICATE_ID_TESTNET,
@@ -65,26 +64,17 @@ export async function getUserCreatedLists({
 
 export async function getUserSavedLists({
   request,
+  userWallet,
   searchParams,
 }: {
   request: Request
+  userWallet: string
   searchParams: URLSearchParams
 }) {
-  const user = await requireUser(request)
-  invariant(user, 'User not found')
-  invariant(user.wallet?.address, 'User wallet address is required')
-
   const { page, limit, sortBy, direction } = getStandardPageParams({
     searchParams,
     paramPrefix: 'positions',
     defaultSortByValue: PositionSortColumn.CREATED_AT,
-  })
-
-  const { id: userId } = await fetchWrapper(request, {
-    method: UsersService.getUserByWalletPublic,
-    args: {
-      wallet: user.wallet?.address,
-    },
   })
 
   const savedListClaims = await fetchWrapper(request, {
@@ -95,7 +85,7 @@ export async function getUserSavedLists({
       sortBy,
       direction,
       displayName: TAG_PREDICATE_DISPLAY_NAME_TESTNET,
-      user: userId,
+      user: userWallet,
     },
   })
 
