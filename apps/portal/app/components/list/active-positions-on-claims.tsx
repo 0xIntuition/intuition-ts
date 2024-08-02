@@ -3,6 +3,7 @@ import { ClaimPresenter, SortColumn } from '@0xintuition/api'
 
 import { formatBalance } from '@lib/utils/misc'
 import { useNavigate } from '@remix-run/react'
+import { BLOCK_EXPLORER_URL, IPFS_GATEWAY_URL, PATHS } from 'consts'
 import { PaginationType } from 'types/pagination'
 
 import { SortOption } from '../sort-select'
@@ -56,6 +57,7 @@ export function ActivePositionsOnClaims({
             className="hover:cursor-pointer"
           >
             <Claim
+              link={`${PATHS.CLAIM}/${claim.claim_id}`}
               subject={{
                 variant: claim.subject?.is_user
                   ? Identity.user
@@ -65,29 +67,67 @@ export function ActivePositionsOnClaims({
                   claim.subject?.display_name ??
                   claim.subject?.identity_id ??
                   '',
-                imgSrc: claim.subject?.image,
+                imgSrc: claim.subject?.is_user
+                  ? claim.subject?.user?.image
+                  : claim.subject?.image,
+                id: claim.subject?.identity_id,
+                description: claim.subject?.is_user
+                  ? claim.subject?.user?.description
+                  : claim.subject?.description,
+                ipfsLink:
+                  claim.subject?.is_user === true
+                    ? `${BLOCK_EXPLORER_URL}/${claim.subject?.identity_id}`
+                    : `${IPFS_GATEWAY_URL}/${claim.subject?.identity_id?.replace('ipfs://', '')}`,
+                link:
+                  claim.subject?.is_user === true
+                    ? `${PATHS.PROFILE}/${claim.subject?.identity_id}`
+                    : `${PATHS.IDENTITY}/${claim.subject?.identity_id?.replace('ipfs://', '')}`,
               }}
               predicate={{
-                variant: claim.predicate?.is_user
-                  ? Identity.user
-                  : Identity.nonUser,
+                variant: claim.predicate?.is_user ? 'user' : 'non-user',
                 label:
                   claim.predicate?.user?.display_name ??
                   claim.predicate?.display_name ??
                   claim.predicate?.identity_id ??
                   '',
-                imgSrc: claim.predicate?.image,
+                imgSrc: claim.predicate?.is_user
+                  ? claim.predicate?.user?.image
+                  : claim.predicate?.image,
+                id: claim.predicate?.identity_id,
+                description: claim.predicate?.is_user
+                  ? claim.predicate?.user?.description
+                  : claim.predicate?.description,
+                ipfsLink:
+                  claim.predicate?.is_user === true
+                    ? `${BLOCK_EXPLORER_URL}/${claim.predicate?.identity_id}`
+                    : `${IPFS_GATEWAY_URL}/${claim.predicate?.identity_id?.replace('ipfs://', '')}`,
+                link:
+                  claim.predicate?.is_user === true
+                    ? `${PATHS.PROFILE}/${claim.predicate?.identity_id}`
+                    : `${PATHS.IDENTITY}/${claim.predicate?.identity_id?.replace('ipfs://', '')}`,
               }}
               object={{
-                variant: claim.object?.is_user
-                  ? Identity.user
-                  : Identity.nonUser,
+                variant: claim.object?.is_user ? 'user' : 'non-user',
                 label:
                   claim.object?.user?.display_name ??
                   claim.object?.display_name ??
                   claim.object?.identity_id ??
                   '',
-                imgSrc: claim.object?.image,
+                imgSrc: claim.object?.is_user
+                  ? claim.object?.user?.image
+                  : claim.object?.image,
+                id: claim.object?.identity_id,
+                description: claim.object?.is_user
+                  ? claim.object?.user?.description
+                  : claim.object?.description,
+                ipfsLink:
+                  claim.object?.is_user === true
+                    ? `${BLOCK_EXPLORER_URL}/${claim.object?.identity_id}`
+                    : `${IPFS_GATEWAY_URL}/${claim.object?.identity_id?.replace('ipfs://', '')}`,
+                link:
+                  claim.object?.is_user === true
+                    ? `${PATHS.PROFILE}/${claim.object?.identity_id}`
+                    : `${PATHS.IDENTITY}/${claim.object?.identity_id?.replace('ipfs://', '')}`,
               }}
             />
           </ClaimPositionRow>

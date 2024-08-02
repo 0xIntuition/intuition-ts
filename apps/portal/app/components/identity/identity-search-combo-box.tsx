@@ -127,7 +127,7 @@ const IdentitySearchCombobox = ({
                           identity.user?.display_name ?? identity.display_name,
                           18,
                         )}
-                        walletAddress={
+                        id={
                           identity.is_user === true
                             ? identity.user?.ens_name ??
                               sliceString(identity.user?.wallet, 6, 4)

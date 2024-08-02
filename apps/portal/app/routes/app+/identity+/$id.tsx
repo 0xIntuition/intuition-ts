@@ -132,7 +132,7 @@ export default function IdentityDetails() {
         variant={Identity.nonUser}
         avatarSrc={identity?.image ?? ''}
         name={identity?.display_name ?? ''}
-        walletAddress={identity?.identity_id}
+        id={identity?.identity_id}
         bio={identity?.description ?? ''}
         ipfsLink={`${IPFS_GATEWAY_URL}/${identity?.identity_id?.replace('ipfs://', '')}`}
         externalLink={identity?.external_reference ?? ''}

@@ -9,7 +9,8 @@ import AddIdentitiesListModal from '@components/list/add-identities-list-modal'
 import { ListIdentityDisplayCard } from '@components/list/list-identity-display-card'
 import NavigationButton from '@components/navigation-link'
 import { addIdentitiesListModalAtom } from '@lib/state/store'
-import { invariant, sliceString } from '@lib/utils/misc'
+import logger from '@lib/utils/logger'
+import { invariant } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import {
   Outlet,
@@ -68,7 +69,7 @@ export default function ListDetails() {
         variant="non-user"
         avatarSrc={claim.object?.image ?? ''}
         name={claim.object?.display_name ?? ''}
-        walletAddress={sliceString(claim.object?.identity_id, 6, 4)}
+        id={claim.object?.identity_id ?? ''}
         bio={claim.object?.description ?? ''}
         ipfsLink={
           claim.object?.is_user === true

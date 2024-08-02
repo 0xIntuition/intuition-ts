@@ -12,6 +12,7 @@ import {
 import { IdentityPresenter, TagEmbeddedPresenter } from '@0xintuition/api'
 
 import { formatBalance, formatDisplayBalance } from '@lib/utils/misc'
+import { BLOCK_EXPLORER_URL, IPFS_GATEWAY_URL, PATHS } from 'consts'
 import { TransactionActionType, TransactionStateType } from 'types/transaction'
 
 interface SaveReviewProps {
@@ -96,19 +97,47 @@ export default function SaveReview({
             </Text>
             <Claim
               subject={{
-                imgSrc: identity.image,
-                label: identity.display_name,
-                variant: Identity.nonUser,
+                variant: identity.is_user ? Identity.user : Identity.nonUser,
+                label:
+                  identity.user?.display_name ??
+                  identity.display_name ??
+                  identity.identity_id ??
+                  '',
+                imgSrc: identity.is_user
+                  ? identity.user?.image
+                  : identity.image,
+                id: identity.identity_id,
+                description: identity.is_user
+                  ? identity.user?.description
+                  : identity.description,
+                ipfsLink:
+                  identity.is_user === true
+                    ? `${BLOCK_EXPLORER_URL}/${identity.identity_id}`
+                    : `${IPFS_GATEWAY_URL}/${identity.identity_id?.replace('ipfs://', '')}`,
+                link:
+                  identity.is_user === true
+                    ? `${PATHS.PROFILE}/${identity.identity_id}`
+                    : `${PATHS.IDENTITY}/${identity.identity_id?.replace('ipfs://', '')}`,
               }}
               predicate={{
-                label: 'has tag',
                 variant: Identity.nonUser,
+                label: 'has tag',
+                imgSrc: '',
+                id: 'QmakZTBNcZandAb7Pj42MkptLmTZuGXoMZKKvugqTcy76P',
+                description: '',
+                ipfsLink: `${IPFS_GATEWAY_URL}/QmakZTBNcZandAb7Pj42MkptLmTZuGXoMZKKvugqTcy76P`,
+                link: `${PATHS.IDENTITY}/QmakZTBNcZandAb7Pj42MkptLmTZuGXoMZKKvugqTcy76P`,
               }}
               object={{
-                imgSrc: tag.image,
-                label: tag.display_name,
                 variant: Identity.nonUser,
+                label: tag.display_name ?? tag.identity_id ?? '',
+                imgSrc: tag.image,
+                id: tag.identity_id,
+                description: '',
+                ipfsLink: '',
+                link: '',
               }}
+              link=""
             />
             <Text
               variant="base"

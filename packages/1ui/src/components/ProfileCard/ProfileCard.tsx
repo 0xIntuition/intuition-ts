@@ -8,15 +8,15 @@ import { ProfileCardHeader, ProfileCardStatItem } from './components'
 
 export interface ProfileCardProps extends HTMLAttributes<HTMLDivElement> {
   variant?: IdentityType
-  avatarSrc: string
+  avatarSrc?: string
   name: string
-  walletAddress: string
+  id?: string
   stats?: {
     numberOfFollowers?: number
     numberOfFollowing?: number
     points?: number
   }
-  ipfsLink: string
+  ipfsLink?: string
   externalLink?: string
   bio?: string
   children?: React.ReactNode
@@ -24,9 +24,9 @@ export interface ProfileCardProps extends HTMLAttributes<HTMLDivElement> {
 
 const ProfileCard = ({
   variant = Identity.user,
-  avatarSrc,
+  avatarSrc = '',
   name,
-  walletAddress,
+  id,
   stats,
   ipfsLink,
   externalLink,
@@ -46,10 +46,10 @@ const ProfileCard = ({
         variant={variant}
         avatarSrc={avatarSrc}
         name={name}
-        walletAddress={walletAddress}
-        ipfsLink={ipfsLink}
+        id={id}
+        link={ipfsLink}
       />
-      {variant === Identity.user && (
+      {variant === Identity.user && stats && (
         <div className="flex justify-start items-center gap-4 pt-2">
           <ProfileCardStatItem
             value={stats?.numberOfFollowing ?? 0}

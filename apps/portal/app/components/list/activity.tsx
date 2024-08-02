@@ -15,7 +15,7 @@ import { ActivityPresenter, SortColumn } from '@0xintuition/api'
 
 import { formatBalance } from '@lib/utils/misc'
 import { Link, useNavigate } from '@remix-run/react'
-import { PATHS } from 'consts'
+import { BLOCK_EXPLORER_URL, IPFS_GATEWAY_URL, PATHS } from 'consts'
 import { formatDistance } from 'date-fns'
 import { PaginationType } from 'types/pagination'
 
@@ -178,38 +178,79 @@ function ActivityItem({
               className="hover:cursor-pointer w-full"
             >
               <Claim
+                link={`${PATHS.CLAIM}/${activity.claim.claim_id}`}
                 subject={{
                   variant: activity.claim.subject?.is_user
                     ? Identity.user
                     : Identity.nonUser,
                   label:
-                    activity.claim.subject?.user_display_name ??
+                    activity.claim.subject?.user?.display_name ??
                     activity.claim.subject?.display_name ??
                     activity.claim.subject?.identity_id ??
                     '',
-                  imgSrc: activity.claim.subject?.image,
+                  imgSrc: activity.claim.subject?.is_user
+                    ? activity.claim.subject?.user?.image
+                    : activity.claim.subject?.image,
+                  id: activity.claim.subject?.identity_id,
+                  description: activity.claim.subject?.is_user
+                    ? activity.claim.subject?.user?.description
+                    : activity.claim.subject?.description,
+                  ipfsLink:
+                    activity.claim.subject?.is_user === true
+                      ? `${BLOCK_EXPLORER_URL}/${activity.claim.subject?.identity_id}`
+                      : `${IPFS_GATEWAY_URL}/${activity.claim.subject?.identity_id?.replace('ipfs://', '')}`,
+                  link:
+                    activity.claim.subject?.is_user === true
+                      ? `${PATHS.PROFILE}/${activity.claim.subject?.identity_id}`
+                      : `${PATHS.IDENTITY}/${activity.claim.subject?.identity_id?.replace('ipfs://', '')}`,
                 }}
                 predicate={{
                   variant: activity.claim.predicate?.is_user
-                    ? Identity.user
-                    : Identity.nonUser,
+                    ? 'user'
+                    : 'non-user',
                   label:
-                    activity.claim.predicate?.user_display_name ??
+                    activity.claim.predicate?.user?.display_name ??
                     activity.claim.predicate?.display_name ??
                     activity.claim.predicate?.identity_id ??
                     '',
-                  imgSrc: activity.claim.predicate?.image,
+                  imgSrc: activity.claim.predicate?.is_user
+                    ? activity.claim.predicate?.user?.image
+                    : activity.claim.predicate?.image,
+                  id: activity.claim.predicate?.identity_id,
+                  description: activity.claim.predicate?.is_user
+                    ? activity.claim.predicate?.user?.description
+                    : activity.claim.predicate?.description,
+                  ipfsLink:
+                    activity.claim.predicate?.is_user === true
+                      ? `${BLOCK_EXPLORER_URL}/${activity.claim.predicate?.identity_id}`
+                      : `${IPFS_GATEWAY_URL}/${activity.claim.predicate?.identity_id?.replace('ipfs://', '')}`,
+                  link:
+                    activity.claim.predicate?.is_user === true
+                      ? `${PATHS.PROFILE}/${activity.claim.predicate?.identity_id}`
+                      : `${PATHS.IDENTITY}/${activity.claim.predicate?.identity_id?.replace('ipfs://', '')}`,
                 }}
                 object={{
-                  variant: activity.claim.object?.is_user
-                    ? Identity.user
-                    : Identity.nonUser,
+                  variant: activity.claim.object?.is_user ? 'user' : 'non-user',
                   label:
-                    activity.claim.object?.user_display_name ??
+                    activity.claim.object?.user?.display_name ??
                     activity.claim.object?.display_name ??
                     activity.claim.object?.identity_id ??
                     '',
-                  imgSrc: activity.claim.object?.image,
+                  imgSrc: activity.claim.object?.is_user
+                    ? activity.claim.object?.user?.image
+                    : activity.claim.object?.image,
+                  id: activity.claim.object?.identity_id,
+                  description: activity.claim.object?.is_user
+                    ? activity.claim.object?.user?.description
+                    : activity.claim.object?.description,
+                  ipfsLink:
+                    activity.claim.object?.is_user === true
+                      ? `${BLOCK_EXPLORER_URL}/${activity.claim.object?.identity_id}`
+                      : `${IPFS_GATEWAY_URL}/${activity.claim.object?.identity_id?.replace('ipfs://', '')}`,
+                  link:
+                    activity.claim.object?.is_user === true
+                      ? `${PATHS.PROFILE}/${activity.claim.object?.identity_id}`
+                      : `${PATHS.IDENTITY}/${activity.claim.object?.identity_id?.replace('ipfs://', '')}`,
                 }}
               />
             </ClaimRow>

@@ -1,5 +1,4 @@
 import {
-  formatWalletAddress,
   Identity,
   IdentityTag,
   IdentityTagSize,
@@ -43,10 +42,9 @@ export const IdentityWithHoverable = ({
                 ? identity?.user?.display_name ?? ''
                 : identity?.display_name
             }
-            walletAddress={
+            id={
               identity?.is_user
-                ? identity?.user?.ens_name ??
-                  formatWalletAddress(identity?.identity_id)
+                ? identity?.user?.ens_name ?? identity?.identity_id
                 : identity?.identity_id
             }
             stats={

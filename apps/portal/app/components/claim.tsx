@@ -1,16 +1,20 @@
-import { Button, ButtonVariant } from 'components/Button'
 import {
+  Button,
+  ButtonVariant,
+  cn,
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
-} from 'components/HoverCard'
-import { IdentityTag, IdentityTagSize } from 'components/IdentityTag'
-import { ProfileCard } from 'components/ProfileCard'
-import { Separator } from 'components/Separator'
-import { Trunctacular } from 'components/Trunctacular'
+  IdentityTag,
+  IdentityTagSize,
+  IdentityType,
+  ProfileCard,
+  Separator,
+  Trunctacular,
+} from '@0xintuition/1ui'
+
+import { Link } from '@remix-run/react'
 import { Fragment } from 'react/jsx-runtime'
-import { cn } from 'styles'
-import { IdentityType } from 'types'
 
 interface ClaimItemProps {
   variant?: IdentityType
@@ -18,8 +22,8 @@ interface ClaimItemProps {
   imgSrc?: string | null
   id?: string | null
   description?: string | null
-  ipfsLink?: string
-  link?: string
+  ipfsLink: string
+  link: string
 }
 
 export interface ClaimProps {
@@ -28,7 +32,7 @@ export interface ClaimProps {
   subject: ClaimItemProps
   predicate: ClaimItemProps
   object: ClaimItemProps
-  link?: string
+  link: string
 }
 
 const ClaimItem = ({
@@ -38,32 +42,30 @@ const ClaimItem = ({
   disabled,
 }: {
   item: ClaimItemProps
-  link?: string
+  link: string
   size?: keyof typeof IdentityTagSize
   disabled?: boolean
 }) => {
-  const content = (
-    <IdentityTag
-      variant={item.variant}
-      size={size}
-      imgSrc={item.imgSrc}
-      disabled={disabled}
-      className="group-hover:border-primary group-hover:bg-primary/20 relative z-10"
-    >
-      <Trunctacular value={item.label} disableTooltip />
-    </IdentityTag>
-  )
-
-  if (disabled) {
-    return link ? <a href={link}>{content}</a> : content
+  const handleItemClick = (e: React.MouseEvent) => {
+    e.stopPropagation()
   }
 
   return (
-    <HoverCard openDelay={100} closeDelay={100}>
+    <HoverCard>
       <HoverCardTrigger>
-        {link ? <a href={link}>{content}</a> : content}
+        <Link to={link} prefetch="intent">
+          <IdentityTag
+            variant={item.variant}
+            size={size}
+            imgSrc={item.imgSrc}
+            disabled={disabled}
+            className="group-hover:border-primary group-hover:bg-primary/20 relative z-10"
+          >
+            <Trunctacular value={item.label} disableTooltip />
+          </IdentityTag>
+        </Link>
       </HoverCardTrigger>
-      <HoverCardContent className="w-80">
+      <HoverCardContent>
         <ProfileCard
           variant={item.variant}
           avatarSrc={item.imgSrc ?? ''}
@@ -73,13 +75,15 @@ const ClaimItem = ({
           ipfsLink={item.ipfsLink}
           className="profile-card"
         />
-        {item.link && (
-          <a href={item.link}>
-            <Button variant={ButtonVariant.secondary} className="w-full">
-              View Identity
-            </Button>
-          </a>
-        )}
+        <a href={item.link} onClick={handleItemClick}>
+          <Button
+            variant={ButtonVariant.secondary}
+            className="w-full"
+            onClick={handleItemClick}
+          >
+            View Identity
+          </Button>
+        </a>
       </HoverCardContent>
     </HoverCard>
   )
@@ -105,12 +109,7 @@ export const Claim = ({
               className={cn(separatorWidth, 'group-hover:bg-primary')}
             />
           )}
-          <ClaimItem
-            item={item}
-            link={link}
-            size={size}
-            disabled={(!item.link && true) || disabled}
-          />
+          <ClaimItem item={item} link={link} size={size} disabled={disabled} />
         </Fragment>
       ))}
     </div>

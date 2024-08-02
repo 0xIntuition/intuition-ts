@@ -168,7 +168,7 @@ export default function Profile() {
         variant="user"
         avatarSrc={userIdentity?.user?.image ?? ''}
         name={userIdentity?.user?.display_name ?? ''}
-        walletAddress={
+        id={
           userIdentity?.user?.ens_name ??
           userIdentity?.user?.wallet ??
           userIdentity.identity_id
