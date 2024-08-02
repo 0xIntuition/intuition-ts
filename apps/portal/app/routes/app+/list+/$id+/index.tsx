@@ -2,10 +2,7 @@ import { Suspense, useEffect, useState } from 'react'
 import * as React from 'react'
 
 import {
-  Avatar,
   Claim,
-  IdentityTag,
-  IdentityTagButton,
   ListHeaderCard,
   Tabs,
   TabsContent,
@@ -107,7 +104,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
           creator: paramWallet,
         })
       : null,
-    additionalUserObject, // Add this to the returned data
+    additionalUserObject,
   })
 }
 
@@ -117,10 +114,8 @@ export default function ListOverview() {
     userListIdentities,
     additionalUserListIdentities,
     totalGlobalIdentitiesCount,
-    totalUserIdentitiesCount,
-    additionalTotalUserIdentitiesCount,
     userObject,
-    additionalUserObject, // Destructure the additional user object
+    additionalUserObject,
   } = useLoaderData<typeof loader>()
   const { claim } =
     useRouteLoaderData<{ claim: ClaimPresenter }>('routes/app+/list+/$id') ?? {}
@@ -212,10 +207,7 @@ export default function ListOverview() {
                     <TabsTrigger
                       value="global"
                       label="Global"
-                      totalCount={4}
-                      // totalCount={
-                      //   totalGlobalIdentitiesCount?.pagination.totalEntries
-                      // }
+                      totalCount={globalListIdentities?.pagination.totalEntries}
                       onClick={(e) => {
                         e.preventDefault()
                         handleTabChange('global')
@@ -223,17 +215,14 @@ export default function ListOverview() {
                     />
                     <TabsTrigger
                       value="you"
-                      // label="You"
-                      // label={<IdentityTag imgSrc="image.jpg">You</IdentityTag>}
-                      // totalCount={totalUserEntries?.pagination.totalEntries}
-                      totalCount={4}
                       label={
-                        <React.Suspense fallback={<div>Loading...</div>}>
+                        <Suspense fallback={<div>Loading...</div>}>
                           <ListTabIdentityDisplay imgSrc={userObject.image}>
                             You
                           </ListTabIdentityDisplay>
-                        </React.Suspense>
+                        </Suspense>
                       }
+                      totalCount={userListIdentities?.pagination.totalEntries}
                       onClick={(e) => {
                         e.preventDefault()
                         handleTabChange('you')
@@ -242,8 +231,10 @@ export default function ListOverview() {
                     {userWalletAddress && (
                       <TabsTrigger
                         className="text-left"
-                        totalCount={4}
                         value="additional"
+                        totalCount={
+                          additionalUserListIdentities?.pagination.totalEntries
+                        }
                         label={
                           <Suspense fallback={<div>Loading...</div>}>
                             <ListTabIdentityDisplay
@@ -304,16 +295,23 @@ export default function ListOverview() {
                       ) : (
                         <Suspense fallback={<PaginatedListSkeleton />}>
                           <Await resolve={additionalUserListIdentities}>
-                            {(resolvedListIdentities) => (
-                              <IdentitiesList
-                                identities={
-                                  resolvedListIdentities.listIdentities
-                                }
-                                pagination={resolvedListIdentities.pagination}
-                                enableSearch={true}
-                                enableSort={true}
-                              />
-                            )}
+                            {(resolvedListIdentities) => {
+                              if (resolvedListIdentities) {
+                                return (
+                                  <IdentitiesList
+                                    identities={
+                                      resolvedListIdentities.listIdentities
+                                    }
+                                    pagination={
+                                      resolvedListIdentities.pagination
+                                    }
+                                    enableSearch={true}
+                                    enableSort={true}
+                                  />
+                                )
+                              }
+                              return null
+                            }}
                           </Await>
                         </Suspense>
                       )}
