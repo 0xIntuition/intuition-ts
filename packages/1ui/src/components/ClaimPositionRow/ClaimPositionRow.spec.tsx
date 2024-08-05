@@ -67,7 +67,7 @@ describe('ClaimPositionRow', () => {
             </div>
           </div>
           <div
-            class="flex items-center justify-start gap-2 max-sm:m-auto"
+            class="flex items-center justify-start gap-2 max-sm:justify-between"
           >
             <div
               class="h-full flex flex-col pt-1"
@@ -87,7 +87,7 @@ describe('ClaimPositionRow', () => {
                 1.21 ETH
               </p>
               <p
-                class="text-base font-medium text-success"
+                class="text-lg font-normal text-success"
               >
                 +0.005 ETH
               </p>
@@ -134,7 +134,7 @@ describe('ClaimPositionRow', () => {
               </div>
             </div>
             <div
-              class="flex items-center justify-start gap-2 max-sm:m-auto"
+              class="flex items-center justify-start gap-2 max-sm:justify-between"
             >
               <div
                 class="h-full flex flex-col pt-1"
@@ -154,7 +154,7 @@ describe('ClaimPositionRow', () => {
                   1.21 ETH
                 </p>
                 <p
-                  class="text-base font-medium text-success"
+                  class="text-lg font-normal text-success"
                 >
                   +0.005 ETH
                 </p>
