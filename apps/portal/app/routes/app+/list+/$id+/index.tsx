@@ -40,6 +40,7 @@ import {
 import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
 import { NO_CLAIM_ERROR, NO_PARAM_ID_ERROR, NO_WALLET_ERROR } from 'consts'
+import { IdentityListType } from 'types'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const id = params.id
