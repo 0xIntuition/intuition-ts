@@ -8,18 +8,12 @@ import {
   TabsList,
   TabsTrigger,
 } from '@0xintuition/1ui'
-import {
-  ClaimPresenter,
-  ClaimsService,
-  IdentityPresenter,
-  UsersService,
-} from '@0xintuition/api'
+import { ClaimPresenter, ClaimsService, UsersService } from '@0xintuition/api'
 
 import { IdentitiesList } from '@components/list/identities'
 import { ListTabIdentityDisplay } from '@components/list/list-tab-identity-display'
 import { DataHeaderSkeleton, PaginatedListSkeleton } from '@components/skeleton'
 import { getListIdentities, getListIdentitiesCount } from '@lib/services/lists'
-import logger from '@lib/utils/logger'
 import { invariant } from '@lib/utils/misc'
 import { defer, LoaderFunctionArgs } from '@remix-run/node'
 import {
@@ -32,6 +26,7 @@ import {
 import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
 import { NO_CLAIM_ERROR, NO_PARAM_ID_ERROR, NO_WALLET_ERROR } from 'consts'
+import { IdentityListType } from 'types'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const id = params.id
@@ -108,7 +103,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
           objectId: claim.object.id,
           creator: paramWallet,
         })
-      : null,
+      : [],
     additionalUserObject,
   })
 }
@@ -122,8 +117,6 @@ export default function ListOverview() {
     userObject,
     additionalUserObject,
   } = useLoaderData<typeof loader>()
-
-  logger('list index render')
 
   const { claim } =
     useRouteLoaderData<{ claim: ClaimPresenter }>('routes/app+/list+/$id') ?? {}
@@ -150,16 +143,6 @@ export default function ListOverview() {
       setIsNavigating(false)
     }
   }, [state])
-
-  type IdentityListType = {
-    listIdentities: IdentityPresenter[]
-    pagination: {
-      currentPage: number
-      limit: number
-      totalEntries: number
-      totalPages: number
-    }
-  }
 
   return (
     <div className="flex-col justify-start items-start flex w-full gap-6">
@@ -314,19 +297,16 @@ export default function ListOverview() {
               </Await>
             </Suspense>
           </TabsContent>
-          {userWalletAddress && (
+          {userWalletAddress && !!additionalUserListIdentities && (
             <TabsContent value="additional">
               <Suspense fallback={<PaginatedListSkeleton />}>
                 <Await resolve={additionalUserListIdentities}>
                   {(
                     resolvedAdditionalUserListIdentities: IdentityListType | null,
                   ) => {
-                    if (!resolvedAdditionalUserListIdentities) {
-                      return <PaginatedListSkeleton />
-                    }
                     return isNavigating ? (
                       <PaginatedListSkeleton />
-                    ) : (
+                    ) : resolvedAdditionalUserListIdentities ? (
                       <IdentitiesList
                         identities={
                           resolvedAdditionalUserListIdentities.listIdentities
@@ -337,7 +317,7 @@ export default function ListOverview() {
                         enableSearch={true}
                         enableSort={true}
                       />
-                    )
+                    ) : null
                   }}
                 </Await>
               </Suspense>
