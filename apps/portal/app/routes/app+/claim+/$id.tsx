@@ -161,7 +161,7 @@ export default function ClaimDetails() {
           link:
             claim.subject?.is_user === true
               ? `${PATHS.PROFILE}/${claim.subject?.identity_id}`
-              : `${PATHS.IDENTITY}/${claim.subject?.identity_id?.replace('ipfs://', '')}`,
+              : `${PATHS.IDENTITY}/${claim.subject?.id}`,
         }}
         predicate={{
           variant: claim.predicate?.is_user ? 'user' : 'non-user',
@@ -184,7 +184,7 @@ export default function ClaimDetails() {
           link:
             claim.predicate?.is_user === true
               ? `${PATHS.PROFILE}/${claim.predicate?.identity_id}`
-              : `${PATHS.IDENTITY}/${claim.predicate?.identity_id?.replace('ipfs://', '')}`,
+              : `${PATHS.IDENTITY}/${claim.predicate?.id}`,
         }}
         object={{
           variant: claim.object?.is_user ? 'user' : 'non-user',
@@ -207,7 +207,7 @@ export default function ClaimDetails() {
           link:
             claim.object?.is_user === true
               ? `${PATHS.PROFILE}/${claim.object?.identity_id}`
-              : `${PATHS.IDENTITY}/${claim.object?.identity_id?.replace('ipfs://', '')}`,
+              : `${PATHS.IDENTITY}/${claim.object?.id}`,
         }}
       />
     </div>
