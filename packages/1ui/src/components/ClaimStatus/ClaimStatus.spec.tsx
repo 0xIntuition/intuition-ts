@@ -68,7 +68,7 @@ describe('ClaimStatus', () => {
               </p>
             </button>
             <div
-              class="shrink-0 bg-border/20 h-[1px] w-4 group-hover:bg-primary max-sm:w-px max-sm:h-2"
+              class="shrink-0 bg-border/20 h-[1px] w-4 group-hover:bg-primary"
               data-orientation="horizontal"
               role="none"
             />
@@ -98,7 +98,7 @@ describe('ClaimStatus', () => {
               </p>
             </button>
             <div
-              class="shrink-0 bg-border/20 h-[1px] w-4 group-hover:bg-primary max-sm:w-px max-sm:h-2"
+              class="shrink-0 bg-border/20 h-[1px] w-4 group-hover:bg-primary"
               data-orientation="horizontal"
               role="none"
             />
