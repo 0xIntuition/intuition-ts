@@ -17,6 +17,8 @@ import {
   ClaimPresenter,
   ClaimSortColumn,
   ClaimsService,
+  GetClaimByIdResponse,
+  IdentityPresenter,
   SortDirection,
 } from '@0xintuition/api'
 
@@ -27,6 +29,11 @@ import logger from '@lib/utils/logger'
 import {
   calculatePercentageOfTvl,
   formatBalance,
+  getAtomDescription,
+  getAtomImage,
+  getAtomIpfsLink,
+  getAtomLabel,
+  getAtomLink,
   invariant,
 } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
@@ -41,12 +48,7 @@ import { requireUserWallet } from '@server/auth'
 import { getVaultDetails } from '@server/multivault'
 import FullPageLayout from 'app/layouts/full-page-layout'
 import TwoPanelLayout from 'app/layouts/two-panel-layout'
-import {
-  BLOCK_EXPLORER_URL,
-  IPFS_GATEWAY_URL,
-  NO_WALLET_ERROR,
-  PATHS,
-} from 'consts'
+import { NO_WALLET_ERROR } from 'consts'
 import { useAtom } from 'jotai'
 import { VaultDetailsType } from 'types/vault'
 
@@ -66,10 +68,13 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const direction: SortDirection =
     (searchParams.get('direction') as SortDirection) ?? 'desc'
 
-  const claim = await fetchWrapper(request, {
-    method: ClaimsService.getClaimById,
-    args: { id },
-  })
+  const claim = await fetchWrapper<GetClaimByIdResponse, { id: string }>(
+    request,
+    {
+      method: ClaimsService.getClaimById,
+      args: { id },
+    },
+  )
 
   let vaultDetails: VaultDetailsType | null = null
 
@@ -142,72 +147,30 @@ export default function ClaimDetails() {
         size="md"
         subject={{
           variant: claim.subject?.is_user ? Identity.user : Identity.nonUser,
-          label:
-            claim.subject?.user?.display_name ??
-            claim.subject?.display_name ??
-            claim.subject?.identity_id ??
-            '',
-          imgSrc: claim.subject?.is_user
-            ? claim.subject?.user?.image
-            : claim.subject?.image,
+          label: getAtomLabel(claim.subject as IdentityPresenter),
+          imgSrc: getAtomImage(claim.subject as IdentityPresenter),
           id: claim.subject?.identity_id,
-          description: claim.subject?.is_user
-            ? claim.subject?.user?.description
-            : claim.subject?.description,
-          ipfsLink:
-            claim.subject?.is_user === true
-              ? `${BLOCK_EXPLORER_URL}/address/${claim.subject?.identity_id}`
-              : `${IPFS_GATEWAY_URL}/${claim.subject?.identity_id?.replace('ipfs://', '')}`,
-          link:
-            claim.subject?.is_user === true
-              ? `${PATHS.PROFILE}/${claim.subject?.identity_id}`
-              : `${PATHS.IDENTITY}/${claim.subject?.id}`,
+          description: getAtomDescription(claim.subject as IdentityPresenter),
+          ipfsLink: getAtomIpfsLink(claim.subject as IdentityPresenter),
+          link: getAtomLink(claim.subject as IdentityPresenter),
         }}
         predicate={{
-          variant: claim.predicate?.is_user ? 'user' : 'non-user',
-          label:
-            claim.predicate?.user?.display_name ??
-            claim.predicate?.display_name ??
-            claim.predicate?.identity_id ??
-            '',
-          imgSrc: claim.predicate?.is_user
-            ? claim.predicate?.user?.image
-            : claim.predicate?.image,
+          variant: claim.predicate?.is_user ? Identity.user : Identity.nonUser,
+          label: getAtomLabel(claim.predicate as IdentityPresenter),
+          imgSrc: getAtomImage(claim.predicate as IdentityPresenter),
           id: claim.predicate?.identity_id,
-          description: claim.predicate?.is_user
-            ? claim.predicate?.user?.description
-            : claim.predicate?.description,
-          ipfsLink:
-            claim.predicate?.is_user === true
-              ? `${BLOCK_EXPLORER_URL}/address/${claim.predicate?.identity_id}`
-              : `${IPFS_GATEWAY_URL}/${claim.predicate?.identity_id?.replace('ipfs://', '')}`,
-          link:
-            claim.predicate?.is_user === true
-              ? `${PATHS.PROFILE}/${claim.predicate?.identity_id}`
-              : `${PATHS.IDENTITY}/${claim.predicate?.id}`,
+          description: getAtomDescription(claim.predicate as IdentityPresenter),
+          ipfsLink: getAtomIpfsLink(claim.predicate as IdentityPresenter),
+          link: getAtomLink(claim.predicate as IdentityPresenter),
         }}
         object={{
-          variant: claim.object?.is_user ? 'user' : 'non-user',
-          label:
-            claim.object?.user?.display_name ??
-            claim.object?.display_name ??
-            claim.object?.identity_id ??
-            '',
-          imgSrc: claim.object?.is_user
-            ? claim.object?.user?.image
-            : claim.object?.image,
+          variant: claim.object?.is_user ? Identity.user : Identity.nonUser,
+          label: getAtomLabel(claim.object as IdentityPresenter),
+          imgSrc: getAtomImage(claim.object as IdentityPresenter),
           id: claim.object?.identity_id,
-          description: claim.object?.is_user
-            ? claim.object?.user?.description
-            : claim.object?.description,
-          ipfsLink:
-            claim.object?.is_user === true
-              ? `${BLOCK_EXPLORER_URL}/address/${claim.object?.identity_id}`
-              : `${IPFS_GATEWAY_URL}/${claim.object?.identity_id?.replace('ipfs://', '')}`,
-          link:
-            claim.object?.is_user === true
-              ? `${PATHS.PROFILE}/${claim.object?.identity_id}`
-              : `${PATHS.IDENTITY}/${claim.object?.id}`,
+          description: getAtomDescription(claim.object as IdentityPresenter),
+          ipfsLink: getAtomIpfsLink(claim.object as IdentityPresenter),
+          link: getAtomLink(claim.object as IdentityPresenter),
         }}
       />
     </div>

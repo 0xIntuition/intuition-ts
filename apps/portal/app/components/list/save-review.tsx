@@ -11,8 +11,16 @@ import {
 } from '@0xintuition/1ui'
 import { IdentityPresenter, TagEmbeddedPresenter } from '@0xintuition/api'
 
-import { formatBalance, formatDisplayBalance } from '@lib/utils/misc'
-import { BLOCK_EXPLORER_URL, IPFS_GATEWAY_URL, PATHS } from 'consts'
+import {
+  formatBalance,
+  formatDisplayBalance,
+  getAtomDescription,
+  getAtomImage,
+  getAtomIpfsLink,
+  getAtomLabel,
+  getAtomLink,
+} from '@lib/utils/misc'
+import { IPFS_GATEWAY_URL, PATHS } from 'consts'
 import { TransactionActionType, TransactionStateType } from 'types/transaction'
 
 interface SaveReviewProps {
@@ -97,27 +105,13 @@ export default function SaveReview({
             </Text>
             <Claim
               subject={{
-                variant: identity.is_user ? Identity.user : Identity.nonUser,
-                label:
-                  identity.user?.display_name ??
-                  identity.display_name ??
-                  identity.identity_id ??
-                  '',
-                imgSrc: identity.is_user
-                  ? identity.user?.image
-                  : identity.image,
-                id: identity.identity_id,
-                description: identity.is_user
-                  ? identity.user?.description
-                  : identity.description,
-                ipfsLink:
-                  identity.is_user === true
-                    ? `${BLOCK_EXPLORER_URL}/${identity.identity_id}`
-                    : `${IPFS_GATEWAY_URL}/${identity.identity_id?.replace('ipfs://', '')}`,
-                link:
-                  identity.is_user === true
-                    ? `${PATHS.PROFILE}/${identity.identity_id}`
-                    : `${PATHS.IDENTITY}/${identity.identity_id?.replace('ipfs://', '')}`,
+                variant: identity?.is_user ? Identity.user : Identity.nonUser,
+                label: getAtomLabel(identity),
+                imgSrc: getAtomImage(identity),
+                id: identity?.identity_id,
+                description: getAtomDescription(identity),
+                ipfsLink: getAtomIpfsLink(identity),
+                link: getAtomLink(identity),
               }}
               predicate={{
                 variant: Identity.nonUser,

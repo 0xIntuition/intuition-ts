@@ -2,6 +2,7 @@ import { Suspense, useEffect, useState } from 'react'
 
 import {
   Claim,
+  Identity,
   ListHeaderCard,
   Skeleton,
   Tabs,
@@ -9,13 +10,25 @@ import {
   TabsList,
   TabsTrigger,
 } from '@0xintuition/1ui'
-import { ClaimPresenter, ClaimsService, UsersService } from '@0xintuition/api'
+import {
+  ClaimPresenter,
+  ClaimsService,
+  IdentityPresenter,
+  UsersService,
+} from '@0xintuition/api'
 
 import { IdentitiesList } from '@components/list/identities'
 import { ListTabIdentityDisplay } from '@components/list/list-tab-identity-display'
 import { DataHeaderSkeleton, PaginatedListSkeleton } from '@components/skeleton'
 import { getListIdentities, getListIdentitiesCount } from '@lib/services/lists'
-import { invariant } from '@lib/utils/misc'
+import {
+  getAtomDescription,
+  getAtomImage,
+  getAtomIpfsLink,
+  getAtomLabel,
+  getAtomLink,
+  invariant,
+} from '@lib/utils/misc'
 import { defer, LoaderFunctionArgs } from '@remix-run/node'
 import {
   Await,
@@ -27,7 +40,6 @@ import {
 import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
 import { NO_CLAIM_ERROR, NO_PARAM_ID_ERROR, NO_WALLET_ERROR } from 'consts'
-import { IdentityListType } from 'types'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const id = params.id
@@ -159,55 +171,45 @@ export default function ListOverview() {
                 <Claim
                   size="md"
                   subject={{
-                    variant: claim.subject?.is_user ? 'user' : 'non-user',
-                    label: '?',
-                    imgSrc: null,
+                    variant: claim.subject?.is_user
+                      ? Identity.user
+                      : Identity.nonUser,
+                    label: getAtomLabel(claim.subject as IdentityPresenter),
+                    imgSrc: getAtomImage(claim.subject as IdentityPresenter),
+                    id: claim.subject?.identity_id,
+                    description: getAtomDescription(
+                      claim.subject as IdentityPresenter,
+                    ),
+                    ipfsLink: getAtomIpfsLink(
+                      claim.subject as IdentityPresenter,
+                    ),
+                    link: getAtomLink(claim.subject as IdentityPresenter),
                   }}
                   predicate={{
                     variant: claim.predicate?.is_user ? 'user' : 'non-user',
-                    label:
-                      claim.predicate?.user?.display_name ??
-                      claim.predicate?.display_name ??
-                      claim.predicate?.identity_id ??
-                      '',
-                    imgSrc: claim.predicate?.is_user
-                      ? claim.predicate?.user?.image
-                      : claim.predicate?.image,
+                    label: getAtomLabel(claim.predicate as IdentityPresenter),
+                    imgSrc: getAtomImage(claim.predicate as IdentityPresenter),
                     id: claim.predicate?.identity_id,
-                    description: claim.predicate?.is_user
-                      ? claim.predicate?.user?.description
-                      : claim.predicate?.description,
-                    ipfsLink:
-                      claim.predicate?.is_user === true
-                        ? `${BLOCK_EXPLORER_URL}/address/${claim.predicate?.identity_id}`
-                        : `${IPFS_GATEWAY_URL}/${claim.predicate?.identity_id?.replace('ipfs://', '')}`,
-                    link:
-                      claim.predicate?.is_user === true
-                        ? `${PATHS.PROFILE}/${claim.predicate?.identity_id}`
-                        : `${PATHS.IDENTITY}/${claim.predicate?.id}`,
+                    description: getAtomDescription(
+                      claim.predicate as IdentityPresenter,
+                    ),
+                    ipfsLink: getAtomIpfsLink(
+                      claim.predicate as IdentityPresenter,
+                    ),
+                    link: getAtomLink(claim.predicate as IdentityPresenter),
                   }}
                   object={{
                     variant: claim.object?.is_user ? 'user' : 'non-user',
-                    label:
-                      claim.object?.user?.display_name ??
-                      claim.object?.display_name ??
-                      claim.object?.identity_id ??
-                      '',
-                    imgSrc: claim.object?.is_user
-                      ? claim.object?.user?.image
-                      : claim.object?.image,
+                    label: getAtomLabel(claim.object as IdentityPresenter),
+                    imgSrc: getAtomImage(claim.object as IdentityPresenter),
                     id: claim.object?.identity_id,
-                    description: claim.object?.is_user
-                      ? claim.object?.user?.description
-                      : claim.object?.description,
-                    ipfsLink:
-                      claim.object?.is_user === true
-                        ? `${BLOCK_EXPLORER_URL}/address/${claim.object?.identity_id}`
-                        : `${IPFS_GATEWAY_URL}/${claim.object?.identity_id?.replace('ipfs://', '')}`,
-                    link:
-                      claim.object?.is_user === true
-                        ? `${PATHS.PROFILE}/${claim.object?.identity_id}`
-                        : `${PATHS.IDENTITY}/${claim.object?.id}`,
+                    description: getAtomDescription(
+                      claim.object as IdentityPresenter,
+                    ),
+                    ipfsLink: getAtomIpfsLink(
+                      claim.object as IdentityPresenter,
+                    ),
+                    link: getAtomLink(claim.object as IdentityPresenter),
                   }}
                 />
               </ListHeaderCard>

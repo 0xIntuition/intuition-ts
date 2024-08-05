@@ -11,11 +11,22 @@ import {
   IdentityTag,
   Text,
 } from '@0xintuition/1ui'
-import { ActivityPresenter, SortColumn } from '@0xintuition/api'
+import {
+  ActivityPresenter,
+  IdentityPresenter,
+  SortColumn,
+} from '@0xintuition/api'
 
-import { formatBalance } from '@lib/utils/misc'
+import {
+  formatBalance,
+  getAtomDescription,
+  getAtomImage,
+  getAtomIpfsLink,
+  getAtomLabel,
+  getAtomLink,
+} from '@lib/utils/misc'
 import { Link, useNavigate } from '@remix-run/react'
-import { BLOCK_EXPLORER_URL, IPFS_GATEWAY_URL, PATHS } from 'consts'
+import { PATHS } from 'consts'
 import { formatDistance } from 'date-fns'
 import { PaginationType } from 'types/pagination'
 
@@ -178,79 +189,67 @@ function ActivityItem({
               className="hover:cursor-pointer w-full"
             >
               <Claim
-                link={`${PATHS.CLAIM}/${activity.claim.claim_id}`}
+                size="md"
                 subject={{
                   variant: activity.claim.subject?.is_user
                     ? Identity.user
                     : Identity.nonUser,
-                  label:
-                    activity.claim.subject?.user?.display_name ??
-                    activity.claim.subject?.display_name ??
-                    activity.claim.subject?.identity_id ??
-                    '',
-                  imgSrc: activity.claim.subject?.is_user
-                    ? activity.claim.subject?.user?.image
-                    : activity.claim.subject?.image,
+                  label: getAtomLabel(
+                    activity.claim.subject as IdentityPresenter,
+                  ),
+                  imgSrc: getAtomImage(
+                    activity.claim.subject as IdentityPresenter,
+                  ),
                   id: activity.claim.subject?.identity_id,
-                  description: activity.claim.subject?.is_user
-                    ? activity.claim.subject?.user?.description
-                    : activity.claim.subject?.description,
-                  ipfsLink:
-                    activity.claim.subject?.is_user === true
-                      ? `${BLOCK_EXPLORER_URL}/${activity.claim.subject?.identity_id}`
-                      : `${IPFS_GATEWAY_URL}/${activity.claim.subject?.identity_id?.replace('ipfs://', '')}`,
-                  link:
-                    activity.claim.subject?.is_user === true
-                      ? `${PATHS.PROFILE}/${activity.claim.subject?.identity_id}`
-                      : `${PATHS.IDENTITY}/${activity.claim.subject?.identity_id?.replace('ipfs://', '')}`,
+                  description: getAtomDescription(
+                    activity.claim.subject as IdentityPresenter,
+                  ),
+                  ipfsLink: getAtomIpfsLink(
+                    activity.claim.subject as IdentityPresenter,
+                  ),
+                  link: getAtomLink(
+                    activity.claim.subject as IdentityPresenter,
+                  ),
                 }}
                 predicate={{
                   variant: activity.claim.predicate?.is_user
                     ? Identity.user
                     : Identity.nonUser,
-                  label:
-                    activity.claim.predicate?.user?.display_name ??
-                    activity.claim.predicate?.display_name ??
-                    activity.claim.predicate?.identity_id ??
-                    '',
-                  imgSrc: activity.claim.predicate?.is_user
-                    ? activity.claim.predicate?.user?.image
-                    : activity.claim.predicate?.image,
+                  label: getAtomLabel(
+                    activity.claim.predicate as IdentityPresenter,
+                  ),
+                  imgSrc: getAtomImage(
+                    activity.claim.predicate as IdentityPresenter,
+                  ),
                   id: activity.claim.predicate?.identity_id,
-                  description: activity.claim.predicate?.is_user
-                    ? activity.claim.predicate?.user?.description
-                    : activity.claim.predicate?.description,
-                  ipfsLink:
-                    activity.claim.predicate?.is_user === true
-                      ? `${BLOCK_EXPLORER_URL}/${activity.claim.predicate?.identity_id}`
-                      : `${IPFS_GATEWAY_URL}/${activity.claim.predicate?.identity_id?.replace('ipfs://', '')}`,
-                  link:
-                    activity.claim.predicate?.is_user === true
-                      ? `${PATHS.PROFILE}/${activity.claim.predicate?.identity_id}`
-                      : `${PATHS.IDENTITY}/${activity.claim.predicate?.identity_id?.replace('ipfs://', '')}`,
+                  description: getAtomDescription(
+                    activity.claim.predicate as IdentityPresenter,
+                  ),
+                  ipfsLink: getAtomIpfsLink(
+                    activity.claim.predicate as IdentityPresenter,
+                  ),
+                  link: getAtomLink(
+                    activity.claim.predicate as IdentityPresenter,
+                  ),
                 }}
                 object={{
-                  variant: activity.claim.object?.is_user ? 'user' : 'non-user',
-                  label:
-                    activity.claim.object?.user?.display_name ??
-                    activity.claim.object?.display_name ??
-                    activity.claim.object?.identity_id ??
-                    '',
-                  imgSrc: activity.claim.object?.is_user
-                    ? activity.claim.object?.user?.image
-                    : activity.claim.object?.image,
+                  variant: activity.claim.object?.is_user
+                    ? Identity.user
+                    : Identity.nonUser,
+                  label: getAtomLabel(
+                    activity.claim.object as IdentityPresenter,
+                  ),
+                  imgSrc: getAtomImage(
+                    activity.claim.object as IdentityPresenter,
+                  ),
                   id: activity.claim.object?.identity_id,
-                  description: activity.claim.object?.is_user
-                    ? activity.claim.object?.user?.description
-                    : activity.claim.object?.description,
-                  ipfsLink:
-                    activity.claim.object?.is_user === true
-                      ? `${BLOCK_EXPLORER_URL}/${activity.claim.object?.identity_id}`
-                      : `${IPFS_GATEWAY_URL}/${activity.claim.object?.identity_id?.replace('ipfs://', '')}`,
-                  link:
-                    activity.claim.object?.is_user === true
-                      ? `${PATHS.PROFILE}/${activity.claim.object?.identity_id}`
-                      : `${PATHS.IDENTITY}/${activity.claim.object?.identity_id?.replace('ipfs://', '')}`,
+                  description: getAtomDescription(
+                    activity.claim.object as IdentityPresenter,
+                  ),
+                  ipfsLink: getAtomIpfsLink(
+                    activity.claim.object as IdentityPresenter,
+                  ),
+                  link: getAtomLink(activity.claim.object as IdentityPresenter),
                 }}
               />
             </ClaimRow>

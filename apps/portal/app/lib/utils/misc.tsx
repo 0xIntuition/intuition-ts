@@ -1,9 +1,11 @@
 import React from 'react'
 
 import { Icon, IconName, Text, Theme } from '@0xintuition/1ui'
+import { IdentityPresenter } from '@0xintuition/api'
 
 import { SubmitFunction } from '@remix-run/react'
 import { clsx, type ClassValue } from 'clsx'
+import { BLOCK_EXPLORER_URL, IPFS_GATEWAY_URL, PATHS } from 'consts'
 import { twMerge } from 'tailwind-merge'
 import { formatUnits } from 'viem'
 
@@ -336,4 +338,31 @@ export function loadMore({
       { method: 'get', replace: true },
     )
   }
+}
+
+// atom helpers
+export const getAtomImage = (atom: IdentityPresenter) => {
+  return atom?.is_user ? atom?.user?.image : atom?.image
+}
+export const getAtomLabel = (atom: IdentityPresenter) => {
+  return atom.user?.display_name
+    ? atom.user.display_name
+    : atom.display_name
+      ? atom.display_name
+      : atom.identity_id
+}
+export const getAtomDescription = (atom: IdentityPresenter) => {
+  return atom?.is_user ? atom?.user?.description : atom?.description
+}
+export const getAtomIpfsLink = (atom: IdentityPresenter) => {
+  if (atom?.is_user === true) {
+    return `${BLOCK_EXPLORER_URL}/address/${atom?.identity_id}`
+  }
+  return `${IPFS_GATEWAY_URL}/${atom?.identity_id?.replace('ipfs://', '')}`
+}
+export const getAtomLink = (atom: IdentityPresenter) => {
+  if (atom?.is_user === true) {
+    return `${PATHS.PROFILE}/${atom?.identity_id}`
+  }
+  return `${PATHS.IDENTITY}/${atom?.id}`
 }
