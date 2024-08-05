@@ -1,3 +1,5 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck content-collections folder is not available at build time
 import { QuestCondition } from '@0xintuition/api'
 
 import { allQuests, QuestContentType } from 'content-collections'
