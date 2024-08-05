@@ -9,7 +9,7 @@ describe('ProfileCard', () => {
     variant: 'user',
     avatarSrc: 'https://avatars.githubusercontent.com/u/94311139?s=200&v=4',
     name: 'John Doe',
-    walletAddress: '0x1234567890abcdef1234567890abcdef12345678',
+    id: '0x1234567890abcdef1234567890abcdef12345678',
     stats: {
       numberOfFollowers: 123,
       numberOfFollowing: 45,
@@ -25,7 +25,6 @@ describe('ProfileCard', () => {
       <DocumentFragment>
         <div
           class="flex flex-col justify-center items-start w-full min-w-80 rounded-lg gap-2.5 max-lg:min-w-max max-lg:items-center"
-          walletaddress="0x1234567890abcdef1234567890abcdef12345678"
         >
           <div
             class="flex items-center space-x-4"
@@ -53,7 +52,30 @@ describe('ProfileCard', () => {
               </h6>
               <div
                 class="flex flex-row gap-1 items-center"
-              />
+              >
+                <a
+                  href="https://ipfs.io/ipfs/QmZKfjJ8v"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  <p
+                    class="text-base font-medium text-muted-foreground"
+                  >
+                    0x1234...5678
+                  </p>
+                </a>
+                <button
+                  class="flex justify-center items-center gap-2 text-sm font-medium border disabled:text-muted-foreground bg-transparent border-transparent disabled:border-transparent disabled:bg-transparent shadow-md-subtle p-0 h-4 w-4 text-primary/60 hover:text-primary undefined"
+                >
+                  <svg
+                    class="h-4 w-4"
+                  >
+                    <use
+                      href="/src/components/Icon/Icon.sprites.svg#copy"
+                    />
+                  </svg>
+                </button>
+              </div>
             </div>
           </div>
           <div
@@ -119,11 +141,12 @@ describe('ProfileCard', () => {
       variant: 'non-user',
       avatarSrc: 'https://avatars.githubusercontent.com/u/94311139?s=200&v=4',
       name: 'Blockchain Corp',
-      walletAddress: '0x1234567890abcdef1234567890abcdef12345678',
+      id: '0x1234567890abcdef1234567890abcdef12345678',
       stats: {
         numberOfFollowers: 300,
       },
       ipfsLink: 'https://ipfs.io/ipfs/QmZKfjJ8v',
+      externalLink: 'https://blockchaincorp.com',
       bio: 'Blockchain Corp is a leading company in blockchain technology. Visit our website for more information about how you can benefit from our services.',
     }
 
@@ -132,7 +155,6 @@ describe('ProfileCard', () => {
       <DocumentFragment>
         <div
           class="flex flex-col justify-center items-start w-full min-w-80 rounded-lg gap-2.5 max-lg:min-w-max max-lg:items-center"
-          walletaddress="0x1234567890abcdef1234567890abcdef12345678"
         >
           <div
             class="flex items-center space-x-4"
@@ -160,7 +182,30 @@ describe('ProfileCard', () => {
               </h6>
               <div
                 class="flex flex-row gap-1 items-center"
-              />
+              >
+                <a
+                  href="https://ipfs.io/ipfs/QmZKfjJ8v"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  <p
+                    class="text-base font-medium text-muted-foreground"
+                  >
+                    0x1234...5678
+                  </p>
+                </a>
+                <button
+                  class="flex justify-center items-center gap-2 text-sm font-medium border disabled:text-muted-foreground bg-transparent border-transparent disabled:border-transparent disabled:bg-transparent shadow-md-subtle p-0 h-4 w-4 text-primary/60 hover:text-primary undefined"
+                >
+                  <svg
+                    class="h-4 w-4"
+                  >
+                    <use
+                      href="/src/components/Icon/Icon.sprites.svg#copy"
+                    />
+                  </svg>
+                </button>
+              </div>
             </div>
           </div>
           <div>
@@ -169,6 +214,21 @@ describe('ProfileCard', () => {
             >
               Blockchain Corp is a leading company in blockchain technology. Visit our website for more information about how you can benefit from our services.
             </p>
+            <div
+              class=""
+            >
+              <p
+                class="text-base font-normal text-muted-foreground"
+              >
+                Link
+              </p>
+              <a
+                class="text-primary-300"
+                href="https://blockchaincorp.com"
+              >
+                https://blockchaincorp.com
+              </a>
+            </div>
           </div>
         </div>
       </DocumentFragment>
@@ -186,7 +246,6 @@ describe('ProfileCard', () => {
       <DocumentFragment>
         <div
           class="flex flex-col justify-center items-start w-full min-w-80 rounded-lg gap-2.5 max-lg:min-w-max max-lg:items-center"
-          walletaddress="0x1234567890abcdef1234567890abcdef12345678"
         >
           <div
             class="flex items-center space-x-4"
@@ -214,7 +273,30 @@ describe('ProfileCard', () => {
               </h6>
               <div
                 class="flex flex-row gap-1 items-center"
-              />
+              >
+                <a
+                  href="https://ipfs.io/ipfs/QmZKfjJ8v"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  <p
+                    class="text-base font-medium text-muted-foreground"
+                  >
+                    0x1234...5678
+                  </p>
+                </a>
+                <button
+                  class="flex justify-center items-center gap-2 text-sm font-medium border disabled:text-muted-foreground bg-transparent border-transparent disabled:border-transparent disabled:bg-transparent shadow-md-subtle p-0 h-4 w-4 text-primary/60 hover:text-primary undefined"
+                >
+                  <svg
+                    class="h-4 w-4"
+                  >
+                    <use
+                      href="/src/components/Icon/Icon.sprites.svg#copy"
+                    />
+                  </svg>
+                </button>
+              </div>
             </div>
           </div>
           <div
