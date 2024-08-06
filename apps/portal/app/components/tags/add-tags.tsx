@@ -107,7 +107,6 @@ export function AddTags({
           <IdentitySearchCombobox
             onCreateIdentityClick={() => setCreateIdentityModalActive(true)}
             identities={filteredIdentities}
-            existingIdentityIds={existingTagIds}
             onIdentitySelect={handleIdentitySelect}
             onValueChange={setSearchQuery}
             onInput={handleInput}
