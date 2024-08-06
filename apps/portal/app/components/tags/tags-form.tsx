@@ -12,7 +12,7 @@ import {
   TabsTrigger,
   Trunctacular,
 } from '@0xintuition/1ui'
-import { IdentityPresenter, IdentityPresenter } from '@0xintuition/api'
+import { IdentityPresenter } from '@0xintuition/api'
 
 import { TransactionState } from '@components/transaction-state'
 import {
@@ -31,12 +31,18 @@ import { TagSearchCombobox } from './tags-search-combo-box'
 
 interface TagsFormProps {
   identity: IdentityPresenter
+  userWallet: string
   mode: 'view' | 'add'
   onSuccess?: () => void
   onClose: () => void
 }
 
-export function TagsForm({ identity, mode, onClose }: TagsFormProps) {
+export function TagsForm({
+  identity,
+  userWallet,
+  mode,
+  onClose,
+}: TagsFormProps) {
   const navigate = useNavigate()
   const [currentTab, setCurrentTab] = useState(mode)
 
@@ -73,14 +79,9 @@ export function TagsForm({ identity, mode, onClose }: TagsFormProps) {
   }
 
   const handleRemoveInvalidTag = (vaultId: string) => {
-    setInvalidTags((prev) =>
-      prev.filter((tag) => tag.vault_id !== vaultId),
-    )
-    setSelectedTags((prev) =>
-      prev.filter((tag) => tag.vault_id !== vaultId),
-    )
+    setInvalidTags((prev) => prev.filter((tag) => tag.vault_id !== vaultId))
+    setSelectedTags((prev) => prev.filter((tag) => tag.vault_id !== vaultId))
   }
-
 
   logger('tags on incoming identity', identity.tags)
 
@@ -130,6 +131,8 @@ export function TagsForm({ identity, mode, onClose }: TagsFormProps) {
                     <AddTags
                       selectedTags={selectedTags}
                       existingTagIds={existingTagIds}
+                      identity={identity}
+                      userWallet={userWallet}
                       onAddTag={handleAddTag}
                       dispatch={dispatch}
                       onRemoveTag={handleRemoveTag}

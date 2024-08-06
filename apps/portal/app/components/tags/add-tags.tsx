@@ -20,6 +20,8 @@ import { TagsListInputPortal } from './tags-list-input-portal'
 interface AddTagsProps {
   selectedTags: IdentityPresenter[]
   existingTagIds: string[]
+  identity: IdentityPresenter
+  userWallet: string
   onAddTag: (newTag: IdentityPresenter) => void
   onRemoveTag: (id: string) => void
   onRemoveInvalidTag: (id: string) => void
@@ -32,6 +34,8 @@ interface AddTagsProps {
 export function AddTags({
   selectedTags,
   existingTagIds,
+  identity,
+  userWallet,
   onAddTag,
   onRemoveTag,
   onRemoveInvalidTag,
@@ -123,43 +127,47 @@ export function AddTags({
           Select up to 5 tags to add to this identity.
         </Text>
       </div>
-      <Popover
-        open={isPopoverOpen}
-        onOpenChange={setIsPopoverOpen}
-        modal={true}
-      >
-        <PopoverContent className="bg-transparent border-none">
-          <IdentitySearchCombobox
-            onCreateIdentityClick={() => setCreateIdentityModalActive(true)}
-            identities={filteredIdentities}
-            onIdentitySelect={handleIdentitySelect}
-            onValueChange={setSearchQuery}
-            onInput={handleInput}
-            shouldFilter={false}
+      <div className="mt-4 max-h-72 overflow-y-auto pr-4">
+        <Popover
+          open={isPopoverOpen}
+          onOpenChange={setIsPopoverOpen}
+          modal={true}
+        >
+          <PopoverContent className="bg-transparent border-none">
+            <IdentitySearchCombobox
+              onCreateIdentityClick={() => setCreateIdentityModalActive(true)}
+              identities={filteredIdentities}
+              onIdentitySelect={handleIdentitySelect}
+              onValueChange={setSearchQuery}
+              onInput={handleInput}
+              shouldFilter={false}
+            />
+          </PopoverContent>
+          <div className="mb-8">
+            <TagsListInputPortal
+              variant="tag"
+              tags={formattedTags}
+              maxTags={5}
+              onAddTag={() => setIsPopoverOpen(true)}
+              onRemoveTag={onRemoveTag}
+              PopoverTriggerComponent={PopoverTrigger}
+            />
+          </div>
+        </Popover>
+        {invalidTags.map((invalidTag) => (
+          <AddListExistingCta
+            key={invalidTag.vault_id}
+            identity={invalidTag}
+            message="This tag already exists in this list."
+            onSaveClick={() => handleSaveClick(invalidTag)}
+            onClose={() => onRemoveInvalidTag(invalidTag.vault_id)}
           />
-        </PopoverContent>
-        <TagsListInputPortal
-          variant="tag"
-          tags={formattedTags}
-          maxTags={5}
-          onAddTag={() => setIsPopoverOpen(true)}
-          onRemoveTag={onRemoveTag}
-          PopoverTriggerComponent={PopoverTrigger}
-        />
-      </Popover>
-      {invalidTags.map((invalidTag) => (
-        <AddListExistingCta
-          key={invalidTag.vault_id}
-          identity={invalidTag}
-          message="This identity already exists in this list."
-          onSaveClick={() => handleSaveClick(invalidTag)}
-          onClose={() => onRemoveInvalidTag(invalidTag.vault_id)}
-        />
-      ))}
-      {/* {selectedInvalidTag && (
+        ))}
+      </div>
+      {selectedInvalidTag && (
         <SaveListModal
           tag={identity}
-          identity={selectedInvalidIdentity}
+          identity={selectedInvalidTag}
           contract={identity.contract}
           userWallet={userWallet}
           open={saveListModalActive.isOpen}
@@ -171,7 +179,7 @@ export function AddTags({
             setSelectedInvalidTag(null)
           }}
         />
-      )} */}
+      )}
     </div>
   )
 }
