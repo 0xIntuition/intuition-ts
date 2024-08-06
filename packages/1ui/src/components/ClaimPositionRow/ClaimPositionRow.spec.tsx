@@ -78,7 +78,7 @@ describe('ClaimPositionRow', () => {
                     </button>
                   </a>
                   <button
-                    class="flex justify-center items-center gap-2 text-sm font-medium border disabled:text-muted-foreground bg-transparent border-transparent disabled:border-transparent disabled:bg-transparent shadow-md-subtle p-0 h-4 w-4 hover:text-primary text-secondary-foreground"
+                    class="flex justify-center items-center gap-2 text-sm font-medium border disabled:text-muted-foreground bg-transparent border-transparent disabled:border-transparent disabled:bg-transparent shadow-none p-0 h-4 w-4 hover:text-primary text-secondary-foreground"
                   >
                     <svg
                       class="h-4 w-4"
