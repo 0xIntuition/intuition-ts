@@ -39,7 +39,12 @@ import {
 } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
-import { NO_CLAIM_ERROR, NO_PARAM_ID_ERROR, NO_WALLET_ERROR } from 'consts'
+import {
+  NO_CLAIM_ERROR,
+  NO_PARAM_ID_ERROR,
+  NO_WALLET_ERROR,
+  PATHS,
+} from 'consts'
 import { IdentityListType } from 'types'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -171,6 +176,7 @@ export default function ListOverview() {
               >
                 <Claim
                   size="md"
+                  link={`${PATHS.CLAIM}/${claim?.claim_id}`}
                   subject={{
                     variant: claim.subject?.is_user
                       ? Identity.user

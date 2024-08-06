@@ -48,7 +48,7 @@ import { requireUserWallet } from '@server/auth'
 import { getVaultDetails } from '@server/multivault'
 import FullPageLayout from 'app/layouts/full-page-layout'
 import TwoPanelLayout from 'app/layouts/two-panel-layout'
-import { NO_WALLET_ERROR } from 'consts'
+import { NO_WALLET_ERROR, PATHS } from 'consts'
 import { useAtom } from 'jotai'
 import { VaultDetailsType } from 'types/vault'
 
@@ -145,6 +145,7 @@ export default function ClaimDetails() {
       </NavigationButton>
       <Claim
         size="md"
+        link={`${PATHS.CLAIM}/${claim?.claim_id}`}
         subject={{
           variant: claim.subject?.is_user ? Identity.user : Identity.nonUser,
           label: getAtomLabel(claim.subject as IdentityPresenter),

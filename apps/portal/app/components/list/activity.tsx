@@ -190,6 +190,7 @@ function ActivityItem({
             >
               <Claim
                 size="md"
+                link={`${PATHS.CLAIM}/${activity.claim.claim_id}`}
                 subject={{
                   variant: activity.claim.subject?.is_user
                     ? Identity.user

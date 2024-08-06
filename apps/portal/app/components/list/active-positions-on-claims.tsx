@@ -10,6 +10,7 @@ import {
   getAtomLink,
 } from '@lib/utils/misc'
 import { useNavigate } from '@remix-run/react'
+import { PATHS } from 'consts'
 import { PaginationType } from 'types/pagination'
 
 import { SortOption } from '../sort-select'
@@ -64,6 +65,7 @@ export function ActivePositionsOnClaims({
           >
             <Claim
               size="md"
+              link={`${PATHS.CLAIM}/${claim.claim_id}`}
               subject={{
                 variant: claim.subject?.is_user
                   ? Identity.user

@@ -25,6 +25,7 @@ import {
   getAtomLink,
 } from '@lib/utils/misc'
 import { type FetcherWithComponents } from '@remix-run/react'
+import { PATHS } from 'consts'
 import { useAtom } from 'jotai'
 import { TransactionActionType, TransactionStateType } from 'types/transaction'
 
@@ -116,6 +117,7 @@ export default function StakeForm({
                 ) : (
                   <Claim
                     size="md"
+                    link={`${PATHS.CLAIM}/${claim?.claim_id}`}
                     subject={{
                       variant: claim?.subject?.is_user
                         ? Identity.user

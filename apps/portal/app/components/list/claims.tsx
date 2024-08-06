@@ -13,6 +13,7 @@ import {
   getAtomLabel,
   getAtomLink,
 } from '@lib/utils/misc'
+import { PATHS } from 'consts'
 import { PaginationType } from 'types/pagination'
 
 import { SortOption } from '../sort-select'
@@ -63,6 +64,7 @@ export function ClaimsList({
           >
             <Claim
               size="md"
+              link={`${PATHS.CLAIM}/${claim.claim_id}`}
               subject={{
                 variant: claim.subject?.is_user
                   ? Identity.user

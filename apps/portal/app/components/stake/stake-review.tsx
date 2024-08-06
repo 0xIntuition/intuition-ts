@@ -21,6 +21,7 @@ import {
   getAtomLabel,
   getAtomLink,
 } from '@lib/utils/misc'
+import { PATHS } from 'consts'
 import { TransactionActionType, TransactionStateType } from 'types/transaction'
 
 interface StakeReviewProps {
@@ -117,6 +118,7 @@ export default function StakeReview({
             ) : (
               <Claim
                 size="md"
+                link={`${PATHS.CLAIM}/${claim?.claim_id}`}
                 subject={{
                   variant: claim?.subject?.is_user
                     ? Identity.user

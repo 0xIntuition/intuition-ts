@@ -58,6 +58,8 @@ const ClaimItem = ({
     return link ? <a href={link}>{content}</a> : content
   }
 
+  console.log('link', link)
+
   return (
     <HoverCard openDelay={100} closeDelay={100}>
       <HoverCardTrigger>
