@@ -134,7 +134,6 @@ export default function InviteRoute() {
                 {...getInputProps(fields.invite_code, { type: 'text' })}
                 className="w-96"
                 placeholder="Enter your invite code here"
-                maxLength={6}
                 onChange={() => setFormTouched(true)}
               />
               <ErrorList

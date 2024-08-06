@@ -75,7 +75,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     })
   } catch (error) {
     if (error instanceof ApiError && error.status === 404) {
-      throw redirect('/create')
+      throw redirect('/invite')
     }
     logger('Error fetching userIdentity', error)
     throw error
@@ -109,6 +109,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
       vaultDetails = null
     }
   }
+
+  logger('userObject', userObject)
 
   return json({
     privyUser: user,

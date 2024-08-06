@@ -2,24 +2,19 @@ import { useState } from 'react'
 
 import { Button, Icon } from '@0xintuition/1ui'
 
-import { useLogin, User } from '@privy-io/react-auth'
+import { useLogin } from '@privy-io/react-auth'
 
-interface PrivyLoginButtonProps {
-  handleLogin: (
-    user: User,
-    isNewUser: boolean,
-    wasAlreadyAuthenticated: boolean,
-  ) => void
-}
+// interface PrivyLoginButtonProps {
+//   handleLogin: (
+//     user: User,
+//     isNewUser: boolean,
+//     wasAlreadyAuthenticated: boolean,
+//   ) => void
+// }
 
-export default function PrivyLoginButton({
-  handleLogin,
-}: PrivyLoginButtonProps) {
+export default function PrivyLoginButton() {
   const [loading, setLoading] = useState(false)
   const { login } = useLogin({
-    onComplete: (user, isNewUser, wasAlreadyAuthenticated) => {
-      handleLogin(user, isNewUser, wasAlreadyAuthenticated)
-    },
     onError: (error) => {
       setLoading(false)
       console.log(error)

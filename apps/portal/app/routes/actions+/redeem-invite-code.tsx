@@ -7,7 +7,7 @@ import { requireUserWallet } from '@server/auth'
 import { NO_WALLET_ERROR } from 'consts'
 
 export async function action({ request }: ActionFunctionArgs) {
-  logger('Validating create identity form data')
+  logger('Validating redeem invite code form data')
   const wallet = await requireUserWallet(request)
   invariant(wallet, NO_WALLET_ERROR)
 
@@ -20,22 +20,18 @@ export async function action({ request }: ActionFunctionArgs) {
   const invite_code = formData.get('invite_code')
 
   try {
-    let identity
+    let invite_code_response
     try {
-      const inviteCodeParams = {
-        invite_code: invite_code as string,
-      }
-      logger('Invite code params:', inviteCodeParams)
-      identity = await InviteCodesService.redeemInviteCode({
+      invite_code_response = await InviteCodesService.redeemInviteCode({
         requestBody: {
-          invite_code: inviteCodeParams,
+          invite_code: invite_code as string,
           wallet,
         },
       })
-      logger('Identity created:', identity)
+      logger('Invite code redeemed:', invite_code_response)
     } catch (error: unknown) {
       if (error instanceof ApiError) {
-        identity = undefined
+        invite_code_response = undefined
         console.log(
           `${error.name} - ${error.status}: ${error.message} - ${JSON.stringify(error.body)}`,
         )
@@ -44,13 +40,13 @@ export async function action({ request }: ActionFunctionArgs) {
       }
     }
 
-    if (!identity) {
-      throw new Error('Failed to create identity')
+    if (!invite_code_response) {
+      throw new Error('Failed to redeem invite code')
     }
     return json(
       {
         status: 'success',
-        identity,
+        invite_code_response,
       } as const,
       {
         status: 200,
@@ -58,7 +54,7 @@ export async function action({ request }: ActionFunctionArgs) {
     )
   } catch (error) {
     if (error instanceof Error) {
-      console.error('Error in creating the offchain identity:', error)
+      console.error('Error in redeeming invite code:', error)
       return json(
         {
           status: 'error',
