@@ -16,7 +16,7 @@ import {
 import { IdentityPresenter } from '@0xintuition/api'
 
 import { IdentitySearchCombobox } from '@components/identity/identity-search-combo-box'
-import { useIdentityServerSearch } from '@lib/hooks/useIdentityServerSearch'
+import useFilteredIdentitySearch from '@lib/hooks/useFilteredIdentitySearch'
 import useInvalidItems from '@lib/hooks/useInvalidItems'
 import { createIdentityModalAtom, saveListModalAtom } from '@lib/state/store'
 import logger from '@lib/utils/logger'
@@ -59,18 +59,15 @@ export function AddIdentities({
   const [saveListModalActive, setSaveListModalActive] =
     useAtom(saveListModalAtom)
 
-  const { setSearchQuery, identities, handleInput } = useIdentityServerSearch()
+  const { setSearchQuery, filteredIdentities, handleInput } =
+    useFilteredIdentitySearch({
+      selectedItems: selectedIdentities,
+    })
+
   const [isPopoverOpen, setIsPopoverOpen] = useState(false)
 
   const [selectedInvalidIdentity, setSelectedInvalidIdentity] =
     useState<IdentityPresenter | null>(null)
-
-  const filteredIdentities = identities.filter(
-    (identity) =>
-      !selectedIdentities.some(
-        (identityToAdd) => identityToAdd.vault_id === identity.vault_id,
-      ),
-  )
 
   const tagFetcher = useFetcher<TagLoaderData>()
 

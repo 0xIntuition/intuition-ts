@@ -6,7 +6,7 @@ import { IdentityPresenter } from '@0xintuition/api'
 import { IdentitySearchCombobox } from '@components/identity/identity-search-combo-box'
 import { AddListExistingCta } from '@components/list/add-list-existing-cta'
 import SaveListModal from '@components/list/save-list-modal'
-import { useIdentityServerSearch } from '@lib/hooks/useIdentityServerSearch'
+import useFilteredIdentitySearch from '@lib/hooks/useFilteredIdentitySearch'
 import useInvalidItems from '@lib/hooks/useInvalidItems'
 import { createIdentityModalAtom, saveListModalAtom } from '@lib/state/store'
 import { useFetcher } from '@remix-run/react'
@@ -55,13 +55,12 @@ export function AddTags({
   const [selectedInvalidTag, setSelectedInvalidTag] =
     useState<IdentityPresenter | null>(null)
 
-  const { setSearchQuery, identities, handleInput } = useIdentityServerSearch()
   const [isPopoverOpen, setIsPopoverOpen] = useState(false)
 
-  const filteredIdentities = identities.filter(
-    (identity) =>
-      !selectedTags.some((tag) => tag.vault_id === identity.vault_id),
-  )
+  const { setSearchQuery, filteredIdentities, handleInput } =
+    useFilteredIdentitySearch({
+      selectedItems: selectedTags,
+    })
 
   const tagFetcher = useFetcher<TagLoaderData>()
 
