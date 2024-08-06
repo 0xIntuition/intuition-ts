@@ -6,7 +6,7 @@ import { ClaimStatus } from './ClaimStatus'
 describe('ClaimStatus', () => {
   it('should render the ClaimStatus component', () => {
     const { asFragment } = render(
-      <ClaimStatus claimsFor={10} claimsAgainst={5}>
+      <ClaimStatus claimsForValue={'10'} claimsAgainstValue={'5'}>
         <Claim
           subject={{
             variant: 'non-user',
@@ -33,7 +33,7 @@ describe('ClaimStatus', () => {
           >
             <span
               class="h-full bg-against block rounded-l-sm"
-              style="min-width: NaN%;"
+              style="min-width: 66.66666666666666%;"
             />
             <span
               class="h-full w-full bg-for block rounded-r-sm"
