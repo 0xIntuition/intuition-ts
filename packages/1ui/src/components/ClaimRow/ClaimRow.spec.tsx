@@ -34,7 +34,6 @@ describe('ClaimRow', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          amount="0.383"
           class="flex justify-between items-center gap-2 max-md:flex-col"
         >
           <div
@@ -48,7 +47,7 @@ describe('ClaimRow', () => {
               >
                 <span
                   class="h-full bg-against block rounded-l-sm"
-                  style="min-width: NaN%;"
+                  style="min-width: 49.869451697127936%;"
                 />
                 <span
                   class="h-full w-full bg-for block rounded-r-sm"
@@ -154,7 +153,7 @@ describe('ClaimRow', () => {
               <p
                 class="text-primary text-lg font-normal"
               >
-                 ETH
+                0.383 ETH
               </p>
               <div
                 class="flex gap-2 items-center mt-2 max-md:mt-0"
