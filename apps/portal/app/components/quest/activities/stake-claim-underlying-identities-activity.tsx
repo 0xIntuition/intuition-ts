@@ -42,7 +42,6 @@ export default function StakeClaimUnderlyingIdentitiesActivity({
       <div className="flex flex-col items-center gap-10 rounded-md p-5">
         {identities &&
           Object.values(identities).map((identity) => {
-            console.log('identity', identity)
             return (
               <div
                 className="flex flex-col items-start gap-2.5"
