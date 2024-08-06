@@ -14,6 +14,7 @@ import {
   IdentityTag,
   ProfileCard,
   Text,
+  Trunctacular,
 } from '@0xintuition/1ui'
 import {
   ActivityPresenter,
@@ -120,21 +121,41 @@ function ActivityItem({
                   size="lg"
                   imgSrc={activity.creator?.image ?? ''}
                 >
-                  {activity.creator?.display_name ??
-                    activity.creator?.wallet ??
-                    ''}
+                  <Trunctacular
+                    value={
+                      activity.creator?.display_name ??
+                      activity.creator?.wallet ??
+                      activity.identity?.creator_address ??
+                      ''
+                    }
+                  ></Trunctacular>
                 </IdentityTag>
               </Link>
             </HoverCardTrigger>
-            <HoverCardContent className="w-80">
-              <ProfileCard
-                variant={Identity.user}
-                avatarSrc={activity.creator?.image ?? ''}
-                name={activity.creator?.display_name ?? ''}
-                id={activity.creator?.wallet}
-                bio={activity.creator?.description ?? ''}
-                ipfsLink={`${BLOCK_EXPLORER_URL}/address/${activity.creator?.wallet}`}
-              />
+            <HoverCardContent className="w-fit">
+              {activity.creator ? (
+                <ProfileCard
+                  variant={Identity.user}
+                  avatarSrc={activity.creator?.image ?? ''}
+                  name={activity.creator?.display_name ?? ''}
+                  id={activity.creator?.wallet}
+                  bio={activity.creator?.description ?? ''}
+                  ipfsLink={`${BLOCK_EXPLORER_URL}/address/${activity.creator?.wallet}`}
+                  className="w-80"
+                />
+              ) : (
+                <ProfileCard
+                  variant={Identity.user}
+                  avatarSrc={''}
+                  name={activity.identity?.creator_address ?? ''}
+                  id={activity.identity?.creator_address}
+                  bio={
+                    'There is no user associated with this wallet. This data was created on-chain, outside of the Intuition Portal.'
+                  }
+                  ipfsLink={`${BLOCK_EXPLORER_URL}/address/${activity.identity?.creator_address}`}
+                  className="w-80"
+                />
+              )}
             </HoverCardContent>
           </HoverCard>
           <Text>{message}</Text>
@@ -154,8 +175,11 @@ function ActivityItem({
                 activity.identity.user?.image ?? activity.identity.image ?? ''
               }
               name={
-                activity.identity.user_display_name ??
-                activity.identity.display_name
+                activity.identity.user_display_name ||
+                (activity.identity.display_name &&
+                activity.identity.display_name !== ''
+                  ? activity.identity.display_name
+                  : activity.identity.identity_id)
               }
               walletAddress={
                 activity.identity.user?.wallet ?? activity.identity.identity_id
@@ -178,36 +202,32 @@ function ActivityItem({
                 }
               }}
             />
-            <Link
-              to={
-                activity.identity.is_user
-                  ? `${PATHS.PROFILE}/${activity.identity.identity_id}`
-                  : `${PATHS.IDENTITY}/${activity.identity.id}`
-              }
-              prefetch="intent"
+            <a
+              href={`${BLOCK_EXPLORER_URL}/tx/${activity.transaction_hash}`}
+              target="_blank"
+              rel="noreferrer noopener"
             >
               <Button
                 variant={ButtonVariant.secondary}
                 size={ButtonSize.md}
-                className="w-40 h-fit"
+                className="w-max h-fit"
               >
-                View Identity{' '}
-                <Icon name={IconName.arrowUpRightFromCircleIcon} />
+                View on Explorer{' '}
+                <Icon name={IconName.squareArrowTopRight} className="h-4 w-4" />
               </Button>
-            </Link>
+            </a>
           </div>
         )}
         {activity.claim && (
-          <div className="hover:cursor-pointer bg-secondary-foreground/10 px-6 py-4 rounded-xl flex flex-row w-full gap-6 items-center max-md:flex-col">
+          <div className="bg-secondary-foreground/10 px-6 py-4 rounded-xl flex flex-row w-full gap-6 items-center max-md:flex-col">
             <ClaimRow
               claimsFor={activity.claim.for_num_positions}
               claimsAgainst={activity.claim.against_num_positions}
+              claimsForValue={+formatBalance(activity.claim.for_assets_sum, 18)}
+              claimsAgainstValue={
+                +formatBalance(activity.claim.against_assets_sum, 18)
+              }
               tvl={+formatBalance(activity.claim.assets_sum, 18, 4)}
-              onClick={() => {
-                if (activity.claim) {
-                  navigate(`${PATHS.CLAIM}/${activity.claim.claim_id}`)
-                }
-              }}
               className="hover:cursor-pointer w-full"
             >
               <Claim
@@ -276,18 +296,20 @@ function ActivityItem({
                 }}
               />
             </ClaimRow>
-            <Link
-              to={`${PATHS.CLAIM}/${activity.claim.claim_id}`}
-              prefetch="intent"
+            <a
+              href={`${BLOCK_EXPLORER_URL}/tx/${activity.transaction_hash}`}
+              target="_blank"
+              rel="noreferrer noopener"
             >
               <Button
                 variant={ButtonVariant.secondary}
                 size={ButtonSize.md}
-                className="w-40 h-fit"
+                className="w-max h-fit"
               >
-                View Claim <Icon name={IconName.arrowUpRightFromCircleIcon} />
+                View on Explorer{' '}
+                <Icon name={IconName.squareArrowTopRight} className="h-4 w-4" />
               </Button>
-            </Link>
+            </a>
           </div>
         )}
       </div>

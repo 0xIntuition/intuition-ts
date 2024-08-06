@@ -3,13 +3,14 @@
   "version": "0.1.2",
   "description": "Protocol",
   "main": "src/index.js",
+  "type": "module",
   "exports": {
     ".": "./src/index.js"
   },
   "types": "src/index.d.ts",
   "scripts": {
     "lint:fix": "pnpm lint --fix",
-    "generate": "node ./scripts/generate.js"
+    "generate": "node ./scripts/generate.mjs"
   },
   "files": [
     "dist/**/*",
@@ -23,7 +24,7 @@
     "directory": "packages/protocol"
   },
   "dependencies": {
-    "viem": "^2.9.29"
+    "viem": "2.18.8"
   },
   "devDependencies": {
     "@viem/anvil": "^0.0.10",

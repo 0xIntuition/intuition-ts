@@ -122,7 +122,7 @@ export const IdentityPopover: React.FC<IdentityPopoverProps> = ({
         </div>
       </PopoverTrigger>
       <PopoverContent
-        className="bg-transparent border-none"
+        className="bg-transparent border-none max-md:w-full"
         side="bottom"
         align="center"
         sideOffset={5}
