@@ -3,10 +3,11 @@ import { useEffect, useState } from 'react'
 import { Popover, PopoverContent, PopoverTrigger, Text } from '@0xintuition/1ui'
 import { IdentityPresenter } from '@0xintuition/api'
 
-import ErrorList from '@components/error-list'
 import { IdentitySearchCombobox } from '@components/identity/identity-search-combo-box'
+import { AddListExistingCta } from '@components/list/add-list-existing-cta'
+import SaveListModal from '@components/list/save-list-modal'
 import { useIdentityServerSearch } from '@lib/hooks/useIdentityServerSearch'
-import { createIdentityModalAtom } from '@lib/state/store'
+import { createIdentityModalAtom, saveListModalAtom } from '@lib/state/store'
 import logger from '@lib/utils/logger'
 import { useFetcher } from '@remix-run/react'
 import { TagLoaderData } from '@routes/resources+/tag'
@@ -21,10 +22,11 @@ interface AddTagsProps {
   existingTagIds: string[]
   onAddTag: (newTag: IdentityPresenter) => void
   onRemoveTag: (id: string) => void
+  onRemoveInvalidTag: (id: string) => void
   dispatch: (action: TransactionActionType) => void
   subjectVaultId: string
-  invalidTags: string[]
-  setInvalidTags: React.Dispatch<React.SetStateAction<string[]>>
+  invalidTags: IdentityPresenter[]
+  setInvalidTags: React.Dispatch<React.SetStateAction<IdentityPresenter[]>>
 }
 
 export function AddTags({
@@ -32,6 +34,7 @@ export function AddTags({
   existingTagIds,
   onAddTag,
   onRemoveTag,
+  onRemoveInvalidTag,
   subjectVaultId,
   invalidTags,
   setInvalidTags,
@@ -42,6 +45,12 @@ export function AddTags({
   }))
 
   const [, setCreateIdentityModalActive] = useAtom(createIdentityModalAtom)
+
+  const [saveListModalActive, setSaveListModalActive] =
+    useAtom(saveListModalAtom)
+
+  const [selectedInvalidTag, setSelectedInvalidTag] =
+    useState<IdentityPresenter | null>(null)
 
   const { setSearchQuery, identities, handleInput } = useIdentityServerSearch()
   const [isPopoverOpen, setIsPopoverOpen] = useState(false)
@@ -69,6 +78,14 @@ export function AddTags({
     tagFetcher.load(finalUrl)
   }
 
+  const handleSaveClick = (invalidTag: IdentityPresenter) => {
+    setSelectedInvalidTag(invalidTag)
+    setSaveListModalActive({
+      isOpen: true,
+      identity: invalidTag,
+    })
+  }
+
   useEffect(() => {
     if (tagFetcher.state === 'idle' && tagFetcher.data !== undefined) {
       const result = tagFetcher.data.result
@@ -76,13 +93,21 @@ export function AddTags({
         logger('in fetcher: valid')
 
         setInvalidTags((prev) =>
-          prev.filter((id) => id !== tagFetcher?.data?.objectId),
+          prev.filter((tag) => tag.vault_id !== tagFetcher?.data?.objectId),
         )
       } else {
         logger('in fetcher: invalid')
         setInvalidTags((prev) => {
           const objectId = tagFetcher?.data?.objectId
-          return objectId ? [...prev, objectId] : prev
+          return objectId
+            ? [
+                ...prev,
+                identities.find((i) => i.vault_id === objectId) || {
+                  vault_id: objectId,
+                  display_name: objectId,
+                },
+              ]
+            : prev
         })
       }
     }
@@ -120,16 +145,33 @@ export function AddTags({
           onAddTag={() => setIsPopoverOpen(true)}
           onRemoveTag={onRemoveTag}
           PopoverTriggerComponent={PopoverTrigger}
-          invalidTags={invalidTags}
         />
       </Popover>
-      {invalidTags.length !== 0 && (
-        <div className="mt-4">
-          <ErrorList
-            errors={['Selected tag(s) already exist on this identity.']}
-          />
-        </div>
-      )}
+      {invalidTags.map((invalidTag) => (
+        <AddListExistingCta
+          key={invalidTag.vault_id}
+          identity={invalidTag}
+          message="This identity already exists in this list."
+          onSaveClick={() => handleSaveClick(invalidTag)}
+          onClose={() => onRemoveInvalidTag(invalidTag.vault_id)}
+        />
+      ))}
+      {/* {selectedInvalidTag && (
+        <SaveListModal
+          tag={identity}
+          identity={selectedInvalidIdentity}
+          contract={identity.contract}
+          userWallet={userWallet}
+          open={saveListModalActive.isOpen}
+          onClose={() => {
+            setSaveListModalActive({
+              isOpen: false,
+              invalidIdentity: null,
+            })
+            setSelectedInvalidTag(null)
+          }}
+        />
+      )} */}
     </div>
   )
 }

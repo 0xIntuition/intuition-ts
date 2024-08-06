@@ -12,7 +12,7 @@ import {
   TabsTrigger,
   Trunctacular,
 } from '@0xintuition/1ui'
-import { IdentityPresenter } from '@0xintuition/api'
+import { IdentityPresenter, IdentityPresenter } from '@0xintuition/api'
 
 import { TransactionState } from '@components/transaction-state'
 import {
@@ -60,7 +60,7 @@ export function TagsForm({ identity, mode, onClose }: TagsFormProps) {
   ].includes(state.status)
 
   const [selectedTags, setSelectedTags] = useState<IdentityPresenter[]>([])
-  const [invalidTags, setInvalidTags] = useState<string[]>([])
+  const [invalidTags, setInvalidTags] = useState<IdentityPresenter[]>([])
 
   const handleAddTag = (newTag: IdentityPresenter) => {
     setSelectedTags((prevTags) => [...prevTags, newTag])
@@ -71,6 +71,16 @@ export function TagsForm({ identity, mode, onClose }: TagsFormProps) {
     setSelectedTags((prevTags) => prevTags.filter((tag) => tag.vault_id !== id))
     setInvalidTags((prev) => prev.filter((tagId) => tagId !== id))
   }
+
+  const handleRemoveInvalidTag = (vaultId: string) => {
+    setInvalidTags((prev) =>
+      prev.filter((tag) => tag.vault_id !== vaultId),
+    )
+    setSelectedTags((prev) =>
+      prev.filter((tag) => tag.vault_id !== vaultId),
+    )
+  }
+
 
   logger('tags on incoming identity', identity.tags)
 
@@ -123,6 +133,7 @@ export function TagsForm({ identity, mode, onClose }: TagsFormProps) {
                       onAddTag={handleAddTag}
                       dispatch={dispatch}
                       onRemoveTag={handleRemoveTag}
+                      onRemoveInvalidTag={handleRemoveInvalidTag}
                       subjectVaultId={identity.vault_id}
                       invalidTags={invalidTags}
                       setInvalidTags={setInvalidTags}
