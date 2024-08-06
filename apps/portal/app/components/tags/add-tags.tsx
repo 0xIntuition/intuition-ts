@@ -99,7 +99,7 @@ export function AddTags({
 
   return (
     <div className="flex flex-col min-h-36">
-      <div className="mb-8 gap-1">
+      <div className="mb-3 gap-2">
         <Text variant="body" className="text-primary/70">
           Add tags to this identity
         </Text>

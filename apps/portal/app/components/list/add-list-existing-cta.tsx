@@ -10,6 +10,8 @@ import {
 } from '@0xintuition/1ui'
 import { IdentityPresenter } from '@0xintuition/api'
 
+import { truncateString } from '@lib/utils/misc'
+
 interface AddListAlertCtaProps {
   variant: 'identity' | 'tag'
   identity: IdentityPresenter
@@ -47,7 +49,7 @@ export function AddListExistingCta({
               <Trunctacular value={identity.display_name} />
             </IdentityTag>
           ) : (
-            <TagWithValue label={identity.display_name} />
+            <TagWithValue label={truncateString(identity.display_name, 20)} />
           )}
           <div className="flex items-center gap-4">
             <Button onClick={onSaveClick} variant="secondary">
