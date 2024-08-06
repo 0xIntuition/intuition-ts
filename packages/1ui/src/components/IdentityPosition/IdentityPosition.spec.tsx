@@ -159,7 +159,11 @@ describe('IdentityPosition', () => {
                     <button
                       class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 text-base font-normal flex items-center cursor-default pl-2"
                     >
-                      keyboard
+                      <p
+                        class="text-primary text-base font-normal"
+                      >
+                        keyboard
+                      </p>
                       <span
                         class="h-[2px] w-[2px] bg-primary mx-1"
                       />
@@ -168,7 +172,11 @@ describe('IdentityPosition', () => {
                     <button
                       class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 text-base font-normal flex items-center cursor-default pl-2"
                     >
-                      ergonomic
+                      <p
+                        class="text-primary text-base font-normal"
+                      >
+                        ergonomic
+                      </p>
                       <span
                         class="h-[2px] w-[2px] bg-primary mx-1"
                       />
@@ -177,7 +185,11 @@ describe('IdentityPosition', () => {
                     <button
                       class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 text-base font-normal flex items-center cursor-default pl-2"
                     >
-                      wireless
+                      <p
+                        class="text-primary text-base font-normal"
+                      >
+                        wireless
+                      </p>
                       <span
                         class="h-[2px] w-[2px] bg-primary mx-1"
                       />
@@ -186,7 +198,11 @@ describe('IdentityPosition', () => {
                     <button
                       class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 text-base font-normal flex items-center cursor-default pl-2"
                     >
-                      gaming
+                      <p
+                        class="text-primary text-base font-normal"
+                      >
+                        gaming
+                      </p>
                       <span
                         class="h-[2px] w-[2px] bg-primary mx-1"
                       />

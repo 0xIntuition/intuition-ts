@@ -52,7 +52,7 @@ const IdentitySearchCombobox = ({
   ...props
 }: IdentitySearchComboboxProps) => {
   return (
-    <div className="min-w-96" {...props}>
+    <div className="min-w-96 max-md:min-w-0 max-md:w-[90vw]" {...props}>
       <Command shouldFilter={shouldFilter}>
         <CommandInput
           placeholder={placeholder}
@@ -75,7 +75,7 @@ const IdentitySearchCombobox = ({
           <CommandEmpty>
             <EmptyStateCard
               message="No identities found."
-              className="border-none"
+              className="border-none max-md:min-h-0 max-md:h-fit"
             />
           </CommandEmpty>
           <CommandGroup key={identities.length}>
@@ -112,7 +112,7 @@ const IdentitySearchCombobox = ({
                     <HoverCardContent
                       side="right"
                       sideOffset={16}
-                      className="w-80"
+                      className="w-80 max-md:w-[80%]"
                     >
                       <ProfileCard
                         variant={identity.is_user ? 'user' : 'non-user'}

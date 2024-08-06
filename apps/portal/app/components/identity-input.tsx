@@ -140,7 +140,7 @@ const IdentityInput = ({
   ...props
 }: IdentityInputProps) => {
   const Divider = () => (
-    <span className="h-px w-2.5 flex bg-border/30 self-end mb-[1.2rem]" />
+    <span className="h-px w-2.5 flex bg-border/30 self-end mb-[1.2rem] max-md:hidden" />
   )
 
   const renderIdentityInput = (inputProps: IdentityInputButtonProps) => (
@@ -157,7 +157,10 @@ const IdentityInput = ({
 
   return (
     <TooltipProvider>
-      <div className="flex justify-center items-center w-full" {...props}>
+      <div
+        className="flex justify-center items-center w-full max-md:flex-col max-md:items-center max-md:gap-2"
+        {...props}
+      >
         {renderIdentityInput(subject)}
         <Divider />
         {renderIdentityInput(predicate)}

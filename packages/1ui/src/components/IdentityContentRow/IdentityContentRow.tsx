@@ -12,6 +12,7 @@ import {
   TagWithValueProps,
   Text,
   TextVariant,
+  Trunctacular,
 } from '..'
 
 export interface IdentityContentRowProps
@@ -44,9 +45,12 @@ const NameAndAddress = ({
         hasTags ? 'flex-row items-center' : 'flex-col',
       )}
     >
-      <Text variant={TextVariant.bodyLarge} className="mr-2">
-        {name}
-      </Text>
+      <Trunctacular
+        value={name}
+        variant={TextVariant.bodyLarge}
+        maxStringLength={20}
+        className="mr-2"
+      />
       <Text variant={TextVariant.body} className="text-secondary-foreground">
         {formatWalletAddress(walletAddress)}
       </Text>

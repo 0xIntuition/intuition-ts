@@ -105,7 +105,7 @@ const ExploreAddTags = ({
         />
         <PopoverTrigger className="block" />
         <PopoverContent
-          className="w-max border-none bg-transparent pt-1"
+          className="w-max border-none bg-transparent pt-1 max-md:w-[50%]"
           ref={popoverContentRef}
         >
           <IdentitySearchCombobox

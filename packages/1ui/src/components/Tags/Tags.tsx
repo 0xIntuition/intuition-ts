@@ -1,6 +1,14 @@
 import * as React from 'react'
 
-import { Button, Icon, Tag, TagProps, Text, TextVariant } from 'components'
+import {
+  Button,
+  Icon,
+  Tag,
+  TagProps,
+  Text,
+  TextVariant,
+  Trunctacular,
+} from 'components'
 
 import { cn } from '../../styles'
 
@@ -60,7 +68,7 @@ const TagWithValue = ({
 }: TagWithValueProps) => {
   const TagContent = (
     <>
-      {label}
+      <Trunctacular value={label ? label : ''} />
       {value && (
         <>
           <span className="h-[2px] w-[2px] bg-primary mx-1" />
