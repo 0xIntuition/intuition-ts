@@ -12,11 +12,13 @@ describe('ClaimPositionRow', () => {
         variant="user"
         position="claimFor"
         name="John Doe"
-        walletAddress="0x1234567890abcdef1234567890abcdef12345678"
+        id="0x1234567890abcdef1234567890abcdef12345678"
         avatarSrc="https://avatars.githubusercontent.com/u/94311139?s=200&v=4"
         amount={1.21}
         feesAccrued={0.005}
         updatedAt="2021-10-01T16:00:00Z"
+        link="https://sepolia.basescan.org/address/0x1234567890abcdef1234567890abcdef12345678"
+        ipfsLink="https://sepolia.basescan.org/address/0x1234567890abcdef1234567890abcdef12345678"
       />,
     )
     expect(asFragment()).toMatchInlineSnapshot(`
@@ -48,16 +50,45 @@ describe('ClaimPositionRow', () => {
               <div
                 class="flex items-center mb-1.5 max-sm:flex-col max-sm:gap-px max-sm:items-start"
               >
-                <p
-                  class="text-primary text-lg font-normal mr-1"
+                <a
+                  href="https://sepolia.basescan.org/address/0x1234567890abcdef1234567890abcdef12345678"
                 >
-                  John Doe
-                </p>
-                <p
-                  class="text-base font-normal text-secondary-foreground"
+                  <p
+                    class="text-primary text-lg font-normal mr-1"
+                  >
+                    John Doe
+                  </p>
+                </a>
+                <div
+                  class="flex flex-row items-center gap-1"
                 >
-                  0x1234...5678
-                </p>
+                  <a
+                    href="https://sepolia.basescan.org/address/0x1234567890abcdef1234567890abcdef12345678"
+                    rel="noreferrer noopener"
+                    target="_blank"
+                  >
+                    <button
+                      data-state="closed"
+                    >
+                      <p
+                        class="text-base font-normal text-secondary-foreground"
+                      >
+                        0x1234...5678
+                      </p>
+                    </button>
+                  </a>
+                  <button
+                    class="flex justify-center items-center gap-2 text-sm font-medium border disabled:text-muted-foreground bg-transparent border-transparent disabled:border-transparent disabled:bg-transparent shadow-md-subtle p-0 h-4 w-4 hover:text-primary text-secondary-foreground"
+                  >
+                    <svg
+                      class="h-4 w-4"
+                    >
+                      <use
+                        href="/src/components/Icon/Icon.sprites.svg#copy"
+                      />
+                    </svg>
+                  </button>
+                </div>
               </div>
               <p
                 class="text-sm font-medium text-secondary-foreground mb-2"
@@ -109,6 +140,7 @@ describe('ClaimPositionRow', () => {
           claimsAgainstValue={5}
           amount={1.21}
           feesAccrued={0.005}
+          link="https://sepolia.basescan.org/address/0x1234567890abcdef1234567890abcdef12345678"
         />,
       )
       expect(asFragment()).toMatchInlineSnapshot(`

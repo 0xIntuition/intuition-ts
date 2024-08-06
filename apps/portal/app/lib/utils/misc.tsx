@@ -341,25 +341,27 @@ export function loadMore({
 }
 
 // atom helpers
-export const getAtomImage = (atom: IdentityPresenter | null) => {
+export const getAtomImage = (atom: IdentityPresenter | null | undefined) => {
   if (!atom) {
     return ''
   }
   return atom?.user?.image ?? atom?.image ?? ''
 }
 
-export const getAtomLabel = (atom: IdentityPresenter | null) => {
+export const getAtomLabel = (atom: IdentityPresenter | null | undefined) => {
   if (!atom) {
     return ''
   }
   return atom.user?.display_name ?? atom.display_name ?? atom.identity_id ?? ''
 }
 
-export const getAtomDescription = (atom: IdentityPresenter | null) => {
+export const getAtomDescription = (
+  atom: IdentityPresenter | null | undefined,
+) => {
   return atom?.user?.description ?? atom?.description ?? ''
 }
 
-export const getAtomIpfsLink = (atom: IdentityPresenter | null) => {
+export const getAtomIpfsLink = (atom: IdentityPresenter | null | undefined) => {
   if (!atom) {
     return ''
   }
@@ -369,7 +371,7 @@ export const getAtomIpfsLink = (atom: IdentityPresenter | null) => {
   return `${IPFS_GATEWAY_URL}/${atom.identity_id?.replace('ipfs://', '')}`
 }
 
-export const getAtomLink = (atom: IdentityPresenter | null) => {
+export const getAtomLink = (atom: IdentityPresenter | null | undefined) => {
   if (!atom) {
     return ''
   }

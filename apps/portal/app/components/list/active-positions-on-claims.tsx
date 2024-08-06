@@ -9,7 +9,6 @@ import {
   getAtomLabel,
   getAtomLink,
 } from '@lib/utils/misc'
-import { useNavigate } from '@remix-run/react'
 import { PATHS } from 'consts'
 import { PaginationType } from 'types/pagination'
 
@@ -23,7 +22,6 @@ export function ActivePositionsOnClaims({
   claims: ClaimPresenter[]
   pagination: PaginationType
 }) {
-  const navigate = useNavigate()
   const options: SortOption<SortColumn>[] = [
     { value: 'Position Amount', sortBy: 'UserAssets' },
     { value: 'Total ETH', sortBy: 'AssetsSum' },
@@ -48,6 +46,8 @@ export function ActivePositionsOnClaims({
             position={claim.user_assets_for > '0' ? 'claimFor' : 'claimAgainst'}
             claimsFor={claim.for_num_positions}
             claimsAgainst={claim.against_num_positions}
+            claimsForValue={+formatBalance(claim.for_assets_sum, 18)}
+            claimsAgainstValue={+formatBalance(claim.against_assets_sum, 18)}
             amount={
               +formatBalance(
                 claim.user_assets_for > '0'
@@ -58,10 +58,7 @@ export function ActivePositionsOnClaims({
               )
             }
             feesAccrued={0} // TODO: Update once BE adds deltas to the data output
-            onClick={() => {
-              navigate(`/app/claim/${claim.claim_id}`)
-            }}
-            className="hover:cursor-pointer"
+            link={`${PATHS.CLAIM}/${claim.claim_id}`}
           >
             <Claim
               size="md"

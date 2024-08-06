@@ -75,7 +75,6 @@ const TabContent = ({
         subject={claim.subject}
         predicate={claim.predicate}
         object={variant === 'followers' ? claim.object : null}
-        claim_id={claim.claim_id}
         totalStake={totalStake}
         totalFollowers={totalFollowers ?? 0}
       />

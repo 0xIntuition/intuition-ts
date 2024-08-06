@@ -8,7 +8,6 @@ import {
   getAtomLabel,
   getAtomLink,
 } from '@lib/utils/misc'
-import { PATHS } from 'consts'
 
 export const ConnectionsHeaderVariants = {
   followers: 'followers',
@@ -23,7 +22,6 @@ interface ConnectionsHeaderProps {
   subject: IdentityPresenter
   predicate: IdentityPresenter
   object: IdentityPresenter | null
-  claim_id: string
   totalFollowers: number
   totalStake: string
 }
@@ -33,7 +31,6 @@ export const ConnectionsHeader: React.FC<ConnectionsHeaderProps> = ({
   subject,
   predicate,
   object,
-  claim_id,
   totalFollowers,
   totalStake = '0',
 }) => {
@@ -78,7 +75,6 @@ export const ConnectionsHeader: React.FC<ConnectionsHeaderProps> = ({
             </Text>
             <Claim
               size="md"
-              link={`${PATHS.CLAIM}/${claim_id}`}
               subject={{
                 variant: subject?.is_user ? Identity.user : Identity.nonUser,
                 label: getAtomLabel(subject),

@@ -127,6 +127,7 @@ const CreateClaimReview: React.FC<CreateClaimReviewProps> = ({
               link: getAtomLink(
                 selectedIdentities.subject as IdentityPresenter,
               ),
+              shouldHover: false,
             }}
             predicate={{
               variant: selectedIdentities.predicate?.is_user
@@ -148,6 +149,7 @@ const CreateClaimReview: React.FC<CreateClaimReviewProps> = ({
               link: getAtomLink(
                 selectedIdentities.predicate as IdentityPresenter,
               ),
+              shouldHover: false,
             }}
             object={{
               variant: selectedIdentities.object?.is_user
@@ -167,8 +169,9 @@ const CreateClaimReview: React.FC<CreateClaimReviewProps> = ({
                 selectedIdentities.object as IdentityPresenter,
               ),
               link: getAtomLink(selectedIdentities.object as IdentityPresenter),
+              shouldHover: false,
             }}
-          />{' '}
+          />
           <Text
             variant="base"
             weight="normal"

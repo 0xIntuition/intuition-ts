@@ -2,7 +2,7 @@ import { Identity, IdentityContentRow } from '@0xintuition/1ui'
 import { IdentityPresenter, SortColumn } from '@0xintuition/api'
 
 import { formatBalance } from '@lib/utils/misc'
-import { useNavigate } from '@remix-run/react'
+import { BLOCK_EXPLORER_URL, IPFS_GATEWAY_URL, PATHS } from 'consts'
 import { PaginationType } from 'types/pagination'
 
 import { SortOption } from '../sort-select'
@@ -21,7 +21,6 @@ export function IdentitiesList({
   enableSearch?: boolean
   enableSort?: boolean
 }) {
-  const navigate = useNavigate()
   const options: SortOption<SortColumn>[] = [
     { value: 'Total ETH', sortBy: 'AssetsSum' },
     { value: 'Total Positions', sortBy: 'NumPositions' },
@@ -47,17 +46,19 @@ export function IdentitiesList({
             variant={identity.is_user ? Identity.user : Identity.nonUser}
             avatarSrc={identity.user?.image ?? identity.image ?? ''}
             name={identity.user?.display_name ?? identity.display_name}
-            walletAddress={identity.user?.wallet ?? identity.identity_id}
+            id={identity.user?.wallet ?? identity.identity_id}
             amount={+formatBalance(BigInt(identity.user_assets || ''), 18, 4)}
             totalFollowers={identity.num_positions}
-            onClick={() => {
-              navigate(
-                identity.is_user
-                  ? `/app/profile/${identity.identity_id}`
-                  : `/app/identity/${identity.id}`,
-              )
-            }}
-            className="hover:cursor-pointer"
+            link={
+              identity.is_user
+                ? `${PATHS.PROFILE}/${identity.identity_id}`
+                : `${PATHS.IDENTITY}/${identity.id}`
+            }
+            ipfsLink={
+              identity.is_user
+                ? `${BLOCK_EXPLORER_URL}/address/${identity.identity_id}`
+                : `${IPFS_GATEWAY_URL}/${identity.id}`
+            }
           />
         </div>
       ))}

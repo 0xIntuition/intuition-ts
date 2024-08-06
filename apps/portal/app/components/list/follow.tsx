@@ -2,8 +2,7 @@ import { ClaimPositionRow, Identity } from '@0xintuition/1ui'
 import { IdentityPresenter, SortColumn } from '@0xintuition/api'
 
 import { SortOption } from '@components/sort-select'
-import { formatBalance } from '@lib/utils/misc'
-import { useNavigate } from '@remix-run/react'
+import { formatBalance, getAtomImage, getAtomLabel } from '@lib/utils/misc'
 import { PATHS } from 'consts'
 import { PaginationType } from 'types/pagination'
 
@@ -18,7 +17,6 @@ export function FollowList({
   pagination: PaginationType
   paramPrefix?: string
 }) {
-  const navigate = useNavigate()
   const options: SortOption<SortColumn>[] = [
     { value: 'Position Amount', sortBy: 'UserAssets' },
     { value: 'Total ETH', sortBy: 'AssetsSum' },
@@ -41,9 +39,9 @@ export function FollowList({
           <ClaimPositionRow
             variant={Identity.user}
             position={'claimFor'}
-            avatarSrc={identity.user?.image ?? identity.image ?? ''}
-            name={identity.user?.display_name ?? identity.display_name ?? ''}
-            walletAddress={identity.user?.wallet ?? identity.identity_id ?? ''}
+            avatarSrc={getAtomImage(identity)}
+            name={getAtomLabel(identity)}
+            id={identity.user?.wallet ?? identity.identity_id}
             amount={+formatBalance(BigInt(identity.user_assets || ''), 18, 4)}
             feesAccrued={
               identity.user_asset_delta
@@ -55,14 +53,11 @@ export function FollowList({
                 : 0
             }
             updatedAt={identity.updated_at}
-            onClick={() => {
-              navigate(
-                identity.is_user
-                  ? `${PATHS.PROFILE}/${identity.identity_id}`
-                  : `${PATHS.IDENTITY}/${identity.id}`,
-              )
-            }}
-            className="hover:cursor-pointer"
+            link={
+              identity.is_user
+                ? `${PATHS.PROFILE}/${identity.identity_id}`
+                : `${PATHS.IDENTITY}/${identity.id}`
+            }
           />
         </div>
       ))}

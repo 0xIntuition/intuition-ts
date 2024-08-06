@@ -2,7 +2,7 @@ import { Identity, IdentityPosition } from '@0xintuition/1ui'
 import { PositionPresenter, PositionSortColumn } from '@0xintuition/api'
 
 import { formatBalance } from '@lib/utils/misc'
-import { useNavigate } from '@remix-run/react'
+import { BLOCK_EXPLORER_URL, PATHS } from 'consts'
 import { PaginationType } from 'types/pagination'
 import { formatUnits } from 'viem'
 
@@ -16,7 +16,6 @@ export function PositionsOnIdentity({
   positions: PositionPresenter[]
   pagination: PaginationType
 }) {
-  const navigate = useNavigate()
   const options: SortOption<PositionSortColumn>[] = [
     { value: 'Total ETH', sortBy: 'Assets' },
     { value: 'Updated At', sortBy: 'UpdatedAt' },
@@ -39,16 +38,14 @@ export function PositionsOnIdentity({
             variant={Identity.user}
             avatarSrc={position.user?.image ?? ''}
             name={position.user?.display_name ?? ''}
-            walletAddress={position.user?.wallet ?? ''}
+            id={position.user?.wallet ?? ''}
             amount={+formatBalance(BigInt(position.assets), 18, 4)}
             feesAccrued={Number(
               formatUnits(BigInt(+position.assets - +position.value), 18),
             )}
             updatedAt={position.updated_at}
-            onClick={() => {
-              navigate(`/app/identity/${position.user?.wallet}`)
-            }}
-            className="hover:cursor-pointer"
+            link={`${PATHS.PROFILE}/${position.user?.wallet}`}
+            ipfsLink={`${BLOCK_EXPLORER_URL}/address/${position.user?.wallet}`}
           />
         </div>
       ))}

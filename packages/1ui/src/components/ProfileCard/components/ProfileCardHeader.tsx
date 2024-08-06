@@ -20,7 +20,7 @@ const ProfileCardHeader = ({
   return (
     <div className="flex items-center space-x-4">
       <Avatar variant={variant} src={avatarSrc} name={name} />
-      <>
+      <div>
         <Trunctacular
           value={name}
           variant="headline"
@@ -48,7 +48,7 @@ const ProfileCardHeader = ({
             </>
           )}
         </div>
-      </>
+      </div>
     </div>
   )
 }
