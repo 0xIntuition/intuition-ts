@@ -4,11 +4,15 @@ import {
   ButtonVariant,
   Claim,
   ClaimRow,
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
   Icon,
   IconName,
   Identity,
   IdentityContentRow,
   IdentityTag,
+  ProfileCard,
   Text,
 } from '@0xintuition/1ui'
 import {
@@ -26,7 +30,7 @@ import {
   getAtomLink,
 } from '@lib/utils/misc'
 import { Link, useNavigate } from '@remix-run/react'
-import { PATHS } from 'consts'
+import { BLOCK_EXPLORER_URL, PATHS } from 'consts'
 import { formatDistance } from 'date-fns'
 import { PaginationType } from 'types/pagination'
 
@@ -108,13 +112,31 @@ function ActivityItem({
     >
       <div className="flex flex-row items-center justify-between min-w-full mb-4">
         <div className="flex flex-row items-center gap-2">
-          <IdentityTag
-            variant={Identity.user}
-            size="lg"
-            imgSrc={activity.creator?.image ?? ''}
-          >
-            {activity.creator?.display_name ?? activity.creator?.wallet ?? ''}
-          </IdentityTag>
+          <HoverCard openDelay={100} closeDelay={100}>
+            <HoverCardTrigger>
+              <Link to={`${PATHS.PROFILE}/${activity.creator?.wallet}`}>
+                <IdentityTag
+                  variant={Identity.user}
+                  size="lg"
+                  imgSrc={activity.creator?.image ?? ''}
+                >
+                  {activity.creator?.display_name ??
+                    activity.creator?.wallet ??
+                    ''}
+                </IdentityTag>
+              </Link>
+            </HoverCardTrigger>
+            <HoverCardContent className="w-80">
+              <ProfileCard
+                variant={Identity.user}
+                avatarSrc={activity.creator?.image ?? ''}
+                name={activity.creator?.display_name ?? ''}
+                id={activity.creator?.wallet}
+                bio={activity.creator?.description ?? ''}
+                ipfsLink={`${BLOCK_EXPLORER_URL}/address/${activity.creator?.wallet}`}
+              />
+            </HoverCardContent>
+          </HoverCard>
           <Text>{message}</Text>
         </div>
         <Text className="text-secondary-foreground">
