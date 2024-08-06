@@ -225,6 +225,8 @@ describe('ProfileCard', () => {
               <a
                 class="text-primary-300"
                 href="https://blockchaincorp.com"
+                rel="noreferrer noopener"
+                target="_blank"
               >
                 https://blockchaincorp.com
               </a>
