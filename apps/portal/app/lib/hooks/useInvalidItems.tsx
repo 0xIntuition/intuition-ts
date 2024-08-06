@@ -1,10 +1,10 @@
 import { useEffect } from 'react'
 
-import { UseFetcherType } from '@remix-run/react'
+import type { useFetcher } from '@remix-run/react'
 import { TagLoaderData } from '@routes/resources+/tag'
 
 interface UseInvalidItemsProps<T> {
-  fetcher: UseFetcherType<TagLoaderData>
+  fetcher: ReturnType<typeof useFetcher<TagLoaderData>>
   selectedItems: T[]
   setInvalidItems: React.Dispatch<React.SetStateAction<T[]>>
   onRemoveItem?: (id: string) => void
