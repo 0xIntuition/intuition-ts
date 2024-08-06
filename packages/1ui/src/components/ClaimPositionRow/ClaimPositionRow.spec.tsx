@@ -105,8 +105,8 @@ describe('ClaimPositionRow', () => {
           position="claimAgainst"
           claimsFor={30}
           claimsAgainst={70}
-          claimsForValue="10"
-          claimsAgainstValue="5"
+          claimsForValue={10}
+          claimsAgainstValue={5}
           amount={1.21}
           feesAccrued={0.005}
         />,
