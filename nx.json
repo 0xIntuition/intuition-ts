@@ -7,7 +7,7 @@
   },
   "targetDefaults": {
     "build": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["^build", "typecheck"],
       "outputs": ["{projectRoot}/dist"],
       "cache": true
     },
