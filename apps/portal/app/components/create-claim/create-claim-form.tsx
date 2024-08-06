@@ -449,7 +449,7 @@ function CreateClaimForm({
   }, [state.status, transactionResponseData])
 
   const Divider = () => (
-    <span className="h-px w-2.5 flex bg-border/30 self-end mb-[1.2rem]" />
+    <span className="h-px w-2.5 flex bg-border/30 self-end mb-[1.2rem] max-sm:hidden" />
   )
 
   return (
@@ -465,7 +465,7 @@ function CreateClaimForm({
           <div className="flex flex-col items-center justify-between h-full">
             <div className="flex-grow flex items-center justify-center">
               <div className="flex flex-col items-center gap-14">
-                <div className="flex items-center">
+                <div className="flex items-center max-sm:flex-col max-sm:gap-3">
                   <IdentityPopover
                     type={ClaimElement.Subject}
                     isObjectPopoverOpen={isSubjectPopoverOpen}

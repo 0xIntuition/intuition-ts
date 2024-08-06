@@ -27,7 +27,7 @@ export default function CreateClaimModal({
         onClose?.()
       }}
     >
-      <DialogContent className="flex flex-col min-w-[640px] h-[420px]">
+      <DialogContent className="flex flex-col min-w-[640px] h-[420px] max-sm:min-w-0">
         <ClaimForm
           onClose={onClose}
           onSuccess={onSuccess}
