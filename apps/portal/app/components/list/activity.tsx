@@ -200,27 +200,24 @@ function ActivityItem({
                 }
               }}
             />
-            <Link
-              to={
-                activity.identity.is_user
-                  ? `${PATHS.PROFILE}/${activity.identity.identity_id}`
-                  : `${PATHS.IDENTITY}/${activity.identity.id}`
-              }
-              prefetch="intent"
+            <a
+              href={`${BLOCK_EXPLORER_URL}/tx/${activity.transaction_hash}`}
+              target="_blank"
+              rel="noreferrer noopener"
             >
               <Button
                 variant={ButtonVariant.secondary}
                 size={ButtonSize.md}
-                className="w-40 h-fit"
+                className="w-max h-fit"
               >
-                View Identity{' '}
-                <Icon name={IconName.arrowUpRightFromCircleIcon} />
+                View on Explorer{' '}
+                <Icon name={IconName.squareArrowTopRight} className="h-4 w-4" />
               </Button>
-            </Link>
+            </a>
           </div>
         )}
         {activity.claim && (
-          <div className="hover:cursor-pointer bg-secondary-foreground/10 px-6 py-4 rounded-xl flex flex-row w-full gap-6 items-center max-md:flex-col">
+          <div className="bg-secondary-foreground/10 px-6 py-4 rounded-xl flex flex-row w-full gap-6 items-center max-md:flex-col">
             <ClaimRow
               claimsFor={activity.claim.for_num_positions}
               claimsAgainst={activity.claim.against_num_positions}
@@ -229,11 +226,6 @@ function ActivityItem({
                 +formatBalance(activity.claim.against_assets_sum, 18)
               }
               tvl={+formatBalance(activity.claim.assets_sum, 18, 4)}
-              onClick={() => {
-                if (activity.claim) {
-                  navigate(`${PATHS.CLAIM}/${activity.claim.claim_id}`)
-                }
-              }}
               className="hover:cursor-pointer w-full"
             >
               <Claim
@@ -302,18 +294,20 @@ function ActivityItem({
                 }}
               />
             </ClaimRow>
-            <Link
-              to={`${PATHS.CLAIM}/${activity.claim.claim_id}`}
-              prefetch="intent"
+            <a
+              href={`${BLOCK_EXPLORER_URL}/tx/${activity.transaction_hash}`}
+              target="_blank"
+              rel="noreferrer noopener"
             >
               <Button
                 variant={ButtonVariant.secondary}
                 size={ButtonSize.md}
-                className="w-40 h-fit"
+                className="w-max h-fit"
               >
-                View Claim <Icon name={IconName.arrowUpRightFromCircleIcon} />
+                View on Explorer{' '}
+                <Icon name={IconName.squareArrowTopRight} className="h-4 w-4" />
               </Button>
-            </Link>
+            </a>
           </div>
         )}
       </div>
