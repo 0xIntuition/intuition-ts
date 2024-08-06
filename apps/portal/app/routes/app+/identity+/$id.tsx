@@ -26,6 +26,7 @@ import SaveListModal from '@components/list/save-list-modal'
 import { SegmentedNav } from '@components/segmented-nav'
 import StakeModal from '@components/stake/stake-modal'
 import TagsModal from '@components/tags/tags-modal'
+import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import {
   saveListModalAtom,
   stakeModalAtom,
@@ -38,7 +39,7 @@ import {
   invariant,
 } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
-import { Outlet, useLoaderData, useNavigate } from '@remix-run/react'
+import { Outlet, useNavigate } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
 import { requireUser, requireUserWallet } from '@server/auth'
 import { getVaultDetails } from '@server/multivault'
@@ -110,11 +111,11 @@ export interface IdentityLoaderData {
 }
 
 export default function IdentityDetails() {
-  const { identity, vaultDetails, userWallet } = useLoaderData<{
+  const { identity, vaultDetails, userWallet } = useLiveLoader<{
     identity: ExtendedIdentityPresenter
     vaultDetails: VaultDetailsType
     userWallet: string
-  }>()
+  }>(['attest'])
   const navigate = useNavigate()
 
   logger('identity', identity)
@@ -170,7 +171,16 @@ export default function IdentityDetails() {
         />
       </Tags>
       {vaultDetails !== null && user_assets !== '0' ? (
-        <PositionCard onButtonClick={() => logger('sell position clicked')}>
+        <PositionCard
+          onButtonClick={() =>
+            setStakeModalActive((prevState) => ({
+              ...prevState,
+              mode: 'redeem',
+              modalType: 'identity',
+              isOpen: true,
+            }))
+          }
+        >
           <PositionCardStaked
             amount={user_assets ? +formatBalance(user_assets, 18, 4) : 0}
           />
