@@ -40,18 +40,21 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - name: Set Shas
         uses: nrwl/nx-set-shas@v3
+      - run: |
+          echo "BASE: ${{ env.NX_BASE }}"
+          echo "HEAD: ${{ env.NX_HEAD }}"
 
       - name: Run Affected Lint
         if: github.event_name == 'pull_request'
-        run: pnpm nx affected -t lint --base=origin/main --head=$(git rev-parse HEAD)
+        run: pnpm nx affected -t lint
 
       - name: Run Affected Tests
         if: github.event_name == 'pull_request'
-        run: pnpm nx affected -t test --base=origin/main --head=$(git rev-parse HEAD)
+        run: pnpm nx affected -t test
 
       - name: Run Affected Builds
         if: github.event_name == 'pull_request'
-        run: pnpm nx affected -t build --base=origin/main --head=$(git rev-parse HEAD)
+        run: pnpm nx affected -t build
 
       - name: Build 1ui Storybook
         if: github.ref == 'refs/heads/main'
