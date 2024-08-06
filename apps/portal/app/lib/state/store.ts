@@ -63,6 +63,7 @@ export const addIdentitiesListModalAtom = atom<{
   id: null,
 })
 
+// @ts-ignore TODO: jp - identity is passed as a prop to atom, but it does not exist in the atom definition
 export const saveListModalAtom = atom<{
   isOpen: boolean
   id: string | null

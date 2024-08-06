@@ -26,6 +26,7 @@ export default function TagsModal({
       }}
     >
       <DialogContent className="bg-neutral-950 rounded-xl shadow border border-solid border-black/10 h-[550px] overflow-hidden flex flex-col">
+        {/* @ts-ignore TODO: jp - userWallet is a required prop. Where should it come from? */}
         <TagsForm
           identity={identity}
           mode={mode}

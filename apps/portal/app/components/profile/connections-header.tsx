@@ -22,7 +22,7 @@ interface ConnectionsHeaderProps {
   variant: ConnectionsHeaderVariantType
   subject: IdentityPresenter
   predicate: IdentityPresenter
-  object: IdentityPresenter
+  object: IdentityPresenter | null
   claim_id: string
   totalFollowers: number
   totalStake: string

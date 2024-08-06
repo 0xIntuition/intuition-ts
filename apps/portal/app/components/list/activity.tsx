@@ -202,7 +202,7 @@ function ActivityItem({
             <ClaimRow
               claimsFor={activity.claim.for_num_positions}
               claimsAgainst={activity.claim.against_num_positions}
-              amount={+formatBalance(activity.claim.assets_sum, 18, 4)}
+              tvl={+formatBalance(activity.claim.assets_sum, 18, 4)}
               onClick={() => {
                 if (activity.claim) {
                   navigate(`${PATHS.CLAIM}/${activity.claim.claim_id}`)
