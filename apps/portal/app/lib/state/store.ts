@@ -1,3 +1,5 @@
+import { IdentityPresenter } from '@0xintuition/api'
+
 import type { WritableAtom } from 'jotai'
 import { atom, createStore } from 'jotai'
 
@@ -64,6 +66,7 @@ export const addIdentitiesListModalAtom = atom<{
 export const saveListModalAtom = atom<{
   isOpen: boolean
   id: string | null
+  identity: IdentityPresenter
 }>({
   isOpen: false,
   id: null,

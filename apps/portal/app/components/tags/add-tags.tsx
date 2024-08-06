@@ -1,13 +1,14 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 import { Popover, PopoverContent, PopoverTrigger, Text } from '@0xintuition/1ui'
 import { IdentityPresenter } from '@0xintuition/api'
 
-import ErrorList from '@components/error-list'
 import { IdentitySearchCombobox } from '@components/identity/identity-search-combo-box'
-import { useIdentityServerSearch } from '@lib/hooks/useIdentityServerSearch'
-import { createIdentityModalAtom } from '@lib/state/store'
-import logger from '@lib/utils/logger'
+import { AddListExistingCta } from '@components/list/add-list-existing-cta'
+import SaveListModal from '@components/list/save-list-modal'
+import useFilteredIdentitySearch from '@lib/hooks/useFilteredIdentitySearch'
+import useInvalidItems from '@lib/hooks/useInvalidItems'
+import { createIdentityModalAtom, saveListModalAtom } from '@lib/state/store'
 import { useFetcher } from '@remix-run/react'
 import { TagLoaderData } from '@routes/resources+/tag'
 import { TAG_PREDICATE_VAULT_ID_TESTNET, TAG_RESOURCE_ROUTE } from 'consts'
@@ -19,19 +20,24 @@ import { TagsListInputPortal } from './tags-list-input-portal'
 interface AddTagsProps {
   selectedTags: IdentityPresenter[]
   existingTagIds: string[]
+  identity: IdentityPresenter
+  userWallet: string
   onAddTag: (newTag: IdentityPresenter) => void
   onRemoveTag: (id: string) => void
+  onRemoveInvalidTag: (id: string) => void
   dispatch: (action: TransactionActionType) => void
   subjectVaultId: string
-  invalidTags: string[]
-  setInvalidTags: React.Dispatch<React.SetStateAction<string[]>>
+  invalidTags: IdentityPresenter[]
+  setInvalidTags: React.Dispatch<React.SetStateAction<IdentityPresenter[]>>
 }
 
 export function AddTags({
   selectedTags,
-  existingTagIds,
+  identity,
+  userWallet,
   onAddTag,
   onRemoveTag,
+  onRemoveInvalidTag,
   subjectVaultId,
   invalidTags,
   setInvalidTags,
@@ -43,18 +49,22 @@ export function AddTags({
 
   const [, setCreateIdentityModalActive] = useAtom(createIdentityModalAtom)
 
-  const { setSearchQuery, identities, handleInput } = useIdentityServerSearch()
+  const [saveListModalActive, setSaveListModalActive] =
+    useAtom(saveListModalAtom)
+
+  const [selectedInvalidTag, setSelectedInvalidTag] =
+    useState<IdentityPresenter | null>(null)
+
   const [isPopoverOpen, setIsPopoverOpen] = useState(false)
 
-  const filteredIdentities = identities.filter(
-    (identity) =>
-      !selectedTags.some((tag) => tag.vault_id === identity.vault_id),
-  )
+  const { setSearchQuery, filteredIdentities, handleInput } =
+    useFilteredIdentitySearch({
+      selectedItems: selectedTags,
+    })
 
   const tagFetcher = useFetcher<TagLoaderData>()
 
   const handleIdentitySelect = (identity: IdentityPresenter) => {
-    logger('tag', identity)
     onAddTag(identity)
     setSearchQuery('')
 
@@ -69,28 +79,26 @@ export function AddTags({
     tagFetcher.load(finalUrl)
   }
 
-  useEffect(() => {
-    if (tagFetcher.state === 'idle' && tagFetcher.data !== undefined) {
-      const result = tagFetcher.data.result
-      if (result === '0') {
-        logger('in fetcher: valid')
+  const handleSaveClick = (invalidTag: IdentityPresenter) => {
+    setSelectedInvalidTag(invalidTag)
+    setSaveListModalActive({
+      isOpen: true,
+      identity: invalidTag,
+    })
+  }
 
-        setInvalidTags((prev) =>
-          prev.filter((id) => id !== tagFetcher?.data?.objectId),
-        )
-      } else {
-        logger('in fetcher: invalid')
-        setInvalidTags((prev) => {
-          const objectId = tagFetcher?.data?.objectId
-          return objectId ? [...prev, objectId] : prev
-        })
-      }
-    }
-  }, [tagFetcher.state, tagFetcher.data, setInvalidTags])
+  useInvalidItems({
+    fetcher: tagFetcher,
+    selectedItems: selectedTags,
+    setInvalidItems: setInvalidTags,
+    onRemoveItem: onRemoveTag,
+    idKey: 'vault_id',
+    dataIdKey: 'objectId',
+  })
 
   return (
     <div className="flex flex-col min-h-36">
-      <div className="mb-8 gap-1">
+      <div className="mb-3 gap-2">
         <Text variant="body" className="text-primary/70">
           Add tags to this identity
         </Text>
@@ -98,38 +106,58 @@ export function AddTags({
           Select up to 5 tags to add to this identity.
         </Text>
       </div>
-      <Popover
-        open={isPopoverOpen}
-        onOpenChange={setIsPopoverOpen}
-        modal={true}
-      >
-        <PopoverContent className="bg-transparent border-none">
-          <IdentitySearchCombobox
-            onCreateIdentityClick={() => setCreateIdentityModalActive(true)}
-            identities={filteredIdentities}
-            existingIdentityIds={existingTagIds}
-            onIdentitySelect={handleIdentitySelect}
-            onValueChange={setSearchQuery}
-            onInput={handleInput}
-            shouldFilter={false}
+      <div className="mt-4 max-h-60 overflow-y-auto pr-4">
+        <Popover
+          open={isPopoverOpen}
+          onOpenChange={setIsPopoverOpen}
+          modal={true}
+        >
+          <PopoverContent className="bg-transparent border-none">
+            <IdentitySearchCombobox
+              onCreateIdentityClick={() => setCreateIdentityModalActive(true)}
+              identities={filteredIdentities}
+              onIdentitySelect={handleIdentitySelect}
+              onValueChange={setSearchQuery}
+              onInput={handleInput}
+              shouldFilter={false}
+            />
+          </PopoverContent>
+          <div className="mb-8">
+            <TagsListInputPortal
+              variant="tag"
+              tags={formattedTags}
+              maxTags={5}
+              onAddTag={() => setIsPopoverOpen(true)}
+              onRemoveTag={onRemoveTag}
+              PopoverTriggerComponent={PopoverTrigger}
+            />
+          </div>
+        </Popover>
+        {invalidTags.map((invalidTag) => (
+          <AddListExistingCta
+            key={invalidTag.vault_id}
+            identity={invalidTag}
+            variant="tag"
+            onSaveClick={() => handleSaveClick(invalidTag)}
+            onClose={() => onRemoveInvalidTag(invalidTag.vault_id)}
           />
-        </PopoverContent>
-        <TagsListInputPortal
-          variant="tag"
-          tags={formattedTags}
-          maxTags={5}
-          onAddTag={() => setIsPopoverOpen(true)}
-          onRemoveTag={onRemoveTag}
-          PopoverTriggerComponent={PopoverTrigger}
-          invalidTags={invalidTags}
+        ))}
+      </div>
+      {selectedInvalidTag && (
+        <SaveListModal
+          tag={selectedInvalidTag}
+          identity={identity}
+          contract={identity.contract}
+          userWallet={userWallet}
+          open={saveListModalActive.isOpen}
+          onClose={() => {
+            setSaveListModalActive({
+              isOpen: false,
+              invalidIdentity: null,
+            })
+            setSelectedInvalidTag(null)
+          }}
         />
-      </Popover>
-      {invalidTags.length !== 0 && (
-        <div className="mt-4">
-          <ErrorList
-            errors={['Selected tag(s) already exist on this identity.']}
-          />
-        </div>
       )}
     </div>
   )

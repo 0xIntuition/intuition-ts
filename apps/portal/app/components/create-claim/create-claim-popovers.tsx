@@ -89,7 +89,7 @@ export const IdentityPopover: React.FC<IdentityPopoverProps> = ({
                       selectedIdentity.display_name,
                     18,
                   )}
-                  walletAddress={
+                  id={
                     selectedIdentity.is_user === true
                       ? selectedIdentity.user?.ens_name ??
                         sliceString(selectedIdentity.user?.wallet, 6, 4)

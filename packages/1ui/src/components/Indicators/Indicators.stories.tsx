@@ -64,7 +64,7 @@ export const IndicatorUsage: Story = {
       <Container>
         <p>ClaimValueDisplay</p>
         <ClaimValueDisplay
-          value={0.345}
+          tvl={0.345}
           currency="ETH"
           claimsFor={230}
           claimsAgainst={125}

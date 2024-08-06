@@ -1,5 +1,14 @@
-import { Claim, MonetaryValue, Text } from '@0xintuition/1ui'
+import { Claim, Identity, MonetaryValue, Text } from '@0xintuition/1ui'
 import { IdentityPresenter } from '@0xintuition/api'
+
+import {
+  getAtomDescription,
+  getAtomImage,
+  getAtomIpfsLink,
+  getAtomLabel,
+  getAtomLink,
+} from '@lib/utils/misc'
+import { PATHS } from 'consts'
 
 export const ConnectionsHeaderVariants = {
   followers: 'followers',
@@ -13,7 +22,8 @@ interface ConnectionsHeaderProps {
   variant: ConnectionsHeaderVariantType
   subject: IdentityPresenter
   predicate: IdentityPresenter
-  object: IdentityPresenter | null
+  object: IdentityPresenter
+  claim_id: string
   totalFollowers: number
   totalStake: string
 }
@@ -23,6 +33,7 @@ export const ConnectionsHeader: React.FC<ConnectionsHeaderProps> = ({
   subject,
   predicate,
   object,
+  claim_id,
   totalFollowers,
   totalStake = '0',
 }) => {
@@ -66,29 +77,35 @@ export const ConnectionsHeader: React.FC<ConnectionsHeaderProps> = ({
               Follow Claim
             </Text>
             <Claim
+              size="md"
+              link={`${PATHS.CLAIM}/${claim_id}`}
               subject={{
-                variant: 'non-user',
-                label: subject?.display_name ?? subject?.identity_id ?? '',
-                imgSrc: subject?.image ?? '',
+                variant: subject?.is_user ? Identity.user : Identity.nonUser,
+                label: getAtomLabel(subject),
+                imgSrc: getAtomImage(subject),
+                id: subject?.identity_id,
+                description: getAtomDescription(subject),
+                ipfsLink: getAtomIpfsLink(subject),
+                link: getAtomLink(subject),
               }}
               predicate={{
-                variant: 'non-user',
-                label: predicate?.display_name ?? predicate?.identity_id ?? '',
-                imgSrc: predicate?.image ?? '',
+                variant: predicate?.is_user ? Identity.user : Identity.nonUser,
+                label: getAtomLabel(predicate),
+                imgSrc: getAtomImage(predicate),
+                id: predicate?.identity_id,
+                description: getAtomDescription(predicate),
+                ipfsLink: getAtomIpfsLink(predicate),
+                link: getAtomLink(predicate),
               }}
-              object={
-                object === null
-                  ? {
-                      variant: 'user',
-                      label: '?',
-                      imgSrc: '',
-                    }
-                  : {
-                      variant: 'user',
-                      label: object?.user?.display_name ?? '',
-                      imgSrc: object?.user?.image ?? '',
-                    }
-              }
+              object={{
+                variant: object?.is_user ? Identity.user : Identity.nonUser,
+                label: getAtomLabel(object),
+                imgSrc: getAtomImage(object),
+                id: object?.identity_id,
+                description: getAtomDescription(object),
+                ipfsLink: getAtomIpfsLink(object),
+                link: getAtomLink(object),
+              }}
             />
           </div>
         </div>

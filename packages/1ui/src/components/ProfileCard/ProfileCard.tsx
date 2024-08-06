@@ -8,15 +8,16 @@ import { ProfileCardHeader, ProfileCardStatItem } from './components'
 
 export interface ProfileCardProps extends HTMLAttributes<HTMLDivElement> {
   variant?: IdentityType
-  avatarSrc: string
+  avatarSrc?: string
   name: string
-  walletAddress: string
+  id?: string
+  vaultId?: string
   stats?: {
     numberOfFollowers?: number
     numberOfFollowing?: number
     points?: number
   }
-  ipfsLink: string
+  ipfsLink?: string
   externalLink?: string
   bio?: string
   children?: React.ReactNode
@@ -24,9 +25,10 @@ export interface ProfileCardProps extends HTMLAttributes<HTMLDivElement> {
 
 const ProfileCard = ({
   variant = Identity.user,
-  avatarSrc,
+  avatarSrc = '',
   name,
-  walletAddress,
+  id,
+  vaultId,
   stats,
   ipfsLink,
   externalLink,
@@ -46,10 +48,10 @@ const ProfileCard = ({
         variant={variant}
         avatarSrc={avatarSrc}
         name={name}
-        walletAddress={walletAddress}
-        ipfsLink={ipfsLink}
+        id={id}
+        link={ipfsLink}
       />
-      {variant === Identity.user && (
+      {variant === Identity.user && stats && (
         <div className="flex justify-start items-center gap-4 pt-2">
           <ProfileCardStatItem
             value={stats?.numberOfFollowing ?? 0}
@@ -79,15 +81,24 @@ const ProfileCard = ({
           </Text>
         )}
 
+        {vaultId && (
+          <div className="pt-2.5">
+            <Text variant="body" className="text-muted-foreground">
+              Vault ID
+            </Text>
+            <Text variant="body">{vaultId}</Text>
+          </div>
+        )}
+
         {variant === Identity.nonUser &&
           externalLink &&
           externalLink !== 'https://' && (
-            <div className="">
+            <div className="pt-2.5">
               <Text variant="body" className="text-muted-foreground">
                 Link
               </Text>
-              <a href={externalLink} className="text-primary-300">
-                {externalLink}
+              <a href={externalLink} target="_blank" rel="noreferrer noopener">
+                <Text variant="body">{externalLink}</Text>
               </a>
             </div>
           )}

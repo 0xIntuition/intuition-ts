@@ -9,7 +9,6 @@ import {
 } from '@0xintuition/1ui'
 import { IdentityPresenter } from '@0xintuition/api'
 
-import { sliceString } from '@lib/utils/misc'
 import { BLOCK_EXPLORER_URL, IPFS_GATEWAY_URL } from 'consts'
 
 export interface ClaimWithHoverableProps {
@@ -64,10 +63,9 @@ export const IdentityWithHoverable = ({
                 ? identity?.user?.display_name ?? ''
                 : identity?.display_name
             }
-            walletAddress={
+            id={
               identity?.is_user
-                ? identity?.user?.ens_name ??
-                  sliceString(identity?.creator_address, 6, 4)
+                ? identity?.user?.ens_name ?? identity?.creator_address
                 : identity?.identity_id
             }
             stats={

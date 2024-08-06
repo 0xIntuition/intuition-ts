@@ -105,6 +105,8 @@ describe('ClaimPositionRow', () => {
           position="claimAgainst"
           claimsFor={30}
           claimsAgainst={70}
+          claimsForValue={10}
+          claimsAgainstValue={5}
           amount={1.21}
           feesAccrued={0.005}
         />,
@@ -123,12 +125,14 @@ describe('ClaimPositionRow', () => {
                 <div
                   class="flex items-center h-[6px] mb-4"
                 >
-                  <span
+                  <button
                     class="h-full bg-against block rounded-l-sm"
-                    style="min-width: 70%;"
+                    data-state="closed"
+                    style="min-width: 33.33333333333333%;"
                   />
-                  <span
+                  <button
                     class="h-full w-full bg-for block rounded-r-sm"
+                    data-state="closed"
                   />
                 </div>
               </div>

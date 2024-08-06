@@ -6,7 +6,12 @@ import { ClaimStatus } from './ClaimStatus'
 describe('ClaimStatus', () => {
   it('should render the ClaimStatus component', () => {
     const { asFragment } = render(
-      <ClaimStatus claimsFor={10} claimsAgainst={5}>
+      <ClaimStatus
+        claimsFor={2}
+        claimsAgainst={1}
+        claimsForValue={10}
+        claimsAgainstValue={5}
+      >
         <Claim
           subject={{
             variant: 'non-user',
@@ -31,19 +36,22 @@ describe('ClaimStatus', () => {
           <div
             class="flex items-center h-[6px] mb-4"
           >
-            <span
+            <button
               class="h-full bg-against block rounded-l-sm"
+              data-state="closed"
               style="min-width: 33.33333333333333%;"
             />
-            <span
+            <button
               class="h-full w-full bg-for block rounded-r-sm"
+              data-state="closed"
             />
           </div>
           <div
-            class="flex items-center w-full max-w-max group max-md:m-auto max-sm:flex-col"
+            class="flex items-center w-full max-w-max group relative"
           >
             <button
-              class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center rounded-md text-base [&>span]:h-6 [&>span]:w-6 group-hover:border-primary group-hover:bg-primary/20"
+              class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center rounded-md text-base [&>span]:h-6 [&>span]:w-6 disabled:bg-muted disabled:text-muted-foreground disabled:border-muted cursor-not-allowed group-hover:border-primary group-hover:bg-primary/20 relative z-10"
+              disabled=""
             >
               <span
                 class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square bg-background theme-border rounded"
@@ -67,12 +75,13 @@ describe('ClaimStatus', () => {
               </p>
             </button>
             <div
-              class="shrink-0 bg-border/20 h-[1px] w-4 group-hover:bg-primary max-sm:w-px max-sm:h-2"
+              class="shrink-0 bg-border/20 h-[1px] w-4 group-hover:bg-primary"
               data-orientation="horizontal"
               role="none"
             />
             <button
-              class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center rounded-md text-base [&>span]:h-6 [&>span]:w-6 group-hover:border-primary group-hover:bg-primary/20"
+              class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center rounded-md text-base [&>span]:h-6 [&>span]:w-6 disabled:bg-muted disabled:text-muted-foreground disabled:border-muted cursor-not-allowed group-hover:border-primary group-hover:bg-primary/20 relative z-10"
+              disabled=""
             >
               <span
                 class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square bg-background theme-border rounded"
@@ -96,12 +105,13 @@ describe('ClaimStatus', () => {
               </p>
             </button>
             <div
-              class="shrink-0 bg-border/20 h-[1px] w-4 group-hover:bg-primary max-sm:w-px max-sm:h-2"
+              class="shrink-0 bg-border/20 h-[1px] w-4 group-hover:bg-primary"
               data-orientation="horizontal"
               role="none"
             />
             <button
-              class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center rounded-md text-base [&>span]:h-6 [&>span]:w-6 group-hover:border-primary group-hover:bg-primary/20"
+              class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center rounded-md text-base [&>span]:h-6 [&>span]:w-6 disabled:bg-muted disabled:text-muted-foreground disabled:border-muted cursor-not-allowed group-hover:border-primary group-hover:bg-primary/20 relative z-10"
+              disabled=""
             >
               <span
                 class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square bg-background theme-border rounded"

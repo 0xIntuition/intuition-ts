@@ -40,7 +40,7 @@ export default function CreateAtomActivity({
             variant={Identity.nonUser}
             avatarSrc={identity?.image ?? ''}
             name={identity?.display_name ?? ''}
-            walletAddress={sliceString(identity?.identity_id, 6, 4)}
+            id={sliceString(identity?.identity_id, 6, 4)}
             bio={identity?.description ?? ''}
             ipfsLink={
               identity.is_user === true
