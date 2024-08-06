@@ -15,8 +15,10 @@ type Story = StoryObj<typeof ClaimStatus>
 
 export const BasicUsage: Story = {
   args: {
-    claimsForValue: '10',
-    claimsAgainstValue: '5',
+    claimsFor: 2,
+    claimsAgainst: 1,
+    claimsForValue: 10,
+    claimsAgainstValue: 5,
   },
   render: (args) => (
     <ClaimStatus {...args} className="w-[800px]">

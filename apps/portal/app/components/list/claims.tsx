@@ -60,8 +60,8 @@ export function ClaimsList({
           <ClaimRow
             claimsFor={claim.for_num_positions}
             claimsAgainst={claim.against_num_positions}
-            claimsForValue={claim.against_assets_sum}
-            claimsAgainstValue={claim.for_assets_sum}
+            claimsForValue={+formatBalance(claim.for_assets_sum, 18)}
+            claimsAgainstValue={+formatBalance(claim.against_assets_sum, 18)}
             tvl={+formatBalance(claim.assets_sum, 18, 4)}
           >
             <Claim

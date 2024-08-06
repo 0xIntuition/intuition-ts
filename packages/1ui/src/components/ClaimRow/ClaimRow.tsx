@@ -7,8 +7,8 @@ import { CurrencyType } from 'types'
 export interface ClaimRowProps extends React.HTMLAttributes<HTMLDivElement> {
   claimsFor: number
   claimsAgainst: number
-  claimsForValue: string
-  claimsAgainstValue: string
+  claimsForValue: number
+  claimsAgainstValue: number
   tvl: number
   currency?: CurrencyType
 }
@@ -34,6 +34,8 @@ const ClaimRow = ({
     >
       <div className="w-[60%] max-md:w-full">
         <ClaimStatus
+          claimsFor={claimsFor}
+          claimsAgainst={claimsAgainst}
           claimsForValue={claimsForValue}
           claimsAgainstValue={claimsAgainstValue}
         >
