@@ -132,7 +132,7 @@ function ActivityItem({
                 </IdentityTag>
               </Link>
             </HoverCardTrigger>
-            <HoverCardContent className="w-80">
+            <HoverCardContent className="w-fit">
               {activity.creator ? (
                 <ProfileCard
                   variant={Identity.user}
@@ -141,6 +141,7 @@ function ActivityItem({
                   id={activity.creator?.wallet}
                   bio={activity.creator?.description ?? ''}
                   ipfsLink={`${BLOCK_EXPLORER_URL}/address/${activity.creator?.wallet}`}
+                  className="w-80"
                 />
               ) : (
                 <ProfileCard
@@ -152,6 +153,7 @@ function ActivityItem({
                     'There is no user associated with this wallet. This data was created on-chain, outside of the Intuition Portal.'
                   }
                   ipfsLink={`${BLOCK_EXPLORER_URL}/address/${activity.identity?.creator_address}`}
+                  className="w-80"
                 />
               )}
             </HoverCardContent>
