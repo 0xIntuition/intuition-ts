@@ -128,6 +128,13 @@ export function AddIdentities({
     selectedIdentities,
   ])
 
+  const validIdentities = selectedIdentities.filter(
+    (identity) =>
+      !invalidIdentities.some(
+        (invalid) => invalid.vault_id === identity.vault_id,
+      ),
+  )
+
   return (
     <div className="flex flex-col min-h-36">
       <div className="mb-3 gap-2">
@@ -140,53 +147,46 @@ export function AddIdentities({
       </div>
       <Separator />
       <div className="mt-4 mb-8 space-y-2">
-        {selectedIdentities
-          .filter(
-            (identity) =>
-              !invalidIdentities.some(
-                (invalid) => invalid.vault_id === identity.vault_id,
-              ),
-          )
-          .map((identity, index) => (
-            <div
-              className="flex items-center justify-between gap-2.5"
-              key={identity.id}
-            >
-              <div className="flex items-center gap-3 flex-1">
-                <Text
-                  variant="body"
-                  weight="medium"
-                  className="text-secondary-foreground/30 w-2"
-                >
-                  {index + 1}.
-                </Text>
-
-                <IdentityTag
-                  size={IdentityTagSize.md}
-                  variant={Identity.nonUser}
-                  imgSrc={identity.image ?? ''}
-                >
-                  <Trunctacular value={identity.display_name} />
-                </IdentityTag>
-              </div>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => onRemoveIdentity(identity.vault_id)}
-                className="border-none"
+        {validIdentities.map((identity, index) => (
+          <div
+            className="flex items-center justify-between gap-2.5"
+            key={identity.id}
+          >
+            <div className="flex items-center gap-3 flex-1">
+              <Text
+                variant="body"
+                weight="medium"
+                className="text-secondary-foreground/30 w-2"
               >
-                <Icon name="cross-large" className="h-3 w-4" />
-              </Button>
+                {index + 1}.
+              </Text>
+
+              <IdentityTag
+                size={IdentityTagSize.md}
+                variant={Identity.nonUser}
+                imgSrc={identity.image ?? ''}
+              >
+                <Trunctacular value={identity.display_name} />
+              </IdentityTag>
             </div>
-          ))}
-        {selectedIdentities.length < maxIdentitiesToAdd && (
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => onRemoveIdentity(identity.vault_id)}
+              className="border-none"
+            >
+              <Icon name="cross-large" className="h-3 w-4" />
+            </Button>
+          </div>
+        ))}
+        {validIdentities.length < maxIdentitiesToAdd && (
           <div className="flex flex-row items-center gap-3">
             <Text
               variant="body"
               weight="medium"
               className="text-secondary-foreground/30 w-2"
             >
-              {selectedIdentities.length + 1}.
+              {validIdentities.length + 1}.
             </Text>
             <Popover
               open={isPopoverOpen}
@@ -215,15 +215,17 @@ export function AddIdentities({
           </div>
         )}
       </div>
-      {invalidIdentities.map((invalidIdentity) => (
-        <AddListAlertCta
-          key={invalidIdentity.vault_id}
-          identity={invalidIdentity}
-          message={`${invalidIdentity.display_name} already exists in this list.`}
-          onSaveClick={() => handleSaveClick(invalidIdentity)}
-          onClose={() => onRemoveInvalidIdentity(invalidIdentity.vault_id)}
-        />
-      ))}
+      <div className="max-h-40 overflow-y-auto mb-4">
+        {invalidIdentities.map((invalidIdentity) => (
+          <AddListAlertCta
+            key={invalidIdentity.vault_id}
+            identity={invalidIdentity}
+            message="This identity already exists in this list."
+            onSaveClick={() => handleSaveClick(invalidIdentity)}
+            onClose={() => onRemoveInvalidIdentity(invalidIdentity.vault_id)}
+          />
+        ))}
+      </div>
       {selectedInvalidIdentity && (
         <SaveListModal
           tag={identity}
