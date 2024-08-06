@@ -32,6 +32,8 @@ interface CommonProps extends React.HTMLAttributes<HTMLDivElement> {
   tags?: TagWithValueProps[]
   claimsForValue?: number
   claimsAgainstValue?: number
+  link: string
+  ipfsLink?: string
 }
 
 interface UserVariantProps extends CommonProps {
@@ -50,7 +52,6 @@ interface ClaimVariantProps extends CommonProps {
   claimsAgainst: number
   name?: never
   avatarSrc?: never
-  link: string
   id?: never
 }
 
@@ -70,6 +71,7 @@ const ClaimPositionRow = ({
   id,
   avatarSrc,
   link,
+  ipfsLink,
   updatedAt,
   tags,
   children,
@@ -97,11 +99,13 @@ const ClaimPositionRow = ({
                 />
               </a>
               <div className="flex flex-row items-center gap-1">
-                <Trunctacular
-                  value={id}
-                  variant="body"
-                  className="text-secondary-foreground"
-                />
+                <a href={ipfsLink} target="_blank" rel="noreferrer noopener">
+                  <Trunctacular
+                    value={id}
+                    variant="body"
+                    className="text-secondary-foreground"
+                  />
+                </a>
                 <Copy text={id} className="text-secondary-foreground" />
               </div>
             </div>

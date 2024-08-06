@@ -82,7 +82,6 @@ const TabContent = ({
         object={
           variant === ConnectionsHeaderVariants.followers ? claim.object : null
         }
-        claim_id={claim.claim_id}
         totalStake={totalStake}
         totalFollowers={totalFollowers ?? 0}
       />

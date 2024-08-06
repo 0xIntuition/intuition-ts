@@ -2,6 +2,7 @@ import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
+  Identity,
   IdentityTag,
   Popover,
   PopoverContent,
@@ -13,8 +14,13 @@ import {
 import { IdentityPresenter } from '@0xintuition/api'
 
 import { IdentitySearchCombobox } from '@components/identity/identity-search-combo-box'
-import { sliceString, truncateString } from '@lib/utils/misc'
-import { BLOCK_EXPLORER_URL, IPFS_GATEWAY_URL } from 'consts'
+import {
+  getAtomDescription,
+  getAtomImage,
+  getAtomIpfsLink,
+  getAtomLabel,
+  sliceString,
+} from '@lib/utils/misc'
 import { ClaimElementType } from 'types'
 
 interface IdentityPopoverProps {
@@ -56,10 +62,10 @@ export const IdentityPopover: React.FC<IdentityPopoverProps> = ({
             <HoverCardTrigger className="w-full">
               <IdentityTag
                 size="lg"
-                variant={selectedIdentity?.is_user ? 'user' : 'non-user'}
-                imgSrc={
-                  selectedIdentity?.user?.image ?? selectedIdentity?.image
+                variant={
+                  selectedIdentity?.is_user ? Identity.user : Identity.nonUser
                 }
+                imgSrc={getAtomImage(selectedIdentity)}
                 className="w-full"
               >
                 <Trunctacular
@@ -79,16 +85,12 @@ export const IdentityPopover: React.FC<IdentityPopoverProps> = ({
               <HoverCardContent side="bottom" className="w-80">
                 <ProfileCard
                   variant={
-                    selectedIdentity.is_user === true ? 'user' : 'non-user'
+                    selectedIdentity.is_user === true
+                      ? Identity.user
+                      : Identity.nonUser
                   }
-                  avatarSrc={
-                    selectedIdentity.user?.image ?? selectedIdentity.image ?? ''
-                  }
-                  name={truncateString(
-                    selectedIdentity.user?.display_name ??
-                      selectedIdentity.display_name,
-                    18,
-                  )}
+                  avatarSrc={getAtomImage(selectedIdentity)}
+                  name={getAtomLabel(selectedIdentity)}
                   id={
                     selectedIdentity.is_user === true
                       ? selectedIdentity.user?.ens_name ??
@@ -105,16 +107,8 @@ export const IdentityPopover: React.FC<IdentityPopoverProps> = ({
                         }
                       : undefined
                   }
-                  bio={
-                    selectedIdentity.is_user === true
-                      ? selectedIdentity.user?.description ?? ''
-                      : selectedIdentity.description ?? ''
-                  }
-                  ipfsLink={
-                    selectedIdentity.is_user === true
-                      ? `${BLOCK_EXPLORER_URL}/address/${selectedIdentity.identity_id}`
-                      : `${IPFS_GATEWAY_URL}/${selectedIdentity?.identity_id?.replace('ipfs://', '')}`
-                  }
+                  bio={getAtomDescription(selectedIdentity)}
+                  ipfsLink={getAtomIpfsLink(selectedIdentity)}
                 ></ProfileCard>
               </HoverCardContent>
             )}

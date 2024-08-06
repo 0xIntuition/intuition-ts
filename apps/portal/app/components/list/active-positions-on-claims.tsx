@@ -58,6 +58,7 @@ export function ActivePositionsOnClaims({
               )
             }
             feesAccrued={0} // TODO: Update once BE adds deltas to the data output
+            link={`${PATHS.CLAIM}/${claim.claim_id}`}
           >
             <Claim
               size="md"

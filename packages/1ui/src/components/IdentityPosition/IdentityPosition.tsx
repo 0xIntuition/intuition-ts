@@ -71,7 +71,7 @@ const IdentityPosition = ({
               <Trunctacular value={name} variant="bodyLarge" className="mr-1" />
             </a>
             <div className="flex flex-row items-center gap-1">
-              <a href={ipfsLink}>
+              <a href={ipfsLink} target="_blank" rel="noreferrer noopener">
                 <Trunctacular
                   value={id}
                   variant="body"

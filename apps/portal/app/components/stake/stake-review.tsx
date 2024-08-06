@@ -21,7 +21,6 @@ import {
   getAtomLabel,
   getAtomLink,
 } from '@lib/utils/misc'
-import { PATHS } from 'consts'
 import { TransactionActionType, TransactionStateType } from 'types/transaction'
 
 interface StakeReviewProps {
@@ -118,7 +117,6 @@ export default function StakeReview({
             ) : (
               <Claim
                 size="md"
-                link={`${PATHS.CLAIM}/${claim?.claim_id}`}
                 subject={{
                   variant: claim?.subject?.is_user
                     ? Identity.user
@@ -133,6 +131,7 @@ export default function StakeReview({
                     claim?.subject as IdentityPresenter,
                   ),
                   link: getAtomLink(claim?.subject as IdentityPresenter),
+                  shouldHover: false,
                 }}
                 predicate={{
                   variant: claim?.predicate?.is_user
@@ -148,6 +147,7 @@ export default function StakeReview({
                     claim?.predicate as IdentityPresenter,
                   ),
                   link: getAtomLink(claim?.predicate as IdentityPresenter),
+                  shouldHover: false,
                 }}
                 object={{
                   variant: claim?.object?.is_user
@@ -161,6 +161,7 @@ export default function StakeReview({
                   ),
                   ipfsLink: getAtomIpfsLink(claim?.object as IdentityPresenter),
                   link: getAtomLink(claim?.object as IdentityPresenter),
+                  shouldHover: false,
                 }}
               />
             )}
