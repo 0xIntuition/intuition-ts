@@ -1,12 +1,14 @@
 import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
+  // Accordion,
+  // AccordionContent,
+  // AccordionItem,
+  // AccordionTrigger,
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
+  Icon,
+  Text,
 } from '@0xintuition/1ui'
 
 import { PrivyVerifiedLinks } from '@client/privy-verified-links'
@@ -32,27 +34,31 @@ export default function EditSocialLinksModal({
     >
       <DialogContent className="w-[600px] bg-neutral-950 rounded-xl shadow border border-solid border-black/10">
         <DialogHeader>
-          <DialogTitle className="text-primary/60 font-normal text-sm">
-            Connect Social Accounts
+          <DialogTitle>
+            <div className="flex items-center gap-2">
+              <Icon name="avatar-sparkle" />
+              <Text variant="headline">Connect Social Accounts</Text>
+            </div>
           </DialogTitle>
         </DialogHeader>
         <div className="flex flex-col gap-4">
-          <Accordion
+          {/* TODO: Uncomment when accordion is necessary */}
+          {/* <Accordion
             type="multiple"
             className="w-full"
             defaultValue={['verified-links']}
           >
             <AccordionItem value="verified-links">
-              <AccordionTrigger>
-                <span className="text-secondary-foreground text-sm font-normal">
-                  Verified Links
-                </span>
-              </AccordionTrigger>
-              <AccordionContent className="border-0">
-                <PrivyVerifiedLinks privyUser={privyUser} />
-              </AccordionContent>
+              <AccordionTrigger> */}
+          <Text variant="caption" className="text-secondary-foreground">
+            Verified Links
+          </Text>
+          {/* </AccordionTrigger>
+              <AccordionContent className="border-0"> */}
+          <PrivyVerifiedLinks privyUser={privyUser} />
+          {/* </AccordionContent>
             </AccordionItem>
-          </Accordion>
+          </Accordion> */}
         </div>
       </DialogContent>
     </Dialog>

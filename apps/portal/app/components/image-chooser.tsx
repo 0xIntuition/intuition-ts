@@ -18,12 +18,12 @@ export function ImageChooser({
   setImageFile,
 }: ImageChooseProps) {
   return (
-    <div className="flex w-full items-center justify-center gap-3">
+    <div className="flex min-w-[60px] w-full items-center justify-center gap-3">
       <div className="relative w-full">
         <label
           htmlFor="image-input"
           className={cn(
-            'group left-0 flex h-[60px] w-[60px] w-full cursor-pointer rounded-lg focus-within:ring-2 focus-within:ring-ring border border-solid border-neutral-700',
+            'group left-0 flex h-[60px] w-[60px] w-full cursor-pointer rounded-lg focus-within:ring-2 focus-within:ring-ring border border-solid border-primary/50',
             {
               'opacity-40 focus-within:opacity-100 hover:opacity-100':
                 !previewImage,
@@ -51,7 +51,7 @@ export function ImageChooser({
               <div className="flex flex-row">
                 <div className="flex h-full w-full items-center justify-center overflow-hidden rounded-md h-[60px] w-[60px]">
                   <div className="pointer-events-pointer inset-0 flex items-center justify-center">
-                    <Icon name="folder" className="h-6 w-6 text-neutral-700" />
+                    <Icon name="folder" className="h-6 w-6 text-primary/50" />
                   </div>
                 </div>
               </div>

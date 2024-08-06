@@ -84,7 +84,7 @@ describe('SidebarLayout', () => {
                   </span>
                 </button>
                 <button
-                  class="flex justify-center items-center gap-2 text-sm font-medium border disabled:text-muted-foreground bg-transparent text-primary/70 border-transparent hover:text-primary disabled:border-transparent disabled:bg-transparent shadow-md-subtle p-1"
+                  class="flex justify-center items-center gap-2 text-sm font-medium border disabled:text-muted-foreground bg-transparent text-primary/70 border-transparent hover:text-primary disabled:border-transparent disabled:bg-transparent shadow-none p-1"
                 >
                   <svg
                     class="h-6 w-6"

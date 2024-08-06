@@ -122,4 +122,5 @@ export const IconName = {
   claim: 'claim',
   fileText: 'file-text',
   hamburger: 'hamburger',
+  avatarSparkle: 'avatar-sparkle',
 } as const

@@ -47,10 +47,14 @@ describe('ProfileCard', () => {
               <h6
                 class="text-xl font-medium text-primary"
               >
-                John Doe
-              </h6>
-              <div
-                class="flex flex-row gap-1 items-center"
+                <p
+                  class="text-base font-medium text-muted-foreground"
+                >
+                  0x1234...5678
+                </p>
+              </a>
+              <button
+                class="flex justify-center items-center gap-2 text-sm font-medium border disabled:text-muted-foreground bg-transparent border-transparent disabled:border-transparent disabled:bg-transparent shadow-none p-0 h-4 w-4 text-primary/60 hover:text-primary undefined"
               >
                 <a
                   href="https://ipfs.io/ipfs/QmZKfjJ8v"
@@ -189,7 +193,7 @@ describe('ProfileCard', () => {
             </span>
             <div>
               <button
-                data-state="closed"
+                class="flex justify-center items-center gap-2 text-sm font-medium border disabled:text-muted-foreground bg-transparent border-transparent disabled:border-transparent disabled:bg-transparent shadow-none p-0 h-4 w-4 text-primary/60 hover:text-primary undefined"
               >
                 <h6
                   class="text-xl font-medium text-primary"
@@ -291,10 +295,14 @@ describe('ProfileCard', () => {
               <h6
                 class="text-xl font-medium text-primary"
               >
-                John Doe
-              </h6>
-              <div
-                class="flex flex-row gap-1 items-center"
+                <p
+                  class="text-base font-medium text-muted-foreground"
+                >
+                  0x1234...5678
+                </p>
+              </a>
+              <button
+                class="flex justify-center items-center gap-2 text-sm font-medium border disabled:text-muted-foreground bg-transparent border-transparent disabled:border-transparent disabled:bg-transparent shadow-none p-0 h-4 w-4 text-primary/60 hover:text-primary undefined"
               >
                 <a
                   href="https://ipfs.io/ipfs/QmZKfjJ8v"

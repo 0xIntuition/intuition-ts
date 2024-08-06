@@ -65,7 +65,7 @@ describe('StakeCard', () => {
               Buy
             </button>
             <button
-              class="flex justify-center items-center gap-2 text-sm font-medium border disabled:text-muted-foreground bg-transparent text-primary/70 border-transparent hover:text-primary disabled:border-transparent disabled:bg-transparent shadow-md-subtle px-3 py-1 w-full"
+              class="flex justify-center items-center gap-2 text-sm font-medium border disabled:text-muted-foreground bg-transparent text-primary/70 border-transparent hover:text-primary disabled:border-transparent disabled:bg-transparent shadow-none px-3 py-1 w-full"
             >
               View all positions
             </button>
