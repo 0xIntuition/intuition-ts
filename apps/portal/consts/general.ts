@@ -16,8 +16,8 @@ export const DEFAULT_VERIFIER = function (): void {
 
 export const MULTIVAULT_CONTRACT_ADDRESS =
   CURRENT_ENV === 'production'
-    ? '0xd57981d5Bc446768E8a1E3D582e545fa705415b5' // prod contract address
-    : '0xd57981d5Bc446768E8a1E3D582e545fa705415b5' // dev contract address
+    ? '0x1A6950807E33d5bC9975067e6D6b5Ea4cD661665' // prod contract address
+    : '0x1A6950807E33d5bC9975067e6D6b5Ea4cD661665' // dev contract address
 
 export const DEFAULT_LIMIT = 10
 
@@ -173,7 +173,7 @@ export const TAG_PREDICATE_ID_TESTNET = '8af2e266-ffdd-4a46-bcf8-69bd27e995d4'
 export const AM_WATCHING_ID_TESTNET = 'e2237e27-cc80-4dec-abf8-ae1755c101f0'
 
 export const AM_WATCHING_DISPLAY_NAME_TESTNET = 'am watching'
-export const TAG_PREDICATE_DISPLAY_NAME_TESTNET = 'hasTag'
+export const TAG_PREDICATE_DISPLAY_NAME_TESTNET = 'has tag'
 
 // So generally, we consider the DSN safe to be shared publicly. Of course, you don't want to unnecessarily share the DSN for any backend projects you have, but there is no real way of hiding the DSN in the frontend (except for maybe obscuring it, but security by obscurity is no real security). https://github.com/getsentry/sentry-javascript/issues/5640#issuecomment-1229960048
 export const SENTRY_DSN =
