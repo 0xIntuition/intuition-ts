@@ -24,6 +24,7 @@ import {
   SortDirection,
 } from '@0xintuition/api'
 
+import NavigationButton from '@components/navigation-link'
 import StakeModal from '@components/stake/stake-modal'
 import { stakeModalAtom } from '@lib/state/store'
 import logger from '@lib/utils/logger'
@@ -113,9 +114,6 @@ export default function ClaimDetails() {
 
   useEffect(() => {
     const from = location.state?.from
-    console.log('from:', from) // This will log the 'from' value from location.state
-    console.log('location:', location) // This will log the entire location object
-    console.log('document.referrer:', document.referrer) // This will log the referrer
 
     if (from) {
       setFromUrl(from.split('?')[0])
@@ -127,7 +125,7 @@ export default function ClaimDetails() {
   }, [location.state])
 
   useEffect(() => {
-    console.log('fromUrl:', fromUrl) // This will log the processed 'fromUrl'
+    console.log('fromUrl:', fromUrl)
   }, [fromUrl])
 
   const [stakeModalActive, setStakeModalActive] = useAtom(stakeModalAtom)
@@ -159,8 +157,8 @@ export default function ClaimDetails() {
   const directionTagText = +userConviction > 0 ? 'FOR' : 'AGAINST'
 
   const ClaimWithNav = () => (
-    <div className="flex items-center w-full mb-6 gap-6">
-      <NavigationButton variant="secondary" size="icon" to={from ?? -1}>
+    <div className="flex justify-between items-center w-full mb-6">
+      <NavigationButton variant="secondary" size="icon" to={fromUrl.toString()}>
         <Icon name="arrow-left" />
       </NavigationButton>
       <Claim
