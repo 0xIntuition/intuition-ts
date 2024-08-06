@@ -215,7 +215,7 @@ describe('ProfileCard', () => {
               Blockchain Corp is a leading company in blockchain technology. Visit our website for more information about how you can benefit from our services.
             </p>
             <div
-              class=""
+              class="pt-2.5"
             >
               <p
                 class="text-base font-normal text-muted-foreground"
@@ -223,10 +223,15 @@ describe('ProfileCard', () => {
                 Link
               </p>
               <a
-                class="text-primary-300"
                 href="https://blockchaincorp.com"
+                rel="noreferrer noopener"
+                target="_blank"
               >
-                https://blockchaincorp.com
+                <p
+                  class="text-primary text-base font-normal"
+                >
+                  https://blockchaincorp.com
+                </p>
               </a>
             </div>
           </div>
