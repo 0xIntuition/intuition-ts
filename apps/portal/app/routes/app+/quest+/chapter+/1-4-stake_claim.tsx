@@ -28,7 +28,7 @@ import StakeModal from '@components/stake/stake-modal'
 import { useQuestMdxContent } from '@lib/hooks/useQuestMdxContent'
 import { stakeModalAtom } from '@lib/state/store'
 import logger from '@lib/utils/logger'
-import { fetchWrapper, invariant } from '@lib/utils/misc'
+import { invariant } from '@lib/utils/misc'
 import { getQuestCriteria, getQuestId, QuestRouteId } from '@lib/utils/quest'
 import { ActionFunctionArgs, json, LoaderFunctionArgs } from '@remix-run/node'
 import {
@@ -38,13 +38,14 @@ import {
   useRevalidator,
 } from '@remix-run/react'
 import { CheckQuestSuccessLoaderData } from '@routes/resources+/check-quest-success'
+import { fetchWrapper } from '@server/api'
 import { requireUser, requireUserId } from '@server/auth'
 import { getVaultDetails } from '@server/multivault'
 import { FALLBACK_CLAIM_ID } from 'consts'
 import { useAtom } from 'jotai'
 import {
-  Identity,
-  IdentityType,
+  ClaimElement,
+  ClaimElementType,
   MDXContentVariant,
   VaultDetailsType,
 } from 'types'
@@ -59,20 +60,20 @@ export async function loader({ request }: LoaderFunctionArgs) {
   invariant(user, 'Unauthorized')
   invariant(user.wallet?.address, 'User wallet is required')
 
-  const quest = await fetchWrapper({
+  const quest = await fetchWrapper(request, {
     method: QuestsService.getQuest,
     args: {
       questId: id,
     },
   })
-  const { id: userId } = await fetchWrapper({
+  const { id: userId } = await fetchWrapper(request, {
     method: UsersService.getUserByWalletPublic,
     args: {
       wallet: user.wallet?.address!,
     },
   })
   const userQuests = (
-    await fetchWrapper({
+    await fetchWrapper(request, {
       method: UserQuestsService.search,
       args: {
         requestBody: {
@@ -95,11 +96,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
     {
       vaultDetails: VaultDetailsType
       identity: IdentityPresenter
-      type: IdentityType
+      type: ClaimElementType
     }
   > = {}
   if (userQuest && userQuest.quest_completion_object_id) {
-    position = await fetchWrapper({
+    position = await fetchWrapper(request, {
       method: PositionsService.getPositionById,
       args: {
         id: userQuest.quest_completion_object_id,
@@ -110,7 +111,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   if (position) {
     invariant(position.claim_id, 'position must be on an claim')
-    claim = await fetchWrapper({
+    claim = await fetchWrapper(request, {
       method: ClaimsService.getClaimById,
       args: {
         id: position.claim_id!,
@@ -124,7 +125,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     )
     const dependsOnClaimId =
       dependsOnUserQuest?.quest_completion_object_id ?? FALLBACK_CLAIM_ID
-    claim = await fetchWrapper({
+    claim = await fetchWrapper(request, {
       method: ClaimsService.getClaimById,
       args: {
         id: dependsOnClaimId,
@@ -167,9 +168,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
           acc[identity.id] = {
             vaultDetails: vaultDetails[index],
             identity,
-            type: [Identity.Subject, Identity.Predicate, Identity.Object][
-              index
-            ],
+            type: [
+              ClaimElement.Subject,
+              ClaimElement.Predicate,
+              ClaimElement.Object,
+            ][index],
           }
         }
         return acc
@@ -179,10 +182,12 @@ export async function loader({ request }: LoaderFunctionArgs) {
         {
           vaultDetails: VaultDetailsType
           identity: IdentityPresenter
-          type: IdentityType
+          type: ClaimElementType
         }
       >,
     )
+
+    console.log('Identities', identities)
   }
 
   return json({
@@ -204,7 +209,7 @@ export async function action({ request }: ActionFunctionArgs) {
   const questId = formData.get('questId') as string
 
   try {
-    const updatedUserQuest = await fetchWrapper({
+    const updatedUserQuest = await fetchWrapper(request, {
       method: UserQuestsService.completeQuest,
       args: {
         questId,
