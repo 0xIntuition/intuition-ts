@@ -4,7 +4,7 @@ import { expect } from 'vitest'
 import { abi } from '../src/abi'
 import { publicClient, walletClient } from '../tests/utils.js'
 import { bytecode } from './bytecode'
-import { ALICE } from './constants.js'
+import { ALICE, BOB } from './constants.js'
 
 export async function deployAndInit(): Promise<Address> {
   const hash = await walletClient.deployContract({
@@ -29,8 +29,8 @@ export async function deployAndInit(): Promise<Address> {
     functionName: 'init',
     args: [
       {
-        admin: ALICE,
-        protocolVault: ALICE,
+        admin: BOB,
+        protocolMultisig: BOB,
         feeDenominator: 10000n, // Common denominator for fee
         minDeposit: parseEther('0.0003'), // Minimum deposit amount in wei
         minShare: 10000n, // Minimum share amount (e.g., for vault initialization)

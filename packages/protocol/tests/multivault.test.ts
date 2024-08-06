@@ -84,6 +84,17 @@ describe('MultiVault', () => {
     expect(events).toBeDefined()
   })
 
+  it('can batch create atoms', async () => {
+    const { vaultIds, hash, events } = await multiVault.batchCreateAtom([
+      'hello3',
+      'hello4',
+    ])
+    expect(vaultIds).toBeDefined()
+    expect(vaultIds.length).toEqual(2)
+    expect(hash).toBeDefined()
+    expect(events).toBeDefined()
+  })
+
   it('can get triple cost', async () => {
     const cost = await multiVault.getTripleCost()
     expect(cost).toBeDefined()
@@ -106,19 +117,53 @@ describe('MultiVault', () => {
     expect(events).toBeDefined()
   })
 
-  it.todo('can batchCreateAtom')
-  it.todo('can batchCreateTriple')
+  it('can batch create triples', async () => {
+    //batch create atoms
+    const { vaultIds } = await multiVault.batchCreateAtom([
+      'a',
+      'b',
+      'c',
+      'd',
+      'e',
+    ])
+
+    //batch create triples
+    const { vaultIds: tripleVaultIds } = await multiVault.batchCreateTriple([
+      {
+        subjectId: vaultIds[0],
+        predicateId: vaultIds[1],
+        objectId: vaultIds[2],
+      },
+      {
+        subjectId: vaultIds[3],
+        predicateId: vaultIds[4],
+        objectId: vaultIds[0],
+      },
+    ])
+    expect(tripleVaultIds).toBeDefined()
+    expect(tripleVaultIds.length).toEqual(2)
+  })
 })
 
 describe('atom life cycle', () => {
   let atomVaultId: bigint
   let sharesPreview: bigint
 
+  it('can check if atom exists', async () => {
+    const vaultId = await multiVault.getVaultIdFromUri('lorem')
+    expect(vaultId).toBeNull()
+  })
+
   it('can create atom', async () => {
     const { vaultId } = await multiVault.createAtom('lorem')
     expect(vaultId).toBeDefined()
 
     atomVaultId = vaultId
+  })
+
+  it('can check if atom exists', async () => {
+    const vaultId = await multiVault.getVaultIdFromUri('lorem')
+    expect(vaultId).toEqual(atomVaultId)
   })
 
   it('can get current share price for given vault id', async () => {
