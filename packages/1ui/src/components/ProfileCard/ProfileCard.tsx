@@ -86,7 +86,12 @@ const ProfileCard = ({
               <Text variant="body" className="text-muted-foreground">
                 Link
               </Text>
-              <a href={externalLink} className="text-primary-300">
+              <a
+                href={externalLink}
+                target="_blank"
+                rel="noreferrer noopener"
+                className="text-primary-300"
+              >
                 {externalLink}
               </a>
             </div>
