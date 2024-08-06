@@ -3,6 +3,7 @@ import { useState } from 'react'
 import {
   Icon,
   Identity,
+  InfoCard,
   PositionCard,
   PositionCardFeesAccrued,
   PositionCardLastUpdated,
@@ -219,6 +220,16 @@ export default function IdentityDetails() {
         onViewAllClick={() =>
           navigate(`${PATHS.IDENTITY}/${identity.id}/data-about`)
         }
+      />
+      <InfoCard
+        variant={identity.is_user ? Identity.user : Identity.nonUser}
+        username={identity.creator?.display_name ?? ''}
+        avatarImgSrc={identity.creator?.image ?? ''}
+        timestamp={identity.created_at}
+        onClick={() => {
+          navigate(`/app/profile/${identity.creator?.wallet}`)
+        }}
+        className="hover:cursor-pointer w-full"
       />
     </div>
   )

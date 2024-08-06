@@ -139,7 +139,7 @@ export default function ClaimDetails() {
   const directionTagText = +userConviction > 0 ? 'FOR' : 'AGAINST'
 
   const ClaimWithNav = () => (
-    <div className="flex justify-between items-center w-full mb-6">
+    <div className="flex items-center w-full mb-6 gap-6">
       <NavigationButton variant="secondary" size="icon" to={from ?? -1}>
         <Icon name="arrow-left" />
       </NavigationButton>
