@@ -75,7 +75,6 @@ export function TagsForm({
 
   const handleRemoveTag = (id: string) => {
     setSelectedTags((prevTags) => prevTags.filter((tag) => tag.vault_id !== id))
-    setInvalidTags((prev) => prev.filter((tag) => tag.vault_id !== id))
   }
 
   const handleRemoveInvalidTag = (vaultId: string) => {
