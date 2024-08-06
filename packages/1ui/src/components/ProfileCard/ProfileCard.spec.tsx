@@ -43,38 +43,36 @@ describe('ProfileCard', () => {
                 </svg>
               </span>
             </span>
-            <div>
-              <h6
-                class="text-xl font-medium text-primary"
+            <h6
+              class="text-xl font-medium text-primary"
+            >
+              John Doe
+            </h6>
+            <div
+              class="flex flex-row gap-1 items-center"
+            >
+              <a
+                href="https://ipfs.io/ipfs/QmZKfjJ8v"
+                rel="noopener noreferrer"
+                target="_blank"
               >
-                John Doe
-              </h6>
-              <div
-                class="flex flex-row gap-1 items-center"
+                <p
+                  class="text-base font-medium text-muted-foreground"
+                >
+                  0x1234...5678
+                </p>
+              </a>
+              <button
+                class="flex justify-center items-center gap-2 text-sm font-medium border disabled:text-muted-foreground bg-transparent border-transparent disabled:border-transparent disabled:bg-transparent shadow-md-subtle p-0 h-4 w-4 text-primary/60 hover:text-primary undefined"
               >
-                <a
-                  href="https://ipfs.io/ipfs/QmZKfjJ8v"
-                  rel="noopener noreferrer"
-                  target="_blank"
+                <svg
+                  class="h-4 w-4"
                 >
-                  <p
-                    class="text-base font-medium text-muted-foreground"
-                  >
-                    0x1234...5678
-                  </p>
-                </a>
-                <button
-                  class="flex justify-center items-center gap-2 text-sm font-medium border disabled:text-muted-foreground bg-transparent border-transparent disabled:border-transparent disabled:bg-transparent shadow-md-subtle p-0 h-4 w-4 text-primary/60 hover:text-primary undefined"
-                >
-                  <svg
-                    class="h-4 w-4"
-                  >
-                    <use
-                      href="/src/components/Icon/Icon.sprites.svg#copy"
-                    />
-                  </svg>
-                </button>
-              </div>
+                  <use
+                    href="/src/components/Icon/Icon.sprites.svg#copy"
+                  />
+                </svg>
+              </button>
             </div>
           </div>
           <div
@@ -187,42 +185,40 @@ describe('ProfileCard', () => {
                 </svg>
               </span>
             </span>
-            <div>
+            <button
+              data-state="closed"
+            >
+              <h6
+                class="text-xl font-medium text-primary"
+              >
+                Blockchai...
+              </h6>
+            </button>
+            <div
+              class="flex flex-row gap-1 items-center"
+            >
+              <a
+                href="https://ipfs.io/ipfs/QmZKfjJ8v"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                <p
+                  class="text-base font-medium text-muted-foreground"
+                >
+                  0x1234...5678
+                </p>
+              </a>
               <button
-                data-state="closed"
+                class="flex justify-center items-center gap-2 text-sm font-medium border disabled:text-muted-foreground bg-transparent border-transparent disabled:border-transparent disabled:bg-transparent shadow-md-subtle p-0 h-4 w-4 text-primary/60 hover:text-primary undefined"
               >
-                <h6
-                  class="text-xl font-medium text-primary"
+                <svg
+                  class="h-4 w-4"
                 >
-                  Blockchai...
-                </h6>
+                  <use
+                    href="/src/components/Icon/Icon.sprites.svg#copy"
+                  />
+                </svg>
               </button>
-              <div
-                class="flex flex-row gap-1 items-center"
-              >
-                <a
-                  href="https://ipfs.io/ipfs/QmZKfjJ8v"
-                  rel="noopener noreferrer"
-                  target="_blank"
-                >
-                  <p
-                    class="text-base font-medium text-muted-foreground"
-                  >
-                    0x1234...5678
-                  </p>
-                </a>
-                <button
-                  class="flex justify-center items-center gap-2 text-sm font-medium border disabled:text-muted-foreground bg-transparent border-transparent disabled:border-transparent disabled:bg-transparent shadow-md-subtle p-0 h-4 w-4 text-primary/60 hover:text-primary undefined"
-                >
-                  <svg
-                    class="h-4 w-4"
-                  >
-                    <use
-                      href="/src/components/Icon/Icon.sprites.svg#copy"
-                    />
-                  </svg>
-                </button>
-              </div>
             </div>
           </div>
           <div>
@@ -287,38 +283,36 @@ describe('ProfileCard', () => {
                 </svg>
               </span>
             </span>
-            <div>
-              <h6
-                class="text-xl font-medium text-primary"
+            <h6
+              class="text-xl font-medium text-primary"
+            >
+              John Doe
+            </h6>
+            <div
+              class="flex flex-row gap-1 items-center"
+            >
+              <a
+                href="https://ipfs.io/ipfs/QmZKfjJ8v"
+                rel="noopener noreferrer"
+                target="_blank"
               >
-                John Doe
-              </h6>
-              <div
-                class="flex flex-row gap-1 items-center"
+                <p
+                  class="text-base font-medium text-muted-foreground"
+                >
+                  0x1234...5678
+                </p>
+              </a>
+              <button
+                class="flex justify-center items-center gap-2 text-sm font-medium border disabled:text-muted-foreground bg-transparent border-transparent disabled:border-transparent disabled:bg-transparent shadow-md-subtle p-0 h-4 w-4 text-primary/60 hover:text-primary undefined"
               >
-                <a
-                  href="https://ipfs.io/ipfs/QmZKfjJ8v"
-                  rel="noopener noreferrer"
-                  target="_blank"
+                <svg
+                  class="h-4 w-4"
                 >
-                  <p
-                    class="text-base font-medium text-muted-foreground"
-                  >
-                    0x1234...5678
-                  </p>
-                </a>
-                <button
-                  class="flex justify-center items-center gap-2 text-sm font-medium border disabled:text-muted-foreground bg-transparent border-transparent disabled:border-transparent disabled:bg-transparent shadow-md-subtle p-0 h-4 w-4 text-primary/60 hover:text-primary undefined"
-                >
-                  <svg
-                    class="h-4 w-4"
-                  >
-                    <use
-                      href="/src/components/Icon/Icon.sprites.svg#copy"
-                    />
-                  </svg>
-                </button>
-              </div>
+                  <use
+                    href="/src/components/Icon/Icon.sprites.svg#copy"
+                  />
+                </svg>
+              </button>
             </div>
           </div>
           <div

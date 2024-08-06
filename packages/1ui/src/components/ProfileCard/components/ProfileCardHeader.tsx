@@ -20,13 +20,13 @@ const ProfileCardHeader = ({
   return (
     <div className="flex items-center space-x-4">
       <Avatar variant={variant} src={avatarSrc} name={name} />
-      <div>
+      <>
         <Trunctacular
           value={name}
           variant="headline"
           weight="medium"
           className="text-primary"
-        ></Trunctacular>
+        />
         <div className="flex flex-row gap-1 items-center">
           {link && id && (
             <>
@@ -48,7 +48,7 @@ const ProfileCardHeader = ({
             </>
           )}
         </div>
-      </div>
+      </>
     </div>
   )
 }
