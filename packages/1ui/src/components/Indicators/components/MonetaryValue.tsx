@@ -1,4 +1,4 @@
-import { Text, TextProps, TextVariant } from 'components/Text'
+import { Text, TextProps, TextVariant, TextWeight } from 'components/Text'
 import { Currency, CurrencyType } from 'types'
 
 interface MonetaryValueProps extends TextProps {
@@ -12,7 +12,7 @@ const MonetaryValue = ({
   ...props
 }: MonetaryValueProps) => {
   return (
-    <Text variant={TextVariant.bodyLarge} {...props}>
+    <Text variant={TextVariant.bodyLarge} weight={TextWeight.medium} {...props}>
       {value} {currency}
     </Text>
   )

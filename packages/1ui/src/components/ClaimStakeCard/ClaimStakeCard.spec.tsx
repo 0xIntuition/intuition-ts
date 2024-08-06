@@ -56,7 +56,7 @@ describe('ClaimStakeCard', () => {
                 Total TVL
               </p>
               <p
-                class="text-primary text-lg font-normal"
+                class="text-primary text-lg font-medium"
               >
                 4.928 ETH
               </p>
@@ -79,7 +79,7 @@ describe('ClaimStakeCard', () => {
                 </p>
               </div>
               <p
-                class="text-primary text-lg font-normal text-left"
+                class="text-primary text-lg font-medium text-left"
               >
                 0.567 ETH
               </p>
@@ -98,7 +98,7 @@ describe('ClaimStakeCard', () => {
                 </p>
               </div>
               <p
-                class="text-primary text-lg font-normal text-right"
+                class="text-primary text-lg font-medium text-right"
               >
                 3.643 ETH
               </p>
@@ -213,7 +213,7 @@ describe('ClaimStakeCard', () => {
                 Total TVL
               </p>
               <p
-                class="text-primary text-lg font-normal"
+                class="text-primary text-lg font-medium"
               >
                 4.928 ETH
               </p>
@@ -236,7 +236,7 @@ describe('ClaimStakeCard', () => {
                 </p>
               </div>
               <p
-                class="text-primary text-lg font-normal text-left"
+                class="text-primary text-lg font-medium text-left"
               >
                 0.567 ETH
               </p>
@@ -255,7 +255,7 @@ describe('ClaimStakeCard', () => {
                 </p>
               </div>
               <p
-                class="text-primary text-lg font-normal text-right"
+                class="text-primary text-lg font-medium text-right"
               >
                 3.643 ETH
               </p>

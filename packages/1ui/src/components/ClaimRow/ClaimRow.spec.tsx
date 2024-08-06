@@ -153,7 +153,7 @@ describe('ClaimRow', () => {
               class="flex flex-col items-end max-md:flex-row max-md:justify-between max-md:items-center"
             >
               <p
-                class="text-primary text-lg font-normal"
+                class="text-primary text-lg font-medium"
               >
                 0.383 ETH
               </p>
