@@ -187,6 +187,7 @@ export default function Profile() {
         avatarSrc={userObject.image ?? ''}
         name={userObject.display_name ?? ''}
         id={userObject.ens_name ?? userObject.wallet}
+        vaultId={userIdentity.vault_id}
         stats={{
           numberOfFollowers: userTotals.follower_count,
           numberOfFollowing: userTotals.followed_count,
