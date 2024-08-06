@@ -82,17 +82,12 @@ const ProfileCard = ({
         {variant === Identity.nonUser &&
           externalLink &&
           externalLink !== 'https://' && (
-            <div className="">
+            <div className="pt-2.5">
               <Text variant="body" className="text-muted-foreground">
                 Link
               </Text>
-              <a
-                href={externalLink}
-                target="_blank"
-                rel="noreferrer noopener"
-                className="text-primary-300"
-              >
-                {externalLink}
+              <a href={externalLink} target="_blank" rel="noreferrer noopener">
+                <Text variant="body">{externalLink}</Text>
               </a>
             </div>
           )}
