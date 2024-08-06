@@ -29,7 +29,7 @@ interface SaveReviewProps {
   dispatch: (action: TransactionActionType) => void
   state: TransactionStateType
   isError?: boolean
-  tag: TagEmbeddedPresenter
+  tag: IdentityPresenter | TagEmbeddedPresenter
   identity: IdentityPresenter
   user_assets: string
   entry_fee: string
