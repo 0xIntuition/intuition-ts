@@ -24,7 +24,6 @@ import {
   SortDirection,
 } from '@0xintuition/api'
 
-import NavigationButton from '@components/navigation-link'
 import StakeModal from '@components/stake/stake-modal'
 import { stakeModalAtom } from '@lib/state/store'
 import logger from '@lib/utils/logger'
