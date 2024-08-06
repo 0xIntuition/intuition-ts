@@ -31,12 +31,18 @@ import { TagSearchCombobox } from './tags-search-combo-box'
 
 interface TagsFormProps {
   identity: IdentityPresenter
+  userWallet: string
   mode: 'view' | 'add'
   onSuccess?: () => void
   onClose: () => void
 }
 
-export function TagsForm({ identity, mode, onClose }: TagsFormProps) {
+export function TagsForm({
+  identity,
+  userWallet,
+  mode,
+  onClose,
+}: TagsFormProps) {
   const navigate = useNavigate()
   const [currentTab, setCurrentTab] = useState(mode)
 
@@ -60,7 +66,7 @@ export function TagsForm({ identity, mode, onClose }: TagsFormProps) {
   ].includes(state.status)
 
   const [selectedTags, setSelectedTags] = useState<IdentityPresenter[]>([])
-  const [invalidTags, setInvalidTags] = useState<string[]>([])
+  const [invalidTags, setInvalidTags] = useState<IdentityPresenter[]>([])
 
   const handleAddTag = (newTag: IdentityPresenter) => {
     setSelectedTags((prevTags) => [...prevTags, newTag])
@@ -69,7 +75,12 @@ export function TagsForm({ identity, mode, onClose }: TagsFormProps) {
 
   const handleRemoveTag = (id: string) => {
     setSelectedTags((prevTags) => prevTags.filter((tag) => tag.vault_id !== id))
-    setInvalidTags((prev) => prev.filter((tagId) => tagId !== id))
+    setInvalidTags((prev) => prev.filter((tag) => tag.vault_id !== id))
+  }
+
+  const handleRemoveInvalidTag = (vaultId: string) => {
+    setInvalidTags((prev) => prev.filter((tag) => tag.vault_id !== vaultId))
+    setSelectedTags((prev) => prev.filter((tag) => tag.vault_id !== vaultId))
   }
 
   logger('tags on incoming identity', identity.tags)
@@ -120,9 +131,12 @@ export function TagsForm({ identity, mode, onClose }: TagsFormProps) {
                     <AddTags
                       selectedTags={selectedTags}
                       existingTagIds={existingTagIds}
+                      identity={identity}
+                      userWallet={userWallet}
                       onAddTag={handleAddTag}
                       dispatch={dispatch}
                       onRemoveTag={handleRemoveTag}
+                      onRemoveInvalidTag={handleRemoveInvalidTag}
                       subjectVaultId={identity.vault_id}
                       invalidTags={invalidTags}
                       setInvalidTags={setInvalidTags}
@@ -142,9 +156,7 @@ export function TagsForm({ identity, mode, onClose }: TagsFormProps) {
                     <div className="flex flex-col items-center gap-1">
                       <Button
                         variant="primary"
-                        disabled={
-                          selectedTags.length === 0 || invalidTags.length !== 0
-                        }
+                        disabled={selectedTags.length === 0}
                         onClick={() => dispatch({ type: 'REVIEW_TRANSACTION' })}
                       >
                         Add Tags

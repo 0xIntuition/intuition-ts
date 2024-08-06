@@ -72,8 +72,6 @@ export default function SaveListModal({
   >(transactionReducer, initialTxState)
   const publicClient = usePublicClient()
 
-  logger('tag in save modal', tag)
-  logger('identity in save modal', identity)
   const [isLoading, setIsLoading] = useState(true)
 
   const depositHook = useDepositTriple(identity.contract)
@@ -124,7 +122,6 @@ export default function SaveListModal({
       const fetchedClaimResponse = claimFetcher.data[0] as unknown as {
         vault_id: string
       }
-      logger('fetched claim response', fetchedClaimResponse)
       setFetchedClaimVaultId(fetchedClaimResponse.vault_id)
     }
   }, [claimFetcher.state, claimFetcher.data])
@@ -140,7 +137,6 @@ export default function SaveListModal({
 
   useEffect(() => {
     if (vaultDetailsFetcher.state === 'idle' && vaultDetailsFetcher.data) {
-      logger('vaultDetailsFetcher', vaultDetailsFetcher.data)
       setVaultDetails(vaultDetailsFetcher.data)
       setIsLoading(false)
     }
@@ -149,9 +145,6 @@ export default function SaveListModal({
   const useHandleAction = (actionType: string) => {
     return async () => {
       try {
-        logger('contract', contract)
-        logger('fetchedClaimVaultId', fetchedClaimVaultId)
-        logger('fetched vaultDetails', vaultDetails)
         if (!contract || !fetchedClaimVaultId || !vaultDetails) {
           throw new Error('Missing required parameters')
         }
@@ -178,8 +171,7 @@ export default function SaveListModal({
           const receipt = await publicClient?.waitForTransactionReceipt({
             hash: txHash,
           })
-          logger('receipt', receipt)
-          logger('txHash', txHash)
+
           dispatch({
             type: 'TRANSACTION_COMPLETE',
             txHash,
