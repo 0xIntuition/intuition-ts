@@ -2,15 +2,14 @@ import * as React from 'react'
 
 import { cn } from 'styles'
 import { CurrencyType, Identity, IdentityType } from 'types'
-import { formatWalletAddress } from 'utils/wallet'
 
 import {
   Avatar,
+  Copy,
   IdentityValueDisplay,
   TagsContent,
   TagWithValue,
   TagWithValueProps,
-  Text,
   TextVariant,
   Trunctacular,
 } from '..'
@@ -21,21 +20,27 @@ export interface IdentityContentRowProps
   amount: number
   currency?: CurrencyType
   name: string
-  walletAddress: string
+  id: string
   avatarSrc: string
+  link: string
+  ipfsLink: string
   totalFollowers: number
   tags?: TagWithValueProps[]
 }
 
 interface NameAndAddressProps {
   name: string
-  walletAddress: string
+  id: string
+  link: string
+  ipfsLink: string
   hasTags: boolean
 }
 
 const NameAndAddress = ({
   name,
-  walletAddress,
+  id,
+  link,
+  ipfsLink,
   hasTags,
 }: NameAndAddressProps) => {
   return (
@@ -45,15 +50,19 @@ const NameAndAddress = ({
         hasTags ? 'flex-row items-center' : 'flex-col',
       )}
     >
-      <Trunctacular
-        value={name}
-        variant={TextVariant.bodyLarge}
-        maxStringLength={20}
-        className="mr-2"
-      />
-      <Text variant={TextVariant.body} className="text-secondary-foreground">
-        {formatWalletAddress(walletAddress)}
-      </Text>
+      <a href={link}>
+        <Trunctacular
+          value={name}
+          variant={TextVariant.bodyLarge}
+          className="mr-2"
+        />
+      </a>
+      <div className="flex flex-row gap-1 items-center">
+        <a href={ipfsLink}>
+          <Trunctacular value={id} className="text-secondary-foreground" />
+        </a>
+        <Copy text={id} />
+      </div>
     </div>
   )
 }
@@ -63,8 +72,10 @@ const IdentityContentRow = ({
   amount,
   currency,
   name,
-  walletAddress,
+  id,
   avatarSrc,
+  link,
+  ipfsLink,
   totalFollowers,
   tags,
   children,
@@ -83,16 +94,20 @@ const IdentityContentRow = ({
         {...props}
       >
         <div className="flex items-center">
-          <Avatar
-            variant={variant}
-            src={avatarSrc}
-            name={name}
-            className="mr-4 w-[64px] h-[64px]"
-          />
+          <a href={link}>
+            <Avatar
+              variant={variant}
+              src={avatarSrc}
+              name={name}
+              className="mr-4 w-[64px] h-[64px]"
+            />
+          </a>
           <div className="flex flex-col">
             <NameAndAddress
               name={name}
-              walletAddress={walletAddress}
+              id={id}
+              link={link}
+              ipfsLink={ipfsLink}
               hasTags={hasTags}
             />
             {hasTags && (

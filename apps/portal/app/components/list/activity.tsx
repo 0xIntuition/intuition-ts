@@ -30,8 +30,8 @@ import {
   getAtomLabel,
   getAtomLink,
 } from '@lib/utils/misc'
-import { Link, useNavigate } from '@remix-run/react'
-import { BLOCK_EXPLORER_URL, PATHS } from 'consts'
+import { Link } from '@remix-run/react'
+import { BLOCK_EXPLORER_URL, IPFS_GATEWAY_URL, PATHS } from 'consts'
 import { formatDistance } from 'date-fns'
 import { PaginationType } from 'types/pagination'
 
@@ -46,8 +46,6 @@ export function ActivityList({
   pagination: PaginationType
   paramPrefix?: string
 }) {
-  const navigate = useNavigate()
-
   const eventMessages: EventMessages = {
     createAtom: 'created an identity',
     createTriple: 'created a claim',
@@ -74,7 +72,6 @@ export function ActivityList({
           key={activity.id}
           activity={activity}
           eventMessages={eventMessages}
-          navigate={navigate}
         />
       ))}
     </List>
@@ -93,11 +90,9 @@ type EventMessages = {
 function ActivityItem({
   activity,
   eventMessages,
-  navigate,
 }: {
   activity: ActivityPresenter
   eventMessages: EventMessages
-  navigate: ReturnType<typeof useNavigate>
 }) {
   const eventMessage = eventMessages[activity.event_type as keyof EventMessages]
   const message = eventMessage
@@ -181,7 +176,7 @@ function ActivityItem({
                   ? activity.identity.display_name
                   : activity.identity.identity_id)
               }
-              walletAddress={
+              id={
                 activity.identity.user?.wallet ?? activity.identity.identity_id
               }
               amount={
@@ -192,15 +187,16 @@ function ActivityItem({
                 )
               }
               totalFollowers={activity.identity.num_positions}
-              onClick={() => {
-                if (activity.identity) {
-                  navigate(
-                    activity.identity.is_user
-                      ? `${PATHS.PROFILE}/${activity.identity.identity_id}`
-                      : `${PATHS.IDENTITY}/${activity.identity.id}`,
-                  )
-                }
-              }}
+              link={
+                activity.identity.is_user
+                  ? `${PATHS.PROFILE}/${activity.identity.identity_id}`
+                  : `${PATHS.IDENTITY}/${activity.identity.id}`
+              }
+              ipfsLink={
+                activity.identity.is_user
+                  ? `${BLOCK_EXPLORER_URL}/address/${activity.identity.identity_id}`
+                  : `${IPFS_GATEWAY_URL}/${activity.identity.id}`
+              }
             />
             <a
               href={`${BLOCK_EXPLORER_URL}/tx/${activity.transaction_hash}`}
@@ -228,7 +224,7 @@ function ActivityItem({
                 +formatBalance(activity.claim.against_assets_sum, 18)
               }
               tvl={+formatBalance(activity.claim.assets_sum, 18, 4)}
-              className="hover:cursor-pointer w-full"
+              className="w-full"
             >
               <Claim
                 size="md"
