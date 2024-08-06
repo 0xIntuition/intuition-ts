@@ -108,10 +108,10 @@ function ActivityItem({
   return (
     <div
       key={activity.id}
-      className={`p-6 bg-black rounded-xl theme-border mb-6 last:mb-0 flex flex-col w-full`}
+      className={`p-6 bg-background rounded-xl theme-border mb-6 last:mb-0 flex flex-col w-full`}
     >
-      <div className="flex flex-row items-center justify-between min-w-full mb-4">
-        <div className="flex flex-row items-center gap-2">
+      <div className="flex flex-row items-center justify-between min-w-full mb-4 max-md:flex-col max-md:gap-3">
+        <div className="flex flex-row items-center gap-2 max-md:flex-col">
           <HoverCard openDelay={100} closeDelay={100}>
             <HoverCardTrigger>
               <Link to={`${PATHS.PROFILE}/${activity.creator?.wallet}`}>
@@ -145,7 +145,7 @@ function ActivityItem({
       </div>
       <div className="flex w-full">
         {activity.identity && (
-          <div className="hover:cursor-pointer bg-secondary-foreground/10 px-6 py-4 rounded-xl flex flex-row w-full gap-6 items-center justify-between">
+          <div className="hover:cursor-pointer bg-secondary-foreground/10 px-6 py-4 rounded-xl flex flex-row w-full gap-6 items-center justify-between max-md:flex-col">
             <IdentityContentRow
               variant={
                 activity.identity.is_user ? Identity.user : Identity.nonUser
@@ -198,7 +198,7 @@ function ActivityItem({
           </div>
         )}
         {activity.claim && (
-          <div className="hover:cursor-pointer bg-secondary-foreground/10 px-6 py-4 rounded-xl flex flex-row w-full gap-6 items-center">
+          <div className="hover:cursor-pointer bg-secondary-foreground/10 px-6 py-4 rounded-xl flex flex-row w-full gap-6 items-center max-md:flex-col">
             <ClaimRow
               claimsFor={activity.claim.for_num_positions}
               claimsAgainst={activity.claim.against_num_positions}

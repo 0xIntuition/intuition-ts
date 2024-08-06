@@ -97,12 +97,15 @@ export const Claim = ({
   const items = [subject, predicate, object]
 
   return (
-    <div className="flex items-center w-full max-w-max group relative">
+    <div className="flex items-center w-full max-w-max group relative max-sm:flex-col max-sm:m-auto">
       {items.map((item, index) => (
         <Fragment key={index}>
           {index > 0 && (
             <Separator
-              className={cn(separatorWidth, 'group-hover:bg-primary')}
+              className={cn(
+                separatorWidth,
+                'group-hover:bg-primary max-sm:w-px max-sm:h-2 ',
+              )}
             />
           )}
           <ClaimItem
