@@ -36,10 +36,6 @@ export const TagsListInputPortal = ({
 }: TagsListInputProps) => {
   const tagsLeft = maxTags - tags.length
 
-  // removing this for now -- need to tweak now that it's in Portal
-  // const tagVariant =
-  //   variant === 'trustCircle' ? TagVariant.social : TagVariant.primary
-
   return (
     <div className="w-full" {...props}>
       <div className={cn('flex flex-wrap gap-2.5 items-center', className)}>

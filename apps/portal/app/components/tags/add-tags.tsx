@@ -8,7 +8,6 @@ import { AddListExistingCta } from '@components/list/add-list-existing-cta'
 import SaveListModal from '@components/list/save-list-modal'
 import { useIdentityServerSearch } from '@lib/hooks/useIdentityServerSearch'
 import { createIdentityModalAtom, saveListModalAtom } from '@lib/state/store'
-import logger from '@lib/utils/logger'
 import { useFetcher } from '@remix-run/react'
 import { TagLoaderData } from '@routes/resources+/tag'
 import { TAG_PREDICATE_VAULT_ID_TESTNET, TAG_RESOURCE_ROUTE } from 'consts'
@@ -33,7 +32,6 @@ interface AddTagsProps {
 
 export function AddTags({
   selectedTags,
-  existingTagIds,
   identity,
   userWallet,
   onAddTag,
@@ -67,7 +65,6 @@ export function AddTags({
   const tagFetcher = useFetcher<TagLoaderData>()
 
   const handleIdentitySelect = (identity: IdentityPresenter) => {
-    logger('tag', identity)
     onAddTag(identity)
     setSearchQuery('')
 
@@ -93,29 +90,32 @@ export function AddTags({
   useEffect(() => {
     if (tagFetcher.state === 'idle' && tagFetcher.data !== undefined) {
       const result = tagFetcher.data.result
-      if (result === '0') {
-        logger('in fetcher: valid')
+      const objectId = tagFetcher.data?.objectId
 
+      if (result === '0') {
         setInvalidTags((prev) =>
-          prev.filter((tag) => tag.vault_id !== tagFetcher?.data?.objectId),
+          prev.filter((tag) => tag.vault_id !== objectId),
         )
-      } else {
-        logger('in fetcher: invalid')
-        setInvalidTags((prev) => {
-          const objectId = tagFetcher?.data?.objectId
-          return objectId
-            ? [
-                ...prev,
-                identities.find((i) => i.vault_id === objectId) || {
-                  vault_id: objectId,
-                  display_name: objectId,
-                },
-              ]
-            : prev
-        })
+      } else if (objectId) {
+        const tagToAdd = selectedTags.find((tag) => tag.vault_id === objectId)
+        if (tagToAdd) {
+          setInvalidTags((prev) => {
+            if (prev.some((tag) => tag.vault_id === objectId)) {
+              return prev
+            }
+            return [...prev, tagToAdd]
+          })
+          onRemoveTag(objectId)
+        }
       }
     }
-  }, [tagFetcher.state, tagFetcher.data, setInvalidTags])
+  }, [
+    tagFetcher.state,
+    tagFetcher.data,
+    setInvalidTags,
+    selectedTags,
+    onRemoveTag,
+  ])
 
   return (
     <div className="flex flex-col min-h-36">
@@ -127,7 +127,7 @@ export function AddTags({
           Select up to 5 tags to add to this identity.
         </Text>
       </div>
-      <div className="mt-4 max-h-72 overflow-y-auto pr-4">
+      <div className="mt-4 max-h-60 overflow-y-auto pr-4">
         <Popover
           open={isPopoverOpen}
           onOpenChange={setIsPopoverOpen}
@@ -158,7 +158,7 @@ export function AddTags({
           <AddListExistingCta
             key={invalidTag.vault_id}
             identity={invalidTag}
-            message="This tag already exists in this list."
+            variant="tag"
             onSaveClick={() => handleSaveClick(invalidTag)}
             onClose={() => onRemoveInvalidTag(invalidTag.vault_id)}
           />

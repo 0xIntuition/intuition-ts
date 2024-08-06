@@ -4,24 +4,30 @@ import {
   Identity,
   IdentityTag,
   IdentityTagSize,
+  TagWithValue,
   Text,
   Trunctacular,
 } from '@0xintuition/1ui'
 import { IdentityPresenter } from '@0xintuition/api'
 
 interface AddListAlertCtaProps {
-  message: string
+  variant: 'identity' | 'tag'
   identity: IdentityPresenter
   onSaveClick: () => void
   onClose: () => void
 }
 
 export function AddListExistingCta({
-  message,
+  variant,
   identity,
   onSaveClick,
   onClose,
 }: AddListAlertCtaProps) {
+  const message =
+    variant === 'identity'
+      ? 'This identity already exists in this list.'
+      : 'This tag already exists in this list.'
+
   return (
     <div className="flex items-center justify-between bg-warning/10 border border-warning/30 px-4 py-3 rounded w-full mb-5">
       <div className="flex flex-col w-full">
@@ -32,13 +38,17 @@ export function AddListExistingCta({
           </Text>
         </div>
         <div className="flex flex-row items-center justify-between">
-          <IdentityTag
-            size={IdentityTagSize.md}
-            variant={Identity.nonUser}
-            imgSrc={identity.image ?? ''}
-          >
-            <Trunctacular value={identity.display_name} />
-          </IdentityTag>
+          {variant === 'identity' ? (
+            <IdentityTag
+              size={IdentityTagSize.md}
+              variant={Identity.nonUser}
+              imgSrc={identity.image ?? ''}
+            >
+              <Trunctacular value={identity.display_name} />
+            </IdentityTag>
+          ) : (
+            <TagWithValue label={identity.display_name} />
+          )}
           <div className="flex items-center gap-4">
             <Button onClick={onSaveClick} variant="secondary">
               Save

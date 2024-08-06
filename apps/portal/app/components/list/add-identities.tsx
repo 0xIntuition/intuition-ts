@@ -218,7 +218,7 @@ export function AddIdentities({
           <AddListExistingCta
             key={invalidIdentity.vault_id}
             identity={invalidIdentity}
-            message="This identity already exists in this list."
+            variant="identity"
             onSaveClick={() => handleSaveClick(invalidIdentity)}
             onClose={() => onRemoveInvalidIdentity(invalidIdentity.vault_id)}
           />
