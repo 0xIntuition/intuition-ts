@@ -1,16 +1,19 @@
 import React from 'react'
 
 interface ClaimStatusProps extends React.HTMLAttributes<HTMLDivElement> {
-  claimsFor: number
-  claimsAgainst: number
+  claimsForValue: string
+  claimsAgainstValue: string
 }
 
 const ClaimStatus = ({
-  claimsFor = 0,
-  claimsAgainst = 0,
+  claimsForValue = '0',
+  claimsAgainstValue = '0',
   children,
 }: ClaimStatusProps) => {
-  const againstPercentage = (claimsAgainst / (claimsFor + claimsAgainst)) * 100
+  const againstPercentage =
+    +(+claimsForValue / (+claimsAgainstValue + +claimsForValue)) * 100
+
+  console.log('againstPercentage', againstPercentage)
   return (
     <div className="flex flex-col justify-between max-md:w-full max-md:justify-center">
       <div className="flex items-center h-[6px] mb-4">

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 import {
   Button,
@@ -16,9 +16,9 @@ import {
 import { IdentityPresenter } from '@0xintuition/api'
 
 import { IdentitySearchCombobox } from '@components/identity/identity-search-combo-box'
-import { useIdentityServerSearch } from '@lib/hooks/useIdentityServerSearch'
+import useFilteredIdentitySearch from '@lib/hooks/useFilteredIdentitySearch'
+import useInvalidItems from '@lib/hooks/useInvalidItems'
 import { createIdentityModalAtom, saveListModalAtom } from '@lib/state/store'
-import logger from '@lib/utils/logger'
 import { useFetcher } from '@remix-run/react'
 import { TagLoaderData } from '@routes/resources+/tag'
 import { TAG_PREDICATE_VAULT_ID_TESTNET, TAG_RESOURCE_ROUTE } from 'consts'
@@ -58,23 +58,19 @@ export function AddIdentities({
   const [saveListModalActive, setSaveListModalActive] =
     useAtom(saveListModalAtom)
 
-  const { setSearchQuery, identities, handleInput } = useIdentityServerSearch()
+  const { setSearchQuery, filteredIdentities, handleInput } =
+    useFilteredIdentitySearch({
+      selectedItems: selectedIdentities,
+    })
+
   const [isPopoverOpen, setIsPopoverOpen] = useState(false)
 
   const [selectedInvalidIdentity, setSelectedInvalidIdentity] =
     useState<IdentityPresenter | null>(null)
 
-  const filteredIdentities = identities.filter(
-    (identity) =>
-      !selectedIdentities.some(
-        (identityToAdd) => identityToAdd.vault_id === identity.vault_id,
-      ),
-  )
-
   const tagFetcher = useFetcher<TagLoaderData>()
 
   const handleIdentitySelect = (identity: IdentityPresenter) => {
-    logger('selected identity', identity)
     onAddIdentity(identity)
     setSearchQuery('')
     setIsPopoverOpen(false)
@@ -98,35 +94,13 @@ export function AddIdentities({
     })
   }
 
-  useEffect(() => {
-    if (tagFetcher.state === 'idle' && tagFetcher.data !== undefined) {
-      const result = tagFetcher.data.result
-      const subjectId = tagFetcher.data?.subjectId
-
-      if (result === '0') {
-        setInvalidIdentities((prev) =>
-          prev.filter((identity) => identity.vault_id !== subjectId),
-        )
-      } else if (subjectId) {
-        const identityToAdd = selectedIdentities.find(
-          (identity) => identity.vault_id === subjectId,
-        )
-        if (identityToAdd) {
-          setInvalidIdentities((prev) => {
-            if (prev.some((identity) => identity.vault_id === subjectId)) {
-              return prev
-            }
-            return [...prev, identityToAdd]
-          })
-        }
-      }
-    }
-  }, [
-    tagFetcher.state,
-    tagFetcher.data,
-    setInvalidIdentities,
-    selectedIdentities,
-  ])
+  useInvalidItems({
+    fetcher: tagFetcher,
+    selectedItems: selectedIdentities,
+    setInvalidItems: setInvalidIdentities,
+    idKey: 'vault_id',
+    dataIdKey: 'subjectId',
+  })
 
   const validIdentities = selectedIdentities.filter(
     (identity) =>
@@ -218,7 +192,7 @@ export function AddIdentities({
           <AddListExistingCta
             key={invalidIdentity.vault_id}
             identity={invalidIdentity}
-            message="This identity already exists in this list."
+            variant="identity"
             onSaveClick={() => handleSaveClick(invalidIdentity)}
             onClose={() => onRemoveInvalidIdentity(invalidIdentity.vault_id)}
           />
