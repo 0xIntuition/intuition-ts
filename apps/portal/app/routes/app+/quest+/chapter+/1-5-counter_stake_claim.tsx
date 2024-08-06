@@ -29,12 +29,7 @@ import { useQuestMdxContent } from '@lib/hooks/useQuestMdxContent'
 import { stakeModalAtom } from '@lib/state/store'
 import logger from '@lib/utils/logger'
 import { invariant } from '@lib/utils/misc'
-import {
-  getQuestContentBySlug,
-  getQuestCriteria,
-  getQuestId,
-  QuestRouteId,
-} from '@lib/utils/quest'
+import { getQuestCriteria, getQuestId, QuestRouteId } from '@lib/utils/quest'
 import { ActionFunctionArgs, json, LoaderFunctionArgs } from '@remix-run/node'
 import {
   Form,
@@ -46,7 +41,7 @@ import { CheckQuestSuccessLoaderData } from '@routes/resources+/check-quest-succ
 import { fetchWrapper } from '@server/api'
 import { requireUser, requireUserId } from '@server/auth'
 import { getVaultDetails } from '@server/multivault'
-import { FALLBACK_CLAIM_ID, FALLBACK_COUNTER_CLAIM_ID } from 'consts'
+import { FALLBACK_COUNTER_CLAIM_ID } from 'consts'
 import { useAtom } from 'jotai'
 import {
   ClaimElement,
@@ -74,7 +69,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const { id: userId } = await fetchWrapper(request, {
     method: UsersService.getUserByWalletPublic,
     args: {
-      wallet: user.wallet?.address!,
+      wallet: user.wallet?.address,
     },
   })
   const userQuests = (
@@ -119,7 +114,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     claim = await fetchWrapper(request, {
       method: ClaimsService.getClaimById,
       args: {
-        id: position.claim_id!,
+        id: position.claim_id,
       },
     })
   } else {
@@ -154,18 +149,18 @@ export async function loader({ request }: LoaderFunctionArgs) {
     const predicateVaultId = predicate?.vault_id
     const vaultDetails = await Promise.all([
       getVaultDetails(
-        subject?.contract!,
-        subjectVaultId!,
+        subject?.contract ?? '',
+        subjectVaultId ?? '',
         user.wallet?.address as `0x${string}`,
       ),
       getVaultDetails(
-        predicate?.contract!,
-        predicateVaultId!,
+        predicate?.contract ?? '',
+        predicateVaultId ?? '',
         user.wallet?.address as `0x${string}`,
       ),
       getVaultDetails(
-        object?.contract!,
-        objectVaultId!,
+        object?.contract ?? '',
+        objectVaultId ?? '',
         user.wallet?.address as `0x${string}`,
       ),
     ])
@@ -305,8 +300,9 @@ export default function Quests() {
     vaultDetails: VaultDetailsType
     direction?: 'for' | 'against'
   }) {
+    const { claim } = args
     logger('Activity success', claim)
-    if (userQuest) {
+    if (userQuest && claim) {
       logger('Submitting fetcher', claim.claim_id, userQuest.id)
       fetcher.load(`/resources/check-quest-success?userQuestId=${userQuest.id}`)
     }
@@ -363,14 +359,16 @@ export default function Quests() {
             (userQuest?.status === QuestStatus.COMPLETED && !!position)
           }
         />
-        {!!identities.length && !!position && (
-          <StakeClaimUnderlyingIdentitiesActivity
-            identities={identities}
-            handleSellClick={handleSellIdentityClick}
-            status={QuestStatus.NOT_STARTED}
-            userWallet={userWallet}
-          />
-        )}
+        {!!identities.length &&
+          !!position &&
+          (userQuest?.status === QuestStatus.CLAIMABLE ||
+            userQuest?.status === QuestStatus.COMPLETED) && (
+            <StakeClaimUnderlyingIdentitiesActivity
+              identities={identities}
+              handleSellClick={handleSellIdentityClick}
+              status={userQuest.status}
+            />
+          )}
 
         <MDXContentView
           body={closingBody}

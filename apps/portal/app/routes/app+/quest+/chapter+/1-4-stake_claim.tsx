@@ -69,7 +69,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const { id: userId } = await fetchWrapper(request, {
     method: UsersService.getUserByWalletPublic,
     args: {
-      wallet: user.wallet?.address!,
+      wallet: user.wallet?.address,
     },
   })
   const userQuests = (
@@ -147,18 +147,18 @@ export async function loader({ request }: LoaderFunctionArgs) {
     const predicateVaultId = predicate?.vault_id
     const vaultDetails = await Promise.all([
       getVaultDetails(
-        subject?.contract!,
-        subjectVaultId!,
+        subject?.contract ?? '',
+        subjectVaultId ?? '',
         user.wallet?.address as `0x${string}`,
       ),
       getVaultDetails(
-        predicate?.contract!,
-        predicateVaultId!,
+        predicate?.contract ?? '',
+        predicateVaultId ?? '',
         user.wallet?.address as `0x${string}`,
       ),
       getVaultDetails(
-        object?.contract!,
-        objectVaultId!,
+        object?.contract ?? '',
+        objectVaultId ?? '',
         user.wallet?.address as `0x${string}`,
       ),
     ])
@@ -301,8 +301,9 @@ export default function Quests() {
     vaultDetails: VaultDetailsType
     direction?: 'for' | 'against'
   }) {
+    const { claim } = args
     logger('Activity success', claim)
-    if (userQuest) {
+    if (userQuest && claim) {
       logger('Submitting fetcher', claim.claim_id, userQuest.id)
       fetcher.load(`/resources/check-quest-success?userQuestId=${userQuest.id}`)
     }
@@ -362,8 +363,7 @@ export default function Quests() {
             <StakeClaimUnderlyingIdentitiesActivity
               identities={identities}
               handleSellClick={handleSellIdentityClick}
-              status={QuestStatus.NOT_STARTED}
-              userWallet={userWallet}
+              status={userQuest.status}
             />
           )}
 
@@ -407,13 +407,16 @@ export default function Quests() {
         }
         userWallet={userWallet}
         contract={
-          stakeModalActive.modalType === 'claim'
-            ? claim.contract
-            : identities[stakeModalActive.id!]?.identity.contract!
+          stakeModalActive.modalType === 'identity' && stakeModalActive.id
+            ? identities[stakeModalActive.id]?.identity.contract
+            : claim.contract
         }
         vaultDetails={
-          stakeModalActive.modalType === 'identity' && position && identities
-            ? identities[stakeModalActive.id!]?.vaultDetails
+          stakeModalActive.modalType === 'identity' &&
+          position &&
+          identities &&
+          stakeModalActive.id
+            ? identities[stakeModalActive.id]?.vaultDetails
             : vaultDetails
         }
         onClose={handleCloseActivityModal}

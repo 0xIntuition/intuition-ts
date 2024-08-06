@@ -12,7 +12,7 @@ import {
 import { IdentityPresenter, QuestStatus } from '@0xintuition/api'
 
 import { calculatePercentageOfTvl, formatBalance } from '@lib/utils/misc'
-import { IdentityType, VaultDetailsType } from 'types'
+import { ClaimElementType, VaultDetailsType } from 'types'
 
 import ActivityContainer from '../activity-container'
 import { IdentityWithHoverable } from '../detail/identity-with-hoverable'
@@ -25,17 +25,15 @@ export interface StakeClaimActivityUnderlyingIdentitiesProps
     {
       vaultDetails: VaultDetailsType
       identity: IdentityPresenter
-      type: IdentityType
+      type: ClaimElementType
     }
   >
-  userWallet: string
   handleSellClick: (identity: IdentityPresenter) => void
 }
 
 export default function StakeClaimUnderlyingIdentitiesActivity({
   identities,
   status,
-  userWallet,
   handleSellClick,
   ...props
 }: StakeClaimActivityUnderlyingIdentitiesProps) {
@@ -46,7 +44,10 @@ export default function StakeClaimUnderlyingIdentitiesActivity({
           Object.values(identities).map((identity) => {
             console.log('identity', identity)
             return (
-              <div className="flex flex-col items-start gap-2.5">
+              <div
+                className="flex flex-col items-start gap-2.5"
+                key={`${identity.identity.id}-quest-stake`}
+              >
                 <Text
                   variant={TextVariant.body}
                   className="text-primary/60 capitalize"
