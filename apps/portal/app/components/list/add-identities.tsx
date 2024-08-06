@@ -146,10 +146,10 @@ export function AddIdentities({
         </Text>
       </div>
       <Separator />
-      <div className="mt-4 mb-8 space-y-2">
+      <div className="mt-4 max-h-72 overflow-y-auto pr-4">
         {validIdentities.map((identity, index) => (
           <div
-            className="flex items-center justify-between gap-2.5"
+            className="flex items-center justify-between gap-2.5 mb-4"
             key={identity.id}
           >
             <div className="flex items-center gap-3 flex-1">
@@ -180,7 +180,7 @@ export function AddIdentities({
           </div>
         ))}
         {validIdentities.length < maxIdentitiesToAdd && (
-          <div className="flex flex-row items-center gap-3">
+          <div className="flex flex-row items-center gap-3 mb-8">
             <Text
               variant="body"
               weight="medium"
@@ -214,8 +214,6 @@ export function AddIdentities({
             </Popover>
           </div>
         )}
-      </div>
-      <div className="max-h-40 overflow-y-auto mb-4">
         {invalidIdentities.map((invalidIdentity) => (
           <AddListAlertCta
             key={invalidIdentity.vault_id}
