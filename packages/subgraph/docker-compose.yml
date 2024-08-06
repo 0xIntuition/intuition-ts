@@ -1,28 +1,22 @@
-version: '3'
 services:
-  anvil:
-    build:
-      context: .
+  geth:
+    container_name: geth
+    image: ethereum/client-go
     ports:
       - '8545:8545'
-
-  # firehose:
-  #   image: ghcr.io/streamingfast/firehose-ethereum
-  #   ports:
-  #     - '9000:9000' # Substreams tier 1 gRPC port
-  #   volumes:
-  #     - data_fh:/data
-  #   command:
-  #     - start
-  #     - reader-node,merger,relayer,firehose,substreams-tier1,substreams-tier2
-  #     - --data-dir=/data
-  #     - --config-file=
-  #     - --log-format=text
-  #     - --log-to-file=false
-  #     - --common-first-streamable-block=1
-  #     - --reader-node-path=fireeth
-  #     - --reader-node-arguments=tools poller generic-evm http://anvil:8545 0 --data-dir=/data
-  #     - --substreams-tier1-grpc-listen-addr=:9000
+    healthcheck:
+      test: ['CMD', 'curl', 'http://localhost:8545']
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    entrypoint: sh /root/init-script.sh
+    command: '--dev --dev.period=1 -cache=8192 --http --http.api=eth,web3,net --mine  --http.port=8545 --http.vhosts=* --http.addr=0.0.0.0 --http.corsdomain="https://remix.ethereum.org" --datadir=/data --password=/root/password.txt'
+    volumes:
+      - data_geth:/data
+      - ./geth/genesis.json:/config/genesis.json
+      - ./geth/init-script.sh:/root/init-script.sh
+      - ./geth/keystore.json:/data/keystore/UTC--2024-06-03T19-15-34.118131000Z--63e87dc2366dc7f1be110ded239879422e165d96
+      - ./geth/password.txt:/root/password.txt
 
   graph-node:
     image: graphprotocol/graph-node:latest
@@ -35,7 +29,7 @@ services:
     depends_on:
       - ipfs
       - postgres
-      - anvil
+      - geth
     extra_hosts:
       - host.docker.internal:host-gateway
     environment:
@@ -44,9 +38,13 @@ services:
       postgres_pass: let-me-in
       postgres_db: graph-node
       ipfs: 'ipfs:5001'
-      ethereum: 'mainnet:http://anvil:8545'
+      ethereum: 'mainnet:http://geth:8545'
       GRAPH_LOG: info
       GRAPH_ALLOW_NON_DETERMINISTIC_IPFS: true
+      GRAPH_STORE_HISTORY_SLACK_FACTOR: 1.01
+      GRAPH_STORE_HISTORY_DELETE_THRESHOLD: 1
+      GRAPH_STORE_HISTORY_REBUILD_THRESHOLD: 0
+      ETHEREUM_REORG_THRESHOLD: 0
 
   ipfs:
     build:
@@ -131,8 +129,6 @@ services:
     ports:
       - '8082:8081'
     command: ['pgweb', '--bind=0.0.0.0', '--listen=8081', '--binary-codec=hex']
-    #command: ["pgweb", "--binary-codec=base58"]
-    #command: ["pgweb", "--binary-codec=base64"]
     links:
       - postgres:postgres
     environment:
@@ -144,3 +140,4 @@ volumes:
   data_fh:
   data_pg:
   data_ipfs:
+  data_geth:

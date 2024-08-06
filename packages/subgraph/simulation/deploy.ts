@@ -1,5 +1,5 @@
 import { type Address, parseEther, parseUnits } from 'viem'
-import { ADMIN, CONTRACT_ADDRESS } from './constants.js'
+import { ADMIN, BOB, CONTRACT_ADDRESS } from './constants.js'
 import { publicClient, adminClient } from './utils.js'
 import { bytecode } from './bytecode'
 import { abi, Multivault } from '@0xintuition/protocol'
@@ -42,8 +42,8 @@ export async function getOrDeployAndInit(): Promise<Address> {
     functionName: 'init',
     args: [
       {
-        admin: ADMIN,
-        protocolVault: ADMIN,
+        admin: ADMIN.address,
+        protocolMultisig: BOB,
         feeDenominator: 10000n, // Common denominator for fee
         minDeposit: parseEther('0.0003'), // Minimum deposit amount in wei
         minShare: 10000n, // Minimum share amount (e.g., for vault initialization)
@@ -61,10 +61,10 @@ export async function getOrDeployAndInit(): Promise<Address> {
         atomDepositFractionForTriple: 1500n, // Fee for equity in atoms when creating a triple
       },
       {
-        permit2: ADMIN, // Permit2 on Base
-        entryPoint: ADMIN, // EntryPoint address on Base
-        atomWarden: ADMIN, // AtomWarden address (should be a multisig in production)
-        atomWalletBeacon: ADMIN, // Address of the AtomWalletBeacon contract
+        permit2: ADMIN.address, // Permit2 on Base
+        entryPoint: ADMIN.address, // EntryPoint address on Base
+        atomWarden: ADMIN.address, // AtomWarden address (should be a multisig in production)
+        atomWalletBeacon: ADMIN.address, // Address of the AtomWalletBeacon contract
       },
       {
         entryFee: 500n, // Entry fee for vault 0

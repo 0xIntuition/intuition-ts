@@ -38,7 +38,7 @@ async function main() {
   const adminOrganizationJson: WithContext<Organization> = {
     '@context': 'https://schema.org',
     '@type': 'Organization',
-    name: 'Intuition Foundation',
+    name: 'Intion Systems with a typo in the name',
     image: 'https://avatars.githubusercontent.com/u/94311139?s=200&v=4',
     email: 'info@intuition.systems',
     url: 'https://intuition.systems',
@@ -60,6 +60,34 @@ async function main() {
   )
   console.log(
     `Created triple: ${adminOrganizationTriple.vaultId} https://schema.org/Organization ${adminOrganizationJson.name} `,
+  )
+
+
+  const adminOrganizationJson2: WithContext<Organization> = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: 'Intuition Systems',
+    image: 'https://avatars.githubusercontent.com/u/94311139?s=200&v=4',
+    email: 'info@intuition.systems',
+    url: 'https://intuition.systems',
+  }
+
+  const ipfs02 = await ipfs.add(JSON.stringify(adminOrganizationJson2))
+  const adminOrganizationAtom2 = await admin.multivault.createAtom(
+    `ipfs://${ipfs02.cid}`,
+  )
+
+  console.log(
+    `Created atom: ${adminOrganizationAtom2.vaultId} ${adminOrganizationJson2.name} `,
+  )
+
+  const adminOrganizationTriple2 = await admin.multivault.createTriple(
+    adminAccountAtom.vaultId,
+    organizationPredicate,
+    adminOrganizationAtom2.vaultId,
+  )
+  console.log(
+    `Created triple: ${adminOrganizationTriple2.vaultId} https://schema.org/Organization ${adminOrganizationJson2.name} `,
   )
 
   const alice = await getIntuition(1)
@@ -95,11 +123,11 @@ async function main() {
 
   const res = await alice.multivault.depositTriple(
     alicePersonTriple.vaultId,
-    parseEther('1'),
+    parseEther('0.01'),
   )
   const res2 = await alice.multivault.redeemTriple(
     alicePersonTriple.vaultId,
-    parseEther('0.3'),
+    parseEther('0.003'),
   )
 
   // const allShares = await alice.multivault.getVaultStateForUser(alicePersonTriple.vaultId, alice.account.address)

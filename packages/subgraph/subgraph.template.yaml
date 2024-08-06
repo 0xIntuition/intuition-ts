@@ -3,7 +3,7 @@ features:
   - nonDeterministicIpfs
   - ipfsOnEthereumContracts
 indexerHints:
-  prune: auto
+  prune: 1 
 schema:
   file: ./schema.graphql
 dataSources:
@@ -20,7 +20,6 @@ dataSources:
       language: wasm/assemblyscript
       entities:
         - Account
-        - Activity
         - Atom
         - AtomValue
         - Deposit
@@ -36,12 +35,12 @@ dataSources:
       eventHandlers:
         - event: AtomCreated(indexed address,indexed address,bytes,uint256)
           handler: handleAtomCreated
+        - event: TripleCreated(indexed address,uint256,uint256,uint256,uint256)
+          handler: handleTripleCreated
         - event: Deposited(indexed address,indexed address,uint256,uint256,uint256,uint256,uint256,bool,bool)
           handler: handleDeposited
         - event: FeesTransferred(indexed address,indexed address,uint256)
           handler: handleFeesTransferred
         - event: Redeemed(indexed address,indexed address,uint256,uint256,uint256,uint256,uint256)
           handler: handleRedeemed
-        - event: TripleCreated(indexed address,uint256,uint256,uint256,uint256)
-          handler: handleTripleCreated
       file: ./src/eth-multi-vault.ts

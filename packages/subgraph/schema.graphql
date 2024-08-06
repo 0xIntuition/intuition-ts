@@ -49,7 +49,8 @@ type Account @entity {
   label: String
   image: String
   atom_id: Atom
-  type: AccountType!
+  "0 - Default, 1 - Atom Wallet, 2 - Protocol Vault"
+  type: Int!
   createdAtoms: [Atom!]! @derivedFrom(field: "creator_id")
   createdTriples: [Triple!]! @derivedFrom(field: "creator_id")
   feeTransfers: [FeeTransfer!]! @derivedFrom(field: "sender_id")
@@ -57,12 +58,6 @@ type Account @entity {
   redemptions: [Redemption!]! @derivedFrom(field: "sender_id")
   positions: [Position!]! @derivedFrom(field: "account_id")
   signals: [Signal!]! @derivedFrom(field: "account_id")
-}
-
-enum AccountType {
-  Default
-  AtomWallet
-  ProtocolVault
 }
 
 type Triple @entity {

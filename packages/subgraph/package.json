@@ -33,8 +33,8 @@
     "testnet:predicates": "tsx testnet/create-predicate-atoms"
   },
   "dependencies": {
-    "@graphprotocol/graph-cli": "0.71.2",
-    "@graphprotocol/graph-ts": "0.32.0"
+    "@graphprotocol/graph-cli": "0.79.0",
+    "@graphprotocol/graph-ts": "0.35.1"
   },
   "devDependencies": {
     "@0xintuition/protocol": "workspace:^",

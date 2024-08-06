@@ -16,7 +16,7 @@ WORKDIR /root
 
 # Command to start the anvil service
 # Add your flags commands here
-ENV ANVIL_START='/root/.foundry/bin/anvil --host 0.0.0.0'
+ENV ANVIL_START='/root/.foundry/bin/anvil --host 0.0.0.0 --block-time 1'
 
 # Execute the scripts after the anvil service is started
 CMD $ANVIL_START

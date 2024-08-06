@@ -35,6 +35,43 @@
   },
   {
     "type": "function",
+    "name": "approvals",
+    "inputs": [
+      {
+        "name": "receiver",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "sender",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "isApproved",
+        "type": "bool",
+        "internalType": "bool"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "approveSender",
+    "inputs": [
+      {
+        "name": "sender",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
     "name": "atomConfig",
     "inputs": [],
     "outputs": [
@@ -452,7 +489,7 @@
         "internalType": "address"
       },
       {
-        "name": "protocolVault",
+        "name": "protocolMultisig",
         "type": "address",
         "internalType": "address"
       },
@@ -722,7 +759,7 @@
             "internalType": "address"
           },
           {
-            "name": "protocolVault",
+            "name": "protocolMultisig",
             "type": "address",
             "internalType": "address"
           },
@@ -887,6 +924,19 @@
       }
     ],
     "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "maxDeposit",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "pure"
   },
   {
     "type": "function",
@@ -1060,6 +1110,19 @@
         "internalType": "uint256"
       }
     ],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "revokeSender",
+    "inputs": [
+      {
+        "name": "sender",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [],
     "stateMutability": "nonpayable"
   },
   {
@@ -1253,10 +1316,10 @@
   },
   {
     "type": "function",
-    "name": "setProtocolVault",
+    "name": "setProtocolMultisig",
     "inputs": [
       {
-        "name": "protocolVault",
+        "name": "protocolMultisig",
         "type": "address",
         "internalType": "address"
       }
@@ -1302,35 +1365,6 @@
         "name": "executed",
         "type": "bool",
         "internalType": "bool"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "tripleAtomShares",
-    "inputs": [
-      {
-        "name": "tripleId",
-        "type": "uint256",
-        "internalType": "uint256"
-      },
-      {
-        "name": "atomId",
-        "type": "uint256",
-        "internalType": "uint256"
-      },
-      {
-        "name": "account",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "outputs": [
-      {
-        "name": "balance",
-        "type": "uint256",
-        "internalType": "uint256"
       }
     ],
     "stateMutability": "view"
@@ -1539,6 +1573,25 @@
   },
   {
     "type": "event",
+    "name": "AdminSet",
+    "inputs": [
+      {
+        "name": "newAdmin",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      },
+      {
+        "name": "oldAdmin",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
     "name": "AtomCreated",
     "inputs": [
       {
@@ -1564,6 +1617,139 @@
         "type": "uint256",
         "indexed": false,
         "internalType": "uint256"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "AtomCreationProtocolFeeSet",
+    "inputs": [
+      {
+        "name": "newAtomCreationProtocolFee",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "oldAtomCreationProtocolFee",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "AtomDepositFractionForTripleSet",
+    "inputs": [
+      {
+        "name": "newAtomDepositFractionForTriple",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "oldAtomDepositFractionForTriple",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "AtomDepositFractionOnTripleCreationSet",
+    "inputs": [
+      {
+        "name": "newAtomDepositFractionOnTripleCreation",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "oldAtomDepositFractionOnTripleCreation",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "AtomUriMaxLengthSet",
+    "inputs": [
+      {
+        "name": "newAtomUriMaxLength",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "oldAtomUriMaxLength",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "AtomWalletDeployed",
+    "inputs": [
+      {
+        "name": "vaultId",
+        "type": "uint256",
+        "indexed": true,
+        "internalType": "uint256"
+      },
+      {
+        "name": "atomWallet",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "AtomWalletInitialDepositAmountSet",
+    "inputs": [
+      {
+        "name": "newAtomWalletInitialDepositAmount",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "oldAtomWalletInitialDepositAmount",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "AtomWardenSet",
+    "inputs": [
+      {
+        "name": "newAtomWarden",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      },
+      {
+        "name": "oldAtomWarden",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
       }
     ],
     "anonymous": false
@@ -1631,6 +1817,56 @@
   },
   {
     "type": "event",
+    "name": "EntryFeeSet",
+    "inputs": [
+      {
+        "name": "id",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "newEntryFee",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "oldEntryFee",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "ExitFeeSet",
+    "inputs": [
+      {
+        "name": "id",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "newExitFee",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "oldExitFee",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
     "name": "FeesTransferred",
     "inputs": [
       {
@@ -1640,7 +1876,7 @@
         "internalType": "address"
       },
       {
-        "name": "protocolVault",
+        "name": "protocolMultisig",
         "type": "address",
         "indexed": true,
         "internalType": "address"
@@ -1669,6 +1905,88 @@
   },
   {
     "type": "event",
+    "name": "MinDepositSet",
+    "inputs": [
+      {
+        "name": "newMinDeposit",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "oldMinDeposit",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "MinShareSet",
+    "inputs": [
+      {
+        "name": "newMinShare",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "oldMinShare",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "OperationCancelled",
+    "inputs": [
+      {
+        "name": "operationId",
+        "type": "bytes32",
+        "indexed": true,
+        "internalType": "bytes32"
+      },
+      {
+        "name": "data",
+        "type": "bytes",
+        "indexed": false,
+        "internalType": "bytes"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "OperationScheduled",
+    "inputs": [
+      {
+        "name": "operationId",
+        "type": "bytes32",
+        "indexed": true,
+        "internalType": "bytes32"
+      },
+      {
+        "name": "data",
+        "type": "bytes",
+        "indexed": false,
+        "internalType": "bytes"
+      },
+      {
+        "name": "readyTime",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
     "name": "Paused",
     "inputs": [
       {
@@ -1676,6 +1994,31 @@
         "type": "address",
         "indexed": false,
         "internalType": "address"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "ProtocolFeeSet",
+    "inputs": [
+      {
+        "name": "id",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "newProtocolFee",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "oldProtocolFee",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
       }
     ],
     "anonymous": false
@@ -1731,6 +2074,56 @@
   },
   {
     "type": "event",
+    "name": "SenderApproved",
+    "inputs": [
+      {
+        "name": "sender",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      },
+      {
+        "name": "receiver",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      },
+      {
+        "name": "approved",
+        "type": "bool",
+        "indexed": false,
+        "internalType": "bool"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "SenderRevoked",
+    "inputs": [
+      {
+        "name": "sender",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      },
+      {
+        "name": "receiver",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      },
+      {
+        "name": "approved",
+        "type": "bool",
+        "indexed": false,
+        "internalType": "bool"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
     "name": "TripleCreated",
     "inputs": [
       {
@@ -1768,6 +2161,25 @@
   },
   {
     "type": "event",
+    "name": "TripleCreationProtocolFeeSet",
+    "inputs": [
+      {
+        "name": "newTripleCreationProtocolFee",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "oldTripleCreationProtocolFee",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
     "name": "Unpaused",
     "inputs": [
       {
@@ -1780,33 +2192,42 @@
     "anonymous": false
   },
   {
+    "type": "event",
+    "name": "protocolMultisigSet",
+    "inputs": [
+      {
+        "name": "newProtocolMultisig",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      },
+      {
+        "name": "oldProtocolMultisig",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      }
+    ],
+    "anonymous": false
+  },
+  {
     "type": "error",
     "name": "EnforcedPause",
     "inputs": []
   },
   {
     "type": "error",
-    "name": "ExpectedPause",
+    "name": "EthMultiVault_AdminOnly",
     "inputs": []
   },
   {
     "type": "error",
-    "name": "InvalidInitialization",
+    "name": "EthMultiVault_ArraysNotSameLength",
     "inputs": []
   },
   {
     "type": "error",
-    "name": "MultiVault_AdminOnly",
-    "inputs": []
-  },
-  {
-    "type": "error",
-    "name": "MultiVault_ArraysNotSameLength",
-    "inputs": []
-  },
-  {
-    "type": "error",
-    "name": "MultiVault_AtomDoesNotExist",
+    "name": "EthMultiVault_AtomDoesNotExist",
     "inputs": [
       {
         "name": "atomId",
@@ -1817,7 +2238,7 @@
   },
   {
     "type": "error",
-    "name": "MultiVault_AtomExists",
+    "name": "EthMultiVault_AtomExists",
     "inputs": [
       {
         "name": "atomUri",
@@ -1828,47 +2249,57 @@
   },
   {
     "type": "error",
-    "name": "MultiVault_AtomUriTooLong",
+    "name": "EthMultiVault_AtomUriTooLong",
     "inputs": []
   },
   {
     "type": "error",
-    "name": "MultiVault_BurnFromZeroAddress",
+    "name": "EthMultiVault_BurnFromZeroAddress",
     "inputs": []
   },
   {
     "type": "error",
-    "name": "MultiVault_BurnInsufficientBalance",
+    "name": "EthMultiVault_BurnInsufficientBalance",
     "inputs": []
   },
   {
     "type": "error",
-    "name": "MultiVault_DeployAccountFailed",
+    "name": "EthMultiVault_CannotApproveSelf",
     "inputs": []
   },
   {
     "type": "error",
-    "name": "MultiVault_DepositOrWithdrawZeroShares",
+    "name": "EthMultiVault_CannotRevokeSelf",
     "inputs": []
   },
   {
     "type": "error",
-    "name": "MultiVault_HasCounterStake",
+    "name": "EthMultiVault_DeployAccountFailed",
     "inputs": []
   },
   {
     "type": "error",
-    "name": "MultiVault_InsufficientBalance",
+    "name": "EthMultiVault_DepositOrWithdrawZeroShares",
     "inputs": []
   },
   {
     "type": "error",
-    "name": "MultiVault_InsufficientDepositAmountToCoverFees",
+    "name": "EthMultiVault_HasCounterStake",
     "inputs": []
   },
   {
     "type": "error",
-    "name": "MultiVault_InsufficientRemainingSharesInVault",
+    "name": "EthMultiVault_InsufficientBalance",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "EthMultiVault_InsufficientDepositAmountToCoverFees",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "EthMultiVault_InsufficientRemainingSharesInVault",
     "inputs": [
       {
         "name": "remainingShares",
@@ -1879,62 +2310,77 @@
   },
   {
     "type": "error",
-    "name": "MultiVault_InsufficientSharesInVault",
+    "name": "EthMultiVault_InsufficientSharesInVault",
     "inputs": []
   },
   {
     "type": "error",
-    "name": "MultiVault_InvalidEntryFee",
+    "name": "EthMultiVault_InvalidAtomDepositFractionForTriple",
     "inputs": []
   },
   {
     "type": "error",
-    "name": "MultiVault_InvalidExitFee",
+    "name": "EthMultiVault_InvalidEntryFee",
     "inputs": []
   },
   {
     "type": "error",
-    "name": "MultiVault_InvalidProtocolFee",
+    "name": "EthMultiVault_InvalidExitFee",
     "inputs": []
   },
   {
     "type": "error",
-    "name": "MultiVault_MinimumDeposit",
+    "name": "EthMultiVault_InvalidProtocolFee",
     "inputs": []
   },
   {
     "type": "error",
-    "name": "MultiVault_OperationAlreadyExecuted",
+    "name": "EthMultiVault_MinimumDeposit",
     "inputs": []
   },
   {
     "type": "error",
-    "name": "MultiVault_OperationAlreadyScheduled",
+    "name": "EthMultiVault_OperationAlreadyExecuted",
     "inputs": []
   },
   {
     "type": "error",
-    "name": "MultiVault_OperationNotScheduled",
+    "name": "EthMultiVault_OperationAlreadyScheduled",
     "inputs": []
   },
   {
     "type": "error",
-    "name": "MultiVault_ReceiveNotAllowed",
+    "name": "EthMultiVault_OperationNotScheduled",
     "inputs": []
   },
   {
     "type": "error",
-    "name": "MultiVault_TimelockNotExpired",
+    "name": "EthMultiVault_ReceiveNotAllowed",
     "inputs": []
   },
   {
     "type": "error",
-    "name": "MultiVault_TransferFailed",
+    "name": "EthMultiVault_SenderAlreadyApproved",
     "inputs": []
   },
   {
     "type": "error",
-    "name": "MultiVault_TripleExists",
+    "name": "EthMultiVault_SenderNotApproved",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "EthMultiVault_TimelockNotExpired",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "EthMultiVault_TransferFailed",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "EthMultiVault_TripleExists",
     "inputs": [
       {
         "name": "subjectId",
@@ -1955,12 +2401,12 @@
   },
   {
     "type": "error",
-    "name": "MultiVault_VaultDoesNotExist",
+    "name": "EthMultiVault_VaultDoesNotExist",
     "inputs": []
   },
   {
     "type": "error",
-    "name": "MultiVault_VaultIsTriple",
+    "name": "EthMultiVault_VaultIsTriple",
     "inputs": [
       {
         "name": "vaultId",
@@ -1971,12 +2417,22 @@
   },
   {
     "type": "error",
-    "name": "MultiVault_VaultNotAtom",
+    "name": "EthMultiVault_VaultNotAtom",
     "inputs": []
   },
   {
     "type": "error",
-    "name": "MultiVault_VaultNotTriple",
+    "name": "EthMultiVault_VaultNotTriple",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "ExpectedPause",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "InvalidInitialization",
     "inputs": []
   },
   {
@@ -1989,4 +2445,4 @@
     "name": "ReentrancyGuardReentrantCall",
     "inputs": []
   }
-]
+] 
