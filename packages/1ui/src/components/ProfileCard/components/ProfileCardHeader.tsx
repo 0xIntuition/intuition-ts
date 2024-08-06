@@ -1,6 +1,6 @@
 import { Identity, IdentityType } from 'types'
 
-import { Avatar, Copy, Text, toast, Trunctacular } from '../..'
+import { Avatar, Copy, toast, Trunctacular } from '../..'
 
 interface ProfileCardHeaderProps {
   variant?: IdentityType
@@ -21,9 +21,12 @@ const ProfileCardHeader = ({
     <div className="flex items-center space-x-4">
       <Avatar variant={variant} src={avatarSrc} name={name} />
       <div>
-        <Text variant="headline" weight="medium" className="text-primary">
-          {name}
-        </Text>
+        <Trunctacular
+          value={name}
+          variant="headline"
+          weight="medium"
+          className="text-primary"
+        ></Trunctacular>
         <div className="flex flex-row gap-1 items-center">
           {link && id && (
             <>

@@ -14,6 +14,7 @@ import {
   IdentityTag,
   ProfileCard,
   Text,
+  Trunctacular,
 } from '@0xintuition/1ui'
 import {
   ActivityPresenter,
@@ -120,21 +121,39 @@ function ActivityItem({
                   size="lg"
                   imgSrc={activity.creator?.image ?? ''}
                 >
-                  {activity.creator?.display_name ??
-                    activity.creator?.wallet ??
-                    ''}
+                  <Trunctacular
+                    value={
+                      activity.creator?.display_name ??
+                      activity.creator?.wallet ??
+                      activity.identity?.creator_address ??
+                      ''
+                    }
+                  ></Trunctacular>
                 </IdentityTag>
               </Link>
             </HoverCardTrigger>
             <HoverCardContent className="w-80">
-              <ProfileCard
-                variant={Identity.user}
-                avatarSrc={activity.creator?.image ?? ''}
-                name={activity.creator?.display_name ?? ''}
-                id={activity.creator?.wallet}
-                bio={activity.creator?.description ?? ''}
-                ipfsLink={`${BLOCK_EXPLORER_URL}/address/${activity.creator?.wallet}`}
-              />
+              {activity.creator ? (
+                <ProfileCard
+                  variant={Identity.user}
+                  avatarSrc={activity.creator?.image ?? ''}
+                  name={activity.creator?.display_name ?? ''}
+                  id={activity.creator?.wallet}
+                  bio={activity.creator?.description ?? ''}
+                  ipfsLink={`${BLOCK_EXPLORER_URL}/address/${activity.creator?.wallet}`}
+                />
+              ) : (
+                <ProfileCard
+                  variant={Identity.user}
+                  avatarSrc={''}
+                  name={activity.identity?.creator_address ?? ''}
+                  id={activity.identity?.creator_address}
+                  bio={
+                    'There is no user associated with this wallet. This data was created on-chain, outside of the Intuition Portal.'
+                  }
+                  ipfsLink={`${BLOCK_EXPLORER_URL}/address/${activity.identity?.creator_address}`}
+                />
+              )}
             </HoverCardContent>
           </HoverCard>
           <Text>{message}</Text>
@@ -154,8 +173,11 @@ function ActivityItem({
                 activity.identity.user?.image ?? activity.identity.image ?? ''
               }
               name={
-                activity.identity.user_display_name ??
-                activity.identity.display_name
+                activity.identity.user_display_name ||
+                (activity.identity.display_name &&
+                activity.identity.display_name !== ''
+                  ? activity.identity.display_name
+                  : activity.identity.identity_id)
               }
               walletAddress={
                 activity.identity.user?.wallet ?? activity.identity.identity_id
@@ -202,6 +224,10 @@ function ActivityItem({
             <ClaimRow
               claimsFor={activity.claim.for_num_positions}
               claimsAgainst={activity.claim.against_num_positions}
+              claimsForValue={+formatBalance(activity.claim.for_assets_sum, 18)}
+              claimsAgainstValue={
+                +formatBalance(activity.claim.against_assets_sum, 18)
+              }
               tvl={+formatBalance(activity.claim.assets_sum, 18, 4)}
               onClick={() => {
                 if (activity.claim) {

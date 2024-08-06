@@ -188,11 +188,15 @@ describe('ProfileCard', () => {
               </span>
             </span>
             <div>
-              <h6
-                class="text-xl font-medium text-primary"
+              <button
+                data-state="closed"
               >
-                Blockchain Corp
-              </h6>
+                <h6
+                  class="text-xl font-medium text-primary"
+                >
+                  Blockchai...
+                </h6>
+              </button>
               <div
                 class="flex flex-row gap-1 items-center"
               >
