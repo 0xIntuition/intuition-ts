@@ -11,8 +11,8 @@ describe('ClaimRow', () => {
       <ClaimRow
         claimsFor={736}
         claimsAgainst={234}
-        claimsForValue={'1.91'}
-        claimsAgainstValue={'1.92'}
+        claimsForValue={1.91}
+        claimsAgainstValue={1.92}
         tvl={0.383}
       >
         <Claim

@@ -114,8 +114,6 @@ describe('ClaimPositionRow', () => {
       expect(asFragment()).toMatchInlineSnapshot(`
         <DocumentFragment>
           <div
-            claimsagainst="70"
-            claimsfor="30"
             class="w-full flex justify-between max-sm:flex-col max-sm:gap-2"
           >
             <div
