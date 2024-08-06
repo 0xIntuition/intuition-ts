@@ -30,7 +30,7 @@ export const UserVariant: Story = {
   args: {
     variant: 'user',
     name: 'John Doe',
-    walletAddress: '0x1234567890abcdef1234567890abcdef12345678',
+    id: '0x1234567890abcdef1234567890abcdef12345678',
     avatarSrc: 'https://avatars.githubusercontent.com/u/94311139?s=200&v=4"',
     amount: 1.21,
     totalFollowers: 305,
@@ -54,7 +54,7 @@ export const EntityVariant: Story = {
   args: {
     variant: 'non-user',
     name: 'Amazon',
-    walletAddress: '0x1234567890abcdef1234567890abcdef12345678',
+    id: '0x1234567890abcdef1234567890abcdef12345678',
     amount: 0.321,
     totalFollowers: 123,
     tags: [
