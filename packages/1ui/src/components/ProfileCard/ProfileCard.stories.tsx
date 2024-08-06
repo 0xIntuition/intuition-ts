@@ -1,5 +1,3 @@
-import React from 'react'
-
 import type { Meta, StoryObj } from '@storybook/react'
 import { Button } from 'components/Button'
 import { Identity } from 'types'
@@ -33,6 +31,12 @@ const meta: Meta<typeof ProfileCard> = {
     },
     id: {
       description: 'Wallet address of the identity',
+      table: {
+        type: { summary: 'string' },
+      },
+    },
+    vaultId: {
+      description: 'Vault ID of the identity',
       table: {
         type: { summary: 'string' },
       },
@@ -80,6 +84,7 @@ export const BasicUsage: Story = {
     avatarSrc: 'https://avatars.githubusercontent.com/u/94311139?s=200&v=4"',
     name: 'John Doe',
     id: '0x1234567890abcdef1234567890abcdef12345678',
+    vaultId: '131',
     stats: {
       numberOfFollowers: 123,
       numberOfFollowing: 45,
@@ -109,6 +114,7 @@ export const EntityProfile: Story = {
     avatarSrc: 'https://avatars.githubusercontent.com/u/94311139?s=200&v=4"',
     name: 'Blockchain Corp',
     id: '0x1234567890abcdef1234567890abcdef12345678',
+    vaultId: '131',
     stats: {
       numberOfFollowers: 300,
     },

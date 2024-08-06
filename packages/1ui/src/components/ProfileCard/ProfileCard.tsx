@@ -11,6 +11,7 @@ export interface ProfileCardProps extends HTMLAttributes<HTMLDivElement> {
   avatarSrc?: string
   name: string
   id?: string
+  vaultId?: string
   stats?: {
     numberOfFollowers?: number
     numberOfFollowing?: number
@@ -27,6 +28,7 @@ const ProfileCard = ({
   avatarSrc = '',
   name,
   id,
+  vaultId,
   stats,
   ipfsLink,
   externalLink,
@@ -77,6 +79,15 @@ const ProfileCard = ({
           >
             {bio}
           </Text>
+        )}
+
+        {vaultId && (
+          <div className="pt-2.5">
+            <Text variant="body" className="text-muted-foreground">
+              Vault ID
+            </Text>
+            <Text variant="body">{vaultId}</Text>
+          </div>
         )}
 
         {variant === Identity.nonUser &&

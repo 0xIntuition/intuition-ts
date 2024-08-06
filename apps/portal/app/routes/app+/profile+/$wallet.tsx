@@ -173,6 +173,7 @@ export default function Profile() {
           userIdentity?.user?.wallet ??
           userIdentity.identity_id
         }
+        vaultId={userIdentity.vault_id}
         stats={{
           numberOfFollowers: userTotals.follower_count,
           numberOfFollowing: userTotals.followed_count,

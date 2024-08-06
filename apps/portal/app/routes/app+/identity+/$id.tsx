@@ -135,6 +135,7 @@ export default function IdentityDetails() {
         avatarSrc={identity?.image ?? ''}
         name={identity?.display_name ?? ''}
         id={identity?.identity_id}
+        vaultId={identity?.vault_id}
         bio={identity?.description ?? ''}
         ipfsLink={`${IPFS_GATEWAY_URL}/${identity?.identity_id?.replace('ipfs://', '')}`}
         externalLink={identity?.external_reference ?? ''}
