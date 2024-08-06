@@ -156,9 +156,7 @@ export function TagsForm({
                     <div className="flex flex-col items-center gap-1">
                       <Button
                         variant="primary"
-                        disabled={
-                          selectedTags.length === 0 || invalidTags.length !== 0
-                        }
+                        disabled={selectedTags.length === 0}
                         onClick={() => dispatch({ type: 'REVIEW_TRANSACTION' })}
                       >
                         Add Tags
