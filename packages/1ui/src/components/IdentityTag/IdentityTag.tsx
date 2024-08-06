@@ -73,13 +73,15 @@ export interface IdentityTagProps
   imgSrc?: string | null
   variant?: IdentityType
   hoverCardContent?: React.ReactNode | null
+  shouldHover?: boolean
 }
 
 const IdentityTag = ({
   hoverCardContent = null,
+  shouldHover = true,
   ...props
 }: IdentityTagProps) => {
-  return hoverCardContent ? (
+  return hoverCardContent && shouldHover ? (
     <HoverCard openDelay={100} closeDelay={100}>
       <HoverCardTrigger>
         <IdentityTagButton {...props} />

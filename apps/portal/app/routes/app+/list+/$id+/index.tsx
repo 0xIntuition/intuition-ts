@@ -2,7 +2,6 @@ import { Suspense, useEffect, useState } from 'react'
 
 import {
   Claim,
-  Identity,
   ListHeaderCard,
   Skeleton,
   Tabs,
@@ -178,19 +177,10 @@ export default function ListOverview() {
                   size="md"
                   link={`${PATHS.CLAIM}/${claim?.claim_id}`}
                   subject={{
-                    variant: claim.subject?.is_user
-                      ? Identity.user
-                      : Identity.nonUser,
-                    label: getAtomLabel(claim.subject as IdentityPresenter),
-                    imgSrc: getAtomImage(claim.subject as IdentityPresenter),
-                    id: claim.subject?.identity_id,
-                    description: getAtomDescription(
-                      claim.subject as IdentityPresenter,
-                    ),
-                    ipfsLink: getAtomIpfsLink(
-                      claim.subject as IdentityPresenter,
-                    ),
-                    link: getAtomLink(claim.subject as IdentityPresenter),
+                    variant: claim.subject?.is_user ? 'user' : 'non-user',
+                    label: '?',
+                    imgSrc: null,
+                    shouldHover: false,
                   }}
                   predicate={{
                     variant: claim.predicate?.is_user ? 'user' : 'non-user',
