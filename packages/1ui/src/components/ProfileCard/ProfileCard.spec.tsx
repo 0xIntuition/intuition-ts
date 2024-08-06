@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { render } from '@testing-library/react'
 
 import { ProfileCard, ProfileCardProps } from './ProfileCard'
@@ -10,6 +8,7 @@ describe('ProfileCard', () => {
     avatarSrc: 'https://avatars.githubusercontent.com/u/94311139?s=200&v=4',
     name: 'John Doe',
     id: '0x1234567890abcdef1234567890abcdef12345678',
+    vaultId: '131',
     stats: {
       numberOfFollowers: 123,
       numberOfFollowing: 45,
@@ -130,6 +129,20 @@ describe('ProfileCard', () => {
             >
               John Doe is a blockchain enthusiast. He loves to learn new things and share his knowledge with others. He is also a contributor to various open-source projects.
             </p>
+            <div
+              class="pt-2.5"
+            >
+              <p
+                class="text-base font-normal text-muted-foreground"
+              >
+                Vault ID
+              </p>
+              <p
+                class="text-primary text-base font-normal"
+              >
+                131
+              </p>
+            </div>
           </div>
         </div>
       </DocumentFragment>
@@ -356,6 +369,20 @@ describe('ProfileCard', () => {
             >
               John Doe is a blockchain enthusiast. He loves to learn new things and share his knowledge with others. He is also a contributor to various open-source projects.
             </p>
+            <div
+              class="pt-2.5"
+            >
+              <p
+                class="text-base font-normal text-muted-foreground"
+              >
+                Vault ID
+              </p>
+              <p
+                class="text-primary text-base font-normal"
+              >
+                131
+              </p>
+            </div>
           </div>
           <div
             class="flex justify-center w-full"
