@@ -48,7 +48,7 @@ const ClaimItem = ({
       size={size}
       imgSrc={item.imgSrc}
       disabled={disabled}
-      className="group-hover:border-primary group-hover:bg-primary/20"
+      className="group-hover:border-primary group-hover:bg-primary/20 relative z-10"
     >
       <Trunctacular value={item.label} disableTooltip />
     </IdentityTag>
