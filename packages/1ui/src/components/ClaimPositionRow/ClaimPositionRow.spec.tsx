@@ -129,7 +129,7 @@ describe('ClaimPositionRow', () => {
                 >
                   <span
                     class="h-full bg-against block rounded-l-sm"
-                    style="min-width: NaN%;"
+                    style="min-width: 66.66666666666666%;"
                   />
                   <span
                     class="h-full w-full bg-for block rounded-r-sm"
