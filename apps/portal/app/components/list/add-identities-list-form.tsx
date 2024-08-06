@@ -16,7 +16,6 @@ import {
   transactionReducer,
   useTransactionState,
 } from '@lib/hooks/useTransactionReducer'
-import logger from '@lib/utils/logger'
 import { TransactionActionType, TransactionStateType } from 'types/transaction'
 
 import { AddIdentities } from './add-identities'
@@ -33,7 +32,7 @@ interface AddIdentitiesListFormProps {
 export function AddIdentitiesListForm({
   identity,
   userWallet,
-  // claimId,
+  // claimId, // leaving this in for now until we know we don't need it
   onClose,
 }: AddIdentitiesListFormProps) {
   const { state, dispatch } = useTransactionState<

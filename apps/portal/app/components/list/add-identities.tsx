@@ -226,8 +226,8 @@ export function AddIdentities({
       ))}
       {selectedInvalidIdentity && (
         <SaveListModal
-          tag={selectedInvalidIdentity}
-          identity={identity}
+          tag={identity}
+          identity={selectedInvalidIdentity}
           contract={identity.contract}
           userWallet={userWallet}
           open={saveListModalActive.isOpen}
