@@ -24,7 +24,7 @@ import { TagLoaderData } from '@routes/resources+/tag'
 import { TAG_PREDICATE_VAULT_ID_TESTNET, TAG_RESOURCE_ROUTE } from 'consts'
 import { useAtom } from 'jotai'
 
-import { AddListAlertCta } from './add-list-alert-cta'
+import { AddListExistingCta } from './add-list-existing-cta'
 import SaveListModal from './save-list-modal'
 
 interface AddIdentitiesProps {
@@ -215,7 +215,7 @@ export function AddIdentities({
           </div>
         )}
         {invalidIdentities.map((invalidIdentity) => (
-          <AddListAlertCta
+          <AddListExistingCta
             key={invalidIdentity.vault_id}
             identity={invalidIdentity}
             message="This identity already exists in this list."

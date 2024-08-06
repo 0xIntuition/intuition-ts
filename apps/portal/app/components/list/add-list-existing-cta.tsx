@@ -16,7 +16,7 @@ interface AddListAlertCtaProps {
   onClose: () => void
 }
 
-export function AddListAlertCta({
+export function AddListExistingCta({
   message,
   identity,
   onSaveClick,
