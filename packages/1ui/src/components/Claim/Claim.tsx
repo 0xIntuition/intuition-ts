@@ -58,14 +58,18 @@ const ClaimItem = ({
     </IdentityTag>
   )
 
-  if (disabled || !link || item.shouldHover === false) {
+  if (disabled) {
+    return link ? <a href={link}>{content}</a> : content
+  }
+
+  if (item.shouldHover === false) {
     return content
   }
 
   return (
     <HoverCard openDelay={100} closeDelay={100}>
       <HoverCardTrigger>
-        <a href={link}>{content}</a>
+        {link ? <a href={link}>{content}</a> : content}
       </HoverCardTrigger>
       <HoverCardContent className="w-80">
         <ProfileCard
@@ -116,7 +120,7 @@ export const Claim = ({
             item={item}
             link={link}
             size={size}
-            disabled={disabled}
+            disabled={(!item.link && true) || disabled}
             shouldHover={item.shouldHover}
           />
         </Fragment>
