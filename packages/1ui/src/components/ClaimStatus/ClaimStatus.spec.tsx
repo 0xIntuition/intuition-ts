@@ -33,7 +33,7 @@ describe('ClaimStatus', () => {
           >
             <span
               class="h-full bg-against block rounded-l-sm"
-              style="min-width: 33.33333333333333%;"
+              style="min-width: NaN%;"
             />
             <span
               class="h-full w-full bg-for block rounded-r-sm"

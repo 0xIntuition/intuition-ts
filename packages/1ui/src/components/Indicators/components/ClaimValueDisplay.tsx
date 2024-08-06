@@ -5,14 +5,14 @@ import { CurrencyType } from 'types'
 import { MonetaryValue } from './MonetaryValue'
 
 interface ClaimValueDisplayProps extends React.HTMLAttributes<HTMLDivElement> {
-  value: number
+  tvl: number
   currency?: CurrencyType
   claimsFor: number
   claimsAgainst: number
 }
 
 const ClaimValueDisplay = ({
-  value,
+  tvl,
   currency,
   claimsFor,
   claimsAgainst,
@@ -21,7 +21,7 @@ const ClaimValueDisplay = ({
     <div className="flex flex-col items-end max-md:flex-row max-md:justify-between max-md:items-center">
       <MonetaryValue
         variant={TextVariant.bodyLarge}
-        value={value}
+        value={tvl}
         currency={currency}
       />
       <div className="flex gap-2 items-center mt-2 max-md:mt-0">

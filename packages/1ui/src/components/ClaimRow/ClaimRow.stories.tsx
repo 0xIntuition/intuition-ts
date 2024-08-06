@@ -18,7 +18,9 @@ export const BasicUsage: Story = {
   args: {
     claimsFor: 736,
     claimsAgainst: 234,
-    amount: 0.383,
+    claimsForValue: '0.191',
+    claimsAgainstValue: '0.192',
+    tvl: 0.383,
   },
   render: (args) => (
     <div className="w-[600px]">
