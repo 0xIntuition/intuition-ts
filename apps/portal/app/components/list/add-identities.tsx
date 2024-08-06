@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 import {
   Button,
@@ -17,6 +17,7 @@ import { IdentityPresenter } from '@0xintuition/api'
 
 import { IdentitySearchCombobox } from '@components/identity/identity-search-combo-box'
 import { useIdentityServerSearch } from '@lib/hooks/useIdentityServerSearch'
+import useInvalidItems from '@lib/hooks/useInvalidItems'
 import { createIdentityModalAtom, saveListModalAtom } from '@lib/state/store'
 import logger from '@lib/utils/logger'
 import { useFetcher } from '@remix-run/react'
@@ -98,35 +99,13 @@ export function AddIdentities({
     })
   }
 
-  useEffect(() => {
-    if (tagFetcher.state === 'idle' && tagFetcher.data !== undefined) {
-      const result = tagFetcher.data.result
-      const subjectId = tagFetcher.data?.subjectId
-
-      if (result === '0') {
-        setInvalidIdentities((prev) =>
-          prev.filter((identity) => identity.vault_id !== subjectId),
-        )
-      } else if (subjectId) {
-        const identityToAdd = selectedIdentities.find(
-          (identity) => identity.vault_id === subjectId,
-        )
-        if (identityToAdd) {
-          setInvalidIdentities((prev) => {
-            if (prev.some((identity) => identity.vault_id === subjectId)) {
-              return prev
-            }
-            return [...prev, identityToAdd]
-          })
-        }
-      }
-    }
-  }, [
-    tagFetcher.state,
-    tagFetcher.data,
-    setInvalidIdentities,
-    selectedIdentities,
-  ])
+  useInvalidItems({
+    fetcher: tagFetcher,
+    selectedItems: selectedIdentities,
+    setInvalidItems: setInvalidIdentities,
+    idKey: 'vault_id',
+    dataIdKey: 'subjectId',
+  })
 
   const validIdentities = selectedIdentities.filter(
     (identity) =>

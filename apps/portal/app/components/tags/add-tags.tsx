@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 import { Popover, PopoverContent, PopoverTrigger, Text } from '@0xintuition/1ui'
 import { IdentityPresenter } from '@0xintuition/api'
@@ -7,6 +7,7 @@ import { IdentitySearchCombobox } from '@components/identity/identity-search-com
 import { AddListExistingCta } from '@components/list/add-list-existing-cta'
 import SaveListModal from '@components/list/save-list-modal'
 import { useIdentityServerSearch } from '@lib/hooks/useIdentityServerSearch'
+import useInvalidItems from '@lib/hooks/useInvalidItems'
 import { createIdentityModalAtom, saveListModalAtom } from '@lib/state/store'
 import { useFetcher } from '@remix-run/react'
 import { TagLoaderData } from '@routes/resources+/tag'
@@ -87,35 +88,14 @@ export function AddTags({
     })
   }
 
-  useEffect(() => {
-    if (tagFetcher.state === 'idle' && tagFetcher.data !== undefined) {
-      const result = tagFetcher.data.result
-      const objectId = tagFetcher.data?.objectId
-
-      if (result === '0') {
-        setInvalidTags((prev) =>
-          prev.filter((tag) => tag.vault_id !== objectId),
-        )
-      } else if (objectId) {
-        const tagToAdd = selectedTags.find((tag) => tag.vault_id === objectId)
-        if (tagToAdd) {
-          setInvalidTags((prev) => {
-            if (prev.some((tag) => tag.vault_id === objectId)) {
-              return prev
-            }
-            return [...prev, tagToAdd]
-          })
-          onRemoveTag(objectId)
-        }
-      }
-    }
-  }, [
-    tagFetcher.state,
-    tagFetcher.data,
-    setInvalidTags,
-    selectedTags,
-    onRemoveTag,
-  ])
+  useInvalidItems({
+    fetcher: tagFetcher,
+    selectedItems: selectedTags,
+    setInvalidItems: setInvalidTags,
+    onRemoveItem: onRemoveTag,
+    idKey: 'vault_id',
+    dataIdKey: 'objectId',
+  })
 
   return (
     <div className="flex flex-col min-h-36">
