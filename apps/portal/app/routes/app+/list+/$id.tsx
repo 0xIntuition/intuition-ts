@@ -18,12 +18,24 @@ import {
   useNavigate,
 } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
+import { requireUser, requireUserWallet } from '@server/auth'
 import FullPageLayout from 'app/layouts/full-page-layout'
 import TwoPanelLayout from 'app/layouts/two-panel-layout'
-import { BLOCK_EXPLORER_URL, IPFS_GATEWAY_URL, NO_PARAM_ID_ERROR } from 'consts'
+import {
+  BLOCK_EXPLORER_URL,
+  IPFS_GATEWAY_URL,
+  NO_PARAM_ID_ERROR,
+  NO_WALLET_ERROR,
+} from 'consts'
 import { useAtom } from 'jotai'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
+  const user = await requireUser(request)
+  invariant(user, 'User not found')
+  invariant(user.wallet?.address, 'User wallet not found')
+
+  const userWallet = await requireUserWallet(request)
+  invariant(userWallet, NO_WALLET_ERROR)
   const id = params.id
   invariant(id, NO_PARAM_ID_ERROR)
 
@@ -34,12 +46,14 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
   return json({
     claim,
+    userWallet,
   })
 }
 
 export default function ListDetails() {
-  const { claim } = useLoaderData<{
+  const { claim, userWallet } = useLoaderData<{
     claim: ClaimPresenter
+    userWallet: string
   }>()
 
   const [addIdentitiesListModalActive, setAddIdentitiesListModalActive] =
@@ -110,6 +124,7 @@ export default function ListDetails() {
       <TwoPanelLayout leftPanel={leftPanel} rightPanel={<Outlet />} />
       <AddIdentitiesListModal
         identity={claim.object as IdentityPresenter}
+        userWallet={userWallet}
         claimId={claim.claim_id}
         open={addIdentitiesListModalActive.isOpen}
         onClose={() =>

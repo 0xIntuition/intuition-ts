@@ -44,7 +44,7 @@ interface SaveListModalProps {
   userWallet: string
   contract?: string
   open: boolean
-  tag: TagEmbeddedPresenter
+  tag: TagEmbeddedPresenter | IdentityPresenter
   identity: IdentityPresenter
 
   onClose?: () => void
@@ -72,6 +72,7 @@ export default function SaveListModal({
   >(transactionReducer, initialTxState)
   const publicClient = usePublicClient()
 
+  logger('tag in save modal', tag)
   const [isLoading, setIsLoading] = useState(true)
 
   const depositHook = useDepositTriple(identity.contract)
