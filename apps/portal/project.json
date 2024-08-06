@@ -18,6 +18,7 @@
       }
     },
     "typecheck": {
+      "dependsOn": ["^build"],
       "command": "tsc",
       "options": {
         "cwd": "apps/portal"

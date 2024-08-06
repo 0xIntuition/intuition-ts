@@ -24,14 +24,6 @@
       "cache": true
     }
   },
-  "targetDependencies": {
-    "build": [
-      {
-        "target": "build",
-        "projects": "dependencies"
-      }
-    ]
-  },
   "release": {
     "projectsRelationship": "independent",
     "projects": [
