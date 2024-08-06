@@ -24,7 +24,7 @@
     "directory": "packages/protocol"
   },
   "dependencies": {
-    "viem": "2.9.29"
+    "viem": "2.18.8"
   },
   "devDependencies": {
     "@viem/anvil": "^0.0.10",

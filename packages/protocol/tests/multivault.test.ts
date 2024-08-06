@@ -140,7 +140,6 @@ describe('MultiVault', () => {
         objectId: vaultIds[0],
       },
     ])
-    console.log('tripleVaultIds', tripleVaultIds)
     expect(tripleVaultIds).toBeDefined()
     expect(tripleVaultIds.length).toEqual(2)
   })
