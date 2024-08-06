@@ -8,7 +8,7 @@ on:
 # Needed for nx-set-shas when run on the main branch
 permissions:
   actions: read
-  contents: read
+  contents: write
 
 jobs:
   build-test-release:
