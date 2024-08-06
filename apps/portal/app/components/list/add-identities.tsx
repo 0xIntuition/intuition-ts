@@ -19,7 +19,6 @@ import { IdentitySearchCombobox } from '@components/identity/identity-search-com
 import useFilteredIdentitySearch from '@lib/hooks/useFilteredIdentitySearch'
 import useInvalidItems from '@lib/hooks/useInvalidItems'
 import { createIdentityModalAtom, saveListModalAtom } from '@lib/state/store'
-import logger from '@lib/utils/logger'
 import { useFetcher } from '@remix-run/react'
 import { TagLoaderData } from '@routes/resources+/tag'
 import { TAG_PREDICATE_VAULT_ID_TESTNET, TAG_RESOURCE_ROUTE } from 'consts'
@@ -72,7 +71,6 @@ export function AddIdentities({
   const tagFetcher = useFetcher<TagLoaderData>()
 
   const handleIdentitySelect = (identity: IdentityPresenter) => {
-    logger('selected identity', identity)
     onAddIdentity(identity)
     setSearchQuery('')
     setIsPopoverOpen(false)
