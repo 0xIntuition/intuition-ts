@@ -5,6 +5,7 @@ import { TagsForm } from './tags-form'
 
 export interface TagsModalProps {
   identity: IdentityPresenter
+  userWallet: string
   open?: boolean
   mode: 'view' | 'add'
   onClose: () => void
@@ -13,6 +14,7 @@ export interface TagsModalProps {
 
 export default function TagsModal({
   identity,
+  userWallet,
   mode,
   open,
   onClose,
@@ -26,9 +28,9 @@ export default function TagsModal({
       }}
     >
       <DialogContent className="bg-neutral-950 rounded-xl shadow border border-solid border-black/10 h-[550px] overflow-hidden flex flex-col">
-        {/* @ts-ignore TODO: jp - userWallet is a required prop. Where should it come from? */}
         <TagsForm
           identity={identity}
+          userWallet={userWallet}
           mode={mode}
           onClose={onClose}
           onSuccess={onSuccess}

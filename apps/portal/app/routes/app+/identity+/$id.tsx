@@ -75,8 +75,6 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     },
   })
 
-  logger('identity', identity)
-
   if (!identity) {
     return null
   }
@@ -262,6 +260,7 @@ export default function IdentityDetails() {
       />
       <TagsModal
         identity={identity}
+        userWallet={userWallet}
         open={tagsModalActive.isOpen}
         mode={tagsModalActive.mode}
         onClose={() =>
