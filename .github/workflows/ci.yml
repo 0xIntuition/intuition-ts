@@ -5,8 +5,13 @@ on:
       - main
   pull_request:
 
+# Needed for nx-set-shas when run on the main branch
+permissions:
+  actions: read
+  contents: read
+
 jobs:
-  build-test-release:
+  main:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -37,24 +42,16 @@ jobs:
           key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
             ${{ runner.os }}-pnpm-
+
       - run: pnpm install --frozen-lockfile
-      - name: Set Shas
-        uses: nrwl/nx-set-shas@v3
-      - run: |
-          echo "BASE: ${{ env.NX_BASE }}"
-          echo "HEAD: ${{ env.NX_HEAD }}"
 
-      - name: Run Affected Lint
-        if: github.event_name == 'pull_request'
-        run: pnpm nx affected -t lint
+      - name: Set SHAs
+        uses: nrwl/nx-set-shas@v4
 
-      - name: Run Affected Tests
-        if: github.event_name == 'pull_request'
-        run: pnpm nx affected -t test
+      - run: npx nx-cloud record -- nx format:check
 
-      - name: Run Affected Builds
-        if: github.event_name == 'pull_request'
-        run: pnpm nx affected -t build
+      - name: Run Affected Targets
+        run: npx nx affected -t lint test build
 
       - name: Build 1ui Storybook
         if: github.ref == 'refs/heads/main'
