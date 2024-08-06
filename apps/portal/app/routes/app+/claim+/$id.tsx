@@ -124,10 +124,6 @@ export default function ClaimDetails() {
     }
   }, [location.state])
 
-  useEffect(() => {
-    console.log('fromUrl:', fromUrl)
-  }, [fromUrl])
-
   const [stakeModalActive, setStakeModalActive] = useAtom(stakeModalAtom)
 
   let direction: 'for' | 'against' = 'for'
