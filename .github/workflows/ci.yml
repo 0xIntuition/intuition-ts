@@ -48,8 +48,6 @@ jobs:
       - name: Set SHAs
         uses: nrwl/nx-set-shas@v4
 
-      - run: npx nx-cloud record -- nx format:check
-
       - name: Run Affected Targets
         run: npx nx affected -t lint test build
 
