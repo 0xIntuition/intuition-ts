@@ -1,16 +1,18 @@
-name: CI
+name: Storybook Deployment
 on:
-  pull_request:
+  push:
     branches:
       - main
+    paths:
+      - 'packages/1ui/**'
 
-# Needed for nx-set-shas when run on the main branch
 permissions:
   actions: read
-  contents: read
+  # Must be write to deploy Storybook
+  contents: write
 
 jobs:
-  build-test-lint:
+  build-and-deploy-storybook:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -28,10 +30,6 @@ jobs:
         with:
           version: 9.0.6
 
-      # Foundry setup for protocol
-      - name: Setup foundry
-        uses: foundry-rs/foundry-toolchain@v1
-
       - name: Cache pnpm store
         uses: actions/cache@v3
         with:
@@ -44,8 +42,11 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
-      - name: Set SHAs
-        uses: nrwl/nx-set-shas@v4
+      - name: Build 1ui Storybook
+        run: pnpm 1ui:build-storybook
 
-      - name: Run Affected Targets
-        run: npx nx affected -t lint test build
+      - name: Deploy 1ui Storybook
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: build/storybook/1ui
+          token: ${{ secrets.GITHUB_TOKEN }}
