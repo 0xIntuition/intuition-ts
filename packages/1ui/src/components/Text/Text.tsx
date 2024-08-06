@@ -18,7 +18,7 @@ export const TextVariant = {
   small: 'small',
 }
 
-export type TextVariantType = keyof typeof TextVariant
+export type TextVariantType = (typeof TextVariant)[keyof typeof TextVariant]
 
 export const TextWeight = {
   normal: 'normal',
@@ -27,7 +27,7 @@ export const TextWeight = {
   bold: 'bold',
 }
 
-export type TextWeightType = keyof typeof TextWeight
+export type TextWeightType = (typeof TextWeight)[keyof typeof TextWeight]
 
 const textVariants = cva('text-primary', {
   variants: {
