@@ -120,7 +120,7 @@ export const Claim = ({
             item={item}
             link={link}
             size={size}
-            disabled={(!item.link && true) || disabled}
+            disabled={disabled || !item.link}
             shouldHover={item.shouldHover}
           />
         </Fragment>
