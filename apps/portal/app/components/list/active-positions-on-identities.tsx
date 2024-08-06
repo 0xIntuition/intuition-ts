@@ -1,8 +1,13 @@
 import { Identity, IdentityPosition } from '@0xintuition/1ui'
 import { IdentityPresenter, SortColumn } from '@0xintuition/api'
 
-import { formatBalance } from '@lib/utils/misc'
-import { useNavigate } from '@remix-run/react'
+import {
+  formatBalance,
+  getAtomImage,
+  getAtomIpfsLink,
+  getAtomLabel,
+  getAtomLink,
+} from '@lib/utils/misc'
 import { PaginationType } from 'types/pagination'
 
 import { SortOption } from '../sort-select'
@@ -15,7 +20,6 @@ export function ActivePositionsOnIdentities({
   identities: IdentityPresenter[]
   pagination: PaginationType
 }) {
-  const navigate = useNavigate()
   const options: SortOption<SortColumn>[] = [
     { value: 'Position Amount', sortBy: 'UserAssets' },
     { value: 'Total ETH', sortBy: 'AssetsSum' },
@@ -37,9 +41,9 @@ export function ActivePositionsOnIdentities({
         >
           <IdentityPosition
             variant={identity.is_user ? Identity.user : Identity.nonUser}
-            avatarSrc={identity.user?.image ?? identity.image ?? ''}
-            name={identity.user?.display_name ?? identity.display_name}
-            walletAddress={identity.user?.wallet ?? identity.identity_id}
+            avatarSrc={getAtomImage(identity)}
+            name={getAtomLabel(identity)}
+            id={identity.user?.wallet ?? identity.identity_id}
             amount={+formatBalance(BigInt(identity.user_assets), 18, 4)}
             feesAccrued={
               identity.user_asset_delta
@@ -51,14 +55,8 @@ export function ActivePositionsOnIdentities({
                 : 0
             }
             updatedAt={identity.updated_at}
-            onClick={() => {
-              navigate(
-                identity.is_user
-                  ? `/app/profile/${identity.identity_id}`
-                  : `/app/identity/${identity.id}`,
-              )
-            }}
-            className="hover:cursor-pointer"
+            link={getAtomLink(identity)}
+            ipfsLink={getAtomIpfsLink(identity)}
           />
         </div>
       ))}
