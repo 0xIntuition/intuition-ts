@@ -80,11 +80,11 @@ const IdentityTag = ({
   ...props
 }: IdentityTagProps) => {
   return hoverCardContent ? (
-    <HoverCard openDelay={100} closeDelay={0}>
+    <HoverCard openDelay={100} closeDelay={100}>
       <HoverCardTrigger>
         <IdentityTagButton {...props} />
       </HoverCardTrigger>
-      <HoverCardContent>{hoverCardContent}</HoverCardContent>
+      <HoverCardContent className="w-80">{hoverCardContent}</HoverCardContent>
     </HoverCard>
   ) : (
     <IdentityTagButton {...props} />

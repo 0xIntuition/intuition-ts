@@ -6,16 +6,16 @@ interface ProfileCardHeaderProps {
   variant?: IdentityType
   avatarSrc?: string
   name: string
-  walletAddress: string
-  ipfsLink: string
+  id?: string
+  link?: string
 }
 
 const ProfileCardHeader = ({
   variant = Identity.user,
   avatarSrc,
   name,
-  walletAddress,
-  ipfsLink,
+  id,
+  link,
 }: ProfileCardHeaderProps) => {
   return (
     <div className="flex items-center space-x-4">
@@ -25,20 +25,25 @@ const ProfileCardHeader = ({
           {name}
         </Text>
         <div className="flex flex-row gap-1 items-center">
-          <a href={ipfsLink} target="_blank" rel="noopener noreferrer">
-            <Trunctacular
-              value={walletAddress}
-              variant="body"
-              weight="medium"
-              className="text-muted-foreground"
-              maxStringLength={24}
-            />
-          </a>
-          <Copy
-            text={walletAddress}
-            // launch toast if they have a toaster setup in consuming app
-            onCopy={() => toast?.success('Copied to clipboard!')}
-          />
+          {link && id && (
+            <>
+              <a href={link} target="_blank" rel="noopener noreferrer">
+                <Trunctacular
+                  value={id}
+                  variant="body"
+                  weight="medium"
+                  className="text-muted-foreground"
+                  maxStringLength={24}
+                  disableTooltip
+                />
+              </a>
+              <Copy
+                text={id}
+                // launch toast if they have a toaster setup in consuming app
+                onCopy={() => toast?.success('Copied to clipboard!')}
+              />
+            </>
+          )}
         </div>
       </div>
     </div>

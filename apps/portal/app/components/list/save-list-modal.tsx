@@ -44,7 +44,7 @@ interface SaveListModalProps {
   userWallet: string
   contract?: string
   open: boolean
-  tag: TagEmbeddedPresenter
+  tag: TagEmbeddedPresenter | IdentityPresenter
   identity: IdentityPresenter
 
   onClose?: () => void
@@ -137,7 +137,6 @@ export default function SaveListModal({
 
   useEffect(() => {
     if (vaultDetailsFetcher.state === 'idle' && vaultDetailsFetcher.data) {
-      logger('vaultDetailsFetcher', vaultDetailsFetcher.data)
       setVaultDetails(vaultDetailsFetcher.data)
       setIsLoading(false)
     }
@@ -146,9 +145,6 @@ export default function SaveListModal({
   const useHandleAction = (actionType: string) => {
     return async () => {
       try {
-        logger('contract', contract)
-        logger('fetchedClaimVaultId', fetchedClaimVaultId)
-        logger('fetched vaultDetails', vaultDetails)
         if (!contract || !fetchedClaimVaultId || !vaultDetails) {
           throw new Error('Missing required parameters')
         }
@@ -175,8 +171,7 @@ export default function SaveListModal({
           const receipt = await publicClient?.waitForTransactionReceipt({
             hash: txHash,
           })
-          logger('receipt', receipt)
-          logger('txHash', txHash)
+
           dispatch({
             type: 'TRANSACTION_COMPLETE',
             txHash,

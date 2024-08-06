@@ -22,3 +22,13 @@ export type InitialIdentityData = {
     totalPages: number
   }
 }
+
+export type IdentityListType = {
+  listIdentities: IdentityPresenter[]
+  pagination: {
+    currentPage: number
+    limit: number
+    totalEntries: number
+    totalPages: number
+  }
+}

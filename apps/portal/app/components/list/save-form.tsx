@@ -6,6 +6,7 @@ import {
   Identity,
   IdentityTag,
   Text,
+  Trunctacular,
 } from '@0xintuition/1ui'
 import { IdentityPresenter, TagEmbeddedPresenter } from '@0xintuition/api'
 
@@ -19,7 +20,7 @@ import SaveActions from './save-actions'
 import SaveReview from './save-review'
 
 interface SaveFormProps {
-  tag: TagEmbeddedPresenter
+  tag: IdentityPresenter | TagEmbeddedPresenter
   identity: IdentityPresenter
   user_assets: string
   entry_fee: string
@@ -114,7 +115,7 @@ export default function SaveForm({
                   imgSrc={identity?.image}
                   variant={Identity.nonUser}
                 >
-                  {identity?.display_name}
+                  <Trunctacular value={identity?.display_name} />
                 </IdentityTag>
               </div>
             </div>

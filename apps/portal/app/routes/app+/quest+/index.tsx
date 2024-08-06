@@ -212,9 +212,9 @@ function UserHeader() {
           return (
             <ProfileCardHeader
               name={getUserName(userProfile as GetUserByWalletResponse)}
-              walletAddress={userWallet}
+              id={userWallet}
               avatarSrc={userProfile?.image ?? undefined}
-              ipfsLink={`${BLOCK_EXPLORER_URL}/address/${userProfile.wallet}`}
+              link={`${BLOCK_EXPLORER_URL}/address/${userProfile.wallet}`}
             />
           )
         }}

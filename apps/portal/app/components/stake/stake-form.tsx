@@ -16,8 +16,16 @@ import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
 
 import { TransactionState } from '@components/transaction-state'
 import { stakeModalAtom } from '@lib/state/store'
-import { formatBalance } from '@lib/utils/misc'
+import {
+  formatBalance,
+  getAtomDescription,
+  getAtomImage,
+  getAtomIpfsLink,
+  getAtomLabel,
+  getAtomLink,
+} from '@lib/utils/misc'
 import { type FetcherWithComponents } from '@remix-run/react'
+import { PATHS } from 'consts'
 import { useAtom } from 'jotai'
 import { TransactionActionType, TransactionStateType } from 'types/transaction'
 
@@ -108,31 +116,56 @@ export default function StakeForm({
                   </IdentityTag>
                 ) : (
                   <Claim
+                    size="md"
+                    link={`${PATHS.CLAIM}/${claim?.claim_id}`}
                     subject={{
-                      imgSrc:
-                        claim?.subject?.user?.image ?? claim?.subject?.image,
-                      label:
-                        claim?.subject?.user?.display_name ??
-                        claim?.subject?.display_name ??
-                        '',
-                      variant: claim?.subject?.user
+                      variant: claim?.subject?.is_user
                         ? Identity.user
                         : Identity.nonUser,
+                      label: getAtomLabel(claim?.subject as IdentityPresenter),
+                      imgSrc: getAtomImage(claim?.subject as IdentityPresenter),
+                      id: claim?.subject?.identity_id,
+                      description: getAtomDescription(
+                        claim?.subject as IdentityPresenter,
+                      ),
+                      ipfsLink: getAtomIpfsLink(
+                        claim?.subject as IdentityPresenter,
+                      ),
+                      link: getAtomLink(claim?.subject as IdentityPresenter),
                     }}
                     predicate={{
-                      imgSrc: claim?.predicate?.image,
-                      label: claim?.predicate?.display_name ?? '',
-                    }}
-                    object={{
-                      imgSrc:
-                        claim?.object?.user?.image ?? claim?.object?.image,
-                      label:
-                        claim?.object?.user?.display_name ??
-                        claim?.object?.display_name ??
-                        '',
-                      variant: claim?.object?.user
+                      variant: claim?.predicate?.is_user
                         ? Identity.user
                         : Identity.nonUser,
+                      label: getAtomLabel(
+                        claim?.predicate as IdentityPresenter,
+                      ),
+                      imgSrc: getAtomImage(
+                        claim?.predicate as IdentityPresenter,
+                      ),
+                      id: claim?.predicate?.identity_id,
+                      description: getAtomDescription(
+                        claim?.predicate as IdentityPresenter,
+                      ),
+                      ipfsLink: getAtomIpfsLink(
+                        claim?.predicate as IdentityPresenter,
+                      ),
+                      link: getAtomLink(claim?.predicate as IdentityPresenter),
+                    }}
+                    object={{
+                      variant: claim?.object?.is_user
+                        ? Identity.user
+                        : Identity.nonUser,
+                      label: getAtomLabel(claim?.object as IdentityPresenter),
+                      imgSrc: getAtomImage(claim?.object as IdentityPresenter),
+                      id: claim?.object?.identity_id,
+                      description: getAtomDescription(
+                        claim?.object as IdentityPresenter,
+                      ),
+                      ipfsLink: getAtomIpfsLink(
+                        claim?.object as IdentityPresenter,
+                      ),
+                      link: getAtomLink(claim?.object as IdentityPresenter),
                     }}
                   />
                 )}

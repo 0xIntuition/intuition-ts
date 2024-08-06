@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react'
+
 import {
   Claim,
   ClaimStakeCard,
@@ -17,6 +19,8 @@ import {
   ClaimPresenter,
   ClaimSortColumn,
   ClaimsService,
+  GetClaimByIdResponse,
+  IdentityPresenter,
   SortDirection,
 } from '@0xintuition/api'
 
@@ -27,6 +31,11 @@ import logger from '@lib/utils/logger'
 import {
   calculatePercentageOfTvl,
   formatBalance,
+  getAtomDescription,
+  getAtomImage,
+  getAtomIpfsLink,
+  getAtomLabel,
+  getAtomLink,
   invariant,
 } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
@@ -41,7 +50,7 @@ import { requireUserWallet } from '@server/auth'
 import { getVaultDetails } from '@server/multivault'
 import FullPageLayout from 'app/layouts/full-page-layout'
 import TwoPanelLayout from 'app/layouts/two-panel-layout'
-import { NO_WALLET_ERROR } from 'consts'
+import { NO_WALLET_ERROR, PATHS } from 'consts'
 import { useAtom } from 'jotai'
 import { VaultDetailsType } from 'types/vault'
 
@@ -61,10 +70,13 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const direction: SortDirection =
     (searchParams.get('direction') as SortDirection) ?? 'desc'
 
-  const claim = await fetchWrapper(request, {
-    method: ClaimsService.getClaimById,
-    args: { id },
-  })
+  const claim = await fetchWrapper<GetClaimByIdResponse, { id: string }>(
+    request,
+    {
+      method: ClaimsService.getClaimById,
+      args: { id },
+    },
+  )
 
   let vaultDetails: VaultDetailsType | null = null
 
@@ -98,7 +110,19 @@ export default function ClaimDetails() {
   }>()
   const navigate = useNavigate()
   const location = useLocation()
-  const from = location.state?.from
+  const [fromUrl, setFromUrl] = useState<string | number>(-1)
+
+  useEffect(() => {
+    const from = location.state?.from
+
+    if (from) {
+      setFromUrl(from.split('?')[0])
+    } else if (document.referrer) {
+      setFromUrl(document.referrer)
+    } else {
+      setFromUrl(-1)
+    }
+  }, [location.state])
 
   const [stakeModalActive, setStakeModalActive] = useAtom(stakeModalAtom)
 
@@ -130,38 +154,38 @@ export default function ClaimDetails() {
 
   const ClaimWithNav = () => (
     <div className="flex justify-between items-center w-full mb-6">
-      <NavigationButton variant="secondary" size="icon" to={from ?? -1}>
+      <NavigationButton variant="secondary" size="icon" to={fromUrl.toString()}>
         <Icon name="arrow-left" />
       </NavigationButton>
       <Claim
         size="md"
+        link={`${PATHS.CLAIM}/${claim?.claim_id}`}
         subject={{
           variant: claim.subject?.is_user ? Identity.user : Identity.nonUser,
-          label: claim.subject?.is_user
-            ? claim.subject?.user?.display_name ?? claim.subject?.display_name
-            : claim.subject?.display_name ?? '',
-          imgSrc: claim.subject?.is_user
-            ? claim.subject?.user?.image ?? claim.subject?.image
-            : claim.subject?.image ?? null,
+          label: getAtomLabel(claim.subject as IdentityPresenter),
+          imgSrc: getAtomImage(claim.subject as IdentityPresenter),
+          id: claim.subject?.identity_id,
+          description: getAtomDescription(claim.subject as IdentityPresenter),
+          ipfsLink: getAtomIpfsLink(claim.subject as IdentityPresenter),
+          link: getAtomLink(claim.subject as IdentityPresenter),
         }}
         predicate={{
           variant: claim.predicate?.is_user ? Identity.user : Identity.nonUser,
-          label: claim.predicate?.is_user
-            ? claim.predicate?.user?.display_name ??
-              claim.predicate?.display_name
-            : claim.predicate?.display_name ?? '',
-          imgSrc: claim.predicate?.is_user
-            ? claim.predicate?.user?.image ?? claim.predicate?.image
-            : claim.predicate?.image ?? null,
+          label: getAtomLabel(claim.predicate as IdentityPresenter),
+          imgSrc: getAtomImage(claim.predicate as IdentityPresenter),
+          id: claim.predicate?.identity_id,
+          description: getAtomDescription(claim.predicate as IdentityPresenter),
+          ipfsLink: getAtomIpfsLink(claim.predicate as IdentityPresenter),
+          link: getAtomLink(claim.predicate as IdentityPresenter),
         }}
         object={{
           variant: claim.object?.is_user ? Identity.user : Identity.nonUser,
-          label: claim.object?.is_user
-            ? claim.object?.user?.display_name ?? claim.object?.display_name
-            : claim.object?.display_name ?? '',
-          imgSrc: claim.object?.is_user
-            ? claim.object?.user?.image ?? claim.object?.image
-            : claim.object?.image ?? null,
+          label: getAtomLabel(claim.object as IdentityPresenter),
+          imgSrc: getAtomImage(claim.object as IdentityPresenter),
+          id: claim.object?.identity_id,
+          description: getAtomDescription(claim.object as IdentityPresenter),
+          ipfsLink: getAtomIpfsLink(claim.object as IdentityPresenter),
+          link: getAtomLink(claim.object as IdentityPresenter),
         }}
       />
     </div>

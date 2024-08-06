@@ -168,11 +168,12 @@ export default function Profile() {
         variant="user"
         avatarSrc={userIdentity?.user?.image ?? ''}
         name={userIdentity?.user?.display_name ?? ''}
-        walletAddress={
+        id={
           userIdentity?.user?.ens_name ??
           userIdentity?.user?.wallet ??
           userIdentity.identity_id
         }
+        vaultId={userIdentity.vault_id}
         stats={{
           numberOfFollowers: userTotals.follower_count,
           numberOfFollowing: userTotals.followed_count,

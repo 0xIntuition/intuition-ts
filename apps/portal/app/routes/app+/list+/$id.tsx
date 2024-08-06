@@ -9,8 +9,7 @@ import AddIdentitiesListModal from '@components/list/add-identities-list-modal'
 import { ListIdentityDisplayCard } from '@components/list/list-identity-display-card'
 import NavigationButton from '@components/navigation-link'
 import { addIdentitiesListModalAtom } from '@lib/state/store'
-import logger from '@lib/utils/logger'
-import { invariant, sliceString } from '@lib/utils/misc'
+import { invariant } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import {
   Outlet,
@@ -19,12 +18,24 @@ import {
   useNavigate,
 } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
+import { requireUser, requireUserWallet } from '@server/auth'
 import FullPageLayout from 'app/layouts/full-page-layout'
 import TwoPanelLayout from 'app/layouts/two-panel-layout'
-import { BLOCK_EXPLORER_URL, IPFS_GATEWAY_URL, NO_PARAM_ID_ERROR } from 'consts'
+import {
+  BLOCK_EXPLORER_URL,
+  IPFS_GATEWAY_URL,
+  NO_PARAM_ID_ERROR,
+  NO_WALLET_ERROR,
+} from 'consts'
 import { useAtom } from 'jotai'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
+  const user = await requireUser(request)
+  invariant(user, 'User not found')
+  invariant(user.wallet?.address, 'User wallet not found')
+
+  const userWallet = await requireUserWallet(request)
+  invariant(userWallet, NO_WALLET_ERROR)
   const id = params.id
   invariant(id, NO_PARAM_ID_ERROR)
 
@@ -35,15 +46,16 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
   return json({
     claim,
+    userWallet,
   })
 }
 
 export default function ListDetails() {
-  const { claim } = useLoaderData<{
+  const { claim, userWallet } = useLoaderData<{
     claim: ClaimPresenter
+    userWallet: string
   }>()
 
-  logger('claim on list route', claim)
   const [addIdentitiesListModalActive, setAddIdentitiesListModalActive] =
     useAtom(addIdentitiesListModalAtom)
   const navigate = useNavigate()
@@ -56,7 +68,7 @@ export default function ListDetails() {
         variant="non-user"
         avatarSrc={claim.object?.image ?? ''}
         name={claim.object?.display_name ?? ''}
-        walletAddress={sliceString(claim.object?.identity_id, 6, 4)}
+        id={claim.object?.identity_id ?? ''}
         bio={claim.object?.description ?? ''}
         ipfsLink={
           claim.object?.is_user === true
@@ -112,6 +124,7 @@ export default function ListDetails() {
       <TwoPanelLayout leftPanel={leftPanel} rightPanel={<Outlet />} />
       <AddIdentitiesListModal
         identity={claim.object as IdentityPresenter}
+        userWallet={userWallet}
         claimId={claim.claim_id}
         open={addIdentitiesListModalActive.isOpen}
         onClose={() =>

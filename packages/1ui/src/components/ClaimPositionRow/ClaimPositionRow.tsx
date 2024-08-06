@@ -33,8 +33,10 @@ interface CommonProps extends React.HTMLAttributes<HTMLDivElement> {
 
 interface UserVariantProps extends CommonProps {
   variant: 'user'
-  claimsFor?: never
-  claimsAgainst?: never
+  claimsFor?: number
+  claimsAgainst?: number
+  claimsForValue?: number
+  claimsAgainstValue?: number
   name: string
   avatarSrc: string
   walletAddress: string
@@ -44,6 +46,8 @@ interface ClaimVariantProps extends CommonProps {
   variant: 'claim'
   claimsFor: number
   claimsAgainst: number
+  claimsForValue: number
+  claimsAgainstValue: number
   name?: never
   avatarSrc?: never
   walletAddress?: never
@@ -56,6 +60,8 @@ const ClaimPositionRow = ({
   position,
   claimsFor = 0,
   claimsAgainst = 0,
+  claimsForValue = 0,
+  claimsAgainstValue = 0,
   amount,
   currency,
   feesAccrued,
@@ -122,6 +128,8 @@ const ClaimPositionRow = ({
           <ClaimStatus
             claimsFor={claimsFor}
             claimsAgainst={claimsAgainst}
+            claimsForValue={claimsForValue}
+            claimsAgainstValue={claimsAgainstValue}
             className="w-[60%] max-sm:w-full"
           >
             {children}

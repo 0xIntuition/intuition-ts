@@ -14,7 +14,14 @@ import {
 } from '@0xintuition/1ui'
 import { IdentityPresenter } from '@0xintuition/api'
 
-import { formatBalance } from '@lib/utils/misc'
+import {
+  formatBalance,
+  getAtomDescription,
+  getAtomImage,
+  getAtomIpfsLink,
+  getAtomLabel,
+  getAtomLink,
+} from '@lib/utils/misc'
 import { CreateClaimFeesType } from '@routes/resources+/create-claim'
 import { TransactionActionType } from 'types/transaction'
 import { formatUnits } from 'viem'
@@ -99,36 +106,69 @@ const CreateClaimReview: React.FC<CreateClaimReviewProps> = ({
             Review your claim
           </Text>
           <Claim
+            size="md"
             subject={{
-              imgSrc:
-                selectedIdentities.subject?.user?.image ??
-                selectedIdentities.subject?.image,
-              label:
-                selectedIdentities.subject?.user?.display_name ??
-                selectedIdentities.subject?.display_name ??
-                '',
-              variant: selectedIdentities.subject?.user
+              variant: selectedIdentities.subject?.is_user
                 ? Identity.user
                 : Identity.nonUser,
+              label: getAtomLabel(
+                selectedIdentities.subject as IdentityPresenter,
+              ),
+              imgSrc: getAtomImage(
+                selectedIdentities.subject as IdentityPresenter,
+              ),
+              id: selectedIdentities.subject?.identity_id,
+              description: getAtomDescription(
+                selectedIdentities.subject as IdentityPresenter,
+              ),
+              ipfsLink: getAtomIpfsLink(
+                selectedIdentities.subject as IdentityPresenter,
+              ),
+              link: getAtomLink(
+                selectedIdentities.subject as IdentityPresenter,
+              ),
             }}
             predicate={{
-              imgSrc: selectedIdentities.predicate?.image,
-              label: selectedIdentities.predicate?.display_name ?? '',
-              variant: Identity.nonUser,
-            }}
-            object={{
-              imgSrc:
-                selectedIdentities.object?.user?.image ??
-                selectedIdentities.object?.image,
-              label:
-                selectedIdentities.object?.user?.display_name ??
-                selectedIdentities.object?.display_name ??
-                '',
-              variant: selectedIdentities.object?.user
+              variant: selectedIdentities.predicate?.is_user
                 ? Identity.user
                 : Identity.nonUser,
+              label: getAtomLabel(
+                selectedIdentities.predicate as IdentityPresenter,
+              ),
+              imgSrc: getAtomImage(
+                selectedIdentities.predicate as IdentityPresenter,
+              ),
+              id: selectedIdentities.predicate?.identity_id,
+              description: getAtomDescription(
+                selectedIdentities.predicate as IdentityPresenter,
+              ),
+              ipfsLink: getAtomIpfsLink(
+                selectedIdentities.predicate as IdentityPresenter,
+              ),
+              link: getAtomLink(
+                selectedIdentities.predicate as IdentityPresenter,
+              ),
             }}
-          />
+            object={{
+              variant: selectedIdentities.object?.is_user
+                ? Identity.user
+                : Identity.nonUser,
+              label: getAtomLabel(
+                selectedIdentities.object as IdentityPresenter,
+              ),
+              imgSrc: getAtomImage(
+                selectedIdentities.object as IdentityPresenter,
+              ),
+              id: selectedIdentities.object?.identity_id,
+              description: getAtomDescription(
+                selectedIdentities.object as IdentityPresenter,
+              ),
+              ipfsLink: getAtomIpfsLink(
+                selectedIdentities.object as IdentityPresenter,
+              ),
+              link: getAtomLink(selectedIdentities.object as IdentityPresenter),
+            }}
+          />{' '}
           <Text
             variant="base"
             weight="normal"

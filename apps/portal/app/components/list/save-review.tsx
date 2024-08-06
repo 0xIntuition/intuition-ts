@@ -11,7 +11,16 @@ import {
 } from '@0xintuition/1ui'
 import { IdentityPresenter, TagEmbeddedPresenter } from '@0xintuition/api'
 
-import { formatBalance, formatDisplayBalance } from '@lib/utils/misc'
+import {
+  formatBalance,
+  formatDisplayBalance,
+  getAtomDescription,
+  getAtomImage,
+  getAtomIpfsLink,
+  getAtomLabel,
+  getAtomLink,
+} from '@lib/utils/misc'
+import { IPFS_GATEWAY_URL, PATHS } from 'consts'
 import { TransactionActionType, TransactionStateType } from 'types/transaction'
 
 interface SaveReviewProps {
@@ -20,7 +29,7 @@ interface SaveReviewProps {
   dispatch: (action: TransactionActionType) => void
   state: TransactionStateType
   isError?: boolean
-  tag: TagEmbeddedPresenter
+  tag: IdentityPresenter | TagEmbeddedPresenter
   identity: IdentityPresenter
   user_assets: string
   entry_fee: string
@@ -96,19 +105,33 @@ export default function SaveReview({
             </Text>
             <Claim
               subject={{
-                imgSrc: identity.image,
-                label: identity.display_name,
-                variant: Identity.nonUser,
+                variant: identity?.is_user ? Identity.user : Identity.nonUser,
+                label: getAtomLabel(identity),
+                imgSrc: getAtomImage(identity),
+                id: identity?.identity_id,
+                description: getAtomDescription(identity),
+                ipfsLink: getAtomIpfsLink(identity),
+                link: getAtomLink(identity),
               }}
               predicate={{
-                label: 'has tag',
                 variant: Identity.nonUser,
+                label: 'has tag',
+                imgSrc: '',
+                id: 'QmakZTBNcZandAb7Pj42MkptLmTZuGXoMZKKvugqTcy76P',
+                description: '',
+                ipfsLink: `${IPFS_GATEWAY_URL}/QmakZTBNcZandAb7Pj42MkptLmTZuGXoMZKKvugqTcy76P`,
+                link: `${PATHS.IDENTITY}/QmakZTBNcZandAb7Pj42MkptLmTZuGXoMZKKvugqTcy76P`,
               }}
               object={{
-                imgSrc: tag.image,
-                label: tag.display_name,
                 variant: Identity.nonUser,
+                label: tag.display_name ?? tag.identity_id ?? '',
+                imgSrc: tag.image,
+                id: tag.identity_id,
+                description: '',
+                ipfsLink: '',
+                link: '',
               }}
+              link=""
             />
             <Text
               variant="base"

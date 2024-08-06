@@ -11,7 +11,16 @@ import {
 } from '@0xintuition/1ui'
 import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
 
-import { formatBalance, formatDisplayBalance } from '@lib/utils/misc'
+import {
+  formatBalance,
+  formatDisplayBalance,
+  getAtomDescription,
+  getAtomImage,
+  getAtomIpfsLink,
+  getAtomLabel,
+  getAtomLink,
+} from '@lib/utils/misc'
+import { PATHS } from 'consts'
 import { TransactionActionType, TransactionStateType } from 'types/transaction'
 
 interface FollowReviewProps {
@@ -33,7 +42,6 @@ export default function FollowReview({
   dispatch,
   state,
   isError,
-  identity,
   claim,
   user_assets,
   entry_fee,
@@ -95,38 +103,46 @@ export default function FollowReview({
               ETH on follow claim
             </Text>
             <Claim
+              size="md"
+              link={`${PATHS.CLAIM}/${claim.claim_id}`}
               subject={{
-                imgSrc: claim?.subject?.user?.image ?? claim?.subject?.image,
-                label: !claim
-                  ? 'I'
-                  : claim?.subject?.user?.display_name ??
-                    claim?.subject?.display_name ??
-                    '',
-                variant: Identity.nonUser,
+                variant: claim.subject?.is_user
+                  ? Identity.user
+                  : Identity.nonUser,
+                label: getAtomLabel(claim.subject as IdentityPresenter),
+                imgSrc: getAtomImage(claim.subject as IdentityPresenter),
+                id: claim.subject?.identity_id,
+                description: getAtomDescription(
+                  claim.subject as IdentityPresenter,
+                ),
+                ipfsLink: getAtomIpfsLink(claim.subject as IdentityPresenter),
+                link: getAtomLink(claim.subject as IdentityPresenter),
               }}
               predicate={{
-                imgSrc: claim?.predicate?.image,
-                label: !claim
-                  ? 'am following'
-                  : claim?.predicate?.display_name ?? '',
-                variant: Identity.nonUser,
+                variant: claim.predicate?.is_user
+                  ? Identity.user
+                  : Identity.nonUser,
+                label: getAtomLabel(claim.predicate as IdentityPresenter),
+                imgSrc: getAtomImage(claim.predicate as IdentityPresenter),
+                id: claim.predicate?.identity_id,
+                description: getAtomDescription(
+                  claim.predicate as IdentityPresenter,
+                ),
+                ipfsLink: getAtomIpfsLink(claim.predicate as IdentityPresenter),
+                link: getAtomLink(claim.predicate as IdentityPresenter),
               }}
               object={{
-                imgSrc: !claim
-                  ? identity?.user?.image
-                  : claim?.object?.user?.image ?? claim?.object?.image,
-                label: !claim
-                  ? identity?.user?.display_name ?? ''
-                  : claim?.object?.user?.display_name ??
-                    claim?.object?.display_name ??
-                    '',
-                variant: !claim
-                  ? identity?.user
-                    ? Identity.user
-                    : Identity.nonUser
-                  : claim?.object?.user
-                    ? Identity.user
-                    : Identity.nonUser,
+                variant: claim.object?.is_user
+                  ? Identity.user
+                  : Identity.nonUser,
+                label: getAtomLabel(claim.object as IdentityPresenter),
+                imgSrc: getAtomImage(claim.object as IdentityPresenter),
+                id: claim.object?.identity_id,
+                description: getAtomDescription(
+                  claim.object as IdentityPresenter,
+                ),
+                ipfsLink: getAtomIpfsLink(claim.object as IdentityPresenter),
+                link: getAtomLink(claim.object as IdentityPresenter),
               }}
             />
             <Text

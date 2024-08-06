@@ -2,19 +2,33 @@ import { Suspense, useEffect, useState } from 'react'
 
 import {
   Claim,
+  Identity,
   ListHeaderCard,
+  Skeleton,
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
 } from '@0xintuition/1ui'
-import { ClaimPresenter, ClaimsService, UsersService } from '@0xintuition/api'
+import {
+  ClaimPresenter,
+  ClaimsService,
+  IdentityPresenter,
+  UsersService,
+} from '@0xintuition/api'
 
 import { IdentitiesList } from '@components/list/identities'
 import { ListTabIdentityDisplay } from '@components/list/list-tab-identity-display'
 import { DataHeaderSkeleton, PaginatedListSkeleton } from '@components/skeleton'
 import { getListIdentities, getListIdentitiesCount } from '@lib/services/lists'
-import { invariant } from '@lib/utils/misc'
+import {
+  getAtomDescription,
+  getAtomImage,
+  getAtomIpfsLink,
+  getAtomLabel,
+  getAtomLink,
+  invariant,
+} from '@lib/utils/misc'
 import { defer, LoaderFunctionArgs } from '@remix-run/node'
 import {
   Await,
@@ -25,7 +39,13 @@ import {
 } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
-import { NO_CLAIM_ERROR, NO_PARAM_ID_ERROR, NO_WALLET_ERROR } from 'consts'
+import {
+  NO_CLAIM_ERROR,
+  NO_PARAM_ID_ERROR,
+  NO_WALLET_ERROR,
+  PATHS,
+} from 'consts'
+import { IdentityListType } from 'types'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const id = params.id
@@ -102,7 +122,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
           objectId: claim.object.id,
           creator: paramWallet,
         })
-      : null,
+      : [],
     additionalUserObject,
   })
 }
@@ -116,6 +136,7 @@ export default function ListOverview() {
     userObject,
     additionalUserObject,
   } = useLoaderData<typeof loader>()
+
   const { claim } =
     useRouteLoaderData<{ claim: ClaimPresenter }>('routes/app+/list+/$id') ?? {}
   invariant(claim, NO_CLAIM_ERROR)
@@ -155,30 +176,47 @@ export default function ListOverview() {
               >
                 <Claim
                   size="md"
+                  link={`${PATHS.CLAIM}/${claim?.claim_id}`}
                   subject={{
-                    variant: claim.subject?.is_user ? 'user' : 'non-user',
-                    label: '?',
-                    imgSrc: null,
+                    variant: claim.subject?.is_user
+                      ? Identity.user
+                      : Identity.nonUser,
+                    label: getAtomLabel(claim.subject as IdentityPresenter),
+                    imgSrc: getAtomImage(claim.subject as IdentityPresenter),
+                    id: claim.subject?.identity_id,
+                    description: getAtomDescription(
+                      claim.subject as IdentityPresenter,
+                    ),
+                    ipfsLink: getAtomIpfsLink(
+                      claim.subject as IdentityPresenter,
+                    ),
+                    link: getAtomLink(claim.subject as IdentityPresenter),
                   }}
                   predicate={{
                     variant: claim.predicate?.is_user ? 'user' : 'non-user',
-                    label: claim.predicate?.is_user
-                      ? claim.predicate?.user?.display_name ??
-                        claim.predicate?.display_name
-                      : claim.predicate?.display_name ?? '',
-                    imgSrc: claim.predicate?.is_user
-                      ? claim.predicate?.user?.image ?? claim.predicate?.image
-                      : claim.predicate?.image ?? null,
+                    label: getAtomLabel(claim.predicate as IdentityPresenter),
+                    imgSrc: getAtomImage(claim.predicate as IdentityPresenter),
+                    id: claim.predicate?.identity_id,
+                    description: getAtomDescription(
+                      claim.predicate as IdentityPresenter,
+                    ),
+                    ipfsLink: getAtomIpfsLink(
+                      claim.predicate as IdentityPresenter,
+                    ),
+                    link: getAtomLink(claim.predicate as IdentityPresenter),
                   }}
                   object={{
                     variant: claim.object?.is_user ? 'user' : 'non-user',
-                    label: claim.object?.is_user
-                      ? claim.object?.user?.display_name ??
-                        claim.object?.display_name
-                      : claim.object?.display_name ?? '',
-                    imgSrc: claim.object?.is_user
-                      ? claim.object?.user?.image ?? claim.object?.image
-                      : claim.object?.image ?? null,
+                    label: getAtomLabel(claim.object as IdentityPresenter),
+                    imgSrc: getAtomImage(claim.object as IdentityPresenter),
+                    id: claim.object?.identity_id,
+                    description: getAtomDescription(
+                      claim.object as IdentityPresenter,
+                    ),
+                    ipfsLink: getAtomIpfsLink(
+                      claim.object as IdentityPresenter,
+                    ),
+                    link: getAtomLink(claim.object as IdentityPresenter),
                   }}
                 />
               </ListHeaderCard>
@@ -186,140 +224,141 @@ export default function ListOverview() {
           </Await>
         </Suspense>
         <Tabs defaultValue={defaultTab}>
-          <Suspense fallback={<PaginatedListSkeleton />}>
-            <Await
-              resolve={Promise.all([
-                globalListIdentities,
-                userListIdentities,
-                additionalUserListIdentities,
-                userObject,
-              ])}
-            >
-              {([
-                globalListIdentities,
-                userListIdentities,
-                additionalUserListIdentities,
-                userObject,
-              ]) => (
-                <>
-                  <TabsList>
+          <TabsList>
+            <Suspense fallback={<Skeleton className="w-44 h-10 rounded" />}>
+              <Await resolve={globalListIdentities}>
+                {(resolvedGlobalListIdentities) => (
+                  <TabsTrigger
+                    value="global"
+                    label="Global"
+                    totalCount={
+                      resolvedGlobalListIdentities?.pagination.totalEntries
+                    }
+                    onClick={(e) => {
+                      e.preventDefault()
+                      handleTabChange('global')
+                    }}
+                  />
+                )}
+              </Await>
+            </Suspense>
+            <Suspense fallback={<Skeleton className="w-44 h-10 rounded" />}>
+              <Await resolve={userListIdentities}>
+                {(resolvedUserListIdentities) => (
+                  <TabsTrigger
+                    value="you"
+                    label={
+                      <ListTabIdentityDisplay imgSrc={userObject.image}>
+                        You
+                      </ListTabIdentityDisplay>
+                    }
+                    totalCount={
+                      resolvedUserListIdentities?.pagination.totalEntries
+                    }
+                    onClick={(e) => {
+                      e.preventDefault()
+                      handleTabChange('you')
+                    }}
+                  />
+                )}
+              </Await>
+            </Suspense>
+            {userWalletAddress && (
+              <Suspense fallback={<div>Loading...</div>}>
+                <Await resolve={additionalUserListIdentities}>
+                  {(resolvedAdditionalUserListIdentities) => (
                     <TabsTrigger
-                      value="global"
-                      label="Global"
-                      totalCount={globalListIdentities?.pagination.totalEntries}
-                      onClick={(e) => {
-                        e.preventDefault()
-                        handleTabChange('global')
-                      }}
-                    />
-                    <TabsTrigger
-                      value="you"
-                      label={
-                        <Suspense fallback={<div>Loading...</div>}>
-                          <ListTabIdentityDisplay imgSrc={userObject.image}>
-                            You
-                          </ListTabIdentityDisplay>
-                        </Suspense>
+                      className="text-left"
+                      value="additional"
+                      totalCount={
+                        resolvedAdditionalUserListIdentities?.pagination
+                          .totalEntries
                       }
-                      totalCount={userListIdentities?.pagination.totalEntries}
+                      label={
+                        <ListTabIdentityDisplay
+                          imgSrc={additionalUserObject?.image}
+                        >
+                          {additionalUserObject?.display_name ?? 'Additional'}
+                        </ListTabIdentityDisplay>
+                      }
                       onClick={(e) => {
                         e.preventDefault()
-                        handleTabChange('you')
+                        handleTabChange('additional')
                       }}
                     />
-                    {userWalletAddress && (
-                      <TabsTrigger
-                        className="text-left"
-                        value="additional"
-                        totalCount={
-                          additionalUserListIdentities?.pagination.totalEntries
-                        }
-                        label={
-                          <Suspense fallback={<div>Loading...</div>}>
-                            <ListTabIdentityDisplay
-                              imgSrc={additionalUserObject?.image}
-                            >
-                              {additionalUserObject?.display_name ??
-                                'Additional'}
-                            </ListTabIdentityDisplay>
-                          </Suspense>
-                        }
-                        onClick={(e) => {
-                          e.preventDefault()
-                          handleTabChange('additional')
-                        }}
-                      />
-                    )}
-                  </TabsList>
-                  <TabsContent value="global">
-                    {isNavigating ? (
-                      <PaginatedListSkeleton />
-                    ) : (
-                      <Suspense fallback={<PaginatedListSkeleton />}>
-                        <Await resolve={globalListIdentities}>
-                          {(resolvedListIdentities) => (
-                            <IdentitiesList
-                              identities={resolvedListIdentities.listIdentities}
-                              pagination={resolvedListIdentities.pagination}
-                              enableSearch={true}
-                              enableSort={true}
-                            />
-                          )}
-                        </Await>
-                      </Suspense>
-                    )}
-                  </TabsContent>
-                  <TabsContent value="you">
-                    {isNavigating ? (
-                      <PaginatedListSkeleton />
-                    ) : (
-                      <Suspense fallback={<PaginatedListSkeleton />}>
-                        <Await resolve={userListIdentities}>
-                          {(resolvedListIdentities) => (
-                            <IdentitiesList
-                              identities={resolvedListIdentities.listIdentities}
-                              pagination={resolvedListIdentities.pagination}
-                              enableSearch={true}
-                              enableSort={true}
-                            />
-                          )}
-                        </Await>
-                      </Suspense>
-                    )}
-                  </TabsContent>
-                  {userWalletAddress && (
-                    <TabsContent value="additional">
-                      {isNavigating ? (
-                        <PaginatedListSkeleton />
-                      ) : (
-                        <Suspense fallback={<PaginatedListSkeleton />}>
-                          <Await resolve={additionalUserListIdentities}>
-                            {(resolvedListIdentities) => {
-                              if (resolvedListIdentities) {
-                                return (
-                                  <IdentitiesList
-                                    identities={
-                                      resolvedListIdentities.listIdentities
-                                    }
-                                    pagination={
-                                      resolvedListIdentities.pagination
-                                    }
-                                    enableSearch={true}
-                                    enableSort={true}
-                                  />
-                                )
-                              }
-                              return null
-                            }}
-                          </Await>
-                        </Suspense>
-                      )}
-                    </TabsContent>
                   )}
-                </>
-              )}
-            </Await>
-          </Suspense>
+                </Await>
+              </Suspense>
+            )}
+          </TabsList>
+          <TabsContent value="global">
+            <Suspense fallback={<PaginatedListSkeleton />}>
+              <Await resolve={globalListIdentities}>
+                {(resolvedGlobalListIdentities: IdentityListType | null) => {
+                  if (!resolvedGlobalListIdentities) {
+                    return <PaginatedListSkeleton />
+                  }
+                  return isNavigating ? (
+                    <PaginatedListSkeleton />
+                  ) : (
+                    <IdentitiesList
+                      identities={resolvedGlobalListIdentities.listIdentities}
+                      pagination={resolvedGlobalListIdentities.pagination}
+                      enableSearch={true}
+                      enableSort={true}
+                    />
+                  )
+                }}
+              </Await>
+            </Suspense>
+          </TabsContent>
+          <TabsContent value="you">
+            <Suspense fallback={<PaginatedListSkeleton />}>
+              <Await resolve={userListIdentities}>
+                {(resolvedUserListIdentities: IdentityListType | null) => {
+                  if (!resolvedUserListIdentities) {
+                    return <PaginatedListSkeleton />
+                  }
+                  return isNavigating ? (
+                    <PaginatedListSkeleton />
+                  ) : (
+                    <IdentitiesList
+                      identities={resolvedUserListIdentities.listIdentities}
+                      pagination={resolvedUserListIdentities.pagination}
+                      enableSearch={true}
+                      enableSort={true}
+                    />
+                  )
+                }}
+              </Await>
+            </Suspense>
+          </TabsContent>
+          {userWalletAddress && !!additionalUserListIdentities && (
+            <TabsContent value="additional">
+              <Suspense fallback={<PaginatedListSkeleton />}>
+                <Await resolve={additionalUserListIdentities}>
+                  {(
+                    resolvedAdditionalUserListIdentities: IdentityListType | null,
+                  ) => {
+                    return isNavigating ? (
+                      <PaginatedListSkeleton />
+                    ) : resolvedAdditionalUserListIdentities ? (
+                      <IdentitiesList
+                        identities={
+                          resolvedAdditionalUserListIdentities.listIdentities
+                        }
+                        pagination={
+                          resolvedAdditionalUserListIdentities.pagination
+                        }
+                        enableSearch={true}
+                        enableSort={true}
+                      />
+                    ) : null
+                  }}
+                </Await>
+              </Suspense>
+            </TabsContent>
+          )}
         </Tabs>
       </div>
     </div>
