@@ -3,6 +3,7 @@ import { Suspense, useEffect, useState } from 'react'
 import {
   Claim,
   ListHeaderCard,
+  Skeleton,
   Tabs,
   TabsContent,
   TabsList,
@@ -189,7 +190,7 @@ export default function ListOverview() {
         </Suspense>
         <Tabs defaultValue={defaultTab}>
           <TabsList>
-            <Suspense fallback={<div>Loading...</div>}>
+            <Suspense fallback={<Skeleton className="w-44 h-10 rounded" />}>
               <Await resolve={globalListIdentities}>
                 {(resolvedGlobalListIdentities) => (
                   <TabsTrigger
@@ -206,7 +207,7 @@ export default function ListOverview() {
                 )}
               </Await>
             </Suspense>
-            <Suspense fallback={<div>Loading...</div>}>
+            <Suspense fallback={<Skeleton className="w-44 h-10 rounded" />}>
               <Await resolve={userListIdentities}>
                 {(resolvedUserListIdentities) => (
                   <TabsTrigger
