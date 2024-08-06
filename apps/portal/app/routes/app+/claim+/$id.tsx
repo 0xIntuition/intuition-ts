@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react'
+
 import {
   Claim,
   ClaimStakeCard,
@@ -108,7 +110,26 @@ export default function ClaimDetails() {
   }>()
   const navigate = useNavigate()
   const location = useLocation()
-  const from = location.state?.from
+  const [fromUrl, setFromUrl] = useState<string | number>(-1)
+
+  useEffect(() => {
+    const from = location.state?.from
+    console.log('from:', from) // This will log the 'from' value from location.state
+    console.log('location:', location) // This will log the entire location object
+    console.log('document.referrer:', document.referrer) // This will log the referrer
+
+    if (from) {
+      setFromUrl(from.split('?')[0])
+    } else if (document.referrer) {
+      setFromUrl(document.referrer)
+    } else {
+      setFromUrl(-1)
+    }
+  }, [location.state])
+
+  useEffect(() => {
+    console.log('fromUrl:', fromUrl) // This will log the processed 'fromUrl'
+  }, [fromUrl])
 
   const [stakeModalActive, setStakeModalActive] = useAtom(stakeModalAtom)
 
