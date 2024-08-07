@@ -8,6 +8,7 @@ import { RevalidateButton } from '@components/revalidate-button'
 import { ActivitySkeleton } from '@components/skeleton'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { getActivity } from '@lib/services/activity'
+import logger from '@lib/utils/logger'
 import { invariant } from '@lib/utils/misc'
 import { defer, LoaderFunctionArgs } from '@remix-run/node'
 import { Await } from '@remix-run/react'
@@ -30,6 +31,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 export default function GlobalActivityFeed() {
   const { activity } = useLiveLoader<typeof loader>(['attest', 'create'])
 
+  logger('activity render')
   return (
     <>
       <Suspense fallback={<ActivitySkeleton />}>

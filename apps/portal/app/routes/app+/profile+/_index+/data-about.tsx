@@ -11,6 +11,7 @@ import { DataHeaderSkeleton, PaginatedListSkeleton } from '@components/skeleton'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { getClaimsAboutIdentity } from '@lib/services/claims'
 import { getPositionsOnIdentity } from '@lib/services/positions'
+import logger from '@lib/utils/logger'
 import { formatBalance, invariant } from '@lib/utils/misc'
 import { defer, LoaderFunctionArgs } from '@remix-run/node'
 import { Await, useRouteLoaderData } from '@remix-run/react'
@@ -58,6 +59,8 @@ export default function ProfileDataAbout() {
     ) ?? {}
   invariant(userIdentity, NO_USER_IDENTITY_ERROR)
 
+  logger('data-about render')
+
   return (
     <div className="flex-col justify-start items-start flex w-full gap-6">
       <div className="flex flex-col w-full gap-6">
@@ -71,19 +74,24 @@ export default function ProfileDataAbout() {
           </Text>
         </div>
         <Suspense fallback={<DataHeaderSkeleton />}>
-          <Await
-            resolve={Promise.all([claims, claimsSummary])}
-            errorElement={<></>}
-          >
-            {([resolvedClaims, resolvedClaimsSummary]) => (
-              <DataAboutHeader
-                variant="claims"
-                userIdentity={userIdentity}
-                totalClaims={resolvedClaims.pagination.totalEntries}
-                totalStake={
-                  +formatBalance(resolvedClaimsSummary?.assets_sum ?? 0, 18, 4)
-                }
-              />
+          <Await resolve={claims} errorElement={<></>}>
+            {(resolvedClaims) => (
+              <Await resolve={claimsSummary} errorElement={<></>}>
+                {(resolvedClaimsSummary) => (
+                  <DataAboutHeader
+                    variant="claims"
+                    userIdentity={userIdentity}
+                    totalClaims={resolvedClaims.pagination.totalEntries}
+                    totalStake={
+                      +formatBalance(
+                        resolvedClaimsSummary?.assets_sum ?? 0,
+                        18,
+                        4,
+                      )
+                    }
+                  />
+                )}
+              </Await>
             )}
           </Await>
         </Suspense>
