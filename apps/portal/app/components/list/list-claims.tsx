@@ -27,7 +27,7 @@ export function ListClaimsList<T extends SortColumnType = ClaimSortColumn>({
   sourceUserAddress,
 }: {
   listClaims: ClaimPresenter[]
-  pagination: PaginationType
+  pagination?: PaginationType
   paramPrefix?: string
   enableSearch?: boolean
   enableSort?: boolean
@@ -83,9 +83,9 @@ export function ListClaimsList<T extends SortColumnType = ClaimSortColumn>({
 
   return (
     <div className="flex flex-col w-full">
-      <div className="flex flex-col w-full gap-6" ref={listContainerRef}>
+      <div className="flex flex-col w-full" ref={listContainerRef}>
         <div
-          className={`flex flex-row w-full ${enableSearch ? 'justify-between' : 'justify-end'}`}
+          className={`flex flex-row w-full ${enableSearch ? 'justify-between' : 'justify-end'} ${enableSort ? 'mb-6' : 'mb-0'}`}
         >
           {enableSearch && <Search handleSearchChange={handleSearchChange} />}
           {enableSort && options && options.length > 0 && (
@@ -116,7 +116,7 @@ export function ListClaimsList<T extends SortColumnType = ClaimSortColumn>({
               ),
           )}
         </ListGrid>
-        {pagination.currentPage < pagination.totalPages && (
+        {pagination && pagination.currentPage < pagination.totalPages && (
           <div className="flex justify-center mt-4">
             <Button onClick={handleLoadMore} disabled={isLoading}>
               {isLoading ? 'Loading...' : 'Load More'}

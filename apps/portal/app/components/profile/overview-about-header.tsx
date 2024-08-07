@@ -30,7 +30,7 @@ interface OverviewAboutHeaderProps
   link: string
 }
 
-const OverviewAboutHeader: React.FC<OverviewAboutHeaderProps> = ({
+export function OverviewAboutHeader({
   variant,
   userIdentity,
   totalClaims,
@@ -38,7 +38,7 @@ const OverviewAboutHeader: React.FC<OverviewAboutHeaderProps> = ({
   totalStake,
   link,
   ...props
-}) => {
+}: OverviewAboutHeaderProps) {
   return (
     <div
       className="flex flex-col gap-4 w-full p-6 bg-black rounded-xl border border-neutral-300/20 max-md:items-center"
@@ -98,5 +98,3 @@ const OverviewAboutHeader: React.FC<OverviewAboutHeaderProps> = ({
     </div>
   )
 }
-
-export default OverviewAboutHeader

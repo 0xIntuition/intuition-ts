@@ -12,16 +12,16 @@ interface OverviewStakingHeaderProps
   link: string
 }
 
-const OverviewStakingHeader: React.FC<OverviewStakingHeaderProps> = ({
+export function OverviewStakingHeader({
   totalClaims,
   totalIdentities,
   totalStake,
   link,
   ...props
-}) => {
+}: OverviewStakingHeaderProps): React.ReactElement {
   return (
     <div
-      className="flex flex-col gap-4 w-full p-6 bg-black rounded-xl border border-neutral-300/20 max-md:items-center"
+      className="flex flex-col gap-4 w-full p-6 bg-black rounded-xl border border-neutral-300/20"
       {...props}
     >
       <div className="flex items-center gap-1.5">
@@ -33,8 +33,8 @@ const OverviewStakingHeader: React.FC<OverviewStakingHeaderProps> = ({
           Staking
         </Text>
       </div>
-      <div className="flex w-full gap-10">
-        <div className="flex flex-col items-end max-md:items-center">
+      <div className="flex flex-col md:flex-row w-full gap-4 md:gap-10">
+        <div className="flex justify-between md:flex-col md:items-start">
           <Text
             variant="caption"
             weight="regular"
@@ -42,11 +42,11 @@ const OverviewStakingHeader: React.FC<OverviewStakingHeaderProps> = ({
           >
             Identities
           </Text>
-          <Text variant="bodyLarge" weight="medium" className="items-center">
+          <Text variant="bodyLarge" weight="medium">
             {totalIdentities}
           </Text>
         </div>
-        <div className="flex flex-col items-end max-md:items-center">
+        <div className="flex justify-between md:flex-col md:items-start">
           <Text
             variant="caption"
             weight="regular"
@@ -54,11 +54,11 @@ const OverviewStakingHeader: React.FC<OverviewStakingHeaderProps> = ({
           >
             Claims
           </Text>
-          <Text variant="bodyLarge" weight="medium" className="items-center">
+          <Text variant="bodyLarge" weight="medium">
             {totalClaims}
           </Text>
         </div>
-        <div className="flex flex-col items-end max-md:items-center">
+        <div className="flex justify-between md:flex-col md:items-start">
           <Text
             variant="caption"
             weight="regular"
@@ -68,9 +68,12 @@ const OverviewStakingHeader: React.FC<OverviewStakingHeaderProps> = ({
           </Text>
           <MonetaryValue value={totalStake} currency="ETH" />
         </div>
-        <div className="flex flex-col items-end justify-end ml-auto">
+        <div className="flex justify-center md:justify-end md:ml-auto mt-4 md:mt-0">
           <Link to={link} prefetch="intent">
-            <Button variant={ButtonVariant.secondary} className="w-max mb-1">
+            <Button
+              variant={ButtonVariant.secondary}
+              className="w-full md:w-max"
+            >
               View all positions
             </Button>
           </Link>
@@ -79,5 +82,3 @@ const OverviewStakingHeader: React.FC<OverviewStakingHeaderProps> = ({
     </div>
   )
 }
-
-export default OverviewStakingHeader

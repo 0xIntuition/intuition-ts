@@ -1,11 +1,13 @@
-import { QuestHeaderCard } from '@0xintuition/1ui'
-import { ClaimsService } from '@0xintuition/api'
+import { QuestHeaderCard, Text } from '@0xintuition/1ui'
+import { ClaimSortColumn, ClaimsService, SortDirection } from '@0xintuition/api'
 
-import OverviewAboutHeader from '@components/profile/overview-about-header'
-import OverviewCreatedHeader from '@components/profile/overview-created-header'
-import OverviewStakingHeader from '@components/profile/overview-staking-header'
+import { ListClaimsList } from '@components/list/list-claims'
+import { OverviewAboutHeader } from '@components/profile/overview-about-header'
+import { OverviewCreatedHeader } from '@components/profile/overview-created-header'
+import { OverviewStakingHeader } from '@components/profile/overview-staking-header'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { getClaimsAboutIdentity } from '@lib/services/claims'
+import { getUserSavedLists } from '@lib/services/lists'
 import { getPositionsOnIdentity } from '@lib/services/positions'
 import { formatBalance, invariant } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
@@ -21,6 +23,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   const url = new URL(request.url)
   const searchParams = new URLSearchParams(url.search)
+
+  const listSearchParams = new URLSearchParams()
+  listSearchParams.set('sortBy', ClaimSortColumn.ASSETS_SUM)
+  listSearchParams.set('direction', SortDirection.DESC)
+  listSearchParams.set('limit', '6')
 
   const mockUserQuestsData = {
     currentQuest: {
@@ -49,13 +56,17 @@ export async function loader({ request }: LoaderFunctionArgs) {
         identity: userWallet,
       },
     }),
+    savedListClaims: await getUserSavedLists({
+      request,
+      userWallet,
+      searchParams: listSearchParams,
+    }),
   })
 }
 
 export default function ProfileOverview() {
-  const { userQuests, claims, positions, claimsSummary } = useLiveLoader<
-    typeof loader
-  >(['attest', 'create'])
+  const { userQuests, claims, positions, claimsSummary, savedListClaims } =
+    useLiveLoader<typeof loader>(['attest', 'create'])
   const { userIdentity, userTotals } =
     useRouteLoaderData<ProfileLoaderData>(
       'routes/app+/profile+/_index+/_layout',
@@ -63,8 +74,6 @@ export default function ProfileOverview() {
   invariant(userIdentity, NO_USER_IDENTITY_ERROR)
 
   const navigate = useNavigate()
-
-  console.log('userTotals', userTotals)
 
   return (
     <div className="flex flex-col gap-6">
@@ -75,8 +84,15 @@ export default function ProfileOverview() {
         totalNumberOfQuests={userQuests.totalQuests}
         onButtonClick={() => navigate(PATHS.QUEST)}
       />
-      <h2 className="font-medium text-xl text-secondary-foreground">About</h2>
-      <div className="flex flex-row items-center gap-6">
+
+      <Text
+        variant="headline"
+        weight="medium"
+        className="text-secondary-foreground"
+      >
+        About
+      </Text>
+      <div className="flex flex-col items-center gap-6">
         <OverviewAboutHeader
           variant="claims"
           userIdentity={userIdentity}
@@ -92,16 +108,20 @@ export default function ProfileOverview() {
           link={`${PATHS.PROFILE}/data-about`}
         />
       </div>
-      <h2 className="font-medium text-xl text-secondary-foreground">
+      <Text
+        variant="headline"
+        weight="medium"
+        className="text-secondary-foreground"
+      >
         User Stats
-      </h2>
+      </Text>
       <OverviewStakingHeader
         totalClaims={userTotals?.total_positions_on_claims ?? 0}
         totalIdentities={userTotals?.total_positions_on_identities ?? 0}
         totalStake={+formatBalance(userTotals?.total_position_value ?? '0', 18)}
         link={`${PATHS.PROFILE}/data-created`}
       />
-      <div className="flex flex-row items-center gap-6">
+      <div className="flex flex-row items-center gap-6 max-md:flex-col">
         <OverviewCreatedHeader
           variant="identities"
           totalCreated={userTotals?.total_identities ?? 0}
@@ -113,6 +133,19 @@ export default function ProfileOverview() {
           link={`${PATHS.PROFILE}/data-created`}
         />
       </div>
+      <Text
+        variant="headline"
+        weight="medium"
+        className="text-secondary-foreground"
+      >
+        Top Lists
+      </Text>
+      <ListClaimsList
+        listClaims={savedListClaims.savedListClaims}
+        enableSort={false}
+        enableSearch={false}
+        columns={3}
+      />
     </div>
   )
 }
