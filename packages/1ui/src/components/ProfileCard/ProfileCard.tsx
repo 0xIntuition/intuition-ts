@@ -93,7 +93,7 @@ const ProfileCard = ({
         {variant === Identity.nonUser &&
           externalLink &&
           externalLink !== 'https://' && (
-            <div className="pt-2.5">
+            <div className="pt-2.5 max-lg:flex max-lg:flex-col max-lg:items-center">
               <Text variant="body" className="text-muted-foreground">
                 Link
               </Text>

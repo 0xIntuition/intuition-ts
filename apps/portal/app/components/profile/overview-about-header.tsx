@@ -64,30 +64,32 @@ export function OverviewAboutHeader({
           />
         </IdentityTag>
       </div>
-      <div className="flex w-full gap-10">
-        <div className="flex flex-col items-end max-md:items-center">
-          <Text
-            variant="caption"
-            weight="regular"
-            className="text-secondary-foreground"
-          >
-            {variant === 'claims' ? 'Claims' : 'Positions'}
-          </Text>
-          <Text variant="bodyLarge" weight="medium" className="items-center">
-            {variant === 'claims' ? totalClaims ?? 0 : totalPositions ?? 0}
-          </Text>
+      <div className="flex w-full gap-10 max-sm:flex-col max-sm:gap-4">
+        <div className="flex w-full gap-10 max-sm:justify-center">
+          <div className="flex flex-col max-md:items-center">
+            <Text
+              variant="caption"
+              weight="regular"
+              className="text-secondary-foreground"
+            >
+              {variant === 'claims' ? 'Claims' : 'Positions'}
+            </Text>
+            <Text variant="bodyLarge" weight="medium" className="items-center">
+              {variant === 'claims' ? totalClaims ?? 0 : totalPositions ?? 0}
+            </Text>
+          </div>
+          <div className="flex flex-col max-md:items-center">
+            <Text
+              variant="caption"
+              weight="regular"
+              className="text-secondary-foreground"
+            >
+              Total stake
+            </Text>
+            <MonetaryValue value={totalStake} currency="ETH" />
+          </div>
         </div>
-        <div className="flex flex-col items-end max-md:items-center">
-          <Text
-            variant="caption"
-            weight="regular"
-            className="text-secondary-foreground"
-          >
-            Total stake
-          </Text>
-          <MonetaryValue value={totalStake} currency="ETH" />
-        </div>
-        <div className="flex flex-col items-end justify-end ml-auto">
+        <div className="flex flex-col items-end justify-end ml-auto max-sm:w-full max-sm:items-center">
           <Link to={link} prefetch="intent">
             <Button variant={ButtonVariant.secondary} className="w-max mb-1">
               View All {variant === 'claims' ? 'Claims' : 'Positions'}

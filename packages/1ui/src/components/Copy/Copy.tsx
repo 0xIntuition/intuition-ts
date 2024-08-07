@@ -1,8 +1,8 @@
 import { useState } from 'react'
 
-import { Button, ButtonVariant } from 'components/Button'
-import { Icon, IconName } from 'components/Icon'
 import { cn } from 'styles'
+
+import { Button, ButtonVariant, Icon, IconName, toast } from '..'
 
 interface CopyProps extends React.HTMLAttributes<HTMLButtonElement> {
   text: string
@@ -10,20 +10,15 @@ interface CopyProps extends React.HTMLAttributes<HTMLButtonElement> {
   onCopy?: () => void
 }
 
-const Copy: React.FC<CopyProps> = ({
-  text,
-  disabled = false,
-  onCopy,
-  className,
-  ...props
-}) => {
+const Copy = ({ text, disabled = false, className, ...props }: CopyProps) => {
   const [copied, setCopied] = useState(false)
 
   const handleCopy = () => {
     navigator.clipboard.writeText(text)
     setCopied(true)
-    onCopy && onCopy()
     setTimeout(() => setCopied(false), 2000)
+    // launch toast if they have a toaster setup in consuming app
+    toast?.success('Copied to clipboard!')
   }
 
   return (
