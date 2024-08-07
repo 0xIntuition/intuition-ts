@@ -24,7 +24,6 @@ import {
 } from '@0xintuition/api'
 
 import SaveListModal from '@components/list/save-list-modal'
-import { SegmentedNav } from '@components/segmented-nav'
 import StakeModal from '@components/stake/stake-modal'
 import TagsModal from '@components/tags/tags-modal'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
@@ -45,12 +44,7 @@ import { fetchWrapper } from '@server/api'
 import { requireUser, requireUserWallet } from '@server/auth'
 import { getVaultDetails } from '@server/multivault'
 import TwoPanelLayout from 'app/layouts/two-panel-layout'
-import {
-  identityRouteOptions,
-  IPFS_GATEWAY_URL,
-  NO_WALLET_ERROR,
-  PATHS,
-} from 'consts'
+import { IPFS_GATEWAY_URL, NO_WALLET_ERROR, PATHS } from 'consts'
 import { useAtom } from 'jotai'
 import { ExtendedIdentityPresenter } from 'types/identity'
 import { VaultDetailsType } from 'types/vault'
@@ -217,7 +211,7 @@ export default function IdentityDetails() {
           }))
         }
         onViewAllClick={() =>
-          navigate(`${PATHS.IDENTITY}/${identity.id}/data-about`)
+          navigate(`${PATHS.IDENTITY}/${identity.id}#positions`)
         }
       />
       <InfoCard
@@ -233,14 +227,7 @@ export default function IdentityDetails() {
     </div>
   )
 
-  const rightPanel = (
-    <>
-      <div className="flex flex-row justify-end mb-6">
-        <SegmentedNav options={identityRouteOptions} />
-      </div>
-      <Outlet />
-    </>
-  )
+  const rightPanel = <Outlet />
 
   return (
     <TwoPanelLayout leftPanel={leftPanel} rightPanel={rightPanel}>
