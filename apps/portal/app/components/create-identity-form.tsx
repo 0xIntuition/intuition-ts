@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 
 import {
   Button,
+  Checkbox,
   DialogHeader,
   DialogTitle,
   Icon,
@@ -163,6 +164,8 @@ function CreateIdentityForm({
     undefined,
   )
   const [initialDeposit, setInitialDeposit] = useState<string>('0')
+  const [isContract, setIsContract] = useState(false)
+
   const loaderFetcher = useFetcher<CreateLoaderData>()
   const loaderFetcherUrl = '/resources/create'
   const loaderFetcherRef = useRef(loaderFetcher.load)
@@ -276,6 +279,10 @@ function CreateIdentityForm({
 
         if (event.currentTarget.initial_deposit?.value !== undefined) {
           setInitialDeposit(event.currentTarget.initial_deposit.value)
+        }
+
+        if (isContract) {
+          formData.append('is_contract', 'true')
         }
 
         // Initial form validation
@@ -455,6 +462,7 @@ function CreateIdentityForm({
     shouldValidate: 'onInput',
     onSubmit: async (e) => handleSubmit(e),
   })
+
   return (
     <offChainFetcher.Form
       method="post"
@@ -480,6 +488,26 @@ function CreateIdentityForm({
               id={fields.display_name.errorId}
               errors={fields.display_name.errors}
             />
+            {fields.display_name.value &&
+              fields.display_name.value.length === 42 &&
+              /^0x[a-fA-F0-9]{1,42}$/.test(fields.display_name.value) && (
+                <div className="flex items-center gap-2">
+                  <Checkbox
+                    checked={isContract}
+                    onCheckedChange={(checked) =>
+                      setIsContract(checked === true)
+                    }
+                    id={fields.is_contract.id}
+                    className="h-4 w-4 text-muted theme-border rounded focus:ring-primary focus:ring-1 bg-primary/10 cursor-pointer checked:bg-primary/10 form-checkbox"
+                  />
+                  <Label
+                    htmlFor={fields.is_contract.id}
+                    className="text-sm text-foreground/70"
+                  >
+                    is Contract?
+                  </Label>
+                </div>
+              )}
           </div>
           <div className="flex flex-col w-full gap-1.5">
             <div className="self-stretch flex-col justify-start items-start flex">

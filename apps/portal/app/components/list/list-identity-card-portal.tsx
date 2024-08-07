@@ -6,6 +6,7 @@ import {
   Text,
   TextVariant,
   TextWeight,
+  Trunctacular,
 } from '@0xintuition/1ui'
 
 export interface ListIdentityCardPortalProps {
@@ -38,16 +39,13 @@ export const ListIdentityCardPortal: React.FC<ListIdentityCardPortalProps> = ({
       />
 
       <div className="text-center flex-grow flex flex-col justify-between items-center">
-        <Text
+        <Trunctacular
+          value={displayName}
           variant={TextVariant.bodyLarge}
           weight={TextWeight.medium}
           className="text-primary/80 mb-2"
-        >
-          {displayName.length > 20
-            ? `${displayName.substring(0, 17)}...`
-            : displayName}
-        </Text>
-
+          maxStringLength={20}
+        />
         <Text variant={TextVariant.body} className="text-secondary/50 mb-2">
           {identitiesCount} identities
         </Text>
