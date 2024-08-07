@@ -13,6 +13,7 @@ import {
   UsersService,
 } from '@0xintuition/api'
 
+import { PointsEarnedCard } from '@components/points-card/points-card'
 import { QuestSetCard } from '@components/quest/quest-set-card'
 import { QuestSetProgressCard } from '@components/quest/quest-set-progress-card'
 import { ReferralCard } from '@components/referral-card/referral-card'
@@ -41,6 +42,13 @@ export async function loader({ request }: LoaderFunctionArgs) {
     },
   })
 
+  const userTotals = fetchWrapper(request, {
+    method: UsersService.getUserTotals,
+    args: {
+      id: userWallet,
+    },
+  })
+
   const details = getQuestsProgress({
     request,
     options: {
@@ -52,6 +60,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     details,
     userWallet,
     userProfile,
+    userTotals,
   })
 }
 
@@ -89,7 +98,7 @@ const mockReferralData = {
 }
 
 export default function Quests() {
-  const { details } = useLoaderData<typeof loader>()
+  const { details, userTotals } = useLoaderData<typeof loader>()
 
   return (
     <div className="p-10 w-full max-w-7xl mx-auto flex flex-col gap-5">
@@ -102,9 +111,29 @@ export default function Quests() {
       <div className="flex flex-col gap-16">
         <div className="flex gap-10">
           <div className="flex-shrink-0 min-w-[256px] w-1/3">
-            <div className="bg-warning/5 rounded-lg theme-border p-5 flex justify-center align-items h-full border-warning/30 text-warning/30 text-bold border-dashed">
-              Points
-            </div>
+            <Suspense fallback={<Skeleton className="h-52 w-full" />}>
+              <Await resolve={userTotals}>
+                {(resolvedUserTotals) => (
+                  <PointsEarnedCard
+                    totalPoints={resolvedUserTotals.total_points}
+                    activities={[
+                      {
+                        name: 'Activity',
+                        points: resolvedUserTotals.protocol_points,
+                      },
+                      {
+                        name: 'Quests',
+                        points: resolvedUserTotals.quest_points,
+                      },
+                      {
+                        name: 'Referrals',
+                        points: resolvedUserTotals.referral_points,
+                      },
+                    ]}
+                  />
+                )}
+              </Await>
+            </Suspense>
           </div>
           <div className="flex-1">
             <Suspense fallback={<Skeleton className="h-52 w-full" />}>
