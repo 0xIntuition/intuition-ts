@@ -27,7 +27,7 @@ import { getPositionsOnIdentity } from '@lib/services/positions'
 import logger from '@lib/utils/logger'
 import { formatBalance, invariant } from '@lib/utils/misc'
 import { defer, LoaderFunctionArgs } from '@remix-run/node'
-import { Await, useRouteLoaderData } from '@remix-run/react'
+import { Await, useParams, useRouteLoaderData } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
 import {
@@ -56,20 +56,6 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   claimSearchParams.set('sortBy', ClaimSortColumn.ASSETS_SUM)
   claimSearchParams.set('direction', SortDirection.DESC)
   claimSearchParams.set('limit', '5')
-
-  // const [positions, claimsSummary] = await Promise.all([
-  //   getPositionsOnIdentity({
-  //     request,
-  //     identityId: wallet,
-  //     searchParams,
-  //   }),
-  //   fetchWrapper(request, {
-  //     method: ClaimsService.claimSummary,
-  //     args: {
-  //       identity: wallet,
-  //     },
-  //   }),
-  // ])
 
   return defer({
     positions: getPositionsOnIdentity({
@@ -108,6 +94,8 @@ export default function ProfileOverview() {
       userTotals: UserTotalsPresenter
     }>('routes/app+/profile+/$wallet') ?? {}
   invariant(userIdentity, NO_USER_IDENTITY_ERROR)
+  const params = useParams()
+  const { wallet } = params
 
   logger('userIdentity', userIdentity)
   logger('userTotals', userTotals)
@@ -128,7 +116,7 @@ export default function ProfileOverview() {
           totalStake={
             +formatBalance(userTotals?.total_position_value ?? '0', 18)
           }
-          link={`${PATHS.PROFILE}/data-created`}
+          link={`${PATHS.PROFILE}/${wallet}/data-created`}
         />
       </div>
 
@@ -136,15 +124,15 @@ export default function ProfileOverview() {
         <OverviewCreatedHeader
           variant="identities"
           totalCreated={userTotals?.total_identities ?? 0}
-          link={`${PATHS.PROFILE}/data-created`}
+          link={`${PATHS.PROFILE}/${wallet}/data-created`}
         />
         <OverviewCreatedHeader
           variant="claims"
           totalCreated={userTotals?.total_claims ?? 0}
-          link={`${PATHS.PROFILE}/data-created`}
+          link={`${PATHS.PROFILE}/${wallet}/data-created`}
         />
       </div>
-      <Suspense fallback={<DataHeaderSkeleton />}>
+      {/* <Suspense fallback={<DataHeaderSkeleton />}>
         <Await
           resolve={Promise.all([claims, claimsSummary])}
           errorElement={<></>}
@@ -157,11 +145,11 @@ export default function ProfileOverview() {
               totalStake={
                 +formatBalance(resolvedClaimsSummary?.assets_sum ?? 0, 18, 4)
               }
-              link={`${PATHS.PROFILE}/data-about`}
+              link={`${PATHS.PROFILE}/${wallet}/data-about`}
             />
           )}
         </Await>
-      </Suspense>
+      </Suspense> */}
       <Text
         variant="headline"
         weight="medium"
@@ -169,7 +157,7 @@ export default function ProfileOverview() {
       >
         Top Claims about this Identity
       </Text>
-      <Suspense fallback={<PaginatedListSkeleton />}>
+      {/* <Suspense fallback={<PaginatedListSkeleton />}>
         <Await
           resolve={claims}
           errorElement={
@@ -187,7 +175,7 @@ export default function ProfileOverview() {
             />
           )}
         </Await>
-      </Suspense>
+      </Suspense> */}
       <Text
         variant="headline"
         weight="medium"
@@ -195,7 +183,7 @@ export default function ProfileOverview() {
       >
         Top Followers
       </Text>
-      <Suspense fallback={<PaginatedListSkeleton />}>
+      {/* <Suspense fallback={<PaginatedListSkeleton />}>
         <Await
           resolve={connectionsData}
           errorElement={
@@ -220,7 +208,7 @@ export default function ProfileOverview() {
             )
           }}
         </Await>
-      </Suspense>
+      </Suspense> */}
       <Text
         variant="headline"
         weight="medium"
@@ -228,7 +216,7 @@ export default function ProfileOverview() {
       >
         Top Lists
       </Text>
-      <Suspense fallback={<ListClaimsSkeletonLayout totalItems={6} />}>
+      {/* <Suspense fallback={<ListClaimsSkeletonLayout totalItems={6} />}>
         <Await resolve={savedListClaims}>
           {(resolvedSavedListClaims) => {
             return (
@@ -241,7 +229,7 @@ export default function ProfileOverview() {
             )
           }}
         </Await>
-      </Suspense>
+      </Suspense> */}
     </div>
   )
 }
