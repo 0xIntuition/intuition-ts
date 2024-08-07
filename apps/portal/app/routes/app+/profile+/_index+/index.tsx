@@ -64,7 +64,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   })
 }
 
-export default function ProfileOverview() {
+export default function UserProfileOverview() {
   const { userQuests, claims, positions, claimsSummary, savedListClaims } =
     useLiveLoader<typeof loader>(['attest', 'create'])
   const { userIdentity, userTotals } =
