@@ -4,7 +4,6 @@ import { Button, ButtonSize, ButtonVariant } from '@0xintuition/1ui'
 import {
   ClaimPresenter,
   ClaimsService,
-  QuestsService,
   QuestStatus,
   UserQuestsService,
 } from '@0xintuition/api'
@@ -19,20 +18,17 @@ import {
 } from '@components/quest/detail/layout'
 import { QuestCriteriaCard } from '@components/quest/quest-criteria-card'
 import { QuestPointsDisplay } from '@components/quest/quest-points-display'
+import QuestSuccessModal from '@components/quest/quest-success-modal'
+import { useQuestCompletion } from '@lib/hooks/useQuestCompletion'
 import { useQuestMdxContent } from '@lib/hooks/useQuestMdxContent'
 import logger from '@lib/utils/logger'
 import { invariant } from '@lib/utils/misc'
 import { getQuestCriteria, getQuestId, QuestRouteId } from '@lib/utils/quest'
 import { ActionFunctionArgs, json, LoaderFunctionArgs } from '@remix-run/node'
-import {
-  Form,
-  useFetcher,
-  useLoaderData,
-  useRevalidator,
-} from '@remix-run/react'
-import { CheckQuestSuccessLoaderData } from '@routes/resources+/check-quest-success'
+import { Form, useActionData, useLoaderData } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
 import { requireUser, requireUserId } from '@server/auth'
+import { getUserQuest } from '@server/quest'
 import { MDXContentVariant } from 'types'
 
 const ROUTE_ID = QuestRouteId.CREATE_CLAIM
@@ -46,22 +42,12 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const wallet = user.wallet?.address
   invariant(wallet, 'Wallet is required')
 
-  const quest = await fetchWrapper(request, {
-    method: QuestsService.getQuest,
-    args: {
-      questId: id,
-    },
-  })
-  const userQuest = await fetchWrapper(request, {
-    method: UserQuestsService.getUserQuestByQuestId,
-    args: {
-      questId: id,
-    },
-  })
-  logger('Fetched user quest', userQuest)
+  const { userQuest, quest } = await getUserQuest(request, id)
+  invariant(userQuest, 'User quest not found')
+  invariant(quest, 'Quest not found')
 
   let claim: ClaimPresenter | undefined
-  if (userQuest && userQuest.quest_completion_object_id) {
+  if (userQuest.quest_completion_object_id) {
     claim = await fetchWrapper(request, {
       method: ClaimsService.getClaimById,
       args: {
@@ -109,10 +95,15 @@ export async function action({ request }: ActionFunctionArgs) {
 
 export default function Quests() {
   const { wallet, quest, userQuest, claim } = useLoaderData<typeof loader>()
+  const {
+    checkQuestSuccess,
+    isLoading: checkQuestSuccessLoading,
+    successModalOpen,
+    setSuccessModalOpen,
+  } = useQuestCompletion(userQuest)
+  const actionData = useActionData<typeof action>()
   const { introBody, mainBody, closingBody } = useQuestMdxContent(quest.id)
   const [activityModalOpen, setActivityModalOpen] = useState(false)
-  const fetcher = useFetcher<CheckQuestSuccessLoaderData>()
-  const { revalidate } = useRevalidator()
 
   function handleOpenActivityModal() {
     setActivityModalOpen(true)
@@ -124,22 +115,14 @@ export default function Quests() {
 
   function handleActivitySuccess(claim: ClaimPresenter) {
     logger('Activity success', claim)
-    if (userQuest) {
-      logger('Submitting fetcher', claim.claim_id, userQuest.id)
-      fetcher.load(`/resources/check-quest-success?userQuestId=${userQuest.id}`)
-    }
+    checkQuestSuccess()
   }
 
   useEffect(() => {
-    if (fetcher.state === 'idle' && fetcher.data) {
-      logger('Fetched fetcher', fetcher.data)
-      if (fetcher.data.success) {
-        logger('Detected quest completion object id')
-        logger('Revalidating')
-        revalidate()
-      }
+    if (actionData?.success) {
+      setSuccessModalOpen(true)
     }
-  }, [fetcher.data, fetcher.state, revalidate])
+  }, [actionData])
 
   return (
     <div className="px-10 w-full max-w-7xl mx-auto flex flex-col gap-10">
@@ -147,7 +130,11 @@ export default function Quests() {
         <Hero imgSrc={quest.image} />
         <div className="flex flex-col gap-10">
           <QuestBackButton />
-          <Header title={quest.title} questStatus={userQuest?.status} />
+          <Header
+            position={quest.position}
+            title={quest.title}
+            questStatus={userQuest?.status}
+          />
           <MDXContentView body={introBody} variant={MDXContentVariant.LORE} />
           <QuestCriteriaCard
             criteria={getQuestCriteria(quest.condition)}
@@ -160,6 +147,11 @@ export default function Quests() {
           claim={claim}
           status={userQuest?.status ?? QuestStatus.NOT_STARTED}
           handleClick={handleOpenActivityModal}
+          isLoading={checkQuestSuccessLoading}
+          isDisabled={
+            userQuest?.status === QuestStatus.CLAIMABLE ||
+            checkQuestSuccessLoading
+          }
         />
         <MDXContentView
           body={closingBody}
@@ -196,6 +188,13 @@ export default function Quests() {
         onClose={handleCloseActivityModal}
         open={activityModalOpen}
         onSuccess={handleActivitySuccess}
+      />
+      <QuestSuccessModal
+        quest={quest}
+        userQuest={userQuest}
+        routeId={ROUTE_ID}
+        isOpen={successModalOpen}
+        onClose={() => setSuccessModalOpen(false)}
       />
     </div>
   )

@@ -8,8 +8,8 @@ import {
   IdentityPresenter,
   PositionPresenter,
   PositionsService,
-  QuestsService,
   QuestStatus,
+  UserQuest,
   UserQuestsService,
   UsersService,
 } from '@0xintuition/api'
@@ -24,7 +24,9 @@ import {
 } from '@components/quest/detail/layout'
 import { QuestCriteriaCard } from '@components/quest/quest-criteria-card'
 import { QuestPointsDisplay } from '@components/quest/quest-points-display'
+import QuestSuccessModal from '@components/quest/quest-success-modal'
 import StakeModal from '@components/stake/stake-modal'
+import { useQuestCompletion } from '@lib/hooks/useQuestCompletion'
 import { useQuestMdxContent } from '@lib/hooks/useQuestMdxContent'
 import { stakeModalAtom } from '@lib/state/store'
 import logger from '@lib/utils/logger'
@@ -33,14 +35,14 @@ import { getQuestCriteria, getQuestId, QuestRouteId } from '@lib/utils/quest'
 import { ActionFunctionArgs, json, LoaderFunctionArgs } from '@remix-run/node'
 import {
   Form,
-  useFetcher,
+  useActionData,
   useLoaderData,
   useRevalidator,
 } from '@remix-run/react'
-import { CheckQuestSuccessLoaderData } from '@routes/resources+/check-quest-success'
 import { fetchWrapper } from '@server/api'
 import { requireUser, requireUserId } from '@server/auth'
 import { getVaultDetails } from '@server/multivault'
+import { getUserQuest } from '@server/quest'
 import { FALLBACK_CLAIM_ID } from 'consts'
 import { useAtom } from 'jotai'
 import {
@@ -60,37 +62,14 @@ export async function loader({ request }: LoaderFunctionArgs) {
   invariant(user, 'Unauthorized')
   invariant(user.wallet?.address, 'User wallet is required')
 
-  const quest = await fetchWrapper(request, {
-    method: QuestsService.getQuest,
-    args: {
-      questId: id,
-    },
-  })
-  const { id: userId } = await fetchWrapper(request, {
-    method: UsersService.getUserByWalletPublic,
-    args: {
-      wallet: user.wallet?.address,
-    },
-  })
-  const userQuests = (
-    await fetchWrapper(request, {
-      method: UserQuestsService.search,
-      args: {
-        requestBody: {
-          questId: id,
-          userId,
-        },
-      },
-    })
-  ).data
-
-  const userQuest = userQuests.find(
-    (userQuest) => userQuest.quest_id === id && userQuest.user_id === userId,
-  )
-  logger('Fetched user quest', userQuest)
+  const { userQuest, quest } = await getUserQuest(request, id)
+  invariant(userQuest, 'User quest not found')
+  invariant(quest, 'Quest not found')
 
   let position: GetPositionByIdResponse | PositionPresenter | undefined
   let claim: ClaimPresenter | undefined
+  let userQuests: UserQuest[] = []
+  let dependsOnUserQuest: UserQuest | undefined
   let identities: Record<
     string,
     {
@@ -118,13 +97,32 @@ export async function loader({ request }: LoaderFunctionArgs) {
       },
     })
   } else {
-    const dependsOnUserQuest = userQuests.find(
-      (userQuest) =>
-        userQuest.quest_id === quest.depends_on_quest &&
-        userId === userQuest.user_id,
-    )
+    if (quest.depends_on_quest) {
+      const { id: userId } = await fetchWrapper(request, {
+        method: UsersService.getUserByWalletPublic,
+        args: {
+          wallet: user.wallet?.address as `0x${string}`,
+        },
+      })
+      const { data } = await fetchWrapper(request, {
+        method: UserQuestsService.search,
+        args: {
+          requestBody: {
+            userId,
+          },
+        },
+      })
+      userQuests = data
+      dependsOnUserQuest = userQuests.find(
+        (userQuest) =>
+          userQuest.quest_id === quest.depends_on_quest &&
+          userId === userQuest.user_id,
+      )
+    }
     const dependsOnClaimId =
-      dependsOnUserQuest?.quest_completion_object_id ?? FALLBACK_CLAIM_ID
+      dependsOnUserQuest && dependsOnUserQuest?.quest_completion_object_id
+        ? dependsOnUserQuest?.quest_completion_object_id
+        : FALLBACK_CLAIM_ID
     claim = await fetchWrapper(request, {
       method: ClaimsService.getClaimById,
       args: {
@@ -132,7 +130,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
       },
     })
   }
-  logger('Fetched claim', claim)
+  invariant(claim, 'Claim not found')
 
   const vaultDetails = await getVaultDetails(
     claim.contract,
@@ -186,7 +184,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
         }
       >,
     )
-
     console.log('Identities', identities)
   }
 
@@ -235,13 +232,18 @@ export default function Quests() {
     userWallet,
     identities,
   } = useLoaderData<typeof loader>()
+  const actionData = useActionData<typeof action>()
   const { introBody, mainBody, mainBody2, closingBody } = useQuestMdxContent(
     quest.id,
   )
-  const [stakeModalActive, setStakeModalActive] = useAtom(stakeModalAtom)
-
-  const fetcher = useFetcher<CheckQuestSuccessLoaderData>()
   const { revalidate } = useRevalidator()
+  const {
+    checkQuestSuccess,
+    isLoading: checkQuestSuccessLoading,
+    successModalOpen,
+    setSuccessModalOpen,
+  } = useQuestCompletion(userQuest)
+  const [stakeModalActive, setStakeModalActive] = useAtom(stakeModalAtom)
 
   function handleOpenForActivityModal() {
     setStakeModalActive((prevState) => ({
@@ -303,22 +305,20 @@ export default function Quests() {
   }) {
     const { claim } = args
     logger('Activity success', claim)
-    if (userQuest && claim) {
-      logger('Submitting fetcher', claim.claim_id, userQuest.id)
-      fetcher.load(`/resources/check-quest-success?userQuestId=${userQuest.id}`)
+    if (
+      (claim && userQuest.status !== QuestStatus.CLAIMABLE) ||
+      userQuest.status !== QuestStatus.COMPLETED
+    ) {
+      logger('Firing off check quest success')
+      checkQuestSuccess()
     }
   }
 
   useEffect(() => {
-    if (fetcher.state === 'idle' && fetcher.data) {
-      logger('Fetched fetcher', fetcher.data)
-      if (fetcher.data.success) {
-        logger('Detected quest completion object id')
-        logger('Revalidating')
-        revalidate()
-      }
+    if (actionData?.success) {
+      setSuccessModalOpen(true)
     }
-  }, [fetcher.data, fetcher.state, revalidate])
+  }, [actionData])
 
   return (
     <div className="px-10 w-full max-w-7xl mx-auto flex flex-col gap-10">
@@ -326,7 +326,11 @@ export default function Quests() {
         <Hero imgSrc={quest.image} />
         <div className="flex flex-col gap-10">
           <QuestBackButton />
-          <Header title={quest.title} questStatus={userQuest?.status} />
+          <Header
+            position={quest.position}
+            title={quest.title}
+            questStatus={userQuest?.status}
+          />
           <MDXContentView body={introBody} variant={MDXContentVariant.LORE} />
           <QuestCriteriaCard
             criteria={getQuestCriteria(quest.condition)}
@@ -343,10 +347,10 @@ export default function Quests() {
           handleAgainstClick={handleOpenAgainstActivityModal}
           handleSellClick={handleSellClick}
           vaultDetails={vaultDetails}
-          isLoading={fetcher.state === 'loading'}
+          isLoading={checkQuestSuccessLoading}
           isDisabled={
             userQuest?.status === QuestStatus.CLAIMABLE ||
-            fetcher.state !== 'idle'
+            checkQuestSuccessLoading
           }
         />
         <MDXContentView
@@ -422,6 +426,13 @@ export default function Quests() {
         onClose={handleCloseActivityModal}
         onSuccess={handleActivitySuccess}
         direction={stakeModalActive.direction}
+      />
+      <QuestSuccessModal
+        quest={quest}
+        userQuest={userQuest}
+        routeId={ROUTE_ID}
+        isOpen={successModalOpen}
+        onClose={() => setSuccessModalOpen(false)}
       />
     </div>
   )

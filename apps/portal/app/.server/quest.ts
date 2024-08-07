@@ -1,4 +1,5 @@
 import {
+  GetQuestResponse,
   QuestNarrative,
   QuestPresenter,
   QuestSortColumn,
@@ -111,5 +112,33 @@ export async function getQuestsProgress({
     numCompletedQuests,
     completedQuestsIds,
     userQuestMap,
+  }
+}
+
+export async function getUserQuest(
+  request: Request,
+  questId: string,
+): Promise<{
+  userQuest: UserQuest
+  quest: GetQuestResponse
+}> {
+  const [quest, userQuest] = await Promise.all([
+    fetchWrapper(request, {
+      method: QuestsService.getQuest,
+      args: {
+        questId,
+      },
+    }),
+    fetchWrapper(request, {
+      method: UserQuestsService.getUserQuestByQuestId,
+      args: {
+        questId,
+      },
+    }),
+  ])
+  // leave erro handling to implementation
+  return {
+    userQuest: userQuest ?? null,
+    quest: quest ?? null,
   }
 }

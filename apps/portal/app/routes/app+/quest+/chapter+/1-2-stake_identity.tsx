@@ -7,8 +7,8 @@ import {
   IdentitiesService,
   IdentityPresenter,
   PositionsService,
-  QuestsService,
   QuestStatus,
+  UserQuest,
   UserQuestsService,
   UsersService,
 } from '@0xintuition/api'
@@ -22,23 +22,20 @@ import {
 } from '@components/quest/detail/layout'
 import { QuestCriteriaCard } from '@components/quest/quest-criteria-card'
 import { QuestPointsDisplay } from '@components/quest/quest-points-display'
+import QuestSuccessModal from '@components/quest/quest-success-modal'
 import StakeModal from '@components/stake/stake-modal'
+import { useQuestCompletion } from '@lib/hooks/useQuestCompletion'
 import { useQuestMdxContent } from '@lib/hooks/useQuestMdxContent'
 import { stakeModalAtom } from '@lib/state/store'
 import logger from '@lib/utils/logger'
 import { invariant } from '@lib/utils/misc'
 import { getQuestCriteria, getQuestId, QuestRouteId } from '@lib/utils/quest'
 import { ActionFunctionArgs, json, LoaderFunctionArgs } from '@remix-run/node'
-import {
-  Form,
-  useFetcher,
-  useLoaderData,
-  useRevalidator,
-} from '@remix-run/react'
-import { CheckQuestSuccessLoaderData } from '@routes/resources+/check-quest-success'
+import { Form, useActionData, useLoaderData } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
 import { requireUser, requireUserId } from '@server/auth'
 import { getVaultDetails } from '@server/multivault'
+import { getUserQuest } from '@server/quest'
 import { FALLBACK_IDENTITY_ID } from 'consts/quest'
 import { useAtom } from 'jotai'
 import { MDXContentVariant, VaultDetailsType } from 'types'
@@ -54,40 +51,14 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const userWallet = user.wallet?.address
   invariant(userWallet, 'Unauthorized')
 
-  const quest = await fetchWrapper(request, {
-    method: QuestsService.getQuest,
-    args: {
-      questId: id,
-    },
-  })
-  invariant(quest, 'quest is required')
-
-  // Fetching all quests to potentially find quest details of dependent quest
-  const userQuests = (
-    await fetchWrapper(request, {
-      method: UserQuestsService.search,
-      args: {
-        requestBody: {
-          questId: id,
-        },
-      },
-    })
-  ).data
-
-  const { id: userId } = await fetchWrapper(request, {
-    method: UsersService.getUserByWalletPublic,
-    args: {
-      wallet: userWallet,
-    },
-  })
-  const userQuest = userQuests.find(
-    (userQuest) => userQuest.quest_id === id && userId === userQuest.user_id,
-  )
-  logger('Fetched user quest', userQuest)
+  const { userQuest, quest } = await getUserQuest(request, id)
+  invariant(userQuest, 'User quest not found')
+  invariant(quest, 'Quest not found')
 
   let position: GetPositionByIdResponse | undefined
   let identity: IdentityPresenter
-  if (userQuest && userQuest.quest_completion_object_id) {
+  let userQuests: UserQuest[] = []
+  if (userQuest.quest_completion_object_id) {
     position = await fetchWrapper(request, {
       method: PositionsService.getPositionById,
       args: {
@@ -107,10 +78,27 @@ export async function loader({ request }: LoaderFunctionArgs) {
   } else {
     // if no position is found, use the identity they just created
     // OR, use the defaulted FALLBACK_IDENTITY_ID
+    if (quest.depends_on_quest) {
+      const { id: userId } = await fetchWrapper(request, {
+        method: UsersService.getUserByWalletPublic,
+        args: {
+          wallet: userWallet,
+        },
+      })
+      const { data } = await fetchWrapper(request, {
+        method: UserQuestsService.search,
+        args: {
+          requestBody: {
+            userId,
+          },
+        },
+      })
+      userQuests = data
+    }
     const dependsOnUserQuest = userQuests.find(
       (userQuest) =>
         userQuest.quest_id === quest.depends_on_quest &&
-        userId === userQuest.user_id,
+        user.id === userQuest.user_id,
     )
     const dependsOnIdentityId =
       dependsOnUserQuest?.quest_completion_object_id ?? FALLBACK_IDENTITY_ID
@@ -172,11 +160,15 @@ export async function action({ request }: ActionFunctionArgs) {
 export default function Quests() {
   const { quest, userQuest, identity, position, vaultDetails, userWallet } =
     useLoaderData<typeof loader>()
+  const {
+    successModalOpen,
+    setSuccessModalOpen,
+    checkQuestSuccess,
+    isLoading: checkQuestSuccessLoading,
+  } = useQuestCompletion(userQuest)
   const [stakeModalActive, setStakeModalActive] = useAtom(stakeModalAtom)
   const { introBody, mainBody, closingBody } = useQuestMdxContent(quest?.id)
-
-  const fetcher = useFetcher<CheckQuestSuccessLoaderData>()
-  const { revalidate } = useRevalidator()
+  const actionData = useActionData<typeof action>()
 
   function handleDepositActivityClick() {
     setStakeModalActive((prevState) => ({
@@ -213,23 +205,16 @@ export default function Quests() {
     direction?: 'for' | 'against'
   }) {
     logger('Activity success', args.identity)
-    const { identity } = args
-    if (userQuest) {
-      logger('Submitting fetcher', identity?.id, userQuest.id)
-      fetcher.load(`/resources/check-quest-success?userQuestId=${userQuest.id}`)
+    if (userQuest?.status !== QuestStatus.COMPLETED) {
+      checkQuestSuccess()
     }
   }
 
   useEffect(() => {
-    if (fetcher.state === 'idle' && fetcher.data) {
-      logger('Fetched fetcher', fetcher.data)
-      if (fetcher.data.success) {
-        logger('Detected quest completion object id')
-        logger('Revalidating')
-        revalidate()
-      }
+    if (actionData?.success) {
+      setSuccessModalOpen(true)
     }
-  }, [fetcher.data, fetcher.state, revalidate])
+  }, [actionData])
 
   return (
     <div className="px-10 w-full max-w-7xl mx-auto flex flex-col gap-10">
@@ -237,7 +222,11 @@ export default function Quests() {
         <Hero imgSrc={quest.image} />
         <div className="flex flex-col gap-10">
           <QuestBackButton />
-          <Header title={quest.title} questStatus={userQuest?.status} />
+          <Header
+            position={quest.position}
+            title={quest.title}
+            questStatus={userQuest?.status}
+          />
           <MDXContentView body={introBody} variant={MDXContentVariant.LORE} />
           <QuestCriteriaCard
             criteria={getQuestCriteria(quest.condition)}
@@ -253,10 +242,10 @@ export default function Quests() {
           vaultDetails={vaultDetails}
           handleDepositIdentityClick={handleDepositActivityClick}
           handleRedeemIdentityClick={handleRedeemActivityClick}
-          isLoading={fetcher.state !== 'idle'}
+          isLoading={checkQuestSuccessLoading}
           disabled={
             userQuest?.status === QuestStatus.CLAIMABLE ||
-            fetcher.state !== 'idle'
+            checkQuestSuccessLoading
           }
         />
         <MDXContentView
@@ -296,6 +285,13 @@ export default function Quests() {
         vaultDetails={vaultDetails}
         onClose={handleCloseActivityModal}
         onSuccess={handleActivitySuccess}
+      />
+      <QuestSuccessModal
+        quest={quest}
+        userQuest={userQuest}
+        routeId={ROUTE_ID}
+        isOpen={successModalOpen}
+        onClose={() => setSuccessModalOpen(false)}
       />
     </div>
   )
