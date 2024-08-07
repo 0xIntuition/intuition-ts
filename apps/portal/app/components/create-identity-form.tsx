@@ -500,7 +500,10 @@ function CreateIdentityForm({
                     id={fields.is_contract.id}
                     className="h-4 w-4 text-muted theme-border rounded focus:ring-primary focus:ring-1 bg-primary/10 cursor-pointer checked:bg-primary/10 form-checkbox"
                   />
-                  <Label htmlFor={fields.is_contract.id} className="text-sm">
+                  <Label
+                    htmlFor={fields.is_contract.id}
+                    className="text-sm text-foreground/70"
+                  >
                     is Contract?
                   </Label>
                 </div>
