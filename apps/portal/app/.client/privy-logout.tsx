@@ -13,7 +13,7 @@ export default function PrivyLogout({ wallet }: { wallet: string }) {
   useEffect(() => {
     let mounted = true
     const handleLogout = async () => {
-      if (mounted && address && address !== wallet && isConnected && ready) {
+      if (mounted && address !== wallet && ready) {
         await logout()
         disconnect()
         submit(null, {
