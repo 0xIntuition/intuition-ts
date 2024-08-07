@@ -20,6 +20,7 @@ export async function action({ request }: ActionFunctionArgs) {
   const image_url = formData.get('image_url')
   const description = formData.get('description')
   const external_reference = formData.get('external_reference')
+  const is_contract = formData.get('is_contract')
 
   try {
     let identity
@@ -31,6 +32,7 @@ export async function action({ request }: ActionFunctionArgs) {
         external_reference: string
         description: string
         image?: string
+        is_contract?: boolean
       } = {
         contract: MULTIVAULT_CONTRACT_ADDRESS as string,
         creator: wallet as string,
@@ -40,6 +42,9 @@ export async function action({ request }: ActionFunctionArgs) {
       }
       if (image_url) {
         identityParams.image = image_url as string
+      }
+      if (is_contract) {
+        identityParams.is_contract = is_contract === 'true'
       }
       logger('Identity params:', identityParams)
       identity = await IdentitiesService.createIdentity({

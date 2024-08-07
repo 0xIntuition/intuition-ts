@@ -1,0 +1,89 @@
+import { Canvas, Controls, Meta, Source, Title } from '@storybook/blocks'
+
+import * as Stories from './Checkbox.stories'
+
+<Meta of={Stories} />
+
+<Title />
+
+#### A customizable checkbox component.
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { Checkbox } from '@0xintuition/1ui'
+
+<Checkbox />
+`} />
+
+<Canvas of={Stories.Default} sourceState="none" />
+
+## Properties
+
+<Controls />
+
+## Usage
+
+The Checkbox component is a versatile input element that can be used in forms, settings, and other interactive interfaces. It supports various states such as checked, unchecked, and disabled.
+
+### Basic Usage
+
+<Source
+  dark
+  language="tsx"
+  code={`
+<Checkbox />
+`}
+/>
+
+<Canvas of={Stories.Default} sourceState="none" />
+
+### Checked State
+
+<Source
+  dark
+  language="tsx"
+  code={`
+<Checkbox checked />
+`}
+/>
+
+<Canvas of={Stories.Checked} sourceState="none" />
+
+### Disabled State
+
+<Source
+  dark
+  language="tsx"
+  code={`
+<Checkbox disabled />
+`}
+/>
+
+<Canvas of={Stories.Disabled} sourceState="none" />
+
+### With Label
+
+<Source
+  dark
+  language="tsx"
+  code={`
+<div className="flex items-center space-x-2">
+  <Checkbox id="terms" />
+  <label htmlFor="terms" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+    Accept terms and conditions
+  </label>
+</div>
+`}
+/>
+
+<Canvas of={Stories.WithLabel} sourceState="none" />
+
+## Accessibility
+
+The Checkbox component is built with accessibility in mind. It uses the native `<input type="checkbox">` element, ensuring proper keyboard navigation and screen reader support.
+
+## Customization
+
+The Checkbox component can be customized using Tailwind CSS classes. You can modify its appearance by passing a `className` prop or by adjusting the default styles in the component definition.

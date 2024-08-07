@@ -25,8 +25,8 @@ export function createIdentitySchema() {
       .min(2, {
         message: 'Identity name must be at least 2 characters.',
       })
-      .max(30, {
-        message: 'Identity name must not be longer than 30 characters.',
+      .max(42, {
+        message: 'Identity name must not be longer than 42 characters.',
       }),
     description: z
       .string({
@@ -55,6 +55,7 @@ export function createIdentitySchema() {
     creator: z.string().optional(),
     contract: z.string().optional(),
     predicate: z.boolean().optional(),
+    is_contract: z.boolean().optional(),
   })
 }
 
