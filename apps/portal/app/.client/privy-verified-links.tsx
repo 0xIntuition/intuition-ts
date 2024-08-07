@@ -90,7 +90,7 @@ export function PrivyVerifiedLinks({
     )
   }
   return (
-    <div className="flex flex-col items-center bg-red-100 gap-4">
+    <div className="flex flex-col items-center bg-red-100 gap-6">
       {linkedPlatforms.map(renderLinkItem)}
     </div>
   )

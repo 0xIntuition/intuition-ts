@@ -105,7 +105,7 @@ function ActivityItem({
   return (
     <div
       key={activity.id}
-      className={`p-6 bg-background rounded-xl theme-border mb-6 last:mb-0 flex flex-col w-full`}
+      className={`p-6 bg-background rounded-xl theme-border mb-6 last:mb-0 flex flex-col w-full max-sm:p-3`}
     >
       <div className="flex flex-row items-center justify-between min-w-full mb-4 max-md:flex-col max-md:gap-3">
         <div className="flex flex-row items-center gap-2 max-md:flex-col">

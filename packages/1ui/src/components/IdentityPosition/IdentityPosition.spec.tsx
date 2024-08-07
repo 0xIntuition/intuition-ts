@@ -85,7 +85,7 @@ describe('IdentityPosition', () => {
                     </button>
                   </a>
                   <button
-                    class="flex justify-center items-center gap-2 text-sm font-medium border disabled:text-muted-foreground bg-transparent border-transparent disabled:border-transparent disabled:bg-transparent shadow-none p-0 h-4 w-4 hover:text-primary text-secondary-foreground"
+                    class="flex justify-center items-center gap-2 text-sm font-medium border disabled:text-muted-foreground bg-transparent border-transparent disabled:border-transparent disabled:bg-transparent shadow-none max-sm:py-2 max-sm:text-base p-0 h-4 w-4 hover:text-primary text-secondary-foreground"
                   >
                     <svg
                       class="h-4 w-4"
@@ -117,11 +117,6 @@ describe('IdentityPosition', () => {
                 class="text-primary text-lg font-medium"
               >
                 1.21 ETH
-              </p>
-              <p
-                class="text-lg font-normal text-success"
-              >
-                +0.005 ETH
               </p>
             </div>
           </div>
@@ -216,7 +211,7 @@ describe('IdentityPosition', () => {
                       </button>
                     </a>
                     <button
-                      class="flex justify-center items-center gap-2 text-sm font-medium border disabled:text-muted-foreground bg-transparent border-transparent disabled:border-transparent disabled:bg-transparent shadow-none p-0 h-4 w-4 hover:text-primary text-secondary-foreground"
+                      class="flex justify-center items-center gap-2 text-sm font-medium border disabled:text-muted-foreground bg-transparent border-transparent disabled:border-transparent disabled:bg-transparent shadow-none max-sm:py-2 max-sm:text-base p-0 h-4 w-4 hover:text-primary text-secondary-foreground"
                     >
                       <svg
                         class="h-4 w-4"
@@ -308,11 +303,6 @@ describe('IdentityPosition', () => {
                   class="text-primary text-lg font-medium"
                 >
                   1.21 ETH
-                </p>
-                <p
-                  class="text-lg font-normal text-success"
-                >
-                  +0.005 ETH
                 </p>
               </div>
             </div>

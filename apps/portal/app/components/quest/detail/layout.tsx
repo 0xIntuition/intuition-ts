@@ -17,7 +17,7 @@ export function Hero({ imgSrc }: IHeroProps) {
     <img
       src={imgSrc ?? FALLBACK_QUEST_PLACEHOLDER_IMAGE}
       alt={'quest hero'}
-      className="object-cover w-full h-[350px] border-x border-b border-border/20 rounded-b-lg"
+      className="object-cover w-full h-[350px] theme-border rounded-lg"
     />
   )
 }
@@ -25,13 +25,14 @@ export function Hero({ imgSrc }: IHeroProps) {
 export interface IHeaderProps {
   title?: string | null
   questStatus?: QuestStatus
+  position?: number | null
 }
 
-export function Header({ title, questStatus }: IHeaderProps) {
+export function Header({ title, questStatus, position }: IHeaderProps) {
   return (
     <div className="flex items-bottom justify-between w-full">
       <Text variant="heading4" weight="medium">
-        {title ?? ''}
+        {position ? `Chapter ${position} : ${title}` : title ?? ''}
       </Text>
       <QuestStatusCard status={questStatus ?? QuestStatus.NOT_STARTED} />
     </div>

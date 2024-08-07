@@ -40,7 +40,7 @@ export function IdentitiesList({
       {identities.map((identity) => (
         <div
           key={identity.id}
-          className={`grow shrink basis-0 self-stretch p-6 bg-black first:rounded-t-xl last:rounded-b-xl border border-neutral-300/20 flex-col justify-start items-start gap-5 inline-flex`}
+          className={`grow shrink basis-0 self-stretch p-6 bg-background first:border-t-px first:rounded-t-xl last:rounded-b-xl theme-border border-t-0 flex-col justify-start items-start gap-5 inline-flex`}
         >
           <IdentityContentRow
             variant={identity.is_user ? Identity.user : Identity.nonUser}

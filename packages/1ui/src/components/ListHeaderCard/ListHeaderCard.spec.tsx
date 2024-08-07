@@ -51,7 +51,7 @@ describe('ListHeaderCard', () => {
               class="flex items-center w-full max-w-max group relative max-sm:flex-col max-sm:m-auto"
             >
               <button
-                class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center rounded-md text-base [&>span]:h-6 [&>span]:w-6 disabled:bg-muted disabled:text-muted-foreground disabled:border-muted cursor-not-allowed group-hover:border-primary group-hover:bg-primary/20 relative z-10"
+                class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center rounded-md text-base [&>span]:h-6 [&>span]:w-6 disabled:opacity-50 cursor-not-allowed group-hover:border-primary group-hover:bg-primary/20 relative z-10"
                 disabled=""
               >
                 <span
@@ -81,7 +81,7 @@ describe('ListHeaderCard', () => {
                 role="none"
               />
               <button
-                class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center rounded-md text-base [&>span]:h-6 [&>span]:w-6 disabled:bg-muted disabled:text-muted-foreground disabled:border-muted cursor-not-allowed group-hover:border-primary group-hover:bg-primary/20 relative z-10"
+                class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center rounded-md text-base [&>span]:h-6 [&>span]:w-6 disabled:opacity-50 cursor-not-allowed group-hover:border-primary group-hover:bg-primary/20 relative z-10"
                 disabled=""
               >
                 <span
@@ -111,7 +111,7 @@ describe('ListHeaderCard', () => {
                 role="none"
               />
               <button
-                class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center rounded-md text-base [&>span]:h-6 [&>span]:w-6 disabled:bg-muted disabled:text-muted-foreground disabled:border-muted cursor-not-allowed group-hover:border-primary group-hover:bg-primary/20 relative z-10"
+                class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center rounded-md text-base [&>span]:h-6 [&>span]:w-6 disabled:opacity-50 cursor-not-allowed group-hover:border-primary group-hover:bg-primary/20 relative z-10"
                 disabled=""
               >
                 <span

@@ -72,7 +72,7 @@ const buttonVariants = cva(
           'bg-against text-against-foreground border-against rounded-full hover:bg-against/70 hover:border-against/30 shadow-md-subtle',
       },
       size: {
-        [ButtonSize.default]: 'px-3 py-1',
+        [ButtonSize.default]: 'px-3 py-1 max-sm:py-2 max-sm:text-base',
         [ButtonSize.md]: 'px-4 py-1.5',
         [ButtonSize.lg]: 'px-4 py-2 gap-2 text-base',
         [ButtonSize.xl]: 'px-5 py-2.5 gap-4 text-lg',

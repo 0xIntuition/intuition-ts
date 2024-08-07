@@ -30,7 +30,7 @@ export const identityTagVariants = cva(
         [IdentityTagSize.xl]: 'text-xl [&>span]:h-11 [&>span]:w-11',
       },
       disabled: {
-        true: 'disabled:bg-muted disabled:text-muted-foreground disabled:border-muted cursor-not-allowed',
+        true: 'disabled:opacity-50 cursor-not-allowed',
         false: '',
       },
     },

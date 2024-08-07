@@ -33,42 +33,46 @@ export function OverviewStakingHeader({
           Staking
         </Text>
       </div>
-      <div className="flex flex-col md:flex-row w-full gap-4 md:gap-10">
-        <div className="flex justify-between md:flex-col md:items-start">
-          <Text
-            variant="caption"
-            weight="regular"
-            className="text-secondary-foreground"
-          >
-            Identities
-          </Text>
-          <Text variant="bodyLarge" weight="medium">
-            {totalIdentities}
-          </Text>
+      <div className="flex justify-between items-center max-sm:flex-col max-sm:gap-5">
+        <div className="flex gap-10 max-sm:flex-col max-sm:gap-3 max-sm:items-center">
+          <div className="flex gap-10">
+            <div className="flex flex-col max-sm:items-center">
+              <Text
+                variant="caption"
+                weight="regular"
+                className="text-secondary-foreground"
+              >
+                Identities
+              </Text>
+              <Text variant="bodyLarge" weight="medium">
+                {totalIdentities}
+              </Text>
+            </div>
+            <div className="flex flex-col max-sm:items-center">
+              <Text
+                variant="caption"
+                weight="regular"
+                className="text-secondary-foreground"
+              >
+                Claims
+              </Text>
+              <Text variant="bodyLarge" weight="medium">
+                {totalClaims}
+              </Text>
+            </div>
+          </div>
+          <div className="flex flex-col max-sm:items-center">
+            <Text
+              variant="caption"
+              weight="regular"
+              className="text-secondary-foreground"
+            >
+              Total staked
+            </Text>
+            <MonetaryValue value={totalStake} currency="ETH" />
+          </div>
         </div>
-        <div className="flex justify-between md:flex-col md:items-start">
-          <Text
-            variant="caption"
-            weight="regular"
-            className="text-secondary-foreground"
-          >
-            Claims
-          </Text>
-          <Text variant="bodyLarge" weight="medium">
-            {totalClaims}
-          </Text>
-        </div>
-        <div className="flex justify-between md:flex-col md:items-start">
-          <Text
-            variant="caption"
-            weight="regular"
-            className="text-secondary-foreground"
-          >
-            Total staked
-          </Text>
-          <MonetaryValue value={totalStake} currency="ETH" />
-        </div>
-        <div className="flex justify-center md:justify-end md:ml-auto mt-4 md:mt-0">
+        <div className="flex">
           <Link to={link} prefetch="intent">
             <Button
               variant={ButtonVariant.secondary}

@@ -47,7 +47,7 @@ export function List<T extends SortColumnType>({
         <>
           {(enableSearch || enableSort) && (
             <div
-              className={`flex w-full max-lg:flex-col max-lg:gap-2 ${enableSearch ? 'justify-between' : 'justify-end'}`}
+              className={`flex w-full max-lg:flex-col max-lg:gap-4 ${enableSearch ? 'justify-between' : 'justify-end'}`}
             >
               {enableSearch && (
                 <Search handleSearchChange={handleSearchChange} />

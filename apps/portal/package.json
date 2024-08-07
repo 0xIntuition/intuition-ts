@@ -46,6 +46,7 @@
     "jotai": "^2.8.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-rewards": "^2.0.4",
     "remix-auth": "^3.6.0",
     "remix-forms": "^2.3.0",
     "remix-utils": "^7.6.0",
