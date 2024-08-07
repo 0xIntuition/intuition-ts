@@ -19,12 +19,12 @@ interface OverviewCreatedHeaderProps
   link: string
 }
 
-const OverviewCreatedHeader: React.FC<OverviewCreatedHeaderProps> = ({
+export function OverviewCreatedHeader({
   variant,
   totalCreated,
   link,
   ...props
-}) => {
+}: OverviewCreatedHeaderProps) {
   return (
     <div
       className="flex flex-col gap-4 w-full p-6 bg-black rounded-xl border border-neutral-300/20 max-md:items-center"
@@ -54,5 +54,3 @@ const OverviewCreatedHeader: React.FC<OverviewCreatedHeaderProps> = ({
     </div>
   )
 }
-
-export default OverviewCreatedHeader
