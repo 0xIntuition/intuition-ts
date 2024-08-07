@@ -116,6 +116,7 @@ export default function ProfileDataAbout() {
             variant="headline"
             weight="medium"
             className="theme-secondary-foreground w-full"
+            id="positions"
           >
             Positions on this Identity
           </Text>

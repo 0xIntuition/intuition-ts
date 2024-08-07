@@ -210,7 +210,9 @@ export default function IdentityDetails() {
             isOpen: true,
           }))
         }
-        onViewAllClick={() => navigate(`${PATHS.IDENTITY}/${identity.id}`)}
+        onViewAllClick={() =>
+          navigate(`${PATHS.IDENTITY}/${identity.id}#positions`)
+        }
       />
       <InfoCard
         variant={identity.is_user ? Identity.user : Identity.nonUser}
