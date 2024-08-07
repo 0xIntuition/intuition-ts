@@ -126,7 +126,7 @@ describe('IdentityContentRow', () => {
               class="flex flex-col items-end max-sm:flex-row max-sm:justify-between max-sm:items-center max-sm:w-full"
             >
               <p
-                class="text-primary text-lg font-normal"
+                class="text-primary text-lg font-medium"
               >
                 1.21 ETH
               </p>
