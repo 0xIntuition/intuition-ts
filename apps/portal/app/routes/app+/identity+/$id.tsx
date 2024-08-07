@@ -121,7 +121,7 @@ export default function IdentityDetails() {
   const [selectedTag, setSelectedTag] = useState<TagEmbeddedPresenter>()
 
   const leftPanel = (
-    <div className="flex-col justify-start items-start inline-flex gap-6">
+    <div className="flex-col justify-start items-start inline-flex gap-6 max-lg:w-full">
       <ProfileCard
         variant={Identity.nonUser}
         avatarSrc={identity?.image ?? ''}
@@ -132,7 +132,7 @@ export default function IdentityDetails() {
         ipfsLink={`${IPFS_GATEWAY_URL}/${identity?.identity_id?.replace('ipfs://', '')}`}
         externalLink={identity?.external_reference ?? ''}
       />
-      <Tags>
+      <Tags className="max-lg:items-center">
         {identity?.tags && identity?.tags.length > 0 && (
           <TagsContent numberOfTags={identity?.tag_count ?? 0}>
             {identity?.tags?.map((tag) => (

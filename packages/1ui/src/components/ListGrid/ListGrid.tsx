@@ -25,8 +25,7 @@ const ListGrid: React.FC<ListGridProps> = ({
         : React.Children.map(children, (child, index) => (
             <div
               key={index}
-              className="theme-border p-8 rounded-xl flex flex-col justify-center items-center"
-              style={{ height: '18rem' }}
+              className="theme-border p-8 rounded-xl flex flex-col justify-center items-center h-72 max-sm:h-fit"
             >
               {child}
             </div>

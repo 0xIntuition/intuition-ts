@@ -30,8 +30,7 @@ describe('ListGrid', () => {
           class="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-7"
         >
           <div
-            class="theme-border p-8 rounded-xl flex flex-col items-center justify-between"
-            style="height: 18rem;"
+            class="theme-border p-8 rounded-xl flex flex-col items-center justify-between h-72 max-sm:h-fit"
           >
             <span
               class="relative flex shrink-0 overflow-hidden aspect-square bg-background theme-border rounded mb-4 w-16 h-16"
@@ -69,8 +68,7 @@ describe('ListGrid', () => {
             </button>
           </div>
           <div
-            class="theme-border p-8 rounded-xl flex flex-col items-center justify-between"
-            style="height: 18rem;"
+            class="theme-border p-8 rounded-xl flex flex-col items-center justify-between h-72 max-sm:h-fit"
           >
             <span
               class="relative flex shrink-0 overflow-hidden aspect-square bg-background theme-border rounded mb-4 w-16 h-16"

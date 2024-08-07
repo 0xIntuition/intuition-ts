@@ -29,7 +29,7 @@ const InfoCard = ({
   return (
     <div
       className={cn(
-        `flex flex-col gap-2 theme-border p-5 rounded-lg`,
+        `flex flex-col gap-2 theme-border p-5 rounded-lg max-sm:items-center`,
         className,
       )}
       {...props}

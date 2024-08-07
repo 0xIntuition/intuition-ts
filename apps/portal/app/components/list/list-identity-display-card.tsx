@@ -8,7 +8,7 @@ export function ListIdentityDisplayCard({
   avatarImgSrc?: string
 }) {
   return (
-    <div className="flex flex-col gap-2 theme-border p-5 rounded-lg">
+    <div className="flex flex-col gap-2 theme-border p-5 rounded-lg max-sm:items-center">
       <Text variant="caption" className="text-muted-foreground">
         Tag Identity
       </Text>

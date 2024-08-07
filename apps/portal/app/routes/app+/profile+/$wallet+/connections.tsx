@@ -176,12 +176,12 @@ function ConnectionsContent({
                 <TabsTrigger
                   value={ConnectionsHeaderVariants.followers}
                   label="Followers"
-                  totalCount={followingPagination.totalEntries}
+                  totalCount={followersPagination.totalEntries}
                 />
                 <TabsTrigger
                   value={ConnectionsHeaderVariants.following}
                   label="Following"
-                  totalCount={followersPagination.totalEntries}
+                  totalCount={followingPagination.totalEntries}
                 />
               </TabsList>
               <TabContent

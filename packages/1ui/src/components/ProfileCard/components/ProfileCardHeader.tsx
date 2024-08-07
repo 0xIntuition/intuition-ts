@@ -1,6 +1,6 @@
 import { Identity, IdentityType } from 'types'
 
-import { Avatar, Copy, toast, Trunctacular } from '../..'
+import { Avatar, Copy, Trunctacular } from '../..'
 
 interface ProfileCardHeaderProps {
   variant?: IdentityType
@@ -40,11 +40,7 @@ const ProfileCardHeader = ({
                   disableTooltip
                 />
               </a>
-              <Copy
-                text={id}
-                // launch toast if they have a toaster setup in consuming app
-                onCopy={() => toast?.success('Copied to clipboard!')}
-              />
+              <Copy text={id} />
             </>
           )}
         </div>
