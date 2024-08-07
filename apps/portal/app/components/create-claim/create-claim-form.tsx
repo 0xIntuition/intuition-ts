@@ -20,6 +20,7 @@ import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
 
 import { IdentityPopover } from '@components/create-claim/create-claim-popovers'
 import CreateClaimReview from '@components/create-claim/create-claim-review'
+import WrongNetworkButton from '@components/wrong-network-button'
 import {
   getFormProps,
   getInputProps,
@@ -36,6 +37,7 @@ import {
   useTransactionState,
 } from '@lib/hooks/useTransactionReducer'
 import { createClaimSchema } from '@lib/schemas/create-claim-schema'
+import { getChainEnvConfig } from '@lib/utils/environment'
 import logger from '@lib/utils/logger'
 import { useFetcher, useNavigate } from '@remix-run/react'
 import { CreateClaimLoaderData } from '@routes/resources+/create-claim'
@@ -43,6 +45,7 @@ import { TagLoaderData } from '@routes/resources+/tag'
 import { useQueryClient } from '@tanstack/react-query'
 import {
   CREATE_CLAIM_RESOURCE_ROUTE,
+  CURRENT_ENV,
   GENERIC_ERROR_MSG,
   MULTIVAULT_CONTRACT_ADDRESS,
   PATHS,
@@ -199,7 +202,7 @@ function CreateClaimForm({
 
   const { data: walletClient } = useWalletClient()
   const publicClient = usePublicClient()
-  const { address } = useAccount()
+  const { address, chain } = useAccount()
 
   const {
     writeContractAsync: writeCreateTriple,
@@ -447,6 +450,8 @@ function CreateClaimForm({
     <span className="h-px w-2.5 flex bg-border/30 self-end mb-[1.2rem] max-sm:hidden" />
   )
 
+  const isWrongNetwork = chain?.id !== getChainEnvConfig(CURRENT_ENV).chainId
+
   return (
     <>
       <claimFetcher.Form
@@ -553,28 +558,32 @@ function CreateClaimForm({
               </div>
             </div>
             <div className="mt-auto">
-              <Button
-                type="button"
-                size="lg"
-                variant="primary"
-                onClick={(e) => {
-                  e.preventDefault()
-                  dispatch({ type: 'REVIEW_TRANSACTION' })
-                }}
-                disabled={
-                  !address ||
-                  claimExists ||
-                  selectedIdentities.subject === null ||
-                  selectedIdentities.predicate === null ||
-                  selectedIdentities.object === null ||
-                  ['confirm', 'transaction-pending', 'awaiting'].includes(
-                    state.status,
-                  )
-                }
-                className="w-40 mx-auto"
-              >
-                {claimExists ? 'Claim Exists' : 'Review'}
-              </Button>
+              {isWrongNetwork ? (
+                <WrongNetworkButton />
+              ) : (
+                <Button
+                  type="button"
+                  size="lg"
+                  variant="primary"
+                  onClick={(e) => {
+                    e.preventDefault()
+                    dispatch({ type: 'REVIEW_TRANSACTION' })
+                  }}
+                  disabled={
+                    !address ||
+                    claimExists ||
+                    selectedIdentities.subject === null ||
+                    selectedIdentities.predicate === null ||
+                    selectedIdentities.object === null ||
+                    ['confirm', 'transaction-pending', 'awaiting'].includes(
+                      state.status,
+                    )
+                  }
+                  className="w-40 mx-auto"
+                >
+                  {claimExists ? 'Claim Exists' : 'Review'}
+                </Button>
+              )}
             </div>
           </div>
         ) : state.status === 'review-transaction' ? (
@@ -586,23 +595,27 @@ function CreateClaimForm({
               fees={fees}
             />
             <div className="mt-auto">
-              <Button
-                form={form.id}
-                type="submit"
-                variant="primary"
-                disabled={
-                  !address ||
-                  selectedIdentities.subject === null ||
-                  selectedIdentities.predicate === null ||
-                  selectedIdentities.object === null ||
-                  ['confirm', 'transaction-pending', 'awaiting'].includes(
-                    state.status,
-                  )
-                }
-                className="w-40 mx-auto"
-              >
-                Create Claim
-              </Button>
+              {isWrongNetwork ? (
+                <WrongNetworkButton />
+              ) : (
+                <Button
+                  form={form.id}
+                  type="submit"
+                  variant="primary"
+                  disabled={
+                    !address ||
+                    selectedIdentities.subject === null ||
+                    selectedIdentities.predicate === null ||
+                    selectedIdentities.object === null ||
+                    ['confirm', 'transaction-pending', 'awaiting'].includes(
+                      state.status,
+                    )
+                  }
+                  className="w-40 mx-auto"
+                >
+                  Create Claim
+                </Button>
+              )}
             </div>
           </div>
         ) : (

@@ -15,6 +15,7 @@ import {
 } from '@0xintuition/1ui'
 import { IdentityPresenter } from '@0xintuition/api'
 
+import WrongNetworkButton from '@components/wrong-network-button'
 import {
   getFormProps,
   getInputProps,
@@ -35,12 +36,14 @@ import {
   useTransactionState,
 } from '@lib/hooks/useTransactionReducer'
 import { createIdentitySchema } from '@lib/schemas/create-identity-schema'
+import { getChainEnvConfig } from '@lib/utils/environment'
 import logger from '@lib/utils/logger'
 import { truncateString } from '@lib/utils/misc'
 import { useFetcher, useNavigate } from '@remix-run/react'
 import { CreateLoaderData } from '@routes/resources+/create'
 import {
   ACCEPTED_IMAGE_MIME_TYPES,
+  CURRENT_ENV,
   GENERIC_ERROR_MSG,
   IPFS_GATEWAY_URL,
   MAX_UPLOAD_SIZE,
@@ -54,7 +57,7 @@ import {
   TransactionSuccessActionType,
 } from 'types'
 import { parseUnits, toHex } from 'viem'
-import { usePublicClient, useWalletClient } from 'wagmi'
+import { useAccount, usePublicClient, useWalletClient } from 'wagmi'
 
 import ErrorList from './error-list'
 import { ImageChooser } from './image-chooser'
@@ -463,6 +466,9 @@ function CreateIdentityForm({
     onSubmit: async (e) => handleSubmit(e),
   })
 
+  const { chain } = useAccount()
+  const isWrongNetwork = chain?.id !== getChainEnvConfig(CURRENT_ENV).chainId
+
   return (
     <offChainFetcher.Form
       method="post"
@@ -606,16 +612,20 @@ function CreateIdentityForm({
               errors={fields.initial_deposit.errors}
             />
           </div>
-          <Button
-            form={form.id}
-            type="submit"
-            variant="primary"
-            size="lg"
-            disabled={loading || !formTouched}
-            className="mx-auto"
-          >
-            Create
-          </Button>
+          {isWrongNetwork ? (
+            <WrongNetworkButton />
+          ) : (
+            <Button
+              form={form.id}
+              type="submit"
+              variant="primary"
+              size="lg"
+              disabled={loading || (!formTouched && !isWrongNetwork)}
+              className="mx-auto"
+            >
+              Create
+            </Button>
+          )}
         </div>
       ) : (
         <div className="flex flex-col items-center justify-center min-h-96">
