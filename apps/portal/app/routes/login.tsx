@@ -113,7 +113,7 @@ export default function Login() {
         </Text>
         <PrivyLoginButton handleLogin={handleLogin} />
       </div>
-      <div className="flex items-center justify-center">
+      <div className="flex items-center justify-center max-sm:flex-col max-sm:gap-2 max-sm:items-center max-sm:text-center">
         <Text variant="body" className="text-secondary-foreground/60">
           Have a question or need help resolving an issue?
         </Text>

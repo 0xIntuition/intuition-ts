@@ -42,7 +42,9 @@ describe('StakeCard', () => {
                   4.928 ETH
                 </p>
               </div>
-              <div>
+              <div
+                class="flex flex-col items-end"
+              >
                 <p
                   class="text-sm font-normal text-muted-foreground"
                 >

@@ -17,7 +17,7 @@ describe('InfoCard', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="flex flex-col gap-2 theme-border p-5 rounded-lg"
+          class="flex flex-col gap-2 theme-border p-5 rounded-lg max-sm:items-center"
         >
           <p
             class="text-sm font-normal text-muted-foreground"

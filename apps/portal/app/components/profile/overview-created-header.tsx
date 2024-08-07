@@ -27,11 +27,11 @@ export function OverviewCreatedHeader({
 }: OverviewCreatedHeaderProps) {
   return (
     <div
-      className="flex flex-col gap-4 w-full p-6 bg-black rounded-xl border border-neutral-300/20 max-md:items-center"
+      className="flex flex-col gap-4 w-full p-6 bg-black rounded-xl border border-neutral-300/20"
       {...props}
     >
-      <div className="flex w-full gap-10">
-        <div className="flex flex-col max-md:items-center">
+      <div className="flex w-full justify-between items-center">
+        <div className="flex flex-col">
           <Text
             variant="caption"
             weight="regular"
@@ -39,7 +39,11 @@ export function OverviewCreatedHeader({
           >
             Created {variant === 'claims' ? 'Claims' : 'Identities'}
           </Text>
-          <Text variant="bodyLarge" weight="medium" className="items-center">
+          <Text
+            variant="bodyLarge"
+            weight="medium"
+            className="items-center max-sm:items-start"
+          >
             {totalCreated ?? 0}
           </Text>
         </div>

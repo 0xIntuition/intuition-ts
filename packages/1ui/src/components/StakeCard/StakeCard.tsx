@@ -39,7 +39,7 @@ const StakeCard = ({
             </Text>
             <MonetaryValue variant="body" value={tvl} currency={currency} />
           </div>
-          <div>
+          <div className="flex flex-col items-end">
             <Text className="text-muted-foreground" variant="caption">
               Holders
             </Text>

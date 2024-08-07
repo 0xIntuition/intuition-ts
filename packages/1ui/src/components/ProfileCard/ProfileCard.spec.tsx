@@ -232,7 +232,7 @@ describe('ProfileCard', () => {
               Blockchain Corp is a leading company in blockchain technology. Visit our website for more information about how you can benefit from our services.
             </p>
             <div
-              class="pt-2.5"
+              class="pt-2.5 max-lg:flex max-lg:flex-col max-lg:items-center"
             >
               <p
                 class="text-base font-normal text-muted-foreground"
