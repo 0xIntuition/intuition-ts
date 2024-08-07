@@ -88,17 +88,19 @@ export default function ProfileOverview() {
     typeof loader
   >(['attest', 'create'])
   const { connectionsData } = useLiveLoader<typeof loader>(['attest'])
-  const { userIdentity, userTotals } =
-    useRouteLoaderData<{
-      userIdentity: IdentityPresenter
-      userTotals: UserTotalsPresenter
-    }>('routes/app+/profile+/$wallet') ?? {}
-  invariant(userIdentity, NO_USER_IDENTITY_ERROR)
+  // const { userIdentity, userTotals } =
+  //   useRouteLoaderData<{
+  //     userIdentity: IdentityPresenter
+  //     userTotals: UserTotalsPresenter
+  //   }>('routes/app+/profile+/$wallet') ?? {}
+  // invariant(userIdentity, NO_USER_IDENTITY_ERROR)
   const params = useParams()
   const { wallet } = params
 
-  logger('userIdentity', userIdentity)
-  logger('userTotals', userTotals)
+  // logger('userIdentity', userIdentity)
+  // logger('userTotals', userTotals)
+
+  logger('render')
 
   return (
     <div className="flex flex-col gap-6">
@@ -109,7 +111,7 @@ export default function ProfileOverview() {
       >
         User Stats
       </Text>
-      <div className="flex flex-col items-center gap-6">
+      {/* <div className="flex flex-col items-center gap-6">
         <OverviewStakingHeader
           totalClaims={userTotals?.total_positions_on_claims ?? 0}
           totalIdentities={userTotals?.total_positions_on_identities ?? 0}
@@ -118,9 +120,9 @@ export default function ProfileOverview() {
           }
           link={`${PATHS.PROFILE}/${wallet}/data-created`}
         />
-      </div>
+      </div> */}
 
-      <div className="flex flex-row items-center gap-6 max-md:flex-col">
+      {/* <div className="flex flex-row items-center gap-6 max-md:flex-col">
         <OverviewCreatedHeader
           variant="identities"
           totalCreated={userTotals?.total_identities ?? 0}
@@ -131,7 +133,7 @@ export default function ProfileOverview() {
           totalCreated={userTotals?.total_claims ?? 0}
           link={`${PATHS.PROFILE}/${wallet}/data-created`}
         />
-      </div>
+      </div> */}
       {/* <Suspense fallback={<DataHeaderSkeleton />}>
         <Await
           resolve={Promise.all([claims, claimsSummary])}
@@ -157,7 +159,7 @@ export default function ProfileOverview() {
       >
         Top Claims about this Identity
       </Text>
-      {/* <Suspense fallback={<PaginatedListSkeleton />}>
+      <Suspense fallback={<PaginatedListSkeleton />}>
         <Await
           resolve={claims}
           errorElement={
@@ -175,7 +177,7 @@ export default function ProfileOverview() {
             />
           )}
         </Await>
-      </Suspense> */}
+      </Suspense>
       <Text
         variant="headline"
         weight="medium"
@@ -183,7 +185,7 @@ export default function ProfileOverview() {
       >
         Top Followers
       </Text>
-      {/* <Suspense fallback={<PaginatedListSkeleton />}>
+      <Suspense fallback={<PaginatedListSkeleton />}>
         <Await
           resolve={connectionsData}
           errorElement={
@@ -208,7 +210,7 @@ export default function ProfileOverview() {
             )
           }}
         </Await>
-      </Suspense> */}
+      </Suspense>
       <Text
         variant="headline"
         weight="medium"
@@ -216,7 +218,7 @@ export default function ProfileOverview() {
       >
         Top Lists
       </Text>
-      {/* <Suspense fallback={<ListClaimsSkeletonLayout totalItems={6} />}>
+      <Suspense fallback={<ListClaimsSkeletonLayout totalItems={6} />}>
         <Await resolve={savedListClaims}>
           {(resolvedSavedListClaims) => {
             return (
@@ -229,7 +231,7 @@ export default function ProfileOverview() {
             )
           }}
         </Await>
-      </Suspense> */}
+      </Suspense>
     </div>
   )
 }
