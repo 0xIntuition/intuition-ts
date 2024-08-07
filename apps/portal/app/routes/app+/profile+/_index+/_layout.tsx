@@ -191,7 +191,7 @@ export default function Profile() {
         stats={{
           numberOfFollowers: userTotals.follower_count,
           numberOfFollowing: userTotals.followed_count,
-          points: userTotals.user_points,
+          points: userTotals.total_points,
         }}
         bio={userObject.description ?? ''}
         ipfsLink={`${BLOCK_EXPLORER_URL}/address/${userObject.wallet}`}

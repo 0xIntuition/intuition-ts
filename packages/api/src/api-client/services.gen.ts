@@ -6,6 +6,8 @@ import { request as __request } from './core/request'
 import type {
   ActivateLinkedAccountData,
   ActivateLinkedAccountResponse,
+  AddressIsWalletData,
+  AddressIsWalletResponse,
   AddWebhookData,
   AddWebhookResponse,
   AlchemyWebhookData,
@@ -24,8 +26,6 @@ import type {
   CreateIdentityResponse,
   CreateInviteCodesByUserData,
   CreateInviteCodesByUserResponse,
-  CreateInviteCodesData,
-  CreateInviteCodesResponse,
   CreateLinkedAccountData,
   CreateLinkedAccountResponse,
   CreatePositionData,
@@ -115,6 +115,8 @@ import type {
   ReissueApiKeyResponse,
   RetryActivityData,
   RetryActivityResponse,
+  RetryLogData,
+  RetryLogResponse,
   RevokeResponse,
   RunDynamicQueryData,
   RunDynamicQueryResponse,
@@ -165,6 +167,24 @@ export class AlchemyControllerService {
       url: '/Alchemy',
       body: data.requestBody,
       mediaType: 'application/octet-stream',
+    })
+  }
+
+  /**
+   * @param data The data for the request.
+   * @param data.address Address to check
+   * @returns boolean Check if address is a wallet or contract
+   * @throws ApiError
+   */
+  public static addressIsWallet(
+    data: AddressIsWalletData,
+  ): CancelablePromise<AddressIsWalletResponse> {
+    return __request(OpenAPI, {
+      method: 'GET',
+      url: '/is_wallet/{address}',
+      path: {
+        address: data.address,
+      },
     })
   }
 }
@@ -242,6 +262,24 @@ export class ActivitiesService {
     return __request(OpenAPI, {
       method: 'POST',
       url: '/activities/{id}/retry',
+      path: {
+        id: data.id,
+      },
+    })
+  }
+
+  /**
+   * @param data The data for the request.
+   * @param data.id sql id
+   * @returns unknown
+   * @throws ApiError
+   */
+  public static retryLog(
+    data: RetryLogData,
+  ): CancelablePromise<RetryLogResponse> {
+    return __request(OpenAPI, {
+      method: 'POST',
+      url: '/activities/{id}/retry_log',
       path: {
         id: data.id,
       },
@@ -478,6 +516,9 @@ export class ClaimsService {
       url: '/claims/{id}',
       path: {
         id: data.id,
+      },
+      errors: {
+        404: 'Record not found in the DB',
       },
     })
   }
@@ -919,24 +960,7 @@ export class InviteCodesService {
   /**
    * @param data The data for the request.
    * @param data.requestBody
-   * @returns unknown Allow admins to create invite codes
-   * @throws ApiError
-   */
-  public static createInviteCodes(
-    data: CreateInviteCodesData,
-  ): CancelablePromise<CreateInviteCodesResponse> {
-    return __request(OpenAPI, {
-      method: 'POST',
-      url: '/invite_codes',
-      body: data.requestBody,
-      mediaType: 'application/json',
-    })
-  }
-
-  /**
-   * @param data The data for the request.
-   * @param data.requestBody
-   * @returns unknown Redeemed valid invite code
+   * @returns unknown Associate valid invite code with current user
    * @throws ApiError
    */
   public static redeemInviteCode(
