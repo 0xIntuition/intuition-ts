@@ -12,10 +12,14 @@ export function FollowList({
   identities,
   pagination,
   paramPrefix,
+  enableSearch = true,
+  enableSort = true,
 }: {
   identities: IdentityPresenter[]
-  pagination: PaginationType
+  pagination?: PaginationType
   paramPrefix?: string
+  enableSearch?: boolean
+  enableSort?: boolean
 }) {
   const options: SortOption<SortColumn>[] = [
     { value: 'Position Amount', sortBy: 'UserAssets' },
@@ -30,6 +34,8 @@ export function FollowList({
       paginationLabel="users"
       options={options}
       paramPrefix={paramPrefix}
+      enableSearch={enableSearch}
+      enableSort={enableSort}
     >
       {identities.map((identity) => (
         <div

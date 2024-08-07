@@ -1,6 +1,6 @@
 import { Suspense } from 'react'
 
-import { ErrorStateCard, Text } from '@0xintuition/1ui'
+import { EmptyStateCard, ErrorStateCard, Text } from '@0xintuition/1ui'
 import {
   ClaimSortColumn,
   ClaimsService,
@@ -10,8 +10,10 @@ import {
 } from '@0xintuition/api'
 
 import { ClaimsList as ClaimsAboutIdentity } from '@components/list/claims'
+import { FollowList } from '@components/list/follow'
 import { ListClaimsList } from '@components/list/list-claims'
 import { ListClaimsSkeletonLayout } from '@components/list/list-skeletons'
+import { ConnectionsHeaderVariants } from '@components/profile/connections-header'
 import { OverviewAboutHeader } from '@components/profile/overview-about-header'
 import { OverviewCreatedHeader } from '@components/profile/overview-created-header'
 import { OverviewStakingHeader } from '@components/profile/overview-staking-header'
@@ -19,6 +21,7 @@ import { RevalidateButton } from '@components/revalidate-button'
 import { DataHeaderSkeleton, PaginatedListSkeleton } from '@components/skeleton'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { getClaimsAboutIdentity } from '@lib/services/claims'
+import { getConnectionsData } from '@lib/services/connections'
 import { getUserSavedLists } from '@lib/services/lists'
 import { getPositionsOnIdentity } from '@lib/services/positions'
 import logger from '@lib/utils/logger'
@@ -90,6 +93,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
       userWallet: wallet,
       searchParams: listSearchParams,
     }),
+    connectionsData: getConnectionsData({ request, userWallet: wallet }),
   })
 }
 
@@ -97,6 +101,7 @@ export default function ProfileOverview() {
   const { claims, claimsSummary, savedListClaims } = useLiveLoader<
     typeof loader
   >(['attest', 'create'])
+  const { connectionsData } = useLiveLoader<typeof loader>(['attest'])
   const { userIdentity, userTotals } =
     useRouteLoaderData<{
       userIdentity: IdentityPresenter
@@ -125,25 +130,8 @@ export default function ProfileOverview() {
           }
           link={`${PATHS.PROFILE}/data-created`}
         />
-        <Suspense fallback={<DataHeaderSkeleton />}>
-          <Await
-            resolve={Promise.all([claims, claimsSummary])}
-            errorElement={<></>}
-          >
-            {([resolvedClaims, resolvedClaimsSummary]) => (
-              <OverviewAboutHeader
-                variant="claims"
-                userIdentity={userIdentity}
-                totalClaims={resolvedClaims.pagination?.totalEntries}
-                totalStake={
-                  +formatBalance(resolvedClaimsSummary?.assets_sum ?? 0, 18, 4)
-                }
-                link={`${PATHS.PROFILE}/data-about`}
-              />
-            )}
-          </Await>
-        </Suspense>
       </div>
+
       <div className="flex flex-row items-center gap-6 max-md:flex-col">
         <OverviewCreatedHeader
           variant="identities"
@@ -156,6 +144,24 @@ export default function ProfileOverview() {
           link={`${PATHS.PROFILE}/data-created`}
         />
       </div>
+      <Suspense fallback={<DataHeaderSkeleton />}>
+        <Await
+          resolve={Promise.all([claims, claimsSummary])}
+          errorElement={<></>}
+        >
+          {([resolvedClaims, resolvedClaimsSummary]) => (
+            <OverviewAboutHeader
+              variant="claims"
+              userIdentity={userIdentity}
+              totalClaims={resolvedClaims.pagination?.totalEntries}
+              totalStake={
+                +formatBalance(resolvedClaimsSummary?.assets_sum ?? 0, 18, 4)
+              }
+              link={`${PATHS.PROFILE}/data-about`}
+            />
+          )}
+        </Await>
+      </Suspense>
       <Text
         variant="headline"
         weight="medium"
@@ -189,6 +195,32 @@ export default function ProfileOverview() {
       >
         Top Followers
       </Text>
+      <Suspense fallback={<PaginatedListSkeleton />}>
+        <Await
+          resolve={connectionsData}
+          errorElement={
+            <ErrorStateCard>
+              <RevalidateButton />
+            </ErrorStateCard>
+          }
+        >
+          {(resolvedConnectionsData) => {
+            if (!resolvedConnectionsData) {
+              return (
+                <EmptyStateCard message="This user has no follow claim yet. A follow claim will be created when the first person follows them." />
+              )
+            }
+            return (
+              <FollowList
+                identities={resolvedConnectionsData.followers}
+                paramPrefix={ConnectionsHeaderVariants.followers}
+                enableSearch={false}
+                enableSort={false}
+              />
+            )
+          }}
+        </Await>
+      </Suspense>
       <Text
         variant="headline"
         weight="medium"
