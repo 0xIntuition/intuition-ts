@@ -17,12 +17,16 @@ export interface CreateClaimActivityProps
   status: QuestStatus
   claim?: ClaimPresenter | null
   handleClick: () => void
+  isLoading?: boolean
+  isDisabled?: boolean
 }
 
 export default function CreateClaimActivity({
   status,
   claim,
   handleClick,
+  isLoading = false,
+  isDisabled = false,
   ...props
 }: CreateClaimActivityProps) {
   return (
@@ -40,8 +44,10 @@ export default function CreateClaimActivity({
           variant={ButtonVariant.secondary}
           size={ButtonSize.lg}
           onClick={handleClick}
+          isLoading={isLoading}
+          disabled={isDisabled}
         >
-          <Icon name={IconName.claim} />
+          {!isLoading ? <Icon name={IconName.claim} /> : null}
           Create Claim
         </Button>
       )}

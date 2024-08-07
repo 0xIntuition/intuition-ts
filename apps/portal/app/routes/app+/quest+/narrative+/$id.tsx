@@ -118,7 +118,7 @@ export default function Quests() {
         <img
           src={STANDARD_QUEST_SET.imgSrc}
           alt={STANDARD_QUEST_SET.title}
-          className="object-cover object-bottom w-full h-[350px] border-x border-b border-border/20 rounded-b-lg"
+          className="object-cover object-bottom w-full h-[350px] theme-border rounded-lg"
         />
         <div className="flex flex-col gap-5">
           <Link to="/app/quest">
@@ -144,7 +144,9 @@ export default function Quests() {
         </div>
       </div>
       <div className="flex flex-col gap-5">
-        <Text variant="headline">Chapters</Text>
+        <Text variant="headline" id="chapters">
+          Chapters
+        </Text>
 
         <div className="flex flex-col gap-10">
           {quests.map((quest) => {
@@ -161,6 +163,7 @@ export default function Quests() {
                 points={quest.points}
                 questCriteria={getQuestCriteria(quest.condition)}
                 disabled={!available}
+                id={quest.id}
                 handleClick={(e) => {
                   e.preventDefault()
                   handleClick({
@@ -176,6 +179,26 @@ export default function Quests() {
             )
           })}
         </div>
+        <QuestCard
+          key={`${'test'}-quest-card`}
+          imgSrc={quests[0].image}
+          title={'Test Quest'}
+          description={'Quest to test success modal + help with handoff'}
+          questStatus={getUserQuestStatus(quests[0])}
+          label={`Chapter ${quests[0].position}`}
+          points={quests[0].points}
+          questCriteria={getQuestCriteria(quests[0].condition)}
+          disabled={false}
+          handleClick={(e) => {
+            e.preventDefault()
+            handleClick({
+              questId: quests[0].id,
+              redirectTo: `1-7-test_atom`,
+              status: getUserQuestStatus(quests[0]),
+              available: true,
+            })
+          }}
+        />
       </div>
     </div>
   )
