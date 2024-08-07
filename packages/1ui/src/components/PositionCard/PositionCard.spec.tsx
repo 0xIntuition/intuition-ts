@@ -149,7 +149,7 @@ describe('PositionCard', () => {
             </div>
           </div>
           <button
-            class="flex justify-center items-center gap-2 text-sm font-medium border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted bg-transparent text-destructive border-destructive rounded-full hover:bg-destructive/30 hover:border-destructive/30 shadow-md-subtle px-3 py-1 w-full mt-5"
+            class="flex justify-center items-center gap-2 text-sm font-medium border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted bg-transparent text-destructive border-destructive rounded-full hover:bg-destructive/30 hover:border-destructive/30 shadow-md-subtle px-3 py-1 max-sm:py-2 max-sm:text-base w-full mt-5"
           >
             Sell
           </button>

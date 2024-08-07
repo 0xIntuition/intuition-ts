@@ -378,6 +378,7 @@ export function EditProfileForm({
         </div>
         <Button
           form={form.id}
+          size="lg"
           disabled={loading}
           onClick={() => {
             handleSubmit

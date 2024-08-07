@@ -281,7 +281,7 @@ export default function ListOverview() {
               </Suspense>
             )}
           </TabsList>
-          <TabsContent value="global">
+          <TabsContent value="global" className="mt-6">
             <Suspense fallback={<PaginatedListSkeleton />}>
               <Await resolve={globalListIdentities}>
                 {(resolvedGlobalListIdentities: IdentityListType | null) => {

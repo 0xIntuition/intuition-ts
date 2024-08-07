@@ -55,7 +55,7 @@ export function ClaimsList({
       {claims.map((claim) => (
         <div
           key={claim.claim_id}
-          className="grow shrink basis-0 self-stretch p-6 bg-background first:rounded-t-xl last:rounded-b-xl theme-border flex-col justify-start gap-5 inline-flex"
+          className="grow shrink basis-0 self-stretch p-6 bg-background first:border-t-px first:rounded-t-xl last:rounded-b-xl theme-border border-t-0 flex-col justify-start gap-5 inline-flex"
         >
           <ClaimRow
             claimsFor={claim.for_num_positions}

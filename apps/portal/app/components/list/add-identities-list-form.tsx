@@ -126,6 +126,7 @@ export function AddIdentitiesListForm({
               <DialogFooter className="!justify-center !items-center">
                 <div className="flex flex-col items-center gap-1">
                   <Button
+                    size="lg"
                     variant="primary"
                     onClick={() => dispatch({ type: 'REVIEW_TRANSACTION' })}
                   >

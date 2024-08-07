@@ -108,7 +108,7 @@ describe('IdentityContentRow', () => {
                       </button>
                     </a>
                     <button
-                      class="flex justify-center items-center gap-2 text-sm font-medium border disabled:text-muted-foreground bg-transparent border-transparent disabled:border-transparent disabled:bg-transparent shadow-none p-0 h-4 w-4 text-primary/60 hover:text-primary undefined"
+                      class="flex justify-center items-center gap-2 text-sm font-medium border disabled:text-muted-foreground bg-transparent border-transparent disabled:border-transparent disabled:bg-transparent shadow-none max-sm:py-2 max-sm:text-base p-0 h-4 w-4 text-primary/60 hover:text-primary undefined"
                     >
                       <svg
                         class="h-4 w-4"
