@@ -27,7 +27,7 @@ export function ClaimsList({
   enableSort = false,
 }: {
   claims: ClaimPresenter[]
-  pagination: PaginationType
+  pagination?: PaginationType
   paramPrefix?: string
   enableSearch?: boolean
   enableSort?: boolean
