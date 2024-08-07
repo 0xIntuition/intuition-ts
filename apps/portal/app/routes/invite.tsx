@@ -10,7 +10,7 @@ import {
   TextVariant,
   toast,
 } from '@0xintuition/1ui'
-import { UsersService } from '@0xintuition/api'
+import { UserPresenter, UsersService } from '@0xintuition/api'
 
 import ErrorList from '@components/error-list'
 import { getFormProps, getInputProps, useForm } from '@conform-to/react'
@@ -20,6 +20,7 @@ import { inviteCodeSchema } from '@lib/schemas/create-identity-schema'
 import logger from '@lib/utils/logger'
 import { invariant } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
+import { useLoaderData } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
 import { NO_WALLET_ERROR } from 'consts'
@@ -46,10 +47,17 @@ export async function loader({ request }: LoaderFunctionArgs) {
     return json({ wallet })
   }
 
-  return json({})
+  return json({ wallet, userObject })
+}
+
+interface InviteRouteLoaderData {
+  wallet: string
+  userObject: UserPresenter
 }
 
 export default function InviteRoute() {
+  const { userObject } = useLoaderData<InviteRouteLoaderData>()
+  console.log('userObject', userObject)
   const { inviteCodeFetcher } = useInviteCodeFetcher()
   const [loading, setLoading] = useState(false)
   const [formTouched, setFormTouched] = useState(false) // to disable submit if user hasn't touched form yet
