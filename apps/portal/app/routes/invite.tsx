@@ -12,6 +12,7 @@ import {
 } from '@0xintuition/1ui'
 import { UserPresenter, UsersService } from '@0xintuition/api'
 
+import PrivyLogout from '@client/privy-logout'
 import ErrorList from '@components/error-list'
 import { getFormProps, getInputProps, useForm } from '@conform-to/react'
 import { getZodConstraint, parseWithZod } from '@conform-to/zod'
@@ -56,7 +57,7 @@ interface InviteRouteLoaderData {
 }
 
 export default function InviteRoute() {
-  const { userObject } = useLoaderData<InviteRouteLoaderData>()
+  const { wallet, userObject } = useLoaderData<InviteRouteLoaderData>()
   console.log('userObject', userObject)
   const { inviteCodeFetcher } = useInviteCodeFetcher()
   const [loading, setLoading] = useState(false)
@@ -167,6 +168,7 @@ export default function InviteRoute() {
               Setup Profile
             </Button>
           </inviteCodeFetcher.Form>
+          <PrivyLogout wallet={wallet} />
         </div>
       </div>
     </>
