@@ -30,7 +30,7 @@ import {
   getAtomLabel,
   getAtomLink,
 } from '@lib/utils/misc'
-import { Link } from '@remix-run/react'
+import { useNavigate } from '@remix-run/react'
 import { BLOCK_EXPLORER_URL, IPFS_GATEWAY_URL, PATHS } from 'consts'
 import { formatDistance } from 'date-fns'
 import { PaginationType } from 'types/pagination'
@@ -94,6 +94,7 @@ function ActivityItem({
   activity: ActivityPresenter
   eventMessages: EventMessages
 }) {
+  const navigate = useNavigate()
   const eventMessage = eventMessages[activity.event_type as keyof EventMessages]
   const message = eventMessage
     ? typeof eventMessage === 'function'
@@ -110,22 +111,23 @@ function ActivityItem({
         <div className="flex flex-row items-center gap-2 max-md:flex-col">
           <HoverCard openDelay={100} closeDelay={100}>
             <HoverCardTrigger>
-              <Link to={`${PATHS.PROFILE}/${activity.creator?.wallet}`}>
-                <IdentityTag
-                  variant={Identity.user}
-                  size="lg"
-                  imgSrc={activity.creator?.image ?? ''}
-                >
-                  <Trunctacular
-                    value={
-                      activity.creator?.display_name ??
-                      activity.creator?.wallet ??
-                      activity.identity?.creator_address ??
-                      ''
-                    }
-                  ></Trunctacular>
-                </IdentityTag>
-              </Link>
+              <IdentityTag
+                variant={Identity.user}
+                size="lg"
+                imgSrc={activity.creator?.image ?? ''}
+              >
+                <Trunctacular
+                  value={
+                    activity.creator?.display_name ??
+                    activity.creator?.wallet ??
+                    activity.identity?.creator_address ??
+                    ''
+                  }
+                  onClick={() =>
+                    navigate(`${PATHS.PROFILE}/${activity.creator?.wallet}`)
+                  }
+                />
+              </IdentityTag>
             </HoverCardTrigger>
             <HoverCardContent className="w-fit">
               {activity.creator ? (
