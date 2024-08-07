@@ -21,7 +21,7 @@ import { formatUnits } from 'viem'
 interface CreateIdentityReviewProps {
   dispatch: (action: IdentityTransactionActionType) => void
   identity: {
-    imageUrl?: string
+    imageUrl?: string | null
     displayName?: string
     description?: string
     externalReference?: string
@@ -83,30 +83,53 @@ const CreateIdentityReview: React.FC<CreateIdentityReviewProps> = ({
           <Text variant="headline" weight="medium" className="text-white/70">
             Review your identity
           </Text>
-          <ProfileCard
-            variant={Identity.nonUser}
-            avatarSrc={identity?.imageUrl ?? ''}
-            name={identity?.displayName ?? ''}
-            bio={identity?.description ?? ''}
-            id={''}
-            externalLink={identity?.externalReference ?? ''}
-          />
-          <Text
-            variant="base"
-            weight="normal"
-            className="text-neutral-50/50 flex items-center gap-1"
-          >
-            Estimated Fees: {totalFees.toFixed(4)} ETH
-            <InfoTooltip
-              content={
-                <div className="flex flex-col gap-2">
-                  <Text variant="base" weight="medium">
-                    Atom Creation Fee: {atomCreationFee} ETH
-                  </Text>
-                </div>
-              }
+          <div className="p-6 rounded-xl theme-border flex">
+            <ProfileCard
+              variant={Identity.nonUser}
+              avatarSrc={identity?.imageUrl ?? ''}
+              name={identity?.displayName ?? ''}
+              bio={identity?.description ?? ''}
+              id={''}
+              externalLink={identity?.externalReference ?? ''}
             />
-          </Text>
+          </div>
+          <div className="flex flex-col items-center justify-center">
+            {identity.initialDeposit && (
+              <Text
+                variant="base"
+                weight="normal"
+                className="text-neutral-50/50 flex items-center gap-1"
+              >
+                Initial Deposit: {identity.initialDeposit} ETH
+                <InfoTooltip
+                  content={
+                    <div className="flex flex-col gap-2 max-w-xs">
+                      <Text variant="base" weight="medium">
+                        Your initial deposit will create a position for you on
+                        your identity at the time of creation.
+                      </Text>
+                    </div>
+                  }
+                />
+              </Text>
+            )}
+            <Text
+              variant="base"
+              weight="normal"
+              className="text-neutral-50/50 flex items-center gap-1"
+            >
+              Estimated Fees: {totalFees.toFixed(4)} ETH
+              <InfoTooltip
+                content={
+                  <div className="flex flex-col gap-2">
+                    <Text variant="base" weight="medium">
+                      Atom Creation Fee: {atomCreationFee} ETH
+                    </Text>
+                  </div>
+                }
+              />
+            </Text>
+          </div>
         </div>
       </div>
     </>
