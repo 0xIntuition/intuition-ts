@@ -88,8 +88,8 @@ const CreateIdentityReview: React.FC<CreateIdentityReviewProps> = ({
             avatarSrc={identity?.imageUrl ?? ''}
             name={identity?.displayName ?? ''}
             bio={identity?.description ?? ''}
-            walletAddress={''}
-            link={identity?.externalReference ?? ''}
+            id={''}
+            externalLink={identity?.externalReference ?? ''}
           />
           <Text
             variant="base"
