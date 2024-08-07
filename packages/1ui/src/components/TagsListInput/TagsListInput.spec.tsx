@@ -151,7 +151,7 @@ describe('TagsListInput', () => {
               <p
                 class="text-sm font-normal text-secondary-foreground"
               >
-                Add up to 5 tags
+                Filter by up to 5 tags
               </p>
             </div>
           </div>
@@ -302,7 +302,7 @@ describe('TagsListInput', () => {
               <p
                 class="text-sm font-normal text-secondary-foreground"
               >
-                Add up to 3 trust circles
+                Filter by up to 3 trust circles
               </p>
             </div>
           </div>

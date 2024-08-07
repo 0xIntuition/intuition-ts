@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react'
 import {
   Badge,
   Button,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
   Icon,
@@ -105,15 +104,11 @@ export function ClaimForm({
       {!isTransactionStarted && (
         <DialogHeader>
           <DialogTitle>
-            <Text variant="headline" className="text-foreground-secondary">
-              Make a claim about an identity
-            </Text>
+            <div className="flex items-center gap-2">
+              <Icon name="bubble-annotation" />
+              <Text variant="headline">Make a claim about an identity</Text>
+            </div>
           </DialogTitle>
-          <DialogDescription className="items-start w-full">
-            <Text variant="caption" className="text-foreground/50">
-              Additional text about this.
-            </Text>
-          </DialogDescription>
         </DialogHeader>
       )}
       <div className="flex-grow">
@@ -463,7 +458,7 @@ function CreateClaimForm({
       <div className="h-full flex flex-col">
         {state.status === 'idle' ? (
           <div className="flex flex-col items-center justify-between h-full">
-            <div className="flex-grow flex items-center justify-center">
+            <div className="flex-grow flex items-center justify-center max-sm:items-start max-sm:mt-4">
               <div className="flex flex-col items-center gap-14">
                 <div className="flex items-center max-sm:flex-col max-sm:gap-3">
                   <IdentityPopover
@@ -560,6 +555,7 @@ function CreateClaimForm({
             <div className="mt-auto">
               <Button
                 type="button"
+                size="lg"
                 variant="primary"
                 onClick={(e) => {
                   e.preventDefault()

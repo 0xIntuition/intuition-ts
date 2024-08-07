@@ -158,7 +158,7 @@ const IdentityInput = ({
   return (
     <TooltipProvider>
       <div
-        className="flex justify-center items-center w-full max-md:flex-col max-md:items-center max-md:gap-2"
+        className="flex justify-center items-center w-fit m-auto theme-border rounded-lg p-4 max-md:flex-col max-md:items-center max-md:gap-2"
         {...props}
       >
         {renderIdentityInput(subject)}

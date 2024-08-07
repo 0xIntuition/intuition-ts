@@ -85,11 +85,6 @@ describe('FollowPosition', () => {
               >
                 1.21 ETH
               </p>
-              <p
-                class="text-lg font-normal text-success"
-              >
-                +0.005 ETH
-              </p>
             </div>
           </div>
         </div>

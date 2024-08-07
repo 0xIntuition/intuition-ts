@@ -27,7 +27,7 @@ const IdentitySearchComboboxItem = ({
   value,
   currency = 'ETH',
   walletAddress,
-  socialCount = 0,
+  // socialCount = 0,
   tagCount = 0,
   onClick,
   onSelect,
@@ -51,7 +51,8 @@ const IdentitySearchComboboxItem = ({
         />
         <div className="flex items-center gap-1">
           <TooltipProvider>
-            <Tooltip>
+            {/* TODO: Uncomment when functionality is available */}
+            {/* <Tooltip>
               <TooltipTrigger>
                 <Badge variant={BadgeVariant.social}>
                   <Icon name={IconName.trustCircle} className="h-3 w-3" />
@@ -61,7 +62,7 @@ const IdentitySearchComboboxItem = ({
               <TooltipContent>
                 Members in this trust circle identity
               </TooltipContent>
-            </Tooltip>
+            </Tooltip> */}
             <Tooltip>
               <TooltipTrigger>
                 <Badge variant={BadgeVariant.default}>

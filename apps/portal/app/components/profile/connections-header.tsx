@@ -65,7 +65,7 @@ export const ConnectionsHeader: React.FC<ConnectionsHeaderProps> = ({
               <MonetaryValue value={+totalStake} currency="ETH" />
             </div>
           </div>
-          <div className="flex flex-col items-end max-sm:items-center max-sm:m-auto gap-2">
+          <div className="flex flex-col items-end gap-2 max-sm:hidden">
             <Text
               variant="caption"
               weight="regular"

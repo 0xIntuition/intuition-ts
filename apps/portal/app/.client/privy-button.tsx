@@ -43,7 +43,7 @@ export function PrivyButton({
       <>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="border-none p-0">
+            <Button variant="ghost" className="border-none p-0 max-sm:p-0">
               {triggerComponent}
             </Button>
           </DropdownMenuTrigger>
