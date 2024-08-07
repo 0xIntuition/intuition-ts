@@ -31,7 +31,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 export default function GlobalActivityFeed() {
   const { activity } = useLiveLoader<typeof loader>(['attest', 'create'])
 
-  logger('activity render')
+  logger('activity feed render')
   return (
     <Suspense fallback={<ActivitySkeleton />}>
       <Await
