@@ -33,24 +33,22 @@ export default function GlobalActivityFeed() {
 
   logger('activity render')
   return (
-    <>
-      <Suspense fallback={<ActivitySkeleton />}>
-        <Await
-          resolve={Promise.all([activity])}
-          errorElement={
-            <ErrorStateCard>
-              <RevalidateButton />
-            </ErrorStateCard>
-          }
-        >
-          {([resolvedActivity]) => (
-            <ActivityList
-              activities={resolvedActivity.activity as ActivityPresenter[]}
-              pagination={resolvedActivity.pagination as PaginationType}
-            />
-          )}
-        </Await>
-      </Suspense>
-    </>
+    <Suspense fallback={<ActivitySkeleton />}>
+      <Await
+        resolve={activity}
+        errorElement={
+          <ErrorStateCard>
+            <RevalidateButton />
+          </ErrorStateCard>
+        }
+      >
+        {(resolvedActivity) => (
+          <ActivityList
+            activities={resolvedActivity.activity as ActivityPresenter[]}
+            pagination={resolvedActivity.pagination as PaginationType}
+          />
+        )}
+      </Await>
+    </Suspense>
   )
 }
