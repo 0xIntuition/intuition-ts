@@ -242,7 +242,6 @@ function CreateIdentityForm({
   const emitterFetcher = useFetcher()
 
   const createdIdentity = offChainFetcher?.data?.identity
-  // const createdIdentity = identity
 
   const [loading, setLoading] = useState(false)
   const [imageFilename, setImageFilename] = useState<string | null>(null)
@@ -446,7 +445,6 @@ function CreateIdentityForm({
       const result = parseWithZod(formData, {
         schema: createIdentitySchema,
       })
-      console.log('Validation result:', result)
       return result
     },
     shouldValidate: 'onBlur',
@@ -454,10 +452,8 @@ function CreateIdentityForm({
       event.preventDefault()
       const result = await form.validate()
       console.log('Submit validation result:', result)
-      // Save form data to state
       const formDataObject = Object.fromEntries(formData.entries())
       setFormState(formDataObject)
-      // Dispatch to next step
       dispatch({ type: 'REVIEW_TRANSACTION' })
     },
   })
@@ -473,12 +469,6 @@ function CreateIdentityForm({
     externalReference: fields.external_reference.value,
     initialDeposit: fields.initial_deposit.value,
   }
-
-  console.log('reviewIdentity', reviewIdentity)
-  console.log('address', address)
-  console.log('loading', loading)
-  console.log('formTouched', formTouched)
-  console.log('state.status', state.status)
 
   return (
     <>
