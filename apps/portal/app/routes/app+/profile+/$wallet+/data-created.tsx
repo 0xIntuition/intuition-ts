@@ -160,7 +160,13 @@ export default function ProfileDataCreated() {
           defaultValue={DataCreatedHeaderVariants.activeIdentities}
           className="w-full"
         >
-          <Suspense fallback={<TabsSkeleton numOfTabs={2} />}>
+          <Suspense
+            fallback={
+              <div className="mb-6">
+                <TabsSkeleton numOfTabs={2} />
+              </div>
+            }
+          >
             <TabsList className="mb-6">
               <Await resolve={activeIdentities} errorElement={<></>}>
                 {(resolvedIdentities) => (
@@ -280,7 +286,13 @@ export default function ProfileDataCreated() {
           defaultValue={DataCreatedHeaderVariants.createdIdentities}
           className="w-full"
         >
-          <Suspense fallback={<TabsSkeleton numOfTabs={2} />}>
+          <Suspense
+            fallback={
+              <div className="mb-6">
+                <TabsSkeleton numOfTabs={2} />
+              </div>
+            }
+          >
             <TabsList className="mb-6">
               <Await resolve={createdIdentities} errorElement={<></>}>
                 {(resolvedIdentities) => (
