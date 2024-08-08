@@ -4,7 +4,7 @@ import logger from '@lib/utils/logger'
 import { invariant } from '@lib/utils/misc'
 import { json, type ActionFunctionArgs } from '@remix-run/node'
 import { requireUserWallet } from '@server/auth'
-import { NO_WALLET_ERROR } from 'consts'
+import { NO_WALLET_ERROR } from 'app/consts'
 
 export async function action({ request }: ActionFunctionArgs) {
   logger('Validating redeem invite code form data')

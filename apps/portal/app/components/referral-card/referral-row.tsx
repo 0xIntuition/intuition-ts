@@ -19,7 +19,7 @@ import { UserPresenter } from '@0xintuition/api'
 
 import { useCopy } from '@lib/hooks/useCopy'
 import { Link } from '@remix-run/react'
-import { BLOCK_EXPLORER_URL, PATHS } from 'consts'
+import { BLOCK_EXPLORER_URL, PATHS } from 'app/consts'
 
 interface ReferralRowProps {
   code: string
