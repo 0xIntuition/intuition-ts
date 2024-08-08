@@ -12,8 +12,8 @@ export function PaginatedListSkeleton({
   enableSearch = true,
   enableSort = true,
 }: {
-  enableSearch: boolean
-  enableSort: boolean
+  enableSearch?: boolean
+  enableSort?: boolean
 }) {
   return (
     <div className="flex flex-col w-full gap-6">

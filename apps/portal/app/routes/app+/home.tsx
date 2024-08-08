@@ -1,6 +1,12 @@
 import { Suspense } from 'react'
 
-import { EmptyStateCard, ErrorStateCard, Text } from '@0xintuition/1ui'
+import {
+  Button,
+  EmptyStateCard,
+  ErrorStateCard,
+  Icon,
+  Text,
+} from '@0xintuition/1ui'
 import {
   ClaimSortColumn,
   ClaimsService,
@@ -8,7 +14,9 @@ import {
   SortDirection,
 } from '@0xintuition/api'
 
+import { HomeSectionHeader } from '@components/home/home-section-header'
 import { HomeStatsHeader } from '@components/home/home-stats-header'
+import { ClaimsList } from '@components/list/claims'
 import { IdentitiesList } from '@components/list/identities'
 import { RevalidateButton } from '@components/revalidate-button'
 import { PaginatedListSkeleton } from '@components/skeleton'
@@ -18,7 +26,7 @@ import { getConnectionsData } from '@lib/services/connections'
 import { getUserSavedLists } from '@lib/services/lists'
 import { invariant } from '@lib/utils/misc'
 import { defer, LoaderFunctionArgs } from '@remix-run/node'
-import { Await } from '@remix-run/react'
+import { Await, useNavigate } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
 import FullPageLayout from 'app/layouts/full-page-layout'
@@ -56,6 +64,14 @@ export async function loader({ request }: LoaderFunctionArgs) {
         isUser: true,
       },
     }),
+    topClaims: fetchWrapper(request, {
+      method: ClaimsService.getClaims,
+      args: {
+        limit: 5,
+        direction: SortDirection.DESC,
+        sortBy: 'AssetsSum',
+      },
+    }),
     // positions: getPositionsOnIdentity({
     //   request,
     //   identityId: wallet,
@@ -80,7 +96,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export default function HomePage() {
-  const { topUsers } = useLiveLoader<typeof loader>(['attest', 'create'])
+  const { topUsers, topClaims } = useLiveLoader<typeof loader>([
+    'attest',
+    'create',
+  ])
+  const navigate = useNavigate()
 
   return (
     <FullPageLayout>
@@ -100,27 +120,49 @@ export default function HomePage() {
         totalStaked={totalStaked}
         totalSignals={totalSignals}
         /> */}
-        <Text
-          variant="headline"
-          weight="medium"
-          className="text-secondary-foreground self-start w-full"
+        <HomeSectionHeader
+          title="Recent Lists"
+          buttonText="Explore Lists"
+          buttonLink="/app/explore/lists"
+        />
+        <HomeSectionHeader
+          title="Top Claims"
+          buttonText="Explore Claims"
+          buttonLink="/app/explore/claims"
+        />
+        <Suspense
+          fallback={
+            <PaginatedListSkeleton enableSearch={false} enableSort={false} />
+          }
         >
-          Recent Lists
-        </Text>
-        <Text
-          variant="headline"
-          weight="medium"
-          className="text-secondary-foreground self-start w-full"
-        >
-          Top Claims
-        </Text>
-        <Text
-          variant="headline"
-          weight="medium"
-          className="text-secondary-foreground self-start w-full"
-        >
-          Top Users
-        </Text>
+          <Await
+            resolve={topClaims}
+            errorElement={
+              <ErrorStateCard>
+                <RevalidateButton />
+              </ErrorStateCard>
+            }
+          >
+            {(resolvedClaims) => {
+              if (!resolvedClaims || resolvedClaims.data.length === 0) {
+                return <EmptyStateCard message="No claims found." />
+              }
+              return (
+                <ClaimsList
+                  claims={resolvedClaims.data}
+                  paramPrefix="claims"
+                  enableSearch={false}
+                  enableSort={false}
+                />
+              )
+            }}
+          </Await>
+        </Suspense>
+        <HomeSectionHeader
+          title="Top Users"
+          buttonText="Explore Users"
+          buttonLink="/app/explore/users"
+        />
         <Suspense
           fallback={
             <PaginatedListSkeleton enableSearch={false} enableSort={false} />
@@ -136,7 +178,7 @@ export default function HomePage() {
           >
             {(resolvedTopUsers) => {
               if (!resolvedTopUsers || resolvedTopUsers.data.length === 0) {
-                return <EmptyStateCard message="No  users found." />
+                return <EmptyStateCard message="No users found." />
               }
               return (
                 <IdentitiesList
@@ -148,14 +190,11 @@ export default function HomePage() {
             }}
           </Await>
         </Suspense>
-
-        <Text
-          variant="headline"
-          weight="medium"
-          className="text-secondary-foreground self-start w-full"
-        >
-          Global Feed
-        </Text>
+        <HomeSectionHeader
+          title="Global Feed"
+          buttonText="Open Feed"
+          buttonLink="/app/activity/global"
+        />
       </div>
     </FullPageLayout>
   )
