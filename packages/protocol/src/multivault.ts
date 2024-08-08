@@ -550,14 +550,48 @@ export class Multivault {
    * @param objectId - vault id of the object atom
    * @returns vault id of the triple, transaction hash, and events
    */
-  public async createTriple(
-    subjectId: bigint,
-    predicateId: bigint,
-    objectId: bigint,
-  ): Promise<{
+  public async createTriple({
+    subjectId,
+    predicateId,
+    objectId,
+    wait,
+  }: {
+    subjectId: bigint
+    predicateId: bigint
+    objectId: bigint
+    wait?: true
+  }): Promise<{
     vaultId: bigint
     hash: `0x${string}`
     events: ParseEventLogsReturnType
+  }>
+  public async createTriple({
+    subjectId,
+    predicateId,
+    objectId,
+    wait,
+  }: {
+    subjectId: bigint
+    predicateId: bigint
+    objectId: bigint
+    wait?: false
+  }): Promise<{
+    hash: `0x${string}`
+  }>
+  public async createTriple({
+    subjectId,
+    predicateId,
+    objectId,
+    wait = true,
+  }: {
+    subjectId: bigint
+    predicateId: bigint
+    objectId: bigint
+    wait?: boolean
+  }): Promise<{
+    vaultId?: bigint
+    hash: `0x${string}`
+    events?: ParseEventLogsReturnType
   }> {
     const cost = await this.getTripleCost()
 
@@ -578,6 +612,17 @@ export class Multivault {
       { value: cost },
     )
 
+    if (!wait) {
+      return { hash }
+    }
+    return this.waitForTripleCreatedTransaction(hash)
+  }
+
+  public async waitForTripleCreatedTransaction(hash: `0x${string}`): Promise<{
+    vaultId: bigint
+    hash: `0x${string}`
+    events: ParseEventLogsReturnType
+  }> {
     const { logs, status } = await this.client.public.waitForTransactionReceipt(
       { hash },
     )

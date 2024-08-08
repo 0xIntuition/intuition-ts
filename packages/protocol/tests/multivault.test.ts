@@ -111,11 +111,11 @@ describe('MultiVault', () => {
       uri: 'https://intuition.systems',
     })
 
-    const { vaultId, hash, events } = await multiVault.createTriple(
+    const { vaultId, hash, events } = await multiVault.createTriple({
       subjectId,
       predicateId,
       objectId,
-    )
+    })
     expect(vaultId).toBeDefined()
     expect(hash).toBeDefined()
     expect(events).toBeDefined()
@@ -328,17 +328,61 @@ describe('triple life cycle', () => {
     predicate = predicateId
     object = objectId
 
-    const { vaultId } = await multiVault.createTriple(
+    const { vaultId } = await multiVault.createTriple({
       subjectId,
       predicateId,
       objectId,
-    )
+    })
     tripleVaultId = vaultId
+  })
+
+  let subject2: bigint
+  let predicate2: bigint
+  let object2: bigint
+  let txHash: `0x${string}`
+
+  it('can create triple without waiting for transaction receipt', async () => {
+    const { vaultId: subjectId } = await multiVault.createAtom({
+      uri: 'did:example:4',
+    })
+    const { vaultId: predicateId } = await multiVault.createAtom({
+      uri: 'did:example:5',
+    })
+    const { vaultId: objectId } = await multiVault.createAtom({
+      uri: 'did:example:6',
+    })
+
+    subject2 = subjectId
+    predicate2 = predicateId
+    object2 = objectId
+
+    const { hash } = await multiVault.createTriple({
+      subjectId: subject2,
+      predicateId: predicate2,
+      objectId: object2,
+      wait: false,
+    })
+    expect(hash).toBeDefined()
+    txHash = hash
+  })
+
+  it('can wait for triple creation transaction receipt', async () => {
+    const { vaultId } = await multiVault.waitForTripleCreatedTransaction(txHash)
+    expect(vaultId).toBeDefined()
+
+    const atoms = await multiVault.getTripleAtoms(vaultId)
+    expect(atoms.subjectId).toEqual(subject2)
+    expect(atoms.predicateId).toEqual(predicate2)
+    expect(atoms.objectId).toEqual(object2)
   })
 
   it('throws error when creating triple with the same atoms', async () => {
     await expect(() =>
-      multiVault.createTriple(subject, predicate, object),
+      multiVault.createTriple({
+        subjectId: subject,
+        predicateId: predicate,
+        objectId: object,
+      }),
     ).rejects.toThrow('MultiVault_TripleExists')
   })
 
