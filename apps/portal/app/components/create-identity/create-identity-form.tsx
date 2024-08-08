@@ -133,6 +133,14 @@ export function IdentityForm({
   )
 }
 
+interface FormState {
+  display_name?: string
+  description?: string
+  external_reference?: string
+  initial_deposit?: string
+  is_contract?: boolean
+}
+
 interface CreateIdentityFormProps {
   state: IdentityTransactionStateType
   dispatch: React.Dispatch<IdentityTransactionActionType>
@@ -460,7 +468,7 @@ function CreateIdentityForm({
 
   const { chain } = useAccount()
   const isWrongNetwork = chain?.id !== getChainEnvConfig(CURRENT_ENV).chainId
-  const [formState, setFormState] = useState<Record<string, any>>({})
+  const [formState, setFormState] = useState<FormState>({})
 
   const reviewIdentity = {
     imageUrl: previewImage,
