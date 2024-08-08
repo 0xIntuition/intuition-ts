@@ -59,7 +59,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const searchParams = new URLSearchParams(url.search)
 
   return defer({
-    activeIdentities: getUserIdentities({ request, userWallet, searchParams }),
+    activeIdentities: getUserIdentities({
+      request,
+      userWallet: userWallet.toLowerCase(),
+      searchParams,
+    }),
     activeClaims: getUserClaims({ request, userWallet, searchParams }),
     activeClaimsSummary: fetchWrapper(request, {
       method: ClaimsService.claimSummary,
