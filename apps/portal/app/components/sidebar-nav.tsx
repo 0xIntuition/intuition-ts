@@ -33,7 +33,7 @@ interface SidebarNavRoute {
 
 const sidebarNavRoutes: SidebarNavRoute[] = [
   {
-    route: PATHS.PROFILE,
+    route: PATHS.HOME,
     label: 'Home',
     iconName: 'home-door',
   },
