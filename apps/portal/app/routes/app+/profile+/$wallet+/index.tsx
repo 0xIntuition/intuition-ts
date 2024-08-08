@@ -88,19 +88,17 @@ export default function ProfileOverview() {
     typeof loader
   >(['attest', 'create'])
   const { connectionsData } = useLiveLoader<typeof loader>(['attest'])
-  // const { userIdentity, userTotals } =
-  //   useRouteLoaderData<{
-  //     userIdentity: IdentityPresenter
-  //     userTotals: UserTotalsPresenter
-  //   }>('routes/app+/profile+/$wallet') ?? {}
-  // invariant(userIdentity, NO_USER_IDENTITY_ERROR)
+  const { userIdentity, userTotals } =
+    useRouteLoaderData<{
+      userIdentity: IdentityPresenter
+      userTotals: UserTotalsPresenter
+    }>('routes/app+/profile+/$wallet') ?? {}
+  invariant(userIdentity, NO_USER_IDENTITY_ERROR)
   const params = useParams()
   const { wallet } = params
 
-  // logger('userIdentity', userIdentity)
-  // logger('userTotals', userTotals)
-
-  logger('render')
+  logger('userIdentity', userIdentity)
+  logger('userTotals', userTotals)
 
   return (
     <div className="flex flex-col gap-6">
@@ -111,7 +109,7 @@ export default function ProfileOverview() {
       >
         User Stats
       </Text>
-      {/* <div className="flex flex-col items-center gap-6">
+      <div className="flex flex-col items-center gap-6">
         <OverviewStakingHeader
           totalClaims={userTotals?.total_positions_on_claims ?? 0}
           totalIdentities={userTotals?.total_positions_on_identities ?? 0}
@@ -120,9 +118,9 @@ export default function ProfileOverview() {
           }
           link={`${PATHS.PROFILE}/${wallet}/data-created`}
         />
-      </div> */}
+      </div>
 
-      {/* <div className="flex flex-row items-center gap-6 max-md:flex-col">
+      <div className="flex flex-row items-center gap-6 max-md:flex-col">
         <OverviewCreatedHeader
           variant="identities"
           totalCreated={userTotals?.total_identities ?? 0}
@@ -133,25 +131,30 @@ export default function ProfileOverview() {
           totalCreated={userTotals?.total_claims ?? 0}
           link={`${PATHS.PROFILE}/${wallet}/data-created`}
         />
-      </div> */}
-      {/* <Suspense fallback={<DataHeaderSkeleton />}>
-        <Await
-          resolve={Promise.all([claims, claimsSummary])}
-          errorElement={<></>}
-        >
-          {([resolvedClaims, resolvedClaimsSummary]) => (
-            <OverviewAboutHeader
-              variant="claims"
-              userIdentity={userIdentity}
-              totalClaims={resolvedClaims.pagination?.totalEntries}
-              totalStake={
-                +formatBalance(resolvedClaimsSummary?.assets_sum ?? 0, 18, 4)
-              }
-              link={`${PATHS.PROFILE}/${wallet}/data-about`}
-            />
+      </div>
+      <Suspense fallback={<DataHeaderSkeleton />}>
+        <Await resolve={claims} errorElement={<></>}>
+          {(resolvedClaims) => (
+            <Await resolve={claimsSummary} errorElement={<></>}>
+              {(resolvedClaimsSummary) => (
+                <OverviewAboutHeader
+                  variant="claims"
+                  userIdentity={userIdentity}
+                  totalClaims={resolvedClaims.pagination?.totalEntries}
+                  totalStake={
+                    +formatBalance(
+                      resolvedClaimsSummary?.assets_sum ?? 0,
+                      18,
+                      4,
+                    )
+                  }
+                  link={`${PATHS.PROFILE}/${wallet}/data-about`}
+                />
+              )}
+            </Await>
           )}
         </Await>
-      </Suspense> */}
+      </Suspense>
       <Text
         variant="headline"
         weight="medium"
@@ -168,14 +171,21 @@ export default function ProfileOverview() {
             </ErrorStateCard>
           }
         >
-          {(resolvedClaims) => (
-            <ClaimsAboutIdentity
-              claims={resolvedClaims.data}
-              paramPrefix="claims"
-              enableSearch={false}
-              enableSort={false}
-            />
-          )}
+          {(resolvedClaims) => {
+            if (!resolvedClaims || resolvedClaims.data.length === 0) {
+              return (
+                <EmptyStateCard message="This user has no claims about their identity yet." />
+              )
+            }
+            return (
+              <ClaimsAboutIdentity
+                claims={resolvedClaims.data}
+                paramPrefix="claims"
+                enableSearch={false}
+                enableSort={false}
+              />
+            )
+          }}
         </Await>
       </Suspense>
       <Text
