@@ -30,7 +30,7 @@ export const ReferralCard: React.FC<ReferralCardProps> = ({
   inviteCodes,
 }) => {
   return (
-    <div className="flex flex-col theme-border rounded-lg p-8 gap-4">
+    <div className="flex flex-col theme-border rounded-lg p-8 gap-4 max-md:p-4">
       <div className="flex justify-between items-center max-md:flex-col max-md:gap-3">
         <div className="flex items-center gap-2">
           <Icon
