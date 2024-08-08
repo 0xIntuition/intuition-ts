@@ -6,6 +6,7 @@ interface StakeActionsProps {
   action: string | undefined
   setVal: (val: string) => void
   walletBalance: string
+  minDeposit: string
   userConviction: string
   price: string
 }
@@ -23,7 +24,7 @@ export default function StakeActions({
         variant="ghost"
         className={`${action === 'redeem' && 'hidden'}`}
         onClick={() => {
-          setVal('0.0003')
+          setVal('0.0007') // TODO: user minDeposit once we figure out the issue why it isn't returning this value
         }}
       >
         <Text variant="small">Min</Text>
