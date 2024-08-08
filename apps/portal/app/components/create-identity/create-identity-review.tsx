@@ -93,7 +93,7 @@ const CreateIdentityReview: React.FC<CreateIdentityReviewProps> = ({
               externalLink={identity?.externalReference ?? ''}
             />
           </div>
-          <div className="flex flex-col items-center justify-center">
+          <div className="flex flex-col items-center justify-center gap-2">
             {identity.initialDeposit && (
               <Text
                 variant="base"
