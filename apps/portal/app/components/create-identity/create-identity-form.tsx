@@ -454,10 +454,6 @@ function CreateIdentityForm({
       event.preventDefault()
       const result = await form.validate()
       console.log('Submit validation result:', result)
-      if (result.status === 'error') {
-        console.error('Validation errors:', result.error)
-        return
-      }
       // Save form data to state
       const formDataObject = Object.fromEntries(formData.entries())
       setFormState(formDataObject)
@@ -649,12 +645,13 @@ function CreateIdentityForm({
               {...getInputProps(fields.initial_deposit, { type: 'text' })}
               placeholder="0"
               startAdornment="ETH"
-              onChange={(e) =>
+              onChange={(e) => {
                 setFormState((prev) => ({
                   ...prev,
                   initial_deposit: e.target.value,
                 }))
-              }
+                setInitialDeposit(e.target.value)
+              }}
               value={formState.initial_deposit}
             />
             <ErrorList
@@ -686,7 +683,7 @@ function CreateIdentityForm({
           )}
         </div>
       ) : state.status === 'review-transaction' ? (
-        <div className="h-full flex flex-col">
+        <div className="h-[600px] flex flex-col">
           <CreateIdentityReview
             dispatch={dispatch}
             identity={reviewIdentity}
