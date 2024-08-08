@@ -227,7 +227,7 @@ export default function StakeModal({
       sender: Address
       receiver?: Address
       owner?: Address
-      userAssetsAfterTotalFees: bigint
+      senderAssetsAfterTotalFees: bigint
       sharesForReceiver: bigint
       entryFee: bigint
       id: bigint
@@ -264,7 +264,7 @@ export default function StakeModal({
       if (topics.args.sender === (userWallet as `0x${string}`)) {
         assets =
           mode === 'deposit'
-            ? (topics.args as BuyArgs).userAssetsAfterTotalFees.toString()
+            ? (topics.args as BuyArgs).senderAssetsAfterTotalFees.toString()
             : (topics.args as SellArgs).assetsForReceiver.toString()
 
         toast.custom(() => (
