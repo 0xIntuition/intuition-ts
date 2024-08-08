@@ -13,9 +13,12 @@ import { formatBalance } from '@lib/utils/misc'
 import { useGenericTxState } from '@lib/utils/use-tx-reducer'
 import { useFetcher, useLocation } from '@remix-run/react'
 import { useQueryClient } from '@tanstack/react-query'
+import {
+  TransactionActionType,
+  TransactionStateType,
+} from 'app/types/transaction'
+import { VaultDetailsType } from 'app/types/vault'
 import { useAtom } from 'jotai'
-import { TransactionActionType, TransactionStateType } from 'types/transaction'
-import { VaultDetailsType } from 'types/vault'
 import { Abi, Address, decodeEventLog, formatUnits, parseUnits } from 'viem'
 import { useBalance, useBlockNumber, usePublicClient } from 'wagmi'
 

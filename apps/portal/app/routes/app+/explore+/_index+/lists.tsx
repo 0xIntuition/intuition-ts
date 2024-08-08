@@ -14,7 +14,7 @@ import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { useLoaderData, useSearchParams, useSubmit } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
-import { NO_WALLET_ERROR, TAG_PREDICATE_VAULT_ID_TESTNET } from 'consts'
+import { NO_WALLET_ERROR, TAG_PREDICATE_VAULT_ID_TESTNET } from 'app/consts'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const wallet = await requireUserWallet(request)

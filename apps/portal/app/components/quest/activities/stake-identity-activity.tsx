@@ -19,8 +19,8 @@ import {
 } from '@0xintuition/api'
 
 import { calculatePercentageOfTvl, formatBalance } from '@lib/utils/misc'
-import { BLOCK_EXPLORER_URL, IPFS_GATEWAY_URL } from 'consts'
-import { VaultDetailsType } from 'types'
+import { BLOCK_EXPLORER_URL, IPFS_GATEWAY_URL } from 'app/consts'
+import { VaultDetailsType } from 'app/types'
 
 import ActivityContainer from '../activity-container'
 import { IdentityWithHoverable } from '../detail/identity-with-hoverable'

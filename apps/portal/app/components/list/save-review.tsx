@@ -20,8 +20,11 @@ import {
   getAtomLabel,
   getAtomLink,
 } from '@lib/utils/misc'
-import { IPFS_GATEWAY_URL, PATHS } from 'consts'
-import { TransactionActionType, TransactionStateType } from 'types/transaction'
+import { IPFS_GATEWAY_URL, PATHS } from 'app/consts'
+import {
+  TransactionActionType,
+  TransactionStateType,
+} from 'app/types/transaction'
 
 interface SaveReviewProps {
   val: string

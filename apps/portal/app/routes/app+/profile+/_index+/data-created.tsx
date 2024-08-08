@@ -47,7 +47,7 @@ import {
   NO_USER_IDENTITY_ERROR,
   NO_USER_TOTALS_ERROR,
   NO_WALLET_ERROR,
-} from 'consts'
+} from 'app/consts'
 
 import { ProfileLoaderData } from './_layout'
 

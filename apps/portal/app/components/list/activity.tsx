@@ -31,9 +31,9 @@ import {
   getAtomLink,
 } from '@lib/utils/misc'
 import { useNavigate } from '@remix-run/react'
-import { BLOCK_EXPLORER_URL, IPFS_GATEWAY_URL, PATHS } from 'consts'
+import { BLOCK_EXPLORER_URL, IPFS_GATEWAY_URL, PATHS } from 'app/consts'
+import { PaginationType } from 'app/types/pagination'
 import { formatDistance } from 'date-fns'
-import { PaginationType } from 'types/pagination'
 
 import { List } from './list'
 

@@ -21,7 +21,7 @@ import {
   getAtomLabel,
   sliceString,
 } from '@lib/utils/misc'
-import { ClaimElementType } from 'types'
+import { ClaimElementType } from 'app/types'
 
 interface IdentityPopoverProps {
   type: ClaimElementType

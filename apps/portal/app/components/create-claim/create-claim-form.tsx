@@ -50,14 +50,14 @@ import {
   MULTIVAULT_CONTRACT_ADDRESS,
   PATHS,
   SEARCH_IDENTITIES_RESOURCE_ROUTE,
-} from 'consts'
-import { ClaimElement, ClaimElementType } from 'types'
+} from 'app/consts'
+import { ClaimElement, ClaimElementType } from 'app/types'
 import {
   TransactionActionType,
   TransactionStateType,
   TransactionSuccessAction,
   TransactionSuccessActionType,
-} from 'types/transaction'
+} from 'app/types/transaction'
 import { formatUnits, parseUnits } from 'viem'
 import {
   useAccount,

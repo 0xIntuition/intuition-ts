@@ -17,7 +17,7 @@ import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { Link, useLoaderData } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
 import { requireUserId } from '@server/auth'
-import { FALLBACK_QUEST_PLACEHOLDER_IMAGE } from 'consts'
+import { FALLBACK_QUEST_PLACEHOLDER_IMAGE } from 'app/consts'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const id = params.id

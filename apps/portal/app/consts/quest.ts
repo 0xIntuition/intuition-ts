@@ -1,6 +1,6 @@
 import comingSoonImage from '@assets/coming-soon-image.png'
 import narrativeStandardImage from '@assets/narrative-standard-image.png'
-import { QuestSet } from 'types/quest'
+import { QuestSet } from 'app/types/quest'
 
 export const QUEST_LOG_DESCRIPTION =
   'Something inside you stirs, urging you to rekindle and reclaim humanity’s lost intuition...'

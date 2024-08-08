@@ -15,8 +15,11 @@ import { formatBalance, formatDisplayBalance } from '@lib/utils/misc'
 import {
   AM_FOLLOWING_DISPLAY_NAME_TESTNET,
   I_PREDICATE_DISPLAY_NAME_TESTNET,
-} from 'consts'
-import { TransactionActionType, TransactionStateType } from 'types/transaction'
+} from 'app/consts'
+import {
+  TransactionActionType,
+  TransactionStateType,
+} from 'app/types/transaction'
 
 interface FollowReviewProps {
   val: string

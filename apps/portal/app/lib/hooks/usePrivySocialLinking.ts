@@ -3,7 +3,7 @@ import { toast } from '@0xintuition/1ui'
 import logger from '@lib/utils/logger'
 import { useLinkAccount, usePrivy } from '@privy-io/react-auth'
 import { useRevalidator } from '@remix-run/react'
-import { LinkMethodNames, PrivyPlatform } from 'types/privy'
+import { LinkMethodNames, PrivyPlatform } from 'app/types/privy'
 
 // for now the onSuccess and onError are contained in the hook. we may need to allow for this to take callbacks
 // to use with the e2e integration with backend

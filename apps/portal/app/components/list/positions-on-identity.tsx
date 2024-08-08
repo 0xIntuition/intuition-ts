@@ -2,8 +2,8 @@ import { Identity, IdentityPosition } from '@0xintuition/1ui'
 import { PositionPresenter, PositionSortColumn } from '@0xintuition/api'
 
 import { formatBalance } from '@lib/utils/misc'
-import { BLOCK_EXPLORER_URL, PATHS } from 'consts'
-import { PaginationType } from 'types/pagination'
+import { BLOCK_EXPLORER_URL, PATHS } from 'app/consts'
+import { PaginationType } from 'app/types/pagination'
 import { formatUnits } from 'viem'
 
 import { SortOption } from '../sort-select'

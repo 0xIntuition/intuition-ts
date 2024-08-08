@@ -36,9 +36,9 @@ import { fetchWrapper } from '@server/api'
 import { requireUser, requireUserId } from '@server/auth'
 import { getVaultDetails } from '@server/multivault'
 import { getUserQuest } from '@server/quest'
-import { FALLBACK_IDENTITY_ID } from 'consts/quest'
+import { FALLBACK_IDENTITY_ID } from 'app/consts/quest'
+import { MDXContentVariant, VaultDetailsType } from 'app/types'
 import { useAtom } from 'jotai'
-import { MDXContentVariant, VaultDetailsType } from 'types'
 
 const ROUTE_ID = QuestRouteId.STAKE_IDENTITY
 

@@ -13,8 +13,8 @@ import { invariant } from '@lib/utils/misc'
 import { defer, LoaderFunctionArgs } from '@remix-run/node'
 import { Await } from '@remix-run/react'
 import { requireUserWallet } from '@server/auth'
-import { NO_WALLET_ERROR } from 'consts'
-import { PaginationType } from 'types/pagination'
+import { NO_WALLET_ERROR } from 'app/consts'
+import { PaginationType } from 'app/types/pagination'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const wallet = await requireUserWallet(request)

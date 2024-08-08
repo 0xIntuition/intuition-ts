@@ -25,13 +25,13 @@ import { useFetcher, useLoaderData, useNavigate } from '@remix-run/react'
 import { CreateLoaderData } from '@routes/resources+/create'
 import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
-import { MULTIVAULT_CONTRACT_ADDRESS, NO_WALLET_ERROR, PATHS } from 'consts'
-import { useAtom } from 'jotai'
-import { ClientOnly } from 'remix-utils/client-only'
+import { MULTIVAULT_CONTRACT_ADDRESS, NO_WALLET_ERROR, PATHS } from 'app/consts'
 import {
   IdentityTransactionActionType,
   IdentityTransactionStateType,
-} from 'types'
+} from 'app/types'
+import { useAtom } from 'jotai'
+import { ClientOnly } from 'remix-utils/client-only'
 import { toHex } from 'viem'
 import { useConnectorClient, usePublicClient } from 'wagmi'
 

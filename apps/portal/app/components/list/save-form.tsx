@@ -14,7 +14,10 @@ import { TransactionState } from '@components/transaction-state'
 import logger from '@lib/utils/logger'
 import { formatBalance } from '@lib/utils/misc'
 import { type FetcherWithComponents } from '@remix-run/react'
-import { TransactionActionType, TransactionStateType } from 'types/transaction'
+import {
+  TransactionActionType,
+  TransactionStateType,
+} from 'app/types/transaction'
 
 import SaveActions from './save-actions'
 import SaveReview from './save-review'

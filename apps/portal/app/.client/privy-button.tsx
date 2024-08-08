@@ -12,7 +12,7 @@ import {
 
 import { usePrivy } from '@privy-io/react-auth'
 import { NavLink, useNavigate } from '@remix-run/react'
-import { PATHS } from 'consts'
+import { PATHS } from 'app/consts'
 import { useDisconnect } from 'wagmi'
 
 export function PrivyButton({

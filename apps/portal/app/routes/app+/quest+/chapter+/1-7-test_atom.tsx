@@ -32,7 +32,7 @@ import { ActionFunctionArgs, json, LoaderFunctionArgs } from '@remix-run/node'
 import { Form, useActionData, useLoaderData } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
 import { requireUser, requireUserId } from '@server/auth'
-import { MDXContentVariant } from 'types'
+import { MDXContentVariant } from 'app/types'
 
 const ROUTE_ID = QuestRouteId.CREATE_ATOM
 

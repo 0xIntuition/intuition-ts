@@ -23,7 +23,7 @@ import {
 } from '@0xintuition/api'
 
 import { calculatePercentageOfTvl, formatBalance } from '@lib/utils/misc'
-import { VaultDetailsType } from 'types'
+import { VaultDetailsType } from 'app/types'
 
 import ActivityContainer from '../activity-container'
 import { ClaimWithHoverable } from '../detail/claim-with-hoverable'

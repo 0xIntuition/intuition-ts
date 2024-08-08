@@ -11,7 +11,7 @@ import {
 import { calculateTotalPages } from '@lib/utils/misc'
 import { getStandardPageParams } from '@lib/utils/params'
 import { fetchWrapper } from '@server/api'
-import { PaginationType } from 'types/pagination'
+import { PaginationType } from 'app/types/pagination'
 
 export async function getPositionsOnIdentity({
   request,

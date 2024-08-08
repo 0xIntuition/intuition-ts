@@ -28,7 +28,7 @@ import {
   COMING_SOON_QUEST_SET,
   QUEST_LOG_DESCRIPTION,
   STANDARD_QUEST_SET,
-} from 'consts'
+} from 'app/consts'
 import { isAddress } from 'viem'
 
 export async function loader({ request }: LoaderFunctionArgs) {

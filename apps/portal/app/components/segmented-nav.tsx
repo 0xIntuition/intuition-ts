@@ -1,7 +1,7 @@
 import { SegmentedControl, SegmentedControlItem } from '@0xintuition/1ui'
 
 import { NavLink, useParams } from '@remix-run/react'
-import { PATHS } from 'consts'
+import { PATHS } from 'app/consts'
 
 export interface OptionType {
   value: string

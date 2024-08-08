@@ -4,7 +4,7 @@ import { IdentityPresenter } from '@0xintuition/api'
 
 import logger from '@lib/utils/logger'
 import { useFetcher } from '@remix-run/react'
-import { SEARCH_IDENTITIES_RESOURCE_ROUTE } from 'consts'
+import { SEARCH_IDENTITIES_RESOURCE_ROUTE } from 'app/consts'
 
 export function useIdentityServerSearch() {
   const [searchQuery, setSearchQuery] = useState('')

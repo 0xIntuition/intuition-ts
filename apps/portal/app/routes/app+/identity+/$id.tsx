@@ -43,11 +43,11 @@ import { Outlet, useNavigate } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
 import { requireUser, requireUserWallet } from '@server/auth'
 import { getVaultDetails } from '@server/multivault'
+import { IPFS_GATEWAY_URL, NO_WALLET_ERROR, PATHS } from 'app/consts'
 import TwoPanelLayout from 'app/layouts/two-panel-layout'
-import { IPFS_GATEWAY_URL, NO_WALLET_ERROR, PATHS } from 'consts'
+import { ExtendedIdentityPresenter } from 'app/types/identity'
+import { VaultDetailsType } from 'app/types/vault'
 import { useAtom } from 'jotai'
-import { ExtendedIdentityPresenter } from 'types/identity'
-import { VaultDetailsType } from 'types/vault'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   logger('[$ID] -- START')

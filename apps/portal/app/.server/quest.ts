@@ -13,7 +13,7 @@ import {
 
 import { invariant } from '@lib/utils/misc'
 import { fetchWrapper } from '@server/api'
-import { User } from 'types'
+import { User } from 'app/types'
 
 import { requireUser } from './auth'
 

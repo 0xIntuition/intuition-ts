@@ -10,7 +10,7 @@ import {
   useSearchAndSortParamsHandler,
 } from '@lib/hooks/useSearchAndSortParams'
 import { useNavigate } from '@remix-run/react'
-import { PaginationType } from 'types/pagination'
+import { PaginationType } from 'app/types/pagination'
 
 import { SortOption } from '../sort-select'
 import { ListIdentityCardPortal } from './list-identity-card-portal'

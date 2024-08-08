@@ -5,8 +5,8 @@ import { IdentityPresenter } from '@0xintuition/api'
 
 import { pascalCaseString } from '@lib/utils/misc'
 import { useFetcher, useLocation, useNavigate } from '@remix-run/react'
-import { GET_IDENTITIES_BY_IDS_RESOURCE_ROUTE } from 'consts'
-import { ClaimElement, ClaimElementType } from 'types'
+import { GET_IDENTITIES_BY_IDS_RESOURCE_ROUTE } from 'app/consts'
+import { ClaimElement, ClaimElementType } from 'app/types'
 
 import { IdentityInput, IdentityInputButtonProps } from '../identity-input'
 

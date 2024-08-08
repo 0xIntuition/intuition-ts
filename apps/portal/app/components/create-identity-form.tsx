@@ -49,13 +49,13 @@ import {
   MAX_UPLOAD_SIZE,
   MULTIVAULT_CONTRACT_ADDRESS,
   PATHS,
-} from 'consts'
+} from 'app/consts'
 import {
   IdentityTransactionActionType,
   IdentityTransactionStateType,
   TransactionSuccessAction,
   TransactionSuccessActionType,
-} from 'types'
+} from 'app/types'
 import { parseUnits, toHex } from 'viem'
 import { useAccount, usePublicClient, useWalletClient } from 'wagmi'
 

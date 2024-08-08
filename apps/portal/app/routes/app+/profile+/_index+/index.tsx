@@ -15,7 +15,7 @@ import { useNavigate, useRouteLoaderData } from '@remix-run/react'
 import { ProfileLoaderData } from '@routes/app+/profile+/_index+/_layout'
 import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
-import { NO_USER_IDENTITY_ERROR, NO_WALLET_ERROR, PATHS } from 'consts'
+import { NO_USER_IDENTITY_ERROR, NO_WALLET_ERROR, PATHS } from 'app/consts'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const userWallet = await requireUserWallet(request)

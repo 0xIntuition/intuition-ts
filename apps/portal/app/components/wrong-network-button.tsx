@@ -1,7 +1,7 @@
 import { Button } from '@0xintuition/1ui'
 
 import { getChainEnvConfig } from '@lib/utils/environment'
-import { CURRENT_ENV } from 'consts'
+import { CURRENT_ENV } from 'app/consts'
 import { useSwitchChain } from 'wagmi'
 
 const WrongNetworkButton: React.FC = () => {

@@ -12,8 +12,8 @@ import { defer, LoaderFunctionArgs } from '@remix-run/node'
 import { Await, useNavigation, useSearchParams } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
-import { NO_PARAM_ID_ERROR, NO_WALLET_ERROR } from 'consts'
-import { PaginationType } from 'types/pagination'
+import { NO_PARAM_ID_ERROR, NO_WALLET_ERROR } from 'app/consts'
+import { PaginationType } from 'app/types/pagination'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const id = params.id

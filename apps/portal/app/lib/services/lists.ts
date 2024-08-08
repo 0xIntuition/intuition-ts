@@ -14,7 +14,7 @@ import { fetchWrapper } from '@server/api'
 import {
   TAG_PREDICATE_DISPLAY_NAME_TESTNET,
   TAG_PREDICATE_ID_TESTNET,
-} from 'consts'
+} from 'app/consts'
 
 export async function getUserCreatedLists({
   request,

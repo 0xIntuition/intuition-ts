@@ -19,9 +19,12 @@ import {
   AM_FOLLOWING_VAULT_ID_TESTNET,
   CREATE_RESOURCE_ROUTE,
   I_PREDICATE_VAULT_ID_TESTNET,
-} from 'consts'
-import { TransactionActionType, TransactionStateType } from 'types/transaction'
-import { VaultDetailsType } from 'types/vault'
+} from 'app/consts'
+import {
+  TransactionActionType,
+  TransactionStateType,
+} from 'app/types/transaction'
+import { VaultDetailsType } from 'app/types/vault'
 import { Abi, Address, decodeEventLog, formatUnits, parseUnits } from 'viem'
 import { useBalance, useBlockNumber, usePublicClient } from 'wagmi'
 

@@ -2,8 +2,8 @@ import { Button, ButtonVariant, Icon, IconName, Text } from '@0xintuition/1ui'
 import { QuestStatus } from '@0xintuition/api'
 
 import { Link } from '@remix-run/react'
-import { FALLBACK_QUEST_PLACEHOLDER_IMAGE } from 'consts'
-import { MDXContentVariant, MDXContentVariantType } from 'types'
+import { FALLBACK_QUEST_PLACEHOLDER_IMAGE } from 'app/consts'
+import { MDXContentVariant, MDXContentVariantType } from 'app/types'
 
 import MDXContentWrapper from '../mdx-content-wrapper'
 import QuestStatusCard from '../quest-status-card'

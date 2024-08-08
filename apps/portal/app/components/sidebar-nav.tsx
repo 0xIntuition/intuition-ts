@@ -18,7 +18,7 @@ import { UserPresenter } from '@0xintuition/api'
 import { PrivyButton } from '@client/privy-button'
 import { createClaimModalAtom, createIdentityModalAtom } from '@lib/state/store'
 import { NavLink, useLocation, useNavigate, useSubmit } from '@remix-run/react'
-import { PATHS } from 'consts'
+import { PATHS } from 'app/consts'
 import { useAtom } from 'jotai'
 import { isAddress } from 'viem'
 

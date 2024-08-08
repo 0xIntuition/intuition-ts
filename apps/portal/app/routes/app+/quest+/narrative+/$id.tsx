@@ -27,7 +27,7 @@ import { Link, useLoaderData, useSubmit } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
 import { requireUser } from '@server/auth'
 import { getQuestsProgress } from '@server/quest'
-import { STANDARD_QUEST_SET } from 'consts'
+import { STANDARD_QUEST_SET } from 'app/consts'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const id = params.id

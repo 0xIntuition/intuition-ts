@@ -21,7 +21,10 @@ import {
   getAtomLabel,
   getAtomLink,
 } from '@lib/utils/misc'
-import { TransactionActionType, TransactionStateType } from 'types/transaction'
+import {
+  TransactionActionType,
+  TransactionStateType,
+} from 'app/types/transaction'
 
 interface StakeReviewProps {
   val: string
