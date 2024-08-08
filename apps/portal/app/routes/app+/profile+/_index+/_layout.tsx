@@ -110,8 +110,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
     }
   }
 
-  logger('userObject', userObject)
-
   return json({
     privyUser: user,
     userWallet,
