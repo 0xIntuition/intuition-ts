@@ -15,7 +15,7 @@ import {
 
 import { formatBalance } from '@lib/utils/misc'
 import { CreateLoaderData } from '@routes/resources+/create'
-import { IdentityTransactionActionType } from 'types/transaction'
+import { IdentityTransactionActionType } from 'app/types'
 import { formatUnits } from 'viem'
 
 interface CreateIdentityReviewProps {
