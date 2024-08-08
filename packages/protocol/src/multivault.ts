@@ -94,6 +94,23 @@ export class Multivault {
     return vaultId
   }
 
+  public async getTripleIdFromAtoms(
+    subjectId: bigint,
+    predicateId: bigint,
+    objectId: bigint,
+  ) {
+    const tripleHash = await this.tripleHashFromAtoms(
+      subjectId,
+      predicateId,
+      objectId,
+    )
+    const tripleId = await this.contract.read.triplesByHash([tripleHash])
+    if (tripleId === 0n) {
+      return null
+    }
+    return tripleId
+  }
+
   /**
    * Returns the fees of the multivault
    */

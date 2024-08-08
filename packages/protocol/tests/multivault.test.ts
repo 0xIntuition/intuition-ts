@@ -309,6 +309,9 @@ describe('atom life cycle', () => {
 describe('triple life cycle', () => {
   let tripleVaultId: bigint
   let sharesPreview: bigint
+  let subject: bigint
+  let predicate: bigint
+  let object: bigint
 
   it('can create triple', async () => {
     const { vaultId: subjectId } = await multiVault.createAtom({
@@ -321,12 +324,31 @@ describe('triple life cycle', () => {
       uri: 'did:example:3',
     })
 
+    subject = subjectId
+    predicate = predicateId
+    object = objectId
+
     const { vaultId } = await multiVault.createTriple(
       subjectId,
       predicateId,
       objectId,
     )
     tripleVaultId = vaultId
+  })
+
+  it('throws error when creating triple with the same atoms', async () => {
+    await expect(() =>
+      multiVault.createTriple(subject, predicate, object),
+    ).rejects.toThrow('MultiVault_TripleExists')
+  })
+
+  it('can check if triple exists', async () => {
+    const vaultId = await multiVault.getTripleIdFromAtoms(
+      subject,
+      predicate,
+      object,
+    )
+    expect(vaultId).toEqual(tripleVaultId)
   })
 
   it('can check if vault is triple', async () => {
