@@ -15,11 +15,9 @@ import {
 } from '@0xintuition/1ui'
 import { IdentityPresenter } from '@0xintuition/api'
 
-import CreateIdentityReview from '@components/create-identity/create-identity-review'
 import ErrorList from '@components/error-list'
 import { ImageChooser } from '@components/image-chooser'
 import { TransactionState } from '@components/transaction-state'
-import WrongNetworkButton from '@components/wrong-network-button'
 import {
   getFormProps,
   getInputProps,
@@ -40,28 +38,26 @@ import {
   useTransactionState,
 } from '@lib/hooks/useTransactionReducer'
 import { createIdentitySchema } from '@lib/schemas/create-identity-schema'
-import { getChainEnvConfig } from '@lib/utils/environment'
 import logger from '@lib/utils/logger'
 import { truncateString } from '@lib/utils/misc'
 import { useFetcher, useNavigate } from '@remix-run/react'
 import { CreateLoaderData } from '@routes/resources+/create'
 import {
   ACCEPTED_IMAGE_MIME_TYPES,
-  CURRENT_ENV,
   GENERIC_ERROR_MSG,
   IPFS_GATEWAY_URL,
   MAX_UPLOAD_SIZE,
   MULTIVAULT_CONTRACT_ADDRESS,
   PATHS,
-} from 'app/consts'
+} from 'consts'
 import {
   IdentityTransactionActionType,
   IdentityTransactionStateType,
   TransactionSuccessAction,
   TransactionSuccessActionType,
-} from 'app/types'
+} from 'types'
 import { parseUnits, toHex } from 'viem'
-import { useAccount, usePublicClient, useWalletClient } from 'wagmi'
+import { usePublicClient, useWalletClient } from 'wagmi'
 
 interface IdentityFormProps {
   onSuccess?: (identity: IdentityPresenter) => void
@@ -82,7 +78,6 @@ export function IdentityForm({
     useState<IdentityPresenter | null>(null)
 
   const isTransactionStarted = [
-    'review-transaction',
     'preparing-identity',
     'publishing-identity',
     'approve-transaction',
@@ -221,11 +216,17 @@ function CreateIdentityForm({
     }
   }, [imageUploadFetcher.data])
 
-  const fees = loaderFetcher.data as CreateLoaderData
+  const { atomCost: atomCostAmount } =
+    (loaderFetcher.data as CreateLoaderData) ?? {
+      vaultId: BigInt(0),
+      atomCost: BigInt(0),
+      protocolFee: BigInt(0),
+      entryFee: BigInt(0),
+    }
 
+  const atomCost = BigInt(atomCostAmount ? atomCostAmount : 0)
   const { data: walletClient } = useWalletClient()
   const publicClient = usePublicClient()
-  const { address } = useAccount()
   const {
     writeContractAsync: writeCreateIdentity,
     awaitingWalletConfirmation,
@@ -246,23 +247,41 @@ function CreateIdentityForm({
   }
   const [formTouched, setFormTouched] = useState(false) // to disable submit if user hasn't touched form yet
 
-  const handleSubmit = async () => {
+  const isTransactionStarted = [
+    'preparing-identity',
+    'publishing-identity',
+    'approve-transaction',
+    'transaction-pending',
+    'confirm',
+    'complete',
+    'error',
+  ].includes(state.status)
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
     try {
       if (walletClient) {
         dispatch({ type: 'PREPARING_IDENTITY' })
-
         const formData = new FormData()
-        Object.entries(formState).forEach(([key, value]) => {
-          formData.append(key, value as string)
-        })
-
-        // Use the formData passed from the form submission
+        formData.append('display_name', event.currentTarget.display_name.value)
+        if (event.currentTarget.description.value !== undefined) {
+          formData.append('description', event.currentTarget.description.value)
+        }
         if (identityImageSrc !== null) {
-          formData.set('image_url', identityImageSrc as string)
+          formData.append('image_url', identityImageSrc as string) // add check to this once we allow for null
+        }
+
+        if (event.currentTarget.external_reference?.value !== undefined) {
+          const prefixedUrl = `https://${event.currentTarget.external_reference?.value}`
+          formData.append('external_reference', prefixedUrl)
+        }
+
+        if (event.currentTarget.initial_deposit?.value !== undefined) {
+          setInitialDeposit(event.currentTarget.initial_deposit.value)
         }
 
         if (isContract) {
-          formData.set('is_contract', 'true')
+          formData.append('is_contract', 'true')
         }
 
         // Initial form validation
@@ -276,7 +295,6 @@ function CreateIdentityForm({
           Object.keys(submission.error).length
         ) {
           console.error('Create identity validation errors: ', submission.error)
-          return
         }
 
         setLoading(true)
@@ -320,7 +338,7 @@ function CreateIdentityForm({
       !awaitingOnChainConfirmation &&
       !awaitingWalletConfirmation &&
       publicClient &&
-      fees
+      atomCost
     ) {
       try {
         dispatch({ type: 'APPROVE_TRANSACTION' })
@@ -331,7 +349,7 @@ function CreateIdentityForm({
           functionName: 'createAtom',
           args: [toHex(atomData)],
           value:
-            BigInt(fees.atomCost) +
+            BigInt(atomCost) +
             parseUnits(initialDeposit === '' ? '0' : initialDeposit, 18),
         })
 
@@ -430,63 +448,66 @@ function CreateIdentityForm({
       setLoading(false)
     }
   }, [state.status])
+
   const [form, fields] = useForm({
     id: 'create-identity',
     lastResult: lastOffChainSubmission,
     constraint: getZodConstraint(createIdentitySchema()),
     onValidate({ formData }) {
-      const result = parseWithZod(formData, {
+      return parseWithZod(formData, {
         schema: createIdentitySchema,
       })
-      console.log('Validation result:', result)
-      return result
     },
-    shouldValidate: 'onBlur',
-    onSubmit: async (event, { formData }) => {
-      event.preventDefault()
-      const result = await form.validate()
-      console.log('Submit validation result:', result)
-      if (result.status === 'error') {
-        console.error('Validation errors:', result.error)
-        return
-      }
-      // Save form data to state
-      const formDataObject = Object.fromEntries(formData.entries())
-      setFormState(formDataObject)
-      // Dispatch to next step
-      dispatch({ type: 'REVIEW_TRANSACTION' })
-    },
+    shouldValidate: 'onInput',
+    onSubmit: async (e) => handleSubmit(e),
   })
 
-  const { chain } = useAccount()
-  const isWrongNetwork = chain?.id !== getChainEnvConfig(CURRENT_ENV).chainId
-  const [formState, setFormState] = useState<Record<string, any>>({})
-
-  const reviewIdentity = {
-    imageUrl: previewImage,
-    displayName: fields.display_name.value,
-    description: fields.description.value,
-    externalReference: fields.external_reference.value,
-    initialDeposit: fields.initial_deposit.value,
-  }
-
-  console.log('reviewIdentity', reviewIdentity)
-  console.log('address', address)
-  console.log('loading', loading)
-  console.log('formTouched', formTouched)
-  console.log('state.status', state.status)
-
   return (
-    <>
-      <offChainFetcher.Form
-        method="post"
-        {...getFormProps(form)}
-        encType="multipart/form-data"
-        action="/actions/create-identity"
-        hidden
-      />
-      {state.status === 'idle' ? (
+    <offChainFetcher.Form
+      method="post"
+      {...getFormProps(form)}
+      encType="multipart/form-data"
+      action="/actions/create-identity"
+    >
+      {!isTransactionStarted ? (
         <div className="w-full flex-col justify-start items-start inline-flex gap-7">
+          <div className="flex flex-col w-full gap-1.5">
+            <Text variant="caption" className="text-foreground/70">
+              Name <span className="text-destructive">*</span>
+            </Text>
+            <Label htmlFor={fields.display_name.id} hidden>
+              Name
+            </Label>
+            <Input
+              {...getInputProps(fields.display_name, { type: 'text' })}
+              placeholder="Enter a display name"
+              onChange={() => setFormTouched(true)}
+            />
+            <ErrorList
+              id={fields.display_name.errorId}
+              errors={fields.display_name.errors}
+            />
+            {fields.display_name.value &&
+              fields.display_name.value.length === 42 &&
+              /^0x[a-fA-F0-9]{1,42}$/.test(fields.display_name.value) && (
+                <div className="flex items-center gap-2">
+                  <Checkbox
+                    checked={isContract}
+                    onCheckedChange={(checked) =>
+                      setIsContract(checked === true)
+                    }
+                    id={fields.is_contract.id}
+                    className="h-4 w-4 text-muted theme-border rounded focus:ring-primary focus:ring-1 bg-primary/10 cursor-pointer checked:bg-primary/10 form-checkbox"
+                  />
+                  <Label
+                    htmlFor={fields.is_contract.id}
+                    className="text-sm text-foreground/70"
+                  >
+                    is Contract?
+                  </Label>
+                </div>
+              )}
+          </div>
           <div className="flex flex-col w-full gap-1.5">
             <div className="self-stretch flex-col justify-start items-start flex">
               <Text variant="caption" className="text-secondary-foreground">
@@ -537,7 +558,7 @@ function CreateIdentityForm({
             />
           </div>
           <div className="flex flex-col w-full gap-1.5">
-            <Text variant="caption" className="text-foreground/70">
+            <Text variant="caption" className="text-secondary-foreground">
               Display Name
             </Text>
             <Label htmlFor={fields.display_name.id} hidden>
@@ -545,47 +566,14 @@ function CreateIdentityForm({
             </Label>
             <Input
               {...getInputProps(fields.display_name, { type: 'text' })}
-              placeholder="Enter a display name here"
-              onChange={(e) => {
-                setFormState((prev) => ({
-                  ...prev,
-                  display_name: e.target.value,
-                }))
-                setFormTouched(true)
-              }}
-              value={formState.display_name}
+              placeholder="Enter display name here"
+              onChange={() => setFormTouched(true)}
             />
             <ErrorList
               id={fields.display_name.errorId}
               errors={fields.display_name.errors}
             />
-            {fields.display_name.value &&
-              fields.display_name.value.length === 42 &&
-              /^0x[a-fA-F0-9]{1,42}$/.test(fields.display_name.value) && (
-                <div className="flex items-center gap-2">
-                  <Checkbox
-                    checked={isContract}
-                    onCheckedChange={(checked) => {
-                      const isChecked = checked === true
-                      setIsContract(isChecked)
-                      setFormState((prev) => ({
-                        ...prev,
-                        is_contract: isChecked,
-                      }))
-                    }}
-                    id={fields.is_contract.id}
-                    className="h-4 w-4 text-muted theme-border rounded focus:ring-primary focus:ring-1 bg-primary/10 cursor-pointer checked:bg-primary/10 form-checkbox"
-                  />
-                  <Label
-                    htmlFor={fields.is_contract.id}
-                    className="text-sm text-foreground/70"
-                  >
-                    is Contract?
-                  </Label>
-                </div>
-              )}
           </div>
-
           <div className="flex flex-col w-full gap-1.5">
             <Text variant="caption" className="text-secondary-foreground">
               Description
@@ -596,14 +584,6 @@ function CreateIdentityForm({
             <Textarea
               {...getInputProps(fields.description, { type: 'text' })}
               placeholder="Enter description here"
-              className="theme-border"
-              onChange={(e) =>
-                setFormState((prev) => ({
-                  ...prev,
-                  description: e.target.value,
-                }))
-              }
-              value={formState.description}
             />
           </div>
           <div className="flex flex-col w-full gap-1.5">
@@ -617,13 +597,6 @@ function CreateIdentityForm({
               {...getInputProps(fields.external_reference, { type: 'text' })}
               placeholder="www.url.com"
               startAdornment="http://"
-              onChange={(e) =>
-                setFormState((prev) => ({
-                  ...prev,
-                  external_reference: e.target.value,
-                }))
-              }
-              value={formState.external_reference}
             />
             <ErrorList
               id={fields.external_reference.errorId}
@@ -641,73 +614,22 @@ function CreateIdentityForm({
               {...getInputProps(fields.initial_deposit, { type: 'text' })}
               placeholder="0"
               startAdornment="ETH"
-              onChange={(e) =>
-                setFormState((prev) => ({
-                  ...prev,
-                  initial_deposit: e.target.value,
-                }))
-              }
-              value={formState.initial_deposit}
             />
             <ErrorList
               id={fields.initial_deposit.errorId}
               errors={fields.initial_deposit.errors}
             />
           </div>
-          {isWrongNetwork ? (
-            <WrongNetworkButton />
-          ) : (
-            <Button
-              type="button"
-              variant="primary"
-              onClick={() => {
-                dispatch({ type: 'REVIEW_TRANSACTION' })
-              }}
-              disabled={
-                !address ||
-                loading ||
-                !formTouched ||
-                ['confirm', 'transaction-pending', 'awaiting'].includes(
-                  state.status,
-                )
-              }
-              className="w-40 mx-auto"
-            >
-              Review
-            </Button>
-          )}
-        </div>
-      ) : state.status === 'review-transaction' ? (
-        <div className="h-full flex flex-col">
-          <CreateIdentityReview
-            dispatch={dispatch}
-            identity={reviewIdentity}
-            initialDeposit={initialDeposit}
-            fees={fees}
-          />
-          <div className="mt-auto">
-            {isWrongNetwork ? (
-              <WrongNetworkButton />
-            ) : (
-              <Button
-                form={form.id}
-                type="submit"
-                variant="primary"
-                onClick={handleSubmit}
-                disabled={
-                  !address ||
-                  loading ||
-                  !formTouched ||
-                  ['confirm', 'transaction-pending', 'awaiting'].includes(
-                    state.status,
-                  )
-                }
-                className="w-40 mx-auto"
-              >
-                Create Identity
-              </Button>
-            )}
-          </div>
+          <Button
+            form={form.id}
+            type="submit"
+            variant="primary"
+            size="lg"
+            disabled={loading || !formTouched}
+            className="mx-auto"
+          >
+            Create
+          </Button>
         </div>
       ) : (
         <div className="flex flex-col items-center justify-center min-h-96">
@@ -740,6 +662,6 @@ function CreateIdentityForm({
           />
         </div>
       )}
-    </>
+    </offChainFetcher.Form>
   )
 }
