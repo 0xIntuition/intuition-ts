@@ -8,21 +8,14 @@ import {
   TextVariant,
   TextWeight,
 } from '@0xintuition/1ui'
+import { InviteCodePresenter } from '@0xintuition/api'
 
 import { ReferralPointsDisplay } from './referral-points-display'
 import { ReferralRow } from './referral-row'
 
 interface ReferralCardProps {
   points: number
-  inviteCodes: Array<{
-    code: string
-    isActivated: boolean
-    identity?: {
-      id: string
-      name: string
-      avatarUrl: string
-    }
-  }>
+  inviteCodes: InviteCodePresenter[]
 }
 
 export const ReferralCard: React.FC<ReferralCardProps> = ({
@@ -51,10 +44,10 @@ export const ReferralCard: React.FC<ReferralCardProps> = ({
       <div className="flex flex-col gap-4">
         {inviteCodes.map((invite) => (
           <ReferralRow
-            key={invite.code}
-            code={invite.code}
-            isActivated={invite.isActivated}
-            identity={invite.identity}
+            key={invite.invite_code}
+            code={invite.invite_code}
+            redeemed={invite.redeemed}
+            redeemer={invite.redeemer}
           />
         ))}
       </div>
