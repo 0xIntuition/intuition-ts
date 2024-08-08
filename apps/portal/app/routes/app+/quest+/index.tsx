@@ -56,8 +56,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
     },
   })
 
-  console.log('inviteCodes', inviteCodes)
-
   const details = getQuestsProgress({
     request,
     options: {
@@ -137,8 +135,17 @@ export default function Quests() {
         <div className="space-y-5">
           <Text variant="headline">Referrals</Text>
           <Suspense fallback={<Skeleton className="h-52 w-full" />}>
-            <Await resolve={inviteCodes}>
-              <ReferralCard points={2100} inviteCodes={inviteCodes} />
+            <Await resolve={inviteCodes} errorElement={<></>}>
+              {(resolvedInviteCodes) => (
+                <Await resolve={userTotals} errorElement={<></>}>
+                  {(resolvedUserTotals) => (
+                    <ReferralCard
+                      points={resolvedUserTotals.referral_points}
+                      inviteCodes={resolvedInviteCodes}
+                    />
+                  )}
+                </Await>
+              )}
             </Await>
           </Suspense>
         </div>
