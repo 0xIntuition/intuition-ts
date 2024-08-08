@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 
 import { Avatar, toast } from '@0xintuition/1ui'
 import {
+  IdentitiesService,
   IdentityPresenter,
   UserPresenter,
   UsersService,
@@ -20,7 +21,7 @@ import {
 import { editProfileModalAtom } from '@lib/state/store'
 import logger from '@lib/utils/logger'
 import { invariant, sliceString } from '@lib/utils/misc'
-import { json, LoaderFunctionArgs } from '@remix-run/node'
+import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
 import { useFetcher, useLoaderData, useNavigate } from '@remix-run/react'
 import { CreateLoaderData } from '@routes/resources+/create'
 import { fetchWrapper } from '@server/api'
@@ -39,19 +40,34 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const wallet = await requireUserWallet(request)
   invariant(wallet, NO_WALLET_ERROR)
 
-  const userObject = await fetchWrapper(request, {
-    method: UsersService.getUserByWalletPublic,
-    args: {
-      wallet,
-    },
-  })
+  let userObject
 
-  if (!userObject) {
-    console.log('No user found in DB')
-    return json({ wallet, userObject })
+  try {
+    userObject = await fetchWrapper(request, {
+      method: UsersService.getUserByWalletPublic,
+      args: {
+        wallet,
+      },
+    })
+  } catch (e) {
+    console.error('No user object associated with wallet')
   }
 
-  return json({ wallet, userObject })
+  let userIdentity
+  try {
+    userIdentity = await fetchWrapper(request, {
+      method: IdentitiesService.getIdentityById,
+      args: { id: wallet },
+    })
+  } catch (e) {
+    console.error('No user identity associated with wallet')
+  }
+
+  if (userIdentity) {
+    throw redirect(`${PATHS.PROFILE}`)
+  }
+
+  return json({ wallet, userIdentity, userObject })
 }
 
 interface CreateButtonWrapperProps {
