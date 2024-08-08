@@ -14,7 +14,7 @@ export const ReferralPointsDisplay: React.FC<ReferralPointsDisplayProps> = ({
   label,
 }) => {
   return (
-    <div className="flex flex-col items-end">
+    <div className="flex flex-col items-end max-md:items-center">
       <Text variant={TextVariant.caption} className="text-muted-foreground">
         {label}
       </Text>

@@ -58,7 +58,7 @@ const DataAboutHeader: React.FC<DataAboutHeaderProps> = ({
         </IdentityTag>
       </div>
       <div className="flex justify-between w-full">
-        <div className="flex flex-col items-end max-md:items-center">
+        <div className="flex flex-col items-start max-md:items-center">
           <Text
             variant="caption"
             weight="regular"

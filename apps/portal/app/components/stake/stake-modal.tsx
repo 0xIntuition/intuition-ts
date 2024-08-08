@@ -376,6 +376,7 @@ export default function StakeModal({
             conviction_price={conviction_price ?? '0'}
             user_conviction={user_conviction ?? '0'}
             user_assets={user_assets ?? '0'}
+            min_deposit={min_deposit ?? '0'}
             entry_fee={formatted_entry_fee ?? '0'}
             exit_fee={formatted_exit_fee ?? '0'}
             direction={direction ? direction : undefined}

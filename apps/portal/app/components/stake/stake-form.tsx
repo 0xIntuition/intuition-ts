@@ -41,6 +41,7 @@ interface StakeFormProps {
   user_conviction: string
   conviction_price: string
   user_assets: string
+  min_deposit: string
   entry_fee: string
   exit_fee: string
   direction?: 'for' | 'against'
@@ -67,6 +68,7 @@ export default function StakeForm({
   user_conviction,
   conviction_price,
   user_assets,
+  min_deposit,
   entry_fee,
   exit_fee,
   direction,
@@ -228,6 +230,7 @@ export default function StakeForm({
                   action={mode}
                   setVal={setVal}
                   walletBalance={walletBalance ?? '0'}
+                  minDeposit={min_deposit ?? '0'}
                   userConviction={user_conviction ?? '0'}
                   price={conviction_price ?? '0'}
                 />
