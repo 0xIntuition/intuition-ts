@@ -48,7 +48,17 @@ export function FollowList({
             avatarSrc={getAtomImage(identity)}
             name={getAtomLabel(identity)}
             id={identity.user?.wallet ?? identity.identity_id}
-            amount={+formatBalance(BigInt(identity.user_assets || ''), 18, 4)}
+            amount={
+              +formatBalance(
+                BigInt(
+                  paramPrefix === 'followers'
+                    ? identity.assets_sum
+                    : identity.user_assets,
+                ),
+                18,
+                4,
+              )
+            }
             feesAccrued={
               identity.user_asset_delta
                 ? +formatBalance(
