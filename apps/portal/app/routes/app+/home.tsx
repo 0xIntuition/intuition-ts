@@ -1,7 +1,9 @@
+import { request } from 'http'
 import { Suspense } from 'react'
 
 import { EmptyStateCard, ErrorStateCard, Text } from '@0xintuition/1ui'
 import {
+  ActivityPresenter,
   ClaimSortColumn,
   ClaimsService,
   IdentitiesService,
@@ -15,8 +17,9 @@ import { IdentitiesList } from '@components/list/identities'
 import { ListClaimsList } from '@components/list/list-claims'
 import { ListClaimsSkeletonLayout } from '@components/list/list-skeletons'
 import { RevalidateButton } from '@components/revalidate-button'
-import { PaginatedListSkeleton } from '@components/skeleton'
+import { ActivitySkeleton, PaginatedListSkeleton } from '@components/skeleton'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
+import { getActivity, getActivity } from '@lib/services/activity'
 import { invariant } from '@lib/utils/misc'
 import { defer, LoaderFunctionArgs } from '@remix-run/node'
 import { Await } from '@remix-run/react'
@@ -24,10 +27,15 @@ import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
 import FullPageLayout from 'app/layouts/full-page-layout'
 import { NO_WALLET_ERROR, TAG_PREDICATE_VAULT_ID_TESTNET } from 'consts'
+import { ActivityList } from '@components/list/activity'
+import { PaginationType } from 'types'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const userWallet = await requireUserWallet(request)
   invariant(userWallet, NO_WALLET_ERROR)
+
+  const url = new URL(request.url)
+  const activitySearchParams = new URLSearchParams(url.search)
 
   const listSearchParams = new URLSearchParams()
   listSearchParams.set('sortBy', ClaimSortColumn.ASSETS_SUM)
@@ -61,11 +69,12 @@ export async function loader({ request }: LoaderFunctionArgs) {
         predicate: TAG_PREDICATE_VAULT_ID_TESTNET,
       },
     }),
+    activity: getActivity({ request, searchParams: activitySearchParams }),
   })
 }
 
 export default function HomePage() {
-  const { topUsers, topClaims, recentLists } = useLiveLoader<typeof loader>([
+  const { topUsers, topClaims, recentLists, activity } = useLiveLoader<typeof loader>([
     'attest',
     'create',
   ])
@@ -198,6 +207,23 @@ export default function HomePage() {
           buttonText="Open Feed"
           buttonLink="/app/activity/global"
         />
+         <Suspense fallback={<ActivitySkeleton />}>
+      <Await
+        resolve={activity}
+        errorElement={
+          <ErrorStateCard>
+            <RevalidateButton />
+          </ErrorStateCard>
+        }
+      >
+        {(resolvedActivity) => (
+          <ActivityList
+            activities={resolvedActivity.activity as ActivityPresenter[]}
+            pagination={resolvedActivity.pagination as PaginationType}
+          />
+        )}
+      </Await>
+    </Suspense>
       </div>
     </FullPageLayout>
   )
