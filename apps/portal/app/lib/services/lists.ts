@@ -90,7 +90,6 @@ export async function getUserSavedLists({
   })
 
   const totalPages = calculateTotalPages(savedListClaims?.total ?? 0, limit)
-  logger('savedListClaims', savedListClaims)
 
   return {
     savedListClaims: savedListClaims.data as ClaimPresenter[],
