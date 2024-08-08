@@ -11,9 +11,6 @@ export async function loader() {
 }
 
 export default function ExploreLayout() {
-  const { message } = useLoaderData<typeof loader>()
-  logger('message from profile overview loader', message)
-
   return (
     <FullPageLayout>
       <NestedTabs outlet={Outlet} options={exploreRouteOptions} />
