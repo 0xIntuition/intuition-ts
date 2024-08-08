@@ -20,7 +20,7 @@ import {
 import { IdentityPresenter } from '@0xintuition/api'
 
 import { formatBalance, sliceString, truncateString } from '@lib/utils/misc'
-import { BLOCK_EXPLORER_URL, IPFS_GATEWAY_URL } from 'consts'
+import { BLOCK_EXPLORER_URL, IPFS_GATEWAY_URL } from 'app/consts'
 
 import { IdentitySearchComboboxItem } from './identity-search-combo-box-item'
 

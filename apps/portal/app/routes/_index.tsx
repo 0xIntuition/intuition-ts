@@ -3,7 +3,7 @@ import logger from '@lib/utils/logger'
 import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
 import { onboardingModalCookie } from '@server/onboarding'
 import { getPrivyTokens } from '@server/privy'
-import { PATHS } from 'consts'
+import { PATHS } from 'app/consts'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const cookieHeader = request.headers.get('Cookie')

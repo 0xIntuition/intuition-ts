@@ -13,7 +13,10 @@ import { IdentityPresenter } from '@0xintuition/api'
 import { TransactionState } from '@components/transaction-state'
 import { formatBalance } from '@lib/utils/misc'
 import { type FetcherWithComponents } from '@remix-run/react'
-import { TransactionActionType, TransactionStateType } from 'types/transaction'
+import {
+  TransactionActionType,
+  TransactionStateType,
+} from 'app/types/transaction'
 
 import FollowActions from './follow-actions'
 import FollowReview from './follow-review'

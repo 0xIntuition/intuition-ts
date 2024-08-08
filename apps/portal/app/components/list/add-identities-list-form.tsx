@@ -16,7 +16,10 @@ import {
   transactionReducer,
   useTransactionState,
 } from '@lib/hooks/useTransactionReducer'
-import { TransactionActionType, TransactionStateType } from 'types/transaction'
+import {
+  TransactionActionType,
+  TransactionStateType,
+} from 'app/types/transaction'
 
 import { AddIdentities } from './add-identities'
 import AddIdentitiesReview from './add-identities-review'

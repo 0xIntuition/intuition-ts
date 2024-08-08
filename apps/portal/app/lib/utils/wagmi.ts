@@ -1,5 +1,5 @@
 import { createConfig } from '@privy-io/wagmi'
-import { CURRENT_ENV } from 'consts'
+import { CURRENT_ENV } from 'app/consts'
 import { base, baseSepolia, mainnet } from 'viem/chains'
 import { Config, http } from 'wagmi'
 

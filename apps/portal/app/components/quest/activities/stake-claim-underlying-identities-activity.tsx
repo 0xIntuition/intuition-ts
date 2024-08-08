@@ -12,7 +12,7 @@ import {
 import { IdentityPresenter, QuestStatus } from '@0xintuition/api'
 
 import { calculatePercentageOfTvl, formatBalance } from '@lib/utils/misc'
-import { ClaimElementType, VaultDetailsType } from 'types'
+import { ClaimElementType, VaultDetailsType } from 'app/types'
 
 import ActivityContainer from '../activity-container'
 import { IdentityWithHoverable } from '../detail/identity-with-hoverable'

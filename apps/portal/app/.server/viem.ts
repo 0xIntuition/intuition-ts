@@ -1,7 +1,7 @@
 import process from 'process'
 
 import { multivaultAbi } from '@lib/abis/multivault'
-import { CURRENT_ENV, MULTIVAULT_CONTRACT_ADDRESS } from 'consts'
+import { CURRENT_ENV, MULTIVAULT_CONTRACT_ADDRESS } from 'app/consts'
 import {
   createPublicClient,
   getContract,

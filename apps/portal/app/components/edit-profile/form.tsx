@@ -37,11 +37,11 @@ import {
   DESCRIPTION_MAX_LENGTH,
   MAX_NAME_LENGTH,
   MAX_UPLOAD_SIZE,
-} from 'consts'
+} from 'app/consts'
 import {
   IdentityTransactionActionType,
   IdentityTransactionStateType,
-} from 'types/transaction'
+} from 'app/types/transaction'
 
 interface EditProfileFormProps {
   userObject: UserPresenter

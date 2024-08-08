@@ -2,8 +2,8 @@ import { Identity, IdentityContentRow } from '@0xintuition/1ui'
 import { IdentityPresenter, SortColumn } from '@0xintuition/api'
 
 import { formatBalance } from '@lib/utils/misc'
-import { BLOCK_EXPLORER_URL, IPFS_GATEWAY_URL, PATHS } from 'consts'
-import { PaginationType } from 'types/pagination'
+import { BLOCK_EXPLORER_URL, IPFS_GATEWAY_URL, PATHS } from 'app/consts'
+import { PaginationType } from 'app/types/pagination'
 
 import { SortOption } from '../sort-select'
 import { List } from './list'

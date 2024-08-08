@@ -48,11 +48,11 @@ import {
 import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
 import { getVaultDetails } from '@server/multivault'
+import { NO_WALLET_ERROR, PATHS } from 'app/consts'
 import FullPageLayout from 'app/layouts/full-page-layout'
 import TwoPanelLayout from 'app/layouts/two-panel-layout'
-import { NO_WALLET_ERROR, PATHS } from 'consts'
+import { VaultDetailsType } from 'app/types/vault'
 import { useAtom } from 'jotai'
-import { VaultDetailsType } from 'types/vault'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const wallet = await requireUserWallet(request)

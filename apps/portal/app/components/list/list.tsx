@@ -11,7 +11,7 @@ import { Search } from '@components/search'
 import { Sort } from '@components/sort'
 import { SortOption } from '@components/sort-select'
 import { useSearchAndSortParamsHandler } from '@lib/hooks/useSearchAndSortParams'
-import { PaginationType } from 'types/pagination'
+import { PaginationType } from 'app/types/pagination'
 
 import { PaginationComponent } from '../pagination-component'
 

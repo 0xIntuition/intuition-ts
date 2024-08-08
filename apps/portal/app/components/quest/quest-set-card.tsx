@@ -27,7 +27,7 @@ const QuestSetCard = ({
   return (
     <div
       className={cn(
-        'bg-popover flex flex-col justify-center align-center theme-border rounded-lg p-8 gap-5 h-full',
+        'bg-popover flex flex-col justify-center align-center theme-border rounded-lg p-8 gap-5 h-full max-md:p-4',
         disabled && 'cursor-not-allowed opacity-50',
       )}
       {...props}

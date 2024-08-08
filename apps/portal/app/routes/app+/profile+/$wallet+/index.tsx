@@ -35,7 +35,7 @@ import {
   NO_USER_IDENTITY_ERROR,
   NO_WALLET_ERROR,
   PATHS,
-} from 'consts'
+} from 'app/consts'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const userWallet = await requireUserWallet(request)

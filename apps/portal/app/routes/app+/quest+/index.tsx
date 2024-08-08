@@ -28,7 +28,7 @@ import {
   COMING_SOON_QUEST_SET,
   QUEST_LOG_DESCRIPTION,
   STANDARD_QUEST_SET,
-} from 'consts'
+} from 'app/consts'
 import { isAddress } from 'viem'
 
 export async function loader({ request }: LoaderFunctionArgs) {
@@ -101,16 +101,16 @@ export default function Quests() {
   const { details, userTotals } = useLoaderData<typeof loader>()
 
   return (
-    <div className="p-10 w-full max-w-7xl mx-auto flex flex-col gap-5">
+    <div className="p-10 w-full max-w-7xl mx-auto flex flex-col gap-5 max-md:p-5 max-sm:p-2">
       <div className="flex flex-col gap-5">
         <div className="flex items-center justify-between">
           <UserHeader />
         </div>
-        <Separator className="mb-5" />
+        <Separator className="mb-5 max-md:mb-2" />
       </div>
-      <div className="flex flex-col gap-16">
-        <div className="flex gap-10">
-          <div className="flex-shrink-0 min-w-[256px] w-1/3">
+      <div className="flex flex-col gap-16 max-md:gap-5">
+        <div className="flex gap-10 flex-grow max-md:flex-col max-md:gap-5">
+          <div className="flex-shrink-0 min-w-[256px] w-1/3 max-md:min-w-full max-md:w-full">
             <Suspense fallback={<Skeleton className="h-52 w-full" />}>
               <Await resolve={userTotals}>
                 {(resolvedUserTotals) => (
@@ -164,14 +164,14 @@ export default function Quests() {
             inviteCodes={mockReferralData.inviteCodes}
           />
         </div>
-        <div className="flex flex-col gap-10">
-          <div className="space-y-5">
+        <div className="flex flex-col gap-10 max-md:gap-5">
+          <div className="space-y-5 max-md:space-y-3">
             <Text variant="headline">Quest Log</Text>
             <Text variant="body" className="text-foreground/70">
               {QUEST_LOG_DESCRIPTION}
             </Text>
           </div>
-          <ul className="grid grid-cols-1 gap-10 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2">
+          <ul className="grid grid-cols-1 gap-10 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 max-md:gap-5">
             <Suspense fallback={<Skeleton className="h-full w-full" />}>
               <Await resolve={details}>
                 {(resolvedDetails) => (

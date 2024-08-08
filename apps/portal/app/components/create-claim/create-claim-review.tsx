@@ -23,7 +23,7 @@ import {
   getAtomLink,
 } from '@lib/utils/misc'
 import { CreateClaimFeesType } from '@routes/resources+/create-claim'
-import { TransactionActionType } from 'types/transaction'
+import { TransactionActionType } from 'app/types/transaction'
 import { formatUnits } from 'viem'
 
 interface CreateClaimReviewProps {

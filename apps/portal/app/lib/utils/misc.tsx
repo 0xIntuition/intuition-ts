@@ -4,8 +4,8 @@ import { Icon, IconName, Text, Theme } from '@0xintuition/1ui'
 import { IdentityPresenter } from '@0xintuition/api'
 
 import { SubmitFunction } from '@remix-run/react'
+import { BLOCK_EXPLORER_URL, IPFS_GATEWAY_URL, PATHS } from 'app/consts'
 import { clsx, type ClassValue } from 'clsx'
-import { BLOCK_EXPLORER_URL, IPFS_GATEWAY_URL, PATHS } from 'consts'
 import { twMerge } from 'tailwind-merge'
 import { formatUnits } from 'viem'
 

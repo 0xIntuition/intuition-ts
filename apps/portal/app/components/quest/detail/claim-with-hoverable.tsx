@@ -9,7 +9,7 @@ import {
 } from '@0xintuition/1ui'
 import { IdentityPresenter } from '@0xintuition/api'
 
-import { BLOCK_EXPLORER_URL, IPFS_GATEWAY_URL } from 'consts'
+import { BLOCK_EXPLORER_URL, IPFS_GATEWAY_URL } from 'app/consts'
 
 export interface ClaimWithHoverableProps {
   size?: keyof typeof IdentityTagSize

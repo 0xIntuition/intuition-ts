@@ -1,4 +1,4 @@
-import { DESCRIPTION_MAX_LENGTH, MAX_UPLOAD_SIZE } from 'consts'
+import { DESCRIPTION_MAX_LENGTH, MAX_UPLOAD_SIZE } from 'app/consts'
 import { z } from 'zod'
 
 const urlWithoutHttps = z

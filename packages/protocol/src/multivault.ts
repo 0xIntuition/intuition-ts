@@ -94,6 +94,23 @@ export class Multivault {
     return vaultId
   }
 
+  public async getTripleIdFromAtoms(
+    subjectId: bigint,
+    predicateId: bigint,
+    objectId: bigint,
+  ) {
+    const tripleHash = await this.tripleHashFromAtoms(
+      subjectId,
+      predicateId,
+      objectId,
+    )
+    const tripleId = await this.contract.read.triplesByHash([tripleHash])
+    if (tripleId === 0n) {
+      return null
+    }
+    return tripleId
+  }
+
   /**
    * Returns the fees of the multivault
    */
@@ -379,22 +396,55 @@ export class Multivault {
   /**
    * Create an atom and return its vault id
    *
-   * @param atomUri - atom data to create atom with
+   * @param uri - atom data to create atom with
    * @param initialDeposit - Optional initial deposit
+   * @param wait - Optional wait for transaction to be mined, defaults to true
    * @returns vault id of the atom, transaction hash, and events
    */
-  public async createAtom(
-    atomUri: string,
-    initialDeposit?: bigint,
-  ): Promise<{
+  public async createAtom({
+    uri,
+    initialDeposit,
+    wait,
+  }: {
+    uri: string
+    initialDeposit?: bigint
+    wait?: true
+  }): Promise<{
     vaultId: bigint
     hash: `0x${string}`
     events: ParseEventLogsReturnType
+  }>
+
+  public async createAtom({
+    uri,
+    initialDeposit,
+    wait,
+  }: {
+    uri: string
+    initialDeposit?: bigint
+    wait?: false
+  }): Promise<{
+    hash: `0x${string}`
+  }>
+
+  // Implementation
+  public async createAtom({
+    uri,
+    initialDeposit,
+    wait = true,
+  }: {
+    uri: string
+    initialDeposit?: bigint
+    wait?: boolean
+  }): Promise<{
+    vaultId?: bigint
+    hash: `0x${string}`
+    events?: ParseEventLogsReturnType
   }> {
     const costWithDeposit = (await this.getAtomCost()) + (initialDeposit || 0n)
 
     try {
-      await this.contract.simulate.createAtom([toHex(atomUri)], {
+      await this.contract.simulate.createAtom([toHex(uri)], {
         value: costWithDeposit,
         account: this.client.wallet.account.address,
       })
@@ -402,10 +452,21 @@ export class Multivault {
       this._throwRevertedError(e as BaseError)
     }
 
-    const hash = await this.contract.write.createAtom([toHex(atomUri)], {
+    const hash = await this.contract.write.createAtom([toHex(uri)], {
       value: costWithDeposit,
     })
 
+    if (!wait) {
+      return { hash }
+    }
+    return this.waitForAtomCreatedTransaction(hash)
+  }
+
+  public async waitForAtomCreatedTransaction(hash: `0x${string}`): Promise<{
+    vaultId: bigint
+    hash: `0x${string}`
+    events: ParseEventLogsReturnType
+  }> {
     const { logs, status } = await this.client.public.waitForTransactionReceipt(
       { hash },
     )
@@ -489,14 +550,48 @@ export class Multivault {
    * @param objectId - vault id of the object atom
    * @returns vault id of the triple, transaction hash, and events
    */
-  public async createTriple(
-    subjectId: bigint,
-    predicateId: bigint,
-    objectId: bigint,
-  ): Promise<{
+  public async createTriple({
+    subjectId,
+    predicateId,
+    objectId,
+    wait,
+  }: {
+    subjectId: bigint
+    predicateId: bigint
+    objectId: bigint
+    wait?: true
+  }): Promise<{
     vaultId: bigint
     hash: `0x${string}`
     events: ParseEventLogsReturnType
+  }>
+  public async createTriple({
+    subjectId,
+    predicateId,
+    objectId,
+    wait,
+  }: {
+    subjectId: bigint
+    predicateId: bigint
+    objectId: bigint
+    wait?: false
+  }): Promise<{
+    hash: `0x${string}`
+  }>
+  public async createTriple({
+    subjectId,
+    predicateId,
+    objectId,
+    wait = true,
+  }: {
+    subjectId: bigint
+    predicateId: bigint
+    objectId: bigint
+    wait?: boolean
+  }): Promise<{
+    vaultId?: bigint
+    hash: `0x${string}`
+    events?: ParseEventLogsReturnType
   }> {
     const cost = await this.getTripleCost()
 
@@ -517,6 +612,17 @@ export class Multivault {
       { value: cost },
     )
 
+    if (!wait) {
+      return { hash }
+    }
+    return this.waitForTripleCreatedTransaction(hash)
+  }
+
+  public async waitForTripleCreatedTransaction(hash: `0x${string}`): Promise<{
+    vaultId: bigint
+    hash: `0x${string}`
+    events: ParseEventLogsReturnType
+  }> {
     const { logs, status } = await this.client.public.waitForTransactionReceipt(
       { hash },
     )

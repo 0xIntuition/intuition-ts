@@ -25,9 +25,12 @@ import {
   getAtomLink,
 } from '@lib/utils/misc'
 import { type FetcherWithComponents } from '@remix-run/react'
-import { PATHS } from 'consts'
+import { PATHS } from 'app/consts'
+import {
+  TransactionActionType,
+  TransactionStateType,
+} from 'app/types/transaction'
 import { useAtom } from 'jotai'
-import { TransactionActionType, TransactionStateType } from 'types/transaction'
 
 import StakeActions from './stake-actions'
 import StakeInput from './stake-input'

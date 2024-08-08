@@ -43,14 +43,14 @@ import { fetchWrapper } from '@server/api'
 import { requireUser, requireUserId } from '@server/auth'
 import { getVaultDetails } from '@server/multivault'
 import { getUserQuest } from '@server/quest'
-import { FALLBACK_CLAIM_ID } from 'consts'
-import { useAtom } from 'jotai'
+import { FALLBACK_CLAIM_ID } from 'app/consts'
 import {
   ClaimElement,
   ClaimElementType,
   MDXContentVariant,
   VaultDetailsType,
-} from 'types'
+} from 'app/types'
+import { useAtom } from 'jotai'
 
 const ROUTE_ID = QuestRouteId.STAKE_CLAIM
 

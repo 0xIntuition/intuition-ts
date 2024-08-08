@@ -22,8 +22,11 @@ import {
 } from '@lib/hooks/useTransactionReducer'
 import logger from '@lib/utils/logger'
 import { useNavigate } from '@remix-run/react'
-import { PATHS } from 'consts'
-import { TransactionActionType, TransactionStateType } from 'types/transaction'
+import { PATHS } from 'app/consts'
+import {
+  TransactionActionType,
+  TransactionStateType,
+} from 'app/types/transaction'
 
 import { AddTags } from './add-tags'
 import TagsReview from './tags-review'

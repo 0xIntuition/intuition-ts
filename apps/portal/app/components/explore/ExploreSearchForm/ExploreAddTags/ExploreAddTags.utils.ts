@@ -1,6 +1,6 @@
 import { IdentityPresenter } from '@0xintuition/api'
 
-import { TagType } from 'types/tags'
+import { TagType } from 'app/types/tags'
 
 export const isClickOutsideOfTagsInteractionZone = (
   tagsContainerRef: React.RefObject<HTMLDivElement>,

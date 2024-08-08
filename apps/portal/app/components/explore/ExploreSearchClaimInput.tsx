@@ -5,8 +5,8 @@ import { IdentityPresenter } from '@0xintuition/api'
 
 import { pascalCaseString } from '@lib/utils/misc'
 import { useFetcher, useLocation, useNavigate } from '@remix-run/react'
-import { GET_IDENTITIES_BY_IDS_RESOURCE_ROUTE } from 'consts'
-import { ClaimElement, ClaimElementType } from 'types'
+import { GET_IDENTITIES_BY_IDS_RESOURCE_ROUTE } from 'app/consts'
+import { ClaimElement, ClaimElementType } from 'app/types'
 
 import { IdentityInput, IdentityInputButtonProps } from '../identity-input'
 
@@ -126,11 +126,17 @@ const ExploreSearchClaimInput = ({
     placeholder: `Select an identity`,
     selectedValue: selectedIdentities[type]
       ? {
-          variant: selectedIdentities[type]!.is_user ? 'user' : 'non-user',
-          imgSrc: selectedIdentities[type]!.user?.image ?? null,
-          name: selectedIdentities[type]!.display_name,
+          variant: selectedIdentities[type]?.is_user ? 'user' : 'non-user',
+          imgSrc:
+            selectedIdentities[type]?.user?.image ??
+            selectedIdentities[type]?.image ??
+            null,
+          name:
+            selectedIdentities[type]?.user?.display_name ??
+            selectedIdentities[type]?.display_name ??
+            '?',
         }
-      : { name: '' },
+      : { name: '?' },
     onClick: () => handleOpenChange(type, !popoverOpen[type]),
     isPopoverOpen: popoverOpen[type],
     identities,

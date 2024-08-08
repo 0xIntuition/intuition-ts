@@ -47,7 +47,7 @@ import {
   NO_USER_IDENTITY_ERROR,
   NO_USER_TOTALS_ERROR,
   NO_WALLET_ERROR,
-} from 'consts'
+} from 'app/consts'
 
 import { ProfileLoaderData } from './_layout'
 
@@ -59,7 +59,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const searchParams = new URLSearchParams(url.search)
 
   return defer({
-    activeIdentities: getUserIdentities({ request, userWallet, searchParams }),
+    activeIdentities: getUserIdentities({
+      request,
+      userWallet: userWallet.toLowerCase(),
+      searchParams,
+    }),
     activeClaims: getUserClaims({ request, userWallet, searchParams }),
     activeClaimsSummary: fetchWrapper(request, {
       method: ClaimsService.claimSummary,

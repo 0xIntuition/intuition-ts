@@ -12,8 +12,8 @@ import { IdentityPresenter } from '@0xintuition/api'
 import { IdentitySearchCombobox } from '@components/identity/identity-search-combo-box'
 import { useIdentityServerSearch } from '@lib/hooks/useIdentityServerSearch'
 import { useFetcher } from '@remix-run/react'
-import { GET_IDENTITIES_BY_IDS_RESOURCE_ROUTE } from 'consts'
-import { TagType } from 'types/tags'
+import { GET_IDENTITIES_BY_IDS_RESOURCE_ROUTE } from 'app/consts'
+import { TagType } from 'app/types/tags'
 
 import {
   isClickOutsideOfTagsInteractionZone,

@@ -11,7 +11,7 @@ import {
 } from '@remix-run/node'
 import { useLoaderData, useSubmit } from '@remix-run/react'
 import { verifyPrivyAccessToken } from '@server/privy'
-import { PATHS, SUPPORT_EMAIL_ADDRESS } from 'consts'
+import { PATHS, SUPPORT_EMAIL_ADDRESS } from 'app/consts'
 import { parse } from 'cookie'
 
 export async function loader({ request }: LoaderFunctionArgs) {

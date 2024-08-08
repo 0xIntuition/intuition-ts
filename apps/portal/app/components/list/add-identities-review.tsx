@@ -23,8 +23,8 @@ import {
   CREATE_RESOURCE_ROUTE,
   GENERIC_ERROR_MSG,
   MULTIVAULT_CONTRACT_ADDRESS,
-} from 'consts'
-import { TransactionActionType } from 'types/transaction'
+} from 'app/consts'
+import { TransactionActionType } from 'app/types/transaction'
 import { formatUnits } from 'viem'
 import { useAccount, usePublicClient, useWalletClient } from 'wagmi'
 

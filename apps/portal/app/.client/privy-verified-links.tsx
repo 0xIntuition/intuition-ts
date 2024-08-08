@@ -10,8 +10,12 @@ import {
 import { useSocialLinking } from '@lib/hooks/usePrivySocialLinking'
 import logger from '@lib/utils/logger'
 import { Discord, Farcaster, Github, Twitter } from '@privy-io/react-auth'
-import { verifiedPlatforms } from 'consts'
-import { ExtendedPrivyUser, PlatformUserDetails, PrivyPlatform } from 'types'
+import { verifiedPlatforms } from 'app/consts'
+import {
+  ExtendedPrivyUser,
+  PlatformUserDetails,
+  PrivyPlatform,
+} from 'app/types'
 
 export function PrivyVerifiedLinks({
   privyUser,

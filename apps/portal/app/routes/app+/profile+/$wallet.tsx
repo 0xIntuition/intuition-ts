@@ -33,15 +33,15 @@ import { Outlet, useNavigate } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
 import { getVaultDetails } from '@server/multivault'
-import TwoPanelLayout from 'app/layouts/two-panel-layout'
 import {
   BLOCK_EXPLORER_URL,
   NO_WALLET_ERROR,
   PATHS,
   userIdentityRouteOptions,
-} from 'consts'
+} from 'app/consts'
+import TwoPanelLayout from 'app/layouts/two-panel-layout'
+import { VaultDetailsType } from 'app/types/vault'
 import { useAtom } from 'jotai'
-import { VaultDetailsType } from 'types/vault'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const userWallet = await requireUserWallet(request)

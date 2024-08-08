@@ -4,7 +4,7 @@ import logger from '@lib/utils/logger'
 import { invariant } from '@lib/utils/misc'
 import { json, type ActionFunctionArgs } from '@remix-run/node'
 import { requireUserWallet, setupAPI } from '@server/auth'
-import { MULTIVAULT_CONTRACT_ADDRESS, NO_WALLET_ERROR } from 'consts'
+import { MULTIVAULT_CONTRACT_ADDRESS, NO_WALLET_ERROR } from 'app/consts'
 
 export async function action({ request }: ActionFunctionArgs) {
   setupAPI(request)

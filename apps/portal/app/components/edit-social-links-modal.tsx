@@ -12,7 +12,7 @@ import {
 } from '@0xintuition/1ui'
 
 import { PrivyVerifiedLinks } from '@client/privy-verified-links'
-import { ExtendedPrivyUser } from 'types/user'
+import { ExtendedPrivyUser } from 'app/types/user'
 
 export interface EditSocialLinksModalProps {
   privyUser: ExtendedPrivyUser

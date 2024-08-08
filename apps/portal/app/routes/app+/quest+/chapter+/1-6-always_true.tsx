@@ -22,7 +22,7 @@ import { Form, useActionData, useLoaderData } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
 import { requireUser, requireUserId } from '@server/auth'
 import { getUserQuest } from '@server/quest'
-import { MDXContentVariant } from 'types'
+import { MDXContentVariant } from 'app/types'
 
 const ROUTE_ID = QuestRouteId.ALWAYS_TRUE
 

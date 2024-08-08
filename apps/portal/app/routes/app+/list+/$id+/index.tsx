@@ -43,8 +43,8 @@ import {
   NO_PARAM_ID_ERROR,
   NO_WALLET_ERROR,
   PATHS,
-} from 'consts'
-import { IdentityListType } from 'types'
+} from 'app/consts'
+import { IdentityListType } from 'app/types'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const id = params.id

@@ -1,8 +1,8 @@
 import { Button } from '@0xintuition/1ui'
 
 import { VerifiedLinkBadges } from '@client/privy-verified-links'
-import { verifiedPlatforms } from 'consts'
-import { ExtendedPrivyUser } from 'types/user'
+import { verifiedPlatforms } from 'app/consts'
+import { ExtendedPrivyUser } from 'app/types/user'
 
 // if the user has not linked any accounts, render the Link CTA version
 // if the user has linked at least one account, render the Edit CTA version

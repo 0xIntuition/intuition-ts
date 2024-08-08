@@ -1,7 +1,10 @@
 import { Dialog, DialogContent } from '@0xintuition/1ui'
 import { ClaimPresenter } from '@0xintuition/api'
 
-import { TransactionSuccessAction, TransactionSuccessActionType } from 'types'
+import {
+  TransactionSuccessAction,
+  TransactionSuccessActionType,
+} from 'app/types'
 
 import { ClaimForm } from './create-claim-form'
 

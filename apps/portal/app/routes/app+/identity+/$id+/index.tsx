@@ -16,7 +16,11 @@ import { defer, LoaderFunctionArgs } from '@remix-run/node'
 import { Await, useRouteLoaderData } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
-import { NO_IDENTITY_ERROR, NO_PARAM_ID_ERROR, NO_WALLET_ERROR } from 'consts'
+import {
+  NO_IDENTITY_ERROR,
+  NO_PARAM_ID_ERROR,
+  NO_WALLET_ERROR,
+} from 'app/consts'
 
 import { IdentityLoaderData } from '../$id'
 

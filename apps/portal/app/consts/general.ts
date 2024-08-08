@@ -1,4 +1,4 @@
-import { PrivyPlatform } from 'types/privy'
+import { PrivyPlatform } from 'app/types/privy'
 import { baseSepolia } from 'viem/chains'
 
 import { PATHS } from './paths'

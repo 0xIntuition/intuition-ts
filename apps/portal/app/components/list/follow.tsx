@@ -3,8 +3,8 @@ import { IdentityPresenter, SortColumn } from '@0xintuition/api'
 
 import { SortOption } from '@components/sort-select'
 import { formatBalance, getAtomImage, getAtomLabel } from '@lib/utils/misc'
-import { PATHS } from 'consts'
-import { PaginationType } from 'types/pagination'
+import { PATHS } from 'app/consts'
+import { PaginationType } from 'app/types/pagination'
 
 import { List } from './list'
 

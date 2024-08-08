@@ -19,14 +19,14 @@ import {
 } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
 import { requireUser, requireUserWallet } from '@server/auth'
-import FullPageLayout from 'app/layouts/full-page-layout'
-import TwoPanelLayout from 'app/layouts/two-panel-layout'
 import {
   BLOCK_EXPLORER_URL,
   IPFS_GATEWAY_URL,
   NO_PARAM_ID_ERROR,
   NO_WALLET_ERROR,
-} from 'consts'
+} from 'app/consts'
+import FullPageLayout from 'app/layouts/full-page-layout'
+import TwoPanelLayout from 'app/layouts/two-panel-layout'
 import { useAtom } from 'jotai'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {

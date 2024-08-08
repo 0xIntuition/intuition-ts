@@ -8,7 +8,7 @@ import {
   getAtomLabel,
   getAtomLink,
 } from '@lib/utils/misc'
-import { PaginationType } from 'types/pagination'
+import { PaginationType } from 'app/types/pagination'
 
 import { SortOption } from '../sort-select'
 import { List } from './list'

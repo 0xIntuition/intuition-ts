@@ -5,7 +5,7 @@ import {
   IdentityTransactionStateType,
   TransactionActionType,
   TransactionStateType,
-} from 'types/transaction'
+} from 'app/types/transaction'
 
 /**
  * This hook takes in a reducer and an initial state and returns the state and dispatch function. It's a generic hook that can be used for any reducer and initial state.

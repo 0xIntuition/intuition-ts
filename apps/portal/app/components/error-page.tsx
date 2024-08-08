@@ -1,7 +1,7 @@
 import { Button, Text } from '@0xintuition/1ui'
 
 import { cn } from '@lib/utils/misc'
-import { PATHS, SUPPORT_EMAIL_ADDRESS } from 'consts'
+import { PATHS, SUPPORT_EMAIL_ADDRESS } from 'app/consts'
 
 import NavigationButton from './navigation-link'
 

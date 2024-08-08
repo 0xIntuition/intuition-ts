@@ -5,9 +5,12 @@ import { Button, cn } from '@0xintuition/1ui'
 import { followModalAtom } from '@lib/state/store'
 import { getChainEnvConfig } from '@lib/utils/environment'
 import { useNavigation } from '@remix-run/react'
-import { CURRENT_ENV } from 'consts'
+import { CURRENT_ENV } from 'app/consts'
+import {
+  TransactionActionType,
+  TransactionStateType,
+} from 'app/types/transaction'
 import { useSetAtom } from 'jotai'
-import { TransactionActionType, TransactionStateType } from 'types/transaction'
 import { useAccount, useSwitchChain } from 'wagmi'
 
 interface UnfollowButtonProps {

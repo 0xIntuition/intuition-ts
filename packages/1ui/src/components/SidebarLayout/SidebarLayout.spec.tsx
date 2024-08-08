@@ -84,7 +84,7 @@ describe('SidebarLayout', () => {
                   </span>
                 </button>
                 <button
-                  class="flex justify-center items-center gap-2 text-sm font-medium border disabled:text-muted-foreground bg-transparent text-primary/70 border-transparent hover:text-primary disabled:border-transparent disabled:bg-transparent shadow-none p-1"
+                  class="flex justify-center items-center gap-2 text-sm font-medium border disabled:text-muted-foreground aria-disabled:text-muted-foreground aria-disabled:pointer-events-none bg-transparent text-primary/70 border-transparent hover:text-primary disabled:border-transparent aria-disabled:border-transparent disabled:bg-transparent aria-disabled:bg-transparent shadow-none p-1"
                 >
                   <svg
                     class="h-6 w-6"
@@ -102,7 +102,7 @@ describe('SidebarLayout', () => {
                   class="flex flex-col gap-px"
                 >
                   <button
-                    class="flex items-center font-medium border disabled:bg-muted disabled:border-muted bg-transparent text-secondary-foreground/70 border-transparent rounded-lg hover:text-secondary-foreground hover:border-border/20 aria-selected:bg-primary/10 aria-selected:text-secondary-foreground/80 disabled:text-muted-foreground px-5 py-2.5 gap-4 text-lg w-full justify-start truncate"
+                    class="flex items-center font-medium border disabled:bg-muted aria-disabled:bg-muted disabled:border-muted aria-disabled:border-muted aria-disabled:pointer-events-none bg-transparent text-secondary-foreground/70 border-transparent rounded-lg hover:text-secondary-foreground hover:border-border/20 aria-selected:bg-primary/10 aria-selected:text-secondary-foreground/80 disabled:text-muted-foreground aria-disabled:text-muted-foreground px-5 py-2.5 gap-4 text-lg w-full justify-start truncate"
                   >
                     <svg
                       class="h-6 w-6"
@@ -114,7 +114,7 @@ describe('SidebarLayout', () => {
                     Explore This
                   </button>
                   <button
-                    class="flex items-center font-medium border disabled:bg-muted disabled:border-muted bg-transparent text-secondary-foreground/70 border-transparent rounded-lg hover:text-secondary-foreground hover:border-border/20 aria-selected:bg-primary/10 aria-selected:text-secondary-foreground/80 disabled:text-muted-foreground px-5 py-2.5 gap-4 text-lg w-full justify-start truncate"
+                    class="flex items-center font-medium border disabled:bg-muted aria-disabled:bg-muted disabled:border-muted aria-disabled:border-muted aria-disabled:pointer-events-none bg-transparent text-secondary-foreground/70 border-transparent rounded-lg hover:text-secondary-foreground hover:border-border/20 aria-selected:bg-primary/10 aria-selected:text-secondary-foreground/80 disabled:text-muted-foreground aria-disabled:text-muted-foreground px-5 py-2.5 gap-4 text-lg w-full justify-start truncate"
                   >
                     <svg
                       class="h-6 w-6"
@@ -130,7 +130,7 @@ describe('SidebarLayout', () => {
                   class="flex flex-col gap-px"
                 >
                   <button
-                    class="flex items-center font-medium border disabled:bg-muted disabled:border-muted bg-transparent text-secondary-foreground/70 border-transparent rounded-lg hover:text-secondary-foreground hover:border-border/20 aria-selected:bg-primary/10 aria-selected:text-secondary-foreground/80 disabled:text-muted-foreground px-5 py-2.5 gap-4 text-lg w-full justify-start truncate"
+                    class="flex items-center font-medium border disabled:bg-muted aria-disabled:bg-muted disabled:border-muted aria-disabled:border-muted aria-disabled:pointer-events-none bg-transparent text-secondary-foreground/70 border-transparent rounded-lg hover:text-secondary-foreground hover:border-border/20 aria-selected:bg-primary/10 aria-selected:text-secondary-foreground/80 disabled:text-muted-foreground aria-disabled:text-muted-foreground px-5 py-2.5 gap-4 text-lg w-full justify-start truncate"
                   >
                     <svg
                       class="h-6 w-6"
@@ -142,7 +142,7 @@ describe('SidebarLayout', () => {
                     Settings
                   </button>
                   <div
-                    class="flex items-center font-medium border disabled:bg-muted disabled:border-muted bg-transparent text-secondary-foreground/70 border-transparent rounded-lg hover:text-secondary-foreground hover:border-border/20 aria-selected:bg-primary/10 aria-selected:text-secondary-foreground/80 disabled:text-muted-foreground px-5 py-2.5 gap-4 text-lg w-full justify-start"
+                    class="flex items-center font-medium border disabled:bg-muted aria-disabled:bg-muted disabled:border-muted aria-disabled:border-muted aria-disabled:pointer-events-none bg-transparent text-secondary-foreground/70 border-transparent rounded-lg hover:text-secondary-foreground hover:border-border/20 aria-selected:bg-primary/10 aria-selected:text-secondary-foreground/80 disabled:text-muted-foreground aria-disabled:text-muted-foreground px-5 py-2.5 gap-4 text-lg w-full justify-start"
                   >
                     <span
                       class="relative flex shrink-0 overflow-hidden aspect-square bg-background theme-border rounded-full h-6 w-6"
