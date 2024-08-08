@@ -29,7 +29,6 @@ export default function PrivyLoginButton({
   const handleClick = () => {
     setLoading(true)
     login()
-    handleLogin
   }
 
   return (

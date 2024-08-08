@@ -13,12 +13,12 @@ export const verifyPrivyAccessToken = async (
   req: Request,
 ): Promise<AuthTokenClaims | null> => {
   const privy = getPrivyClient()
-  const { accessToken } = getPrivyTokens(req)
-  if (!accessToken) {
+  const authToken = getPrivyAccessToken(req)
+  if (!authToken) {
     logger('No privy access token found')
     return null
   }
-  const verifiedClaims = await privy.verifyAuthToken(accessToken)
+  const verifiedClaims = await privy.verifyAuthToken(authToken)
   return verifiedClaims
 }
 
