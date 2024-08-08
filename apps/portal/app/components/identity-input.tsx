@@ -69,10 +69,11 @@ const IdentityInputButton = ({
             <IdentityTag
               size={IdentityTagSize.lg}
               variant={selectedValue.variant}
+              imgSrc={selectedValue.imgSrc}
               className="min-w-32"
               {...props}
             >
-              <Trunctacular value={selectedValue.name.toLowerCase()} />
+              <Trunctacular value={selectedValue.name} maxStringLength={20} />
             </IdentityTag>
           ) : (
             <Button
