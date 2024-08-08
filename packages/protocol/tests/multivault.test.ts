@@ -62,23 +62,25 @@ describe('MultiVault', () => {
   })
 
   it('can create atom', async () => {
-    const { vaultId, hash, events } = await multiVault.createAtom('hello')
+    const { vaultId, hash, events } = await multiVault.createAtom({
+      uri: 'hello',
+    })
     expect(vaultId).toBeDefined()
     expect(hash).toBeDefined()
     expect(events).toBeDefined()
   })
 
   it('throws error when creating atom with the same atomUri', async () => {
-    await expect(() => multiVault.createAtom('hello')).rejects.toThrow(
+    await expect(() => multiVault.createAtom({ uri: 'hello' })).rejects.toThrow(
       'MultiVault_AtomExists',
     )
   })
 
   it('can create atom with initial deposit', async () => {
-    const { vaultId, hash, events } = await multiVault.createAtom(
-      'hello2',
-      parseEther('0.5'),
-    )
+    const { vaultId, hash, events } = await multiVault.createAtom({
+      uri: 'hello2',
+      initialDeposit: parseEther('0.5'),
+    })
     expect(vaultId).toBeDefined()
     expect(hash).toBeDefined()
     expect(events).toBeDefined()
@@ -101,11 +103,13 @@ describe('MultiVault', () => {
   })
 
   it('can create triple', async () => {
-    const { vaultId: subjectId } = await multiVault.createAtom('Alice')
-    const { vaultId: predicateId } = await multiVault.createAtom('likes')
-    const { vaultId: objectId } = await multiVault.createAtom(
-      'https://intuition.systems',
-    )
+    const { vaultId: subjectId } = await multiVault.createAtom({ uri: 'Alice' })
+    const { vaultId: predicateId } = await multiVault.createAtom({
+      uri: 'likes',
+    })
+    const { vaultId: objectId } = await multiVault.createAtom({
+      uri: 'https://intuition.systems',
+    })
 
     const { vaultId, hash, events } = await multiVault.createTriple(
       subjectId,
@@ -154,8 +158,25 @@ describe('atom life cycle', () => {
     expect(vaultId).toBeNull()
   })
 
+  let txHash: `0x${string}`
+
+  it('can create atom without waiting for transaction receipt', async () => {
+    const { hash } = await multiVault.createAtom({
+      uri: 'barbaz',
+      wait: false,
+    })
+    expect(hash).toBeDefined()
+
+    txHash = hash
+  })
+
+  it('can wait for atom creation transaction receipt', async () => {
+    const { vaultId } = await multiVault.waitForAtomCreatedTransaction(txHash)
+    expect(vaultId).toBeDefined()
+  })
+
   it('can create atom', async () => {
-    const { vaultId } = await multiVault.createAtom('lorem')
+    const { vaultId } = await multiVault.createAtom({ uri: 'lorem' })
     expect(vaultId).toBeDefined()
 
     atomVaultId = vaultId
@@ -290,10 +311,15 @@ describe('triple life cycle', () => {
   let sharesPreview: bigint
 
   it('can create triple', async () => {
-    const { vaultId: subjectId } = await multiVault.createAtom('did:example:1')
-    const { vaultId: predicateId } =
-      await multiVault.createAtom('did:example:2')
-    const { vaultId: objectId } = await multiVault.createAtom('did:example:3')
+    const { vaultId: subjectId } = await multiVault.createAtom({
+      uri: 'did:example:1',
+    })
+    const { vaultId: predicateId } = await multiVault.createAtom({
+      uri: 'did:example:2',
+    })
+    const { vaultId: objectId } = await multiVault.createAtom({
+      uri: 'did:example:3',
+    })
 
     const { vaultId } = await multiVault.createTriple(
       subjectId,
