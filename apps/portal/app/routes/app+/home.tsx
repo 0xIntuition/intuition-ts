@@ -1,4 +1,3 @@
-import { request } from 'http'
 import { Suspense } from 'react'
 
 import { EmptyStateCard, ErrorStateCard, Text } from '@0xintuition/1ui'
@@ -11,15 +10,21 @@ import {
 } from '@0xintuition/api'
 
 import { HomeSectionHeader } from '@components/home/home-section-header'
-// import { HomeStatsHeader } from '@components/home/home-stats-header'
+import { HomeStatsHeader } from '@components/home/home-stats-header'
+import { ActivityList } from '@components/list/activity'
 import { ClaimsList } from '@components/list/claims'
 import { IdentitiesList } from '@components/list/identities'
 import { ListClaimsList } from '@components/list/list-claims'
 import { ListClaimsSkeletonLayout } from '@components/list/list-skeletons'
 import { RevalidateButton } from '@components/revalidate-button'
-import { ActivitySkeleton, PaginatedListSkeleton } from '@components/skeleton'
+import {
+  ActivitySkeleton,
+  HomeStatsHeaderSkeleton,
+  PaginatedListSkeleton,
+} from '@components/skeleton'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
-import { getActivity, getActivity } from '@lib/services/activity'
+import { getActivity } from '@lib/services/activity'
+import { getSystemStats } from '@lib/services/stats'
 import { invariant } from '@lib/utils/misc'
 import { defer, LoaderFunctionArgs } from '@remix-run/node'
 import { Await } from '@remix-run/react'
@@ -27,7 +32,6 @@ import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
 import FullPageLayout from 'app/layouts/full-page-layout'
 import { NO_WALLET_ERROR, TAG_PREDICATE_VAULT_ID_TESTNET } from 'consts'
-import { ActivityList } from '@components/list/activity'
 import { PaginationType } from 'types'
 
 export async function loader({ request }: LoaderFunctionArgs) {
@@ -43,6 +47,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   listSearchParams.set('limit', '6')
 
   return defer({
+    systemStats: getSystemStats(request),
     topUsers: fetchWrapper(request, {
       method: IdentitiesService.searchIdentity,
       args: {
@@ -74,10 +79,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export default function HomePage() {
-  const { topUsers, topClaims, recentLists, activity } = useLiveLoader<typeof loader>([
-    'attest',
-    'create',
-  ])
+  const { systemStats, topUsers, topClaims, recentLists, activity } =
+    useLiveLoader<typeof loader>(['attest', 'create'])
 
   return (
     <FullPageLayout>
@@ -89,14 +92,27 @@ export default function HomePage() {
         >
           Intuition System Stats
         </Text>
-        {/* <HomeStatsHeader
-        totalIdentities={totalIdentities}
-        totalClaims={totalClaims}
-        totalUsers={totalUsers}
-        totalVolume={totalVolume}
-        totalStaked={totalStaked}
-        totalSignals={totalSignals}
-        /> */}
+        <Suspense fallback={<HomeStatsHeaderSkeleton />}>
+          <Await
+            resolve={systemStats}
+            errorElement={
+              <ErrorStateCard>
+                <RevalidateButton />
+              </ErrorStateCard>
+            }
+          >
+            {(resolvedStats) => (
+              <HomeStatsHeader
+                totalIdentities={resolvedStats.totalIdentities}
+                totalClaims={resolvedStats.totalClaims}
+                totalUsers={resolvedStats.totalUsers}
+                totalVolume={resolvedStats.totalVolume || 0}
+                totalStaked={resolvedStats.totalStaked || 0}
+                totalSignals={resolvedStats.totalSignals || 0}
+              />
+            )}
+          </Await>
+        </Suspense>
         <HomeSectionHeader
           title="Recent Lists"
           buttonText="Explore Lists"
@@ -207,23 +223,23 @@ export default function HomePage() {
           buttonText="Open Feed"
           buttonLink="/app/activity/global"
         />
-         <Suspense fallback={<ActivitySkeleton />}>
-      <Await
-        resolve={activity}
-        errorElement={
-          <ErrorStateCard>
-            <RevalidateButton />
-          </ErrorStateCard>
-        }
-      >
-        {(resolvedActivity) => (
-          <ActivityList
-            activities={resolvedActivity.activity as ActivityPresenter[]}
-            pagination={resolvedActivity.pagination as PaginationType}
-          />
-        )}
-      </Await>
-    </Suspense>
+        <Suspense fallback={<ActivitySkeleton />}>
+          <Await
+            resolve={activity}
+            errorElement={
+              <ErrorStateCard>
+                <RevalidateButton />
+              </ErrorStateCard>
+            }
+          >
+            {(resolvedActivity) => (
+              <ActivityList
+                activities={resolvedActivity.activity as ActivityPresenter[]}
+                pagination={resolvedActivity.pagination as PaginationType}
+              />
+            )}
+          </Await>
+        </Suspense>
       </div>
     </FullPageLayout>
   )
