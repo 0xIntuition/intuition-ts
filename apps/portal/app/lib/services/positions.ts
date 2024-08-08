@@ -4,7 +4,6 @@ import {
   IdentityPositionsService,
   PositionPresenter,
   PositionSortColumn,
-  PositionsService,
   SortDirection,
   VaultType,
 } from '@0xintuition/api'
@@ -12,7 +11,11 @@ import {
 import { calculateTotalPages } from '@lib/utils/misc'
 import { getStandardPageParams } from '@lib/utils/params'
 import { fetchWrapper } from '@server/api'
+<<<<<<< HEAD
 import { PaginationType } from 'app/types/pagination'
+=======
+import { PaginationType } from 'types'
+>>>>>>> a692b83c (Adds in basic take on responsive for the header)
 
 export async function getPositionsOnIdentity({
   request,
@@ -32,7 +35,7 @@ export async function getPositionsOnIdentity({
     (searchParams.get('positionsSearch') as Identifier) || null
 
   const positions = await fetchWrapper(request, {
-    method: PositionsService.positionSummary,
+    method: IdentityPositionsService.getIdentityPositions,
     args: {
       id: identityId,
       page,

@@ -105,7 +105,7 @@ export function HomeStatsHeader({
       className="flex justify-between items-center w-full p-4 bg-black rounded-xl border border-neutral-300/20"
       {...props}
     >
-      <div className="flex gap-8">
+      <div className="flex gap-8 max-lg:flex-col max-lg:gap-2">
         <StatItem label="Identities" value={totalIdentities} />
         <StatItem label="Claims" value={totalClaims} />
         <StatItem label="Users" value={totalUsers} />
@@ -114,7 +114,7 @@ export function HomeStatsHeader({
         orientation="vertical"
         className="mx-8 h-12 w-px bg-gradient-radial from-white via-white/20"
       />
-      <div className="flex gap-8">
+      <div className="flex gap-8 max-lg:flex-col max-lg:gap-2">
         {/* <StatItem label="Volume" value={`${totalVolume} ETH`} /> */}
         <StatItem label="Staked" value={`${totalStaked} ETH`} />
         <StatItem label="Signals" value={totalSignals} />
