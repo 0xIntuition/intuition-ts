@@ -15,6 +15,7 @@ export default function StakeActions({
   action,
   setVal,
   walletBalance,
+  minDeposit,
   userConviction,
   price,
 }: StakeActionsProps) {
@@ -24,7 +25,7 @@ export default function StakeActions({
         variant="ghost"
         className={`${action === 'redeem' && 'hidden'}`}
         onClick={() => {
-          setVal('0.0007') // TODO: user minDeposit once we figure out the issue why it isn't returning this value
+          setVal(formatUnits(BigInt(minDeposit), 18))
         }}
       >
         <Text variant="small">Min</Text>
