@@ -8,6 +8,7 @@ import { RevalidateButton } from '@components/revalidate-button'
 import { ActivitySkeleton } from '@components/skeleton'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { getActivity } from '@lib/services/activity'
+import logger from '@lib/utils/logger'
 import { invariant } from '@lib/utils/misc'
 import { defer, LoaderFunctionArgs } from '@remix-run/node'
 import { Await } from '@remix-run/react'
@@ -39,25 +40,24 @@ export async function loader({ request }: LoaderFunctionArgs) {
 export default function PersonalActivityFeed() {
   const { activity } = useLiveLoader<typeof loader>(['attest', 'create'])
 
+  logger('personal feed render')
   return (
-    <>
-      <Suspense fallback={<ActivitySkeleton />}>
-        <Await
-          resolve={Promise.all([activity])}
-          errorElement={
-            <ErrorStateCard>
-              <RevalidateButton />
-            </ErrorStateCard>
-          }
-        >
-          {([resolvedActivity]) => (
-            <ActivityList
-              activities={resolvedActivity.activity as ActivityPresenter[]}
-              pagination={resolvedActivity.pagination as PaginationType}
-            />
-          )}
-        </Await>
-      </Suspense>
-    </>
+    <Suspense fallback={<ActivitySkeleton />}>
+      <Await
+        resolve={activity}
+        errorElement={
+          <ErrorStateCard>
+            <RevalidateButton />
+          </ErrorStateCard>
+        }
+      >
+        {(resolvedActivity) => (
+          <ActivityList
+            activities={resolvedActivity.activity as ActivityPresenter[]}
+            pagination={resolvedActivity.pagination as PaginationType}
+          />
+        )}
+      </Await>
+    </Suspense>
   )
 }

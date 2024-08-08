@@ -73,19 +73,24 @@ export default function ProfileDataAbout() {
           </Text>
         </div>
         <Suspense fallback={<DataHeaderSkeleton />}>
-          <Await
-            resolve={Promise.all([claims, claimsSummary])}
-            errorElement={<></>}
-          >
-            {([resolvedClaims, resolvedClaimsSummary]) => (
-              <DataAboutHeader
-                variant="claims"
-                userIdentity={identity}
-                totalClaims={resolvedClaims.pagination.totalEntries}
-                totalStake={
-                  +formatBalance(resolvedClaimsSummary?.assets_sum ?? 0, 18, 4)
-                }
-              />
+          <Await resolve={claims} errorElement={<></>}>
+            {(resolvedClaims) => (
+              <Await resolve={claimsSummary} errorElement={<></>}>
+                {(resolvedClaimsSummary) => (
+                  <DataAboutHeader
+                    variant="claims"
+                    userIdentity={identity}
+                    totalClaims={resolvedClaims.pagination.totalEntries}
+                    totalStake={
+                      +formatBalance(
+                        resolvedClaimsSummary?.assets_sum ?? 0,
+                        18,
+                        4,
+                      )
+                    }
+                  />
+                )}
+              </Await>
             )}
           </Await>
         </Suspense>
