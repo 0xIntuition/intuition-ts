@@ -9,7 +9,6 @@ import { useRedeemAtom } from '@lib/hooks/useRedeemAtom'
 import { transactionReducer } from '@lib/hooks/useTransactionReducer'
 import { stakeModalAtom } from '@lib/state/store'
 import logger from '@lib/utils/logger'
-import { formatBalance } from '@lib/utils/misc'
 import { useGenericTxState } from '@lib/utils/use-tx-reducer'
 import { useFetcher, useLocation } from '@remix-run/react'
 import { useQueryClient } from '@tanstack/react-query'
@@ -132,6 +131,7 @@ export default function StakeModal({
   const useHandleAction = (actionType: string) => {
     return async () => {
       try {
+        const parsedValue = parseUnits(val === '' ? '0' : val, 18)
         const txHash = await writeContractAsync({
           address: contract as `0x${string}`,
           abi: multivaultAbi as Abi,
@@ -159,10 +159,7 @@ export default function StakeModal({
                   userWallet as `0x${string}`,
                   vaultId,
                 ],
-          value:
-            actionType === 'buy'
-              ? parseUnits(val === '' ? '0' : val, 18)
-              : undefined,
+          value: actionType === 'buy' ? parsedValue : undefined,
         })
 
         if (publicClient && txHash) {
@@ -329,7 +326,7 @@ export default function StakeModal({
 
   const handleStakeButtonClick = async () => {
     if (
-      (mode === 'deposit' && val < formatBalance(min_deposit, 18)) ||
+      (mode === 'deposit' && +val < +formatUnits(BigInt(min_deposit), 18)) ||
       +val > (mode === 'deposit' ? +walletBalance : +(user_conviction ?? '0'))
     ) {
       setShowErrors(true)
