@@ -16,6 +16,13 @@
       "options": {
         "config": "apps/portal/vitest.config.ts"
       }
+    },
+    "typecheck": {
+      "dependsOn": ["^build"],
+      "command": "tsc",
+      "options": {
+        "cwd": "apps/portal"
+      }
     }
   }
 }

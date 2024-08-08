@@ -8,14 +8,17 @@ import {
   VaultType,
 } from '@0xintuition/api'
 
-import { calculateTotalPages, fetchWrapper } from '@lib/utils/misc'
+import { calculateTotalPages } from '@lib/utils/misc'
 import { getStandardPageParams } from '@lib/utils/params'
-import { PaginationType } from 'types/pagination'
+import { fetchWrapper } from '@server/api'
+import { PaginationType } from 'app/types/pagination'
 
 export async function getPositionsOnIdentity({
+  request,
   identityId,
   searchParams,
 }: {
+  request: Request
   identityId: string
   searchParams: URLSearchParams
 }) {
@@ -27,7 +30,7 @@ export async function getPositionsOnIdentity({
   const positionsSearch =
     (searchParams.get('positionsSearch') as Identifier) || null
 
-  const positions = await fetchWrapper({
+  const positions = await fetchWrapper(request, {
     method: IdentityPositionsService.getIdentityPositions,
     args: {
       id: identityId,
@@ -51,9 +54,11 @@ export async function getPositionsOnIdentity({
 }
 
 export async function getPositionsOnClaim({
+  request,
   claimId,
   searchParams,
 }: {
+  request: Request
   claimId: string
   searchParams: URLSearchParams
 }): Promise<{
@@ -71,7 +76,7 @@ export async function getPositionsOnClaim({
   const positionDirection =
     (searchParams.get('positionDirection') as VaultType) || null
 
-  const positions = await fetchWrapper({
+  const positions = await fetchWrapper(request, {
     method: ClaimPositionsService.getClaimPositions,
     args: {
       id: claimId,

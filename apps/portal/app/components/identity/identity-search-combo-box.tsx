@@ -10,19 +10,23 @@ import {
   CommandInput,
   CommandList,
   EmptyStateCard,
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
   Icon,
   IconName,
+  ProfileCard,
 } from '@0xintuition/1ui'
 import { IdentityPresenter } from '@0xintuition/api'
 
-import { formatBalance, truncateString } from '@lib/utils/misc'
+import { formatBalance, sliceString, truncateString } from '@lib/utils/misc'
+import { BLOCK_EXPLORER_URL, IPFS_GATEWAY_URL } from 'app/consts'
 
 import { IdentitySearchComboboxItem } from './identity-search-combo-box-item'
 
 export interface IdentitySearchComboboxProps
   extends React.HTMLAttributes<HTMLDivElement> {
   identities: IdentityPresenter[]
-  existingIdentityIds?: string[]
   placeholder?: string
   onIdentityClick?: (identity: IdentityPresenter) => void
   onIdentitySelect?: (identity: IdentityPresenter) => void
@@ -34,7 +38,6 @@ export interface IdentitySearchComboboxProps
 }
 
 // TODO: [ENG-2670] - determine why there are more selected identities showing when overriding default search
-// TODO: [ENG-2511] - determine what is causing mouse scrolling to be unavailable when overriding default search
 
 const IdentitySearchCombobox = ({
   placeholder = 'Search for an identity...',
@@ -42,7 +45,6 @@ const IdentitySearchCombobox = ({
   onIdentitySelect = () => {},
   onCreateIdentityClick,
   identities,
-  existingIdentityIds,
   onValueChange,
   onInput,
   value,
@@ -50,7 +52,7 @@ const IdentitySearchCombobox = ({
   ...props
 }: IdentitySearchComboboxProps) => {
   return (
-    <div className="min-w-96" {...props}>
+    <div className="min-w-96 max-md:min-w-0 max-md:w-[90vw]" {...props}>
       <Command shouldFilter={shouldFilter}>
         <CommandInput
           placeholder={placeholder}
@@ -73,36 +75,80 @@ const IdentitySearchCombobox = ({
           <CommandEmpty>
             <EmptyStateCard
               message="No identities found."
-              className="border-none"
+              className="border-none max-md:min-h-0 max-md:h-fit"
             />
           </CommandEmpty>
           <CommandGroup key={identities.length}>
-            {identities.map((identity, index) => {
+            {identities.map((identity) => {
               const {
                 display_name: name,
+                user,
+                image,
                 assets_sum: value,
                 creator_address: walletAddress,
                 follower_count: socialCount,
                 tag_count: tagCount,
                 is_user: isUser,
-                identity_id,
               } = identity
               const variant = isUser ? 'user' : 'non-user'
-              const isDisabled = existingIdentityIds?.includes(identity_id)
 
               return (
-                <IdentitySearchComboboxItem
-                  key={index}
-                  variant={variant}
-                  name={truncateString(name, 7)}
-                  value={+formatBalance(value)}
-                  walletAddress={walletAddress}
-                  socialCount={socialCount || 0}
-                  tagCount={tagCount || 0}
-                  onClick={() => onIdentityClick(identity)}
-                  onSelect={() => onIdentitySelect(identity)}
-                  disabled={isDisabled}
-                />
+                <HoverCard openDelay={100} closeDelay={100} key={identity.id}>
+                  <HoverCardTrigger className="w-full">
+                    <IdentitySearchComboboxItem
+                      key={identity.id}
+                      variant={variant}
+                      name={truncateString(user?.display_name ?? name, 7)}
+                      avatarSrc={user?.image ?? image ?? ''}
+                      value={+formatBalance(value)}
+                      walletAddress={walletAddress}
+                      socialCount={socialCount || 0}
+                      tagCount={tagCount || 0}
+                      onClick={() => onIdentityClick(identity)}
+                      onSelect={() => onIdentitySelect(identity)}
+                    />
+                  </HoverCardTrigger>
+                  {identity && (
+                    <HoverCardContent
+                      side="right"
+                      sideOffset={16}
+                      className="w-80 max-md:w-[80%]"
+                    >
+                      <ProfileCard
+                        variant={identity.is_user ? 'user' : 'non-user'}
+                        avatarSrc={identity.user?.image ?? identity.image ?? ''}
+                        name={truncateString(
+                          identity.user?.display_name ?? identity.display_name,
+                          18,
+                        )}
+                        id={
+                          identity.is_user === true
+                            ? identity.user?.ens_name ??
+                              sliceString(identity.user?.wallet, 6, 4)
+                            : identity.identity_id
+                        }
+                        stats={
+                          identity.is_user === true
+                            ? {
+                                numberOfFollowers: identity.follower_count ?? 0,
+                                numberOfFollowing: identity.followed_count ?? 0,
+                              }
+                            : undefined
+                        }
+                        bio={
+                          identity.is_user === true
+                            ? identity.user?.description ?? ''
+                            : identity.description ?? ''
+                        }
+                        ipfsLink={
+                          identity.is_user === true
+                            ? `${BLOCK_EXPLORER_URL}/address/${identity.identity_id}`
+                            : `${IPFS_GATEWAY_URL}/${identity?.identity_id?.replace('ipfs://', '')}`
+                        }
+                      ></ProfileCard>
+                    </HoverCardContent>
+                  )}
+                </HoverCard>
               )
             })}
           </CommandGroup>

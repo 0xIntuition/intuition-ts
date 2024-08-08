@@ -3,9 +3,11 @@ import { useEffect, useState } from 'react'
 import {
   Button,
   DialogHeader,
+  DialogTitle,
   Icon,
   Input,
   Label,
+  Text,
   Textarea,
   toast,
 } from '@0xintuition/1ui'
@@ -35,11 +37,11 @@ import {
   DESCRIPTION_MAX_LENGTH,
   MAX_NAME_LENGTH,
   MAX_UPLOAD_SIZE,
-} from 'consts'
+} from 'app/consts'
 import {
   IdentityTransactionActionType,
   IdentityTransactionStateType,
-} from 'types/transaction'
+} from 'app/types/transaction'
 
 interface EditProfileFormProps {
   userObject: UserPresenter
@@ -271,91 +273,75 @@ export function EditProfileForm({
 
   return (
     <>
-      <>
-        <DialogHeader className="py-4">
-          <div className="absolute top-5 flex flex-row items-center gap-2 align-baseline text-primary-400">
-            <h2 className="text-xl text-white/70 font-normal">
+      <DialogHeader className="pb-1">
+        <DialogTitle>
+          <div className="flex items-center gap-2">
+            <Icon name="avatar-sparkle" />
+            <Text variant="headline">
               {isCreateRoute ? 'Create Profile' : 'Update Profile'}
-            </h2>
-            <Icon
-              name="circle-question-mark"
-              className="h-4 w-4 text-neutral-500 transition-colors duration-300 hover:text-neutral-400"
-            />
+            </Text>
           </div>
-        </DialogHeader>
+        </DialogTitle>
+      </DialogHeader>
 
-        <offChainFetcher.Form
-          method="post"
-          {...getFormProps(form)}
-          encType="multipart/form-data"
-          action="/actions/edit-profile"
-        >
-          <div className="h-[184px] w-full py-1 flex-col justify-start items-start inline-flex">
-            <div className="self-stretch h-[38px] py-2.5 flex-col justify-start items-start gap-1 flex">
-              <div className="self-stretch justify-start items-center gap-2.5 inline-flex">
-                <div className="grow shrink basis-0 text-white/70 text-xs font-medium leading-[18px]">
-                  Profile Picture
-                </div>
+      <offChainFetcher.Form
+        method="post"
+        {...getFormProps(form)}
+        encType="multipart/form-data"
+        action="/actions/edit-profile"
+      >
+        <div>
+          {/* Profile picture */}
+          <div className="flex flex-col gap-2">
+            <Label className="text-sm text-secondary-foreground">
+              Profile Picture
+            </Label>
+            <div className="flex justify-between items-center p-4 theme-border rounded-lg bg-primary/10">
+              <div className="w-fit">
+                <ImageChooser
+                  previewImage={previewImage}
+                  setPreviewImage={setPreviewImage}
+                  onFileChange={handleFileChange}
+                  setImageFile={setImageFile}
+                />
               </div>
+              <div className="flex flex-col h-full items-start justify-center text-secondary-foreground">
+                <Text variant="footnote">
+                  {truncateString(imageFilename ?? '', 36)}
+                </Text>
+                <Text variant="footnote">{imageFilesize}</Text>
+              </div>
+              <Button
+                variant="text"
+                size="icon"
+                onClick={(e) => {
+                  e.preventDefault()
+                  setPreviewImage(null)
+                  setImageFilename(null)
+                  setImageFilesize(null)
+                }}
+                className={previewImage === null ? 'hidden' : ''}
+              >
+                <Icon name="circle-x" />
+              </Button>
             </div>
-            <div className="self-stretch h-[100px] px-9 py-2.5 border border-input/30 bg-primary/10 rounded-md justify-between items-center inline-flex">
-              <div className="justify-start items-center gap-[18px] flex">
-                <div className="w-[60px] h-[60px] rounded-xl justify-center items-center flex">
-                  <ImageChooser
-                    previewImage={previewImage}
-                    setPreviewImage={setPreviewImage}
-                    onFileChange={handleFileChange}
-                    setImageFile={setImageFile}
-                  />
-                </div>
-                <div className="flex-col justify-start items-start inline-flex">
-                  <div className="text-center text-neutral-200 text-sm font-normal leading-tight">
-                    {truncateString(imageFilename ?? '', 36)}
-                  </div>
-                  <div className="text-center text-neutral-200 text-xs font-normal leading-[18px]">
-                    {imageFilesize}
-                  </div>
-                </div>
-              </div>
-              <div className="flex-col justify-end items-end inline-flex">
-                <button
-                  onClick={(e) => {
-                    e.preventDefault()
-                    setPreviewImage(null)
-                    setImageFilename(null)
-                    setImageFilesize(null)
-                  }}
-                  className={`${previewImage === null ? 'hidden' : 'block'}`}
-                >
-                  <Icon
-                    name="circle-x"
-                    className="h-6 w-6 relative text-neutral-700 hover:text-neutral-600 transition-colors duration-300"
-                  />
-                </button>
-              </div>
-            </div>
-            <div className="self-stretch p-2.5 rounded-lg justify-center items-center gap-2.5 inline-flex">
-              <div className="grow shrink basis-0 text-right text-secondary-foreground text-xs font-normal leading-[18px]">
-                {fields.image_url.errors ? (
-                  <ErrorList
-                    id={fields.image_url.errorId}
-                    errors={fields.image_url.errors}
-                  />
-                ) : (
-                  `Max ${MAX_UPLOAD_SIZE / 1024 / 1024} MB`
-                )}
-              </div>
-            </div>
+            <Text
+              variant="small"
+              className="self-end text-secondary-foreground"
+            >
+              {fields.image_url.errors ? (
+                <ErrorList
+                  id={fields.image_url.errorId}
+                  errors={fields.image_url.errors}
+                />
+              ) : (
+                `Max ${MAX_UPLOAD_SIZE / 1024 / 1024} MB`
+              )}
+            </Text>
           </div>
-          <div className="self-stretch h-[124px] py-1 flex-col justify-start items-start flex">
-            <div className="self-stretch h-[38px] py-2.5 flex-col justify-start items-start gap-1 flex">
-              <div className="self-stretch justify-start items-center gap-2.5 inline-flex">
-                <div className="grow shrink basis-0 text-white/70 text-xs font-medium leading-[18px]">
-                  Display Name
-                </div>
-              </div>
-            </div>
-            <Label htmlFor={fields.display_name.id} hidden>
+          {/* Display name */}
+          <div className="flex flex-col gap-2">
+            <Label className="text-sm text-secondary-foreground">
               Display Name
             </Label>
             <Input
@@ -365,23 +351,16 @@ export function EditProfileForm({
               onChange={handleDisplayNameChange}
               className="w-full"
             />
-            <div className="self-stretch p-2.5 rounded-lg justify-center items-center gap-2.5 inline-flex">
-              <div className="grow shrink basis-0 text-right text-secondary-foreground text-xs font-normal leading-[18px]">
-                Max {MAX_NAME_LENGTH} characters
-              </div>
-            </div>
+            <Text
+              variant="small"
+              className="self-end text-secondary-foreground"
+            >
+              Max {MAX_NAME_LENGTH} characters
+            </Text>
           </div>
-          <div className="self-stretch h-[164px] py-1 rounded-xl flex-col justify-start items-start flex">
-            <div className="self-stretch h-[38px] py-2.5 flex-col justify-start items-start gap-1 flex">
-              <div className="self-stretch justify-start items-center gap-2.5 inline-flex">
-                <div className="grow shrink basis-0 text-white/70 text-xs font-medium leading-[18px]">
-                  Bio
-                </div>
-              </div>
-            </div>
-            <Label htmlFor={fields.description.id} hidden>
-              Bio
-            </Label>
+          {/* Bio */}
+          <div className="flex flex-col gap-2">
+            <Label className="text-sm text-secondary-foreground">Bio</Label>
             <Textarea
               {...getInputProps(fields.description, { type: 'text' })}
               placeholder="Tell us about yourself!"
@@ -389,46 +368,48 @@ export function EditProfileForm({
               onChange={handleDescriptionChange}
               className="h-20"
             />
-            <div className="self-stretch p-2.5 rounded-lg justify-center items-center gap-2.5 inline-flex">
-              <div className="grow shrink basis-0 text-right text-secondary-foreground text-xs font-normal leading-[18px]">
-                Max {DESCRIPTION_MAX_LENGTH} characters
-              </div>
-            </div>
+            <Text
+              variant="small"
+              className="self-end text-secondary-foreground"
+            >
+              Max {DESCRIPTION_MAX_LENGTH} characters
+            </Text>
           </div>
-          <Button
-            form={form.id}
-            disabled={loading}
-            onClick={() => {
-              handleSubmit
-            }}
-            className="mx-auto"
-          >
-            {loading ? (
-              isCreateRoute ? (
-                <>
-                  <Icon
-                    name="in-progress"
-                    className="animate-spin h-5 w-5 mr-1"
-                  />{' '}
-                  Creating Profile...
-                </>
-              ) : (
-                <>
-                  <Icon
-                    name="in-progress"
-                    className="animate-spin h-5 w-5 mr-1"
-                  />{' '}
-                  Updating Profile...
-                </>
-              )
-            ) : isCreateRoute ? (
-              'Create Profile'
+        </div>
+        <Button
+          form={form.id}
+          size="lg"
+          disabled={loading}
+          onClick={() => {
+            handleSubmit
+          }}
+          className="mx-auto mt-4"
+        >
+          {loading ? (
+            isCreateRoute ? (
+              <>
+                <Icon
+                  name="in-progress"
+                  className="animate-spin h-5 w-5 mr-1"
+                />{' '}
+                Creating Profile...
+              </>
             ) : (
-              'Update Profile'
-            )}
-          </Button>
-        </offChainFetcher.Form>
-      </>
+              <>
+                <Icon
+                  name="in-progress"
+                  className="animate-spin h-5 w-5 mr-1"
+                />{' '}
+                Updating Profile...
+              </>
+            )
+          ) : isCreateRoute ? (
+            'Create Profile'
+          ) : (
+            'Update Profile'
+          )}
+        </Button>
+      </offChainFetcher.Form>
     </>
   )
 }

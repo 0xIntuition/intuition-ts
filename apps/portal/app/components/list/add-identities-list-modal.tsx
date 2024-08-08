@@ -5,6 +5,7 @@ import { AddIdentitiesListForm } from './add-identities-list-form'
 
 export interface AddIdentitiesListModalProps {
   identity: IdentityPresenter
+  userWallet: string
   claimId: string
   open?: boolean
   onClose: () => void
@@ -13,6 +14,7 @@ export interface AddIdentitiesListModalProps {
 
 export default function AddIdentitiesListModal({
   identity,
+  userWallet,
   claimId,
   open,
   onClose,
@@ -28,6 +30,7 @@ export default function AddIdentitiesListModal({
       <DialogContent className="bg-neutral-950 rounded-xl shadow border border-solid border-black/10 h-[550px] overflow-hidden flex flex-col">
         <AddIdentitiesListForm
           identity={identity}
+          userWallet={userWallet}
           claimId={claimId}
           onClose={onClose}
           onSuccess={onSuccess}

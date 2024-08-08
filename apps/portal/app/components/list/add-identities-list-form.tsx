@@ -6,7 +6,6 @@ import {
   DialogHeader,
   DialogTitle,
   IdentityTag,
-  TransactionStatusType,
   Trunctacular,
 } from '@0xintuition/1ui'
 import { IdentityPresenter } from '@0xintuition/api'
@@ -17,13 +16,17 @@ import {
   transactionReducer,
   useTransactionState,
 } from '@lib/hooks/useTransactionReducer'
-import { TransactionActionType, TransactionStateType } from 'types/transaction'
+import {
+  TransactionActionType,
+  TransactionStateType,
+} from 'app/types/transaction'
 
 import { AddIdentities } from './add-identities'
 import AddIdentitiesReview from './add-identities-review'
 
 interface AddIdentitiesListFormProps {
   identity: IdentityPresenter
+  userWallet: string
   claimId: string
   onSuccess?: () => void
   onClose: () => void
@@ -31,7 +34,8 @@ interface AddIdentitiesListFormProps {
 
 export function AddIdentitiesListForm({
   identity,
-  // claimId,
+  userWallet,
+  // claimId, // leaving this in for now until we know we don't need it
   onClose,
 }: AddIdentitiesListFormProps) {
   const { state, dispatch } = useTransactionState<
@@ -60,20 +64,27 @@ export function AddIdentitiesListForm({
   //   ? identity.tags.map((tag) => tag.identity_id)
   //   : []
 
-  const [invalidIdentities, setInvalidIdentities] = useState<string[]>([])
+  const [invalidIdentities, setInvalidIdentities] = useState<
+    IdentityPresenter[]
+  >([])
 
   const handleAddIdentity = (selectedIdentity: IdentityPresenter) => {
     if (selectedIdentities.length < MAX_IDENTITIES_TO_ADD) {
-      setSelectedIdentities([...selectedIdentities, selectedIdentity])
+      setSelectedIdentities((prev) => [...prev, selectedIdentity])
     }
   }
 
   const handleRemoveIdentity = (vaultId: string) => {
-    setSelectedIdentities(
-      selectedIdentities.filter((identity) => identity.vault_id !== vaultId),
+    setSelectedIdentities((prev) =>
+      prev.filter((identity) => identity.vault_id !== vaultId),
     )
+  }
+  const handleRemoveInvalidIdentity = (vaultId: string) => {
     setInvalidIdentities((prev) =>
-      prev.filter((invalidId) => invalidId !== vaultId),
+      prev.filter((identity) => identity.vault_id !== vaultId),
+    )
+    setSelectedIdentities((prev) =>
+      prev.filter((identity) => identity.vault_id !== vaultId),
     )
   }
 
@@ -101,12 +112,15 @@ export function AddIdentitiesListForm({
               </DialogHeader>
               <AddIdentities
                 objectVaultId={identity.vault_id}
+                identity={identity}
+                userWallet={userWallet}
                 selectedIdentities={selectedIdentities}
                 onAddIdentity={handleAddIdentity}
                 onRemoveIdentity={handleRemoveIdentity}
                 maxIdentitiesToAdd={MAX_IDENTITIES_TO_ADD}
                 invalidIdentities={invalidIdentities}
                 setInvalidIdentities={setInvalidIdentities}
+                onRemoveInvalidIdentity={handleRemoveInvalidIdentity}
               />
             </div>
           )}
@@ -115,11 +129,8 @@ export function AddIdentitiesListForm({
               <DialogFooter className="!justify-center !items-center">
                 <div className="flex flex-col items-center gap-1">
                   <Button
+                    size="lg"
                     variant="primary"
-                    disabled={
-                      selectedIdentities.length === 0 ||
-                      invalidIdentities.length !== 0
-                    }
                     onClick={() => dispatch({ type: 'REVIEW_TRANSACTION' })}
                   >
                     Add Identities
@@ -140,7 +151,7 @@ export function AddIdentitiesListForm({
       {isTransactionStarted && (
         <div className="flex flex-col items-center justify-center flex-grow">
           <TransactionState
-            status={state.status as TransactionStatusType}
+            status={state.status}
             txHash={state.txHash}
             type="list"
             successButton={

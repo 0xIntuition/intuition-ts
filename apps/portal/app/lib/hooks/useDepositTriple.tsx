@@ -1,4 +1,4 @@
-import { CURRENT_ENV } from 'consts'
+import { CURRENT_ENV } from 'app/consts'
 import type { GetContractReturnType } from 'viem'
 
 import { getChainEnvConfig } from '../utils/environment'
@@ -13,6 +13,7 @@ export const useDepositTriple = (contract: string) => {
 
   return useContractWriteAndWait({
     ...multivault,
+    // @ts-ignore TODO: Fix type for useContractWriteAndWait
     functionName: 'depositTriple',
   })
 }

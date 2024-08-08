@@ -1,5 +1,13 @@
-import { Claim, MonetaryValue, Text } from '@0xintuition/1ui'
+import { Claim, Identity, MonetaryValue, Text } from '@0xintuition/1ui'
 import { IdentityPresenter } from '@0xintuition/api'
+
+import {
+  getAtomDescription,
+  getAtomImage,
+  getAtomIpfsLink,
+  getAtomLabel,
+  getAtomLink,
+} from '@lib/utils/misc'
 
 export const ConnectionsHeaderVariants = {
   followers: 'followers',
@@ -29,9 +37,9 @@ export const ConnectionsHeader: React.FC<ConnectionsHeaderProps> = ({
   return (
     <div className="flex flex-col w-full gap-3">
       <div className="p-6 bg-black rounded-xl border border-neutral-300/20 flex flex-col gap-5">
-        <div className="flex justify-between items-start">
-          <div className="flex gap-10">
-            <div className="flex flex-col items-start">
+        <div className="flex justify-between items-center max-sm:flex-col max-sm:gap-3">
+          <div className="flex gap-10 max-sm:flex-col max-sm:gap-3 max-sm:m-auto">
+            <div className="flex flex-col items-start max-sm:items-center">
               <Text
                 variant="caption"
                 weight="regular"
@@ -43,7 +51,7 @@ export const ConnectionsHeader: React.FC<ConnectionsHeaderProps> = ({
                 {totalFollowers ?? '0'}
               </div>
             </div>
-            <div className="flex flex-col items-start">
+            <div className="flex flex-col items-start max-sm:items-center">
               <Text
                 variant="caption"
                 weight="regular"
@@ -57,7 +65,7 @@ export const ConnectionsHeader: React.FC<ConnectionsHeaderProps> = ({
               <MonetaryValue value={+totalStake} currency="ETH" />
             </div>
           </div>
-          <div className="flex flex-col items-end">
+          <div className="flex flex-col items-end gap-2 max-sm:hidden">
             <Text
               variant="caption"
               weight="regular"
@@ -66,29 +74,34 @@ export const ConnectionsHeader: React.FC<ConnectionsHeaderProps> = ({
               Follow Claim
             </Text>
             <Claim
+              size="md"
               subject={{
-                variant: 'non-user',
-                label: subject?.display_name ?? subject?.identity_id ?? '',
-                imgSrc: subject?.image ?? '',
+                variant: subject?.is_user ? Identity.user : Identity.nonUser,
+                label: getAtomLabel(subject),
+                imgSrc: getAtomImage(subject),
+                id: subject?.identity_id,
+                description: getAtomDescription(subject),
+                ipfsLink: getAtomIpfsLink(subject),
+                link: getAtomLink(subject),
               }}
               predicate={{
-                variant: 'non-user',
-                label: predicate?.display_name ?? predicate?.identity_id ?? '',
-                imgSrc: predicate?.image ?? '',
+                variant: predicate?.is_user ? Identity.user : Identity.nonUser,
+                label: getAtomLabel(predicate),
+                imgSrc: getAtomImage(predicate),
+                id: predicate?.identity_id,
+                description: getAtomDescription(predicate),
+                ipfsLink: getAtomIpfsLink(predicate),
+                link: getAtomLink(predicate),
               }}
-              object={
-                object === null
-                  ? {
-                      variant: 'user',
-                      label: '?',
-                      imgSrc: '',
-                    }
-                  : {
-                      variant: 'user',
-                      label: object?.user?.display_name ?? '',
-                      imgSrc: object?.user?.image ?? '',
-                    }
-              }
+              object={{
+                variant: object?.is_user ? Identity.user : Identity.nonUser,
+                label: getAtomLabel(object),
+                imgSrc: getAtomImage(object),
+                id: object?.identity_id,
+                description: getAtomDescription(object),
+                ipfsLink: getAtomIpfsLink(object),
+                link: getAtomLink(object),
+              }}
             />
           </div>
         </div>

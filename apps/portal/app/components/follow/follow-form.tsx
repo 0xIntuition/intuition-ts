@@ -7,14 +7,16 @@ import {
   Identity,
   IdentityTag,
   Text,
-  TransactionStatusType,
 } from '@0xintuition/1ui'
-import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
+import { IdentityPresenter } from '@0xintuition/api'
 
 import { TransactionState } from '@components/transaction-state'
 import { formatBalance } from '@lib/utils/misc'
 import { type FetcherWithComponents } from '@remix-run/react'
-import { TransactionActionType, TransactionStateType } from 'types/transaction'
+import {
+  TransactionActionType,
+  TransactionStateType,
+} from 'app/types/transaction'
 
 import FollowActions from './follow-actions'
 import FollowReview from './follow-review'
@@ -22,7 +24,6 @@ import FollowReview from './follow-review'
 interface FollowFormProps {
   walletBalance: string
   identity: IdentityPresenter
-  claim: ClaimPresenter
   user_assets: string
   entry_fee: string
   exit_fee: string
@@ -42,7 +43,6 @@ interface FollowFormProps {
 export default function FollowForm({
   walletBalance,
   identity,
-  claim,
   user_assets,
   entry_fee,
   exit_fee,
@@ -106,7 +106,7 @@ export default function FollowForm({
               <div className="w-full bg-neutral-50/5 rounded-lg border border-neutral-300/10 flex-col justify-start items-start inline-flex">
                 <ActivePositionCard
                   value={Number(formatBalance(user_assets, 18, 4))}
-                  claimPosition={`${user_assets > '0' ? 'claimFor' : ''}`}
+                  claimPosition={user_assets > '0' ? 'claimFor' : null}
                 />
               </div>
             </div>
@@ -129,7 +129,6 @@ export default function FollowForm({
             dispatch={dispatch}
             state={state}
             identity={identity}
-            claim={claim}
             user_assets={user_assets}
             entry_fee={entry_fee}
             exit_fee={exit_fee}
@@ -138,7 +137,7 @@ export default function FollowForm({
       ) : (
         <div className="flex flex-col items-center justify-center min-h-96">
           <TransactionState
-            status={state.status as TransactionStatusType}
+            status={state.status}
             txHash={state.txHash}
             type={mode === 'follow' ? 'follow' : 'unfollow'}
           />

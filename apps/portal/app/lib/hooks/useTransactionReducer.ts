@@ -5,7 +5,7 @@ import {
   IdentityTransactionStateType,
   TransactionActionType,
   TransactionStateType,
-} from 'types/transaction'
+} from 'app/types/transaction'
 
 /**
  * This hook takes in a reducer and an initial state and returns the state and dispatch function. It's a generic hook that can be used for any reducer and initial state.
@@ -77,6 +77,8 @@ export const identityTransactionReducer = (
         description: action.description,
         externalReference: action.externalReference,
       }
+    case 'REVIEW_TRANSACTION':
+      return { ...state, status: 'review-transaction' }
     case 'PREPARING_IDENTITY':
       return { ...state, status: 'preparing-identity' }
     case 'PUBLISHING_IDENTITY':
@@ -84,7 +86,7 @@ export const identityTransactionReducer = (
     case 'APPROVE_TRANSACTION':
       return { ...state, status: 'approve-transaction' }
     case 'CONFIRM_TRANSACTION':
-      return { ...state, status: 'confirm-transaction' }
+      return { ...state, status: 'confirm' }
     case 'TRANSACTION_PENDING':
       return { ...state, status: 'transaction-pending' }
     case 'TRANSACTION_CONFIRMED':

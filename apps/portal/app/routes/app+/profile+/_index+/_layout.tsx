@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import {
   Button,
@@ -11,6 +11,7 @@ import {
   StakeCard,
 } from '@0xintuition/1ui'
 import {
+  ApiError,
   IdentitiesService,
   IdentityPresenter,
   UserPresenter,
@@ -21,8 +22,8 @@ import {
 import PrivyRevalidate from '@client/privy-revalidate'
 import EditProfileModal from '@components/edit-profile/modal'
 import EditSocialLinksModal from '@components/edit-social-links-modal'
-import { NestedLayout } from '@components/nested-layout'
 import { ProfileSocialAccounts } from '@components/profile-social-accounts'
+import { SegmentedNav } from '@components/segmented-nav'
 import StakeModal from '@components/stake/stake-modal'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import {
@@ -33,10 +34,8 @@ import {
 import logger from '@lib/utils/logger'
 import {
   calculatePercentageOfTvl,
-  fetchWrapper,
   formatBalance,
   invariant,
-  sliceString,
 } from '@lib/utils/misc'
 import { User } from '@privy-io/react-auth'
 import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
@@ -46,12 +45,18 @@ import {
   useNavigate,
   useRevalidator,
 } from '@remix-run/react'
+import { fetchWrapper } from '@server/api'
 import { requireUser, requireUserWallet } from '@server/auth'
 import { getVaultDetails } from '@server/multivault'
-import * as blockies from 'blockies-ts'
-import { NO_WALLET_ERROR, userProfileRouteOptions } from 'consts'
+import {
+  BLOCK_EXPLORER_URL,
+  NO_WALLET_ERROR,
+  PATHS,
+  userProfileRouteOptions,
+} from 'app/consts'
+import TwoPanelLayout from 'app/layouts/two-panel-layout'
+import { VaultDetailsType } from 'app/types/vault'
 import { useAtom } from 'jotai'
-import { VaultDetailsType } from 'types/vault'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await requireUser(request)
@@ -64,32 +69,26 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   let userIdentity
   try {
-    userIdentity = await fetchWrapper({
+    userIdentity = await fetchWrapper(request, {
       method: IdentitiesService.getIdentityById,
       args: { id: userWallet },
     })
   } catch (error) {
+    if (error instanceof ApiError && error.status === 404) {
+      throw redirect('/invite')
+    }
     logger('Error fetching userIdentity', error)
-    return redirect('/create')
+    throw error
   }
 
-  if (!userIdentity) {
-    return redirect('/create')
-  }
-
-  const userObject = await fetchWrapper({
+  const userObject = await fetchWrapper(request, {
     method: UsersService.getUserByWalletPublic,
     args: {
       wallet: userWallet,
     },
   })
 
-  if (!userObject) {
-    logger('No user found in DB')
-    return
-  }
-
-  const userTotals = await fetchWrapper({
+  const userTotals = await fetchWrapper(request, {
     method: UsersService.getUserTotals,
     args: {
       id: userObject.id,
@@ -138,32 +137,19 @@ export default function Profile() {
     userIdentity,
     userTotals,
     vaultDetails,
-  } = useLiveLoader<{
-    privyUser: User
-    userWallet: string
-    userIdentity: IdentityPresenter
-    userObject: UserPresenter
-    userTotals: UserTotalsPresenter
-    vaultDetails: VaultDetailsType
-  }>(['attest', 'create'])
+  } = useLiveLoader<ProfileLoaderData>(['attest', 'create'])
 
   const { user_assets, assets_sum } = vaultDetails ? vaultDetails : userIdentity
-
   const { user_asset_delta } = userIdentity
 
   const [userObject, setUserObject] = useState<
     UserPresenter | null | undefined
   >(userIdentity.user ?? user)
-
-  const imgSrc = blockies.create({ seed: userWallet }).toDataURL()
-
   const [editProfileModalActive, setEditProfileModalActive] =
     useAtom(editProfileModalAtom)
-
   const [editSocialLinksModalActive, setEditSocialLinksModalActive] = useAtom(
     editSocialLinksModalAtom,
   )
-
   const [stakeModalActive, setStakeModalActive] = useAtom(stakeModalAtom)
 
   const revalidator = useRevalidator()
@@ -184,7 +170,7 @@ export default function Profile() {
   const currentPath = matches[matches.length - 1].pathname
 
   // List of paths that should not use the ProfileLayout
-  const excludedPaths = ['/app/profile/create']
+  const excludedPaths = [PATHS.PROFILE_CREATE]
 
   if (excludedPaths.includes(currentPath)) {
     return <Outlet />
@@ -194,86 +180,94 @@ export default function Profile() {
     return null
   }
 
-  return (
-    <NestedLayout outlet={Outlet} options={userProfileRouteOptions}>
-      <div className="flex-col justify-start items-start gap-5 inline-flex">
-        <ProfileCard
-          variant="user"
-          avatarSrc={userObject.image ?? imgSrc}
-          name={userObject.display_name ?? ''}
-          walletAddress={
-            userObject.ens_name ?? sliceString(userObject.wallet, 6, 4)
-          }
-          stats={{
-            numberOfFollowers: userTotals.follower_count,
-            numberOfFollowing: userTotals.followed_count,
-            points: userTotals.user_points,
-          }}
-          bio={userObject.description ?? ''}
+  const leftPanel = (
+    <div className="flex-col justify-start items-start gap-5 inline-flex max-lg:w-full">
+      <ProfileCard
+        variant="user"
+        avatarSrc={userObject.image ?? ''}
+        name={userObject.display_name ?? ''}
+        id={userObject.ens_name ?? userObject.wallet}
+        vaultId={userIdentity.vault_id}
+        stats={{
+          numberOfFollowers: userTotals.follower_count,
+          numberOfFollowing: userTotals.followed_count,
+          points: userTotals.total_points,
+        }}
+        bio={userObject.description ?? ''}
+        ipfsLink={`${BLOCK_EXPLORER_URL}/address/${userObject.wallet}`}
+      >
+        <Button
+          variant="secondary"
+          className="w-full"
+          onClick={() => setEditProfileModalActive(true)}
         >
-          <Button
-            variant="secondary"
-            className="w-full"
-            onClick={() => setEditProfileModalActive(true)}
-          >
-            Edit Profile
-          </Button>
-        </ProfileCard>
-        <ProfileSocialAccounts
-          privyUser={JSON.parse(JSON.stringify(privyUser))}
-          handleOpenEditSocialLinksModal={() =>
-            setEditSocialLinksModalActive(true)
-          }
-        />
-        {vaultDetails !== null && user_assets !== '0' ? (
-          <PositionCard
-            onButtonClick={() =>
-              setStakeModalActive((prevState) => ({
-                ...prevState,
-                mode: 'redeem',
-                modalType: 'identity',
-                isOpen: true,
-              }))
-            }
-          >
-            <PositionCardStaked
-              amount={user_assets ? +formatBalance(user_assets, 18, 4) : 0}
-            />
-            <PositionCardOwnership
-              percentOwnership={
-                user_assets !== null && assets_sum
-                  ? +calculatePercentageOfTvl(user_assets ?? '0', assets_sum)
-                  : 0
-              }
-            />
-            <PositionCardFeesAccrued
-              amount={
-                user_asset_delta
-                  ? +formatBalance(
-                      +(user_assets ?? 0) - +user_asset_delta,
-                      18,
-                      5,
-                    )
-                  : 0
-              }
-            />
-            <PositionCardLastUpdated timestamp={userIdentity.updated_at} />
-          </PositionCard>
-        ) : null}
-        <StakeCard
-          tvl={+formatBalance(assets_sum)}
-          holders={userIdentity.num_positions}
-          onBuyClick={() =>
+          Edit Profile
+        </Button>
+      </ProfileCard>
+      <ProfileSocialAccounts
+        privyUser={JSON.parse(JSON.stringify(privyUser))}
+        handleOpenEditSocialLinksModal={() =>
+          setEditSocialLinksModalActive(true)
+        }
+      />
+      {vaultDetails !== null && user_assets !== '0' ? (
+        <PositionCard
+          onButtonClick={() =>
             setStakeModalActive((prevState) => ({
               ...prevState,
-              mode: 'deposit',
+              mode: 'redeem',
               modalType: 'identity',
               isOpen: true,
             }))
           }
-          onViewAllClick={() => navigate('/app/profile/data-about')}
-        />
+        >
+          <PositionCardStaked
+            amount={user_assets ? +formatBalance(user_assets, 18, 4) : 0}
+          />
+          <PositionCardOwnership
+            percentOwnership={
+              user_assets !== null && assets_sum
+                ? +calculatePercentageOfTvl(user_assets ?? '0', assets_sum)
+                : 0
+            }
+          />
+          <PositionCardFeesAccrued
+            amount={
+              user_asset_delta
+                ? +formatBalance(+(user_assets ?? 0) - +user_asset_delta, 18, 5)
+                : 0
+            }
+          />
+          <PositionCardLastUpdated timestamp={userIdentity.updated_at} />
+        </PositionCard>
+      ) : null}
+      <StakeCard
+        tvl={+formatBalance(assets_sum)}
+        holders={userIdentity.num_positions}
+        onBuyClick={() =>
+          setStakeModalActive((prevState) => ({
+            ...prevState,
+            mode: 'deposit',
+            modalType: 'identity',
+            isOpen: true,
+          }))
+        }
+        onViewAllClick={() => navigate(PATHS.PROFILE_DATA_ABOUT)}
+      />
+    </div>
+  )
+
+  const rightPanel = (
+    <>
+      <div className="flex flex-row justify-end mb-6 max-lg:justify-center">
+        <SegmentedNav options={userProfileRouteOptions} />
       </div>
+      <Outlet />
+    </>
+  )
+
+  return (
+    <TwoPanelLayout leftPanel={leftPanel} rightPanel={rightPanel}>
       <EditProfileModal
         userObject={userObject}
         setUserObject={setUserObject}
@@ -299,6 +293,6 @@ export default function Profile() {
         }}
       />
       <PrivyRevalidate />
-    </NestedLayout>
+    </TwoPanelLayout>
   )
 }

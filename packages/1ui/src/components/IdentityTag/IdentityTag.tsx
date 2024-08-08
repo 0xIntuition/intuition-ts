@@ -15,13 +15,13 @@ export const IdentityTagSize = {
 export type IdentityTagSizeType = keyof typeof IdentityTagSize
 
 export const identityTagVariants = cva(
-  'theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center',
+  'theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center',
   {
     variants: {
       variant: {
         [Identity.user]:
           'rounded-full [&>span]:rounded-full [&>span]:overflow-hidden',
-        [Identity.nonUser]: 'rounded-sm',
+        [Identity.nonUser]: 'rounded-md',
       },
       size: {
         [IdentityTagSize.default]: 'text-base [&>span]:h-6 [&>span]:w-6',
@@ -30,7 +30,7 @@ export const identityTagVariants = cva(
         [IdentityTagSize.xl]: 'text-xl [&>span]:h-11 [&>span]:w-11',
       },
       disabled: {
-        true: 'disabled:bg-muted disabled:text-muted-foreground disabled:border-muted cursor-not-allowed',
+        true: 'disabled:opacity-50 cursor-not-allowed',
         false: '',
       },
     },
@@ -61,7 +61,7 @@ const IdentityTagButton = ({
       {...props}
     >
       <Avatar variant={variant} src={imgSrc || ''} name="identity avatar" />
-      {children}
+      {children || '?'}
     </button>
   )
 }
@@ -73,18 +73,20 @@ export interface IdentityTagProps
   imgSrc?: string | null
   variant?: IdentityType
   hoverCardContent?: React.ReactNode | null
+  shouldHover?: boolean
 }
 
 const IdentityTag = ({
   hoverCardContent = null,
+  shouldHover = true,
   ...props
 }: IdentityTagProps) => {
-  return hoverCardContent ? (
-    <HoverCard>
+  return hoverCardContent && shouldHover ? (
+    <HoverCard openDelay={100} closeDelay={100}>
       <HoverCardTrigger>
         <IdentityTagButton {...props} />
       </HoverCardTrigger>
-      <HoverCardContent>{hoverCardContent}</HoverCardContent>
+      <HoverCardContent className="w-80">{hoverCardContent}</HoverCardContent>
     </HoverCard>
   ) : (
     <IdentityTagButton {...props} />

@@ -28,18 +28,25 @@ describe('Claim', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="flex items-center w-full max-w-full group"
+          class="flex items-center w-full max-w-max group relative max-sm:flex-col max-sm:m-auto"
         >
           <button
-            class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center rounded-full [&>span]:rounded-full [&>span]:overflow-hidden text-base [&>span]:h-7 [&>span]:w-7 group-hover:border-primary group-hover:bg-primary/20"
+            class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center rounded-full [&>span]:rounded-full [&>span]:overflow-hidden text-base [&>span]:h-7 [&>span]:w-7 disabled:opacity-50 cursor-not-allowed group-hover:border-primary group-hover:bg-primary/20 relative z-10"
+            disabled=""
           >
             <span
-              class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square rounded-full bg-muted"
+              class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square bg-background theme-border rounded-full"
             >
               <span
                 class="flex h-full w-full items-center justify-center bg-inherit"
               >
-                ID
+                <svg
+                  class="text-primary/30 w-[80%] h-[80%] max-w-8 max-h-8"
+                >
+                  <use
+                    href="/src/components/Icon/Icon.sprites.svg#crypto-punk"
+                  />
+                </svg>
               </span>
             </span>
             <p
@@ -49,15 +56,16 @@ describe('Claim', () => {
             </p>
           </button>
           <div
-            class="shrink-0 bg-border/20 h-[1px] w-4 group-hover:bg-primary"
+            class="shrink-0 bg-border/20 h-[1px] w-4 group-hover:bg-primary max-sm:w-px max-sm:h-2"
             data-orientation="horizontal"
             role="none"
           />
           <button
-            class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center rounded-sm text-base [&>span]:h-7 [&>span]:w-7 group-hover:border-primary group-hover:bg-primary/20"
+            class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center rounded-md text-base [&>span]:h-7 [&>span]:w-7 disabled:opacity-50 cursor-not-allowed group-hover:border-primary group-hover:bg-primary/20 relative z-10"
+            disabled=""
           >
             <span
-              class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square rounded bg-background theme-border"
+              class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square bg-background theme-border rounded"
             >
               <span
                 class="flex h-full w-full items-center justify-center bg-inherit"
@@ -78,15 +86,16 @@ describe('Claim', () => {
             </p>
           </button>
           <div
-            class="shrink-0 bg-border/20 h-[1px] w-4 group-hover:bg-primary"
+            class="shrink-0 bg-border/20 h-[1px] w-4 group-hover:bg-primary max-sm:w-px max-sm:h-2"
             data-orientation="horizontal"
             role="none"
           />
           <button
-            class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center rounded-sm text-base [&>span]:h-7 [&>span]:w-7 group-hover:border-primary group-hover:bg-primary/20"
+            class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center rounded-md text-base [&>span]:h-7 [&>span]:w-7 disabled:opacity-50 cursor-not-allowed group-hover:border-primary group-hover:bg-primary/20 relative z-10"
+            disabled=""
           >
             <span
-              class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square rounded bg-background theme-border"
+              class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square bg-background theme-border rounded"
             >
               <span
                 class="flex h-full w-full items-center justify-center bg-inherit"
@@ -116,19 +125,25 @@ describe('Claim', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="flex items-center w-full max-w-full group"
+          class="flex items-center w-full max-w-max group relative max-sm:flex-col max-sm:m-auto"
         >
           <button
-            class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center rounded-full [&>span]:rounded-full [&>span]:overflow-hidden text-base [&>span]:h-7 [&>span]:w-7 disabled:bg-muted disabled:text-muted-foreground disabled:border-muted cursor-not-allowed group-hover:border-primary group-hover:bg-primary/20"
+            class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center rounded-full [&>span]:rounded-full [&>span]:overflow-hidden text-base [&>span]:h-7 [&>span]:w-7 disabled:opacity-50 cursor-not-allowed group-hover:border-primary group-hover:bg-primary/20 relative z-10"
             disabled=""
           >
             <span
-              class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square rounded-full bg-muted"
+              class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square bg-background theme-border rounded-full"
             >
               <span
                 class="flex h-full w-full items-center justify-center bg-inherit"
               >
-                ID
+                <svg
+                  class="text-primary/30 w-[80%] h-[80%] max-w-8 max-h-8"
+                >
+                  <use
+                    href="/src/components/Icon/Icon.sprites.svg#crypto-punk"
+                  />
+                </svg>
               </span>
             </span>
             <p
@@ -138,16 +153,16 @@ describe('Claim', () => {
             </p>
           </button>
           <div
-            class="shrink-0 bg-border/20 h-[1px] w-4 group-hover:bg-primary"
+            class="shrink-0 bg-border/20 h-[1px] w-4 group-hover:bg-primary max-sm:w-px max-sm:h-2"
             data-orientation="horizontal"
             role="none"
           />
           <button
-            class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center rounded-sm text-base [&>span]:h-7 [&>span]:w-7 disabled:bg-muted disabled:text-muted-foreground disabled:border-muted cursor-not-allowed group-hover:border-primary group-hover:bg-primary/20"
+            class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center rounded-md text-base [&>span]:h-7 [&>span]:w-7 disabled:opacity-50 cursor-not-allowed group-hover:border-primary group-hover:bg-primary/20 relative z-10"
             disabled=""
           >
             <span
-              class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square rounded bg-background theme-border"
+              class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square bg-background theme-border rounded"
             >
               <span
                 class="flex h-full w-full items-center justify-center bg-inherit"
@@ -168,16 +183,16 @@ describe('Claim', () => {
             </p>
           </button>
           <div
-            class="shrink-0 bg-border/20 h-[1px] w-4 group-hover:bg-primary"
+            class="shrink-0 bg-border/20 h-[1px] w-4 group-hover:bg-primary max-sm:w-px max-sm:h-2"
             data-orientation="horizontal"
             role="none"
           />
           <button
-            class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center rounded-sm text-base [&>span]:h-7 [&>span]:w-7 disabled:bg-muted disabled:text-muted-foreground disabled:border-muted cursor-not-allowed group-hover:border-primary group-hover:bg-primary/20"
+            class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center rounded-md text-base [&>span]:h-7 [&>span]:w-7 disabled:opacity-50 cursor-not-allowed group-hover:border-primary group-hover:bg-primary/20 relative z-10"
             disabled=""
           >
             <span
-              class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square rounded bg-background theme-border"
+              class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square bg-background theme-border rounded"
             >
               <span
                 class="flex h-full w-full items-center justify-center bg-inherit"
@@ -204,23 +219,30 @@ describe('Claim', () => {
 
   it('should render with different sizes', () => {
     const { asFragment: smFragment } = render(
-      <Claim {...defaultProps} size="sm" />,
+      <Claim {...defaultProps} size="xl" />,
     )
     expect(smFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="flex items-center w-full max-w-full group"
+          class="flex items-center w-full max-w-max group relative max-sm:flex-col max-sm:m-auto"
         >
           <button
-            class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center rounded-full [&>span]:rounded-full [&>span]:overflow-hidden group-hover:border-primary group-hover:bg-primary/20"
+            class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center rounded-full [&>span]:rounded-full [&>span]:overflow-hidden text-xl [&>span]:h-11 [&>span]:w-11 disabled:opacity-50 cursor-not-allowed group-hover:border-primary group-hover:bg-primary/20 relative z-10"
+            disabled=""
           >
             <span
-              class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square rounded-full bg-muted"
+              class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square bg-background theme-border rounded-full"
             >
               <span
                 class="flex h-full w-full items-center justify-center bg-inherit"
               >
-                ID
+                <svg
+                  class="text-primary/30 w-[80%] h-[80%] max-w-8 max-h-8"
+                >
+                  <use
+                    href="/src/components/Icon/Icon.sprites.svg#crypto-punk"
+                  />
+                </svg>
               </span>
             </span>
             <p
@@ -230,15 +252,16 @@ describe('Claim', () => {
             </p>
           </button>
           <div
-            class="shrink-0 bg-border/20 h-[1px] w-4 group-hover:bg-primary"
+            class="shrink-0 bg-border/20 h-[1px] w-4 group-hover:bg-primary max-sm:w-px max-sm:h-2"
             data-orientation="horizontal"
             role="none"
           />
           <button
-            class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center rounded-sm group-hover:border-primary group-hover:bg-primary/20"
+            class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center rounded-md text-xl [&>span]:h-11 [&>span]:w-11 disabled:opacity-50 cursor-not-allowed group-hover:border-primary group-hover:bg-primary/20 relative z-10"
+            disabled=""
           >
             <span
-              class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square rounded bg-background theme-border"
+              class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square bg-background theme-border rounded"
             >
               <span
                 class="flex h-full w-full items-center justify-center bg-inherit"
@@ -259,15 +282,16 @@ describe('Claim', () => {
             </p>
           </button>
           <div
-            class="shrink-0 bg-border/20 h-[1px] w-4 group-hover:bg-primary"
+            class="shrink-0 bg-border/20 h-[1px] w-4 group-hover:bg-primary max-sm:w-px max-sm:h-2"
             data-orientation="horizontal"
             role="none"
           />
           <button
-            class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center rounded-sm group-hover:border-primary group-hover:bg-primary/20"
+            class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center rounded-md text-xl [&>span]:h-11 [&>span]:w-11 disabled:opacity-50 cursor-not-allowed group-hover:border-primary group-hover:bg-primary/20 relative z-10"
+            disabled=""
           >
             <span
-              class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square rounded bg-background theme-border"
+              class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square bg-background theme-border rounded"
             >
               <span
                 class="flex h-full w-full items-center justify-center bg-inherit"
@@ -297,18 +321,25 @@ describe('Claim', () => {
     expect(lgFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="flex items-center w-full max-w-full group"
+          class="flex items-center w-full max-w-max group relative max-sm:flex-col max-sm:m-auto"
         >
           <button
-            class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center rounded-full [&>span]:rounded-full [&>span]:overflow-hidden text-lg [&>span]:h-8 [&>span]:w-8 group-hover:border-primary group-hover:bg-primary/20"
+            class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center rounded-full [&>span]:rounded-full [&>span]:overflow-hidden text-lg [&>span]:h-8 [&>span]:w-8 disabled:opacity-50 cursor-not-allowed group-hover:border-primary group-hover:bg-primary/20 relative z-10"
+            disabled=""
           >
             <span
-              class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square rounded-full bg-muted"
+              class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square bg-background theme-border rounded-full"
             >
               <span
                 class="flex h-full w-full items-center justify-center bg-inherit"
               >
-                ID
+                <svg
+                  class="text-primary/30 w-[80%] h-[80%] max-w-8 max-h-8"
+                >
+                  <use
+                    href="/src/components/Icon/Icon.sprites.svg#crypto-punk"
+                  />
+                </svg>
               </span>
             </span>
             <p
@@ -318,15 +349,16 @@ describe('Claim', () => {
             </p>
           </button>
           <div
-            class="shrink-0 bg-border/20 h-[1px] w-4 group-hover:bg-primary"
+            class="shrink-0 bg-border/20 h-[1px] w-4 group-hover:bg-primary max-sm:w-px max-sm:h-2"
             data-orientation="horizontal"
             role="none"
           />
           <button
-            class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center rounded-sm text-lg [&>span]:h-8 [&>span]:w-8 group-hover:border-primary group-hover:bg-primary/20"
+            class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center rounded-md text-lg [&>span]:h-8 [&>span]:w-8 disabled:opacity-50 cursor-not-allowed group-hover:border-primary group-hover:bg-primary/20 relative z-10"
+            disabled=""
           >
             <span
-              class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square rounded bg-background theme-border"
+              class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square bg-background theme-border rounded"
             >
               <span
                 class="flex h-full w-full items-center justify-center bg-inherit"
@@ -347,15 +379,16 @@ describe('Claim', () => {
             </p>
           </button>
           <div
-            class="shrink-0 bg-border/20 h-[1px] w-4 group-hover:bg-primary"
+            class="shrink-0 bg-border/20 h-[1px] w-4 group-hover:bg-primary max-sm:w-px max-sm:h-2"
             data-orientation="horizontal"
             role="none"
           />
           <button
-            class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center rounded-sm text-lg [&>span]:h-8 [&>span]:w-8 group-hover:border-primary group-hover:bg-primary/20"
+            class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center rounded-md text-lg [&>span]:h-8 [&>span]:w-8 disabled:opacity-50 cursor-not-allowed group-hover:border-primary group-hover:bg-primary/20 relative z-10"
+            disabled=""
           >
             <span
-              class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square rounded bg-background theme-border"
+              class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square bg-background theme-border rounded"
             >
               <span
                 class="flex h-full w-full items-center justify-center bg-inherit"

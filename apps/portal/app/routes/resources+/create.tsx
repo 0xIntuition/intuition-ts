@@ -1,9 +1,9 @@
 import { json } from '@remix-run/node'
 import {
+  getAtomConfig,
   getAtomCost,
   getFees,
   getGeneralConfig,
-  getTripleCost,
 } from '@server/multivault'
 
 export type CreateLoaderData = {
@@ -26,12 +26,12 @@ export async function loader() {
 
   const [
     atomCost,
-    tripleCost,
+    [, atomCreationFee],
     [entryFee, , protocolFee],
     [, , feeDenominator, minDeposit],
   ] = await Promise.all([
     getAtomCost(),
-    getTripleCost(),
+    getAtomConfig(),
     getFees(),
     getGeneralConfig(),
   ])
@@ -39,7 +39,7 @@ export async function loader() {
   return json({
     vaultId: vid.toString(),
     atomCost: atomCost.toString(),
-    tripleCost: tripleCost.toString(),
+    atomCreationFee: atomCreationFee.toString(),
     protocolFee: protocolFee.toString(),
     entryFee: entryFee.toString(),
     feeDenominator: feeDenominator.toString(),

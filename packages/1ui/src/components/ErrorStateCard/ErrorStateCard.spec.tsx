@@ -17,22 +17,22 @@ describe('EmptyStateCard', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="flex flex-col justify-center items-center p-6 theme-border border-destructive/50 rounded-lg min-h-52"
+          class="flex flex-col justify-center items-center p-6 theme-border border-destructive/50 rounded-lg min-h-52 w-full gap-4"
         >
           <svg
-            class="w-12 h-12 mb-4 text-destructive"
+            class="w-12 h-12 text-destructive"
           >
             <use
               href="/src/components/Icon/Icon.sprites.svg#triangle-exclamation"
             />
           </svg>
           <p
-            class="text-sm font-normal text-muted-foreground mb-5"
+            class="text-sm font-normal text-muted-foreground"
           >
             An error occured
           </p>
           <button
-            class="flex justify-center items-center gap-2 text-sm font-medium border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted bg-primary text-primary-foreground border-primary hover:bg-primary/80 rounded-full shadow-md-subtle px-4 py-1.5"
+            class="flex justify-center items-center gap-2 text-sm font-medium border disabled:bg-muted aria-disabled:bg-muted disabled:text-muted-foreground aria-disabled:text-muted-foreground disabled:border-muted aria-disabled:border-muted aria-disabled:pointer-events-none bg-primary text-primary-foreground border-primary hover:bg-primary/80 rounded-full shadow-md-subtle px-4 py-1.5"
           >
             Add Stake
           </button>

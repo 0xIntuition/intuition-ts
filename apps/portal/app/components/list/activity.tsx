@@ -4,20 +4,36 @@ import {
   ButtonVariant,
   Claim,
   ClaimRow,
-  EmptyStateCard,
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
   Icon,
   IconName,
   Identity,
   IdentityContentRow,
   IdentityTag,
+  ProfileCard,
   Text,
+  Trunctacular,
 } from '@0xintuition/1ui'
-import { ActivityPresenter, SortColumn } from '@0xintuition/api'
+import {
+  ActivityPresenter,
+  IdentityPresenter,
+  SortColumn,
+} from '@0xintuition/api'
 
-import { formatBalance } from '@lib/utils/misc'
-import { Link, useNavigate } from '@remix-run/react'
+import {
+  formatBalance,
+  getAtomDescription,
+  getAtomImage,
+  getAtomIpfsLink,
+  getAtomLabel,
+  getAtomLink,
+} from '@lib/utils/misc'
+import { useNavigate } from '@remix-run/react'
+import { BLOCK_EXPLORER_URL, IPFS_GATEWAY_URL, PATHS } from 'app/consts'
+import { PaginationType } from 'app/types/pagination'
 import { formatDistance } from 'date-fns'
-import { PaginationType } from 'types/pagination'
 
 import { List } from './list'
 
@@ -30,8 +46,6 @@ export function ActivityList({
   pagination: PaginationType
   paramPrefix?: string
 }) {
-  const navigate = useNavigate()
-
   const eventMessages: EventMessages = {
     createAtom: 'created an identity',
     createTriple: 'created a claim',
@@ -45,23 +59,19 @@ export function ActivityList({
       `redeemed ${formatBalance(value, 18, 4)} ETH from a claim`,
   }
 
-  if (!activities.length) {
-    return <EmptyStateCard message="No activities found." />
-  }
-
   return (
     <List<SortColumn>
       pagination={pagination}
-      paginationLabel="identities"
+      paginationLabel="activities"
       paramPrefix={paramPrefix}
       enableSearch={false}
+      enableSort={false}
     >
       {activities.map((activity) => (
         <ActivityItem
           key={activity.id}
           activity={activity}
           eventMessages={eventMessages}
-          navigate={navigate}
         />
       ))}
     </List>
@@ -80,12 +90,11 @@ type EventMessages = {
 function ActivityItem({
   activity,
   eventMessages,
-  navigate,
 }: {
   activity: ActivityPresenter
   eventMessages: EventMessages
-  navigate: ReturnType<typeof useNavigate>
 }) {
+  const navigate = useNavigate()
   const eventMessage = eventMessages[activity.event_type as keyof EventMessages]
   const message = eventMessage
     ? typeof eventMessage === 'function'
@@ -96,17 +105,56 @@ function ActivityItem({
   return (
     <div
       key={activity.id}
-      className={`grow shrink basis-0 self-stretch p-6 bg-black rounded-xl my-4 border border-neutral-300/20 flex-col justify-start items-start gap-5 inline-flex w-full`}
+      className={`p-6 bg-background rounded-xl theme-border mb-6 last:mb-0 flex flex-col w-full max-sm:p-3`}
     >
-      <div className="flex flex-row items-center justify-between min-w-full">
-        <div className="flex flex-row items-center gap-2">
-          <IdentityTag
-            variant={Identity.user}
-            size="lg"
-            imgSrc={activity.creator?.image ?? ''}
-          >
-            {activity.creator?.display_name ?? activity.creator?.wallet ?? ''}
-          </IdentityTag>
+      <div className="flex flex-row items-center justify-between min-w-full mb-4 max-md:flex-col max-md:gap-3">
+        <div className="flex flex-row items-center gap-2 max-md:flex-col">
+          <HoverCard openDelay={100} closeDelay={100}>
+            <HoverCardTrigger>
+              <IdentityTag
+                variant={Identity.user}
+                size="lg"
+                imgSrc={activity.creator?.image ?? ''}
+              >
+                <Trunctacular
+                  value={
+                    activity.creator?.display_name ??
+                    activity.creator?.wallet ??
+                    activity.identity?.creator_address ??
+                    ''
+                  }
+                  onClick={() =>
+                    navigate(`${PATHS.PROFILE}/${activity.creator?.wallet}`)
+                  }
+                />
+              </IdentityTag>
+            </HoverCardTrigger>
+            <HoverCardContent className="w-fit">
+              {activity.creator ? (
+                <ProfileCard
+                  variant={Identity.user}
+                  avatarSrc={activity.creator?.image ?? ''}
+                  name={activity.creator?.display_name ?? ''}
+                  id={activity.creator?.wallet}
+                  bio={activity.creator?.description ?? ''}
+                  ipfsLink={`${BLOCK_EXPLORER_URL}/address/${activity.creator?.wallet}`}
+                  className="w-80"
+                />
+              ) : (
+                <ProfileCard
+                  variant={Identity.user}
+                  avatarSrc={''}
+                  name={activity.identity?.creator_address ?? ''}
+                  id={activity.identity?.creator_address}
+                  bio={
+                    'There is no user associated with this wallet. This data was created on-chain, outside of the Intuition Portal.'
+                  }
+                  ipfsLink={`${BLOCK_EXPLORER_URL}/address/${activity.identity?.creator_address}`}
+                  className="w-80"
+                />
+              )}
+            </HoverCardContent>
+          </HoverCard>
           <Text>{message}</Text>
         </div>
         <Text className="text-secondary-foreground">
@@ -115,7 +163,7 @@ function ActivityItem({
       </div>
       <div className="flex w-full">
         {activity.identity && (
-          <div className="hover:cursor-pointer bg-secondary-foreground/10 pl-12 pr-6 py-4 rounded-xl flex flex-row w-full gap-6 items-center">
+          <div className="hover:cursor-pointer bg-secondary-foreground/10 px-6 py-4 rounded-xl flex flex-row w-full gap-6 items-center justify-between max-md:flex-col">
             <IdentityContentRow
               variant={
                 activity.identity.is_user ? Identity.user : Identity.nonUser
@@ -124,110 +172,142 @@ function ActivityItem({
                 activity.identity.user?.image ?? activity.identity.image ?? ''
               }
               name={
-                activity.identity.user?.display_name ??
-                activity.identity.display_name
+                activity.identity.user_display_name ||
+                (activity.identity.display_name &&
+                activity.identity.display_name !== ''
+                  ? activity.identity.display_name
+                  : activity.identity.identity_id)
               }
-              walletAddress={
+              id={
                 activity.identity.user?.wallet ?? activity.identity.identity_id
               }
               amount={
                 +formatBalance(
-                  BigInt(activity.identity.user_assets ?? '0'),
+                  BigInt(activity.identity.assets_sum ?? '0'),
                   18,
                   4,
                 )
               }
               totalFollowers={activity.identity.num_positions}
-              onClick={() => {
-                if (activity.identity) {
-                  navigate(
-                    activity.identity.is_user
-                      ? `/app/profile/${activity.identity.identity_id}`
-                      : `/app/identity/${activity.identity.identity_id}`,
-                  )
-                }
-              }}
-            />
-            <Link
-              to={
+              link={
                 activity.identity.is_user
-                  ? `/app/profile/${activity.identity.identity_id}`
-                  : `/app/identity/${activity.identity.id}`
+                  ? `${PATHS.PROFILE}/${activity.identity.identity_id}`
+                  : `${PATHS.IDENTITY}/${activity.identity.id}`
               }
-              prefetch="intent"
+              ipfsLink={
+                activity.identity.is_user
+                  ? `${BLOCK_EXPLORER_URL}/address/${activity.identity.identity_id}`
+                  : `${IPFS_GATEWAY_URL}/${activity.identity.id}`
+              }
+            />
+            <a
+              href={`${BLOCK_EXPLORER_URL}/tx/${activity.transaction_hash}`}
+              target="_blank"
+              rel="noreferrer noopener"
             >
               <Button
                 variant={ButtonVariant.secondary}
                 size={ButtonSize.md}
-                className="w-40 h-fit"
+                className="w-max h-fit"
               >
-                View Identity{' '}
-                <Icon name={IconName.arrowUpRightFromCircleIcon} />
+                View on Explorer{' '}
+                <Icon name={IconName.squareArrowTopRight} className="h-4 w-4" />
               </Button>
-            </Link>
+            </a>
           </div>
         )}
         {activity.claim && (
-          <div className="hover:cursor-pointer bg-secondary-foreground/10 pl-12 pr-6 py-4 rounded-xl flex flex-row w-full gap-6 items-center">
+          <div className="bg-secondary-foreground/10 px-6 py-4 rounded-xl flex flex-row w-full gap-6 items-center max-md:flex-col">
             <ClaimRow
               claimsFor={activity.claim.for_num_positions}
               claimsAgainst={activity.claim.against_num_positions}
-              amount={+formatBalance(activity.claim.assets_sum, 18, 4)}
-              onClick={() => {
-                if (activity.claim) {
-                  navigate(`/app/claim/${activity.claim.claim_id}`)
-                }
-              }}
-              className="hover:cursor-pointer w-full"
+              claimsForValue={+formatBalance(activity.claim.for_assets_sum, 18)}
+              claimsAgainstValue={
+                +formatBalance(activity.claim.against_assets_sum, 18)
+              }
+              tvl={+formatBalance(activity.claim.assets_sum, 18, 4)}
+              className="w-full"
             >
               <Claim
+                size="md"
+                link={`${PATHS.CLAIM}/${activity.claim.claim_id}`}
                 subject={{
                   variant: activity.claim.subject?.is_user
                     ? Identity.user
                     : Identity.nonUser,
-                  label:
-                    activity.claim.subject?.user?.display_name ??
-                    activity.claim.subject?.display_name ??
-                    activity.claim.subject?.identity_id ??
-                    '',
-                  imgSrc: activity.claim.subject?.image,
+                  label: getAtomLabel(
+                    activity.claim.subject as IdentityPresenter,
+                  ),
+                  imgSrc: getAtomImage(
+                    activity.claim.subject as IdentityPresenter,
+                  ),
+                  id: activity.claim.subject?.identity_id,
+                  description: getAtomDescription(
+                    activity.claim.subject as IdentityPresenter,
+                  ),
+                  ipfsLink: getAtomIpfsLink(
+                    activity.claim.subject as IdentityPresenter,
+                  ),
+                  link: getAtomLink(
+                    activity.claim.subject as IdentityPresenter,
+                  ),
                 }}
                 predicate={{
                   variant: activity.claim.predicate?.is_user
                     ? Identity.user
                     : Identity.nonUser,
-                  label:
-                    activity.claim.predicate?.user?.display_name ??
-                    activity.claim.predicate?.display_name ??
-                    activity.claim.predicate?.identity_id ??
-                    '',
-                  imgSrc: activity.claim.predicate?.image,
+                  label: getAtomLabel(
+                    activity.claim.predicate as IdentityPresenter,
+                  ),
+                  imgSrc: getAtomImage(
+                    activity.claim.predicate as IdentityPresenter,
+                  ),
+                  id: activity.claim.predicate?.identity_id,
+                  description: getAtomDescription(
+                    activity.claim.predicate as IdentityPresenter,
+                  ),
+                  ipfsLink: getAtomIpfsLink(
+                    activity.claim.predicate as IdentityPresenter,
+                  ),
+                  link: getAtomLink(
+                    activity.claim.predicate as IdentityPresenter,
+                  ),
                 }}
                 object={{
                   variant: activity.claim.object?.is_user
                     ? Identity.user
                     : Identity.nonUser,
-                  label:
-                    activity.claim.object?.user?.display_name ??
-                    activity.claim.object?.display_name ??
-                    activity.claim.object?.identity_id ??
-                    '',
-                  imgSrc: activity.claim.object?.image,
+                  label: getAtomLabel(
+                    activity.claim.object as IdentityPresenter,
+                  ),
+                  imgSrc: getAtomImage(
+                    activity.claim.object as IdentityPresenter,
+                  ),
+                  id: activity.claim.object?.identity_id,
+                  description: getAtomDescription(
+                    activity.claim.object as IdentityPresenter,
+                  ),
+                  ipfsLink: getAtomIpfsLink(
+                    activity.claim.object as IdentityPresenter,
+                  ),
+                  link: getAtomLink(activity.claim.object as IdentityPresenter),
                 }}
               />
             </ClaimRow>
-            <Link
-              to={`/app/claim/${activity.claim.claim_id}`}
-              prefetch="intent"
+            <a
+              href={`${BLOCK_EXPLORER_URL}/tx/${activity.transaction_hash}`}
+              target="_blank"
+              rel="noreferrer noopener"
             >
               <Button
                 variant={ButtonVariant.secondary}
                 size={ButtonSize.md}
-                className="w-40 h-fit"
+                className="w-max h-fit"
               >
-                View Claim <Icon name={IconName.arrowUpRightFromCircleIcon} />
+                View on Explorer{' '}
+                <Icon name={IconName.squareArrowTopRight} className="h-4 w-4" />
               </Button>
-            </Link>
+            </a>
           </div>
         )}
       </div>

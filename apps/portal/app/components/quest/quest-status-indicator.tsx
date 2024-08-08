@@ -1,8 +1,12 @@
+import { HTMLAttributes } from 'react'
+
 import { cn, Icon, IconName } from '@0xintuition/1ui'
 import { QuestStatus } from '@0xintuition/api'
 
-export interface QuestStatusIndicatorProps {
+export interface QuestStatusIndicatorProps
+  extends HTMLAttributes<HTMLDivElement> {
   status: QuestStatus
+  className?: string
 }
 
 const getStatusComponentData = (status: QuestStatus) => {
@@ -40,11 +44,14 @@ const getStatusComponentData = (status: QuestStatus) => {
   }
 }
 
-const QuestStatusIndicator = ({ status }: QuestStatusIndicatorProps) => {
+const QuestStatusIndicator = ({
+  status,
+  className,
+}: QuestStatusIndicatorProps) => {
   const { iconName, iconClass, bgClass } = getStatusComponentData(status)
 
   return (
-    <div className={`relative w-[58px] h-[64px]`}>
+    <div className={cn(`relative w-[58px] h-[64px]`, className)}>
       <svg
         width="58"
         height="64"

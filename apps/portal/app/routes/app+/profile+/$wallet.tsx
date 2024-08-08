@@ -18,26 +18,30 @@ import {
 } from '@0xintuition/api'
 
 import FollowModal from '@components/follow/follow-modal'
-import { NestedLayout } from '@components/nested-layout'
+import { SegmentedNav } from '@components/segmented-nav'
 import StakeModal from '@components/stake/stake-modal'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { followModalAtom, stakeModalAtom } from '@lib/state/store'
 import logger from '@lib/utils/logger'
 import {
   calculatePercentageOfTvl,
-  fetchWrapper,
   formatBalance,
   invariant,
-  sliceString,
 } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
 import { Outlet, useNavigate } from '@remix-run/react'
+import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
 import { getVaultDetails } from '@server/multivault'
-import * as blockies from 'blockies-ts'
-import { NO_WALLET_ERROR, userIdentityRouteOptions } from 'consts'
+import {
+  BLOCK_EXPLORER_URL,
+  NO_WALLET_ERROR,
+  PATHS,
+  userIdentityRouteOptions,
+} from 'app/consts'
+import TwoPanelLayout from 'app/layouts/two-panel-layout'
+import { VaultDetailsType } from 'app/types/vault'
 import { useAtom } from 'jotai'
-import { VaultDetailsType } from 'types/vault'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const userWallet = await requireUserWallet(request)
@@ -49,11 +53,11 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     throw new Error('Wallet is undefined in params')
   }
 
-  if (wallet === userWallet) {
-    throw redirect('/app/profile')
+  if (wallet.toLowerCase() === userWallet.toLowerCase()) {
+    throw redirect(PATHS.PROFILE)
   }
 
-  const userIdentity = await fetchWrapper({
+  const userIdentity = await fetchWrapper(request, {
     method: IdentitiesService.getIdentityById,
     args: {
       id: wallet,
@@ -69,7 +73,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     return
   }
 
-  const userTotals = await fetchWrapper({
+  const userTotals = await fetchWrapper(request, {
     method: UsersService.getUserTotals,
     args: {
       id: userIdentity.creator.id,
@@ -99,7 +103,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   let followVaultDetails: VaultDetailsType | null = null
 
   if (userIdentity.follow_claim_id) {
-    followClaim = await fetchWrapper({
+    followClaim = await fetchWrapper(request, {
       method: ClaimsService.getClaimById,
       args: {
         id: userIdentity.follow_claim_id,
@@ -151,104 +155,120 @@ export default function Profile() {
   }>(['attest', 'create'])
   const navigate = useNavigate()
 
+  logger('followClaim', followClaim)
+
   const { user_assets, assets_sum } = vaultDetails ? vaultDetails : userIdentity
 
   const { user_asset_delta } = userIdentity
 
-  const imgSrc = blockies.create({ seed: wallet }).toDataURL()
-
   const [stakeModalActive, setStakeModalActive] = useAtom(stakeModalAtom)
   const [followModalActive, setFollowModalActive] = useAtom(followModalAtom)
 
-  return (
-    <NestedLayout outlet={Outlet} options={userIdentityRouteOptions}>
-      <div className="flex-col justify-start items-start gap-5 inline-flex">
-        <ProfileCard
-          variant="user"
-          avatarSrc={userIdentity?.user?.image ?? imgSrc}
-          name={userIdentity?.user?.display_name ?? ''}
-          walletAddress={
-            userIdentity?.user?.ens_name ??
-            sliceString(userIdentity?.user?.wallet, 6, 4)
+  const leftPanel = (
+    <div className="flex-col justify-start items-start gap-5 inline-flex max-lg:w-full">
+      <ProfileCard
+        variant="user"
+        avatarSrc={userIdentity?.user?.image ?? ''}
+        name={userIdentity?.user?.display_name ?? ''}
+        id={
+          userIdentity?.user?.ens_name ??
+          userIdentity?.user?.wallet ??
+          userIdentity.identity_id
+        }
+        vaultId={userIdentity.vault_id}
+        stats={{
+          numberOfFollowers: userTotals.follower_count,
+          numberOfFollowing: userTotals.followed_count,
+          points: userTotals.total_points,
+        }}
+        bio={userIdentity?.user?.description ?? ''}
+        ipfsLink={`${BLOCK_EXPLORER_URL}/address/${userIdentity.identity_id}`}
+      >
+        <Button
+          variant="secondary"
+          className="w-full"
+          onClick={() =>
+            setFollowModalActive((prevState) => ({
+              ...prevState,
+              isOpen: true,
+            }))
           }
-          stats={{
-            numberOfFollowers: userTotals.follower_count,
-            numberOfFollowing: userTotals.followed_count,
-            points: userTotals.user_points,
-          }}
-          bio={userIdentity?.user?.description ?? ''}
         >
-          <Button
-            variant="secondary"
-            className="w-full"
-            onClick={() =>
-              setFollowModalActive((prevState) => ({
-                ...prevState,
-                isOpen: true,
-              }))
-            }
-          >
-            {followVaultDetails &&
-            (followVaultDetails.user_conviction ?? '0') > '0'
-              ? `Following · ${formatBalance(followVaultDetails.user_assets ?? '0', 18, 4)} ETH`
-              : 'Follow'}
-          </Button>
-        </ProfileCard>
-        {/* <ProfileSocialAccounts
-              privyUser={JSON.parse(JSON.stringify(user))}
-              handleOpenEditSocialLinksModal={() =>
-                setEditSocialLinksModalActive(true)
-              }
-            /> */}
-        {vaultDetails !== null && user_assets !== '0' ? (
-          <PositionCard
-            onButtonClick={() =>
-              setStakeModalActive((prevState) => ({
-                ...prevState,
-                mode: 'redeem',
-                modalType: 'identity',
-                isOpen: true,
-              }))
-            }
-          >
-            <PositionCardStaked
-              amount={user_assets ? +formatBalance(user_assets, 18, 4) : 0}
-            />
-            <PositionCardOwnership
-              percentOwnership={
-                user_assets !== null && assets_sum
-                  ? +calculatePercentageOfTvl(user_assets ?? '0', assets_sum)
-                  : 0
-              }
-            />
-            <PositionCardFeesAccrued
-              amount={
-                user_asset_delta
-                  ? +formatBalance(
-                      +(user_assets ?? '0') - +user_asset_delta,
-                      18,
-                      5,
-                    )
-                  : 0
-              }
-            />
-            <PositionCardLastUpdated timestamp={userIdentity.updated_at} />
-          </PositionCard>
-        ) : null}
-        <StakeCard
-          tvl={+formatBalance(assets_sum ?? '0')}
-          holders={userIdentity.num_positions}
-          onBuyClick={() =>
+          {followVaultDetails &&
+          (followVaultDetails.user_conviction ?? '0') > '0'
+            ? `Following · ${formatBalance(followVaultDetails.user_assets ?? '0', 18, 4)} ETH`
+            : 'Follow'}
+        </Button>
+      </ProfileCard>
+      {/* TODO: Determine whether we need this or not */}
+      {/* <ProfileSocialAccounts
+      privyUser={JSON.parse(JSON.stringify(user))}
+      handleOpenEditSocialLinksModal={() =>
+        setEditSocialLinksModalActive(true)
+      }
+    /> */}
+      {vaultDetails !== null && user_assets !== '0' ? (
+        <PositionCard
+          onButtonClick={() =>
             setStakeModalActive((prevState) => ({
               ...prevState,
-              mode: 'deposit',
+              mode: 'redeem',
               modalType: 'identity',
               isOpen: true,
             }))
           }
-          onViewAllClick={() => navigate(`/app/profile/${wallet}/data-about`)}
-        />
+        >
+          <PositionCardStaked
+            amount={user_assets ? +formatBalance(user_assets, 18, 4) : 0}
+          />
+          <PositionCardOwnership
+            percentOwnership={
+              user_assets !== null && assets_sum
+                ? +calculatePercentageOfTvl(user_assets ?? '0', assets_sum)
+                : 0
+            }
+          />
+          <PositionCardFeesAccrued
+            amount={
+              user_asset_delta
+                ? +formatBalance(
+                    +(user_assets ?? '0') - +user_asset_delta,
+                    18,
+                    5,
+                  )
+                : 0
+            }
+          />
+          <PositionCardLastUpdated timestamp={userIdentity.updated_at} />
+        </PositionCard>
+      ) : null}
+      <StakeCard
+        tvl={+formatBalance(assets_sum ?? '0')}
+        holders={userIdentity.num_positions}
+        onBuyClick={() =>
+          setStakeModalActive((prevState) => ({
+            ...prevState,
+            mode: 'deposit',
+            modalType: 'identity',
+            isOpen: true,
+          }))
+        }
+        onViewAllClick={() => navigate(`/app/profile/${wallet}/data-about`)}
+      />
+    </div>
+  )
+
+  const rightPanel = (
+    <>
+      <div className="flex flex-row justify-end mb-6 max-lg:justify-center">
+        <SegmentedNav options={userIdentityRouteOptions} />
       </div>
+      <Outlet />
+    </>
+  )
+
+  return (
+    <TwoPanelLayout leftPanel={leftPanel} rightPanel={rightPanel}>
       <StakeModal
         userWallet={userWallet}
         contract={userIdentity.contract}
@@ -276,6 +296,6 @@ export default function Profile() {
           }))
         }}
       />
-    </NestedLayout>
+    </TwoPanelLayout>
   )
 }

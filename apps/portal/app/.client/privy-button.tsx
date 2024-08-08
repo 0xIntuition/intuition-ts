@@ -7,10 +7,12 @@ import {
   DropdownMenuTrigger,
   Text,
   Trunctacular,
+  useSidebarLayoutContext,
 } from '@0xintuition/1ui'
 
 import { usePrivy } from '@privy-io/react-auth'
 import { NavLink, useNavigate } from '@remix-run/react'
+import { PATHS } from 'app/consts'
 import { useDisconnect } from 'wagmi'
 
 export function PrivyButton({
@@ -21,6 +23,7 @@ export function PrivyButton({
   onLogout?: () => void
 }) {
   const { ready, authenticated, logout, user: privyUser } = usePrivy()
+  const { isMobileView, setIsCollapsed } = useSidebarLayoutContext()
 
   const navigate = useNavigate()
   const { disconnect } = useDisconnect()
@@ -40,7 +43,7 @@ export function PrivyButton({
       <>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="border-none p-0">
+            <Button variant="ghost" className="border-none p-0 max-sm:p-0">
               {triggerComponent}
             </Button>
           </DropdownMenuTrigger>
@@ -61,10 +64,15 @@ export function PrivyButton({
               className="cursor-pointer justify-start"
               onSelect={(e) => {
                 e.preventDefault()
-                navigate('/app/profile')
+                navigate(PATHS.PROFILE)
               }}
             >
-              <NavLink to={`/app/profile`} className="font-semibold">
+              <NavLink
+                to={`/app/profile`}
+                className="font-semibold"
+                // dismiss nav menu programmatically
+                onClick={() => isMobileView && setIsCollapsed(true)}
+              >
                 <div className="space-y-1">
                   <Text>View Profile</Text>
                 </div>

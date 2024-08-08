@@ -5,8 +5,8 @@ import { IdentityPresenter } from '@0xintuition/api'
 
 import { pascalCaseString } from '@lib/utils/misc'
 import { useFetcher, useLocation, useNavigate } from '@remix-run/react'
-import { GET_IDENTITIES_BY_IDS_RESOURCE_ROUTE } from 'consts'
-import { Identity, IdentityType } from 'types/identity'
+import { GET_IDENTITIES_BY_IDS_RESOURCE_ROUTE } from 'app/consts'
+import { ClaimElement, ClaimElementType } from 'app/types'
 
 import { IdentityInput, IdentityInputButtonProps } from '../identity-input'
 
@@ -55,9 +55,9 @@ const ExploreSearchClaimInput = ({
 
   React.useEffect(() => {
     const params = new URLSearchParams(location.search)
-    fetchIdentityById(params.get(Identity.Subject), subjectFetcher)
-    fetchIdentityById(params.get(Identity.Predicate), predicateFetcher)
-    fetchIdentityById(params.get(Identity.Object), objectFetcher)
+    fetchIdentityById(params.get(ClaimElement.Subject), subjectFetcher)
+    fetchIdentityById(params.get(ClaimElement.Predicate), predicateFetcher)
+    fetchIdentityById(params.get(ClaimElement.Object), objectFetcher)
     // omits the fetchers from the exhaustive deps
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.search])
@@ -81,7 +81,7 @@ const ExploreSearchClaimInput = ({
   }, [subjectFetcher.data, predicateFetcher.data, objectFetcher.data])
 
   const handleIdentitySelection = (
-    type: IdentityType,
+    type: ClaimElementType,
     identity: IdentityPresenter,
   ) => {
     const updatedIdentities = { ...selectedIdentities, [type]: identity }
@@ -97,40 +97,46 @@ const ExploreSearchClaimInput = ({
   }) => {
     const params = new URLSearchParams(window.location.search)
     if (identities.subject) {
-      params.set(Identity.Subject, identities.subject.id)
+      params.set(ClaimElement.Subject, identities.subject.id)
     } else {
-      params.delete(Identity.Subject)
+      params.delete(ClaimElement.Subject)
     }
     if (identities.predicate) {
-      params.set(Identity.Predicate, identities.predicate.id)
+      params.set(ClaimElement.Predicate, identities.predicate.id)
     } else {
-      params.delete(Identity.Predicate)
+      params.delete(ClaimElement.Predicate)
     }
     if (identities.object) {
-      params.set(Identity.Object, identities.object.id)
+      params.set(ClaimElement.Object, identities.object.id)
     } else {
-      params.delete(Identity.Object)
+      params.delete(ClaimElement.Object)
     }
     const newUrl = `${window.location.pathname}?${params.toString()}`
     navigate(newUrl, { replace: true })
   }
 
-  const handleOpenChange = (type: IdentityType, isOpen: boolean) => {
+  const handleOpenChange = (type: ClaimElementType, isOpen: boolean) => {
     setPopoverOpen({ ...popoverOpen, [type]: isOpen })
   }
 
   const identityInputProps = (
-    type: IdentityType,
+    type: ClaimElementType,
   ): IdentityInputButtonProps => ({
     label: pascalCaseString(type),
     placeholder: `Select an identity`,
     selectedValue: selectedIdentities[type]
       ? {
-          variant: selectedIdentities[type]!.is_user ? 'user' : 'non-user',
-          imgSrc: selectedIdentities[type]!.user?.image ?? null,
-          name: selectedIdentities[type]!.display_name,
+          variant: selectedIdentities[type]?.is_user ? 'user' : 'non-user',
+          imgSrc:
+            selectedIdentities[type]?.user?.image ??
+            selectedIdentities[type]?.image ??
+            null,
+          name:
+            selectedIdentities[type]?.user?.display_name ??
+            selectedIdentities[type]?.display_name ??
+            '?',
         }
-      : { name: '' },
+      : { name: '?' },
     onClick: () => handleOpenChange(type, !popoverOpen[type]),
     isPopoverOpen: popoverOpen[type],
     identities,
@@ -139,7 +145,7 @@ const ExploreSearchClaimInput = ({
   })
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col w-full gap-2">
       <Text
         variant="bodyLarge"
         weight="regular"
@@ -164,9 +170,9 @@ const ExploreSearchClaimInput = ({
       <Separator className="mb-7" />
       <IdentityInput
         showLabels
-        subject={identityInputProps(Identity.Subject)}
-        predicate={identityInputProps(Identity.Predicate)}
-        object={identityInputProps(Identity.Object)}
+        subject={identityInputProps(ClaimElement.Subject)}
+        predicate={identityInputProps(ClaimElement.Predicate)}
+        object={identityInputProps(ClaimElement.Object)}
       />
     </div>
   )

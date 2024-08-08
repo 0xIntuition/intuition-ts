@@ -18,15 +18,15 @@ const ErrorStateCard = ({
   return (
     <div
       className={cn(
-        `flex flex-col justify-center items-center p-6 theme-border border-destructive/50 rounded-lg min-h-52`,
+        `flex flex-col justify-center items-center p-6 theme-border border-destructive/50 rounded-lg min-h-52 w-full gap-4`,
         className,
       )}
     >
       <Icon
         name={IconName.triangleExclamation}
-        className="w-12 h-12 mb-4 text-destructive"
+        className="w-12 h-12 text-destructive"
       />
-      <Text variant="caption" className="text-muted-foreground mb-5">
+      <Text variant="caption" className="text-muted-foreground">
         {message}
       </Text>
       {children}

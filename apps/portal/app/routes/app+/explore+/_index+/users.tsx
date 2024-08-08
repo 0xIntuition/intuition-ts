@@ -3,12 +3,13 @@ import { IdentitiesService, IdentityPresenter } from '@0xintuition/api'
 import { ExploreSearch } from '@components/explore/ExploreSearch'
 import { IdentitiesList } from '@components/list/identities'
 import logger from '@lib/utils/logger'
-import { calculateTotalPages, fetchWrapper, invariant } from '@lib/utils/misc'
+import { calculateTotalPages, invariant } from '@lib/utils/misc'
 import { getStandardPageParams } from '@lib/utils/params'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
+import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
-import { NO_WALLET_ERROR } from 'consts'
+import { NO_WALLET_ERROR } from 'app/consts'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const wallet = await requireUserWallet(request)
@@ -21,7 +22,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   })
   const displayName = searchParams.get('user') || null
 
-  const identities = await fetchWrapper({
+  const identities = await fetchWrapper(request, {
     method: IdentitiesService.searchIdentity,
     args: {
       page,
@@ -53,14 +54,14 @@ export default function ExploreUsers() {
   const { identities, pagination } = useLoaderData<typeof loader>()
 
   return (
-    <div className="m-8 flex flex-col items-center gap-4">
-      <ExploreSearch variant="user" className="mb-12" />
+    <>
+      <ExploreSearch variant="user" />
       <IdentitiesList
         identities={identities}
         pagination={pagination}
         enableSearch={false}
         enableSort={true}
       />
-    </div>
+    </>
   )
 }

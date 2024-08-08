@@ -26,10 +26,7 @@ export const ListIdentityCard: React.FC<ListIdentityCardProps> = ({
   currency = Currency.ETH,
 }) => {
   return (
-    <div
-      className="theme-border p-8 rounded-xl flex flex-col items-center justify-between"
-      style={{ height: '18rem' }}
-    >
+    <div className="theme-border p-8 rounded-xl flex flex-col items-center justify-between h-72 max-sm:h-fit">
       <Avatar
         variant="non-user"
         src={imgSrc}

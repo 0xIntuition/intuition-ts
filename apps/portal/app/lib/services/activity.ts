@@ -4,13 +4,15 @@ import {
   SortColumn,
 } from '@0xintuition/api'
 
-import { fetchWrapper } from '@lib/utils/misc'
 import { getStandardPageParams } from '@lib/utils/params'
+import { fetchWrapper } from '@server/api'
 
 export async function getActivity({
+  request,
   searchParams,
   fromAddress,
 }: {
+  request: Request
   searchParams: URLSearchParams
   fromAddress?: string
 }) {
@@ -27,7 +29,7 @@ export async function getActivity({
     ...(fromAddress && { fromAddress }),
   }
 
-  const activity = await fetchWrapper({
+  const activity = await fetchWrapper(request, {
     method: ActivitiesService.getActivities,
     args: activityArgs,
   })

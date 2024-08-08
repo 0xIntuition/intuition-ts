@@ -17,7 +17,7 @@ describe('InfoCard', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="flex flex-col gap-2 theme-border p-5 rounded-lg"
+          class="flex flex-col gap-2 theme-border p-5 rounded-lg max-sm:items-center"
         >
           <p
             class="text-sm font-normal text-muted-foreground"
@@ -28,15 +28,21 @@ describe('InfoCard', () => {
             class="flex justify-start items-center gap-1"
           >
             <button
-              class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center rounded-full [&>span]:rounded-full [&>span]:overflow-hidden text-base [&>span]:h-6 [&>span]:w-6"
+              class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center rounded-full [&>span]:rounded-full [&>span]:overflow-hidden text-base [&>span]:h-6 [&>span]:w-6"
             >
               <span
-                class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square rounded-full bg-muted"
+                class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square bg-background theme-border rounded-full"
               >
                 <span
                   class="flex h-full w-full items-center justify-center bg-inherit"
                 >
-                  ID
+                  <svg
+                    class="text-primary/30 w-[80%] h-[80%] max-w-8 max-h-8"
+                  >
+                    <use
+                      href="/src/components/Icon/Icon.sprites.svg#crypto-punk"
+                    />
+                  </svg>
                 </span>
               </span>
               super dave

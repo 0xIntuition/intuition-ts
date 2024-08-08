@@ -49,11 +49,11 @@ const AvatarFallback = React.forwardRef<
 ))
 AvatarFallback.displayName = AvatarPrimitive.Fallback.displayName
 
-const avatarVariants = cva('aspect-square', {
+const avatarVariants = cva('aspect-square bg-background theme-border', {
   variants: {
     variant: {
-      [Identity.user]: 'rounded-full bg-muted',
-      [Identity.nonUser]: 'rounded bg-background theme-border',
+      [Identity.user]: 'rounded-full',
+      [Identity.nonUser]: 'rounded',
     },
   },
   defaultVariants: {
@@ -73,14 +73,14 @@ const Avatar = ({ className, variant, src, name }: AvatarProps) => {
     <AvatarContainer className={cn(avatarVariants({ variant }), className)}>
       <AvatarImage src={src} alt={`${name} avatar`} />
       <AvatarFallback className="bg-inherit">
-        {variant === Identity.nonUser ? (
-          <Icon
-            name={IconName.fingerprint}
-            className="text-primary/30 w-[80%] h-[80%] max-w-8 max-h-8"
-          />
-        ) : (
-          <>{name?.substring(0, 2).toUpperCase() || `??`}</>
-        )}
+        <Icon
+          name={
+            variant === Identity.nonUser
+              ? IconName.fingerprint
+              : IconName.cryptoPunk
+          }
+          className="text-primary/30 w-[80%] h-[80%] max-w-8 max-h-8"
+        />
       </AvatarFallback>
     </AvatarContainer>
   )

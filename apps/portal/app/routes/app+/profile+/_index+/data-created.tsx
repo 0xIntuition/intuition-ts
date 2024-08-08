@@ -37,15 +37,17 @@ import {
   getUserClaims,
   getUserIdentities,
 } from '@lib/services/users'
-import { fetchWrapper, formatBalance, invariant } from '@lib/utils/misc'
+import logger from '@lib/utils/logger'
+import { formatBalance, invariant } from '@lib/utils/misc'
 import { defer, LoaderFunctionArgs } from '@remix-run/node'
 import { Await, useRouteLoaderData } from '@remix-run/react'
+import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
 import {
   NO_USER_IDENTITY_ERROR,
   NO_USER_TOTALS_ERROR,
   NO_WALLET_ERROR,
-} from 'consts'
+} from 'app/consts'
 
 import { ProfileLoaderData } from './_layout'
 
@@ -57,23 +59,31 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const searchParams = new URLSearchParams(url.search)
 
   return defer({
-    activeIdentities: getUserIdentities({ userWallet, searchParams }),
-    activeClaims: getUserClaims({ userWallet, searchParams }),
-    activeClaimsSummary: fetchWrapper({
+    activeIdentities: getUserIdentities({
+      request,
+      userWallet: userWallet.toLowerCase(),
+      searchParams,
+    }),
+    activeClaims: getUserClaims({ request, userWallet, searchParams }),
+    activeClaimsSummary: fetchWrapper(request, {
       method: ClaimsService.claimSummary,
       args: {
         identity: userWallet,
       },
     }),
-    createdIdentities: getCreatedIdentities({ userWallet, searchParams }),
-    createdIdentitiesSummary: fetchWrapper({
+    createdIdentities: getCreatedIdentities({
+      request,
+      userWallet,
+      searchParams,
+    }),
+    createdIdentitiesSummary: fetchWrapper(request, {
       method: IdentitiesService.identitySummary,
       args: {
         creator: userWallet,
       },
     }),
-    createdClaims: getCreatedClaims({ userWallet, searchParams }),
-    createdClaimsSummary: fetchWrapper({
+    createdClaims: getCreatedClaims({ request, userWallet, searchParams }),
+    createdClaimsSummary: fetchWrapper(request, {
       method: ClaimsService.claimSummary,
       args: {
         creator: userWallet,
@@ -100,14 +110,13 @@ const TabContent = ({
   children?: ReactNode
 }) => {
   return (
-    <TabsContent value={value} className="w-full">
+    <TabsContent value={value} className="flex flex-col w-full gap-6">
       <DataCreatedHeader
         variant={variant}
         userIdentity={userIdentity}
         userTotals={userTotals}
         totalResults={totalResults}
         totalStake={totalStake}
-        className="mb-6"
       />
       {children}
     </TabsContent>
@@ -132,10 +141,11 @@ export default function ProfileDataCreated() {
   invariant(userIdentity, NO_USER_IDENTITY_ERROR)
   invariant(userTotals, NO_USER_TOTALS_ERROR)
 
+  logger('data-created render')
   return (
-    <>
-      <div className="flex-col justify-start items-start flex w-full">
-        <div className="self-stretch justify-between items-center inline-flex mb-6">
+    <div className="flex-col justify-start items-start flex w-full gap-6">
+      <div className="flex flex-col w-full gap-6">
+        <div className="self-stretch justify-between items-center inline-flex">
           <Text
             variant="headline"
             weight="medium"
@@ -148,105 +158,120 @@ export default function ProfileDataCreated() {
           defaultValue={DataCreatedHeaderVariants.activeIdentities}
           className="w-full"
         >
-          <Suspense fallback={<TabsSkeleton numOfTabs={2} />}>
-            <Await
-              resolve={Promise.all([
-                activeIdentities,
-                activeClaims,
-                activeClaimsSummary,
-              ])}
-              errorElement={<></>}
-            >
-              {([resolvedIdentities, resolvedClaims]) => (
-                <TabsList className="mb-4">
+          <Suspense
+            fallback={
+              <div className="mb-3">
+                <TabsSkeleton numOfTabs={2} />
+              </div>
+            }
+          >
+            <TabsList className="mb-6">
+              <Await resolve={activeIdentities} errorElement={<></>}>
+                {(resolvedIdentities) => (
                   <TabsTrigger
                     value={DataCreatedHeaderVariants.activeIdentities}
                     label="Identities"
                     totalCount={resolvedIdentities.pagination.totalEntries}
                     disabled={activeIdentities === undefined}
                   />
+                )}
+              </Await>
+              <Await resolve={activeClaims} errorElement={<></>}>
+                {(resolvedClaims) => (
                   <TabsTrigger
                     value={DataCreatedHeaderVariants.activeClaims}
                     label="Claims"
                     totalCount={resolvedClaims.pagination.totalEntries}
                     disabled={activeClaims === undefined}
                   />
-                </TabsList>
-              )}
-            </Await>
+                )}
+              </Await>
+            </TabsList>
           </Suspense>
           <Suspense
             fallback={
-              <>
+              <div className="flex flex-col w-full gap-6">
                 <DataHeaderSkeleton />
                 <PaginatedListSkeleton />
-              </>
+              </div>
             }
           >
             <Await
-              resolve={Promise.all([
-                activeIdentities,
-                activeClaims,
-                activeClaimsSummary,
-              ])}
+              resolve={activeIdentities}
               errorElement={
                 <ErrorStateCard>
                   <RevalidateButton />
                 </ErrorStateCard>
               }
             >
-              {([
-                resolvedIdentities,
-                resolvedClaims,
-                resolvedActiveClaimsSummary,
-              ]) => (
-                <>
-                  <TabContent
-                    value={DataCreatedHeaderVariants.activeIdentities}
-                    userIdentity={userIdentity}
-                    userTotals={userTotals}
-                    totalResults={resolvedIdentities.pagination.totalEntries}
-                    totalStake={
-                      +formatBalance(
-                        userTotals.total_position_value ?? '0',
-                        18,
-                        4,
-                      )
-                    }
-                    variant={DataCreatedHeaderVariants.activeIdentities}
-                  >
-                    <ActivePositionsOnIdentities
-                      identities={resolvedIdentities.data}
-                      pagination={resolvedIdentities.pagination}
-                    />
-                  </TabContent>
-                  <TabContent
-                    value={DataCreatedHeaderVariants.activeClaims}
-                    userIdentity={userIdentity}
-                    userTotals={userTotals}
-                    totalResults={resolvedClaims.pagination.totalEntries}
-                    totalStake={
-                      +formatBalance(
-                        resolvedActiveClaimsSummary?.assets_sum ?? '0',
-                        18,
-                        4,
-                      )
-                    }
-                    variant={DataCreatedHeaderVariants.activeClaims}
-                  >
-                    <ActivePositionsOnClaims
-                      claims={resolvedClaims.data}
-                      pagination={resolvedClaims.pagination}
-                    />
-                  </TabContent>
-                </>
+              {(resolvedIdentities) => (
+                <TabContent
+                  value={DataCreatedHeaderVariants.activeIdentities}
+                  userIdentity={userIdentity}
+                  userTotals={userTotals}
+                  totalResults={resolvedIdentities.pagination.totalEntries}
+                  totalStake={
+                    +formatBalance(
+                      userTotals.total_position_value ?? '0',
+                      18,
+                      4,
+                    )
+                  }
+                  variant={DataCreatedHeaderVariants.activeIdentities}
+                >
+                  <ActivePositionsOnIdentities
+                    identities={resolvedIdentities.data}
+                    pagination={resolvedIdentities.pagination}
+                  />
+                </TabContent>
+              )}
+            </Await>
+            <Await
+              resolve={activeClaims}
+              errorElement={
+                <ErrorStateCard>
+                  <RevalidateButton />
+                </ErrorStateCard>
+              }
+            >
+              {(resolvedClaims) => (
+                <Await
+                  resolve={activeClaimsSummary}
+                  errorElement={
+                    <ErrorStateCard>
+                      <RevalidateButton />
+                    </ErrorStateCard>
+                  }
+                >
+                  {(resolvedActiveClaimsSummary) => (
+                    <TabContent
+                      value={DataCreatedHeaderVariants.activeClaims}
+                      userIdentity={userIdentity}
+                      userTotals={userTotals}
+                      totalResults={resolvedClaims.pagination.totalEntries}
+                      totalStake={
+                        +formatBalance(
+                          resolvedActiveClaimsSummary?.assets_sum ?? '0',
+                          18,
+                          4,
+                        )
+                      }
+                      variant={DataCreatedHeaderVariants.activeClaims}
+                    >
+                      <ActivePositionsOnClaims
+                        claims={resolvedClaims.data}
+                        pagination={resolvedClaims.pagination}
+                      />
+                    </TabContent>
+                  )}
+                </Await>
               )}
             </Await>
           </Suspense>
         </Tabs>
       </div>
-      <div className="flex-col justify-start items-start flex w-full">
-        <div className="self-stretch justify-between items-center inline-flex mb-6">
+      <div className="flex flex-col w-full gap-6">
+        <div className="self-stretch justify-between items-center inline-flex">
           <Text
             variant="headline"
             weight="medium"
@@ -260,106 +285,128 @@ export default function ProfileDataCreated() {
           className="w-full"
         >
           <Suspense fallback={<TabsSkeleton numOfTabs={2} />}>
-            <Await
-              resolve={Promise.all([createdIdentities, createdClaims])}
-              errorElement={<></>}
-            >
-              {([resolvedIdentities, resolvedClaims]) => (
-                <TabsList className="mb-4">
+            <TabsList className="mb-6">
+              <Await resolve={createdIdentities} errorElement={<></>}>
+                {(resolvedIdentities) => (
                   <TabsTrigger
                     value={DataCreatedHeaderVariants.createdIdentities}
                     label="Identities"
                     totalCount={resolvedIdentities.pagination.totalEntries}
                     disabled={createdIdentities === undefined}
                   />
+                )}
+              </Await>
+              <Await resolve={createdClaims} errorElement={<></>}>
+                {(resolvedClaims) => (
                   <TabsTrigger
                     value={DataCreatedHeaderVariants.createdClaims}
                     label="Claims"
                     totalCount={resolvedClaims.pagination.totalEntries}
                     disabled={createdClaims === undefined}
                   />
-                </TabsList>
-              )}
-            </Await>
+                )}
+              </Await>
+            </TabsList>
           </Suspense>
           <Suspense
             fallback={
-              <>
+              <div className="flex flex-col w-full gap-6">
                 <DataHeaderSkeleton />
                 <PaginatedListSkeleton />
-              </>
+              </div>
             }
           >
             <Await
-              resolve={Promise.all([
-                createdIdentities,
-                createdIdentitiesSummary,
-                createdClaims,
-                createdClaimsSummary,
-              ])}
+              resolve={createdIdentities}
               errorElement={
                 <ErrorStateCard>
                   <RevalidateButton />
                 </ErrorStateCard>
               }
             >
-              {([
-                resolvedIdentities,
-                resolvedIdentitiesSummary,
-                resolvedClaims,
-                resolvedClaimsSummary,
-              ]) => (
-                <>
-                  <TabContent
-                    value={DataCreatedHeaderVariants.createdIdentities}
-                    userIdentity={userIdentity}
-                    userTotals={userTotals}
-                    totalResults={resolvedIdentities.pagination.totalEntries}
-                    totalStake={
-                      +formatBalance(
-                        resolvedIdentitiesSummary?.assets ?? '0',
-                        18,
-                        4,
-                      )
-                    }
-                    variant={DataCreatedHeaderVariants.createdIdentities}
-                  >
-                    <IdentitiesList
-                      identities={resolvedIdentities.data}
-                      pagination={resolvedIdentities.pagination}
-                      paramPrefix="createdIdentities"
-                      enableSearch
-                      enableSort
-                    />
-                  </TabContent>
-                  <TabContent
-                    value={DataCreatedHeaderVariants.createdClaims}
-                    userIdentity={userIdentity}
-                    userTotals={userTotals}
-                    totalResults={resolvedClaims.pagination.totalEntries}
-                    totalStake={
-                      +formatBalance(
-                        resolvedClaimsSummary?.assets_sum ?? '0',
-                        18,
-                        4,
-                      )
-                    }
-                    variant={DataCreatedHeaderVariants.createdClaims}
-                  >
-                    <ClaimsList
-                      claims={resolvedClaims.data}
-                      pagination={resolvedClaims.pagination}
-                      paramPrefix="createdClaims"
-                      enableSearch
-                      enableSort
-                    />
-                  </TabContent>
-                </>
+              {(resolvedIdentities) => (
+                <Await
+                  resolve={createdIdentitiesSummary}
+                  errorElement={
+                    <ErrorStateCard>
+                      <RevalidateButton />
+                    </ErrorStateCard>
+                  }
+                >
+                  {(resolvedIdentitiesSummary) => (
+                    <TabContent
+                      value={DataCreatedHeaderVariants.createdIdentities}
+                      userIdentity={userIdentity}
+                      userTotals={userTotals}
+                      totalResults={resolvedIdentities.pagination.totalEntries}
+                      totalStake={
+                        +formatBalance(
+                          resolvedIdentitiesSummary?.assets ?? '0',
+                          18,
+                          4,
+                        )
+                      }
+                      variant={DataCreatedHeaderVariants.createdIdentities}
+                    >
+                      <IdentitiesList
+                        identities={resolvedIdentities.data}
+                        pagination={resolvedIdentities.pagination}
+                        paramPrefix="createdIdentities"
+                        enableSearch
+                        enableSort
+                      />
+                    </TabContent>
+                  )}
+                </Await>
+              )}
+            </Await>
+            <Await
+              resolve={createdClaims}
+              errorElement={
+                <ErrorStateCard>
+                  <RevalidateButton />
+                </ErrorStateCard>
+              }
+            >
+              {(resolvedClaims) => (
+                <Await
+                  resolve={createdClaimsSummary}
+                  errorElement={
+                    <ErrorStateCard>
+                      <RevalidateButton />
+                    </ErrorStateCard>
+                  }
+                >
+                  {(resolvedClaimsSummary) => (
+                    <TabContent
+                      value={DataCreatedHeaderVariants.createdClaims}
+                      userIdentity={userIdentity}
+                      userTotals={userTotals}
+                      totalResults={resolvedClaims.pagination.totalEntries}
+                      totalStake={
+                        +formatBalance(
+                          resolvedClaimsSummary?.assets_sum ?? '0',
+                          18,
+                          4,
+                        )
+                      }
+                      variant={DataCreatedHeaderVariants.createdClaims}
+                    >
+                      <ClaimsList
+                        claims={resolvedClaims.data}
+                        pagination={resolvedClaims.pagination}
+                        paramPrefix="createdClaims"
+                        enableSearch
+                        enableSort
+                      />
+                    </TabContent>
+                  )}
+                </Await>
               )}
             </Await>
           </Suspense>
         </Tabs>
       </div>
-    </>
+    </div>
   )
 }

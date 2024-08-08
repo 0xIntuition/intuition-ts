@@ -1,9 +1,20 @@
-import { Claim, ClaimRow, EmptyStateCard, Identity } from '@0xintuition/1ui'
-import { ClaimPresenter, ClaimSortColumn } from '@0xintuition/api'
+import { Claim, ClaimRow, Identity } from '@0xintuition/1ui'
+import {
+  ClaimPresenter,
+  ClaimSortColumn,
+  IdentityPresenter,
+} from '@0xintuition/api'
 
-import { formatBalance } from '@lib/utils/misc'
-import { useNavigate } from '@remix-run/react'
-import { PaginationType } from 'types/pagination'
+import {
+  formatBalance,
+  getAtomDescription,
+  getAtomImage,
+  getAtomIpfsLink,
+  getAtomLabel,
+  getAtomLink,
+} from '@lib/utils/misc'
+import { PATHS } from 'app/consts'
+import { PaginationType } from 'app/types/pagination'
 
 import { SortOption } from '../sort-select'
 import { List } from './list'
@@ -16,12 +27,11 @@ export function ClaimsList({
   enableSort = false,
 }: {
   claims: ClaimPresenter[]
-  pagination: PaginationType
+  pagination?: PaginationType
   paramPrefix?: string
   enableSearch?: boolean
   enableSort?: boolean
 }) {
-  const navigate = useNavigate()
   const options: SortOption<ClaimSortColumn>[] = [
     { value: 'Total ETH', sortBy: 'AssetsSum' },
     { value: 'ETH For', sortBy: 'ForAssetsSum' },
@@ -32,10 +42,6 @@ export function ClaimsList({
     { value: 'Updated At', sortBy: 'UpdatedAt' },
     { value: 'Created At', sortBy: 'CreatedAt' },
   ]
-
-  if (!claims.length) {
-    return <EmptyStateCard message="No claims found." />
-  }
 
   return (
     <List<ClaimSortColumn>
@@ -49,46 +55,56 @@ export function ClaimsList({
       {claims.map((claim) => (
         <div
           key={claim.claim_id}
-          className="grow shrink basis-0 self-stretch p-6 bg-background first:rounded-t-xl last:rounded-b-xl theme-border flex-col justify-start gap-5 inline-flex"
+          className="grow shrink basis-0 self-stretch p-6 bg-background first:border-t-px first:rounded-t-xl last:rounded-b-xl theme-border border-t-0 flex-col justify-start gap-5 inline-flex"
         >
           <ClaimRow
             claimsFor={claim.for_num_positions}
             claimsAgainst={claim.against_num_positions}
-            amount={+formatBalance(claim.assets_sum, 18, 4)}
-            onClick={() => {
-              navigate(`/app/claim/${claim.claim_id}`)
-            }}
-            className="hover:cursor-pointer"
+            claimsForValue={+formatBalance(claim.for_assets_sum, 18)}
+            claimsAgainstValue={+formatBalance(claim.against_assets_sum, 18)}
+            tvl={+formatBalance(claim.assets_sum, 18, 4)}
           >
             <Claim
+              size="md"
+              link={`${PATHS.CLAIM}/${claim.claim_id}`}
               subject={{
                 variant: claim.subject?.is_user
                   ? Identity.user
                   : Identity.nonUser,
-                label:
-                  claim.subject?.user?.display_name ??
-                  claim.subject?.display_name ??
-                  claim.subject?.identity_id ??
-                  '',
-                imgSrc: claim.subject?.image,
+                label: getAtomLabel(claim.subject as IdentityPresenter),
+                imgSrc: getAtomImage(claim.subject as IdentityPresenter),
+                id: claim.subject?.identity_id,
+                description: getAtomDescription(
+                  claim.subject as IdentityPresenter,
+                ),
+                ipfsLink: getAtomIpfsLink(claim.subject as IdentityPresenter),
+                link: getAtomLink(claim.subject as IdentityPresenter),
               }}
               predicate={{
-                variant: claim.predicate?.is_user ? 'user' : 'non-user',
-                label:
-                  claim.predicate?.user?.display_name ??
-                  claim.predicate?.display_name ??
-                  claim.predicate?.identity_id ??
-                  '',
-                imgSrc: claim.predicate?.image,
+                variant: claim.predicate?.is_user
+                  ? Identity.user
+                  : Identity.nonUser,
+                label: getAtomLabel(claim.predicate as IdentityPresenter),
+                imgSrc: getAtomImage(claim.predicate as IdentityPresenter),
+                id: claim.predicate?.identity_id,
+                description: getAtomDescription(
+                  claim.predicate as IdentityPresenter,
+                ),
+                ipfsLink: getAtomIpfsLink(claim.predicate as IdentityPresenter),
+                link: getAtomLink(claim.predicate as IdentityPresenter),
               }}
               object={{
-                variant: claim.object?.is_user ? 'user' : 'non-user',
-                label:
-                  claim.object?.user?.display_name ??
-                  claim.object?.display_name ??
-                  claim.object?.identity_id ??
-                  '',
-                imgSrc: claim.object?.image,
+                variant: claim.object?.is_user
+                  ? Identity.user
+                  : Identity.nonUser,
+                label: getAtomLabel(claim.object as IdentityPresenter),
+                imgSrc: getAtomImage(claim.object as IdentityPresenter),
+                id: claim.object?.identity_id,
+                description: getAtomDescription(
+                  claim.object as IdentityPresenter,
+                ),
+                ipfsLink: getAtomIpfsLink(claim.object as IdentityPresenter),
+                link: getAtomLink(claim.object as IdentityPresenter),
               }}
             />
           </ClaimRow>

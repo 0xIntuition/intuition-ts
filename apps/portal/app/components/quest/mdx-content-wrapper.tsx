@@ -3,7 +3,7 @@ import React from 'react'
 import { Text, TextVariant, TextWeight } from '@0xintuition/1ui'
 
 import { MDXContent } from '@content-collections/mdx/react'
-import { MDXContentVariant, MDXContentVariantType } from 'types/quest'
+import { MDXContentVariant, MDXContentVariantType } from 'app/types/quest'
 
 interface MDXContentWrapperProps {
   code: string

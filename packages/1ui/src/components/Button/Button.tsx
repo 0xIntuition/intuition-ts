@@ -36,18 +36,18 @@ export const ButtonSize = {
 }
 
 const buttonVariants = cva(
-  'flex justify-center items-center gap-2 text-sm font-medium border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted',
+  'flex justify-center items-center gap-2 text-sm font-medium border disabled:bg-muted aria-disabled:bg-muted disabled:text-muted-foreground aria-disabled:text-muted-foreground disabled:border-muted aria-disabled:border-muted aria-disabled:pointer-events-none',
   {
     variants: {
       variant: {
         [ButtonVariant.primary]:
           'bg-primary text-primary-foreground border-primary hover:bg-primary/80 rounded-full shadow-md-subtle',
         [ButtonVariant.secondary]:
-          'primary-gradient-subtle text-primary/60 border-primary/10 rounded-lg hover:text-primary disabled:from-muted disabled:to-muted shadow-md-subtle',
+          'primary-gradient-subtle text-primary/60 border-primary/10 rounded-lg hover:text-primary disabled:from-muted aria-disabled:from-muted disabled:to-muted aria-disabled:to-muted shadow-md-subtle',
         [ButtonVariant.ghost]:
-          'bg-gradient-to-b from-transparent to-transparent text-primary/70 border-primary/70 rounded-lg hover:text-primary hover:border-primary disabled:bg-transparent aria-selected:primary-gradient-subtle aria-selected:border-primary/10 shadow-md-subtle',
+          'bg-gradient-to-b from-transparent to-transparent text-primary/70 border-primary/70 rounded-lg hover:text-primary hover:border-primary disabled:bg-transparent aria-disabled:bg-transparent aria-selected:primary-gradient-subtle aria-selected:border-primary/10 shadow-md-subtle',
         [ButtonVariant.text]:
-          'bg-transparent text-primary/70 border-transparent hover:text-primary disabled:border-transparent disabled:bg-transparent shadow-md-subtle',
+          'bg-transparent text-primary/70 border-transparent hover:text-primary disabled:border-transparent aria-disabled:border-transparent disabled:bg-transparent aria-disabled:bg-transparent shadow-none',
         [ButtonVariant.accent]:
           'bg-accent text-accent-foreground border-accent rounded-full hover:bg-accent/70 hover:border-accent/30 shadow-md-subtle',
         [ButtonVariant.warning]:
@@ -57,7 +57,7 @@ const buttonVariants = cva(
         [ButtonVariant.destructive]:
           'bg-destructive text-destructive-foreground border-destructive rounded-full hover:bg-destructive/70 hover:border-destructive/30 shadow-md-subtle',
         [ButtonVariant.navigation]:
-          'bg-transparent text-secondary-foreground/70 border-transparent rounded-lg  hover:text-secondary-foreground hover:border-border/20 aria-selected:bg-primary/10 aria-selected:text-secondary-foreground/80 disabled:text-muted-foreground',
+          'bg-transparent text-secondary-foreground/70 border-transparent rounded-lg  hover:text-secondary-foreground hover:border-border/20 aria-selected:bg-primary/10 aria-selected:text-secondary-foreground/80 disabled:text-muted-foreground aria-disabled:text-muted-foreground',
         [ButtonVariant.accentOutline]:
           'bg-transparent text-accent border-accent rounded-full hover:bg-accent/30 hover:border-accent/30 shadow-md-subtle',
         [ButtonVariant.warningOutline]:
@@ -72,7 +72,7 @@ const buttonVariants = cva(
           'bg-against text-against-foreground border-against rounded-full hover:bg-against/70 hover:border-against/30 shadow-md-subtle',
       },
       size: {
-        [ButtonSize.default]: 'px-3 py-1',
+        [ButtonSize.default]: 'px-3 py-1 max-sm:py-2 max-sm:text-base',
         [ButtonSize.md]: 'px-4 py-1.5',
         [ButtonSize.lg]: 'px-4 py-2 gap-2 text-base',
         [ButtonSize.xl]: 'px-5 py-2.5 gap-4 text-lg',

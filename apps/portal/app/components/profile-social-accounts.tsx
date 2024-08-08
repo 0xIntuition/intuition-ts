@@ -1,8 +1,8 @@
 import { Button } from '@0xintuition/1ui'
 
 import { VerifiedLinkBadges } from '@client/privy-verified-links'
-import { verifiedPlatforms } from 'consts'
-import { ExtendedPrivyUser } from 'types/user'
+import { verifiedPlatforms } from 'app/consts'
+import { ExtendedPrivyUser } from 'app/types/user'
 
 // if the user has not linked any accounts, render the Link CTA version
 // if the user has linked at least one account, render the Edit CTA version
@@ -43,7 +43,7 @@ function LinkSocialAccounts({
   handleOpenEditSocialLinksModal: () => void
 }) {
   return (
-    <div className="flex flex-col items-center gap-5 border border-solid border-white/10 px-5 py-6 text-center max-w-xl rounded-lg bg-black/60">
+    <div className="flex flex-col items-center gap-5 border border-solid border-white/10 px-5 py-6 text-center max-w-xl rounded-lg bg-black/60 max-lg:max-w-full">
       <p className="font-medium text-sm text-secondary-foreground">
         Strengthen your profile&apos;s credibility by linking your social
         accounts. This enhances trustworthiness. Verified accounts offer

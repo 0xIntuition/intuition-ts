@@ -24,11 +24,17 @@ export const SidebarLayoutNavAvatar = ({
   name,
 }: SidebarLayoutNavAvatarProps) => {
   const containerBaseClass = 'w-full'
-  const { isCollapsed } = useSidebarLayoutContext()
+  const { isMobileView, isCollapsed, setIsCollapsed } =
+    useSidebarLayoutContext()
   const AvatarComponent = () => (
-    <Avatar className="h-6 w-6" src={imageSrc} name={name} />
+    <Avatar
+      className="h-6 w-6"
+      src={imageSrc}
+      name={name}
+      onClick={() => setIsCollapsed(true)}
+    />
   )
-  return isCollapsed ? (
+  return isCollapsed && !isMobileView ? (
     <TooltipProvider delayDuration={0}>
       <Tooltip>
         <TooltipTrigger asChild>
@@ -36,10 +42,10 @@ export const SidebarLayoutNavAvatar = ({
             className={cn(
               buttonVariants({
                 variant: ButtonVariant.navigation,
-                size: ButtonSize.iconLg,
+                size: isMobileView ? ButtonSize.iconXl : ButtonSize.iconLg,
               }),
               containerBaseClass,
-              'justify-center',
+              'justify-center w-fit m-auto',
             )}
           >
             <AvatarComponent />
@@ -55,7 +61,7 @@ export const SidebarLayoutNavAvatar = ({
       className={cn(
         buttonVariants({
           variant: ButtonVariant.navigation,
-          size: ButtonSize.lg,
+          size: isMobileView ? ButtonSize.xl : ButtonSize.lg,
         }),
         containerBaseClass,
         'justify-start',

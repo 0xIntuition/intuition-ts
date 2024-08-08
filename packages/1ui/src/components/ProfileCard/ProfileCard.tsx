@@ -1,45 +1,59 @@
-import React from 'react'
+import React, { HTMLAttributes } from 'react'
 
 import { Text } from 'components/Text'
+import { cn } from 'styles'
 import { Identity, IdentityType } from 'types'
 
 import { ProfileCardHeader, ProfileCardStatItem } from './components'
 
-export interface ProfileCardProps {
+export interface ProfileCardProps extends HTMLAttributes<HTMLDivElement> {
   variant?: IdentityType
-  avatarSrc: string
+  avatarSrc?: string
   name: string
-  walletAddress: string
+  id?: string
+  vaultId?: string
   stats?: {
     numberOfFollowers?: number
     numberOfFollowing?: number
     points?: number
   }
-  link?: string
+  ipfsLink?: string
+  externalLink?: string
   bio?: string
   children?: React.ReactNode
 }
 
 const ProfileCard = ({
   variant = Identity.user,
-  avatarSrc,
+  avatarSrc = '',
   name,
-  walletAddress,
+  id,
+  vaultId,
   stats,
-  link,
+  ipfsLink,
+  externalLink,
   bio,
   children,
+  ...props
 }: ProfileCardProps) => {
   return (
-    <div className="flex flex-col justify-center items-start w-full min-w-80 rounded-lg box-border gap-2.5">
+    <div
+      className={cn(
+        'flex flex-col justify-start items-start w-full min-w-[320px] max-w-full rounded-lg gap-2.5 p-4',
+        'overflow-hidden',
+        props.className,
+      )}
+      {...props}
+    >
       <ProfileCardHeader
         variant={variant}
         avatarSrc={avatarSrc}
         name={name}
-        walletAddress={walletAddress}
+        id={id}
+        link={ipfsLink}
       />
-      {variant === Identity.user && (
-        <div className="flex justify-start items-center gap-4 pt-1">
+      {variant === Identity.user && stats && (
+        <div className="flex justify-start items-center gap-4 pt-2">
           <ProfileCardStatItem
             value={stats?.numberOfFollowing ?? 0}
             label="Following"
@@ -59,25 +73,38 @@ const ProfileCard = ({
       )}
       <div>
         {bio && (
-          <Text
-            variant="body"
-            weight="medium"
-            className="text-primary-300 pt-2.5"
-          >
-            {bio}
-          </Text>
-        )}
-
-        {variant === Identity.nonUser && link && (
-          <div className="">
-            <Text variant="body" className="text-muted-foreground">
-              Link
+          <div className="w-full overflow-hidden">
+            <Text
+              variant="body"
+              weight="medium"
+              className="text-primary-300 pt-2.5 break-all whitespace-pre-wrap"
+            >
+              {bio}
             </Text>
-            <a href={link} className="text-primary-300">
-              {link}
-            </a>
           </div>
         )}
+
+        {vaultId && (
+          <div className="pt-2.5 max-lg:flex max-lg:flex-col max-lg:items-center">
+            <Text variant="body" className="text-muted-foreground">
+              Vault ID
+            </Text>
+            <Text variant="body">{vaultId}</Text>
+          </div>
+        )}
+
+        {variant === Identity.nonUser &&
+          externalLink &&
+          externalLink !== 'https://' && (
+            <div className="pt-2.5 max-lg:flex max-lg:flex-col max-lg:items-center">
+              <Text variant="body" className="text-muted-foreground">
+                Link
+              </Text>
+              <a href={externalLink} target="_blank" rel="noreferrer noopener">
+                <Text variant="body">{externalLink}</Text>
+              </a>
+            </div>
+          )}
       </div>
       {children && <div className="flex justify-center w-full">{children}</div>}
     </div>

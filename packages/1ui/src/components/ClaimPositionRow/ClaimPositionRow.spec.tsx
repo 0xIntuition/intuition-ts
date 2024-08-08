@@ -12,46 +12,83 @@ describe('ClaimPositionRow', () => {
         variant="user"
         position="claimFor"
         name="John Doe"
-        walletAddress="0x1234567890abcdef1234567890abcdef12345678"
+        id="0x1234567890abcdef1234567890abcdef12345678"
         avatarSrc="https://avatars.githubusercontent.com/u/94311139?s=200&v=4"
         amount={1.21}
         feesAccrued={0.005}
         updatedAt="2021-10-01T16:00:00Z"
+        link="https://sepolia.basescan.org/address/0x1234567890abcdef1234567890abcdef12345678"
+        ipfsLink="https://sepolia.basescan.org/address/0x1234567890abcdef1234567890abcdef12345678"
       />,
     )
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="w-full flex justify-between"
+          class="w-full flex justify-between max-sm:flex-col max-sm:gap-2"
         >
           <div
-            class="flex items-center"
+            class="flex items-center max-sm:justify-center"
           >
             <span
-              class="relative flex shrink-0 overflow-hidden aspect-square rounded-full bg-muted w-16 h-16 mr-4"
+              class="relative flex shrink-0 overflow-hidden aspect-square bg-background theme-border rounded-full w-16 h-16 mr-4"
             >
               <span
                 class="flex h-full w-full items-center justify-center bg-inherit"
               >
-                JO
+                <svg
+                  class="text-primary/30 w-[80%] h-[80%] max-w-8 max-h-8"
+                >
+                  <use
+                    href="/src/components/Icon/Icon.sprites.svg#crypto-punk"
+                  />
+                </svg>
               </span>
             </span>
             <div
               class="flex flex-col"
             >
               <div
-                class="flex items-center mb-1.5"
+                class="flex items-center mb-1.5 max-sm:flex-col max-sm:gap-px max-sm:items-start"
               >
-                <p
-                  class="text-primary text-lg font-normal mr-1"
+                <a
+                  href="https://sepolia.basescan.org/address/0x1234567890abcdef1234567890abcdef12345678"
                 >
-                  John Doe
-                </p>
-                <p
-                  class="text-base font-normal text-secondary-foreground"
+                  <p
+                    class="text-primary text-lg font-normal mr-1"
+                  >
+                    John Doe
+                  </p>
+                </a>
+                <div
+                  class="flex flex-row items-center gap-1"
                 >
-                  0x1234...5678
-                </p>
+                  <a
+                    href="https://sepolia.basescan.org/address/0x1234567890abcdef1234567890abcdef12345678"
+                    rel="noreferrer noopener"
+                    target="_blank"
+                  >
+                    <button
+                      data-state="closed"
+                    >
+                      <p
+                        class="text-base font-normal text-secondary-foreground"
+                      >
+                        0x1234...5678
+                      </p>
+                    </button>
+                  </a>
+                  <button
+                    class="flex justify-center items-center gap-2 text-sm font-medium border disabled:text-muted-foreground aria-disabled:text-muted-foreground aria-disabled:pointer-events-none bg-transparent border-transparent disabled:border-transparent aria-disabled:border-transparent disabled:bg-transparent aria-disabled:bg-transparent shadow-none max-sm:py-2 max-sm:text-base p-0 h-4 w-4 hover:text-primary text-secondary-foreground"
+                  >
+                    <svg
+                      class="h-4 w-4"
+                    >
+                      <use
+                        href="/src/components/Icon/Icon.sprites.svg#copy"
+                      />
+                    </svg>
+                  </button>
+                </div>
               </div>
               <p
                 class="text-sm font-medium text-secondary-foreground mb-2"
@@ -61,7 +98,7 @@ describe('ClaimPositionRow', () => {
             </div>
           </div>
           <div
-            class="flex items-center justify-start gap-2"
+            class="flex items-center justify-start gap-2 max-sm:justify-between"
           >
             <div
               class="h-full flex flex-col pt-1"
@@ -76,14 +113,9 @@ describe('ClaimPositionRow', () => {
               class="h-full flex flex-col items-end"
             >
               <p
-                class="text-primary text-lg font-normal"
+                class="text-primary text-lg font-medium"
               >
                 1.21 ETH
-              </p>
-              <p
-                class="text-base font-medium text-success"
-              >
-                +0.005 ETH
               </p>
             </div>
           </div>
@@ -99,36 +131,41 @@ describe('ClaimPositionRow', () => {
           position="claimAgainst"
           claimsFor={30}
           claimsAgainst={70}
+          claimsForValue={10}
+          claimsAgainstValue={5}
           amount={1.21}
           feesAccrued={0.005}
+          link="https://sepolia.basescan.org/address/0x1234567890abcdef1234567890abcdef12345678"
         />,
       )
       expect(asFragment()).toMatchInlineSnapshot(`
         <DocumentFragment>
           <div
-            class="w-full flex justify-between"
+            class="w-full flex justify-between max-sm:flex-col max-sm:gap-2"
           >
             <div
-              class="w-[60%]"
+              class="w-[60%] max-sm:w-full"
             >
               <div
-                class="flex flex-col justify-between"
+                class="flex flex-col justify-between max-md:w-full max-md:justify-center"
               >
                 <div
                   class="flex items-center h-[6px] mb-4"
                 >
-                  <span
+                  <button
                     class="h-full bg-against block rounded-l-sm"
-                    style="min-width: 70%;"
+                    data-state="closed"
+                    style="min-width: 33.33333333333333%;"
                   />
-                  <span
+                  <button
                     class="h-full w-full bg-for block rounded-r-sm"
+                    data-state="closed"
                   />
                 </div>
               </div>
             </div>
             <div
-              class="flex items-center justify-start gap-2"
+              class="flex items-center justify-start gap-2 max-sm:justify-between"
             >
               <div
                 class="h-full flex flex-col pt-1"
@@ -143,14 +180,9 @@ describe('ClaimPositionRow', () => {
                 class="h-full flex flex-col items-end"
               >
                 <p
-                  class="text-primary text-lg font-normal"
+                  class="text-primary text-lg font-medium"
                 >
                   1.21 ETH
-                </p>
-                <p
-                  class="text-base font-medium text-success"
-                >
-                  +0.005 ETH
                 </p>
               </div>
             </div>

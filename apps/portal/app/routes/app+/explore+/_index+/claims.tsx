@@ -7,12 +7,13 @@ import {
 
 import { ExploreSearch } from '@components/explore/ExploreSearch'
 import { ClaimsList } from '@components/list/claims'
-import { calculateTotalPages, fetchWrapper, invariant } from '@lib/utils/misc'
+import { calculateTotalPages, invariant } from '@lib/utils/misc'
 import { getStandardPageParams } from '@lib/utils/params'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
+import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
-import { NO_WALLET_ERROR } from 'consts'
+import { NO_WALLET_ERROR } from 'app/consts'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const wallet = await requireUserWallet(request)
@@ -27,7 +28,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const predicateId = searchParams.get('predicate') || null
   const objectId = searchParams.get('object') || null
 
-  const claims = await fetchWrapper({
+  const claims = await fetchWrapper(request, {
     method: ClaimsService.searchClaims,
     args: {
       page,
@@ -40,7 +41,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     },
   })
 
-  const identities = await fetchWrapper({
+  const identities = await fetchWrapper(request, {
     method: IdentitiesService.searchIdentity,
     args: {
       page: 1,
@@ -68,18 +69,14 @@ export default function ExploreClaims() {
   const { claims, identities, claimsPagination } =
     useLoaderData<typeof loader>()
   return (
-    <div className="m-8 flex flex-col items-center gap-4">
-      <ExploreSearch
-        variant="claim"
-        className="mb-12"
-        identities={identities}
-      />
+    <>
+      <ExploreSearch variant="claim" identities={identities} />
       <ClaimsList
         claims={claims}
         pagination={claimsPagination}
         enableSearch={false}
         enableSort={true}
       />
-    </div>
+    </>
   )
 }

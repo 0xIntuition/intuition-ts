@@ -7,25 +7,23 @@ import {
   SidebarLayoutContent,
   SidebarLayoutNav,
   SidebarLayoutNavAvatar,
-  SidebarLayoutNavFooter,
-  SidebarLayoutNavFooterItem,
+  SidebarLayoutNavBody,
   SidebarLayoutNavHeader,
   SidebarLayoutNavHeaderButton,
-  SidebarLayoutNavItem,
-  SidebarLayoutNavItems,
   SidebarLayoutProvider,
+  SidebarNavItem,
 } from '@0xintuition/1ui'
 import { UserPresenter } from '@0xintuition/api'
 
 import { PrivyButton } from '@client/privy-button'
 import { createClaimModalAtom, createIdentityModalAtom } from '@lib/state/store'
-import { NavLink, useNavigate, useSubmit } from '@remix-run/react'
-import * as blockies from 'blockies-ts'
+import { NavLink, useLocation, useNavigate, useSubmit } from '@remix-run/react'
+import { PATHS } from 'app/consts'
 import { useAtom } from 'jotai'
 import { isAddress } from 'viem'
 
-import CreateClaimModal from './create-claim-modal'
-import CreateIdentityModal from './create-identity-modal'
+import CreateClaimModal from './create-claim/create-claim-modal'
+import CreateIdentityModal from './create-identity/create-identity-modal'
 
 interface SidebarNavRoute {
   route: string
@@ -35,27 +33,27 @@ interface SidebarNavRoute {
 
 const sidebarNavRoutes: SidebarNavRoute[] = [
   {
-    route: '/app/profile',
+    route: PATHS.HOME,
     label: 'Home',
     iconName: 'home-door',
   },
   {
-    route: '/app/explore',
+    route: PATHS.EXPLORE,
     label: 'Explore',
     iconName: 'magnifying-glass',
   },
   {
-    route: '/app/lists',
+    route: PATHS.EXPLORE_LISTS,
     label: 'Lists',
     iconName: 'tag',
   },
   {
-    route: '/app/activity',
+    route: PATHS.ACTIVITY,
     label: 'Activity',
     iconName: 'calendar',
   },
   {
-    route: '/app/quest',
+    route: PATHS.QUEST,
     label: 'Quest',
     iconName: 'crystal-ball',
   },
@@ -70,6 +68,7 @@ export default function SidebarNav({
 }) {
   const submit = useSubmit()
   const navigate = useNavigate()
+  const location = useLocation()
   const [isPrivyButtonLoaded, setIsPrivyButtonLoaded] = useState(false)
 
   useEffect(() => {
@@ -82,8 +81,6 @@ export default function SidebarNav({
 
   const [createClaimModalActive, setCreateClaimModalActive] =
     useAtom(createClaimModalAtom)
-
-  const imgSrc = blockies.create({ seed: userObject?.wallet }).toDataURL()
 
   function onLogout() {
     submit(null, {
@@ -102,8 +99,8 @@ export default function SidebarNav({
   return (
     <>
       <SidebarLayoutProvider>
-        <SidebarLayout className="h-screen">
-          <SidebarLayoutNav collapsedSize={5} minSize={16} maxSize={18}>
+        <SidebarLayout>
+          <SidebarLayoutNav>
             <SidebarLayoutNavHeader>
               <SidebarLayoutNavHeaderButton
                 imgLogo={
@@ -157,50 +154,50 @@ export default function SidebarNav({
                 onClick={() => navigate('/')}
               />
             </SidebarLayoutNavHeader>
-            <SidebarLayoutNavItems>
-              {sidebarNavRoutes.map((sidebarNavItem) => (
-                <NavLink
-                  key={sidebarNavItem.label}
-                  to={sidebarNavItem.route}
-                  prefetch="intent"
-                >
-                  <SidebarLayoutNavItem
-                    key={sidebarNavItem.label}
-                    iconName={sidebarNavItem.iconName}
-                    label={sidebarNavItem.label}
-                  />
-                </NavLink>
-              ))}
-            </SidebarLayoutNavItems>
-            <SidebarLayoutNavFooter>
-              <SidebarLayoutNavFooterItem
-                iconName="fingerprint"
-                label="Create Identity"
-                onClick={() => setCreateIdentityModalActive(true)}
-              />
-              <SidebarLayoutNavFooterItem
-                iconName="claim"
-                label="Create Claim"
-                onClick={() => setCreateClaimModalActive(true)}
-              />
-
-              {isPrivyButtonLoaded ? (
-                <PrivyButton
-                  triggerComponent={
-                    <SidebarLayoutNavAvatar
-                      imageSrc={userObject.image ?? imgSrc}
-                      name={username}
+            <SidebarLayoutNavBody className="flex flex-col justify-between">
+              <div className="flex flex-col gap-px">
+                {sidebarNavRoutes.map((sidebarNavItem, index) => (
+                  <NavLink
+                    key={`nav-item-${index}`}
+                    to={sidebarNavItem.route}
+                    prefetch="intent"
+                  >
+                    <SidebarNavItem
+                      iconName={sidebarNavItem.iconName}
+                      label={sidebarNavItem.label}
                     />
-                  }
-                  onLogout={onLogout}
+                  </NavLink>
+                ))}
+              </div>
+              <div className="flex flex-col gap-px">
+                <SidebarNavItem
+                  iconName="fingerprint"
+                  label="Create Identity"
+                  onClick={() => setCreateIdentityModalActive(true)}
                 />
-              ) : (
-                <div className="h-20" />
-              )}
-            </SidebarLayoutNavFooter>
+                <SidebarNavItem
+                  iconName="claim"
+                  label="Create Claim"
+                  onClick={() => setCreateClaimModalActive(true)}
+                />
+
+                {isPrivyButtonLoaded ? (
+                  <PrivyButton
+                    triggerComponent={
+                      <SidebarLayoutNavAvatar
+                        imageSrc={userObject.image ?? ''}
+                        name={username}
+                      />
+                    }
+                    onLogout={onLogout}
+                  />
+                ) : (
+                  <div className="h-20" />
+                )}
+              </div>
+            </SidebarLayoutNavBody>
           </SidebarLayoutNav>
-          <SidebarLayoutContent className="h-full w-full min-h-screen overflow-y-scroll">
-            {/* TODO: overflow-y-scroll on SidebarLayoutContent is causing scroll issues all over the app. Discussion is needed to fix this. */}
+          <SidebarLayoutContent currentPathname={location.pathname}>
             {children}
           </SidebarLayoutContent>
         </SidebarLayout>
@@ -211,6 +208,7 @@ export default function SidebarNav({
       />
       <CreateClaimModal
         open={createClaimModalActive}
+        wallet={userObject.wallet}
         onClose={() => setCreateClaimModalActive(false)}
       />
     </>

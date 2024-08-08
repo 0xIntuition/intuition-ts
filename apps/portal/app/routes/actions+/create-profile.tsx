@@ -3,10 +3,11 @@ import { ApiError, IdentitiesService } from '@0xintuition/api'
 import logger from '@lib/utils/logger'
 import { invariant } from '@lib/utils/misc'
 import { json, type ActionFunctionArgs } from '@remix-run/node'
-import { requireUserWallet } from '@server/auth'
-import { MULTIVAULT_CONTRACT_ADDRESS, NO_WALLET_ERROR } from 'consts'
+import { requireUserWallet, setupAPI } from '@server/auth'
+import { MULTIVAULT_CONTRACT_ADDRESS, NO_WALLET_ERROR } from 'app/consts'
 
 export async function action({ request }: ActionFunctionArgs) {
+  setupAPI(request)
   logger('Validating create identity form data')
   const wallet = await requireUserWallet(request)
   invariant(wallet, NO_WALLET_ERROR)
@@ -30,6 +31,7 @@ export async function action({ request }: ActionFunctionArgs) {
         display_name: display_name as string,
         identity_id: identity_id as string,
         description: description as string,
+        is_user: true,
       }
       logger('Identity params:', identityParams)
       identity = await IdentitiesService.createIdentity({

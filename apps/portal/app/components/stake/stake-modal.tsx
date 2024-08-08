@@ -13,9 +13,12 @@ import { formatBalance } from '@lib/utils/misc'
 import { useGenericTxState } from '@lib/utils/use-tx-reducer'
 import { useFetcher, useLocation } from '@remix-run/react'
 import { useQueryClient } from '@tanstack/react-query'
+import {
+  TransactionActionType,
+  TransactionStateType,
+} from 'app/types/transaction'
+import { VaultDetailsType } from 'app/types/vault'
 import { useAtom } from 'jotai'
-import { TransactionActionType, TransactionStateType } from 'types/transaction'
-import { VaultDetailsType } from 'types/vault'
 import { Abi, Address, decodeEventLog, formatUnits, parseUnits } from 'viem'
 import { useBalance, useBlockNumber, usePublicClient } from 'wagmi'
 
@@ -37,6 +40,12 @@ interface StakeModalProps {
   claim?: ClaimPresenter
   vaultDetails: VaultDetailsType
   onClose?: () => void
+  onSuccess?: (args: {
+    identity?: IdentityPresenter
+    claim?: ClaimPresenter
+    vaultDetails: VaultDetailsType
+    direction?: 'for' | 'against'
+  }) => void
   direction?: 'for' | 'against'
 }
 
@@ -49,6 +58,7 @@ export default function StakeModal({
   claim,
   vaultDetails,
   direction,
+  onSuccess,
 }: StakeModalProps) {
   const fetchReval = useFetcher()
   const [stakeModalState] = useAtom(stakeModalAtom)
@@ -167,6 +177,12 @@ export default function StakeModal({
             txHash,
             txReceipt: receipt,
           })
+          onSuccess?.({
+            identity,
+            claim,
+            vaultDetails,
+            direction,
+          })
           fetchReval.submit(formRef.current, {
             method: 'POST',
           })
@@ -214,7 +230,7 @@ export default function StakeModal({
       sender: Address
       receiver?: Address
       owner?: Address
-      userAssetsAfterTotalFees: bigint
+      senderAssetsAfterTotalFees: bigint
       sharesForReceiver: bigint
       entryFee: bigint
       id: bigint
@@ -251,7 +267,7 @@ export default function StakeModal({
       if (topics.args.sender === (userWallet as `0x${string}`)) {
         assets =
           mode === 'deposit'
-            ? (topics.args as BuyArgs).userAssetsAfterTotalFees.toString()
+            ? (topics.args as BuyArgs).senderAssetsAfterTotalFees.toString()
             : (topics.args as SellArgs).assetsForReceiver.toString()
 
         toast.custom(() => (
@@ -353,7 +369,7 @@ export default function StakeModal({
         handleClose()
       }}
     >
-      <DialogContent className="flex flex-col w-[476px] h-[500px] gap-0">
+      <DialogContent className="flex flex-col w-[480px] h-auto gap-2.5 p-5">
         <div className="flex-grow">
           <StakeForm
             userWallet={userWallet}
@@ -363,6 +379,7 @@ export default function StakeModal({
             conviction_price={conviction_price ?? '0'}
             user_conviction={user_conviction ?? '0'}
             user_assets={user_assets ?? '0'}
+            min_deposit={min_deposit ?? '0'}
             entry_fee={formatted_entry_fee ?? '0'}
             exit_fee={formatted_exit_fee ?? '0'}
             direction={direction ? direction : undefined}

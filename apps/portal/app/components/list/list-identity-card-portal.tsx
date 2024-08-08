@@ -3,10 +3,10 @@ import {
   Button,
   CurrencyType,
   Icon,
-  Identity,
   Text,
   TextVariant,
   TextWeight,
+  Trunctacular,
 } from '@0xintuition/1ui'
 
 export interface ListIdentityCardPortalProps {
@@ -27,26 +27,22 @@ export const ListIdentityCardPortal: React.FC<ListIdentityCardPortalProps> = ({
   onViewClick,
 }) => {
   return (
-    <div
-      className="flex flex-col items-center justify-between"
-      style={{ height: '18rem' }}
-    >
+    <div className="flex flex-col items-center justify-between gap-2 h-72 max-sm:h-fit max-sm:gap-px">
       <Avatar
-        variant={Identity.nonUser as unknown as number}
+        variant="non-user"
         src={imgSrc}
         name={displayName}
-        className="mb-4 w-16 h-16"
+        className="mb-2 w-16 h-16"
       />
-
-      <div className="text-center flex-grow flex flex-col justify-between items-center">
-        <Text
+      <div className="text-center flex-grow flex flex-col justify-between items-center gap-4">
+        <Trunctacular
+          value={displayName}
           variant={TextVariant.bodyLarge}
           weight={TextWeight.medium}
-          className="text-primary/80 mb-2"
-        >
-          {displayName}
-        </Text>
-        <Text variant={TextVariant.body} className="text-secondary/50 mb-2">
+          className="text-primary/80"
+          maxStringLength={20}
+        />
+        <Text variant={TextVariant.body} className="text-secondary/50">
           {identitiesCount} identities
         </Text>
       </div>

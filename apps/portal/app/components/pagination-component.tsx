@@ -57,9 +57,9 @@ export function PaginationComponent({
   }
 
   return (
-    <Pagination className="flex w-full justify-between">
+    <Pagination className="flex w-full justify-between max-sm:flex-col max-sm:items-center max-sm:gap-3">
       <PaginationSummary totalEntries={totalEntries} label={label} />
-      <div className="flex">
+      <div className="flex max-sm:flex-col max-sm:items-center max-sm:gap-3">
         <PaginationRowSelection
           defaultValue={limit.toString()}
           onValueChange={(newLimit) => {
@@ -67,36 +67,38 @@ export function PaginationComponent({
             onLimitChange(Number(newLimit))
           }}
         />
-        <PaginationPageCounter
-          currentPage={currentPage}
-          totalPages={totalPages}
-        />
-        <PaginationContent>
-          <PaginationItem>
-            <PaginationFirst
-              onClick={() => handlePageChange(1)}
-              disabled={currentPage === 1}
-            />
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationPrevious
-              onClick={() => handlePageChange(currentPage - 1)}
-              disabled={currentPage === 1 || currentPage === undefined}
-            />
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationNext
-              onClick={() => handlePageChange(currentPage + 1)}
-              disabled={currentPage === totalPages}
-            />
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLast
-              onClick={() => handlePageChange(totalPages)}
-              disabled={currentPage === totalPages}
-            />
-          </PaginationItem>
-        </PaginationContent>
+        <div className="flex items-center w-fit">
+          <PaginationPageCounter
+            currentPage={currentPage}
+            totalPages={totalPages}
+          />
+          <PaginationContent>
+            <PaginationItem>
+              <PaginationFirst
+                onClick={() => handlePageChange(1)}
+                disabled={currentPage === 1}
+              />
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationPrevious
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1 || currentPage === undefined}
+              />
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationNext
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+              />
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationLast
+                onClick={() => handlePageChange(totalPages)}
+                disabled={currentPage === totalPages}
+              />
+            </PaginationItem>
+          </PaginationContent>
+        </div>
       </div>
     </Pagination>
   )

@@ -3,10 +3,11 @@ import { ApiError, IdentitiesService } from '@0xintuition/api'
 import logger from '@lib/utils/logger'
 import { invariant } from '@lib/utils/misc'
 import { json, type ActionFunctionArgs } from '@remix-run/node'
-import { requireUserWallet } from '@server/auth'
-import { MULTIVAULT_CONTRACT_ADDRESS, NO_WALLET_ERROR } from 'consts'
+import { requireUserWallet, setupAPI } from '@server/auth'
+import { MULTIVAULT_CONTRACT_ADDRESS, NO_WALLET_ERROR } from 'app/consts'
 
 export async function action({ request }: ActionFunctionArgs) {
+  await setupAPI(request)
   const wallet = await requireUserWallet(request)
   invariant(wallet, NO_WALLET_ERROR)
 
@@ -19,6 +20,7 @@ export async function action({ request }: ActionFunctionArgs) {
   const image_url = formData.get('image_url')
   const description = formData.get('description')
   const external_reference = formData.get('external_reference')
+  const is_contract = formData.get('is_contract')
 
   try {
     let identity
@@ -30,6 +32,7 @@ export async function action({ request }: ActionFunctionArgs) {
         external_reference: string
         description: string
         image?: string
+        is_contract?: boolean
       } = {
         contract: MULTIVAULT_CONTRACT_ADDRESS as string,
         creator: wallet as string,
@@ -39,6 +42,9 @@ export async function action({ request }: ActionFunctionArgs) {
       }
       if (image_url) {
         identityParams.image = image_url as string
+      }
+      if (is_contract) {
+        identityParams.is_contract = is_contract === 'true'
       }
       logger('Identity params:', identityParams)
       identity = await IdentitiesService.createIdentity({

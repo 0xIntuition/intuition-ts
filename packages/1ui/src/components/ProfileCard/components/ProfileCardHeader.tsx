@@ -1,31 +1,49 @@
 import { Identity, IdentityType } from 'types'
-import { formatWalletAddress } from 'utils/wallet'
 
-import { Avatar, Text } from '../..'
+import { Avatar, Copy, Trunctacular } from '../..'
 
 interface ProfileCardHeaderProps {
   variant?: IdentityType
   avatarSrc?: string
   name: string
-  walletAddress: string
+  id?: string
+  link?: string
 }
 
 const ProfileCardHeader = ({
   variant = Identity.user,
   avatarSrc,
   name,
-  walletAddress,
+  id,
+  link,
 }: ProfileCardHeaderProps) => {
   return (
-    <div className="flex items-center space-x-4">
+    <div className="flex items-center space-x-4 w-full">
       <Avatar variant={variant} src={avatarSrc} name={name} />
       <div>
-        <Text variant="headline" weight="medium" className="text-primary">
-          {name}
-        </Text>
-        <Text variant="body" weight="medium" className="text-muted-foreground">
-          {formatWalletAddress(walletAddress)}
-        </Text>
+        <Trunctacular
+          value={name}
+          variant="headline"
+          weight="medium"
+          className="text-primary"
+        />
+        <div className="flex flex-row gap-1 items-center">
+          {link && id && (
+            <>
+              <a href={link} target="_blank" rel="noopener noreferrer">
+                <Trunctacular
+                  value={id}
+                  variant="body"
+                  weight="medium"
+                  className="text-muted-foreground"
+                  maxStringLength={24}
+                  disableTooltip
+                />
+              </a>
+              <Copy text={id} />
+            </>
+          )}
+        </div>
       </div>
     </div>
   )

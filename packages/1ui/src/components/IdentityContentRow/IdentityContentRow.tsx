@@ -2,16 +2,16 @@ import * as React from 'react'
 
 import { cn } from 'styles'
 import { CurrencyType, Identity, IdentityType } from 'types'
-import { formatWalletAddress } from 'utils/wallet'
 
 import {
   Avatar,
+  Copy,
   IdentityValueDisplay,
   TagsContent,
   TagWithValue,
   TagWithValueProps,
-  Text,
   TextVariant,
+  Trunctacular,
 } from '..'
 
 export interface IdentityContentRowProps
@@ -20,10 +20,51 @@ export interface IdentityContentRowProps
   amount: number
   currency?: CurrencyType
   name: string
-  walletAddress: string
+  id: string
   avatarSrc: string
+  link: string
+  ipfsLink: string
   totalFollowers: number
   tags?: TagWithValueProps[]
+}
+
+interface NameAndAddressProps {
+  name: string
+  id: string
+  link: string
+  ipfsLink: string
+  hasTags: boolean
+}
+
+const NameAndAddress = ({
+  name,
+  id,
+  link,
+  ipfsLink,
+  hasTags,
+}: NameAndAddressProps) => {
+  return (
+    <div
+      className={cn(
+        'mb-1 flex',
+        hasTags ? 'flex-row items-center' : 'flex-col',
+      )}
+    >
+      <a href={link}>
+        <Trunctacular
+          value={name}
+          variant={TextVariant.bodyLarge}
+          className="mr-2"
+        />
+      </a>
+      <div className="flex flex-row gap-1 items-center">
+        <a href={ipfsLink}>
+          <Trunctacular value={id} className="text-secondary-foreground" />
+        </a>
+        <Copy text={id} />
+      </div>
+    </div>
+  )
 }
 
 const IdentityContentRow = ({
@@ -31,40 +72,45 @@ const IdentityContentRow = ({
   amount,
   currency,
   name,
-  walletAddress,
+  id,
   avatarSrc,
+  link,
+  ipfsLink,
   totalFollowers,
   tags,
   children,
   className,
   ...props
 }: IdentityContentRowProps) => {
+  const hasTags = !!(tags && tags.length > 0)
+
   return (
     <div className="w-full">
       <div
-        className={cn(`w-full flex justify-between items-center`, className)}
+        className={cn(
+          `w-full flex justify-between items-center max-sm:flex-col max-sm:gap-3`,
+          className,
+        )}
         {...props}
       >
         <div className="flex items-center">
-          <Avatar
-            variant={variant}
-            src={avatarSrc}
-            name={name}
-            className="w-[64px] h-[64px] mr-4"
-          />
+          <a href={link}>
+            <Avatar
+              variant={variant}
+              src={avatarSrc}
+              name={name}
+              className="mr-4 w-[64px] h-[64px]"
+            />
+          </a>
           <div className="flex flex-col">
-            <div className="flex items-center mb-1.5">
-              <Text variant={TextVariant.bodyLarge} className="mr-1">
-                {name}
-              </Text>
-              <Text
-                variant={TextVariant.body}
-                className="text-secondary-foreground"
-              >
-                {formatWalletAddress(walletAddress)}
-              </Text>
-            </div>
-            {tags && tags.length > 0 && (
+            <NameAndAddress
+              name={name}
+              id={id}
+              link={link}
+              ipfsLink={ipfsLink}
+              hasTags={hasTags}
+            />
+            {hasTags && (
               <div className="flex gap-2 mt-1">
                 <TagsContent numberOfTags={tags.length}>
                   {tags.slice(0, 4).map((tag, index) => (

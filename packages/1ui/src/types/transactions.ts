@@ -6,11 +6,14 @@ export const TransactionStatus = {
   publishingIdentity: 'publishing-identity',
   approveTransaction: 'approve-transaction',
   reviewTransaction: 'review-transaction',
+  transactionHash: 'hash',
   transactionPending: 'transaction-pending',
   transactionConfirmed: 'transaction-confirmed',
   confirm: 'confirm',
   complete: 'complete',
   error: 'error',
+  uploadingImage: 'uploading-image',
+  imageUploadComplete: 'image-upload-complete',
 } as const
 
 export type TransactionStatusType =

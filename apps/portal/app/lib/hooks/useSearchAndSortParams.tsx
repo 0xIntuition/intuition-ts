@@ -6,7 +6,7 @@ import {
 
 import { useSearchParams } from '@remix-run/react'
 
-type SortColumnType = PositionSortColumn | ClaimSortColumn | SortColumn
+export type SortColumnType = PositionSortColumn | ClaimSortColumn | SortColumn
 type SortDirection = 'asc' | 'desc'
 
 export const useSearchAndSortParamsHandler = <T extends SortColumnType>(

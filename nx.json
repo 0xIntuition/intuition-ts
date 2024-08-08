@@ -22,16 +22,6 @@
     },
     "typecheck": {
       "cache": true
-    },
-    "@nx/js:tsc": {
-      "cache": true,
-      "dependsOn": ["^build"],
-      "inputs": ["default", "^default"]
-    },
-    "@nx/remix:build": {
-      "cache": true,
-      "dependsOn": ["^build"],
-      "inputs": ["default", "^default"]
     }
   },
   "release": {

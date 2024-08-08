@@ -10,7 +10,6 @@ import {
   TabsContent,
   TabsList,
   TabsTrigger,
-  TransactionStatusType,
   Trunctacular,
 } from '@0xintuition/1ui'
 import { IdentityPresenter } from '@0xintuition/api'
@@ -23,7 +22,11 @@ import {
 } from '@lib/hooks/useTransactionReducer'
 import logger from '@lib/utils/logger'
 import { useNavigate } from '@remix-run/react'
-import { TransactionActionType, TransactionStateType } from 'types/transaction'
+import { PATHS } from 'app/consts'
+import {
+  TransactionActionType,
+  TransactionStateType,
+} from 'app/types/transaction'
 
 import { AddTags } from './add-tags'
 import TagsReview from './tags-review'
@@ -31,12 +34,18 @@ import { TagSearchCombobox } from './tags-search-combo-box'
 
 interface TagsFormProps {
   identity: IdentityPresenter
+  userWallet: string
   mode: 'view' | 'add'
   onSuccess?: () => void
   onClose: () => void
 }
 
-export function TagsForm({ identity, mode, onClose }: TagsFormProps) {
+export function TagsForm({
+  identity,
+  userWallet,
+  mode,
+  onClose,
+}: TagsFormProps) {
   const navigate = useNavigate()
   const [currentTab, setCurrentTab] = useState(mode)
 
@@ -60,7 +69,7 @@ export function TagsForm({ identity, mode, onClose }: TagsFormProps) {
   ].includes(state.status)
 
   const [selectedTags, setSelectedTags] = useState<IdentityPresenter[]>([])
-  const [invalidTags, setInvalidTags] = useState<string[]>([])
+  const [invalidTags, setInvalidTags] = useState<IdentityPresenter[]>([])
 
   const handleAddTag = (newTag: IdentityPresenter) => {
     setSelectedTags((prevTags) => [...prevTags, newTag])
@@ -69,7 +78,11 @@ export function TagsForm({ identity, mode, onClose }: TagsFormProps) {
 
   const handleRemoveTag = (id: string) => {
     setSelectedTags((prevTags) => prevTags.filter((tag) => tag.vault_id !== id))
-    setInvalidTags((prev) => prev.filter((tagId) => tagId !== id))
+  }
+
+  const handleRemoveInvalidTag = (vaultId: string) => {
+    setInvalidTags((prev) => prev.filter((tag) => tag.vault_id !== vaultId))
+    setSelectedTags((prev) => prev.filter((tag) => tag.vault_id !== vaultId))
   }
 
   logger('tags on incoming identity', identity.tags)
@@ -120,9 +133,12 @@ export function TagsForm({ identity, mode, onClose }: TagsFormProps) {
                     <AddTags
                       selectedTags={selectedTags}
                       existingTagIds={existingTagIds}
+                      identity={identity}
+                      userWallet={userWallet}
                       onAddTag={handleAddTag}
                       dispatch={dispatch}
                       onRemoveTag={handleRemoveTag}
+                      onRemoveInvalidTag={handleRemoveInvalidTag}
                       subjectVaultId={identity.vault_id}
                       invalidTags={invalidTags}
                       setInvalidTags={setInvalidTags}
@@ -142,9 +158,7 @@ export function TagsForm({ identity, mode, onClose }: TagsFormProps) {
                     <div className="flex flex-col items-center gap-1">
                       <Button
                         variant="primary"
-                        disabled={
-                          selectedTags.length === 0 || invalidTags.length !== 0
-                        }
+                        disabled={selectedTags.length === 0}
                         onClick={() => dispatch({ type: 'REVIEW_TRANSACTION' })}
                       >
                         Add Tags
@@ -167,7 +181,7 @@ export function TagsForm({ identity, mode, onClose }: TagsFormProps) {
       {isTransactionStarted && (
         <div className="flex flex-col items-center justify-center flex-grow">
           <TransactionState
-            status={state.status as TransactionStatusType}
+            status={state.status}
             txHash={state.txHash}
             type="tag"
             successButton={
@@ -176,7 +190,7 @@ export function TagsForm({ identity, mode, onClose }: TagsFormProps) {
                   type="button"
                   variant="primary"
                   onClick={() => {
-                    navigate(`/app/identity/${identity.identity_id}`)
+                    navigate(`${PATHS.IDENTITY}/${identity.id}`)
                     onClose()
                   }}
                 >

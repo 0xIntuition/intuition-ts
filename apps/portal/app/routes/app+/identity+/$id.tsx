@@ -1,4 +1,9 @@
+import { useState } from 'react'
+
 import {
+  Icon,
+  Identity,
+  InfoCard,
   PositionCard,
   PositionCardFeesAccrued,
   PositionCardLastUpdated,
@@ -6,35 +11,46 @@ import {
   PositionCardStaked,
   ProfileCard,
   StakeCard,
+  Tag,
   Tags,
   TagsButton,
   TagsContent,
   TagWithValue,
 } from '@0xintuition/1ui'
-import { IdentitiesService, IdentityPresenter } from '@0xintuition/api'
+import {
+  IdentitiesService,
+  IdentityPresenter,
+  TagEmbeddedPresenter,
+} from '@0xintuition/api'
 
-import { NestedLayout } from '@components/nested-layout'
+import SaveListModal from '@components/list/save-list-modal'
 import StakeModal from '@components/stake/stake-modal'
 import TagsModal from '@components/tags/tags-modal'
-import { stakeModalAtom, tagsModalAtom } from '@lib/state/store'
+import { useLiveLoader } from '@lib/hooks/useLiveLoader'
+import {
+  saveListModalAtom,
+  stakeModalAtom,
+  tagsModalAtom,
+} from '@lib/state/store'
 import logger from '@lib/utils/logger'
 import {
   calculatePercentageOfTvl,
-  fetchWrapper,
   formatBalance,
   invariant,
-  sliceString,
 } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
-import { Outlet, useLoaderData, useNavigate } from '@remix-run/react'
+import { Outlet, useNavigate } from '@remix-run/react'
+import { fetchWrapper } from '@server/api'
 import { requireUser, requireUserWallet } from '@server/auth'
 import { getVaultDetails } from '@server/multivault'
-import { identityRouteOptions, NO_WALLET_ERROR } from 'consts'
+import { IPFS_GATEWAY_URL, NO_WALLET_ERROR, PATHS } from 'app/consts'
+import TwoPanelLayout from 'app/layouts/two-panel-layout'
+import { ExtendedIdentityPresenter } from 'app/types/identity'
+import { VaultDetailsType } from 'app/types/vault'
 import { useAtom } from 'jotai'
-import { ExtendedIdentityPresenter } from 'types/identity'
-import { VaultDetailsType } from 'types/vault'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
+  logger('[$ID] -- START')
   const user = await requireUser(request)
   invariant(user, 'User not found')
   invariant(user.wallet?.address, 'User wallet not found')
@@ -46,14 +62,12 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     return
   }
 
-  const identity = await fetchWrapper({
+  const identity = await fetchWrapper(request, {
     method: IdentitiesService.getIdentityById,
     args: {
       id: params.id,
     },
   })
-
-  logger('identity', identity)
 
   if (!identity) {
     return null
@@ -75,6 +89,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     }
   }
 
+  logger('[$ID] -- END')
   return json({
     identity,
     vaultDetails,
@@ -89,87 +104,133 @@ export interface IdentityLoaderData {
 }
 
 export default function IdentityDetails() {
-  const { identity, vaultDetails, userWallet } = useLoaderData<{
+  const { identity, vaultDetails, userWallet } = useLiveLoader<{
     identity: ExtendedIdentityPresenter
     vaultDetails: VaultDetailsType
     userWallet: string
-  }>()
+  }>(['attest'])
   const navigate = useNavigate()
+
+  logger('identity', identity)
 
   const { user_assets, assets_sum } = vaultDetails ? vaultDetails : identity
   const [stakeModalActive, setStakeModalActive] = useAtom(stakeModalAtom)
   const [tagsModalActive, setTagsModalActive] = useAtom(tagsModalAtom)
+  const [saveListModalActive, setSaveListModalActive] =
+    useAtom(saveListModalAtom)
+  const [selectedTag, setSelectedTag] = useState<TagEmbeddedPresenter>()
 
-  return (
-    <NestedLayout outlet={Outlet} options={identityRouteOptions}>
-      <div className="flex-col justify-start items-start inline-flex gap-6">
-        <ProfileCard
-          variant="non-user"
-          avatarSrc={identity?.image ?? ''}
-          name={identity?.display_name ?? ''}
-          walletAddress={sliceString(identity?.identity_id, 6, 4)}
-          bio={identity?.description ?? ''}
+  const leftPanel = (
+    <div className="flex-col justify-start items-start inline-flex gap-6 max-lg:w-full">
+      <ProfileCard
+        variant={Identity.nonUser}
+        avatarSrc={identity?.image ?? ''}
+        name={identity?.display_name ?? ''}
+        id={identity?.identity_id}
+        vaultId={identity?.vault_id}
+        bio={identity?.description ?? ''}
+        ipfsLink={`${IPFS_GATEWAY_URL}/${identity?.identity_id?.replace('ipfs://', '')}`}
+        externalLink={identity?.external_reference ?? ''}
+      />
+      <Tags className="max-lg:items-center">
+        {identity?.tags && identity?.tags.length > 0 && (
+          <TagsContent numberOfTags={identity?.tag_count ?? 0}>
+            {identity?.tags?.map((tag) => (
+              <TagWithValue
+                key={tag.identity_id}
+                label={tag.display_name}
+                value={tag.num_positions}
+                onStake={() => {
+                  setSelectedTag(tag)
+                  setSaveListModalActive({ isOpen: true, id: tag.vault_id })
+                }}
+              />
+            ))}
+          </TagsContent>
+        )}
+        <Tag
+          className="w-fit border-dashed"
+          onClick={() => {
+            setTagsModalActive({ isOpen: true, mode: 'add' })
+          }}
+        >
+          <Icon name="plus-small" className="w-5 h-5" />
+          Add tags
+        </Tag>
+
+        <TagsButton
+          onClick={() => {
+            setTagsModalActive({ isOpen: true, mode: 'view' })
+          }}
         />
-        <Tags>
-          {identity?.tags && identity?.tags.length > 0 && (
-            <TagsContent numberOfTags={identity?.tag_count ?? 0}>
-              {identity?.tags?.map((tag, index) => (
-                <TagWithValue
-                  key={index}
-                  label={tag.display_name}
-                  value={tag.num_positions}
-                />
-              ))}
-            </TagsContent>
-          )}
-          <TagsButton
-            onClick={() => {
-              setTagsModalActive({ isOpen: true, mode: 'add' })
-            }}
-          />
-        </Tags>
-        {vaultDetails !== null && user_assets !== '0' ? (
-          <PositionCard onButtonClick={() => logger('sell position clicked')}>
-            <PositionCardStaked
-              amount={user_assets ? +formatBalance(user_assets, 18, 4) : 0}
-            />
-            <PositionCardOwnership
-              percentOwnership={
-                user_assets !== null && assets_sum
-                  ? +calculatePercentageOfTvl(user_assets ?? '0', assets_sum)
-                  : 0
-              }
-            />
-            <PositionCardFeesAccrued
-              amount={
-                identity.user_asset_delta
-                  ? +formatBalance(
-                      +identity.user_assets - +identity.user_asset_delta,
-                      18,
-                      5,
-                    )
-                  : 0
-              }
-            />
-            <PositionCardLastUpdated timestamp={identity.updated_at} />
-          </PositionCard>
-        ) : null}
-        <StakeCard
-          tvl={+formatBalance(identity?.assets_sum)}
-          holders={identity?.num_positions}
-          onBuyClick={() =>
+      </Tags>
+      {vaultDetails !== null && user_assets !== '0' ? (
+        <PositionCard
+          onButtonClick={() =>
             setStakeModalActive((prevState) => ({
               ...prevState,
-              mode: 'deposit',
+              mode: 'redeem',
               modalType: 'identity',
               isOpen: true,
             }))
           }
-          onViewAllClick={() =>
-            navigate(`/app/identity/${identity.identity_id}/data-about`)
-          }
-        />
-      </div>
+        >
+          <PositionCardStaked
+            amount={user_assets ? +formatBalance(user_assets, 18, 4) : 0}
+          />
+          <PositionCardOwnership
+            percentOwnership={
+              user_assets !== null && assets_sum
+                ? +calculatePercentageOfTvl(user_assets ?? '0', assets_sum)
+                : 0
+            }
+          />
+          <PositionCardFeesAccrued
+            amount={
+              identity.user_asset_delta
+                ? +formatBalance(
+                    +identity.user_assets - +identity.user_asset_delta,
+                    18,
+                    5,
+                  )
+                : 0
+            }
+          />
+          <PositionCardLastUpdated timestamp={identity.updated_at} />
+        </PositionCard>
+      ) : null}
+      <StakeCard
+        tvl={+formatBalance(identity?.assets_sum)}
+        holders={identity?.num_positions}
+        onBuyClick={() =>
+          setStakeModalActive((prevState) => ({
+            ...prevState,
+            mode: 'deposit',
+            modalType: 'identity',
+            isOpen: true,
+          }))
+        }
+        onViewAllClick={() =>
+          navigate(`${PATHS.IDENTITY}/${identity.id}#positions`)
+        }
+      />
+      <InfoCard
+        variant={identity.is_user ? Identity.user : Identity.nonUser}
+        username={identity.creator?.display_name ?? ''}
+        avatarImgSrc={identity.creator?.image ?? ''}
+        timestamp={identity.created_at}
+        onClick={() => {
+          navigate(`/app/profile/${identity.creator?.wallet}`)
+        }}
+        className="hover:cursor-pointer w-full"
+      />
+    </div>
+  )
+
+  const rightPanel = <Outlet />
+
+  return (
+    <TwoPanelLayout leftPanel={leftPanel} rightPanel={rightPanel}>
       <StakeModal
         userWallet={userWallet}
         contract={identity.contract}
@@ -186,6 +247,7 @@ export default function IdentityDetails() {
       />
       <TagsModal
         identity={identity}
+        userWallet={userWallet}
         open={tagsModalActive.isOpen}
         mode={tagsModalActive.mode}
         onClose={() =>
@@ -195,6 +257,21 @@ export default function IdentityDetails() {
           })
         }
       />
-    </NestedLayout>
+      {selectedTag && (
+        <SaveListModal
+          tag={selectedTag}
+          identity={identity}
+          contract={identity.contract}
+          userWallet={userWallet}
+          open={saveListModalActive.isOpen}
+          onClose={() =>
+            setSaveListModalActive({
+              ...saveListModalActive,
+              isOpen: false,
+            })
+          }
+        />
+      )}
+    </TwoPanelLayout>
   )
 }

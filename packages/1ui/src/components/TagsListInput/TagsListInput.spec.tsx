@@ -30,7 +30,11 @@ describe('TagsListInput', () => {
             <button
               class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 text-base font-normal flex items-center cursor-default pl-2"
             >
-              Tag Name 1
+              <p
+                class="text-primary text-base font-normal"
+              >
+                Tag Name 1
+              </p>
             </button>
             <button
               aria-label="Remove tag"
@@ -47,7 +51,11 @@ describe('TagsListInput', () => {
             <button
               class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 text-base font-normal flex items-center cursor-default pl-2"
             >
-              Tag Name 2
+              <p
+                class="text-primary text-base font-normal"
+              >
+                Tag Name 2
+              </p>
             </button>
             <button
               aria-label="Remove tag"
@@ -64,7 +72,11 @@ describe('TagsListInput', () => {
             <button
               class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 text-base font-normal flex items-center cursor-default pl-2"
             >
-              Tag Name 3
+              <p
+                class="text-primary text-base font-normal"
+              >
+                Tag Name 3
+              </p>
             </button>
             <button
               aria-label="Remove tag"
@@ -82,7 +94,7 @@ describe('TagsListInput', () => {
               class="flex items-center gap-2"
             >
               <button
-                class="flex justify-center items-center gap-2 text-sm font-medium border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted primary-gradient-subtle text-primary/60 border-primary/10 hover:text-primary disabled:from-muted disabled:to-muted shadow-md-subtle rounded-full px-2 mr-1"
+                class="flex justify-center items-center gap-2 text-sm font-medium border disabled:bg-muted aria-disabled:bg-muted disabled:text-muted-foreground aria-disabled:text-muted-foreground disabled:border-muted aria-disabled:border-muted aria-disabled:pointer-events-none primary-gradient-subtle text-primary/60 border-primary/10 hover:text-primary disabled:from-muted aria-disabled:from-muted disabled:to-muted aria-disabled:to-muted shadow-md-subtle rounded-full px-2 mr-1"
               >
                 <svg
                   class="h-6 w-6"
@@ -126,7 +138,7 @@ describe('TagsListInput', () => {
               class="flex items-center gap-2"
             >
               <button
-                class="flex justify-center items-center gap-2 text-sm font-medium border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted primary-gradient-subtle text-primary/60 border-primary/10 hover:text-primary disabled:from-muted disabled:to-muted shadow-md-subtle rounded-full px-2 mr-1"
+                class="flex justify-center items-center gap-2 text-sm font-medium border disabled:bg-muted aria-disabled:bg-muted disabled:text-muted-foreground aria-disabled:text-muted-foreground disabled:border-muted aria-disabled:border-muted aria-disabled:pointer-events-none primary-gradient-subtle text-primary/60 border-primary/10 hover:text-primary disabled:from-muted aria-disabled:from-muted disabled:to-muted aria-disabled:to-muted shadow-md-subtle rounded-full px-2 mr-1"
               >
                 <svg
                   class="h-6 w-6"
@@ -139,7 +151,7 @@ describe('TagsListInput', () => {
               <p
                 class="text-sm font-normal text-secondary-foreground"
               >
-                Add up to 5 tags
+                Filter by up to 5 tags
               </p>
             </div>
           </div>
@@ -169,7 +181,11 @@ describe('TagsListInput', () => {
             <button
               class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-social/10 text-social/90 border-social/40 hover:bg-social/30 hover:text-social hover:border-social/60 text-base font-normal flex items-center cursor-default pl-2"
             >
-              Tag Name 1
+              <p
+                class="text-primary text-base font-normal"
+              >
+                Tag Name 1
+              </p>
             </button>
             <button
               aria-label="Remove tag"
@@ -186,7 +202,11 @@ describe('TagsListInput', () => {
             <button
               class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-social/10 text-social/90 border-social/40 hover:bg-social/30 hover:text-social hover:border-social/60 text-base font-normal flex items-center cursor-default pl-2"
             >
-              Tag Name 2
+              <p
+                class="text-primary text-base font-normal"
+              >
+                Tag Name 2
+              </p>
             </button>
             <button
               aria-label="Remove tag"
@@ -203,7 +223,11 @@ describe('TagsListInput', () => {
             <button
               class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-social/10 text-social/90 border-social/40 hover:bg-social/30 hover:text-social hover:border-social/60 text-base font-normal flex items-center cursor-default pl-2"
             >
-              Tag Name 3
+              <p
+                class="text-primary text-base font-normal"
+              >
+                Tag Name 3
+              </p>
             </button>
             <button
               aria-label="Remove tag"
@@ -221,7 +245,7 @@ describe('TagsListInput', () => {
               class="flex items-center gap-2"
             >
               <button
-                class="flex justify-center items-center gap-2 text-sm font-medium border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted primary-gradient-subtle text-primary/60 border-primary/10 hover:text-primary disabled:from-muted disabled:to-muted shadow-md-subtle rounded-full px-2 mr-1"
+                class="flex justify-center items-center gap-2 text-sm font-medium border disabled:bg-muted aria-disabled:bg-muted disabled:text-muted-foreground aria-disabled:text-muted-foreground disabled:border-muted aria-disabled:border-muted aria-disabled:pointer-events-none primary-gradient-subtle text-primary/60 border-primary/10 hover:text-primary disabled:from-muted aria-disabled:from-muted disabled:to-muted aria-disabled:to-muted shadow-md-subtle rounded-full px-2 mr-1"
               >
                 <svg
                   class="h-6 w-6"
@@ -265,7 +289,7 @@ describe('TagsListInput', () => {
               class="flex items-center gap-2"
             >
               <button
-                class="flex justify-center items-center gap-2 text-sm font-medium border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted primary-gradient-subtle text-primary/60 border-primary/10 hover:text-primary disabled:from-muted disabled:to-muted shadow-md-subtle rounded-full px-2 mr-1"
+                class="flex justify-center items-center gap-2 text-sm font-medium border disabled:bg-muted aria-disabled:bg-muted disabled:text-muted-foreground aria-disabled:text-muted-foreground disabled:border-muted aria-disabled:border-muted aria-disabled:pointer-events-none primary-gradient-subtle text-primary/60 border-primary/10 hover:text-primary disabled:from-muted aria-disabled:from-muted disabled:to-muted aria-disabled:to-muted shadow-md-subtle rounded-full px-2 mr-1"
               >
                 <svg
                   class="h-6 w-6"
@@ -278,7 +302,7 @@ describe('TagsListInput', () => {
               <p
                 class="text-sm font-normal text-secondary-foreground"
               >
-                Add up to 3 trust circles
+                Filter by up to 3 trust circles
               </p>
             </div>
           </div>

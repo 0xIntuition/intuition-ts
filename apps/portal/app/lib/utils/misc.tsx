@@ -1,13 +1,13 @@
 import React from 'react'
 
 import { Icon, IconName, Text, Theme } from '@0xintuition/1ui'
-import { ApiError } from '@0xintuition/api'
+import { IdentityPresenter } from '@0xintuition/api'
 
+import { SubmitFunction } from '@remix-run/react'
+import { BLOCK_EXPLORER_URL, IPFS_GATEWAY_URL, PATHS } from 'app/consts'
 import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 import { formatUnits } from 'viem'
-
-import logger from './logger'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -104,10 +104,6 @@ export function getAuthHeaders(token?: string) {
 
   if (token) {
     headers.authorization = `Bearer ${token}`
-  }
-
-  if (!token) {
-    headers['x-api-key'] = process.env.API_KEY as string
   }
 
   return headers
@@ -275,33 +271,19 @@ export const truncateNumber = (balance: string | number): string => {
     console.error('Invalid number input:', balance)
     return 'Invalid number'
   }
+  const format = (num: number, divisor: number, suffix: string) =>
+    `${(num / divisor).toFixed(2).replace(/\.?0+$/, '')}${suffix}`
+
   if (n >= 1000000000) {
-    return `${(n / 1000000000).toFixed(2).replace(/\.0$/, '')}B`
+    return format(n, 1000000000, 'B')
   }
   if (n >= 1000000) {
-    return `${(n / 1000000).toFixed(2).replace(/\.0$/, '')}M`
+    return format(n, 1000000, 'M')
   }
   if (n >= 1000) {
-    return `${(n / 1000).toFixed(2).replace(/\.0$/, '')}K`
+    return format(n, 1000, 'K')
   }
-  return n.toFixed(2)
-}
-
-export const fetchWrapper = async <T, A>({
-  method,
-  args,
-}: {
-  method: (arg: A) => Promise<T>
-  args: A
-}): Promise<T> => {
-  try {
-    return await method(args)
-  } catch (error: unknown) {
-    if (error instanceof ApiError) {
-      logger(`${error.name} - ${error.status}: ${error.message} ${error.url}`)
-    }
-    throw error
-  }
+  return n.toFixed(2).replace(/\.?0+$/, '')
 }
 
 export interface DataErrorDisplayProps
@@ -325,4 +307,76 @@ export const DataErrorDisplay = ({
       {children}
     </div>
   )
+}
+
+interface LoadMoreParams {
+  currentPage: number
+  pagination: {
+    limit: number
+  }
+  sortBy: string
+  direction: string
+  submit: SubmitFunction
+}
+
+export function loadMore({
+  currentPage,
+  pagination,
+  sortBy,
+  direction,
+  submit,
+}: LoadMoreParams): () => void {
+  return () => {
+    const nextPage = currentPage + 1
+    submit(
+      {
+        page: nextPage.toString(),
+        limit: pagination.limit.toString(),
+        sortBy,
+        direction,
+      },
+      { method: 'get', replace: true },
+    )
+  }
+}
+
+// atom helpers
+export const getAtomImage = (atom: IdentityPresenter | null | undefined) => {
+  if (!atom) {
+    return ''
+  }
+  return atom?.user?.image ?? atom?.image ?? ''
+}
+
+export const getAtomLabel = (atom: IdentityPresenter | null | undefined) => {
+  if (!atom) {
+    return '?'
+  }
+  return atom.user?.display_name ?? atom.display_name ?? atom.identity_id ?? ''
+}
+
+export const getAtomDescription = (
+  atom: IdentityPresenter | null | undefined,
+) => {
+  return atom?.user?.description ?? atom?.description ?? ''
+}
+
+export const getAtomIpfsLink = (atom: IdentityPresenter | null | undefined) => {
+  if (!atom) {
+    return ''
+  }
+  if (atom.is_user === true) {
+    return `${BLOCK_EXPLORER_URL}/address/${atom.identity_id}`
+  }
+  return `${IPFS_GATEWAY_URL}/${atom.identity_id?.replace('ipfs://', '')}`
+}
+
+export const getAtomLink = (atom: IdentityPresenter | null | undefined) => {
+  if (!atom) {
+    return ''
+  }
+  if (atom.is_user === true) {
+    return `${PATHS.PROFILE}/${atom.identity_id}`
+  }
+  return `${PATHS.IDENTITY}/${atom.id}`
 }

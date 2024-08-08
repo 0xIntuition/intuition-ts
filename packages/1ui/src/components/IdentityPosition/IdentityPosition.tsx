@@ -3,10 +3,10 @@ import * as React from 'react'
 import { cn } from 'styles'
 import { CurrencyType, Identity, IdentityType } from 'types'
 import { formatDate } from 'utils/date'
-import { formatWalletAddress } from 'utils/wallet'
 
 import {
   Avatar,
+  Copy,
   PositionValueDisplay,
   PositionValueVariants,
   TagsContent,
@@ -15,6 +15,7 @@ import {
   Text,
   TextVariant,
   TextWeight,
+  Trunctacular,
 } from '..'
 
 export interface IdentityPositionProps
@@ -24,8 +25,10 @@ export interface IdentityPositionProps
   currency?: CurrencyType
   feesAccrued: number
   name: string
-  walletAddress: string
+  id: string
   avatarSrc: string
+  link: string
+  ipfsLink: string
   updatedAt?: string
   tags?: TagWithValueProps[]
 }
@@ -36,33 +39,47 @@ const IdentityPosition = ({
   currency,
   feesAccrued,
   name,
-  walletAddress,
+  id,
   avatarSrc,
+  link,
+  ipfsLink,
   updatedAt,
   tags,
   className,
   ...props
 }: IdentityPositionProps) => {
   return (
-    <div className={cn(`w-full flex justify-between`, className)} {...props}>
+    <div
+      className={cn(
+        `w-full flex justify-between max-sm:flex-col max-sm:items-center`,
+        className,
+      )}
+      {...props}
+    >
       <div className="flex items-center">
-        <Avatar
-          variant={variant}
-          src={avatarSrc}
-          name={name}
-          className="w-16 h-16 mr-4"
-        />
+        <a href={link}>
+          <Avatar
+            variant={variant}
+            src={avatarSrc}
+            name={name}
+            className="w-16 h-16 mr-4"
+          />
+        </a>
         <div className="flex flex-col">
-          <div className="flex items-center mb-1.5">
-            <Text variant={TextVariant.bodyLarge} className="mr-1">
-              {name}
-            </Text>
-            <Text
-              variant={TextVariant.body}
-              className="text-secondary-foreground"
-            >
-              {formatWalletAddress(walletAddress)}
-            </Text>
+          <div className="flex items-center mb-1.5 max-sm:flex-col max-sm:gap-px max-sm:items-start">
+            <a href={link}>
+              <Trunctacular value={name} variant="bodyLarge" className="mr-1" />
+            </a>
+            <div className="flex flex-row items-center gap-1">
+              <a href={ipfsLink} target="_blank" rel="noreferrer noopener">
+                <Trunctacular
+                  value={id}
+                  variant="body"
+                  className="text-secondary-foreground"
+                />
+              </a>
+              <Copy text={id} className="text-secondary-foreground" />
+            </div>
           </div>
           {updatedAt && (
             <Text

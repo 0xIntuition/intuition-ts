@@ -76,7 +76,7 @@ describe('PositionCard', () => {
             class="w-full grid grid-cols-2 gap-5"
           >
             <div
-              class="flex flex-col"
+              class="flex flex-col max-lg:items-center"
             >
               <p
                 class="text-sm font-normal text-muted-foreground mb-0.5"
@@ -84,13 +84,13 @@ describe('PositionCard', () => {
                 Amount Staked
               </p>
               <p
-                class="text-primary text-lg font-normal"
+                class="text-primary text-lg font-medium"
               >
                 0.512 ETH
               </p>
             </div>
             <div
-              class="flex flex-col"
+              class="flex flex-col max-lg:items-center"
             >
               <p
                 class="text-sm font-normal text-muted-foreground mb-0.5"
@@ -120,7 +120,7 @@ describe('PositionCard', () => {
               </div>
             </div>
             <div
-              class="flex flex-col"
+              class="flex flex-col max-lg:items-center"
             >
               <p
                 class="text-sm font-medium text-muted-foreground mb-0.5"
@@ -134,7 +134,7 @@ describe('PositionCard', () => {
               </p>
             </div>
             <div
-              class="flex flex-col"
+              class="flex flex-col max-lg:items-center"
             >
               <p
                 class="text-sm font-medium text-muted-foreground mb-0.5"
@@ -149,7 +149,7 @@ describe('PositionCard', () => {
             </div>
           </div>
           <button
-            class="flex justify-center items-center gap-2 text-sm font-medium border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted bg-transparent text-destructive border-destructive rounded-full hover:bg-destructive/30 hover:border-destructive/30 shadow-md-subtle px-3 py-1 w-full mt-5"
+            class="flex justify-center items-center gap-2 text-sm font-medium border disabled:bg-muted aria-disabled:bg-muted disabled:text-muted-foreground aria-disabled:text-muted-foreground disabled:border-muted aria-disabled:border-muted aria-disabled:pointer-events-none bg-transparent text-destructive border-destructive rounded-full hover:bg-destructive/30 hover:border-destructive/30 shadow-md-subtle px-3 py-1 max-sm:py-2 max-sm:text-base w-full mt-5"
           >
             Sell
           </button>

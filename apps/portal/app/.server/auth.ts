@@ -5,7 +5,7 @@ import { combineHeaders, getAuthHeaders } from '@lib/utils/misc'
 import { getRedirectToUrl } from '@lib/utils/redirect'
 import { User } from '@privy-io/server-auth'
 import { redirect } from '@remix-run/node'
-import { RedirectOptions } from 'types'
+import { RedirectOptions } from 'app/types'
 
 import {
   getPrivyAccessToken,
@@ -111,8 +111,25 @@ export async function handlePrivyRedirect({
 }
 
 export async function setupAPI(request: Request) {
-  OpenAPI.BASE = 'https://dev.api.intuition.systems'
-  const accessToken = getPrivyAccessToken(request)
+  const apiUrl =
+    typeof window !== 'undefined' ? window.ENV?.API_URL : process.env.API_URL
+
+  OpenAPI.BASE = apiUrl
+
+  if (typeof window !== 'undefined') {
+    const accessToken = localStorage.getItem('privy:token')
+    const headers = getAuthHeaders(accessToken || '')
+    OpenAPI.HEADERS = headers as Record<string, string>
+  } else if (request) {
+    const accessToken = getPrivyAccessToken(request)
+    const headers = getAuthHeaders(accessToken || '')
+    OpenAPI.HEADERS = headers as Record<string, string>
+  }
+}
+
+export function updateClientAPIHeaders(accessToken: string | null) {
   const headers = getAuthHeaders(accessToken !== null ? accessToken : '')
+
   OpenAPI.HEADERS = headers as Record<string, string>
+  logger('[SETUP API] -- END')
 }

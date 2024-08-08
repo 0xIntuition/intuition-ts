@@ -9,10 +9,17 @@ import {
   Identity,
   Text,
 } from '@0xintuition/1ui'
-import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
+import { IdentityPresenter } from '@0xintuition/api'
 
 import { formatBalance, formatDisplayBalance } from '@lib/utils/misc'
-import { TransactionActionType, TransactionStateType } from 'types/transaction'
+import {
+  AM_FOLLOWING_DISPLAY_NAME_TESTNET,
+  I_PREDICATE_DISPLAY_NAME_TESTNET,
+} from 'app/consts'
+import {
+  TransactionActionType,
+  TransactionStateType,
+} from 'app/types/transaction'
 
 interface FollowReviewProps {
   val: string
@@ -21,7 +28,6 @@ interface FollowReviewProps {
   state: TransactionStateType
   isError?: boolean
   identity: IdentityPresenter
-  claim: ClaimPresenter
   user_assets: string
   entry_fee: string
   exit_fee: string
@@ -34,7 +40,6 @@ export default function FollowReview({
   state,
   isError,
   identity,
-  claim,
   user_assets,
   entry_fee,
   exit_fee,
@@ -95,38 +100,22 @@ export default function FollowReview({
               ETH on follow claim
             </Text>
             <Claim
+              size="md"
               subject={{
-                imgSrc: claim?.subject?.user?.image ?? claim?.subject?.image,
-                label: !claim
-                  ? 'I'
-                  : claim?.subject?.user?.display_name ??
-                    claim?.subject?.display_name ??
-                    '',
                 variant: Identity.nonUser,
+                label: I_PREDICATE_DISPLAY_NAME_TESTNET,
+                shouldHover: false,
               }}
               predicate={{
-                imgSrc: claim?.predicate?.image,
-                label: !claim
-                  ? 'am following'
-                  : claim?.predicate?.display_name ?? '',
                 variant: Identity.nonUser,
+                label: AM_FOLLOWING_DISPLAY_NAME_TESTNET,
+                shouldHover: false,
               }}
               object={{
-                imgSrc: !claim
-                  ? identity?.user?.image
-                  : claim?.object?.user?.image ?? claim?.object?.image,
-                label: !claim
-                  ? identity?.user?.display_name ?? ''
-                  : claim?.object?.user?.display_name ??
-                    claim?.object?.display_name ??
-                    '',
-                variant: !claim
-                  ? identity?.user
-                    ? Identity.user
-                    : Identity.nonUser
-                  : claim?.object?.user
-                    ? Identity.user
-                    : Identity.nonUser,
+                variant: Identity.user,
+                imgSrc: identity.user?.image ?? identity.image,
+                label: identity.user?.display_name ?? identity.display_name,
+                shouldHover: false,
               }}
             />
             <Text

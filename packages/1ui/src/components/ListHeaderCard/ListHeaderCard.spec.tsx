@@ -48,13 +48,14 @@ describe('ListHeaderCard', () => {
             class="flex items-center"
           >
             <div
-              class="flex items-center w-full max-w-full group"
+              class="flex items-center w-full max-w-max group relative max-sm:flex-col max-sm:m-auto"
             >
               <button
-                class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center rounded-sm text-base [&>span]:h-6 [&>span]:w-6 group-hover:border-primary group-hover:bg-primary/20"
+                class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center rounded-md text-base [&>span]:h-6 [&>span]:w-6 disabled:opacity-50 cursor-not-allowed group-hover:border-primary group-hover:bg-primary/20 relative z-10"
+                disabled=""
               >
                 <span
-                  class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square rounded bg-background theme-border"
+                  class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square bg-background theme-border rounded"
                 >
                   <span
                     class="flex h-full w-full items-center justify-center bg-inherit"
@@ -75,15 +76,16 @@ describe('ListHeaderCard', () => {
                 </p>
               </button>
               <div
-                class="shrink-0 bg-border/20 h-[1px] w-4 group-hover:bg-primary"
+                class="shrink-0 bg-border/20 h-[1px] w-4 group-hover:bg-primary max-sm:w-px max-sm:h-2"
                 data-orientation="horizontal"
                 role="none"
               />
               <button
-                class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center rounded-sm text-base [&>span]:h-6 [&>span]:w-6 group-hover:border-primary group-hover:bg-primary/20"
+                class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center rounded-md text-base [&>span]:h-6 [&>span]:w-6 disabled:opacity-50 cursor-not-allowed group-hover:border-primary group-hover:bg-primary/20 relative z-10"
+                disabled=""
               >
                 <span
-                  class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square rounded bg-background theme-border"
+                  class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square bg-background theme-border rounded"
                 >
                   <span
                     class="flex h-full w-full items-center justify-center bg-inherit"
@@ -104,15 +106,16 @@ describe('ListHeaderCard', () => {
                 </p>
               </button>
               <div
-                class="shrink-0 bg-border/20 h-[1px] w-4 group-hover:bg-primary"
+                class="shrink-0 bg-border/20 h-[1px] w-4 group-hover:bg-primary max-sm:w-px max-sm:h-2"
                 data-orientation="horizontal"
                 role="none"
               />
               <button
-                class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center rounded-sm text-base [&>span]:h-6 [&>span]:w-6 group-hover:border-primary group-hover:bg-primary/20"
+                class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center rounded-md text-base [&>span]:h-6 [&>span]:w-6 disabled:opacity-50 cursor-not-allowed group-hover:border-primary group-hover:bg-primary/20 relative z-10"
+                disabled=""
               >
                 <span
-                  class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square rounded bg-background theme-border"
+                  class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square bg-background theme-border rounded"
                 >
                   <span
                     class="flex h-full w-full items-center justify-center bg-inherit"

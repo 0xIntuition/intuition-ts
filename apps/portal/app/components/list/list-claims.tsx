@@ -1,33 +1,44 @@
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 
-import { EmptyStateCard, ListGrid } from '@0xintuition/1ui'
+import { Button, EmptyStateCard, ListGrid } from '@0xintuition/1ui'
 import { ClaimPresenter, ClaimSortColumn } from '@0xintuition/api'
 
-import { PaginationComponent } from '@components/pagination-component'
 import { Search } from '@components/search'
 import { Sort } from '@components/sort'
-import { useSearchAndSortParamsHandler } from '@lib/hooks/useSearchAndSortParams'
+import {
+  SortColumnType,
+  useSearchAndSortParamsHandler,
+} from '@lib/hooks/useSearchAndSortParams'
+import logger from '@lib/utils/logger'
 import { useNavigate } from '@remix-run/react'
-import { PaginationType } from 'types/pagination'
+import { PaginationType } from 'app/types/pagination'
 
 import { SortOption } from '../sort-select'
 import { ListIdentityCardPortal } from './list-identity-card-portal'
 
-export function ListClaimsList({
+export function ListClaimsList<T extends SortColumnType = ClaimSortColumn>({
   listClaims,
   pagination,
   paramPrefix,
   enableSearch = false,
   enableSort = false,
+  onLoadMore,
+  columns,
+  sortOptions,
+  sourceUserAddress,
 }: {
   listClaims: ClaimPresenter[]
-  pagination: PaginationType
+  pagination?: PaginationType
   paramPrefix?: string
   enableSearch?: boolean
   enableSort?: boolean
+  onLoadMore?: () => void
+  columns?: number
+  sortOptions?: SortOption<T>[]
+  sourceUserAddress?: string
 }) {
   const navigate = useNavigate()
-  const options: SortOption<ClaimSortColumn>[] = [
+  const defaultOptions: SortOption<ClaimSortColumn>[] = [
     { value: 'Total ETH', sortBy: 'AssetsSum' },
     { value: 'ETH For', sortBy: 'ForAssetsSum' },
     { value: 'ETH Against', sortBy: 'AgainstAssetsSum' },
@@ -38,33 +49,57 @@ export function ListClaimsList({
     { value: 'Created At', sortBy: 'CreatedAt' },
   ]
 
-  const claimData = listClaims.map((claim) => ({
+  logger('listClaims', listClaims)
+
+  const options = sortOptions || defaultOptions
+
+  const [isLoading, setIsLoading] = useState(false)
+
+  const uniqueClaimData = Array.from(
+    new Map(
+      listClaims.map((claim) => [
+        claim.object?.display_name || 'unknown',
+        claim,
+      ]),
+    ).values(),
+  ).map((claim) => ({
     object: claim.object,
     user_assets_for: claim.user_assets_for,
     claim_id: claim.claim_id,
   }))
 
   const listContainerRef = useRef<HTMLDivElement>(null)
-  const { handleSearchChange, handleSortChange, onPageChange, onLimitChange } =
+  const { handleSearchChange, handleSortChange } =
     useSearchAndSortParamsHandler(paramPrefix)
 
-  if (!claimData.length) {
+  if (!uniqueClaimData.length) {
     return <EmptyStateCard message="No lists found." />
+  }
+
+  const handleLoadMore = async () => {
+    if (onLoadMore) {
+      setIsLoading(true)
+      await onLoadMore()
+      setIsLoading(false)
+    }
   }
 
   return (
     <div className="flex flex-col w-full">
-      <div className="flex flex-col w-full gap-6" ref={listContainerRef}>
+      <div className="flex flex-col w-full" ref={listContainerRef}>
         <div
-          className={`flex flex-row w-full mt-6 ${enableSearch ? 'justify-between' : 'justify-end'}`}
+          className={`flex flex-row w-full ${enableSearch ? 'justify-between' : 'justify-end'} ${enableSort ? 'mb-6' : 'mb-0'}`}
         >
           {enableSearch && <Search handleSearchChange={handleSearchChange} />}
-          {enableSort && options && (
-            <Sort options={options} handleSortChange={handleSortChange} />
+          {enableSort && options && options.length > 0 && (
+            <Sort
+              options={options as SortOption<T>[]}
+              handleSortChange={handleSortChange}
+            />
           )}
         </div>
-        <ListGrid>
-          {claimData.map(
+        <ListGrid columns={columns}>
+          {uniqueClaimData.map(
             (claim, index) =>
               claim &&
               claim.object && (
@@ -75,21 +110,22 @@ export function ListClaimsList({
                   identitiesCount={claim.object.tag_count ?? 0}
                   isSaved={claim.user_assets_for !== '0'}
                   savedAmount={claim.user_assets_for}
-                  onViewClick={() => navigate(`/app/list/${claim.claim_id}`)}
+                  onViewClick={() =>
+                    navigate(
+                      `/app/list/${claim.claim_id}${sourceUserAddress ? `?user=${sourceUserAddress}` : ''}`,
+                    )
+                  }
                 />
               ),
           )}
         </ListGrid>
-        <PaginationComponent
-          totalEntries={pagination.totalEntries ?? 0}
-          currentPage={pagination.currentPage ?? 0}
-          totalPages={pagination.totalPages ?? 0}
-          limit={pagination.limit ?? 0}
-          onPageChange={onPageChange}
-          onLimitChange={onLimitChange}
-          label="lists"
-          listContainerRef={listContainerRef}
-        />
+        {pagination && pagination.currentPage < pagination.totalPages && (
+          <div className="flex justify-center mt-4">
+            <Button onClick={handleLoadMore} disabled={isLoading}>
+              {isLoading ? 'Loading...' : 'Load More'}
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   )

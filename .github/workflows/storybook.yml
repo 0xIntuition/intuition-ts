@@ -1,0 +1,52 @@
+name: Storybook Deployment
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'packages/1ui/**'
+
+permissions:
+  actions: read
+  # Must be write to deploy Storybook
+  contents: write
+
+jobs:
+  build-and-deploy-storybook:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9.0.6
+
+      - name: Cache pnpm store
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.pnpm-store
+            **/node_modules/.pnpm
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Build 1ui Storybook
+        run: pnpm 1ui:build-storybook
+
+      - name: Deploy 1ui Storybook
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: build/storybook/1ui
+          token: ${{ secrets.GITHUB_TOKEN }}

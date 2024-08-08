@@ -3,7 +3,8 @@
   "compilerOptions": {
     "jsx": "react-jsx",
     "baseUrl": "./src",
-    "outDir": "../../dist/packages/1ui"
+    "outDir": "../../dist/packages/1ui",
+    "composite": true
   },
   "include": ["src"]
 }

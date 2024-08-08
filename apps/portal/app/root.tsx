@@ -11,10 +11,10 @@ import {
   ScrollRestoration,
   useLoaderData,
   useLocation,
-  useNavigate,
   useRouteError,
 } from '@remix-run/react'
 import { useTheme } from '@routes/actions+/set-theme'
+import { captureRemixErrorBoundaryError, withSentry } from '@sentry/remix'
 import { getEnv } from '@server/env'
 import { getTheme } from '@server/theme'
 
@@ -22,14 +22,14 @@ import './styles/globals.css'
 
 import { useEffect } from 'react'
 
-import { Button, Icon, Text, Toaster } from '@0xintuition/1ui'
+import { Icon, Toaster } from '@0xintuition/1ui'
 
+import { ErrorPage } from '@components/error-page'
 import { GlobalLoading } from '@components/global-loading'
 import { getChainEnvConfig } from '@lib/utils/environment'
 import logger from '@lib/utils/logger'
-import { cn } from '@lib/utils/misc'
 import { setupAPI } from '@server/auth'
-import { CURRENT_ENV, PATH, SUPPORT_EMAIL_ADDRESS } from 'consts'
+import { CURRENT_ENV } from 'app/consts'
 import { ClientOnly } from 'remix-utils/client-only'
 import { baseSepolia } from 'viem/chains'
 import { useAccount, useSwitchChain } from 'wagmi'
@@ -111,7 +111,7 @@ export function ExternalScripts() {
   return null // this component doesn't render anything itself
 }
 
-export default function App() {
+function App() {
   const nonce = useNonce()
   const theme = useTheme()
   const { env } = useLoaderData<typeof loader>()
@@ -130,6 +130,10 @@ export default function App() {
     </Document>
   )
 }
+
+export default withSentry(App, {
+  wrapWithErrorBoundary: process.env.NODE_ENV === 'production',
+})
 
 export function AppLayout() {
   const { chain } = useAccount()
@@ -156,77 +160,9 @@ export function ErrorBoundary() {
   let title: string | React.ReactNode = (
     <Icon name="circle-x" className="h-20 w-20" />
   )
-  // @ts-ignore this may be an Error thrown by a loader, in that case we want to display the message thrown
-  let description = error?.message || 'Something went wrong...'
+  let description = 'Something went wrong...'
 
   logger('ROOT ERROR BOUNDARY:', error)
-
-  const ErrorMessage = ({
-    statusCode,
-    title,
-    description,
-  }: {
-    statusCode: number | null
-    title: string | React.ReactNode
-    description: string
-  }) => {
-    const navigate = useNavigate()
-    const descriptionArray = description.split('\n')
-    return (
-      <Document>
-        <div className="flex h-[100vh] w-full items-center justify-center gap-12 max-[900px]:flex-col-reverse max-[900px]:gap-2">
-          <div
-            className={cn(
-              'flex flex-col max-w-[500px] gap-2 max-[900px]:items-center max-[900px]:text-center',
-              !statusCode && 'items-center [&>div]:text-center',
-            )}
-          >
-            <Text
-              variant={statusCode ? 'heading1' : 'heading3'}
-              weight="medium"
-            >
-              {title}
-            </Text>
-            <div className="flex flex-col max-[900px]:text-center">
-              {descriptionArray?.map((content, index) => (
-                <Text
-                  variant={statusCode ? 'bodyLarge' : 'headline'}
-                  className="text-secondary/30"
-                  key={index}
-                >
-                  {content}
-                </Text>
-              ))}
-            </div>
-            <div className="flex gap-6 mt-5 max-[400px]:flex-col">
-              <Button
-                variant="primary"
-                size="lg"
-                onClick={() => navigate(PATH.ROOT)}
-              >
-                Back to home
-              </Button>
-              <Button
-                variant="ghost"
-                size="lg"
-                className="rounded-full"
-                onClick={() =>
-                  (window.location.href = `mailto:${SUPPORT_EMAIL_ADDRESS}`)
-                }
-              >
-                Contact Support
-              </Button>
-            </div>
-          </div>
-          {statusCode && (
-            <Text variant="heading1" weight="bold" className="text-9xl">
-              {statusCode}
-            </Text>
-          )}
-        </div>
-      </Document>
-    )
-  }
 
   if (isRouteErrorResponse(error)) {
     statusCode = error.status
@@ -239,11 +175,15 @@ export function ErrorBoundary() {
     }
   }
 
+  captureRemixErrorBoundaryError(error)
+
   return (
-    <ErrorMessage
-      statusCode={statusCode}
-      title={title}
-      description={description}
-    />
+    <Document>
+      <ErrorPage
+        statusCode={statusCode}
+        title={title}
+        description={description}
+      />
+    </Document>
   )
 }

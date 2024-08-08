@@ -15,13 +15,13 @@ const ExploreSearchInput = ({
   initialValue,
   ...props
 }: ExploreSearchInputProps) => (
-  <div className="flex items-center justify-between">
+  <div className="flex items-center justify-between gap-2">
     <Input
       type="text"
       name={searchParam}
       placeholder={placeholder}
       defaultValue={initialValue || undefined}
-      className="w-full min-w-[610px] bg-card/70 rounded-lg border-none focus:ring-0 focus:outline-none [&>input]:text-lg pl-px"
+      className="w-full min-w-[610px] bg-card/70 rounded-lg border-none focus:ring-0 focus:outline-none [&>input]:text-lg pl-px max-md:min-w-0 max-md:p-0"
       {...props}
     />
     <Button type="submit" variant="secondary" size="icon">

@@ -49,15 +49,21 @@ describe('IdentityInput', () => {
               </button>
             </div>
             <button
-              class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center rounded-full [&>span]:rounded-full [&>span]:overflow-hidden text-lg [&>span]:h-8 [&>span]:w-8"
+              class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center rounded-full [&>span]:rounded-full [&>span]:overflow-hidden text-lg [&>span]:h-8 [&>span]:w-8"
             >
               <span
-                class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square rounded-full bg-muted"
+                class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square bg-background theme-border rounded-full"
               >
                 <span
                   class="flex h-full w-full items-center justify-center bg-inherit"
                 >
-                  ID
+                  <svg
+                    class="text-primary/30 w-[80%] h-[80%] max-w-8 max-h-8"
+                  >
+                    <use
+                      href="/src/components/Icon/Icon.sprites.svg#crypto-punk"
+                    />
+                  </svg>
                 </span>
               </span>
               super dave
@@ -90,10 +96,10 @@ describe('IdentityInput', () => {
               </button>
             </div>
             <button
-              class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center rounded-sm text-lg [&>span]:h-8 [&>span]:w-8"
+              class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center rounded-md text-lg [&>span]:h-8 [&>span]:w-8"
             >
               <span
-                class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square rounded bg-background theme-border"
+                class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square bg-background theme-border rounded"
               >
                 <span
                   class="flex h-full w-full items-center justify-center bg-inherit"
@@ -137,10 +143,10 @@ describe('IdentityInput', () => {
               </button>
             </div>
             <button
-              class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/20 disabled:pointer-events-none flex gap-2 items-center rounded-sm text-lg [&>span]:h-8 [&>span]:w-8"
+              class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center rounded-md text-lg [&>span]:h-8 [&>span]:w-8"
             >
               <span
-                class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square rounded bg-background theme-border"
+                class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square bg-background theme-border rounded"
               >
                 <span
                   class="flex h-full w-full items-center justify-center bg-inherit"
@@ -187,7 +193,7 @@ describe('IdentityInput', () => {
             class="flex flex-col gap-2"
           >
             <button
-              class="flex justify-center items-center font-medium border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted primary-gradient-subtle text-primary/60 border-primary/10 rounded-lg hover:text-primary disabled:from-muted disabled:to-muted shadow-md-subtle px-4 py-2 gap-2 text-base"
+              class="flex justify-center items-center font-medium border disabled:bg-muted aria-disabled:bg-muted disabled:text-muted-foreground aria-disabled:text-muted-foreground disabled:border-muted aria-disabled:border-muted aria-disabled:pointer-events-none primary-gradient-subtle text-primary/60 border-primary/10 rounded-lg hover:text-primary disabled:from-muted aria-disabled:from-muted disabled:to-muted aria-disabled:to-muted shadow-md-subtle px-4 py-2 gap-2 text-base"
             >
               <svg
                 class="h-4 w-4"
@@ -206,7 +212,7 @@ describe('IdentityInput', () => {
             class="flex flex-col gap-2"
           >
             <button
-              class="flex justify-center items-center font-medium border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted primary-gradient-subtle text-primary/60 border-primary/10 rounded-lg hover:text-primary disabled:from-muted disabled:to-muted shadow-md-subtle px-4 py-2 gap-2 text-base"
+              class="flex justify-center items-center font-medium border disabled:bg-muted aria-disabled:bg-muted disabled:text-muted-foreground aria-disabled:text-muted-foreground disabled:border-muted aria-disabled:border-muted aria-disabled:pointer-events-none primary-gradient-subtle text-primary/60 border-primary/10 rounded-lg hover:text-primary disabled:from-muted aria-disabled:from-muted disabled:to-muted aria-disabled:to-muted shadow-md-subtle px-4 py-2 gap-2 text-base"
             >
               <svg
                 class="h-4 w-4"
@@ -225,7 +231,7 @@ describe('IdentityInput', () => {
             class="flex flex-col gap-2"
           >
             <button
-              class="flex justify-center items-center font-medium border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted primary-gradient-subtle text-primary/60 border-primary/10 rounded-lg hover:text-primary disabled:from-muted disabled:to-muted shadow-md-subtle px-4 py-2 gap-2 text-base"
+              class="flex justify-center items-center font-medium border disabled:bg-muted aria-disabled:bg-muted disabled:text-muted-foreground aria-disabled:text-muted-foreground disabled:border-muted aria-disabled:border-muted aria-disabled:pointer-events-none primary-gradient-subtle text-primary/60 border-primary/10 rounded-lg hover:text-primary disabled:from-muted aria-disabled:from-muted disabled:to-muted aria-disabled:to-muted shadow-md-subtle px-4 py-2 gap-2 text-base"
             >
               <svg
                 class="h-4 w-4"

@@ -37,11 +37,23 @@ export type ActivityPresenter = {
   min_deposit: string
   min_share: string
   net_user_assets: string
+  object_share_price: string
+  object_shares: string
+  object_vault_assets: string
+  object_vault_id: string
+  predicate_share_price: string
+  predicate_shares: string
+  predicate_vault_assets: string
+  predicate_vault_id: string
   protocol_fee: string
   protocol_fee_paid: string
   protocol_vault?: string | null
   raw_input_data: string
   share_price: string
+  subject_share_price: string
+  subject_shares: string
+  subject_vault_assets: string
+  subject_vault_id: string
   timestamp: string
   total_assets: string
   total_shares: string
@@ -72,6 +84,16 @@ export type ActivityQuery = {
 export type AtomCreated = {
   atom_data: Blob | File
   vault_id: string
+}
+
+export type BatchCreateAtom = {
+  atoms_data: Array<Blob | File>
+}
+
+export type BatchCreateTriple = {
+  object_ids: string
+  predicate_ids: string
+  subject_ids: string
 }
 
 export type ClaimAttribute =
@@ -311,7 +333,9 @@ export const EnumComparators = {
 
 export type Event =
   | 'createAtom'
+  | 'batchCreateAtom'
   | 'createAtomCompressed'
+  | 'batchCreateTriple'
   | 'createTriple'
   | 'currentSharePrice'
   | 'deployAtomWallet'
@@ -331,7 +355,9 @@ export type Event =
 
 export const Event = {
   CREATE_ATOM: 'createAtom',
+  BATCH_CREATE_ATOM: 'batchCreateAtom',
   CREATE_ATOM_COMPRESSED: 'createAtomCompressed',
+  BATCH_CREATE_TRIPLE: 'batchCreateTriple',
   CREATE_TRIPLE: 'createTriple',
   CURRENT_SHARE_PRICE: 'currentSharePrice',
   DEPLOY_ATOM_WALLET: 'deployAtomWallet',
@@ -487,7 +513,13 @@ export type InputData =
       CreateAtom: CreateAtom
     }
   | {
+      BatchCreateAtom: BatchCreateAtom
+    }
+  | {
       CreateTriple: CreateTriple
+    }
+  | {
+      BatchCreateTriple: BatchCreateTriple
     }
   | {
       DepositAtom: DepositAtom
@@ -511,8 +543,19 @@ export type IntegrationStatus = {
   cloudinary_cache?: string | null
 }
 
+export type InviteCodePresenter = {
+  created_at: string
+  id: string
+  invite_code: string
+  invited_by?: string | null
+  redeemed: boolean
+  redeemed_by?: string | null
+  redeemer?: UserPresenter | null
+  updated_at: string
+}
+
 export type InviteCodesResponse = {
-  invite_codes: Array<string>
+  invite_codes: Array<InviteCodePresenter>
 }
 
 export type IsCompleteQuery = {
@@ -590,11 +633,17 @@ export type NewClaim = {
   creator: string
   creator_id?: string | null
   object: Identifier
+  object_display_name?: string | null
   object_id?: string | null
+  object_identity_id?: string | null
   predicate: Identifier
+  predicate_display_name?: string | null
   predicate_id?: string | null
+  predicate_identity_id?: string | null
   subject: Identifier
+  subject_display_name?: string | null
   subject_id?: string | null
+  subject_identity_id?: string | null
   vault_id?: Identifier | null
   vault_uuid?: string | null
 }
@@ -696,7 +745,18 @@ export const ParentTable = {
   CLAIM: 'Claim',
 } as const
 
+export type PointType = 'social' | 'quest' | 'referral' | 'protocol' | 'nft'
+
+export const PointType = {
+  SOCIAL: 'social',
+  QUEST: 'quest',
+  REFERRAL: 'referral',
+  PROTOCOL: 'protocol',
+  NFT: 'nft',
+} as const
+
 export type PointsRequest = {
+  point_type: PointType
   points: number
 }
 
@@ -1093,10 +1153,13 @@ export type TripleCreated = {
 }
 
 export type UpdateClaim = {
+  against_num_positions?: number | null
   counter_vault_id?: Identifier | null
   counter_vault_uuid?: string | null
   creator: string
   creator_id?: string | null
+  for_num_positions?: number | null
+  num_positions?: number | null
   object?: Identifier | null
   object_id?: string | null
   predicate?: Identifier | null
@@ -1150,6 +1213,13 @@ export type UpsertUser = {
   wallet?: string | null
 }
 
+export type UpsertUserPoints = {
+  point_type: PointType
+  points: number
+  user_id?: string | null
+  wallet: string
+}
+
 export type User = {
   api_key?: string | null
   created_at: string
@@ -1160,8 +1230,14 @@ export type User = {
   id: string
   image?: string | null
   last_login?: string | null
+  nft_points: number
   privy_id?: string | null
+  protocol_points: number
+  quest_points: number
+  referral_points: number
   role: Role
+  social_points: number
+  total_points: number
   updated_at: string
   wallet: string
 }
@@ -1201,6 +1277,7 @@ export type UserListQuery = {
 export type UserPoints = {
   created_at: string
   id: string
+  point_type: PointType
   points: number
   updated_at: string
   user_id?: string | null
@@ -1223,8 +1300,14 @@ export type UserPresenter = {
   ens_name?: string | null
   id?: string | null
   image?: string | null
+  nft_points: number
   privy_id?: string | null
+  protocol_points: number
+  quest_points: number
+  referral_points: number
+  social_points: number
   total?: number | null
+  total_points: number
   wallet: string
 }
 
@@ -1251,9 +1334,9 @@ export type UserQuestPaginatedResponse = {
 export type UserQuestQuery = {
   direction?: SortDirection | null
   limit?: number | null
-  narrative?: QuestNarrative | null
   offset?: number | null
   page?: number | null
+  questCondition?: QuestCondition | null
   questId?: string | null
   sortBy?: UserQuestSortColumn | null
   status?: QuestStatus | null
@@ -1299,12 +1382,18 @@ export type UserTotalsPresenter = {
   follower_count: number
   id?: string | null
   image?: string | null
+  nft_points: number
   privy_id?: string | null
+  protocol_points: number
+  quest_points: number
+  referral_points: number
+  total?: number | null
   total_claims: number
   total_delta: string
   total_entry_fees: string
   total_exit_fees: string
   total_identities: number
+  total_points: number
   total_position_value: string
   total_position_value_against_claims: string
   total_position_value_for_claims: string
@@ -1317,7 +1406,6 @@ export type UserTotalsPresenter = {
   total_positions_on_identities: number
   total_protocol_fee_paid: string
   updated_at?: string | null
-  user_points: number
   wallet: string
 }
 
@@ -1361,6 +1449,15 @@ export type AlchemyWebhookData = {
 }
 
 export type AlchemyWebhookResponse = unknown
+
+export type AddressIsWalletData = {
+  /**
+   * Address to check
+   */
+  address: string
+}
+
+export type AddressIsWalletResponse = boolean
 
 export type GetActivitiesData = {
   blockHash?: string | null
@@ -1422,11 +1519,23 @@ export type GetActivityByIdResponse = {
   min_deposit: string
   min_share: string
   net_user_assets: string
+  object_share_price: string
+  object_shares: string
+  object_vault_assets: string
+  object_vault_id: string
+  predicate_share_price: string
+  predicate_shares: string
+  predicate_vault_assets: string
+  predicate_vault_id: string
   protocol_fee: string
   protocol_fee_paid: string
   protocol_vault?: string | null
   raw_input_data: string
   share_price: string
+  subject_share_price: string
+  subject_shares: string
+  subject_vault_assets: string
+  subject_vault_id: string
   timestamp: string
   total_assets: string
   total_shares: string
@@ -1446,6 +1555,15 @@ export type RetryActivityData = {
 }
 
 export type RetryActivityResponse = unknown
+
+export type RetryLogData = {
+  /**
+   * sql id
+   */
+  id: string
+}
+
+export type RetryLogResponse = unknown
 
 export type AuthData = {
   requestBody: DidQuery
@@ -2049,14 +2167,8 @@ export type IntegrationHealthcheckResponse = {
   cloudinary_cache?: string | null
 }
 
-export type CreateInviteCodesData = {
-  requestBody: NewPosition
-}
-
-export type CreateInviteCodesResponse = unknown
-
 export type RedeemInviteCodeData = {
-  requestBody: NewPosition
+  requestBody: RedeemBody
 }
 
 export type RedeemInviteCodeResponse = unknown
@@ -2432,6 +2544,23 @@ export type DeleteQuestResponse = {
   updated_at: string
 }
 
+export type GetUserQuestByQuestIdData = {
+  questId: string
+}
+
+export type GetUserQuestByQuestIdResponse = {
+  date_completed?: string | null
+  date_started: string
+  id: string
+  point_multiplier: number
+  progress: number
+  quest_completion_object_id?: string | null
+  quest_condition: QuestCondition
+  quest_id: string
+  status: QuestStatus
+  user_id: string
+}
+
 export type SearchData = {
   requestBody: UserQuestQuery
 }
@@ -2546,8 +2675,14 @@ export type CreateUserResponse = {
   id: string
   image?: string | null
   last_login?: string | null
+  nft_points: number
   privy_id?: string | null
+  protocol_points: number
+  quest_points: number
+  referral_points: number
   role: Role
+  social_points: number
+  total_points: number
   updated_at: string
   wallet: string
 }
@@ -2562,8 +2697,14 @@ export type ReissueApiKeyResponse = {
   id: string
   image?: string | null
   last_login?: string | null
+  nft_points: number
   privy_id?: string | null
+  protocol_points: number
+  quest_points: number
+  referral_points: number
   role: Role
+  social_points: number
+  total_points: number
   updated_at: string
   wallet: string
 }
@@ -2656,8 +2797,14 @@ export type GetUserByWalletPublicResponse = {
   id: string
   image?: string | null
   last_login?: string | null
+  nft_points: number
   privy_id?: string | null
+  protocol_points: number
+  quest_points: number
+  referral_points: number
   role: Role
+  social_points: number
+  total_points: number
   updated_at: string
   wallet: string
 }
@@ -2679,8 +2826,14 @@ export type GetUserByWalletResponse = {
   id: string
   image?: string | null
   last_login?: string | null
+  nft_points: number
   privy_id?: string | null
+  protocol_points: number
+  quest_points: number
+  referral_points: number
   role: Role
+  social_points: number
+  total_points: number
   updated_at: string
   wallet: string
 }
@@ -2702,8 +2855,14 @@ export type GetUserByIdPublicResponse = {
   id: string
   image?: string | null
   last_login?: string | null
+  nft_points: number
   privy_id?: string | null
+  protocol_points: number
+  quest_points: number
+  referral_points: number
   role: Role
+  social_points: number
+  total_points: number
   updated_at: string
   wallet: string
 }
@@ -2726,8 +2885,14 @@ export type UpdateUserResponse = {
   id: string
   image?: string | null
   last_login?: string | null
+  nft_points: number
   privy_id?: string | null
+  protocol_points: number
+  quest_points: number
+  referral_points: number
   role: Role
+  social_points: number
+  total_points: number
   updated_at: string
   wallet: string
 }
@@ -2749,8 +2914,14 @@ export type DeleteUserResponse = {
   id: string
   image?: string | null
   last_login?: string | null
+  nft_points: number
   privy_id?: string | null
+  protocol_points: number
+  quest_points: number
+  referral_points: number
   role: Role
+  social_points: number
+  total_points: number
   updated_at: string
   wallet: string
 }
@@ -2772,10 +2943,27 @@ export type UpdateUserEnsResponse = {
   id: string
   image?: string | null
   last_login?: string | null
+  nft_points: number
   privy_id?: string | null
+  protocol_points: number
+  quest_points: number
+  referral_points: number
   role: Role
+  social_points: number
+  total_points: number
   updated_at: string
   wallet: string
+}
+
+export type GetInviteCodesByUserData = {
+  /**
+   * User sql id
+   */
+  id: string
+}
+
+export type GetInviteCodesByUserResponse = {
+  invite_codes: Array<InviteCodePresenter>
 }
 
 export type CreateInviteCodesByUserData = {
@@ -2786,7 +2974,7 @@ export type CreateInviteCodesByUserData = {
 }
 
 export type CreateInviteCodesByUserResponse = {
-  invite_codes: Array<string>
+  invite_codes: Array<InviteCodePresenter>
 }
 
 export type GetLinkedAccountsByUserData = {
@@ -2821,8 +3009,14 @@ export type UpdateUserPointsResponse = {
   id: string
   image?: string | null
   last_login?: string | null
+  nft_points: number
   privy_id?: string | null
+  protocol_points: number
+  quest_points: number
+  referral_points: number
   role: Role
+  social_points: number
+  total_points: number
   updated_at: string
   wallet: string
 }
@@ -2844,10 +3038,30 @@ export type GetUserByIdResponse = {
   id: string
   image?: string | null
   last_login?: string | null
+  nft_points: number
   privy_id?: string | null
+  protocol_points: number
+  quest_points: number
+  referral_points: number
   role: Role
+  social_points: number
+  total_points: number
   updated_at: string
   wallet: string
+}
+
+export type GetUserTagsData = {
+  /**
+   * User sql id or wallet
+   */
+  id: Identifier
+}
+
+export type GetUserTagsResponse = {
+  data: Array<IdentityPresenter>
+  limit: number
+  page: number
+  total: number
 }
 
 export type GetUserTotalsData = {
@@ -2873,12 +3087,18 @@ export type GetUserTotalsResponse = {
   follower_count: number
   id?: string | null
   image?: string | null
+  nft_points: number
   privy_id?: string | null
+  protocol_points: number
+  quest_points: number
+  referral_points: number
+  total?: number | null
   total_claims: number
   total_delta: string
   total_entry_fees: string
   total_exit_fees: string
   total_identities: number
+  total_points: number
   total_position_value: string
   total_position_value_against_claims: string
   total_position_value_for_claims: string
@@ -2891,7 +3111,6 @@ export type GetUserTotalsResponse = {
   total_positions_on_identities: number
   total_protocol_fee_paid: string
   updated_at?: string | null
-  user_points: number
   wallet: string
 }
 
@@ -2912,6 +3131,22 @@ export type $OpenApiTs = {
          * Receive message from Alchemy
          */
         200: unknown
+      }
+    }
+  }
+  '/is_wallet/{address}': {
+    get: {
+      req: {
+        /**
+         * Address to check
+         */
+        address: string
+      }
+      res: {
+        /**
+         * Check if address is a wallet or contract
+         */
+        200: boolean
       }
     }
   }
@@ -2987,11 +3222,23 @@ export type $OpenApiTs = {
           min_deposit: string
           min_share: string
           net_user_assets: string
+          object_share_price: string
+          object_shares: string
+          object_vault_assets: string
+          object_vault_id: string
+          predicate_share_price: string
+          predicate_shares: string
+          predicate_vault_assets: string
+          predicate_vault_id: string
           protocol_fee: string
           protocol_fee_paid: string
           protocol_vault?: string | null
           raw_input_data: string
           share_price: string
+          subject_share_price: string
+          subject_shares: string
+          subject_vault_assets: string
+          subject_vault_id: string
           timestamp: string
           total_assets: string
           total_shares: string
@@ -3006,6 +3253,19 @@ export type $OpenApiTs = {
     }
   }
   '/activities/{id}/retry': {
+    post: {
+      req: {
+        /**
+         * sql id
+         */
+        id: string
+      }
+      res: {
+        200: unknown
+      }
+    }
+  }
+  '/activities/{id}/retry_log': {
     post: {
       req: {
         /**
@@ -3256,6 +3516,10 @@ export type $OpenApiTs = {
           user_conviction_for: string
           vault_id: string
         }
+        /**
+         * Record not found in the DB
+         */
+        404: unknown
       }
     }
     put: {
@@ -3780,27 +4044,14 @@ export type $OpenApiTs = {
       }
     }
   }
-  '/invite_codes': {
-    post: {
-      req: {
-        requestBody: NewPosition
-      }
-      res: {
-        /**
-         * Allow admins to create invite codes
-         */
-        200: unknown
-      }
-    }
-  }
   '/invite_codes/redeem': {
     post: {
       req: {
-        requestBody: NewPosition
+        requestBody: RedeemBody
       }
       res: {
         /**
-         * Redeemed valid invite code
+         * Associate valid invite code with current user
          */
         200: unknown
       }
@@ -4287,6 +4538,30 @@ export type $OpenApiTs = {
       }
     }
   }
+  '/user_quest/quest/{quest_id}': {
+    get: {
+      req: {
+        questId: string
+      }
+      res: {
+        /**
+         * Get the user quest associated with the quest id and the user
+         */
+        200: {
+          date_completed?: string | null
+          date_started: string
+          id: string
+          point_multiplier: number
+          progress: number
+          quest_completion_object_id?: string | null
+          quest_condition: QuestCondition
+          quest_id: string
+          status: QuestStatus
+          user_id: string
+        }
+      }
+    }
+  }
   '/user_quest/search': {
     post: {
       req: {
@@ -4441,8 +4716,14 @@ export type $OpenApiTs = {
           id: string
           image?: string | null
           last_login?: string | null
+          nft_points: number
           privy_id?: string | null
+          protocol_points: number
+          quest_points: number
+          referral_points: number
           role: Role
+          social_points: number
+          total_points: number
           updated_at: string
           wallet: string
         }
@@ -4465,8 +4746,14 @@ export type $OpenApiTs = {
           id: string
           image?: string | null
           last_login?: string | null
+          nft_points: number
           privy_id?: string | null
+          protocol_points: number
+          quest_points: number
+          referral_points: number
           role: Role
+          social_points: number
+          total_points: number
           updated_at: string
           wallet: string
         }
@@ -4594,8 +4881,14 @@ export type $OpenApiTs = {
           id: string
           image?: string | null
           last_login?: string | null
+          nft_points: number
           privy_id?: string | null
+          protocol_points: number
+          quest_points: number
+          referral_points: number
           role: Role
+          social_points: number
+          total_points: number
           updated_at: string
           wallet: string
         }
@@ -4624,8 +4917,14 @@ export type $OpenApiTs = {
           id: string
           image?: string | null
           last_login?: string | null
+          nft_points: number
           privy_id?: string | null
+          protocol_points: number
+          quest_points: number
+          referral_points: number
           role: Role
+          social_points: number
+          total_points: number
           updated_at: string
           wallet: string
         }
@@ -4654,8 +4953,14 @@ export type $OpenApiTs = {
           id: string
           image?: string | null
           last_login?: string | null
+          nft_points: number
           privy_id?: string | null
+          protocol_points: number
+          quest_points: number
+          referral_points: number
           role: Role
+          social_points: number
+          total_points: number
           updated_at: string
           wallet: string
         }
@@ -4683,8 +4988,14 @@ export type $OpenApiTs = {
           id: string
           image?: string | null
           last_login?: string | null
+          nft_points: number
           privy_id?: string | null
+          protocol_points: number
+          quest_points: number
+          referral_points: number
           role: Role
+          social_points: number
+          total_points: number
           updated_at: string
           wallet: string
         }
@@ -4711,8 +5022,14 @@ export type $OpenApiTs = {
           id: string
           image?: string | null
           last_login?: string | null
+          nft_points: number
           privy_id?: string | null
+          protocol_points: number
+          quest_points: number
+          referral_points: number
           role: Role
+          social_points: number
+          total_points: number
           updated_at: string
           wallet: string
         }
@@ -4741,8 +5058,14 @@ export type $OpenApiTs = {
           id: string
           image?: string | null
           last_login?: string | null
+          nft_points: number
           privy_id?: string | null
+          protocol_points: number
+          quest_points: number
+          referral_points: number
           role: Role
+          social_points: number
+          total_points: number
           updated_at: string
           wallet: string
         }
@@ -4750,6 +5073,22 @@ export type $OpenApiTs = {
     }
   }
   '/users/{id}/invite_codes': {
+    get: {
+      req: {
+        /**
+         * User sql id
+         */
+        id: string
+      }
+      res: {
+        /**
+         * Invite codes created for user
+         */
+        200: {
+          invite_codes: Array<InviteCodePresenter>
+        }
+      }
+    }
     post: {
       req: {
         /**
@@ -4762,7 +5101,7 @@ export type $OpenApiTs = {
          * Invite codes created for user
          */
         200: {
-          invite_codes: Array<string>
+          invite_codes: Array<InviteCodePresenter>
         }
       }
     }
@@ -4811,8 +5150,14 @@ export type $OpenApiTs = {
           id: string
           image?: string | null
           last_login?: string | null
+          nft_points: number
           privy_id?: string | null
+          protocol_points: number
+          quest_points: number
+          referral_points: number
           role: Role
+          social_points: number
+          total_points: number
           updated_at: string
           wallet: string
         }
@@ -4841,10 +5186,37 @@ export type $OpenApiTs = {
           id: string
           image?: string | null
           last_login?: string | null
+          nft_points: number
           privy_id?: string | null
+          protocol_points: number
+          quest_points: number
+          referral_points: number
           role: Role
+          social_points: number
+          total_points: number
           updated_at: string
           wallet: string
+        }
+      }
+    }
+  }
+  '/users/{id}/tags': {
+    get: {
+      req: {
+        /**
+         * User sql id or wallet
+         */
+        id: Identifier
+      }
+      res: {
+        /**
+         * get identities tagged by user
+         */
+        200: {
+          data: Array<IdentityPresenter>
+          limit: number
+          page: number
+          total: number
         }
       }
     }
@@ -4877,12 +5249,18 @@ export type $OpenApiTs = {
           follower_count: number
           id?: string | null
           image?: string | null
+          nft_points: number
           privy_id?: string | null
+          protocol_points: number
+          quest_points: number
+          referral_points: number
+          total?: number | null
           total_claims: number
           total_delta: string
           total_entry_fees: string
           total_exit_fees: string
           total_identities: number
+          total_points: number
           total_position_value: string
           total_position_value_against_claims: string
           total_position_value_for_claims: string
@@ -4895,7 +5273,6 @@ export type $OpenApiTs = {
           total_positions_on_identities: number
           total_protocol_fee_paid: string
           updated_at?: string | null
-          user_points: number
           wallet: string
         }
       }

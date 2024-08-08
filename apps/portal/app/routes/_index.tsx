@@ -3,6 +3,7 @@ import logger from '@lib/utils/logger'
 import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
 import { onboardingModalCookie } from '@server/onboarding'
 import { getPrivyTokens } from '@server/privy'
+import { PATHS } from 'app/consts'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const cookieHeader = request.headers.get('Cookie')
@@ -18,7 +19,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     if (redirectTo) {
       throw redirect(redirectTo)
     }
-    throw redirect('/app/profile')
+    throw redirect(PATHS.PROFILE)
   }
 
   if (!sessionToken) {

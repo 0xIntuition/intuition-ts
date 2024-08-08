@@ -20,8 +20,8 @@ import {
   CREATE_RESOURCE_ROUTE,
   GENERIC_ERROR_MSG,
   MULTIVAULT_CONTRACT_ADDRESS,
-} from 'consts'
-import { TransactionActionType } from 'types/transaction'
+} from 'app/consts'
+import { TransactionActionType } from 'app/types/transaction'
 import { formatUnits } from 'viem'
 import { useAccount, usePublicClient, useWalletClient } from 'wagmi'
 
@@ -40,8 +40,9 @@ export default function TagsReview({
 }: TagsReviewProps) {
   const feeFetcher = useLoaderFetcher<CreateLoaderData>(CREATE_RESOURCE_ROUTE)
 
-  const { tripleCost } = (feeFetcher.data as CreateLoaderData) ?? {
+  const { tripleCost, minDeposit } = (feeFetcher.data as CreateLoaderData) ?? {
     tripleCost: BigInt(0),
+    minDeposit: BigInt(0),
   }
 
   const { data: walletClient } = useWalletClient()
@@ -89,7 +90,9 @@ export default function TagsReview({
             predicateHasTagVaultIds,
             objectTagVaultIds,
           ],
-          value: BigInt(tripleCost) * BigInt(subjectIdentityVaultIds.length),
+          value:
+            BigInt(tripleCost) * BigInt(subjectIdentityVaultIds.length) +
+            BigInt(minDeposit) * BigInt(subjectIdentityVaultIds.length),
         })
         dispatch({ type: 'TRANSACTION_PENDING' })
         if (txHash) {

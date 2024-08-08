@@ -34,7 +34,11 @@ describe('Tags', () => {
             <button
               class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 text-base font-normal flex items-center cursor-default pl-2"
             >
-              keyboard
+              <p
+                class="text-primary text-base font-normal"
+              >
+                keyboard
+              </p>
               <span
                 class="h-[2px] w-[2px] bg-primary mx-1"
               />
@@ -43,7 +47,11 @@ describe('Tags', () => {
             <button
               class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 text-base font-normal flex items-center cursor-default pl-2"
             >
-              ergonomic
+              <p
+                class="text-primary text-base font-normal"
+              >
+                ergonomic
+              </p>
               <span
                 class="h-[2px] w-[2px] bg-primary mx-1"
               />
@@ -52,7 +60,11 @@ describe('Tags', () => {
             <button
               class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 text-base font-normal flex items-center cursor-default pl-2"
             >
-              wireless
+              <p
+                class="text-primary text-base font-normal"
+              >
+                wireless
+              </p>
               <span
                 class="h-[2px] w-[2px] bg-primary mx-1"
               />
@@ -61,7 +73,11 @@ describe('Tags', () => {
             <button
               class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 text-base font-normal flex items-center cursor-default pl-2"
             >
-              gaming
+              <p
+                class="text-primary text-base font-normal"
+              >
+                gaming
+              </p>
               <span
                 class="h-[2px] w-[2px] bg-primary mx-1"
               />
@@ -70,7 +86,11 @@ describe('Tags', () => {
             <button
               class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 text-base font-normal flex items-center cursor-default pl-2"
             >
-              mechanical
+              <p
+                class="text-primary text-base font-normal"
+              >
+                mechanical
+              </p>
               <span
                 class="h-[2px] w-[2px] bg-primary mx-1"
               />
@@ -79,7 +99,11 @@ describe('Tags', () => {
             <button
               class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 text-base font-normal flex items-center cursor-default pl-2"
             >
-              tech
+              <p
+                class="text-primary text-base font-normal"
+              >
+                tech
+              </p>
               <span
                 class="h-[2px] w-[2px] bg-primary mx-1"
               />
@@ -88,7 +112,11 @@ describe('Tags', () => {
             <button
               class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 text-base font-normal flex items-center cursor-default pl-2"
             >
-              innovation
+              <p
+                class="text-primary text-base font-normal"
+              >
+                innovation
+              </p>
               <span
                 class="h-[2px] w-[2px] bg-primary mx-1"
               />
@@ -97,7 +125,11 @@ describe('Tags', () => {
             <button
               class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 text-base font-normal flex items-center cursor-default pl-2"
             >
-              typing
+              <p
+                class="text-primary text-base font-normal"
+              >
+                typing
+              </p>
               <span
                 class="h-[2px] w-[2px] bg-primary mx-1"
               />
@@ -106,7 +138,11 @@ describe('Tags', () => {
             <button
               class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 text-base font-normal flex items-center cursor-default pl-2"
             >
-              quality
+              <p
+                class="text-primary text-base font-normal"
+              >
+                quality
+              </p>
               <span
                 class="h-[2px] w-[2px] bg-primary mx-1"
               />
@@ -115,7 +151,11 @@ describe('Tags', () => {
             <button
               class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 text-base font-normal flex items-center cursor-default pl-2"
             >
-              brand
+              <p
+                class="text-primary text-base font-normal"
+              >
+                brand
+              </p>
               <span
                 class="h-[2px] w-[2px] bg-primary mx-1"
               />
@@ -128,9 +168,9 @@ describe('Tags', () => {
             </p>
           </div>
           <button
-            class="flex justify-center items-center gap-2 text-sm font-medium border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted primary-gradient-subtle text-primary/60 border-primary/10 rounded-lg hover:text-primary disabled:from-muted disabled:to-muted shadow-md-subtle px-3 py-1"
+            class="flex justify-center items-center gap-2 text-sm font-medium border disabled:bg-muted aria-disabled:bg-muted disabled:text-muted-foreground aria-disabled:text-muted-foreground disabled:border-muted aria-disabled:border-muted aria-disabled:pointer-events-none primary-gradient-subtle text-primary/60 border-primary/10 rounded-lg hover:text-primary disabled:from-muted aria-disabled:from-muted disabled:to-muted aria-disabled:to-muted shadow-md-subtle px-3 py-1 max-sm:py-2 max-sm:text-base"
           >
-            Add tags
+            View all tags
           </button>
         </div>
       </DocumentFragment>
@@ -165,7 +205,11 @@ describe('Tags', () => {
             <button
               class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 text-base font-normal flex items-center cursor-default pl-2"
             >
-              keyboard
+              <p
+                class="text-primary text-base font-normal"
+              >
+                keyboard
+              </p>
               <span
                 class="h-[2px] w-[2px] bg-primary mx-1"
               />
@@ -174,7 +218,11 @@ describe('Tags', () => {
             <button
               class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 text-base font-normal flex items-center cursor-default pl-2"
             >
-              ergonomic
+              <p
+                class="text-primary text-base font-normal"
+              >
+                ergonomic
+              </p>
               <span
                 class="h-[2px] w-[2px] bg-primary mx-1"
               />
@@ -183,7 +231,11 @@ describe('Tags', () => {
             <button
               class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 text-base font-normal flex items-center cursor-default pl-2"
             >
-              wireless
+              <p
+                class="text-primary text-base font-normal"
+              >
+                wireless
+              </p>
               <span
                 class="h-[2px] w-[2px] bg-primary mx-1"
               />
@@ -192,7 +244,11 @@ describe('Tags', () => {
             <button
               class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 text-base font-normal flex items-center cursor-default pl-2"
             >
-              gaming
+              <p
+                class="text-primary text-base font-normal"
+              >
+                gaming
+              </p>
               <span
                 class="h-[2px] w-[2px] bg-primary mx-1"
               />
@@ -201,7 +257,11 @@ describe('Tags', () => {
             <button
               class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 text-base font-normal flex items-center cursor-default pl-2"
             >
-              mechanical
+              <p
+                class="text-primary text-base font-normal"
+              >
+                mechanical
+              </p>
               <span
                 class="h-[2px] w-[2px] bg-primary mx-1"
               />
@@ -210,7 +270,11 @@ describe('Tags', () => {
             <button
               class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 text-base font-normal flex items-center cursor-default pl-2"
             >
-              tech
+              <p
+                class="text-primary text-base font-normal"
+              >
+                tech
+              </p>
               <span
                 class="h-[2px] w-[2px] bg-primary mx-1"
               />
@@ -219,7 +283,11 @@ describe('Tags', () => {
             <button
               class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 text-base font-normal flex items-center cursor-default pl-2"
             >
-              innovation
+              <p
+                class="text-primary text-base font-normal"
+              >
+                innovation
+              </p>
               <span
                 class="h-[2px] w-[2px] bg-primary mx-1"
               />
@@ -228,7 +296,11 @@ describe('Tags', () => {
             <button
               class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 text-base font-normal flex items-center cursor-default pl-2"
             >
-              typing
+              <p
+                class="text-primary text-base font-normal"
+              >
+                typing
+              </p>
               <span
                 class="h-[2px] w-[2px] bg-primary mx-1"
               />
@@ -237,7 +309,11 @@ describe('Tags', () => {
             <button
               class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 text-base font-normal flex items-center cursor-default pl-2"
             >
-              quality
+              <p
+                class="text-primary text-base font-normal"
+              >
+                quality
+              </p>
               <span
                 class="h-[2px] w-[2px] bg-primary mx-1"
               />
@@ -246,7 +322,11 @@ describe('Tags', () => {
             <button
               class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 text-base font-normal flex items-center cursor-default pl-2"
             >
-              brand
+              <p
+                class="text-primary text-base font-normal"
+              >
+                brand
+              </p>
               <span
                 class="h-[2px] w-[2px] bg-primary mx-1"
               />
@@ -254,9 +334,9 @@ describe('Tags', () => {
             </button>
           </div>
           <button
-            class="flex justify-center items-center gap-2 text-sm font-medium border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted primary-gradient-subtle text-primary/60 border-primary/10 rounded-lg hover:text-primary disabled:from-muted disabled:to-muted shadow-md-subtle px-3 py-1"
+            class="flex justify-center items-center gap-2 text-sm font-medium border disabled:bg-muted aria-disabled:bg-muted disabled:text-muted-foreground aria-disabled:text-muted-foreground disabled:border-muted aria-disabled:border-muted aria-disabled:pointer-events-none primary-gradient-subtle text-primary/60 border-primary/10 rounded-lg hover:text-primary disabled:from-muted aria-disabled:from-muted disabled:to-muted aria-disabled:to-muted shadow-md-subtle px-3 py-1 max-sm:py-2 max-sm:text-base"
           >
-            Add tags
+            View all tags
           </button>
         </div>
       </DocumentFragment>

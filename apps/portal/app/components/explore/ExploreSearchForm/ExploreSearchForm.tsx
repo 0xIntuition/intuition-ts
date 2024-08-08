@@ -40,7 +40,7 @@ const ExploreSearchForm = ({
     <Form
       method="get"
       onChange={handleChange}
-      className="flex flex-col rounded-lg p-5 border border-1 theme-border bg-card/70"
+      className="flex flex-col rounded-lg p-5 border border-1 theme-border bg-card/70 gap-4 max-md:w-full"
     >
       <ExploreSearchInput
         searchParam={searchParam}
@@ -49,7 +49,7 @@ const ExploreSearchForm = ({
       />
       {searchParam === 'identity' && (
         <>
-          <Separator className="my-5 in-out-gradient-strong" />
+          <Separator className="my-5 in-out-gradient-strong max-md:m-0" />
           <ExploreAddTags
             inputId={tagsInputId}
             initialValue={searchParams.get(tagsInputId)}

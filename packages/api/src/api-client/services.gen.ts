@@ -6,6 +6,8 @@ import { request as __request } from './core/request'
 import type {
   ActivateLinkedAccountData,
   ActivateLinkedAccountResponse,
+  AddressIsWalletData,
+  AddressIsWalletResponse,
   AddWebhookData,
   AddWebhookResponse,
   AlchemyWebhookData,
@@ -24,8 +26,6 @@ import type {
   CreateIdentityResponse,
   CreateInviteCodesByUserData,
   CreateInviteCodesByUserResponse,
-  CreateInviteCodesData,
-  CreateInviteCodesResponse,
   CreateLinkedAccountData,
   CreateLinkedAccountResponse,
   CreatePositionData,
@@ -64,6 +64,8 @@ import type {
   GetIdentityPositionsResponse,
   GetIdentityTagsData,
   GetIdentityTagsResponse,
+  GetInviteCodesByUserData,
+  GetInviteCodesByUserResponse,
   GetLinkedAccountByIdData,
   GetLinkedAccountByIdResponse,
   GetLinkedAccountsByUserData,
@@ -91,10 +93,14 @@ import type {
   GetUserIdentitiesResponse,
   GetUserQuestByIdData,
   GetUserQuestByIdResponse,
+  GetUserQuestByQuestIdData,
+  GetUserQuestByQuestIdResponse,
   GetUsersData,
   GetUsersPositionsData,
   GetUsersPositionsResponse,
   GetUsersResponse,
+  GetUserTagsData,
+  GetUserTagsResponse,
   GetUserTotalsData,
   GetUserTotalsResponse,
   IdentitySummaryData,
@@ -109,6 +115,8 @@ import type {
   ReissueApiKeyResponse,
   RetryActivityData,
   RetryActivityResponse,
+  RetryLogData,
+  RetryLogResponse,
   RevokeResponse,
   RunDynamicQueryData,
   RunDynamicQueryResponse,
@@ -159,6 +167,24 @@ export class AlchemyControllerService {
       url: '/Alchemy',
       body: data.requestBody,
       mediaType: 'application/octet-stream',
+    })
+  }
+
+  /**
+   * @param data The data for the request.
+   * @param data.address Address to check
+   * @returns boolean Check if address is a wallet or contract
+   * @throws ApiError
+   */
+  public static addressIsWallet(
+    data: AddressIsWalletData,
+  ): CancelablePromise<AddressIsWalletResponse> {
+    return __request(OpenAPI, {
+      method: 'GET',
+      url: '/is_wallet/{address}',
+      path: {
+        address: data.address,
+      },
     })
   }
 }
@@ -236,6 +262,24 @@ export class ActivitiesService {
     return __request(OpenAPI, {
       method: 'POST',
       url: '/activities/{id}/retry',
+      path: {
+        id: data.id,
+      },
+    })
+  }
+
+  /**
+   * @param data The data for the request.
+   * @param data.id sql id
+   * @returns unknown
+   * @throws ApiError
+   */
+  public static retryLog(
+    data: RetryLogData,
+  ): CancelablePromise<RetryLogResponse> {
+    return __request(OpenAPI, {
+      method: 'POST',
+      url: '/activities/{id}/retry_log',
       path: {
         id: data.id,
       },
@@ -472,6 +516,9 @@ export class ClaimsService {
       url: '/claims/{id}',
       path: {
         id: data.id,
+      },
+      errors: {
+        404: 'Record not found in the DB',
       },
     })
   }
@@ -913,24 +960,7 @@ export class InviteCodesService {
   /**
    * @param data The data for the request.
    * @param data.requestBody
-   * @returns unknown Allow admins to create invite codes
-   * @throws ApiError
-   */
-  public static createInviteCodes(
-    data: CreateInviteCodesData,
-  ): CancelablePromise<CreateInviteCodesResponse> {
-    return __request(OpenAPI, {
-      method: 'POST',
-      url: '/invite_codes',
-      body: data.requestBody,
-      mediaType: 'application/json',
-    })
-  }
-
-  /**
-   * @param data The data for the request.
-   * @param data.requestBody
-   * @returns unknown Redeemed valid invite code
+   * @returns unknown Associate valid invite code with current user
    * @throws ApiError
    */
   public static redeemInviteCode(
@@ -1333,6 +1363,24 @@ export class QuestsService {
 export class UserQuestsService {
   /**
    * @param data The data for the request.
+   * @param data.questId
+   * @returns unknown Get the user quest associated with the quest id and the user
+   * @throws ApiError
+   */
+  public static getUserQuestByQuestId(
+    data: GetUserQuestByQuestIdData,
+  ): CancelablePromise<GetUserQuestByQuestIdResponse> {
+    return __request(OpenAPI, {
+      method: 'GET',
+      url: '/user_quest/quest/{quest_id}',
+      path: {
+        quest_id: data.questId,
+      },
+    })
+  }
+
+  /**
+   * @param data The data for the request.
    * @param data.requestBody
    * @returns unknown Filter quests
    * @throws ApiError
@@ -1717,6 +1765,24 @@ export class UsersService {
    * @returns unknown Invite codes created for user
    * @throws ApiError
    */
+  public static getInviteCodesByUser(
+    data: GetInviteCodesByUserData,
+  ): CancelablePromise<GetInviteCodesByUserResponse> {
+    return __request(OpenAPI, {
+      method: 'GET',
+      url: '/users/{id}/invite_codes',
+      path: {
+        id: data.id,
+      },
+    })
+  }
+
+  /**
+   * @param data The data for the request.
+   * @param data.id User sql id
+   * @returns unknown Invite codes created for user
+   * @throws ApiError
+   */
   public static createInviteCodesByUser(
     data: CreateInviteCodesByUserData,
   ): CancelablePromise<CreateInviteCodesByUserResponse> {
@@ -1780,6 +1846,24 @@ export class UsersService {
     return __request(OpenAPI, {
       method: 'GET',
       url: '/users/{id}/private',
+      path: {
+        id: data.id,
+      },
+    })
+  }
+
+  /**
+   * @param data The data for the request.
+   * @param data.id User sql id or wallet
+   * @returns unknown get identities tagged by user
+   * @throws ApiError
+   */
+  public static getUserTags(
+    data: GetUserTagsData,
+  ): CancelablePromise<GetUserTagsResponse> {
+    return __request(OpenAPI, {
+      method: 'GET',
+      url: '/users/{id}/tags',
       path: {
         id: data.id,
       },

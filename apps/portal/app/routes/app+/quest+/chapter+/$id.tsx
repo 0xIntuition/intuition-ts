@@ -8,15 +8,16 @@ import {
 } from '@0xintuition/1ui'
 import { QuestsService, QuestStatus, UserQuestsService } from '@0xintuition/api'
 
-import questPlaceholder from '@assets/quest-placeholder.png'
 import { QuestCriteriaCard } from '@components/quest/quest-criteria-card'
 import QuestStatusCard from '@components/quest/quest-status-card'
 import { MDXContent } from '@content-collections/mdx/react'
-import { fetchWrapper, invariant } from '@lib/utils/misc'
+import { invariant } from '@lib/utils/misc'
 import { getQuestContentBySlug, getQuestCriteria } from '@lib/utils/quest'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { Link, useLoaderData } from '@remix-run/react'
+import { fetchWrapper } from '@server/api'
 import { requireUserId } from '@server/auth'
+import { FALLBACK_QUEST_PLACEHOLDER_IMAGE } from 'app/consts'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const id = params.id
@@ -24,13 +25,13 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const userId = await requireUserId(request)
   invariant(userId, 'Unauthorized')
 
-  const quest = await fetchWrapper({
+  const quest = await fetchWrapper(request, {
     method: QuestsService.getQuest,
     args: {
       questId: id,
     },
   })
-  const status = await fetchWrapper({
+  const status = await fetchWrapper(request, {
     method: UserQuestsService.checkQuestStatus,
     args: {
       questId: id,
@@ -66,7 +67,7 @@ export default function Quests() {
     <div className="px-10 w-full max-w-7xl mx-auto flex flex-col gap-10">
       <div className="flex flex-col gap-10 mb-5">
         <img
-          src={quest.image ?? questPlaceholder}
+          src={quest.image ?? FALLBACK_QUEST_PLACEHOLDER_IMAGE}
           alt={'quest hero'}
           className="object-cover w-full h-[350px] border-x border-b border-border/20 rounded-b-lg"
         />

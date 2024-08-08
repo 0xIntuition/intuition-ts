@@ -7,7 +7,7 @@ interface SearchProps {
 export function Search({ handleSearchChange }: SearchProps) {
   return (
     <Input
-      className="w-48"
+      className="w-48 max-lg:w-full"
       onChange={handleSearchChange}
       placeholder="Search"
       startAdornment="magnifying-glass"

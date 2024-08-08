@@ -1,4 +1,4 @@
-import { DESCRIPTION_MAX_LENGTH, MAX_UPLOAD_SIZE } from 'consts'
+import { DESCRIPTION_MAX_LENGTH, MAX_UPLOAD_SIZE } from 'app/consts'
 import { z } from 'zod'
 
 const urlWithoutHttps = z
@@ -22,11 +22,8 @@ export function createIdentitySchema() {
   return z.object({
     display_name: z
       .string({ required_error: 'Please enter an identity name.' })
-      .min(2, {
-        message: 'Identity name must be at least 2 characters.',
-      })
-      .max(30, {
-        message: 'Identity name must not be longer than 30 characters.',
+      .max(100, {
+        message: 'Identity name must not be longer than 100 characters.',
       }),
     description: z
       .string({
@@ -55,6 +52,7 @@ export function createIdentitySchema() {
     creator: z.string().optional(),
     contract: z.string().optional(),
     predicate: z.boolean().optional(),
+    is_contract: z.boolean().optional(),
   })
 }
 
@@ -69,5 +67,15 @@ export function imageUrlSchema() {
         return ['image/jpeg', 'image/png', 'image/gif'].includes(file.type)
       }, 'File must be a .png, .jpg, .jpeg, or .gif')
       .or(z.string()),
+  })
+}
+
+export function inviteCodeSchema() {
+  return z.object({
+    invite_code: z
+      .string({ required_error: 'Please enter an invite code.' })
+      .min(6, {
+        message: 'Invite codes are 6 characters.',
+      }),
   })
 }

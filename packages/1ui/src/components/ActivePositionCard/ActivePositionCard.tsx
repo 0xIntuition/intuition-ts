@@ -6,7 +6,7 @@ import { Tag, TagSize, TagVariant, Text, TextVariant } from '..'
 
 export interface ActivePositionCardProps
   extends React.HTMLAttributes<HTMLDivElement> {
-  claimPosition?: ClaimPositionType
+  claimPosition?: ClaimPositionType | null
   value: number
   currency?: CurrencyType
 }

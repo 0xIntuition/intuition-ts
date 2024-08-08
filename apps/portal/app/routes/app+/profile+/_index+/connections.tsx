@@ -1,7 +1,7 @@
 import { ReactNode, Suspense } from 'react'
 
 import {
-  ErrorStateCard,
+  EmptyStateCard,
   Tabs,
   TabsContent,
   TabsList,
@@ -24,14 +24,14 @@ import {
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { getConnectionsData } from '@lib/services/connections'
 import { formatBalance, invariant } from '@lib/utils/misc'
-import { defer, LoaderFunctionArgs } from '@remix-run/node'
-import { Await, useRouteLoaderData } from '@remix-run/react'
+import { defer, LoaderFunctionArgs, redirect } from '@remix-run/node'
+import { Await, useRouteLoaderData, useSearchParams } from '@remix-run/react'
 import { requireUserWallet } from '@server/auth'
 import {
   NO_USER_IDENTITY_ERROR,
   NO_USER_TOTALS_ERROR,
   NO_WALLET_ERROR,
-} from 'consts'
+} from 'app/consts'
 
 import { ProfileLoaderData } from './_layout'
 
@@ -39,8 +39,14 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const userWallet = await requireUserWallet(request)
   invariant(userWallet, NO_WALLET_ERROR)
 
+  const url = new URL(request.url)
+  if (!url.searchParams.get('tab')) {
+    url.searchParams.set('tab', ConnectionsHeaderVariants.followers)
+    return redirect(url.toString())
+  }
+
   return defer({
-    connectionsData: getConnectionsData({ userWallet, request }),
+    connectionsData: getConnectionsData({ request, userWallet }),
   })
 }
 
@@ -63,7 +69,7 @@ const TabContent = ({
     return null
   }
   return (
-    <TabsContent value={value} className="w-full">
+    <TabsContent value={value} className="flex flex-col w-full gap-6">
       <ConnectionsHeader
         variant={variant}
         subject={claim.subject}
@@ -78,6 +84,9 @@ const TabContent = ({
 }
 
 export default function ProfileConnections() {
+  const [searchParams, setSearchParams] = useSearchParams()
+  const tab = searchParams.get('tab') || 'followers'
+
   const { connectionsData } = useLiveLoader<typeof loader>(['attest'])
   const { userIdentity } =
     useRouteLoaderData<ProfileLoaderData>(
@@ -85,9 +94,13 @@ export default function ProfileConnections() {
     ) ?? {}
   invariant(userIdentity, NO_USER_IDENTITY_ERROR)
 
+  const handleTabChange = (value: string) => {
+    setSearchParams({ tab: value })
+  }
+
   return (
-    <div className="flex-col justify-start items-start flex w-full">
-      <div className="self-stretch justify-between items-center inline-flex mb-6">
+    <div className="flex flex-col w-full gap-6">
+      <div className="self-stretch justify-between items-center inline-flex">
         <Text
           variant="headline"
           weight="medium"
@@ -99,6 +112,8 @@ export default function ProfileConnections() {
       <ConnectionsContent
         userIdentity={userIdentity}
         connectionsData={connectionsData}
+        tab={tab}
+        onTabChange={handleTabChange}
       />
     </div>
   )
@@ -107,11 +122,15 @@ export default function ProfileConnections() {
 function ConnectionsContent({
   userIdentity,
   connectionsData,
+  tab,
+  onTabChange,
 }: {
   userIdentity: IdentityPresenter
   connectionsData: Promise<NonNullable<
     Awaited<ReturnType<typeof getConnectionsData>>
   > | null>
+  tab: string
+  onTabChange: (value: string) => void
 }) {
   const { userTotals } =
     useRouteLoaderData<ProfileLoaderData>(
@@ -122,29 +141,22 @@ function ConnectionsContent({
   return (
     <Suspense
       fallback={
-        <>
+        <div className="flex flex-col w-full gap-6">
           <TabsSkeleton numOfTabs={2} />
           <DataHeaderSkeleton />
           <PaginatedListSkeleton />
-        </>
+        </div>
       }
     >
-      <Await
-        resolve={connectionsData}
-        errorElement={
-          <ErrorStateCard
-            message="This user has no follow claim yet. A follow claim will be
-                created when the first person follows them."
-          />
-        }
-      >
+      <Await resolve={connectionsData} errorElement={<></>}>
         {(resolvedConnectionsData) => {
           if (!resolvedConnectionsData) {
             return (
-              <Text>
-                This user has no follow claim yet. A follow claim will be
-                created when the first person follows them.
-              </Text>
+              <EmptyStateCard
+                message={
+                  'This user has no follow claim yet. A follow claim will be created when the first person follows them.'
+                }
+              />
             )
           }
           const {
@@ -156,20 +168,17 @@ function ConnectionsContent({
           } = resolvedConnectionsData
 
           return (
-            <Tabs
-              defaultValue={ConnectionsHeaderVariants.followers}
-              className="w-full"
-            >
-              <TabsList className="mb-4">
+            <Tabs value={tab} onValueChange={onTabChange} className="w-full">
+              <TabsList className="mb-6">
                 <TabsTrigger
                   value={ConnectionsHeaderVariants.followers}
                   label="Followers"
-                  totalCount={followingPagination.totalEntries}
+                  totalCount={followersPagination.totalEntries}
                 />
                 <TabsTrigger
                   value={ConnectionsHeaderVariants.following}
                   label="Following"
-                  totalCount={followersPagination.totalEntries}
+                  totalCount={followingPagination.totalEntries}
                 />
               </TabsList>
               <TabContent
@@ -182,7 +191,7 @@ function ConnectionsContent({
                 <FollowList
                   identities={followers}
                   pagination={followersPagination}
-                  paramPrefix="followers"
+                  paramPrefix={ConnectionsHeaderVariants.followers}
                 />
               </TabContent>
               <TabContent
@@ -195,7 +204,7 @@ function ConnectionsContent({
                 <FollowList
                   identities={following}
                   pagination={followingPagination}
-                  paramPrefix="following"
+                  paramPrefix={ConnectionsHeaderVariants.following}
                 />
               </TabContent>
             </Tabs>

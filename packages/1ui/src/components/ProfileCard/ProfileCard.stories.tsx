@@ -1,5 +1,3 @@
-import React from 'react'
-
 import type { Meta, StoryObj } from '@storybook/react'
 import { Button } from 'components/Button'
 import { Identity } from 'types'
@@ -31,8 +29,14 @@ const meta: Meta<typeof ProfileCard> = {
         type: { summary: 'string' },
       },
     },
-    walletAddress: {
+    id: {
       description: 'Wallet address of the identity',
+      table: {
+        type: { summary: 'string' },
+      },
+    },
+    vaultId: {
+      description: 'Vault ID of the identity',
       table: {
         type: { summary: 'string' },
       },
@@ -46,7 +50,14 @@ const meta: Meta<typeof ProfileCard> = {
         },
       },
     },
-    link: {
+    ipfsLink: {
+      description: 'Link related IPFS document',
+      table: {
+        type: { summary: 'string' },
+        defaultValue: { summary: 'undefined' },
+      },
+    },
+    externalLink: {
       description: 'Link related to the entity (optional)',
       table: {
         type: { summary: 'string' },
@@ -72,7 +83,8 @@ export const BasicUsage: Story = {
     variant: 'user',
     avatarSrc: 'https://avatars.githubusercontent.com/u/94311139?s=200&v=4"',
     name: 'John Doe',
-    walletAddress: '0x1234567890abcdef1234567890abcdef12345678',
+    id: '0x1234567890abcdef1234567890abcdef12345678',
+    vaultId: '131',
     stats: {
       numberOfFollowers: 123,
       numberOfFollowing: 45,
@@ -101,11 +113,14 @@ export const EntityProfile: Story = {
     variant: 'non-user',
     avatarSrc: 'https://avatars.githubusercontent.com/u/94311139?s=200&v=4"',
     name: 'Blockchain Corp',
-    walletAddress: '0x1234567890abcdef1234567890abcdef12345678',
+    id: '0x1234567890abcdef1234567890abcdef12345678',
+    vaultId: '131',
     stats: {
       numberOfFollowers: 300,
     },
-    link: 'https://blockchaincorp.com',
+    ipfsLink:
+      'https://ipfs.io/ipfs/QmYch4WMF5p7yxjEcuZJxNa7AFR1ZeQhCRsn9xG7P3koXo',
+    externalLink: 'https://blockchaincorp.com',
     bio: 'Blockchain Corp is a leading company in blockchain technology. Visit our website for more information about how you can benefit from our services.',
   },
   render: (args: ProfileCardProps) => (

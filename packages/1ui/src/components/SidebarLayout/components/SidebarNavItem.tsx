@@ -1,7 +1,11 @@
+import { ReactNode } from 'react'
+
 import { type VariantProps } from 'class-variance-authority'
 
 import {
   Button,
+  ButtonSize,
+  ButtonVariant,
   buttonVariants,
   Icon,
   IconNameType,
@@ -16,7 +20,7 @@ import { useSidebarLayoutContext } from './SidebarLayoutProvider'
 
 export interface SidebarNavItemProps
   extends VariantProps<typeof buttonVariants> {
-  iconName: IconNameType
+  iconName: IconNameType | ReactNode
   label: string
   onClick?: () => void
 }
@@ -24,23 +28,39 @@ export interface SidebarNavItemProps
 export const SidebarNavItem = ({
   iconName,
   label,
-  variant,
   onClick,
   ...props
 }: SidebarNavItemProps) => {
-  const { isCollapsed } = useSidebarLayoutContext()
+  const { isMobileView, isCollapsed, setIsCollapsed } =
+    useSidebarLayoutContext()
+
   const buttonProps = {
-    variant,
+    variant: ButtonVariant.navigation,
     className: 'w-full justify-start truncate',
-    onClick,
+    onClick: () => {
+      onClick && onClick()
+      isMobileView && setIsCollapsed(true)
+    },
     ...props,
   }
-  return isCollapsed ? (
+
+  const ImageComponent =
+    typeof iconName === 'string' ? (
+      <Icon name={iconName as IconNameType} />
+    ) : (
+      iconName
+    )
+
+  return isCollapsed && !isMobileView ? (
     <TooltipProvider delayDuration={0}>
       <Tooltip>
-        <TooltipTrigger asChild>
-          <Button size="iconLg" {...buttonProps} className="justify-center">
-            <Icon name={iconName} />
+        <TooltipTrigger asChild className="m-auto">
+          <Button
+            size={isMobileView ? ButtonSize.iconXl : ButtonSize.iconLg}
+            {...buttonProps}
+            className="justify-center"
+          >
+            {ImageComponent}
           </Button>
         </TooltipTrigger>
         <TooltipContent side="right" sideOffset={16}>
@@ -49,8 +69,11 @@ export const SidebarNavItem = ({
       </Tooltip>
     </TooltipProvider>
   ) : (
-    <Button size="lg" {...buttonProps}>
-      <Icon name={iconName} />
+    <Button
+      size={isMobileView ? ButtonSize.xl : ButtonSize.lg}
+      {...buttonProps}
+    >
+      {ImageComponent}
       {label}
     </Button>
   )

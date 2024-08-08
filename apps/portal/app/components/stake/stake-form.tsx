@@ -10,17 +10,27 @@ import {
   Tabs,
   TabsList,
   TabsTrigger,
-  TransactionStatusType,
   Trunctacular,
 } from '@0xintuition/1ui'
 import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
 
 import { TransactionState } from '@components/transaction-state'
 import { stakeModalAtom } from '@lib/state/store'
-import { formatBalance } from '@lib/utils/misc'
+import {
+  formatBalance,
+  getAtomDescription,
+  getAtomImage,
+  getAtomIpfsLink,
+  getAtomLabel,
+  getAtomLink,
+} from '@lib/utils/misc'
 import { type FetcherWithComponents } from '@remix-run/react'
+import { PATHS } from 'app/consts'
+import {
+  TransactionActionType,
+  TransactionStateType,
+} from 'app/types/transaction'
 import { useAtom } from 'jotai'
-import { TransactionActionType, TransactionStateType } from 'types/transaction'
 
 import StakeActions from './stake-actions'
 import StakeInput from './stake-input'
@@ -34,6 +44,7 @@ interface StakeFormProps {
   user_conviction: string
   conviction_price: string
   user_assets: string
+  min_deposit: string
   entry_fee: string
   exit_fee: string
   direction?: 'for' | 'against'
@@ -60,6 +71,7 @@ export default function StakeForm({
   user_conviction,
   conviction_price,
   user_assets,
+  min_deposit,
   entry_fee,
   exit_fee,
   direction,
@@ -92,8 +104,8 @@ export default function StakeForm({
       {state.status === 'idle' ? (
         <>
           <DialogHeader>
-            <DialogTitle className="justify-between">
-              <div className=" flex items-center justify-between w-full mr-2.5">
+            <DialogTitle>
+              <div className="flex items-center justify-between w-full pr-2.5">
                 {modalType === 'identity' ? (
                   <IdentityTag
                     imgSrc={identity?.user?.image ?? identity?.image}
@@ -109,42 +121,69 @@ export default function StakeForm({
                   </IdentityTag>
                 ) : (
                   <Claim
+                    size="md"
+                    link={`${PATHS.CLAIM}/${claim?.claim_id}`}
                     subject={{
-                      imgSrc:
-                        claim?.subject?.user?.image ?? claim?.subject?.image,
-                      label:
-                        claim?.subject?.user?.display_name ??
-                        claim?.subject?.display_name ??
-                        '',
-                      variant: claim?.subject?.user
+                      variant: claim?.subject?.is_user
                         ? Identity.user
                         : Identity.nonUser,
+                      label: getAtomLabel(claim?.subject as IdentityPresenter),
+                      imgSrc: getAtomImage(claim?.subject as IdentityPresenter),
+                      id: claim?.subject?.identity_id,
+                      description: getAtomDescription(
+                        claim?.subject as IdentityPresenter,
+                      ),
+                      ipfsLink: getAtomIpfsLink(
+                        claim?.subject as IdentityPresenter,
+                      ),
+                      link: getAtomLink(claim?.subject as IdentityPresenter),
                     }}
                     predicate={{
-                      imgSrc: claim?.predicate?.image,
-                      label: claim?.predicate?.display_name ?? '',
-                    }}
-                    object={{
-                      imgSrc:
-                        claim?.object?.user?.image ?? claim?.object?.image,
-                      label:
-                        claim?.object?.user?.display_name ??
-                        claim?.object?.display_name ??
-                        '',
-                      variant: claim?.object?.user
+                      variant: claim?.predicate?.is_user
                         ? Identity.user
                         : Identity.nonUser,
+                      label: getAtomLabel(
+                        claim?.predicate as IdentityPresenter,
+                      ),
+                      imgSrc: getAtomImage(
+                        claim?.predicate as IdentityPresenter,
+                      ),
+                      id: claim?.predicate?.identity_id,
+                      description: getAtomDescription(
+                        claim?.predicate as IdentityPresenter,
+                      ),
+                      ipfsLink: getAtomIpfsLink(
+                        claim?.predicate as IdentityPresenter,
+                      ),
+                      link: getAtomLink(claim?.predicate as IdentityPresenter),
+                    }}
+                    object={{
+                      variant: claim?.object?.is_user
+                        ? Identity.user
+                        : Identity.nonUser,
+                      label: getAtomLabel(claim?.object as IdentityPresenter),
+                      imgSrc: getAtomImage(claim?.object as IdentityPresenter),
+                      id: claim?.object?.identity_id,
+                      description: getAtomDescription(
+                        claim?.object as IdentityPresenter,
+                      ),
+                      ipfsLink: getAtomIpfsLink(
+                        claim?.object as IdentityPresenter,
+                      ),
+                      link: getAtomLink(claim?.object as IdentityPresenter),
                     }}
                   />
                 )}
-                <Badge>
+                <Badge className="flex items-center gap-2">
                   <Icon name="wallet" className="h-4 w-4" />
-                  {(+walletBalance).toFixed(2)} ETH
+                  <span className="text-sm text-nowrap">
+                    {(+walletBalance).toFixed(2)} ETH
+                  </span>
                 </Badge>
               </div>
             </DialogTitle>
           </DialogHeader>
-          <div className="h-full w-full flex-col pt-5 px-10 pb-10 gap-5 inline-flex">
+          <div className="h-full w-full flex-col pt-5 px-10 pb-10 gap-5 inline-">
             <Tabs defaultValue={mode}>
               <TabsList>
                 <TabsTrigger
@@ -169,7 +208,7 @@ export default function StakeForm({
             </Tabs>
             <div className="pt-2.5">
               <ActivePositionCard
-                value={Number(formatBalance(user_assets, 18, 4))}
+                value={Number(formatBalance(user_assets, 18, 6))}
                 claimPosition={
                   direction !== undefined
                     ? direction === 'for'
@@ -178,7 +217,7 @@ export default function StakeForm({
                     : undefined
                 }
               />
-              <div className="rounded-t-lg bg-primary-950/15 px-4 pt-2.5">
+              <div className="rounded-t-lg bg-primary-950/15 px-4 pt-5">
                 <StakeInput
                   val={val}
                   setVal={setVal}
@@ -194,6 +233,7 @@ export default function StakeForm({
                   action={mode}
                   setVal={setVal}
                   walletBalance={walletBalance ?? '0'}
+                  minDeposit={min_deposit ?? '0'}
                   userConviction={user_conviction ?? '0'}
                   price={conviction_price ?? '0'}
                 />
@@ -219,7 +259,7 @@ export default function StakeForm({
       ) : (
         <div className="flex flex-col items-center justify-center min-h-96">
           <TransactionState
-            status={state.status as TransactionStatusType}
+            status={state.status}
             txHash={state.txHash}
             type={mode === 'deposit' ? 'deposit' : 'redeem'}
           />

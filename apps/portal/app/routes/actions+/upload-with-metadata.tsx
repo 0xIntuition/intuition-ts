@@ -10,7 +10,7 @@ import {
   type UploadHandler,
 } from '@remix-run/node'
 import { uploadImage } from '@server/cloudinary'
-import { MAX_UPLOAD_SIZE } from 'consts'
+import { MAX_UPLOAD_SIZE } from 'app/consts'
 
 interface CloudinaryResponse {
   secure_url: string

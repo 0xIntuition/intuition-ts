@@ -1,6 +1,5 @@
 import { Button, Icon, Text } from '@0xintuition/1ui'
 
-import logger from '@lib/utils/logger'
 import { useNavigate } from '@remix-run/react'
 
 export function ListOverview() {
@@ -32,14 +31,6 @@ export function ListOverview() {
         >
           <Icon name="magnifying-glass" className="mr-2" />
           Explore
-        </Button>
-        <Button variant="secondary">
-          <Icon
-            name="plus-small"
-            className="mr-2"
-            onClick={() => logger('create new list clicked')} // TODO: [ENG-2798] - add the create list functionality
-          />
-          Create new list
         </Button>
       </div>
     </div>

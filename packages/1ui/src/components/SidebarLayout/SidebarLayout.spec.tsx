@@ -8,13 +8,11 @@ import {
   SidebarLayoutContent,
   SidebarLayoutNav,
   SidebarLayoutNavAvatar,
-  SidebarLayoutNavFooter,
-  SidebarLayoutNavFooterItem,
+  SidebarLayoutNavBody,
   SidebarLayoutNavHeader,
   SidebarLayoutNavHeaderButton,
-  SidebarLayoutNavItem,
-  SidebarLayoutNavItems,
   SidebarLayoutProvider,
+  SidebarNavItem,
 } from '.'
 
 describe('SidebarLayout', () => {
@@ -29,30 +27,32 @@ describe('SidebarLayout', () => {
                 textLogo={<span>textLogo</span>}
               />
             </SidebarLayoutNavHeader>
-            <SidebarLayoutNavItems>
-              <SidebarLayoutNavItem
-                iconName="crystal-ball"
-                label="Explore This"
-                onClick={() => null}
-              />
-              <SidebarLayoutNavItem
-                iconName="megaphone"
-                label="Explore That"
-                onClick={() => null}
-              />
-            </SidebarLayoutNavItems>
-            <SidebarLayoutNavFooter>
-              <SidebarLayoutNavFooterItem
-                iconName="settings-gear"
-                label="Settings"
-                onClick={() => null}
-              />
-              <SidebarLayoutNavAvatar
-                imageSrc="imageSrc"
-                name="Super Dave"
-                onClick={() => null}
-              />
-            </SidebarLayoutNavFooter>
+            <SidebarLayoutNavBody className="flex flex-col justify-between">
+              <div className="flex flex-col gap-px">
+                <SidebarNavItem
+                  iconName="crystal-ball"
+                  label="Explore This"
+                  onClick={() => null}
+                />
+                <SidebarNavItem
+                  iconName="megaphone"
+                  label="Explore That"
+                  onClick={() => null}
+                />
+              </div>
+              <div className="flex flex-col gap-px">
+                <SidebarNavItem
+                  iconName="settings-gear"
+                  label="Settings"
+                  onClick={() => null}
+                />
+                <SidebarLayoutNavAvatar
+                  imageSrc="https://m.media-amazon.com/images/M/MV5BNDhiMWYzMjgtNTRiYi00ZTA3LThlODctNDRkMDk0NzFkMWI3L2ltYWdlL2ltYWdlXkEyXkFqcGdeQXVyNTg0MTkzMzA@._V1_.jpg"
+                  name="Super Dave"
+                  onClick={() => null}
+                />
+              </div>
+            </SidebarLayoutNavBody>
           </SidebarLayoutNav>
           <SidebarLayoutContent>Content goes here.</SidebarLayoutContent>
         </SidebarLayout>
@@ -61,29 +61,20 @@ describe('SidebarLayout', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="flex h-full w-full data-[panel-group-direction=vertical]:flex-col"
-          data-panel-group=""
-          data-panel-group-direction="horizontal"
-          data-panel-group-id=":r0:"
-          style="display: flex; flex-direction: row; height: 100%; overflow: hidden; width: 100%;"
+          class="flex h-full w-full overflow-x-hidden flex-col"
         >
           <div
-            class=""
-            data-panel=""
-            data-panel-collapsible="true"
-            data-panel-group-id=":r0:"
-            data-panel-id=":r1:"
-            data-panel-size="50.0"
-            style="flex-basis: 0px; flex-grow: 50; flex-shrink: 1; overflow: hidden;"
+            class="theme-border border-0"
+            style="width: 100%;"
           >
             <div
-              class="from-primary/10 to-primary/2 flex h-full flex-col items-center bg-gradient-to-b"
+              class="from-primary/10 to-primary/2 bg-gradient-to-b flex flex-col h-full w-full relative top-0"
             >
               <div
-                class="border-border/20 flex w-full items-center border-0 border-b-[1px] py-4 px-6"
+                class="border-border/20 flex w-full items-center border-0 border-b-[1px] p-2"
               >
                 <button
-                  class="flex gap-3 items-center"
+                  class="w-full px-4 py-2 flex gap-3 items-center"
                 >
                   <span>
                     imgLogo
@@ -92,104 +83,92 @@ describe('SidebarLayout', () => {
                     textLogo
                   </span>
                 </button>
-              </div>
-              <div
-                class="flex w-full flex-col gap-2 p-2"
-              >
                 <button
-                  class="flex items-center font-medium border disabled:bg-muted disabled:border-muted bg-transparent text-secondary-foreground/70 border-transparent rounded-lg hover:text-secondary-foreground hover:border-border/20 aria-selected:bg-primary/10 aria-selected:text-secondary-foreground/80 disabled:text-muted-foreground px-4 py-2 gap-2 text-base w-full justify-start truncate"
+                  class="flex justify-center items-center gap-2 text-sm font-medium border disabled:text-muted-foreground aria-disabled:text-muted-foreground aria-disabled:pointer-events-none bg-transparent text-primary/70 border-transparent hover:text-primary disabled:border-transparent aria-disabled:border-transparent disabled:bg-transparent aria-disabled:bg-transparent shadow-none p-1"
                 >
                   <svg
                     class="h-6 w-6"
                   >
                     <use
-                      href="/src/components/Icon/Icon.sprites.svg#crystal-ball"
+                      href="/src/components/Icon/Icon.sprites.svg#hamburger"
                     />
                   </svg>
-                  Explore This
-                </button>
-                <button
-                  class="flex items-center font-medium border disabled:bg-muted disabled:border-muted bg-transparent text-secondary-foreground/70 border-transparent rounded-lg hover:text-secondary-foreground hover:border-border/20 aria-selected:bg-primary/10 aria-selected:text-secondary-foreground/80 disabled:text-muted-foreground px-4 py-2 gap-2 text-base w-full justify-start truncate"
-                >
-                  <svg
-                    class="h-6 w-6"
-                  >
-                    <use
-                      href="/src/components/Icon/Icon.sprites.svg#megaphone"
-                    />
-                  </svg>
-                  Explore That
                 </button>
               </div>
               <div
-                class="flex h-full w-full flex-col justify-end gap-2 p-2 mb-4"
+                class="w-full p-2 fixed top-[3.45rem] left-0 right-0 bottom-0 bg-background overflow-none z-50 h-auto from-primary/10 to-primary/2 bg-gradient-to-b collapse flex flex-col justify-between"
               >
-                <button
-                  class="flex items-center font-medium border disabled:bg-muted disabled:border-muted bg-transparent text-secondary-foreground/70 border-transparent rounded-lg hover:text-secondary-foreground hover:border-border/20 aria-selected:bg-primary/10 aria-selected:text-secondary-foreground/80 disabled:text-muted-foreground px-4 py-2 gap-2 text-base w-full justify-start truncate"
-                >
-                  <svg
-                    class="h-6 w-6"
-                  >
-                    <use
-                      href="/src/components/Icon/Icon.sprites.svg#settings-gear"
-                    />
-                  </svg>
-                  Settings
-                </button>
                 <div
-                  class="flex items-center font-medium border disabled:bg-muted disabled:border-muted bg-transparent text-secondary-foreground/70 border-transparent rounded-lg hover:text-secondary-foreground hover:border-border/20 aria-selected:bg-primary/10 aria-selected:text-secondary-foreground/80 disabled:text-muted-foreground px-4 py-2 gap-2 text-base w-full justify-start"
+                  class="flex flex-col gap-px"
                 >
-                  <span
-                    class="relative flex shrink-0 overflow-hidden aspect-square rounded-full bg-muted h-6 w-6"
+                  <button
+                    class="flex items-center font-medium border disabled:bg-muted aria-disabled:bg-muted disabled:border-muted aria-disabled:border-muted aria-disabled:pointer-events-none bg-transparent text-secondary-foreground/70 border-transparent rounded-lg hover:text-secondary-foreground hover:border-border/20 aria-selected:bg-primary/10 aria-selected:text-secondary-foreground/80 disabled:text-muted-foreground aria-disabled:text-muted-foreground px-5 py-2.5 gap-4 text-lg w-full justify-start truncate"
+                  >
+                    <svg
+                      class="h-6 w-6"
+                    >
+                      <use
+                        href="/src/components/Icon/Icon.sprites.svg#crystal-ball"
+                      />
+                    </svg>
+                    Explore This
+                  </button>
+                  <button
+                    class="flex items-center font-medium border disabled:bg-muted aria-disabled:bg-muted disabled:border-muted aria-disabled:border-muted aria-disabled:pointer-events-none bg-transparent text-secondary-foreground/70 border-transparent rounded-lg hover:text-secondary-foreground hover:border-border/20 aria-selected:bg-primary/10 aria-selected:text-secondary-foreground/80 disabled:text-muted-foreground aria-disabled:text-muted-foreground px-5 py-2.5 gap-4 text-lg w-full justify-start truncate"
+                  >
+                    <svg
+                      class="h-6 w-6"
+                    >
+                      <use
+                        href="/src/components/Icon/Icon.sprites.svg#megaphone"
+                      />
+                    </svg>
+                    Explore That
+                  </button>
+                </div>
+                <div
+                  class="flex flex-col gap-px"
+                >
+                  <button
+                    class="flex items-center font-medium border disabled:bg-muted aria-disabled:bg-muted disabled:border-muted aria-disabled:border-muted aria-disabled:pointer-events-none bg-transparent text-secondary-foreground/70 border-transparent rounded-lg hover:text-secondary-foreground hover:border-border/20 aria-selected:bg-primary/10 aria-selected:text-secondary-foreground/80 disabled:text-muted-foreground aria-disabled:text-muted-foreground px-5 py-2.5 gap-4 text-lg w-full justify-start truncate"
+                  >
+                    <svg
+                      class="h-6 w-6"
+                    >
+                      <use
+                        href="/src/components/Icon/Icon.sprites.svg#settings-gear"
+                      />
+                    </svg>
+                    Settings
+                  </button>
+                  <div
+                    class="flex items-center font-medium border disabled:bg-muted aria-disabled:bg-muted disabled:border-muted aria-disabled:border-muted aria-disabled:pointer-events-none bg-transparent text-secondary-foreground/70 border-transparent rounded-lg hover:text-secondary-foreground hover:border-border/20 aria-selected:bg-primary/10 aria-selected:text-secondary-foreground/80 disabled:text-muted-foreground aria-disabled:text-muted-foreground px-5 py-2.5 gap-4 text-lg w-full justify-start"
                   >
                     <span
-                      class="flex h-full w-full items-center justify-center bg-inherit"
+                      class="relative flex shrink-0 overflow-hidden aspect-square bg-background theme-border rounded-full h-6 w-6"
                     >
-                      SU
+                      <span
+                        class="flex h-full w-full items-center justify-center bg-inherit"
+                      >
+                        <svg
+                          class="text-primary/30 w-[80%] h-[80%] max-w-8 max-h-8"
+                        >
+                          <use
+                            href="/src/components/Icon/Icon.sprites.svg#crypto-punk"
+                          />
+                        </svg>
+                      </span>
                     </span>
-                  </span>
-                  Super Dave
+                    Super Dave
+                  </div>
                 </div>
               </div>
             </div>
           </div>
           <div
-            class="border-border/20 focus-visible:ring-ring relative flex w-px items-center justify-center border after:absolute after:inset-y-0 after:left-1/2 after:w-1 after:-translate-x-1/2 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-offset-1 data-[panel-group-direction=vertical]:h-px data-[panel-group-direction=vertical]:w-full data-[panel-group-direction=vertical]:after:left-0 data-[panel-group-direction=vertical]:after:h-1 data-[panel-group-direction=vertical]:after:w-full data-[panel-group-direction=vertical]:after:-translate-y-1/2 data-[panel-group-direction=vertical]:after:translate-x-0 [&[data-panel-group-direction=vertical]>div]:rotate-90"
-            data-panel-group-direction="horizontal"
-            data-panel-group-id=":r0:"
-            data-panel-resize-handle-enabled="true"
-            data-panel-resize-handle-id=":r2:"
-            data-resize-handle=""
-            data-resize-handle-state="inactive"
-            role="separator"
-            style="user-select: none;"
-            tabindex="0"
+            class="h-full w-full overflow-y-auto overflow-x-hidden flex justify-center"
           >
-            <div
-              class="bg-background border-border/20 z-10 flex h-4 w-3 items-center justify-center rounded-sm border"
-            >
-              <svg
-                class="h-3 w-3"
-              >
-                <use
-                  href="/src/components/Icon/Icon.sprites.svg#dot-grid"
-                />
-              </svg>
-            </div>
-          </div>
-          <div
-            class=""
-            data-panel=""
-            data-panel-group-id=":r0:"
-            data-panel-id=":r3:"
-            data-panel-size="70.0"
-            style="flex-basis: 0px; flex-grow: 70; flex-shrink: 1; overflow: hidden;"
-          >
-            <div
-              class="flex h-full items-center justify-center py-3 px-1"
-            >
-              Content goes here.
-            </div>
+            Content goes here.
           </div>
         </div>
       </DocumentFragment>
@@ -208,30 +187,32 @@ describe('SidebarLayout', () => {
                 textLogo={<span>textLogo</span>}
               />
             </SidebarLayoutNavHeader>
-            <SidebarLayoutNavItems>
-              <SidebarLayoutNavItem
-                iconName="crystal-ball"
-                label="Explore This"
-                onClick={() => null}
-              />
-              <SidebarLayoutNavItem
-                iconName="megaphone"
-                label="Explore That"
-                onClick={() => null}
-              />
-            </SidebarLayoutNavItems>
-            <SidebarLayoutNavFooter>
-              <SidebarLayoutNavFooterItem
-                iconName="settings-gear"
-                label="Settings"
-                onClick={() => null}
-              />
-              <SidebarLayoutNavAvatar
-                imageSrc="imageSrc"
-                name="Super Dave"
-                onClick={() => null}
-              />
-            </SidebarLayoutNavFooter>
+            <SidebarLayoutNavBody className="flex flex-col justify-between">
+              <div className="flex flex-col gap-px">
+                <SidebarNavItem
+                  iconName="crystal-ball"
+                  label="Explore This"
+                  onClick={() => null}
+                />
+                <SidebarNavItem
+                  iconName="megaphone"
+                  label="Explore That"
+                  onClick={() => null}
+                />
+              </div>
+              <div className="flex flex-col gap-px">
+                <SidebarNavItem
+                  iconName="settings-gear"
+                  label="Settings"
+                  onClick={() => null}
+                />
+                <SidebarLayoutNavAvatar
+                  imageSrc="https://m.media-amazon.com/images/M/MV5BNDhiMWYzMjgtNTRiYi00ZTA3LThlODctNDRkMDk0NzFkMWI3L2ltYWdlL2ltYWdlXkEyXkFqcGdeQXVyNTg0MTkzMzA@._V1_.jpg"
+                  name="Super Dave"
+                  onClick={() => null}
+                />
+              </div>
+            </SidebarLayoutNavBody>
           </SidebarLayoutNav>
           <SidebarLayoutContent>Content goes here.</SidebarLayoutContent>
         </SidebarLayout>,

@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react'
+
 import {
   ClaimPresenter,
   ClaimSortColumn,
@@ -6,12 +8,13 @@ import {
 
 import { ExploreSearch } from '@components/explore/ExploreSearch'
 import { ListClaimsList } from '@components/list/list-claims'
-import { calculateTotalPages, fetchWrapper, invariant } from '@lib/utils/misc'
+import { calculateTotalPages, invariant, loadMore } from '@lib/utils/misc'
 import { getStandardPageParams } from '@lib/utils/params'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
-import { useLoaderData } from '@remix-run/react'
+import { useLoaderData, useSearchParams, useSubmit } from '@remix-run/react'
+import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
-import { NO_WALLET_ERROR, TAG_PREDICATE_VAULT_ID_TESTNET } from 'consts'
+import { NO_WALLET_ERROR, TAG_PREDICATE_VAULT_ID_TESTNET } from 'app/consts'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const wallet = await requireUserWallet(request)
@@ -24,7 +27,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   })
   const displayName = searchParams.get('list') || null
 
-  const listClaims = await fetchWrapper({
+  const listClaims = await fetchWrapper(request, {
     method: ClaimsService.searchClaims,
     args: {
       page,
@@ -52,18 +55,44 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export default function ExploreLists() {
-  const { listClaims, pagination } = useLoaderData<typeof loader>()
+  const submit = useSubmit()
+  const { listClaims, pagination, sortBy, direction } =
+    useLoaderData<typeof loader>()
+  // const [currentPage, setCurrentPage] = useState(pagination.currentPage)
+  const [searchParams] = useSearchParams()
+
+  const currentPage = Number(searchParams.get('page') || '1')
+
+  const [accumulatedClaims, setAccumulatedClaims] = useState<ClaimPresenter[]>(
+    [],
+  )
+
+  useEffect(() => {
+    if (currentPage === 1) {
+      setAccumulatedClaims(listClaims)
+    } else {
+      setAccumulatedClaims((prev) => [...prev, ...listClaims])
+    }
+  }, [listClaims, currentPage])
+
+  const handleLoadMore = loadMore({
+    currentPage,
+    pagination,
+    sortBy,
+    direction,
+    submit,
+  })
 
   return (
-    <div className="m-8 flex flex-col items-center gap-4 w-full">
+    <>
       <ExploreSearch variant="list" />
-      <div className="w-full">
-        <ListClaimsList
-          listClaims={listClaims}
-          pagination={pagination}
-          enableSort={true}
-        />
-      </div>
-    </div>
+      <ListClaimsList
+        listClaims={accumulatedClaims}
+        pagination={{ ...pagination, currentPage }}
+        enableSearch={false}
+        enableSort={true}
+        onLoadMore={handleLoadMore}
+      />
+    </>
   )
 }

@@ -1,9 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 
-import { toast } from '@0xintuition/1ui'
+import { Avatar, toast } from '@0xintuition/1ui'
 import {
-  ApiError,
-  IdentitiesService,
   IdentityPresenter,
   UserPresenter,
   UsersService,
@@ -21,19 +19,19 @@ import {
 } from '@lib/hooks/useTransactionReducer'
 import { editProfileModalAtom } from '@lib/state/store'
 import logger from '@lib/utils/logger'
-import { fetchWrapper, invariant, sliceString } from '@lib/utils/misc'
+import { invariant, sliceString } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { useFetcher, useLoaderData, useNavigate } from '@remix-run/react'
 import { CreateLoaderData } from '@routes/resources+/create'
+import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
-import * as blockies from 'blockies-ts'
-import { MULTIVAULT_CONTRACT_ADDRESS, NO_WALLET_ERROR } from 'consts'
-import { useAtom } from 'jotai'
-import { ClientOnly } from 'remix-utils/client-only'
+import { MULTIVAULT_CONTRACT_ADDRESS, NO_WALLET_ERROR, PATHS } from 'app/consts'
 import {
   IdentityTransactionActionType,
   IdentityTransactionStateType,
-} from 'types'
+} from 'app/types'
+import { useAtom } from 'jotai'
+import { ClientOnly } from 'remix-utils/client-only'
 import { toHex } from 'viem'
 import { useConnectorClient, usePublicClient } from 'wagmi'
 
@@ -41,23 +39,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const wallet = await requireUserWallet(request)
   invariant(wallet, NO_WALLET_ERROR)
 
-  let userIdentity
-  try {
-    userIdentity = await IdentitiesService.getIdentityById({
-      id: wallet,
-    })
-  } catch (error: unknown) {
-    if (error instanceof ApiError) {
-      userIdentity = undefined
-      console.log(
-        `${error.name} - ${error.status}: ${error.message} ${error.url}`,
-      )
-    } else {
-      throw error
-    }
-  }
-
-  const userObject = await fetchWrapper({
+  const userObject = await fetchWrapper(request, {
     method: UsersService.getUserByWalletPublic,
     args: {
       wallet,
@@ -66,10 +48,10 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   if (!userObject) {
     console.log('No user found in DB')
-    return json({ wallet, userIdentity, userObject })
+    return json({ wallet, userObject })
   }
 
-  return json({ wallet, userIdentity, userObject })
+  return json({ wallet, userObject })
 }
 
 interface CreateButtonWrapperProps {
@@ -305,7 +287,6 @@ export default function Profile() {
     wallet: string
     userObject: UserPresenter
   }>()
-  const imgSrc = blockies.create({ seed: wallet }).toDataURL()
 
   const [editProfileModalActive, setEditProfileModalActive] =
     useAtom(editProfileModalAtom)
@@ -327,11 +308,7 @@ export default function Profile() {
             <div className="w-[552px] justify-between items-center inline-flex">
               <div className="grow shrink basis-0 h-16 justify-start items-center gap-[18px] flex">
                 <div className="w-[70px] pr-1.5 justify-start items-center flex">
-                  <img
-                    className="w-16 h-16 relative rounded-full border border-neutral-700"
-                    src={imgSrc}
-                    alt="Avatar"
-                  />
+                  <Avatar name="" src="" />
                 </div>
                 <div className="flex-col justify-start items-start gap-[3px] inline-flex">
                   <div className="justify-start items-end gap-1.5 inline-flex">
@@ -381,7 +358,7 @@ export default function Profile() {
         open={editProfileModalActive}
         onClose={() => {
           setEditProfileModalActive(false)
-          navigate('/app/profile')
+          navigate(PATHS.PROFILE)
         }}
       />
     </>

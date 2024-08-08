@@ -60,7 +60,7 @@ export const TagsListInput = ({
           </Button>
           {tags.length === 0 ? (
             <Text variant="footnote" className="text-secondary-foreground">
-              {`Add up to ${tagsLeft} ${TagsListVariants[variant]}${tagsLeft === 1 ? '' : 's'}`}
+              {`Filter by up to ${tagsLeft} ${TagsListVariants[variant]}${tagsLeft === 1 ? '' : 's'}`}
             </Text>
           ) : (
             <Text variant="footnote" className="text-secondary-foreground">
