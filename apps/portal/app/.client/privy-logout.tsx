@@ -13,7 +13,8 @@ export default function PrivyLogout({ wallet }: { wallet: string }) {
   useEffect(() => {
     let mounted = true
     const handleLogout = async () => {
-      if (mounted && address !== wallet && ready) {
+      if (mounted && address && address !== wallet && isConnected && ready) {
+        //TODO: ENG-3136 -- Make address optional and remove isConnected on prod
         await logout()
         disconnect()
         submit(null, {
