@@ -23,10 +23,10 @@ describe('ProfileCard', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="flex flex-col justify-center items-start w-full min-w-80 rounded-lg gap-2.5 max-lg:min-w-max max-lg:items-center"
+          class="flex flex-col justify-start items-start w-full min-w-[320px] max-w-full rounded-lg gap-2.5 p-4 overflow-hidden"
         >
           <div
-            class="flex items-center space-x-4"
+            class="flex items-center space-x-4 w-full"
           >
             <span
               class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square bg-background theme-border rounded-full"
@@ -124,11 +124,15 @@ describe('ProfileCard', () => {
             </div>
           </div>
           <div>
-            <p
-              class="text-base font-medium text-primary-300 pt-2.5"
+            <div
+              class="w-full overflow-hidden"
             >
-              John Doe is a blockchain enthusiast. He loves to learn new things and share his knowledge with others. He is also a contributor to various open-source projects.
-            </p>
+              <p
+                class="text-base font-medium text-primary-300 pt-2.5 break-all whitespace-pre-wrap"
+              >
+                John Doe is a blockchain enthusiast. He loves to learn new things and share his knowledge with others. He is also a contributor to various open-source projects.
+              </p>
+            </div>
             <div
               class="pt-2.5 max-lg:flex max-lg:flex-col max-lg:items-center"
             >
@@ -167,10 +171,10 @@ describe('ProfileCard', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="flex flex-col justify-center items-start w-full min-w-80 rounded-lg gap-2.5 max-lg:min-w-max max-lg:items-center"
+          class="flex flex-col justify-start items-start w-full min-w-[320px] max-w-full rounded-lg gap-2.5 p-4 overflow-hidden"
         >
           <div
-            class="flex items-center space-x-4"
+            class="flex items-center space-x-4 w-full"
           >
             <span
               class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square bg-background theme-border rounded"
@@ -226,11 +230,15 @@ describe('ProfileCard', () => {
             </div>
           </div>
           <div>
-            <p
-              class="text-base font-medium text-primary-300 pt-2.5"
+            <div
+              class="w-full overflow-hidden"
             >
-              Blockchain Corp is a leading company in blockchain technology. Visit our website for more information about how you can benefit from our services.
-            </p>
+              <p
+                class="text-base font-medium text-primary-300 pt-2.5 break-all whitespace-pre-wrap"
+              >
+                Blockchain Corp is a leading company in blockchain technology. Visit our website for more information about how you can benefit from our services.
+              </p>
+            </div>
             <div
               class="pt-2.5 max-lg:flex max-lg:flex-col max-lg:items-center"
             >
@@ -267,10 +275,10 @@ describe('ProfileCard', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="flex flex-col justify-center items-start w-full min-w-80 rounded-lg gap-2.5 max-lg:min-w-max max-lg:items-center"
+          class="flex flex-col justify-start items-start w-full min-w-[320px] max-w-full rounded-lg gap-2.5 p-4 overflow-hidden"
         >
           <div
-            class="flex items-center space-x-4"
+            class="flex items-center space-x-4 w-full"
           >
             <span
               class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square bg-background theme-border rounded-full"
@@ -368,11 +376,15 @@ describe('ProfileCard', () => {
             </div>
           </div>
           <div>
-            <p
-              class="text-base font-medium text-primary-300 pt-2.5"
+            <div
+              class="w-full overflow-hidden"
             >
-              John Doe is a blockchain enthusiast. He loves to learn new things and share his knowledge with others. He is also a contributor to various open-source projects.
-            </p>
+              <p
+                class="text-base font-medium text-primary-300 pt-2.5 break-all whitespace-pre-wrap"
+              >
+                John Doe is a blockchain enthusiast. He loves to learn new things and share his knowledge with others. He is also a contributor to various open-source projects.
+              </p>
+            </div>
             <div
               class="pt-2.5 max-lg:flex max-lg:flex-col max-lg:items-center"
             >
