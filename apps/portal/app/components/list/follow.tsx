@@ -53,7 +53,7 @@ export function FollowList({
                 BigInt(
                   paramPrefix === 'followers'
                     ? identity.assets_sum
-                    : identity.user_assets || '',
+                    : identity.user_assets,
                 ),
                 18,
                 4,
