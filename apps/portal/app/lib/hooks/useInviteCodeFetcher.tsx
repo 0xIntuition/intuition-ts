@@ -3,8 +3,9 @@ import logger from '@lib/utils/logger'
 import { useFetcher } from '@remix-run/react'
 
 export interface InviteCodeFetcher {
-  success: 'success' | 'error'
+  status: 'success' | 'error'
   submission: SubmissionResult<string[]> | null
+  error?: string
 }
 
 export function useInviteCodeFetcher() {

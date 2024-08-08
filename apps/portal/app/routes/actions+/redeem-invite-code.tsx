@@ -33,20 +33,22 @@ export async function action({ request }: ActionFunctionArgs) {
       if (error instanceof ApiError) {
         invite_code_response = undefined
         console.log(
-          `${error.name} - ${error.status}: ${error.message} - ${JSON.stringify(error.body)}`,
+          `${error.name} - ${error.status}: ${error.message} - ${(error.body as { code: number; error: string }).error}`,
         )
-      } else {
-        throw error
+        return json(
+          {
+            status: 'error',
+            error: (error.body as { code: number; error: string }).error,
+          },
+          { status: error.status },
+        )
       }
+      throw error
     }
 
-    if (!invite_code_response) {
-      throw new Error('Failed to redeem invite code')
-    }
     return json(
       {
         status: 'success',
-        invite_code_response,
       } as const,
       {
         status: 200,

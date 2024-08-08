@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import {
   Button,
@@ -21,20 +21,14 @@ import { inviteCodeSchema } from '@lib/schemas/create-identity-schema'
 import logger from '@lib/utils/logger'
 import { invariant } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
-import { useLoaderData } from '@remix-run/react'
+import { useLoaderData, useNavigate } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
 import { NO_WALLET_ERROR } from 'consts'
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  // const authTokenClaims = await verifyPrivyAccessToken(request)
   const wallet = await requireUserWallet(request)
   invariant(wallet, NO_WALLET_ERROR)
-
-  // if (authTokenClaims) {
-  //   console.log('[Loader] User is already authenticated, redirecting to home')
-  //   throw redirect(PATHS.PROFILE)
-  // }
 
   const userObject = await fetchWrapper(request, {
     method: UsersService.getUserByWalletPublic,
@@ -42,6 +36,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
       wallet,
     },
   })
+
+  console.log('userObject', userObject)
 
   if (!userObject) {
     console.log('No user found in DB')
@@ -57,11 +53,11 @@ interface InviteRouteLoaderData {
 }
 
 export default function InviteRoute() {
-  const { wallet, userObject } = useLoaderData<InviteRouteLoaderData>()
-  console.log('userObject', userObject)
+  const { wallet } = useLoaderData<InviteRouteLoaderData>()
+  const navigate = useNavigate()
   const { inviteCodeFetcher } = useInviteCodeFetcher()
   const [loading, setLoading] = useState(false)
-  const [formTouched, setFormTouched] = useState(false) // to disable submit if user hasn't touched form yet
+  const [fetcherError, setFetcherError] = useState<string | null>(null)
 
   const [form, fields] = useForm({
     id: 'invite-code',
@@ -95,6 +91,7 @@ export default function InviteRoute() {
           'Redeem invite code validation errors: ',
           submission.error,
         )
+        return
       }
 
       setLoading(true)
@@ -108,16 +105,26 @@ export default function InviteRoute() {
         if (error instanceof Error) {
           const errorMessage = 'Error in redeeming invite code.'
           toast.error(errorMessage)
-          return
         }
         console.error('Error redeeming invite code', error)
       }
-
-      setLoading(true)
     } catch (error: unknown) {
       logger(error)
     }
   }
+
+  useEffect(() => {
+    if (inviteCodeFetcher.state === 'idle') {
+      setLoading(false)
+      if (inviteCodeFetcher.data?.status === 'success') {
+        navigate('/create')
+      } else if (inviteCodeFetcher.data?.error) {
+        const errorMessage = inviteCodeFetcher.data.error
+        setFetcherError(errorMessage)
+        toast.error(errorMessage)
+      }
+    }
+  }, [inviteCodeFetcher.state, inviteCodeFetcher.data, navigate])
 
   return (
     <>
@@ -143,11 +150,13 @@ export default function InviteRoute() {
                 {...getInputProps(fields.invite_code, { type: 'text' })}
                 className="w-96"
                 placeholder="Enter your invite code here"
-                onChange={() => setFormTouched(true)}
               />
               <ErrorList
                 id={fields.invite_code.errorId}
-                errors={fields.invite_code.errors}
+                errors={[
+                  ...(fields.invite_code.errors || []),
+                  ...(fetcherError ? [fetcherError] : []),
+                ]}
               />
             </div>
             <Text
@@ -162,7 +171,7 @@ export default function InviteRoute() {
               type="submit"
               variant={ButtonVariant.primary}
               size={ButtonSize.lg}
-              disabled={loading || !formTouched}
+              disabled={loading}
               className="w-48"
             >
               Setup Profile
