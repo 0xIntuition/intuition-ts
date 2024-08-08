@@ -61,7 +61,8 @@ const QuestSetProgressCard = ({
               className="max-md:text-base max-md:py-3 max-md:flex-grow"
               variant="secondary"
               size="md"
-              disabled={progressPercentage === 100}
+              disabled
+              // disabled={progressPercentage === 100}
             >
               {progressPercentage === 0
                 ? 'Get Started'

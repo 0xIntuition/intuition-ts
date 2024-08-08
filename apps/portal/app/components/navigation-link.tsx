@@ -13,11 +13,13 @@ interface NavigationButtonProps
 const NavigationButton = ({
   variant,
   size,
+  disabled,
   className,
   ...props
 }: NavigationButtonProps) => {
   return (
     <NavLink
+      aria-disabled={disabled}
       className={cn(buttonVariants({ variant, size, className }))}
       {...props}
     />
