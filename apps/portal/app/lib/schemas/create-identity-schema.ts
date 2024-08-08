@@ -22,11 +22,8 @@ export function createIdentitySchema() {
   return z.object({
     display_name: z
       .string({ required_error: 'Please enter an identity name.' })
-      .min(2, {
-        message: 'Identity name must be at least 2 characters.',
-      })
-      .max(42, {
-        message: 'Identity name must not be longer than 42 characters.',
+      .max(100, {
+        message: 'Identity name must not be longer than 100 characters.',
       }),
     description: z
       .string({

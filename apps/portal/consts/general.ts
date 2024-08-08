@@ -164,16 +164,20 @@ export const activityRouteOptions = [
 
 // SPECIAL ATOMS
 
-export const LIST_OBJECT_VAULT_ID_TESTNET = 175 // used in testnet list claim as object
-export const TAG_PREDICATE_VAULT_ID_TESTNET = 176 // used in testnet tag claim as predicate
-export const I_PREDICATE_VAULT_ID_TESTNET = 19
-export const AM_WATCHING_VAULT_ID_TESTNET = 264
+export const TAG_PREDICATE_VAULT_ID_TESTNET = 3 // used in testnet tag claim as predicate
+export const I_PREDICATE_VAULT_ID_TESTNET = 13
+export const AM_FOLLOWING_VAULT_ID_TESTNET = 4
+export const THING_VAULT_ID_TESTNET = 2
 
-export const TAG_PREDICATE_ID_TESTNET = '8af2e266-ffdd-4a46-bcf8-69bd27e995d4'
-export const AM_WATCHING_ID_TESTNET = 'e2237e27-cc80-4dec-abf8-ae1755c101f0'
+export const TAG_PREDICATE_ID_TESTNET = '6eab2a76-687e-4f23-9429-276eb14e6c6c'
+export const I_PREDICATE_ID_TESTNET = '6b8c8a43-6338-4a96-a3b6-fc8cc4910600'
+export const AM_FOLLOWING_ID_TESTNET = 'b369445b-2310-4a89-8335-8c5c61e1b464'
+export const THING_ID_TESTNET = 'cd43092d-8698-46da-96a6-fd2b8551dde0'
 
-export const AM_WATCHING_DISPLAY_NAME_TESTNET = 'am watching'
 export const TAG_PREDICATE_DISPLAY_NAME_TESTNET = 'has tag'
+export const I_PREDICATE_DISPLAY_NAME_TESTNET = 'I'
+export const AM_FOLLOWING_DISPLAY_NAME_TESTNET = 'am following'
+export const THING_DISPLAY_NAME_TESTNET = 'thing'
 
 // So generally, we consider the DSN safe to be shared publicly. Of course, you don't want to unnecessarily share the DSN for any backend projects you have, but there is no real way of hiding the DSN in the frontend (except for maybe obscuring it, but security by obscurity is no real security). https://github.com/getsentry/sentry-javascript/issues/5640#issuecomment-1229960048
 export const SENTRY_DSN =
