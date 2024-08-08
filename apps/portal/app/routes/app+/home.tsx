@@ -30,9 +30,9 @@ import { defer, LoaderFunctionArgs } from '@remix-run/node'
 import { Await } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
+import { NO_WALLET_ERROR, TAG_PREDICATE_VAULT_ID_TESTNET } from 'app/consts'
 import FullPageLayout from 'app/layouts/full-page-layout'
-import { NO_WALLET_ERROR, TAG_PREDICATE_VAULT_ID_TESTNET } from 'consts'
-import { PaginationType } from 'types'
+import { PaginationType } from 'app/types'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const userWallet = await requireUserWallet(request)
