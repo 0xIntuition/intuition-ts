@@ -86,7 +86,7 @@ interface HomeStatsHeaderProps extends React.HTMLAttributes<HTMLDivElement> {
   totalIdentities: number
   totalClaims: number
   totalUsers: number
-  totalVolume: number
+  // totalVolume?: number  omitting until we can support this
   totalStaked: number
   totalSignals: number
 }
@@ -95,7 +95,7 @@ export function HomeStatsHeader({
   totalIdentities,
   totalClaims,
   totalUsers,
-  totalVolume,
+  // totalVolume,  omitting until we can support this
   totalStaked,
   totalSignals,
   ...props
@@ -115,7 +115,7 @@ export function HomeStatsHeader({
         className="mx-8 h-12 w-px bg-gradient-radial from-white via-white/20"
       />
       <div className="flex gap-8">
-        <StatItem label="Volume" value={`${totalVolume} ETH`} />
+        {/* <StatItem label="Volume" value={`${totalVolume} ETH`} /> */}
         <StatItem label="Staked" value={`${totalStaked} ETH`} />
         <StatItem label="Signals" value={totalSignals} />
       </div>

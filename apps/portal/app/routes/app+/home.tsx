@@ -25,7 +25,7 @@ import {
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { getActivity } from '@lib/services/activity'
 import { getSystemStats } from '@lib/services/stats'
-import { invariant } from '@lib/utils/misc'
+import { formatBalance, invariant } from '@lib/utils/misc'
 import { defer, LoaderFunctionArgs } from '@remix-run/node'
 import { Await } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
@@ -106,8 +106,9 @@ export default function HomePage() {
                 totalIdentities={resolvedStats.totalIdentities}
                 totalClaims={resolvedStats.totalClaims}
                 totalUsers={resolvedStats.totalUsers}
-                totalVolume={resolvedStats.totalVolume || 0}
-                totalStaked={resolvedStats.totalStaked || 0}
+                totalStaked={
+                  Number(formatBalance(resolvedStats.totalStaked, 18, 4)) || 0
+                }
                 totalSignals={resolvedStats.totalSignals || 0}
               />
             )}

@@ -4,6 +4,7 @@ import {
   IdentityPositionsService,
   PositionPresenter,
   PositionSortColumn,
+  PositionsService,
   SortDirection,
   VaultType,
 } from '@0xintuition/api'
@@ -31,7 +32,7 @@ export async function getPositionsOnIdentity({
     (searchParams.get('positionsSearch') as Identifier) || null
 
   const positions = await fetchWrapper(request, {
-    method: IdentityPositionsService.getIdentityPositions,
+    method: PositionsService.positionSummary,
     args: {
       id: identityId,
       page,
