@@ -15,7 +15,11 @@ import { useGenericTxState } from '@lib/utils/use-tx-reducer'
 import { useFetcher, useLocation } from '@remix-run/react'
 import { CreateLoaderData } from '@routes/resources+/create'
 import { useQueryClient } from '@tanstack/react-query'
-import { CREATE_RESOURCE_ROUTE } from 'consts'
+import {
+  AM_FOLLOWING_VAULT_ID_TESTNET,
+  CREATE_RESOURCE_ROUTE,
+  I_PREDICATE_VAULT_ID_TESTNET,
+} from 'consts'
 import { TransactionActionType, TransactionStateType } from 'types/transaction'
 import { VaultDetailsType } from 'types/vault'
 import { Abi, Address, decodeEventLog, formatUnits, parseUnits } from 'viem'
@@ -63,9 +67,6 @@ export default function FollowModal({
     TransactionActionType
   >(transactionReducer, initialTxState)
   const publicClient = usePublicClient()
-
-  const iVaultId = '47'
-  const followVaultId = '48'
   const userVaultId = identity.vault_id
 
   let vault_id: string = '0'
@@ -115,7 +116,11 @@ export default function FollowModal({
               ? 'depositTriple'
               : 'redeemTriple',
           args: !claim
-            ? [iVaultId, followVaultId, userVaultId]
+            ? [
+                I_PREDICATE_VAULT_ID_TESTNET,
+                AM_FOLLOWING_VAULT_ID_TESTNET,
+                userVaultId,
+              ]
             : actionType === 'follow'
               ? [userWallet as `0x${string}`, vault_id]
               : [user_conviction, userWallet as `0x${string}`, vault_id],
@@ -180,7 +185,7 @@ export default function FollowModal({
       sender: Address
       receiver?: Address
       owner?: Address
-      userAssetsAfterTotalFees: bigint
+      senderAssetsAfterTotalFees: bigint
       sharesForReceiver: bigint
       entryFee: bigint
       id: bigint
@@ -214,10 +219,12 @@ export default function FollowModal({
         args: EventLogArgs
       }
 
+      console.log('topics', topics)
+
       if (topics.args.sender === (userWallet as `0x${string}`)) {
         assets =
           mode === 'follow'
-            ? (topics.args as BuyArgs).userAssetsAfterTotalFees.toString()
+            ? (topics.args as BuyArgs).senderAssetsAfterTotalFees.toString()
             : (topics.args as SellArgs).assetsForReceiver.toString()
 
         toast.custom(() => (
@@ -317,7 +324,6 @@ export default function FollowModal({
           <FollowForm
             walletBalance={walletBalance}
             identity={identity}
-            claim={claim}
             user_assets={user_assets ?? '0'}
             entry_fee={formatted_entry_fee ?? '0'}
             exit_fee={formatted_exit_fee ?? '0'}

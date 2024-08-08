@@ -8,7 +8,7 @@ import {
   IdentityTag,
   Text,
 } from '@0xintuition/1ui'
-import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
+import { IdentityPresenter } from '@0xintuition/api'
 
 import { TransactionState } from '@components/transaction-state'
 import { formatBalance } from '@lib/utils/misc'
@@ -21,7 +21,6 @@ import FollowReview from './follow-review'
 interface FollowFormProps {
   walletBalance: string
   identity: IdentityPresenter
-  claim: ClaimPresenter
   user_assets: string
   entry_fee: string
   exit_fee: string
@@ -41,7 +40,6 @@ interface FollowFormProps {
 export default function FollowForm({
   walletBalance,
   identity,
-  claim,
   user_assets,
   entry_fee,
   exit_fee,
@@ -128,7 +126,6 @@ export default function FollowForm({
             dispatch={dispatch}
             state={state}
             identity={identity}
-            claim={claim}
             user_assets={user_assets}
             entry_fee={entry_fee}
             exit_fee={exit_fee}

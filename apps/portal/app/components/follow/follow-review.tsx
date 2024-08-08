@@ -9,17 +9,13 @@ import {
   Identity,
   Text,
 } from '@0xintuition/1ui'
-import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
+import { IdentityPresenter } from '@0xintuition/api'
 
+import { formatBalance, formatDisplayBalance } from '@lib/utils/misc'
 import {
-  formatBalance,
-  formatDisplayBalance,
-  getAtomDescription,
-  getAtomImage,
-  getAtomIpfsLink,
-  getAtomLabel,
-  getAtomLink,
-} from '@lib/utils/misc'
+  AM_FOLLOWING_DISPLAY_NAME_TESTNET,
+  I_PREDICATE_DISPLAY_NAME_TESTNET,
+} from 'consts'
 import { TransactionActionType, TransactionStateType } from 'types/transaction'
 
 interface FollowReviewProps {
@@ -29,7 +25,6 @@ interface FollowReviewProps {
   state: TransactionStateType
   isError?: boolean
   identity: IdentityPresenter
-  claim: ClaimPresenter
   user_assets: string
   entry_fee: string
   exit_fee: string
@@ -41,7 +36,7 @@ export default function FollowReview({
   dispatch,
   state,
   isError,
-  claim,
+  identity,
   user_assets,
   entry_fee,
   exit_fee,
@@ -104,45 +99,19 @@ export default function FollowReview({
             <Claim
               size="md"
               subject={{
-                variant: claim.subject?.is_user
-                  ? Identity.user
-                  : Identity.nonUser,
-                label: getAtomLabel(claim.subject as IdentityPresenter),
-                imgSrc: getAtomImage(claim.subject as IdentityPresenter),
-                id: claim.subject?.identity_id,
-                description: getAtomDescription(
-                  claim.subject as IdentityPresenter,
-                ),
-                ipfsLink: getAtomIpfsLink(claim.subject as IdentityPresenter),
-                link: getAtomLink(claim.subject as IdentityPresenter),
+                variant: Identity.nonUser,
+                label: I_PREDICATE_DISPLAY_NAME_TESTNET,
                 shouldHover: false,
               }}
               predicate={{
-                variant: claim.predicate?.is_user
-                  ? Identity.user
-                  : Identity.nonUser,
-                label: getAtomLabel(claim.predicate as IdentityPresenter),
-                imgSrc: getAtomImage(claim.predicate as IdentityPresenter),
-                id: claim.predicate?.identity_id,
-                description: getAtomDescription(
-                  claim.predicate as IdentityPresenter,
-                ),
-                ipfsLink: getAtomIpfsLink(claim.predicate as IdentityPresenter),
-                link: getAtomLink(claim.predicate as IdentityPresenter),
+                variant: Identity.nonUser,
+                label: AM_FOLLOWING_DISPLAY_NAME_TESTNET,
                 shouldHover: false,
               }}
               object={{
-                variant: claim.object?.is_user
-                  ? Identity.user
-                  : Identity.nonUser,
-                label: getAtomLabel(claim.object as IdentityPresenter),
-                imgSrc: getAtomImage(claim.object as IdentityPresenter),
-                id: claim.object?.identity_id,
-                description: getAtomDescription(
-                  claim.object as IdentityPresenter,
-                ),
-                ipfsLink: getAtomIpfsLink(claim.object as IdentityPresenter),
-                link: getAtomLink(claim.object as IdentityPresenter),
+                variant: Identity.user,
+                imgSrc: identity.user?.image ?? identity.image,
+                label: identity.user?.display_name ?? identity.display_name,
                 shouldHover: false,
               }}
             />
