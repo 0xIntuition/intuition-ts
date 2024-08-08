@@ -222,8 +222,6 @@ export default function FollowModal({
         args: EventLogArgs
       }
 
-      console.log('topics', topics)
-
       if (topics.args.sender === (userWallet as `0x${string}`)) {
         assets =
           mode === 'follow'

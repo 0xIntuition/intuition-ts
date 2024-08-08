@@ -35,7 +35,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const userWallet = await requireUserWallet(request)
   invariant(userWallet, 'Unauthorized')
 
-  const userProfile = fetchWrapper(request, {
+  const userProfile = await fetchWrapper(request, {
     method: UsersService.getUserByWalletPublic,
     args: {
       wallet: userWallet,
@@ -46,6 +46,13 @@ export async function loader({ request }: LoaderFunctionArgs) {
     method: UsersService.getUserTotals,
     args: {
       id: userWallet,
+    },
+  })
+
+  const inviteCodes = await fetchWrapper(request, {
+    method: UsersService.getInviteCodesByUser,
+    args: {
+      id: userProfile.id,
     },
   })
 
@@ -61,44 +68,12 @@ export async function loader({ request }: LoaderFunctionArgs) {
     userWallet,
     userProfile,
     userTotals,
+    inviteCodes: inviteCodes.invite_codes,
   })
 }
 
-// TODO: Remove this once we are getting the data from BE.
-const mockReferralData = {
-  points: 2100,
-  inviteCodes: [
-    {
-      code: 'M9W5B',
-      isActivated: true,
-      identity: {
-        id: '1',
-        name: 'Sophie Nélisse',
-        avatarUrl: 'https://example.com/avatar1.jpg',
-      },
-    },
-    {
-      code: 'H6K9Q1',
-      isActivated: true,
-      identity: {
-        id: '2',
-        name: 'Mia Rodriguez',
-        avatarUrl: 'https://example.com/avatar2.jpg',
-      },
-    },
-    {
-      code: 'T3R7F9',
-      isActivated: false,
-    },
-    {
-      code: 'L2P8X6',
-      isActivated: false,
-    },
-  ],
-}
-
 export default function Quests() {
-  const { details, userTotals } = useLoaderData<typeof loader>()
+  const { details, userTotals, inviteCodes } = useLoaderData<typeof loader>()
 
   return (
     <div className="p-10 w-full max-w-7xl mx-auto flex flex-col gap-5 max-md:p-5 max-sm:p-2">
@@ -159,10 +134,20 @@ export default function Quests() {
         </div>
         <div className="space-y-5">
           <Text variant="headline">Referrals</Text>
-          <ReferralCard
-            points={mockReferralData.points}
-            inviteCodes={mockReferralData.inviteCodes}
-          />
+          <Suspense fallback={<Skeleton className="h-52 w-full" />}>
+            <Await resolve={inviteCodes} errorElement={<></>}>
+              {(resolvedInviteCodes) => (
+                <Await resolve={userTotals} errorElement={<></>}>
+                  {(resolvedUserTotals) => (
+                    <ReferralCard
+                      points={resolvedUserTotals.referral_points}
+                      inviteCodes={resolvedInviteCodes}
+                    />
+                  )}
+                </Await>
+              )}
+            </Await>
+          </Suspense>
         </div>
         <div className="flex flex-col gap-10 max-md:gap-5">
           <div className="space-y-5 max-md:space-y-3">

@@ -23,7 +23,7 @@ export default function CreateIdentityModal({
         onClose?.()
       }}
     >
-      <DialogContent className="w-[600px] bg-neutral-950 rounded-lg shadow theme-border">
+      <DialogContent>
         <IdentityForm
           onClose={onClose}
           onSuccess={onSuccess}

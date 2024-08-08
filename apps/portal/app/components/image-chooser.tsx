@@ -1,4 +1,4 @@
-import { cn, Icon } from '@0xintuition/1ui'
+import { cn, Icon, IconName } from '@0xintuition/1ui'
 
 import logger from '@lib/utils/logger'
 
@@ -51,7 +51,10 @@ export function ImageChooser({
               <div className="flex flex-row">
                 <div className="flex h-full w-full items-center justify-center overflow-hidden rounded-md h-[60px] w-[60px]">
                   <div className="pointer-events-pointer inset-0 flex items-center justify-center">
-                    <Icon name="folder" className="h-6 w-6 text-primary/50" />
+                    <Icon
+                      name={IconName.arrowOutOfBox}
+                      className="h-6 w-6 text-secondary-foreground"
+                    />
                   </div>
                 </div>
               </div>

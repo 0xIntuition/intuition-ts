@@ -69,3 +69,13 @@ export function imageUrlSchema() {
       .or(z.string()),
   })
 }
+
+export function inviteCodeSchema() {
+  return z.object({
+    invite_code: z
+      .string({ required_error: 'Please enter an invite code.' })
+      .min(6, {
+        message: 'Invite codes are 6 characters.',
+      }),
+  })
+}
