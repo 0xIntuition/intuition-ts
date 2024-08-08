@@ -49,7 +49,7 @@ const QuestHeaderCard = ({
       </div>
       <div className="flex justify-between items-end">
         <Text variant={TextVariant.small}>
-          {`${percentageOfQuestsCompleted}% Complete`}
+          {`${percentageOfQuestsCompleted.toFixed(0)}% Complete`}
         </Text>
         <Button variant={ButtonVariant.secondary} onClick={onButtonClick}>
           View quests
