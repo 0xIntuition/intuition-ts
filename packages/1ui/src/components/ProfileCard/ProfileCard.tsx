@@ -39,7 +39,8 @@ const ProfileCard = ({
   return (
     <div
       className={cn(
-        'flex flex-col justify-center items-start w-full min-w-80 rounded-lg gap-2.5 max-lg:min-w-max  max-lg:items-center',
+        'flex flex-col justify-start items-start w-full min-w-[320px] max-w-full rounded-lg gap-2.5 p-4',
+        'overflow-hidden',
         props.className,
       )}
       {...props}
@@ -72,13 +73,15 @@ const ProfileCard = ({
       )}
       <div>
         {bio && (
-          <Text
-            variant="body"
-            weight="medium"
-            className="text-primary-300 pt-2.5"
-          >
-            {bio}
-          </Text>
+          <div className="w-full overflow-hidden">
+            <Text
+              variant="body"
+              weight="medium"
+              className="text-primary-300 pt-2.5 break-all whitespace-pre-wrap"
+            >
+              {bio}
+            </Text>
+          </div>
         )}
 
         {vaultId && (
