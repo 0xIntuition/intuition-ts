@@ -61,7 +61,7 @@ const IdentityTagButton = ({
       {...props}
     >
       <Avatar variant={variant} src={imgSrc || ''} name="identity avatar" />
-      {children}
+      {children || '?'}
     </button>
   )
 }

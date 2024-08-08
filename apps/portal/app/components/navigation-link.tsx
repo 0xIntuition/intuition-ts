@@ -6,7 +6,9 @@ import { type VariantProps } from 'class-variance-authority'
 
 interface NavigationButtonProps
   extends NavLinkProps,
-    VariantProps<typeof buttonVariants> {}
+    VariantProps<typeof buttonVariants> {
+  disabled?: boolean
+}
 
 const NavigationButton = ({
   variant,
