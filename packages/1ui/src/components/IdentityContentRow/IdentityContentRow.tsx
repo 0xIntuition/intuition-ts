@@ -55,6 +55,7 @@ const NameAndAddress = ({
           value={name}
           variant={TextVariant.bodyLarge}
           className="mr-2"
+          maxStringLength={32}
         />
       </a>
       <div className="flex flex-row gap-1 items-center">

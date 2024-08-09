@@ -63,7 +63,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
       userWallet: userWallet.toLowerCase(),
       searchParams,
     }),
-    activeClaims: getUserClaims({ request, userWallet, searchParams }),
+    activeClaims: getUserClaims({
+      request,
+      userWallet: userWallet.toLowerCase(),
+      searchParams,
+    }),
     activeClaimsSummary: fetchWrapper(request, {
       method: ClaimsService.claimSummary,
       args: {

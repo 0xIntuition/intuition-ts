@@ -29,21 +29,25 @@ describe('ClaimPositionRow', () => {
           <div
             class="flex items-center max-sm:justify-center"
           >
-            <span
-              class="relative flex shrink-0 overflow-hidden aspect-square bg-background theme-border rounded-full w-16 h-16 mr-4"
+            <a
+              href="https://sepolia.basescan.org/address/0x1234567890abcdef1234567890abcdef12345678"
             >
               <span
-                class="flex h-full w-full items-center justify-center bg-inherit"
+                class="relative flex shrink-0 overflow-hidden aspect-square bg-background theme-border rounded-full w-16 h-16 mr-4"
               >
-                <svg
-                  class="text-primary/30 w-[80%] h-[80%] max-w-8 max-h-8"
+                <span
+                  class="flex h-full w-full items-center justify-center bg-inherit"
                 >
-                  <use
-                    href="/src/components/Icon/Icon.sprites.svg#crypto-punk"
-                  />
-                </svg>
+                  <svg
+                    class="text-primary/30 w-[80%] h-[80%] max-w-8 max-h-8"
+                  >
+                    <use
+                      href="/src/components/Icon/Icon.sprites.svg#crypto-punk"
+                    />
+                  </svg>
+                </span>
               </span>
-            </span>
+            </a>
             <div
               class="flex flex-col"
             >

@@ -57,6 +57,7 @@ export default function ExploreUsers() {
     <>
       <ExploreSearch variant="user" />
       <IdentitiesList
+        variant="explore"
         identities={identities}
         pagination={pagination}
         enableSearch={false}

@@ -57,6 +57,7 @@ export default function ExploreIdentities() {
     <>
       <ExploreSearch variant="identity" />
       <IdentitiesList
+        variant="explore"
         identities={identities}
         pagination={pagination}
         enableSearch={false}

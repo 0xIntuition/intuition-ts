@@ -88,7 +88,9 @@ const ClaimPositionRow = ({
     >
       {variant === ClaimPositionRowVariant.user && (
         <div className="flex items-center max-sm:justify-center">
-          <Avatar src={avatarSrc} name={name} className="w-16 h-16 mr-4" />
+          <a href={link}>
+            <Avatar src={avatarSrc} name={name} className="w-16 h-16 mr-4" />
+          </a>
           <div className="flex flex-col">
             <div className="flex items-center mb-1.5 max-sm:flex-col max-sm:gap-px max-sm:items-start">
               <a href={link}>

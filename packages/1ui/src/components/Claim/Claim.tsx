@@ -54,7 +54,11 @@ const ClaimItem = ({
       className="group-hover:border-primary group-hover:bg-primary/20 relative z-10"
       shouldHover={shouldHover}
     >
-      <Trunctacular value={item.label} disableTooltip={shouldHover} />
+      <Trunctacular
+        value={item.label}
+        disableTooltip={shouldHover}
+        maxStringLength={24}
+      />
     </IdentityTag>
   )
 
