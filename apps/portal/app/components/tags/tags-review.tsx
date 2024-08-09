@@ -14,7 +14,6 @@ import { IdentityPresenter } from '@0xintuition/api'
 import { multivaultAbi } from '@lib/abis/multivault'
 import { useBatchCreateTriple } from '@lib/hooks/useBatchCreateTriple'
 import { useLoaderFetcher } from '@lib/hooks/useLoaderFetcher'
-import logger from '@lib/utils/logger'
 import { CreateLoaderData } from '@routes/resources+/create'
 import {
   CREATE_RESOURCE_ROUTE,
@@ -77,10 +76,6 @@ export default function TagsReview({
     ) {
       try {
         dispatch({ type: 'APPROVE_TRANSACTION' })
-        logger('[BEGIN ONCHAIN CREATE')
-        logger('subjectVaultIds:', subjectIdentityVaultIds)
-        logger('predicateHasTagVaultIds:', predicateHasTagVaultIds)
-        logger('objectTagVaultIds:', objectTagVaultIds)
         const txHash = await writeBatchCreateTriple({
           address: MULTIVAULT_CONTRACT_ADDRESS,
           abi: multivaultAbi,
