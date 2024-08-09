@@ -237,6 +237,7 @@ export default function ProfileOverview() {
                 enableSort={false}
                 enableSearch={false}
                 columns={3}
+                sourceUserAddress={wallet}
               />
             )
           }}
