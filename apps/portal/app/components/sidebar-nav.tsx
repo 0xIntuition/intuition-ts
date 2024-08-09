@@ -1,12 +1,17 @@
-import { useEffect, useState } from 'react'
-
 import {
-  formatWalletAddress,
+  Button,
+  ButtonSize,
+  ButtonVariant,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+  Icon,
+  IconName,
   IconNameType,
   SidebarLayout,
   SidebarLayoutContent,
   SidebarLayoutNav,
-  SidebarLayoutNavAvatar,
   SidebarLayoutNavBody,
   SidebarLayoutNavHeader,
   SidebarLayoutNavHeaderButton,
@@ -15,12 +20,11 @@ import {
 } from '@0xintuition/1ui'
 import { UserPresenter } from '@0xintuition/api'
 
-import { PrivyButton } from '@client/privy-button'
+import PrivyLogoutButton from '@client/privy-logout-button'
 import { createClaimModalAtom, createIdentityModalAtom } from '@lib/state/store'
 import { NavLink, useLocation, useNavigate, useSubmit } from '@remix-run/react'
 import { PATHS } from 'app/consts'
 import { useAtom } from 'jotai'
-import { isAddress } from 'viem'
 
 import CreateClaimModal from './create-claim/create-claim-modal'
 import CreateIdentityModal from './create-identity/create-identity-modal'
@@ -41,7 +45,7 @@ const sidebarNavRoutes: SidebarNavRoute[] = [
   {
     route: PATHS.PROFILE,
     label: 'Profile',
-    iconName: 'person-circle',
+    iconName: 'people',
   },
   {
     route: PATHS.EXPLORE,
@@ -56,7 +60,7 @@ const sidebarNavRoutes: SidebarNavRoute[] = [
   {
     route: PATHS.ACTIVITY,
     label: 'Activity',
-    iconName: 'calendar',
+    iconName: 'lightning-bolt',
   },
   {
     route: PATHS.QUEST,
@@ -69,12 +73,12 @@ const comingSoonRoutes: SidebarNavRoute[] = [
   {
     route: '#',
     label: 'Trust Circles',
-    iconName: 'trust-circle',
+    iconName: 'trust-circle-filled',
   },
   {
     route: '#',
     label: 'Query Builder',
-    iconName: 'layout-third',
+    iconName: 'square-checklist',
   },
   {
     route: '#',
@@ -93,11 +97,6 @@ export default function SidebarNav({
   const submit = useSubmit()
   const navigate = useNavigate()
   const location = useLocation()
-  const [isPrivyButtonLoaded, setIsPrivyButtonLoaded] = useState(false)
-
-  useEffect(() => {
-    setIsPrivyButtonLoaded(true)
-  }, [])
 
   const [createIdentityModalActive, setCreateIdentityModalActive] = useAtom(
     createIdentityModalAtom,
@@ -112,13 +111,6 @@ export default function SidebarNav({
       method: 'post',
     })
   }
-
-  const username =
-    userObject?.display_name ||
-    userObject?.ens_name ||
-    (userObject?.wallet && isAddress(userObject.wallet)
-      ? formatWalletAddress(userObject.wallet)
-      : 'Profile')
 
   return (
     <>
@@ -179,53 +171,63 @@ export default function SidebarNav({
               />
             </SidebarLayoutNavHeader>
             <SidebarLayoutNavBody className="flex flex-col justify-between">
-              <div className="flex flex-col gap-px">
-                {sidebarNavRoutes.map((sidebarNavItem, index) => (
-                  <NavLink
-                    key={`nav-item-${index}`}
-                    to={sidebarNavItem.route}
-                    prefetch="intent"
-                  >
+              <div className="flex flex-col gap-6">
+                <div className="flex flex-col gap-px">
+                  {sidebarNavRoutes.map((sidebarNavItem, index) => (
+                    <NavLink
+                      key={`nav-item-${index}`}
+                      to={sidebarNavItem.route}
+                      prefetch="intent"
+                    >
+                      <SidebarNavItem
+                        iconName={sidebarNavItem.iconName}
+                        label={sidebarNavItem.label}
+                      />
+                    </NavLink>
+                  ))}
+                  {comingSoonRoutes.map((sidebarNavItem, index) => (
                     <SidebarNavItem
+                      key={`nav-item-${index}`}
                       iconName={sidebarNavItem.iconName}
                       label={sidebarNavItem.label}
+                      disabled={true}
                     />
-                  </NavLink>
-                ))}
-                {comingSoonRoutes.map((sidebarNavItem, index) => (
-                  <SidebarNavItem
-                    key={`nav-item-${index}`}
-                    iconName={sidebarNavItem.iconName}
-                    label={sidebarNavItem.label}
-                    disabled={true}
-                  />
-                ))}
+                  ))}
+                </div>
               </div>
-              <div className="flex flex-col gap-px">
-                <SidebarNavItem
-                  iconName="fingerprint"
-                  label="Create Identity"
-                  onClick={() => setCreateIdentityModalActive(true)}
-                />
-                <SidebarNavItem
-                  iconName="claim"
-                  label="Create Claim"
-                  onClick={() => setCreateClaimModalActive(true)}
-                />
-
-                {isPrivyButtonLoaded ? (
-                  <PrivyButton
-                    triggerComponent={
-                      <SidebarLayoutNavAvatar
-                        imageSrc={userObject.image ?? ''}
-                        name={username}
-                      />
-                    }
-                    onLogout={onLogout}
-                  />
-                ) : (
-                  <div className="h-20" />
-                )}
+              <div className="flex flex-col gap-4">
+                <DropdownMenu>
+                  <DropdownMenuTrigger>
+                    <SidebarNavItem
+                      iconName={IconName.brushSparkle}
+                      label="Create"
+                      className="bg-for text-white rounded-full items-center justify-center"
+                    />
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent
+                    side="right"
+                    sideOffset={8}
+                    align="center"
+                    className="bg-popover w-48"
+                  >
+                    <Button
+                      variant={ButtonVariant.text}
+                      size={ButtonSize.lg}
+                      onClick={() => setCreateIdentityModalActive(true)}
+                    >
+                      <Icon name="fingerprint" /> Create Identity
+                    </Button>
+                    <DropdownMenuSeparator />
+                    <Button
+                      variant={ButtonVariant.text}
+                      size={ButtonSize.lg}
+                      onClick={() => setCreateClaimModalActive(true)}
+                    >
+                      <Icon name="claim" /> Create Claim
+                    </Button>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+                <PrivyLogoutButton handleLogout={onLogout} />
               </div>
             </SidebarLayoutNavBody>
           </SidebarLayoutNav>

@@ -1,4 +1,4 @@
-import { Button } from '@0xintuition/1ui'
+import { SidebarNavItem } from '@0xintuition/1ui'
 
 import { useLogout } from '@privy-io/react-auth'
 import { useDisconnect } from 'wagmi'
@@ -23,14 +23,12 @@ export default function PrivyLogoutButton({
   }
 
   return (
-    <Button
-      onClick={(e) => {
-        e.preventDefault()
+    <SidebarNavItem
+      iconName="arrow-box-left"
+      label="Log Out"
+      onClick={() => {
         onLogout()
       }}
-      variant="primary"
-    >
-      Log out
-    </Button>
+    />
   )
 }
