@@ -29,6 +29,7 @@ interface SidebarNavRoute {
   route: string
   label: string
   iconName: IconNameType
+  disabled?: boolean
 }
 
 const sidebarNavRoutes: SidebarNavRoute[] = [
@@ -36,6 +37,11 @@ const sidebarNavRoutes: SidebarNavRoute[] = [
     route: PATHS.HOME,
     label: 'Home',
     iconName: 'home-door',
+  },
+  {
+    route: PATHS.PROFILE,
+    label: 'Profile',
+    iconName: 'person-circle',
   },
   {
     route: PATHS.EXPLORE,
@@ -56,6 +62,24 @@ const sidebarNavRoutes: SidebarNavRoute[] = [
     route: PATHS.QUEST,
     label: 'Quest',
     iconName: 'crystal-ball',
+  },
+]
+
+const comingSoonRoutes: SidebarNavRoute[] = [
+  {
+    route: '#',
+    label: 'Trust Circles',
+    iconName: 'trust-circle',
+  },
+  {
+    route: '#',
+    label: 'Query Builder',
+    iconName: 'layout-third',
+  },
+  {
+    route: '#',
+    label: 'Preferences',
+    iconName: 'settings-gear',
   },
 ]
 
@@ -167,6 +191,14 @@ export default function SidebarNav({
                       label={sidebarNavItem.label}
                     />
                   </NavLink>
+                ))}
+                {comingSoonRoutes.map((sidebarNavItem, index) => (
+                  <SidebarNavItem
+                    key={`nav-item-${index}`}
+                    iconName={sidebarNavItem.iconName}
+                    label={sidebarNavItem.label}
+                    disabled={true}
+                  />
                 ))}
               </div>
               <div className="flex flex-col gap-px">

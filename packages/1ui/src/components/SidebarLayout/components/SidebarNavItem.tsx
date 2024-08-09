@@ -22,12 +22,14 @@ export interface SidebarNavItemProps
   extends VariantProps<typeof buttonVariants> {
   iconName: IconNameType | ReactNode
   label: string
+  disabled?: boolean
   onClick?: () => void
 }
 
 export const SidebarNavItem = ({
   iconName,
   label,
+  disabled = false,
   onClick,
   ...props
 }: SidebarNavItemProps) => {
@@ -35,8 +37,8 @@ export const SidebarNavItem = ({
     useSidebarLayoutContext()
 
   const buttonProps = {
-    variant: ButtonVariant.navigation,
-    className: 'w-full justify-start truncate',
+    variant: disabled ? ButtonVariant.text : ButtonVariant.navigation,
+    className: 'w-full justify-start truncate disabled:text-muted',
     onClick: () => {
       onClick && onClick()
       isMobileView && setIsCollapsed(true)
@@ -59,6 +61,7 @@ export const SidebarNavItem = ({
             size={isMobileView ? ButtonSize.iconXl : ButtonSize.iconLg}
             {...buttonProps}
             className="justify-center"
+            disabled={disabled}
           >
             {ImageComponent}
           </Button>
@@ -68,10 +71,31 @@ export const SidebarNavItem = ({
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>
+  ) : disabled ? (
+    <TooltipProvider delayDuration={0}>
+      <Tooltip>
+        <TooltipTrigger asChild className="m-auto">
+          <Button
+            size={isMobileView ? ButtonSize.xl : ButtonSize.lg}
+            {...buttonProps}
+            disabled={disabled}
+          >
+            {ImageComponent}
+            {label}
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent side="right" sideOffset={-140}>
+          <Text variant={TextVariant.body} className="text-muted-foreground">
+            Coming Soon
+          </Text>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
   ) : (
     <Button
       size={isMobileView ? ButtonSize.xl : ButtonSize.lg}
       {...buttonProps}
+      disabled={disabled}
     >
       {ImageComponent}
       {label}
