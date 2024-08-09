@@ -200,46 +200,43 @@ export function EditProfileForm({
   // Handle Initial Form Submit
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    if (userObject.image !== previewImage) {
-      try {
-        dispatch({ type: 'START_TRANSACTION' })
-        setLoading(true)
-        const formData = new FormData(event.currentTarget)
-        // Initial form validation
-        const submission = parseWithZod(formData, {
-          schema: updateProfileSchema(),
-        })
-        if (
-          submission.status === 'error' &&
-          submission.error !== null &&
-          Object.keys(submission.error).length
-        ) {
-          console.error('Update profile validation errors: ', submission.error)
-        }
-        setLoading(true)
+    try {
+      dispatch({ type: 'START_TRANSACTION' })
+      setLoading(true)
+      const formData = new FormData(event.currentTarget)
+
+      // Initial form validation
+      const submission = parseWithZod(formData, {
+        schema: updateProfileSchema(),
+      })
+      if (
+        submission.status === 'error' &&
+        submission.error !== null &&
+        Object.keys(submission.error).length
+      ) {
+        console.error('Update profile validation errors: ', submission.error)
+        setLoading(false)
+        return
+      }
+
+      if (imageFile && userObject.image !== previewImage) {
         dispatch({ type: 'START_IMAGE_UPLOAD' })
         imageUploadFetcher.submit(formData, {
           action: '/actions/upload-with-metadata',
           method: 'post',
           encType: 'multipart/form-data',
         })
-      } catch (error: unknown) {
-        handleError(error, dispatch)
-      }
-    } else {
-      try {
-        dispatch({ type: 'START_TRANSACTION' })
-        setLoading(true)
-        const formData = new FormData(event.currentTarget)
+      } else {
         formData.append('id', userObject.id ?? '')
         formData.append('image_url', previewImage ?? '')
         offChainFetcher.submit(formData, {
           action: '/actions/edit-profile',
           method: 'post',
         })
-      } catch (error: unknown) {
-        handleError(error, dispatch)
       }
+    } catch (error: unknown) {
+      handleError(error, dispatch)
+      setLoading(false)
     }
   }
 

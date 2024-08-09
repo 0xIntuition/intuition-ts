@@ -46,10 +46,9 @@ export async function action({ request }: ActionFunctionArgs) {
         privy_id: user.id as string,
         display_name: display_name as string,
         description: description as string,
+        image: image_url as string,
       }
-      if (image_url) {
-        requestBody.image = image_url as string
-      }
+
       logger('requestBody:', requestBody)
 
       profile = await UsersService.updateUser({
