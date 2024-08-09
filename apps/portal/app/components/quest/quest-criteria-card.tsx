@@ -19,8 +19,11 @@ const QuestCriteriaCard = ({
   ...props
 }: QuestCriteriaCardProps) => {
   return (
-    <div className={cn('p-5 rounded-lg theme-border space-y-8')} {...props}>
-      <div className="space-y-2.5">
+    <div
+      className={cn('p-5 rounded-lg theme-border space-y-8 max-md:space-y-4')}
+      {...props}
+    >
+      <div className="space-y-2.5 max-md:space-y-2">
         <Text
           variant="bodyLarge"
           weight="normal"
@@ -32,7 +35,7 @@ const QuestCriteriaCard = ({
           <QuestCriteriaDisplay criteria={criteria} status={questStatus} />
         </div>
       </div>
-      <div className="space-y-2.5">
+      <div className="space-y-2.5 max-md:space-y-2">
         <Text
           variant="bodyLarge"
           weight="normal"
