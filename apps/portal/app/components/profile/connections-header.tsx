@@ -1,4 +1,10 @@
-import { Claim, Identity, MonetaryValue, Text } from '@0xintuition/1ui'
+import {
+  Claim,
+  Identity,
+  MonetaryValue,
+  Text,
+  TextVariant,
+} from '@0xintuition/1ui'
 import { IdentityPresenter } from '@0xintuition/api'
 
 import {
@@ -62,7 +68,11 @@ export const ConnectionsHeader: React.FC<ConnectionsHeaderProps> = ({
                   : 'Total stake'}
               </Text>
               {/*TODO: Add actual value when BE updates presenter */}
-              <MonetaryValue value={+totalStake} currency="ETH" />
+              <MonetaryValue
+                value={+totalStake}
+                currency="ETH"
+                textVariant={TextVariant.headline}
+              />
             </div>
           </div>
           <div className="flex flex-col items-end gap-2 max-sm:hidden">

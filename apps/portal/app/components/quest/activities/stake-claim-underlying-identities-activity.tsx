@@ -2,7 +2,6 @@ import React from 'react'
 
 import {
   PositionCard,
-  PositionCardFeesAccrued,
   PositionCardLastUpdated,
   PositionCardOwnership,
   PositionCardStaked,
@@ -95,7 +94,6 @@ export const PositionCardWrapper = ({
                 : 0
             }
           />
-          <PositionCardFeesAccrued amount={0} />
           <PositionCardLastUpdated timestamp={identity.updated_at} />
         </PositionCard>
       )}
