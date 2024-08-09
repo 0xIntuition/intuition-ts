@@ -195,6 +195,8 @@ export default function Profile() {
         }}
         bio={userObject.description ?? ''}
         ipfsLink={`${BLOCK_EXPLORER_URL}/address/${userObject.wallet}`}
+        followingLink={`${PATHS.PROFILE_CONNECTIONS}?tab=following`}
+        followerLink={`${PATHS.PROFILE_CONNECTIONS}?tab=followers`}
       >
         <Button
           variant="secondary"
