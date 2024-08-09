@@ -108,7 +108,7 @@ export default function IdentityDetails() {
     identity: ExtendedIdentityPresenter
     vaultDetails: VaultDetailsType
     userWallet: string
-  }>(['attest'])
+  }>(['attest', 'create'])
   const navigate = useNavigate()
 
   logger('identity', identity)

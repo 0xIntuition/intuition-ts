@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react'
 import {
   Button,
   PositionCard,
-  PositionCardFeesAccrued,
   PositionCardLastUpdated,
   PositionCardOwnership,
   PositionCardStaked,
@@ -140,7 +139,6 @@ export default function Profile() {
   } = useLiveLoader<ProfileLoaderData>(['attest', 'create'])
 
   const { user_assets, assets_sum } = vaultDetails ? vaultDetails : userIdentity
-  const { user_asset_delta } = userIdentity
 
   const [userObject, setUserObject] = useState<
     UserPresenter | null | undefined
@@ -195,6 +193,8 @@ export default function Profile() {
         }}
         bio={userObject.description ?? ''}
         ipfsLink={`${BLOCK_EXPLORER_URL}/address/${userObject.wallet}`}
+        followingLink={`${PATHS.PROFILE_CONNECTIONS}?tab=following`}
+        followerLink={`${PATHS.PROFILE_CONNECTIONS}?tab=followers`}
       >
         <Button
           variant="secondary"
@@ -228,13 +228,6 @@ export default function Profile() {
             percentOwnership={
               user_assets !== null && assets_sum
                 ? +calculatePercentageOfTvl(user_assets ?? '0', assets_sum)
-                : 0
-            }
-          />
-          <PositionCardFeesAccrued
-            amount={
-              user_asset_delta
-                ? +formatBalance(+(user_assets ?? 0) - +user_asset_delta, 18, 5)
                 : 0
             }
           />

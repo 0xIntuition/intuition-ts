@@ -9,6 +9,8 @@ import {
   Trunctacular,
 } from '@0xintuition/1ui'
 
+import { Link } from '@remix-run/react'
+
 export interface ListIdentityCardPortalProps {
   displayName: string
   imgSrc?: string
@@ -18,6 +20,7 @@ export interface ListIdentityCardPortalProps {
   onViewClick?: () => void
   isSaved?: boolean
   currency?: CurrencyType
+  navigateLink?: string
 }
 
 export const ListIdentityCardPortal: React.FC<ListIdentityCardPortalProps> = ({
@@ -25,6 +28,7 @@ export const ListIdentityCardPortal: React.FC<ListIdentityCardPortalProps> = ({
   imgSrc,
   identitiesCount,
   onViewClick,
+  navigateLink,
 }) => {
   return (
     <div className="flex flex-col items-center justify-between gap-2 h-72 max-sm:h-fit max-sm:gap-px">
@@ -35,13 +39,25 @@ export const ListIdentityCardPortal: React.FC<ListIdentityCardPortalProps> = ({
         className="mb-2 w-16 h-16"
       />
       <div className="text-center flex-grow flex flex-col justify-between items-center gap-4">
-        <Trunctacular
-          value={displayName}
-          variant={TextVariant.bodyLarge}
-          weight={TextWeight.medium}
-          className="text-primary/80"
-          maxStringLength={20}
-        />
+        {navigateLink ? (
+          <Link to={navigateLink}>
+            <Trunctacular
+              value={displayName}
+              variant={TextVariant.bodyLarge}
+              weight={TextWeight.medium}
+              className="text-primary/80"
+              maxStringLength={20}
+            />
+          </Link>
+        ) : (
+          <Trunctacular
+            value={displayName}
+            variant={TextVariant.bodyLarge}
+            weight={TextWeight.medium}
+            className="text-primary/80"
+            maxStringLength={20}
+          />
+        )}
         <Text variant={TextVariant.body} className="text-secondary/50">
           {identitiesCount} identities
         </Text>

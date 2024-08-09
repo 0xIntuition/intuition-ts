@@ -6,7 +6,6 @@ import {
   ButtonVariant,
   ClaimStakeCard,
   PositionCard,
-  PositionCardFeesAccrued,
   PositionCardLastUpdated,
   PositionCardOwnership,
   PositionCardStaked,
@@ -147,7 +146,6 @@ export default function StakeClaimActivity({
                     : 0
                 }
               />
-              <PositionCardFeesAccrued amount={0} />
               <PositionCardLastUpdated timestamp={claim.updated_at} />
             </PositionCard>
           </div>

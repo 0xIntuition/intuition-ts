@@ -7,7 +7,6 @@ import {
   Identity,
   InfoCard,
   PositionCard,
-  PositionCardFeesAccrued,
   PositionCardLastUpdated,
   PositionCardOwnership,
   PositionCardStaked,
@@ -153,7 +152,7 @@ export default function ClaimDetails() {
   const directionTagText = +userConviction > 0 ? 'FOR' : 'AGAINST'
 
   const ClaimWithNav = () => (
-    <div className="flex justify-between items-center w-full mb-6">
+    <div className="flex gap-6 items-center w-full mb-6">
       <NavigationButton variant="secondary" size="icon" to={fromUrl.toString()}>
         <Icon name="arrow-left" />
       </NavigationButton>
@@ -226,7 +225,6 @@ export default function ClaimDetails() {
                 : 0
             }
           />
-          <PositionCardFeesAccrued amount={0} />
           <PositionCardLastUpdated timestamp={claim.updated_at} />
         </PositionCard>
       ) : null}

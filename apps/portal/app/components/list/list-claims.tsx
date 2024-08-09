@@ -110,6 +110,7 @@ export function ListClaimsList<T extends SortColumnType = ClaimSortColumn>({
                   identitiesCount={claim.object.tag_count ?? 0}
                   isSaved={claim.user_assets_for !== '0'}
                   savedAmount={claim.user_assets_for}
+                  navigateLink={`/app/list/${claim.claim_id}${sourceUserAddress ? `?user=${sourceUserAddress}` : ''}`}
                   onViewClick={() =>
                     navigate(
                       `/app/list/${claim.claim_id}${sourceUserAddress ? `?user=${sourceUserAddress}` : ''}`,

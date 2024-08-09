@@ -37,7 +37,6 @@ import {
   getUserClaims,
   getUserIdentities,
 } from '@lib/services/users'
-import logger from '@lib/utils/logger'
 import { formatBalance, invariant } from '@lib/utils/misc'
 import { defer, LoaderFunctionArgs } from '@remix-run/node'
 import { Await, useRouteLoaderData } from '@remix-run/react'
@@ -141,7 +140,6 @@ export default function ProfileDataCreated() {
   invariant(userIdentity, NO_USER_IDENTITY_ERROR)
   invariant(userTotals, NO_USER_TOTALS_ERROR)
 
-  logger('data-created render')
   return (
     <div className="flex-col justify-start items-start flex w-full gap-6">
       <div className="flex flex-col w-full gap-6">
@@ -160,7 +158,7 @@ export default function ProfileDataCreated() {
         >
           <Suspense
             fallback={
-              <div className="mb-3">
+              <div className="mb-6">
                 <TabsSkeleton numOfTabs={2} />
               </div>
             }
@@ -284,7 +282,13 @@ export default function ProfileDataCreated() {
           defaultValue={DataCreatedHeaderVariants.createdIdentities}
           className="w-full"
         >
-          <Suspense fallback={<TabsSkeleton numOfTabs={2} />}>
+          <Suspense
+            fallback={
+              <div className="mb-6">
+                <TabsSkeleton numOfTabs={2} />
+              </div>
+            }
+          >
             <TabsList className="mb-6">
               <Await resolve={createdIdentities} errorElement={<></>}>
                 {(resolvedIdentities) => (
