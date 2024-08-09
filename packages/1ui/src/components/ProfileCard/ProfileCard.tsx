@@ -1,5 +1,6 @@
 import React, { HTMLAttributes } from 'react'
 
+import { Link } from '@remix-run/react'
 import { Text } from 'components/Text'
 import { cn } from 'styles'
 import { Identity, IdentityType } from 'types'
@@ -21,6 +22,10 @@ export interface ProfileCardProps extends HTMLAttributes<HTMLDivElement> {
   externalLink?: string
   bio?: string
   children?: React.ReactNode
+  showContentLink?: boolean
+  followingLink?: string
+  followerLink?: string
+  statsLink?: string
 }
 
 const ProfileCard = ({
@@ -33,6 +38,9 @@ const ProfileCard = ({
   ipfsLink,
   externalLink,
   bio,
+  followingLink,
+  followerLink,
+  showContentLink = false,
   children,
   ...props
 }: ProfileCardProps) => {
@@ -54,14 +62,32 @@ const ProfileCard = ({
       />
       {variant === Identity.user && stats && (
         <div className="flex justify-start items-center gap-4 pt-2">
-          <ProfileCardStatItem
-            value={stats?.numberOfFollowing ?? 0}
-            label="Following"
-          />
-          <ProfileCardStatItem
-            value={stats?.numberOfFollowers ?? 0}
-            label="Followers"
-          />
+          {showContentLink && followingLink ? (
+            <Link to={followingLink}>
+              <ProfileCardStatItem
+                value={stats?.numberOfFollowing ?? 0}
+                label="Following"
+              />
+            </Link>
+          ) : (
+            <ProfileCardStatItem
+              value={stats?.numberOfFollowing ?? 0}
+              label="Following"
+            />
+          )}
+          {showContentLink && followerLink ? (
+            <Link to={followerLink}>
+              <ProfileCardStatItem
+                value={stats?.numberOfFollowers ?? 0}
+                label="Followers"
+              />
+            </Link>
+          ) : (
+            <ProfileCardStatItem
+              value={stats?.numberOfFollowers ?? 0}
+              label="Followers"
+            />
+          )}
           {stats?.points !== undefined && (
             <ProfileCardStatItem
               value={stats.points}
