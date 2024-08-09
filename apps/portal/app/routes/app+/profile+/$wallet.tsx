@@ -183,6 +183,8 @@ export default function Profile() {
         }}
         bio={userIdentity?.user?.description ?? ''}
         ipfsLink={`${BLOCK_EXPLORER_URL}/address/${userIdentity.identity_id}`}
+        followingLink={`${PATHS.PROFILE}/${wallet}/connections?tab=following`}
+        followerLink={`${PATHS.PROFILE}/${wallet}/connections?tab=followers`}
       >
         <Button
           variant="secondary"
