@@ -30,6 +30,7 @@ export interface ClaimProps {
   predicate: ClaimItemProps
   object: ClaimItemProps
   link?: string
+  maxIdentityLength?: number
 }
 
 const ClaimItem = ({
@@ -38,12 +39,14 @@ const ClaimItem = ({
   size,
   disabled,
   shouldHover = true,
+  maxIdentityLength = 24,
 }: {
   item: ClaimItemProps
   link?: string
   size?: keyof typeof IdentityTagSize
   shouldHover?: boolean
   disabled?: boolean
+  maxIdentityLength?: number
 }) => {
   const content = (
     <IdentityTag
@@ -57,7 +60,7 @@ const ClaimItem = ({
       <Trunctacular
         value={item.label}
         disableTooltip={shouldHover}
-        maxStringLength={24}
+        maxStringLength={maxIdentityLength}
       />
     </IdentityTag>
   )
@@ -104,6 +107,7 @@ export const Claim = ({
   link,
   disabled,
   size,
+  maxIdentityLength,
 }: ClaimProps) => {
   const separatorWidth = size !== IdentityTagSize.default ? 'w-4' : 'w-2'
   const items = [subject, predicate, object]
@@ -126,6 +130,7 @@ export const Claim = ({
             size={size}
             disabled={disabled || !item.link}
             shouldHover={item.shouldHover}
+            maxIdentityLength={maxIdentityLength}
           />
         </Fragment>
       ))}
