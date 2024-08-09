@@ -44,33 +44,38 @@ export function IdentitiesList({
       enableSearch={enableSearch}
       enableSort={enableSort}
     >
-      {identities.map((identity) => (
-        <div
-          key={identity.id}
-          className={`grow shrink basis-0 self-stretch p-6 bg-background first:border-t-px first:rounded-t-xl last:rounded-b-xl theme-border border-t-0 flex-col justify-start items-start gap-5 inline-flex`}
-        >
-          <IdentityContentRow
-            variant={identity.is_user ? Identity.user : Identity.nonUser}
-            avatarSrc={getAtomImage(identity)}
-            name={getAtomLabel(identity)}
-            id={identity.user?.wallet ?? identity.identity_id}
-            amount={
-              +formatBalance(
-                BigInt(
-                  variant === 'explore'
-                    ? identity.assets_sum
-                    : identity.user_assets || '',
-                ),
-                18,
-                4,
-              )
-            }
-            totalFollowers={identity.num_positions}
-            link={getAtomLink(identity)}
-            ipfsLink={getAtomIpfsLink(identity)}
-          />
-        </div>
-      ))}
+      {identities.map((identity) => {
+        if (!identity || typeof identity !== 'object') {
+          return null
+        }
+        return (
+          <div
+            key={identity.id}
+            className={`grow shrink basis-0 self-stretch p-6 bg-background first:border-t-px first:rounded-t-xl last:rounded-b-xl theme-border border-t-0 flex-col justify-start items-start gap-5 inline-flex`}
+          >
+            <IdentityContentRow
+              variant={identity.is_user ? Identity.user : Identity.nonUser}
+              avatarSrc={getAtomImage(identity)}
+              name={getAtomLabel(identity)}
+              id={identity.user?.wallet ?? identity.identity_id}
+              amount={
+                +formatBalance(
+                  BigInt(
+                    variant === 'explore'
+                      ? identity.assets_sum
+                      : identity.user_assets || '',
+                  ),
+                  18,
+                  4,
+                )
+              }
+              totalFollowers={identity.num_positions}
+              link={getAtomLink(identity)}
+              ipfsLink={getAtomIpfsLink(identity)}
+            />
+          </div>
+        )
+      })}
     </List>
   )
 }
