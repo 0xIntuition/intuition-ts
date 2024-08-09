@@ -55,10 +55,11 @@ const NameAndAddress = ({
           value={name}
           variant={TextVariant.bodyLarge}
           className="mr-2"
+          maxStringLength={32}
         />
       </a>
       <div className="flex flex-row gap-1 items-center">
-        <a href={ipfsLink}>
+        <a href={ipfsLink} target="_blank" rel="noreferrer noreopener">
           <Trunctacular value={id} className="text-secondary-foreground" />
         </a>
         <Copy text={id} />

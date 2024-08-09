@@ -109,6 +109,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
     }
   }
 
+  console.log('userIdentity', userIdentity)
+
   return json({
     privyUser: user,
     userWallet,
