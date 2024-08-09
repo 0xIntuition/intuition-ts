@@ -25,6 +25,7 @@ describe('SidebarLayout', () => {
               <SidebarLayoutNavHeaderButton
                 imgLogo={<span>imgLogo</span>}
                 textLogo={<span>textLogo</span>}
+                productLogo={<span>productLogo</span>}
               />
             </SidebarLayoutNavHeader>
             <SidebarLayoutNavBody className="flex flex-col justify-between">
@@ -81,6 +82,9 @@ describe('SidebarLayout', () => {
                   </span>
                   <span>
                     textLogo
+                  </span>
+                  <span>
+                    productLogo
                   </span>
                 </button>
                 <button
@@ -185,6 +189,7 @@ describe('SidebarLayout', () => {
               <SidebarLayoutNavHeaderButton
                 imgLogo={<span>imgLogo</span>}
                 textLogo={<span>textLogo</span>}
+                productLogo={<span>productLogo</span>}
               />
             </SidebarLayoutNavHeader>
             <SidebarLayoutNavBody className="flex flex-col justify-between">
