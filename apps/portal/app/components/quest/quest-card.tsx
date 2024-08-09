@@ -33,13 +33,13 @@ const QuestCard = ({
   return (
     <div
       className={cn(
-        'flex items-stretch theme-border rounded-lg overflow-hidden relative h-full',
+        'flex items-stretch theme-border rounded-lg overflow-hidden relative min-h-52 max-sm:flex-col',
         disabled && 'opacity-50',
       )}
       {...props}
     >
       <div
-        className="w-52 h-52 flex-shrink-0 relative bg-center bg-cover"
+        className="w-52 h-full flex-shrink-0 relative bg-center bg-cover max-sm:w-full max-sm:h-44"
         style={{ backgroundImage: `url(${imgSrc})` }}
       >
         <div className="absolute top-2.5 left-2.5">
@@ -52,31 +52,33 @@ const QuestCard = ({
         </div>
         <div className="w-full h-full bg-cover bg-center border-r border-border/10"></div>
       </div>
-      <div className="flex flex-col justify-center -ml-[29px] z-10">
+      <div className="flex flex-col justify-center -ml-[29px] z-10 max-sm:m-auto max-sm:mt-[-2rem]">
         <QuestStatusIndicator status={questStatus} />
       </div>
-      <div className="flex-1 flex flex-col justify-between p-6">
-        <div className="space-y-2.5">
-          <Text variant="headline" weight="normal">
-            {title}
-          </Text>
-          <Text
-            variant="bodyLarge"
-            weight="normal"
-            className="text-foreground/70"
-          >
-            {description}
-          </Text>
+      <div className="flex justify-between w-full max-lg:flex-col">
+        <div className="flex-1 flex flex-col justify-between p-6 max-sm:p-4 max-sm:pt-0 gap-3">
+          <div className="space-y-2.5">
+            <Text variant="headline" weight="normal">
+              {title}
+            </Text>
+            <Text
+              variant="bodyLarge"
+              weight="normal"
+              className="text-foreground/70"
+            >
+              {description}
+            </Text>
+          </div>
+          <QuestCriteriaDisplay criteria={questCriteria} status={questStatus} />
         </div>
-        <QuestCriteriaDisplay criteria={questCriteria} status={questStatus} />
-      </div>
-      <div className="flex flex-col gap-2 items-center p-6">
-        <QuestCardButton
-          questStatus={questStatus}
-          disabled={disabled}
-          onClick={handleClick}
-        />
-        <QuestPointsDisplay points={points} questStatus={questStatus} />
+        <div className="flex flex-col gap-2 items-center p-6">
+          <QuestCardButton
+            questStatus={questStatus}
+            disabled={disabled}
+            onClick={handleClick}
+          />
+          <QuestPointsDisplay points={points} questStatus={questStatus} />
+        </div>
       </div>
     </div>
   )
