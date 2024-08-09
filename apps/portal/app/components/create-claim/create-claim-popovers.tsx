@@ -14,6 +14,7 @@ import {
 import { IdentityPresenter } from '@0xintuition/api'
 
 import { IdentitySearchCombobox } from '@components/identity/identity-search-combo-box'
+import { createIdentityModalAtom } from '@lib/state/store'
 import {
   getAtomDescription,
   getAtomImage,
@@ -22,6 +23,7 @@ import {
   sliceString,
 } from '@lib/utils/misc'
 import { ClaimElementType } from 'app/types'
+import { useSetAtom } from 'jotai'
 
 interface IdentityPopoverProps {
   type: ClaimElementType
@@ -47,6 +49,7 @@ export const IdentityPopover: React.FC<IdentityPopoverProps> = ({
   setSearchQuery,
   handleInput,
 }) => {
+  const setCreateIdentityModalActive = useSetAtom(createIdentityModalAtom)
   return (
     <Popover
       open={isObjectPopoverOpen}
@@ -123,6 +126,7 @@ export const IdentityPopover: React.FC<IdentityPopoverProps> = ({
       >
         <IdentitySearchCombobox
           identities={identities}
+          onCreateIdentityClick={() => setCreateIdentityModalActive(true)}
           onIdentitySelect={(identity) =>
             handleIdentitySelection(type, identity)
           }
