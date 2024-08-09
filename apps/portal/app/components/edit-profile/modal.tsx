@@ -26,7 +26,7 @@ export default function EditProfileModal({
         }
       }}
     >
-      <DialogContent className="w-[600px] bg-neutral-950 rounded-xl shadow border border-solid border-black/10">
+      <DialogContent>
         <EditProfileForm
           userObject={userObject}
           setUserObject={setUserObject}

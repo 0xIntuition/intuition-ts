@@ -68,7 +68,7 @@ const TagWithValue = ({
 }: TagWithValueProps) => {
   const TagContent = (
     <>
-      <Trunctacular value={label ? label : ''} />
+      <Trunctacular value={label ? label : ''} maxStringLength={24} />
       {value && (
         <>
           <span className="h-[2px] w-[2px] bg-primary mx-1" />

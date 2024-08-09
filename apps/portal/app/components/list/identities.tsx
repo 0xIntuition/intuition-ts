@@ -16,7 +16,7 @@ export function IdentitiesList({
   enableSort = false,
 }: {
   identities: IdentityPresenter[]
-  pagination: PaginationType
+  pagination?: PaginationType
   paramPrefix?: string
   enableSearch?: boolean
   enableSort?: boolean

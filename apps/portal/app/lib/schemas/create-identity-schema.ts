@@ -40,7 +40,7 @@ export function createIdentitySchema() {
       .instanceof(File)
       .refine((file) => {
         return file.size <= MAX_UPLOAD_SIZE
-      }, 'File size must be less than 3MB')
+      }, 'File size must be less than 5MB')
       .refine((file) => {
         return ['image/jpeg', 'image/png', 'image/gif'].includes(file.type)
       }, 'File must be a .png, .jpg, .jpeg, or .gif')
@@ -67,5 +67,15 @@ export function imageUrlSchema() {
         return ['image/jpeg', 'image/png', 'image/gif'].includes(file.type)
       }, 'File must be a .png, .jpg, .jpeg, or .gif')
       .or(z.string()),
+  })
+}
+
+export function inviteCodeSchema() {
+  return z.object({
+    invite_code: z
+      .string({ required_error: 'Please enter an invite code.' })
+      .min(6, {
+        message: 'Invite codes are 6 characters.',
+      }),
   })
 }

@@ -2,10 +2,13 @@ import { useState } from 'react'
 
 import {
   Button,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
   IdentityTag,
+  Text,
+  TextVariant,
   Trunctacular,
 } from '@0xintuition/1ui'
 import { IdentityPresenter } from '@0xintuition/api'
@@ -110,6 +113,16 @@ export function AddIdentitiesListForm({
                   </IdentityTag>
                 </DialogTitle>
               </DialogHeader>
+              <DialogDescription className="mb-6">
+                <Text variant={TextVariant.caption} className="text-primary/70">
+                  Adding Identities to a List is performed by
+                  &lsquo;Tagging&rsquo; Identities. You can think of
+                  &lsquo;Tagging&rsquo; like hashtags on a Web2 platform, or a
+                  note-taking app like Roam Research. You can tag Identities to
+                  add them to Lists as you explore Intuition, or you can do it
+                  easily here!
+                </Text>
+              </DialogDescription>
               <AddIdentities
                 objectVaultId={identity.vault_id}
                 identity={identity}

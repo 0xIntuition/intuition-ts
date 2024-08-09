@@ -5,6 +5,7 @@ import {
   DialogHeader,
   DialogTitle,
   Icon,
+  IconName,
   Input,
   Label,
   Text,
@@ -200,46 +201,43 @@ export function EditProfileForm({
   // Handle Initial Form Submit
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    if (userObject.image !== previewImage) {
-      try {
-        dispatch({ type: 'START_TRANSACTION' })
-        setLoading(true)
-        const formData = new FormData(event.currentTarget)
-        // Initial form validation
-        const submission = parseWithZod(formData, {
-          schema: updateProfileSchema(),
-        })
-        if (
-          submission.status === 'error' &&
-          submission.error !== null &&
-          Object.keys(submission.error).length
-        ) {
-          console.error('Update profile validation errors: ', submission.error)
-        }
-        setLoading(true)
+    try {
+      dispatch({ type: 'START_TRANSACTION' })
+      setLoading(true)
+      const formData = new FormData(event.currentTarget)
+
+      // Initial form validation
+      const submission = parseWithZod(formData, {
+        schema: updateProfileSchema(),
+      })
+      if (
+        submission.status === 'error' &&
+        submission.error !== null &&
+        Object.keys(submission.error).length
+      ) {
+        console.error('Update profile validation errors: ', submission.error)
+        setLoading(false)
+        return
+      }
+
+      if (imageFile && userObject.image !== previewImage) {
         dispatch({ type: 'START_IMAGE_UPLOAD' })
         imageUploadFetcher.submit(formData, {
           action: '/actions/upload-with-metadata',
           method: 'post',
           encType: 'multipart/form-data',
         })
-      } catch (error: unknown) {
-        handleError(error, dispatch)
-      }
-    } else {
-      try {
-        dispatch({ type: 'START_TRANSACTION' })
-        setLoading(true)
-        const formData = new FormData(event.currentTarget)
+      } else {
         formData.append('id', userObject.id ?? '')
         formData.append('image_url', previewImage ?? '')
         offChainFetcher.submit(formData, {
           action: '/actions/edit-profile',
           method: 'post',
         })
-      } catch (error: unknown) {
-        handleError(error, dispatch)
       }
+    } catch (error: unknown) {
+      handleError(error, dispatch)
+      setLoading(false)
     }
   }
 
@@ -275,12 +273,13 @@ export function EditProfileForm({
     <>
       <DialogHeader className="pb-1">
         <DialogTitle>
-          <div className="flex items-center gap-2">
-            <Icon name="avatar-sparkle" />
-            <Text variant="headline">
-              {isCreateRoute ? 'Create Profile' : 'Update Profile'}
-            </Text>
-          </div>
+          <Text
+            variant="headline"
+            className="text-foreground flex items-center gap-2"
+          >
+            <Icon name={IconName.avatarSparkle} className="h-6 w-6" />
+            {isCreateRoute ? 'Create Profile' : 'Update Profile'}
+          </Text>
         </DialogTitle>
       </DialogHeader>
 
@@ -290,58 +289,59 @@ export function EditProfileForm({
         encType="multipart/form-data"
         action="/actions/edit-profile"
       >
-        <div>
-          {/* Profile picture */}
-          <div className="flex flex-col gap-2">
-            <Label className="text-sm text-secondary-foreground">
-              Profile Picture
-            </Label>
-            <div className="flex justify-between items-center p-4 theme-border rounded-lg bg-primary/10">
-              <div className="w-fit">
-                <ImageChooser
-                  previewImage={previewImage}
-                  setPreviewImage={setPreviewImage}
-                  onFileChange={handleFileChange}
-                  setImageFile={setImageFile}
-                />
-              </div>
-              <div className="flex flex-col h-full items-start justify-center text-secondary-foreground">
-                <Text variant="footnote">
-                  {truncateString(imageFilename ?? '', 36)}
-                </Text>
-                <Text variant="footnote">{imageFilesize}</Text>
-              </div>
-              <Button
-                variant="text"
-                size="icon"
-                onClick={(e) => {
-                  e.preventDefault()
-                  setPreviewImage(null)
-                  setImageFilename(null)
-                  setImageFilesize(null)
-                }}
-                className={previewImage === null ? 'hidden' : ''}
-              >
-                <Icon name="circle-x" />
-              </Button>
+        <div className="w-full flex-col justify-start items-start inline-flex gap-7">
+          <div className="flex flex-col w-full gap-1.5">
+            <div className="self-stretch flex-col justify-start items-start flex">
+              <Text variant="caption" className="text-secondary-foreground">
+                Image
+              </Text>
             </div>
-            <Text
-              variant="small"
-              className="self-end text-secondary-foreground"
-            >
-              {fields.image_url.errors ? (
-                <ErrorList
-                  id={fields.image_url.errorId}
-                  errors={fields.image_url.errors}
-                />
-              ) : (
-                `Max ${MAX_UPLOAD_SIZE / 1024 / 1024} MB`
-              )}
-            </Text>
+            <div className="self-stretch h-[100px] px-9 py-2.5 theme-border bg-primary/10 rounded-md justify-between items-center inline-flex">
+              <div className="justify-start items-center gap-[18px] flex">
+                <div className="w-[60px] h-[60px] rounded-xl justify-center items-center flex">
+                  <ImageChooser
+                    previewImage={previewImage}
+                    setPreviewImage={setPreviewImage}
+                    onFileChange={handleFileChange}
+                    setImageFile={setImageFile}
+                  />
+                </div>
+                <div className="flex-col justify-start items-start inline-flex">
+                  <div className="text-center text-neutral-200 text-sm font-normal leading-tight">
+                    {truncateString(imageFilename ?? '', 36)}
+                  </div>
+                  <div className="text-center text-neutral-200 text-xs font-normal leading-[18px]">
+                    {imageFilesize}
+                  </div>
+                </div>
+              </div>
+              <div className="flex-col justify-end items-end inline-flex">
+                <button
+                  onClick={(e) => {
+                    e.preventDefault()
+                    setPreviewImage(null)
+                    setImageFilename(null)
+                    setImageFilesize(null)
+                  }}
+                  className={`${previewImage === null ? 'hidden' : 'block'}`}
+                >
+                  <Icon
+                    name="circle-x"
+                    className="h-6 w-6 relative text-neutral-700 hover:text-neutral-600 transition-colors duration-300"
+                  />
+                </button>
+              </div>
+            </div>
+            <ErrorList
+              id={fields.image_url.errorId}
+              errors={fields.image_url.errors}
+            />
           </div>
-          {/* Display name */}
-          <div className="flex flex-col gap-2">
-            <Label className="text-sm text-secondary-foreground">
+          <div className="flex flex-col w-full gap-1.5">
+            <Text variant="caption" className="text-foreground/70">
+              Display Name
+            </Text>
+            <Label htmlFor={fields.display_name.id} hidden>
               Display Name
             </Label>
             <Input
@@ -359,8 +359,13 @@ export function EditProfileForm({
             </Text>
           </div>
           {/* Bio */}
-          <div className="flex flex-col gap-2">
-            <Label className="text-sm text-secondary-foreground">Bio</Label>
+          <div className="flex flex-col w-full gap-1.5">
+            <Text variant="caption" className="text-secondary-foreground">
+              Description
+            </Text>
+            <Label htmlFor={fields.description.id} hidden>
+              Description
+            </Label>
             <Textarea
               {...getInputProps(fields.description, { type: 'text' })}
               placeholder="Tell us about yourself!"
@@ -378,12 +383,12 @@ export function EditProfileForm({
         </div>
         <Button
           form={form.id}
-          size="lg"
+          variant={'primary'}
           disabled={loading}
           onClick={() => {
             handleSubmit
           }}
-          className="mx-auto mt-4"
+          className="mx-auto mt-4 w-40"
         >
           {loading ? (
             isCreateRoute ? (

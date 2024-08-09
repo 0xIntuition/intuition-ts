@@ -23,7 +23,7 @@ describe('ProfileCard', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="flex flex-col justify-start items-start w-full min-w-[320px] max-w-full rounded-lg gap-2.5 p-4 overflow-hidden"
+          class="flex flex-col justify-start items-start w-full min-w-[320px] max-w-full rounded-lg gap-2.5 overflow-hidden"
         >
           <div
             class="flex items-center space-x-4 w-full"
@@ -171,7 +171,7 @@ describe('ProfileCard', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="flex flex-col justify-start items-start w-full min-w-[320px] max-w-full rounded-lg gap-2.5 p-4 overflow-hidden"
+          class="flex flex-col justify-start items-start w-full min-w-[320px] max-w-full rounded-lg gap-2.5 overflow-hidden"
         >
           <div
             class="flex items-center space-x-4 w-full"
@@ -192,15 +192,11 @@ describe('ProfileCard', () => {
               </span>
             </span>
             <div>
-              <button
-                data-state="closed"
+              <h6
+                class="text-xl font-medium text-primary"
               >
-                <h6
-                  class="text-xl font-medium text-primary"
-                >
-                  Blockchai...
-                </h6>
-              </button>
+                Blockchain Corp
+              </h6>
               <div
                 class="flex flex-row gap-1 items-center"
               >
@@ -275,7 +271,7 @@ describe('ProfileCard', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="flex flex-col justify-start items-start w-full min-w-[320px] max-w-full rounded-lg gap-2.5 p-4 overflow-hidden"
+          class="flex flex-col justify-start items-start w-full min-w-[320px] max-w-full rounded-lg gap-2.5 overflow-hidden"
         >
           <div
             class="flex items-center space-x-4 w-full"

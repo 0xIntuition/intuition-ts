@@ -12,7 +12,7 @@ import {
   UserQuestsService,
 } from '@0xintuition/api'
 
-import CreateIdentityModal from '@components/create-identity-modal'
+import CreateIdentityModal from '@components/create-identity/create-identity-modal'
 import CreateAtomActivity from '@components/quest/create-atom-activity'
 import {
   Header,

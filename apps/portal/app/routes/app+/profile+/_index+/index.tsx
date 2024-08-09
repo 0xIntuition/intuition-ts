@@ -1,5 +1,10 @@
 import { QuestHeaderCard, Text } from '@0xintuition/1ui'
-import { ClaimSortColumn, ClaimsService, SortDirection } from '@0xintuition/api'
+import {
+  ClaimSortColumn,
+  ClaimsService,
+  QuestNarrative,
+  SortDirection,
+} from '@0xintuition/api'
 
 import { ListClaimsList } from '@components/list/list-claims'
 import { OverviewAboutHeader } from '@components/profile/overview-about-header'
@@ -15,6 +20,7 @@ import { useNavigate, useRouteLoaderData } from '@remix-run/react'
 import { ProfileLoaderData } from '@routes/app+/profile+/_index+/_layout'
 import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
+import { getQuestsProgress } from '@server/quest'
 import { NO_USER_IDENTITY_ERROR, NO_WALLET_ERROR, PATHS } from 'app/consts'
 
 export async function loader({ request }: LoaderFunctionArgs) {
@@ -29,17 +35,13 @@ export async function loader({ request }: LoaderFunctionArgs) {
   listSearchParams.set('direction', SortDirection.DESC)
   listSearchParams.set('limit', '6')
 
-  const mockUserQuestsData = {
-    currentQuest: {
-      title: 'Primitive Island',
-      subtitle: 'Continue your journey',
-    },
-    questsCompleted: 1,
-    totalQuests: 10,
-  }
-
   return json({
-    userQuests: mockUserQuestsData,
+    questsProgress: await getQuestsProgress({
+      request,
+      options: {
+        narrative: QuestNarrative.STANDARD,
+      },
+    }),
     positions: await getPositionsOnIdentity({
       request,
       identityId: userWallet,
@@ -65,7 +67,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export default function UserProfileOverview() {
-  const { userQuests, claims, positions, claimsSummary, savedListClaims } =
+  const { questsProgress, claims, positions, claimsSummary, savedListClaims } =
     useLiveLoader<typeof loader>(['attest', 'create'])
   const { userIdentity, userTotals } =
     useRouteLoaderData<ProfileLoaderData>(
@@ -75,13 +77,15 @@ export default function UserProfileOverview() {
 
   const navigate = useNavigate()
 
+  const currentQuest = questsProgress.numCompletedQuests
+
   return (
     <div className="flex flex-col gap-6">
       <QuestHeaderCard
-        title={userQuests.currentQuest.title}
-        subtitle={userQuests.currentQuest.subtitle}
-        numberOfCompletedQuests={userQuests.questsCompleted}
-        totalNumberOfQuests={userQuests.totalQuests}
+        title={questsProgress.quests[currentQuest].title ?? ''}
+        subtitle={questsProgress.quests[currentQuest].description ?? ''}
+        numberOfCompletedQuests={questsProgress.numCompletedQuests}
+        totalNumberOfQuests={questsProgress.numQuests}
         onButtonClick={() => navigate(PATHS.QUEST)}
       />
 

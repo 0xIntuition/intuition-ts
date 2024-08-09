@@ -1,14 +1,25 @@
-import { Identity, IdentityTag, Text } from '@0xintuition/1ui'
+import { cn, Identity, IdentityTag, Text } from '@0xintuition/1ui'
+
+export interface ListIdentityDisplayCardProps
+  extends React.HTMLAttributes<HTMLDivElement> {
+  displayName: string
+  avatarImgSrc?: string
+}
 
 export function ListIdentityDisplayCard({
   displayName,
   avatarImgSrc,
-}: {
-  displayName: string
-  avatarImgSrc?: string
-}) {
+  className,
+  ...props
+}: ListIdentityDisplayCardProps) {
   return (
-    <div className="flex flex-col gap-2 theme-border p-5 rounded-lg max-sm:items-center">
+    <div
+      className={cn(
+        `flex flex-col gap-2 theme-border p-5 rounded-lg max-sm:items-center`,
+        className,
+      )}
+      {...props}
+    >
       <Text variant="caption" className="text-muted-foreground">
         Tag Identity
       </Text>

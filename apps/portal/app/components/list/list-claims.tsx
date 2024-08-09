@@ -9,6 +9,7 @@ import {
   SortColumnType,
   useSearchAndSortParamsHandler,
 } from '@lib/hooks/useSearchAndSortParams'
+import logger from '@lib/utils/logger'
 import { useNavigate } from '@remix-run/react'
 import { PaginationType } from 'app/types/pagination'
 
@@ -47,6 +48,8 @@ export function ListClaimsList<T extends SortColumnType = ClaimSortColumn>({
     { value: 'Updated At', sortBy: 'UpdatedAt' },
     { value: 'Created At', sortBy: 'CreatedAt' },
   ]
+
+  logger('listClaims', listClaims)
 
   const options = sortOptions || defaultOptions
 
@@ -107,6 +110,7 @@ export function ListClaimsList<T extends SortColumnType = ClaimSortColumn>({
                   identitiesCount={claim.object.tag_count ?? 0}
                   isSaved={claim.user_assets_for !== '0'}
                   savedAmount={claim.user_assets_for}
+                  navigateLink={`/app/list/${claim.claim_id}${sourceUserAddress ? `?user=${sourceUserAddress}` : ''}`}
                   onViewClick={() =>
                     navigate(
                       `/app/list/${claim.claim_id}${sourceUserAddress ? `?user=${sourceUserAddress}` : ''}`,

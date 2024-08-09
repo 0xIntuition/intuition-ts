@@ -1,12 +1,11 @@
 import { Dialog, DialogContent } from '@0xintuition/1ui'
 import { ClaimPresenter } from '@0xintuition/api'
 
+import { ClaimForm } from '@components/create-claim/create-claim-form'
 import {
   TransactionSuccessAction,
   TransactionSuccessActionType,
 } from 'app/types'
-
-import { ClaimForm } from './create-claim-form'
 
 export interface CreateClaimModalProps {
   open?: boolean

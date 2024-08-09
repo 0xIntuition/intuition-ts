@@ -42,7 +42,7 @@ describe('SocialLinks', () => {
             class="flex flex-wrap gap-2"
           >
             <button
-              class="items-center rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 flex gap-2 w-min text-sm font-normal"
+              class="items-center rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 flex gap-2 w-min text-sm font-normal text-nowrap"
             >
               <svg
                 class="h-3 w-3"
@@ -61,7 +61,7 @@ describe('SocialLinks', () => {
               </svg>
             </button>
             <button
-              class="items-center rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 flex gap-2 w-min text-sm font-normal"
+              class="items-center rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 flex gap-2 w-min text-sm font-normal text-nowrap"
             >
               <svg
                 class="h-3 w-3"
@@ -80,7 +80,7 @@ describe('SocialLinks', () => {
               </svg>
             </button>
             <button
-              class="items-center rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 flex gap-2 w-min text-sm font-normal"
+              class="items-center rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 flex gap-2 w-min text-sm font-normal text-nowrap"
             >
               <svg
                 class="h-3 w-3"
@@ -92,7 +92,7 @@ describe('SocialLinks', () => {
               @superdave
             </button>
             <button
-              class="items-center rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 flex gap-2 w-min text-sm font-normal"
+              class="items-center rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 flex gap-2 w-min text-sm font-normal text-nowrap"
             >
               <svg
                 class="h-3 w-3"
@@ -104,7 +104,7 @@ describe('SocialLinks', () => {
               @superdave
             </button>
             <button
-              class="items-center rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 flex gap-2 w-min text-sm font-normal"
+              class="items-center rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 flex gap-2 w-min text-sm font-normal text-nowrap"
             >
               <svg
                 class="h-3 w-3"
@@ -123,7 +123,7 @@ describe('SocialLinks', () => {
               </svg>
             </button>
             <button
-              class="items-center rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 flex gap-2 w-min text-sm font-normal"
+              class="items-center rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 flex gap-2 w-min text-sm font-normal text-nowrap"
             >
               <svg
                 class="h-3 w-3"
@@ -135,7 +135,7 @@ describe('SocialLinks', () => {
               @superdave
             </button>
             <button
-              class="items-center rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 flex gap-2 w-min text-sm font-normal"
+              class="items-center rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 flex gap-2 w-min text-sm font-normal text-nowrap"
             >
               <svg
                 class="h-3 w-3"

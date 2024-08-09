@@ -79,6 +79,10 @@ export default function ListDetails() {
       <ListIdentityDisplayCard
         displayName={claim.object?.display_name ?? ''}
         avatarImgSrc={claim.object?.image ?? ''}
+        onClick={() => {
+          navigate(`/app/identity/${claim.object?.id}`)
+        }}
+        className="hover:cursor-pointer w-full"
       />
       <InfoCard
         variant="user"

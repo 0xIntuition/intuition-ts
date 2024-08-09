@@ -22,11 +22,11 @@ export const COMING_SOON_QUEST_SET: QuestSet = {
   navigatePath: '',
 }
 
-export const FALLBACK_IDENTITY_ID = '0160563f-45da-4f17-928a-69b54339c97d'
+export const FALLBACK_IDENTITY_ID = 'd72adfd5-c872-4c8e-9864-cb3c5217df2b'
 
-export const FALLBACK_CLAIM_ID = '9ef671bc-6304-49aa-a268-f007b2a7aeac'
+export const FALLBACK_CLAIM_ID = 'b07c739e-6d46-4145-abd4-102a2351c585'
 
-export const FALLBACK_COUNTER_CLAIM_ID = '853fc4eb-86a6-43d3-a1a0-b62d72cd7592'
+export const FALLBACK_COUNTER_CLAIM_ID = '7df63698-2f30-46d8-ae6a-3dfe672c2722'
 
 export const FALLBACK_QUEST_PLACEHOLDER_IMAGE =
   'https://res.cloudinary.com/dfpwy9nyv/image/upload/f_auto,q_auto/v1/Portal%20Assets/quests/quest-placeholder'

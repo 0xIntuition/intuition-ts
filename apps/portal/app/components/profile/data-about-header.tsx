@@ -4,6 +4,7 @@ import {
   IdentityTag,
   MonetaryValue,
   Text,
+  TextVariant,
   Trunctacular,
 } from '@0xintuition/1ui'
 import { IdentityPresenter } from '@0xintuition/api'
@@ -82,7 +83,11 @@ const DataAboutHeader: React.FC<DataAboutHeaderProps> = ({
           >
             Total stake {variant === 'claims' && 'across all Claims'}
           </Text>
-          <MonetaryValue value={totalStake} currency="ETH" />
+          <MonetaryValue
+            value={totalStake}
+            currency="ETH"
+            textVariant={TextVariant.headline}
+          />
         </div>
       </div>
     </div>

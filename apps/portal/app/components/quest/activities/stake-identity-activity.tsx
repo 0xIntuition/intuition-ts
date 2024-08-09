@@ -5,7 +5,6 @@ import {
   Identity,
   InfoCard,
   PositionCard,
-  PositionCardFeesAccrued,
   PositionCardLastUpdated,
   PositionCardOwnership,
   PositionCardStaked,
@@ -83,7 +82,6 @@ export default function StakeIdentityActivity({
                     : 0
                 }
               />
-              <PositionCardFeesAccrued amount={0} />
               <PositionCardLastUpdated timestamp={identity.updated_at} />
             </PositionCard>
           </div>

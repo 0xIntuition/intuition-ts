@@ -51,7 +51,10 @@ const SocialLinksBadge = ({
 }: SocialLinksBadgeProps) => {
   return (
     <Tag
-      className={cn('flex gap-2 w-min text-sm font-normal', className)}
+      className={cn(
+        'flex gap-2 w-min text-sm font-normal text-nowrap',
+        className,
+      )}
       {...props}
     >
       <Icon className="h-3 w-3" name={platform as IconNameType} />

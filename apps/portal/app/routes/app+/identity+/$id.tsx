@@ -108,10 +108,8 @@ export default function IdentityDetails() {
     identity: ExtendedIdentityPresenter
     vaultDetails: VaultDetailsType
     userWallet: string
-  }>(['attest'])
+  }>(['attest', 'create'])
   const navigate = useNavigate()
-
-  logger('identity', identity)
 
   const { user_assets, assets_sum } = vaultDetails ? vaultDetails : identity
   const [stakeModalActive, setStakeModalActive] = useAtom(stakeModalAtom)
