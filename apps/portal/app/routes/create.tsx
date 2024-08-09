@@ -40,6 +40,9 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const wallet = await requireUserWallet(request)
   invariant(wallet, NO_WALLET_ERROR)
 
+  const url = new URL(request.url)
+  const isCreating = url.searchParams.get('setupProfile') === 'true'
+
   let userObject
 
   try {
@@ -63,11 +66,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
     console.error('No user identity associated with wallet')
   }
 
-  if (userIdentity) {
+  if (userIdentity && !isCreating) {
     throw redirect(`${PATHS.PROFILE}`)
   }
 
-  return json({ wallet, userIdentity, userObject })
+  return json({ wallet, userIdentity, userObject, isCreating })
 }
 
 interface CreateButtonWrapperProps {
@@ -121,6 +124,7 @@ export function CreateButton({
   const { data: walletClient } = useConnectorClient()
 
   const [loading, setLoading] = useState(false)
+  const navigate = useNavigate()
 
   interface OffChainFetcherData {
     success: 'success' | 'error'
@@ -258,6 +262,7 @@ export function CreateButton({
 
         try {
           dispatch({ type: 'PREPARING_IDENTITY' })
+          navigate('?setupProfile=true', { replace: true })
           offChainFetcher.submit(formData, {
             action: '/actions/create-profile',
             method: 'post',
