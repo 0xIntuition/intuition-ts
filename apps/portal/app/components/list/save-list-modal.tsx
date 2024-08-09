@@ -99,22 +99,24 @@ export default function SaveListModal({
   const vaultDetailsFetcher = useFetcher<VaultDetailsType>()
 
   useEffect(() => {
-    const fetchClaim = () => {
-      const searchParams = new URLSearchParams({
-        subject: identity.vault_id,
-        predicate: TAG_PREDICATE_VAULT_ID_TESTNET.toString(),
-        object: tag.vault_id,
-      })
+    if (identity && tag) {
+      const fetchClaim = () => {
+        const searchParams = new URLSearchParams({
+          subject: identity.vault_id,
+          predicate: TAG_PREDICATE_VAULT_ID_TESTNET.toString(),
+          object: tag.vault_id,
+        })
 
-      const finalUrl = `${SEARCH_CLAIMS_BY_IDS_RESOURCE_ROUTE}?${searchParams.toString()}`
+        const finalUrl = `${SEARCH_CLAIMS_BY_IDS_RESOURCE_ROUTE}?${searchParams.toString()}`
 
-      claimFetcher.load(finalUrl)
+        claimFetcher.load(finalUrl)
+      }
+
+      fetchClaim()
     }
-
-    fetchClaim()
     // omits the fetcher from the exhaustive deps
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [identity.vault_id, tag.vault_id])
+  }, [identity, tag])
 
   useEffect(() => {
     if (
@@ -223,7 +225,7 @@ export default function SaveListModal({
       sender: Address
       receiver?: Address
       owner?: Address
-      userAssetsAfterTotalFees: bigint
+      senderAssetsAfterTotalFees: bigint
       sharesForReceiver: bigint
       entryFee: bigint
       id: bigint
@@ -257,10 +259,12 @@ export default function SaveListModal({
         args: EventLogArgs
       }
 
+      console.log('topics', topics)
+
       if (topics.args.sender === (userWallet as `0x${string}`)) {
         assets =
           mode === 'save'
-            ? (topics.args as BuyArgs).userAssetsAfterTotalFees.toString()
+            ? (topics.args as BuyArgs).senderAssetsAfterTotalFees.toString()
             : (topics.args as SellArgs).assetsForReceiver.toString()
 
         toast.custom(() => (
