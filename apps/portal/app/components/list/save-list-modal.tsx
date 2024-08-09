@@ -74,12 +74,13 @@ export default function SaveListModal({
     TransactionActionType
   >(transactionReducer, initialTxState)
   const publicClient = usePublicClient()
+  console.log('identity', identity)
 
   const [isLoading, setIsLoading] = useState(true)
 
-  const depositHook = useDepositTriple(identity.contract)
+  const depositHook = useDepositTriple(identity?.contract ?? '')
 
-  const redeemHook = useRedeemTriple(identity.contract)
+  const redeemHook = useRedeemTriple(identity?.contract ?? '')
 
   const {
     writeContractAsync,

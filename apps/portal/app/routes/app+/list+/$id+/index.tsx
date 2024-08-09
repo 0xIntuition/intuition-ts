@@ -21,8 +21,8 @@ import {
 } from '@0xintuition/api'
 
 import { InfoTooltip } from '@components/info-tooltip'
-import { IdentitiesList } from '@components/list/identities'
 import { ListTabIdentityDisplay } from '@components/list/list-tab-identity-display'
+import { TagsList } from '@components/list/tags'
 import { DataHeaderSkeleton, PaginatedListSkeleton } from '@components/skeleton'
 import { getListIdentities, getListIdentitiesCount } from '@lib/services/lists'
 import { addIdentitiesListModalAtom } from '@lib/state/store'
@@ -100,6 +100,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   })
 
   return defer({
+    wallet,
     userObject,
     globalListIdentities: getListIdentities({
       request,
@@ -135,6 +136,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
 export default function ListOverview() {
   const {
+    wallet,
     globalListIdentities,
     userListIdentities,
     additionalUserListIdentities,
@@ -325,9 +327,11 @@ export default function ListOverview() {
                   return isNavigating ? (
                     <PaginatedListSkeleton />
                   ) : (
-                    <IdentitiesList
+                    <TagsList
                       identities={resolvedGlobalListIdentities.listIdentities}
                       pagination={resolvedGlobalListIdentities.pagination}
+                      claim={claim}
+                      wallet={wallet}
                       enableSearch={true}
                       enableSort={true}
                     />
@@ -346,9 +350,11 @@ export default function ListOverview() {
                   return isNavigating ? (
                     <PaginatedListSkeleton />
                   ) : (
-                    <IdentitiesList
+                    <TagsList
                       identities={resolvedUserListIdentities.listIdentities}
                       pagination={resolvedUserListIdentities.pagination}
+                      claim={claim}
+                      wallet={wallet}
                       enableSearch={true}
                       enableSort={true}
                     />
@@ -367,13 +373,15 @@ export default function ListOverview() {
                     return isNavigating ? (
                       <PaginatedListSkeleton />
                     ) : resolvedAdditionalUserListIdentities ? (
-                      <IdentitiesList
+                      <TagsList
                         identities={
                           resolvedAdditionalUserListIdentities.listIdentities
                         }
                         pagination={
                           resolvedAdditionalUserListIdentities.pagination
                         }
+                        claim={claim}
+                        wallet={wallet}
                         enableSearch={true}
                         enableSort={true}
                       />
