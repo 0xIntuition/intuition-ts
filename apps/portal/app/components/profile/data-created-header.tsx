@@ -1,7 +1,6 @@
 import React from 'react'
 
 import {
-  FeesAccrued,
   IdentityTag,
   MonetaryValue,
   Text,
@@ -9,8 +8,6 @@ import {
   TextWeight,
 } from '@0xintuition/1ui'
 import { IdentityPresenter, UserTotalsPresenter } from '@0xintuition/api'
-
-import { formatBalance } from '@lib/utils/misc'
 
 export const DataCreatedHeaderVariants = {
   activeIdentities: 'activeIdentities',
@@ -33,18 +30,17 @@ interface DataCreatedHeaderProps extends React.HTMLAttributes<HTMLDivElement> {
 export const DataCreatedHeader: React.FC<DataCreatedHeaderProps> = ({
   variant,
   userIdentity,
-  userTotals,
   totalStake,
   totalResults,
   ...props
 }) => {
-  const totalPositionValue = +formatBalance(
-    userTotals?.total_position_value ?? '0',
-    18,
-    4,
-  )
-  const totalDelta = +formatBalance(userTotals?.total_delta ?? '0', 18, 4)
-  const feesAccrued = totalDelta - totalPositionValue
+  // const totalPositionValue = +formatBalance(
+  //   userTotals?.total_position_value ?? '0',
+  //   18,
+  //   4,
+  // )
+  // const totalDelta = +formatBalance(userTotals?.total_delta ?? '0', 18, 4)
+  // const feesAccrued = totalDelta - totalPositionValue
 
   return (
     <div className="h-46 flex flex-col w-full gap-3" {...props}>
@@ -86,18 +82,22 @@ export const DataCreatedHeader: React.FC<DataCreatedHeaderProps> = ({
                 {totalResults}
               </Text>
             </div>
-            <div className="flex flex-col items-start max-sm:items-center">
-              <Text
-                variant="caption"
-                weight="regular"
-                className="text-secondary-foreground"
-              >
-                Total Staked
-              </Text>
-              <MonetaryValue value={totalStake} currency="ETH" />
-            </div>
           </div>
           <div className="flex flex-col items-end max-sm:items-center">
+            <Text
+              variant="caption"
+              weight="regular"
+              className="text-secondary-foreground"
+            >
+              Total Staked
+            </Text>
+            <MonetaryValue
+              value={totalStake}
+              currency="ETH"
+              textVariant={TextVariant.headline}
+            />
+          </div>
+          {/* <div className="flex flex-col items-end max-sm:items-center">
             <Text
               variant="caption"
               weight="regular"
@@ -106,7 +106,7 @@ export const DataCreatedHeader: React.FC<DataCreatedHeaderProps> = ({
               Fees Accrued
             </Text>
             <FeesAccrued value={feesAccrued} currency="ETH" />
-          </div>
+          </div> */}
         </div>
       </div>
     </div>
