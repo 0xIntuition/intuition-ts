@@ -254,7 +254,7 @@ export default function ListOverview() {
               </Await>
             </Suspense>
             {userWalletAddress && (
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<Skeleton className="w-44 h-10 rounded" />}>
                 <Await resolve={additionalUserListIdentities}>
                   {(resolvedAdditionalUserListIdentities) => (
                     <TabsTrigger
