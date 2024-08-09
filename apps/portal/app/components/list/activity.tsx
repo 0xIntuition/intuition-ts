@@ -31,7 +31,7 @@ import {
   getAtomLink,
 } from '@lib/utils/misc'
 import { useNavigate } from '@remix-run/react'
-import { BLOCK_EXPLORER_URL, IPFS_GATEWAY_URL, PATHS } from 'app/consts'
+import { BLOCK_EXPLORER_URL, PATHS } from 'app/consts'
 import { PaginationType } from 'app/types/pagination'
 import { formatDistance } from 'date-fns'
 
@@ -126,6 +126,7 @@ function ActivityItem({
                   onClick={() =>
                     navigate(`${PATHS.PROFILE}/${activity.creator?.wallet}`)
                   }
+                  maxStringLength={32}
                 />
               </IdentityTag>
             </HoverCardTrigger>
@@ -168,16 +169,8 @@ function ActivityItem({
               variant={
                 activity.identity.is_user ? Identity.user : Identity.nonUser
               }
-              avatarSrc={
-                activity.identity.user?.image ?? activity.identity.image ?? ''
-              }
-              name={
-                activity.identity.user_display_name ||
-                (activity.identity.display_name &&
-                activity.identity.display_name !== ''
-                  ? activity.identity.display_name
-                  : activity.identity.identity_id)
-              }
+              avatarSrc={getAtomImage(activity.identity)}
+              name={getAtomLabel(activity.identity)}
               id={
                 activity.identity.user?.wallet ?? activity.identity.identity_id
               }
@@ -189,16 +182,8 @@ function ActivityItem({
                 )
               }
               totalFollowers={activity.identity.num_positions}
-              link={
-                activity.identity.is_user
-                  ? `${PATHS.PROFILE}/${activity.identity.identity_id}`
-                  : `${PATHS.IDENTITY}/${activity.identity.id}`
-              }
-              ipfsLink={
-                activity.identity.is_user
-                  ? `${BLOCK_EXPLORER_URL}/address/${activity.identity.identity_id}`
-                  : `${IPFS_GATEWAY_URL}/${activity.identity.id}`
-              }
+              link={getAtomLink(activity.identity)}
+              ipfsLink={getAtomIpfsLink(activity.identity)}
             />
             <a
               href={`${BLOCK_EXPLORER_URL}/tx/${activity.transaction_hash}`}
