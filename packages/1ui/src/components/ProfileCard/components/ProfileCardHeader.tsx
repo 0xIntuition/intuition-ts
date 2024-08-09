@@ -26,6 +26,7 @@ const ProfileCardHeader = ({
           variant="headline"
           weight="medium"
           className="text-primary"
+          maxStringLength={24}
         />
         <div className="flex flex-row gap-1 items-center">
           {link && id && (
