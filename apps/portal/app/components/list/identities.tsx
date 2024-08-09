@@ -1,8 +1,13 @@
 import { Identity, IdentityContentRow } from '@0xintuition/1ui'
 import { IdentityPresenter, SortColumn } from '@0xintuition/api'
 
-import { formatBalance } from '@lib/utils/misc'
-import { BLOCK_EXPLORER_URL, IPFS_GATEWAY_URL, PATHS } from 'app/consts'
+import {
+  formatBalance,
+  getAtomImage,
+  getAtomIpfsLink,
+  getAtomLabel,
+  getAtomLink,
+} from '@lib/utils/misc'
 import { PaginationType } from 'app/types/pagination'
 
 import { SortOption } from '../sort-select'
@@ -46,8 +51,8 @@ export function IdentitiesList({
         >
           <IdentityContentRow
             variant={identity.is_user ? Identity.user : Identity.nonUser}
-            avatarSrc={identity.user?.image ?? identity.image ?? ''}
-            name={identity.user?.display_name ?? identity.display_name}
+            avatarSrc={getAtomImage(identity)}
+            name={getAtomLabel(identity)}
             id={identity.user?.wallet ?? identity.identity_id}
             amount={
               +formatBalance(
@@ -61,16 +66,8 @@ export function IdentitiesList({
               )
             }
             totalFollowers={identity.num_positions}
-            link={
-              identity.is_user
-                ? `${PATHS.PROFILE}/${identity.identity_id}`
-                : `${PATHS.IDENTITY}/${identity.id}`
-            }
-            ipfsLink={
-              identity.is_user
-                ? `${BLOCK_EXPLORER_URL}/address/${identity.identity_id}`
-                : `${IPFS_GATEWAY_URL}/${identity.id}`
-            }
+            link={getAtomLink(identity)}
+            ipfsLink={getAtomIpfsLink(identity)}
           />
         </div>
       ))}
