@@ -18,7 +18,7 @@ const ProfileCardHeader = ({
   link,
 }: ProfileCardHeaderProps) => {
   return (
-    <div className="flex items-center space-x-4 w-full">
+    <div className="flex items-center space-x-4 w-full max-lg:justify-center">
       <Avatar variant={variant} src={avatarSrc} name={name} />
       <div>
         <Trunctacular
