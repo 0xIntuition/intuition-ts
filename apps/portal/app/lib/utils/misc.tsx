@@ -368,6 +368,9 @@ export const getAtomIpfsLink = (atom: IdentityPresenter | null | undefined) => {
   if (atom.is_user === true) {
     return `${BLOCK_EXPLORER_URL}/address/${atom.identity_id}`
   }
+  if (atom.identity_id?.startsWith('https')) {
+    return atom.identity_id
+  }
   return `${IPFS_GATEWAY_URL}/${atom.identity_id?.replace('ipfs://', '')}`
 }
 
