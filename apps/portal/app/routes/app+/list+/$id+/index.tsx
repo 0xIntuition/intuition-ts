@@ -1,7 +1,9 @@
 import { Suspense, useEffect, useState } from 'react'
 
 import {
+  Button,
   Claim,
+  Icon,
   ListHeaderCard,
   Skeleton,
   Tabs,
@@ -20,6 +22,7 @@ import { IdentitiesList } from '@components/list/identities'
 import { ListTabIdentityDisplay } from '@components/list/list-tab-identity-display'
 import { DataHeaderSkeleton, PaginatedListSkeleton } from '@components/skeleton'
 import { getListIdentities, getListIdentitiesCount } from '@lib/services/lists'
+import { addIdentitiesListModalAtom } from '@lib/state/store'
 import {
   getAtomDescription,
   getAtomImage,
@@ -45,6 +48,7 @@ import {
   PATHS,
 } from 'app/consts'
 import { IdentityListType } from 'app/types'
+import { useSetAtom } from 'jotai'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const id = params.id
@@ -140,6 +144,8 @@ export default function ListOverview() {
     useRouteLoaderData<{ claim: ClaimPresenter }>('routes/app+/list+/$id') ?? {}
   invariant(claim, NO_CLAIM_ERROR)
 
+  const setAddIdentitiesListModalActive = useSetAtom(addIdentitiesListModalAtom)
+
   const [searchParams, setSearchParams] = useSearchParams()
   const [isNavigating, setIsNavigating] = useState(false)
   const userWalletAddress = searchParams.get('user')
@@ -164,6 +170,20 @@ export default function ListOverview() {
 
   return (
     <div className="flex-col justify-start items-start flex w-full gap-6">
+      <div className="flex flex-row w-full justify-end">
+        <Button
+          variant="primary"
+          onClick={() => {
+            setAddIdentitiesListModalActive({
+              isOpen: true,
+              id: claim?.object?.id ?? null,
+            })
+          }}
+        >
+          <Icon name="plus-small" />
+          Add to list
+        </Button>
+      </div>
       <div className="flex flex-col w-full pb-4">
         <Suspense fallback={<DataHeaderSkeleton />}>
           <Await resolve={totalGlobalIdentitiesCount} errorElement={<></>}>

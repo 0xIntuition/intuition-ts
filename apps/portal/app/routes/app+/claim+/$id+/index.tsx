@@ -1,18 +1,43 @@
 import { Suspense, useEffect, useState } from 'react'
 
-import { Tabs, TabsList, TabsTrigger, Text } from '@0xintuition/1ui'
-import { ClaimsService, VaultType } from '@0xintuition/api'
+import {
+  Claim,
+  Identity,
+  Tabs,
+  TabsList,
+  TabsTrigger,
+  Text,
+} from '@0xintuition/1ui'
+import { ClaimsService, IdentityPresenter, VaultType } from '@0xintuition/api'
 
 import { PositionsOnClaim } from '@components/list/positions-on-claim'
 import { PaginatedListSkeleton, TabsSkeleton } from '@components/skeleton'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { getPositionsOnClaim } from '@lib/services/positions'
-import { invariant } from '@lib/utils/misc'
+import {
+  getAtomDescription,
+  getAtomImage,
+  getAtomIpfsLink,
+  getAtomLabel,
+  getAtomLink,
+  invariant,
+} from '@lib/utils/misc'
 import { defer, LoaderFunctionArgs } from '@remix-run/node'
-import { Await, useNavigation, useSearchParams } from '@remix-run/react'
+import {
+  Await,
+  useNavigation,
+  useRouteLoaderData,
+  useSearchParams,
+} from '@remix-run/react'
+import { ClaimDetailsLoaderData } from '@routes/app+/claim+/$id'
 import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
-import { NO_PARAM_ID_ERROR, NO_WALLET_ERROR } from 'app/consts'
+import {
+  NO_CLAIM_ERROR,
+  NO_PARAM_ID_ERROR,
+  NO_WALLET_ERROR,
+  PATHS,
+} from 'app/consts'
 import { PaginationType } from 'app/types/pagination'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -38,10 +63,11 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 }
 
 export default function ClaimOverview() {
-  const { claim, positionsData } = useLiveLoader<typeof loader>([
-    'attest',
-    'create',
-  ])
+  const { positionsData } = useLiveLoader<typeof loader>(['attest', 'create'])
+  const { claim } =
+    useRouteLoaderData<ClaimDetailsLoaderData>('routes/app+/claim+/$id') ?? {}
+  invariant(claim, NO_CLAIM_ERROR)
+
   const [searchParams, setSearchParams] = useSearchParams()
   const [isNavigating, setIsNavigating] = useState(false)
 
@@ -67,8 +93,45 @@ export default function ClaimOverview() {
   }, [state])
 
   return (
-    <div className="flex-col justify-start items-start flex w-full gap-4">
-      <div className="self-stretch justify-between items-center inline-flex mb-2">
+    <div className="flex-col justify-start items-start flex w-full gap-6">
+      <div className="flex-row hidden md:flex">
+        <Claim
+          size="xl"
+          link={`${PATHS.CLAIM}/${claim?.claim_id}`}
+          subject={{
+            variant: claim.subject?.is_user ? Identity.user : Identity.nonUser,
+            label: getAtomLabel(claim.subject as IdentityPresenter),
+            imgSrc: getAtomImage(claim.subject as IdentityPresenter),
+            id: claim.subject?.identity_id,
+            description: getAtomDescription(claim.subject as IdentityPresenter),
+            ipfsLink: getAtomIpfsLink(claim.subject as IdentityPresenter),
+            link: getAtomLink(claim.subject as IdentityPresenter),
+          }}
+          predicate={{
+            variant: claim.predicate?.is_user
+              ? Identity.user
+              : Identity.nonUser,
+            label: getAtomLabel(claim.predicate as IdentityPresenter),
+            imgSrc: getAtomImage(claim.predicate as IdentityPresenter),
+            id: claim.predicate?.identity_id,
+            description: getAtomDescription(
+              claim.predicate as IdentityPresenter,
+            ),
+            ipfsLink: getAtomIpfsLink(claim.predicate as IdentityPresenter),
+            link: getAtomLink(claim.predicate as IdentityPresenter),
+          }}
+          object={{
+            variant: claim.object?.is_user ? Identity.user : Identity.nonUser,
+            label: getAtomLabel(claim.object as IdentityPresenter),
+            imgSrc: getAtomImage(claim.object as IdentityPresenter),
+            id: claim.object?.identity_id,
+            description: getAtomDescription(claim.object as IdentityPresenter),
+            ipfsLink: getAtomIpfsLink(claim.object as IdentityPresenter),
+            link: getAtomLink(claim.object as IdentityPresenter),
+          }}
+        />
+      </div>
+      <div className="self-stretch justify-between items-center inline-flex mt-6">
         <Text
           variant="headline"
           weight="medium"
@@ -79,38 +142,36 @@ export default function ClaimOverview() {
       </div>
       <Tabs defaultValue="all">
         <Suspense fallback={<TabsSkeleton numOfTabs={3} />}>
-          <Await resolve={claim}>
-            {(resolvedClaim) => (
-              <TabsList>
-                <TabsTrigger
-                  value="all"
-                  label="All"
-                  totalCount={resolvedClaim?.num_positions}
-                  onClick={(e) => {
-                    e.preventDefault()
-                    handleTabChange(null)
-                  }}
-                />
-                <TabsTrigger
-                  value="for"
-                  label="For"
-                  totalCount={resolvedClaim?.for_num_positions}
-                  onClick={(e) => {
-                    e.preventDefault()
-                    handleTabChange('for')
-                  }}
-                />
-                <TabsTrigger
-                  value="against"
-                  label="Against"
-                  totalCount={resolvedClaim?.against_num_positions}
-                  onClick={(e) => {
-                    e.preventDefault()
-                    handleTabChange('against')
-                  }}
-                />
-              </TabsList>
-            )}
+          <Await resolve={positionsData}>
+            <TabsList>
+              <TabsTrigger
+                value="all"
+                label="All"
+                totalCount={claim.num_positions}
+                onClick={(e) => {
+                  e.preventDefault()
+                  handleTabChange(null)
+                }}
+              />
+              <TabsTrigger
+                value="for"
+                label="For"
+                totalCount={claim.for_num_positions}
+                onClick={(e) => {
+                  e.preventDefault()
+                  handleTabChange('for')
+                }}
+              />
+              <TabsTrigger
+                value="against"
+                label="Against"
+                totalCount={claim.against_num_positions}
+                onClick={(e) => {
+                  e.preventDefault()
+                  handleTabChange('against')
+                }}
+              />
+            </TabsList>
           </Await>
         </Suspense>
       </Tabs>
