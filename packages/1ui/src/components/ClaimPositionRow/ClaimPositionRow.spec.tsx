@@ -12,6 +12,7 @@ describe('ClaimPositionRow', () => {
         variant="user"
         position="claimFor"
         name="John Doe"
+        description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi."
         id="0x1234567890abcdef1234567890abcdef12345678"
         avatarSrc="https://avatars.githubusercontent.com/u/94311139?s=200&v=4"
         amount={1.21}
@@ -30,10 +31,11 @@ describe('ClaimPositionRow', () => {
             class="flex items-center max-sm:justify-center"
           >
             <a
+              data-state="closed"
               href="https://sepolia.basescan.org/address/0x1234567890abcdef1234567890abcdef12345678"
             >
               <span
-                class="relative flex shrink-0 overflow-hidden aspect-square bg-background theme-border rounded-full w-16 h-16 mr-4"
+                class="relative flex shrink-0 overflow-hidden aspect-square bg-background theme-border rounded-full mr-4 w-[64px] h-[64px]"
               >
                 <span
                   class="flex h-full w-full items-center justify-center bg-inherit"
