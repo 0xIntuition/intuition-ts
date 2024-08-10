@@ -470,6 +470,20 @@ function CreateIdentityForm({
     initialDeposit: fields.initial_deposit.value,
   }
 
+  const handleClose = () => {
+    dispatch({ type: 'START_TRANSACTION' })
+    setFormState({})
+    setFormTouched(false)
+    setPreviewImage(null)
+    setImageFilename(null)
+    setImageFilesize(null)
+    setIdentityImageSrc(null)
+    setIdentityImageFile(undefined)
+    setInitialDeposit('0')
+    setIsContract(false)
+    onClose()
+  }
+
   return (
     <>
       <offChainFetcher.Form
@@ -479,262 +493,278 @@ function CreateIdentityForm({
         action="/actions/create-identity"
         hidden
       />
-      {state.status === 'idle' ? (
-        <div className="w-full flex-col justify-start items-start inline-flex gap-7">
-          <div className="flex flex-col w-full gap-1.5">
-            <div className="self-stretch flex-col justify-start items-start flex">
-              <Text variant="caption" className="text-secondary-foreground">
-                Image
-              </Text>
-            </div>
-            <div className="self-stretch h-[100px] px-9 py-2.5 theme-border bg-primary/10 rounded-md justify-between items-center inline-flex">
-              <div className="justify-start items-center gap-[18px] flex">
-                <div className="w-[60px] h-[60px] rounded-xl justify-center items-center flex">
-                  <ImageChooser
-                    previewImage={previewImage}
-                    setPreviewImage={setPreviewImage}
-                    onFileChange={handleFileChange}
-                    setImageFile={setIdentityImageFile}
-                    disabled={imageUploading}
-                    {...getInputProps(fields.image_url, { type: 'file' })}
-                  />
-                </div>
-                <div className="flex-col justify-start items-start inline-flex">
-                  <div className="text-center text-neutral-200 text-sm font-normal leading-tight">
-                    {truncateString(imageFilename ?? '', 36)}
-                  </div>
-                  <div className="text-center text-neutral-200 text-xs font-normal leading-[18px]">
-                    {imageFilesize}
-                  </div>
-                </div>
+      <div className="h-full flex flex-col">
+        {state.status === 'idle' ? (
+          <div className="w-full h-full flex-col justify-start items-start inline-flex gap-7">
+            <div className="flex flex-col w-full gap-1.5">
+              <div className="self-stretch flex-col justify-start items-start flex">
+                <Text variant="caption" className="text-secondary-foreground">
+                  Image
+                </Text>
               </div>
-              <div className="flex-col justify-end items-end inline-flex">
-                <button
-                  onClick={(e) => {
-                    e.preventDefault()
-                    setPreviewImage(null)
-                    setImageFilename(null)
-                    setImageFilesize(null)
-                  }}
-                  className={`${previewImage === null ? 'hidden' : 'block'}`}
-                >
-                  <Icon
-                    name="circle-x"
-                    className="h-6 w-6 relative text-neutral-700 hover:text-neutral-600 transition-colors duration-300"
-                  />
-                </button>
-              </div>
-            </div>
-            <ErrorList
-              id={fields.image_url.errorId}
-              errors={fields.image_url.errors}
-            />
-          </div>
-          <div className="flex flex-col w-full gap-1.5">
-            <Text variant="caption" className="text-foreground/70">
-              Display Name
-            </Text>
-            <Label htmlFor={fields.display_name.id} hidden>
-              Display Name
-            </Label>
-            <Input
-              {...getInputProps(fields.display_name, { type: 'text' })}
-              placeholder="Enter a display name here"
-              onChange={(e) => {
-                setFormState((prev) => ({
-                  ...prev,
-                  display_name: e.target.value,
-                }))
-                setFormTouched(true)
-              }}
-              value={formState.display_name}
-            />
-            <ErrorList
-              id={fields.display_name.errorId}
-              errors={fields.display_name.errors}
-            />
-            {fields.display_name.value &&
-              fields.display_name.value.length === 42 &&
-              /^0x[a-fA-F0-9]{1,42}$/.test(fields.display_name.value) && (
-                <div className="flex items-center gap-2">
-                  <Checkbox
-                    checked={isContract}
-                    onCheckedChange={(checked) => {
-                      const isChecked = checked === true
-                      setIsContract(isChecked)
-                      setFormState((prev) => ({
-                        ...prev,
-                        is_contract: isChecked,
-                      }))
+              <div className="self-stretch h-[100px] px-9 py-2.5 theme-border bg-primary/10 rounded-md justify-between items-center inline-flex">
+                <div className="justify-start items-center gap-[18px] flex">
+                  <div className="w-[60px] h-[60px] rounded-xl justify-center items-center flex">
+                    <ImageChooser
+                      previewImage={previewImage}
+                      setPreviewImage={setPreviewImage}
+                      onFileChange={handleFileChange}
+                      setImageFile={setIdentityImageFile}
+                      disabled={imageUploading}
+                      {...getInputProps(fields.image_url, { type: 'file' })}
+                    />
+                  </div>
+                  <div className="flex-col justify-start items-start inline-flex">
+                    <div className="text-center text-neutral-200 text-sm font-normal leading-tight">
+                      {truncateString(imageFilename ?? '', 36)}
+                    </div>
+                    <div className="text-center text-neutral-200 text-xs font-normal leading-[18px]">
+                      {imageFilesize}
+                    </div>
+                  </div>
+                </div>
+                <div className="flex-col justify-end items-end inline-flex">
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault()
+                      setPreviewImage(null)
+                      setImageFilename(null)
+                      setImageFilesize(null)
                     }}
-                    id={fields.is_contract.id}
-                    className="h-4 w-4 text-muted theme-border rounded focus:ring-primary focus:ring-1 bg-primary/10 cursor-pointer checked:bg-primary/10 form-checkbox"
-                  />
-                  <Label
-                    htmlFor={fields.is_contract.id}
-                    className="text-sm text-foreground/70"
+                    className={`${previewImage === null ? 'hidden' : 'block'}`}
                   >
-                    is Contract?
-                  </Label>
+                    <Icon
+                      name="circle-x"
+                      className="h-6 w-6 relative text-neutral-700 hover:text-neutral-600 transition-colors duration-300"
+                    />
+                  </button>
                 </div>
-              )}
-          </div>
+              </div>
+              <ErrorList
+                id={fields.image_url.errorId}
+                errors={fields.image_url.errors}
+              />
+            </div>
+            <div className="flex flex-col w-full gap-1.5">
+              <Text variant="caption" className="text-foreground/70">
+                Display Name
+              </Text>
+              <Label htmlFor={fields.display_name.id} hidden>
+                Display Name
+              </Label>
+              <Input
+                {...getInputProps(fields.display_name, { type: 'text' })}
+                placeholder="Enter a display name here"
+                onChange={(e) => {
+                  setFormState((prev) => ({
+                    ...prev,
+                    display_name: e.target.value,
+                  }))
+                  setFormTouched(true)
+                }}
+                value={formState.display_name}
+              />
+              <ErrorList
+                id={fields.display_name.errorId}
+                errors={fields.display_name.errors}
+              />
+              {fields.display_name.value &&
+                fields.display_name.value.length === 42 &&
+                /^0x[a-fA-F0-9]{1,42}$/.test(fields.display_name.value) && (
+                  <div className="flex items-center gap-2">
+                    <Checkbox
+                      checked={isContract}
+                      onCheckedChange={(checked) => {
+                        const isChecked = checked === true
+                        setIsContract(isChecked)
+                        setFormState((prev) => ({
+                          ...prev,
+                          is_contract: isChecked,
+                        }))
+                      }}
+                      id={fields.is_contract.id}
+                      className="h-4 w-4 text-muted theme-border rounded focus:ring-primary focus:ring-1 bg-primary/10 cursor-pointer checked:bg-primary/10 form-checkbox"
+                    />
+                    <Label
+                      htmlFor={fields.is_contract.id}
+                      className="text-sm text-foreground/70"
+                    >
+                      is Contract?
+                    </Label>
+                  </div>
+                )}
+            </div>
 
-          <div className="flex flex-col w-full gap-1.5">
-            <Text variant="caption" className="text-secondary-foreground">
-              Description
-            </Text>
-            <Label htmlFor={fields.description.id} hidden>
-              Description
-            </Label>
-            <Textarea
-              {...getInputProps(fields.description, { type: 'text' })}
-              placeholder="Enter description here"
-              className="theme-border"
-              onChange={(e) =>
-                setFormState((prev) => ({
-                  ...prev,
-                  description: e.target.value,
-                }))
-              }
-              value={formState.description}
-            />
-          </div>
-          <div className="flex flex-col w-full gap-1.5">
-            <Text variant="caption" className="text-secondary-foreground">
-              Add Link
-            </Text>
-            <Label htmlFor={fields.external_reference.id} hidden>
-              Add Link
-            </Label>
-            <Input
-              {...getInputProps(fields.external_reference, { type: 'text' })}
-              placeholder="www.url.com"
-              startAdornment="http://"
-              onChange={(e) =>
-                setFormState((prev) => ({
-                  ...prev,
-                  external_reference: e.target.value,
-                }))
-              }
-              value={formState.external_reference}
-            />
-            <ErrorList
-              id={fields.external_reference.errorId}
-              errors={fields.external_reference.errors}
-            />
-          </div>
-          <div className="flex flex-col w-full gap-1.5">
-            <Text variant="caption" className="text-secondary-foreground">
-              Initial Deposit
-            </Text>
-            <Label htmlFor={fields.initial_deposit.id} hidden>
-              Initial Deposit
-            </Label>
-            <Input
-              {...getInputProps(fields.initial_deposit, { type: 'text' })}
-              placeholder="0"
-              startAdornment="ETH"
-              onChange={(e) => {
-                setFormState((prev) => ({
-                  ...prev,
-                  initial_deposit: e.target.value,
-                }))
-                setInitialDeposit(e.target.value)
-              }}
-              value={formState.initial_deposit}
-            />
-            <ErrorList
-              id={fields.initial_deposit.errorId}
-              errors={fields.initial_deposit.errors}
-            />
-          </div>
-          {isWrongNetwork ? (
-            <WrongNetworkButton />
-          ) : (
-            <Button
-              type="button"
-              variant="primary"
-              onClick={() => {
-                dispatch({ type: 'REVIEW_TRANSACTION' })
-              }}
-              disabled={
-                !address ||
-                loading ||
-                !formTouched ||
-                ['confirm', 'transaction-pending', 'awaiting'].includes(
-                  state.status,
-                )
-              }
-              className="w-40 mx-auto"
-            >
-              Review
-            </Button>
-          )}
-        </div>
-      ) : state.status === 'review-transaction' ? (
-        <div className="h-[600px] flex flex-col">
-          <CreateIdentityReview
-            dispatch={dispatch}
-            identity={reviewIdentity}
-            initialDeposit={initialDeposit}
-            fees={fees}
-          />
-          <div className="mt-auto">
-            {isWrongNetwork ? (
-              <WrongNetworkButton />
-            ) : (
-              <Button
-                form={form.id}
-                type="submit"
-                variant="primary"
-                onClick={handleSubmit}
-                disabled={
-                  !address ||
-                  loading ||
-                  !formTouched ||
-                  ['confirm', 'transaction-pending', 'awaiting'].includes(
-                    state.status,
-                  )
+            <div className="flex flex-col w-full gap-1.5">
+              <Text variant="caption" className="text-secondary-foreground">
+                Description
+              </Text>
+              <Label htmlFor={fields.description.id} hidden>
+                Description
+              </Label>
+              <Textarea
+                {...getInputProps(fields.description, { type: 'text' })}
+                placeholder="Enter description here"
+                className="theme-border"
+                onChange={(e) =>
+                  setFormState((prev) => ({
+                    ...prev,
+                    description: e.target.value,
+                  }))
                 }
-                className="w-40 mx-auto"
-              >
-                Create Identity
-              </Button>
-            )}
-          </div>
-        </div>
-      ) : (
-        <div className="flex flex-col items-center justify-center min-h-96">
-          <TransactionState
-            status={state.status}
-            txHash={state.txHash}
-            type="identity"
-            ipfsLink={`${IPFS_GATEWAY_URL}/${transactionResponseData?.identity_id?.replace('ipfs://', '')}`}
-            successButton={
-              transactionResponseData && (
+                value={formState.description}
+              />
+            </div>
+            <div className="flex flex-col w-full gap-1.5">
+              <Text variant="caption" className="text-secondary-foreground">
+                Add Link
+              </Text>
+              <Label htmlFor={fields.external_reference.id} hidden>
+                Add Link
+              </Label>
+              <Input
+                {...getInputProps(fields.external_reference, { type: 'text' })}
+                placeholder="www.url.com"
+                startAdornment="http://"
+                onChange={(e) =>
+                  setFormState((prev) => ({
+                    ...prev,
+                    external_reference: e.target.value,
+                  }))
+                }
+                value={formState.external_reference}
+              />
+              <ErrorList
+                id={fields.external_reference.errorId}
+                errors={fields.external_reference.errors}
+              />
+            </div>
+            <div className="flex flex-col w-full gap-1.5">
+              <Text variant="caption" className="text-secondary-foreground">
+                Initial Deposit
+              </Text>
+              <Label htmlFor={fields.initial_deposit.id} hidden>
+                Initial Deposit
+              </Label>
+              <Input
+                {...getInputProps(fields.initial_deposit, { type: 'text' })}
+                placeholder="0"
+                startAdornment="ETH"
+                onChange={(e) => {
+                  setFormState((prev) => ({
+                    ...prev,
+                    initial_deposit: e.target.value,
+                  }))
+                  setInitialDeposit(e.target.value)
+                }}
+                value={formState.initial_deposit}
+              />
+              <ErrorList
+                id={fields.initial_deposit.errorId}
+                errors={fields.initial_deposit.errors}
+              />
+            </div>
+            <div className="mt-auto mx-auto">
+              {isWrongNetwork ? (
+                <WrongNetworkButton />
+              ) : (
                 <Button
                   type="button"
                   variant="primary"
-                  size="lg"
                   onClick={() => {
-                    if (successAction === TransactionSuccessAction.VIEW) {
-                      navigate(
-                        `${PATHS.IDENTITY}/${transactionResponseData.id}`,
-                      )
-                    }
-                    onClose()
+                    dispatch({ type: 'REVIEW_TRANSACTION' })
+                  }}
+                  disabled={
+                    !address ||
+                    loading ||
+                    !formTouched ||
+                    ['confirm', 'transaction-pending', 'awaiting'].includes(
+                      state.status,
+                    )
+                  }
+                  className="w-40 mx-auto"
+                >
+                  Review
+                </Button>
+              )}
+            </div>
+          </div>
+        ) : state.status === 'review-transaction' ? (
+          <div className="h-full flex flex-col">
+            <CreateIdentityReview
+              dispatch={dispatch}
+              identity={reviewIdentity}
+              initialDeposit={initialDeposit}
+              fees={fees}
+            />
+            <div className="mt-auto">
+              {isWrongNetwork ? (
+                <WrongNetworkButton />
+              ) : (
+                <Button
+                  form={form.id}
+                  type="submit"
+                  variant="primary"
+                  onClick={handleSubmit}
+                  disabled={
+                    !address ||
+                    loading ||
+                    !formTouched ||
+                    ['confirm', 'transaction-pending', 'awaiting'].includes(
+                      state.status,
+                    )
+                  }
+                  className="w-40 mx-auto"
+                >
+                  Create Identity
+                </Button>
+              )}
+            </div>
+          </div>
+        ) : (
+          <div className="h-full flex flex-col">
+            <TransactionState
+              status={state.status}
+              txHash={state.txHash}
+              type="identity"
+              ipfsLink={`${IPFS_GATEWAY_URL}/${transactionResponseData?.identity_id?.replace('ipfs://', '')}`}
+              successButton={
+                transactionResponseData && (
+                  <Button
+                    type="button"
+                    variant="primary"
+                    className="mt-auto w-40"
+                    onClick={() => {
+                      if (successAction === TransactionSuccessAction.VIEW) {
+                        navigate(
+                          `${PATHS.IDENTITY}/${transactionResponseData.id}`,
+                        )
+                      }
+                      handleClose
+                    }}
+                  >
+                    {successAction === TransactionSuccessAction.VIEW
+                      ? 'View Identity'
+                      : 'Close'}
+                  </Button>
+                )
+              }
+              errorButton={
+                <Button
+                  type="button"
+                  variant="primary"
+                  className="mt-auto w-40"
+                  onClick={() => {
+                    dispatch({ type: 'START_TRANSACTION' })
                   }}
                 >
-                  {successAction === TransactionSuccessAction.VIEW
-                    ? 'View Identity'
-                    : 'Close'}
+                  Retry
                 </Button>
-              )
-            }
-          />
-        </div>
-      )}
+              }
+            />
+          </div>
+        )}
+      </div>
     </>
   )
 }

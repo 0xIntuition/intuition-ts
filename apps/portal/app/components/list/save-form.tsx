@@ -142,7 +142,7 @@ export default function SaveForm({
           </div>
         </>
       ) : state.status === 'review-transaction' ? (
-        <>
+        <div className="h-full flex flex-col">
           <SaveReview
             mode={mode}
             val={val}
@@ -154,9 +154,9 @@ export default function SaveForm({
             entry_fee={entry_fee}
             exit_fee={exit_fee}
           />
-        </>
+        </div>
       ) : (
-        <div className="flex flex-col items-center justify-center min-h-96">
+        <div className="h-full flex flex-col">
           <TransactionState
             status={state.status}
             txHash={state.txHash}
