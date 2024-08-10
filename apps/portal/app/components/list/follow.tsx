@@ -1,6 +1,7 @@
-import { ClaimPositionRow, Identity } from '@0xintuition/1ui'
+import { ClaimPositionRow, IconName, Identity } from '@0xintuition/1ui'
 import { IdentityPresenter, SortColumn } from '@0xintuition/api'
 
+import { ListHeader } from '@components/list/list-header'
 import { SortOption } from '@components/sort-select'
 import { formatBalance, getAtomImage, getAtomLabel } from '@lib/utils/misc'
 import { PATHS } from 'app/consts'
@@ -37,6 +38,12 @@ export function FollowList({
       enableSearch={enableSearch}
       enableSort={enableSort}
     >
+      <ListHeader
+        items={[
+          { label: 'User', icon: IconName.cryptoPunk },
+          { label: 'Position Amount', icon: IconName.ethereum },
+        ]}
+      />
       {identities.map((identity) => (
         <div
           key={identity.id}

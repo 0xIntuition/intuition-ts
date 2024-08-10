@@ -1,6 +1,7 @@
-import { Identity, IdentityContentRow } from '@0xintuition/1ui'
+import { IconName, Identity, IdentityContentRow } from '@0xintuition/1ui'
 import { IdentityPresenter, SortColumn } from '@0xintuition/api'
 
+import { ListHeader } from '@components/list/list-header'
 import {
   formatBalance,
   getAtomImage,
@@ -44,6 +45,12 @@ export function IdentitiesList({
       enableSearch={enableSearch}
       enableSort={enableSort}
     >
+      <ListHeader
+        items={[
+          { label: 'Identity', icon: IconName.fingerprint },
+          { label: 'Total Staked', icon: IconName.ethereum },
+        ]}
+      />
       {identities.map((identity) => {
         if (!identity || typeof identity !== 'object') {
           return null

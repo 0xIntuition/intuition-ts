@@ -1,6 +1,7 @@
-import { Identity, IdentityPosition } from '@0xintuition/1ui'
+import { IconName, Identity, IdentityPosition } from '@0xintuition/1ui'
 import { IdentityPresenter, SortColumn } from '@0xintuition/api'
 
+import { ListHeader } from '@components/list/list-header'
 import {
   formatBalance,
   getAtomImage,
@@ -34,6 +35,12 @@ export function ActivePositionsOnIdentities({
       options={options}
       paramPrefix="activeIdentities"
     >
+      <ListHeader
+        items={[
+          { label: 'Identity', icon: IconName.fingerprint },
+          { label: 'Position Amount', icon: IconName.ethereum },
+        ]}
+      />
       {identities.map((identity) => (
         <div
           key={identity.id}

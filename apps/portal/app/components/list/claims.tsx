@@ -1,10 +1,11 @@
-import { Claim, ClaimRow, Identity } from '@0xintuition/1ui'
+import { Claim, ClaimRow, IconName, Identity } from '@0xintuition/1ui'
 import {
   ClaimPresenter,
   ClaimSortColumn,
   IdentityPresenter,
 } from '@0xintuition/api'
 
+import { ListHeader } from '@components/list/list-header'
 import {
   formatBalance,
   getAtomDescription,
@@ -52,6 +53,12 @@ export function ClaimsList({
       enableSearch={enableSearch}
       enableSort={enableSort}
     >
+      <ListHeader
+        items={[
+          { label: 'Claim', icon: IconName.claim },
+          { label: 'Total Staked', icon: IconName.ethereum },
+        ]}
+      />
       {claims.map((claim) => (
         <div
           key={claim.claim_id}

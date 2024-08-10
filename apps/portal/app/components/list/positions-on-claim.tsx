@@ -1,6 +1,7 @@
-import { ClaimPositionRow } from '@0xintuition/1ui'
+import { ClaimPositionRow, IconName } from '@0xintuition/1ui'
 import { PositionPresenter, PositionSortColumn } from '@0xintuition/api'
 
+import { ListHeader } from '@components/list/list-header'
 import { formatBalance } from '@lib/utils/misc'
 import { BLOCK_EXPLORER_URL, PATHS } from 'app/consts'
 import { PaginationType } from 'app/types/pagination'
@@ -29,6 +30,12 @@ export function PositionsOnClaim({
       options={options}
       paramPrefix="positions"
     >
+      <ListHeader
+        items={[
+          { label: 'User', icon: IconName.cryptoPunk },
+          { label: 'Position Amount', icon: IconName.ethereum },
+        ]}
+      />
       {positions.map((position) => (
         <div
           key={position.id}
