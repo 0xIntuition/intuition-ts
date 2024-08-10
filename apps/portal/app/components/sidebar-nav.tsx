@@ -1,12 +1,17 @@
-import { useEffect, useState } from 'react'
-
 import {
-  formatWalletAddress,
+  Button,
+  ButtonSize,
+  ButtonVariant,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+  Icon,
+  IconName,
   IconNameType,
   SidebarLayout,
   SidebarLayoutContent,
   SidebarLayoutNav,
-  SidebarLayoutNavAvatar,
   SidebarLayoutNavBody,
   SidebarLayoutNavHeader,
   SidebarLayoutNavHeaderButton,
@@ -15,12 +20,11 @@ import {
 } from '@0xintuition/1ui'
 import { UserPresenter } from '@0xintuition/api'
 
-import { PrivyButton } from '@client/privy-button'
+import PrivyLogoutButton from '@client/privy-logout-button'
 import { createClaimModalAtom, createIdentityModalAtom } from '@lib/state/store'
 import { NavLink, useLocation, useNavigate, useSubmit } from '@remix-run/react'
 import { PATHS } from 'app/consts'
 import { useAtom } from 'jotai'
-import { isAddress } from 'viem'
 
 import CreateClaimModal from './create-claim/create-claim-modal'
 import CreateIdentityModal from './create-identity/create-identity-modal'
@@ -41,7 +45,7 @@ const sidebarNavRoutes: SidebarNavRoute[] = [
   {
     route: PATHS.PROFILE,
     label: 'Profile',
-    iconName: 'person-circle',
+    iconName: 'people',
   },
   {
     route: PATHS.EXPLORE,
@@ -56,7 +60,7 @@ const sidebarNavRoutes: SidebarNavRoute[] = [
   {
     route: PATHS.ACTIVITY,
     label: 'Activity',
-    iconName: 'calendar',
+    iconName: 'lightning-bolt',
   },
   {
     route: PATHS.QUEST,
@@ -69,12 +73,12 @@ const comingSoonRoutes: SidebarNavRoute[] = [
   {
     route: '#',
     label: 'Trust Circles',
-    iconName: 'trust-circle',
+    iconName: 'trust-circle-filled',
   },
   {
     route: '#',
     label: 'Query Builder',
-    iconName: 'layout-third',
+    iconName: 'square-checklist',
   },
   {
     route: '#',
@@ -93,11 +97,6 @@ export default function SidebarNav({
   const submit = useSubmit()
   const navigate = useNavigate()
   const location = useLocation()
-  const [isPrivyButtonLoaded, setIsPrivyButtonLoaded] = useState(false)
-
-  useEffect(() => {
-    setIsPrivyButtonLoaded(true)
-  }, [])
 
   const [createIdentityModalActive, setCreateIdentityModalActive] = useAtom(
     createIdentityModalAtom,
@@ -112,13 +111,6 @@ export default function SidebarNav({
       method: 'post',
     })
   }
-
-  const username =
-    userObject?.display_name ||
-    userObject?.ens_name ||
-    (userObject?.wallet && isAddress(userObject.wallet)
-      ? formatWalletAddress(userObject.wallet)
-      : 'Profile')
 
   return (
     <>
@@ -175,57 +167,152 @@ export default function SidebarNav({
                     />
                   </svg>
                 }
+                productLogo={
+                  <svg
+                    width="75"
+                    height="22"
+                    viewBox="0 0 75 22"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <rect
+                      x="1.13135"
+                      y="1"
+                      width="73"
+                      height="20"
+                      rx="5.5"
+                      fill="url(#paint0_linear_12803_13204)"
+                      fillOpacity="0.9"
+                    />
+                    <rect
+                      x="1.13135"
+                      y="1"
+                      width="73"
+                      height="20"
+                      rx="5.5"
+                      fill="url(#paint1_linear_12803_13204)"
+                      fillOpacity="0.2"
+                    />
+                    <rect
+                      x="1.13135"
+                      y="1"
+                      width="73"
+                      height="20"
+                      rx="5.5"
+                      stroke="url(#paint2_linear_12803_13204)"
+                    />
+                    <path
+                      d="M7.9245 6.98H13.8525V8.516H9.7485V10.472H13.7085V11.984H9.7485V13.964H13.9485V15.5H7.9245V6.98ZM21.6413 6.98H23.7293L20.8373 11.216L23.7533 15.5H21.6533L19.7813 12.584L17.8973 15.5H15.7973L18.7133 11.216L15.8213 6.98H17.9213L19.7933 9.836L21.6413 6.98ZM29.1431 6.98C31.1831 6.98 32.4191 8.036 32.4191 9.764C32.4191 11.492 31.1831 12.56 29.1431 12.56H27.5591V15.5H25.7351V6.98H29.1431ZM27.5591 11.024H29.0351C29.9951 11.024 30.5471 10.592 30.5471 9.764C30.5471 8.936 29.9951 8.516 29.0351 8.516H27.5591V11.024ZM34.7459 15.5V6.98H36.5699V13.964H40.4939V15.5H34.7459ZM46.153 15.692C43.561 15.692 42.013 13.988 42.013 11.252C42.013 8.492 43.561 6.788 46.153 6.788C48.745 6.788 50.305 8.492 50.305 11.252C50.305 13.988 48.745 15.692 46.153 15.692ZM43.897 11.252C43.897 13.076 44.737 14.156 46.153 14.156C47.593 14.156 48.421 13.076 48.421 11.252C48.421 9.416 47.593 8.324 46.153 8.324C44.737 8.324 43.897 9.416 43.897 11.252ZM56.2065 6.98C57.9705 6.98 59.2665 7.892 59.2665 9.536C59.2665 10.616 58.6425 11.348 57.7185 11.588C58.6305 11.696 59.0625 12.128 59.1345 13.052L59.3505 15.5H57.5145L57.3465 13.364C57.2865 12.62 56.8905 12.38 55.8945 12.38H54.2985V15.5H52.4745V6.98H56.2065ZM54.2985 10.856H55.9425C56.8785 10.856 57.3945 10.436 57.3945 9.692C57.3945 8.936 56.8905 8.516 55.9425 8.516H54.2985V10.856ZM61.6493 6.98H67.5773V8.516H63.4733V10.472H67.4333V11.984H63.4733V13.964H67.6733V15.5H61.6493V6.98Z"
+                      fill="black"
+                    />
+                    <defs>
+                      <linearGradient
+                        id="paint0_linear_12803_13204"
+                        x1="45.6313"
+                        y1="0.499999"
+                        x2="45.0239"
+                        y2="21.4824"
+                        gradientUnits="userSpaceOnUse"
+                      >
+                        <stop stopColor="white" />
+                        <stop offset="1" stopColor="#736961" />
+                      </linearGradient>
+                      <linearGradient
+                        id="paint1_linear_12803_13204"
+                        x1="74.6313"
+                        y1="11"
+                        x2="0.631348"
+                        y2="11"
+                        gradientUnits="userSpaceOnUse"
+                      >
+                        <stop stopOpacity="0" />
+                        <stop
+                          offset="0.0793919"
+                          stopColor="white"
+                          stopOpacity="0.8"
+                        />
+                        <stop
+                          offset="0.955"
+                          stopColor="#FBFBFB"
+                          stopOpacity="0.786437"
+                        />
+                        <stop offset="1" stopOpacity="0" />
+                      </linearGradient>
+                      <linearGradient
+                        id="paint2_linear_12803_13204"
+                        x1="27.6314"
+                        y1="0.5"
+                        x2="27.6314"
+                        y2="21.5"
+                        gradientUnits="userSpaceOnUse"
+                      >
+                        <stop stopColor="white" stopOpacity="0.24" />
+                        <stop offset="1" stopColor="white" stopOpacity="0" />
+                      </linearGradient>
+                    </defs>
+                  </svg>
+                }
                 onClick={() => navigate('/')}
               />
             </SidebarLayoutNavHeader>
             <SidebarLayoutNavBody className="flex flex-col justify-between">
-              <div className="flex flex-col gap-px">
-                {sidebarNavRoutes.map((sidebarNavItem, index) => (
-                  <NavLink
-                    key={`nav-item-${index}`}
-                    to={sidebarNavItem.route}
-                    prefetch="intent"
-                  >
+              <div className="flex flex-col gap-6">
+                <div className="flex flex-col gap-px">
+                  {sidebarNavRoutes.map((sidebarNavItem, index) => (
+                    <NavLink
+                      key={`nav-item-${index}`}
+                      to={sidebarNavItem.route}
+                      prefetch="intent"
+                    >
+                      <SidebarNavItem
+                        iconName={sidebarNavItem.iconName}
+                        label={sidebarNavItem.label}
+                      />
+                    </NavLink>
+                  ))}
+                  {comingSoonRoutes.map((sidebarNavItem, index) => (
                     <SidebarNavItem
+                      key={`nav-item-${index}`}
                       iconName={sidebarNavItem.iconName}
                       label={sidebarNavItem.label}
+                      disabled={true}
                     />
-                  </NavLink>
-                ))}
-                {comingSoonRoutes.map((sidebarNavItem, index) => (
-                  <SidebarNavItem
-                    key={`nav-item-${index}`}
-                    iconName={sidebarNavItem.iconName}
-                    label={sidebarNavItem.label}
-                    disabled={true}
-                  />
-                ))}
+                  ))}
+                </div>
               </div>
-              <div className="flex flex-col gap-px">
-                <SidebarNavItem
-                  iconName="fingerprint"
-                  label="Create Identity"
-                  onClick={() => setCreateIdentityModalActive(true)}
-                />
-                <SidebarNavItem
-                  iconName="claim"
-                  label="Create Claim"
-                  onClick={() => setCreateClaimModalActive(true)}
-                />
-
-                {isPrivyButtonLoaded ? (
-                  <PrivyButton
-                    triggerComponent={
-                      <SidebarLayoutNavAvatar
-                        imageSrc={userObject.image ?? ''}
-                        name={username}
-                      />
-                    }
-                    onLogout={onLogout}
-                  />
-                ) : (
-                  <div className="h-20" />
-                )}
+              <div className="flex flex-col gap-4">
+                <DropdownMenu>
+                  <DropdownMenuTrigger>
+                    <SidebarNavItem
+                      iconName={IconName.brushSparkle}
+                      label="Create"
+                      className="bg-for text-white rounded-full items-center justify-center"
+                    />
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent
+                    side="right"
+                    sideOffset={8}
+                    align="center"
+                    className="bg-popover w-48"
+                  >
+                    <Button
+                      variant={ButtonVariant.text}
+                      size={ButtonSize.lg}
+                      onClick={() => setCreateIdentityModalActive(true)}
+                    >
+                      <Icon name="fingerprint" /> Create Identity
+                    </Button>
+                    <DropdownMenuSeparator />
+                    <Button
+                      variant={ButtonVariant.text}
+                      size={ButtonSize.lg}
+                      onClick={() => setCreateClaimModalActive(true)}
+                    >
+                      <Icon name="claim" /> Create Claim
+                    </Button>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+                <PrivyLogoutButton handleLogout={onLogout} />
               </div>
             </SidebarLayoutNavBody>
           </SidebarLayoutNav>

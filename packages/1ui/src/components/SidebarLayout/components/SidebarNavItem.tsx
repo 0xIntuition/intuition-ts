@@ -1,6 +1,7 @@
 import { ReactNode } from 'react'
 
 import { type VariantProps } from 'class-variance-authority'
+import { cn } from 'styles'
 
 import {
   Button,
@@ -24,6 +25,7 @@ export interface SidebarNavItemProps
   label: string
   disabled?: boolean
   onClick?: () => void
+  className?: string
 }
 
 export const SidebarNavItem = ({
@@ -31,6 +33,7 @@ export const SidebarNavItem = ({
   label,
   disabled = false,
   onClick,
+  className,
   ...props
 }: SidebarNavItemProps) => {
   const { isMobileView, isCollapsed, setIsCollapsed } =
@@ -38,7 +41,10 @@ export const SidebarNavItem = ({
 
   const buttonProps = {
     variant: disabled ? ButtonVariant.text : ButtonVariant.navigation,
-    className: 'w-full justify-start truncate disabled:text-muted',
+    className: cn(
+      'w-full justify-start truncate disabled:text-muted',
+      className,
+    ),
     onClick: () => {
       onClick && onClick()
       isMobileView && setIsCollapsed(true)
@@ -60,7 +66,7 @@ export const SidebarNavItem = ({
           <Button
             size={isMobileView ? ButtonSize.iconXl : ButtonSize.iconLg}
             {...buttonProps}
-            className="justify-center"
+            className={cn(buttonProps.className, 'justify-center w-auto')}
             disabled={disabled}
           >
             {ImageComponent}

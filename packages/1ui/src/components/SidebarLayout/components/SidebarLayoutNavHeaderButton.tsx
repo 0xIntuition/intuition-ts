@@ -6,11 +6,13 @@ export interface SidebarLayoutNavHeaderButtonProps
   extends React.HTMLAttributes<HTMLButtonElement> {
   imgLogo: React.ReactElement
   textLogo: React.ReactElement
+  productLogo: React.ReactElement
 }
 
 export const SidebarLayoutNavHeaderButton = ({
   imgLogo,
   textLogo,
+  productLogo,
   ...props
 }: SidebarLayoutNavHeaderButtonProps) => {
   const { isMobileView, isCollapsed } = useSidebarLayoutContext()
@@ -24,6 +26,7 @@ export const SidebarLayoutNavHeaderButton = ({
     >
       {imgLogo}
       {(!isCollapsed || (isCollapsed && isMobileView)) && textLogo}
+      {productLogo}
     </button>
   )
 }
