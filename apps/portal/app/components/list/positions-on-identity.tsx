@@ -38,6 +38,7 @@ export function PositionsOnIdentity({
             variant={Identity.user}
             avatarSrc={position.user?.image ?? ''}
             name={position.user?.display_name ?? ''}
+            description={position.user?.description ?? ''}
             id={position.user?.wallet ?? ''}
             amount={+formatBalance(BigInt(position.assets), 18, 4)}
             feesAccrued={Number(
