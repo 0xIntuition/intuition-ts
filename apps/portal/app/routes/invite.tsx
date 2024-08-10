@@ -18,6 +18,8 @@ import { getFormProps, getInputProps, useForm } from '@conform-to/react'
 import { getZodConstraint, parseWithZod } from '@conform-to/zod'
 import { useInviteCodeFetcher } from '@lib/hooks/useInviteCodeFetcher'
 import { inviteCodeSchema } from '@lib/schemas/create-identity-schema'
+import { getPurchaseIntentsByAddress } from '@lib/services/phosphor/mint.server'
+import { getChainEnvConfig } from '@lib/utils/environment'
 import logger from '@lib/utils/logger'
 import { invariant } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
@@ -43,6 +45,15 @@ export async function loader({ request }: LoaderFunctionArgs) {
     console.log('No user found in DB')
     return json({ wallet })
   }
+
+  const userCompletedMints = await getPurchaseIntentsByAddress(
+    wallet,
+    'CONFIRMED',
+    getChainEnvConfig(CURRENT_ENV).collectionId,
+  )
+  const completedPurchaseIntentIds = userCompletedMints.data.results.map(
+    (purchaseIntent) => purchaseIntent.id,
+  )
 
   return json({ wallet, userObject })
 }
