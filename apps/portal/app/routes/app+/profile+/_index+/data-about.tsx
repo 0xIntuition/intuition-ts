@@ -1,7 +1,7 @@
 import { Suspense } from 'react'
 
 import { Button, ErrorStateCard, Text } from '@0xintuition/1ui'
-import { ClaimsService } from '@0xintuition/api'
+import { ApiError, ClaimsService, IdentitiesService } from '@0xintuition/api'
 
 import CreateClaimModal from '@components/create-claim/create-claim-modal'
 import { ClaimsList as ClaimsAboutIdentity } from '@components/list/claims'
@@ -13,8 +13,9 @@ import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { getClaimsAboutIdentity } from '@lib/services/claims'
 import { getPositionsOnIdentity } from '@lib/services/positions'
 import { createClaimModalAtom } from '@lib/state/store'
+import logger from '@lib/utils/logger'
 import { formatBalance, invariant } from '@lib/utils/misc'
-import { defer, LoaderFunctionArgs } from '@remix-run/node'
+import { defer, LoaderFunctionArgs, redirect } from '@remix-run/node'
 import { Await, useRouteLoaderData } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
@@ -27,24 +28,38 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const userWallet = await requireUserWallet(request)
   invariant(userWallet, NO_WALLET_ERROR)
 
+  let userIdentity
+  try {
+    userIdentity = await fetchWrapper(request, {
+      method: IdentitiesService.getIdentityById,
+      args: { id: userWallet },
+    })
+  } catch (error) {
+    if (error instanceof ApiError && error.status === 404) {
+      throw redirect('/invite')
+    }
+    logger('Error fetching userIdentity', error)
+    throw error
+  }
+
   const url = new URL(request.url)
   const searchParams = new URLSearchParams(url.search)
 
   return defer({
     positions: getPositionsOnIdentity({
       request,
-      identityId: userWallet,
+      identityId: userIdentity.id,
       searchParams,
     }),
     claims: getClaimsAboutIdentity({
       request,
-      identityId: userWallet,
+      identityId: userIdentity.id,
       searchParams,
     }),
     claimsSummary: fetchWrapper(request, {
       method: ClaimsService.claimSummary,
       args: {
-        identity: userWallet,
+        identity: userIdentity.id,
       },
     }),
     userWallet,

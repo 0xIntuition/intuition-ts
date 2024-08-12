@@ -68,12 +68,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
       userWallet: userWallet.toLowerCase(),
       searchParams,
     }),
-    activeClaimsSummary: fetchWrapper(request, {
-      method: ClaimsService.claimSummary,
-      args: {
-        identity: userWallet,
-      },
-    }),
     createdIdentities: getCreatedIdentities({
       request,
       userWallet,
@@ -82,14 +76,14 @@ export async function loader({ request }: LoaderFunctionArgs) {
     createdIdentitiesSummary: fetchWrapper(request, {
       method: IdentitiesService.identitySummary,
       args: {
-        creator: userWallet,
+        creator: userWallet.toLowerCase(),
       },
     }),
     createdClaims: getCreatedClaims({ request, userWallet, searchParams }),
     createdClaimsSummary: fetchWrapper(request, {
       method: ClaimsService.claimSummary,
       args: {
-        creator: userWallet,
+        creator: userWallet.toLowerCase(),
       },
     }),
   })
@@ -132,7 +126,6 @@ export default function ProfileDataCreated() {
     createdIdentities,
     createdIdentitiesSummary,
     activeClaims,
-    activeClaimsSummary,
     createdClaims,
     createdClaimsSummary,
   } = useLiveLoader<typeof loader>(['attest'])
@@ -214,7 +207,7 @@ export default function ProfileDataCreated() {
                   totalResults={resolvedIdentities.pagination.totalEntries}
                   totalStake={
                     +formatBalance(
-                      userTotals.total_position_value ?? '0',
+                      userTotals.total_position_value_on_identities ?? '0',
                       18,
                       4,
                     )
@@ -238,34 +231,32 @@ export default function ProfileDataCreated() {
             >
               {(resolvedClaims) => (
                 <Await
-                  resolve={activeClaimsSummary}
+                  resolve={activeClaims}
                   errorElement={
                     <ErrorStateCard>
                       <RevalidateButton />
                     </ErrorStateCard>
                   }
                 >
-                  {(resolvedActiveClaimsSummary) => (
-                    <TabContent
-                      value={DataCreatedHeaderVariants.activeClaims}
-                      userIdentity={userIdentity}
-                      userTotals={userTotals}
-                      totalResults={resolvedClaims.pagination.totalEntries}
-                      totalStake={
-                        +formatBalance(
-                          resolvedActiveClaimsSummary?.assets_sum ?? '0',
-                          18,
-                          4,
-                        )
-                      }
-                      variant={DataCreatedHeaderVariants.activeClaims}
-                    >
-                      <ActivePositionsOnClaims
-                        claims={resolvedClaims.data}
-                        pagination={resolvedClaims.pagination}
-                      />
-                    </TabContent>
-                  )}
+                  <TabContent
+                    value={DataCreatedHeaderVariants.activeClaims}
+                    userIdentity={userIdentity}
+                    userTotals={userTotals}
+                    totalResults={resolvedClaims.pagination.totalEntries}
+                    totalStake={
+                      +formatBalance(
+                        userTotals.total_position_value_on_claims ?? '0',
+                        18,
+                        4,
+                      )
+                    }
+                    variant={DataCreatedHeaderVariants.activeClaims}
+                  >
+                    <ActivePositionsOnClaims
+                      claims={resolvedClaims.data}
+                      pagination={resolvedClaims.pagination}
+                    />
+                  </TabContent>
                 </Await>
               )}
             </Await>
