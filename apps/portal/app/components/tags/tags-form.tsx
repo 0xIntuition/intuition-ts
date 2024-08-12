@@ -120,15 +120,15 @@ export function TagsForm({
                   <TabsTrigger
                     variant="alternate"
                     value="view"
-                    label="View tags"
+                    label="Exisiting Tags"
                   />
                   <TabsTrigger
                     variant="alternate"
                     value="add"
-                    label="Add tags"
+                    label="Add Tags"
                   />
                 </TabsList>
-                <div className="flex-grow overflow-y-auto">
+                <div className="flex-grow overflow-y-auto overflow-x-visible">
                   <TabsContent value="add" className="h-full">
                     <AddTags
                       selectedTags={selectedTags}
