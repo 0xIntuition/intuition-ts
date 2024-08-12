@@ -133,26 +133,24 @@ export default function AddIdentitiesReview({
   }
 
   return (
-    <div className="flex flex-col h-full">
+    <>
       <DialogHeader>
-        <DialogTitle className="justify-between">
-          <div className="flex flex-row gap-2">
-            <Button
-              onClick={(e) => {
-                e.preventDefault()
-                dispatch({ type: 'START_TRANSACTION' })
-              }}
-              variant="ghost"
-              size="icon"
-            >
-              <Icon name="arrow-left" className="h-4 w-4" />
-            </Button>
-          </div>
+        <DialogTitle>
+          <Button
+            onClick={(e) => {
+              e.preventDefault()
+              dispatch({ type: 'START_TRANSACTION' })
+            }}
+            variant="ghost"
+            size="icon"
+          >
+            <Icon name="arrow-left" className="h-4 w-4" />
+          </Button>
         </DialogTitle>
       </DialogHeader>
-      <div className="flex flex-col justify-center items-center gap-5">
+      <div className="flex flex-col items-center justify-center m-auto">
         <Icon name="await-action" className="h-20 w-20 text-neutral-50/30" />
-        <div className="gap-5 flex flex-col items-center">
+        <div className="flex flex-col items-center gap-5 mt-5">
           <Text
             variant="headline"
             weight="medium"
@@ -161,7 +159,7 @@ export default function AddIdentitiesReview({
             Review your Identities
           </Text>
         </div>
-        <div className="items-center">
+        <div className="flex p-6 items-center">
           <Tags>
             <div className="flex flex-wrap gap-2 items-center">
               {identitiesToAdd.map((identity) => (
@@ -183,15 +181,17 @@ export default function AddIdentitiesReview({
           </Text>
         )}
       </div>
-      <div className="mt-auto py-4 bg-neutral-950">
-        <DialogFooter className="!justify-center !items-center">
-          <div className="flex flex-col items-center gap-1 ">
-            <Button variant="primary" onClick={handleOnChainCreateTags}>
-              Confirm
-            </Button>
-          </div>
-        </DialogFooter>
-      </div>
-    </div>
+      <DialogFooter className="!justify-center !items-center">
+        <div className="flex flex-col items-center gap-1 ">
+          <Button
+            variant="primary"
+            onClick={handleOnChainCreateTags}
+            className="w-40"
+          >
+            Confirm
+          </Button>
+        </div>
+      </DialogFooter>
+    </>
   )
 }

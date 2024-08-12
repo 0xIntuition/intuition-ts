@@ -78,23 +78,25 @@ const ClaimItem = ({
       <HoverCardTrigger asChild>
         {link ? <a href={link}>{content}</a> : content}
       </HoverCardTrigger>
-      <HoverCardContent className="w-80">
-        <ProfileCard
-          variant={item.variant}
-          avatarSrc={item.imgSrc ?? ''}
-          name={item.label}
-          id={item.id ?? ''}
-          bio={item.description ?? ''}
-          ipfsLink={item.ipfsLink}
-          className="profile-card"
-        />
-        {item.link && (
-          <a href={item.link}>
-            <Button variant={ButtonVariant.secondary} className="w-full">
-              View Identity
-            </Button>
-          </a>
-        )}
+      <HoverCardContent side="right" className="w-max">
+        <div className="flex flex-col gap-4 w-80 max-md:w-[80%]">
+          <ProfileCard
+            variant={item.variant}
+            avatarSrc={item.imgSrc ?? ''}
+            name={item.label}
+            id={item.id ?? ''}
+            bio={item.description ?? ''}
+            ipfsLink={item.ipfsLink}
+            className="profile-card"
+          />
+          {item.link && (
+            <a href={item.link}>
+              <Button variant={ButtonVariant.secondary} className="w-full">
+                View Identity
+              </Button>
+            </a>
+          )}
+        </div>
       </HoverCardContent>
     </HoverCard>
   )

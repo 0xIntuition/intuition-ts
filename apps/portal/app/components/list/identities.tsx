@@ -4,6 +4,7 @@ import { IdentityPresenter, SortColumn } from '@0xintuition/api'
 import { ListHeader } from '@components/list/list-header'
 import {
   formatBalance,
+  getAtomDescription,
   getAtomImage,
   getAtomIpfsLink,
   getAtomLabel,
@@ -68,6 +69,7 @@ export function IdentitiesList({
               variant={identity.is_user ? Identity.user : Identity.nonUser}
               avatarSrc={getAtomImage(identity)}
               name={getAtomLabel(identity)}
+              description={getAtomDescription(identity)}
               id={identity.user?.wallet ?? identity.identity_id}
               amount={
                 +formatBalance(

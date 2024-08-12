@@ -11,6 +11,7 @@ describe('IdentityContentRow', () => {
       <IdentityContentRow
         variant="user"
         name="John Doe"
+        description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi."
         id="0x1234567890abcdef1234567890abcdef12345678"
         avatarSrc="https://avatars.githubusercontent.com/u/94311139?s=200&v=4"
         amount={1.21}
@@ -34,6 +35,7 @@ describe('IdentityContentRow', () => {
       <IdentityContentRow
         variant="user"
         name="John Doe"
+        description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi."
         id="0x1234567890abcdef1234567890abcdef12345678"
         avatarSrc="https://avatars.githubusercontent.com/u/94311139?s=200&v=4"
         amount={1.21}
@@ -58,6 +60,7 @@ describe('IdentityContentRow', () => {
               class="flex items-center"
             >
               <a
+                data-state="closed"
                 href="https://sepolia.basescan.org/address/0xd57981d5bc446768e8a1e3d582e545fa705415b5"
               >
                 <span

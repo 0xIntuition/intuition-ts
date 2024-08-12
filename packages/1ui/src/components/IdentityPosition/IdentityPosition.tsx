@@ -6,9 +6,15 @@ import { formatDate } from 'utils/date'
 
 import {
   Avatar,
+  Button,
+  ButtonVariant,
   Copy,
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
   PositionValueDisplay,
   PositionValueVariants,
+  ProfileCard,
   TagsContent,
   TagWithValue,
   TagWithValueProps,
@@ -25,6 +31,7 @@ export interface IdentityPositionProps
   currency?: CurrencyType
   feesAccrued: number
   name: string
+  description: string
   id: string
   avatarSrc: string
   link: string
@@ -39,6 +46,7 @@ const IdentityPosition = ({
   currency,
   feesAccrued,
   name,
+  description,
   id,
   avatarSrc,
   link,
@@ -57,18 +65,47 @@ const IdentityPosition = ({
       {...props}
     >
       <div className="flex items-center">
-        <a href={link}>
-          <Avatar
-            variant={variant}
-            src={avatarSrc}
-            name={name}
-            className="w-16 h-16 mr-4"
-          />
-        </a>
+        <HoverCard openDelay={100} closeDelay={100}>
+          <HoverCardTrigger asChild>
+            <a href={link}>
+              <Avatar
+                variant={variant}
+                src={avatarSrc}
+                name={name}
+                className="w-16 h-16 mr-4"
+              />
+            </a>
+          </HoverCardTrigger>
+          <HoverCardContent side="right" className="w-max">
+            <div className="flex flex-col gap-4 w-80 max-md:w-[80%]">
+              <ProfileCard
+                variant={variant}
+                avatarSrc={avatarSrc ?? ''}
+                name={name}
+                id={id ?? ''}
+                bio={description ?? ''}
+                ipfsLink={ipfsLink}
+                className="profile-card"
+              />
+              {link && (
+                <a href={link}>
+                  <Button variant={ButtonVariant.secondary} className="w-full">
+                    View Identity
+                  </Button>
+                </a>
+              )}
+            </div>
+          </HoverCardContent>
+        </HoverCard>
         <div className="flex flex-col">
           <div className="flex items-center mb-1.5 max-sm:flex-col max-sm:gap-px max-sm:items-start">
             <a href={link}>
-              <Trunctacular value={name} variant="bodyLarge" className="mr-1" />
+              <Trunctacular
+                value={name}
+                variant="bodyLarge"
+                maxStringLength={42}
+                className="mr-1"
+              />
             </a>
             <div className="flex flex-row items-center gap-1">
               <a href={ipfsLink} target="_blank" rel="noreferrer noopener">

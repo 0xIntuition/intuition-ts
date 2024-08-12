@@ -85,34 +85,36 @@ export const IdentityPopover: React.FC<IdentityPopoverProps> = ({
               </IdentityTag>
             </HoverCardTrigger>
             {selectedIdentity && (
-              <HoverCardContent side="bottom" className="w-80">
-                <ProfileCard
-                  variant={
-                    selectedIdentity.is_user === true
-                      ? Identity.user
-                      : Identity.nonUser
-                  }
-                  avatarSrc={getAtomImage(selectedIdentity)}
-                  name={getAtomLabel(selectedIdentity)}
-                  id={
-                    selectedIdentity.is_user === true
-                      ? selectedIdentity.user?.ens_name ??
-                        sliceString(selectedIdentity.user?.wallet, 6, 4)
-                      : selectedIdentity.identity_id
-                  }
-                  stats={
-                    selectedIdentity.is_user === true
-                      ? {
-                          numberOfFollowers:
-                            selectedIdentity.follower_count ?? 0,
-                          numberOfFollowing:
-                            selectedIdentity.followed_count ?? 0,
-                        }
-                      : undefined
-                  }
-                  bio={getAtomDescription(selectedIdentity)}
-                  ipfsLink={getAtomIpfsLink(selectedIdentity)}
-                ></ProfileCard>
+              <HoverCardContent side="bottom" className="w-max">
+                <div className="w-80 max-md:w-[80%]">
+                  <ProfileCard
+                    variant={
+                      selectedIdentity.is_user === true
+                        ? Identity.user
+                        : Identity.nonUser
+                    }
+                    avatarSrc={getAtomImage(selectedIdentity)}
+                    name={getAtomLabel(selectedIdentity)}
+                    id={
+                      selectedIdentity.is_user === true
+                        ? selectedIdentity.user?.ens_name ??
+                          sliceString(selectedIdentity.user?.wallet, 6, 4)
+                        : selectedIdentity.identity_id
+                    }
+                    stats={
+                      selectedIdentity.is_user === true
+                        ? {
+                            numberOfFollowers:
+                              selectedIdentity.follower_count ?? 0,
+                            numberOfFollowing:
+                              selectedIdentity.followed_count ?? 0,
+                          }
+                        : undefined
+                    }
+                    bio={getAtomDescription(selectedIdentity)}
+                    ipfsLink={getAtomIpfsLink(selectedIdentity)}
+                  />
+                </div>
               </HoverCardContent>
             )}
           </HoverCard>

@@ -563,7 +563,6 @@ function CreateClaimForm({
               ) : (
                 <Button
                   type="button"
-                  size="lg"
                   variant="primary"
                   onClick={(e) => {
                     e.preventDefault()
@@ -619,7 +618,7 @@ function CreateClaimForm({
             </div>
           </div>
         ) : (
-          <div className="flex flex-col items-center justify-center min-h-96">
+          <div className="h-full flex flex-col">
             <TransactionState
               status={state.status}
               txHash={state.txHash}
@@ -629,6 +628,7 @@ function CreateClaimForm({
                   <Button
                     type="button"
                     variant="primary"
+                    className="w-40"
                     onClick={() => {
                       if (successAction === TransactionSuccessAction.VIEW) {
                         navigate(
@@ -640,10 +640,22 @@ function CreateClaimForm({
                     }}
                   >
                     {successAction === TransactionSuccessAction.VIEW
-                      ? 'View claim'
+                      ? 'View Claim'
                       : 'Close'}
                   </Button>
                 )
+              }
+              errorButton={
+                <Button
+                  type="button"
+                  variant="primary"
+                  className="mt-auto w-40"
+                  onClick={() => {
+                    dispatch({ type: 'START_TRANSACTION' })
+                  }}
+                >
+                  Retry
+                </Button>
               }
             />
           </div>

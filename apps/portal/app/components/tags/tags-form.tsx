@@ -189,6 +189,7 @@ export function TagsForm({
                 <Button
                   type="button"
                   variant="primary"
+                  className="w-40"
                   onClick={() => {
                     navigate(`${PATHS.IDENTITY}/${identity.id}`)
                     onClose()

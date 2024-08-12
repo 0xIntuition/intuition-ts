@@ -3,8 +3,14 @@ import { IdentityPresenter, SortColumn } from '@0xintuition/api'
 
 import { ListHeader } from '@components/list/list-header'
 import { SortOption } from '@components/sort-select'
-import { formatBalance, getAtomImage, getAtomLabel } from '@lib/utils/misc'
-import { PATHS } from 'app/consts'
+import {
+  formatBalance,
+  getAtomDescription,
+  getAtomImage,
+  getAtomIpfsLink,
+  getAtomLabel,
+  getAtomLink,
+} from '@lib/utils/misc'
 import { PaginationType } from 'app/types/pagination'
 
 import { List } from './list'
@@ -58,6 +64,7 @@ export function FollowList({
             position={'claimFor'}
             avatarSrc={getAtomImage(identity)}
             name={getAtomLabel(identity)}
+            description={getAtomDescription(identity)}
             id={identity.user?.wallet ?? identity.identity_id}
             amount={
               +formatBalance(
@@ -80,11 +87,8 @@ export function FollowList({
                 : 0
             }
             updatedAt={identity.updated_at}
-            link={
-              identity.is_user
-                ? `${PATHS.PROFILE}/${identity.identity_id}`
-                : `${PATHS.IDENTITY}/${identity.id}`
-            }
+            ipfsLink={getAtomIpfsLink(identity)}
+            link={getAtomLink(identity)}
           />
         </div>
       ))}

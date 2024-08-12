@@ -11,6 +11,7 @@ describe('IdentityPosition', () => {
       <IdentityPosition
         variant="non-user"
         name="John Doe"
+        description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi."
         id="0x1234567890abcdef1234567890abcdef12345678"
         avatarSrc="https://avatars.githubusercontent.com/u/94311139?s=200&v=4"
         amount={1.21}
@@ -33,6 +34,7 @@ describe('IdentityPosition', () => {
             class="flex items-center"
           >
             <a
+              data-state="closed"
               href="https://sepolia.basescan.org/address/0x1234567890abcdef1234567890abcdef12345678"
             >
               <span
@@ -130,6 +132,7 @@ describe('IdentityPosition', () => {
         <IdentityPosition
           variant="non-user"
           name="John Doe"
+          description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi."
           id="0x1234567890abcdef1234567890abcdef12345678"
           avatarSrc="https://avatars.githubusercontent.com/u/94311139?s=200&v=4"
           amount={1.21}
@@ -159,6 +162,7 @@ describe('IdentityPosition', () => {
               class="flex items-center"
             >
               <a
+                data-state="closed"
                 href="https://sepolia.basescan.org/address/0x1234567890abcdef1234567890abcdef12345678"
               >
                 <span
