@@ -26,7 +26,6 @@ export type ChainConfig = {
   name: string
   alchemyRpcUrl: string
   contractAddress: `0x${string}`
-  collectionId: string
 }
 
 export type ChainEnv = 'development' | 'staging' | 'production'
@@ -40,21 +39,18 @@ export const getChainEnvConfig = (env: string): ChainConfig => {
       name: baseSepolia.name,
       alchemyRpcUrl: alchemyRpcUrlSepolia,
       contractAddress: multiVaultContractAddress as `0x${string}`,
-      collectionId: process.env.PHOSPHOR_COLLECTION_ID!,
     },
     staging: {
       chainId: baseSepolia.id,
       name: baseSepolia.name,
       alchemyRpcUrl: alchemyRpcUrlSepolia,
       contractAddress: multiVaultContractAddress as `0x${string}`,
-      collectionId: process.env.PHOSPHOR_COLLECTION_ID!,
     },
     production: {
       chainId: baseSepolia.id,
       name: baseSepolia.name,
       alchemyRpcUrl: alchemyRpcUrlSepolia,
       contractAddress: multiVaultContractAddress as `0x${string}`, // TODO: temporarily seting the envs to be the same -- revisit in [ENG-2407]
-      collectionId: process.env.PHOSPHOR_COLLECTION_ID!,
     },
   }
 
