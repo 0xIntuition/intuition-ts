@@ -1,9 +1,8 @@
-import { IconName, Identity, IdentityContentRow } from '@0xintuition/1ui'
+import { IconName, Identity, IdentityPosition } from '@0xintuition/1ui'
 import { IdentityPresenter, SortColumn } from '@0xintuition/api'
 
 import { ListHeader } from '@components/list/list-header'
 import {
-  formatBalance,
   getAtomDescription,
   getAtomImage,
   getAtomIpfsLink,
@@ -15,20 +14,18 @@ import { PaginationType } from 'app/types/pagination'
 import { SortOption } from '../sort-select'
 import { List } from './list'
 
-export function IdentitiesList({
-  variant = 'explore',
+export function UsersList({
   identities,
   pagination,
   paramPrefix,
-  enalbeHeader = true,
+  enableHeader = true,
   enableSearch = true,
   enableSort = true,
 }: {
-  variant?: 'explore' | 'positions'
   identities: IdentityPresenter[]
   pagination?: PaginationType
   paramPrefix?: string
-  enalbeHeader?: boolean
+  enableHeader?: boolean
   enableSearch?: boolean
   enableSort?: boolean
 }) {
@@ -48,11 +45,11 @@ export function IdentitiesList({
       enableSearch={enableSearch}
       enableSort={enableSort}
     >
-      {enalbeHeader && (
+      {enableHeader && (
         <ListHeader
           items={[
-            { label: 'Identity', icon: IconName.fingerprint },
-            { label: 'Total Staked', icon: IconName.ethereum },
+            { label: 'User', icon: IconName.fingerprint },
+            { label: 'Total Points', icon: IconName.rocket },
           ]}
         />
       )}
@@ -65,24 +62,14 @@ export function IdentitiesList({
             key={identity.id}
             className={`grow shrink basis-0 self-stretch p-6 bg-background first:border-t-px first:rounded-t-xl last:rounded-b-xl theme-border border-t-0 flex-col justify-start items-start gap-5 inline-flex`}
           >
-            <IdentityContentRow
-              variant={identity.is_user ? Identity.user : Identity.nonUser}
+            <IdentityPosition
+              variant={Identity.user}
               avatarSrc={getAtomImage(identity)}
               name={getAtomLabel(identity)}
               description={getAtomDescription(identity)}
               id={identity.user?.wallet ?? identity.identity_id}
-              amount={
-                +formatBalance(
-                  BigInt(
-                    variant === 'explore'
-                      ? identity.assets_sum
-                      : identity.user_assets || '',
-                  ),
-                  18,
-                  4,
-                )
-              }
-              totalFollowers={identity.num_positions}
+              amount={identity.user?.total_points ?? 0}
+              feesAccrued={0}
               link={getAtomLink(identity)}
               ipfsLink={getAtomIpfsLink(identity)}
             />
