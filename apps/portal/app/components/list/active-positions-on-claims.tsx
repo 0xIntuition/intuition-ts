@@ -1,6 +1,7 @@
-import { Claim, ClaimPositionRow, Identity } from '@0xintuition/1ui'
+import { Claim, ClaimPositionRow, IconName, Identity } from '@0xintuition/1ui'
 import { ClaimPresenter, IdentityPresenter, SortColumn } from '@0xintuition/api'
 
+import { ListHeader } from '@components/list/list-header'
 import {
   formatBalance,
   getAtomDescription,
@@ -36,6 +37,12 @@ export function ActivePositionsOnClaims({
       options={options}
       paramPrefix="activeClaims"
     >
+      <ListHeader
+        items={[
+          { label: 'Claim', icon: IconName.claim },
+          { label: 'Position Amount', icon: IconName.ethereum },
+        ]}
+      />
       {claims.map((claim) => (
         <div
           key={claim.claim_id}

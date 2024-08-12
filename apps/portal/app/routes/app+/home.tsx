@@ -180,6 +180,7 @@ export default function HomePage() {
                 <ClaimsList
                   claims={resolvedClaims.data}
                   paramPrefix="claims"
+                  enableHeader={false}
                   enableSearch={false}
                   enableSort={false}
                 />
@@ -212,6 +213,7 @@ export default function HomePage() {
               return (
                 <IdentitiesList
                   identities={resolvedTopUsers.data}
+                  enalbeHeader={false}
                   enableSearch={false}
                   enableSort={false}
                 />

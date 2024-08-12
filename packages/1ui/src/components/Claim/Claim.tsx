@@ -30,6 +30,7 @@ export interface ClaimProps {
   predicate: ClaimItemProps
   object: ClaimItemProps
   link?: string
+  maxIdentityLength?: number
 }
 
 const ClaimItem = ({
@@ -38,12 +39,14 @@ const ClaimItem = ({
   size,
   disabled,
   shouldHover = true,
+  maxIdentityLength = 24,
 }: {
   item: ClaimItemProps
   link?: string
   size?: keyof typeof IdentityTagSize
   shouldHover?: boolean
   disabled?: boolean
+  maxIdentityLength?: number
 }) => {
   const content = (
     <IdentityTag
@@ -54,7 +57,11 @@ const ClaimItem = ({
       className="group-hover:border-primary group-hover:bg-primary/20 relative z-10"
       shouldHover={shouldHover}
     >
-      <Trunctacular value={item.label} disableTooltip={shouldHover} />
+      <Trunctacular
+        value={item.label}
+        disableTooltip={shouldHover}
+        maxStringLength={maxIdentityLength}
+      />
     </IdentityTag>
   )
 
@@ -71,23 +78,25 @@ const ClaimItem = ({
       <HoverCardTrigger asChild>
         {link ? <a href={link}>{content}</a> : content}
       </HoverCardTrigger>
-      <HoverCardContent className="w-80">
-        <ProfileCard
-          variant={item.variant}
-          avatarSrc={item.imgSrc ?? ''}
-          name={item.label}
-          id={item.id ?? ''}
-          bio={item.description ?? ''}
-          ipfsLink={item.ipfsLink}
-          className="profile-card"
-        />
-        {item.link && (
-          <a href={item.link}>
-            <Button variant={ButtonVariant.secondary} className="w-full">
-              View Identity
-            </Button>
-          </a>
-        )}
+      <HoverCardContent side="right" className="w-max">
+        <div className="flex flex-col gap-4 w-80 max-md:w-[80%]">
+          <ProfileCard
+            variant={item.variant}
+            avatarSrc={item.imgSrc ?? ''}
+            name={item.label}
+            id={item.id ?? ''}
+            bio={item.description ?? ''}
+            ipfsLink={item.ipfsLink}
+            className="profile-card"
+          />
+          {item.link && (
+            <a href={item.link}>
+              <Button variant={ButtonVariant.secondary} className="w-full">
+                View Identity
+              </Button>
+            </a>
+          )}
+        </div>
       </HoverCardContent>
     </HoverCard>
   )
@@ -100,6 +109,7 @@ export const Claim = ({
   link,
   disabled,
   size,
+  maxIdentityLength,
 }: ClaimProps) => {
   const separatorWidth = size !== IdentityTagSize.default ? 'w-4' : 'w-2'
   const items = [subject, predicate, object]
@@ -122,6 +132,7 @@ export const Claim = ({
             size={size}
             disabled={disabled || !item.link}
             shouldHover={item.shouldHover}
+            maxIdentityLength={maxIdentityLength}
           />
         </Fragment>
       ))}

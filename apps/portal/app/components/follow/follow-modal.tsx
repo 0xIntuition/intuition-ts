@@ -341,34 +341,36 @@ export default function FollowModal({
             setShowErrors={setShowErrors}
           />
         </div>
-        {!isTransactionStarted && (
-          <DialogFooter className="!justify-center !items-center gap-5">
-            <UnfollowButton
-              setMode={setMode}
-              handleAction={handleUnfollowButtonClick}
-              handleClose={handleClose}
-              dispatch={dispatch}
-              state={state}
-              user_conviction={user_conviction ?? '0'}
-              className={`${(user_conviction && user_conviction > '0' && state.status === 'idle') || mode !== 'follow' ? '' : 'hidden'}`}
-            />
-            <FollowButton
-              val={val}
-              setMode={setMode}
-              handleAction={handleFollowButtonClick}
-              handleClose={handleClose}
-              dispatch={dispatch}
-              state={state}
-              min_deposit={min_deposit}
-              walletBalance={walletBalance}
-              conviction_price={conviction_price ?? '0'}
-              user_assets={user_assets ?? '0'}
-              setValidationErrors={setValidationErrors}
-              setShowErrors={setShowErrors}
-              className={`${mode === 'unfollow' && 'hidden'}`}
-            />
-          </DialogFooter>
-        )}
+        <DialogFooter className="!justify-center !items-center gap-5">
+          {!isTransactionStarted && (
+            <>
+              <UnfollowButton
+                setMode={setMode}
+                handleAction={handleUnfollowButtonClick}
+                handleClose={handleClose}
+                dispatch={dispatch}
+                state={state}
+                user_conviction={user_conviction ?? '0'}
+                className={`${(user_conviction && user_conviction > '0' && state.status === 'idle') || mode !== 'follow' ? '' : 'hidden'}`}
+              />
+              <FollowButton
+                val={val}
+                setMode={setMode}
+                handleAction={handleFollowButtonClick}
+                handleClose={handleClose}
+                dispatch={dispatch}
+                state={state}
+                min_deposit={min_deposit}
+                walletBalance={walletBalance}
+                conviction_price={conviction_price ?? '0'}
+                user_assets={user_assets ?? '0'}
+                setValidationErrors={setValidationErrors}
+                setShowErrors={setShowErrors}
+                className={`${mode === 'unfollow' && 'hidden'}`}
+              />
+            </>
+          )}
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   )

@@ -23,7 +23,7 @@ export default function CreateIdentityModal({
         onClose?.()
       }}
     >
-      <DialogContent>
+      <DialogContent className="flex flex-col h-[740px] max-sm:min-w-0">
         <IdentityForm
           onClose={onClose}
           onSuccess={onSuccess}

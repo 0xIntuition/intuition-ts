@@ -121,7 +121,7 @@ export default function StakeForm({
                   </IdentityTag>
                 ) : (
                   <Claim
-                    size="md"
+                    size="default"
                     link={`${PATHS.CLAIM}/${claim?.claim_id}`}
                     subject={{
                       variant: claim?.subject?.is_user
@@ -172,6 +172,7 @@ export default function StakeForm({
                       ),
                       link: getAtomLink(claim?.object as IdentityPresenter),
                     }}
+                    maxIdentityLength={8}
                   />
                 )}
                 <Badge className="flex items-center gap-2">
@@ -242,7 +243,7 @@ export default function StakeForm({
           </div>
         </>
       ) : state.status === 'review-transaction' ? (
-        <>
+        <div className="h-full flex flex-col">
           <StakeReview
             mode={mode}
             val={val}
@@ -255,9 +256,9 @@ export default function StakeForm({
             entry_fee={entry_fee}
             exit_fee={exit_fee}
           />
-        </>
+        </div>
       ) : (
-        <div className="flex flex-col items-center justify-center min-h-96">
+        <div className="h-full flex flex-col">
           <TransactionState
             status={state.status}
             txHash={state.txHash}

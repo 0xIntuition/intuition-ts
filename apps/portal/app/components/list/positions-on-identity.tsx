@@ -1,6 +1,7 @@
-import { Identity, IdentityPosition } from '@0xintuition/1ui'
+import { IconName, Identity, IdentityPosition } from '@0xintuition/1ui'
 import { PositionPresenter, PositionSortColumn } from '@0xintuition/api'
 
+import { ListHeader } from '@components/list/list-header'
 import { formatBalance } from '@lib/utils/misc'
 import { BLOCK_EXPLORER_URL, PATHS } from 'app/consts'
 import { PaginationType } from 'app/types/pagination'
@@ -29,6 +30,12 @@ export function PositionsOnIdentity({
       options={options}
       paramPrefix="positions"
     >
+      <ListHeader
+        items={[
+          { label: 'User', icon: IconName.cryptoPunk },
+          { label: 'Position Amount', icon: IconName.ethereum },
+        ]}
+      />
       {positions.map((position) => (
         <div
           key={position.id}
@@ -38,6 +45,7 @@ export function PositionsOnIdentity({
             variant={Identity.user}
             avatarSrc={position.user?.image ?? ''}
             name={position.user?.display_name ?? ''}
+            description={position.user?.description ?? ''}
             id={position.user?.wallet ?? ''}
             amount={+formatBalance(BigInt(position.assets), 18, 4)}
             feesAccrued={Number(

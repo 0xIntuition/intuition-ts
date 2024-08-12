@@ -64,14 +64,14 @@ export default function Quests() {
   } = useLoaderData<typeof loader>()
 
   return (
-    <div className="px-10 w-full max-w-7xl mx-auto flex flex-col gap-10">
-      <div className="flex flex-col gap-10 mb-5">
+    <div className="px-10 w-full max-w-7xl mx-auto flex flex-col gap-10 max-lg:px-5 max-md:gap-4">
+      <div className="flex flex-col gap-10 mb-5 max-md:gap-5 max-md:mb-2">
         <img
           src={quest.image ?? FALLBACK_QUEST_PLACEHOLDER_IMAGE}
           alt={'quest hero'}
           className="object-cover w-full h-[350px] border-x border-b border-border/20 rounded-b-lg"
         />
-        <div className="flex flex-col gap-10">
+        <div className="flex flex-col gap-10 max-md:gap-4">
           <Link to="/app/quest/narrative/0">
             <Button variant={ButtonVariant.secondary} className="w-fit">
               <div className="flex items-center gap-2">
@@ -98,12 +98,12 @@ export default function Quests() {
           Quest Activity
         </div>
         {questClosing?.body && status === QuestStatus.COMPLETED && (
-          <div className="flex flex-col gap-5 py-5">
+          <div className="flex flex-col gap-5 py-5 max-md:py-2 max-md:gap-3">
             <MDXContentWrapper code={questClosing.body} />
           </div>
         )}
         {questContent2 && (
-          <div className="flex flex-col gap-5 py-5">
+          <div className="flex flex-col gap-5 py-5 max-md:py-2 max-md:gap-3">
             <MDXLoreWrapper code={questContent2.body} />
           </div>
         )}
@@ -114,7 +114,7 @@ export default function Quests() {
           </div>
         )}
 
-        <div className="flex flex-col items-center justify-center w-full gap-2 pb-20">
+        <div className="flex flex-col items-center justify-center w-full gap-2 pb-20 max-md:pb-5">
           <Button
             variant={ButtonVariant.primary}
             size={ButtonSize.lg}
@@ -133,7 +133,7 @@ export default function Quests() {
 
 export function MDXContentWrapper({ code }: { code: string }) {
   return (
-    <div className="flex flex-col gap-5 py-5">
+    <div className="flex flex-col gap-5 py-5 max-md:py-0 max-md:gap-3">
       <MDXContent
         code={code}
         components={{

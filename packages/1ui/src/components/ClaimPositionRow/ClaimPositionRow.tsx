@@ -2,9 +2,15 @@ import * as React from 'react'
 
 import {
   Avatar,
+  Button,
+  ButtonVariant,
   ClaimStatus,
   Copy,
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
   PositionValueDisplay,
+  ProfileCard,
   TagsContent,
   TagWithValue,
   TagWithValueProps,
@@ -41,6 +47,7 @@ interface UserVariantProps extends CommonProps {
   claimsFor?: number
   claimsAgainst?: number
   name: string
+  description?: string
   avatarSrc: string
   link: string
   id: string
@@ -51,6 +58,7 @@ interface ClaimVariantProps extends CommonProps {
   claimsFor: number
   claimsAgainst: number
   name?: never
+  description?: never
   avatarSrc?: never
   id?: never
 }
@@ -68,6 +76,7 @@ const ClaimPositionRow = ({
   currency,
   feesAccrued,
   name,
+  description,
   id,
   avatarSrc,
   link,
@@ -88,13 +97,48 @@ const ClaimPositionRow = ({
     >
       {variant === ClaimPositionRowVariant.user && (
         <div className="flex items-center max-sm:justify-center">
-          <Avatar src={avatarSrc} name={name} className="w-16 h-16 mr-4" />
+          <HoverCard openDelay={100} closeDelay={100}>
+            <HoverCardTrigger asChild>
+              <a href={link}>
+                <Avatar
+                  variant={variant}
+                  src={avatarSrc}
+                  name={name}
+                  className="mr-4 w-[64px] h-[64px]"
+                />
+              </a>
+            </HoverCardTrigger>
+            <HoverCardContent side="right" className="w-max">
+              <div className="flex flex-col gap-4 w-80 max-md:w-[80%]">
+                <ProfileCard
+                  variant={variant}
+                  avatarSrc={avatarSrc ?? ''}
+                  name={name}
+                  id={id ?? ''}
+                  bio={description ?? ''}
+                  ipfsLink={ipfsLink}
+                  className="profile-card"
+                />
+                {link && (
+                  <a href={link}>
+                    <Button
+                      variant={ButtonVariant.secondary}
+                      className="w-full"
+                    >
+                      View Identity
+                    </Button>
+                  </a>
+                )}
+              </div>
+            </HoverCardContent>
+          </HoverCard>
           <div className="flex flex-col">
             <div className="flex items-center mb-1.5 max-sm:flex-col max-sm:gap-px max-sm:items-start">
               <a href={link}>
                 <Trunctacular
                   value={name}
                   variant="bodyLarge"
+                  maxStringLength={42}
                   className="mr-1"
                 />
               </a>

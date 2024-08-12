@@ -46,7 +46,7 @@ const ProfileCard = ({
   return (
     <div
       className={cn(
-        'flex flex-col justify-start items-start w-full min-w-[320px] max-w-full rounded-lg gap-2.5',
+        'flex flex-col justify-start items-start w-full min-w-[320px] max-w-full rounded-lg gap-2.5 max-lg:items-center',
         'overflow-hidden',
         props.className,
       )}
@@ -102,7 +102,7 @@ const ProfileCard = ({
             <Text
               variant="body"
               weight="medium"
-              className="text-primary-300 pt-2.5 break-all whitespace-pre-wrap"
+              className="text-primary-300 pt-2.5 whitespace-pre-wrap"
             >
               {bio}
             </Text>

@@ -112,40 +112,47 @@ const IdentitySearchCombobox = ({
                     <HoverCardContent
                       side="right"
                       sideOffset={16}
-                      className="w-80 max-md:w-[80%]"
+                      className="w-max"
                     >
-                      <ProfileCard
-                        variant={identity.is_user ? 'user' : 'non-user'}
-                        avatarSrc={identity.user?.image ?? identity.image ?? ''}
-                        name={truncateString(
-                          identity.user?.display_name ?? identity.display_name,
-                          18,
-                        )}
-                        id={
-                          identity.is_user === true
-                            ? identity.user?.ens_name ??
-                              sliceString(identity.user?.wallet, 6, 4)
-                            : identity.identity_id
-                        }
-                        stats={
-                          identity.is_user === true
-                            ? {
-                                numberOfFollowers: identity.follower_count ?? 0,
-                                numberOfFollowing: identity.followed_count ?? 0,
-                              }
-                            : undefined
-                        }
-                        bio={
-                          identity.is_user === true
-                            ? identity.user?.description ?? ''
-                            : identity.description ?? ''
-                        }
-                        ipfsLink={
-                          identity.is_user === true
-                            ? `${BLOCK_EXPLORER_URL}/address/${identity.identity_id}`
-                            : `${IPFS_GATEWAY_URL}/${identity?.identity_id?.replace('ipfs://', '')}`
-                        }
-                      ></ProfileCard>
+                      <div className="w-80 max-md:w-[80%]">
+                        <ProfileCard
+                          variant={identity.is_user ? 'user' : 'non-user'}
+                          avatarSrc={
+                            identity.user?.image ?? identity.image ?? ''
+                          }
+                          name={truncateString(
+                            identity.user?.display_name ??
+                              identity.display_name,
+                            18,
+                          )}
+                          id={
+                            identity.is_user === true
+                              ? identity.user?.ens_name ??
+                                sliceString(identity.user?.wallet, 6, 4)
+                              : identity.identity_id
+                          }
+                          stats={
+                            identity.is_user === true
+                              ? {
+                                  numberOfFollowers:
+                                    identity.follower_count ?? 0,
+                                  numberOfFollowing:
+                                    identity.followed_count ?? 0,
+                                }
+                              : undefined
+                          }
+                          bio={
+                            identity.is_user === true
+                              ? identity.user?.description ?? ''
+                              : identity.description ?? ''
+                          }
+                          ipfsLink={
+                            identity.is_user === true
+                              ? `${BLOCK_EXPLORER_URL}/address/${identity.identity_id}`
+                              : `${IPFS_GATEWAY_URL}/${identity?.identity_id?.replace('ipfs://', '')}`
+                          }
+                        />
+                      </div>
                     </HoverCardContent>
                   )}
                 </HoverCard>

@@ -1,6 +1,7 @@
 import { ReactNode } from 'react'
 
 import { type VariantProps } from 'class-variance-authority'
+import { cn } from 'styles'
 
 import {
   Button,
@@ -22,21 +23,28 @@ export interface SidebarNavItemProps
   extends VariantProps<typeof buttonVariants> {
   iconName: IconNameType | ReactNode
   label: string
+  disabled?: boolean
   onClick?: () => void
+  className?: string
 }
 
 export const SidebarNavItem = ({
   iconName,
   label,
+  disabled = false,
   onClick,
+  className,
   ...props
 }: SidebarNavItemProps) => {
   const { isMobileView, isCollapsed, setIsCollapsed } =
     useSidebarLayoutContext()
 
   const buttonProps = {
-    variant: ButtonVariant.navigation,
-    className: 'w-full justify-start truncate',
+    variant: disabled ? ButtonVariant.text : ButtonVariant.navigation,
+    className: cn(
+      'w-full justify-start truncate disabled:text-muted',
+      className,
+    ),
     onClick: () => {
       onClick && onClick()
       isMobileView && setIsCollapsed(true)
@@ -58,7 +66,8 @@ export const SidebarNavItem = ({
           <Button
             size={isMobileView ? ButtonSize.iconXl : ButtonSize.iconLg}
             {...buttonProps}
-            className="justify-center"
+            className={cn(buttonProps.className, 'justify-center w-auto')}
+            disabled={disabled}
           >
             {ImageComponent}
           </Button>
@@ -68,10 +77,31 @@ export const SidebarNavItem = ({
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>
+  ) : disabled ? (
+    <TooltipProvider delayDuration={0}>
+      <Tooltip>
+        <TooltipTrigger asChild className="m-auto">
+          <Button
+            size={isMobileView ? ButtonSize.xl : ButtonSize.lg}
+            {...buttonProps}
+            disabled={disabled}
+          >
+            {ImageComponent}
+            {label}
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent side="right" sideOffset={-140}>
+          <Text variant={TextVariant.body} className="text-muted-foreground">
+            Coming Soon
+          </Text>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
   ) : (
     <Button
       size={isMobileView ? ButtonSize.xl : ButtonSize.lg}
       {...buttonProps}
+      disabled={disabled}
     >
       {ImageComponent}
       {label}

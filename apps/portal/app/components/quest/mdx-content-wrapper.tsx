@@ -48,7 +48,7 @@ function getComponentData(variant: MDXContentVariantType) {
       }
     default:
       return {
-        baseClass: 'flex flex-col gap-5 py-5',
+        baseClass: 'flex flex-col gap-5 py-5 max-md:py-0 max-md:gap-3',
         components: getMdxComponents(variant),
       }
   }

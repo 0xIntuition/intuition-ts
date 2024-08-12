@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react'
+
 import { Button, Icon, InfoCard, ProfileCard } from '@0xintuition/1ui'
 import {
   ClaimPresenter,
@@ -25,7 +27,6 @@ import {
   NO_PARAM_ID_ERROR,
   NO_WALLET_ERROR,
 } from 'app/consts'
-import FullPageLayout from 'app/layouts/full-page-layout'
 import TwoPanelLayout from 'app/layouts/two-panel-layout'
 import { useAtom } from 'jotai'
 
@@ -60,10 +61,25 @@ export default function ListDetails() {
     useAtom(addIdentitiesListModalAtom)
   const navigate = useNavigate()
   const location = useLocation()
-  const from = location.state?.from
+  const [fromUrl, setFromUrl] = useState<string | number>(-1)
+
+  useEffect(() => {
+    const from = location.state?.from
+
+    if (from) {
+      setFromUrl(from.split('?')[0])
+    } else if (document.referrer) {
+      setFromUrl(document.referrer)
+    } else {
+      setFromUrl(-1)
+    }
+  }, [location.state])
 
   const leftPanel = (
-    <div className="flex flex-col item-center gap-6">
+    <div className="flex-col justify-start items-start gap-6 inline-flex max-lg:w-full">
+      <NavigationButton variant="secondary" size="icon" to={fromUrl.toString()}>
+        <Icon name="arrow-left" />
+      </NavigationButton>
       <ProfileCard
         variant="non-user"
         avatarSrc={claim.object?.image ?? ''}
@@ -79,6 +95,10 @@ export default function ListDetails() {
       <ListIdentityDisplayCard
         displayName={claim.object?.display_name ?? ''}
         avatarImgSrc={claim.object?.image ?? ''}
+        onClick={() => {
+          navigate(`/app/identity/${claim.object?.id}`)
+        }}
+        className="hover:cursor-pointer w-full"
       />
       <InfoCard
         variant="user"
@@ -95,6 +115,7 @@ export default function ListDetails() {
         onClick={() => {
           navigate(`/app/identity/${claim.object?.id}`)
         }}
+        className="w-full"
       >
         View identity
         <Icon name="arrow-up-right" />
@@ -103,24 +124,7 @@ export default function ListDetails() {
   )
 
   return (
-    <FullPageLayout>
-      <div className="flex w-full items-center justify-between mb-6">
-        <NavigationButton variant="secondary" size="icon" to={from ?? -1}>
-          <Icon name="arrow-left" />
-        </NavigationButton>
-        <Button
-          variant="primary"
-          onClick={() => {
-            setAddIdentitiesListModalActive({
-              isOpen: true,
-              id: claim?.object?.id ?? null,
-            })
-          }}
-        >
-          <Icon name="plus-small" />
-          Add to list
-        </Button>
-      </div>
+    <>
       <TwoPanelLayout leftPanel={leftPanel} rightPanel={<Outlet />} />
       <AddIdentitiesListModal
         identity={claim.object as IdentityPresenter}
@@ -134,6 +138,6 @@ export default function ListDetails() {
           })
         }
       />
-    </FullPageLayout>
+    </>
   )
 }

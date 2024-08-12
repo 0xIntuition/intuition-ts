@@ -1,8 +1,10 @@
-import { Identity, IdentityPosition } from '@0xintuition/1ui'
+import { IconName, Identity, IdentityPosition } from '@0xintuition/1ui'
 import { IdentityPresenter, SortColumn } from '@0xintuition/api'
 
+import { ListHeader } from '@components/list/list-header'
 import {
   formatBalance,
+  getAtomDescription,
   getAtomImage,
   getAtomIpfsLink,
   getAtomLabel,
@@ -34,6 +36,12 @@ export function ActivePositionsOnIdentities({
       options={options}
       paramPrefix="activeIdentities"
     >
+      <ListHeader
+        items={[
+          { label: 'Identity', icon: IconName.fingerprint },
+          { label: 'Position Amount', icon: IconName.ethereum },
+        ]}
+      />
       {identities.map((identity) => (
         <div
           key={identity.id}
@@ -43,6 +51,7 @@ export function ActivePositionsOnIdentities({
             variant={identity.is_user ? Identity.user : Identity.nonUser}
             avatarSrc={getAtomImage(identity)}
             name={getAtomLabel(identity)}
+            description={getAtomDescription(identity)}
             id={identity.user?.wallet ?? identity.identity_id}
             amount={+formatBalance(BigInt(identity.user_assets), 18, 4)}
             feesAccrued={

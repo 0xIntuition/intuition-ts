@@ -17,7 +17,7 @@ export function Hero({ imgSrc }: IHeroProps) {
     <img
       src={imgSrc ?? FALLBACK_QUEST_PLACEHOLDER_IMAGE}
       alt={'quest hero'}
-      className="object-cover w-full h-[350px] theme-border rounded-lg"
+      className="object-cover w-full h-[350px] theme-border rounded-lg max-sm:h-[200px]"
     />
   )
 }
@@ -30,7 +30,7 @@ export interface IHeaderProps {
 
 export function Header({ title, questStatus, position }: IHeaderProps) {
   return (
-    <div className="flex items-bottom justify-between w-full">
+    <div className="flex items-bottom justify-between w-full max-sm:flex-col max-sm:gap-2">
       <Text variant="heading4" weight="medium">
         {position ? `Chapter ${position} : ${title}` : title ?? ''}
       </Text>
@@ -65,7 +65,7 @@ export function QuestBackButton({
 }: IQuestBackButtonProps) {
   return (
     <Link to={to} prefetch="intent">
-      <Button variant={ButtonVariant.secondary} className="w-fit">
+      <Button variant={ButtonVariant.secondary} className="w-fit max-sm:w-full">
         <div className="flex items-center gap-2">
           <Icon name={IconName.arrowLeft} />
         </div>
