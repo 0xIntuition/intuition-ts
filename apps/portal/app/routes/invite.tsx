@@ -14,6 +14,7 @@ import { UserPresenter, UsersService } from '@0xintuition/api'
 
 import PrivyLogout from '@client/privy-logout'
 import ErrorList from '@components/error-list'
+import { HeaderLogo } from '@components/header-logo'
 import RelicCard from '@components/relic-card/relic-card'
 import { getFormProps, getInputProps, useForm } from '@conform-to/react'
 import { getZodConstraint, parseWithZod } from '@conform-to/zod'
@@ -140,7 +141,8 @@ export default function InviteRoute() {
   }, [inviteCodeFetcher.state, inviteCodeFetcher.data, navigate])
 
   return (
-    <>
+    <div className="flex flex-col justify-between h-screen w-full p-8">
+      <HeaderLogo />
       <div className="flex justify-center items-center h-screen">
         <div className="flex-col justify-start items-start inline-flex gap-6">
           {relicHolder ? (
@@ -151,7 +153,7 @@ export default function InviteRoute() {
                 </div>
               </div>
               <RelicCard />
-              <Link to={'/welcome'} prefetch="intent" className="m-auto">
+              <Link to={'/create'} prefetch="intent" className="m-auto">
                 <Button
                   type="button"
                   variant={ButtonVariant.primary}
@@ -214,9 +216,9 @@ export default function InviteRoute() {
               </inviteCodeFetcher.Form>
             </>
           )}
-          <PrivyLogout wallet={wallet} />
         </div>
       </div>
-    </>
+      <PrivyLogout wallet={wallet} />
+    </div>
   )
 }
