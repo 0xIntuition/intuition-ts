@@ -14,6 +14,7 @@ import {
 import { IdentityPresenter } from '@0xintuition/api'
 
 import { IdentitySearchCombobox } from '@components/identity/identity-search-combo-box'
+import { InfoTooltip } from '@components/info-tooltip'
 import { createIdentityModalAtom } from '@lib/state/store'
 import {
   getAtomDescription,
@@ -58,9 +59,27 @@ export const IdentityPopover: React.FC<IdentityPopoverProps> = ({
     >
       <PopoverTrigger asChild>
         <div className="flex flex-col gap-2 w-45">
-          <Text variant="small" className="text-primary/60">
-            {type}
-          </Text>
+          <div className="flex flex-row gap-1">
+            <Text variant="caption" className="text-secondary-foreground">
+              {type}
+            </Text>
+            <InfoTooltip
+              title={
+                type === 'subject'
+                  ? 'Subject'
+                  : type === 'predicate'
+                    ? 'Predicate'
+                    : 'Object'
+              }
+              content={
+                type === 'subject'
+                  ? 'Represents the entity or concept being described. For example, in the statement {[Alice] [is] [trustworthy]}, [Alice] is the subject.'
+                  : type === 'predicate'
+                    ? 'Describes the relationship or attribute of the subject. For example, in the statement {[Alice] [is] [trustworthy]}, [Alice], [is] serves as the predicate, akin to the key in a key-value pair.'
+                    : 'Denotes the value or characteristic attributed to the subject. For example, in the statement {[Alice] [is] [trustworthy]}, [Alice], [trustworthy] is the object, akin to the value in a key-value pair.'
+              }
+            />
+          </div>
           <HoverCard openDelay={100} closeDelay={100}>
             <HoverCardTrigger className="w-full">
               <IdentityTag
