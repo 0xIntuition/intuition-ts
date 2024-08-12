@@ -3,6 +3,7 @@ import { IdentityPresenter, SortColumn } from '@0xintuition/api'
 
 import {
   formatBalance,
+  getAtomDescription,
   getAtomImage,
   getAtomIpfsLink,
   getAtomLabel,
@@ -43,6 +44,7 @@ export function ActivePositionsOnIdentities({
             variant={identity.is_user ? Identity.user : Identity.nonUser}
             avatarSrc={getAtomImage(identity)}
             name={getAtomLabel(identity)}
+            description={getAtomDescription(identity)}
             id={identity.user?.wallet ?? identity.identity_id}
             amount={+formatBalance(BigInt(identity.user_assets), 18, 4)}
             feesAccrued={

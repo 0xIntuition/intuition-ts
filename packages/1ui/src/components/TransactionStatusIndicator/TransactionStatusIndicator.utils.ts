@@ -40,6 +40,8 @@ export const getSuccessLabel = (type: TransactionType) => {
       return 'Claim created successfully'
     case Transaction.identity:
       return 'Identity created successfully'
+    case Transaction.list:
+      return 'Identities added to list successfully'
     default:
       return 'Successful'
   }

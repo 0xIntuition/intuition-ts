@@ -217,10 +217,10 @@ export default function Quests() {
   }, [actionData])
 
   return (
-    <div className="px-10 w-full max-w-7xl mx-auto flex flex-col gap-10">
-      <div className="flex flex-col gap-10 mb-5">
+    <div className="px-10 w-full max-w-7xl mx-auto flex flex-col gap-10 max-lg:px-0 max-md:gap-4">
+      <div className="flex flex-col gap-10 mb-5 max-md:gap-5 max-md:mb-2">
         <Hero imgSrc={quest.image} />
-        <div className="flex flex-col gap-10">
+        <div className="flex flex-col gap-10 max-md:gap-4">
           <QuestBackButton />
           <Header
             position={quest.position}
@@ -257,7 +257,7 @@ export default function Quests() {
           }
         />
 
-        <div className="flex flex-col items-center justify-center w-full gap-2 pb-20">
+        <div className="flex flex-col items-center justify-center w-full gap-2 pb-20 max-md:pb-5">
           <Form method="post">
             <input type="hidden" name="questId" value={quest.id} />
             <Button

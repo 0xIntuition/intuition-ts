@@ -5,8 +5,14 @@ import { CurrencyType, Identity, IdentityType } from 'types'
 
 import {
   Avatar,
+  Button,
+  ButtonVariant,
   Copy,
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
   IdentityValueDisplay,
+  ProfileCard,
   TagsContent,
   TagWithValue,
   TagWithValueProps,
@@ -20,6 +26,7 @@ export interface IdentityContentRowProps
   amount: number
   currency?: CurrencyType
   name: string
+  description: string
   id: string
   avatarSrc: string
   link: string
@@ -55,10 +62,11 @@ const NameAndAddress = ({
           value={name}
           variant={TextVariant.bodyLarge}
           className="mr-2"
+          maxStringLength={42}
         />
       </a>
       <div className="flex flex-row gap-1 items-center">
-        <a href={ipfsLink}>
+        <a href={ipfsLink} target="_blank" rel="noreferrer noreopener">
           <Trunctacular value={id} className="text-secondary-foreground" />
         </a>
         <Copy text={id} />
@@ -72,6 +80,7 @@ const IdentityContentRow = ({
   amount,
   currency,
   name,
+  description,
   id,
   avatarSrc,
   link,
@@ -94,14 +103,41 @@ const IdentityContentRow = ({
         {...props}
       >
         <div className="flex items-center">
-          <a href={link}>
-            <Avatar
-              variant={variant}
-              src={avatarSrc}
-              name={name}
-              className="mr-4 w-[64px] h-[64px]"
-            />
-          </a>
+          <HoverCard openDelay={100} closeDelay={100}>
+            <HoverCardTrigger asChild>
+              <a href={link}>
+                <Avatar
+                  variant={variant}
+                  src={avatarSrc}
+                  name={name}
+                  className="mr-4 w-[64px] h-[64px]"
+                />
+              </a>
+            </HoverCardTrigger>
+            <HoverCardContent side="right" className="w-max">
+              <div className="flex flex-col gap-4 w-80 max-md:w-[80%]">
+                <ProfileCard
+                  variant={variant}
+                  avatarSrc={avatarSrc ?? ''}
+                  name={name}
+                  id={id ?? ''}
+                  bio={description ?? ''}
+                  ipfsLink={ipfsLink}
+                  className="profile-card"
+                />
+                {link && (
+                  <a href={link}>
+                    <Button
+                      variant={ButtonVariant.secondary}
+                      className="w-full"
+                    >
+                      View Identity
+                    </Button>
+                  </a>
+                )}
+              </div>
+            </HoverCardContent>
+          </HoverCard>
           <div className="flex flex-col">
             <NameAndAddress
               name={name}

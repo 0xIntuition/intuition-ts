@@ -31,7 +31,7 @@ import {
   getAtomLink,
 } from '@lib/utils/misc'
 import { useNavigate } from '@remix-run/react'
-import { BLOCK_EXPLORER_URL, IPFS_GATEWAY_URL, PATHS } from 'app/consts'
+import { BLOCK_EXPLORER_URL, PATHS } from 'app/consts'
 import { PaginationType } from 'app/types/pagination'
 import { formatDistance } from 'date-fns'
 
@@ -126,33 +126,36 @@ function ActivityItem({
                   onClick={() =>
                     navigate(`${PATHS.PROFILE}/${activity.creator?.wallet}`)
                   }
+                  maxStringLength={32}
                 />
               </IdentityTag>
             </HoverCardTrigger>
-            <HoverCardContent className="w-fit">
-              {activity.creator ? (
-                <ProfileCard
-                  variant={Identity.user}
-                  avatarSrc={activity.creator?.image ?? ''}
-                  name={activity.creator?.display_name ?? ''}
-                  id={activity.creator?.wallet}
-                  bio={activity.creator?.description ?? ''}
-                  ipfsLink={`${BLOCK_EXPLORER_URL}/address/${activity.creator?.wallet}`}
-                  className="w-80"
-                />
-              ) : (
-                <ProfileCard
-                  variant={Identity.user}
-                  avatarSrc={''}
-                  name={activity.identity?.creator_address ?? ''}
-                  id={activity.identity?.creator_address}
-                  bio={
-                    'There is no user associated with this wallet. This data was created on-chain, outside of the Intuition Portal.'
-                  }
-                  ipfsLink={`${BLOCK_EXPLORER_URL}/address/${activity.identity?.creator_address}`}
-                  className="w-80"
-                />
-              )}
+            <HoverCardContent side="right" className="w-max">
+              <div className="w-80 max-md:w-[80%]">
+                {activity.creator ? (
+                  <ProfileCard
+                    variant={Identity.user}
+                    avatarSrc={activity.creator?.image ?? ''}
+                    name={activity.creator?.display_name ?? ''}
+                    id={activity.creator?.wallet}
+                    bio={activity.creator?.description ?? ''}
+                    ipfsLink={`${BLOCK_EXPLORER_URL}/address/${activity.creator?.wallet}`}
+                    className="w-80"
+                  />
+                ) : (
+                  <ProfileCard
+                    variant={Identity.user}
+                    avatarSrc={''}
+                    name={activity.identity?.creator_address ?? ''}
+                    id={activity.identity?.creator_address}
+                    bio={
+                      'There is no user associated with this wallet. This data was created on-chain, outside of the Intuition Portal.'
+                    }
+                    ipfsLink={`${BLOCK_EXPLORER_URL}/address/${activity.identity?.creator_address}`}
+                    className="w-80"
+                  />
+                )}
+              </div>
             </HoverCardContent>
           </HoverCard>
           <Text>{message}</Text>
@@ -168,16 +171,9 @@ function ActivityItem({
               variant={
                 activity.identity.is_user ? Identity.user : Identity.nonUser
               }
-              avatarSrc={
-                activity.identity.user?.image ?? activity.identity.image ?? ''
-              }
-              name={
-                activity.identity.user_display_name ||
-                (activity.identity.display_name &&
-                activity.identity.display_name !== ''
-                  ? activity.identity.display_name
-                  : activity.identity.identity_id)
-              }
+              avatarSrc={getAtomImage(activity.identity)}
+              name={getAtomLabel(activity.identity)}
+              description={getAtomDescription(activity.identity)}
               id={
                 activity.identity.user?.wallet ?? activity.identity.identity_id
               }
@@ -189,16 +185,8 @@ function ActivityItem({
                 )
               }
               totalFollowers={activity.identity.num_positions}
-              link={
-                activity.identity.is_user
-                  ? `${PATHS.PROFILE}/${activity.identity.identity_id}`
-                  : `${PATHS.IDENTITY}/${activity.identity.id}`
-              }
-              ipfsLink={
-                activity.identity.is_user
-                  ? `${BLOCK_EXPLORER_URL}/address/${activity.identity.identity_id}`
-                  : `${IPFS_GATEWAY_URL}/${activity.identity.id}`
-              }
+              link={getAtomLink(activity.identity)}
+              ipfsLink={getAtomIpfsLink(activity.identity)}
             />
             <a
               href={`${BLOCK_EXPLORER_URL}/tx/${activity.transaction_hash}`}

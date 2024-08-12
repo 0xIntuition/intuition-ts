@@ -58,20 +58,25 @@ export const ReferralRow: React.FC<ReferralRowProps> = ({
               />
             </IdentityTag>
           </HoverCardTrigger>
-          <HoverCardContent className="w-80">
-            <ProfileCard
-              variant={Identity.user}
-              avatarSrc={redeemer?.image ?? ''}
-              name={redeemer?.display_name ?? redeemer.wallet}
-              id={redeemer.wallet}
-              bio={redeemer.description ?? ''}
-              ipfsLink={`${BLOCK_EXPLORER_URL}/address/${redeemer.wallet}`}
-            />
-            <Link to={`${PATHS.PROFILE}/${redeemer.wallet}`} prefetch="intent">
-              <Button variant={ButtonVariant.secondary} className="w-full">
-                View Identity
-              </Button>
-            </Link>
+          <HoverCardContent side="right" className="w-max">
+            <div className="w-80 max-md:w-[80%]">
+              <ProfileCard
+                variant={Identity.user}
+                avatarSrc={redeemer?.image ?? ''}
+                name={redeemer?.display_name ?? redeemer.wallet}
+                id={redeemer.wallet}
+                bio={redeemer.description ?? ''}
+                ipfsLink={`${BLOCK_EXPLORER_URL}/address/${redeemer.wallet}`}
+              />
+              <Link
+                to={`${PATHS.PROFILE}/${redeemer.wallet}`}
+                prefetch="intent"
+              >
+                <Button variant={ButtonVariant.secondary} className="w-full">
+                  View Identity
+                </Button>
+              </Link>
+            </div>
           </HoverCardContent>
         </HoverCard>
       ) : (

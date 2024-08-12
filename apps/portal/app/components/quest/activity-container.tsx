@@ -52,7 +52,7 @@ export default function ActivityContainer({
   return (
     <div
       className={cn(
-        'rounded-lg p-5 flex flex-col w-full justify-center items-center gap-5',
+        'rounded-lg p-5 flex flex-col w-full justify-center items-center gap-5 max-md:p-5 max-md:gap-3',
         containerClass,
         className,
       )}
@@ -61,7 +61,7 @@ export default function ActivityContainer({
       <div className="w-full justify-start flex items-center">
         <Icon className={cn(iconClass, 'h-6 w-6')} name={iconName} />
       </div>
-      <div className="pb-5">{children}</div>
+      <div className="pb-5 max-md:pb-0">{children}</div>
     </div>
   )
 }

@@ -92,12 +92,12 @@ export function AddIdentitiesListForm({
   }
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full w-full">
       {!isTransactionStarted && (
         <>
           {state.status === 'idle' && (
-            <div>
-              <DialogHeader className="py-4">
+            <>
+              <DialogHeader>
                 <DialogTitle>
                   <IdentityTag
                     imgSrc={identity?.user?.image ?? identity?.image}
@@ -123,46 +123,48 @@ export function AddIdentitiesListForm({
                   easily here!
                 </Text>
               </DialogDescription>
-              <AddIdentities
-                objectVaultId={identity.vault_id}
-                identity={identity}
-                userWallet={userWallet}
-                selectedIdentities={selectedIdentities}
-                onAddIdentity={handleAddIdentity}
-                onRemoveIdentity={handleRemoveIdentity}
-                maxIdentitiesToAdd={MAX_IDENTITIES_TO_ADD}
-                invalidIdentities={invalidIdentities}
-                setInvalidIdentities={setInvalidIdentities}
-                onRemoveInvalidIdentity={handleRemoveInvalidIdentity}
-              />
-            </div>
+              <div className="flex flex-col h-full">
+                <AddIdentities
+                  objectVaultId={identity.vault_id}
+                  identity={identity}
+                  userWallet={userWallet}
+                  selectedIdentities={selectedIdentities}
+                  onAddIdentity={handleAddIdentity}
+                  onRemoveIdentity={handleRemoveIdentity}
+                  maxIdentitiesToAdd={MAX_IDENTITIES_TO_ADD}
+                  invalidIdentities={invalidIdentities}
+                  setInvalidIdentities={setInvalidIdentities}
+                  onRemoveInvalidIdentity={handleRemoveInvalidIdentity}
+                />
+              </div>
+            </>
           )}
           {state.status !== 'review-transaction' && (
-            <div className="mt-auto py-4 bg-neutral-950">
-              <DialogFooter className="!justify-center !items-center">
-                <div className="flex flex-col items-center gap-1">
-                  <Button
-                    size="lg"
-                    variant="primary"
-                    onClick={() => dispatch({ type: 'REVIEW_TRANSACTION' })}
-                  >
-                    Add Identities
-                  </Button>
-                </div>
-              </DialogFooter>
-            </div>
+            <DialogFooter className="!justify-center !items-center">
+              <div className="flex flex-col items-center gap-1">
+                <Button
+                  variant="primary"
+                  className="w-40"
+                  onClick={() => dispatch({ type: 'REVIEW_TRANSACTION' })}
+                >
+                  Add Identities
+                </Button>
+              </div>
+            </DialogFooter>
           )}
           {state.status === 'review-transaction' && (
-            <AddIdentitiesReview
-              dispatch={dispatch}
-              objectVaultId={identity.vault_id}
-              identitiesToAdd={selectedIdentities}
-            />
+            <div className="h-full flex flex-col">
+              <AddIdentitiesReview
+                dispatch={dispatch}
+                objectVaultId={identity.vault_id}
+                identitiesToAdd={selectedIdentities}
+              />
+            </div>
           )}
         </>
       )}
       {isTransactionStarted && (
-        <div className="flex flex-col items-center justify-center flex-grow">
+        <div className="h-full flex flex-col">
           <TransactionState
             status={state.status}
             txHash={state.txHash}
@@ -172,6 +174,7 @@ export function AddIdentitiesListForm({
                 <Button
                   type="button"
                   variant="primary"
+                  className="mt-auto w-40"
                   onClick={() => {
                     onClose()
                   }}
@@ -179,6 +182,18 @@ export function AddIdentitiesListForm({
                   Close
                 </Button>
               )
+            }
+            errorButton={
+              <Button
+                type="button"
+                variant="primary"
+                className="w-40 mt-auto"
+                onClick={() => {
+                  dispatch({ type: 'START_TRANSACTION' })
+                }}
+              >
+                Retry
+              </Button>
             }
           />
         </div>

@@ -366,7 +366,7 @@ export default function StakeModal({
         handleClose()
       }}
     >
-      <DialogContent className="flex flex-col w-[480px] h-auto gap-2.5 p-5">
+      <DialogContent className="flex flex-col w-[480px] h-[480px] gap-2.5 p-5">
         <div className="flex-grow">
           <StakeForm
             userWallet={userWallet}

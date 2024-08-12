@@ -27,6 +27,7 @@ export const Transaction = {
   tag: 'tag',
   follow: 'follow',
   unfollow: 'unfollow',
+  list: 'list',
 }
 
 export type TransactionType = (typeof Transaction)[keyof typeof Transaction]

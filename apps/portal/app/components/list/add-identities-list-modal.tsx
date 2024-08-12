@@ -27,7 +27,7 @@ export default function AddIdentitiesListModal({
         onClose?.()
       }}
     >
-      <DialogContent className="bg-neutral-950 rounded-xl shadow border border-solid border-black/10 h-[550px] overflow-hidden flex flex-col">
+      <DialogContent className="h-[550px]">
         <AddIdentitiesListForm
           identity={identity}
           userWallet={userWallet}

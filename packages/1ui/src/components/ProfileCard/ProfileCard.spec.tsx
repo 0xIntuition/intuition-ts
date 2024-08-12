@@ -23,10 +23,10 @@ describe('ProfileCard', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="flex flex-col justify-start items-start w-full min-w-[320px] max-w-full rounded-lg gap-2.5 overflow-hidden"
+          class="flex flex-col justify-start items-start w-full min-w-[320px] max-w-full rounded-lg gap-2.5 max-lg:items-center overflow-hidden"
         >
           <div
-            class="flex items-center space-x-4 w-full"
+            class="flex items-center space-x-4 w-full max-lg:justify-center"
           >
             <span
               class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square bg-background theme-border rounded-full"
@@ -128,7 +128,7 @@ describe('ProfileCard', () => {
               class="w-full overflow-hidden"
             >
               <p
-                class="text-base font-medium text-primary-300 pt-2.5 break-all whitespace-pre-wrap"
+                class="text-base font-medium text-primary-300 pt-2.5 whitespace-pre-wrap"
               >
                 John Doe is a blockchain enthusiast. He loves to learn new things and share his knowledge with others. He is also a contributor to various open-source projects.
               </p>
@@ -171,10 +171,10 @@ describe('ProfileCard', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="flex flex-col justify-start items-start w-full min-w-[320px] max-w-full rounded-lg gap-2.5 overflow-hidden"
+          class="flex flex-col justify-start items-start w-full min-w-[320px] max-w-full rounded-lg gap-2.5 max-lg:items-center overflow-hidden"
         >
           <div
-            class="flex items-center space-x-4 w-full"
+            class="flex items-center space-x-4 w-full max-lg:justify-center"
           >
             <span
               class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square bg-background theme-border rounded"
@@ -230,7 +230,7 @@ describe('ProfileCard', () => {
               class="w-full overflow-hidden"
             >
               <p
-                class="text-base font-medium text-primary-300 pt-2.5 break-all whitespace-pre-wrap"
+                class="text-base font-medium text-primary-300 pt-2.5 whitespace-pre-wrap"
               >
                 Blockchain Corp is a leading company in blockchain technology. Visit our website for more information about how you can benefit from our services.
               </p>
@@ -271,10 +271,10 @@ describe('ProfileCard', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="flex flex-col justify-start items-start w-full min-w-[320px] max-w-full rounded-lg gap-2.5 overflow-hidden"
+          class="flex flex-col justify-start items-start w-full min-w-[320px] max-w-full rounded-lg gap-2.5 max-lg:items-center overflow-hidden"
         >
           <div
-            class="flex items-center space-x-4 w-full"
+            class="flex items-center space-x-4 w-full max-lg:justify-center"
           >
             <span
               class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square bg-background theme-border rounded-full"
@@ -376,7 +376,7 @@ describe('ProfileCard', () => {
               class="w-full overflow-hidden"
             >
               <p
-                class="text-base font-medium text-primary-300 pt-2.5 break-all whitespace-pre-wrap"
+                class="text-base font-medium text-primary-300 pt-2.5 whitespace-pre-wrap"
               >
                 John Doe is a blockchain enthusiast. He loves to learn new things and share his knowledge with others. He is also a contributor to various open-source projects.
               </p>

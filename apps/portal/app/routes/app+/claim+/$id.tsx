@@ -48,7 +48,6 @@ import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
 import { getVaultDetails } from '@server/multivault'
 import { NO_WALLET_ERROR, PATHS } from 'app/consts'
-import FullPageLayout from 'app/layouts/full-page-layout'
 import TwoPanelLayout from 'app/layouts/two-panel-layout'
 import { VaultDetailsType } from 'app/types/vault'
 import { useAtom } from 'jotai'
@@ -101,6 +100,13 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     vaultDetails,
   })
 }
+
+export interface ClaimDetailsLoaderData {
+  wallet: string
+  claim: ClaimPresenter
+  vaultDetails: VaultDetailsType
+}
+
 export default function ClaimDetails() {
   const { wallet, claim, vaultDetails } = useLoaderData<{
     wallet: string
@@ -151,47 +157,48 @@ export default function ClaimDetails() {
     +userConviction > 0 ? TagVariant.for : TagVariant.against
   const directionTagText = +userConviction > 0 ? 'FOR' : 'AGAINST'
 
-  const ClaimWithNav = () => (
-    <div className="flex gap-6 items-center w-full mb-6">
+  const leftPanel = (
+    <div className="flex-col justify-start items-start gap-6 inline-flex max-lg:w-full">
       <NavigationButton variant="secondary" size="icon" to={fromUrl.toString()}>
         <Icon name="arrow-left" />
       </NavigationButton>
-      <Claim
-        size="md"
-        link={`${PATHS.CLAIM}/${claim?.claim_id}`}
-        subject={{
-          variant: claim.subject?.is_user ? Identity.user : Identity.nonUser,
-          label: getAtomLabel(claim.subject as IdentityPresenter),
-          imgSrc: getAtomImage(claim.subject as IdentityPresenter),
-          id: claim.subject?.identity_id,
-          description: getAtomDescription(claim.subject as IdentityPresenter),
-          ipfsLink: getAtomIpfsLink(claim.subject as IdentityPresenter),
-          link: getAtomLink(claim.subject as IdentityPresenter),
-        }}
-        predicate={{
-          variant: claim.predicate?.is_user ? Identity.user : Identity.nonUser,
-          label: getAtomLabel(claim.predicate as IdentityPresenter),
-          imgSrc: getAtomImage(claim.predicate as IdentityPresenter),
-          id: claim.predicate?.identity_id,
-          description: getAtomDescription(claim.predicate as IdentityPresenter),
-          ipfsLink: getAtomIpfsLink(claim.predicate as IdentityPresenter),
-          link: getAtomLink(claim.predicate as IdentityPresenter),
-        }}
-        object={{
-          variant: claim.object?.is_user ? Identity.user : Identity.nonUser,
-          label: getAtomLabel(claim.object as IdentityPresenter),
-          imgSrc: getAtomImage(claim.object as IdentityPresenter),
-          id: claim.object?.identity_id,
-          description: getAtomDescription(claim.object as IdentityPresenter),
-          ipfsLink: getAtomIpfsLink(claim.object as IdentityPresenter),
-          link: getAtomLink(claim.object as IdentityPresenter),
-        }}
-      />
-    </div>
-  )
-
-  const leftPanel = (
-    <div className="w-full flex-col justify-start items-start gap-5 inline-flex">
+      <div className="flex-row flex m-auto md:hidden">
+        <Claim
+          size="xl"
+          link={`${PATHS.CLAIM}/${claim?.claim_id}`}
+          subject={{
+            variant: claim.subject?.is_user ? Identity.user : Identity.nonUser,
+            label: getAtomLabel(claim.subject as IdentityPresenter),
+            imgSrc: getAtomImage(claim.subject as IdentityPresenter),
+            id: claim.subject?.identity_id,
+            description: getAtomDescription(claim.subject as IdentityPresenter),
+            ipfsLink: getAtomIpfsLink(claim.subject as IdentityPresenter),
+            link: getAtomLink(claim.subject as IdentityPresenter),
+          }}
+          predicate={{
+            variant: claim.predicate?.is_user
+              ? Identity.user
+              : Identity.nonUser,
+            label: getAtomLabel(claim.predicate as IdentityPresenter),
+            imgSrc: getAtomImage(claim.predicate as IdentityPresenter),
+            id: claim.predicate?.identity_id,
+            description: getAtomDescription(
+              claim.predicate as IdentityPresenter,
+            ),
+            ipfsLink: getAtomIpfsLink(claim.predicate as IdentityPresenter),
+            link: getAtomLink(claim.predicate as IdentityPresenter),
+          }}
+          object={{
+            variant: claim.object?.is_user ? Identity.user : Identity.nonUser,
+            label: getAtomLabel(claim.object as IdentityPresenter),
+            imgSrc: getAtomImage(claim.object as IdentityPresenter),
+            id: claim.object?.identity_id,
+            description: getAtomDescription(claim.object as IdentityPresenter),
+            ipfsLink: getAtomIpfsLink(claim.object as IdentityPresenter),
+            link: getAtomLink(claim.object as IdentityPresenter),
+          }}
+        />
+      </div>
       {vaultDetails !== null && user_assets !== '0' ? (
         <PositionCard
           onButtonClick={() =>
@@ -288,8 +295,7 @@ export default function ClaimDetails() {
   const rightPanel = <Outlet />
 
   return (
-    <FullPageLayout>
-      <ClaimWithNav />
+    <>
       <TwoPanelLayout leftPanel={leftPanel} rightPanel={rightPanel} />
       <StakeModal
         userWallet={wallet}
@@ -306,6 +312,6 @@ export default function ClaimDetails() {
           }))
         }}
       />
-    </FullPageLayout>
+    </>
   )
 }

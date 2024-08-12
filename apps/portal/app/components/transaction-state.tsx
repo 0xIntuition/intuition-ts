@@ -1,6 +1,9 @@
 import React from 'react'
 
 import {
+  Button,
+  DialogHeader,
+  DialogTitle,
   Icon,
   TransactionStatusCard,
   TransactionStatusIndicator,
@@ -18,6 +21,7 @@ interface TransactionStateProps {
   type: TransactionType
   ipfsLink?: string
   successButton?: React.ReactNode
+  errorButton?: React.ReactNode
 }
 
 export function TransactionState({
@@ -26,22 +30,34 @@ export function TransactionState({
   type,
   ipfsLink,
   successButton,
+  errorButton,
 }: TransactionStateProps) {
   return (
-    <div className="flex flex-col items-center justify-center min-h-96">
-      <div className={clsx({ 'mb-10': status !== 'complete' })}>
-        <TransactionStatusIndicator status={status} type={type} />
-      </div>
-      {status !== 'complete' ? (
-        <TransactionStatusCard status={status} />
-      ) : (
-        <div className="flex flex-col items-center">
-          {txHash && (
-            <div className="flex flex-col items-center mt-2.5">
+    <>
+      <DialogHeader>
+        <DialogTitle>
+          <Button variant="ghost" size="icon" disabled>
+            <Icon name="arrow-left" className="h-4 w-4" />
+          </Button>
+        </DialogTitle>
+      </DialogHeader>
+      <div className="flex flex-col items-center justify-center m-auto h-full">
+        <div
+          className={clsx(
+            'flex flex-col m-auto justify-center items-center h-full',
+            {
+              'gap-10': status !== 'complete',
+            },
+          )}
+        >
+          <TransactionStatusIndicator status={status} type={type} />
+          {status !== 'complete' && <TransactionStatusCard status={status} />}
+          {status === 'complete' && txHash && (
+            <div className="flex flex-col items-center mt-2.5 gap-2.5">
               <Link
                 to={`${BLOCK_EXPLORER_URL}/tx/${txHash}`}
                 target="_blank"
-                className="flex flex-row items-center gap-1 text-xxs text-blue-500 transition-colors duration-300 hover:text-blue-400"
+                className="flex flex-row items-center gap-1 text-sm text-blue-500 transition-colors duration-300 hover:text-blue-400"
               >
                 View on Basescan
                 <Icon name="square-arrow-top-right" className="h-3 w-3" />
@@ -50,17 +66,20 @@ export function TransactionState({
                 <Link
                   to={ipfsLink}
                   target="_blank"
-                  className="flex flex-row items-center gap-1 text-xxs text-blue-500 transition-colors duration-300 hover:text-blue-400 mt-2.5"
+                  className="flex flex-row items-center gap-1 text-sm text-blue-500 transition-colors duration-300 hover:text-blue-400"
                 >
                   View on IPFS
                   <Icon name="square-arrow-top-right" className="h-3 w-3" />
                 </Link>
               )}
-              {successButton && <div className="mt-10">{successButton}</div>}
             </div>
           )}
         </div>
-      )}
-    </div>
+        <div className="mt-auto">
+          {status === 'error' && errorButton && errorButton}
+          {status === 'complete' && successButton && successButton}
+        </div>
+      </div>
+    </>
   )
 }
