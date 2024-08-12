@@ -70,7 +70,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     }),
     createdIdentities: getCreatedIdentities({
       request,
-      userWallet,
+      userWallet: userWallet.toLowerCase(),
       searchParams,
     }),
     createdIdentitiesSummary: fetchWrapper(request, {

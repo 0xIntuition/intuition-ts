@@ -1,6 +1,6 @@
 import { Suspense } from 'react'
 
-import { Button, ErrorStateCard, Text } from '@0xintuition/1ui'
+import { Button, ErrorStateCard, Icon, IconName, Text } from '@0xintuition/1ui'
 import { ClaimsService } from '@0xintuition/api'
 
 import CreateClaimModal from '@components/create-claim/create-claim-modal'
@@ -90,7 +90,7 @@ export default function ProfileDataAbout() {
               className="max-lg:w-full max-lg:mt-2"
               onClick={() => setCreateClaimModalActive(true)}
             >
-              Make a Claim
+              <Icon name={IconName.claim} className="h-4 w-4" /> Make a Claim
             </Button>
           </div>
           <Suspense fallback={<DataHeaderSkeleton />}>

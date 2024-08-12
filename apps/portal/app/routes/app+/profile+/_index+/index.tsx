@@ -1,7 +1,9 @@
 import { QuestHeaderCard, Text } from '@0xintuition/1ui'
 import {
+  ApiError,
   ClaimSortColumn,
   ClaimsService,
+  IdentitiesService,
   QuestNarrative,
   SortDirection,
 } from '@0xintuition/api'
@@ -14,8 +16,9 @@ import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { getClaimsAboutIdentity } from '@lib/services/claims'
 import { getUserSavedLists } from '@lib/services/lists'
 import { getPositionsOnIdentity } from '@lib/services/positions'
+import logger from '@lib/utils/logger'
 import { formatBalance, invariant } from '@lib/utils/misc'
-import { json, LoaderFunctionArgs } from '@remix-run/node'
+import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
 import { useNavigate, useRouteLoaderData } from '@remix-run/react'
 import { ProfileLoaderData } from '@routes/app+/profile+/_index+/_layout'
 import { fetchWrapper } from '@server/api'
@@ -26,6 +29,20 @@ import { NO_USER_IDENTITY_ERROR, NO_WALLET_ERROR, PATHS } from 'app/consts'
 export async function loader({ request }: LoaderFunctionArgs) {
   const userWallet = await requireUserWallet(request)
   invariant(userWallet, NO_WALLET_ERROR)
+
+  let userIdentity
+  try {
+    userIdentity = await fetchWrapper(request, {
+      method: IdentitiesService.getIdentityById,
+      args: { id: userWallet },
+    })
+  } catch (error) {
+    if (error instanceof ApiError && error.status === 404) {
+      throw redirect('/invite')
+    }
+    logger('Error fetching userIdentity', error)
+    throw error
+  }
 
   const url = new URL(request.url)
   const searchParams = new URLSearchParams(url.search)
@@ -44,18 +61,18 @@ export async function loader({ request }: LoaderFunctionArgs) {
     }),
     positions: await getPositionsOnIdentity({
       request,
-      identityId: userWallet,
+      identityId: userIdentity.id,
       searchParams,
     }),
     claims: await getClaimsAboutIdentity({
       request,
-      identityId: userWallet,
+      identityId: userIdentity.id,
       searchParams,
     }),
     claimsSummary: await fetchWrapper(request, {
       method: ClaimsService.claimSummary,
       args: {
-        identity: userWallet,
+        identity: userIdentity.id,
       },
     }),
     savedListClaims: await getUserSavedLists({
