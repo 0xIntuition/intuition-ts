@@ -10,6 +10,7 @@ import {
 } from '@0xintuition/1ui'
 import { IdentityPresenter } from '@0xintuition/api'
 
+import { InfoTooltip } from '@components/info-tooltip'
 import { TransactionState } from '@components/transaction-state'
 import { formatBalance } from '@lib/utils/misc'
 import { type FetcherWithComponents } from '@remix-run/react'
@@ -90,11 +91,11 @@ export default function FollowForm({
             <div className="flex-col justify-center items-start gap-1 inline-flex">
               <div className="justify-center items-center gap-2 inline-flex">
                 <Text variant="base" weight="medium">
-                  Follow User{' '}
+                  {+user_assets > 0 ? 'Increase Follow' : 'Follow User'}{' '}
                 </Text>
-                <Icon
-                  name="circle-question-mark"
-                  className="w-4 h-4 relative text-neutral-50/30"
+                <InfoTooltip
+                  title="Follow"
+                  content="In Intuition, follows are not binary - you can signal how much you want to follow someone by depositing more tokens. This is helpful for curating your &lsquo;follow&rsquo; list, allowing you to rank some people higher than others."
                 />
                 <div className="w-4 h-4 relative" />
               </div>
@@ -106,7 +107,7 @@ export default function FollowForm({
               <div className="w-full bg-neutral-50/5 rounded-lg border border-neutral-300/10 flex-col justify-start items-start inline-flex">
                 <ActivePositionCard
                   value={Number(formatBalance(user_assets, 18, 4))}
-                  claimPosition={user_assets > '0' ? 'claimFor' : null}
+                  claimPosition={+user_assets > 0 ? 'claimFor' : null}
                 />
               </div>
             </div>
