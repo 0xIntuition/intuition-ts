@@ -5,18 +5,48 @@ import {
   Text,
   TextVariant,
 } from '@0xintuition/1ui'
+import { IdentitiesService, UsersService } from '@0xintuition/api'
 
 import PrivyLogout from '@client/privy-logout'
 import { HeaderLogo } from '@components/header-logo'
 import { invariant } from '@lib/utils/misc'
-import { LoaderFunctionArgs } from '@remix-run/node'
+import { LoaderFunctionArgs, redirect } from '@remix-run/node'
 import { json, Link, useLoaderData } from '@remix-run/react'
+import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
-import { NO_WALLET_ERROR } from 'app/consts'
+import { NO_WALLET_ERROR, PATHS } from 'app/consts'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const wallet = await requireUserWallet(request)
   invariant(wallet, NO_WALLET_ERROR)
+
+  const userObject = await fetchWrapper(request, {
+    method: UsersService.getUserByWalletPublic,
+    args: {
+      wallet,
+    },
+  })
+
+  console.log('userObject', userObject)
+
+  if (!userObject) {
+    console.log('No user found in DB')
+    return json({ wallet })
+  }
+
+  let userIdentity
+  try {
+    userIdentity = await fetchWrapper(request, {
+      method: IdentitiesService.getIdentityById,
+      args: { id: wallet },
+    })
+  } catch (e) {
+    console.error('No user identity associated with wallet')
+  }
+
+  if (userIdentity) {
+    throw redirect(`${PATHS.PROFILE}`)
+  }
 
   return json({ wallet })
 }

@@ -10,7 +10,11 @@ import {
   TextVariant,
   toast,
 } from '@0xintuition/1ui'
-import { UserPresenter, UsersService } from '@0xintuition/api'
+import {
+  IdentitiesService,
+  UserPresenter,
+  UsersService,
+} from '@0xintuition/api'
 
 import PrivyLogout from '@client/privy-logout'
 import ErrorList from '@components/error-list'
@@ -23,12 +27,12 @@ import { useInviteCodeFetcher } from '@lib/hooks/useInviteCodeFetcher'
 import { inviteCodeSchema } from '@lib/schemas/create-identity-schema'
 import logger from '@lib/utils/logger'
 import { invariant } from '@lib/utils/misc'
-import { json, LoaderFunctionArgs } from '@remix-run/node'
+import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
 import { Link, useLoaderData, useNavigate } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
 import { mainnetClient } from '@server/viem'
-import { NO_WALLET_ERROR } from 'app/consts'
+import { NO_WALLET_ERROR, PATHS } from 'app/consts'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const wallet = await requireUserWallet(request)
@@ -46,6 +50,20 @@ export async function loader({ request }: LoaderFunctionArgs) {
   if (!userObject) {
     console.log('No user found in DB')
     return json({ wallet })
+  }
+
+  let userIdentity
+  try {
+    userIdentity = await fetchWrapper(request, {
+      method: IdentitiesService.getIdentityById,
+      args: { id: wallet },
+    })
+  } catch (e) {
+    console.error('No user identity associated with wallet')
+  }
+
+  if (userIdentity) {
+    throw redirect(`${PATHS.PROFILE}`)
   }
 
   const relicCount = (await mainnetClient.readContract({
