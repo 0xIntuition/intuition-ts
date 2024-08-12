@@ -50,6 +50,7 @@ export type ActivityPresenter = {
   protocol_vault?: string | null
   raw_input_data: string
   share_price: string
+  shares_redeemed_by_sender: string
   subject_share_price: string
   subject_shares: string
   subject_vault_assets: string
@@ -63,6 +64,7 @@ export type ActivityPresenter = {
   vault_assets: string
   vault_balance: string
   vault_id: string
+  vault_shares: string
 }
 
 export type ActivityQuery = {
@@ -301,9 +303,11 @@ export type DepositTriple = {
 export type Deposited = {
   entry_fee: string
   id: string
+  is_atom_wallet?: boolean | null
+  is_triple?: boolean | null
+  receiver_total_shares_in_vault: string
+  sender_assets_after_total_fees: string
   shares_for_receiver: string
-  user_assets_after_total_fees: string
-  vault_balance: string
 }
 
 export type DescriptionQuery = {
@@ -991,8 +995,8 @@ export type Redeemed = {
   assets_for_receiver: string
   exit_fee: string
   id: string
-  shares: string
-  vault_balance: string
+  sender_total_shares_in_vault: string
+  shares_redeemed_by_sender: string
 }
 
 export type RefreshRequest = {
@@ -1229,6 +1233,7 @@ export type User = {
   ens_name?: string | null
   id: string
   image?: string | null
+  invite_code?: string | null
   last_login?: string | null
   nft_points: number
   privy_id?: string | null
@@ -1300,6 +1305,7 @@ export type UserPresenter = {
   ens_name?: string | null
   id?: string | null
   image?: string | null
+  invite_code?: string | null
   nft_points: number
   privy_id?: string | null
   protocol_points: number
@@ -1532,6 +1538,7 @@ export type GetActivityByIdResponse = {
   protocol_vault?: string | null
   raw_input_data: string
   share_price: string
+  shares_redeemed_by_sender: string
   subject_share_price: string
   subject_shares: string
   subject_vault_assets: string
@@ -1545,6 +1552,7 @@ export type GetActivityByIdResponse = {
   vault_assets: string
   vault_balance: string
   vault_id: string
+  vault_shares: string
 }
 
 export type RetryActivityData = {
@@ -2674,6 +2682,7 @@ export type CreateUserResponse = {
   ens_name?: string | null
   id: string
   image?: string | null
+  invite_code?: string | null
   last_login?: string | null
   nft_points: number
   privy_id?: string | null
@@ -2696,6 +2705,7 @@ export type ReissueApiKeyResponse = {
   ens_name?: string | null
   id: string
   image?: string | null
+  invite_code?: string | null
   last_login?: string | null
   nft_points: number
   privy_id?: string | null
@@ -2796,6 +2806,7 @@ export type GetUserByWalletPublicResponse = {
   ens_name?: string | null
   id: string
   image?: string | null
+  invite_code?: string | null
   last_login?: string | null
   nft_points: number
   privy_id?: string | null
@@ -2825,6 +2836,7 @@ export type GetUserByWalletResponse = {
   ens_name?: string | null
   id: string
   image?: string | null
+  invite_code?: string | null
   last_login?: string | null
   nft_points: number
   privy_id?: string | null
@@ -2854,6 +2866,7 @@ export type GetUserByIdPublicResponse = {
   ens_name?: string | null
   id: string
   image?: string | null
+  invite_code?: string | null
   last_login?: string | null
   nft_points: number
   privy_id?: string | null
@@ -2884,6 +2897,7 @@ export type UpdateUserResponse = {
   ens_name?: string | null
   id: string
   image?: string | null
+  invite_code?: string | null
   last_login?: string | null
   nft_points: number
   privy_id?: string | null
@@ -2913,6 +2927,7 @@ export type DeleteUserResponse = {
   ens_name?: string | null
   id: string
   image?: string | null
+  invite_code?: string | null
   last_login?: string | null
   nft_points: number
   privy_id?: string | null
@@ -2942,6 +2957,7 @@ export type UpdateUserEnsResponse = {
   ens_name?: string | null
   id: string
   image?: string | null
+  invite_code?: string | null
   last_login?: string | null
   nft_points: number
   privy_id?: string | null
@@ -3008,6 +3024,7 @@ export type UpdateUserPointsResponse = {
   ens_name?: string | null
   id: string
   image?: string | null
+  invite_code?: string | null
   last_login?: string | null
   nft_points: number
   privy_id?: string | null
@@ -3037,6 +3054,7 @@ export type GetUserByIdResponse = {
   ens_name?: string | null
   id: string
   image?: string | null
+  invite_code?: string | null
   last_login?: string | null
   nft_points: number
   privy_id?: string | null
@@ -3235,6 +3253,7 @@ export type $OpenApiTs = {
           protocol_vault?: string | null
           raw_input_data: string
           share_price: string
+          shares_redeemed_by_sender: string
           subject_share_price: string
           subject_shares: string
           subject_vault_assets: string
@@ -3248,6 +3267,7 @@ export type $OpenApiTs = {
           vault_assets: string
           vault_balance: string
           vault_id: string
+          vault_shares: string
         }
       }
     }
@@ -4715,6 +4735,7 @@ export type $OpenApiTs = {
           ens_name?: string | null
           id: string
           image?: string | null
+          invite_code?: string | null
           last_login?: string | null
           nft_points: number
           privy_id?: string | null
@@ -4745,6 +4766,7 @@ export type $OpenApiTs = {
           ens_name?: string | null
           id: string
           image?: string | null
+          invite_code?: string | null
           last_login?: string | null
           nft_points: number
           privy_id?: string | null
@@ -4880,6 +4902,7 @@ export type $OpenApiTs = {
           ens_name?: string | null
           id: string
           image?: string | null
+          invite_code?: string | null
           last_login?: string | null
           nft_points: number
           privy_id?: string | null
@@ -4916,6 +4939,7 @@ export type $OpenApiTs = {
           ens_name?: string | null
           id: string
           image?: string | null
+          invite_code?: string | null
           last_login?: string | null
           nft_points: number
           privy_id?: string | null
@@ -4952,6 +4976,7 @@ export type $OpenApiTs = {
           ens_name?: string | null
           id: string
           image?: string | null
+          invite_code?: string | null
           last_login?: string | null
           nft_points: number
           privy_id?: string | null
@@ -4987,6 +5012,7 @@ export type $OpenApiTs = {
           ens_name?: string | null
           id: string
           image?: string | null
+          invite_code?: string | null
           last_login?: string | null
           nft_points: number
           privy_id?: string | null
@@ -5021,6 +5047,7 @@ export type $OpenApiTs = {
           ens_name?: string | null
           id: string
           image?: string | null
+          invite_code?: string | null
           last_login?: string | null
           nft_points: number
           privy_id?: string | null
@@ -5057,6 +5084,7 @@ export type $OpenApiTs = {
           ens_name?: string | null
           id: string
           image?: string | null
+          invite_code?: string | null
           last_login?: string | null
           nft_points: number
           privy_id?: string | null
@@ -5149,6 +5177,7 @@ export type $OpenApiTs = {
           ens_name?: string | null
           id: string
           image?: string | null
+          invite_code?: string | null
           last_login?: string | null
           nft_points: number
           privy_id?: string | null
@@ -5185,6 +5214,7 @@ export type $OpenApiTs = {
           ens_name?: string | null
           id: string
           image?: string | null
+          invite_code?: string | null
           last_login?: string | null
           nft_points: number
           privy_id?: string | null

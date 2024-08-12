@@ -26,7 +26,7 @@ export const SidebarLayoutNavHeaderButton = ({
     >
       {imgLogo}
       {(!isCollapsed || (isCollapsed && isMobileView)) && textLogo}
-      {productLogo}
+      {(!isCollapsed || (isCollapsed && isMobileView)) && productLogo}
     </button>
   )
 }
