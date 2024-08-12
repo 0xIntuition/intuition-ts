@@ -1,4 +1,29 @@
+# https://github.com/marketplace/actions/release-drafter
+
+categories:
+  - title: '🚀 Features'
+    labels:
+      - 'feat'
+  - title: '🐛 Bug Fixes'
+    labels:
+      - 'fix'
+  - title: '🔨 Maintenance'
+    label: 'chore'
+
+change-template: '- $TITLE @$AUTHOR (#$NUMBER)'
+
 template: |
-  ## What’s Changed
+  ## Changes
 
   $CHANGES
+
+  **Full Changelog**: https://github.com/$OWNER/$REPOSITORY/compare/$PREVIOUS_TAG...v$RESOLVED_VERSION
+
+  --
+
+  ## Contributors
+
+  $CONTRIBUTORS
+
+name-template: 'v$RESOLVED_VERSION ✨'
+tag-template: 'v$RESOLVED_VERSION'
