@@ -11,6 +11,7 @@ import {
   Label,
   Text,
   Textarea,
+  TextVariant,
   toast,
 } from '@0xintuition/1ui'
 import { IdentityPresenter } from '@0xintuition/api'
@@ -18,6 +19,7 @@ import { IdentityPresenter } from '@0xintuition/api'
 import CreateIdentityReview from '@components/create-identity/create-identity-review'
 import ErrorList from '@components/error-list'
 import { ImageChooser } from '@components/image-chooser'
+import { InfoTooltip } from '@components/info-tooltip'
 import { TransactionState } from '@components/transaction-state'
 import WrongNetworkButton from '@components/wrong-network-button'
 import {
@@ -111,12 +113,19 @@ export function IdentityForm({
                 className="text-foreground flex items-center gap-2"
               >
                 <Icon name={IconName.fingerprint} className="w-6 h-6" />
-                Create Identity
+                Create Identity{' '}
+                <InfoTooltip
+                  title="Create Identity"
+                  content="You are encouraged to create the best Atom/Identity you can, so that others will use it! As this Identity is interacted with, its shareholders will earn fees - so create a good one, and be the first to stake on it! Please note - you will not be able to change this data later."
+                  icon={IconName.fingerprint}
+                />
               </Text>
             </DialogTitle>
             <Text variant="caption" className="text-muted-foreground w-full">
-              Begin the process of establishing a new digital representation
-              within the blockchain network.
+              In Intuition, every thing is given a unique, decentralized digital
+              identifier in the form of an Atom. These &rsquo;Identities&lsquo;
+              serve as conceptual anchors to which we attach and correlate data,
+              experiences, and perceptions.
             </Text>
           </DialogHeader>
         )}
@@ -175,7 +184,7 @@ function CreateIdentityForm({
   const [identityImageFile, setIdentityImageFile] = useState<File | undefined>(
     undefined,
   )
-  const [initialDeposit, setInitialDeposit] = useState<string>('0')
+  const [initialDeposit, setInitialDeposit] = useState<string>('')
   const [isContract, setIsContract] = useState(false)
 
   const loaderFetcher = useFetcher<CreateLoaderData>()
@@ -498,9 +507,18 @@ function CreateIdentityForm({
           <div className="w-full h-full flex-col justify-start items-start inline-flex gap-7">
             <div className="flex flex-col w-full gap-1.5">
               <div className="self-stretch flex-col justify-start items-start flex">
-                <Text variant="caption" className="text-secondary-foreground">
-                  Image
-                </Text>
+                <div className="flex w-full items-center justify-between">
+                  <Text variant="caption" className="text-secondary-foreground">
+                    Image
+                  </Text>
+                  <InfoTooltip
+                    title="Image"
+                    content={`We've done some image filtering in The Portal, so that
+                          we don't begin our journey with a bunch of
+                          inappropriate images - though the Intuition Protocol
+                          itself allows for any image to be referenced.`}
+                  />
+                </div>
               </div>
               <div className="self-stretch h-[100px] px-9 py-2.5 theme-border bg-primary/10 rounded-md justify-between items-center inline-flex">
                 <div className="justify-start items-center gap-[18px] flex">
@@ -546,9 +564,17 @@ function CreateIdentityForm({
               />
             </div>
             <div className="flex flex-col w-full gap-1.5">
-              <Text variant="caption" className="text-foreground/70">
-                Display Name
-              </Text>
+              <div className="self-stretch flex-col justify-start items-start flex">
+                <div className="flex w-full items-center justify-between">
+                  <Text variant="caption" className="text-secondary-foreground">
+                    Display Name
+                  </Text>
+                  <InfoTooltip
+                    title="Display Name"
+                    content="This is the display name of your Atom/Identity, and will be a main way that people discover it - so make sure it is good!"
+                  />
+                </div>
+              </div>
               <Label htmlFor={fields.display_name.id} hidden>
                 Display Name
               </Label>
@@ -596,9 +622,17 @@ function CreateIdentityForm({
             </div>
 
             <div className="flex flex-col w-full gap-1.5">
-              <Text variant="caption" className="text-secondary-foreground">
-                Description
-              </Text>
+              <div className="self-stretch flex-col justify-start items-start flex">
+                <div className="flex w-full items-center justify-between">
+                  <Text variant="caption" className="text-secondary-foreground">
+                    Description
+                  </Text>
+                  <InfoTooltip
+                    title="Description"
+                    content="Add a bit more context to elaborate on what this Atom/Identity is meant to represent. The more data you add, the more useful your Atom/Identity will be."
+                  />
+                </div>
+              </div>
               <Label htmlFor={fields.description.id} hidden>
                 Description
               </Label>
@@ -616,9 +650,17 @@ function CreateIdentityForm({
               />
             </div>
             <div className="flex flex-col w-full gap-1.5">
-              <Text variant="caption" className="text-secondary-foreground">
-                Add Link
-              </Text>
+              <div className="self-stretch flex-col justify-start items-start flex">
+                <div className="flex w-full items-center justify-between">
+                  <Text variant="caption" className="text-secondary-foreground">
+                    Add Link
+                  </Text>
+                  <InfoTooltip
+                    title="Link"
+                    content="If this Atom/Identity has a relevant link, or is meant to reference data on another platform, add the URL here!"
+                  />
+                </div>
+              </div>
               <Label htmlFor={fields.external_reference.id} hidden>
                 Add Link
               </Label>
@@ -640,29 +682,52 @@ function CreateIdentityForm({
               />
             </div>
             <div className="flex flex-col w-full gap-1.5">
-              <Text variant="caption" className="text-secondary-foreground">
-                Initial Deposit
-              </Text>
+              <div className="self-stretch flex-col justify-start items-start flex">
+                <div className="flex w-full items-center justify-between">
+                  <Text variant="caption" className="text-secondary-foreground">
+                    Initial Deposit
+                  </Text>
+                  <InfoTooltip
+                    title="Initial Deposit"
+                    content="You will not receive shares merely by creating this Atom/Identity - so, if you believe in it, and think that it will generate fees, then you will need to deposit on it, to gain ownership of it. You will not be charged an entry fee for depositing on your newly-created Atom/Identity."
+                  />
+                </div>
+              </div>
               <Label htmlFor={fields.initial_deposit.id} hidden>
                 Initial Deposit
               </Label>
               <Input
-                {...getInputProps(fields.initial_deposit, { type: 'text' })}
-                placeholder="0"
-                startAdornment="ETH"
+                id="position"
+                autoComplete="off"
+                type="text"
+                value={initialDeposit}
                 onChange={(e) => {
-                  setFormState((prev) => ({
-                    ...prev,
-                    initial_deposit: e.target.value,
-                  }))
-                  setInitialDeposit(e.target.value)
+                  e.preventDefault()
+                  let inputValue = e.target.value
+                  if (inputValue.startsWith('.')) {
+                    inputValue = `0${inputValue}`
+                  }
+                  const sanitizedValue = inputValue.replace(/[^0-9.]/g, '')
+                  if (sanitizedValue.split('.').length > 2) {
+                    return
+                  }
+                  setInitialDeposit(sanitizedValue)
                 }}
-                value={formState.initial_deposit}
+                min={'0'}
+                placeholder={'0'}
+                startAdornment="ETH"
               />
               <ErrorList
                 id={fields.initial_deposit.errorId}
                 errors={fields.initial_deposit.errors}
               />
+              <Text
+                variant={TextVariant.caption}
+                className="text-center text-primary/70"
+              >
+                Note: You will not be chraged an entry fee for this initial
+                deposit.
+              </Text>
             </div>
             <div className="mt-auto mx-auto">
               {isWrongNetwork ? (
