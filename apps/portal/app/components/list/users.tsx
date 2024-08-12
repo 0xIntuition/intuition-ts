@@ -3,6 +3,7 @@ import { IdentityPresenter, SortColumn } from '@0xintuition/api'
 
 import { ListHeader } from '@components/list/list-header'
 import {
+  getAtomDescription,
   getAtomImage,
   getAtomIpfsLink,
   getAtomLabel,
@@ -65,6 +66,7 @@ export function UsersList({
               variant={Identity.user}
               avatarSrc={getAtomImage(identity)}
               name={getAtomLabel(identity)}
+              description={getAtomDescription(identity)}
               id={identity.user?.wallet ?? identity.identity_id}
               amount={identity.user?.total_points ?? 0}
               feesAccrued={0}
