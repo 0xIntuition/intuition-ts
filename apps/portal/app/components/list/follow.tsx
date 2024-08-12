@@ -13,12 +13,14 @@ export function FollowList({
   identities,
   pagination,
   paramPrefix,
+  enableHeader = true,
   enableSearch = true,
   enableSort = true,
 }: {
   identities: IdentityPresenter[]
   pagination?: PaginationType
   paramPrefix?: string
+  enableHeader?: boolean
   enableSearch?: boolean
   enableSort?: boolean
 }) {
@@ -38,12 +40,14 @@ export function FollowList({
       enableSearch={enableSearch}
       enableSort={enableSort}
     >
-      <ListHeader
-        items={[
-          { label: 'User', icon: IconName.cryptoPunk },
-          { label: 'Position Amount', icon: IconName.ethereum },
-        ]}
-      />
+      {enableHeader && (
+        <ListHeader
+          items={[
+            { label: 'User', icon: IconName.cryptoPunk },
+            { label: 'Position Amount', icon: IconName.ethereum },
+          ]}
+        />
+      )}
       {identities.map((identity) => (
         <div
           key={identity.id}

@@ -24,12 +24,14 @@ export function ClaimsList({
   claims,
   pagination,
   paramPrefix,
-  enableSearch = false,
-  enableSort = false,
+  enableHeader = true,
+  enableSearch = true,
+  enableSort = true,
 }: {
   claims: ClaimPresenter[]
   pagination?: PaginationType
   paramPrefix?: string
+  enableHeader?: boolean
   enableSearch?: boolean
   enableSort?: boolean
 }) {
@@ -53,12 +55,14 @@ export function ClaimsList({
       enableSearch={enableSearch}
       enableSort={enableSort}
     >
-      <ListHeader
-        items={[
-          { label: 'Claim', icon: IconName.claim },
-          { label: 'Total Staked', icon: IconName.ethereum },
-        ]}
-      />
+      {enableHeader && (
+        <ListHeader
+          items={[
+            { label: 'Claim', icon: IconName.claim },
+            { label: 'Total Staked', icon: IconName.ethereum },
+          ]}
+        />
+      )}
       {claims.map((claim) => (
         <div
           key={claim.claim_id}
