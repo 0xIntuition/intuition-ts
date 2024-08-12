@@ -1,7 +1,6 @@
 import {
   Button,
   PositionCard,
-  PositionCardFeesAccrued,
   PositionCardLastUpdated,
   PositionCardOwnership,
   PositionCardStaked,
@@ -159,8 +158,6 @@ export default function Profile() {
 
   const { user_assets, assets_sum } = vaultDetails ? vaultDetails : userIdentity
 
-  const { user_asset_delta } = userIdentity
-
   const [stakeModalActive, setStakeModalActive] = useAtom(stakeModalAtom)
   const [followModalActive, setFollowModalActive] = useAtom(followModalAtom)
 
@@ -227,17 +224,6 @@ export default function Profile() {
             percentOwnership={
               user_assets !== null && assets_sum
                 ? +calculatePercentageOfTvl(user_assets ?? '0', assets_sum)
-                : 0
-            }
-          />
-          <PositionCardFeesAccrued
-            amount={
-              user_asset_delta
-                ? +formatBalance(
-                    +(user_assets ?? '0') - +user_asset_delta,
-                    18,
-                    5,
-                  )
                 : 0
             }
           />
