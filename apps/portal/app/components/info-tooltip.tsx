@@ -1,3 +1,5 @@
+import { ReactNode } from 'react'
+
 import {
   Button,
   ButtonVariant,
@@ -18,20 +20,26 @@ export const InfoTooltip = ({
   content,
   icon,
   link,
+  trigger,
 }: {
   title: string
   content: string
   icon?: IconNameType
   link?: string
+  trigger?: ReactNode
 }) => {
   return (
     <TooltipProvider>
-      <Tooltip>
+      <Tooltip delayDuration={100}>
         <TooltipTrigger>
-          <Icon
-            name={IconName.circleQuestionMark}
-            className="h-4 w-4 text-muted-foreground"
-          />
+          {trigger ? (
+            trigger
+          ) : (
+            <Icon
+              name={IconName.circleQuestionMark}
+              className="h-4 w-4 text-muted-foreground"
+            />
+          )}
         </TooltipTrigger>
         <TooltipContent className="w-64 p-2">
           <div className="flex flex-col gap-2">
