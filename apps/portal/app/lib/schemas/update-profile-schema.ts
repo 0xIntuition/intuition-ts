@@ -28,8 +28,10 @@ export function updateProfileSchema() {
         return file.size <= MAX_UPLOAD_SIZE
       }, 'File size must be less than 3MB')
       .refine((file) => {
-        return ['image/jpeg', 'image/png', 'image/gif'].includes(file.type)
-      }, 'File must be a .png, .jpg, .jpeg, or .gif')
+        return ['image/jpeg', 'image/png', 'image/gif', 'image/webp'].includes(
+          file.type,
+        )
+      }, 'File must be a .png, .jpg, .jpeg, .gif, or .webp')
       .or(z.string())
       .optional(),
   })
