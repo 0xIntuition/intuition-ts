@@ -42,6 +42,10 @@ export const getSuccessLabel = (type: TransactionType) => {
       return 'Identity created successfully'
     case Transaction.list:
       return 'Identities added to list successfully'
+    case Transaction.save:
+      return 'Saved to list successfully'
+    case Transaction.unsave:
+      return 'Unsaved from list successfully'
     default:
       return 'Successful'
   }
@@ -63,6 +67,12 @@ export const getErrorLabel = (type: TransactionType) => {
       return 'Failed to create claim'
     case Transaction.identity:
       return 'Failed to create identity'
+    case Transaction.list:
+      return 'Failed to add identities to list'
+    case Transaction.save:
+      return 'Failed to save list'
+    case Transaction.unsave:
+      return 'Failed to unsave list'
     default:
       return 'An error occurred'
   }
