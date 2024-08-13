@@ -286,7 +286,7 @@ export default function SidebarNav({
                     <SidebarNavItem
                       iconName={IconName.brushSparkle}
                       label="Create"
-                      className="bg-for text-white rounded-full items-center justify-center"
+                      className="bg-for/50 hover:bg-for text-foreground hover:text-foreground"
                     />
                   </DropdownMenuTrigger>
                   <DropdownMenuContent

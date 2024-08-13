@@ -13,7 +13,7 @@ const RootLayout: React.FC<RootLayoutProps> = ({ children, userObject }) => {
   return (
     <div className="h-screen flex">
       <SidebarNav userObject={userObject}>
-        <div className="h-max flex-grow justify-center flex w-full">
+        <div className="h-full flex-grow justify-center flex w-full">
           {children}
         </div>
       </SidebarNav>
