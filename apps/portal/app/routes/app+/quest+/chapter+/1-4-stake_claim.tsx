@@ -184,7 +184,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
         }
       >,
     )
-    console.log('Identities', identities)
   }
 
   return json({
