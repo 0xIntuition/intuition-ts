@@ -26,6 +26,7 @@ const ProfileCardHeader = ({
         src={avatarSrc}
         name={name}
         onClick={onAvatarClick}
+        className={onAvatarClick ? 'cursor-pointer' : ''}
       />
       <div>
         <Trunctacular

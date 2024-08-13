@@ -145,7 +145,6 @@ export default function IdentityDetails() {
         onAvatarClick={() => {
           setImageModalActive({
             isOpen: true,
-            // imageSrc: identity.image ?? '',
             identity,
           })
         }}
@@ -295,20 +294,17 @@ export default function IdentityDetails() {
           }
         />
       )}
-      {identity.image && (
-        <ImageModal
-          identity={identity}
-          // displayName={identity.display_name ?? ''}
-          // imageSrc={identity.image ?? ''}
-          open={imageModalActive.isOpen}
-          onClose={() =>
-            setImageModalActive({
-              ...imageModalActive,
-              isOpen: false,
-            })
-          }
-        />
-      )}
+
+      <ImageModal
+        identity={identity}
+        open={imageModalActive.isOpen}
+        onClose={() =>
+          setImageModalActive({
+            ...imageModalActive,
+            isOpen: false,
+          })
+        }
+      />
     </TwoPanelLayout>
   )
 }
