@@ -19,6 +19,7 @@ import {
 import {
   ActivityPresenter,
   IdentityPresenter,
+  Redeemed,
   SortColumn,
 } from '@0xintuition/api'
 
@@ -59,6 +60,7 @@ export function ActivityList({
       `redeemed ${formatBalance(value, 18, 4)} ETH from a claim`,
   }
 
+  console.log('activities', activities)
   return (
     <List<SortColumn>
       pagination={pagination}
@@ -96,9 +98,14 @@ function ActivityItem({
 }) {
   const navigate = useNavigate()
   const eventMessage = eventMessages[activity.event_type as keyof EventMessages]
+  const isRedeemEvent = activity.event_type.startsWith('redeem')
+  const value = isRedeemEvent
+    ? (activity.logs?.[0] as { Redeemed: Redeemed }).Redeemed
+        .assets_for_receiver
+    : activity.value
   const message = eventMessage
     ? typeof eventMessage === 'function'
-      ? (eventMessage as (value: string) => string)(activity.value).toString()
+      ? (eventMessage as (value: string) => string)(value).toString()
       : eventMessage.toString()
     : ''
 
