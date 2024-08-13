@@ -24,7 +24,7 @@ export default function CreateIdentityModal({
       }}
     >
       <DialogContent
-        onOpenAutoFocus={(e) => e.preventDefault()} // prevent tooltip from being auto-launched
+        onOpenAutoFocus={(event) => event.preventDefault()} // prevent tooltip from being auto-launched
         className="flex flex-col h-[760px] max-sm:min-w-0"
       >
         <IdentityForm
