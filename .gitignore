@@ -10,3 +10,4 @@ packages/1ui/storybook-static
 .env*
 !.env.example
 .secrets
+act.sh
