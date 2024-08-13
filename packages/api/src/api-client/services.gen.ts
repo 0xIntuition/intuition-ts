@@ -108,6 +108,8 @@ import type {
   IntegrationHealthcheckResponse,
   PositionSummaryData,
   PositionSummaryResponse,
+  ReconcilePositionData,
+  ReconcilePositionResponse,
   RedeemInviteCodeData,
   RedeemInviteCodeResponse,
   RefreshData,
@@ -1224,6 +1226,24 @@ export class PositionsService {
       },
       body: data.requestBody,
       mediaType: 'application/json',
+    })
+  }
+
+  /**
+   * @param data The data for the request.
+   * @param data.id position's id in sql
+   * @returns unknown Update out of sync position data
+   * @throws ApiError
+   */
+  public static reconcilePosition(
+    data: ReconcilePositionData,
+  ): CancelablePromise<ReconcilePositionResponse> {
+    return __request(OpenAPI, {
+      method: 'POST',
+      url: '/positions/{id}/reconcile',
+      path: {
+        id: data.id,
+      },
     })
   }
 }

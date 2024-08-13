@@ -2428,6 +2428,34 @@ export type UpdatePositionResponse = {
   vault_uuid?: string | null
 }
 
+export type ReconcilePositionData = {
+  /**
+   * position's id in sql
+   */
+  id: string
+}
+
+export type ReconcilePositionResponse = {
+  assets: string
+  claim_id?: string | null
+  contract: string
+  conviction: string
+  created_at: string
+  creator: string
+  creator_id?: string | null
+  fee: string
+  id: string
+  identity_id?: string | null
+  parent_table: ParentTable
+  share_price: string
+  status: Status
+  updated_at: string
+  value: string
+  vault_id: string
+  vault_type: VaultType
+  vault_uuid?: string | null
+}
+
 export type GetQueryStructureResponse = unknown
 
 export type RunDynamicQueryData = {
@@ -4366,6 +4394,41 @@ export type $OpenApiTs = {
       res: {
         /**
          * Update an position
+         */
+        200: {
+          assets: string
+          claim_id?: string | null
+          contract: string
+          conviction: string
+          created_at: string
+          creator: string
+          creator_id?: string | null
+          fee: string
+          id: string
+          identity_id?: string | null
+          parent_table: ParentTable
+          share_price: string
+          status: Status
+          updated_at: string
+          value: string
+          vault_id: string
+          vault_type: VaultType
+          vault_uuid?: string | null
+        }
+      }
+    }
+  }
+  '/positions/{id}/reconcile': {
+    post: {
+      req: {
+        /**
+         * position's id in sql
+         */
+        id: string
+      }
+      res: {
+        /**
+         * Update out of sync position data
          */
         200: {
           assets: string
