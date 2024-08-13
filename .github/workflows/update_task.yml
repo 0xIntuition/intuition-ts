@@ -15,11 +15,6 @@ on:
       cluster_name:
         required: true
         type: string
-    secrets:
-      aws_region:
-        required: true
-      aws_account:
-        required: true
 
 jobs:
   update_task_definition:
@@ -54,8 +49,8 @@ jobs:
           container-name: portal
           image: ${{ inputs.ecr_image }}
           environment-variables: |
-            AWS_REGION=${{ secrets.aws_region }}
-            AWS_ACCOUNT=${{ secrets.aws_account }}
+            AWS_REGION=${{ secrets.AWS_REGION }}
+            AWS_ACCOUNT=${{ secrets.AWS_ACCOUNT }}
 
       - name: Deploy task definition to Amazon ECS
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1

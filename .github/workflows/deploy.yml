@@ -124,9 +124,6 @@ jobs:
           ecr_image: ${{ needs.deployment.outputs.ECR_IMAGE }}
           service_name: ${{ needs.deployment.outputs.SERVICE_NAME }}
           cluster_name: ${{ needs.deployment.outputs.CLUSTER_NAME }}
-        secrets:
-          aws_region: ${{ secrets.AWS_REGION }}
-          aws_account: ${{ secrets.AWS_ACCOUNT }}
 
   update_task_for_staging:
     needs: [deployment]
@@ -140,6 +137,3 @@ jobs:
           ecr_image: ${{ needs.deployment.outputs.ECR_IMAGE_STAGING }}
           service_name: ${{ needs.deployment.outputs.SERVICE_NAME }}
           cluster_name: ${{ needs.deployment.outputs.CLUSTER_NAME }}
-        secrets:
-          aws_region: ${{ secrets.AWS_REGION }}
-          aws_account: ${{ secrets.AWS_ACCOUNT }}
