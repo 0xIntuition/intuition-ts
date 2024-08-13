@@ -222,8 +222,6 @@ export default function IdentityDetails() {
 
   const rightPanel = <Outlet />
 
-  console.log('saveListModalActive id route', saveListModalActive)
-
   return (
     <TwoPanelLayout leftPanel={leftPanel} rightPanel={rightPanel}>
       <StakeModal

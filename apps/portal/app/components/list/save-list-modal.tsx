@@ -71,13 +71,12 @@ export default function SaveListModal({
     TransactionActionType
   >(transactionReducer, initialTxState)
   const publicClient = usePublicClient()
-  console.log('identity', identity)
 
   const [isLoading, setIsLoading] = useState(true)
 
-  const depositHook = useDepositTriple(identity?.contract ?? '')
+  const depositHook = useDepositTriple(identity.contract)
 
-  const redeemHook = useRedeemTriple(identity?.contract ?? '')
+  const redeemHook = useRedeemTriple(identity.contract)
 
   const {
     writeContractAsync,
@@ -197,7 +196,6 @@ export default function SaveListModal({
       } catch (error) {
         logger('error', error)
         if (error instanceof Error) {
-          logger('error', error)
           let errorMessage = 'Failed transaction'
           if (error.message.includes('insufficient')) {
             errorMessage = 'Insufficient funds'

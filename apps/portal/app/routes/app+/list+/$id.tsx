@@ -45,8 +45,6 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     args: { id },
   })
 
-  console.log('claim', claim)
-
   return json({
     claim,
     userWallet,
