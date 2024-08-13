@@ -128,7 +128,6 @@ export default function IdentityDetails() {
     }
   }, [saveListModalActive])
 
-  console.log('saveListModalActive', saveListModalActive)
   const leftPanel = (
     <div className="flex-col justify-start items-start inline-flex gap-6 max-lg:w-full">
       <ProfileCard
@@ -140,7 +139,9 @@ export default function IdentityDetails() {
         bio={identity?.description ?? ''}
         ipfsLink={`${IPFS_GATEWAY_URL}/${identity?.identity_id?.replace('ipfs://', '')}`}
         externalLink={identity?.external_reference ?? ''}
+        onAvatarClick={() => logger('test')}
       />
+
       <Tags className="max-lg:items-center">
         {identity?.tags && identity?.tags.length > 0 && (
           <TagsContent numberOfTags={identity?.tag_count ?? 0}>

@@ -25,6 +25,7 @@ export interface ProfileCardProps extends HTMLAttributes<HTMLDivElement> {
   followingLink?: string
   followerLink?: string
   statsLink?: string
+  onAvatarClick?: () => void
 }
 
 const ProfileCard = ({
@@ -39,8 +40,8 @@ const ProfileCard = ({
   bio,
   followingLink,
   followerLink,
-
   children,
+  onAvatarClick,
   ...props
 }: ProfileCardProps) => {
   return (
@@ -58,6 +59,7 @@ const ProfileCard = ({
         name={name}
         id={id}
         link={ipfsLink}
+        onAvatarClick={onAvatarClick}
       />
       {variant === Identity.user && stats && (
         <div className="flex justify-start items-center gap-4 pt-2">

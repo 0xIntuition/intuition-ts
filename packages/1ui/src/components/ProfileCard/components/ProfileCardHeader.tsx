@@ -8,6 +8,7 @@ interface ProfileCardHeaderProps {
   name: string
   id?: string
   link?: string
+  onAvatarClick?: () => void
 }
 
 const ProfileCardHeader = ({
@@ -16,10 +17,16 @@ const ProfileCardHeader = ({
   name,
   id,
   link,
+  onAvatarClick,
 }: ProfileCardHeaderProps) => {
   return (
     <div className="flex items-center space-x-4 w-full max-lg:justify-center">
-      <Avatar variant={variant} src={avatarSrc} name={name} />
+      <Avatar
+        variant={variant}
+        src={avatarSrc}
+        name={name}
+        onClick={onAvatarClick}
+      />
       <div>
         <Trunctacular
           value={name}
