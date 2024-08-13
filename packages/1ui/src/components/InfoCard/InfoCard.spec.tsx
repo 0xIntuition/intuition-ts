@@ -45,7 +45,11 @@ describe('InfoCard', () => {
                   </svg>
                 </span>
               </span>
-              super dave
+              <p
+                class="text-primary text-base font-normal"
+              >
+                super dave
+              </p>
             </button>
             <span
               class="bg-muted-foreground h-[2px] w-[2px] block rounded-full"

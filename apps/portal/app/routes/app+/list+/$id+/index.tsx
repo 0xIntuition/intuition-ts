@@ -21,8 +21,8 @@ import {
 } from '@0xintuition/api'
 
 import { InfoTooltip } from '@components/info-tooltip'
-import { IdentitiesList } from '@components/list/identities'
 import { ListTabIdentityDisplay } from '@components/list/list-tab-identity-display'
+import { TagsList } from '@components/list/tags'
 import { DataHeaderSkeleton, PaginatedListSkeleton } from '@components/skeleton'
 import { getListIdentities, getListIdentitiesCount } from '@lib/services/lists'
 import { addIdentitiesListModalAtom } from '@lib/state/store'
@@ -100,6 +100,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   })
 
   return defer({
+    wallet,
     userObject,
     globalListIdentities: getListIdentities({
       request,
@@ -135,6 +136,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
 export default function ListOverview() {
   const {
+    wallet,
     globalListIdentities,
     userListIdentities,
     additionalUserListIdentities,
@@ -189,10 +191,10 @@ export default function ListOverview() {
         <InfoTooltip
           title="Save List"
           content="To add a List to &lsquo;your lists&rsquo;, you&lsquo;ll need to use the List! Save the List to your profile by staking on an entry in the List, or tagging something new with the List&lsquo;s Identity. For example - tagging [MetaMask] with [Wallet] will add the [Wallet] List to your Profile, for easy discoverability later!"
-          icon={IconName.floppyDisk1}
+          icon={IconName.bookmark}
           trigger={
             <Button variant={ButtonVariant.primary}>
-              <Icon name={IconName.floppyDisk1} />
+              <Icon name={IconName.bookmark} />
               Save list
             </Button>
           }
@@ -325,9 +327,11 @@ export default function ListOverview() {
                   return isNavigating ? (
                     <PaginatedListSkeleton />
                   ) : (
-                    <IdentitiesList
+                    <TagsList
                       identities={resolvedGlobalListIdentities.listIdentities}
                       pagination={resolvedGlobalListIdentities.pagination}
+                      claim={claim}
+                      wallet={wallet}
                       enableSearch={true}
                       enableSort={true}
                     />
@@ -346,9 +350,11 @@ export default function ListOverview() {
                   return isNavigating ? (
                     <PaginatedListSkeleton />
                   ) : (
-                    <IdentitiesList
+                    <TagsList
                       identities={resolvedUserListIdentities.listIdentities}
                       pagination={resolvedUserListIdentities.pagination}
+                      claim={claim}
+                      wallet={wallet}
                       enableSearch={true}
                       enableSort={true}
                     />
@@ -367,13 +373,15 @@ export default function ListOverview() {
                     return isNavigating ? (
                       <PaginatedListSkeleton />
                     ) : resolvedAdditionalUserListIdentities ? (
-                      <IdentitiesList
+                      <TagsList
                         identities={
                           resolvedAdditionalUserListIdentities.listIdentities
                         }
                         pagination={
                           resolvedAdditionalUserListIdentities.pagination
                         }
+                        claim={claim}
+                        wallet={wallet}
                         enableSearch={true}
                         enableSort={true}
                       />

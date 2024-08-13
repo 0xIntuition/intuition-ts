@@ -3,7 +3,7 @@ import * as React from 'react'
 import { cn } from 'styles'
 import { Identity, IdentityType } from 'types'
 
-import { IdentityTag, Text, TextVariant } from '..'
+import { IdentityTag, Text, TextVariant, Trunctacular } from '..'
 
 export interface InfoCardProps extends React.HTMLAttributes<HTMLDivElement> {
   variant: IdentityType
@@ -39,7 +39,7 @@ const InfoCard = ({
       </Text>
       <div className="flex justify-start items-center gap-1">
         <IdentityTag variant={variant} imgSrc={avatarImgSrc}>
-          {username}
+          <Trunctacular value={username} maxStringLength={18} />
         </IdentityTag>
         <span className="bg-muted-foreground h-[2px] w-[2px] block rounded-full" />
         <Text variant={TextVariant.body} className="text-muted-foreground">

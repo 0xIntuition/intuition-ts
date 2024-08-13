@@ -28,6 +28,8 @@ export const Transaction = {
   follow: 'follow',
   unfollow: 'unfollow',
   list: 'list',
+  save: 'save',
+  unsave: 'unsave',
 }
 
 export type TransactionType = (typeof Transaction)[keyof typeof Transaction]
