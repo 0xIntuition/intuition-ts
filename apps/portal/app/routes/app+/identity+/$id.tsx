@@ -294,7 +294,6 @@ export default function IdentityDetails() {
           }
         />
       )}
-
       <ImageModal
         identity={identity}
         open={imageModalActive.isOpen}
