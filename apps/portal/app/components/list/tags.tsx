@@ -52,8 +52,6 @@ export function TagsList({
   const [saveListModalActive, setSaveListModalActive] =
     useAtom(saveListModalAtom)
 
-  console.log('identities', identities)
-
   return (
     <>
       <List<SortColumn>

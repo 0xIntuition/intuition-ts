@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import {
   Icon,
@@ -117,6 +117,12 @@ export default function IdentityDetails() {
     useAtom(saveListModalAtom)
   const [selectedTag, setSelectedTag] = useState<TagEmbeddedPresenter>()
 
+  useEffect(() => {
+    if (saveListModalActive.tag) {
+      setSelectedTag(saveListModalActive.tag)
+    }
+  }, [saveListModalActive])
+
   console.log('saveListModalActive', saveListModalActive)
   const leftPanel = (
     <div className="flex-col justify-start items-start inline-flex gap-6 max-lg:w-full">
@@ -215,6 +221,8 @@ export default function IdentityDetails() {
   )
 
   const rightPanel = <Outlet />
+
+  console.log('saveListModalActive id route', saveListModalActive)
 
   return (
     <TwoPanelLayout leftPanel={leftPanel} rightPanel={rightPanel}>
