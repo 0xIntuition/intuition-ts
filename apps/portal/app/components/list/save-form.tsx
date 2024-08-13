@@ -1,8 +1,8 @@
 import {
   ActivePositionCard,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
-  Icon,
   Identity,
   IdentityTag,
   Skeleton,
@@ -12,7 +12,6 @@ import {
 import { IdentityPresenter, TagEmbeddedPresenter } from '@0xintuition/api'
 
 import { TransactionState } from '@components/transaction-state'
-import logger from '@lib/utils/logger'
 import { formatBalance, getAtomImage, getAtomLabel } from '@lib/utils/misc'
 import { type FetcherWithComponents } from '@remix-run/react'
 import {
@@ -62,7 +61,6 @@ export default function SaveForm({
   setValidationErrors,
   isLoading,
 }: SaveFormProps) {
-  logger('user_assets in save form', user_assets)
   return (
     <>
       <fetchReval.Form
@@ -82,19 +80,15 @@ export default function SaveForm({
                   <Text variant="base" weight="medium">
                     Tag Identity
                   </Text>
-                  <Icon
-                    name="circle-question-mark"
-                    className="w-4 h-4 relative text-neutral-50/30"
-                  />
-                  {/* // TODO: [ENG-2525] -- add tooltip and content */}
-                  <div className="w-4 h-4 relative" />
                 </div>
-                <Text variant="small" className="text-neutral-50/50">
-                  Tag the Identity to improve discoverability, and to add it to
-                  the respective Tag&lsquo;s list.
-                </Text>
               </div>
             </DialogTitle>
+            <DialogDescription>
+              <Text variant="caption" className="text-neutral-50/50">
+                Tag the Identity to improve discoverability, and to add it to
+                the respective Tag&lsquo;s list.
+              </Text>
+            </DialogDescription>
           </DialogHeader>
           <div className="h-full w-full flex-col pt-5 px-10 pb-10 gap-5 inline-flex">
             <div className="flex items-center w-full mr-2.5 gap-5 ">
