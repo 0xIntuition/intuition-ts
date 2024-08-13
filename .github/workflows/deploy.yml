@@ -116,26 +116,24 @@ jobs:
   update_task:
     needs: [deployment]
     runs-on: ubuntu-latest
-    uses: ./.github/workflows/update_task.yml
-    with:
-      target_env: ${{ needs.deployment.outputs.MY_ENV }}
-      ecr_image: ${{ needs.deployment.outputs.ECR_IMAGE }}
-      service_name: ${{ needs.deployment.outputs.SERVICE_NAME }}
-      cluster_name: ${{ needs.deployment.outputs.CLUSTER_NAME }}
-    secrets:
-      aws_region: ${{ secrets.AWS_REGION }}
-      aws_account: ${{ secrets.AWS_ACCOUNT }}
+    steps:
+      - name: Update task for dev or production
+        uses: ./.github/workflows/update_task.yml
+        with:
+          target_env: ${{ needs.deployment.outputs.MY_ENV }}
+          ecr_image: ${{ needs.deployment.outputs.ECR_IMAGE }}
+          service_name: ${{ needs.deployment.outputs.SERVICE_NAME }}
+          cluster_name: ${{ needs.deployment.outputs.CLUSTER_NAME }}
 
   update_task_for_staging:
     needs: [deployment]
     runs-on: ubuntu-latest
-    if: ${{ env.MY_ENV == 'dev' }}
-    uses: ./.github/workflows/update_task.yml
-    with:
-      target_env: ${{ needs.deployment.outputs.MY_ENV }}
-      ecr_image: ${{ needs.deployment.outputs.ECR_IMAGE_STAGING }}
-      service_name: ${{ needs.deployment.outputs.SERVICE_NAME }}
-      cluster_name: ${{ needs.deployment.outputs.CLUSTER_NAME }}
-    secrets:
-      aws_region: ${{ secrets.AWS_REGION }}
-      aws_account: ${{ secrets.AWS_ACCOUNT }}
+    steps:
+      - name: Update task for staging too, if dev
+        if: ${{ env.MY_ENV == 'dev' }}
+        uses: ./.github/workflows/update_task.yml
+        with:
+          target_env: ${{ needs.deployment.outputs.MY_ENV }}
+          ecr_image: ${{ needs.deployment.outputs.ECR_IMAGE_STAGING }}
+          service_name: ${{ needs.deployment.outputs.SERVICE_NAME }}
+          cluster_name: ${{ needs.deployment.outputs.CLUSTER_NAME }}
