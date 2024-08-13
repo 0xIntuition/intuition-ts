@@ -24,13 +24,14 @@ import {
 } from '@components/skeleton'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { getActivity } from '@lib/services/activity'
+import { getFeaturedLists } from '@lib/services/lists'
 import { getSystemStats } from '@lib/services/stats'
 import { formatBalance, invariant } from '@lib/utils/misc'
 import { defer, LoaderFunctionArgs } from '@remix-run/node'
 import { Await } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
-import { NO_WALLET_ERROR, TAG_PREDICATE_VAULT_ID_TESTNET } from 'app/consts'
+import { NO_WALLET_ERROR } from 'app/consts'
 import FullPageLayout from 'app/layouts/full-page-layout'
 import { PaginationType } from 'app/types'
 
@@ -47,7 +48,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   listSearchParams.set('limit', '6')
 
   return defer({
-    systemStats: getSystemStats(request),
+    systemStats: getSystemStats({ request }),
     topUsers: fetchWrapper(request, {
       method: IdentitiesService.searchIdentity,
       args: {
@@ -65,21 +66,22 @@ export async function loader({ request }: LoaderFunctionArgs) {
         sortBy: 'AssetsSum',
       },
     }),
-    recentLists: fetchWrapper(request, {
-      method: ClaimsService.searchClaims,
-      args: {
-        limit: 5,
-        sortBy: ClaimSortColumn.CREATED_AT,
-        direction: SortDirection.DESC,
-        predicate: TAG_PREDICATE_VAULT_ID_TESTNET,
-      },
-    }),
+    // featuredLists: fetchWrapper(request, {
+    //   method: ClaimsService.searchClaims,
+    //   args: {
+    //     limit: 5,
+    //     sortBy: ClaimSortColumn.CREATED_AT,
+    //     direction: SortDirection.DESC,
+    //     predicate: TAG_PREDICATE_VAULT_ID_TESTNET,
+    //   },
+    // }),
+    featuredLists: getFeaturedLists({ request }),
     activity: getActivity({ request, searchParams: activitySearchParams }),
   })
 }
 
 export default function HomePage() {
-  const { systemStats, topUsers, topClaims, recentLists, activity } =
+  const { systemStats, topUsers, topClaims, featuredLists, activity } =
     useLiveLoader<typeof loader>(['attest', 'create'])
 
   return (
@@ -115,7 +117,7 @@ export default function HomePage() {
           </Await>
         </Suspense>
         <HomeSectionHeader
-          title="Recent Lists"
+          title="Featured Lists"
           buttonText="Explore Lists"
           buttonLink="/app/explore/lists"
         />
@@ -129,23 +131,23 @@ export default function HomePage() {
           }
         >
           <Await
-            resolve={recentLists}
+            resolve={featuredLists}
             errorElement={
               <ErrorStateCard>
                 <RevalidateButton />
               </ErrorStateCard>
             }
           >
-            {(resolvedRecentLists) => {
+            {(resolvedFeaturedLists) => {
               if (
-                !resolvedRecentLists ||
-                resolvedRecentLists.data.length === 0
+                !resolvedFeaturedLists ||
+                resolvedFeaturedLists.featuredLists.length === 0
               ) {
                 return <EmptyStateCard message="No lists found." />
               }
               return (
                 <ListClaimsList
-                  listClaims={resolvedRecentLists.data}
+                  listClaims={resolvedFeaturedLists.featuredLists}
                   enableSort={false}
                   enableSearch={false}
                   columns={3}
