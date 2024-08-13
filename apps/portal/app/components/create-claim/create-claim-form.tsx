@@ -27,6 +27,7 @@ import {
 import { parseWithZod } from '@conform-to/zod'
 import { multivaultAbi } from '@lib/abis/multivault'
 import { useCreateTriple } from '@lib/hooks/useCreateTriple'
+import { useIdentityServerSearch } from '@lib/hooks/useIdentityServerSearch'
 import { useLoaderFetcher } from '@lib/hooks/useLoaderFetcher'
 import {
   initialTransactionState,
@@ -46,7 +47,6 @@ import {
   GENERIC_ERROR_MSG,
   MULTIVAULT_CONTRACT_ADDRESS,
   PATHS,
-  SEARCH_IDENTITIES_RESOURCE_ROUTE,
 } from 'app/consts'
 import { ClaimElement, ClaimElementType } from 'app/types'
 import {
@@ -172,38 +172,13 @@ function CreateClaimForm({
     submission: SubmissionResult<string[]> | null
   }
 
-  const [searchQuery, setSearchQuery] = useState('')
+  // const [searchQuery, setSearchQuery] = useState('')
   const [isSubjectPopoverOpen, setIsSubjectPopoverOpen] = useState(false)
   const [isPredicatePopoverOpen, setIsPredicatePopoverOpen] = useState(false)
   const [isObjectPopoverOpen, setIsObjectPopoverOpen] = useState(false)
   const [claimExists, setClaimExists] = useState(false)
 
-  const handleInput = async (event: React.FormEvent<HTMLInputElement>) => {
-    event.preventDefault()
-    const value = (event.target as HTMLInputElement).value
-    setSearchQuery(value)
-  }
-
-  const [identities, setIdentities] = React.useState<IdentityPresenter[]>([])
-  const identitiesFetcher = useFetcher<IdentityPresenter[]>()
-
-  useEffect(() => {
-    logger('identitiesFetcher.data changed:', identitiesFetcher.data)
-    if (identitiesFetcher.data) {
-      setIdentities(identitiesFetcher.data)
-    }
-  }, [identitiesFetcher.data])
-
-  useEffect(() => {
-    logger('searchQuery changed:', searchQuery)
-    if (searchQuery) {
-      const searchParam = `?search=${encodeURIComponent(searchQuery)}`
-      identitiesFetcher.load(
-        `${SEARCH_IDENTITIES_RESOURCE_ROUTE}${searchParam}`,
-      )
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchQuery, SEARCH_IDENTITIES_RESOURCE_ROUTE])
+  const { setSearchQuery, identities, handleInput } = useIdentityServerSearch()
 
   const { data: walletClient } = useWalletClient()
   const publicClient = usePublicClient()
@@ -384,7 +359,7 @@ function CreateClaimForm({
       [identityType]: identity,
     }))
     setSearchQuery('')
-    setIdentities([])
+    // setIdentities([])
     if (identityType === ClaimElement.Subject) {
       setIsSubjectPopoverOpen(false)
     } else if (identityType === ClaimElement.Predicate) {
@@ -401,7 +376,7 @@ function CreateClaimForm({
       !isObjectPopoverOpen
     ) {
       setSearchQuery('')
-      setIdentities([])
+      // setIdentities([])
     }
   }, [isSubjectPopoverOpen, isPredicatePopoverOpen, isObjectPopoverOpen])
 
