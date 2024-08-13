@@ -23,10 +23,12 @@ import {
 } from '@0xintuition/api'
 
 import SaveListModal from '@components/list/save-list-modal'
+import ImageModal from '@components/profile/image-modal'
 import StakeModal from '@components/stake/stake-modal'
 import TagsModal from '@components/tags/tags-modal'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import {
+  imageModalAtom,
   saveListModalAtom,
   stakeModalAtom,
   tagsModalAtom,
@@ -120,6 +122,7 @@ export default function IdentityDetails() {
   const [tagsModalActive, setTagsModalActive] = useAtom(tagsModalAtom)
   const [saveListModalActive, setSaveListModalActive] =
     useAtom(saveListModalAtom)
+  const [imageModalActive, setImageModalActive] = useAtom(imageModalAtom)
   const [selectedTag, setSelectedTag] = useState<TagEmbeddedPresenter>()
 
   useEffect(() => {
@@ -139,7 +142,13 @@ export default function IdentityDetails() {
         bio={identity?.description ?? ''}
         ipfsLink={`${IPFS_GATEWAY_URL}/${identity?.identity_id?.replace('ipfs://', '')}`}
         externalLink={identity?.external_reference ?? ''}
-        onAvatarClick={() => logger('test')}
+        onAvatarClick={() => {
+          setImageModalActive({
+            isOpen: true,
+            // imageSrc: identity.image ?? '',
+            identity,
+          })
+        }}
       />
 
       <Tags className="max-lg:items-center">
@@ -266,6 +275,35 @@ export default function IdentityDetails() {
           onClose={() =>
             setSaveListModalActive({
               ...saveListModalActive,
+              isOpen: false,
+            })
+          }
+        />
+      )}
+      {selectedTag && (
+        <SaveListModal
+          contract={identity.contract ?? MULTIVAULT_CONTRACT_ADDRESS}
+          tag={saveListModalActive.tag ?? selectedTag}
+          identity={identity}
+          userWallet={userWallet}
+          open={saveListModalActive.isOpen}
+          onClose={() =>
+            setSaveListModalActive({
+              ...saveListModalActive,
+              isOpen: false,
+            })
+          }
+        />
+      )}
+      {identity.image && (
+        <ImageModal
+          identity={identity}
+          // displayName={identity.display_name ?? ''}
+          // imageSrc={identity.image ?? ''}
+          open={imageModalActive.isOpen}
+          onClose={() =>
+            setImageModalActive({
+              ...imageModalActive,
               isOpen: false,
             })
           }
