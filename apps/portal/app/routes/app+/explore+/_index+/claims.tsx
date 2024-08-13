@@ -45,8 +45,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
     method: IdentitiesService.searchIdentity,
     args: {
       page: 1,
-      limit: 10,
-      sortBy: 'AssetsSum',
+      limit: 20,
+      sortBy: 'CreatedAt',
       direction: 'desc',
     },
   })
