@@ -9,7 +9,6 @@ import {
   SortColumnType,
   useSearchAndSortParamsHandler,
 } from '@lib/hooks/useSearchAndSortParams'
-import logger from '@lib/utils/logger'
 import { useNavigate } from '@remix-run/react'
 import { PaginationType } from 'app/types/pagination'
 
@@ -48,8 +47,6 @@ export function ListClaimsList<T extends SortColumnType = ClaimSortColumn>({
     { value: 'Updated At', sortBy: 'UpdatedAt' },
     { value: 'Created At', sortBy: 'CreatedAt' },
   ]
-
-  logger('listClaims', listClaims)
 
   const options = sortOptions || defaultOptions
 
