@@ -181,6 +181,10 @@ export const I_PREDICATE_DISPLAY_NAME_TESTNET = 'I'
 export const AM_FOLLOWING_DISPLAY_NAME_TESTNET = 'am following'
 export const THING_DISPLAY_NAME_TESTNET = 'thing'
 
+// FEATURED LISTS
+
+export const FEATURED_LIST_OBJECT_IDS = [33, 22]
+
 // So generally, we consider the DSN safe to be shared publicly. Of course, you don't want to unnecessarily share the DSN for any backend projects you have, but there is no real way of hiding the DSN in the frontend (except for maybe obscuring it, but security by obscurity is no real security). https://github.com/getsentry/sentry-javascript/issues/5640#issuecomment-1229960048
 export const SENTRY_DSN =
   'https://de49927453262eeb56a313be2d02c052@o4507699051560960.ingest.us.sentry.io/4507699076399104'

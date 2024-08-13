@@ -80,7 +80,7 @@ export default function SaveForm({
               <div className="flex-col justify-center items-start gap-1 inline-flex">
                 <div className="justify-center items-center gap-2 inline-flex">
                   <Text variant="base" weight="medium">
-                    Save identity to your list
+                    Tag Identity
                   </Text>
                   <Icon
                     name="circle-question-mark"
@@ -90,25 +90,14 @@ export default function SaveForm({
                   <div className="w-4 h-4 relative" />
                 </div>
                 <Text variant="small" className="text-neutral-50/50">
-                  Save this identity to your list by staking on the claim.
+                  Tag the Identity to improve discoverability, and to add it to
+                  the respective Tag&lsquo;s list.
                 </Text>
               </div>
             </DialogTitle>
           </DialogHeader>
           <div className="h-full w-full flex-col pt-5 px-10 pb-10 gap-5 inline-flex">
             <div className="flex items-center w-full mr-2.5 gap-5 ">
-              <div className="flex flex-col gap-1">
-                <Text
-                  variant="caption"
-                  weight="regular"
-                  className="text-neutral-50/50"
-                >
-                  List:
-                </Text>
-                <IdentityTag imgSrc={tag?.image} variant={Identity.nonUser}>
-                  {tag?.display_name}
-                </IdentityTag>
-              </div>
               <div className="flex flex-col gap-1">
                 <Text
                   variant="caption"
@@ -122,6 +111,18 @@ export default function SaveForm({
                   variant={Identity.nonUser}
                 >
                   <Trunctacular value={getAtomLabel(identity)} />
+                </IdentityTag>
+              </div>
+              <div className="flex flex-col gap-1">
+                <Text
+                  variant="caption"
+                  weight="regular"
+                  className="text-neutral-50/50"
+                >
+                  List:
+                </Text>
+                <IdentityTag imgSrc={tag?.image} variant={Identity.nonUser}>
+                  {tag?.display_name}
                 </IdentityTag>
               </div>
             </div>

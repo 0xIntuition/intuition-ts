@@ -158,7 +158,7 @@ export default function ClaimDetails() {
   const directionTagText = +userConviction > 0 ? 'FOR' : 'AGAINST'
 
   const leftPanel = (
-    <div className="flex-col justify-start items-start gap-6 inline-flex max-lg:w-full">
+    <div className="flex-col justify-start items-start gap-6 inline-flex w-full">
       <NavigationButton variant="secondary" size="icon" to={fromUrl.toString()}>
         <Icon name="arrow-left" />
       </NavigationButton>

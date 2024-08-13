@@ -4,6 +4,7 @@ import {
   ClaimsService,
   IdentityPresenter,
   PositionSortColumn,
+  SortDirection,
   UsersService,
 } from '@0xintuition/api'
 
@@ -14,6 +15,7 @@ import { fetchWrapper } from '@server/api'
 import {
   TAG_PREDICATE_DISPLAY_NAME_TESTNET,
   TAG_PREDICATE_ID_TESTNET,
+  TAG_PREDICATE_VAULT_ID_TESTNET,
 } from 'app/consts'
 
 export async function getUserCreatedLists({
@@ -175,4 +177,40 @@ export async function getListIdentitiesCount({
   })
 
   return listIdentities.total
+}
+
+export async function getFeaturedLists({
+  request,
+  listIds,
+}: {
+  request: Request
+  listIds: number[]
+}) {
+  const commonArgs = {
+    limit: 1,
+    sortBy: ClaimSortColumn.CREATED_AT,
+    direction: SortDirection.DESC,
+    predicate: TAG_PREDICATE_VAULT_ID_TESTNET,
+  }
+
+  const featuredListsResults = await Promise.all(
+    listIds.map((id) =>
+      fetchWrapper(request, {
+        method: ClaimsService.searchClaims,
+        args: {
+          ...commonArgs,
+          object: id,
+        },
+      }),
+    ),
+  )
+
+  const featuredLists = featuredListsResults
+    .flatMap((result) => result.data)
+    .filter(Boolean) as ClaimPresenter[]
+
+  return {
+    featuredLists,
+    total: featuredLists.length,
+  }
 }

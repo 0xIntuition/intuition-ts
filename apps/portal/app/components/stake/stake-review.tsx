@@ -166,6 +166,7 @@ export default function StakeReview({
                   link: getAtomLink(claim?.object as IdentityPresenter),
                   shouldHover: false,
                 }}
+                maxIdentityLength={12}
               />
             )}
             <Text

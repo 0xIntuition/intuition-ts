@@ -7,7 +7,7 @@ import {
 
 import { fetchWrapper } from '@server/api'
 
-export async function getSystemStats(request: Request) {
+export async function getSystemStats({ request }: { request: Request }) {
   const [totalIdentities, totalClaims, totalUsers, positionsSummary] =
     await Promise.all([
       fetchWrapper(request, {
