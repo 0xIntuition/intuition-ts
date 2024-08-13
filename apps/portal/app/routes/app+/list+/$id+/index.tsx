@@ -2,8 +2,10 @@ import { Suspense, useEffect, useState } from 'react'
 
 import {
   Button,
+  ButtonVariant,
   Claim,
   Icon,
+  IconName,
   ListHeaderCard,
   Skeleton,
   Tabs,
@@ -18,6 +20,7 @@ import {
   UsersService,
 } from '@0xintuition/api'
 
+import { InfoTooltip } from '@components/info-tooltip'
 import { IdentitiesList } from '@components/list/identities'
 import { ListTabIdentityDisplay } from '@components/list/list-tab-identity-display'
 import { DataHeaderSkeleton, PaginatedListSkeleton } from '@components/skeleton'
@@ -170,7 +173,7 @@ export default function ListOverview() {
 
   return (
     <div className="flex-col justify-start items-start flex w-full gap-6">
-      <div className="flex flex-row w-full justify-end">
+      <div className="flex flex-row w-full justify-end gap-4">
         <Button
           variant="primary"
           onClick={() => {
@@ -183,6 +186,17 @@ export default function ListOverview() {
           <Icon name="plus-small" />
           Add to list
         </Button>
+        <InfoTooltip
+          title="Save List"
+          content="To add a List to &lsquo;your lists&rsquo;, you&lsquo;ll need to use the List! Save the List to your profile by staking on an entry in the List, or tagging something new with the List&lsquo;s Identity. For example - tagging [MetaMask] with [Wallet] will add the [Wallet] List to your Profile, for easy discoverability later!"
+          icon={IconName.floppyDisk1}
+          trigger={
+            <Button variant={ButtonVariant.primary}>
+              <Icon name={IconName.floppyDisk1} />
+              Save list
+            </Button>
+          }
+        />
       </div>
       <div className="flex flex-col w-full pb-4">
         <Suspense fallback={<DataHeaderSkeleton />}>

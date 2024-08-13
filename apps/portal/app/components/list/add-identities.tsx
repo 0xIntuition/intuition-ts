@@ -16,6 +16,7 @@ import {
 import { IdentityPresenter } from '@0xintuition/api'
 
 import { IdentitySearchCombobox } from '@components/identity/identity-search-combo-box'
+import { InfoTooltip } from '@components/info-tooltip'
 import useFilteredIdentitySearch from '@lib/hooks/useFilteredIdentitySearch'
 import useInvalidItems from '@lib/hooks/useInvalidItems'
 import { createIdentityModalAtom, saveListModalAtom } from '@lib/state/store'
@@ -112,9 +113,15 @@ export function AddIdentities({
   return (
     <div className="flex flex-col min-h-36">
       <div className="mb-3 gap-2">
-        <Text variant="body" className="text-primary/70">
-          Add identities to list
-        </Text>
+        <div className="flex flex-row gap-1">
+          <Text variant="body" className="text-primary/70">
+            Tag Identities to add them to the List
+          </Text>
+          <InfoTooltip
+            title="Add to List"
+            content="Adding Identities to a List is performed by 'Tagging' Identities. You can think of 'Tagging' like hashtags on a Web2 platform, or a note-taking app like Roam Research. You can tag Identities to add them to Lists as you explore Intuition, or you can do it easily here!' For example, to add things to a [Wallet] list, you would tag them with [Wallet]!"
+          />
+        </div>
         <Text variant="caption" className="text-primary/50">
           Select up to 5 identities to add to this list.
         </Text>

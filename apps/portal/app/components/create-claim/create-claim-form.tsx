@@ -3,23 +3,20 @@ import React, { useEffect, useState } from 'react'
 import {
   Badge,
   Button,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   Icon,
-  IconName,
   Input,
   Label,
   Text,
   toast,
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
 } from '@0xintuition/1ui'
 import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
 
 import { IdentityPopover } from '@components/create-claim/create-claim-popovers'
 import CreateClaimReview from '@components/create-claim/create-claim-review'
+import { InfoTooltip } from '@components/info-tooltip'
 import WrongNetworkButton from '@components/wrong-network-button'
 import {
   getFormProps,
@@ -112,6 +109,14 @@ export function ClaimForm({
               <Text variant="headline">Make a claim about an identity</Text>
             </div>
           </DialogTitle>
+          <DialogDescription>
+            Claim anything about anything.
+            <br />
+            &rsquo;Claims&lsquo; in Intuition, also referred to as
+            &rsquo;Triples&lsquo;, are structured in Semantic Triple format -
+            similar to that of a sentence. For example, a Triple could be
+            [Alice] [is] [trustworthy]. This makes the data nice and usable!
+          </DialogDescription>
         </DialogHeader>
       )}
       <div className="flex-grow">
@@ -515,27 +520,20 @@ function CreateClaimForm({
                         <Label htmlFor={fields.initial_deposit.id} hidden>
                           Initial Deposit
                         </Label>
-                        <Text
-                          variant="caption"
-                          className="text-secondary-foreground/90"
-                        >
-                          Initial Deposit
-                        </Text>
-                        <TooltipProvider>
-                          <Tooltip>
-                            <TooltipTrigger>
-                              <Icon
-                                name={IconName.circleQuestionMark}
-                                className="text-secondary-foreground/90 h-4 w-4"
-                              />
-                            </TooltipTrigger>
-                            <TooltipContent className="max-w-60">
-                              No initial deposit is required to create a claim.
-                              However, you will need to spend small amount of
-                              ETH to cover the fees.
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
+                        <div className="self-stretch flex-col justify-start items-start flex">
+                          <div className="flex w-full items-center justify-between gap-1">
+                            <Text
+                              variant="caption"
+                              className="text-secondary-foreground"
+                            >
+                              Initial Deposit
+                            </Text>
+                            <InfoTooltip
+                              title="Initial Deposit"
+                              content="To &lsquo;claim a thing about a thing&rsquo;, you must stake on the Claim. This deposit is akin to you signaling that you believe the Claim to be True. Without depositing, the Claim will exist, but you will not be expressing it! The more you stake, the more shares of the Claim you will receive."
+                            />
+                          </div>
+                        </div>
                       </div>
                       <Badge className="bg-transparent">
                         <Icon name="wallet" className="h-4 w-4" />

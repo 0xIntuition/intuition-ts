@@ -41,6 +41,14 @@ export const mainnetClient = createPublicClient({
   transport: http(process.env.ALCHEMY_MAINNET_RPC_URL),
 })
 
+export const optimismSepoliaClient = createPublicClient({
+  batch: {
+    multicall: true,
+  },
+  chain: baseSepolia,
+  transport: http(process.env.ALCHEMY_BASE_SEPOLIA_RPC_URL),
+})
+
 export const getMultivaultContract = getContract({
   address: MULTIVAULT_CONTRACT_ADDRESS as `0x${string}`,
   abi: multivaultAbi as Abi,
