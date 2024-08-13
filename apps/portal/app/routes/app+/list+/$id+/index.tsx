@@ -191,10 +191,10 @@ export default function ListOverview() {
         <InfoTooltip
           title="Save List"
           content="To add a List to &lsquo;your lists&rsquo;, you&lsquo;ll need to use the List! Save the List to your profile by staking on an entry in the List, or tagging something new with the List&lsquo;s Identity. For example - tagging [MetaMask] with [Wallet] will add the [Wallet] List to your Profile, for easy discoverability later!"
-          icon={IconName.floppyDisk1}
+          icon={IconName.bookmark}
           trigger={
             <Button variant={ButtonVariant.primary}>
-              <Icon name={IconName.floppyDisk1} />
+              <Icon name={IconName.bookmark} />
               Save list
             </Button>
           }

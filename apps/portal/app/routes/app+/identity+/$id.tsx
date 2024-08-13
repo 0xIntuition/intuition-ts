@@ -248,7 +248,6 @@ export default function IdentityDetails() {
         <SaveListModal
           tag={saveListModalActive.tag ?? selectedTag}
           identity={identity}
-          contract={identity.contract}
           userWallet={userWallet}
           open={saveListModalActive.isOpen}
           onClose={() =>

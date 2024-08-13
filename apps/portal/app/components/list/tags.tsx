@@ -11,8 +11,14 @@ import { ClaimPresenter, IdentityPresenter, SortColumn } from '@0xintuition/api'
 
 import SaveListModal from '@components/list/save-list-modal'
 import { saveListModalAtom } from '@lib/state/store'
-import { formatBalance } from '@lib/utils/misc'
-import { BLOCK_EXPLORER_URL, IPFS_GATEWAY_URL, PATHS } from 'app/consts'
+import {
+  formatBalance,
+  getAtomDescription,
+  getAtomImage,
+  getAtomIpfsLink,
+  getAtomLabel,
+  getAtomLink,
+} from '@lib/utils/misc'
 import { PaginationType } from 'app/types/pagination'
 import { useAtom } from 'jotai'
 
@@ -46,6 +52,8 @@ export function TagsList({
   const [saveListModalActive, setSaveListModalActive] =
     useAtom(saveListModalAtom)
 
+  console.log('identities', identities)
+
   return (
     <>
       <List<SortColumn>
@@ -64,23 +72,16 @@ export function TagsList({
             <div className="flex flex-row gap-2 w-full">
               <IdentityContentRow
                 variant={identity.is_user ? Identity.user : Identity.nonUser}
-                avatarSrc={identity.user?.image ?? identity.image ?? ''}
-                name={identity.user?.display_name ?? identity.display_name}
+                avatarSrc={getAtomImage(identity)}
+                name={getAtomLabel(identity)}
+                description={getAtomDescription(identity)}
                 id={identity.user?.wallet ?? identity.identity_id}
                 amount={
                   +formatBalance(BigInt(identity.user_assets || ''), 18, 4)
                 }
                 totalFollowers={identity.num_positions}
-                link={
-                  identity.is_user
-                    ? `${PATHS.PROFILE}/${identity.identity_id}`
-                    : `${PATHS.IDENTITY}/${identity.id}`
-                }
-                ipfsLink={
-                  identity.is_user
-                    ? `${BLOCK_EXPLORER_URL}/address/${identity.identity_id}`
-                    : `${IPFS_GATEWAY_URL}/${identity.id}`
-                }
+                link={getAtomLink(identity)}
+                ipfsLink={getAtomIpfsLink(identity)}
               />
               <Button
                 variant={ButtonVariant.text}
@@ -93,14 +94,7 @@ export function TagsList({
                   })
                 }}
               >
-                <Icon
-                  name={
-                    claim.user_assets_for > '0'
-                      ? IconName.circleCheckFilled
-                      : IconName.circleCheck
-                  }
-                  className="h-6 w-6"
-                />
+                <Icon name={IconName.bookmark} className="h-6 w-6" />
               </Button>
             </div>
           </div>

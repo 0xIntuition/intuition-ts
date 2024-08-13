@@ -20,6 +20,7 @@ export default function AddIdentitiesListModal({
   onClose,
   onSuccess,
 }: AddIdentitiesListModalProps) {
+  console.log('identity', identity)
   return (
     <Dialog
       open={open}

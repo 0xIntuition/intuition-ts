@@ -13,7 +13,7 @@ import { IdentityPresenter, TagEmbeddedPresenter } from '@0xintuition/api'
 
 import { TransactionState } from '@components/transaction-state'
 import logger from '@lib/utils/logger'
-import { formatBalance } from '@lib/utils/misc'
+import { formatBalance, getAtomImage, getAtomLabel } from '@lib/utils/misc'
 import { type FetcherWithComponents } from '@remix-run/react'
 import {
   TransactionActionType,
@@ -118,10 +118,10 @@ export default function SaveForm({
                   Identity:
                 </Text>
                 <IdentityTag
-                  imgSrc={identity?.image}
+                  imgSrc={getAtomImage(identity)}
                   variant={Identity.nonUser}
                 >
-                  <Trunctacular value={identity?.display_name} />
+                  <Trunctacular value={getAtomLabel(identity)} />
                 </IdentityTag>
               </div>
             </div>

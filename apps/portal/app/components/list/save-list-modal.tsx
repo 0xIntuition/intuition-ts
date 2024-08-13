@@ -45,7 +45,6 @@ const initialTxState: TransactionStateType = {
 
 interface SaveListModalProps {
   userWallet: string
-  contract?: string
   open: boolean
   tag: TagEmbeddedPresenter | IdentityPresenter
   identity: IdentityPresenter
@@ -55,11 +54,9 @@ interface SaveListModalProps {
 
 export default function SaveListModal({
   userWallet,
-  contract,
   open = false,
   tag,
   identity,
-
   onClose = () => {},
 }: SaveListModalProps) {
   const fetchReval = useFetcher()
@@ -149,7 +146,7 @@ export default function SaveListModal({
     }
     // omits the fetcher from the exhaustive deps
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fetchedClaimVaultId, identity.contract])
+  }, [fetchedClaimVaultId])
 
   useEffect(() => {
     if (vaultDetailsFetcher.state === 'idle' && vaultDetailsFetcher.data) {
@@ -161,11 +158,11 @@ export default function SaveListModal({
   const useHandleAction = (actionType: string) => {
     return async () => {
       try {
-        if (!contract || !fetchedClaimVaultId || !vaultDetails) {
+        if (!identity.contract || !fetchedClaimVaultId || !vaultDetails) {
           throw new Error('Missing required parameters')
         }
         const txHash = await writeContractAsync({
-          address: contract as `0x${string}`,
+          address: identity.contract as `0x${string}`,
           abi: multivaultAbi as Abi,
           functionName:
             actionType === 'save' ? 'depositTriple' : 'redeemTriple',
@@ -200,6 +197,7 @@ export default function SaveListModal({
       } catch (error) {
         logger('error', error)
         if (error instanceof Error) {
+          logger('error', error)
           let errorMessage = 'Failed transaction'
           if (error.message.includes('insufficient')) {
             errorMessage = 'Insufficient funds'
