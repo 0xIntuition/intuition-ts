@@ -128,7 +128,6 @@ export default function IdentityDetails() {
     }
   }, [saveListModalActive])
 
-  console.log('saveListModalActive', saveListModalActive)
   const leftPanel = (
     <div className="flex-col justify-start items-start inline-flex gap-6 max-lg:w-full">
       <ProfileCard

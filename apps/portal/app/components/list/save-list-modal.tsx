@@ -101,7 +101,6 @@ export default function SaveListModal({
   const claimFetcher = useFetcher<ClaimLoaderData[]>()
   const vaultDetailsFetcher = useFetcher<VaultDetailsType>()
 
-  console.log('claimFetcher.state', claimFetcher.state)
   useEffect(() => {
     if (identity && tag) {
       const fetchClaim = () => {
@@ -277,8 +276,6 @@ export default function SaveListModal({
         eventName: string
         args: EventLogArgs
       }
-
-      console.log('topics', topics)
 
       if (topics.args.sender === (userWallet as `0x${string}`)) {
         assets =

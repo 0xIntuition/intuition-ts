@@ -8,7 +8,6 @@ export function ViewTags({ tags }: { tags: IdentityPresenter[] }) {
   const setSaveListModalActive = useSetAtom(saveListModalAtom)
 
   const handleIdentityClick = (identity: IdentityPresenter) => {
-    console.log('test')
     setSaveListModalActive({
       isOpen: true,
       id: identity.vault_id,
