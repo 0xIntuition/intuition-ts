@@ -115,9 +115,9 @@ export default function StakeModal({
 
   const { min_deposit, formatted_entry_fee, formatted_exit_fee } = vaultDetails
 
-  const depositHook = useDepositAtom(claim?.contract ?? contract)
+  const depositHook = useDepositAtom(contract)
 
-  const redeemHook = useRedeemAtom(claim?.contract ?? contract)
+  const redeemHook = useRedeemAtom(contract)
 
   const {
     writeContractAsync,
