@@ -111,7 +111,7 @@ export default function ReconcilePositions() {
                 Select date and time to reconcile from:
               </Text>
               <div className="flex flex-row gap-4 items-center">
-                <input
+                <Input
                   type="datetime-local"
                   id="timestamp"
                   name="timestamp"
