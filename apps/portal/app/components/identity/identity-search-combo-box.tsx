@@ -2,7 +2,6 @@ import * as React from 'react'
 
 import {
   Button,
-  ButtonSize,
   ButtonVariant,
   Command,
   CommandEmpty,
@@ -19,8 +18,16 @@ import {
 } from '@0xintuition/1ui'
 import { IdentityPresenter } from '@0xintuition/api'
 
-import { formatBalance, sliceString, truncateString } from '@lib/utils/misc'
-import { BLOCK_EXPLORER_URL, IPFS_GATEWAY_URL } from 'app/consts'
+import {
+  formatBalance,
+  getAtomDescription,
+  getAtomId,
+  getAtomImage,
+  getAtomIpfsLink,
+  getAtomLabel,
+  sliceString,
+  truncateString,
+} from '@lib/utils/misc'
 
 import { IdentitySearchComboboxItem } from './identity-search-combo-box-item'
 
@@ -40,7 +47,6 @@ export interface IdentitySearchComboboxProps
 // TODO: [ENG-2670] - determine why there are more selected identities showing when overriding default search
 
 const IdentitySearchCombobox = ({
-  placeholder = 'Search for an identity...',
   onIdentityClick = () => {},
   onIdentitySelect = () => {},
   onCreateIdentityClick,
@@ -49,6 +55,7 @@ const IdentitySearchCombobox = ({
   onInput,
   value,
   shouldFilter,
+  placeholder = `Search for an identity...`,
   ...props
 }: IdentitySearchComboboxProps) => {
   return (
@@ -63,18 +70,17 @@ const IdentitySearchCombobox = ({
         {onCreateIdentityClick && (
           <Button
             variant={ButtonVariant.text}
-            size={ButtonSize.lg}
-            className="gap-1.5 font-light justify-start p-3 theme-border border-0 border-b"
             onClick={onCreateIdentityClick}
+            className="w-fit p-2.5"
           >
             <Icon name={IconName.plusLarge} className="h-4 w-4" />
-            Create a new identity
+            Create a new Identity
           </Button>
         )}
         <CommandList>
           <CommandEmpty>
             <EmptyStateCard
-              message="No identities found."
+              message={`No identities found.`}
               className="border-none max-md:min-h-0 max-md:h-fit"
             />
           </CommandEmpty>
@@ -85,7 +91,6 @@ const IdentitySearchCombobox = ({
                 user,
                 image,
                 assets_sum: value,
-                creator_address: walletAddress,
                 follower_count: socialCount,
                 tag_count: tagCount,
                 is_user: isUser,
@@ -101,7 +106,12 @@ const IdentitySearchCombobox = ({
                       name={truncateString(user?.display_name ?? name, 7)}
                       avatarSrc={user?.image ?? image ?? ''}
                       value={+formatBalance(value)}
-                      walletAddress={walletAddress}
+                      walletAddress={
+                        identity.is_user === true
+                          ? identity.user?.ens_name ??
+                            sliceString(identity.user?.wallet, 6, 4)
+                          : identity.identity_id
+                      }
                       socialCount={socialCount || 0}
                       tagCount={tagCount || 0}
                       onClick={() => onIdentityClick(identity)}
@@ -117,20 +127,9 @@ const IdentitySearchCombobox = ({
                       <div className="w-80 max-md:w-[80%]">
                         <ProfileCard
                           variant={identity.is_user ? 'user' : 'non-user'}
-                          avatarSrc={
-                            identity.user?.image ?? identity.image ?? ''
-                          }
-                          name={truncateString(
-                            identity.user?.display_name ??
-                              identity.display_name,
-                            18,
-                          )}
-                          id={
-                            identity.is_user === true
-                              ? identity.user?.ens_name ??
-                                sliceString(identity.user?.wallet, 6, 4)
-                              : identity.identity_id
-                          }
+                          avatarSrc={getAtomImage(identity)}
+                          name={getAtomLabel(identity)}
+                          id={getAtomId(identity)}
                           stats={
                             identity.is_user === true
                               ? {
@@ -141,16 +140,8 @@ const IdentitySearchCombobox = ({
                                 }
                               : undefined
                           }
-                          bio={
-                            identity.is_user === true
-                              ? identity.user?.description ?? ''
-                              : identity.description ?? ''
-                          }
-                          ipfsLink={
-                            identity.is_user === true
-                              ? `${BLOCK_EXPLORER_URL}/address/${identity.identity_id}`
-                              : `${IPFS_GATEWAY_URL}/${identity?.identity_id?.replace('ipfs://', '')}`
-                          }
+                          bio={getAtomDescription(identity)}
+                          ipfsLink={getAtomIpfsLink(identity)}
                         />
                       </div>
                     </HoverCardContent>

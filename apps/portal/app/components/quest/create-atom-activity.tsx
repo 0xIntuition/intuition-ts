@@ -11,7 +11,7 @@ import {
 import { IdentityPresenter, QuestStatus } from '@0xintuition/api'
 
 import { sliceString } from '@lib/utils/misc'
-import { BLOCK_EXPLORER_URL, IPFS_GATEWAY_URL } from 'app/consts'
+import { BLOCK_EXPLORER_URL, IPFS_GATEWAY_URL, PATHS } from 'app/consts'
 
 import ActivityContainer from './activity-container'
 
@@ -52,6 +52,14 @@ export default function CreateAtomActivity({
             variant={Identity.user}
             username={identity.creator?.display_name ?? ''}
             avatarImgSrc={identity.creator?.image ?? ''}
+            id={identity.creator?.id ?? ''}
+            description={identity.creator?.description ?? ''}
+            link={
+              identity.creator?.id
+                ? `${PATHS.PROFILE}/${identity.creator?.wallet}`
+                : ''
+            }
+            ipfsLink={`${BLOCK_EXPLORER_URL}/address/${identity.creator?.wallet}`}
             timestamp={identity.created_at}
             className="p-0 border-none"
           />

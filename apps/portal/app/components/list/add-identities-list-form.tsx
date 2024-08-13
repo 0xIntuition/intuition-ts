@@ -106,6 +106,7 @@ export function AddIdentitiesListForm({
                         identity?.display_name ??
                         'Identity'
                       }
+                      maxStringLength={42}
                     />
                   </IdentityTag>
                 </DialogTitle>
