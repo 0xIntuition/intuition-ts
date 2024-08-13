@@ -49,11 +49,15 @@ describe('IdentityCard', () => {
                 4.123 ETH
               </div>
             </div>
-            <p
-              class="text-sm font-normal text-muted-foreground"
+            <button
+              data-state="closed"
             >
-              0x1234...5678
-            </p>
+              <p
+                class="text-sm font-normal text-muted-foreground"
+              >
+                0x1234...5678
+              </p>
+            </button>
           </div>
         </div>
       </DocumentFragment>
@@ -104,11 +108,15 @@ describe('IdentityCard', () => {
                 7.892 ETH
               </div>
             </div>
-            <p
-              class="text-sm font-normal text-muted-foreground"
+            <button
+              data-state="closed"
             >
-              0x1234...5678
-            </p>
+              <p
+                class="text-sm font-normal text-muted-foreground"
+              >
+                0x1234...5678
+              </p>
+            </button>
           </div>
         </div>
       </DocumentFragment>

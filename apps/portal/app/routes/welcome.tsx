@@ -27,8 +27,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
     },
   })
 
-  console.log('userObject', userObject)
-
   if (!userObject) {
     console.log('No user found in DB')
     return json({ wallet })

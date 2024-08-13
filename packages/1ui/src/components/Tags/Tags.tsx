@@ -67,10 +67,14 @@ const TagWithValue = ({
   ...props
 }: TagWithValueProps) => {
   const TagContent = (
-    <>
+    <div className="flex flex-row gap-2 items-center">
       <Trunctacular value={label ? label : ''} maxStringLength={24} />
-      <span className="h-[2px] w-[2px] bg-primary mx-1" />
-      {value}
+      {value && (
+        <div className="flex flex-row gap-1.5 items-center">
+          <span className="h-[2px] w-[2px] bg-primary" />
+          {value}
+        </div>
+      )}
       {onRemove && (
         <button
           onClick={(e) => {
@@ -83,7 +87,7 @@ const TagWithValue = ({
           <Icon name="cross-large" className="h-3 w-3" />
         </button>
       )}
-    </>
+    </div>
   )
 
   return onStake ? (
@@ -113,4 +117,4 @@ const TagsButton = ({ ...props }: TagsButtonProps) => {
   )
 }
 
-export { Tags, TagsContent, TagWithValue, TagsButton }
+export { Tags, TagsButton, TagsContent, TagWithValue }

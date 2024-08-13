@@ -76,3 +76,11 @@ export const saveListModalAtom = atom<{
   identity: null,
   invalidIdentity: null,
 })
+
+export const imageModalAtom = atom<{
+  isOpen: boolean
+  identity: IdentityPresenter | null
+}>({
+  isOpen: false,
+  identity: null,
+})
