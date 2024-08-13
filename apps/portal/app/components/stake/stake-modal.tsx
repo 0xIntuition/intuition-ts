@@ -115,9 +115,9 @@ export default function StakeModal({
 
   const { min_deposit, formatted_entry_fee, formatted_exit_fee } = vaultDetails
 
-  const depositHook = useDepositAtom(contract)
+  const depositHook = useDepositAtom(claim?.contract ?? contract)
 
-  const redeemHook = useRedeemAtom(contract)
+  const redeemHook = useRedeemAtom(claim?.contract ?? contract)
 
   const {
     writeContractAsync,
@@ -188,6 +188,7 @@ export default function StakeModal({
         logger('error', error)
         setLoading(false)
         if (error instanceof Error) {
+          logger('error', error)
           let errorMessage = 'Failed transaction'
           if (error.message.includes('insufficient')) {
             errorMessage = 'Insufficient funds'
