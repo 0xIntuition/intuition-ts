@@ -37,7 +37,7 @@ const IdentitySearchComboboxItem = ({
     <CommandItem
       onClick={onClick}
       onSelect={onSelect}
-      className="border border-transparent rounded-lg aria-selected:bg-primary/10 aria-selected:text-primary hover:border-border/30 px-2 py-4"
+      className="border border-transparent rounded-lg aria-selected:bg-primary/10 aria-selected:text-primary hover:border-border/30 px-2 py-4 cursor-pointer"
       disabled={disabled}
     >
       <div className="flex justify-between items-center w-full">
@@ -70,7 +70,7 @@ const IdentitySearchComboboxItem = ({
                   {tagCount}
                 </Badge>
               </TooltipTrigger>
-              <TooltipContent>
+              <TooltipContent align="end">
                 Identities tagged with this identity
               </TooltipContent>
             </Tooltip>

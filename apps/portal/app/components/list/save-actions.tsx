@@ -14,6 +14,7 @@ interface SaveActionsProps {
   setShowErrors: (show: boolean) => void
   validationErrors: string[]
   setValidationErrors: (errors: string[]) => void
+  isLoading: boolean
 }
 
 export default function SaveActions({
@@ -22,6 +23,7 @@ export default function SaveActions({
   setShowErrors,
   validationErrors,
   setValidationErrors,
+  isLoading,
 }: SaveActionsProps) {
   const radioGroupData = [
     { id: '0.001', value: 'Minimum', subValue: '+0.001 ETH' },
@@ -41,6 +43,7 @@ export default function SaveActions({
           setShowErrors(false)
           setValidationErrors([])
         }}
+        disabled={isLoading}
       >
         {radioGroupData.map((item, index) => (
           <div key={index}>

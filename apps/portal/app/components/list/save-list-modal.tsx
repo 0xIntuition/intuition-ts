@@ -98,6 +98,7 @@ export default function SaveListModal({
   const claimFetcher = useFetcher<ClaimLoaderData[]>()
   const vaultDetailsFetcher = useFetcher<VaultDetailsType>()
 
+  console.log('claimFetcher.state', claimFetcher.state)
   useEffect(() => {
     if (identity && tag) {
       const fetchClaim = () => {
@@ -117,6 +118,15 @@ export default function SaveListModal({
     // omits the fetcher from the exhaustive deps
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [identity, tag])
+
+  useEffect(() => {
+    if (
+      claimFetcher.state === 'loading' ||
+      vaultDetailsFetcher.state === 'loading'
+    ) {
+      setIsLoading(true)
+    }
+  }, [claimFetcher.state])
 
   useEffect(() => {
     if (
@@ -389,6 +399,7 @@ export default function SaveListModal({
             setValidationErrors={setValidationErrors}
             showErrors={showErrors}
             setShowErrors={setShowErrors}
+            isLoading={isLoading}
           />
         </div>
         <DialogFooter className="!justify-center !items-center gap-5">

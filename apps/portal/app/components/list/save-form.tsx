@@ -5,6 +5,7 @@ import {
   Icon,
   Identity,
   IdentityTag,
+  Skeleton,
   Text,
   Trunctacular,
 } from '@0xintuition/1ui'
@@ -39,6 +40,7 @@ interface SaveFormProps {
   setShowErrors: (show: boolean) => void
   validationErrors: string[]
   setValidationErrors: (errors: string[]) => void
+  isLoading: boolean
 }
 
 export default function SaveForm({
@@ -58,6 +60,7 @@ export default function SaveForm({
   setShowErrors,
   validationErrors,
   setValidationErrors,
+  isLoading,
 }: SaveFormProps) {
   logger('user_assets in save form', user_assets)
   return (
@@ -124,10 +127,14 @@ export default function SaveForm({
             </div>
             <div className="flex flex-row items-center justify-center">
               <div className="w-full bg-neutral-50/5 rounded-lg border border-neutral-300/10 flex-col justify-start items-start inline-flex">
-                <ActivePositionCard
-                  value={Number(formatBalance(user_assets, 18, 4))}
-                  claimPosition={user_assets > '0' ? 'claimFor' : null}
-                />
+                {isLoading ? (
+                  <Skeleton className="h-12 w-full" />
+                ) : (
+                  <ActivePositionCard
+                    value={Number(formatBalance(user_assets, 18, 4))}
+                    claimPosition={user_assets > '0' ? 'claimFor' : null}
+                  />
+                )}
               </div>
             </div>
             <div className="rounded-t-lg bg-primary-950/15 w-full">
@@ -137,6 +144,7 @@ export default function SaveForm({
                 setValidationErrors={setValidationErrors}
                 showErrors={showErrors}
                 setShowErrors={setShowErrors}
+                isLoading={isLoading}
               />
             </div>
           </div>

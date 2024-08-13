@@ -12,7 +12,7 @@ import {
   TabsTrigger,
   Trunctacular,
 } from '@0xintuition/1ui'
-import { IdentityPresenter } from '@0xintuition/api'
+import { IdentityPresenter, TagEmbeddedPresenter } from '@0xintuition/api'
 
 import { TransactionState } from '@components/transaction-state'
 import {
@@ -20,6 +20,7 @@ import {
   transactionReducer,
   useTransactionState,
 } from '@lib/hooks/useTransactionReducer'
+import { saveListModalAtom } from '@lib/state/store'
 import logger from '@lib/utils/logger'
 import { useNavigate } from '@remix-run/react'
 import { PATHS } from 'app/consts'
@@ -27,6 +28,7 @@ import {
   TransactionActionType,
   TransactionStateType,
 } from 'app/types/transaction'
+import { useSetAtom } from 'jotai'
 
 import { AddTags } from './add-tags'
 import TagsReview from './tags-review'
@@ -85,7 +87,15 @@ export function TagsForm({
     setSelectedTags((prev) => prev.filter((tag) => tag.vault_id !== vaultId))
   }
 
-  logger('tags on incoming identity', identity.tags)
+  const setSaveListModalActive = useSetAtom(saveListModalAtom)
+
+  const handleTagClick = (tag: TagEmbeddedPresenter) => {
+    setSaveListModalActive({
+      isOpen: true,
+      id: tag.vault_id,
+      tag,
+    })
+  }
 
   return (
     <div className="flex flex-col h-full">
@@ -148,6 +158,7 @@ export function TagsForm({
                     <TagSearchCombobox
                       tags={identity.tags || []}
                       shouldFilter={true}
+                      onTagClick={handleTagClick}
                     />
                   </TabsContent>
                 </div>
