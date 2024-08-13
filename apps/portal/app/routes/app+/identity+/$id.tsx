@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import {
   Icon,
@@ -116,6 +116,12 @@ export default function IdentityDetails() {
   const [saveListModalActive, setSaveListModalActive] =
     useAtom(saveListModalAtom)
   const [selectedTag, setSelectedTag] = useState<TagEmbeddedPresenter>()
+
+  useEffect(() => {
+    if (saveListModalActive.tag) {
+      setSelectedTag(saveListModalActive.tag)
+    }
+  }, [saveListModalActive])
 
   console.log('saveListModalActive', saveListModalActive)
   const leftPanel = (
@@ -248,7 +254,6 @@ export default function IdentityDetails() {
         <SaveListModal
           tag={saveListModalActive.tag ?? selectedTag}
           identity={identity}
-          contract={identity.contract}
           userWallet={userWallet}
           open={saveListModalActive.isOpen}
           onClose={() =>

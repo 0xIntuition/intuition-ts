@@ -156,7 +156,6 @@ export function AddTags({
         <SaveListModal
           tag={selectedInvalidTag}
           identity={identity}
-          contract={identity.contract}
           userWallet={userWallet}
           open={saveListModalActive.isOpen}
           onClose={() => {
