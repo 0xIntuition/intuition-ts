@@ -5,7 +5,6 @@ import {
   Identity,
   InfoCard,
   PositionCard,
-  PositionCardFeesAccrued,
   PositionCardLastUpdated,
   PositionCardOwnership,
   PositionCardStaked,
@@ -181,17 +180,6 @@ export default function IdentityDetails() {
             percentOwnership={
               user_assets !== null && assets_sum
                 ? +calculatePercentageOfTvl(user_assets ?? '0', assets_sum)
-                : 0
-            }
-          />
-          <PositionCardFeesAccrued
-            amount={
-              identity.user_asset_delta
-                ? +formatBalance(
-                    +identity.user_assets - +identity.user_asset_delta,
-                    18,
-                    5,
-                  )
                 : 0
             }
           />

@@ -1,7 +1,7 @@
 import { Suspense } from 'react'
 
-import { Button, ErrorStateCard, Text } from '@0xintuition/1ui'
-import { ClaimsService } from '@0xintuition/api'
+import { Button, ErrorStateCard, Icon, IconName, Text } from '@0xintuition/1ui'
+import { ApiError, ClaimsService, IdentitiesService } from '@0xintuition/api'
 
 import CreateClaimModal from '@components/create-claim/create-claim-modal'
 import { ClaimsList as ClaimsAboutIdentity } from '@components/list/claims'
@@ -13,8 +13,9 @@ import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { getClaimsAboutIdentity } from '@lib/services/claims'
 import { getPositionsOnIdentity } from '@lib/services/positions'
 import { createClaimModalAtom } from '@lib/state/store'
+import logger from '@lib/utils/logger'
 import { formatBalance, invariant } from '@lib/utils/misc'
-import { defer, LoaderFunctionArgs } from '@remix-run/node'
+import { defer, LoaderFunctionArgs, redirect } from '@remix-run/node'
 import { Await, useRouteLoaderData } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
@@ -34,24 +35,38 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const wallet = params.wallet
   invariant(wallet, NO_PARAM_ID_ERROR)
 
+  let userIdentity
+  try {
+    userIdentity = await fetchWrapper(request, {
+      method: IdentitiesService.getIdentityById,
+      args: { id: wallet },
+    })
+  } catch (error) {
+    if (error instanceof ApiError && error.status === 404) {
+      throw redirect('/invite')
+    }
+    logger('Error fetching userIdentity', error)
+    throw error
+  }
+
   const url = new URL(request.url)
   const searchParams = new URLSearchParams(url.search)
 
   return defer({
     positions: getPositionsOnIdentity({
       request,
-      identityId: wallet,
+      identityId: userIdentity.id,
       searchParams,
     }),
     claims: getClaimsAboutIdentity({
       request,
-      identityId: wallet,
+      identityId: userIdentity.id,
       searchParams,
     }),
     claimsSummary: fetchWrapper(request, {
       method: ClaimsService.claimSummary,
       args: {
-        identity: wallet,
+        identity: userIdentity.id,
       },
     }),
     userWallet,
@@ -89,7 +104,7 @@ export default function ProfileDataAbout() {
               className="max-lg:w-full max-lg:mt-2"
               onClick={() => setCreateClaimModalActive(true)}
             >
-              Make a Claim
+              <Icon name={IconName.claim} className="h-4 w-4" /> Make a Claim
             </Button>
           </div>
           <Suspense fallback={<DataHeaderSkeleton />}>

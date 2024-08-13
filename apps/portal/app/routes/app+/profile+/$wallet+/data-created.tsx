@@ -60,36 +60,34 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
   return defer({
     activeIdentities: getUserIdentities({
       request,
-      userWallet: wallet,
+      userWallet: wallet.toLowerCase(),
       searchParams,
     }),
-    activeClaims: getUserClaims({ request, userWallet: wallet, searchParams }),
-    activeClaimsSummary: fetchWrapper(request, {
-      method: ClaimsService.claimSummary,
-      args: {
-        identity: wallet,
-      },
+    activeClaims: getUserClaims({
+      request,
+      userWallet: wallet.toLowerCase(),
+      searchParams,
     }),
     createdIdentities: getCreatedIdentities({
       request,
-      userWallet: wallet,
+      userWallet: wallet.toLowerCase(),
       searchParams,
     }),
     createdIdentitiesSummary: fetchWrapper(request, {
       method: IdentitiesService.identitySummary,
       args: {
-        creator: wallet,
+        creator: wallet.toLowerCase(),
       },
     }),
     createdClaims: getCreatedClaims({
       request,
-      userWallet: wallet,
+      userWallet: wallet.toLowerCase(),
       searchParams,
     }),
     createdClaimsSummary: fetchWrapper(request, {
       method: ClaimsService.claimSummary,
       args: {
-        creator: wallet,
+        creator: wallet.toLowerCase(),
       },
     }),
   })
@@ -132,7 +130,6 @@ export default function ProfileDataCreated() {
     createdIdentities,
     createdIdentitiesSummary,
     activeClaims,
-    activeClaimsSummary,
     createdClaims,
     createdClaimsSummary,
   } = useLiveLoader<typeof loader>(['attest'])
@@ -237,36 +234,25 @@ export default function ProfileDataCreated() {
               }
             >
               {(resolvedClaims) => (
-                <Await
-                  resolve={activeClaimsSummary}
-                  errorElement={
-                    <ErrorStateCard>
-                      <RevalidateButton />
-                    </ErrorStateCard>
+                <TabContent
+                  value={DataCreatedHeaderVariants.activeClaims}
+                  userIdentity={userIdentity}
+                  userTotals={userTotals}
+                  totalResults={resolvedClaims.pagination.totalEntries}
+                  totalStake={
+                    +formatBalance(
+                      userTotals?.total_position_value_on_claims ?? '0',
+                      18,
+                      4,
+                    )
                   }
+                  variant={DataCreatedHeaderVariants.activeClaims}
                 >
-                  {(resolvedActiveClaimsSummary) => (
-                    <TabContent
-                      value={DataCreatedHeaderVariants.activeClaims}
-                      userIdentity={userIdentity}
-                      userTotals={userTotals}
-                      totalResults={resolvedClaims.pagination.totalEntries}
-                      totalStake={
-                        +formatBalance(
-                          resolvedActiveClaimsSummary?.assets_sum ?? '0',
-                          18,
-                          4,
-                        )
-                      }
-                      variant={DataCreatedHeaderVariants.activeClaims}
-                    >
-                      <ActivePositionsOnClaims
-                        claims={resolvedClaims.data}
-                        pagination={resolvedClaims.pagination}
-                      />
-                    </TabContent>
-                  )}
-                </Await>
+                  <ActivePositionsOnClaims
+                    claims={resolvedClaims.data}
+                    pagination={resolvedClaims.pagination}
+                  />
+                </TabContent>
               )}
             </Await>
           </Suspense>

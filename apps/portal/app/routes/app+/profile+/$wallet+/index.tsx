@@ -2,8 +2,10 @@ import { Suspense } from 'react'
 
 import { EmptyStateCard, ErrorStateCard, Text } from '@0xintuition/1ui'
 import {
+  ApiError,
   ClaimSortColumn,
   ClaimsService,
+  IdentitiesService,
   IdentityPresenter,
   SortDirection,
   UserTotalsPresenter,
@@ -26,7 +28,7 @@ import { getUserSavedLists } from '@lib/services/lists'
 import { getPositionsOnIdentity } from '@lib/services/positions'
 import logger from '@lib/utils/logger'
 import { formatBalance, invariant } from '@lib/utils/misc'
-import { defer, LoaderFunctionArgs } from '@remix-run/node'
+import { defer, LoaderFunctionArgs, redirect } from '@remix-run/node'
 import { Await, useParams, useRouteLoaderData } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
@@ -44,6 +46,20 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const wallet = params.wallet
   invariant(wallet, NO_PARAM_ID_ERROR)
 
+  let userIdentity
+  try {
+    userIdentity = await fetchWrapper(request, {
+      method: IdentitiesService.getIdentityById,
+      args: { id: wallet },
+    })
+  } catch (error) {
+    if (error instanceof ApiError && error.status === 404) {
+      throw redirect('/invite')
+    }
+    logger('Error fetching userIdentity', error)
+    throw error
+  }
+
   const url = new URL(request.url)
   const searchParams = new URLSearchParams(url.search)
 
@@ -60,18 +76,18 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   return defer({
     positions: getPositionsOnIdentity({
       request,
-      identityId: wallet,
+      identityId: userIdentity.id,
       searchParams,
     }),
     claimsSummary: fetchWrapper(request, {
       method: ClaimsService.claimSummary,
       args: {
-        identity: wallet,
+        identity: userIdentity.id,
       },
     }),
     claims: getClaimsAboutIdentity({
       request,
-      identityId: wallet,
+      identityId: userIdentity.id,
       searchParams: claimSearchParams,
     }),
     savedListClaims: getUserSavedLists({
