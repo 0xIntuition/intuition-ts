@@ -4,12 +4,22 @@ import { IdentityPresenter } from '@0xintuition/api'
 
 import logger from '@lib/utils/logger'
 import { useFetcher } from '@remix-run/react'
-import { SEARCH_IDENTITIES_RESOURCE_ROUTE } from 'app/consts'
+import {
+  GET_IDENTITIES_BY_PARAM_RESOURCE_ROUTE,
+  GET_IDENTITIES_RESOURCE_ROUTE,
+  SEARCH_IDENTITIES_RESOURCE_ROUTE,
+} from 'app/consts'
+
+interface DefaultIdentitiesResponse {
+  identities: IdentityPresenter[]
+}
 
 export function useIdentityServerSearch() {
   const [searchQuery, setSearchQuery] = useState('')
   const [identities, setIdentities] = useState<IdentityPresenter[]>([])
-  const identitiesFetcher = useFetcher<IdentityPresenter[]>()
+  const identitiesFetcher = useFetcher<
+    IdentityPresenter[] | DefaultIdentitiesResponse
+  >()
 
   const handleInput = async (event: React.FormEvent<HTMLInputElement>) => {
     event.preventDefault()
@@ -20,7 +30,11 @@ export function useIdentityServerSearch() {
   useEffect(() => {
     logger('identitiesFetcher.data changed:', identitiesFetcher.data)
     if (identitiesFetcher.data) {
-      setIdentities(identitiesFetcher.data)
+      const newIdentities = Array.isArray(identitiesFetcher.data)
+        ? identitiesFetcher.data
+        : identitiesFetcher.data.identities || []
+      logger('Setting identities:', newIdentities)
+      setIdentities(newIdentities)
     }
   }, [identitiesFetcher.data])
 
@@ -31,10 +45,23 @@ export function useIdentityServerSearch() {
       identitiesFetcher.load(
         `${SEARCH_IDENTITIES_RESOURCE_ROUTE}${searchParam}`,
       )
+    } else {
+      // Fetch default list when search query is empty
+      const defaultParams = new URLSearchParams({
+        page: '1',
+        limit: '20',
+        sortBy: 'CreatedAt',
+        direction: 'desc',
+      })
+      identitiesFetcher.load(
+        `${GET_IDENTITIES_BY_PARAM_RESOURCE_ROUTE}?${defaultParams}`,
+      )
     }
-    // Ignoring identitiesFetcher to prevent loop
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchQuery, SEARCH_IDENTITIES_RESOURCE_ROUTE])
+  }, [
+    searchQuery,
+    SEARCH_IDENTITIES_RESOURCE_ROUTE,
+    GET_IDENTITIES_RESOURCE_ROUTE,
+  ])
 
   return { setSearchQuery, identities, handleInput }
 }
