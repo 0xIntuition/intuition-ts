@@ -3,10 +3,14 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
   Icon,
   Identity,
   IdentityTag,
   IdentityTagSize,
+  ProfileCard,
   Tags,
   Text,
   toast,
@@ -18,6 +22,13 @@ import { multivaultAbi } from '@lib/abis/multivault'
 import { useBatchCreateTriple } from '@lib/hooks/useBatchCreateTriple'
 import { useLoaderFetcher } from '@lib/hooks/useLoaderFetcher'
 import logger from '@lib/utils/logger'
+import {
+  getAtomDescription,
+  getAtomId,
+  getAtomImage,
+  getAtomIpfsLink,
+  getAtomLabel,
+} from '@lib/utils/misc'
 import { CreateLoaderData } from '@routes/resources+/create'
 import {
   CREATE_RESOURCE_ROUTE,
@@ -163,14 +174,35 @@ export default function AddIdentitiesReview({
           <Tags>
             <div className="flex flex-wrap gap-2 items-center">
               {identitiesToAdd.map((identity) => (
-                <IdentityTag
-                  key={identity.id}
-                  size={IdentityTagSize.md}
-                  variant={Identity.nonUser}
-                  imgSrc={identity.image ?? ''}
-                >
-                  <Trunctacular value={identity.display_name} />
-                </IdentityTag>
+                <HoverCard key={identity.id} openDelay={100} closeDelay={100}>
+                  <HoverCardTrigger>
+                    <IdentityTag
+                      key={identity.id}
+                      size={IdentityTagSize.md}
+                      variant={Identity.nonUser}
+                      imgSrc={identity.image ?? ''}
+                    >
+                      <Trunctacular
+                        value={identity.display_name}
+                        disableTooltip
+                      />
+                    </IdentityTag>
+                  </HoverCardTrigger>
+                  <HoverCardContent side="top" align="center" className="w-max">
+                    <div className="flex flex-col gap-4 w-80 max-md:w-[80%]">
+                      <ProfileCard
+                        variant={
+                          identity.is_user ? Identity.user : Identity.nonUser
+                        }
+                        avatarSrc={getAtomImage(identity)}
+                        name={getAtomLabel(identity)}
+                        id={getAtomId(identity)}
+                        bio={getAtomDescription(identity)}
+                        ipfsLink={getAtomIpfsLink(identity)}
+                      />
+                    </div>
+                  </HoverCardContent>
+                </HoverCard>
               ))}
             </div>
           </Tags>

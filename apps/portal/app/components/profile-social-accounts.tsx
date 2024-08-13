@@ -1,4 +1,4 @@
-import { Button } from '@0xintuition/1ui'
+import { Button, Icon, IconName } from '@0xintuition/1ui'
 
 import { VerifiedLinkBadges } from '@client/privy-verified-links'
 import { verifiedPlatforms } from 'app/consts'
@@ -50,7 +50,8 @@ function LinkSocialAccounts({
         additional authenticity.
       </p>
       <Button variant="secondary" onClick={handleOpenEditSocialLinksModal}>
-        Link Social Accounts
+        <Icon name={IconName.chainLink} className="h-4 w-4" /> Link Social
+        Accounts
       </Button>
     </div>
   )

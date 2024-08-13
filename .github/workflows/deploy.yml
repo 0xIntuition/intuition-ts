@@ -140,6 +140,7 @@ jobs:
 
       - name: Render Amazon ECS task definition
         id: render-container-staging
+        if: ${{ env.MY_ENV == 'dev' }}
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
           task-definition: task-definition.json
@@ -150,6 +151,7 @@ jobs:
             AWS_ACCOUNT=${{ secrets.AWS_ACCOUNT }}
 
       - name: Deploy task definition to Amazon ECS
+        if: ${{ env.MY_ENV == 'dev' }}
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
           task-definition: ${{ steps.render-container-staging.outputs.task-definition }}

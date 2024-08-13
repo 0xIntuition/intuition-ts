@@ -30,14 +30,15 @@ describe('TagsListInput', () => {
             <button
               class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 text-base font-normal flex items-center cursor-default pl-2"
             >
-              <p
-                class="text-primary text-base font-normal"
+              <div
+                class="flex flex-row gap-2 items-center"
               >
-                Tag Name 1
-              </p>
-              <span
-                class="h-[2px] w-[2px] bg-primary mx-1"
-              />
+                <p
+                  class="text-primary text-base font-normal"
+                >
+                  Tag Name 1
+                </p>
+              </div>
             </button>
             <button
               aria-label="Remove tag"
@@ -51,75 +52,77 @@ describe('TagsListInput', () => {
                 />
               </svg>
             </button>
-            <button
-              class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 text-base font-normal flex items-center cursor-default pl-2"
+          </div>
+          <button
+            class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 text-base font-normal flex items-center cursor-default pl-2"
+          >
+            <div
+              class="flex flex-row gap-2 items-center"
             >
               <p
                 class="text-primary text-base font-normal"
               >
                 Tag Name 2
               </p>
-              <span
-                class="h-[2px] w-[2px] bg-primary mx-1"
-              />
-            </button>
-            <button
-              aria-label="Remove tag"
-              class="ml-2 cursor-pointer"
-            >
-              <svg
-                class="h-3 w-3"
-              >
-                <use
-                  href="/src/components/Icon/Icon.sprites.svg#cross-large"
-                />
-              </svg>
-            </button>
-            <button
-              class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 text-base font-normal flex items-center cursor-default pl-2"
-            >
-              <p
-                class="text-primary text-base font-normal"
-              >
-                Tag Name 3
-              </p>
-              <span
-                class="h-[2px] w-[2px] bg-primary mx-1"
-              />
-            </button>
-            <button
-              aria-label="Remove tag"
-              class="ml-2 cursor-pointer"
-            >
-              <svg
-                class="h-3 w-3"
-              >
-                <use
-                  href="/src/components/Icon/Icon.sprites.svg#cross-large"
-                />
-              </svg>
-            </button>
-            <div
-              class="flex items-center gap-2"
-            >
-              <button
-                class="flex justify-center items-center gap-2 text-sm font-medium border disabled:bg-muted aria-disabled:bg-muted disabled:text-muted-foreground aria-disabled:text-muted-foreground disabled:border-muted aria-disabled:border-muted aria-disabled:pointer-events-none primary-gradient-subtle text-primary/60 border-primary/10 hover:text-primary disabled:from-muted aria-disabled:from-muted disabled:to-muted aria-disabled:to-muted shadow-md-subtle rounded-full px-2 mr-1"
-              >
-                <svg
-                  class="h-6 w-6"
-                >
-                  <use
-                    href="/src/components/Icon/Icon.sprites.svg#plus-small"
-                  />
-                </svg>
-              </button>
-              <p
-                class="text-sm font-normal text-secondary-foreground"
-              >
-                2 tags left
-              </p>
             </div>
+          </button>
+          <button
+            aria-label="Remove tag"
+            class="ml-2 cursor-pointer"
+          >
+            <svg
+              class="h-3 w-3"
+            >
+              <use
+                href="/src/components/Icon/Icon.sprites.svg#cross-large"
+              />
+            </svg>
+          </button>
+        </div>
+        <button
+          class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 text-base font-normal flex items-center cursor-default pl-2"
+        >
+          <div
+            class="flex flex-row gap-2 items-center"
+          >
+            <p
+              class="text-primary text-base font-normal"
+            >
+              Tag Name 3
+            </p>
           </div>
+        </button>
+        <button
+          aria-label="Remove tag"
+          class="ml-2 cursor-pointer"
+        >
+          <svg
+            class="h-3 w-3"
+          >
+            <use
+              href="/src/components/Icon/Icon.sprites.svg#cross-large"
+            />
+          </svg>
+        </button>
+        <div
+          class="flex items-center gap-2"
+        >
+          <button
+            class="flex justify-center items-center gap-2 text-sm font-medium border disabled:bg-muted aria-disabled:bg-muted disabled:text-muted-foreground aria-disabled:text-muted-foreground disabled:border-muted aria-disabled:border-muted aria-disabled:pointer-events-none primary-gradient-subtle text-primary/60 border-primary/10 hover:text-primary disabled:from-muted aria-disabled:from-muted disabled:to-muted aria-disabled:to-muted shadow-md-subtle rounded-full px-2 mr-1"
+          >
+            <svg
+              class="h-6 w-6"
+            >
+              <use
+                href="/src/components/Icon/Icon.sprites.svg#plus-small"
+              />
+            </svg>
+          </button>
+          <p
+            class="text-sm font-normal text-secondary-foreground"
+          >
+            2 tags left
+          </p>
         </div>
       </DocumentFragment>
     `)
@@ -190,14 +193,15 @@ describe('TagsListInput', () => {
             <button
               class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-social/10 text-social/90 border-social/40 hover:bg-social/30 hover:text-social hover:border-social/60 text-base font-normal flex items-center cursor-default pl-2"
             >
-              <p
-                class="text-primary text-base font-normal"
+              <div
+                class="flex flex-row gap-2 items-center"
               >
-                Tag Name 1
-              </p>
-              <span
-                class="h-[2px] w-[2px] bg-primary mx-1"
-              />
+                <p
+                  class="text-primary text-base font-normal"
+                >
+                  Tag Name 1
+                </p>
+              </div>
             </button>
             <button
               aria-label="Remove tag"
@@ -211,75 +215,77 @@ describe('TagsListInput', () => {
                 />
               </svg>
             </button>
-            <button
-              class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-social/10 text-social/90 border-social/40 hover:bg-social/30 hover:text-social hover:border-social/60 text-base font-normal flex items-center cursor-default pl-2"
+          </div>
+          <button
+            class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-social/10 text-social/90 border-social/40 hover:bg-social/30 hover:text-social hover:border-social/60 text-base font-normal flex items-center cursor-default pl-2"
+          >
+            <div
+              class="flex flex-row gap-2 items-center"
             >
               <p
                 class="text-primary text-base font-normal"
               >
                 Tag Name 2
               </p>
-              <span
-                class="h-[2px] w-[2px] bg-primary mx-1"
-              />
-            </button>
-            <button
-              aria-label="Remove tag"
-              class="ml-2 cursor-pointer"
-            >
-              <svg
-                class="h-3 w-3"
-              >
-                <use
-                  href="/src/components/Icon/Icon.sprites.svg#cross-large"
-                />
-              </svg>
-            </button>
-            <button
-              class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-social/10 text-social/90 border-social/40 hover:bg-social/30 hover:text-social hover:border-social/60 text-base font-normal flex items-center cursor-default pl-2"
-            >
-              <p
-                class="text-primary text-base font-normal"
-              >
-                Tag Name 3
-              </p>
-              <span
-                class="h-[2px] w-[2px] bg-primary mx-1"
-              />
-            </button>
-            <button
-              aria-label="Remove tag"
-              class="ml-2 cursor-pointer"
-            >
-              <svg
-                class="h-3 w-3"
-              >
-                <use
-                  href="/src/components/Icon/Icon.sprites.svg#cross-large"
-                />
-              </svg>
-            </button>
-            <div
-              class="flex items-center gap-2"
-            >
-              <button
-                class="flex justify-center items-center gap-2 text-sm font-medium border disabled:bg-muted aria-disabled:bg-muted disabled:text-muted-foreground aria-disabled:text-muted-foreground disabled:border-muted aria-disabled:border-muted aria-disabled:pointer-events-none primary-gradient-subtle text-primary/60 border-primary/10 hover:text-primary disabled:from-muted aria-disabled:from-muted disabled:to-muted aria-disabled:to-muted shadow-md-subtle rounded-full px-2 mr-1"
-              >
-                <svg
-                  class="h-6 w-6"
-                >
-                  <use
-                    href="/src/components/Icon/Icon.sprites.svg#plus-small"
-                  />
-                </svg>
-              </button>
-              <p
-                class="text-sm font-normal text-secondary-foreground"
-              >
-                0 trust circles left
-              </p>
             </div>
+          </button>
+          <button
+            aria-label="Remove tag"
+            class="ml-2 cursor-pointer"
+          >
+            <svg
+              class="h-3 w-3"
+            >
+              <use
+                href="/src/components/Icon/Icon.sprites.svg#cross-large"
+              />
+            </svg>
+          </button>
+        </div>
+        <button
+          class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-social/10 text-social/90 border-social/40 hover:bg-social/30 hover:text-social hover:border-social/60 text-base font-normal flex items-center cursor-default pl-2"
+        >
+          <div
+            class="flex flex-row gap-2 items-center"
+          >
+            <p
+              class="text-primary text-base font-normal"
+            >
+              Tag Name 3
+            </p>
           </div>
+        </button>
+        <button
+          aria-label="Remove tag"
+          class="ml-2 cursor-pointer"
+        >
+          <svg
+            class="h-3 w-3"
+          >
+            <use
+              href="/src/components/Icon/Icon.sprites.svg#cross-large"
+            />
+          </svg>
+        </button>
+        <div
+          class="flex items-center gap-2"
+        >
+          <button
+            class="flex justify-center items-center gap-2 text-sm font-medium border disabled:bg-muted aria-disabled:bg-muted disabled:text-muted-foreground aria-disabled:text-muted-foreground disabled:border-muted aria-disabled:border-muted aria-disabled:pointer-events-none primary-gradient-subtle text-primary/60 border-primary/10 hover:text-primary disabled:from-muted aria-disabled:from-muted disabled:to-muted aria-disabled:to-muted shadow-md-subtle rounded-full px-2 mr-1"
+          >
+            <svg
+              class="h-6 w-6"
+            >
+              <use
+                href="/src/components/Icon/Icon.sprites.svg#plus-small"
+              />
+            </svg>
+          </button>
+          <p
+            class="text-sm font-normal text-secondary-foreground"
+          >
+            0 trust circles left
+          </p>
         </div>
       </DocumentFragment>
     `)

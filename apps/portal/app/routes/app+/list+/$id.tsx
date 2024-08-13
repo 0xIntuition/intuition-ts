@@ -10,7 +10,8 @@ import {
 import AddIdentitiesListModal from '@components/list/add-identities-list-modal'
 import { ListIdentityDisplayCard } from '@components/list/list-identity-display-card'
 import NavigationButton from '@components/navigation-link'
-import { addIdentitiesListModalAtom } from '@lib/state/store'
+import ImageModal from '@components/profile/image-modal'
+import { addIdentitiesListModalAtom, imageModalAtom } from '@lib/state/store'
 import { invariant } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import {
@@ -26,6 +27,7 @@ import {
   IPFS_GATEWAY_URL,
   NO_PARAM_ID_ERROR,
   NO_WALLET_ERROR,
+  PATHS,
 } from 'app/consts'
 import TwoPanelLayout from 'app/layouts/two-panel-layout'
 import { useAtom } from 'jotai'
@@ -59,6 +61,7 @@ export default function ListDetails() {
 
   const [addIdentitiesListModalActive, setAddIdentitiesListModalActive] =
     useAtom(addIdentitiesListModalAtom)
+  const [imageModalActive, setImageModalActive] = useAtom(imageModalAtom)
   const navigate = useNavigate()
   const location = useLocation()
   const [fromUrl, setFromUrl] = useState<string | number>(-1)
@@ -91,6 +94,14 @@ export default function ListDetails() {
             ? `${BLOCK_EXPLORER_URL}/address/${claim.object?.identity_id}`
             : `${IPFS_GATEWAY_URL}/${claim.object?.identity_id?.replace('ipfs://', '')}`
         }
+        onAvatarClick={() => {
+          if (claim.object) {
+            setImageModalActive({
+              isOpen: true,
+              identity: claim.object,
+            })
+          }
+        }}
       />
       <ListIdentityDisplayCard
         displayName={claim.object?.display_name ?? ''}
@@ -102,13 +113,16 @@ export default function ListDetails() {
       />
       <InfoCard
         variant="user"
-        username={claim.creator?.display_name ?? ''}
+        username={claim.creator?.display_name ?? claim.creator?.wallet ?? ''}
         avatarImgSrc={claim.creator?.image ?? ''}
+        id={claim.creator?.wallet ?? ''}
+        description={claim.creator?.description ?? ''}
+        link={
+          claim.creator?.id ? `${PATHS.PROFILE}/${claim.creator?.wallet}` : ''
+        }
+        ipfsLink={`${BLOCK_EXPLORER_URL}/address/${claim.creator?.wallet}`}
         timestamp={claim.created_at}
-        onClick={() => {
-          navigate(`/app/profile/${claim.creator?.wallet}`)
-        }}
-        className="hover:cursor-pointer w-full"
+        className="w-full"
       />
       <Button
         variant="secondary"
@@ -118,7 +132,7 @@ export default function ListDetails() {
         className="w-full"
       >
         View identity
-        <Icon name="arrow-up-right" />
+        <Icon name="arrow-up-right" className="h-4 w-4" />
       </Button>
     </div>
   )
@@ -138,6 +152,18 @@ export default function ListDetails() {
           })
         }
       />
+      {claim.object && (
+        <ImageModal
+          identity={claim.object}
+          open={imageModalActive.isOpen}
+          onClose={() =>
+            setImageModalActive({
+              ...imageModalActive,
+              isOpen: false,
+            })
+          }
+        />
+      )}
     </>
   )
 }

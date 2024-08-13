@@ -3,12 +3,27 @@ import * as React from 'react'
 import { cn } from 'styles'
 import { Identity, IdentityType } from 'types'
 
-import { IdentityTag, Text, TextVariant, Trunctacular } from '..'
+import {
+  Button,
+  ButtonVariant,
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+  IdentityTag,
+  ProfileCard,
+  Text,
+  TextVariant,
+  Trunctacular,
+} from '..'
 
 export interface InfoCardProps extends React.HTMLAttributes<HTMLDivElement> {
   variant: IdentityType
   username: string
   avatarImgSrc: string
+  id: string
+  description: string
+  link: string
+  ipfsLink: string
   timestamp: string
 }
 
@@ -16,6 +31,10 @@ const InfoCard = ({
   variant = Identity.user,
   username,
   avatarImgSrc,
+  id,
+  description,
+  link,
+  ipfsLink,
   timestamp,
   className,
   ...props
@@ -38,9 +57,35 @@ const InfoCard = ({
         Creator
       </Text>
       <div className="flex justify-start items-center gap-1">
-        <IdentityTag variant={variant} imgSrc={avatarImgSrc}>
-          <Trunctacular value={username} maxStringLength={18} />
-        </IdentityTag>
+        <HoverCard openDelay={100} closeDelay={100}>
+          <HoverCardTrigger>
+            <a href={link}>
+              <IdentityTag variant={variant} imgSrc={avatarImgSrc}>
+                <Trunctacular value={username} maxStringLength={18} />
+              </IdentityTag>
+            </a>
+          </HoverCardTrigger>
+          <HoverCardContent side="right" className="w-max">
+            <div className="flex flex-col gap-4 w-80 max-md:w-[80%]">
+              <ProfileCard
+                variant={variant}
+                avatarSrc={avatarImgSrc ?? ''}
+                name={username}
+                id={id ?? ''}
+                bio={description ?? ''}
+                ipfsLink={ipfsLink}
+                className="profile-card"
+              />
+              {link && (
+                <a href={link}>
+                  <Button variant={ButtonVariant.secondary} className="w-full">
+                    View Identity
+                  </Button>
+                </a>
+              )}
+            </div>
+          </HoverCardContent>
+        </HoverCard>
         <span className="bg-muted-foreground h-[2px] w-[2px] block rounded-full" />
         <Text variant={TextVariant.body} className="text-muted-foreground">
           {formattedDate}
