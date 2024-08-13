@@ -24,12 +24,14 @@ import PrivyRevalidate from '@client/privy-revalidate'
 import EditProfileModal from '@components/edit-profile/modal'
 import EditSocialLinksModal from '@components/edit-social-links-modal'
 import { ProfileSocialAccounts } from '@components/profile-social-accounts'
+import ImageModal from '@components/profile/image-modal'
 import { SegmentedNav } from '@components/segmented-nav'
 import StakeModal from '@components/stake/stake-modal'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import {
   editProfileModalAtom,
   editSocialLinksModalAtom,
+  imageModalAtom,
   stakeModalAtom,
 } from '@lib/state/store'
 import logger from '@lib/utils/logger'
@@ -151,6 +153,7 @@ export default function Profile() {
     editSocialLinksModalAtom,
   )
   const [stakeModalActive, setStakeModalActive] = useAtom(stakeModalAtom)
+  const [imageModalActive, setImageModalActive] = useAtom(imageModalAtom)
 
   const revalidator = useRevalidator()
   const navigate = useNavigate()
@@ -197,6 +200,12 @@ export default function Profile() {
         ipfsLink={`${BLOCK_EXPLORER_URL}/address/${userObject.wallet}`}
         followingLink={`${PATHS.PROFILE_CONNECTIONS}?tab=following`}
         followerLink={`${PATHS.PROFILE_CONNECTIONS}?tab=followers`}
+        onAvatarClick={() => {
+          setImageModalActive({
+            isOpen: true,
+            identity: userIdentity,
+          })
+        }}
       >
         <Button
           variant="secondary"
@@ -288,6 +297,18 @@ export default function Profile() {
           }))
         }}
       />
+
+      <ImageModal
+        identity={userIdentity}
+        open={imageModalActive.isOpen}
+        onClose={() =>
+          setImageModalActive({
+            ...imageModalActive,
+            isOpen: false,
+          })
+        }
+      />
+
       <PrivyRevalidate />
     </TwoPanelLayout>
   )

@@ -19,10 +19,15 @@ import {
 } from '@0xintuition/api'
 
 import FollowModal from '@components/follow/follow-modal'
+import ImageModal from '@components/profile/image-modal'
 import { SegmentedNav } from '@components/segmented-nav'
 import StakeModal from '@components/stake/stake-modal'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
-import { followModalAtom, stakeModalAtom } from '@lib/state/store'
+import {
+  followModalAtom,
+  imageModalAtom,
+  stakeModalAtom,
+} from '@lib/state/store'
 import logger from '@lib/utils/logger'
 import {
   calculatePercentageOfTvl,
@@ -162,6 +167,7 @@ export default function Profile() {
 
   const [stakeModalActive, setStakeModalActive] = useAtom(stakeModalAtom)
   const [followModalActive, setFollowModalActive] = useAtom(followModalAtom)
+  const [imageModalActive, setImageModalActive] = useAtom(imageModalAtom)
 
   const leftPanel = (
     <div className="flex-col justify-start items-start gap-5 inline-flex max-lg:w-full">
@@ -184,6 +190,12 @@ export default function Profile() {
         ipfsLink={`${BLOCK_EXPLORER_URL}/address/${userIdentity.identity_id}`}
         followingLink={`${PATHS.PROFILE}/${wallet}/connections?tab=following`}
         followerLink={`${PATHS.PROFILE}/${wallet}/connections?tab=followers`}
+        onAvatarClick={() => {
+          setImageModalActive({
+            isOpen: true,
+            identity: userIdentity,
+          })
+        }}
       >
         <Button
           variant="secondary"
@@ -294,6 +306,17 @@ export default function Profile() {
             isOpen: false,
           }))
         }}
+      />
+
+      <ImageModal
+        identity={userIdentity}
+        open={imageModalActive.isOpen}
+        onClose={() =>
+          setImageModalActive({
+            ...imageModalActive,
+            isOpen: false,
+          })
+        }
       />
     </TwoPanelLayout>
   )

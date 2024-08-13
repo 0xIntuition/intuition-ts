@@ -68,9 +68,12 @@ export interface AvatarProps
   name: string
 }
 
-const Avatar = ({ className, variant, src, name }: AvatarProps) => {
+const Avatar = ({ className, variant, src, name, onClick }: AvatarProps) => {
   return (
-    <AvatarContainer className={cn(avatarVariants({ variant }), className)}>
+    <AvatarContainer
+      className={cn(avatarVariants({ variant }), className)}
+      onClick={onClick}
+    >
       <AvatarImage src={src} alt={`${name} avatar`} />
       <AvatarFallback className="bg-inherit">
         <Icon
