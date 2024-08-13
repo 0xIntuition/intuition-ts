@@ -10,21 +10,29 @@ import {
   TextVariant,
   toast,
 } from '@0xintuition/1ui'
-import { UserPresenter, UsersService } from '@0xintuition/api'
+import {
+  IdentitiesService,
+  UserPresenter,
+  UsersService,
+} from '@0xintuition/api'
 
 import PrivyLogout from '@client/privy-logout'
 import ErrorList from '@components/error-list'
+import { HeaderLogo } from '@components/header-logo'
+import RelicCard from '@components/relic-card/relic-card'
 import { getFormProps, getInputProps, useForm } from '@conform-to/react'
 import { getZodConstraint, parseWithZod } from '@conform-to/zod'
+import { relicsAbi } from '@lib/abis/relics'
 import { useInviteCodeFetcher } from '@lib/hooks/useInviteCodeFetcher'
 import { inviteCodeSchema } from '@lib/schemas/create-identity-schema'
 import logger from '@lib/utils/logger'
 import { invariant } from '@lib/utils/misc'
-import { json, LoaderFunctionArgs } from '@remix-run/node'
-import { useLoaderData, useNavigate } from '@remix-run/react'
+import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
+import { Link, useLoaderData, useNavigate } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
-import { NO_WALLET_ERROR } from 'app/consts'
+import { mainnetClient } from '@server/viem'
+import { NO_WALLET_ERROR, PATHS } from 'app/consts'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const wallet = await requireUserWallet(request)
@@ -44,16 +52,40 @@ export async function loader({ request }: LoaderFunctionArgs) {
     return json({ wallet })
   }
 
-  return json({ wallet, userObject })
+  let userIdentity
+  try {
+    userIdentity = await fetchWrapper(request, {
+      method: IdentitiesService.getIdentityById,
+      args: { id: wallet },
+    })
+  } catch (e) {
+    console.error('No user identity associated with wallet')
+  }
+
+  if (userIdentity) {
+    throw redirect(`${PATHS.PROFILE}`)
+  }
+
+  const relicCount = (await mainnetClient.readContract({
+    address: '0x7aB2F10CaC6E27971fa93A5D5470Bb84126Bb734',
+    abi: relicsAbi,
+    functionName: 'balanceOf',
+    args: [wallet],
+  })) as number
+
+  const relicHolder = relicCount > 0
+
+  return json({ wallet, userObject, relicHolder })
 }
 
 interface InviteRouteLoaderData {
   wallet: string
   userObject: UserPresenter
+  relicHolder: boolean
 }
 
 export default function InviteRoute() {
-  const { wallet } = useLoaderData<InviteRouteLoaderData>()
+  const { wallet, relicHolder } = useLoaderData<InviteRouteLoaderData>()
   const navigate = useNavigate()
   const { inviteCodeFetcher } = useInviteCodeFetcher()
   const [loading, setLoading] = useState(false)
@@ -117,7 +149,7 @@ export default function InviteRoute() {
     if (inviteCodeFetcher.state === 'idle') {
       setLoading(false)
       if (inviteCodeFetcher.data?.status === 'success') {
-        navigate('/create')
+        navigate('/welcome')
       } else if (inviteCodeFetcher.data?.error) {
         const errorMessage = inviteCodeFetcher.data.error
         setFetcherError(errorMessage)
@@ -127,59 +159,84 @@ export default function InviteRoute() {
   }, [inviteCodeFetcher.state, inviteCodeFetcher.data, navigate])
 
   return (
-    <>
+    <div className="flex flex-col justify-between h-screen w-full p-8">
+      <HeaderLogo />
       <div className="flex justify-center items-center h-screen">
         <div className="flex-col justify-start items-start inline-flex gap-6">
-          <div className="flex-col justify-start items-start flex">
-            <div className="self-stretch text-white text-3xl font-semibold">
-              Enter your invide code
-            </div>
-          </div>
-          <inviteCodeFetcher.Form
-            method="post"
-            {...getFormProps(form)}
-            encType="multipart/form-data"
-            action="/actions/create-identity"
-            className="flex flex-col gap-6"
-          >
-            <div>
-              <Label htmlFor={fields.invite_code.id} hidden>
-                Invite Code
-              </Label>
-              <Input
-                {...getInputProps(fields.invite_code, { type: 'text' })}
-                className="w-96"
-                placeholder="Enter your invite code here"
-              />
-              <ErrorList
-                id={fields.invite_code.errorId}
-                errors={[
-                  ...(fields.invite_code.errors || []),
-                  ...(fetcherError ? [fetcherError] : []),
-                ]}
-              />
-            </div>
-            <Text
-              variant={TextVariant.body}
-              className="text-muted-foreground w-80"
-            >
-              Unlock exclusive access with your invite code. Join us today for a
-              premium experience.
-            </Text>
-            <Button
-              form={form.id}
-              type="submit"
-              variant={ButtonVariant.primary}
-              size={ButtonSize.lg}
-              disabled={loading}
-              className="w-48"
-            >
-              Setup Profile
-            </Button>
-          </inviteCodeFetcher.Form>
-          <PrivyLogout wallet={wallet} />
+          {relicHolder ? (
+            <>
+              <div className="flex-col justify-start items-start flex">
+                <div className="self-stretch text-white text-3xl font-semibold">
+                  Welcome, Seeker
+                </div>
+              </div>
+              <RelicCard />
+              <Link to={'/create'} prefetch="intent" className="m-auto">
+                <Button
+                  type="button"
+                  variant={ButtonVariant.primary}
+                  size={ButtonSize.lg}
+                  disabled={loading}
+                  className="w-48"
+                >
+                  Continue
+                </Button>
+              </Link>
+            </>
+          ) : (
+            <>
+              <div className="flex-col justify-start items-start flex">
+                <div className="self-stretch text-white text-3xl font-semibold">
+                  Enter your invide code
+                </div>
+              </div>
+              <inviteCodeFetcher.Form
+                method="post"
+                {...getFormProps(form)}
+                encType="multipart/form-data"
+                action="/actions/create-identity"
+                className="flex flex-col gap-6"
+              >
+                <div>
+                  <Label htmlFor={fields.invite_code.id} hidden>
+                    Invite Code
+                  </Label>
+                  <Input
+                    {...getInputProps(fields.invite_code, { type: 'text' })}
+                    className="w-96"
+                    placeholder="Enter your invite code here"
+                  />
+                  <ErrorList
+                    id={fields.invite_code.errorId}
+                    errors={[
+                      ...(fields.invite_code.errors || []),
+                      ...(fetcherError ? [fetcherError] : []),
+                    ]}
+                  />
+                </div>
+                <Text
+                  variant={TextVariant.body}
+                  className="text-muted-foreground w-80"
+                >
+                  Unlock exclusive access with your invite code. Join us today
+                  for a premium experience.
+                </Text>
+                <Button
+                  form={form.id}
+                  type="submit"
+                  variant={ButtonVariant.primary}
+                  size={ButtonSize.lg}
+                  disabled={loading}
+                  className="w-48"
+                >
+                  Setup Profile
+                </Button>
+              </inviteCodeFetcher.Form>
+            </>
+          )}
         </div>
       </div>
-    </>
+      <PrivyLogout wallet={wallet} />
+    </div>
   )
 }

@@ -20,4 +20,12 @@ export const PATHS = {
   EXPLORE_LISTS: '/app/explore/lists',
   // Activity
   GLOBAL_ACTIVITY: '/app/activity/global',
+  // Onboarding
+  CREATE: '/create',
+  INVITE: '/invite',
+  // General
+  LOGIN: '/login',
+  // Legal
+  TERMS: '/terms',
+  PRIVACY: '/privacy',
 }

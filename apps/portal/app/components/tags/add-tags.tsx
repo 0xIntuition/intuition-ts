@@ -4,6 +4,7 @@ import { Popover, PopoverContent, PopoverTrigger, Text } from '@0xintuition/1ui'
 import { IdentityPresenter } from '@0xintuition/api'
 
 import { IdentitySearchCombobox } from '@components/identity/identity-search-combo-box'
+import { InfoTooltip } from '@components/info-tooltip'
 import { AddListExistingCta } from '@components/list/add-list-existing-cta'
 import SaveListModal from '@components/list/save-list-modal'
 import useFilteredIdentitySearch from '@lib/hooks/useFilteredIdentitySearch'
@@ -99,9 +100,17 @@ export function AddTags({
   return (
     <div className="flex flex-col min-h-36">
       <div className="mb-3 gap-2">
-        <Text variant="body" className="text-primary/70">
-          Add tags to this identity
-        </Text>
+        <div className="flex flex-row gap-1 items-center">
+          <Text variant="body" className="text-primary/70">
+            Add tags to this identity
+          </Text>
+          <InfoTooltip
+            title="Add Tags"
+            content="Adding Tags to an Identity helps with discoverability for you and others later! Tagging is also how you add Identities to Lists. For example, to add this identity to the [Wallets] List, you would tag it with [Wallet]!
+
+  Behind the scenes, tagging involves creating a Triple with the Predicate [has tag]."
+          />
+        </div>
         <Text variant="caption" className="text-primary/50">
           Select up to 5 tags to add to this identity.
         </Text>

@@ -27,7 +27,7 @@ export default function TagsModal({
         onClose?.()
       }}
     >
-      <DialogContent className="bg-neutral-950 rounded-xl shadow border border-solid border-black/10 h-[550px] overflow-hidden flex flex-col">
+      <DialogContent className="bg-neutral-950 rounded-xl shadow border border-solid border-black/10 h-[550px] flex flex-col">
         <TagsForm
           identity={identity}
           userWallet={userWallet}
