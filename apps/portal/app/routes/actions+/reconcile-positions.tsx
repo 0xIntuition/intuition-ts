@@ -14,15 +14,27 @@ export async function action({ request }: ActionFunctionArgs) {
   invariant(wallet, 'User wallet is required')
 
   const formData = await request.formData()
+  const singleId = formData.get('singleId') as string | null
   const timestampString = formData.get('timestamp') as string | null
-  const timestamp = timestampString ? new Date(timestampString) : undefined
 
   try {
-    const positionIds = await getAllPositionIds({
-      request,
-      timestamp: timestamp?.getTime() ?? 0,
-    })
-    const totalPositions = positionIds.length
+    let positionIds: string[]
+    let totalPositions: number
+
+    if (singleId) {
+      // Handle single position reconciliation
+      positionIds = [singleId]
+      totalPositions = 1
+    } else {
+      // Handle multiple positions reconciliation
+      const timestamp = timestampString ? new Date(timestampString) : undefined
+      positionIds = await getAllPositionIds({
+        request,
+        timestamp: timestamp?.getTime() ?? 0,
+      })
+      totalPositions = positionIds.length
+    }
+
     const results = []
     const logs = []
 
