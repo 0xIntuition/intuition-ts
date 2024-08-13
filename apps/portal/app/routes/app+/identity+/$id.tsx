@@ -45,6 +45,7 @@ import { fetchWrapper } from '@server/api'
 import { requireUser, requireUserWallet } from '@server/auth'
 import { getVaultDetails } from '@server/multivault'
 import {
+  BLOCK_EXPLORER_URL,
   IPFS_GATEWAY_URL,
   MULTIVAULT_CONTRACT_ADDRESS,
   NO_WALLET_ERROR,
@@ -222,14 +223,19 @@ export default function IdentityDetails() {
         }
       />
       <InfoCard
-        variant={identity.is_user ? Identity.user : Identity.nonUser}
+        variant={Identity.user}
         username={identity.creator?.display_name ?? ''}
         avatarImgSrc={identity.creator?.image ?? ''}
+        id={identity.creator?.wallet ?? ''}
+        description={identity.creator?.description ?? ''}
+        link={
+          identity.creator?.id
+            ? `${PATHS.PROFILE}/${identity.creator?.wallet}`
+            : ''
+        }
+        ipfsLink={`${BLOCK_EXPLORER_URL}/address/${identity.creator?.wallet}`}
         timestamp={identity.created_at}
-        onClick={() => {
-          navigate(`/app/profile/${identity.creator?.wallet}`)
-        }}
-        className="hover:cursor-pointer w-full"
+        className="w-full"
       />
     </div>
   )

@@ -27,6 +27,7 @@ import {
   IPFS_GATEWAY_URL,
   NO_PARAM_ID_ERROR,
   NO_WALLET_ERROR,
+  PATHS,
 } from 'app/consts'
 import TwoPanelLayout from 'app/layouts/two-panel-layout'
 import { useAtom } from 'jotai'
@@ -112,13 +113,16 @@ export default function ListDetails() {
       />
       <InfoCard
         variant="user"
-        username={claim.creator?.display_name ?? ''}
+        username={claim.creator?.display_name ?? claim.creator?.wallet ?? ''}
         avatarImgSrc={claim.creator?.image ?? ''}
+        id={claim.creator?.wallet ?? ''}
+        description={claim.creator?.description ?? ''}
+        link={
+          claim.creator?.id ? `${PATHS.PROFILE}/${claim.creator?.wallet}` : ''
+        }
+        ipfsLink={`${BLOCK_EXPLORER_URL}/address/${claim.creator?.wallet}`}
         timestamp={claim.created_at}
-        onClick={() => {
-          navigate(`/app/profile/${claim.creator?.wallet}`)
-        }}
-        className="hover:cursor-pointer w-full"
+        className="w-full"
       />
       <Button
         variant="secondary"
@@ -128,7 +132,7 @@ export default function ListDetails() {
         className="w-full"
       >
         View identity
-        <Icon name="arrow-up-right" />
+        <Icon name="arrow-up-right" className="h-4 w-4" />
       </Button>
     </div>
   )

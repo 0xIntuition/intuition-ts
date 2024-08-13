@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import { Button, ButtonVariant, Text, TextVariant } from '..'
+import { Button, ButtonVariant, Icon, IconName, Text, TextVariant } from '..'
 
 export interface QuestHeaderCardProps
   extends React.HTMLAttributes<HTMLDivElement> {
@@ -52,7 +52,7 @@ const QuestHeaderCard = ({
           {`${percentageOfQuestsCompleted.toFixed(0)}% Complete`}
         </Text>
         <Button variant={ButtonVariant.secondary} onClick={onButtonClick}>
-          View quests
+          <Icon name={IconName.crystalBall} className="h-4 w-4" /> View quests
         </Button>
       </div>
     </div>

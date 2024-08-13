@@ -72,7 +72,7 @@ export interface SocialLinksButtonProps
 const SocialLinksButton = ({ ...props }: SocialLinksButtonProps) => {
   return (
     <Button variant="secondary" {...props}>
-      Edit Social Links
+      <Icon name={IconName.chainLink} className="h-4 w-4" /> Edit Social Links
     </Button>
   )
 }
