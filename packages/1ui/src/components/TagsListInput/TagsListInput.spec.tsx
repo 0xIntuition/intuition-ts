@@ -35,6 +35,9 @@ describe('TagsListInput', () => {
               >
                 Tag Name 1
               </p>
+              <span
+                class="h-[2px] w-[2px] bg-primary mx-1"
+              />
             </button>
             <button
               aria-label="Remove tag"
@@ -56,6 +59,9 @@ describe('TagsListInput', () => {
               >
                 Tag Name 2
               </p>
+              <span
+                class="h-[2px] w-[2px] bg-primary mx-1"
+              />
             </button>
             <button
               aria-label="Remove tag"
@@ -77,6 +83,9 @@ describe('TagsListInput', () => {
               >
                 Tag Name 3
               </p>
+              <span
+                class="h-[2px] w-[2px] bg-primary mx-1"
+              />
             </button>
             <button
               aria-label="Remove tag"
@@ -186,6 +195,9 @@ describe('TagsListInput', () => {
               >
                 Tag Name 1
               </p>
+              <span
+                class="h-[2px] w-[2px] bg-primary mx-1"
+              />
             </button>
             <button
               aria-label="Remove tag"
@@ -207,6 +219,9 @@ describe('TagsListInput', () => {
               >
                 Tag Name 2
               </p>
+              <span
+                class="h-[2px] w-[2px] bg-primary mx-1"
+              />
             </button>
             <button
               aria-label="Remove tag"
@@ -228,6 +243,9 @@ describe('TagsListInput', () => {
               >
                 Tag Name 3
               </p>
+              <span
+                class="h-[2px] w-[2px] bg-primary mx-1"
+              />
             </button>
             <button
               aria-label="Remove tag"
