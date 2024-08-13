@@ -1,6 +1,13 @@
 import React from 'react'
 
-import { Button, ButtonVariant, MonetaryValue, Text } from '@0xintuition/1ui'
+import {
+  Button,
+  ButtonVariant,
+  Icon,
+  IconName,
+  MonetaryValue,
+  Text,
+} from '@0xintuition/1ui'
 
 import { Link } from '@remix-run/react'
 
@@ -78,7 +85,8 @@ export function OverviewStakingHeader({
               variant={ButtonVariant.secondary}
               className="w-full md:w-max"
             >
-              View all positions
+              <Icon name={IconName.ethereum} className="h-4 w-4" /> View all
+              positions
             </Button>
           </Link>
         </div>

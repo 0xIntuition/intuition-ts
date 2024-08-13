@@ -171,6 +171,7 @@ export function TagsForm({
                         variant="primary"
                         disabled={selectedTags.length === 0}
                         onClick={() => dispatch({ type: 'REVIEW_TRANSACTION' })}
+                        className="w-40"
                       >
                         Add Tags
                       </Button>

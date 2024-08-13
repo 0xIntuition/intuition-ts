@@ -45,8 +45,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
     },
   })
 
-  console.log('userObject', userObject)
-
   if (!userObject) {
     console.log('No user found in DB')
     return json({ wallet })
@@ -187,7 +185,7 @@ export default function InviteRoute() {
             <>
               <div className="flex-col justify-start items-start flex">
                 <div className="self-stretch text-white text-3xl font-semibold">
-                  Enter your invide code
+                  Enter your invite code
                 </div>
               </div>
               <inviteCodeFetcher.Form

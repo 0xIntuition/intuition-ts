@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Button, ButtonVariant, Text } from '@0xintuition/1ui'
+import { Button, ButtonVariant, Icon, IconName, Text } from '@0xintuition/1ui'
 
 import { Link } from '@remix-run/react'
 
@@ -50,6 +50,12 @@ export function OverviewCreatedHeader({
         <div className="flex flex-col items-end justify-end ml-auto">
           <Link to={link} prefetch="intent">
             <Button variant={ButtonVariant.secondary} className="w-max mb-1">
+              <Icon
+                name={
+                  variant === 'claims' ? IconName.claim : IconName.fingerprint
+                }
+                className="h-4 w-4"
+              />{' '}
               View All {variant === 'claims' ? 'Claims' : 'Identities'}
             </Button>
           </Link>

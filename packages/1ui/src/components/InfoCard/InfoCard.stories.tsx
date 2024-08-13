@@ -1,5 +1,3 @@
-import React from 'react'
-
 import type { Meta, StoryObj } from '@storybook/react'
 import { Identity } from 'types'
 
@@ -31,6 +29,10 @@ export const BasicUsage: Story = {
     username: 'super dave',
     avatarImgSrc:
       'https://m.media-amazon.com/images/M/MV5BNDhiMWYzMjgtNTRiYi00ZTA3LThlODctNDRkMDk0NzFkMWI3L2ltYWdlL2ltYWdlXkEyXkFqcGdeQXVyNTg0MTkzMzA@._V1_.jpg',
+    id: 'id',
+    description: 'description',
+    link: 'link',
+    ipfsLink: 'ipfsLink',
     timestamp: '2024-05-10T00:00:00Z',
   },
   render: (args) => <InfoCard {...args} />,
