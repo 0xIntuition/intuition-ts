@@ -4,7 +4,7 @@ import { Button, cn } from '@0xintuition/1ui'
 
 import { saveListModalAtom } from '@lib/state/store'
 import { getChainEnvConfig } from '@lib/utils/environment'
-import { useNavigation } from '@remix-run/react'
+import { useNavigate, useNavigation } from '@remix-run/react'
 import { CURRENT_ENV } from 'app/consts'
 import {
   TransactionActionType,
@@ -19,6 +19,7 @@ interface UnsaveButtonProps {
   handleClose: () => void
   dispatch: (action: TransactionActionType) => void
   state: TransactionStateType
+  id: string
   user_conviction: string
   className?: string
 }
@@ -29,6 +30,7 @@ const UnsaveButton: React.FC<UnsaveButtonProps> = ({
   handleClose,
   dispatch,
   state,
+  id,
   user_conviction,
   className,
 }) => {
@@ -64,6 +66,7 @@ const UnsaveButton: React.FC<UnsaveButtonProps> = ({
 
   const setSaveListModalActive = useSetAtom(saveListModalAtom)
 
+  const navigate = useNavigate()
   const navigation = useNavigation()
   const [navigationStarted, setNavigationStarted] = useState(false)
 
@@ -78,6 +81,7 @@ const UnsaveButton: React.FC<UnsaveButtonProps> = ({
       setSaveListModalActive({
         isOpen: false,
         id: null,
+        tag: null,
       })
       setNavigationStarted(false)
     }
@@ -93,6 +97,7 @@ const UnsaveButton: React.FC<UnsaveButtonProps> = ({
           state.status === 'transaction-confirmed'
         ) {
           handleClose()
+          navigate(`/apps/identity/${id}`)
         } else if (state.status === 'review-transaction') {
           handleAction()
         } else if (chain?.id !== getChainEnvConfig(CURRENT_ENV).chainId) {

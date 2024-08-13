@@ -69,12 +69,8 @@ const TagWithValue = ({
   const TagContent = (
     <>
       <Trunctacular value={label ? label : ''} maxStringLength={24} />
-      {value && (
-        <>
-          <span className="h-[2px] w-[2px] bg-primary mx-1" />
-          {value}
-        </>
-      )}
+      <span className="h-[2px] w-[2px] bg-primary mx-1" />
+      {value}
       {onRemove && (
         <button
           onClick={(e) => {

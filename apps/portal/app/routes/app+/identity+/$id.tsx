@@ -138,7 +138,7 @@ export default function IdentityDetails() {
               <TagWithValue
                 key={tag.identity_id}
                 label={tag.display_name}
-                value={tag.num_positions}
+                value={tag.num_tagged_identities}
                 onStake={() => {
                   setSelectedTag(tag)
                   setSaveListModalActive({ isOpen: true, id: tag.vault_id })

@@ -2,10 +2,10 @@ import { useEffect, useState } from 'react'
 
 import { Button, cn } from '@0xintuition/1ui'
 
-import { stakeModalAtom } from '@lib/state/store'
+import { saveListModalAtom } from '@lib/state/store'
 import { getChainEnvConfig } from '@lib/utils/environment'
 import { formatBalance } from '@lib/utils/misc'
-import { useNavigation } from '@remix-run/react'
+import { useNavigate, useNavigation } from '@remix-run/react'
 import { CURRENT_ENV } from 'app/consts'
 import {
   TransactionActionType,
@@ -22,6 +22,7 @@ interface SaveButtonProps {
   handleClose: () => void
   dispatch: (action: TransactionActionType) => void
   state: TransactionStateType
+  id: string
   min_deposit: string
   walletBalance: string
   conviction_price: string
@@ -38,6 +39,7 @@ const SaveButton: React.FC<SaveButtonProps> = ({
   handleClose,
   dispatch,
   state,
+  id,
   min_deposit,
   walletBalance,
   conviction_price,
@@ -80,8 +82,9 @@ const SaveButton: React.FC<SaveButtonProps> = ({
     return `${user_assets > '0' ? 'Increase Stake' : 'Save'}`
   }
 
-  const setStakeModalActive = useSetAtom(stakeModalAtom)
+  const setSaveListModalActive = useSetAtom(saveListModalAtom)
 
+  const navigate = useNavigate()
   const navigation = useNavigation()
   const [navigationStarted, setNavigationStarted] = useState(false)
 
@@ -93,9 +96,10 @@ const SaveButton: React.FC<SaveButtonProps> = ({
 
   useEffect(() => {
     if (navigation.state === 'idle' && navigationStarted) {
-      setStakeModalActive({
+      setSaveListModalActive({
         isOpen: false,
         id: null,
+        tag: null,
       })
       setNavigationStarted(false)
     }
@@ -111,6 +115,7 @@ const SaveButton: React.FC<SaveButtonProps> = ({
           state.status === 'transaction-confirmed'
         ) {
           handleClose()
+          navigate(`/apps/identity/${id}`)
         } else if (state.status === 'review-transaction') {
           handleAction()
         } else if (chain?.id !== getChainEnvConfig(CURRENT_ENV).chainId) {
