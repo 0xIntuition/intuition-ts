@@ -46,7 +46,7 @@ export const ListIdentityCardPortal: React.FC<ListIdentityCardPortalProps> = ({
               variant={TextVariant.bodyLarge}
               weight={TextWeight.medium}
               className="text-primary/80"
-              maxStringLength={20}
+              maxStringLength={40}
             />
           </Link>
         ) : (
@@ -55,7 +55,7 @@ export const ListIdentityCardPortal: React.FC<ListIdentityCardPortalProps> = ({
             variant={TextVariant.bodyLarge}
             weight={TextWeight.medium}
             className="text-primary/80"
-            maxStringLength={20}
+            maxStringLength={40}
           />
         )}
         <Text variant={TextVariant.body} className="text-secondary/50">
