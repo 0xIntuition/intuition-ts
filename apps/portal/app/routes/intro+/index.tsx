@@ -43,13 +43,11 @@ export default function IntroRoute() {
   const SLIDES = [
     {
       video: '',
-      title: 'A New Internet.',
+      title: 'Welcome to the Intuition Beta',
       text: (
         <>
-          At Intuition, we believe we can do things differently. We refuse to
-          accept the status quo.
-          <br />
-          The ways of today will not be the ways of tomorrow.
+          A single moment of frustration has the power to change the world
+          forever.
         </>
       ),
       button: (
@@ -63,14 +61,16 @@ export default function IntroRoute() {
     },
     {
       video: '',
-      title: 'True Interoperability.',
+      title: 'The Information Economy',
       text: (
         <>
-          Our vision for the future of digital experience is decentralized and
-          agent-centric.
+          The ideas we have and decisions we make are only as good as the data
+          we consume.
           <br />
-          A communal, interoperable bazaar. A democratized commons for
-          coordination.
+          Intuition is an attempt to change the way we interact with data by
+          harnessing the collective power of the wisdom of the crowds,
+          introducing the concept of ‘information markets’ to disrupt the
+          current data paradigm.
           <br />
         </>
       ),
@@ -88,14 +88,14 @@ export default function IntroRoute() {
     },
     {
       video: '',
-      title: 'A Novel Set of Primitives.',
+      title: 'The Trustful Interaction Layer',
       text: (
         <>
-          To achieve this vision, Intuition introduces a new set of digital
-          primitives, enabled by blockchain technology.
+          With your help, we will usher in a new era of digital interaction.
           <br />
-          These primitives facilitate the discrete capturing, structuring,
-          referenceability of information.
+          One where you have the data you need, when you need it, from the
+          voices you trust - <br />
+          bringing more trust to all of our interactions.
           <br />
         </>
       ),
@@ -113,13 +113,15 @@ export default function IntroRoute() {
     },
     {
       video: '',
-      title: 'Reimagining the way we D.R.E.A.M.',
+      title: 'A Novel Set of Primitives',
       text: (
         <>
-          This functionality unlocks new possibilities for the way Data can be
-          Refined, Expressed, And Monetized - <br />
-          allowing value to more easily flow to the edges of the system: to you,
-          the user.
+          To achieve this vision, Intuition introduces Atoms, Triples, and
+          Signal -
+          <br /> a new set of primitives recently made possible by Ethereum.
+          <br />
+          These primitives facilitate the discrete capturing, structuring, and
+          referenceability of information.
           <br />
         </>
       ),
@@ -137,15 +139,17 @@ export default function IntroRoute() {
     },
     {
       video: '',
-      title: 'A Trustful Interaction Layer.',
+      title: 'The Portal',
       text: (
         <>
-          The Intuition System helps to make the layers of the decentralized web
-          that cannot yet be made trustless, trustful.
+          This application, The Portal, is merely an Explorer (akin to
+          Etherscan) for the Intuition ecosystem.
           <br />
-          We hope to bring more trust to all of your interactions, to help you
-          better decision-make in your everyday life.
+          At its core, Intuition is developer tooling & a platform of platforms,
+          powered by the Intuition Protocol and associated middleware.
           <br />
+          We hope this is just the beginning of your journey into the Intuition
+          ecosystem.
         </>
       ),
       button: (
@@ -162,39 +166,17 @@ export default function IntroRoute() {
     },
     {
       video: '',
-      title: 'The Portal',
+      title: 'What Comes Next?',
       text: (
         <>
-          The Portal is the initial explorer for the Intuition ecosystem, and a
-          place to gain familiarity with the primitives.
+          Intuition asks a simple question: ‘what if we reimagine the way that
+          value flows through data?’
           <br />
-          We hope The Portal will be merely the first step in your exploration
-          of the Intuition ecosystem.
+          With your participation, we can decouple identities, data, and
+          algorithms from platforms,
           <br />
-        </>
-      ),
-      button: (
-        <Link
-          to="https://docs.intuition.systems/learn-more/faq"
-          target="_blank"
-        >
-          <SlideButton>
-            Learn more{' '}
-            <Icon name="square-arrow-top-right" className="h-4 w-4" />
-          </SlideButton>
-        </Link>
-      ),
-    },
-    {
-      video: '',
-      title: 'Welcome Aboard.',
-      text: (
-        <>
-          Thank you for being here early.
-          <br />
-          We are extremely grateful for the opportunity to build and grow
-          alongside you in this attempt to change the world.
-          <br />
+          disintermediate trillions in value, and flow this value back to you -
+          the user.
         </>
       ),
       button: (
