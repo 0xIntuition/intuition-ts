@@ -10,7 +10,8 @@ import {
 import AddIdentitiesListModal from '@components/list/add-identities-list-modal'
 import { ListIdentityDisplayCard } from '@components/list/list-identity-display-card'
 import NavigationButton from '@components/navigation-link'
-import { addIdentitiesListModalAtom } from '@lib/state/store'
+import ImageModal from '@components/profile/image-modal'
+import { addIdentitiesListModalAtom, imageModalAtom } from '@lib/state/store'
 import { invariant } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import {
@@ -60,6 +61,7 @@ export default function ListDetails() {
 
   const [addIdentitiesListModalActive, setAddIdentitiesListModalActive] =
     useAtom(addIdentitiesListModalAtom)
+  const [imageModalActive, setImageModalActive] = useAtom(imageModalAtom)
   const navigate = useNavigate()
   const location = useLocation()
   const [fromUrl, setFromUrl] = useState<string | number>(-1)
@@ -92,6 +94,14 @@ export default function ListDetails() {
             ? `${BLOCK_EXPLORER_URL}/address/${claim.object?.identity_id}`
             : `${IPFS_GATEWAY_URL}/${claim.object?.identity_id?.replace('ipfs://', '')}`
         }
+        onAvatarClick={() => {
+          if (claim.object) {
+            setImageModalActive({
+              isOpen: true,
+              identity: claim.object,
+            })
+          }
+        }}
       />
       <ListIdentityDisplayCard
         displayName={claim.object?.display_name ?? ''}
@@ -142,6 +152,18 @@ export default function ListDetails() {
           })
         }
       />
+      {claim.object && (
+        <ImageModal
+          identity={claim.object}
+          open={imageModalActive.isOpen}
+          onClose={() =>
+            setImageModalActive({
+              ...imageModalActive,
+              isOpen: false,
+            })
+          }
+        />
+      )}
     </>
   )
 }
