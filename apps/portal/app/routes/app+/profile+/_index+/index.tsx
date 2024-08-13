@@ -113,7 +113,7 @@ export default function UserProfileOverview() {
       >
         About
       </Text>
-      <div className="flex flex-row items-center gap-6 max-lg:flex-col">
+      <div className="flex flex-row items-center gap-6 max-2xl:flex-col">
         <OverviewAboutHeader
           variant="claims"
           userIdentity={userIdentity}
