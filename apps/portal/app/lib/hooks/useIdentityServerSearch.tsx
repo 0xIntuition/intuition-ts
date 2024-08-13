@@ -46,7 +46,6 @@ export function useIdentityServerSearch() {
         `${SEARCH_IDENTITIES_RESOURCE_ROUTE}${searchParam}`,
       )
     } else {
-      // Fetch default list when search query is empty
       const defaultParams = new URLSearchParams({
         page: '1',
         limit: '20',
@@ -58,6 +57,8 @@ export function useIdentityServerSearch() {
       )
     }
   }, [
+    // omits the fetcher from the exhaustive deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     searchQuery,
     SEARCH_IDENTITIES_RESOURCE_ROUTE,
     GET_IDENTITIES_RESOURCE_ROUTE,
