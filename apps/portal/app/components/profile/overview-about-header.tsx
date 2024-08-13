@@ -3,6 +3,8 @@ import React from 'react'
 import {
   Button,
   ButtonVariant,
+  Icon,
+  IconName,
   IdentityTag,
   MonetaryValue,
   Text,
@@ -92,6 +94,10 @@ export function OverviewAboutHeader({
         <div className="flex flex-col items-end justify-end ml-auto max-sm:w-full max-sm:items-center">
           <Link to={link} prefetch="intent">
             <Button variant={ButtonVariant.secondary} className="w-max mb-1">
+              <Icon
+                name={variant === 'claims' ? IconName.claim : IconName.ethereum}
+                className="h-4 w-4"
+              />{' '}
               View All {variant === 'claims' ? 'Claims' : 'Positions'}
             </Button>
           </Link>

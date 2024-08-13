@@ -1,5 +1,7 @@
 import {
   Button,
+  Icon,
+  IconName,
   PositionCard,
   PositionCardLastUpdated,
   PositionCardOwnership,
@@ -194,9 +196,18 @@ export default function Profile() {
           }
         >
           {followVaultDetails &&
-          (followVaultDetails.user_conviction ?? '0') > '0'
-            ? `Following · ${formatBalance(followVaultDetails.user_assets ?? '0', 18, 4)} ETH`
-            : 'Follow'}
+          (followVaultDetails.user_conviction ?? '0') > '0' ? (
+            <>
+              <Icon name={IconName.peopleAddFilled} className="h-4 w-4" />
+              Following ·{' '}
+              {formatBalance(followVaultDetails.user_assets ?? '0', 18, 4)} ETH
+            </>
+          ) : (
+            <>
+              <Icon name={IconName.peopleAdd} className="h-4 w-4" />
+              Follow
+            </>
+          )}
         </Button>
       </ProfileCard>
       {/* TODO: Determine whether we need this or not */}

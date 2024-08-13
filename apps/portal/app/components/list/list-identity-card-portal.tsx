@@ -62,9 +62,9 @@ export const ListIdentityCardPortal: React.FC<ListIdentityCardPortalProps> = ({
           {identitiesCount} identities
         </Text>
       </div>
-      <Button variant="secondary" className="mt-4 w-full" onClick={onViewClick}>
+      <Button variant="secondary" className="mt-4" onClick={onViewClick}>
         View List
-        <Icon name="arrow-up-right" className="w-3 h-3 text-primary mr-2" />
+        <Icon name="arrow-up-right" className="w-3 h-3 text-primary" />
       </Button>
     </div>
   )

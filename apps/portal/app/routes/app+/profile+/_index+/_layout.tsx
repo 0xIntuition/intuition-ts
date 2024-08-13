@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react'
 
 import {
   Button,
+  Icon,
+  IconName,
   PositionCard,
   PositionCardLastUpdated,
   PositionCardOwnership,
@@ -201,7 +203,8 @@ export default function Profile() {
           className="w-full"
           onClick={() => setEditProfileModalActive(true)}
         >
-          Edit Profile
+          <Icon name={IconName.avatarSparkle} className="h-4 w-4" /> Edit
+          Profile
         </Button>
       </ProfileCard>
       <ProfileSocialAccounts
