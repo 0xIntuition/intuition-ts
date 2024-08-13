@@ -188,7 +188,6 @@ export default function StakeModal({
         logger('error', error)
         setLoading(false)
         if (error instanceof Error) {
-          logger('error', error)
           let errorMessage = 'Failed transaction'
           if (error.message.includes('insufficient')) {
             errorMessage = 'Insufficient funds'
