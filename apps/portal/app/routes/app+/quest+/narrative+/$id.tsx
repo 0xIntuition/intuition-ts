@@ -118,7 +118,7 @@ export default function Quests() {
         <img
           src={STANDARD_QUEST_SET.imgSrc}
           alt={STANDARD_QUEST_SET.title}
-          className="object-cover object-bottom w-full h-[350px] theme-border rounded-lg max-md:h-[250px]"
+          className="object-cover object-center w-full h-[350px] theme-border rounded-lg max-md:h-[250px]"
         />
         <div className="flex flex-col gap-5 max-md:gap-3">
           <Link to="/app/quest">
