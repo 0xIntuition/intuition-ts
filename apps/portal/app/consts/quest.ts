@@ -1,4 +1,4 @@
-import tutorialIslandOverview from '@assets/0-tutorial-island-overview.gif'
+import tutorialIslandOverview from '@assets/0-tutorial-island-overview.webp'
 import comingSoonImage from '@assets/coming-soon-image.png'
 import { QuestSet } from 'app/types/quest'
 
