@@ -42,7 +42,12 @@ import { Outlet, useNavigate } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
 import { requireUser, requireUserWallet } from '@server/auth'
 import { getVaultDetails } from '@server/multivault'
-import { IPFS_GATEWAY_URL, NO_WALLET_ERROR, PATHS } from 'app/consts'
+import {
+  IPFS_GATEWAY_URL,
+  MULTIVAULT_CONTRACT_ADDRESS,
+  NO_WALLET_ERROR,
+  PATHS,
+} from 'app/consts'
 import TwoPanelLayout from 'app/layouts/two-panel-layout'
 import { ExtendedIdentityPresenter } from 'app/types/identity'
 import { VaultDetailsType } from 'app/types/vault'
@@ -252,6 +257,7 @@ export default function IdentityDetails() {
       />
       {selectedTag && (
         <SaveListModal
+          contract={identity.contract ?? MULTIVAULT_CONTRACT_ADDRESS}
           tag={saveListModalActive.tag ?? selectedTag}
           identity={identity}
           userWallet={userWallet}

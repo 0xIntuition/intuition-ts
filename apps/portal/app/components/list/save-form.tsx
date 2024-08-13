@@ -110,7 +110,10 @@ export default function SaveForm({
                   imgSrc={getAtomImage(identity)}
                   variant={Identity.nonUser}
                 >
-                  <Trunctacular value={getAtomLabel(identity)} />
+                  <Trunctacular
+                    value={getAtomLabel(identity)}
+                    maxStringLength={18}
+                  />
                 </IdentityTag>
               </div>
               <div className="flex flex-col gap-1">

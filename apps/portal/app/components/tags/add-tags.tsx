@@ -154,6 +154,7 @@ export function AddTags({
       </div>
       {selectedInvalidTag && (
         <SaveListModal
+          contract={identity.contract}
           tag={selectedInvalidTag}
           identity={identity}
           userWallet={userWallet}

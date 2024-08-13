@@ -19,6 +19,7 @@ import {
   getAtomLabel,
   getAtomLink,
 } from '@lib/utils/misc'
+import { MULTIVAULT_CONTRACT_ADDRESS } from 'app/consts'
 import { PaginationType } from 'app/types/pagination'
 import { useAtom } from 'jotai'
 
@@ -99,6 +100,7 @@ export function TagsList({
         ))}
       </List>
       <SaveListModal
+        contract={claim.object?.contract ?? MULTIVAULT_CONTRACT_ADDRESS}
         identity={saveListModalActive.identity as IdentityPresenter}
         tag={claim.object as IdentityPresenter}
         userWallet={wallet}

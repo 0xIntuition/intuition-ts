@@ -207,6 +207,7 @@ export function AddIdentities({
       </div>
       {selectedInvalidIdentity && (
         <SaveListModal
+          contract={identity.contract}
           tag={identity}
           identity={selectedInvalidIdentity}
           userWallet={userWallet}
