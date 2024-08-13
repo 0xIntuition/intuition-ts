@@ -31,7 +31,7 @@ import { defer, LoaderFunctionArgs } from '@remix-run/node'
 import { Await } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
-import { NO_WALLET_ERROR } from 'app/consts'
+import { FEATURED_LIST_OBJECT_IDS, NO_WALLET_ERROR } from 'app/consts'
 import FullPageLayout from 'app/layouts/full-page-layout'
 import { PaginationType } from 'app/types'
 
@@ -66,16 +66,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
         sortBy: 'AssetsSum',
       },
     }),
-    // featuredLists: fetchWrapper(request, {
-    //   method: ClaimsService.searchClaims,
-    //   args: {
-    //     limit: 5,
-    //     sortBy: ClaimSortColumn.CREATED_AT,
-    //     direction: SortDirection.DESC,
-    //     predicate: TAG_PREDICATE_VAULT_ID_TESTNET,
-    //   },
-    // }),
-    featuredLists: getFeaturedLists({ request }),
+
+    featuredLists: getFeaturedLists({
+      request,
+      listIds: FEATURED_LIST_OBJECT_IDS,
+    }),
     activity: getActivity({ request, searchParams: activitySearchParams }),
   })
 }

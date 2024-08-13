@@ -13,7 +13,6 @@ import { calculateTotalPages } from '@lib/utils/misc'
 import { getStandardPageParams } from '@lib/utils/params'
 import { fetchWrapper } from '@server/api'
 import {
-  FEATURED_LIST_OBJECT_IDS,
   TAG_PREDICATE_DISPLAY_NAME_TESTNET,
   TAG_PREDICATE_ID_TESTNET,
   TAG_PREDICATE_VAULT_ID_TESTNET,
@@ -180,7 +179,13 @@ export async function getListIdentitiesCount({
   return listIdentities.total
 }
 
-export async function getFeaturedLists({ request }: { request: Request }) {
+export async function getFeaturedLists({
+  request,
+  listIds,
+}: {
+  request: Request
+  listIds: number[]
+}) {
   const commonArgs = {
     limit: 1,
     sortBy: ClaimSortColumn.CREATED_AT,
@@ -189,7 +194,7 @@ export async function getFeaturedLists({ request }: { request: Request }) {
   }
 
   const featuredListsResults = await Promise.all(
-    FEATURED_LIST_OBJECT_IDS.map((id) =>
+    listIds.map((id) =>
       fetchWrapper(request, {
         method: ClaimsService.searchClaims,
         args: {
@@ -200,7 +205,6 @@ export async function getFeaturedLists({ request }: { request: Request }) {
     ),
   )
 
-  logger('featuredListsResults', featuredListsResults)
   const featuredLists = featuredListsResults
     .flatMap((result) => result.data)
     .filter(Boolean) as ClaimPresenter[]
