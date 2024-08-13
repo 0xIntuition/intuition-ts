@@ -23,10 +23,12 @@ import {
 } from '@0xintuition/api'
 
 import SaveListModal from '@components/list/save-list-modal'
+import ImageModal from '@components/profile/image-modal'
 import StakeModal from '@components/stake/stake-modal'
 import TagsModal from '@components/tags/tags-modal'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import {
+  imageModalAtom,
   saveListModalAtom,
   stakeModalAtom,
   tagsModalAtom,
@@ -43,6 +45,7 @@ import { fetchWrapper } from '@server/api'
 import { requireUser, requireUserWallet } from '@server/auth'
 import { getVaultDetails } from '@server/multivault'
 import {
+  BLOCK_EXPLORER_URL,
   IPFS_GATEWAY_URL,
   MULTIVAULT_CONTRACT_ADDRESS,
   NO_WALLET_ERROR,
@@ -120,6 +123,7 @@ export default function IdentityDetails() {
   const [tagsModalActive, setTagsModalActive] = useAtom(tagsModalAtom)
   const [saveListModalActive, setSaveListModalActive] =
     useAtom(saveListModalAtom)
+  const [imageModalActive, setImageModalActive] = useAtom(imageModalAtom)
   const [selectedTag, setSelectedTag] = useState<TagEmbeddedPresenter>()
 
   useEffect(() => {
@@ -128,7 +132,6 @@ export default function IdentityDetails() {
     }
   }, [saveListModalActive])
 
-  console.log('saveListModalActive', saveListModalActive)
   const leftPanel = (
     <div className="flex-col justify-start items-start inline-flex gap-6 max-lg:w-full">
       <ProfileCard
@@ -140,7 +143,14 @@ export default function IdentityDetails() {
         bio={identity?.description ?? ''}
         ipfsLink={`${IPFS_GATEWAY_URL}/${identity?.identity_id?.replace('ipfs://', '')}`}
         externalLink={identity?.external_reference ?? ''}
+        onAvatarClick={() => {
+          setImageModalActive({
+            isOpen: true,
+            identity,
+          })
+        }}
       />
+
       <Tags className="max-lg:items-center">
         {identity?.tags && identity?.tags.length > 0 && (
           <TagsContent numberOfTags={identity?.tag_count ?? 0}>
@@ -213,14 +223,19 @@ export default function IdentityDetails() {
         }
       />
       <InfoCard
-        variant={identity.is_user ? Identity.user : Identity.nonUser}
+        variant={Identity.user}
         username={identity.creator?.display_name ?? ''}
         avatarImgSrc={identity.creator?.image ?? ''}
+        id={identity.creator?.wallet ?? ''}
+        description={identity.creator?.description ?? ''}
+        link={
+          identity.creator?.id
+            ? `${PATHS.PROFILE}/${identity.creator?.wallet}`
+            : ''
+        }
+        ipfsLink={`${BLOCK_EXPLORER_URL}/address/${identity.creator?.wallet}`}
         timestamp={identity.created_at}
-        onClick={() => {
-          navigate(`/app/profile/${identity.creator?.wallet}`)
-        }}
-        className="hover:cursor-pointer w-full"
+        className="w-full"
       />
     </div>
   )
@@ -270,6 +285,31 @@ export default function IdentityDetails() {
           }
         />
       )}
+      {selectedTag && (
+        <SaveListModal
+          contract={identity.contract ?? MULTIVAULT_CONTRACT_ADDRESS}
+          tag={saveListModalActive.tag ?? selectedTag}
+          identity={identity}
+          userWallet={userWallet}
+          open={saveListModalActive.isOpen}
+          onClose={() =>
+            setSaveListModalActive({
+              ...saveListModalActive,
+              isOpen: false,
+            })
+          }
+        />
+      )}
+      <ImageModal
+        identity={identity}
+        open={imageModalActive.isOpen}
+        onClose={() =>
+          setImageModalActive({
+            ...imageModalActive,
+            isOpen: false,
+          })
+        }
+      />
     </TwoPanelLayout>
   )
 }

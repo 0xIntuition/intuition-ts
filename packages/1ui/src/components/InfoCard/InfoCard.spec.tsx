@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { render } from '@testing-library/react'
 
 import { InfoCard } from './InfoCard'
@@ -11,6 +9,10 @@ describe('InfoCard', () => {
         variant="user"
         username="super dave"
         avatarImgSrc="image.jpg"
+        id="id"
+        description="description"
+        link="link"
+        ipfsLink="ipfsLink"
         timestamp="2024-05-10T16:00:00Z"
       />,
     )
@@ -27,30 +29,37 @@ describe('InfoCard', () => {
           <div
             class="flex justify-start items-center gap-1"
           >
-            <button
-              class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center rounded-full [&>span]:rounded-full [&>span]:overflow-hidden text-base [&>span]:h-6 [&>span]:w-6"
+            <a
+              data-state="closed"
+            />
+            <a
+              href="link"
             >
-              <span
-                class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square bg-background theme-border rounded-full"
+              <button
+                class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center rounded-full [&>span]:rounded-full [&>span]:overflow-hidden text-base [&>span]:h-6 [&>span]:w-6"
               >
                 <span
-                  class="flex h-full w-full items-center justify-center bg-inherit"
+                  class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square bg-background theme-border rounded-full"
                 >
-                  <svg
-                    class="text-primary/30 w-[80%] h-[80%] max-w-8 max-h-8"
+                  <span
+                    class="flex h-full w-full items-center justify-center bg-inherit"
                   >
-                    <use
-                      href="/src/components/Icon/Icon.sprites.svg#crypto-punk"
-                    />
-                  </svg>
+                    <svg
+                      class="text-primary/30 w-[80%] h-[80%] max-w-8 max-h-8"
+                    >
+                      <use
+                        href="/src/components/Icon/Icon.sprites.svg#crypto-punk"
+                      />
+                    </svg>
+                  </span>
                 </span>
-              </span>
-              <p
-                class="text-primary text-base font-normal"
-              >
-                super dave
-              </p>
-            </button>
+                <p
+                  class="text-primary text-base font-normal"
+                >
+                  super dave
+                </p>
+              </button>
+            </a>
             <span
               class="bg-muted-foreground h-[2px] w-[2px] block rounded-full"
             />

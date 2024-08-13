@@ -47,7 +47,7 @@ import {
 import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
 import { getVaultDetails } from '@server/multivault'
-import { NO_WALLET_ERROR, PATHS } from 'app/consts'
+import { BLOCK_EXPLORER_URL, NO_WALLET_ERROR, PATHS } from 'app/consts'
 import TwoPanelLayout from 'app/layouts/two-panel-layout'
 import { VaultDetailsType } from 'app/types/vault'
 import { useAtom } from 'jotai'
@@ -283,6 +283,12 @@ export default function ClaimDetails() {
         variant={Identity.user}
         username={claim.creator?.display_name ?? ''}
         avatarImgSrc={claim.creator?.image ?? ''}
+        id={claim.creator?.wallet ?? ''}
+        description={claim.creator?.description ?? ''}
+        link={
+          claim.creator?.id ? `${PATHS.PROFILE}/${claim.creator?.wallet}` : ''
+        }
+        ipfsLink={`${BLOCK_EXPLORER_URL}/address/${claim.creator?.wallet}`}
         timestamp={claim.created_at}
         onClick={() => {
           navigate(`/app/profile/${claim.creator?.wallet}`)
