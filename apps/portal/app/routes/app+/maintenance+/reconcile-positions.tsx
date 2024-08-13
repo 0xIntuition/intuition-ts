@@ -6,6 +6,7 @@ import {
   ButtonVariant,
   Input,
   Label,
+  Skeleton,
   Text,
   TextVariant,
 } from '@0xintuition/1ui'
@@ -39,14 +40,18 @@ export default function ReconcilePositions() {
   useEffect(() => {
     if (fetcher.data) {
       try {
-        const { totalPositions, results } =
+        const { totalPositions, results, progress } =
           typeof fetcher.data === 'string'
             ? JSON.parse(fetcher.data)
             : fetcher.data
         setTotalPositions(totalPositions)
-        setResults(results)
-        setProgress(100)
-        setStatus('Reconciliation complete')
+        setResults((prevResults) => [...prevResults, ...results])
+        setProgress(progress)
+        if (progress === 100) {
+          setStatus('Reconciliation complete')
+        } else {
+          setStatus('Reconciling positions...')
+        }
       } catch (error) {
         console.error('Error parsing fetcher data:', error)
         setStatus('Error processing results')
@@ -106,7 +111,7 @@ export default function ReconcilePositions() {
                 Select date and time to reconcile from:
               </Text>
               <div className="flex flex-row gap-4 items-center">
-                <Input
+                <input
                   type="datetime-local"
                   id="timestamp"
                   name="timestamp"
@@ -157,13 +162,25 @@ export default function ReconcilePositions() {
       </div>
       <div className="flex flex-col gap-6 mb-4">
         <Text variant={TextVariant.bodyLarge}>Status: {status}</Text>
-        <div className="w-full bg-muted rounded-full h-2.5 mt-2">
-          <div
-            className="bg-for h-2.5 rounded-full"
-            style={{ width: `${progress}%` }}
-          ></div>
+        {totalPositions > 0 && (
+          <Text variant={TextVariant.body}>
+            Total positions to reconcile: {totalPositions}
+          </Text>
+        )}
+        <div className="flex flex-row gap-2 w-full items-center">
+          <Text
+            variant={TextVariant.body}
+            className="whitespace-nowrap min-w-[100px]"
+          >
+            Progress: {progress}%
+          </Text>
+          <div className="w-full bg-muted rounded-full h-2.5 flex-grow">
+            <div
+              className="bg-for h-2.5 rounded-full"
+              style={{ width: `${progress}%` }}
+            ></div>
+          </div>
         </div>
-        <Text variant={TextVariant.bodyLarge}>Progress: {progress}%</Text>
         <Button
           variant={ButtonVariant.destructive}
           className="w-40"
@@ -172,11 +189,11 @@ export default function ReconcilePositions() {
           Cancel
         </Button>
       </div>
-      {results.length > 0 && (
+      {(results.length > 0 || progress > 0) && (
         <div>
           <Text variant={TextVariant.headline}>Results:</Text>
           <Text variant={TextVariant.body}>
-            Total positions: {totalPositions}
+            Positions reconciled: {results.length} / {totalPositions}
           </Text>
           <div className="mt-4 max-h-96 overflow-y-auto">
             <ul className="list-disc pl-5">
@@ -185,7 +202,7 @@ export default function ReconcilePositions() {
                   <Text
                     variant={TextVariant.body}
                     className={
-                      result.success ? 'text-success' : 'text-desctructive'
+                      result.success ? 'text-success' : 'text-destructive'
                     }
                   >
                     Position {result.id}:{' '}
@@ -193,6 +210,11 @@ export default function ReconcilePositions() {
                   </Text>
                 </li>
               ))}
+              {progress < 100 && (
+                <li>
+                  <Skeleton className="h-6 w-full" />
+                </li>
+              )}
             </ul>
           </div>
         </div>
