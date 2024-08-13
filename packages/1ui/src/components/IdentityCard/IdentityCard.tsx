@@ -1,9 +1,15 @@
 import * as React from 'react'
 
 import { Currency, CurrencyType, Identity, IdentityType } from 'types'
-import { formatWalletAddress } from 'utils'
 
-import { Avatar, Badge, BadgeVariant, Text, TextVariant } from '..'
+import {
+  Avatar,
+  Badge,
+  BadgeVariant,
+  Text,
+  TextVariant,
+  Trunctacular,
+} from '..'
 
 export interface IdentityCardProps
   extends React.HTMLAttributes<HTMLDivElement> {
@@ -34,9 +40,11 @@ const IdentityCard = ({
           </Text>
           <Badge variant={BadgeVariant.default}>{`${value} ${currency}`}</Badge>
         </div>
-        <Text variant={TextVariant.caption} className="text-muted-foreground">
-          {formatWalletAddress(walletAddress)}
-        </Text>
+        <Trunctacular
+          variant={TextVariant.caption}
+          value={walletAddress}
+          className="text-muted-foreground"
+        />
       </div>
     </div>
   )

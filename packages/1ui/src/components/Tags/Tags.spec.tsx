@@ -34,132 +34,212 @@ describe('Tags', () => {
             <button
               class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 text-base font-normal flex items-center cursor-default pl-2"
             >
-              <p
-                class="text-primary text-base font-normal"
+              <div
+                class="flex flex-row gap-2 items-center"
               >
-                keyboard
-              </p>
-              <span
-                class="h-[2px] w-[2px] bg-primary mx-1"
-              />
-              192
+                <p
+                  class="text-primary text-base font-normal"
+                >
+                  keyboard
+                </p>
+                <div
+                  class="flex flex-row gap-1.5 items-center"
+                >
+                  <span
+                    class="h-[2px] w-[2px] bg-primary"
+                  />
+                  192
+                </div>
+              </div>
             </button>
             <button
               class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 text-base font-normal flex items-center cursor-default pl-2"
             >
-              <p
-                class="text-primary text-base font-normal"
+              <div
+                class="flex flex-row gap-2 items-center"
               >
-                ergonomic
-              </p>
-              <span
-                class="h-[2px] w-[2px] bg-primary mx-1"
-              />
-              168
+                <p
+                  class="text-primary text-base font-normal"
+                >
+                  ergonomic
+                </p>
+                <div
+                  class="flex flex-row gap-1.5 items-center"
+                >
+                  <span
+                    class="h-[2px] w-[2px] bg-primary"
+                  />
+                  168
+                </div>
+              </div>
             </button>
             <button
               class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 text-base font-normal flex items-center cursor-default pl-2"
             >
-              <p
-                class="text-primary text-base font-normal"
+              <div
+                class="flex flex-row gap-2 items-center"
               >
-                wireless
-              </p>
-              <span
-                class="h-[2px] w-[2px] bg-primary mx-1"
-              />
-              143
+                <p
+                  class="text-primary text-base font-normal"
+                >
+                  wireless
+                </p>
+                <div
+                  class="flex flex-row gap-1.5 items-center"
+                >
+                  <span
+                    class="h-[2px] w-[2px] bg-primary"
+                  />
+                  143
+                </div>
+              </div>
             </button>
             <button
               class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 text-base font-normal flex items-center cursor-default pl-2"
             >
-              <p
-                class="text-primary text-base font-normal"
+              <div
+                class="flex flex-row gap-2 items-center"
               >
-                gaming
-              </p>
-              <span
-                class="h-[2px] w-[2px] bg-primary mx-1"
-              />
-              132
+                <p
+                  class="text-primary text-base font-normal"
+                >
+                  gaming
+                </p>
+                <div
+                  class="flex flex-row gap-1.5 items-center"
+                >
+                  <span
+                    class="h-[2px] w-[2px] bg-primary"
+                  />
+                  132
+                </div>
+              </div>
             </button>
             <button
               class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 text-base font-normal flex items-center cursor-default pl-2"
             >
-              <p
-                class="text-primary text-base font-normal"
+              <div
+                class="flex flex-row gap-2 items-center"
               >
-                mechanical
-              </p>
-              <span
-                class="h-[2px] w-[2px] bg-primary mx-1"
-              />
-              128
+                <p
+                  class="text-primary text-base font-normal"
+                >
+                  mechanical
+                </p>
+                <div
+                  class="flex flex-row gap-1.5 items-center"
+                >
+                  <span
+                    class="h-[2px] w-[2px] bg-primary"
+                  />
+                  128
+                </div>
+              </div>
             </button>
             <button
               class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 text-base font-normal flex items-center cursor-default pl-2"
             >
-              <p
-                class="text-primary text-base font-normal"
+              <div
+                class="flex flex-row gap-2 items-center"
               >
-                tech
-              </p>
-              <span
-                class="h-[2px] w-[2px] bg-primary mx-1"
-              />
-              122
+                <p
+                  class="text-primary text-base font-normal"
+                >
+                  tech
+                </p>
+                <div
+                  class="flex flex-row gap-1.5 items-center"
+                >
+                  <span
+                    class="h-[2px] w-[2px] bg-primary"
+                  />
+                  122
+                </div>
+              </div>
             </button>
             <button
               class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 text-base font-normal flex items-center cursor-default pl-2"
             >
-              <p
-                class="text-primary text-base font-normal"
+              <div
+                class="flex flex-row gap-2 items-center"
               >
-                innovation
-              </p>
-              <span
-                class="h-[2px] w-[2px] bg-primary mx-1"
-              />
-              118
+                <p
+                  class="text-primary text-base font-normal"
+                >
+                  innovation
+                </p>
+                <div
+                  class="flex flex-row gap-1.5 items-center"
+                >
+                  <span
+                    class="h-[2px] w-[2px] bg-primary"
+                  />
+                  118
+                </div>
+              </div>
             </button>
             <button
               class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 text-base font-normal flex items-center cursor-default pl-2"
             >
-              <p
-                class="text-primary text-base font-normal"
+              <div
+                class="flex flex-row gap-2 items-center"
               >
-                typing
-              </p>
-              <span
-                class="h-[2px] w-[2px] bg-primary mx-1"
-              />
-              111
+                <p
+                  class="text-primary text-base font-normal"
+                >
+                  typing
+                </p>
+                <div
+                  class="flex flex-row gap-1.5 items-center"
+                >
+                  <span
+                    class="h-[2px] w-[2px] bg-primary"
+                  />
+                  111
+                </div>
+              </div>
             </button>
             <button
               class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 text-base font-normal flex items-center cursor-default pl-2"
             >
-              <p
-                class="text-primary text-base font-normal"
+              <div
+                class="flex flex-row gap-2 items-center"
               >
-                quality
-              </p>
-              <span
-                class="h-[2px] w-[2px] bg-primary mx-1"
-              />
-              98
+                <p
+                  class="text-primary text-base font-normal"
+                >
+                  quality
+                </p>
+                <div
+                  class="flex flex-row gap-1.5 items-center"
+                >
+                  <span
+                    class="h-[2px] w-[2px] bg-primary"
+                  />
+                  98
+                </div>
+              </div>
             </button>
             <button
               class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 text-base font-normal flex items-center cursor-default pl-2"
             >
-              <p
-                class="text-primary text-base font-normal"
+              <div
+                class="flex flex-row gap-2 items-center"
               >
-                brand
-              </p>
-              <span
-                class="h-[2px] w-[2px] bg-primary mx-1"
-              />
-              94
+                <p
+                  class="text-primary text-base font-normal"
+                >
+                  brand
+                </p>
+                <div
+                  class="flex flex-row gap-1.5 items-center"
+                >
+                  <span
+                    class="h-[2px] w-[2px] bg-primary"
+                  />
+                  94
+                </div>
+              </div>
             </button>
             <p
               class="text-primary text-base font-normal"
@@ -205,132 +285,212 @@ describe('Tags', () => {
             <button
               class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 text-base font-normal flex items-center cursor-default pl-2"
             >
-              <p
-                class="text-primary text-base font-normal"
+              <div
+                class="flex flex-row gap-2 items-center"
               >
-                keyboard
-              </p>
-              <span
-                class="h-[2px] w-[2px] bg-primary mx-1"
-              />
-              192
+                <p
+                  class="text-primary text-base font-normal"
+                >
+                  keyboard
+                </p>
+                <div
+                  class="flex flex-row gap-1.5 items-center"
+                >
+                  <span
+                    class="h-[2px] w-[2px] bg-primary"
+                  />
+                  192
+                </div>
+              </div>
             </button>
             <button
               class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 text-base font-normal flex items-center cursor-default pl-2"
             >
-              <p
-                class="text-primary text-base font-normal"
+              <div
+                class="flex flex-row gap-2 items-center"
               >
-                ergonomic
-              </p>
-              <span
-                class="h-[2px] w-[2px] bg-primary mx-1"
-              />
-              168
+                <p
+                  class="text-primary text-base font-normal"
+                >
+                  ergonomic
+                </p>
+                <div
+                  class="flex flex-row gap-1.5 items-center"
+                >
+                  <span
+                    class="h-[2px] w-[2px] bg-primary"
+                  />
+                  168
+                </div>
+              </div>
             </button>
             <button
               class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 text-base font-normal flex items-center cursor-default pl-2"
             >
-              <p
-                class="text-primary text-base font-normal"
+              <div
+                class="flex flex-row gap-2 items-center"
               >
-                wireless
-              </p>
-              <span
-                class="h-[2px] w-[2px] bg-primary mx-1"
-              />
-              143
+                <p
+                  class="text-primary text-base font-normal"
+                >
+                  wireless
+                </p>
+                <div
+                  class="flex flex-row gap-1.5 items-center"
+                >
+                  <span
+                    class="h-[2px] w-[2px] bg-primary"
+                  />
+                  143
+                </div>
+              </div>
             </button>
             <button
               class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 text-base font-normal flex items-center cursor-default pl-2"
             >
-              <p
-                class="text-primary text-base font-normal"
+              <div
+                class="flex flex-row gap-2 items-center"
               >
-                gaming
-              </p>
-              <span
-                class="h-[2px] w-[2px] bg-primary mx-1"
-              />
-              132
+                <p
+                  class="text-primary text-base font-normal"
+                >
+                  gaming
+                </p>
+                <div
+                  class="flex flex-row gap-1.5 items-center"
+                >
+                  <span
+                    class="h-[2px] w-[2px] bg-primary"
+                  />
+                  132
+                </div>
+              </div>
             </button>
             <button
               class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 text-base font-normal flex items-center cursor-default pl-2"
             >
-              <p
-                class="text-primary text-base font-normal"
+              <div
+                class="flex flex-row gap-2 items-center"
               >
-                mechanical
-              </p>
-              <span
-                class="h-[2px] w-[2px] bg-primary mx-1"
-              />
-              128
+                <p
+                  class="text-primary text-base font-normal"
+                >
+                  mechanical
+                </p>
+                <div
+                  class="flex flex-row gap-1.5 items-center"
+                >
+                  <span
+                    class="h-[2px] w-[2px] bg-primary"
+                  />
+                  128
+                </div>
+              </div>
             </button>
             <button
               class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 text-base font-normal flex items-center cursor-default pl-2"
             >
-              <p
-                class="text-primary text-base font-normal"
+              <div
+                class="flex flex-row gap-2 items-center"
               >
-                tech
-              </p>
-              <span
-                class="h-[2px] w-[2px] bg-primary mx-1"
-              />
-              122
+                <p
+                  class="text-primary text-base font-normal"
+                >
+                  tech
+                </p>
+                <div
+                  class="flex flex-row gap-1.5 items-center"
+                >
+                  <span
+                    class="h-[2px] w-[2px] bg-primary"
+                  />
+                  122
+                </div>
+              </div>
             </button>
             <button
               class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 text-base font-normal flex items-center cursor-default pl-2"
             >
-              <p
-                class="text-primary text-base font-normal"
+              <div
+                class="flex flex-row gap-2 items-center"
               >
-                innovation
-              </p>
-              <span
-                class="h-[2px] w-[2px] bg-primary mx-1"
-              />
-              118
+                <p
+                  class="text-primary text-base font-normal"
+                >
+                  innovation
+                </p>
+                <div
+                  class="flex flex-row gap-1.5 items-center"
+                >
+                  <span
+                    class="h-[2px] w-[2px] bg-primary"
+                  />
+                  118
+                </div>
+              </div>
             </button>
             <button
               class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 text-base font-normal flex items-center cursor-default pl-2"
             >
-              <p
-                class="text-primary text-base font-normal"
+              <div
+                class="flex flex-row gap-2 items-center"
               >
-                typing
-              </p>
-              <span
-                class="h-[2px] w-[2px] bg-primary mx-1"
-              />
-              111
+                <p
+                  class="text-primary text-base font-normal"
+                >
+                  typing
+                </p>
+                <div
+                  class="flex flex-row gap-1.5 items-center"
+                >
+                  <span
+                    class="h-[2px] w-[2px] bg-primary"
+                  />
+                  111
+                </div>
+              </div>
             </button>
             <button
               class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 text-base font-normal flex items-center cursor-default pl-2"
             >
-              <p
-                class="text-primary text-base font-normal"
+              <div
+                class="flex flex-row gap-2 items-center"
               >
-                quality
-              </p>
-              <span
-                class="h-[2px] w-[2px] bg-primary mx-1"
-              />
-              98
+                <p
+                  class="text-primary text-base font-normal"
+                >
+                  quality
+                </p>
+                <div
+                  class="flex flex-row gap-1.5 items-center"
+                >
+                  <span
+                    class="h-[2px] w-[2px] bg-primary"
+                  />
+                  98
+                </div>
+              </div>
             </button>
             <button
               class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60 text-base font-normal flex items-center cursor-default pl-2"
             >
-              <p
-                class="text-primary text-base font-normal"
+              <div
+                class="flex flex-row gap-2 items-center"
               >
-                brand
-              </p>
-              <span
-                class="h-[2px] w-[2px] bg-primary mx-1"
-              />
-              94
+                <p
+                  class="text-primary text-base font-normal"
+                >
+                  brand
+                </p>
+                <div
+                  class="flex flex-row gap-1.5 items-center"
+                >
+                  <span
+                    class="h-[2px] w-[2px] bg-primary"
+                  />
+                  94
+                </div>
+              </div>
             </button>
           </div>
           <button

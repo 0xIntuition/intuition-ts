@@ -99,7 +99,7 @@ export default function FollowForm({
                 />
                 <div className="w-4 h-4 relative" />
               </div>
-              <Text variant="small" className="text-neutral-50/50">
+              <Text variant="caption" className="text-neutral-50/50">
                 Create or strengthen your connection.
               </Text>
             </div>

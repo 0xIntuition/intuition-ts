@@ -383,3 +383,13 @@ export const getAtomLink = (atom: IdentityPresenter | null | undefined) => {
   }
   return `${PATHS.IDENTITY}/${atom.id}`
 }
+
+export const getAtomId = (atom: IdentityPresenter) => {
+  if (!atom) {
+    return ''
+  }
+  if (atom.is_user === true) {
+    return atom.user?.ens_name ?? atom.user?.wallet
+  }
+  return atom.identity_id
+}
