@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 import {
   Button,
@@ -32,10 +32,13 @@ export default function PrivyButton({
 }) {
   const { ready, authenticated, logout, user: privyUser } = usePrivy()
 
+  const [isAccountMenuOpen, setIsAccountMenuOpen] = useState(false)
+
   const navigate = useNavigate()
   const { disconnect } = useDisconnect()
 
   async function handleSignout() {
+    setIsAccountMenuOpen(false)
     await logout()
     disconnect()
     onLogout?.()
@@ -48,7 +51,10 @@ export default function PrivyButton({
   if (ready && authenticated && privyUser !== null) {
     return (
       <>
-        <DropdownMenu>
+        <DropdownMenu
+          open={isAccountMenuOpen}
+          onOpenChange={setIsAccountMenuOpen}
+        >
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="border-none p-0 max-sm:p-0">
               {triggerComponent}
@@ -88,6 +94,7 @@ export default function PrivyButton({
               variant={ButtonVariant.text}
               size={ButtonSize.lg}
               onClick={() => {
+                setIsAccountMenuOpen(false)
                 navigate(PATHS.PROFILE)
               }}
             >

@@ -1,5 +1,9 @@
+import { useState } from 'react'
+
 import { Dialog, DialogContent } from '@0xintuition/1ui'
 import { IdentityPresenter } from '@0xintuition/api'
+
+import AlertDialog from '@components/alert-dialog'
 
 import { IdentityForm } from './create-identity-form'
 
@@ -16,23 +20,40 @@ export default function CreateIdentityModal({
   onSuccess,
   successAction = 'view',
 }: CreateIdentityModalProps) {
+  const [showAlertDialog, setShowAlertDialog] = useState(false)
+  const [isTransactionComplete, setIsTransactionComplete] = useState(false)
+
+  const handleCloseAttempt = () => {
+    if (isTransactionComplete) {
+      onClose()
+    } else {
+      setShowAlertDialog(true)
+    }
+  }
+
   return (
-    <Dialog
-      open={open}
-      onOpenChange={() => {
-        onClose?.()
-      }}
-    >
-      <DialogContent
-        onOpenAutoFocus={(event) => event.preventDefault()} // prevent tooltip from being auto-launched
-        className="flex flex-col max-sm:min-w-0"
-      >
-        <IdentityForm
-          onClose={onClose}
-          onSuccess={onSuccess}
-          successAction={successAction}
-        />
-      </DialogContent>
-    </Dialog>
+    <>
+      <Dialog open={open} onOpenChange={handleCloseAttempt}>
+        <DialogContent
+          onOpenAutoFocus={(event) => event.preventDefault()}
+          className="flex flex-col h-[780px] max-sm:min-w-0"
+        >
+          <IdentityForm
+            onClose={onClose}
+            onSuccess={(identity) => {
+              setIsTransactionComplete(true)
+              onSuccess?.(identity)
+            }}
+            successAction={successAction}
+          />
+        </DialogContent>
+      </Dialog>
+      <AlertDialog
+        open={showAlertDialog}
+        onOpenChange={setShowAlertDialog}
+        setShowAlertDialog={setShowAlertDialog}
+        onClose={onClose}
+      />
+    </>
   )
 }
