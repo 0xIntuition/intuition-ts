@@ -1,0 +1,106 @@
+name: Deploy Portal to Production
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy-production:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    env:
+      ENV: production
+      CLUSTER_NAME: systems-intuition-${{ env.ENV }}-cluster
+      SERVICE_NAME: portal-intuition-${{ env.ENV }}
+      ECR_IMAGE: ${{ secrets.AWS_ACCOUNT }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/portal-${{ env.ENV }}:latest
+
+    steps:
+      - name: Check if important variables are set
+        shell: bash
+        run: |
+          if [[ ${{ secrets.AWS_ACCESS_KEY_ID }} == '' ]]; then
+            echo "secret AWS_ACCESS_KEY_ID not set"
+            exit 1
+          fi
+          if [[ ${{ secrets.AWS_SECRET_ACCESS_KEY }} == '' ]]; then
+            echo "secret AWS_SECRET_ACCESS_KEY not set"
+            exit 1
+          fi
+          if [[ ${{ secrets.AWS_ACCOUNT }} == '' ]]; then
+            echo "secret AWS_ACCOUNT not set"
+            exit 1
+          fi
+
+      - name: Print variables
+        shell: bash
+        run: |
+          echo "ENV=$ENV"
+          echo "CLUSTER_NAME=$CLUSTER_NAME"
+          echo "SERVICE_NAME=$SERVICE_NAME"
+          echo "ECR_IMAGE=$ECR_IMAGE"
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v1
+        with:
+          mask-password: true
+
+      - name: Build, tag, and push image to AWS ECR
+        run: |
+          docker build \
+          --platform linux/x86_64 \
+          -t portal \
+          -f apps/portal/Dockerfile \
+          . \
+          --build-arg ALCHEMY_MAINNET_API_KEY=${{ secrets.ALCHEMY_MAINNET_API_KEY }} \
+          --build-arg ALCHEMY_API_KEY=${{ secrets.ALCHEMY_API_KEY }} \
+          --build-arg ALCHEMY_MAINNET_RPC_URL=${{ secrets.ALCHEMY_MAINNET_RPC_URL }} \
+          --build-arg ALCHEMY_BASE_SEPOLIA_RPC_URL=${{ secrets.ALCHEMY_BASE_SEPOLIA_RPC_URL }} \
+          --build-arg ALCHEMY_BASE_RPC_URL=${{ secrets.ALCHEMY_BASE_RPC_URL }} \
+          --build-arg WALLETCONNECT_PROJECT_ID=${{ secrets.WALLETCONNECT_PROJECT_ID }} \
+          --build-arg SESSION_SECRET=${{ secrets.SESSION_SECRET }} \
+          --build-arg API_URL=${{ secrets.API_URL }} \
+          --build-arg API_KEY=${{ secrets.API_KEY }} \
+          --build-arg PRIVY_APP_ID=${{ secrets.PRIVY_APP_ID }} \
+          --build-arg PRIVY_APP_SECRET=${{ secrets.PRIVY_APP_SECRET }} \
+          --build-arg CLOUDINARY_CLOUD_NAME=${{ secrets.CLOUDINARY_CLOUD_NAME }} \
+          --build-arg CLOUDINARY_API_KEY=${{ secrets.CLOUDINARY_API_KEY }} \
+          --build-arg CLOUDINARY_API_SECRET=${{ secrets.CLOUDINARY_API_SECRET }} \
+          --build-arg SENTRY_DSN=${{ secrets.SENTRY_DSN }} \
+          --build-arg SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }} \
+          --build-arg SENTRY_ORG=${{ secrets.SENTRY_ORG }} \
+          --build-arg SENTRY_PROJECT=${{ secrets.SENTRY_PROJECT }}
+          docker tag portal ${{ env.ECR_IMAGE }}
+          docker push ${{ env.ECR_IMAGE }}
+
+      - name: Download task definition
+        shell: bash
+        run: |
+          aws ecs describe-task-definition --task-definition ${{ env.SERVICE_NAME }} --query taskDefinition > task-definition.json
+
+      - name: Render Amazon ECS task definition
+        id: render-container
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: task-definition.json
+          container-name: portal
+          image: ${{ env.ECR_IMAGE }}
+          environment-variables: |
+            AWS_REGION=${{ secrets.AWS_REGION }}
+            AWS_ACCOUNT=${{ secrets.AWS_ACCOUNT }}
+
+      - name: Deploy task definition to Amazon ECS
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: ${{ steps.render-container.outputs.task-definition }}
+          service: ${{ env.SERVICE_NAME }}
+          cluster: ${{ env.CLUSTER_NAME }}
+          wait-for-service-stability: true
