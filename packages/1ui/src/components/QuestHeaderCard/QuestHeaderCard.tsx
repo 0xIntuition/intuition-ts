@@ -28,7 +28,9 @@ const QuestHeaderCard = ({
     >
       <div className="flex justify-between items-start">
         <div className="flex-col gap-1">
-          <Text variant={TextVariant.small}>{subtitle}</Text>
+          <Text variant={TextVariant.caption} className="text-foreground/70">
+            {subtitle}
+          </Text>
           <Text variant={TextVariant.bodyLarge}>{title}</Text>
         </div>
         <div className="flex gap-1 items-center">
@@ -48,7 +50,7 @@ const QuestHeaderCard = ({
         </div>
       </div>
       <div className="flex justify-between items-end">
-        <Text variant={TextVariant.small}>
+        <Text variant={TextVariant.caption} className="text-foreground/70">
           {`${percentageOfQuestsCompleted.toFixed(0)}% Complete`}
         </Text>
         <Button variant={ButtonVariant.secondary} onClick={onButtonClick}>

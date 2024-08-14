@@ -11,12 +11,6 @@ jobs:
   deployment:
     name: Deploy
     runs-on: ubuntu-latest
-    outputs:
-      MY_ENV: ${{ steps.set_variables.outputs.MY_ENV }}
-      CLUSTER_NAME: ${{ steps.set_variables.outputs.CLUSTER_NAME }}
-      SERVICE_NAME: ${{ steps.set_variables.outputs.SERVICE_NAME }}
-      ECR_IMAGE: ${{ steps.set_variables.outputs.ECR_IMAGE }}
-      ECR_IMAGE_STAGING: ${{ steps.set_variables.outputs.ECR_IMAGE_STAGING }}
 
     steps:
       - name: Check if important variables are set
@@ -40,7 +34,6 @@ jobs:
         shell: bash
         run: |
           IS_DISPATCH=${{ github.event_name == 'workflow_dispatch' }}
-
           if [[ $IS_DISPATCH = 'true' ]]; then
             MY_ENV=production
           else 
@@ -57,12 +50,6 @@ jobs:
           echo "SERVICE_NAME=$SERVICE_NAME" >> $GITHUB_ENV
           echo "ECR_IMAGE=$ECR_IMAGE" >> $GITHUB_ENV
           echo "ECR_IMAGE_STAGING=$ECR_IMAGE_STAGING" >> $GITHUB_ENV
-
-          echo "MY_ENV=$MY_ENV" >> $GITHUB_OUTPUT
-          echo "CLUSTER_NAME=$CLUSTER_NAME" >> $GITHUB_OUTPUT
-          echo "SERVICE_NAME=$SERVICE_NAME" >> $GITHUB_OUTPUT
-          echo "ECR_IMAGE=$ECR_IMAGE" >> $GITHUB_OUTPUT
-          echo "ECR_IMAGE_STAGING=$ECR_IMAGE_STAGING" >> $GITHUB_OUTPUT
 
       - name: Checkout code
         uses: actions/checkout@v4
@@ -106,34 +93,68 @@ jobs:
           --build-arg SENTRY_PROJECT=${{ secrets.SENTRY_PROJECT }}
 
           docker tag portal ${{ env.ECR_IMAGE }}
-          # docker push ${{ env.ECR_IMAGE }}
+          docker push ${{ env.ECR_IMAGE }}
 
           if [[ ${{ env.MY_ENV }} = 'dev' ]]; then
             docker tag ${{ env.ECR_IMAGE }} ${{ env.ECR_IMAGE_STAGING }}
-            # docker push ${{ env.ECR_IMAGE_STAGING }}
+            docker push ${{ env.ECR_IMAGE_STAGING }}
           fi
 
-  update_task:
-    needs: [deployment]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Update task for dev or production
-        uses: ./.github/workflows/update_task.yml
-        with:
-          target_env: ${{ needs.deployment.outputs.MY_ENV }}
-          ecr_image: ${{ needs.deployment.outputs.ECR_IMAGE }}
-          service_name: ${{ needs.deployment.outputs.SERVICE_NAME }}
-          cluster_name: ${{ needs.deployment.outputs.CLUSTER_NAME }}
+      #
+      # Task update for Dev or Production
+      #
 
-  update_task_for_staging:
-    needs: [deployment]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Update task for staging too, if dev
-        if: ${{ env.MY_ENV == 'dev' }}
-        uses: ./.github/workflows/update_task.yml
+      - name: Download task definition
+        shell: bash
+        run: |
+          aws ecs describe-task-definition --task-definition portal-intuition-${{ env.MY_ENV }} --query taskDefinition > task-definition.json
+
+      - name: Render Amazon ECS task definition
+        id: render-container
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
-          target_env: ${{ needs.deployment.outputs.MY_ENV }}
-          ecr_image: ${{ needs.deployment.outputs.ECR_IMAGE_STAGING }}
-          service_name: ${{ needs.deployment.outputs.SERVICE_NAME }}
-          cluster_name: ${{ needs.deployment.outputs.CLUSTER_NAME }}
+          task-definition: task-definition.json
+          container-name: portal
+          image: ${{ env.ECR_IMAGE }}
+          environment-variables: |
+            AWS_REGION=${{ secrets.AWS_REGION }}
+            AWS_ACCOUNT=${{ secrets.AWS_ACCOUNT }}
+
+      - name: Deploy task definition to Amazon ECS
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: ${{ steps.render-container.outputs.task-definition }}
+          service: ${{ env.SERVICE_NAME }}
+          cluster: ${{ env.CLUSTER_NAME }}
+          wait-for-service-stability: true
+
+      #
+      # Task update for Staging
+      #
+
+      - name: Download task definition
+        shell: bash
+        if: ${{ env.MY_ENV == 'dev' }}
+        run: |
+          aws ecs describe-task-definition --task-definition portal-intuition-staging --query taskDefinition > task-definition.json
+
+      - name: Render Amazon ECS task definition
+        id: render-container-staging
+        if: ${{ env.MY_ENV == 'dev' }}
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: task-definition.json
+          container-name: portal
+          image: ${{ env.ECR_IMAGE_STAGING }}
+          environment-variables: |
+            AWS_REGION=${{ secrets.AWS_REGION }}
+            AWS_ACCOUNT=${{ secrets.AWS_ACCOUNT }}
+
+      - name: Deploy task definition to Amazon ECS
+        if: ${{ env.MY_ENV == 'dev' }}
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: ${{ steps.render-container-staging.outputs.task-definition }}
+          service: ${{ env.SERVICE_NAME }}
+          cluster: ${{ env.CLUSTER_NAME }}
+          wait-for-service-stability: true

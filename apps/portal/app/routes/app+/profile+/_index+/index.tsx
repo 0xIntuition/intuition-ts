@@ -24,7 +24,12 @@ import { ProfileLoaderData } from '@routes/app+/profile+/_index+/_layout'
 import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
 import { getQuestsProgress } from '@server/quest'
-import { NO_USER_IDENTITY_ERROR, NO_WALLET_ERROR, PATHS } from 'app/consts'
+import {
+  NO_USER_IDENTITY_ERROR,
+  NO_WALLET_ERROR,
+  PATHS,
+  STANDARD_QUEST_SET,
+} from 'app/consts'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const userWallet = await requireUserWallet(request)
@@ -94,16 +99,14 @@ export default function UserProfileOverview() {
 
   const navigate = useNavigate()
 
-  const currentQuest = questsProgress.numCompletedQuests
-
   return (
     <div className="flex flex-col gap-6">
       <QuestHeaderCard
-        title={questsProgress.quests[currentQuest].title ?? ''}
-        subtitle={questsProgress.quests[currentQuest].description ?? ''}
+        title={STANDARD_QUEST_SET.title ?? ''}
+        subtitle={STANDARD_QUEST_SET.description ?? ''}
         numberOfCompletedQuests={questsProgress.numCompletedQuests}
         totalNumberOfQuests={questsProgress.numQuests}
-        onButtonClick={() => navigate(PATHS.QUEST)}
+        onButtonClick={() => navigate(STANDARD_QUEST_SET.navigatePath)}
       />
 
       <Text

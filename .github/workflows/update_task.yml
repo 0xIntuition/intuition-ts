@@ -31,6 +31,9 @@ jobs:
           echo "service_name: ${{ inputs.service_name }}"
           echo "cluster_name: ${{ inputs.cluster_name }}"
 
+      - name: Checkout code
+        uses: actions/checkout@v2
+
       - name: Install AWS CLI
         uses: unfor19/install-aws-cli-action@v1
         with:

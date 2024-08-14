@@ -27,7 +27,7 @@ describe('QuestHeaderCard', () => {
               class="flex-col gap-1"
             >
               <p
-                class="text-primary text-xs font-normal"
+                class="text-sm font-normal text-foreground/70"
               >
                 Continue your journey.
               </p>
@@ -61,7 +61,7 @@ describe('QuestHeaderCard', () => {
             class="flex justify-between items-end"
           >
             <p
-              class="text-primary text-xs font-normal"
+              class="text-sm font-normal text-foreground/70"
             >
               10% Complete
             </p>
