@@ -161,40 +161,46 @@ export function combineHeaders(
   return combined
 }
 
+const getMinPrecision = (num: number): number => {
+  const absNum = Math.abs(num)
+  return absNum >= 1 ? 0 : Math.ceil(Math.abs(Math.log10(absNum))) + 1
+}
+
+const formatNumber = (n: number, precision: number): string => {
+  let result = n.toLocaleString(undefined, {
+    minimumFractionDigits: precision,
+    maximumFractionDigits: precision,
+  })
+
+  result = result.replace(/\.?0+$/, '')
+
+  if (result.includes('e')) {
+    const [base, exponent] = result.split('e')
+    const exp = parseInt(exponent)
+    if (exp < 0) {
+      result = `0.${'0'.repeat(-exp - 1)}${base.replace('.', '')}`
+    } else {
+      result = `${base.replace('.', '')}${'0'.repeat(exp - (base.length - 1))}`
+    }
+  }
+
+  return result
+}
+
 export const formatBalance = (
   balance: bigint | string | number,
   decimals = 18,
   precision?: number,
 ): string => {
-  if (!balance) {
+  const formattedBalance = formatUnits(BigInt(balance), decimals)
+  if (+formattedBalance === 0) {
     return '0'
   }
 
-  const n = Number(balance.toString()) / 10 ** decimals
-  let result: string
+  const minPrecision = getMinPrecision(+formattedBalance)
+  const finalPrecision = Math.max(minPrecision, precision ?? 2)
 
-  if (n > 0 && n < 1) {
-    result = n.toLocaleString(undefined, {
-      minimumFractionDigits: precision ?? 4,
-      maximumFractionDigits: precision ?? 4,
-    })
-  } else if (n < 0 && n > -1) {
-    result = n.toLocaleString(undefined, {
-      minimumFractionDigits: precision ?? 4,
-      maximumFractionDigits: precision ?? 4,
-    })
-  } else {
-    result = n.toLocaleString(undefined, {
-      minimumFractionDigits: precision ?? 2,
-      maximumFractionDigits: precision ?? 2,
-    })
-  }
-
-  if (result.includes('.')) {
-    result = result.replace(/\.?0+$/, '')
-  }
-
-  return result
+  return formatNumber(+formattedBalance, finalPrecision)
 }
 
 export const formatDisplayBalance = (
@@ -352,7 +358,13 @@ export const getAtomLabel = (atom: IdentityPresenter | null | undefined) => {
   if (!atom) {
     return '?'
   }
-  return atom.user?.display_name ?? atom.display_name ?? atom.identity_id ?? ''
+  return (
+    atom.user?.display_name ??
+    atom.user?.ens_name ??
+    atom.display_name ??
+    atom.identity_id ??
+    ''
+  )
 }
 
 export const getAtomDescription = (

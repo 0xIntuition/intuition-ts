@@ -53,7 +53,7 @@ export function ActivePositionsOnIdentities({
             name={getAtomLabel(identity)}
             description={getAtomDescription(identity)}
             id={identity.user?.wallet ?? identity.identity_id}
-            amount={+formatBalance(BigInt(identity.user_assets), 18, 4)}
+            amount={+formatBalance(BigInt(identity.user_assets), 18)}
             feesAccrued={
               identity.user_asset_delta
                 ? +formatBalance(

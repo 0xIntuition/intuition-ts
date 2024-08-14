@@ -10,11 +10,17 @@ import {
   PositionCardStaked,
   ProfileCard,
   StakeCard,
+  Tag,
+  Tags,
+  TagsButton,
+  TagsContent,
+  TagWithValue,
 } from '@0xintuition/1ui'
 import {
   ApiError,
   IdentitiesService,
   IdentityPresenter,
+  TagEmbeddedPresenter,
   UserPresenter,
   UsersService,
   UserTotalsPresenter,
@@ -23,16 +29,20 @@ import {
 import PrivyRevalidate from '@client/privy-revalidate'
 import EditProfileModal from '@components/edit-profile/modal'
 import EditSocialLinksModal from '@components/edit-social-links-modal'
+import SaveListModal from '@components/list/save-list-modal'
 import { ProfileSocialAccounts } from '@components/profile-social-accounts'
 import ImageModal from '@components/profile/image-modal'
 import { SegmentedNav } from '@components/segmented-nav'
 import StakeModal from '@components/stake/stake-modal'
+import TagsModal from '@components/tags/tags-modal'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import {
   editProfileModalAtom,
   editSocialLinksModalAtom,
   imageModalAtom,
+  saveListModalAtom,
   stakeModalAtom,
+  tagsModalAtom,
 } from '@lib/state/store'
 import logger from '@lib/utils/logger'
 import {
@@ -53,6 +63,7 @@ import { requireUser, requireUserWallet } from '@server/auth'
 import { getVaultDetails } from '@server/multivault'
 import {
   BLOCK_EXPLORER_URL,
+  MULTIVAULT_CONTRACT_ADDRESS,
   NO_WALLET_ERROR,
   PATHS,
   userProfileRouteOptions,
@@ -162,7 +173,18 @@ export default function Profile() {
     editSocialLinksModalAtom,
   )
   const [stakeModalActive, setStakeModalActive] = useAtom(stakeModalAtom)
+  const [tagsModalActive, setTagsModalActive] = useAtom(tagsModalAtom)
+  const [saveListModalActive, setSaveListModalActive] =
+    useAtom(saveListModalAtom)
   const [imageModalActive, setImageModalActive] = useAtom(imageModalAtom)
+
+  const [selectedTag, setSelectedTag] = useState<TagEmbeddedPresenter>()
+
+  useEffect(() => {
+    if (saveListModalActive.tag) {
+      setSelectedTag(saveListModalActive.tag)
+    }
+  }, [saveListModalActive])
 
   const revalidator = useRevalidator()
   const navigate = useNavigate()
@@ -231,6 +253,38 @@ export default function Profile() {
           setEditSocialLinksModalActive(true)
         }
       />
+      <Tags className="max-lg:items-center">
+        {userIdentity?.tags && userIdentity?.tags.length > 0 && (
+          <TagsContent numberOfTags={userIdentity?.tag_count ?? 0}>
+            {userIdentity?.tags?.map((tag) => (
+              <TagWithValue
+                key={tag.identity_id}
+                label={tag.display_name}
+                value={tag.num_tagged_identities}
+                onStake={() => {
+                  setSelectedTag(tag)
+                  setSaveListModalActive({ isOpen: true, id: tag.vault_id })
+                }}
+              />
+            ))}
+          </TagsContent>
+        )}
+        <Tag
+          className="w-fit border-dashed"
+          onClick={() => {
+            setTagsModalActive({ isOpen: true, mode: 'add' })
+          }}
+        >
+          <Icon name="plus-small" className="w-5 h-5" />
+          Add tags
+        </Tag>
+
+        <TagsButton
+          onClick={() => {
+            setTagsModalActive({ isOpen: true, mode: 'view' })
+          }}
+        />
+      </Tags>
       {vaultDetails !== null && user_assets !== '0' ? (
         <PositionCard
           onButtonClick={() =>
@@ -306,7 +360,48 @@ export default function Profile() {
           }))
         }}
       />
-
+      <TagsModal
+        identity={userIdentity}
+        userWallet={userWallet}
+        open={tagsModalActive.isOpen}
+        mode={tagsModalActive.mode}
+        onClose={() =>
+          setTagsModalActive({
+            ...tagsModalActive,
+            isOpen: false,
+          })
+        }
+      />
+      {selectedTag && (
+        <SaveListModal
+          contract={userIdentity.contract ?? MULTIVAULT_CONTRACT_ADDRESS}
+          tag={saveListModalActive.tag ?? selectedTag}
+          identity={userIdentity}
+          userWallet={userWallet}
+          open={saveListModalActive.isOpen}
+          onClose={() =>
+            setSaveListModalActive({
+              ...saveListModalActive,
+              isOpen: false,
+            })
+          }
+        />
+      )}
+      {selectedTag && (
+        <SaveListModal
+          contract={userIdentity.contract ?? MULTIVAULT_CONTRACT_ADDRESS}
+          tag={saveListModalActive.tag ?? selectedTag}
+          identity={userIdentity}
+          userWallet={userWallet}
+          open={saveListModalActive.isOpen}
+          onClose={() =>
+            setSaveListModalActive({
+              ...saveListModalActive,
+              isOpen: false,
+            })
+          }
+        />
+      )}
       <ImageModal
         identity={userIdentity}
         open={imageModalActive.isOpen}

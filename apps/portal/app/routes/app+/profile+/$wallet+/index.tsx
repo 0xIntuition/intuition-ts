@@ -228,7 +228,7 @@ export default function ProfileOverview() {
             }
             return (
               <FollowList
-                identities={resolvedConnectionsData.followers}
+                identities={resolvedConnectionsData.followers ?? []}
                 paramPrefix={ConnectionsHeaderVariants.followers}
                 enableSearch={false}
                 enableSort={false}
