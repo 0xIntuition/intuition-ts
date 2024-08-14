@@ -1,10 +1,17 @@
 import {
   ActivePositionCard,
+  Button,
+  ButtonVariant,
   DialogDescription,
   DialogHeader,
   DialogTitle,
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+  Icon,
   Identity,
   IdentityTag,
+  ProfileCard,
   Skeleton,
   Text,
   Trunctacular,
@@ -12,8 +19,16 @@ import {
 import { IdentityPresenter, TagEmbeddedPresenter } from '@0xintuition/api'
 
 import { TransactionState } from '@components/transaction-state'
-import { formatBalance, getAtomImage, getAtomLabel } from '@lib/utils/misc'
+import {
+  formatBalance,
+  getAtomDescription,
+  getAtomId,
+  getAtomImage,
+  getAtomIpfsLink,
+  getAtomLabel,
+} from '@lib/utils/misc'
 import { type FetcherWithComponents } from '@remix-run/react'
+import { PATHS } from 'app/consts'
 import {
   TransactionActionType,
   TransactionStateType,
@@ -100,15 +115,50 @@ export default function SaveForm({
                 >
                   Identity:
                 </Text>
-                <IdentityTag
-                  imgSrc={getAtomImage(identity)}
-                  variant={Identity.nonUser}
-                >
-                  <Trunctacular
-                    value={getAtomLabel(identity)}
-                    maxStringLength={18}
-                  />
-                </IdentityTag>
+                <HoverCard openDelay={100} closeDelay={100}>
+                  <HoverCardTrigger>
+                    <IdentityTag
+                      imgSrc={getAtomImage(identity)}
+                      variant={
+                        identity.is_user ? Identity.user : Identity.nonUser
+                      }
+                    >
+                      <Trunctacular
+                        value={getAtomLabel(identity)}
+                        maxStringLength={18}
+                      />
+                    </IdentityTag>
+                  </HoverCardTrigger>
+                  <HoverCardContent side="top" align="center" className="w-max">
+                    <div className="flex flex-col gap-4 w-80 max-md:w-[80%]">
+                      <ProfileCard
+                        variant={
+                          identity.is_user ? Identity.user : Identity.nonUser
+                        }
+                        avatarSrc={getAtomImage(identity)}
+                        name={getAtomLabel(identity)}
+                        id={getAtomId(identity)}
+                        bio={getAtomDescription(identity)}
+                        ipfsLink={getAtomIpfsLink(identity)}
+                      />
+                      <a
+                        href={
+                          identity.is_user
+                            ? `${PATHS.PROFILE}/${identity.id}`
+                            : `${PATHS.IDENTITY}/${identity.identity_id}`
+                        }
+                      >
+                        <Button
+                          variant={ButtonVariant.secondary}
+                          className="w-full"
+                        >
+                          View Identity{' '}
+                          <Icon name={'arrow-up-right'} className="h-3 w-3" />
+                        </Button>
+                      </a>
+                    </div>
+                  </HoverCardContent>
+                </HoverCard>
               </div>
               <div className="flex flex-col gap-1">
                 <Text
@@ -116,11 +166,31 @@ export default function SaveForm({
                   weight="regular"
                   className="text-neutral-50/50"
                 >
-                  List:
+                  Tag:
                 </Text>
-                <IdentityTag imgSrc={tag?.image} variant={Identity.nonUser}>
-                  {tag?.display_name}
-                </IdentityTag>
+                <HoverCard openDelay={100} closeDelay={100}>
+                  <HoverCardTrigger>
+                    <IdentityTag imgSrc={tag?.image} variant={Identity.nonUser}>
+                      <Trunctacular
+                        value={tag?.display_name}
+                        maxStringLength={18}
+                      />
+                    </IdentityTag>
+                  </HoverCardTrigger>
+                  <HoverCardContent side="top" align="center" className="w-max">
+                    <div className="flex flex-col gap-4 w-80 max-md:w-[80%]">
+                      <ProfileCard
+                        variant={
+                          identity.is_user ? Identity.user : Identity.nonUser
+                        }
+                        avatarSrc={tag.image ?? ''}
+                        name={tag.display_name ?? tag.identity_id}
+                        id={tag.identity_id}
+                        bio={tag.description ?? ''}
+                      />
+                    </div>
+                  </HoverCardContent>
+                </HoverCard>
               </div>
             </div>
             <div className="flex flex-row items-center justify-center">

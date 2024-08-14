@@ -9,16 +9,17 @@ import { IdentitiesService, UsersService } from '@0xintuition/api'
 
 import PrivyLogout from '@client/privy-logout'
 import { HeaderLogo } from '@components/header-logo'
-import { invariant } from '@lib/utils/misc'
 import { LoaderFunctionArgs, redirect } from '@remix-run/node'
 import { json, Link, useLoaderData } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
-import { NO_WALLET_ERROR, PATHS } from 'app/consts'
+import { PATHS } from 'app/consts'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const wallet = await requireUserWallet(request)
-  invariant(wallet, NO_WALLET_ERROR)
+  if (!wallet) {
+    return redirect('/login')
+  }
 
   const userObject = await fetchWrapper(request, {
     method: UsersService.getUserByWalletPublic,
@@ -29,7 +30,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   if (!userObject) {
     console.log('No user found in DB')
-    return json({ wallet })
+    return redirect('/login')
   }
 
   let userIdentity
