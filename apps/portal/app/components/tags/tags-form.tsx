@@ -182,16 +182,18 @@ export function TagsForm({
             </>
           )}
           {state.status === 'review-transaction' && (
-            <TagsReview
-              dispatch={dispatch}
-              subjectVaultId={identity.vault_id}
-              tags={selectedTags}
-            />
+            <div className="h-full flex flex-col">
+              <TagsReview
+                dispatch={dispatch}
+                subjectVaultId={identity.vault_id}
+                tags={selectedTags}
+              />
+            </div>
           )}
         </>
       )}
       {isTransactionStarted && (
-        <div className="flex flex-col items-center justify-center flex-grow">
+        <div className="h-full flex flex-col">
           <TransactionState
             status={state.status}
             txHash={state.txHash}
