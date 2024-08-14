@@ -7,7 +7,13 @@ import {
 } from '@0xintuition/1ui'
 import { IdentityPresenter } from '@0xintuition/api'
 
-import { BLOCK_EXPLORER_URL, IPFS_GATEWAY_URL } from 'app/consts'
+import {
+  getAtomDescription,
+  getAtomId,
+  getAtomImage,
+  getAtomIpfsLink,
+  getAtomLabel,
+} from '@lib/utils/misc'
 
 export interface ClaimWithHoverableProps {
   size?: keyof typeof IdentityTagSize
@@ -27,7 +33,7 @@ export const IdentityWithHoverable = ({
   return (
     <IdentityTag
       variant={identity?.is_user ? Identity.user : Identity.nonUser}
-      imgSrc={identity?.image ?? ''}
+      imgSrc={getAtomImage(identity)}
       disabled={disabled}
       size={IdentityTagSize.lg}
       className="group-hover:border-primary group-hover:bg-primary/20"
@@ -36,17 +42,9 @@ export const IdentityWithHoverable = ({
           <ProfileCard
             className="w-fit max-w-64"
             variant={identity?.is_user ? Identity.user : Identity.nonUser}
-            avatarSrc={identity?.image ?? ''}
-            name={
-              identity?.is_user
-                ? identity?.user?.display_name ?? ''
-                : identity?.display_name
-            }
-            id={
-              identity?.is_user
-                ? identity?.user?.ens_name ?? identity?.identity_id
-                : identity?.identity_id
-            }
+            avatarSrc={getAtomImage(identity)}
+            name={getAtomLabel(identity)}
+            id={getAtomId(identity)}
             stats={
               identity?.is_user
                 ? {
@@ -55,21 +53,13 @@ export const IdentityWithHoverable = ({
                   }
                 : undefined
             }
-            bio={
-              identity?.is_user
-                ? identity?.user?.description ?? ''
-                : identity?.description ?? ''
-            }
-            ipfsLink={
-              identity.is_user === true
-                ? `${BLOCK_EXPLORER_URL}/address/${identity.identity_id}`
-                : `${IPFS_GATEWAY_URL}/${identity?.identity_id?.replace('ipfs://', '')}`
-            }
+            bio={getAtomDescription(identity)}
+            ipfsLink={getAtomIpfsLink(identity)}
           />
         </div>
       }
     >
-      <Trunctacular value={identity.display_name} />
+      <Trunctacular value={getAtomLabel(identity)} />
     </IdentityTag>
   )
 }

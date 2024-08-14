@@ -352,7 +352,13 @@ export const getAtomLabel = (atom: IdentityPresenter | null | undefined) => {
   if (!atom) {
     return '?'
   }
-  return atom.user?.display_name ?? atom.display_name ?? atom.identity_id ?? ''
+  return (
+    atom.user?.display_name ??
+    atom.user?.ens_name ??
+    atom.display_name ??
+    atom.identity_id ??
+    ''
+  )
 }
 
 export const getAtomDescription = (
