@@ -11,13 +11,11 @@ const SiteWideBanner = ({
   const bannerData = { variant: '', title: '', message: '' }
 
   if (featureFlags.FF_GENERIC_BANNER_ENABLED === 'true') {
-    console.log('FF_GENERIC_BANNER_ENABLED')
     bannerData.variant = 'info'
     bannerData.title = 'Scheduled Maintenance'
     bannerData.message =
       'Intuition will be temporarily unavailable during scheduled maintenance. We’ll be back online shortly — thanks for your patience!'
   } else if (featureFlags.FF_INCIDENT_BANNER_ENABLED === 'true') {
-    console.log('FF_INCIDENT_BANNER_ENABLED')
     bannerData.variant = 'warning'
     bannerData.title = 'Ongoing Incident'
     bannerData.message =
