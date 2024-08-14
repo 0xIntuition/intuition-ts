@@ -1,6 +1,11 @@
 import { useRef, useState } from 'react'
 
-import { Button, EmptyStateCard, ListGrid } from '@0xintuition/1ui'
+import {
+  Button,
+  ButtonVariant,
+  EmptyStateCard,
+  ListGrid,
+} from '@0xintuition/1ui'
 import { ClaimPresenter, ClaimSortColumn } from '@0xintuition/api'
 
 import { Search } from '@components/search'
@@ -119,7 +124,11 @@ export function ListClaimsList<T extends SortColumnType = ClaimSortColumn>({
         </ListGrid>
         {pagination && pagination.currentPage < pagination.totalPages && (
           <div className="flex justify-center mt-4">
-            <Button onClick={handleLoadMore} disabled={isLoading}>
+            <Button
+              onClick={handleLoadMore}
+              disabled={isLoading}
+              variant={ButtonVariant.ghost}
+            >
               {isLoading ? 'Loading...' : 'Load More'}
             </Button>
           </div>

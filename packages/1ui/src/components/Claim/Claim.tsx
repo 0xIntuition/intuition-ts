@@ -7,6 +7,7 @@ import {
 import { IdentityTag, IdentityTagSize } from 'components/IdentityTag'
 import { ProfileCard } from 'components/ProfileCard'
 import { Separator } from 'components/Separator'
+import { useSidebarLayoutContext } from 'components/SidebarLayout'
 import { Trunctacular } from 'components/Trunctacular'
 import { Fragment } from 'react/jsx-runtime'
 import { cn } from 'styles'
@@ -48,6 +49,7 @@ const ClaimItem = ({
   disabled?: boolean
   maxIdentityLength?: number
 }) => {
+  const { isMobileView } = useSidebarLayoutContext()
   const content = (
     <IdentityTag
       variant={item.variant}
@@ -78,8 +80,12 @@ const ClaimItem = ({
       <HoverCardTrigger asChild>
         {link ? <a href={link}>{content}</a> : content}
       </HoverCardTrigger>
-      <HoverCardContent side="top" className="w-max">
-        <div className="flex flex-col gap-4 w-80 max-md:w-[80%]">
+      <HoverCardContent
+        side="bottom"
+        className="w-full"
+        align={isMobileView ? 'center' : 'start'}
+      >
+        <div className="flex flex-col gap-4 w-80 max-md:max-w-fit">
           <ProfileCard
             variant={item.variant}
             avatarSrc={item.imgSrc ?? ''}
@@ -87,7 +93,6 @@ const ClaimItem = ({
             id={item.id ?? ''}
             bio={item.description ?? ''}
             ipfsLink={item.ipfsLink}
-            className="profile-card"
           />
           {item.link && (
             <a href={item.link}>

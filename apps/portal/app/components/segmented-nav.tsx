@@ -36,6 +36,7 @@ export const SegmentedNav = ({ options }: SegmentedNavProps) => {
           to={getPath(option)}
           prefetch="intent"
           end={option.value === 'overview'}
+          tabIndex={-1} // disable double focus as the child has a tab index value
         >
           {({ isActive }) => (
             <SegmentedControlItem isActive={isActive}>

@@ -110,8 +110,8 @@ export default function StakeClaimActivity({
               tvlFor={
                 +formatBalance(vaultDetails.assets_sum ?? claim.for_assets_sum)
               }
-              amountAgainst={+formatBalance(claim.against_num_positions)}
-              amountFor={+formatBalance(claim.for_num_positions)}
+              amountAgainst={claim.against_num_positions}
+              amountFor={claim.for_num_positions}
               onAgainstBtnClick={handleAgainstClick}
               onForBtnClick={handleForClick}
               disableForBtn={
@@ -164,7 +164,7 @@ export default function StakeClaimActivity({
               direction === 'for' ? ButtonVariant.for : ButtonVariant.against
             }
             size={ButtonSize.lg}
-            disabled={direction === userPositionDirection || isDisabled}
+            disabled={direction !== userPositionDirection || isDisabled}
             onClick={direction === 'for' ? handleForClick : handleAgainstClick}
             className="w-fit"
             isLoading={isLoading && direction === userPositionDirection}
