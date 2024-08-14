@@ -57,14 +57,15 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
 
 const TabContent = ({
   value,
-  claim,
+  userIdentity,
   totalFollowers,
   totalStake,
   variant,
   children,
 }: {
   value: string
-  claim?: ClaimPresenter
+  userIdentity: IdentityPresenter
+  followClaim?: ClaimPresenter
   totalFollowers: number | null | undefined
   totalStake: string
   variant: ConnectionsHeaderVariantType
@@ -74,7 +75,7 @@ const TabContent = ({
     <TabsContent value={value} className="flex flex-col w-full gap-6">
       <ConnectionsHeader
         variant={variant}
-        object={variant === 'followers' ? claim?.object : null}
+        userIdentity={userIdentity}
         totalStake={totalStake}
         totalFollowers={totalFollowers ?? 0}
       />
@@ -85,7 +86,7 @@ const TabContent = ({
 
 export default function ProfileConnections() {
   const [searchParams, setSearchParams] = useSearchParams()
-  const tab = searchParams.get('tab') || ConnectionsHeaderVariants.followers
+  const tab = searchParams.get('tab') || 'followers'
 
   const { connectionsData } = useLiveLoader<typeof loader>(['attest'])
   const { userIdentity } =
@@ -171,7 +172,8 @@ function ConnectionsContent({
                 {followClaim ? (
                   <TabContent
                     value={ConnectionsHeaderVariants.followers}
-                    claim={followClaim}
+                    followClaim={followClaim}
+                    userIdentity={userIdentity}
                     totalFollowers={userIdentity.follower_count}
                     totalStake={formatBalance(followClaim.assets_sum, 18, 4)}
                     variant={ConnectionsHeaderVariants.followers}
@@ -189,7 +191,8 @@ function ConnectionsContent({
               <TabsContent value={ConnectionsHeaderVariants.following}>
                 <TabContent
                   value={ConnectionsHeaderVariants.following}
-                  claim={followClaim ?? ({} as ClaimPresenter)}
+                  followClaim={followClaim}
+                  userIdentity={userIdentity}
                   totalFollowers={userIdentity.followed_count}
                   totalStake={formatBalance(userTotals.followed_assets, 18, 4)}
                   variant={ConnectionsHeaderVariants.following}

@@ -5,7 +5,7 @@ import {
   Text,
   TextVariant,
 } from '@0xintuition/1ui'
-import { IdentityPresenter } from '@0xintuition/api'
+import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
 
 import {
   getAtomDescription,
@@ -25,16 +25,15 @@ export type ConnectionsHeaderVariantType =
 
 interface ConnectionsHeaderProps {
   variant: ConnectionsHeaderVariantType
-  subject?: IdentityPresenter
-  predicate?: IdentityPresenter
-  object?: IdentityPresenter | null
+  userIdentity: IdentityPresenter
+  followClaim?: ClaimPresenter
   totalFollowers: number
   totalStake: string
 }
 
 export const ConnectionsHeader: React.FC<ConnectionsHeaderProps> = ({
   variant,
-  object,
+  userIdentity,
   totalFollowers,
   totalStake = '0',
 }) => {
@@ -101,15 +100,27 @@ export const ConnectionsHeader: React.FC<ConnectionsHeaderProps> = ({
                   'The act of forming a personal connection with someone/something (object) unidirectionally/asymmetrically to get updates polled from.',
                 ipfsLink: 'https://schema.org/FollowAction',
               }}
-              object={{
-                variant: Identity.user,
-                label: getAtomLabel(object),
-                imgSrc: getAtomImage(object),
-                id: object?.identity_id,
-                description: getAtomDescription(object),
-                ipfsLink: getAtomIpfsLink(object),
-                link: getAtomLink(object),
-              }}
+              object={
+                variant === 'followers'
+                  ? {
+                      variant: Identity.user,
+                      label: getAtomLabel(userIdentity),
+                      imgSrc: getAtomImage(userIdentity),
+                      id: userIdentity?.identity_id,
+                      description: getAtomDescription(userIdentity),
+                      ipfsLink: getAtomIpfsLink(userIdentity),
+                      link: getAtomLink(userIdentity),
+                    }
+                  : {
+                      variant: Identity.nonUser,
+                      label: '?',
+                      imgSrc: '',
+                      id: '?',
+                      description: '?',
+                      ipfsLink: '',
+                      link: '',
+                    }
+              }
             />
           </div>
         </div>

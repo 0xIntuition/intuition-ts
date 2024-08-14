@@ -161,8 +161,6 @@ export default function Profile() {
   }>(['attest', 'create'])
   const navigate = useNavigate()
 
-  logger('followClaim', followClaim)
-
   const { user_assets, assets_sum } = vaultDetails ? vaultDetails : userIdentity
 
   const [stakeModalActive, setStakeModalActive] = useAtom(stakeModalAtom)
