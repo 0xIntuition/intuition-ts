@@ -90,8 +90,15 @@ export async function loader({ request }: LoaderFunctionArgs) {
       },
     })
   } catch (error) {
-    if (error instanceof ApiError && error.status === 400) {
-      throw redirect('/login')
+    if (
+      error instanceof ApiError &&
+      (error.status === 400 || error.status === 404)
+    ) {
+      if (!wallet) {
+        throw redirect('/login')
+      } else {
+        throw redirect('/invite')
+      }
     }
     logger('Error fetching userObject', error)
     throw error
@@ -104,7 +111,10 @@ export async function loader({ request }: LoaderFunctionArgs) {
       args: { id: userWallet },
     })
   } catch (error) {
-    if (error instanceof ApiError && error.status === 400) {
+    if (
+      error instanceof ApiError &&
+      (error.status === 400 || error.status === 404)
+    ) {
       throw redirect('/login')
     }
     logger('Error fetching userIdentity', error)
