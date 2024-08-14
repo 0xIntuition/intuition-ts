@@ -9,6 +9,7 @@ import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
+  Icon,
   IdentityTag,
   ProfileCard,
   Text,
@@ -79,7 +80,8 @@ const InfoCard = ({
               {link && (
                 <a href={link}>
                   <Button variant={ButtonVariant.secondary} className="w-full">
-                    View Identity
+                    View Identity{' '}
+                    <Icon name={'arrow-up-right'} className="h-3 w-3" />
                   </Button>
                 </a>
               )}
