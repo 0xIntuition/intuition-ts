@@ -1,0 +1,58 @@
+import { Canvas, Controls, Meta, Source, Title } from '@storybook/blocks'
+
+import * as Stories from './Banner.stories'
+
+<Meta of={Stories} />
+
+<Title />
+
+#### A banner component to display top-level messaging to the user.
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { Banner } from '@0xintuition/1ui'
+
+<Banner variant="info" title="Warning" message="Here is some information." />
+`} />
+
+<Canvas of={Stories.BasicUsage} sourceState="none" />
+
+## Properties
+
+<Controls />
+
+## Variants
+
+### Warning
+
+<Source
+  dark
+  language="tsx"
+  code={`
+<Banner
+  variant="warning"
+  title="Warning"
+  message="There is something going on!"
+/>
+`}
+/>
+
+<Canvas of={Stories.Warning} sourceState="none" />
+
+### Error
+
+<Source
+  dark
+  language="tsx"
+  code={`
+<Banner
+  variant="error"
+  title="Error"
+  message="There is something horrible going on!"
+/>
+`}
+/>
+
+<Canvas of={Stories.Error} sourceState="none" />
