@@ -12,6 +12,7 @@ import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
+  Icon,
   PositionValueDisplay,
   PositionValueVariants,
   ProfileCard,
@@ -90,7 +91,8 @@ const IdentityPosition = ({
               {link && (
                 <a href={link}>
                   <Button variant={ButtonVariant.secondary} className="w-full">
-                    View Identity
+                    View Identity{' '}
+                    <Icon name={'arrow-up-right'} className="h-3 w-3" />{' '}
                   </Button>
                 </a>
               )}

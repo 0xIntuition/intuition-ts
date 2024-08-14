@@ -21,7 +21,6 @@ import { ClaimLoaderData } from '@routes/resources+/search-claims-by-ids'
 import { useQueryClient } from '@tanstack/react-query'
 import {
   GET_VAULT_DETAILS_RESOURCE_ROUTE,
-  MULTIVAULT_CONTRACT_ADDRESS,
   SEARCH_CLAIMS_BY_IDS_RESOURCE_ROUTE,
   TAG_PREDICATE_VAULT_ID_TESTNET,
 } from 'app/consts'
@@ -76,13 +75,9 @@ export default function SaveListModal({
 
   const [isLoading, setIsLoading] = useState(true)
 
-  const depositHook = useDepositTriple(
-    contract ?? identity.contract ?? MULTIVAULT_CONTRACT_ADDRESS,
-  )
+  const depositHook = useDepositTriple(contract)
 
-  const redeemHook = useRedeemTriple(
-    contract ?? identity.contract ?? MULTIVAULT_CONTRACT_ADDRESS,
-  )
+  const redeemHook = useRedeemTriple(contract)
 
   const {
     writeContractAsync,
@@ -145,7 +140,7 @@ export default function SaveListModal({
 
   useEffect(() => {
     if (fetchedClaimVaultId !== null) {
-      const finalUrl = `${GET_VAULT_DETAILS_RESOURCE_ROUTE}?contract=${contract ?? identity.contract ?? MULTIVAULT_CONTRACT_ADDRESS}&vaultId=${fetchedClaimVaultId}`
+      const finalUrl = `${GET_VAULT_DETAILS_RESOURCE_ROUTE}?contract=${contract}&vaultId=${fetchedClaimVaultId}`
       vaultDetailsFetcher.load(finalUrl)
     }
     // omits the fetcher from the exhaustive deps
@@ -162,17 +157,11 @@ export default function SaveListModal({
   const useHandleAction = (actionType: string) => {
     return async () => {
       try {
-        if (
-          (!contract ?? !identity.contract ?? !MULTIVAULT_CONTRACT_ADDRESS) ||
-          !fetchedClaimVaultId ||
-          !vaultDetails
-        ) {
+        if (!contract || !fetchedClaimVaultId || !vaultDetails) {
           throw new Error('Missing required parameters')
         }
         const txHash = await writeContractAsync({
-          address: (contract ??
-            identity.contract ??
-            MULTIVAULT_CONTRACT_ADDRESS) as `0x${string}`,
+          address: contract as `0x${string}`,
           abi: multivaultAbi as Abi,
           functionName:
             actionType === 'save' ? 'depositTriple' : 'redeemTriple',
@@ -365,6 +354,8 @@ export default function SaveListModal({
   const handleClose = () => {
     onClose()
     setMode('save')
+    setFetchedClaimVaultId(null)
+    setVaultDetails(undefined)
     setTimeout(() => {
       dispatch({ type: 'START_TRANSACTION' })
       reset()
