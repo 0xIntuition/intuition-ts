@@ -27,17 +27,18 @@ import { relicsAbi } from '@lib/abis/relics'
 import { useInviteCodeFetcher } from '@lib/hooks/useInviteCodeFetcher'
 import { inviteCodeSchema } from '@lib/schemas/create-identity-schema'
 import logger from '@lib/utils/logger'
-import { invariant } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
 import { Link, useLoaderData, useNavigate } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
 import { mainnetClient } from '@server/viem'
-import { NO_WALLET_ERROR, PATHS } from 'app/consts'
+import { PATHS } from 'app/consts'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const wallet = await requireUserWallet(request)
-  invariant(wallet, NO_WALLET_ERROR)
+  if (!wallet) {
+    return redirect('/login')
+  }
 
   const relicCount = (await mainnetClient.readContract({
     address: '0x7aB2F10CaC6E27971fa93A5D5470Bb84126Bb734',
