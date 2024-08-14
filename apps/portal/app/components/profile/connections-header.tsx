@@ -25,17 +25,15 @@ export type ConnectionsHeaderVariantType =
 
 interface ConnectionsHeaderProps {
   variant: ConnectionsHeaderVariantType
-  subject: IdentityPresenter
-  predicate: IdentityPresenter
-  object: IdentityPresenter | null
+  subject?: IdentityPresenter
+  predicate?: IdentityPresenter
+  object?: IdentityPresenter | null
   totalFollowers: number
   totalStake: string
 }
 
 export const ConnectionsHeader: React.FC<ConnectionsHeaderProps> = ({
   variant,
-  subject,
-  predicate,
   object,
   totalFollowers,
   totalStake = '0',
@@ -67,7 +65,6 @@ export const ConnectionsHeader: React.FC<ConnectionsHeaderProps> = ({
                   ? 'Total stake in the Follow Claim'
                   : 'Total stake'}
               </Text>
-              {/*TODO: Add actual value when BE updates presenter */}
               <MonetaryValue
                 value={+totalStake}
                 currency="ETH"
@@ -86,25 +83,26 @@ export const ConnectionsHeader: React.FC<ConnectionsHeaderProps> = ({
             <Claim
               size="md"
               subject={{
-                variant: subject?.is_user ? Identity.user : Identity.nonUser,
-                label: getAtomLabel(subject),
-                imgSrc: getAtomImage(subject),
-                id: subject?.identity_id,
-                description: getAtomDescription(subject),
-                ipfsLink: getAtomIpfsLink(subject),
-                link: getAtomLink(subject),
+                variant: Identity.nonUser,
+                label: 'I',
+                imgSrc: '',
+                id: 'ipfs://QmUt9aQX5bSdwvqETtdr2x7HZbBidnbXNaoywyFTexFsbU',
+                description:
+                  'A first-person singular pronoun used by a speaker to refer to themselves. For example, "I am studying for a test". "I" can also be used to refer to the narrator of a first-person singular literary work.',
+                ipfsLink:
+                  'https://ipfs.io/ipfs/QmUt9aQX5bSdwvqETtdr2x7HZbBidnbXNaoywyFTexFsbU',
               }}
               predicate={{
-                variant: predicate?.is_user ? Identity.user : Identity.nonUser,
-                label: getAtomLabel(predicate),
-                imgSrc: getAtomImage(predicate),
-                id: predicate?.identity_id,
-                description: getAtomDescription(predicate),
-                ipfsLink: getAtomIpfsLink(predicate),
-                link: getAtomLink(predicate),
+                variant: Identity.nonUser,
+                label: 'am following',
+                imgSrc: '',
+                id: 'https://schema.org/FollowAction',
+                description:
+                  'The act of forming a personal connection with someone/something (object) unidirectionally/asymmetrically to get updates polled from.',
+                ipfsLink: 'https://schema.org/FollowAction',
               }}
               object={{
-                variant: object?.is_user ? Identity.user : Identity.nonUser,
+                variant: Identity.user,
                 label: getAtomLabel(object),
                 imgSrc: getAtomImage(object),
                 id: object?.identity_id,

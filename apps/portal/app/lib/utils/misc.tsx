@@ -171,27 +171,37 @@ export const formatBalance = (
   }
 
   const n = Number(balance.toString()) / 10 ** decimals
-  let result: string
 
-  if (n > 0 && n < 1) {
-    result = n.toLocaleString(undefined, {
-      minimumFractionDigits: precision ?? 4,
-      maximumFractionDigits: precision ?? 4,
-    })
-  } else if (n < 0 && n > -1) {
-    result = n.toLocaleString(undefined, {
-      minimumFractionDigits: precision ?? 4,
-      maximumFractionDigits: precision ?? 4,
-    })
-  } else {
-    result = n.toLocaleString(undefined, {
-      minimumFractionDigits: precision ?? 2,
-      maximumFractionDigits: precision ?? 2,
-    })
+  if (Math.abs(n) < 1e-10) {
+    return '0'
   }
 
-  if (result.includes('.')) {
-    result = result.replace(/\.?0+$/, '')
+  const getMinPrecision = (num: number) => {
+    const absNum = Math.abs(num)
+    if (absNum >= 1) {
+      return 0
+    }
+    return Math.ceil(Math.abs(Math.log10(absNum))) + 1
+  }
+
+  const minPrecision = getMinPrecision(n)
+  const finalPrecision = Math.max(minPrecision, precision ?? 2)
+
+  let result = n.toLocaleString(undefined, {
+    minimumFractionDigits: finalPrecision,
+    maximumFractionDigits: finalPrecision,
+  })
+
+  result = result.replace(/\.?0+$/, '')
+
+  if (result.includes('e')) {
+    const [base, exponent] = result.split('e')
+    const exp = parseInt(exponent)
+    if (exp < 0) {
+      result = `0.${'0'.repeat(-exp - 1)}${base.replace('.', '')}`
+    } else {
+      result = `${base.replace('.', '')}${'0'.repeat(exp - (base.length - 1))}`
+    }
   }
 
   return result

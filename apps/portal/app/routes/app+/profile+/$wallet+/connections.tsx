@@ -64,24 +64,17 @@ const TabContent = ({
   children,
 }: {
   value: string
-  claim: ClaimPresenter
+  claim?: ClaimPresenter
   totalFollowers: number | null | undefined
   totalStake: string
   variant: ConnectionsHeaderVariantType
   children?: ReactNode
 }) => {
-  if (!claim.subject || !claim.predicate || !claim.object) {
-    return null
-  }
   return (
     <TabsContent value={value} className="flex flex-col w-full gap-6">
       <ConnectionsHeader
         variant={variant}
-        subject={claim.subject}
-        predicate={claim.predicate}
-        object={
-          variant === ConnectionsHeaderVariants.followers ? claim.object : null
-        }
+        object={variant === 'followers' ? claim?.object : null}
         totalStake={totalStake}
         totalFollowers={totalFollowers ?? 0}
       />
@@ -153,63 +146,63 @@ function ConnectionsContent({
     >
       <Await resolve={connectionsData} errorElement={<></>}>
         {(resolvedConnectionsData) => {
-          if (!resolvedConnectionsData) {
-            return (
-              <EmptyStateCard
-                message={
-                  'This user has no follow claim yet. A follow claim will be created when the first person follows them.'
-                }
-              />
-            )
-          }
           const {
             followClaim,
             followers,
             followersPagination,
             following,
             followingPagination,
-          } = resolvedConnectionsData
-
+          } = resolvedConnectionsData || {}
           return (
             <Tabs value={tab} onValueChange={onTabChange} className="w-full">
               <TabsList className="mb-6">
                 <TabsTrigger
                   value={ConnectionsHeaderVariants.followers}
                   label="Followers"
-                  totalCount={followersPagination.totalEntries}
+                  totalCount={followersPagination?.totalEntries ?? 0}
                 />
                 <TabsTrigger
                   value={ConnectionsHeaderVariants.following}
                   label="Following"
-                  totalCount={followingPagination.totalEntries}
+                  totalCount={followingPagination?.totalEntries ?? 0}
                 />
               </TabsList>
-              <TabContent
-                value={ConnectionsHeaderVariants.followers}
-                claim={followClaim}
-                totalFollowers={userIdentity.follower_count}
-                totalStake={formatBalance(followClaim.assets_sum, 18, 4)}
-                variant={ConnectionsHeaderVariants.followers}
-              >
-                <FollowList
-                  identities={followers}
-                  pagination={followersPagination}
-                  paramPrefix={ConnectionsHeaderVariants.followers}
-                />
-              </TabContent>
-              <TabContent
-                value={ConnectionsHeaderVariants.following}
-                claim={followClaim}
-                totalFollowers={userIdentity.followed_count}
-                totalStake={formatBalance(userTotals.followed_assets, 18, 4)}
-                variant={ConnectionsHeaderVariants.following}
-              >
-                <FollowList
-                  identities={following}
-                  pagination={followingPagination}
-                  paramPrefix={ConnectionsHeaderVariants.following}
-                />
-              </TabContent>
+              <TabsContent value={ConnectionsHeaderVariants.followers}>
+                {followClaim ? (
+                  <TabContent
+                    value={ConnectionsHeaderVariants.followers}
+                    claim={followClaim}
+                    totalFollowers={userIdentity.follower_count}
+                    totalStake={formatBalance(followClaim.assets_sum, 18, 4)}
+                    variant={ConnectionsHeaderVariants.followers}
+                  >
+                    <FollowList
+                      identities={followers ?? []}
+                      pagination={followersPagination!}
+                      paramPrefix={ConnectionsHeaderVariants.followers}
+                    />
+                  </TabContent>
+                ) : (
+                  <EmptyStateCard message="This user has no follow claim yet. A follow claim will be created when the first person follows them." />
+                )}
+              </TabsContent>
+              <TabsContent value={ConnectionsHeaderVariants.following}>
+                <TabContent
+                  value={ConnectionsHeaderVariants.following}
+                  claim={followClaim ?? ({} as ClaimPresenter)}
+                  totalFollowers={userIdentity.followed_count}
+                  totalStake={formatBalance(userTotals.followed_assets, 18, 4)}
+                  variant={ConnectionsHeaderVariants.following}
+                >
+                  {following && followingPagination && (
+                    <FollowList
+                      identities={following}
+                      pagination={followingPagination}
+                      paramPrefix={ConnectionsHeaderVariants.following}
+                    />
+                  )}
+                </TabContent>
+              </TabsContent>
             </Tabs>
           )
         }}
