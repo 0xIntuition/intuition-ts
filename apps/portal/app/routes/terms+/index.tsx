@@ -7,7 +7,7 @@ import { Link } from '@remix-run/react'
 export default function TermsRoute() {
   return (
     <div className="flex flex-col justify-between h-screen w-full p-8">
-      <Link to={'/app'} prefetch="intent">
+      <Link to={'/'} prefetch="intent">
         <div className="flex gap-2 items-center">
           <svg
             width="22"
@@ -63,1362 +63,1565 @@ export default function TermsRoute() {
           </Text>
         </div>
         <div className="px-6">
-          <p className="c0">
-            <span className="c5">Terms of Use</span>
+          <p className="c13">
+            <span className="c0">TERMS OF SERVICE</span>
           </p>
-          <p className="c0 c2">
-            <span className="c1"></span>
+          <p className="c10">
+            <span className="c0"></span>
           </p>
-          <p className="c0">
-            <span className="c1">
-              INTUITION PORTAL USES A SUITE OF EXPERIMENTAL BLOCKCHAIN-ORIENTED
-              FUNCTIONALITIES. USING THESE FUNCTIONALITIES (INCLUDING VIA THE
-              INTERFACE ON OUR WEBSITE) POSES SIGNIFICANT RISKS TO YOU AND YOUR
-              ONLINE ASSETS. THIS DOCUMENT CONTAINS VERY IMPORTANT INFORMATION
-              REGARDING THESE RISKS AND YOUR RIGHTS AND OBLIGATIONS, AS WELL AS
-              CONDITIONS, LIMITATIONS, AND EXCLUSIONS THAT MIGHT APPLY TO YOU
-              AND YOUR RIGHTS. PLEASE READ IT CAREFULLY. THESE TERMS REQUIRE THE
-              USE OF ARBITRATION ON AN INDIVIDUAL BASIS TO RESOLVE DISPUTES,
-              RATHER THAN JURY TRIALS OR CLASS ACTIONS. BY USING THE WEBSITE OR
-              OUR SERVICES, YOU ACCEPT AND ARE BOUND BY THESE TERMS AND
-              CONDITIONS. YOU MAY NOT USE OUR WEBSITE OR SERVICES IF YOU: (A) DO
-              NOT AGREE TO THESE TERMS; (B) ARE NOT THE OLDER OF (i) AT LEAST
-              EIGHTEEN (18) YEARS OF AGE; OR (ii) LEGAL AGE TO FORM A BINDING
-              CONTRACT; OR (C) ARE PROHIBITED FROM ACCESSING OR USING THIS
-              WEBSITE OR ANY OF THIS WEBSITE&rsquo;S FUNCTIONALITIES BY THESE
-              TERMS OR BY APPLICABLE LAW.
-            </span>
+          <p className="c14">
+            <span className="c6 c21">Last Revised on August 8, 2024</span>
           </p>
-          <p className="c0 c2">
-            <span className="c1"></span>
-          </p>
-          <p className="c0">
-            <span className="c1">
-              1. &nbsp;Acceptance of These Terms of Use
-            </span>
-          </p>
-          <p className="c0 c2">
-            <span className="c1"></span>
-          </p>
-          <p className="c0">
-            <span className="c1">
-              These terms of use are entered into by and between you
-              (&ldquo;you&rdquo; or the &ldquo;User&rdquo;) and Intuition
-              Systems Inc (&ldquo;Intuition,&rdquo; &ldquo;we,&rdquo;
-              our,&rdquo; &ldquo;us&rdquo;). The following terms and conditions,
-              together with any documents they expressly incorporate by
-              reference (collectively, these &ldquo;Terms of Use&rdquo; or this
-              &ldquo;Agreement&rdquo;), govern the User&rsquo;s access to and
-              use of Intuition Portal and its sub-pages, including any content
-              or functionality offered on or through the website-hosted user
-              interface (the &ldquo;Interface,&rdquo; or the
-              &ldquo;Website&rdquo;). The User must read these Terms of Use
-              carefully before using the Website (including the Interface).
-            </span>
-          </p>
-          <p className="c0 c2">
-            <span className="c1"></span>
-          </p>
-          <p className="c0">
+          <p className="c13">
+            <span>The Terms of Service (these &ldquo;</span>
+            <span className="c6">Terms</span>
+            <span>&rdquo; or the &ldquo;</span>
+            <span className="c6">Agreement</span>
             <span>
-              By using the Website or the Interface, the User accepts and agrees
-              to be bound and abide by these Terms of Use and all documents
-              incorporated herein by reference. If the User does not want to
-              agree to these Terms of Use or any documents that are incorporated
+              &rdquo;) for the website portal.intuition.systems (the &ldquo;
             </span>
-            <span className="c1">
-              &nbsp;herein by reference, the User must not access the Website or
-              use the Interface.
-            </span>
-          </p>
-          <p className="c0 c2">
-            <span className="c1"></span>
-          </p>
-          <p className="c0">
-            <span className="c1">
-              The Website is offered and available to users who are eighteen
-              (18) years of age or older. By using this Website, the User
-              represents and warrants that the User is at least the higher of
-              legal age to form a binding contract with Intuition in the
-              User&rsquo;s applicable jurisdiction or eighteen (18) years of
-              age, and meets all of the foregoing eligibility requirements.
-              Further, by using this Website, the User represents and warrants
-              that the User is not a citizen or resident of, nor is located in,
-              any country where the use of the Website is illegal or
-              impermissible, whether by rule, statute, regulation, bylaw, court
-              adjudication or order, protocol, administrative statement, code,
-              decree, or other directive, requirement or guideline, whether
-              applicable on Intuition, the Website, the Interface, the Protocol
-              (as defined herein), or on the User (or any combination of the
-              foregoing) by an authority with valid and enforceable jurisdiction
-              (&ldquo;Applicable Laws&rdquo;). If you do not meet all of these
-              requirements, you must not access or use the Website.
-            </span>
-          </p>
-          <p className="c0 c2">
-            <span className="c1"></span>
-          </p>
-          <p className="c0">
-            <span className="c1">
-              2. &nbsp;The Services and Protocol; Blockchain Fees
-            </span>
-          </p>
-          <p className="c0">
+            <span className="c6">Portal</span>
+            <span>,&rdquo; &ldquo;</span>
+            <span className="c6">Website</span>
+            <span>,&rdquo; or &ldquo;</span>
+            <span className="c6">Interface</span>
             <span>
-              <br />
+              &rdquo;) apply to the Website and any content, smart contracts,
+              tools, features and functionality offered on or through the
+              Website (collectively the &ldquo;
             </span>
+            <span className="c6">Services</span>
             <span>
-              The Website&rsquo;s services (the &ldquo;Services&rdquo;) include
-              without limitation providing methods and information to enable
-              those who access the Website (&ldquo;Participants&rdquo;) to
-              access to or participate in the Intuition attestation and data
-              market mechanisms powered by blockchain-enforced smart contracts
-              (the &ldquo;Intuition Protocol,&rdquo; or &ldquo;Protocol&rdquo;).
-              The Protocol is intended to be provided and operate in a
-              decentralized manner, meaning that Intuition has no ability to
-              control, modify, prevent, stop, amend, or adjust interactions or
-              transactions after they are submitted to the Protocol, whether or
-              not through the Interface. Further, the Interface is not the only
-              method that individuals or parties may interact with, contribute
-              to, access, or otherwise affect the Protocol. Thus, the Services
-              (including the Website and the Interface) are distinct from the
-              Protocol, and any of the Protocol&rsquo;s products or offerings
-              should not be viewed as products or offerings provided by the
-              Website. You are expected to be familiar with the Protocol and the
-              risks it represents (including without limitation the possibility
-              of your crypto-assets being forfeited according to the
-              Protocol&rsquo;s rules or being lost for any other reason) before
-              accessing it (whether accessed via the Interface or otherwise).
-              YOU ACKNOWLEDGE AND AGREE THAT YOUR USE OR INTERACTION WITH THE
-              PROTOCOL IS AT YOUR OWN RISK AND INTUITION WAIVES ALL LIABILITY OR
-              RESPONSIBILITY, AND MAKES NO WARRANTIES, RELATED TO THE PROTOCOL,
-              WHETHER OR NOT THE PROTOCOL IS ACCESSED VIA OUR SERVICES.
+              &rdquo;) and are entered into are entered into by and between you
+              as the user of the Services (&ldquo;
             </span>
-            <span className="c5 c6">
-              <br />
-            </span>
-          </p>
-          <p className="c0">
-            <span className="c1">
-              Your full use and enjoyment of the Services (whether or not by
-              using the Interface) may require you to pay transactional fees
-              required by their underlying blockchain or distributed ledger
-              service, or by the Protocol itself, that are designed to encourage
-              their intended use among the Protocol&rsquo;s participants
-              (&ldquo;Blockchain Fees&rdquo;). You acknowledge that in no event
-              will Intuition be responsible to you or any other part for the
-              payment, repayment, refund, disbursement, indemnity, or for any
-              other aspect of your use or transmission of Blockchain Fees. For
-              further information regarding blockchain technology, crypto-assets
-              and the associated risks, see Nature of Blockchain; Assumption of
-              Risk; Waiver of Claims.
-            </span>
-          </p>
-          <p className="c0 c2">
-            <span className="c1"></span>
-          </p>
-          <p className="c0">
-            <span className="c1">
-              3. &nbsp;Accessing the Website and User Security
-              <br />
-            </span>
-          </p>
-          <p className="c0">
-            <span className="c1">
-              We reserve the right to withdraw or amend the Website (including
-              the Interface), and any other Services or material we provide on
-              the Website, in our sole discretion without notice. We will not be
-              liable if for any reason all or any part of the Website, the
-              Interface, the Protocol, or any of the Services are unavailable at
-              any time or for any period. From time to time, we may restrict
-              access to some parts of the Website, or the entire Website, to
-              Participants.
-            </span>
-          </p>
-          <p className="c0">
-            <span className="c1">
-              <br />
-              The User is responsible for both:
-              <br />
-            </span>
-          </p>
-          <ul className="c3 lst-kix_hobv8zb2zu32-0 start">
-            <li className="c0 c4 li-bullet-0">
-              <span className="c1">
-                Making all arrangements necessary for the User to have access to
-                the Website and the Services.
-              </span>
-            </li>
-            <li className="c0 c4 li-bullet-0">
-              <span className="c1">
-                Ensuring that all persons who access the Website or the Services
-                through the User&rsquo;s internet connection are aware of these
-                Terms of Use and comply with them.
-                <br />
-              </span>
-            </li>
-          </ul>
-          <p className="c0">
-            <span className="c1">
-              To access certain Services or some of the resources offered on the
-              Website, the User may be asked to provide certain registration
-              details or other information. Other Services or resources offered
-              on the Website (such as the Interface) may require the User to
-              utilize certain Web3 capabilities, such a crypto-asset wallet
-              capable of interacting with the User&rsquo;s web browser or
-              relevant blockchain nodes (&ldquo;Web3 Utilities&rdquo;). It is a
-              condition of the User&rsquo;s use of the Website and the Services
-              that the User only operate such Web3 Utilities with a private
-              key(s) that the User created or has the direct, explicit
-              permission of the party who created the relevant private key(s).
-            </span>
-          </p>
-          <p className="c0 c2">
-            <span className="c1"></span>
-          </p>
-          <p className="c0">
-            <span className="c1">
-              The User agrees that all information it provides to interact with
-              the Website, Interface, Services, or otherwise, including, but not
-              limited to, through the use of any interactive features on the
-              Website is correct, current, and complete. The User consents to
-              all actions we take with respect to the User&rsquo;s information
-              as is consistent with these Terms of Use and all documents
-              referenced or incorporated herein.
-            </span>
-          </p>
-          <p className="c0 c2">
-            <span className="c1"></span>
-          </p>
-          <p className="c0">
-            <span className="c1">
-              If the User utilizes a Web3 Utility that relies on a separate
-              username, password, private key, or any other piece of information
-              as part of its security procedures, the User must treat such
-              information as confidential, and the User must not disclose that
-              information to any other person or entity. The User also
-              acknowledges that any identity linked to its Web3 Utility is
-              personal to the User and agrees not to provide any other person
-              with access to such identity. The User also agrees to ensure that
-              it will lock or otherwise prevent its Web3 Utility from
-              unauthorized use on this Website or the Services at the end of
-              each session. The User should use particular caution when
-              accessing the Website or the Services from a public or shared
-              computer so that others are not able to view or record the
-              User&rsquo;s username, password, private key, or other personal
-              information. In the event the User&rsquo;s Web3 credentials are
-              compromised, the User acknowledges and understands that all of its
-              related crypto-assets may be compromised as well, and waives any
-              and all responsibility of and liability against Intuition related
-              to any losses in any such event.
-            </span>
-          </p>
-          <p className="c0 c2">
-            <span className="c1"></span>
-          </p>
-          <p className="c0">
+            <span className="c6">you</span>
+            <span>,&rdquo; &ldquo;</span>
+            <span className="c6">your</span>
+            <span>,</span>
+            <span className="c6">&rdquo;</span>
+            <span>&nbsp;or the &ldquo;</span>
+            <span className="c6">User</span>
             <span>
-              4. &nbsp;Prohibited Uses
-              <br />
-              <br />
-              Intuition Portal
+              &rdquo;) and the Website&rsquo;s operators Intuition Systems, Inc.
+              (&ldquo;
             </span>
-            <span>
-              &nbsp;is a user interface for displaying content created by other
-              users. We do not verify, endorse, or assume responsibility for any
-              content, contracts, or applications introduced or created by
-              users. Users must exercise caution and conduct their due diligence
-              before interacting with any contracts or applications.
-            </span>
-            <span className="c1">
-              <br />
-            </span>
+            <span className="c6">we</span>
+            <span>,&rdquo; </span>
+            <span className="c6">our</span>
+            <span>,&rdquo; &ldquo;</span>
+            <span className="c6">us</span>
+            <span>,&rdquo; &ldquo;</span>
+            <span className="c6">Intuition</span>
+            <span>,&rdquo; &ldquo;</span>
+            <span className="c6">Company</span>
+            <span className="c1">&rdquo;). </span>
           </p>
-          <p className="c0">
-            <span className="c1">
-              The User may access or use the Website and the Services only for
-              lawful purposes and in accordance with these Terms of Use. The
-              User agrees not to use or access the Website or the Services:
-              <br />
-            </span>
-          </p>
-          <ul className="c3 lst-kix_b7khnf267911-0 start">
-            <li className="c0 c4 li-bullet-0">
-              <span className="c1">
-                In any way that violates any applicable federal, state, local,
-                or international law or regulation (including, without
-                limitation, any laws regarding the export of data or software to
-                and from the US or other countries).
-              </span>
-            </li>
-            <li className="c0 c4 li-bullet-0">
-              <span className="c1">
-                For the purpose of exploiting, harming, or attempting to exploit
-                or harm minors in any way by exposing them to inappropriate
-                content, asking for personally identifiable information, or
-                otherwise.
-              </span>
-            </li>
-            <li className="c0 c4 li-bullet-0">
-              <span className="c1">
-                To transmit, or procure the sending of, any advertising or
-                promotional material, including any &ldquo;junk mail,&rdquo;
-                &ldquo;chain letter,&rdquo; &ldquo;spam,&rdquo; or any other
-                similar solicitation.
-              </span>
-            </li>
-            <li className="c0 c4 li-bullet-0">
-              <span className="c1">
-                To impersonate or attempt to impersonate a specific individual
-                Intuition contributor, another user, or any other person or
-                entity (including, without limitation, by using email addresses,
-                screen names, similarly named or commonly misspelled URLs, or
-                associated blockchain identities).
-              </span>
-            </li>
-            <li className="c0 c4 li-bullet-0">
-              <span className="c1">
-                To engage in any other conduct that restricts or inhibits
-                anyone&rsquo;s use or enjoyment of the Website or the Services,
-                or which, as determined by us, may harm Intuition or
-                Participants, or expose them to liability.
-              </span>
-            </li>
-            <li className="c0 c4 li-bullet-0">
-              <span>
-                If they are a citizen of or otherwise accessing the Website from
-                Burma (Myanmar), Cuba, Iran, Sudan, Syria, the Western Balkans,
-                Belarus, C&ocirc;te d&rsquo;Ivoire, Democratic Republic of the
-                Congo, Iraq, Lebanon, Liberia, Libya, North Korea, Russia,
-                certain sanctioned areas of Ukraine, Somalia, Venezuela, Yemen,
-                or Zimbabwe (collectively, &ldquo;Prohibited
-                Jurisdictions&rdquo;), or if the User is otherwise listed as a
-                Specially Designated National by the United States Office of
-                Foreign Asset Control (&ldquo;
-              </span>
-              <span className="c5">OFAC</span>
-              <span className="c1">&rdquo;).</span>
-            </li>
-            <li className="c0 c4 li-bullet-0">
-              <span className="c1">
-                If doing so is illegal or impermissible according to any
-                Applicable Laws.
-              </span>
-            </li>
-            <li className="c0 c4 li-bullet-0">
-              <span className="c1">
-                To cause the Services, any of the Services&rsquo; underlying
-                blockchain networks or technologies, or any other functionality
-                with which the Services interact to work other than as intended.
-              </span>
-            </li>
-            <li className="c0 c4 li-bullet-0">
-              <span className="c1">
-                To take any action that may be reasonably construed as fraud,
-                deceit, or manipulation.
-              </span>
-            </li>
-            <li className="c0 c4 li-bullet-0">
-              <span className="c1">
-                To damage the reputation of Intuition or impair any of
-                Intuition&rsquo;s legal rights or interests.
-              </span>
-            </li>
-          </ul>
-          <p className="c0">
-            <span className="c1">
-              <br />
-              Additionally, the User agrees not to:
-            </span>
-          </p>
-          <p className="c0 c2">
+          <p className="c10">
             <span className="c1"></span>
           </p>
-          <ul className="c3 lst-kix_uracdijlke84-0 start">
-            <li className="c0 c4 li-bullet-0">
-              <span className="c1">
-                Be likely to deceive or defraud, or attempt to deceive or
-                defraud, any person, including (without limitation) providing
-                any false, inaccurate, or misleading information (whether
-                directly through the Services or through an external means that
-                affects the Protocol) with the intent to unlawfully obtain the
-                property of another or to provide knowingly or recklessly false
-                information, including in any way that causes inaccuracy among
-                the content on the Website or on the Services.
-              </span>
-            </li>
-            <li className="c0 c4 li-bullet-0">
-              <span className="c1">
-                Use the Services to manipulate or defraud any DEX, oracle
-                system, the Protocol, or blockchain network, or the users
-                thereof.
-              </span>
-            </li>
-            <li className="c0 c4 li-bullet-0">
-              <span className="c1">
-                Promote any illegal activity, or advocate, promote, or assist
-                any unlawful act.
-              </span>
-            </li>
-            <li className="c0 c4 li-bullet-0">
-              <span className="c1">
-                Cause needless annoyance, inconvenience, or anxiety, or be
-                likely to unreasonably upset, embarrass, alarm, or annoy any
-                other person.
-              </span>
-            </li>
-            <li className="c0 c4 li-bullet-0">
-              <span className="c1">
-                Impersonate any person, or misrepresent the User&rsquo;s
-                affiliation with any person or organization in connection with
-                its use of the Website and Services.
-              </span>
-            </li>
-            <li className="c0 c4 li-bullet-0">
-              <span className="c1">
-                Engage in any activity or behavior that violates any applicable
-                law, rule, or regulation concerning, or otherwise damages, the
-                integrity of the Website or the Services, or any other service
-                or software which relies on the Services.
-              </span>
-            </li>
-            <li className="c0 c4 li-bullet-0">
-              <span className="c1">
-                Give the impression that they emanate from or are endorsed by us
-                or any other person or entity if this is not the case.
-              </span>
-            </li>
-            <li className="c0 c4 li-bullet-0">
-              <span className="c1">
-                Use the Website in any manner that could disable, overburden,
-                damage, impair, or interfere with any other party&rsquo;s use of
-                the Website, including the ability to engage in real time
-                activities through the Website or with the Services.
-              </span>
-            </li>
-            <li className="c0 c4 li-bullet-0">
-              <span className="c1">
-                Use any robot, spider, or other similar automatic device,
-                process, or means to access the Website for any purpose,
-                including monitoring or copying any of the material on the
-                Website.
-              </span>
-            </li>
-            <li className="c0 c4 li-bullet-0">
-              <span className="c1">
-                Use any manual process to copy any of the material on the
-                Website, or for any other purpose not expressly authorized in
-                these Terms of Use, without our prior written consent.
-              </span>
-            </li>
-            <li className="c0 c4 li-bullet-0">
-              <span className="c1">
-                Use any device, software, or routine that interferes with the
-                proper working of the Website or the Services.
-              </span>
-            </li>
-            <li className="c0 c4 li-bullet-0">
-              <span className="c1">
-                Circumnavigate, by any means, any restriction we may have
-                implemented to prohibit impermissible access to citizens and
-                residents of, or Participants physically located in, any
-                Prohibited Jurisdiction.
-              </span>
-            </li>
-            <li className="c0 c4 li-bullet-0">
-              <span className="c1">
-                Introduce any viruses, Trojan horses, worms, logic bombs, or
-                other material that is malicious or technologically harmful to
-                the Website, the Services, the Participants, any underlying
-                blockchain, or any of the Service&rsquo;s related utilities or
-                functionalities.
-              </span>
-            </li>
-            <li className="c0 c4 li-bullet-0">
-              <span className="c1">
-                Attempt to gain unauthorized access to, interfere with, damage,
-                or disrupt any parts of the Website, the server on which the
-                Website is stored, or any server, computer, or database
-                connected to the Website, including any underlying blockchain.
-              </span>
-            </li>
-            <li className="c0 c4 li-bullet-0">
-              <span className="c1">
-                Violate the legal rights (including the rights of publicity and
-                privacy) of others or contain any material that could give rise
-                to any civil or criminal liability under applicable laws or
-                regulations or that otherwise may be in conflict with these
-                Terms of Use.
-              </span>
-            </li>
-            <li className="c0 c4 li-bullet-0">
-              <span className="c1">
-                Attack the Website, the Services, the Protocol, any of the
-                Services&rsquo; underlying blockchain networks or technologies,
-                or any other functionality with which the Services interact via
-                a denial-of-service attack or a distributed denial-of-service
-                attack.
-              </span>
-            </li>
-            <li className="c0 c4 li-bullet-0">
-              <span className="c1">
-                Encourage or induce any third party to engage in any of the
-                activities prohibited under these Terms.
-              </span>
-            </li>
-            <li className="c0 c4 li-bullet-0">
-              <span className="c1">
-                Otherwise interfere with or attempt to interfere with the proper
-                working of the Website or the Services in any way.
-              </span>
-            </li>
-          </ul>
-          <p className="c0 c2">
-            <span className="c1"></span>
-          </p>
-          <p className="c0">
+          <p className="c14">
             <span className="c1">
-              The User further agrees to not upload abusive content, files or
-              images to the Website. Intuition reserves the right to remove any
-              content, file or image deemed abusive at its sole discretion and
-              assumes no liability for loss incurred through uploading or
-              otherwise interacting with abusive content. Abusive content may
-              include, but is not limited to:
-              <br />
-            </span>
-          </p>
-          <ul className="c3 lst-kix_oucgwelwomu1-0 start">
-            <li className="c0 c4 li-bullet-0">
-              <span className="c1">Copyrighted material.</span>
-            </li>
-            <li className="c0 c4 li-bullet-0">
-              <span className="c1">Gore.</span>
-            </li>
-            <li className="c0 c4 li-bullet-0">
-              <span className="c1">
-                Hate speech (e.g., demeaning race, gender, age, religious or
-                sexual orientation, etc.), or material that is otherwise
-                threatening, harassing, defamatory, or that encourages violence
-                or crime.
-              </span>
-            </li>
-            <li className="c0 c4 li-bullet-0">
-              <span className="c1">
-                Pornography, including illegal content such as child sexual
-                abuse material or nonconsensual pornography.
-              </span>
-            </li>
-            <li className="c0 c4 li-bullet-0">
-              <span className="c1">
-                Any file that is otherwise illegal or infringes on the privacy
-                rights of any person or entity.
-              </span>
-            </li>
-            <li className="c0 c4 li-bullet-0">
-              <span className="c1">
-                Files intended to harass, spam, or promote anything for
-                commercial profit.
-              </span>
-            </li>
-          </ul>
-          <p className="c0">
-            <span className="c1">
-              <br />
-              5. &nbsp;Monitoring and Enforcement; Termination
-            </span>
-          </p>
-          <p className="c0">
-            <span className="c1">
-              <br />
-              We have the right to:
-              <br />
-            </span>
-          </p>
-          <ul className="c3 lst-kix_lr2946qi1hef-0 start">
-            <li className="c0 c4 li-bullet-0">
-              <span className="c1">
-                Take appropriate legal action, including without limitation,
-                referral to law enforcement, for any illegal or unauthorized use
-                of the Website.
-              </span>
-            </li>
-            <li className="c0 c4 li-bullet-0">
-              <span className="c1">
-                Terminate or suspend your access to all or part of the Website
-                for any or no reason, including without limitation, any
-                violation of these Terms of Use.
-                <br />
-              </span>
-            </li>
-          </ul>
-          <p className="c0">
-            <span className="c1">
-              Without limiting the foregoing, Intuition contributors have the
-              right to cooperate fully with any law enforcement authorities or
-              court order requesting or directing us to disclose the identity or
-              other information of anyone posting any materials on or through
-              the Website. BY USING THE SERVICES, YOU WAIVE AND HOLD HARMLESS
-              INTUITION AND ITS AFFILIATES, LICENSEES, AND SERVICE PROVIDERS
-              FROM ANY CLAIMS RESULTING FROM ANY ACTION TAKEN BY ANY OF THE
-              FOREGOING PARTIES DURING, OR TAKEN AS A CONSEQUENCE OF,
-              INVESTIGATIONS BY EITHER SUCH PARTIES OR LAW ENFORCEMENT
-              AUTHORITIES.
-            </span>
-          </p>
-          <p className="c0">
-            <span className="c1">
-              <br />
-              However, we cannot review interactions or activities before they
-              are executed through the Website, and, given the nature of
-              blockchain and functionalities like those offered via the
-              Services, cannot ensure prompt removal or rectification of
-              objectionable interactions or activities after they have been
-              executed. Accordingly, the User agrees that we assume no liability
-              for any action or inaction regarding transmissions,
-              communications, transactions, blockchain operations, or content
-              provided by any Participant or third party, including any that may
-              cause a malfunction or inaccuracy on the Website or among the
-              Services. We have no liability or responsibility to anyone for any
-              other party&rsquo;s performance or nonperformance of the
-              activities described in this Section, nor for any harms or damages
-              created by others&rsquo; interactions with any blockchain
-              underlying the Services or reliance on the information or content
-              presented on the Website.
-            </span>
-          </p>
-          <p className="c0 c2">
-            <span className="c1"></span>
-          </p>
-          <p className="c0">
-            <span className="c1">
-              6. &nbsp;Notice for Claims of Intellectual Property Violations and
-              Copyright Infringement
-            </span>
-          </p>
-          <p className="c0 c2">
-            <span className="c1"></span>
-          </p>
-          <p className="c0">
-            <span className="c1">
-              We respond to notices of alleged copyright infringement under the
-              United States Digital Millennium Copyright Act. Our team works to
-              ensure that content on our site or in our app does not infringe
-              upon the copyright, trademark, or certain other intellectual
-              property rights of third parties. If you believe that your
-              intellectual property rights have been infringed, please notify
-              contact@intuition.systems and we will investigate.
-            </span>
-          </p>
-          <p className="c0">
-            <span className="c1">
-              <br />
-              7. &nbsp;Changes to These Terms of Use
-              <br />
-            </span>
-          </p>
-          <p className="c0">
-            <span>
-              We may revise and update these Terms of Use from time to time in
-              our sole discretion. All changes are effective immediately when we
-              post them and apply to all access to and use of the Website
-              thereafter. However, any changes to the dispute resolution
-              provisions set out in the Section entitled{' '}
-            </span>
-            <span className="c5">Governing Law &amp; Jurisdiction</span>
-            <span className="c1">
-              &nbsp;below will not apply to any disputes for which the parties
-              have actual notice before the date the change is posted on the
-              Website.
-            </span>
-          </p>
-          <p className="c0">
-            <span className="c1">
-              <br />
-              The User&rsquo;s continued use of the Website or the Services
-              following the posting of revised Terms of Use means that the User
-              accepts and agrees to the changes. The User is expected to check
-              this page each time it accesses this Website or the Interface, so
-              it is aware of any changes as they are binding on the User.
-            </span>
-          </p>
-          <p className="c0">
-            <span className="c1">
-              <br />
-              8. &nbsp;Intellectual Property Rights
-            </span>
-          </p>
-          <p className="c0">
-            <span className="c1">
-              <br />
-              Except any open-source software or other material incorporated the
-              Website or the Services, the Website and its entire contents,
-              features, and functionality (including but not limited to all
-              information, software, text, displays, images, video, and audio,
-              and the design, selection, and arrangement thereof) are owned by
-              Intuition, its licensors, or other providers of such material and
-              are protected by international copyright, trademark, patent, trade
-              secret, and other intellectual property or proprietary rights
-              laws. The User must not reproduce, distribute, modify, create
-              derivative works of, publicly display, publicly perform,
-              republish, download, store, or transmit any of the material on our
-              Website, except as follows:
-              <br />
-            </span>
-          </p>
-          <ul className="c3 lst-kix_112atmtzryqw-0 start">
-            <li className="c0 c4 li-bullet-0">
-              <span className="c1">
-                The User&rsquo;s computer may temporarily store copies of such
-                materials in RAM incidental to the User&rsquo;s accessing and
-                viewing those materials.
-              </span>
-            </li>
-            <li className="c0 c4 li-bullet-0">
-              <span className="c1">
-                The User may store files that are automatically cached by the
-                User&rsquo;s web browser for display enhancement purposes.
-              </span>
-            </li>
-            <li className="c0 c4 li-bullet-0">
-              <span className="c1">
-                The User may print or download one copy of a reasonable number
-                of pages of the Website for its own personal, non-commercial use
-                and not for further reproduction, publication, or distribution.
-              </span>
-            </li>
-            <li className="c0 c4 li-bullet-0">
-              <span className="c1">
-                If we provide desktop, mobile, or other applications for
-                download, the User may download a single copy to its computer or
-                mobile device, provided the User agrees to be bound by any
-                applicable end user license agreement or other similar agreement
-                for such applications.
-              </span>
-            </li>
-            <li className="c0 c4 li-bullet-0">
-              <span className="c1">
-                For any open-source materials provided on the Website or through
-                the Services, the User may perform any activities only as is
-                consistent with the open-source license applicable to such
-                materials.
-              </span>
-            </li>
-          </ul>
-          <p className="c0">
-            <span className="c1">
-              <br />
-              The User must not:
-              <br />
-            </span>
-          </p>
-          <ul className="c3 lst-kix_psoc6t7ms2fi-0 start">
-            <li className="c0 c4 li-bullet-0">
-              <span className="c1">
-                Modify copies of any materials from this Website.
-              </span>
-            </li>
-            <li className="c0 c4 li-bullet-0">
-              <span className="c1">
-                Use any illustrations, photographs, video or audio sequences, or
-                any graphics separately from the accompanying text.
-              </span>
-            </li>
-            <li className="c0 c4 li-bullet-0">
-              <span className="c1">
-                Delete or alter any copyright, trademark, or other proprietary
-                rights notices from copies of materials from this Website.
-                <br />
-              </span>
-            </li>
-          </ul>
-          <p className="c0">
-            <span className="c1">
-              If the User prints, copies, modifies, downloads, or otherwise uses
-              or provides any other person with access to any part of the
-              Website in breach of these Terms of Use, the User&rsquo;s right to
-              access the Website will stop immediately and the User must, at our
-              option, return or destroy any copies of the materials the User has
-              made. No right, title, or interest in or to the Website or any
-              content on the Website is transferred to the User, and all rights
-              not expressly granted are reserved by Intuition.
-              <br />
-            </span>
-          </p>
-          <p className="c0">
-            <span className="c1">
-              Notwithstanding anything to the contrary in these Terms of Use,
-              the User may freely use any open-sourced materials up to the
-              limits provided, but in accordance with any requirements placed,
-              by those materials&rsquo; open-source licenses.
-              <br />
-            </span>
-          </p>
-          <p className="c0">
-            <span className="c1">
-              Any use of the Website not expressly permitted by these Terms of
-              Use is a breach of these Terms of Use and may violate copyright,
-              trademark, and other laws.
-            </span>
-          </p>
-          <p className="c0">
-            <span className="c1">
-              <br />
-              9. &nbsp;Trademarks
-            </span>
-          </p>
-          <p className="c0">
-            <span className="c1">
-              <br />
-              The Intuition name and all related names, logos, product and
-              service names, designs, and slogans are trademarks of Intuition or
-              its affiliates or licensors. You must not use such marks without
-              the prior written permission of Intuition; provided, however, the
-              User is hereby granted a limited, revocable, non-transferable
-              permission and license to use the term &ldquo;Intuition&rdquo; and
-              any related names, logos, product and service names, designs, and
-              slogans in any way that they desire so long as such usage is not
-              done in a way that: (1) is deceitful, fraudulent, or manipulative;
-              (2) implies any relationship between User and Intuition beyond
-              that reasonably typical of a website administrator and its users;
-              or (3) to cause confusion in any way to gain crypto-assets of, or
-              personal information about, another party other than that intended
-              by the Services, the Protocol, the Interface or any related or
-              interacting functionality (for example but without limitation, you
-              may not use the foregoing marks to execute phishing attacks,
-              spearphishing attacks, social engineering, or in any way that may
-              cause a party to transmit crypto-assets to an unintended recipient
-              or to reveal private information, like a private key or password).
-              All other names, logos, product and service names, designs, and
-              slogans on the Website and Website are the trademarks of their
-              respective owners.
-            </span>
-          </p>
-          <p className="c0 c2">
-            <span className="c1"></span>
-          </p>
-          <p className="c0">
-            <span className="c1">10. &nbsp;Reliance on Information Posted</span>
-          </p>
-          <p className="c0 c2">
-            <span className="c1"></span>
-          </p>
-          <p className="c0">
-            <span className="c1">
-              The content and information presented on or through the Website
-              (including, without limitation, on the Interface) is made
-              available solely for general information and education purposes.
-              We do not warrant the accuracy, completeness, or usefulness of
-              this information. Any information posted to the Website or through
-              the Services should not be construed as an intention to form a
-              contract, and in no case should any information be construed as
-              Intuition&rsquo;s offer to buy, sell, or exchange crypto-assets.
-              Any reliance the User places on such information is strictly at
-              the User&rsquo;s own risk, and as is common in the blockchain
-              space, the User is assuming a high amount of risk related to
-              others or technical harms when operating via the Website, the
-              Interface, and the Services. We disclaim all liability and
-              responsibility arising from any reliance placed on such materials
-              by the User or any other Participant, by anyone who may be
-              informed of any of the Website&rsquo;s or the Services&rsquo;
-              contents, or by the actions or omissions of others interacting
-              with the Protocol or any underlying blockchain.
-            </span>
-          </p>
-          <p className="c0 c2">
-            <span className="c1"></span>
-          </p>
-          <p className="c0">
-            <span className="c1">
-              This Website or the Services may include content provided by third
-              parties, including (without limitation) materials provided by
-              bloggers, blockchain users, other decentralized applications,
-              aggregators, and/or reporting services. All statements, alleged
-              facts, and/or opinions expressed in these materials, and all
-              articles and responses to questions and other content, other than
-              the content provided through official Intuition channels, are
-              solely the opinions and the responsibility of the person or entity
-              providing those materials. These materials do not necessarily
-              reflect the opinion of individual Intuition contributors or even
-              the factual status of reality. We are not responsible, or liable
-              to the User or any third party, for the content or accuracy of any
-              materials provided by any third parties, and User agrees that it
-              bears sole and absolute responsibility to evaluate and select any
-              third-party functionality with which it interacts via the
+              These Terms govern your access to and use of the Services, which
+              use a suite of experimental blockchain-oriented functionalities.
+              Using these functionalities (including via the interface on our
+              website) poses significant risks to you and your online assets.
+              Please read these terms carefully, as they contain very important
+              information regarding these risks and your rights and obligations,
+              as well as conditions, limitations, and exclusions that might
+              apply to you and your rights. By accessing and/or using the
+              Services, you are agreeing to these Terms. If you do not
+              understand or agree to these Terms, please do not use the
               Services.
             </span>
           </p>
-          <p className="c0">
+          <p className="c13">
             <span className="c1">
-              <br />
-              11. &nbsp;Changes to the Website
+              If you use the Services on behalf of a company or other entity
+              then &ldquo;you&rdquo; includes you and that entity, and you
+              represent and warrant that (a) you are an authorized
+              representative of the entity with the authority to bind the entity
+              to these Terms, and (b) you agree to these Terms on the
+              entity&rsquo;s behalf.
             </span>
           </p>
-          <p className="c0 c2">
+          <p className="c10">
             <span className="c1"></span>
           </p>
-          <p className="c0">
-            <span className="c1">
-              We may update the content on, design of, or functionalities
-              available through this Website or through the Services from time
-              to time, but the Website and the Services are not necessarily
-              complete or up-to-date. Any of the material on the Website or
-              provided through the Services may be out of date at any given
-              time, and we are under no obligation to update such material.
+          <p className="c16">
+            <span className="c6">
+              SECTION 9 CONTAINS AN ARBITRATION CLAUSE AND CLASS ACTION WAIVER.
+              BY AGREEING TO THESE TERMS, YOU AGREE (A) TO RESOLVE ALL DISPUTES
+              WITH US (WITH LIMITED EXCEPTION) RELATED TO THE COMPANY&rsquo;S
+              SERVICES AND/OR PRODUCTS THROUGH BINDING INDIVIDUAL ARBITRATION,
+              WHICH MEANS THAT YOU WAIVE ANY RIGHT TO HAVE THOSE DISPUTES
+              DECIDED BY A JUDGE OR JURY, AND (B) TO WAIVE YOUR RIGHT TO
+              PARTICIPATE IN CLASS ACTIONS, CLASS ARBITRATIONS, OR
+              REPRESENTATIVE ACTIONS, AS SET FORTH BELOW. YOU HAVE THE RIGHT TO
+              OPT-OUT OF ARBITRATION CLAUSE AND THE CLASS ACTION WAIVER AS
+              EXPLAINED IN SECTION 9.
             </span>
           </p>
-          <p className="c0">
-            <span className="c1">
-              <br />
-              12. &nbsp;WARRANTY DISCLAIMER
-            </span>
-          </p>
-          <p className="c0">
-            <span className="c1">
-              <br />
-              The User is responsible for its use of the Services, the
-              functionalities they enable, transactions engaged through the
-              Website or the Interface, and the use of the information derived
-              thereof. The User is solely responsible for complying with all
-              Applicable Laws related to its transactions and activities that
-              directly or indirectly incorporate our provision of the Services,
-              including, but not limited to, the Commodity Exchange Act and its
-              regulations as overseen by the U.S. Commodity Futures Trading
-              Commission (&ldquo;CFTC&rdquo;), and the federal securities laws
-              and its regulations overseen by the U.S. Securities and Exchange
-              Commission (&ldquo;SEC&rdquo;). The User acknowledges its
-              understanding that Intuition is not registered nor licensed with,
-              nor have our Website, Interface, or Services (or the software
-              contained therein) been reviewed or evaluated by, the CFTC, SEC,
-              or any other financial or banking regulator of any jurisdiction.
-            </span>
-          </p>
-          <p className="c0">
-            <span className="c1">
-              <br />
-              The User understands that we cannot and do not guarantee or
-              warrant that files available for download from the internet or the
-              Website or through the Services will be free of viruses or other
-              destructive code. The User is responsible for implementing
-              sufficient procedures and checkpoints to satisfy the User&rsquo;s
-              particular requirements for: (1) an appropriate Web3 Utility; (2)
-              anti-virus protection and accuracy of data input and output; (3)
-              its participation in and use of DeFi products, the protocol, and
-              any of the Services&rsquo; underlying blockchain and related
-              technologies; and (4) maintaining a means external to our site to
-              reconstruct of any lost data.
-            </span>
-          </p>
-          <p className="c0">
-            <span className="c1">
-              <br />
-              TO THE FULLEST EXTENT PROVIDED BY LAW, WE WILL NOT BE LIABLE FOR
-              ANY LOSS OR DAMAGE CAUSED BY A DISTRIBUTED DENIAL-OF-SERVICE
-              ATTACK, MAN-IN-THE-MIDDLE ATTACK, VIRUSES, OR OTHER
-              TECHNOLOGICALLY HARMFUL MATERIAL THAT MAY INFECT THE USER&rsquo;S
-              COMPUTER EQUIPMENT, COMPUTER PROGRAMS, DATA, OR OTHER PROPRIETARY
-              MATERIAL DUE TO THE USER&rsquo;S USE OF THE WEBSITE OR ANY
-              SERVICES OR ITEMS OBTAINED THROUGH THE WEBSITE OR TO THE
-              USER&rsquo;S DOWNLOADING OF ANY MATERIAL POSTED ON IT, OR ON ANY
-              WEBSITE LINKED TO IT.
-            </span>
-          </p>
-          <p className="c0">
-            <span className="c1">
-              <br />
-              THE USER&rsquo;S USE OF THE WEBSITE AND THE INTERFACE, THE
-              PROTOCOL, AND ANY OF THE SERVICES (AND ANY OF THEIR CONTENT) IS AT
-              THE USER&rsquo;S SOLE RISK. THE WEBSITE, THE INTERFACE, AND THE
-              SERVICES ARE PROVIDED ON AN &ldquo;AS IS&rsquo;&rsquo; AND
-              &ldquo;AS AVAILABLE&rdquo; BASIS. TO THE FULLEST EXTENT LEGALLY
-              PERMISSIBLE, NEITHER WE, NOR ANY PERSON ASSOCIATED WITH INTUITION,
-              MAKE, AND WE EXPLICITLY DISCLAIM, ANY AND ALL REPRESENTATIONS OR
-              WARRANTIES OF ANY KIND RELATED TO THE WEBSITE, THE INTERFACE, AND
-              THE SERVICES, WHETHER EXPRESS, IMPLIED, OR STATUTORY, INCLUDING
-              (WITHOUT LIMITATION) THE WARRANTIES OF MERCHANTABILITY,
-              NON-INFRINGEMENT, AND FITNESS FOR A PARTICULAR PURPOSE. NEITHER
-              INTUITION NOR ANY PERSON ASSOCIATED WITH INTUITION MAKES ANY
-              WARRANTY OR REPRESENTATION WITH RESPECT TO THE COMPLETENESS,
-              SECURITY, RELIABILITY, QUALITY, ACCURACY, OR AVAILABILITY OF THE
-              WEBSITE, THE INTERFACE, OR THE SERVICES. INTUITION AND ANY PERSON
-              ASSOCIATED WITH INTUITION DO NOT REPRESENT OR WARRANT THAT: (1)
-              ACCESS TO THE WEBSITE, THE INTERFACE, OR THE SERVICES WILL BE
-              CONTINUOUS, UNINTERRUPTED, TIMELY, WITHOUT DELAY, ERROR-FREE,
-              SECURE, OR FREE FROM DEFECTS; (2) THAT THE INFORMATION CONTAINED
-              OR PRESENTED ON THE WEBSITE OR VIA THE SERVICES IS ACCURATE,
-              RELIABLE, COMPLETE, CONCISE, CURRENT, OR RELEVANT; (3) THAT THE
-              WEBSITE, THE INTERFACE, THE SERVICES, OR ANY SOFTWARE CONTAINED
-              THEREIN WILL BE FREE FROM DEFECTS, MALICIOUS SOFTWARE, ERRORS, OR
-              ANY OTHER HARMFUL ELEMENTS, OR THAT ANY OF SUCH WILL BE CORRECTED;
-              OR (4) THAT THE WEBSITE, THE INTERFACE, OR THE SERVICES WILL MEET
-              THE USER&rsquo;S EXPECTATIONS. NO INFORMATION OR STATEMENT THAT WE
-              MAKE, INCLUDING DOCUMENTATION OR OUR PRIVATE COMMUNICATIONS,
-              SHOULD BE TREATED AS OFFERING ANY WARRANTY CONCERNING THE WEBSITE,
-              THE INTERFACE, OR THE SERVICES. WE DO NOT ENDORSE, GUARANTEE, OR
-              ASSUME ANY LIABILITY OR RESPONSIBILITY FOR ANY CONTENT,
-              ADVERTISEMENTS, OFFERS, STATEMENTS, OR ACTIONS BY ANY THIRD PARTY
-              EITHER REGARDING THE WEBSITE OR THE SERVICES.
-            </span>
-          </p>
-          <p className="c0">
-            <span className="c1">
-              <br />
-              THE FOREGOING DOES NOT AFFECT ANY WARRANTIES THAT CANNOT BE
-              EXCLUDED OR LIMITED UNDER APPLICABLE LAW.
-            </span>
-          </p>
-          <p className="c0">
-            <span className="c1">
-              <br />
-              13. &nbsp;LIMITATION OF LIABILITY
-            </span>
-          </p>
-          <p className="c0">
-            <span className="c1">
-              <br />
-              TO THE FULLEST EXTENT PROVIDED BY LAW, IN NO EVENT WILL INTUITION,
-              ITS AFFILIATES, OR THEIR LICENSORS, SERVICE PROVIDERS,
-              CONTRIBUTORS, AGENTS, OFFICERS, OR DIRECTORS BE LIABLE FOR DAMAGES
-              OF ANY KIND, UNDER ANY LEGAL THEORY, ARISING OUT OF OR IN
-              CONNECTION WITH THE USER&rsquo;S USE, OR INABILITY TO USE, THE
-              WEBSITE, THE INTERFACE, THE SERVICES, THE PROTOCOL, ANY WEBSITES
-              LINKED THROUGH OUR SERVICES, ANY CONTENT ON THE WEBSITE OR SUCH
-              OTHER WEBSITES, INCLUDING ANY DIRECT, INDIRECT, SPECIAL,
-              INCIDENTAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, INCLUDING BUT NOT
-              LIMITED TO, PERSONAL INJURY, PAIN AND SUFFERING, EMOTIONAL
-              DISTRESS, LOSS OF REVENUE, LOSS OF PROFITS, LOSS OF BUSINESS OR
-              ANTICIPATED SAVINGS, LOSS OF USE, LOSS OF GOODWILL, LOSS OF DATA,
-              AND WHETHER CAUSED BY TORT (INCLUDING NEGLIGENCE), BREACH OF
-              CONTRACT, OR OTHERWISE, EVEN IF FORESEEABLE. THIS DISCLAIMER OF
-              LIABILITY EXTENDS TO ANY AND ALL DAMAGES CAUSED BY ANY THIRD PARTY
-              (INCLUDING, WITHOUT LIMITATION, THOSE CAUSED BY FRAUD, DECEIT, OR
-              MANIPULATION), WHETHER OR NOT A PARTICIPANT, OR ANY FAILURE,
-              EXPLOIT, OR VULNERABILITY OF THE WEBSITE, SERVICES, THE PROTOCOL,
-              THE USER&rsquo;S WEB3 UTILITIES, OR THE UNDERLYING BLOCKCHAINS OR
-              RELATED BLOCKCHAIN FUNCTIONALITIES. TO THE FULLEST EXTENT PROVIDED
-              BY LAW, IN NO EVENT WILL THE COLLECTIVE LIABILITY OF INTUITION AND
-              ITS SUBSIDIARIES AND AFFILIATES, AND THEIR LICENSORS, SERVICE
-              PROVIDERS, CONTRIBUTORS, AGENTS, OFFICERS, AND DIRECTORS, TO ANY
-              PARTY (REGARDLESS OF THE FORM OF ACTION, WHETHER IN CONTRACT,
-              TORT, OR OTHERWISE) EXCEED THE GREATER OF $100 OR THE AMOUNT YOU
-              HAVE PAID DIRECTLY TO INTUITION FOR THE APPLICABLE CONTENT OR
-              SERVICES IN THE LAST SIX MONTHS OUT OF WHICH LIABILITY AROSE.
-            </span>
-          </p>
-          <p className="c0">
-            <span className="c1">
-              <br />
-              THE FOREGOING DOES NOT AFFECT ANY LIABILITY THAT CANNOT BE
-              EXCLUDED OR LIMITED UNDER APPLICABLE LAW.
-            </span>
-          </p>
-          <p className="c0">
-            <span className="c1">
-              <br />
-              14. &nbsp;Nature of Blockchain; Beta status; Assumption of Risk;
-              Waiver of Claims
-              <br />
-            </span>
-          </p>
-          <p className="c0">
-            <span className="c1">
-              Blockchains, DEXs, DeFi, crypto-assets, the Protocol, and their
-              related technologies and functionalities are still emerging
-              innovations that carry a relatively high amount of foreseeable and
-              unforeseeable risk from security, financial, technical, political,
-              social, and personal safety standpoints. Further, the Intuition is
-              still in beta and Users acknowledge the elevated risk associated
-              with early testing of the Website, the Interface, the Services,
-              and the Protocol.
-              <br />
-            </span>
-          </p>
-          <p className="c0">
-            <span className="c1">
-              The mere access to and interaction with blockchains requires high
-              degrees of skill and knowledge to operate with a relative degree
-              of safety and proficiency. Crypto-assets are highly volatile in
-              nature due to many diverse factors, including without limitation
-              use and adoption, speculation, manipulation, technology, security,
-              and legal and regulatory developments and application. Further,
-              the speed and cost of transacting with cryptographic technologies,
-              such as blockchains like those underlying the Protocol, are
-              variable and highly volatile. Moreover, the transparent nature of
-              many blockchains means that any interactions the User has with the
-              Protocol and any blockchain may be publicly visible and readable
-              in human form.
-            </span>
-          </p>
-          <p className="c0 c2">
+          <p className="c10">
             <span className="c1"></span>
           </p>
-          <p className="c0">
-            <span className="c1">
-              By accessing and using the Website or the Services, the User
-              acknowledges the foregoing, and agrees and represents that it
-              understands and assumes such and other risks involved with
-              blockchains, DeFi, the Protocol, and related technologies
-              (including without limitation any specific technical language used
-              in this Agreement). The User further represents that it has all
-              knowledge sufficient to work, and is informed of all foreseeable
-              risks and the possibility of unforeseeable risks, associated with
-              blockchains, crypto-assets, Web3 Utilities, smart contracts, the
-              Interface, the Protocol, and the Services. The User further
-              acknowledges, and assumes all risk related to the possibility,
-              that any information presented via the Website, Interface, or
-              Services may be inaccurate, possibly due to another party&rsquo;s
-              malicious activities and possibly to the User&rsquo;s severe harm
-              or detriment. The User agrees that we are not responsible for any
-              of these or related risks, do not own or control any blockchain
-              and cannot guarantee the safe or accurate functioning of the
-              Services, and shall not be held liable for any resulting harms,
-              damages, or losses incurred by or against the User experiences
-              while accessing or using the Website or the Services. Accordingly,
-              the User acknowledges the foregoing, represents its understanding
-              of the foregoing, and agrees to assume full responsibility for all
-              of the risks of accessing and using the Website and interacting
-              with the Services, whether mentioned in this Section or otherwise.
-              The User further expressly waives and releases us from any and all
-              liability, claims, causes of action, or damages arising from or in
-              any way relating to the User&rsquo;s use of the Website and the
-              User&rsquo;s interaction with the Services.
+          <p className="c18" id="h.30j0zll">
+            <span className="c0">TABLE OF CONTENTS</span>
+          </p>
+          <p className="c11">
+            <span className="c0">
+              <a className="c3" href="#h.ncf24gfua7ei">
+                1. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;THE
+                SERVICES&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1
+              </a>
             </span>
           </p>
-          <p className="c0">
-            <span className="c1">
-              <br />
-              15. &nbsp;No Professional Advice
+          <p className="c11">
+            <span className="c0">
+              <a className="c3" href="#h.kg6jgqtuw849">
+                2. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ELIGIBILITY;
+                USER ACCOUNTS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4
+              </a>
             </span>
           </p>
-          <p className="c0">
-            <span className="c1">
-              <br />
-              All information or content provided or displayed by the Website
-              (including, without limitation, on the Interface) is for
-              informational purposes only and should not be construed as
-              professional advice (including, without limitation, tax, legal, or
-              financial advice). The User should not take or refrain from taking
-              any action based on any information or content displayed or
-              provided on the Website, on the Interface, or through the
-              Services. The User should seek independent professional advice
-              from an individual licensed and competent in the appropriate area
-              before the User makes any financial, legal, or other decisions
-              where such should be considered prudent. The User acknowledges and
-              agrees that, to the fullest extent permissible by law, it has not
-              relied on Intuition, the content on the Website, the Interface, or
-              the Services for any professional advice related to its financial
-              or legal behaviors.
+          <p className="c11">
+            <span className="c0">
+              <a className="c3" href="#h.dgq21f1fnx6w">
+                3. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LOCATION OF
+                OUR PRIVACY AND ADDITIONAL
+                POLICIES&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4
+              </a>
             </span>
           </p>
-          <p className="c0">
-            <span className="c1">
-              <br />
-              16. &nbsp;No Fiduciary Duties
-              <br />
+          <p className="c11">
+            <span className="c0">
+              <a className="c3" href="#h.71tzq3vgeem3">
+                4.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RIGHTS WE
+                GRANT YOU&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4
+              </a>
             </span>
           </p>
-          <p className="c0">
-            <span className="c1">
-              These Terms of Use, and the provision of the Website and the
-              Services, are not intended to create any fiduciary duties between
-              us and the User or any third party. Intuition contributors never
-              take possession, custody, control, ownership, or management of any
-              crypto-assets or other property transmitted via the Interface. To
-              the fullest extent permissible by law, the User agrees that
-              neither the User&rsquo;s use of the Website or the Services causes
-              us or any Participant to owe fiduciary duties or liabilities to
-              the User or any third party. Further, the User acknowledges and
-              agrees to the fullest extent such duties or liabilities are
-              afforded by law or by equity, those duties and liabilities are
-              hereby irrevocably disclaimed, waived, and eliminated, and that we
-              and any other Participant shall be held completely harmless in
-              relation thereof. The User further agrees that the only duties and
-              obligations that we or any Contributor owes the User, and the only
-              rights the User has related to this Agreement or the User&rsquo;s
-              use of the Website or the Services, are those set out expressly in
-              this Agreement or that cannot be waived by law. Further, the User
-              agrees and understands that they are responsible for all
-              applicable reporting requirements and deadlines, including taxes
-              and relevant fees, and that we owe Users no affirmative duties
-              with respect to said reporting requirements and deadlines.
+          <p className="c11">
+            <span className="c0">
+              <a className="c3" href="#h.gka81dyq0vrg">
+                5. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;USE OF THE
+                SERVICES&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5
+              </a>
             </span>
           </p>
-          <p className="c0">
-            <span className="c1">
-              <br />
-              17. &nbsp;No Insurance
+          <p className="c11">
+            <span className="c0">
+              <a className="c3" href="#h.s32s21zoksm">
+                6. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OWNERSHIP AND
+                CONTENT&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;8
+              </a>
             </span>
           </p>
-          <p className="c0">
-            <span className="c1">
-              <br />
-              Your crypto accounts are not checking or savings accounts. We do
-              not provide any kind of insurance to you against any type of loss,
-              including (without limitation) losses due to decrease in value of
-              assets, assets lost due to a cybersecurity failure, or from your
-              or other individuals&rsquo; errors or malfeasance. In most
-              jurisdictions crypto-assets are not considered legal tender, and
-              most crypto-assets are not backed by any government. Neither your
-              crypto-asset balances nor any of your transactions via the
-              Interface or Protocol are covered by Federal Deposit Insurance
-              Corporation (FDIC), Securities Investor Protection Corporation
-              (SIPC), or other similar protections.
+          <p className="c11">
+            <span className="c0">
+              <a className="c3" href="#h.m4uij41phr5g">
+                7.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;WEBSITE
+                CONTENT AND
+                INFORMATION&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;8
+              </a>
             </span>
           </p>
-          <p className="c0">
-            <span className="c1">
-              <br />
-              18. &nbsp;Indemnification
+          <p className="c11">
+            <span className="c0">
+              <a className="c3" href="#h.75sckzu9p7lo">
+                8. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DISCLAIMERS,
+                LIMITATIONS OF LIABILITY, AND
+                INDEMNIFICATION&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;10
+              </a>
+            </span>
+          </p>
+          <p className="c11">
+            <span className="c0">
+              <a className="c3" href="#h.ir4t1q6ixcix">
+                9. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ARBITRATION
+                AND CLASS ACTION
+                WAIVER&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;13
+              </a>
+            </span>
+          </p>
+          <p className="c11">
+            <span className="c0">
+              <a className="c3" href="#h.8hgf2omby0vc">
+                10. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ADDITIONAL
+                PROVISIONS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;15
+              </a>
+            </span>
+            <span className="c6">
               <br />
             </span>
           </p>
-          <p className="c0">
-            <span className="c1">
-              The User agrees to defend, indemnify, and hold harmless Intuition,
-              its affiliates, licensors, and service providers, and its and
-              their respective officers, directors, contributors, contractors,
-              agents, licensors, suppliers, successors, and assigns from and
-              against any claims, liabilities, damages, judgments, awards,
-              losses, costs, expenses, or fees (including reasonable
-              attorneys&rsquo; fees) arising out of or relating to: (1) the
-              User&rsquo;s violation of these Terms of Use; (2) the User&rsquo;s
-              use of the Website, the Services, or the Protocol, including, but
-              not limited to, the User&rsquo;s interactions with the Interface
-              or other features which incorporate the Services, use of or
-              reliance on the Website&rsquo;s content, services, and products
-              other than as expressly authorized in these Terms of Use; (3) the
-              User&rsquo;s use or reliance on of any information obtained from
-              the Website; or (4) any other party&rsquo;s access and use of the
-              Website or Services with the User&rsquo;s assistance or by using
-              any device or account that the User owns or controls.
-            </span>
+          <ol className="c2 lst-kix_v61pi1glm5bt-0 start" start={1}>
+            <li className="c17 li-bullet-0">
+              <h1 id="h.ncf24gfua7ei" className="inline">
+                <span>THE SERVICES</span>
+                <span className="c0">
+                  <br />
+                </span>
+              </h1>
+            </li>
+          </ol>
+          <ol className="c2 lst-kix_v61pi1glm5bt-1 start" start={1}>
+            <li className="c4 li-bullet-0">
+              <span className="c7">
+                Attestation Data Market and the Protocol
+              </span>
+              <span>. </span>
+              <span>
+                The Website&rsquo;s Services include without limitation
+                providing methods and information to enable those who access the
+                Portal (&ldquo;
+              </span>
+              <span className="c6">Participants</span>
+              <span className="c1">
+                &rdquo;) to access to or participate in attestation and data
+                market mechanisms powered by blockchain-enforced smart contracts
+                (the &ldquo;Protocol&rdquo;). The Protocol is intended to be
+                provided and operate in a decentralized manner, meaning that
+                Intuition has no ability to control, modify, prevent, stop,
+                amend, or adjust interactions or transactions after they are
+                submitted to the Protocol, whether or not through the Interface.
+                Further, the Interface is not the only method that individuals
+                or parties may interact with, contribute to, access, or
+                otherwise affect the Protocol. Thus, the Services (including the
+                Website and the Interface) are distinct from the Protocol, and
+                any of the Protocol&rsquo;s products or offerings should not be
+                viewed as products or offerings provided by the Website. You are
+                expected to be familiar with the Protocol and the risks it
+                represents (including without limitation the possibility of your
+                crypto-assets being forfeited according to the Protocol&rsquo;s
+                rules or being lost for any &nbsp;other reason) before accessing
+                it (whether accessed via the Interface or otherwise). YOU
+                ACKNOWLEDGE AND AGREE THAT YOUR USE OR INTERACTION WITH THE
+                PROTOCOL IS AT YOUR OWN RISK AND INTUITION WAIVES ALL LIABILITY
+                OR RESPONSIBILITY, AND MAKES NO WARRANTIES, RELATED TO THE
+                PROTOCOL, WHETHER OR NOT THE PROTOCOL IS ACCESSED VIA OUR
+                SERVICES.
+              </span>
+            </li>
+            <li className="c4 li-bullet-0">
+              <span className="c7">Blockchain Fees</span>
+              <span>.</span>
+              <span className="c6">&nbsp;</span>
+              <span>
+                Your full use and enjoyment of the Services (whether or not by
+                using the Interface) may require you to pay transactional fees
+                required by their underlying blockchain or distributed ledger
+                service, or by the Protocol itself, that are designed to
+                encourage their intended use among the Protocol&rsquo;s
+                participants (&ldquo;Blockchain Fees&rdquo;). You acknowledge
+                that in no event will Intuition be responsible to you or any
+                other party for the payment, repayment, refund, disbursement,
+                indemnity, or for any other aspect of your use or transmission
+                of Blockchain Fees
+              </span>
+            </li>
+            <li className="c4 li-bullet-0">
+              <h2 id="h.7u18h5ck514k" className="inline">
+                <span className="c7 c8">Wallets</span>
+                <span className="c8">
+                  . All transactions initiated through our Services require you
+                  to use third party digital wallets (&ldquo;
+                </span>
+                <span className="c8 c6">Wallets</span>
+                <span className="c8">
+                  &rdquo;). Your use of any Wallet is solely at your own risk.
+                  &nbsp;You agree that you authorize all transactions initiated
+                  by you or on your behalf through the Services in connection
+                  with your Wallet. We have no control over any blockchain and
+                  cannot and do not guarantee that any transaction details that
+                  you submit or receive via the Services will be validated by or
+                  confirmed on such blockchain. By using such Wallets to conduct
+                  transactions via the Services, you agree that you are governed
+                  by the terms of service and privacy policy for the applicable
+                  Wallets, and that the Company has no responsibility, liability
+                  or responsibility to you in any way arising from your use of
+                  such Wallets, including for any security failures or other
+                  errors or failures of such Wallets.{' '}
+                </span>
+                <span className="c0">
+                  The private keys necessary to access the assets held in a
+                  Wallet are not held by the Company. The Company has no ability
+                  to help you access or recover your private keys and/or seed
+                  phrases for your Wallet. You are solely responsible for
+                  maintaining the confidentiality of your private keys and you
+                  are responsible for any transactions signed with your private
+                  keys.
+                </span>
+              </h2>
+            </li>
+            <li className="c4 li-bullet-0">
+              <h2 id="h.ryos5de0xjl3" className="inline">
+                <span className="c7 c8">Third Party Platforms</span>
+                <span className="c8">
+                  . You may be able to transact and otherwise interact with the
+                  Protocol&rsquo;s attestation and data market mechanisms via
+                  third party platforms (&ldquo;
+                </span>
+                <span className="c8 c6">Third Party Platforms</span>
+                <span className="c1">
+                  &rdquo;). &nbsp;We are not party to any agreements between
+                  Users and any Third Party Platforms. If you have a dispute
+                  with one or more users in connection with transactions
+                  performed via Third Party Platforms, you release us (and our
+                  affiliates and subsidiaries, and our and their respective
+                  officers, directors, employees and agents) from claims,
+                  demands and damages (actual and consequential) of every kind
+                  and nature, known and unknown, arising out of or in any way
+                  connected with such disputes. In entering into this release
+                  you expressly waive any protections (whether statutory or
+                  otherwise) that would otherwise limit the coverage of this
+                  release to include only those claims which you may know or
+                  suspect to exist in your favor at the time of agreeing to this
+                  release. &nbsp;We may not be able to control the actions of
+                  Third Party Platforms, and we make no promises or guarantees
+                  of any kind regarding Third Party Platforms.
+                </span>
+              </h2>
+            </li>
+            <li className="c4 li-bullet-0">
+              <span className="c7">Points</span>
+              <span className="c1">
+                . The Services may allow you to receive points
+                (&ldquo;Points&rdquo;) for performing certain actions and
+                participating in the Services. These points are not facilitated
+                by blockchain technology and are assigned and maintained
+                off-chain by the Company at its sole discretion. By
+                participating in the Services and receiving points, you
+                acknowledge and agree that you are receiving points solely for
+                the functionality, traits and features that exist as of the date
+                the points are received, and not in anticipation of any future
+                or speculative functionality, traits, features or economic
+                benefit that may be associated with such points.
+              </span>
+            </li>
+            <li className="c4 li-bullet-0">
+              <span className="c7">Connected Services</span>
+              <span>
+                . You may be able to display and showcase Points or attestation
+                data created using the Websites Services within third-party
+                applications and services that have integrated with the Services
+                to allow relevant data to be displayed on their applications and
+                services (&ldquo;
+              </span>
+              <span className="c6">Connected Services</span>
+              <span>
+                &rdquo;). &nbsp;To be clear, the Connected Services are owned
+                and operated by third parties and are not owned or controlled by
+                us. Thus, we can&rsquo;t make any guarantee or promise about the
+                functionality or nature of any Connected Services, including
+                whether you&rsquo;ll be able to display and use relevant data
+                within any Connected Services.
+              </span>
+            </li>
+            <li className="c4 li-bullet-0">
+              <h2 id="h.i4ql26stjm37" className="inline">
+                <span className="c7 c8">Additional Information</span>
+                <span className="c1">
+                  . In order to transact through our Services, we or our
+                  services providers may require you to provide additional
+                  information and documents regarding your use of the Services,
+                  including at the request of any competent authority or in case
+                  of application of any applicable law or regulation, including
+                  laws related to anti-money laundering, or for counteracting
+                  financing of terrorism. If you do not provide complete and
+                  accurate information and documentation in response to such a
+                  request, your transactions may not be processed through our
+                  Services. You acknowledge that there may also be a time delay
+                  between the time when you submit such information and when we
+                  and/or our service providers are able to complete any
+                  anti-money laundering, know-your-client or similar checks.
+                </span>
+              </h2>
+            </li>
+            <li className="c4 li-bullet-0">
+              <span className="c7">Beta Offerings</span>
+              <span>
+                . From time to time, we may, in our sole discretion, include
+                certain test or beta features or products in the Services
+                (&ldquo;
+              </span>
+              <span className="c6">Beta Offerings</span>
+              <span className="c1">
+                &rdquo;) as we may designate from time to time. Your use of any
+                Beta Offering is completely voluntary. The Beta Offerings are
+                provided on an &ldquo;as is&rdquo; basis and may contain errors,
+                defects, bugs, or inaccuracies that could cause failures,
+                corruption or loss of data and information from any connected
+                device. You acknowledge and agree that all use of any Beta
+                Offering is at your sole risk. You agree that once you use a
+                Beta Offering, your content or data may be affected such that
+                you may be unable to revert back to a prior non-beta version of
+                the same or similar feature. Additionally, if such reversion is
+                possible, you may not be able to return or restore data created
+                within the Beta Offering back to the prior non-beta version. If
+                we provide you with any Beta Offerings on a closed beta or
+                confidential basis, we will notify you of such as part of your
+                use of the Beta Offerings. For any such confidential Beta
+                Offerings, you agree to not disclose, divulge, display, or
+                otherwise make available any of the Beta Offerings without our
+                prior written consent.
+              </span>
+            </li>
+          </ol>
+          <ol className="c2 lst-kix_v61pi1glm5bt-0" start={2}>
+            <li className="c9 li-bullet-0">
+              <h1 id="h.kg6jgqtuw849" className="inline">
+                <span className="c0">
+                  ELIGIBILITY; USER ACCOUNTS
+                  <br />
+                </span>
+              </h1>
+            </li>
+          </ol>
+          <ol className="c2 lst-kix_v61pi1glm5bt-1 start" start={1}>
+            <li className="c4 li-bullet-0">
+              <span className="c7">Eligibility</span>
+              <span>
+                . &nbsp;To use the Services, you must be 18 years of age or
+                older and not be a Prohibited Person.
+              </span>
+              <span className="c6">&nbsp;</span>
+              <span>A &ldquo;</span>
+              <span className="c6">Prohibited Person</span>
+              <span>
+                &rdquo; is any person or entity that is (a) listed on any U.S.
+                Government list of prohibited or restricted parties, including
+                the U.S. Treasury Department&rsquo;s list of Specially
+                Designated Nationals and Blocked Persons maintained by the US
+                Treasury Department&rsquo;s Office of Foreign Assets Control
+                (&ldquo;
+              </span>
+              <span className="c6">OFAC</span>
+              <span>&rdquo;</span>
+              <span>) or the U.S. Department of Commerce Denied </span>
+              <span>Person&rsquo;s</span>
+              <span>
+                &nbsp;List or Entity List, (b) located or organized in any U.S.
+                embargoed countries or any country that has been designated by
+                the U.S. Government as a &ldquo;terrorist supporting&rdquo;, (c)
+                on any list pursuant to European Union (&ldquo;
+              </span>
+              <span className="c6">EU</span>
+              <span>&rdquo;) and/or United Kingdom (&ldquo;</span>
+              <span className="c6">UK</span>
+              <span>
+                &rdquo;) regulations (as the latter are extended to the British
+                Virgin Islands by statutory instrument); (ii) operationally
+                based or domiciled in a country or territory in relation to
+                which sanctions imposed by the United Nations (whether through
+                the Security Council or otherwise), OFAC, the EU and/or the UK
+                apply; or (iii) otherwise pursuant to sanctions imposed by the
+                United Nations, OFAC, the EU or the UK; (c) for a senior foreign
+                political figure, any member of a senior foreign political
+                figure&rsquo;s immediate family or any close associate of a
+                senior foreign political figure unless the directors of the
+                Company, after being specifically notified by the Purchaser in
+                writing that it is such a person, conduct further due diligence
+                and determine that you shall be permitted to receive the
+                relevant Company NFT under these terms, (d) trustee, agent,
+                representative or nominee for a foreign shell bank, or (e) owned
+                or controlled by such persons or entities listed in (a)-(e).
+                &nbsp;You acknowledge and agree that you are solely responsible
+                for complying with all applicable laws of the jurisdiction you
+                are located or accessing the Services from in connection with
+                your use of the Services. Further, if you use the Services, you
+                may not transfer or provide to us any currency, digital assets
+                or other items that have been derived from any illegal or
+                unlawful activity.{' '}
+              </span>
+              <span className="c6">
+                By using the Services, you represent and warrant that you meet
+                these all requirements.
+              </span>
+            </li>
+          </ol>
+          <ol className="c2 lst-kix_v61pi1glm5bt-0" start={3}>
+            <li className="c9 li-bullet-0">
+              <h1 id="h.dgq21f1fnx6w" className="inline">
+                <span className="c0">
+                  LOCATION OF OUR PRIVACY AND ADDITIONAL POLICIES
+                </span>
+              </h1>
+            </li>
+          </ol>
+          <ol className="c2 lst-kix_v61pi1glm5bt-1 start" start={1}>
+            <li className="c4 li-bullet-0">
+              <span className="c7">Privacy Policy</span>
+              <span className="c1">
+                . Our Privacy Policy describes how we handle the information you
+                provide to us when you use the Services. For an explanation of
+                our privacy practices, please visit our Privacy Policy located
+                at portal.intuition.systems/privacy.
+              </span>
+            </li>
+          </ol>
+          <ol className="c2 lst-kix_v61pi1glm5bt-0" start={4}>
+            <li className="c9 li-bullet-0">
+              <h1 id="h.71tzq3vgeem3" className="inline">
+                <span className="c0">RIGHTS WE GRANT YOU</span>
+              </h1>
+            </li>
+          </ol>
+          <ol className="c2 lst-kix_v61pi1glm5bt-1 start" start={1}>
+            <li className="c4 li-bullet-0">
+              <h2 id="h.svm0n0gedqmt" className="inline">
+                <span className="c7 c8">Services License</span>
+                <span className="c1">
+                  . Subject to your compliance with these Terms, the Company
+                  hereby grants to you, a personal, worldwide, royalty-free,
+                  non-assignable, non-sublicensable, non-transferrable, and
+                  non-exclusive license to use the software provided to you as
+                  part of the Services. This license has the sole purpose of
+                  enabling you to use and enjoy the benefit of the Services as
+                  provided by us, in the manner permitted by these Terms and
+                  subject to the use restrictions described below. Your access
+                  and use of the Services may be interrupted from time to time
+                  for any of several reasons, including, without limitation, the
+                  malfunction of equipment, periodic updating, maintenance, or
+                  repair of the Service or other actions that Company, in its
+                  sole discretion, may elect to take.
+                </span>
+              </h2>
+            </li>
+          </ol>
+          <ol className="c2 lst-kix_v61pi1glm5bt-0" start={5}>
+            <li className="c17 li-bullet-0">
+              <h1 id="h.gka81dyq0vrg" className="inline">
+                <span className="c0">
+                  USE OF THE SERVICES
+                  <br />
+                </span>
+              </h1>
+            </li>
+          </ol>
+          <ol className="c2 lst-kix_v61pi1glm5bt-1 start" start={1}>
+            <li className="c4 li-bullet-0">
+              <span className="c7">
+                Accessing the Website and User Security
+              </span>
+              <span>
+                . We reserve the right to withdraw or amend the Website
+                (including the Interface), and any other Services or material we
+                provide on the Website, in our sole discretion without notice.
+                We will not be liable if for any reason all or any part of the
+                Website, the Interface, the Protocol, or any of the Services are
+                unavailable at any time or for any period. From time to time, we
+                may restrict access to some parts of the Website, or the entire
+                Website, to Participants. <br />
+                <br />
+                To access certain Services or some of the resources offered on
+                the Website, the User may be asked to provide certain
+                registration details or other information. Other Services or
+                resources offered on the Website (such as the Interface) may
+                require the User to utilize certain Web3 capabilities, such a
+                crypto-asset wallet capable of interacting with the User&rsquo;s
+                web browser or relevant blockchain nodes (&ldquo;Web3
+                Utilities&rdquo;). It is a condition of the User&rsquo;s use of
+                the Website and the Services that the User only operate such
+                Web3 Utilities with a private key(s) that the User created or
+                has the direct, explicit permission of the party who created the
+                relevant private key(s).
+                <br />
+                <br />
+                The User agrees that all information it provides to interact
+                with the Website, Interface, Services, or otherwise, including,
+                but not limited to, through the use of any interactive features
+                on the Website is correct, current, and complete. The User
+                consents to all actions we take with respect to the User&rsquo;s
+                information as is consistent with these Terms of Use and all
+                documents referenced or incorporated herein.
+                <br />
+                <br />
+                If the User utilizes a Web3 Utility that relies on a separate
+                username, password, private key, or any other piece of
+                information as part of its security procedures, the User must
+                treat such information as confidential, and the User must not
+                disclose that information to any other person or entity. The
+                User also acknowledges that any identity linked to its Web3
+                Utility is personal to the User and agrees not to provide any
+                other person with access to such identity. The User also agrees
+                to ensure that it will lock or otherwise prevent its Web3
+                Utility from unauthorized use on this Website or the Services at
+                the end of each session. The User should use particular caution
+                when accessing the Website or the Services from a public or
+                shared computer so that others are not able to view or record
+                the User&rsquo;s username, password, private key, or other
+                personal information. In the event the User&rsquo;s Web3
+                credentials are compromised, the User acknowledges and
+                understands that all of its related crypto-assets may be
+                compromised as well, and waives any and all responsibility of
+                and liability against Intuition related to any losses in any
+                such event.
+              </span>
+            </li>
+            <li className="c4 li-bullet-0">
+              <span className="c7">
+                Interaction with other users on the Services
+              </span>
+              <span className="c1">
+                . The Website is a user interface for displaying content created
+                by other users. We do not verify, endorse, or assume
+                responsibility for any content, contracts, or applications
+                introduced or created by users. Users must exercise caution and
+                conduct their due diligence before interacting with any
+                contracts or applications.
+                <br />
+                <br />
+                You are responsible for your interactions with other users on
+                the Services. While we reserve the right to monitor interactions
+                between users of our Services, we are not obligated to do so,
+                and we cannot be held liable for your interactions with other
+                users, or for any user&rsquo;s actions or inactions. If you have
+                a dispute with one or more users, you release us (and our
+                affiliates and subsidiaries, and our and their respective
+                officers, directors, employees and agents) from claims, demands
+                and damages (actual and consequential) of every kind and nature,
+                known and unknown, arising out of or in any way connected with
+                such disputes. In entering into this release you expressly waive
+                any protections (whether statutory or otherwise) that would
+                otherwise limit the coverage of this release to include only
+                those claims which you may know or suspect to exist in your
+                favor at the time of agreeing to this release.
+              </span>
+            </li>
+            <li className="c4 li-bullet-0">
+              <span className="c7">
+                Restrictions on Your Use of the Service
+              </span>
+              <span className="c1">
+                . You may not do any of the following, unless applicable laws or
+                regulations prohibit these restrictions or you have our written
+                permission to do so:
+              </span>
+            </li>
+          </ol>
+          <ol className="c2 lst-kix_v61pi1glm5bt-2 start" start={1}>
+            <li className="c5 li-bullet-0">
+              <span className="c1">
+                submit, transmit, display, perform, post or store any content
+                that is inaccurate, unlawful, defamatory, obscene, lewd,
+                lascivious, filthy, excessively violent, pornographic, invasive
+                of privacy or publicity rights, harassing, threatening, abusive,
+                inflammatory, harmful, hateful, cruel or insensitive, deceptive,
+                or otherwise objectionable, use the Services for illegal,
+                harassing, bullying, unethical or disruptive purposes, or
+                otherwise use the Services in a manner that is obscene, lewd,
+                lascivious, filthy, excessively violent, harassing, harmful,
+                hateful, cruel or insensitive, deceptive, threatening, abusive,
+                inflammatory, pornographic, inciting, organizing, promoting or
+                facilitating violence or criminal or harmful activities,
+                defamatory, obscene or otherwise objectionable;
+              </span>
+            </li>
+            <li className="c5 li-bullet-0">
+              <span className="c1">
+                use the Services for the purpose of exploiting, harming, or
+                attempting to exploit or harm minors in any way by exposing them
+                to inappropriate content, asking for personally identifiable
+                information, or otherwise;
+              </span>
+            </li>
+            <li className="c5 li-bullet-0">
+              <span className="c1">
+                promote any illegal activity, or advocate, promote, or assist
+                any unlawful act;
+              </span>
+            </li>
+            <li className="c5 li-bullet-0">
+              <span className="c1">
+                cause needless annoyance, inconvenience, or anxiety, or be
+                likely to unreasonably upset, embarrass, alarm, or annoy any
+                other person;
+              </span>
+            </li>
+            <li className="c5 li-bullet-0">
+              <span className="c12">
+                duplicate, decompile, reverse engineer, disassemble, or decode
+                the Services (including any underlying idea or algorithm), or
+                attempt to do any of the same;
+              </span>
+            </li>
+            <li className="c5 li-bullet-0">
+              <span className="c1">
+                use, reproduce or remove any copyright, trademark, service mark,
+                trade name, slogan, logo, image, or other proprietary notation
+                displayed on or through the Services;
+              </span>
+            </li>
+            <li className="c5 li-bullet-0">
+              <span className="c1">
+                use the Services in such a way as to infringe the privacy,
+                intellectual property rights or other rights of third parties;
+              </span>
+            </li>
+            <li className="c5 li-bullet-0">
+              <span className="c1">
+                use automation software (bots), hacks, modifications (mods) or
+                any other unauthorized third party software designed to modify
+                the Services;
+              </span>
+            </li>
+            <li className="c5 li-bullet-0">
+              <span className="c1">
+                use any robot, spider, crawlers, scraper, or other automatic
+                device, process, software, or queries that intercepts,
+                &ldquo;mines,&rdquo; scrapes, extracts, or otherwise accesses
+                the Services to monitor, extract, copy, or collect information
+                or data from or through the Services, or engage in any manual
+                process to do the same;
+              </span>
+            </li>
+            <li className="c5 li-bullet-0">
+              <span className="c12">
+                access or use the Services in any manner that could disable,
+                overburden, damage, disrupt, or impair the Services or interfere
+                with any other party&rsquo;s access to or use of the Services or
+                use any device, software or routine that causes the same;
+              </span>
+            </li>
+            <li className="c5 li-bullet-0">
+              <span className="c12">
+                attempt to gain unauthorized access to, interfere with, damage
+                or disrupt the Services, accounts registered to other users, or
+                the computer systems or networks connected to the Services;
+              </span>
+            </li>
+            <li className="c5 li-bullet-0">
+              <span className="c12">
+                circumvent, remove, alter, deactivate, degrade, or thwart any
+                technological measure
+              </span>
+              <span>, </span>
+              <span className="c12">
+                content protections, or restrictions prohibiti
+              </span>
+              <span>ng impermissible access to</span>
+              <span className="c12">&nbsp;the Services;</span>
+            </li>
+            <li className="c5 li-bullet-0">
+              <span className="c12">
+                introduce any viruses, trojan horses, worms, logic bombs, or
+                other materials that are malicious or technologically harmful
+                into our systems;
+              </span>
+            </li>
+            <li className="c5 li-bullet-0">
+              <span className="c1">
+                deceive or defraud, or attempt to deceive or defraud, any
+                person, including (without limitation) providing any false,
+                inaccurate, or misleading information (whether directly through
+                the Services or through an external means that affects the
+                Protocol) with the intent to unlawfully obtain the property of
+                another or to provide knowingly or recklessly false information,
+                including in any way that causes inaccuracy among the content on
+                the Website or on the Services;
+              </span>
+            </li>
+            <li className="c5 li-bullet-0">
+              <span className="c1">
+                impersonate any person, or misrepresent the User&rsquo;s
+                affiliation with any person or organization in connection with
+                its use of the Website and Services;
+              </span>
+            </li>
+            <li className="c5 li-bullet-0">
+              <span className="c1">
+                provide the Company with the personal information of any persons
+                under the age of 13 for delivery or any other reason;
+              </span>
+            </li>
+            <li className="c5 li-bullet-0">
+              <span className="c12">
+                violate any applicable law or regulation in connection with your
+                access to or use of the Services (including, without limitation,
+                any laws regarding the export of data or software to and from
+                the US and other countries);
+              </span>
+              <span className="c12 c19">&nbsp;</span>
+              <span className="c12">or</span>
+            </li>
+            <li className="c5 li-bullet-0">
+              <span className="c12">
+                access or use the Services in any way not expressly permitted by
+                these Terms.
+              </span>
+            </li>
+          </ol>
+          <ol className="c2 lst-kix_v61pi1glm5bt-1" start={4}>
+            <li className="c4 li-bullet-0">
+              <span className="c7">
+                Monitoring and Enforcement; Termination
+              </span>
+              <span>.</span>
+              <span className="c6">&nbsp;</span>
+              <span className="c1">
+                We reserve the right to remove any content, file or image deemed
+                in violation of these Terms at our sole discretion and assume no
+                liability for loss incurred through uploading or otherwise
+                interacting with content in violation of our Terms of Service.
+                <br />
+                <br />
+                We may also Terminate or suspend your access to all or part of
+                the Website for any or no reason, including without limitation,
+                any violation of these Terms of Use, and may further take
+                appropriate legal action, including without limitation, referral
+                to law enforcement, for any illegal or unauthorized use of the
+                Website.
+                <br />
+                <br />
+                Without limiting the foregoing, We have the right to cooperate
+                fully with any law enforcement authorities or court order
+                requesting or directing us to disclose the identity or other
+                information of anyone posting any materials on or through the
+                Website. BY USING THE SERVICES, YOU WAIVE AND HOLD HARMLESS
+                COMPANY AND ITS AFFILIATES, LICENSEES, AND SERVICE PROVIDERS
+                FROM ANY CLAIMS RESULTING FROM ANY ACTION TAKEN BY ANY OF THE
+                FOREGOING PARTIES DURING, OR TAKEN AS A CONSEQUENCE OF,
+                INVESTIGATIONS BY EITHER SUCH PARTIES OR LAW ENFORCEMENT
+                AUTHORITIES.
+                <br />
+                <br />
+                However, we cannot review interactions or activities before they
+                are executed through the Website, and, given the nature of
+                blockchain and functionalities like those offered via the
+                Services, cannot ensure prompt removal or rectification of
+                objectionable interactions or activities after they have been
+                executed. Accordingly, the User agrees that we assume no
+                liability for any action or inaction regarding transmissions,
+                communications, transactions, blockchain operations, or content
+                provided by any Participant or third party, including any that
+                may cause a malfunction or inaccuracy on the Website or among
+                the Services. We have no liability or responsibility to anyone
+                for any other party&rsquo;s performance or nonperformance of the
+                activities described in this Section, nor for any harms or
+                damages created by others&rsquo; interactions with any
+                blockchain underlying the Services or reliance on the
+                information or content presented on the Website.
+              </span>
+            </li>
+          </ol>
+          <ol className="c2 lst-kix_v61pi1glm5bt-0" start={6}>
+            <li className="c9 li-bullet-0">
+              <h1 id="h.s32s21zoksm" className="inline">
+                <span className="c0">OWNERSHIP AND CONTENT</span>
+              </h1>
+            </li>
+          </ol>
+          <ol className="c2 lst-kix_v61pi1glm5bt-1 start" start={1}>
+            <li className="c4 li-bullet-0">
+              <span className="c7">Ownership of the Services</span>
+              <span className="c1">
+                . The Services, including their &ldquo;look and feel&rdquo;
+                (e.g., text, graphics, images, logos), proprietary content,
+                information and other materials, are protected under copyright,
+                trademark and other intellectual property laws. You agree that
+                the Company and/or its licensors own all right, title and
+                interest in and to the Services and you agree not to take any
+                action(s) inconsistent with such ownership interests. We and our
+                licensors reserve all rights in connection with the Services and
+                its content, including the right to create derivative works.
+              </span>
+            </li>
+            <li className="c4 li-bullet-0">
+              <span className="c7">Ownership of Trademarks</span>
+              <span className="c1">
+                . The Company&rsquo;s name, trademarks, the Company&rsquo;s
+                logo, and all related names, logos, product and service names,
+                designs and slogans are trademarks of the Company or its
+                affiliates or licensors. Other names, logos, product and service
+                names, designs, and slogans that appear on the Services are the
+                property of their respective owners, who may or may not be
+                affiliated with, connected to, or sponsored by us.
+              </span>
+            </li>
+          </ol>
+          <ol className="c2 lst-kix_v61pi1glm5bt-0" start={7}>
+            <li className="c17 li-bullet-0">
+              <h1 id="h.m4uij41phr5g" className="inline">
+                <span className="c0">WEBSITE CONTENT AND INFORMATION</span>
+              </h1>
+            </li>
+          </ol>
+          <p className="c10 c22">
+            <span className="c0"></span>
           </p>
-          <p className="c0">
-            <span className="c1">
-              <br />
-              19. &nbsp;Governing Law and Jurisdiction
-              <br />
-            </span>
-          </p>
-          <p className="c0">
-            <span className="c1">
-              The User agrees to defend, indemnify, and hold harmless Intuition,
-              its affiliates, licensors, and service providers, and its and
-              their respective officers, directors, contributors, contractors,
-              agents, licensors, suppliers, successors, and assigns from and
-              against any claims, liabilities, damages, judgments, awards,
-              losses, costs, expenses, or fees (including reasonable
-              attorneys&rsquo; fees) arising out of or relating to: (1) the
-              User&rsquo;s violation of these Terms of Use; (2) the User&rsquo;s
-              use of the Website, the Services, or the Protocol, including, but
-              not limited to, the User&rsquo;s interactions with the Interface
-              or other features which incorporate the Services, use of or
-              reliance on the Website&rsquo;s content, services, and products
-              other than as expressly authorized in these Terms of Use; (3) the
-              User&rsquo;s use or reliance on of any information obtained from
-              the Website; or (4) any other party&rsquo;s access and use of the
-              Website or Services with the User&rsquo;s assistance or by using
-              any device or account that the User owns or controls.
-            </span>
-          </p>
-          <p className="c0">
-            <span className="c1">
-              <br />
-              20. &nbsp;Arbitration; Class Arbitration Waiver
-              <br />
-            </span>
-          </p>
-          <p className="c0">
-            <span className="c1">
-              Any dispute, controversy or claim arising out of, relating to, or
-              in connection with the User&rsquo;s use of the Website or the
-              Services, or in connection with this Agreement, including disputes
-              arising from or concerning their interpretation, violation,
-              invalidity, non-performance, or termination, shall be finally
-              resolved by binding individual arbitration before a single
-              arbitrator appointed by the American Arbitration Association
-              (&ldquo;AAA&rdquo;) under the Federal Arbitration Act (&ldquo;FAA)
-              and not sue in court in front of a judge or jury. TThe neutral
-              arbitrator will decide the dispute, and the arbitrator&rsquo;s
-              decision will be final except for a limited right of review under
-              the FAA. The parties agree to arbitrate solely on an individual
-              basis, and that these Terms of Use do not permit className
-              arbitration or any claims brought as a plaintiff or className
-              member in any className or representative arbitration proceeding.
-              The arbitrator may not consolidate more than one person&rsquo;s
-              claims and may not otherwise preside over any form of a
-              representative or className proceeding. In the event the
-              prohibition on className arbitration is deemed invalid or
-              unenforceable, then its remaining portions will remain in force.
-            </span>
-          </p>
-          <p className="c0 c2">
-            <span className="c1"></span>
-          </p>
-          <p className="c0">
-            <span className="c1">
-              21. &nbsp;Limitation on Time to File Claims
-            </span>
-          </p>
-          <p className="c0">
-            <span className="c1">
-              <br />
-              ANY CAUSE OF ACTION OR CLAIM THE USER MAY HAVE ARISING OUT OF OR
-              RELATING TO THESE TERMS OF USE OR ITS USE OF THE WEBSITE MUST BE
-              COMMENCED WITHIN ONE (1) YEAR AFTER THE CAUSE OF ACTION ACCRUES;
-              OTHERWISE, SUCH CAUSE OF ACTION OR CLAIM IS PERMANENTLY BARRED.
-            </span>
-          </p>
-          <p className="c0">
-            <span className="c1">
-              <br />
-              22. &nbsp;Waiver and Severability
-            </span>
-          </p>
-          <p className="c0">
-            <span className="c1">
-              <br />
-              No waiver by Intuition of any term or condition set out in these
-              Terms of Use shall be deemed a further or continuing waiver of
-              such term or condition or a waiver of any other term or condition,
-              and any failure of Intuition to assert a right or provision under
-              these Terms of Use shall not constitute a waiver of such right or
-              provision.
-              <br />
-            </span>
-          </p>
-          <p className="c0">
-            <span className="c1">
-              If any provision of these Terms of Use is held by a court or other
-              tribunal of competent jurisdiction to be invalid, illegal, or
-              unenforceable for any reason, such provision shall be eliminated
-              or limited to the minimum extent such that the remaining
-              provisions of these Terms of Use will continue in full force and
-              effect.
-            </span>
-          </p>
-          <p className="c0">
-            <span className="c1">
-              <br />
-              23. &nbsp;Entire Agreement
-            </span>
-          </p>
-          <p className="c0">
-            <span className="c1">
-              <br />
-              These Terms of Use, the Privacy Policy, and any other document
-              incorporated by reference herein constitute the sole and entire
-              agreement between the User and Intuition regarding the Website and
-              supersede all prior and contemporaneous understandings,
-              agreements, representations, and warranties, both written and
-              oral, regarding the Website.
-            </span>
-          </p>
-          <p className="c0 c2">
-            <span className="c1"></span>
-          </p>
-          <p className="c0 c2">
-            <span className="c1"></span>
-          </p>
+          <ol className="c2 lst-kix_v61pi1glm5bt-1" start={3}>
+            <li className="c4 li-bullet-0">
+              <span className="c7">Reliance on Information Posted</span>
+              <span>
+                . The content and information presented on or through the
+                Website (including, without limitation, on the Interface) is
+                made available solely for general information and education
+                purposes. We do not warrant the accuracy, completeness, or
+                usefulness of this information. Any information posted to the
+                Website or through the Services should not be construed as an
+                intention to form a contract, and in no case should any
+                information be construed as Company&rsquo;s offer to buy, sell,
+                or exchange crypto-assets. Any reliance the User places on such
+                information is strictly at the User&rsquo;s own risk, and as is
+                common in the blockchain space, the User is assuming a high
+                amount of risk related to others or technical harms when
+                operating via the Website, the Interface, and the Services. We
+                disclaim all liability and responsibility arising from any
+                reliance placed on such materials by the User or any other
+                Participant, by anyone who may be informed of any of the
+                Website&rsquo;s or the Services&rsquo; contents, or by the
+                actions or omissions of others interacting with the Protocol or
+                any underlying blockchain.
+              </span>
+            </li>
+            <li className="c4 li-bullet-0">
+              <span className="c7">
+                Use of Third Party Materials in the Services
+              </span>
+              <span>
+                . Certain Services may display, include or make available
+                content, data, information, applications or materials from third
+                parties (&ldquo;
+              </span>
+              <span className="c6">Third Party Materials</span>
+              <span className="c1">
+                &rdquo;) or provide links to certain third party websites (such
+                as Twitter, Discord, NFT marketplaces or decentralized
+                exchanges). By using the Services, you acknowledge and agree
+                that the Company is not responsible for examining or evaluating
+                the content, accuracy, completeness, availability, timeliness,
+                validity, copyright compliance, legality, decency, quality or
+                any other aspect of such Third Party Materials or websites. We
+                do not warrant or endorse and do not assume and will not have
+                any liability or responsibility to you or any other person for
+                any third party services, Third Party Materials or third party
+                websites, or for any other materials, products, or services of
+                third parties. Third Party Materials and links to other websites
+                are provided solely as a convenience to you.
+              </span>
+            </li>
+            <li className="c4 li-bullet-0">
+              <span className="c7">No Professional Advice</span>
+              <span>. </span>
+              <span className="c1">
+                All information or content provided or displayed by the Website
+                (including, without limitation, on the Interface) is for
+                informational purposes only and should not be construed as
+                professional advice (including, without limitation, tax, legal,
+                or financial advice). The User should not take or refrain from
+                taking any action based on any information or content displayed
+                or provided on the Website, on the Interface, or through the
+                Services. The User should seek independent professional advice
+                from an individual licensed and competent in the appropriate
+                area before the User makes any financial, legal, or other
+                decisions where such should be considered prudent. The User
+                acknowledges and agrees that, to the fullest extent permissible
+                by law, it has not relied on Intuition, the content on the
+                Website, the Interface, or the Services for any professional
+                advice related to its financial or legal behaviors.
+              </span>
+            </li>
+            <li className="c4 li-bullet-0">
+              <span className="c7">
+                Claims of Intellectual Property Violations and Copyright
+                Infringement
+              </span>
+              <span className="c1">
+                . We respond to notices of alleged copyright infringement under
+                the United States Digital Millennium Copyright Act. Our team
+                works to ensure that content on our Website or in our app does
+                not infringe upon the copyright, trademark, or certain other
+                intellectual property rights of third parties. If you believe
+                that your intellectual property rights have been infringed,
+                please notify support@intuition.systems and we will investigate.
+              </span>
+            </li>
+          </ol>
+          <ol className="c2 lst-kix_v61pi1glm5bt-0" start={8}>
+            <li className="c9 li-bullet-0">
+              <h1 id="h.75sckzu9p7lo" className="inline">
+                <span className="c0">
+                  DISCLAIMERS, LIMITATIONS OF LIABILITY, AND INDEMNIFICATION
+                </span>
+              </h1>
+            </li>
+          </ol>
+          <ol className="c2 lst-kix_v61pi1glm5bt-1 start" start={1}>
+            <li className="c4 li-bullet-0">
+              <span className="c7">Disclaimers</span>
+              <span className="c1">. </span>
+            </li>
+          </ol>
+          <ol className="c2 lst-kix_v61pi1glm5bt-2 start" start={1}>
+            <li className="c5 li-bullet-0">
+              <span>
+                Your access to and use of the Services are at your own risk. You
+                understand and agree that the Services are provided to you on an
+                &ldquo;AS IS&rdquo; and &ldquo;AS AVAILABLE&rdquo; basis.
+                Without limiting the foregoing, to the maximum extent permitted
+                under applicable law, the Company, its parents, affiliates,
+                related companies, officers, directors, employees, agents,
+                representatives, partners and licensors (the &ldquo;
+              </span>
+              <span className="c6">the Company Entities</span>
+              <span className="c1">
+                &rdquo;) DISCLAIM ALL WARRANTIES AND CONDITIONS, WHETHER EXPRESS
+                OR IMPLIED, OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE
+                OR NON-INFRINGEMENT. The Company Entities make no warranty or
+                representation and disclaim all responsibility and liability
+                for: (a) the completeness, accuracy, availability, timeliness,
+                security or reliability of the Services; (b) any harm to your
+                computer system, loss of data, or other harm that results from
+                your access to or use of the Services; (c) the operation or
+                compatibility with any other application or any particular
+                system or device; and (d) whether the Services will meet your
+                requirements or be available on an uninterrupted, secure or
+                error-free basis. No advice or information, whether oral or
+                written, obtained from the Company Entities or through the
+                Services, will create any warranty or representation not
+                expressly made herein.
+              </span>
+            </li>
+            <li className="c5 li-bullet-0">
+              <span className="c12">
+                THE LAWS OF CERTAIN JURISDICTIONS, INCLUDING THE STATE OF NEW
+                JERSEY, DO NOT ALLOW LIMITATIONS ON IMPLIED WARRANTIES OR THE
+                EXCLUSION OR LIMITATION OF CERTAIN DAMAGES AS SET FORTH IN
+                SECTION 9.2 BELOW. IF THESE LAWS APPLY TO YOU, SOME OR ALL OF
+                THE ABOVE DISCLAIMERS, EXCLUSIONS, OR LIMITATIONS MAY NOT APPLY
+                TO YOU, AND YOU MAY HAVE ADDITIONAL RIGHTS.
+              </span>
+            </li>
+            <li className="c5 li-bullet-0">
+              <span className="c12">
+                THE COMPANY ENTITIES TAKE NO RESPONSIBILITY AND ASSUME NO
+                LIABILITY FOR ANY CONTENT THAT YOU, ANOTHER USER, OR A THIRD
+                PARTY CREATES, UPLOADS, POSTS, SENDS, RECEIVES, OR STORES ON OR
+                THROUGH OUR SERVICES.
+              </span>
+            </li>
+            <li className="c5 li-bullet-0">
+              <span className="c1">
+                YOU UNDERSTAND AND AGREE THAT YOU MAY BE EXPOSED TO CONTENT THAT
+                MIGHT BE OFFENSIVE, ILLEGAL, MISLEADING, OR OTHERWISE
+                INAPPROPRIATE, NONE OF WHICH THE COMPANY ENTITIES WILL BE
+                RESPONSIBLE FOR.
+              </span>
+            </li>
+          </ol>
+          <ol className="c2 lst-kix_v61pi1glm5bt-1" start={2}>
+            <li className="c4 li-bullet-0">
+              <span className="c7">Limitations of Liability</span>
+              <span className="c1">
+                . TO THE EXTENT NOT PROHIBITED BY LAW, YOU AGREE THAT IN NO
+                EVENT WILL THE COMPANY ENTITIES BE LIABLE (A) FOR DAMAGES OF ANY
+                KIND, INCLUDING INDIRECT SPECIAL, EXEMPLARY, INCIDENTAL,
+                CONSEQUENTIAL OR PUNITIVE DAMAGES (INCLUDING, BUT NOT LIMITED
+                TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, LOSS OF USE,
+                DATA OR PROFITS, BUSINESS INTERRUPTION OR ANY OTHER
+                &nbsp;DAMAGES OR LOSSES, ARISING OUT OF OR RELATED TO YOUR USE
+                OR INABILITY TO USE THE SERVICES), HOWEVER CAUSED AND UNDER ANY
+                THEORY OF LIABILITY, WHETHER UNDER THESE TERMS OR OTHERWISE
+                ARISING IN ANY WAY IN CONNECTION WITH THE SERVICES OR THESE
+                TERMS AND WHETHER IN CONTRACT, STRICT LIABILITY OR TORT
+                (INCLUDING NEGLIGENCE OR OTHERWISE) EVEN IF THE COMPANY ENTITIES
+                HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE, OR (B) FOR
+                ANY OTHER CLAIM, DEMAND OR DAMAGES WHATSOEVER RESULTING FROM OR
+                ARISING OUT OF OR IN CONNECTION WITH THESE TERMS OR THE
+                DELIVERY, USE OR PERFORMANCE OF THE SERVICES. &nbsp;THE COMPANY
+                ENTITIES&rsquo; TOTAL LIABILITY TO YOU FOR ANY DAMAGES FINALLY
+                AWARDED SHALL NOT EXCEED THE GREATER OF ONE HUNDRED DOLLARS
+                ($100.00), OR THE AMOUNT YOU PAID THE COMPANY ENTITIES, IF ANY,
+                IN THE PAST SIX (6) MONTHS FOR THE SERVICES (OR OFFERINGS
+                PURCHASED ON THE SERVICES) GIVING RISE TO THE CLAIM. THE
+                FOREGOING LIMITATIONS WILL APPLY EVEN IF THE ABOVE STATED REMEDY
+                FAILS OF ITS ESSENTIAL PURPOSE.
+              </span>
+            </li>
+            <li className="c4 li-bullet-0">
+              <span className="c7">Indemnification</span>
+              <span className="c1">
+                . By entering into these Terms and accessing or using the
+                Services, you agree that you shall defend, indemnify and hold
+                the Company Entities harmless from and against any and all
+                claims, costs, damages, losses, liabilities and expenses
+                (including attorneys&rsquo; fees and costs) incurred by the
+                Company Entities arising out of or in connection with: (a) your
+                violation or breach of any term of these Terms or any applicable
+                law or regulation; (b) your violation of any rights of any third
+                party; (c) your misuse of the Services; or (d) your negligence
+                or wilful misconduct. If you are obligated to indemnify any
+                Company Entity hereunder, then you agree that Company (or, at
+                its discretion, the applicable Company Entity) will have the
+                right, in its sole discretion, to control any action or
+                proceeding and to determine whether Company wishes to settle,
+                and if so, on what terms, and you agree to fully cooperate with
+                Company in the defense or settlement of such claim.
+              </span>
+            </li>
+            <li className="c4 li-bullet-0">
+              <span className="c7">Acknowledgement: Assumption of Risks</span>
+              <span className="c1">.</span>
+            </li>
+          </ol>
+          <ol className="c2 lst-kix_v61pi1glm5bt-2 start" start={1}>
+            <li className="c5 li-bullet-0">
+              <span>
+                By using the Services, you acknowledge that blockchains,
+                decentralized exchanges, decentralized finance, crypto-assets,
+                the Protocol, and their related technologies and functionalities
+                are still emerging innovations that carry a relatively high
+                amount of foreseeable and unforeseeable risk from security,
+                financial, technical, political, social, and personal safety
+                standpoints. The speed and cost of transacting with
+                cryptographic technologies, such as blockchains like those
+                underlying the Protocol, are variable and highly volatile.
+                Moreover, the transparent nature of many blockchains means that
+                any interactions the User has with the Protocol and any
+                blockchain may be publicly visible and readable in human form.{' '}
+              </span>
+              <span className="c6">
+                The Website and Services are still in beta and Users acknowledge
+                the elevated risk associated with early testing of the Website,
+                the Interface, the Services, and the Protocol
+              </span>
+              <span className="c1">.</span>
+            </li>
+            <li className="c5 li-bullet-0">
+              <span className="c1">
+                Crypto-assets are highly volatile in nature due to many diverse
+                factors, including without limitation use and adoption,
+                speculation, manipulation, technology, security, and legal and
+                regulatory developments and application. We do not provide any
+                kind of insurance to you against any type of loss, including
+                (without limitation) losses due to decrease in value of assets,
+                assets lost due to a cybersecurity failure, or from your or
+                other individuals&rsquo; errors or malfeasance. You acknowledge
+                that cryptocurrencies and other similar digital assets are
+                neither (i) deposits of or guaranteed by a bank nor (ii) insured
+                by the FDIC or by any other governmental agency. Further, you
+                agree that Company&rsquo;s Services are not to be used as a
+                substitute for currency or medium of exchange, or redistribution
+                and that you are not acquiring any equity or other ownership or
+                revenue sharing interest in the Company, its affiliates, or any
+                brand as a result of your use of the Services.
+              </span>
+            </li>
+            <li className="c5 li-bullet-0">
+              <span className="c1">
+                The mere access to and interaction with blockchains requires
+                high degrees of skill and knowledge to operate with a relative
+                degree of safety and proficiency. By accessing and using the
+                Website or the Services, the User acknowledges the foregoing,
+                and agrees and represents that it understands and assumes such
+                and other risks involved with blockchains, decentralized
+                finance, the Protocol, and related technologies (including
+                without limitation any specific technical language used in this
+                Agreement). You acknowledge that there are inherent risks
+                associated with using or interacting with public blockchains and
+                blockchain technology. There is no guarantee that such
+                technology will be unavailable or subject to errors, hacking or
+                other security risks. Underlying blockchain protocols may also
+                be subject to sudden changes in operating rules, including
+                forks, and it is your responsibility to make yourself aware of
+                upcoming operating changes.
+              </span>
+            </li>
+            <li className="c5 li-bullet-0">
+              <span className="c1">
+                The User represents that it has sufficient knowledge and
+                experience in business and financial matters, including a
+                sufficient understanding of blockchain technologies, digital
+                assets, storage mechanisms (such as Wallets), and
+                blockchain-based software systems to be able to assess and
+                evaluate the risks and benefits of the Services contemplated
+                hereunder, and will bear the risks thereof, including loss of
+                all amounts paid, and the risk that digital assets may have
+                little or no value. You acknowledge and agree that there are
+                risks associated with purchasing and holding digital assets and
+                using blockchain technology. These including, but are not
+                limited to, risk of losing access to digital assets due to loss
+                of private key(s), custodial error or purchaser error, risk of
+                mining or blockchain attacks, risk of hacking and security
+                weaknesses, risk of unfavorable regulatory intervention in one
+                or more jurisdictions, risks related to token taxation, risk of
+                personal information disclosure, risk of uninsured losses,
+                unanticipated risks, and volatility risks.
+              </span>
+            </li>
+            <li className="c5 li-bullet-0">
+              <span className="c12">
+                We will use commercially reasonable efforts to use secure and
+                functional smart contracts, however, we will not be liable or
+                responsible to you for any failure in the intended function of
+                such smart contracts, or any bugs, viruses, exploits, logic
+                gaps, or malicious code which may be incorporated into any such
+                smart contracts, or which could be used to commit fraud or
+                otherwise cause harm. You acknowledge that you have obtained
+                sufficient information to make an informed decision to interact
+                with relevant smart contracts, including carefully reviewing the
+                code of the smart contracts, and fully understand and accept the
+                functions of the same. Smart contracts execute automatically
+                when certain conditions are met. We do not have the ability to
+                reverse a transaction that is recorded on a public blockchain.
+                You are responsible for ensuring that any details{' '}
+              </span>
+              <span>entered</span>
+              <span className="c1">
+                &nbsp;in connection with a transaction using any smart contracts
+                are accurate and complete. We are not responsible for any losses
+                due to your errors, including an incorrectly constructed
+                transaction.
+              </span>
+            </li>
+          </ol>
+          <ol className="c2 lst-kix_v61pi1glm5bt-0" start={9}>
+            <li className="c9 li-bullet-0">
+              <h1 id="h.ir4t1q6ixcix" className="inline">
+                <span className="c0">
+                  ARBITRATION AND CLASS ACTION WAIVER
+                  <br />
+                  <br />
+                  PLEASE READ THIS SECTION CAREFULLY &ndash; IT MAY
+                  SIGNIFICANTLY AFFECT YOUR LEGAL RIGHTS, INCLUDING YOUR RIGHT
+                  TO FILE A LAWSUIT IN COURT AND TO HAVE A JURY HEAR YOUR
+                  CLAIMS. IT CONTAINS PROCEDURES FOR MANDATORY BINDING
+                  ARBITRATION AND A CLASS ACTION WAIVER.
+                </span>
+              </h1>
+            </li>
+          </ol>
+          <ol className="c2 lst-kix_v61pi1glm5bt-1 start" start={1}>
+            <li className="c4 li-bullet-0">
+              <span className="c7">Informal Process First</span>
+              <span className="c1">
+                . You and the Company agree that in the event of any dispute,
+                either party will first contact the other party and make a good
+                faith sustained effort to resolve the dispute before resorting
+                to more formal means of resolution, including without
+                limitation, any court action, after first allowing the receiving
+                party 30 days in which to respond. Both you and the Company
+                agree that this dispute resolution procedure is a condition
+                precedent which must be satisfied before initiating any
+                arbitration against the other party.
+              </span>
+            </li>
+            <li className="c4 li-bullet-0">
+              <span className="c7">
+                Arbitration Agreement and Class Action Waiver
+              </span>
+              <span>
+                . After the informal dispute resolution process, any remaining
+                dispute, controversy, or claim (collectively, &ldquo;
+              </span>
+              <span className="c6">Claim</span>
+              <span>
+                &rdquo;) relating in any way to the Company&rsquo;s services
+                and/or products, including the Services, and any use or access
+                or lack of access thereto, will be resolved by arbitration,
+                including threshold questions of arbitrability of the Claim. You
+                and the Company agree that any Claim will be settled by final
+                and binding arbitration, using the English language,
+                administered by JAMS
+              </span>
+              <span className="c6">&nbsp;</span>
+              <span>
+                under its Comprehensive Arbitration Rules and Procedures (the
+                &ldquo;
+              </span>
+              <span className="c6">JAMS Rules</span>
+              <span>
+                &rdquo;) then in effect (those rules are deemed to be
+                incorporated by reference into this section, and as of the date
+                of these Terms). &nbsp;Because your contract with the Company,
+                these Terms, and this Arbitration Agreement concern interstate
+                commerce, the Federal Arbitration Act (&ldquo;FAA&rdquo;)
+                governs the arbitrability of all disputes. However, the
+                arbitrator will apply applicable substantive law consistent with
+                the FAA and the applicable statute of limitations or condition
+                precedent to suit.{' '}
+              </span>
+              <span className="c6">
+                Arbitration will be handled by a sole arbitrator in accordance
+                with the JAMS Rules. Judgment on the arbitration award may be
+                entered in any court that has jurisdiction. Any arbitration
+                under these Terms will take place on an individual basis &ndash;
+                class arbitrations and class actions are not permitted. You
+                understand that by agreeing to these Terms, you and the Company
+                are each waiving the right to trial by jury or to participate in
+                a class action or class arbitration.
+              </span>
+            </li>
+            <li className="c4 li-bullet-0">
+              <span className="c7">Exceptions</span>
+              <span className="c1">
+                . Notwithstanding the foregoing, you and the Company agree that
+                the following types of disputes will be resolved in a court of
+                proper jurisdiction:
+              </span>
+            </li>
+          </ol>
+          <ol className="c2 lst-kix_v61pi1glm5bt-2 start" start={1}>
+            <li className="c5 li-bullet-0">
+              <span className="c1">
+                Disputes or claims within the jurisdiction of a small claims
+                court consistent with the jurisdictional and dollar limits that
+                may apply, as long as it is brought and maintained as an
+                individual dispute and not as a class, representative, or
+                consolidated action or proceeding;
+              </span>
+            </li>
+            <li className="c5 li-bullet-0">
+              <span className="c1">
+                Disputes or claims where the sole form of relief sought is
+                injunctive relief (including public injunctive relief); or
+              </span>
+            </li>
+            <li className="c5 li-bullet-0">
+              <span className="c1">Intellectual property disputes.</span>
+            </li>
+          </ol>
+          <ol className="c2 lst-kix_v61pi1glm5bt-1" start={4}>
+            <li className="c4 li-bullet-0">
+              <span className="c7">Costs of Arbitration</span>
+              <span className="c1">
+                . Payment of all filing, administration, and arbitrator costs
+                and expenses will be governed by the JAMS Rules, except that if
+                you demonstrate that any such costs and expenses owed by you
+                under those rules would be prohibitively more expensive than a
+                court proceeding, the Company will pay the amount of any such
+                costs and expenses that the arbitrator determines are necessary
+                to prevent the arbitration from being prohibitively more
+                expensive than a court proceeding (subject to possible
+                reimbursement as set forth below). <br />
+                <br />
+                Fees and costs may be awarded as provided pursuant to applicable
+                law. If the arbitrator finds that either the substance of your
+                claim or the relief sought in the demand is frivolous or brought
+                for an improper purpose (as measured by the standards set forth
+                in Federal Rule of Civil Procedure 11(b)), then the payment of
+                all fees will be governed by the JAMS rules. In that case, you
+                agree to reimburse the Company for all monies previously
+                disbursed by it that are otherwise your obligation to pay under
+                the applicable rules. If you prevail in the arbitration and are
+                awarded an amount that is less than the last written settlement
+                amount offered by the Company before the arbitrator was
+                appointed, the Company will pay you the amount it offered in
+                settlement. &nbsp;The arbitrator may make rulings and resolve
+                disputes as to the payment and reimbursement of fees or expenses
+                at any time during the proceeding and upon request from either
+                party made within 14 days of the arbitrator&rsquo;s ruling on
+                the merits.
+              </span>
+            </li>
+            <li className="c4 li-bullet-0">
+              <span className="c7">Opt-Out</span>
+              <span className="c1">
+                . You have the right to opt-out and not be bound by the
+                arbitration provisions set forth in these Terms by sending
+                written notice of your decision to opt-out
+                to&nbsp;support@intuition.systems. The notice must be sent to
+                the Company within thirty (30) days of your first registering to
+                use the Services or agreeing to these Terms; otherwise you shall
+                be bound to arbitrate disputes on a non-class basis in
+                accordance with these Terms. If you opt out of only the
+                arbitration provisions, and not also the class action waiver,
+                the class action waiver still applies. You may not opt out of
+                only the class action waiver and not also the arbitration
+                provisions. &nbsp;If you opt-out of these arbitration
+                provisions, the Company also will not be bound by them.
+              </span>
+            </li>
+            <li className="c4 li-bullet-0">
+              <span className="c7 c6">
+                WAIVER OF RIGHT TO BRING CLASS ACTION AND REPRESENTATIVE CLAIMS
+              </span>
+              <span>
+                . To the fullest extent permitted by applicable law, you and the
+                Company each agree that any proceeding to resolve any dispute,
+                claim, or controversy will be brought and conducted ONLY IN THE
+                RESPECTIVE PARTY&rsquo;S INDIVIDUAL CAPACITY AND NOT AS PART OF
+                ANY CLASS (OR PURPORTED CLASS), CONSOLIDATED,
+                MULTIPLE-PLAINTIFF, OR REPRESENTATIVE ACTION OR PROCEEDING
+                (&ldquo;CLASS ACTION&rdquo;). You and the Company AGREE TO WAIVE
+                THE RIGHT TO PARTICIPATE AS A PLAINTIFF OR CLASS MEMBER IN ANY
+                CLASS ACTION. You and the Company EXPRESSLY WAIVE ANY ABILITY TO
+                MAINTAIN A CLASS ACTION IN ANY FORUM. &nbsp;If the dispute is
+                subject to arbitration, THE ARBITRATOR WILL NOT HAVE THE
+                AUTHORITY TO COMBINE OR AGGREGATE CLAIMS, CONDUCT A CLASS
+                ACTION, OR MAKE AN AWARD TO ANY PERSON OR ENTITY NOT A PARTY TO
+                THE ARBITRATION. Further, you and the Company agree that the
+                ARBITRATOR MAY NOT CONSOLIDATE PROCEEDINGS FOR MORE THAN ONE
+                PERSON&rsquo;S CLAIMS, AND IT MAY NOT OTHERWISE PRESIDE OVER ANY
+                FORM OF A CLASS ACTION. For the avoidance of doubt, however, you
+                can seek public injunctive relief to the extent authorized by
+                law and consistent with the Exceptions clause above.
+              </span>
+              <span className="c6">
+                <br />
+                <br />
+              </span>
+              <span className="c1">
+                IF THIS CLASS ACTION WAIVER IS LIMITED, VOIDED, OR FOUND
+                UNENFORCEABLE, THEN, UNLESS THE PARTIES MUTUALLY AGREE
+                OTHERWISE, THE PARTIES&rsquo; AGREEMENT TO ARBITRATE SHALL BE
+                NULL AND VOID WITH RESPECT TO SUCH PROCEEDING SO LONG AS THE
+                PROCEEDING IS PERMITTED TO PROCEED AS A CLASS ACTION. &nbsp;If a
+                court decides that the limitations of this paragraph are deemed
+                invalid or unenforceable, any putative class, private attorney
+                general, or consolidated or representative action must be
+                brought in a court of proper jurisdiction and not in
+                arbitration.
+              </span>
+            </li>
+          </ol>
+          <ol className="c2 lst-kix_v61pi1glm5bt-0" start={10}>
+            <li className="c9 li-bullet-0">
+              <h1 id="h.8hgf2omby0vc" className="inline">
+                <span className="c0">ADDITIONAL PROVISIONS</span>
+              </h1>
+            </li>
+          </ol>
+          <ol className="c2 lst-kix_v61pi1glm5bt-1 start" start={1}>
+            <li className="c4 li-bullet-0">
+              <span className="c7">Updating These Terms</span>
+              <span className="c1">
+                . We may modify these Terms from time to time in which case we
+                will update the &ldquo;Last Revised&rdquo; date at the top of
+                these Terms. If we make changes that are material, we will use
+                reasonable efforts to attempt to notify you, such as by email
+                and/or by placing a prominent notice on the first page of the
+                Website. However, it is your sole responsibility to review these
+                Terms from time to time to view any such changes. The updated
+                Terms will be effective as of the time of posting, or such later
+                date as may be specified in the updated Terms. Your continued
+                access or use of the Services after the modifications have
+                become effective will be deemed your acceptance of the modified
+                Terms. &nbsp;No amendment shall apply to a dispute for which
+                arbitration has been initiated prior to the change in Terms.
+              </span>
+            </li>
+            <li className="c4 li-bullet-0">
+              <span className="c7">Termination of Services</span>
+              <span className="c1">
+                . The Company may suspend or disable your access to the Services
+                (or any part of the foregoing) with or without notice, for any
+                or no reason. All sections which by their nature should survive
+                the termination of these Terms shall continue in full force and
+                effect subsequent to and notwithstanding any termination of
+                these Terms by the Company or you. Termination will not limit
+                any of the Company&rsquo;s other rights or remedies at law or in
+                equity.
+              </span>
+            </li>
+            <li className="c4 li-bullet-0">
+              <span className="c7">Injunctive Relief</span>
+              <span className="c1">
+                . You agree that a breach of these Terms will cause irreparable
+                injury to the Company for which monetary damages would not be an
+                adequate remedy and the Company shall be entitled to equitable
+                relief in addition to any remedies it may have hereunder or at
+                law without a bond, other security or proof of damages.
+              </span>
+            </li>
+            <li className="c4 li-bullet-0">
+              <span className="c7">California Residents</span>
+              <span className="c1">
+                . If you are a California resident, in accordance with Cal. Civ.
+                Code &sect; 1789.3, you may report complaints to the Complaint
+                Assistance Unit of the Division of Consumer Services of the
+                California Department of Consumer Affairs by contacting them in
+                writing at 1625 North Market Blvd., Suite N 112 Sacramento, CA
+                95834, or by telephone at (800) 952-5210.
+              </span>
+            </li>
+            <li className="c4 li-bullet-0">
+              <span className="c7">Force Majeure</span>
+              <span className="c1">
+                . We will not be liable or responsible to you, nor be deemed to
+                have defaulted under or breached these Terms, for any failure or
+                delay in fulfilling or performing any of our obligations under
+                these Terms or in providing the Services, including operating
+                the Website, when and to the extent such failure or delay is
+                caused by or results from any events beyond our ability to
+                control, including acts of God, flood, fire, earthquake,
+                epidemics, pandemics, tsunami, explosion, war, invasion,
+                hostilities (whether war is declared or not), terrorist threats
+                or acts, riot or other civil unrest, government order, law, or
+                action, embargoes or blockades, strikes, labor stoppages or
+                slowdowns or other industrial disturbances, shortage of adequate
+                or suitable Internet connectivity, telecommunication breakdown
+                or shortage of adequate power or electricity, and other similar
+                events beyond our control.
+              </span>
+            </li>
+            <li className="c4 li-bullet-0">
+              <span className="c7">No Fiduciary Duties</span>
+              <span className="c1">
+                . These Terms of Use, and the provision of the Website and the
+                Services, are not intended to create any fiduciary duties
+                between us and the User or any third party. The Company never
+                takes possession, custody, control, ownership, or management of
+                any crypto-assets or other property transmitted via the
+                Interface. To the fullest extent permissible by law, the User
+                agrees that neither the User&rsquo;s use of the Website or the
+                Services causes us or any Participant to owe fiduciary duties or
+                liabilities to the User or any third party. Further, the User
+                acknowledges and agrees to the fullest extent such duties or
+                liabilities are afforded by law or by equity, those duties and
+                liabilities are hereby irrevocably disclaimed, waived, and
+                eliminated, and that we and any other Participant shall be held
+                completely harmless in relation thereof. The User further agrees
+                that the only duties and obligations that we owe the User, and
+                the only rights the User has related to this Agreement or the
+                User&rsquo;s use of the Website or the Services, are those set
+                out expressly in this Agreement or that cannot be waived by law.
+                Further, the User agrees and understands that they are
+                responsible for all applicable reporting requirements and
+                deadlines, including taxes and relevant fees, and that we owe
+                Users no affirmative duties with respect to said reporting
+                requirements and deadlines.
+              </span>
+            </li>
+            <li className="c4 li-bullet-0">
+              <span className="c7">Miscellaneous</span>
+              <span>
+                . If any provision of these Terms shall be unlawful, void or for
+                any reason unenforceable, then that provision shall be deemed
+                severable from these Terms and shall not affect the validity and
+                enforceability of any remaining provisions. These Terms and the
+                licenses granted hereunder may be assigned by the Company but
+                may not be assigned by you without the prior express written
+                consent of the Company. No waiver by either party of any breach
+                or default hereunder shall be deemed to be a waiver of any
+                preceding or subsequent breach or default. The section headings
+                used herein are for reference only and shall not be read to have
+                any legal effect. The Services are operated by us in the United
+                States. Those who choose to access the Services from locations
+                outside the United States do so at their own initiative and are
+                responsible for compliance with applicable local laws. These
+                Terms are governed by the laws of the State of New York, without
+                regard to conflict of laws rules, and the proper venue for any
+                disputes arising out of or relating to any of the same will be
+                the arbitration venue set forth in Section 10, or if arbitration
+                does not apply, then the state and federal courts located in New
+                York. You and the Company agree that the United Nations
+                Convention on Contracts for the International Sale of Goods will
+                not apply to the interpretation or construction of these Terms.
+              </span>
+              <span className="c6">&nbsp;</span>
+            </li>
+            <li className="c4 li-bullet-0 mb-20">
+              <span className="c7">How to Contact Us</span>
+              <span>
+                . &nbsp;You may contact us regarding the Services or these Terms
+                by{' '}
+              </span>
+              <span>email</span>
+              <span className="c1">&nbsp;at support@intuition.systems.</span>
+            </li>
+          </ol>
         </div>
       </div>
     </div>

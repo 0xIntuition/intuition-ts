@@ -648,10 +648,10 @@ ol.lst-kix_pcfvvm8tyj4r-7.start {
   counter-reset: lst-ctn-kix_pcfvvm8tyj4r-7 0;
 }
 li.li-bullet-4:before {
-  margin-left: -22.5pt;
+  margin-left: -18pt;
   white-space: nowrap;
   display: inline-block;
-  min-width: 22.5pt;
+  min-width: 18pt;
 }
 .lst-kix_gwue1abvxgk6-7 > li:before {
   content: '\0025cb   ';
@@ -974,10 +974,10 @@ ul.lst-kix_k20bd1xvfflg-1 {
   content: '-  ';
 }
 li.li-bullet-3:before {
-  margin-left: -22.5pt;
+  margin-left: -18pt;
   white-space: nowrap;
   display: inline-block;
-  min-width: 22.5pt;
+  min-width: 18pt;
 }
 .lst-kix_8h5ain7jq45a-5 > li:before {
   content: '-  ';
@@ -1351,12 +1351,6 @@ ol.lst-kix_pcfvvm8tyj4r-3.start {
 .lst-kix_xms2ljyf2a0l-6 > li:before {
   content: '' counter(lst-ctn-kix_xms2ljyf2a0l-6, decimal) '. ';
 }
-li.li-bullet-6:before {
-  margin-left: -27pt;
-  white-space: nowrap;
-  display: inline-block;
-  min-width: 27pt;
-}
 .lst-kix_rmvchl5jh113-1 > li:before {
   content: '\0025cb   ';
 }
@@ -1448,10 +1442,10 @@ ol.lst-kix_oni0v7to6i53-0.start {
   content: '' counter(lst-ctn-kix_2k5moc43dv7a-7, lower-latin) '. ';
 }
 li.li-bullet-2:before {
-  margin-left: -18pt;
+  margin-left: -22.5pt;
   white-space: nowrap;
   display: inline-block;
-  min-width: 18pt;
+  min-width: 22.5pt;
 }
 .lst-kix_1pw5ybnuf64p-5 > li {
   counter-increment: lst-ctn-kix_1pw5ybnuf64p-5;
@@ -2335,10 +2329,10 @@ ol.lst-kix_sxgx5w9hgiqk-8.start {
   content: '-  ';
 }
 li.li-bullet-5:before {
-  margin-left: -27pt;
+  margin-left: -18pt;
   white-space: nowrap;
   display: inline-block;
-  min-width: 27pt;
+  min-width: 18pt;
 }
 .lst-kix_hq3ko68ri1rc-2 > li:before {
   content: '-  ';
@@ -2407,7 +2401,7 @@ table td,
 table th {
   padding: 0;
 }
-.c6 {
+.c12 {
   border-right-style: solid;
   padding-top: 0pt;
   border-top-width: 0pt;
@@ -2425,37 +2419,7 @@ table th {
   text-align: justify;
   padding-right: 0pt;
 }
-.c12 {
-  margin-left: 85.5pt;
-  padding-top: 0pt;
-  padding-left: 0pt;
-  padding-bottom: 11pt;
-  line-height: 1;
-  orphans: 2;
-  widows: 2;
-  text-align: justify;
-}
 .c7 {
-  margin-left: 27pt;
-  padding-top: 0pt;
-  padding-left: 9pt;
-  padding-bottom: 11pt;
-  line-height: 1;
-  orphans: 2;
-  widows: 2;
-  text-align: justify;
-}
-.c10 {
-  margin-left: 54pt;
-  padding-top: 0pt;
-  padding-left: 4.5pt;
-  padding-bottom: 11pt;
-  line-height: 1;
-  orphans: 2;
-  widows: 2;
-  text-align: justify;
-}
-.c3 {
   margin-left: 36pt;
   padding-top: 0pt;
   padding-left: 0pt;
@@ -2465,8 +2429,30 @@ table th {
   widows: 2;
   text-align: justify;
 }
-.c13 {
+.c6 {
+  margin-left: 54pt;
   padding-top: 0pt;
+  padding-left: 4.5pt;
+  padding-bottom: 11pt;
+  line-height: 1;
+  orphans: 2;
+  widows: 2;
+  text-align: justify;
+}
+.c13 {
+  margin-left: 85.5pt;
+  padding-top: 0pt;
+  padding-left: 0pt;
+  padding-bottom: 11pt;
+  line-height: 1;
+  orphans: 2;
+  widows: 2;
+  text-align: justify;
+}
+.c1 {
+  margin-left: 27pt;
+  padding-top: 0pt;
+  padding-left: 9pt;
   padding-bottom: 11pt;
   line-height: 1;
   orphans: 2;
@@ -2474,39 +2460,54 @@ table th {
   text-align: justify;
 }
 .c5 {
+  color: #ffffff;
+  text-decoration: none;
+  vertical-align: baseline;
+  font-size: 11pt;
+  font-family: 'Arial';
+  font-style: normal;
+}
+.c2 {
+  padding-top: 0pt;
+  padding-bottom: 11pt;
+  line-height: 1;
+  orphans: 2;
+  widows: 2;
+  text-align: justify;
+}
+.c11 {
   text-decoration: none;
   vertical-align: baseline;
   font-family: 'Arial';
   font-style: normal;
 }
-.c11 {
-  max-width: 468pt;
-  padding: 72pt 72pt 72pt 72pt;
-}
-.c9 {
-  page-break-after: avoid;
-}
-.c2 {
-  color: #ffffff;
-  font-size: 11pt;
-}
-.c0 {
+.c10 {
   padding: 0;
   margin: 0;
 }
-.c14 {
+.c16 {
+  max-width: 468pt;
+  padding: 72pt 72pt 72pt 72pt;
 }
 .c4 {
-  font-weight: 400;
+  page-break-after: avoid;
 }
-.c15 {
-  font-style: italic;
+.c3 {
+  font-weight: 700;
+}
+.c9 {
+  color: #ffffff;
 }
 .c8 {
   font-size: 11pt;
 }
-.c1 {
-  font-weight: 700;
+.c14 {
+}
+.c15 {
+  font-style: italic;
+}
+.c0 {
+  font-weight: 400;
 }
 .title {
   padding-top: 0pt;
@@ -2536,6 +2537,25 @@ li {
   color: #ffffff;
   font-size: 11pt;
   font-family: 'Arial';
+}
+p {
+  margin: 0;
+  color: #ffffff;
+  font-size: 11pt;
+  font-family: 'Arial';
+}
+h1 {
+  padding-top: 0pt;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 11pt;
+  padding-bottom: 0pt;
+  font-family: 'Arial';
+  line-height: 1;
+  page-break-after: avoid;
+  orphans: 2;
+  widows: 2;
+  text-align: left;
 }
 h2 {
   padding-top: 18pt;
