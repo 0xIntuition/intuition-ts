@@ -38,7 +38,7 @@ export const ListIdentityCardPortal: React.FC<ListIdentityCardPortalProps> = ({
         name={displayName}
         className="mb-2 w-16 h-16"
       />
-      <div className="text-center flex-grow flex flex-col justify-between items-center gap-4">
+      <div className="text-center flex flex-col justify-between items-center gap-2">
         {navigateLink ? (
           <Link to={navigateLink}>
             <Trunctacular
