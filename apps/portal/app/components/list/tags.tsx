@@ -12,7 +12,6 @@ import { ClaimPresenter, IdentityPresenter, SortColumn } from '@0xintuition/api'
 import { ListHeader } from '@components/list/list-header'
 import SaveListModal from '@components/list/save-list-modal'
 import { saveListModalAtom } from '@lib/state/store'
-import logger from '@lib/utils/logger'
 import {
   formatBalance,
   getAtomDescription,
@@ -21,7 +20,7 @@ import {
   getAtomLabel,
   getAtomLink,
 } from '@lib/utils/misc'
-import { MULTIVAULT_CONTRACT_ADDRESS } from 'app/consts'
+import { MULTIVAULT_CONTRACT_ADDRESS, PATHS } from 'app/consts'
 import { PaginationType } from 'app/types/pagination'
 import { useAtom } from 'jotai'
 
@@ -70,7 +69,7 @@ export function TagsList({
           subject: NonNullable<ClaimPresenter['subject']>
         } => claim.subject !== null,
       )
-      .map((claim) => [claim.subject.id, claim]),
+      .map((claim) => [claim.subject.id, claim.claim_id]),
   )
 
   return (
@@ -110,6 +109,13 @@ export function TagsList({
                   name={getAtomLabel(identity)}
                   description={getAtomDescription(identity)}
                   id={identity.user?.wallet ?? identity.identity_id}
+                  claimLink={`${PATHS.CLAIM}/${matchingClaim}`}
+                  tags={
+                    identity.tags?.map((tag) => ({
+                      label: tag.display_name,
+                      value: tag.num_tagged_identities,
+                    })) ?? undefined
+                  }
                   amount={
                     +formatBalance(BigInt(identity.assets_sum || ''), 18, 4)
                   }

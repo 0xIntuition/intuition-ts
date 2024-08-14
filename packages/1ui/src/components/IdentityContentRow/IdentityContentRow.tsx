@@ -29,6 +29,7 @@ export interface IdentityContentRowProps
   name: string
   description: string
   id: string
+  claimLink?: string
   avatarSrc: string
   link: string
   ipfsLink: string
@@ -83,6 +84,7 @@ const IdentityContentRow = ({
   name,
   description,
   id,
+  claimLink,
   avatarSrc,
   link,
   ipfsLink,
@@ -94,83 +96,93 @@ const IdentityContentRow = ({
 }: IdentityContentRowProps) => {
   const hasTags = !!(tags && tags.length > 0)
 
+  const content = (
+    <div
+      className={cn(
+        `w-full flex justify-between items-center max-sm:flex-col max-sm:gap-3`,
+        className,
+      )}
+      {...props}
+    >
+      <div className="flex items-center">
+        <HoverCard openDelay={100} closeDelay={100}>
+          <HoverCardTrigger asChild>
+            <a href={claimLink ? claimLink : link}>
+              <Avatar
+                variant={variant}
+                src={avatarSrc}
+                name={name}
+                className="mr-4 w-[64px] h-[64px]"
+              />
+            </a>
+          </HoverCardTrigger>
+          <HoverCardContent side="right" className="w-max">
+            <div className="flex flex-col gap-4 w-80 max-md:w-[80%]">
+              <ProfileCard
+                variant={variant}
+                avatarSrc={avatarSrc ?? ''}
+                name={name}
+                id={id ?? ''}
+                bio={description ?? ''}
+                ipfsLink={ipfsLink}
+                className="profile-card"
+              />
+              {link && (
+                <a href={link}>
+                  <Button variant={ButtonVariant.secondary} className="w-full">
+                    View Identity{' '}
+                    <Icon name={'arrow-up-right'} className="h-3 w-3" />
+                  </Button>
+                </a>
+              )}
+            </div>
+          </HoverCardContent>
+        </HoverCard>
+        <div className="flex flex-col">
+          <NameAndAddress
+            name={name}
+            id={id}
+            link={claimLink || link}
+            ipfsLink={ipfsLink}
+            hasTags={hasTags}
+          />
+          {hasTags && (
+            <div className="flex gap-2 mt-1">
+              <TagsContent numberOfTags={tags.length}>
+                {tags.slice(0, 4).map((tag, index) => (
+                  <TagWithValue
+                    label={tag.label}
+                    value={tag.value}
+                    key={index}
+                  />
+                ))}
+              </TagsContent>
+            </div>
+          )}
+        </div>
+      </div>
+
+      <IdentityValueDisplay
+        value={amount}
+        currency={currency}
+        followers={totalFollowers}
+      />
+    </div>
+  )
+
   return (
     <div className="w-full">
-      <div
-        className={cn(
-          `w-full flex justify-between items-center max-sm:flex-col max-sm:gap-3`,
-          className,
-        )}
-        {...props}
-      >
-        <div className="flex items-center">
-          <HoverCard openDelay={100} closeDelay={100}>
-            <HoverCardTrigger asChild>
-              <a href={link}>
-                <Avatar
-                  variant={variant}
-                  src={avatarSrc}
-                  name={name}
-                  className="mr-4 w-[64px] h-[64px]"
-                />
-              </a>
-            </HoverCardTrigger>
-            <HoverCardContent side="right" className="w-max">
-              <div className="flex flex-col gap-4 w-80 max-md:w-[80%]">
-                <ProfileCard
-                  variant={variant}
-                  avatarSrc={avatarSrc ?? ''}
-                  name={name}
-                  id={id ?? ''}
-                  bio={description ?? ''}
-                  ipfsLink={ipfsLink}
-                  className="profile-card"
-                />
-                {link && (
-                  <a href={link}>
-                    <Button
-                      variant={ButtonVariant.secondary}
-                      className="w-full"
-                    >
-                      View Identity{' '}
-                      <Icon name={'arrow-up-right'} className="h-3 w-3" />
-                    </Button>
-                  </a>
-                )}
-              </div>
-            </HoverCardContent>
-          </HoverCard>
-          <div className="flex flex-col">
-            <NameAndAddress
-              name={name}
-              id={id}
-              link={link}
-              ipfsLink={ipfsLink}
-              hasTags={hasTags}
-            />
-            {hasTags && (
-              <div className="flex gap-2 mt-1">
-                <TagsContent numberOfTags={tags.length}>
-                  {tags.slice(0, 4).map((tag, index) => (
-                    <TagWithValue
-                      label={tag.label}
-                      value={tag.value}
-                      key={index}
-                    />
-                  ))}
-                </TagsContent>
-              </div>
-            )}
-          </div>
-        </div>
-
-        <IdentityValueDisplay
-          value={amount}
-          currency={currency}
-          followers={totalFollowers}
-        />
-      </div>
-      {children}
+      {claimLink ? (
+        <a href={claimLink}>
+          {content}
+          {children}
+        </a>
+      ) : (
+        <>
+          {content}
+          {children}
+        </>
+      )}
     </div>
   )
 }

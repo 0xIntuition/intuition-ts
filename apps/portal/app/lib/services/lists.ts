@@ -8,7 +8,6 @@ import {
   UsersService,
 } from '@0xintuition/api'
 
-import logger from '@lib/utils/logger'
 import { calculateTotalPages } from '@lib/utils/misc'
 import { getStandardPageParams } from '@lib/utils/params'
 import { fetchWrapper } from '@server/api'
