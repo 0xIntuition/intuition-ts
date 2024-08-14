@@ -29,6 +29,7 @@ import { List } from './list'
 export function TagsList({
   identities,
   claim,
+  tag,
   wallet,
   pagination,
   paramPrefix,
@@ -37,6 +38,7 @@ export function TagsList({
 }: {
   identities: IdentityPresenter[]
   claim: ClaimPresenter
+  tag?: IdentityPresenter | null
   wallet: string
   pagination?: PaginationType
   paramPrefix?: string
@@ -95,6 +97,9 @@ export function TagsList({
                       isOpen: true,
                       id: identity.vault_id,
                       identity,
+                      tag:
+                        tag &&
+                        identity.tags?.find((t) => t.vault_id === tag.vault_id),
                     })
                   }}
                 >

@@ -354,6 +354,7 @@ export default function ListOverview() {
                       identities={resolvedUserListIdentities.listIdentities}
                       pagination={resolvedUserListIdentities.pagination}
                       claim={claim}
+                      tag={claim.object}
                       wallet={wallet}
                       enableSearch={true}
                       enableSort={true}
@@ -381,6 +382,7 @@ export default function ListOverview() {
                           resolvedAdditionalUserListIdentities.pagination
                         }
                         claim={claim}
+                        tag={claim.object}
                         wallet={wallet}
                         enableSearch={true}
                         enableSort={true}
