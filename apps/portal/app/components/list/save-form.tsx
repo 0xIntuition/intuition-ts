@@ -166,7 +166,7 @@ export default function SaveForm({
                   weight="regular"
                   className="text-neutral-50/50"
                 >
-                  List:
+                  Tag:
                 </Text>
                 <HoverCard openDelay={100} closeDelay={100}>
                   <HoverCardTrigger>

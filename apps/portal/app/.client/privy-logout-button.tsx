@@ -1,4 +1,10 @@
-import { SidebarNavItem } from '@0xintuition/1ui'
+import {
+  Button,
+  ButtonSize,
+  ButtonVariant,
+  Icon,
+  IconName,
+} from '@0xintuition/1ui'
 
 import { useLogout } from '@privy-io/react-auth'
 import { useDisconnect } from 'wagmi'
@@ -23,12 +29,14 @@ export default function PrivyLogoutButton({
   }
 
   return (
-    <SidebarNavItem
-      iconName="arrow-box-left"
-      label="Log Out"
+    <Button
+      variant={ButtonVariant.text}
+      size={ButtonSize.lg}
       onClick={() => {
         onLogout()
       }}
-    />
+    >
+      <Icon name={IconName.arrowBoxLeft} /> Log Out
+    </Button>
   )
 }
