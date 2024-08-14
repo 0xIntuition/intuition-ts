@@ -5,7 +5,7 @@ import {
   Text,
   TextVariant,
 } from '@0xintuition/1ui'
-import { IdentitiesService, UsersService } from '@0xintuition/api'
+import { ApiError, IdentitiesService } from '@0xintuition/api'
 
 import PrivyLogout from '@client/privy-logout'
 import { HeaderLogo } from '@components/header-logo'
@@ -21,26 +21,21 @@ export async function loader({ request }: LoaderFunctionArgs) {
     return redirect('/login')
   }
 
-  const userObject = await fetchWrapper(request, {
-    method: UsersService.getUserByWalletPublic,
-    args: {
-      wallet,
-    },
-  })
-
-  if (!userObject) {
-    console.log('No user found in DB')
-    return redirect('/login')
-  }
-
   let userIdentity
   try {
     userIdentity = await fetchWrapper(request, {
       method: IdentitiesService.getIdentityById,
       args: { id: wallet },
     })
-  } catch (e) {
-    console.error('No user identity associated with wallet')
+  } catch (error) {
+    if (
+      error instanceof ApiError &&
+      (error.status === 400 || error.status === 404)
+    ) {
+      console.error('No user identity associated with wallet')
+      return json({ wallet })
+    }
+    throw error
   }
 
   if (userIdentity) {
