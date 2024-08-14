@@ -173,7 +173,7 @@ function ActivityItem({
       </div>
       <div className="flex w-full">
         {activity.identity && (
-          <div className="hover:cursor-pointer bg-secondary-foreground/10 px-6 py-4 rounded-xl flex flex-row w-full gap-6 items-center justify-between max-md:flex-col">
+          <div className="bg-secondary-foreground/10 px-6 py-4 rounded-xl flex flex-row w-full gap-6 items-center justify-between max-md:flex-col">
             <IdentityContentRow
               variant={
                 activity.identity.is_user ? Identity.user : Identity.nonUser
