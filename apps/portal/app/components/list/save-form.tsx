@@ -116,7 +116,7 @@ export default function SaveForm({
                   weight="regular"
                   className="text-neutral-50/50"
                 >
-                  List:
+                  Tag:
                 </Text>
                 <IdentityTag imgSrc={tag?.image} variant={Identity.nonUser}>
                   {tag?.display_name}
