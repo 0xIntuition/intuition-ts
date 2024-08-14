@@ -142,10 +142,9 @@ export async function getListIdentities({
     (claim) => claim.subject,
   ) as IdentityPresenter[]
 
-  logger('getListIdentities', listIdentities.total)
-
   return {
     listIdentities: listIdentitiesSubjects as IdentityPresenter[],
+    claims: listIdentities.data as ClaimPresenter[],
     pagination: {
       currentPage: Number(page),
       limit: Number(limit),

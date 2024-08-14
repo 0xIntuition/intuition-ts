@@ -12,6 +12,7 @@ import { ClaimPresenter, IdentityPresenter, SortColumn } from '@0xintuition/api'
 import { ListHeader } from '@components/list/list-header'
 import SaveListModal from '@components/list/save-list-modal'
 import { saveListModalAtom } from '@lib/state/store'
+import logger from '@lib/utils/logger'
 import {
   formatBalance,
   getAtomDescription,
@@ -29,6 +30,7 @@ import { List } from './list'
 
 export function TagsList({
   identities,
+  claims,
   claim,
   tag,
   wallet,
@@ -39,6 +41,7 @@ export function TagsList({
   enableSort = true,
 }: {
   identities: IdentityPresenter[]
+  claims: ClaimPresenter[]
   claim: ClaimPresenter
   tag?: IdentityPresenter | null
   wallet: string
@@ -57,6 +60,18 @@ export function TagsList({
 
   const [saveListModalActive, setSaveListModalActive] =
     useAtom(saveListModalAtom)
+
+  const claimMap = new Map(
+    claims
+      .filter(
+        (
+          claim,
+        ): claim is ClaimPresenter & {
+          subject: NonNullable<ClaimPresenter['subject']>
+        } => claim.subject !== null,
+      )
+      .map((claim) => [claim.subject.id, claim]),
+  )
 
   return (
     <>
@@ -80,6 +95,8 @@ export function TagsList({
           if (!identity || typeof identity !== 'object') {
             return null
           }
+
+          const matchingClaim = claimMap.get(identity.id)
 
           return (
             <div

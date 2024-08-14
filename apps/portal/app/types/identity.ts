@@ -1,4 +1,5 @@
 import {
+  ClaimPresenter,
   GetIdentityByIdResponse,
   IdentityPresenter,
   SearchClaimsResponse,
@@ -25,6 +26,7 @@ export type InitialIdentityData = {
 
 export type IdentityListType = {
   listIdentities: IdentityPresenter[]
+  claims: ClaimPresenter[]
   pagination: {
     currentPage: number
     limit: number
