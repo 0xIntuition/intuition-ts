@@ -10,10 +10,9 @@ jobs:
     name: Deploy to Dev
     runs-on: ubuntu-latest
     env:
-      ENV: dev
-      CLUSTER_NAME: systems-intuition-${{ env.ENV }}-cluster
-      SERVICE_NAME: portal-intuition-${{ env.ENV }}
-      ECR_IMAGE: ${{ secrets.AWS_ACCOUNT }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/portal-${{ env.ENV }}:latest
+      CLUSTER_NAME: systems-intuition-dev-cluster
+      SERVICE_NAME: portal-intuition-dev
+      ECR_IMAGE: ${{ secrets.AWS_ACCOUNT }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/portal-dev:latest
 
     steps:
       - name: Check if important variables are set
