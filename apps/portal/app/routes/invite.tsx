@@ -11,6 +11,7 @@ import {
   toast,
 } from '@0xintuition/1ui'
 import {
+  ApiError,
   IdentitiesService,
   UserPresenter,
   UsersService,
@@ -38,16 +39,29 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const wallet = await requireUserWallet(request)
   invariant(wallet, NO_WALLET_ERROR)
 
-  const userObject = await fetchWrapper(request, {
-    method: UsersService.getUserByWalletPublic,
-    args: {
-      wallet,
-    },
-  })
+  let userObject
+  try {
+    userObject = await fetchWrapper(request, {
+      method: UsersService.getUserByWalletPublic,
+      args: {
+        wallet,
+      },
+    })
+  } catch (error) {
+    if (error instanceof ApiError && error.status === 400) {
+      console.log('No user found in DB, needs to enter invite code')
+      return json({ wallet, relicHolder: false })
+    }
+    throw error
+  }
+
+  if (userObject) {
+    throw redirect('/create')
+  }
 
   if (!userObject) {
     console.log('No user found in DB')
-    return json({ wallet })
+    return json({ wallet, relicHolder: false })
   }
 
   let userIdentity
