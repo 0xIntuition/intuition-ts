@@ -115,6 +115,7 @@ export function TagsForm({
                         identity?.display_name ??
                         'Identity'
                       }
+                      maxStringLength={42}
                     />
                   </IdentityTag>
                 </DialogTitle>
@@ -164,7 +165,7 @@ export function TagsForm({
                 </div>
               </Tabs>
               {currentTab === 'add' && (
-                <div className="mt-auto py-4 bg-neutral-950">
+                <div className="mt-auto py-4">
                   <DialogFooter className="!justify-center !items-center">
                     <div className="flex flex-col items-center gap-1">
                       <Button

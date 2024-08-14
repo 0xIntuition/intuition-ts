@@ -78,6 +78,7 @@ export function AddTags({
     const finalUrl = `${TAG_RESOURCE_ROUTE}?${searchParams.toString()}`
 
     tagFetcher.load(finalUrl)
+    setIsPopoverOpen(false)
   }
 
   const handleSaveClick = (invalidTag: IdentityPresenter) => {
