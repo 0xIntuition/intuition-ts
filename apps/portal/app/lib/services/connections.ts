@@ -19,11 +19,11 @@ interface PaginationData {
 }
 
 export interface ConnectionsData {
-  followClaim: ClaimPresenter
-  followers: IdentityPresenter[]
-  followersSortBy: SortColumn
-  followersDirection: SortDirection
-  followersPagination: PaginationData
+  followClaim?: ClaimPresenter
+  followers?: IdentityPresenter[]
+  followersSortBy?: SortColumn
+  followersDirection?: SortDirection
+  followersPagination?: PaginationData
   following: IdentityPresenter[]
   followingSortBy: SortColumn
   followingDirection: SortDirection
@@ -44,6 +44,31 @@ export async function getConnectionsData({
     },
   })
 
+  const url = new URL(request.url)
+  const searchParams = new URLSearchParams(url.search)
+
+  const followingParams = getStandardPageParams({
+    searchParams,
+    paramPrefix: 'following',
+    defaultSortByValue: SortColumn.USER_ASSETS,
+  })
+
+  const following = await fetchWrapper(request, {
+    method: IdentitiesService.getIdentityFollowed,
+    args: {
+      id: userIdentity.id,
+      ...followingParams,
+      offset: null,
+      timeframe: null,
+      userWallet: null,
+    },
+  })
+
+  const followingTotalPages = calculateTotalPages(
+    following?.total ?? 0,
+    Number(followingParams.limit),
+  )
+
   if (userIdentity.follow_claim_id) {
     const followClaim = await fetchWrapper(request, {
       method: ClaimsService.getClaimById,
@@ -51,8 +76,6 @@ export async function getConnectionsData({
         id: userIdentity.follow_claim_id,
       },
     })
-    const url = new URL(request.url)
-    const searchParams = new URLSearchParams(url.search)
 
     const followersParams = getStandardPageParams({
       searchParams,
@@ -74,28 +97,6 @@ export async function getConnectionsData({
     const followersTotalPages = calculateTotalPages(
       followers?.total ?? 0,
       Number(followersParams.limit),
-    )
-
-    const followingParams = getStandardPageParams({
-      searchParams,
-      paramPrefix: 'following',
-      defaultSortByValue: SortColumn.USER_ASSETS,
-    })
-
-    const following = await fetchWrapper(request, {
-      method: IdentitiesService.getIdentityFollowed,
-      args: {
-        id: userIdentity.id,
-        ...followingParams,
-        offset: null,
-        timeframe: null,
-        userWallet: null,
-      },
-    })
-
-    const followingTotalPages = calculateTotalPages(
-      following?.total ?? 0,
-      Number(followingParams.limit),
     )
 
     return {
@@ -121,5 +122,15 @@ export async function getConnectionsData({
     }
   }
 
-  return null
+  return {
+    following: following?.data,
+    followingSortBy: followingParams.sortBy,
+    followingDirection: followingParams.direction,
+    followingPagination: {
+      currentPage: Number(followingParams.page),
+      limit: Number(followingParams.limit),
+      totalEntries: following?.total ?? 0,
+      totalPages: followingTotalPages,
+    },
+  }
 }

@@ -135,7 +135,7 @@ export const Claim = ({
             item={item}
             link={link}
             size={size}
-            disabled={disabled || !item.link}
+            disabled={disabled}
             shouldHover={item.shouldHover}
             maxIdentityLength={maxIdentityLength}
           />
