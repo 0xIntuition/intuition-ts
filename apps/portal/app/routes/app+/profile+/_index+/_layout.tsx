@@ -80,7 +80,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     })
   } catch (error) {
     if (error instanceof ApiError && error.status === 400) {
-      throw redirect('/invite')
+      throw redirect('/login')
     }
     logger('Error fetching userObject', error)
     throw error
@@ -94,7 +94,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     })
   } catch (error) {
     if (error instanceof ApiError && error.status === 400) {
-      throw redirect('/create')
+      throw redirect('/login')
     }
     logger('Error fetching userIdentity', error)
     throw error
