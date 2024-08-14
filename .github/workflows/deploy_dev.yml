@@ -1,0 +1,30 @@
+name: Deploy Portal to Dev
+
+on:
+  push:
+    branches:
+      - main
+
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Deploy to Dev
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check if important variables are set
+        shell: bash
+        run: |
+          if [[ ${{ secrets.AWS_ACCESS_KEY_ID }} == '' ]]; then
+            echo "secret AWS_ACCESS_KEY_ID not set"
+            exit 1
+          fi
+          if [[ ${{ secrets.AWS_SECRET_ACCESS_KEY }} == '' ]]; then
+            echo "secret AWS_SECRET_ACCESS_KEY not set"
+            exit 1
+          fi
+          if [[ ${{ secrets.AWS_ACCOUNT }} == '' ]]; then
+            echo "secret AWS_ACCOUNT not set"
+            exit 1
+          fi

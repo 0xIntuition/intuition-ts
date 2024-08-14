@@ -1,0 +1,16 @@
+name: Deploy Portal to Production
+
+on:
+  workflow_dispatch:
+  release:
+    types:
+      - published
+
+jobs:
+  deploy:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Echo Deployment Message
+        run: echo "Deploying to production"
