@@ -12,6 +12,7 @@ import {
   SidebarLayout,
   SidebarLayoutContent,
   SidebarLayoutNav,
+  SidebarLayoutNavAvatar,
   SidebarLayoutNavBody,
   SidebarLayoutNavHeader,
   SidebarLayoutNavHeaderButton,
@@ -20,7 +21,7 @@ import {
 } from '@0xintuition/1ui'
 import { UserPresenter } from '@0xintuition/api'
 
-import PrivyLogoutButton from '@client/privy-logout-button'
+import PrivyButton from '@client/privy-button'
 import { createClaimModalAtom, createIdentityModalAtom } from '@lib/state/store'
 import { NavLink, useLocation, useNavigate, useSubmit } from '@remix-run/react'
 import { PATHS } from 'app/consts'
@@ -280,7 +281,7 @@ export default function SidebarNav({
                   ))}
                 </div>
               </div>
-              <div className="flex flex-col gap-4">
+              <div className="flex flex-col gap-4 w-full">
                 <DropdownMenu>
                   <DropdownMenuTrigger>
                     <SidebarNavItem
@@ -290,9 +291,8 @@ export default function SidebarNav({
                     />
                   </DropdownMenuTrigger>
                   <DropdownMenuContent
-                    side="right"
-                    sideOffset={8}
-                    align="center"
+                    side="top"
+                    align="start"
                     className="bg-popover w-48"
                   >
                     <Button
@@ -312,7 +312,21 @@ export default function SidebarNav({
                     </Button>
                   </DropdownMenuContent>
                 </DropdownMenu>
-                <PrivyLogoutButton handleLogout={onLogout} />
+                <PrivyButton
+                  userObject={userObject}
+                  triggerComponent={
+                    <SidebarLayoutNavAvatar
+                      imageSrc={userObject.image ?? ''}
+                      name={
+                        userObject.display_name ??
+                        userObject.ens_name ??
+                        userObject.wallet ??
+                        ''
+                      }
+                    />
+                  }
+                  onLogout={onLogout}
+                />
               </div>
             </SidebarLayoutNavBody>
           </SidebarLayoutNav>

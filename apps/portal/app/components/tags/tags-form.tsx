@@ -203,11 +203,16 @@ export function TagsForm({
                   variant="primary"
                   className="w-40"
                   onClick={() => {
-                    navigate(`${PATHS.IDENTITY}/${identity.id}`)
+                    navigate(
+                      identity.is_user
+                        ? `${PATHS.PROFILE}/${identity.identity_id}`
+                        : `${PATHS.IDENTITY}/${identity.id}`,
+                    )
+
                     onClose()
                   }}
                 >
-                  View identity
+                  View {identity.is_user ? 'profile' : 'identity'}
                 </Button>
               )
             }

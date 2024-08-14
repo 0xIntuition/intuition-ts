@@ -26,7 +26,7 @@ export const FALLBACK_IDENTITY_ID = 'd72adfd5-c872-4c8e-9864-cb3c5217df2b'
 
 export const FALLBACK_CLAIM_ID = 'b07c739e-6d46-4145-abd4-102a2351c585'
 
-export const FALLBACK_COUNTER_CLAIM_ID = '7df63698-2f30-46d8-ae6a-3dfe672c2722'
+export const FALLBACK_COUNTER_CLAIM_ID = '823ac20c-cbc4-4b53-9c37-fef0cb39749b'
 
 export const FALLBACK_QUEST_PLACEHOLDER_IMAGE =
   'https://res.cloudinary.com/dfpwy9nyv/image/upload/f_auto,q_auto/v1/Portal%20Assets/quests/quest-placeholder'
