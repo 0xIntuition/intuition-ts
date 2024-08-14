@@ -115,6 +115,7 @@ export function TagsForm({
                         identity?.display_name ??
                         'Identity'
                       }
+                      maxStringLength={42}
                     />
                   </IdentityTag>
                 </DialogTitle>
@@ -164,7 +165,7 @@ export function TagsForm({
                 </div>
               </Tabs>
               {currentTab === 'add' && (
-                <div className="mt-auto py-4 bg-neutral-950">
+                <div className="mt-auto py-4">
                   <DialogFooter className="!justify-center !items-center">
                     <div className="flex flex-col items-center gap-1">
                       <Button
@@ -182,16 +183,18 @@ export function TagsForm({
             </>
           )}
           {state.status === 'review-transaction' && (
-            <TagsReview
-              dispatch={dispatch}
-              subjectVaultId={identity.vault_id}
-              tags={selectedTags}
-            />
+            <div className="h-full flex flex-col">
+              <TagsReview
+                dispatch={dispatch}
+                subjectVaultId={identity.vault_id}
+                tags={selectedTags}
+              />
+            </div>
           )}
         </>
       )}
       {isTransactionStarted && (
-        <div className="flex flex-col items-center justify-center flex-grow">
+        <div className="h-full flex flex-col">
           <TransactionState
             status={state.status}
             txHash={state.txHash}

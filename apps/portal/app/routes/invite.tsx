@@ -32,7 +32,7 @@ import { Link, useLoaderData, useNavigate } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
 import { mainnetClient } from '@server/viem'
-import { PATHS } from 'app/consts'
+import { PATHS, RELIC_CONTRACT_ADDRESS } from 'app/consts'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const wallet = await requireUserWallet(request)
@@ -41,7 +41,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   }
 
   const relicCount = (await mainnetClient.readContract({
-    address: '0x7aB2F10CaC6E27971fa93A5D5470Bb84126Bb734',
+    address: RELIC_CONTRACT_ADDRESS,
     abi: relicsAbi,
     functionName: 'balanceOf',
     args: [wallet],

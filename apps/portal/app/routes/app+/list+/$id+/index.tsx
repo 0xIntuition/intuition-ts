@@ -198,6 +198,8 @@ export default function ListOverview() {
               Save list
             </Button>
           }
+          side="bottom"
+          align="end"
         />
       </div>
       <div className="flex flex-col w-full pb-4">

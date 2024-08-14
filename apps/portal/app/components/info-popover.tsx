@@ -20,12 +20,16 @@ export const InfoPopover = ({
   icon,
   link,
   trigger,
+  side = 'bottom',
+  align = 'center',
 }: {
   title: string
   content: string
   icon?: IconNameType
   link?: string
   trigger?: ReactNode
+  side?: 'top' | 'right' | 'bottom' | 'left'
+  align?: 'start' | 'center' | 'end'
 }) => {
   return (
     <Popover>
@@ -39,7 +43,7 @@ export const InfoPopover = ({
           />
         )}
       </PopoverTrigger>
-      <PopoverContent className="w-64 p-2">
+      <PopoverContent className="w-64 p-2" side={side} align={align}>
         <div className="flex flex-col gap-2">
           <div className="flex flex-row gap-2 items-center">
             <Icon name={icon ?? IconName.circle} className="h-4 w-4" />

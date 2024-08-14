@@ -145,10 +145,10 @@ export function AddIdentities({
               <IdentityTag
                 size={IdentityTagSize.md}
                 variant={Identity.nonUser}
-                imgSrc={identity.image ?? ''}
+                imgSrc={identity.user?.image ?? identity.image ?? ''}
               >
                 <Trunctacular
-                  value={identity.display_name}
+                  value={identity.user?.display_name ?? identity.display_name}
                   maxStringLength={42}
                 />
               </IdentityTag>
