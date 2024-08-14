@@ -161,35 +161,15 @@ export function combineHeaders(
   return combined
 }
 
-export const formatBalance = (
-  balance: bigint | string | number,
-  decimals = 18,
-  precision?: number,
-): string => {
-  if (!balance) {
-    return '0'
-  }
+const getMinPrecision = (num: number): number => {
+  const absNum = Math.abs(num)
+  return absNum >= 1 ? 0 : Math.ceil(Math.abs(Math.log10(absNum))) + 1
+}
 
-  const n = Number(balance.toString()) / 10 ** decimals
-
-  if (Math.abs(n) < 1e-10) {
-    return '0'
-  }
-
-  const getMinPrecision = (num: number) => {
-    const absNum = Math.abs(num)
-    if (absNum >= 1) {
-      return 0
-    }
-    return Math.ceil(Math.abs(Math.log10(absNum))) + 1
-  }
-
-  const minPrecision = getMinPrecision(n)
-  const finalPrecision = Math.max(minPrecision, precision ?? 2)
-
+const formatNumber = (n: number, precision: number): string => {
   let result = n.toLocaleString(undefined, {
-    minimumFractionDigits: finalPrecision,
-    maximumFractionDigits: finalPrecision,
+    minimumFractionDigits: precision,
+    maximumFractionDigits: precision,
   })
 
   result = result.replace(/\.?0+$/, '')
@@ -205,6 +185,22 @@ export const formatBalance = (
   }
 
   return result
+}
+
+export const formatBalance = (
+  balance: bigint | string | number,
+  decimals = 18,
+  precision?: number,
+): string => {
+  const formattedBalance = formatUnits(BigInt(balance), decimals)
+  if (+formattedBalance === 0) {
+    return '0'
+  }
+
+  const minPrecision = getMinPrecision(+formattedBalance)
+  const finalPrecision = Math.max(minPrecision, precision ?? 2)
+
+  return formatNumber(+formattedBalance, finalPrecision)
 }
 
 export const formatDisplayBalance = (
