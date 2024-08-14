@@ -19,6 +19,11 @@ export const MULTIVAULT_CONTRACT_ADDRESS =
     ? '0x1A6950807E33d5bC9975067e6D6b5Ea4cD661665' // prod contract address
     : '0x1A6950807E33d5bC9975067e6D6b5Ea4cD661665' // dev contract address
 
+export const RELIC_CONTRACT_ADDRESS =
+  CURRENT_ENV === 'production'
+    ? '0x7aB2F10CaC6E27971fa93A5D5470Bb84126Bb734' // prod contract address
+    : '0x7aB2F10CaC6E27971fa93A5D5470Bb84126Bb734' // dev contract address
+
 export const DEFAULT_LIMIT = 10
 
 // Form constants

@@ -131,8 +131,7 @@ export default function ListDetails() {
         }}
         className="w-full"
       >
-        View identity
-        <Icon name="arrow-up-right" className="h-4 w-4" />
+        View Identity <Icon name={'arrow-up-right'} className="h-3 w-3" />{' '}
       </Button>
     </div>
   )

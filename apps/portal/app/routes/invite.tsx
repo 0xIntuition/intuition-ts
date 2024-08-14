@@ -11,6 +11,7 @@ import {
   toast,
 } from '@0xintuition/1ui'
 import {
+  ApiError,
   IdentitiesService,
   UserPresenter,
   UsersService,
@@ -26,28 +27,49 @@ import { relicsAbi } from '@lib/abis/relics'
 import { useInviteCodeFetcher } from '@lib/hooks/useInviteCodeFetcher'
 import { inviteCodeSchema } from '@lib/schemas/create-identity-schema'
 import logger from '@lib/utils/logger'
-import { invariant } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
 import { Link, useLoaderData, useNavigate } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
 import { mainnetClient } from '@server/viem'
-import { NO_WALLET_ERROR, PATHS } from 'app/consts'
+import { PATHS, RELIC_CONTRACT_ADDRESS } from 'app/consts'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const wallet = await requireUserWallet(request)
-  invariant(wallet, NO_WALLET_ERROR)
+  if (!wallet) {
+    return redirect('/login')
+  }
 
-  const userObject = await fetchWrapper(request, {
-    method: UsersService.getUserByWalletPublic,
-    args: {
-      wallet,
-    },
-  })
+  const relicCount = (await mainnetClient.readContract({
+    address: RELIC_CONTRACT_ADDRESS,
+    abi: relicsAbi,
+    functionName: 'balanceOf',
+    args: [wallet],
+  })) as number
 
-  if (!userObject) {
-    console.log('No user found in DB')
-    return json({ wallet })
+  const relicHolder = relicCount > 0
+
+  let userObject
+  try {
+    userObject = await fetchWrapper(request, {
+      method: UsersService.getUserByWalletPublic,
+      args: {
+        wallet,
+      },
+    })
+  } catch (error) {
+    if (
+      error instanceof ApiError &&
+      (error.status === 400 || error.status === 404)
+    ) {
+      console.error('No user found in DB, needs to enter invite code')
+      return json({ wallet, relicHolder })
+    }
+    throw error
+  }
+
+  if (userObject) {
+    throw redirect('/create')
   }
 
   let userIdentity
@@ -56,24 +78,20 @@ export async function loader({ request }: LoaderFunctionArgs) {
       method: IdentitiesService.getIdentityById,
       args: { id: wallet },
     })
-  } catch (e) {
-    console.error('No user identity associated with wallet')
+  } catch (error) {
+    if (
+      error instanceof ApiError &&
+      (error.status === 400 || error.status === 404)
+    ) {
+      console.error('No user identity associated with wallet')
+    }
+
+    if (userIdentity) {
+      throw redirect(`${PATHS.PROFILE}`)
+    }
+
+    return json({ wallet, userObject, relicHolder })
   }
-
-  if (userIdentity) {
-    throw redirect(`${PATHS.PROFILE}`)
-  }
-
-  const relicCount = (await mainnetClient.readContract({
-    address: '0x7aB2F10CaC6E27971fa93A5D5470Bb84126Bb734',
-    abi: relicsAbi,
-    functionName: 'balanceOf',
-    args: [wallet],
-  })) as number
-
-  const relicHolder = relicCount > 0
-
-  return json({ wallet, userObject, relicHolder })
 }
 
 interface InviteRouteLoaderData {
@@ -169,7 +187,7 @@ export default function InviteRoute() {
                 </div>
               </div>
               <RelicCard />
-              <Link to={'/create'} prefetch="intent" className="m-auto">
+              <Link to={'/welcome'} prefetch="intent" className="m-auto">
                 <Button
                   type="button"
                   variant={ButtonVariant.primary}

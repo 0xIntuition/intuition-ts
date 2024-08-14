@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 
 import { Avatar, toast } from '@0xintuition/1ui'
 import {
+  ApiError,
   IdentitiesService,
   IdentityPresenter,
   UserPresenter,
@@ -21,13 +22,13 @@ import {
 } from '@lib/hooks/useTransactionReducer'
 import { editProfileModalAtom } from '@lib/state/store'
 import logger from '@lib/utils/logger'
-import { invariant, sliceString } from '@lib/utils/misc'
+import { sliceString } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
 import { useFetcher, useLoaderData, useNavigate } from '@remix-run/react'
 import { CreateLoaderData } from '@routes/resources+/create'
 import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
-import { MULTIVAULT_CONTRACT_ADDRESS, NO_WALLET_ERROR, PATHS } from 'app/consts'
+import { MULTIVAULT_CONTRACT_ADDRESS, PATHS } from 'app/consts'
 import {
   IdentityTransactionActionType,
   IdentityTransactionStateType,
@@ -39,13 +40,14 @@ import { useConnectorClient, usePublicClient } from 'wagmi'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const wallet = await requireUserWallet(request)
-  invariant(wallet, NO_WALLET_ERROR)
+  if (!wallet) {
+    return redirect('/login')
+  }
 
   const url = new URL(request.url)
   const isCreating = url.searchParams.get('setupProfile') === 'true'
 
   let userObject
-
   try {
     userObject = await fetchWrapper(request, {
       method: UsersService.getUserByWalletPublic,
@@ -53,8 +55,19 @@ export async function loader({ request }: LoaderFunctionArgs) {
         wallet,
       },
     })
-  } catch (e) {
-    console.error('No user object associated with wallet')
+  } catch (error) {
+    if (
+      error instanceof ApiError &&
+      (error.status === 400 || error.status === 404)
+    ) {
+      console.error('No user found in DB, needs to enter invite code')
+      return json({ wallet })
+    }
+    throw error
+  }
+
+  if (!userObject) {
+    return redirect('/invite')
   }
 
   let userIdentity

@@ -11,6 +11,7 @@ import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
+  Icon,
   IdentityValueDisplay,
   ProfileCard,
   TagsContent,
@@ -131,7 +132,8 @@ const IdentityContentRow = ({
                       variant={ButtonVariant.secondary}
                       className="w-full"
                     >
-                      View Identity
+                      View Identity{' '}
+                      <Icon name={'arrow-up-right'} className="h-3 w-3" />
                     </Button>
                   </a>
                 )}

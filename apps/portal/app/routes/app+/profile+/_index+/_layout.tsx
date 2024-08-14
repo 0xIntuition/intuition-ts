@@ -81,6 +81,29 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const wallet = await requireUserWallet(request)
   invariant(wallet, NO_WALLET_ERROR)
 
+  let userObject
+  try {
+    userObject = await fetchWrapper(request, {
+      method: UsersService.getUserByWalletPublic,
+      args: {
+        wallet: userWallet,
+      },
+    })
+  } catch (error) {
+    if (
+      error instanceof ApiError &&
+      (error.status === 400 || error.status === 404)
+    ) {
+      if (!wallet) {
+        throw redirect('/login')
+      } else {
+        throw redirect('/invite')
+      }
+    }
+    logger('Error fetching userObject', error)
+    throw error
+  }
+
   let userIdentity
   try {
     userIdentity = await fetchWrapper(request, {
@@ -88,19 +111,15 @@ export async function loader({ request }: LoaderFunctionArgs) {
       args: { id: userWallet },
     })
   } catch (error) {
-    if (error instanceof ApiError && error.status === 404) {
-      throw redirect('/invite')
+    if (
+      error instanceof ApiError &&
+      (error.status === 400 || error.status === 404)
+    ) {
+      throw redirect('/login')
     }
     logger('Error fetching userIdentity', error)
     throw error
   }
-
-  const userObject = await fetchWrapper(request, {
-    method: UsersService.getUserByWalletPublic,
-    args: {
-      wallet: userWallet,
-    },
-  })
 
   const userTotals = await fetchWrapper(request, {
     method: UsersService.getUserTotals,
