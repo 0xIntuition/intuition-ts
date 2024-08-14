@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react'
 
 import { Button, cn } from '@0xintuition/1ui'
+import { IdentityPresenter } from '@0xintuition/api'
 
 import { saveListModalAtom } from '@lib/state/store'
 import { getChainEnvConfig } from '@lib/utils/environment'
 import { formatBalance } from '@lib/utils/misc'
 import { useNavigate, useNavigation } from '@remix-run/react'
-import { CURRENT_ENV } from 'app/consts'
+import { CURRENT_ENV, PATHS } from 'app/consts'
 import {
   TransactionActionType,
   TransactionStateType,
@@ -22,7 +23,7 @@ interface SaveButtonProps {
   handleClose: () => void
   dispatch: (action: TransactionActionType) => void
   state: TransactionStateType
-  id: string
+  identity: IdentityPresenter
   min_deposit: string
   walletBalance: string
   conviction_price: string
@@ -39,7 +40,7 @@ const SaveButton: React.FC<SaveButtonProps> = ({
   handleClose,
   dispatch,
   state,
-  id,
+  identity,
   min_deposit,
   walletBalance,
   conviction_price,
@@ -115,7 +116,11 @@ const SaveButton: React.FC<SaveButtonProps> = ({
           state.status === 'transaction-confirmed'
         ) {
           handleClose()
-          navigate(`/apps/identity/${id}`)
+          navigate(
+            identity.is_user
+              ? `${PATHS.PROFILE}/${identity.identity_id}`
+              : `${PATHS.IDENTITY}/${identity.id}`,
+          )
         } else if (state.status === 'review-transaction') {
           handleAction()
         } else if (chain?.id !== getChainEnvConfig(CURRENT_ENV).chainId) {

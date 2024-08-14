@@ -174,8 +174,6 @@ export default function Profile() {
   }>(['attest', 'create'])
   const navigate = useNavigate()
 
-  logger('followClaim', followClaim)
-
   const { user_assets, assets_sum } = vaultDetails ? vaultDetails : userIdentity
 
   const [stakeModalActive, setStakeModalActive] = useAtom(stakeModalAtom)
@@ -252,7 +250,6 @@ export default function Profile() {
         setEditSocialLinksModalActive(true)
       }
     /> */}
-
       <Tags className="max-lg:items-center">
         {userIdentity?.tags && userIdentity?.tags.length > 0 && (
           <TagsContent numberOfTags={userIdentity?.tag_count ?? 0}>
