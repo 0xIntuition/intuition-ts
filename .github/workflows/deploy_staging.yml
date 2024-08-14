@@ -10,10 +10,9 @@ jobs:
     name: Deploy to Staging
     runs-on: ubuntu-latest
     env:
-      ENV: staging
-      CLUSTER_NAME: systems-intuition-$ENV-cluster
-      SERVICE_NAME: portal-intuition-$ENV
-      ECR_IMAGE: ${{ secrets.AWS_ACCOUNT }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/portal-$ENV:latest
+      CLUSTER_NAME: systems-intuition-staging-cluster
+      SERVICE_NAME: portal-intuition-staging
+      ECR_IMAGE: ${{ secrets.AWS_ACCOUNT }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/portal-staging:latest
 
     steps:
       - name: Check if important variables are set

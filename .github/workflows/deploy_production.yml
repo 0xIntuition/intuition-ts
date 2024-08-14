@@ -8,10 +8,9 @@ jobs:
     name: Deploy to Production
     runs-on: ubuntu-latest
     env:
-      ENV: production
-      CLUSTER_NAME: systems-intuition-$ENV-cluster
-      SERVICE_NAME: portal-intuition-$ENV
-      ECR_IMAGE: ${{ secrets.AWS_ACCOUNT }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/portal-$ENV:latest
+      CLUSTER_NAME: systems-intuition-production-cluster
+      SERVICE_NAME: portal-intuition-production
+      ECR_IMAGE: ${{ secrets.AWS_ACCOUNT }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/portal-production:latest
 
     steps:
       - name: Check if important variables are set
