@@ -39,45 +39,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const wallet = await requireUserWallet(request)
   invariant(wallet, NO_WALLET_ERROR)
 
-  let userObject
-  try {
-    userObject = await fetchWrapper(request, {
-      method: UsersService.getUserByWalletPublic,
-      args: {
-        wallet,
-      },
-    })
-  } catch (error) {
-    if (error instanceof ApiError && error.status === 400) {
-      console.log('No user found in DB, needs to enter invite code')
-      return json({ wallet, relicHolder: false })
-    }
-    throw error
-  }
-
-  if (userObject) {
-    throw redirect('/create')
-  }
-
-  if (!userObject) {
-    console.log('No user found in DB')
-    return json({ wallet, relicHolder: false })
-  }
-
-  let userIdentity
-  try {
-    userIdentity = await fetchWrapper(request, {
-      method: IdentitiesService.getIdentityById,
-      args: { id: wallet },
-    })
-  } catch (e) {
-    console.error('No user identity associated with wallet')
-  }
-
-  if (userIdentity) {
-    throw redirect(`${PATHS.PROFILE}`)
-  }
-
   const relicCount = (await mainnetClient.readContract({
     address: '0x7aB2F10CaC6E27971fa93A5D5470Bb84126Bb734',
     abi: relicsAbi,
@@ -87,7 +48,49 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   const relicHolder = relicCount > 0
 
-  return json({ wallet, userObject, relicHolder })
+  let userObject
+  try {
+    userObject = await fetchWrapper(request, {
+      method: UsersService.getUserByWalletPublic,
+      args: {
+        wallet,
+      },
+    })
+  } catch (error) {
+    if (
+      error instanceof ApiError &&
+      (error.status === 400 || error.status === 404)
+    ) {
+      console.error('No user found in DB, needs to enter invite code')
+      return json({ wallet, relicHolder })
+    }
+    throw error
+  }
+
+  if (userObject) {
+    throw redirect('/create')
+  }
+
+  let userIdentity
+  try {
+    userIdentity = await fetchWrapper(request, {
+      method: IdentitiesService.getIdentityById,
+      args: { id: wallet },
+    })
+  } catch (error) {
+    if (
+      error instanceof ApiError &&
+      (error.status === 400 || error.status === 404)
+    ) {
+      console.error('No user identity associated with wallet')
+    }
+
+    if (userIdentity) {
+      throw redirect(`${PATHS.PROFILE}`)
+    }
+
+    return json({ wallet, userObject, relicHolder })
+  }
 }
 
 interface InviteRouteLoaderData {
@@ -183,7 +186,7 @@ export default function InviteRoute() {
                 </div>
               </div>
               <RelicCard />
-              <Link to={'/create'} prefetch="intent" className="m-auto">
+              <Link to={'/welcome'} prefetch="intent" className="m-auto">
                 <Button
                   type="button"
                   variant={ButtonVariant.primary}
