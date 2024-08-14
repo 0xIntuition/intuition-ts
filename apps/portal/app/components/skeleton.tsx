@@ -49,13 +49,8 @@ export function ActivitySkeleton() {
 
 export function HomeStatsHeaderSkeleton() {
   return (
-    <div className="grid grid-cols-3 gap-4 w-full">
-      {[...Array(6)].map((_, index) => (
-        <div key={index} className="flex flex-col space-y-2">
-          <Skeleton className="h-6 w-24" />
-          <Skeleton className="h-8 w-32" />
-        </div>
-      ))}
+    <div className="w-full">
+      <Skeleton className="w-full h-24" />
     </div>
   )
 }

@@ -423,7 +423,7 @@ export default function SaveListModal({
                   handleClose={handleClose}
                   dispatch={dispatch}
                   state={state}
-                  id={identity.id}
+                  identity={identity}
                   user_conviction={vaultDetails?.user_conviction ?? '0'}
                   className={`${(vaultDetails?.user_conviction && vaultDetails?.user_conviction > '0' && state.status === 'idle') || mode !== 'save' ? '' : 'hidden'}`}
                 />
@@ -434,7 +434,7 @@ export default function SaveListModal({
                   handleClose={handleClose}
                   dispatch={dispatch}
                   state={state}
-                  id={identity.id}
+                  identity={identity}
                   min_deposit={vaultDetails?.min_deposit ?? '0'}
                   walletBalance={walletBalance}
                   conviction_price={vaultDetails?.conviction_price ?? '0'}
