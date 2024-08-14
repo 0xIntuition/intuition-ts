@@ -11,7 +11,7 @@ export interface ErrorStateCardProps
 }
 
 const ErrorStateCard = ({
-  message = 'No error occured.',
+  message = 'An error occured',
   children,
   className,
 }: ErrorStateCardProps) => {

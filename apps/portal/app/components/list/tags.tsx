@@ -9,6 +9,7 @@ import {
 } from '@0xintuition/1ui'
 import { ClaimPresenter, IdentityPresenter, SortColumn } from '@0xintuition/api'
 
+import { ListHeader } from '@components/list/list-header'
 import SaveListModal from '@components/list/save-list-modal'
 import { saveListModalAtom } from '@lib/state/store'
 import {
@@ -33,8 +34,9 @@ export function TagsList({
   wallet,
   pagination,
   paramPrefix,
-  enableSearch = false,
-  enableSort = false,
+  enableHeader = true,
+  enableSearch = true,
+  enableSort = true,
 }: {
   identities: IdentityPresenter[]
   claim: ClaimPresenter
@@ -42,6 +44,7 @@ export function TagsList({
   wallet: string
   pagination?: PaginationType
   paramPrefix?: string
+  enableHeader?: boolean
   enableSearch?: boolean
   enableSort?: boolean
 }) {
@@ -65,6 +68,14 @@ export function TagsList({
         enableSearch={enableSearch}
         enableSort={enableSort}
       >
+        {enableHeader && (
+          <ListHeader
+            items={[
+              { label: 'Tag', icon: IconName.bookmark },
+              { label: 'Total Staked', icon: IconName.ethereum },
+            ]}
+          />
+        )}
         {identities.map((identity) => {
           if (!identity || typeof identity !== 'object') {
             return null
@@ -83,7 +94,7 @@ export function TagsList({
                   description={getAtomDescription(identity)}
                   id={identity.user?.wallet ?? identity.identity_id}
                   amount={
-                    +formatBalance(BigInt(identity.user_assets || ''), 18, 4)
+                    +formatBalance(BigInt(identity.assets_sum || ''), 18, 4)
                   }
                   totalFollowers={identity.num_positions}
                   link={getAtomLink(identity)}

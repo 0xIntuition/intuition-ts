@@ -20,7 +20,7 @@ import {
   UsersService,
 } from '@0xintuition/api'
 
-import { InfoTooltip } from '@components/info-tooltip'
+import { InfoPopover } from '@components/info-popover'
 import { ListTabIdentityDisplay } from '@components/list/list-tab-identity-display'
 import { TagsList } from '@components/list/tags'
 import { DataHeaderSkeleton, PaginatedListSkeleton } from '@components/skeleton'
@@ -188,7 +188,7 @@ export default function ListOverview() {
           <Icon name="plus-small" />
           Add to list
         </Button>
-        <InfoTooltip
+        <InfoPopover
           title="Save List"
           content="To add a List to &lsquo;your lists&rsquo;, you&lsquo;ll need to use the List! Save the List to your profile by staking on an entry in the List, or tagging something new with the List&lsquo;s Identity. For example - tagging [MetaMask] with [Wallet] will add the [Wallet] List to your Profile, for easy discoverability later!"
           icon={IconName.bookmark}

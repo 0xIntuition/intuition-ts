@@ -208,7 +208,7 @@ export default function IdentityDetails() {
         </PositionCard>
       ) : null}
       <StakeCard
-        tvl={+formatBalance(identity?.assets_sum)}
+        tvl={+formatBalance(assets_sum, 18, 4)}
         holders={identity?.num_positions}
         onBuyClick={() =>
           setStakeModalActive((prevState) => ({
