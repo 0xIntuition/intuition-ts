@@ -78,7 +78,7 @@ const ClaimItem = ({
       <HoverCardTrigger asChild>
         {link ? <a href={link}>{content}</a> : content}
       </HoverCardTrigger>
-      <HoverCardContent side="right" className="w-max">
+      <HoverCardContent side="top" className="w-max">
         <div className="flex flex-col gap-4 w-80 max-md:w-[80%]">
           <ProfileCard
             variant={item.variant}

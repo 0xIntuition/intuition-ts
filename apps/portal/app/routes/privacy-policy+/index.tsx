@@ -6,8 +6,8 @@ import { Link } from '@remix-run/react'
 
 export default function PrivacyRoute() {
   return (
-    <div className="flex flex-col justify-between h-screen w-full p-8">
-      <Link to={'/app'} prefetch="intent">
+    <div className="flex flex-col justify-between h-screen w-full p-8 mb-10">
+      <Link to={'/'} prefetch="intent">
         <div className="flex gap-2 items-center">
           <svg
             width="22"
@@ -62,48 +62,52 @@ export default function PrivacyRoute() {
             Privacy Policy
           </Text>
         </div>
-        <p className="c6">
-          <span className="c1">
+        <p className="c12">
+          <span className="c3">
             PRIVACY POLICY
             <br />
             <br />
           </span>
-          <span className="c1 c15">Last Revised on April 20, 2024</span>
+          <span className="c3 c15">Last Revised on August 8, 2024</span>
         </p>
-        <p className="c13">
+        <p className="c2">
           <span>The Privacy Policy (this &ldquo;</span>
-          <span className="c1">Policy</span>
+          <span className="c3">Policy</span>
           <span>&rdquo;) for</span>
-          <span>&nbsp;the website intuition.systems (the &ldquo;</span>
-          <span className="c1">Website</span>
+          <span>&nbsp;the website portal.intuition.systems (the &ldquo;</span>
+          <span className="c3">Portal</span>
           <span>,&rdquo; &ldquo;</span>
-          <span className="c1">Site</span>
+          <span className="c3">Website</span>
+          <span>,&rdquo; &ldquo;</span>
+          <span className="c3">Site</span>
           <span>,&rdquo; or &ldquo;</span>
-          <span className="c1">Service</span>
+          <span className="c3">Service</span>
           <span>&rdquo;) applies to the users of the Website (&ldquo;</span>
-          <span className="c1">you</span>
+          <span className="c3">you</span>
           <span>,&rdquo; &ldquo;</span>
-          <span className="c1">your</span>
+          <span className="c3">your</span>
           <span>,&rdquo; or the &ldquo;</span>
-          <span className="c1">user</span>
-          <span>&rdquo;) and the Website&rsquo;s operators </span>
+          <span className="c3">user</span>
+          <span>
+            &rdquo;) and the Website&rsquo;s operators Intuition Systems, Inc.{' '}
+          </span>
           <span>(&ldquo;</span>
-          <span className="c1">we</span>
+          <span className="c3">we</span>
           <span>,&rdquo; </span>
-          <span className="c1">our</span>
+          <span className="c3">our</span>
           <span>,&rdquo; &ldquo;</span>
-          <span className="c1">us</span>
+          <span className="c3">us</span>
           <span>,&rdquo; &ldquo;</span>
-          <span className="c1">Intuition</span>
+          <span className="c3">Intuition</span>
           <span>,&rdquo; &ldquo;</span>
-          <span className="c1">Company</span>
+          <span className="c3">Company</span>
           <span>&rdquo;)</span>
-          <span className="c5 c2 c4">
+          <span className="c11 c9 c8 c0">
             . This Policy describes how we handle and protect the information
             you provide when using our platform.
           </span>
         </p>
-        <p className="c13">
+        <p className="c2">
           <span>
             Your privacy is important to us, and this Policy outlines the types
             of information we collect, how we use it, and the measures we take
@@ -112,41 +116,42 @@ export default function PrivacyRoute() {
             <br />
           </span>
         </p>
-        <ol className="c0 lst-kix_pcfvvm8tyj4r-0 start">
-          <li className="c7 c9 li-bullet-0">
-            <h1 id="h.9n6o8in0sx7x">
+        <ol className="c10 lst-kix_pcfvvm8tyj4r-0 start" start={1}>
+          <li className="c1 c4 li-bullet-0">
+            <h1 id="h.9n6o8in0sx7x" className="inline">
               <span>
                 INFORMATION WE COLLECT AND USE
                 <br />
                 <br />
               </span>
-              <span className="c5 c2 c4">
+              <span className="c9 c8 c0 c11">
                 We may collect information when you use or enter information on
                 our site. We may use the information we collect from you to
-                personalize your experience or improve our website and related
+                personalize your experience or improve our Website and related
                 services in order to better serve you. We may also use collected
-                information to internally analyze our user population for
-                marketing or compliance purposes.
+                information to internally analyze user metrics and behavior on
+                our Website or our user population for marketing or compliance
+                purposes.
                 <br />
               </span>
             </h1>
           </li>
-          <li className="c7 c9 li-bullet-0">
-            <h1 id="h.tpfvydhmkfss">
-              <span className="c1">COOKIES</span>
+          <li className="c1 c4 li-bullet-0">
+            <h1 id="h.tpfvydhmkfss" className="inline">
+              <span className="c3">COOKIES</span>
               <span>
                 <br />
                 <br />
               </span>
-              <span className="c4">
+              <span className="c0">
                 We use cookies for a variety of reasons detailed below.
                 Unfortunately in most cases there are no standard options for
                 disabling cookies without completely disabling the functionality
                 and features they add to this site. It is recommended that you
                 leave all{' '}
               </span>
-              <span className="c4">on all</span>
-              <span className="c4">
+              <span className="c0">on all</span>
+              <span className="c0">
                 &nbsp;cookies in case they are used to provide a service that
                 you use.
                 <br />
@@ -160,65 +165,65 @@ export default function PrivacyRoute() {
               <span>
                 <br />
               </span>
-              <span className="c5 c2 c4">
+              <span className="c11 c9 c8 c0">
                 Types of cookies we may use:
                 <br />
               </span>
             </h1>
           </li>
         </ol>
-        <ol className="c0 lst-kix_kz8cixy8wsvv-0 start">
-          <li className="c10 li-bullet-1">
+        <ol className="c10 lst-kix_kz8cixy8wsvv-0 start" start={1}>
+          <li className="c6 li-bullet-1">
             <span>Login related cookies: </span>
-            <span className="c5 c2 c14 c4">
+            <span className="c5 c0">
               We use cookies to manage user authentication and use sessions.
               This prevents you from having to log in every single time you
               visit our page.
               <br />
             </span>
           </li>
-          <li className="c10 li-bullet-1">
+          <li className="c6 li-bullet-1">
             <span>Essential cookies: </span>
-            <span className="c5 c2 c4 c14">
-              Essential cookies are essential for our website to function. They
-              allow visitors to move around our website and use its basic
+            <span className="c5 c0">
+              Essential cookies are essential for our Website to function. They
+              allow visitors to move around our Website and use its basic
               features, such as triggering notifications upon completing a
               transaction.
               <br />
             </span>
           </li>
-          <li className="c10 li-bullet-1">
-            <span className="c4">Personalization cookies: </span>
-            <span className="c14 c4">
+          <li className="c6 li-bullet-2">
+            <span className="c0">Personalization cookies: </span>
+            <span className="c0 c14">
               These cookies allow us to remember choices you make (such as user
               preferences, themes, and timezones) to provide enhanced, more
               personal features
             </span>
-            <span className="c5 c2 c14 c4">
+            <span className="c0 c5">
               .<br />
             </span>
           </li>
         </ol>
-        <ol className="c0 lst-kix_pcfvvm8tyj4r-0">
-          <li className="c7 c9 li-bullet-0">
-            <h1 id="h.npy83wqngzl3">
-              <span className="c1">SECURIT</span>
+        <ol className="c10 lst-kix_pcfvvm8tyj4r-0" start={3}>
+          <li className="c1 c4 li-bullet-0">
+            <h1 id="h.npy83wqngzl3" className="inline">
+              <span className="c3">SECURIT</span>
               <span>
                 Y<br />
                 <br />
               </span>
-              <span className="c4">We value your trust and </span>
-              <span className="c4">
+              <span className="c0">We value your trust and </span>
+              <span className="c0">
                 are committed to ensuring that your information is secure
               </span>
-              <span className="c4">. </span>
-              <span className="c4">
+              <span className="c0">. </span>
+              <span className="c0">
                 In order to prevent unauthorized access or disclosure, we have
                 put in place suitable physical, electronic and managerial
                 procedures to safeguard and secure the information we collect
                 online.{' '}
               </span>
-              <span className="c5 c2 c4">
+              <span className="c11 c9 c8 c0">
                 But remember that no method of transmission over the internet,
                 or method of electronic storage is 100% secure and reliable, and
                 we cannot guarantee its absolute security.
@@ -226,14 +231,14 @@ export default function PrivacyRoute() {
               </span>
             </h1>
           </li>
-          <li className="c7 c9 li-bullet-0">
-            <h1 id="h.jaoi2evmx2x1">
-              <span className="c1">LINKS TO OTHER WEBSITES</span>
+          <li className="c1 c4 li-bullet-0">
+            <h1 id="h.jaoi2evmx2x1" className="inline">
+              <span className="c3">LINKS TO OTHER WEBSITES</span>
               <span>
                 <br />
                 <br />
               </span>
-              <span className="c5 c2 c4">
+              <span className="c11 c9 c8 c0">
                 Our Service may contain links to other sites. If you click on a
                 third-party link, you will be directed to that site. Note that
                 these external sites are not operated by us. Therefore, we
@@ -245,14 +250,14 @@ export default function PrivacyRoute() {
               </span>
             </h1>
           </li>
-          <li className="c7 c9 li-bullet-0">
-            <h1 id="h.2wbkplpg7z8c">
-              <span className="c1">THIRD-PARTY RESPONSIBILITY</span>
+          <li className="c1 c4 li-bullet-0">
+            <h1 id="h.2wbkplpg7z8c" className="inline">
+              <span className="c3">THIRD-PARTY RESPONSIBILITY</span>
               <span>
                 <br />
                 <br />
               </span>
-              <span className="c5 c2 c4">
+              <span className="c11 c9 c8 c0">
                 Intuition is not responsible for the data handling practices or
                 policies of third-party providers. Users are encouraged to
                 review the privacy policies and relevant terms of service of
@@ -262,97 +267,97 @@ export default function PrivacyRoute() {
               </span>
             </h1>
           </li>
-          <li className="c7 c9 li-bullet-0">
-            <h1 id="h.2to4n34d0j0e">
-              <span className="c1">ONCHAIN AND OFFCHAIN DATA</span>
+          <li className="c1 c4 li-bullet-0">
+            <h1 id="h.2to4n34d0j0e" className="inline">
+              <span className="c3">ONCHAIN AND OFFCHAIN DATA</span>
               <span>
                 <br />
                 <br />
               </span>
-              <span className="c4">
+              <span className="c0">
                 Use of our Service to create and share content results in the
                 creation of both offchain and{' '}
               </span>
-              <span className="c4">onchain</span>
-              <span className="c4">
+              <span className="c0">onchain</span>
+              <span className="c0">
                 &nbsp;data. Through use of our Service, users acknowledge and
                 accept the inherent risks associated with creating public
                 content.
                 <br />
                 <br />O
               </span>
-              <span className="c4">nchain</span>
-              <span className="c4">
+              <span className="c0">nchain</span>
+              <span className="c0">
                 &nbsp;data is immutable and offchain data may be stored using
                 decentralized services. We can hide content from the
                 Service&rsquo;s user interface that violates our Terms of Use,
                 but{' '}
               </span>
-              <span className="c4">onchain</span>
-              <span className="c4">
+              <span className="c0">onchain</span>
+              <span className="c0">
                 &nbsp;data is immutable and remains on the blockchain while{' '}
               </span>
-              <span className="c4">offchain</span>
-              <span className="c5 c2 c4">
+              <span className="c0">offchain</span>
+              <span className="c11 c9 c8 c0">
                 &nbsp;data may potentially persist on third party storage.
                 <br />
                 <br />
-                The Site is a neutral platform that enables the creation,
+                The Portal is a neutral platform that enables the creation,
                 sharing and interaction with user-created content. We don&#39;t
                 control nor endorse and are not liable for content created by
                 users or third parties. Users are accountable for their content
                 and must ensure legal and best practice compliance. By using our
                 Service, users indemnify Intuition against any claims, damages,
                 or legal actions arising from their attestations or misuse of
-                the Site.
+                the Portal.
                 <br />
               </span>
             </h1>
           </li>
-          <li className="c7 c9 li-bullet-0">
-            <h1 id="h.jt67xz3hl6rl">
-              <span className="c1">
+          <li className="c1 c4 li-bullet-0">
+            <h1 id="h.jt67xz3hl6rl" className="inline">
+              <span className="c3">
                 PERSONAL INFORMATION
                 <br />
               </span>
             </h1>
           </li>
         </ol>
-        <ol className="c0 lst-kix_pcfvvm8tyj4r-1 start">
-          <li className="c3 li-bullet-2">
+        <ol className="c10 lst-kix_pcfvvm8tyj4r-1 start" start={1}>
+          <li className="c7 li-bullet-3">
             <span>
               You acknowledge and agree that information supplied in these terms
               may relate to individuals (collectively &ldquo;
             </span>
-            <span className="c1">Personal Information</span>
-            <span className="c5 c2 c4">
+            <span className="c3">Personal Information</span>
+            <span className="c11 c9 c8 c0">
               &rdquo;), may be held by the Company and/or its delegates and
               agents and may be used for the purpose of:
               <br />
             </span>
           </li>
         </ol>
-        <ol className="c0 lst-kix_xms2ljyf2a0l-0 start">
-          <li className="c10 li-bullet-1">
-            <span className="c5 c2 c4">
+        <ol className="c10 lst-kix_xms2ljyf2a0l-0 start" start={1}>
+          <li className="c6 li-bullet-1">
+            <span className="c11 c9 c8 c0">
               completion of information on statutory registers and books and
               other related dealings, including performing know-your-client
               procedures and overseeing these processes; <br />
             </span>
           </li>
-          <li className="c10 li-bullet-1">
-            <span className="c5 c2 c4">
+          <li className="c6 li-bullet-1">
+            <span className="c11 c9 c8 c0">
               carrying out the provisions of these terms; <br />
             </span>
           </li>
-          <li className="c10 li-bullet-1">
-            <span className="c5 c2 c4">
+          <li className="c6 li-bullet-1">
+            <span className="c11 c9 c8 c0">
               responding to any enquiry purporting to be given by you or on
               behalf of you; <br />
             </span>
           </li>
-          <li className="c10 li-bullet-1">
-            <span className="c5 c2 c4">
+          <li className="c6 li-bullet-1">
+            <span className="c11 c9 c8 c0">
               dealing in any other matters relating to the Company&rsquo;s
               general business administration (including the mailing of reports
               or notices, communicating with service providers and
@@ -361,8 +366,8 @@ export default function PrivacyRoute() {
               products); and <br />
             </span>
           </li>
-          <li className="c10 li-bullet-3">
-            <span className="c5 c2 c4">
+          <li className="c6 li-bullet-2">
+            <span className="c11 c9 c8 c0">
               observing any legal, governmental, regulatory requirements of any
               relevant jurisdiction (including any disclosure or notification
               requirements to which any recipient of the data is subject,
@@ -372,48 +377,48 @@ export default function PrivacyRoute() {
             </span>
           </li>
         </ol>
-        <ol className="c0 lst-kix_pcfvvm8tyj4r-1 start">
-          <li className="c3 li-bullet-2">
-            <span className="c5 c2 c4">
+        <ol className="c10 lst-kix_pcfvvm8tyj4r-1 start" start={1}>
+          <li className="c7 li-bullet-4">
+            <span className="c11 c9 c8 c0">
               You give your express consent to the use of your Personal
               Information as set out at Section 7.1 above. <br />
             </span>
           </li>
-          <li className="c3 li-bullet-2">
-            <span className="c4 c8">
+          <li className="c7 li-bullet-3">
+            <span className="c8 c0">
               If you are not an individual, you confirm, represent and warrant
               that y
             </span>
-            <span className="c2 c4">
+            <span className="c9 c8 c0">
               ou have obtained consent from any individual whose Personal
               Information has been provided to the Company or its delegates and
               agents for that Personal Information to be provided to the
               Company, its delegates and agents.
             </span>
-            <span className="c4">
+            <span className="c0">
               &nbsp;
               <br />
             </span>
           </li>
-          <li className="c3 li-bullet-2">
-            <span className="c4 c8">
+          <li className="c7 li-bullet-5">
+            <span className="c0 c8">
               You acknowledge and agree that, subject to the requirements of
               applicable law, the Company and/or its delegates and agents, may:
               <br />
             </span>
           </li>
         </ol>
-        <ol className="c0 lst-kix_khxbhic88mhe-0 start">
-          <li className="c10 c9 li-bullet-4">
-            <h1 id="h.gsek5oqlef0y">
-              <span className="c2 c4">
+        <ol className="c10 lst-kix_khxbhic88mhe-0 start" start={1}>
+          <li className="c6 c4 li-bullet-1">
+            <h1 id="h.gsek5oqlef0y" className="inline">
+              <span className="c9 c8 c0">
                 retain Personal Information after your use of the Services;
                 <br />
               </span>
             </h1>
           </li>
-          <li className="c10 li-bullet-1">
-            <span className="c2">
+          <li className="c6 li-bullet-2">
+            <span className="c8 c9">
               maintain Personal Information on computer systems based or
               maintained in such places as the Company and/or its delegate or
               agent determines, which may be in countries that have not enacted
@@ -421,8 +426,8 @@ export default function PrivacyRoute() {
               <br />
             </span>
           </li>
-          <li className="c10 li-bullet-1">
-            <span className="c2">
+          <li className="c6 li-bullet-2">
+            <span className="c9 c8">
               disclose and transfer Personal Information, by any method
               including electronically and/or by making available the original
               or a copy of these terms, to:
@@ -430,31 +435,31 @@ export default function PrivacyRoute() {
             </span>
           </li>
         </ol>
-        <ol className="c0 lst-kix_khxbhic88mhe-1 start">
-          <li className="c12 li-bullet-2">
-            <span className="c2">
+        <ol className="c10 lst-kix_khxbhic88mhe-1 start" start={1}>
+          <li className="c13 li-bullet-4">
+            <span className="c9 c8">
               the Company and/or any delegate or agent of the Company{' '}
             </span>
             <span>&ndash;</span>
-            <span className="c2">
+            <span className="c9 c8">
               and/or the professional advisers of any of them and/or any of{' '}
             </span>
             <span>&ndash;</span>
-            <span className="c2">
+            <span className="c9 c8">
               their employees, officers, directors, agents and/or affiliates; or
               <br />
             </span>
           </li>
-          <li className="c12 li-bullet-2">
-            <span className="c5 c2 c4">
+          <li className="c13 li-bullet-3">
+            <span className="c11 c9 c8 c0">
               any third party employed to provide administrative, computer or
               other services or facilities to any person to whom data is
               disclosed or transferred as aforesaid; or
               <br />
             </span>
           </li>
-          <li className="c12 li-bullet-2">
-            <span className="c5 c2 c4">
+          <li className="c13 li-bullet-4">
+            <span className="c11 c9 c8 c0">
               disclose Personal Information where such disclosure is required by
               any law or order of any court or pursuant to any direction,
               request or requirement (whether or not having the force of law) of
@@ -464,14 +469,14 @@ export default function PrivacyRoute() {
             </span>
           </li>
         </ol>
-        <ol className="c0 lst-kix_pcfvvm8tyj4r-0">
-          <li className="c7 li-bullet-5">
-            <span className="c1">CHILDREN&rsquo;S PRIVACY</span>
+        <ol className="c10 lst-kix_pcfvvm8tyj4r-0" start={8}>
+          <li className="c1 li-bullet-0">
+            <span className="c3">CHILDREN&rsquo;S PRIVACY</span>
             <span>
               <br />
               <br />
             </span>
-            <span className="c5 c2 c4">
+            <span className="c11 c9 c8 c0">
               We do not knowingly market to nor collect personal identifiable
               information from children under 13. In the case we discover that a
               child under 13 has provided us with personal information, please
@@ -479,28 +484,28 @@ export default function PrivacyRoute() {
               <br />
             </span>
           </li>
-          <li className="c7 li-bullet-6">
-            <span className="c1">
+          <li className="c1 li-bullet-0">
+            <span className="c3">
               UPDATES TO THIS POLICY
               <br />
               <br />
             </span>
-            <span className="c5 c2 c4">
+            <span className="c11 c9 c8 c0">
               We may periodically update this Privacy Policy. Users are
               encouraged to review it regularly to stay informed about our data
               practices.
               <br />
             </span>
           </li>
-          <li className="c7 li-bullet-5">
-            <span className="c1">
+          <li className="c1 li-bullet-0 mb-20">
+            <span className="c3">
               CONTACT US
               <br />
               <br />
             </span>
             <span>
               For any inquiries, concerns, or requests related to this Policy,
-              please contact us at contact@intuition.systems.
+              please contact us at support@intuition.systems.
             </span>
           </li>
         </ol>
