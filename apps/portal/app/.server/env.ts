@@ -1,5 +1,10 @@
 import { z } from 'zod'
 
+export const featureFlagsSchema = z.object({
+  FF_GENERIC_BANNER_ENABLED: z.string(),
+  FF_INCIDENT_BANNER_ENABLED: z.string(),
+})
+
 const schema = z.object({
   NODE_ENV: z.enum(['production', 'development', 'test'] as const),
   API_URL: z.string(),
@@ -12,6 +17,7 @@ const schema = z.object({
   PRODUCTION_ORIGIN_URL: z.string(),
   STAGING_ORIGIN_URL: z.string(),
   PRIVY_APP_ID: z.string(),
+  featureFlagsSchema,
 })
 
 declare global {
@@ -57,6 +63,16 @@ export function getEnv() {
     PRODUCTION_ORIGIN_URL: process.env.PRODUCTION_ORIGIN_URL,
     STAGING_ORIGIN_URL: process.env.STAGING_ORIGIN_URL,
     PRIVY_APP_ID: process.env.PRIVY_APP_ID,
+    // Feature flags
+    FF_GENERIC_BANNER_ENABLED: process.env.FF_GENERIC_BANNER_ENABLED,
+    FF_INCIDENT_BANNER_ENABLED: process.env.FF_INCIDENT_BANNER_ENABLED,
+  }
+}
+
+export function getFeatureFlags() {
+  return {
+    FF_GENERIC_BANNER_ENABLED: process.env.FF_GENERIC_BANNER_ENABLED,
+    FF_INCIDENT_BANNER_ENABLED: process.env.FF_INCIDENT_BANNER_ENABLED,
   }
 }
 

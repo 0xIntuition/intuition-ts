@@ -140,9 +140,9 @@ export default function TagsReview({
           </div>
         </DialogTitle>
       </DialogHeader>
-      <div className="flex flex-col justify-center items-center gap-5">
+      <div className="flex flex-col items-center justify-center m-auto">
         <Icon name="await-action" className="h-20 w-20 text-neutral-50/30" />
-        <div className="gap-5 flex flex-col items-center">
+        <div className="flex flex-col items-center gap-5 mt-5">
           <Text
             variant="headline"
             weight="medium"
@@ -151,7 +151,7 @@ export default function TagsReview({
             Review your Tags
           </Text>
         </div>
-        <div className="items-center">
+        <div className="flex p-6 items-center">
           <Tags>
             <div className="flex flex-wrap gap-2 items-center">
               {tags.map((tag, index) => (
@@ -172,7 +172,11 @@ export default function TagsReview({
       </div>
       <DialogFooter className="!justify-center !items-center mt-20">
         <div className="flex flex-col items-center gap-1">
-          <Button variant="primary" onClick={handleOnChainCreateTags}>
+          <Button
+            variant="primary"
+            onClick={handleOnChainCreateTags}
+            className="w-40"
+          >
             Confirm
           </Button>
         </div>

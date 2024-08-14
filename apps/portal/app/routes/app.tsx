@@ -8,9 +8,11 @@ import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
 import { Outlet, useLoaderData, useLocation } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
+import { featureFlagsSchema, getFeatureFlags } from '@server/env'
 import { isSanctioned } from '@server/ofac'
 import RootLayout from 'app/layouts/root-layout'
 import { Address } from 'viem'
+import { z } from 'zod'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const wallet = await requireUserWallet(request)
@@ -28,16 +30,21 @@ export async function loader({ request }: LoaderFunctionArgs) {
     },
   })
 
+  // TODO: Figure out why SiteWideBanner has no access to window.ENV values [ENG-3367]
+  const featureFlags = getFeatureFlags()
+
   return json({
     wallet,
     userObject,
+    featureFlags,
   })
 }
 
 export default function App() {
-  const { wallet, userObject } = useLoaderData<{
+  const { wallet, userObject, featureFlags } = useLoaderData<{
     wallet: string
     userObject: UserPresenter
+    featureFlags: z.infer<typeof featureFlagsSchema>
   }>()
   const { pathname } = useLocation()
 
@@ -46,7 +53,7 @@ export default function App() {
   }, [pathname])
 
   return (
-    <RootLayout userObject={userObject}>
+    <RootLayout userObject={userObject} featureFlags={featureFlags}>
       <Outlet />
       <PrivyLogout wallet={wallet} />
     </RootLayout>
