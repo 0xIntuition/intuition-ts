@@ -4,6 +4,7 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from 'components/HoverCard'
+import { Icon } from 'components/Icon'
 import { IdentityTag, IdentityTagSize } from 'components/IdentityTag'
 import { ProfileCard } from 'components/ProfileCard'
 import { Separator } from 'components/Separator'
@@ -97,7 +98,8 @@ const ClaimItem = ({
           {item.link && (
             <a href={item.link}>
               <Button variant={ButtonVariant.secondary} className="w-full">
-                View Identity
+                View Identity{' '}
+                <Icon name={'arrow-up-right'} className="h-3 w-3" />
               </Button>
             </a>
           )}
@@ -135,7 +137,7 @@ export const Claim = ({
             item={item}
             link={link}
             size={size}
-            disabled={disabled || !item.link}
+            disabled={disabled}
             shouldHover={item.shouldHover}
             maxIdentityLength={maxIdentityLength}
           />

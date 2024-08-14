@@ -9,6 +9,7 @@ import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
+  Icon,
   PositionValueDisplay,
   ProfileCard,
   TagsContent,
@@ -125,7 +126,8 @@ const ClaimPositionRow = ({
                       variant={ButtonVariant.secondary}
                       className="w-full"
                     >
-                      View Identity
+                      View Identity{' '}
+                      <Icon name={'arrow-up-right'} className="h-3 w-3" />
                     </Button>
                   </a>
                 )}
