@@ -35,10 +35,22 @@ const ExploreSearchForm = ({
     const formData = new FormData(event.currentTarget)
     const tagIdQuery = formData.get(tagsInputId) as string
     const displayNameQuery = formData.get(searchParam) as string
-    const params = new URLSearchParams({
-      displayNameQuery,
-      tagIdQuery,
-    })
+    const isUser = formData.get('isUser') as string
+
+    const params = new URLSearchParams()
+
+    if (displayNameQuery) {
+      params.append(searchParam, displayNameQuery)
+    }
+
+    if (tagIdQuery) {
+      params.append('tagIds', tagIdQuery)
+    }
+
+    if (isUser === 'true' || isUser === 'false') {
+      params.append('isUser', isUser)
+    }
+
     const action = `?${params.toString()}`
     submit(event.currentTarget, { action, method: 'get' })
   }
@@ -46,17 +58,17 @@ const ExploreSearchForm = ({
   const radioGroupData = [
     {
       id: 'all',
-      value: 'all',
+      value: '',
       displayValue: 'All',
     },
     {
       id: 'users',
-      value: 'users',
+      value: 'true',
       displayValue: 'Users',
     },
     {
       id: 'non-users',
-      value: 'non-users',
+      value: 'false',
       displayValue: 'Non-users',
     },
   ]
@@ -82,18 +94,18 @@ const ExploreSearchForm = ({
             initialValue={searchParams.get(tagsInputId)}
           />
           <Separator className="my-5 in-out-gradient-strong max-md:m-0" />
-          <RadioGroup>
+          <RadioGroup name="isUser" defaultValue="">
             {radioGroupData.map((item, index) => (
               <div key={index}>
                 <RadioGroupItemContainer>
                   <RadioGroupItemLabel
                     htmlFor={item.id}
-                    value={item.value}
+                    value={item.displayValue}
                     subValue={'test'}
                   />
-                  <RadioGroupItem value={item.id} id={item.id} />
+                  <RadioGroupItem value={item.value} id={item.id} />
                 </RadioGroupItemContainer>
-                {index + 1 < numberOfRadioGroupItems && <RadioGroupDivider />}
+                {index < numberOfRadioGroupItems - 1 && <RadioGroupDivider />}
               </div>
             ))}
           </RadioGroup>
