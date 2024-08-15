@@ -28,6 +28,25 @@ template: |
 name-template: 'v$RESOLVED_VERSION ✨'
 tag-template: 'v$RESOLVED_VERSION'
 
+autolabeler:
+  - label: 'breaking'
+    title:
+      - '/breaking/i'
+      - '/BREAKING/i'
+  - label: 'feat'
+    title:
+      - '/feat/i'
+  - label: 'fix'
+    title:
+      - '/fix/i'
+  - label: 'chore'
+    title:
+      - '/chore/i'
+      - '/maintenance/i'
+  - label: 'docs'
+    title:
+      - '/docs/i'
+
 version-resolver:
   major:
     labels:
