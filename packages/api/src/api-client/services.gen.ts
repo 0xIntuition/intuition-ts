@@ -106,6 +106,8 @@ import type {
   IdentitySummaryData,
   IdentitySummaryResponse,
   IntegrationHealthcheckResponse,
+  MissedTransactionsData,
+  MissedTransactionsResponse,
   PositionSummaryData,
   PositionSummaryResponse,
   ReconcilePositionData,
@@ -1087,6 +1089,34 @@ export class LinkedAccountsService {
       url: '/linked_accounts/{identifier}/deactivate',
       path: {
         identifier: data.identifier,
+      },
+    })
+  }
+}
+
+export class MissedTransactionsService {
+  /**
+   * Endpoint to verify missed transactions. It acquires a set of block hashes
+   * from our indexing solution and compare them with the ones we have in the
+   * `activity` table. If there are missed transactions in the `activity` table
+   * it set a new Alchemy webhook to backfill the transactions
+   * @param data The data for the request.
+   * @param data.limit The amount of results we are returning
+   * @param data.after The starting cursor
+   * @param data.startingBlockTimestamp The block timestamp to use as the starting point to look for missing transactions
+   * @returns unknown Process missed transactions
+   * @throws ApiError
+   */
+  public static missedTransactions(
+    data: MissedTransactionsData,
+  ): CancelablePromise<MissedTransactionsResponse> {
+    return __request(OpenAPI, {
+      method: 'GET',
+      url: '/missed_transactions',
+      path: {
+        limit: data.limit,
+        after: data.after,
+        starting_block_timestamp: data.startingBlockTimestamp,
       },
     })
   }
