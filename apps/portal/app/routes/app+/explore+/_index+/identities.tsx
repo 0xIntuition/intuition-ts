@@ -21,6 +21,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   })
   const displayName = searchParams.get('identity') || null
   const hasTag = searchParams.get('tagIds') || null
+  const isUser = searchParams.get('isUser')
 
   const identities = await fetchWrapper(request, {
     method: IdentitiesService.searchIdentity,
@@ -31,7 +32,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
       direction,
       displayName,
       hasTag,
-      isUser: false,
+      isUser: isUser === 'true' ? true : isUser === 'false' ? false : undefined,
     },
   })
 
