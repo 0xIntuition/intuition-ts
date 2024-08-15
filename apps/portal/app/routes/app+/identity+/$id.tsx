@@ -16,11 +16,7 @@ import {
   TagsContent,
   TagWithValue,
 } from '@0xintuition/1ui'
-import {
-  IdentitiesService,
-  IdentityPresenter,
-  TagEmbeddedPresenter,
-} from '@0xintuition/api'
+import { IdentityPresenter, TagEmbeddedPresenter } from '@0xintuition/api'
 
 import { ErrorPage } from '@components/error-page'
 import SaveListModal from '@components/list/save-list-modal'
@@ -28,6 +24,7 @@ import ImageModal from '@components/profile/image-modal'
 import StakeModal from '@components/stake/stake-modal'
 import TagsModal from '@components/tags/tags-modal'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
+import { getIdentityOrPending } from '@lib/services/identities'
 import {
   imageModalAtom,
   saveListModalAtom,
@@ -47,7 +44,6 @@ import {
 } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { Outlet, useNavigate } from '@remix-run/react'
-import { fetchWrapper } from '@server/api'
 import { requireUser, requireUserWallet } from '@server/auth'
 import { getVaultDetails } from '@server/multivault'
 import {
@@ -74,21 +70,39 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     return
   }
 
-  const identity = await fetchWrapper(request, {
-    method: IdentitiesService.getIdentityById,
-    args: {
-      id: params.id,
-    },
-  })
+  // const identity = await fetchWrapper(request, {
+  //   method: IdentitiesService.getIdentityById,
+  //   args: {
+  //     id: params.id,
+  //   },
+  // })
+
+  // if (!identity) {
+  //   return null
+  // }
+
+  const { identity, isPending } = await getIdentityOrPending(
+    request,
+    params.id!,
+  )
+  logger(
+    isPending === true
+      ? 'isPending true in loader'
+      : 'isPending false in loader',
+  )
 
   if (!identity) {
-    return null
+    throw new Response('Not Found', { status: 404 })
   }
+
+  // if (isPending) {
+  //   throw new Response('Pending identity', {status:200})
+  // }
 
   let vaultDetails: VaultDetailsType | null = null
 
   logger('[identity id] wallet:', userWallet)
-  if (identity !== undefined && identity.vault_id) {
+  if (!!identity && identity.vault_id) {
     try {
       vaultDetails = await getVaultDetails(
         identity.contract,
@@ -101,9 +115,12 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     }
   }
 
+  logger(isPending ? 'pending' : 'not pending')
+
   logger('[$ID] -- END')
   return json({
     identity,
+    isPending,
     vaultDetails,
     userWallet,
   })
@@ -113,13 +130,19 @@ export interface IdentityLoaderData {
   identity: IdentityPresenter
   vaultDetails: VaultDetailsType
   userWallet: string
+  isPending: boolean
+}
+
+export function PlaceholderPendingUI() {
+  return <div>This identity is pending!</div>
 }
 
 export default function IdentityDetails() {
-  const { identity, vaultDetails, userWallet } = useLiveLoader<{
+  const { identity, vaultDetails, userWallet, isPending } = useLiveLoader<{
     identity: ExtendedIdentityPresenter
     vaultDetails: VaultDetailsType
     userWallet: string
+    isPending: boolean
   }>(['attest', 'create'])
   const navigate = useNavigate()
 
@@ -130,6 +153,8 @@ export default function IdentityDetails() {
     useAtom(saveListModalAtom)
   const [imageModalActive, setImageModalActive] = useAtom(imageModalAtom)
   const [selectedTag, setSelectedTag] = useState<TagEmbeddedPresenter>()
+
+  logger(isPending ? 'pending' : 'not pending')
 
   useEffect(() => {
     if (saveListModalActive.tag) {
@@ -244,8 +269,7 @@ export default function IdentityDetails() {
       />
     </div>
   )
-
-  const rightPanel = <Outlet />
+  const rightPanel = isPending ? <PlaceholderPendingUI /> : <Outlet />
 
   return (
     <TwoPanelLayout leftPanel={leftPanel} rightPanel={rightPanel}>
