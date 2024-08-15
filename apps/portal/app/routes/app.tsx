@@ -3,6 +3,7 @@ import { useEffect } from 'react'
 import { UserPresenter, UsersService } from '@0xintuition/api'
 
 import PrivyLogout from '@client/privy-logout'
+import LockdownView from '@components/lockdown-view'
 import { invariant } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
 import { Outlet, useLoaderData, useLocation } from '@remix-run/react'
@@ -51,6 +52,10 @@ export default function App() {
   useEffect(() => {
     window.scrollTo(0, 0)
   }, [pathname])
+
+  if (featureFlags.FF_FULL_LOCKDOWN_ENABLED === 'true') {
+    return <LockdownView />
+  }
 
   return (
     <RootLayout userObject={userObject} featureFlags={featureFlags}>

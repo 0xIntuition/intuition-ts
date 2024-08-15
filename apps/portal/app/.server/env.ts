@@ -3,6 +3,7 @@ import { z } from 'zod'
 export const featureFlagsSchema = z.object({
   FF_GENERIC_BANNER_ENABLED: z.string(),
   FF_INCIDENT_BANNER_ENABLED: z.string(),
+  FF_FULL_LOCKDOWN_ENABLED: z.string(),
 })
 
 const schema = z.object({
@@ -66,6 +67,7 @@ export function getEnv() {
     // Feature flags
     FF_GENERIC_BANNER_ENABLED: process.env.FF_GENERIC_BANNER_ENABLED,
     FF_INCIDENT_BANNER_ENABLED: process.env.FF_INCIDENT_BANNER_ENABLED,
+    FF_FULL_LOCKDOWN_ENABLED: process.env.FF_FULL_LOCKDOWN_ENABLED,
   }
 }
 
@@ -73,6 +75,7 @@ export function getFeatureFlags() {
   return {
     FF_GENERIC_BANNER_ENABLED: process.env.FF_GENERIC_BANNER_ENABLED,
     FF_INCIDENT_BANNER_ENABLED: process.env.FF_INCIDENT_BANNER_ENABLED,
+    FF_FULL_LOCKDOWN_ENABLED: process.env.FF_FULL_LOCKDOWN_ENABLED,
   }
 }
 
