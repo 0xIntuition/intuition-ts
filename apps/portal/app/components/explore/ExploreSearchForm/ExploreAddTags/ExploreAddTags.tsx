@@ -11,8 +11,12 @@ import { IdentityPresenter } from '@0xintuition/api'
 
 import { IdentitySearchCombobox } from '@components/identity/identity-search-combo-box'
 import { useIdentityServerSearch } from '@lib/hooks/useIdentityServerSearch'
+import logger from '@lib/utils/logger'
 import { useFetcher } from '@remix-run/react'
-import { GET_IDENTITIES_BY_IDS_RESOURCE_ROUTE } from 'app/consts'
+import {
+  GET_IDENTITIES_BY_IDS_RESOURCE_ROUTE,
+  SEARCH_IDENTITIES_BY_TAGS_RESOURCE_ROUTE,
+} from 'app/consts'
 import { TagType } from 'app/types/tags'
 
 import {
@@ -28,18 +32,19 @@ const ExploreAddTags = ({
   initialValue?: string | null
 }) => {
   const { setSearchQuery, identities, handleInput } = useIdentityServerSearch()
-  const identityFetcher = useFetcher<IdentityPresenter[]>()
+  const identityTagFetcher = useFetcher<IdentityPresenter[]>()
   const tagsContainerRef = React.useRef<HTMLDivElement>(null)
   const popoverContentRef = React.useRef<HTMLDivElement>(null)
   const inputElementRef = React.useRef<HTMLInputElement>(null)
   const [isPopoverOpen, setIsPopoverOpen] = React.useState(false)
   const [selectedTags, setSelectedTags] = React.useState<TagType[]>([])
 
+  logger('initialValue', initialValue)
   React.useEffect(() => {
     if (initialValue) {
-      const searchParam = `?id=${encodeURIComponent(initialValue)}`
-      identityFetcher.load(
-        `${GET_IDENTITIES_BY_IDS_RESOURCE_ROUTE}${searchParam}`,
+      const searchParam = `?tagIds=${encodeURIComponent(initialValue)}`
+      identityTagFetcher.load(
+        `${SEARCH_IDENTITIES_BY_TAGS_RESOURCE_ROUTE}${searchParam}`,
       )
     }
     // Only run this block once on load
@@ -48,7 +53,8 @@ const ExploreAddTags = ({
 
   React.useEffect(() => {
     const initialSelectedTags: TagType[] = []
-    const result = identityFetcher.data
+    const result = identityTagFetcher.data
+    logger('result', result)
     result?.forEach((result) =>
       initialSelectedTags.push({
         name: result.display_name,
@@ -56,7 +62,7 @@ const ExploreAddTags = ({
       }),
     )
     setSelectedTags(initialSelectedTags)
-  }, [identityFetcher.data])
+  }, [identityTagFetcher.data])
 
   React.useEffect(() => {
     const handleClickEvent = (event: MouseEvent) => {
