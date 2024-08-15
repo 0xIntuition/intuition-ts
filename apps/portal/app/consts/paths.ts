@@ -17,6 +17,7 @@ export const PATHS = {
   PROFILE_LISTS: '/app/profile/lists',
   // Explore
   EXPLORE_USERS: '/app/explore/users',
+  EXPLORE_IDENTITIES: '/app/explore/identities',
   EXPLORE_LISTS: '/app/explore/lists',
   // Activity
   GLOBAL_ACTIVITY: '/app/activity/global',

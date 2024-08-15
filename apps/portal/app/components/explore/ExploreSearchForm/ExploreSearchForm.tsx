@@ -1,6 +1,13 @@
 import * as React from 'react'
 
-import { Separator } from '@0xintuition/1ui'
+import {
+  RadioGroup,
+  RadioGroupDivider,
+  RadioGroupItem,
+  RadioGroupItemContainer,
+  RadioGroupItemLabel,
+  Separator,
+} from '@0xintuition/1ui'
 
 import { Form, useSearchParams, useSubmit } from '@remix-run/react'
 
@@ -36,6 +43,26 @@ const ExploreSearchForm = ({
     submit(event.currentTarget, { action, method: 'get' })
   }
 
+  const radioGroupData = [
+    {
+      id: 'all',
+      value: 'all',
+      displayValue: 'All',
+    },
+    {
+      id: 'users',
+      value: 'users',
+      displayValue: 'Users',
+    },
+    {
+      id: 'non-users',
+      value: 'non-users',
+      displayValue: 'Non-users',
+    },
+  ]
+
+  const numberOfRadioGroupItems = radioGroupData.length
+
   return (
     <Form
       method="get"
@@ -54,6 +81,22 @@ const ExploreSearchForm = ({
             inputId={tagsInputId}
             initialValue={searchParams.get(tagsInputId)}
           />
+          <Separator className="my-5 in-out-gradient-strong max-md:m-0" />
+          <RadioGroup>
+            {radioGroupData.map((item, index) => (
+              <div key={index}>
+                <RadioGroupItemContainer>
+                  <RadioGroupItemLabel
+                    htmlFor={item.id}
+                    value={item.value}
+                    subValue={'test'}
+                  />
+                  <RadioGroupItem value={item.id} id={item.id} />
+                </RadioGroupItemContainer>
+                {index + 1 < numberOfRadioGroupItems && <RadioGroupDivider />}
+              </div>
+            ))}
+          </RadioGroup>
         </>
       )}
     </Form>
