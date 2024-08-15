@@ -75,3 +75,55 @@ const numberOfRadioGroupItems = radioGroupData.length
 `} />
 
 <Canvas of={Stories.BasicUsage} sourceState="none" />
+
+## Variants
+
+### Simple
+
+Add `variant="simple"` to both `RadioGroup` and `RadioGroupItemContainer`
+
+<Source
+  dark
+  language="tsx"
+  code={`
+<RadioGroup variant="simple" defaultValue={radioGroupData[0].value}>
+  {radioGroupData.map((item, index) => (
+    <div key={index}>
+      <RadioGroupItemContainer variant="simple">
+        <RadioGroupItem value={item.value} id={item.id} />
+        <RadioGroupItemLabel
+          htmlFor={item.id}
+          value={item.displayValue}
+        />
+      </RadioGroupItemContainer>
+    </div>
+  ))}
+</RadioGroup>
+`}
+/>
+<Canvas of={Stories.Simple} sourceState="none" />
+
+### Simple Small
+
+Add `size="small"` to `RadioGroupItem`
+
+<Source
+  dark
+  language="tsx"
+  code={`
+<RadioGroup variant="simple" defaultValue={radioGroupData[0].value}>
+  {radioGroupData.map((item, index) => (
+    <div key={index}>
+      <RadioGroupItemContainer variant="simple">
+        <RadioGroupItem size="small" value={item.value} id={item.id} />
+        <RadioGroupItemLabel
+          htmlFor={item.id}
+          value={item.displayValue}
+        />
+      </RadioGroupItemContainer>
+    </div>
+  ))}
+</RadioGroup>
+`}
+/>
+<Canvas of={Stories.SimpleSmall} sourceState="none" />

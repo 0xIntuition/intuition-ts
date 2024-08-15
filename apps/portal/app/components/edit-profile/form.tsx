@@ -79,6 +79,7 @@ export function EditProfileForm({
   const [imageFile, setImageFile] = useState<File | undefined>(undefined)
   const [imageFilename, setImageFilename] = useState<string | null>(null)
   const [imageFilesize, setImageFilesize] = useState<string | null>(null)
+  const [imageUploadError, setImageUploadError] = useState<string | null>(null)
 
   const [displayName, setDisplayName] = useState(
     userObject.display_name ? userObject.display_name : '',
@@ -138,12 +139,12 @@ export function EditProfileForm({
     ) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const data = imageUploadFetcher.data as any
-      if (typeof data.submission.payload.image_url !== 'string') {
-        logger('Transaction Error')
-        dispatch({
-          type: 'TRANSACTION_ERROR',
-          error: 'Your profile picture was rejected.',
-        })
+      if (
+        imageUploadFetcher.data &&
+        imageUploadFetcher.data.status === 'error'
+      ) {
+        toast.error(imageUploadFetcher.data.error)
+        setImageUploadError(imageUploadFetcher.data.error)
       } else {
         dispatch({
           type: 'IMAGE_UPLOAD_COMPLETE',
@@ -223,7 +224,7 @@ export function EditProfileForm({
       if (imageFile && userObject.image !== previewImage) {
         dispatch({ type: 'START_IMAGE_UPLOAD' })
         imageUploadFetcher.submit(formData, {
-          action: '/actions/upload-with-metadata',
+          action: '/actions/upload-image',
           method: 'post',
           encType: 'multipart/form-data',
         })
@@ -334,7 +335,10 @@ export function EditProfileForm({
             </div>
             <ErrorList
               id={fields.image_url.errorId}
-              errors={fields.image_url.errors}
+              errors={[
+                ...(fields.image_url.errors || []),
+                ...(imageUploadError ? [imageUploadError] : []),
+              ]}
             />
           </div>
           <div className="flex flex-col w-full gap-1.5">
