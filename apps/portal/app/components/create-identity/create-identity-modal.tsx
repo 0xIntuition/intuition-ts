@@ -36,7 +36,7 @@ export default function CreateIdentityModal({
       <Dialog open={open} onOpenChange={handleCloseAttempt}>
         <DialogContent
           onOpenAutoFocus={(event) => event.preventDefault()}
-          className="flex flex-col h-[780px] max-sm:min-w-0"
+          className="flex flex-col max-sm:min-w-0"
         >
           <IdentityForm
             onClose={onClose}
