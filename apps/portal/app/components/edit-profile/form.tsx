@@ -16,6 +16,7 @@ import { UserPresenter } from '@0xintuition/api'
 
 import ErrorList from '@components/error-list'
 import { ImageChooser } from '@components/image-chooser'
+import { InfoTooltip } from '@components/info-tooltip'
 import {
   getFormProps,
   getInputProps,
@@ -33,12 +34,7 @@ import { updateProfileSchema } from '@lib/schemas/update-profile-schema'
 import logger from '@lib/utils/logger'
 import { truncateString } from '@lib/utils/misc'
 import { useFetcher, useLocation } from '@remix-run/react'
-import {
-  ACCEPTED_IMAGE_MIME_TYPES,
-  DESCRIPTION_MAX_LENGTH,
-  MAX_NAME_LENGTH,
-  MAX_UPLOAD_SIZE,
-} from 'app/consts'
+import { ACCEPTED_IMAGE_MIME_TYPES, MAX_UPLOAD_SIZE } from 'app/consts'
 import {
   IdentityTransactionActionType,
   IdentityTransactionStateType,
@@ -102,9 +98,17 @@ export function EditProfileForm({
   })
   const [loading, setLoading] = useState(false)
   const [previewImage, setPreviewImage] = useState<string | null>(null)
-  const handleFileChange = (filename: string, filesize: string) => {
+  const handleFileChange = (filename: string, filesize: string, file: File) => {
     setImageFilename(filename)
     setImageFilesize(filesize)
+    setImageFile(file)
+    setImageUploadError(null)
+
+    if (file.size > MAX_UPLOAD_SIZE) {
+      setImageUploadError('File size must be less than 5MB')
+    } else if (!ACCEPTED_IMAGE_MIME_TYPES.includes(file.type)) {
+      setImageUploadError('File must be a .png, .jpg, .jpeg, .gif, or .webp')
+    }
   }
 
   const handleError = (
@@ -143,8 +147,8 @@ export function EditProfileForm({
         imageUploadFetcher.data &&
         imageUploadFetcher.data.status === 'error'
       ) {
-        toast.error(imageUploadFetcher.data.error)
         setImageUploadError(imageUploadFetcher.data.error)
+        setLoading(false)
       } else {
         dispatch({
           type: 'IMAGE_UPLOAD_COMPLETE',
@@ -205,7 +209,24 @@ export function EditProfileForm({
     try {
       dispatch({ type: 'START_TRANSACTION' })
       setLoading(true)
-      const formData = new FormData(event.currentTarget)
+      const formData = new FormData()
+      formData.append('display_name', displayName)
+      formData.append('description', description)
+      formData.append('image_url', previewImage || userObject.image || '')
+
+      // Check if any changes were made
+      const hasChanges =
+        displayName !== userObject.display_name ||
+        description !== userObject.description ||
+        previewImage !== userObject.image
+
+      if (!hasChanges) {
+        onClose()
+        return
+      }
+
+      // Add the user ID
+      formData.append('id', userObject.id ?? '')
 
       // Initial form validation
       const submission = parseWithZod(formData, {
@@ -229,8 +250,6 @@ export function EditProfileForm({
           encType: 'multipart/form-data',
         })
       } else {
-        formData.append('id', userObject.id ?? '')
-        formData.append('image_url', previewImage ?? '')
         offChainFetcher.submit(formData, {
           action: '/actions/edit-profile',
           method: 'post',
@@ -290,12 +309,21 @@ export function EditProfileForm({
         encType="multipart/form-data"
         action="/actions/edit-profile"
       >
-        <div className="w-full flex-col justify-start items-start inline-flex gap-7">
+        <div className="w-full h-max flex-col justify-start items-start inline-flex gap-7">
           <div className="flex flex-col w-full gap-1.5">
             <div className="self-stretch flex-col justify-start items-start flex">
-              <Text variant="caption" className="text-secondary-foreground">
-                Image
-              </Text>
+              <div className="flex w-full items-center justify-between">
+                <Text variant="caption" className="text-secondary-foreground">
+                  Image
+                </Text>
+                <InfoTooltip
+                  title="Image"
+                  content={`We've done some image filtering in The Portal, so that
+                          we don't begin our journey with a bunch of
+                          inappropriate images - though the Intuition Protocol
+                          itself allows for any image to be referenced.`}
+                />
+              </div>
             </div>
             <div className="self-stretch h-[100px] px-9 py-2.5 theme-border bg-primary/10 rounded-md justify-between items-center inline-flex">
               <div className="justify-start items-center gap-[18px] flex">
@@ -303,8 +331,12 @@ export function EditProfileForm({
                   <ImageChooser
                     previewImage={previewImage}
                     setPreviewImage={setPreviewImage}
-                    onFileChange={handleFileChange}
+                    onFileChange={(filename, filesize, file) =>
+                      handleFileChange(filename, filesize, file)
+                    }
                     setImageFile={setImageFile}
+                    disabled={loading}
+                    {...getInputProps(fields.image_url, { type: 'file' })}
                   />
                 </div>
                 <div className="flex-col justify-start items-start inline-flex">
@@ -323,6 +355,8 @@ export function EditProfileForm({
                     setPreviewImage(null)
                     setImageFilename(null)
                     setImageFilesize(null)
+                    setImageFile(undefined)
+                    setImageUploadError(null)
                   }}
                   className={`${previewImage === null ? 'hidden' : 'block'}`}
                 >
@@ -335,54 +369,62 @@ export function EditProfileForm({
             </div>
             <ErrorList
               id={fields.image_url.errorId}
-              errors={[
-                ...(fields.image_url.errors || []),
-                ...(imageUploadError ? [imageUploadError] : []),
-              ]}
+              errors={[...(imageUploadError ? [imageUploadError] : [])]}
             />
           </div>
           <div className="flex flex-col w-full gap-1.5">
-            <Text variant="caption" className="text-foreground/70">
-              Display Name
-            </Text>
+            <div className="self-stretch flex-col justify-start items-start flex">
+              <div className="flex w-full items-center justify-between">
+                <Text variant="caption" className="text-secondary-foreground">
+                  Display Name
+                </Text>
+                <InfoTooltip
+                  title="Display Name"
+                  content="This is the display name of your Atom/Identity, and will be a main way that people discover it - so make sure it is good!"
+                />
+              </div>
+            </div>
             <Label htmlFor={fields.display_name.id} hidden>
               Display Name
             </Label>
             <Input
               {...getInputProps(fields.display_name, { type: 'text' })}
-              placeholder="Enter a display name"
-              value={displayName}
+              placeholder="Enter a display name here"
               onChange={handleDisplayNameChange}
-              className="w-full"
+              value={displayName}
             />
-            <Text
-              variant="small"
-              className="self-end text-secondary-foreground"
-            >
-              Max {MAX_NAME_LENGTH} characters
-            </Text>
+            <ErrorList
+              id={fields.display_name.errorId}
+              errors={fields.display_name.errors}
+            />
           </div>
-          {/* Bio */}
+
           <div className="flex flex-col w-full gap-1.5">
-            <Text variant="caption" className="text-secondary-foreground">
-              Description
-            </Text>
+            <div className="self-stretch flex-col justify-start items-start flex">
+              <div className="flex w-full items-center justify-between">
+                <Text variant="caption" className="text-secondary-foreground">
+                  Description
+                </Text>
+                <InfoTooltip
+                  title="Description"
+                  content="Add a bit more context to elaborate on what this Atom/Identity is meant to represent. The more data you add, the more useful your Atom/Identity will be."
+                />
+              </div>
+            </div>
             <Label htmlFor={fields.description.id} hidden>
               Description
             </Label>
             <Textarea
               {...getInputProps(fields.description, { type: 'text' })}
-              placeholder="Tell us about yourself!"
-              value={description}
+              placeholder="Enter description here"
+              className="theme-border"
               onChange={handleDescriptionChange}
-              className="h-20"
+              value={description}
             />
-            <Text
-              variant="small"
-              className="self-end text-secondary-foreground"
-            >
-              Max {DESCRIPTION_MAX_LENGTH} characters
-            </Text>
+            <ErrorList
+              id={fields.description.errorId}
+              errors={fields.description.errors}
+            />
           </div>
         </div>
         <Button
