@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import {
   Button,
@@ -46,6 +46,7 @@ export function TagsForm({
   identity,
   userWallet,
   mode,
+  onSuccess,
   onClose,
 }: TagsFormProps) {
   const navigate = useNavigate()
@@ -96,6 +97,12 @@ export function TagsForm({
       tag,
     })
   }
+
+  useEffect(() => {
+    if (state.status === 'complete') {
+      onSuccess?.()
+    }
+  }, [state.status])
 
   return (
     <div className="flex flex-col h-full">
