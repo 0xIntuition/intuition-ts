@@ -50,7 +50,6 @@ import { CreateLoaderData } from '@routes/resources+/create'
 import {
   ACCEPTED_IMAGE_MIME_TYPES,
   CURRENT_ENV,
-  GENERIC_ERROR_MSG,
   IPFS_GATEWAY_URL,
   MAX_UPLOAD_SIZE,
   MULTIVAULT_CONTRACT_ADDRESS,
@@ -184,6 +183,7 @@ function CreateIdentityForm({
   const [identityImageFile, setIdentityImageFile] = useState<File | undefined>(
     undefined,
   )
+  const [imageUploadError, setImageUploadError] = useState<string | null>(null)
   const [initialDeposit, setInitialDeposit] = useState<string>('')
   const [isContract, setIsContract] = useState(false)
 
@@ -232,9 +232,10 @@ function CreateIdentityForm({
       imageUploadFetcher.data &&
       imageUploadFetcher.data.status === 'error'
     ) {
-      toast.error(GENERIC_ERROR_MSG)
+      toast.error(imageUploadFetcher.data.error)
       setIdentityImageSrc(null)
       setImageUploading(false)
+      setImageUploadError(imageUploadFetcher.data.error)
     }
   }, [imageUploadFetcher.data])
 
@@ -560,7 +561,10 @@ function CreateIdentityForm({
               </div>
               <ErrorList
                 id={fields.image_url.errorId}
-                errors={fields.image_url.errors}
+                errors={[
+                  ...(fields.image_url.errors || []),
+                  ...(imageUploadError ? [imageUploadError] : []),
+                ]}
               />
             </div>
             <div className="flex flex-col w-full gap-1.5">
