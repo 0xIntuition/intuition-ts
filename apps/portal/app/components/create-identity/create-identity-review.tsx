@@ -52,7 +52,7 @@ const calculateFees = (initialDeposit: string, fees: CreateLoaderData) => {
       +initialDeposit > epsilon
         ? +initialDeposit + atomCostDecimal
         : atomCostDecimal,
-    atomCreationFee: +formatBalance(fees.atomCreationFee, 18, 4),
+    atomCreationFee: +formatBalance(fees.atomCreationFee, 18),
   }
 }
 

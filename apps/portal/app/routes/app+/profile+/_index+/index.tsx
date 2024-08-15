@@ -121,14 +121,14 @@ export default function UserProfileOverview() {
           variant="claims"
           userIdentity={userIdentity}
           totalClaims={claims.pagination?.totalEntries}
-          totalStake={+formatBalance(claimsSummary?.assets_sum ?? 0, 18, 4)}
+          totalStake={+formatBalance(claimsSummary?.assets_sum ?? 0, 18)}
           link={`${PATHS.PROFILE}/data-about`}
         />
         <OverviewAboutHeader
           variant="positions"
           userIdentity={userIdentity}
           totalPositions={positions.pagination.totalEntries}
-          totalStake={+formatBalance(userIdentity.assets_sum, 18, 4)}
+          totalStake={+formatBalance(userIdentity.assets_sum, 18)}
           link={`${PATHS.PROFILE}/data-about`}
         />
       </div>

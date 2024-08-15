@@ -1,3 +1,5 @@
+import { useState } from 'react'
+
 import {
   Button,
   ButtonSize,
@@ -98,6 +100,8 @@ export default function SidebarNav({
   const submit = useSubmit()
   const navigate = useNavigate()
   const location = useLocation()
+
+  const [isCreateMenuOpen, setIsCreateMenuOpen] = useState(false)
 
   const [createIdentityModalActive, setCreateIdentityModalActive] = useAtom(
     createIdentityModalAtom,
@@ -268,6 +272,9 @@ export default function SidebarNav({
                       <SidebarNavItem
                         iconName={sidebarNavItem.iconName}
                         label={sidebarNavItem.label}
+                        aria-selected={
+                          sidebarNavItem.route === location.pathname
+                        }
                       />
                     </NavLink>
                   ))}
@@ -282,7 +289,10 @@ export default function SidebarNav({
                 </div>
               </div>
               <div className="flex flex-col gap-4 w-full">
-                <DropdownMenu>
+                <DropdownMenu
+                  open={isCreateMenuOpen}
+                  onOpenChange={setIsCreateMenuOpen}
+                >
                   <DropdownMenuTrigger>
                     <SidebarNavItem
                       iconName={IconName.brushSparkle}
@@ -298,7 +308,10 @@ export default function SidebarNav({
                     <Button
                       variant={ButtonVariant.text}
                       size={ButtonSize.lg}
-                      onClick={() => setCreateIdentityModalActive(true)}
+                      onClick={() => {
+                        setIsCreateMenuOpen(false)
+                        setCreateIdentityModalActive(true)
+                      }}
                     >
                       <Icon name="fingerprint" /> Create Identity
                     </Button>
@@ -306,7 +319,10 @@ export default function SidebarNav({
                     <Button
                       variant={ButtonVariant.text}
                       size={ButtonSize.lg}
-                      onClick={() => setCreateClaimModalActive(true)}
+                      onClick={() => {
+                        setIsCreateMenuOpen(false)
+                        setCreateClaimModalActive(true)
+                      }}
                     >
                       <Icon name="claim" /> Create Claim
                     </Button>

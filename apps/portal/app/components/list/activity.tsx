@@ -51,13 +51,13 @@ export function ActivityList({
     createAtom: 'created an identity',
     createTriple: 'created a claim',
     depositAtom: (value: string) =>
-      `deposited ${formatBalance(value, 18, 4)} ETH on an identity`,
+      `deposited ${formatBalance(value, 18)} ETH on an identity`,
     redeemAtom: (value: string) =>
-      `redeemed ${formatBalance(value, 18, 4)} ETH from an identity`,
+      `redeemed ${formatBalance(value, 18)} ETH from an identity`,
     depositTriple: (value: string) =>
-      `deposited ${formatBalance(value, 18, 4)} ETH on a claim`,
+      `deposited ${formatBalance(value, 18)} ETH on a claim`,
     redeemTriple: (value: string) =>
-      `redeemed ${formatBalance(value, 18, 4)} ETH from a claim`,
+      `redeemed ${formatBalance(value, 18)} ETH from a claim`,
   }
 
   console.log('activities', activities)
@@ -185,11 +185,7 @@ function ActivityItem({
                 activity.identity.user?.wallet ?? activity.identity.identity_id
               }
               amount={
-                +formatBalance(
-                  BigInt(activity.identity.assets_sum ?? '0'),
-                  18,
-                  4,
-                )
+                +formatBalance(BigInt(activity.identity.assets_sum ?? '0'), 18)
               }
               totalFollowers={activity.identity.num_positions}
               link={getAtomLink(activity.identity)}
@@ -220,7 +216,7 @@ function ActivityItem({
               claimsAgainstValue={
                 +formatBalance(activity.claim.against_assets_sum, 18)
               }
-              tvl={+formatBalance(activity.claim.assets_sum, 18, 4)}
+              tvl={+formatBalance(activity.claim.assets_sum, 18)}
               className="w-full"
             >
               <Claim

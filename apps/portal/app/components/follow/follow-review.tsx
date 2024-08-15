@@ -93,7 +93,7 @@ export default function FollowReview({
               {mode === 'follow' ? 'Deposit' : 'Redeem'}{' '}
               {formatDisplayBalance(
                 mode === 'unfollow'
-                  ? Number(formatBalance(user_assets, 18, 4))
+                  ? Number(formatBalance(user_assets, 18))
                   : Number(val),
                 2,
               )}{' '}

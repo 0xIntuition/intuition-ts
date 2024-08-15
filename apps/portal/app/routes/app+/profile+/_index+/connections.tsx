@@ -174,7 +174,7 @@ function ConnectionsContent({
                     followClaim={followClaim}
                     userIdentity={userIdentity}
                     totalFollowers={userIdentity.follower_count}
-                    totalStake={formatBalance(followClaim.assets_sum, 18, 4)}
+                    totalStake={formatBalance(followClaim.assets_sum, 18)}
                     variant={ConnectionsHeaderVariants.followers}
                   >
                     <FollowList
@@ -193,7 +193,7 @@ function ConnectionsContent({
                   followClaim={followClaim}
                   userIdentity={userIdentity}
                   totalFollowers={userIdentity.followed_count}
-                  totalStake={formatBalance(userTotals.followed_assets, 18, 4)}
+                  totalStake={formatBalance(userTotals.followed_assets, 18)}
                   variant={ConnectionsHeaderVariants.following}
                 >
                   {following && followingPagination && (

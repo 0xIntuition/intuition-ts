@@ -1,0 +1,60 @@
+import { Canvas, Controls, Meta, Source, Title } from '@storybook/blocks'
+
+import { Button } from '..'
+import * as Stories from './AlertDialog.stories'
+
+<Meta of={Stories} />
+
+<Title />
+
+#### A modal dialog that interrupts the user with important content and expects a response.
+
+<Button
+  variant="accent"
+  onClick={() =>
+    window.open(
+      'https://www.radix-ui.com/primitives/docs/components/alert-dialog#api-reference',
+      '_blank',
+    )
+  }
+>
+  {'API Reference'}
+</Button>
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import {
+  AlertDialog,
+  AlertDialogTrigger,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogCancel,
+  AlertDialogAction,
+} from '@0xintuition/1ui'
+
+<AlertDialog>
+  <AlertDialogTrigger>
+    <Button size="lg">Open alert dialog</Button>
+  </AlertDialogTrigger>
+  <AlertDialogContent>
+    <AlertDialogHeader>
+      <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+      <AlertDialogDescription>
+        This action cannot be undone. This will permanently delete your account
+        and remove your data from our servers.
+      </AlertDialogDescription>
+    </AlertDialogHeader>
+    <AlertDialogFooter>
+      <AlertDialogCancel>Cancel</AlertDialogCancel>
+      <AlertDialogAction>Continue</AlertDialogAction>
+    </AlertDialogFooter>
+  </AlertDialogContent>
+</AlertDialog>
+`} />
+
+<Canvas of={Stories.BasicUsage} sourceState="none" />

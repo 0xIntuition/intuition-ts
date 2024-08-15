@@ -79,7 +79,6 @@ export function IdentitiesList({
                       : identity.user_assets || '',
                   ),
                   18,
-                  4,
                 )
               }
               totalFollowers={identity.num_positions}

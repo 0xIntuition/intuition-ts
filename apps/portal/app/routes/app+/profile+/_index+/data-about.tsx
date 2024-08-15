@@ -115,7 +115,6 @@ export default function ProfileDataAbout() {
                         +formatBalance(
                           resolvedClaimsSummary?.assets_sum ?? 0,
                           18,
-                          4,
                         )
                       }
                     />
@@ -162,7 +161,7 @@ export default function ProfileDataAbout() {
                   variant="positions"
                   userIdentity={userIdentity}
                   totalPositions={resolvedPositions.pagination.totalEntries}
-                  totalStake={+formatBalance(userIdentity.assets_sum, 18, 4)}
+                  totalStake={+formatBalance(userIdentity.assets_sum, 18)}
                 />
               )}
             </Await>

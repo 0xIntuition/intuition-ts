@@ -320,7 +320,7 @@ export default function FollowModal({
         handleClose()
       }}
     >
-      <DialogContent className="flex flex-col w-[476px] h-[500px] gap-0">
+      <DialogContent className="flex flex-col w-[476px] h-[520px] gap-0">
         <div className="flex-grow">
           <FollowForm
             walletBalance={walletBalance}

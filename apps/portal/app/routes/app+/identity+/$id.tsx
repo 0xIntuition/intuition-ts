@@ -195,7 +195,7 @@ export default function IdentityDetails() {
           }
         >
           <PositionCardStaked
-            amount={user_assets ? +formatBalance(user_assets, 18, 4) : 0}
+            amount={user_assets ? +formatBalance(user_assets, 18) : 0}
           />
           <PositionCardOwnership
             percentOwnership={
@@ -208,7 +208,7 @@ export default function IdentityDetails() {
         </PositionCard>
       ) : null}
       <StakeCard
-        tvl={+formatBalance(assets_sum, 18, 4)}
+        tvl={+formatBalance(assets_sum, 18)}
         holders={identity?.num_positions}
         onBuyClick={() =>
           setStakeModalActive((prevState) => ({

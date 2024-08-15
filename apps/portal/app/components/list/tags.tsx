@@ -116,9 +116,7 @@ export function TagsList({
                       value: tag.num_tagged_identities,
                     })) ?? undefined
                   }
-                  amount={
-                    +formatBalance(BigInt(identity.assets_sum || ''), 18, 4)
-                  }
+                  amount={+formatBalance(BigInt(identity.assets_sum || ''), 18)}
                   totalFollowers={identity.num_positions}
                   link={getAtomLink(identity)}
                   ipfsLink={getAtomIpfsLink(identity)}

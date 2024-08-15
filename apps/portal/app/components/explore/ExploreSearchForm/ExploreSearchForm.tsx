@@ -1,6 +1,12 @@
 import * as React from 'react'
 
-import { Separator } from '@0xintuition/1ui'
+import {
+  RadioGroup,
+  RadioGroupItem,
+  RadioGroupItemContainer,
+  RadioGroupItemLabel,
+  Separator,
+} from '@0xintuition/1ui'
 
 import { Form, useSearchParams, useSubmit } from '@remix-run/react'
 
@@ -28,13 +34,45 @@ const ExploreSearchForm = ({
     const formData = new FormData(event.currentTarget)
     const tagIdQuery = formData.get(tagsInputId) as string
     const displayNameQuery = formData.get(searchParam) as string
-    const params = new URLSearchParams({
-      displayNameQuery,
-      tagIdQuery,
-    })
+    const isUser = formData.get('isUser') as string
+
+    const params = new URLSearchParams()
+
+    if (displayNameQuery) {
+      params.append(searchParam, displayNameQuery)
+    }
+
+    if (tagIdQuery) {
+      params.append('tagIds', tagIdQuery)
+    }
+
+    if (isUser === 'true' || isUser === 'false') {
+      params.append('isUser', isUser)
+    }
+
     const action = `?${params.toString()}`
     submit(event.currentTarget, { action, method: 'get' })
   }
+
+  const radioGroupData = [
+    {
+      id: 'all',
+      value: '',
+      displayValue: 'All',
+    },
+    {
+      id: 'users',
+      value: 'true',
+      displayValue: 'Users',
+    },
+    {
+      id: 'non-users',
+      value: 'false',
+      displayValue: 'Non-users',
+    },
+  ]
+
+  const currentIsUser = searchParams.get('isUser') || ''
 
   return (
     <Form
@@ -54,6 +92,28 @@ const ExploreSearchForm = ({
             inputId={tagsInputId}
             initialValue={searchParams.get(tagsInputId)}
           />
+          <Separator className="my-5 in-out-gradient-strong max-md:m-0" />
+          <RadioGroup
+            name="isUser"
+            defaultValue={currentIsUser}
+            variant="simple"
+          >
+            {radioGroupData.map((item, index) => (
+              <div key={index}>
+                <RadioGroupItemContainer variant="simple">
+                  <RadioGroupItem
+                    value={item.value}
+                    id={item.id}
+                    size="small"
+                  />
+                  <RadioGroupItemLabel
+                    htmlFor={item.id}
+                    value={item.displayValue}
+                  />
+                </RadioGroupItemContainer>
+              </div>
+            ))}
+          </RadioGroup>
         </>
       )}
     </Form>

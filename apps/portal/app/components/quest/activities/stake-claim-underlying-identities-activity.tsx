@@ -85,7 +85,7 @@ export const PositionCardWrapper = ({
             </div>
           </div>
           <PositionCardStaked
-            amount={user_assets ? +formatBalance(user_assets, 18, 5) : 0}
+            amount={user_assets ? +formatBalance(user_assets, 18) : 0}
           />
           <PositionCardOwnership
             percentOwnership={

@@ -199,7 +199,7 @@ export default function SaveForm({
                   <Skeleton className="h-12 w-full" />
                 ) : (
                   <ActivePositionCard
-                    value={Number(formatBalance(user_assets, 18, 4))}
+                    value={Number(formatBalance(user_assets, 18))}
                     claimPosition={user_assets > '0' ? 'claimFor' : null}
                   />
                 )}

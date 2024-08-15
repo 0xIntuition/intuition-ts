@@ -47,7 +47,7 @@ export function PositionsOnIdentity({
             name={position.user?.display_name ?? ''}
             description={position.user?.description ?? ''}
             id={position.user?.wallet ?? ''}
-            amount={+formatBalance(BigInt(position.assets), 18, 4)}
+            amount={+formatBalance(BigInt(position.assets), 18)}
             feesAccrued={Number(
               formatUnits(BigInt(+position.assets - +position.value), 18),
             )}

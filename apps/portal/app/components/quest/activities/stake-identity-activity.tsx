@@ -73,7 +73,7 @@ export default function StakeIdentityActivity({
               className="bg-primary/5"
             >
               <PositionCardStaked
-                amount={user_assets ? +formatBalance(user_assets, 18, 5) : 0}
+                amount={user_assets ? +formatBalance(user_assets, 18) : 0}
               />
               <PositionCardOwnership
                 percentOwnership={

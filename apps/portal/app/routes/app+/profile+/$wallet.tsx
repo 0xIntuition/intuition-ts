@@ -233,7 +233,7 @@ export default function Profile() {
             <>
               <Icon name={IconName.peopleAddFilled} className="h-4 w-4" />
               Following ·{' '}
-              {formatBalance(followVaultDetails.user_assets ?? '0', 18, 4)} ETH
+              {formatBalance(followVaultDetails.user_assets ?? '0', 18)} ETH
             </>
           ) : (
             <>
@@ -295,7 +295,7 @@ export default function Profile() {
           }
         >
           <PositionCardStaked
-            amount={user_assets ? +formatBalance(user_assets, 18, 4) : 0}
+            amount={user_assets ? +formatBalance(user_assets, 18) : 0}
           />
           <PositionCardOwnership
             percentOwnership={

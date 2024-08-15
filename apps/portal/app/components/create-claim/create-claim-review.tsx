@@ -73,7 +73,7 @@ const calculateFees = (initialDeposit: string, fees: CreateClaimFeesType) => {
       +initialDeposit > epsilon
         ? atomFractionDistributionOnDepositDecimal.toFixed(4)
         : atomFractionDistributionOnCreationDecimal,
-    tripleCreationFee: formatBalance(fees.tripleCreationFee, 18, 4),
+    tripleCreationFee: formatBalance(fees.tripleCreationFee, 18),
   }
 }
 

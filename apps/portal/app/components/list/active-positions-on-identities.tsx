@@ -59,7 +59,6 @@ export function ActivePositionsOnIdentities({
                 ? +formatBalance(
                     +identity.user_assets - +identity.user_asset_delta,
                     18,
-                    5,
                   )
                 : 0
             }

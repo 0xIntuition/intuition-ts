@@ -61,7 +61,6 @@ export function ActivePositionsOnClaims({
                   ? claim.user_assets_for
                   : claim.user_assets_against,
                 18,
-                5,
               )
             }
             feesAccrued={0} // TODO: Update once BE adds deltas to the data output

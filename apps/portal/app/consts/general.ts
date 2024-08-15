@@ -137,11 +137,6 @@ export const userIdentityRouteOptions = [
 
 export const exploreRouteOptions = [
   {
-    value: 'users',
-    label: 'Users',
-    basePath: PATHS.EXPLORE,
-  },
-  {
     value: 'identities',
     label: 'Identities',
     basePath: PATHS.EXPLORE,
