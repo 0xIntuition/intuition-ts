@@ -3,14 +3,19 @@ import { useEffect } from 'react'
 import { UserPresenter, UsersService } from '@0xintuition/api'
 
 import PrivyLogout from '@client/privy-logout'
-import LockdownView from '@components/lockdown-view'
 import { invariant } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
-import { Outlet, useLoaderData, useLocation } from '@remix-run/react'
+import {
+  Outlet,
+  useLoaderData,
+  useLocation,
+  useNavigate,
+} from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
 import { featureFlagsSchema, getFeatureFlags } from '@server/env'
 import { isSanctioned } from '@server/ofac'
+import { PATHS } from 'app/consts'
 import RootLayout from 'app/layouts/root-layout'
 import { Address } from 'viem'
 import { z } from 'zod'
@@ -48,13 +53,14 @@ export default function App() {
     featureFlags: z.infer<typeof featureFlagsSchema>
   }>()
   const { pathname } = useLocation()
+  const navigate = useNavigate()
 
   useEffect(() => {
     window.scrollTo(0, 0)
   }, [pathname])
 
   if (featureFlags.FF_FULL_LOCKDOWN_ENABLED === 'true') {
-    return <LockdownView />
+    navigate(PATHS.MAINTENANCE)
   }
 
   return (

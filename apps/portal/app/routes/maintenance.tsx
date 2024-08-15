@@ -1,6 +1,6 @@
 import { Button, Icon, Text } from '@0xintuition/1ui'
 
-const LockdownView = () => {
+export default function Maintenance() {
   return (
     <div className="m-auto w-3/4">
       <div className="w-[33rem]">
@@ -24,5 +24,3 @@ const LockdownView = () => {
     </div>
   )
 }
-
-export default LockdownView

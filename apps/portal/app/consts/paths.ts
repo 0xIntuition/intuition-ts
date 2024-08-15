@@ -28,4 +28,6 @@ export const PATHS = {
   // Legal
   TERMS: '/terms',
   PRIVACY: '/privacy',
+  // Other
+  MAINTENANCE: '/maintenance',
 }
