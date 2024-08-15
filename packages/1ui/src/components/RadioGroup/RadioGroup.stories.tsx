@@ -63,3 +63,43 @@ export const BasicUsage: Story = {
     </div>
   ),
 }
+
+export const Simple: Story = {
+  render: () => (
+    <div className="w-[300px]">
+      <RadioGroup variant="simple" defaultValue={radioGroupData[0].value}>
+        {radioGroupData.map((item, index) => (
+          <div key={index}>
+            <RadioGroupItemContainer variant="simple">
+              <RadioGroupItem value={item.value} id={item.id} />
+              <RadioGroupItemLabel
+                htmlFor={item.id}
+                value={item.displayValue}
+              />
+            </RadioGroupItemContainer>
+          </div>
+        ))}
+      </RadioGroup>
+    </div>
+  ),
+}
+
+export const SimpleSmall: Story = {
+  render: () => (
+    <div className="w-[300px]">
+      <RadioGroup variant="simple" defaultValue={radioGroupData[0].value}>
+        {radioGroupData.map((item, index) => (
+          <div key={index}>
+            <RadioGroupItemContainer variant="simple">
+              <RadioGroupItem size="small" value={item.value} id={item.id} />
+              <RadioGroupItemLabel
+                htmlFor={item.id}
+                value={item.displayValue}
+              />
+            </RadioGroupItemContainer>
+          </div>
+        ))}
+      </RadioGroup>
+    </div>
+  ),
+}

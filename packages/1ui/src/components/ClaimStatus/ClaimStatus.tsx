@@ -30,6 +30,25 @@ const ClaimStatus = ({
       <div className="flex items-center h-[6px] mb-4">
         <TooltipProvider delayDuration={100}>
           <Tooltip>
+            <TooltipTrigger className="h-full w-full bg-for block rounded-r-sm" />
+            <TooltipContent>
+              <div
+                className={
+                  'flex flex-col justify-center items-start w-full rounded-lg gap-2.5 max-lg:min-w-max max-lg:items-center'
+                }
+              >
+                <div className="flex flex-row gap-2">
+                  <Icon name={IconName.people} className="text-for h-4 w-4" />
+                  {claimsFor}
+                  <Icon name={IconName.moneybag} className="text-for h-4 w-4" />
+                  {claimsForValue} ETH
+                </div>
+              </div>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+        <TooltipProvider delayDuration={100}>
+          <Tooltip>
             <TooltipTrigger
               className="h-full bg-against block rounded-l-sm"
               style={{ minWidth: `${againstPercentage}%` }}
@@ -51,25 +70,6 @@ const ClaimStatus = ({
                     className="text-against h-4 w-4"
                   />
                   {claimsAgainstValue} ETH
-                </div>
-              </div>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-        <TooltipProvider delayDuration={100}>
-          <Tooltip>
-            <TooltipTrigger className="h-full w-full bg-for block rounded-r-sm" />
-            <TooltipContent>
-              <div
-                className={
-                  'flex flex-col justify-center items-start w-full rounded-lg gap-2.5 max-lg:min-w-max max-lg:items-center'
-                }
-              >
-                <div className="flex flex-row gap-2">
-                  <Icon name={IconName.people} className="text-for h-4 w-4" />
-                  {claimsFor}
-                  <Icon name={IconName.moneybag} className="text-for h-4 w-4" />
-                  {claimsForValue} ETH
                 </div>
               </div>
             </TooltipContent>
