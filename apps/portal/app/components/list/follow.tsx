@@ -74,7 +74,6 @@ export function FollowList({
                     : identity.user_assets,
                 ),
                 18,
-                4,
               )
             }
             feesAccrued={
@@ -82,7 +81,6 @@ export function FollowList({
                 ? +formatBalance(
                     +identity.user_assets - +identity.user_asset_delta,
                     18,
-                    5,
                   )
                 : 0
             }

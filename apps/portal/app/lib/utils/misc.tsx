@@ -161,27 +161,19 @@ export function combineHeaders(
   return combined
 }
 
-const getMinPrecision = (num: number): number => {
-  const absNum = Math.abs(num)
-  return absNum >= 1 ? 0 : Math.ceil(Math.abs(Math.log10(absNum))) + 1
-}
-
 const formatNumber = (n: number, precision: number): string => {
-  let result = n.toLocaleString(undefined, {
-    minimumFractionDigits: precision,
-    maximumFractionDigits: precision,
-  })
+  if (Math.abs(n) < 1e-10) {
+    return '0'
+  }
 
+  let result = n.toFixed(precision)
+
+  // Remove trailing zeros after the decimal point
   result = result.replace(/\.?0+$/, '')
 
-  if (result.includes('e')) {
-    const [base, exponent] = result.split('e')
-    const exp = parseInt(exponent)
-    if (exp < 0) {
-      result = `0.${'0'.repeat(-exp - 1)}${base.replace('.', '')}`
-    } else {
-      result = `${base.replace('.', '')}${'0'.repeat(exp - (base.length - 1))}`
-    }
+  // If all digits after the decimal are zero, remove the decimal point
+  if (result.indexOf('.') !== -1 && !result.split('.')[1]) {
+    result = result.split('.')[0]
   }
 
   return result
@@ -190,17 +182,22 @@ const formatNumber = (n: number, precision: number): string => {
 export const formatBalance = (
   balance: bigint | string | number,
   decimals = 18,
-  precision?: number,
 ): string => {
   const formattedBalance = formatUnits(BigInt(balance), decimals)
-  if (+formattedBalance === 0) {
+  const numBalance = +formattedBalance
+
+  if (numBalance === 0 || numBalance < 1e-10) {
     return '0'
   }
 
-  const minPrecision = getMinPrecision(+formattedBalance)
-  const finalPrecision = Math.max(minPrecision, precision ?? 2)
+  for (let i = 4; i <= 10; i++) {
+    const formatted = formatNumber(numBalance, i)
+    if (formatted !== '0') {
+      return formatted
+    }
+  }
 
-  return formatNumber(+formattedBalance, finalPrecision)
+  return '0'
 }
 
 export const formatDisplayBalance = (

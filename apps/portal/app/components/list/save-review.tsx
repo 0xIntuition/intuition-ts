@@ -100,7 +100,7 @@ export default function SaveReview({
               {mode === 'save' ? 'Deposit' : 'Redeem'}{' '}
               {formatDisplayBalance(
                 mode === 'unsave'
-                  ? Number(formatBalance(user_assets, 18, 4))
+                  ? Number(formatBalance(user_assets, 18))
                   : Number(val),
                 2,
               )}{' '}

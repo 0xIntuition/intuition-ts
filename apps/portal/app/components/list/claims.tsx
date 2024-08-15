@@ -73,7 +73,7 @@ export function ClaimsList({
             claimsAgainst={claim.against_num_positions}
             claimsForValue={+formatBalance(claim.for_assets_sum, 18)}
             claimsAgainstValue={+formatBalance(claim.against_assets_sum, 18)}
-            tvl={+formatBalance(claim.assets_sum, 18, 4)}
+            tvl={+formatBalance(claim.assets_sum, 18)}
           >
             <Claim
               size="md"

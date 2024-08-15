@@ -32,7 +32,7 @@ export default function StakeToast({ action, assets, txHash }: ToastProps) {
             >
               {action}{' '}
               <span className="text-sm font-bold">
-                {formatBalance(BigInt(assets), 18, 6)}
+                {formatBalance(BigInt(assets), 18)}
               </span>{' '}
               ETH
             </Text>

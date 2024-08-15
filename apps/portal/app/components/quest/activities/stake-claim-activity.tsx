@@ -127,7 +127,7 @@ export default function StakeClaimActivity({
             <PositionCard onButtonClick={handleSellClick}>
               <div>
                 <PositionCardStaked
-                  amount={user_assets ? +formatBalance(user_assets, 18, 4) : 0}
+                  amount={user_assets ? +formatBalance(user_assets, 18) : 0}
                 />
                 <Tag variant={directionTagVariant} size={TagSize.sm}>
                   {directionTagText}

@@ -39,7 +39,7 @@ export const DataCreatedHeader: React.FC<DataCreatedHeaderProps> = ({
   //   18,
   //   4,
   // )
-  // const totalDelta = +formatBalance(userTotals?.total_delta ?? '0', 18, 4)
+  // const totalDelta = +formatBalance(userTotals?.total_delta ?? '0', 18)
   // const feesAccrued = totalDelta - totalPositionValue
 
   return (

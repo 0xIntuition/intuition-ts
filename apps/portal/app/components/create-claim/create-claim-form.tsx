@@ -521,6 +521,22 @@ function CreateClaimForm({
                       })}
                       placeholder="0"
                       startAdornment="ETH"
+                      value={initialDeposit}
+                      onChange={(e) => {
+                        e.preventDefault()
+                        let inputValue = e.target.value
+                        if (inputValue.startsWith('.')) {
+                          inputValue = `0${inputValue}`
+                        }
+                        const sanitizedValue = inputValue.replace(
+                          /[^0-9.]/g,
+                          '',
+                        )
+                        if (sanitizedValue.split('.').length > 2) {
+                          return
+                        }
+                        setInitialDeposit(sanitizedValue)
+                      }}
                     />
                     <ErrorList
                       id={fields.initial_deposit.errorId}

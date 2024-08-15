@@ -158,11 +158,7 @@ export default function ProfileOverview() {
                   userIdentity={userIdentity}
                   totalClaims={resolvedClaims.pagination?.totalEntries}
                   totalStake={
-                    +formatBalance(
-                      resolvedClaimsSummary?.assets_sum ?? 0,
-                      18,
-                      4,
-                    )
+                    +formatBalance(resolvedClaimsSummary?.assets_sum ?? 0, 18)
                   }
                   link={`${PATHS.PROFILE}/${wallet}/data-about`}
                 />

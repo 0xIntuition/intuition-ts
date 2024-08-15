@@ -104,7 +104,7 @@ export default function HomePage() {
                 totalClaims={resolvedStats.totalClaims}
                 totalUsers={resolvedStats.totalUsers}
                 totalStaked={
-                  Number(formatBalance(resolvedStats.totalStaked, 18, 4)) || 0
+                  Number(formatBalance(resolvedStats.totalStaked, 18)) || 0
                 }
                 totalSignals={resolvedStats.totalSignals || 0}
               />

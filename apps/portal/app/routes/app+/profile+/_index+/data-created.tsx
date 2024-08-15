@@ -209,7 +209,6 @@ export default function ProfileDataCreated() {
                     +formatBalance(
                       userTotals.total_position_value_on_identities ?? '0',
                       18,
-                      4,
                     )
                   }
                   variant={DataCreatedHeaderVariants.activeIdentities}
@@ -247,7 +246,6 @@ export default function ProfileDataCreated() {
                       +formatBalance(
                         userTotals.total_position_value_on_claims ?? '0',
                         18,
-                        4,
                       )
                     }
                     variant={DataCreatedHeaderVariants.activeClaims}
@@ -342,7 +340,6 @@ export default function ProfileDataCreated() {
                         +formatBalance(
                           resolvedIdentitiesSummary?.assets ?? '0',
                           18,
-                          4,
                         )
                       }
                       variant={DataCreatedHeaderVariants.createdIdentities}
@@ -386,7 +383,6 @@ export default function ProfileDataCreated() {
                         +formatBalance(
                           resolvedClaimsSummary?.assets_sum ?? '0',
                           18,
-                          4,
                         )
                       }
                       variant={DataCreatedHeaderVariants.createdClaims}

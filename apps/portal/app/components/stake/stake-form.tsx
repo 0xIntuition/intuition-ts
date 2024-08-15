@@ -201,7 +201,7 @@ export default function StakeForm({
             <div className="pt-2.5">
               <ActivePositionCard
                 value={Number(
-                  formatBalance(vaultDetails.user_assets ?? '0', 18, 6),
+                  formatBalance(vaultDetails?.user_assets ?? 0, 18),
                 )}
                 claimPosition={
                   direction !== undefined

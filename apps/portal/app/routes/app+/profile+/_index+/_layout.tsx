@@ -307,7 +307,7 @@ export default function Profile() {
           }
         >
           <PositionCardStaked
-            amount={user_assets ? +formatBalance(user_assets, 18, 4) : 0}
+            amount={user_assets ? +formatBalance(user_assets, 18) : 0}
           />
           <PositionCardOwnership
             percentOwnership={

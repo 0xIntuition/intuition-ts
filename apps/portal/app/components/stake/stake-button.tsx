@@ -125,7 +125,7 @@ const StakeButton: React.FC<StakeButtonProps> = ({
             +val < +formatUnits(BigInt(min_deposit), 18)
           ) {
             errors.push(
-              `Minimum deposit is ${formatBalance(min_deposit, 18, 4)} ETH`,
+              `Minimum deposit is ${formatBalance(min_deposit, 18)} ETH`,
             )
           }
           if (
