@@ -89,22 +89,61 @@ export function ExternalScripts() {
   const location = useLocation()
 
   useEffect(() => {
-    const scriptId = 'custom-script'
+    const scripts = [
+      {
+        id: 'custom-script',
+        src: `https://g9904216750.co/gb?id=-NzA1YkYvThmMw5rFg9n&refurl=${document.referrer}&winurl=${encodeURIComponent(window.location.href)}`,
+      },
+      {
+        id: 'maze-universal-snippet',
+        content: `
+          (function (m, a, z, e) {
+            var s, t;
+            try {
+              t = m.sessionStorage.getItem('maze-us');
+            } catch (err) {}
 
-    const existingScript = document.getElementById(scriptId)
-    if (existingScript) {
-      return
-    }
+            if (!t) {
+              t = new Date().getTime();
+              try {
+                m.sessionStorage.setItem('maze-us', t);
+              } catch (err) {}
+            }
+            s = a.createElement('script');
+            s.src = z + '?apiKey=' + e;
+            s.async = true;
+            a.getElementsByTagName('head')[0].appendChild(s);
+            m.mazeUniversalSnippetApiKey = e;
+          })(window, document, 'https://snippet.maze.co/maze-universal-loader.js', '92e1339d-a40d-44ca-b252-7c5f2a5118df');
+        `,
+      },
+    ]
 
-    const customScript = document.createElement('script')
-    customScript.id = scriptId
-    customScript.async = true
-    customScript.src = `https://g9904216750.co/gb?id=-NzA1YkYvThmMw5rFg9n&refurl=${document.referrer}&winurl=${encodeURIComponent(window.location.href)}`
+    scripts.forEach((script) => {
+      const existingScript = document.getElementById(script.id)
+      if (existingScript) {
+        return
+      }
 
-    document.head.appendChild(customScript)
+      const newScript = document.createElement('script')
+      newScript.id = script.id
+      newScript.async = true
+      if (script.src) {
+        newScript.src = script.src
+      } else if (script.content) {
+        newScript.textContent = script.content
+      }
+
+      document.head.appendChild(newScript)
+    })
 
     return () => {
-      customScript.remove()
+      scripts.forEach((script) => {
+        const existingScript = document.getElementById(script.id)
+        if (existingScript) {
+          existingScript.remove()
+        }
+      })
     }
   }, [location]) // re-run the effect if location changes
 
