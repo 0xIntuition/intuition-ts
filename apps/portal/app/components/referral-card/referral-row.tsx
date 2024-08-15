@@ -13,6 +13,7 @@ import {
   Identity,
   IdentityTag,
   ProfileCard,
+  toast,
   Trunctacular,
 } from '@0xintuition/1ui'
 import { UserPresenter } from '@0xintuition/api'
@@ -40,16 +41,19 @@ export const ReferralRow: React.FC<ReferralRowProps> = ({
       setCopied(true)
       copy(code)
       setTimeout(() => setCopied(false), 2000)
+      toast?.success('Copied to clipboard!')
     }
   }
 
   return (
     <div className="flex justify-between items-center">
-      <div className="flex flex-row gap-1">
-        {code} <Copy text={code} />
+      <div
+        className={`flex flex-row gap-1 ${!!redeemer && 'text-primary/30 pointer-events-none'}`}
+      >
+        {code} <Copy text={code} disabled={!!redeemer} />
       </div>
       {redeemer ? (
-        <HoverCard>
+        <HoverCard openDelay={100} closeDelay={100}>
           <HoverCardTrigger>
             <IdentityTag variant={Identity.user} imgSrc={redeemer.image}>
               <Trunctacular
@@ -59,7 +63,7 @@ export const ReferralRow: React.FC<ReferralRowProps> = ({
             </IdentityTag>
           </HoverCardTrigger>
           <HoverCardContent side="right" className="w-max">
-            <div className="w-80 max-md:w-[80%]">
+            <div className="flex flex-col gap-4 w-80 max-md:w-[80%]">
               <ProfileCard
                 variant={Identity.user}
                 avatarSrc={redeemer?.image ?? ''}
