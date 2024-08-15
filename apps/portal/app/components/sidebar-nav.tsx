@@ -272,6 +272,9 @@ export default function SidebarNav({
                       <SidebarNavItem
                         iconName={sidebarNavItem.iconName}
                         label={sidebarNavItem.label}
+                        aria-selected={
+                          sidebarNavItem.route === location.pathname
+                        }
                       />
                     </NavLink>
                   ))}
