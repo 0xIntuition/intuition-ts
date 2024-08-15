@@ -74,6 +74,7 @@ const ExploreSearchForm = ({
   ]
 
   const numberOfRadioGroupItems = radioGroupData.length
+  const currentIsUser = searchParams.get('isUser') || ''
 
   return (
     <Form
@@ -94,7 +95,7 @@ const ExploreSearchForm = ({
             initialValue={searchParams.get(tagsInputId)}
           />
           <Separator className="my-5 in-out-gradient-strong max-md:m-0" />
-          <RadioGroup name="isUser" defaultValue="">
+          <RadioGroup name="isUser" defaultValue={currentIsUser}>
             {radioGroupData.map((item, index) => (
               <div key={index}>
                 <RadioGroupItemContainer>
