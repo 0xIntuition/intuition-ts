@@ -22,15 +22,22 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   const url = new URL(request.url)
   const searchParams = new URLSearchParams(url.search)
-  const { page, limit, sortBy, direction } = getStandardPageParams({
+  const { page, sortBy, direction } = getStandardPageParams({
     searchParams,
   })
+
   const displayName = searchParams.get('list') || null
+
+  const initialLimit = 100
+  const effectiveLimit = Number(
+    searchParams.get('effectiveLimit') || initialLimit,
+  )
+  const limit = Math.max(effectiveLimit, initialLimit)
 
   const listClaims = await fetchWrapper(request, {
     method: ClaimsService.searchClaims,
     args: {
-      page,
+      page: 1,
       limit,
       sortBy: sortBy as ClaimSortColumn,
       direction,
@@ -58,7 +65,6 @@ export default function ExploreLists() {
   const submit = useSubmit()
   const { listClaims, pagination, sortBy, direction } =
     useLoaderData<typeof loader>()
-  // const [currentPage, setCurrentPage] = useState(pagination.currentPage)
   const [searchParams] = useSearchParams()
 
   const currentPage = Number(searchParams.get('page') || '1')
@@ -68,12 +74,9 @@ export default function ExploreLists() {
   )
 
   useEffect(() => {
-    if (currentPage === 1) {
-      setAccumulatedClaims(listClaims)
-    } else {
-      setAccumulatedClaims((prev) => [...prev, ...listClaims])
-    }
-  }, [listClaims, currentPage])
+    const endIndex = currentPage * pagination.limit
+    setAccumulatedClaims(listClaims.slice(0, endIndex))
+  }, [listClaims, currentPage, pagination.limit])
 
   const handleLoadMore = loadMore({
     currentPage,
