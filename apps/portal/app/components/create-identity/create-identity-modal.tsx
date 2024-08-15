@@ -1,9 +1,8 @@
-import { useState } from 'react'
-
 import { Dialog, DialogContent } from '@0xintuition/1ui'
 import { IdentityPresenter } from '@0xintuition/api'
 
 import AlertDialog from '@components/alert-dialog'
+import useHandleCloseAttempt from '@lib/hooks/useHandleCloseAttempt'
 
 import { IdentityForm } from './create-identity-form'
 
@@ -20,16 +19,12 @@ export default function CreateIdentityModal({
   onSuccess,
   successAction = 'view',
 }: CreateIdentityModalProps) {
-  const [showAlertDialog, setShowAlertDialog] = useState(false)
-  const [isTransactionComplete, setIsTransactionComplete] = useState(false)
-
-  const handleCloseAttempt = () => {
-    if (isTransactionComplete) {
-      onClose()
-    } else {
-      setShowAlertDialog(true)
-    }
-  }
+  const {
+    showAlertDialog,
+    setShowAlertDialog,
+    setIsTransactionComplete,
+    handleCloseAttempt,
+  } = useHandleCloseAttempt(onClose)
 
   return (
     <>

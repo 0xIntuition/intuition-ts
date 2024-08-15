@@ -1,10 +1,9 @@
-import { useState } from 'react'
-
 import { Dialog, DialogContent } from '@0xintuition/1ui'
 import { ClaimPresenter } from '@0xintuition/api'
 
 import AlertDialog from '@components/alert-dialog'
 import { ClaimForm } from '@components/create-claim/create-claim-form'
+import useHandleCloseAttempt from '@lib/hooks/useHandleCloseAttempt'
 import {
   TransactionSuccessAction,
   TransactionSuccessActionType,
@@ -25,16 +24,12 @@ export default function CreateClaimModal({
   onSuccess,
   successAction = TransactionSuccessAction.VIEW,
 }: CreateClaimModalProps) {
-  const [showAlertDialog, setShowAlertDialog] = useState(false)
-  const [isTransactionComplete, setIsTransactionComplete] = useState(false)
-
-  const handleCloseAttempt = () => {
-    if (isTransactionComplete) {
-      onClose()
-    } else {
-      setShowAlertDialog(true)
-    }
-  }
+  const {
+    showAlertDialog,
+    setShowAlertDialog,
+    setIsTransactionComplete,
+    handleCloseAttempt,
+  } = useHandleCloseAttempt(onClose)
 
   return (
     <>
