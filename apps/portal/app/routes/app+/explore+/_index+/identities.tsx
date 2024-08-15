@@ -1,5 +1,6 @@
 import { IdentitiesService, IdentityPresenter } from '@0xintuition/api'
 
+import { ErrorPage } from '@components/error-page'
 import { ExploreSearch } from '@components/explore/ExploreSearch'
 import { IdentitiesList } from '@components/list/identities'
 import { calculateTotalPages, invariant } from '@lib/utils/misc'
@@ -66,4 +67,8 @@ export default function ExploreIdentities() {
       />
     </>
   )
+}
+
+export function ErrorBoundary() {
+  return <ErrorPage routeName="explore/identities" />
 }

@@ -84,6 +84,12 @@ export function IdentitiesList({
               totalFollowers={identity.num_positions}
               link={getAtomLink(identity)}
               ipfsLink={getAtomIpfsLink(identity)}
+              tags={
+                identity.tags?.map((tag) => ({
+                  label: tag.display_name,
+                  value: tag.num_tagged_identities,
+                })) ?? undefined
+              }
             />
           </div>
         )

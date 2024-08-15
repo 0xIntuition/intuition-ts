@@ -15,6 +15,7 @@ import {
   UserTotalsPresenter,
 } from '@0xintuition/api'
 
+import { ErrorPage } from '@components/error-page'
 import { ActivePositionsOnClaims } from '@components/list/active-positions-on-claims'
 import { ActivePositionsOnIdentities } from '@components/list/active-positions-on-identities'
 import { ClaimsList } from '@components/list/claims'
@@ -396,4 +397,8 @@ export default function ProfileDataCreated() {
       </div>
     </div>
   )
+}
+
+export function ErrorBoundary() {
+  return <ErrorPage routeName="wallet/data-created" />
 }

@@ -23,6 +23,7 @@ import {
   SortDirection,
 } from '@0xintuition/api'
 
+import { ErrorPage } from '@components/error-page'
 import NavigationButton from '@components/navigation-link'
 import StakeModal from '@components/stake/stake-modal'
 import { stakeModalAtom } from '@lib/state/store'
@@ -320,4 +321,8 @@ export default function ClaimDetails() {
       />
     </>
   )
+}
+
+export function ErrorBoundary() {
+  return <ErrorPage routeName="claim/$id" />
 }

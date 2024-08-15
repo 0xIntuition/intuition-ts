@@ -3,6 +3,7 @@ import { Suspense } from 'react'
 import { ErrorStateCard } from '@0xintuition/1ui'
 import { ActivityPresenter } from '@0xintuition/api'
 
+import { ErrorPage } from '@components/error-page'
 import { ActivityList } from '@components/list/activity'
 import { RevalidateButton } from '@components/revalidate-button'
 import { ActivitySkeleton } from '@components/skeleton'
@@ -60,4 +61,8 @@ export default function PersonalActivityFeed() {
       </Await>
     </Suspense>
   )
+}
+
+export function ErrorBoundary() {
+  return <ErrorPage routeName="activity/personal" />
 }

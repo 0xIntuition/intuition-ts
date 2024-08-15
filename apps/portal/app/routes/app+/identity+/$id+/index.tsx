@@ -4,6 +4,7 @@ import { Button, ErrorStateCard, Icon, IconName, Text } from '@0xintuition/1ui'
 import { ClaimsService } from '@0xintuition/api'
 
 import CreateClaimModal from '@components/create-claim/create-claim-modal'
+import { ErrorPage } from '@components/error-page'
 import { ClaimsList as ClaimsAboutIdentity } from '@components/list/claims'
 import { PositionsOnIdentity } from '@components/list/positions-on-identity'
 import DataAboutHeader from '@components/profile/data-about-header'
@@ -186,4 +187,8 @@ export default function ProfileDataAbout() {
       )}
     </>
   )
+}
+
+export function ErrorBoundary() {
+  return <ErrorPage routeName="identity/$id/index" />
 }

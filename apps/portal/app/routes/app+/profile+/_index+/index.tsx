@@ -8,6 +8,7 @@ import {
   SortDirection,
 } from '@0xintuition/api'
 
+import { ErrorPage } from '@components/error-page'
 import { ListClaimsList } from '@components/list/list-claims'
 import { OverviewAboutHeader } from '@components/profile/overview-about-header'
 import { OverviewCreatedHeader } from '@components/profile/overview-created-header'
@@ -172,4 +173,8 @@ export default function UserProfileOverview() {
       />
     </div>
   )
+}
+
+export function ErrorBoundary() {
+  return <ErrorPage routeName="profile/index" />
 }

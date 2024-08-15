@@ -13,6 +13,7 @@ import {
   UsersService,
 } from '@0xintuition/api'
 
+import { ErrorPage } from '@components/error-page'
 import { PointsEarnedCard } from '@components/points-card/points-card'
 import { QuestSetCard } from '@components/quest/quest-set-card'
 import { QuestSetProgressCard } from '@components/quest/quest-set-progress-card'
@@ -235,4 +236,8 @@ function UserHeader() {
       </Await>
     </Suspense>
   )
+}
+
+export function ErrorBoundary() {
+  return <ErrorPage routeName="quest/index" />
 }
