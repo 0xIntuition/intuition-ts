@@ -2,18 +2,50 @@ import React from 'react'
 
 import { render } from '@testing-library/react'
 
-import { AlertDialog } from './AlertDialog'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from './AlertDialog'
 
 describe('AlertDialog', () => {
-  // Example assertion: Check if the component renders a specific text
   it('should render appropriate element', () => {
-    const { asFragment } = render(<AlertDialog>Something</AlertDialog>)
+    const { asFragment } = render(
+      <AlertDialog>
+        <AlertDialogTrigger>Open alert dialog</AlertDialogTrigger>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete your
+              account and remove your data from our servers.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction>Continue</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>,
+    )
     expect(asFragment()).toMatchInlineSnapshot(`
-    <DocumentFragment>
-      <p>Something</p>>
-    </DocumentFragment>
+      <DocumentFragment>
+        <button
+          aria-controls="radix-:r0:"
+          aria-expanded="false"
+          aria-haspopup="dialog"
+          data-state="closed"
+          type="button"
+        >
+          Open alert dialog
+        </button>
+      </DocumentFragment>
     `)
   })
-  // Add more tests as needed to cover the functionality of your component
-  // Additional tests can be written here to check different states and props
 })

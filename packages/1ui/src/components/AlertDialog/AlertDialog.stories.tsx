@@ -1,13 +1,20 @@
-// Import React
 import React from 'react'
 
-// Import Storybook meta and StoryObj type
 import type { Meta, StoryObj } from '@storybook/react'
 
-// Import your actual component
-import { AlertDialog } from './AlertDialog'
+import { Button } from '..'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from './AlertDialog'
 
-// Setup meta for the Storybook
 const meta: Meta<typeof AlertDialog> = {
   title: 'Components/AlertDialog',
   component: AlertDialog,
@@ -15,13 +22,28 @@ const meta: Meta<typeof AlertDialog> = {
 
 export default meta
 
-// Define types for your stories
 type Story = StoryObj<typeof AlertDialog>
 
-// Example story for the default state
 export const BasicUsage: Story = {
-  args: {
-    // Define default props here, if any
-  },
-  render: (args) => <AlertDialog {...args} />,
+  args: {},
+  render: (args) => (
+    <AlertDialog {...args}>
+      <AlertDialogTrigger>
+        <Button size="lg">Open alert dialog</Button>
+      </AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+          <AlertDialogDescription>
+            This action cannot be undone. This will permanently delete your
+            account and remove your data from our servers.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogAction>Continue</AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  ),
 }
