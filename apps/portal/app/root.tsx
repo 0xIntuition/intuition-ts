@@ -14,7 +14,7 @@ import {
   useRouteError,
 } from '@remix-run/react'
 import { useTheme } from '@routes/actions+/set-theme'
-import { captureRemixErrorBoundaryError, withSentry } from '@sentry/remix'
+import { withSentry } from '@sentry/remix'
 import { getEnv } from '@server/env'
 import { getTheme } from '@server/theme'
 
@@ -22,12 +22,11 @@ import './styles/globals.css'
 
 import { useEffect } from 'react'
 
-import { Icon, Toaster } from '@0xintuition/1ui'
+import { Toaster } from '@0xintuition/1ui'
 
 import { ErrorPage } from '@components/error-page'
 import { GlobalLoading } from '@components/global-loading'
 import { getChainEnvConfig } from '@lib/utils/environment'
-import logger from '@lib/utils/logger'
 import { setupAPI } from '@server/auth'
 import { CURRENT_ENV } from 'app/consts'
 import { ClientOnly } from 'remix-utils/client-only'
@@ -195,13 +194,9 @@ export function AppLayout() {
 
 export function ErrorBoundary() {
   const error = useRouteError()
-  let statusCode = null
-  let title: string | React.ReactNode = (
-    <Icon name="circle-x" className="h-20 w-20" />
-  )
-  let description = 'Something went wrong...'
-
-  logger('ROOT ERROR BOUNDARY:', error)
+  let statusCode
+  let title
+  let description
 
   if (isRouteErrorResponse(error)) {
     statusCode = error.status
@@ -214,11 +209,11 @@ export function ErrorBoundary() {
     }
   }
 
-  captureRemixErrorBoundaryError(error)
-
   return (
     <Document>
       <ErrorPage
+        isAtRoot
+        routeName="root"
         statusCode={statusCode}
         title={title}
         description={description}

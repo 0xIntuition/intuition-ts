@@ -29,6 +29,7 @@ import {
 import PrivyRevalidate from '@client/privy-revalidate'
 import EditProfileModal from '@components/edit-profile/modal'
 import EditSocialLinksModal from '@components/edit-social-links-modal'
+import { ErrorPage } from '@components/error-page'
 import SaveListModal from '@components/list/save-list-modal'
 import { ProfileSocialAccounts } from '@components/profile-social-accounts'
 import ImageModal from '@components/profile/image-modal'
@@ -426,4 +427,8 @@ export default function Profile() {
       <PrivyRevalidate />
     </TwoPanelLayout>
   )
+}
+
+export function ErrorBoundary() {
+  return <ErrorPage routeName="profile/layout" />
 }

@@ -13,6 +13,7 @@ import {
   UsersService,
 } from '@0xintuition/api'
 
+import { ErrorPage } from '@components/error-page'
 import StakeIdentityActivity from '@components/quest/activities/stake-identity-activity'
 import {
   Header,
@@ -295,4 +296,8 @@ export default function Quests() {
       />
     </div>
   )
+}
+
+export function ErrorBoundary() {
+  return <ErrorPage routeName="quest/chapter/1-2" />
 }

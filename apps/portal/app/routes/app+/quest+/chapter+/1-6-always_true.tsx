@@ -3,6 +3,7 @@ import { useEffect } from 'react'
 import { Button, ButtonSize, ButtonVariant } from '@0xintuition/1ui'
 import { QuestStatus, UserQuestsService, UsersService } from '@0xintuition/api'
 
+import { ErrorPage } from '@components/error-page'
 import {
   Header,
   Hero,
@@ -168,4 +169,8 @@ export default function Quests() {
       />
     </div>
   )
+}
+
+export function ErrorBoundary() {
+  return <ErrorPage routeName="quest/chapter/1-6" />
 }

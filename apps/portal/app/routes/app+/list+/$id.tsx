@@ -7,6 +7,7 @@ import {
   IdentityPresenter,
 } from '@0xintuition/api'
 
+import { ErrorPage } from '@components/error-page'
 import AddIdentitiesListModal from '@components/list/add-identities-list-modal'
 import { ListIdentityDisplayCard } from '@components/list/list-identity-display-card'
 import NavigationButton from '@components/navigation-link'
@@ -165,4 +166,8 @@ export default function ListDetails() {
       )}
     </>
   )
+}
+
+export function ErrorBoundary() {
+  return <ErrorPage routeName="list/$id" />
 }

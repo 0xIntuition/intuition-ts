@@ -1,9 +1,68 @@
 import { Button, Text } from '@0xintuition/1ui'
 
+import derpFace1 from '@assets/derp-face-1.png'
+import derpFace2 from '@assets/derp-face-2.png'
+import derpFace3 from '@assets/derp-face-3.png'
+import derpFace4 from '@assets/derp-face-4.png'
+import derpFace5 from '@assets/derp-face-5.png'
+import derpFace6 from '@assets/derp-face-6.png'
+import derpFace7 from '@assets/derp-face-7.png'
+import derpFace8 from '@assets/derp-face-8.png'
+import derpFace9 from '@assets/derp-face-9.png'
+import derpFace10 from '@assets/derp-face-10.png'
+import derpFace11 from '@assets/derp-face-11.png'
+import derpFace12 from '@assets/derp-face-12.jpg'
+import logger from '@lib/utils/logger'
 import { cn } from '@lib/utils/misc'
+import { useRouteError } from '@remix-run/react'
+import { captureRemixErrorBoundaryError } from '@sentry/remix'
 import { PATHS, SUPPORT_EMAIL_ADDRESS } from 'app/consts'
 
 import NavigationButton from './navigation-link'
+
+const getDerpFace = () => {
+  const numberOfDerpFaces = 12
+  const randomNumber = Math.floor(Math.random() * numberOfDerpFaces) + 1
+  let imgSrc = derpFace1
+  switch (randomNumber) {
+    case 2:
+      imgSrc = derpFace2
+      break
+    case 3:
+      imgSrc = derpFace3
+      break
+    case 4:
+      imgSrc = derpFace4
+      break
+    case 5:
+      imgSrc = derpFace5
+      break
+    case 6:
+      imgSrc = derpFace6
+      break
+    case 7:
+      imgSrc = derpFace7
+      break
+    case 8:
+      imgSrc = derpFace8
+      break
+    case 9:
+      imgSrc = derpFace9
+      break
+    case 10:
+      imgSrc = derpFace10
+      break
+    case 11:
+      imgSrc = derpFace11
+      break
+    case 12:
+      imgSrc = derpFace12
+      break
+  }
+  return (
+    <img src={imgSrc} alt="error" className="w-56 h-full rounded-lg mb-4" />
+  )
+}
 
 const StatusCode = ({ statusCode }: { statusCode: number }) => {
   return (
@@ -26,9 +85,12 @@ const ErrorPageTitle = ({
   statusCode,
   title,
 }: {
-  statusCode: number | null
-  title: string | React.ReactNode
+  statusCode?: number
+  title?: string
 }) => {
+  if (!title) {
+    return getDerpFace()
+  }
   return (
     <>
       <span className="max-sm:hidden">
@@ -46,15 +108,25 @@ const ErrorPageTitle = ({
 }
 
 export const ErrorPage = ({
+  isAtRoot,
+  routeName,
   statusCode,
   title,
   description,
 }: {
-  statusCode: number | null
-  title: string | React.ReactNode
-  description: string
+  isAtRoot?: boolean
+  routeName: string
+  statusCode?: number
+  title?: string
+  description?: string
 }) => {
-  const descriptionArray = description.split('\n')
+  const error = useRouteError()
+  logger(`ERROR BOUNDARY (${routeName}):`, error)
+  captureRemixErrorBoundaryError(error)
+
+  const descriptionArray = description
+    ? description.split('\n')
+    : ['Oh no!  Something went wrong with our flux capacitor']
   return (
     <div className="flex h-[100vh] w-full items-center p-6 justify-center gap-12 max-lg:flex-col-reverse max-lg:gap-2 max-md:gap-0">
       <div
@@ -68,7 +140,7 @@ export const ErrorPage = ({
           {descriptionArray?.map((content, index) => (
             <Text
               variant={statusCode ? 'bodyLarge' : 'headline'}
-              className="text-secondary/30"
+              className="text-secondary/50"
               key={index}
             >
               {content}
@@ -76,8 +148,13 @@ export const ErrorPage = ({
           ))}
         </div>
         <div className="flex gap-6 mt-5 max-sm:flex-col max-sm:w-full">
-          <NavigationButton variant="primary" size="lg" to={PATHS.ROOT}>
-            Back to home
+          <NavigationButton
+            reloadDocument={!isAtRoot}
+            variant="primary"
+            size="lg"
+            to={isAtRoot ? PATHS.ROOT : ''}
+          >
+            {isAtRoot ? 'Back to home' : 'Refresh'}
           </NavigationButton>
           <Button
             variant="ghost"

@@ -190,6 +190,12 @@ function ActivityItem({
               totalFollowers={activity.identity.num_positions}
               link={getAtomLink(activity.identity)}
               ipfsLink={getAtomIpfsLink(activity.identity)}
+              tags={
+                activity.identity.tags?.map((tag) => ({
+                  label: tag.display_name,
+                  value: tag.num_tagged_identities,
+                })) ?? undefined
+              }
             />
             <a
               href={`${BLOCK_EXPLORER_URL}/tx/${activity.transaction_hash}`}

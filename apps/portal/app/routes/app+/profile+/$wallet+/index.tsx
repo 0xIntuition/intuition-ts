@@ -11,6 +11,7 @@ import {
   UserTotalsPresenter,
 } from '@0xintuition/api'
 
+import { ErrorPage } from '@components/error-page'
 import { ClaimsList as ClaimsAboutIdentity } from '@components/list/claims'
 import { FollowList } from '@components/list/follow'
 import { ListClaimsList } from '@components/list/list-claims'
@@ -257,4 +258,8 @@ export default function ProfileOverview() {
       </Suspense>
     </div>
   )
+}
+
+export function ErrorBoundary() {
+  return <ErrorPage routeName="wallet/index" />
 }

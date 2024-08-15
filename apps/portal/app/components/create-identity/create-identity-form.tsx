@@ -111,10 +111,7 @@ export function IdentityForm({
         {!isTransactionStarted && (
           <DialogHeader className="pb-1">
             <DialogTitle>
-              <Text
-                variant="headline"
-                className="text-foreground flex items-center gap-2"
-              >
+              <div className="text-foreground flex items-center gap-2">
                 <Icon name={IconName.fingerprint} className="w-6 h-6" />
                 Create Identity{' '}
                 <InfoTooltip
@@ -122,7 +119,7 @@ export function IdentityForm({
                   content="You are encouraged to create the best Atom/Identity you can, so that others will use it! As this Identity is interacted with, its shareholders will earn fees - so create a good one, and be the first to stake on it! Please note - you will not be able to change this data later."
                   icon={IconName.fingerprint}
                 />
-              </Text>
+              </div>
             </DialogTitle>
             <Text variant="caption" className="text-muted-foreground w-full">
               In Intuition, every thing is given a unique, decentralized digital
@@ -239,7 +236,6 @@ function CreateIdentityForm({
       imageUploadFetcher.data &&
       imageUploadFetcher.data.status === 'error'
     ) {
-      toast.error(imageUploadFetcher.data.error)
       setIdentityImageSrc(null)
       setImageUploading(false)
       setImageUploadError(imageUploadFetcher.data.error)
@@ -266,10 +262,20 @@ function CreateIdentityForm({
   const [imageFilename, setImageFilename] = useState<string | null>(null)
   const [imageFilesize, setImageFilesize] = useState<string | null>(null)
   const [previewImage, setPreviewImage] = useState<string | null>(null)
-  const handleFileChange = (filename: string, filesize: string) => {
+
+  const handleFileChange = (filename: string, filesize: string, file: File) => {
     setImageFilename(filename)
     setImageFilesize(filesize)
+    setIdentityImageFile(file)
+    setImageUploadError(null)
+
+    if (file.size > MAX_UPLOAD_SIZE) {
+      setImageUploadError('File size must be less than 5MB')
+    } else if (!ACCEPTED_IMAGE_MIME_TYPES.includes(file.type)) {
+      setImageUploadError('File must be a .png, .jpg, .jpeg, .gif, or .webp')
+    }
   }
+
   const [formTouched, setFormTouched] = useState(false) // to disable submit if user hasn't touched form yet
 
   const handleSubmit = async () => {
@@ -456,6 +462,7 @@ function CreateIdentityForm({
       setLoading(false)
     }
   }, [state.status])
+
   const [form, fields] = useForm({
     id: 'create-identity',
     lastResult: lastOffChainSubmission,
@@ -518,7 +525,7 @@ function CreateIdentityForm({
       />
       <div className="h-full flex flex-col">
         {state.status === 'idle' ? (
-          <div className="w-full h-[690px] flex-col justify-start items-start inline-flex gap-7">
+          <div className="w-full h-max flex-col justify-start items-start inline-flex gap-7">
             <div className="flex flex-col w-full gap-1.5">
               <div className="self-stretch flex-col justify-start items-start flex">
                 <div className="flex w-full items-center justify-between">
@@ -540,7 +547,9 @@ function CreateIdentityForm({
                     <ImageChooser
                       previewImage={previewImage}
                       setPreviewImage={setPreviewImage}
-                      onFileChange={handleFileChange}
+                      onFileChange={(filename, filesize, file) =>
+                        handleFileChange(filename, filesize, file)
+                      }
                       setImageFile={setIdentityImageFile}
                       disabled={imageUploading}
                       {...getInputProps(fields.image_url, { type: 'file' })}
@@ -562,6 +571,8 @@ function CreateIdentityForm({
                       setPreviewImage(null)
                       setImageFilename(null)
                       setImageFilesize(null)
+                      setIdentityImageFile(undefined)
+                      setImageUploadError(null)
                     }}
                     className={`${previewImage === null ? 'hidden' : 'block'}`}
                   >
@@ -664,6 +675,10 @@ function CreateIdentityForm({
                   }))
                 }
                 value={formState.description}
+              />
+              <ErrorList
+                id={fields.description.errorId}
+                errors={fields.description.errors}
               />
             </div>
             <div className="flex flex-col w-full gap-1.5">
@@ -768,9 +783,9 @@ function CreateIdentityForm({
                   type="button"
                   variant="primary"
                   onClick={() => {
-                    const result = form.valid
+                    const result = form.valid && !imageUploadError
                     console.log('result', result)
-                    if (result) {
+                    if (result && !imageUploadError) {
                       dispatch({ type: 'REVIEW_TRANSACTION' })
                     }
                   }}
@@ -790,7 +805,7 @@ function CreateIdentityForm({
             </div>
           </div>
         ) : state.status === 'review-transaction' ? (
-          <div className="h-[460px] flex flex-col">
+          <div className="h-[600px] flex flex-col">
             <CreateIdentityReview
               dispatch={dispatch}
               identity={reviewIdentity}
@@ -822,7 +837,7 @@ function CreateIdentityForm({
             </div>
           </div>
         ) : (
-          <div className="h-[460px]  flex flex-col">
+          <div className="h-[600px] flex flex-col">
             <TransactionState
               status={state.status}
               txHash={state.txHash}
@@ -840,7 +855,7 @@ function CreateIdentityForm({
                           `${PATHS.IDENTITY}/${transactionResponseData.id}`,
                         )
                       }
-                      handleClose
+                      handleClose()
                     }}
                   >
                     {successAction === TransactionSuccessAction.VIEW

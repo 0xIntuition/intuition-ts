@@ -26,7 +26,7 @@ export default function AlertDialog({
     <UIAlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent className="max-w-sm">
         <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-        <AlertDialogDescription>
+        <AlertDialogDescription asChild>
           <Text
             variant={TextVariant.body}
             className="text-secondary-foreground"

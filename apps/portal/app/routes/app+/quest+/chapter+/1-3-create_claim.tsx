@@ -9,6 +9,7 @@ import {
 } from '@0xintuition/api'
 
 import CreateClaimModal from '@components/create-claim/create-claim-modal'
+import { ErrorPage } from '@components/error-page'
 import CreateClaimActivity from '@components/quest/activities/create-claim-activity'
 import {
   Header,
@@ -198,4 +199,8 @@ export default function Quests() {
       />
     </div>
   )
+}
+
+export function ErrorBoundary() {
+  return <ErrorPage routeName="quest/chapter/1-3" />
 }

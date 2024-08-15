@@ -10,6 +10,7 @@ import {
 } from '@0xintuition/1ui'
 import { ClaimsService, IdentityPresenter, VaultType } from '@0xintuition/api'
 
+import { ErrorPage } from '@components/error-page'
 import { PositionsOnClaim } from '@components/list/positions-on-claim'
 import { PaginatedListSkeleton, TabsSkeleton } from '@components/skeleton'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
@@ -191,4 +192,8 @@ export default function ClaimOverview() {
       </Suspense>
     </div>
   )
+}
+
+export function ErrorBoundary() {
+  return <ErrorPage routeName="claim/$id/index" />
 }

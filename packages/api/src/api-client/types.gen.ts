@@ -543,8 +543,8 @@ export type InputFile = string
 
 export type IntegrationStatus = {
   alchemy_tx_parsed?: string | null
-  alchemy_tx_received?: string | null
   cloudinary_cache?: string | null
+  last_block_processed?: string | null
 }
 
 export type InviteCodePresenter = {
@@ -629,6 +629,16 @@ export type LogType =
       Redeemed: Redeemed
     }
   | 'NoOp'
+
+/**
+ * This struct contains the parameters we can use to query information the
+ * indexer using GraphQL
+ */
+export type MissedTransactionsQuery = {
+  after?: string | null
+  limit?: number | null
+  starting_block_timestamp?: string | null
+}
 
 export type NewClaim = {
   contract: string
@@ -2171,8 +2181,8 @@ export type GetIdentityPositionsResponse = {
 
 export type IntegrationHealthcheckResponse = {
   alchemy_tx_parsed?: string | null
-  alchemy_tx_received?: string | null
   cloudinary_cache?: string | null
+  last_block_processed?: string | null
 }
 
 export type RedeemInviteCodeData = {
@@ -2300,6 +2310,23 @@ export type DeactivateLinkedAccountResponse = {
   wallet_client?: string | null
   wallet_client_type?: string | null
 }
+
+export type MissedTransactionsData = {
+  /**
+   * The starting cursor
+   */
+  after: string | null
+  /**
+   * The amount of results we are returning
+   */
+  limit: string | null
+  /**
+   * The block timestamp to use as the starting point to look for missing transactions
+   */
+  startingBlockTimestamp: string | null
+}
+
+export type MissedTransactionsResponse = unknown
 
 export type CreatePositionData = {
   requestBody: NewPosition
@@ -4086,8 +4113,8 @@ export type $OpenApiTs = {
          */
         200: {
           alchemy_tx_parsed?: string | null
-          alchemy_tx_received?: string | null
           cloudinary_cache?: string | null
+          last_block_processed?: string | null
         }
       }
     }
@@ -4255,6 +4282,30 @@ export type $OpenApiTs = {
           wallet_client?: string | null
           wallet_client_type?: string | null
         }
+      }
+    }
+  }
+  '/missed_transactions': {
+    get: {
+      req: {
+        /**
+         * The starting cursor
+         */
+        after: string | null
+        /**
+         * The amount of results we are returning
+         */
+        limit: string | null
+        /**
+         * The block timestamp to use as the starting point to look for missing transactions
+         */
+        startingBlockTimestamp: string | null
+      }
+      res: {
+        /**
+         * Process missed transactions
+         */
+        200: unknown
       }
     }
   }

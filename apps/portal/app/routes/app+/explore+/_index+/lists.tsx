@@ -6,6 +6,7 @@ import {
   ClaimsService,
 } from '@0xintuition/api'
 
+import { ErrorPage } from '@components/error-page'
 import { ExploreSearch } from '@components/explore/ExploreSearch'
 import { ListClaimsList } from '@components/list/list-claims'
 import { calculateTotalPages, invariant, loadMore } from '@lib/utils/misc'
@@ -98,4 +99,8 @@ export default function ExploreLists() {
       />
     </>
   )
+}
+
+export function ErrorBoundary() {
+  return <ErrorPage routeName="explore/lists" />
 }
