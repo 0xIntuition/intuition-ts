@@ -3,6 +3,7 @@ import { Suspense, useEffect, useState } from 'react'
 import { Text } from '@0xintuition/1ui'
 import { ClaimPresenter, ClaimSortColumn } from '@0xintuition/api'
 
+import { ErrorPage } from '@components/error-page'
 import { ListClaimsList } from '@components/list/list-claims'
 import { ListClaimsSkeletonLayout } from '@components/list/list-skeletons'
 import { SortOption } from '@components/sort-select'
@@ -114,4 +115,8 @@ export default function ProfileLists() {
       </Suspense>
     </div>
   )
+}
+
+export function ErrorBoundary() {
+  return <ErrorPage routeName="profile/lists" />
 }

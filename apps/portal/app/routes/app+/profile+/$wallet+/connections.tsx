@@ -10,6 +10,7 @@ import {
 } from '@0xintuition/1ui'
 import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
 
+import { ErrorPage } from '@components/error-page'
 import { FollowList } from '@components/list/follow'
 import {
   ConnectionsHeader,
@@ -212,4 +213,8 @@ function ConnectionsContent({
       </Await>
     </Suspense>
   )
+}
+
+export function ErrorBoundary() {
+  return <ErrorPage routeName="wallet/connections" />
 }

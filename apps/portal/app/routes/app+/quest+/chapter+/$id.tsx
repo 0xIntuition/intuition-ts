@@ -8,6 +8,7 @@ import {
 } from '@0xintuition/1ui'
 import { QuestsService, QuestStatus, UserQuestsService } from '@0xintuition/api'
 
+import { ErrorPage } from '@components/error-page'
 import { QuestCriteriaCard } from '@components/quest/quest-criteria-card'
 import QuestStatusCard from '@components/quest/quest-status-card'
 import { MDXContent } from '@content-collections/mdx/react'
@@ -169,4 +170,8 @@ export function MDXLoreWrapper({ code }: { code: string }) {
       />
     </div>
   )
+}
+
+export function ErrorBoundary() {
+  return <ErrorPage routeName="quest/chapter/$id" />
 }

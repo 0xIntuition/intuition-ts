@@ -26,6 +26,7 @@ import {
   UserTotalsPresenter,
 } from '@0xintuition/api'
 
+import { ErrorPage } from '@components/error-page'
 import FollowModal from '@components/follow/follow-modal'
 import SaveListModal from '@components/list/save-list-modal'
 import ImageModal from '@components/profile/image-modal'
@@ -415,4 +416,8 @@ export default function Profile() {
       />
     </TwoPanelLayout>
   )
+}
+
+export function ErrorBoundary() {
+  return <ErrorPage routeName="profile/$wallet" />
 }

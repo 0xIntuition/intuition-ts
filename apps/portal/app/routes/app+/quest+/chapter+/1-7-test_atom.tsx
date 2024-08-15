@@ -13,6 +13,7 @@ import {
 } from '@0xintuition/api'
 
 import CreateIdentityModal from '@components/create-identity/create-identity-modal'
+import { ErrorPage } from '@components/error-page'
 import CreateAtomActivity from '@components/quest/create-atom-activity'
 import {
   Header,
@@ -215,4 +216,8 @@ export default function Quests() {
       />
     </div>
   )
+}
+
+export function ErrorBoundary() {
+  return <ErrorPage routeName="quest/chapter/1-7" />
 }

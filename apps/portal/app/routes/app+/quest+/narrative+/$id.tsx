@@ -13,6 +13,7 @@ import {
   UserQuestsService,
 } from '@0xintuition/api'
 
+import { ErrorPage } from '@components/error-page'
 import { QuestCard } from '@components/quest/quest-card'
 import logger from '@lib/utils/logger'
 import { invariant } from '@lib/utils/misc'
@@ -202,4 +203,8 @@ export default function Quests() {
       </div>
     </div>
   )
+}
+
+export function ErrorBoundary() {
+  return <ErrorPage routeName="quest/narrative/$id" />
 }

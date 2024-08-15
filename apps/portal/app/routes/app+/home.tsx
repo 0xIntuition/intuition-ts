@@ -9,6 +9,7 @@ import {
   SortDirection,
 } from '@0xintuition/api'
 
+import { ErrorPage } from '@components/error-page'
 import { HomeSectionHeader } from '@components/home/home-section-header'
 import { HomeStatsHeader } from '@components/home/home-stats-header'
 import { ActivityList } from '@components/list/activity'
@@ -243,4 +244,8 @@ export default function HomePage() {
       </div>
     </FullPageLayout>
   )
+}
+
+export function ErrorBoundary() {
+  return <ErrorPage routeName="home" />
 }

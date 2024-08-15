@@ -5,6 +5,7 @@ import {
   IdentitiesService,
 } from '@0xintuition/api'
 
+import { ErrorPage } from '@components/error-page'
 import { ExploreSearch } from '@components/explore/ExploreSearch'
 import { ClaimsList } from '@components/list/claims'
 import { calculateTotalPages, invariant } from '@lib/utils/misc'
@@ -79,4 +80,8 @@ export default function ExploreClaims() {
       />
     </>
   )
+}
+
+export function ErrorBoundary() {
+  return <ErrorPage routeName="explore/claims" />
 }

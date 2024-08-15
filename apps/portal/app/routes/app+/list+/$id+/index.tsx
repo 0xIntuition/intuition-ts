@@ -20,6 +20,7 @@ import {
   UsersService,
 } from '@0xintuition/api'
 
+import { ErrorPage } from '@components/error-page'
 import { InfoPopover } from '@components/info-popover'
 import { ListTabIdentityDisplay } from '@components/list/list-tab-identity-display'
 import { TagsList } from '@components/list/tags'
@@ -402,4 +403,8 @@ export default function ListOverview() {
       </div>
     </div>
   )
+}
+
+export function ErrorBoundary() {
+  return <ErrorPage routeName="list/$id/index" />
 }

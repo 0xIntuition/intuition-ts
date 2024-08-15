@@ -13,7 +13,7 @@ export default function Maintenance() {
         <Text variant="heading2">Maintenance in Progress</Text>
         <Text
           variant="headline"
-          className="text-secondary-foreground/50 mt-2 mb-8"
+          className="text-secondary-foreground/70 mt-2 mb-8"
         >
           We&apos;re currently performing some essential maintenance on
           Intuition. Please check back later. In the meantime, join our Discord
