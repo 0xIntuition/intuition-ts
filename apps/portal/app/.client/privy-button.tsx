@@ -45,8 +45,6 @@ export default function PrivyButton({
     return null
   }
 
-  console.log('userObject', userObject)
-
   if (ready && authenticated && privyUser !== null) {
     return (
       <>

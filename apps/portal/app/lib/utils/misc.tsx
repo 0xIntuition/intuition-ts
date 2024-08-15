@@ -334,10 +334,12 @@ export function loadMore({
 }: LoadMoreParams): () => void {
   return () => {
     const nextPage = currentPage + 1
+    const effectiveLimit = nextPage * pagination.limit
     submit(
       {
         page: nextPage.toString(),
         limit: pagination.limit.toString(),
+        effectiveLimit: effectiveLimit.toString(),
         sortBy,
         direction,
       },
