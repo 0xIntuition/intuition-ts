@@ -150,8 +150,10 @@ export async function getVaultDetails(
 
   let tripleCreationFee,
     formattedTripleCreationFee,
-    atomEquityFee,
-    formattedAtomEquityFee,
+    atomDepositFractionOnTripleCreation,
+    formattedAtomDepositFractionOnTripleCreation,
+    atomDepositFractionForTriple,
+    formattedAtomDepositFractionForTriple,
     totalAssetsAgainst,
     formattedTotalAssetsAgainst,
     totalConvictionAgainst,
@@ -162,8 +164,15 @@ export async function getVaultDetails(
   if (counterVault) {
     tripleCreationFee = resp[currentIndex].result[0] as bigint
     formattedTripleCreationFee = formatUnits(tripleCreationFee, 18)
-    atomEquityFee = resp[currentIndex].result[1] as bigint
-    formattedAtomEquityFee = formatUnits(atomEquityFee, 18)
+    atomDepositFractionOnTripleCreation = resp[currentIndex].result[1] as bigint
+    formattedAtomDepositFractionOnTripleCreation = formatUnits(
+      atomDepositFractionOnTripleCreation,
+      18,
+    )
+    atomDepositFractionForTriple = resp[currentIndex].result[2] as bigint
+    formattedAtomDepositFractionForTriple =
+      +formatUnits(atomDepositFractionForTriple, 18) /
+      +formatUnits(feeDenominator, 18)
     currentIndex++
     totalAssetsAgainst = resp[currentIndex].result[0] as bigint
     formattedTotalAssetsAgainst = formatUnits(totalAssetsAgainst, 18)
@@ -230,8 +239,14 @@ export async function getVaultDetails(
           isTriple: true,
           triple_creation_fee: tripleCreationFee?.toString(),
           formatted_triple_creation_fee: formattedTripleCreationFee,
-          atom_equity_fee: atomEquityFee?.toString(),
-          formatted_atom_equity_fee: formattedAtomEquityFee,
+          atom_deposit_fraction_on_triple_creation:
+            atomDepositFractionOnTripleCreation?.toString(),
+          formatted_atom_deposit_fraction_on_triple_creation:
+            formattedAtomDepositFractionOnTripleCreation,
+          atom_deposit_fraction_for_triple:
+            atomDepositFractionForTriple?.toString(),
+          formatted_atom_deposit_fraction_for_triple:
+            formattedAtomDepositFractionForTriple?.toString(),
           against_assets_sum: totalAssetsAgainst?.toString(),
           formatted_against_assets_sum: formattedTotalAssetsAgainst,
           against_conviction_sum: totalConvictionAgainst?.toString(),

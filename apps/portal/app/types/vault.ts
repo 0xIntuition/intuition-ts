@@ -85,4 +85,11 @@ export type VaultDetailsType = {
   formatted_atom_cost?: string
   atom_creation_fee?: string
   formatted_atom_creation_fee?: string
+  isTriple?: boolean
+  triple_creation_fee?: string
+  formatted_triple_creation_fee?: string
+  atom_deposit_fraction_on_triple_creation?: string
+  formatted_atom_deposit_fraction_on_triple_creation?: string
+  atom_deposit_fraction_for_triple?: string
+  formatted_atom_deposit_fraction_for_triple?: string
 }
