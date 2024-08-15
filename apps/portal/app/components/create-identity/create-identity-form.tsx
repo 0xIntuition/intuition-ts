@@ -504,7 +504,7 @@ function CreateIdentityForm({
       />
       <div className="h-full flex flex-col">
         {state.status === 'idle' ? (
-          <div className="w-full h-full flex-col justify-start items-start inline-flex gap-7">
+          <div className="w-full h-[690px] flex-col justify-start items-start inline-flex gap-7">
             <div className="flex flex-col w-full gap-1.5">
               <div className="self-stretch flex-col justify-start items-start flex">
                 <div className="flex w-full items-center justify-between">
@@ -666,8 +666,7 @@ function CreateIdentityForm({
               </Label>
               <Input
                 {...getInputProps(fields.external_reference, { type: 'text' })}
-                placeholder="www.url.com"
-                startAdornment="http://"
+                placeholder="https://www.url.com"
                 onChange={(e) =>
                   setFormState((prev) => ({
                     ...prev,
@@ -723,7 +722,7 @@ function CreateIdentityForm({
               />
               <Text
                 variant={TextVariant.caption}
-                className="text-center text-primary/70"
+                className="text-center text-primary/70 mt-0.5"
               >
                 Note: You will not be chraged an entry fee for this initial
                 deposit.
@@ -737,7 +736,11 @@ function CreateIdentityForm({
                   type="button"
                   variant="primary"
                   onClick={() => {
-                    dispatch({ type: 'REVIEW_TRANSACTION' })
+                    const result = form.valid
+                    console.log('result', result)
+                    if (result) {
+                      dispatch({ type: 'REVIEW_TRANSACTION' })
+                    }
                   }}
                   disabled={
                     !address ||
@@ -755,7 +758,7 @@ function CreateIdentityForm({
             </div>
           </div>
         ) : state.status === 'review-transaction' ? (
-          <div className="h-full flex flex-col">
+          <div className="h-[460px] flex flex-col">
             <CreateIdentityReview
               dispatch={dispatch}
               identity={reviewIdentity}
@@ -787,7 +790,7 @@ function CreateIdentityForm({
             </div>
           </div>
         ) : (
-          <div className="h-full flex flex-col">
+          <div className="h-[460px]  flex flex-col">
             <TransactionState
               status={state.status}
               txHash={state.txHash}

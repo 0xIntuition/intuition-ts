@@ -1,22 +1,36 @@
 import { DESCRIPTION_MAX_LENGTH, MAX_UPLOAD_SIZE } from 'app/consts'
 import { z } from 'zod'
 
-const urlWithoutHttps = z
+const urlSchema = z
   .string()
-  .refine((url) => !url.startsWith('https://'), {
-    message: "You don't need to include the https://",
-  })
-  .transform((url) => (url.startsWith('https://') ? url.slice(8) : url))
   .refine(
     (url) => {
-      const urlPattern =
-        /^(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,}(?:\/[^\s]*)?(?:\?[^\s]*)?$/i
-      return urlPattern.test(url)
+      // Check if the URL contains ://
+      if (!url.includes('://')) {
+        return false
+      }
+
+      // Split the URL into protocol and the rest
+      const [protocol, rest] = url.split('://')
+
+      // Check if the protocol is not empty and contains only valid characters
+      if (!/^[a-z0-9]+$/i.test(protocol)) {
+        return false
+      }
+
+      // Check if the rest of the URL is not empty and contains at least one dot
+      if (!rest || !rest.includes('.')) {
+        return false
+      }
+
+      return true
     },
     {
-      message: 'This link is an invalid URL.',
+      message:
+        'Please enter a valid URL (e.g., https://example.com, ipfs://Qm...)',
     },
   )
+  .transform((url) => url.toLowerCase())
 
 export function createIdentitySchema() {
   return z.object({
@@ -48,7 +62,7 @@ export function createIdentitySchema() {
       }, 'File must be a .png, .jpg, .jpeg, .gif, or .webp')
       .or(z.string())
       .optional(),
-    external_reference: urlWithoutHttps.optional(),
+    external_reference: urlSchema.optional(),
     initial_deposit: z.string().optional(),
     vault_id: z.string().optional(),
     creator: z.string().optional(),
