@@ -13,10 +13,7 @@ import { IdentitySearchCombobox } from '@components/identity/identity-search-com
 import { useIdentityServerSearch } from '@lib/hooks/useIdentityServerSearch'
 import logger from '@lib/utils/logger'
 import { useFetcher } from '@remix-run/react'
-import {
-  GET_IDENTITIES_BY_IDS_RESOURCE_ROUTE,
-  SEARCH_IDENTITIES_BY_TAGS_RESOURCE_ROUTE,
-} from 'app/consts'
+import { SEARCH_IDENTITIES_BY_TAGS_RESOURCE_ROUTE } from 'app/consts'
 import { TagType } from 'app/types/tags'
 
 import {
@@ -52,17 +49,28 @@ const ExploreAddTags = ({
   }, [])
 
   React.useEffect(() => {
-    const initialSelectedTags: TagType[] = []
-    const result = identityTagFetcher.data
-    logger('result', result)
-    result?.forEach((result) =>
-      initialSelectedTags.push({
-        name: result.display_name,
-        id: result.id,
-      }),
-    )
-    setSelectedTags(initialSelectedTags)
-  }, [identityTagFetcher.data])
+    if (identityTagFetcher.data && initialValue) {
+      const initialTagNames = initialValue.split(',')
+      const tagSet = new Set<string>() // Set to store unique tag IDs
+      const initialSelectedTags: TagType[] = identityTagFetcher.data.flatMap(
+        (identity) =>
+          identity.tags
+            ?.filter((tag) => initialTagNames.includes(tag.display_name))
+            .map((tag) => ({
+              name: tag.display_name,
+              id: tag.identity_id,
+            }))
+            .filter((tag) => {
+              if (tagSet.has(tag.id)) {
+                return false // Skip if we've already added this tag
+              }
+              tagSet.add(tag.id)
+              return true
+            }) ?? [],
+      )
+      setSelectedTags(initialSelectedTags)
+    }
+  }, [identityTagFetcher.data, initialValue])
 
   React.useEffect(() => {
     const handleClickEvent = (event: MouseEvent) => {
