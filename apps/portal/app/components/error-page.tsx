@@ -23,34 +23,45 @@ import NavigationButton from './navigation-link'
 const getDerpFace = () => {
   const numberOfDerpFaces = 12
   const randomNumber = Math.floor(Math.random() * numberOfDerpFaces) + 1
-  const altText = 'error'
-  const className = 'w-56 h-full rounded-lg mb-4'
+  let imgSrc = derpFace1
   switch (randomNumber) {
     case 2:
-      return <img src={derpFace2} alt={altText} className={className} />
+      imgSrc = derpFace2
+      break
     case 3:
-      return <img src={derpFace3} alt={altText} className={className} />
+      imgSrc = derpFace3
+      break
     case 4:
-      return <img src={derpFace4} alt={altText} className={className} />
+      imgSrc = derpFace4
+      break
     case 5:
-      return <img src={derpFace5} alt={altText} className={className} />
+      imgSrc = derpFace5
+      break
     case 6:
-      return <img src={derpFace6} alt={altText} className={className} />
+      imgSrc = derpFace6
+      break
     case 7:
-      return <img src={derpFace7} alt={altText} className={className} />
+      imgSrc = derpFace7
+      break
     case 8:
-      return <img src={derpFace8} alt={altText} className={className} />
+      imgSrc = derpFace8
+      break
     case 9:
-      return <img src={derpFace9} alt={altText} className={className} />
+      imgSrc = derpFace9
+      break
     case 10:
-      return <img src={derpFace10} alt={altText} className={className} />
+      imgSrc = derpFace10
+      break
     case 11:
-      return <img src={derpFace11} alt={altText} className={className} />
+      imgSrc = derpFace11
+      break
     case 12:
-      return <img src={derpFace12} alt={altText} className={className} />
-    default:
-      return <img src={derpFace1} alt={altText} className={className} />
+      imgSrc = derpFace12
+      break
   }
+  return (
+    <img src={imgSrc} alt="error" className="w-56 h-full rounded-lg mb-4" />
+  )
 }
 
 const StatusCode = ({ statusCode }: { statusCode: number }) => {
