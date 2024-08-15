@@ -23,7 +23,7 @@ export const InfoTooltip = ({
   trigger,
 }: {
   title: string
-  content: string
+  content: string | ReactNode
   icon?: IconNameType
   link?: string
   trigger?: ReactNode

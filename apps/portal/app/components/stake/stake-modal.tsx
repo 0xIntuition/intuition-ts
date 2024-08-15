@@ -81,16 +81,6 @@ export default function StakeModal({
     vaultId = direction === 'for' ? claim.vault_id : claim.counter_vault_id
   }
 
-  let user_assets: string = '0'
-  if (identityShouldOverride) {
-    user_assets = vaultDetails.user_assets ?? identity.user_assets
-  } else if (claim) {
-    user_assets =
-      direction === 'for'
-        ? vaultDetails.user_assets ?? claim.user_assets_for
-        : vaultDetails.user_assets_against ?? claim.user_assets_against
-  }
-
   let user_conviction: string = '0'
   if (identityShouldOverride) {
     user_conviction = vaultDetails.user_conviction ?? identity.user_conviction
@@ -113,7 +103,7 @@ export default function StakeModal({
           claim.against_conviction_price
   }
 
-  const { min_deposit, formatted_entry_fee, formatted_exit_fee } = vaultDetails
+  const { min_deposit } = vaultDetails
 
   const depositHook = useDepositAtom(contract)
 
@@ -373,12 +363,7 @@ export default function StakeModal({
             walletBalance={walletBalance}
             identity={identity}
             claim={claim}
-            conviction_price={conviction_price ?? '0'}
-            user_conviction={user_conviction ?? '0'}
-            user_assets={user_assets ?? '0'}
-            min_deposit={min_deposit ?? '0'}
-            entry_fee={formatted_entry_fee ?? '0'}
-            exit_fee={formatted_exit_fee ?? '0'}
+            vaultDetails={vaultDetails}
             direction={direction ? direction : undefined}
             val={val}
             setVal={setVal}

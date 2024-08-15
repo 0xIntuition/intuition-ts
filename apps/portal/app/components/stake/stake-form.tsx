@@ -26,6 +26,7 @@ import {
 } from '@lib/utils/misc'
 import { type FetcherWithComponents } from '@remix-run/react'
 import { PATHS } from 'app/consts'
+import { VaultDetailsType } from 'app/types'
 import {
   TransactionActionType,
   TransactionStateType,
@@ -41,12 +42,7 @@ interface StakeFormProps {
   walletBalance: string
   identity?: IdentityPresenter
   claim?: ClaimPresenter
-  user_conviction: string
-  conviction_price: string
-  user_assets: string
-  min_deposit: string
-  entry_fee: string
-  exit_fee: string
+  vaultDetails: VaultDetailsType
   direction?: 'for' | 'against'
   val: string
   setVal: (val: string) => void
@@ -68,12 +64,7 @@ export default function StakeForm({
   walletBalance,
   identity,
   claim,
-  user_conviction,
-  conviction_price,
-  user_assets,
-  min_deposit,
-  entry_fee,
-  exit_fee,
+  vaultDetails,
   direction,
   val,
   setVal,
@@ -209,7 +200,9 @@ export default function StakeForm({
             </Tabs>
             <div className="pt-2.5">
               <ActivePositionCard
-                value={Number(formatBalance(user_assets, 18, 6))}
+                value={Number(
+                  formatBalance(vaultDetails.user_assets ?? '0', 18, 6),
+                )}
                 claimPosition={
                   direction !== undefined
                     ? direction === 'for'
@@ -234,9 +227,9 @@ export default function StakeForm({
                   action={mode}
                   setVal={setVal}
                   walletBalance={walletBalance ?? '0'}
-                  minDeposit={min_deposit ?? '0'}
-                  userConviction={user_conviction ?? '0'}
-                  price={conviction_price ?? '0'}
+                  minDeposit={vaultDetails.min_deposit ?? '0'}
+                  userConviction={vaultDetails.user_conviction ?? '0'}
+                  price={vaultDetails.conviction_price ?? '0'}
                 />
               </div>
             </div>
@@ -253,8 +246,7 @@ export default function StakeForm({
             modalType={modalType}
             identity={identity}
             claim={claim}
-            entry_fee={entry_fee}
-            exit_fee={exit_fee}
+            vaultDetails={vaultDetails}
           />
         </div>
       ) : (
