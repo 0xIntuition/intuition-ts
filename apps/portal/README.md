@@ -32,3 +32,9 @@ Once you've cloned the `intuition-ts` monorepo you can run Portal from the monor
 Run the Vite dev server:
 
 `pnpm run --filter portal dev`
+
+## Deployments
+
+Please read the [Portal deployments runbook](../../docs/portal-deployments.md) for a detailed explanation of how we deploy to Dev, Staging, and Prod.
+
+You can also refer to [this loom recording](https://www.loom.com/share/e8f5ec555693466d8dc608642849ddcc?sid=0ae5f117-53a7-4016-9ea7-7fe26d89c396) for a quick walkthrough

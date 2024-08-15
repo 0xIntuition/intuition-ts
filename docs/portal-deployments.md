@@ -1,6 +1,6 @@
 # Portal Deployment Process
 
-Our deployment process is structured around trunk-based development, with all code residing on the `main` branch. Deployments are categorized into following three environments
+Our deployment process is structured around trunk-based development, with all code residing on the `main` branch. This means all our deployments (with the exception of Hotfixes) will be done on `main`. Deployments are categorized into following three environments:
 
 - Dev
 - Staging
