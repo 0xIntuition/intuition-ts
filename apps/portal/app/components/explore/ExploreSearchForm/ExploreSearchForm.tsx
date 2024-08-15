@@ -2,7 +2,6 @@ import * as React from 'react'
 
 import {
   RadioGroup,
-  RadioGroupDivider,
   RadioGroupItem,
   RadioGroupItemContainer,
   RadioGroupItemLabel,
@@ -73,7 +72,6 @@ const ExploreSearchForm = ({
     },
   ]
 
-  const numberOfRadioGroupItems = radioGroupData.length
   const currentIsUser = searchParams.get('isUser') || ''
 
   return (
@@ -95,18 +93,24 @@ const ExploreSearchForm = ({
             initialValue={searchParams.get(tagsInputId)}
           />
           <Separator className="my-5 in-out-gradient-strong max-md:m-0" />
-          <RadioGroup name="isUser" defaultValue={currentIsUser}>
+          <RadioGroup
+            name="isUser"
+            defaultValue={currentIsUser}
+            variant="simple"
+          >
             {radioGroupData.map((item, index) => (
               <div key={index}>
-                <RadioGroupItemContainer>
+                <RadioGroupItemContainer variant="simple">
+                  <RadioGroupItem
+                    value={item.value}
+                    id={item.id}
+                    size="small"
+                  />
                   <RadioGroupItemLabel
                     htmlFor={item.id}
                     value={item.displayValue}
-                    subValue={'test'}
                   />
-                  <RadioGroupItem value={item.value} id={item.id} />
                 </RadioGroupItemContainer>
-                {index < numberOfRadioGroupItems - 1 && <RadioGroupDivider />}
               </div>
             ))}
           </RadioGroup>
