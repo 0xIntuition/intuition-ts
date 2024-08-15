@@ -353,6 +353,7 @@ export default function SidebarNav({
       </SidebarLayoutProvider>
       <CreateIdentityModal
         open={createIdentityModalActive}
+        wallet={userObject.wallet}
         onClose={() => setCreateIdentityModalActive(false)}
       />
       <CreateClaimModal

@@ -11,6 +11,7 @@ import { IdentityPresenter, TagEmbeddedPresenter } from '@0xintuition/api'
 
 import { multivaultAbi } from '@lib/abis/multivault'
 import { useDepositTriple } from '@lib/hooks/useDepositTriple'
+import { useGetWalletBalance } from '@lib/hooks/useGetWalletBalance'
 import { useRedeemTriple } from '@lib/hooks/useRedeemTriple'
 import { transactionReducer } from '@lib/hooks/useTransactionReducer'
 import logger from '@lib/utils/logger'
@@ -18,7 +19,6 @@ import { formatBalance } from '@lib/utils/misc'
 import { useGenericTxState } from '@lib/utils/use-tx-reducer'
 import { useFetcher, useLocation } from '@remix-run/react'
 import { ClaimLoaderData } from '@routes/resources+/search-claims-by-ids'
-import { useQueryClient } from '@tanstack/react-query'
 import {
   GET_VAULT_DETAILS_RESOURCE_ROUTE,
   SEARCH_CLAIMS_BY_IDS_RESOURCE_ROUTE,
@@ -29,8 +29,8 @@ import {
   TransactionStateType,
 } from 'app/types/transaction'
 import { VaultDetailsType } from 'app/types/vault'
-import { Abi, Address, decodeEventLog, formatUnits, parseUnits } from 'viem'
-import { useBalance, useBlockNumber, usePublicClient } from 'wagmi'
+import { Abi, Address, decodeEventLog, parseUnits } from 'viem'
+import { useAccount, usePublicClient } from 'wagmi'
 
 import SaveButton from './save-button'
 import SaveForm from './save-form'
@@ -304,19 +304,11 @@ export default function SaveListModal({
     dispatch,
   ])
 
-  const queryClient = useQueryClient()
-  const { data: blockNumber } = useBlockNumber({ watch: true })
-  const { data: balance, queryKey } = useBalance({
-    address: userWallet as `0x${string}`,
-  })
+  const { address } = useAccount()
 
-  useEffect(() => {
-    if (blockNumber && blockNumber % 5n === 0n) {
-      queryClient.invalidateQueries({ queryKey })
-    }
-  }, [blockNumber, queryClient, queryKey, open])
-
-  const walletBalance = formatUnits(balance?.value ?? 0n, 18)
+  const walletBalance = useGetWalletBalance(
+    address ?? (userWallet as `0x${string}`),
+  )
 
   const handleSaveButtonClick = async () => {
     if (!vaultDetails) {

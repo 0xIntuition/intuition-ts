@@ -27,6 +27,7 @@ import {
 import { parseWithZod } from '@conform-to/zod'
 import { multivaultAbi } from '@lib/abis/multivault'
 import { useCreateTriple } from '@lib/hooks/useCreateTriple'
+import { useGetWalletBalance } from '@lib/hooks/useGetWalletBalance'
 import { useIdentityServerSearch } from '@lib/hooks/useIdentityServerSearch'
 import { useLoaderFetcher } from '@lib/hooks/useLoaderFetcher'
 import {
@@ -40,7 +41,6 @@ import logger from '@lib/utils/logger'
 import { useFetcher, useNavigate } from '@remix-run/react'
 import { CreateClaimLoaderData } from '@routes/resources+/create-claim'
 import { TagLoaderData } from '@routes/resources+/tag'
-import { useQueryClient } from '@tanstack/react-query'
 import {
   CREATE_CLAIM_RESOURCE_ROUTE,
   CURRENT_ENV,
@@ -55,14 +55,8 @@ import {
   TransactionSuccessAction,
   TransactionSuccessActionType,
 } from 'app/types/transaction'
-import { formatUnits, parseUnits } from 'viem'
-import {
-  useAccount,
-  useBalance,
-  useBlockNumber,
-  usePublicClient,
-  useWalletClient,
-} from 'wagmi'
+import { parseUnits } from 'viem'
+import { useAccount, usePublicClient, useWalletClient } from 'wagmi'
 
 import ErrorList from '../error-list'
 import { TransactionState } from '../transaction-state'
@@ -380,19 +374,9 @@ function CreateClaimForm({
     }
   }, [isSubjectPopoverOpen, isPredicatePopoverOpen, isObjectPopoverOpen])
 
-  const queryClient = useQueryClient()
-  const { data: blockNumber } = useBlockNumber({ watch: true })
-  const { data: balance, queryKey } = useBalance({
-    address: wallet as `0x${string}`,
-  })
-
-  const walletBalance = formatUnits(balance?.value ?? 0n, 18)
-
-  useEffect(() => {
-    if (blockNumber && blockNumber % 5n === 0n) {
-      queryClient.invalidateQueries({ queryKey })
-    }
-  }, [blockNumber, queryClient, queryKey])
+  const walletBalance = useGetWalletBalance(
+    address ?? (wallet as `0x${string}`),
+  )
 
   const claimChecker = useFetcher<TagLoaderData>()
 

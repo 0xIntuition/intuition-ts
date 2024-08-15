@@ -5,13 +5,13 @@ import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
 
 import { multivaultAbi } from '@lib/abis/multivault'
 import { useDepositAtom } from '@lib/hooks/useDepositAtom'
+import { useGetWalletBalance } from '@lib/hooks/useGetWalletBalance'
 import { useRedeemAtom } from '@lib/hooks/useRedeemAtom'
 import { transactionReducer } from '@lib/hooks/useTransactionReducer'
 import { stakeModalAtom } from '@lib/state/store'
 import logger from '@lib/utils/logger'
 import { useGenericTxState } from '@lib/utils/use-tx-reducer'
 import { useFetcher, useLocation } from '@remix-run/react'
-import { useQueryClient } from '@tanstack/react-query'
 import {
   TransactionActionType,
   TransactionStateType,
@@ -19,7 +19,7 @@ import {
 import { VaultDetailsType } from 'app/types/vault'
 import { useAtom } from 'jotai'
 import { Abi, Address, decodeEventLog, formatUnits, parseUnits } from 'viem'
-import { useBalance, useBlockNumber, usePublicClient } from 'wagmi'
+import { useAccount, usePublicClient } from 'wagmi'
 
 import StakeButton from './stake-button'
 import StakeForm from './stake-form'
@@ -297,19 +297,10 @@ export default function StakeModal({
     state.status === 'transaction-pending' ||
     state.status === 'transaction-confirmed'
 
-  const queryClient = useQueryClient()
-  const { data: blockNumber } = useBlockNumber({ watch: true })
-  const { data: balance, queryKey } = useBalance({
-    address: userWallet as `0x${string}`,
-  })
-
-  useEffect(() => {
-    if (blockNumber && blockNumber % 5n === 0n) {
-      queryClient.invalidateQueries({ queryKey })
-    }
-  }, [blockNumber, queryClient, queryKey])
-
-  const walletBalance = formatUnits(balance?.value ?? 0n, 18)
+  const { address } = useAccount()
+  const walletBalance = useGetWalletBalance(
+    address ?? (userWallet as `0x${string}`),
+  )
 
   const [showErrors, setShowErrors] = useState(false)
   const [validationErrors, setValidationErrors] = useState<string[]>([])
