@@ -28,7 +28,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   const displayName = searchParams.get('list') || null
 
-  const initialLimit = 100
+  const initialLimit = 200
   const effectiveLimit = Number(
     searchParams.get('effectiveLimit') || initialLimit,
   )
