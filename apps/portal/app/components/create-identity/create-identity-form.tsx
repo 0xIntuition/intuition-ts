@@ -184,7 +184,7 @@ function CreateIdentityForm({
     undefined,
   )
   const [imageUploadError, setImageUploadError] = useState<string | null>(null)
-  const [initialDeposit, setInitialDeposit] = useState<string>('')
+  const [initialDeposit, setInitialDeposit] = useState<string>('0')
   const [isContract, setIsContract] = useState(false)
 
   const loaderFetcher = useFetcher<CreateLoaderData>()
@@ -505,7 +505,7 @@ function CreateIdentityForm({
       />
       <div className="h-full flex flex-col">
         {state.status === 'idle' ? (
-          <div className="w-full h-[690px] flex-col justify-start items-start inline-flex gap-7">
+          <div className="w-full h-[660px] flex-col justify-start items-start inline-flex gap-7">
             <div className="flex flex-col w-full gap-1.5">
               <div className="self-stretch flex-col justify-start items-start flex">
                 <div className="flex w-full items-center justify-between">
@@ -762,7 +762,7 @@ function CreateIdentityForm({
             </div>
           </div>
         ) : state.status === 'review-transaction' ? (
-          <div className="h-[460px] flex flex-col">
+          <div className="h-[600px] flex flex-col">
             <CreateIdentityReview
               dispatch={dispatch}
               identity={reviewIdentity}
@@ -794,7 +794,7 @@ function CreateIdentityForm({
             </div>
           </div>
         ) : (
-          <div className="h-[460px]  flex flex-col">
+          <div className="h-[600px] flex flex-col">
             <TransactionState
               status={state.status}
               txHash={state.txHash}
@@ -812,7 +812,7 @@ function CreateIdentityForm({
                           `${PATHS.IDENTITY}/${transactionResponseData.id}`,
                         )
                       }
-                      handleClose
+                      handleClose()
                     }}
                   >
                     {successAction === TransactionSuccessAction.VIEW
