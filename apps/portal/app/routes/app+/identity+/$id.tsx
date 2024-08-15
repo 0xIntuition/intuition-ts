@@ -20,10 +20,12 @@ import { IdentityPresenter, TagEmbeddedPresenter } from '@0xintuition/api'
 
 import { ErrorPage } from '@components/error-page'
 import SaveListModal from '@components/list/save-list-modal'
+import { PendingRefreshBanner } from '@components/pending-refresh-banner'
 import ImageModal from '@components/profile/image-modal'
 import StakeModal from '@components/stake/stake-modal'
 import TagsModal from '@components/tags/tags-modal'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
+import { usePageRefresh } from '@lib/hooks/usePageRefresh'
 import { getIdentityOrPending } from '@lib/services/identities'
 import {
   imageModalAtom,
@@ -133,10 +135,6 @@ export interface IdentityLoaderData {
   isPending: boolean
 }
 
-export function PlaceholderPendingUI() {
-  return <div>This identity is pending!</div>
-}
-
 export default function IdentityDetails() {
   const { identity, vaultDetails, userWallet, isPending } = useLiveLoader<{
     identity: ExtendedIdentityPresenter
@@ -153,6 +151,7 @@ export default function IdentityDetails() {
     useAtom(saveListModalAtom)
   const [imageModalActive, setImageModalActive] = useAtom(imageModalAtom)
   const [selectedTag, setSelectedTag] = useState<TagEmbeddedPresenter>()
+  const refreshPage = usePageRefresh()
 
   logger(isPending ? 'pending' : 'not pending')
 
@@ -269,7 +268,15 @@ export default function IdentityDetails() {
       />
     </div>
   )
-  const rightPanel = isPending ? <PlaceholderPendingUI /> : <Outlet />
+  const rightPanel = isPending ? (
+    <PendingRefreshBanner
+      title="Please Refresh the Page"
+      message="It looks like the on-chain transaction was successful, but we’re still waiting for the information to update. Please refresh the page to ensure everything is up to date."
+      onRefresh={refreshPage}
+    />
+  ) : (
+    <Outlet />
+  )
 
   return (
     <TwoPanelLayout leftPanel={leftPanel} rightPanel={rightPanel}>
