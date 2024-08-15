@@ -31,21 +31,19 @@ tag-template: 'v$RESOLVED_VERSION'
 autolabeler:
   - label: 'breaking'
     title:
-      - '/breaking/i'
-      - '/BREAKING/i'
+      - '/\bbreaking\b/'
   - label: 'feat'
     title:
-      - '/feat/i'
+      - '/\feat\b/'
   - label: 'fix'
     title:
-      - '/fix/i'
+      - '/\bfix\b/'
   - label: 'chore'
     title:
-      - '/chore/i'
-      - '/maintenance/i'
+      - '/\bchore\b/'
+      - '/\bmaintenance\b/'
   - label: 'docs'
-    title:
-      - '/docs/i'
+    title: -'/\bdocs\b/'
 
 version-resolver:
   major:
