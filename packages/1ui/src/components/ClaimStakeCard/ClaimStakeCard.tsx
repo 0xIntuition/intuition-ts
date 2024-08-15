@@ -38,7 +38,7 @@ const ClaimStakeCardDataSet = ({
   const isVariantFor = variant === StakeCardDataSetVariant.for
   let subContainerClassName = 'flex gap-1 items-center'
   if (isVariantFor) {
-    subContainerClassName += ' justify-end'
+    subContainerClassName += ' justify-start'
   }
   return (
     <div>
@@ -59,13 +59,13 @@ const ClaimStakeCardDataSet = ({
           variant={TextVariant.bodyLarge}
           value={value}
           currency={currency}
-          className={isVariantFor ? 'text-right' : 'text-left'}
+          className={isVariantFor ? 'text-left' : 'text-right'}
         />
       ) : (
         <Text
           variant={TextVariant.bodyLarge}
           weight={TextWeight.medium}
-          className={isVariantFor ? 'text-right' : 'text-left'}
+          className={isVariantFor ? 'text-left' : 'text-right'}
         >
           {value}
         </Text>
@@ -138,36 +138,27 @@ const ClaimStakeCard = ({
       </div>
       <div className="flex justify-between items-center">
         <ClaimStakeCardDataSet
-          variant={StakeCardDataSetVariant.against}
-          value={tvlAgainst}
+          variant={StakeCardDataSetVariant.for}
+          value={tvlFor}
           currency={currency}
         />
         <ClaimStakeCardDataSet
-          variant={StakeCardDataSetVariant.for}
-          value={tvlFor}
+          variant={StakeCardDataSetVariant.against}
+          value={tvlAgainst}
           currency={currency}
         />
       </div>
       <div className="flex justify-between items-center">
         <ClaimStakeCardDataSet
-          variant={StakeCardDataSetVariant.against}
-          value={amountAgainst}
-        />
-        <ClaimStakeCardDataSet
           variant={StakeCardDataSetVariant.for}
           value={amountFor}
         />
+        <ClaimStakeCardDataSet
+          variant={StakeCardDataSetVariant.against}
+          value={amountAgainst}
+        />
       </div>
       <div className="flex justify-between items-center gap-4 w-full mt-2">
-        <Button
-          variant={ButtonVariant.against}
-          size={ButtonSize.md}
-          disabled={disableAgainstBtn || !onAgainstBtnClick}
-          onClick={onAgainstBtnClick}
-          className="w-full"
-        >
-          Deposit Against
-        </Button>
         <Button
           variant={ButtonVariant.for}
           size={ButtonSize.md}
@@ -176,6 +167,15 @@ const ClaimStakeCard = ({
           className="w-full"
         >
           Deposit For
+        </Button>
+        <Button
+          variant={ButtonVariant.against}
+          size={ButtonSize.md}
+          disabled={disableAgainstBtn || !onAgainstBtnClick}
+          onClick={onAgainstBtnClick}
+          className="w-full"
+        >
+          Deposit Against
         </Button>
       </div>
     </div>
