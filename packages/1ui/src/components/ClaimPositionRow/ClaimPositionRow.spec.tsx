@@ -159,13 +159,13 @@ describe('ClaimPositionRow', () => {
                   class="flex items-center h-[6px] mb-4"
                 >
                   <button
+                    class="h-full w-full bg-for block rounded-r-sm"
+                    data-state="closed"
+                  />
+                  <button
                     class="h-full bg-against block rounded-l-sm"
                     data-state="closed"
                     style="min-width: 33.33333333333333%;"
-                  />
-                  <button
-                    class="h-full w-full bg-for block rounded-r-sm"
-                    data-state="closed"
                   />
                 </div>
               </div>
