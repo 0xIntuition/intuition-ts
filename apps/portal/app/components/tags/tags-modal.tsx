@@ -1,9 +1,6 @@
 import { Dialog, DialogContent } from '@0xintuition/1ui'
 import { IdentityPresenter } from '@0xintuition/api'
 
-import AlertDialog from '@components/alert-dialog'
-import useHandleCloseAttempt from '@lib/hooks/useHandleCloseAttempt'
-
 import { TagsForm } from './tags-form'
 
 export interface TagsModalProps {
@@ -23,35 +20,24 @@ export default function TagsModal({
   onClose,
   onSuccess,
 }: TagsModalProps) {
-  const {
-    showAlertDialog,
-    setShowAlertDialog,
-    setIsTransactionComplete,
-    handleCloseAttempt,
-  } = useHandleCloseAttempt(onClose)
-
   return (
     <>
-      <Dialog open={open} onOpenChange={handleCloseAttempt}>
+      <Dialog
+        open={open}
+        onOpenChange={() => {
+          onClose?.()
+        }}
+      >
         <DialogContent className="h-[550px]">
           <TagsForm
             identity={identity}
             userWallet={userWallet}
             mode={mode}
             onClose={onClose}
-            onSuccess={() => {
-              setIsTransactionComplete(true)
-              onSuccess?.()
-            }}
+            onSuccess={onSuccess}
           />
         </DialogContent>
       </Dialog>
-      <AlertDialog
-        open={showAlertDialog}
-        onOpenChange={setShowAlertDialog}
-        setShowAlertDialog={setShowAlertDialog}
-        onClose={onClose}
-      />
-    </>
+    </> // TODO: [ENG-3436] -- Add AlertDialog interaction back in
   )
 }
