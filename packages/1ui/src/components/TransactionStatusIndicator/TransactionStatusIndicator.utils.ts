@@ -86,7 +86,17 @@ export const getStatusComponentData = (
     case TransactionStatus.inProgress:
     case TransactionStatus.preparingIdentity:
     case TransactionStatus.publishingIdentity:
+      return {
+        iconName: IconName.inProgress,
+        iconClass: 'text-accent animate-spin',
+        label: getInProgressLabel(status),
+      }
     case TransactionStatus.approveTransaction:
+      return {
+        iconName: IconName.awaitAction,
+        iconClass: 'text-warning',
+        label: getInProgressLabel(status),
+      }
     case TransactionStatus.transactionPending:
     case TransactionStatus.confirm:
       return {

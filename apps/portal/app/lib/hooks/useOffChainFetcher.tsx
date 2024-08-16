@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react'
+
 import { IdentityPresenter } from '@0xintuition/api'
 
 import { SubmissionResult } from '@conform-to/react'
@@ -5,19 +7,27 @@ import { useFetcher } from '@remix-run/react'
 
 export interface OffChainFetcherData {
   success: 'success' | 'error'
+  error: string
   identity: IdentityPresenter
   submission: SubmissionResult<string[]> | null
 }
 
 export function useOffChainFetcher() {
-  const offChainFetcher = useFetcher<OffChainFetcherData>()
-  const lastOffChainSubmission = offChainFetcher.data?.submission
-  const identity = offChainFetcher?.data?.identity
+  const fetcher = useFetcher<OffChainFetcherData>()
+  const [error, setError] = useState<Error | null>(null)
+
+  useEffect(() => {
+    if (fetcher.data && fetcher.data.success === 'error') {
+      setError(new Error(fetcher.data.error || 'Unknown error'))
+    } else {
+      setError(null)
+    }
+  }, [fetcher.data])
 
   return {
-    offChainFetcher,
-    lastOffChainSubmission,
-    identity,
+    offChainFetcher: fetcher,
+    lastOffChainSubmission: fetcher.data?.submission ?? null,
+    error,
   }
 }
 
