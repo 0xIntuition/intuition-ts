@@ -101,7 +101,7 @@ export default function UserProfileOverview() {
   const navigate = useNavigate()
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-10">
       <QuestHeaderCard
         title={STANDARD_QUEST_SET.title ?? ''}
         subtitle={STANDARD_QUEST_SET.description ?? ''}
@@ -110,67 +110,77 @@ export default function UserProfileOverview() {
         onButtonClick={() => navigate(STANDARD_QUEST_SET.navigatePath)}
       />
 
-      <Text
-        variant="headline"
-        weight="medium"
-        className="text-secondary-foreground"
-      >
-        About
-      </Text>
-      <div className="flex flex-row items-center gap-6 max-2xl:flex-col">
-        <OverviewAboutHeader
-          variant="claims"
-          userIdentity={userIdentity}
-          totalClaims={claims.pagination?.totalEntries}
-          totalStake={+formatBalance(claimsSummary?.assets_sum ?? 0, 18)}
-          link={`${PATHS.PROFILE}/data-about`}
-        />
-        <OverviewAboutHeader
-          variant="positions"
-          userIdentity={userIdentity}
-          totalPositions={positions.pagination.totalEntries}
-          totalStake={+formatBalance(userIdentity.assets_sum, 18)}
-          link={`${PATHS.PROFILE}/data-about`}
-        />
+      <div className="flex flex-col gap-6">
+        <Text
+          variant="headline"
+          weight="medium"
+          className="text-secondary-foreground"
+        >
+          About
+        </Text>
+        <div className="flex flex-row items-center gap-6 max-2xl:flex-col">
+          <OverviewAboutHeader
+            variant="claims"
+            userIdentity={userIdentity}
+            totalClaims={claims.pagination?.totalEntries}
+            totalStake={+formatBalance(claimsSummary?.assets_sum ?? 0, 18)}
+            link={`${PATHS.PROFILE}/data-about`}
+          />
+          <OverviewAboutHeader
+            variant="positions"
+            userIdentity={userIdentity}
+            totalPositions={positions.pagination.totalEntries}
+            totalStake={+formatBalance(userIdentity.assets_sum, 18)}
+            link={`${PATHS.PROFILE}/data-about`}
+          />
+        </div>
       </div>
-      <Text
-        variant="headline"
-        weight="medium"
-        className="text-secondary-foreground"
-      >
-        User Stats
-      </Text>
-      <OverviewStakingHeader
-        totalClaims={userTotals?.total_positions_on_claims ?? 0}
-        totalIdentities={userTotals?.total_positions_on_identities ?? 0}
-        totalStake={+formatBalance(userTotals?.total_position_value ?? '0', 18)}
-        link={`${PATHS.PROFILE}/data-created`}
-      />
-      <div className="flex flex-row items-center gap-6 max-md:flex-col">
-        <OverviewCreatedHeader
-          variant="identities"
-          totalCreated={userTotals?.total_identities ?? 0}
+
+      <div className="flex flex-col gap-6">
+        <Text
+          variant="headline"
+          weight="medium"
+          className="text-secondary-foreground"
+        >
+          User Stats
+        </Text>
+        <OverviewStakingHeader
+          totalClaims={userTotals?.total_positions_on_claims ?? 0}
+          totalIdentities={userTotals?.total_positions_on_identities ?? 0}
+          totalStake={
+            +formatBalance(userTotals?.total_position_value ?? '0', 18)
+          }
           link={`${PATHS.PROFILE}/data-created`}
         />
-        <OverviewCreatedHeader
-          variant="claims"
-          totalCreated={userTotals?.total_claims ?? 0}
-          link={`${PATHS.PROFILE}/data-created`}
+        <div className="flex flex-row items-center gap-6 max-md:flex-col">
+          <OverviewCreatedHeader
+            variant="identities"
+            totalCreated={userTotals?.total_identities ?? 0}
+            link={`${PATHS.PROFILE}/data-created`}
+          />
+          <OverviewCreatedHeader
+            variant="claims"
+            totalCreated={userTotals?.total_claims ?? 0}
+            link={`${PATHS.PROFILE}/data-created`}
+          />
+        </div>
+      </div>
+
+      <div className="flex flex-col gap-6">
+        <Text
+          variant="headline"
+          weight="medium"
+          className="text-secondary-foreground"
+        >
+          Top Lists
+        </Text>
+        <ListClaimsList
+          listClaims={savedListClaims.savedListClaims}
+          enableSort={false}
+          enableSearch={false}
+          columns={3}
         />
       </div>
-      <Text
-        variant="headline"
-        weight="medium"
-        className="text-secondary-foreground"
-      >
-        Top Lists
-      </Text>
-      <ListClaimsList
-        listClaims={savedListClaims.savedListClaims}
-        enableSort={false}
-        enableSearch={false}
-        columns={3}
-      />
     </div>
   )
 }

@@ -75,7 +75,7 @@ describe('QuestHeaderCard', () => {
                   href="/src/components/Icon/Icon.sprites.svg#crystal-ball"
                 />
               </svg>
-               View quests
+               View Quests
             </button>
           </div>
         </div>

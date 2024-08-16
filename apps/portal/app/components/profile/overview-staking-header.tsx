@@ -74,7 +74,7 @@ export function OverviewStakingHeader({
               weight="regular"
               className="text-secondary-foreground"
             >
-              Total staked
+              Total Staked
             </Text>
             <MonetaryValue value={totalStake} currency="ETH" />
           </div>
@@ -85,8 +85,8 @@ export function OverviewStakingHeader({
               variant={ButtonVariant.secondary}
               className="w-full md:w-max"
             >
-              <Icon name={IconName.ethereum} className="h-4 w-4" /> View all
-              positions
+              <Icon name={IconName.ethereum} className="h-4 w-4" /> View All
+              Positions
             </Button>
           </Link>
         </div>

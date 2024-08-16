@@ -261,7 +261,7 @@ export default function SidebarNav({
                     </defs>
                   </svg>
                 }
-                onClick={() => navigate('/')}
+                onClick={() => navigate('/app/home')}
               />
             </SidebarLayoutNavHeader>
             <SidebarLayoutNavBody className="flex flex-col justify-between">

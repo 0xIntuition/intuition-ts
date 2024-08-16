@@ -143,7 +143,7 @@ export default function ProfileDataCreated() {
   logger('$wallet data-created render')
 
   return (
-    <div className="flex-col justify-start items-start flex w-full gap-6">
+    <div className="flex-col justify-start items-start flex w-full gap-10">
       <div className="flex flex-col w-full gap-6">
         <div className="self-stretch justify-between items-center inline-flex">
           <Text

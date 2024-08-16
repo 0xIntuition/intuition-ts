@@ -54,7 +54,7 @@ const QuestHeaderCard = ({
           {`${percentageOfQuestsCompleted.toFixed(0)}% Complete`}
         </Text>
         <Button variant={ButtonVariant.secondary} onClick={onButtonClick}>
-          <Icon name={IconName.crystalBall} className="h-4 w-4" /> View quests
+          <Icon name={IconName.crystalBall} className="h-4 w-4" /> View Quests
         </Button>
       </div>
     </div>
