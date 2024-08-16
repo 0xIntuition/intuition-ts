@@ -38,20 +38,22 @@ const QuestCard = ({
       )}
       {...props}
     >
-      <div
-        className="w-52 h-full flex-shrink-0 relative bg-center bg-cover max-sm:w-full max-sm:h-44"
-        style={{ backgroundImage: `url(${imgSrc})` }}
-      >
-        <div className="absolute top-2.5 left-2.5">
-          <Text
-            variant="body"
-            className="text-foreground/70 bg-background/70 backdrop-blur-md px-2 py-1 rounded-md theme-border"
-          >
-            {label}
-          </Text>
+      <button onClick={handleClick} disabled={disabled}>
+        <div
+          className="w-52 h-full flex-shrink-0 relative bg-center bg-cover max-sm:w-full max-sm:h-44"
+          style={{ backgroundImage: `url(${imgSrc})` }}
+        >
+          <div className="absolute top-2.5 left-2.5">
+            <Text
+              variant="body"
+              className="text-foreground/70 bg-background/70 backdrop-blur-md px-2 py-1 rounded-md theme-border"
+            >
+              {label}
+            </Text>
+          </div>
+          <div className="w-full h-full bg-cover bg-center border-r border-border/10"></div>
         </div>
-        <div className="w-full h-full bg-cover bg-center border-r border-border/10"></div>
-      </div>
+      </button>
       <div className="flex flex-col justify-center -ml-[29px] z-10 max-sm:m-auto max-sm:mt-[-2rem]">
         <QuestStatusIndicator status={questStatus} />
       </div>
