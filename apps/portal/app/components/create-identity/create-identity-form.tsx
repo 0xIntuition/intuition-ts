@@ -317,30 +317,53 @@ function CreateIdentityForm({
         try {
           logger('try offline submit')
           dispatch({ type: 'PUBLISHING_IDENTITY' })
-          offChainFetcher.submit(formData, {
-            action: '/actions/create-identity',
-            method: 'post',
-          })
+          await submitWithTimeout(formData)
         } catch (error: unknown) {
-          if (error instanceof Error) {
-            const errorMessage = 'Error in creating offchain identity data.'
-            dispatch({
-              type: 'TRANSACTION_ERROR',
-              error: errorMessage,
-            })
-            toast.error(errorMessage)
-            dispatch({ type: 'START_TRANSACTION' })
-            return
-          }
-          console.error('Error creating identity', error)
+          handleSubmitError(error)
         }
 
         setLoading(true)
       }
-      // }
     } catch (error: unknown) {
       logger(error)
+      handleSubmitError(error)
     }
+  }
+
+  const submitWithTimeout = (formData: FormData) => {
+    return new Promise((resolve, reject) => {
+      const timeoutId = setTimeout(() => {
+        reject(new Error('Submission timed out'))
+      }, 30000) // 30 seconds timeout
+
+      offChainFetcher.submit(formData, {
+        action: '/actions/create-identity',
+        method: 'post',
+      })
+
+      const checkSubmissionStatus = setInterval(() => {
+        if (offChainFetcher.state === 'idle') {
+          clearInterval(checkSubmissionStatus)
+          clearTimeout(timeoutId)
+          if (offChainFetcher.data) {
+            resolve(offChainFetcher.data)
+          }
+        }
+      }, 1000) // Check every second
+    })
+  }
+
+  const handleSubmitError = (error: unknown) => {
+    let errorMessage = 'Error in creating offchain identity data.'
+    if (error instanceof Error) {
+      errorMessage = error.message
+    }
+    dispatch({
+      type: 'TRANSACTION_ERROR',
+      error: errorMessage,
+    })
+    toast.error(errorMessage)
+    setLoading(false)
   }
 
   async function handleOnChainCreateIdentity({
