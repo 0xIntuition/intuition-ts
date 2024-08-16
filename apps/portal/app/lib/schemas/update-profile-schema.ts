@@ -5,11 +5,8 @@ export function updateProfileSchema() {
   return z.object({
     display_name: z
       .string({ required_error: 'Please enter a display name.' })
-      .min(2, {
-        message: 'Display name must be at least 2 characters.',
-      })
-      .max(30, {
-        message: 'Display name must not be longer than 30 characters.',
+      .max(42, {
+        message: 'Identity name must not be longer than 42 characters.',
       }),
     description: z
       .string({
@@ -19,7 +16,7 @@ export function updateProfileSchema() {
         message: 'Description must be at least 2 characters.',
       })
       .max(DESCRIPTION_MAX_LENGTH, {
-        message: 'Description must not be longer than 30 characters.',
+        message: 'Description must not be longer than 266 characters.',
       })
       .optional(),
     image_url: z

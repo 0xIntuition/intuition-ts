@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 
 import {
+  Badge,
   Button,
   Checkbox,
   DialogHeader,
@@ -31,6 +32,7 @@ import {
 import { getZodConstraint, parseWithZod } from '@conform-to/zod'
 import { multivaultAbi } from '@lib/abis/multivault'
 import { useCreateAtom } from '@lib/hooks/useCreateAtom'
+import { useGetWalletBalance } from '@lib/hooks/useGetWalletBalance'
 import { useImageUploadFetcher } from '@lib/hooks/useImageUploadFetcher'
 import {
   OffChainFetcherData,
@@ -65,11 +67,13 @@ import { parseUnits, toHex } from 'viem'
 import { useAccount, usePublicClient, useWalletClient } from 'wagmi'
 
 interface IdentityFormProps {
+  wallet?: string
   onSuccess?: (identity: IdentityPresenter) => void
   onClose: () => void
   successAction?: TransactionSuccessActionType
 }
 export function IdentityForm({
+  wallet,
   onClose,
   onSuccess,
   successAction = TransactionSuccessAction.VIEW,
@@ -107,10 +111,7 @@ export function IdentityForm({
         {!isTransactionStarted && (
           <DialogHeader className="pb-1">
             <DialogTitle>
-              <Text
-                variant="headline"
-                className="text-foreground flex items-center gap-2"
-              >
+              <div className="text-foreground flex items-center gap-2">
                 <Icon name={IconName.fingerprint} className="w-6 h-6" />
                 Create Identity{' '}
                 <InfoTooltip
@@ -118,7 +119,7 @@ export function IdentityForm({
                   content="You are encouraged to create the best Atom/Identity you can, so that others will use it! As this Identity is interacted with, its shareholders will earn fees - so create a good one, and be the first to stake on it! Please note - you will not be able to change this data later."
                   icon={IconName.fingerprint}
                 />
-              </Text>
+              </div>
             </DialogTitle>
             <Text variant="caption" className="text-muted-foreground w-full">
               In Intuition, every thing is given a unique, decentralized digital
@@ -129,6 +130,7 @@ export function IdentityForm({
           </DialogHeader>
         )}
         <CreateIdentityForm
+          wallet={wallet}
           state={state}
           dispatch={dispatch}
           onClose={onClose}
@@ -150,6 +152,7 @@ interface FormState {
 }
 
 interface CreateIdentityFormProps {
+  wallet?: string
   state: IdentityTransactionStateType
   dispatch: React.Dispatch<IdentityTransactionActionType>
   setTransactionResponseData: React.Dispatch<
@@ -166,6 +169,7 @@ export interface OffChainIdentityFetcherData {
 }
 
 function CreateIdentityForm({
+  wallet,
   state,
   dispatch,
   setTransactionResponseData,
@@ -184,7 +188,7 @@ function CreateIdentityForm({
     undefined,
   )
   const [imageUploadError, setImageUploadError] = useState<string | null>(null)
-  const [initialDeposit, setInitialDeposit] = useState<string>('0')
+  const [initialDeposit, setInitialDeposit] = useState<string>('')
   const [isContract, setIsContract] = useState(false)
 
   const loaderFetcher = useFetcher<CreateLoaderData>()
@@ -232,7 +236,6 @@ function CreateIdentityForm({
       imageUploadFetcher.data &&
       imageUploadFetcher.data.status === 'error'
     ) {
-      toast.error(imageUploadFetcher.data.error)
       setIdentityImageSrc(null)
       setImageUploading(false)
       setImageUploadError(imageUploadFetcher.data.error)
@@ -240,6 +243,8 @@ function CreateIdentityForm({
   }, [imageUploadFetcher.data])
 
   const fees = loaderFetcher.data as CreateLoaderData
+
+  console.log('fees', fees)
 
   const { data: walletClient } = useWalletClient()
   const publicClient = usePublicClient()
@@ -257,10 +262,20 @@ function CreateIdentityForm({
   const [imageFilename, setImageFilename] = useState<string | null>(null)
   const [imageFilesize, setImageFilesize] = useState<string | null>(null)
   const [previewImage, setPreviewImage] = useState<string | null>(null)
-  const handleFileChange = (filename: string, filesize: string) => {
+
+  const handleFileChange = (filename: string, filesize: string, file: File) => {
     setImageFilename(filename)
     setImageFilesize(filesize)
+    setIdentityImageFile(file)
+    setImageUploadError(null)
+
+    if (file.size > MAX_UPLOAD_SIZE) {
+      setImageUploadError('File size must be less than 5MB')
+    } else if (!ACCEPTED_IMAGE_MIME_TYPES.includes(file.type)) {
+      setImageUploadError('File must be a .png, .jpg, .jpeg, .gif, or .webp')
+    }
   }
+
   const [formTouched, setFormTouched] = useState(false) // to disable submit if user hasn't touched form yet
 
   const handleSubmit = async () => {
@@ -447,6 +462,7 @@ function CreateIdentityForm({
       setLoading(false)
     }
   }, [state.status])
+
   const [form, fields] = useForm({
     id: 'create-identity',
     lastResult: lastOffChainSubmission,
@@ -494,6 +510,10 @@ function CreateIdentityForm({
     onClose()
   }
 
+  const walletBalance = useGetWalletBalance(
+    address ?? (wallet as `0x${string}`),
+  )
+
   return (
     <>
       <offChainFetcher.Form
@@ -505,7 +525,7 @@ function CreateIdentityForm({
       />
       <div className="h-full flex flex-col">
         {state.status === 'idle' ? (
-          <div className="w-full h-[660px] flex-col justify-start items-start inline-flex gap-7">
+          <div className="w-full h-max flex-col justify-start items-start inline-flex gap-7">
             <div className="flex flex-col w-full gap-1.5">
               <div className="self-stretch flex-col justify-start items-start flex">
                 <div className="flex w-full items-center justify-between">
@@ -527,7 +547,9 @@ function CreateIdentityForm({
                     <ImageChooser
                       previewImage={previewImage}
                       setPreviewImage={setPreviewImage}
-                      onFileChange={handleFileChange}
+                      onFileChange={(filename, filesize, file) =>
+                        handleFileChange(filename, filesize, file)
+                      }
                       setImageFile={setIdentityImageFile}
                       disabled={imageUploading}
                       {...getInputProps(fields.image_url, { type: 'file' })}
@@ -549,6 +571,8 @@ function CreateIdentityForm({
                       setPreviewImage(null)
                       setImageFilename(null)
                       setImageFilesize(null)
+                      setIdentityImageFile(undefined)
+                      setImageUploadError(null)
                     }}
                     className={`${previewImage === null ? 'hidden' : 'block'}`}
                   >
@@ -652,6 +676,10 @@ function CreateIdentityForm({
                 }
                 value={formState.description}
               />
+              <ErrorList
+                id={fields.description.errorId}
+                errors={fields.description.errors}
+              />
             </div>
             <div className="flex flex-col w-full gap-1.5">
               <div className="self-stretch flex-col justify-start items-start flex">
@@ -685,16 +713,31 @@ function CreateIdentityForm({
               />
             </div>
             <div className="flex flex-col w-full gap-1.5">
-              <div className="self-stretch flex-col justify-start items-start flex">
-                <div className="flex w-full items-center justify-between">
-                  <Text variant="caption" className="text-secondary-foreground">
+              <div className="flex flex-row items-center justify-between mb-1">
+                <div className="inline-flex gap-1">
+                  <Label htmlFor={fields.initial_deposit.id} hidden>
                     Initial Deposit
-                  </Text>
-                  <InfoTooltip
-                    title="Initial Deposit"
-                    content="You will not receive shares merely by creating this Atom/Identity - so, if you believe in it, and think that it will generate fees, then you will need to deposit on it, to gain ownership of it. You will not be charged an entry fee for depositing on your newly-created Atom/Identity."
-                  />
+                  </Label>
+                  <div className="self-stretch flex-col justify-start items-start flex">
+                    <div className="flex w-full items-center justify-between gap-1">
+                      <Text
+                        variant="caption"
+                        className="text-secondary-foreground"
+                      >
+                        Initial Deposit
+                      </Text>
+
+                      <InfoTooltip
+                        title="Initial Deposit"
+                        content="You will not receive shares merely by creating this Atom/Identity - so, if you believe in it, and think that it will generate fees, then you will need to deposit on it, to gain ownership of it. You will not be charged an entry fee for depositing on your newly-created Atom/Identity."
+                      />
+                    </div>
+                  </div>
                 </div>
+                <Badge className="bg-transparent">
+                  <Icon name="wallet" className="h-4 w-4" />
+                  {(+walletBalance).toFixed(2)} ETH
+                </Badge>
               </div>
               <Label htmlFor={fields.initial_deposit.id} hidden>
                 Initial Deposit
@@ -726,7 +769,7 @@ function CreateIdentityForm({
               />
               <Text
                 variant={TextVariant.caption}
-                className="text-center text-primary/70 mt-0.5"
+                className="text-center text-primary/70 mt-1"
               >
                 Note: You will not be chraged an entry fee for this initial
                 deposit.
@@ -740,9 +783,9 @@ function CreateIdentityForm({
                   type="button"
                   variant="primary"
                   onClick={() => {
-                    const result = form.valid
+                    const result = form.valid && !imageUploadError
                     console.log('result', result)
-                    if (result) {
+                    if (result && !imageUploadError) {
                       dispatch({ type: 'REVIEW_TRANSACTION' })
                     }
                   }}
