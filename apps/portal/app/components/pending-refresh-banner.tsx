@@ -1,13 +1,13 @@
-import { Button, Icon, Text } from '@0xintuition/1ui'
+import { Icon, Text } from '@0xintuition/1ui'
+
+import NavigationButton from './navigation-link'
 
 export function PendingRefreshBanner({
   title,
   message,
-  onRefresh,
 }: {
   title: string
   message: string
-  onRefresh: () => void
 }) {
   return (
     <div className="w-full rounded-lg bg-warning/10 border border-warning/30">
@@ -18,9 +18,10 @@ export function PendingRefreshBanner({
             {title}
           </Text>
         </div>
-        <Button variant="secondary" onClick={onRefresh}>
+
+        <NavigationButton reloadDocument variant="secondary" to="">
           Refresh
-        </Button>
+        </NavigationButton>
       </div>
       <div className="p-4">
         <Text variant="bodyMedium" className="text-secondary-foreground/70">

@@ -25,7 +25,6 @@ import ImageModal from '@components/profile/image-modal'
 import StakeModal from '@components/stake/stake-modal'
 import TagsModal from '@components/tags/tags-modal'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
-import { usePageRefresh } from '@lib/hooks/usePageRefresh'
 import { getIdentityOrPending } from '@lib/services/identities'
 import {
   imageModalAtom,
@@ -73,13 +72,6 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   }
 
   const { identity, isPending } = await getIdentityOrPending(request, params.id)
-  logger(
-    isPending === true
-      ? 'isPending true in loader'
-      : 'isPending false in loader',
-  )
-
-  logger('identity from pending', identity)
 
   if (!identity) {
     throw new Response('Not Found', { status: 404 })
@@ -132,7 +124,6 @@ export default function IdentityDetails() {
     useAtom(saveListModalAtom)
   const [imageModalActive, setImageModalActive] = useAtom(imageModalAtom)
   const [selectedTag, setSelectedTag] = useState<TagEmbeddedPresenter>()
-  const refreshPage = usePageRefresh()
 
   useEffect(() => {
     if (saveListModalActive.tag) {
@@ -236,7 +227,7 @@ export default function IdentityDetails() {
       )}
       <InfoCard
         variant={Identity.user}
-        username={identity.creator?.display_name ?? ''}
+        username={identity.creator?.display_name ?? '?'}
         avatarImgSrc={identity.creator?.image ?? ''}
         id={identity.creator?.wallet ?? ''}
         description={identity.creator?.description ?? ''}
@@ -255,8 +246,7 @@ export default function IdentityDetails() {
     <PendingRefreshBanner
       title="Please Refresh the Page"
       message="It looks like the on-chain transaction was successful, but we're still waiting for the information to update. Please refresh the page to ensure everything is up to date."
-      onRefresh={refreshPage}
-    />
+    /> // TODO [ENG-3443] - Replace with 1ui Banner when it accepts children as a prop. Will pass in the NavigationButton as a child prop
   ) : (
     <Outlet />
   )
