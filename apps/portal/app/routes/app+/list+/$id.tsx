@@ -12,15 +12,11 @@ import AddIdentitiesListModal from '@components/list/add-identities-list-modal'
 import { ListIdentityDisplayCard } from '@components/list/list-identity-display-card'
 import NavigationButton from '@components/navigation-link'
 import ImageModal from '@components/profile/image-modal'
+import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { addIdentitiesListModalAtom, imageModalAtom } from '@lib/state/store'
 import { invariant } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
-import {
-  Outlet,
-  useLoaderData,
-  useLocation,
-  useNavigate,
-} from '@remix-run/react'
+import { Outlet, useLocation, useNavigate } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
 import { requireUser, requireUserWallet } from '@server/auth'
 import {
@@ -55,10 +51,10 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 }
 
 export default function ListDetails() {
-  const { claim, userWallet } = useLoaderData<{
+  const { claim, userWallet } = useLiveLoader<{
     claim: ClaimPresenter
     userWallet: string
-  }>()
+  }>(['create', 'attest'])
 
   const [addIdentitiesListModalActive, setAddIdentitiesListModalActive] =
     useAtom(addIdentitiesListModalAtom)

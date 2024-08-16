@@ -13,7 +13,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const page = parseInt(url.searchParams.get('page') ?? '1', 10)
   const limit = parseInt(url.searchParams.get('limit') ?? '20', 10)
   const offset = parseInt(url.searchParams.get('offset') ?? '0', 10)
-  const sortBy = (url.searchParams.get('sortBy') ?? 'CreatedAt') as SortColumn
+  const sortBy = (url.searchParams.get('sortBy') ?? 'AssetsSum') as SortColumn
   const direction = (url.searchParams.get('direction') ??
     'desc') as SortDirection
 
