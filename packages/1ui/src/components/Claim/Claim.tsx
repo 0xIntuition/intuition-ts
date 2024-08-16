@@ -40,7 +40,7 @@ const ClaimItem = ({
   size,
   disabled,
   shouldHover = true,
-  maxIdentityLength = 24,
+  maxIdentityLength,
 }: {
   item: ClaimItemProps
   link?: string
@@ -49,6 +49,9 @@ const ClaimItem = ({
   disabled?: boolean
   maxIdentityLength?: number
 }) => {
+  console.log('maxIdentityLength in ClaimItem', maxIdentityLength)
+  const effectiveMaxLength = maxIdentityLength ?? 24
+
   const content = (
     <IdentityTag
       variant={item.variant}
@@ -61,7 +64,7 @@ const ClaimItem = ({
       <Trunctacular
         value={item.label}
         disableTooltip={shouldHover}
-        maxStringLength={maxIdentityLength}
+        maxStringLength={effectiveMaxLength}
       />
     </IdentityTag>
   )
@@ -73,6 +76,8 @@ const ClaimItem = ({
   if (item.shouldHover === false) {
     return content
   }
+
+  console.log('maxIdentityLength', maxIdentityLength)
 
   return (
     <HoverCard openDelay={100} closeDelay={100}>
@@ -115,6 +120,7 @@ export const Claim = ({
   const separatorWidth = size !== IdentityTagSize.default ? 'w-4' : 'w-2'
   const items = [subject, predicate, object]
 
+  console.log('maxIdentityLength in Claim', maxIdentityLength)
   return (
     <div className="flex items-center w-full max-w-max group relative max-sm:flex-col max-sm:m-auto">
       {items.map((item, index) => (

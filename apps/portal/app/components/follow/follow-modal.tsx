@@ -6,6 +6,7 @@ import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
 import { multivaultAbi } from '@lib/abis/multivault'
 import { useCreateTriple } from '@lib/hooks/useCreateTriple'
 import { useDepositTriple } from '@lib/hooks/useDepositTriple'
+import { useGetWalletBalance } from '@lib/hooks/useGetWalletBalance'
 import { useLoaderFetcher } from '@lib/hooks/useLoaderFetcher'
 import { useRedeemTriple } from '@lib/hooks/useRedeemTriple'
 import { transactionReducer } from '@lib/hooks/useTransactionReducer'
@@ -14,7 +15,6 @@ import { formatBalance } from '@lib/utils/misc'
 import { useGenericTxState } from '@lib/utils/use-tx-reducer'
 import { useFetcher, useLocation } from '@remix-run/react'
 import { CreateLoaderData } from '@routes/resources+/create'
-import { useQueryClient } from '@tanstack/react-query'
 import {
   AM_FOLLOWING_VAULT_ID_TESTNET,
   CREATE_RESOURCE_ROUTE,
@@ -25,8 +25,8 @@ import {
   TransactionStateType,
 } from 'app/types/transaction'
 import { VaultDetailsType } from 'app/types/vault'
-import { Abi, Address, decodeEventLog, formatUnits, parseUnits } from 'viem'
-import { useBalance, useBlockNumber, usePublicClient } from 'wagmi'
+import { Abi, Address, decodeEventLog, parseUnits } from 'viem'
+import { useAccount, usePublicClient } from 'wagmi'
 
 import FollowButton from './follow-button'
 import FollowForm from './follow-form'
@@ -100,6 +100,8 @@ export default function FollowModal({
   } = !claim ? createHook : mode === 'follow' ? depositHook : redeemHook
 
   const feeFetcher = useLoaderFetcher<CreateLoaderData>(CREATE_RESOURCE_ROUTE)
+
+  const { address } = useAccount()
 
   const { tripleCost } = (feeFetcher.data as CreateLoaderData) ?? {
     atomEquityFeeRaw: BigInt(0),
@@ -260,20 +262,9 @@ export default function FollowModal({
     dispatch,
   ])
 
-  const queryClient = useQueryClient()
-  const { data: blockNumber } = useBlockNumber({ watch: true })
-  const { data: balance, queryKey } = useBalance({
-    address: userWallet as `0x${string}`,
-  })
-
-  useEffect(() => {
-    if (blockNumber && blockNumber % 5n === 0n) {
-      queryClient.invalidateQueries({ queryKey })
-    }
-  }, [blockNumber, queryClient, queryKey])
-
-  const walletBalance = formatUnits(balance?.value ?? 0n, 18)
-
+  const walletBalance = useGetWalletBalance(
+    address ?? (userWallet as `0x${string}`),
+  )
   const handleFollowButtonClick = async () => {
     if (val < formatBalance(min_deposit, 18) || +val > +walletBalance) {
       setShowErrors(true)

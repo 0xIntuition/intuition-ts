@@ -145,7 +145,7 @@ const ExploreSearchClaimInput = ({
   })
 
   return (
-    <div className="flex flex-col w-full gap-2">
+    <div className="flex flex-col w-full gap-2 p-4 theme-border rounded-lg">
       <Text
         variant="bodyLarge"
         weight="regular"
@@ -167,7 +167,7 @@ const ExploreSearchClaimInput = ({
         </a>
       </Text>
 
-      <Separator className="mb-7" />
+      <Separator className="mb-6" />
       <IdentityInput
         showLabels
         subject={identityInputProps(ClaimElement.Subject)}

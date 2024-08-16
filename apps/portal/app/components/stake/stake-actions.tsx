@@ -7,8 +7,8 @@ interface StakeActionsProps {
   setVal: (val: string) => void
   walletBalance: string
   minDeposit: string
-  userConviction: string
-  price: string
+  userConviction?: string
+  price?: string
 }
 
 export default function StakeActions({
@@ -34,10 +34,12 @@ export default function StakeActions({
         variant="ghost"
         className={`${action === 'deposit' && 'hidden'}`}
         onClick={() => {
-          const maxEth =
-            +formatUnits(BigInt(userConviction), 18) *
-            +formatUnits(BigInt(price), 18)
-          setVal((maxEth * 0.05).toString())
+          if (userConviction && price) {
+            const maxEth =
+              +formatUnits(BigInt(userConviction), 18) *
+              +formatUnits(BigInt(price), 18)
+            setVal((maxEth * 0.05).toString())
+          }
         }}
       >
         <Text variant="small">5%</Text>
@@ -47,7 +49,7 @@ export default function StakeActions({
         onClick={() => {
           if (action === 'deposit') {
             setVal((+walletBalance * 0.1).toString())
-          } else {
+          } else if (userConviction && price) {
             const maxEth =
               +formatUnits(BigInt(userConviction), 18) *
               +formatUnits(BigInt(price), 18)
@@ -62,7 +64,7 @@ export default function StakeActions({
         onClick={() => {
           if (action === 'deposit') {
             setVal((+walletBalance * 0.5).toString())
-          } else {
+          } else if (userConviction && price) {
             const maxEth =
               +formatUnits(BigInt(userConviction), 18) *
               +formatUnits(BigInt(price), 18)
@@ -77,7 +79,7 @@ export default function StakeActions({
         onClick={() => {
           if (action === 'deposit') {
             setVal(walletBalance)
-          } else {
+          } else if (userConviction && price) {
             const maxEth = (
               +formatUnits(BigInt(userConviction), 18) *
               +formatUnits(BigInt(price), 18)
