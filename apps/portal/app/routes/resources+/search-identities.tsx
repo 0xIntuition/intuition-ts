@@ -15,6 +15,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
   logger('[search-identities] searchQuery', searchQuery)
   const response = await IdentitiesService.searchIdentity({
     displayName: searchQuery,
+    sortBy: 'AssetsSum',
+    direction: 'desc',
   })
   const data = response.data
   if (data) {
