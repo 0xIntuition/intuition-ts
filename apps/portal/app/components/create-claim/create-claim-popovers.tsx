@@ -15,7 +15,7 @@ import { IdentityPresenter } from '@0xintuition/api'
 
 import { IdentitySearchCombobox } from '@components/identity/identity-search-combo-box'
 import { InfoTooltip } from '@components/info-tooltip'
-import { detailCreateIdentityModalAtom } from '@lib/state/store'
+import { globalCreateIdentityModalAtom } from '@lib/state/store'
 import {
   getAtomDescription,
   getAtomImage,
@@ -50,7 +50,7 @@ export const IdentityPopover: React.FC<IdentityPopoverProps> = ({
   setSearchQuery,
   handleInput,
 }) => {
-  const setCreateIdentityModalActive = useSetAtom(detailCreateIdentityModalAtom)
+  const setCreateIdentityModalActive = useSetAtom(globalCreateIdentityModalAtom)
   return (
     <Popover
       open={isObjectPopoverOpen}
