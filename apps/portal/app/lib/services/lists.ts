@@ -67,16 +67,25 @@ export async function getUserSavedLists({
   request,
   userWallet,
   searchParams,
+  limit: customLimit,
 }: {
   request: Request
   userWallet: string
   searchParams: URLSearchParams
+  limit?: number
 }) {
-  const { page, limit, sortBy, direction } = getStandardPageParams({
+  const {
+    page,
+    limit: defaultLimit,
+    sortBy,
+    direction,
+  } = getStandardPageParams({
     searchParams,
     paramPrefix: 'positions',
     defaultSortByValue: PositionSortColumn.CREATED_AT,
   })
+
+  const limit = customLimit ?? defaultLimit
 
   const savedListClaims = await fetchWrapper(request, {
     method: UsersService.getUserClaims,

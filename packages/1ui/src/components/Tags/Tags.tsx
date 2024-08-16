@@ -25,12 +25,14 @@ const Tags = ({ className, ...props }: TagsProps) => {
 
 export interface TagsContentProps extends React.HTMLAttributes<HTMLDivElement> {
   numberOfTags: number
+  link?: string
 }
 
 const TagsContent = ({
   className,
   children,
   numberOfTags,
+  link,
   ...props
 }: TagsContentProps) => {
   const numberOfTagsNotDisplayed =
@@ -42,9 +44,11 @@ const TagsContent = ({
     >
       {children}
       {numberOfTagsNotDisplayed > 0 && (
-        <Text variant={TextVariant.body}>
-          + {numberOfTagsNotDisplayed} more
-        </Text>
+        <a href={link}>
+          <Text variant={TextVariant.body}>
+            + {numberOfTagsNotDisplayed} more
+          </Text>
+        </a>
       )}
     </div>
   )
