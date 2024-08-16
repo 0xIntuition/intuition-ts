@@ -12,7 +12,7 @@ export const BannerVariant = {
 }
 
 const bannerVariants = cva(
-  'flex w-full gap-2 items-center rounded-tl-lg rounded-tr-lg bg-gradient-to-r',
+  'flex w-full justify-between items-center rounded-tl-lg rounded-tr-lg bg-gradient-to-r max-sm:flex-col max-sm:gap-3',
   {
     variants: {
       variant: {
@@ -39,6 +39,7 @@ const Banner = ({
   title,
   message,
   className,
+  children,
   ...props
 }: BannerProps) => {
   let iconName: IconNameType = IconName.circleInfo
@@ -52,13 +53,16 @@ const Banner = ({
   return (
     <div className={cn('w-full theme-border rounded-lg', className)} {...props}>
       <div className={cn(bannerVariants({ variant }), 'p-3')}>
-        <Icon name={iconName} />
-        <Text variant={TextVariant.bodyLarge}>{title}</Text>
+        <div className="flex gap-2 items-center">
+          <Icon name={iconName} />
+          <Text variant={TextVariant.bodyLarge}>{title}</Text>
+        </div>
+        {children}
       </div>
       <div className="p-4">
         <Text
           variant={TextVariant.body}
-          className="text-secondary-foreground/70"
+          className="text-secondary-foreground/70 max-sm:text-center"
         >
           {message}
         </Text>

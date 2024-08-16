@@ -15,26 +15,30 @@ describe('Banner', () => {
           class="w-full theme-border rounded-lg"
         >
           <div
-            class="flex w-full gap-2 items-center rounded-tl-lg rounded-tr-lg bg-gradient-to-r from-accent/60 to-accent/10 p-3"
+            class="flex w-full justify-between items-center rounded-tl-lg rounded-tr-lg bg-gradient-to-r max-sm:flex-col max-sm:gap-3 from-accent/60 to-accent/10 p-3"
           >
-            <svg
-              class="h-6 w-6"
+            <div
+              class="flex gap-2 items-center"
             >
-              <use
-                href="/src/components/Icon/Icon.sprites.svg#circle-info"
-              />
-            </svg>
-            <p
-              class="text-primary text-lg font-normal"
-            >
-              Title
-            </p>
+              <svg
+                class="h-6 w-6"
+              >
+                <use
+                  href="/src/components/Icon/Icon.sprites.svg#circle-info"
+                />
+              </svg>
+              <p
+                class="text-primary text-lg font-normal"
+              >
+                Title
+              </p>
+            </div>
           </div>
           <div
             class="p-4"
           >
             <p
-              class="text-base font-normal text-secondary-foreground/70"
+              class="text-base font-normal text-secondary-foreground/70 max-sm:text-center"
             >
               Here is some information.
             </p>
@@ -57,26 +61,30 @@ describe('Banner', () => {
           class="w-full theme-border rounded-lg"
         >
           <div
-            class="flex w-full gap-2 items-center rounded-tl-lg rounded-tr-lg bg-gradient-to-r from-warning/60 to-warning/10 p-3"
+            class="flex w-full justify-between items-center rounded-tl-lg rounded-tr-lg bg-gradient-to-r max-sm:flex-col max-sm:gap-3 from-warning/60 to-warning/10 p-3"
           >
-            <svg
-              class="h-6 w-6"
+            <div
+              class="flex gap-2 items-center"
             >
-              <use
-                href="/src/components/Icon/Icon.sprites.svg#triangle-exclamation"
-              />
-            </svg>
-            <p
-              class="text-primary text-lg font-normal"
-            >
-              Title
-            </p>
+              <svg
+                class="h-6 w-6"
+              >
+                <use
+                  href="/src/components/Icon/Icon.sprites.svg#triangle-exclamation"
+                />
+              </svg>
+              <p
+                class="text-primary text-lg font-normal"
+              >
+                Title
+              </p>
+            </div>
           </div>
           <div
             class="p-4"
           >
             <p
-              class="text-base font-normal text-secondary-foreground/70"
+              class="text-base font-normal text-secondary-foreground/70 max-sm:text-center"
             >
               Here is some information.
             </p>
@@ -99,26 +107,30 @@ describe('Banner', () => {
           class="w-full theme-border rounded-lg"
         >
           <div
-            class="flex w-full gap-2 items-center rounded-tl-lg rounded-tr-lg bg-gradient-to-r from-destructive/60 to-destructive/10 p-3"
+            class="flex w-full justify-between items-center rounded-tl-lg rounded-tr-lg bg-gradient-to-r max-sm:flex-col max-sm:gap-3 from-destructive/60 to-destructive/10 p-3"
           >
-            <svg
-              class="h-6 w-6"
+            <div
+              class="flex gap-2 items-center"
             >
-              <use
-                href="/src/components/Icon/Icon.sprites.svg#circle-x"
-              />
-            </svg>
-            <p
-              class="text-primary text-lg font-normal"
-            >
-              Title
-            </p>
+              <svg
+                class="h-6 w-6"
+              >
+                <use
+                  href="/src/components/Icon/Icon.sprites.svg#circle-x"
+                />
+              </svg>
+              <p
+                class="text-primary text-lg font-normal"
+              >
+                Title
+              </p>
+            </div>
           </div>
           <div
             class="p-4"
           >
             <p
-              class="text-base font-normal text-secondary-foreground/70"
+              class="text-base font-normal text-secondary-foreground/70 max-sm:text-center"
             >
               Here is some information.
             </p>

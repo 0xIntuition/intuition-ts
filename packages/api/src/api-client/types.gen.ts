@@ -98,6 +98,35 @@ export type BatchCreateTriple = {
   subject_ids: string
 }
 
+export type Claim = {
+  against_num_positions: number
+  contract: string
+  counter_vault_id: string
+  counter_vault_uuid?: string | null
+  created_at: string
+  creator: string
+  creator_id?: string | null
+  for_num_positions: number
+  id: string
+  num_positions: number
+  object_display_name?: string | null
+  object_id?: string | null
+  object_identity_id?: string | null
+  object_vault_id: string
+  predicate_display_name?: string | null
+  predicate_id?: string | null
+  predicate_identity_id?: string | null
+  predicate_vault_id: string
+  status: Status
+  subject_display_name?: string | null
+  subject_id?: string | null
+  subject_identity_id?: string | null
+  subject_vault_id: string
+  updated_at: string
+  vault_id: string
+  vault_uuid?: string | null
+}
+
 export type ClaimAttribute =
   | {
       vaultId: VaultIdQuery
@@ -164,6 +193,13 @@ export type ClaimPresenter = {
   user_conviction_against: string
   user_conviction_for: string
   vault_id: string
+}
+
+export type ClaimRawPaginatedResponse = {
+  data: Array<Claim>
+  limit: number
+  page: number
+  total: number
 }
 
 export type ClaimSort = {
@@ -1674,6 +1710,34 @@ export type CreateClaimResponse = {
   vault_id: string
 }
 
+export type PendingClaimsData = {
+  direction?: SortDirection | null
+  limit?: number | null
+  offset?: number | null
+  page?: number | null
+  sortBy?: ClaimSortColumn | null
+}
+
+export type PendingClaimsResponse = {
+  direction?: SortDirection | null
+  limit?: number | null
+  offset?: number | null
+  page?: number | null
+  sortBy?: ClaimSortColumn | null
+}
+
+export type PendingClaimByIdData = {
+  id: string
+}
+
+export type PendingClaimByIdResponse = {
+  direction?: SortDirection | null
+  limit?: number | null
+  offset?: number | null
+  page?: number | null
+  sortBy?: ClaimSortColumn | null
+}
+
 export type SearchClaimsData = {
   counterVault?: Identifier | null
   creator?: Identifier | null
@@ -1830,6 +1894,46 @@ export type GetPendingIdentitiesResponse = {
   limit: number
   page: number
   total: number
+}
+
+export type GetPendingIdentityData = {
+  /**
+   * User identifier
+   */
+  identifier: Identifier
+}
+
+export type GetPendingIdentityResponse = {
+  contract: string
+  corpora_id?: string | null
+  created_at: string
+  creator: string
+  creator_id?: string | null
+  description?: string | null
+  display_name: string
+  entity_type?: string | null
+  external_reference?: string | null
+  follow_claim_id?: string | null
+  follow_vault_id: string
+  followed_count: number
+  follower_count: number
+  id: string
+  identity_hash: string
+  identity_id: string
+  image?: string | null
+  is_contract: boolean
+  is_user: boolean
+  num_positions: number
+  predicate: boolean
+  semantic?: string | null
+  status: Status
+  tag_count: number
+  updated_at: string
+  url?: string | null
+  user_display_name?: string | null
+  user_ens_name?: string | null
+  vault_id: string
+  vault_uuid?: string | null
 }
 
 export type UpdateIdentityData = {
@@ -3485,6 +3589,52 @@ export type $OpenApiTs = {
       }
     }
   }
+  '/claims/pending': {
+    get: {
+      req: {
+        direction?: SortDirection | null
+        limit?: number | null
+        offset?: number | null
+        page?: number | null
+        sortBy?: ClaimSortColumn | null
+      }
+      res: {
+        /**
+         * Summary of pending claims
+         */
+        200: {
+          direction?: SortDirection | null
+          limit?: number | null
+          offset?: number | null
+          page?: number | null
+          sortBy?: ClaimSortColumn | null
+        }
+      }
+    }
+  }
+  '/claims/pending/{id}': {
+    get: {
+      req: {
+        id: string
+      }
+      res: {
+        /**
+         * The pending claim for the provided ID
+         */
+        200: {
+          direction?: SortDirection | null
+          limit?: number | null
+          offset?: number | null
+          page?: number | null
+          sortBy?: ClaimSortColumn | null
+        }
+        /**
+         * Record not found in the DB
+         */
+        404: unknown
+      }
+    }
+  }
   '/claims/search': {
     get: {
       req: {
@@ -3684,6 +3834,57 @@ export type $OpenApiTs = {
           page: number
           total: number
         }
+      }
+    }
+  }
+  '/identities/pending/{identifier}': {
+    get: {
+      req: {
+        /**
+         * User identifier
+         */
+        identifier: Identifier
+      }
+      res: {
+        /**
+         * Get a pending identity by the identifier
+         */
+        200: {
+          contract: string
+          corpora_id?: string | null
+          created_at: string
+          creator: string
+          creator_id?: string | null
+          description?: string | null
+          display_name: string
+          entity_type?: string | null
+          external_reference?: string | null
+          follow_claim_id?: string | null
+          follow_vault_id: string
+          followed_count: number
+          follower_count: number
+          id: string
+          identity_hash: string
+          identity_id: string
+          image?: string | null
+          is_contract: boolean
+          is_user: boolean
+          num_positions: number
+          predicate: boolean
+          semantic?: string | null
+          status: Status
+          tag_count: number
+          updated_at: string
+          url?: string | null
+          user_display_name?: string | null
+          user_ens_name?: string | null
+          vault_id: string
+          vault_uuid?: string | null
+        }
+        /**
+         * Record not found in the DB
+         */
+        404: unknown
       }
     }
   }
