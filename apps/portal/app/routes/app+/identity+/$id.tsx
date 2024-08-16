@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 
 import {
+  Banner,
   Icon,
   Identity,
   InfoCard,
@@ -20,7 +21,7 @@ import { IdentityPresenter, TagEmbeddedPresenter } from '@0xintuition/api'
 
 import { ErrorPage } from '@components/error-page'
 import SaveListModal from '@components/list/save-list-modal'
-import { PendingRefreshBanner } from '@components/pending-refresh-banner'
+import NavigationButton from '@components/navigation-link'
 import ImageModal from '@components/profile/image-modal'
 import StakeModal from '@components/stake/stake-modal'
 import TagsModal from '@components/tags/tags-modal'
@@ -243,10 +244,20 @@ export default function IdentityDetails() {
     </div>
   )
   const rightPanel = isPending ? (
-    <PendingRefreshBanner
+    <Banner
+      variant="warning"
       title="Please Refresh the Page"
       message="It looks like the on-chain transaction was successful, but we're still waiting for the information to update. Please refresh the page to ensure everything is up to date."
-    /> // TODO [ENG-3443] - Replace with 1ui Banner when it accepts children as a prop. Will pass in the NavigationButton as a child prop
+    >
+      <NavigationButton
+        reloadDocument
+        variant="secondary"
+        to=""
+        className="max-lg:w-full"
+      >
+        Refresh
+      </NavigationButton>
+    </Banner>
   ) : (
     <Outlet />
   )
