@@ -38,6 +38,11 @@ import logger from '@lib/utils/logger'
 import {
   calculatePercentageOfTvl,
   formatBalance,
+  getAtomDescription,
+  getAtomId,
+  getAtomImage,
+  getAtomIpfsLink,
+  getAtomLabel,
   invariant,
 } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
@@ -47,7 +52,6 @@ import { requireUser, requireUserWallet } from '@server/auth'
 import { getVaultDetails } from '@server/multivault'
 import {
   BLOCK_EXPLORER_URL,
-  IPFS_GATEWAY_URL,
   MULTIVAULT_CONTRACT_ADDRESS,
   NO_WALLET_ERROR,
   PATHS,
@@ -137,13 +141,13 @@ export default function IdentityDetails() {
     <div className="flex-col justify-start items-start inline-flex gap-6 max-lg:w-full">
       <ProfileCard
         variant={Identity.nonUser}
-        avatarSrc={identity?.image ?? ''}
-        name={identity?.display_name ?? ''}
-        id={identity?.identity_id}
+        avatarSrc={getAtomImage(identity)}
+        name={getAtomLabel(identity)}
+        id={getAtomId(identity)}
         vaultId={identity?.vault_id}
-        bio={identity?.description ?? ''}
-        ipfsLink={`${IPFS_GATEWAY_URL}/${identity?.identity_id?.replace('ipfs://', '')}`}
-        externalLink={identity?.external_reference ?? ''}
+        bio={getAtomDescription(identity)}
+        ipfsLink={getAtomIpfsLink(identity)}
+        externalLink={identity.external_reference ?? ''}
         onAvatarClick={() => {
           setImageModalActive({
             isOpen: true,
