@@ -8,6 +8,7 @@ import { IdentityForm } from './create-identity-form'
 
 export interface CreateIdentityModalProps {
   open?: boolean
+  wallet?: string
   onClose: () => void
   onSuccess?: (identity: IdentityPresenter) => void
   successAction?: 'view' | 'close'
@@ -15,6 +16,7 @@ export interface CreateIdentityModalProps {
 
 export default function CreateIdentityModal({
   open,
+  wallet,
   onClose,
   onSuccess,
   successAction = 'view',
@@ -34,6 +36,7 @@ export default function CreateIdentityModal({
           className="flex flex-col max-sm:min-w-0"
         >
           <IdentityForm
+            wallet={wallet}
             onClose={onClose}
             onSuccess={(identity) => {
               setIsTransactionComplete(true)
