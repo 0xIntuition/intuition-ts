@@ -74,6 +74,8 @@ import type {
   GetLinkedAccountsResponse,
   GetPendingIdentitiesData,
   GetPendingIdentitiesResponse,
+  GetPendingIdentityData,
+  GetPendingIdentityResponse,
   GetPositionByIdData,
   GetPositionByIdResponse,
   GetQueryStructureResponse,
@@ -108,6 +110,10 @@ import type {
   IntegrationHealthcheckResponse,
   MissedTransactionsData,
   MissedTransactionsResponse,
+  PendingClaimByIdData,
+  PendingClaimByIdResponse,
+  PendingClaimsData,
+  PendingClaimsResponse,
   PositionSummaryData,
   PositionSummaryResponse,
   ReconcilePositionData,
@@ -425,6 +431,53 @@ export class ClaimsService {
    * @param data.page
    * @param data.offset
    * @param data.limit
+   * @returns unknown Summary of pending claims
+   * @throws ApiError
+   */
+  public static pendingClaims(
+    data: PendingClaimsData = {},
+  ): CancelablePromise<PendingClaimsResponse> {
+    return __request(OpenAPI, {
+      method: 'GET',
+      url: '/claims/pending',
+      query: {
+        direction: data.direction,
+        sortBy: data.sortBy,
+        page: data.page,
+        offset: data.offset,
+        limit: data.limit,
+      },
+    })
+  }
+
+  /**
+   * @param data The data for the request.
+   * @param data.id
+   * @returns unknown The pending claim for the provided ID
+   * @throws ApiError
+   */
+  public static pendingClaimById(
+    data: PendingClaimByIdData,
+  ): CancelablePromise<PendingClaimByIdResponse> {
+    return __request(OpenAPI, {
+      method: 'GET',
+      url: '/claims/pending/{id}',
+      path: {
+        id: data.id,
+      },
+      errors: {
+        404: 'Record not found in the DB',
+      },
+    })
+  }
+
+  /**
+   * @param data The data for the request.
+   * @param data.direction
+   * @param data.sortBy
+   * @param data.page
+   * @param data.offset
+   * @param data.limit
    * @param data.creator
    * @param data.subject
    * @param data.identity
@@ -606,6 +659,27 @@ export class IdentitiesService {
         limit: data.limit,
         userWallet: data.userWallet,
         timeframe: data.timeframe,
+      },
+    })
+  }
+
+  /**
+   * @param data The data for the request.
+   * @param data.identifier User identifier
+   * @returns unknown Get a pending identity by the identifier
+   * @throws ApiError
+   */
+  public static getPendingIdentity(
+    data: GetPendingIdentityData,
+  ): CancelablePromise<GetPendingIdentityResponse> {
+    return __request(OpenAPI, {
+      method: 'GET',
+      url: '/identities/pending/{identifier}',
+      path: {
+        identifier: data.identifier,
+      },
+      errors: {
+        404: 'Record not found in the DB',
       },
     })
   }
