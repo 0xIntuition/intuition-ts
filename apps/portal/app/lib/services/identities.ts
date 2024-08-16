@@ -14,24 +14,16 @@ export async function getIdentityOrPending(
   try {
     const identity = await fetchWrapper(request, {
       method: IdentitiesService.getIdentityById,
-      args: { id }, // currently this is params.id (but we'll pass this in)
+      args: { id },
     })
     return { identity, isPending: false }
   } catch (error) {
     if (error instanceof ApiError && error.status === 404) {
       try {
-        logger('checking pending status')
-        // const pendingIdentity = await fetchWrapper(request, {
-        //   method: IdentitiesService.getIdentityById,
-        //   args: { id: 'de2456d4-70fc-41d9-9fda-51624545036e' }, // currently this is params.id (but we'll pass this in)
-        // })
-        // return { identity: pendingIdentity, isPending: true }
         const pendingIdentity = (await fetchWrapper(request, {
           method: IdentitiesService.getPendingIdentity,
           args: { identifier: id },
-        })) as unknown as IdentityPresenter
-        logger('id', id)
-        logger('pending identity', pendingIdentity)
+        })) as unknown as IdentityPresenter // we're handling the missing identity properties via not rendering anything that relies on any missing properties. otherwise we'd need to set defaults which i'm wary of
         return { identity: pendingIdentity, isPending: true }
       } catch (pendingError) {
         logger('catching pendingError')
