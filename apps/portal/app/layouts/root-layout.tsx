@@ -23,7 +23,7 @@ const RootLayout: React.FC<RootLayoutProps> = ({
       <SidebarNav userObject={userObject}>
         <div className="flex flex-col w-screen">
           <SiteWideBanner featureFlags={featureFlags} />
-          <div className="pb-12 flex-grow justify-center flex w-full">
+          <div className="pb-6 flex-grow justify-center flex w-full md:pb-12">
             {children}
           </div>
         </div>
