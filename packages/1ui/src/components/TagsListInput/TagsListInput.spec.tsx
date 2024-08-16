@@ -34,7 +34,7 @@ describe('TagsListInput', () => {
                 class="flex flex-row gap-2 items-center"
               >
                 <p
-                  class="text-primary font-normal text-sm"
+                  class="text-primary text-base font-normal"
                 >
                   Tag Name 1
                 </p>
@@ -60,7 +60,7 @@ describe('TagsListInput', () => {
               class="flex flex-row gap-2 items-center"
             >
               <p
-                class="text-primary font-normal text-sm"
+                class="text-primary text-base font-normal"
               >
                 Tag Name 2
               </p>
@@ -86,7 +86,7 @@ describe('TagsListInput', () => {
             class="flex flex-row gap-2 items-center"
           >
             <p
-              class="text-primary font-normal text-sm"
+              class="text-primary text-base font-normal"
             >
               Tag Name 3
             </p>
@@ -197,7 +197,7 @@ describe('TagsListInput', () => {
                 class="flex flex-row gap-2 items-center"
               >
                 <p
-                  class="text-primary font-normal text-sm"
+                  class="text-primary text-base font-normal"
                 >
                   Tag Name 1
                 </p>
@@ -223,7 +223,7 @@ describe('TagsListInput', () => {
               class="flex flex-row gap-2 items-center"
             >
               <p
-                class="text-primary font-normal text-sm"
+                class="text-primary text-base font-normal"
               >
                 Tag Name 2
               </p>
@@ -249,7 +249,7 @@ describe('TagsListInput', () => {
             class="flex flex-row gap-2 items-center"
           >
             <p
-              class="text-primary font-normal text-sm"
+              class="text-primary text-base font-normal"
             >
               Tag Name 3
             </p>

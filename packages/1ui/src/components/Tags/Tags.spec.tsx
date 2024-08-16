@@ -38,7 +38,7 @@ describe('Tags', () => {
                 class="flex flex-row gap-2 items-center"
               >
                 <p
-                  class="text-primary font-normal text-sm"
+                  class="text-primary text-base font-normal"
                 >
                   keyboard
                 </p>
@@ -59,7 +59,7 @@ describe('Tags', () => {
                 class="flex flex-row gap-2 items-center"
               >
                 <p
-                  class="text-primary font-normal text-sm"
+                  class="text-primary text-base font-normal"
                 >
                   ergonomic
                 </p>
@@ -80,7 +80,7 @@ describe('Tags', () => {
                 class="flex flex-row gap-2 items-center"
               >
                 <p
-                  class="text-primary font-normal text-sm"
+                  class="text-primary text-base font-normal"
                 >
                   wireless
                 </p>
@@ -101,7 +101,7 @@ describe('Tags', () => {
                 class="flex flex-row gap-2 items-center"
               >
                 <p
-                  class="text-primary font-normal text-sm"
+                  class="text-primary text-base font-normal"
                 >
                   gaming
                 </p>
@@ -122,7 +122,7 @@ describe('Tags', () => {
                 class="flex flex-row gap-2 items-center"
               >
                 <p
-                  class="text-primary font-normal text-sm"
+                  class="text-primary text-base font-normal"
                 >
                   mechanical
                 </p>
@@ -143,7 +143,7 @@ describe('Tags', () => {
                 class="flex flex-row gap-2 items-center"
               >
                 <p
-                  class="text-primary font-normal text-sm"
+                  class="text-primary text-base font-normal"
                 >
                   tech
                 </p>
@@ -164,7 +164,7 @@ describe('Tags', () => {
                 class="flex flex-row gap-2 items-center"
               >
                 <p
-                  class="text-primary font-normal text-sm"
+                  class="text-primary text-base font-normal"
                 >
                   innovation
                 </p>
@@ -185,7 +185,7 @@ describe('Tags', () => {
                 class="flex flex-row gap-2 items-center"
               >
                 <p
-                  class="text-primary font-normal text-sm"
+                  class="text-primary text-base font-normal"
                 >
                   typing
                 </p>
@@ -206,7 +206,7 @@ describe('Tags', () => {
                 class="flex flex-row gap-2 items-center"
               >
                 <p
-                  class="text-primary font-normal text-sm"
+                  class="text-primary text-base font-normal"
                 >
                   quality
                 </p>
@@ -227,7 +227,7 @@ describe('Tags', () => {
                 class="flex flex-row gap-2 items-center"
               >
                 <p
-                  class="text-primary font-normal text-sm"
+                  class="text-primary text-base font-normal"
                 >
                   brand
                 </p>
@@ -291,7 +291,7 @@ describe('Tags', () => {
                 class="flex flex-row gap-2 items-center"
               >
                 <p
-                  class="text-primary font-normal text-sm"
+                  class="text-primary text-base font-normal"
                 >
                   keyboard
                 </p>
@@ -312,7 +312,7 @@ describe('Tags', () => {
                 class="flex flex-row gap-2 items-center"
               >
                 <p
-                  class="text-primary font-normal text-sm"
+                  class="text-primary text-base font-normal"
                 >
                   ergonomic
                 </p>
@@ -333,7 +333,7 @@ describe('Tags', () => {
                 class="flex flex-row gap-2 items-center"
               >
                 <p
-                  class="text-primary font-normal text-sm"
+                  class="text-primary text-base font-normal"
                 >
                   wireless
                 </p>
@@ -354,7 +354,7 @@ describe('Tags', () => {
                 class="flex flex-row gap-2 items-center"
               >
                 <p
-                  class="text-primary font-normal text-sm"
+                  class="text-primary text-base font-normal"
                 >
                   gaming
                 </p>
@@ -375,7 +375,7 @@ describe('Tags', () => {
                 class="flex flex-row gap-2 items-center"
               >
                 <p
-                  class="text-primary font-normal text-sm"
+                  class="text-primary text-base font-normal"
                 >
                   mechanical
                 </p>
@@ -396,7 +396,7 @@ describe('Tags', () => {
                 class="flex flex-row gap-2 items-center"
               >
                 <p
-                  class="text-primary font-normal text-sm"
+                  class="text-primary text-base font-normal"
                 >
                   tech
                 </p>
@@ -417,7 +417,7 @@ describe('Tags', () => {
                 class="flex flex-row gap-2 items-center"
               >
                 <p
-                  class="text-primary font-normal text-sm"
+                  class="text-primary text-base font-normal"
                 >
                   innovation
                 </p>
@@ -438,7 +438,7 @@ describe('Tags', () => {
                 class="flex flex-row gap-2 items-center"
               >
                 <p
-                  class="text-primary font-normal text-sm"
+                  class="text-primary text-base font-normal"
                 >
                   typing
                 </p>
@@ -459,7 +459,7 @@ describe('Tags', () => {
                 class="flex flex-row gap-2 items-center"
               >
                 <p
-                  class="text-primary font-normal text-sm"
+                  class="text-primary text-base font-normal"
                 >
                   quality
                 </p>
@@ -480,7 +480,7 @@ describe('Tags', () => {
                 class="flex flex-row gap-2 items-center"
               >
                 <p
-                  class="text-primary font-normal text-sm"
+                  class="text-primary text-base font-normal"
                 >
                   brand
                 </p>

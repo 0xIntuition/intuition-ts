@@ -240,7 +240,7 @@ describe('IdentityPosition', () => {
                         class="flex flex-row gap-2 items-center"
                       >
                         <p
-                          class="text-primary font-normal text-sm"
+                          class="text-primary text-base font-normal"
                         >
                           keyboard
                         </p>
@@ -261,7 +261,7 @@ describe('IdentityPosition', () => {
                         class="flex flex-row gap-2 items-center"
                       >
                         <p
-                          class="text-primary font-normal text-sm"
+                          class="text-primary text-base font-normal"
                         >
                           ergonomic
                         </p>
@@ -282,7 +282,7 @@ describe('IdentityPosition', () => {
                         class="flex flex-row gap-2 items-center"
                       >
                         <p
-                          class="text-primary font-normal text-sm"
+                          class="text-primary text-base font-normal"
                         >
                           wireless
                         </p>
@@ -303,7 +303,7 @@ describe('IdentityPosition', () => {
                         class="flex flex-row gap-2 items-center"
                       >
                         <p
-                          class="text-primary font-normal text-sm"
+                          class="text-primary text-base font-normal"
                         >
                           gaming
                         </p>

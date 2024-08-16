@@ -72,11 +72,7 @@ const TagWithValue = ({
 }: TagWithValueProps) => {
   const TagContent = (
     <div className="flex flex-row gap-2 items-center">
-      <Trunctacular
-        className="text-sm"
-        value={label ? label : ''}
-        maxStringLength={24}
-      />
+      <Trunctacular value={label ? label : ''} maxStringLength={24} />
       {value && (
         <div className="flex flex-row gap-1.5 items-center">
           <span className="h-[2px] w-[2px] bg-primary" />
