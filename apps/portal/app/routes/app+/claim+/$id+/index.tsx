@@ -98,6 +98,7 @@ export default function ClaimOverview() {
       <div className="flex-row hidden md:flex">
         <Claim
           size="xl"
+          maxIdentityLength={60}
           link={`${PATHS.CLAIM}/${claim?.claim_id}`}
           subject={{
             variant: claim.subject?.is_user ? Identity.user : Identity.nonUser,
