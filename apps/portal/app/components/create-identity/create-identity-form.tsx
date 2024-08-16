@@ -305,7 +305,6 @@ function CreateIdentityForm({
           submission.error !== null &&
           Object.keys(submission.error).length
         ) {
-          console.error('Create identity validation errors: ', submission.error)
           return
         }
 
@@ -393,8 +392,6 @@ function CreateIdentityForm({
           const receipt = await publicClient.waitForTransactionReceipt({
             hash: txHash,
           })
-          logger('receipt', receipt)
-          logger('txHash', txHash)
           dispatch({
             type: 'TRANSACTION_COMPLETE',
             txHash,
@@ -403,7 +400,6 @@ function CreateIdentityForm({
           })
         }
       } catch (error) {
-        logger('error', error)
         setLoading(false)
         if (error instanceof Error) {
           let errorMessage = 'Failed transaction'
@@ -430,10 +426,6 @@ function CreateIdentityForm({
 
   function handleIdentityTxReceiptReceived() {
     if (createdIdentity) {
-      logger(
-        'Submitting to emitterFetcher with identity_id:',
-        createdIdentity.id,
-      )
       emitterFetcher.submit(
         { identity_id: createdIdentity.id },
         { method: 'post', action: '/actions/create-emitter' },
@@ -444,7 +436,6 @@ function CreateIdentityForm({
   useEffect(() => {
     if (state.status === 'complete') {
       handleIdentityTxReceiptReceived()
-      logger('complete!')
     }
   }, [state.status])
 
