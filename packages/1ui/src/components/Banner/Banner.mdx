@@ -56,3 +56,21 @@ import { Banner } from '@0xintuition/1ui'
 />
 
 <Canvas of={Stories.Error} sourceState="none" />
+
+### With Children
+
+<Source
+  dark
+  language="tsx"
+  code={`
+<Banner
+  variant={BannerVariant.warning}
+  title="Uh oh"
+  message="There is something going on... Try refreshing the page."
+>
+  <Button variant="secondary">Refresh</Button>
+</Banner>
+`}
+/>
+
+<Canvas of={Stories.WithChildren} sourceState="none" />

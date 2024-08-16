@@ -1,6 +1,7 @@
 import React from 'react'
 
 import type { Meta, StoryObj } from '@storybook/react'
+import { Button } from 'components/Button'
 
 import { Banner, BannerVariant } from './Banner'
 
@@ -57,6 +58,20 @@ export const Error: Story = {
         title="Error"
         message="There is something horrible going on!"
       />
+    </div>
+  ),
+}
+
+export const WithChildren: Story = {
+  render: () => (
+    <div className="w-[500px]">
+      <Banner
+        variant={BannerVariant.warning}
+        title="Uh oh"
+        message="There is something going on... Try refreshing the page."
+      >
+        <Button variant="secondary">Refresh</Button>
+      </Banner>
     </div>
   ),
 }
