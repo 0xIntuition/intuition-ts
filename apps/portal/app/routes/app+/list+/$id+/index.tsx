@@ -25,6 +25,7 @@ import { InfoPopover } from '@components/info-popover'
 import { ListTabIdentityDisplay } from '@components/list/list-tab-identity-display'
 import { TagsList } from '@components/list/tags'
 import { DataHeaderSkeleton, PaginatedListSkeleton } from '@components/skeleton'
+import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { getListIdentities, getListIdentitiesCount } from '@lib/services/lists'
 import { addIdentitiesListModalAtom } from '@lib/state/store'
 import {
@@ -38,7 +39,6 @@ import {
 import { defer, LoaderFunctionArgs } from '@remix-run/node'
 import {
   Await,
-  useLoaderData,
   useNavigation,
   useRouteLoaderData,
   useSearchParams,
@@ -144,7 +144,7 @@ export default function ListOverview() {
     totalGlobalIdentitiesCount,
     userObject,
     additionalUserObject,
-  } = useLoaderData<typeof loader>()
+  } = useLiveLoader<typeof loader>(['create', 'attest'])
 
   const { claim } =
     useRouteLoaderData<{ claim: ClaimPresenter }>('routes/app+/list+/$id') ?? {}

@@ -554,11 +554,13 @@ export class Multivault {
     subjectId,
     predicateId,
     objectId,
+    initialDeposit,
     wait,
   }: {
     subjectId: bigint
     predicateId: bigint
     objectId: bigint
+    initialDeposit?: bigint
     wait?: true
   }): Promise<{
     vaultId: bigint
@@ -569,11 +571,13 @@ export class Multivault {
     subjectId,
     predicateId,
     objectId,
+    initialDeposit,
     wait,
   }: {
     subjectId: bigint
     predicateId: bigint
     objectId: bigint
+    initialDeposit?: bigint
     wait?: false
   }): Promise<{
     hash: `0x${string}`
@@ -582,24 +586,26 @@ export class Multivault {
     subjectId,
     predicateId,
     objectId,
+    initialDeposit,
     wait = true,
   }: {
     subjectId: bigint
     predicateId: bigint
     objectId: bigint
+    initialDeposit?: bigint
     wait?: boolean
   }): Promise<{
     vaultId?: bigint
     hash: `0x${string}`
     events?: ParseEventLogsReturnType
   }> {
-    const cost = await this.getTripleCost()
-
+    const costWithDeposit =
+      (await this.getTripleCost()) + (initialDeposit || 0n)
     try {
       await this.contract.simulate.createTriple(
         [subjectId, predicateId, objectId],
         {
-          value: cost,
+          value: costWithDeposit,
           account: this.client.wallet.account.address,
         },
       )
@@ -609,7 +615,7 @@ export class Multivault {
 
     const hash = await this.contract.write.createTriple(
       [subjectId, predicateId, objectId],
-      { value: cost },
+      { value: costWithDeposit },
     )
 
     if (!wait) {

@@ -261,22 +261,22 @@ const Carousel: React.FC<CarouselProps> = (props) => {
   } = usePrevNextButtons(emblaApi)
 
   return (
-    <div className="mx-auto w-[600px]">
+    <div className="m-auto md:w-[600px]">
       <div className="overflow-hidden" ref={emblaRef}>
-        <div className="flex touch-pan-y">
+        <div className="flex touch-pan-y gap-10">
           {slides?.map((slide, index) => (
             <div className="w-full flex-none" key={index}>
               <div className="w-full flex-col justify-start items-center gap-3.5 inline-flex">
                 <div className="text-center text-white/90 text-3xl font-semibold">
                   {slide.title}
                 </div>
-                <div className="w-[600px] text-center text-white/70 text-xs font-normal leading-[18px]">
+                <div className="md:w-[600px] text-center text-white/70 text-xs font-normal leading-[18px]">
                   {slide.text}
                 </div>
               </div>
               <div className="w-full flex-col justify-start items-center gap-7 mt-7 inline-flex">
                 {slide.button}
-                <div className="w-[500px] h-[300px] bg-black/70 rounded-xl border border-solid border-neutral-300/20" />
+                <div className="w-full md:w-[500px] h-[300px] bg-black/70 rounded-xl border border-solid border-neutral-300/20" />
               </div>
             </div>
           ))}

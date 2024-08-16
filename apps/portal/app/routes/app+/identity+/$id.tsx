@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 
 import {
+  Banner,
   Icon,
   Identity,
   InfoCard,
@@ -16,18 +17,16 @@ import {
   TagsContent,
   TagWithValue,
 } from '@0xintuition/1ui'
-import {
-  IdentitiesService,
-  IdentityPresenter,
-  TagEmbeddedPresenter,
-} from '@0xintuition/api'
+import { IdentityPresenter, TagEmbeddedPresenter } from '@0xintuition/api'
 
 import { ErrorPage } from '@components/error-page'
 import SaveListModal from '@components/list/save-list-modal'
+import NavigationButton from '@components/navigation-link'
 import ImageModal from '@components/profile/image-modal'
 import StakeModal from '@components/stake/stake-modal'
 import TagsModal from '@components/tags/tags-modal'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
+import { getIdentityOrPending } from '@lib/services/identities'
 import {
   imageModalAtom,
   saveListModalAtom,
@@ -47,7 +46,6 @@ import {
 } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { Outlet, useNavigate } from '@remix-run/react'
-import { fetchWrapper } from '@server/api'
 import { requireUser, requireUserWallet } from '@server/auth'
 import { getVaultDetails } from '@server/multivault'
 import {
@@ -74,21 +72,15 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     return
   }
 
-  const identity = await fetchWrapper(request, {
-    method: IdentitiesService.getIdentityById,
-    args: {
-      id: params.id,
-    },
-  })
+  const { identity, isPending } = await getIdentityOrPending(request, params.id)
 
   if (!identity) {
-    return null
+    throw new Response('Not Found', { status: 404 })
   }
 
   let vaultDetails: VaultDetailsType | null = null
 
-  logger('[identity id] wallet:', userWallet)
-  if (identity !== undefined && identity.vault_id) {
+  if (!!identity && identity.vault_id) {
     try {
       vaultDetails = await getVaultDetails(
         identity.contract,
@@ -104,6 +96,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   logger('[$ID] -- END')
   return json({
     identity,
+    isPending,
     vaultDetails,
     userWallet,
   })
@@ -113,13 +106,15 @@ export interface IdentityLoaderData {
   identity: IdentityPresenter
   vaultDetails: VaultDetailsType
   userWallet: string
+  isPending: boolean
 }
 
 export default function IdentityDetails() {
-  const { identity, vaultDetails, userWallet } = useLiveLoader<{
+  const { identity, vaultDetails, userWallet, isPending } = useLiveLoader<{
     identity: ExtendedIdentityPresenter
     vaultDetails: VaultDetailsType
     userWallet: string
+    isPending: boolean
   }>(['attest', 'create'])
   const navigate = useNavigate()
 
@@ -156,80 +151,84 @@ export default function IdentityDetails() {
         }}
       />
 
-      <Tags className="max-lg:items-center">
-        {identity?.tags && identity?.tags.length > 0 && (
-          <TagsContent numberOfTags={identity?.tag_count ?? 0}>
-            {identity?.tags?.map((tag) => (
-              <TagWithValue
-                key={tag.identity_id}
-                label={tag.display_name}
-                value={tag.num_tagged_identities}
-                onStake={() => {
-                  setSelectedTag(tag)
-                  setSaveListModalActive({ isOpen: true, id: tag.vault_id })
-                }}
-              />
-            ))}
-          </TagsContent>
-        )}
-        <Tag
-          className="w-fit border-dashed"
-          onClick={() => {
-            setTagsModalActive({ isOpen: true, mode: 'add' })
-          }}
-        >
-          <Icon name="plus-small" className="w-5 h-5" />
-          Add tags
-        </Tag>
+      {!isPending && (
+        <>
+          <Tags className="max-lg:items-center">
+            {identity?.tags && identity?.tags.length > 0 && (
+              <TagsContent numberOfTags={identity?.tag_count ?? 0}>
+                {identity?.tags?.map((tag) => (
+                  <TagWithValue
+                    key={tag.identity_id}
+                    label={tag.display_name}
+                    value={tag.num_tagged_identities}
+                    onStake={() => {
+                      setSelectedTag(tag)
+                      setSaveListModalActive({ isOpen: true, id: tag.vault_id })
+                    }}
+                  />
+                ))}
+              </TagsContent>
+            )}
+            <Tag
+              className="w-fit border-dashed"
+              onClick={() => {
+                setTagsModalActive({ isOpen: true, mode: 'add' })
+              }}
+            >
+              <Icon name="plus-small" className="w-5 h-5" />
+              Add tags
+            </Tag>
 
-        <TagsButton
-          onClick={() => {
-            setTagsModalActive({ isOpen: true, mode: 'view' })
-          }}
-        />
-      </Tags>
-      {vaultDetails !== null && user_assets !== '0' ? (
-        <PositionCard
-          onButtonClick={() =>
-            setStakeModalActive((prevState) => ({
-              ...prevState,
-              mode: 'redeem',
-              modalType: 'identity',
-              isOpen: true,
-            }))
-          }
-        >
-          <PositionCardStaked
-            amount={user_assets ? +formatBalance(user_assets, 18) : 0}
-          />
-          <PositionCardOwnership
-            percentOwnership={
-              user_assets !== null && assets_sum
-                ? +calculatePercentageOfTvl(user_assets ?? '0', assets_sum)
-                : 0
+            <TagsButton
+              onClick={() => {
+                setTagsModalActive({ isOpen: true, mode: 'view' })
+              }}
+            />
+          </Tags>
+          {vaultDetails !== null && user_assets !== '0' ? (
+            <PositionCard
+              onButtonClick={() =>
+                setStakeModalActive((prevState) => ({
+                  ...prevState,
+                  mode: 'redeem',
+                  modalType: 'identity',
+                  isOpen: true,
+                }))
+              }
+            >
+              <PositionCardStaked
+                amount={user_assets ? +formatBalance(user_assets, 18) : 0}
+              />
+              <PositionCardOwnership
+                percentOwnership={
+                  user_assets !== null && assets_sum
+                    ? +calculatePercentageOfTvl(user_assets ?? '0', assets_sum)
+                    : 0
+                }
+              />
+              <PositionCardLastUpdated timestamp={identity.updated_at} />
+            </PositionCard>
+          ) : null}
+          <StakeCard
+            tvl={+formatBalance(assets_sum, 18)}
+            holders={identity?.num_positions}
+            onBuyClick={() =>
+              setStakeModalActive((prevState) => ({
+                ...prevState,
+                mode: 'deposit',
+                modalType: 'identity',
+                isOpen: true,
+              }))
+            }
+            onViewAllClick={() =>
+              navigate(`${PATHS.IDENTITY}/${identity.id}#positions`)
             }
           />
-          <PositionCardLastUpdated timestamp={identity.updated_at} />
-        </PositionCard>
-      ) : null}
-      <StakeCard
-        tvl={+formatBalance(assets_sum, 18)}
-        holders={identity?.num_positions}
-        onBuyClick={() =>
-          setStakeModalActive((prevState) => ({
-            ...prevState,
-            mode: 'deposit',
-            modalType: 'identity',
-            isOpen: true,
-          }))
-        }
-        onViewAllClick={() =>
-          navigate(`${PATHS.IDENTITY}/${identity.id}#positions`)
-        }
-      />
+        </>
+      )}
       <InfoCard
         variant={Identity.user}
-        username={identity.creator?.display_name ?? ''}
+        username={identity.creator?.display_name ?? '?'}
         avatarImgSrc={identity.creator?.image ?? ''}
         id={identity.creator?.wallet ?? ''}
         description={identity.creator?.description ?? ''}
@@ -244,66 +243,71 @@ export default function IdentityDetails() {
       />
     </div>
   )
-
-  const rightPanel = <Outlet />
+  const rightPanel = isPending ? (
+    <Banner
+      variant="warning"
+      title="Please Refresh the Page"
+      message="It looks like the on-chain transaction was successful, but we're still waiting for the information to update. Please refresh the page to ensure everything is up to date."
+    >
+      <NavigationButton
+        reloadDocument
+        variant="secondary"
+        to=""
+        className="max-lg:w-full"
+      >
+        Refresh
+      </NavigationButton>
+    </Banner>
+  ) : (
+    <Outlet />
+  )
 
   return (
     <TwoPanelLayout leftPanel={leftPanel} rightPanel={rightPanel}>
-      <StakeModal
-        userWallet={userWallet}
-        contract={identity.contract}
-        open={stakeModalActive.isOpen}
-        identity={identity}
-        vaultDetails={vaultDetails}
-        onClose={() => {
-          setStakeModalActive((prevState) => ({
-            ...prevState,
-            isOpen: false,
-            mode: undefined,
-          }))
-        }}
-      />
-      <TagsModal
-        identity={identity}
-        userWallet={userWallet}
-        open={tagsModalActive.isOpen}
-        mode={tagsModalActive.mode}
-        onClose={() =>
-          setTagsModalActive({
-            ...tagsModalActive,
-            isOpen: false,
-          })
-        }
-      />
-      {selectedTag && (
-        <SaveListModal
-          contract={identity.contract ?? MULTIVAULT_CONTRACT_ADDRESS}
-          tag={saveListModalActive.tag ?? selectedTag}
-          identity={identity}
-          userWallet={userWallet}
-          open={saveListModalActive.isOpen}
-          onClose={() =>
-            setSaveListModalActive({
-              ...saveListModalActive,
-              isOpen: false,
-            })
-          }
-        />
-      )}
-      {selectedTag && (
-        <SaveListModal
-          contract={identity.contract ?? MULTIVAULT_CONTRACT_ADDRESS}
-          tag={saveListModalActive.tag ?? selectedTag}
-          identity={identity}
-          userWallet={userWallet}
-          open={saveListModalActive.isOpen}
-          onClose={() =>
-            setSaveListModalActive({
-              ...saveListModalActive,
-              isOpen: false,
-            })
-          }
-        />
+      {!isPending && (
+        <>
+          <StakeModal
+            userWallet={userWallet}
+            contract={identity.contract}
+            open={stakeModalActive.isOpen}
+            identity={identity}
+            vaultDetails={vaultDetails}
+            onClose={() => {
+              setStakeModalActive((prevState) => ({
+                ...prevState,
+                isOpen: false,
+                mode: undefined,
+              }))
+            }}
+          />
+          <TagsModal
+            identity={identity}
+            userWallet={userWallet}
+            open={tagsModalActive.isOpen}
+            mode={tagsModalActive.mode}
+            onClose={() =>
+              setTagsModalActive({
+                ...tagsModalActive,
+                isOpen: false,
+              })
+            }
+          />
+          {selectedTag && (
+            <SaveListModal
+              contract={identity.contract ?? MULTIVAULT_CONTRACT_ADDRESS}
+              tag={saveListModalActive.tag ?? selectedTag}
+              identity={identity}
+              userWallet={userWallet}
+              open={saveListModalActive.isOpen}
+              onClose={() =>
+                setSaveListModalActive({
+                  ...saveListModalActive,
+                  isOpen: false,
+                })
+              }
+            />
+          )}
+        </>
       )}
       <ImageModal
         identity={identity}

@@ -26,6 +26,7 @@ import {
 import { ErrorPage } from '@components/error-page'
 import NavigationButton from '@components/navigation-link'
 import StakeModal from '@components/stake/stake-modal'
+import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { stakeModalAtom } from '@lib/state/store'
 import logger from '@lib/utils/logger'
 import {
@@ -39,12 +40,7 @@ import {
   invariant,
 } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
-import {
-  Outlet,
-  useLoaderData,
-  useLocation,
-  useNavigate,
-} from '@remix-run/react'
+import { Outlet, useLocation, useNavigate } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
 import { getVaultDetails } from '@server/multivault'
@@ -109,11 +105,11 @@ export interface ClaimDetailsLoaderData {
 }
 
 export default function ClaimDetails() {
-  const { wallet, claim, vaultDetails } = useLoaderData<{
+  const { wallet, claim, vaultDetails } = useLiveLoader<{
     wallet: string
     claim: ClaimPresenter
     vaultDetails: VaultDetailsType
-  }>()
+  }>(['create', 'attest'])
   const navigate = useNavigate()
   const location = useLocation()
   const [fromUrl, setFromUrl] = useState<string | number>(-1)
