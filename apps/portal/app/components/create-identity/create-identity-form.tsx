@@ -305,6 +305,7 @@ function CreateIdentityForm({
           submission.error !== null &&
           Object.keys(submission.error).length
         ) {
+          console.error('Create identity validation errors: ', submission.error)
           return
         }
 
@@ -314,53 +315,30 @@ function CreateIdentityForm({
         try {
           logger('try offline submit')
           dispatch({ type: 'PUBLISHING_IDENTITY' })
-          await submitWithTimeout(formData)
+          offChainFetcher.submit(formData, {
+            action: '/actions/create-identity',
+            method: 'post',
+          })
         } catch (error: unknown) {
-          handleSubmitError(error)
+          if (error instanceof Error) {
+            const errorMessage = 'Error in creating offchain identity data.'
+            dispatch({
+              type: 'TRANSACTION_ERROR',
+              error: errorMessage,
+            })
+            toast.error(errorMessage)
+            dispatch({ type: 'START_TRANSACTION' })
+            return
+          }
+          console.error('Error creating identity', error)
         }
 
         setLoading(true)
       }
+      // }
     } catch (error: unknown) {
       logger(error)
-      handleSubmitError(error)
     }
-  }
-
-  const submitWithTimeout = (formData: FormData) => {
-    return new Promise((resolve, reject) => {
-      const timeoutId = setTimeout(() => {
-        reject(new Error('Submission timed out'))
-      }, 30000) // 30 seconds timeout
-
-      offChainFetcher.submit(formData, {
-        action: '/actions/create-identity',
-        method: 'post',
-      })
-
-      const checkSubmissionStatus = setInterval(() => {
-        if (offChainFetcher.state === 'idle') {
-          clearInterval(checkSubmissionStatus)
-          clearTimeout(timeoutId)
-          if (offChainFetcher.data) {
-            resolve(offChainFetcher.data)
-          }
-        }
-      }, 1000) // Check every second
-    })
-  }
-
-  const handleSubmitError = (error: unknown) => {
-    let errorMessage = 'Error in creating offchain identity data.'
-    if (error instanceof Error) {
-      errorMessage = error.message
-    }
-    dispatch({
-      type: 'TRANSACTION_ERROR',
-      error: errorMessage,
-    })
-    toast.error(errorMessage)
-    setLoading(false)
   }
 
   async function handleOnChainCreateIdentity({
@@ -392,6 +370,8 @@ function CreateIdentityForm({
           const receipt = await publicClient.waitForTransactionReceipt({
             hash: txHash,
           })
+          logger('receipt', receipt)
+          logger('txHash', txHash)
           dispatch({
             type: 'TRANSACTION_COMPLETE',
             txHash,
@@ -400,6 +380,7 @@ function CreateIdentityForm({
           })
         }
       } catch (error) {
+        logger('error', error)
         setLoading(false)
         if (error instanceof Error) {
           let errorMessage = 'Failed transaction'
@@ -426,6 +407,10 @@ function CreateIdentityForm({
 
   function handleIdentityTxReceiptReceived() {
     if (createdIdentity) {
+      logger(
+        'Submitting to emitterFetcher with identity_id:',
+        createdIdentity.id,
+      )
       emitterFetcher.submit(
         { identity_id: createdIdentity.id },
         { method: 'post', action: '/actions/create-emitter' },
@@ -436,31 +421,51 @@ function CreateIdentityForm({
   useEffect(() => {
     if (state.status === 'complete') {
       handleIdentityTxReceiptReceived()
+      logger('complete!')
     }
   }, [state.status])
 
   useEffect(() => {
+    let isMounted = true
+
     if (
       offChainFetcher.state === 'idle' &&
       offChainFetcher.data !== null &&
       offChainFetcher.data !== undefined
     ) {
       const responseData = offChainFetcher.data as OffChainFetcherData
-      if (responseData !== null) {
-        if (createdIdentity !== undefined && responseData.identity) {
-          const { identity_id } = responseData.identity
-          setTransactionResponseData(responseData.identity)
-          handleOnChainCreateIdentity({
-            atomData: identity_id,
+      if (isMounted) {
+        logger('responseData', responseData)
+        if (responseData !== null) {
+          if (createdIdentity !== undefined && responseData.identity) {
+            logger('responseData', responseData)
+            const { identity_id } = responseData.identity
+            setTransactionResponseData(responseData.identity)
+            logger('responseData identity', responseData.identity)
+            logger('onchain create starting. identity_id:', identity_id)
+            handleOnChainCreateIdentity({
+              atomData: identity_id,
+            })
+          }
+        }
+        if (
+          offChainFetcher.data === null ||
+          offChainFetcher.data === undefined
+        ) {
+          console.error(
+            'Error in offchain data creation.:',
+            offChainFetcher.data,
+          )
+          dispatch({
+            type: 'TRANSACTION_ERROR',
+            error: 'Error in offchain data creation.',
           })
         }
       }
-      if (offChainFetcher.data === null || offChainFetcher.data === undefined) {
-        dispatch({
-          type: 'TRANSACTION_ERROR',
-          error: 'Error in offchain data creation.',
-        })
-      }
+    }
+
+    return () => {
+      isMounted = false
     }
   }, [offChainFetcher.state, offChainFetcher.data, dispatch])
 
@@ -483,8 +488,6 @@ function CreateIdentityForm({
     shouldValidate: 'onBlur',
     onSubmit: async (event, { formData }) => {
       event.preventDefault()
-      const result = await form.validate()
-      console.log('Submit validation result:', result)
       const formDataObject = Object.fromEntries(formData.entries())
       setFormState(formDataObject)
       dispatch({ type: 'REVIEW_TRANSACTION' })
@@ -791,7 +794,6 @@ function CreateIdentityForm({
                   variant="primary"
                   onClick={() => {
                     const result = form.valid && !imageUploadError
-                    console.log('result', result)
                     if (result && !imageUploadError) {
                       dispatch({ type: 'REVIEW_TRANSACTION' })
                     }
