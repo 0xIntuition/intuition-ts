@@ -64,7 +64,7 @@ export const Error: Story = {
 
 export const WithChildren: Story = {
   render: () => (
-    <div className="w-[500px]">
+    <div>
       <Banner
         variant={BannerVariant.warning}
         title="Uh oh"

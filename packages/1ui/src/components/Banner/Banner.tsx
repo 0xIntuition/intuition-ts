@@ -12,7 +12,7 @@ export const BannerVariant = {
 }
 
 const bannerVariants = cva(
-  'flex w-full justify-between items-center rounded-tl-lg rounded-tr-lg bg-gradient-to-r',
+  'flex w-full justify-between items-center rounded-tl-lg rounded-tr-lg bg-gradient-to-r max-sm:flex-col max-sm:gap-3',
   {
     variants: {
       variant: {
@@ -62,7 +62,7 @@ const Banner = ({
       <div className="p-4">
         <Text
           variant={TextVariant.body}
-          className="text-secondary-foreground/70"
+          className="text-secondary-foreground/70 max-sm:text-center"
         >
           {message}
         </Text>
