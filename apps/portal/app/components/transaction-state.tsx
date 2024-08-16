@@ -57,7 +57,7 @@ export function TransactionState({
               <Link
                 to={`${BLOCK_EXPLORER_URL}/tx/${txHash}`}
                 target="_blank"
-                className="flex flex-row items-center gap-1 text-sm text-blue-500 transition-colors duration-300 hover:text-blue-400"
+                className="flex flex-row items-center gap-1 text-blue-500 transition-colors duration-300 hover:text-blue-400"
               >
                 View on Basescan
                 <Icon name="square-arrow-top-right" className="h-3 w-3" />
@@ -66,7 +66,7 @@ export function TransactionState({
                 <Link
                   to={ipfsLink}
                   target="_blank"
-                  className="flex flex-row items-center gap-1 text-sm text-blue-500 transition-colors duration-300 hover:text-blue-400"
+                  className="flex flex-row items-center gap-1 text-blue-500 transition-colors duration-300 hover:text-blue-400"
                 >
                   View on IPFS
                   <Icon name="square-arrow-top-right" className="h-3 w-3" />
