@@ -157,7 +157,7 @@ export default function Quests() {
               {QUEST_LOG_DESCRIPTION}
             </Text>
           </div>
-          <ul className="grid grid-cols-1 mb-20 gap-10 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 max-md:gap-5">
+          <ul className="grid grid-cols-1 gap-10 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 max-md:gap-5">
             <Suspense fallback={<Skeleton className="h-full w-full" />}>
               <Await resolve={details}>
                 {(resolvedDetails) => (
