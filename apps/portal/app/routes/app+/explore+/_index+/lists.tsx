@@ -9,10 +9,11 @@ import {
 import { ErrorPage } from '@components/error-page'
 import { ExploreSearch } from '@components/explore/ExploreSearch'
 import { ListClaimsList } from '@components/list/list-claims'
+import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { calculateTotalPages, invariant, loadMore } from '@lib/utils/misc'
 import { getStandardPageParams } from '@lib/utils/params'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
-import { useLoaderData, useSearchParams, useSubmit } from '@remix-run/react'
+import { useSearchParams, useSubmit } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
 import { NO_WALLET_ERROR, TAG_PREDICATE_VAULT_ID_TESTNET } from 'app/consts'
@@ -64,8 +65,9 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 export default function ExploreLists() {
   const submit = useSubmit()
-  const { listClaims, pagination, sortBy, direction } =
-    useLoaderData<typeof loader>()
+  const { listClaims, pagination, sortBy, direction } = useLiveLoader<
+    typeof loader
+  >(['create', 'attest'])
   const [searchParams] = useSearchParams()
 
   const currentPage = Number(searchParams.get('page') || '1')

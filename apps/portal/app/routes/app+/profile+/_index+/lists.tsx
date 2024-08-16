@@ -7,16 +7,12 @@ import { ErrorPage } from '@components/error-page'
 import { ListClaimsList } from '@components/list/list-claims'
 import { ListClaimsSkeletonLayout } from '@components/list/list-skeletons'
 import { SortOption } from '@components/sort-select'
+import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { getUserSavedLists } from '@lib/services/lists'
 import { invariant, loadMore } from '@lib/utils/misc'
 import { getStandardPageParams } from '@lib/utils/params'
 import { defer, LoaderFunctionArgs } from '@remix-run/node'
-import {
-  Await,
-  useLoaderData,
-  useSearchParams,
-  useSubmit,
-} from '@remix-run/react'
+import { Await, useSearchParams, useSubmit } from '@remix-run/react'
 import { requireUserWallet } from '@server/auth'
 import { NO_WALLET_ERROR } from 'app/consts'
 
@@ -55,7 +51,10 @@ type JsonifyObject<T> = {
 }
 
 export default function ProfileLists() {
-  const { savedListClaims, sortBy, direction } = useLoaderData<typeof loader>()
+  const { savedListClaims, sortBy, direction } = useLiveLoader<typeof loader>([
+    'create',
+    'attest',
+  ])
   const [searchParams] = useSearchParams()
   const submit = useSubmit()
   const [accumulatedClaims, setAccumulatedClaims] = useState<
