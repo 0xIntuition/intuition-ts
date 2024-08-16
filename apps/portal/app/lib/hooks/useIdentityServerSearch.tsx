@@ -49,7 +49,7 @@ export function useIdentityServerSearch() {
       const defaultParams = new URLSearchParams({
         page: '1',
         limit: '20',
-        sortBy: 'CreatedAt',
+        sortBy: 'AssetsSum',
         direction: 'desc',
       })
       identitiesFetcher.load(

@@ -59,7 +59,7 @@ export const IdentityWithHoverable = ({
         </div>
       }
     >
-      <Trunctacular value={getAtomLabel(identity)} />
+      <Trunctacular value={getAtomLabel(identity)} maxStringLength={42} />
     </IdentityTag>
   )
 }

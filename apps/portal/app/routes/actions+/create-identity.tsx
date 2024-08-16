@@ -46,25 +46,33 @@ export async function action({ request }: ActionFunctionArgs) {
       if (is_contract) {
         identityParams.is_contract = is_contract === 'true'
       }
-      logger('Identity params:', identityParams)
       identity = await IdentitiesService.createIdentity({
         requestBody: identityParams,
       })
-      logger('Identity created:', identity)
-    } catch (error: unknown) {
+
+      if (!identity) {
+        throw new Error('Failed to create identity.')
+      }
+
+      return json(
+        {
+          status: 'success',
+          identity,
+        } as const,
+        {
+          status: 200,
+        },
+      )
+    } catch (error) {
       if (error instanceof ApiError) {
         identity = undefined
         console.log(
           `${error.name} - ${error.status}: ${error.message} - ${JSON.stringify(error.body)}`,
         )
-      } else {
-        throw error
+        throw new Error(JSON.stringify(error.body))
       }
     }
 
-    if (!identity) {
-      throw new Error('Failed to create identity.')
-    }
     return json(
       {
         status: 'success',
@@ -75,17 +83,38 @@ export async function action({ request }: ActionFunctionArgs) {
       },
     )
   } catch (error) {
-    if (error instanceof Error) {
-      console.error('Error in creating the offchain identity:', error)
+    if (error instanceof ApiError) {
       return json(
         {
           status: 'error',
-          error: `An error occurred: ${error}`,
+          error: error.message,
+          errorBody: error.body,
+          errorStatus: error.status,
+        } as const,
+        {
+          status: error.status || 500,
+        },
+      )
+    }
+    if (error instanceof Error) {
+      return json(
+        {
+          status: 'error',
+          error: error.message,
         } as const,
         {
           status: 500,
         },
       )
     }
+    return json(
+      {
+        status: 'error',
+        error: 'An unknown error occurred',
+      } as const,
+      {
+        status: 500,
+      },
+    )
   }
 }

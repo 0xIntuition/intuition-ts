@@ -8,10 +8,10 @@ import {
 import { ErrorPage } from '@components/error-page'
 import { ExploreSearch } from '@components/explore/ExploreSearch'
 import { ClaimsList } from '@components/list/claims'
+import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { calculateTotalPages, invariant } from '@lib/utils/misc'
 import { getStandardPageParams } from '@lib/utils/params'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
-import { useLoaderData } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
 import { NO_WALLET_ERROR } from 'app/consts'
@@ -67,8 +67,9 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export default function ExploreClaims() {
-  const { claims, identities, claimsPagination } =
-    useLoaderData<typeof loader>()
+  const { claims, identities, claimsPagination } = useLiveLoader<typeof loader>(
+    ['create', 'attest'],
+  )
   return (
     <>
       <ExploreSearch variant="claim" identities={identities} />

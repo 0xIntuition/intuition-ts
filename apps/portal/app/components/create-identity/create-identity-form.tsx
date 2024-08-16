@@ -244,8 +244,6 @@ function CreateIdentityForm({
 
   const fees = loaderFetcher.data as CreateLoaderData
 
-  console.log('fees', fees)
-
   const { data: walletClient } = useWalletClient()
   const publicClient = usePublicClient()
   const { address } = useAccount()
@@ -428,32 +426,46 @@ function CreateIdentityForm({
   }, [state.status])
 
   useEffect(() => {
+    let isMounted = true
+
     if (
       offChainFetcher.state === 'idle' &&
       offChainFetcher.data !== null &&
       offChainFetcher.data !== undefined
     ) {
       const responseData = offChainFetcher.data as OffChainFetcherData
-      logger('responseData', responseData)
-      if (responseData !== null) {
-        if (createdIdentity !== undefined && responseData.identity) {
-          logger('responseData', responseData)
-          const { identity_id } = responseData.identity
-          setTransactionResponseData(responseData.identity)
-          logger('responseData identity', responseData.identity)
-          logger('onchain create starting. identity_id:', identity_id)
-          handleOnChainCreateIdentity({
-            atomData: identity_id,
+      if (isMounted) {
+        logger('responseData', responseData)
+        if (responseData !== null) {
+          if (createdIdentity !== undefined && responseData.identity) {
+            logger('responseData', responseData)
+            const { identity_id } = responseData.identity
+            setTransactionResponseData(responseData.identity)
+            logger('responseData identity', responseData.identity)
+            logger('onchain create starting. identity_id:', identity_id)
+            handleOnChainCreateIdentity({
+              atomData: identity_id,
+            })
+          }
+        }
+        if (
+          offChainFetcher.data === null ||
+          offChainFetcher.data === undefined
+        ) {
+          console.error(
+            'Error in offchain data creation.:',
+            offChainFetcher.data,
+          )
+          dispatch({
+            type: 'TRANSACTION_ERROR',
+            error: 'Error in offchain data creation.',
           })
         }
       }
-      if (offChainFetcher.data === null || offChainFetcher.data === undefined) {
-        console.error('Error in offchain data creation.:', offChainFetcher.data)
-        dispatch({
-          type: 'TRANSACTION_ERROR',
-          error: 'Error in offchain data creation.',
-        })
-      }
+    }
+
+    return () => {
+      isMounted = false
     }
   }, [offChainFetcher.state, offChainFetcher.data, dispatch])
 
@@ -476,8 +488,6 @@ function CreateIdentityForm({
     shouldValidate: 'onBlur',
     onSubmit: async (event, { formData }) => {
       event.preventDefault()
-      const result = await form.validate()
-      console.log('Submit validation result:', result)
       const formDataObject = Object.fromEntries(formData.entries())
       setFormState(formDataObject)
       dispatch({ type: 'REVIEW_TRANSACTION' })
@@ -784,7 +794,6 @@ function CreateIdentityForm({
                   variant="primary"
                   onClick={() => {
                     const result = form.valid && !imageUploadError
-                    console.log('result', result)
                     if (result && !imageUploadError) {
                       dispatch({ type: 'REVIEW_TRANSACTION' })
                     }

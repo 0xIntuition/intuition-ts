@@ -3,10 +3,10 @@ import { IdentitiesService, IdentityPresenter } from '@0xintuition/api'
 import { ErrorPage } from '@components/error-page'
 import { ExploreSearch } from '@components/explore/ExploreSearch'
 import { IdentitiesList } from '@components/list/identities'
+import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { calculateTotalPages, invariant } from '@lib/utils/misc'
 import { getStandardPageParams } from '@lib/utils/params'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
-import { useLoaderData } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
 import { NO_WALLET_ERROR } from 'app/consts'
@@ -53,7 +53,10 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export default function ExploreIdentities() {
-  const { identities, pagination } = useLoaderData<typeof loader>()
+  const { identities, pagination } = useLiveLoader<typeof loader>([
+    'create',
+    'attest',
+  ])
 
   return (
     <>

@@ -18,14 +18,34 @@ const getStatusComponentData = (status: TransactionStatusType) => {
   switch (status) {
     case TransactionStatus.inProgress:
     case TransactionStatus.preparingIdentity:
+      return {
+        iconName: IconName.inProgress,
+        iconClassName: 'text-accent animate-spin',
+        label: 'Creating Identity in the Intuition Network...',
+      }
     case TransactionStatus.publishingIdentity:
+      return {
+        iconName: IconName.inProgress,
+        iconClassName: 'text-accent animate-spin',
+        label: 'Publishing Identity to IPFS...',
+      }
     case TransactionStatus.approveTransaction:
+      return {
+        iconName: IconName.wallet2,
+        iconClassName: 'text-warning',
+        label: 'Approve transaction in your wallet',
+      }
     case TransactionStatus.transactionPending:
+      return {
+        iconName: IconName.inProgress,
+        iconClassName: 'text-accent animate-spin',
+        label: 'Transaction pending',
+      }
     case TransactionStatus.confirm: {
       return {
         iconName: IconName.inProgress,
         iconClassName: 'text-accent animate-spin',
-        label: 'Submitting transaction',
+        label: 'Confirming transaction',
       }
     }
     case TransactionStatus.complete: {

@@ -81,7 +81,7 @@ describe('TransactionStatusCard', () => {
           <p
             class="text-primary text-base font-normal"
           >
-            Submitting transaction
+            Creating Identity in the Intuition Network...
           </p>
         </div>
       </DocumentFragment>
@@ -106,7 +106,7 @@ describe('TransactionStatusCard', () => {
           <p
             class="text-primary text-base font-normal"
           >
-            Submitting transaction
+            Creating Identity in the Intuition Network...
           </p>
         </div>
       </DocumentFragment>
@@ -131,7 +131,7 @@ describe('TransactionStatusCard', () => {
           <p
             class="text-primary text-base font-normal"
           >
-            Submitting transaction
+            Publishing Identity to IPFS...
           </p>
         </div>
       </DocumentFragment>
@@ -147,16 +147,16 @@ describe('TransactionStatusCard', () => {
           class="flex items-center gap-2 bg-primary/10 rounded-md theme-border p-3"
         >
           <svg
-            class="text-accent animate-spin h-4 w-4"
+            class="text-warning h-4 w-4"
           >
             <use
-              href="/src/components/Icon/Icon.sprites.svg#in-progress"
+              href="/src/components/Icon/Icon.sprites.svg#wallet-2"
             />
           </svg>
           <p
             class="text-primary text-base font-normal"
           >
-            Submitting transaction
+            Approve transaction in your wallet
           </p>
         </div>
       </DocumentFragment>
@@ -181,7 +181,7 @@ describe('TransactionStatusCard', () => {
           <p
             class="text-primary text-base font-normal"
           >
-            Submitting transaction
+            Transaction pending
           </p>
         </div>
       </DocumentFragment>
@@ -204,7 +204,7 @@ describe('TransactionStatusCard', () => {
           <p
             class="text-primary text-base font-normal"
           >
-            Submitting transaction
+            Confirming transaction
           </p>
         </div>
       </DocumentFragment>
