@@ -25,12 +25,14 @@ const Tags = ({ className, ...props }: TagsProps) => {
 
 export interface TagsContentProps extends React.HTMLAttributes<HTMLDivElement> {
   numberOfTags: number
+  link?: string
 }
 
 const TagsContent = ({
   className,
   children,
   numberOfTags,
+  link,
   ...props
 }: TagsContentProps) => {
   const numberOfTagsNotDisplayed =
@@ -42,9 +44,11 @@ const TagsContent = ({
     >
       {children}
       {numberOfTagsNotDisplayed > 0 && (
-        <Text variant={TextVariant.body}>
-          + {numberOfTagsNotDisplayed} more
-        </Text>
+        <a href={link}>
+          <Text variant={TextVariant.body}>
+            + {numberOfTagsNotDisplayed} more
+          </Text>
+        </a>
       )}
     </div>
   )
@@ -68,7 +72,11 @@ const TagWithValue = ({
 }: TagWithValueProps) => {
   const TagContent = (
     <div className="flex flex-row gap-2 items-center">
-      <Trunctacular value={label ? label : ''} maxStringLength={24} />
+      <Trunctacular
+        className="text-sm"
+        value={label ? label : ''}
+        maxStringLength={24}
+      />
       {value && (
         <div className="flex flex-row gap-1.5 items-center">
           <span className="h-[2px] w-[2px] bg-primary" />

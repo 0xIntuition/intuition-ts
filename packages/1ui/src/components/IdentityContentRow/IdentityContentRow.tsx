@@ -107,7 +107,7 @@ const IdentityContentRow = ({
       <div className="flex items-center">
         <HoverCard openDelay={100} closeDelay={100}>
           <HoverCardTrigger asChild>
-            <a href={claimLink ? claimLink : link}>
+            <a href={claimLink || link}>
               <Avatar
                 variant={variant}
                 src={avatarSrc}
@@ -148,8 +148,8 @@ const IdentityContentRow = ({
           />
           {hasTags && (
             <div className="flex gap-2 mt-1">
-              <TagsContent numberOfTags={tags.length}>
-                {tags.slice(0, 4).map((tag, index) => (
+              <TagsContent numberOfTags={tags.length} link={link}>
+                {tags.slice(0, 2).map((tag, index) => (
                   <TagWithValue
                     label={tag.label}
                     value={tag.value}
@@ -172,17 +172,8 @@ const IdentityContentRow = ({
 
   return (
     <div className="w-full">
-      {claimLink ? (
-        <a href={claimLink}>
-          {content}
-          {children}
-        </a>
-      ) : (
-        <>
-          {content}
-          {children}
-        </>
-      )}
+      {content}
+      {children}
     </div>
   )
 }

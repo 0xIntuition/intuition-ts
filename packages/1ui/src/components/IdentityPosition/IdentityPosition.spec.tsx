@@ -240,7 +240,7 @@ describe('IdentityPosition', () => {
                         class="flex flex-row gap-2 items-center"
                       >
                         <p
-                          class="text-primary text-base font-normal"
+                          class="text-primary font-normal text-sm"
                         >
                           keyboard
                         </p>
@@ -261,7 +261,7 @@ describe('IdentityPosition', () => {
                         class="flex flex-row gap-2 items-center"
                       >
                         <p
-                          class="text-primary text-base font-normal"
+                          class="text-primary font-normal text-sm"
                         >
                           ergonomic
                         </p>
@@ -282,7 +282,7 @@ describe('IdentityPosition', () => {
                         class="flex flex-row gap-2 items-center"
                       >
                         <p
-                          class="text-primary text-base font-normal"
+                          class="text-primary font-normal text-sm"
                         >
                           wireless
                         </p>
@@ -303,7 +303,7 @@ describe('IdentityPosition', () => {
                         class="flex flex-row gap-2 items-center"
                       >
                         <p
-                          class="text-primary text-base font-normal"
+                          class="text-primary font-normal text-sm"
                         >
                           gaming
                         </p>
@@ -317,11 +317,13 @@ describe('IdentityPosition', () => {
                         </div>
                       </div>
                     </button>
-                    <p
-                      class="text-primary text-base font-normal"
-                    >
-                      + 2 more
-                    </p>
+                    <a>
+                      <p
+                        class="text-primary text-base font-normal"
+                      >
+                        + 2 more
+                      </p>
+                    </a>
                   </div>
                 </div>
               </div>
