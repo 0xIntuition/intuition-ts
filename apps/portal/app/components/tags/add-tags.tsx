@@ -10,7 +10,7 @@ import SaveListModal from '@components/list/save-list-modal'
 import useFilteredIdentitySearch from '@lib/hooks/useFilteredIdentitySearch'
 import useInvalidItems from '@lib/hooks/useInvalidItems'
 import {
-  detailCreateIdentityModalAtom,
+  globalCreateIdentityModalAtom,
   saveListModalAtom,
 } from '@lib/state/store'
 import { useFetcher } from '@remix-run/react'
@@ -52,7 +52,7 @@ export function AddTags({
   }))
 
   const [, setCreateIdentityModalActive] = useAtom(
-    detailCreateIdentityModalAtom,
+    globalCreateIdentityModalAtom,
   )
 
   const [saveListModalActive, setSaveListModalActive] =

@@ -20,7 +20,7 @@ import { InfoTooltip } from '@components/info-tooltip'
 import useFilteredIdentitySearch from '@lib/hooks/useFilteredIdentitySearch'
 import useInvalidItems from '@lib/hooks/useInvalidItems'
 import {
-  detailCreateIdentityModalAtom,
+  globalCreateIdentityModalAtom,
   saveListModalAtom,
 } from '@lib/state/store'
 import { useFetcher } from '@remix-run/react'
@@ -59,7 +59,7 @@ export function AddIdentities({
   setInvalidIdentities,
 }: AddIdentitiesProps) {
   const [, setCreateIdentityModalActive] = useAtom(
-    detailCreateIdentityModalAtom,
+    globalCreateIdentityModalAtom,
   )
   const [saveListModalActive, setSaveListModalActive] =
     useAtom(saveListModalAtom)
