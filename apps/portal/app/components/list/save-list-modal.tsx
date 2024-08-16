@@ -128,13 +128,23 @@ export default function SaveListModal({
   useEffect(() => {
     if (
       claimFetcher.state === 'idle' &&
-      claimFetcher.data !== null &&
-      claimFetcher.data !== undefined
+      claimFetcher.data &&
+      Array.isArray(claimFetcher.data) &&
+      claimFetcher.data.length > 0
     ) {
       const fetchedClaimResponse = claimFetcher.data[0] as unknown as {
         vault_id: string
       }
-      setFetchedClaimVaultId(fetchedClaimResponse.vault_id)
+      if (fetchedClaimResponse && fetchedClaimResponse.vault_id) {
+        setFetchedClaimVaultId(fetchedClaimResponse.vault_id)
+      } else {
+        setFetchedClaimVaultId(null)
+      }
+    } else if (
+      claimFetcher.state === 'idle' &&
+      (!claimFetcher.data || claimFetcher.data.length === 0)
+    ) {
+      setFetchedClaimVaultId(null)
     }
   }, [claimFetcher.state, claimFetcher.data])
 
@@ -348,6 +358,9 @@ export default function SaveListModal({
     setMode('save')
     setFetchedClaimVaultId(null)
     setVaultDetails(undefined)
+    setIsLoading(true)
+    claimFetcher.data = undefined
+    vaultDetailsFetcher.data = undefined
     setTimeout(() => {
       dispatch({ type: 'START_TRANSACTION' })
       reset()

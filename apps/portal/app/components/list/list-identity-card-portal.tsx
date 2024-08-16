@@ -32,15 +32,26 @@ export const ListIdentityCardPortal: React.FC<ListIdentityCardPortalProps> = ({
 }) => {
   return (
     <div className="flex flex-col items-center justify-between gap-2 h-72 max-sm:h-fit max-sm:gap-px">
-      <Avatar
-        variant="non-user"
-        src={imgSrc}
-        name={displayName}
-        className="mb-2 w-16 h-16"
-      />
+      {navigateLink ? (
+        <Link to={navigateLink} prefetch="intent">
+          <Avatar
+            variant="non-user"
+            src={imgSrc}
+            name={displayName}
+            className="mb-2 w-16 h-16"
+          />
+        </Link>
+      ) : (
+        <Avatar
+          variant="non-user"
+          src={imgSrc}
+          name={displayName}
+          className="mb-2 w-16 h-16"
+        />
+      )}
       <div className="text-center flex flex-col justify-between items-center gap-2">
         {navigateLink ? (
-          <Link to={navigateLink}>
+          <Link to={navigateLink} prefetch="intent">
             <Trunctacular
               value={displayName}
               variant={TextVariant.bodyLarge}
