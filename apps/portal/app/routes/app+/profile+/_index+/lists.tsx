@@ -26,12 +26,23 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   const url = new URL(request.url)
   const searchParams = new URLSearchParams(url.search)
-  const { page, limit, sortBy, direction } = getStandardPageParams({
+  const { page, sortBy, direction } = getStandardPageParams({
     searchParams,
   })
 
+  const initialLimit = 200
+  const effectiveLimit = Number(
+    searchParams.get('effectiveLimit') || initialLimit,
+  )
+  const limit = Math.max(effectiveLimit, initialLimit)
+
   return defer({
-    savedListClaims: getUserSavedLists({ request, userWallet, searchParams }),
+    savedListClaims: getUserSavedLists({
+      request,
+      userWallet,
+      searchParams,
+      limit,
+    }),
     page,
     limit,
     sortBy,

@@ -317,11 +317,13 @@ describe('IdentityPosition', () => {
                         </div>
                       </div>
                     </button>
-                    <p
-                      class="text-primary text-base font-normal"
-                    >
-                      + 2 more
-                    </p>
+                    <a>
+                      <p
+                        class="text-primary text-base font-normal"
+                      >
+                        + 2 more
+                      </p>
+                    </a>
                   </div>
                 </div>
               </div>
