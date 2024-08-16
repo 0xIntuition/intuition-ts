@@ -13,7 +13,7 @@ export default function StakeToast({ action, assets, txHash }: ToastProps) {
   return (
     <div
       className={cn(
-        'z-[999999] m-0 h-full w-[300px] rounded-md theme-border py-4 pl-4 pr-4 bg-background',
+        'z-[999999] m-0 h-full w-[300px] rounded-md theme-border py-4 pl-4 pr-4 bg-black',
       )}
     >
       <div className="flex h-full w-full items-center justify-start gap-4">

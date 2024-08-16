@@ -226,6 +226,18 @@ export function TagsForm({
                 </Button>
               )
             }
+            errorButton={
+              <Button
+                type="button"
+                variant="primary"
+                className="w-40 mt-auto"
+                onClick={() => {
+                  dispatch({ type: 'START_TRANSACTION' })
+                }}
+              >
+                Retry
+              </Button>
+            }
           />
         </div>
       )}
