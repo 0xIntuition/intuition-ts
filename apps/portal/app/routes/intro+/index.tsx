@@ -8,6 +8,12 @@ import {
 
 import { Button, Icon } from '@0xintuition/1ui'
 
+import carouselSlideOne from '@assets/carousel/carousel-1.mp4'
+import carouselSlideTwo from '@assets/carousel/carousel-2.mp4'
+import carouselSlideThree from '@assets/carousel/carousel-3.mp4'
+import carouselSlideFour from '@assets/carousel/carousel-4.mp4'
+import carouselSlideFive from '@assets/carousel/carousel-5.mp4'
+import carouselSlideSix from '@assets/carousel/carousel-6.mp4'
 import Container from '@components/container'
 import { cn } from '@lib/utils/misc'
 import { ActionFunctionArgs } from '@remix-run/node'
@@ -15,6 +21,7 @@ import { Link, redirect, useFetcher } from '@remix-run/react'
 import { onboardingModalCookie } from '@server/onboarding'
 import type { EmblaCarouselType, EmblaOptionsType } from 'embla-carousel'
 import useEmblaCarousel from 'embla-carousel-react'
+import { AnimatePresence, motion } from 'framer-motion'
 
 export async function action({ request }: ActionFunctionArgs) {
   const redirectUrl = (await request.formData()).get('redirectUrl')
@@ -42,12 +49,15 @@ export default function IntroRoute() {
 
   const SLIDES = [
     {
-      video: '',
+      video: carouselSlideOne,
       title: 'Welcome to the Intuition Beta',
       text: (
         <>
           A single moment of frustration has the power to change the world
           forever.
+          <br />
+          <br />
+          <br />
         </>
       ),
       button: (
@@ -60,7 +70,7 @@ export default function IntroRoute() {
       ),
     },
     {
-      video: '',
+      video: carouselSlideTwo,
       title: 'The Information Economy',
       text: (
         <>
@@ -87,7 +97,7 @@ export default function IntroRoute() {
       ),
     },
     {
-      video: '',
+      video: carouselSlideThree,
       title: 'The Trustful Interaction Layer',
       text: (
         <>
@@ -112,7 +122,7 @@ export default function IntroRoute() {
       ),
     },
     {
-      video: '',
+      video: carouselSlideFour,
       title: 'A Novel Set of Primitives',
       text: (
         <>
@@ -138,7 +148,7 @@ export default function IntroRoute() {
       ),
     },
     {
-      video: '',
+      video: carouselSlideFive,
       title: 'The Portal',
       text: (
         <>
@@ -165,7 +175,7 @@ export default function IntroRoute() {
       ),
     },
     {
-      video: '',
+      video: carouselSlideSix,
       title: 'What Comes Next?',
       text: (
         <>
@@ -245,9 +255,27 @@ type CarouselProps = {
 const Carousel: React.FC<CarouselProps> = (props) => {
   const { slides, options, onSlideChange } = props
   const [emblaRef, emblaApi] = useEmblaCarousel(options)
+  const [selectedIndex, setSelectedIndex] = useState(0)
+  const videoRefs = useRef<(HTMLVideoElement | null)[]>([])
 
-  const { selectedIndex, scrollSnaps, onDotButtonClick } =
-    useDotButton(emblaApi)
+  const { scrollSnaps, onDotButtonClick } = useDotButton(emblaApi)
+
+  useEffect(() => {
+    if (!emblaApi) {
+      return
+    }
+
+    const onSelect = () => {
+      setSelectedIndex(emblaApi.selectedScrollSnap())
+    }
+
+    emblaApi.on('select', onSelect)
+    onSelect()
+
+    return () => {
+      emblaApi.off('select', onSelect)
+    }
+  }, [emblaApi])
 
   useEffect(() => {
     onSlideChange(selectedIndex)
@@ -260,12 +288,30 @@ const Carousel: React.FC<CarouselProps> = (props) => {
     onNextButtonClick,
   } = usePrevNextButtons(emblaApi)
 
+  useEffect(() => {
+    videoRefs.current.forEach((video, index) => {
+      if (video) {
+        if (index === selectedIndex) {
+          video
+            .play()
+            .catch((error) => console.error('Autoplay failed:', error))
+        } else {
+          video.pause()
+          video.currentTime = 0
+        }
+      }
+    })
+  }, [selectedIndex])
+
   return (
     <div className="m-auto md:w-[600px]">
       <div className="overflow-hidden" ref={emblaRef}>
-        <div className="flex touch-pan-y gap-10">
+        <div className="flex touch-pan-y gap-10 h-full">
           {slides?.map((slide, index) => (
-            <div className="w-full flex-none" key={index}>
+            <div
+              className="w-full h-full flex-none justify-between"
+              key={index}
+            >
               <div className="w-full flex-col justify-start items-center gap-3.5 inline-flex">
                 <div className="text-center text-white/90 text-3xl font-semibold">
                   {slide.title}
@@ -273,10 +319,28 @@ const Carousel: React.FC<CarouselProps> = (props) => {
                 <div className="md:w-[600px] text-center text-white/70 text-xs font-normal leading-[18px]">
                   {slide.text}
                 </div>
+                <div>{slide.button}</div>
               </div>
-              <div className="w-full flex-col justify-start items-center gap-7 mt-7 inline-flex">
-                {slide.button}
-                <div className="w-full md:w-[500px] h-[300px] bg-black/70 rounded-xl border border-solid border-neutral-300/20" />
+              <div className="m-auto flex flex-col justify-center items-center mt-7 h-full">
+                <AnimatePresence>
+                  <motion.div
+                    key="mediaPlayer"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 1 }}
+                  >
+                    <video
+                      ref={(el) => (videoRefs.current[index] = el)}
+                      src={slide.video}
+                      title={slide.title}
+                      loop
+                      muted
+                      playsInline
+                      className="rounded-xl overflow-hidden h-[fit] items-center justify-center theme-border"
+                    />
+                  </motion.div>
+                </AnimatePresence>
               </div>
             </div>
           ))}
