@@ -61,8 +61,8 @@ export const ConnectionsHeader: React.FC<ConnectionsHeaderProps> = ({
                 className="text-secondary-foreground"
               >
                 {variant === 'followers'
-                  ? 'Total stake in the Follow Claim'
-                  : 'Total stake'}
+                  ? 'Total Staked in the Follow Claim'
+                  : 'Total Staked'}
               </Text>
               <MonetaryValue
                 value={+totalStake}

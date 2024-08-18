@@ -3,6 +3,7 @@ import * as React from 'react'
 import {
   Button,
   Icon,
+  IconName,
   Tag,
   TagProps,
   Text,
@@ -116,7 +117,8 @@ export interface TagsButtonProps
 const TagsButton = ({ ...props }: TagsButtonProps) => {
   return (
     <Button variant="secondary" {...props}>
-      View all tags
+      <Icon name={IconName.bookmark} className="w-4 h-4" />
+      View All Tags
     </Button>
   )
 }

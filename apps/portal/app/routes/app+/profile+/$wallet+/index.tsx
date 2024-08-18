@@ -118,144 +118,152 @@ export default function ProfileOverview() {
   logger('userTotals', userTotals)
 
   return (
-    <div className="flex flex-col gap-6">
-      <Text
-        variant="headline"
-        weight="medium"
-        className="text-secondary-foreground"
-      >
-        User Stats
-      </Text>
-      <div className="flex flex-col items-center gap-6">
-        <OverviewStakingHeader
-          totalClaims={userTotals?.total_positions_on_claims ?? 0}
-          totalIdentities={userTotals?.total_positions_on_identities ?? 0}
-          totalStake={
-            +formatBalance(userTotals?.total_position_value ?? '0', 18)
-          }
-          link={`${PATHS.PROFILE}/${wallet}/data-created`}
-        />
-      </div>
+    <div className="flex flex-col gap-10">
+      <div className="flex flex-col gap-6">
+        <Text
+          variant="headline"
+          weight="medium"
+          className="text-secondary-foreground"
+        >
+          User Stats
+        </Text>
+        <div className="flex flex-col items-center gap-6">
+          <OverviewStakingHeader
+            totalClaims={userTotals?.total_positions_on_claims ?? 0}
+            totalIdentities={userTotals?.total_positions_on_identities ?? 0}
+            totalStake={
+              +formatBalance(userTotals?.total_position_value ?? '0', 18)
+            }
+            link={`${PATHS.PROFILE}/${wallet}/data-created`}
+          />
+        </div>
 
-      <div className="flex flex-row items-center gap-6 max-md:flex-col">
-        <OverviewCreatedHeader
-          variant="identities"
-          totalCreated={userTotals?.total_identities ?? 0}
-          link={`${PATHS.PROFILE}/${wallet}/data-created`}
-        />
-        <OverviewCreatedHeader
-          variant="claims"
-          totalCreated={userTotals?.total_claims ?? 0}
-          link={`${PATHS.PROFILE}/${wallet}/data-created`}
-        />
+        <div className="flex flex-row items-center gap-6 max-md:flex-col">
+          <OverviewCreatedHeader
+            variant="identities"
+            totalCreated={userTotals?.total_identities ?? 0}
+            link={`${PATHS.PROFILE}/${wallet}/data-created`}
+          />
+          <OverviewCreatedHeader
+            variant="claims"
+            totalCreated={userTotals?.total_claims ?? 0}
+            link={`${PATHS.PROFILE}/${wallet}/data-created`}
+          />
+        </div>
+        <Suspense fallback={<DataHeaderSkeleton />}>
+          <Await resolve={claims} errorElement={<></>}>
+            {(resolvedClaims) => (
+              <Await resolve={claimsSummary} errorElement={<></>}>
+                {(resolvedClaimsSummary) => (
+                  <OverviewAboutHeader
+                    variant="claims"
+                    userIdentity={userIdentity}
+                    totalClaims={resolvedClaims.pagination?.totalEntries}
+                    totalStake={
+                      +formatBalance(resolvedClaimsSummary?.assets_sum ?? 0, 18)
+                    }
+                    link={`${PATHS.PROFILE}/${wallet}/data-about`}
+                  />
+                )}
+              </Await>
+            )}
+          </Await>
+        </Suspense>
       </div>
-      <Suspense fallback={<DataHeaderSkeleton />}>
-        <Await resolve={claims} errorElement={<></>}>
-          {(resolvedClaims) => (
-            <Await resolve={claimsSummary} errorElement={<></>}>
-              {(resolvedClaimsSummary) => (
-                <OverviewAboutHeader
-                  variant="claims"
-                  userIdentity={userIdentity}
-                  totalClaims={resolvedClaims.pagination?.totalEntries}
-                  totalStake={
-                    +formatBalance(resolvedClaimsSummary?.assets_sum ?? 0, 18)
-                  }
-                  link={`${PATHS.PROFILE}/${wallet}/data-about`}
+      <div className="flex flex-col gap-6">
+        <Text
+          variant="headline"
+          weight="medium"
+          className="text-secondary-foreground"
+        >
+          Top Claims about this Identity
+        </Text>
+        <Suspense fallback={<PaginatedListSkeleton />}>
+          <Await
+            resolve={claims}
+            errorElement={
+              <ErrorStateCard>
+                <RevalidateButton />
+              </ErrorStateCard>
+            }
+          >
+            {(resolvedClaims) => {
+              if (!resolvedClaims || resolvedClaims.data.length === 0) {
+                return (
+                  <EmptyStateCard message="This user has no claims about their identity yet." />
+                )
+              }
+              return (
+                <ClaimsAboutIdentity
+                  claims={resolvedClaims.data}
+                  paramPrefix="claims"
+                  enableSearch={false}
+                  enableSort={false}
                 />
-              )}
-            </Await>
-          )}
-        </Await>
-      </Suspense>
-      <Text
-        variant="headline"
-        weight="medium"
-        className="text-secondary-foreground"
-      >
-        Top Claims about this Identity
-      </Text>
-      <Suspense fallback={<PaginatedListSkeleton />}>
-        <Await
-          resolve={claims}
-          errorElement={
-            <ErrorStateCard>
-              <RevalidateButton />
-            </ErrorStateCard>
-          }
-        >
-          {(resolvedClaims) => {
-            if (!resolvedClaims || resolvedClaims.data.length === 0) {
-              return (
-                <EmptyStateCard message="This user has no claims about their identity yet." />
               )
-            }
-            return (
-              <ClaimsAboutIdentity
-                claims={resolvedClaims.data}
-                paramPrefix="claims"
-                enableSearch={false}
-                enableSort={false}
-              />
-            )
-          }}
-        </Await>
-      </Suspense>
-      <Text
-        variant="headline"
-        weight="medium"
-        className="text-secondary-foreground"
-      >
-        Top Followers
-      </Text>
-      <Suspense fallback={<PaginatedListSkeleton />}>
-        <Await
-          resolve={connectionsData}
-          errorElement={
-            <ErrorStateCard>
-              <RevalidateButton />
-            </ErrorStateCard>
-          }
+            }}
+          </Await>
+        </Suspense>
+      </div>
+      <div className="flex flex-col gap-6">
+        <Text
+          variant="headline"
+          weight="medium"
+          className="text-secondary-foreground"
         >
-          {(resolvedConnectionsData) => {
-            if (!resolvedConnectionsData) {
-              return (
-                <EmptyStateCard message="This user has no follow claim yet. A follow claim will be created when the first person follows them." />
-              )
+          Top Followers
+        </Text>
+        <Suspense fallback={<PaginatedListSkeleton />}>
+          <Await
+            resolve={connectionsData}
+            errorElement={
+              <ErrorStateCard>
+                <RevalidateButton />
+              </ErrorStateCard>
             }
-            return (
-              <FollowList
-                identities={resolvedConnectionsData.followers ?? []}
-                paramPrefix={ConnectionsHeaderVariants.followers}
-                enableSearch={false}
-                enableSort={false}
-              />
-            )
-          }}
-        </Await>
-      </Suspense>
-      <Text
-        variant="headline"
-        weight="medium"
-        className="text-secondary-foreground"
-      >
-        Top Lists
-      </Text>
-      <Suspense fallback={<ListClaimsSkeletonLayout totalItems={6} />}>
-        <Await resolve={savedListClaims}>
-          {(resolvedSavedListClaims) => {
-            return (
-              <ListClaimsList
-                listClaims={resolvedSavedListClaims.savedListClaims}
-                enableSort={false}
-                enableSearch={false}
-                columns={3}
-                sourceUserAddress={wallet}
-              />
-            )
-          }}
-        </Await>
-      </Suspense>
+          >
+            {(resolvedConnectionsData) => {
+              if (!resolvedConnectionsData) {
+                return (
+                  <EmptyStateCard message="This user has no follow claim yet. A follow claim will be created when the first person follows them." />
+                )
+              }
+              return (
+                <FollowList
+                  identities={resolvedConnectionsData.followers ?? []}
+                  paramPrefix={ConnectionsHeaderVariants.followers}
+                  enableSearch={false}
+                  enableSort={false}
+                />
+              )
+            }}
+          </Await>
+        </Suspense>
+      </div>
+      <div className="flex flex-col gap-6">
+        <Text
+          variant="headline"
+          weight="medium"
+          className="text-secondary-foreground"
+        >
+          Top Lists
+        </Text>
+        <Suspense fallback={<ListClaimsSkeletonLayout totalItems={6} />}>
+          <Await resolve={savedListClaims}>
+            {(resolvedSavedListClaims) => {
+              return (
+                <ListClaimsList
+                  listClaims={resolvedSavedListClaims.savedListClaims}
+                  enableSort={false}
+                  enableSearch={false}
+                  columns={3}
+                  sourceUserAddress={wallet}
+                />
+              )
+            }}
+          </Await>
+        </Suspense>
+      </div>
     </div>
   )
 }

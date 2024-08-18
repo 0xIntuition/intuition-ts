@@ -96,7 +96,7 @@ export default function ProfileConnections() {
   }
 
   return (
-    <div className="flex flex-col w-full gap-6">
+    <div className="flex flex-col w-full gap-10">
       <div className="self-stretch justify-between items-center inline-flex">
         <Text
           variant="headline"

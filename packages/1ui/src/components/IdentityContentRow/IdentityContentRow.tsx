@@ -69,7 +69,11 @@ const NameAndAddress = ({
       </a>
       <div className="flex flex-row gap-1 items-center">
         <a href={ipfsLink} target="_blank" rel="noreferrer noreopener">
-          <Trunctacular value={id} className="text-secondary-foreground" />
+          <Trunctacular
+            value={id}
+            className="text-secondary-foreground"
+            maxStringLength={16}
+          />
         </a>
         <Copy text={id} />
       </div>
