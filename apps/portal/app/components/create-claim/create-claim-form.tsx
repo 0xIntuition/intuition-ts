@@ -104,12 +104,11 @@ export function ClaimForm({
             </div>
           </DialogTitle>
           <DialogDescription>
-            Claim anything about anything.
-            <br />
-            &rsquo;Claims&lsquo; in Intuition, also referred to as
-            &rsquo;Triples&lsquo;, are structured in Semantic Triple format -
-            similar to that of a sentence. For example, a Triple could be
-            [Alice] [is] [trustworthy]. This makes the data nice and usable!
+            Claim anything about anything. &rsquo;Claims&lsquo; in Intuition,
+            also referred to as &rsquo;Triples&lsquo;, are structured in
+            Semantic Triple format - similar to that of a sentence. For example,
+            a Triple could be [Alice] [is] [trustworthy]. This keeps our
+            attestations tidy!
           </DialogDescription>
         </DialogHeader>
       )}
