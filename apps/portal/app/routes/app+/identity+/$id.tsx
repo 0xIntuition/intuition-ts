@@ -285,12 +285,13 @@ export default function IdentityDetails() {
             userWallet={userWallet}
             open={tagsModalActive.isOpen}
             mode={tagsModalActive.mode}
-            onClose={() =>
+            onClose={() => {
               setTagsModalActive({
                 ...tagsModalActive,
                 isOpen: false,
               })
-            }
+              setSelectedTag(undefined)
+            }}
           />
           {selectedTag && (
             <SaveListModal

@@ -4,6 +4,7 @@ node_modules
 /build
 .env
 /.content-collections
+.DS_Store
 # Sentry Config File
 .sentryclirc
 
