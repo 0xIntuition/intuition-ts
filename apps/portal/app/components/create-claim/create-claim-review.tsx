@@ -171,6 +171,7 @@ const CreateClaimReview: React.FC<CreateClaimReviewProps> = ({
               link: getAtomLink(selectedIdentities.object as IdentityPresenter),
               shouldHover: false,
             }}
+            maxIdentityLength={16}
           />
           <Text
             variant="base"
