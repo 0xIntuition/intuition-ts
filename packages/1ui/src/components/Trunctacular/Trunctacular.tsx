@@ -59,7 +59,11 @@ const Trunctacular = ({
     )
   }
 
-  return <Text {...textProps}>{content}</Text>
+  return (
+    <Text {...textProps} {...props}>
+      {content}
+    </Text>
+  )
 }
 
 export { Trunctacular }
