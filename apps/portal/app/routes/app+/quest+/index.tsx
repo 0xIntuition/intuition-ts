@@ -116,7 +116,7 @@ export default function Quests() {
               <Await resolve={details}>
                 {(resolvedDetails) => (
                   <QuestSetProgressCard
-                    imgSrc={STANDARD_QUEST_SET.imgSrc}
+                    imgSrc={`${STANDARD_QUEST_SET.imgSrc}-thumbnail`}
                     title={STANDARD_QUEST_SET.title}
                     numberQuests={resolvedDetails.numQuests}
                     numberCompletedQuests={resolvedDetails.numCompletedQuests}

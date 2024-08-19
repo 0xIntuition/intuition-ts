@@ -13,7 +13,7 @@ If you think about it, most online applications are composed of Lists. Your Twit
 
 When Identities and Claims are used effectively, they enable the construction of deterministic queries with arbitrarily complex combinatorial logic. This allows the state of Intuition to be easily navigated, allowing for an accommodation of most use cases across the web. A List can be seen as the results of a query.
 
-To envision this in practice, take, for example, a scenario in which there is convergence on the Atom [employee of] to represent a person’s employment with a company. Lets assume the adopted Triple structure is {[Person] [employee of] [Business]}. To get all employees of the [Business], a simple query could be constructed to say ‘give me all Subjects of Triples where the Predicate is [employee of], and the Object is [Business]. To filter out potentially bad data, you could make the query a bit more specific, and say ‘give me all the Subjects of Triples where the Predicate is [employee of], the Object is [Business], and [Business] has attested to the fact that it is True’.
+To envision this in practice, take, for example, a scenario in which there is convergence on the Atom \[employee of]\ to represent a person’s employment with a company. Lets assume the adopted Triple structure is \{[Person] [employee of] [Business]}\. To get all employees of the [Business], a simple query could be constructed to say ‘give me all Subjects of Triples where the Predicate is [employee of], and the Object is [Business]. To filter out potentially bad data, you could make the query a bit more specific, and say ‘give me all the Subjects of Triples where the Predicate is \[employee of], the Object is [Business], and [Business]\ has attested to the fact that it is True’.
 
 Intuition’s primitives offer the following as query parameters:
 
@@ -34,12 +34,12 @@ For instance, Lists of songs by global popularity, books by genre, movies by cri
 
 In the current iteration of the Portal, we’ve produced a reference implementation to demonstrate the power of these queries, where the List functionality is composed of two simple queries:
 
-1. To obtain a List of Lists, we simply do a query for all unique Objects of Triples where the Predicate is [has tag]. For example, if you ‘Tag’ an Atom/Identity with [Web3], behind the scenes, a Triple/Claim is created with Predicate [has tag] and Object [Web3]. Now, [Web3] will show up as a List.
-2. To obtain the entries in a List, we simply do a query for all unique Subjects of Triples where the Predicate is [has tag], and the Object is the respective ‘List’. In the [Web3] example, the query looks for all Subject of Triples where the Predicate is [has tag], and the Object is [Web3].
+1. To obtain a List of Lists, we simply do a query for all unique Objects of Triples where the Predicate is \[has tag]\. For example, if you ‘Tag’ an Atom/Identity with [Web3], behind the scenes, a Triple/Claim is created with Predicate [has tag] and Object [Web3]. Now, [Web3] will show up as a List.
+2. To obtain the entries in a List, we simply do a query for all unique Subjects of Triples where the Predicate is [has tag], and the Object is the respective ‘List’. In the \[Web3]\ example, the query looks for all Subject of Triples where the Predicate is \[has tag]\, and the Object is [Web3].
 
 Because of the tidy semantic nature of the data, it is very easy to make these queries more specific. For example, by passing through additional arguments to the query, a global List can be filtered down to your List, a specific person’s List, or a List filtered through a social graph.
 
-By leveraging specific Triple structures in our Claims, we can create very easily-queryable data for specific use cases. For example, the ‘Follow’ functionality of the Portal leverages a specific Triple structure of [I] [am following] [User]. To get a List of a user’s followers, we merely run a query to return the users staked on the [I] [am following] [User] Triple.
+By leveraging specific Triple structures in our Claims, we can create very easily-queryable data for specific use cases. For example, the ‘Follow’ functionality of the Portal leverages a specific Triple structure of \[I] [am following] [User]\. To get a List of a user’s followers, we merely run a query to return the users staked on the \[I] [am following] [User]\ Triple.
 
 As you can see, once the data is structured correctly, building new, powerful functionality on top becomes extremely trivial...
 

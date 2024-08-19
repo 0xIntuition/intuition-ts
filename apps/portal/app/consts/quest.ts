@@ -6,7 +6,7 @@ export const QUEST_LOG_DESCRIPTION =
 
 export const STANDARD_QUEST_SET: QuestSet = {
   imgSrc:
-    'https://res.cloudinary.com/dfpwy9nyv/image/upload/f_auto,q_auto/v1/Portal%20Assets/quests/primitive-island-overview-header',
+    'https://res.cloudinary.com/dfpwy9nyv/image/upload/f_auto,q_auto/v1/Portal%20Assets/quests/primitive-island-overview',
   title: 'Tutorial Island: The Primitive Elements',
   description: 'Learn the core elements of the Intuition System',
   summary: `Your perspective shifts; the matrix seeming to glitch.

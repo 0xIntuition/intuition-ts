@@ -119,7 +119,7 @@ export default function Quests() {
     <div className="px-10 w-full max-w-7xl mx-auto flex flex-col gap-10 pb-20 max-lg:p-0 max-md:gap-4">
       <div className="space-y-10 mb-5 max-md:space-y-5">
         <img
-          src={STANDARD_QUEST_SET.imgSrc}
+          src={`${STANDARD_QUEST_SET.imgSrc}-header`}
           alt={STANDARD_QUEST_SET.title}
           className="object-cover object-center w-full h-[350px] theme-border rounded-lg max-md:h-[250px]"
         />
