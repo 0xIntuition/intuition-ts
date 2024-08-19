@@ -290,7 +290,7 @@ export default function ClaimDetails() {
       )}
       <InfoCard
         variant={Identity.user}
-        username={claim.creator?.display_name ?? ''}
+        username={claim.creator?.display_name ?? '?'}
         avatarImgSrc={claim.creator?.image ?? ''}
         id={claim.creator?.wallet ?? ''}
         description={claim.creator?.description ?? ''}
