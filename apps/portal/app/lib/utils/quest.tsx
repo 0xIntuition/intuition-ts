@@ -17,7 +17,7 @@ export function getQuestCriteria(condition: QuestCondition) {
     case QuestCondition.CREATE_ATOM:
       return 'Create an atom'
     case QuestCondition.STAKE_IDENTITY:
-      return 'Stake on an atom'
+      return 'Indicate your conviction in and support of an Atom / Identity by staking on the Atom / Identity’s Vault.'
     case QuestCondition.CREATE_CLAIM:
       return 'Create a claim'
     case QuestCondition.STAKE_CLAIM:
