@@ -243,6 +243,7 @@ export default function IdentityDetails() {
       />
     </div>
   )
+
   const rightPanel = isPending ? (
     <Banner
       variant="warning"
