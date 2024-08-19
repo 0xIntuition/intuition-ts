@@ -56,7 +56,7 @@ jobs:
         run: pnpm install
 
       - name: Run codegen for API package
-        run: |
+        run:
           API_URL=https://dev.api.intuition.systems pnpm run codegen
 
       - name: Configure AWS credentials
