@@ -43,23 +43,21 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # - name: Setup Node.js
-      #   uses: actions/setup-node@v4
-      #   with:
-      #     node-version: 20
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
 
-      # - name: Setup pnpm
-      #   uses: pnpm/action-setup@v3
-      #   with:
-      #     version: 9.0.6
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9.0.6
 
-      # - name: Install dependencies
-      #   run: pnpm install
+      - name: Install dependencies
+        run: pnpm install
 
-      # - name: Run codegen for API package
-      #   run: |
-      #     cd packages/api
-      #     API_URL=https://api.intuition.systems pnpm run codegen
+      - name: Run codegen for API package
+        run: API_URL=https://api.intuition.systems pnpm run codegen
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
