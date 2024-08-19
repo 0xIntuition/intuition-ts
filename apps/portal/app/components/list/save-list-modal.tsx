@@ -61,6 +61,7 @@ export default function SaveListModal({
   onClose = () => {},
 }: SaveListModalProps) {
   const fetchReval = useFetcher()
+  const [fetchId, setFetchId] = useState(0)
   const formRef = useRef(null)
   const [val, setVal] = useState('0.001')
   const [mode, setMode] = useState<'save' | 'unsave'>('save')
@@ -97,24 +98,50 @@ export default function SaveListModal({
   const vaultDetailsFetcher = useFetcher<VaultDetailsType>()
 
   useEffect(() => {
+    let isCancelled = false
+
     if (identity && tag) {
       const fetchClaim = () => {
         const searchParams = new URLSearchParams({
           subject: identity.vault_id,
           predicate: TAG_PREDICATE_VAULT_ID_TESTNET.toString(),
           object: tag.vault_id,
+          fetchId: fetchId.toString(),
         })
 
         const finalUrl = `${SEARCH_CLAIMS_BY_IDS_RESOURCE_ROUTE}?${searchParams.toString()}`
 
-        claimFetcher.load(finalUrl)
+        if (!isCancelled) {
+          claimFetcher.load(finalUrl)
+        }
       }
 
       fetchClaim()
     }
+
+    return () => {
+      isCancelled = true
+    }
     // omits the fetcher from the exhaustive deps
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [identity, tag])
+  }, [identity, tag, fetchId])
+
+  useEffect(() => {
+    let isCancelled = false
+
+    if (fetchedClaimVaultId !== null) {
+      const finalUrl = `${GET_VAULT_DETAILS_RESOURCE_ROUTE}?contract=${contract}&vaultId=${fetchedClaimVaultId}&fetchId=${fetchId}`
+      if (!isCancelled) {
+        vaultDetailsFetcher.load(finalUrl)
+      }
+    }
+
+    return () => {
+      isCancelled = true
+    }
+    // omits the fetcher from the exhaustive deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [contract, fetchedClaimVaultId, fetchId])
 
   useEffect(() => {
     if (
@@ -147,15 +174,6 @@ export default function SaveListModal({
       setFetchedClaimVaultId(null)
     }
   }, [claimFetcher.state, claimFetcher.data])
-
-  useEffect(() => {
-    if (fetchedClaimVaultId !== null) {
-      const finalUrl = `${GET_VAULT_DETAILS_RESOURCE_ROUTE}?contract=${contract}&vaultId=${fetchedClaimVaultId}`
-      vaultDetailsFetcher.load(finalUrl)
-    }
-    // omits the fetcher from the exhaustive deps
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fetchedClaimVaultId])
 
   useEffect(() => {
     if (vaultDetailsFetcher.state === 'idle' && vaultDetailsFetcher.data) {
@@ -359,13 +377,37 @@ export default function SaveListModal({
     setFetchedClaimVaultId(null)
     setVaultDetails(undefined)
     setIsLoading(true)
+    setVal('0.001')
+    setShowErrors(false)
+    setValidationErrors([])
     claimFetcher.data = undefined
     vaultDetailsFetcher.data = undefined
+    claimFetcher.state = 'idle'
+    vaultDetailsFetcher.state = 'idle'
+    setFetchId((prevId) => prevId + 1)
     setTimeout(() => {
       dispatch({ type: 'START_TRANSACTION' })
       reset()
     }, 500)
   }
+
+  useEffect(() => {
+    if (open) {
+      setMode('save')
+      setFetchedClaimVaultId(null)
+      setVaultDetails(undefined)
+      setIsLoading(true)
+      setVal('0.001')
+      setShowErrors(false)
+      setValidationErrors([])
+      claimFetcher.data = undefined
+      vaultDetailsFetcher.data = undefined
+      claimFetcher.state = 'idle'
+      vaultDetailsFetcher.state = 'idle'
+      setFetchId((prevId) => prevId + 1)
+      dispatch({ type: 'START_TRANSACTION' })
+    }
+  }, [open, dispatch])
 
   const isTransactionStarted = [
     'approve-transaction',
