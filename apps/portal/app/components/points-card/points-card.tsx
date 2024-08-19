@@ -43,7 +43,7 @@ export const PointsEarnedCard: React.FC<PointsEarnedCardProps> = ({
     <div className="flex flex-col theme-border rounded-lg p-6 gap-4 bg-black">
       <div className="flex flex-col gap-1">
         <Text variant={TextVariant.body} className="text-muted-foreground">
-          Points Earned
+          IQ Points Earned
         </Text>
         <Text variant={TextVariant.heading5} className="text-white">
           {truncateNumber(totalPoints)}

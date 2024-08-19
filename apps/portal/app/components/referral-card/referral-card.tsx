@@ -35,7 +35,8 @@ export const ReferralCard: React.FC<ReferralCardProps> = ({
             weight={TextWeight.medium}
             className="max-md:text-center"
           >
-            Earn +10,000 points each time a friend activates your invite code.
+            Earn +10,000 IQ points each time a friend activates your invite
+            code.
           </Text>
         </div>
         <ReferralPointsDisplay points={points} label="Referral Points" />
