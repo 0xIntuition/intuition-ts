@@ -100,6 +100,16 @@ export default function PrivyButton({
             >
               <Icon name={IconName.cryptoPunk} /> View Profile
             </Button>
+            <Button
+              variant={ButtonVariant.text}
+              size={ButtonSize.lg}
+              onClick={() => {
+                setIsAccountMenuOpen(false)
+                navigate(`${PATHS.QUEST}/#referrals`)
+              }}
+            >
+              <Icon name={IconName.group} /> Refer a Friend
+            </Button>
             <DropdownMenuSeparator />
             <PrivyLogoutButton handleLogout={handleSignout} />
           </DropdownMenuContent>
