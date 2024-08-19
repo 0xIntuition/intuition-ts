@@ -2,10 +2,8 @@ import { Suspense } from 'react'
 
 import { EmptyStateCard, ErrorStateCard, Text } from '@0xintuition/1ui'
 import {
-  ApiError,
   ClaimSortColumn,
   ClaimsService,
-  IdentitiesService,
   IdentityPresenter,
   SortDirection,
   UserTotalsPresenter,
@@ -25,11 +23,11 @@ import { DataHeaderSkeleton, PaginatedListSkeleton } from '@components/skeleton'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { getClaimsAboutIdentity } from '@lib/services/claims'
 import { getConnectionsData } from '@lib/services/connections'
+import { getIdentityOrPending } from '@lib/services/identities'
 import { getUserSavedLists } from '@lib/services/lists'
 import { getPositionsOnIdentity } from '@lib/services/positions'
-import logger from '@lib/utils/logger'
 import { formatBalance, invariant } from '@lib/utils/misc'
-import { defer, LoaderFunctionArgs, redirect } from '@remix-run/node'
+import { defer, LoaderFunctionArgs } from '@remix-run/node'
 import { Await, useParams, useRouteLoaderData } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
@@ -47,19 +45,10 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const wallet = params.wallet
   invariant(wallet, NO_PARAM_ID_ERROR)
 
-  let userIdentity
-  try {
-    userIdentity = await fetchWrapper(request, {
-      method: IdentitiesService.getIdentityById,
-      args: { id: wallet },
-    })
-  } catch (error) {
-    if (error instanceof ApiError && error.status === 404) {
-      throw redirect('/invite')
-    }
-    logger('Error fetching userIdentity', error)
-    throw error
-  }
+  const { identity: userIdentity, isPending } = await getIdentityOrPending(
+    request,
+    wallet,
+  )
 
   const url = new URL(request.url)
   const searchParams = new URLSearchParams(url.search)
@@ -75,28 +64,31 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   claimSearchParams.set('limit', '5')
 
   return defer({
-    positions: getPositionsOnIdentity({
-      request,
-      identityId: userIdentity.id,
-      searchParams,
-    }),
-    claimsSummary: fetchWrapper(request, {
-      method: ClaimsService.claimSummary,
-      args: {
-        identity: userIdentity.id,
-      },
-    }),
-    claims: getClaimsAboutIdentity({
-      request,
-      identityId: userIdentity.id,
-      searchParams: claimSearchParams,
-    }),
-    savedListClaims: getUserSavedLists({
-      request,
-      userWallet: wallet,
-      searchParams: listSearchParams,
-    }),
-    connectionsData: getConnectionsData({ request, userWallet: wallet }),
+    ...(!isPending &&
+      !!userIdentity && {
+        positions: getPositionsOnIdentity({
+          request,
+          identityId: userIdentity.id,
+          searchParams,
+        }),
+        claimsSummary: fetchWrapper(request, {
+          method: ClaimsService.claimSummary,
+          args: {
+            identity: userIdentity.id,
+          },
+        }),
+        claims: getClaimsAboutIdentity({
+          request,
+          identityId: userIdentity.id,
+          searchParams: claimSearchParams,
+        }),
+        savedListClaims: getUserSavedLists({
+          request,
+          userWallet: wallet,
+          searchParams: listSearchParams,
+        }),
+        connectionsData: getConnectionsData({ request, userWallet: wallet }),
+      }),
   })
 }
 
@@ -109,13 +101,12 @@ export default function ProfileOverview() {
     useRouteLoaderData<{
       userIdentity: IdentityPresenter
       userTotals: UserTotalsPresenter
+      isPending: boolean
     }>('routes/app+/profile+/$wallet') ?? {}
   invariant(userIdentity, NO_USER_IDENTITY_ERROR)
+
   const params = useParams()
   const { wallet } = params
-
-  logger('userIdentity', userIdentity)
-  logger('userTotals', userTotals)
 
   return (
     <div className="flex flex-col gap-10">
@@ -158,7 +149,7 @@ export default function ProfileOverview() {
                   <OverviewAboutHeader
                     variant="claims"
                     userIdentity={userIdentity}
-                    totalClaims={resolvedClaims.pagination?.totalEntries}
+                    totalClaims={resolvedClaims?.pagination?.totalEntries}
                     totalStake={
                       +formatBalance(resolvedClaimsSummary?.assets_sum ?? 0, 18)
                     }
@@ -253,7 +244,7 @@ export default function ProfileOverview() {
             {(resolvedSavedListClaims) => {
               return (
                 <ListClaimsList
-                  listClaims={resolvedSavedListClaims.savedListClaims}
+                  listClaims={resolvedSavedListClaims?.savedListClaims ?? []}
                   enableSort={false}
                   enableSearch={false}
                   columns={3}

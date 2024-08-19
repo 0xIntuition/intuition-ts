@@ -26,7 +26,6 @@ export async function getIdentityOrPending(
           args: { identifier: id },
         })) as unknown as IdentityPresenter // we're handling the missing identity properties via not rendering anything that relies on any missing properties. otherwise we'd need to set defaults which i'm wary of
         logger(`IDENTITY ${id} IS PENDING`)
-
         return { identity: pendingIdentity, isPending: true }
       } catch (pendingError) {
         logger('catching pendingError')

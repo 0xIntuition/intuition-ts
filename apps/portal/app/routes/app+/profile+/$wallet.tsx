@@ -20,9 +20,9 @@ import {
 import {
   ClaimPresenter,
   ClaimsService,
-  IdentitiesService,
   IdentityPresenter,
   TagEmbeddedPresenter,
+  UserPresenter,
   UsersService,
   UserTotalsPresenter,
 } from '@0xintuition/api'
@@ -80,38 +80,45 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     throw redirect(PATHS.PROFILE)
   }
 
-  // const userIdentity = await fetchWrapper(request, {
-  //   method: IdentitiesService.getIdentityById,
-  //   args: {
-  //     id: wallet,
-  //   },
-  // })
-
   const { identity: userIdentity, isPending } = await getIdentityOrPending(
     request,
     wallet,
   )
 
-  // if (!userIdentity) {
-  //   return logger('No user identity found')
-  // }
+  logger('userIdentity in loader after pending check', userIdentity)
 
   if (!userIdentity) {
     throw new Response('Not Found', { status: 404 })
   }
 
-  // if (
-  //   !isPending ||
-  //   !userIdentity.creator ||
-  //   typeof userIdentity.creator.id !== 'string'
-  // ) {
-  //   throw new Response('Invalid or missing creator ID', { status: 404 })
-  // }
+  if (!userIdentity.creator) {
+    throw new Response('Invalid or missing creator ID', { status: 404 })
+  }
+
+  const getCreatorId = (
+    creator: string | UserPresenter | null | undefined,
+  ): string | null | undefined => {
+    if (creator === null || creator === undefined) {
+      return creator // Returns null or undefined
+    }
+    if (typeof creator === 'string') {
+      return creator
+    }
+    if ('id' in creator) {
+      return creator.id
+    }
+    return undefined
+  }
+
+  const creatorId = getCreatorId(userIdentity.creator)
+  if (!creatorId) {
+    throw new Error('Invalid or missing creator ID')
+  }
 
   const userTotals = await fetchWrapper(request, {
     method: UsersService.getUserTotals,
     args: {
-      id: userIdentity.creator.id,
+      id: creatorId,
     },
   })
 
@@ -374,74 +381,78 @@ export default function Profile() {
 
   return (
     <TwoPanelLayout leftPanel={leftPanel} rightPanel={rightPanel}>
-      <StakeModal
-        userWallet={userWallet}
-        contract={userIdentity.contract}
-        open={stakeModalActive.isOpen}
-        identity={userIdentity}
-        vaultDetails={vaultDetails}
-        onClose={() => {
-          setStakeModalActive((prevState) => ({
-            ...prevState,
-            isOpen: false,
-          }))
-        }}
-      />
-      <FollowModal
-        userWallet={userWallet}
-        contract={userIdentity.contract}
-        open={followModalActive.isOpen}
-        identity={userIdentity}
-        claim={followClaim}
-        vaultDetails={followVaultDetails}
-        onClose={() => {
-          setFollowModalActive((prevState) => ({
-            ...prevState,
-            isOpen: false,
-          }))
-        }}
-      />
-      <TagsModal
-        identity={userIdentity}
-        userWallet={userWallet}
-        open={tagsModalActive.isOpen}
-        mode={tagsModalActive.mode}
-        onClose={() =>
-          setTagsModalActive({
-            ...tagsModalActive,
-            isOpen: false,
-          })
-        }
-      />
-      {selectedTag && (
-        <SaveListModal
-          contract={userIdentity.contract ?? MULTIVAULT_CONTRACT_ADDRESS}
-          tag={saveListModalActive.tag ?? selectedTag}
-          identity={userIdentity}
-          userWallet={userWallet}
-          open={saveListModalActive.isOpen}
-          onClose={() =>
-            setSaveListModalActive({
-              ...saveListModalActive,
-              isOpen: false,
-            })
-          }
-        />
-      )}
-      {selectedTag && (
-        <SaveListModal
-          contract={userIdentity.contract ?? MULTIVAULT_CONTRACT_ADDRESS}
-          tag={saveListModalActive.tag ?? selectedTag}
-          identity={userIdentity}
-          userWallet={userWallet}
-          open={saveListModalActive.isOpen}
-          onClose={() =>
-            setSaveListModalActive({
-              ...saveListModalActive,
-              isOpen: false,
-            })
-          }
-        />
+      {!isPending && (
+        <>
+          <StakeModal
+            userWallet={userWallet}
+            contract={userIdentity.contract}
+            open={stakeModalActive.isOpen}
+            identity={userIdentity}
+            vaultDetails={vaultDetails}
+            onClose={() => {
+              setStakeModalActive((prevState) => ({
+                ...prevState,
+                isOpen: false,
+              }))
+            }}
+          />
+          <FollowModal
+            userWallet={userWallet}
+            contract={userIdentity.contract}
+            open={followModalActive.isOpen}
+            identity={userIdentity}
+            claim={followClaim}
+            vaultDetails={followVaultDetails}
+            onClose={() => {
+              setFollowModalActive((prevState) => ({
+                ...prevState,
+                isOpen: false,
+              }))
+            }}
+          />
+          <TagsModal
+            identity={userIdentity}
+            userWallet={userWallet}
+            open={tagsModalActive.isOpen}
+            mode={tagsModalActive.mode}
+            onClose={() =>
+              setTagsModalActive({
+                ...tagsModalActive,
+                isOpen: false,
+              })
+            }
+          />
+          {selectedTag && (
+            <SaveListModal
+              contract={userIdentity.contract ?? MULTIVAULT_CONTRACT_ADDRESS}
+              tag={saveListModalActive.tag ?? selectedTag}
+              identity={userIdentity}
+              userWallet={userWallet}
+              open={saveListModalActive.isOpen}
+              onClose={() =>
+                setSaveListModalActive({
+                  ...saveListModalActive,
+                  isOpen: false,
+                })
+              }
+            />
+          )}
+          {selectedTag && (
+            <SaveListModal
+              contract={userIdentity.contract ?? MULTIVAULT_CONTRACT_ADDRESS}
+              tag={saveListModalActive.tag ?? selectedTag}
+              identity={userIdentity}
+              userWallet={userWallet}
+              open={saveListModalActive.isOpen}
+              onClose={() =>
+                setSaveListModalActive({
+                  ...saveListModalActive,
+                  isOpen: false,
+                })
+              }
+            />
+          )}
+        </>
       )}
       <ImageModal
         identity={userIdentity}
