@@ -25,6 +25,11 @@ const multiVaultContractAddressBaseSepolia =
     ? window.ENV?.MULTIVAULT_ADDRESS_BASE_SEPOLIA
     : process.env.MULTIVAULT_ADDRESS_BASE_SEPOLIA
 
+const phosphorCollectionId =
+  typeof window !== 'undefined'
+    ? window.ENV?.PHOSPHOR_COLLECTION_ID
+    : process.env.PHOSPHOR_COLLECTION_ID
+
 type ChainId = typeof base.id | typeof baseSepolia.id | typeof mainnet.id
 
 export type ChainConfig = {
@@ -32,6 +37,7 @@ export type ChainConfig = {
   name: string
   alchemyRpcUrl: string
   contractAddress: `0x${string}`
+  collectionId: string
 }
 
 export type ChainEnv = 'development' | 'staging' | 'production'
@@ -45,18 +51,21 @@ export const getChainEnvConfig = (env: string): ChainConfig => {
       name: baseSepolia.name,
       alchemyRpcUrl: alchemyRpcUrlBaseSepolia,
       contractAddress: multiVaultContractAddressBaseSepolia as Address,
+      collectionId: phosphorCollectionId,
     },
     staging: {
       chainId: baseSepolia.id,
       name: baseSepolia.name,
       alchemyRpcUrl: alchemyRpcUrlBaseSepolia,
       contractAddress: multiVaultContractAddressBaseSepolia as Address,
+      collectionId: phosphorCollectionId,
     },
     production: {
       chainId: base.id,
       name: base.name,
       alchemyRpcUrl: alchemyRpcUrlBaseMainnet,
       contractAddress: multiVaultContractAddressBaseMainnet as Address,
+      collectionId: phosphorCollectionId,
     },
   }
 

@@ -19,6 +19,7 @@ const schema = z.object({
   MULTIVAULT_ADDRESS_BASE_MAINNET: z.string(),
   ORIGIN_URL: z.string(),
   PRIVY_APP_ID: z.string(),
+  PHOSPHOR_COLLECTION_ID: z.string(),
   featureFlagsSchema,
 })
 
@@ -67,6 +68,7 @@ export function getEnv() {
       process.env.MULTIVAULT_ADDRESS_BASE_MAINNET,
     ORIGIN_URL: process.env.ORIGIN_URL,
     PRIVY_APP_ID: process.env.PRIVY_APP_ID,
+    PHOSPHOR_COLLECTION_ID: process.env.PHOSPHOR_COLLECTION_ID,
     // Feature flags
     FF_GENERIC_BANNER_ENABLED: process.env.FF_GENERIC_BANNER_ENABLED,
     FF_INCIDENT_BANNER_ENABLED: process.env.FF_INCIDENT_BANNER_ENABLED,

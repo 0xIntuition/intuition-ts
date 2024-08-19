@@ -18,15 +18,19 @@ import { PointsEarnedCard } from '@components/points-card/points-card'
 import { QuestSetCard } from '@components/quest/quest-set-card'
 import { QuestSetProgressCard } from '@components/quest/quest-set-progress-card'
 import { ReferralCard } from '@components/referral-card/referral-card'
+import { getPurchaseIntentsByAddress } from '@lib/services/phosphor'
+import { getChainEnvConfig } from '@lib/utils/environment'
 import { invariant } from '@lib/utils/misc'
 import { defer, LoaderFunctionArgs } from '@remix-run/node'
 import { Await, Link, useLoaderData } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
 import { getQuestsProgress } from '@server/quest'
+import { getRelicCount } from '@server/relics'
 import {
   BLOCK_EXPLORER_URL,
   COMING_SOON_QUEST_SET,
+  CURRENT_ENV,
   QUEST_LOG_DESCRIPTION,
   STANDARD_QUEST_SET,
 } from 'app/consts'
@@ -35,6 +39,17 @@ import { isAddress } from 'viem'
 export async function loader({ request }: LoaderFunctionArgs) {
   const userWallet = await requireUserWallet(request)
   invariant(userWallet, 'Unauthorized')
+
+  // TODO: Remove this relic hold/mint count and points calculation when it is stored in BE.
+  const relicHoldCount = await getRelicCount(userWallet as `0x${string}`)
+
+  const userCompletedMints = await getPurchaseIntentsByAddress(
+    userWallet,
+    'CONFIRMED',
+    getChainEnvConfig(CURRENT_ENV).collectionId,
+  )
+
+  const relicMintCount = userCompletedMints.data?.total_results
 
   const userProfile = await fetchWrapper(request, {
     method: UsersService.getUserByWalletPublic,
@@ -70,11 +85,14 @@ export async function loader({ request }: LoaderFunctionArgs) {
     userProfile,
     userTotals,
     inviteCodes: inviteCodes.invite_codes,
+    relicHoldCount: relicHoldCount.toString(),
+    relicMintCount,
   })
 }
 
 export default function Quests() {
-  const { details, userTotals, inviteCodes } = useLoaderData<typeof loader>()
+  const { details, userTotals, inviteCodes, relicMintCount } =
+    useLoaderData<typeof loader>()
 
   return (
     <div className="p-10 w-full max-w-7xl mx-auto flex flex-col gap-5 max-md:p-5 max-sm:p-2">
@@ -91,7 +109,13 @@ export default function Quests() {
               <Await resolve={userTotals}>
                 {(resolvedUserTotals) => (
                   <PointsEarnedCard
-                    totalPoints={resolvedUserTotals.total_points}
+                    // TODO: Remove this relic hold/mint count and points calculation when it is stored in BE.
+                    totalPoints={
+                      relicMintCount
+                        ? resolvedUserTotals.total_points +
+                          relicMintCount * 2000000
+                        : 0
+                    }
                     activities={[
                       {
                         name: 'Activity',
@@ -104,6 +128,10 @@ export default function Quests() {
                       {
                         name: 'Referrals',
                         points: resolvedUserTotals.referral_points,
+                      },
+                      {
+                        name: 'NFT',
+                        points: relicMintCount ? relicMintCount * 2000000 : 0,
                       },
                     ]}
                   />

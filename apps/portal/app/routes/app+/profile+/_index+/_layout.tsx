@@ -40,6 +40,7 @@ import StakeModal from '@components/stake/stake-modal'
 import TagsModal from '@components/tags/tags-modal'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { getIdentityOrPending } from '@lib/services/identities'
+import { getPurchaseIntentsByAddress } from '@lib/services/phosphor'
 import {
   editProfileModalAtom,
   editSocialLinksModalAtom,
@@ -48,6 +49,7 @@ import {
   stakeModalAtom,
   tagsModalAtom,
 } from '@lib/state/store'
+import { getChainEnvConfig } from '@lib/utils/environment'
 import logger from '@lib/utils/logger'
 import {
   calculatePercentageOfTvl,
@@ -65,8 +67,10 @@ import {
 import { fetchWrapper } from '@server/api'
 import { requireUser, requireUserWallet } from '@server/auth'
 import { getVaultDetails } from '@server/multivault'
+import { getRelicCount } from '@server/relics'
 import {
   BLOCK_EXPLORER_URL,
+  CURRENT_ENV,
   MULTIVAULT_CONTRACT_ADDRESS,
   NO_WALLET_ERROR,
   PATHS,
@@ -84,6 +88,17 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   const wallet = await requireUserWallet(request)
   invariant(wallet, NO_WALLET_ERROR)
+
+  // TODO: Remove this relic hold/mint count and points calculation when it is stored in BE.
+  const relicHoldCount = await getRelicCount(userWallet as `0x${string}`)
+
+  const userCompletedMints = await getPurchaseIntentsByAddress(
+    userWallet,
+    'CONFIRMED',
+    getChainEnvConfig(CURRENT_ENV).collectionId,
+  )
+
+  const relicMintCount = userCompletedMints.data?.total_results
 
   let userObject
   try {
@@ -175,6 +190,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
     userTotals,
     vaultDetails,
     isPending,
+    relicHoldCount: relicHoldCount.toString(),
+    relicMintCount,
   })
 }
 
@@ -186,6 +203,7 @@ export interface ProfileLoaderData {
   userTotals: UserTotalsPresenter
   vaultDetails: VaultDetailsType
   isPending: boolean
+  relicMintCount: number
 }
 
 export default function Profile() {
@@ -197,6 +215,7 @@ export default function Profile() {
     userTotals,
     vaultDetails,
     isPending,
+    relicMintCount,
   } = useLiveLoader<ProfileLoaderData>(['attest', 'create'])
 
   const { user_assets, assets_sum } = vaultDetails ? vaultDetails : userIdentity
@@ -262,7 +281,8 @@ export default function Profile() {
         stats={{
           numberOfFollowers: userTotals.follower_count,
           numberOfFollowing: userTotals.followed_count,
-          points: userTotals.total_points,
+          // TODO: Remove this relic hold/mint count and points calculation when it is stored in BE.
+          points: userTotals.total_points + relicMintCount * 2000000,
         }}
         bio={userObject.description ?? ''}
         ipfsLink={`${BLOCK_EXPLORER_URL}/address/${userObject.wallet}`}
