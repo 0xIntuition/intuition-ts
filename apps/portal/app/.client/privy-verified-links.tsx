@@ -8,7 +8,6 @@ import {
 } from '@0xintuition/1ui'
 
 import { useSocialLinking } from '@lib/hooks/usePrivySocialLinking'
-import logger from '@lib/utils/logger'
 import { Discord, Farcaster, Github, Twitter } from '@privy-io/react-auth'
 import { verifiedPlatforms } from 'app/consts'
 import {
@@ -31,14 +30,19 @@ export function PrivyVerifiedLinks({
   if (!privyUser) {
     return null
   }
+
+  const sortedPlatforms = [...linkedPlatforms].sort((a, b) => {
+    if (a.platformPrivyName === 'farcaster') {
+      return -1
+    }
+    if (b.platformPrivyName === 'farcaster') {
+      return 1
+    }
+    return 0
+  })
+
   const renderLinkItem = (platform: PrivyPlatform) => {
     const isConnected = Boolean(privyUser[platform.platformPrivyName])
-    logger('privyUser', privyUser)
-    logger(
-      'privyUser[platform.platformPrivyName',
-      privyUser[platform.platformPrivyName],
-    )
-    logger(`${platform.platformPrivyName} : ${isConnected}`)
 
     const handleUnlinkWrapper = () => {
       const userDetails:
@@ -95,7 +99,7 @@ export function PrivyVerifiedLinks({
   }
   return (
     <div className="flex flex-col items-center bg-red-100 gap-6">
-      {linkedPlatforms.map(renderLinkItem)}
+      {sortedPlatforms.map(renderLinkItem)}
     </div>
   )
 }
@@ -126,6 +130,10 @@ export function VerifiedLinkItem({
   privyUser,
   platform,
 }: VerifiedLinkItemProps) {
+  const isComingSoon =
+    platform.platformPrivyName === 'github' ||
+    platform.platformPrivyName === 'twitter'
+
   return (
     <div className="flex w-full justify-between gap-4 px-8 ">
       <div className="flex flex-row items-center gap-3">
@@ -141,7 +149,11 @@ export function VerifiedLinkItem({
           <span>{platformDisplayName}</span>
         )}
       </div>
-      {isConnected ? (
+      {isComingSoon ? (
+        <Button variant="accent" className="py-1 px-3" disabled>
+          Coming Soon
+        </Button>
+      ) : isConnected ? (
         <Button
           variant="destructive"
           className="py-1 px-3"
