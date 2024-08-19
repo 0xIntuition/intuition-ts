@@ -1,6 +1,7 @@
 import { Button, ButtonVariant, Icon, IconName, Text } from '@0xintuition/1ui'
 import { QuestStatus } from '@0xintuition/api'
 
+import AudioPlayer from '@components/audio-player'
 import { Link } from '@remix-run/react'
 import { FALLBACK_QUEST_PLACEHOLDER_IMAGE } from 'app/consts'
 import { MDXContentVariant, MDXContentVariantType } from 'app/types'
@@ -26,14 +27,23 @@ export interface IHeaderProps {
   title?: string | null
   questStatus?: QuestStatus
   position?: number | null
+  questAudio?: string | null
 }
 
-export function Header({ title, questStatus, position }: IHeaderProps) {
+export function Header({
+  title,
+  questStatus,
+  position,
+  questAudio,
+}: IHeaderProps) {
   return (
     <div className="flex items-bottom justify-between w-full max-sm:flex-col max-sm:gap-2">
-      <Text variant="heading4" weight="medium">
-        {position ? `Chapter ${position} : ${title}` : title ?? ''}
-      </Text>
+      <div className="flex flex-row gap-4 items-center">
+        <Text variant="heading4" weight="medium">
+          {position ? `Chapter ${position} : ${title}` : title ?? ''}
+        </Text>
+        {questAudio && <AudioPlayer audioSrc={questAudio} />}
+      </div>
       <QuestStatusCard status={questStatus ?? QuestStatus.NOT_STARTED} />
     </div>
   )

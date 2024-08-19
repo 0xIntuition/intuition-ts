@@ -121,6 +121,22 @@ export default function SidebarNav({
     })
   }
 
+  const isRouteActive = (route: string) => {
+    if (route === PATHS.HOME) {
+      return location.pathname === route
+    }
+    if (route === PATHS.EXPLORE_LISTS) {
+      return location.pathname === PATHS.EXPLORE_LISTS
+    }
+    if (route === PATHS.EXPLORE) {
+      return (
+        location.pathname.startsWith(route) &&
+        location.pathname !== PATHS.EXPLORE_LISTS
+      )
+    }
+    return location.pathname.startsWith(route)
+  }
+
   return (
     <>
       <SidebarLayoutProvider>
@@ -276,9 +292,7 @@ export default function SidebarNav({
                       <SidebarNavItem
                         iconName={sidebarNavItem.iconName}
                         label={sidebarNavItem.label}
-                        aria-selected={
-                          sidebarNavItem.route === location.pathname
-                        }
+                        aria-selected={isRouteActive(sidebarNavItem.route)}
                       />
                     </NavLink>
                   ))}
