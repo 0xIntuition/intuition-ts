@@ -795,7 +795,7 @@ function CreateIdentityForm({
                 variant={TextVariant.caption}
                 className="text-center text-primary/70 mt-1"
               >
-                Note: You will not be chraged an entry fee for this initial
+                Note: You will not be charged an entry fee for this initial
                 deposit.
               </Text>
             </div>

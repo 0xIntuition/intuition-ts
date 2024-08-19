@@ -52,7 +52,7 @@ export function OverviewAboutHeader({
           weight="regular"
           className="text-secondary-foreground"
         >
-          {variant === 'claims' ? 'Claims about' : 'Positions staked on'}
+          {variant === 'claims' ? 'Claims about' : 'Conviction in'}
         </Text>
         <IdentityTag
           imgSrc={userIdentity?.user?.image ?? userIdentity?.image}

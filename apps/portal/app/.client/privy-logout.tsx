@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 
 import { usePrivy } from '@privy-io/react-auth'
 import { useSubmit } from '@remix-run/react'
@@ -9,23 +9,41 @@ export default function PrivyLogout({ wallet }: { wallet: string }) {
   const submit = useSubmit()
   const { logout, ready } = usePrivy()
   const { disconnect } = useDisconnect()
+  const logoutTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
   useEffect(() => {
     let mounted = true
     const handleLogout = async () => {
-      if (mounted && address && address !== wallet && isConnected && ready) {
-        //TODO: ENG-3136 -- Make address optional and remove isConnected on prod
-        await logout()
-        disconnect()
-        submit(null, {
-          action: '/actions/logout',
-          method: 'post',
-        })
+      if (mounted && ready) {
+        if (!address || address !== wallet || !isConnected) {
+          // Clear any existing timeout
+          if (logoutTimeoutRef.current) {
+            clearTimeout(logoutTimeoutRef.current)
+          }
+
+          // Set a new timeout
+          logoutTimeoutRef.current = setTimeout(async () => {
+            // Double-check the conditions before logging out
+            if (!address || address !== wallet || !isConnected) {
+              await logout()
+              disconnect()
+              submit(null, {
+                action: '/actions/logout',
+                method: 'post',
+              })
+            }
+          }, 500) // 0.5 second delay
+        }
       }
     }
+
     handleLogout()
+
     return () => {
       mounted = false
+      if (logoutTimeoutRef.current) {
+        clearTimeout(logoutTimeoutRef.current)
+      }
     }
   }, [address, wallet, submit, logout, disconnect, isConnected, ready])
 
