@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 
 import {
+  Banner,
   Claim,
   ClaimStakeCard,
   Icon,
@@ -17,8 +18,6 @@ import {
 import {
   ClaimPresenter,
   ClaimSortColumn,
-  ClaimsService,
-  GetClaimByIdResponse,
   IdentityPresenter,
   SortDirection,
 } from '@0xintuition/api'
@@ -27,8 +26,8 @@ import { ErrorPage } from '@components/error-page'
 import NavigationButton from '@components/navigation-link'
 import StakeModal from '@components/stake/stake-modal'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
+import { getClaimOrPending } from '@lib/services/claims'
 import { stakeModalAtom } from '@lib/state/store'
-import logger from '@lib/utils/logger'
 import {
   calculatePercentageOfTvl,
   formatBalance,
@@ -41,7 +40,6 @@ import {
 } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { Outlet, useLocation, useNavigate } from '@remix-run/react'
-import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
 import { getVaultDetails } from '@server/multivault'
 import { BLOCK_EXPLORER_URL, NO_WALLET_ERROR, PATHS } from 'app/consts'
@@ -65,13 +63,11 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const direction: SortDirection =
     (searchParams.get('direction') as SortDirection) ?? 'desc'
 
-  const claim = await fetchWrapper<GetClaimByIdResponse, { id: string }>(
-    request,
-    {
-      method: ClaimsService.getClaimById,
-      args: { id },
-    },
-  )
+  const { claim, isPending } = await getClaimOrPending(request, id)
+
+  if (!claim) {
+    throw new Response('Not Found', { status: 404 })
+  }
 
   let vaultDetails: VaultDetailsType | null = null
 
@@ -84,7 +80,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
         claim.counter_vault_id,
       )
     } catch (error) {
-      logger('Failed to fetch vaultDetails', error)
+      console.error('Failed to fetch vaultDetails', error)
       vaultDetails = null
     }
   }
@@ -92,6 +88,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   return json({
     wallet,
     claim,
+    isPending,
     sortBy,
     direction,
     vaultDetails,
@@ -105,10 +102,11 @@ export interface ClaimDetailsLoaderData {
 }
 
 export default function ClaimDetails() {
-  const { wallet, claim, vaultDetails } = useLiveLoader<{
+  const { wallet, claim, vaultDetails, isPending } = useLiveLoader<{
     wallet: string
     claim: ClaimPresenter
     vaultDetails: VaultDetailsType
+    isPending: boolean
   }>(['create', 'attest'])
   const navigate = useNavigate()
   const location = useLocation()
@@ -128,31 +126,41 @@ export default function ClaimDetails() {
 
   const [stakeModalActive, setStakeModalActive] = useAtom(stakeModalAtom)
 
-  let direction: 'for' | 'against' = 'for'
-  direction =
-    (vaultDetails.user_conviction ?? claim.user_conviction_for) > '0' ||
-    (vaultDetails.user_conviction_against ?? claim.user_conviction_against) ===
-      '0'
+  const direction: 'for' | 'against' = isPending
+    ? 'for'
+    : (vaultDetails?.user_conviction ?? claim.user_conviction_for) > '0' ||
+        (vaultDetails?.user_conviction_against ??
+          claim.user_conviction_against) === '0'
       ? 'for'
       : 'against'
 
-  let user_assets: string = '0'
-  user_assets =
-    (vaultDetails.user_conviction ?? claim.user_conviction_for) > '0'
-      ? vaultDetails.user_assets ?? claim.user_assets_for
-      : vaultDetails.user_assets_against ?? claim.user_assets_against
+  const user_assets: string = isPending
+    ? '0'
+    : (vaultDetails?.user_conviction ?? claim.user_conviction_for) > '0'
+      ? vaultDetails?.user_assets ?? claim.user_assets_for
+      : vaultDetails?.user_assets_against ?? claim.user_assets_against
 
-  let assets_sum: string = '0'
-  assets_sum =
-    (vaultDetails.assets_sum ?? claim.for_assets_sum) > '0'
-      ? vaultDetails.assets_sum ?? claim.for_assets_sum
-      : vaultDetails.against_assets_sum ?? claim.against_assets_sum
+  const assets_sum: string = isPending
+    ? '0'
+    : (vaultDetails?.assets_sum ?? claim.for_assets_sum) > '0'
+      ? vaultDetails?.assets_sum ?? claim.for_assets_sum
+      : vaultDetails?.against_assets_sum ?? claim.against_assets_sum
 
-  const userConviction =
-    vaultDetails.user_conviction ?? claim.user_conviction_for
-  const directionTagVariant =
-    +userConviction > 0 ? TagVariant.for : TagVariant.against
-  const directionTagText = +userConviction > 0 ? 'FOR' : 'AGAINST'
+  const userConviction = isPending
+    ? '0'
+    : vaultDetails?.user_conviction ?? claim.user_conviction_for
+
+  const directionTagVariant = isPending
+    ? TagVariant.for
+    : +userConviction > 0
+      ? TagVariant.for
+      : TagVariant.against
+
+  const directionTagText = isPending
+    ? 'FOR'
+    : +userConviction > 0
+      ? 'FOR'
+      : 'AGAINST'
 
   const leftPanel = (
     <div className="flex-col justify-start items-start gap-6 inline-flex w-full">
@@ -196,7 +204,7 @@ export default function ClaimDetails() {
           }}
         />
       </div>
-      {vaultDetails !== null && user_assets !== '0' ? (
+      {vaultDetails !== null && user_assets !== '0' && !isPending ? (
         <PositionCard
           onButtonClick={() =>
             setStakeModalActive((prevState) => ({
@@ -232,50 +240,54 @@ export default function ClaimDetails() {
           <PositionCardLastUpdated timestamp={claim.updated_at} />
         </PositionCard>
       ) : null}
-      <ClaimStakeCard
-        currency="ETH"
-        totalTVL={
-          +formatBalance(
-            +vaultDetails.assets_sum +
-              +(vaultDetails.against_assets_sum
-                ? vaultDetails.against_assets_sum
-                : '0'),
-          )
-        }
-        tvlAgainst={
-          +formatBalance(
-            vaultDetails.against_assets_sum ?? claim.against_assets_sum,
-          )
-        }
-        tvlFor={+formatBalance(vaultDetails.assets_sum ?? claim.for_assets_sum)}
-        amountAgainst={claim.against_num_positions}
-        amountFor={claim.for_num_positions}
-        onAgainstBtnClick={() =>
-          setStakeModalActive((prevState) => ({
-            ...prevState,
-            mode: 'deposit',
-            modalType: 'claim',
-            direction: 'against',
-            isOpen: true,
-          }))
-        }
-        onForBtnClick={() =>
-          setStakeModalActive((prevState) => ({
-            ...prevState,
-            mode: 'deposit',
-            modalType: 'claim',
-            direction: 'for',
-            isOpen: true,
-          }))
-        }
-        disableForBtn={
-          (vaultDetails.user_conviction_against ??
-            claim.user_conviction_against) > '0'
-        }
-        disableAgainstBtn={
-          (vaultDetails.user_conviction ?? claim.user_conviction_for) > '0'
-        }
-      />
+      {!isPending && (
+        <ClaimStakeCard
+          currency="ETH"
+          totalTVL={
+            +formatBalance(
+              +vaultDetails.assets_sum +
+                +(vaultDetails.against_assets_sum
+                  ? vaultDetails.against_assets_sum
+                  : '0'),
+            )
+          }
+          tvlAgainst={
+            +formatBalance(
+              vaultDetails.against_assets_sum ?? claim.against_assets_sum,
+            )
+          }
+          tvlFor={
+            +formatBalance(vaultDetails.assets_sum ?? claim.for_assets_sum)
+          }
+          amountAgainst={claim.against_num_positions}
+          amountFor={claim.for_num_positions}
+          onAgainstBtnClick={() =>
+            setStakeModalActive((prevState) => ({
+              ...prevState,
+              mode: 'deposit',
+              modalType: 'claim',
+              direction: 'against',
+              isOpen: true,
+            }))
+          }
+          onForBtnClick={() =>
+            setStakeModalActive((prevState) => ({
+              ...prevState,
+              mode: 'deposit',
+              modalType: 'claim',
+              direction: 'for',
+              isOpen: true,
+            }))
+          }
+          disableForBtn={
+            (vaultDetails.user_conviction_against ??
+              claim.user_conviction_against) > '0'
+          }
+          disableAgainstBtn={
+            (vaultDetails.user_conviction ?? claim.user_conviction_for) > '0'
+          }
+        />
+      )}
       <InfoCard
         variant={Identity.user}
         username={claim.creator?.display_name ?? ''}
@@ -295,26 +307,45 @@ export default function ClaimDetails() {
     </div>
   )
 
-  const rightPanel = <Outlet />
+  const rightPanel = isPending ? (
+    <Banner
+      variant="warning"
+      title="Please Refresh the Page"
+      message="It looks like the on-chain transaction was successful, but we're still waiting for the information to update. Please refresh the page to ensure everything is up to date."
+    >
+      <NavigationButton
+        reloadDocument
+        variant="secondary"
+        to=""
+        className="max-lg:w-full"
+      >
+        Refresh
+      </NavigationButton>
+    </Banner>
+  ) : (
+    <Outlet />
+  )
 
   return (
     <>
       <TwoPanelLayout leftPanel={leftPanel} rightPanel={rightPanel} />
-      <StakeModal
-        userWallet={wallet}
-        contract={claim.contract}
-        open={stakeModalActive.isOpen}
-        direction={stakeModalActive.direction}
-        claim={claim}
-        vaultDetails={vaultDetails}
-        onClose={() => {
-          setStakeModalActive((prevState) => ({
-            ...prevState,
-            isOpen: false,
-            mode: undefined,
-          }))
-        }}
-      />
+      {!isPending && (
+        <StakeModal
+          userWallet={wallet}
+          contract={claim.contract}
+          open={stakeModalActive.isOpen}
+          direction={stakeModalActive.direction}
+          claim={claim}
+          vaultDetails={vaultDetails}
+          onClose={() => {
+            setStakeModalActive((prevState) => ({
+              ...prevState,
+              isOpen: false,
+              mode: undefined,
+            }))
+          }}
+        />
+      )}
     </>
   )
 }
