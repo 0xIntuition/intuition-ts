@@ -7,17 +7,43 @@ summary: 'Intuition’s collaborative intelligence fosters community-driven cont
 
 ## Overview:
 
-Now that we have signal semantically structured in a many-to-one fashion, we can introduce our first meta-primitive: Lists.
+Now that we have ‘who is saying what’ semantically structured in a many-to-one fashion, we can introduce our first meta-primitive to provide an understanding of the power of Intuition: Lists.
 
-When Identities and Claims are used effectively, they enable the construction of queries with arbitrarily complex combinatorial logic. This allows the state of Intuition to be navigated easily, producing deterministic results.
+If you think about it, most online applications are composed of Lists. Your Twitter feed is a list of Tweets, your following is a list of followers, Amazon provides lists of products, Airbnb is a list of houses to rent, Youtube offers lists of videos, Craigslist is a list...
 
-Essentially, a List can be seen as the outcome of a query.
+When Identities and Claims are used effectively, they enable the construction of deterministic queries with arbitrarily complex combinatorial logic. This allows the state of Intuition to be easily navigated, allowing for an accommodation of most use cases across the web. A List can be seen as the results of a query.
 
-In the Claim creation quest, the Predicate of your Claim was ‘hasTag’ and the Object was ‘Web3’. With this, we can perform a query to return a List of Identities contained in Claims where the Predicate is ‘hasTag’ and the Object is ‘Web3’. This will return a global List of all Identities anyone has tagged with being Web3-related.
+To envision this in practice, take, for example, a scenario in which there is convergence on the Atom [employee of] to represent a person’s employment with a company. Lets assume the adopted Triple structure is {[Person] [employee of] [Business]}. To get all employees of the [Business], a simple query could be constructed to say ‘give me all Subjects of Triples where the Predicate is [employee of], and the Object is [Business]. To filter out potentially bad data, you could make the query a bit more specific, and say ‘give me all the Subjects of Triples where the Predicate is [employee of], the Object is [Business], and [Business] has attested to the fact that it is True’.
 
-You could very easily filter this global List to see your List, a specific person’s List, or a List filtered through a social graph. And, you could very easily use this for all sorts of functionality, as either a user or a developer!
+Intuition’s primitives offer the following as query parameters:
 
-For instance, lists of songs by popularity, books by genre, movies by critic reviews, crypto wallets by Web3 experts, DAO delegates by reputation, computer keyboards by top developers, restaurants by foodies, ride-share drivers by Uber, houses to rent by AirBnb... the list of lists goes on.
+- Atom Data
+- Subject
+- Subject Atom Data
+- Predicate
+- Predicate Atom Data
+- Object
+- Object Atom Data
+- Attestors (users staked)
+- Stake Amount (by user)
+- Stake Timestamp (and, by proxy, Stake Duration)
+
+With these primitive elements, simple queries can accommodate a plethora of functionality for users and developers alike.
+
+For instance, Lists of songs by global popularity, books by genre, movies by critic reviews, crypto wallets by Web3 experts, DAO delegates by reputation, computer keyboards by top developers, restaurants by foodies, ride-share drivers by Uber, houses to rent by AirBnb... The List of Lists goes on - now simply queries on top of a semantic dataset, instead of each new use case requiring a new application to be built...
+
+In the current iteration of the Portal, we’ve produced a reference implementation to demonstrate the power of these queries, where the List functionality is composed of two simple queries:
+
+1. To obtain a List of Lists, we simply do a query for all unique Objects of Triples where the Predicate is [has tag]. For example, if you ‘Tag’ an Atom/Identity with [Web3], behind the scenes, a Triple/Claim is created with Predicate [has tag] and Object [Web3]. Now, [Web3] will show up as a List.
+2. To obtain the entries in a List, we simply do a query for all unique Subjects of Triples where the Predicate is [has tag], and the Object is the respective ‘List’. In the [Web3] example, the query looks for all Subject of Triples where the Predicate is [has tag], and the Object is [Web3].
+
+Because of the tidy semantic nature of the data, it is very easy to make these queries more specific. For example, by passing through additional arguments to the query, a global List can be filtered down to your List, a specific person’s List, or a List filtered through a social graph.
+
+By leveraging specific Triple structures in our Claims, we can create very easily-queryable data for specific use cases. For example, the ‘Follow’ functionality of the Portal leverages a specific Triple structure of [I] [am following] [User]. To get a List of a user’s followers, we merely run a query to return the users staked on the [I] [am following] [User] Triple.
+
+As you can see, once the data is structured correctly, building new, powerful functionality on top becomes extremely trivial...
+
+Lists of things. Lists of lists. Lists of lists of lists...
 
 This is the power of Intuition.
 

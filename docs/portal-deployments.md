@@ -57,7 +57,7 @@ Here's a summary of a typical lifecycle in a sprint.
    The hotfix branch is deployed to the staging environment for immediate testing. The testing process should be thorough but expedited to ensure the fix is effective without unnecessary delays.
 4. **Merging and Deployment**:
    Once verified, the hotfix branch is merged directly into the main branch. This merge triggers an automatic deployment to the dev and staging environments to ensure the fix is integrated smoothly.
-   The hotfix is then deployed to the production environment manually, following the same process as a regular release. This involves publishing a draft release, which includes the hotfix changes, and creating a tag to mark the release.
+   The hotfix is then deployed to the production environment manually. You can go to the "Deploy Portal to Production" action and run the workflow by selecting the appropriate hotfix branch and clicking "Run workflow".
 5. **Post-Deployment Verification**:
    After the hotfix is deployed to production, the system should be closely monitored to confirm that the issue has been resolved without introducing new problems.
    Any necessary follow-up actions, such as informing stakeholders or updating documentation, should be carried out immediately after the deployment.

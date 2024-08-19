@@ -13,11 +13,13 @@ import {
   UserQuestsService,
 } from '@0xintuition/api'
 
+import narrativeAudio from '@assets/audio/quests/primitive-island-intro.mp3'
+import AudioPlayer from '@components/audio-player'
 import { ErrorPage } from '@components/error-page'
 import { QuestCard } from '@components/quest/quest-card'
 import logger from '@lib/utils/logger'
 import { invariant } from '@lib/utils/misc'
-import { getQuestCriteria } from '@lib/utils/quest'
+import { getQuestCriteriaShort } from '@lib/utils/quest'
 import {
   ActionFunctionArgs,
   json,
@@ -130,10 +132,16 @@ export default function Quests() {
             </Button>
           </Link>
           <div className="flex flex-col gap-2">
-            <Text variant="heading4" weight="medium">
-              {STANDARD_QUEST_SET.title}
-            </Text>
-            <Text variant="bodyLarge" className="text-foreground/50">
+            <div className="flex flex-row gap-4 items-center">
+              <Text variant="heading4" weight="medium">
+                {STANDARD_QUEST_SET.title}
+              </Text>
+              <AudioPlayer audioSrc={narrativeAudio} />
+            </div>
+            <Text
+              variant="bodyLarge"
+              className="text-foreground/50 whitespace-pre-wrap italic leading-loose"
+            >
               {STANDARD_QUEST_SET.summary}
             </Text>
           </div>
@@ -156,13 +164,13 @@ export default function Quests() {
             return (
               <QuestCard
                 key={`${quest.id}-quest-card`}
-                imgSrc={quest.image}
+                imgSrc={`${quest.image}-thumbnail`}
                 title={quest.title ?? ''}
                 description={quest.description ?? ''}
                 questStatus={userQuestStatus}
                 label={`Chapter ${quest.position}`}
                 points={quest.points}
-                questCriteria={getQuestCriteria(quest.condition)}
+                questCriteria={getQuestCriteriaShort(quest.condition)}
                 disabled={!available}
                 id={quest.id}
                 handleClick={(e) => {

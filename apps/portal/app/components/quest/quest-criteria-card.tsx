@@ -31,7 +31,7 @@ const QuestCriteriaCard = ({
         >
           Tasks
         </Text>
-        <div className="space-y-2">
+        <div className="space-y-2 w-1/2">
           <QuestCriteriaDisplay criteria={criteria} status={questStatus} />
         </div>
       </div>

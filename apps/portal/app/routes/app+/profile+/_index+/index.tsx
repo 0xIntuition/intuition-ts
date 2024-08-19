@@ -1,9 +1,7 @@
 import { QuestHeaderCard, Text } from '@0xintuition/1ui'
 import {
-  ApiError,
   ClaimSortColumn,
   ClaimsService,
-  IdentitiesService,
   QuestNarrative,
   SortDirection,
 } from '@0xintuition/api'
@@ -15,11 +13,11 @@ import { OverviewCreatedHeader } from '@components/profile/overview-created-head
 import { OverviewStakingHeader } from '@components/profile/overview-staking-header'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { getClaimsAboutIdentity } from '@lib/services/claims'
+import { getIdentityOrPending } from '@lib/services/identities'
 import { getUserSavedLists } from '@lib/services/lists'
 import { getPositionsOnIdentity } from '@lib/services/positions'
-import logger from '@lib/utils/logger'
 import { formatBalance, invariant } from '@lib/utils/misc'
-import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
+import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { useNavigate, useRouteLoaderData } from '@remix-run/react'
 import { ProfileLoaderData } from '@routes/app+/profile+/_index+/_layout'
 import { fetchWrapper } from '@server/api'
@@ -36,19 +34,10 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const userWallet = await requireUserWallet(request)
   invariant(userWallet, NO_WALLET_ERROR)
 
-  let userIdentity
-  try {
-    userIdentity = await fetchWrapper(request, {
-      method: IdentitiesService.getIdentityById,
-      args: { id: userWallet },
-    })
-  } catch (error) {
-    if (error instanceof ApiError && error.status === 404) {
-      throw redirect('/invite')
-    }
-    logger('Error fetching userIdentity', error)
-    throw error
-  }
+  const { identity: userIdentity, isPending } = await getIdentityOrPending(
+    request,
+    userWallet,
+  )
 
   const url = new URL(request.url)
   const searchParams = new URLSearchParams(url.search)
@@ -59,40 +48,43 @@ export async function loader({ request }: LoaderFunctionArgs) {
   listSearchParams.set('limit', '6')
 
   return json({
-    questsProgress: await getQuestsProgress({
-      request,
-      options: {
-        narrative: QuestNarrative.STANDARD,
-      },
-    }),
-    positions: await getPositionsOnIdentity({
-      request,
-      identityId: userIdentity.id,
-      searchParams,
-    }),
-    claims: await getClaimsAboutIdentity({
-      request,
-      identityId: userIdentity.id,
-      searchParams,
-    }),
-    claimsSummary: await fetchWrapper(request, {
-      method: ClaimsService.claimSummary,
-      args: {
-        identity: userIdentity.id,
-      },
-    }),
-    savedListClaims: await getUserSavedLists({
-      request,
-      userWallet,
-      searchParams: listSearchParams,
-    }),
+    ...(!isPending &&
+      !!userIdentity && {
+        questsProgress: await getQuestsProgress({
+          request,
+          options: {
+            narrative: QuestNarrative.STANDARD,
+          },
+        }),
+        positions: await getPositionsOnIdentity({
+          request,
+          identityId: userIdentity.id,
+          searchParams,
+        }),
+        claims: await getClaimsAboutIdentity({
+          request,
+          identityId: userIdentity.id,
+          searchParams,
+        }),
+        claimsSummary: await fetchWrapper(request, {
+          method: ClaimsService.claimSummary,
+          args: {
+            identity: userIdentity.id,
+          },
+        }),
+        savedListClaims: await getUserSavedLists({
+          request,
+          userWallet,
+          searchParams: listSearchParams,
+        }),
+      }),
   })
 }
 
 export default function UserProfileOverview() {
   const { questsProgress, claims, positions, claimsSummary, savedListClaims } =
     useLiveLoader<typeof loader>(['attest', 'create'])
-  const { userIdentity, userTotals } =
+  const { userIdentity, userTotals, isPending } =
     useRouteLoaderData<ProfileLoaderData>(
       'routes/app+/profile+/_index+/_layout',
     ) ?? {}
@@ -102,13 +94,15 @@ export default function UserProfileOverview() {
 
   return (
     <div className="flex flex-col gap-10">
-      <QuestHeaderCard
-        title={STANDARD_QUEST_SET.title ?? ''}
-        subtitle={STANDARD_QUEST_SET.description ?? ''}
-        numberOfCompletedQuests={questsProgress.numCompletedQuests}
-        totalNumberOfQuests={questsProgress.numQuests}
-        onButtonClick={() => navigate(STANDARD_QUEST_SET.navigatePath)}
-      />
+      {!isPending && !!questsProgress && (
+        <QuestHeaderCard
+          title={STANDARD_QUEST_SET.title ?? ''}
+          subtitle={STANDARD_QUEST_SET.description ?? ''}
+          numberOfCompletedQuests={questsProgress.numCompletedQuests}
+          totalNumberOfQuests={questsProgress.numQuests}
+          onButtonClick={() => navigate(STANDARD_QUEST_SET.navigatePath)}
+        />
+      )}
 
       <div className="flex flex-col gap-6">
         <Text
@@ -122,14 +116,14 @@ export default function UserProfileOverview() {
           <OverviewAboutHeader
             variant="claims"
             userIdentity={userIdentity}
-            totalClaims={claims.pagination?.totalEntries}
+            totalClaims={claims?.pagination?.totalEntries}
             totalStake={+formatBalance(claimsSummary?.assets_sum ?? 0, 18)}
             link={`${PATHS.PROFILE}/data-about`}
           />
           <OverviewAboutHeader
             variant="positions"
             userIdentity={userIdentity}
-            totalPositions={positions.pagination.totalEntries}
+            totalPositions={positions?.pagination.totalEntries}
             totalStake={+formatBalance(userIdentity.assets_sum, 18)}
             link={`${PATHS.PROFILE}/data-about`}
           />
@@ -175,7 +169,7 @@ export default function UserProfileOverview() {
           Top Lists
         </Text>
         <ListClaimsList
-          listClaims={savedListClaims.savedListClaims}
+          listClaims={savedListClaims?.savedListClaims ?? []}
           enableSort={false}
           enableSearch={false}
           columns={3}
