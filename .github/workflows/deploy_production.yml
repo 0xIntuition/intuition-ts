@@ -89,8 +89,8 @@ jobs:
           --build-arg SESSION_SECRET=${{ secrets.SESSION_SECRET }} \
           --build-arg API_URL=${{ secrets.API_URL }} \
           --build-arg API_KEY=${{ secrets.API_KEY }} \
-          --build-arg PRIVY_APP_ID=${{ secrets.PRIVY_APP_ID }} \
-          --build-arg PRIVY_APP_SECRET=${{ secrets.PRIVY_APP_SECRET }} \
+          --build-arg PRIVY_APP_ID=${{ secrets.PRIVY_APP_ID_PRODUCTION }} \
+          --build-arg PRIVY_APP_SECRET=${{ secrets.PRIVY_APP_SECRET_PRODUCTION }} \
           --build-arg CLOUDINARY_CLOUD_NAME=${{ secrets.CLOUDINARY_CLOUD_NAME }} \
           --build-arg CLOUDINARY_API_KEY=${{ secrets.CLOUDINARY_API_KEY }} \
           --build-arg CLOUDINARY_API_SECRET=${{ secrets.CLOUDINARY_API_SECRET }} \

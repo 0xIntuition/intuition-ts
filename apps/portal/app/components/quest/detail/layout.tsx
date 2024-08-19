@@ -18,7 +18,7 @@ export function Hero({ imgSrc }: IHeroProps) {
     <img
       src={imgSrc ?? FALLBACK_QUEST_PLACEHOLDER_IMAGE}
       alt={'quest hero'}
-      className="object-cover w-full h-[350px] theme-border rounded-lg max-sm:h-[200px]"
+      className="object-cover w-full h-[350px] theme-border rounded-b-lg max-sm:h-[200px]"
     />
   )
 }
