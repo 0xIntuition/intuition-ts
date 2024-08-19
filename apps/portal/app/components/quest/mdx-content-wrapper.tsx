@@ -43,7 +43,7 @@ function getComponentData(variant: MDXContentVariantType) {
   switch (variant) {
     case MDXContentVariant.LORE:
       return {
-        baseClass: 'flex flex-col gap-2 text-italic',
+        baseClass: 'flex flex-col gap-2 italic',
         components: getMdxComponents(variant),
       }
     default:

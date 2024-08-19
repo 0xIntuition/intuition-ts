@@ -12,20 +12,39 @@ export function getQuestContentBySlug(slug: string): QuestContentType | null {
   return quest
 }
 
+export function getQuestCriteriaShort(condition: QuestCondition) {
+  switch (condition) {
+    case QuestCondition.CREATE_ATOM:
+      return 'Create an Atom'
+    case QuestCondition.STAKE_IDENTITY:
+      return 'Stake on an Atom'
+    case QuestCondition.CREATE_CLAIM:
+      return 'Create a Triple'
+    case QuestCondition.STAKE_CLAIM:
+      return 'Stake ETH ‘For’ a Triple'
+    case QuestCondition.COUNTER_STAKE_CLAIM:
+      return 'Stake ETH ‘Against’ a Triple'
+    case QuestCondition.ALWAYS_TRUE:
+      return 'View a Query'
+    default:
+      return 'Unknown'
+  }
+}
+
 export function getQuestCriteria(condition: QuestCondition) {
   switch (condition) {
     case QuestCondition.CREATE_ATOM:
-      return 'Create an atom'
+      return 'Create an Identity for any web3 project, topic, or concept of your choosing.'
     case QuestCondition.STAKE_IDENTITY:
       return 'Indicate your conviction in and support of an Atom / Identity by staking on the Atom / Identity’s Vault.'
     case QuestCondition.CREATE_CLAIM:
-      return 'Create a claim'
+      return 'Practice creating a Triple, also known as a ‘Claim’, to create a semantic statement about a web3 project or topic of your choosing.'
     case QuestCondition.STAKE_CLAIM:
-      return 'Stake ETH For a claim'
+      return 'Signal agreement with a specific semantic statement by staking on the Triple / Claim’s respective Positive Vault.'
     case QuestCondition.COUNTER_STAKE_CLAIM:
-      return 'Stake ETH Against a claim'
+      return 'Signal disagreement with a specific semantic statement by staking on the Triple / Claim’s respective Negative Vault.'
     case QuestCondition.ALWAYS_TRUE:
-      return 'Search and explore the intuition knowledge graph'
+      return 'Get a feel for the power of Atoms / Triples by viewing a basic query, also known as a ‘List’.'
     default:
       return 'Unknown'
   }
