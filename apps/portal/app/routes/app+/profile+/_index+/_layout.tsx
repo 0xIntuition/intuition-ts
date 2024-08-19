@@ -113,7 +113,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   )
 
   if (!userIdentity) {
-    throw new Response('Not Found', { status: 404 })
+    throw redirect('/create') // this is an actual 404 and should redirect to /create
   }
 
   if (!userIdentity.creator) {
