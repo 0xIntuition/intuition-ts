@@ -10,9 +10,10 @@ export default function PrivyRevalidate() {
   useEffect(() => {
     // if privyUser has changed, revalidate the page
     if (ready && authenticated && privyUser) {
-      console.log('DETECTED PRIVY USER CHANGE', privyUser)
       revalidate()
     }
+    // omits authenticate from the exhaustive deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ready, privyUser, revalidate])
 
   return <div></div>

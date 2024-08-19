@@ -60,7 +60,6 @@ export function ActivityList({
       `redeemed ${formatBalance(value, 18)} ETH from a claim`,
   }
 
-  console.log('activities', activities)
   return (
     <List<SortColumn>
       pagination={pagination}
