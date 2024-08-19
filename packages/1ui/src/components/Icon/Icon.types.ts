@@ -60,6 +60,7 @@ export const IconName = {
   microphone: 'microphone',
   moneybag: 'moneybag',
   personCircle: 'person-circle',
+  pause: 'pause',
   play: 'play',
   playCircle: 'play-circle',
   plusLarge: 'plus-large',

@@ -1,4 +1,3 @@
-import tutorialIslandOverview from '@assets/0-tutorial-island-overview.webp'
 import comingSoonImage from '@assets/coming-soon-image.png'
 import { QuestSet } from 'app/types/quest'
 
@@ -6,11 +5,20 @@ export const QUEST_LOG_DESCRIPTION =
   'Something inside you stirs, urging you to rekindle and reclaim humanity’s lost intuition...'
 
 export const STANDARD_QUEST_SET: QuestSet = {
-  imgSrc: tutorialIslandOverview,
+  imgSrc:
+    'https://res.cloudinary.com/dfpwy9nyv/image/upload/f_auto,q_auto/v1/Portal%20Assets/quests/primitive-island-overview-header',
   title: 'Tutorial Island: The Primitive Elements',
   description: 'Learn the core elements of the Intuition System',
-  summary:
-    'Complete the chapters below to learn the core primitives that make up the Intuition system.',
+  summary: `Your perspective shifts; the matrix seeming to glitch.
+The universe flickers, winks. The fabric of reality tearing asunder.
+You smile. A twinkle in your eye. An understanding. Deep, powerful - humbling, yet reassuring.
+Reality fades out of existence. In full awareness, the world turns black.
+From the nothingness, shape comes into form.
+An island. A place from a time lost.
+The blurred shapes become clear, the world sharply snapping into place.
+This world suddenly feels… real. Even more real than the reality you knew before.
+But how could this be?
+Why have you been brought here?`,
   navigatePath: '/app/quest/narrative/0',
 }
 

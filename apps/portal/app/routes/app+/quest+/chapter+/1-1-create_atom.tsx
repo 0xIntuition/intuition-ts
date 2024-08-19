@@ -11,6 +11,7 @@ import {
   UserQuestsService,
 } from '@0xintuition/api'
 
+import questAudio from '@assets/audio/quests/chapter-1.mp3'
 import CreateIdentityModal from '@components/create-identity/create-identity-modal'
 import { ErrorPage } from '@components/error-page'
 import CreateAtomActivity from '@components/quest/create-atom-activity'
@@ -152,13 +153,14 @@ export default function Quests() {
   return (
     <div className="px-10 w-full max-w-7xl mx-auto flex flex-col gap-10 max-lg:px-0 max-md:gap-4">
       <div className="flex flex-col gap-10 mb-5 max-md:gap-5 max-md:mb-2">
-        <Hero imgSrc={quest.image} />
+        <Hero imgSrc={`${quest.image}-header`} />
         <div className="flex flex-col gap-10 max-md:gap-4">
           <QuestBackButton />
           <Header
             position={quest.position}
             title={quest.title}
             questStatus={userQuest?.status}
+            questAudio={questAudio}
           />
           <MDXContentView body={introBody} variant={MDXContentVariant.LORE} />
           <QuestCriteriaCard
