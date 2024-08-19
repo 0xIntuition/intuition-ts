@@ -17,6 +17,7 @@ import {
 import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
 
 import { InfoTooltip } from '@components/info-tooltip'
+import { FeeBreakdownTooltip } from '@components/stake/stake-fee-breakdown'
 import {
   formatDisplayBalance,
   getAtomDescription,
@@ -131,7 +132,7 @@ interface Fees {
 
 export default function StakeReview({
   val,
-  mode,
+  mode = 'identity',
   dispatch,
   state,
   direction,
@@ -168,45 +169,6 @@ export default function StakeReview({
       ? calculateDepositFees(val, vaultDetails)
       : calculateRedeemFees(val, vaultDetails)
 
-  const renderFeeBreakdown = () => (
-    <div className="flex flex-col gap-2 w-full">
-      {claim && mode === 'deposit'
-        ? `When depositing on a claim, standard fees apply to your
-                    deposit. Additionally, a portion of your deposit goes to the
-                    claim's underlying identities, creating "atom
-                    equity". This portion also incurs entry fees.`
-        : claim && mode === 'redeem'
-          ? `When redeeming from a claim, you pay a protocol fee and
-      an exit fee on your withdrawal. This applies only to your
-      position in the claim itself.`
-          : `Standard fees apply to this transaction.`}
-      <FeeBreakdown label="Protocol Fee" amount={fees.protocolFeeAmount} />
-      {mode === 'redeem' && (
-        <FeeBreakdown label="Exit Fee" amount={fees.exitFeeAmount ?? 0} />
-      )}
-      {claim && mode === 'deposit' && (
-        <>
-          <FeeBreakdown
-            label="Identity Entry Fees"
-            amount={fees.totalAtomEntryFeeAmount ?? 0}
-          />
-          <FeeBreakdown
-            label="Claim Entry Fee"
-            amount={fees.tripleEntryFeeAmount ?? 0}
-          />
-        </>
-      )}
-      {identity && mode === 'deposit' && (
-        <FeeBreakdown
-          label="Entry Fee"
-          amount={fees.tripleEntryFeeAmount ?? 0}
-        />
-      )}
-      <Separator />
-      <FeeBreakdown label="Total Fees" amount={fees.totalFees} />
-    </div>
-  )
-
   const renderHeadlineInfoTooltip = () => {
     if (mode === 'deposit' && modalType === 'claim') {
       return (
@@ -218,11 +180,11 @@ export default function StakeReview({
           }
           content={
             <div className="flex flex-col gap-2 w-full">
-              When depositing on a claim, most goes to signal your stance on the
-              claim itself. A portion is allocated to the claim&apos;s
-              underlying identities, giving you &lsquo;atom equity&rsquo;. Both
-              parts of your deposit strengthens your signal in the Intuition
-              network.
+              <Text variant="base">
+                When depositing on a Claim, a portion of the deposit amount is
+                automatically allocated to each underlying Identity, as there is
+                an indirect signaling of support of these Identities.
+              </Text>
               <div className="flex flex-row w-full justify-between">
                 <Text variant="base" weight="medium">
                   Claim Deposit:
@@ -262,44 +224,9 @@ export default function StakeReview({
           }
           content={
             <div className="flex flex-col gap-2 w-full">
-              When depositing on an identity, you&apos;re creating a signal that
-              improves the identity&apos;s discoverability in the Intuition
-              network.
-            </div>
-          }
-        />
-      )
-    } else if (mode === 'redeem' && modalType === 'identity') {
-      return (
-        <InfoTooltip
-          title="Redeeming from an Identity"
-          icon={IconName.circleInfo}
-          trigger={
-            <Icon name={IconName.circleQuestionMark} className="h-5 w-5" />
-          }
-          content={
-            <div className="flex flex-col gap-2 w-full">
-              When redeeming from an identity, you&apos;re withdrawing your
-              position. This reduces your signal of support for that user or
-              entity in the Intuition network.
-            </div>
-          }
-        />
-      )
-    } else if (mode === 'redeem' && modalType === 'claim') {
-      return (
-        <InfoTooltip
-          title="Redeeming from a Claim"
-          icon={IconName.circleInfo}
-          trigger={
-            <Icon name={IconName.circleQuestionMark} className="h-5 w-5" />
-          }
-          content={
-            <div className="flex flex-col gap-2 w-full">
-              When redeeming from a claim, you&apos;re withdrawing your
-              position. This reduces your signal for the claim in the Intuition
-              network. Any &apos;atom equity&apos; you hold in the underlying
-              identities is separate and can be redeemed independently.
+              Depositing on an Identity signifies a belief in the relevancy of
+              the respective Identity and enhances its discoverability in the
+              Intuition system.
             </div>
           }
         />
@@ -415,10 +342,11 @@ export default function StakeReview({
               className="text-neutral-50/50 flex items-center gap-1"
             >
               Estimated Fees: {fees.totalFees.toFixed(4)} ETH{' '}
-              <InfoTooltip
-                title="Fees"
-                icon={IconName.circleInfo}
-                content={renderFeeBreakdown()}
+              <FeeBreakdownTooltip
+                fees={fees}
+                mode={mode}
+                claim={claim}
+                identity={identity}
               />
             </Text>
           </div>
@@ -427,14 +355,3 @@ export default function StakeReview({
     </>
   )
 }
-
-const FeeBreakdown = ({ label, amount }: { label: string; amount: number }) => (
-  <div className="flex flex-row w-full justify-between">
-    <Text variant="base" weight="medium">
-      {label}:
-    </Text>
-    <Text variant="base" weight="medium" className="text-destructive">
-      {amount.toFixed(6)} ETH
-    </Text>
-  </div>
-)
