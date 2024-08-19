@@ -133,7 +133,7 @@ export default function Quests() {
             Relics
           </div>
         </div>
-        <div className="space-y-5">
+        <div id="referrals" className="space-y-5">
           <Text variant="headline">Referrals</Text>
           <Suspense fallback={<Skeleton className="h-52 w-full" />}>
             <Await resolve={inviteCodes} errorElement={<></>}>
