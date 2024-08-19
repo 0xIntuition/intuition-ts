@@ -4,9 +4,11 @@
  */
 import { defineConfig } from '@hey-api/openapi-ts'
 
+const openApiUrl = process.env.API_URL || 'https://dev.api.intuition.systems'
+
 export default defineConfig({
   client: 'fetch',
-  input: 'https://dev.api.intuition.systems/api-docs/openapi.json',
+  input: `${openApiUrl}/api-docs/openapi.json`,
   output: {
     format: 'prettier',
     path: './src/api-client',
