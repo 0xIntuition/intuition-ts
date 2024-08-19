@@ -53,7 +53,7 @@ export function AddListExistingCta({
           )}
           <div className="flex items-center gap-4">
             <Button onClick={onSaveClick} variant="secondary">
-              Save
+              Stake
             </Button>
             <Button
               variant="ghost"

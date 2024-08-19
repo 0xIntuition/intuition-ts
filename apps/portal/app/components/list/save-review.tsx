@@ -107,6 +107,7 @@ export default function SaveReview({
               ETH on save claim
             </Text>
             <Claim
+              size="md"
               subject={{
                 variant: identity?.is_user ? Identity.user : Identity.nonUser,
                 label: getAtomLabel(identity),
@@ -135,6 +136,7 @@ export default function SaveReview({
                 link: '',
               }}
               link=""
+              maxIdentityLength={16}
             />
             <Text
               variant="base"
