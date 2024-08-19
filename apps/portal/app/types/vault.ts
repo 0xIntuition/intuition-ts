@@ -83,6 +83,8 @@ export type VaultDetailsType = {
   formatted_min_share: string
   atom_cost?: string
   formatted_atom_cost?: string
+  triple_cost?: string
+  formatted_triple_cost?: string
   atom_creation_fee?: string
   formatted_atom_creation_fee?: string
   isTriple?: boolean

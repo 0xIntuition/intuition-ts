@@ -2,6 +2,8 @@ import { IconName, Separator, Text } from '@0xintuition/1ui'
 import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
 
 import { InfoTooltip } from '@components/info-tooltip'
+import { Link } from '@remix-run/react'
+import { PATHS } from 'app/consts'
 
 export interface Fees {
   totalFees: number
@@ -54,16 +56,7 @@ export const FeeBreakdownTooltip = ({
     icon={IconName.circleInfo}
     content={
       <div className="flex flex-col gap-2 w-full">
-        {claim && mode === 'deposit'
-          ? `When depositing on a claim, standard fees apply to your
-              deposit. Additionally, a portion of your deposit goes to the
-              claim's underlying identities, creating "atom
-              equity". This portion also incurs entry fees.`
-          : claim && mode === 'redeem'
-            ? `When redeeming from a claim, you pay a protocol fee and
-                an exit fee on your withdrawal. This applies only to your
-                position in the claim itself.`
-            : `Standard fees apply to this transaction.`}
+        <StandardFees />
         <FeeBreakdown label="Protocol Fee" amount={fees.protocolFeeAmount} />
         {mode === 'redeem' && (
           <FeeBreakdown label="Exit Fee" amount={fees.exitFeeAmount ?? 0} />
@@ -92,3 +85,20 @@ export const FeeBreakdownTooltip = ({
     }
   />
 )
+
+export const StandardFees = () => {
+  return (
+    <Text variant="base">
+      Standard fees apply to this transaction. See{' '}
+      <Link
+        to={PATHS.HELP}
+        target="_blank"
+        prefetch="intent"
+        className="underline"
+      >
+        Help Center
+      </Link>{' '}
+      for details.
+    </Text>
+  )
+}

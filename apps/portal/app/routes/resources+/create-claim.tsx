@@ -1,5 +1,6 @@
 import { json } from '@remix-run/node'
 import {
+  getFees,
   getGeneralConfig,
   getTripleConfig,
   getTripleCost,
@@ -15,6 +16,8 @@ export type CreateClaimFeesType = {
   tripleCreationFee: string
   atomDepositFractionOnCreation: string
   atomDepositFractionOnDeposit: string
+  entryFee: string
+  protocolFee: string
   feeDenominator: string
 }
 
@@ -29,10 +32,12 @@ export async function loader() {
       atomDepositFractionOnDeposit,
     ],
     [, , feeDenominator],
+    [entryFee, , protocolFee],
   ] = await Promise.all([
     getTripleCost(),
     getTripleConfig(),
     getGeneralConfig(),
+    getFees(),
   ])
 
   return json({
@@ -42,6 +47,8 @@ export async function loader() {
       tripleCreationFee: tripleCreationFee.toString(),
       atomDepositFractionOnCreation: atomDepositFractionOnCreation.toString(),
       atomDepositFractionOnDeposit: atomDepositFractionOnDeposit.toString(),
+      entryFee: entryFee.toString(),
+      protocolFee: protocolFee.toString(),
       feeDenominator: feeDenominator.toString(),
     } as CreateClaimFeesType,
   } as CreateClaimLoaderData)
