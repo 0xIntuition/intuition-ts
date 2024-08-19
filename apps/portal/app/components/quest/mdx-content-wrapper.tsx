@@ -26,7 +26,27 @@ export function getMdxComponents(variant: MDXContentVariantType) {
         {...props}
       />
     ),
+    ul: (props: React.HTMLAttributes<HTMLUListElement>) => (
+      <ul className="list-disc text-foreground/50 pl-5 space-y-2" {...props} />
+    ),
+    ol: (props: React.HTMLAttributes<HTMLOListElement>) => (
+      <ol
+        className="list-decimal text-foreground/50 pl-5 space-y-2"
+        {...props}
+      />
+    ),
+    li: (props: React.HTMLAttributes<HTMLLIElement>) => (
+      <li>
+        {/* @ts-expect-error Suppressing element type mismatch */}
+        <Text
+          variant={TextVariant.bodyLarge}
+          className="text-foreground/50"
+          {...props}
+        />
+      </li>
+    ),
   }
+
   switch (variant) {
     case MDXContentVariant.LORE: {
       return {
