@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 
 import {
+  Banner,
   Button,
   Icon,
   IconName,
@@ -29,11 +30,13 @@ import {
 import { ErrorPage } from '@components/error-page'
 import FollowModal from '@components/follow/follow-modal'
 import SaveListModal from '@components/list/save-list-modal'
+import NavigationButton from '@components/navigation-link'
 import ImageModal from '@components/profile/image-modal'
 import { SegmentedNav } from '@components/segmented-nav'
 import StakeModal from '@components/stake/stake-modal'
 import TagsModal from '@components/tags/tags-modal'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
+import { getIdentityOrPending } from '@lib/services/identities'
 import {
   followModalAtom,
   imageModalAtom,
@@ -77,21 +80,33 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     throw redirect(PATHS.PROFILE)
   }
 
-  const userIdentity = await fetchWrapper(request, {
-    method: IdentitiesService.getIdentityById,
-    args: {
-      id: wallet,
-    },
-  })
+  // const userIdentity = await fetchWrapper(request, {
+  //   method: IdentitiesService.getIdentityById,
+  //   args: {
+  //     id: wallet,
+  //   },
+  // })
+
+  const { identity: userIdentity, isPending } = await getIdentityOrPending(
+    request,
+    wallet,
+  )
+
+  // if (!userIdentity) {
+  //   return logger('No user identity found')
+  // }
 
   if (!userIdentity) {
-    return logger('No user identity found')
+    throw new Response('Not Found', { status: 404 })
   }
 
-  if (!userIdentity.creator || typeof userIdentity.creator.id !== 'string') {
-    logger('Invalid or missing creator ID')
-    return
-  }
+  // if (
+  //   !isPending ||
+  //   !userIdentity.creator ||
+  //   typeof userIdentity.creator.id !== 'string'
+  // ) {
+  //   throw new Response('Invalid or missing creator ID', { status: 404 })
+  // }
 
   const userTotals = await fetchWrapper(request, {
     method: UsersService.getUserTotals,
@@ -106,7 +121,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
   let vaultDetails: VaultDetailsType | null = null
 
-  if (userIdentity !== null && userIdentity.vault_id) {
+  if (!!userIdentity && userIdentity.vault_id) {
     try {
       vaultDetails = await getVaultDetails(
         userIdentity.contract,
@@ -152,6 +167,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     followClaim,
     followVaultDetails,
     vaultDetails,
+    isPending,
   })
 }
 
@@ -164,6 +180,7 @@ export default function Profile() {
     followClaim,
     followVaultDetails,
     vaultDetails,
+    isPending,
   } = useLiveLoader<{
     wallet: string
     userWallet: string
@@ -172,6 +189,7 @@ export default function Profile() {
     followClaim: ClaimPresenter
     followVaultDetails: VaultDetailsType
     vaultDetails: VaultDetailsType
+    isPending: boolean
   }>(['attest', 'create'])
   const navigate = useNavigate()
 
@@ -219,30 +237,32 @@ export default function Profile() {
           })
         }}
       >
-        <Button
-          variant="secondary"
-          className="w-full"
-          onClick={() =>
-            setFollowModalActive((prevState) => ({
-              ...prevState,
-              isOpen: true,
-            }))
-          }
-        >
-          {followVaultDetails &&
-          (followVaultDetails.user_conviction ?? '0') > '0' ? (
-            <>
-              <Icon name={IconName.peopleAddFilled} className="h-4 w-4" />
-              Following ·{' '}
-              {formatBalance(followVaultDetails.user_assets ?? '0', 18)} ETH
-            </>
-          ) : (
-            <>
-              <Icon name={IconName.peopleAdd} className="h-4 w-4" />
-              Follow
-            </>
-          )}
-        </Button>
+        {!isPending && (
+          <Button
+            variant="secondary"
+            className="w-full"
+            onClick={() =>
+              setFollowModalActive((prevState) => ({
+                ...prevState,
+                isOpen: true,
+              }))
+            }
+          >
+            {followVaultDetails &&
+            (followVaultDetails.user_conviction ?? '0') > '0' ? (
+              <>
+                <Icon name={IconName.peopleAddFilled} className="h-4 w-4" />
+                Following ·{' '}
+                {formatBalance(followVaultDetails.user_assets ?? '0', 18)} ETH
+              </>
+            ) : (
+              <>
+                <Icon name={IconName.peopleAdd} className="h-4 w-4" />
+                Follow
+              </>
+            )}
+          </Button>
+        )}
       </ProfileCard>
       {/* TODO: Determine whether we need this or not */}
       {/* <ProfileSocialAccounts
@@ -251,80 +271,99 @@ export default function Profile() {
         setEditSocialLinksModalActive(true)
       }
     /> */}
-      <Tags className="max-lg:items-center">
-        {userIdentity?.tags && userIdentity?.tags.length > 0 && (
-          <TagsContent numberOfTags={userIdentity?.tag_count ?? 0}>
-            {userIdentity?.tags?.map((tag) => (
-              <TagWithValue
-                key={tag.identity_id}
-                label={tag.display_name}
-                value={tag.num_tagged_identities}
-                onStake={() => {
-                  setSelectedTag(tag)
-                  setSaveListModalActive({ isOpen: true, id: tag.vault_id })
-                }}
+      {!isPending && (
+        <>
+          <Tags className="max-lg:items-center">
+            {userIdentity?.tags && userIdentity?.tags.length > 0 && (
+              <TagsContent numberOfTags={userIdentity?.tag_count ?? 0}>
+                {userIdentity?.tags?.map((tag) => (
+                  <TagWithValue
+                    key={tag.identity_id}
+                    label={tag.display_name}
+                    value={tag.num_tagged_identities}
+                    onStake={() => {
+                      setSelectedTag(tag)
+                      setSaveListModalActive({ isOpen: true, id: tag.vault_id })
+                    }}
+                  />
+                ))}
+              </TagsContent>
+            )}
+            <Tag
+              className="w-fit border-dashed"
+              onClick={() => {
+                setTagsModalActive({ isOpen: true, mode: 'add' })
+              }}
+            >
+              <Icon name="plus-small" className="w-5 h-5" />
+              Add tags
+            </Tag>
+
+            <TagsButton
+              onClick={() => {
+                setTagsModalActive({ isOpen: true, mode: 'view' })
+              }}
+            />
+          </Tags>
+
+          {vaultDetails !== null && user_assets !== '0' ? (
+            <PositionCard
+              onButtonClick={() =>
+                setStakeModalActive((prevState) => ({
+                  ...prevState,
+                  mode: 'redeem',
+                  modalType: 'identity',
+                  isOpen: true,
+                }))
+              }
+            >
+              <PositionCardStaked
+                amount={user_assets ? +formatBalance(user_assets, 18) : 0}
               />
-            ))}
-          </TagsContent>
-        )}
-        <Tag
-          className="w-fit border-dashed"
-          onClick={() => {
-            setTagsModalActive({ isOpen: true, mode: 'add' })
-          }}
-        >
-          <Icon name="plus-small" className="w-5 h-5" />
-          Add tags
-        </Tag>
-
-        <TagsButton
-          onClick={() => {
-            setTagsModalActive({ isOpen: true, mode: 'view' })
-          }}
-        />
-      </Tags>
-
-      {vaultDetails !== null && user_assets !== '0' ? (
-        <PositionCard
-          onButtonClick={() =>
-            setStakeModalActive((prevState) => ({
-              ...prevState,
-              mode: 'redeem',
-              modalType: 'identity',
-              isOpen: true,
-            }))
-          }
-        >
-          <PositionCardStaked
-            amount={user_assets ? +formatBalance(user_assets, 18) : 0}
-          />
-          <PositionCardOwnership
-            percentOwnership={
-              user_assets !== null && assets_sum
-                ? +calculatePercentageOfTvl(user_assets ?? '0', assets_sum)
-                : 0
+              <PositionCardOwnership
+                percentOwnership={
+                  user_assets !== null && assets_sum
+                    ? +calculatePercentageOfTvl(user_assets ?? '0', assets_sum)
+                    : 0
+                }
+              />
+              <PositionCardLastUpdated timestamp={userIdentity.updated_at} />
+            </PositionCard>
+          ) : null}
+          <StakeCard
+            tvl={+formatBalance(assets_sum ?? '0')}
+            holders={userIdentity.num_positions}
+            onBuyClick={() =>
+              setStakeModalActive((prevState) => ({
+                ...prevState,
+                mode: 'deposit',
+                modalType: 'identity',
+                isOpen: true,
+              }))
             }
+            onViewAllClick={() => navigate(`/app/profile/${wallet}/data-about`)}
           />
-          <PositionCardLastUpdated timestamp={userIdentity.updated_at} />
-        </PositionCard>
-      ) : null}
-      <StakeCard
-        tvl={+formatBalance(assets_sum ?? '0')}
-        holders={userIdentity.num_positions}
-        onBuyClick={() =>
-          setStakeModalActive((prevState) => ({
-            ...prevState,
-            mode: 'deposit',
-            modalType: 'identity',
-            isOpen: true,
-          }))
-        }
-        onViewAllClick={() => navigate(`/app/profile/${wallet}/data-about`)}
-      />
+        </>
+      )}
     </div>
   )
 
-  const rightPanel = (
+  const rightPanel = isPending ? (
+    <Banner
+      variant="warning"
+      title="Please Refresh the Page"
+      message="It looks like the on-chain transaction was successful, but we're still waiting for the information to update. Please refresh the page to ensure everything is up to date."
+    >
+      <NavigationButton
+        reloadDocument
+        variant="secondary"
+        to=""
+        className="max-lg:w-full"
+      >
+        Refresh
+      </NavigationButton>
+    </Banner>
+  ) : (
     <>
       <div className="flex flex-row justify-end mb-6 max-lg:justify-center">
         <SegmentedNav options={userIdentityRouteOptions} />
