@@ -41,7 +41,7 @@ export const getStandardPageParams = ({
 }): {
   page: number
   limit: number
-  sortBy: SortColumn
+  sortBy: SortColumn | ClaimSortColumn | PositionSortColumn
   direction: SortDirection
 } => {
   const getParamProps = { searchParams, paramPrefix }

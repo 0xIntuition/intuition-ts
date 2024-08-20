@@ -4,6 +4,7 @@ import {
   ClaimsService,
   IdentityPresenter,
   PositionSortColumn,
+  SortColumn,
   SortDirection,
   UsersService,
 } from '@0xintuition/api'
@@ -89,7 +90,7 @@ export async function getUserSavedLists({
     args: {
       page,
       limit,
-      sortBy,
+      sortBy: sortBy as SortColumn,
       direction,
       displayName: getSpecialPredicate(CURRENT_ENV).tagPredicate.displayName,
       user: userWallet,

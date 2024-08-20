@@ -22,7 +22,7 @@ import { RevalidateButton } from '@components/revalidate-button'
 import { DataHeaderSkeleton, PaginatedListSkeleton } from '@components/skeleton'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { getClaimsAboutIdentity } from '@lib/services/claims'
-import { getConnectionsData } from '@lib/services/connections'
+import { ConnectionsData, getConnectionsData } from '@lib/services/connections'
 import { getIdentityOrPending } from '@lib/services/identities'
 import { getUserSavedLists } from '@lib/services/lists'
 import { getPositionsOnIdentity } from '@lib/services/positions'
@@ -87,16 +87,18 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
           userWallet: wallet,
           searchParams: listSearchParams,
         }),
-        connectionsData: getConnectionsData({ request, userWallet: wallet }),
+        connectionsData: getConnectionsData({
+          request,
+          userWallet: wallet,
+          searchParams,
+        }),
       }),
   })
 }
 
 export default function ProfileOverview() {
-  const { claims, claimsSummary, savedListClaims } = useLiveLoader<
-    typeof loader
-  >(['attest', 'create'])
-  const { connectionsData } = useLiveLoader<typeof loader>(['attest'])
+  const { claims, claimsSummary, savedListClaims, connectionsData } =
+    useLiveLoader<typeof loader>(['attest', 'create'])
   const { userIdentity, userTotals } =
     useRouteLoaderData<{
       userIdentity: IdentityPresenter
@@ -219,9 +221,11 @@ export default function ProfileOverview() {
                   <EmptyStateCard message="This user has no follow claim yet. A follow claim will be created when the first person follows them." />
                 )
               }
+              const { followers } =
+                (resolvedConnectionsData as ConnectionsData) || {}
               return (
                 <FollowList
-                  identities={resolvedConnectionsData.followers ?? []}
+                  identities={followers}
                   paramPrefix={ConnectionsHeaderVariants.followers}
                   enableSearch={false}
                   enableSort={false}

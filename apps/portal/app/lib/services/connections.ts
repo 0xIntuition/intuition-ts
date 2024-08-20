@@ -1,11 +1,13 @@
 import {
+  ClaimPositionsService,
   ClaimPresenter,
   ClaimsService,
-  Identifier,
   IdentitiesService,
   IdentityPresenter,
+  PositionSortColumn,
   SortColumn,
   SortDirection,
+  UsersService,
 } from '@0xintuition/api'
 
 import { calculateTotalPages } from '@lib/utils/misc'
@@ -22,10 +24,11 @@ interface PaginationData {
 export interface ConnectionsData {
   followClaim?: ClaimPresenter
   followers?: IdentityPresenter[]
-  followersSortBy?: SortColumn
+  followersSortBy?: PositionSortColumn
   followersDirection?: SortDirection
   followersPagination?: PaginationData
-  following: IdentityPresenter[]
+  followingIdentities: IdentityPresenter[]
+  followingClaims: ClaimPresenter[]
   followingSortBy: SortColumn
   followingDirection: SortDirection
   followingPagination: PaginationData
@@ -47,8 +50,6 @@ export async function getConnectionsData({
     },
   })
 
-  console.log('searchParams before', searchParams)
-
   const {
     page: followingPage,
     limit: followingLimit,
@@ -57,29 +58,28 @@ export async function getConnectionsData({
   } = getStandardPageParams({
     searchParams,
     paramPrefix: 'following',
-    defaultSortByValue: SortColumn.USER_ASSETS,
   })
 
-  const followingSearch =
-    (searchParams.get('followingSearch') as Identifier) || null
-
-  const following = await fetchWrapper(request, {
-    method: IdentitiesService.getIdentityFollowed,
+  const followingClaims = await fetchWrapper(request, {
+    method: UsersService.getUserClaims,
     args: {
-      id: userIdentity.id,
       page: followingPage,
       limit: followingLimit,
-      sortBy: followingSortBy,
+      sortBy: followingSortBy as SortColumn,
       direction: followingDirection,
-      displayName: followingSearch,
+      displayName: 'am following',
+      user: userWallet,
     },
   })
 
   const followingTotalPages = calculateTotalPages(
-    following?.total ?? 0,
-    Number(followingLimit),
+    followingClaims?.total ?? 0,
+    followingLimit,
   )
 
+  const followingIdentitiesObjects = followingClaims.data.map(
+    (claim) => claim.object,
+  ) as IdentityPresenter[]
   if (userIdentity.follow_claim_id) {
     const followClaim = await fetchWrapper(request, {
       method: ClaimsService.getClaimById,
@@ -95,20 +95,21 @@ export async function getConnectionsData({
       direction: followersDirection,
     } = getStandardPageParams({
       searchParams,
-      paramPrefix: 'following',
+      paramPrefix: 'followers',
+      defaultSortByValue: PositionSortColumn.ASSETS,
     })
     const followersSearch =
       (searchParams.get('followersSearch') as string) || null
 
     const followers = await fetchWrapper(request, {
-      method: IdentitiesService.getIdentityFollowers,
+      method: ClaimPositionsService.getClaimPositions,
       args: {
-        id: userIdentity.id,
+        id: followClaim.claim_id,
         page: followersPage,
         limit: followersLimit,
-        sortBy: followersSortBy,
+        sortBy: followersSortBy as PositionSortColumn,
         direction: followersDirection,
-        displayName: followersSearch,
+        creator: followersSearch,
       },
     })
 
@@ -116,8 +117,6 @@ export async function getConnectionsData({
       followers?.total ?? 0,
       Number(followersLimit),
     )
-
-    console.log('searchParams after', searchParams)
 
     return {
       followClaim,
@@ -130,26 +129,28 @@ export async function getConnectionsData({
         totalEntries: followers?.total ?? 0,
         totalPages: followersTotalPages,
       },
-      following: following?.data,
+      followingIdentities: followingIdentitiesObjects,
+      followingClaims: followingClaims.data,
       followingSortBy,
       followingDirection,
       followingPagination: {
         currentPage: Number(followingPage),
         limit: Number(followingLimit),
-        totalEntries: following?.total ?? 0,
+        totalEntries: followingClaims?.total ?? 0,
         totalPages: followingTotalPages,
       },
     }
   }
 
   return {
-    following: following?.data,
+    followingIdentities: followingIdentitiesObjects,
+    followingClaims: followingClaims.data,
     followingSortBy,
     followingDirection,
     followingPagination: {
       currentPage: Number(followingPage),
       limit: Number(followingLimit),
-      totalEntries: following?.total ?? 0,
+      totalEntries: followingClaims?.total ?? 0,
       totalPages: followingTotalPages,
     },
   }

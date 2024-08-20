@@ -853,6 +853,7 @@ export class IdentitiesService {
    * @param data.offset
    * @param data.limit
    * @param data.userWallet
+   * @param data.displayName
    * @param data.timeframe
    * @returns unknown Get paginated list of identities following this one
    * @throws ApiError
@@ -865,12 +866,15 @@ export class IdentitiesService {
       url: '/identity/{id}/followed',
       path: {
         id: data.id,
+      },
+      query: {
         direction: data.direction,
         sortBy: data.sortBy,
         page: data.page,
         offset: data.offset,
         limit: data.limit,
         userWallet: data.userWallet,
+        displayName: data.displayName,
         timeframe: data.timeframe,
       },
     })
@@ -885,6 +889,7 @@ export class IdentitiesService {
    * @param data.offset
    * @param data.limit
    * @param data.userWallet
+   * @param data.displayName
    * @param data.timeframe
    * @returns unknown Get paginated list of identity's followers
    * @throws ApiError
@@ -897,12 +902,15 @@ export class IdentitiesService {
       url: '/identity/{id}/followers',
       path: {
         id: data.id,
+      },
+      query: {
         direction: data.direction,
         sortBy: data.sortBy,
         page: data.page,
         offset: data.offset,
         limit: data.limit,
         userWallet: data.userWallet,
+        displayName: data.displayName,
         timeframe: data.timeframe,
       },
     })

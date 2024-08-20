@@ -139,7 +139,8 @@ function ConnectionsContent({
             followClaim,
             followers,
             followersPagination,
-            following,
+            followingIdentities,
+            followingClaims,
             followingPagination,
           } = resolvedConnectionsData || {}
           return (
@@ -170,7 +171,7 @@ function ConnectionsContent({
                     variant={ConnectionsHeaderVariants.followers}
                   >
                     <FollowList
-                      identities={followers ?? []}
+                      positions={followers}
                       pagination={followersPagination!}
                       paramPrefix={ConnectionsHeaderVariants.followers}
                     />
@@ -188,13 +189,18 @@ function ConnectionsContent({
                   totalStake={formatBalance(userTotals.followed_assets, 18)}
                   variant={ConnectionsHeaderVariants.following}
                 >
-                  {following && followingPagination && (
-                    <FollowList
-                      identities={following}
-                      pagination={followingPagination}
-                      paramPrefix={ConnectionsHeaderVariants.following}
-                    />
-                  )}
+                  {followingIdentities &&
+                    followingClaims &&
+                    followingPagination && (
+                      <FollowList
+                        identities={followingIdentities}
+                        claims={followingClaims}
+                        pagination={followingPagination}
+                        paramPrefix={ConnectionsHeaderVariants.following}
+                        enableSearch={false}
+                        enableSort={false}
+                      />
+                    )}
                 </TabContent>
               </TabsContent>
             </Tabs>

@@ -41,36 +41,32 @@ export function List<T extends SortColumnType>({
 
   return (
     <div className="flex flex-col w-full gap-6 mb-6" ref={listContainerRef}>
+      {(enableSearch || enableSort) && (
+        <div
+          className={`flex w-full max-lg:flex-col max-lg:gap-4 ${enableSearch ? 'justify-between' : 'justify-end'}`}
+        >
+          {enableSearch && <Search handleSearchChange={handleSearchChange} />}
+          {enableSort && options && (
+            <Sort options={options} handleSortChange={handleSortChange} />
+          )}
+        </div>
+      )}
       {pagination && pagination.totalEntries === 0 ? (
         <EmptyStateCard message={`No ${paginationLabel} found.`} />
       ) : (
-        <>
-          {(enableSearch || enableSort) && (
-            <div
-              className={`flex w-full max-lg:flex-col max-lg:gap-4 ${enableSearch ? 'justify-between' : 'justify-end'}`}
-            >
-              {enableSearch && (
-                <Search handleSearchChange={handleSearchChange} />
-              )}
-              {enableSort && options && (
-                <Sort options={options} handleSortChange={handleSortChange} />
-              )}
-            </div>
-          )}
-          <div className="flex flex-col w-full">{children}</div>
-          {pagination && (
-            <PaginationComponent
-              totalEntries={pagination.totalEntries ?? 0}
-              currentPage={pagination.currentPage ?? 0}
-              totalPages={pagination.totalPages ?? 0}
-              limit={pagination.limit ?? 0}
-              onPageChange={onPageChange}
-              onLimitChange={onLimitChange}
-              label={paginationLabel}
-              listContainerRef={listContainerRef}
-            />
-          )}
-        </>
+        <div className="flex flex-col w-full">{children}</div>
+      )}
+      {pagination && (
+        <PaginationComponent
+          totalEntries={pagination.totalEntries ?? 0}
+          currentPage={pagination.currentPage ?? 0}
+          totalPages={pagination.totalPages ?? 0}
+          limit={pagination.limit ?? 0}
+          onPageChange={onPageChange}
+          onLimitChange={onLimitChange}
+          label={paginationLabel}
+          listContainerRef={listContainerRef}
+        />
       )}
     </div>
   )

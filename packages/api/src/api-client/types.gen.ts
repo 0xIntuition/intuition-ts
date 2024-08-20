@@ -2178,17 +2178,18 @@ export type GetIdentityByIdResponse = {
 }
 
 export type GetIdentityFollowedData = {
-  direction: SortDirection | null
+  direction?: SortDirection | null
+  displayName?: string | null
   /**
    * sql id
    */
   id: string
-  limit: number | null
-  offset: number | null
-  page: number | null
-  sortBy: SortColumn | null
-  timeframe: TimeFrame | null
-  userWallet: string | null
+  limit?: number | null
+  offset?: number | null
+  page?: number | null
+  sortBy?: SortColumn | null
+  timeframe?: TimeFrame | null
+  userWallet?: string | null
 }
 
 export type GetIdentityFollowedResponse = {
@@ -2199,17 +2200,18 @@ export type GetIdentityFollowedResponse = {
 }
 
 export type GetIdentityFollowersData = {
-  direction: SortDirection | null
+  direction?: SortDirection | null
+  displayName?: string | null
   /**
    * sql id
    */
   id: string
-  limit: number | null
-  offset: number | null
-  page: number | null
-  sortBy: SortColumn | null
-  timeframe: TimeFrame | null
-  userWallet: string | null
+  limit?: number | null
+  offset?: number | null
+  page?: number | null
+  sortBy?: SortColumn | null
+  timeframe?: TimeFrame | null
+  userWallet?: string | null
 }
 
 export type GetIdentityFollowersResponse = {
@@ -4167,17 +4169,18 @@ export type $OpenApiTs = {
   '/identity/{id}/followed': {
     get: {
       req: {
-        direction: SortDirection | null
+        direction?: SortDirection | null
+        displayName?: string | null
         /**
          * sql id
          */
         id: string
-        limit: number | null
-        offset: number | null
-        page: number | null
-        sortBy: SortColumn | null
-        timeframe: TimeFrame | null
-        userWallet: string | null
+        limit?: number | null
+        offset?: number | null
+        page?: number | null
+        sortBy?: SortColumn | null
+        timeframe?: TimeFrame | null
+        userWallet?: string | null
       }
       res: {
         /**
@@ -4195,17 +4198,18 @@ export type $OpenApiTs = {
   '/identity/{id}/followers': {
     get: {
       req: {
-        direction: SortDirection | null
+        direction?: SortDirection | null
+        displayName?: string | null
         /**
          * sql id
          */
         id: string
-        limit: number | null
-        offset: number | null
-        page: number | null
-        sortBy: SortColumn | null
-        timeframe: TimeFrame | null
-        userWallet: string | null
+        limit?: number | null
+        offset?: number | null
+        page?: number | null
+        sortBy?: SortColumn | null
+        timeframe?: TimeFrame | null
+        userWallet?: string | null
       }
       res: {
         /**
