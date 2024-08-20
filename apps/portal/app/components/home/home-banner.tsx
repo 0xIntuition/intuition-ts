@@ -142,9 +142,10 @@ export const HomeAnimation = () => {
           <video
             src={HOME_BANNER_MP4}
             title={'Home'}
-            loop
+            autoPlay
             muted
-            autoPlay={true}
+            loop
+            playsInline
             className="w-full h-auto overflow-hidden"
           />
         </motion.div>

@@ -16,6 +16,7 @@ export default function RelicCard() {
             >
               <video
                 src={RELIC_LEGENDARY_V1_MP4}
+                title={'Relic'}
                 autoPlay
                 muted
                 loop
