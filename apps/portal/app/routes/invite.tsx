@@ -40,7 +40,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
   }
 
   const relicCount = await getRelicCount(wallet as `0x${string}`)
-
   const relicHolder = relicCount > 0
 
   let userObject
@@ -62,10 +61,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
     throw error
   }
 
-  if (userObject) {
-    throw redirect('/welcome')
-  }
-
   let userIdentity
   try {
     userIdentity = await fetchWrapper(request, {
@@ -78,14 +73,18 @@ export async function loader({ request }: LoaderFunctionArgs) {
       (error.status === 400 || error.status === 404)
     ) {
       console.error('No user identity associated with wallet')
+      return json({ wallet, userObject, relicHolder })
     }
-
-    if (userIdentity) {
-      throw redirect(`${PATHS.PROFILE}`)
-    }
-
-    return json({ wallet, userObject, relicHolder })
+    throw error
   }
+
+  // If we reach here, it means we have both userObject and userIdentity
+  // if (userIdentity) {
+  //   return redirect(`${PATHS.PROFILE}`)
+  // }
+
+  // If we reach here, it means we have userObject but no userIdentity
+  return json({ wallet, userObject, relicHolder })
 }
 
 interface InviteRouteLoaderData {
@@ -172,10 +171,10 @@ export default function InviteRoute() {
     <div className="flex flex-col justify-between h-screen w-full p-8">
       <Header />
       <div className="flex justify-center items-center h-screen">
-        <div className="flex justify-center items-start gap-12 w-full max-w-6xl">
+        <div className="flex flex-col justify-center items-center md:items-start gap-12 w-full max-w-6xl md:flex-row">
           <div className="flex flex-col gap-6 h-[250px] w-1/3">
             <div className="flex-col justify-start items-start flex">
-              <div className="self-stretch text-white text-3xl font-semibold">
+              <div className="text-foreground/90 text-3xl font-semibold">
                 Enter your invite code
               </div>
             </div>
@@ -224,8 +223,8 @@ export default function InviteRoute() {
               </Button>
             </div>
           </div>
-          <div className="w-px h-[250px] in-out-gradient-strong self-center"></div>
-          <div className="flex flex-row h-[250px] gap-6">
+          <div className="h-px w-[250px] md:w-px md:h-[250px] in-out-gradient-strong self-center"></div>
+          <div className="flex flex-col md:flex-row md:h-[250px] gap-6">
             <div className="flex flex-col gap-6 justify-start items-start">
               <div className="flex-col flex">
                 <div className="self-stretch text-white text-3xl font-semibold">
