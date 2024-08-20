@@ -320,7 +320,7 @@ const Carousel: React.FC<CarouselProps> = (props) => {
                 <div className="text-center text-white/90 text-3xl font-semibold">
                   {slide.title}
                 </div>
-                <div className="md:w-[450px] text-center text-white/70 text-base font-normal leading-[18px]">
+                <div className="md:w-[450px] text-center text-white/70 text-sm font-normal leading-[18px]">
                   {slide.text}
                 </div>
                 <div>{slide.button}</div>
