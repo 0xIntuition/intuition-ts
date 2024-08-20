@@ -22,7 +22,7 @@ import { RevalidateButton } from '@components/revalidate-button'
 import { DataHeaderSkeleton, PaginatedListSkeleton } from '@components/skeleton'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { getClaimsAboutIdentity } from '@lib/services/claims'
-import { ConnectionsData, getConnectionsData } from '@lib/services/connections'
+import { getConnectionsData } from '@lib/services/connections'
 import { getIdentityOrPending } from '@lib/services/identities'
 import { getUserSavedLists } from '@lib/services/lists'
 import { getPositionsOnIdentity } from '@lib/services/positions'
@@ -97,8 +97,10 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 }
 
 export default function ProfileOverview() {
-  const { claims, claimsSummary, savedListClaims, connectionsData } =
-    useLiveLoader<typeof loader>(['attest', 'create'])
+  const { claims, claimsSummary, savedListClaims } = useLiveLoader<
+    typeof loader
+  >(['attest', 'create'])
+  const { connectionsData } = useLiveLoader<typeof loader>(['attest'])
   const { userIdentity, userTotals } =
     useRouteLoaderData<{
       userIdentity: IdentityPresenter
@@ -198,43 +200,7 @@ export default function ProfileOverview() {
           </Await>
         </Suspense>
       </div>
-      <div className="flex flex-col gap-6">
-        <Text
-          variant="headline"
-          weight="medium"
-          className="text-secondary-foreground"
-        >
-          Top Followers
-        </Text>
-        <Suspense fallback={<PaginatedListSkeleton />}>
-          <Await
-            resolve={connectionsData}
-            errorElement={
-              <ErrorStateCard>
-                <RevalidateButton />
-              </ErrorStateCard>
-            }
-          >
-            {(resolvedConnectionsData) => {
-              if (!resolvedConnectionsData) {
-                return (
-                  <EmptyStateCard message="This user has no follow claim yet. A follow claim will be created when the first person follows them." />
-                )
-              }
-              const { followers } =
-                (resolvedConnectionsData as ConnectionsData) || {}
-              return (
-                <FollowList
-                  identities={followers}
-                  paramPrefix={ConnectionsHeaderVariants.followers}
-                  enableSearch={false}
-                  enableSort={false}
-                />
-              )
-            }}
-          </Await>
-        </Suspense>
-      </div>
+      {connectionsData && <TopFollowers connectionsData={connectionsData} />}
       <div className="flex flex-col gap-6">
         <Text
           variant="headline"
@@ -265,4 +231,50 @@ export default function ProfileOverview() {
 
 export function ErrorBoundary() {
   return <ErrorPage routeName="wallet/index" />
+}
+
+function TopFollowers({
+  connectionsData,
+}: {
+  connectionsData: Promise<NonNullable<
+    Awaited<ReturnType<typeof getConnectionsData>>
+  > | null>
+}) {
+  return (
+    <div className="flex flex-col gap-6">
+      <Text
+        variant="headline"
+        weight="medium"
+        className="text-secondary-foreground"
+      >
+        Top Followers
+      </Text>
+      <Suspense fallback={<PaginatedListSkeleton />}>
+        <Await
+          resolve={connectionsData}
+          errorElement={
+            <ErrorStateCard>
+              <RevalidateButton />
+            </ErrorStateCard>
+          }
+        >
+          {(resolvedConnectionsData) => {
+            if (!resolvedConnectionsData) {
+              return (
+                <EmptyStateCard message="This user has no follow claim yet. A follow claim will be created when the first person follows them." />
+              )
+            }
+            return (
+              <FollowList
+                positions={resolvedConnectionsData.followers ?? []}
+                paramPrefix={ConnectionsHeaderVariants.followers}
+                enableSearch={false}
+                enableSort={false}
+              />
+            )
+          }}
+        </Await>
+      </Suspense>
+    </div>
+  )
 }
