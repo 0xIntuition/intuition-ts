@@ -95,7 +95,9 @@ jobs:
           --build-arg SENTRY_DSN=${{ secrets.SENTRY_DSN }} \
           --build-arg SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }} \
           --build-arg SENTRY_ORG=${{ secrets.SENTRY_ORG }} \
-          --build-arg SENTRY_PROJECT=${{ secrets.SENTRY_PROJECT }}
+          --build-arg SENTRY_PROJECT=${{ secrets.SENTRY_PROJECT }} \
+          --build-arg VITE_DEPLOY_ENV=staging \
+          --build-arg ORIGIN_URL=${{ secrets.ORIGIN_URL_STAGING }}
           docker tag portal ${{ env.ECR_IMAGE }}
           docker push ${{ env.ECR_IMAGE }}
 

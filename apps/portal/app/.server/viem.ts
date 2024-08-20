@@ -1,5 +1,3 @@
-import process from 'process'
-
 import { multivaultAbi } from '@lib/abis/multivault'
 import { CURRENT_ENV, MULTIVAULT_CONTRACT_ADDRESS } from 'app/consts'
 import {
@@ -15,21 +13,21 @@ export const publicClient: PublicClient = createPublicClient({
   batch: {
     multicall: true,
   },
-  chain: CURRENT_ENV === 'development' ? baseSepolia : base,
+  chain:
+    CURRENT_ENV === 'development' || CURRENT_ENV === 'staging'
+      ? baseSepolia
+      : base,
   transport: http(
-    CURRENT_ENV === 'development'
+    CURRENT_ENV === 'development' || CURRENT_ENV === 'staging'
       ? process.env.ALCHEMY_BASE_SEPOLIA_RPC_URL
       : process.env.ALCHEMY_BASE_RPC_URL,
-    // {
-    //   fetchOptions: {
-    //     headers: {
-    //       Origin:
-    //         CURRENT_ENV === 'production'
-    //           ? process.env.PRODUCTION_ORIGIN_URL!
-    //           : process.env.STAGING_ORIGIN_URL!,
-    //     },
-    //   },
-    // }, // TODO: we need to add this back in for hardening - revisit in [ENG-3508]
+    {
+      fetchOptions: {
+        headers: {
+          Origin: process.env.ORIGIN_URL,
+        },
+      },
+    },
   ),
 }) as PublicClient
 

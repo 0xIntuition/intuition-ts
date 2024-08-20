@@ -43,7 +43,7 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 export async function loader({ request }: LoaderFunctionArgs) {
   setupAPI(request)
 
-  logger('getEnv', getEnv())
+  logger('env', getEnv())
   return json({
     env: getEnv(),
     requestInfo: {
@@ -154,7 +154,6 @@ function App() {
   const nonce = useNonce()
   const theme = useTheme()
   const { env } = useLoaderData<typeof loader>()
-  logger('env in client', env)
 
   return (
     <Document nonce={nonce} theme={theme}>
