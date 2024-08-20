@@ -47,7 +47,7 @@ export const getSpecialPredicate = (
       },
       thingPredicate: {
         id: 'b369445b-2310-4a89-8335-8c5c61e1b464',
-        vaultId: 4,
+        vaultId: 2,
         displayName: 'Thing',
         type: 'identity',
       },
