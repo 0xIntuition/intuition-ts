@@ -8,10 +8,6 @@
  * initialization if API_URL is not defined.
  */
 
-export const publicApiUrl = process.env.PHOSPHOR_PUBLIC_API_URL
-if (!publicApiUrl) {
-  throw new Error('PHOSPHOR_PUBLIC_API_URL is not defined')
-}
 export const privateApiUrl = process.env.PHOSPHOR_ADMIN_API_URL
 if (!privateApiUrl) {
   throw new Error('PHOSPHOR_ADMIN_API_URL is not defined')
