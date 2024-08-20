@@ -27,7 +27,7 @@ describe('StakeCard', () => {
             class="flex flex-col gap-2 w-full"
           >
             <p
-              class="text-primary text-lg font-normal"
+              class="text-primary text-lg font-normal flex flex-row gap-1.5"
             >
               Conviction in 
               <button
@@ -48,14 +48,10 @@ describe('StakeCard', () => {
                     </svg>
                   </span>
                 </span>
-              </button>
-              <button
-                data-state="closed"
-              >
                 <p
                   class="text-primary text-base font-normal"
                 >
-                  identityD...
+                  identityDisplayName
                 </p>
               </button>
             </p>
