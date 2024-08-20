@@ -114,9 +114,8 @@ export default function Quests() {
                     // TODO: Remove this relic hold/mint count and points calculation when it is stored in BE.
                     totalPoints={
                       relicMintCount
-                        ? resolvedUserTotals.total_points +
-                          relicMintCount * 2000000
-                        : 0
+                        ? resolvedUserTotals.total_points + totalNftPoints
+                        : resolvedUserTotals.total_points
                     }
                     activities={[
                       {
