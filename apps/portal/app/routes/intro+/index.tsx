@@ -213,11 +213,13 @@ export default function IntroRoute() {
 
   return (
     <Container>
-      <div className="px-5">
-        <Button variant="navigation" className="ml-auto" onClick={onGetStarted}>
-          Skip <Icon name="arrow-right" className="h-4 w-4" />
-        </Button>
-      </div>
+      <Button
+        variant="navigation"
+        className="ml-auto md:absolute md:top-8 md:right-8 md:z-10"
+        onClick={onGetStarted}
+      >
+        Skip <Icon name="arrow-right" className="h-4 w-4" />
+      </Button>
       <Carousel
         slides={SLIDES}
         options={OPTIONS}
