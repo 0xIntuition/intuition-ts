@@ -10,6 +10,7 @@ import {
 } from '@0xintuition/api'
 
 import { ErrorPage } from '@components/error-page'
+import HomeBanner from '@components/home/home-banner'
 import { HomeSectionHeader } from '@components/home/home-section-header'
 import { HomeStatsHeader } from '@components/home/home-stats-header'
 import { ActivityList } from '@components/list/activity'
@@ -83,12 +84,13 @@ export default function HomePage() {
   return (
     <FullPageLayout>
       <div className="w-full flex flex-col gap-6">
+        <HomeBanner />
         <Text
           variant="headline"
           weight="medium"
           className="text-secondary-foreground self-start w-full"
         >
-          Intuition System Stats
+          System Stats
         </Text>
         <Suspense fallback={<HomeStatsHeaderSkeleton />}>
           <Await

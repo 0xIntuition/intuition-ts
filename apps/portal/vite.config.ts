@@ -40,12 +40,12 @@ export default defineConfig({
     contentCollections(),
     process.env.SENTRY_AUTH_TOKEN
       ? sentryVitePlugin({
-          disable: process.env.NODE_ENV !== 'production',
-          authToken: process.env.SENTRY_AUTH_TOKEN,
-          org: process.env.SENTRY_ORG,
-          project: process.env.SENTRY_PROJECT,
-          release: { inject: false },
-        })
+        disable: process.env.NODE_ENV !== 'production',
+        authToken: process.env.SENTRY_AUTH_TOKEN,
+        org: process.env.SENTRY_ORG,
+        project: process.env.SENTRY_PROJECT,
+        release: { inject: false },
+      })
       : null,
   ],
   server: {
@@ -66,6 +66,7 @@ export default defineConfig({
       '@privy-io/react-auth',
       '@privy-io/wagmi',
       '@content-collections/mdx',
+      'react-lottie'
     ],
   },
 })
