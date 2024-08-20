@@ -1,5 +1,3 @@
-import process from 'process'
-
 import { multivaultAbi } from '@lib/abis/multivault'
 import { CURRENT_ENV, MULTIVAULT_CONTRACT_ADDRESS } from 'app/consts'
 import {
@@ -10,6 +8,21 @@ import {
   type Abi,
 } from 'viem'
 import { base, baseSepolia, mainnet } from 'viem/chains'
+
+const getOriginByEnvironment = ({
+  env,
+}: {
+  env: 'development' | 'staging' | 'production'
+}) => {
+  switch (env) {
+    case 'staging':
+      return process.env.STAGING_ORIGIN_URL
+    case 'production':
+      return process.env.PRODUCTION_ORIGIN_URL
+    default:
+      return process.env.STAGING_ORIGIN_URL
+  }
+}
 
 export const publicClient: PublicClient = createPublicClient({
   batch: {
@@ -23,16 +36,13 @@ export const publicClient: PublicClient = createPublicClient({
     CURRENT_ENV === 'development' || CURRENT_ENV === 'staging'
       ? process.env.ALCHEMY_BASE_SEPOLIA_RPC_URL
       : process.env.ALCHEMY_BASE_RPC_URL,
-    // {
-    //   fetchOptions: {
-    //     headers: {
-    //       Origin:
-    //         CURRENT_ENV === 'production'
-    //           ? process.env.PRODUCTION_ORIGIN_URL!
-    //           : process.env.STAGING_ORIGIN_URL!,
-    //     },
-    //   },
-    // }, // TODO: we need to add this back in for hardening - revisit in [ENG-3508]
+    {
+      fetchOptions: {
+        headers: {
+          Origin: getOriginByEnvironment(CURRENT_ENV),
+        },
+      },
+    },
   ),
 }) as PublicClient
 
