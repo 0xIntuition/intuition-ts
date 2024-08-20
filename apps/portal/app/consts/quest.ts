@@ -1,4 +1,4 @@
-import comingSoonImage from '@assets/coming-soon-image.png'
+import comingSoonImage from '@assets/quests/1_0-tribes/1_0-tribes.gif'
 import { QuestSet } from 'app/types/quest'
 
 export const QUEST_LOG_DESCRIPTION =

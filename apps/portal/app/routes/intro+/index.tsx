@@ -321,7 +321,7 @@ const Carousel: React.FC<CarouselProps> = (props) => {
                 </div>
                 <div>{slide.button}</div>
               </div>
-              <div className="m-auto flex flex-col justify-center items-center mt-7 h-full">
+              <div className="m-auto flex flex-col justify-center items-center mt-7 h-full overflow-hidden">
                 <AnimatePresence>
                   <motion.div
                     key="mediaPlayer"
@@ -337,7 +337,7 @@ const Carousel: React.FC<CarouselProps> = (props) => {
                       loop
                       muted
                       playsInline
-                      className="rounded-xl overflow-hidden h-[fit] items-center justify-center theme-border"
+                      className="rounded-xl h-[300px] overflow-hidden items-center justify-center theme-border"
                     />
                   </motion.div>
                 </AnimatePresence>
