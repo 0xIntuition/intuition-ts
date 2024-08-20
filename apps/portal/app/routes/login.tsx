@@ -1,4 +1,4 @@
-import { Button, Text } from '@0xintuition/1ui'
+import { Text } from '@0xintuition/1ui'
 
 import PrivyLoginButton from '@client/privy-login-button'
 import { HeaderLogo } from '@components/header-logo'
@@ -10,9 +10,9 @@ import {
   LoaderFunctionArgs,
   redirect,
 } from '@remix-run/node'
-import { useLoaderData, useSubmit } from '@remix-run/react'
+import { Link, useLoaderData, useSubmit } from '@remix-run/react'
 import { verifyPrivyAccessToken } from '@server/privy'
-import { PATHS, SUPPORT_EMAIL_ADDRESS } from 'app/consts'
+import { PATHS } from 'app/consts'
 import { parse } from 'cookie'
 
 export async function loader({ request }: LoaderFunctionArgs) {
@@ -69,18 +69,17 @@ export default function Login() {
         </Text>
         <PrivyLoginButton handleLogin={handleLogin} />
       </div>
-      <div className="flex items-center justify-center max-sm:flex-col max-sm:gap-2 max-sm:items-center max-sm:text-center">
+      <div className="flex items-center justify-center max-sm:flex-col max-sm:gap-2 max-sm:items-center max-sm:text-center gap-1">
         <Text variant="body" className="text-secondary-foreground/60">
           Have a question or need help resolving an issue?
         </Text>
-        <Button
-          variant="text"
-          onClick={() =>
-            (window.location.href = `mailto:${SUPPORT_EMAIL_ADDRESS}`)
-          }
+        <Link
+          to="https://discord.com/channels/909531430881746974/1151564740255043604"
+          target="_blank"
+          className="text-base text-foreground/70 hover:text-foreground/90"
         >
           Contact Support
-        </Button>
+        </Link>
       </div>
     </div>
   )
