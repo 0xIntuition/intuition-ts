@@ -1,14 +1,17 @@
 import * as React from 'react'
 
 import { cn } from 'styles'
-import { CurrencyType } from 'types'
+import { CurrencyType, Identity, IdentityType } from 'types'
 
-import { Button, MonetaryValue, Text } from '..'
+import { Button, IdentityTag, MonetaryValue, Text, Trunctacular } from '..'
 
 export interface StakeCardProps extends React.HTMLAttributes<HTMLDivElement> {
   tvl: number
   currency?: CurrencyType
   holders: number
+  variant?: IdentityType
+  identityImgSrc: string
+  identityDisplayName: string
   onBuyClick: () => void
   onViewAllClick?: () => void
 }
@@ -17,6 +20,9 @@ const StakeCard = ({
   tvl,
   currency,
   holders,
+  variant = Identity.user,
+  identityImgSrc,
+  identityDisplayName,
   onBuyClick,
   onViewAllClick,
   className,
@@ -31,7 +37,12 @@ const StakeCard = ({
       {...props}
     >
       <div className="flex flex-col gap-2 w-full">
-        <Text variant="bodyLarge">Stake</Text>
+        <Text variant="bodyLarge" className="flex flex-row gap-1.5">
+          Conviction in{' '}
+          <IdentityTag imgSrc={identityImgSrc} variant={variant}>
+            <Trunctacular value={identityDisplayName} maxStringLength={26} />
+          </IdentityTag>
+        </Text>
         <div className="flex justify-between items-center">
           <div>
             <Text className="text-muted-foreground" variant="caption">
