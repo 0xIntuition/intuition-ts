@@ -62,10 +62,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
     throw error
   }
 
-  if (userObject) {
-    throw redirect('/welcome')
-  }
-
   let userIdentity
   try {
     userIdentity = await fetchWrapper(request, {
@@ -172,78 +168,104 @@ export default function InviteRoute() {
     <div className="flex flex-col justify-between h-screen w-full p-8">
       <Header />
       <div className="flex justify-center items-center h-screen">
-        <div className="flex-col justify-start items-start inline-flex gap-6">
-          {relicHolder ? (
-            <>
-              <div className="flex-col justify-start items-start flex">
+        <div className="flex justify-center items-start gap-12 w-full max-w-6xl">
+          <div className="flex flex-col gap-6 h-[250px] w-1/3">
+            <div className="flex-col justify-start items-start flex">
+              <div className="self-stretch text-white text-3xl font-semibold">
+                Enter your invite code
+              </div>
+            </div>
+            <inviteCodeFetcher.Form
+              method="post"
+              {...getFormProps(form)}
+              encType="multipart/form-data"
+              action="/actions/create-identity"
+              className="flex flex-col gap-6"
+            >
+              <div>
+                <Label htmlFor={fields.invite_code.id} hidden>
+                  Invite Code
+                </Label>
+                <Input
+                  {...getInputProps(fields.invite_code, { type: 'text' })}
+                  className="w-96"
+                  placeholder="Enter your invite code here"
+                />
+                <ErrorList
+                  id={fields.invite_code.errorId}
+                  errors={[
+                    ...(fields.invite_code.errors || []),
+                    ...(fetcherError ? [fetcherError] : []),
+                  ]}
+                />
+              </div>
+              <Text
+                variant={TextVariant.body}
+                className="text-muted-foreground w-96"
+              >
+                Intuition is currently in Closed Beta. Obtain an invite code or
+                a Relic to gain access!
+              </Text>
+            </inviteCodeFetcher.Form>
+            <div className="flex flex-col mt-auto">
+              <Button
+                form={form.id}
+                type="submit"
+                variant={ButtonVariant.primary}
+                size={ButtonSize.lg}
+                disabled={loading || relicHolder}
+                className="w-48"
+              >
+                Setup Profile
+              </Button>
+            </div>
+          </div>
+          <div className="w-px h-[250px] in-out-gradient-strong self-center"></div>
+          <div className="flex flex-row h-[250px] gap-6">
+            <div className="flex flex-col gap-6 justify-start items-start">
+              <div className="flex-col flex">
                 <div className="self-stretch text-white text-3xl font-semibold">
-                  Welcome, Seeker
+                  Relic Holders
                 </div>
               </div>
-              <RelicCard />
-              <Link to={'/welcome'} prefetch="intent" className="m-auto">
+              <Text
+                variant={TextVariant.body}
+                className="text-muted-foreground w-64"
+              >
+                The Relic, a key to the unseen realms. Its bearer walks the
+                paths of Intuition&apos;s Beta. Seek your own: forge it in the
+                fires of creation{' '}
+                <Link
+                  to={'https://intuition.church'}
+                  target="_blank"
+                  className="text-foreground/70"
+                >
+                  here
+                </Link>
+                , or unearth one from the{' '}
+                <Link
+                  to={'https://opensea.io/collection/relics-by-intuition'}
+                  target="_blank"
+                  className="text-foreground/70"
+                >
+                  digital seas
+                </Link>
+                .
+              </Text>{' '}
+              <Link to={'/welcome'} prefetch="intent" className="mt-auto">
                 <Button
                   type="button"
                   variant={ButtonVariant.primary}
                   size={ButtonSize.lg}
-                  disabled={loading}
+                  disabled={loading || !relicHolder}
                   className="w-48"
                 >
                   Continue
                 </Button>
               </Link>
-            </>
-          ) : (
-            <>
-              <div className="flex-col justify-start items-start flex">
-                <div className="self-stretch text-white text-3xl font-semibold">
-                  Enter your invite code
-                </div>
-              </div>
-              <inviteCodeFetcher.Form
-                method="post"
-                {...getFormProps(form)}
-                encType="multipart/form-data"
-                action="/actions/create-identity"
-                className="flex flex-col gap-6"
-              >
-                <div>
-                  <Label htmlFor={fields.invite_code.id} hidden>
-                    Invite Code
-                  </Label>
-                  <Input
-                    {...getInputProps(fields.invite_code, { type: 'text' })}
-                    className="w-96"
-                    placeholder="Enter your invite code here"
-                  />
-                  <ErrorList
-                    id={fields.invite_code.errorId}
-                    errors={[
-                      ...(fields.invite_code.errors || []),
-                      ...(fetcherError ? [fetcherError] : []),
-                    ]}
-                  />
-                </div>
-                <Text
-                  variant={TextVariant.body}
-                  className="text-muted-foreground w-80"
-                >
-                  Unlock exclusive access with your invite code. Join us today
-                  for a premium experience.
-                </Text>
-                <Button
-                  form={form.id}
-                  type="submit"
-                  variant={ButtonVariant.primary}
-                  size={ButtonSize.lg}
-                  disabled={loading}
-                  className="w-48"
-                >
-                  Setup Profile
-                </Button>
-              </inviteCodeFetcher.Form>
-            </>
-          )}
+            </div>
+            <RelicCard />
+          </div>
         </div>
       </div>
       <PrivyLogout wallet={wallet} />

@@ -4,7 +4,7 @@ export default function RelicCard() {
   return (
     <>
       <motion.div>
-        <div className="h-96 w-96 overflow-hidden rounded-xl">
+        <div className="w-[250px] h-[250px] overflow-hidden rounded-xl">
           <AnimatePresence>
             <motion.div
               key="mediaPlayer"
