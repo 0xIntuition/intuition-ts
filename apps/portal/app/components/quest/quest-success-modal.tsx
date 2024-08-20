@@ -139,7 +139,7 @@ export default function QuestSuccessModal({
           </div>
           <div className="relative h-full overflow-hidden rounded-lg shadow-xl theme-border">
             <img
-              src={quest.image}
+              src={`${quest.image}-thumbnail`}
               alt={quest.id}
               className="w-full h-full max-h-[250px] object-cover aspect-square"
             />

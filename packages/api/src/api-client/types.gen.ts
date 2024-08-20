@@ -1211,12 +1211,18 @@ export type UpdateClaim = {
   for_num_positions?: number | null
   num_positions?: number | null
   object?: Identifier | null
+  object_display_name?: string | null
   object_id?: string | null
+  object_identity_id?: string | null
   predicate?: Identifier | null
+  predicate_display_name?: string | null
   predicate_id?: string | null
+  predicate_identity_id?: string | null
   status?: Status | null
   subject?: Identifier | null
+  subject_display_name?: string | null
   subject_id?: string | null
+  subject_identity_id?: string | null
   vault_id?: Identifier | null
   vault_uuid?: string | null
 }
