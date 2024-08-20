@@ -117,7 +117,7 @@ describe('ClaimStakeCard', () => {
                 <p
                   class="text-sm font-medium text-muted-foreground"
                 >
-                  Holders
+                  Depositors
                 </p>
               </div>
               <p
@@ -136,7 +136,7 @@ describe('ClaimStakeCard', () => {
                 <p
                   class="text-sm font-medium text-muted-foreground"
                 >
-                  Holders
+                  Depositors
                 </p>
               </div>
               <p
@@ -274,7 +274,7 @@ describe('ClaimStakeCard', () => {
                 <p
                   class="text-sm font-medium text-muted-foreground"
                 >
-                  Holders
+                  Depositors
                 </p>
               </div>
               <p
@@ -293,7 +293,7 @@ describe('ClaimStakeCard', () => {
                 <p
                   class="text-sm font-medium text-muted-foreground"
                 >
-                  Holders
+                  Depositors
                 </p>
               </div>
               <p

@@ -9,20 +9,22 @@ export const PieChartSize = {
 export const PieChartVariant = {
   default: 'default',
   forVsAgainst: 'forVsAgainst',
+  for: 'for',
+  against: 'against',
 }
 
-export type PieCartSizeType = (typeof PieChartSize)[keyof typeof PieChartSize]
+export type PieChartSizeType = (typeof PieChartSize)[keyof typeof PieChartSize]
 
-export type PieCartVariantType =
+export type PieChartVariantType =
   (typeof PieChartVariant)[keyof typeof PieChartVariant]
 
 export interface PieChartProps extends React.HTMLAttributes<HTMLDivElement> {
-  variant?: PieCartVariantType
-  size?: PieCartSizeType
+  variant?: PieChartVariantType
+  size?: PieChartSizeType
   percentage: number
 }
 
-const determinePieChartSize = (size: PieCartSizeType) => {
+const determinePieChartSize = (size: PieChartSizeType) => {
   if (size === PieChartSize.sm) {
     return { size: 22, width: 2 }
   } else if (size === PieChartSize.md) {
@@ -31,11 +33,23 @@ const determinePieChartSize = (size: PieCartSizeType) => {
   return { size: 160, width: 10 }
 }
 
-const determinePieChartColorScheme = (variant: PieCartVariantType) => {
+const determinePieChartColorScheme = (variant: PieChartVariantType) => {
   if (variant === PieChartVariant.forVsAgainst) {
     return {
       overlay: `var(--for)`,
       base: 'var(--against)',
+    }
+  }
+  if (variant === PieChartVariant.for) {
+    return {
+      overlay: `var(--for)`,
+      base: 'color-mix(in srgb, var(--background) 10%, transparent)',
+    }
+  }
+  if (variant === PieChartVariant.against) {
+    return {
+      overlay: 'var(--against)',
+      base: 'color-mix(in srgb, var(--background) 10%, transparent)',
     }
   }
   return {

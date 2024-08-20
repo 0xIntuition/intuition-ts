@@ -27,7 +27,7 @@ const PositionCard = ({
         onClick={onButtonClick}
         className="w-full mt-5"
       >
-        Sell
+        Redeem
       </Button>
     </div>
   )
