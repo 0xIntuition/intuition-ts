@@ -108,7 +108,7 @@ export default function PrivyButton({
                 navigate(`${PATHS.QUEST}/#referrals`)
               }}
             >
-              <Icon name={IconName.group} /> Refer a Friend
+              <Icon name={IconName.gift} /> Share Intuition
             </Button>
             <DropdownMenuSeparator />
             <PrivyLogoutButton handleLogout={handleSignout} />
