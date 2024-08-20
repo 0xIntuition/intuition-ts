@@ -91,8 +91,13 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export default function Quests() {
-  const { details, userTotals, inviteCodes, relicMintCount } =
+  const { details, userTotals, inviteCodes, relicMintCount, relicHoldCount } =
     useLoaderData<typeof loader>()
+
+  // TODO: Remove this relic hold/mint count and points calculation when it is stored in BE.
+  const nftMintPoints = relicMintCount ? relicMintCount * 2000000 : 0
+  const nftHoldPoints = relicHoldCount ? +relicHoldCount * 250000 : 0
+  const totalNftPoints = nftMintPoints + nftHoldPoints
 
   return (
     <div className="p-10 w-full max-w-7xl mx-auto flex flex-col gap-5 max-md:p-5 max-sm:p-2">
@@ -131,7 +136,7 @@ export default function Quests() {
                       },
                       {
                         name: 'NFT',
-                        points: relicMintCount ? relicMintCount * 2000000 : 0,
+                        points: totalNftPoints,
                       },
                     ]}
                   />

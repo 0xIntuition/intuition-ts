@@ -207,6 +207,7 @@ export default function Profile() {
     vaultDetails,
     isPending,
     relicMintCount,
+    relicHoldCount,
   } = useLiveLoader<{
     wallet: string
     userWallet: string
@@ -217,6 +218,7 @@ export default function Profile() {
     vaultDetails: VaultDetailsType
     isPending: boolean
     relicMintCount: number
+    relicHoldCount: string
   }>(['attest', 'create'])
   const navigate = useNavigate()
 
@@ -236,6 +238,11 @@ export default function Profile() {
     }
   }, [saveListModalActive])
 
+  // TODO: Remove this relic hold/mint count and points calculation when it is stored in BE.
+  const nftMintPoints = relicMintCount ? relicMintCount * 2000000 : 0
+  const nftHoldPoints = relicHoldCount ? +relicHoldCount * 250000 : 0
+  const totalNftPoints = nftMintPoints + nftHoldPoints
+
   const leftPanel = (
     <div className="flex-col justify-start items-start gap-5 inline-flex max-lg:w-full">
       <ProfileCard
@@ -252,7 +259,7 @@ export default function Profile() {
           numberOfFollowers: userTotals.follower_count,
           numberOfFollowing: userTotals.followed_count,
           // TODO: Remove this relic hold/mint count and points calculation when it is stored in BE.
-          points: userTotals.total_points + relicMintCount * 2000000,
+          points: userTotals.total_points + totalNftPoints,
         }}
         bio={userIdentity?.user?.description ?? ''}
         ipfsLink={`${BLOCK_EXPLORER_URL}/address/${userIdentity.identity_id}`}
