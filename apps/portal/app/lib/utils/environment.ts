@@ -47,10 +47,10 @@ export const getChainEnvConfig = (env: string): ChainConfig => {
       contractAddress: multiVaultContractAddressBaseSepolia as Address,
     },
     staging: {
-      chainId: base.id,
-      name: base.name,
-      alchemyRpcUrl: alchemyRpcUrlBaseMainnet,
-      contractAddress: multiVaultContractAddressBaseMainnet as Address,
+      chainId: baseSepolia.id,
+      name: baseSepolia.name,
+      alchemyRpcUrl: alchemyRpcUrlBaseSepolia,
+      contractAddress: multiVaultContractAddressBaseSepolia as Address,
     },
     production: {
       chainId: base.id,

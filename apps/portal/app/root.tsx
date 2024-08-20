@@ -27,6 +27,7 @@ import { Toaster } from '@0xintuition/1ui'
 import { ErrorPage } from '@components/error-page'
 import { GlobalLoading } from '@components/global-loading'
 import { getChainEnvConfig } from '@lib/utils/environment'
+import logger from '@lib/utils/logger'
 import { setupAPI } from '@server/auth'
 import { CURRENT_ENV } from 'app/consts'
 import { ClientOnly } from 'remix-utils/client-only'
@@ -42,6 +43,7 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 export async function loader({ request }: LoaderFunctionArgs) {
   setupAPI(request)
 
+  logger('env', getEnv())
   return json({
     env: getEnv(),
     requestInfo: {

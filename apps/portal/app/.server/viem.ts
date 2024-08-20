@@ -15,9 +15,12 @@ export const publicClient: PublicClient = createPublicClient({
   batch: {
     multicall: true,
   },
-  chain: CURRENT_ENV === 'development' ? baseSepolia : base,
+  chain:
+    CURRENT_ENV === 'development' || CURRENT_ENV === 'staging'
+      ? baseSepolia
+      : base,
   transport: http(
-    CURRENT_ENV === 'development'
+    CURRENT_ENV === 'development' || CURRENT_ENV === 'staging'
       ? process.env.ALCHEMY_BASE_SEPOLIA_RPC_URL
       : process.env.ALCHEMY_BASE_RPC_URL,
     // {
