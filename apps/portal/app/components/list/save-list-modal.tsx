@@ -92,6 +92,7 @@ export default function SaveListModal({
   const [fetchedClaimVaultId, setFetchedClaimVaultId] = useState<string | null>(
     null,
   )
+  const [fetchedClaimId, setFetchedClaimId] = useState<string | null>(null)
   const [vaultDetails, setVaultDetails] = useState<VaultDetailsType>()
 
   const claimFetcher = useFetcher<ClaimLoaderData[]>()
@@ -159,13 +160,21 @@ export default function SaveListModal({
       Array.isArray(claimFetcher.data) &&
       claimFetcher.data.length > 0
     ) {
+      logger('claimFetcher.data[0]', claimFetcher.data[0])
       const fetchedClaimResponse = claimFetcher.data[0] as unknown as {
+        claim_id: string
         vault_id: string
       }
       if (fetchedClaimResponse && fetchedClaimResponse.vault_id) {
         setFetchedClaimVaultId(fetchedClaimResponse.vault_id)
       } else {
         setFetchedClaimVaultId(null)
+      }
+
+      if (fetchedClaimResponse && fetchedClaimResponse.claim_id) {
+        setFetchedClaimId(fetchedClaimResponse.claim_id)
+      } else {
+        setFetchedClaimId(null)
       }
     } else if (
       claimFetcher.state === 'idle' &&
@@ -429,6 +438,7 @@ export default function SaveListModal({
           <SaveForm
             tag={tag}
             identity={identity}
+            claimId={fetchedClaimId}
             user_assets={vaultDetails?.user_assets ?? '0'}
             entry_fee={vaultDetails?.formatted_entry_fee ?? '0'}
             exit_fee={vaultDetails?.formatted_exit_fee ?? '0'}
