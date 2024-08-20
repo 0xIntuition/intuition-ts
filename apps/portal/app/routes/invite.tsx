@@ -173,86 +173,82 @@ export default function InviteRoute() {
       <Header />
       <div className="flex-grow flex justify-center items-center">
         <div className="flex flex-col md:flex-row justify-center items-center md:items-stretch gap-12 w-full max-w-7xl">
-          <div className="flex flex-col gap-6 w-full md:w-1/2 max-w-lg">
-            <div className="text-foreground/90 text-3xl font-semibold text-center md:text-left">
-              Enter your invite code
-            </div>
-            <inviteCodeFetcher.Form
-              method="post"
-              {...getFormProps(form)}
-              encType="multipart/form-data"
-              action="/actions/create-identity"
-              className="flex flex-col gap-6"
-            >
-              <div>
-                <Label htmlFor={fields.invite_code.id} hidden>
-                  Invite Code
-                </Label>
-                <Input
-                  {...getInputProps(fields.invite_code, { type: 'text' })}
-                  className="w-[420px]"
-                  placeholder="Enter your invite code here"
-                />
-                <ErrorList
-                  id={fields.invite_code.errorId}
-                  errors={[
-                    ...(fields.invite_code.errors || []),
-                    ...(fetcherError ? [fetcherError] : []),
-                  ]}
-                />
+          <div className="flex flex-col w-full md:w-1/2 max-w-lg items-end justify-end">
+            <div className="flex flex-col justify-between items-start h-full gap-4">
+              <div className="text-foreground/90 text-3xl font-semibold text-center md:text-left">
+                Enter your invite code
               </div>
-              <Text
-                variant={TextVariant.body}
-                className="text-muted-foreground w-[400px]"
+              <inviteCodeFetcher.Form
+                method="post"
+                {...getFormProps(form)}
+                encType="multipart/form-data"
+                action="/actions/create-identity"
+                className="flex flex-col gap-6"
               >
-                Intuition is currently in Closed Beta. Obtain an invite code or
-                a Relic to gain access!
-              </Text>
-            </inviteCodeFetcher.Form>
-            <div className="flex justify-center md:justify-start mt-auto">
-              <Button
-                form={form.id}
-                type="submit"
-                variant={ButtonVariant.primary}
-                size={ButtonSize.lg}
-                disabled={loading || relicHolder}
-                className="w-full md:w-48"
-              >
-                Setup Profile
-              </Button>
+                <div>
+                  <Label htmlFor={fields.invite_code.id} hidden>
+                    Invite Code
+                  </Label>
+                  <Input
+                    {...getInputProps(fields.invite_code, { type: 'text' })}
+                    className="w-96"
+                    placeholder="Enter your invite code here"
+                  />
+                  <ErrorList
+                    id={fields.invite_code.errorId}
+                    errors={[
+                      ...(fields.invite_code.errors || []),
+                      ...(fetcherError ? [fetcherError] : []),
+                    ]}
+                  />
+                </div>
+                <Text
+                  variant={TextVariant.body}
+                  className="text-muted-foreground w-96"
+                >
+                  Intuition is currently in Closed Beta. Obtain an invite code
+                  or a Relic to gain access!
+                </Text>
+              </inviteCodeFetcher.Form>
+              <div className="flex justify-center md:justify-start mt-auto w-full">
+                <Button
+                  form={form.id}
+                  type="submit"
+                  variant={ButtonVariant.primary}
+                  size={ButtonSize.lg}
+                  disabled={loading || relicHolder}
+                  className="w-full md:w-48"
+                >
+                  Setup Profile
+                </Button>
+              </div>
             </div>
           </div>
           <div className="hidden md:block w-px h-[250px] bg-secondary-foreground self-center"></div>
           <Separator className="bg-secondary-foreground block md:hidden" />
-          <div className="flex flex-col md:flex-row gap-6 w-full md:w-1/2 max-w-md">
-            <div className="flex flex-col gap-6 justify-start items-center md:items-start w-full">
-              <div className="text-white text-3xl font-semibold text-center md:text-left">
-                Relic Holders
+          <div className="flex flex-col md:flex-row gap-6 w-full md:w-1/2 max-w-lg">
+            <div className="flex flex-col justify-between items-start h-full gap-4">
+              <div className="flex flex-col items-start h-full gap-4">
+                <div className="text-white text-3xl font-semibold text-center md:text-left">
+                  Relic Holders
+                </div>
+                <Text
+                  variant={TextVariant.body}
+                  className="text-muted-foreground text-center md:text-left md:pr-2"
+                >
+                  The Relic, a key to the unseen realms. Its bearer walks the
+                  paths of Intuition&apos;s Beta. Seek your own: forge it in the
+                  fires of creation{' '}
+                  <Link
+                    to={'https://intuition.church'}
+                    target="_blank"
+                    className="text-foreground/70"
+                  >
+                    here
+                  </Link>
+                  .
+                </Text>
               </div>
-              <Text
-                variant={TextVariant.body}
-                className="text-muted-foreground text-center md:text-left"
-              >
-                The Relic, a key to the unseen realms. Its bearer walks the
-                paths of Intuition&apos;s Beta. Seek your own: forge it in the
-                fires of creation{' '}
-                <Link
-                  to={'https://intuition.church'}
-                  target="_blank"
-                  className="text-foreground/70"
-                >
-                  here
-                </Link>
-                , or unearth one from the{' '}
-                <Link
-                  to={'https://opensea.io/collection/relics-by-intuition'}
-                  target="_blank"
-                  className="text-foreground/70"
-                >
-                  digital seas
-                </Link>
-                .
-              </Text>
               <div className="flex flex-col items-center md:items-start w-full">
                 <div className="mb-6 md:hidden w-full flex justify-center">
                   <RelicCard />
