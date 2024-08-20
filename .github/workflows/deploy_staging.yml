@@ -85,7 +85,7 @@ jobs:
           --build-arg ALCHEMY_BASE_RPC_URL=${{ secrets.ALCHEMY_BASE_RPC_URL }} \
           --build-arg WALLETCONNECT_PROJECT_ID=${{ secrets.WALLETCONNECT_PROJECT_ID }} \
           --build-arg SESSION_SECRET=${{ secrets.SESSION_SECRET }} \
-          --build-arg API_URL=${{ secrets.API_URL_STAGING }} \
+          --build-arg API_URL=${{ secrets.API_URL_PRODUCTION }} \
           --build-arg API_KEY=${{ secrets.API_KEY }} \
           --build-arg PRIVY_APP_ID=${{ secrets.PRIVY_APP_ID_STAGING }} \
           --build-arg PRIVY_APP_SECRET=${{ secrets.PRIVY_APP_SECRET_STAGING }} \
