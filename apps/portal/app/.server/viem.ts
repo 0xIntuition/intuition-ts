@@ -9,21 +9,6 @@ import {
 } from 'viem'
 import { base, baseSepolia, mainnet } from 'viem/chains'
 
-const getOriginByEnvironment = ({
-  env,
-}: {
-  env: 'development' | 'staging' | 'production'
-}) => {
-  switch (env) {
-    case 'staging':
-      return process.env.STAGING_ORIGIN_URL
-    case 'production':
-      return process.env.PRODUCTION_ORIGIN_URL
-    default:
-      return process.env.STAGING_ORIGIN_URL
-  }
-}
-
 export const publicClient: PublicClient = createPublicClient({
   batch: {
     multicall: true,
@@ -39,7 +24,7 @@ export const publicClient: PublicClient = createPublicClient({
     {
       fetchOptions: {
         headers: {
-          Origin: getOriginByEnvironment(CURRENT_ENV),
+          Origin: process.env.ORIGIN_URL,
         },
       },
     },

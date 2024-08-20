@@ -17,8 +17,7 @@ const schema = z.object({
   ALCHEMY_SEPOLIA_RPC_URL: z.string(),
   MULTIVAULT_ADDRESS_BASE_SEPOLIA: z.string(),
   MULTIVAULT_ADDRESS_BASE_MAINNET: z.string(),
-  PRODUCTION_ORIGIN_URL: z.string(),
-  STAGING_ORIGIN_URL: z.string(),
+  ORIGIN_URL: z.string(),
   PRIVY_APP_ID: z.string(),
   featureFlagsSchema,
 })
@@ -66,8 +65,7 @@ export function getEnv() {
       process.env.MULTIVAULT_ADDRESS_BASE_SEPOLIA,
     MULTIVAULT_ADDRESS_BASE_MAINNET:
       process.env.MULTIVAULT_ADDRESS_BASE_MAINNET,
-    PRODUCTION_ORIGIN_URL: process.env.PRODUCTION_ORIGIN_URL,
-    STAGING_ORIGIN_URL: process.env.STAGING_ORIGIN_URL,
+    ORIGIN_URL: process.env.ORIGIN_URL,
     PRIVY_APP_ID: process.env.PRIVY_APP_ID,
     // Feature flags
     FF_GENERIC_BANNER_ENABLED: process.env.FF_GENERIC_BANNER_ENABLED,

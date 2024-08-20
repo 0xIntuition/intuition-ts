@@ -1,5 +1,4 @@
 import { createConfig } from '@privy-io/wagmi'
-import { CURRENT_ENV } from 'app/consts'
 import { base, baseSepolia, mainnet } from 'viem/chains'
 import { Config, http } from 'wagmi'
 
@@ -18,15 +17,10 @@ const alchemyBaseSepoliaRpcUrl =
     ? window.ENV?.ALCHEMY_BASE_SEPOLIA_RPC_URL
     : process.env.ALCHEMY_BASE_SEPOLIA_RPC_URL
 
-const productionOriginUrl =
+const originUrl =
   typeof window !== 'undefined'
-    ? window.ENV?.PRODUCTION_ORIGIN_URL
-    : process.env.PRODUCTION_ORIGIN_URL
-
-const stagingOriginUrl =
-  typeof window !== 'undefined'
-    ? window.ENV?.STAGING_ORIGIN_URL
-    : process.env.STAGING_ORIGIN_URL
+    ? window.ENV?.ORIGIN_URL
+    : process.env.ORIGIN_URL
 
 export const wagmiConfig: Config = createConfig({
   chains: [mainnet, base, baseSepolia],
@@ -34,30 +28,21 @@ export const wagmiConfig: Config = createConfig({
     [mainnet.id]: http(alchemyMainnetRpcUrl, {
       fetchOptions: {
         headers: {
-          Origin:
-            CURRENT_ENV === 'development' || CURRENT_ENV === 'staging'
-              ? stagingOriginUrl
-              : productionOriginUrl,
+          Origin: originUrl,
         },
       },
     }),
     [base.id]: http(alchemyBaseRpcUrl, {
       fetchOptions: {
         headers: {
-          Origin:
-            CURRENT_ENV === 'development' || CURRENT_ENV === 'staging'
-              ? stagingOriginUrl
-              : productionOriginUrl,
+          Origin: originUrl,
         },
       },
     }),
     [baseSepolia.id]: http(alchemyBaseSepoliaRpcUrl, {
       fetchOptions: {
         headers: {
-          Origin:
-            CURRENT_ENV === 'development' || CURRENT_ENV === 'staging'
-              ? stagingOriginUrl
-              : productionOriginUrl,
+          Origin: originUrl,
         },
       },
     }),
