@@ -15,6 +15,13 @@ export type SpecialPredicateMap = {
   thingPredicate: SpecialObjectConfig
 }
 
+export type QuestObjectMap = {
+  stakeAtomFallbackAtom: SpecialObjectConfig
+  stakeClaimFallbackClaim: SpecialObjectConfig
+  counterstakeClaimFallbackClaim: SpecialObjectConfig
+  discoverListFallbackAtom: SpecialObjectConfig
+}
+
 export const getSpecialPredicate = (
   chainEnv: ChainEnv,
 ): SpecialPredicateMap => {
@@ -118,7 +125,6 @@ export const getFeaturedListObjectIds = (chainEnv: ChainEnv): number[] => {
     staging: [0, 0],
     production: [0, 0],
   }
-
   if (!chainEnv) {
     console.error(
       `No chain environment specified. Defaulting to ${DEFAULT_CHAIN_ENV}.`,
@@ -130,4 +136,100 @@ export const getFeaturedListObjectIds = (chainEnv: ChainEnv): number[] => {
     return featuredListObjectIds[DEFAULT_CHAIN_ENV]
   }
   return featuredListObjectIds[chainEnv as ChainEnv]
+}
+
+export const getQuestObjects = (chainEnv: ChainEnv) => {
+  const questObjects: Record<ChainEnv, QuestObjectMap> = {
+    development: {
+      stakeAtomFallbackAtom: {
+        id: 'fd805a60-fbe8-4a1c-91cc-2bebf4a7f3a8',
+        vaultId: 533,
+        displayName: 'Solidity',
+        type: 'identity',
+      },
+      stakeClaimFallbackClaim: {
+        id: '5219ae05-738f-4cb9-8bae-7fa70fe6c4f0',
+        vaultId: 0,
+        displayName: 'Solidity Rules Ethereum',
+        type: 'claim',
+      },
+      counterstakeClaimFallbackClaim: {
+        id: '823ac20c-cbc4-4b53-9c37-fef0cb39749b',
+        vaultId: 0,
+        displayName: 'Anchovy is Best Pizza',
+        type: 'claim',
+      },
+      discoverListFallbackAtom: {
+        id: '92a3b107-ee1c-4edc-8e38-191446e10ed1',
+        vaultId: 0,
+        displayName: 'Best Web3 Projects',
+        type: 'identity',
+      },
+    },
+    // repeat for staging and production with initial values
+    staging: {
+      stakeAtomFallbackAtom: {
+        id: '',
+        vaultId: 0,
+        displayName: '',
+        type: 'identity',
+      },
+      stakeClaimFallbackClaim: {
+        id: '',
+        vaultId: 0,
+        displayName: '',
+        type: 'claim',
+      },
+      counterstakeClaimFallbackClaim: {
+        id: '',
+        vaultId: 0,
+        displayName: '',
+        type: 'claim',
+      },
+      discoverListFallbackAtom: {
+        id: '',
+        vaultId: 0,
+        displayName: '',
+        type: 'identity',
+      },
+    },
+    production: {
+      stakeAtomFallbackAtom: {
+        id: '',
+        vaultId: 0,
+        displayName: '',
+        type: 'identity',
+      },
+      stakeClaimFallbackClaim: {
+        id: '',
+        vaultId: 0,
+        displayName: '',
+        type: 'claim',
+      },
+      counterstakeClaimFallbackClaim: {
+        id: '',
+        vaultId: 0,
+        displayName: '',
+        type: 'claim',
+      },
+      discoverListFallbackAtom: {
+        id: '',
+        vaultId: 0,
+        displayName: '',
+        type: 'identity',
+      },
+    },
+  }
+
+  if (!chainEnv) {
+    console.error(
+      `No chain environment specified. Defaulting to ${DEFAULT_CHAIN_ENV}.`,
+    )
+    return questObjects[DEFAULT_CHAIN_ENV]
+  }
+  if (!(chainEnv in questObjects)) {
+    logger(`No config for provided environment: ${chainEnv}.`)
+    return questObjects[DEFAULT_CHAIN_ENV]
+  }
+  return questObjects[chainEnv as ChainEnv]
 }

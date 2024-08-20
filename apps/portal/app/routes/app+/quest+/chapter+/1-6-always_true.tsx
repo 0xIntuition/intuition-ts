@@ -28,6 +28,7 @@ import { PaginatedListSkeleton } from '@components/skeleton'
 import { useQuestCompletion } from '@lib/hooks/useQuestCompletion'
 import { useQuestMdxContent } from '@lib/hooks/useQuestMdxContent'
 import { getListIdentities } from '@lib/services/lists'
+import { getQuestObjects } from '@lib/utils/app'
 import logger from '@lib/utils/logger'
 import { invariant } from '@lib/utils/misc'
 import { getQuestCriteria, getQuestId, QuestRouteId } from '@lib/utils/quest'
@@ -36,7 +37,7 @@ import { Await, Form, useActionData, useLoaderData } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
 import { requireUser, requireUserId } from '@server/auth'
 import { getUserQuest } from '@server/quest'
-import { CHAPTER_6_MP3, FALLBACK_LIST_ID_FOR_QUERY } from 'app/consts'
+import { CHAPTER_6_MP3, CURRENT_ENV } from 'app/consts'
 import { IdentityListType, MDXContentVariant } from 'app/types'
 
 const ROUTE_ID = QuestRouteId.ALWAYS_TRUE
@@ -44,6 +45,10 @@ const ROUTE_ID = QuestRouteId.ALWAYS_TRUE
 export async function loader({ request }: LoaderFunctionArgs) {
   const id = getQuestId(ROUTE_ID)
   invariant(id, 'id is required')
+
+  // get fallback claim
+  const discoverListFallbackAtomId =
+    getQuestObjects(CURRENT_ENV).discoverListFallbackAtom.id
 
   const user = await requireUser(request)
   invariant(user, 'Unauthorized')
@@ -78,7 +83,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   const claim = await fetchWrapper(request, {
     method: ClaimsService.getClaimById,
-    args: { id: FALLBACK_LIST_ID_FOR_QUERY },
+    args: { id: discoverListFallbackAtomId },
   })
 
   const globalListIdentities = await getListIdentities({

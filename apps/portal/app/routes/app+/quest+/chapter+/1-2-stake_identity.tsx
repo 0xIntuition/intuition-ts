@@ -28,6 +28,7 @@ import StakeModal from '@components/stake/stake-modal'
 import { useQuestCompletion } from '@lib/hooks/useQuestCompletion'
 import { useQuestMdxContent } from '@lib/hooks/useQuestMdxContent'
 import { stakeModalAtom } from '@lib/state/store'
+import { getQuestObjects } from '@lib/utils/app'
 import logger from '@lib/utils/logger'
 import { invariant } from '@lib/utils/misc'
 import { getQuestCriteria, getQuestId, QuestRouteId } from '@lib/utils/quest'
@@ -37,8 +38,7 @@ import { fetchWrapper } from '@server/api'
 import { requireUser, requireUserId } from '@server/auth'
 import { getVaultDetails } from '@server/multivault'
 import { getUserQuest } from '@server/quest'
-import { CHAPTER_2_MP3 } from 'app/consts'
-import { FALLBACK_IDENTITY_ID } from 'app/consts/quest'
+import { CHAPTER_2_MP3, CURRENT_ENV } from 'app/consts'
 import { MDXContentVariant, VaultDetailsType } from 'app/types'
 import { useAtom } from 'jotai'
 
@@ -47,6 +47,10 @@ const ROUTE_ID = QuestRouteId.STAKE_IDENTITY
 export async function loader({ request }: LoaderFunctionArgs) {
   const id = getQuestId(ROUTE_ID)
   invariant(id, 'id is required')
+
+  // get fallback atom
+  const stakeAtomFallbackAtomId =
+    getQuestObjects(CURRENT_ENV).stakeAtomFallbackAtom.id
 
   const user = await requireUser(request)
   invariant(user, 'Unauthorized')
@@ -103,7 +107,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
         user.id === userQuest.user_id,
     )
     const dependsOnIdentityId =
-      dependsOnUserQuest?.quest_completion_object_id ?? FALLBACK_IDENTITY_ID
+      dependsOnUserQuest?.quest_completion_object_id ?? stakeAtomFallbackAtomId
     identity = await fetchWrapper(request, {
       method: IdentitiesService.getIdentityById,
       args: {

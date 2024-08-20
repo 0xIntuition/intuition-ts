@@ -30,6 +30,7 @@ import StakeModal from '@components/stake/stake-modal'
 import { useQuestCompletion } from '@lib/hooks/useQuestCompletion'
 import { useQuestMdxContent } from '@lib/hooks/useQuestMdxContent'
 import { stakeModalAtom } from '@lib/state/store'
+import { getQuestObjects } from '@lib/utils/app'
 import logger from '@lib/utils/logger'
 import { invariant } from '@lib/utils/misc'
 import { getQuestCriteria, getQuestId, QuestRouteId } from '@lib/utils/quest'
@@ -44,7 +45,7 @@ import { fetchWrapper } from '@server/api'
 import { requireUser, requireUserId } from '@server/auth'
 import { getVaultDetails } from '@server/multivault'
 import { getUserQuest } from '@server/quest'
-import { CHAPTER_5_MP3, FALLBACK_COUNTER_CLAIM_ID } from 'app/consts'
+import { CHAPTER_5_MP3, CURRENT_ENV } from 'app/consts'
 import {
   ClaimElement,
   ClaimElementType,
@@ -58,6 +59,10 @@ const ROUTE_ID = QuestRouteId.COUNTER_STAKE_CLAIM
 export async function loader({ request }: LoaderFunctionArgs) {
   const id = getQuestId(ROUTE_ID)
   invariant(id, 'id is required')
+
+  // get fallback claim
+  const counterStakeClaimFallbackClaimId =
+    getQuestObjects(CURRENT_ENV).counterstakeClaimFallbackClaim.id
 
   const user = await requireUser(request)
   invariant(user, 'Unauthorized')
@@ -122,7 +127,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     }
 
     const dependsOnClaimId =
-      FALLBACK_COUNTER_CLAIM_ID ??
+      counterStakeClaimFallbackClaimId ??
       dependsOnUserQuest?.quest_completion_object_id //TODO: Update when we decide how to handle ensuring user doesnt have an existing stake
     claim = await fetchWrapper(request, {
       method: ClaimsService.getClaimById,
