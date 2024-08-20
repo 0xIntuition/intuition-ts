@@ -81,7 +81,7 @@ const DataAboutHeader: React.FC<DataAboutHeaderProps> = ({
             weight="regular"
             className="text-secondary-foreground"
           >
-            Total Staked {variant === 'claims' && 'Across All Claims'}
+            TVL
           </Text>
           <MonetaryValue
             value={totalStake}

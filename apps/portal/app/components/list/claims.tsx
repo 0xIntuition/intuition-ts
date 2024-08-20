@@ -59,7 +59,7 @@ export function ClaimsList({
         <ListHeader
           items={[
             { label: 'Claim', icon: IconName.claim },
-            { label: 'Total Staked', icon: IconName.ethereum },
+            { label: 'TVL', icon: IconName.ethereum },
           ]}
         />
       )}
