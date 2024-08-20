@@ -1,6 +1,5 @@
 import { defineCollection, defineConfig } from '@content-collections/core'
 import { compileMDX } from '@content-collections/mdx'
-import logger from '@lib/utils/logger'
 
 const quests = defineCollection({
   name: 'quests',
@@ -24,7 +23,7 @@ const quests = defineCollection({
     }
   },
   onSuccess: (docs) => {
-    logger(`generated quest collection with ${docs.length}`)
+    console.log(`generated quest collection with ${docs.length}`)
   },
 })
 
