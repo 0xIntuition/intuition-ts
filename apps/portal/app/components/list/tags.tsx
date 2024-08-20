@@ -95,7 +95,12 @@ export function TagsList({
             return null
           }
 
-          const matchingClaim = claimMap.get(identity.id)
+          const claimId = claimMap.get(identity.id)
+          const matchingClaim = claims.find(
+            (claim) => claim.claim_id === claimId,
+          )
+          // TODO: ENG-0000: Show filled save if user has a position on claim
+          // TODO: ENG-0000: Show only user position if user is on filtering by you.
 
           return (
             <div
@@ -109,15 +114,17 @@ export function TagsList({
                   name={getAtomLabel(identity)}
                   description={getAtomDescription(identity)}
                   id={identity.user?.wallet ?? identity.identity_id}
-                  claimLink={`${PATHS.CLAIM}/${matchingClaim}`}
+                  claimLink={`${PATHS.CLAIM}/${claimId}`}
                   tags={
                     identity.tags?.map((tag) => ({
                       label: tag.display_name,
                       value: tag.num_tagged_identities,
                     })) ?? undefined
                   }
-                  amount={+formatBalance(BigInt(identity.assets_sum || ''), 18)}
-                  totalFollowers={identity.num_positions}
+                  amount={
+                    +formatBalance(BigInt(matchingClaim?.assets_sum || 0), 18)
+                  }
+                  totalFollowers={matchingClaim?.num_positions || 0}
                   link={getAtomLink(identity)}
                   ipfsLink={getAtomIpfsLink(identity)}
                 />
