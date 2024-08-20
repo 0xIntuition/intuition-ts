@@ -8,13 +8,14 @@ import {
   UsersService,
 } from '@0xintuition/api'
 
+import { getSpecialPredicate } from '@lib/utils/app'
 import { calculateTotalPages } from '@lib/utils/misc'
 import { getStandardPageParams } from '@lib/utils/params'
 import { fetchWrapper } from '@server/api'
 import {
+  CURRENT_ENV,
   TAG_PREDICATE_DISPLAY_NAME_TESTNET,
   TAG_PREDICATE_ID_TESTNET,
-  TAG_PREDICATE_VAULT_ID_TESTNET,
 } from 'app/consts'
 
 export async function getUserCreatedLists({
@@ -197,7 +198,7 @@ export async function getFeaturedLists({
     limit: 1,
     sortBy: ClaimSortColumn.CREATED_AT,
     direction: SortDirection.DESC,
-    predicate: TAG_PREDICATE_VAULT_ID_TESTNET,
+    predicate: getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId,
   }
 
   const featuredListsResults = await Promise.all(

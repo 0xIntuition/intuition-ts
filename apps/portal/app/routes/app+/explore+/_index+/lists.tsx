@@ -10,13 +10,14 @@ import { ErrorPage } from '@components/error-page'
 import { ExploreSearch } from '@components/explore/ExploreSearch'
 import { ListClaimsList } from '@components/list/list-claims'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
+import { getSpecialPredicate } from '@lib/utils/app'
 import { calculateTotalPages, invariant, loadMore } from '@lib/utils/misc'
 import { getStandardPageParams } from '@lib/utils/params'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { useSearchParams, useSubmit } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
-import { NO_WALLET_ERROR, TAG_PREDICATE_VAULT_ID_TESTNET } from 'app/consts'
+import { CURRENT_ENV, NO_WALLET_ERROR } from 'app/consts'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const wallet = await requireUserWallet(request)
@@ -44,7 +45,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
       sortBy: sortBy as ClaimSortColumn,
       direction,
       displayName,
-      predicate: TAG_PREDICATE_VAULT_ID_TESTNET,
+      predicate: getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId,
     },
   })
 

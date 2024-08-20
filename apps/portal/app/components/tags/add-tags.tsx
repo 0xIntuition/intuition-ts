@@ -13,9 +13,10 @@ import {
   globalCreateIdentityModalAtom,
   saveListModalAtom,
 } from '@lib/state/store'
+import { getSpecialPredicate } from '@lib/utils/app'
 import { useFetcher } from '@remix-run/react'
 import { TagLoaderData } from '@routes/resources+/tag'
-import { TAG_PREDICATE_VAULT_ID_TESTNET, TAG_RESOURCE_ROUTE } from 'app/consts'
+import { CURRENT_ENV, TAG_RESOURCE_ROUTE } from 'app/consts'
 import { TransactionActionType } from 'app/types/transaction'
 import { useAtom } from 'jotai'
 
@@ -76,7 +77,8 @@ export function AddTags({
 
     const searchParams = new URLSearchParams({
       subjectId: subjectVaultId,
-      predicateId: TAG_PREDICATE_VAULT_ID_TESTNET.toString(),
+      predicateId:
+        getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId?.toString(),
       objectId: identity.vault_id,
     })
 
