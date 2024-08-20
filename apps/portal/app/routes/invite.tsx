@@ -251,7 +251,7 @@ export default function InviteRoute() {
               </div>
               <div className="flex flex-col items-center md:items-start w-full">
                 <div className="mb-6 md:hidden w-full flex justify-center">
-                  <RelicCard />
+                  <RelicCard variant={'v1'} />
                 </div>
                 <Link
                   to={'/welcome'}
@@ -271,7 +271,7 @@ export default function InviteRoute() {
               </div>
             </div>
             <div className="hidden md:flex flex-col m-auto">
-              <RelicCard />
+              <RelicCard variant={'v1'} />
             </div>
           </div>
         </div>
