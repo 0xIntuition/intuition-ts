@@ -10,9 +10,11 @@ import {
   UsersService,
 } from '@0xintuition/api'
 
+import { getSpecialPredicate } from '@lib/utils/app'
 import { calculateTotalPages } from '@lib/utils/misc'
 import { getStandardPageParams } from '@lib/utils/params'
 import { fetchWrapper } from '@server/api'
+import { CURRENT_ENV } from 'app/consts'
 
 interface PaginationData {
   currentPage: number
@@ -67,7 +69,8 @@ export async function getConnectionsData({
       limit: followingLimit,
       sortBy: followingSortBy as SortColumn,
       direction: followingDirection,
-      displayName: 'am following',
+      displayName:
+        getSpecialPredicate(CURRENT_ENV).amFollowingPredicate.displayName,
       user: userWallet,
     },
   })
@@ -98,6 +101,7 @@ export async function getConnectionsData({
       paramPrefix: 'followers',
       defaultSortByValue: PositionSortColumn.ASSETS,
     })
+
     const followersSearch =
       (searchParams.get('followersSearch') as string) || null
 
