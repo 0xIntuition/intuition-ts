@@ -28,7 +28,7 @@ export const SidebarLayoutNav = ({
         className,
       )}
       style={{
-        width: isMobileView ? '100%' : isCollapsed ? '5rem' : '24rem',
+        width: isMobileView ? '100%' : isCollapsed ? '5rem' : '20rem',
       }}
     >
       <div
