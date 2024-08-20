@@ -1,9 +1,6 @@
 import { apiPrivateGET } from '@lib/utils/http-requests'
 
-const phosphorCollectionId =
-  typeof window !== 'undefined'
-    ? window.ENV?.PHOSPHOR_COLLECTION_ID
-    : process.env.PHOSPHOR_COLLECTION_ID
+const phosphorCollectionId = process.env.PHOSPHOR_COLLECTION_ID
 
 export interface PurchaseIntentsData {
   cursor: string | null
