@@ -35,7 +35,7 @@ const supportCards = [
     title: 'Email',
     description:
       "For personalized assistance, reach out to us via email. We're here to help with any questions or concerns.",
-    link: '#',
+    link: 'https://discord.com/channels/909531430881746974/1151564740255043604',
   },
   {
     icon: IconName.megaphone,
