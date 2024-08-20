@@ -31,7 +31,6 @@ import { Link, useLoaderData, useNavigate } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
 import { getRelicCount } from '@server/relics'
-import { PATHS } from 'app/consts'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const wallet = await requireUserWallet(request)
