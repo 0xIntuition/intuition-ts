@@ -4,15 +4,15 @@ import { base, baseSepolia, type mainnet } from 'viem/chains'
 
 import logger from './logger'
 
-const alchemyRpcUrlSepolia =
+const alchemyRpcUrlBaseSepolia =
   typeof window !== 'undefined'
     ? window.ENV?.ALCHEMY_BASE_SEPOLIA_RPC_URL
     : process.env.ALCHEMY_BASE_SEPOLIA_RPC_URL
 
-// const alchemyRpcUrlMainnet =
-//   typeof window !== 'undefined'
-//     ? window.ENV?.ALCHEMY_BASE_RPC_URL
-//     : process.env.ALCHEMY_BASE_RPC_URL
+const alchemyRpcUrlBaseMainnet =
+  typeof window !== 'undefined'
+    ? window.ENV?.ALCHEMY_BASE_RPC_URL
+    : process.env.ALCHEMY_BASE_RPC_URL
 
 const multiVaultContractAddress =
   typeof window !== 'undefined'
@@ -37,20 +37,20 @@ export const getChainEnvConfig = (env: string): ChainConfig => {
     development: {
       chainId: baseSepolia.id,
       name: baseSepolia.name,
-      alchemyRpcUrl: alchemyRpcUrlSepolia,
+      alchemyRpcUrl: alchemyRpcUrlBaseSepolia,
       contractAddress: multiVaultContractAddress as `0x${string}`,
     },
     staging: {
       chainId: baseSepolia.id,
       name: baseSepolia.name,
-      alchemyRpcUrl: alchemyRpcUrlSepolia,
+      alchemyRpcUrl: alchemyRpcUrlBaseMainnet,
       contractAddress: multiVaultContractAddress as `0x${string}`,
     },
     production: {
       chainId: baseSepolia.id,
       name: baseSepolia.name,
-      alchemyRpcUrl: alchemyRpcUrlSepolia,
-      contractAddress: multiVaultContractAddress as `0x${string}`, // TODO: temporarily seting the envs to be the same -- revisit in [ENG-2407]
+      alchemyRpcUrl: alchemyRpcUrlBaseMainnet,
+      contractAddress: multiVaultContractAddress as `0x${string}`,
     },
   }
 
