@@ -2,21 +2,18 @@ import * as React from 'react'
 
 import { Tag } from '@0xintuition/1ui'
 
-import animationData from '@assets/lottie/home-banner.json'
-import { DotLottieReact } from '@lottiefiles/dotlottie-react'
+import { HOME_BANNER_MP4 } from 'app/consts'
+import { AnimatePresence, motion } from 'framer-motion'
 
 export interface HomeBannerProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export default function HomeBanner(props: HomeBannerProps) {
   return (
     <div
-      className="relative px-5 py-20 w-full theme-border rounded-lg bg-background/60 shadow-md backdrop-blur-lg overflow-hidden"
+      className="relative px-5 py-20 md:py-30 w-full theme-border rounded-lg bg-background/60 shadow-md backdrop-blur-lg overflow-hidden"
       {...props}
     >
-      <div className="absolute inset-0 w-full h-full">
-        <HomeAnimation />
-      </div>
-      <div className="flex flex-col gap-4 items-center justify-center w-full">
+      <div className="relative z-10 flex flex-col gap-4 items-center justify-center w-full">
         <div className="flex gap-2 items-center">
           <TextSVG />
           <BadgeSVG />
@@ -29,6 +26,9 @@ export default function HomeBanner(props: HomeBannerProps) {
             BETA
           </Tag>
         </div>
+      </div>
+      <div className="absolute inset-0 w-full h-full">
+        <HomeAnimation />
       </div>
     </div>
   )
@@ -129,14 +129,25 @@ const BadgeSVG: React.FC = () => (
 
 export const HomeAnimation = () => {
   return (
-    <div className="opacity-50 w-full">
-      <DotLottieReact
-        data={animationData}
-        loop
-        autoplay
-        autoResizeCanvas={false}
-        className="w-full h-auto"
-      />
+    <div className="opacity-70 w-full">
+      <AnimatePresence>
+        <motion.div
+          key="mediaPlayer"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 1 }}
+        >
+          <video
+            src={HOME_BANNER_MP4}
+            title={'Home'}
+            loop
+            muted
+            autoPlay={true}
+            className="w-full h-auto overflow-hidden"
+          />
+        </motion.div>
+      </AnimatePresence>
     </div>
   )
 }

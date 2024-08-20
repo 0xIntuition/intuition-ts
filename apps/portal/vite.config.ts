@@ -66,7 +66,6 @@ export default defineConfig({
       '@privy-io/react-auth',
       '@privy-io/wagmi',
       '@content-collections/mdx',
-      'react-lottie'
     ],
   },
 })

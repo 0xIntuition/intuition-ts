@@ -219,9 +219,6 @@ importers:
       '@epic-web/remember':
         specifier: ^1.0.2
         version: 1.1.0
-      '@lottiefiles/dotlottie-react':
-        specifier: ^0.8.8
-        version: 0.8.8(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@paralleldrive/cuid2':
         specifier: ^2.2.2
         version: 2.2.2
@@ -2562,15 +2559,6 @@ packages:
 
   '@lit/reactive-element@1.6.3':
     resolution: {integrity: sha512-QuTgnG52Poic7uM1AN5yJ09QMe0O28e10XzSvWDz02TJiiKee4stsiownEIadWm8nYzyDAyT+gKzUoZmiWQtsQ==}
-
-  '@lottiefiles/dotlottie-react@0.8.8':
-    resolution: {integrity: sha512-ZKiESH8a3Nas5XV8VucU77Bkhn5LtELniGtBvKJVIkxhrGVk6VwjMzYR+KcFeb/umuw16H8Hyv8uQYfQ/7IDuw==}
-    peerDependencies:
-      react: ^16.8.0 || ^17.0.0 || ^18.0.0
-      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
-
-  '@lottiefiles/dotlottie-web@0.30.3':
-    resolution: {integrity: sha512-GjjMiTLEGIqMZa6mJ6/imNpTPnfRA316og2njru6Cs0p28b7NDAjwpcQlmBIRbL4Hy28W35DQcJGlSy0adZZkw==}
 
   '@marsidev/react-turnstile@0.4.1':
     resolution: {integrity: sha512-uZusUW9mPr0csWpls8bApe5iuRK0YK7H1PCKqfM4djW3OA9GB9rU68irjk7xRO8qlHyj0aDTeVu9tTLPExBO4Q==}
@@ -6809,10 +6797,6 @@ packages:
 
   dayjs@1.11.11:
     resolution: {integrity: sha512-okzr3f11N6WuqYtZSvm+F776mB41wRZMhKP+hc34YdW+KmtYYK9iqvHSwo2k9FEH3fhGXvOPV6yz2IcSrfRUDg==}
-
-  debounce@2.1.0:
-    resolution: {integrity: sha512-OkL3+0pPWCqoBc/nhO9u6TIQNTK44fnBnzuVtJAbp13Naxw9R6u21x+8tVTka87AhDZ3htqZ2pSSsZl9fqL2Wg==}
-    engines: {node: '>=18'}
 
   debug@2.6.9:
     resolution: {integrity: sha512-bC7ElrdJaJnPbAP+1EotYvqZsb3ecl5wi6Bfi6BJTUcNowp6cvspg0jXznRTKDjm/E7AdgFBVeAPVMNcKGsHMA==}
@@ -15283,15 +15267,6 @@ snapshots:
     dependencies:
       '@lit-labs/ssr-dom-shim': 1.2.0
 
-  '@lottiefiles/dotlottie-react@0.8.8(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
-    dependencies:
-      '@lottiefiles/dotlottie-web': 0.30.3
-      debounce: 2.1.0
-      react: 18.3.1
-      react-dom: 18.3.1(react@18.3.1)
-
-  '@lottiefiles/dotlottie-web@0.30.3': {}
-
   '@marsidev/react-turnstile@0.4.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       react: 18.3.1
@@ -22085,8 +22060,6 @@ snapshots:
   dayjs@1.11.10: {}
 
   dayjs@1.11.11: {}
-
-  debounce@2.1.0: {}
 
   debug@2.6.9:
     dependencies:
