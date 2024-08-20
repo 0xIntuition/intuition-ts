@@ -78,7 +78,8 @@ export default function TermsRoute() {
             <span>&rdquo; or the &ldquo;</span>
             <span className="c6">Agreement</span>
             <span>
-              &rdquo;) for the website portal.intuition.systems (the &ldquo;
+              &rdquo;) for the website beta.portal.intuition.systems (the
+              &ldquo;
             </span>
             <span className="c6">Portal</span>
             <span>,&rdquo; &ldquo;</span>
@@ -556,7 +557,7 @@ export default function TermsRoute() {
                 . Our Privacy Policy describes how we handle the information you
                 provide to us when you use the Services. For an explanation of
                 our privacy practices, please visit our Privacy Policy located
-                at portal.intuition.systems/privacy.
+                at beta.portal.intuition.systems/privacy.
               </span>
             </li>
           </ol>
