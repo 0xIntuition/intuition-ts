@@ -54,9 +54,9 @@ export const getSpecialPredicate = (
     },
     staging: {
       tagPredicate: {
-        id: '',
-        vaultId: 0,
-        displayName: '',
+        id: '55b339a3-6280-482c-9e55-a1d55750a840',
+        vaultId: 4,
+        displayName: 'has tag',
         type: 'identity',
       },
       iPredicate: {
@@ -66,23 +66,23 @@ export const getSpecialPredicate = (
         type: 'identity',
       },
       amFollowingPredicate: {
-        id: '',
-        vaultId: 0,
-        displayName: '',
+        id: 'e498ca71-ef74-4cc9-90e4-2d42b8a02a18',
+        vaultId: 3,
+        displayName: 'am following',
         type: 'identity',
       },
       thingPredicate: {
-        id: '',
-        vaultId: 0,
-        displayName: '',
+        id: 'da4882fc-1d45-4c96-a7ab-cf1ff251cbb2',
+        vaultId: 2,
+        displayName: 'thing',
         type: 'identity',
       },
     },
     production: {
       tagPredicate: {
-        id: '',
-        vaultId: 0,
-        displayName: '',
+        id: '55b339a3-6280-482c-9e55-a1d55750a840',
+        vaultId: 4,
+        displayName: 'has tag',
         type: 'identity',
       },
       iPredicate: {
@@ -92,15 +92,15 @@ export const getSpecialPredicate = (
         type: 'identity',
       },
       amFollowingPredicate: {
-        id: '',
-        vaultId: 0,
-        displayName: '',
+        id: 'e498ca71-ef74-4cc9-90e4-2d42b8a02a18',
+        vaultId: 3,
+        displayName: 'am following',
         type: 'identity',
       },
       thingPredicate: {
-        id: '',
-        vaultId: 0,
-        displayName: '',
+        id: 'da4882fc-1d45-4c96-a7ab-cf1ff251cbb2',
+        vaultId: 2,
+        displayName: 'thing',
         type: 'identity',
       },
     },
