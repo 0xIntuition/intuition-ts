@@ -42,13 +42,13 @@ export const getSpecialPredicate = (
       amFollowingPredicate: {
         id: '6eab2a76-687e-4f23-9429-276eb14e6c6c',
         vaultId: 4,
-        displayName: 'has tag',
+        displayName: 'am following',
         type: 'identity',
       },
       thingPredicate: {
         id: 'b369445b-2310-4a89-8335-8c5c61e1b464',
         vaultId: 4,
-        displayName: 'am following',
+        displayName: 'Thing',
         type: 'identity',
       },
     },
@@ -74,7 +74,7 @@ export const getSpecialPredicate = (
       thingPredicate: {
         id: 'da4882fc-1d45-4c96-a7ab-cf1ff251cbb2',
         vaultId: 2,
-        displayName: 'thing',
+        displayName: 'Thing',
         type: 'identity',
       },
     },
@@ -100,7 +100,7 @@ export const getSpecialPredicate = (
       thingPredicate: {
         id: 'da4882fc-1d45-4c96-a7ab-cf1ff251cbb2',
         vaultId: 2,
-        displayName: 'thing',
+        displayName: 'Thing',
         type: 'identity',
       },
     },

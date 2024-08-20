@@ -106,7 +106,9 @@ export default function FollowReview({
               }}
               predicate={{
                 variant: Identity.nonUser,
-                label: getSpecialPredicate(CURRENT_ENV).iPredicate.displayName,
+                label:
+                  getSpecialPredicate(CURRENT_ENV).amFollowingPredicate
+                    .displayName,
                 shouldHover: false,
               }}
               object={{
