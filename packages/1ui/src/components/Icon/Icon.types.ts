@@ -58,6 +58,7 @@ export const IconName = {
   medal: 'medal',
   megaphone: 'megaphone',
   microphone: 'microphone',
+  mobile: 'mobile',
   moneybag: 'moneybag',
   personCircle: 'person-circle',
   pause: 'pause',
