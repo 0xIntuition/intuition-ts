@@ -160,7 +160,7 @@ export default function Quests() {
         </div>
         <MDXContentView body={mainBody} />
 
-        <div className="rounded-lg theme-border p-5 flex min-h-96 theme-border text-warning/30 overflow-auto">
+        <div className="rounded-lg theme-border p-6 flex min-h-96 theme-border text-warning/30 overflow-auto">
           <Suspense fallback={<PaginatedListSkeleton />}>
             <Await resolve={globalListIdentities}>
               {(resolvedGlobalListIdentities: IdentityListType | null) => {
