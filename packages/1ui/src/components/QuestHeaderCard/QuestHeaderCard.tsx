@@ -21,9 +21,11 @@ const QuestHeaderCard = ({
 }: QuestHeaderCardProps) => {
   const percentageOfQuestsCompleted =
     (numberOfCompletedQuests / totalNumberOfQuests) * 100
+
+  console.log(percentageOfQuestsCompleted < 100)
   return (
     <div
-      className="flex flex-col gap-6 p-6 rounded-xl theme-border bg-gradient-to-r from-against/30"
+      className={`flex flex-col gap-6 p-6 rounded-xl theme-border bg-gradient-to-r ${percentageOfQuestsCompleted === 100 ? 'from-success/30' : 'from-against/30'}`}
       {...props}
     >
       <div className="flex justify-between items-start">

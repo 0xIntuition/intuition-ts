@@ -8,7 +8,7 @@ import {
 import { ApiError, IdentitiesService } from '@0xintuition/api'
 
 import PrivyLogout from '@client/privy-logout'
-import { HeaderLogo } from '@components/header-logo'
+import { Header } from '@components/header'
 import { LoaderFunctionArgs, redirect } from '@remix-run/node'
 import { json, Link, useLoaderData } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
@@ -50,7 +50,7 @@ export default function WelcomePage() {
 
   return (
     <div className="flex flex-col justify-between h-screen w-full p-8">
-      <HeaderLogo />
+      <Header />
       <div className="flex justify-center items-center h-screen">
         <div className="flex-col justify-start items-start inline-flex gap-6">
           <h1 className="text-4xl font-bold mb-6">Chapter 0: The Big Bang</h1>

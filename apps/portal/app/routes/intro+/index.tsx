@@ -213,11 +213,13 @@ export default function IntroRoute() {
 
   return (
     <Container>
-      <div className="px-5">
-        <Button variant="navigation" className="ml-auto" onClick={onGetStarted}>
-          Skip <Icon name="arrow-right" className="h-4 w-4" />
-        </Button>
-      </div>
+      <Button
+        variant="navigation"
+        className="ml-auto md:absolute md:top-8 md:right-8 md:z-10"
+        onClick={onGetStarted}
+      >
+        Skip <Icon name="arrow-right" className="h-4 w-4" />
+      </Button>
       <Carousel
         slides={SLIDES}
         options={OPTIONS}
@@ -316,7 +318,7 @@ const Carousel: React.FC<CarouselProps> = (props) => {
                 <div className="text-center text-white/90 text-3xl font-semibold">
                   {slide.title}
                 </div>
-                <div className="md:w-[600px] text-center text-white/70 text-xs font-normal leading-[18px]">
+                <div className="md:w-[450px] text-center text-white/70 text-base font-normal leading-[18px]">
                   {slide.text}
                 </div>
                 <div>{slide.button}</div>

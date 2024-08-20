@@ -19,7 +19,7 @@ import {
 
 import PrivyLogout from '@client/privy-logout'
 import ErrorList from '@components/error-list'
-import { HeaderLogo } from '@components/header-logo'
+import { Header } from '@components/header'
 import RelicCard from '@components/relic-card/relic-card'
 import { getFormProps, getInputProps, useForm } from '@conform-to/react'
 import { getZodConstraint, parseWithZod } from '@conform-to/zod'
@@ -69,7 +69,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   }
 
   if (userObject) {
-    throw redirect('/create')
+    throw redirect('/welcome')
   }
 
   let userIdentity
@@ -176,7 +176,7 @@ export default function InviteRoute() {
 
   return (
     <div className="flex flex-col justify-between h-screen w-full p-8">
-      <HeaderLogo />
+      <Header />
       <div className="flex justify-center items-center h-screen">
         <div className="flex-col justify-start items-start inline-flex gap-6">
           {relicHolder ? (
