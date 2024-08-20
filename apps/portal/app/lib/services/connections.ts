@@ -1,6 +1,7 @@
 import {
   ClaimPresenter,
   ClaimsService,
+  Identifier,
   IdentitiesService,
   IdentityPresenter,
   SortColumn,
@@ -33,10 +34,12 @@ export interface ConnectionsData {
 export async function getConnectionsData({
   request,
   userWallet,
+  searchParams,
 }: {
   request: Request
   userWallet: string
-}): Promise<ConnectionsData | null> {
+  searchParams: URLSearchParams
+}) {
   const userIdentity = await fetchWrapper(request, {
     method: IdentitiesService.getIdentityById,
     args: {
@@ -44,29 +47,37 @@ export async function getConnectionsData({
     },
   })
 
-  const url = new URL(request.url)
-  const searchParams = new URLSearchParams(url.search)
+  console.log('searchParams before', searchParams)
 
-  const followingParams = getStandardPageParams({
+  const {
+    page: followingPage,
+    limit: followingLimit,
+    sortBy: followingSortBy,
+    direction: followingDirection,
+  } = getStandardPageParams({
     searchParams,
     paramPrefix: 'following',
     defaultSortByValue: SortColumn.USER_ASSETS,
   })
 
+  const followingSearch =
+    (searchParams.get('followingSearch') as Identifier) || null
+
   const following = await fetchWrapper(request, {
     method: IdentitiesService.getIdentityFollowed,
     args: {
       id: userIdentity.id,
-      ...followingParams,
-      offset: null,
-      timeframe: null,
-      userWallet: null,
+      page: followingPage,
+      limit: followingLimit,
+      sortBy: followingSortBy,
+      direction: followingDirection,
+      displayName: followingSearch,
     },
   })
 
   const followingTotalPages = calculateTotalPages(
     following?.total ?? 0,
-    Number(followingParams.limit),
+    Number(followingLimit),
   )
 
   if (userIdentity.follow_claim_id) {
@@ -77,45 +88,54 @@ export async function getConnectionsData({
       },
     })
 
-    const followersParams = getStandardPageParams({
+    const {
+      page: followersPage,
+      limit: followersLimit,
+      sortBy: followersSortBy,
+      direction: followersDirection,
+    } = getStandardPageParams({
       searchParams,
-      paramPrefix: 'followers',
-      defaultSortByValue: SortColumn.USER_ASSETS,
+      paramPrefix: 'following',
     })
+    const followersSearch =
+      (searchParams.get('followersSearch') as string) || null
 
     const followers = await fetchWrapper(request, {
       method: IdentitiesService.getIdentityFollowers,
       args: {
         id: userIdentity.id,
-        ...followersParams,
-        offset: null,
-        timeframe: null,
-        userWallet: null,
+        page: followersPage,
+        limit: followersLimit,
+        sortBy: followersSortBy,
+        direction: followersDirection,
+        displayName: followersSearch,
       },
     })
 
     const followersTotalPages = calculateTotalPages(
       followers?.total ?? 0,
-      Number(followersParams.limit),
+      Number(followersLimit),
     )
+
+    console.log('searchParams after', searchParams)
 
     return {
       followClaim,
       followers: followers?.data,
-      followersSortBy: followersParams.sortBy,
-      followersDirection: followersParams.direction,
+      followersSortBy,
+      followersDirection,
       followersPagination: {
-        currentPage: Number(followersParams.page),
-        limit: Number(followersParams.limit),
+        currentPage: Number(followersPage),
+        limit: Number(followersLimit),
         totalEntries: followers?.total ?? 0,
         totalPages: followersTotalPages,
       },
       following: following?.data,
-      followingSortBy: followingParams.sortBy,
-      followingDirection: followingParams.direction,
+      followingSortBy,
+      followingDirection,
       followingPagination: {
-        currentPage: Number(followingParams.page),
-        limit: Number(followingParams.limit),
+        currentPage: Number(followingPage),
+        limit: Number(followingLimit),
         totalEntries: following?.total ?? 0,
         totalPages: followingTotalPages,
       },
@@ -124,11 +144,11 @@ export async function getConnectionsData({
 
   return {
     following: following?.data,
-    followingSortBy: followingParams.sortBy,
-    followingDirection: followingParams.direction,
+    followingSortBy,
+    followingDirection,
     followingPagination: {
-      currentPage: Number(followingParams.page),
-      limit: Number(followingParams.limit),
+      currentPage: Number(followingPage),
+      limit: Number(followingLimit),
       totalEntries: following?.total ?? 0,
       totalPages: followingTotalPages,
     },
