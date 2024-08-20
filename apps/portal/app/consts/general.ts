@@ -1,14 +1,12 @@
 import { PrivyPlatform } from 'app/types/privy'
-import { baseSepolia } from 'viem/chains'
+import { base, baseSepolia } from 'viem/chains'
 
 import { PATHS } from './paths'
 
 export const CURRENT_ENV = process.env.NODE_ENV
 
 export const DEFAULT_CHAIN_ID =
-  CURRENT_ENV === 'production'
-    ? baseSepolia.id.toString()
-    : baseSepolia.id.toString()
+  CURRENT_ENV === 'production' ? base.id.toString() : baseSepolia.id.toString()
 
 export const DEFAULT_VERIFIER = function (): void {
   throw new Error('verify function must be implemented')
@@ -16,7 +14,7 @@ export const DEFAULT_VERIFIER = function (): void {
 
 export const MULTIVAULT_CONTRACT_ADDRESS =
   CURRENT_ENV === 'production'
-    ? '0x1A6950807E33d5bC9975067e6D6b5Ea4cD661665' // prod contract address
+    ? '0x430BbF52503Bd4801E51182f4cB9f8F534225DE5' // prod contract address
     : '0x1A6950807E33d5bC9975067e6D6b5Ea4cD661665' // dev contract address
 
 export const RELIC_CONTRACT_ADDRESS =
@@ -41,7 +39,7 @@ export const ACCEPTED_IMAGE_TYPES = ['jpeg', 'jpg', 'png']
 
 export const BLOCK_EXPLORER_URL =
   CURRENT_ENV === 'production'
-    ? 'https://sepolia.basescan.org'
+    ? 'https://basescan.org'
     : 'https://sepolia.basescan.org'
 
 export const IPFS_GATEWAY_URL = 'https://ipfs.io/ipfs'
