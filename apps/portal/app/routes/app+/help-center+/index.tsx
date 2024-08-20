@@ -2,6 +2,7 @@ import { IconName } from '@0xintuition/1ui'
 
 import { SupportCardGrid } from '@components/support/support-card'
 import { SupportFAQ } from '@components/support/support-faq'
+import { SupportHeaderCard } from '@components/support/support-header-card'
 import { SocialCardGrid } from '@components/support/support-socials'
 import FullPageLayout from 'app/layouts/full-page-layout'
 
@@ -77,16 +78,16 @@ const faqItems = [
   },
 ]
 
-export default function SupportPage() {
+export default function HelpCenter() {
   return (
     <FullPageLayout>
       <div className="flex flex-col max-w-7xl gap-12">
-        {/* <SupportHeaderCard
+        <SupportHeaderCard
           title="Guided Tutorials to Get You Started"
           content="Dive into our guided tutorials to master the essentials of the Intuition Portal. From creating claims to staking, we’ve got you covered with easy-to-follow instructions."
           link="#"
           ctaText="Watch videos"
-        /> */}
+        />
         <SupportCardGrid supportCards={supportCards} />
         <SupportFAQ faqItems={faqItems} />
         <SocialCardGrid socialCards={socialCards} />
