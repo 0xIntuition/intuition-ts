@@ -23,9 +23,10 @@ import {
   globalCreateIdentityModalAtom,
   saveListModalAtom,
 } from '@lib/state/store'
+import { getSpecialPredicate } from '@lib/utils/app'
 import { useFetcher } from '@remix-run/react'
 import { TagLoaderData } from '@routes/resources+/tag'
-import { TAG_PREDICATE_VAULT_ID_TESTNET, TAG_RESOURCE_ROUTE } from 'app/consts'
+import { CURRENT_ENV, TAG_RESOURCE_ROUTE } from 'app/consts'
 import { useAtom } from 'jotai'
 
 import { AddListExistingCta } from './add-list-existing-cta'
@@ -83,7 +84,8 @@ export function AddIdentities({
 
     const searchParams = new URLSearchParams({
       subjectId: identity.vault_id,
-      predicateId: TAG_PREDICATE_VAULT_ID_TESTNET.toString(),
+      predicateId:
+        getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId?.toString(),
       objectId: objectVaultId,
     })
 

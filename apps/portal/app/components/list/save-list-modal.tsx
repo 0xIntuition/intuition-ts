@@ -14,15 +14,16 @@ import { useDepositTriple } from '@lib/hooks/useDepositTriple'
 import { useGetWalletBalance } from '@lib/hooks/useGetWalletBalance'
 import { useRedeemTriple } from '@lib/hooks/useRedeemTriple'
 import { transactionReducer } from '@lib/hooks/useTransactionReducer'
+import { getSpecialPredicate } from '@lib/utils/app'
 import logger from '@lib/utils/logger'
 import { formatBalance } from '@lib/utils/misc'
 import { useGenericTxState } from '@lib/utils/use-tx-reducer'
 import { useFetcher, useLocation } from '@remix-run/react'
 import { ClaimLoaderData } from '@routes/resources+/search-claims-by-ids'
 import {
+  CURRENT_ENV,
   GET_VAULT_DETAILS_RESOURCE_ROUTE,
   SEARCH_CLAIMS_BY_IDS_RESOURCE_ROUTE,
-  TAG_PREDICATE_VAULT_ID_TESTNET,
 } from 'app/consts'
 import {
   TransactionActionType,
@@ -105,7 +106,8 @@ export default function SaveListModal({
       const fetchClaim = () => {
         const searchParams = new URLSearchParams({
           subject: identity.vault_id,
-          predicate: TAG_PREDICATE_VAULT_ID_TESTNET.toString(),
+          predicate:
+            getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId?.toString(),
           object: tag.vault_id,
           fetchId: fetchId.toString(),
         })

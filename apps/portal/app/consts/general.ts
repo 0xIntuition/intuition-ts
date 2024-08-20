@@ -1,3 +1,4 @@
+import { ChainEnv } from '@lib/utils/environment'
 import { PrivyPlatform } from 'app/types/privy'
 import { base, baseSepolia } from 'viem/chains'
 
@@ -6,7 +7,8 @@ import { PATHS } from './paths'
 // export const CURRENT_ENV =
 //   typeof window !== 'undefined' ? window.ENV.DEPLOY_ENV : process.env.DEPLOY_ENV
 
-export const CURRENT_ENV = import.meta.env.VITE_DEPLOY_ENV || 'development'
+export const CURRENT_ENV: ChainEnv =
+  (import.meta.env.VITE_DEPLOY_ENV as ChainEnv) || 'development'
 
 export const DEFAULT_CHAIN_ID =
   CURRENT_ENV === 'development' || CURRENT_ENV === 'staging'
