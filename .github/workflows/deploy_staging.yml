@@ -87,8 +87,8 @@ jobs:
           --build-arg SESSION_SECRET=${{ secrets.SESSION_SECRET }} \
           --build-arg API_URL=${{ secrets.API_URL_PRODUCTION }} \
           --build-arg API_KEY=${{ secrets.API_KEY }} \
-          --build-arg PRIVY_APP_ID=${{ secrets.PRIVY_APP_ID_STAGING }} \
-          --build-arg PRIVY_APP_SECRET=${{ secrets.PRIVY_APP_SECRET_STAGING }} \
+          --build-arg PRIVY_APP_ID=${{ secrets.PRIVY_APP_ID_PRODUCTION }} \
+          --build-arg PRIVY_APP_SECRET=${{ secrets.PRIVY_APP_SECRET_PRODUCTION }} \
           --build-arg CLOUDINARY_CLOUD_NAME=${{ secrets.CLOUDINARY_CLOUD_NAME }} \
           --build-arg CLOUDINARY_API_KEY=${{ secrets.CLOUDINARY_API_KEY }} \
           --build-arg CLOUDINARY_API_SECRET=${{ secrets.CLOUDINARY_API_SECRET }} \
@@ -97,7 +97,7 @@ jobs:
           --build-arg SENTRY_ORG=${{ secrets.SENTRY_ORG }} \
           --build-arg SENTRY_PROJECT=${{ secrets.SENTRY_PROJECT }} \
           --build-arg VITE_DEPLOY_ENV=staging \
-          --build-arg ORIGIN_URL=${{ secrets.ORIGIN_URL_DEVELOPMENT }} \
+          --build-arg ORIGIN_URL=${{ secrets.ORIGIN_URL_PRODUCTION }} \
           --build-arg PHOSPHOR_API_KEY=${{ secrets.PHOSPHOR_API_KEY }} \
           --build-arg PHOSPHOR_ADMIN_API_URL=${{ secrets.PHOSPHOR_ADMIN_API_URL }} \
           --build-arg PHOSPHOR_COLLECTION_ID=${{ secrets.PHOSPHOR_COLLECTION_ID }} \
