@@ -102,7 +102,7 @@ export function HomeStatsHeader({
 }: HomeStatsHeaderProps) {
   return (
     <div
-      className="flex justify-between items-center w-full p-4 bg-black rounded-xl border border-neutral-300/20"
+      className="flex justify-between items-start md:items-center w-full p-4 bg-black rounded-xl border border-neutral-300/20"
       {...props}
     >
       <div className="flex gap-8 max-lg:flex-col max-lg:gap-2">
@@ -130,7 +130,7 @@ interface StatItemProps {
 
 function StatItem({ label, value }: StatItemProps) {
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-start">
       <Text
         variant="caption"
         weight="regular"
@@ -138,7 +138,7 @@ function StatItem({ label, value }: StatItemProps) {
       >
         {label}
       </Text>
-      <Text variant="bodyLarge" weight="medium">
+      <Text variant="headline" weight="medium">
         {value}
       </Text>
     </div>
