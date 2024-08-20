@@ -53,7 +53,7 @@ describe('ClaimStakeCard', () => {
               <p
                 class="text-lg font-normal text-muted-foreground"
               >
-                Total TVL
+                TVL
               </p>
               <p
                 class="text-primary text-lg font-medium"
@@ -210,7 +210,7 @@ describe('ClaimStakeCard', () => {
               <p
                 class="text-lg font-normal text-muted-foreground"
               >
-                Total TVL
+                TVL
               </p>
               <p
                 class="text-primary text-lg font-medium"
