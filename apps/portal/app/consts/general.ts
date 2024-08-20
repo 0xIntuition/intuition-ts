@@ -11,21 +11,19 @@ export const CURRENT_ENV: ChainEnv =
   (import.meta.env.VITE_DEPLOY_ENV as ChainEnv) || 'development'
 
 export const DEFAULT_CHAIN_ID =
-  CURRENT_ENV === 'development' || CURRENT_ENV === 'staging'
-    ? baseSepolia.id.toString()
-    : base.id.toString()
+  CURRENT_ENV === 'development' ? baseSepolia.id.toString() : base.id.toString()
 
 export const DEFAULT_VERIFIER = function (): void {
   throw new Error('verify function must be implemented')
 }
 
 export const MULTIVAULT_CONTRACT_ADDRESS =
-  CURRENT_ENV === 'development' || CURRENT_ENV === 'staging'
+  CURRENT_ENV === 'development'
     ? '0x1A6950807E33d5bC9975067e6D6b5Ea4cD661665' // dev contract address
     : '0x0f93A2a337d344bc8FD20FFa0C7b6bFbd4585bE5' // prod contract address
 
 export const RELIC_CONTRACT_ADDRESS =
-  CURRENT_ENV === 'development' || CURRENT_ENV === 'staging'
+  CURRENT_ENV === 'development'
     ? '0x7aB2F10CaC6E27971fa93A5D5470Bb84126Bb734' // dev contract address
     : '0x7aB2F10CaC6E27971fa93A5D5470Bb84126Bb734' // prod contract address
 
@@ -45,7 +43,7 @@ export const ACCEPTED_IMAGE_MIME_TYPES = [
 export const ACCEPTED_IMAGE_TYPES = ['jpeg', 'jpg', 'png']
 
 export const BLOCK_EXPLORER_URL =
-  CURRENT_ENV === 'development' || CURRENT_ENV === 'staging'
+  CURRENT_ENV === 'development'
     ? 'https://sepolia.basescan.org'
     : 'https://basescan.org'
 
