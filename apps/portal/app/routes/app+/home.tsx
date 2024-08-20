@@ -28,12 +28,13 @@ import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { getActivity } from '@lib/services/activity'
 import { getFeaturedLists } from '@lib/services/lists'
 import { getSystemStats } from '@lib/services/stats'
+import { getFeaturedListObjectIds } from '@lib/utils/app'
 import { formatBalance, invariant } from '@lib/utils/misc'
 import { defer, LoaderFunctionArgs } from '@remix-run/node'
 import { Await } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
-import { FEATURED_LIST_OBJECT_IDS, NO_WALLET_ERROR } from 'app/consts'
+import { CURRENT_ENV, NO_WALLET_ERROR } from 'app/consts'
 import FullPageLayout from 'app/layouts/full-page-layout'
 import { PaginationType } from 'app/types'
 
@@ -71,7 +72,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
     featuredLists: getFeaturedLists({
       request,
-      listIds: FEATURED_LIST_OBJECT_IDS,
+      listIds: getFeaturedListObjectIds(CURRENT_ENV),
     }),
     activity: getActivity({ request, searchParams: activitySearchParams }),
   })

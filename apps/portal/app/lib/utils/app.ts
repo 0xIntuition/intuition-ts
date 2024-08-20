@@ -111,3 +111,23 @@ export const getSpecialPredicate = (
   }
   return specialPredicates[chainEnv as ChainEnv]
 }
+
+export const getFeaturedListObjectIds = (chainEnv: ChainEnv): number[] => {
+  const featuredListObjectIds: Record<ChainEnv, number[]> = {
+    development: [33, 22],
+    staging: [0, 0],
+    production: [0, 0],
+  }
+
+  if (!chainEnv) {
+    console.error(
+      `No chain environment specified. Defaulting to ${DEFAULT_CHAIN_ENV}.`,
+    )
+    return featuredListObjectIds[DEFAULT_CHAIN_ENV]
+  }
+  if (!(chainEnv in featuredListObjectIds)) {
+    logger(`No config for provided environment: ${chainEnv}.`)
+    return featuredListObjectIds[DEFAULT_CHAIN_ENV]
+  }
+  return featuredListObjectIds[chainEnv as ChainEnv]
+}
