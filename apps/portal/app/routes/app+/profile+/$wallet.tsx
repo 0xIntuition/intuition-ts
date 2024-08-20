@@ -5,6 +5,7 @@ import {
   Button,
   Icon,
   IconName,
+  Identity,
   PieChartVariant,
   PositionCard,
   PositionCardLastUpdated,
@@ -38,6 +39,7 @@ import StakeModal from '@components/stake/stake-modal'
 import TagsModal from '@components/tags/tags-modal'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { getIdentityOrPending } from '@lib/services/identities'
+import { getPurchaseIntentsByAddress } from '@lib/services/phosphor'
 import {
   followModalAtom,
   imageModalAtom,
@@ -49,6 +51,8 @@ import logger from '@lib/utils/logger'
 import {
   calculatePercentageOfTvl,
   formatBalance,
+  getAtomImage,
+  getAtomLabel,
   invariant,
 } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
@@ -56,6 +60,7 @@ import { Outlet, useNavigate } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
 import { getVaultDetails } from '@server/multivault'
+import { getRelicCount } from '@server/relics'
 import {
   BLOCK_EXPLORER_URL,
   MULTIVAULT_CONTRACT_ADDRESS,
@@ -127,6 +132,16 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     return logger('No user totals found')
   }
 
+  // TODO: Remove this relic hold/mint count and points calculation when it is stored in BE.
+  const relicHoldCount = await getRelicCount(wallet as `0x${string}`)
+
+  const userCompletedMints = await getPurchaseIntentsByAddress(
+    wallet,
+    'CONFIRMED',
+  )
+
+  const relicMintCount = userCompletedMints.data?.total_results
+
   let vaultDetails: VaultDetailsType | null = null
 
   if (!!userIdentity && userIdentity.vault_id) {
@@ -176,6 +191,8 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     followVaultDetails,
     vaultDetails,
     isPending,
+    relicHoldCount: relicHoldCount.toString(),
+    relicMintCount,
   })
 }
 
@@ -189,6 +206,8 @@ export default function Profile() {
     followVaultDetails,
     vaultDetails,
     isPending,
+    relicMintCount,
+    relicHoldCount,
   } = useLiveLoader<{
     wallet: string
     userWallet: string
@@ -198,6 +217,8 @@ export default function Profile() {
     followVaultDetails: VaultDetailsType
     vaultDetails: VaultDetailsType
     isPending: boolean
+    relicMintCount: number
+    relicHoldCount: string
   }>(['attest', 'create'])
   const navigate = useNavigate()
 
@@ -217,6 +238,11 @@ export default function Profile() {
     }
   }, [saveListModalActive])
 
+  // TODO: Remove this relic hold/mint count and points calculation when it is stored in BE.
+  const nftMintPoints = relicMintCount ? relicMintCount * 2000000 : 0
+  const nftHoldPoints = relicHoldCount ? +relicHoldCount * 250000 : 0
+  const totalNftPoints = nftMintPoints + nftHoldPoints
+
   const leftPanel = (
     <div className="flex-col justify-start items-start gap-5 inline-flex max-lg:w-full">
       <ProfileCard
@@ -232,7 +258,8 @@ export default function Profile() {
         stats={{
           numberOfFollowers: userTotals.follower_count,
           numberOfFollowing: userTotals.followed_count,
-          points: userTotals.total_points,
+          // TODO: Remove this relic hold/mint count and points calculation when it is stored in BE.
+          points: userTotals.total_points + totalNftPoints,
         }}
         bio={userIdentity?.user?.description ?? ''}
         ipfsLink={`${BLOCK_EXPLORER_URL}/address/${userIdentity.identity_id}`}
@@ -342,6 +369,9 @@ export default function Profile() {
           <StakeCard
             tvl={+formatBalance(assets_sum ?? '0')}
             holders={userIdentity.num_positions}
+            variant={userIdentity.is_user ? Identity.user : Identity.nonUser}
+            identityImgSrc={getAtomImage(userIdentity)}
+            identityDisplayName={getAtomLabel(userIdentity)}
             onBuyClick={() =>
               setStakeModalActive((prevState) => ({
                 ...prevState,

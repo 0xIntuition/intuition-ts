@@ -18,12 +18,14 @@ import { PointsEarnedCard } from '@components/points-card/points-card'
 import { QuestSetCard } from '@components/quest/quest-set-card'
 import { QuestSetProgressCard } from '@components/quest/quest-set-progress-card'
 import { ReferralCard } from '@components/referral-card/referral-card'
+import { getPurchaseIntentsByAddress } from '@lib/services/phosphor'
 import { invariant } from '@lib/utils/misc'
 import { defer, LoaderFunctionArgs } from '@remix-run/node'
 import { Await, Link, useLoaderData } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
 import { getQuestsProgress } from '@server/quest'
+import { getRelicCount } from '@server/relics'
 import {
   BLOCK_EXPLORER_URL,
   COMING_SOON_QUEST_SET,
@@ -35,6 +37,16 @@ import { isAddress } from 'viem'
 export async function loader({ request }: LoaderFunctionArgs) {
   const userWallet = await requireUserWallet(request)
   invariant(userWallet, 'Unauthorized')
+
+  // TODO: Remove this relic hold/mint count and points calculation when it is stored in BE.
+  const relicHoldCount = await getRelicCount(userWallet as `0x${string}`)
+
+  const userCompletedMints = await getPurchaseIntentsByAddress(
+    userWallet,
+    'CONFIRMED',
+  )
+
+  const relicMintCount = userCompletedMints.data?.total_results
 
   const userProfile = await fetchWrapper(request, {
     method: UsersService.getUserByWalletPublic,
@@ -70,11 +82,19 @@ export async function loader({ request }: LoaderFunctionArgs) {
     userProfile,
     userTotals,
     inviteCodes: inviteCodes.invite_codes,
+    relicHoldCount: relicHoldCount.toString(),
+    relicMintCount,
   })
 }
 
 export default function Quests() {
-  const { details, userTotals, inviteCodes } = useLoaderData<typeof loader>()
+  const { details, userTotals, inviteCodes, relicMintCount, relicHoldCount } =
+    useLoaderData<typeof loader>()
+
+  // TODO: Remove this relic hold/mint count and points calculation when it is stored in BE.
+  const nftMintPoints = relicMintCount ? relicMintCount * 2000000 : 0
+  const nftHoldPoints = relicHoldCount ? +relicHoldCount * 250000 : 0
+  const totalNftPoints = nftMintPoints + nftHoldPoints
 
   return (
     <div className="p-10 w-full max-w-7xl mx-auto flex flex-col gap-5 max-md:p-5 max-sm:p-2">
@@ -91,19 +111,37 @@ export default function Quests() {
               <Await resolve={userTotals}>
                 {(resolvedUserTotals) => (
                   <PointsEarnedCard
-                    totalPoints={resolvedUserTotals.total_points}
+                    // TODO: Remove this relic hold/mint count and points calculation when it is stored in BE.
+                    totalPoints={
+                      relicMintCount
+                        ? resolvedUserTotals.total_points +
+                          relicMintCount * 2000000
+                        : 0
+                    }
                     activities={[
                       {
-                        name: 'Activity',
+                        name: 'Portal',
+                        points: resolvedUserTotals.quest_points,
+                      },
+                      // {
+                      //   name: 'Community',
+                      //   points: resolvedUserTotals.social_points,
+                      // },
+                      {
+                        name: 'Protocol',
                         points: resolvedUserTotals.protocol_points,
                       },
                       {
-                        name: 'Quests',
-                        points: resolvedUserTotals.quest_points,
+                        name: 'NFT',
+                        points: resolvedUserTotals.nft_points,
                       },
                       {
                         name: 'Referrals',
                         points: resolvedUserTotals.referral_points,
+                      },
+                      {
+                        name: 'NFT',
+                        points: totalNftPoints,
                       },
                     ]}
                   />

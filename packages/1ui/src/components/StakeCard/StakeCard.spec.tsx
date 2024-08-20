@@ -1,6 +1,7 @@
 import React from 'react'
 
 import { render } from '@testing-library/react'
+import { Identity } from 'types'
 
 import { StakeCard } from './StakeCard'
 
@@ -10,6 +11,9 @@ describe('StakeCard', () => {
       <StakeCard
         tvl={4.928}
         holders={69}
+        variant={Identity.user}
+        identityImgSrc={'identityImgSrc'}
+        identityDisplayName={'identityDisplayName'}
         onBuyClick={() => null}
         onViewAllClick={() => null}
       />,
@@ -23,9 +27,33 @@ describe('StakeCard', () => {
             class="flex flex-col gap-2 w-full"
           >
             <p
-              class="text-primary text-lg font-normal"
+              class="text-primary text-lg font-normal flex flex-row gap-1.5"
             >
-              Stake
+              Conviction in 
+              <button
+                class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center rounded-full [&>span]:rounded-full [&>span]:overflow-hidden text-base [&>span]:h-6 [&>span]:w-6"
+              >
+                <span
+                  class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square bg-background theme-border rounded-full"
+                >
+                  <span
+                    class="flex h-full w-full items-center justify-center bg-inherit"
+                  >
+                    <svg
+                      class="text-primary/30 w-[80%] h-[80%] max-w-8 max-h-8"
+                    >
+                      <use
+                        href="/src/components/Icon/Icon.sprites.svg#crypto-punk"
+                      />
+                    </svg>
+                  </span>
+                </span>
+                <p
+                  class="text-primary text-base font-normal"
+                >
+                  identityDisplayName
+                </p>
+              </button>
             </p>
             <div
               class="flex justify-between items-center"

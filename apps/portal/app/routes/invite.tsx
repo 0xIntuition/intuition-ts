@@ -23,7 +23,6 @@ import { Header } from '@components/header'
 import RelicCard from '@components/relic-card/relic-card'
 import { getFormProps, getInputProps, useForm } from '@conform-to/react'
 import { getZodConstraint, parseWithZod } from '@conform-to/zod'
-import { relicsAbi } from '@lib/abis/relics'
 import { useInviteCodeFetcher } from '@lib/hooks/useInviteCodeFetcher'
 import { inviteCodeSchema } from '@lib/schemas/create-identity-schema'
 import logger from '@lib/utils/logger'
@@ -31,8 +30,8 @@ import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
 import { Link, useLoaderData, useNavigate } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
-import { mainnetClient } from '@server/viem'
-import { PATHS, RELIC_CONTRACT_ADDRESS } from 'app/consts'
+import { getRelicCount } from '@server/relics'
+import { PATHS } from 'app/consts'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const wallet = await requireUserWallet(request)
@@ -40,12 +39,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     return redirect('/login')
   }
 
-  const relicCount = (await mainnetClient.readContract({
-    address: RELIC_CONTRACT_ADDRESS,
-    abi: relicsAbi,
-    functionName: 'balanceOf',
-    args: [wallet],
-  })) as number
+  const relicCount = await getRelicCount(wallet as `0x${string}`)
 
   const relicHolder = relicCount > 0
 

@@ -18,7 +18,12 @@ import {
   QuestStatus,
 } from '@0xintuition/api'
 
-import { calculatePercentageOfTvl, formatBalance } from '@lib/utils/misc'
+import {
+  calculatePercentageOfTvl,
+  formatBalance,
+  getAtomImage,
+  getAtomLabel,
+} from '@lib/utils/misc'
 import { BLOCK_EXPLORER_URL, IPFS_GATEWAY_URL, PATHS } from 'app/consts'
 import { VaultDetailsType } from 'app/types'
 
@@ -66,6 +71,9 @@ export default function StakeIdentityActivity({
                 className="bg-primary/5"
                 tvl={+formatBalance(identity?.assets_sum)}
                 holders={identity?.num_positions}
+                variant={identity.is_user ? Identity.user : Identity.nonUser}
+                identityImgSrc={getAtomImage(identity)}
+                identityDisplayName={getAtomLabel(identity)}
                 onBuyClick={handleDepositIdentityClick}
               />
             </div>
