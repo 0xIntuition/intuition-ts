@@ -1,3 +1,4 @@
+import { RELIC_LEGENDARY_V1_MP4 } from 'app/consts'
 import { AnimatePresence, motion } from 'framer-motion'
 
 export default function RelicCard() {
@@ -14,9 +15,7 @@ export default function RelicCard() {
               transition={{ duration: 1 }}
             >
               <video
-                src={
-                  'https://storage.googleapis.com/intuition-ts-assets-v1/relic_legendary_v2_compressed.mp4'
-                }
+                src={RELIC_LEGENDARY_V1_MP4}
                 autoPlay
                 muted
                 loop

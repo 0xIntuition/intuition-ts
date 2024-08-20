@@ -39,3 +39,12 @@ export const INTRO_CAROUSEL_5_MP4 =
 
 export const INTRO_CAROUSEL_6_MP4 =
   'https://res.cloudinary.com/dfpwy9nyv/video/upload/f_auto:video,q_auto/v1/Portal%20Assets/intro-carousel/carousel-6'
+
+export const RELIC_LEGENDARY_V1_MP4 =
+  'https://res.cloudinary.com/dfpwy9nyv/video/upload/f_auto:video,q_auto/v1/Portal%20Assets/relics/relic-legendary-v1'
+
+export const RELIC_LEGENDARY_V2_MP4 =
+  'https://res.cloudinary.com/dfpwy9nyv/video/upload/f_auto:video,q_auto/v1/Portal%20Assets/relics/relic-legendary-v2'
+
+export const RELIC_LEGENDARY_V3_MP4 =
+  'https://res.cloudinary.com/dfpwy9nyv/video/upload/f_auto:video,q_auto/v1/Portal%20Assets/relics/relic-legendary-v3'
