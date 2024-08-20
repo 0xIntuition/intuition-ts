@@ -11,7 +11,7 @@ import {
 
 import PrivyLogout from '@client/privy-logout'
 import EditProfileModal from '@components/edit-profile/modal'
-import { HeaderLogo } from '@components/header-logo'
+import { Header } from '@components/header'
 import SubmitButton from '@components/submit-button'
 import { multivaultAbi } from '@lib/abis/multivault'
 import { useCreateAtom } from '@lib/hooks/useCreateAtom'
@@ -330,7 +330,7 @@ export default function Profile() {
 
   return (
     <div className="flex flex-col justify-between h-screen w-full p-8">
-      <HeaderLogo />
+      <Header />
       <div className="flex justify-center items-center h-screen">
         <div className="w-[600px] h-[307px] flex-col justify-start items-start gap-[42px] inline-flex">
           <div className="h-[37px] flex-col justify-start items-start gap-6 flex">

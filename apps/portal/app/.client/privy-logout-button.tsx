@@ -6,22 +6,19 @@ import {
   IconName,
 } from '@0xintuition/1ui'
 
-import { useLogout } from '@privy-io/react-auth'
+import { usePrivy } from '@privy-io/react-auth'
 import { useDisconnect } from 'wagmi'
 
 interface PrivyLogoutButtonProps {
-  handleLogout: () => void
+  handleLogout?: () => void
 }
 
 export default function PrivyLogoutButton({
   handleLogout,
 }: PrivyLogoutButtonProps) {
+  const { logout } = usePrivy()
+
   const { disconnect } = useDisconnect()
-  const { logout } = useLogout({
-    onSuccess: () => {
-      handleLogout()
-    },
-  })
 
   async function onLogout() {
     await logout()
@@ -33,7 +30,7 @@ export default function PrivyLogoutButton({
       variant={ButtonVariant.text}
       size={ButtonSize.lg}
       onClick={() => {
-        onLogout()
+        handleLogout ? handleLogout() : onLogout()
       }}
     >
       <Icon name={IconName.arrowBoxLeft} /> Log Out
