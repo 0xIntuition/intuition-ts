@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactNode } from 'react'
 
 import {
   Accordion,
@@ -12,35 +12,34 @@ import {
 
 interface SupportFAQCardData {
   question: string
-  answer: string
+  answer: string | ReactNode
 }
 
 interface SupportFAQCardProps {
+  title: string
   faqItems: SupportFAQCardData[]
 }
 
-export const SupportFAQ: React.FC<SupportFAQCardProps> = ({ faqItems }) => {
+export const SupportFAQ: React.FC<SupportFAQCardProps> = ({
+  title,
+  faqItems,
+}) => {
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col">
       <Text
-        variant={TextVariant.headline}
+        variant={TextVariant.bodyLarge}
         weight={TextWeight.medium}
-        className="text-primary/90"
+        className="text-foreground/90"
       >
-        FAQs
+        {title}
       </Text>
-      <Accordion
-        type="single"
-        collapsible
-        className="w-full"
-        defaultValue="item-1"
-      >
+      <Accordion type="single" collapsible className="w-full">
         {faqItems.map((item, index) => (
           <AccordionItem key={index} value={`item-${index + 1}`}>
-            <AccordionTrigger className="text-primary/90">
+            <AccordionTrigger className="text-foreground/70 text-base">
               {item.question}
             </AccordionTrigger>
-            <AccordionContent className="text-secondary-foreground/90">
+            <AccordionContent className="text-foreground/70">
               {item.answer}
             </AccordionContent>
           </AccordionItem>
