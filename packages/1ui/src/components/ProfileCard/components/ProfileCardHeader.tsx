@@ -9,6 +9,7 @@ interface ProfileCardHeaderProps {
   id?: string
   link?: string
   onAvatarClick?: () => void
+  maxStringLength?: number
 }
 
 const ProfileCardHeader = ({
@@ -18,6 +19,7 @@ const ProfileCardHeader = ({
   id,
   link,
   onAvatarClick,
+  maxStringLength = 24,
 }: ProfileCardHeaderProps) => {
   return (
     <div className="flex items-center space-x-4 w-full max-lg:justify-center">
@@ -34,7 +36,7 @@ const ProfileCardHeader = ({
           variant="headline"
           weight="medium"
           className="text-primary"
-          maxStringLength={24}
+          maxStringLength={maxStringLength}
         />
         <div className="flex flex-row gap-1 items-center">
           {link && id && (
@@ -45,7 +47,7 @@ const ProfileCardHeader = ({
                   variant="body"
                   weight="medium"
                   className="text-muted-foreground"
-                  maxStringLength={24}
+                  maxStringLength={maxStringLength}
                   disableTooltip
                 />
               </a>

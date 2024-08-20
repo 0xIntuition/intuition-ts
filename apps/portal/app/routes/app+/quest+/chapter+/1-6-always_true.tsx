@@ -1,10 +1,21 @@
-import { useEffect } from 'react'
+import { Suspense, useEffect } from 'react'
 
-import { Button, ButtonSize, ButtonVariant } from '@0xintuition/1ui'
-import { QuestStatus, UserQuestsService, UsersService } from '@0xintuition/api'
+import {
+  Button,
+  ButtonSize,
+  ButtonVariant,
+  ProfileCardHeader,
+} from '@0xintuition/1ui'
+import {
+  ClaimsService,
+  QuestStatus,
+  UserQuestsService,
+  UsersService,
+} from '@0xintuition/api'
 
 import questAudio from '@assets/audio/quests/chapter-6.mp3'
 import { ErrorPage } from '@components/error-page'
+import { TagsList } from '@components/list/tags'
 import {
   Header,
   Hero,
@@ -14,17 +25,20 @@ import {
 import { QuestCriteriaCard } from '@components/quest/quest-criteria-card'
 import { QuestPointsDisplay } from '@components/quest/quest-points-display'
 import QuestSuccessModal from '@components/quest/quest-success-modal'
+import { PaginatedListSkeleton } from '@components/skeleton'
 import { useQuestCompletion } from '@lib/hooks/useQuestCompletion'
 import { useQuestMdxContent } from '@lib/hooks/useQuestMdxContent'
+import { getListIdentities } from '@lib/services/lists'
 import logger from '@lib/utils/logger'
 import { invariant } from '@lib/utils/misc'
 import { getQuestCriteria, getQuestId, QuestRouteId } from '@lib/utils/quest'
 import { ActionFunctionArgs, json, LoaderFunctionArgs } from '@remix-run/node'
-import { Form, useActionData, useLoaderData } from '@remix-run/react'
+import { Await, Form, useActionData, useLoaderData } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
 import { requireUser, requireUserId } from '@server/auth'
 import { getUserQuest } from '@server/quest'
-import { MDXContentVariant } from 'app/types'
+import { FALLBACK_LIST_ID_FOR_QUERY } from 'app/consts'
+import { IdentityListType, MDXContentVariant } from 'app/types'
 
 const ROUTE_ID = QuestRouteId.ALWAYS_TRUE
 
@@ -60,6 +74,20 @@ export async function loader({ request }: LoaderFunctionArgs) {
     userQuest.status = QuestStatus.CLAIMABLE
   }
 
+  const url = new URL(request.url)
+  const searchParams = new URLSearchParams(url.search)
+
+  const claim = await fetchWrapper(request, {
+    method: ClaimsService.getClaimById,
+    args: { id: FALLBACK_LIST_ID_FOR_QUERY },
+  })
+
+  const globalListIdentities = await getListIdentities({
+    request,
+    objectId: claim.object?.id ?? '',
+    searchParams,
+  })
+
   logger('Fetched user quest', userQuest)
 
   logger('Fetched user quest status', status)
@@ -68,6 +96,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
     quest,
     userQuest,
     userWallet: user.wallet?.address,
+    claim,
+    globalListIdentities,
   })
 }
 
@@ -97,7 +127,8 @@ export async function action({ request }: ActionFunctionArgs) {
 }
 
 export default function Quests() {
-  const { quest, userQuest } = useLoaderData<typeof loader>()
+  const { quest, userQuest, userWallet, claim, globalListIdentities } =
+    useLoaderData<typeof loader>()
   const actionData = useActionData<typeof action>()
   const { successModalOpen, setSuccessModalOpen } =
     useQuestCompletion(userQuest)
@@ -129,8 +160,39 @@ export default function Quests() {
           />
         </div>
         <MDXContentView body={mainBody} />
-        <div className="bg-warning/5 rounded-lg theme-border p-5 flex justify-center align-items h-96 border-warning/30 border-dashed text-warning/30 text-bold">
-          Quest Activity
+
+        <div className="rounded-lg theme-border p-6 flex min-h-96 theme-border text-warning/30 overflow-auto">
+          <Suspense fallback={<PaginatedListSkeleton />}>
+            <Await resolve={globalListIdentities}>
+              {(resolvedGlobalListIdentities: IdentityListType | null) => {
+                if (!resolvedGlobalListIdentities) {
+                  return <PaginatedListSkeleton />
+                }
+                return (
+                  <>
+                    <div className="flex flex-col w-full gap-6 text-foreground">
+                      <ProfileCardHeader
+                        variant="non-user"
+                        avatarSrc={claim.object?.image ?? ''}
+                        name={claim.object?.display_name ?? ''}
+                        id={claim.object?.identity_id ?? ''}
+                        maxStringLength={72}
+                      />
+                      <TagsList
+                        identities={resolvedGlobalListIdentities.listIdentities}
+                        claims={resolvedGlobalListIdentities.claims}
+                        pagination={resolvedGlobalListIdentities.pagination}
+                        claim={claim}
+                        wallet={userWallet}
+                        enableSearch={true}
+                        enableSort={true}
+                      />
+                    </div>
+                  </>
+                )
+              }}
+            </Await>
+          </Suspense>
         </div>
 
         <MDXContentView
