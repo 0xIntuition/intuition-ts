@@ -40,7 +40,7 @@ const StakeCard = ({
         <Text variant="bodyLarge" className="flex flex-row gap-1.5">
           Conviction in{' '}
           <IdentityTag imgSrc={identityImgSrc} variant={variant}>
-            <Trunctacular value={identityDisplayName} maxStringLength={26} />
+            <Trunctacular value={identityDisplayName} maxStringLength={16} />
           </IdentityTag>
         </Text>
         <div className="flex justify-between items-center">
