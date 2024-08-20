@@ -6,6 +6,7 @@ import {
   ButtonVariant,
   Input,
   Label,
+  Separator,
   Text,
   TextVariant,
   toast,
@@ -31,6 +32,7 @@ import { Link, useLoaderData, useNavigate } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
 import { getRelicCount } from '@server/relics'
+import { PATHS } from 'app/consts'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const wallet = await requireUserWallet(request)
@@ -78,9 +80,9 @@ export async function loader({ request }: LoaderFunctionArgs) {
   }
 
   // If we reach here, it means we have both userObject and userIdentity
-  // if (userIdentity) {
-  //   return redirect(`${PATHS.PROFILE}`)
-  // }
+  if (userIdentity) {
+    return redirect(`${PATHS.PROFILE}`)
+  }
 
   // If we reach here, it means we have userObject but no userIdentity
   return json({ wallet, userObject, relicHolder })
@@ -167,15 +169,13 @@ export default function InviteRoute() {
   }, [inviteCodeFetcher.state, inviteCodeFetcher.data, navigate])
 
   return (
-    <div className="flex flex-col justify-between h-screen w-full p-8">
+    <div className="flex flex-col justify-between min-h-screen w-full p-4 md:p-8">
       <Header />
-      <div className="flex justify-center items-center h-screen">
-        <div className="flex flex-col justify-center items-center md:items-start gap-12 w-full max-w-6xl md:flex-row">
-          <div className="flex flex-col gap-6 h-[250px] w-1/3">
-            <div className="flex-col justify-start items-start flex">
-              <div className="text-foreground/90 text-3xl font-semibold">
-                Enter your invite code
-              </div>
+      <div className="flex-grow flex justify-center items-center">
+        <div className="flex flex-col md:flex-row justify-center items-center md:items-stretch gap-12 w-full max-w-7xl">
+          <div className="flex flex-col gap-6 w-full md:w-1/2 max-w-lg">
+            <div className="text-foreground/90 text-3xl font-semibold text-center md:text-left">
+              Enter your invite code
             </div>
             <inviteCodeFetcher.Form
               method="post"
@@ -190,7 +190,7 @@ export default function InviteRoute() {
                 </Label>
                 <Input
                   {...getInputProps(fields.invite_code, { type: 'text' })}
-                  className="w-96"
+                  className="w-[420px]"
                   placeholder="Enter your invite code here"
                 />
                 <ErrorList
@@ -203,36 +203,35 @@ export default function InviteRoute() {
               </div>
               <Text
                 variant={TextVariant.body}
-                className="text-muted-foreground w-96"
+                className="text-muted-foreground w-[400px]"
               >
                 Intuition is currently in Closed Beta. Obtain an invite code or
                 a Relic to gain access!
               </Text>
             </inviteCodeFetcher.Form>
-            <div className="flex flex-col mt-auto">
+            <div className="flex justify-center md:justify-start mt-auto">
               <Button
                 form={form.id}
                 type="submit"
                 variant={ButtonVariant.primary}
                 size={ButtonSize.lg}
                 disabled={loading || relicHolder}
-                className="w-48"
+                className="w-full md:w-48"
               >
                 Setup Profile
               </Button>
             </div>
           </div>
-          <div className="h-px w-[250px] md:w-px md:h-[250px] in-out-gradient-strong self-center"></div>
-          <div className="flex flex-col md:flex-row md:h-[250px] gap-6">
-            <div className="flex flex-col gap-6 justify-start items-start">
-              <div className="flex-col flex">
-                <div className="self-stretch text-white text-3xl font-semibold">
-                  Relic Holders
-                </div>
+          <div className="hidden md:block w-px h-[250px] bg-secondary-foreground self-center"></div>
+          <Separator className="bg-secondary-foreground block md:hidden" />
+          <div className="flex flex-col md:flex-row gap-6 w-full md:w-1/2 max-w-md">
+            <div className="flex flex-col gap-6 justify-start items-center md:items-start w-full">
+              <div className="text-white text-3xl font-semibold text-center md:text-left">
+                Relic Holders
               </div>
               <Text
                 variant={TextVariant.body}
-                className="text-muted-foreground w-64"
+                className="text-muted-foreground text-center md:text-left"
               >
                 The Relic, a key to the unseen realms. Its bearer walks the
                 paths of Intuition&apos;s Beta. Seek your own: forge it in the
@@ -253,20 +252,31 @@ export default function InviteRoute() {
                   digital seas
                 </Link>
                 .
-              </Text>{' '}
-              <Link to={'/welcome'} prefetch="intent" className="mt-auto">
-                <Button
-                  type="button"
-                  variant={ButtonVariant.primary}
-                  size={ButtonSize.lg}
-                  disabled={loading || !relicHolder}
-                  className="w-48"
+              </Text>
+              <div className="flex flex-col items-center md:items-start w-full">
+                <div className="mb-6 md:hidden w-full flex justify-center">
+                  <RelicCard />
+                </div>
+                <Link
+                  to={'/welcome'}
+                  prefetch="intent"
+                  className="w-full md:w-auto"
                 >
-                  Continue
-                </Button>
-              </Link>
+                  <Button
+                    type="button"
+                    variant={ButtonVariant.primary}
+                    size={ButtonSize.lg}
+                    disabled={loading || !relicHolder}
+                    className="w-full md:w-48"
+                  >
+                    Continue
+                  </Button>
+                </Link>
+              </div>
             </div>
-            <RelicCard />
+            <div className="hidden md:flex flex-col m-auto">
+              <RelicCard />
+            </div>
           </div>
         </div>
       </div>
