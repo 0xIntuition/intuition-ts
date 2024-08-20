@@ -165,7 +165,7 @@ export default function QuestSuccessModal({
               weight={TextWeight.normal}
               className="text-foreground/70"
             >
-              Points
+              IQ Points
             </Text>
           </div>
           <NavLink

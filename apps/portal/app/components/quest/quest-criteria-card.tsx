@@ -41,7 +41,7 @@ const QuestCriteriaCard = ({
           weight="normal"
           className="text-foreground/70"
         >
-          Points
+          IQ Points
         </Text>
         <QuestPointsDisplay points={points} questStatus={questStatus} />
       </div>

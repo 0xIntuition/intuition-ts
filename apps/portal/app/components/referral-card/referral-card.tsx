@@ -39,7 +39,7 @@ export const ReferralCard: React.FC<ReferralCardProps> = ({
             code.
           </Text>
         </div>
-        <ReferralPointsDisplay points={points} label="Referral Points" />
+        <ReferralPointsDisplay points={points} label="Referral IQ Points" />
       </div>
       <Separator />
       <div className="flex flex-col gap-4">

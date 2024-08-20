@@ -72,7 +72,8 @@ export const SidebarLayoutNavAvatar = ({
       <Trunctacular
         variant={ButtonVariant.navigation}
         value={name}
-        className="bg-transparent text-secondary-foreground/70 border-transparent rounded-lg  hover:text-secondary-foreground hover:border-border/20 aria-selected:bg-primary/10 aria-selected:text-secondary-foreground/80 disabled:text-muted-foreground aria-disabled:text-muted-foreground"
+        className="bg-transparent text-secondary-foreground/70 font-medium border-transparent rounded-lg  hover:text-secondary-foreground hover:border-border/20 aria-selected:bg-primary/10 aria-selected:text-secondary-foreground/80 disabled:text-muted-foreground aria-disabled:text-muted-foreground"
+        maxStringLength={42}
       />
     </div>
   )

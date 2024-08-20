@@ -41,7 +41,7 @@ const QuestPointsDisplay = ({
 
   return (
     <Text variant="body" weight="normal" className={cn(statusClass)}>
-      {`${points > 0 ? '+' : ''}${points} Points`}
+      {`${points > 0 ? '+' : ''}${points} IQ Points`}
     </Text>
   )
 }

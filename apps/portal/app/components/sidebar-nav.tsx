@@ -306,7 +306,7 @@ export default function SidebarNav({
                   ))}
                 </div>
               </div>
-              <div className="flex flex-col gap-4 w-full">
+              <div className="flex flex-col gap-2 w-full">
                 <DropdownMenu
                   open={isCreateMenuOpen}
                   onOpenChange={setIsCreateMenuOpen}
@@ -346,6 +346,13 @@ export default function SidebarNav({
                     </Button>
                   </DropdownMenuContent>
                 </DropdownMenu>
+                <NavLink to={PATHS.HELP} prefetch="intent">
+                  <SidebarNavItem
+                    iconName={IconName.rescueRing}
+                    label="Help Center"
+                    aria-selected={isRouteActive(PATHS.HELP)}
+                  />
+                </NavLink>
                 <PrivyButton
                   userObject={userObject}
                   triggerComponent={

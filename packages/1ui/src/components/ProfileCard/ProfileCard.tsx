@@ -92,7 +92,7 @@ const ProfileCard = ({
           {stats?.points !== undefined && (
             <ProfileCardStatItem
               value={stats.points}
-              label="Points"
+              label="IQ Points"
               valueClassName="text-success"
             />
           )}
