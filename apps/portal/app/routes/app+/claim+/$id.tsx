@@ -7,6 +7,7 @@ import {
   Icon,
   Identity,
   InfoCard,
+  PieChartVariant,
   PositionCard,
   PositionCardLastUpdated,
   PositionCardOwnership,
@@ -235,6 +236,11 @@ export default function ClaimDetails() {
                     ).toString(),
                   )
                 : 0
+            }
+            variant={
+              direction === 'for'
+                ? PieChartVariant.for
+                : PieChartVariant.against
             }
           />
           <PositionCardLastUpdated timestamp={claim.updated_at} />

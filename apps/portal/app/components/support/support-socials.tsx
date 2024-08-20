@@ -22,7 +22,7 @@ export function SocialCardGrid({ socialCards }: SocialCardGridProps) {
       >
         Socials
       </Text>
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
         {socialCards.map((card, index) => (
           <SupportCard
             key={index}

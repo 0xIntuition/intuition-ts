@@ -4,6 +4,7 @@ import {
   ButtonVariant,
   Identity,
   InfoCard,
+  PieChartVariant,
   PositionCard,
   PositionCardLastUpdated,
   PositionCardOwnership,
@@ -81,6 +82,7 @@ export default function StakeIdentityActivity({
                     ? +calculatePercentageOfTvl(user_assets ?? '0', assets_sum)
                     : 0
                 }
+                variant={PieChartVariant.default}
               />
               <PositionCardLastUpdated timestamp={identity.updated_at} />
             </PositionCard>

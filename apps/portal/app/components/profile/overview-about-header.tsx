@@ -86,7 +86,7 @@ export function OverviewAboutHeader({
               weight="regular"
               className="text-secondary-foreground"
             >
-              Total Staked
+              TVL
             </Text>
             <MonetaryValue value={totalStake} currency="ETH" />
           </div>

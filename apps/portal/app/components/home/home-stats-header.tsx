@@ -116,7 +116,7 @@ export function HomeStatsHeader({
       />
       <div className="flex gap-8 max-lg:flex-col max-lg:gap-2">
         {/* <StatItem label="Volume" value={`${totalVolume} ETH`} /> */}
-        <StatItem label="Staked" value={`${totalStaked} ETH`} />
+        <StatItem label="TVL" value={`${totalStaked} ETH`} />
         <StatItem label="Signals" value={totalSignals} />
       </div>
     </div>

@@ -5,6 +5,7 @@ import {
   Button,
   Icon,
   IconName,
+  PieChartVariant,
   PositionCard,
   PositionCardLastUpdated,
   PositionCardOwnership,
@@ -343,6 +344,7 @@ export default function Profile() {
                     ? +calculatePercentageOfTvl(user_assets ?? '0', assets_sum)
                     : 0
                 }
+                variant={PieChartVariant.default}
               />
               <PositionCardLastUpdated timestamp={userIdentity.updated_at} />
             </PositionCard>

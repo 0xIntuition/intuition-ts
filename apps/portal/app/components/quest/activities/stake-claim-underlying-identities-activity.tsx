@@ -1,6 +1,7 @@
 import React from 'react'
 
 import {
+  PieChartVariant,
   PositionCard,
   PositionCardLastUpdated,
   PositionCardOwnership,
@@ -93,6 +94,7 @@ export const PositionCardWrapper = ({
                 ? +calculatePercentageOfTvl(user_assets ?? '0', assets_sum)
                 : 0
             }
+            variant={PieChartVariant.default}
           />
           <PositionCardLastUpdated timestamp={identity.updated_at} />
         </PositionCard>

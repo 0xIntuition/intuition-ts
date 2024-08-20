@@ -51,7 +51,7 @@ const ClaimStakeCardDataSet = ({
           weight={TextWeight.medium}
           className="text-muted-foreground"
         >
-          {!currency ? 'Holders' : isVariantFor ? 'TVL For' : 'TVL Against'}
+          {!currency ? 'Depositors' : isVariantFor ? 'TVL For' : 'TVL Against'}
         </Text>
       </div>
       {currency ? (
@@ -127,7 +127,7 @@ const ClaimStakeCard = ({
             weight={TextWeight.normal}
             className="text-muted-foreground"
           >
-            Total TVL
+            TVL
           </Text>
           <MonetaryValue
             variant={TextVariant.bodyLarge}

@@ -89,7 +89,7 @@ export const DataCreatedHeader: React.FC<DataCreatedHeaderProps> = ({
               weight="regular"
               className="text-secondary-foreground"
             >
-              Total Staked
+              TVL
             </Text>
             <MonetaryValue
               value={totalStake}

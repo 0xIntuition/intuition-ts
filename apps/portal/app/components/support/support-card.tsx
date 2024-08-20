@@ -36,7 +36,7 @@ export function SupportCard({
         </Text>
       </a>
       {description && (
-        <Text className="text-secondary-foreground/60">{description}</Text>
+        <Text className="text-secondary-foreground">{description}</Text>
       )}
     </div>
   )

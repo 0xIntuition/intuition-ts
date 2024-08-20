@@ -86,7 +86,7 @@ export function TagsList({
           <ListHeader
             items={[
               { label: 'Tag', icon: IconName.bookmark },
-              { label: 'Total Staked', icon: IconName.ethereum },
+              { label: 'TVL', icon: IconName.ethereum },
             ]}
           />
         )}

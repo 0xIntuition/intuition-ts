@@ -1,12 +1,18 @@
-import { PieChart, PieChartSize } from 'components/PieChart'
+import {
+  PieChart,
+  PieChartSize,
+  PieChartVariantType,
+} from 'components/PieChart'
 import { Text } from 'components/Text'
 
 interface PositionCardOwnershipProps
   extends React.HTMLAttributes<HTMLDivElement> {
+  variant: PieChartVariantType
   percentOwnership: number
 }
 
 const PositionCardOwnership = ({
+  variant,
   percentOwnership,
   className,
 }: PositionCardOwnershipProps) => {
@@ -19,7 +25,11 @@ const PositionCardOwnership = ({
         <Text variant="bodyLarge" className={`mr-2 ${className}`}>
           {`${percentOwnership}%`}
         </Text>
-        <PieChart percentage={percentOwnership} size={PieChartSize.sm} />
+        <PieChart
+          percentage={percentOwnership}
+          size={PieChartSize.sm}
+          variant={variant}
+        />
       </div>
     </div>
   )

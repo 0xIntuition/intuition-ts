@@ -52,7 +52,7 @@ export function IdentitiesList({
         <ListHeader
           items={[
             { label: 'Identity', icon: IconName.fingerprint },
-            { label: 'Total Staked', icon: IconName.ethereum },
+            { label: 'TVL', icon: IconName.ethereum },
           ]}
         />
       )}

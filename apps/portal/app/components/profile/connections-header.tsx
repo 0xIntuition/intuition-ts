@@ -60,9 +60,7 @@ export const ConnectionsHeader: React.FC<ConnectionsHeaderProps> = ({
                 weight="regular"
                 className="text-secondary-foreground"
               >
-                {variant === 'followers'
-                  ? 'Total Follow Value'
-                  : 'Total Staked'}
+                Total Follow Value
               </Text>
               <MonetaryValue
                 value={+totalStake}

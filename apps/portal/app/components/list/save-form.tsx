@@ -103,7 +103,8 @@ export default function SaveForm({
             <DialogDescription>
               <Text variant="caption" className="text-neutral-50/50">
                 Tag the Identity to improve discoverability, and to add it to
-                the respective Tag&lsquo;s list.
+                the respective Tag&apos;s List. The more ETH staked, the higher
+                the Identity will rank in the respective Tag&apos;s List.
               </Text>
             </DialogDescription>
           </DialogHeader>

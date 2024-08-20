@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
+import { PieChartVariant } from 'components/PieChart'
 
 import {
   PositionCardFeesAccrued,
@@ -21,13 +22,16 @@ type Story = StoryObj<typeof PositionCard>
 export const BasicUsage: Story = {
   render: (args) => {
     const handleSell = () => {
-      console.log('Sell button clicked')
+      console.log('Redeem button clicked')
     }
 
     return (
       <PositionCard {...args} onButtonClick={handleSell}>
         <PositionCardStaked amount={0.512} />
-        <PositionCardOwnership percentOwnership={24} />
+        <PositionCardOwnership
+          percentOwnership={24}
+          variant={PieChartVariant.default}
+        />
         <PositionCardFeesAccrued amount={0.005} />
         <PositionCardLastUpdated timestamp="2024-05-10T00:00:00Z" />
       </PositionCard>

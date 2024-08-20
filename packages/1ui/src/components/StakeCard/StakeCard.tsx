@@ -41,7 +41,7 @@ const StakeCard = ({
           </div>
           <div className="flex flex-col items-end">
             <Text className="text-muted-foreground" variant="caption">
-              Holders
+              Depositors
             </Text>
             <Text variant="body">{holders}</Text>
           </div>
@@ -49,7 +49,7 @@ const StakeCard = ({
       </div>
       <div className="flex flex-col gap-2 w-full">
         <Button className="w-full mt-4" variant="primary" onClick={onBuyClick}>
-          Buy
+          Deposit
         </Button>
         {onViewAllClick && (
           <Button className="w-full" variant="text" onClick={onViewAllClick}>

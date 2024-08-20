@@ -14,18 +14,21 @@ import * as Stories from './PositionCard.stories'
   language="tsx"
   code={
 `
-import { PositionCard, PositionCardStaked, PositionCardOwnership, PositionCardFeesAccrued, PositionCardLastUpdated } from '@0xintuition/1ui'
+import { PieChartVariant, PositionCard, PositionCardStaked, PositionCardOwnership, PositionCardFeesAccrued, PositionCardLastUpdated } from '@0xintuition/1ui'
 
 const ExampleUsage = () => {
 const handleSell = () => {
-console.log('Sell button clicked')
+console.log('Redeem button clicked')
 }
 
 return (
 
 <PositionCard onButtonClick={handleSell}>
   <PositionCardStaked amount={0.512} />
-  <PositionCardOwnership percentOwnership={24} />
+  <PositionCardOwnership
+    percentOwnership={24}
+    variant={PieChartVariant.default}
+  />
   <PositionCardFeesAccrued amount={0.005} />
   <PositionCardLastUpdated timestamp="2024-05-10T00:00:00Z" />
 </PositionCard>

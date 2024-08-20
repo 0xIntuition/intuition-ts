@@ -1,4 +1,5 @@
 import { fireEvent, render } from '@testing-library/react'
+import { PieChartVariant } from 'components/PieChart'
 import { vi } from 'vitest'
 
 import {
@@ -14,7 +15,10 @@ describe('PositionCard', () => {
     const { getByText } = render(
       <PositionCard>
         <PositionCardStaked amount={0.512} />
-        <PositionCardOwnership percentOwnership={24} />
+        <PositionCardOwnership
+          percentOwnership={24}
+          variant={PieChartVariant.default}
+        />
         <PositionCardFeesAccrued amount={0.005} />
         <PositionCardLastUpdated timestamp="2024-05-10T16:00:00Z" />
       </PositionCard>,
@@ -32,18 +36,21 @@ describe('PositionCard', () => {
   })
 
   // Test if the button click triggers the provided function
-  it('should trigger onButtonClick when Sell button is clicked', () => {
+  it('should trigger onButtonClick when Redeem button is clicked', () => {
     const handleSell = vi.fn()
     const { getByText } = render(
       <PositionCard onButtonClick={handleSell}>
         <PositionCardStaked amount={0.512} />
-        <PositionCardOwnership percentOwnership={24} />
+        <PositionCardOwnership
+          percentOwnership={24}
+          variant={PieChartVariant.default}
+        />
         <PositionCardFeesAccrued amount={0.005} />
         <PositionCardLastUpdated timestamp="2024-05-10T16:00:00Z" />
       </PositionCard>,
     )
 
-    const button = getByText('Sell')
+    const button = getByText('Redeem')
     fireEvent.click(button)
     expect(handleSell).toHaveBeenCalledTimes(1)
   })
@@ -53,7 +60,10 @@ describe('PositionCard', () => {
     const { asFragment } = render(
       <PositionCard>
         <PositionCardStaked amount={0.512} />
-        <PositionCardOwnership percentOwnership={24} />
+        <PositionCardOwnership
+          percentOwnership={24}
+          variant={PieChartVariant.default}
+        />
         <PositionCardFeesAccrued amount={0.005} />
         <PositionCardLastUpdated timestamp="2024-05-10T16:00:00Z" />
       </PositionCard>,
@@ -151,7 +161,7 @@ describe('PositionCard', () => {
           <button
             class="flex justify-center items-center gap-2 text-sm font-medium border disabled:bg-muted aria-disabled:bg-muted disabled:text-muted-foreground aria-disabled:text-muted-foreground disabled:border-muted aria-disabled:border-muted aria-disabled:pointer-events-none bg-transparent text-destructive border-destructive rounded-full hover:bg-destructive/30 hover:border-destructive/30 shadow-md-subtle px-3 py-1 max-sm:py-2 max-sm:text-base w-full mt-5"
           >
-            Sell
+            Redeem
           </button>
         </div>
       </DocumentFragment>

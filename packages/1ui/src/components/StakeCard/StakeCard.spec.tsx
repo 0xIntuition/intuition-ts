@@ -48,7 +48,7 @@ describe('StakeCard', () => {
                 <p
                   class="text-sm font-normal text-muted-foreground"
                 >
-                  Holders
+                  Depositors
                 </p>
                 <p
                   class="text-primary text-base font-normal"
@@ -64,7 +64,7 @@ describe('StakeCard', () => {
             <button
               class="flex justify-center items-center gap-2 text-sm font-medium border disabled:bg-muted aria-disabled:bg-muted disabled:text-muted-foreground aria-disabled:text-muted-foreground disabled:border-muted aria-disabled:border-muted aria-disabled:pointer-events-none bg-primary text-primary-foreground border-primary hover:bg-primary/80 rounded-full shadow-md-subtle px-3 py-1 max-sm:py-2 max-sm:text-base w-full mt-4"
             >
-              Buy
+              Deposit
             </button>
             <button
               class="flex justify-center items-center gap-2 text-sm font-medium border disabled:text-muted-foreground aria-disabled:text-muted-foreground aria-disabled:pointer-events-none bg-transparent text-primary/70 border-transparent hover:text-primary disabled:border-transparent aria-disabled:border-transparent disabled:bg-transparent aria-disabled:bg-transparent shadow-none px-3 py-1 max-sm:py-2 max-sm:text-base w-full"

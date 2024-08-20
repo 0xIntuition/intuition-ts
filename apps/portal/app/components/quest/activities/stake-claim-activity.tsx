@@ -5,6 +5,7 @@ import {
   ButtonSize,
   ButtonVariant,
   ClaimStakeCard,
+  PieChartVariant,
   PositionCard,
   PositionCardLastUpdated,
   PositionCardOwnership,
@@ -145,6 +146,11 @@ export default function StakeClaimActivity({
                         ).toString(),
                       )
                     : 0
+                }
+                variant={
+                  userPositionDirection === 'for'
+                    ? PieChartVariant.for
+                    : PieChartVariant.against
                 }
               />
               <PositionCardLastUpdated timestamp={claim.updated_at} />
