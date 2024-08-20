@@ -1,4 +1,3 @@
-import comingSoonImage from '@assets/quests/1_0-tribes/1_0-tribes.gif'
 import { QuestSet } from 'app/types/quest'
 
 export const QUEST_LOG_DESCRIPTION =
@@ -23,8 +22,10 @@ Why have you been brought here?`,
   navigatePath: '/app/quest/narrative/0',
 }
 
+const COMING_SOON_IMAGE = 'https://res.cloudinary.com/dfpwy9nyv/image/upload/f_auto,q_auto/v1/Portal%20Assets/quests/1_0-tribes'
+
 export const COMING_SOON_QUEST_SET: QuestSet = {
-  imgSrc: comingSoonImage,
+  imgSrc: COMING_SOON_IMAGE,
   title: 'Coming Soon',
   description: 'Our interns are hard at work.',
   summary: 'Our interns are hard at work.',
