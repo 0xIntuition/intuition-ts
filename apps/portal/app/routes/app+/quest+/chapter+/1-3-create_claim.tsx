@@ -8,7 +8,6 @@ import {
   UserQuestsService,
 } from '@0xintuition/api'
 
-import questAudio from '@assets/audio/quests/chapter-3.mp3'
 import CreateClaimModal from '@components/create-claim/create-claim-modal'
 import { ErrorPage } from '@components/error-page'
 import CreateClaimActivity from '@components/quest/activities/create-claim-activity'
@@ -31,6 +30,7 @@ import { Form, useActionData, useLoaderData } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
 import { requireUser, requireUserId } from '@server/auth'
 import { getUserQuest } from '@server/quest'
+import { CHAPTER_3_MP3 } from 'app/consts'
 import { MDXContentVariant } from 'app/types'
 
 const ROUTE_ID = QuestRouteId.CREATE_CLAIM
@@ -136,7 +136,7 @@ export default function Quests() {
             position={quest.position}
             title={quest.title}
             questStatus={userQuest?.status}
-            questAudio={questAudio}
+            questAudio={CHAPTER_3_MP3}
           />
           <MDXContentView body={introBody} variant={MDXContentVariant.LORE} />
           <QuestCriteriaCard

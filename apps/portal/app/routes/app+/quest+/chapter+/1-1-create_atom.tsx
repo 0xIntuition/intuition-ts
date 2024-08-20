@@ -11,7 +11,6 @@ import {
   UserQuestsService,
 } from '@0xintuition/api'
 
-import questAudio from '@assets/audio/quests/chapter-1.mp3'
 import CreateIdentityModal from '@components/create-identity/create-identity-modal'
 import { ErrorPage } from '@components/error-page'
 import CreateAtomActivity from '@components/quest/create-atom-activity'
@@ -34,6 +33,7 @@ import { Form, useActionData, useLoaderData } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
 import { requireUser, requireUserId } from '@server/auth'
 import { getUserQuest } from '@server/quest'
+import { CHAPTER_1_MP3 } from 'app/consts'
 import { MDXContentVariant } from 'app/types'
 
 const ROUTE_ID = QuestRouteId.CREATE_ATOM
@@ -160,7 +160,7 @@ export default function Quests() {
             position={quest.position}
             title={quest.title}
             questStatus={userQuest?.status}
-            questAudio={questAudio}
+            questAudio={CHAPTER_1_MP3}
           />
           <MDXContentView body={introBody} variant={MDXContentVariant.LORE} />
           <QuestCriteriaCard

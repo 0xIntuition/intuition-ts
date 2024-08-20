@@ -13,7 +13,6 @@ import {
   UserQuestsService,
 } from '@0xintuition/api'
 
-import narrativeAudio from '@assets/audio/quests/primitive-island-intro.mp3'
 import AudioPlayer from '@components/audio-player'
 import { ErrorPage } from '@components/error-page'
 import { QuestCard } from '@components/quest/quest-card'
@@ -30,7 +29,7 @@ import { Link, useLoaderData, useSubmit } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
 import { requireUser } from '@server/auth'
 import { getQuestsProgress } from '@server/quest'
-import { STANDARD_QUEST_SET } from 'app/consts'
+import { PRIMITIVE_ISLAND_INTRO_MP3, STANDARD_QUEST_SET } from 'app/consts'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const id = params.id
@@ -136,7 +135,7 @@ export default function Quests() {
               <Text variant="heading4" weight="medium">
                 {STANDARD_QUEST_SET.title}
               </Text>
-              <AudioPlayer audioSrc={narrativeAudio} />
+              <AudioPlayer audioSrc={PRIMITIVE_ISLAND_INTRO_MP3} />
             </div>
             <Text
               variant="bodyLarge"

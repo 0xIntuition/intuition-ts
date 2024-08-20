@@ -8,17 +8,19 @@ import {
 
 import { Button, Icon } from '@0xintuition/1ui'
 
-import carouselSlideOne from '@assets/carousel/carousel-1.mp4'
-import carouselSlideTwo from '@assets/carousel/carousel-2.mp4'
-import carouselSlideThree from '@assets/carousel/carousel-3.mp4'
-import carouselSlideFour from '@assets/carousel/carousel-4.mp4'
-import carouselSlideFive from '@assets/carousel/carousel-5.mp4'
-import carouselSlideSix from '@assets/carousel/carousel-6.mp4'
 import Container from '@components/container'
 import { cn } from '@lib/utils/misc'
 import { ActionFunctionArgs } from '@remix-run/node'
 import { Link, redirect, useFetcher } from '@remix-run/react'
 import { onboardingModalCookie } from '@server/onboarding'
+import {
+  INTRO_CAROUSEL_1_MP4,
+  INTRO_CAROUSEL_2_MP4,
+  INTRO_CAROUSEL_3_MP4,
+  INTRO_CAROUSEL_4_MP4,
+  INTRO_CAROUSEL_5_MP4,
+  INTRO_CAROUSEL_6_MP4,
+} from 'app/consts'
 import type { EmblaCarouselType, EmblaOptionsType } from 'embla-carousel'
 import useEmblaCarousel from 'embla-carousel-react'
 import { AnimatePresence, motion } from 'framer-motion'
@@ -49,7 +51,7 @@ export default function IntroRoute() {
 
   const SLIDES = [
     {
-      video: carouselSlideOne,
+      video: INTRO_CAROUSEL_1_MP4,
       title: 'Welcome to the Intuition Beta',
       text: (
         <>
@@ -70,7 +72,7 @@ export default function IntroRoute() {
       ),
     },
     {
-      video: carouselSlideTwo,
+      video: INTRO_CAROUSEL_2_MP4,
       title: 'The Information Economy',
       text: (
         <>
@@ -97,7 +99,7 @@ export default function IntroRoute() {
       ),
     },
     {
-      video: carouselSlideThree,
+      video: INTRO_CAROUSEL_3_MP4,
       title: 'The Trustful Interaction Layer',
       text: (
         <>
@@ -122,7 +124,7 @@ export default function IntroRoute() {
       ),
     },
     {
-      video: carouselSlideFour,
+      video: INTRO_CAROUSEL_4_MP4,
       title: 'A Novel Set of Primitives',
       text: (
         <>
@@ -148,7 +150,7 @@ export default function IntroRoute() {
       ),
     },
     {
-      video: carouselSlideFive,
+      video: INTRO_CAROUSEL_5_MP4,
       title: 'The Portal',
       text: (
         <>
@@ -175,7 +177,7 @@ export default function IntroRoute() {
       ),
     },
     {
-      video: carouselSlideSix,
+      video: INTRO_CAROUSEL_6_MP4,
       title: 'What Comes Next?',
       text: (
         <>

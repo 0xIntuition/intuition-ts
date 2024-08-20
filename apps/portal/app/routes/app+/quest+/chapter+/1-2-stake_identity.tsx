@@ -13,7 +13,6 @@ import {
   UsersService,
 } from '@0xintuition/api'
 
-import questAudio from '@assets/audio/quests/chapter-2.mp3'
 import { ErrorPage } from '@components/error-page'
 import StakeIdentityActivity from '@components/quest/activities/stake-identity-activity'
 import {
@@ -38,6 +37,7 @@ import { fetchWrapper } from '@server/api'
 import { requireUser, requireUserId } from '@server/auth'
 import { getVaultDetails } from '@server/multivault'
 import { getUserQuest } from '@server/quest'
+import { CHAPTER_2_MP3 } from 'app/consts'
 import { FALLBACK_IDENTITY_ID } from 'app/consts/quest'
 import { MDXContentVariant, VaultDetailsType } from 'app/types'
 import { useAtom } from 'jotai'
@@ -228,7 +228,7 @@ export default function Quests() {
             position={quest.position}
             title={quest.title}
             questStatus={userQuest?.status}
-            questAudio={questAudio}
+            questAudio={CHAPTER_2_MP3}
           />
           <MDXContentView body={introBody} variant={MDXContentVariant.LORE} />
           <QuestCriteriaCard

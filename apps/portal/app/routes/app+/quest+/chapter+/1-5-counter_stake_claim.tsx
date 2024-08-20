@@ -14,7 +14,6 @@ import {
   UsersService,
 } from '@0xintuition/api'
 
-import questAudio from '@assets/audio/quests/chapter-5.mp3'
 import { ErrorPage } from '@components/error-page'
 import StakeClaimActivity from '@components/quest/activities/stake-claim-activity'
 import StakeClaimUnderlyingIdentitiesActivity from '@components/quest/activities/stake-claim-underlying-identities-activity'
@@ -45,7 +44,7 @@ import { fetchWrapper } from '@server/api'
 import { requireUser, requireUserId } from '@server/auth'
 import { getVaultDetails } from '@server/multivault'
 import { getUserQuest } from '@server/quest'
-import { FALLBACK_COUNTER_CLAIM_ID } from 'app/consts'
+import { CHAPTER_5_MP3, FALLBACK_COUNTER_CLAIM_ID } from 'app/consts'
 import {
   ClaimElement,
   ClaimElementType,
@@ -332,7 +331,7 @@ export default function Quests() {
             position={quest.position}
             title={quest.title}
             questStatus={userQuest?.status}
-            questAudio={questAudio}
+            questAudio={CHAPTER_5_MP3}
           />
           <MDXContentView body={introBody} variant={MDXContentVariant.LORE} />
           <QuestCriteriaCard

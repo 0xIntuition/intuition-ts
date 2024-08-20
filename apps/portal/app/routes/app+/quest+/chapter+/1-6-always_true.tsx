@@ -13,7 +13,6 @@ import {
   UsersService,
 } from '@0xintuition/api'
 
-import questAudio from '@assets/audio/quests/chapter-6.mp3'
 import { ErrorPage } from '@components/error-page'
 import { TagsList } from '@components/list/tags'
 import {
@@ -37,7 +36,7 @@ import { Await, Form, useActionData, useLoaderData } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
 import { requireUser, requireUserId } from '@server/auth'
 import { getUserQuest } from '@server/quest'
-import { FALLBACK_LIST_ID_FOR_QUERY } from 'app/consts'
+import { CHAPTER_6_MP3, FALLBACK_LIST_ID_FOR_QUERY } from 'app/consts'
 import { IdentityListType, MDXContentVariant } from 'app/types'
 
 const ROUTE_ID = QuestRouteId.ALWAYS_TRUE
@@ -150,7 +149,7 @@ export default function Quests() {
             position={quest.position}
             title={quest.title}
             questStatus={userQuest?.status}
-            questAudio={questAudio}
+            questAudio={CHAPTER_6_MP3}
           />
           <MDXContentView body={introBody} variant={MDXContentVariant.LORE} />
           <QuestCriteriaCard
