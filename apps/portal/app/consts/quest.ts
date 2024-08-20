@@ -22,7 +22,8 @@ Why have you been brought here?`,
   navigatePath: '/app/quest/narrative/0',
 }
 
-const COMING_SOON_IMAGE = 'https://res.cloudinary.com/dfpwy9nyv/image/upload/f_auto,q_auto/v1/Portal%20Assets/quests/1_0-tribes'
+const COMING_SOON_IMAGE =
+  'https://res.cloudinary.com/dfpwy9nyv/image/upload/f_auto,q_auto/v1/Portal%20Assets/quests/1_0-tribes'
 
 export const COMING_SOON_QUEST_SET: QuestSet = {
   imgSrc: COMING_SOON_IMAGE,
