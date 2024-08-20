@@ -203,14 +203,13 @@ export default function ListOverview() {
           align="end"
         />
       </div>
-      <div className="flex flex-col w-full pb-4">
+      <div className="flex flex-col gap-6 w-full">
         <Suspense fallback={<DataHeaderSkeleton />}>
           <Await resolve={totalGlobalIdentitiesCount} errorElement={<></>}>
             {(resolvedtotalIdentitiesCount) => (
               <ListHeaderCard
                 label="Identities"
                 value={resolvedtotalIdentitiesCount}
-                className="mb-6"
               >
                 <Claim
                   size="md"
@@ -252,9 +251,13 @@ export default function ListOverview() {
             )}
           </Await>
         </Suspense>
+      </div>
+      <div className="flex flex-col gap-6 w-full">
         <Tabs defaultValue={defaultTab}>
-          <TabsList>
-            <Suspense fallback={<Skeleton className="w-44 h-10 rounded" />}>
+          <TabsList className="flex flex-row">
+            <Suspense
+              fallback={<Skeleton className="w-44 h-10 rounded mr-2" />}
+            >
               <Await resolve={globalListIdentities}>
                 {(resolvedGlobalListIdentities) => (
                   <TabsTrigger
