@@ -40,6 +40,7 @@ import SaveReview from './save-review'
 interface SaveFormProps {
   tag: IdentityPresenter | TagEmbeddedPresenter
   identity: IdentityPresenter
+  claimId?: string | null
   user_assets: string
   entry_fee: string
   exit_fee: string
@@ -60,6 +61,7 @@ interface SaveFormProps {
 export default function SaveForm({
   identity,
   tag,
+  claimId,
   user_assets,
   entry_fee,
   exit_fee,
@@ -189,6 +191,19 @@ export default function SaveForm({
                         id={tag.identity_id}
                         bio={tag.description ?? ''}
                       />
+                      {isLoading ? (
+                        <Skeleton className="h-9 w-full" /> // Adjust height as needed
+                      ) : claimId ? (
+                        <a href={`${PATHS.LIST}/${claimId}`}>
+                          <Button
+                            variant={ButtonVariant.secondary}
+                            className="w-full"
+                          >
+                            View List
+                            <Icon name={'arrow-up-right'} className="h-3 w-3" />
+                          </Button>
+                        </a>
+                      ) : null}
                     </div>
                   </HoverCardContent>
                 </HoverCard>

@@ -9,6 +9,7 @@ export const PATHS = {
   PROFILE: '/app/profile',
   QUEST: '/app/quest',
   LISTS: '/app/lists',
+  LIST: '/app/list',
   HELP: '/app/help-center',
   // Profile
   PROFILE_CREATE: '/app/profile/create',
