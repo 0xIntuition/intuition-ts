@@ -6,7 +6,7 @@ import {
   type PropsWithChildren,
 } from 'react'
 
-import { Button, Icon } from '@0xintuition/1ui'
+import { Button, Icon, IconName } from '@0xintuition/1ui'
 
 import Container from '@components/container'
 import { cn } from '@lib/utils/misc'
@@ -65,8 +65,8 @@ export default function IntroRoute() {
       button: (
         <Link to="https://docs.intuition.systems/introduction" target="_blank">
           <SlideButton>
-            <Icon name="play-circle" className="h-4 w-4 relative" /> Watch the
-            tutorial
+            <Icon name={IconName.book} className="h-4 w-4 relative" /> Read the
+            Docs
           </SlideButton>
         </Link>
       ),
@@ -87,10 +87,7 @@ export default function IntroRoute() {
         </>
       ),
       button: (
-        <Link
-          to="https://docs.intuition.systems/primitives-and-interactions/primitives/identities"
-          target="_blank"
-        >
+        <Link to="https://docs.intuition.systems/introduction" target="_blank">
           <SlideButton>
             Learn more{' '}
             <Icon name="square-arrow-top-right" className="h-4 w-4 relative" />
@@ -112,10 +109,7 @@ export default function IntroRoute() {
         </>
       ),
       button: (
-        <Link
-          to="https://docs.intuition.systems/primitives-and-interactions/primitives/claims"
-          target="_blank"
-        >
+        <Link to="https://docs.intuition.systems/introduction" target="_blank">
           <SlideButton>
             Learn more{' '}
             <Icon name="square-arrow-top-right" className="h-4 w-4 relative" />
@@ -138,10 +132,7 @@ export default function IntroRoute() {
         </>
       ),
       button: (
-        <Link
-          to="https://docs.intuition.systems/primitives-and-interactions/interacations/attestations"
-          target="_blank"
-        >
+        <Link to="https://docs.intuition.systems/introduction" target="_blank">
           <SlideButton>
             Learn more{' '}
             <Icon name="square-arrow-top-right" className="h-4 w-4 relative" />
@@ -165,10 +156,7 @@ export default function IntroRoute() {
         </>
       ),
       button: (
-        <Link
-          to="https://docs.intuition.systems/primitives-and-interactions/interacations/query"
-          target="_blank"
-        >
+        <Link to="https://docs.intuition.systems/introduction" target="_blank">
           <SlideButton>
             Learn more{' '}
             <Icon name="square-arrow-top-right" className="h-4 w-4 relative" />
@@ -192,10 +180,7 @@ export default function IntroRoute() {
         </>
       ),
       button: (
-        <Link
-          to="https://docs.intuition.systems/learn-more/faq"
-          target="_blank"
-        >
+        <Link to="https://docs.intuition.systems/introduction" target="_blank">
           <SlideButton>
             Learn more{' '}
             <Icon name="square-arrow-top-right" className="h-4 w-4" />
