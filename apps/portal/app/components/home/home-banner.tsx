@@ -21,7 +21,7 @@ export default function HomeBanner(props: HomeBannerProps) {
         <div>
           <Tag
             variant="accent"
-            className="px-2.5 py-1 tracking-wider backdrop-blur"
+            className="px-2.5 py-1 tracking-wider backdrop-blur bg-accent/20 hover:bg-accent/20 border-accent/50 hover:border-accent/50 hover:cursor-default text-accent hover:text-accent" // TODO: ENG-0000 Add read-only variant to tag.  This is to overwrite the tag hover styling
           >
             BETA
           </Tag>
