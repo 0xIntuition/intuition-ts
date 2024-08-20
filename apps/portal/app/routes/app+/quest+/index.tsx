@@ -133,15 +133,11 @@ export default function Quests() {
                       },
                       {
                         name: 'NFT',
-                        points: resolvedUserTotals.nft_points,
+                        points: totalNftPoints,
                       },
                       {
                         name: 'Referrals',
                         points: resolvedUserTotals.referral_points,
-                      },
-                      {
-                        name: 'NFT',
-                        points: totalNftPoints,
                       },
                     ]}
                   />
