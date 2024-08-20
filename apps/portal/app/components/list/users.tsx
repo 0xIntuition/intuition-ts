@@ -49,7 +49,7 @@ export function UsersList({
         <ListHeader
           items={[
             { label: 'User', icon: IconName.fingerprint },
-            { label: 'Total Points', icon: IconName.rocket },
+            { label: 'Total IQ Points', icon: IconName.rocket },
           ]}
         />
       )}

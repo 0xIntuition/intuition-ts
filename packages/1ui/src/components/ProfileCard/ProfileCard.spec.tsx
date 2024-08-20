@@ -119,7 +119,7 @@ describe('ProfileCard', () => {
               <p
                 class="text-base font-normal text-muted-foreground"
               >
-                Points
+                IQ Points
               </p>
             </div>
           </div>
@@ -367,7 +367,7 @@ describe('ProfileCard', () => {
               <p
                 class="text-base font-normal text-muted-foreground"
               >
-                Points
+                IQ Points
               </p>
             </div>
           </div>

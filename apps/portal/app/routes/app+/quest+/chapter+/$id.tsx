@@ -124,7 +124,7 @@ export default function Quests() {
             Complete Quest
           </Button>
           <Text variant="bodyLarge" className="text-foreground/50">
-            +{quest.points} Points
+            +{quest.points} IQ Points
           </Text>
         </div>
       </div>
