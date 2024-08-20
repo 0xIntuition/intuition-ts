@@ -7,8 +7,9 @@ export const QUEST_LOG_DESCRIPTION =
 export const STANDARD_QUEST_SET: QuestSet = {
   imgSrc:
     'https://res.cloudinary.com/dfpwy9nyv/image/upload/f_auto,q_auto/v1/Portal%20Assets/quests/primitive-island-overview',
-  title: 'Tutorial Island: The Primitive Elements',
-  description: 'Learn the core elements of the Intuition System',
+  title: 'Primitive Island',
+  description:
+    'An introduction to the core primitives of the Intuition System.',
   summary: `Your perspective shifts; the matrix seeming to glitch.
 The universe flickers, winks. The fabric of reality tearing asunder.
 You smile. A twinkle in your eye. An understanding. Deep, powerful - humbling, yet reassuring.
