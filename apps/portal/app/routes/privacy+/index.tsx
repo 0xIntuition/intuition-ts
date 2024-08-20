@@ -74,7 +74,9 @@ export default function PrivacyRoute() {
           <span>The Privacy Policy (this &ldquo;</span>
           <span className="c3">Policy</span>
           <span>&rdquo;) for</span>
-          <span>&nbsp;the website portal.intuition.systems (the &ldquo;</span>
+          <span>
+            &nbsp;the website beta.portal.intuition.systems (the &ldquo;
+          </span>
           <span className="c3">Portal</span>
           <span>,&rdquo; &ldquo;</span>
           <span className="c3">Website</span>
