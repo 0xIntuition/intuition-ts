@@ -94,12 +94,20 @@ export default function Quests() {
                     totalPoints={resolvedUserTotals.total_points}
                     activities={[
                       {
-                        name: 'Activity',
+                        name: 'Portal',
+                        points: resolvedUserTotals.quest_points,
+                      },
+                      // {
+                      //   name: 'Community',
+                      //   points: resolvedUserTotals.social_points,
+                      // },
+                      {
+                        name: 'Protocol',
                         points: resolvedUserTotals.protocol_points,
                       },
                       {
-                        name: 'Quests',
-                        points: resolvedUserTotals.quest_points,
+                        name: 'NFT',
+                        points: resolvedUserTotals.nft_points,
                       },
                       {
                         name: 'Referrals',
