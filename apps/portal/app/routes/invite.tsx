@@ -62,10 +62,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
     throw error
   }
 
-  if (userObject) {
-    throw redirect('/welcome')
-  }
-
   let userIdentity
   try {
     userIdentity = await fetchWrapper(request, {
