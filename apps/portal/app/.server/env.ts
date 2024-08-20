@@ -7,7 +7,7 @@ export const featureFlagsSchema = z.object({
 })
 
 const schema = z.object({
-  NODE_ENV: z.enum(['production', 'development', 'test'] as const),
+  NODE_ENV: z.enum(['production', 'development', 'staging'] as const),
   API_URL: z.string(),
   WALLETCONNECT_PROJECT_ID: z.string(),
   ALCHEMY_MAINNET_RPC_URL: z.string(),
