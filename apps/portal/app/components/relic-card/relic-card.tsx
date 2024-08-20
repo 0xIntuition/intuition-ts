@@ -1,11 +1,35 @@
-import { RELIC_LEGENDARY_V1_MP4 } from 'app/consts'
+import { cn } from '@0xintuition/1ui'
+
+import {
+  RELIC_LEGENDARY_V1_MP4,
+  RELIC_LEGENDARY_V2_MP4,
+  RELIC_LEGENDARY_V3_MP4,
+} from 'app/consts'
 import { AnimatePresence, motion } from 'framer-motion'
 
-export default function RelicCard() {
+export default function RelicCard({
+  variant,
+  className,
+}: {
+  variant: 'v1' | 'v2' | 'v3'
+  className?: string
+}) {
+  const relicVideo =
+    variant === 'v1'
+      ? RELIC_LEGENDARY_V1_MP4
+      : variant === 'v2'
+        ? RELIC_LEGENDARY_V2_MP4
+        : RELIC_LEGENDARY_V3_MP4
+
   return (
     <>
       <motion.div>
-        <div className="w-[250px] h-[250px] overflow-hidden rounded-xl">
+        <div
+          className={cn(
+            `w-[250px] h-[250px] overflow-hidden rounded-xl`,
+            className,
+          )}
+        >
           <AnimatePresence>
             <motion.div
               key="mediaPlayer"
@@ -15,7 +39,7 @@ export default function RelicCard() {
               transition={{ duration: 1 }}
             >
               <video
-                src={RELIC_LEGENDARY_V1_MP4}
+                src={relicVideo}
                 title={'Relic'}
                 autoPlay
                 muted
