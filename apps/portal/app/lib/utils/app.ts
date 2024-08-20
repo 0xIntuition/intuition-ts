@@ -60,9 +60,9 @@ export const getSpecialPredicate = (
         type: 'identity',
       },
       iPredicate: {
-        id: '',
-        vaultId: 0,
-        displayName: '',
+        id: 'd993a496-e009-4ae9-bb28-546d4377d6a0',
+        vaultId: 11,
+        displayName: 'I',
         type: 'identity',
       },
       amFollowingPredicate: {
@@ -86,9 +86,9 @@ export const getSpecialPredicate = (
         type: 'identity',
       },
       iPredicate: {
-        id: '',
-        vaultId: 0,
-        displayName: '',
+        id: 'd993a496-e009-4ae9-bb28-546d4377d6a0',
+        vaultId: 11,
+        displayName: 'I',
         type: 'identity',
       },
       amFollowingPredicate: {
