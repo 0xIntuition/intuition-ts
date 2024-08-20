@@ -9,17 +9,17 @@ import {
   PublicClient,
   type Abi,
 } from 'viem'
-import { baseSepolia, mainnet, sepolia } from 'viem/chains'
+import { base, baseSepolia, mainnet } from 'viem/chains'
 
 export const publicClient: PublicClient = createPublicClient({
   batch: {
     multicall: true,
   },
-  chain: CURRENT_ENV === 'production' ? baseSepolia : baseSepolia, // TODO:  temporarily making these both the same until we sort out envs -- revisit in [ENG-2407]
+  chain: CURRENT_ENV === 'development' ? baseSepolia : base,
   transport: http(
-    CURRENT_ENV === 'production'
-      ? process.env.ALCHEMY_BASE_SEPOLIA_RPC_URL // TODO: temporarily making these both the same until we sort out envs -- revisit in [ENG-2407]
-      : process.env.ALCHEMY_BASE_SEPOLIA_RPC_URL,
+    CURRENT_ENV === 'development'
+      ? process.env.ALCHEMY_BASE_SEPOLIA_RPC_URL
+      : process.env.ALCHEMY_BASE_RPC_URL,
     // {
     //   fetchOptions: {
     //     headers: {
@@ -29,7 +29,7 @@ export const publicClient: PublicClient = createPublicClient({
     //           : process.env.STAGING_ORIGIN_URL!,
     //     },
     //   },
-    // }, // TODO: omitting these headers to reduce troubleshooting area for now -- revisit in [ENG-2407]
+    // }, // TODO: we need to add this back in for hardening - revisit in [ENG-3508]
   ),
 }) as PublicClient
 
@@ -39,22 +39,6 @@ export const mainnetClient = createPublicClient({
   },
   chain: mainnet,
   transport: http(process.env.ALCHEMY_MAINNET_RPC_URL),
-})
-
-export const optimismSepoliaClient = createPublicClient({
-  batch: {
-    multicall: true,
-  },
-  chain: baseSepolia,
-  transport: http(process.env.ALCHEMY_BASE_SEPOLIA_RPC_URL),
-})
-
-export const sepoliaClient = createPublicClient({
-  batch: {
-    multicall: true,
-  },
-  chain: sepolia,
-  transport: http(process.env.ALCHEMY_SEPOLIA_RPC_URL),
 })
 
 export const getMultivaultContract = getContract({

@@ -27,10 +27,10 @@ import { Toaster } from '@0xintuition/1ui'
 import { ErrorPage } from '@components/error-page'
 import { GlobalLoading } from '@components/global-loading'
 import { getChainEnvConfig } from '@lib/utils/environment'
+import logger from '@lib/utils/logger'
 import { setupAPI } from '@server/auth'
 import { CURRENT_ENV } from 'app/consts'
 import { ClientOnly } from 'remix-utils/client-only'
-import { baseSepolia } from 'viem/chains'
 import { useAccount, useSwitchChain } from 'wagmi'
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
@@ -43,6 +43,7 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 export async function loader({ request }: LoaderFunctionArgs) {
   setupAPI(request)
 
+  logger('getEnv', getEnv())
   return json({
     env: getEnv(),
     requestInfo: {
@@ -153,6 +154,7 @@ function App() {
   const nonce = useNonce()
   const theme = useTheme()
   const { env } = useLoaderData<typeof loader>()
+  logger('env in client', env)
 
   return (
     <Document nonce={nonce} theme={theme}>
@@ -178,7 +180,7 @@ export function AppLayout() {
   const { switchChain } = useSwitchChain()
 
   useEffect(() => {
-    if (chain?.id !== baseSepolia.id && switchChain) {
+    if (chain?.id !== getChainEnvConfig(CURRENT_ENV).chainId && switchChain) {
       switchChain({
         chainId: getChainEnvConfig(CURRENT_ENV).chainId,
       })

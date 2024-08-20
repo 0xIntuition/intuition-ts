@@ -7,7 +7,7 @@ export const featureFlagsSchema = z.object({
 })
 
 const schema = z.object({
-  NODE_ENV: z.enum(['production', 'development', 'test'] as const),
+  NODE_ENV: z.enum(['production', 'development', 'staging'] as const),
   API_URL: z.string(),
   WALLETCONNECT_PROJECT_ID: z.string(),
   ALCHEMY_MAINNET_RPC_URL: z.string(),
@@ -15,6 +15,7 @@ const schema = z.object({
   ALCHEMY_BASE_RPC_URL: z.string(),
   ALCHEMY_SEPOLIA_RPC_URL: z.string(),
   MULTIVAULT_ADDRESS_BASE_SEPOLIA: z.string(),
+  MULTIVAULT_ADDRESS_BASE_MAINNET: z.string(),
   PRODUCTION_ORIGIN_URL: z.string(),
   STAGING_ORIGIN_URL: z.string(),
   PRIVY_APP_ID: z.string(),
@@ -61,6 +62,8 @@ export function getEnv() {
     ALCHEMY_SEPOLIA_RPC_URL: process.env.ALCHEMY_SEPOLIA_RPC_URL,
     MULTIVAULT_ADDRESS_BASE_SEPOLIA:
       process.env.MULTIVAULT_ADDRESS_BASE_SEPOLIA,
+    MULTIVAULT_ADDRESS_BASE_MAINNET:
+      process.env.MULTIVAULT_ADDRESS_BASE_MAINNET,
     PRODUCTION_ORIGIN_URL: process.env.PRODUCTION_ORIGIN_URL,
     STAGING_ORIGIN_URL: process.env.STAGING_ORIGIN_URL,
     PRIVY_APP_ID: process.env.PRIVY_APP_ID,

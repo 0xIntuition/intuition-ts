@@ -32,7 +32,7 @@ export async function action({ request }: ActionFunctionArgs) {
     } catch (error: unknown) {
       if (error instanceof ApiError) {
         invite_code_response = undefined
-        console.log(
+        logger(
           `${error.name} - ${error.status}: ${error.message} - ${(error.body as { code: number; error: string }).error}`,
         )
         return json(

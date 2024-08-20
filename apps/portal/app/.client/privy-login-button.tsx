@@ -2,6 +2,7 @@ import { useState } from 'react'
 
 import { Button, Icon } from '@0xintuition/1ui'
 
+import logger from '@lib/utils/logger'
 import { useLogin, User } from '@privy-io/react-auth'
 
 interface PrivyLoginButtonProps {
@@ -22,7 +23,7 @@ export default function PrivyLoginButton({
     },
     onError: (error) => {
       setLoading(false)
-      console.log(error)
+      logger(error)
     },
   })
 

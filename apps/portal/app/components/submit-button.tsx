@@ -4,7 +4,7 @@ import { Button, Icon } from '@0xintuition/1ui'
 
 import { getChainEnvConfig } from '@lib/utils/environment'
 import { CURRENT_ENV } from 'app/consts'
-import { baseSepolia } from 'viem/chains'
+import { base, baseSepolia } from 'viem/chains'
 import { useAccount, useSwitchChain } from 'wagmi'
 
 interface SubmitButtonProps {
@@ -23,8 +23,7 @@ const SubmitButton: React.FC<SubmitButtonProps> = ({
   const { switchChain } = useSwitchChain()
   const { chain } = useAccount()
   const correctChain =
-    chain?.id ===
-    (CURRENT_ENV === 'production' ? baseSepolia.id : baseSepolia.id) // TODO: revisit in [ENG-2407]
+    chain?.id === (CURRENT_ENV === 'development' ? baseSepolia.id : base.id)
 
   const handleSwitch = () => {
     if (switchChain) {

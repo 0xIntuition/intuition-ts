@@ -41,7 +41,7 @@ export async function action({ request }: ActionFunctionArgs) {
     } catch (error: unknown) {
       if (error instanceof ApiError) {
         identity = undefined
-        console.log(
+        logger(
           `${error.name} - ${error.status}: ${error.message} - ${JSON.stringify(error.body)}`,
         )
       } else {

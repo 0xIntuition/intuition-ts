@@ -1,20 +1,26 @@
 import process from 'process'
 
+import { Address } from 'viem'
 import { base, baseSepolia, type mainnet } from 'viem/chains'
 
 import logger from './logger'
 
-const alchemyRpcUrlSepolia =
+const alchemyRpcUrlBaseSepolia =
   typeof window !== 'undefined'
     ? window.ENV?.ALCHEMY_BASE_SEPOLIA_RPC_URL
     : process.env.ALCHEMY_BASE_SEPOLIA_RPC_URL
 
-// const alchemyRpcUrlMainnet =
-//   typeof window !== 'undefined'
-//     ? window.ENV?.ALCHEMY_BASE_RPC_URL
-//     : process.env.ALCHEMY_BASE_RPC_URL
+const alchemyRpcUrlBaseMainnet =
+  typeof window !== 'undefined'
+    ? window.ENV?.ALCHEMY_BASE_RPC_URL
+    : process.env.ALCHEMY_BASE_RPC_URL
 
-const multiVaultContractAddress =
+const multiVaultContractAddressBaseMainnet =
+  typeof window !== 'undefined'
+    ? window.ENV?.MULTIVAULT_ADDRESS_BASE_MAINNET
+    : process.env.MULTIVAULT_ADDRESS_BASE_MAINNET
+
+const multiVaultContractAddressBaseSepolia =
   typeof window !== 'undefined'
     ? window.ENV?.MULTIVAULT_ADDRESS_BASE_SEPOLIA
     : process.env.MULTIVAULT_ADDRESS_BASE_SEPOLIA
@@ -37,20 +43,20 @@ export const getChainEnvConfig = (env: string): ChainConfig => {
     development: {
       chainId: baseSepolia.id,
       name: baseSepolia.name,
-      alchemyRpcUrl: alchemyRpcUrlSepolia,
-      contractAddress: multiVaultContractAddress as `0x${string}`,
+      alchemyRpcUrl: alchemyRpcUrlBaseSepolia,
+      contractAddress: multiVaultContractAddressBaseSepolia as Address,
     },
     staging: {
-      chainId: baseSepolia.id,
-      name: baseSepolia.name,
-      alchemyRpcUrl: alchemyRpcUrlSepolia,
-      contractAddress: multiVaultContractAddress as `0x${string}`,
+      chainId: base.id,
+      name: base.name,
+      alchemyRpcUrl: alchemyRpcUrlBaseMainnet,
+      contractAddress: multiVaultContractAddressBaseMainnet as Address,
     },
     production: {
-      chainId: baseSepolia.id,
-      name: baseSepolia.name,
-      alchemyRpcUrl: alchemyRpcUrlSepolia,
-      contractAddress: multiVaultContractAddress as `0x${string}`, // TODO: temporarily seting the envs to be the same -- revisit in [ENG-2407]
+      chainId: base.id,
+      name: base.name,
+      alchemyRpcUrl: alchemyRpcUrlBaseMainnet,
+      contractAddress: multiVaultContractAddressBaseMainnet as Address,
     },
   }
 
