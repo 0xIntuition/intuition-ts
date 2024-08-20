@@ -14,9 +14,9 @@ import derpFace11 from '@assets/derp-face-11.png'
 import derpFace12 from '@assets/derp-face-12.jpg'
 import logger from '@lib/utils/logger'
 import { cn } from '@lib/utils/misc'
-import { useRouteError } from '@remix-run/react'
+import { Link, useRouteError } from '@remix-run/react'
 import { captureRemixErrorBoundaryError } from '@sentry/remix'
-import { PATHS, SUPPORT_EMAIL_ADDRESS } from 'app/consts'
+import { PATHS } from 'app/consts'
 
 import NavigationButton from './navigation-link'
 
@@ -156,16 +156,14 @@ export const ErrorPage = ({
           >
             {isAtRoot ? 'Back to home' : 'Refresh'}
           </NavigationButton>
-          <Button
-            variant="ghost"
-            size="lg"
-            className="rounded-full"
-            onClick={() =>
-              (window.location.href = `mailto:${SUPPORT_EMAIL_ADDRESS}`)
-            }
+          <Link
+            to="https://discord.com/channels/909531430881746974/1151564740255043604"
+            target="_blank"
           >
-            Contact Support
-          </Button>
+            <Button variant="ghost" size="lg" className="rounded-full">
+              Contact Support
+            </Button>
+          </Link>
         </div>
       </div>
       {statusCode && <StatusCode statusCode={statusCode} />}
