@@ -15,11 +15,11 @@ export const publicClient: PublicClient = createPublicClient({
   batch: {
     multicall: true,
   },
-  chain: CURRENT_ENV === 'production' ? base : baseSepolia,
+  chain: CURRENT_ENV === 'development' ? baseSepolia : base,
   transport: http(
-    CURRENT_ENV === 'production'
-      ? process.env.ALCHEMY_BASE_RPC_URL
-      : process.env.ALCHEMY_BASE_SEPOLIA_RPC_URL,
+    CURRENT_ENV === 'development'
+      ? process.env.ALCHEMY_BASE_SEPOLIA_RPC_URL
+      : process.env.ALCHEMY_BASE_RPC_URL,
     // {
     //   fetchOptions: {
     //     headers: {

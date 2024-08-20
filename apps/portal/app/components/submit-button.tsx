@@ -23,7 +23,7 @@ const SubmitButton: React.FC<SubmitButtonProps> = ({
   const { switchChain } = useSwitchChain()
   const { chain } = useAccount()
   const correctChain =
-    chain?.id === (CURRENT_ENV === 'production' ? base.id : baseSepolia.id)
+    chain?.id === (CURRENT_ENV === 'development' ? baseSepolia.id : base.id)
 
   const handleSwitch = () => {
     if (switchChain) {

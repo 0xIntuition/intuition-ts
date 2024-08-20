@@ -6,21 +6,21 @@ import { PATHS } from './paths'
 export const CURRENT_ENV = process.env.NODE_ENV
 
 export const DEFAULT_CHAIN_ID =
-  CURRENT_ENV === 'production' ? base.id.toString() : baseSepolia.id.toString()
+  CURRENT_ENV === 'development' ? baseSepolia.id.toString() : base.id.toString()
 
 export const DEFAULT_VERIFIER = function (): void {
   throw new Error('verify function must be implemented')
 }
 
 export const MULTIVAULT_CONTRACT_ADDRESS =
-  CURRENT_ENV === 'production'
-    ? '0x430BbF52503Bd4801E51182f4cB9f8F534225DE5' // prod contract address
-    : '0x1A6950807E33d5bC9975067e6D6b5Ea4cD661665' // dev contract address
+  CURRENT_ENV === 'development'
+    ? '0x1A6950807E33d5bC9975067e6D6b5Ea4cD661665' // dev contract address
+    : '0x430BbF52503Bd4801E51182f4cB9f8F534225DE5' // prod contract address
 
 export const RELIC_CONTRACT_ADDRESS =
-  CURRENT_ENV === 'production'
-    ? '0x7aB2F10CaC6E27971fa93A5D5470Bb84126Bb734' // prod contract address
-    : '0x7aB2F10CaC6E27971fa93A5D5470Bb84126Bb734' // dev contract address
+  CURRENT_ENV === 'development'
+    ? '0x7aB2F10CaC6E27971fa93A5D5470Bb84126Bb734' // dev contract address
+    : '0x7aB2F10CaC6E27971fa93A5D5470Bb84126Bb734' // prod contract address
 
 export const DEFAULT_LIMIT = 10
 
@@ -38,9 +38,9 @@ export const ACCEPTED_IMAGE_MIME_TYPES = [
 export const ACCEPTED_IMAGE_TYPES = ['jpeg', 'jpg', 'png']
 
 export const BLOCK_EXPLORER_URL =
-  CURRENT_ENV === 'production'
-    ? 'https://basescan.org'
-    : 'https://sepolia.basescan.org'
+  CURRENT_ENV === 'development'
+    ? 'https://sepolia.basescan.org'
+    : 'https://basescan.org'
 
 export const IPFS_GATEWAY_URL = 'https://ipfs.io/ipfs'
 

@@ -35,9 +35,9 @@ export const wagmiConfig: Config = createConfig({
       fetchOptions: {
         headers: {
           Origin:
-            CURRENT_ENV === 'production'
-              ? productionOriginUrl
-              : stagingOriginUrl,
+            CURRENT_ENV === 'development'
+              ? stagingOriginUrl
+              : productionOriginUrl,
         },
       },
     }),
@@ -45,9 +45,9 @@ export const wagmiConfig: Config = createConfig({
       fetchOptions: {
         headers: {
           Origin:
-            CURRENT_ENV === 'production'
-              ? productionOriginUrl
-              : stagingOriginUrl,
+            CURRENT_ENV === 'development'
+              ? stagingOriginUrl
+              : productionOriginUrl,
         },
       },
     }),
@@ -55,9 +55,9 @@ export const wagmiConfig: Config = createConfig({
       fetchOptions: {
         headers: {
           Origin:
-            CURRENT_ENV === 'production'
-              ? productionOriginUrl
-              : stagingOriginUrl,
+            CURRENT_ENV === 'development'
+              ? stagingOriginUrl
+              : productionOriginUrl,
         },
       },
     }),
