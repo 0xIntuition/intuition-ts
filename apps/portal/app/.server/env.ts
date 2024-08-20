@@ -7,7 +7,8 @@ export const featureFlagsSchema = z.object({
 })
 
 const schema = z.object({
-  NODE_ENV: z.enum(['production', 'development', 'staging'] as const),
+  NODE_ENV: z.enum(['production', 'development'] as const), // remix only has development (local) and production (deployed)
+  DEPLOY_ENV: z.enum(['production', 'staging', 'development'] as const), // based on the environment context
   API_URL: z.string(),
   WALLETCONNECT_PROJECT_ID: z.string(),
   ALCHEMY_MAINNET_RPC_URL: z.string(),
@@ -54,6 +55,7 @@ export function init() {
 export function getEnv() {
   return {
     MODE: process.env.NODE_ENV,
+    DEPLOY_ENV: process.env.DEPLOY_ENV,
     API_URL: process.env.API_URL,
     WALLETCONNECT_PROJECT_ID: process.env.WALLETCONNECT_PROJECT_ID,
     ALCHEMY_MAINNET_RPC_URL: process.env.ALCHEMY_MAINNET_RPC_URL,

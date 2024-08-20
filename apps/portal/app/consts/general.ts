@@ -3,7 +3,7 @@ import { base, baseSepolia } from 'viem/chains'
 
 import { PATHS } from './paths'
 
-export const CURRENT_ENV = process.env.NODE_ENV
+export const CURRENT_ENV = process.env.DEPLOY_ENV
 
 export const DEFAULT_CHAIN_ID =
   CURRENT_ENV === 'development' ? baseSepolia.id.toString() : base.id.toString()

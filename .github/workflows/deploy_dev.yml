@@ -56,8 +56,7 @@ jobs:
         run: pnpm install
 
       - name: Run codegen for API package
-        run:
-          API_URL=https://dev.api.intuition.systems pnpm run codegen
+        run: API_URL=https://dev.api.intuition.systems pnpm run codegen
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
@@ -95,7 +94,8 @@ jobs:
           --build-arg SENTRY_DSN=${{ secrets.SENTRY_DSN }} \
           --build-arg SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }} \
           --build-arg SENTRY_ORG=${{ secrets.SENTRY_ORG }} \
-          --build-arg SENTRY_PROJECT=${{ secrets.SENTRY_PROJECT }}
+          --build-arg SENTRY_PROJECT=${{ secrets.SENTRY_PROJECT }} \
+          --build-arg DEPLOY_ENV=development
           docker tag portal ${{ env.ECR_IMAGE }}
           docker push ${{ env.ECR_IMAGE }}
 
