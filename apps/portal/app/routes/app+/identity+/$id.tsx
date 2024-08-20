@@ -214,6 +214,9 @@ export default function IdentityDetails() {
           <StakeCard
             tvl={+formatBalance(assets_sum, 18)}
             holders={identity?.num_positions}
+            variant={identity.is_user ? Identity.user : Identity.nonUser}
+            identityImgSrc={getAtomImage(identity)}
+            identityDisplayName={getAtomLabel(identity)}
             onBuyClick={() =>
               setStakeModalActive((prevState) => ({
                 ...prevState,

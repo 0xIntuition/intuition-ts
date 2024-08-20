@@ -5,6 +5,7 @@ import {
   Button,
   Icon,
   IconName,
+  Identity,
   PieChartVariant,
   PositionCard,
   PositionCardLastUpdated,
@@ -50,6 +51,8 @@ import logger from '@lib/utils/logger'
 import {
   calculatePercentageOfTvl,
   formatBalance,
+  getAtomImage,
+  getAtomLabel,
   invariant,
 } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
@@ -366,6 +369,9 @@ export default function Profile() {
           <StakeCard
             tvl={+formatBalance(assets_sum ?? '0')}
             holders={userIdentity.num_positions}
+            variant={userIdentity.is_user ? Identity.user : Identity.nonUser}
+            identityImgSrc={getAtomImage(userIdentity)}
+            identityDisplayName={getAtomLabel(userIdentity)}
             onBuyClick={() =>
               setStakeModalActive((prevState) => ({
                 ...prevState,

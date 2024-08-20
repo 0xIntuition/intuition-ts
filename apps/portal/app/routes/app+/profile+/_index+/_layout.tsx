@@ -5,6 +5,7 @@ import {
   Button,
   Icon,
   IconName,
+  Identity,
   PieChartVariant,
   PositionCard,
   PositionCardLastUpdated,
@@ -53,6 +54,8 @@ import logger from '@lib/utils/logger'
 import {
   calculatePercentageOfTvl,
   formatBalance,
+  getAtomImage,
+  getAtomLabel,
   invariant,
 } from '@lib/utils/misc'
 import { User } from '@privy-io/react-auth'
@@ -376,6 +379,9 @@ export default function Profile() {
           <StakeCard
             tvl={+formatBalance(assets_sum)}
             holders={userIdentity.num_positions}
+            variant={userIdentity.is_user ? Identity.user : Identity.nonUser}
+            identityImgSrc={getAtomImage(userIdentity)}
+            identityDisplayName={getAtomLabel(userIdentity)}
             onBuyClick={() =>
               setStakeModalActive((prevState) => ({
                 ...prevState,
