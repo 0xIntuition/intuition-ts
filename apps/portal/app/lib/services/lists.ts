@@ -12,11 +12,7 @@ import { getSpecialPredicate } from '@lib/utils/app'
 import { calculateTotalPages } from '@lib/utils/misc'
 import { getStandardPageParams } from '@lib/utils/params'
 import { fetchWrapper } from '@server/api'
-import {
-  CURRENT_ENV,
-  TAG_PREDICATE_DISPLAY_NAME_TESTNET,
-  TAG_PREDICATE_ID_TESTNET,
-} from 'app/consts'
+import { CURRENT_ENV } from 'app/consts'
 
 export async function getUserCreatedLists({
   request,
@@ -42,7 +38,7 @@ export async function getUserCreatedLists({
       sortBy: sortBy as ClaimSortColumn,
       direction,
       creator: userWallet,
-      predicate: TAG_PREDICATE_ID_TESTNET,
+      predicate: getSpecialPredicate(CURRENT_ENV).tagPredicate.id,
       displayName,
     },
   })
@@ -95,7 +91,7 @@ export async function getUserSavedLists({
       limit,
       sortBy,
       direction,
-      displayName: TAG_PREDICATE_DISPLAY_NAME_TESTNET,
+      displayName: getSpecialPredicate(CURRENT_ENV).tagPredicate.displayName,
       user: userWallet,
     },
   })
@@ -138,7 +134,7 @@ export async function getListIdentities({
       limit,
       sortBy: sortBy as ClaimSortColumn,
       direction,
-      predicate: TAG_PREDICATE_ID_TESTNET,
+      predicate: getSpecialPredicate(CURRENT_ENV).tagPredicate.id,
       object: objectId,
       displayName,
       creator,
@@ -176,7 +172,7 @@ export async function getListIdentitiesCount({
   const listIdentities = await fetchWrapper(request, {
     method: ClaimsService.searchClaims,
     args: {
-      predicate: TAG_PREDICATE_ID_TESTNET,
+      predicate: getSpecialPredicate(CURRENT_ENV).tagPredicate.id,
       object: objectId,
       creator,
       page: 1,

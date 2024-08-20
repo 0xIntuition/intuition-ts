@@ -10,16 +10,13 @@ import { useGetWalletBalance } from '@lib/hooks/useGetWalletBalance'
 import { useLoaderFetcher } from '@lib/hooks/useLoaderFetcher'
 import { useRedeemTriple } from '@lib/hooks/useRedeemTriple'
 import { transactionReducer } from '@lib/hooks/useTransactionReducer'
+import { getSpecialPredicate } from '@lib/utils/app'
 import logger from '@lib/utils/logger'
 import { formatBalance } from '@lib/utils/misc'
 import { useGenericTxState } from '@lib/utils/use-tx-reducer'
 import { useFetcher, useLocation } from '@remix-run/react'
 import { CreateLoaderData } from '@routes/resources+/create'
-import {
-  AM_FOLLOWING_VAULT_ID_TESTNET,
-  CREATE_RESOURCE_ROUTE,
-  I_PREDICATE_VAULT_ID_TESTNET,
-} from 'app/consts'
+import { CREATE_RESOURCE_ROUTE, CURRENT_ENV } from 'app/consts'
 import {
   TransactionActionType,
   TransactionStateType,
@@ -122,8 +119,8 @@ export default function FollowModal({
               : 'redeemTriple',
           args: !claim
             ? [
-                I_PREDICATE_VAULT_ID_TESTNET,
-                AM_FOLLOWING_VAULT_ID_TESTNET,
+                getSpecialPredicate(CURRENT_ENV).iPredicate.vaultId,
+                getSpecialPredicate(CURRENT_ENV).amFollowingPredicate.vaultId,
                 userVaultId,
               ]
             : actionType === 'follow'

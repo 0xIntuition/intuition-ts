@@ -4,7 +4,7 @@ import logger from './logger'
 export type SpecialObjectConfig = {
   id: string
   vaultId: number
-  displayName?: string
+  displayName: string
   type: 'identity' | 'claim'
 }
 

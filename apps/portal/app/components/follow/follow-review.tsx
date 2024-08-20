@@ -11,11 +11,9 @@ import {
 } from '@0xintuition/1ui'
 import { IdentityPresenter } from '@0xintuition/api'
 
+import { getSpecialPredicate } from '@lib/utils/app'
 import { formatBalance, formatDisplayBalance } from '@lib/utils/misc'
-import {
-  AM_FOLLOWING_DISPLAY_NAME_TESTNET,
-  I_PREDICATE_DISPLAY_NAME_TESTNET,
-} from 'app/consts'
+import { CURRENT_ENV } from 'app/consts'
 import {
   TransactionActionType,
   TransactionStateType,
@@ -103,12 +101,12 @@ export default function FollowReview({
               size="md"
               subject={{
                 variant: Identity.nonUser,
-                label: I_PREDICATE_DISPLAY_NAME_TESTNET,
+                label: getSpecialPredicate(CURRENT_ENV).iPredicate.displayName,
                 shouldHover: false,
               }}
               predicate={{
                 variant: Identity.nonUser,
-                label: AM_FOLLOWING_DISPLAY_NAME_TESTNET,
+                label: getSpecialPredicate(CURRENT_ENV).iPredicate.displayName,
                 shouldHover: false,
               }}
               object={{
