@@ -190,7 +190,9 @@ export default function SaveForm({
                         id={tag.identity_id}
                         bio={tag.description ?? ''}
                       />
-                      {claimId && (
+                      {isLoading ? (
+                        <Skeleton className="h-9 w-full" /> // Adjust height as needed
+                      ) : claimId ? (
                         <a href={`${PATHS.LIST}/${claimId}`}>
                           <Button
                             variant={ButtonVariant.secondary}
@@ -200,7 +202,7 @@ export default function SaveForm({
                             <Icon name={'arrow-up-right'} className="h-3 w-3" />
                           </Button>
                         </a>
-                      )}
+                      ) : null}
                     </div>
                   </HoverCardContent>
                 </HoverCard>
