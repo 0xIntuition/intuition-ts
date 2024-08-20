@@ -19,7 +19,6 @@ import { QuestSetCard } from '@components/quest/quest-set-card'
 import { QuestSetProgressCard } from '@components/quest/quest-set-progress-card'
 import { ReferralCard } from '@components/referral-card/referral-card'
 import { getPurchaseIntentsByAddress } from '@lib/services/phosphor'
-import { getChainEnvConfig } from '@lib/utils/environment'
 import { invariant } from '@lib/utils/misc'
 import { defer, LoaderFunctionArgs } from '@remix-run/node'
 import { Await, Link, useLoaderData } from '@remix-run/react'
@@ -30,7 +29,6 @@ import { getRelicCount } from '@server/relics'
 import {
   BLOCK_EXPLORER_URL,
   COMING_SOON_QUEST_SET,
-  CURRENT_ENV,
   QUEST_LOG_DESCRIPTION,
   STANDARD_QUEST_SET,
 } from 'app/consts'
@@ -46,7 +44,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const userCompletedMints = await getPurchaseIntentsByAddress(
     userWallet,
     'CONFIRMED',
-    getChainEnvConfig(CURRENT_ENV).collectionId,
   )
 
   const relicMintCount = userCompletedMints.data?.total_results

@@ -46,7 +46,6 @@ import {
   stakeModalAtom,
   tagsModalAtom,
 } from '@lib/state/store'
-import { getChainEnvConfig } from '@lib/utils/environment'
 import logger from '@lib/utils/logger'
 import {
   calculatePercentageOfTvl,
@@ -61,7 +60,6 @@ import { getVaultDetails } from '@server/multivault'
 import { getRelicCount } from '@server/relics'
 import {
   BLOCK_EXPLORER_URL,
-  CURRENT_ENV,
   MULTIVAULT_CONTRACT_ADDRESS,
   NO_WALLET_ERROR,
   PATHS,
@@ -137,7 +135,6 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const userCompletedMints = await getPurchaseIntentsByAddress(
     wallet,
     'CONFIRMED',
-    getChainEnvConfig(CURRENT_ENV).collectionId,
   )
 
   const relicMintCount = userCompletedMints.data?.total_results

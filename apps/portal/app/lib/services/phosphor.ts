@@ -1,5 +1,10 @@
 import { apiPrivateGET } from '@lib/utils/http-requests'
 
+const phosphorCollectionId =
+  typeof window !== 'undefined'
+    ? window.ENV?.PHOSPHOR_COLLECTION_ID
+    : process.env.PHOSPHOR_COLLECTION_ID
+
 export interface PurchaseIntentsData {
   cursor: string | null
   has_more: boolean
@@ -16,14 +21,13 @@ export interface PurchaseIntentsResponse {
 export async function getPurchaseIntentsByAddress(
   eth_address?: string,
   status?: string,
-  collection_id?: string,
   listing_id?: string,
 ): Promise<PurchaseIntentsResponse> {
   try {
     const queryParams = [
       eth_address ? `eth_address=${eth_address}` : '',
       status ? `status=${status}` : '',
-      collection_id ? `collection_id=${collection_id}` : '',
+      phosphorCollectionId ? `collection_id=${phosphorCollectionId}` : '',
       listing_id ? `listing_id=${listing_id}` : '',
     ]
       .filter(Boolean)
