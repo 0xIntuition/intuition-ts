@@ -48,10 +48,14 @@ describe('StakeCard', () => {
                     </svg>
                   </span>
                 </span>
+              </button>
+              <button
+                data-state="closed"
+              >
                 <p
                   class="text-primary text-base font-normal"
                 >
-                  identityDisplayName
+                  identityDispl...
                 </p>
               </button>
             </p>
