@@ -44,6 +44,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   setupAPI(request)
 
   logger('env', getEnv())
+
   return json({
     env: getEnv(),
     requestInfo: {

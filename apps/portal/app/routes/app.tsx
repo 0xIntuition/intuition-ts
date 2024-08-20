@@ -5,12 +5,7 @@ import { UserPresenter, UsersService } from '@0xintuition/api'
 import PrivyLogout from '@client/privy-logout'
 import { invariant } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
-import {
-  Outlet,
-  useLoaderData,
-  useLocation,
-  useNavigate,
-} from '@remix-run/react'
+import { Outlet, useLoaderData, useLocation } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
 import { featureFlagsSchema, getFeatureFlags } from '@server/env'
@@ -27,6 +22,10 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const isWalletSanctioned = await isSanctioned(wallet as Address)
   if (isWalletSanctioned) {
     return redirect('/sanctioned')
+  }
+
+  if (process.env.FF_FULL_LOCKDOWN_ENABLED === 'true') {
+    throw redirect(PATHS.MAINTENANCE)
   }
 
   const userObject = await fetchWrapper(request, {
@@ -53,15 +52,10 @@ export default function App() {
     featureFlags: z.infer<typeof featureFlagsSchema>
   }>()
   const { pathname } = useLocation()
-  const navigate = useNavigate()
 
   useEffect(() => {
     window.scrollTo(0, 0)
   }, [pathname])
-
-  if (featureFlags.FF_FULL_LOCKDOWN_ENABLED === 'true') {
-    navigate(PATHS.MAINTENANCE)
-  }
 
   return (
     <RootLayout userObject={userObject} featureFlags={featureFlags}>
