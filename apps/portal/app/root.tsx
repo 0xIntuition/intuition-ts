@@ -59,10 +59,12 @@ export async function loader({ request }: LoaderFunctionArgs) {
 export function Document({
   children,
   nonce,
+  gtmTrackingId,
   /* eslint-disable @typescript-eslint/no-unused-vars */
   theme = 'system',
 }: {
   children: React.ReactNode
+  gtmTrackingId?: string
   nonce?: string
   theme?: string
 }) {
@@ -74,7 +76,7 @@ export function Document({
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta />
         <Links />
-        <ExternalScripts />
+        <ExternalScripts gtmTrackingId={gtmTrackingId} />
       </head>
       <body>
         {children}
@@ -85,7 +87,11 @@ export function Document({
   )
 }
 
-export function ExternalScripts() {
+export function ExternalScripts({
+  gtmTrackingId,
+}: {
+  gtmTrackingId: string | undefined
+}) {
   const location = useLocation()
 
   useEffect(() => {
@@ -117,6 +123,16 @@ export function ExternalScripts() {
           })(window, document, 'https://snippet.maze.co/maze-universal-loader.js', '92e1339d-a40d-44ca-b252-7c5f2a5118df');
         `,
       },
+      {
+        id: 'gtm-script',
+        content: `
+        (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','${gtmTrackingId}')
+      `,
+      },
     ]
 
     scripts.forEach((script) => {
@@ -147,7 +163,17 @@ export function ExternalScripts() {
     }
   }, [location]) // re-run the effect if location changes
 
-  return null // this component doesn't render anything itself
+  return gtmTrackingId ? (
+    <noscript>
+      <iframe
+        title="Google Tag Manager"
+        src={`https://www.googletagmanager.com/ns.html?id=${gtmTrackingId}`}
+        height={0}
+        width={0}
+        style={{ display: 'none', visibility: 'hidden' }}
+      />
+    </noscript>
+  ) : null
 }
 
 function App() {
@@ -156,7 +182,7 @@ function App() {
   const { env } = useLoaderData<typeof loader>()
 
   return (
-    <Document nonce={nonce} theme={theme}>
+    <Document nonce={nonce} theme={theme} gtmTrackingId={env.GTM_TRACKING_ID}>
       <GlobalLoading />
       <Toaster position="top-right" />
       <ClientOnly>
