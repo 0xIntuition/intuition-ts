@@ -28,7 +28,7 @@ export function OverviewStakingHeader({
 }: OverviewStakingHeaderProps): React.ReactElement {
   return (
     <div
-      className="flex flex-col gap-4 w-full p-6 bg-black rounded-xl border border-neutral-300/20"
+      className="flex flex-col gap-4 w-full p-6 bg-black rounded-xl theme-border"
       {...props}
     >
       <div className="flex items-center gap-1.5">

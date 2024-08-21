@@ -44,7 +44,7 @@ export const DataCreatedHeader: React.FC<DataCreatedHeaderProps> = ({
 
   return (
     <div className="h-46 flex flex-col w-full gap-3" {...props}>
-      <div className="p-6 bg-black rounded-xl border border-neutral-300/20 flex flex-col gap-5">
+      <div className="p-6 bg-black rounded-xl theme-border flex flex-col gap-5">
         <div className="flex gap-1.5 items-center">
           <Text
             variant="caption"

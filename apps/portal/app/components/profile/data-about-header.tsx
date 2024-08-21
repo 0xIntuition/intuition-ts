@@ -35,7 +35,7 @@ const DataAboutHeader: React.FC<DataAboutHeaderProps> = ({
 }) => {
   return (
     <div
-      className="flex flex-col gap-4 w-full p-6 bg-black rounded-xl border border-neutral-300/20 max-md:items-center"
+      className="flex flex-col gap-4 w-full p-6 bg-black rounded-xl theme-border max-md:items-center"
       {...props}
     >
       <div className="flex items-center gap-1.5">

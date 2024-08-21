@@ -137,7 +137,7 @@ export function VerifiedLinkItem({
   return (
     <div className="flex w-full justify-between gap-4 px-8 ">
       <div className="flex flex-row items-center gap-3">
-        <div className="flex flex-col items-center border border-solid  border-white/10 rounded-full p-2.5">
+        <div className="flex flex-col items-center theme-border rounded-full p-2.5">
           <Icon name={platformIcon} className="w-4 h-4" />
         </div>
         {isConnected ? (

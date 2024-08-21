@@ -22,7 +22,7 @@
 // }: HomeStatsHeaderProps) {
 //   return (
 //     <div
-//       className="flex flex-col gap-4 w-full p-6 bg-black rounded-xl border border-neutral-300/20"
+//       className="flex flex-col gap-4 w-full p-6 bg-black rounded-xl theme-border"
 //       {...props}
 //     >
 //       <div className="flex items-center gap-1.5">
@@ -102,7 +102,7 @@ export function HomeStatsHeader({
 }: HomeStatsHeaderProps) {
   return (
     <div
-      className="flex justify-between items-start md:items-center w-full p-4 bg-black rounded-xl border border-neutral-300/20"
+      className="flex justify-between items-start md:items-center w-full p-4 bg-black rounded-xl theme-border"
       {...props}
     >
       <div className="flex gap-8 max-lg:flex-col max-lg:gap-2">

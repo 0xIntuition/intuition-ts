@@ -109,7 +109,7 @@ export const themePlugin = plugin(
         'font-feature-settings': '"rlig" 1, "calt" 1',
       },
       '.theme-border': {
-        '@apply border border-border/20': {},
+        '@apply border border-border/25': {},
       },
       '.in-out-gradient': {
         '@apply bg-gradient-to-r from-border/5 from-10% via-border/20 via-50% to-border/5 to-90%':
@@ -147,7 +147,7 @@ export const themePlugin = plugin(
           sans: ['Geist', ...defaultTheme.fontFamily.sans],
         },
         borderWidth: {
-          DEFAULT: '0.5px',
+          DEFAULT: '1px',
           px: '1px',
         },
         fontSize: {
