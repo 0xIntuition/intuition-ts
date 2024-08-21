@@ -9,6 +9,7 @@ interface PointsEarnedCardProps {
   activities: Array<{
     name: string
     points: number
+    disabled?: boolean
   }>
 }
 
@@ -16,10 +17,16 @@ const PointsRow: React.FC<{
   name: string
   points: number
   totalPoints: number
-}> = ({ name, points, totalPoints }) => {
+  disabled?: boolean
+}> = ({ name, points, totalPoints, disabled = false }) => {
   return (
-    <div className="grid grid-cols-[2fr,6fr,1fr] items-center gap-2">
-      <Text variant={TextVariant.body}>{name}</Text>
+    <div className={`grid grid-cols-[2fr,5fr,1fr] items-center gap-2`}>
+      <Text
+        variant={TextVariant.body}
+        className={`${disabled && 'text-primary/40'}`}
+      >
+        {name}
+      </Text>
       <div className="h-[6px] w-full bg-muted rounded-sm">
         <div
           className="h-full bg-primary rounded-sm"
@@ -28,7 +35,10 @@ const PointsRow: React.FC<{
           }}
         />
       </div>
-      <Text variant={TextVariant.body} className="text-right">
+      <Text
+        variant={TextVariant.body}
+        className={`text-right ${disabled && 'text-primary/40'}`}
+      >
         {truncateNumber(points)}
       </Text>
     </div>
@@ -56,6 +66,7 @@ export const PointsEarnedCard: React.FC<PointsEarnedCardProps> = ({
             name={activity.name}
             points={activity.points}
             totalPoints={totalPoints}
+            disabled={activity.disabled}
           />
         ))}
       </div>
