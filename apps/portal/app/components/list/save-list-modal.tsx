@@ -391,7 +391,7 @@ export default function SaveListModal({
     setFetchedClaimVaultId(null)
     setVaultDetails(undefined)
     setIsLoading(true)
-    setVal('0.001')
+    setVal(min_deposit ?? vaultDetails?.min_deposit ?? MIN_DEPOSIT)
     setShowErrors(false)
     setValidationErrors([])
     claimFetcher.data = undefined
@@ -411,7 +411,7 @@ export default function SaveListModal({
       setFetchedClaimVaultId(null)
       setVaultDetails(undefined)
       setIsLoading(true)
-      setVal('0.001')
+      setVal(min_deposit ?? vaultDetails?.min_deposit ?? MIN_DEPOSIT)
       setShowErrors(false)
       setValidationErrors([])
       claimFetcher.data = undefined

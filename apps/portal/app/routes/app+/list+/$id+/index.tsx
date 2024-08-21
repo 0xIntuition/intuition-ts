@@ -23,11 +23,12 @@ import {
 import { ErrorPage } from '@components/error-page'
 import { InfoPopover } from '@components/info-popover'
 import { ListTabIdentityDisplay } from '@components/list/list-tab-identity-display'
+import SaveListModal from '@components/list/save-list-modal'
 import { TagsList } from '@components/list/tags'
 import { DataHeaderSkeleton, PaginatedListSkeleton } from '@components/skeleton'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { getListIdentities, getListIdentitiesCount } from '@lib/services/lists'
-import { addIdentitiesListModalAtom } from '@lib/state/store'
+import { addIdentitiesListModalAtom, saveListModalAtom } from '@lib/state/store'
 import {
   getAtomDescription,
   getAtomImage,
@@ -46,13 +47,14 @@ import {
 import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
 import {
+  MULTIVAULT_CONTRACT_ADDRESS,
   NO_CLAIM_ERROR,
   NO_PARAM_ID_ERROR,
   NO_WALLET_ERROR,
   PATHS,
 } from 'app/consts'
-import { IdentityListType } from 'app/types'
-import { useSetAtom } from 'jotai'
+import { IdentityListType, VaultDetailsType } from 'app/types'
+import { useAtom, useSetAtom } from 'jotai'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const id = params.id
@@ -146,9 +148,15 @@ export default function ListOverview() {
     additionalUserObject,
   } = useLiveLoader<typeof loader>(['create', 'attest'])
 
-  const { claim } =
-    useRouteLoaderData<{ claim: ClaimPresenter }>('routes/app+/list+/$id') ?? {}
+  const { claim, vaultDetails } =
+    useRouteLoaderData<{
+      claim: ClaimPresenter
+      vaultDetails: VaultDetailsType
+    }>('routes/app+/list+/$id') ?? {}
   invariant(claim, NO_CLAIM_ERROR)
+
+  const [saveListModalActive, setSaveListModalActive] =
+    useAtom(saveListModalAtom)
 
   const setAddIdentitiesListModalActive = useSetAtom(addIdentitiesListModalAtom)
 
@@ -404,6 +412,20 @@ export default function ListOverview() {
           )}
         </Tabs>
       </div>
+      <SaveListModal
+        contract={claim.object?.contract ?? MULTIVAULT_CONTRACT_ADDRESS}
+        identity={saveListModalActive.identity as IdentityPresenter}
+        tag={claim.object as IdentityPresenter}
+        userWallet={wallet}
+        open={saveListModalActive.isOpen}
+        onClose={() =>
+          setSaveListModalActive({
+            ...saveListModalActive,
+            isOpen: false,
+          })
+        }
+        min_deposit={vaultDetails?.min_deposit}
+      />
     </div>
   )
 }

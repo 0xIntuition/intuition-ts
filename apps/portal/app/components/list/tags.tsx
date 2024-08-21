@@ -10,7 +10,6 @@ import {
 import { ClaimPresenter, IdentityPresenter, SortColumn } from '@0xintuition/api'
 
 import { ListHeader } from '@components/list/list-header'
-import SaveListModal from '@components/list/save-list-modal'
 import { saveListModalAtom } from '@lib/state/store'
 import {
   formatBalance,
@@ -20,9 +19,9 @@ import {
   getAtomLabel,
   getAtomLink,
 } from '@lib/utils/misc'
-import { MULTIVAULT_CONTRACT_ADDRESS, PATHS } from 'app/consts'
+import { PATHS } from 'app/consts'
 import { PaginationType } from 'app/types/pagination'
-import { useAtom } from 'jotai'
+import { useSetAtom } from 'jotai'
 
 import { SortOption } from '../sort-select'
 import { List } from './list'
@@ -30,9 +29,7 @@ import { List } from './list'
 export function TagsList({
   identities,
   claims,
-  claim,
   tag,
-  wallet,
   pagination,
   paramPrefix,
   enableHeader = true,
@@ -57,8 +54,7 @@ export function TagsList({
     { value: 'Created At', sortBy: 'CreatedAt' },
   ]
 
-  const [saveListModalActive, setSaveListModalActive] =
-    useAtom(saveListModalAtom)
+  const setSaveListModalActive = useSetAtom(saveListModalAtom)
 
   const claimMap = new Map(
     claims
@@ -149,19 +145,6 @@ export function TagsList({
           )
         })}
       </List>
-      <SaveListModal
-        contract={claim.object?.contract ?? MULTIVAULT_CONTRACT_ADDRESS}
-        identity={saveListModalActive.identity as IdentityPresenter}
-        tag={claim.object as IdentityPresenter}
-        userWallet={wallet}
-        open={saveListModalActive.isOpen}
-        onClose={() =>
-          setSaveListModalActive({
-            ...saveListModalActive,
-            isOpen: false,
-          })
-        }
-      />
     </>
   )
 }

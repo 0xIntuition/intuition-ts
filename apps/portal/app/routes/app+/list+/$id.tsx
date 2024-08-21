@@ -14,11 +14,13 @@ import NavigationButton from '@components/navigation-link'
 import ImageModal from '@components/profile/image-modal'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { addIdentitiesListModalAtom, imageModalAtom } from '@lib/state/store'
+import logger from '@lib/utils/logger'
 import { invariant } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { Outlet, useLocation, useNavigate } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
 import { requireUser, requireUserWallet } from '@server/auth'
+import { getVaultDetails } from '@server/multivault'
 import {
   BLOCK_EXPLORER_URL,
   IPFS_GATEWAY_URL,
@@ -27,6 +29,7 @@ import {
   PATHS,
 } from 'app/consts'
 import TwoPanelLayout from 'app/layouts/two-panel-layout'
+import { VaultDetailsType } from 'app/types'
 import { useAtom } from 'jotai'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -44,9 +47,25 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     args: { id },
   })
 
+  let vaultDetails: VaultDetailsType | null = null
+
+  if (claim !== undefined && claim.vault_id) {
+    try {
+      vaultDetails = await getVaultDetails(
+        claim.contract,
+        claim.vault_id,
+        userWallet as `0x${string}`,
+      )
+    } catch (error) {
+      logger('Failed to fetch vaultDetails', error)
+      vaultDetails = null
+    }
+  }
+
   return json({
     claim,
     userWallet,
+    vaultDetails,
   })
 }
 
@@ -54,6 +73,7 @@ export default function ListDetails() {
   const { claim, userWallet } = useLiveLoader<{
     claim: ClaimPresenter
     userWallet: string
+    vaultDetails: VaultDetailsType
   }>(['create', 'attest'])
 
   const [addIdentitiesListModalActive, setAddIdentitiesListModalActive] =
