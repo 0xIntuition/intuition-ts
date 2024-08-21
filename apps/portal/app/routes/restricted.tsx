@@ -2,6 +2,8 @@
 
 import { Button, Icon } from '@0xintuition/1ui'
 
+import { Link } from '@remix-run/react'
+
 export default function Restricted() {
   return (
     <div className="mt-16 flex h-full w-full flex-col items-center">
@@ -22,9 +24,11 @@ export default function Restricted() {
           In the meantime, join our Discord community to stay updated and
           connect with us!
         </p>
-        <Button className="w-fit mt-3.5" variant="secondary">
-          Join our Discord
-        </Button>
+        <Link to="https://discord.gg/0xintuition" target="_blank">
+          <Button className="w-fit mt-3.5" variant="secondary">
+            Join our Discord
+          </Button>
+        </Link>
       </div>
     </div>
   )
