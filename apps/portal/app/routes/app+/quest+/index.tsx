@@ -20,7 +20,7 @@ import { QuestSetProgressCard } from '@components/quest/quest-set-progress-card'
 import { ReferralCard } from '@components/referral-card/referral-card'
 import RelicPointCard from '@components/relic-point-card/relic-point-card'
 import { getPurchaseIntentsByAddress } from '@lib/services/phosphor'
-import { invariant } from '@lib/utils/misc'
+import { calculatePointsFromFees, invariant } from '@lib/utils/misc'
 import { defer, LoaderFunctionArgs } from '@remix-run/node'
 import { Await, Link, useLoaderData } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
@@ -133,9 +133,18 @@ export default function Quests() {
                     <PointsEarnedCard
                       // TODO: Remove this relic hold/mint count and points calculation when it is stored in BE.
                       totalPoints={
-                        relicMintCount
-                          ? resolvedUserTotals.total_points + totalNftPoints
-                          : resolvedUserTotals.total_points
+                        relicMintCount || relicHoldCount
+                          ? resolvedUserTotals.referral_points +
+                            resolvedUserTotals.quest_points +
+                            totalNftPoints +
+                            calculatePointsFromFees(
+                              resolvedUserTotals.total_protocol_fee_paid,
+                            )
+                          : resolvedUserTotals.referral_points +
+                            resolvedUserTotals.quest_points +
+                            calculatePointsFromFees(
+                              resolvedUserTotals.total_protocol_fee_paid,
+                            )
                       }
                       activities={[
                         {
@@ -144,7 +153,9 @@ export default function Quests() {
                         },
                         {
                           name: 'Protocol',
-                          points: resolvedUserTotals.protocol_points,
+                          points: calculatePointsFromFees(
+                            resolvedUserTotals.total_protocol_fee_paid,
+                          ),
                         },
                         {
                           name: 'NFT',
