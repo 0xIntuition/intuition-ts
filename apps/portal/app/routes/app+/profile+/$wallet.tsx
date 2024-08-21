@@ -478,21 +478,6 @@ export default function Profile() {
               }
             />
           )}
-          {selectedTag && (
-            <SaveListModal
-              contract={userIdentity.contract ?? MULTIVAULT_CONTRACT_ADDRESS}
-              tag={saveListModalActive.tag ?? selectedTag}
-              identity={userIdentity}
-              userWallet={userWallet}
-              open={saveListModalActive.isOpen}
-              onClose={() =>
-                setSaveListModalActive({
-                  ...saveListModalActive,
-                  isOpen: false,
-                })
-              }
-            />
-          )}
         </>
       )}
       <ImageModal
