@@ -93,7 +93,7 @@ export default function StakeClaimActivity({
             />
           )}
           <Separator />
-          <div className="flex items-start justify-start gap-5 w-full">
+          <div className="flex flex-col md:flex-row items-start justify-start gap-5 w-full">
             <ClaimStakeCard
               currency="ETH"
               totalTVL={

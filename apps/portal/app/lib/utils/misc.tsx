@@ -404,3 +404,9 @@ export const getAtomId = (atom: IdentityPresenter) => {
   }
   return atom.identity_id
 }
+
+export const calculatePointsFromFees = (totalProtocolFees: string): number => {
+  const feesInEth = formatUnits(BigInt(totalProtocolFees), 18)
+  const pointsPerEth = 10000000
+  return Number(feesInEth) * pointsPerEth
+}

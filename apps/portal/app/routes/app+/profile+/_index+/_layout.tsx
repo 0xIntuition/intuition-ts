@@ -53,6 +53,7 @@ import {
 import logger from '@lib/utils/logger'
 import {
   calculatePercentageOfTvl,
+  calculatePointsFromFees,
   formatBalance,
   getAtomImage,
   getAtomLabel,
@@ -277,6 +278,14 @@ export default function Profile() {
   const nftHoldPoints = relicHoldCount ? +relicHoldCount * 250000 : 0
   const totalNftPoints = nftMintPoints + nftHoldPoints
 
+  const feePoints = calculatePointsFromFees(userTotals.total_protocol_fee_paid)
+
+  const totalPoints =
+    userTotals.referral_points +
+    userTotals.quest_points +
+    totalNftPoints +
+    feePoints
+
   const leftPanel = (
     <div className="flex-col justify-start items-start gap-5 inline-flex max-lg:w-full">
       <ProfileCard
@@ -289,7 +298,7 @@ export default function Profile() {
           numberOfFollowers: userTotals.follower_count,
           numberOfFollowing: userTotals.followed_count,
           // TODO: Remove this relic hold/mint count and points calculation when it is stored in BE.
-          points: userTotals.total_points + totalNftPoints,
+          points: totalPoints,
         }}
         bio={userObject.description ?? ''}
         ipfsLink={`${BLOCK_EXPLORER_URL}/address/${userObject.wallet}`}

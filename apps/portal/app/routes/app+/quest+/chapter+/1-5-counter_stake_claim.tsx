@@ -327,7 +327,7 @@ export default function Quests() {
   }, [actionData])
 
   return (
-    <div className="px-10 w-full max-w-7xl mx-auto flex flex-col gap-10 max-lg:px-0 max-md:gap-4">
+    <div className="px-10 w-full max-w-7xl mx-auto flex flex-col gap-10 max-lg:px-4 max-md:gap-4">
       <div className="flex flex-col gap-10 mb-5 max-md:gap-5 max-md:mb-2">
         <Hero imgSrc={`${quest.image}-header`} />
         <div className="flex flex-col gap-10 max-md:gap-4">

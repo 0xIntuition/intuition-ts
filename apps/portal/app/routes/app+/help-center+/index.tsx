@@ -31,10 +31,10 @@ const supportCards = [
     link: 'https://t.me/intuitionsystems',
   },
   {
-    icon: IconName.envelope,
-    title: 'Email',
+    icon: IconName.headset,
+    title: 'Support',
     description:
-      "For personalized assistance, reach out to us via email. We're here to help with any questions or concerns.",
+      'Got a bug? Hit a snag? No worries — help is just a click away! Just head to our Discord and submit your issue through our in-chat intake form.',
     link: 'https://discord.com/channels/909531430881746974/1151564740255043604',
   },
   {
@@ -47,16 +47,16 @@ const supportCards = [
 ]
 
 const socialCards = [
+  { title: 'Twitter', link: 'https://x.com/0xIntuition' },
+  { title: 'Discord', link: 'https://discord.gg/0xintuition' },
+  { title: 'Telegram', link: 'https://t.me/intuitionsystems' },
+  { title: 'Warpcast', link: 'https://warpcast.com/0xintuition' },
   { title: 'Medium', link: 'https://medium.com/0xintuition' },
-  { title: 'Guild', link: 'https://guild.xyz/intuition' },
+  { title: 'Galxe', link: 'https://app.galxe.com/quest/intuition' },
   {
     title: 'Mirror',
     link: 'https://mirror.xyz/0x0bcAFff6B45769B53DE34169f08AB220d2b9F910',
   },
-  { title: 'Warpcast', link: 'https://warpcast.com/0xintuition' },
-  { title: 'Twitter', link: 'https://x.com/0xIntuition' },
-  { title: 'Lens', link: 'https://hey.xyz/u/intuition' },
-  { title: 'Galxe', link: 'https://app.galxe.com/quest/intuition' },
   { title: 'Github', link: 'https://github.com/0xintuition' },
 ]
 
