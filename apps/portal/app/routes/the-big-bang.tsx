@@ -79,7 +79,7 @@ export default function WelcomePage() {
               what came before...
             </Text>
           </div>
-          <div className="mt-8 space-y-2">
+          <div className="mt-6 space-y-2">
             <Text variant={TextVariant.bodyLarge} className="text-primary/70">
               Our story begins with the &lsquo;atom&rsquo;.
             </Text>
@@ -90,7 +90,7 @@ export default function WelcomePage() {
               And our &lsquo;atoms&rsquo; begin with you.
             </Text>
           </div>
-          <Link to="/create" className="m-auto mt-8 mb-12 md:mb-0">
+          <Link to="/create" className="m-auto mt-6">
             <Button
               variant={ButtonVariant.primary}
               size={ButtonSize.lg}

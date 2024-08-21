@@ -84,37 +84,39 @@ export default function HomePage() {
 
   return (
     <FullPageLayout>
-      <div className="w-full flex flex-col gap-6">
+      <div className="w-full flex flex-col gap-8">
         <HomeBanner />
-        <Text
-          variant="headline"
-          weight="medium"
-          className="text-secondary-foreground self-start w-full"
-        >
-          System Stats
-        </Text>
-        <Suspense fallback={<HomeStatsHeaderSkeleton />}>
-          <Await
-            resolve={systemStats}
-            errorElement={
-              <ErrorStateCard>
-                <RevalidateButton />
-              </ErrorStateCard>
-            }
+        <div className="flex flex-col gap-4">
+          <Text
+            variant="headline"
+            weight="medium"
+            className="text-secondary-foreground self-start w-full"
           >
-            {(resolvedStats) => (
-              <HomeStatsHeader
-                totalIdentities={resolvedStats.totalIdentities}
-                totalClaims={resolvedStats.totalClaims}
-                totalUsers={resolvedStats.totalUsers}
-                totalStaked={
-                  Number(formatBalance(resolvedStats.totalStaked, 18)) || 0
-                }
-                totalSignals={resolvedStats.totalSignals || 0}
-              />
-            )}
-          </Await>
-        </Suspense>
+            System Stats
+          </Text>
+          <Suspense fallback={<HomeStatsHeaderSkeleton />}>
+            <Await
+              resolve={systemStats}
+              errorElement={
+                <ErrorStateCard>
+                  <RevalidateButton />
+                </ErrorStateCard>
+              }
+            >
+              {(resolvedStats) => (
+                <HomeStatsHeader
+                  totalIdentities={resolvedStats.totalIdentities}
+                  totalClaims={resolvedStats.totalClaims}
+                  totalUsers={resolvedStats.totalUsers}
+                  totalStaked={
+                    Number(formatBalance(resolvedStats.totalStaked, 18)) || 0
+                  }
+                  totalSignals={resolvedStats.totalSignals || 0}
+                />
+              )}
+            </Await>
+          </Suspense>
+        </div>
         <HomeSectionHeader
           title="Featured Lists"
           buttonText="Explore Lists"

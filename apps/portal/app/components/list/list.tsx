@@ -40,7 +40,7 @@ export function List<T extends SortColumnType>({
   const listContainerRef = useRef<HTMLDivElement>(null)
 
   return (
-    <div className="flex flex-col w-full gap-6 mb-6" ref={listContainerRef}>
+    <div className="flex flex-col w-full gap-6" ref={listContainerRef}>
       {(enableSearch || enableSort) && (
         <div
           className={`flex w-full max-lg:flex-col max-lg:gap-4 ${enableSearch ? 'justify-between' : 'justify-end'}`}

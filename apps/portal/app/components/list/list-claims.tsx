@@ -93,7 +93,7 @@ export function ListClaimsList<T extends SortColumnType = ClaimSortColumn>({
 
   return (
     <div className="flex flex-col w-full">
-      <div className="flex flex-col w-full mb-8" ref={listContainerRef}>
+      <div className="flex flex-col w-full" ref={listContainerRef}>
         <div
           className={`flex flex-row w-full ${enableSearch ? 'justify-between' : 'justify-end'} ${enableSort ? 'mb-6' : 'mb-0'}`}
         >
