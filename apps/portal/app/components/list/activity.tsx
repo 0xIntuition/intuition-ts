@@ -117,7 +117,11 @@ function ActivityItem({
           <HoverCard openDelay={100} closeDelay={100}>
             <HoverCardTrigger asChild>
               <Link
-                to={`${PATHS.PROFILE}/${activity.creator?.wallet}`}
+                to={
+                  activity.creator
+                    ? `${PATHS.PROFILE}/${activity.creator?.wallet}`
+                    : `${BLOCK_EXPLORER_URL}/address/${activity.identity?.creator_address}`
+                }
                 prefetch="intent"
               >
                 <IdentityTag
@@ -130,7 +134,7 @@ function ActivityItem({
                       activity.creator?.display_name ??
                       activity.creator?.wallet ??
                       activity.identity?.creator_address ??
-                      ''
+                      'Unknown'
                     }
                     maxStringLength={32}
                   />
