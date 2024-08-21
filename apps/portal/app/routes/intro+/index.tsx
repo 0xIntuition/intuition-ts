@@ -9,6 +9,7 @@ import {
 import { Button, Icon, Text, TextVariant } from '@0xintuition/1ui'
 
 import Container from '@components/container'
+import { getMaintenanceMode } from '@lib/utils/maintenance'
 import { cn } from '@lib/utils/misc'
 import { ActionFunctionArgs } from '@remix-run/node'
 import { redirect, useFetcher } from '@remix-run/react'
@@ -24,6 +25,10 @@ import {
 import type { EmblaCarouselType, EmblaOptionsType } from 'embla-carousel'
 import useEmblaCarousel from 'embla-carousel-react'
 import { AnimatePresence, motion } from 'framer-motion'
+
+export async function loader() {
+  getMaintenanceMode()
+}
 
 export async function action({ request }: ActionFunctionArgs) {
   const redirectUrl = (await request.formData()).get('redirectUrl')

@@ -1,11 +1,14 @@
 import PrivyRefresh from '@client/privy-refresh'
 import logger from '@lib/utils/logger'
+import { getMaintenanceMode } from '@lib/utils/maintenance'
 import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
 import { onboardingModalCookie } from '@server/onboarding'
 import { getPrivyTokens } from '@server/privy'
 import { PATHS } from 'app/consts'
 
 export async function loader({ request }: LoaderFunctionArgs) {
+  getMaintenanceMode()
+
   const cookieHeader = request.headers.get('Cookie')
   const cookie = await onboardingModalCookie.parse(cookieHeader)
   const redirectTo = new URL(request.url).searchParams.get('redirectTo')

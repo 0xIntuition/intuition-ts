@@ -9,6 +9,7 @@ import { ApiError, IdentitiesService } from '@0xintuition/api'
 
 import PrivyLogout from '@client/privy-logout'
 import { Header } from '@components/header'
+import { getMaintenanceMode } from '@lib/utils/maintenance'
 import { LoaderFunctionArgs, redirect } from '@remix-run/node'
 import { json, Link, useLoaderData } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
@@ -16,6 +17,8 @@ import { requireUserWallet } from '@server/auth'
 import { PATHS } from 'app/consts'
 
 export async function loader({ request }: LoaderFunctionArgs) {
+  getMaintenanceMode()
+
   const wallet = await requireUserWallet(request)
   if (!wallet) {
     return redirect('/login')

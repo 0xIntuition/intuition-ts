@@ -22,6 +22,7 @@ import {
 } from '@lib/hooks/useTransactionReducer'
 import { editProfileModalAtom } from '@lib/state/store'
 import logger from '@lib/utils/logger'
+import { getMaintenanceMode } from '@lib/utils/maintenance'
 import { sliceString } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
 import { useFetcher, useLoaderData, useNavigate } from '@remix-run/react'
@@ -39,6 +40,8 @@ import { toHex } from 'viem'
 import { useConnectorClient, usePublicClient } from 'wagmi'
 
 export async function loader({ request }: LoaderFunctionArgs) {
+  getMaintenanceMode()
+
   const wallet = await requireUserWallet(request)
   if (!wallet) {
     return redirect('/login')

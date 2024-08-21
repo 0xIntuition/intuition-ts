@@ -27,6 +27,7 @@ import { getZodConstraint, parseWithZod } from '@conform-to/zod'
 import { useInviteCodeFetcher } from '@lib/hooks/useInviteCodeFetcher'
 import { inviteCodeSchema } from '@lib/schemas/create-identity-schema'
 import logger from '@lib/utils/logger'
+import { getMaintenanceMode } from '@lib/utils/maintenance'
 import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
 import { Link, useLoaderData, useNavigate } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
@@ -35,6 +36,8 @@ import { getRelicCount } from '@server/relics'
 import { PATHS } from 'app/consts'
 
 export async function loader({ request }: LoaderFunctionArgs) {
+  getMaintenanceMode()
+
   const wallet = await requireUserWallet(request)
   if (!wallet) {
     return redirect('/login')
