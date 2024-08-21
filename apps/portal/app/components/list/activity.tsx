@@ -134,7 +134,7 @@ function ActivityItem({
                       activity.creator?.display_name ??
                       activity.creator?.wallet ??
                       activity.identity?.creator_address ??
-                      'Unknown'
+                      '?'
                     }
                     maxStringLength={32}
                   />
