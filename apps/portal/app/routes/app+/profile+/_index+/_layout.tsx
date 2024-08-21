@@ -130,7 +130,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   )
 
   if (!userIdentity) {
-    throw redirect('/invite') // this is an actual 404 and should redirect to /create
+    throw redirect('/invite')
   }
 
   if (!userIdentity.creator) {

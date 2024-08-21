@@ -3,6 +3,7 @@ import { useEffect } from 'react'
 import { UserPresenter, UsersService } from '@0xintuition/api'
 
 import PrivyLogout from '@client/privy-logout'
+import { getIdentityOrPending } from '@lib/services/identities'
 import { invariant } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
 import { Outlet, useLoaderData, useLocation } from '@remix-run/react'
@@ -34,6 +35,19 @@ export async function loader({ request }: LoaderFunctionArgs) {
       wallet,
     },
   })
+
+  const { identity: userIdentity, isPending } = await getIdentityOrPending(
+    request,
+    wallet,
+  )
+
+  if (!userIdentity || !isPending) {
+    if (!wallet) {
+      throw redirect('/login')
+    } else {
+      throw redirect('/invite')
+    }
+  }
 
   // TODO: Figure out why SiteWideBanner has no access to window.ENV values [ENG-3367]
   const featureFlags = getFeatureFlags()
