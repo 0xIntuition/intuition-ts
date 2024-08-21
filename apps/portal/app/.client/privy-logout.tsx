@@ -32,7 +32,7 @@ export default function PrivyLogout({ wallet }: { wallet: string }) {
                 method: 'post',
               })
             }
-          }, 3000) // 3 second delay
+          }, 5000) // 5 second delay
         }
       }
     }
