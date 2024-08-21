@@ -20,14 +20,14 @@ const PointsRow: React.FC<{
   disabled?: boolean
 }> = ({ name, points, totalPoints, disabled = false }) => {
   return (
-    <div className={`grid grid-cols-[2fr,5fr,1fr] items-center gap-2`}>
+    <div className="grid grid-cols-7 items-center gap-2">
       <Text
         variant={TextVariant.body}
-        className={`${disabled && 'text-primary/40'}`}
+        className={`col-span-2 ${disabled ? 'text-primary/40' : ''}`}
       >
         {name}
       </Text>
-      <div className="h-[6px] w-full bg-muted rounded-sm">
+      <div className="col-span-4 h-[6px] w-full bg-muted rounded-sm mx-auto">
         <div
           className="h-full bg-primary rounded-sm"
           style={{
@@ -37,7 +37,7 @@ const PointsRow: React.FC<{
       </div>
       <Text
         variant={TextVariant.body}
-        className={`text-right ${disabled && 'text-primary/40'}`}
+        className={`col-span-1 text-right ${disabled ? 'text-primary/40' : ''}`}
       >
         {truncateNumber(points)}
       </Text>
