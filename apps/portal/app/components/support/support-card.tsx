@@ -7,6 +7,8 @@ import {
   TextWeight,
 } from '@0xintuition/1ui'
 
+import { Link } from '@remix-run/react'
+
 interface SupportCardProps {
   icon?: IconNameType
   title: string
@@ -29,12 +31,16 @@ export function SupportCard({
         className,
       )}
     >
-      <a href={link} className="flex flex-row items-center gap-2">
+      <Link
+        to={link ?? '#'}
+        className="flex flex-row items-center gap-2"
+        target="_blank"
+      >
         {icon && <Icon name={icon} className="text-primary" />}
         <Text variant={TextVariant.bodyLarge} weight={TextWeight.medium}>
           {title}
         </Text>
-      </a>
+      </Link>
       {description && (
         <Text className="text-secondary-foreground">{description}</Text>
       )}

@@ -169,21 +169,21 @@ export const getQuestObjects = (chainEnv: ChainEnv) => {
     // repeat for staging and production with initial values
     staging: {
       stakeAtomFallbackAtom: {
-        id: '',
-        vaultId: 0,
-        displayName: '',
+        id: 'b1f186ba-4789-47d3-a4d0-cb54eb86f70b',
+        vaultId: 13,
+        displayName: 'Intuition',
         type: 'identity',
       },
       stakeClaimFallbackClaim: {
-        id: '',
-        vaultId: 0,
-        displayName: '',
+        id: '369d24ff-6d65-4094-9a27-3867cec6927f',
+        vaultId: 15,
+        displayName: 'Intuition has tag Trustworthy',
         type: 'claim',
       },
       counterstakeClaimFallbackClaim: {
-        id: '',
-        vaultId: 0,
-        displayName: '',
+        id: '78e03073-effb-4d6a-964b-eea55b1d08b4',
+        vaultId: 19,
+        displayName: 'Bitcoin Created By Craig Wright',
         type: 'claim',
       },
       discoverListFallbackAtom: {
@@ -195,21 +195,21 @@ export const getQuestObjects = (chainEnv: ChainEnv) => {
     },
     production: {
       stakeAtomFallbackAtom: {
-        id: '',
-        vaultId: 0,
-        displayName: '',
+        id: 'b1f186ba-4789-47d3-a4d0-cb54eb86f70b',
+        vaultId: 13,
+        displayName: 'Intuition',
         type: 'identity',
       },
       stakeClaimFallbackClaim: {
-        id: '',
-        vaultId: 0,
-        displayName: '',
+        id: '369d24ff-6d65-4094-9a27-3867cec6927f',
+        vaultId: 15,
+        displayName: 'Intuition has tag Trustworthy',
         type: 'claim',
       },
       counterstakeClaimFallbackClaim: {
-        id: '',
-        vaultId: 0,
-        displayName: '',
+        id: '78e03073-effb-4d6a-964b-eea55b1d08b4',
+        vaultId: 19,
+        displayName: 'Bitcoin Created By Craig Wright',
         type: 'claim',
       },
       discoverListFallbackAtom: {
