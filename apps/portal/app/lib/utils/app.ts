@@ -122,8 +122,8 @@ export const getSpecialPredicate = (
 export const getFeaturedListObjectIds = (chainEnv: ChainEnv): number[] => {
   const featuredListObjectIds: Record<ChainEnv, number[]> = {
     development: [33, 22],
-    staging: [0, 0],
-    production: [0, 0],
+    staging: [45],
+    production: [45],
   }
   if (!chainEnv) {
     console.error(
@@ -187,9 +187,9 @@ export const getQuestObjects = (chainEnv: ChainEnv) => {
         type: 'claim',
       },
       discoverListFallbackAtom: {
-        id: '',
-        vaultId: 0,
-        displayName: '',
+        id: 'c1bfa201-9a0f-4d37-af07-1bcb019860f4',
+        vaultId: 45,
+        displayName: 'Top Web3 Developer Tooling',
         type: 'identity',
       },
     },
@@ -213,9 +213,9 @@ export const getQuestObjects = (chainEnv: ChainEnv) => {
         type: 'claim',
       },
       discoverListFallbackAtom: {
-        id: '',
-        vaultId: 0,
-        displayName: '',
+        id: 'c1bfa201-9a0f-4d37-af07-1bcb019860f4',
+        vaultId: 45,
+        displayName: 'Top Web3 Developer Tooling',
         type: 'identity',
       },
     },
