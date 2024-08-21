@@ -30,6 +30,7 @@ interface FollowFormProps {
   exit_fee: string
   val: string
   setVal: (val: string) => void
+  min_deposit: string
   mode: string | undefined
   dispatch: (action: TransactionActionType) => void
   state: TransactionStateType
@@ -49,6 +50,7 @@ export default function FollowForm({
   exit_fee,
   val,
   setVal,
+  min_deposit,
   mode,
   dispatch,
   state,
@@ -114,6 +116,7 @@ export default function FollowForm({
             <div className="rounded-t-lg bg-primary-950/15 w-full">
               <FollowActions
                 setVal={setVal}
+                min_deposit={min_deposit}
                 validationErrors={validationErrors}
                 setValidationErrors={setValidationErrors}
                 showErrors={showErrors}

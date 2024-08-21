@@ -57,7 +57,7 @@ export default function FollowModal({
 }: FollowModalProps) {
   const fetchReval = useFetcher()
   const formRef = useRef(null)
-  const [val, setVal] = useState('0.001')
+  const [val, setVal] = useState('0.00069')
   const [mode, setMode] = useState<'follow' | 'unfollow'>('follow')
   const [showErrors, setShowErrors] = useState(false)
   const [validationErrors, setValidationErrors] = useState<string[]>([])
@@ -263,7 +263,10 @@ export default function FollowModal({
     address ?? (userWallet as `0x${string}`),
   )
   const handleFollowButtonClick = async () => {
-    if (val < formatBalance(min_deposit, 18) || +val > +walletBalance) {
+    console.log('val', val)
+    console.log('min_deposit', min_deposit)
+    console.log('walletBalance', walletBalance)
+    if (+val < +formatBalance(min_deposit, 18) || +val > +walletBalance) {
       setShowErrors(true)
       return
     }
@@ -313,6 +316,7 @@ export default function FollowModal({
           <FollowForm
             walletBalance={walletBalance}
             identity={identity}
+            min_deposit={min_deposit}
             user_assets={user_assets ?? '0'}
             entry_fee={formatted_entry_fee ?? '0'}
             exit_fee={formatted_exit_fee ?? '0'}
