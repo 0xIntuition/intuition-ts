@@ -54,7 +54,7 @@ export default function WelcomePage() {
       <div className="flex justify-center items-center h-screen">
         <div className="flex-col justify-start items-start inline-flex gap-6">
           <h1 className="text-4xl font-bold mb-6">Chapter 0: The Big Bang</h1>
-          <div className="max-w-2xl space-y-4">
+          <div className="max-w-2xl space-y-2">
             <Text variant={TextVariant.bodyLarge} className="text-primary/70">
               In the beginning, there was nothing. Then suddenly - everything.
             </Text>
@@ -76,7 +76,7 @@ export default function WelcomePage() {
               what came before...
             </Text>
           </div>
-          <div className="mt-8 space-y-4">
+          <div className="mt-8 space-y-2">
             <Text variant={TextVariant.bodyLarge} className="text-primary/70">
               Our story begins with the &lsquo;atom&rsquo;.
             </Text>
@@ -87,7 +87,7 @@ export default function WelcomePage() {
               And our &lsquo;atoms&rsquo; begin with you.
             </Text>
           </div>
-          <Link to="/create" className="m-auto">
+          <Link to="/create" className="m-auto mt-8">
             <Button
               variant={ButtonVariant.primary}
               size={ButtonSize.lg}
