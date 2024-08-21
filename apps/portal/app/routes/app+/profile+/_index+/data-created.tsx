@@ -139,135 +139,137 @@ export default function ProfileDataCreated() {
   invariant(userTotals, NO_USER_TOTALS_ERROR)
 
   return (
-    <div className="flex-col justify-start items-start flex w-full gap-10">
+    <div className="flex-col justify-start items-start flex w-full gap-12">
       <div className="flex flex-col w-full gap-6">
-        <div className="self-stretch justify-between items-center inline-flex">
-          <Text
-            variant="headline"
-            weight="medium"
-            className="theme-secondary-foreground w-full"
+        <div className="flex flex-col w-full gap-4">
+          <div className="self-stretch justify-between items-center inline-flex">
+            <Text
+              variant="headline"
+              weight="medium"
+              className="text-secondary-foreground w-full"
+            >
+              Active Positions
+            </Text>
+          </div>
+          <Tabs
+            defaultValue={DataCreatedHeaderVariants.activeIdentities}
+            className="w-full"
           >
-            Active Positions
-          </Text>
-        </div>
-        <Tabs
-          defaultValue={DataCreatedHeaderVariants.activeIdentities}
-          className="w-full"
-        >
-          <Suspense
-            fallback={
-              <div className="mb-6">
-                <TabsSkeleton numOfTabs={2} />
-              </div>
-            }
-          >
-            <TabsList className="mb-6">
-              <Await resolve={activeIdentities} errorElement={<></>}>
+            <Suspense
+              fallback={
+                <div className="mb-6">
+                  <TabsSkeleton numOfTabs={2} />
+                </div>
+              }
+            >
+              <TabsList className="mb-6">
+                <Await resolve={activeIdentities} errorElement={<></>}>
+                  {(resolvedIdentities) => (
+                    <TabsTrigger
+                      value={DataCreatedHeaderVariants.activeIdentities}
+                      label="Identities"
+                      totalCount={resolvedIdentities.pagination.totalEntries}
+                      disabled={activeIdentities === undefined}
+                    />
+                  )}
+                </Await>
+                <Await resolve={activeClaims} errorElement={<></>}>
+                  {(resolvedClaims) => (
+                    <TabsTrigger
+                      value={DataCreatedHeaderVariants.activeClaims}
+                      label="Claims"
+                      totalCount={resolvedClaims.pagination.totalEntries}
+                      disabled={activeClaims === undefined}
+                    />
+                  )}
+                </Await>
+              </TabsList>
+            </Suspense>
+            <Suspense
+              fallback={
+                <div className="flex flex-col w-full gap-6">
+                  <DataHeaderSkeleton />
+                  <PaginatedListSkeleton />
+                </div>
+              }
+            >
+              <Await
+                resolve={activeIdentities}
+                errorElement={
+                  <ErrorStateCard>
+                    <RevalidateButton />
+                  </ErrorStateCard>
+                }
+              >
                 {(resolvedIdentities) => (
-                  <TabsTrigger
-                    value={DataCreatedHeaderVariants.activeIdentities}
-                    label="Identities"
-                    totalCount={resolvedIdentities.pagination.totalEntries}
-                    disabled={activeIdentities === undefined}
-                  />
-                )}
-              </Await>
-              <Await resolve={activeClaims} errorElement={<></>}>
-                {(resolvedClaims) => (
-                  <TabsTrigger
-                    value={DataCreatedHeaderVariants.activeClaims}
-                    label="Claims"
-                    totalCount={resolvedClaims.pagination.totalEntries}
-                    disabled={activeClaims === undefined}
-                  />
-                )}
-              </Await>
-            </TabsList>
-          </Suspense>
-          <Suspense
-            fallback={
-              <div className="flex flex-col w-full gap-6">
-                <DataHeaderSkeleton />
-                <PaginatedListSkeleton />
-              </div>
-            }
-          >
-            <Await
-              resolve={activeIdentities}
-              errorElement={
-                <ErrorStateCard>
-                  <RevalidateButton />
-                </ErrorStateCard>
-              }
-            >
-              {(resolvedIdentities) => (
-                <TabContent
-                  value={DataCreatedHeaderVariants.activeIdentities}
-                  userIdentity={userIdentity}
-                  userTotals={userTotals}
-                  totalResults={resolvedIdentities.pagination.totalEntries}
-                  totalStake={
-                    +formatBalance(
-                      userTotals.total_position_value_on_identities ?? '0',
-                      18,
-                    )
-                  }
-                  variant={DataCreatedHeaderVariants.activeIdentities}
-                >
-                  <ActivePositionsOnIdentities
-                    identities={resolvedIdentities.data}
-                    pagination={resolvedIdentities.pagination}
-                  />
-                </TabContent>
-              )}
-            </Await>
-            <Await
-              resolve={activeClaims}
-              errorElement={
-                <ErrorStateCard>
-                  <RevalidateButton />
-                </ErrorStateCard>
-              }
-            >
-              {(resolvedClaims) => (
-                <Await
-                  resolve={activeClaims}
-                  errorElement={
-                    <ErrorStateCard>
-                      <RevalidateButton />
-                    </ErrorStateCard>
-                  }
-                >
                   <TabContent
-                    value={DataCreatedHeaderVariants.activeClaims}
+                    value={DataCreatedHeaderVariants.activeIdentities}
                     userIdentity={userIdentity}
                     userTotals={userTotals}
-                    totalResults={resolvedClaims.pagination.totalEntries}
+                    totalResults={resolvedIdentities.pagination.totalEntries}
                     totalStake={
                       +formatBalance(
-                        userTotals.total_position_value_on_claims ?? '0',
+                        userTotals.total_position_value_on_identities ?? '0',
                         18,
                       )
                     }
-                    variant={DataCreatedHeaderVariants.activeClaims}
+                    variant={DataCreatedHeaderVariants.activeIdentities}
                   >
-                    <ActivePositionsOnClaims
-                      claims={resolvedClaims.data}
-                      pagination={resolvedClaims.pagination}
+                    <ActivePositionsOnIdentities
+                      identities={resolvedIdentities.data}
+                      pagination={resolvedIdentities.pagination}
                     />
                   </TabContent>
-                </Await>
-              )}
-            </Await>
-          </Suspense>
-        </Tabs>
+                )}
+              </Await>
+              <Await
+                resolve={activeClaims}
+                errorElement={
+                  <ErrorStateCard>
+                    <RevalidateButton />
+                  </ErrorStateCard>
+                }
+              >
+                {(resolvedClaims) => (
+                  <Await
+                    resolve={activeClaims}
+                    errorElement={
+                      <ErrorStateCard>
+                        <RevalidateButton />
+                      </ErrorStateCard>
+                    }
+                  >
+                    <TabContent
+                      value={DataCreatedHeaderVariants.activeClaims}
+                      userIdentity={userIdentity}
+                      userTotals={userTotals}
+                      totalResults={resolvedClaims.pagination.totalEntries}
+                      totalStake={
+                        +formatBalance(
+                          userTotals.total_position_value_on_claims ?? '0',
+                          18,
+                        )
+                      }
+                      variant={DataCreatedHeaderVariants.activeClaims}
+                    >
+                      <ActivePositionsOnClaims
+                        claims={resolvedClaims.data}
+                        pagination={resolvedClaims.pagination}
+                      />
+                    </TabContent>
+                  </Await>
+                )}
+              </Await>
+            </Suspense>
+          </Tabs>
+        </div>
       </div>
-      <div className="flex flex-col w-full gap-6">
+      <div className="flex flex-col w-full gap-4">
         <div className="self-stretch justify-between items-center inline-flex">
           <Text
             variant="headline"
             weight="medium"
-            className="theme-secondary-foreground w-full"
+            className="text-secondary-foreground w-full"
           >
             Created
           </Text>

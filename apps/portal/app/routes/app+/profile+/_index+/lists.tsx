@@ -90,12 +90,12 @@ export default function ProfileLists() {
   ]
 
   return (
-    <div className="flex flex-col w-full gap-6">
+    <div className="flex flex-col w-full gap-4">
       <div className="self-stretch justify-between items-center inline-flex">
         <Text
           variant="headline"
           weight="medium"
-          className="theme-secondary-foreground w-full"
+          className="text-secondary-foreground w-full"
         >
           My Lists
         </Text>

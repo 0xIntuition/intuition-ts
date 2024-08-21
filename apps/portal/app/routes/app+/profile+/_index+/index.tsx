@@ -93,7 +93,7 @@ export default function UserProfileOverview() {
   const navigate = useNavigate()
 
   return (
-    <div className="flex flex-col gap-10">
+    <div className="flex flex-col gap-12">
       {!isPending && !!questsProgress && (
         <QuestHeaderCard
           title={STANDARD_QUEST_SET.title ?? ''}
@@ -104,7 +104,7 @@ export default function UserProfileOverview() {
         />
       )}
 
-      <div className="flex flex-col gap-6">
+      <div className="flex flex-col gap-4">
         <Text
           variant="headline"
           weight="medium"
@@ -112,7 +112,7 @@ export default function UserProfileOverview() {
         >
           About
         </Text>
-        <div className="flex flex-row items-center gap-6 max-2xl:flex-col">
+        <div className="flex flex-col items-center gap-6 md:flex-row">
           <OverviewAboutHeader
             variant="claims"
             userIdentity={userIdentity}
@@ -130,7 +130,7 @@ export default function UserProfileOverview() {
         </div>
       </div>
 
-      <div className="flex flex-col gap-6">
+      <div className="flex flex-col gap-4">
         <Text
           variant="headline"
           weight="medium"
@@ -138,29 +138,31 @@ export default function UserProfileOverview() {
         >
           User Stats
         </Text>
-        <OverviewStakingHeader
-          totalClaims={userTotals?.total_positions_on_claims ?? 0}
-          totalIdentities={userTotals?.total_positions_on_identities ?? 0}
-          totalStake={
-            +formatBalance(userTotals?.total_position_value ?? '0', 18)
-          }
-          link={`${PATHS.PROFILE}/data-created`}
-        />
-        <div className="flex flex-row items-center gap-6 max-md:flex-col">
-          <OverviewCreatedHeader
-            variant="identities"
-            totalCreated={userTotals?.total_identities ?? 0}
+        <div className="flex flex-col items-center gap-6">
+          <OverviewStakingHeader
+            totalClaims={userTotals?.total_positions_on_claims ?? 0}
+            totalIdentities={userTotals?.total_positions_on_identities ?? 0}
+            totalStake={
+              +formatBalance(userTotals?.total_position_value ?? '0', 18)
+            }
             link={`${PATHS.PROFILE}/data-created`}
           />
-          <OverviewCreatedHeader
-            variant="claims"
-            totalCreated={userTotals?.total_claims ?? 0}
-            link={`${PATHS.PROFILE}/data-created`}
-          />
+          <div className="flex flex-row w-full items-center gap-6 max-md:flex-col">
+            <OverviewCreatedHeader
+              variant="identities"
+              totalCreated={userTotals?.total_identities ?? 0}
+              link={`${PATHS.PROFILE}/data-created`}
+            />
+            <OverviewCreatedHeader
+              variant="claims"
+              totalCreated={userTotals?.total_claims ?? 0}
+              link={`${PATHS.PROFILE}/data-created`}
+            />
+          </div>
         </div>
       </div>
 
-      <div className="flex flex-col gap-6">
+      <div className="flex flex-col gap-4">
         <Text
           variant="headline"
           weight="medium"

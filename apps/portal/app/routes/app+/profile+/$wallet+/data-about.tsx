@@ -81,14 +81,14 @@ export default function ProfileDataAbout() {
 
   return (
     <>
-      <div className="flex-col justify-start items-start flex w-full gap-10 max-lg:gap-0">
+      <div className="flex-col justify-start items-start flex w-full gap-10">
         <div className="flex flex-col w-full gap-6">
           <div className="flex max-lg:flex-col justify-between items-center max-lg:w-full">
             <div className="self-stretch justify-between items-center inline-flex">
               <Text
                 variant="headline"
                 weight="medium"
-                className="theme-secondary-foreground w-full"
+                className="text-secondary-foreground w-full"
               >
                 Claims about this Identity
               </Text>
@@ -148,7 +148,7 @@ export default function ProfileDataAbout() {
             <Text
               variant="headline"
               weight="medium"
-              className="theme-secondary-foreground w-full"
+              className="text-secondary-foreground w-full"
             >
               Positions on this Identity
             </Text>
@@ -196,5 +196,5 @@ export default function ProfileDataAbout() {
 }
 
 export function ErrorBoundary() {
-  return <ErrorPage routeName="wallet/data-about" />
+  return <ErrorPage routeName="profile/data-about" />
 }

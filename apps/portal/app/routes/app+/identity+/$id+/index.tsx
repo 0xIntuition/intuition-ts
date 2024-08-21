@@ -82,7 +82,7 @@ export default function ProfileDataAbout() {
               <Text
                 variant="headline"
                 weight="medium"
-                className="theme-secondary-foreground w-full"
+                className="text-secondary-foreground w-full"
               >
                 Claims about this Identity
               </Text>
@@ -142,7 +142,7 @@ export default function ProfileDataAbout() {
             <Text
               variant="headline"
               weight="medium"
-              className="theme-secondary-foreground w-full"
+              className="text-secondary-foreground w-full"
               id="positions"
             >
               Positions on this Identity

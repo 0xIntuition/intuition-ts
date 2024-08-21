@@ -10,14 +10,14 @@ export function ListOverview() {
         <Text
           variant="headline"
           weight="medium"
-          className="theme-secondary-foreground w-full"
+          className="text-secondary-foreground w-full"
         >
           Lists
         </Text>
         <Text
           variant="footnote"
           weight="regular"
-          className="theme-secondary-foreground/50"
+          className="text-secondary-foreground/50"
         >
           Begin the process of establishing a new digital
           <br />

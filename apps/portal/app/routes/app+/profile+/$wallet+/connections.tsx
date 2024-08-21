@@ -98,7 +98,7 @@ export default function ProfileConnections() {
         <Text
           variant="headline"
           weight="medium"
-          className="theme-secondary-foreground w-full"
+          className="text-secondary-foreground w-full"
         >
           Connections
         </Text>

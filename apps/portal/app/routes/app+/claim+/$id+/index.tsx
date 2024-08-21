@@ -137,7 +137,7 @@ export default function ClaimOverview() {
         <Text
           variant="headline"
           weight="medium"
-          className="theme-secondary-foreground w-full"
+          className="text-secondary-foreground w-full"
         >
           Positions on this Claim
         </Text>

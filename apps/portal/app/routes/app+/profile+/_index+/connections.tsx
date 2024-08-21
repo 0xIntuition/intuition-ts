@@ -90,12 +90,12 @@ export default function ProfileConnections() {
   invariant(userIdentity, NO_USER_IDENTITY_ERROR)
 
   return (
-    <div className="flex flex-col w-full gap-10">
+    <div className="flex flex-col w-full gap-4">
       <div className="self-stretch justify-between items-center inline-flex">
         <Text
           variant="headline"
           weight="medium"
-          className="theme-secondary-foreground w-full"
+          className="text-secondary-foreground w-full"
         >
           Connections
         </Text>

@@ -113,24 +113,26 @@ export default function ProfileOverview() {
   const { wallet } = params
 
   return (
-    <div className="flex flex-col gap-10">
+    <div className="flex flex-col gap-12">
       <div className="flex flex-col gap-6">
-        <Text
-          variant="headline"
-          weight="medium"
-          className="text-secondary-foreground"
-        >
-          User Stats
-        </Text>
-        <div className="flex flex-col items-center gap-6">
-          <OverviewStakingHeader
-            totalClaims={userTotals?.total_positions_on_claims ?? 0}
-            totalIdentities={userTotals?.total_positions_on_identities ?? 0}
-            totalStake={
-              +formatBalance(userTotals?.total_position_value ?? '0', 18)
-            }
-            link={`${PATHS.PROFILE}/${wallet}/data-created`}
-          />
+        <div className="flex flex-col gap-4">
+          <Text
+            variant="headline"
+            weight="medium"
+            className="text-secondary-foreground"
+          >
+            User Stats
+          </Text>
+          <div className="flex flex-col items-center gap-6">
+            <OverviewStakingHeader
+              totalClaims={userTotals?.total_positions_on_claims ?? 0}
+              totalIdentities={userTotals?.total_positions_on_identities ?? 0}
+              totalStake={
+                +formatBalance(userTotals?.total_position_value ?? '0', 18)
+              }
+              link={`${PATHS.PROFILE}/${wallet}/data-created`}
+            />
+          </div>
         </div>
 
         <div className="flex flex-row items-center gap-6 max-md:flex-col">
@@ -165,7 +167,7 @@ export default function ProfileOverview() {
           </Await>
         </Suspense>
       </div>
-      <div className="flex flex-col gap-6">
+      <div className="flex flex-col gap-4">
         <Text
           variant="headline"
           weight="medium"
@@ -201,7 +203,7 @@ export default function ProfileOverview() {
         </Suspense>
       </div>
       {connectionsData && <TopFollowers connectionsData={connectionsData} />}
-      <div className="flex flex-col gap-6">
+      <div className="flex flex-col gap-4">
         <Text
           variant="headline"
           weight="medium"
