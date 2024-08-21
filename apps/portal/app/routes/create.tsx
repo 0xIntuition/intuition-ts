@@ -332,18 +332,18 @@ export default function Profile() {
     <div className="flex flex-col justify-between h-screen w-full p-8">
       <Header />
       <div className="flex justify-center items-center h-screen">
-        <div className="w-[600px] h-[307px] flex-col justify-start items-start gap-[42px] inline-flex">
-          <div className="h-[37px] flex-col justify-start items-start gap-6 flex">
-            <div className="self-stretch h-[37px] flex-col justify-start items-start gap-2.5 flex">
-              <div className="self-stretch text-white text-3xl font-semibold">
+        <div className="md:w-[600px] h-[307px] flex-col justify-start items-start gap-6 md:gap-[42px] inline-flex">
+          <div className="md:h-[37px] flex-col justify-start items-start gap-6 flex">
+            <div className="self-stretch md:h-[37px] flex-col justify-start items-start gap-2.5 flex">
+              <div className="self-stretch text-white text-3xl font-semibold text-center md:text-left">
                 Create Your Decentralized Identifier
               </div>
             </div>
           </div>
-          <div className="h-28 p-6 bg-black rounded-[10px] shadow border border-solid border-neutral-300/20 backdrop-blur-xl flex-col justify-center items-center gap-6 flex">
-            <div className="w-[552px] justify-between items-center inline-flex">
-              <div className="grow shrink basis-0 h-16 justify-start items-center gap-[18px] flex">
-                <div className="w-[70px] pr-1.5 justify-start items-center flex">
+          <div className="h-28 p-6 bg-black rounded-[10px] shadow border border-solid border-neutral-300/20 backdrop-blur-xl flex-col justify-center items-center gap-6 flex w-full">
+            <div className="md:w-[552px] justify-between items-center inline-flex w-full">
+              <div className="md:grow md:shrink md:basis-0 h-16 justify-start items-center gap-2 md:gap-4 flex">
+                <div className="md:w-[70px] pr-1.5 justify-start items-center flex">
                   <Avatar name="" src="" />
                 </div>
                 <div className="flex-col justify-start items-start gap-[3px] inline-flex">
@@ -369,7 +369,7 @@ export default function Profile() {
               </ClientOnly>
             </div>
           </div>
-          <div className="w-[600px] justify-start items-start gap-6 inline-flex">
+          <div className="md:w-[600px] justify-start items-start gap-6 inline-flex">
             <div className="grow shrink basis-0 self-stretch flex-col justify-start items-start gap-6 inline-flex">
               <div className="self-stretch h-[74px] flex-col justify-start items-start gap-2.5 flex">
                 <div className="self-stretch text-white text-base font-medium leading-normal">
