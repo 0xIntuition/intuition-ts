@@ -6,12 +6,12 @@ import {
   type PropsWithChildren,
 } from 'react'
 
-import { Button, Icon, IconName, Text, TextVariant } from '@0xintuition/1ui'
+import { Button, Icon, Text, TextVariant } from '@0xintuition/1ui'
 
 import Container from '@components/container'
 import { cn } from '@lib/utils/misc'
 import { ActionFunctionArgs } from '@remix-run/node'
-import { Link, redirect, useFetcher } from '@remix-run/react'
+import { redirect, useFetcher } from '@remix-run/react'
 import { onboardingModalCookie } from '@server/onboarding'
 import {
   INTRO_CAROUSEL_1_MP4,
@@ -59,14 +59,6 @@ export default function IntroRoute() {
           forever.
         </Text>
       ),
-      button: (
-        <Link to="https://docs.intuition.systems/introduction" target="_blank">
-          <SlideButton>
-            <Icon name={IconName.book} className="h-4 w-4 relative" /> Read the
-            Docs
-          </SlideButton>
-        </Link>
-      ),
     },
     {
       video: INTRO_CAROUSEL_2_MP4,
@@ -85,14 +77,6 @@ export default function IntroRoute() {
           </Text>
         </div>
       ),
-      button: (
-        <Link to="https://docs.intuition.systems/introduction" target="_blank">
-          <SlideButton>
-            Learn more{' '}
-            <Icon name="square-arrow-top-right" className="h-4 w-4 relative" />
-          </SlideButton>
-        </Link>
-      ),
     },
     {
       video: INTRO_CAROUSEL_3_MP4,
@@ -107,14 +91,6 @@ export default function IntroRoute() {
             voices you trust - bringing more trust to all of our interactions.
           </Text>
         </div>
-      ),
-      button: (
-        <Link to="https://docs.intuition.systems/introduction" target="_blank">
-          <SlideButton>
-            Learn more{' '}
-            <Icon name="square-arrow-top-right" className="h-4 w-4 relative" />
-          </SlideButton>
-        </Link>
       ),
     },
     {
@@ -131,14 +107,6 @@ export default function IntroRoute() {
             referenceability of information.
           </Text>
         </div>
-      ),
-      button: (
-        <Link to="https://docs.intuition.systems/introduction" target="_blank">
-          <SlideButton>
-            Learn more{' '}
-            <Icon name="square-arrow-top-right" className="h-4 w-4 relative" />
-          </SlideButton>
-        </Link>
       ),
     },
     {
@@ -161,14 +129,6 @@ export default function IntroRoute() {
           </Text>
         </div>
       ),
-      button: (
-        <Link to="https://docs.intuition.systems/introduction" target="_blank">
-          <SlideButton>
-            Learn more{' '}
-            <Icon name="square-arrow-top-right" className="h-4 w-4 relative" />
-          </SlideButton>
-        </Link>
-      ),
     },
     {
       video: INTRO_CAROUSEL_6_MP4,
@@ -188,14 +148,6 @@ export default function IntroRoute() {
             - the user.
           </Text>
         </div>
-      ),
-      button: (
-        <Link to="https://docs.intuition.systems/introduction" target="_blank">
-          <SlideButton>
-            Learn more{' '}
-            <Icon name="square-arrow-top-right" className="h-4 w-4" />
-          </SlideButton>
-        </Link>
       ),
     },
   ]
@@ -245,7 +197,7 @@ type CarouselProps = {
     video: string
     title: string
     text: React.ReactNode
-    button: React.ReactNode
+    button?: React.ReactNode
   }[]
   options: EmblaOptionsType
   onSlideChange: (index: number) => void
@@ -303,49 +255,48 @@ const Carousel: React.FC<CarouselProps> = (props) => {
   }, [selectedIndex])
 
   return (
-    <div className="m-auto md:w-[600px] flex flex-col justify-between">
-      <div className="overflow-hidden" ref={emblaRef}>
-        <div className="flex touch-pan-y gap-10">
-          {slides?.map((slide, index) => (
-            <div
-              className="w-full h-full flex-none justify-between"
-              key={index}
-            >
-              <div className="w-full flex-col justify-start items-center gap-4 inline-flex">
-                <div className="text-center text-white/90 text-3xl font-semibold">
-                  {slide.title}
+    <div className="flex flex-col h-full">
+      <div className="flex-grow overflow-hidden" ref={emblaRef}>
+        <div className="flex">
+          {slides.map((slide, index) => (
+            <div className="w-full flex-none" key={index}>
+              <div className="flex flex-col h-full">
+                <div className="flex-grow">
+                  <div className="text-center text-white/90 text-3xl font-semibold mb-4">
+                    {slide.title}
+                  </div>
+                  <div className="text-center text-white/70 text-base font-normal mb-4 md:w-[600px] m-auto">
+                    {slide.text}
+                    {slide.button && slide.button}
+                  </div>
                 </div>
-                <div className="flex flex-col gap-4 text-center text-white/70 text-base font-normal h-[250px] md:h-[110px]">
-                  {slide.text}
-                  {slide.button}
+                <div className="flex justify-center mb-8">
+                  <AnimatePresence>
+                    <motion.div
+                      key="mediaPlayer"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 1 }}
+                    >
+                      <video
+                        ref={(el) => (videoRefs.current[index] = el)}
+                        src={slide.video}
+                        title={slide.title}
+                        loop
+                        muted
+                        playsInline
+                        className="rounded-xl w-full md:h-[300px] overflow-hidden items-center justify-center theme-border"
+                      />
+                    </motion.div>
+                  </AnimatePresence>
                 </div>
-              </div>
-              <div className="m-auto flex flex-col justify-center items-center md:mt-12 h-full overflow-hidden">
-                <AnimatePresence>
-                  <motion.div
-                    key="mediaPlayer"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 1 }}
-                  >
-                    <video
-                      ref={(el) => (videoRefs.current[index] = el)}
-                      src={slide.video}
-                      title={slide.title}
-                      loop
-                      muted
-                      playsInline
-                      className="rounded-xl h-[160px] md:h-[300px] overflow-hidden items-center justify-center theme-border"
-                    />
-                  </motion.div>
-                </AnimatePresence>
               </div>
             </div>
           ))}
         </div>
       </div>
-      <div className="flex items-center justify-center gap-2 mt-12 md:mt-6">
+      <div className="flex items-center justify-center gap-2 mt-4">
         <PrevButton onClick={onPrevButtonClick} disabled={prevBtnDisabled} />
         <div className="flex gap-2">
           {scrollSnaps.map((_, index) => (
@@ -520,7 +471,7 @@ const DotButton: React.FC<ButtonProps> = (props) => {
   )
 }
 
-const SlideButton: React.FC<ButtonProps> = (props) => {
+export const SlideButton: React.FC<ButtonProps> = (props) => {
   const { children, ...restProps } = props
 
   return (
