@@ -1,9 +1,10 @@
 import { useEffect } from 'react'
 
-import { UserPresenter, UsersService } from '@0xintuition/api'
+import { ApiError, UserPresenter, UsersService } from '@0xintuition/api'
 
 import PrivyLogout from '@client/privy-logout'
 import { getIdentityOrPending } from '@lib/services/identities'
+import logger from '@lib/utils/logger'
 import { invariant } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
 import { Outlet, useLoaderData, useLocation } from '@remix-run/react'
@@ -29,24 +30,41 @@ export async function loader({ request }: LoaderFunctionArgs) {
     throw redirect(PATHS.MAINTENANCE)
   }
 
-  const userObject = await fetchWrapper(request, {
-    method: UsersService.getUserByWalletPublic,
-    args: {
-      wallet,
-    },
-  })
+  let userObject
+  try {
+    userObject = await fetchWrapper(request, {
+      method: UsersService.getUserByWalletPublic,
+      args: {
+        wallet,
+      },
+    })
+  } catch (error) {
+    if (
+      error instanceof ApiError &&
+      (error.status === 400 || error.status === 404)
+    ) {
+      throw redirect('/invite')
+    }
+    logger('Error fetching userObject', error)
+    throw error
+  }
 
   const { identity: userIdentity, isPending } = await getIdentityOrPending(
     request,
     wallet,
   )
+  logger(`isPending: ${isPending}`)
 
-  if (!userIdentity || !isPending) {
-    if (!wallet) {
-      throw redirect('/login')
-    } else {
-      throw redirect('/invite')
-    }
+  if (!userIdentity && !isPending) {
+    throw redirect('/create')
+  }
+
+  if (!userIdentity && isPending) {
+    throw redirect('/create')
+  }
+
+  if (isPending) {
+    throw redirect(PATHS.PROFILE)
   }
 
   // TODO: Figure out why SiteWideBanner has no access to window.ENV values [ENG-3367]

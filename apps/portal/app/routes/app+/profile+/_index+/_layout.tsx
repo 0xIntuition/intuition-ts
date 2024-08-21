@@ -20,7 +20,6 @@ import {
   TagWithValue,
 } from '@0xintuition/1ui'
 import {
-  ApiError,
   IdentityPresenter,
   TagEmbeddedPresenter,
   UserPresenter,
@@ -60,7 +59,7 @@ import {
   invariant,
 } from '@lib/utils/misc'
 import { User } from '@privy-io/react-auth'
-import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
+import { json, LoaderFunctionArgs } from '@remix-run/node'
 import {
   Outlet,
   useMatches,
@@ -101,37 +100,20 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   const relicMintCount = userCompletedMints.data?.total_results
 
-  let userObject
-  try {
-    userObject = await fetchWrapper(request, {
-      method: UsersService.getUserByWalletPublic,
-      args: {
-        wallet: userWallet,
-      },
-    })
-  } catch (error) {
-    if (
-      error instanceof ApiError &&
-      (error.status === 400 || error.status === 404)
-    ) {
-      if (!wallet) {
-        throw redirect('/login')
-      } else {
-        throw redirect('/invite')
-      }
-    }
-    logger('Error fetching userObject', error)
-    throw error
-  }
+  const userObject = await fetchWrapper(request, {
+    method: UsersService.getUserByWalletPublic,
+    args: {
+      wallet: userWallet,
+    },
+  })
+  invariant(userObject, 'No user object found.')
 
   const { identity: userIdentity, isPending } = await getIdentityOrPending(
     request,
     wallet,
   )
 
-  if (!userIdentity) {
-    throw redirect('/invite')
-  }
+  invariant(userIdentity, 'No user identity found')
 
   if (!userIdentity.creator) {
     throw new Response('Invalid or missing creator ID', { status: 404 })
