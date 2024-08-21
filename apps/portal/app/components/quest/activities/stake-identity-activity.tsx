@@ -65,7 +65,7 @@ export default function StakeIdentityActivity({
             </div>
           </div>
 
-          <div className="flex gap-5 items-start pb-5 px-5">
+          <div className="flex flex-col md:flex-row gap-5 items-start pb-5 px-5">
             <div className="w-full min-w-80 h-full">
               <StakeCard
                 className="bg-primary/5"
