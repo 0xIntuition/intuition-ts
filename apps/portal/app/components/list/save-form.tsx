@@ -44,6 +44,7 @@ interface SaveFormProps {
   user_assets: string
   entry_fee: string
   exit_fee: string
+  min_deposit: string
   val: string
   setVal: (val: string) => void
   mode: string | undefined
@@ -65,6 +66,7 @@ export default function SaveForm({
   user_assets,
   entry_fee,
   exit_fee,
+  min_deposit,
   val,
   setVal,
   mode,
@@ -223,6 +225,7 @@ export default function SaveForm({
             </div>
             <div className="rounded-t-lg bg-primary-950/15 w-full">
               <SaveActions
+                min_deposit={min_deposit}
                 setVal={setVal}
                 validationErrors={validationErrors}
                 setValidationErrors={setValidationErrors}

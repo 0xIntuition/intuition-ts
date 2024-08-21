@@ -29,6 +29,7 @@ export const RELIC_CONTRACT_ADDRESS =
 
 export const DEFAULT_LIMIT = 10
 
+export const MIN_DEPOSIT = CURRENT_ENV === 'development' ? '0.00069' : '0.00042'
 // Form constants
 export const MAX_NAME_LENGTH = 69
 export const DESCRIPTION_MAX_LENGTH = 266

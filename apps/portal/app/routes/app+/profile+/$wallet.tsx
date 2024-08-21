@@ -476,6 +476,7 @@ export default function Profile() {
                   isOpen: false,
                 })
               }
+              min_deposit={vaultDetails?.min_deposit}
             />
           )}
         </>

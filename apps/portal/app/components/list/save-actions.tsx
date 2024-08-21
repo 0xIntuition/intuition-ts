@@ -7,8 +7,10 @@ import {
 } from '@0xintuition/1ui'
 
 import ErrorList from '@components/error-list'
+import { formatUnits } from 'viem'
 
 interface SaveActionsProps {
+  min_deposit: string
   setVal: (val: string) => void
   showErrors: boolean
   setShowErrors: (show: boolean) => void
@@ -18,6 +20,7 @@ interface SaveActionsProps {
 }
 
 export default function SaveActions({
+  min_deposit,
   setVal,
   showErrors,
   setShowErrors,
@@ -25,10 +28,16 @@ export default function SaveActions({
   setValidationErrors,
   isLoading,
 }: SaveActionsProps) {
+  const formattedMinDeposit = formatUnits(BigInt(min_deposit), 18)
+
   const radioGroupData = [
-    { id: '0.001', value: 'Minimum', subValue: '+0.001 ETH' },
-    { id: '0.01', value: 'Default', subValue: '+0.01 ETH' },
-    { id: '0.05', value: 'Strong', subValue: '+0.05 ETH' },
+    {
+      id: formattedMinDeposit,
+      value: 'Minimum',
+      subValue: `+${formattedMinDeposit} ETH`,
+    },
+    { id: '0.001', value: 'Default', subValue: '+0.001 ETH' },
+    { id: '0.01', value: 'Strong', subValue: '+0.01 ETH' },
   ]
 
   const numberOfRadioGroupItems = radioGroupData.length

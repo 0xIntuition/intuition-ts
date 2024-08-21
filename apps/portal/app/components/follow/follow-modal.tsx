@@ -16,7 +16,7 @@ import { formatBalance } from '@lib/utils/misc'
 import { useGenericTxState } from '@lib/utils/use-tx-reducer'
 import { useFetcher, useLocation } from '@remix-run/react'
 import { CreateLoaderData } from '@routes/resources+/create'
-import { CREATE_RESOURCE_ROUTE, CURRENT_ENV } from 'app/consts'
+import { CREATE_RESOURCE_ROUTE, CURRENT_ENV, MIN_DEPOSIT } from 'app/consts'
 import {
   TransactionActionType,
   TransactionStateType,
@@ -55,9 +55,18 @@ export default function FollowModal({
   vaultDetails,
   onClose = () => {},
 }: FollowModalProps) {
+  const {
+    conviction_price = '0',
+    user_conviction = '0',
+    user_assets = '0',
+    min_deposit = '0',
+    formatted_entry_fee = '0',
+    formatted_exit_fee = '0',
+  } = vaultDetails ? vaultDetails : {}
+
   const fetchReval = useFetcher()
   const formRef = useRef(null)
-  const [val, setVal] = useState('0.00069')
+  const [val, setVal] = useState(min_deposit ?? MIN_DEPOSIT)
   const [mode, setMode] = useState<'follow' | 'unfollow'>('follow')
   const [showErrors, setShowErrors] = useState(false)
   const [validationErrors, setValidationErrors] = useState<string[]>([])
@@ -71,15 +80,6 @@ export default function FollowModal({
 
   let vault_id: string = '0'
   vault_id = claim ? claim.vault_id : '0'
-
-  const {
-    conviction_price = '0',
-    user_conviction = '0',
-    user_assets = '0',
-    min_deposit = '0',
-    formatted_entry_fee = '0',
-    formatted_exit_fee = '0',
-  } = vaultDetails ? vaultDetails : {}
 
   const depositHook = useDepositTriple(contract)
 

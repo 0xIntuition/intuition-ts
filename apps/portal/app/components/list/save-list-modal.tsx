@@ -23,6 +23,7 @@ import { ClaimLoaderData } from '@routes/resources+/search-claims-by-ids'
 import {
   CURRENT_ENV,
   GET_VAULT_DETAILS_RESOURCE_ROUTE,
+  MIN_DEPOSIT,
   SEARCH_CLAIMS_BY_IDS_RESOURCE_ROUTE,
 } from 'app/consts'
 import {
@@ -51,6 +52,7 @@ interface SaveListModalProps {
   identity: IdentityPresenter
   contract: string
   onClose?: () => void
+  min_deposit?: string
 }
 
 export default function SaveListModal({
@@ -60,11 +62,12 @@ export default function SaveListModal({
   identity,
   contract,
   onClose = () => {},
+  min_deposit,
 }: SaveListModalProps) {
   const fetchReval = useFetcher()
   const [fetchId, setFetchId] = useState(0)
   const formRef = useRef(null)
-  const [val, setVal] = useState('0.001')
+  const [val, setVal] = useState(min_deposit ?? MIN_DEPOSIT)
   const [mode, setMode] = useState<'save' | 'unsave'>('save')
   const [showErrors, setShowErrors] = useState(false)
   const [validationErrors, setValidationErrors] = useState<string[]>([])
@@ -444,6 +447,7 @@ export default function SaveListModal({
             user_assets={vaultDetails?.user_assets ?? '0'}
             entry_fee={vaultDetails?.formatted_entry_fee ?? '0'}
             exit_fee={vaultDetails?.formatted_exit_fee ?? '0'}
+            min_deposit={min_deposit ?? vaultDetails?.min_deposit ?? '0'}
             val={val}
             setVal={setVal}
             mode={mode}
