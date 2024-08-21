@@ -80,7 +80,7 @@ export const IdentityPopover: React.FC<IdentityPopoverProps> = ({
               }
             />
           </div>
-          <HoverCard openDelay={150} closeDelay={150}>
+          <HoverCard openDelay={150} closeDelay={100}>
             <HoverCardTrigger className="w-full">
               <IdentityTag
                 size="lg"
