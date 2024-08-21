@@ -394,7 +394,7 @@ export default function Profile() {
         open={editProfileModalActive}
         onClose={() => {
           setEditProfileModalActive(false)
-          navigate(PATHS.PROFILE)
+          navigate(PATHS.QUEST)
         }}
       />
     </div>

@@ -39,7 +39,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   }
 
   if (userIdentity) {
-    throw redirect(`${PATHS.PROFILE}`)
+    throw redirect(`${PATHS.HOME}`)
   }
 
   return json({ wallet })

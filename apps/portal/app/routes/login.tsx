@@ -19,7 +19,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const authTokenClaims = await verifyPrivyAccessToken(request)
   if (authTokenClaims) {
     logger('[Loader] User is already authenticated, redirecting to home')
-    throw redirect(PATHS.PROFILE)
+    throw redirect(PATHS.HOME)
   }
   return json({ authTokenClaims })
 }
@@ -30,7 +30,7 @@ export async function action({ request }: ActionFunctionArgs) {
   const userId = formData.get('userId') // not necessary but just to show its being properly passed to the action post privy-auth
   logger('[Action] userId', userId)
 
-  const redirectUrl = url.searchParams.get('redirectTo') ?? PATHS.PROFILE
+  const redirectUrl = url.searchParams.get('redirectTo') ?? PATHS.HOME
   logger('[Action] Redirecting to', redirectUrl)
   const cookies = parse(request.headers.get('cookie') ?? '')
   const privyToken = cookies['privy-token'] // not necessary but just to show its being properly set by privy post auth

@@ -81,7 +81,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   // If we reach here, it means we have both userObject and userIdentity
   if (userIdentity) {
-    return redirect(`${PATHS.PROFILE}`)
+    return redirect(`${PATHS.HOME}`)
   }
 
   // If we reach here, it means we have userObject but no userIdentity
