@@ -54,8 +54,8 @@ const TagSearchCombobox = ({
               } = tag
               return (
                 <HoverCard
-                  openDelay={100}
-                  closeDelay={100}
+                  openDelay={150}
+                  closeDelay={150}
                   key={tag.identity_id}
                 >
                   <HoverCardTrigger className="w-full">

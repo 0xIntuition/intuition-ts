@@ -77,7 +77,7 @@ const ClaimItem = ({
   }
 
   return (
-    <HoverCard openDelay={100} closeDelay={100}>
+    <HoverCard openDelay={150} closeDelay={150}>
       <HoverCardTrigger asChild>
         {link ? <a href={link}>{content}</a> : content}
       </HoverCardTrigger>

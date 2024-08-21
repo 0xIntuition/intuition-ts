@@ -53,7 +53,7 @@ export const ReferralRow: React.FC<ReferralRowProps> = ({
         {code} <Copy text={code} disabled={!!redeemer} />
       </div>
       {redeemer ? (
-        <HoverCard openDelay={100} closeDelay={100}>
+        <HoverCard openDelay={150} closeDelay={150}>
           <HoverCardTrigger>
             <IdentityTag variant={Identity.user} imgSrc={redeemer.image}>
               <Trunctacular

@@ -98,7 +98,7 @@ const ClaimPositionRow = ({
     >
       {variant === ClaimPositionRowVariant.user && (
         <div className="flex items-center max-sm:justify-center">
-          <HoverCard openDelay={100} closeDelay={100}>
+          <HoverCard openDelay={150} closeDelay={150}>
             <HoverCardTrigger asChild>
               <a href={link}>
                 <Avatar
