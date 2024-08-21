@@ -1,17 +1,11 @@
 import { Suspense } from 'react'
 
 import {
-  ButtonSize,
-  ButtonVariant,
   formatWalletAddress,
-  Icon,
-  IconName,
   ProfileCardHeader,
   Separator,
   Skeleton,
   Text,
-  TextVariant,
-  TextWeight,
 } from '@0xintuition/1ui'
 import {
   GetUserByWalletResponse,
@@ -20,13 +14,11 @@ import {
 } from '@0xintuition/api'
 
 import { ErrorPage } from '@components/error-page'
-import NavigationButton from '@components/navigation-link'
 import { PointsEarnedCard } from '@components/points-card/points-card'
 import { QuestSetCard } from '@components/quest/quest-set-card'
 import { QuestSetProgressCard } from '@components/quest/quest-set-progress-card'
 import { ReferralCard } from '@components/referral-card/referral-card'
-import { ReferralPointsDisplay } from '@components/referral-card/referral-points-display'
-import RelicCard from '@components/relic-card/relic-card'
+import RelicPointCard from '@components/relic-point-card/relic-point-card'
 import { getPurchaseIntentsByAddress } from '@lib/services/phosphor'
 import { invariant } from '@lib/utils/misc'
 import { defer, LoaderFunctionArgs } from '@remix-run/node'
@@ -142,18 +134,13 @@ export default function Quests() {
                       // TODO: Remove this relic hold/mint count and points calculation when it is stored in BE.
                       totalPoints={
                         relicMintCount
-                          ? resolvedUserTotals.total_points +
-                            relicMintCount * 2000000
-                          : 0
+                          ? resolvedUserTotals.total_points + totalNftPoints
+                          : resolvedUserTotals.total_points
                       }
                       activities={[
                         {
                           name: 'Portal',
                           points: resolvedUserTotals.quest_points,
-                        },
-                        {
-                          name: 'Community',
-                          points: 0, // TODO: Update this when backend adds social points
                         },
                         {
                           name: 'Protocol',
@@ -167,58 +154,22 @@ export default function Quests() {
                           name: 'Referrals',
                           points: resolvedUserTotals.referral_points,
                         },
+                        {
+                          name: 'Community',
+                          points: 0, // TODO: Update this when backend adds social points
+                          disabled: true,
+                        },
                       ]}
                     />
                   )}
                 </Await>
               </Suspense>
             </div>
-            <div className="rounded-lg theme-border p-5 flex flex-col md:flex-row items-start gap-5 w-full">
-              <RelicCard
-                variant={'v2'}
-                className="w-fit h-fit mx-auto md:h-[250px] md:w-[250px]"
-              />
-              <div className="flex flex-row w-full">
-                <div className="flex flex-col gap-5 w-2/3 justify-between">
-                  <Text
-                    variant={TextVariant.headline}
-                    weight={TextWeight.semibold}
-                  >
-                    Relics by Intuition
-                  </Text>
-                  <Text className="italic text-secondary-foreground text-sm">
-                    Holding this relic, you feel an otherworldly connection...
-                    As if the secrets of the past and future are within your
-                    grasp...
-                  </Text>
-                  <Text className="text-secondary-foreground text-base w-full">
-                    The Relic, a key to the unseen realms. Its bearer walks the
-                    paths of Intuition&apos;s Beta. Seek your own: forge it in
-                    the fires of creation.
-                  </Text>
-                  <NavigationButton
-                    to={'https://intuition.church'}
-                    variant={ButtonVariant.secondary}
-                    size={ButtonSize.md}
-                    className="w-full md:w-fit"
-                  >
-                    <Icon name={IconName.circle} className="h-4 w-4" />
-                    Visit Intuition.Church
-                  </NavigationButton>
-                </div>
-                <div className="flex flex-col gap-5 w-1/3">
-                  {/* {+relicHoldCount > 0 ||
-                  ((relicMintCount ?? 0) > 0 && ( */}
-                  <ReferralPointsDisplay points={17} label="Relics Minted" />
-                  <ReferralPointsDisplay points={32} label="Relics Held" />
-                  <ReferralPointsDisplay
-                    points={25250000}
-                    label="Relics Points"
-                  />
-                  {/* ))} */}
-                </div>
-              </div>
-            </div>
+            <RelicPointCard
+              relicsMintCount={relicMintCount ? relicMintCount : 0}
+              relicsHoldCount={relicHoldCount ? +relicHoldCount : 0}
+              relicsPoints={totalNftPoints}
+            />
           </div>
         </div>
         <div id="referrals" className="space-y-5">
