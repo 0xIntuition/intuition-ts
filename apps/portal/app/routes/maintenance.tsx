@@ -1,5 +1,7 @@
 import { Button, Icon, Text } from '@0xintuition/1ui'
 
+import { Link } from '@remix-run/react'
+
 export default function Maintenance() {
   return (
     <div className="m-auto w-3/4">
@@ -19,7 +21,9 @@ export default function Maintenance() {
           Intuition. Please check back later. In the meantime, join our Discord
           community to stay updated and connect with us!
         </Text>
-        <Button variant="secondary">Join our Discord</Button>
+        <Link to="https://discord.gg/0xintuition" target="_blank">
+          <Button variant="secondary">Join our Discord</Button>
+        </Link>
       </div>
     </div>
   )

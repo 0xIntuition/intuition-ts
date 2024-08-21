@@ -1,7 +1,7 @@
 import { Suspense } from 'react'
 
 import { Button, ErrorStateCard, Icon, IconName, Text } from '@0xintuition/1ui'
-import { ApiError, ClaimsService, IdentitiesService } from '@0xintuition/api'
+import { ClaimsService, IdentitiesService } from '@0xintuition/api'
 
 import CreateClaimModal from '@components/create-claim/create-claim-modal'
 import { ErrorPage } from '@components/error-page'
@@ -14,9 +14,8 @@ import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { getClaimsAboutIdentity } from '@lib/services/claims'
 import { getPositionsOnIdentity } from '@lib/services/positions'
 import { detailCreateClaimModalAtom } from '@lib/state/store'
-import logger from '@lib/utils/logger'
 import { formatBalance, invariant } from '@lib/utils/misc'
-import { defer, LoaderFunctionArgs, redirect } from '@remix-run/node'
+import { defer, LoaderFunctionArgs } from '@remix-run/node'
 import { Await, useRouteLoaderData } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
@@ -29,19 +28,12 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const userWallet = await requireUserWallet(request)
   invariant(userWallet, NO_WALLET_ERROR)
 
-  let userIdentity
-  try {
-    userIdentity = await fetchWrapper(request, {
-      method: IdentitiesService.getIdentityById,
-      args: { id: userWallet },
-    })
-  } catch (error) {
-    if (error instanceof ApiError && error.status === 404) {
-      throw redirect('/invite')
-    }
-    logger('Error fetching userIdentity', error)
-    throw error
-  }
+  const userIdentity = await fetchWrapper(request, {
+    method: IdentitiesService.getIdentityById,
+    args: { id: userWallet },
+  })
+
+  invariant(userIdentity, 'No user identity')
 
   const url = new URL(request.url)
   const searchParams = new URLSearchParams(url.search)

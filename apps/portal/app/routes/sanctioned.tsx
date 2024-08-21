@@ -2,6 +2,7 @@ import { Button, Icon } from '@0xintuition/1ui'
 
 import { chainalysisOracleAbi } from '@lib/abis/chainalysisOracle'
 import { LoaderFunctionArgs, redirect } from '@remix-run/node'
+import { Link } from '@remix-run/react'
 import { requireUserWallet } from '@server/auth'
 import { mainnetClient } from '@server/viem'
 
@@ -42,9 +43,11 @@ export default function Sanctioned() {
           In the meantime, join our Discord community to stay updated and
           connect with us!
         </p>
-        <Button className="w-fit mt-3.5" variant="secondary">
-          Join our Discord
-        </Button>
+        <Link to="https://discord.gg/0xintuition" target="_blank">
+          <Button className="w-fit mt-3.5" variant="secondary">
+            Join our Discord
+          </Button>
+        </Link>
       </div>
     </div>
   )
