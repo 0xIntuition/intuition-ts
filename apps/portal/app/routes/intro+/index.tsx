@@ -6,7 +6,7 @@ import {
   type PropsWithChildren,
 } from 'react'
 
-import { Button, Icon, IconName } from '@0xintuition/1ui'
+import { Button, Icon, IconName, Text, TextVariant } from '@0xintuition/1ui'
 
 import Container from '@components/container'
 import { cn } from '@lib/utils/misc'
@@ -54,13 +54,10 @@ export default function IntroRoute() {
       video: INTRO_CAROUSEL_1_MP4,
       title: 'Welcome to the Intuition Beta',
       text: (
-        <>
+        <Text variant={TextVariant.caption} className="text-foreground/70">
           A single moment of frustration has the power to change the world
           forever.
-          <br />
-          <br />
-          <br />
-        </>
+        </Text>
       ),
       button: (
         <Link to="https://docs.intuition.systems/introduction" target="_blank">
@@ -75,16 +72,18 @@ export default function IntroRoute() {
       video: INTRO_CAROUSEL_2_MP4,
       title: 'The Information Economy',
       text: (
-        <>
-          The ideas we have and decisions we make are only as good as the data
-          we consume.
-          <br />
-          Intuition is an attempt to change the way we interact with data by
-          harnessing the collective power of the wisdom of the crowds,
-          introducing the concept of ‘information markets’ to disrupt the
-          current data paradigm.
-          <br />
-        </>
+        <div className="flex flex-col gap-2">
+          <Text variant={TextVariant.caption} className="text-foreground/70">
+            The ideas we have and decisions we make are only as good as the data
+            we consume.
+          </Text>
+          <Text variant={TextVariant.caption} className="text-foreground/70">
+            Intuition is an attempt to change the way we interact with data by
+            harnessing the collective power of the wisdom of the crowds,
+            introducing the concept of ‘information markets’ to disrupt the
+            current data paradigm.
+          </Text>
+        </div>
       ),
       button: (
         <Link to="https://docs.intuition.systems/introduction" target="_blank">
@@ -99,14 +98,15 @@ export default function IntroRoute() {
       video: INTRO_CAROUSEL_3_MP4,
       title: 'The Trustful Interaction Layer',
       text: (
-        <>
-          With your help, we will usher in a new era of digital interaction.
-          <br />
-          One where you have the data you need, when you need it, from the
-          voices you trust - <br />
-          bringing more trust to all of our interactions.
-          <br />
-        </>
+        <div className="flex flex-col gap-2">
+          <Text variant={TextVariant.caption} className="text-foreground/70">
+            With your help, we will usher in a new era of digital interaction.
+          </Text>
+          <Text variant={TextVariant.caption} className="text-foreground/70">
+            One where you have the data you need, when you need it, from the
+            voices you trust - bringing more trust to all of our interactions.
+          </Text>
+        </div>
       ),
       button: (
         <Link to="https://docs.intuition.systems/introduction" target="_blank">
@@ -121,15 +121,16 @@ export default function IntroRoute() {
       video: INTRO_CAROUSEL_4_MP4,
       title: 'A Novel Set of Primitives',
       text: (
-        <>
-          To achieve this vision, Intuition introduces Atoms, Triples, and
-          Signal -
-          <br /> a new set of primitives recently made possible by Ethereum.
-          <br />
-          These primitives facilitate the discrete capturing, structuring, and
-          referenceability of information.
-          <br />
-        </>
+        <div className="flex flex-col gap-2">
+          <Text variant={TextVariant.caption} className="text-foreground/70">
+            To achieve this vision, Intuition introduces Atoms, Triples, and
+            Signal - a new set of primitives recently made possible by Ethereum.
+          </Text>
+          <Text variant={TextVariant.caption} className="text-foreground/70">
+            These primitives facilitate the discrete capturing, structuring, and
+            referenceability of information.
+          </Text>
+        </div>
       ),
       button: (
         <Link to="https://docs.intuition.systems/introduction" target="_blank">
@@ -144,16 +145,21 @@ export default function IntroRoute() {
       video: INTRO_CAROUSEL_5_MP4,
       title: 'The Portal',
       text: (
-        <>
-          This application, The Portal, is merely an Explorer (akin to
-          Etherscan) for the Intuition ecosystem.
-          <br />
-          At its core, Intuition is developer tooling & a platform of platforms,
-          powered by the Intuition Protocol and associated middleware.
-          <br />
-          We hope this is just the beginning of your journey into the Intuition
-          ecosystem.
-        </>
+        <div className="flex flex-col gap-2">
+          <Text variant={TextVariant.caption} className="text-foreground/70">
+            This application, The Portal, is merely an Explorer (akin to
+            Etherscan) for the Intuition ecosystem.
+          </Text>
+          <Text variant={TextVariant.caption} className="text-foreground/70">
+            At its core, Intuition is developer tooling & a platform of
+            platforms, powered by the Intuition Protocol and associated
+            middleware.
+          </Text>
+          <Text variant={TextVariant.caption} className="text-foreground/70">
+            We hope this is just the beginning of your journey into the
+            Intuition ecosystem.
+          </Text>
+        </div>
       ),
       button: (
         <Link to="https://docs.intuition.systems/introduction" target="_blank">
@@ -168,16 +174,20 @@ export default function IntroRoute() {
       video: INTRO_CAROUSEL_6_MP4,
       title: 'What Comes Next?',
       text: (
-        <>
-          Intuition asks a simple question: ‘what if we reimagine the way that
-          value flows through data?’
-          <br />
-          With your participation, we can decouple identities, data, and
-          algorithms from platforms,
-          <br />
-          disintermediate trillions in value, and flow this value back to you -
-          the user.
-        </>
+        <div className="flex flex-col gap-2">
+          <Text variant={TextVariant.caption} className="text-foreground/70">
+            Intuition asks a simple question: ‘what if we reimagine the way that
+            value flows through data?’
+          </Text>
+          <Text variant={TextVariant.caption} className="text-foreground/70">
+            With your participation, we can decouple identities, data, and
+            algorithms from platforms,
+          </Text>
+          <Text variant={TextVariant.caption} className="text-foreground/70">
+            disintermediate trillions in value, and flow this value back to you
+            - the user.
+          </Text>
+        </div>
       ),
       button: (
         <Link to="https://docs.intuition.systems/introduction" target="_blank">
@@ -293,24 +303,24 @@ const Carousel: React.FC<CarouselProps> = (props) => {
   }, [selectedIndex])
 
   return (
-    <div className="m-auto md:w-[600px]">
+    <div className="m-auto md:w-[600px] flex flex-col justify-between">
       <div className="overflow-hidden" ref={emblaRef}>
-        <div className="flex touch-pan-y gap-10 h-full">
+        <div className="flex touch-pan-y gap-10">
           {slides?.map((slide, index) => (
             <div
               className="w-full h-full flex-none justify-between"
               key={index}
             >
-              <div className="w-full flex-col justify-start items-center gap-3.5 inline-flex">
+              <div className="w-full flex-col justify-start items-center gap-4 inline-flex">
                 <div className="text-center text-white/90 text-3xl font-semibold">
                   {slide.title}
                 </div>
-                <div className="md:w-[450px] text-center text-white/70 text-sm font-normal leading-[18px]">
+                <div className="flex flex-col gap-4 text-center text-white/70 text-base font-normal h-[250px] md:h-[110px]">
                   {slide.text}
+                  {slide.button}
                 </div>
-                <div>{slide.button}</div>
               </div>
-              <div className="m-auto flex flex-col justify-center items-center mt-7 h-full overflow-hidden">
+              <div className="m-auto flex flex-col justify-center items-center md:mt-12 h-full overflow-hidden">
                 <AnimatePresence>
                   <motion.div
                     key="mediaPlayer"
@@ -326,7 +336,7 @@ const Carousel: React.FC<CarouselProps> = (props) => {
                       loop
                       muted
                       playsInline
-                      className="rounded-xl h-[300px] overflow-hidden items-center justify-center theme-border"
+                      className="rounded-xl h-[160px] md:h-[300px] overflow-hidden items-center justify-center theme-border"
                     />
                   </motion.div>
                 </AnimatePresence>
@@ -335,7 +345,7 @@ const Carousel: React.FC<CarouselProps> = (props) => {
           ))}
         </div>
       </div>
-      <div className="flex items-center justify-center gap-2 mt-7">
+      <div className="flex items-center justify-center gap-2 mt-12 md:mt-6">
         <PrevButton onClick={onPrevButtonClick} disabled={prevBtnDisabled} />
         <div className="flex gap-2">
           {scrollSnaps.map((_, index) => (
