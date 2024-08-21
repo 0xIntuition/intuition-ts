@@ -2,6 +2,7 @@ import { Suspense } from 'react'
 
 import {
   formatWalletAddress,
+  IconName,
   ProfileCardHeader,
   Separator,
   Skeleton,
@@ -14,6 +15,7 @@ import {
 } from '@0xintuition/api'
 
 import { ErrorPage } from '@components/error-page'
+import ExploreHeader from '@components/explore/ExploreHeader'
 import { PointsEarnedCard } from '@components/points-card/points-card'
 import { QuestSetCard } from '@components/quest/quest-set-card'
 import { QuestSetProgressCard } from '@components/quest/quest-set-progress-card'
@@ -30,6 +32,7 @@ import { getRelicCount } from '@server/relics'
 import {
   BLOCK_EXPLORER_URL,
   COMING_SOON_QUEST_SET,
+  HEADER_BANNER_HELP_CENTER,
   QUEST_LOG_DESCRIPTION,
   STANDARD_QUEST_SET,
 } from 'app/consts'
@@ -96,9 +99,14 @@ export default function Quests() {
   const nftMintPoints = relicMintCount ? relicMintCount * 2000000 : 0
   const nftHoldPoints = relicHoldCount ? +relicHoldCount * 250000 : 0
   const totalNftPoints = nftMintPoints + nftHoldPoints
-
   return (
     <div className="p-10 w-full max-w-7xl mx-auto flex flex-col gap-5 max-md:p-5 max-sm:p-2">
+      <ExploreHeader
+        title="Quests"
+        content="Explore the Intuition ecosystem, and earn IQ points along the way."
+        icon={IconName.crystalBall}
+        bgImage={HEADER_BANNER_HELP_CENTER}
+      />
       <div className="flex flex-col gap-5">
         <div className="flex items-center justify-between">
           <UserHeader />

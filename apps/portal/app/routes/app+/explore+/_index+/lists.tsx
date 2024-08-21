@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 
+import { IconName } from '@0xintuition/1ui'
 import {
   ClaimPresenter,
   ClaimSortColumn,
@@ -7,6 +8,7 @@ import {
 } from '@0xintuition/api'
 
 import { ErrorPage } from '@components/error-page'
+import ExploreHeader from '@components/explore/ExploreHeader'
 import { ExploreSearch } from '@components/explore/ExploreSearch'
 import { ListClaimsList } from '@components/list/list-claims'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
@@ -17,7 +19,7 @@ import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { useSearchParams, useSubmit } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
-import { CURRENT_ENV, NO_WALLET_ERROR } from 'app/consts'
+import { CURRENT_ENV, HEADER_BANNER_LISTS, NO_WALLET_ERROR } from 'app/consts'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const wallet = await requireUserWallet(request)
@@ -92,6 +94,12 @@ export default function ExploreLists() {
 
   return (
     <>
+      <ExploreHeader
+        title="Lists"
+        content="Collaborate with the world to curate collections of information - or create your own."
+        icon={IconName.bookmark}
+        bgImage={HEADER_BANNER_LISTS}
+      />
       <ExploreSearch variant="list" />
       <ListClaimsList
         listClaims={accumulatedClaims}
