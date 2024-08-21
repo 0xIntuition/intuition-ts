@@ -31,7 +31,7 @@ import {
   getAtomLabel,
   getAtomLink,
 } from '@lib/utils/misc'
-import { useNavigate } from '@remix-run/react'
+import { Link } from '@remix-run/react'
 import { BLOCK_EXPLORER_URL, PATHS } from 'app/consts'
 import { PaginationType } from 'app/types/pagination'
 import { formatDistance } from 'date-fns'
@@ -95,7 +95,6 @@ function ActivityItem({
   activity: ActivityPresenter
   eventMessages: EventMessages
 }) {
-  const navigate = useNavigate()
   const eventMessage = eventMessages[activity.event_type as keyof EventMessages]
   const isRedeemEvent = activity.event_type.startsWith('redeem')
   const value = isRedeemEvent
@@ -116,25 +115,27 @@ function ActivityItem({
       <div className="flex flex-row items-center justify-between min-w-full mb-4 max-md:flex-col max-md:gap-3">
         <div className="flex flex-row items-center gap-2 max-md:flex-col">
           <HoverCard openDelay={100} closeDelay={100}>
-            <HoverCardTrigger>
-              <IdentityTag
-                variant={Identity.user}
-                size="lg"
-                imgSrc={activity.creator?.image ?? ''}
+            <HoverCardTrigger asChild>
+              <Link
+                to={`${PATHS.PROFILE}/${activity.creator?.wallet}`}
+                prefetch="intent"
               >
-                <Trunctacular
-                  value={
-                    activity.creator?.display_name ??
-                    activity.creator?.wallet ??
-                    activity.identity?.creator_address ??
-                    ''
-                  }
-                  onClick={() =>
-                    navigate(`${PATHS.PROFILE}/${activity.creator?.wallet}`)
-                  }
-                  maxStringLength={32}
-                />
-              </IdentityTag>
+                <IdentityTag
+                  variant={Identity.user}
+                  size="lg"
+                  imgSrc={activity.creator?.image ?? ''}
+                >
+                  <Trunctacular
+                    value={
+                      activity.creator?.display_name ??
+                      activity.creator?.wallet ??
+                      activity.identity?.creator_address ??
+                      ''
+                    }
+                    maxStringLength={32}
+                  />
+                </IdentityTag>
+              </Link>
             </HoverCardTrigger>
             <HoverCardContent side="right" className="w-max">
               <div className="w-80 max-md:w-[80%]">
