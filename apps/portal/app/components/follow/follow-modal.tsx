@@ -263,9 +263,6 @@ export default function FollowModal({
     address ?? (userWallet as `0x${string}`),
   )
   const handleFollowButtonClick = async () => {
-    console.log('val', val)
-    console.log('min_deposit', min_deposit)
-    console.log('walletBalance', walletBalance)
     if (+val < +formatBalance(min_deposit, 18) || +val > +walletBalance) {
       setShowErrors(true)
       return
