@@ -192,7 +192,7 @@ export default function HomePage() {
         <HomeSectionHeader
           title="Top Users"
           buttonText="Explore Users"
-          buttonLink="/app/explore/users"
+          buttonLink="/app/explore/identities?identity=&tagIds=&isUser=true"
         />
         <Suspense
           fallback={
