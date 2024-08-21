@@ -67,13 +67,10 @@ export default function IntroRoute() {
         <div className="flex flex-col gap-2">
           <Text variant={TextVariant.caption} className="text-foreground/70">
             The ideas we have and decisions we make are only as good as the data
-            we consume.
-          </Text>
-          <Text variant={TextVariant.caption} className="text-foreground/70">
-            Intuition is an attempt to change the way we interact with data by
-            harnessing the collective power of the wisdom of the crowds,
-            introducing the concept of ‘information markets’ to disrupt the
-            current data paradigm.
+            we consume. Intuition is an attempt to change the way we interact
+            with data by harnessing the collective power of the wisdom of the
+            crowds, introducing the concept of ‘information markets’ to disrupt
+            the current data paradigm.
           </Text>
         </div>
       ),
@@ -85,8 +82,6 @@ export default function IntroRoute() {
         <div className="flex flex-col gap-2">
           <Text variant={TextVariant.caption} className="text-foreground/70">
             With your help, we will usher in a new era of digital interaction.
-          </Text>
-          <Text variant={TextVariant.caption} className="text-foreground/70">
             One where you have the data you need, when you need it, from the
             voices you trust - bringing more trust to all of our interactions.
           </Text>
@@ -101,8 +96,6 @@ export default function IntroRoute() {
           <Text variant={TextVariant.caption} className="text-foreground/70">
             To achieve this vision, Intuition introduces Atoms, Triples, and
             Signal - a new set of primitives recently made possible by Ethereum.
-          </Text>
-          <Text variant={TextVariant.caption} className="text-foreground/70">
             These primitives facilitate the discrete capturing, structuring, and
             referenceability of information.
           </Text>
@@ -116,16 +109,10 @@ export default function IntroRoute() {
         <div className="flex flex-col gap-2">
           <Text variant={TextVariant.caption} className="text-foreground/70">
             This application, The Portal, is merely an Explorer (akin to
-            Etherscan) for the Intuition ecosystem.
-          </Text>
-          <Text variant={TextVariant.caption} className="text-foreground/70">
-            At its core, Intuition is developer tooling & a platform of
-            platforms, powered by the Intuition Protocol and associated
-            middleware.
-          </Text>
-          <Text variant={TextVariant.caption} className="text-foreground/70">
-            We hope this is just the beginning of your journey into the
-            Intuition ecosystem.
+            Etherscan) for the Intuition ecosystem. At its core, Intuition is
+            developer tooling & a platform of platforms, powered by the
+            Intuition Protocol and associated middleware. We hope this is just
+            the beginning of your journey into the Intuition ecosystem.
           </Text>
         </div>
       ),
@@ -137,15 +124,9 @@ export default function IntroRoute() {
         <div className="flex flex-col gap-2">
           <Text variant={TextVariant.caption} className="text-foreground/70">
             Intuition asks a simple question: ‘what if we reimagine the way that
-            value flows through data?’
-          </Text>
-          <Text variant={TextVariant.caption} className="text-foreground/70">
-            With your participation, we can decouple identities, data, and
-            algorithms from platforms,
-          </Text>
-          <Text variant={TextVariant.caption} className="text-foreground/70">
-            disintermediate trillions in value, and flow this value back to you
-            - the user.
+            value flows through data?’ With your participation, we can decouple
+            identities, data, and algorithms from platforms, disintermediate
+            trillions in value, and flow this value back to you - the user.
           </Text>
         </div>
       ),
