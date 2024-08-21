@@ -31,10 +31,10 @@ const supportCards = [
     link: 'https://t.me/intuitionsystems',
   },
   {
-    icon: IconName.envelope,
-    title: 'Email',
+    icon: IconName.headset,
+    title: 'Support',
     description:
-      "For personalized assistance, reach out to us via email. We're here to help with any questions or concerns.",
+      'Got a bug? Hit a snag? No worries — help is just a click away! Just head to our Discord and submit your issue through our in-chat intake form.',
     link: 'https://discord.com/channels/909531430881746974/1151564740255043604',
   },
   {

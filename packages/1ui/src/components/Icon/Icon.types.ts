@@ -49,6 +49,7 @@ export const IconName = {
   gift: 'gift',
   graduateCap: 'graduate-cap',
   group: 'group',
+  headset: 'headset',
   layoutGrid: 'layout-grid',
   layoutThird: 'layout-third',
   lightningBolt: 'lightning-bolt',
