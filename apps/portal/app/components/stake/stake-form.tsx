@@ -42,6 +42,9 @@ interface StakeFormProps {
   walletBalance: string
   identity?: IdentityPresenter
   claim?: ClaimPresenter
+  user_conviction: string
+  conviction_price: string
+  user_assets: string
   vaultDetails: VaultDetailsType
   direction?: 'for' | 'against'
   val: string
@@ -64,6 +67,9 @@ export default function StakeForm({
   walletBalance,
   identity,
   claim,
+  user_conviction,
+  conviction_price,
+  user_assets,
   vaultDetails,
   direction,
   val,
@@ -195,14 +201,13 @@ export default function StakeForm({
                     e.preventDefault()
                     setStakeModalState({ ...stakeModalState, mode: 'redeem' })
                   }}
+                  disabled={user_conviction === '0'}
                 />
               </TabsList>
             </Tabs>
             <div className="pt-2.5">
               <ActivePositionCard
-                value={Number(
-                  formatBalance(vaultDetails?.user_assets ?? 0, 18),
-                )}
+                value={Number(formatBalance(user_assets ?? 0, 18))}
                 claimPosition={
                   direction !== undefined
                     ? direction === 'for'
@@ -228,8 +233,8 @@ export default function StakeForm({
                   setVal={setVal}
                   walletBalance={walletBalance ?? '0'}
                   minDeposit={vaultDetails.min_deposit ?? '0'}
-                  userConviction={vaultDetails.user_conviction ?? '0'}
-                  price={vaultDetails.conviction_price ?? '0'}
+                  userConviction={user_conviction}
+                  price={conviction_price}
                 />
               </div>
             </div>
