@@ -60,17 +60,21 @@ export default function IntroRoute() {
       video: INTRO_CAROUSEL_1_MP4,
       title: 'Welcome to the Intuition Beta',
       text: (
-        <Text variant={TextVariant.caption} className="text-foreground/70">
-          A single moment of frustration has the power to change the world
-          forever.
-        </Text>
+        <div className="flex flex-col gap-2 text-justify md:text-center">
+          <Text variant={TextVariant.caption} className="text-foreground/70">
+            A single moment of frustration has the power to change the world
+            forever. The time has come to start building new, novel things on
+            top of the decentralized web stack. The infrastructure is finally
+            really. It is time for crypto to eat the world.
+          </Text>
+        </div>
       ),
     },
     {
       video: INTRO_CAROUSEL_2_MP4,
       title: 'The Information Economy',
       text: (
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2 text-justify md:text-center">
           <Text variant={TextVariant.caption} className="text-foreground/70">
             The ideas we have and decisions we make are only as good as the data
             we consume. Intuition is an attempt to change the way we interact
@@ -85,11 +89,13 @@ export default function IntroRoute() {
       video: INTRO_CAROUSEL_3_MP4,
       title: 'The Trustful Interaction Layer',
       text: (
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2 text-justify md:text-center">
           <Text variant={TextVariant.caption} className="text-foreground/70">
             With your help, we will usher in a new era of digital interaction.
             One where you have the data you need, when you need it, from the
             voices you trust - bringing more trust to all of our interactions.
+            Powered by technologically-mediated intuition, allowing you to make
+            better decisions in an exponential world.
           </Text>
         </div>
       ),
@@ -98,7 +104,7 @@ export default function IntroRoute() {
       video: INTRO_CAROUSEL_4_MP4,
       title: 'A Novel Set of Primitives',
       text: (
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2 text-justify md:text-center">
           <Text variant={TextVariant.caption} className="text-foreground/70">
             To achieve this vision, Intuition introduces Atoms, Triples, and
             Signal - a new set of primitives recently made possible by Ethereum.
@@ -112,7 +118,7 @@ export default function IntroRoute() {
       video: INTRO_CAROUSEL_5_MP4,
       title: 'The Portal',
       text: (
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2 text-justify md:text-center">
           <Text variant={TextVariant.caption} className="text-foreground/70">
             This application, The Portal, is merely an Explorer (akin to
             Etherscan) for the Intuition ecosystem. At its core, Intuition is
@@ -127,7 +133,7 @@ export default function IntroRoute() {
       video: INTRO_CAROUSEL_6_MP4,
       title: 'What Comes Next?',
       text: (
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2 text-justify md:text-center">
           <Text variant={TextVariant.caption} className="text-foreground/70">
             Intuition asks a simple question: ‘what if we reimagine the way that
             value flows through data?’ With your participation, we can decouple
