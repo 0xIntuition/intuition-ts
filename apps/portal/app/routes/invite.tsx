@@ -326,7 +326,7 @@ export default function InviteRoute() {
                   playsInline
                   autoPlay
                   muted={isMuted}
-                  className="rounded-xl overflow-hidden w-full h-auto max-h-[75vh] shadow-lg object-contain"
+                  className="rounded-xl overflow-hidden items-center justify-center w-full md:max-w-[500px] xl:max-w-[1000px] shadow-lg"
                   onEnded={handleVideoEnd}
                 />
                 <AnimatePresence>
