@@ -102,15 +102,6 @@ const StakeButton: React.FC<StakeButtonProps> = ({
     }
   }, [navigation.state, navigationStarted])
 
-  console.log('Data from StakeButton')
-  console.log('mode', mode)
-  console.log('val', val)
-  console.log('walletBalance', walletBalance)
-  console.log('conviction_price', conviction_price)
-  console.log('formattedConvictionPrice', formattedConvictionPrice)
-  console.log('user_conviction', user_conviction)
-  console.log('formattedUserConviction', formattedUserConviction)
-
   return (
     <Button
       variant="primary"
@@ -138,7 +129,7 @@ const StakeButton: React.FC<StakeButtonProps> = ({
           }
           if (
             mode === 'deposit'
-              ? +val * +formattedConvictionPrice > +walletBalance
+              ? +val > +walletBalance
               : +val > +formattedUserConviction * +formattedConvictionPrice
           ) {
             errors.push('Insufficient funds')

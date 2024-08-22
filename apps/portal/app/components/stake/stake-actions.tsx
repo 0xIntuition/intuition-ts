@@ -19,6 +19,27 @@ export default function StakeActions({
   userConviction,
   price,
 }: StakeActionsProps) {
+  const formatDecimal = (value: number): string => {
+    return value.toLocaleString('fullwide', {
+      useGrouping: false,
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 18,
+    })
+  }
+
+  const calculateAndSetValue = (percentage: number) => {
+    if (action === 'deposit') {
+      const value = +walletBalance * percentage
+      setVal(formatDecimal(value))
+    } else if (userConviction && price) {
+      const maxEth =
+        +formatUnits(BigInt(userConviction), 18) *
+        +formatUnits(BigInt(price), 18)
+      const value = maxEth * percentage
+      setVal(formatDecimal(value))
+    }
+  }
+
   return (
     <div className="flex flex-row items-center justify-center gap-5">
       <Button
@@ -33,45 +54,14 @@ export default function StakeActions({
       <Button
         variant="ghost"
         className={`${action === 'deposit' && 'hidden'}`}
-        onClick={() => {
-          if (userConviction && price) {
-            const maxEth =
-              +formatUnits(BigInt(userConviction), 18) *
-              +formatUnits(BigInt(price), 18)
-            setVal((maxEth * 0.05).toString())
-          }
-        }}
+        onClick={() => calculateAndSetValue(0.05)}
       >
         <Text variant="small">5%</Text>
       </Button>
-      <Button
-        variant="ghost"
-        onClick={() => {
-          if (action === 'deposit') {
-            setVal((+walletBalance * 0.1).toString())
-          } else if (userConviction && price) {
-            const maxEth =
-              +formatUnits(BigInt(userConviction), 18) *
-              +formatUnits(BigInt(price), 18)
-            setVal((maxEth * 0.1).toString())
-          }
-        }}
-      >
+      <Button variant="ghost" onClick={() => calculateAndSetValue(0.1)}>
         <Text variant="small">10%</Text>
       </Button>
-      <Button
-        variant="ghost"
-        onClick={() => {
-          if (action === 'deposit') {
-            setVal((+walletBalance * 0.5).toString())
-          } else if (userConviction && price) {
-            const maxEth =
-              +formatUnits(BigInt(userConviction), 18) *
-              +formatUnits(BigInt(price), 18)
-            setVal((maxEth * 0.5).toString())
-          }
-        }}
-      >
+      <Button variant="ghost" onClick={() => calculateAndSetValue(0.5)}>
         <Text variant="small">50%</Text>
       </Button>
       <Button
@@ -80,11 +70,10 @@ export default function StakeActions({
           if (action === 'deposit') {
             setVal(walletBalance)
           } else if (userConviction && price) {
-            const maxEth = (
+            const maxEth =
               +formatUnits(BigInt(userConviction), 18) *
               +formatUnits(BigInt(price), 18)
-            ).toString()
-            setVal(maxEth)
+            setVal(formatDecimal(maxEth))
           }
         }}
       >
