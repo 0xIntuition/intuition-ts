@@ -385,8 +385,8 @@ export default function Profile() {
                   </div>
                 </div>
               </div>
-              <div className="h-28 p-6 bg-black rounded-[10px] shadow border border-solid border-neutral-300/20 backdrop-blur-xl flex-col justify-center items-center gap-6 flex w-full">
-                <div className="md:w-[552px] justify-between items-center inline-flex w-full">
+              <div className="md:h-28 p-6 bg-black rounded-[10px] shadow border border-solid border-neutral-300/20 backdrop-blur-xl flex-col justify-center items-center gap-6 flex w-full">
+                <div className="md:w-[552px] justify-between items-center inline-flex w-full flex-col md:flex-row">
                   <div className="md:grow md:shrink md:basis-0 h-16 justify-start items-center gap-2 md:gap-4 flex">
                     <div className="md:w-[70px] pr-1.5 justify-start items-center flex">
                       <Avatar name="" src="" />

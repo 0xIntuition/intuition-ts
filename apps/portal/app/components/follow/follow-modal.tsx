@@ -21,7 +21,7 @@ import {
   TransactionStateType,
 } from 'app/types/transaction'
 import { VaultDetailsType } from 'app/types/vault'
-import { Abi, Address, decodeEventLog, formatUnits, parseUnits } from 'viem'
+import { Abi, Address, decodeEventLog, parseUnits } from 'viem'
 import { useAccount, usePublicClient } from 'wagmi'
 
 import FollowButton from './follow-button'
@@ -65,11 +65,8 @@ export default function FollowModal({
 
   const fetchReval = useFetcher()
   const formRef = useRef(null)
-  const formattedMinDeposit = min_deposit
-    ? formatUnits(BigInt(BigInt(min_deposit)), 18)
-    : null
 
-  const [val, setVal] = useState(formattedMinDeposit ?? MIN_DEPOSIT)
+  const [val, setVal] = useState(MIN_DEPOSIT)
   const [mode, setMode] = useState<'follow' | 'unfollow'>('follow')
   const [showErrors, setShowErrors] = useState(false)
   const [validationErrors, setValidationErrors] = useState<string[]>([])

@@ -154,31 +154,36 @@ export default function IdentityDetails() {
 
       {!isPending && (
         <>
-          <Tags className="max-lg:items-center">
-            {identity?.tags && identity?.tags.length > 0 && (
-              <TagsContent numberOfTags={identity?.tag_count ?? 0}>
-                {identity?.tags?.map((tag) => (
-                  <TagWithValue
-                    key={tag.identity_id}
-                    label={tag.display_name}
-                    value={tag.num_tagged_identities}
-                    onStake={() => {
-                      setSelectedTag(tag)
-                      setSaveListModalActive({ isOpen: true, id: tag.vault_id })
-                    }}
-                  />
-                ))}
-              </TagsContent>
-            )}
-            <Tag
-              className="w-fit border-dashed"
-              onClick={() => {
-                setTagsModalActive({ isOpen: true, mode: 'add' })
-              }}
-            >
-              <Icon name="plus-small" className="w-5 h-5" />
-              Add tags
-            </Tag>
+          <Tags>
+            <div className="flex flex-row gap-2 md:flex-col">
+              {identity?.tags && identity?.tags.length > 0 && (
+                <TagsContent numberOfTags={identity?.tag_count ?? 0}>
+                  {identity?.tags?.map((tag) => (
+                    <TagWithValue
+                      key={tag.identity_id}
+                      label={tag.display_name}
+                      value={tag.num_tagged_identities}
+                      onStake={() => {
+                        setSelectedTag(tag)
+                        setSaveListModalActive({
+                          isOpen: true,
+                          id: tag.vault_id,
+                        })
+                      }}
+                    />
+                  ))}
+                </TagsContent>
+              )}
+              <Tag
+                className="w-fit border-dashed"
+                onClick={() => {
+                  setTagsModalActive({ isOpen: true, mode: 'add' })
+                }}
+              >
+                <Icon name="plus-small" className="w-5 h-5" />
+                Add tags
+              </Tag>
+            </div>
 
             <TagsButton
               onClick={() => {

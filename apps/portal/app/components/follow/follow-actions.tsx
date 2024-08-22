@@ -7,10 +7,10 @@ import {
 } from '@0xintuition/1ui'
 
 import ErrorList from '@components/error-list'
-import { formatUnits } from 'viem'
+import { MIN_DEPOSIT } from '@consts/general'
 
 interface FollowActionsProps {
-  min_deposit: string
+  min_deposit?: string
   setVal: (val: string) => void
   showErrors: boolean
   setShowErrors: (show: boolean) => void
@@ -19,19 +19,17 @@ interface FollowActionsProps {
 }
 
 export default function FollowActions({
-  min_deposit,
   setVal,
   showErrors,
   setShowErrors,
   validationErrors,
   setValidationErrors,
 }: FollowActionsProps) {
-  const formattedMinDeposit = formatUnits(BigInt(min_deposit), 18)
   const radioGroupData = [
     {
-      id: formattedMinDeposit,
+      id: MIN_DEPOSIT,
       value: 'Minimum',
-      subValue: `+${formattedMinDeposit} ETH`,
+      subValue: `+${MIN_DEPOSIT} ETH`,
     },
     { id: '0.001', value: 'Default', subValue: '+0.001 ETH' },
     { id: '0.01', value: 'Strong', subValue: '+0.01 ETH' },

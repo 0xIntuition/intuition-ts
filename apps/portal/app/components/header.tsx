@@ -4,7 +4,7 @@ import { ClientOnly } from 'remix-utils/client-only'
 
 export function Header() {
   return (
-    <div className="flex flex-row items-center justify-between">
+    <div className="flex flex-row items-center justify-between mb-8 md:mb-0">
       <HeaderLogo />
       <ClientOnly>{() => <PrivyLogoutButton />}</ClientOnly>
     </div>

@@ -228,7 +228,7 @@ export default function InviteRoute() {
                       </Label>
                       <Input
                         {...getInputProps(fields.invite_code, { type: 'text' })}
-                        className="w-96"
+                        className="md:w-96"
                         placeholder="Enter your invite code here"
                       />
                       <ErrorList
@@ -241,7 +241,7 @@ export default function InviteRoute() {
                     </div>
                     <Text
                       variant={TextVariant.body}
-                      className="text-muted-foreground w-96"
+                      className="text-muted-foreground md:w-96"
                     >
                       Intuition is currently in Closed Beta. Obtain an invite
                       code or a Relic to gain access!
@@ -325,7 +325,7 @@ export default function InviteRoute() {
                   playsInline
                   autoPlay
                   muted={isMuted}
-                  className="rounded-xl overflow-hidden items-center justify-center w-[1000px] shadow-lg"
+                  className="rounded-xl overflow-hidden items-center justify-center w-full md:max-w-[500px] xl:max-w-[1000px] shadow-lg"
                   onEnded={handleVideoEnd}
                 />
               </div>

@@ -317,7 +317,7 @@ export default function Profile() {
     /> */}
       {!isPending && (
         <>
-          <Tags className="max-lg:items-center">
+          <Tags>
             {userIdentity?.tags && userIdentity?.tags.length > 0 && (
               <TagsContent numberOfTags={userIdentity?.tag_count ?? 0}>
                 {userIdentity?.tags?.map((tag) => (
