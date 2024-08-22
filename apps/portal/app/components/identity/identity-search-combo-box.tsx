@@ -98,7 +98,7 @@ const IdentitySearchCombobox = ({
               const variant = isUser ? 'user' : 'non-user'
 
               return (
-                <HoverCard openDelay={100} closeDelay={100} key={identity.id}>
+                <HoverCard openDelay={150} closeDelay={150} key={identity.id}>
                   <HoverCardTrigger className="w-full">
                     <IdentitySearchComboboxItem
                       key={identity.id}

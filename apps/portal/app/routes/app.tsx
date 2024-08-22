@@ -5,6 +5,7 @@ import { ApiError, UserPresenter, UsersService } from '@0xintuition/api'
 import PrivyLogout from '@client/privy-logout'
 import { getIdentityOrPending } from '@lib/services/identities'
 import logger from '@lib/utils/logger'
+import { getMaintenanceMode } from '@lib/utils/maintenance'
 import { invariant } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
 import { Outlet, useLoaderData, useLocation } from '@remix-run/react'
@@ -18,16 +19,14 @@ import { Address } from 'viem'
 import { z } from 'zod'
 
 export async function loader({ request }: LoaderFunctionArgs) {
+  getMaintenanceMode()
+
   const wallet = await requireUserWallet(request)
   invariant(wallet, 'Unauthorized')
 
   const isWalletSanctioned = await isSanctioned(wallet as Address)
   if (isWalletSanctioned) {
     return redirect('/sanctioned')
-  }
-
-  if (process.env.FF_FULL_LOCKDOWN_ENABLED === 'true') {
-    throw redirect(PATHS.MAINTENANCE)
   }
 
   let userObject

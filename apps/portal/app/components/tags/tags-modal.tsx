@@ -38,6 +38,6 @@ export default function TagsModal({
           />
         </DialogContent>
       </Dialog>
-    </> // TODO: [ENG-3436] -- Add AlertDialog interaction back in
+    </>
   )
 }

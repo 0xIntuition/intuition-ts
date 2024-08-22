@@ -45,7 +45,7 @@ export default function RelicCard({
                 muted
                 loop
                 playsInline
-                className="rounded-xl overflow-hidden h-[fit] items-center justify-center theme-border"
+                className="rounded-xl overflow-hidden h-[fit] items-center justify-center"
               />
             </motion.div>
           </AnimatePresence>

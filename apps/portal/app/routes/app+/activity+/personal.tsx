@@ -1,9 +1,10 @@
 import { Suspense } from 'react'
 
-import { ErrorStateCard } from '@0xintuition/1ui'
+import { ErrorStateCard, IconName } from '@0xintuition/1ui'
 import { ActivityPresenter } from '@0xintuition/api'
 
 import { ErrorPage } from '@components/error-page'
+import ExploreHeader from '@components/explore/ExploreHeader'
 import { ActivityList } from '@components/list/activity'
 import { RevalidateButton } from '@components/revalidate-button'
 import { ActivitySkeleton } from '@components/skeleton'
@@ -14,7 +15,7 @@ import { invariant } from '@lib/utils/misc'
 import { defer, LoaderFunctionArgs } from '@remix-run/node'
 import { Await } from '@remix-run/react'
 import { requireUser, requireUserWallet } from '@server/auth'
-import { NO_WALLET_ERROR } from 'app/consts'
+import { HEADER_BANNER_ACTIVITY, NO_WALLET_ERROR } from 'app/consts'
 import { PaginationType } from 'app/types/pagination'
 
 export async function loader({ request }: LoaderFunctionArgs) {
@@ -43,23 +44,31 @@ export default function PersonalActivityFeed() {
 
   logger('personal feed render')
   return (
-    <Suspense fallback={<ActivitySkeleton />}>
-      <Await
-        resolve={activity}
-        errorElement={
-          <ErrorStateCard>
-            <RevalidateButton />
-          </ErrorStateCard>
-        }
-      >
-        {(resolvedActivity) => (
-          <ActivityList
-            activities={resolvedActivity.activity as ActivityPresenter[]}
-            pagination={resolvedActivity.pagination as PaginationType}
-          />
-        )}
-      </Await>
-    </Suspense>
+    <>
+      <ExploreHeader
+        title="Activity"
+        content="The pulse of the collective conscious. Watch the Intuition knowledge graph come to life."
+        icon={IconName.lightningBolt}
+        bgImage={HEADER_BANNER_ACTIVITY}
+      />
+      <Suspense fallback={<ActivitySkeleton />}>
+        <Await
+          resolve={activity}
+          errorElement={
+            <ErrorStateCard>
+              <RevalidateButton />
+            </ErrorStateCard>
+          }
+        >
+          {(resolvedActivity) => (
+            <ActivityList
+              activities={resolvedActivity.activity as ActivityPresenter[]}
+              pagination={resolvedActivity.pagination as PaginationType}
+            />
+          )}
+        </Await>
+      </Suspense>
+    </>
   )
 }
 

@@ -61,6 +61,7 @@ export interface TagWithValueProps extends TagProps {
   onRemove?: () => void
   onStake?: () => void
   className?: string | undefined
+  maxStringLength?: number
 }
 
 const TagWithValue = ({
@@ -69,11 +70,15 @@ const TagWithValue = ({
   onRemove,
   onStake,
   className,
+  maxStringLength = 24,
   ...props
 }: TagWithValueProps) => {
   const TagContent = (
     <div className="flex flex-row gap-2 items-center">
-      <Trunctacular value={label ? label : ''} maxStringLength={24} />
+      <Trunctacular
+        value={label ? label : ''}
+        maxStringLength={maxStringLength}
+      />
       {value && (
         <div className="flex flex-row gap-1.5 items-center">
           <span className="h-[2px] w-[2px] bg-primary" />

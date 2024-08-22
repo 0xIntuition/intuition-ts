@@ -3,6 +3,7 @@ import { Text } from '@0xintuition/1ui'
 import PrivyLoginButton from '@client/privy-login-button'
 import { HeaderLogo } from '@components/header-logo'
 import logger from '@lib/utils/logger'
+import { getMaintenanceMode } from '@lib/utils/maintenance'
 import { User as PrivyUser } from '@privy-io/react-auth'
 import {
   ActionFunctionArgs,
@@ -16,6 +17,8 @@ import { PATHS } from 'app/consts'
 import { parse } from 'cookie'
 
 export async function loader({ request }: LoaderFunctionArgs) {
+  getMaintenanceMode()
+
   const authTokenClaims = await verifyPrivyAccessToken(request)
   if (authTokenClaims) {
     logger('[Loader] User is already authenticated, redirecting to home')

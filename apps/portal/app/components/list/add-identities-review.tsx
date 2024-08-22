@@ -174,7 +174,7 @@ export default function AddIdentitiesReview({
           <Tags>
             <div className="flex flex-wrap gap-2 items-center">
               {identitiesToAdd.map((identity) => (
-                <HoverCard key={identity.id} openDelay={100} closeDelay={100}>
+                <HoverCard key={identity.id} openDelay={150} closeDelay={150}>
                   <HoverCardTrigger>
                     <IdentityTag
                       key={identity.id}

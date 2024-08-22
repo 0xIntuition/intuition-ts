@@ -28,7 +28,7 @@ const ClaimStatus = ({
   return (
     <div className="flex flex-col justify-between max-md:w-full max-md:justify-center">
       <div className="flex items-center h-[6px] mb-4">
-        <TooltipProvider delayDuration={100}>
+        <TooltipProvider delayDuration={150}>
           <Tooltip>
             <TooltipTrigger className="h-full w-full bg-for block rounded-r-sm" />
             <TooltipContent>
@@ -47,7 +47,7 @@ const ClaimStatus = ({
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
-        <TooltipProvider delayDuration={100}>
+        <TooltipProvider delayDuration={150}>
           <Tooltip>
             <TooltipTrigger
               className="h-full bg-against block rounded-l-sm"

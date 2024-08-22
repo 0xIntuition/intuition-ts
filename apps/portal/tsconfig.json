@@ -10,6 +10,7 @@
     "types": ["@remix-run/node", "vite/client"],
     "paths": {
       "@components/*": ["app/components/*"],
+      "@consts/*": ["app/consts/*"],
       "@lib/*": ["app/lib/*"],
       "@routes/*": ["app/routes/*"],
       "@styles/*": ["app/styles/*"],
