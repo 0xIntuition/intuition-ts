@@ -63,9 +63,8 @@ export default function IntroRoute() {
         <div className="flex flex-col gap-2 text-justify md:text-center">
           <Text variant={TextVariant.caption} className="text-foreground/70">
             A single moment of frustration has the power to change the world
-            forever. The time has come to start building new, novel things on
-            top of the decentralized web stack. The infrastructure is finally
-            really. It is time for crypto to eat the world.
+            forever. It can spark revolutions, drive innovation, or alter the
+            trajectory of societies in ways we may never fully predict.
           </Text>
         </div>
       ),
@@ -94,8 +93,6 @@ export default function IntroRoute() {
             With your help, we will usher in a new era of digital interaction.
             One where you have the data you need, when you need it, from the
             voices you trust - bringing more trust to all of our interactions.
-            Powered by technologically-mediated intuition, allowing you to make
-            better decisions in an exponential world.
           </Text>
         </div>
       ),
