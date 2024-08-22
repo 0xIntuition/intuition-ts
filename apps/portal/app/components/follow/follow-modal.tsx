@@ -12,7 +12,6 @@ import { useRedeemTriple } from '@lib/hooks/useRedeemTriple'
 import { transactionReducer } from '@lib/hooks/useTransactionReducer'
 import { getSpecialPredicate } from '@lib/utils/app'
 import logger from '@lib/utils/logger'
-import { formatBalance } from '@lib/utils/misc'
 import { useGenericTxState } from '@lib/utils/use-tx-reducer'
 import { useFetcher, useLocation } from '@remix-run/react'
 import { CreateLoaderData } from '@routes/resources+/create'
@@ -22,7 +21,7 @@ import {
   TransactionStateType,
 } from 'app/types/transaction'
 import { VaultDetailsType } from 'app/types/vault'
-import { Abi, Address, decodeEventLog, parseUnits } from 'viem'
+import { Abi, Address, decodeEventLog, formatUnits, parseUnits } from 'viem'
 import { useAccount, usePublicClient } from 'wagmi'
 
 import FollowButton from './follow-button'
@@ -66,7 +65,11 @@ export default function FollowModal({
 
   const fetchReval = useFetcher()
   const formRef = useRef(null)
-  const [val, setVal] = useState(min_deposit ?? MIN_DEPOSIT)
+  const formattedMinDeposit = min_deposit
+    ? formatUnits(BigInt(BigInt(min_deposit)), 18)
+    : null
+
+  const [val, setVal] = useState(formattedMinDeposit ?? MIN_DEPOSIT)
   const [mode, setMode] = useState<'follow' | 'unfollow'>('follow')
   const [showErrors, setShowErrors] = useState(false)
   const [validationErrors, setValidationErrors] = useState<string[]>([])
@@ -263,7 +266,7 @@ export default function FollowModal({
     address ?? (userWallet as `0x${string}`),
   )
   const handleFollowButtonClick = async () => {
-    if (+val < +formatBalance(min_deposit, 18) || +val > +walletBalance) {
+    if (+val < +MIN_DEPOSIT || +val > +walletBalance) {
       setShowErrors(true)
       return
     }

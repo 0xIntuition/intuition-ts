@@ -16,7 +16,6 @@ import { useRedeemTriple } from '@lib/hooks/useRedeemTriple'
 import { transactionReducer } from '@lib/hooks/useTransactionReducer'
 import { getSpecialPredicate } from '@lib/utils/app'
 import logger from '@lib/utils/logger'
-import { formatBalance } from '@lib/utils/misc'
 import { useGenericTxState } from '@lib/utils/use-tx-reducer'
 import { useFetcher, useLocation } from '@remix-run/react'
 import { ClaimLoaderData } from '@routes/resources+/search-claims-by-ids'
@@ -31,7 +30,7 @@ import {
   TransactionStateType,
 } from 'app/types/transaction'
 import { VaultDetailsType } from 'app/types/vault'
-import { Abi, Address, decodeEventLog, parseUnits } from 'viem'
+import { Abi, Address, decodeEventLog, formatUnits, parseUnits } from 'viem'
 import { useAccount, usePublicClient } from 'wagmi'
 
 import SaveButton from './save-button'
@@ -67,7 +66,14 @@ export default function SaveListModal({
   const fetchReval = useFetcher()
   const [fetchId, setFetchId] = useState(0)
   const formRef = useRef(null)
-  const [val, setVal] = useState(min_deposit ?? MIN_DEPOSIT)
+  const formattedMinDeposit = min_deposit
+    ? formatUnits(BigInt(BigInt(min_deposit)), 18)
+    : null
+
+  console.log('formattedMinDeposit', formattedMinDeposit)
+  console.log('min_deposit', min_deposit)
+  const [val, setVal] = useState(formattedMinDeposit ?? MIN_DEPOSIT)
+  console.log('val', val)
   const [mode, setMode] = useState<'save' | 'unsave'>('save')
   const [showErrors, setShowErrors] = useState(false)
   const [validationErrors, setValidationErrors] = useState<string[]>([])
@@ -356,10 +362,7 @@ export default function SaveListModal({
     if (!vaultDetails) {
       throw new Error('Missing required parameters')
     }
-    if (
-      val < formatBalance(vaultDetails.min_deposit, 18) ||
-      +val > +walletBalance
-    ) {
+    if (+val < +MIN_DEPOSIT || +val > +walletBalance) {
       setShowErrors(true)
       return
     }
@@ -391,7 +394,7 @@ export default function SaveListModal({
     setFetchedClaimVaultId(null)
     setVaultDetails(undefined)
     setIsLoading(true)
-    setVal(min_deposit ?? vaultDetails?.min_deposit ?? MIN_DEPOSIT)
+    setVal(formattedMinDeposit ?? MIN_DEPOSIT)
     setShowErrors(false)
     setValidationErrors([])
     claimFetcher.data = undefined
@@ -411,7 +414,7 @@ export default function SaveListModal({
       setFetchedClaimVaultId(null)
       setVaultDetails(undefined)
       setIsLoading(true)
-      setVal(min_deposit ?? vaultDetails?.min_deposit ?? MIN_DEPOSIT)
+      setVal(formattedMinDeposit ?? MIN_DEPOSIT)
       setShowErrors(false)
       setValidationErrors([])
       claimFetcher.data = undefined
