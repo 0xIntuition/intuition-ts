@@ -103,7 +103,10 @@ export function Document({
       <head>
         {nonce && <ClientHintCheck nonce={nonce} />}
         <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"
+        />
         <Meta />
         <Links />
         <ExternalScripts gtmTrackingId={gtmTrackingId} />
