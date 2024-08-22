@@ -2,7 +2,6 @@ import {
   ButtonSize,
   ButtonVariant,
   Icon,
-  IconName,
   Text,
   TextVariant,
   TextWeight,
@@ -25,7 +24,7 @@ export default function RelicPointCard({
   return (
     <div className="rounded-lg theme-border p-5 flex flex-col md:flex-row items-start gap-5 w-full">
       <RelicCard
-        variant={'v2'}
+        variant={'v1'}
         className="w-fit h-fit mx-auto md:h-[250px] md:w-[250px]"
       />
       <div className="flex flex-row w-full">
@@ -49,8 +48,8 @@ export default function RelicPointCard({
             size={ButtonSize.md}
             className="w-full md:w-fit"
           >
-            <Icon name={IconName.circle} className="h-4 w-4" />
             Visit Intuition.Church
+            <Icon name={'arrow-up-right'} className="h-4 w-4" />
           </NavigationButton>
         </div>
         <div className="flex flex-col gap-5 w-1/3">
