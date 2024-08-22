@@ -1,3 +1,4 @@
+import { IconName } from '@0xintuition/1ui'
 import {
   IdentitiesService,
   IdentityPresenter,
@@ -5,6 +6,7 @@ import {
 } from '@0xintuition/api'
 
 import { ErrorPage } from '@components/error-page'
+import ExploreHeader from '@components/explore/ExploreHeader'
 import { ExploreSearch } from '@components/explore/ExploreSearch'
 import { IdentitiesList } from '@components/list/identities'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
@@ -13,7 +15,7 @@ import { getStandardPageParams } from '@lib/utils/params'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
-import { NO_WALLET_ERROR } from 'app/consts'
+import { HEADER_BANNER_IDENTITIES, NO_WALLET_ERROR } from 'app/consts'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const wallet = await requireUserWallet(request)
@@ -64,6 +66,12 @@ export default function ExploreIdentities() {
 
   return (
     <>
+      <ExploreHeader
+        title="Identities"
+        content="Decentralized identities for anything and everything - not just people."
+        icon={IconName.fingerprint}
+        bgImage={HEADER_BANNER_IDENTITIES}
+      />
       <ExploreSearch variant="identity" />
       <IdentitiesList
         variant="explore"

@@ -114,7 +114,7 @@ function ActivityItem({
     >
       <div className="flex flex-row items-center justify-between min-w-full mb-4 max-md:flex-col max-md:gap-3">
         <div className="flex flex-row items-center gap-2 max-md:flex-col">
-          <HoverCard openDelay={100} closeDelay={100}>
+          <HoverCard openDelay={150} closeDelay={150}>
             <HoverCardTrigger asChild>
               <Link
                 to={

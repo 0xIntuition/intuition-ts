@@ -1,5 +1,6 @@
 import { IconName, Text, TextVariant, TextWeight } from '@0xintuition/1ui'
 
+import ExploreHeader from '@components/explore/ExploreHeader'
 import { SupportCardGrid } from '@components/support/support-card'
 import { SupportFAQ } from '@components/support/support-faq'
 import { SupportHeaderCard } from '@components/support/support-header-card'
@@ -12,7 +13,7 @@ import {
   stakingFaq,
   tagsFaq,
 } from '@routes/app+/help-center+/faq'
-import { PATHS } from 'app/consts'
+import { HEADER_BANNER_HELP_CENTER, PATHS } from 'app/consts'
 import FullPageLayout from 'app/layouts/full-page-layout'
 
 const supportCards = [
@@ -64,6 +65,12 @@ export default function HelpCenter() {
   return (
     <FullPageLayout>
       <div className="flex flex-col max-w-7xl gap-12">
+        <ExploreHeader
+          title="Help Center"
+          content="Find answers and get support."
+          icon={IconName.rescueRing}
+          bgImage={HEADER_BANNER_HELP_CENTER}
+        />
         <SupportHeaderCard
           title="Complete Quests to Get You Started"
           content="Our Primitive Island quest line is designed to help you master the essentials of the Intuition System. From creating Claims to Staking, we’ve got you covered with easy-to-follow instructions."

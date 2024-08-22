@@ -58,7 +58,7 @@ const InfoCard = ({
         Creator
       </Text>
       <div className="flex justify-start items-center gap-1">
-        <HoverCard openDelay={100} closeDelay={100}>
+        <HoverCard openDelay={150} closeDelay={150}>
           <HoverCardTrigger>
             <a href={link}>
               <IdentityTag variant={variant} imgSrc={avatarImgSrc}>

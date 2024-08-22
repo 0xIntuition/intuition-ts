@@ -1,3 +1,4 @@
+import { IconName } from '@0xintuition/1ui'
 import {
   ClaimPresenter,
   ClaimSortColumn,
@@ -6,6 +7,7 @@ import {
 } from '@0xintuition/api'
 
 import { ErrorPage } from '@components/error-page'
+import ExploreHeader from '@components/explore/ExploreHeader'
 import { ExploreSearch } from '@components/explore/ExploreSearch'
 import { ClaimsList } from '@components/list/claims'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
@@ -14,7 +16,7 @@ import { getStandardPageParams } from '@lib/utils/params'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
-import { NO_WALLET_ERROR } from 'app/consts'
+import { HEADER_BANNER_CLAIMS, NO_WALLET_ERROR } from 'app/consts'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const wallet = await requireUserWallet(request)
@@ -72,6 +74,12 @@ export default function ExploreClaims() {
   )
   return (
     <>
+      <ExploreHeader
+        title="Claims"
+        content="Semantic statements, allowing anyone to claim anything about anything."
+        icon={IconName.claim}
+        bgImage={HEADER_BANNER_CLAIMS}
+      />
       <ExploreSearch variant="claim" identities={identities} />
       <ClaimsList
         claims={claims}
