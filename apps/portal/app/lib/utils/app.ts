@@ -175,9 +175,9 @@ export const getQuestObjects = (chainEnv: ChainEnv) => {
         type: 'identity',
       },
       stakeClaimFallbackClaim: {
-        id: '369d24ff-6d65-4094-9a27-3867cec6927f',
-        vaultId: 15,
-        displayName: 'Intuition has tag Trustworthy',
+        id: '79e7ec5c-8ab1-4baa-9233-0230c6cb0832',
+        vaultId: 759,
+        displayName: 'Intuition has tag Bullish',
         type: 'claim',
       },
       counterstakeClaimFallbackClaim: {
@@ -201,9 +201,9 @@ export const getQuestObjects = (chainEnv: ChainEnv) => {
         type: 'identity',
       },
       stakeClaimFallbackClaim: {
-        id: '369d24ff-6d65-4094-9a27-3867cec6927f',
-        vaultId: 15,
-        displayName: 'Intuition has tag Trustworthy',
+        id: '79e7ec5c-8ab1-4baa-9233-0230c6cb0832',
+        vaultId: 759,
+        displayName: 'Intuition has tag Bullish',
         type: 'claim',
       },
       counterstakeClaimFallbackClaim: {
