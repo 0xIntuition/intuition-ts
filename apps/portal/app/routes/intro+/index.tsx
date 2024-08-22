@@ -11,7 +11,7 @@ import { Button, Icon, Text, TextVariant } from '@0xintuition/1ui'
 import Container from '@components/container'
 import { getMaintenanceMode } from '@lib/utils/maintenance'
 import { cn } from '@lib/utils/misc'
-import { ActionFunctionArgs } from '@remix-run/node'
+import { ActionFunctionArgs, json } from '@remix-run/node'
 import { redirect, useFetcher } from '@remix-run/react'
 import { onboardingModalCookie } from '@server/onboarding'
 import {
@@ -28,6 +28,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 
 export async function loader() {
   getMaintenanceMode()
+  return json({})
 }
 
 export async function action({ request }: ActionFunctionArgs) {
