@@ -68,7 +68,7 @@ function EditSocialAccounts({
     return null
   }
   return (
-    <div className="flex flex-col w-full gap-5 mt-5">
+    <div className="flex flex-col w-full gap-5">
       <VerifiedLinkBadges
         privyUser={privyUser}
         handleOpenEditSocialLinksModal={handleOpenEditSocialLinksModal}
