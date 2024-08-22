@@ -187,10 +187,10 @@ export const getQuestObjects = (chainEnv: ChainEnv) => {
         type: 'claim',
       },
       discoverListFallbackAtom: {
-        id: 'c1bfa201-9a0f-4d37-af07-1bcb019860f4',
-        vaultId: 45,
-        displayName: 'Top Web3 Developer Tooling',
-        type: 'identity',
+        id: '46bab601-ce76-48e9-aea8-7dd13427e7e6',
+        vaultId: 63,
+        displayName: 'Alchemy has tag Top Web3 Developer Tooling',
+        type: 'claim',
       },
     },
     production: {
@@ -213,10 +213,10 @@ export const getQuestObjects = (chainEnv: ChainEnv) => {
         type: 'claim',
       },
       discoverListFallbackAtom: {
-        id: 'c1bfa201-9a0f-4d37-af07-1bcb019860f4',
-        vaultId: 45,
-        displayName: 'Top Web3 Developer Tooling',
-        type: 'identity',
+        id: '46bab601-ce76-48e9-aea8-7dd13427e7e6',
+        vaultId: 63,
+        displayName: 'Alchemy has tag Top Web3 Developer Tooling',
+        type: 'claim',
       },
     },
   }
