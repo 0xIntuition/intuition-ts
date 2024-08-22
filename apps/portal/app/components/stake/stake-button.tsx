@@ -4,7 +4,6 @@ import { Button } from '@0xintuition/1ui'
 
 import { stakeModalAtom } from '@lib/state/store'
 import { getChainEnvConfig } from '@lib/utils/environment'
-import { formatBalance } from '@lib/utils/misc'
 import { useNavigation } from '@remix-run/react'
 import { CURRENT_ENV } from 'app/consts'
 import {
@@ -103,6 +102,15 @@ const StakeButton: React.FC<StakeButtonProps> = ({
     }
   }, [navigation.state, navigationStarted])
 
+  console.log('Data from StakeButton')
+  console.log('mode', mode)
+  console.log('val', val)
+  console.log('walletBalance', walletBalance)
+  console.log('conviction_price', conviction_price)
+  console.log('formattedConvictionPrice', formattedConvictionPrice)
+  console.log('user_conviction', user_conviction)
+  console.log('formattedUserConviction', formattedUserConviction)
+
   return (
     <Button
       variant="primary"
@@ -125,7 +133,7 @@ const StakeButton: React.FC<StakeButtonProps> = ({
             +val < +formatUnits(BigInt(min_deposit), 18)
           ) {
             errors.push(
-              `Minimum deposit is ${formatBalance(min_deposit, 18)} ETH`,
+              `Minimum deposit is ${formatUnits(BigInt(min_deposit), 18)} ETH`,
             )
           }
           if (
