@@ -9,11 +9,11 @@ describe('Text', () => {
     const { asFragment } = render(<Text>Text</Text>)
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
-        <p
+        <div
           class="text-primary text-base font-normal"
         >
           Text
-        </p>
+        </div>
       </DocumentFragment>
     `)
   })
@@ -100,11 +100,11 @@ describe('Text', () => {
     const { asFragment } = render(<Text variant="bodyLarge">Text</Text>)
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
-        <p
+        <div
           class="text-primary text-lg font-normal"
         >
           Text
-        </p>
+        </div>
       </DocumentFragment>
     `)
   })
@@ -113,11 +113,11 @@ describe('Text', () => {
     const { asFragment } = render(<Text variant="body">Text</Text>)
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
-        <p
+        <div
           class="text-primary text-base font-normal"
         >
           Text
-        </p>
+        </div>
       </DocumentFragment>
     `)
   })
@@ -126,11 +126,11 @@ describe('Text', () => {
     const { asFragment } = render(<Text variant="caption">Text</Text>)
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
-        <p
+        <div
           class="text-primary text-sm font-normal"
         >
           Text
-        </p>
+        </div>
       </DocumentFragment>
     `)
   })
@@ -139,11 +139,11 @@ describe('Text', () => {
     const { asFragment } = render(<Text variant="footnote">Text</Text>)
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
-        <p
+        <div
           class="text-primary text-sm font-normal"
         >
           Text
-        </p>
+        </div>
       </DocumentFragment>
     `)
   })
@@ -152,11 +152,11 @@ describe('Text', () => {
     const { asFragment } = render(<Text variant="small">Text</Text>)
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
-        <p
+        <div
           class="text-primary text-xs font-normal"
         >
           Text
-        </p>
+        </div>
       </DocumentFragment>
     `)
   })
@@ -165,11 +165,11 @@ describe('Text', () => {
     const { asFragment } = render(<Text weight="medium">Text</Text>)
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
-        <p
+        <div
           class="text-primary text-base font-medium"
         >
           Text
-        </p>
+        </div>
       </DocumentFragment>
     `)
   })
@@ -178,11 +178,11 @@ describe('Text', () => {
     const { asFragment } = render(<Text weight="semibold">Text</Text>)
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
-        <p
+        <div
           class="text-primary text-base font-semibold"
         >
           Text
-        </p>
+        </div>
       </DocumentFragment>
     `)
   })
@@ -191,11 +191,11 @@ describe('Text', () => {
     const { asFragment } = render(<Text weight="bold">Text</Text>)
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
-        <p
+        <div
           class="text-primary text-base font-bold"
         >
           Text
-        </p>
+        </div>
       </DocumentFragment>
     `)
   })

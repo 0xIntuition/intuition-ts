@@ -33,16 +33,16 @@ describe('ListHeaderCard', () => {
           <div
             class="flex flex-col"
           >
-            <p
+            <div
               class="text-sm font-normal text-muted-foreground mb-0.5"
             >
               Identities
-            </p>
-            <p
+            </div>
+            <div
               class="text-primary text-lg font-medium"
             >
               35
-            </p>
+            </div>
           </div>
           <div
             class="flex items-center"
@@ -69,11 +69,11 @@ describe('ListHeaderCard', () => {
                     </svg>
                   </span>
                 </span>
-                <p
+                <div
                   class="text-primary text-base font-normal"
                 >
                   0xintuition
-                </p>
+                </div>
               </button>
               <div
                 class="shrink-0 bg-border/20 h-[1px] w-4 group-hover:bg-primary max-sm:w-px max-sm:h-2"
@@ -99,11 +99,11 @@ describe('ListHeaderCard', () => {
                     </svg>
                   </span>
                 </span>
-                <p
+                <div
                   class="text-primary text-base font-normal"
                 >
                   is really
-                </p>
+                </div>
               </button>
               <div
                 class="shrink-0 bg-border/20 h-[1px] w-4 group-hover:bg-primary max-sm:w-px max-sm:h-2"
@@ -129,11 +129,11 @@ describe('ListHeaderCard', () => {
                     </svg>
                   </span>
                 </span>
-                <p
+                <div
                   class="text-primary text-base font-normal"
                 >
                   cool
-                </p>
+                </div>
               </button>
             </div>
           </div>

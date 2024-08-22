@@ -27,21 +27,21 @@ describe('Banner', () => {
                   href="/src/components/Icon/Icon.sprites.svg#circle-info"
                 />
               </svg>
-              <p
+              <div
                 class="text-primary text-lg font-normal"
               >
                 Title
-              </p>
+              </div>
             </div>
           </div>
           <div
             class="p-4"
           >
-            <p
+            <div
               class="text-base font-normal text-secondary-foreground/70 max-sm:text-center"
             >
               Here is some information.
-            </p>
+            </div>
           </div>
         </div>
       </DocumentFragment>
@@ -73,21 +73,21 @@ describe('Banner', () => {
                   href="/src/components/Icon/Icon.sprites.svg#triangle-exclamation"
                 />
               </svg>
-              <p
+              <div
                 class="text-primary text-lg font-normal"
               >
                 Title
-              </p>
+              </div>
             </div>
           </div>
           <div
             class="p-4"
           >
-            <p
+            <div
               class="text-base font-normal text-secondary-foreground/70 max-sm:text-center"
             >
               Here is some information.
-            </p>
+            </div>
           </div>
         </div>
       </DocumentFragment>
@@ -119,21 +119,21 @@ describe('Banner', () => {
                   href="/src/components/Icon/Icon.sprites.svg#circle-x"
                 />
               </svg>
-              <p
+              <div
                 class="text-primary text-lg font-normal"
               >
                 Title
-              </p>
+              </div>
             </div>
           </div>
           <div
             class="p-4"
           >
-            <p
+            <div
               class="text-base font-normal text-secondary-foreground/70 max-sm:text-center"
             >
               Here is some information.
-            </p>
+            </div>
           </div>
         </div>
       </DocumentFragment>

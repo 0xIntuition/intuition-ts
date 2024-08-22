@@ -23,11 +23,11 @@ describe('ClaimStakeCard', () => {
         <div
           class="flex flex-col gap-4 theme-border rounded-xl p-5 w-full"
         >
-          <p
+          <div
             class="text-primary text-lg font-normal"
           >
             Stake
-          </p>
+          </div>
           <div
             class="grid justify-center items-center"
           >
@@ -50,16 +50,16 @@ describe('ClaimStakeCard', () => {
             <div
               class="col-[1] row-[1] text-center"
             >
-              <p
+              <div
                 class="text-lg font-normal text-muted-foreground"
               >
                 TVL
-              </p>
-              <p
+              </div>
+              <div
                 class="text-primary text-lg font-medium"
               >
                 4.928 ETH
-              </p>
+              </div>
             </div>
           </div>
           <div
@@ -72,17 +72,17 @@ describe('ClaimStakeCard', () => {
                 <span
                   class="block h-2 w-2 rounded-[2px] bg-for"
                 />
-                <p
+                <div
                   class="text-sm font-medium text-muted-foreground"
                 >
                   TVL For
-                </p>
+                </div>
               </div>
-              <p
+              <div
                 class="text-primary text-lg font-medium text-left"
               >
                 3.643 ETH
-              </p>
+              </div>
             </div>
             <div>
               <div
@@ -91,17 +91,17 @@ describe('ClaimStakeCard', () => {
                 <span
                   class="block h-2 w-2 rounded-[2px] bg-against"
                 />
-                <p
+                <div
                   class="text-sm font-medium text-muted-foreground"
                 >
                   TVL Against
-                </p>
+                </div>
               </div>
-              <p
+              <div
                 class="text-primary text-lg font-medium text-right"
               >
                 0.567 ETH
-              </p>
+              </div>
             </div>
           </div>
           <div
@@ -114,17 +114,17 @@ describe('ClaimStakeCard', () => {
                 <span
                   class="block h-2 w-2 rounded-[2px] bg-for"
                 />
-                <p
+                <div
                   class="text-sm font-medium text-muted-foreground"
                 >
                   Depositors
-                </p>
+                </div>
               </div>
-              <p
+              <div
                 class="text-primary text-lg font-medium text-left"
               >
                 124
-              </p>
+              </div>
             </div>
             <div>
               <div
@@ -133,17 +133,17 @@ describe('ClaimStakeCard', () => {
                 <span
                   class="block h-2 w-2 rounded-[2px] bg-against"
                 />
-                <p
+                <div
                   class="text-sm font-medium text-muted-foreground"
                 >
                   Depositors
-                </p>
+                </div>
               </div>
-              <p
+              <div
                 class="text-primary text-lg font-medium text-right"
               >
                 39
-              </p>
+              </div>
             </div>
           </div>
           <div
@@ -180,11 +180,11 @@ describe('ClaimStakeCard', () => {
         <div
           class="flex flex-col gap-4 theme-border rounded-xl p-5 w-full"
         >
-          <p
+          <div
             class="text-primary text-lg font-normal"
           >
             Stake
-          </p>
+          </div>
           <div
             class="grid justify-center items-center"
           >
@@ -207,16 +207,16 @@ describe('ClaimStakeCard', () => {
             <div
               class="col-[1] row-[1] text-center"
             >
-              <p
+              <div
                 class="text-lg font-normal text-muted-foreground"
               >
                 TVL
-              </p>
-              <p
+              </div>
+              <div
                 class="text-primary text-lg font-medium"
               >
                 4.928 ETH
-              </p>
+              </div>
             </div>
           </div>
           <div
@@ -229,17 +229,17 @@ describe('ClaimStakeCard', () => {
                 <span
                   class="block h-2 w-2 rounded-[2px] bg-for"
                 />
-                <p
+                <div
                   class="text-sm font-medium text-muted-foreground"
                 >
                   TVL For
-                </p>
+                </div>
               </div>
-              <p
+              <div
                 class="text-primary text-lg font-medium text-left"
               >
                 3.643 ETH
-              </p>
+              </div>
             </div>
             <div>
               <div
@@ -248,17 +248,17 @@ describe('ClaimStakeCard', () => {
                 <span
                   class="block h-2 w-2 rounded-[2px] bg-against"
                 />
-                <p
+                <div
                   class="text-sm font-medium text-muted-foreground"
                 >
                   TVL Against
-                </p>
+                </div>
               </div>
-              <p
+              <div
                 class="text-primary text-lg font-medium text-right"
               >
                 0.567 ETH
-              </p>
+              </div>
             </div>
           </div>
           <div
@@ -271,17 +271,17 @@ describe('ClaimStakeCard', () => {
                 <span
                   class="block h-2 w-2 rounded-[2px] bg-for"
                 />
-                <p
+                <div
                   class="text-sm font-medium text-muted-foreground"
                 >
                   Depositors
-                </p>
+                </div>
               </div>
-              <p
+              <div
                 class="text-primary text-lg font-medium text-left"
               >
                 124
-              </p>
+              </div>
             </div>
             <div>
               <div
@@ -290,17 +290,17 @@ describe('ClaimStakeCard', () => {
                 <span
                   class="block h-2 w-2 rounded-[2px] bg-against"
                 />
-                <p
+                <div
                   class="text-sm font-medium text-muted-foreground"
                 >
                   Depositors
-                </p>
+                </div>
               </div>
-              <p
+              <div
                 class="text-primary text-lg font-medium text-right"
               >
                 39
-              </p>
+              </div>
             </div>
           </div>
           <div

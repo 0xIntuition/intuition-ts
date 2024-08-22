@@ -66,11 +66,11 @@ describe('Input', () => {
           <div
             class="border-0 border-border/10 py-2 min-w-16 border-r"
           >
-            <p
+            <div
               class="text-base font-medium text-secondary-foreground/80"
             >
               http://
-            </p>
+            </div>
           </div>
           <input
             class="flex w-full px-2 bg-transparent ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-[0.5px] focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
@@ -98,11 +98,11 @@ describe('Input', () => {
           <div
             class="border-0 border-border/10 py-2 min-w-16 border-l text-right"
           >
-            <p
+            <div
               class="text-base font-medium text-secondary-foreground/80"
             >
               etherium
-            </p>
+            </div>
           </div>
         </div>
       </DocumentFragment>
@@ -125,11 +125,11 @@ describe('Input', () => {
           <div
             class="border-0 border-border/10 py-2 min-w-16 border-l text-right"
           >
-            <p
+            <div
               class="text-base font-medium text-secondary-foreground/80"
             >
               .com
-            </p>
+            </div>
           </div>
         </div>
       </DocumentFragment>

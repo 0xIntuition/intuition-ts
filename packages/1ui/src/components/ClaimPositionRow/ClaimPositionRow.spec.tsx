@@ -59,11 +59,11 @@ describe('ClaimPositionRow', () => {
                 <a
                   href="https://sepolia.basescan.org/address/0x1234567890abcdef1234567890abcdef12345678"
                 >
-                  <p
+                  <div
                     class="text-primary text-lg font-normal mr-1"
                   >
                     John Doe
-                  </p>
+                  </div>
                 </a>
                 <div
                   class="flex flex-row items-center gap-1"
@@ -76,11 +76,11 @@ describe('ClaimPositionRow', () => {
                     <button
                       data-state="closed"
                     >
-                      <p
+                      <div
                         class="text-base font-normal text-secondary-foreground"
                       >
                         0x1234...5678
-                      </p>
+                      </div>
                     </button>
                   </a>
                   <button
@@ -96,11 +96,11 @@ describe('ClaimPositionRow', () => {
                   </button>
                 </div>
               </div>
-              <p
+              <div
                 class="text-sm font-medium text-secondary-foreground mb-2"
               >
                 Last update October 1, 2021
-              </p>
+              </div>
             </div>
           </div>
           <div
@@ -118,11 +118,11 @@ describe('ClaimPositionRow', () => {
             <div
               class="h-full flex flex-col items-end"
             >
-              <p
+              <div
                 class="text-primary text-lg font-medium"
               >
                 1.21 ETH
-              </p>
+              </div>
             </div>
           </div>
         </div>
@@ -185,11 +185,11 @@ describe('ClaimPositionRow', () => {
               <div
                 class="h-full flex flex-col items-end"
               >
-                <p
+                <div
                   class="text-primary text-lg font-medium"
                 >
                   1.21 ETH
-                </p>
+                </div>
               </div>
             </div>
           </div>

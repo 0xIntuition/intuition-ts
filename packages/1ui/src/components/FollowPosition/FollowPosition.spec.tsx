@@ -47,22 +47,22 @@ describe('FollowPosition', () => {
               <div
                 class="flex items-center mb-1.5"
               >
-                <p
+                <div
                   class="text-primary text-lg font-normal mr-1"
                 >
                   John Doe
-                </p>
-                <p
+                </div>
+                <div
                   class="text-base font-normal text-secondary-foreground"
                 >
                   0x1234...5678
-                </p>
+                </div>
               </div>
-              <p
+              <div
                 class="text-sm font-medium text-secondary-foreground mb-2"
               >
                 Last update October 1, 2021
-              </p>
+              </div>
             </div>
           </div>
           <div
@@ -80,11 +80,11 @@ describe('FollowPosition', () => {
             <div
               class="h-full flex flex-col items-end"
             >
-              <p
+              <div
                 class="text-primary text-lg font-medium"
               >
                 1.21 ETH
-              </p>
+              </div>
             </div>
           </div>
         </div>

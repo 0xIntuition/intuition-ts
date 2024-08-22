@@ -43,31 +43,31 @@ describe('ProgressCard', () => {
               <div
                 class="flex gap-1 items-center"
               >
-                <p
+                <div
                   class="text-primary text-lg font-normal"
                 >
                   5
-                </p>
-                <p
+                </div>
+                <div
                   class="text-lg font-normal text-muted-foreground"
                 >
                   /
-                </p>
-                <p
+                </div>
+                <div
                   class="text-lg font-normal text-muted-foreground"
                 >
                   10
-                </p>
+                </div>
               </div>
             </div>
             <div
               class="space-y-2.5"
             >
-              <p
+              <div
                 class="text-base font-normal text-muted-foreground"
               >
                 50% Complete
-              </p>
+              </div>
               <div
                 class="flex items-center h-[6px] mb-4"
               >
@@ -126,31 +126,31 @@ describe('ProgressCard', () => {
               <div
                 class="flex gap-1 items-center"
               >
-                <p
+                <div
                   class="text-primary text-lg font-normal"
                 >
                   0
-                </p>
-                <p
+                </div>
+                <div
                   class="text-lg font-normal text-muted-foreground"
                 >
                   /
-                </p>
-                <p
+                </div>
+                <div
                   class="text-lg font-normal text-muted-foreground"
                 >
                   10
-                </p>
+                </div>
               </div>
             </div>
             <div
               class="space-y-2.5"
             >
-              <p
+              <div
                 class="text-base font-normal text-muted-foreground"
               >
                 0% Complete
-              </p>
+              </div>
               <div
                 class="flex items-center h-[6px] mb-4"
               >
@@ -209,31 +209,31 @@ describe('ProgressCard', () => {
               <div
                 class="flex gap-1 items-center"
               >
-                <p
+                <div
                   class="text-primary text-lg font-normal"
                 >
                   10
-                </p>
-                <p
+                </div>
+                <div
                   class="text-lg font-normal text-muted-foreground"
                 >
                   /
-                </p>
-                <p
+                </div>
+                <div
                   class="text-lg font-normal text-muted-foreground"
                 >
                   10
-                </p>
+                </div>
               </div>
             </div>
             <div
               class="space-y-2.5"
             >
-              <p
+              <div
                 class="text-base font-normal text-muted-foreground"
               >
                 100% Complete
-              </p>
+              </div>
               <div
                 class="flex items-center h-[6px] mb-4"
               >
@@ -292,31 +292,31 @@ describe('ProgressCard', () => {
               <div
                 class="flex gap-1 items-center"
               >
-                <p
+                <div
                   class="text-primary text-lg font-normal"
                 >
                   0
-                </p>
-                <p
+                </div>
+                <div
                   class="text-lg font-normal text-muted-foreground"
                 >
                   /
-                </p>
-                <p
+                </div>
+                <div
                   class="text-lg font-normal text-muted-foreground"
                 >
                   0
-                </p>
+                </div>
               </div>
             </div>
             <div
               class="space-y-2.5"
             >
-              <p
+              <div
                 class="text-base font-normal text-muted-foreground"
               >
                 0% Complete
-              </p>
+              </div>
               <div
                 class="flex items-center h-[6px] mb-4"
               >

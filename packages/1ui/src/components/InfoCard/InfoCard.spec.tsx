@@ -21,11 +21,11 @@ describe('InfoCard', () => {
         <div
           class="flex flex-col gap-2 theme-border p-5 rounded-lg max-sm:items-center"
         >
-          <p
+          <div
             class="text-sm font-normal text-muted-foreground"
           >
             Creator
-          </p>
+          </div>
           <div
             class="flex justify-start items-center gap-1"
           >
@@ -53,21 +53,21 @@ describe('InfoCard', () => {
                     </svg>
                   </span>
                 </span>
-                <p
+                <div
                   class="text-primary text-base font-normal"
                 >
                   super dave
-                </p>
+                </div>
               </button>
             </a>
             <span
               class="bg-muted-foreground h-[2px] w-[2px] block rounded-full"
             />
-            <p
+            <div
               class="text-base font-normal text-muted-foreground"
             >
               May 10, 2024
-            </p>
+            </div>
           </div>
         </div>
       </DocumentFragment>

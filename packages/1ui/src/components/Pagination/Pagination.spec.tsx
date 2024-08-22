@@ -47,22 +47,22 @@ describe('Pagination', () => {
           class="mx-auto flex w-full justify-center"
           role="navigation"
         >
-          <p
+          <div
             class="text-primary text-sm font-normal self-center"
           >
             100 users found
-          </p>
+          </div>
           <div
             class="flex"
           >
             <div
               class="self-center px-4 flex gap-4 justify-center items-center"
             >
-              <p
+              <div
                 class="text-primary text-sm font-normal"
               >
                 Rows per page
-              </p>
+              </div>
               <button
                 aria-autocomplete="none"
                 aria-controls="radix-:r0:"
@@ -87,11 +87,11 @@ describe('Pagination', () => {
                 </svg>
               </button>
             </div>
-            <p
+            <div
               class="text-primary text-sm font-normal self-center px-4"
             >
               Page 1 of 10
-            </p>
+            </div>
             <ul
               class="flex flex-row items-center gap-2 h-max"
             >
@@ -262,11 +262,11 @@ describe('Pagination', () => {
                 aria-hidden="true"
                 class="flex w-6 h-5 items-center justify-center"
               >
-                <p
+                <div
                   class="text-primary text-lg font-normal"
                 >
                   ...
-                </p>
+                </div>
                 <span
                   class="sr-only"
                 >

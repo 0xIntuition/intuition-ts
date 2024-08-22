@@ -22,11 +22,11 @@ describe('TransactionStatusCard', () => {
                 href="/src/components/Icon/Icon.sprites.svg#wallet-2"
               />
             </svg>
-            <p
+            <div
               class="text-primary text-base font-normal"
             >
               Awaiting wallet approval
-            </p>
+            </div>
             <svg
               class="text-primary/20 h-4 w-4"
             >
@@ -53,11 +53,11 @@ describe('TransactionStatusCard', () => {
               href="/src/components/Icon/Icon.sprites.svg#triangle-exclamation"
             />
           </svg>
-          <p
+          <div
             class="text-primary text-base font-normal"
           >
             Transaction failed
-          </p>
+          </div>
         </div>
       </DocumentFragment>
     `)
@@ -78,11 +78,11 @@ describe('TransactionStatusCard', () => {
               href="/src/components/Icon/Icon.sprites.svg#in-progress"
             />
           </svg>
-          <p
+          <div
             class="text-primary text-base font-normal"
           >
             Creating Identity in the Intuition Network...
-          </p>
+          </div>
         </div>
       </DocumentFragment>
     `)
@@ -103,11 +103,11 @@ describe('TransactionStatusCard', () => {
               href="/src/components/Icon/Icon.sprites.svg#in-progress"
             />
           </svg>
-          <p
+          <div
             class="text-primary text-base font-normal"
           >
             Creating Identity in the Intuition Network...
-          </p>
+          </div>
         </div>
       </DocumentFragment>
     `)
@@ -128,11 +128,11 @@ describe('TransactionStatusCard', () => {
               href="/src/components/Icon/Icon.sprites.svg#in-progress"
             />
           </svg>
-          <p
+          <div
             class="text-primary text-base font-normal"
           >
             Publishing Identity to IPFS...
-          </p>
+          </div>
         </div>
       </DocumentFragment>
     `)
@@ -153,11 +153,11 @@ describe('TransactionStatusCard', () => {
               href="/src/components/Icon/Icon.sprites.svg#wallet-2"
             />
           </svg>
-          <p
+          <div
             class="text-primary text-base font-normal"
           >
             Approve transaction in your wallet
-          </p>
+          </div>
         </div>
       </DocumentFragment>
     `)
@@ -178,11 +178,11 @@ describe('TransactionStatusCard', () => {
               href="/src/components/Icon/Icon.sprites.svg#in-progress"
             />
           </svg>
-          <p
+          <div
             class="text-primary text-base font-normal"
           >
             Transaction pending
-          </p>
+          </div>
         </div>
       </DocumentFragment>
     `)
@@ -201,11 +201,11 @@ describe('TransactionStatusCard', () => {
               href="/src/components/Icon/Icon.sprites.svg#in-progress"
             />
           </svg>
-          <p
+          <div
             class="text-primary text-base font-normal"
           >
             Confirming transaction
-          </p>
+          </div>
         </div>
       </DocumentFragment>
     `)
@@ -224,11 +224,11 @@ describe('TransactionStatusCard', () => {
               href="/src/components/Icon/Icon.sprites.svg#circle-check"
             />
           </svg>
-          <p
+          <div
             class="text-primary text-base font-normal"
           >
             Transaction complete
-          </p>
+          </div>
         </div>
       </DocumentFragment>
     `)

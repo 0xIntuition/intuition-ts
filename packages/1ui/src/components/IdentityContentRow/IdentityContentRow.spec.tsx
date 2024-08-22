@@ -88,11 +88,11 @@ describe('IdentityContentRow', () => {
                   <a
                     href="https://sepolia.basescan.org/address/0xd57981d5bc446768e8a1e3d582e545fa705415b5"
                   >
-                    <p
+                    <div
                       class="text-primary text-lg font-normal mr-2"
                     >
                       John Doe
-                    </p>
+                    </div>
                   </a>
                   <div
                     class="hidden md:flex flex-row gap-1 items-center"
@@ -105,11 +105,11 @@ describe('IdentityContentRow', () => {
                       <button
                         data-state="closed"
                       >
-                        <p
+                        <div
                           class="text-base font-normal text-secondary-foreground"
                         >
                           0x1234...5678
-                        </p>
+                        </div>
                       </button>
                     </a>
                     <button
@@ -130,11 +130,11 @@ describe('IdentityContentRow', () => {
             <div
               class="flex flex-col items-end max-sm:flex-row max-sm:justify-between max-sm:items-center max-sm:w-full"
             >
-              <p
+              <div
                 class="text-primary text-lg font-medium"
               >
                 1.21 ETH
-              </p>
+              </div>
               <div
                 class="flex gap-1 items-center"
               >
@@ -145,11 +145,11 @@ describe('IdentityContentRow', () => {
                     href="/src/components/Icon/Icon.sprites.svg#people"
                   />
                 </svg>
-                <p
+                <div
                   class="text-base font-normal text-secondary-foreground"
                 >
                   305
-                </p>
+                </div>
               </div>
             </div>
           </div>

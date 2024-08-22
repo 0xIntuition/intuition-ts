@@ -88,33 +88,33 @@ describe('PositionCard', () => {
             <div
               class="flex flex-col max-lg:items-center"
             >
-              <p
+              <div
                 class="text-sm font-normal text-muted-foreground mb-0.5"
               >
                 Amount Staked
-              </p>
-              <p
+              </div>
+              <div
                 class="text-primary text-lg font-medium"
               >
                 0.512 ETH
-              </p>
+              </div>
             </div>
             <div
               class="flex flex-col max-lg:items-center"
             >
-              <p
+              <div
                 class="text-sm font-normal text-muted-foreground mb-0.5"
               >
                 Percent Ownership
-              </p>
+              </div>
               <div
                 class="flex items-center"
               >
-                <p
+                <div
                   class="text-primary text-lg font-normal mr-2 undefined"
                 >
                   24%
-                </p>
+                </div>
                 <div
                   class="grid"
                 >
@@ -132,30 +132,30 @@ describe('PositionCard', () => {
             <div
               class="flex flex-col max-lg:items-center"
             >
-              <p
+              <div
                 class="text-sm font-medium text-muted-foreground mb-0.5"
               >
                 Fees Accrued
-              </p>
-              <p
+              </div>
+              <div
                 class="text-lg font-medium text-success"
               >
                 +0.005 ETH
-              </p>
+              </div>
             </div>
             <div
               class="flex flex-col max-lg:items-center"
             >
-              <p
+              <div
                 class="text-sm font-medium text-muted-foreground mb-0.5"
               >
                 Last Updated
-              </p>
-              <p
+              </div>
+              <div
                 class="text-primary text-lg font-medium"
               >
                 May 10, 2024
-              </p>
+              </div>
             </div>
           </div>
           <button

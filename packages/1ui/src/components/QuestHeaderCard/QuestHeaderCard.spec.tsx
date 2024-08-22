@@ -26,45 +26,45 @@ describe('QuestHeaderCard', () => {
             <div
               class="flex-col gap-1"
             >
-              <p
+              <div
                 class="text-sm font-normal text-foreground/70"
               >
                 Continue your journey.
-              </p>
-              <p
+              </div>
+              <div
                 class="text-primary text-lg font-normal"
               >
                 Primitive Island
-              </p>
+              </div>
             </div>
             <div
               class="flex gap-1 items-center"
             >
-              <p
+              <div
                 class="text-primary text-lg font-normal"
               >
                 1
-              </p>
-              <p
+              </div>
+              <div
                 class="text-lg font-normal text-muted-foreground"
               >
                 /
-              </p>
-              <p
+              </div>
+              <div
                 class="text-lg font-normal text-muted-foreground"
               >
                 10
-              </p>
+              </div>
             </div>
           </div>
           <div
             class="flex justify-between items-end"
           >
-            <p
+            <div
               class="text-sm font-normal text-foreground/70"
             >
               10% Complete
-            </p>
+            </div>
             <button
               class="flex justify-center items-center gap-2 text-sm font-medium border disabled:bg-muted aria-disabled:bg-muted disabled:text-muted-foreground aria-disabled:text-muted-foreground disabled:border-muted aria-disabled:border-muted aria-disabled:pointer-events-none primary-gradient-subtle text-primary/60 border-primary/10 rounded-lg hover:text-primary disabled:from-muted aria-disabled:from-muted disabled:to-muted aria-disabled:to-muted shadow-md-subtle px-3 py-1 max-sm:py-2 max-sm:text-base"
             >

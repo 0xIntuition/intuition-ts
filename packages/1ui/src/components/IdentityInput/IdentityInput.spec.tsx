@@ -31,11 +31,11 @@ describe('IdentityInput', () => {
             <div
               class="flex gap-1 items-center"
             >
-              <p
+              <div
                 class="text-xs font-normal text-primary/60"
               >
                 Subject
-              </p>
+              </div>
               <button
                 data-state="closed"
               >
@@ -78,11 +78,11 @@ describe('IdentityInput', () => {
             <div
               class="flex gap-1 items-center"
             >
-              <p
+              <div
                 class="text-xs font-normal text-primary/60"
               >
                 Predicate
-              </p>
+              </div>
               <button
                 data-state="closed"
               >
@@ -125,11 +125,11 @@ describe('IdentityInput', () => {
             <div
               class="flex gap-1 items-center"
             >
-              <p
+              <div
                 class="text-xs font-normal text-primary/60"
               >
                 Object
-              </p>
+              </div>
               <button
                 data-state="closed"
               >

@@ -72,7 +72,7 @@ const textElement = (variant: number | string | undefined | null) => {
     case TextVariant.headline:
       return 'h6'
     default:
-      return 'p'
+      return 'div'
   }
 }
 

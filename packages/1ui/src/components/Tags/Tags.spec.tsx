@@ -37,11 +37,11 @@ describe('Tags', () => {
               <div
                 class="flex flex-row gap-2 items-center"
               >
-                <p
+                <div
                   class="text-primary text-base font-normal"
                 >
                   keyboard
-                </p>
+                </div>
                 <div
                   class="flex flex-row gap-1.5 items-center"
                 >
@@ -58,11 +58,11 @@ describe('Tags', () => {
               <div
                 class="flex flex-row gap-2 items-center"
               >
-                <p
+                <div
                   class="text-primary text-base font-normal"
                 >
                   ergonomic
-                </p>
+                </div>
                 <div
                   class="flex flex-row gap-1.5 items-center"
                 >
@@ -79,11 +79,11 @@ describe('Tags', () => {
               <div
                 class="flex flex-row gap-2 items-center"
               >
-                <p
+                <div
                   class="text-primary text-base font-normal"
                 >
                   wireless
-                </p>
+                </div>
                 <div
                   class="flex flex-row gap-1.5 items-center"
                 >
@@ -100,11 +100,11 @@ describe('Tags', () => {
               <div
                 class="flex flex-row gap-2 items-center"
               >
-                <p
+                <div
                   class="text-primary text-base font-normal"
                 >
                   gaming
-                </p>
+                </div>
                 <div
                   class="flex flex-row gap-1.5 items-center"
                 >
@@ -121,11 +121,11 @@ describe('Tags', () => {
               <div
                 class="flex flex-row gap-2 items-center"
               >
-                <p
+                <div
                   class="text-primary text-base font-normal"
                 >
                   mechanical
-                </p>
+                </div>
                 <div
                   class="flex flex-row gap-1.5 items-center"
                 >
@@ -142,11 +142,11 @@ describe('Tags', () => {
               <div
                 class="flex flex-row gap-2 items-center"
               >
-                <p
+                <div
                   class="text-primary text-base font-normal"
                 >
                   tech
-                </p>
+                </div>
                 <div
                   class="flex flex-row gap-1.5 items-center"
                 >
@@ -163,11 +163,11 @@ describe('Tags', () => {
               <div
                 class="flex flex-row gap-2 items-center"
               >
-                <p
+                <div
                   class="text-primary text-base font-normal"
                 >
                   innovation
-                </p>
+                </div>
                 <div
                   class="flex flex-row gap-1.5 items-center"
                 >
@@ -184,11 +184,11 @@ describe('Tags', () => {
               <div
                 class="flex flex-row gap-2 items-center"
               >
-                <p
+                <div
                   class="text-primary text-base font-normal"
                 >
                   typing
-                </p>
+                </div>
                 <div
                   class="flex flex-row gap-1.5 items-center"
                 >
@@ -205,11 +205,11 @@ describe('Tags', () => {
               <div
                 class="flex flex-row gap-2 items-center"
               >
-                <p
+                <div
                   class="text-primary text-base font-normal"
                 >
                   quality
-                </p>
+                </div>
                 <div
                   class="flex flex-row gap-1.5 items-center"
                 >
@@ -226,11 +226,11 @@ describe('Tags', () => {
               <div
                 class="flex flex-row gap-2 items-center"
               >
-                <p
+                <div
                   class="text-primary text-base font-normal"
                 >
                   brand
-                </p>
+                </div>
                 <div
                   class="flex flex-row gap-1.5 items-center"
                 >
@@ -242,11 +242,11 @@ describe('Tags', () => {
               </div>
             </button>
             <a>
-              <p
+              <div
                 class="text-primary text-base font-normal"
               >
                 + 32 more
-              </p>
+              </div>
             </a>
           </div>
           <button
@@ -297,11 +297,11 @@ describe('Tags', () => {
               <div
                 class="flex flex-row gap-2 items-center"
               >
-                <p
+                <div
                   class="text-primary text-base font-normal"
                 >
                   keyboard
-                </p>
+                </div>
                 <div
                   class="flex flex-row gap-1.5 items-center"
                 >
@@ -318,11 +318,11 @@ describe('Tags', () => {
               <div
                 class="flex flex-row gap-2 items-center"
               >
-                <p
+                <div
                   class="text-primary text-base font-normal"
                 >
                   ergonomic
-                </p>
+                </div>
                 <div
                   class="flex flex-row gap-1.5 items-center"
                 >
@@ -339,11 +339,11 @@ describe('Tags', () => {
               <div
                 class="flex flex-row gap-2 items-center"
               >
-                <p
+                <div
                   class="text-primary text-base font-normal"
                 >
                   wireless
-                </p>
+                </div>
                 <div
                   class="flex flex-row gap-1.5 items-center"
                 >
@@ -360,11 +360,11 @@ describe('Tags', () => {
               <div
                 class="flex flex-row gap-2 items-center"
               >
-                <p
+                <div
                   class="text-primary text-base font-normal"
                 >
                   gaming
-                </p>
+                </div>
                 <div
                   class="flex flex-row gap-1.5 items-center"
                 >
@@ -381,11 +381,11 @@ describe('Tags', () => {
               <div
                 class="flex flex-row gap-2 items-center"
               >
-                <p
+                <div
                   class="text-primary text-base font-normal"
                 >
                   mechanical
-                </p>
+                </div>
                 <div
                   class="flex flex-row gap-1.5 items-center"
                 >
@@ -402,11 +402,11 @@ describe('Tags', () => {
               <div
                 class="flex flex-row gap-2 items-center"
               >
-                <p
+                <div
                   class="text-primary text-base font-normal"
                 >
                   tech
-                </p>
+                </div>
                 <div
                   class="flex flex-row gap-1.5 items-center"
                 >
@@ -423,11 +423,11 @@ describe('Tags', () => {
               <div
                 class="flex flex-row gap-2 items-center"
               >
-                <p
+                <div
                   class="text-primary text-base font-normal"
                 >
                   innovation
-                </p>
+                </div>
                 <div
                   class="flex flex-row gap-1.5 items-center"
                 >
@@ -444,11 +444,11 @@ describe('Tags', () => {
               <div
                 class="flex flex-row gap-2 items-center"
               >
-                <p
+                <div
                   class="text-primary text-base font-normal"
                 >
                   typing
-                </p>
+                </div>
                 <div
                   class="flex flex-row gap-1.5 items-center"
                 >
@@ -465,11 +465,11 @@ describe('Tags', () => {
               <div
                 class="flex flex-row gap-2 items-center"
               >
-                <p
+                <div
                   class="text-primary text-base font-normal"
                 >
                   quality
-                </p>
+                </div>
                 <div
                   class="flex flex-row gap-1.5 items-center"
                 >
@@ -486,11 +486,11 @@ describe('Tags', () => {
               <div
                 class="flex flex-row gap-2 items-center"
               >
-                <p
+                <div
                   class="text-primary text-base font-normal"
                 >
                   brand
-                </p>
+                </div>
                 <div
                   class="flex flex-row gap-1.5 items-center"
                 >

@@ -38,11 +38,11 @@ describe('IdentityCard', () => {
             <div
               class="flex gap-2 items-center"
             >
-              <p
+              <div
                 class="text-base font-normal text-primary/80"
               >
                 super dave
-              </p>
+              </div>
               <div
                 class="inline-flex items-center gap-1 rounded-md pl-1 pr-1.5 py-0.5 text-sm font-light text-foreground/65 bg-primary/15"
               >
@@ -52,11 +52,11 @@ describe('IdentityCard', () => {
             <button
               data-state="closed"
             >
-              <p
+              <div
                 class="text-sm font-normal text-muted-foreground"
               >
                 0x1234...5678
-              </p>
+              </div>
             </button>
           </div>
         </div>
@@ -97,11 +97,11 @@ describe('IdentityCard', () => {
             <div
               class="flex gap-2 items-center"
             >
-              <p
+              <div
                 class="text-base font-normal text-primary/80"
               >
                 intuition
-              </p>
+              </div>
               <div
                 class="inline-flex items-center gap-1 rounded-md pl-1 pr-1.5 py-0.5 text-sm font-light text-foreground/65 bg-primary/15"
               >
@@ -111,11 +111,11 @@ describe('IdentityCard', () => {
             <button
               data-state="closed"
             >
-              <p
+              <div
                 class="text-sm font-normal text-muted-foreground"
               >
                 0x1234...5678
-              </p>
+              </div>
             </button>
           </div>
         </div>

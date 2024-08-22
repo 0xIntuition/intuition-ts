@@ -33,11 +33,11 @@ describe('TagsListInput', () => {
               <div
                 class="flex flex-row gap-2 items-center"
               >
-                <p
+                <div
                   class="text-primary text-base font-normal"
                 >
                   Tag Name 1
-                </p>
+                </div>
               </div>
             </button>
             <button
@@ -59,11 +59,11 @@ describe('TagsListInput', () => {
             <div
               class="flex flex-row gap-2 items-center"
             >
-              <p
+              <div
                 class="text-primary text-base font-normal"
               >
                 Tag Name 2
-              </p>
+              </div>
             </div>
           </button>
           <button
@@ -85,11 +85,11 @@ describe('TagsListInput', () => {
           <div
             class="flex flex-row gap-2 items-center"
           >
-            <p
+            <div
               class="text-primary text-base font-normal"
             >
               Tag Name 3
-            </p>
+            </div>
           </div>
         </button>
         <button
@@ -118,11 +118,11 @@ describe('TagsListInput', () => {
               />
             </svg>
           </button>
-          <p
+          <div
             class="text-sm font-normal text-secondary-foreground"
           >
             2 tags left
-          </p>
+          </div>
         </div>
       </DocumentFragment>
     `)
@@ -160,11 +160,11 @@ describe('TagsListInput', () => {
                   />
                 </svg>
               </button>
-              <p
+              <div
                 class="text-sm font-normal text-secondary-foreground"
               >
                 Filter by up to 5 tags
-              </p>
+              </div>
             </div>
           </div>
         </div>
@@ -196,11 +196,11 @@ describe('TagsListInput', () => {
               <div
                 class="flex flex-row gap-2 items-center"
               >
-                <p
+                <div
                   class="text-primary text-base font-normal"
                 >
                   Tag Name 1
-                </p>
+                </div>
               </div>
             </button>
             <button
@@ -222,11 +222,11 @@ describe('TagsListInput', () => {
             <div
               class="flex flex-row gap-2 items-center"
             >
-              <p
+              <div
                 class="text-primary text-base font-normal"
               >
                 Tag Name 2
-              </p>
+              </div>
             </div>
           </button>
           <button
@@ -248,11 +248,11 @@ describe('TagsListInput', () => {
           <div
             class="flex flex-row gap-2 items-center"
           >
-            <p
+            <div
               class="text-primary text-base font-normal"
             >
               Tag Name 3
-            </p>
+            </div>
           </div>
         </button>
         <button
@@ -281,11 +281,11 @@ describe('TagsListInput', () => {
               />
             </svg>
           </button>
-          <p
+          <div
             class="text-sm font-normal text-secondary-foreground"
           >
             0 trust circles left
-          </p>
+          </div>
         </div>
       </DocumentFragment>
     `)
@@ -323,11 +323,11 @@ describe('TagsListInput', () => {
                   />
                 </svg>
               </button>
-              <p
+              <div
                 class="text-sm font-normal text-secondary-foreground"
               >
                 Filter by up to 3 trust circles
-              </p>
+              </div>
             </div>
           </div>
         </div>

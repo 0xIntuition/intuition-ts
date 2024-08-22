@@ -12,19 +12,19 @@ describe('ActivePositionCard', () => {
         <div
           class="flex justify-between items-center theme-border rounded-lg bg-primary/5 py-3 px-5 w-full gap-8"
         >
-          <p
+          <div
             class="text-base font-normal text-foreground/50"
           >
             Your Active Position
-          </p>
+          </div>
           <div
             class="flex items-center gap-2"
           >
-            <p
+            <div
               class="text-primary text-base font-normal"
             >
               0.567 ETH
-            </p>
+            </div>
           </div>
         </div>
       </DocumentFragment>
@@ -39,11 +39,11 @@ describe('ActivePositionCard', () => {
         <div
           class="flex justify-between items-center theme-border rounded-lg bg-primary/5 py-3 px-5 w-full gap-8"
         >
-          <p
+          <div
             class="text-base font-normal text-foreground/50"
           >
             Your Active Position
-          </p>
+          </div>
           <div
             class="flex items-center gap-2"
           >
@@ -52,11 +52,11 @@ describe('ActivePositionCard', () => {
             >
               FOR
             </button>
-            <p
+            <div
               class="text-primary text-base font-normal"
             >
               0.567 ETH
-            </p>
+            </div>
           </div>
         </div>
       </DocumentFragment>
@@ -71,11 +71,11 @@ describe('ActivePositionCard', () => {
         <div
           class="flex justify-between items-center theme-border rounded-lg bg-primary/5 py-3 px-5 w-full gap-8"
         >
-          <p
+          <div
             class="text-base font-normal text-foreground/50"
           >
             Your Active Position
-          </p>
+          </div>
           <div
             class="flex items-center gap-2"
           >
@@ -84,11 +84,11 @@ describe('ActivePositionCard', () => {
             >
               AGAINST
             </button>
-            <p
+            <div
               class="text-primary text-base font-normal"
             >
               0.567 ETH
-            </p>
+            </div>
           </div>
         </div>
       </DocumentFragment>

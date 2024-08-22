@@ -26,7 +26,7 @@ describe('StakeCard', () => {
           <div
             class="flex flex-col gap-2 w-full"
           >
-            <p
+            <div
               class="text-primary text-lg font-normal flex flex-row gap-1.5"
             >
               Conviction in 
@@ -52,41 +52,41 @@ describe('StakeCard', () => {
               <button
                 data-state="closed"
               >
-                <p
+                <div
                   class="text-primary text-base font-normal"
                 >
                   identityDispl...
-                </p>
+                </div>
               </button>
-            </p>
+            </div>
             <div
               class="flex justify-between items-center"
             >
               <div>
-                <p
+                <div
                   class="text-sm font-normal text-muted-foreground"
                 >
                   TVL
-                </p>
-                <p
+                </div>
+                <div
                   class="text-primary text-base font-medium"
                 >
                   4.928 ETH
-                </p>
+                </div>
               </div>
               <div
                 class="flex flex-col items-end"
               >
-                <p
+                <div
                   class="text-sm font-normal text-muted-foreground"
                 >
                   Depositors
-                </p>
-                <p
+                </div>
+                <div
                   class="text-primary text-base font-normal"
                 >
                   69
-                </p>
+                </div>
               </div>
             </div>
           </div>

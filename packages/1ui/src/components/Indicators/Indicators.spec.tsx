@@ -11,11 +11,11 @@ describe('MonetaryValue', () => {
     )
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
-        <p
+        <div
           class="text-primary text-lg font-medium"
         >
           0.345 ETH
-        </p>
+        </div>
       </DocumentFragment>
     `)
   })

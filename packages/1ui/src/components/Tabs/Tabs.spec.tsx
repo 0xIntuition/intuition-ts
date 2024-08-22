@@ -49,16 +49,16 @@ describe('Tabs', () => {
               tabindex="-1"
               type="button"
             >
-              <p
+              <div
                 class="text-primary text-lg font-normal group-disabled:text-muted"
               >
                 One 
-              </p>
-              <p
+              </div>
+              <div
                 class="text-base font-normal text-muted-foreground group-disabled:text-muted"
               >
                 69
-              </p>
+              </div>
             </button>
             <button
               aria-controls="radix-:r0:-content-two"
@@ -72,16 +72,16 @@ describe('Tabs', () => {
               tabindex="-1"
               type="button"
             >
-              <p
+              <div
                 class="text-primary text-lg font-normal group-disabled:text-muted"
               >
                 Two
-              </p>
-              <p
+              </div>
+              <div
                 class="text-base font-normal text-muted-foreground group-disabled:text-muted"
               >
                 69
-              </p>
+              </div>
             </button>
             <button
               aria-controls="radix-:r0:-content-three"
@@ -97,16 +97,16 @@ describe('Tabs', () => {
               tabindex="-1"
               type="button"
             >
-              <p
+              <div
                 class="text-primary text-lg font-normal group-disabled:text-muted"
               >
                 Three
-              </p>
-              <p
+              </div>
+              <div
                 class="text-base font-normal text-muted-foreground group-disabled:text-muted"
               >
                 69
-              </p>
+              </div>
             </button>
           </div>
           <div
@@ -201,16 +201,16 @@ describe('Tabs', () => {
               tabindex="-1"
               type="button"
             >
-              <p
+              <div
                 class="text-lg font-normal group-disabled:text-muted text-primary/30 group-data-[state=active]:text-primary"
               >
                 One 
-              </p>
-              <p
+              </div>
+              <div
                 class="text-base font-normal text-muted-foreground group-disabled:text-muted"
               >
                 69
-              </p>
+              </div>
             </button>
             <button
               aria-controls="radix-:r4:-content-two"
@@ -224,16 +224,16 @@ describe('Tabs', () => {
               tabindex="-1"
               type="button"
             >
-              <p
+              <div
                 class="text-lg font-normal group-disabled:text-muted text-primary/30 group-data-[state=active]:text-primary"
               >
                 Two
-              </p>
-              <p
+              </div>
+              <div
                 class="text-base font-normal text-muted-foreground group-disabled:text-muted"
               >
                 69
-              </p>
+              </div>
             </button>
             <button
               aria-controls="radix-:r4:-content-three"
@@ -249,16 +249,16 @@ describe('Tabs', () => {
               tabindex="-1"
               type="button"
             >
-              <p
+              <div
                 class="text-lg font-normal group-disabled:text-muted text-primary/30 group-data-[state=active]:text-primary"
               >
                 Three
-              </p>
-              <p
+              </div>
+              <div
                 class="text-base font-normal text-muted-foreground group-disabled:text-muted"
               >
                 0
-              </p>
+              </div>
             </button>
           </div>
           <div

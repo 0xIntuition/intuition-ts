@@ -49,11 +49,11 @@ describe('Claim', () => {
                 </svg>
               </span>
             </span>
-            <p
+            <div
               class="text-primary text-base font-normal"
             >
               Alice
-            </p>
+            </div>
           </button>
           <div
             class="shrink-0 bg-border/20 h-[1px] w-4 group-hover:bg-primary max-sm:w-px max-sm:h-2"
@@ -79,11 +79,11 @@ describe('Claim', () => {
                 </svg>
               </span>
             </span>
-            <p
+            <div
               class="text-primary text-base font-normal"
             >
               likes
-            </p>
+            </div>
           </button>
           <div
             class="shrink-0 bg-border/20 h-[1px] w-4 group-hover:bg-primary max-sm:w-px max-sm:h-2"
@@ -109,11 +109,11 @@ describe('Claim', () => {
                 </svg>
               </span>
             </span>
-            <p
+            <div
               class="text-primary text-base font-normal"
             >
               pizza
-            </p>
+            </div>
           </button>
         </div>
       </DocumentFragment>
@@ -146,11 +146,11 @@ describe('Claim', () => {
                 </svg>
               </span>
             </span>
-            <p
+            <div
               class="text-primary text-base font-normal"
             >
               Alice
-            </p>
+            </div>
           </button>
           <div
             class="shrink-0 bg-border/20 h-[1px] w-4 group-hover:bg-primary max-sm:w-px max-sm:h-2"
@@ -176,11 +176,11 @@ describe('Claim', () => {
                 </svg>
               </span>
             </span>
-            <p
+            <div
               class="text-primary text-base font-normal"
             >
               likes
-            </p>
+            </div>
           </button>
           <div
             class="shrink-0 bg-border/20 h-[1px] w-4 group-hover:bg-primary max-sm:w-px max-sm:h-2"
@@ -206,11 +206,11 @@ describe('Claim', () => {
                 </svg>
               </span>
             </span>
-            <p
+            <div
               class="text-primary text-base font-normal"
             >
               pizza
-            </p>
+            </div>
           </button>
         </div>
       </DocumentFragment>
@@ -245,11 +245,11 @@ describe('Claim', () => {
                 </svg>
               </span>
             </span>
-            <p
+            <div
               class="text-primary text-base font-normal"
             >
               Alice
-            </p>
+            </div>
           </button>
           <div
             class="shrink-0 bg-border/20 h-[1px] w-4 group-hover:bg-primary max-sm:w-px max-sm:h-2"
@@ -275,11 +275,11 @@ describe('Claim', () => {
                 </svg>
               </span>
             </span>
-            <p
+            <div
               class="text-primary text-base font-normal"
             >
               likes
-            </p>
+            </div>
           </button>
           <div
             class="shrink-0 bg-border/20 h-[1px] w-4 group-hover:bg-primary max-sm:w-px max-sm:h-2"
@@ -305,11 +305,11 @@ describe('Claim', () => {
                 </svg>
               </span>
             </span>
-            <p
+            <div
               class="text-primary text-base font-normal"
             >
               pizza
-            </p>
+            </div>
           </button>
         </div>
       </DocumentFragment>
@@ -342,11 +342,11 @@ describe('Claim', () => {
                 </svg>
               </span>
             </span>
-            <p
+            <div
               class="text-primary text-base font-normal"
             >
               Alice
-            </p>
+            </div>
           </button>
           <div
             class="shrink-0 bg-border/20 h-[1px] w-4 group-hover:bg-primary max-sm:w-px max-sm:h-2"
@@ -372,11 +372,11 @@ describe('Claim', () => {
                 </svg>
               </span>
             </span>
-            <p
+            <div
               class="text-primary text-base font-normal"
             >
               likes
-            </p>
+            </div>
           </button>
           <div
             class="shrink-0 bg-border/20 h-[1px] w-4 group-hover:bg-primary max-sm:w-px max-sm:h-2"
@@ -402,11 +402,11 @@ describe('Claim', () => {
                 </svg>
               </span>
             </span>
-            <p
+            <div
               class="text-primary text-base font-normal"
             >
               pizza
-            </p>
+            </div>
           </button>
         </div>
       </DocumentFragment>

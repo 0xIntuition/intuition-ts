@@ -12,11 +12,11 @@ describe('Trunctacular', () => {
         <button
           data-state="closed"
         >
-          <p
+          <div
             class="text-primary text-base font-normal"
           >
             reallyRea...
-          </p>
+          </div>
         </button>
       </DocumentFragment>
     `)
@@ -25,11 +25,11 @@ describe('Trunctacular', () => {
     const { asFragment } = render(<Trunctacular value="0xUser" />)
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
-        <p
+        <div
           class="text-primary text-base font-normal"
         >
           0xUser
-        </p>
+        </div>
       </DocumentFragment>
     `)
   })
@@ -42,11 +42,11 @@ describe('Trunctacular', () => {
         <button
           data-state="closed"
         >
-          <p
+          <div
             class="text-primary text-base font-normal"
           >
             0x1234...5678
-          </p>
+          </div>
         </button>
       </DocumentFragment>
     `)
@@ -55,11 +55,11 @@ describe('Trunctacular', () => {
     const { asFragment } = render(<Trunctacular value="shortName" />)
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
-        <p
+        <div
           class="text-primary text-base font-normal"
         >
           shortName
-        </p>
+        </div>
       </DocumentFragment>
     `)
   })
@@ -72,11 +72,11 @@ describe('Trunctacular', () => {
     )
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
-        <p
+        <div
           class="text-primary text-base font-normal"
         >
           ReallyLongNameThatKeepsOnGoing
-        </p>
+        </div>
       </DocumentFragment>
     `)
   })
