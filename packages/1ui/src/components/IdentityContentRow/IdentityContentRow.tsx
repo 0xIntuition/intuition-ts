@@ -67,7 +67,7 @@ const NameAndAddress = ({
           maxStringLength={42}
         />
       </a>
-      <div className="flex flex-row gap-1 items-center">
+      <div className="hidden md:flex flex-row gap-1 items-center">
         <a href={ipfsLink} target="_blank" rel="noreferrer noreopener">
           <Trunctacular
             value={id}
