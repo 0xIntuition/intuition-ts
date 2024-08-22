@@ -108,9 +108,9 @@ export default function HomePage() {
                   totalIdentities={resolvedStats.totalIdentities}
                   totalClaims={resolvedStats.totalClaims}
                   totalUsers={resolvedStats.totalUsers}
-                  totalStaked={
-                    Number(formatBalance(resolvedStats.totalStaked, 18)) || 0
-                  }
+                  // totalStaked={
+                  //   Number(formatBalance(resolvedStats.totalStaked, 18)) || 0
+                  // }
                   totalSignals={resolvedStats.totalSignals || 0}
                 />
               )}
