@@ -19,6 +19,7 @@ import {
   TagWithValueProps,
   TextVariant,
   Trunctacular,
+  useSidebarLayoutContext,
 } from '..'
 
 export interface IdentityContentRowProps
@@ -67,7 +68,7 @@ const NameAndAddress = ({
           maxStringLength={42}
         />
       </a>
-      <div className="flex flex-row gap-1 items-center">
+      <div className="hidden md:flex flex-row gap-1 items-center">
         <a href={ipfsLink} target="_blank" rel="noreferrer noreopener">
           <Trunctacular
             value={id}
@@ -99,6 +100,8 @@ const IdentityContentRow = ({
   ...props
 }: IdentityContentRowProps) => {
   const hasTags = !!(tags && tags.length > 0)
+
+  const { isMobileView } = useSidebarLayoutContext()
 
   const content = (
     <div
@@ -157,6 +160,7 @@ const IdentityContentRow = ({
                   <TagWithValue
                     label={tag.label}
                     value={tag.value}
+                    maxStringLength={isMobileView ? 12 : 24}
                     key={index}
                   />
                 ))}

@@ -38,6 +38,6 @@ export default function AddIdentitiesListModal({
           />
         </DialogContent>
       </Dialog>
-    </> // TODO: [ENG-3436] -- Add AlertDialog interaction back in
+    </>
   )
 }

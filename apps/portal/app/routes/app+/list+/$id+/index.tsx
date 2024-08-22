@@ -176,7 +176,7 @@ export default function ListOverview() {
 
   return (
     <div className="flex-col justify-start items-start flex w-full gap-6">
-      <div className="flex flex-row w-full justify-end gap-4">
+      <div className="flex flex-row w-full justify-around md:justify-end gap-4">
         <Button
           variant="primary"
           onClick={() => {
