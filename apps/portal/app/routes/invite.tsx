@@ -166,24 +166,26 @@ export default function InviteRoute() {
           toast.error(errorMessage)
         }
         console.error('Error redeeming invite code', error)
+        setLoading(false)
       }
     } catch (error: unknown) {
       logger(error)
+      setLoading(false)
     }
   }
 
   useEffect(() => {
-    if (inviteCodeFetcher.state === 'idle') {
+    if (inviteCodeFetcher.state === 'idle' && inviteCodeFetcher.data) {
       setLoading(false)
-      if (inviteCodeFetcher.data?.status === 'success') {
-        handleContinue
-      } else if (inviteCodeFetcher.data?.error) {
+      if (inviteCodeFetcher.data.status === 'success') {
+        handleContinue()
+      } else if (inviteCodeFetcher.data.error) {
         const errorMessage = inviteCodeFetcher.data.error
         setFetcherError(errorMessage)
         toast.error(errorMessage)
       }
     }
-  }, [inviteCodeFetcher.state, inviteCodeFetcher.data, navigate])
+  }, [inviteCodeFetcher.state, inviteCodeFetcher.data])
 
   const handleContinue = () => {
     setShowVideo(true)
@@ -253,9 +255,8 @@ export default function InviteRoute() {
                       type="submit"
                       variant={ButtonVariant.primary}
                       size={ButtonSize.lg}
-                      disabled={loading || relicHolder}
+                      disabled={loading}
                       className="w-full md:w-48"
-                      onClick={handleContinue}
                     >
                       Setup Profile
                     </Button>
