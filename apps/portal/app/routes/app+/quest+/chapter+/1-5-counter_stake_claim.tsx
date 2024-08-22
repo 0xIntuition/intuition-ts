@@ -142,6 +142,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     claim.contract,
     claim.vault_id,
     user.wallet?.address as `0x${string}`,
+    claim.counter_vault_id,
   )
 
   // if position fetch underlying vault details
