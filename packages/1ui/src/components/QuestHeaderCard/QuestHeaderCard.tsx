@@ -22,7 +22,6 @@ const QuestHeaderCard = ({
   const percentageOfQuestsCompleted =
     (numberOfCompletedQuests / totalNumberOfQuests) * 100
 
-  console.log(percentageOfQuestsCompleted < 100)
   return (
     <div
       className={`flex flex-col gap-6 p-6 rounded-xl theme-border bg-gradient-to-r ${percentageOfQuestsCompleted === 100 ? 'from-for/30' : 'from-against/30'}`}

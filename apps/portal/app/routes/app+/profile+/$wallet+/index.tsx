@@ -261,7 +261,6 @@ function TopFollowers({
           }
         >
           {(resolvedConnectionsData) => {
-            console.log('resolvedConnectionsData', resolvedConnectionsData)
             if (
               !resolvedConnectionsData?.followers ||
               !resolvedConnectionsData?.followClaim
