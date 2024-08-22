@@ -29,7 +29,7 @@ import { getActivity } from '@lib/services/activity'
 import { getFeaturedLists } from '@lib/services/lists'
 import { getSystemStats } from '@lib/services/stats'
 import { getFeaturedListObjectIds } from '@lib/utils/app'
-import { invariant } from '@lib/utils/misc'
+import { formatBalance, invariant } from '@lib/utils/misc'
 import { defer, LoaderFunctionArgs } from '@remix-run/node'
 import { Await } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
@@ -108,9 +108,9 @@ export default function HomePage() {
                   totalIdentities={resolvedStats.totalIdentities}
                   totalClaims={resolvedStats.totalClaims}
                   totalUsers={resolvedStats.totalUsers}
-                  // totalStaked={
-                  //   Number(formatBalance(resolvedStats.totalStaked, 18)) || 0
-                  // }
+                  totalStaked={
+                    Number(formatBalance(resolvedStats.totalStaked, 18)) || 0
+                  }
                   totalSignals={resolvedStats.totalSignals || 0}
                 />
               )}
