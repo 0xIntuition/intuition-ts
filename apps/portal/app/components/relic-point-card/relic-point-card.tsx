@@ -44,6 +44,7 @@ export default function RelicPointCard({
           </Text>
           <NavigationButton
             to={'https://intuition.church'}
+            target="_blank"
             variant={ButtonVariant.secondary}
             size={ButtonSize.md}
             className="w-full md:w-fit"
