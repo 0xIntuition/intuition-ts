@@ -26,7 +26,7 @@ const tagVariants = cva(
     variants: {
       variant: {
         [TagVariant.primary]:
-          'bg-primary/10 text-primary/90 border-primary/40 hover:bg-primary/30 hover:text-primary hover:border-primary/60',
+          'bg-primary/10 text-primary/90 border-primary/20 hover:bg-primary/20 hover:text-primary hover:border-primary/40',
         [TagVariant.success]:
           'bg-success/10 text-success/90 border-success/40 hover:bg-success/30 hover:text-success hover:border-success/60',
         [TagVariant.accent]:

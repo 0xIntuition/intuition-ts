@@ -261,7 +261,11 @@ function TopFollowers({
           }
         >
           {(resolvedConnectionsData) => {
-            if (!resolvedConnectionsData) {
+            console.log('resolvedConnectionsData', resolvedConnectionsData)
+            if (
+              !resolvedConnectionsData?.followers ||
+              !resolvedConnectionsData?.followClaim
+            ) {
               return (
                 <EmptyStateCard message="This user has no follow claim yet. A follow claim will be created when the first person follows them." />
               )

@@ -5,6 +5,7 @@ import {
   MonetaryValue,
   Text,
   TextVariant,
+  TextWeight,
   Trunctacular,
 } from '@0xintuition/1ui'
 import { IdentityPresenter } from '@0xintuition/api'
@@ -40,9 +41,9 @@ const DataAboutHeader: React.FC<DataAboutHeaderProps> = ({
     >
       <div className="flex items-center gap-1.5">
         <Text
-          variant="caption"
-          weight="regular"
-          className="text-secondary-foreground"
+          variant="body"
+          weight={TextWeight.medium}
+          className="text-foreground/70"
         >
           {variant === 'claims' ? 'Claims about' : 'Conviction in'}
         </Text>

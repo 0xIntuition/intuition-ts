@@ -155,7 +155,7 @@ const PaginationPageCounter = ({
 }: PaginationPageCounterProps) => (
   <Text
     variant={TextVariant.caption}
-    className={cn('self-center px-4', className)}
+    className={cn('self-center px-4 text-foreground/70', className)}
     {...props}
   >{`Page ${currentPage} of ${totalPages}`}</Text>
 )
@@ -168,7 +168,9 @@ const PaginationRowSelection = ({ className, ...props }: SelectProps) => (
       className,
     )}
   >
-    <Text variant={TextVariant.caption}>Rows per page</Text>
+    <Text variant={TextVariant.caption} className="text-foreground/70">
+      Rows per page
+    </Text>
     <Select {...props}>
       <SelectTrigger className="w-max h-8 gap-2">
         <SelectValue placeholder="Select a fruit" />
@@ -198,7 +200,7 @@ const PaginationSummary = ({
 }: PaginationSummaryProps) => (
   <Text
     variant={TextVariant.caption}
-    className={cn('self-center', className)}
+    className={cn('self-center text-foreground/70', className)}
     {...props}
   >{`${totalEntries} ${label} found`}</Text>
 )

@@ -21,7 +21,10 @@ const EmptyStateCard = ({
         className,
       )}
     >
-      <Icon name={IconName.inboxEmpty} className="w-12 h-12" />
+      <Icon
+        name={IconName.inboxEmpty}
+        className="w-12 h-12 text-muted-foreground"
+      />
       <Text variant="body" className="text-muted-foreground">
         {message}
       </Text>

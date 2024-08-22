@@ -109,7 +109,7 @@ export const themePlugin = plugin(
         'font-feature-settings': '"rlig" 1, "calt" 1',
       },
       '.theme-border': {
-        '@apply border border-border/25': {},
+        '@apply border border-border/20': {},
       },
       '.in-out-gradient': {
         '@apply bg-gradient-to-r from-border/5 from-10% via-border/20 via-50% to-border/5 to-90%':

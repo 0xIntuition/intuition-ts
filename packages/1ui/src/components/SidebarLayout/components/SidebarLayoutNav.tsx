@@ -37,7 +37,7 @@ export const SidebarLayoutNav = ({
       />
       {!isMobileView && (
         <Button
-          className="relative right-[-0.75rem] float-right w-6 h-6 top-[-50%] bg-background theme-border"
+          className="relative right-[-0.75rem] float-right w-6 h-6 top-[-50%] bg-background theme-border backdrop-blur-md"
           variant={ButtonVariant.ghost}
           size={ButtonSize.icon}
           onClick={toggleIsCollapsedValues}

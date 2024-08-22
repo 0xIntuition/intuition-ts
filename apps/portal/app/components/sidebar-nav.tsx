@@ -282,7 +282,7 @@ export default function SidebarNav({
             </SidebarLayoutNavHeader>
             <SidebarLayoutNavBody className="flex flex-col justify-between">
               <div className="flex flex-col gap-6">
-                <div className="flex flex-col gap-px">
+                <div className="flex flex-col gap-1">
                   {sidebarNavRoutes.map((sidebarNavItem, index) => (
                     <NavLink
                       key={`nav-item-${index}`}
@@ -315,7 +315,7 @@ export default function SidebarNav({
                     <SidebarNavItem
                       iconName={IconName.brushSparkle}
                       label="Create"
-                      className="bg-for/50 hover:bg-for text-foreground hover:text-foreground"
+                      className="bg-for hover:bg-for/70 text-foreground hover:text-foreground"
                     />
                   </DropdownMenuTrigger>
                   <DropdownMenuContent

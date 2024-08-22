@@ -7,6 +7,7 @@ import {
   IconName,
   MonetaryValue,
   Text,
+  TextWeight,
 } from '@0xintuition/1ui'
 
 import { Link } from '@remix-run/react'
@@ -34,8 +35,8 @@ export function OverviewStakingHeader({
       <div className="flex items-center gap-1.5">
         <Text
           variant="body"
-          weight="regular"
-          className="text-secondary-foreground"
+          weight={TextWeight.medium}
+          className="text-foreground/70"
         >
           Staking
         </Text>
