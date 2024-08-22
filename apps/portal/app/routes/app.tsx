@@ -55,11 +55,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
   logger(`isPending: ${isPending}`)
 
   if (!userIdentity && !isPending) {
-    throw redirect('/create')
+    throw redirect('/invite')
   }
 
   if (!userIdentity && isPending) {
-    throw redirect('/create')
+    throw redirect('/invite')
   }
 
   if (isPending) {

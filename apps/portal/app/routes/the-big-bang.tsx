@@ -54,7 +54,7 @@ export default function WelcomePage() {
   return (
     <div className="flex flex-col justify-between h-screen w-full p-8">
       <Header />
-      <div className="flex justify-center items-center h-screen">
+      <div className="flex justify-center items-center h-screen mt-6">
         <div className="flex-col justify-start items-start inline-flex gap-6">
           <h1 className="text-4xl font-bold mb-6">Chapter 0: The Big Bang</h1>
           <div className="max-w-2xl space-y-2">
@@ -90,7 +90,7 @@ export default function WelcomePage() {
               And our &lsquo;atoms&rsquo; begin with you.
             </Text>
           </div>
-          <Link to="/create" className="m-auto mt-8">
+          <Link to="/create" className="m-auto mt-8 mb-12 md:mb-0">
             <Button
               variant={ButtonVariant.primary}
               size={ButtonSize.lg}

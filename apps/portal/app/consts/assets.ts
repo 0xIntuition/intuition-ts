@@ -49,6 +49,12 @@ export const RELIC_LEGENDARY_V2_MP4 =
 export const RELIC_LEGENDARY_V3_MP4 =
   'https://res.cloudinary.com/dfpwy9nyv/video/upload/f_auto:video,q_auto/v1/Portal%20Assets/relics/relic-legendary-v3'
 
+export const RELIC_LEGENDARY_V2_WITH_AUDIO_MP4 =
+  'https://res.cloudinary.com/dfpwy9nyv/video/upload/f_auto:video,q_auto/v1/Portal%20Assets/relics/relic-legendary-v2-with-audio'
+
+export const RELIC_LEGENDARY_V3_WITH_AUDIO_MP4 =
+  'https://res.cloudinary.com/dfpwy9nyv/video/upload/f_auto:video,q_auto/v1/Portal%20Assets/relics/relic-legendary-v3-with-audio'
+
 export const HEADER_BANNER_IDENTITIES =
   'https://res.cloudinary.com/dfpwy9nyv/image/upload/f_auto,q_auto/v1/Portal%20Assets/banners/identities'
 

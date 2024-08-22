@@ -103,6 +103,10 @@
         fill="transparent"
       />
     </symbol>
+    <!-- play-filled -->
+    <symbol id='play-filled' viewBox="0 0 24 24" fill="none">
+      <path d="M5 22V2L22 12L5 22Z" fill="currentColor" />
+    </symbol>
     <!-- book -->
     <symbol id="book" viewBox="0 0 24 24">
       <path
@@ -859,11 +863,11 @@
         fill="currentColor" />
     </symbol>
     <!-- people -->
-    <svg id="people" viewBox="0 0 24 24" fill="none">
+    <symbol id="people" viewBox="0 0 24 24" fill="none">
       <path
         d="M4.49996 20.25L3.75325 20.1798L3.67615 21H4.49996V20.25ZM19.5 20.25V21H20.3238L20.2467 20.1798L19.5 20.25ZM15 6.5C15 8.15685 13.6569 9.5 12 9.5V11C14.4853 11 16.5 8.98528 16.5 6.5H15ZM12 9.5C10.3431 9.5 8.99996 8.15685 8.99996 6.5H7.49996C7.49996 8.98528 9.51468 11 12 11V9.5ZM8.99996 6.5C8.99996 4.84315 10.3431 3.5 12 3.5V2C9.51468 2 7.49996 4.01472 7.49996 6.5H8.99996ZM12 3.5C13.6569 3.5 15 4.84315 15 6.5H16.5C16.5 4.01472 14.4853 2 12 2V3.5ZM5.24667 20.3202C5.58312 16.7412 8.23544 14 12 14V12.5C7.38407 12.5 4.15468 15.9097 3.75325 20.1798L5.24667 20.3202ZM12 14C15.7645 14 18.4168 16.7412 18.7533 20.3202L20.2467 20.1798C19.8453 15.9097 16.6159 12.5 12 12.5V14ZM4.49996 21H19.5V19.5H4.49996V21Z"
         fill="currentColor" />
-    </svg>
+    </symbol>
     <!-- tag -->
     <symbol id="tag" viewBox="0 0 24 24" fill="none">
       <path
@@ -1169,16 +1173,33 @@
       <path d="M14.75 3.75H19.25V20.25H14.75V3.75Z" stroke="currentColor" strokeWidth="1.5" />
     </symbol>
     <!-- mobile -->
-    <svg id="mobile" viewBox="0 0 24 24" fill="none">
+    <symbol id="mobile" viewBox="0 0 24 24" fill="none">
       <path d="M9.75 19.25H14.25M5.75 1.75H18.25V22.25H5.75V1.75Z" stroke="currentColor"
         strokeWidth="1.5"
         strokeLinecap="square" />
-    </svg>
+    </symbol>
     <!-- headset -->
-    <svg id="headset" viewBox="0 0 24 24" fill="none">
+    <symbol id="headset" viewBox="0 0 24 24" fill="none">
       <path
         d="M4.75 9.75V9.5C4.75 5.77208 7.99594 2.75 12 2.75C16.0041 2.75 19.25 5.77208 19.25 9.5V9.75M12 19.6429V21.25H15C17.4853 21.25 19.5 19.2353 19.5 16.75M4.25 9.75H5.75V16.25H4.25C3.42157 16.25 2.75 15.5784 2.75 14.75V11.25C2.75 10.4216 3.42157 9.75 4.25 9.75ZM18.25 9.75H19.75C20.5784 9.75 21.25 10.4216 21.25 11.25V14.75C21.25 15.5784 20.5784 16.25 19.75 16.25H18.25V9.75Z"
         stroke="currentColor" stroke-width="1.5" stroke-linecap="square" />
-    </svg>
+    </symbol>
+    <!-- volume-full -->
+    <symbol id="volume-full" viewBox="0 0 24 24" fill="none">
+      <path d="M13 21.0296V2.97046L5.8043 7.00005H1V17.0001H5.8043L13 21.0296Z" fill="currentColor" />
+      <path
+        d="M21.5 11.9999C21.5 9.37629 20.4375 7.00232 18.7175 5.28234L19.7782 4.22168C21.768 6.21147 23 8.9625 23 11.9999C23 15.0372 21.768 17.7882 19.7782 19.778L18.7175 18.7174C20.4375 16.9974 21.5 14.6234 21.5 11.9999Z"
+        fill="currentColor" />
+      <path
+        d="M15.3588 8.64172C16.2192 9.50212 16.75 10.6886 16.75 12.0005C16.75 13.3124 16.2192 14.4988 15.3588 15.3592L16.4194 16.4199C17.5496 15.2897 18.25 13.7262 18.25 12.0005C18.25 10.2748 17.5496 8.71126 16.4194 7.58105L15.3588 8.64172Z"
+        fill="currentColor" />
+    </symbol>
+    <!-- volume-muted -->
+    <symbol id="volume-muted" viewBox="0 0 24 24" fill="none">
+      <path
+        d="M3.74816 21.3108L21.3088 3.75011L20.2482 2.68945L17 5.93761V2.9707L9.8043 7.0003H5V17.0003H5.93732L2.6875 20.2501L3.74816 21.3108Z"
+        fill="currentColor" />
+      <path d="M17 21.0299L10.0454 17.1353L17 10.1806V21.0299Z" fill="currentColor" />
+    </symbol>
   </defs>
 </svg>
