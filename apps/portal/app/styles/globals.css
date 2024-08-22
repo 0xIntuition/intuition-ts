@@ -2,6 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
-html body {
+html,
+body {
   overflow-x: hidden;
+  touch-action: pan-y;
+  -webkit-overflow-scrolling: touch;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
 }
