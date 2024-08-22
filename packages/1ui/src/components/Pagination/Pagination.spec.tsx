@@ -48,7 +48,7 @@ describe('Pagination', () => {
           role="navigation"
         >
           <div
-            class="text-primary text-sm font-normal self-center"
+            class="text-sm font-normal self-center text-foreground/70"
           >
             100 users found
           </div>
@@ -59,7 +59,7 @@ describe('Pagination', () => {
               class="self-center px-4 flex gap-4 justify-center items-center"
             >
               <div
-                class="text-primary text-sm font-normal"
+                class="text-sm font-normal text-foreground/70"
               >
                 Rows per page
               </div>
@@ -88,7 +88,7 @@ describe('Pagination', () => {
               </button>
             </div>
             <div
-              class="text-primary text-sm font-normal self-center px-4"
+              class="text-sm font-normal self-center px-4 text-foreground/70"
             >
               Page 1 of 10
             </div>
@@ -134,7 +134,7 @@ describe('Pagination', () => {
               >
                 <a
                   aria-label="Go to next page"
-                  class="items-center gap-2 text-sm font-medium border disabled:text-muted-foreground aria-disabled:text-muted-foreground disabled:border-muted aria-disabled:border-muted aria-disabled:pointer-events-none bg-gradient-to-b from-transparent to-transparent text-primary/70 border-primary/70 rounded-lg hover:text-primary hover:border-primary disabled:bg-transparent aria-disabled:bg-transparent aria-selected:primary-gradient-subtle aria-selected:border-primary/10 shadow-md-subtle p-1 min-w-8 flex justify-center hover:cursor-pointer"
+                  class="items-center gap-2 text-sm font-medium border disabled:text-muted-foreground aria-disabled:text-muted-foreground disabled:border-muted aria-disabled:border-muted aria-disabled:pointer-events-none bg-gradient-to-b from-transparent to-transparent text-primary/70 border-primary/50 rounded-lg hover:text-primary hover:border-primary disabled:bg-transparent aria-disabled:bg-transparent aria-selected:primary-gradient-subtle aria-selected:border-primary/10 shadow-md-subtle p-1 min-w-8 flex justify-center hover:cursor-pointer"
                   href="#"
                 >
                   <svg
@@ -151,7 +151,7 @@ describe('Pagination', () => {
               >
                 <a
                   aria-label="Go to last page"
-                  class="items-center gap-2 text-sm font-medium border disabled:text-muted-foreground aria-disabled:text-muted-foreground disabled:border-muted aria-disabled:border-muted aria-disabled:pointer-events-none bg-gradient-to-b from-transparent to-transparent text-primary/70 border-primary/70 rounded-lg hover:text-primary hover:border-primary disabled:bg-transparent aria-disabled:bg-transparent aria-selected:primary-gradient-subtle aria-selected:border-primary/10 shadow-md-subtle p-1 min-w-8 flex justify-center hover:cursor-pointer"
+                  class="items-center gap-2 text-sm font-medium border disabled:text-muted-foreground aria-disabled:text-muted-foreground disabled:border-muted aria-disabled:border-muted aria-disabled:pointer-events-none bg-gradient-to-b from-transparent to-transparent text-primary/70 border-primary/50 rounded-lg hover:text-primary hover:border-primary disabled:bg-transparent aria-disabled:bg-transparent aria-selected:primary-gradient-subtle aria-selected:border-primary/10 shadow-md-subtle p-1 min-w-8 flex justify-center hover:cursor-pointer"
                   href="#"
                 >
                   <svg
@@ -229,7 +229,7 @@ describe('Pagination', () => {
               <a
                 aria-current="page"
                 aria-selected="true"
-                class="items-center gap-2 text-sm font-medium border disabled:text-muted-foreground aria-disabled:text-muted-foreground disabled:border-muted aria-disabled:border-muted aria-disabled:pointer-events-none bg-gradient-to-b from-transparent to-transparent text-primary/70 border-primary/70 rounded-lg hover:text-primary hover:border-primary disabled:bg-transparent aria-disabled:bg-transparent aria-selected:primary-gradient-subtle aria-selected:border-primary/10 shadow-md-subtle p-1 min-w-8 flex justify-center hover:cursor-pointer"
+                class="items-center gap-2 text-sm font-medium border disabled:text-muted-foreground aria-disabled:text-muted-foreground disabled:border-muted aria-disabled:border-muted aria-disabled:pointer-events-none bg-gradient-to-b from-transparent to-transparent text-primary/70 border-primary/50 rounded-lg hover:text-primary hover:border-primary disabled:bg-transparent aria-disabled:bg-transparent aria-selected:primary-gradient-subtle aria-selected:border-primary/10 shadow-md-subtle p-1 min-w-8 flex justify-center hover:cursor-pointer"
                 href="#"
               >
                 1
@@ -239,7 +239,7 @@ describe('Pagination', () => {
               class="flex h-8"
             >
               <a
-                class="items-center gap-2 text-sm font-medium border disabled:text-muted-foreground aria-disabled:text-muted-foreground disabled:border-muted aria-disabled:border-muted aria-disabled:pointer-events-none bg-gradient-to-b from-transparent to-transparent text-primary/70 border-primary/70 rounded-lg hover:text-primary hover:border-primary disabled:bg-transparent aria-disabled:bg-transparent aria-selected:primary-gradient-subtle aria-selected:border-primary/10 shadow-md-subtle p-1 min-w-8 flex justify-center hover:cursor-pointer"
+                class="items-center gap-2 text-sm font-medium border disabled:text-muted-foreground aria-disabled:text-muted-foreground disabled:border-muted aria-disabled:border-muted aria-disabled:pointer-events-none bg-gradient-to-b from-transparent to-transparent text-primary/70 border-primary/50 rounded-lg hover:text-primary hover:border-primary disabled:bg-transparent aria-disabled:bg-transparent aria-selected:primary-gradient-subtle aria-selected:border-primary/10 shadow-md-subtle p-1 min-w-8 flex justify-center hover:cursor-pointer"
                 href="#"
               >
                 2
@@ -249,7 +249,7 @@ describe('Pagination', () => {
               class="flex h-8"
             >
               <a
-                class="items-center gap-2 text-sm font-medium border disabled:text-muted-foreground aria-disabled:text-muted-foreground disabled:border-muted aria-disabled:border-muted aria-disabled:pointer-events-none bg-gradient-to-b from-transparent to-transparent text-primary/70 border-primary/70 rounded-lg hover:text-primary hover:border-primary disabled:bg-transparent aria-disabled:bg-transparent aria-selected:primary-gradient-subtle aria-selected:border-primary/10 shadow-md-subtle p-1 min-w-8 flex justify-center hover:cursor-pointer"
+                class="items-center gap-2 text-sm font-medium border disabled:text-muted-foreground aria-disabled:text-muted-foreground disabled:border-muted aria-disabled:border-muted aria-disabled:pointer-events-none bg-gradient-to-b from-transparent to-transparent text-primary/70 border-primary/50 rounded-lg hover:text-primary hover:border-primary disabled:bg-transparent aria-disabled:bg-transparent aria-selected:primary-gradient-subtle aria-selected:border-primary/10 shadow-md-subtle p-1 min-w-8 flex justify-center hover:cursor-pointer"
                 href="#"
               >
                 3
@@ -279,7 +279,7 @@ describe('Pagination', () => {
             >
               <a
                 aria-label="Go to next page"
-                class="items-center gap-2 text-sm font-medium border disabled:text-muted-foreground aria-disabled:text-muted-foreground disabled:border-muted aria-disabled:border-muted aria-disabled:pointer-events-none bg-gradient-to-b from-transparent to-transparent text-primary/70 border-primary/70 rounded-lg hover:text-primary hover:border-primary disabled:bg-transparent aria-disabled:bg-transparent aria-selected:primary-gradient-subtle aria-selected:border-primary/10 shadow-md-subtle p-1 min-w-8 flex justify-center hover:cursor-pointer"
+                class="items-center gap-2 text-sm font-medium border disabled:text-muted-foreground aria-disabled:text-muted-foreground disabled:border-muted aria-disabled:border-muted aria-disabled:pointer-events-none bg-gradient-to-b from-transparent to-transparent text-primary/70 border-primary/50 rounded-lg hover:text-primary hover:border-primary disabled:bg-transparent aria-disabled:bg-transparent aria-selected:primary-gradient-subtle aria-selected:border-primary/10 shadow-md-subtle p-1 min-w-8 flex justify-center hover:cursor-pointer"
                 href="#"
               >
                 <svg

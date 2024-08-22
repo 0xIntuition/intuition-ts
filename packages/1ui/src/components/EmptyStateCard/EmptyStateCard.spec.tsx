@@ -20,7 +20,7 @@ describe('EmptyStateCard', () => {
           class="flex flex-col justify-center items-center p-6 theme-border rounded-lg min-h-64 w-full gap-2"
         >
           <svg
-            class="w-12 h-12"
+            class="w-12 h-12 text-muted-foreground"
           >
             <use
               href="/src/components/Icon/Icon.sprites.svg#inbox-empty"
