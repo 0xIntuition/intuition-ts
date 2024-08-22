@@ -19,6 +19,7 @@ import {
   TagWithValueProps,
   TextVariant,
   Trunctacular,
+  useSidebarLayoutContext,
 } from '..'
 
 export interface IdentityContentRowProps
@@ -100,6 +101,8 @@ const IdentityContentRow = ({
 }: IdentityContentRowProps) => {
   const hasTags = !!(tags && tags.length > 0)
 
+  const { isMobileView } = useSidebarLayoutContext()
+
   const content = (
     <div
       className={cn(
@@ -157,6 +160,7 @@ const IdentityContentRow = ({
                   <TagWithValue
                     label={tag.label}
                     value={tag.value}
+                    maxStringLength={isMobileView ? 12 : 24}
                     key={index}
                   />
                 ))}

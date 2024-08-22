@@ -95,7 +95,7 @@ describe('IdentityContentRow', () => {
                     </p>
                   </a>
                   <div
-                    class="flex flex-row gap-1 items-center"
+                    class="hidden md:flex flex-row gap-1 items-center"
                   >
                     <a
                       href="https://sepolia.basescan.org/address/0xd57981d5bc446768e8a1e3d582e545fa705415b5"
