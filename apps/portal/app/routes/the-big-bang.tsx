@@ -52,11 +52,13 @@ export default function WelcomePage() {
   const { wallet } = useLoaderData<typeof loader>()
 
   return (
-    <div className="flex flex-col justify-between h-screen w-full p-8">
+    <div className="flex flex-col min-h-screen w-full p-8">
       <Header />
-      <div className="flex justify-center items-center h-screen mt-6">
+      <div className="flex-grow flex justify-center items-center">
         <div className="flex-col justify-start items-start inline-flex gap-6">
-          <h1 className="text-4xl font-bold mb-6">Chapter 0: The Big Bang</h1>
+          <h1 className="text-4xl font-bold mb-6 text-center md:text-left">
+            Chapter 0: The Big Bang
+          </h1>
           <div className="max-w-2xl space-y-2">
             <Text variant={TextVariant.bodyLarge} className="text-primary/70">
               In the beginning, there was nothing. Then suddenly - everything.
