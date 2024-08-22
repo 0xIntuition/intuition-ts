@@ -2,6 +2,7 @@ import React, { HTMLAttributes } from 'react'
 
 import { Link } from '@remix-run/react'
 import { Text } from 'components/Text'
+import { Trunctacular } from 'components/Trunctacular'
 import { cn } from 'styles'
 import { Identity, IdentityType } from 'types'
 
@@ -128,7 +129,7 @@ const ProfileCard = ({
                 Link
               </Text>
               <a href={externalLink} target="_blank" rel="noreferrer noopener">
-                <Text variant="body">{externalLink}</Text>
+                <Trunctacular value={externalLink} maxStringLength={48} />
               </a>
             </div>
           )}
