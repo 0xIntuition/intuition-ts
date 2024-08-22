@@ -69,11 +69,7 @@ export default function SaveListModal({
   const formattedMinDeposit = min_deposit
     ? formatUnits(BigInt(BigInt(min_deposit)), 18)
     : null
-
-  console.log('formattedMinDeposit', formattedMinDeposit)
-  console.log('min_deposit', min_deposit)
   const [val, setVal] = useState(formattedMinDeposit ?? MIN_DEPOSIT)
-  console.log('val', val)
   const [mode, setMode] = useState<'save' | 'unsave'>('save')
   const [showErrors, setShowErrors] = useState(false)
   const [validationErrors, setValidationErrors] = useState<string[]>([])
