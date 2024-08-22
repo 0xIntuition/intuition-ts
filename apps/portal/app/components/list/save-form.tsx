@@ -118,7 +118,7 @@ export default function SaveForm({
                 >
                   Identity:
                 </Text>
-                <HoverCard openDelay={100} closeDelay={100}>
+                <HoverCard openDelay={150} closeDelay={150}>
                   <HoverCardTrigger>
                     <IdentityTag
                       imgSrc={getAtomImage(identity)}
@@ -171,7 +171,7 @@ export default function SaveForm({
                 >
                   Tag:
                 </Text>
-                <HoverCard openDelay={100} closeDelay={100}>
+                <HoverCard openDelay={150} closeDelay={150}>
                   <HoverCardTrigger>
                     <IdentityTag imgSrc={tag?.image} variant={Identity.nonUser}>
                       <Trunctacular

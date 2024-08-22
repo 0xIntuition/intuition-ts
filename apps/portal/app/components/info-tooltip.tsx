@@ -30,7 +30,7 @@ export const InfoTooltip = ({
 }) => {
   return (
     <TooltipProvider>
-      <Tooltip delayDuration={100}>
+      <Tooltip delayDuration={150}>
         <TooltipTrigger>
           {trigger ? (
             trigger
