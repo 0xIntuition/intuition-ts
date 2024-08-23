@@ -1,3 +1,4 @@
+import { CURRENT_ENV } from '@consts/general'
 import logger from '@lib/utils/logger'
 import { AuthTokenClaims, PrivyClient, User } from '@privy-io/server-auth'
 import { parse } from 'cookie'
@@ -35,10 +36,24 @@ export const getPrivyUserById = async (id: string): Promise<User> => {
 // get access token from cookie or header
 export const getPrivyAccessToken = (req: Request): string | null => {
   const cookies = parse(req.headers.get('Cookie') ?? '')
-  // logger('Cookies from access token', cookies)
+
+  // production environment check
+  const isProductionEnvironment = CURRENT_ENV !== 'development'
+
+  if (isProductionEnvironment) {
+    const authIdToken =
+      req.headers.get('Authorization')?.replace('Bearer ', '') ||
+      cookies['privy-id-token']
+    if (authIdToken) {
+      logger('authIdToken', authIdToken)
+      return authIdToken
+    }
+  }
+
   const authToken =
     req.headers.get('Authorization')?.replace('Bearer ', '') ||
     cookies['privy-token']
+  logger('authToken', authToken)
   return authToken
 }
 

@@ -116,15 +116,9 @@ export async function setupAPI(request: Request) {
 
   OpenAPI.BASE = apiUrl
 
-  if (typeof window !== 'undefined') {
-    const accessToken = localStorage.getItem('privy:token')
-    const headers = getAuthHeaders(accessToken || '')
-    OpenAPI.HEADERS = headers as Record<string, string>
-  } else if (request) {
-    const accessToken = getPrivyAccessToken(request)
-    const headers = getAuthHeaders(accessToken || '')
-    OpenAPI.HEADERS = headers as Record<string, string>
-  }
+  const accessToken = getPrivyAccessToken(request)
+  const headers = getAuthHeaders(accessToken !== null ? accessToken : '')
+  OpenAPI.HEADERS = headers as Record<string, string>
 }
 
 export function updateClientAPIHeaders(accessToken: string | null) {
