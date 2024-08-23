@@ -51,13 +51,13 @@ describe('IdentityContentRow', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="w-full"
+          class="w-full flex flex-row gap-2.5"
         >
           <div
-            class="w-full flex justify-between items-center max-sm:flex-col max-sm:gap-3"
+            class="w-full flex justify-between md:items-center max-sm:flex-col max-sm:gap-2.5"
           >
             <div
-              class="flex items-center"
+              class="flex md:items-center"
             >
               <a
                 data-state="closed"
@@ -131,9 +131,20 @@ describe('IdentityContentRow', () => {
               class="flex flex-col items-end max-sm:flex-row max-sm:justify-between max-sm:items-center max-sm:w-full"
             >
               <div
-                class="text-primary text-lg font-medium"
+                class="flex gap-1 items-center"
               >
-                1.21 ETH
+                <svg
+                  class="text-primary/90 h-4 w-4"
+                >
+                  <use
+                    href="/src/components/Icon/Icon.sprites.svg#ethereum"
+                  />
+                </svg>
+                <div
+                  class="text-lg font-medium text-primary/90"
+                >
+                  1.21 ETH
+                </div>
               </div>
               <div
                 class="flex gap-1 items-center"

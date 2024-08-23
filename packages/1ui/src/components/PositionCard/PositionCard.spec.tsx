@@ -86,7 +86,7 @@ describe('PositionCard', () => {
             class="w-full grid grid-cols-2 gap-5"
           >
             <div
-              class="flex flex-col max-lg:items-center"
+              class="flex flex-col"
             >
               <div
                 class="text-sm font-normal text-muted-foreground mb-0.5"
@@ -100,7 +100,7 @@ describe('PositionCard', () => {
               </div>
             </div>
             <div
-              class="flex flex-col max-lg:items-center"
+              class="flex flex-col items-end justify-end md:items-start md:justify-start"
             >
               <div
                 class="text-sm font-normal text-muted-foreground mb-0.5"
@@ -130,7 +130,7 @@ describe('PositionCard', () => {
               </div>
             </div>
             <div
-              class="flex flex-col max-lg:items-center"
+              class="flex flex-col"
             >
               <div
                 class="text-sm font-medium text-muted-foreground mb-0.5"
@@ -144,7 +144,7 @@ describe('PositionCard', () => {
               </div>
             </div>
             <div
-              class="flex flex-col max-lg:items-center"
+              class="flex flex-col"
             >
               <div
                 class="text-sm font-medium text-muted-foreground mb-0.5"

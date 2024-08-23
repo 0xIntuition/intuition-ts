@@ -103,7 +103,7 @@ export function TagsList({
               key={identity.id}
               className={`grow shrink basis-0 self-stretch p-6 bg-background first:border-t-px first:rounded-t-xl last:rounded-b-xl theme-border border-t-0 flex-col justify-start items-start gap-5 inline-flex`}
             >
-              <div className="flex flex-row gap-2 w-full">
+              <div className="flex flex-row gap-2 w-full max-sm:relative">
                 <IdentityContentRow
                   variant={identity.is_user ? Identity.user : Identity.nonUser}
                   avatarSrc={getAtomImage(identity)}
@@ -123,23 +123,27 @@ export function TagsList({
                   totalFollowers={matchingClaim?.num_positions || 0}
                   link={getAtomLink(identity)}
                   ipfsLink={getAtomIpfsLink(identity)}
-                />
-                <Button
-                  variant={ButtonVariant.text}
-                  size={ButtonSize.icon}
-                  onClick={() => {
-                    setSaveListModalActive({
-                      isOpen: true,
-                      id: identity.vault_id,
-                      identity,
-                      tag:
-                        tag &&
-                        identity.tags?.find((t) => t.vault_id === tag.vault_id),
-                    })
-                  }}
                 >
-                  <Icon name={IconName.bookmark} className="h-6 w-6" />
-                </Button>
+                  <Button
+                    variant={ButtonVariant.text}
+                    size={ButtonSize.icon}
+                    onClick={() => {
+                      setSaveListModalActive({
+                        isOpen: true,
+                        id: identity.vault_id,
+                        identity,
+                        tag:
+                          tag &&
+                          identity.tags?.find(
+                            (t) => t.vault_id === tag.vault_id,
+                          ),
+                      })
+                    }}
+                    className="max-sm:mb-auto max-sm:absolute max-sm:top-0 max-sm:right-0"
+                  >
+                    <Icon name={IconName.bookmark} className="h-6 w-6" />
+                  </Button>
+                </IdentityContentRow>
               </div>
             </div>
           )

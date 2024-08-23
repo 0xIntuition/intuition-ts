@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { Currency, CurrencyType } from 'types'
 
 import { Tag, TagVariant, TextProps } from '../..'

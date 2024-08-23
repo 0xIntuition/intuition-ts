@@ -106,12 +106,12 @@ const IdentityContentRow = ({
   const content = (
     <div
       className={cn(
-        `w-full flex justify-between items-center max-sm:flex-col max-sm:gap-3`,
+        `w-full flex justify-between md:items-center max-sm:flex-col max-sm:gap-2.5`,
         className,
       )}
       {...props}
     >
-      <div className="flex items-center">
+      <div className="flex md:items-center">
         <HoverCard openDelay={150} closeDelay={150}>
           <HoverCardTrigger asChild>
             <a href={claimLink || link}>
@@ -179,7 +179,7 @@ const IdentityContentRow = ({
   )
 
   return (
-    <div className="w-full">
+    <div className="w-full flex flex-row gap-2.5">
       {content}
       {children}
     </div>
