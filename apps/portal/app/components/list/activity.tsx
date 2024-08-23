@@ -205,11 +205,12 @@ function ActivityItem({
               href={`${BLOCK_EXPLORER_URL}/tx/${activity.transaction_hash}`}
               target="_blank"
               rel="noreferrer noopener"
+              className="w-full"
             >
               <Button
                 variant={ButtonVariant.secondary}
                 size={ButtonSize.md}
-                className="w-max h-fit"
+                className="w-full md:w-max md:h-fit"
               >
                 View on Explorer{' '}
                 <Icon name={IconName.squareArrowTopRight} className="h-4 w-4" />
@@ -299,11 +300,12 @@ function ActivityItem({
               href={`${BLOCK_EXPLORER_URL}/tx/${activity.transaction_hash}`}
               target="_blank"
               rel="noreferrer noopener"
+              className="w-full"
             >
               <Button
                 variant={ButtonVariant.secondary}
                 size={ButtonSize.md}
-                className="w-max h-fit"
+                className="w-full md:w-max md:h-fit"
               >
                 View on Explorer{' '}
                 <Icon name={IconName.squareArrowTopRight} className="h-4 w-4" />

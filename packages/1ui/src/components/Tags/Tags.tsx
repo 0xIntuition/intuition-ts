@@ -10,6 +10,7 @@ import {
   Text,
   TextVariant,
   Trunctacular,
+  useSidebarLayoutContext,
 } from 'components'
 
 import { cn } from '../../styles'
@@ -39,6 +40,9 @@ const TagsContent = ({
 }: TagsContentProps) => {
   const numberOfTagsNotDisplayed =
     numberOfTags - React.Children.toArray(children).length
+
+  const { isMobileView } = useSidebarLayoutContext()
+
   return (
     <div
       className={cn('flex flex-wrap gap-2 items-center', className)}
@@ -48,7 +52,7 @@ const TagsContent = ({
       {numberOfTagsNotDisplayed > 0 && (
         <a href={link}>
           <Text variant={TextVariant.body}>
-            + {numberOfTagsNotDisplayed} more
+            + {numberOfTagsNotDisplayed} {!isMobileView ? 'more' : ''}
           </Text>
         </a>
       )}
