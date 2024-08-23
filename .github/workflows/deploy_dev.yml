@@ -72,6 +72,7 @@ jobs:
 
       - name: Build, tag, and push image to AWS ECR
         run: |
+          echo "${{ secrets.PRIVY_VERIFICATION_KEY_DEV }}" > privy_verification_key.pem
           docker build \
           --platform linux/x86_64 \
           -t portal \
@@ -88,7 +89,7 @@ jobs:
           --build-arg API_KEY=${{ secrets.API_KEY }} \
           --build-arg PRIVY_APP_ID=${{ secrets.PRIVY_APP_ID }} \
           --build-arg PRIVY_APP_SECRET=${{ secrets.PRIVY_APP_SECRET }} \
-          --build-arg PRIVY_VERIFICATION_KEY=${{ secrets.PRIVY_VERIFICATION_KEY_DEV }} \
+          --build-arg PRIVY_VERIFICATION_KEY="$(cat privy_verification_key.pem)" \
           --build-arg CLOUDINARY_CLOUD_NAME=${{ secrets.CLOUDINARY_CLOUD_NAME }} \
           --build-arg CLOUDINARY_API_KEY=${{ secrets.CLOUDINARY_API_KEY }} \
           --build-arg CLOUDINARY_API_SECRET=${{ secrets.CLOUDINARY_API_SECRET }} \
@@ -106,6 +107,7 @@ jobs:
           --build-arg FF_INCIDENT_BANNER_ENABLED=true
           docker tag portal ${{ env.ECR_IMAGE }}
           docker push ${{ env.ECR_IMAGE }}
+          rm privy_verification_key.pem
 
       - name: Download task definition
         shell: bash
