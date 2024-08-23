@@ -110,20 +110,6 @@ export default function ClaimDetails() {
     isPending: boolean
   }>(['create', 'attest'])
   const navigate = useNavigate()
-  const location = useLocation()
-  const [fromUrl, setFromUrl] = useState<string | number>(-1)
-
-  useEffect(() => {
-    const from = location.state?.from
-
-    if (from) {
-      setFromUrl(from.split('?')[0])
-    } else if (document.referrer) {
-      setFromUrl(document.referrer)
-    } else {
-      setFromUrl(-1)
-    }
-  }, [location.state])
 
   const [stakeModalActive, setStakeModalActive] = useAtom(stakeModalAtom)
 
@@ -165,7 +151,7 @@ export default function ClaimDetails() {
 
   const leftPanel = (
     <div className="flex-col justify-start items-start gap-6 inline-flex w-full">
-      <NavigationButton variant="secondary" size="icon" to={fromUrl.toString()}>
+      <NavigationButton variant="secondary" size="icon" to={'..'}>
         <Icon name="arrow-left" />
       </NavigationButton>
       <div className="flex-row flex m-auto md:hidden">
