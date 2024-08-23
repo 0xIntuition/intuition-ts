@@ -156,7 +156,7 @@ const IdentityContentRow = ({
           {hasTags && (
             <div className="flex gap-2 mt-1">
               <TagsContent numberOfTags={tags.length} link={link}>
-                {tags.slice(0, 2).map((tag, index) => (
+                {tags.slice(0, isMobileView ? 1 : 2).map((tag, index) => (
                   <TagWithValue
                     label={tag.label}
                     value={tag.value}

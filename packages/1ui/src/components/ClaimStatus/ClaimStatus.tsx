@@ -1,6 +1,7 @@
 import React from 'react'
 
 import { Icon, IconName } from 'components/Icon'
+import { PieChart } from 'components/PieChart'
 import {
   Tooltip,
   TooltipContent,
@@ -26,8 +27,8 @@ const ClaimStatus = ({
     +(+claimsAgainstValue / (+claimsForValue + +claimsAgainstValue)) * 100
 
   return (
-    <div className="flex flex-col justify-between max-md:w-full max-md:justify-center">
-      <div className="flex items-center h-[6px] mb-4">
+    <div className="flex flex-col justify-between max-md:justify-center py-4 md:p-4 w-full">
+      <div className="items-center h-[6px] mb-4 hidden md:flex">
         <TooltipProvider delayDuration={150}>
           <Tooltip>
             <TooltipTrigger className="h-full w-full bg-for block rounded-r-sm" />
@@ -76,7 +77,17 @@ const ClaimStatus = ({
           </Tooltip>
         </TooltipProvider>
       </div>
-      {children}
+      <div className="flex flex-row md:flex-col justify-between items-start w-full">
+        {children}
+        <div className="flex items-end w-fit my-auto md:hidden">
+          <PieChart
+            variant="forVsAgainst"
+            percentage={
+              (claimsForValue / (claimsForValue + claimsAgainstValue)) * 100
+            }
+          />
+        </div>
+      </div>
     </div>
   )
 }

@@ -1,4 +1,4 @@
-import { Button, Text } from '@0xintuition/1ui'
+import { Text } from '@0xintuition/1ui'
 
 import derpFace1 from '@assets/derp-face-1.png'
 import derpFace2 from '@assets/derp-face-2.png'
@@ -14,7 +14,7 @@ import derpFace11 from '@assets/derp-face-11.png'
 import derpFace12 from '@assets/derp-face-12.jpg'
 import logger from '@lib/utils/logger'
 import { cn } from '@lib/utils/misc'
-import { Link, useRouteError } from '@remix-run/react'
+import { useRouteError } from '@remix-run/react'
 import { captureRemixErrorBoundaryError } from '@sentry/remix'
 import { PATHS } from 'app/consts'
 
@@ -156,14 +156,15 @@ export const ErrorPage = ({
           >
             {isAtRoot ? 'Back to home' : 'Refresh'}
           </NavigationButton>
-          <Link
+          <NavigationButton
             to="https://discord.com/channels/909531430881746974/1151564740255043604"
             target="_blank"
+            variant="ghost"
+            size="lg"
+            className="rounded-full"
           >
-            <Button variant="ghost" size="lg" className="rounded-full">
-              Contact Support
-            </Button>
-          </Link>
+            Contact Support
+          </NavigationButton>
         </div>
       </div>
       {statusCode && <StatusCode statusCode={statusCode} />}

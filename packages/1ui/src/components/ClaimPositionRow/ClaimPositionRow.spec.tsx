@@ -119,10 +119,22 @@ describe('ClaimPositionRow', () => {
               class="h-full flex flex-col items-end"
             >
               <div
-                class="text-primary text-lg font-medium"
+                class="flex gap-1 items-center"
               >
-                1.21 ETH
+                <svg
+                  class="text-primary/90 h-4 w-4"
+                >
+                  <use
+                    href="/src/components/Icon/Icon.sprites.svg#ethereum"
+                  />
+                </svg>
+                <div
+                  class="text-lg font-medium text-primary/90"
+                >
+                  1.21 ETH
+                </div>
               </div>
+               
             </div>
           </div>
         </div>
@@ -153,10 +165,10 @@ describe('ClaimPositionRow', () => {
               class="w-[60%] max-sm:w-full"
             >
               <div
-                class="flex flex-col justify-between max-md:w-full max-md:justify-center"
+                class="flex flex-col justify-between max-md:justify-center py-4 md:p-4 w-full"
               >
                 <div
-                  class="flex items-center h-[6px] mb-4"
+                  class="items-center h-[6px] mb-4 hidden md:flex"
                 >
                   <button
                     class="h-full w-full bg-for block rounded-r-sm"
@@ -167,6 +179,26 @@ describe('ClaimPositionRow', () => {
                     data-state="closed"
                     style="min-width: 33.33333333333333%;"
                   />
+                </div>
+                <div
+                  class="flex flex-row md:flex-col justify-between items-start w-full"
+                >
+                  <div
+                    class="flex items-end w-fit my-auto md:hidden"
+                  >
+                    <div
+                      class="grid"
+                    >
+                      <span
+                        class="col-[1] row-[1] rounded-full block"
+                        style="height: 80px; width: 80px; mask: radial-gradient(farthest-side,#0000 calc(99% - 10px),var(--background) calc(100% - 10px);"
+                      />
+                      <span
+                        class="col-[1] row-[1] border-muted-foreground rounded-full block"
+                        style="border-width: 10px;"
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -186,10 +218,22 @@ describe('ClaimPositionRow', () => {
                 class="h-full flex flex-col items-end"
               >
                 <div
-                  class="text-primary text-lg font-medium"
+                  class="flex gap-1 items-center"
                 >
-                  1.21 ETH
+                  <svg
+                    class="text-primary/90 h-4 w-4"
+                  >
+                    <use
+                      href="/src/components/Icon/Icon.sprites.svg#ethereum"
+                    />
+                  </svg>
+                  <div
+                    class="text-lg font-medium text-primary/90"
+                  >
+                    1.21 ETH
+                  </div>
                 </div>
+                 
               </div>
             </div>
           </div>

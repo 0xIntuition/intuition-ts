@@ -118,7 +118,7 @@ export const Claim = ({
   const items = [subject, predicate, object]
 
   return (
-    <div className="flex items-center w-full max-w-max group relative max-sm:flex-col max-sm:m-auto">
+    <div className="flex items-center w-full max-w-max group relative max-sm:flex-col">
       {items.map((item, index) => (
         <Fragment key={index}>
           {index > 0 && (

@@ -116,10 +116,22 @@ describe('IdentityPosition', () => {
               class="h-full flex flex-col items-end"
             >
               <div
-                class="text-primary text-lg font-medium"
+                class="flex gap-1 items-center"
               >
-                1.21 ETH
+                <svg
+                  class="text-primary/90 h-4 w-4"
+                >
+                  <use
+                    href="/src/components/Icon/Icon.sprites.svg#ethereum"
+                  />
+                </svg>
+                <div
+                  class="text-lg font-medium text-primary/90"
+                >
+                  1.21 ETH
+                </div>
               </div>
+               
             </div>
           </div>
         </div>
@@ -338,10 +350,22 @@ describe('IdentityPosition', () => {
                 class="h-full flex flex-col items-end"
               >
                 <div
-                  class="text-primary text-lg font-medium"
+                  class="flex gap-1 items-center"
                 >
-                  1.21 ETH
+                  <svg
+                    class="text-primary/90 h-4 w-4"
+                  >
+                    <use
+                      href="/src/components/Icon/Icon.sprites.svg#ethereum"
+                    />
+                  </svg>
+                  <div
+                    class="text-lg font-medium text-primary/90"
+                  >
+                    1.21 ETH
+                  </div>
                 </div>
+                 
               </div>
             </div>
           </div>

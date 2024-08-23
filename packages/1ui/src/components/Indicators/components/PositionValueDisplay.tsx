@@ -1,6 +1,6 @@
 import { Currency, CurrencyType } from 'types'
 
-import { Tag, TagVariant, TextProps } from '../..'
+import { Icon, IconName, Tag, TagVariant, TextProps } from '../..'
 // import { FeesAccrued } from './FeesAccrued'
 import { MonetaryValue } from './MonetaryValue'
 
@@ -39,7 +39,14 @@ const PositionValueDisplay = ({
     <div className="flex items-center justify-start gap-2 max-sm:justify-between">
       <div className="h-full flex flex-col pt-1">{renderBadge()}</div>
       <div className="h-full flex flex-col items-end">
-        <MonetaryValue value={value} currency={currency} />
+        <div className="flex gap-1 items-center">
+          <Icon name={IconName.ethereum} className="text-primary/90 h-4 w-4" />
+          <MonetaryValue
+            value={value}
+            currency={currency}
+            className="text-primary/90"
+          />
+        </div>{' '}
         {/* TODO: Uncomment when feature is supported  */}
         {/* <FeesAccrued value={feesAccrued} currency={currency} /> */}
       </div>
