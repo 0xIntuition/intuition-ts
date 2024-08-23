@@ -1,6 +1,7 @@
 import { Text } from '@0xintuition/1ui'
 
 import PrivyLoginButton from '@client/privy-login-button'
+import { BuiltOnBase } from '@components/built-on-base'
 import { HeaderLogo } from '@components/header-logo'
 import logger from '@lib/utils/logger'
 import { getMaintenanceMode } from '@lib/utils/maintenance'
@@ -62,7 +63,12 @@ export default function Login() {
 
   return (
     <div className="flex flex-col justify-between h-screen w-full p-8">
-      <HeaderLogo />
+      <div className="flex flex-row justify-between w-full">
+        <HeaderLogo />
+        <div className="justify-end">
+          <BuiltOnBase />
+        </div>
+      </div>
       <div className="flex flex-col items-center">
         <Text variant="heading4" weight="semibold" className="mb-4">
           Sign in to Intuition

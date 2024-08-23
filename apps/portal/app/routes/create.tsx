@@ -20,6 +20,7 @@ import {
 } from '@0xintuition/api'
 
 import PrivyLogout from '@client/privy-logout'
+import { BridgeToBase } from '@components/bridge-to-base'
 import EditProfileModal from '@components/edit-profile/modal'
 import { Header } from '@components/header'
 import SubmitButton from '@components/submit-button'
@@ -376,11 +377,11 @@ export default function Profile() {
               initial={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 1 }}
-              className="md:w-[600px] h-[307px] flex-col justify-start items-start gap-6 md:gap-[42px] inline-flex"
+              className="md:w-[600px] mdh-[307px] flex-col justify-start items-start gap-6 md:gap-[42px] inline-flex"
             >
               <div className="md:h-[37px] flex-col justify-start items-start gap-6 flex">
                 <div className="self-stretch md:h-[37px] flex-col justify-start items-start gap-2.5 flex">
-                  <div className="self-stretch text-white text-3xl font-semibold text-center md:text-left">
+                  <div className="self-stretch text-white text-2xl md:text-3xl font-semibold text-center md:text-left">
                     Create Your Decentralized Identifier
                   </div>
                 </div>
@@ -416,7 +417,7 @@ export default function Profile() {
               </div>
               <div className="md:w-[600px] justify-start items-start gap-6 inline-flex">
                 <div className="grow shrink basis-0 self-stretch flex-col justify-start items-start gap-6 inline-flex">
-                  <div className="self-stretch h-[74px] flex-col justify-start items-start gap-2.5 flex">
+                  <div className="self-stretch md:h-[74px] flex-col justify-start items-start gap-2.5 flex">
                     <div className="self-stretch text-white text-base font-medium leading-normal">
                       Welcome to the world of Intuition.
                     </div>
@@ -432,6 +433,7 @@ export default function Profile() {
                   </div>
                 </div>
               </div>
+              <BridgeToBase />
             </motion.div>
           ) : (
             <motion.div
