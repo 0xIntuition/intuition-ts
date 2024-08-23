@@ -25,26 +25,24 @@ export function SupportCard({
   className,
 }: SupportCardProps) {
   return (
-    <div
+    <Link
+      to={link ?? '#'}
+      target="_blank"
       className={cn(
         `flex flex-col w-full theme-border rounded-lg p-6 gap-6`,
         className,
       )}
     >
-      <Link
-        to={link ?? '#'}
-        className="flex flex-row items-center gap-2"
-        target="_blank"
-      >
+      <div className="flex flex-row items-center gap-2">
         {icon && <Icon name={icon} className="text-primary" />}
         <Text variant={TextVariant.bodyLarge} weight={TextWeight.medium}>
           {title}
         </Text>
-      </Link>
+      </div>
       {description && (
         <Text className="text-secondary-foreground">{description}</Text>
       )}
-    </div>
+    </Link>
   )
 }
 
