@@ -1,5 +1,3 @@
-import { useEffect, useState } from 'react'
-
 import {
   Banner,
   Claim,
@@ -40,7 +38,7 @@ import {
   invariant,
 } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
-import { Outlet, useLocation, useNavigate } from '@remix-run/react'
+import { Outlet, useNavigate } from '@remix-run/react'
 import { requireUserWallet } from '@server/auth'
 import { getVaultDetails } from '@server/multivault'
 import { BLOCK_EXPLORER_URL, NO_WALLET_ERROR, PATHS } from 'app/consts'
