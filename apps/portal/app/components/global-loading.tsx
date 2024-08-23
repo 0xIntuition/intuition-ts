@@ -29,11 +29,11 @@ function GlobalLoading() {
       role="progressbar"
       aria-hidden={navigation.state === 'idle'}
       aria-valuetext={navigation.state !== 'idle' ? 'Loading' : undefined}
-      className="fixed inset-x-0 left-0 top-0 z-50 h-[2px]"
+      className="fixed inset-x-0 left-0 top-0 z-50 h-[3px]"
     >
       <div
         className={cn(
-          'h-full bg-gradient-to-r from-primary to-secondary transition-all duration-300 ease-out',
+          'h-full bg-gradient-to-r from-accent/40 to-accent/100 transition-all duration-300 ease-out',
           navigation.state === 'idle' && progress === 0 && 'opacity-0',
         )}
         style={{ width: `${progress}%` }}
