@@ -11,12 +11,11 @@ import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
 import { Outlet, useLoaderData, useLocation } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
-import { featureFlagsSchema, getFeatureFlags } from '@server/env'
+import { FeatureFlags, getFeatureFlags } from '@server/env'
 import { isSanctioned } from '@server/ofac'
 import { PATHS } from 'app/consts'
 import RootLayout from 'app/layouts/root-layout'
 import { Address } from 'viem'
-import { z } from 'zod'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   getMaintenanceMode()
@@ -80,7 +79,7 @@ export default function App() {
   const { wallet, userObject, featureFlags } = useLoaderData<{
     wallet: string
     userObject: UserPresenter
-    featureFlags: z.infer<typeof featureFlagsSchema>
+    featureFlags: FeatureFlags
   }>()
   const { pathname } = useLocation()
 

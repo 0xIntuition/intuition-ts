@@ -23,6 +23,7 @@ import PrivyLogout from '@client/privy-logout'
 import { BridgeToBase } from '@components/bridge-to-base'
 import EditProfileModal from '@components/edit-profile/modal'
 import { Header } from '@components/header'
+import SiteWideBanner from '@components/site-wide-banner'
 import SubmitButton from '@components/submit-button'
 import { multivaultAbi } from '@lib/abis/multivault'
 import { useCreateAtom } from '@lib/hooks/useCreateAtom'
@@ -40,6 +41,7 @@ import { useFetcher, useLoaderData, useNavigate } from '@remix-run/react'
 import { CreateLoaderData } from '@routes/resources+/create'
 import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
+import { FeatureFlags, getFeatureFlags } from '@server/env'
 import {
   MULTIVAULT_CONTRACT_ADDRESS,
   PATHS,
@@ -57,6 +59,7 @@ import { useConnectorClient, usePublicClient } from 'wagmi'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   getMaintenanceMode()
+  const featureFlags = getFeatureFlags()
 
   const wallet = await requireUserWallet(request)
   if (!wallet) {
@@ -80,7 +83,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
       (error.status === 400 || error.status === 404)
     ) {
       console.error('No user found in DB, needs to enter invite code')
-      return json({ wallet })
+      return json({ wallet, featureFlags })
     }
     throw error
   }
@@ -103,7 +106,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     throw redirect(`${PATHS.PROFILE}`)
   }
 
-  return json({ wallet, userIdentity, userObject, isCreating })
+  return json({ wallet, userIdentity, userObject, isCreating, featureFlags })
 }
 
 interface CreateButtonWrapperProps {
@@ -337,9 +340,10 @@ export function CreateButton({
 }
 
 export default function Profile() {
-  const { wallet, userObject } = useLoaderData<{
+  const { wallet, userObject, featureFlags } = useLoaderData<{
     wallet: string
     userObject: UserPresenter
+    featureFlags: FeatureFlags
   }>()
 
   const [editProfileModalActive, setEditProfileModalActive] =
@@ -367,129 +371,134 @@ export default function Profile() {
   }
 
   return (
-    <div className="flex flex-col justify-between h-screen w-full p-8">
-      <Header />
-      <div className="flex justify-center items-center h-screen">
-        <AnimatePresence mode="wait">
-          {!showVideo ? (
-            <motion.div
-              key="createForm"
-              initial={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 1 }}
-              className="md:w-[600px] mdh-[307px] flex-col justify-start items-start gap-6 md:gap-[42px] inline-flex"
-            >
-              <div className="md:h-[37px] flex-col justify-start items-start gap-6 flex">
-                <div className="self-stretch md:h-[37px] flex-col justify-start items-start gap-2.5 flex">
-                  <div className="self-stretch text-white text-2xl md:text-3xl font-semibold text-center md:text-left">
-                    Create Your Decentralized Identifier
+    <div>
+      <SiteWideBanner featureFlags={featureFlags} />
+      <div className="flex flex-col justify-between h-screen w-full p-8">
+        <Header />
+        <div className="flex justify-center items-center h-screen">
+          <AnimatePresence mode="wait">
+            {!showVideo ? (
+              <motion.div
+                key="createForm"
+                initial={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 1 }}
+                className="md:w-[600px] mdh-[307px] flex-col justify-start items-start gap-6 md:gap-[42px] inline-flex"
+              >
+                <div className="md:h-[37px] flex-col justify-start items-start gap-6 flex">
+                  <div className="self-stretch md:h-[37px] flex-col justify-start items-start gap-2.5 flex">
+                    <div className="self-stretch text-white text-2xl md:text-3xl font-semibold text-center md:text-left">
+                      Create Your Decentralized Identifier
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div className="md:h-28 p-6 bg-black rounded-[10px] shadow border border-solid border-neutral-300/20 backdrop-blur-xl flex-col justify-center items-center gap-6 flex w-full">
-                <div className="md:w-[552px] justify-between items-center inline-flex w-full flex-col md:flex-row">
-                  <div className="md:grow md:shrink md:basis-0 h-16 justify-start items-center gap-2 md:gap-4 flex">
-                    <div className="md:w-[70px] pr-1.5 justify-start items-center flex">
-                      <Avatar name="" src="" />
-                    </div>
-                    <div className="flex-col justify-start items-start gap-[3px] inline-flex">
-                      <div className="justify-start items-end gap-1.5 inline-flex">
-                        <div className="text-neutral-200 text-base font-medium leading-normal">
-                          {sliceString(wallet, 6, 4)}
-                        </div>
-                        <div className="w-[0px] self-stretch pb-0.5 justify-start items-end gap-2.5 flex">
-                          <div></div>
+                <div className="md:h-28 p-6 bg-black rounded-[10px] shadow border border-solid border-neutral-300/20 backdrop-blur-xl flex-col justify-center items-center gap-6 flex w-full">
+                  <div className="md:w-[552px] justify-between items-center inline-flex w-full flex-col md:flex-row">
+                    <div className="md:grow md:shrink md:basis-0 h-16 justify-start items-center gap-2 md:gap-4 flex">
+                      <div className="md:w-[70px] pr-1.5 justify-start items-center flex">
+                        <Avatar name="" src="" />
+                      </div>
+                      <div className="flex-col justify-start items-start gap-[3px] inline-flex">
+                        <div className="justify-start items-end gap-1.5 inline-flex">
+                          <div className="text-neutral-200 text-base font-medium leading-normal">
+                            {sliceString(wallet, 6, 4)}
+                          </div>
+                          <div className="w-[0px] self-stretch pb-0.5 justify-start items-end gap-2.5 flex">
+                            <div></div>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                  <ClientOnly>
-                    {() => (
-                      <>
-                        <CreateButton
-                          setEditProfileModalActive={setEditProfileModalActive}
-                        />
-                        <PrivyLogout wallet={wallet} />
-                      </>
-                    )}
-                  </ClientOnly>
-                </div>
-              </div>
-              <div className="md:w-[600px] justify-start items-start gap-6 inline-flex">
-                <div className="grow shrink basis-0 self-stretch flex-col justify-start items-start gap-6 inline-flex">
-                  <div className="self-stretch md:h-[74px] flex-col justify-start items-start gap-2.5 flex">
-                    <div className="self-stretch text-white text-base font-medium leading-normal">
-                      Welcome to the world of Intuition.
-                    </div>
-                    <div className="self-stretch text-white/40 text-sm font-normal leading-tight">
-                      By completing this step, you&#39;ll create an
-                      &#39;Atom&#39; for your Ethereum address - a universally
-                      referenceable node in the Intuition Trust Graph,
-                      representative of you. With this, you&#39;ll be able to
-                      make claims about things, and will allow claims to be made
-                      about you - taking the first step in your journey towards
-                      better intuition in all of your interactions.
-                    </div>
+                    <ClientOnly>
+                      {() => (
+                        <>
+                          <CreateButton
+                            setEditProfileModalActive={
+                              setEditProfileModalActive
+                            }
+                          />
+                          <PrivyLogout wallet={wallet} />
+                        </>
+                      )}
+                    </ClientOnly>
                   </div>
                 </div>
-              </div>
-              <BridgeToBase />
-            </motion.div>
-          ) : (
-            <motion.div
-              key="videoPlayer"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 1 }}
-              exit={{ opacity: 0 }}
-              className="relative max-w-[90vw] md:max-w-[75vw]"
-            >
-              <div className={cn(`overflow-hidden rounded-xl relative`)}>
-                <video
-                  ref={videoRef}
-                  src={RELIC_LEGENDARY_V3_WITH_AUDIO_MP4}
-                  title={'Relic'}
-                  playsInline
-                  autoPlay
-                  muted={isMuted}
-                  className="rounded-xl overflow-hidden items-center justify-center w-full md:max-w-[500px] xl:max-w-[1000px] shadow-lg"
-                  onEnded={handleVideoEnd}
-                />
-                <AnimatePresence>
-                  <motion.div
-                    initial={{ opacity: 1 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.5 }}
-                    className="absolute bottom-4 right-4 md:bottom-6 md:right-6"
-                  >
-                    <Button
-                      variant={ButtonVariant.primary}
-                      size={ButtonSize.iconLg}
-                      onClick={() => setIsMuted(!isMuted)}
-                      className="bg-primary/70"
+                <div className="md:w-[600px] justify-start items-start gap-6 inline-flex">
+                  <div className="grow shrink basis-0 self-stretch flex-col justify-start items-start gap-6 inline-flex">
+                    <div className="self-stretch md:h-[74px] flex-col justify-start items-start gap-2.5 flex">
+                      <div className="self-stretch text-white text-base font-medium leading-normal">
+                        Welcome to the world of Intuition.
+                      </div>
+                      <div className="self-stretch text-white/40 text-sm font-normal leading-tight">
+                        By completing this step, you&#39;ll create an
+                        &#39;Atom&#39; for your Ethereum address - a universally
+                        referenceable node in the Intuition Trust Graph,
+                        representative of you. With this, you&#39;ll be able to
+                        make claims about things, and will allow claims to be
+                        made about you - taking the first step in your journey
+                        towards better intuition in all of your interactions.
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <BridgeToBase />
+              </motion.div>
+            ) : (
+              <motion.div
+                key="videoPlayer"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 1 }}
+                exit={{ opacity: 0 }}
+                className="relative max-w-[90vw] md:max-w-[75vw]"
+              >
+                <div className={cn(`overflow-hidden rounded-xl relative`)}>
+                  <video
+                    ref={videoRef}
+                    src={RELIC_LEGENDARY_V3_WITH_AUDIO_MP4}
+                    title={'Relic'}
+                    playsInline
+                    autoPlay
+                    muted={isMuted}
+                    className="rounded-xl overflow-hidden items-center justify-center w-full md:max-w-[500px] xl:max-w-[1000px] shadow-lg"
+                    onEnded={handleVideoEnd}
+                  />
+                  <AnimatePresence>
+                    <motion.div
+                      initial={{ opacity: 1 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.5 }}
+                      className="absolute bottom-4 right-4 md:bottom-6 md:right-6"
                     >
-                      <Icon
-                        name={getVolumeIcon()}
-                        className="h-8 w-8 md:h-10 md:w-10 fill-black"
-                      />
-                    </Button>
-                  </motion.div>
-                </AnimatePresence>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+                      <Button
+                        variant={ButtonVariant.primary}
+                        size={ButtonSize.iconLg}
+                        onClick={() => setIsMuted(!isMuted)}
+                        className="bg-primary/70"
+                      >
+                        <Icon
+                          name={getVolumeIcon()}
+                          className="h-8 w-8 md:h-10 md:w-10 fill-black"
+                        />
+                      </Button>
+                    </motion.div>
+                  </AnimatePresence>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+        <EditProfileModal
+          userObject={userObject}
+          open={editProfileModalActive}
+          onClose={() => {
+            setEditProfileModalActive(false)
+            setShowVideo(true)
+          }}
+        />
+        <PrivyLogout wallet={wallet} />
       </div>
-      <EditProfileModal
-        userObject={userObject}
-        open={editProfileModalActive}
-        onClose={() => {
-          setEditProfileModalActive(false)
-          setShowVideo(true)
-        }}
-      />
-      <PrivyLogout wallet={wallet} />
     </div>
   )
 }

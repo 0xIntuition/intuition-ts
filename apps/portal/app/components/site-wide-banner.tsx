@@ -17,9 +17,10 @@ const SiteWideBanner = ({
       'Intuition will be temporarily unavailable during scheduled maintenance. We’ll be back online shortly — thanks for your patience!'
   } else if (featureFlags.FF_INCIDENT_BANNER_ENABLED === 'true') {
     bannerData.variant = 'warning'
-    bannerData.title = 'Ongoing Incident'
+    bannerData.title =
+      "We're currently doing maintenance on the Portal, degraded performance is expected."
     bannerData.message =
-      'Intuition is currently investigating an incident. We’ll be back online shortly — thanks for your patience!'
+      'If you have any issues please wait until this banner goes away to make a ticket if the issue persists.  Thank you for your patience.'
   } else {
     return null
   }

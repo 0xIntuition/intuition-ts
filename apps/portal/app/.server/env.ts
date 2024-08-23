@@ -1,9 +1,9 @@
 import { z } from 'zod'
 
 export const featureFlagsSchema = z.object({
-  FF_GENERIC_BANNER_ENABLED: z.string(),
-  FF_INCIDENT_BANNER_ENABLED: z.string(),
-  FF_FULL_LOCKDOWN_ENABLED: z.string(),
+  FF_GENERIC_BANNER_ENABLED: z.string().optional(),
+  FF_INCIDENT_BANNER_ENABLED: z.string().optional(),
+  FF_FULL_LOCKDOWN_ENABLED: z.string().optional(),
 })
 
 const schema = z.object({
@@ -76,13 +76,15 @@ export function getEnv() {
   }
 }
 
-export function getFeatureFlags() {
+export function getFeatureFlags(): z.infer<typeof featureFlagsSchema> {
   return {
     FF_GENERIC_BANNER_ENABLED: process.env.FF_GENERIC_BANNER_ENABLED,
     FF_INCIDENT_BANNER_ENABLED: process.env.FF_INCIDENT_BANNER_ENABLED,
     FF_FULL_LOCKDOWN_ENABLED: process.env.FF_FULL_LOCKDOWN_ENABLED,
   }
 }
+
+export type FeatureFlags = z.infer<typeof featureFlagsSchema>
 
 type ENV = ReturnType<typeof getEnv>
 

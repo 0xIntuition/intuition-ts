@@ -3,6 +3,7 @@ import { Text } from '@0xintuition/1ui'
 import PrivyLoginButton from '@client/privy-login-button'
 import { BuiltOnBase } from '@components/built-on-base'
 import { HeaderLogo } from '@components/header-logo'
+import SiteWideBanner from '@components/site-wide-banner'
 import logger from '@lib/utils/logger'
 import { getMaintenanceMode } from '@lib/utils/maintenance'
 import { User as PrivyUser } from '@privy-io/react-auth'
@@ -13,19 +14,21 @@ import {
   redirect,
 } from '@remix-run/node'
 import { Link, useLoaderData, useSubmit } from '@remix-run/react'
+import { getFeatureFlags } from '@server/env'
 import { verifyPrivyAccessToken } from '@server/privy'
 import { PATHS } from 'app/consts'
 import { parse } from 'cookie'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   getMaintenanceMode()
+  const featureFlags = getFeatureFlags()
 
   const authTokenClaims = await verifyPrivyAccessToken(request)
   if (authTokenClaims) {
     logger('[Loader] User is already authenticated, redirecting to home')
     throw redirect(PATHS.HOME)
   }
-  return json({ authTokenClaims })
+  return json({ authTokenClaims, featureFlags })
 }
 export async function action({ request }: ActionFunctionArgs) {
   logger('[Action] Entering login action')
@@ -44,7 +47,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
 export default function Login() {
   const submit = useSubmit()
-  const { authTokenClaims } = useLoaderData<typeof loader>()
+  const { authTokenClaims, featureFlags } = useLoaderData<typeof loader>()
   logger('[Login] authTokenClaims', authTokenClaims)
 
   function handleLogin(
@@ -62,33 +65,36 @@ export default function Login() {
   }
 
   return (
-    <div className="flex flex-col justify-between h-screen w-full p-8">
-      <div className="flex flex-row justify-between w-full">
-        <HeaderLogo />
-        <div className="justify-end">
-          <BuiltOnBase />
+    <div>
+      <SiteWideBanner featureFlags={featureFlags} />
+      <div className="flex flex-col justify-between h-screen w-full p-8">
+        <div className="flex flex-row justify-between w-full">
+          <HeaderLogo />
+          <div className="justify-end">
+            <BuiltOnBase />
+          </div>
         </div>
-      </div>
-      <div className="flex flex-col items-center">
-        <Text variant="heading4" weight="semibold" className="mb-4">
-          Sign in to Intuition
-        </Text>
-        <Text variant="body" className="text-secondary-foreground/60 mb-10">
-          Connect your wallet to get started
-        </Text>
-        <PrivyLoginButton handleLogin={handleLogin} />
-      </div>
-      <div className="flex items-center justify-center max-sm:flex-col max-sm:gap-2 max-sm:items-center max-sm:text-center gap-1">
-        <Text variant="body" className="text-secondary-foreground/60">
-          Have a question or need help resolving an issue?
-        </Text>
-        <Link
-          to="https://discord.com/channels/909531430881746974/1151564740255043604"
-          target="_blank"
-          className="text-base text-foreground/70 hover:text-foreground/90"
-        >
-          Contact Support
-        </Link>
+        <div className="flex flex-col items-center">
+          <Text variant="heading4" weight="semibold" className="mb-4">
+            Sign in to Intuition
+          </Text>
+          <Text variant="body" className="text-secondary-foreground/60 mb-10">
+            Connect your wallet to get started
+          </Text>
+          <PrivyLoginButton handleLogin={handleLogin} />
+        </div>
+        <div className="flex items-center justify-center max-sm:flex-col max-sm:gap-2 max-sm:items-center max-sm:text-center gap-1">
+          <Text variant="body" className="text-secondary-foreground/60">
+            Have a question or need help resolving an issue?
+          </Text>
+          <Link
+            to="https://discord.com/channels/909531430881746974/1151564740255043604"
+            target="_blank"
+            className="text-base text-foreground/70 hover:text-foreground/90"
+          >
+            Contact Support
+          </Link>
+        </div>
       </div>
     </div>
   )
