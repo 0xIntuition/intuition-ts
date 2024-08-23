@@ -18,7 +18,10 @@ export const verifyPrivyAccessToken = async (
     logger('No privy access token found')
     return null
   }
-  const verifiedClaims = await privy.verifyAuthToken(authToken)
+  const verifiedClaims = await privy.verifyAuthToken(
+    authToken,
+    process.env.PRIVY_VERIFICATION_KEY,
+  )
   return verifiedClaims
 }
 
