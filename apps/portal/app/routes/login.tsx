@@ -40,7 +40,6 @@ export async function action({ request }: ActionFunctionArgs) {
   const redirectUrl = url.searchParams.get('redirectTo') ?? PATHS.HOME
   logger('[Action] Redirecting to', redirectUrl)
   const cookies = parse(request.headers.get('cookie') ?? '')
-  logger('cookies in login', cookies)
   const privyToken = cookies['privy-token'] // not necessary but just to show its being properly set by privy post auth
   const privyIdToken = cookies['privy-id-token']
   logger('privyIdToken', privyIdToken)
