@@ -1,5 +1,3 @@
-import { useEffect, useState } from 'react'
-
 import { Button, Icon, InfoCard, ProfileCard } from '@0xintuition/1ui'
 import {
   ClaimPresenter,
