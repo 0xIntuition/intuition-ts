@@ -13,7 +13,7 @@ const PositionCardFeesAccrued = ({
   currency,
 }: PositionCardFeesAccruedProps) => {
   return (
-    <div className={'flex flex-col max-lg:items-center'}>
+    <div className={'flex flex-col'}>
       <Text
         variant={TextVariant.caption}
         weight={TextWeight.medium}

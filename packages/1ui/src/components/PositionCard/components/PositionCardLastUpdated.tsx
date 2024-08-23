@@ -16,7 +16,7 @@ const PositionCardLastUpdated = ({
   }).format(new Date(timestamp))
 
   return (
-    <div className="flex flex-col max-lg:items-center">
+    <div className="flex flex-col">
       <Text
         variant="caption"
         weight="medium"

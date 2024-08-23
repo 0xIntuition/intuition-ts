@@ -13,7 +13,7 @@ const PositionCardStaked = ({
   className,
 }: PositionCardStakedProps) => {
   return (
-    <div className="flex flex-col max-lg:items-center">
+    <div className="flex flex-col">
       <Text variant="caption" className="text-muted-foreground mb-0.5">
         Amount Staked
       </Text>

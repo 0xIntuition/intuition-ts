@@ -17,7 +17,7 @@ const PositionCardOwnership = ({
   className,
 }: PositionCardOwnershipProps) => {
   return (
-    <div className="flex flex-col max-lg:items-center">
+    <div className="flex flex-col items-end justify-end md:items-start md:justify-start">
       <Text variant="caption" className="text-muted-foreground mb-0.5">
         Percent Ownership
       </Text>
