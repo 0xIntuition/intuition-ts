@@ -100,7 +100,7 @@ export default function Quests() {
   const nftHoldPoints = relicHoldCount ? +relicHoldCount * 250000 : 0
   const totalNftPoints = nftMintPoints + nftHoldPoints
   return (
-    <div className="p-10 w-full max-w-7xl mx-auto flex flex-col gap-5 max-md:p-5 max-sm:p-2">
+    <div className="p-10 w-full max-w-7xl mx-auto flex flex-col gap-5 max-md:p-5 max-sm:p-2.5">
       <ExploreHeader
         title="Quests"
         content="Explore the Intuition ecosystem, and earn IQ points along the way."

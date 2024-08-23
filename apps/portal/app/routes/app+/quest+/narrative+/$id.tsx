@@ -122,9 +122,12 @@ export default function Quests() {
           alt={STANDARD_QUEST_SET.title}
           className="object-cover object-center w-full h-[350px] theme-border rounded-lg max-md:h-[250px]"
         />
-        <div className="flex flex-col gap-5 max-md:gap-3">
+        <div className="flex flex-col gap-5 3 max-md:p-5 max-sm:p-2.5">
           <Link to="/app/quest">
-            <Button variant={ButtonVariant.secondary} className="w-fit">
+            <Button
+              variant={ButtonVariant.secondary}
+              className="w-full md:w-fit"
+            >
               <div className="flex items-center gap-2">
                 <Icon name={IconName.arrowLeft} />
               </div>
@@ -151,7 +154,7 @@ export default function Quests() {
           />
         </div>
       </div>
-      <div className="flex flex-col gap-5">
+      <div className="flex flex-col gap-5 max-md:p-5 max-sm:p-2.5">
         <Text variant="headline" id="chapters">
           Chapters
         </Text>

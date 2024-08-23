@@ -35,7 +35,7 @@ export default function CreateAtomActivity({
   return (
     <ActivityContainer status={status} {...props}>
       {identity ? (
-        <div className="flex flex-col gap-5 theme-border rounded-md p-5 max-md:p-3 max-md:gap-3">
+        <div className="flex flex-col gap-5 theme-border rounded-md p-5 max-md:p-2.5 max-md:gap-2.5">
           <ProfileCard
             variant={Identity.nonUser}
             avatarSrc={identity?.image ?? ''}

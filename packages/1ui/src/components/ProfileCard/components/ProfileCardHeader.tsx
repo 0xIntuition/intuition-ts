@@ -22,7 +22,7 @@ const ProfileCardHeader = ({
   maxStringLength = 24,
 }: ProfileCardHeaderProps) => {
   return (
-    <div className="flex items-center space-x-4 w-full max-lg:justify-center">
+    <div className="flex items-center space-x-4 w-full">
       <Avatar
         variant={variant}
         src={avatarSrc}

@@ -23,12 +23,17 @@ const ExploreHeader: React.FC<ExploreHeaderProps> = ({
 }: ExploreHeaderProps) => {
   return (
     <div
-      className={`hidden relative md:flex w-full h-52 justify-center w-full rounded-xl theme-border bg-right bg-no-repeat`}
+      className={`relative md:flex w-full md:h-52 justify-center w-full rounded-xl theme-border bg-right bg-no-repeat`}
       style={{ backgroundImage: `url(${bgImage})` }}
     >
       <div className="w-full px-6 py-4">
-        <Text variant={TextVariant.heading5} weight={TextWeight.semibold}>
+        <Text
+          variant={TextVariant.heading5}
+          weight={TextWeight.semibold}
+          className="flex flex-row justify-between"
+        >
           {title}
+          <Icon name={icon} className="md:hidden w-8 h-8 text-white" />
         </Text>
         <Text
           variant={TextVariant.bodyLarge}
@@ -38,7 +43,7 @@ const ExploreHeader: React.FC<ExploreHeaderProps> = ({
           {content}
         </Text>
       </div>
-      <div className="absolute bottom-4 right-6">
+      <div className="hidden md:block absolute bottom-4 right-6">
         <Icon name={icon} className="w-8 h-8 text-white" />
       </div>
     </div>
