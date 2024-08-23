@@ -452,7 +452,7 @@ export default function Profile() {
                   playsInline
                   autoPlay
                   muted={isMuted}
-                  className="rounded-xl overflow-hidden items-center justify-center w-[1000px] shadow-lg"
+                  className="rounded-xl overflow-hidden items-center justify-center w-full md:max-w-[500px] xl:max-w-[1000px] shadow-lg"
                   onEnded={handleVideoEnd}
                 />
               </div>
