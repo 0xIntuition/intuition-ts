@@ -17,7 +17,7 @@ import { addIdentitiesListModalAtom, imageModalAtom } from '@lib/state/store'
 import logger from '@lib/utils/logger'
 import { invariant } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
-import { Outlet, useLocation, useNavigate } from '@remix-run/react'
+import { Outlet, useNavigate } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
 import { requireUser, requireUserWallet } from '@server/auth'
 import { getVaultDetails } from '@server/multivault'
@@ -80,24 +80,10 @@ export default function ListDetails() {
     useAtom(addIdentitiesListModalAtom)
   const [imageModalActive, setImageModalActive] = useAtom(imageModalAtom)
   const navigate = useNavigate()
-  const location = useLocation()
-  const [fromUrl, setFromUrl] = useState<string | number>(-1)
-
-  useEffect(() => {
-    const from = location.state?.from
-
-    if (from) {
-      setFromUrl(from.split('?')[0])
-    } else if (document.referrer) {
-      setFromUrl(document.referrer)
-    } else {
-      setFromUrl(-1)
-    }
-  }, [location.state])
 
   const leftPanel = (
     <div className="flex-col justify-start items-start gap-6 inline-flex max-lg:w-full">
-      <NavigationButton variant="secondary" size="icon" to={fromUrl.toString()}>
+      <NavigationButton variant="secondary" size="icon" to={'..'}>
         <Icon name="arrow-left" />
       </NavigationButton>
       <ProfileCard
