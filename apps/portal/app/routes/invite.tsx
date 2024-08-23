@@ -316,9 +316,9 @@ export default function InviteRoute() {
               animate={{ opacity: 1 }}
               transition={{ duration: 1 }}
               exit={{ opacity: 0 }}
-              className="relative"
+              className="relative max-w-[90vw] md:max-w-[75vw]"
             >
-              <div className={cn(`overflow-hidden rounded-xl`)}>
+              <div className={cn(`overflow-hidden rounded-xl relative`)}>
                 <video
                   ref={videoRef}
                   src={RELIC_LEGENDARY_V2_WITH_AUDIO_MP4}
@@ -326,31 +326,31 @@ export default function InviteRoute() {
                   playsInline
                   autoPlay
                   muted={isMuted}
-                  className="rounded-xl overflow-hidden items-center justify-center w-full md:max-w-[500px] xl:max-w-[1000px] shadow-lg"
+                  className="rounded-xl overflow-hidden w-full h-auto max-h-[75vh] shadow-lg object-contain"
                   onEnded={handleVideoEnd}
                 />
-              </div>
-              <AnimatePresence>
-                <motion.div
-                  initial={{ opacity: 1 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.5 }}
-                  className="absolute bottom-6 right-6"
-                >
-                  <Button
-                    variant={ButtonVariant.primary}
-                    size={ButtonSize.iconXl}
-                    onClick={() => setIsMuted(!isMuted)}
-                    className="bg-primary/70"
+                <AnimatePresence>
+                  <motion.div
+                    initial={{ opacity: 1 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.5 }}
+                    className="absolute bottom-4 right-4 md:bottom-6 md:right-6"
                   >
-                    <Icon
-                      name={getVolumeIcon()}
-                      className="h-12 w-12 fill-black"
-                    />
-                  </Button>
-                </motion.div>
-              </AnimatePresence>
+                    <Button
+                      variant={ButtonVariant.primary}
+                      size={ButtonSize.iconLg}
+                      onClick={() => setIsMuted(!isMuted)}
+                      className="bg-primary/70"
+                    >
+                      <Icon
+                        name={getVolumeIcon()}
+                        className="h-8 w-8 md:h-10 md:w-10 fill-black"
+                      />
+                    </Button>
+                  </motion.div>
+                </AnimatePresence>
+              </div>
             </motion.div>
           )}
         </AnimatePresence>
