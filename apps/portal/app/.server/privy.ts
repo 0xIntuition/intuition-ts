@@ -35,6 +35,7 @@ export const getPrivyUserById = async (id: string): Promise<User> => {
 // get access token from cookie or header
 export const getPrivyAccessToken = (req: Request): string | null => {
   const cookies = parse(req.headers.get('Cookie') ?? '')
+  // logger('Cookies from access token', cookies)
   const authToken =
     req.headers.get('Authorization')?.replace('Bearer ', '') ||
     cookies['privy-token']
