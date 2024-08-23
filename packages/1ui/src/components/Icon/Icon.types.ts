@@ -133,4 +133,8 @@ export const IconName = {
   fileText: 'file-text',
   hamburger: 'hamburger',
   avatarSparkle: 'avatar-sparkle',
+  twitter: 'twitter',
+  mirror: 'mirror',
+  warpcast: 'warpcast',
+  galxe: 'galxe',
 } as const

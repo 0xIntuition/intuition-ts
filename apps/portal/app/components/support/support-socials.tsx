@@ -1,10 +1,11 @@
-import { Text, TextVariant, TextWeight } from '@0xintuition/1ui'
+import { IconNameType, Text, TextVariant, TextWeight } from '@0xintuition/1ui'
 
 import { SupportCard } from '@components/support/support-card'
 
 interface SocialCardData {
   title: string
   link: string
+  icon: IconNameType
   className?: string
 }
 
@@ -28,6 +29,7 @@ export function SocialCardGrid({ socialCards }: SocialCardGridProps) {
             key={index}
             title={card.title}
             link={card.link}
+            icon={card.icon}
             className={card.className || 'items-center'}
           />
         ))}

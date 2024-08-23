@@ -48,17 +48,46 @@ const supportCards = [
 ]
 
 const socialCards = [
-  { title: 'Twitter', link: 'https://x.com/0xIntuition' },
-  { title: 'Discord', link: 'https://discord.gg/0xintuition' },
-  { title: 'Telegram', link: 'https://t.me/intuitionsystems' },
-  { title: 'Warpcast', link: 'https://warpcast.com/0xintuition' },
-  { title: 'Medium', link: 'https://medium.com/0xintuition' },
-  { title: 'Galxe', link: 'https://app.galxe.com/quest/intuition' },
+  {
+    title: 'Twitter',
+    link: 'https://x.com/0xIntuition',
+    icon: IconName.twitter,
+  },
+  {
+    title: 'Discord',
+    link: 'https://discord.gg/0xintuition',
+    icon: IconName.discord,
+  },
+  {
+    title: 'Telegram',
+    link: 'https://t.me/intuitionsystems',
+    icon: IconName.telegram,
+  },
+  {
+    title: 'Warpcast',
+    link: 'https://warpcast.com/0xintuition',
+    icon: IconName.warpcast,
+  },
+  {
+    title: 'Medium',
+    link: 'https://medium.com/0xintuition',
+    icon: IconName.medium,
+  },
+  {
+    title: 'Galxe',
+    link: 'https://app.galxe.com/quest/intuition',
+    icon: IconName.galxe,
+  },
   {
     title: 'Mirror',
     link: 'https://mirror.xyz/0x0bcAFff6B45769B53DE34169f08AB220d2b9F910',
+    icon: IconName.mirror,
   },
-  { title: 'Github', link: 'https://github.com/0xintuition' },
+  {
+    title: 'Github',
+    link: 'https://github.com/0xintuition',
+    icon: IconName.github,
+  },
 ]
 
 export default function HelpCenter() {
