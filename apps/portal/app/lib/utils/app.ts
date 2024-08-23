@@ -125,18 +125,18 @@ export const getFeaturedListObjectIds = (chainEnv: ChainEnv): number[] => {
     staging: [
       980, // Pro Crypto Politicians
       1193, // Anti Crypto Politicians
+      765, // Crypto Thought Leaders
+      893, // Recommended Predicates
       3421, // CryptoCurrencies
       45, // Top Web3 Developer Tooling
-      893, // Recommended Predicates
-      765, // Crypto Thought Leaders
     ],
     production: [
       980, // Pro Crypto Politicians
       1193, // Anti Crypto Politicians
+      765, // Crypto Thought Leaders
+      893, // Recommended Predicates
       3421, // CryptoCurrencies
       45, // Top Web3 Developer Tooling
-      893, // Recommended Predicates
-      765, // Crypto Thought Leaders
     ],
   }
   if (!chainEnv) {
