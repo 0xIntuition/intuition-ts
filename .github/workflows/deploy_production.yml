@@ -103,7 +103,7 @@ jobs:
           --build-arg PHOSPHOR_COLLECTION_ID=${{ secrets.PHOSPHOR_COLLECTION_ID }} \
           --build-arg GTM_TRACKING_ID=${{ secrets.GTM_TRACKING_ID }} \
           --build-arg FF_FULL_LOCKDOWN_ENABLED=true
-          --build-arg FF_INCIDENT_BANNER_ENABLED=true
+          --build-arg FF_INCIDENT_BANNER_ENABLED=false
           docker tag portal ${{ env.ECR_IMAGE }}
           docker push ${{ env.ECR_IMAGE }}
 
