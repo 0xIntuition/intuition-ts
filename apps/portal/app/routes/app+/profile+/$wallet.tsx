@@ -47,6 +47,7 @@ import {
   stakeModalAtom,
   tagsModalAtom,
 } from '@lib/state/store'
+import { getSpecialPredicate } from '@lib/utils/app'
 import logger from '@lib/utils/logger'
 import {
   calculatePercentageOfTvl,
@@ -64,6 +65,7 @@ import { getVaultDetails } from '@server/multivault'
 import { getRelicCount } from '@server/relics'
 import {
   BLOCK_EXPLORER_URL,
+  CURRENT_ENV,
   MULTIVAULT_CONTRACT_ADDRESS,
   NO_WALLET_ERROR,
   PATHS,
@@ -161,16 +163,22 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   let followClaim: ClaimPresenter | null = null
   let followVaultDetails: VaultDetailsType | null = null
 
-  if (userIdentity.follow_claim_id) {
-    followClaim = await fetchWrapper(request, {
-      method: ClaimsService.getClaimById,
-      args: {
-        id: userIdentity.follow_claim_id,
-      },
-    })
+  const followClaimResponse = await fetchWrapper(request, {
+    method: ClaimsService.searchClaims,
+    args: {
+      subject: getSpecialPredicate(CURRENT_ENV).iPredicate.vaultId,
+      predicate: getSpecialPredicate(CURRENT_ENV).amFollowingPredicate.vaultId,
+      object: userIdentity.vault_id,
+      page: 1,
+      limit: 1,
+    },
+  })
+
+  if (followClaimResponse.data && followClaimResponse.data.length) {
+    followClaim = followClaimResponse.data[0]
   }
 
-  if (userIdentity.user && followClaim && followClaim.vault_id) {
+  if (userIdentity.user && followClaim) {
     try {
       followVaultDetails = await getVaultDetails(
         followClaim.contract,
@@ -182,6 +190,8 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
       followVaultDetails = null
     }
   }
+
+  logger('follow claim', followClaim)
 
   return json({
     wallet,
