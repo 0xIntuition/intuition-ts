@@ -80,17 +80,27 @@ export async function getConnectionsData({
     followingLimit,
   )
 
+  let followClaim: ClaimPresenter | null = null
+
+  const followClaimResponse = await fetchWrapper(request, {
+    method: ClaimsService.searchClaims,
+    args: {
+      subject: getSpecialPredicate(CURRENT_ENV).iPredicate.vaultId,
+      predicate: getSpecialPredicate(CURRENT_ENV).amFollowingPredicate.vaultId,
+      object: userIdentity.vault_id,
+      page: 1,
+      limit: 1,
+    },
+  })
+
+  if (followClaimResponse.data && followClaimResponse.data.length) {
+    followClaim = followClaimResponse.data[0]
+  }
+
   const followingIdentitiesObjects = followingClaims.data.map(
     (claim) => claim.object,
   ) as IdentityPresenter[]
-  if (userIdentity.follow_claim_id) {
-    const followClaim = await fetchWrapper(request, {
-      method: ClaimsService.getClaimById,
-      args: {
-        id: userIdentity.follow_claim_id,
-      },
-    })
-
+  if (followClaim) {
     const {
       page: followersPage,
       limit: followersLimit,
