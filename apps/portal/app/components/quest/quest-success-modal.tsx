@@ -168,9 +168,7 @@ export default function QuestSuccessModal({
               IQ Points
             </Text>
           </div>
-          <NavLink
-            to={`/app/quest/narrative/0${nextQuestId ? `#${nextQuestId}` : ''}`}
-          >
+          <NavLink to={`/app/quest/narrative/0`}>
             <Button
               variant={ButtonVariant.primary}
               size={ButtonSize.md}

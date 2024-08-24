@@ -12,9 +12,9 @@ const SiteWideBanner = ({
 
   if (featureFlags.FF_GENERIC_BANNER_ENABLED === 'true') {
     bannerData.variant = 'info'
-    bannerData.title = 'Scheduled Maintenance'
+    bannerData.title = "Ongoing Incident with Quest 'Chapter 3: Language'"
     bannerData.message =
-      'Intuition will be temporarily unavailable during scheduled maintenance. We’ll be back online shortly — thanks for your patience!'
+      "We are currently investigating an issue with quest 'Chapter 3: Language'.  We have removed the requirement to move on to quest 'Chapter 4: Expression'.  Please wait until this banner goes away to make a ticket if the issue persists."
   } else if (featureFlags.FF_INCIDENT_BANNER_ENABLED === 'true') {
     bannerData.variant = 'warning'
     bannerData.title =

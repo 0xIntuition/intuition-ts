@@ -170,7 +170,7 @@ export default function Quests() {
                 label={`Chapter ${quest.position}`}
                 points={quest.points}
                 questCriteria={getQuestCriteriaShort(quest.condition)}
-                disabled={!available}
+                disabled={!available || !quest.active}
                 id={quest.id}
                 handleClick={(e) => {
                   e.preventDefault()
