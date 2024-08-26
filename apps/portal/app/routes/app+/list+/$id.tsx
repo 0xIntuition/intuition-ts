@@ -16,7 +16,7 @@ import { addIdentitiesListModalAtom, imageModalAtom } from '@lib/state/store'
 import logger from '@lib/utils/logger'
 import { invariant } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
-import { Outlet, useLocation, useNavigate } from '@remix-run/react'
+import { Outlet, useNavigate } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
 import { requireUser, requireUserWallet } from '@server/auth'
 import { getVaultDetails } from '@server/multivault'
@@ -78,6 +78,7 @@ export default function ListDetails() {
   const [addIdentitiesListModalActive, setAddIdentitiesListModalActive] =
     useAtom(addIdentitiesListModalAtom)
   const [imageModalActive, setImageModalActive] = useAtom(imageModalAtom)
+  const navigate = useNavigate()
   const handleGoBack = useGoBack({ fallbackRoute: PATHS.LISTS })
 
   const leftPanel = (
