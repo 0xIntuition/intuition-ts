@@ -15,7 +15,7 @@ import { addIdentitiesListModalAtom, imageModalAtom } from '@lib/state/store'
 import logger from '@lib/utils/logger'
 import { invariant } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
-import { Outlet, useNavigate } from '@remix-run/react'
+import { Outlet, useLocation, useNavigate } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
 import { requireUser, requireUserWallet } from '@server/auth'
 import { getVaultDetails } from '@server/multivault'
@@ -78,10 +78,30 @@ export default function ListDetails() {
     useAtom(addIdentitiesListModalAtom)
   const [imageModalActive, setImageModalActive] = useAtom(imageModalAtom)
   const navigate = useNavigate()
+  const location = useLocation()
+
+  // const handleGoBack = () => {
+  //   navigate(-1)
+  // }
+
+  const handleGoBack = () => {
+    if (location.key === 'default') {
+      // This is likely a server-side navigation or direct access
+      navigate('/app/lists')
+    } else {
+      // This is a client-side navigation
+      navigate(-1)
+    }
+  }
 
   const leftPanel = (
     <div className="flex-col justify-start items-start gap-6 inline-flex max-lg:w-full">
-      <NavigationButton variant="secondary" size="icon" to={'..'}>
+      <NavigationButton
+        variant="secondary"
+        size="icon"
+        to="#"
+        onClick={handleGoBack}
+      >
         <Icon name="arrow-left" />
       </NavigationButton>
       <ProfileCard
