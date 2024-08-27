@@ -296,7 +296,7 @@ export default function InviteRoute() {
                 </div>
               </motion.div>
             ) : (
-              <RelicOnboadingVideo variant="v2" />
+              <RelicOnboadingVideo variant="v2" link={PATHS.THE_BIG_BANG} />
             )}
           </AnimatePresence>
         </div>

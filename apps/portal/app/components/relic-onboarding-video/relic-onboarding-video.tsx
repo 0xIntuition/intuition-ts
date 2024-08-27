@@ -24,8 +24,10 @@ import { AnimatePresence, motion } from 'framer-motion'
 
 export default function RelicOnboadingVideo({
   variant,
+  link,
 }: {
   variant: 'v1' | 'v2' | 'v3'
+  link: string
 }) {
   const [isMuted, setIsMuted] = useState(false)
   const videoVolume = 0.33
@@ -42,7 +44,7 @@ export default function RelicOnboadingVideo({
   const navigate = useNavigate()
 
   const handleVideoEnd = () => {
-    navigate('/the-big-bang')
+    navigate(link)
   }
 
   const getVolumeIcon = () => {

@@ -412,7 +412,7 @@ export default function Profile() {
                 <BridgeToBase />
               </motion.div>
             ) : (
-              <RelicOnboadingVideo variant="v3" />
+              <RelicOnboadingVideo variant="v3" link={PATHS.QUEST} />
             )}
           </AnimatePresence>
         </div>
