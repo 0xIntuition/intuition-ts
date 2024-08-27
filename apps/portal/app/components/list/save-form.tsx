@@ -101,7 +101,7 @@ export default function SaveForm({
               </Text>
             </DialogDescription>
           </DialogHeader>
-          <div className="h-full w-full flex-col pt-5 px-10 pb-10 gap-5 inline-flex">
+          <div className="h-full w-full flex-col pt-5 md:px-10 pb-10 gap-5 inline-flex">
             <div className="flex items-center w-full mr-2.5 gap-5 ">
               <Claim
                 size="md"

@@ -437,7 +437,10 @@ export default function SaveListModal({
         handleClose()
       }}
     >
-      <DialogContent className="flex flex-col w-[476px] h-[580px] gap-0">
+      <DialogContent
+        className="flex flex-col md:w-[476px] h-[570px] gap-0"
+        onOpenAutoFocus={(event) => event.preventDefault()}
+      >
         <div className="flex-grow">
           <SaveForm
             tag={tag}

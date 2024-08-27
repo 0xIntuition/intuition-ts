@@ -2,11 +2,11 @@ import {
   ActivePositionCard,
   Badge,
   Claim,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   Icon,
   Identity,
-  IdentityTag,
   Text,
 } from '@0xintuition/1ui'
 import { IdentityPresenter } from '@0xintuition/api'
@@ -84,35 +84,31 @@ export default function FollowForm({
           <DialogHeader>
             <DialogTitle className="justify-between">
               <div className="flex items-center justify-between w-full mr-2.5">
-                <IdentityTag
-                  imgSrc={identity?.user?.image ?? identity?.image}
-                  variant={identity?.user ? Identity.user : Identity.nonUser}
-                >
-                  {identity?.user?.display_name ?? identity?.display_name}
-                </IdentityTag>
+                <div className="justify-center items-center gap-2 inline-flex">
+                  <Text variant="base" weight="medium">
+                    {+user_assets > 0 ? 'Increase Follow' : 'Follow User'}{' '}
+                  </Text>
+                  <InfoTooltip
+                    title="Follow"
+                    content="In Intuition, follows are not binary - you can signal how much you want to follow someone by depositing more tokens. This is helpful for curating your &lsquo;follow&rsquo; list, allowing you to rank some people higher than others."
+                  />
+                  <div className="w-4 h-4 relative" />
+                </div>
                 <Badge>
                   <Icon name="wallet" className="h-4 w-4" />
                   {(+walletBalance).toFixed(2)} ETH
                 </Badge>
               </div>
             </DialogTitle>
-          </DialogHeader>
-          <div className="h-full w-full flex-col pt-5 px-10 pb-10 gap-5 inline-flex">
-            <div className="flex-col justify-center items-start gap-2.5 inline-flex">
-              <div className="justify-center items-center gap-2 inline-flex">
-                <Text variant="base" weight="medium">
-                  {+user_assets > 0 ? 'Increase Follow' : 'Follow User'}{' '}
-                </Text>
-                <InfoTooltip
-                  title="Follow"
-                  content="In Intuition, follows are not binary - you can signal how much you want to follow someone by depositing more tokens. This is helpful for curating your &lsquo;follow&rsquo; list, allowing you to rank some people higher than others."
-                />
-                <div className="w-4 h-4 relative" />
-              </div>
+            <DialogDescription>
               <Text variant="caption" className="text-neutral-50/50">
                 Stake on a user&apos;s follow claim to create or strengthen your
                 connection.
               </Text>
+            </DialogDescription>
+          </DialogHeader>
+          <div className="h-full w-full flex-col pt-5 md:px-10 pb-10 gap-5 inline-flex">
+            <div className="flex-col justify-center items-start gap-2.5 inline-flex">
               <div className="flex flex-row mx-auto">
                 <Claim
                   subject={{

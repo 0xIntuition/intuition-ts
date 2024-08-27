@@ -308,7 +308,10 @@ export default function FollowModal({
         handleClose()
       }}
     >
-      <DialogContent className="flex flex-col w-[476px] h-[580px] gap-0">
+      <DialogContent
+        className="flex flex-col md:w-[476px] h-[540px] gap-0"
+        onOpenAutoFocus={(event) => event.preventDefault()}
+      >
         <div className="flex-grow">
           <FollowForm
             walletBalance={walletBalance}
