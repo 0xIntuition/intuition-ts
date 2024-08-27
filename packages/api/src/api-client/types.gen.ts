@@ -713,7 +713,7 @@ export type NewLinkedAccount = {
   link_id: string
   privy_id?: string | null
   user_id: string
-  verified_at: string
+  verified_at?: string | null
   wallet_client?: string | null
   wallet_client_type?: string | null
 }
@@ -1258,15 +1258,11 @@ export type UpdateQuest = {
 }
 
 export type UpsertUser = {
-  api_key?: string | null
   description?: string | null
-  did?: string | null
   display_name?: string | null
   ens_name?: string | null
   image?: string | null
   privy_id: string
-  role?: Role | null
-  wallet?: string | null
 }
 
 export type UpsertUserPoints = {
@@ -1303,10 +1299,13 @@ export type UserClaimQuery = {
   direction?: SortDirection | null
   displayName?: string | null
   limit?: number | null
+  object?: Identifier | null
   offset?: number | null
   page?: number | null
+  predicate?: Identifier | null
   showEmptyPosition?: boolean | null
   sortBy?: SortColumn | null
+  subject?: Identifier | null
   timeframe?: TimeFrame | null
   user?: Identifier | null
 }
@@ -2340,7 +2339,7 @@ export type CreateLinkedAccountResponse = {
   link_id: string
   privy_id?: string | null
   user_id: string
-  verified_at: string
+  verified_at?: string | null
   wallet_client?: string | null
   wallet_client_type?: string | null
 }
@@ -2394,7 +2393,7 @@ export type ActivateLinkedAccountResponse = {
   type: string
   updated_at: string
   user_id: string
-  verified_at: string
+  verified_at?: string | null
   wallet_client?: string | null
   wallet_client_type?: string | null
 }
@@ -2418,7 +2417,7 @@ export type DeactivateLinkedAccountResponse = {
   type: string
   updated_at: string
   user_id: string
-  verified_at: string
+  verified_at?: string | null
   wallet_client?: string | null
   wallet_client_type?: string | null
 }
@@ -2781,6 +2780,26 @@ export type CompleteQuestResponse = {
   user_id: string
 }
 
+export type ResetQuestData = {
+  /**
+   * Quest SQL id
+   */
+  questId: string
+}
+
+export type ResetQuestResponse = {
+  date_completed?: string | null
+  date_started: string
+  id: string
+  point_multiplier: number
+  progress: number
+  quest_completion_object_id?: string | null
+  quest_condition: QuestCondition
+  quest_id: string
+  status: QuestStatus
+  user_id: string
+}
+
 export type StartQuestData = {
   /**
    * Quest SQL id
@@ -2890,10 +2909,13 @@ export type GetUserClaimsData = {
   direction?: SortDirection | null
   displayName?: string | null
   limit?: number | null
+  object?: Identifier | null
   offset?: number | null
   page?: number | null
+  predicate?: Identifier | null
   showEmptyPosition?: boolean | null
   sortBy?: SortColumn | null
+  subject?: Identifier | null
   timeframe?: TimeFrame | null
   user?: Identifier | null
 }
@@ -4390,7 +4412,7 @@ export type $OpenApiTs = {
           link_id: string
           privy_id?: string | null
           user_id: string
-          verified_at: string
+          verified_at?: string | null
           wallet_client?: string | null
           wallet_client_type?: string | null
         }
@@ -4458,7 +4480,7 @@ export type $OpenApiTs = {
           type: string
           updated_at: string
           user_id: string
-          verified_at: string
+          verified_at?: string | null
           wallet_client?: string | null
           wallet_client_type?: string | null
         }
@@ -4489,7 +4511,7 @@ export type $OpenApiTs = {
           type: string
           updated_at: string
           user_id: string
-          verified_at: string
+          verified_at?: string | null
           wallet_client?: string | null
           wallet_client_type?: string | null
         }
@@ -4968,6 +4990,33 @@ export type $OpenApiTs = {
       }
     }
   }
+  '/user_quest/{quest_id}/reset': {
+    post: {
+      req: {
+        /**
+         * Quest SQL id
+         */
+        questId: string
+      }
+      res: {
+        /**
+         * Reset a quest for the authenticated user
+         */
+        200: {
+          date_completed?: string | null
+          date_started: string
+          id: string
+          point_multiplier: number
+          progress: number
+          quest_completion_object_id?: string | null
+          quest_condition: QuestCondition
+          quest_id: string
+          status: QuestStatus
+          user_id: string
+        }
+      }
+    }
+  }
   '/user_quest/{quest_id}/start': {
     post: {
       req: {
@@ -5113,10 +5162,13 @@ export type $OpenApiTs = {
         direction?: SortDirection | null
         displayName?: string | null
         limit?: number | null
+        object?: Identifier | null
         offset?: number | null
         page?: number | null
+        predicate?: Identifier | null
         showEmptyPosition?: boolean | null
         sortBy?: SortColumn | null
+        subject?: Identifier | null
         timeframe?: TimeFrame | null
         user?: Identifier | null
       }
