@@ -1,13 +1,9 @@
-/* eslint-disable jsx-a11y/media-has-caption */
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import {
   Button,
   ButtonSize,
   ButtonVariant,
-  cn,
-  Icon,
-  IconName,
   Input,
   Label,
   Separator,
@@ -26,6 +22,7 @@ import PrivyLogout from '@client/privy-logout'
 import ErrorList from '@components/error-list'
 import { Header } from '@components/header'
 import RelicCard from '@components/relic-card/relic-card'
+import RelicOnboadingVideo from '@components/relic-onboarding-video/relic-onboarding-video'
 import SiteWideBanner from '@components/site-wide-banner'
 import { getFormProps, getInputProps, useForm } from '@conform-to/react'
 import { getZodConstraint, parseWithZod } from '@conform-to/zod'
@@ -34,12 +31,12 @@ import { inviteCodeSchema } from '@lib/schemas/create-identity-schema'
 import logger from '@lib/utils/logger'
 import { getMaintenanceMode } from '@lib/utils/maintenance'
 import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
-import { Link, useLoaderData, useNavigate } from '@remix-run/react'
+import { Link, useLoaderData } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
 import { FeatureFlags, getFeatureFlags } from '@server/env'
 import { getRelicCount } from '@server/relics'
-import { PATHS, RELIC_LEGENDARY_V2_WITH_AUDIO_MP4 } from 'app/consts'
+import { PATHS } from 'app/consts'
 import { AnimatePresence, motion } from 'framer-motion'
 
 export async function loader({ request }: LoaderFunctionArgs) {
@@ -107,22 +104,10 @@ interface InviteRouteLoaderData {
 export default function InviteRoute() {
   const { wallet, relicHolder, featureFlags } =
     useLoaderData<InviteRouteLoaderData>()
-  const navigate = useNavigate()
   const { inviteCodeFetcher } = useInviteCodeFetcher()
   const [loading, setLoading] = useState(false)
   const [fetcherError, setFetcherError] = useState<string | null>(null)
   const [showVideo, setShowVideo] = useState(false)
-  const [isMuted, setIsMuted] = useState(false)
-  const videoVolume = 0.33
-
-  const videoRef = useCallback(
-    (node: HTMLVideoElement | null) => {
-      if (node) {
-        node.volume = videoVolume
-      }
-    },
-    [videoVolume],
-  )
 
   const [form, fields] = useForm({
     id: 'invite-code',
@@ -194,14 +179,6 @@ export default function InviteRoute() {
 
   const handleContinue = () => {
     setShowVideo(true)
-  }
-
-  const handleVideoEnd = () => {
-    navigate('/the-big-bang')
-  }
-
-  const getVolumeIcon = () => {
-    return isMuted ? IconName.volumeMuted : IconName.volumeFull
   }
 
   return (
@@ -319,48 +296,7 @@ export default function InviteRoute() {
                 </div>
               </motion.div>
             ) : (
-              <motion.div
-                key="videoPlayer"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 1 }}
-                exit={{ opacity: 0 }}
-                className="relative max-w-[90vw] md:max-w-[75vw]"
-              >
-                <div className={cn(`overflow-hidden rounded-xl relative`)}>
-                  <video
-                    ref={videoRef}
-                    src={RELIC_LEGENDARY_V2_WITH_AUDIO_MP4}
-                    title={'Relic'}
-                    playsInline
-                    autoPlay
-                    muted={isMuted}
-                    className="rounded-xl overflow-hidden w-full h-auto max-h-[75vh] shadow-lg object-contain"
-                    onEnded={handleVideoEnd}
-                  />
-                  <AnimatePresence>
-                    <motion.div
-                      initial={{ opacity: 1 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      transition={{ duration: 0.5 }}
-                      className="absolute bottom-4 right-4 md:bottom-6 md:right-6"
-                    >
-                      <Button
-                        variant={ButtonVariant.primary}
-                        size={ButtonSize.iconLg}
-                        onClick={() => setIsMuted(!isMuted)}
-                        className="bg-primary/70"
-                      >
-                        <Icon
-                          name={getVolumeIcon()}
-                          className="h-8 w-8 md:h-10 md:w-10 fill-black"
-                        />
-                      </Button>
-                    </motion.div>
-                  </AnimatePresence>
-                </div>
-              </motion.div>
+              <RelicOnboadingVideo variant="v2" link={PATHS.THE_BIG_BANG} />
             )}
           </AnimatePresence>
         </div>

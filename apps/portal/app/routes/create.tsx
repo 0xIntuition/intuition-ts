@@ -1,16 +1,7 @@
 /* eslint-disable jsx-a11y/media-has-caption */
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
-import {
-  Avatar,
-  Button,
-  ButtonSize,
-  ButtonVariant,
-  cn,
-  Icon,
-  IconName,
-  toast,
-} from '@0xintuition/1ui'
+import { Avatar, toast } from '@0xintuition/1ui'
 import {
   ApiError,
   IdentitiesService,
@@ -23,6 +14,7 @@ import PrivyLogout from '@client/privy-logout'
 import { BridgeToBase } from '@components/bridge-to-base'
 import EditProfileModal from '@components/edit-profile/modal'
 import { Header } from '@components/header'
+import RelicOnboadingVideo from '@components/relic-onboarding-video/relic-onboarding-video'
 import SiteWideBanner from '@components/site-wide-banner'
 import SubmitButton from '@components/submit-button'
 import { multivaultAbi } from '@lib/abis/multivault'
@@ -42,11 +34,7 @@ import { CreateLoaderData } from '@routes/resources+/create'
 import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
 import { FeatureFlags, getFeatureFlags } from '@server/env'
-import {
-  MULTIVAULT_CONTRACT_ADDRESS,
-  PATHS,
-  RELIC_LEGENDARY_V3_WITH_AUDIO_MP4,
-} from 'app/consts'
+import { MULTIVAULT_CONTRACT_ADDRESS, PATHS } from 'app/consts'
 import {
   IdentityTransactionActionType,
   IdentityTransactionStateType,
@@ -349,26 +337,6 @@ export default function Profile() {
   const [editProfileModalActive, setEditProfileModalActive] =
     useAtom(editProfileModalAtom)
   const [showVideo, setShowVideo] = useState(false)
-  const [isMuted, setIsMuted] = useState(false)
-  const videoVolume = 0.33
-  const navigate = useNavigate()
-
-  const videoRef = useCallback(
-    (node: HTMLVideoElement | null) => {
-      if (node) {
-        node.volume = videoVolume
-      }
-    },
-    [videoVolume],
-  )
-
-  const handleVideoEnd = () => {
-    navigate(PATHS.QUEST)
-  }
-
-  const getVolumeIcon = () => {
-    return isMuted ? IconName.volumeMuted : IconName.volumeFull
-  }
 
   return (
     <div>
@@ -444,48 +412,7 @@ export default function Profile() {
                 <BridgeToBase />
               </motion.div>
             ) : (
-              <motion.div
-                key="videoPlayer"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 1 }}
-                exit={{ opacity: 0 }}
-                className="relative max-w-[90vw] md:max-w-[75vw]"
-              >
-                <div className={cn(`overflow-hidden rounded-xl relative`)}>
-                  <video
-                    ref={videoRef}
-                    src={RELIC_LEGENDARY_V3_WITH_AUDIO_MP4}
-                    title={'Relic'}
-                    playsInline
-                    autoPlay
-                    muted={isMuted}
-                    className="rounded-xl overflow-hidden items-center justify-center w-full md:max-w-[500px] xl:max-w-[1000px] shadow-lg"
-                    onEnded={handleVideoEnd}
-                  />
-                  <AnimatePresence>
-                    <motion.div
-                      initial={{ opacity: 1 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      transition={{ duration: 0.5 }}
-                      className="absolute bottom-4 right-4 md:bottom-6 md:right-6"
-                    >
-                      <Button
-                        variant={ButtonVariant.primary}
-                        size={ButtonSize.iconLg}
-                        onClick={() => setIsMuted(!isMuted)}
-                        className="bg-primary/70"
-                      >
-                        <Icon
-                          name={getVolumeIcon()}
-                          className="h-8 w-8 md:h-10 md:w-10 fill-black"
-                        />
-                      </Button>
-                    </motion.div>
-                  </AnimatePresence>
-                </div>
-              </motion.div>
+              <RelicOnboadingVideo variant="v3" link={PATHS.QUEST} />
             )}
           </AnimatePresence>
         </div>

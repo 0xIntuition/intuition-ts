@@ -32,4 +32,5 @@ export const PATHS = {
   PRIVACY: '/privacy',
   // Other
   MAINTENANCE: '/maintenance',
+  THE_BIG_BANG: '/the-big-bang',
 }
