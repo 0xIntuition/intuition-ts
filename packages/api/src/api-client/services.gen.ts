@@ -123,6 +123,8 @@ import type {
   RefreshData,
   RefreshResponse,
   ReissueApiKeyResponse,
+  ResetQuestData,
+  ResetQuestResponse,
   RetryActivityData,
   RetryActivityResponse,
   RetryLogData,
@@ -1565,6 +1567,24 @@ export class UserQuestsService {
   /**
    * @param data The data for the request.
    * @param data.questId Quest SQL id
+   * @returns unknown Reset a quest for the authenticated user
+   * @throws ApiError
+   */
+  public static resetQuest(
+    data: ResetQuestData,
+  ): CancelablePromise<ResetQuestResponse> {
+    return __request(OpenAPI, {
+      method: 'POST',
+      url: '/user_quest/{quest_id}/reset',
+      path: {
+        quest_id: data.questId,
+      },
+    })
+  }
+
+  /**
+   * @param data The data for the request.
+   * @param data.questId Quest SQL id
    * @returns unknown Start a quest for the authenticated user
    * @throws ApiError
    */
@@ -1664,6 +1684,9 @@ export class UsersService {
    * @param data.user
    * @param data.displayName
    * @param data.showEmptyPosition
+   * @param data.subject
+   * @param data.predicate
+   * @param data.object
    * @param data.timeframe
    * @returns unknown Get claims user has position on
    * @throws ApiError
@@ -1683,6 +1706,9 @@ export class UsersService {
         user: data.user,
         displayName: data.displayName,
         showEmptyPosition: data.showEmptyPosition,
+        subject: data.subject,
+        predicate: data.predicate,
+        object: data.object,
         timeframe: data.timeframe,
       },
     })
