@@ -5,10 +5,10 @@ function useGoBack({ fallbackRoute }: { fallbackRoute: string }) {
   const location = useLocation()
 
   return () => {
-    if (location.key === 'default') {
-      navigate(fallbackRoute)
-    } else {
+    if (window.history.length > 2 && location.key !== 'default') {
       navigate(-1)
+    } else {
+      navigate(fallbackRoute)
     }
   }
 }
