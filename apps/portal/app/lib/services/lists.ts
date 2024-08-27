@@ -94,7 +94,7 @@ export async function getUserSavedLists({
       sortBy: sortBy as SortColumn,
       direction,
       displayName,
-      predicate: getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId,
+      predicate: getSpecialPredicate(CURRENT_ENV).tagPredicate.id,
       user: userWallet,
     },
   })
