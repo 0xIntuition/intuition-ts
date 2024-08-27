@@ -57,26 +57,25 @@ export default function FollowActions({
   const handleCustomInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
     setCustomValue(value)
-    if (selectedValue === 'custom') {
-      e.preventDefault()
-      let inputValue = e.target.value
-      if (inputValue.startsWith('.')) {
-        inputValue = `0${inputValue}`
-      }
-      const sanitizedValue = inputValue.replace(/[^0-9.]/g, '')
-      if (sanitizedValue.split('.').length > 2) {
-        return
-      }
-      setVal(sanitizedValue)
-      setShowErrors(false)
-      setValidationErrors([])
+    setSelectedValue('custom')
+    e.preventDefault()
+    let inputValue = e.target.value
+    if (inputValue.startsWith('.')) {
+      inputValue = `0${inputValue}`
     }
+    const sanitizedValue = inputValue.replace(/[^0-9.]/g, '')
+    if (sanitizedValue.split('.').length > 2) {
+      return
+    }
+    setVal(sanitizedValue)
+    setShowErrors(false)
+    setValidationErrors([])
   }
 
   return (
     <div className="flex flex-col items-center justify-center">
       <RadioGroup
-        defaultValue={radioGroupData[0].id}
+        defaultValue={radioGroupData[1].id}
         value={selectedValue}
         onValueChange={handleValueChange}
         onChange={(e) => {
@@ -103,16 +102,23 @@ export default function FollowActions({
           <RadioGroupItemContainer className="justify-between flex flex-row px-5 py-4">
             <div className="flex flex-row gap-1 items-center">
               <RadioGroupItemLabel htmlFor="custom" value="Custom" />
-              <Input
-                id="position"
-                autoComplete="off"
-                type="text"
-                value={customValue}
-                onChange={handleCustomInputChange}
-                min={'0'}
-                placeholder={'Enter a custom amount'}
-                className="p-0 h-auto border-none bg-transparent text-sm w-full"
-              />
+              <div className="relative flex items-center">
+                <Input
+                  id="position"
+                  autoComplete="off"
+                  type="text"
+                  value={customValue}
+                  onChange={handleCustomInputChange}
+                  min={'0'}
+                  placeholder={'0'}
+                  className="p-0.5 pr-8 h-auto border-none bg-transparent text-sm w-fit text-foreground/30"
+                />
+                {customValue !== '0' && (
+                  <span className="absolute right-0 text-foreground/30 text-sm">
+                    ETH
+                  </span>
+                )}
+              </div>
             </div>
             <RadioGroupItem value="custom" id="custom" />
           </RadioGroupItemContainer>

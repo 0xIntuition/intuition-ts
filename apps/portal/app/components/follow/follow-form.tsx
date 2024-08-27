@@ -1,6 +1,7 @@
 import {
   ActivePositionCard,
   Badge,
+  Claim,
   DialogHeader,
   DialogTitle,
   Icon,
@@ -12,7 +13,14 @@ import { IdentityPresenter } from '@0xintuition/api'
 
 import { InfoTooltip } from '@components/info-tooltip'
 import { TransactionState } from '@components/transaction-state'
-import { formatBalance } from '@lib/utils/misc'
+import {
+  formatBalance,
+  getAtomDescription,
+  getAtomImage,
+  getAtomIpfsLink,
+  getAtomLabel,
+  getAtomLink,
+} from '@lib/utils/misc'
 import { type FetcherWithComponents } from '@remix-run/react'
 import {
   TransactionActionType,
@@ -90,7 +98,7 @@ export default function FollowForm({
             </DialogTitle>
           </DialogHeader>
           <div className="h-full w-full flex-col pt-5 px-10 pb-10 gap-5 inline-flex">
-            <div className="flex-col justify-center items-start gap-1 inline-flex">
+            <div className="flex-col justify-center items-start gap-2.5 inline-flex">
               <div className="justify-center items-center gap-2 inline-flex">
                 <Text variant="base" weight="medium">
                   {+user_assets > 0 ? 'Increase Follow' : 'Follow User'}{' '}
@@ -102,15 +110,52 @@ export default function FollowForm({
                 <div className="w-4 h-4 relative" />
               </div>
               <Text variant="caption" className="text-neutral-50/50">
-                Create or strengthen your connection.
+                Stake on a users follow claim to create or strengthen your
+                connection.
               </Text>
-            </div>
-            <div className="flex flex-row items-center justify-center">
-              <div className="w-full bg-neutral-50/5 rounded-lg border border-neutral-300/10 flex-col justify-start items-start inline-flex">
-                <ActivePositionCard
-                  value={Number(formatBalance(user_assets, 18))}
-                  claimPosition={+user_assets > 0 ? 'claimFor' : null}
+              <div className="flex flex-row mx-auto">
+                <Claim
+                  subject={{
+                    variant: Identity.nonUser,
+                    label: 'I',
+                    imgSrc: '',
+                    id: 'ipfs://QmUt9aQX5bSdwvqETtdr2x7HZbBidnbXNaoywyFTexFsbU',
+                    description:
+                      'A first-person singular pronoun used by a speaker to refer to themselves. For example, "I am studying for a test". "I" can also be used to refer to the narrator of a first-person singular literary work.',
+                    ipfsLink:
+                      'https://ipfs.io/ipfs/QmUt9aQX5bSdwvqETtdr2x7HZbBidnbXNaoywyFTexFsbU',
+                    shouldHover: false,
+                  }}
+                  predicate={{
+                    variant: Identity.nonUser,
+                    label: 'am following',
+                    imgSrc: '',
+                    id: 'https://schema.org/FollowAction',
+                    description:
+                      'The act of forming a personal connection with someone/something (object) unidirectionally/asymmetrically to get updates polled from.',
+                    ipfsLink: 'https://schema.org/FollowAction',
+                    shouldHover: false,
+                  }}
+                  object={{
+                    variant: Identity.user,
+                    label: getAtomLabel(identity),
+                    imgSrc: getAtomImage(identity),
+                    id: identity.identity_id,
+                    description: getAtomDescription(identity),
+                    ipfsLink: getAtomIpfsLink(identity),
+                    link: getAtomLink(identity),
+                    shouldHover: false,
+                  }}
+                  maxIdentityLength={16}
                 />
+              </div>
+              <div className="flex flex-row items-center justify-center w-full">
+                <div className="w-full bg-neutral-50/5 rounded-lg border border-neutral-300/10 flex-col justify-start items-start inline-flex">
+                  <ActivePositionCard
+                    value={Number(formatBalance(user_assets, 18))}
+                    claimPosition={+user_assets > 0 ? 'claimFor' : null}
+                  />
+                </div>
               </div>
             </div>
             <div className="rounded-t-lg bg-primary-950/15 w-full">
