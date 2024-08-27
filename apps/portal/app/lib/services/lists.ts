@@ -80,6 +80,7 @@ export async function getUserSavedLists({
   } = getStandardPageParams({
     searchParams,
     paramPrefix: 'positions',
+    predicate: getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId,
     defaultSortByValue: PositionSortColumn.CREATED_AT,
   })
 
