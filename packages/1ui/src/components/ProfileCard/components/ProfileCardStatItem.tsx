@@ -17,7 +17,7 @@ const ProfileCardStatItem = ({
   return (
     <div className="flex items-center space-x-1">
       <Text variant="body" weight="medium" className={valueClassName}>
-        {formattedValue}
+        {(+formattedValue).toFixed(0)}
       </Text>
       <Text variant="body" className="text-muted-foreground">
         {label}
