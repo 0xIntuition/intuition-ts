@@ -79,7 +79,7 @@ export default function ListDetails() {
     useAtom(addIdentitiesListModalAtom)
   const [imageModalActive, setImageModalActive] = useAtom(imageModalAtom)
   const navigate = useNavigate()
-  const handleGoBack = useGoBack({ fallbackRoute: PATHS.LISTS })
+  const handleGoBack = useGoBack({ fallbackRoute: PATHS.EXPLORE_LISTS })
 
   const leftPanel = (
     <div className="flex-col justify-start items-start gap-6 inline-flex max-lg:w-full">
