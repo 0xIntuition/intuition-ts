@@ -12,12 +12,13 @@ const ProfileCardStatItem = ({
   label,
   valueClassName = 'text-primary-300',
 }: ProfileCardStatItemProps) => {
-  const formattedValue = typeof value === 'number' ? formatNumber(value) : value
+  const formattedValue =
+    typeof value === 'number' ? formatNumber(+value.toFixed(0)) : value
 
   return (
     <div className="flex items-center space-x-1">
       <Text variant="body" weight="medium" className={valueClassName}>
-        {(+formattedValue).toFixed(0)}
+        {formattedValue}
       </Text>
       <Text variant="body" className="text-muted-foreground">
         {label}
