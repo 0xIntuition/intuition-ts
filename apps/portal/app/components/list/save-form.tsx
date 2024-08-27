@@ -18,6 +18,7 @@ import {
 } from '@0xintuition/1ui'
 import { IdentityPresenter, TagEmbeddedPresenter } from '@0xintuition/api'
 
+import StakingRadioGroup from '@components/staking-radio-group'
 import { TransactionState } from '@components/transaction-state'
 import {
   formatBalance,
@@ -34,7 +35,6 @@ import {
   TransactionStateType,
 } from 'app/types/transaction'
 
-import SaveActions from './save-actions'
 import SaveReview from './save-review'
 
 interface SaveFormProps {
@@ -224,14 +224,14 @@ export default function SaveForm({
               </div>
             </div>
             <div className="rounded-t-lg bg-primary-950/15 w-full">
-              <SaveActions
-                min_deposit={min_deposit}
+              <StakingRadioGroup
                 setVal={setVal}
                 validationErrors={validationErrors}
                 setValidationErrors={setValidationErrors}
                 showErrors={showErrors}
                 setShowErrors={setShowErrors}
                 isLoading={isLoading}
+                min_deposit={min_deposit}
               />
             </div>
           </div>

@@ -12,6 +12,7 @@ import {
 import { IdentityPresenter } from '@0xintuition/api'
 
 import { InfoTooltip } from '@components/info-tooltip'
+import StakingRadioGroup from '@components/staking-radio-group'
 import { TransactionState } from '@components/transaction-state'
 import {
   formatBalance,
@@ -27,7 +28,6 @@ import {
   TransactionStateType,
 } from 'app/types/transaction'
 
-import FollowActions from './follow-actions'
 import FollowReview from './follow-review'
 
 interface FollowFormProps {
@@ -159,13 +159,13 @@ export default function FollowForm({
               </div>
             </div>
             <div className="rounded-t-lg bg-primary-950/15 w-full">
-              <FollowActions
+              <StakingRadioGroup
                 setVal={setVal}
-                min_deposit={min_deposit}
                 validationErrors={validationErrors}
                 setValidationErrors={setValidationErrors}
                 showErrors={showErrors}
                 setShowErrors={setShowErrors}
+                min_deposit={min_deposit}
               />
             </div>
           </div>

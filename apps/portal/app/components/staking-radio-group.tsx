@@ -12,25 +12,24 @@ import {
 import ErrorList from '@components/error-list'
 import { MIN_DEPOSIT } from '@consts/general'
 
-interface FollowActionsProps {
-  min_deposit?: string
+interface StakingRadioGroupProps {
   setVal: (val: string) => void
   showErrors: boolean
   setShowErrors: (show: boolean) => void
   validationErrors: string[]
   setValidationErrors: (errors: string[]) => void
+  isLoading?: boolean
+  min_deposit?: string
 }
 
-export default function FollowActions({
+export default function StakingRadioGroup({
   setVal,
   showErrors,
   setShowErrors,
   validationErrors,
   setValidationErrors,
-}: FollowActionsProps) {
-  const [customValue, setCustomValue] = useState('')
-  const [selectedValue, setSelectedValue] = useState(MIN_DEPOSIT)
-
+  isLoading,
+}: StakingRadioGroupProps) {
   const radioGroupData = [
     {
       id: MIN_DEPOSIT,
@@ -40,6 +39,9 @@ export default function FollowActions({
     { id: '0.001', value: 'Default', subValue: '+0.001 ETH' },
     { id: '0.01', value: 'Strong', subValue: '+0.01 ETH' },
   ]
+
+  const [customValue, setCustomValue] = useState('')
+  const [selectedValue, setSelectedValue] = useState(radioGroupData[1].id)
 
   const numberOfRadioGroupItems = radioGroupData.length
 
@@ -83,6 +85,7 @@ export default function FollowActions({
           setShowErrors(false)
           setValidationErrors([])
         }}
+        disabled={isLoading}
       >
         {radioGroupData.map((item, index) => (
           <div key={index}>

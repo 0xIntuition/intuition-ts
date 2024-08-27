@@ -437,7 +437,7 @@ export default function SaveListModal({
         handleClose()
       }}
     >
-      <DialogContent className="flex flex-col w-[476px] h-[520px] gap-0">
+      <DialogContent className="flex flex-col w-[476px] h-[580px] gap-0">
         <div className="flex-grow">
           <SaveForm
             tag={tag}
