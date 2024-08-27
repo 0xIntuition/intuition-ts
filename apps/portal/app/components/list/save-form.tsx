@@ -1,20 +1,12 @@
 import {
   ActivePositionCard,
-  Button,
-  ButtonVariant,
+  Claim,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-  Icon,
   Identity,
-  IdentityTag,
-  ProfileCard,
   Skeleton,
   Text,
-  Trunctacular,
 } from '@0xintuition/1ui'
 import { IdentityPresenter, TagEmbeddedPresenter } from '@0xintuition/api'
 
@@ -23,13 +15,13 @@ import { TransactionState } from '@components/transaction-state'
 import {
   formatBalance,
   getAtomDescription,
-  getAtomId,
   getAtomImage,
   getAtomIpfsLink,
   getAtomLabel,
+  getAtomLink,
 } from '@lib/utils/misc'
 import { type FetcherWithComponents } from '@remix-run/react'
-import { PATHS } from 'app/consts'
+import { IPFS_GATEWAY_URL, PATHS } from 'app/consts'
 import {
   TransactionActionType,
   TransactionStateType,
@@ -62,7 +54,6 @@ interface SaveFormProps {
 export default function SaveForm({
   identity,
   tag,
-  claimId,
   user_assets,
   entry_fee,
   exit_fee,
@@ -112,104 +103,38 @@ export default function SaveForm({
           </DialogHeader>
           <div className="h-full w-full flex-col pt-5 px-10 pb-10 gap-5 inline-flex">
             <div className="flex items-center w-full mr-2.5 gap-5 ">
-              <div className="flex flex-col gap-1">
-                <Text
-                  variant="caption"
-                  weight="regular"
-                  className="text-neutral-50/50"
-                >
-                  Identity:
-                </Text>
-                <HoverCard openDelay={150} closeDelay={150}>
-                  <HoverCardTrigger>
-                    <IdentityTag
-                      imgSrc={getAtomImage(identity)}
-                      variant={
-                        identity.is_user ? Identity.user : Identity.nonUser
-                      }
-                    >
-                      <Trunctacular
-                        value={getAtomLabel(identity)}
-                        maxStringLength={18}
-                      />
-                    </IdentityTag>
-                  </HoverCardTrigger>
-                  <HoverCardContent side="top" align="center" className="w-max">
-                    <div className="flex flex-col gap-4 w-80 max-md:w-[80%]">
-                      <ProfileCard
-                        variant={
-                          identity.is_user ? Identity.user : Identity.nonUser
-                        }
-                        avatarSrc={getAtomImage(identity)}
-                        name={getAtomLabel(identity)}
-                        id={getAtomId(identity)}
-                        bio={getAtomDescription(identity)}
-                        ipfsLink={getAtomIpfsLink(identity)}
-                      />
-                      <a
-                        href={
-                          identity.is_user
-                            ? `${PATHS.PROFILE}/${identity.id}`
-                            : `${PATHS.IDENTITY}/${identity.identity_id}`
-                        }
-                      >
-                        <Button
-                          variant={ButtonVariant.secondary}
-                          className="w-full"
-                        >
-                          View Identity{' '}
-                          <Icon name={'arrow-up-right'} className="h-3 w-3" />
-                        </Button>
-                      </a>
-                    </div>
-                  </HoverCardContent>
-                </HoverCard>
-              </div>
-              <div className="flex flex-col gap-1">
-                <Text
-                  variant="caption"
-                  weight="regular"
-                  className="text-neutral-50/50"
-                >
-                  Tag:
-                </Text>
-                <HoverCard openDelay={150} closeDelay={150}>
-                  <HoverCardTrigger>
-                    <IdentityTag imgSrc={tag?.image} variant={Identity.nonUser}>
-                      <Trunctacular
-                        value={tag?.display_name}
-                        maxStringLength={18}
-                      />
-                    </IdentityTag>
-                  </HoverCardTrigger>
-                  <HoverCardContent side="top" align="center" className="w-max">
-                    <div className="flex flex-col gap-4 w-80 max-md:w-[80%]">
-                      <ProfileCard
-                        variant={
-                          identity.is_user ? Identity.user : Identity.nonUser
-                        }
-                        avatarSrc={tag.image ?? ''}
-                        name={tag.display_name ?? tag.identity_id}
-                        id={tag.identity_id}
-                        bio={tag.description ?? ''}
-                      />
-                      {isLoading ? (
-                        <Skeleton className="h-9 w-full" /> // Adjust height as needed
-                      ) : claimId ? (
-                        <a href={`${PATHS.LIST}/${claimId}`}>
-                          <Button
-                            variant={ButtonVariant.secondary}
-                            className="w-full"
-                          >
-                            View List
-                            <Icon name={'arrow-up-right'} className="h-3 w-3" />
-                          </Button>
-                        </a>
-                      ) : null}
-                    </div>
-                  </HoverCardContent>
-                </HoverCard>
-              </div>
+              <Claim
+                size="md"
+                subject={{
+                  variant: identity?.is_user ? Identity.user : Identity.nonUser,
+                  label: getAtomLabel(identity),
+                  imgSrc: getAtomImage(identity),
+                  id: identity?.identity_id,
+                  description: getAtomDescription(identity),
+                  ipfsLink: getAtomIpfsLink(identity),
+                  link: getAtomLink(identity),
+                }}
+                predicate={{
+                  variant: Identity.nonUser,
+                  label: 'has tag',
+                  imgSrc: '',
+                  id: 'QmakZTBNcZandAb7Pj42MkptLmTZuGXoMZKKvugqTcy76P',
+                  description: '',
+                  ipfsLink: `${IPFS_GATEWAY_URL}/QmakZTBNcZandAb7Pj42MkptLmTZuGXoMZKKvugqTcy76P`,
+                  link: `${PATHS.IDENTITY}/QmakZTBNcZandAb7Pj42MkptLmTZuGXoMZKKvugqTcy76P`,
+                }}
+                object={{
+                  variant: Identity.nonUser,
+                  label: tag.display_name ?? tag.identity_id ?? '',
+                  imgSrc: tag.image,
+                  id: tag.identity_id,
+                  description: '',
+                  ipfsLink: '',
+                  link: '',
+                }}
+                link=""
+                maxIdentityLength={12}
+              />
             </div>
             <div className="flex flex-row items-center justify-center">
               <div className="w-full bg-neutral-50/5 rounded-lg border border-neutral-300/10 flex-col justify-start items-start inline-flex">

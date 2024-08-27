@@ -113,7 +113,7 @@ export default function StakingRadioGroup({
                   value={customValue}
                   onChange={handleCustomInputChange}
                   min={'0'}
-                  placeholder={'0'}
+                  placeholder={'Enter a custom amount'}
                   className="p-0.5 pr-8 h-auto border-none bg-transparent text-sm w-fit text-foreground/30"
                 />
                 {customValue !== '0' && (

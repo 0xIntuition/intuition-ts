@@ -110,7 +110,7 @@ export default function FollowForm({
                 <div className="w-4 h-4 relative" />
               </div>
               <Text variant="caption" className="text-neutral-50/50">
-                Stake on a users follow claim to create or strengthen your
+                Stake on a user&apos;s follow claim to create or strengthen your
                 connection.
               </Text>
               <div className="flex flex-row mx-auto">
@@ -119,11 +119,11 @@ export default function FollowForm({
                     variant: Identity.nonUser,
                     label: 'I',
                     imgSrc: '',
-                    id: 'ipfs://QmUt9aQX5bSdwvqETtdr2x7HZbBidnbXNaoywyFTexFsbU',
+                    id: 'ipfs://QmQoLT5G6yxbBJSvdpJzB3z66cqWLKJXEgDJxASzVsZnuw',
                     description:
                       'A first-person singular pronoun used by a speaker to refer to themselves. For example, "I am studying for a test". "I" can also be used to refer to the narrator of a first-person singular literary work.',
                     ipfsLink:
-                      'https://ipfs.io/ipfs/QmUt9aQX5bSdwvqETtdr2x7HZbBidnbXNaoywyFTexFsbU',
+                      'https://ipfs.io/ipfs/QmQoLT5G6yxbBJSvdpJzB3z66cqWLKJXEgDJxASzVsZnuw',
                     shouldHover: false,
                   }}
                   predicate={{
