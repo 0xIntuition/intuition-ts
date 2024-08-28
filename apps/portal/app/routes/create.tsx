@@ -1,7 +1,15 @@
 /* eslint-disable jsx-a11y/media-has-caption */
 import { useEffect, useRef, useState } from 'react'
 
-import { Avatar, toast } from '@0xintuition/1ui'
+import {
+  Avatar,
+  Icon,
+  IconName,
+  Separator,
+  Text,
+  TextVariant,
+  toast,
+} from '@0xintuition/1ui'
 import {
   ApiError,
   IdentitiesService,
@@ -14,6 +22,7 @@ import PrivyLogout from '@client/privy-logout'
 import { BridgeToBase } from '@components/bridge-to-base'
 import EditProfileModal from '@components/edit-profile/modal'
 import { Header } from '@components/header'
+import { InfoTooltip } from '@components/info-tooltip'
 import RelicOnboadingVideo from '@components/relic-onboarding-video/relic-onboarding-video'
 import SiteWideBanner from '@components/site-wide-banner'
 import SubmitButton from '@components/submit-button'
@@ -27,7 +36,7 @@ import {
 import { editProfileModalAtom } from '@lib/state/store'
 import logger from '@lib/utils/logger'
 import { getMaintenanceMode } from '@lib/utils/maintenance'
-import { sliceString } from '@lib/utils/misc'
+import { formatBalance, sliceString } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
 import { useFetcher, useLoaderData, useNavigate } from '@remix-run/react'
 import { CreateLoaderData } from '@routes/resources+/create'
@@ -42,7 +51,7 @@ import {
 import { AnimatePresence, motion } from 'framer-motion'
 import { useAtom } from 'jotai'
 import { ClientOnly } from 'remix-utils/client-only'
-import { toHex } from 'viem'
+import { formatUnits, toHex } from 'viem'
 import { useConnectorClient, usePublicClient } from 'wagmi'
 
 export async function loader({ request }: LoaderFunctionArgs) {
@@ -98,38 +107,19 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 interface CreateButtonWrapperProps {
+  atomCost: bigint
   setEditProfileModalActive: (active: boolean) => void
 }
 
 export function CreateButton({
+  atomCost,
   setEditProfileModalActive,
 }: CreateButtonWrapperProps) {
   const { wallet } = useLoaderData<{ wallet: string }>()
-  const loaderFetcher = useFetcher<CreateLoaderData>()
-  const loaderFetcherUrl = '/resources/create'
-  const loaderFetcherRef = useRef(loaderFetcher.load)
   const { state, dispatch } = useTransactionState<
     IdentityTransactionStateType,
     IdentityTransactionActionType
   >(identityTransactionReducer, initialIdentityTransactionState)
-
-  useEffect(() => {
-    loaderFetcherRef.current = loaderFetcher.load
-  })
-
-  useEffect(() => {
-    loaderFetcherRef.current(loaderFetcherUrl)
-  }, [loaderFetcherUrl])
-
-  const { atomCost: atomCostAmount } =
-    (loaderFetcher.data as CreateLoaderData) ?? {
-      vaultId: BigInt(0),
-      atomCost: BigInt(0),
-      protocolFee: BigInt(0),
-      entryFee: BigInt(0),
-    }
-
-  const atomCost = BigInt(atomCostAmount ? atomCostAmount : 0)
 
   const publicClient = usePublicClient()
   const {
@@ -334,6 +324,28 @@ export default function Profile() {
     featureFlags: FeatureFlags
   }>()
 
+  const loaderFetcher = useFetcher<CreateLoaderData>()
+  const loaderFetcherUrl = '/resources/create'
+  const loaderFetcherRef = useRef(loaderFetcher.load)
+  useEffect(() => {
+    loaderFetcherRef.current = loaderFetcher.load
+  })
+
+  useEffect(() => {
+    loaderFetcherRef.current(loaderFetcherUrl)
+  }, [loaderFetcherUrl])
+
+  const { atomCost: atomCostAmount, atomCreationFee } =
+    (loaderFetcher.data as CreateLoaderData) ?? {
+      vaultId: BigInt(0),
+      atomCost: BigInt(0),
+      atomCreationFee: BigInt(0),
+      protocolFee: BigInt(0),
+      entryFee: BigInt(0),
+    }
+
+  const atomCost = BigInt(atomCostAmount ? atomCostAmount : 0)
+
   const [editProfileModalActive, setEditProfileModalActive] =
     useAtom(editProfileModalAtom)
   const [showVideo, setShowVideo] = useState(false)
@@ -379,14 +391,98 @@ export default function Profile() {
                     </div>
                     <ClientOnly>
                       {() => (
-                        <>
+                        <div className="flex flex-col gap-1">
                           <CreateButton
+                            atomCost={atomCost}
                             setEditProfileModalActive={
                               setEditProfileModalActive
                             }
                           />
                           <PrivyLogout wallet={wallet} />
-                        </>
+                          <Text
+                            variant={TextVariant.caption}
+                            className="text-secondary-foreground items-center flex flex-row gap-1"
+                          >
+                            Est. Cost: {formatBalance(atomCost, 18)} ETH
+                            <InfoTooltip
+                              title="Atom Cost"
+                              icon={IconName.circleInfo}
+                              trigger={
+                                <Icon
+                                  name={IconName.circleQuestionMark}
+                                  className="h-4 w-4"
+                                />
+                              }
+                              content={
+                                <div className="flex flex-col gap-2 w-full">
+                                  <Text variant="base">
+                                    The cost to create an atom, or atomCost, is
+                                    the sum of atom creation fee, atom wallet
+                                    initial deposit amount, and minting of the
+                                    min shares required to instantiate the atom
+                                    vault.
+                                  </Text>
+                                  <div className="flex flex-row w-full justify-between">
+                                    <Text variant="base" weight="medium">
+                                      Atom Wallet Deposit:
+                                    </Text>
+                                    <Text
+                                      variant="base"
+                                      weight="medium"
+                                      className="text-success"
+                                    >
+                                      {+formatUnits(
+                                        BigInt(
+                                          atomCost - BigInt(atomCreationFee),
+                                        ),
+                                        18,
+                                      ) - 0.000000000001}{' '}
+                                      ETH
+                                    </Text>
+                                  </div>
+                                  <div className="flex flex-row w-full justify-between">
+                                    <Text variant="base" weight="medium">
+                                      Atom Creation Fee:
+                                    </Text>
+                                    <Text
+                                      variant="base"
+                                      weight="medium"
+                                      className="text-destructive"
+                                    >
+                                      {formatUnits(BigInt(atomCreationFee), 18)}{' '}
+                                      ETH
+                                    </Text>
+                                  </div>
+                                  <div className="flex flex-row w-full justify-between">
+                                    <Text variant="base" weight="medium">
+                                      Min Shares:
+                                    </Text>
+                                    <Text
+                                      variant="base"
+                                      weight="medium"
+                                      className="text-destructive"
+                                    >
+                                      0.000000000001 ETH
+                                    </Text>
+                                  </div>
+                                  <Separator />
+                                  <div className="flex flex-row w-full justify-between">
+                                    <Text variant="base" weight="medium">
+                                      Atom Cost:
+                                    </Text>
+                                    <Text
+                                      variant="base"
+                                      weight="medium"
+                                      className="text-destructive"
+                                    >
+                                      {formatUnits(atomCost, 18)} ETH
+                                    </Text>
+                                  </div>
+                                </div>
+                              }
+                            />
+                          </Text>
+                        </div>
                       )}
                     </ClientOnly>
                   </div>
