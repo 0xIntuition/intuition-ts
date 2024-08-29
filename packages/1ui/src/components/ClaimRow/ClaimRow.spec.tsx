@@ -58,8 +58,9 @@ describe('ClaimRow', () => {
               <div
                 class="flex items-center w-full max-w-max group relative max-sm:flex-col max-sm:m-auto"
               >
+                <button />
                 <button
-                  class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center rounded-md text-base [&>span]:h-6 [&>span]:w-6 group-hover:border-primary group-hover:bg-primary/20 relative z-10"
+                  class="theme-border font-medium py-0.5 pl-0.5 pr-2 disabled:pointer-events-none flex gap-2 items-center rounded-md text-base [&>span]:h-6 [&>span]:w-6 hover:bg-primary/20 hover:border-primary relative z-10 identity-tag group-hover:border-primary group-hover:bg-primary/20 duration-200"
                   data-state="closed"
                 >
                   <span
@@ -88,8 +89,9 @@ describe('ClaimRow', () => {
                   data-orientation="horizontal"
                   role="none"
                 />
+                <button />
                 <button
-                  class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center rounded-md text-base [&>span]:h-6 [&>span]:w-6 group-hover:border-primary group-hover:bg-primary/20 relative z-10"
+                  class="theme-border font-medium py-0.5 pl-0.5 pr-2 disabled:pointer-events-none flex gap-2 items-center rounded-md text-base [&>span]:h-6 [&>span]:w-6 hover:bg-primary/20 hover:border-primary relative z-10 identity-tag group-hover:border-primary group-hover:bg-primary/20 duration-200"
                   data-state="closed"
                 >
                   <span
@@ -118,8 +120,9 @@ describe('ClaimRow', () => {
                   data-orientation="horizontal"
                   role="none"
                 />
+                <button />
                 <button
-                  class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center rounded-md text-base [&>span]:h-6 [&>span]:w-6 group-hover:border-primary group-hover:bg-primary/20 relative z-10"
+                  class="theme-border font-medium py-0.5 pl-0.5 pr-2 disabled:pointer-events-none flex gap-2 items-center rounded-md text-base [&>span]:h-6 [&>span]:w-6 hover:bg-primary/20 hover:border-primary relative z-10 identity-tag group-hover:border-primary group-hover:bg-primary/20 duration-200"
                   data-state="closed"
                 >
                   <span

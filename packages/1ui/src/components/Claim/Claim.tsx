@@ -1,3 +1,5 @@
+import { useState } from 'react'
+
 import { Button, ButtonVariant } from 'components/Button'
 import {
   HoverCard,
@@ -30,17 +32,17 @@ export interface ClaimProps {
   subject: ClaimItemProps
   predicate: ClaimItemProps
   object: ClaimItemProps
-  link?: string
   maxIdentityLength?: number
 }
 
 const ClaimItem = ({
   item,
-  link,
   size,
   disabled,
   shouldHover = true,
   maxIdentityLength,
+  isHovered,
+  otherItemHovered,
 }: {
   item: ClaimItemProps
   link?: string
@@ -48,6 +50,8 @@ const ClaimItem = ({
   shouldHover?: boolean
   disabled?: boolean
   maxIdentityLength?: number
+  isHovered: boolean
+  otherItemHovered: boolean
 }) => {
   const effectiveMaxLength = maxIdentityLength ?? 24
 
@@ -57,8 +61,15 @@ const ClaimItem = ({
       size={size}
       imgSrc={item.imgSrc}
       disabled={disabled}
-      className="group-hover:border-primary group-hover:bg-primary/20 relative z-10"
-      shouldHover={shouldHover}
+      className={cn(
+        'hover:bg-primary/20 hover:border-primary relative z-10 identity-tag',
+        {
+          'group-hover:border-primary group-hover:bg-primary/20 duration-200':
+            !otherItemHovered,
+          'border-primary bg-primary/20': isHovered,
+        },
+      )}
+      shouldHover={shouldHover && !otherItemHovered}
     >
       <Trunctacular
         value={item.label}
@@ -69,7 +80,7 @@ const ClaimItem = ({
   )
 
   if (disabled) {
-    return link ? <a href={link}>{content}</a> : content
+    return item.link ? <a href={item.link}>{content}</a> : content
   }
 
   if (item.shouldHover === false) {
@@ -79,9 +90,13 @@ const ClaimItem = ({
   return (
     <HoverCard openDelay={150} closeDelay={150}>
       <HoverCardTrigger asChild>
-        {link ? <a href={link}>{content}</a> : content}
+        {item.link ? <a href={item.link}>{content}</a> : content}
       </HoverCardTrigger>
-      <HoverCardContent side="bottom" className="w-full" align="center">
+      <HoverCardContent
+        side="bottom"
+        className="w-full hover-card cursor-default"
+        align="center"
+      >
         <div className="flex flex-col gap-4 w-80 max-md:max-w-fit">
           <ProfileCard
             variant={item.variant}
@@ -109,13 +124,21 @@ export const Claim = ({
   subject,
   predicate,
   object,
-  link,
   disabled,
   size,
   maxIdentityLength,
 }: ClaimProps) => {
   const separatorWidth = size !== IdentityTagSize.default ? 'w-4' : 'w-2'
   const items = [subject, predicate, object]
+  const [hoveredItem, setHoveredItem] = useState<number | null>(null)
+
+  const handleItemClick = (e: React.MouseEvent) => {
+    e.stopPropagation()
+  }
+
+  const handleItemHover = (index: number | null) => {
+    setHoveredItem(index)
+  }
 
   return (
     <div className="flex items-center w-full max-w-max group relative max-sm:flex-col max-sm:m-auto">
@@ -129,14 +152,21 @@ export const Claim = ({
               )}
             />
           )}
-          <ClaimItem
-            item={item}
-            link={link}
-            size={size}
-            disabled={disabled}
-            shouldHover={item.shouldHover}
-            maxIdentityLength={maxIdentityLength}
-          />
+          <button
+            onClick={(e) => handleItemClick(e)}
+            onMouseEnter={() => handleItemHover(index)}
+            onMouseLeave={() => handleItemHover(null)}
+          >
+            <ClaimItem
+              item={item}
+              size={size}
+              disabled={disabled}
+              shouldHover={item.shouldHover}
+              maxIdentityLength={maxIdentityLength}
+              isHovered={hoveredItem === index}
+              otherItemHovered={hoveredItem !== null && hoveredItem !== index}
+            />
+          </button>
         </Fragment>
       ))}
     </div>

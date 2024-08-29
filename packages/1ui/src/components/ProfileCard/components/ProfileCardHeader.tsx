@@ -22,7 +22,7 @@ const ProfileCardHeader = ({
   maxStringLength = 24,
 }: ProfileCardHeaderProps) => {
   return (
-    <div className="flex items-center space-x-4 w-full max-lg:justify-center">
+    <div className="flex items-center space-x-4 w-full text-left max-lg:justify-center">
       <Avatar
         variant={variant}
         src={avatarSrc}
@@ -46,7 +46,7 @@ const ProfileCardHeader = ({
                   value={id}
                   variant="body"
                   weight="medium"
-                  className="text-muted-foreground"
+                  className="text-primary/60 hover:text-primary"
                   maxStringLength={maxStringLength}
                   disableTooltip
                 />
