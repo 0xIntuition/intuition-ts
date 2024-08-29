@@ -5,8 +5,8 @@ import { IdentityPresenter } from '@0xintuition/api'
 
 import { IdentitySearchCombobox } from '@components/identity/identity-search-combo-box'
 import { InfoTooltip } from '@components/info-tooltip'
-import { AddListExistingCta } from '@components/list/add-list-existing-cta'
-import SaveListModal from '@components/list/save-list-modal'
+import { AddListExistingCta } from '@components/lists/add-list-existing-cta'
+import SaveListModal from '@components/save-list/save-list-modal'
 import useFilteredIdentitySearch from '@lib/hooks/useFilteredIdentitySearch'
 import useInvalidItems from '@lib/hooks/useInvalidItems'
 import {

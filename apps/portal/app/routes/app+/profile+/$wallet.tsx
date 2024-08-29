@@ -31,9 +31,9 @@ import {
 
 import { ErrorPage } from '@components/error-page'
 import FollowModal from '@components/follow/follow-modal'
-import SaveListModal from '@components/list/save-list-modal'
 import NavigationButton from '@components/navigation-link'
 import ImageModal from '@components/profile/image-modal'
+import SaveListModal from '@components/save-list/save-list-modal'
 import { SegmentedNav } from '@components/segmented-nav'
 import StakeModal from '@components/stake/stake-modal'
 import TagsModal from '@components/tags/tags-modal'

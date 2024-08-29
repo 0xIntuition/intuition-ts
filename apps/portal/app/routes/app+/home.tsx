@@ -17,7 +17,7 @@ import { ActivityList } from '@components/list/activity'
 import { ClaimsList } from '@components/list/claims'
 import { IdentitiesList } from '@components/list/identities'
 import { ListClaimsList } from '@components/list/list-claims'
-import { ListClaimsSkeletonLayout } from '@components/list/list-skeletons'
+import { ListClaimsSkeletonLayout } from '@components/lists/list-skeletons'
 import { RevalidateButton } from '@components/revalidate-button'
 import {
   ActivitySkeleton,

@@ -22,9 +22,9 @@ import {
 
 import { ErrorPage } from '@components/error-page'
 import { InfoPopover } from '@components/info-popover'
-import { ListTabIdentityDisplay } from '@components/list/list-tab-identity-display'
-import SaveListModal from '@components/list/save-list-modal'
 import { TagsList } from '@components/list/tags'
+import { ListTabIdentityDisplay } from '@components/lists/list-tab-identity-display'
+import SaveListModal from '@components/save-list/save-list-modal'
 import { DataHeaderSkeleton, PaginatedListSkeleton } from '@components/skeleton'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { getListIdentities, getListIdentitiesCount } from '@lib/services/lists'
@@ -51,7 +51,6 @@ import {
   NO_CLAIM_ERROR,
   NO_PARAM_ID_ERROR,
   NO_WALLET_ERROR,
-  PATHS,
 } from 'app/consts'
 import { IdentityListType, VaultDetailsType } from 'app/types'
 import { useAtom, useSetAtom } from 'jotai'
@@ -221,7 +220,6 @@ export default function ListOverview() {
               >
                 <Claim
                   size="md"
-                  link={`${PATHS.CLAIM}/${claim?.claim_id}`}
                   subject={{
                     variant: claim.subject?.is_user ? 'user' : 'non-user',
                     label: '?',

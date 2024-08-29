@@ -17,6 +17,7 @@ import { IdentityPresenter } from '@0xintuition/api'
 
 import { IdentitySearchCombobox } from '@components/identity/identity-search-combo-box'
 import { InfoTooltip } from '@components/info-tooltip'
+import SaveListModal from '@components/save-list/save-list-modal'
 import useFilteredIdentitySearch from '@lib/hooks/useFilteredIdentitySearch'
 import useInvalidItems from '@lib/hooks/useInvalidItems'
 import {
@@ -30,7 +31,6 @@ import { CURRENT_ENV, TAG_RESOURCE_ROUTE } from 'app/consts'
 import { useAtom } from 'jotai'
 
 import { AddListExistingCta } from './add-list-existing-cta'
-import SaveListModal from './save-list-modal'
 
 interface AddIdentitiesProps {
   objectVaultId: string
