@@ -26,6 +26,7 @@ import { InfoTooltip } from '@components/info-tooltip'
 import RelicOnboadingVideo from '@components/relic-onboarding-video/relic-onboarding-video'
 import SiteWideBanner from '@components/site-wide-banner'
 import SubmitButton from '@components/submit-button'
+import { UsdTooltip } from '@components/usd-tooltip'
 import { multivaultAbi } from '@lib/abis/multivault'
 import { useCreateAtom } from '@lib/hooks/useCreateAtom'
 import {
@@ -33,6 +34,7 @@ import {
   initialIdentityTransactionState,
   useTransactionState,
 } from '@lib/hooks/useTransactionReducer'
+import { getEthPrice } from '@lib/services/pricefeeds'
 import { editProfileModalAtom } from '@lib/state/store'
 import logger from '@lib/utils/logger'
 import { getMaintenanceMode } from '@lib/utils/maintenance'
@@ -103,7 +105,16 @@ export async function loader({ request }: LoaderFunctionArgs) {
     throw redirect(`${PATHS.PROFILE}`)
   }
 
-  return json({ wallet, userIdentity, userObject, isCreating, featureFlags })
+  const ethPrice = await getEthPrice()
+
+  return json({
+    wallet,
+    userIdentity,
+    userObject,
+    isCreating,
+    featureFlags,
+    ethPrice,
+  })
 }
 
 interface CreateButtonWrapperProps {
@@ -318,10 +329,11 @@ export function CreateButton({
 }
 
 export default function Profile() {
-  const { wallet, userObject, featureFlags } = useLoaderData<{
+  const { wallet, userObject, featureFlags, ethPrice } = useLoaderData<{
     wallet: string
     userObject: UserPresenter
     featureFlags: FeatureFlags
+    ethPrice: string
   }>()
 
   const loaderFetcher = useFetcher<CreateLoaderData>()
@@ -403,7 +415,13 @@ export default function Profile() {
                             variant={TextVariant.caption}
                             className="text-secondary-foreground items-center flex flex-row gap-1"
                           >
-                            Est. Cost: {formatBalance(atomCost, 18)} ETH
+                            Est. Cost:{' '}
+                            <UsdTooltip
+                              ethValue={formatBalance(atomCost, 18)}
+                              usdValue={(
+                                +formatBalance(atomCost, 18) * +ethPrice
+                              ).toFixed(2)}
+                            />
                             <InfoTooltip
                               title="Atom Cost"
                               icon={IconName.circleInfo}
