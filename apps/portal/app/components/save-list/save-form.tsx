@@ -132,7 +132,6 @@ export default function SaveForm({
                   ipfsLink: '',
                   link: '',
                 }}
-                link=""
                 maxIdentityLength={12}
               />
             </div>

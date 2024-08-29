@@ -25,7 +25,6 @@ import {
   getAtomLink,
 } from '@lib/utils/misc'
 import { type FetcherWithComponents } from '@remix-run/react'
-import { PATHS } from 'app/consts'
 import { VaultDetailsType } from 'app/types'
 import {
   TransactionActionType,
@@ -119,7 +118,6 @@ export default function StakeForm({
                 ) : (
                   <Claim
                     size="default"
-                    link={`${PATHS.CLAIM}/${claim?.claim_id}`}
                     subject={{
                       variant: claim?.subject?.is_user
                         ? Identity.user

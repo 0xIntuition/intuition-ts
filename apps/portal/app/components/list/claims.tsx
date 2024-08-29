@@ -1,10 +1,11 @@
-import { Claim, ClaimRow, IconName, Identity } from '@0xintuition/1ui'
+import { Claim, IconName, Identity } from '@0xintuition/1ui'
 import {
   ClaimPresenter,
   ClaimSortColumn,
   IdentityPresenter,
 } from '@0xintuition/api'
 
+import { ClaimRow } from '@components/claim/claim-row'
 import { ListHeader } from '@components/list/list-header'
 import {
   formatBalance,
@@ -66,7 +67,7 @@ export function ClaimsList({
       {claims.map((claim) => (
         <div
           key={claim.claim_id}
-          className="grow shrink basis-0 self-stretch p-6 bg-background first:border-t-px first:rounded-t-xl last:rounded-b-xl theme-border border-t-0 flex-col justify-start gap-5 inline-flex"
+          className="grow shrink basis-0 self-stretch bg-background first:border-t-px first:rounded-t-xl last:rounded-b-xl theme-border border-t-0 flex-col justify-start gap-5 inline-flex"
         >
           <ClaimRow
             claimsFor={claim.for_num_positions}
@@ -74,10 +75,10 @@ export function ClaimsList({
             claimsForValue={+formatBalance(claim.for_assets_sum, 18)}
             claimsAgainstValue={+formatBalance(claim.against_assets_sum, 18)}
             tvl={+formatBalance(claim.assets_sum, 18)}
+            claimLink={`${PATHS.CLAIM}/${claim.claim_id}`}
           >
             <Claim
               size="md"
-              link={`${PATHS.CLAIM}/${claim.claim_id}`}
               subject={{
                 variant: claim.subject?.is_user
                   ? Identity.user

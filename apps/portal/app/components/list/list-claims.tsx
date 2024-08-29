@@ -18,8 +18,8 @@ import logger from '@lib/utils/logger'
 import { useNavigate } from '@remix-run/react'
 import { PaginationType } from 'app/types/pagination'
 
+import { ListIdentityCardPortal } from '../lists/list-identity-card-portal'
 import { SortOption } from '../sort-select'
-import { ListIdentityCardPortal } from './list-identity-card-portal'
 
 export function ListClaimsList<T extends SortColumnType = ClaimSortColumn>({
   listClaims,

@@ -155,7 +155,6 @@ export default function ClaimDetails() {
       <div className="flex-row flex m-auto md:hidden">
         <Claim
           size="xl"
-          link={`${PATHS.CLAIM}/${claim?.claim_id}`}
           subject={{
             variant: claim.subject?.is_user ? Identity.user : Identity.nonUser,
             label: getAtomLabel(claim.subject as IdentityPresenter),

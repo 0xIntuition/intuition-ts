@@ -1,6 +1,7 @@
-import { IconName, Identity, IdentityPosition } from '@0xintuition/1ui'
+import { IconName, Identity } from '@0xintuition/1ui'
 import { IdentityPresenter, SortColumn } from '@0xintuition/api'
 
+import { IdentityPositionRow } from '@components/identity/identity-position-row'
 import { ListHeader } from '@components/list/list-header'
 import {
   formatBalance,
@@ -45,9 +46,9 @@ export function ActivePositionsOnIdentities({
       {identities.map((identity) => (
         <div
           key={identity.id}
-          className={`grow shrink basis-0 self-stretch p-6 bg-black first:rounded-t-xl last:rounded-b-xl theme-border flex-col justify-start items-start gap-5 inline-flex`}
+          className={`grow shrink basis-0 self-stretch bg-black first:rounded-t-xl last:rounded-b-xl theme-border flex-col justify-start items-start gap-5 inline-flex`}
         >
-          <IdentityPosition
+          <IdentityPositionRow
             variant={identity.is_user ? Identity.user : Identity.nonUser}
             avatarSrc={getAtomImage(identity)}
             name={getAtomLabel(identity)}

@@ -1,4 +1,4 @@
-import { ClaimPositionRow, IconName, Identity } from '@0xintuition/1ui'
+import { IconName, Identity } from '@0xintuition/1ui'
 import {
   ClaimPresenter,
   IdentityPresenter,
@@ -7,6 +7,7 @@ import {
   SortColumn,
 } from '@0xintuition/api'
 
+import { ClaimPositionRow } from '@components/claim/claim-position-row'
 import { ListHeader } from '@components/list/list-header'
 import { SortOption } from '@components/sort-select'
 import {
@@ -79,7 +80,7 @@ export function FollowList({
             return (
               <div
                 key={identity.id}
-                className={`grow shrink basis-0 self-stretch p-6 bg-black first:rounded-t-xl last:rounded-b-xl theme-border flex-col justify-start items-start gap-5 inline-flex`}
+                className={`grow shrink basis-0 self-stretch bg-black first:rounded-t-xl last:rounded-b-xl theme-border flex-col justify-start items-start gap-5 inline-flex`}
               >
                 <ClaimPositionRow
                   variant={Identity.user}
@@ -109,7 +110,7 @@ export function FollowList({
         : positions?.map((position) => (
             <div
               key={position.id}
-              className={`grow shrink basis-0 self-stretch p-6 bg-black first:rounded-t-xl last:rounded-b-xl theme-border flex-col justify-start items-start gap-5 inline-flex`}
+              className={`grow shrink basis-0 self-stretch bg-black first:rounded-t-xl last:rounded-b-xl theme-border flex-col justify-start items-start gap-5 inline-flex`}
             >
               <ClaimPositionRow
                 variant={Identity.user}

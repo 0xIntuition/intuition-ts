@@ -135,7 +135,6 @@ export default function SaveReview({
                 ipfsLink: '',
                 link: '',
               }}
-              link=""
               maxIdentityLength={16}
             />
             <Text

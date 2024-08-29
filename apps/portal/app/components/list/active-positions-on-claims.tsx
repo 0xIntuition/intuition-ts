@@ -1,6 +1,7 @@
-import { Claim, ClaimPositionRow, IconName, Identity } from '@0xintuition/1ui'
+import { Claim, IconName, Identity } from '@0xintuition/1ui'
 import { ClaimPresenter, IdentityPresenter, SortColumn } from '@0xintuition/api'
 
+import { ClaimPositionRow } from '@components/claim/claim-position-row'
 import { ListHeader } from '@components/list/list-header'
 import {
   formatBalance,
@@ -46,7 +47,7 @@ export function ActivePositionsOnClaims({
       {claims.map((claim) => (
         <div
           key={claim.claim_id}
-          className={`grow shrink basis-0 self-stretch p-6 bg-black first:rounded-t-xl last:rounded-b-xl theme-border flex-col justify-start items-start gap-5 inline-flex`}
+          className={`grow shrink basis-0 self-stretch bg-black first:rounded-t-xl last:rounded-b-xl theme-border flex-col justify-start items-start gap-5 inline-flex`}
         >
           <ClaimPositionRow
             variant="claim"
@@ -68,7 +69,6 @@ export function ActivePositionsOnClaims({
           >
             <Claim
               size="md"
-              link={`${PATHS.CLAIM}/${claim.claim_id}`}
               subject={{
                 variant: claim.subject?.is_user
                   ? Identity.user

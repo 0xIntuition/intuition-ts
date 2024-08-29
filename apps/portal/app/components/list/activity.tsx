@@ -3,7 +3,6 @@ import {
   ButtonSize,
   ButtonVariant,
   Claim,
-  ClaimRow,
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
@@ -23,6 +22,7 @@ import {
   SortColumn,
 } from '@0xintuition/api'
 
+import { ClaimRow } from '@components/claim/claim-row'
 import {
   formatBalance,
   getAtomDescription,
@@ -110,7 +110,7 @@ function ActivityItem({
   return (
     <div
       key={activity.id}
-      className={`p-6 bg-background rounded-xl theme-border mb-6 last:mb-0 flex flex-col w-full max-sm:p-3`}
+      className={`bg-background rounded-xl theme-border mb-6 last:mb-0 flex flex-col w-full max-sm:p-3`}
     >
       <div className="flex flex-row items-center justify-between min-w-full mb-4 max-md:flex-col max-md:gap-3">
         <div className="flex flex-row items-center gap-2 max-md:flex-col">
@@ -227,11 +227,11 @@ function ActivityItem({
                 +formatBalance(activity.claim.against_assets_sum, 18)
               }
               tvl={+formatBalance(activity.claim.assets_sum, 18)}
+              claimLink={`${PATHS.CLAIM}/${activity.claim.claim_id}`}
               className="w-full"
             >
               <Claim
                 size="md"
-                link={`${PATHS.CLAIM}/${activity.claim.claim_id}`}
                 subject={{
                   variant: activity.claim.subject?.is_user
                     ? Identity.user

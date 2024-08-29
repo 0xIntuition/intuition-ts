@@ -5,10 +5,10 @@ import {
   Icon,
   IconName,
   Identity,
-  IdentityContentRow,
 } from '@0xintuition/1ui'
 import { ClaimPresenter, IdentityPresenter, SortColumn } from '@0xintuition/api'
 
+import { IdentityRow } from '@components/identity/identity-row'
 import { ListHeader } from '@components/list/list-header'
 import { saveListModalAtom } from '@lib/state/store'
 import {
@@ -101,10 +101,10 @@ export function TagsList({
           return (
             <div
               key={identity.id}
-              className={`grow shrink basis-0 self-stretch p-6 bg-background first:border-t-px first:rounded-t-xl last:rounded-b-xl theme-border border-t-0 flex-col justify-start items-start gap-5 inline-flex`}
+              className={`grow shrink basis-0 self-stretch bg-background first:border-t-px first:rounded-t-xl last:rounded-b-xl theme-border border-t-0 flex-col justify-start items-start gap-5 inline-flex`}
             >
               <div className="flex flex-row gap-2 w-full">
-                <IdentityContentRow
+                <IdentityRow
                   variant={identity.is_user ? Identity.user : Identity.nonUser}
                   avatarSrc={getAtomImage(identity)}
                   name={getAtomLabel(identity)}
