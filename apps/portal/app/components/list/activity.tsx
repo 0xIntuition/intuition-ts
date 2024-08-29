@@ -9,7 +9,6 @@ import {
   Icon,
   IconName,
   Identity,
-  IdentityContentRow,
   IdentityTag,
   ProfileCard,
   Text,
@@ -23,6 +22,7 @@ import {
 } from '@0xintuition/api'
 
 import { ClaimRow } from '@components/claim/claim-row'
+import { IdentityRow } from '@components/identity/identity-row'
 import {
   formatBalance,
   getAtomDescription,
@@ -110,9 +110,9 @@ function ActivityItem({
   return (
     <div
       key={activity.id}
-      className={`bg-background rounded-xl theme-border mb-6 last:mb-0 flex flex-col w-full max-sm:p-3`}
+      className={`bg-background rounded-xl mb-6 theme-border last:mb-0 flex flex-col w-full max-sm:p-3`}
     >
-      <div className="flex flex-row items-center justify-between min-w-full mb-4 max-md:flex-col max-md:gap-3">
+      <div className="flex flex-row items-center px-6 py-4 justify-between min-w-full max-md:flex-col max-md:gap-3">
         <div className="flex flex-row items-center gap-2 max-md:flex-col">
           <HoverCard openDelay={150} closeDelay={150}>
             <HoverCardTrigger asChild>
@@ -177,8 +177,8 @@ function ActivityItem({
       </div>
       <div className="flex w-full">
         {activity.identity && (
-          <div className="bg-secondary-foreground/10 px-6 py-4 rounded-xl flex flex-row w-full gap-6 items-center justify-between max-md:flex-col">
-            <IdentityContentRow
+          <div className="bg-secondary-foreground/10 rounded-xl flex flex-row w-full gap-6 rounded-t-none items-center max-md:flex-col group hover:bg-secondary/10 transition-colors duration-200">
+            <IdentityRow
               variant={
                 activity.identity.is_user ? Identity.user : Identity.nonUser
               }
@@ -200,6 +200,7 @@ function ActivityItem({
                   value: tag.num_tagged_identities,
                 })) ?? undefined
               }
+              className="w-full hover:bg-transparent pr-0"
             />
             <a
               href={`${BLOCK_EXPLORER_URL}/tx/${activity.transaction_hash}`}
@@ -218,7 +219,7 @@ function ActivityItem({
           </div>
         )}
         {activity.claim && (
-          <div className="bg-secondary-foreground/10 px-6 py-4 rounded-xl flex flex-row w-full gap-6 items-center max-md:flex-col">
+          <div className="bg-secondary-foreground/10 rounded-xl flex flex-row w-full gap-6 rounded-t-none items-center max-md:flex-col group hover:bg-secondary/10 transition-colors duration-200">
             <ClaimRow
               claimsFor={activity.claim.for_num_positions}
               claimsAgainst={activity.claim.against_num_positions}
@@ -227,8 +228,8 @@ function ActivityItem({
                 +formatBalance(activity.claim.against_assets_sum, 18)
               }
               tvl={+formatBalance(activity.claim.assets_sum, 18)}
-              claimLink={`${PATHS.CLAIM}/${activity.claim.claim_id}`}
-              className="w-full"
+              link={`${PATHS.CLAIM}/${activity.claim.claim_id}`}
+              className="w-full hover:bg-transparent pr-0"
             >
               <Claim
                 size="md"
@@ -303,7 +304,7 @@ function ActivityItem({
               <Button
                 variant={ButtonVariant.secondary}
                 size={ButtonSize.md}
-                className="w-max h-fit"
+                className="w-max h-fit mr-6"
               >
                 View on Explorer{' '}
                 <Icon name={IconName.squareArrowTopRight} className="h-4 w-4" />

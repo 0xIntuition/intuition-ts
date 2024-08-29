@@ -28,7 +28,7 @@ describe('IdentityPosition', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="w-full flex justify-between max-sm:flex-col max-sm:items-center"
+          class="w-full flex justify-between max-sm:flex-col max-sm:items-center p-6"
         >
           <div
             class="flex items-center"
@@ -156,7 +156,7 @@ describe('IdentityPosition', () => {
       expect(asFragment()).toMatchInlineSnapshot(`
         <DocumentFragment>
           <div
-            class="w-full flex justify-between max-sm:flex-col max-sm:items-center"
+            class="w-full flex justify-between max-sm:flex-col max-sm:items-center p-6"
           >
             <div
               class="flex items-center"

@@ -8,6 +8,7 @@ import {
 } from '@0xintuition/1ui'
 import {
   ClaimsService,
+  IdentityPresenter,
   QuestStatus,
   UserQuestsService,
   UsersService,
@@ -24,10 +25,12 @@ import {
 import { QuestCriteriaCard } from '@components/quest/quest-criteria-card'
 import { QuestPointsDisplay } from '@components/quest/quest-points-display'
 import QuestSuccessModal from '@components/quest/quest-success-modal'
+import SaveListModal from '@components/save-list/save-list-modal'
 import { PaginatedListSkeleton } from '@components/skeleton'
 import { useQuestCompletion } from '@lib/hooks/useQuestCompletion'
 import { useQuestMdxContent } from '@lib/hooks/useQuestMdxContent'
 import { getListIdentities } from '@lib/services/lists'
+import { saveListModalAtom } from '@lib/state/store'
 import { getQuestObjects } from '@lib/utils/app'
 import logger from '@lib/utils/logger'
 import { invariant } from '@lib/utils/misc'
@@ -37,8 +40,15 @@ import { Await, Form, useActionData, useLoaderData } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
 import { requireUser, requireUserId } from '@server/auth'
 import { getUserQuest } from '@server/quest'
-import { CHAPTER_6_MP3, CURRENT_ENV } from 'app/consts'
+import {
+  CHAPTER_6_MP3,
+  CURRENT_ENV,
+  MIN_DEPOSIT,
+  MULTIVAULT_CONTRACT_ADDRESS,
+} from 'app/consts'
 import { IdentityListType, MDXContentVariant } from 'app/types'
+import { useAtom } from 'jotai'
+import { parseUnits } from 'viem'
 
 const ROUTE_ID = QuestRouteId.ALWAYS_TRUE
 
@@ -144,6 +154,9 @@ export default function Quests() {
     }
   }, [actionData])
 
+  const [saveListModalActive, setSaveListModalActive] =
+    useAtom(saveListModalAtom)
+
   return (
     <div className="px-10 w-full max-w-7xl mx-auto flex flex-col gap-10 max-lg:px-4 max-md:gap-4">
       <div className="flex flex-col gap-10 mb-5 max-md:gap-5 max-md:mb-2">
@@ -187,9 +200,28 @@ export default function Quests() {
                         claims={resolvedGlobalListIdentities.claims}
                         pagination={resolvedGlobalListIdentities.pagination}
                         claim={claim}
+                        tag={claim.object}
                         wallet={userWallet}
                         enableSearch={true}
                         enableSort={true}
+                      />
+                      <SaveListModal
+                        contract={
+                          claim.object?.contract ?? MULTIVAULT_CONTRACT_ADDRESS
+                        }
+                        identity={
+                          saveListModalActive.identity as IdentityPresenter
+                        }
+                        tag={claim.object as IdentityPresenter}
+                        userWallet={userWallet}
+                        open={saveListModalActive.isOpen}
+                        onClose={() =>
+                          setSaveListModalActive({
+                            ...saveListModalActive,
+                            isOpen: false,
+                          })
+                        }
+                        min_deposit={parseUnits(MIN_DEPOSIT, 18).toString()}
                       />
                     </div>
                   </>

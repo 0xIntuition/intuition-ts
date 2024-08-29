@@ -2,8 +2,6 @@ import React, { useRef, useState } from 'react'
 
 import {
   Avatar,
-  Button,
-  ButtonVariant,
   ClaimPositionType,
   ClaimStatus,
   cn,
@@ -13,7 +11,6 @@ import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
-  Icon,
   PositionValueDisplay,
   ProfileCard,
   TagsContent,
@@ -152,7 +149,7 @@ const ClaimPositionRow = ({
                   ipfsLink={ipfsLink}
                   className="profile-card"
                 />
-                {link && (
+                {/* {link && (
                   <a href={link}>
                     <Button
                       variant={ButtonVariant.secondary}
@@ -162,7 +159,7 @@ const ClaimPositionRow = ({
                       <Icon name={'arrow-up-right'} className="h-3 w-3" />
                     </Button>
                   </a>
-                )}
+                )} */}
               </div>
             </HoverCardContent>
           </HoverCard>

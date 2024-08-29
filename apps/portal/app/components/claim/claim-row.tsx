@@ -16,7 +16,7 @@ export interface ClaimRowProps extends React.HTMLAttributes<HTMLDivElement> {
   claimsAgainstValue?: number
   tvl: number
   currency?: CurrencyType
-  claimLink?: string
+  link?: string
 }
 
 const ClaimRow = ({
@@ -28,19 +28,15 @@ const ClaimRow = ({
   currency,
   children,
   className,
-  claimLink,
+  link,
 }: ClaimRowProps) => {
   const navigate = useNavigate()
   const [isInteractiveElement, setIsInteractiveElement] = useState(false)
   const linkRef = useRef<HTMLDivElement>(null)
 
   const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
-    if (
-      !isInteractiveElement &&
-      claimLink &&
-      event.target === linkRef.current
-    ) {
-      navigate(claimLink)
+    if (!isInteractiveElement && link && event.target === linkRef.current) {
+      navigate(link)
     }
   }
 
@@ -53,8 +49,8 @@ const ClaimRow = ({
   }
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
-    if (event.key === 'Enter' && !isInteractiveElement && claimLink) {
-      navigate(claimLink)
+    if (event.key === 'Enter' && !isInteractiveElement && link) {
+      navigate(link)
     }
   }
 

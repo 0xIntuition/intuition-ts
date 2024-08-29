@@ -2,8 +2,6 @@ import React, { useRef, useState } from 'react'
 
 import {
   Avatar,
-  Button,
-  ButtonVariant,
   cn,
   Copy,
   CurrencyType,
@@ -11,7 +9,6 @@ import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
-  Icon,
   Identity,
   IdentityType,
   PositionValueDisplay,
@@ -121,14 +118,14 @@ const IdentityPositionRow = ({
                 ipfsLink={ipfsLink}
                 className="profile-card"
               />
-              {link && (
+              {/* {link && (
                 <a href={link}>
                   <Button variant={ButtonVariant.secondary} className="w-full">
                     View Identity{' '}
                     <Icon name={'arrow-up-right'} className="h-3 w-3" />{' '}
                   </Button>
                 </a>
-              )}
+              )} */}
             </div>
           </HoverCardContent>
         </HoverCard>

@@ -2,15 +2,12 @@ import React, { useRef, useState } from 'react'
 
 import {
   Avatar,
-  Button,
-  ButtonVariant,
   cn,
   Copy,
   CurrencyType,
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
-  Icon,
   Identity,
   IdentityType,
   IdentityValueDisplay,
@@ -74,7 +71,7 @@ const NameAndAddress = ({
         <a href={ipfsLink} target="_blank" rel="noreferrer noreopener">
           <Trunctacular
             value={id}
-            className="text-secondary-foreground"
+            className="text-primary/60 hover:text-primary"
             maxStringLength={16}
           />
         </a>
@@ -166,14 +163,14 @@ const IdentityRow = ({
                 ipfsLink={ipfsLink}
                 className="profile-card"
               />
-              {link && (
+              {/* {link && (
                 <a href={link}>
                   <Button variant={ButtonVariant.secondary} className="w-full">
                     View Identity{' '}
                     <Icon name={'arrow-up-right'} className="h-3 w-3" />
                   </Button>
                 </a>
-              )}
+              )} */}
             </div>
           </HoverCardContent>
         </HoverCard>

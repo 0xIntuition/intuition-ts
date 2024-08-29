@@ -101,7 +101,7 @@ export function TagsList({
           return (
             <div
               key={identity.id}
-              className={`grow shrink basis-0 self-stretch bg-background first:border-t-px first:rounded-t-xl last:rounded-b-xl theme-border border-t-0 flex-col justify-start items-start gap-5 inline-flex`}
+              className={`grow shrink basis-0 self-stretch bg-background first:border-t-px first:rounded-t-xl last:rounded-b-xl theme-border border-t-0 flex-col justify-start hover:bg-secondary/10 transition-colors duration-200 items-start gap-5 inline-flex`}
             >
               <div className="flex flex-row gap-2 w-full">
                 <IdentityRow
@@ -123,6 +123,7 @@ export function TagsList({
                   totalFollowers={matchingClaim?.num_positions || 0}
                   link={getAtomLink(identity)}
                   ipfsLink={getAtomIpfsLink(identity)}
+                  className="w-full hover:bg-transparent pr-0"
                 />
                 <Button
                   variant={ButtonVariant.text}

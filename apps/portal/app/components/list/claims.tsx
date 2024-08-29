@@ -75,7 +75,7 @@ export function ClaimsList({
             claimsForValue={+formatBalance(claim.for_assets_sum, 18)}
             claimsAgainstValue={+formatBalance(claim.against_assets_sum, 18)}
             tvl={+formatBalance(claim.assets_sum, 18)}
-            claimLink={`${PATHS.CLAIM}/${claim.claim_id}`}
+            link={`${PATHS.CLAIM}/${claim.claim_id}`}
           >
             <Claim
               size="md"

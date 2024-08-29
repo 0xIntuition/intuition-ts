@@ -1,12 +1,10 @@
 import { useState } from 'react'
 
-import { Button, ButtonVariant } from 'components/Button'
 import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
 } from 'components/HoverCard'
-import { Icon } from 'components/Icon'
 import { IdentityTag, IdentityTagSize } from 'components/IdentityTag'
 import { ProfileCard } from 'components/ProfileCard'
 import { Separator } from 'components/Separator'
@@ -106,14 +104,14 @@ const ClaimItem = ({
             bio={item.description ?? ''}
             ipfsLink={item.ipfsLink}
           />
-          {item.link && (
+          {/* {item.link && (
             <a href={item.link}>
               <Button variant={ButtonVariant.secondary} className="w-full">
                 View Identity{' '}
                 <Icon name={'arrow-up-right'} className="h-3 w-3" />
               </Button>
             </a>
-          )}
+          )} */}
         </div>
       </HoverCardContent>
     </HoverCard>
