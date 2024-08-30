@@ -127,6 +127,8 @@ import type {
   ResetQuestResponse,
   RetryActivityData,
   RetryActivityResponse,
+  RetryBlockData,
+  RetryBlockResponse,
   RetryLogData,
   RetryLogResponse,
   RevokeResponse,
@@ -148,8 +150,6 @@ import type {
   SetTagPredicateResponse,
   StartQuestData,
   StartQuestResponse,
-  UpdateClaimData,
-  UpdateClaimResponse,
   UpdateIdentityData,
   UpdateIdentityResponse,
   UpdatePositionData,
@@ -241,6 +241,23 @@ export class ActivitiesService {
         blockNumber: data.blockNumber,
         vaultId: data.vaultId,
       },
+    })
+  }
+
+  /**
+   * @param data The data for the request.
+   * @param data.requestBody
+   * @returns unknown
+   * @throws ApiError
+   */
+  public static retryBlock(
+    data: RetryBlockData,
+  ): CancelablePromise<RetryBlockResponse> {
+    return __request(OpenAPI, {
+      method: 'POST',
+      url: '/activities/retry_block',
+      body: data.requestBody,
+      mediaType: 'application/json',
     })
   }
 
@@ -579,27 +596,6 @@ export class ClaimsService {
       errors: {
         404: 'Record not found in the DB',
       },
-    })
-  }
-
-  /**
-   * @param data The data for the request.
-   * @param data.id Claim sql id
-   * @param data.requestBody
-   * @returns unknown Update a claim
-   * @throws ApiError
-   */
-  public static updateClaim(
-    data: UpdateClaimData,
-  ): CancelablePromise<UpdateClaimResponse> {
-    return __request(OpenAPI, {
-      method: 'PUT',
-      url: '/claims/{id}',
-      path: {
-        id: data.id,
-      },
-      body: data.requestBody,
-      mediaType: 'application/json',
     })
   }
 }
