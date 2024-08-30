@@ -148,14 +148,24 @@ export const ErrorPage = ({
           ))}
         </div>
         <div className="flex gap-6 mt-5 max-sm:flex-col max-sm:w-full">
-          <NavigationButton
-            reloadDocument={!isAtRoot}
-            variant="primary"
-            size="lg"
-            to={isAtRoot ? PATHS.ROOT : ''}
-          >
-            {isAtRoot ? 'Back to home' : 'Refresh'}
-          </NavigationButton>
+          {isAtRoot ? (
+            <NavigationButton
+              reloadDocument={!isAtRoot}
+              variant="primary"
+              size="lg"
+              to={PATHS.ROOT}
+            >
+              Back to home
+            </NavigationButton>
+          ) : (
+            <Button
+              variant="primary"
+              size="lg"
+              onClick={() => window.location.reload()}
+            >
+              Refresh
+            </Button>
+          )}
           <Link
             to="https://discord.com/channels/909531430881746974/1151564740255043604"
             target="_blank"
