@@ -21,13 +21,19 @@ const getStatusComponentData = (status: TransactionStatusType) => {
       return {
         iconName: IconName.inProgress,
         iconClassName: 'text-accent animate-spin',
-        label: 'Creating Identity in the Intuition Network...',
+        label: 'Creating identity in the Intuition Network',
+      }
+    case TransactionStatus.preparingClaim:
+      return {
+        iconName: IconName.inProgress,
+        iconClassName: 'text-accent animate-spin',
+        label: 'Creating claim in the Intuition Network',
       }
     case TransactionStatus.publishingIdentity:
       return {
         iconName: IconName.inProgress,
         iconClassName: 'text-accent animate-spin',
-        label: 'Publishing Identity to IPFS...',
+        label: 'Publishing identity to IPFS',
       }
     case TransactionStatus.approveTransaction:
       return {

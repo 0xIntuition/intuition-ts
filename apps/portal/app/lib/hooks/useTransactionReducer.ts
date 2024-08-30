@@ -1,6 +1,8 @@
 import { useReducer, type Reducer } from 'react'
 
 import {
+  ClaimTransactionActionType,
+  ClaimTransactionStateType,
   IdentityTransactionActionType,
   IdentityTransactionStateType,
   TransactionActionType,
@@ -107,6 +109,48 @@ export const identityTransactionReducer = (
 }
 
 export const initialIdentityTransactionState: IdentityTransactionStateType = {
+  status: 'idle',
+  txHash: `0x${1234}...`,
+  error: undefined,
+}
+
+export const claimTransactionReducer = (
+  state: ClaimTransactionStateType,
+  action: ClaimTransactionActionType,
+): IdentityTransactionStateType => {
+  switch (action.type) {
+    case 'START_TRANSACTION':
+      return { ...state, status: 'idle' }
+    case 'REVIEW_TRANSACTION':
+      return { ...state, status: 'review-transaction' }
+    case 'PREPARING_CLAIM':
+      return { ...state, status: 'preparing-claim' }
+    case 'PUBLISHING_CLAIM':
+      return { ...state, status: 'publishing-claim' }
+    case 'APPROVE_TRANSACTION':
+      return { ...state, status: 'approve-transaction' }
+    case 'CONFIRM_TRANSACTION':
+      return { ...state, status: 'confirm' }
+    case 'TRANSACTION_PENDING':
+      return { ...state, status: 'transaction-pending' }
+    case 'TRANSACTION_CONFIRMED':
+      return { ...state, status: 'transaction-confirmed' }
+    case 'TRANSACTION_COMPLETE':
+      return {
+        ...state,
+        status: 'complete',
+        txHash: action.txHash,
+      }
+    case 'TRANSACTION_HASH':
+      return { ...state, status: 'hash', txHash: action.txHash }
+    case 'TRANSACTION_ERROR':
+      return { ...state, status: 'error', error: action.error }
+    default:
+      return state
+  }
+}
+
+export const initialClaimTransactionState: ClaimTransactionStateType = {
   status: 'idle',
   txHash: `0x${1234}...`,
   error: undefined,

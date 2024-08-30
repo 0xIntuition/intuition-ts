@@ -56,11 +56,30 @@ export type IdentityTransactionActionType =
   | { type: 'TRANSACTION_HASH'; txHash?: `0x${string}` }
   | { type: 'TRANSACTION_ERROR'; error: string }
 
+export type ClaimTransactionActionType =
+  | { type: 'START_TRANSACTION' }
+  | { type: 'REVIEW_TRANSACTION' }
+  | { type: 'PREPARING_CLAIM' }
+  | { type: 'PUBLISHING_CLAIM' }
+  | { type: 'APPROVE_TRANSACTION' }
+  | { type: 'CONFIRM_TRANSACTION' }
+  | { type: 'TRANSACTION_PENDING' }
+  | { type: 'TRANSACTION_CONFIRMED' }
+  | {
+      type: 'TRANSACTION_COMPLETE'
+      txHash?: `0x${string}`
+      txReceipt: TransactionReceipt
+      identityId?: string
+    }
+  | { type: 'TRANSACTION_HASH'; txHash?: `0x${string}` }
+  | { type: 'TRANSACTION_ERROR'; error: string }
+
 export type TransactionStateType =
   BaseTransactionStateType<TransactionStatusType>
 export type IdentityTransactionStateType =
   BaseTransactionStateType<TransactionStatusType>
-
+export type ClaimTransactionStateType =
+  BaseTransactionStateType<TransactionStatusType>
 export const TransactionSuccessAction = {
   VIEW: 'view',
   CLOSE: 'close',
