@@ -10,6 +10,7 @@ import AddIdentitiesListModal from '@components/lists/add-identities-list-modal'
 import { ListIdentityDisplayCard } from '@components/lists/list-identity-display-card'
 import NavigationButton from '@components/navigation-link'
 import ImageModal from '@components/profile/image-modal'
+import { useGoBack } from '@lib/hooks/useGoBack'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { addIdentitiesListModalAtom, imageModalAtom } from '@lib/state/store'
 import logger from '@lib/utils/logger'
@@ -78,10 +79,16 @@ export default function ListDetails() {
     useAtom(addIdentitiesListModalAtom)
   const [imageModalActive, setImageModalActive] = useAtom(imageModalAtom)
   const navigate = useNavigate()
+  const handleGoBack = useGoBack({ fallbackRoute: PATHS.EXPLORE_LISTS })
 
   const leftPanel = (
     <div className="flex-col justify-start items-start gap-6 inline-flex max-lg:w-full">
-      <NavigationButton variant="secondary" size="icon" to={'..'}>
+      <NavigationButton
+        variant="secondary"
+        size="icon"
+        to="#"
+        onClick={handleGoBack}
+      >
         <Icon name="arrow-left" />
       </NavigationButton>
       <ProfileCard
