@@ -101,11 +101,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
       })
       userQuests = data
     }
+
     const dependsOnUserQuest = userQuests.find(
-      (userQuest) =>
-        userQuest.quest_id === quest.depends_on_quest &&
-        user.id === userQuest.user_id,
+      (userQuest) => userQuest.quest_id === quest.depends_on_quest,
     )
+
     const dependsOnIdentityId =
       dependsOnUserQuest?.quest_completion_object_id ?? stakeAtomFallbackAtomId
     identity = await fetchWrapper(request, {

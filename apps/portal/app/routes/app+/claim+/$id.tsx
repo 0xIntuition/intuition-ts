@@ -24,6 +24,7 @@ import {
 import { ErrorPage } from '@components/error-page'
 import NavigationButton from '@components/navigation-link'
 import StakeModal from '@components/stake/stake-modal'
+import { useGoBack } from '@lib/hooks/useGoBack'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { getClaimOrPending } from '@lib/services/claims'
 import { stakeModalAtom } from '@lib/state/store'
@@ -147,9 +148,16 @@ export default function ClaimDetails() {
       ? 'FOR'
       : 'AGAINST'
 
+  const handleGoBack = useGoBack({ fallbackRoute: PATHS.EXPLORE_CLAIMS })
+
   const leftPanel = (
     <div className="flex-col justify-start items-start gap-6 inline-flex w-full">
-      <NavigationButton variant="secondary" size="icon" to={'..'}>
+      <NavigationButton
+        variant="secondary"
+        size="icon"
+        to="#"
+        onClick={handleGoBack}
+      >
         <Icon name="arrow-left" />
       </NavigationButton>
       <div className="flex-row flex m-auto md:hidden">
