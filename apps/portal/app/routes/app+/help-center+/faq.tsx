@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { Text, TextVariant, TextWeight } from '@0xintuition/1ui'
 
 export const identityFaq = [
@@ -51,6 +49,26 @@ export const identityFaq = [
           the Intuition contracts, which accept any arbitrary URI as the
           <code> atomURI</code>. This creates an immutable object that can now
           be referenced universally across the web.
+        </Text>
+      </div>
+    ),
+  },
+  {
+    question:
+      'Do I need to make an initial deposit when I create an Atom/Identity?',
+    answer: (
+      <div className="flex flex-col gap-4">
+        <Text variant={TextVariant.body} className="text-secondary-foreground">
+          No, you don&apos;t need to make an initial deposit when creating a an
+          Atom/Identity. When you don&apos;t make an initial deposit, the cost
+          you see while approving the transaction in your wallet is the atomCost
+          and gas fee required to send a transaction on the blockchain. Creating
+          an Atom/Identity without an initial deposit will create the identity,
+          but without taking a position on it.
+        </Text>
+        <Text variant={TextVariant.body} className="text-secondary-foreground">
+          Making an initial deposit when creating an Atom/Identity allows you to
+          stake on and signal your support for the newly created identity.
         </Text>
       </div>
     ),
@@ -113,6 +131,29 @@ export const claimFaq = [
       </div>
     ),
   },
+  {
+    question:
+      'Do I need to make an initial deposit when I create a Triple/Claim?',
+    answer: (
+      <div className="flex flex-col gap-4">
+        <Text variant={TextVariant.body} className="text-secondary-foreground">
+          No, you don&apos;t need to make an initial deposit when creating a
+          Triple/Claim. When you don&apos;t make an initial deposit, the cost
+          you see while approving the transaction in your wallet is the
+          tripleCost and gas fee required to send a transaction on the
+          blockchain. Creating a Triple/Claim without an initial deposit will
+          create the claim, but without taking a position on it.
+        </Text>
+        <Text variant={TextVariant.body} className="text-secondary-foreground">
+          Making an initial deposit when creating a Triple/Claim allows you to
+          stake on and signal your support for the newly created claim. When you
+          stake on a Claim, you are automatically staked on the Claim&apos;s
+          underlying Identities, as you are indirectly signaling the relevancy
+          of each of these Identities.
+        </Text>
+      </div>
+    ),
+  },
 ]
 
 export const stakingFaq = [
@@ -165,8 +206,8 @@ export const stakingFaq = [
           className="text-secondary-foreground"
         >
           Please note: when you stake on a Claim, you are automatically staked
-          on the Claim’s 3 underlying Identities, as you are indirectly
-          signaling the relevancy of each of these Identities.
+          on the Claim’s underlying Identities, as you are indirectly signaling
+          the relevancy of each of these Identities.
         </Text>
       </div>
     ),
@@ -265,8 +306,8 @@ export const listsFaq = [
           className="text-secondary-foreground"
         >
           Please note: when you stake on a Claim, you are automatically staked
-          on the Claim’s 3 underlying Identities, as you are indirectly
-          signaling the relevancy of each of these Identities.
+          on the Claim’s underlying Identities, as you are indirectly signaling
+          the relevancy of each of these Identities.
         </Text>
       </div>
     ),
