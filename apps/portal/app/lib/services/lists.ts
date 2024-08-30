@@ -84,6 +84,7 @@ export async function getUserSavedLists({
   })
 
   const limit = customLimit ?? defaultLimit
+  const displayName = searchParams.get('search') || null
 
   const savedListClaims = await fetchWrapper(request, {
     method: UsersService.getUserClaims,
@@ -92,7 +93,8 @@ export async function getUserSavedLists({
       limit,
       sortBy: sortBy as SortColumn,
       direction,
-      displayName: getSpecialPredicate(CURRENT_ENV).tagPredicate.displayName,
+      displayName,
+      predicate: getSpecialPredicate(CURRENT_ENV).tagPredicate.id,
       user: userWallet,
     },
   })

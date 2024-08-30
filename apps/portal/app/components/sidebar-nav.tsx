@@ -126,12 +126,16 @@ export default function SidebarNav({
       return location.pathname === route
     }
     if (route === PATHS.EXPLORE_LISTS) {
-      return location.pathname === PATHS.EXPLORE_LISTS
+      return (
+        location.pathname === PATHS.EXPLORE_LISTS ||
+        location.pathname.startsWith(PATHS.LIST)
+      )
     }
     if (route === PATHS.EXPLORE) {
       return (
         location.pathname.startsWith(route) &&
-        location.pathname !== PATHS.EXPLORE_LISTS
+        location.pathname !== PATHS.EXPLORE_LISTS &&
+        !location.pathname.startsWith(PATHS.LIST)
       )
     }
     return location.pathname.startsWith(route)

@@ -365,9 +365,9 @@ export default function Profile() {
   return (
     <div>
       <SiteWideBanner featureFlags={featureFlags} />
-      <div className="flex flex-col justify-between h-screen w-full p-8">
+      <div className="flex flex-col justify-between min-h-screen w-full p-4 md:p-8">
         <Header />
-        <div className="flex justify-center items-center h-screen">
+        <div className="flex-grow flex justify-center items-center">
           <AnimatePresence mode="wait">
             {!showVideo ? (
               <motion.div

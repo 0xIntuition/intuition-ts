@@ -118,7 +118,7 @@ export default function ProfileLists() {
                 listClaims={accumulatedClaims}
                 pagination={resolvedSavedListClaims.pagination}
                 enableSort={true}
-                enableSearch={false}
+                enableSearch={true}
                 columns={3}
                 onLoadMore={() => handleLoadMore(resolvedSavedListClaims)}
                 sortOptions={sortOptions}
