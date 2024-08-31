@@ -66,10 +66,11 @@ export default function StakeActions({
           if (action === 'deposit') {
             setVal(walletBalance)
           } else if (userConviction && price) {
-            const maxEth =
-              +formatUnits(BigInt(userConviction), 18) *
-              +formatUnits(BigInt(price), 18)
-            setVal(formatDecimal(maxEth))
+            const userConvictionValue = BigInt(userConviction)
+            const priceValue = BigInt(price)
+            const maxEthInWei = userConvictionValue * priceValue
+            const maxEth = formatUnits(maxEthInWei, 36)
+            setVal(maxEth)
           }
         }}
       >
