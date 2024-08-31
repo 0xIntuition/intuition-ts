@@ -20,11 +20,7 @@ export default function StakeActions({
   price,
 }: StakeActionsProps) {
   const formatDecimal = (value: number): string => {
-    return value.toLocaleString('fullwide', {
-      useGrouping: false,
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 18,
-    })
+    return (Math.floor(value * 1e18) / 1e18).toFixed(18).replace(/\.?0+$/, '')
   }
 
   const calculateAndSetValue = (percentage: number) => {
