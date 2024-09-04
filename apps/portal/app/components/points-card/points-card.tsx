@@ -1,6 +1,13 @@
 import React from 'react'
 
-import { Text, TextVariant } from '@0xintuition/1ui'
+import {
+  Text,
+  TextVariant,
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@0xintuition/1ui'
 
 import { truncateNumber } from '@lib/utils/misc'
 
@@ -20,28 +27,38 @@ const PointsRow: React.FC<{
   disabled?: boolean
 }> = ({ name, points, totalPoints, disabled = false }) => {
   return (
-    <div className="grid grid-cols-7 items-center gap-2">
-      <Text
-        variant={TextVariant.body}
-        className={`col-span-2 ${disabled ? 'text-primary/40' : ''}`}
-      >
-        {name}
-      </Text>
-      <div className="col-span-4 h-[6px] w-full bg-muted rounded-sm mx-auto">
-        <div
-          className="h-full bg-primary rounded-sm"
-          style={{
-            width: `${totalPoints === 0 ? 0 : (points / totalPoints) * 100}%`,
-          }}
-        />
-      </div>
-      <Text
-        variant={TextVariant.body}
-        className={`col-span-1 text-right ${disabled ? 'text-primary/40' : ''}`}
-      >
-        {truncateNumber(points)}
-      </Text>
-    </div>
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <div className="grid grid-cols-7 items-center gap-2">
+            <Text
+              variant={TextVariant.body}
+              className={`col-span-2 ${disabled ? 'text-primary/40' : ''}`}
+            >
+              {name}
+            </Text>
+            <div className="col-span-4 h-[6px] w-full bg-muted rounded-sm mx-auto">
+              <div
+                className="h-full bg-primary rounded-sm"
+                style={{
+                  width: `${totalPoints === 0 ? 0 : (points / totalPoints) * 100}%`,
+                }}
+              />
+            </div>
+
+            <Text
+              variant={TextVariant.body}
+              className={`col-span-1 text-right ${disabled ? 'text-primary/40' : ''}`}
+            >
+              {truncateNumber(points)}
+            </Text>
+          </div>
+        </TooltipTrigger>
+        <TooltipContent>
+          {(totalPoints === 0 ? 0 : (points / totalPoints) * 100).toFixed(1)}%
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
   )
 }
 

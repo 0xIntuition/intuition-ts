@@ -20,11 +20,7 @@ export default function StakeActions({
   price,
 }: StakeActionsProps) {
   const formatDecimal = (value: number): string => {
-    return value.toLocaleString('fullwide', {
-      useGrouping: false,
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 18,
-    })
+    return (Math.floor(value * 1e18) / 1e18).toFixed(18).replace(/\.?0+$/, '')
   }
 
   const calculateAndSetValue = (percentage: number) => {
@@ -70,10 +66,11 @@ export default function StakeActions({
           if (action === 'deposit') {
             setVal(walletBalance)
           } else if (userConviction && price) {
-            const maxEth =
-              +formatUnits(BigInt(userConviction), 18) *
-              +formatUnits(BigInt(price), 18)
-            setVal(formatDecimal(maxEth))
+            const userConvictionValue = BigInt(userConviction)
+            const priceValue = BigInt(price)
+            const maxEthInWei = userConvictionValue * priceValue
+            const maxEth = formatUnits(maxEthInWei, 36)
+            setVal(maxEth)
           }
         }}
       >
