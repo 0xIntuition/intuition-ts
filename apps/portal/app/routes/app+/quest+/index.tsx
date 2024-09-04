@@ -96,8 +96,11 @@ export default function Quests() {
     useLoaderData<typeof loader>()
 
   // TODO: Remove this relic hold/mint count and points calculation when it is stored in BE.
-  const mintedRelics = Math.min(relicMintCount || 0, +relicHoldCount || 0)
-  const heldRelics = (+relicHoldCount || 0) - mintedRelics
+  const mintedRelics = Math.min(
+    Number(relicMintCount) || 0,
+    Number(relicHoldCount) || 0,
+  )
+  const heldRelics = (Number(relicHoldCount) || 0) - mintedRelics
   const nftPoints = mintedRelics * 2000000 + heldRelics * 250000
 
   return (
