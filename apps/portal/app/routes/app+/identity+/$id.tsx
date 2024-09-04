@@ -4,7 +4,6 @@ import {
   Banner,
   Icon,
   Identity,
-  InfoCard,
   PieChartVariant,
   PositionCard,
   PositionCardLastUpdated,
@@ -18,9 +17,15 @@ import {
   TagsContent,
   TagWithValue,
 } from '@0xintuition/1ui'
-import { IdentityPresenter, TagEmbeddedPresenter } from '@0xintuition/api'
+import {
+  ClaimPresenter,
+  ClaimsService,
+  IdentityPresenter,
+  TagEmbeddedPresenter,
+} from '@0xintuition/api'
 
 import { ErrorPage } from '@components/error-page'
+import { IdentityInfoCard } from '@components/identity-info-card'
 import NavigationButton from '@components/navigation-link'
 import ImageModal from '@components/profile/image-modal'
 import SaveListModal from '@components/save-list/save-list-modal'
@@ -34,6 +39,7 @@ import {
   stakeModalAtom,
   tagsModalAtom,
 } from '@lib/state/store'
+import { getSpecialPredicate } from '@lib/utils/app'
 import logger from '@lib/utils/logger'
 import {
   calculatePercentageOfTvl,
@@ -51,12 +57,12 @@ import { requireUser, requireUserWallet } from '@server/auth'
 import { getVaultDetails } from '@server/multivault'
 import {
   BLOCK_EXPLORER_URL,
+  CURRENT_ENV,
   MULTIVAULT_CONTRACT_ADDRESS,
   NO_WALLET_ERROR,
   PATHS,
 } from 'app/consts'
 import TwoPanelLayout from 'app/layouts/two-panel-layout'
-import { ExtendedIdentityPresenter } from 'app/types/identity'
 import { VaultDetailsType } from 'app/types/vault'
 import { useAtom } from 'jotai'
 
@@ -79,6 +85,21 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     throw new Response('Not Found', { status: 404 })
   }
 
+  let list: ClaimPresenter | null = null
+
+  try {
+    const listResult = await ClaimsService.searchClaims({
+      predicate: getSpecialPredicate(CURRENT_ENV).tagPredicate.id,
+      object: identity.id,
+    })
+
+    if (listResult && listResult.data.length > 0) {
+      list = listResult.data[0]
+    }
+  } catch (error) {
+    logger('Failed to fetch list:', error)
+  }
+
   let vaultDetails: VaultDetailsType | null = null
 
   if (!!identity && identity.vault_id) {
@@ -97,6 +118,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   logger('[$ID] -- END')
   return json({
     identity,
+    list,
     isPending,
     vaultDetails,
     userWallet,
@@ -105,18 +127,15 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
 export interface IdentityLoaderData {
   identity: IdentityPresenter
+  list: ClaimPresenter
   vaultDetails: VaultDetailsType
   userWallet: string
   isPending: boolean
 }
 
 export default function IdentityDetails() {
-  const { identity, vaultDetails, userWallet, isPending } = useLiveLoader<{
-    identity: ExtendedIdentityPresenter
-    vaultDetails: VaultDetailsType
-    userWallet: string
-    isPending: boolean
-  }>(['attest', 'create'])
+  const { identity, list, vaultDetails, userWallet, isPending } =
+    useLiveLoader<IdentityLoaderData>(['attest', 'create'])
   const navigate = useNavigate()
 
   const { user_assets, assets_sum } = vaultDetails ? vaultDetails : identity
@@ -236,8 +255,9 @@ export default function IdentityDetails() {
           />
         </>
       )}
-      <InfoCard
+      <IdentityInfoCard
         variant={Identity.user}
+        list={list}
         username={identity.creator?.display_name ?? '?'}
         avatarImgSrc={identity.creator?.image ?? ''}
         id={identity.creator?.wallet ?? ''}
