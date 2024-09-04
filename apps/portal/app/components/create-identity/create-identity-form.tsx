@@ -276,6 +276,53 @@ function CreateIdentityForm({
 
   const [formTouched, setFormTouched] = useState(false) // to disable submit if user hasn't touched form yet
 
+  const submitWithTimeout = (
+    formData: FormData,
+  ): Promise<IdentityPresenter> => {
+    return new Promise((resolve, reject) => {
+      const maxAttempts = 30 // 30 seconds total
+      let attempts = 0
+
+      const checkSubmissionStatus = () => {
+        if (offChainFetcher.state === 'idle') {
+          if (offChainFetcher.data) {
+            if (offChainFetcher.data.success === 'error') {
+              // If there's an error in the response, reject with that error
+              reject(
+                new Error(
+                  offChainFetcher.data.error || 'Unknown error occurred',
+                ),
+              )
+            } else if (offChainFetcher.data.identity) {
+              // If we have the identity data, resolve with it
+              resolve(offChainFetcher.data.identity)
+            } else {
+              // If we don't have an error or identity data, something went wrong
+              reject(new Error('Invalid response data'))
+            }
+          } else if (attempts >= maxAttempts) {
+            reject(new Error('Submission timed out'))
+          } else {
+            attempts++
+            setTimeout(checkSubmissionStatus, 1000) // Check every second
+          }
+        } else if (attempts >= maxAttempts) {
+          reject(new Error('Submission timed out'))
+        } else {
+          attempts++
+          setTimeout(checkSubmissionStatus, 1000) // Check every second
+        }
+      }
+
+      offChainFetcher.submit(formData, {
+        action: '/actions/create-identity',
+        method: 'post',
+      })
+
+      checkSubmissionStatus()
+    })
+  }
+
   const handleSubmit = async () => {
     try {
       if (walletClient) {
@@ -286,7 +333,6 @@ function CreateIdentityForm({
           formData.append(key, value as string)
         })
 
-        // Use the formData passed from the form submission
         if (identityImageSrc !== null) {
           formData.set('image_url', identityImageSrc as string)
         }
@@ -295,7 +341,6 @@ function CreateIdentityForm({
           formData.set('is_contract', 'true')
         }
 
-        // Initial form validation
         const submission = parseWithZod(formData, {
           schema: createIdentitySchema(),
         })
@@ -314,46 +359,46 @@ function CreateIdentityForm({
         try {
           logger('try offline submit')
           dispatch({ type: 'PUBLISHING_IDENTITY' })
-          await submitWithTimeout(formData)
+          const createdIdentity = await submitWithTimeout(formData)
+
+          // If we reach here, the offchain submission was successful
+          // Now we can proceed with the onchain transaction
+          setTransactionResponseData(createdIdentity)
+          await handleOnChainCreateIdentity({
+            atomData: createdIdentity.identity_id,
+          })
         } catch (error: unknown) {
           handleSubmitError(error)
         }
-
-        setLoading(true)
       }
     } catch (error: unknown) {
       logger(error)
       handleSubmitError(error)
+    } finally {
+      setLoading(false)
     }
-  }
-
-  const submitWithTimeout = (formData: FormData) => {
-    return new Promise((resolve, reject) => {
-      const timeoutId = setTimeout(() => {
-        reject(new Error('Submission timed out'))
-      }, 30000) // 30 seconds timeout
-
-      offChainFetcher.submit(formData, {
-        action: '/actions/create-identity',
-        method: 'post',
-      })
-
-      const checkSubmissionStatus = setInterval(() => {
-        if (offChainFetcher.state === 'idle') {
-          clearInterval(checkSubmissionStatus)
-          clearTimeout(timeoutId)
-          if (offChainFetcher.data) {
-            resolve(offChainFetcher.data)
-          }
-        }
-      }, 1000) // Check every second
-    })
   }
 
   const handleSubmitError = (error: unknown) => {
     let errorMessage = 'Error in creating offchain identity data.'
     if (error instanceof Error) {
-      errorMessage = error.message
+      if (error.message === 'Submission timed out') {
+        errorMessage =
+          'The identity creation process timed out. Please try again.'
+      } else {
+        try {
+          // Try to parse the error message as JSON
+          const parsedError = JSON.parse(error.message)
+          if (parsedError && parsedError.error) {
+            errorMessage = parsedError.error
+          } else {
+            errorMessage = error.message
+          }
+        } catch (jsonError) {
+          // If parsing fails, use the original error message
+          errorMessage = error.message
+        }
+      }
     }
     dispatch({
       type: 'TRANSACTION_ERROR',
