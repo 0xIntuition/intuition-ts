@@ -96,9 +96,10 @@ export default function Quests() {
     useLoaderData<typeof loader>()
 
   // TODO: Remove this relic hold/mint count and points calculation when it is stored in BE.
-  const nftMintPoints = relicMintCount ? relicMintCount * 2000000 : 0
-  const nftHoldPoints = relicHoldCount ? +relicHoldCount * 250000 : 0
-  const totalNftPoints = nftMintPoints + nftHoldPoints
+  const mintedRelics = Math.min(relicMintCount || 0, +relicHoldCount || 0)
+  const heldRelics = (+relicHoldCount || 0) - mintedRelics
+  const nftPoints = mintedRelics * 2000000 + heldRelics * 250000
+
   return (
     <div className="p-10 w-full max-w-7xl mx-auto flex flex-col gap-5 max-md:p-5 max-sm:p-2">
       <ExploreHeader
@@ -144,7 +145,7 @@ export default function Quests() {
                         relicMintCount || relicHoldCount
                           ? resolvedUserTotals.referral_points +
                             resolvedUserTotals.quest_points +
-                            totalNftPoints +
+                            nftPoints +
                             calculatePointsFromFees(
                               resolvedUserTotals.total_protocol_fee_paid,
                             )
@@ -167,7 +168,7 @@ export default function Quests() {
                         },
                         {
                           name: 'NFT',
-                          points: totalNftPoints,
+                          points: nftPoints,
                         },
                         {
                           name: 'Referrals',
@@ -187,7 +188,7 @@ export default function Quests() {
             <RelicPointCard
               relicsMintCount={relicMintCount ? relicMintCount : 0}
               relicsHoldCount={relicHoldCount ? +relicHoldCount : 0}
-              relicsPoints={totalNftPoints}
+              relicsPoints={nftPoints}
             />
           </div>
         </div>
