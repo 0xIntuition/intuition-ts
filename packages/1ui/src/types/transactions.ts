@@ -4,8 +4,6 @@ export const TransactionStatus = {
   inProgress: 'in-progress',
   preparingIdentity: 'preparing-identity',
   publishingIdentity: 'publishing-identity',
-  preparingClaim: 'preparing-claim',
-  publishingClaim: 'publishing-claim',
   approveTransaction: 'approve-transaction',
   reviewTransaction: 'review-transaction',
   transactionHash: 'hash',

@@ -11,12 +11,8 @@ export const getInProgressLabel = (status: TransactionStatusType) => {
   switch (status) {
     case TransactionStatus.preparingIdentity:
       return 'Preparing identity...'
-    case TransactionStatus.preparingClaim:
-      return 'Preparing claim...'
     case TransactionStatus.publishingIdentity:
       return 'Publishing identity...'
-    case TransactionStatus.publishingClaim:
-      return 'Publishing claim...'
     case TransactionStatus.approveTransaction:
       return 'Approving transaction...'
     case TransactionStatus.transactionPending:
@@ -95,13 +91,6 @@ export const getStatusComponentData = (
         iconClass: 'text-accent animate-spin',
         label: getInProgressLabel(status),
       }
-    case TransactionStatus.preparingClaim:
-      return {
-        iconName: IconName.inProgress,
-        iconClass: 'text-accent animate-spin',
-        label: getInProgressLabel(status),
-      }
-    case TransactionStatus.publishingClaim:
     case TransactionStatus.approveTransaction:
       return {
         iconName: IconName.awaitAction,

@@ -31,8 +31,8 @@ import { useGetWalletBalance } from '@lib/hooks/useGetWalletBalance'
 import { useIdentityServerSearch } from '@lib/hooks/useIdentityServerSearch'
 import { useLoaderFetcher } from '@lib/hooks/useLoaderFetcher'
 import {
-  claimTransactionReducer,
-  initialClaimTransactionState,
+  initialTransactionState,
+  transactionReducer,
   useTransactionState,
 } from '@lib/hooks/useTransactionReducer'
 import { createClaimSchema } from '@lib/schemas/create-claim-schema'
@@ -50,8 +50,7 @@ import {
 } from 'app/consts'
 import { ClaimElement, ClaimElementType } from 'app/types'
 import {
-  ClaimTransactionActionType,
-  ClaimTransactionStateType,
+  TransactionActionType,
   TransactionStateType,
   TransactionSuccessAction,
   TransactionSuccessActionType,
@@ -76,22 +75,18 @@ export function ClaimForm({
   successAction = TransactionSuccessAction.VIEW,
 }: ClaimFormProps) {
   const { state, dispatch } = useTransactionState<
-    ClaimTransactionStateType,
-    ClaimTransactionActionType
-  >(claimTransactionReducer, initialClaimTransactionState)
+    TransactionStateType,
+    TransactionActionType
+  >(transactionReducer, initialTransactionState)
 
   const [transactionResponseData, setTransactionResponseData] =
     useState<ClaimPresenter | null>(null)
-
-  console.log('state.status', state.status)
 
   const isTransactionStarted = [
     'approve',
     'awaiting',
     'confirm',
     'review-transaction',
-    'preparing-claim',
-    'approve-transaction',
     'transaction-pending',
     'transaction-confirmed',
     'complete',
@@ -136,7 +131,7 @@ export function ClaimForm({
 interface CreateClaimFormProps {
   wallet: string
   state: TransactionStateType
-  dispatch: React.Dispatch<ClaimTransactionActionType>
+  dispatch: React.Dispatch<TransactionActionType>
   setTransactionResponseData: React.Dispatch<
     React.SetStateAction<ClaimPresenter | null>
   >
@@ -162,13 +157,10 @@ function CreateClaimForm({
   const { fees } = (feeFetcher.data as CreateClaimLoaderData) ?? {}
 
   const [initialDeposit, setInitialDeposit] = useState<string>('0')
-  const [isCheckingClaimExistence, setIsCheckingClaimExistence] =
-    useState(false)
 
   const navigate = useNavigate()
   interface OffChainClaimFetcherData {
     success: 'success' | 'error'
-    error: string
     claim: ClaimPresenter
     submission: SubmissionResult<string[]> | null
   }
@@ -294,53 +286,6 @@ function CreateClaimForm({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [claimFetcher.state, claimFetcher.data, dispatch])
 
-  const submitWithTimeout = (formData: FormData): Promise<ClaimPresenter> => {
-    let timeoutId: NodeJS.Timeout | null = null
-
-    return new Promise<ClaimPresenter>((resolve, reject) => {
-      const maxAttempts = 30 // 30 seconds total
-      let attempts = 0
-
-      const checkSubmissionStatus = () => {
-        if (claimFetcher.state === 'idle') {
-          if (claimFetcher.data) {
-            if (claimFetcher.data.success === 'error') {
-              reject(
-                new Error(claimFetcher.data.error || 'Unknown error occurred'),
-              )
-            } else if (claimFetcher.data.claim) {
-              resolve(claimFetcher.data.claim)
-            } else {
-              reject(new Error('Invalid response data'))
-            }
-          } else if (attempts >= maxAttempts) {
-            reject(new Error('Submission timed out'))
-          } else {
-            attempts++
-            timeoutId = setTimeout(checkSubmissionStatus, 1000) // Check every second
-          }
-        } else if (attempts >= maxAttempts) {
-          reject(new Error('Submission timed out'))
-        } else {
-          attempts++
-          timeoutId = setTimeout(checkSubmissionStatus, 1000) // Check every second
-        }
-      }
-
-      claimFetcher.submit(formData, {
-        action: '/actions/create-claim',
-        method: 'post',
-      })
-
-      checkSubmissionStatus()
-    }).then((result) => {
-      if (timeoutId) {
-        clearTimeout(timeoutId)
-      }
-      return result
-    })
-  }
-
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     try {
@@ -354,11 +299,15 @@ function CreateClaimForm({
         formData.append('subject_id', selectedIdentities.subject.id)
         formData.append('predicate_id', selectedIdentities.predicate.id)
         formData.append('object_id', selectedIdentities.object.id)
-        formData.append('initial_deposit', initialDeposit)
-
         const submission = parseWithZod(formData, {
           schema: createClaimSchema,
         })
+
+        if (event.currentTarget.initial_deposit?.value !== undefined) {
+          setInitialDeposit(event.currentTarget.initial_deposit.value)
+        }
+
+        logger('submission', submission)
 
         if (
           submission.status === 'error' &&
@@ -366,53 +315,16 @@ function CreateClaimForm({
           Object.keys(submission.error).length
         ) {
           console.error('Create claim validation errors: ', submission.error)
-          return
         }
-
-        try {
-          dispatch({ type: 'PREPARING_CLAIM' })
-          const createdClaim = await submitWithTimeout(formData)
-          setTransactionResponseData(createdClaim)
-
-          dispatch({ type: 'CONFIRM_TRANSACTION' })
-          await handleOnChainCreateTriple({
-            subjectVaultId: selectedIdentities.subject.vault_id,
-            predicateVaultId: selectedIdentities.predicate.vault_id,
-            objectVaultId: selectedIdentities.object.vault_id,
-          })
-        } catch (error: unknown) {
-          handleSubmitError(error)
-        }
+        claimFetcher.submit(formData, {
+          action: '/actions/create-claim',
+          method: 'post',
+        })
+        dispatch({ type: 'CONFIRM_TRANSACTION' })
       }
     } catch (error: unknown) {
       logger(error)
-      handleSubmitError(error)
     }
-  }
-
-  const handleSubmitError = (error: unknown) => {
-    let errorMessage = 'Error in creating offchain claim data.'
-    if (error instanceof Error) {
-      if (error.message === 'Submission timed out') {
-        errorMessage = 'The claim creation process timed out. Please try again.'
-      } else {
-        try {
-          const parsedError = JSON.parse(error.message)
-          if (parsedError && parsedError.error) {
-            errorMessage = parsedError.error
-          } else {
-            errorMessage = error.message
-          }
-        } catch (jsonError) {
-          errorMessage = error.message
-        }
-      }
-    }
-    dispatch({
-      type: 'TRANSACTION_ERROR',
-      error: errorMessage,
-    })
-    toast.error(errorMessage)
   }
 
   const [form, fields] = useForm({
@@ -473,30 +385,21 @@ function CreateClaimForm({
       selectedIdentities.predicate &&
       selectedIdentities.object
     ) {
-      setIsCheckingClaimExistence(true)
       claimChecker.load(
         `/resources/tag?subjectId=${selectedIdentities.subject.vault_id}&predicateId=${selectedIdentities.predicate.vault_id}&objectId=${selectedIdentities.object.vault_id}`,
       )
-    } else {
-      setIsCheckingClaimExistence(false)
-      setClaimExists(false)
     }
   }, [
     selectedIdentities.subject,
     selectedIdentities.object,
     selectedIdentities.predicate,
-    claimChecker.load,
   ])
 
   useEffect(() => {
-    if (claimChecker.state === 'idle' && claimChecker.data) {
+    if (claimChecker.data) {
       setClaimExists(claimChecker.data.result !== '0')
-      setIsCheckingClaimExistence(false)
     }
-    if (claimChecker.state !== 'idle') {
-      setIsCheckingClaimExistence(true)
-    }
-  }, [claimChecker.state, claimChecker.data, selectedIdentities])
+  }, [claimChecker.data, selectedIdentities])
 
   useEffect(() => {
     if (state.status === 'complete') {
@@ -640,7 +543,6 @@ function CreateClaimForm({
                   disabled={
                     !address ||
                     claimExists ||
-                    isCheckingClaimExistence ||
                     selectedIdentities.subject === null ||
                     selectedIdentities.predicate === null ||
                     selectedIdentities.object === null ||
@@ -650,11 +552,7 @@ function CreateClaimForm({
                   }
                   className="w-40 mx-auto"
                 >
-                  {claimExists
-                    ? 'Claim Exists'
-                    : isCheckingClaimExistence
-                      ? 'Checking...'
-                      : 'Review'}
+                  {claimExists ? 'Claim Exists' : 'Review'}
                 </Button>
               )}
             </div>
