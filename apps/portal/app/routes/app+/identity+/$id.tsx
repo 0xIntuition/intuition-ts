@@ -24,8 +24,8 @@ import {
   TagEmbeddedPresenter,
 } from '@0xintuition/api'
 
+import { DetailInfoCard } from '@components/detail-info-card'
 import { ErrorPage } from '@components/error-page'
-import { IdentityInfoCard } from '@components/identity-info-card'
 import NavigationButton from '@components/navigation-link'
 import ImageModal from '@components/profile/image-modal'
 import SaveListModal from '@components/save-list/save-list-modal'
@@ -255,7 +255,7 @@ export default function IdentityDetails() {
           />
         </>
       )}
-      <IdentityInfoCard
+      <DetailInfoCard
         variant={Identity.user}
         list={list}
         username={identity.creator?.display_name ?? '?'}

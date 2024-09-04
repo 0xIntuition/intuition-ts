@@ -18,10 +18,10 @@ import { ClaimPresenter } from '@0xintuition/api'
 
 import { PATHS } from '@consts/paths'
 
-export interface IdentityInfoCardProps
+export interface DetailInfoCardProps
   extends React.HTMLAttributes<HTMLDivElement> {
   variant: IdentityType
-  list: ClaimPresenter
+  list?: ClaimPresenter
   username: string
   avatarImgSrc: string
   id: string
@@ -31,7 +31,7 @@ export interface IdentityInfoCardProps
   timestamp: string
 }
 
-const IdentityInfoCard = ({
+const DetailInfoCard = ({
   variant = Identity.user,
   list,
   username,
@@ -43,7 +43,7 @@ const IdentityInfoCard = ({
   timestamp,
   className,
   ...props
-}: IdentityInfoCardProps) => {
+}: DetailInfoCardProps) => {
   const formattedDate = new Intl.DateTimeFormat('en-US', {
     year: 'numeric',
     month: 'long',
@@ -130,4 +130,4 @@ const IdentityInfoCard = ({
   )
 }
 
-export { IdentityInfoCard }
+export { DetailInfoCard }
