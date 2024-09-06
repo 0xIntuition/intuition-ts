@@ -4,7 +4,6 @@ import {
   ClaimStakeCard,
   Icon,
   Identity,
-  InfoCard,
   PieChartVariant,
   PositionCard,
   PositionCardLastUpdated,
@@ -21,6 +20,7 @@ import {
   SortDirection,
 } from '@0xintuition/api'
 
+import { DetailInfoCard } from '@components/detail-info-card'
 import { ErrorPage } from '@components/error-page'
 import NavigationButton from '@components/navigation-link'
 import StakeModal from '@components/stake/stake-modal'
@@ -28,6 +28,7 @@ import { useGoBack } from '@lib/hooks/useGoBack'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { getClaimOrPending } from '@lib/services/claims'
 import { stakeModalAtom } from '@lib/state/store'
+import { getSpecialPredicate } from '@lib/utils/app'
 import {
   calculatePercentageOfTvl,
   formatBalance,
@@ -39,10 +40,15 @@ import {
   invariant,
 } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
-import { Outlet, useNavigate } from '@remix-run/react'
+import { Outlet } from '@remix-run/react'
 import { requireUserWallet } from '@server/auth'
 import { getVaultDetails } from '@server/multivault'
-import { BLOCK_EXPLORER_URL, NO_WALLET_ERROR, PATHS } from 'app/consts'
+import {
+  BLOCK_EXPLORER_URL,
+  CURRENT_ENV,
+  NO_WALLET_ERROR,
+  PATHS,
+} from 'app/consts'
 import TwoPanelLayout from 'app/layouts/two-panel-layout'
 import { VaultDetailsType } from 'app/types/vault'
 import { useAtom } from 'jotai'
@@ -108,8 +114,6 @@ export default function ClaimDetails() {
     vaultDetails: VaultDetailsType
     isPending: boolean
   }>(['create', 'attest'])
-  const navigate = useNavigate()
-
   const [stakeModalActive, setStakeModalActive] = useAtom(stakeModalAtom)
 
   const direction: 'for' | 'against' = isPending
@@ -285,8 +289,14 @@ export default function ClaimDetails() {
           }
         />
       )}
-      <InfoCard
+      <DetailInfoCard
         variant={Identity.user}
+        list={
+          claim?.predicate?.id ===
+          getSpecialPredicate(CURRENT_ENV).tagPredicate.id
+            ? claim
+            : undefined
+        }
         username={claim.creator?.display_name ?? '?'}
         avatarImgSrc={claim.creator?.image ?? ''}
         id={claim.creator?.wallet ?? ''}
@@ -296,10 +306,7 @@ export default function ClaimDetails() {
         }
         ipfsLink={`${BLOCK_EXPLORER_URL}/address/${claim.creator?.wallet}`}
         timestamp={claim.created_at}
-        onClick={() => {
-          navigate(`/app/profile/${claim.creator?.wallet}`)
-        }}
-        className="hover:cursor-pointer w-full"
+        className="w-full"
       />
     </div>
   )
