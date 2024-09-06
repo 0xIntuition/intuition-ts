@@ -61,7 +61,7 @@ export function PaginationComponent({
       <PaginationSummary totalEntries={totalEntries} label={label} />
       <div className="flex max-sm:flex-col max-sm:items-center max-sm:gap-3">
         <PaginationRowSelection
-          defaultValue={limit.toString()}
+          value={limit.toString()}
           onValueChange={(newLimit) => {
             setHasUserInteracted(true)
             onLimitChange(Number(newLimit))
