@@ -8,7 +8,7 @@ import {
   Separator,
 } from '@0xintuition/1ui'
 
-import { Form, useSearchParams, useSubmit } from '@remix-run/react'
+import { Form, useSearchParams } from '@remix-run/react'
 
 import { ExploreAddTags } from './ExploreAddTags/ExploreAddTags'
 import { ExploreSearchInput } from './ExploreSearchInput/ExploreSearchInput'
@@ -20,15 +20,10 @@ export interface ExploreSearchFormProps {
 
 const ExploreSearchForm = ({
   searchParam,
-  inputPlaceholder = searchParam === 'user'
-    ? 'Search by a username or address'
-    : searchParam === 'identity'
-      ? 'Search by identity'
-      : 'Search',
+  inputPlaceholder = 'Search',
 }: ExploreSearchFormProps) => {
   const tagsInputId = 'tagIds'
-  const [searchParams] = useSearchParams()
-  const submit = useSubmit()
+  const [searchParams, setSearchParams] = useSearchParams()
 
   const handleChange = (event: React.ChangeEvent<HTMLFormElement>) => {
     const formData = new FormData(event.currentTarget)
@@ -36,22 +31,16 @@ const ExploreSearchForm = ({
     const displayNameQuery = formData.get(searchParam) as string
     const isUser = formData.get('isUser') as string
 
-    const params = new URLSearchParams()
-
-    if (displayNameQuery) {
-      params.append(searchParam, displayNameQuery)
+    const currentParams = Object.fromEntries(searchParams)
+    const updatedParams = {
+      ...currentParams,
+      [searchParam]: displayNameQuery || '',
+      tagIds: tagIdQuery || '',
+      isUser: isUser || '',
+      page: '1',
     }
 
-    if (tagIdQuery) {
-      params.append('tagIds', tagIdQuery)
-    }
-
-    if (isUser === 'true' || isUser === 'false') {
-      params.append('isUser', isUser)
-    }
-
-    const action = `?${params.toString()}`
-    submit(event.currentTarget, { action, method: 'get' })
+    setSearchParams(updatedParams)
   }
 
   const radioGroupData = [
