@@ -206,13 +206,16 @@ export function EditProfileForm({
   // Handle Initial Form Submit
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
+    logger('previewImage in handleSubmit', previewImage)
     try {
       dispatch({ type: 'START_TRANSACTION' })
       setLoading(true)
       const formData = new FormData()
       formData.append('display_name', displayName)
       formData.append('description', description)
-      formData.append('image_url', previewImage || userObject.image || '')
+      if (previewImage !== null) {
+        formData.append('image_url', previewImage)
+      }
 
       // Check if any changes were made
       const hasChanges =
@@ -232,6 +235,7 @@ export function EditProfileForm({
       const submission = parseWithZod(formData, {
         schema: updateProfileSchema(),
       })
+      logger('image file in submission', imageFile)
       if (
         submission.status === 'error' &&
         submission.error !== null &&
@@ -352,7 +356,7 @@ export function EditProfileForm({
                 <button
                   onClick={(e) => {
                     e.preventDefault()
-                    setPreviewImage(null)
+                    setPreviewImage('')
                     setImageFilename(null)
                     setImageFilesize(null)
                     setImageFile(undefined)
