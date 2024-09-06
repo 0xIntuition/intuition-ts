@@ -13,7 +13,7 @@ import { DataHeaderSkeleton, PaginatedListSkeleton } from '@components/skeleton'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { getClaimsAboutIdentity } from '@lib/services/claims'
 import { getPositionsOnIdentity } from '@lib/services/positions'
-import { detailCreateClaimModalAtom } from '@lib/state/store'
+import { createClaimModalAtom } from '@lib/state/store'
 import { formatBalance, invariant } from '@lib/utils/misc'
 import { defer, LoaderFunctionArgs } from '@remix-run/node'
 import { Await, useRouteLoaderData } from '@remix-run/react'
@@ -75,9 +75,8 @@ export default function ProfileDataAbout() {
     useRouteLoaderData<ProfileLoaderData>('routes/app+/profile+/$wallet') ?? {}
   invariant(userIdentity, NO_USER_IDENTITY_ERROR)
 
-  const [createClaimModalActive, setCreateClaimModalActive] = useAtom(
-    detailCreateClaimModalAtom,
-  )
+  const [createClaimModalActive, setCreateClaimModalActive] =
+    useAtom(createClaimModalAtom)
 
   return (
     <>
@@ -96,7 +95,11 @@ export default function ProfileDataAbout() {
             <Button
               variant="primary"
               className="max-lg:w-full max-lg:mt-2"
-              onClick={() => setCreateClaimModalActive(true)}
+              onClick={() =>
+                setCreateClaimModalActive({
+                  isOpen: true,
+                })
+              }
             >
               <Icon name={IconName.claim} className="h-4 w-4" /> Make a Claim
             </Button>
@@ -186,9 +189,9 @@ export default function ProfileDataAbout() {
       </div>
       {userWallet && (
         <CreateClaimModal
-          open={createClaimModalActive}
+          open={createClaimModalActive.isOpen}
           wallet={userWallet}
-          onClose={() => setCreateClaimModalActive(false)}
+          onClose={() => setCreateClaimModalActive({ isOpen: false })}
         />
       )}
     </>

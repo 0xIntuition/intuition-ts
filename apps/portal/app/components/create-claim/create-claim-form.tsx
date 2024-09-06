@@ -36,6 +36,7 @@ import {
   useTransactionState,
 } from '@lib/hooks/useTransactionReducer'
 import { createClaimSchema } from '@lib/schemas/create-claim-schema'
+import { createClaimModalAtom } from '@lib/state/store'
 import { getChainEnvConfig } from '@lib/utils/environment'
 import logger from '@lib/utils/logger'
 import { useFetcher, useNavigate } from '@remix-run/react'
@@ -55,6 +56,7 @@ import {
   TransactionSuccessAction,
   TransactionSuccessActionType,
 } from 'app/types/transaction'
+import { useAtomValue } from 'jotai'
 import { parseUnits } from 'viem'
 import { useAccount, usePublicClient, useWalletClient } from 'wagmi'
 
@@ -151,6 +153,7 @@ function CreateClaimForm({
   onSuccess,
   successAction = TransactionSuccessAction.VIEW,
 }: CreateClaimFormProps) {
+  const { subject, predicate, object } = useAtomValue(createClaimModalAtom)
   const feeFetcher = useLoaderFetcher<CreateClaimLoaderData>(
     CREATE_CLAIM_RESOURCE_ROUTE,
   )
@@ -338,9 +341,9 @@ function CreateClaimForm({
     predicate: IdentityPresenter | null
     object: IdentityPresenter | null
   }>({
-    subject: null,
-    predicate: null,
-    object: null,
+    subject: subject ?? null,
+    predicate: predicate ?? null,
+    object: object ?? null,
   })
 
   const handleIdentitySelection = (

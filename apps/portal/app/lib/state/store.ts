@@ -86,3 +86,15 @@ export const imageModalAtom = atom<{
   isOpen: false,
   identity: null,
 })
+
+export const createClaimModalAtom = atom<{
+  isOpen: boolean
+  subject?: IdentityPresenter | null
+  predicate?: IdentityPresenter | null
+  object?: IdentityPresenter | null
+}>({
+  isOpen: false,
+  subject: null,
+  predicate: null,
+  object: null,
+})

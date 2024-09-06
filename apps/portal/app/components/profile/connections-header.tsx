@@ -8,13 +8,19 @@ import {
 } from '@0xintuition/1ui'
 import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
 
+import CreateClaimModal from '@components/create-claim/create-claim-modal'
+import { NO_FOLLOW_CLAIM_ERROR, NO_WALLET_ERROR } from '@consts/errors'
+import { createClaimModalAtom } from '@lib/state/store'
 import {
   getAtomDescription,
   getAtomImage,
   getAtomIpfsLink,
   getAtomLabel,
   getAtomLink,
+  invariant,
 } from '@lib/utils/misc'
+import { useLocation, useRouteLoaderData } from '@remix-run/react'
+import { useAtom } from 'jotai'
 
 export const ConnectionsHeaderVariants = {
   followers: 'followers',
@@ -32,12 +38,31 @@ interface ConnectionsHeaderProps {
   totalStake: string
 }
 
+interface RouteLoaderData {
+  userWallet: string
+  followClaim: ClaimPresenter
+}
+
 export const ConnectionsHeader: React.FC<ConnectionsHeaderProps> = ({
   variant,
   userIdentity,
   totalFollowers,
   totalStake = '0',
 }) => {
+  const [createClaimModalActive, setCreateClaimModalActive] =
+    useAtom(createClaimModalAtom)
+
+  const location = useLocation()
+  const routeLoaderKey =
+    location.pathname === '/app/profile/connections'
+      ? 'routes/app+/profile+/_index+/_layout'
+      : 'routes/app+/profile+/$wallet'
+
+  const { userWallet, followClaim } =
+    useRouteLoaderData<RouteLoaderData>(routeLoaderKey) ?? {}
+  invariant(followClaim, NO_FOLLOW_CLAIM_ERROR)
+  invariant(userWallet, NO_WALLET_ERROR)
+
   return (
     <div className="flex flex-col w-full gap-3">
       <div className="p-6 bg-black rounded-xl theme-border flex flex-col gap-5">
@@ -82,22 +107,21 @@ export const ConnectionsHeader: React.FC<ConnectionsHeaderProps> = ({
               size="md"
               subject={{
                 variant: Identity.nonUser,
-                label: 'I',
-                imgSrc: '',
-                id: 'ipfs://QmUt9aQX5bSdwvqETtdr2x7HZbBidnbXNaoywyFTexFsbU',
-                description:
-                  'A first-person singular pronoun used by a speaker to refer to themselves. For example, "I am studying for a test". "I" can also be used to refer to the narrator of a first-person singular literary work.',
-                ipfsLink:
-                  'https://ipfs.io/ipfs/QmUt9aQX5bSdwvqETtdr2x7HZbBidnbXNaoywyFTexFsbU',
+                label: getAtomLabel(followClaim.subject),
+                imgSrc: getAtomImage(followClaim.subject),
+                id: followClaim.subject?.identity_id,
+                description: getAtomDescription(followClaim.subject),
+                ipfsLink: getAtomIpfsLink(followClaim.subject),
+                link: getAtomLink(followClaim.subject),
               }}
               predicate={{
                 variant: Identity.nonUser,
-                label: 'am following',
-                imgSrc: '',
-                id: 'https://schema.org/FollowAction',
-                description:
-                  'The act of forming a personal connection with someone/something (object) unidirectionally/asymmetrically to get updates polled from.',
-                ipfsLink: 'https://schema.org/FollowAction',
+                label: getAtomLabel(followClaim.predicate),
+                imgSrc: getAtomImage(followClaim.predicate),
+                id: followClaim.predicate?.identity_id,
+                description: getAtomDescription(followClaim.predicate),
+                ipfsLink: getAtomIpfsLink(followClaim.predicate),
+                link: getAtomLink(followClaim.predicate),
               }}
               object={
                 variant === 'followers'
@@ -120,10 +144,32 @@ export const ConnectionsHeader: React.FC<ConnectionsHeaderProps> = ({
                       link: '',
                     }
               }
+              onClick={
+                variant === 'following'
+                  ? () =>
+                      setCreateClaimModalActive({
+                        isOpen: true,
+                        subject: followClaim.subject,
+                        predicate: followClaim.predicate,
+                      })
+                  : undefined
+              }
             />
           </div>
         </div>
       </div>
+      <CreateClaimModal
+        open={createClaimModalActive.isOpen}
+        wallet={userWallet}
+        onClose={() =>
+          setCreateClaimModalActive({
+            isOpen: false,
+            subject: null,
+            predicate: null,
+            object: null,
+          })
+        }
+      />
     </div>
   )
 }

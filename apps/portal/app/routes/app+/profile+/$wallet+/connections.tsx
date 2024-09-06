@@ -8,7 +8,11 @@ import {
   TabsTrigger,
   Text,
 } from '@0xintuition/1ui'
-import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
+import {
+  ClaimPresenter,
+  IdentityPresenter,
+  UserTotalsPresenter,
+} from '@0xintuition/api'
 
 import { ErrorPage } from '@components/error-page'
 import { FollowList } from '@components/list/follow'
@@ -33,8 +37,6 @@ import {
   NO_USER_TOTALS_ERROR,
   NO_WALLET_ERROR,
 } from 'app/consts'
-
-import { ProfileLoaderData } from '../_index+/_layout'
 
 export async function loader({ params, request }: LoaderFunctionArgs) {
   const userWallet = await requireUserWallet(request)
@@ -86,10 +88,15 @@ const TabContent = ({
   )
 }
 
+interface RouteLoaderData {
+  userIdentity: IdentityPresenter
+  userTotals: UserTotalsPresenter
+}
+
 export default function ProfileConnections() {
   const { connectionsData } = useLiveLoader<typeof loader>(['attest'])
   const { userIdentity } =
-    useRouteLoaderData<ProfileLoaderData>('routes/app+/profile+/$wallet') ?? {}
+    useRouteLoaderData<RouteLoaderData>('routes/app+/profile+/$wallet') ?? {}
   invariant(userIdentity, NO_USER_IDENTITY_ERROR)
 
   return (
@@ -121,7 +128,7 @@ function ConnectionsContent({
   > | null>
 }) {
   const { userTotals } =
-    useRouteLoaderData<ProfileLoaderData>('routes/app+/profile+/$wallet') ?? {}
+    useRouteLoaderData<RouteLoaderData>('routes/app+/profile+/$wallet') ?? {}
   invariant(userTotals, NO_USER_TOTALS_ERROR)
 
   return (
