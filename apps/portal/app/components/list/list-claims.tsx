@@ -14,7 +14,6 @@ import {
   SortColumnType,
   useSearchAndSortParamsHandler,
 } from '@lib/hooks/useSearchAndSortParams'
-import logger from '@lib/utils/logger'
 import { useNavigate } from '@remix-run/react'
 import { PaginationType } from 'app/types/pagination'
 
@@ -58,8 +57,6 @@ export function ListClaimsList<T extends SortColumnType = ClaimSortColumn>({
 
   const [isLoading, setIsLoading] = useState(false)
 
-  logger('listClaims', listClaims)
-
   const uniqueClaimData = Array.from(
     new Map(
       listClaims.map((claim) => [
@@ -72,8 +69,6 @@ export function ListClaimsList<T extends SortColumnType = ClaimSortColumn>({
     user_assets_for: claim.user_assets_for,
     claim_id: claim.claim_id,
   }))
-
-  logger('uniqueClaimData', uniqueClaimData)
 
   const listContainerRef = useRef<HTMLDivElement>(null)
   const { handleSearchChange, handleSortChange } =
