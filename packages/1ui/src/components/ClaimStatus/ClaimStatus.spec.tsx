@@ -47,96 +47,99 @@ describe('ClaimStatus', () => {
             />
           </div>
           <div
-            class="flex items-center w-full max-w-max group relative max-sm:flex-col max-sm:m-auto"
+            class="flex items-center w-full max-w-max group relative max-sm:flex-col max-sm:m-auto transition-colors duration-200"
           >
-            <button />
-            <button
-              class="theme-border font-medium py-0.5 pl-0.5 pr-2 disabled:pointer-events-none flex gap-2 items-center rounded-md text-base [&>span]:h-6 [&>span]:w-6 hover:bg-primary/20 hover:border-primary relative z-10 identity-tag group-hover:border-primary group-hover:bg-primary/20 duration-200"
-              data-state="closed"
-            >
-              <span
-                class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square bg-background theme-border rounded"
+            <div>
+              <button
+                class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center rounded-md text-base [&>span]:h-6 [&>span]:w-6 relative z-10 identity-tag transition-colors duration-200 group-hover:border-primary"
+                data-state="closed"
               >
                 <span
-                  class="flex h-full w-full items-center justify-center bg-inherit"
+                  class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square bg-background theme-border rounded"
                 >
-                  <svg
-                    class="text-primary/30 w-[80%] h-[80%] max-w-8 max-h-8"
+                  <span
+                    class="flex h-full w-full items-center justify-center bg-inherit"
                   >
-                    <use
-                      href="/src/components/Icon/Icon.sprites.svg#fingerprint"
-                    />
-                  </svg>
+                    <svg
+                      class="text-primary/30 w-[80%] h-[80%] max-w-8 max-h-8"
+                    >
+                      <use
+                        href="/src/components/Icon/Icon.sprites.svg#fingerprint"
+                      />
+                    </svg>
+                  </span>
                 </span>
-              </span>
-              <div
-                class="text-primary text-base font-normal"
-              >
-                0xintuition
-              </div>
-            </button>
+                <div
+                  class="text-primary text-base font-normal"
+                >
+                  0xintuition
+                </div>
+              </button>
+            </div>
             <div
-              class="shrink-0 bg-border/20 h-[1px] w-4 group-hover:bg-primary max-sm:w-px max-sm:h-2"
+              class="shrink-0 bg-border/20 h-[1px] w-4 max-sm:w-px max-sm:h-2 transition-colors duration-200 group-hover:bg-primary"
               data-orientation="horizontal"
               role="none"
             />
-            <button />
-            <button
-              class="theme-border font-medium py-0.5 pl-0.5 pr-2 disabled:pointer-events-none flex gap-2 items-center rounded-md text-base [&>span]:h-6 [&>span]:w-6 hover:bg-primary/20 hover:border-primary relative z-10 identity-tag group-hover:border-primary group-hover:bg-primary/20 duration-200"
-              data-state="closed"
-            >
-              <span
-                class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square bg-background theme-border rounded"
+            <div>
+              <button
+                class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center rounded-md text-base [&>span]:h-6 [&>span]:w-6 relative z-10 identity-tag transition-colors duration-200 group-hover:border-primary"
+                data-state="closed"
               >
                 <span
-                  class="flex h-full w-full items-center justify-center bg-inherit"
+                  class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square bg-background theme-border rounded"
                 >
-                  <svg
-                    class="text-primary/30 w-[80%] h-[80%] max-w-8 max-h-8"
+                  <span
+                    class="flex h-full w-full items-center justify-center bg-inherit"
                   >
-                    <use
-                      href="/src/components/Icon/Icon.sprites.svg#fingerprint"
-                    />
-                  </svg>
+                    <svg
+                      class="text-primary/30 w-[80%] h-[80%] max-w-8 max-h-8"
+                    >
+                      <use
+                        href="/src/components/Icon/Icon.sprites.svg#fingerprint"
+                      />
+                    </svg>
+                  </span>
                 </span>
-              </span>
-              <div
-                class="text-primary text-base font-normal"
-              >
-                is really
-              </div>
-            </button>
+                <div
+                  class="text-primary text-base font-normal"
+                >
+                  is really
+                </div>
+              </button>
+            </div>
             <div
-              class="shrink-0 bg-border/20 h-[1px] w-4 group-hover:bg-primary max-sm:w-px max-sm:h-2"
+              class="shrink-0 bg-border/20 h-[1px] w-4 max-sm:w-px max-sm:h-2 transition-colors duration-200 group-hover:bg-primary"
               data-orientation="horizontal"
               role="none"
             />
-            <button />
-            <button
-              class="theme-border font-medium py-0.5 pl-0.5 pr-2 disabled:pointer-events-none flex gap-2 items-center rounded-md text-base [&>span]:h-6 [&>span]:w-6 hover:bg-primary/20 hover:border-primary relative z-10 identity-tag group-hover:border-primary group-hover:bg-primary/20 duration-200"
-              data-state="closed"
-            >
-              <span
-                class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square bg-background theme-border rounded"
+            <div>
+              <button
+                class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center rounded-md text-base [&>span]:h-6 [&>span]:w-6 relative z-10 identity-tag transition-colors duration-200 group-hover:border-primary"
+                data-state="closed"
               >
                 <span
-                  class="flex h-full w-full items-center justify-center bg-inherit"
+                  class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square bg-background theme-border rounded"
                 >
-                  <svg
-                    class="text-primary/30 w-[80%] h-[80%] max-w-8 max-h-8"
+                  <span
+                    class="flex h-full w-full items-center justify-center bg-inherit"
                   >
-                    <use
-                      href="/src/components/Icon/Icon.sprites.svg#fingerprint"
-                    />
-                  </svg>
+                    <svg
+                      class="text-primary/30 w-[80%] h-[80%] max-w-8 max-h-8"
+                    >
+                      <use
+                        href="/src/components/Icon/Icon.sprites.svg#fingerprint"
+                      />
+                    </svg>
+                  </span>
                 </span>
-              </span>
-              <div
-                class="text-primary text-base font-normal"
-              >
-                cool
-              </div>
-            </button>
+                <div
+                  class="text-primary text-base font-normal"
+                >
+                  cool
+                </div>
+              </button>
+            </div>
           </div>
         </div>
       </DocumentFragment>
