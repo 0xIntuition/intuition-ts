@@ -120,7 +120,7 @@ const DetailInfoCard = ({
               </div>
             </HoverCardContent>
           </HoverCard>
-          <span className="bg-muted-foreground h-[2px] w-[2px] block rounded-full" />
+          <span className="bg-muted-foreground h-0.5 w-0.5 block rounded-full" />
           <Text variant={TextVariant.body} className="text-muted-foreground">
             {formattedDate}
           </Text>

@@ -18,12 +18,12 @@ export function ImageChooser({
   setImageFile,
 }: ImageChooseProps) {
   return (
-    <div className="flex min-w-[60px] w-full items-center justify-center gap-3">
+    <div className="flex min-w-16 w-full items-center justify-center gap-3">
       <div className="relative w-full">
         <label
           htmlFor="image-input"
           className={cn(
-            'group left-0 flex h-[60px] w-[60px] w-full cursor-pointer rounded-lg focus-within:ring-2 focus-within:ring-ring border border-solid border-primary/50',
+            'group left-0 flex h-16 w-16 w-full cursor-pointer rounded-lg focus-within:ring-2 focus-within:ring-ring border border-solid border-primary/50',
             {
               'opacity-40 focus-within:opacity-100 hover:opacity-100':
                 !previewImage,
@@ -40,7 +40,7 @@ export function ImageChooser({
             )}
           >
             {previewImage ? (
-              <div className="flex h-[60px] w-[60px] items-center justify-center overflow-hidden rounded-lg">
+              <div className="flex h-16 w-16 items-center justify-center overflow-hidden rounded-lg">
                 <img
                   src={previewImage}
                   className="h-full w-full object-cover object-position-center shadow-md"
@@ -49,7 +49,7 @@ export function ImageChooser({
               </div>
             ) : (
               <div className="flex flex-row">
-                <div className="flex h-full w-full items-center justify-center overflow-hidden rounded-md h-[60px] w-[60px]">
+                <div className="flex h-full w-full items-center justify-center overflow-hidden rounded-md h-16 w-16">
                   <div className="pointer-events-pointer inset-0 flex items-center justify-center">
                     <Icon
                       name={IconName.arrowOutOfBox}

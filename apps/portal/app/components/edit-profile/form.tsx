@@ -329,9 +329,9 @@ export function EditProfileForm({
                 />
               </div>
             </div>
-            <div className="self-stretch h-[100px] px-9 py-2.5 theme-border bg-primary/10 rounded-md justify-between items-center inline-flex">
+            <div className="self-stretch h-24 px-9 py-2.5 theme-border bg-primary/10 rounded-md justify-between items-center inline-flex">
               <div className="justify-start items-center gap-[18px] flex">
-                <div className="w-[60px] h-[60px] rounded-xl justify-center items-center flex">
+                <div className="w-16 h-16 rounded-xl justify-center items-center flex">
                   <ImageChooser
                     previewImage={previewImage}
                     setPreviewImage={setPreviewImage}

@@ -51,7 +51,7 @@ const QuestStatusIndicator = ({
   const { iconName, iconClass, bgClass } = getStatusComponentData(status)
 
   return (
-    <div className={cn(`relative w-[58px] h-[64px]`, className)}>
+    <div className={cn(`relative w-[58px] h-16`, className)}>
       <svg
         width="58"
         height="64"

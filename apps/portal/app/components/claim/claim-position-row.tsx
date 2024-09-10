@@ -134,7 +134,7 @@ const ClaimPositionRow = ({
                   variant={variant}
                   src={avatarSrc}
                   name={name}
-                  className="mr-4 w-[64px] h-[64px]"
+                  className="mr-4 w-16 h-16"
                 />
               </a>
             </HoverCardTrigger>

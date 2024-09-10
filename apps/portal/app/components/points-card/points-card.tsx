@@ -37,7 +37,7 @@ const PointsRow: React.FC<{
             >
               {name}
             </Text>
-            <div className="col-span-4 h-[6px] w-full bg-muted rounded-sm mx-auto">
+            <div className="col-span-4 h-1.5 w-full bg-muted rounded-sm mx-auto">
               <div
                 className="h-full bg-primary rounded-sm"
                 style={{
