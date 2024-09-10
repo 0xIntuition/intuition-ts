@@ -210,7 +210,7 @@ function ActivityItem({
               <Button
                 variant={ButtonVariant.secondary}
                 size={ButtonSize.md}
-                className="w-max h-fit"
+                className="w-max h-fit mr-6"
               >
                 View on Explorer{' '}
                 <Icon name={IconName.squareArrowTopRight} className="h-4 w-4" />
