@@ -59,6 +59,7 @@ export async function getConnectionsData({
     direction: followingDirection,
   } = getStandardPageParams({
     searchParams,
+    defaultSortByValue: 'UserAssets',
     paramPrefix: 'following',
   })
 
@@ -109,7 +110,7 @@ export async function getConnectionsData({
     } = getStandardPageParams({
       searchParams,
       paramPrefix: 'followers',
-      defaultSortByValue: PositionSortColumn.ASSETS,
+      defaultSortByValue: 'Assets',
     })
 
     const followersSearch =
