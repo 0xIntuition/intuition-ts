@@ -55,7 +55,9 @@ const PointsRow: React.FC<{
           </div>
         </TooltipTrigger>
         <TooltipContent>
-          {(totalPoints === 0 ? 0 : (points / totalPoints) * 100).toFixed(1)}%
+          {disabled
+            ? 'Coming Soon'
+            : `${(totalPoints === 0 ? 0 : (points / totalPoints) * 100).toFixed(1)}%`}
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>
