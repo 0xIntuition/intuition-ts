@@ -1,6 +1,13 @@
 import { Suspense } from 'react'
 
-import { EmptyStateCard, ErrorStateCard, Text } from '@0xintuition/1ui'
+import {
+  Button,
+  ButtonVariant,
+  EmptyStateCard,
+  ErrorStateCard,
+  Icon,
+  Text,
+} from '@0xintuition/1ui'
 import {
   ClaimSortColumn,
   ClaimsService,
@@ -27,6 +34,7 @@ import { getIdentityOrPending } from '@lib/services/identities'
 import { getUserSavedLists } from '@lib/services/lists'
 import { getPositionsOnIdentity } from '@lib/services/positions'
 import { getUserIdentities } from '@lib/services/users'
+import { globalCreateClaimModalAtom } from '@lib/state/store'
 import { formatBalance, invariant } from '@lib/utils/misc'
 import { defer, LoaderFunctionArgs } from '@remix-run/node'
 import { Await, useParams, useRouteLoaderData } from '@remix-run/react'
@@ -38,6 +46,7 @@ import {
   NO_WALLET_ERROR,
   PATHS,
 } from 'app/consts'
+import { useSetAtom } from 'jotai'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const userWallet = await requireUserWallet(request)
@@ -117,6 +126,8 @@ export default function ProfileOverview() {
   const params = useParams()
   const { wallet } = params
 
+  const setCreateClaimModalActive = useSetAtom(globalCreateClaimModalAtom)
+
   return (
     <div className="flex flex-col gap-12">
       <div className="flex flex-col gap-6">
@@ -192,7 +203,16 @@ export default function ProfileOverview() {
             {(resolvedClaims) => {
               if (!resolvedClaims || resolvedClaims.data.length === 0) {
                 return (
-                  <EmptyStateCard message="This user has no claims about their identity yet." />
+                  <EmptyStateCard message="This user has no claims about their identity yet.">
+                    <Button
+                      variant={ButtonVariant.primary}
+                      onClick={() => {
+                        setCreateClaimModalActive(true)
+                      }}
+                    >
+                      <Icon name="claim" /> Make a Claim
+                    </Button>
+                  </EmptyStateCard>
                 )
               }
               return (

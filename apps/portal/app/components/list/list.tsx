@@ -45,7 +45,6 @@ export function List<T extends SortColumnType>({
   const listContainerRef = useRef<HTMLDivElement>(null)
 
   const setCreateIdentityModalActive = useSetAtom(globalCreateIdentityModalAtom)
-
   const setCreateClaimModalActive = useSetAtom(globalCreateClaimModalAtom)
 
   return (
@@ -62,23 +61,23 @@ export function List<T extends SortColumnType>({
       )}
       {pagination && pagination.totalEntries === 0 ? (
         <EmptyStateCard message={`No ${paginationLabel} found.`}>
-          {paginationLabel === 'identities' ? (
+          {paginationLabel.includes('identities') ? (
             <Button
               variant={ButtonVariant.primary}
               onClick={() => {
                 setCreateIdentityModalActive(true)
               }}
             >
-              <Icon name="fingerprint" /> Create Identity
+              <Icon name="fingerprint" className="h-4 w-4" /> Create an Identity
             </Button>
-          ) : paginationLabel === 'claims' ? (
+          ) : paginationLabel.includes('claims') ? (
             <Button
               variant={ButtonVariant.primary}
               onClick={() => {
                 setCreateClaimModalActive(true)
               }}
             >
-              <Icon name="claim" /> Create Claim
+              <Icon name="claim" className="h-4 w-4" /> Make a Claim
             </Button>
           ) : null}
         </EmptyStateCard>
