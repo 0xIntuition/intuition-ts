@@ -22,10 +22,13 @@ export async function getUserIdentities({
 }) {
   const { page, limit, sortBy, direction } = getStandardPageParams({
     searchParams,
+    defaultSortByValue: 'UserAssets',
     paramPrefix: 'activeIdentities',
   })
   const identitiesSearch =
     (searchParams.get('activeIdentitiesSearch') as string) || null
+
+  console.log('sortBy', sortBy)
 
   const result = await fetchWrapper(request, {
     method: UsersService.getUserIdentities,
@@ -100,6 +103,7 @@ export async function getUserClaims({
 }) {
   const { page, limit, sortBy, direction } = getStandardPageParams({
     searchParams,
+    defaultSortByValue: 'UserAssets',
     paramPrefix: 'activeClaims',
   })
   const claimsSearch =

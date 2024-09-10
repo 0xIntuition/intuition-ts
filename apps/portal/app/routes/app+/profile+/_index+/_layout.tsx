@@ -186,8 +186,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
     followClaim = followClaimResponse.data[0]
   }
 
-  console.log('followClaim', followClaim)
-
   return json({
     privyUser: user,
     userWallet,
