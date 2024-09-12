@@ -212,7 +212,6 @@ export default function ReadOnlyProfile() {
     relicMintCount: number
     relicHoldCount: string
   }>(['attest', 'create'])
-  const navigate = useNavigate()
 
   const { user_assets, assets_sum } = vaultDetails ? vaultDetails : userIdentity
 
@@ -289,10 +288,6 @@ export default function ReadOnlyProfile() {
                     key={tag.identity_id}
                     label={tag.display_name}
                     value={tag.num_tagged_identities}
-                    onStake={() => {
-                      setSelectedTag(tag)
-                      setSaveListModalActive({ isOpen: true, id: tag.vault_id })
-                    }}
                   />
                 ))}
               </TagsContent>
