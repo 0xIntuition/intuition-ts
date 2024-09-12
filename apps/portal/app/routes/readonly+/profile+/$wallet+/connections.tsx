@@ -96,7 +96,8 @@ interface RouteLoaderData {
 export default function ProfileConnections() {
   const { connectionsData } = useLiveLoader<typeof loader>(['attest'])
   const { userIdentity } =
-    useRouteLoaderData<RouteLoaderData>('routes/app+/profile+/$wallet') ?? {}
+    useRouteLoaderData<RouteLoaderData>('routes/readonly+/profile+/$wallet') ??
+    {}
   invariant(userIdentity, NO_USER_IDENTITY_ERROR)
 
   return (

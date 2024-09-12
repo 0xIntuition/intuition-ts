@@ -40,7 +40,7 @@ export function TagsList({
   claims: ClaimPresenter[]
   claim: ClaimPresenter
   tag?: IdentityPresenter | null
-  wallet: string
+  wallet?: string
   pagination?: PaginationType
   paramPrefix?: string
   enableHeader?: boolean

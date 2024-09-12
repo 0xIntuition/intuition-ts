@@ -17,6 +17,7 @@ import {
 } from '@0xintuition/api'
 
 import { ErrorPage } from '@components/error-page'
+import { TagsList } from '@components/list/tags'
 import { ListTabIdentityDisplay } from '@components/lists/list-tab-identity-display'
 import { DataHeaderSkeleton, PaginatedListSkeleton } from '@components/skeleton'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
@@ -258,16 +259,14 @@ export default function ReadOnlyListOverview() {
                   return isNavigating ? (
                     <PaginatedListSkeleton />
                   ) : (
-                    // <TagsList
-                    //   identities={resolvedGlobalListIdentities.listIdentities}
-                    //   claims={resolvedGlobalListIdentities.claims}
-                    //   pagination={resolvedGlobalListIdentities.pagination}
-                    //   claim={claim}
-                    //   wallet={wallet}
-                    //   enableSearch={true}
-                    //   enableSort={true}
-                    // />
-                    <div>placeholder</div>
+                    <TagsList
+                      identities={resolvedGlobalListIdentities.listIdentities}
+                      claims={resolvedGlobalListIdentities.claims}
+                      pagination={resolvedGlobalListIdentities.pagination}
+                      claim={claim}
+                      enableSearch={true}
+                      enableSort={true}
+                    />
                   )
                 }}
               </Await>
@@ -283,17 +282,15 @@ export default function ReadOnlyListOverview() {
                   return isNavigating ? (
                     <PaginatedListSkeleton />
                   ) : (
-                    <div>placeholder</div>
-                    // <TagsList
-                    //   identities={resolvedUserListIdentities.listIdentities}
-                    //   claims={resolvedUserListIdentities.claims}
-                    //   pagination={resolvedUserListIdentities.pagination}
-                    //   claim={claim}
-                    //   tag={claim.object}
-                    //   wallet={wallet}
-                    //   enableSearch={true}
-                    //   enableSort={true}
-                    // />
+                    <TagsList
+                      identities={resolvedUserListIdentities.listIdentities}
+                      claims={resolvedUserListIdentities.claims}
+                      pagination={resolvedUserListIdentities.pagination}
+                      claim={claim}
+                      tag={claim.object}
+                      enableSearch={true}
+                      enableSort={true}
+                    />
                   )
                 }}
               </Await>
@@ -309,21 +306,19 @@ export default function ReadOnlyListOverview() {
                     return isNavigating ? (
                       <PaginatedListSkeleton />
                     ) : resolvedAdditionalUserListIdentities ? (
-                      // <TagsList
-                      //   identities={
-                      //     resolvedAdditionalUserListIdentities.listIdentities
-                      //   }
-                      //   claims={resolvedAdditionalUserListIdentities.claims}
-                      //   pagination={
-                      //     resolvedAdditionalUserListIdentities.pagination
-                      //   }
-                      //   claim={claim}
-                      //   tag={claim.object}
-                      //   wallet={wallet}
-                      //   enableSearch={true}
-                      //   enableSort={true}
-                      // />
-                      <div>placeholder</div>
+                      <TagsList
+                        identities={
+                          resolvedAdditionalUserListIdentities.listIdentities
+                        }
+                        claims={resolvedAdditionalUserListIdentities.claims}
+                        pagination={
+                          resolvedAdditionalUserListIdentities.pagination
+                        }
+                        claim={claim}
+                        tag={claim.object}
+                        enableSearch={true}
+                        enableSort={true}
+                      />
                     ) : null
                   }}
                 </Await>

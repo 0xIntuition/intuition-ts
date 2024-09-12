@@ -106,7 +106,7 @@ export default function ProfileOverview() {
       userIdentity: IdentityPresenter
       userTotals: UserTotalsPresenter
       isPending: boolean
-    }>('routes/app+/profile+/$wallet') ?? {}
+    }>('routes/readonly+/profile+/$wallet') ?? {}
   invariant(userIdentity, NO_USER_IDENTITY_ERROR)
 
   const params = useParams()
