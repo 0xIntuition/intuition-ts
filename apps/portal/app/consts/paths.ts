@@ -35,7 +35,6 @@ export const PATHS = {
   MAINTENANCE: '/maintenance',
   THE_BIG_BANG: '/the-big-bang',
   // ReadOnly
-  READONLY_HOME: '/readonly',
   READONLY_LIST: '/readonly/list',
   READONLY_IDENTITY: '/readonly/identity',
   READONLY_CLAIM: '/readonly/claim',
