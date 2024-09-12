@@ -38,11 +38,7 @@ import {
   useSearchParams,
 } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
-import {
-  MULTIVAULT_CONTRACT_ADDRESS,
-  NO_CLAIM_ERROR,
-  NO_PARAM_ID_ERROR,
-} from 'app/consts'
+import { NO_CLAIM_ERROR, NO_PARAM_ID_ERROR } from 'app/consts'
 import { IdentityListType, VaultDetailsType } from 'app/types'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -111,7 +107,6 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
 export default function ReadOnlyListOverview() {
   const {
-    // wallet,
     globalListIdentities,
     userListIdentities,
     additionalUserListIdentities,

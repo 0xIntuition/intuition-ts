@@ -37,18 +37,16 @@ import {
 } from '@lib/state/store'
 import { getSpecialPredicate } from '@lib/utils/app'
 import logger from '@lib/utils/logger'
-import { calculatePointsFromFees, invariant } from '@lib/utils/misc'
-import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
-import { Outlet, useNavigate } from '@remix-run/react'
+import { calculatePointsFromFees } from '@lib/utils/misc'
+import { json, LoaderFunctionArgs } from '@remix-run/node'
+import { Outlet } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
-import { requireUserWallet } from '@server/auth'
 import { getVaultDetails } from '@server/multivault'
 import { getRelicCount } from '@server/relics'
 import {
   BLOCK_EXPLORER_URL,
   CURRENT_ENV,
   MULTIVAULT_CONTRACT_ADDRESS,
-  NO_WALLET_ERROR,
   PATHS,
   readOnlyUserIdentityRouteOptions,
 } from 'app/consts'

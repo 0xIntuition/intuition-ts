@@ -48,8 +48,7 @@ import {
   NO_USER_TOTALS_ERROR,
   NO_WALLET_ERROR,
 } from 'app/consts'
-
-import { ProfileLoaderData } from '../_index+/_layout'
+import { ReadOnlyProfileLoaderData } from 'app/types'
 
 export async function loader({ params, request }: LoaderFunctionArgs) {
   const wallet = params.wallet
@@ -136,7 +135,7 @@ export default function ProfileDataCreated() {
   } = useLiveLoader<typeof loader>(['attest'])
 
   const { userIdentity, userTotals } =
-    useRouteLoaderData<ProfileLoaderData>(
+    useRouteLoaderData<ReadOnlyProfileLoaderData>(
       'routes/readonly+/profile+/$wallet',
     ) ?? {}
   invariant(userIdentity, NO_USER_IDENTITY_ERROR)

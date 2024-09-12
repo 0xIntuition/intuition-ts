@@ -24,9 +24,8 @@ import {
   NO_USER_IDENTITY_ERROR,
   NO_WALLET_ERROR,
 } from 'app/consts'
+import { ReadOnlyProfileLoaderData } from 'app/types'
 import { useAtom } from 'jotai'
-
-import { ProfileLoaderData } from '../_index+/_layout'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const userWallet = await requireUserWallet(request)
@@ -72,7 +71,7 @@ export default function ProfileDataAbout() {
   >(['attest'])
 
   const { userIdentity } =
-    useRouteLoaderData<ProfileLoaderData>(
+    useRouteLoaderData<ReadOnlyProfileLoaderData>(
       'routes/readonly+/profile+/$wallet',
     ) ?? {}
   invariant(userIdentity, NO_USER_IDENTITY_ERROR)

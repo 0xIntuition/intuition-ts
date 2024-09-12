@@ -1,4 +1,4 @@
-import { Banner, Claim, Icon, Identity, TagVariant } from '@0xintuition/1ui'
+import { Banner, Claim, Icon, Identity } from '@0xintuition/1ui'
 import {
   ClaimPresenter,
   ClaimSortColumn,
@@ -9,11 +9,9 @@ import {
 import { DetailInfoCard } from '@components/detail-info-card'
 import { ErrorPage } from '@components/error-page'
 import NavigationButton from '@components/navigation-link'
-import StakeModal from '@components/stake/stake-modal'
 import { useGoBack } from '@lib/hooks/useGoBack'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { getClaimOrPending } from '@lib/services/claims'
-import { stakeModalAtom } from '@lib/state/store'
 import { getSpecialPredicate } from '@lib/utils/app'
 import {
   getAtomDescription,
@@ -21,21 +19,13 @@ import {
   getAtomIpfsLink,
   getAtomLabel,
   getAtomLink,
-  invariant,
 } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { Outlet } from '@remix-run/react'
-import { requireUserWallet } from '@server/auth'
 import { getVaultDetails } from '@server/multivault'
-import {
-  BLOCK_EXPLORER_URL,
-  CURRENT_ENV,
-  NO_WALLET_ERROR,
-  PATHS,
-} from 'app/consts'
+import { BLOCK_EXPLORER_URL, CURRENT_ENV, PATHS } from 'app/consts'
 import TwoPanelLayout from 'app/layouts/two-panel-layout'
 import { VaultDetailsType } from 'app/types/vault'
-import { useAtom } from 'jotai'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const id = params.id
@@ -63,7 +53,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
       vaultDetails = await getVaultDetails(
         claim.contract,
         claim.vault_id,
-        '',
+        null, // TODO: Fix in [ENG-4038] where we refactor the params of getVaultDetails
         claim.counter_vault_id,
       )
     } catch (error) {
@@ -88,13 +78,10 @@ export interface ReadOnlyClaimDetailsLoaderData {
 }
 
 export default function ReadOnlyClaimDetails() {
-  const { wallet, claim, vaultDetails, isPending } = useLiveLoader<{
-    wallet: string
+  const { claim, isPending } = useLiveLoader<{
     claim: ClaimPresenter
-    vaultDetails: VaultDetailsType
     isPending: boolean
   }>(['create', 'attest'])
-  const [stakeModalActive, setStakeModalActive] = useAtom(stakeModalAtom)
 
   const handleGoBack = useGoBack({ fallbackRoute: PATHS.EXPLORE_CLAIMS })
 
@@ -149,7 +136,7 @@ export default function ReadOnlyClaimDetails() {
         list={
           claim?.predicate?.id ===
           getSpecialPredicate(CURRENT_ENV).tagPredicate.id
-            ? claim
+            ? (claim as ClaimPresenter)
             : undefined
         }
         username={claim.creator?.display_name ?? '?'}
@@ -190,23 +177,6 @@ export default function ReadOnlyClaimDetails() {
   return (
     <>
       <TwoPanelLayout leftPanel={leftPanel} rightPanel={rightPanel} />
-      {!isPending && (
-        <StakeModal
-          userWallet={wallet}
-          contract={claim.contract}
-          open={stakeModalActive.isOpen}
-          direction={stakeModalActive.direction}
-          claim={claim}
-          vaultDetails={vaultDetails}
-          onClose={() => {
-            setStakeModalActive((prevState) => ({
-              ...prevState,
-              isOpen: false,
-              mode: undefined,
-            }))
-          }}
-        />
-      )}
     </>
   )
 }

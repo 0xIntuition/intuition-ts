@@ -12,25 +12,15 @@ import { DataHeaderSkeleton, PaginatedListSkeleton } from '@components/skeleton'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { getClaimsAboutIdentity } from '@lib/services/claims'
 import { getPositionsOnIdentity } from '@lib/services/positions'
-import { detailCreateClaimModalAtom } from '@lib/state/store'
 import { formatBalance, invariant } from '@lib/utils/misc'
 import { defer, LoaderFunctionArgs } from '@remix-run/node'
 import { Await, useRouteLoaderData } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
-import { requireUserWallet } from '@server/auth'
-import {
-  NO_IDENTITY_ERROR,
-  NO_PARAM_ID_ERROR,
-  NO_WALLET_ERROR,
-} from 'app/consts'
-import { useAtom } from 'jotai'
+import { NO_IDENTITY_ERROR, NO_PARAM_ID_ERROR } from 'app/consts'
 
 import { ReadOnlyIdentityLoaderData } from '../$id'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
-  const wallet = await requireUserWallet(request)
-  invariant(wallet, NO_WALLET_ERROR)
-
   const id = params.id
 
   invariant(id, NO_PARAM_ID_ERROR)
@@ -55,7 +45,6 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
         identity: id,
       },
     }),
-    wallet,
   })
 }
 

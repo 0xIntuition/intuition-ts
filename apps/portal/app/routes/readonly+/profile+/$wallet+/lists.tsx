@@ -13,13 +13,9 @@ import { invariant, loadMore } from '@lib/utils/misc'
 import { getStandardPageParams } from '@lib/utils/params'
 import { defer, LoaderFunctionArgs } from '@remix-run/node'
 import { Await, useSearchParams, useSubmit } from '@remix-run/react'
-import { requireUserWallet } from '@server/auth'
-import { NO_PARAM_ID_ERROR, NO_WALLET_ERROR } from 'app/consts'
+import { NO_PARAM_ID_ERROR } from 'app/consts'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
-  const userWallet = await requireUserWallet(request)
-  invariant(userWallet, NO_WALLET_ERROR)
-
   const wallet = params.wallet
   invariant(wallet, NO_PARAM_ID_ERROR)
 

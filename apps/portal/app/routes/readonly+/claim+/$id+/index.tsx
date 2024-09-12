@@ -32,8 +32,7 @@ import {
 } from '@remix-run/react'
 import { ReadOnlyClaimDetailsLoaderData } from '@routes/readonly+/claim+/$id'
 import { fetchWrapper } from '@server/api'
-import { requireUserWallet } from '@server/auth'
-import { NO_CLAIM_ERROR, NO_PARAM_ID_ERROR, NO_WALLET_ERROR } from 'app/consts'
+import { NO_CLAIM_ERROR, NO_PARAM_ID_ERROR } from 'app/consts'
 import { PaginationType } from 'app/types/pagination'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {

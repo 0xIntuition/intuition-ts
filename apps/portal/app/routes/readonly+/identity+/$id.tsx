@@ -1,11 +1,8 @@
-import { useEffect, useState } from 'react'
-
 import {
   Banner,
   Identity,
   ProfileCard,
   Tags,
-  TagsButton,
   TagsContent,
   TagWithValue,
 } from '@0xintuition/1ui'
@@ -13,24 +10,15 @@ import {
   ClaimPresenter,
   ClaimsService,
   IdentityPresenter,
-  TagEmbeddedPresenter,
 } from '@0xintuition/api'
 
 import { DetailInfoCard } from '@components/detail-info-card'
 import { ErrorPage } from '@components/error-page'
 import NavigationButton from '@components/navigation-link'
 import ImageModal from '@components/profile/image-modal'
-import SaveListModal from '@components/save-list/save-list-modal'
-import StakeModal from '@components/stake/stake-modal'
-import TagsModal from '@components/tags/tags-modal'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { getIdentityOrPending } from '@lib/services/identities'
-import {
-  imageModalAtom,
-  saveListModalAtom,
-  stakeModalAtom,
-  tagsModalAtom,
-} from '@lib/state/store'
+import { imageModalAtom } from '@lib/state/store'
 import { getSpecialPredicate } from '@lib/utils/app'
 import logger from '@lib/utils/logger'
 import {
@@ -39,31 +27,17 @@ import {
   getAtomImage,
   getAtomIpfsLink,
   getAtomLabel,
-  invariant,
 } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
-import { Outlet, useNavigate } from '@remix-run/react'
-import { requireUser, requireUserWallet } from '@server/auth'
+import { Outlet } from '@remix-run/react'
 import { getVaultDetails } from '@server/multivault'
-import {
-  BLOCK_EXPLORER_URL,
-  CURRENT_ENV,
-  MULTIVAULT_CONTRACT_ADDRESS,
-  NO_WALLET_ERROR,
-  PATHS,
-} from 'app/consts'
+import { BLOCK_EXPLORER_URL, CURRENT_ENV, PATHS } from 'app/consts'
 import TwoPanelLayout from 'app/layouts/two-panel-layout'
 import { VaultDetailsType } from 'app/types/vault'
 import { useAtom } from 'jotai'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   logger('[$ID] -- START')
-  const user = await requireUser(request)
-  invariant(user, 'User not found')
-  invariant(user.wallet?.address, 'User wallet not found')
-
-  const userWallet = await requireUserWallet(request)
-  invariant(userWallet, NO_WALLET_ERROR)
 
   if (!params.id) {
     return
@@ -94,11 +68,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
   if (!!identity && identity.vault_id) {
     try {
-      vaultDetails = await getVaultDetails(
-        identity.contract,
-        identity.vault_id,
-        userWallet as `0x${string}`,
-      )
+      vaultDetails = await getVaultDetails(identity.contract, identity.vault_id)
     } catch (error) {
       logger('Failed to fetch vaultDetails:', error)
       vaultDetails = null
@@ -111,7 +81,6 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     list,
     isPending,
     vaultDetails,
-    userWallet,
   })
 }
 
@@ -124,21 +93,10 @@ export interface ReadOnlyIdentityLoaderData {
 }
 
 export default function ReadOnlyIdentityDetails() {
-  const { identity, list, vaultDetails, userWallet, isPending } =
+  const { identity, list, isPending } =
     useLiveLoader<ReadOnlyIdentityLoaderData>(['attest', 'create'])
 
-  const [stakeModalActive, setStakeModalActive] = useAtom(stakeModalAtom)
-  const [tagsModalActive, setTagsModalActive] = useAtom(tagsModalAtom)
-  const [saveListModalActive, setSaveListModalActive] =
-    useAtom(saveListModalAtom)
   const [imageModalActive, setImageModalActive] = useAtom(imageModalAtom)
-  const [selectedTag, setSelectedTag] = useState<TagEmbeddedPresenter>()
-
-  useEffect(() => {
-    if (saveListModalActive.tag) {
-      setSelectedTag(saveListModalActive.tag)
-    }
-  }, [saveListModalActive])
 
   const leftPanel = (
     <div className="flex-col justify-start items-start inline-flex gap-6 max-lg:w-full">
@@ -170,24 +128,11 @@ export default function ReadOnlyIdentityDetails() {
                       key={tag.identity_id}
                       label={tag.display_name}
                       value={tag.num_tagged_identities}
-                      onStake={() => {
-                        setSelectedTag(tag)
-                        setSaveListModalActive({
-                          isOpen: true,
-                          id: tag.vault_id,
-                        })
-                      }}
                     />
                   ))}
                 </TagsContent>
               )}
             </div>
-
-            <TagsButton
-              onClick={() => {
-                setTagsModalActive({ isOpen: true, mode: 'view' })
-              }}
-            />
           </Tags>
         </>
       )}
@@ -231,52 +176,6 @@ export default function ReadOnlyIdentityDetails() {
 
   return (
     <TwoPanelLayout leftPanel={leftPanel} rightPanel={rightPanel}>
-      {!isPending && (
-        <>
-          <StakeModal
-            userWallet={userWallet}
-            contract={identity.contract}
-            open={stakeModalActive.isOpen}
-            identity={identity}
-            vaultDetails={vaultDetails}
-            onClose={() => {
-              setStakeModalActive((prevState) => ({
-                ...prevState,
-                isOpen: false,
-                mode: undefined,
-              }))
-            }}
-          />
-          <TagsModal
-            identity={identity}
-            userWallet={userWallet}
-            open={tagsModalActive.isOpen}
-            mode={tagsModalActive.mode}
-            onClose={() => {
-              setTagsModalActive({
-                ...tagsModalActive,
-                isOpen: false,
-              })
-              setSelectedTag(undefined)
-            }}
-          />
-          {selectedTag && (
-            <SaveListModal
-              contract={identity.contract ?? MULTIVAULT_CONTRACT_ADDRESS}
-              tag={saveListModalActive.tag ?? selectedTag}
-              identity={identity}
-              userWallet={userWallet}
-              open={saveListModalActive.isOpen}
-              onClose={() =>
-                setSaveListModalActive({
-                  ...saveListModalActive,
-                  isOpen: false,
-                })
-              }
-            />
-          )}
-        </>
-      )}
       <ImageModal
         identity={identity}
         open={imageModalActive.isOpen}

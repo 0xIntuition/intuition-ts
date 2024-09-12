@@ -32,7 +32,7 @@ const baseVault = BigInt(0)
 export async function getVaultDetails(
   contract: string,
   vid: string,
-  wallet?: Address,
+  wallet?: Address | null,
   counterVault?: string,
 ) {
   const multiVaultContract = createMultiVaultContract(contract)
