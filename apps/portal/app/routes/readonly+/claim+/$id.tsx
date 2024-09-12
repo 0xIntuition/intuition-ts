@@ -1,4 +1,4 @@
-import { Banner, Claim, Icon, Identity } from '@0xintuition/1ui'
+import { Banner, BannerVariant, Claim, Identity } from '@0xintuition/1ui'
 import {
   ClaimPresenter,
   ClaimSortColumn,
@@ -9,7 +9,7 @@ import {
 import { DetailInfoCard } from '@components/detail-info-card'
 import { ErrorPage } from '@components/error-page'
 import NavigationButton from '@components/navigation-link'
-import { useGoBack } from '@lib/hooks/useGoBack'
+import ReadOnlyBanner from '@components/read-only-banner'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { getClaimOrPending } from '@lib/services/claims'
 import { getSpecialPredicate } from '@lib/utils/app'
@@ -83,18 +83,8 @@ export default function ReadOnlyClaimDetails() {
     isPending: boolean
   }>(['create', 'attest'])
 
-  const handleGoBack = useGoBack({ fallbackRoute: PATHS.EXPLORE_CLAIMS })
-
   const leftPanel = (
     <div className="flex-col justify-start items-start gap-6 inline-flex w-full">
-      <NavigationButton
-        variant="secondary"
-        size="icon"
-        to="#"
-        onClick={handleGoBack}
-      >
-        <Icon name="arrow-left" />
-      </NavigationButton>
       <div className="flex-row flex m-auto md:hidden">
         <Claim
           size="xl"
@@ -151,6 +141,10 @@ export default function ReadOnlyClaimDetails() {
         ipfsLink={`${BLOCK_EXPLORER_URL}/address/${claim.creator?.wallet}`}
         timestamp={claim.created_at}
         className="w-full"
+      />
+      <ReadOnlyBanner
+        variant={BannerVariant.warning}
+        to={`${PATHS.CLAIM}/${claim.claim_id}`}
       />
     </div>
   )

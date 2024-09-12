@@ -1,11 +1,16 @@
-import { Button, Icon, InfoCard, ProfileCard } from '@0xintuition/1ui'
+import {
+  BannerVariant,
+  Button,
+  Icon,
+  InfoCard,
+  ProfileCard,
+} from '@0xintuition/1ui'
 import { ClaimPresenter, ClaimsService } from '@0xintuition/api'
 
 import { ErrorPage } from '@components/error-page'
 import { ListIdentityDisplayCard } from '@components/lists/list-identity-display-card'
-import NavigationButton from '@components/navigation-link'
 import ImageModal from '@components/profile/image-modal'
-import { useGoBack } from '@lib/hooks/useGoBack'
+import ReadOnlyBanner from '@components/read-only-banner'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { imageModalAtom } from '@lib/state/store'
 import { invariant } from '@lib/utils/misc'
@@ -45,18 +50,9 @@ export default function ReadOnlyListDetails() {
 
   const [imageModalActive, setImageModalActive] = useAtom(imageModalAtom)
   const navigate = useNavigate()
-  const handleGoBack = useGoBack({ fallbackRoute: PATHS.EXPLORE_LISTS })
 
   const leftPanel = (
     <div className="flex-col justify-start items-start gap-6 inline-flex max-lg:w-full">
-      <NavigationButton
-        variant="secondary"
-        size="icon"
-        to="#"
-        onClick={handleGoBack}
-      >
-        <Icon name="arrow-left" />
-      </NavigationButton>
       <ProfileCard
         variant="non-user"
         avatarSrc={claim.object?.image ?? ''}
@@ -109,6 +105,10 @@ export default function ReadOnlyListDetails() {
       >
         View Identity <Icon name={'arrow-up-right'} className="h-3 w-3" />{' '}
       </Button>
+      <ReadOnlyBanner
+        variant={BannerVariant.warning}
+        to={`${PATHS.LIST}/${claim.claim_id}`}
+      />
     </div>
   )
 

@@ -1,5 +1,6 @@
 import {
   Banner,
+  BannerVariant,
   Identity,
   ProfileCard,
   Tags,
@@ -16,6 +17,7 @@ import { DetailInfoCard } from '@components/detail-info-card'
 import { ErrorPage } from '@components/error-page'
 import NavigationButton from '@components/navigation-link'
 import ImageModal from '@components/profile/image-modal'
+import ReadOnlyBanner from '@components/read-only-banner'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { getIdentityOrPending } from '@lib/services/identities'
 import { imageModalAtom } from '@lib/state/store'
@@ -117,7 +119,7 @@ export default function ReadOnlyIdentityDetails() {
         }}
       />
 
-      {!isPending && (
+      {!isPending && identity?.tags && identity?.tags.length > 0 && (
         <>
           <Tags>
             <div className="flex flex-row gap-2 md:flex-col">
@@ -136,6 +138,7 @@ export default function ReadOnlyIdentityDetails() {
           </Tags>
         </>
       )}
+
       <DetailInfoCard
         variant={Identity.user}
         list={list}
@@ -151,6 +154,10 @@ export default function ReadOnlyIdentityDetails() {
         ipfsLink={`${BLOCK_EXPLORER_URL}/address/${identity.creator?.wallet}`}
         timestamp={identity.created_at}
         className="w-full"
+      />
+      <ReadOnlyBanner
+        variant={BannerVariant.warning}
+        to={`${PATHS.IDENTITY}/${identity.id}`}
       />
     </div>
   )

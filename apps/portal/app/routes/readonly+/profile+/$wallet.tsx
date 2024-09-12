@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 
 import {
   Banner,
+  BannerVariant,
   ProfileCard,
   Tags,
   TagsContent,
@@ -21,6 +22,7 @@ import { ErrorPage } from '@components/error-page'
 import FollowModal from '@components/follow/follow-modal'
 import NavigationButton from '@components/navigation-link'
 import ImageModal from '@components/profile/image-modal'
+import ReadOnlyBanner from '@components/read-only-banner'
 import SaveListModal from '@components/save-list/save-list-modal'
 import { SegmentedNav } from '@components/segmented-nav'
 import StakeModal from '@components/stake/stake-modal'
@@ -274,6 +276,10 @@ export default function ReadOnlyProfile() {
           </Tags>
         </>
       )}
+      <ReadOnlyBanner
+        variant={BannerVariant.warning}
+        to={`${PATHS.PROFILE}/${wallet}`}
+      />
     </div>
   )
 
