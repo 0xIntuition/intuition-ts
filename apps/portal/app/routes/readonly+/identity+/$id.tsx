@@ -2,16 +2,8 @@ import { useEffect, useState } from 'react'
 
 import {
   Banner,
-  Icon,
   Identity,
-  PieChartVariant,
-  PositionCard,
-  PositionCardLastUpdated,
-  PositionCardOwnership,
-  PositionCardStaked,
   ProfileCard,
-  StakeCard,
-  Tag,
   Tags,
   TagsButton,
   TagsContent,
@@ -42,8 +34,6 @@ import {
 import { getSpecialPredicate } from '@lib/utils/app'
 import logger from '@lib/utils/logger'
 import {
-  calculatePercentageOfTvl,
-  formatBalance,
   getAtomDescription,
   getAtomId,
   getAtomImage,
@@ -136,9 +126,7 @@ export interface ReadOnlyIdentityLoaderData {
 export default function ReadOnlyIdentityDetails() {
   const { identity, list, vaultDetails, userWallet, isPending } =
     useLiveLoader<ReadOnlyIdentityLoaderData>(['attest', 'create'])
-  const navigate = useNavigate()
 
-  const { user_assets, assets_sum } = vaultDetails ? vaultDetails : identity
   const [stakeModalActive, setStakeModalActive] = useAtom(stakeModalAtom)
   const [tagsModalActive, setTagsModalActive] = useAtom(tagsModalAtom)
   const [saveListModalActive, setSaveListModalActive] =
