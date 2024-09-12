@@ -193,15 +193,6 @@ export default function ReadOnlyIdentityDetails() {
                   ))}
                 </TagsContent>
               )}
-              <Tag
-                className="w-fit border-dashed"
-                onClick={() => {
-                  setTagsModalActive({ isOpen: true, mode: 'add' })
-                }}
-              >
-                <Icon name="plus-small" className="w-5 h-5" />
-                Add tags
-              </Tag>
             </div>
 
             <TagsButton
@@ -210,49 +201,6 @@ export default function ReadOnlyIdentityDetails() {
               }}
             />
           </Tags>
-          {vaultDetails !== null && user_assets !== '0' ? (
-            <PositionCard
-              onButtonClick={() =>
-                setStakeModalActive((prevState) => ({
-                  ...prevState,
-                  mode: 'redeem',
-                  modalType: 'identity',
-                  isOpen: true,
-                }))
-              }
-            >
-              <PositionCardStaked
-                amount={user_assets ? +formatBalance(user_assets, 18) : 0}
-              />
-              <PositionCardOwnership
-                percentOwnership={
-                  user_assets !== null && assets_sum
-                    ? +calculatePercentageOfTvl(user_assets ?? '0', assets_sum)
-                    : 0
-                }
-                variant={PieChartVariant.default}
-              />
-              <PositionCardLastUpdated timestamp={identity.updated_at} />
-            </PositionCard>
-          ) : null}
-          <StakeCard
-            tvl={+formatBalance(assets_sum, 18)}
-            holders={identity?.num_positions}
-            variant={identity.is_user ? Identity.user : Identity.nonUser}
-            identityImgSrc={getAtomImage(identity)}
-            identityDisplayName={getAtomLabel(identity)}
-            onBuyClick={() =>
-              setStakeModalActive((prevState) => ({
-                ...prevState,
-                mode: 'deposit',
-                modalType: 'identity',
-                isOpen: true,
-              }))
-            }
-            onViewAllClick={() =>
-              navigate(`${PATHS.IDENTITY}/${identity.id}#positions`)
-            }
-          />
         </>
       )}
       <DetailInfoCard
@@ -264,7 +212,7 @@ export default function ReadOnlyIdentityDetails() {
         description={identity.creator?.description ?? ''}
         link={
           identity.creator?.id
-            ? `${PATHS.PROFILE}/${identity.creator?.wallet}`
+            ? `${PATHS.READONLY_PROFILE}/${identity.creator?.wallet}`
             : ''
         }
         ipfsLink={`${BLOCK_EXPLORER_URL}/address/${identity.creator?.wallet}`}

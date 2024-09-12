@@ -1,9 +1,8 @@
 import { Suspense } from 'react'
 
-import { Button, ErrorStateCard, Icon, IconName, Text } from '@0xintuition/1ui'
+import { ErrorStateCard, Text } from '@0xintuition/1ui'
 import { ClaimsService } from '@0xintuition/api'
 
-import CreateClaimModal from '@components/create-claim/create-claim-modal'
 import { ErrorPage } from '@components/error-page'
 import { ClaimsList as ClaimsAboutIdentity } from '@components/list/claims'
 import { PositionsOnIdentity } from '@components/list/positions-on-identity'
@@ -26,7 +25,7 @@ import {
 } from 'app/consts'
 import { useAtom } from 'jotai'
 
-import { IdentityLoaderData } from '../$id'
+import { ReadOnlyIdentityLoaderData } from '../$id'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const wallet = await requireUserWallet(request)
@@ -61,18 +60,15 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 }
 
 export default function ReadOnlyProfileDataAbout() {
-  const { positions, claims, claimsSummary, wallet } = useLiveLoader<
-    typeof loader
-  >(['attest'])
+  const { positions, claims, claimsSummary } = useLiveLoader<typeof loader>([
+    'attest',
+  ])
 
   const { identity } =
-    useRouteLoaderData<IdentityLoaderData>('routes/readonly+/identity+/$id') ??
-    {}
+    useRouteLoaderData<ReadOnlyIdentityLoaderData>(
+      'routes/readonly+/identity+/$id',
+    ) ?? {}
   invariant(identity, NO_IDENTITY_ERROR)
-
-  const [createClaimModalActive, setCreateClaimModalActive] = useAtom(
-    detailCreateClaimModalAtom,
-  )
 
   return (
     <>
@@ -88,13 +84,6 @@ export default function ReadOnlyProfileDataAbout() {
                 Claims about this Identity
               </Text>
             </div>
-            <Button
-              variant="primary"
-              className="max-lg:w-full max-lg:mt-2"
-              onClick={() => setCreateClaimModalActive(true)}
-            >
-              <Icon name={IconName.claim} className="h-4 w-4" /> Make a Claim
-            </Button>
           </div>
           <Suspense fallback={<DataHeaderSkeleton />}>
             <Await resolve={claims} errorElement={<></>}>
@@ -180,13 +169,6 @@ export default function ReadOnlyProfileDataAbout() {
           </Suspense>
         </div>
       </div>
-      {wallet && (
-        <CreateClaimModal
-          open={createClaimModalActive}
-          wallet={wallet}
-          onClose={() => setCreateClaimModalActive(false)}
-        />
-      )}
     </>
   )
 }
