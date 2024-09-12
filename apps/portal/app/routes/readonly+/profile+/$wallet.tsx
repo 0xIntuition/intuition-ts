@@ -57,17 +57,10 @@ import { VaultDetailsType } from 'app/types/vault'
 import { useAtom } from 'jotai'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
-  const userWallet = await requireUserWallet(request)
-  invariant(userWallet, NO_WALLET_ERROR)
-
   const wallet = params.wallet
 
   if (!wallet) {
     throw new Error('Wallet is undefined in params')
-  }
-
-  if (wallet.toLowerCase() === userWallet.toLowerCase()) {
-    throw redirect(PATHS.PROFILE)
   }
 
   const { identity: userIdentity, isPending } = await getIdentityOrPending(
@@ -133,7 +126,6 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
       vaultDetails = await getVaultDetails(
         userIdentity.contract,
         userIdentity.vault_id,
-        userWallet as `0x${string}`,
       )
     } catch (error) {
       logger('Failed to fetch vaultDetails', error)
@@ -164,7 +156,6 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
       followVaultDetails = await getVaultDetails(
         followClaim.contract,
         followClaim.vault_id,
-        userWallet as `0x${string}`,
       )
     } catch (error) {
       logger('Failed to fetch followVaultDetails', error)
@@ -172,11 +163,9 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     }
   }
 
-  logger('follow claim', followClaim)
-
   return json({
     wallet,
-    userWallet,
+
     userIdentity,
     userTotals,
     followClaim,
@@ -212,8 +201,6 @@ export default function ReadOnlyProfile() {
     relicMintCount: number
     relicHoldCount: string
   }>(['attest', 'create'])
-
-  const { user_assets, assets_sum } = vaultDetails ? vaultDetails : userIdentity
 
   const [stakeModalActive, setStakeModalActive] = useAtom(stakeModalAtom)
   const [tagsModalActive, setTagsModalActive] = useAtom(tagsModalAtom)
@@ -271,13 +258,7 @@ export default function ReadOnlyProfile() {
           })
         }}
       />
-      {/* TODO: Determine whether we need this or not */}
-      {/* <ProfileSocialAccounts
-      privyUser={JSON.parse(JSON.stringify(user))}
-      handleOpenEditSocialLinksModal={() =>
-        setEditSocialLinksModalActive(true)
-      }
-    /> */}
+
       {!isPending && (
         <>
           <Tags>

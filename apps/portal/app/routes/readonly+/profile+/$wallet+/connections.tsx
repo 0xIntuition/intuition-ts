@@ -39,9 +39,6 @@ import {
 } from 'app/consts'
 
 export async function loader({ params, request }: LoaderFunctionArgs) {
-  const userWallet = await requireUserWallet(request)
-  invariant(userWallet, NO_WALLET_ERROR)
-
   const wallet = params.wallet
   if (!wallet) {
     throw new Error('Wallet is undefined.')

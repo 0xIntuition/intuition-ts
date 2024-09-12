@@ -38,9 +38,6 @@ import { VaultDetailsType } from 'app/types/vault'
 import { useAtom } from 'jotai'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
-  const wallet = await requireUserWallet(request)
-  invariant(wallet, NO_WALLET_ERROR)
-
   const id = params.id
   if (!id) {
     throw new Error('vault_id is undefined.')
@@ -66,7 +63,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
       vaultDetails = await getVaultDetails(
         claim.contract,
         claim.vault_id,
-        wallet as `0x${string}`,
+        '',
         claim.counter_vault_id,
       )
     } catch (error) {
@@ -76,7 +73,6 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   }
 
   return json({
-    wallet,
     claim,
     isPending,
     sortBy,

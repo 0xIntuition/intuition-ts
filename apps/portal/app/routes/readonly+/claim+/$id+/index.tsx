@@ -39,8 +39,6 @@ import { PaginationType } from 'app/types/pagination'
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const id = params.id
   invariant(id, NO_PARAM_ID_ERROR)
-  const wallet = await requireUserWallet(request)
-  invariant(wallet, NO_WALLET_ERROR)
 
   const url = new URL(request.url)
   const searchParams = new URLSearchParams(url.search)
@@ -62,7 +60,7 @@ export default function ReadOnlyClaimOverview() {
   const { positionsData } = useLiveLoader<typeof loader>(['attest', 'create'])
   const { claim } =
     useRouteLoaderData<ReadOnlyClaimDetailsLoaderData>(
-      'routes/app+/claim+/$id',
+      'routes/readonly+/claim+/$id',
     ) ?? {}
   invariant(claim, NO_CLAIM_ERROR)
 
