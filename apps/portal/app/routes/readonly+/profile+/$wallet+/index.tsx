@@ -30,18 +30,9 @@ import { formatBalance, invariant } from '@lib/utils/misc'
 import { defer, LoaderFunctionArgs } from '@remix-run/node'
 import { Await, useParams, useRouteLoaderData } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
-import { requireUserWallet } from '@server/auth'
-import {
-  NO_PARAM_ID_ERROR,
-  NO_USER_IDENTITY_ERROR,
-  NO_WALLET_ERROR,
-  PATHS,
-} from 'app/consts'
+import { NO_PARAM_ID_ERROR, NO_USER_IDENTITY_ERROR, PATHS } from 'app/consts'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
-  const userWallet = await requireUserWallet(request)
-  invariant(userWallet, NO_WALLET_ERROR)
-
   const wallet = params.wallet
   invariant(wallet, NO_PARAM_ID_ERROR)
 
