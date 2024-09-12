@@ -207,7 +207,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   })
 }
 
-export default function Profile() {
+export default function ReadOnlyProfile() {
   const {
     wallet,
     userWallet,
@@ -290,34 +290,7 @@ export default function Profile() {
             identity: userIdentity,
           })
         }}
-      >
-        {!isPending && (
-          <Button
-            variant="secondary"
-            className="w-full"
-            onClick={() =>
-              setFollowModalActive((prevState) => ({
-                ...prevState,
-                isOpen: true,
-              }))
-            }
-          >
-            {followVaultDetails &&
-            (followVaultDetails.user_conviction ?? '0') > '0' ? (
-              <>
-                <Icon name={IconName.peopleAddFilled} className="h-4 w-4" />
-                Following ·{' '}
-                {formatBalance(followVaultDetails.user_assets ?? '0', 18)} ETH
-              </>
-            ) : (
-              <>
-                <Icon name={IconName.peopleAdd} className="h-4 w-4" />
-                Follow
-              </>
-            )}
-          </Button>
-        )}
-      </ProfileCard>
+      />
       {/* TODO: Determine whether we need this or not */}
       {/* <ProfileSocialAccounts
       privyUser={JSON.parse(JSON.stringify(user))}
@@ -359,48 +332,6 @@ export default function Profile() {
               }}
             />
           </Tags>
-
-          {vaultDetails !== null && user_assets !== '0' ? (
-            <PositionCard
-              onButtonClick={() =>
-                setStakeModalActive((prevState) => ({
-                  ...prevState,
-                  mode: 'redeem',
-                  modalType: 'identity',
-                  isOpen: true,
-                }))
-              }
-            >
-              <PositionCardStaked
-                amount={user_assets ? +formatBalance(user_assets, 18) : 0}
-              />
-              <PositionCardOwnership
-                percentOwnership={
-                  user_assets !== null && assets_sum
-                    ? +calculatePercentageOfTvl(user_assets ?? '0', assets_sum)
-                    : 0
-                }
-                variant={PieChartVariant.default}
-              />
-              <PositionCardLastUpdated timestamp={userIdentity.updated_at} />
-            </PositionCard>
-          ) : null}
-          <StakeCard
-            tvl={+formatBalance(assets_sum ?? '0')}
-            holders={userIdentity.num_positions}
-            variant={userIdentity.is_user ? Identity.user : Identity.nonUser}
-            identityImgSrc={getAtomImage(userIdentity)}
-            identityDisplayName={getAtomLabel(userIdentity)}
-            onBuyClick={() =>
-              setStakeModalActive((prevState) => ({
-                ...prevState,
-                mode: 'deposit',
-                modalType: 'identity',
-                isOpen: true,
-              }))
-            }
-            onViewAllClick={() => navigate(`/app/profile/${wallet}/data-about`)}
-          />
         </>
       )}
     </div>
