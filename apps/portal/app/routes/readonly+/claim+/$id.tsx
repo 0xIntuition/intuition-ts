@@ -200,95 +200,6 @@ export default function ReadOnlyClaimDetails() {
           }}
         />
       </div>
-      {vaultDetails !== null && user_assets !== '0' && !isPending ? (
-        <PositionCard
-          onButtonClick={() =>
-            setStakeModalActive((prevState) => ({
-              ...prevState,
-              mode: 'redeem',
-              modalType: 'claim',
-              direction,
-              isOpen: true,
-            }))
-          }
-        >
-          <div>
-            <PositionCardStaked
-              amount={user_assets ? +formatBalance(user_assets, 18) : 0}
-            />
-            <Tag variant={directionTagVariant} size={TagSize.sm}>
-              {directionTagText}
-            </Tag>
-          </div>
-          <PositionCardOwnership
-            percentOwnership={
-              user_assets !== null && assets_sum
-                ? +calculatePercentageOfTvl(
-                    user_assets,
-                    (
-                      +vaultDetails.assets_sum +
-                      +(vaultDetails.against_assets_sum ?? '0')
-                    ).toString(),
-                  )
-                : 0
-            }
-            variant={
-              direction === 'for'
-                ? PieChartVariant.for
-                : PieChartVariant.against
-            }
-          />
-          <PositionCardLastUpdated timestamp={claim.updated_at} />
-        </PositionCard>
-      ) : null}
-      {!isPending && (
-        <ClaimStakeCard
-          currency="ETH"
-          totalTVL={
-            +formatBalance(
-              +vaultDetails.assets_sum +
-                +(vaultDetails.against_assets_sum
-                  ? vaultDetails.against_assets_sum
-                  : '0'),
-            )
-          }
-          tvlAgainst={
-            +formatBalance(
-              vaultDetails.against_assets_sum ?? claim.against_assets_sum,
-            )
-          }
-          tvlFor={
-            +formatBalance(vaultDetails.assets_sum ?? claim.for_assets_sum)
-          }
-          amountAgainst={claim.against_num_positions}
-          amountFor={claim.for_num_positions}
-          onAgainstBtnClick={() =>
-            setStakeModalActive((prevState) => ({
-              ...prevState,
-              mode: 'deposit',
-              modalType: 'claim',
-              direction: 'against',
-              isOpen: true,
-            }))
-          }
-          onForBtnClick={() =>
-            setStakeModalActive((prevState) => ({
-              ...prevState,
-              mode: 'deposit',
-              modalType: 'claim',
-              direction: 'for',
-              isOpen: true,
-            }))
-          }
-          disableForBtn={
-            (vaultDetails.user_conviction_against ??
-              claim.user_conviction_against) > '0'
-          }
-          disableAgainstBtn={
-            (vaultDetails.user_conviction ?? claim.user_conviction_for) > '0'
-          }
-        />
-      )}
       <DetailInfoCard
         variant={Identity.user}
         list={
@@ -302,7 +213,9 @@ export default function ReadOnlyClaimDetails() {
         id={claim.creator?.wallet ?? ''}
         description={claim.creator?.description ?? ''}
         link={
-          claim.creator?.id ? `${PATHS.PROFILE}/${claim.creator?.wallet}` : ''
+          claim.creator?.id
+            ? `${PATHS.READONLY_PROFILE}/${claim.creator?.wallet}`
+            : ''
         }
         ipfsLink={`${BLOCK_EXPLORER_URL}/address/${claim.creator?.wallet}`}
         timestamp={claim.created_at}
