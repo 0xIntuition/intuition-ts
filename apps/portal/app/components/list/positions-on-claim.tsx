@@ -57,7 +57,7 @@ export function PositionsOnClaim({
             )}
             updatedAt={position.updated_at}
             link={`${PATHS.PROFILE}/${position.user?.wallet}`}
-            ipfsLink={`${BLOCK_EXPLORER_URL}/${position.user?.wallet}`}
+            ipfsLink={`${BLOCK_EXPLORER_URL}/address/${position.user?.wallet}`}
           />
         </div>
       ))}
