@@ -1,18 +1,4 @@
-import {
-  Banner,
-  Claim,
-  ClaimStakeCard,
-  Icon,
-  Identity,
-  PieChartVariant,
-  PositionCard,
-  PositionCardLastUpdated,
-  PositionCardOwnership,
-  PositionCardStaked,
-  Tag,
-  TagSize,
-  TagVariant,
-} from '@0xintuition/1ui'
+import { Banner, Claim, Icon, Identity, TagVariant } from '@0xintuition/1ui'
 import {
   ClaimPresenter,
   ClaimSortColumn,
@@ -30,8 +16,6 @@ import { getClaimOrPending } from '@lib/services/claims'
 import { stakeModalAtom } from '@lib/state/store'
 import { getSpecialPredicate } from '@lib/utils/app'
 import {
-  calculatePercentageOfTvl,
-  formatBalance,
   getAtomDescription,
   getAtomImage,
   getAtomIpfsLink,
@@ -115,42 +99,6 @@ export default function ReadOnlyClaimDetails() {
     isPending: boolean
   }>(['create', 'attest'])
   const [stakeModalActive, setStakeModalActive] = useAtom(stakeModalAtom)
-
-  const direction: 'for' | 'against' = isPending
-    ? 'for'
-    : (vaultDetails?.user_conviction ?? claim.user_conviction_for) > '0' ||
-        (vaultDetails?.user_conviction_against ??
-          claim.user_conviction_against) === '0'
-      ? 'for'
-      : 'against'
-
-  const user_assets: string = isPending
-    ? '0'
-    : (vaultDetails?.user_conviction ?? claim.user_conviction_for) > '0'
-      ? vaultDetails?.user_assets ?? claim.user_assets_for
-      : vaultDetails?.user_assets_against ?? claim.user_assets_against
-
-  const assets_sum: string = isPending
-    ? '0'
-    : (vaultDetails?.assets_sum ?? claim.for_assets_sum) > '0'
-      ? vaultDetails?.assets_sum ?? claim.for_assets_sum
-      : vaultDetails?.against_assets_sum ?? claim.against_assets_sum
-
-  const userConviction = isPending
-    ? '0'
-    : vaultDetails?.user_conviction ?? claim.user_conviction_for
-
-  const directionTagVariant = isPending
-    ? TagVariant.for
-    : +userConviction > 0
-      ? TagVariant.for
-      : TagVariant.against
-
-  const directionTagText = isPending
-    ? 'FOR'
-    : +userConviction > 0
-      ? 'FOR'
-      : 'AGAINST'
 
   const handleGoBack = useGoBack({ fallbackRoute: PATHS.EXPLORE_CLAIMS })
 
