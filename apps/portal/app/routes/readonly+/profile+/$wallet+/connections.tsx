@@ -129,7 +129,8 @@ function ConnectionsContent({
   > | null>
 }) {
   const { userTotals } =
-    useRouteLoaderData<RouteLoaderData>('routes/app+/profile+/$wallet') ?? {}
+    useRouteLoaderData<RouteLoaderData>('routes/readonly+/profile+/$wallet') ??
+    {}
   invariant(userTotals, NO_USER_TOTALS_ERROR)
 
   return (

@@ -136,7 +136,9 @@ export default function ProfileDataCreated() {
   } = useLiveLoader<typeof loader>(['attest'])
 
   const { userIdentity, userTotals } =
-    useRouteLoaderData<ProfileLoaderData>('routes/app+/profile+/$wallet') ?? {}
+    useRouteLoaderData<ProfileLoaderData>(
+      'routes/readonly+/profile+/$wallet',
+    ) ?? {}
   invariant(userIdentity, NO_USER_IDENTITY_ERROR)
   invariant(userTotals, NO_USER_TOTALS_ERROR)
 

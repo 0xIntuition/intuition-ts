@@ -72,7 +72,9 @@ export default function ProfileDataAbout() {
   >(['attest'])
 
   const { userIdentity } =
-    useRouteLoaderData<ProfileLoaderData>('routes/app+/profile+/$wallet') ?? {}
+    useRouteLoaderData<ProfileLoaderData>(
+      'routes/readonly+/profile+/$wallet',
+    ) ?? {}
   invariant(userIdentity, NO_USER_IDENTITY_ERROR)
 
   const [createClaimModalActive, setCreateClaimModalActive] =
