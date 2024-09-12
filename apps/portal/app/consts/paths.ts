@@ -39,4 +39,5 @@ export const PATHS = {
   READONLY_LIST: '/readonly/list',
   READONLY_IDENTITY: '/readonly/identity',
   READONLY_CLAIM: '/readonly/claim',
+  READONLY_PROFILE: '/readonly/profile',
 }
