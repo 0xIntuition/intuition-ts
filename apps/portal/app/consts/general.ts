@@ -172,6 +172,30 @@ export const activityRouteOptions = [
   },
 ]
 
+export const readOnlyUserIdentityRouteOptions = [
+  { value: 'overview', label: 'Overview', basePath: PATHS.READONLY_PROFILE },
+  {
+    value: 'data-about',
+    label: 'Data About',
+    basePath: PATHS.READONLY_PROFILE,
+  },
+  {
+    value: 'data-created',
+    label: 'Data Created',
+    basePath: PATHS.READONLY_PROFILE,
+  },
+  {
+    value: 'connections',
+    label: 'Connections',
+    basePath: PATHS.READONLY_PROFILE,
+  },
+  {
+    value: 'lists',
+    label: 'Lists',
+    basePath: PATHS.READONLY_PROFILE,
+  },
+]
+
 // SPECIAL ATOMS
 
 export const TAG_PREDICATE_VAULT_ID_TESTNET = 3 // used in testnet tag claim as predicate

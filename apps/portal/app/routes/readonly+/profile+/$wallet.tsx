@@ -2,20 +2,8 @@ import { useEffect, useState } from 'react'
 
 import {
   Banner,
-  Button,
-  Icon,
-  IconName,
-  Identity,
-  PieChartVariant,
-  PositionCard,
-  PositionCardLastUpdated,
-  PositionCardOwnership,
-  PositionCardStaked,
   ProfileCard,
-  StakeCard,
-  Tag,
   Tags,
-  TagsButton,
   TagsContent,
   TagWithValue,
 } from '@0xintuition/1ui'
@@ -49,14 +37,7 @@ import {
 } from '@lib/state/store'
 import { getSpecialPredicate } from '@lib/utils/app'
 import logger from '@lib/utils/logger'
-import {
-  calculatePercentageOfTvl,
-  calculatePointsFromFees,
-  formatBalance,
-  getAtomImage,
-  getAtomLabel,
-  invariant,
-} from '@lib/utils/misc'
+import { calculatePointsFromFees, invariant } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
 import { Outlet, useNavigate } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
@@ -69,7 +50,7 @@ import {
   MULTIVAULT_CONTRACT_ADDRESS,
   NO_WALLET_ERROR,
   PATHS,
-  userIdentityRouteOptions,
+  readOnlyUserIdentityRouteOptions,
 } from 'app/consts'
 import TwoPanelLayout from 'app/layouts/two-panel-layout'
 import { VaultDetailsType } from 'app/types/vault'
@@ -316,21 +297,6 @@ export default function ReadOnlyProfile() {
                 ))}
               </TagsContent>
             )}
-            <Tag
-              className="w-fit border-dashed"
-              onClick={() => {
-                setTagsModalActive({ isOpen: true, mode: 'add' })
-              }}
-            >
-              <Icon name="plus-small" className="w-5 h-5" />
-              Add tags
-            </Tag>
-
-            <TagsButton
-              onClick={() => {
-                setTagsModalActive({ isOpen: true, mode: 'view' })
-              }}
-            />
           </Tags>
         </>
       )}
@@ -355,7 +321,7 @@ export default function ReadOnlyProfile() {
   ) : (
     <>
       <div className="flex flex-row justify-end mb-6 max-lg:justify-center">
-        <SegmentedNav options={userIdentityRouteOptions} />
+        <SegmentedNav options={readOnlyUserIdentityRouteOptions} />
       </div>
       <Outlet />
     </>
