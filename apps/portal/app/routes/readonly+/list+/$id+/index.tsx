@@ -17,13 +17,10 @@ import {
 } from '@0xintuition/api'
 
 import { ErrorPage } from '@components/error-page'
-import { TagsList } from '@components/list/tags'
 import { ListTabIdentityDisplay } from '@components/lists/list-tab-identity-display'
-import SaveListModal from '@components/save-list/save-list-modal'
 import { DataHeaderSkeleton, PaginatedListSkeleton } from '@components/skeleton'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { getListIdentities, getListIdentitiesCount } from '@lib/services/lists'
-import { addIdentitiesListModalAtom, saveListModalAtom } from '@lib/state/store'
 import {
   getAtomDescription,
   getAtomImage,
@@ -46,8 +43,6 @@ import {
   NO_PARAM_ID_ERROR,
 } from 'app/consts'
 import { IdentityListType, VaultDetailsType } from 'app/types'
-import { useAtom, useSetAtom } from 'jotai'
-import { ErrorBoundary } from '@sentry/remix'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const id = params.id
@@ -124,7 +119,7 @@ export default function ReadOnlyListOverview() {
     additionalUserObject,
   } = useLiveLoader<typeof loader>(['create', 'attest'])
 
-  const { claim, vaultDetails } =
+  const { claim } =
     useRouteLoaderData<{
       claim: ClaimPresenter
       vaultDetails: VaultDetailsType
