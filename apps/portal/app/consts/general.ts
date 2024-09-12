@@ -185,11 +185,6 @@ export const readOnlyUserIdentityRouteOptions = [
     basePath: PATHS.READONLY_PROFILE,
   },
   {
-    value: 'connections',
-    label: 'Connections',
-    basePath: PATHS.READONLY_PROFILE,
-  },
-  {
     value: 'lists',
     label: 'Lists',
     basePath: PATHS.READONLY_PROFILE,
