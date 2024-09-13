@@ -1,10 +1,9 @@
-import { useEffect, useState } from 'react'
-
 import {
   Banner,
   BannerVariant,
   ProfileCard,
   Tags,
+  TagsButton,
   TagsContent,
   TagWithValue,
 } from '@0xintuition/1ui'
@@ -12,31 +11,21 @@ import {
   ClaimPresenter,
   ClaimsService,
   IdentityPresenter,
-  TagEmbeddedPresenter,
   UserPresenter,
   UsersService,
   UserTotalsPresenter,
 } from '@0xintuition/api'
 
 import { ErrorPage } from '@components/error-page'
-import FollowModal from '@components/follow/follow-modal'
 import NavigationButton from '@components/navigation-link'
 import ImageModal from '@components/profile/image-modal'
 import ReadOnlyBanner from '@components/read-only-banner'
-import SaveListModal from '@components/save-list/save-list-modal'
 import { SegmentedNav } from '@components/segmented-nav'
-import StakeModal from '@components/stake/stake-modal'
 import TagsModal from '@components/tags/tags-modal'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { getIdentityOrPending } from '@lib/services/identities'
 import { getPurchaseIntentsByAddress } from '@lib/services/phosphor'
-import {
-  followModalAtom,
-  imageModalAtom,
-  saveListModalAtom,
-  stakeModalAtom,
-  tagsModalAtom,
-} from '@lib/state/store'
+import { imageModalAtom, tagsModalAtom } from '@lib/state/store'
 import { getSpecialPredicate } from '@lib/utils/app'
 import logger from '@lib/utils/logger'
 import { calculatePointsFromFees } from '@lib/utils/misc'
@@ -48,7 +37,6 @@ import { getRelicCount } from '@server/relics'
 import {
   BLOCK_EXPLORER_URL,
   CURRENT_ENV,
-  MULTIVAULT_CONTRACT_ADDRESS,
   PATHS,
   readOnlyUserIdentityRouteOptions,
 } from 'app/consts'
@@ -183,9 +171,6 @@ export default function ReadOnlyProfile() {
     userWallet,
     userIdentity,
     userTotals,
-    followClaim,
-    followVaultDetails,
-    vaultDetails,
     isPending,
     relicMintCount,
     relicHoldCount,
@@ -202,19 +187,9 @@ export default function ReadOnlyProfile() {
     relicHoldCount: string
   }>(['attest', 'create'])
 
-  const [stakeModalActive, setStakeModalActive] = useAtom(stakeModalAtom)
   const [tagsModalActive, setTagsModalActive] = useAtom(tagsModalAtom)
-  const [saveListModalActive, setSaveListModalActive] =
-    useAtom(saveListModalAtom)
-  const [followModalActive, setFollowModalActive] = useAtom(followModalAtom)
-  const [imageModalActive, setImageModalActive] = useAtom(imageModalAtom)
-  const [selectedTag, setSelectedTag] = useState<TagEmbeddedPresenter>()
 
-  useEffect(() => {
-    if (saveListModalActive.tag) {
-      setSelectedTag(saveListModalActive.tag)
-    }
-  }, [saveListModalActive])
+  const [imageModalActive, setImageModalActive] = useAtom(imageModalAtom)
 
   // TODO: Remove this relic hold/mint count and points calculation when it is stored in BE.
   const nftMintPoints = relicMintCount ? relicMintCount * 2000000 : 0
@@ -273,6 +248,15 @@ export default function ReadOnlyProfile() {
                 ))}
               </TagsContent>
             )}
+            <TagsButton
+              onClick={() => {
+                setTagsModalActive({
+                  isOpen: true,
+                  mode: 'view',
+                  readOnly: true,
+                })
+              }}
+            />
           </Tags>
         </>
       )}
@@ -311,38 +295,12 @@ export default function ReadOnlyProfile() {
     <TwoPanelLayout leftPanel={leftPanel} rightPanel={rightPanel}>
       {!isPending && (
         <>
-          <StakeModal
-            userWallet={userWallet}
-            contract={userIdentity.contract}
-            open={stakeModalActive.isOpen}
-            identity={userIdentity}
-            vaultDetails={vaultDetails}
-            onClose={() => {
-              setStakeModalActive((prevState) => ({
-                ...prevState,
-                isOpen: false,
-              }))
-            }}
-          />
-          <FollowModal
-            userWallet={userWallet}
-            contract={userIdentity.contract}
-            open={followModalActive.isOpen}
-            identity={userIdentity}
-            claim={followClaim}
-            vaultDetails={followVaultDetails}
-            onClose={() => {
-              setFollowModalActive((prevState) => ({
-                ...prevState,
-                isOpen: false,
-              }))
-            }}
-          />
           <TagsModal
             identity={userIdentity}
             userWallet={userWallet}
             open={tagsModalActive.isOpen}
             mode={tagsModalActive.mode}
+            readOnly={tagsModalActive.readOnly}
             onClose={() =>
               setTagsModalActive({
                 ...tagsModalActive,
@@ -350,22 +308,6 @@ export default function ReadOnlyProfile() {
               })
             }
           />
-          {selectedTag && (
-            <SaveListModal
-              contract={userIdentity.contract ?? MULTIVAULT_CONTRACT_ADDRESS}
-              tag={saveListModalActive.tag ?? selectedTag}
-              identity={userIdentity}
-              userWallet={userWallet}
-              open={saveListModalActive.isOpen}
-              onClose={() =>
-                setSaveListModalActive({
-                  ...saveListModalActive,
-                  isOpen: false,
-                })
-              }
-              min_deposit={vaultDetails?.min_deposit}
-            />
-          )}
         </>
       )}
       <ImageModal
