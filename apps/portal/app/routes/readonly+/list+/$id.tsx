@@ -13,8 +13,9 @@ import ImageModal from '@components/profile/image-modal'
 import ReadOnlyBanner from '@components/read-only-banner'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { imageModalAtom } from '@lib/state/store'
+import logger from '@lib/utils/logger'
 import { invariant } from '@lib/utils/misc'
-import { json, LoaderFunctionArgs } from '@remix-run/node'
+import { json, LoaderFunctionArgs, MetaFunction } from '@remix-run/node'
 import { Outlet, useNavigate } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
 import {
@@ -36,9 +37,55 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     args: { id },
   })
 
+  const { origin } = new URL(request.url)
+  const ogImageUrl = `${origin}/resources/create-og?title=${claim.object?.display_name}`
+
   return json({
     claim,
+    ogImageUrl,
   })
+}
+
+export const meta: MetaFunction<typeof loader> = ({ data }) => {
+  if (!data) {
+    return []
+  }
+
+  const { claim, ogImageUrl } = data
+
+  return [
+    {
+      title: claim ? claim.object?.display_name : 'Error | Intuition Explorer',
+    },
+    {
+      name: 'description',
+      content: `Intuition is an ecosystem of technologies composing a universal and permissionless knowledge graph, capable of handling both objective facts and subjective opinions - delivering superior data for intelligences across the spectrum, from human to artificial.`,
+    },
+    {
+      property: 'og:image',
+      content: ogImageUrl,
+    },
+    { property: 'og:site_name', content: 'Intuition Explorer' },
+    { property: 'og:locale', content: 'en_US' },
+    // { property: 'og:url', content: 'https://beta.portal.intuition.systems' },
+    {
+      name: 'twitter:image',
+      content: ogImageUrl,
+    },
+    {
+      name: 'twitter:card',
+      content: 'summary_large_image',
+    },
+    {
+      name: 'twitter:title',
+      content: 'Intuition Explorer',
+    },
+    {
+      name: 'twitter:description',
+      content: 'Bringing trust to trustless systems.',
+    },
+    { name: 'twitter:site', content: '@0xIntuition' },
+  ]
 }
 
 export default function ReadOnlyListDetails() {
