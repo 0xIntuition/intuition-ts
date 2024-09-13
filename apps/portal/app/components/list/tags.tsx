@@ -11,6 +11,7 @@ import { ClaimPresenter, IdentityPresenter, SortColumn } from '@0xintuition/api'
 import { IdentityRow } from '@components/identity/identity-row'
 import { ListHeader } from '@components/list/list-header'
 import { saveListModalAtom } from '@lib/state/store'
+import logger from '@lib/utils/logger'
 import {
   formatBalance,
   getAtomDescription,
@@ -18,8 +19,8 @@ import {
   getAtomIpfsLink,
   getAtomLabel,
   getAtomLink,
+  getClaimUrl,
 } from '@lib/utils/misc'
-import { PATHS } from 'app/consts'
 import { PaginationType } from 'app/types/pagination'
 import { useSetAtom } from 'jotai'
 
@@ -35,6 +36,7 @@ export function TagsList({
   enableHeader = true,
   enableSearch = true,
   enableSort = true,
+  readOnly = false,
 }: {
   identities: IdentityPresenter[]
   claims: ClaimPresenter[]
@@ -46,6 +48,7 @@ export function TagsList({
   enableHeader?: boolean
   enableSearch?: boolean
   enableSort?: boolean
+  readOnly?: boolean
 }) {
   const options: SortOption<SortColumn>[] = [
     { value: 'Total ETH', sortBy: 'AssetsSum' },
@@ -53,6 +56,8 @@ export function TagsList({
     { value: 'Updated At', sortBy: 'UpdatedAt' },
     { value: 'Created At', sortBy: 'CreatedAt' },
   ]
+
+  logger('readonly', readOnly)
 
   const setSaveListModalActive = useSetAtom(saveListModalAtom)
 
@@ -110,7 +115,7 @@ export function TagsList({
                   name={getAtomLabel(identity)}
                   description={getAtomDescription(identity)}
                   id={identity.user?.wallet ?? identity.identity_id}
-                  claimLink={`${PATHS.CLAIM}/${claimId}`}
+                  claimLink={getClaimUrl(claimId ?? '', readOnly)}
                   tags={
                     identity.tags?.map((tag) => ({
                       label: tag.display_name,
@@ -121,26 +126,30 @@ export function TagsList({
                     +formatBalance(BigInt(matchingClaim?.assets_sum || 0), 18)
                   }
                   totalFollowers={matchingClaim?.num_positions || 0}
-                  link={getAtomLink(identity)}
+                  link={getAtomLink(identity, readOnly)}
                   ipfsLink={getAtomIpfsLink(identity)}
-                  className="w-full hover:bg-transparent pr-0"
+                  className={`w-full hover:bg-transparent ${readOnly ? '' : 'pr-0'}`}
                 />
-                <Button
-                  variant={ButtonVariant.text}
-                  size={ButtonSize.icon}
-                  onClick={() => {
-                    setSaveListModalActive({
-                      isOpen: true,
-                      id: identity.vault_id,
-                      identity,
-                      tag:
-                        tag &&
-                        identity.tags?.find((t) => t.vault_id === tag.vault_id),
-                    })
-                  }}
-                >
-                  <Icon name={IconName.bookmark} className="h-6 w-6" />
-                </Button>
+                {readOnly === false && (
+                  <Button
+                    variant={ButtonVariant.text}
+                    size={ButtonSize.icon}
+                    onClick={() => {
+                      setSaveListModalActive({
+                        isOpen: true,
+                        id: identity.vault_id,
+                        identity,
+                        tag:
+                          tag &&
+                          identity.tags?.find(
+                            (t) => t.vault_id === tag.vault_id,
+                          ),
+                      })
+                    }}
+                  >
+                    <Icon name={IconName.bookmark} className="h-6 w-6" />
+                  </Button>
+                )}
               </div>
             </div>
           )

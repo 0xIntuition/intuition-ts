@@ -72,7 +72,6 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   })
 
   return defer({
-    // wallet,
     globalListIdentities: getListIdentities({
       request,
       objectId: claim.object.id,
@@ -81,7 +80,6 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     userListIdentities: getListIdentities({
       request,
       objectId: claim.object.id,
-      // creator: wallet,
       searchParams,
     }),
     additionalUserListIdentities: paramWallet
@@ -93,7 +91,6 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
         })
       : null,
     totalGlobalIdentitiesCount,
-    // totalUserIdentitiesCount,
     additionalTotalUserIdentitiesCount: paramWallet
       ? getListIdentitiesCount({
           request,
@@ -173,7 +170,10 @@ export default function ReadOnlyListOverview() {
                     ipfsLink: getAtomIpfsLink(
                       claim.predicate as IdentityPresenter,
                     ),
-                    link: getAtomLink(claim.predicate as IdentityPresenter),
+                    link: getAtomLink(
+                      claim.predicate as IdentityPresenter,
+                      true,
+                    ),
                   }}
                   object={{
                     variant: claim.object?.is_user ? 'user' : 'non-user',
@@ -186,7 +186,7 @@ export default function ReadOnlyListOverview() {
                     ipfsLink: getAtomIpfsLink(
                       claim.object as IdentityPresenter,
                     ),
-                    link: getAtomLink(claim.object as IdentityPresenter),
+                    link: getAtomLink(claim.object as IdentityPresenter, true),
                   }}
                 />
               </ListHeaderCard>
@@ -261,6 +261,7 @@ export default function ReadOnlyListOverview() {
                       claim={claim}
                       enableSearch={true}
                       enableSort={true}
+                      readOnly={true}
                     />
                   )
                 }}
@@ -285,6 +286,7 @@ export default function ReadOnlyListOverview() {
                       tag={claim.object}
                       enableSearch={true}
                       enableSort={true}
+                      readOnly={true}
                     />
                   )
                 }}
@@ -313,6 +315,7 @@ export default function ReadOnlyListOverview() {
                         tag={claim.object}
                         enableSearch={true}
                         enableSort={true}
+                        readOnly={true}
                       />
                     ) : null
                   }}
