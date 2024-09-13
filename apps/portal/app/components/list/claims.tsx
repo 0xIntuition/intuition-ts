@@ -7,6 +7,7 @@ import {
 
 import { ClaimRow } from '@components/claim/claim-row'
 import { ListHeader } from '@components/list/list-header'
+import logger from '@lib/utils/logger'
 import {
   formatBalance,
   getAtomDescription,
@@ -54,6 +55,8 @@ export function ClaimsList({
     return `${baseUrl}${claimId}`
   }
 
+  logger('readonly', readOnly)
+
   return (
     <List<ClaimSortColumn>
       pagination={pagination}
@@ -97,7 +100,7 @@ export function ClaimsList({
                   claim.subject as IdentityPresenter,
                 ),
                 ipfsLink: getAtomIpfsLink(claim.subject as IdentityPresenter),
-                link: getAtomLink(claim.subject as IdentityPresenter),
+                link: getAtomLink(claim.subject as IdentityPresenter, readOnly),
               }}
               predicate={{
                 variant: claim.predicate?.is_user
@@ -110,7 +113,10 @@ export function ClaimsList({
                   claim.predicate as IdentityPresenter,
                 ),
                 ipfsLink: getAtomIpfsLink(claim.predicate as IdentityPresenter),
-                link: getAtomLink(claim.predicate as IdentityPresenter),
+                link: getAtomLink(
+                  claim.predicate as IdentityPresenter,
+                  readOnly,
+                ),
               }}
               object={{
                 variant: claim.object?.is_user
@@ -123,7 +129,7 @@ export function ClaimsList({
                   claim.object as IdentityPresenter,
                 ),
                 ipfsLink: getAtomIpfsLink(claim.object as IdentityPresenter),
-                link: getAtomLink(claim.object as IdentityPresenter),
+                link: getAtomLink(claim.object as IdentityPresenter, readOnly),
               }}
             />
           </ClaimRow>

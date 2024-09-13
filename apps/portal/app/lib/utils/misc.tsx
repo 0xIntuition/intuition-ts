@@ -385,14 +385,21 @@ export const getAtomIpfsLink = (atom: IdentityPresenter | null | undefined) => {
   return `${IPFS_GATEWAY_URL}/${atom.identity_id?.replace('ipfs://', '')}`
 }
 
-export const getAtomLink = (atom: IdentityPresenter | null | undefined) => {
+export const getAtomLink = (
+  atom: IdentityPresenter | null | undefined,
+  readOnly: boolean = false,
+) => {
   if (!atom) {
     return ''
   }
   if (atom.is_user === true) {
-    return `${PATHS.PROFILE}/${atom.identity_id}`
+    return readOnly
+      ? `${PATHS.READONLY_PROFILE}/${atom.identity_id}`
+      : `${PATHS.PROFILE}/${atom.identity_id}`
   }
-  return `${PATHS.IDENTITY}/${atom.id}`
+  return readOnly
+    ? `${PATHS.READONLY_IDENTITY}/${atom.id}`
+    : `${PATHS.IDENTITY}/${atom.id}`
 }
 
 export const getAtomId = (atom: IdentityPresenter) => {
