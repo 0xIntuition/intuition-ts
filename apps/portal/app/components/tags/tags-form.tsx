@@ -140,7 +140,7 @@ export function TagsForm({
                   <TabsTrigger
                     variant="alternate"
                     value="view"
-                    label="Exisiting Tags"
+                    label="Existing Tags"
                   />
                   {!readOnly && (
                     <TabsTrigger
