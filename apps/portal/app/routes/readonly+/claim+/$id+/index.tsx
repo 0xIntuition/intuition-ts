@@ -179,6 +179,7 @@ export default function ReadOnlyClaimOverview() {
               <PositionsOnClaim
                 positions={resolvedPositionsData.data}
                 pagination={resolvedPositionsData.pagination as PaginationType}
+                readOnly={true}
               />
             )}
           </Await>

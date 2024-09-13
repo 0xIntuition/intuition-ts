@@ -111,6 +111,7 @@ export default function ReadOnlyProfileDataAbout() {
                   paramPrefix="claims"
                   enableSearch
                   enableSort
+                  readOnly
                 />
               )}
             </Await>

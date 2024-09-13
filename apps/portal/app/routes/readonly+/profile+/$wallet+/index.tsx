@@ -87,7 +87,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   })
 }
 
-export default function ProfileOverview() {
+export default function ReadOnlyProfileOverview() {
   const { claims, claimsSummary, savedListClaims } = useLiveLoader<
     typeof loader
   >(['attest', 'create'])
@@ -213,6 +213,7 @@ export default function ProfileOverview() {
                   enableSearch={false}
                   columns={3}
                   sourceUserAddress={wallet}
+                  readOnly={true}
                 />
               )
             }}
@@ -267,6 +268,7 @@ function TopFollowers({
                 paramPrefix={ConnectionsHeaderVariants.followers}
                 enableSearch={false}
                 enableSort={false}
+                readOnly={true}
               />
             )
           }}

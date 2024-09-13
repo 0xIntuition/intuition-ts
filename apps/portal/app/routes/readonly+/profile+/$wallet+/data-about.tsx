@@ -51,7 +51,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   })
 }
 
-export default function ProfileDataAbout() {
+export default function ReadOnlyProfileDataAbout() {
   const { positions, claims, claimsSummary } = useLiveLoader<typeof loader>([
     'attest',
   ])
@@ -114,6 +114,7 @@ export default function ProfileDataAbout() {
                   paramPrefix="claims"
                   enableSearch
                   enableSort
+                  readOnly={true}
                 />
               )}
             </Await>
@@ -154,6 +155,7 @@ export default function ProfileDataAbout() {
                 <PositionsOnIdentity
                   positions={resolvedPositions.data}
                   pagination={resolvedPositions.pagination}
+                  readOnly={true}
                 />
               )}
             </Await>

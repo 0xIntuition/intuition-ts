@@ -417,3 +417,26 @@ export const calculatePointsFromFees = (totalProtocolFees: string): number => {
   const pointsPerEth = 10000000
   return Number(feesInEth) * pointsPerEth
 }
+
+export const getClaimUrl = (claimId: string, readOnly: boolean = false) => {
+  const baseUrl = readOnly ? `${PATHS.READONLY_CLAIM}/` : `${PATHS.CLAIM}/`
+  return `${baseUrl}${claimId}`
+}
+
+export const getListUrl = (
+  claimId: string,
+  sourceUserAddress: string,
+  readOnly: boolean = false,
+) => {
+  const baseUrl = readOnly ? `${PATHS.READONLY_LIST}/` : `${PATHS.LIST}/`
+  const userParam = sourceUserAddress ? `?user=${sourceUserAddress}` : ''
+  return `${baseUrl}${claimId}${userParam}`
+}
+
+export const getProfileUrl = (
+  userAddress: string | undefined,
+  readOnly: boolean = false,
+) => {
+  const baseUrl = readOnly ? `${PATHS.READONLY_PROFILE}/` : `${PATHS.PROFILE}/`
+  return `${baseUrl}${userAddress}`
+}

@@ -50,7 +50,7 @@ type JsonifyObject<T> = {
   [P in keyof T]: T[P] extends object ? JsonifyObject<T[P]> : T[P]
 }
 
-export default function ProfileLists() {
+export default function ReadOnlyProfileLists() {
   const { savedListClaims, wallet, sortBy, direction } = useLiveLoader<
     typeof loader
   >(['create', 'attest'])

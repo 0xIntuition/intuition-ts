@@ -7,7 +7,6 @@ import {
 
 import { ClaimRow } from '@components/claim/claim-row'
 import { ListHeader } from '@components/list/list-header'
-import logger from '@lib/utils/logger'
 import {
   formatBalance,
   getAtomDescription,
@@ -15,8 +14,8 @@ import {
   getAtomIpfsLink,
   getAtomLabel,
   getAtomLink,
+  getClaimUrl,
 } from '@lib/utils/misc'
-import { PATHS } from 'app/consts'
 import { PaginationType } from 'app/types/pagination'
 
 import { SortOption } from '../sort-select'
@@ -50,13 +49,6 @@ export function ClaimsList({
     { value: 'Created At', sortBy: 'CreatedAt' },
   ]
 
-  const getClaimUrl = (claimId: string) => {
-    const baseUrl = readOnly ? `${PATHS.READONLY_CLAIM}/` : `${PATHS.CLAIM}/`
-    return `${baseUrl}${claimId}`
-  }
-
-  logger('readonly', readOnly)
-
   return (
     <List<ClaimSortColumn>
       pagination={pagination}
@@ -85,7 +77,7 @@ export function ClaimsList({
             claimsForValue={+formatBalance(claim.for_assets_sum, 18)}
             claimsAgainstValue={+formatBalance(claim.against_assets_sum, 18)}
             tvl={+formatBalance(claim.assets_sum, 18)}
-            link={getClaimUrl(claim.claim_id)}
+            link={getClaimUrl(claim.claim_id, readOnly)}
           >
             <Claim
               size="md"

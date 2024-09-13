@@ -19,9 +19,11 @@ import { List } from './list'
 export function ActivePositionsOnIdentities({
   identities,
   pagination,
+  readOnly = false,
 }: {
   identities: IdentityPresenter[]
   pagination: PaginationType
+  readOnly?: boolean
 }) {
   const options: SortOption<SortColumn>[] = [
     { value: 'Position Amount', sortBy: 'UserAssets' },
@@ -64,7 +66,7 @@ export function ActivePositionsOnIdentities({
                 : 0
             }
             updatedAt={identity.updated_at}
-            link={getAtomLink(identity)}
+            link={getAtomLink(identity, readOnly)}
             ipfsLink={getAtomIpfsLink(identity)}
           />
         </div>

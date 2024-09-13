@@ -124,7 +124,7 @@ const TabContent = ({
   )
 }
 
-export default function ProfileDataCreated() {
+export default function ReadOnlyProfileDataCreated() {
   const {
     activeIdentities,
     createdIdentities,
@@ -223,6 +223,7 @@ export default function ProfileDataCreated() {
                     <ActivePositionsOnIdentities
                       identities={resolvedIdentities.data}
                       pagination={resolvedIdentities.pagination}
+                      readOnly={true}
                     />
                   </TabContent>
                 )}
@@ -260,6 +261,7 @@ export default function ProfileDataCreated() {
                       <ActivePositionsOnClaims
                         claims={resolvedClaims.data}
                         pagination={resolvedClaims.pagination}
+                        readOnly={true}
                       />
                     </TabContent>
                   </Await>

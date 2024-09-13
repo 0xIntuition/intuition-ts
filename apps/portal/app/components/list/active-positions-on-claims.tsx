@@ -10,8 +10,8 @@ import {
   getAtomIpfsLink,
   getAtomLabel,
   getAtomLink,
+  getClaimUrl,
 } from '@lib/utils/misc'
-import { PATHS } from 'app/consts'
 import { PaginationType } from 'app/types/pagination'
 
 import { SortOption } from '../sort-select'
@@ -20,9 +20,11 @@ import { List } from './list'
 export function ActivePositionsOnClaims({
   claims,
   pagination,
+  readOnly = false,
 }: {
   claims: ClaimPresenter[]
   pagination: PaginationType
+  readOnly?: boolean
 }) {
   const options: SortOption<SortColumn>[] = [
     { value: 'Position Amount', sortBy: 'UserAssets' },
@@ -65,7 +67,7 @@ export function ActivePositionsOnClaims({
               )
             }
             feesAccrued={0} // TODO: Update once BE adds deltas to the data output
-            link={`${PATHS.CLAIM}/${claim.claim_id}`}
+            link={getClaimUrl(claim.claim_id, readOnly)}
           >
             <Claim
               size="md"
@@ -80,7 +82,7 @@ export function ActivePositionsOnClaims({
                   claim.subject as IdentityPresenter,
                 ),
                 ipfsLink: getAtomIpfsLink(claim.subject as IdentityPresenter),
-                link: getAtomLink(claim.subject as IdentityPresenter),
+                link: getAtomLink(claim.subject as IdentityPresenter, readOnly),
               }}
               predicate={{
                 variant: claim.predicate?.is_user
@@ -93,7 +95,10 @@ export function ActivePositionsOnClaims({
                   claim.predicate as IdentityPresenter,
                 ),
                 ipfsLink: getAtomIpfsLink(claim.predicate as IdentityPresenter),
-                link: getAtomLink(claim.predicate as IdentityPresenter),
+                link: getAtomLink(
+                  claim.predicate as IdentityPresenter,
+                  readOnly,
+                ),
               }}
               object={{
                 variant: claim.object?.is_user
@@ -106,7 +111,7 @@ export function ActivePositionsOnClaims({
                   claim.object as IdentityPresenter,
                 ),
                 ipfsLink: getAtomIpfsLink(claim.object as IdentityPresenter),
-                link: getAtomLink(claim.object as IdentityPresenter),
+                link: getAtomLink(claim.object as IdentityPresenter, readOnly),
               }}
             />
           </ClaimPositionRow>
