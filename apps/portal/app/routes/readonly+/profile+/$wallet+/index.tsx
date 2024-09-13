@@ -187,6 +187,7 @@ export default function ProfileOverview() {
                   paramPrefix="claims"
                   enableSearch={false}
                   enableSort={false}
+                  readOnly={true}
                 />
               )
             }}

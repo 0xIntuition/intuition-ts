@@ -28,6 +28,7 @@ export function ClaimsList({
   enableHeader = true,
   enableSearch = true,
   enableSort = true,
+  readOnly = false,
 }: {
   claims: ClaimPresenter[]
   pagination?: PaginationType
@@ -35,6 +36,7 @@ export function ClaimsList({
   enableHeader?: boolean
   enableSearch?: boolean
   enableSort?: boolean
+  readOnly?: boolean
 }) {
   const options: SortOption<ClaimSortColumn>[] = [
     { value: 'Total ETH', sortBy: 'AssetsSum' },
@@ -46,6 +48,11 @@ export function ClaimsList({
     { value: 'Updated At', sortBy: 'UpdatedAt' },
     { value: 'Created At', sortBy: 'CreatedAt' },
   ]
+
+  const getClaimUrl = (claimId: string) => {
+    const baseUrl = readOnly ? `${PATHS.READONLY_CLAIM}/` : `${PATHS.CLAIM}/`
+    return `${baseUrl}${claimId}`
+  }
 
   return (
     <List<ClaimSortColumn>
@@ -75,7 +82,7 @@ export function ClaimsList({
             claimsForValue={+formatBalance(claim.for_assets_sum, 18)}
             claimsAgainstValue={+formatBalance(claim.against_assets_sum, 18)}
             tvl={+formatBalance(claim.assets_sum, 18)}
-            link={`${PATHS.CLAIM}/${claim.claim_id}`}
+            link={getClaimUrl(claim.claim_id)}
           >
             <Claim
               size="md"
