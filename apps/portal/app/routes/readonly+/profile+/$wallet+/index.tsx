@@ -121,7 +121,7 @@ export default function ProfileOverview() {
               totalStake={
                 +formatBalance(userTotals?.total_position_value ?? '0', 18)
               }
-              link={`${PATHS.PROFILE}/${wallet}/data-created`}
+              link={`${PATHS.READONLY_PROFILE}/${wallet}/data-created`}
             />
           </div>
         </div>
@@ -130,12 +130,12 @@ export default function ProfileOverview() {
           <OverviewCreatedHeader
             variant="identities"
             totalCreated={userTotals?.total_identities ?? 0}
-            link={`${PATHS.PROFILE}/${wallet}/data-created`}
+            link={`${PATHS.READONLY_PROFILE}/${wallet}/data-created`}
           />
           <OverviewCreatedHeader
             variant="claims"
             totalCreated={userTotals?.total_claims ?? 0}
-            link={`${PATHS.PROFILE}/${wallet}/data-created`}
+            link={`${PATHS.READONLY_PROFILE}/${wallet}/data-created`}
           />
         </div>
         <Suspense fallback={<DataHeaderSkeleton />}>
@@ -150,7 +150,7 @@ export default function ProfileOverview() {
                     totalStake={
                       +formatBalance(resolvedClaimsSummary?.assets_sum ?? 0, 18)
                     }
-                    link={`${PATHS.PROFILE}/${wallet}/data-about`}
+                    link={`${PATHS.READONLY_PROFILE}/${wallet}/data-about`}
                   />
                 )}
               </Await>
