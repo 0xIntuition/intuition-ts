@@ -43,7 +43,6 @@ import { IdentityListType, VaultDetailsType } from 'app/types'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const id = params.id
-
   invariant(id, NO_PARAM_ID_ERROR)
 
   const url = new URL(request.url)
@@ -63,13 +62,21 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     method: ClaimsService.getClaimById,
     args: { id },
   })
-
   invariant(claim.object?.id, NO_PARAM_ID_ERROR)
 
   const totalGlobalIdentitiesCount = getListIdentitiesCount({
     request,
     objectId: claim.object.id,
   })
+
+  const totalAdditionalUserIdentitiesCount = paramWallet
+    ? getListIdentitiesCount({
+        request,
+        objectId: claim.object.id,
+        userWithPosition: additionalUserObject?.id,
+        userAssetsForPresent: true,
+      })
+    : 0
 
   return defer({
     globalListIdentities: getListIdentities({
@@ -86,18 +93,13 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
       ? getListIdentities({
           request,
           objectId: claim.object.id,
-          creator: paramWallet,
           searchParams,
+          userWithPosition: additionalUserObject?.id,
+          userAssetsForPresent: true,
         })
       : null,
     totalGlobalIdentitiesCount,
-    additionalTotalUserIdentitiesCount: paramWallet
-      ? getListIdentitiesCount({
-          request,
-          objectId: claim.object.id,
-          creator: paramWallet,
-        })
-      : [],
+    totalAdditionalUserIdentitiesCount,
     additionalUserObject,
   })
 }
