@@ -119,6 +119,7 @@ export default function ProfileLists() {
                 onLoadMore={() => handleLoadMore(resolvedSavedListClaims)}
                 sortOptions={sortOptions}
                 sourceUserAddress={wallet}
+                readOnly={true}
               />
             )
           }}

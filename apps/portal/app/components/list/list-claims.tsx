@@ -10,6 +10,7 @@ import { ClaimPresenter, ClaimSortColumn } from '@0xintuition/api'
 
 import { Search } from '@components/search'
 import { Sort } from '@components/sort'
+import { PATHS } from '@consts/paths'
 import {
   SortColumnType,
   useSearchAndSortParamsHandler,
@@ -30,6 +31,7 @@ export function ListClaimsList<T extends SortColumnType = ClaimSortColumn>({
   columns,
   sortOptions,
   sourceUserAddress,
+  readOnly = false,
 }: {
   listClaims: ClaimPresenter[]
   pagination?: PaginationType
@@ -40,6 +42,7 @@ export function ListClaimsList<T extends SortColumnType = ClaimSortColumn>({
   columns?: number
   sortOptions?: SortOption<T>[]
   sourceUserAddress?: string
+  readOnly?: boolean
 }) {
   const navigate = useNavigate()
   const defaultOptions: SortOption<ClaimSortColumn>[] = [
@@ -86,6 +89,12 @@ export function ListClaimsList<T extends SortColumnType = ClaimSortColumn>({
     }
   }
 
+  const getListUrl = (claimId: string) => {
+    const baseUrl = readOnly ? `${PATHS.READONLY_LIST}/` : `${PATHS.LIST}/`
+    const userParam = sourceUserAddress ? `?user=${sourceUserAddress}` : ''
+    return `${baseUrl}${claimId}${userParam}`
+  }
+
   return (
     <div className="flex flex-col w-full">
       <div className="flex flex-col w-full" ref={listContainerRef}>
@@ -112,12 +121,8 @@ export function ListClaimsList<T extends SortColumnType = ClaimSortColumn>({
                   identitiesCount={claim.object.tag_count ?? 0}
                   isSaved={claim.user_assets_for !== '0'}
                   savedAmount={claim.user_assets_for}
-                  navigateLink={`/app/list/${claim.claim_id}${sourceUserAddress ? `?user=${sourceUserAddress}` : ''}`}
-                  onViewClick={() =>
-                    navigate(
-                      `/app/list/${claim.claim_id}${sourceUserAddress ? `?user=${sourceUserAddress}` : ''}`,
-                    )
-                  }
+                  navigateLink={getListUrl(claim.claim_id)}
+                  onViewClick={() => navigate(getListUrl(claim.claim_id))}
                 />
               ),
           )}
