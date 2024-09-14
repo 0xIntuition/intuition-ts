@@ -38,7 +38,9 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   })
 
   const { origin } = new URL(request.url)
-  const ogImageUrl = `${origin}/resources/create-og?type=list&title=${claim.object?.display_name}&holders=${claim.object?.tag_count}&tvl=${+formatBalance(BigInt(claim.object?.assets_sum ?? 0), 18)}`
+  // const ogImageUrl = `${origin}/resources/create-og?type=list&title=${claim.object?.display_name}&holders=${claim.object?.tag_count}&tvl=${+formatBalance(BigInt(claim.object?.assets_sum ?? 0), 18)}`
+
+  const ogImageUrl = `${origin}/resources/create-og?id=${id}&type=list`
 
   return json({
     claim,
