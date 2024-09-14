@@ -13,14 +13,16 @@ import ReadOnlyBanner from '@components/read-only-banner'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { getClaimOrPending } from '@lib/services/claims'
 import { getSpecialPredicate } from '@lib/utils/app'
+import logger from '@lib/utils/logger'
 import {
+  formatBalance,
   getAtomDescription,
   getAtomImage,
   getAtomIpfsLink,
   getAtomLabel,
   getAtomLink,
 } from '@lib/utils/misc'
-import { json, LoaderFunctionArgs } from '@remix-run/node'
+import { json, LoaderFunctionArgs, MetaFunction } from '@remix-run/node'
 import { Outlet } from '@remix-run/react'
 import { getVaultDetails } from '@server/multivault'
 import { BLOCK_EXPLORER_URL, CURRENT_ENV, PATHS } from 'app/consts'
@@ -62,13 +64,69 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     }
   }
 
+  const stringifiedClaim = `${claim.subject?.display_name} - ${claim.predicate?.display_name} - ${claim.object?.display_name}`
+  const { origin } = new URL(request.url)
+  const ogImageUrl = `${origin}/resources/create-og?type=claim&title=${stringifiedClaim}&holdersFor=${claim.for_num_positions}
+  &holdersAgainst=${claim.against_num_positions}
+  &tvlFor=${+formatBalance(BigInt(claim.for_assets_sum ?? 0), 18)}
+  &tvlAgainst=${+formatBalance(BigInt(claim.against_assets_sum ?? 0), 18)}
+  `
+
   return json({
     claim,
     isPending,
     sortBy,
     direction,
     vaultDetails,
+    stringifiedClaim,
+    ogImageUrl,
   })
+}
+
+export const meta: MetaFunction<typeof loader> = ({ data }) => {
+  if (!data) {
+    return []
+  }
+
+  const { claim, stringifiedClaim, ogImageUrl } = data
+  logger('ogImageUrl data in meta', ogImageUrl)
+
+  return [
+    {
+      title: stringifiedClaim ? stringifiedClaim : 'Error | Intuition Explorer',
+    },
+    {
+      name: 'description',
+      content: `Intuition is an ecosystem of technologies composing a universal and permissionless knowledge graph, capable of handling both objective facts and subjective opinions - delivering superior data for intelligences across the spectrum, from human to artificial.`,
+    },
+    {
+      property: 'og-title',
+      name: stringifiedClaim ? stringifiedClaim : 'Error | Intuition Explorer',
+    },
+    {
+      property: 'og:image',
+      content: ogImageUrl,
+    },
+    { property: 'og:site_name', content: 'Intuition Explorer' },
+    { property: 'og:locale', content: 'en_US' },
+    {
+      name: 'twitter:image',
+      content: ogImageUrl,
+    },
+    {
+      name: 'twitter:card',
+      content: 'summary_large_image',
+    },
+    {
+      name: 'twitter:title',
+      content: `Intuition Explorer | ${stringifiedClaim ? stringifiedClaim : ''}`,
+    },
+    {
+      name: 'twitter:description',
+      content: 'Bringing trust to trustless systems.',
+    },
+    { name: 'twitter:site', content: '@0xIntuition' },
+  ]
 }
 
 export interface ReadOnlyClaimDetailsLoaderData {

@@ -14,7 +14,7 @@ import ReadOnlyBanner from '@components/read-only-banner'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { imageModalAtom } from '@lib/state/store'
 import logger from '@lib/utils/logger'
-import { formatBalance, formatBalance, invariant } from '@lib/utils/misc'
+import { formatBalance, invariant } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs, MetaFunction } from '@remix-run/node'
 import { Outlet, useNavigate } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
@@ -38,7 +38,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   })
 
   const { origin } = new URL(request.url)
-  const ogImageUrl = `${origin}/resources/create-og?title=${claim.object?.display_name}&holders=${claim.object?.tag_count}&tvl=0`
+  const ogImageUrl = `${origin}/resources/create-og?type=list&title=${claim.object?.display_name}&holders=${claim.object?.tag_count}&tvl=${+formatBalance(BigInt(claim.object?.assets_sum ?? 0), 18)}`
 
   return json({
     claim,

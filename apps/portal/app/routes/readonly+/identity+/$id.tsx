@@ -24,13 +24,14 @@ import { imageModalAtom } from '@lib/state/store'
 import { getSpecialPredicate } from '@lib/utils/app'
 import logger from '@lib/utils/logger'
 import {
+  formatBalance,
   getAtomDescription,
   getAtomId,
   getAtomImage,
   getAtomIpfsLink,
   getAtomLabel,
 } from '@lib/utils/misc'
-import { json, LoaderFunctionArgs } from '@remix-run/node'
+import { json, LoaderFunctionArgs, MetaFunction } from '@remix-run/node'
 import { Outlet } from '@remix-run/react'
 import { getVaultDetails } from '@server/multivault'
 import { BLOCK_EXPLORER_URL, CURRENT_ENV, PATHS } from 'app/consts'
@@ -77,13 +78,64 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     }
   }
 
+  const { origin } = new URL(request.url)
+  logger('identity', identity.display_name)
+  const ogImageUrl = `${origin}/resources/create-og?type=identity&title=${identity.display_name}&holders=${identity.num_positions}&tvl=${+formatBalance(BigInt(identity.assets_sum), 18)}`
+
   logger('[$ID] -- END')
   return json({
     identity,
     list,
     isPending,
     vaultDetails,
+    ogImageUrl,
   })
+}
+
+export const meta: MetaFunction<typeof loader> = ({ data }) => {
+  if (!data) {
+    return []
+  }
+
+  const { identity, ogImageUrl } = data
+  logger('ogImageUrl data in meta', ogImageUrl)
+
+  return [
+    {
+      title: identity ? identity.display_name : 'Error | Intuition Explorer',
+    },
+    {
+      name: 'description',
+      content: `Intuition is an ecosystem of technologies composing a universal and permissionless knowledge graph, capable of handling both objective facts and subjective opinions - delivering superior data for intelligences across the spectrum, from human to artificial.`,
+    },
+    {
+      property: 'og-title',
+      name: identity ? identity.display_name : 'Error | Intuition Explorer',
+    },
+    {
+      property: 'og:image',
+      content: ogImageUrl,
+    },
+    { property: 'og:site_name', content: 'Intuition Explorer' },
+    { property: 'og:locale', content: 'en_US' },
+    {
+      name: 'twitter:image',
+      content: ogImageUrl,
+    },
+    {
+      name: 'twitter:card',
+      content: 'summary_large_image',
+    },
+    {
+      name: 'twitter:title',
+      content: `Intuition Explorer | ${identity ? identity.display_name : ''}`,
+    },
+    {
+      name: 'twitter:description',
+      content: 'Bringing trust to trustless systems.',
+    },
+    { name: 'twitter:site', content: '@0xIntuition' },
+  ]
 }
 
 export interface ReadOnlyIdentityLoaderData {

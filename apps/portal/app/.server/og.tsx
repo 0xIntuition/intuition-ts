@@ -1,10 +1,7 @@
-import { Icon, IconName } from '@0xintuition/1ui'
-
-import derpFace1 from '@assets/derp-face-1.png'
+import logger from '@lib/utils/logger'
 import { Resvg } from '@resvg/resvg-js'
 import type { SatoriOptions } from 'satori'
 import satori from 'satori'
-import { fontWeight } from 'tailwindcss/defaultTheme'
 
 const fontGeistMedium = (baseUrl: string) =>
   fetch(new URL(`${baseUrl}/fonts/Geist-Medium.otf`)).then((res) =>
@@ -13,9 +10,14 @@ const fontGeistMedium = (baseUrl: string) =>
 
 export async function createOGImage(
   title: string,
-  holders: string,
-  tvl: string,
+  type: 'list' | 'identity' | 'claim',
   requestUrl: string,
+  holders?: string,
+  tvl?: string,
+  holdersFor?: number,
+  holdersAgainst?: number,
+  tvlFor?: string,
+  tvlAgainst?: string,
 ) {
   const fontData = await fontGeistMedium(requestUrl)
 
@@ -31,6 +33,7 @@ export async function createOGImage(
     ],
   }
 
+  logger('title', title)
   const svg = await satori(
     <div
       style={{
@@ -39,8 +42,10 @@ export async function createOGImage(
         background: 'black',
         color: 'white',
         fontFamily: 'Geist',
+        backgroundImage: `url('https://res.cloudinary.com/dfpwy9nyv/image/upload/v1726282731/Portal%20Assets/media-links/banner-variant-1.png')`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
@@ -107,12 +112,7 @@ export async function createOGImage(
             />
           </svg>
         </div>
-        <div
-          style={{
-            display: 'flex',
-            gap: '8px',
-          }}
-        >
+        <div style={{ display: 'flex', gap: '8px' }}>
           <svg
             width="24"
             height="24"
@@ -120,12 +120,33 @@ export async function createOGImage(
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
           >
-            <path
-              d="M5 21V5C5 4.45 5.19583 3.97917 5.5875 3.5875C5.97917 3.19583 6.45 3 7 3H17C17.55 3 18.0208 3.19583 18.4125 3.5875C18.8042 3.97917 19 4.45 19 5V21L12 18L5 21ZM7 17.95L12 15.8L17 17.95V5H7V17.95Z"
-              fill="white"
-            />
+            {type === 'list' && (
+              <path
+                d="M5 21V5C5 4.45 5.19583 3.97917 5.5875 3.5875C5.97917 3.19583 6.45 3 7 3H17C17.55 3 18.0208 3.19583 18.4125 3.5875C18.8042 3.97917 19 4.45 19 5V21L12 18L5 21ZM7 17.95L12 15.8L17 17.95V5H7V17.95Z"
+                fill="white"
+              />
+            )}
+            {type === 'identity' && (
+              <path
+                fillRule="evenodd"
+                clipRule="evenodd"
+                d="M12.0084 3.5C10.8296 3.5 9.71635 3.7713 8.72569 4.25417L8.06848 2.90581C9.25938 2.32534 10.597 2 12.0084 2C16.9805 2 21.0112 6.03071 21.0112 11.0028C21.0112 13.1838 20.8105 15.3185 20.4262 17.3894L20.2894 18.1268L18.8146 17.8532L18.9514 17.1158C19.319 15.1347 19.5112 13.0916 19.5112 11.0028C19.5112 6.85913 16.1521 3.5 12.0084 3.5ZM6.55983 5.84473C5.28583 7.18997 4.50555 9.00447 4.50555 11.0028C4.50555 12.4932 4.32711 13.943 3.99006 15.3314L3.81314 16.0603L2.35547 15.7064L2.53239 14.9776C2.84153 13.7041 3.00555 12.3731 3.00555 11.0028C3.00555 8.6057 3.94342 6.42601 5.47073 4.81329L6.55983 5.84473ZM12.0084 7.62642C10.1436 7.62642 8.63197 9.13809 8.63197 11.0028C8.63197 12.9227 8.39042 14.7872 7.93567 16.5672L6.48235 16.1959C6.90636 14.5363 7.13197 12.7964 7.13197 11.0028C7.13197 8.30966 9.31522 6.12642 12.0084 6.12642C14.7016 6.12642 16.8848 8.30966 16.8848 11.0028C16.8848 12.0735 16.8299 13.1315 16.7227 14.1743L15.2306 14.021C15.3325 13.029 15.3848 12.0222 15.3848 11.0028C15.3848 9.13809 13.8731 7.62642 12.0084 7.62642ZM12.7588 10.2528V11.0028C12.7588 13.932 12.284 16.7517 11.4066 19.3885C11.1809 20.0669 10.9285 20.7331 10.6507 21.3859L10.3571 22.076L8.97684 21.4887L9.27049 20.7986C9.53245 20.1829 9.77046 19.5546 9.98335 18.9149C10.8106 16.4289 11.2588 13.769 11.2588 11.0028V10.2528H12.7588ZM14.427 18.4449C14.6352 17.6534 14.811 16.8488 14.9529 16.0324L16.4307 16.2893C16.2815 17.1478 16.0966 17.9941 15.8776 18.8265C15.6612 19.6492 15.4114 20.4583 15.1299 21.2524L14.8793 21.9593L13.4655 21.4581L13.7161 20.7512C13.9838 19.9962 14.2212 19.227 14.427 18.4449ZM5.5414 19.0176C5.72453 18.5766 5.893 18.128 6.04619 17.6724L7.46797 18.1504C7.3037 18.639 7.12306 19.12 6.9267 19.5929L6.63907 20.2855L5.25377 19.7103L5.5414 19.0176Z"
+                fill="white"
+              />
+            )}
+            {type === 'claim' && (
+              <path
+                d="M15.25 9.75H8.75M12.25 14.25H8.75M2.75 20.25H16.25C19.0114 20.25 21.25 18.0114 21.25 15.25V8.75C21.25 5.98858 19.0114 3.75 16.25 3.75H7.75C4.98858 3.75 2.75 5.98858 2.75 8.75V20.25Z"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            )}
           </svg>
-          <div style={{ fontSize: '18px' }}>List</div>
+          <div style={{ fontSize: '18px' }}>
+            {type.charAt(0).toUpperCase() + type.slice(1)}
+          </div>
         </div>
       </div>
       <div
@@ -134,7 +155,7 @@ export async function createOGImage(
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          height: '80%',
+          height: '100%%',
           position: 'relative',
           zIndex: 1,
         }}
@@ -184,15 +205,60 @@ export async function createOGImage(
             marginTop: '24px',
           }}
         >
-          <span style={{ fontWeight: 'bold' }}>{tvl} ETH</span>
-          <span style={{ opacity: 0.7 }}>{holders} holders</span>
+          {type === 'claim' ? (
+            <div
+              style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}
+            >
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  gap: '16px',
+                }}
+              >
+                <span style={{ fontWeight: 'bold' }}>For</span>
+                <span style={{ fontWeight: 'bold' }}>{tvlFor || '0'} ETH</span>
+                <span style={{ opacity: 0.7 }}>
+                  {holdersFor !== undefined ? holdersFor : '0'} holders
+                </span>
+              </div>
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  gap: '16px',
+                }}
+              >
+                <span style={{ fontWeight: 'bold' }}>Against</span>
+                <span style={{ fontWeight: 'bold' }}>
+                  {tvlAgainst || '0'} ETH
+                </span>
+                <span style={{ opacity: 0.7 }}>
+                  {holdersAgainst !== undefined ? holdersAgainst : '0'} holders
+                </span>
+              </div>
+            </div>
+          ) : (
+            <div
+              style={{
+                display: 'flex',
+                gap: '20px',
+                fontSize: '24px',
+                marginTop: '24px',
+              }}
+            >
+              <span style={{ fontWeight: 'bold' }}>{tvl || '0'} ETH</span>
+              <span style={{ opacity: 0.7 }}>
+                {holders !== undefined ? holders : '0'} holders
+              </span>
+            </div>
+          )}
         </div>
       </div>
     </div>,
     options,
   )
 
-  // Convert the SVG to PNG with "resvg"
   const resvg = new Resvg(svg)
   const pngData = resvg.render()
   return pngData.asPng()
