@@ -116,12 +116,16 @@ export async function getListIdentities({
   request,
   objectId,
   creator,
+  userWithPosition,
   searchParams,
+  userAssetsForPresent = null,
 }: {
   request: Request
   objectId: string
   creator?: string
+  userWithPosition?: string
   searchParams: URLSearchParams
+  userAssetsForPresent?: boolean | null
 }) {
   const { page, limit, sortBy, direction } = getStandardPageParams({
     searchParams,
@@ -141,6 +145,8 @@ export async function getListIdentities({
       object: objectId,
       displayName,
       creator,
+      userWithPosition,
+      userAssetsForPresent,
     },
   })
 
@@ -157,7 +163,6 @@ export async function getListIdentities({
       currentPage: Number(page),
       limit: Number(limit),
       totalEntries: listIdentities.total,
-
       totalPages,
     },
   }
@@ -167,10 +172,14 @@ export async function getListIdentitiesCount({
   request,
   objectId,
   creator,
+  userWithPosition,
+  userAssetsForPresent = null,
 }: {
   request: Request
   objectId: string
   creator?: string
+  userWithPosition?: string
+  userAssetsForPresent?: boolean | null
 }) {
   const listIdentities = await fetchWrapper(request, {
     method: ClaimsService.searchClaims,
@@ -178,8 +187,10 @@ export async function getListIdentitiesCount({
       predicate: getSpecialPredicate(CURRENT_ENV).tagPredicate.id,
       object: objectId,
       creator,
+      userWithPosition,
       page: 1,
       limit: 1,
+      userAssetsPresent: userAssetsForPresent,
     },
   })
 
