@@ -63,12 +63,15 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
       content: `Intuition is an ecosystem of technologies composing a universal and permissionless knowledge graph, capable of handling both objective facts and subjective opinions - delivering superior data for intelligences across the spectrum, from human to artificial.`,
     },
     {
+      property: 'og-title',
+      name: claim ? claim.object?.display_name : 'Error | Intuition Explorer',
+    },
+    {
       property: 'og:image',
       content: ogImageUrl,
     },
     { property: 'og:site_name', content: 'Intuition Explorer' },
     { property: 'og:locale', content: 'en_US' },
-    // { property: 'og:url', content: 'https://beta.portal.intuition.systems' },
     {
       name: 'twitter:image',
       content: ogImageUrl,
@@ -79,7 +82,7 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
     },
     {
       name: 'twitter:title',
-      content: 'Intuition Explorer',
+      content: `Intuition Explorer | ${claim ? claim.object?.display_name : ''}`,
     },
     {
       name: 'twitter:description',
