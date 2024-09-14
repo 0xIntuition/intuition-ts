@@ -14,10 +14,10 @@ export async function createOGImage(
   requestUrl: string,
   holders?: string,
   tvl?: string,
-  holdersFor?: number,
-  holdersAgainst?: number,
-  tvlFor?: string,
-  tvlAgainst?: string,
+  holdersFor?: number | string,
+  holdersAgainst?: number | string,
+  tvlFor?: number | string,
+  tvlAgainst?: number | string,
 ) {
   const fontData = await fontGeistMedium(requestUrl)
 

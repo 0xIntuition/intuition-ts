@@ -15,7 +15,6 @@ import { getClaimOrPending } from '@lib/services/claims'
 import { getSpecialPredicate } from '@lib/utils/app'
 import logger from '@lib/utils/logger'
 import {
-  formatBalance,
   getAtomDescription,
   getAtomImage,
   getAtomIpfsLink,
@@ -66,10 +65,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
   const stringifiedClaim = `${claim.subject?.display_name} - ${claim.predicate?.display_name} - ${claim.object?.display_name}`
   const { origin } = new URL(request.url)
-  const ogImageUrl = `${origin}/resources/create-og?type=claim&title=${stringifiedClaim}&holdersFor=${claim.for_num_positions}
-  &holdersAgainst=${claim.against_num_positions}
-  &tvlFor=${+formatBalance(BigInt(claim.for_assets_sum ?? 0), 18)}
-  &tvlAgainst=${+formatBalance(BigInt(claim.against_assets_sum ?? 0), 18)}
+  const ogImageUrl = `${origin}/resources/create-og?id=${params.id}&type=claim
   `
 
   return json({
@@ -88,7 +84,7 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
     return []
   }
 
-  const { claim, stringifiedClaim, ogImageUrl } = data
+  const { stringifiedClaim, ogImageUrl } = data
   logger('ogImageUrl data in meta', ogImageUrl)
 
   return [

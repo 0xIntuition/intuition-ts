@@ -24,7 +24,6 @@ import { imageModalAtom } from '@lib/state/store'
 import { getSpecialPredicate } from '@lib/utils/app'
 import logger from '@lib/utils/logger'
 import {
-  formatBalance,
   getAtomDescription,
   getAtomId,
   getAtomImage,
@@ -79,8 +78,8 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   }
 
   const { origin } = new URL(request.url)
-  logger('identity', identity.display_name)
-  const ogImageUrl = `${origin}/resources/create-og?type=identity&title=${identity.display_name}&holders=${identity.num_positions}&tvl=${+formatBalance(BigInt(identity.assets_sum), 18)}`
+
+  const ogImageUrl = `${origin}/resources/create-og?id=${params.id}&type=identity`
 
   logger('[$ID] -- END')
   return json({

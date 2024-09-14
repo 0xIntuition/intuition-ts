@@ -1,6 +1,7 @@
 import { ClaimsService } from '@0xintuition/api'
 
-import logger from '@lib/utils/logger'
+import { getClaimOrPending } from '@lib/services/claims'
+import { getIdentityOrPending } from '@lib/services/identities'
 import { formatBalance } from '@lib/utils/misc'
 import type { LoaderFunctionArgs } from '@remix-run/node'
 import { fetchWrapper } from '@server/api'
@@ -12,17 +13,6 @@ export const OG_IMAGE_HEIGHT = 630
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const { origin, searchParams } = new URL(request.url)
-  logger('searchParams', searchParams)
-  // const id = searchParams.get('id')
-  // const title = searchParams.get('title') ?? 'Intuition'
-  // const type =
-  //   (searchParams.get('type') as 'list' | 'identity' | 'claim') ?? 'list'
-  // const holders = searchParams.get('holders') ?? undefined
-  // const tvl = searchParams.get('tvl') ?? undefined
-  // const holdersFor = Number(searchParams.get('holdersFor')) || undefined
-  // const holdersAgainst = Number(searchParams.get('holdersAgainst')) || undefined
-  // const tvlFor = searchParams.get('tvlFor') ?? undefined
-  // const tvlAgainst = searchParams.get('tvlAgainst') ?? undefined
 
   const id = searchParams.get('id')
   const type = searchParams.get('type') as 'list' | 'identity' | 'claim'
@@ -46,19 +36,36 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     holders = claim.object?.tag_count
     tvl = +formatBalance(BigInt(claim.object?.assets_sum ?? 0), 18)
 
-    // if (type === 'claim') {
-    //   holdersFor = claim.holdersFor
-    //   holdersAgainst = claim.holdersAgainst
-    //   tvlFor = claim.tvlFor?.toString()
-    //   tvlAgainst = claim.tvlAgainst?.toString()
-    // }
+    if (type === 'claim') {
+      const { claim, isPending } = await getClaimOrPending(request, id)
+
+      if (!claim) {
+        throw new Response('Not Found', { status: 404 })
+      }
+
+      const stringifiedClaim = `${claim.subject?.display_name} - ${claim.predicate?.display_name} - ${claim.object?.display_name}`
+      title = stringifiedClaim ?? 'Intuition Explorer'
+      holdersFor = isPending ? 'Pending' : claim.for_num_positions
+      holdersAgainst = isPending ? 'Pending' : claim.against_num_positions
+      tvlFor = isPending
+        ? 'Pending'
+        : +formatBalance(BigInt(claim.for_assets_sum ?? 0), 18)
+      tvlAgainst = isPending
+        ? 'Pending'
+        : +formatBalance(BigInt(claim.against_assets_sum ?? 0), 18)
+    }
   } else if (type === 'identity') {
-    // Fetch identity data if needed
-    // const identity = await fetchWrapper(request, {
-    //   method: IdentityService.getIdentityById,
-    //   args: { id },
-    // })
-    // Set title and other relevant fields
+    const { identity, isPending } = await getIdentityOrPending(request, id)
+
+    if (!identity) {
+      throw new Response('Not Found', { status: 404 })
+    }
+
+    title = identity.display_name ?? 'Intuition Explorer'
+    holders = isPending ? 'Pending' : identity.num_positions
+    tvl = isPending
+      ? 'Pending'
+      : +formatBalance(BigInt(identity.assets_sum), 18)
   }
 
   const png = await createOGImage(
