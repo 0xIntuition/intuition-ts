@@ -32,41 +32,41 @@ import { CURRENT_ENV } from 'app/consts'
 import { ClientOnly } from 'remix-utils/client-only'
 import { useAccount, useSwitchChain } from 'wagmi'
 
-// export const meta: MetaFunction<typeof loader> = ({ data }) => {
-//   return [
-//     { title: data ? 'Intuition Explorer' : 'Error | Intuition Explorer' },
-//     {
-//       name: 'description',
-//       content: `Intuition is an ecosystem of technologies composing a universal and permissionless knowledge graph, capable of handling both objective facts and subjective opinions - delivering superior data for intelligences across the spectrum, from human to artificial.`,
-//     },
-//     {
-//       property: 'og:image',
-//       content:
-//         'https://res.cloudinary.com/dfpwy9nyv/image/upload/f_auto,q_auto/v1/Portal%20Assets/Site%20Metadata/site-og-image',
-//     },
-//     { property: 'og:site_name', content: 'Intuition Explorer' },
-//     { property: 'og:locale', content: 'en_US' },
-//     { property: 'og:url', content: 'https://beta.portal.intuition.systems' },
-//     {
-//       name: 'twitter:image',
-//       content:
-//         'https://res.cloudinary.com/dfpwy9nyv/image/upload/f_auto,q_auto/v1/Portal%20Assets/Site%20Metadata/site-og-image',
-//     },
-//     {
-//       name: 'twitter:card',
-//       content: 'summary_large_image',
-//     },
-//     {
-//       name: 'twitter:title',
-//       content: 'Intuition Explorer',
-//     },
-//     {
-//       name: 'twitter:description',
-//       content: 'Bringing trust to trustless systems.',
-//     },
-//     { name: 'twitter:site', content: '@0xIntuition' },
-//   ]
-// }
+export const meta: MetaFunction<typeof loader> = ({ data }) => {
+  return [
+    { title: data ? 'Intuition Explorer' : 'Error | Intuition Explorer' },
+    {
+      name: 'description',
+      content: `Intuition is an ecosystem of technologies composing a universal and permissionless knowledge graph, capable of handling both objective facts and subjective opinions - delivering superior data for intelligences across the spectrum, from human to artificial.`,
+    },
+    {
+      property: 'og:image',
+      content:
+        'https://res.cloudinary.com/dfpwy9nyv/image/upload/f_auto,q_auto/v1/Portal%20Assets/Site%20Metadata/site-og-image',
+    },
+    { property: 'og:site_name', content: 'Intuition Explorer' },
+    { property: 'og:locale', content: 'en_US' },
+    { property: 'og:url', content: 'https://beta.portal.intuition.systems' },
+    {
+      name: 'twitter:image',
+      content:
+        'https://res.cloudinary.com/dfpwy9nyv/image/upload/f_auto,q_auto/v1/Portal%20Assets/Site%20Metadata/site-og-image',
+    },
+    {
+      name: 'twitter:card',
+      content: 'summary_large_image',
+    },
+    {
+      name: 'twitter:title',
+      content: 'Intuition Explorer',
+    },
+    {
+      name: 'twitter:description',
+      content: 'Bringing trust to trustless systems.',
+    },
+    { name: 'twitter:site', content: '@0xIntuition' },
+  ]
+}
 
 export async function loader({ request }: LoaderFunctionArgs) {
   setupAPI(request)

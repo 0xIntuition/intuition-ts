@@ -8,8 +8,10 @@ export const OG_IMAGE_HEIGHT = 630
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const { origin, searchParams } = new URL(request.url)
   const title = searchParams.get('title') ?? `Intuition`
+  const holders = searchParams.get('holders') ?? 0
+  const tvl = searchParams.get('tvl') ?? 0
 
-  const png = await createOGImage(title, origin)
+  const png = await createOGImage(title, holders, tvl, origin)
 
   return new Response(png, {
     status: 200,
