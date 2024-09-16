@@ -205,6 +205,7 @@ export default function ReadOnlyIdentityDetails() {
         ipfsLink={`${BLOCK_EXPLORER_URL}/address/${identity.creator?.wallet}`}
         timestamp={identity.created_at}
         className="w-full"
+        readOnly={true}
       />
       <ReadOnlyBanner
         variant={BannerVariant.warning}
