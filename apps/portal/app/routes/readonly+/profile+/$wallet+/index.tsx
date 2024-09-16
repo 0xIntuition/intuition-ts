@@ -26,6 +26,7 @@ import { getConnectionsData } from '@lib/services/connections'
 import { getIdentityOrPending } from '@lib/services/identities'
 import { getUserSavedLists } from '@lib/services/lists'
 import { getPositionsOnIdentity } from '@lib/services/positions'
+import { getUserIdentities } from '@lib/services/users'
 import { formatBalance, invariant } from '@lib/utils/misc'
 import { defer, LoaderFunctionArgs } from '@remix-run/node'
 import { Await, useParams, useRouteLoaderData } from '@remix-run/react'
@@ -68,6 +69,11 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
             identity: userIdentity.id,
           },
         }),
+        activeIdentities: await getUserIdentities({
+          request,
+          userWallet: wallet.toLowerCase(),
+          searchParams,
+        }),
         claims: getClaimsAboutIdentity({
           request,
           identityId: userIdentity.id,
@@ -88,9 +94,8 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 }
 
 export default function ReadOnlyProfileOverview() {
-  const { claims, claimsSummary, savedListClaims } = useLiveLoader<
-    typeof loader
-  >(['attest', 'create'])
+  const { claims, activeIdentities, claimsSummary, savedListClaims } =
+    useLiveLoader<typeof loader>(['attest', 'create'])
   const { connectionsData } = useLiveLoader<typeof loader>(['attest'])
   const { userIdentity, userTotals } =
     useRouteLoaderData<{
@@ -117,7 +122,7 @@ export default function ReadOnlyProfileOverview() {
           <div className="flex flex-col items-center gap-6">
             <OverviewStakingHeader
               totalClaims={userTotals?.total_positions_on_claims ?? 0}
-              totalIdentities={userTotals?.total_positions_on_identities ?? 0}
+              totalIdentities={activeIdentities?.pagination.totalEntries ?? 0}
               totalStake={
                 +formatBalance(userTotals?.total_position_value ?? '0', 18)
               }
