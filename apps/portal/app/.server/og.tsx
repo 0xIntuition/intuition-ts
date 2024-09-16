@@ -1,4 +1,3 @@
-import logger from '@lib/utils/logger'
 import { Resvg } from '@resvg/resvg-js'
 import type { SatoriOptions } from 'satori'
 import satori from 'satori'
@@ -33,7 +32,6 @@ export async function createOGImage(
     ],
   }
 
-  logger('title', title)
   const svg = await satori(
     <div
       style={{
@@ -157,7 +155,6 @@ export async function createOGImage(
           justifyContent: 'center',
           height: '100%%',
           position: 'relative',
-          zIndex: 1,
         }}
       >
         <h1
@@ -205,7 +202,7 @@ export async function createOGImage(
             marginTop: '24px',
           }}
         >
-          {type === 'claim' ? (
+          {type === 'claim' && (
             <div
               style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}
             >
@@ -238,7 +235,8 @@ export async function createOGImage(
                 </span>
               </div>
             </div>
-          ) : (
+          )}
+          {type === 'identity' && (
             <div
               style={{
                 display: 'flex',
@@ -250,6 +248,20 @@ export async function createOGImage(
               <span style={{ fontWeight: 'bold' }}>{tvl || '0'} ETH</span>
               <span style={{ opacity: 0.7 }}>
                 {holders !== undefined ? holders : '0'} holders
+              </span>
+            </div>
+          )}
+          {type === 'list' && (
+            <div
+              style={{
+                display: 'flex',
+                gap: '20px',
+                fontSize: '24px',
+                marginTop: '24px',
+              }}
+            >
+              <span style={{ fontWeight: 'bold' }}>
+                {holders !== undefined ? holders : '0'} entries
               </span>
             </div>
           )}
