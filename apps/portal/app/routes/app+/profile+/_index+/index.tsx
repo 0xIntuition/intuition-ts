@@ -16,6 +16,8 @@ import { getClaimsAboutIdentity } from '@lib/services/claims'
 import { getIdentityOrPending } from '@lib/services/identities'
 import { getUserSavedLists } from '@lib/services/lists'
 import { getPositionsOnIdentity } from '@lib/services/positions'
+import { getUserIdentities } from '@lib/services/users'
+import logger from '@lib/utils/logger'
 import { formatBalance, invariant } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { useNavigate, useRouteLoaderData } from '@remix-run/react'
@@ -43,9 +45,10 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const searchParams = new URLSearchParams(url.search)
 
   const listSearchParams = new URLSearchParams()
-  listSearchParams.set('sortBy', ClaimSortColumn.ASSETS_SUM)
+  listSearchParams.set('sortsBy', ClaimSortColumn.ASSETS_SUM)
   listSearchParams.set('direction', SortDirection.DESC)
   listSearchParams.set('limit', '6')
+  logger('wallet', userWallet.toLowerCase())
 
   return json({
     ...(!isPending &&
@@ -59,6 +62,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
         positions: await getPositionsOnIdentity({
           request,
           identityId: userIdentity.id,
+          searchParams,
+        }),
+        activeIdentities: await getUserIdentities({
+          request,
+          userWallet: userWallet.toLowerCase(),
           searchParams,
         }),
         claims: await getClaimsAboutIdentity({
@@ -82,8 +90,14 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export default function UserProfileOverview() {
-  const { questsProgress, claims, positions, claimsSummary, savedListClaims } =
-    useLiveLoader<typeof loader>(['attest', 'create'])
+  const {
+    questsProgress,
+    activeIdentities,
+    claims,
+    positions,
+    claimsSummary,
+    savedListClaims,
+  } = useLiveLoader<typeof loader>(['attest', 'create'])
   const { userIdentity, userTotals, isPending } =
     useRouteLoaderData<ProfileLoaderData>(
       'routes/app+/profile+/_index+/_layout',
@@ -141,7 +155,7 @@ export default function UserProfileOverview() {
         <div className="flex flex-col items-center gap-6">
           <OverviewStakingHeader
             totalClaims={userTotals?.total_positions_on_claims ?? 0}
-            totalIdentities={userTotals?.total_positions_on_identities ?? 0}
+            totalIdentities={activeIdentities?.pagination.totalEntries ?? 0}
             totalStake={
               +formatBalance(userTotals?.total_position_value ?? '0', 18)
             }
