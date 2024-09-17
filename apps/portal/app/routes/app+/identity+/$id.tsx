@@ -174,14 +174,7 @@ export default function IdentityDetails() {
           })
         }}
       />
-      <ShareCta
-        onShareClick={() =>
-          setShareModalActive({
-            isOpen: true,
-            currentPath: location.pathname,
-          })
-        }
-      />
+
       {!isPending && (
         <>
           <Tags>
@@ -281,6 +274,14 @@ export default function IdentityDetails() {
         ipfsLink={`${BLOCK_EXPLORER_URL}/address/${identity.creator?.wallet}`}
         timestamp={identity.created_at}
         className="w-full"
+      />
+      <ShareCta
+        onShareClick={() =>
+          setShareModalActive({
+            isOpen: true,
+            currentPath: location.pathname,
+          })
+        }
       />
     </div>
   )

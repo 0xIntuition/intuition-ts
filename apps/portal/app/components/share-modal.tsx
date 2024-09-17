@@ -23,12 +23,17 @@ export interface ShareModalProps {
   onClose: () => void
 }
 
+function getShareableUrl(path: string): string {
+  return `${window.location.origin}${path.replace('/app/', '/readonly/')}`
+}
+
 function createShareQRCode(path: string) {
   return new QRCodeStyling({
     width: 256,
     height: 256,
     type: 'svg',
-    data: `${window.location.origin}${path.replace('/app/', '/readonly/')}`,
+    // data: `${window.location.origin}${path.replace('/app/', '/readonly/')}`,
+    data: getShareableUrl(path),
     dotsOptions: { type: 'classy-rounded', color: '#000000' },
     backgroundOptions: { color: '#ffffff' },
     cornersSquareOptions: { type: 'dot', color: '#007AFF' },
@@ -70,6 +75,18 @@ function ShareQRInner({
 function ShareModalContent({ currentPath }: ShareModalProps) {
   logger('currentPath', currentPath)
 
+  const handleCopyLink = () => {
+    navigator.clipboard
+      .writeText(getShareableUrl(currentPath))
+      .then(() => {
+        // Optionally, you can add some feedback here, like a toast notification
+        logger('Link copied to clipboard')
+      })
+      .catch((err) => {
+        console.error('Failed to copy link:', err)
+      })
+  }
+
   return (
     <DialogContent className="bg-neutral-950 rounded-xl shadow border-theme h-[550px] flex flex-col">
       <DialogHeader>
@@ -82,7 +99,9 @@ function ShareModalContent({ currentPath }: ShareModalProps) {
         <ClientOnly fallback={<div>Loading QR Code...</div>}>
           {() => <ShareQRInner currentPath={currentPath} />}
         </ClientOnly>
-        <Button variant="accent">Copy Link</Button>
+        <Button variant="accent" onClick={handleCopyLink}>
+          Copy Link
+        </Button>
       </div>
     </DialogContent>
   )
