@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 
 import {
   Banner,
+  Button,
   Icon,
   Identity,
   PieChartVariant,
@@ -29,6 +30,7 @@ import { ErrorPage } from '@components/error-page'
 import NavigationButton from '@components/navigation-link'
 import ImageModal from '@components/profile/image-modal'
 import SaveListModal from '@components/save-list/save-list-modal'
+import ShareCta from '@components/share-cta'
 import StakeModal from '@components/stake/stake-modal'
 import TagsModal from '@components/tags/tags-modal'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
@@ -170,7 +172,7 @@ export default function IdentityDetails() {
           })
         }}
       />
-
+      <ShareCta />
       {!isPending && (
         <>
           <Tags>
