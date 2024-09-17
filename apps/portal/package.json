@@ -31,6 +31,7 @@
     "@resvg/resvg-js": "^2.6.2",
     "@sentry/remix": "^8.21.0",
     "@sentry/vite-plugin": "^2.21.1",
+    "@solana/qr-code-styling": "^1.6.0",
     "@tanstack/react-query": "^5.32.0",
     "@vidstack/react": "^1.10.9",
     "class-variance-authority": "^0.7.0",
