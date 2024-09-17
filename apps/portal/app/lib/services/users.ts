@@ -28,8 +28,6 @@ export async function getUserIdentities({
   const identitiesSearch =
     (searchParams.get('activeIdentitiesSearch') as string) || null
 
-  console.log('sortBy', sortBy)
-
   const result = await fetchWrapper(request, {
     method: UsersService.getUserIdentities,
     args: {

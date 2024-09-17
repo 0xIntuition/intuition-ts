@@ -928,6 +928,7 @@ export type QuestCondition =
   | 'create_tag_claim'
   | 'stake_claim'
   | 'stake_identity'
+  | 'unimplemented'
 
 /**
  * This enum represents the conditions that we can handle for quests
@@ -941,6 +942,7 @@ export const QuestCondition = {
   CREATE_TAG_CLAIM: 'create_tag_claim',
   STAKE_CLAIM: 'stake_claim',
   STAKE_IDENTITY: 'stake_identity',
+  UNIMPLEMENTED: 'unimplemented',
 } as const
 
 /**
@@ -1789,6 +1791,13 @@ export type SearchClaimsData = {
   sortBy?: ClaimSortColumn | null
   status?: Status | null
   subject?: Identifier | null
+  userAssets?: number | null
+  userAssetsAgainst?: number | null
+  userAssetsAgainstPresent?: boolean | null
+  userAssetsFor?: number | null
+  userAssetsForPresent?: boolean | null
+  userAssetsPresent?: boolean | null
+  userWithPosition?: string | null
   vault?: Identifier | null
 }
 
@@ -1813,6 +1822,13 @@ export type ClaimSummaryData = {
   sortBy?: ClaimSortColumn | null
   status?: Status | null
   subject?: Identifier | null
+  userAssets?: number | null
+  userAssetsAgainst?: number | null
+  userAssetsAgainstPresent?: boolean | null
+  userAssetsFor?: number | null
+  userAssetsForPresent?: boolean | null
+  userAssetsPresent?: boolean | null
+  userWithPosition?: string | null
   vault?: Identifier | null
 }
 
@@ -3695,6 +3711,13 @@ export type $OpenApiTs = {
         sortBy?: ClaimSortColumn | null
         status?: Status | null
         subject?: Identifier | null
+        userAssets?: number | null
+        userAssetsAgainst?: number | null
+        userAssetsAgainstPresent?: boolean | null
+        userAssetsFor?: number | null
+        userAssetsForPresent?: boolean | null
+        userAssetsPresent?: boolean | null
+        userWithPosition?: string | null
         vault?: Identifier | null
       }
       res: {
@@ -3726,6 +3749,13 @@ export type $OpenApiTs = {
         sortBy?: ClaimSortColumn | null
         status?: Status | null
         subject?: Identifier | null
+        userAssets?: number | null
+        userAssetsAgainst?: number | null
+        userAssetsAgainstPresent?: boolean | null
+        userAssetsFor?: number | null
+        userAssetsForPresent?: boolean | null
+        userAssetsPresent?: boolean | null
+        userWithPosition?: string | null
         vault?: Identifier | null
       }
       res: {

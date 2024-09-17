@@ -385,14 +385,21 @@ export const getAtomIpfsLink = (atom: IdentityPresenter | null | undefined) => {
   return `${IPFS_GATEWAY_URL}/${atom.identity_id?.replace('ipfs://', '')}`
 }
 
-export const getAtomLink = (atom: IdentityPresenter | null | undefined) => {
+export const getAtomLink = (
+  atom: IdentityPresenter | null | undefined,
+  readOnly: boolean = false,
+) => {
   if (!atom) {
     return ''
   }
   if (atom.is_user === true) {
-    return `${PATHS.PROFILE}/${atom.identity_id}`
+    return readOnly
+      ? `${PATHS.READONLY_PROFILE}/${atom.identity_id}`
+      : `${PATHS.PROFILE}/${atom.identity_id}`
   }
-  return `${PATHS.IDENTITY}/${atom.id}`
+  return readOnly
+    ? `${PATHS.READONLY_IDENTITY}/${atom.id}`
+    : `${PATHS.IDENTITY}/${atom.id}`
 }
 
 export const getAtomId = (atom: IdentityPresenter) => {
@@ -409,4 +416,27 @@ export const calculatePointsFromFees = (totalProtocolFees: string): number => {
   const feesInEth = formatUnits(BigInt(totalProtocolFees), 18)
   const pointsPerEth = 10000000
   return Number(feesInEth) * pointsPerEth
+}
+
+export const getClaimUrl = (claimId: string, readOnly: boolean = false) => {
+  const baseUrl = readOnly ? `${PATHS.READONLY_CLAIM}/` : `${PATHS.CLAIM}/`
+  return `${baseUrl}${claimId}`
+}
+
+export const getListUrl = (
+  claimId: string,
+  sourceUserAddress: string,
+  readOnly: boolean = false,
+) => {
+  const baseUrl = readOnly ? `${PATHS.READONLY_LIST}/` : `${PATHS.LIST}/`
+  const userParam = sourceUserAddress ? `?user=${sourceUserAddress}` : ''
+  return `${baseUrl}${claimId}${userParam}`
+}
+
+export const getProfileUrl = (
+  userAddress: string | undefined,
+  readOnly: boolean = false,
+) => {
+  const baseUrl = readOnly ? `${PATHS.READONLY_PROFILE}/` : `${PATHS.PROFILE}/`
+  return `${baseUrl}${userAddress}`
 }

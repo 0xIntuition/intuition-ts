@@ -14,6 +14,7 @@ import {
   SortColumnType,
   useSearchAndSortParamsHandler,
 } from '@lib/hooks/useSearchAndSortParams'
+import { getListUrl } from '@lib/utils/misc'
 import { useNavigate } from '@remix-run/react'
 import { PaginationType } from 'app/types/pagination'
 
@@ -30,6 +31,7 @@ export function ListClaimsList<T extends SortColumnType = ClaimSortColumn>({
   columns,
   sortOptions,
   sourceUserAddress,
+  readOnly = false,
 }: {
   listClaims: ClaimPresenter[]
   pagination?: PaginationType
@@ -40,6 +42,7 @@ export function ListClaimsList<T extends SortColumnType = ClaimSortColumn>({
   columns?: number
   sortOptions?: SortOption<T>[]
   sourceUserAddress?: string
+  readOnly?: boolean
 }) {
   const navigate = useNavigate()
   const defaultOptions: SortOption<ClaimSortColumn>[] = [
@@ -112,10 +115,18 @@ export function ListClaimsList<T extends SortColumnType = ClaimSortColumn>({
                   identitiesCount={claim.object.tag_count ?? 0}
                   isSaved={claim.user_assets_for !== '0'}
                   savedAmount={claim.user_assets_for}
-                  navigateLink={`/app/list/${claim.claim_id}${sourceUserAddress ? `?user=${sourceUserAddress}` : ''}`}
+                  navigateLink={getListUrl(
+                    claim.claim_id,
+                    sourceUserAddress ?? '',
+                    readOnly,
+                  )}
                   onViewClick={() =>
                     navigate(
-                      `/app/list/${claim.claim_id}${sourceUserAddress ? `?user=${sourceUserAddress}` : ''}`,
+                      getListUrl(
+                        claim.claim_id,
+                        sourceUserAddress ?? '',
+                        readOnly,
+                      ),
                     )
                   }
                 />

@@ -1,9 +1,15 @@
-import { UserPresenter } from '@0xintuition/api'
+import {
+  ClaimPresenter,
+  IdentityPresenter,
+  UserPresenter,
+  UserTotalsPresenter,
+} from '@0xintuition/api'
 
 import { User as PrivyUser } from '@privy-io/react-auth'
 import { AuthTokenClaims } from '@privy-io/server-auth'
 
 import { PlatformUserDetails } from './privy'
+import { VaultDetailsType } from './vault'
 
 export type ExtendedPrivyUser = PrivyUser & {
   twitter?: PlatformUserDetails
@@ -29,4 +35,16 @@ export type ExtendedUserPresenter = UserPresenter & {
     ens_name?: string
     total: number
   }
+}
+
+export interface ReadOnlyProfileLoaderData {
+  userWallet: string
+  userIdentity: IdentityPresenter
+  userObject: UserPresenter
+  userTotals: UserTotalsPresenter
+  vaultDetails: VaultDetailsType
+  followClaim: ClaimPresenter
+  isPending: boolean
+  relicMintCount: number
+  relicHoldCount: string
 }
