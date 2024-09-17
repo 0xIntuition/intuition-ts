@@ -23,11 +23,13 @@ import {
 import { DetailInfoCard } from '@components/detail-info-card'
 import { ErrorPage } from '@components/error-page'
 import NavigationButton from '@components/navigation-link'
+import ShareCta from '@components/share-cta'
+import ShareModal from '@components/share-modal'
 import StakeModal from '@components/stake/stake-modal'
 import { useGoBack } from '@lib/hooks/useGoBack'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { getClaimOrPending } from '@lib/services/claims'
-import { stakeModalAtom } from '@lib/state/store'
+import { shareModalAtom, stakeModalAtom } from '@lib/state/store'
 import { getSpecialPredicate } from '@lib/utils/app'
 import {
   calculatePercentageOfTvl,
@@ -115,6 +117,7 @@ export default function ClaimDetails() {
     isPending: boolean
   }>(['create', 'attest'])
   const [stakeModalActive, setStakeModalActive] = useAtom(stakeModalAtom)
+  const [shareModalActive, setShareModalActive] = useAtom(shareModalAtom)
 
   const direction: 'for' | 'against' = isPending
     ? 'for'
@@ -308,6 +311,14 @@ export default function ClaimDetails() {
         timestamp={claim.created_at}
         className="w-full"
       />
+      <ShareCta
+        onShareClick={() =>
+          setShareModalActive({
+            isOpen: true,
+            currentPath: location.pathname,
+          })
+        }
+      />
     </div>
   )
 
@@ -350,6 +361,16 @@ export default function ClaimDetails() {
           }}
         />
       )}
+      <ShareModal
+        currentPath={location.pathname}
+        open={shareModalActive.isOpen}
+        onClose={() =>
+          setShareModalActive({
+            ...shareModalActive,
+            isOpen: false,
+          })
+        }
+      />
     </>
   )
 }
