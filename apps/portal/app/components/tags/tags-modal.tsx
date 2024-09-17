@@ -8,6 +8,7 @@ export interface TagsModalProps {
   userWallet: string
   open?: boolean
   mode: 'view' | 'add'
+  readOnly?: boolean
   onClose: () => void
   onSuccess?: () => void
 }
@@ -15,8 +16,9 @@ export interface TagsModalProps {
 export default function TagsModal({
   identity,
   userWallet,
-  mode,
   open,
+  mode,
+  readOnly = false,
   onClose,
   onSuccess,
 }: TagsModalProps) {
@@ -33,6 +35,7 @@ export default function TagsModal({
             identity={identity}
             userWallet={userWallet}
             mode={mode}
+            readOnly={readOnly}
             onClose={onClose}
             onSuccess={onSuccess}
           />

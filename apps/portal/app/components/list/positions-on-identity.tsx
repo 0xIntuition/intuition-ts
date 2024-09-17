@@ -3,8 +3,8 @@ import { PositionPresenter, PositionSortColumn } from '@0xintuition/api'
 
 import { IdentityPositionRow } from '@components/identity/identity-position-row'
 import { ListHeader } from '@components/list/list-header'
-import { formatBalance } from '@lib/utils/misc'
-import { BLOCK_EXPLORER_URL, PATHS } from 'app/consts'
+import { formatBalance, getProfileUrl } from '@lib/utils/misc'
+import { BLOCK_EXPLORER_URL } from 'app/consts'
 import { PaginationType } from 'app/types/pagination'
 import { formatUnits } from 'viem'
 
@@ -14,9 +14,11 @@ import { List } from './list'
 export function PositionsOnIdentity({
   positions,
   pagination,
+  readOnly = false,
 }: {
   positions: PositionPresenter[]
   pagination: PaginationType
+  readOnly?: boolean
 }) {
   const options: SortOption<PositionSortColumn>[] = [
     { value: 'Total ETH', sortBy: 'Assets' },
@@ -53,7 +55,7 @@ export function PositionsOnIdentity({
               formatUnits(BigInt(+position.assets - +position.value), 18),
             )}
             updatedAt={position.updated_at}
-            link={`${PATHS.PROFILE}/${position.user?.wallet}`}
+            link={getProfileUrl(position.user?.wallet, readOnly)}
             ipfsLink={`${BLOCK_EXPLORER_URL}/address/${position.user?.wallet}`}
           />
         </div>

@@ -10,9 +10,15 @@ import AddIdentitiesListModal from '@components/lists/add-identities-list-modal'
 import { ListIdentityDisplayCard } from '@components/lists/list-identity-display-card'
 import NavigationButton from '@components/navigation-link'
 import ImageModal from '@components/profile/image-modal'
+import ShareCta from '@components/share-cta'
+import ShareModal from '@components/share-modal'
 import { useGoBack } from '@lib/hooks/useGoBack'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
-import { addIdentitiesListModalAtom, imageModalAtom } from '@lib/state/store'
+import {
+  addIdentitiesListModalAtom,
+  imageModalAtom,
+  shareModalAtom,
+} from '@lib/state/store'
 import logger from '@lib/utils/logger'
 import { invariant } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
@@ -78,6 +84,8 @@ export default function ListDetails() {
   const [addIdentitiesListModalActive, setAddIdentitiesListModalActive] =
     useAtom(addIdentitiesListModalAtom)
   const [imageModalActive, setImageModalActive] = useAtom(imageModalAtom)
+  const [shareModalActive, setShareModalActive] = useAtom(shareModalAtom)
+
   const navigate = useNavigate()
   const handleGoBack = useGoBack({ fallbackRoute: PATHS.EXPLORE_LISTS })
 
@@ -141,6 +149,14 @@ export default function ListDetails() {
       >
         View Identity <Icon name={'arrow-up-right'} className="h-3 w-3" />{' '}
       </Button>
+      <ShareCta
+        onShareClick={() =>
+          setShareModalActive({
+            isOpen: true,
+            currentPath: location.pathname,
+          })
+        }
+      />
     </div>
   )
 
@@ -171,6 +187,16 @@ export default function ListDetails() {
           }
         />
       )}
+      <ShareModal
+        currentPath={location.pathname}
+        open={shareModalActive.isOpen}
+        onClose={() =>
+          setShareModalActive({
+            ...shareModalActive,
+            isOpen: false,
+          })
+        }
+      />
     </>
   )
 }

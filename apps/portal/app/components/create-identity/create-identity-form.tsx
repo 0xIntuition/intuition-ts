@@ -276,53 +276,6 @@ function CreateIdentityForm({
 
   const [formTouched, setFormTouched] = useState(false) // to disable submit if user hasn't touched form yet
 
-  const submitWithTimeout = (
-    formData: FormData,
-  ): Promise<IdentityPresenter> => {
-    return new Promise((resolve, reject) => {
-      const maxAttempts = 30 // 30 seconds total
-      let attempts = 0
-
-      const checkSubmissionStatus = () => {
-        if (offChainFetcher.state === 'idle') {
-          if (offChainFetcher.data) {
-            if (offChainFetcher.data.success === 'error') {
-              // If there's an error in the response, reject with that error
-              reject(
-                new Error(
-                  offChainFetcher.data.error || 'Unknown error occurred',
-                ),
-              )
-            } else if (offChainFetcher.data.identity) {
-              // If we have the identity data, resolve with it
-              resolve(offChainFetcher.data.identity)
-            } else {
-              // If we don't have an error or identity data, something went wrong
-              reject(new Error('Invalid response data'))
-            }
-          } else if (attempts >= maxAttempts) {
-            reject(new Error('Submission timed out'))
-          } else {
-            attempts++
-            setTimeout(checkSubmissionStatus, 1000) // Check every second
-          }
-        } else if (attempts >= maxAttempts) {
-          reject(new Error('Submission timed out'))
-        } else {
-          attempts++
-          setTimeout(checkSubmissionStatus, 1000) // Check every second
-        }
-      }
-
-      offChainFetcher.submit(formData, {
-        action: '/actions/create-identity',
-        method: 'post',
-      })
-
-      checkSubmissionStatus()
-    })
-  }
-
   const handleSubmit = async () => {
     try {
       if (walletClient) {
@@ -359,13 +312,9 @@ function CreateIdentityForm({
         try {
           logger('try offline submit')
           dispatch({ type: 'PUBLISHING_IDENTITY' })
-          const createdIdentity = await submitWithTimeout(formData)
-
-          // If we reach here, the offchain submission was successful
-          // Now we can proceed with the onchain transaction
-          setTransactionResponseData(createdIdentity)
-          await handleOnChainCreateIdentity({
-            atomData: createdIdentity.identity_id,
+          offChainFetcher.submit(formData, {
+            action: '/actions/create-identity',
+            method: 'post',
           })
         } catch (error: unknown) {
           handleSubmitError(error)

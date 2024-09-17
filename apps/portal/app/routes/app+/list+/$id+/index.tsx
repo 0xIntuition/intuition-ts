@@ -57,7 +57,6 @@ import { useAtom, useSetAtom } from 'jotai'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const id = params.id
-
   invariant(id, NO_PARAM_ID_ERROR)
 
   const wallet = await requireUserWallet(request)
@@ -87,7 +86,6 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     method: ClaimsService.getClaimById,
     args: { id },
   })
-
   invariant(claim.object?.id, NO_PARAM_ID_ERROR)
 
   const totalGlobalIdentitiesCount = getListIdentitiesCount({
@@ -98,9 +96,18 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const totalUserIdentitiesCount = getListIdentitiesCount({
     request,
     objectId: claim.object.id,
-    creator: wallet,
+    userWithPosition: userObject.id,
+    userAssetsForPresent: true,
   })
 
+  const totalAdditionalUserIdentitiesCount = paramWallet
+    ? getListIdentitiesCount({
+        request,
+        objectId: claim.object.id,
+        userWithPosition: additionalUserObject?.id,
+        userAssetsForPresent: true,
+      })
+    : 0
   return defer({
     wallet,
     userObject,
@@ -112,26 +119,22 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     userListIdentities: getListIdentities({
       request,
       objectId: claim.object.id,
-      creator: wallet,
       searchParams,
+      userWithPosition: userObject.id,
+      userAssetsForPresent: true,
     }),
     additionalUserListIdentities: paramWallet
       ? getListIdentities({
           request,
           objectId: claim.object.id,
-          creator: paramWallet,
           searchParams,
+          userWithPosition: additionalUserObject?.id,
+          userAssetsForPresent: true,
         })
       : null,
     totalGlobalIdentitiesCount,
     totalUserIdentitiesCount,
-    additionalTotalUserIdentitiesCount: paramWallet
-      ? getListIdentitiesCount({
-          request,
-          objectId: claim.object.id,
-          creator: paramWallet,
-        })
-      : [],
+    additionalTotalUserIdentitiesCount: totalAdditionalUserIdentitiesCount,
     additionalUserObject,
   })
 }

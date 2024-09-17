@@ -34,8 +34,8 @@ const ClaimRow = ({
   const [isInteractiveElement, setIsInteractiveElement] = useState(false)
   const linkRef = useRef<HTMLDivElement>(null)
 
-  const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
-    if (!isInteractiveElement && link && event.target === linkRef.current) {
+  const handleClick = () => {
+    if (!isInteractiveElement && link) {
       navigate(link)
     }
   }

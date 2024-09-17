@@ -38,6 +38,7 @@ interface TagsFormProps {
   identity: IdentityPresenter
   userWallet: string
   mode: 'view' | 'add'
+  readOnly?: boolean
   onSuccess?: () => void
   onClose: () => void
 }
@@ -46,6 +47,7 @@ export function TagsForm({
   identity,
   userWallet,
   mode,
+  readOnly = false,
   onSuccess,
   onClose,
 }: TagsFormProps) {
@@ -138,30 +140,34 @@ export function TagsForm({
                   <TabsTrigger
                     variant="alternate"
                     value="view"
-                    label="Exisiting Tags"
+                    label="Existing Tags"
                   />
-                  <TabsTrigger
-                    variant="alternate"
-                    value="add"
-                    label="Add Tags"
-                  />
+                  {!readOnly && (
+                    <TabsTrigger
+                      variant="alternate"
+                      value="add"
+                      label="Add Tags"
+                    />
+                  )}
                 </TabsList>
                 <div className="flex-grow overflow-y-auto overflow-x-visible">
-                  <TabsContent value="add" className="h-full">
-                    <AddTags
-                      selectedTags={selectedTags}
-                      existingTagIds={existingTagIds}
-                      identity={identity}
-                      userWallet={userWallet}
-                      onAddTag={handleAddTag}
-                      dispatch={dispatch}
-                      onRemoveTag={handleRemoveTag}
-                      onRemoveInvalidTag={handleRemoveInvalidTag}
-                      subjectVaultId={identity.vault_id}
-                      invalidTags={invalidTags}
-                      setInvalidTags={setInvalidTags}
-                    />
-                  </TabsContent>
+                  {!readOnly && (
+                    <TabsContent value="add" className="h-full">
+                      <AddTags
+                        selectedTags={selectedTags}
+                        existingTagIds={existingTagIds}
+                        identity={identity}
+                        userWallet={userWallet}
+                        onAddTag={handleAddTag}
+                        dispatch={dispatch}
+                        onRemoveTag={handleRemoveTag}
+                        onRemoveInvalidTag={handleRemoveInvalidTag}
+                        subjectVaultId={identity.vault_id}
+                        invalidTags={invalidTags}
+                        setInvalidTags={setInvalidTags}
+                      />
+                    </TabsContent>
+                  )}
                   <TabsContent value="view" className="h-full">
                     <TagSearchCombobox
                       tags={identity.tags || []}
