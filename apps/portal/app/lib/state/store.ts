@@ -100,3 +100,11 @@ export const createClaimModalAtom = atom<{
   predicate: null,
   object: null,
 })
+
+export const shareModalAtom = atom<{
+  isOpen: boolean
+  currentPath: string | null
+}>({
+  isOpen: false,
+  currentPath: null,
+})

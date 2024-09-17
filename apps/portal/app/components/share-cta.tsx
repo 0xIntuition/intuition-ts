@@ -1,14 +1,18 @@
-import { Button, Icon, IconName, Text } from '@0xintuition/1ui'
+import { Button, Text } from '@0xintuition/1ui'
 
 const DEFAULT_SHARE_CTA =
   'Share this content with your network using a direct link or QR code.'
 export interface ShareCtaProps {
   title?: string
+  onShareClick: () => void
 }
 
 // TODO: Add icon to 1ui
 
-export default function ShareCta({ title = DEFAULT_SHARE_CTA }: ShareCtaProps) {
+export default function ShareCta({
+  title = DEFAULT_SHARE_CTA,
+  onShareClick,
+}: ShareCtaProps) {
   return (
     <div className="flex flex-col w-full justify-between rounded-lg theme-border items-center gap-3 p-5">
       <div className="flex gap-2 items-center">
@@ -38,7 +42,7 @@ export default function ShareCta({ title = DEFAULT_SHARE_CTA }: ShareCtaProps) {
           {title}
         </Text>
       </div>
-      <Button variant="secondary" className="w-full">
+      <Button variant="secondary" className="w-full" onClick={onShareClick}>
         Share
       </Button>
     </div>

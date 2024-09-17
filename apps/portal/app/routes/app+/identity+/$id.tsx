@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 
 import {
   Banner,
-  Button,
   Icon,
   Identity,
   PieChartVariant,
@@ -31,6 +30,7 @@ import NavigationButton from '@components/navigation-link'
 import ImageModal from '@components/profile/image-modal'
 import SaveListModal from '@components/save-list/save-list-modal'
 import ShareCta from '@components/share-cta'
+import ShareModal from '@components/share-modal'
 import StakeModal from '@components/stake/stake-modal'
 import TagsModal from '@components/tags/tags-modal'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
@@ -38,6 +38,7 @@ import { getIdentityOrPending } from '@lib/services/identities'
 import {
   imageModalAtom,
   saveListModalAtom,
+  shareModalAtom,
   stakeModalAtom,
   tagsModalAtom,
 } from '@lib/state/store'
@@ -147,6 +148,7 @@ export default function IdentityDetails() {
     useAtom(saveListModalAtom)
   const [imageModalActive, setImageModalActive] = useAtom(imageModalAtom)
   const [selectedTag, setSelectedTag] = useState<TagEmbeddedPresenter>()
+  const [shareModalActive, setShareModalActive] = useAtom(shareModalAtom)
 
   useEffect(() => {
     if (saveListModalActive.tag) {
@@ -172,7 +174,14 @@ export default function IdentityDetails() {
           })
         }}
       />
-      <ShareCta />
+      <ShareCta
+        onShareClick={() =>
+          setShareModalActive({
+            isOpen: true,
+            currentPath: location.pathname,
+          })
+        }
+      />
       {!isPending && (
         <>
           <Tags>
@@ -349,6 +358,16 @@ export default function IdentityDetails() {
         onClose={() =>
           setImageModalActive({
             ...imageModalActive,
+            isOpen: false,
+          })
+        }
+      />
+      <ShareModal
+        currentPath="test"
+        open={shareModalActive.isOpen}
+        onClose={() =>
+          setShareModalActive({
+            ...shareModalActive,
             isOpen: false,
           })
         }
