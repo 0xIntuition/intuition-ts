@@ -8,6 +8,12 @@ const privyConfig: PrivyClientConfig = {
     requireUserPasswordOnCreate: true,
     noPromptOnSignature: false,
   },
+  externalWallets: {
+    coinbaseWallet: {
+      // Valid connection options include 'eoaOnly' (default), 'smartWalletOnly', or 'all'
+      connectionOptions: 'all',
+    },
+  },
   loginMethods: ['wallet', 'email', 'sms'],
   appearance: {
     theme: 'dark',

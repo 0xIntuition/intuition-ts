@@ -13,6 +13,13 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const cookie = await onboardingModalCookie.parse(cookieHeader)
   const redirectTo = new URL(request.url).searchParams.get('redirectTo')
 
+  const url = new URL(request.url)
+  const isReadonlyRoute = url.pathname.startsWith('/readonly/')
+
+  if (isReadonlyRoute) {
+    return json({})
+  }
+
   if (!cookie) {
     throw redirect('/intro')
   }

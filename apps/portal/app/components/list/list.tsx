@@ -1,6 +1,6 @@
 import { ReactNode, useRef } from 'react'
 
-import { EmptyStateCard } from '@0xintuition/1ui'
+import { Button, ButtonVariant, EmptyStateCard, Icon } from '@0xintuition/1ui'
 import {
   ClaimSortColumn,
   PositionSortColumn,
@@ -11,7 +11,12 @@ import { Search } from '@components/search'
 import { Sort } from '@components/sort'
 import { SortOption } from '@components/sort-select'
 import { useSearchAndSortParamsHandler } from '@lib/hooks/useSearchAndSortParams'
+import {
+  globalCreateClaimModalAtom,
+  globalCreateIdentityModalAtom,
+} from '@lib/state/store'
 import { PaginationType } from 'app/types/pagination'
+import { useSetAtom } from 'jotai'
 
 import { PaginationComponent } from '../pagination-component'
 
@@ -39,6 +44,9 @@ export function List<T extends SortColumnType>({
 
   const listContainerRef = useRef<HTMLDivElement>(null)
 
+  const setCreateIdentityModalActive = useSetAtom(globalCreateIdentityModalAtom)
+  const setCreateClaimModalActive = useSetAtom(globalCreateClaimModalAtom)
+
   return (
     <div className="flex flex-col w-full gap-6" ref={listContainerRef}>
       {(enableSearch || enableSort) && (
@@ -52,7 +60,27 @@ export function List<T extends SortColumnType>({
         </div>
       )}
       {pagination && pagination.totalEntries === 0 ? (
-        <EmptyStateCard message={`No ${paginationLabel} found.`} />
+        <EmptyStateCard message={`No ${paginationLabel} found.`}>
+          {paginationLabel.includes('identities') ? (
+            <Button
+              variant={ButtonVariant.primary}
+              onClick={() => {
+                setCreateIdentityModalActive(true)
+              }}
+            >
+              <Icon name="fingerprint" className="h-4 w-4" /> Create an Identity
+            </Button>
+          ) : paginationLabel.includes('claims') ? (
+            <Button
+              variant={ButtonVariant.primary}
+              onClick={() => {
+                setCreateClaimModalActive(true)
+              }}
+            >
+              <Icon name="claim" className="h-4 w-4" /> Make a Claim
+            </Button>
+          ) : null}
+        </EmptyStateCard>
       ) : (
         <div className="flex flex-col w-full">{children}</div>
       )}

@@ -18,6 +18,7 @@ interface OverviewStakingHeaderProps
   totalIdentities: number
   totalStake: number
   link: string
+  readOnly?: boolean
 }
 
 export function OverviewStakingHeader({

@@ -506,6 +506,13 @@ export class ClaimsService {
    * @param data.displayName
    * @param data.counterVault
    * @param data.status
+   * @param data.userWithPosition
+   * @param data.userAssetsFor
+   * @param data.userAssetsForPresent
+   * @param data.userAssetsAgainst
+   * @param data.userAssetsAgainstPresent
+   * @param data.userAssets
+   * @param data.userAssetsPresent
    * @returns unknown Search claims in paginated list
    * @throws ApiError
    */
@@ -530,6 +537,13 @@ export class ClaimsService {
         displayName: data.displayName,
         counterVault: data.counterVault,
         status: data.status,
+        userWithPosition: data.userWithPosition,
+        userAssetsFor: data.userAssetsFor,
+        userAssetsForPresent: data.userAssetsForPresent,
+        userAssetsAgainst: data.userAssetsAgainst,
+        userAssetsAgainstPresent: data.userAssetsAgainstPresent,
+        userAssets: data.userAssets,
+        userAssetsPresent: data.userAssetsPresent,
       },
     })
   }
@@ -550,6 +564,13 @@ export class ClaimsService {
    * @param data.displayName
    * @param data.counterVault
    * @param data.status
+   * @param data.userWithPosition
+   * @param data.userAssetsFor
+   * @param data.userAssetsForPresent
+   * @param data.userAssetsAgainst
+   * @param data.userAssetsAgainstPresent
+   * @param data.userAssets
+   * @param data.userAssetsPresent
    * @returns unknown Summary of claim values based on query
    * @throws ApiError
    */
@@ -574,6 +595,13 @@ export class ClaimsService {
         displayName: data.displayName,
         counterVault: data.counterVault,
         status: data.status,
+        userWithPosition: data.userWithPosition,
+        userAssetsFor: data.userAssetsFor,
+        userAssetsForPresent: data.userAssetsForPresent,
+        userAssetsAgainst: data.userAssetsAgainst,
+        userAssetsAgainstPresent: data.userAssetsAgainstPresent,
+        userAssets: data.userAssets,
+        userAssetsPresent: data.userAssetsPresent,
       },
     })
   }

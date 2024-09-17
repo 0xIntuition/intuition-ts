@@ -2,6 +2,9 @@ import React from 'react'
 
 import { Separator, Text } from '@0xintuition/1ui'
 
+import { PATHS } from '@consts/paths'
+import { Link } from '@remix-run/react'
+
 interface HomeStatsHeaderProps extends React.HTMLAttributes<HTMLDivElement> {
   totalIdentities: number
   totalClaims: number
@@ -26,8 +29,16 @@ export function HomeStatsHeader({
       {...props}
     >
       <div className="flex gap-8 max-lg:flex-col max-lg:gap-2">
-        <StatItem label="Identities" value={totalIdentities} />
-        <StatItem label="Claims" value={totalClaims} />
+        <StatItem
+          label="Identities"
+          value={totalIdentities}
+          link={PATHS.EXPLORE_IDENTITIES}
+        />
+        <StatItem
+          label="Claims"
+          value={totalClaims}
+          link={PATHS.EXPLORE_CLAIMS}
+        />
         {/* <StatItem label="Users" value={totalUsers} /> */}
       </div>
       <Separator
@@ -36,8 +47,16 @@ export function HomeStatsHeader({
       />
       <div className="flex gap-8 max-lg:flex-col max-lg:gap-2">
         {/* {totalStaked && <StatItem label="TVL" value={`${totalStaked} ETH`} />} */}
-        <StatItem label="Users" value={totalUsers} />
-        <StatItem label="Signals" value={totalSignals} />
+        <StatItem
+          label="Users"
+          value={totalUsers}
+          link={`${PATHS.EXPLORE_IDENTITIES}?isUser=true`}
+        />
+        <StatItem
+          label="Signals"
+          value={totalSignals}
+          link={PATHS.GLOBAL_ACTIVITY}
+        />
       </div>
     </div>
   )
@@ -46,11 +65,12 @@ export function HomeStatsHeader({
 interface StatItemProps {
   label: string
   value: string | number
+  link: string
 }
 
-function StatItem({ label, value }: StatItemProps) {
+function StatItem({ label, value, link }: StatItemProps) {
   return (
-    <div className="flex flex-col items-start">
+    <Link to={link} className="flex flex-col items-start">
       <Text
         variant="caption"
         weight="regular"
@@ -61,6 +81,6 @@ function StatItem({ label, value }: StatItemProps) {
       <Text variant="headline" weight="medium">
         {value}
       </Text>
-    </div>
+    </Link>
   )
 }

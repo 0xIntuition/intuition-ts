@@ -107,7 +107,7 @@ const ProfileCard = ({
               weight="medium"
               className="text-primary-300 pt-2.5 whitespace-pre-wrap"
             >
-              {bio}
+              <Trunctacular value={bio} maxStringLength={266} />
             </Text>
           </div>
         )}
@@ -129,7 +129,11 @@ const ProfileCard = ({
                 Link
               </Text>
               <a href={externalLink} target="_blank" rel="noreferrer noopener">
-                <Trunctacular value={externalLink} maxStringLength={48} />
+                <Trunctacular
+                  value={externalLink}
+                  maxStringLength={48}
+                  className="text-left"
+                />
               </a>
             </div>
           )}

@@ -146,7 +146,7 @@ export const HomeAnimation = () => {
             muted
             loop
             playsInline
-            className="w-full h-auto overflow-hidden"
+            className="w-full h-auto overflow-hidden opacity-80"
           />
         </motion.div>
       </AnimatePresence>

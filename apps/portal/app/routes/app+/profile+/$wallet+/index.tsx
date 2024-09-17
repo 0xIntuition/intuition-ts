@@ -1,6 +1,13 @@
 import { Suspense } from 'react'
 
-import { EmptyStateCard, ErrorStateCard, Text } from '@0xintuition/1ui'
+import {
+  Button,
+  ButtonVariant,
+  EmptyStateCard,
+  ErrorStateCard,
+  Icon,
+  Text,
+} from '@0xintuition/1ui'
 import {
   ClaimSortColumn,
   ClaimsService,
@@ -26,6 +33,8 @@ import { getConnectionsData } from '@lib/services/connections'
 import { getIdentityOrPending } from '@lib/services/identities'
 import { getUserSavedLists } from '@lib/services/lists'
 import { getPositionsOnIdentity } from '@lib/services/positions'
+import { getUserIdentities } from '@lib/services/users'
+import { globalCreateClaimModalAtom } from '@lib/state/store'
 import { formatBalance, invariant } from '@lib/utils/misc'
 import { defer, LoaderFunctionArgs } from '@remix-run/node'
 import { Await, useParams, useRouteLoaderData } from '@remix-run/react'
@@ -37,6 +46,7 @@ import {
   NO_WALLET_ERROR,
   PATHS,
 } from 'app/consts'
+import { useSetAtom } from 'jotai'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const userWallet = await requireUserWallet(request)
@@ -77,6 +87,11 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
             identity: userIdentity.id,
           },
         }),
+        activeIdentities: await getUserIdentities({
+          request,
+          userWallet: wallet.toLowerCase(),
+          searchParams,
+        }),
         claims: getClaimsAboutIdentity({
           request,
           identityId: userIdentity.id,
@@ -97,9 +112,8 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 }
 
 export default function ProfileOverview() {
-  const { claims, claimsSummary, savedListClaims } = useLiveLoader<
-    typeof loader
-  >(['attest', 'create'])
+  const { claims, activeIdentities, claimsSummary, savedListClaims } =
+    useLiveLoader<typeof loader>(['attest', 'create'])
   const { connectionsData } = useLiveLoader<typeof loader>(['attest'])
   const { userIdentity, userTotals } =
     useRouteLoaderData<{
@@ -111,6 +125,8 @@ export default function ProfileOverview() {
 
   const params = useParams()
   const { wallet } = params
+
+  const setCreateClaimModalActive = useSetAtom(globalCreateClaimModalAtom)
 
   return (
     <div className="flex flex-col gap-12">
@@ -126,7 +142,7 @@ export default function ProfileOverview() {
           <div className="flex flex-col items-center gap-6">
             <OverviewStakingHeader
               totalClaims={userTotals?.total_positions_on_claims ?? 0}
-              totalIdentities={userTotals?.total_positions_on_identities ?? 0}
+              totalIdentities={activeIdentities?.pagination.totalEntries ?? 0}
               totalStake={
                 +formatBalance(userTotals?.total_position_value ?? '0', 18)
               }
@@ -187,7 +203,16 @@ export default function ProfileOverview() {
             {(resolvedClaims) => {
               if (!resolvedClaims || resolvedClaims.data.length === 0) {
                 return (
-                  <EmptyStateCard message="This user has no claims about their identity yet." />
+                  <EmptyStateCard message="This user has no claims about their identity yet.">
+                    <Button
+                      variant={ButtonVariant.primary}
+                      onClick={() => {
+                        setCreateClaimModalActive(true)
+                      }}
+                    >
+                      <Icon name="claim" /> Make a Claim
+                    </Button>
+                  </EmptyStateCard>
                 )
               }
               return (

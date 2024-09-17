@@ -16,7 +16,7 @@ import {
 } from '@0xintuition/1ui'
 import { ClaimPresenter } from '@0xintuition/api'
 
-import { PATHS } from '@consts/paths'
+import { getListUrl } from '@lib/utils/misc'
 
 export interface DetailInfoCardProps
   extends React.HTMLAttributes<HTMLDivElement> {
@@ -29,6 +29,7 @@ export interface DetailInfoCardProps
   link: string
   ipfsLink: string
   timestamp: string
+  readOnly?: boolean
 }
 
 const DetailInfoCard = ({
@@ -42,6 +43,7 @@ const DetailInfoCard = ({
   ipfsLink,
   timestamp,
   className,
+  readOnly = false,
   ...props
 }: DetailInfoCardProps) => {
   const formattedDate = new Intl.DateTimeFormat('en-US', {
@@ -64,7 +66,7 @@ const DetailInfoCard = ({
             List
           </Text>
           <div className="flex justify-start items-center gap-1">
-            <a href={`${PATHS.LIST}/${list.claim_id}`}>
+            <a href={getListUrl(list.claim_id, '', readOnly)}>
               <IdentityTag
                 variant={list.object?.user ? Identity.user : Identity.nonUser}
                 imgSrc={list.object?.image ?? ''}

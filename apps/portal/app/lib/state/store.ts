@@ -30,9 +30,11 @@ export const editSocialLinksModalAtom = atomWithToggle(false)
 export const tagsModalAtom = atom<{
   isOpen: boolean
   mode: 'view' | 'add'
+  readOnly?: boolean
 }>({
   isOpen: false,
   mode: 'add',
+  readOnly: false,
 })
 
 export const stakeModalAtom = atom<{
@@ -97,4 +99,12 @@ export const createClaimModalAtom = atom<{
   subject: null,
   predicate: null,
   object: null,
+})
+
+export const shareModalAtom = atom<{
+  isOpen: boolean
+  currentPath: string | null
+}>({
+  isOpen: false,
+  currentPath: null,
 })

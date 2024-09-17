@@ -35,6 +35,8 @@ import NavigationButton from '@components/navigation-link'
 import ImageModal from '@components/profile/image-modal'
 import SaveListModal from '@components/save-list/save-list-modal'
 import { SegmentedNav } from '@components/segmented-nav'
+import ShareCta from '@components/share-cta'
+import ShareModal from '@components/share-modal'
 import StakeModal from '@components/stake/stake-modal'
 import TagsModal from '@components/tags/tags-modal'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
@@ -44,6 +46,7 @@ import {
   followModalAtom,
   imageModalAtom,
   saveListModalAtom,
+  shareModalAtom,
   stakeModalAtom,
   tagsModalAtom,
 } from '@lib/state/store'
@@ -241,6 +244,7 @@ export default function Profile() {
     useAtom(saveListModalAtom)
   const [followModalActive, setFollowModalActive] = useAtom(followModalAtom)
   const [imageModalActive, setImageModalActive] = useAtom(imageModalAtom)
+  const [shareModalActive, setShareModalActive] = useAtom(shareModalAtom)
   const [selectedTag, setSelectedTag] = useState<TagEmbeddedPresenter>()
 
   useEffect(() => {
@@ -403,6 +407,14 @@ export default function Profile() {
           />
         </>
       )}
+      <ShareCta
+        onShareClick={() =>
+          setShareModalActive({
+            isOpen: true,
+            currentPath: location.pathname,
+          })
+        }
+      />
     </div>
   )
 
@@ -497,6 +509,16 @@ export default function Profile() {
         onClose={() =>
           setImageModalActive({
             ...imageModalActive,
+            isOpen: false,
+          })
+        }
+      />
+      <ShareModal
+        currentPath={location.pathname}
+        open={shareModalActive.isOpen}
+        onClose={() =>
+          setShareModalActive({
+            ...shareModalActive,
             isOpen: false,
           })
         }
