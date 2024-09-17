@@ -363,7 +363,7 @@ export default function IdentityDetails() {
         }
       />
       <ShareModal
-        currentPath="test"
+        currentPath={location.pathname}
         open={shareModalActive.isOpen}
         onClose={() =>
           setShareModalActive({

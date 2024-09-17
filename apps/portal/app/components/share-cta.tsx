@@ -7,7 +7,7 @@ export interface ShareCtaProps {
   onShareClick: () => void
 }
 
-// TODO: Add icon to 1ui
+// TODO: [ENG-4080] Add QR Code icon to 1ui
 
 export default function ShareCta({
   title = DEFAULT_SHARE_CTA,
