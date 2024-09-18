@@ -38,7 +38,6 @@ import {
   getUserClaims,
   getUserIdentities,
 } from '@lib/services/users'
-import logger from '@lib/utils/logger'
 import { formatBalance, invariant } from '@lib/utils/misc'
 import { defer, LoaderFunctionArgs } from '@remix-run/node'
 import { Await, useRouteLoaderData } from '@remix-run/react'
@@ -140,8 +139,6 @@ export default function ReadOnlyProfileDataCreated() {
     ) ?? {}
   invariant(userIdentity, NO_USER_IDENTITY_ERROR)
   invariant(userTotals, NO_USER_TOTALS_ERROR)
-
-  logger('$wallet data-created render')
 
   return (
     <div className="flex-col justify-start items-start flex w-full gap-12">
@@ -358,8 +355,9 @@ export default function ReadOnlyProfileDataCreated() {
                         identities={resolvedIdentities.data}
                         pagination={resolvedIdentities.pagination}
                         paramPrefix="createdIdentities"
-                        enableSearch
-                        enableSort
+                        enableSearch={true}
+                        enableSort={true}
+                        readOnly={true}
                       />
                     </TabContent>
                   )}
@@ -401,8 +399,9 @@ export default function ReadOnlyProfileDataCreated() {
                         claims={resolvedClaims.data}
                         pagination={resolvedClaims.pagination}
                         paramPrefix="createdClaims"
-                        enableSearch
-                        enableSort
+                        enableSearch={true}
+                        enableSort={true}
+                        readOnly={true}
                       />
                     </TabContent>
                   )}

@@ -24,6 +24,7 @@ export function IdentitiesList({
   enalbeHeader = true,
   enableSearch = true,
   enableSort = true,
+  readOnly = false,
 }: {
   variant?: 'explore' | 'positions'
   identities: IdentityPresenter[]
@@ -32,6 +33,7 @@ export function IdentitiesList({
   enalbeHeader?: boolean
   enableSearch?: boolean
   enableSort?: boolean
+  readOnly?: boolean
 }) {
   const options: SortOption<SortColumn>[] = [
     { value: 'Total ETH', sortBy: 'AssetsSum' },
@@ -83,7 +85,7 @@ export function IdentitiesList({
                 )
               }
               totalFollowers={identity.num_positions}
-              link={getAtomLink(identity)}
+              link={getAtomLink(identity, readOnly)}
               ipfsLink={getAtomIpfsLink(identity)}
               tags={
                 identity.tags?.map((tag) => ({
