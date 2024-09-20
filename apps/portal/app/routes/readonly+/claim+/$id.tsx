@@ -198,7 +198,7 @@ export default function ReadOnlyClaimDetails() {
       />
       <ReadOnlyBanner
         variant={BannerVariant.warning}
-        to={`${PATHS.CLAIM}/${claim.claim_id}`}
+        to={`${PATHS.CLAIM}/${claim.vault_id}`}
       />
     </div>
   )

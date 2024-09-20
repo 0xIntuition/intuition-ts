@@ -101,7 +101,7 @@ const UnsaveButton: React.FC<UnsaveButtonProps> = ({
           navigate(
             identity.is_user
               ? `${PATHS.PROFILE}/${identity.identity_id}`
-              : `${PATHS.IDENTITY}/${identity.id}`,
+              : `${PATHS.IDENTITY}/${identity.vault_id}`,
           )
         } else if (state.status === 'review-transaction') {
           handleAction()

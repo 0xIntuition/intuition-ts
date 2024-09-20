@@ -71,6 +71,7 @@ export function ListClaimsList<T extends SortColumnType = ClaimSortColumn>({
     object: claim.object,
     user_assets_for: claim.user_assets_for,
     claim_id: claim.claim_id,
+    vault_id: claim.vault_id,
   }))
 
   const listContainerRef = useRef<HTMLDivElement>(null)
@@ -116,14 +117,14 @@ export function ListClaimsList<T extends SortColumnType = ClaimSortColumn>({
                   isSaved={claim.user_assets_for !== '0'}
                   savedAmount={claim.user_assets_for}
                   navigateLink={getListUrl(
-                    claim.claim_id,
+                    claim.vault_id,
                     sourceUserAddress ?? '',
                     readOnly,
                   )}
                   onViewClick={() =>
                     navigate(
                       getListUrl(
-                        claim.claim_id,
+                        claim.vault_id,
                         sourceUserAddress ?? '',
                         readOnly,
                       ),

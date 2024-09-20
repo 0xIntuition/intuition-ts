@@ -159,7 +159,7 @@ export default function ReadOnlyListDetails() {
       </Button>
       <ReadOnlyBanner
         variant={BannerVariant.warning}
-        to={`${PATHS.LIST}/${claim.claim_id}`}
+        to={`${PATHS.LIST}/${claim.vault_id}`}
       />
     </div>
   )

@@ -96,7 +96,7 @@ export function TagsList({
             return null
           }
 
-          const claimId = claimMap.get(identity.id)
+          const claimId = claimMap.get(identity.vault_id)
           const matchingClaim = claims.find(
             (claim) => claim.claim_id === claimId,
           )

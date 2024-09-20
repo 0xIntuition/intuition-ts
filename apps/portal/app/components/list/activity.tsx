@@ -228,7 +228,7 @@ function ActivityItem({
                 +formatBalance(activity.claim.against_assets_sum, 18)
               }
               tvl={+formatBalance(activity.claim.assets_sum, 18)}
-              link={`${PATHS.CLAIM}/${activity.claim.claim_id}`}
+              link={`${PATHS.CLAIM}/${activity.claim.vault_id}`}
               className="w-full hover:bg-transparent pr-0"
             >
               <Claim

@@ -67,7 +67,7 @@ export function ActivePositionsOnClaims({
               )
             }
             feesAccrued={0} // TODO: Update once BE adds deltas to the data output
-            link={getClaimUrl(claim.claim_id, readOnly)}
+            link={getClaimUrl(claim.vault_id, readOnly)}
           >
             <Claim
               size="md"

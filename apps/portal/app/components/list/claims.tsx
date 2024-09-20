@@ -77,7 +77,7 @@ export function ClaimsList({
             claimsForValue={+formatBalance(claim.for_assets_sum, 18)}
             claimsAgainstValue={+formatBalance(claim.against_assets_sum, 18)}
             tvl={+formatBalance(claim.assets_sum, 18)}
-            link={getClaimUrl(claim.claim_id, readOnly)}
+            link={getClaimUrl(claim.vault_id, readOnly)}
           >
             <Claim
               size="md"
