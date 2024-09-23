@@ -3,12 +3,10 @@ import React, { useEffect, useRef, useState } from 'react'
 import {
   Badge,
   Button,
-  Checkbox,
   Icon,
   Input,
   Label,
   Text,
-  Textarea,
   TextVariant,
   toast,
 } from '@0xintuition/1ui'
@@ -16,41 +14,29 @@ import { IdentityPresenter } from '@0xintuition/api'
 
 import CreateIdentityReview from '@components/create-identity/create-identity-review'
 import ErrorList from '@components/error-list'
-import { ImageChooser } from '@components/image-chooser'
 import { InfoTooltip } from '@components/info-tooltip'
 import { TransactionState } from '@components/transaction-state'
 import WrongNetworkButton from '@components/wrong-network-button'
-import {
-  getFormProps,
-  getInputProps,
-  SubmissionResult,
-  useForm,
-} from '@conform-to/react'
+import { getInputProps, SubmissionResult, useForm } from '@conform-to/react'
 import { getZodConstraint, parseWithZod } from '@conform-to/zod'
 import { multivaultAbi } from '@lib/abis/multivault'
 import { useCreateAtom } from '@lib/hooks/useCreateAtom'
 import { useGetWalletBalance } from '@lib/hooks/useGetWalletBalance'
 import { useImageUploadFetcher } from '@lib/hooks/useImageUploadFetcher'
-import {
-  OffChainFetcherData,
-  useOffChainFetcher,
-} from '@lib/hooks/useOffChainFetcher'
+import { useOffChainFetcher } from '@lib/hooks/useOffChainFetcher'
 import {
   identityTransactionReducer,
   initialIdentityTransactionState,
   useTransactionState,
 } from '@lib/hooks/useTransactionReducer'
-import { createIdentitySchema } from '@lib/schemas/create-identity-schema'
+import { createSmartContractSchema } from '@lib/schemas/create-identity-schema'
 import { getChainEnvConfig } from '@lib/utils/environment'
 import logger from '@lib/utils/logger'
-import { truncateString } from '@lib/utils/misc'
 import { useFetcher, useNavigate } from '@remix-run/react'
 import { CreateLoaderData } from '@routes/resources+/create'
 import {
-  ACCEPTED_IMAGE_MIME_TYPES,
   CURRENT_ENV,
   IPFS_GATEWAY_URL,
-  MAX_UPLOAD_SIZE,
   MULTIVAULT_CONTRACT_ADDRESS,
   PATHS,
 } from 'app/consts'
@@ -60,7 +46,9 @@ import {
   TransactionSuccessAction,
   TransactionSuccessActionType,
 } from 'app/types'
-import { parseUnits, toHex } from 'viem'
+import { Address, decodeEventLog, parseUnits, toHex } from 'viem'
+import { reset } from 'viem/actions'
+import { mode } from 'viem/chains'
 import { useAccount, usePublicClient, useWalletClient } from 'wagmi'
 
 interface IdentityFormProps {
@@ -69,7 +57,7 @@ interface IdentityFormProps {
   onClose: () => void
   successAction?: TransactionSuccessActionType
 }
-export function IdentityForm({
+export function SmartContractForm({
   wallet,
   onClose,
   onSuccess,
@@ -94,7 +82,7 @@ export function IdentityForm({
   return (
     <>
       <>
-        <CreateIdentityForm
+        <CreateSmartContractForm
           wallet={wallet}
           state={state}
           dispatch={dispatch}
@@ -109,11 +97,9 @@ export function IdentityForm({
 }
 
 interface FormState {
-  display_name?: string
-  description?: string
-  external_reference?: string
+  address?: string
+  chainId?: string
   initial_deposit?: string
-  is_contract?: boolean
 }
 
 interface CreateIdentityFormProps {
@@ -133,7 +119,7 @@ export interface OffChainIdentityFetcherData {
   submission: SubmissionResult<string[]> | null
 }
 
-function CreateIdentityForm({
+function CreateSmartContractForm({
   wallet,
   state,
   dispatch,
@@ -155,6 +141,9 @@ function CreateIdentityForm({
   const [imageUploadError, setImageUploadError] = useState<string | null>(null)
   const [initialDeposit, setInitialDeposit] = useState<string>('')
   const [isContract, setIsContract] = useState(false)
+  const [vaultId, setVaultId] = useState<string | undefined>(undefined)
+  const [lastTxHash, setLastTxHash] = useState<string | undefined>(undefined)
+  const [chainId, setChainId] = useState<number | undefined>(undefined)
 
   const loaderFetcher = useFetcher<CreateLoaderData>()
   const loaderFetcherUrl = '/resources/create'
@@ -168,45 +157,6 @@ function CreateIdentityForm({
     loaderFetcherRef.current(loaderFetcherUrl)
   }, [loaderFetcherUrl])
 
-  useEffect(() => {
-    logger('file changed', identityImageFile)
-    if (identityImageFile) {
-      if (
-        !ACCEPTED_IMAGE_MIME_TYPES.includes(identityImageFile.type) ||
-        identityImageFile.size > MAX_UPLOAD_SIZE
-      ) {
-        console.error('Invalid image file', identityImageFile)
-        return
-      }
-
-      const formData = new FormData()
-      formData.append('image_url', identityImageFile)
-
-      imageUploadFetcher.submit(formData, {
-        action: '/actions/upload-image',
-        method: 'post',
-        encType: 'multipart/form-data',
-      })
-    }
-  }, [identityImageFile])
-
-  useEffect(() => {
-    if (
-      imageUploadFetcher.data &&
-      imageUploadFetcher.data?.status !== 'error'
-    ) {
-      setIdentityImageSrc(imageUploadFetcher.data.submission.value.image_url)
-      setImageUploading(false)
-    } else if (
-      imageUploadFetcher.data &&
-      imageUploadFetcher.data.status === 'error'
-    ) {
-      setIdentityImageSrc(null)
-      setImageUploading(false)
-      setImageUploadError(imageUploadFetcher.data.error)
-    }
-  }, [imageUploadFetcher.data])
-
   const fees = loaderFetcher.data as CreateLoaderData
 
   const { data: walletClient } = useWalletClient()
@@ -216,111 +166,42 @@ function CreateIdentityForm({
     writeContractAsync: writeCreateIdentity,
     awaitingWalletConfirmation,
     awaitingOnChainConfirmation,
+    receipt: txReceipt,
   } = useCreateAtom()
+
+  useEffect(() => {
+    const receipt = txReceipt
+
+    type EventLogArgs = {
+      sender: Address
+      receiver?: Address
+      owner?: Address
+      vaultId: string
+    }
+
+    if (
+      txReceipt &&
+      receipt?.logs[0].data &&
+      receipt?.transactionHash !== lastTxHash
+    ) {
+      const decodedLog = decodeEventLog({
+        abi: multivaultAbi,
+        data: receipt?.logs[0].data,
+        topics: receipt?.logs[0].topics,
+      })
+
+      const topics = decodedLog as unknown as {
+        eventName: string
+        args: EventLogArgs
+      }
+      setVaultId(topics.args.vaultId.toString())
+      setLastTxHash(txReceipt.transactionHash)
+    }
+  }, [txReceipt, mode, reset, lastTxHash])
+
   const emitterFetcher = useFetcher()
 
-  const createdIdentity = offChainFetcher?.data?.identity
-
   const [loading, setLoading] = useState(false)
-  const [imageFilename, setImageFilename] = useState<string | null>(null)
-  const [imageFilesize, setImageFilesize] = useState<string | null>(null)
-  const [previewImage, setPreviewImage] = useState<string | null>(null)
-
-  const handleFileChange = (filename: string, filesize: string, file: File) => {
-    setImageFilename(filename)
-    setImageFilesize(filesize)
-    setIdentityImageFile(file)
-    setImageUploadError(null)
-
-    if (file.size > MAX_UPLOAD_SIZE) {
-      setImageUploadError('File size must be less than 5MB')
-    } else if (!ACCEPTED_IMAGE_MIME_TYPES.includes(file.type)) {
-      setImageUploadError('File must be a .png, .jpg, .jpeg, .gif, or .webp')
-    }
-  }
-
-  const [formTouched, setFormTouched] = useState(false) // to disable submit if user hasn't touched form yet
-
-  const handleSubmit = async () => {
-    try {
-      if (walletClient) {
-        dispatch({ type: 'PREPARING_IDENTITY' })
-
-        const formData = new FormData()
-        Object.entries(formState).forEach(([key, value]) => {
-          formData.append(key, value as string)
-        })
-
-        if (identityImageSrc !== null) {
-          formData.set('image_url', identityImageSrc as string)
-        }
-
-        if (isContract) {
-          formData.set('is_contract', 'true')
-        }
-
-        const submission = parseWithZod(formData, {
-          schema: createIdentitySchema(),
-        })
-
-        if (
-          submission.status === 'error' &&
-          submission.error !== null &&
-          Object.keys(submission.error).length
-        ) {
-          return
-        }
-
-        setLoading(true)
-        dispatch({ type: 'START_IMAGE_UPLOAD' })
-
-        try {
-          logger('try offline submit')
-          dispatch({ type: 'PUBLISHING_IDENTITY' })
-          offChainFetcher.submit(formData, {
-            action: '/actions/create-identity',
-            method: 'post',
-          })
-        } catch (error: unknown) {
-          handleSubmitError(error)
-        }
-      }
-    } catch (error: unknown) {
-      logger(error)
-      handleSubmitError(error)
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const handleSubmitError = (error: unknown) => {
-    let errorMessage = 'Error in creating offchain identity data.'
-    if (error instanceof Error) {
-      if (error.message === 'Submission timed out') {
-        errorMessage =
-          'The identity creation process timed out. Please try again.'
-      } else {
-        try {
-          // Try to parse the error message as JSON
-          const parsedError = JSON.parse(error.message)
-          if (parsedError && parsedError.error) {
-            errorMessage = parsedError.error
-          } else {
-            errorMessage = error.message
-          }
-        } catch (jsonError) {
-          // If parsing fails, use the original error message
-          errorMessage = error.message
-        }
-      }
-    }
-    dispatch({
-      type: 'TRANSACTION_ERROR',
-      error: errorMessage,
-    })
-    toast.error(errorMessage)
-    setLoading(false)
-  }
 
   async function handleOnChainCreateIdentity({
     atomData,
@@ -384,9 +265,9 @@ function CreateIdentityForm({
   }
 
   function handleIdentityTxReceiptReceived() {
-    if (createdIdentity) {
+    if (txReceipt && vaultId) {
       emitterFetcher.submit(
-        { identity_id: createdIdentity.id },
+        { identity_id: vaultId },
         { method: 'post', action: '/actions/create-emitter' },
       )
     }
@@ -399,62 +280,36 @@ function CreateIdentityForm({
   }, [state.status])
 
   useEffect(() => {
-    let isMounted = true
-
-    if (
-      offChainFetcher.state === 'idle' &&
-      offChainFetcher.data !== null &&
-      offChainFetcher.data !== undefined
-    ) {
-      const responseData = offChainFetcher.data as OffChainFetcherData
-      if (isMounted) {
-        logger('responseData', responseData)
-        if (responseData !== null) {
-          if (createdIdentity !== undefined && responseData.identity) {
-            logger('responseData', responseData)
-            const { identity_id } = responseData.identity
-            setTransactionResponseData(responseData.identity)
-            logger('responseData identity', responseData.identity)
-            logger('onchain create starting. identity_id:', identity_id)
-            handleOnChainCreateIdentity({
-              atomData: identity_id,
-            })
-          }
-        }
-        if (
-          offChainFetcher.data === null ||
-          offChainFetcher.data === undefined
-        ) {
-          console.error(
-            'Error in offchain data creation.:',
-            offChainFetcher.data,
-          )
-          dispatch({
-            type: 'TRANSACTION_ERROR',
-            error: 'Error in offchain data creation.',
-          })
-        }
-      }
+    if (txReceipt && vaultId) {
+      handleOnChainCreateIdentity({
+        atomData: `eip155:${fields.chainId.value}:${fields.address.value}`,
+      })
     }
+  }, [chainId, address, handleOnChainCreateIdentity])
 
-    return () => {
-      isMounted = false
-    }
-  }, [offChainFetcher.state, offChainFetcher.data, dispatch])
+  const { chain } = useAccount()
+  const isWrongNetwork = chain?.id !== getChainEnvConfig(CURRENT_ENV).chainId
+  const [formState, setFormState] = useState<FormState>({})
 
-  useEffect(() => {
-    if (state.status === 'error') {
-      setLoading(false)
-    }
-  }, [state.status])
+  const handleClose = () => {
+    dispatch({ type: 'START_TRANSACTION' })
+    setInitialDeposit('0')
+    onClose()
+  }
+
+  const walletBalance = useGetWalletBalance(
+    address ?? (wallet as `0x${string}`),
+  )
+
+  const [formTouched, setFormTouched] = useState(false) // to disable submit if user hasn't touched form yet
 
   const [form, fields] = useForm({
     id: 'create-identity',
     lastResult: lastOffChainSubmission,
-    constraint: getZodConstraint(createIdentitySchema()),
+    constraint: getZodConstraint(createSmartContractSchema()),
     onValidate({ formData }) {
       const result = parseWithZod(formData, {
-        schema: createIdentitySchema,
+        schema: createSmartContractSchema,
       })
       return result
     },
@@ -467,45 +322,12 @@ function CreateIdentityForm({
     },
   })
 
-  const { chain } = useAccount()
-  const isWrongNetwork = chain?.id !== getChainEnvConfig(CURRENT_ENV).chainId
-  const [formState, setFormState] = useState<FormState>({})
-
   const reviewIdentity = {
-    imageUrl: previewImage,
-    displayName: fields.display_name.value,
-    description: fields.description.value,
-    externalReference: fields.external_reference.value,
-    initialDeposit: fields.initial_deposit.value,
+    displayName: `caip10:eip155:${formState.chainId}:${formState.address}`,
   }
-
-  const handleClose = () => {
-    dispatch({ type: 'START_TRANSACTION' })
-    setFormState({})
-    setFormTouched(false)
-    setPreviewImage(null)
-    setImageFilename(null)
-    setImageFilesize(null)
-    setIdentityImageSrc(null)
-    setIdentityImageFile(undefined)
-    setInitialDeposit('0')
-    setIsContract(false)
-    onClose()
-  }
-
-  const walletBalance = useGetWalletBalance(
-    address ?? (wallet as `0x${string}`),
-  )
 
   return (
     <>
-      <offChainFetcher.Form
-        method="post"
-        {...getFormProps(form)}
-        encType="multipart/form-data"
-        action="/actions/create-identity"
-        hidden
-      />
       <div className="h-full flex flex-col">
         {state.status === 'idle' ? (
           <div className="w-full h-max flex-col justify-start items-start inline-flex gap-7">
@@ -513,188 +335,68 @@ function CreateIdentityForm({
               <div className="self-stretch flex-col justify-start items-start flex">
                 <div className="flex w-full items-center justify-between">
                   <Text variant="caption" className="text-secondary-foreground">
-                    Image
+                    Address
                   </Text>
                   <InfoTooltip
-                    title="Image"
-                    content={`We've done some image filtering in The Portal, so that
-                          we don't begin our journey with a bunch of
-                          inappropriate images - though the Intuition Protocol
-                          itself allows for any image to be referenced.`}
+                    title="Address"
+                    content="This is the address of your Smart Contract Atom, and will be a main way that people discover it - so make sure it is accurate!"
                   />
                 </div>
               </div>
-              <div className="self-stretch h-24 px-9 py-2.5 theme-border bg-primary/10 rounded-md justify-between items-center inline-flex">
-                <div className="justify-start items-center gap-[18px] flex">
-                  <div className="w-16 h-16 rounded-xl justify-center items-center flex">
-                    <ImageChooser
-                      previewImage={previewImage}
-                      setPreviewImage={setPreviewImage}
-                      onFileChange={(filename, filesize, file) =>
-                        handleFileChange(filename, filesize, file)
-                      }
-                      setImageFile={setIdentityImageFile}
-                      disabled={imageUploading}
-                      {...getInputProps(fields.image_url, { type: 'file' })}
-                    />
-                  </div>
-                  <div className="flex-col justify-start items-start inline-flex">
-                    <div className="text-center text-neutral-200 text-sm font-normal leading-tight">
-                      {truncateString(imageFilename ?? '', 36)}
-                    </div>
-                    <div className="text-center text-neutral-200 text-xs font-normal leading-[18px]">
-                      {imageFilesize}
-                    </div>
-                  </div>
-                </div>
-                <div className="flex-col justify-end items-end inline-flex">
-                  <button
-                    onClick={(e) => {
-                      e.preventDefault()
-                      setPreviewImage(null)
-                      setImageFilename(null)
-                      setImageFilesize(null)
-                      setIdentityImageFile(undefined)
-                      setImageUploadError(null)
-                    }}
-                    className={`${previewImage === null ? 'hidden' : 'block'}`}
-                  >
-                    <Icon
-                      name="circle-x"
-                      className="h-6 w-6 relative text-neutral-700 hover:text-neutral-600 transition-colors duration-300"
-                    />
-                  </button>
-                </div>
-              </div>
-              <ErrorList
-                id={fields.image_url.errorId}
-                errors={[
-                  ...(fields.image_url.errors || []),
-                  ...(imageUploadError ? [imageUploadError] : []),
-                ]}
-              />
-            </div>
-            <div className="flex flex-col w-full gap-1.5">
-              <div className="self-stretch flex-col justify-start items-start flex">
-                <div className="flex w-full items-center justify-between">
-                  <Text variant="caption" className="text-secondary-foreground">
-                    Display Name
-                  </Text>
-                  <InfoTooltip
-                    title="Display Name"
-                    content="This is the display name of your Atom/Identity, and will be a main way that people discover it - so make sure it is good!"
-                  />
-                </div>
-              </div>
-              <Label htmlFor={fields.display_name.id} hidden>
-                Display Name
+              <Label htmlFor={fields.address.id} hidden>
+                Address
               </Label>
               <Input
-                {...getInputProps(fields.display_name, { type: 'text' })}
-                placeholder="Enter a display name here"
+                {...getInputProps(fields.address, { type: 'text' })}
+                placeholder="Enter an address here"
                 onChange={(e) => {
                   setFormState((prev) => ({
                     ...prev,
-                    display_name: e.target.value,
+                    address: e.target.value,
                   }))
                   setFormTouched(true)
                 }}
-                value={formState.display_name}
+                value={formState.address}
               />
               <ErrorList
-                id={fields.display_name.errorId}
-                errors={fields.display_name.errors}
+                id={fields.address.errorId}
+                errors={fields.address.errors}
               />
-              {fields.display_name.value &&
-                fields.display_name.value.length === 42 &&
-                /^0x[a-fA-F0-9]{1,42}$/.test(fields.display_name.value) && (
-                  <div className="flex items-center gap-2">
-                    <Checkbox
-                      checked={isContract}
-                      onCheckedChange={(checked) => {
-                        const isChecked = checked === true
-                        setIsContract(isChecked)
-                        setFormState((prev) => ({
-                          ...prev,
-                          is_contract: isChecked,
-                        }))
-                      }}
-                      id={fields.is_contract.id}
-                      className="h-4 w-4 text-muted theme-border rounded focus:ring-primary focus:ring-1 bg-primary/10 cursor-pointer checked:bg-primary/10 form-checkbox"
-                    />
-                    <Label
-                      htmlFor={fields.is_contract.id}
-                      className="text-sm text-foreground/70"
-                    >
-                      is Contract?
-                    </Label>
-                  </div>
-                )}
             </div>
 
             <div className="flex flex-col w-full gap-1.5">
               <div className="self-stretch flex-col justify-start items-start flex">
                 <div className="flex w-full items-center justify-between">
                   <Text variant="caption" className="text-secondary-foreground">
-                    Description
+                    Chain ID
                   </Text>
                   <InfoTooltip
-                    title="Description"
-                    content="Add a bit more context to elaborate on what this Atom/Identity is meant to represent. The more data you add, the more useful your Atom/Identity will be."
+                    title="Chain ID"
+                    content="This is the chain ID of the EVM compatible chain that the Smart Contract is deployed on - so make sure it is accurate!"
                   />
                 </div>
               </div>
-              <Label htmlFor={fields.description.id} hidden>
-                Description
-              </Label>
-              <Textarea
-                {...getInputProps(fields.description, { type: 'text' })}
-                placeholder="Enter description here"
-                className="theme-border"
-                onChange={(e) =>
-                  setFormState((prev) => ({
-                    ...prev,
-                    description: e.target.value,
-                  }))
-                }
-                value={formState.description}
-              />
-              <ErrorList
-                id={fields.description.errorId}
-                errors={fields.description.errors}
-              />
-            </div>
-            <div className="flex flex-col w-full gap-1.5">
-              <div className="self-stretch flex-col justify-start items-start flex">
-                <div className="flex w-full items-center justify-between">
-                  <Text variant="caption" className="text-secondary-foreground">
-                    Add Link
-                  </Text>
-                  <InfoTooltip
-                    title="Link"
-                    content="If this Atom/Identity has a relevant link, or is meant to reference data on another platform, add the URL here!"
-                  />
-                </div>
-              </div>
-              <Label htmlFor={fields.external_reference.id} hidden>
-                Add Link
+              <Label htmlFor={fields.chainId.id} hidden>
+                Chain ID
               </Label>
               <Input
-                {...getInputProps(fields.external_reference, { type: 'text' })}
-                placeholder="https://www.url.com"
-                onChange={(e) =>
+                {...getInputProps(fields.chainId, { type: 'text' })}
+                placeholder="Enter a chain ID here. Eg: 8453 for Base"
+                onChange={(e) => {
                   setFormState((prev) => ({
                     ...prev,
-                    external_reference: e.target.value,
+                    chainId: e.target.value,
                   }))
-                }
-                value={formState.external_reference}
+                  setFormTouched(true)
+                }}
+                value={formState.chainId}
               />
               <ErrorList
-                id={fields.external_reference.errorId}
-                errors={fields.external_reference.errors}
+                id={fields.chainId.errorId}
+                errors={fields.chainId.errors}
               />
             </div>
+
             <div className="flex flex-col w-full gap-1.5">
               <div className="flex flex-row items-center justify-between mb-1">
                 <div className="inline-flex gap-1">
@@ -802,7 +504,11 @@ function CreateIdentityForm({
                   form={form.id}
                   type="submit"
                   variant="primary"
-                  onClick={handleSubmit}
+                  onClick={() =>
+                    handleOnChainCreateIdentity({
+                      atomData: `caip10:eip155:${formState.chainId}:${formState.address}`,
+                    })
+                  }
                   disabled={
                     !address ||
                     loading ||

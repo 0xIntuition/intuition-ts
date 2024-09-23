@@ -62,6 +62,7 @@ export function createIdentitySchema() {
       }, 'File must be a .png, .jpg, .jpeg, .gif, or .webp')
       .or(z.string())
       .optional(),
+    atom_type: z.string().optional(),
     external_reference: urlSchema.optional(),
     initial_deposit: z.string().optional(),
     vault_id: z.string().optional(),
@@ -69,6 +70,18 @@ export function createIdentitySchema() {
     contract: z.string().optional(),
     predicate: z.boolean().optional(),
     is_contract: z.boolean().optional(),
+  })
+}
+
+export function createSmartContractSchema() {
+  return z.object({
+    address: z.string({ required_error: 'Please enter an address.' }).max(42, {
+      message: 'Address must not be longer than 42 characters.',
+    }),
+    chainId: z.string({ required_error: 'Please enter a chain ID.' }).max(20, {
+      message: 'Chain ID must not be longer than 20 characters.',
+    }),
+    initial_deposit: z.string().optional(),
   })
 }
 
