@@ -61,17 +61,15 @@ export function TagsList({
 
   const setSaveListModalActive = useSetAtom(saveListModalAtom)
 
-  const claimMap = new Map(
-    claims
-      .filter(
-        (
-          claim,
-        ): claim is ClaimPresenter & {
-          subject: NonNullable<ClaimPresenter['subject']>
-        } => claim.subject !== null,
-      )
-      .map((claim) => [claim.subject.id, claim.claim_id]),
-  )
+  const claimIdMap = new Map()
+  const vaultIdMap = new Map()
+
+  claims.forEach((claim) => {
+    if (claim.subject) {
+      claimIdMap.set(claim.subject.id, claim.claim_id)
+      vaultIdMap.set(claim.subject.id, claim.vault_id)
+    }
+  })
 
   return (
     <>
@@ -96,13 +94,15 @@ export function TagsList({
             return null
           }
 
-          const claimId = claimMap.get(identity.vault_id)
+          const claimId = claimIdMap.get(identity.id)
+          const vaultId = vaultIdMap.get(identity.id)
           const matchingClaim = claims.find(
             (claim) => claim.claim_id === claimId,
           )
           // TODO: ENG-0000: Show filled save if user has a position on claim
           // TODO: ENG-0000: Show only user position if user is on filtering by you.
 
+          console.log('vaultId', vaultId)
           return (
             <div
               key={identity.id}
@@ -115,7 +115,7 @@ export function TagsList({
                   name={getAtomLabel(identity)}
                   description={getAtomDescription(identity)}
                   id={identity.user?.wallet ?? identity.identity_id}
-                  claimLink={getClaimUrl(claimId ?? '', readOnly)}
+                  claimLink={getClaimUrl(vaultId ?? '', readOnly)}
                   tags={
                     identity.tags?.map((tag) => ({
                       label: tag.display_name,

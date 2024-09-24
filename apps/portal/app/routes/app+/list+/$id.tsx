@@ -123,7 +123,7 @@ export default function ListDetails() {
         displayName={claim.object?.display_name ?? ''}
         avatarImgSrc={claim.object?.image ?? ''}
         onClick={() => {
-          navigate(`/app/identity/${claim.object?.id}`)
+          navigate(`/app/identity/${claim.object?.vault_id}`)
         }}
         className="hover:cursor-pointer w-full"
       />
