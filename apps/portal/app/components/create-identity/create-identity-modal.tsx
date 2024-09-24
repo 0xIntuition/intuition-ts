@@ -66,7 +66,7 @@ export default function CreateIdentityModal({
               experiences, and perceptions.
             </Text>
           </DialogHeader>
-          <div className="flex flex-col w-full gap-1.5">
+          <div className="flex flex-col w-full gap-1.5 mb-5">
             <div className="self-stretch flex-col justify-start items-start flex">
               <div className="flex w-full items-center justify-between">
                 <Text variant="caption" className="text-secondary-foreground">

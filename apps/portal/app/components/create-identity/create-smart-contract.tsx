@@ -4,6 +4,7 @@ import {
   Badge,
   Button,
   Icon,
+  IconName,
   Input,
   Label,
   Text,
@@ -22,8 +23,6 @@ import { getZodConstraint, parseWithZod } from '@conform-to/zod'
 import { multivaultAbi } from '@lib/abis/multivault'
 import { useCreateAtom } from '@lib/hooks/useCreateAtom'
 import { useGetWalletBalance } from '@lib/hooks/useGetWalletBalance'
-import { useImageUploadFetcher } from '@lib/hooks/useImageUploadFetcher'
-import { useOffChainFetcher } from '@lib/hooks/useOffChainFetcher'
 import {
   identityTransactionReducer,
   initialIdentityTransactionState,
@@ -49,7 +48,7 @@ import {
 import { Address, decodeEventLog, parseUnits, toHex } from 'viem'
 import { reset } from 'viem/actions'
 import { mode } from 'viem/chains'
-import { useAccount, usePublicClient, useWalletClient } from 'wagmi'
+import { useAccount, usePublicClient } from 'wagmi'
 
 interface IdentityFormProps {
   wallet?: string
@@ -123,27 +122,14 @@ function CreateSmartContractForm({
   wallet,
   state,
   dispatch,
-  setTransactionResponseData,
   transactionResponseData,
   onClose,
   successAction,
 }: CreateIdentityFormProps) {
-  const { offChainFetcher, lastOffChainSubmission } = useOffChainFetcher()
   const navigate = useNavigate()
-  const imageUploadFetcher = useImageUploadFetcher()
-  const [imageUploading, setImageUploading] = React.useState(false)
-  const [identityImageSrc, setIdentityImageSrc] = React.useState<
-    string | ArrayBuffer | null
-  >(null)
-  const [identityImageFile, setIdentityImageFile] = useState<File | undefined>(
-    undefined,
-  )
-  const [imageUploadError, setImageUploadError] = useState<string | null>(null)
   const [initialDeposit, setInitialDeposit] = useState<string>('')
-  const [isContract, setIsContract] = useState(false)
   const [vaultId, setVaultId] = useState<string | undefined>(undefined)
   const [lastTxHash, setLastTxHash] = useState<string | undefined>(undefined)
-  const [chainId, setChainId] = useState<number | undefined>(undefined)
 
   const loaderFetcher = useFetcher<CreateLoaderData>()
   const loaderFetcherUrl = '/resources/create'
@@ -159,7 +145,6 @@ function CreateSmartContractForm({
 
   const fees = loaderFetcher.data as CreateLoaderData
 
-  const { data: walletClient } = useWalletClient()
   const publicClient = usePublicClient()
   const { address } = useAccount()
   const {
@@ -236,7 +221,7 @@ function CreateSmartContractForm({
             type: 'TRANSACTION_COMPLETE',
             txHash,
             txReceipt: receipt,
-            identityId: transactionResponseData?.id,
+            identityId: vaultId,
           })
         }
       } catch (error) {
@@ -279,14 +264,6 @@ function CreateSmartContractForm({
     }
   }, [state.status])
 
-  useEffect(() => {
-    if (txReceipt && vaultId) {
-      handleOnChainCreateIdentity({
-        atomData: `eip155:${fields.chainId.value}:${fields.address.value}`,
-      })
-    }
-  }, [chainId, address, handleOnChainCreateIdentity])
-
   const { chain } = useAccount()
   const isWrongNetwork = chain?.id !== getChainEnvConfig(CURRENT_ENV).chainId
   const [formState, setFormState] = useState<FormState>({})
@@ -305,7 +282,6 @@ function CreateSmartContractForm({
 
   const [form, fields] = useForm({
     id: 'create-identity',
-    lastResult: lastOffChainSubmission,
     constraint: getZodConstraint(createSmartContractSchema()),
     onValidate({ formData }) {
       const result = parseWithZod(formData, {
@@ -323,6 +299,7 @@ function CreateSmartContractForm({
   })
 
   const reviewIdentity = {
+    imageUrl: IconName.fileText,
     displayName: `caip10:eip155:${formState.chainId}:${formState.address}`,
   }
 
@@ -468,8 +445,8 @@ function CreateSmartContractForm({
                   type="button"
                   variant="primary"
                   onClick={() => {
-                    const result = form.valid && !imageUploadError
-                    if (result && !imageUploadError) {
+                    const result = form.valid
+                    if (result) {
                       dispatch({ type: 'REVIEW_TRANSACTION' })
                     }
                   }}
@@ -532,25 +509,21 @@ function CreateSmartContractForm({
               type="identity"
               ipfsLink={`${IPFS_GATEWAY_URL}/${transactionResponseData?.identity_id?.replace('ipfs://', '')}`}
               successButton={
-                transactionResponseData && (
-                  <Button
-                    type="button"
-                    variant="primary"
-                    className="mt-auto w-40"
-                    onClick={() => {
-                      if (successAction === TransactionSuccessAction.VIEW) {
-                        navigate(
-                          `${PATHS.IDENTITY}/${transactionResponseData.vault_id}`,
-                        )
-                      }
-                      handleClose()
-                    }}
-                  >
-                    {successAction === TransactionSuccessAction.VIEW
-                      ? 'View Identity'
-                      : 'Close'}
-                  </Button>
-                )
+                <Button
+                  type="button"
+                  variant="primary"
+                  className="mt-auto w-40"
+                  onClick={() => {
+                    if (successAction === TransactionSuccessAction.VIEW) {
+                      navigate(`${PATHS.IDENTITY}/${vaultId}`)
+                    }
+                    handleClose()
+                  }}
+                >
+                  {successAction === TransactionSuccessAction.VIEW
+                    ? 'View Identity'
+                    : 'Close'}
+                </Button>
               }
               errorButton={
                 <Button

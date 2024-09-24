@@ -360,7 +360,7 @@ export const getAtomLabel = (atom: IdentityPresenter | null | undefined) => {
   return (
     atom.user?.display_name ??
     atom.user?.ens_name ??
-    atom.display_name ??
+    (atom.display_name !== '' ? atom.display_name : undefined) ??
     atom.identity_id ??
     ''
   )

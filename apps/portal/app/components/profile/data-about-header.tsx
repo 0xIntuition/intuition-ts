@@ -10,6 +10,8 @@ import {
 } from '@0xintuition/1ui'
 import { IdentityPresenter } from '@0xintuition/api'
 
+import { getAtomLabel } from '@lib/utils/misc'
+
 export const DataAboutHeaderVariants = {
   positions: 'positions',
   claims: 'claims',
@@ -52,9 +54,7 @@ const DataAboutHeader: React.FC<DataAboutHeaderProps> = ({
           variant={userIdentity?.user ? 'user' : 'non-user'}
         >
           <Trunctacular
-            value={
-              userIdentity?.user?.display_name ?? userIdentity?.display_name
-            }
+            value={getAtomLabel(userIdentity)}
             maxStringLength={40}
           />
         </IdentityTag>

@@ -70,7 +70,6 @@ import { VaultDetailsType } from 'app/types/vault'
 import { useAtom } from 'jotai'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
-  logger('[$ID] -- START')
   const user = await requireUser(request)
   invariant(user, 'User not found')
   invariant(user.wallet?.address, 'User wallet not found')
@@ -118,7 +117,8 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     }
   }
 
-  logger('[$ID] -- END')
+  console.log('identity', identity)
+
   return json({
     identity,
     list,
