@@ -117,8 +117,6 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     }
   }
 
-  console.log('identity', identity)
-
   return json({
     identity,
     list,

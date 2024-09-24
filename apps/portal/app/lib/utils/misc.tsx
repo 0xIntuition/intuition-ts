@@ -7,7 +7,8 @@ import { SubmitFunction } from '@remix-run/react'
 import { BLOCK_EXPLORER_URL, IPFS_GATEWAY_URL, PATHS } from 'app/consts'
 import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
-import { formatUnits } from 'viem'
+import { extractChain, formatUnits } from 'viem'
+import * as chains from 'viem/chains'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -382,7 +383,21 @@ export const getAtomIpfsLink = (atom: IdentityPresenter | null | undefined) => {
   if (atom.identity_id?.startsWith('https')) {
     return atom.identity_id
   }
+  if (atom.identity_id?.startsWith('caip10')) {
+    const parts = atom.identity_id.split(':')
+    const chainId = Number(parts[2])
+    const address = parts[3]
+    const chain = extractChain({
+      chains: Object.values(chains),
+      // @ts-ignore Ignoring type since viem doesn't provide proper typings for chain IDs
+      id: chainId,
+    })
+    return chain?.blockExplorers?.default
+      ? `${chain.blockExplorers.default.url}/address/${address}`
+      : ''
+  }
   return `${IPFS_GATEWAY_URL}/${atom.identity_id?.replace('ipfs://', '')}`
+  return ''
 }
 
 export const getAtomLink = (

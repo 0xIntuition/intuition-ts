@@ -7,6 +7,11 @@ import {
   IconName,
   Input,
   Label,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
   Text,
   TextVariant,
   toast,
@@ -301,24 +306,29 @@ export function SmartContractForm({
                 </div>
               </div>
               <Label htmlFor={fields.chainId.id} hidden>
-                Chain ID
+                Chain
               </Label>
-              <Input
-                {...getInputProps(fields.chainId, { type: 'text' })}
-                placeholder="Enter a chain ID here. Eg: 8453 for Base"
-                onChange={(e) => {
+              <Select
+                onValueChange={(value) => {
                   setFormState((prev) => ({
                     ...prev,
-                    chainId: e.target.value,
+                    chainId: value,
                   }))
                   setFormTouched(true)
                 }}
                 value={formState.chainId}
-              />
-              <ErrorList
-                id={fields.chainId.errorId}
-                errors={fields.chainId.errors}
-              />
+              >
+                <SelectTrigger className="w-52 max-lg:w-full">
+                  <SelectValue placeholder="Select a chain" />
+                </SelectTrigger>
+                <SelectContent>
+                  {Object.values(chains).map((chain) => (
+                    <SelectItem key={chain.id} value={chain.id.toString()}>
+                      {chain.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
 
             <div className="flex flex-col w-full gap-1.5">
