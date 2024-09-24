@@ -68,44 +68,7 @@ interface IdentityFormProps {
   onSuccess?: (identity: IdentityPresenter) => void
   onClose: () => void
   successAction?: TransactionSuccessActionType
-}
-export function IdentityForm({
-  wallet,
-  onClose,
-  onSuccess,
-  successAction = TransactionSuccessAction.VIEW,
-}: IdentityFormProps) {
-  const { state, dispatch } = useTransactionState<
-    IdentityTransactionStateType,
-    IdentityTransactionActionType
-  >(identityTransactionReducer, initialIdentityTransactionState)
-
-  const [transactionResponseData, setTransactionResponseData] =
-    useState<IdentityPresenter | null>(null)
-
-  useEffect(() => {
-    if (state.status === 'complete') {
-      if (transactionResponseData) {
-        onSuccess?.(transactionResponseData)
-      }
-    }
-  }, [state.status, transactionResponseData])
-
-  return (
-    <>
-      <>
-        <CreateIdentityForm
-          wallet={wallet}
-          state={state}
-          dispatch={dispatch}
-          onClose={onClose}
-          setTransactionResponseData={setTransactionResponseData}
-          transactionResponseData={transactionResponseData}
-          successAction={successAction}
-        />
-      </>
-    </>
-  )
+  setIsTransactionStarted: (isTransactionStarted: boolean) => void
 }
 
 interface FormState {
@@ -116,32 +79,24 @@ interface FormState {
   is_contract?: boolean
 }
 
-interface CreateIdentityFormProps {
-  wallet?: string
-  state: IdentityTransactionStateType
-  dispatch: React.Dispatch<IdentityTransactionActionType>
-  setTransactionResponseData: React.Dispatch<
-    React.SetStateAction<IdentityPresenter | null>
-  >
-  transactionResponseData: IdentityPresenter | null
-  onClose: () => void
-  successAction: TransactionSuccessActionType
-}
 export interface OffChainIdentityFetcherData {
   success: 'success' | 'error'
   identity: IdentityPresenter
   submission: SubmissionResult<string[]> | null
 }
 
-function CreateIdentityForm({
+export function IdentityForm({
   wallet,
-  state,
-  dispatch,
-  setTransactionResponseData,
-  transactionResponseData,
   onClose,
-  successAction,
-}: CreateIdentityFormProps) {
+  onSuccess,
+  successAction = TransactionSuccessAction.VIEW,
+  setIsTransactionStarted,
+}: IdentityFormProps) {
+  const { state, dispatch } = useTransactionState<
+    IdentityTransactionStateType,
+    IdentityTransactionActionType
+  >(identityTransactionReducer, initialIdentityTransactionState)
+
   const { offChainFetcher, lastOffChainSubmission } = useOffChainFetcher()
   const navigate = useNavigate()
   const imageUploadFetcher = useImageUploadFetcher()
@@ -155,6 +110,16 @@ function CreateIdentityForm({
   const [imageUploadError, setImageUploadError] = useState<string | null>(null)
   const [initialDeposit, setInitialDeposit] = useState<string>('')
   const [isContract, setIsContract] = useState(false)
+  const [transactionResponseData, setTransactionResponseData] =
+    useState<IdentityPresenter | null>(null)
+
+  useEffect(() => {
+    if (state.status === 'complete') {
+      if (transactionResponseData) {
+        onSuccess?.(transactionResponseData)
+      }
+    }
+  }, [state.status, transactionResponseData])
 
   const loaderFetcher = useFetcher<CreateLoaderData>()
   const loaderFetcherUrl = '/resources/create'
@@ -463,6 +428,7 @@ function CreateIdentityForm({
       event.preventDefault()
       const formDataObject = Object.fromEntries(formData.entries())
       setFormState(formDataObject)
+      setIsTransactionStarted(true)
       dispatch({ type: 'REVIEW_TRANSACTION' })
     },
   })
@@ -490,6 +456,7 @@ function CreateIdentityForm({
     setIdentityImageFile(undefined)
     setInitialDeposit('0')
     setIsContract(false)
+    setIsTransactionStarted(false)
     onClose()
   }
 
@@ -768,6 +735,7 @@ function CreateIdentityForm({
                   onClick={() => {
                     const result = form.valid && !imageUploadError
                     if (result && !imageUploadError) {
+                      setIsTransactionStarted(true)
                       dispatch({ type: 'REVIEW_TRANSACTION' })
                     }
                   }}

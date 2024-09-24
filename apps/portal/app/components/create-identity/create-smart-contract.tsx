@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import {
   Badge,
@@ -18,7 +18,7 @@ import ErrorList from '@components/error-list'
 import { InfoTooltip } from '@components/info-tooltip'
 import { TransactionState } from '@components/transaction-state'
 import WrongNetworkButton from '@components/wrong-network-button'
-import { getInputProps, SubmissionResult, useForm } from '@conform-to/react'
+import { getInputProps, useForm } from '@conform-to/react'
 import { getZodConstraint, parseWithZod } from '@conform-to/zod'
 import { multivaultAbi } from '@lib/abis/multivault'
 import { useCreateAtom } from '@lib/hooks/useCreateAtom'
@@ -33,20 +33,16 @@ import { getChainEnvConfig } from '@lib/utils/environment'
 import logger from '@lib/utils/logger'
 import { useFetcher, useNavigate } from '@remix-run/react'
 import { CreateLoaderData } from '@routes/resources+/create'
-import {
-  CURRENT_ENV,
-  IPFS_GATEWAY_URL,
-  MULTIVAULT_CONTRACT_ADDRESS,
-  PATHS,
-} from 'app/consts'
+import { CURRENT_ENV, MULTIVAULT_CONTRACT_ADDRESS, PATHS } from 'app/consts'
 import {
   IdentityTransactionActionType,
   IdentityTransactionStateType,
   TransactionSuccessAction,
   TransactionSuccessActionType,
 } from 'app/types'
-import { Address, decodeEventLog, parseUnits, toHex } from 'viem'
+import { Address, decodeEventLog, extractChain, parseUnits, toHex } from 'viem'
 import { reset } from 'viem/actions'
+import * as chains from 'viem/chains'
 import { mode } from 'viem/chains'
 import { useAccount, usePublicClient } from 'wagmi'
 
@@ -55,44 +51,7 @@ interface IdentityFormProps {
   onSuccess?: (identity: IdentityPresenter) => void
   onClose: () => void
   successAction?: TransactionSuccessActionType
-}
-export function SmartContractForm({
-  wallet,
-  onClose,
-  onSuccess,
-  successAction = TransactionSuccessAction.VIEW,
-}: IdentityFormProps) {
-  const { state, dispatch } = useTransactionState<
-    IdentityTransactionStateType,
-    IdentityTransactionActionType
-  >(identityTransactionReducer, initialIdentityTransactionState)
-
-  const [transactionResponseData, setTransactionResponseData] =
-    useState<IdentityPresenter | null>(null)
-
-  useEffect(() => {
-    if (state.status === 'complete') {
-      if (transactionResponseData) {
-        onSuccess?.(transactionResponseData)
-      }
-    }
-  }, [state.status, transactionResponseData])
-
-  return (
-    <>
-      <>
-        <CreateSmartContractForm
-          wallet={wallet}
-          state={state}
-          dispatch={dispatch}
-          onClose={onClose}
-          setTransactionResponseData={setTransactionResponseData}
-          transactionResponseData={transactionResponseData}
-          successAction={successAction}
-        />
-      </>
-    </>
-  )
+  setIsTransactionStarted: (isTransactionStarted: boolean) => void
 }
 
 interface FormState {
@@ -101,32 +60,18 @@ interface FormState {
   initial_deposit?: string
 }
 
-interface CreateIdentityFormProps {
-  wallet?: string
-  state: IdentityTransactionStateType
-  dispatch: React.Dispatch<IdentityTransactionActionType>
-  setTransactionResponseData: React.Dispatch<
-    React.SetStateAction<IdentityPresenter | null>
-  >
-  transactionResponseData: IdentityPresenter | null
-  onClose: () => void
-  successAction: TransactionSuccessActionType
-}
-export interface OffChainIdentityFetcherData {
-  success: 'success' | 'error'
-  identity: IdentityPresenter
-  submission: SubmissionResult<string[]> | null
-}
-
-function CreateSmartContractForm({
+export function SmartContractForm({
   wallet,
-  state,
-  dispatch,
-  transactionResponseData,
   onClose,
-  successAction,
-}: CreateIdentityFormProps) {
+  successAction = TransactionSuccessAction.VIEW,
+  setIsTransactionStarted,
+}: IdentityFormProps) {
+  const { state, dispatch } = useTransactionState<
+    IdentityTransactionStateType,
+    IdentityTransactionActionType
+  >(identityTransactionReducer, initialIdentityTransactionState)
   const navigate = useNavigate()
+
   const [initialDeposit, setInitialDeposit] = useState<string>('')
   const [vaultId, setVaultId] = useState<string | undefined>(undefined)
   const [lastTxHash, setLastTxHash] = useState<string | undefined>(undefined)
@@ -271,6 +216,7 @@ function CreateSmartContractForm({
   const handleClose = () => {
     dispatch({ type: 'START_TRANSACTION' })
     setInitialDeposit('0')
+    setIsTransactionStarted(false)
     onClose()
   }
 
@@ -294,6 +240,7 @@ function CreateSmartContractForm({
       event.preventDefault()
       const formDataObject = Object.fromEntries(formData.entries())
       setFormState(formDataObject)
+      setIsTransactionStarted(true)
       dispatch({ type: 'REVIEW_TRANSACTION' })
     },
   })
@@ -447,6 +394,7 @@ function CreateSmartContractForm({
                   onClick={() => {
                     const result = form.valid
                     if (result) {
+                      setIsTransactionStarted(true)
                       dispatch({ type: 'REVIEW_TRANSACTION' })
                     }
                   }}
@@ -507,7 +455,21 @@ function CreateSmartContractForm({
               status={state.status}
               txHash={state.txHash}
               type="identity"
-              ipfsLink={`${IPFS_GATEWAY_URL}/${transactionResponseData?.identity_id?.replace('ipfs://', '')}`}
+              atomType="smartContract"
+              chainName={
+                extractChain({
+                  chains: Object.values(chains),
+                  // @ts-ignore Ignoring type since viem doesn't provide proper typings for chain IDs
+                  id: Number(formState.chainId),
+                })?.blockExplorers?.default?.name
+              }
+              ipfsLink={`${
+                extractChain({
+                  chains: Object.values(chains),
+                  // @ts-ignore Ignoring type since viem doesn't provide proper typings for chain IDs
+                  id: Number(formState.chainId),
+                })?.blockExplorers?.default?.url
+              }/address/${formState.address}`}
               successButton={
                 <Button
                   type="button"

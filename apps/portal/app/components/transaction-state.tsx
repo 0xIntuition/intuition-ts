@@ -19,6 +19,8 @@ interface TransactionStateProps {
   status: TransactionStatusType
   txHash?: `0x${string}`
   type: TransactionType
+  atomType?: 'default' | 'smartContract'
+  chainName?: string
   ipfsLink?: string
   successButton?: React.ReactNode
   errorButton?: React.ReactNode
@@ -28,6 +30,8 @@ export function TransactionState({
   status,
   txHash,
   type,
+  atomType,
+  chainName,
   ipfsLink,
   successButton,
   errorButton,
@@ -59,7 +63,7 @@ export function TransactionState({
                 target="_blank"
                 className="flex flex-row items-center gap-1 text-blue-500 transition-colors duration-300 hover:text-blue-400"
               >
-                View on Basescan
+                View Transaction on Basescan
                 <Icon name="square-arrow-top-right" className="h-3 w-3" />
               </Link>
               {type === 'identity' && ipfsLink && (
@@ -68,7 +72,9 @@ export function TransactionState({
                   target="_blank"
                   className="flex flex-row items-center gap-1 text-blue-500 transition-colors duration-300 hover:text-blue-400"
                 >
-                  View on IPFS
+                  {atomType === 'smartContract'
+                    ? `View Contract on ${chainName}`
+                    : 'View on IPFS'}
                   <Icon name="square-arrow-top-right" className="h-3 w-3" />
                 </Link>
               )}
