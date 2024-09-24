@@ -102,7 +102,6 @@ export function TagsList({
           // TODO: ENG-0000: Show filled save if user has a position on claim
           // TODO: ENG-0000: Show only user position if user is on filtering by you.
 
-          console.log('vaultId', vaultId)
           return (
             <div
               key={identity.id}
