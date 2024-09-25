@@ -91,26 +91,20 @@ export default function SaveListModal({
   } = mode === 'save' ? depositHook : redeemHook
 
   const [vaultDetails, setVaultDetails] = useState<VaultDetailsType>()
+
   const vaultDetailsFetcher = useFetcher<VaultDetailsType>()
 
   const { id: vaultId } = useAtomValue(saveListModalAtom)
 
   useEffect(() => {
-    let isCancelled = false
+    if (vaultId) {
+      const vaultUrl = `${GET_VAULT_DETAILS_RESOURCE_ROUTE}?contract=${contract}&vaultId=${vaultId}&fetchId=${fetchId}`
 
-    if (vaultId !== null) {
-      const finalUrl = `${GET_VAULT_DETAILS_RESOURCE_ROUTE}?contract=${contract}&vaultId=${vaultId}&fetchId=${fetchId}`
-      if (!isCancelled) {
-        vaultDetailsFetcher.load(finalUrl)
+      if (vaultId !== null) {
+        vaultDetailsFetcher.load(vaultUrl)
       }
     }
-
-    return () => {
-      isCancelled = true
-    }
-    // omits the fetcher from the exhaustive deps
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [contract, vaultId, fetchId])
+  }, [identity, tag, fetchId, contract, vaultId])
 
   useEffect(() => {
     if (vaultDetailsFetcher.state === 'loading') {

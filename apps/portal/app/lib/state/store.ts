@@ -1,4 +1,4 @@
-import { IdentityPresenter, TagEmbeddedPresenter } from '@0xintuition/api'
+import { IdentityPresenter } from '@0xintuition/api'
 
 import type { WritableAtom } from 'jotai'
 import { atom, createStore } from 'jotai'
@@ -70,7 +70,7 @@ export const addIdentitiesListModalAtom = atom<{
 export const saveListModalAtom = atom<{
   isOpen: boolean
   id?: string | null
-  tag?: TagEmbeddedPresenter | null
+  tag?: IdentityPresenter | null
   identity?: IdentityPresenter | null
   invalidIdentity?: IdentityPresenter | null
 }>({

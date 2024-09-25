@@ -21,7 +21,6 @@ import {
   ClaimPresenter,
   ClaimsService,
   IdentityPresenter,
-  TagEmbeddedPresenter,
 } from '@0xintuition/api'
 
 import { DetailInfoCard } from '@components/detail-info-card'
@@ -35,6 +34,7 @@ import StakeModal from '@components/stake/stake-modal'
 import TagsModal from '@components/tags/tags-modal'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { getIdentityOrPending } from '@lib/services/identities'
+import { getTags } from '@lib/services/tags'
 import {
   imageModalAtom,
   saveListModalAtom,
@@ -117,12 +117,23 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     }
   }
 
+  const url = new URL(request.url)
+  const searchParams = new URLSearchParams(url.search)
+
+  const { tagClaims } = await getTags({
+    request,
+    subjectId: identity.id,
+    searchParams,
+  })
+
+  logger('[$ID] -- END')
   return json({
     identity,
     list,
     isPending,
     vaultDetails,
     userWallet,
+    tags: tagClaims,
   })
 }
 
@@ -132,10 +143,11 @@ export interface IdentityLoaderData {
   vaultDetails: VaultDetailsType
   userWallet: string
   isPending: boolean
+  tags: ClaimPresenter[]
 }
 
 export default function IdentityDetails() {
-  const { identity, list, vaultDetails, userWallet, isPending } =
+  const { identity, list, vaultDetails, userWallet, isPending, tags } =
     useLiveLoader<IdentityLoaderData>(['attest', 'create'])
   const navigate = useNavigate()
 
@@ -145,7 +157,9 @@ export default function IdentityDetails() {
   const [saveListModalActive, setSaveListModalActive] =
     useAtom(saveListModalAtom)
   const [imageModalActive, setImageModalActive] = useAtom(imageModalAtom)
-  const [selectedTag, setSelectedTag] = useState<TagEmbeddedPresenter>()
+  const [selectedTag, setSelectedTag] = useState<
+    IdentityPresenter | null | undefined
+  >(null)
   const [shareModalActive, setShareModalActive] = useAtom(shareModalAtom)
 
   useEffect(() => {
@@ -177,15 +191,15 @@ export default function IdentityDetails() {
         <>
           <Tags>
             <div className="flex flex-row gap-2 md:flex-col">
-              {identity?.tags && identity?.tags.length > 0 && (
-                <TagsContent numberOfTags={identity?.tag_count ?? 0}>
-                  {identity?.tags?.map((tag) => (
+              {Array.isArray(tags) && tags.length > 0 ? (
+                <TagsContent numberOfTags={tags?.length ?? 0}>
+                  {tags.slice(0, 5).map((tag) => (
                     <TagWithValue
-                      key={tag.identity_id}
-                      label={tag.display_name}
-                      value={tag.num_tagged_identities}
+                      key={tag.claim_id}
+                      label={tag.object?.display_name}
+                      value={tag.num_positions}
                       onStake={() => {
-                        setSelectedTag(tag)
+                        setSelectedTag(tag.object)
                         setSaveListModalActive({
                           isOpen: true,
                           id: tag.vault_id,
@@ -194,7 +208,7 @@ export default function IdentityDetails() {
                     />
                   ))}
                 </TagsContent>
-              )}
+              ) : null}
               <Tag
                 className="w-fit border-dashed"
                 onClick={() => {
