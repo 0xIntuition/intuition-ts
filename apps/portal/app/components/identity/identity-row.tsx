@@ -106,8 +106,12 @@ const IdentityRow = ({
   const linkRef = useRef<HTMLDivElement>(null)
 
   const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
-    if (!isInteractiveElement && link && event.target === linkRef.current) {
-      navigate(link)
+    if (
+      !isInteractiveElement &&
+      (claimLink || link) &&
+      event.target === linkRef.current
+    ) {
+      navigate(claimLink || link)
     }
   }
 
@@ -120,8 +124,8 @@ const IdentityRow = ({
   }
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
-    if (event.key === 'Enter' && !isInteractiveElement && link) {
-      navigate(link)
+    if (event.key === 'Enter' && !isInteractiveElement && (claimLink || link)) {
+      navigate(claimLink || link)
     }
   }
 

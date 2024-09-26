@@ -313,6 +313,7 @@ export default function ReadOnlyProfile() {
             userWallet={userWallet}
             open={tagsModalActive.isOpen}
             mode={tagsModalActive.mode}
+            readOnly={tagsModalActive.readOnly}
             onClose={() => {
               setTagsModalActive({
                 ...tagsModalActive,

@@ -106,6 +106,8 @@ export function TagsForm({
     }
   }, [state.status])
 
+  console.log('readOnly', readOnly)
+
   return (
     <div className="flex flex-col h-full">
       {!isTransactionStarted && (
