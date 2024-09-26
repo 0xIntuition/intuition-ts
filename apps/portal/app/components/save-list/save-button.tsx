@@ -78,7 +78,7 @@ const SaveButton: React.FC<SaveButtonProps> = ({
     } else if (state.status === 'error') {
       return 'Retry'
     } else if (chain?.id !== getChainEnvConfig(CURRENT_ENV).chainId) {
-      return 'Wrong Network'
+      return 'Switch Network'
     }
     return `${user_assets > '0' ? 'Increase Stake' : 'Save'}`
   }
