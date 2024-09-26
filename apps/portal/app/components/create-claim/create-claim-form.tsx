@@ -49,8 +49,6 @@ import {
 } from 'app/types/transaction'
 import { useAtomValue } from 'jotai'
 import { Address, decodeEventLog, parseUnits } from 'viem'
-import { reset } from 'viem/actions'
-import { mode } from 'viem/chains'
 import { useAccount, usePublicClient } from 'wagmi'
 
 import { TransactionState } from '../transaction-state'
@@ -205,6 +203,31 @@ function CreateClaimForm({
             txHash,
             txReceipt: receipt,
           })
+
+          type EventLogArgs = {
+            sender: Address
+            receiver?: Address
+            owner?: Address
+            vaultId: string
+          }
+
+          if (
+            receipt?.logs[0].data &&
+            receipt?.transactionHash !== lastTxHash
+          ) {
+            const decodedLog = decodeEventLog({
+              abi: multivaultAbi,
+              data: receipt?.logs[0].data,
+              topics: receipt?.logs[0].topics,
+            })
+
+            const topics = decodedLog as unknown as {
+              eventName: string
+              args: EventLogArgs
+            }
+            setVaultId(topics.args.vaultId.toString())
+            setLastTxHash(receipt.transactionHash)
+          }
         }
       } catch (error) {
         console.error('error', error)
@@ -314,36 +337,6 @@ function CreateClaimForm({
       setClaimExists(claimChecker.data.result !== '0')
     }
   }, [claimChecker.data, selectedIdentities])
-
-  useEffect(() => {
-    const receipt = txReceipt
-
-    type EventLogArgs = {
-      sender: Address
-      receiver?: Address
-      owner?: Address
-      vaultId: string
-    }
-
-    if (
-      txReceipt &&
-      receipt?.logs[0].data &&
-      receipt?.transactionHash !== lastTxHash
-    ) {
-      const decodedLog = decodeEventLog({
-        abi: multivaultAbi,
-        data: receipt?.logs[0].data,
-        topics: receipt?.logs[0].topics,
-      })
-
-      const topics = decodedLog as unknown as {
-        eventName: string
-        args: EventLogArgs
-      }
-      setVaultId(topics.args.vaultId.toString())
-      setLastTxHash(txReceipt.transactionHash)
-    }
-  }, [txReceipt, mode, reset, lastTxHash])
 
   const Divider = () => (
     <span className="h-px w-2.5 flex bg-border/30 self-end mb-[1.2rem] max-sm:hidden" />
