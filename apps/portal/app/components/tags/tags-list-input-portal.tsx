@@ -12,7 +12,7 @@ type TagsListVariantsType = keyof typeof TagsListVariants
 export interface TagsListInputProps
   extends React.HTMLAttributes<HTMLDivElement> {
   variant: TagsListVariantsType
-  tags: { name: string; id: string }[]
+  tags: { name: string; id: string; tagCount?: number | null }[]
   maxTags: number
   onAddTag: () => void
   onRemoveTag: (id: string) => void
@@ -43,6 +43,7 @@ export const TagsListInputPortal = ({
           <TagWithValue
             key={tag.id}
             label={tag.name}
+            value={tag.tagCount ?? 0}
             onRemove={() => onRemoveTag(tag.id)}
           />
         ))}

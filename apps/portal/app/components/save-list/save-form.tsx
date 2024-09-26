@@ -8,7 +8,7 @@ import {
   Skeleton,
   Text,
 } from '@0xintuition/1ui'
-import { IdentityPresenter, TagEmbeddedPresenter } from '@0xintuition/api'
+import { IdentityPresenter } from '@0xintuition/api'
 
 import StakingRadioGroup from '@components/staking-radio-group'
 import { TransactionState } from '@components/transaction-state'
@@ -30,7 +30,7 @@ import {
 import SaveReview from './save-review'
 
 interface SaveFormProps {
-  tag: IdentityPresenter | TagEmbeddedPresenter
+  tag: IdentityPresenter
   identity: IdentityPresenter
   user_assets: string
   entry_fee: string
@@ -124,12 +124,12 @@ export default function SaveForm({
                 }}
                 object={{
                   variant: Identity.nonUser,
-                  label: tag.display_name ?? tag.identity_id ?? '',
-                  imgSrc: tag.image,
+                  label: getAtomLabel(tag),
+                  imgSrc: getAtomImage(tag),
                   id: tag.identity_id,
-                  description: '',
-                  ipfsLink: '',
-                  link: '',
+                  description: getAtomDescription(tag),
+                  ipfsLink: getAtomIpfsLink(tag),
+                  link: getAtomLink(tag),
                 }}
                 maxIdentityLength={12}
               />
