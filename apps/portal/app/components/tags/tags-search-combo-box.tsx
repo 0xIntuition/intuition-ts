@@ -13,18 +13,17 @@ import {
   Identity,
   ProfileCard,
 } from '@0xintuition/1ui'
-import { TagEmbeddedPresenter } from '@0xintuition/api'
+import { ClaimPresenter } from '@0xintuition/api'
 
 import { IdentitySearchComboboxItem } from '@components/identity/identity-search-combo-box-item'
-import { formatBalance, truncateString } from '@lib/utils/misc'
-import { IPFS_GATEWAY_URL } from 'app/consts'
+import { formatBalance, getAtomIpfsLink, truncateString } from '@lib/utils/misc'
 
 export interface TagSearchComboboxProps
   extends React.HTMLAttributes<HTMLDivElement> {
-  tags: TagEmbeddedPresenter[]
+  tags: ClaimPresenter[]
   placeholder?: string
   shouldFilter?: boolean
-  onTagClick?: (identity: TagEmbeddedPresenter) => void
+  onTagClick?: (tag: ClaimPresenter) => void
 }
 
 const TagSearchCombobox = ({
@@ -46,27 +45,17 @@ const TagSearchCombobox = ({
           </CommandEmpty>
           <CommandGroup key={tags.length}>
             {tags.map((tag, index) => {
-              const {
-                display_name: name,
-                total_assets: value,
-                num_tagged_identities: tagCount,
-                identity_id: walletAddress,
-              } = tag
               return (
-                <HoverCard
-                  openDelay={150}
-                  closeDelay={150}
-                  key={tag.identity_id}
-                >
+                <HoverCard openDelay={150} closeDelay={150} key={tag.claim_id}>
                   <HoverCardTrigger className="w-full">
                     <IdentitySearchComboboxItem
                       key={index}
                       variant={Identity.nonUser}
-                      name={truncateString(name, 16)}
-                      value={+formatBalance(value)}
-                      walletAddress={walletAddress}
-                      avatarSrc={tag.image ?? ''}
-                      tagCount={tagCount || 0}
+                      name={truncateString(tag.object?.display_name ?? '', 16)}
+                      value={+formatBalance(tag.assets_sum)}
+                      walletAddress={tag.object?.identity_id ?? ''}
+                      avatarSrc={tag.object?.image ?? ''}
+                      tagCount={tag.num_positions || 0}
                       onClick={() => onTagClick(tag)}
                       onSelect={() => onTagClick(tag)}
                     />
@@ -80,11 +69,14 @@ const TagSearchCombobox = ({
                       <div className="w-80 max-md:w-[80%]">
                         <ProfileCard
                           variant={Identity.nonUser}
-                          avatarSrc={tag.image ?? ''}
-                          name={truncateString(tag.display_name, 18)}
-                          id={tag.identity_id}
-                          bio={tag.description ?? ''}
-                          ipfsLink={`${IPFS_GATEWAY_URL}/${tag?.identity_id?.replace('ipfs://', '')}`}
+                          avatarSrc={tag.object?.image ?? ''}
+                          name={truncateString(
+                            tag.object?.display_name ?? '',
+                            18,
+                          )}
+                          id={tag.object?.identity_id}
+                          bio={tag.object?.description ?? ''}
+                          ipfsLink={getAtomIpfsLink(tag?.object)}
                         />
                       </div>
                     </HoverCardContent>

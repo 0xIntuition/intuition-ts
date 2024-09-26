@@ -203,6 +203,7 @@ export default function IdentityDetails() {
                         setSaveListModalActive({
                           isOpen: true,
                           id: tag.vault_id,
+                          tag: tag.object,
                         })
                       }}
                     />
@@ -337,6 +338,7 @@ export default function IdentityDetails() {
           />
           <TagsModal
             identity={identity}
+            tags={tags}
             userWallet={userWallet}
             open={tagsModalActive.isOpen}
             mode={tagsModalActive.mode}

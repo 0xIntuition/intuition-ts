@@ -100,8 +100,8 @@ export default function SaveForm({
               </Text>
             </DialogDescription>
           </DialogHeader>
-          <div className="h-full w-full flex-col pt-5 md:px-10 pb-10 gap-5 inline-flex">
-            <div className="flex items-center w-full mr-2.5 gap-5 ">
+          <div className="h-full w-full flex-col pt-5 pb-10 gap-5 inline-flex">
+            <div className="flex items-center w-full mr-2.5 gap-5 justify-center">
               <Claim
                 size="md"
                 subject={{
@@ -134,28 +134,30 @@ export default function SaveForm({
                 maxIdentityLength={12}
               />
             </div>
-            <div className="flex flex-row items-center justify-center">
-              <div className="w-full bg-neutral-50/5 rounded-lg border border-neutral-300/10 flex-col justify-start items-start inline-flex">
-                {isLoading ? (
-                  <Skeleton className="h-12 w-full" />
-                ) : (
-                  <ActivePositionCard
-                    value={Number(formatBalance(user_assets, 18))}
-                    claimPosition={user_assets > '0' ? 'claimFor' : null}
-                  />
-                )}
+            <div className="flex flex-col md:px-10 gap-5">
+              <div className="flex flex-row items-center justify-center">
+                <div className="w-full bg-neutral-50/5 rounded-lg border border-neutral-300/10 flex-col justify-start items-start inline-flex">
+                  {isLoading ? (
+                    <Skeleton className="h-12 w-full" />
+                  ) : (
+                    <ActivePositionCard
+                      value={Number(formatBalance(user_assets, 18))}
+                      claimPosition={user_assets > '0' ? 'claimFor' : null}
+                    />
+                  )}
+                </div>
               </div>
-            </div>
-            <div className="rounded-t-lg bg-primary-950/15 w-full">
-              <StakingRadioGroup
-                setVal={setVal}
-                validationErrors={validationErrors}
-                setValidationErrors={setValidationErrors}
-                showErrors={showErrors}
-                setShowErrors={setShowErrors}
-                isLoading={isLoading}
-                min_deposit={min_deposit}
-              />
+              <div className="rounded-t-lg bg-primary-950/15 w-full">
+                <StakingRadioGroup
+                  setVal={setVal}
+                  validationErrors={validationErrors}
+                  setValidationErrors={setValidationErrors}
+                  showErrors={showErrors}
+                  setShowErrors={setShowErrors}
+                  isLoading={isLoading}
+                  min_deposit={min_deposit}
+                />
+              </div>
             </div>
           </div>
         </>

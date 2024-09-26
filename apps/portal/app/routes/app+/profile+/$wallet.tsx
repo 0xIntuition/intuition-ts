@@ -23,7 +23,6 @@ import {
   ClaimPresenter,
   ClaimsService,
   IdentityPresenter,
-  TagEmbeddedPresenter,
   UserPresenter,
   UsersService,
   UserTotalsPresenter,
@@ -42,6 +41,7 @@ import TagsModal from '@components/tags/tags-modal'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { getIdentityOrPending } from '@lib/services/identities'
 import { getPurchaseIntentsByAddress } from '@lib/services/phosphor'
+import { getTags } from '@lib/services/tags'
 import {
   followModalAtom,
   imageModalAtom,
@@ -194,12 +194,20 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     }
   }
 
-  logger('follow claim', followClaim)
+  const url = new URL(request.url)
+  const searchParams = new URLSearchParams(url.search)
+
+  const { tagClaims } = await getTags({
+    request,
+    subjectId: userIdentity.id,
+    searchParams,
+  })
 
   return json({
     wallet,
     userWallet,
     userIdentity,
+    tags: tagClaims,
     userTotals,
     followClaim,
     followVaultDetails,
@@ -215,6 +223,7 @@ export default function Profile() {
     wallet,
     userWallet,
     userIdentity,
+    tags,
     userTotals,
     followClaim,
     followVaultDetails,
@@ -226,6 +235,7 @@ export default function Profile() {
     wallet: string
     userWallet: string
     userIdentity: IdentityPresenter
+    tags: ClaimPresenter[]
     userTotals: UserTotalsPresenter
     followClaim: ClaimPresenter
     followVaultDetails: VaultDetailsType
@@ -245,7 +255,9 @@ export default function Profile() {
   const [followModalActive, setFollowModalActive] = useAtom(followModalAtom)
   const [imageModalActive, setImageModalActive] = useAtom(imageModalAtom)
   const [shareModalActive, setShareModalActive] = useAtom(shareModalAtom)
-  const [selectedTag, setSelectedTag] = useState<TagEmbeddedPresenter>()
+  const [selectedTag, setSelectedTag] = useState<
+    IdentityPresenter | null | undefined
+  >(null)
 
   useEffect(() => {
     if (saveListModalActive.tag) {
@@ -332,30 +344,36 @@ export default function Profile() {
       {!isPending && (
         <>
           <Tags>
-            {userIdentity?.tags && userIdentity?.tags.length > 0 && (
-              <TagsContent numberOfTags={userIdentity?.tag_count ?? 0}>
-                {userIdentity?.tags?.map((tag) => (
-                  <TagWithValue
-                    key={tag.identity_id}
-                    label={tag.display_name}
-                    value={tag.num_tagged_identities}
-                    onStake={() => {
-                      setSelectedTag(tag)
-                      setSaveListModalActive({ isOpen: true, id: tag.vault_id })
-                    }}
-                  />
-                ))}
-              </TagsContent>
-            )}
-            <Tag
-              className="w-fit border-dashed"
-              onClick={() => {
-                setTagsModalActive({ isOpen: true, mode: 'add' })
-              }}
-            >
-              <Icon name="plus-small" className="w-5 h-5" />
-              Add tags
-            </Tag>
+            <div className="flex flex-row gap-2 md:flex-col">
+              {Array.isArray(tags) && tags.length > 0 ? (
+                <TagsContent numberOfTags={tags?.length ?? 0}>
+                  {tags.slice(0, 5).map((tag) => (
+                    <TagWithValue
+                      key={tag.claim_id}
+                      label={tag.object?.display_name}
+                      value={tag.num_positions}
+                      onStake={() => {
+                        setSelectedTag(tag.object)
+                        setSaveListModalActive({
+                          isOpen: true,
+                          id: tag.vault_id,
+                          tag: tag.object,
+                        })
+                      }}
+                    />
+                  ))}
+                </TagsContent>
+              ) : null}
+              <Tag
+                className="w-fit border-dashed"
+                onClick={() => {
+                  setTagsModalActive({ isOpen: true, mode: 'add' })
+                }}
+              >
+                <Icon name="plus-small" className="w-5 h-5" />
+                Add tags
+              </Tag>
+            </div>
 
             <TagsButton
               onClick={() => {
@@ -475,15 +493,17 @@ export default function Profile() {
           />
           <TagsModal
             identity={userIdentity}
+            tags={tags}
             userWallet={userWallet}
             open={tagsModalActive.isOpen}
             mode={tagsModalActive.mode}
-            onClose={() =>
+            onClose={() => {
               setTagsModalActive({
                 ...tagsModalActive,
                 isOpen: false,
               })
-            }
+              setSelectedTag(undefined)
+            }}
           />
           {selectedTag && (
             <SaveListModal

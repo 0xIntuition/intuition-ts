@@ -25,6 +25,7 @@ import TagsModal from '@components/tags/tags-modal'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { getIdentityOrPending } from '@lib/services/identities'
 import { getPurchaseIntentsByAddress } from '@lib/services/phosphor'
+import { getTags } from '@lib/services/tags'
 import { imageModalAtom, tagsModalAtom } from '@lib/state/store'
 import { getSpecialPredicate } from '@lib/utils/app'
 import logger from '@lib/utils/logger'
@@ -151,10 +152,19 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     }
   }
 
+  const url = new URL(request.url)
+  const searchParams = new URLSearchParams(url.search)
+
+  const { tagClaims } = await getTags({
+    request,
+    subjectId: userIdentity.id,
+    searchParams,
+  })
+
   return json({
     wallet,
-
     userIdentity,
+    tags: tagClaims,
     userTotals,
     followClaim,
     followVaultDetails,
@@ -170,6 +180,7 @@ export default function ReadOnlyProfile() {
     wallet,
     userWallet,
     userIdentity,
+    tags,
     userTotals,
     isPending,
     relicMintCount,
@@ -178,6 +189,7 @@ export default function ReadOnlyProfile() {
     wallet: string
     userWallet: string
     userIdentity: IdentityPresenter
+    tags: ClaimPresenter[]
     userTotals: UserTotalsPresenter
     followClaim: ClaimPresenter
     followVaultDetails: VaultDetailsType
@@ -239,11 +251,11 @@ export default function ReadOnlyProfile() {
           <Tags>
             {userIdentity?.tags && userIdentity?.tags.length > 0 && (
               <TagsContent numberOfTags={userIdentity?.tag_count ?? 0}>
-                {userIdentity?.tags?.map((tag) => (
+                {tags.slice(0, 5).map((tag) => (
                   <TagWithValue
-                    key={tag.identity_id}
-                    label={tag.display_name}
-                    value={tag.num_tagged_identities}
+                    key={tag.claim_id}
+                    label={tag.object?.display_name}
+                    value={tag.num_positions}
                   />
                 ))}
               </TagsContent>
@@ -297,16 +309,16 @@ export default function ReadOnlyProfile() {
         <>
           <TagsModal
             identity={userIdentity}
+            tags={tags}
             userWallet={userWallet}
             open={tagsModalActive.isOpen}
             mode={tagsModalActive.mode}
-            readOnly={tagsModalActive.readOnly}
-            onClose={() =>
+            onClose={() => {
               setTagsModalActive({
                 ...tagsModalActive,
                 isOpen: false,
               })
-            }
+            }}
           />
         </>
       )}

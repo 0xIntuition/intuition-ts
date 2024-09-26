@@ -155,11 +155,7 @@ export default function TagsReview({
           <Tags>
             <div className="flex flex-wrap gap-2 items-center">
               {tags.map((tag, index) => (
-                <TagWithValue
-                  key={index}
-                  label={tag.display_name}
-                  value={tag.num_positions}
-                />
+                <TagWithValue key={index} label={tag.display_name} />
               ))}
             </div>
           </Tags>
