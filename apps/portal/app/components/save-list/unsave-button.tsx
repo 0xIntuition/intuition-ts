@@ -60,7 +60,7 @@ const UnsaveButton: React.FC<UnsaveButtonProps> = ({
     } else if (state.status === 'error') {
       return 'Retry'
     } else if (chain?.id !== getChainEnvConfig(CURRENT_ENV).chainId) {
-      return 'Wrong Network'
+      return 'Switch Network'
     }
     return `Unsave`
   }

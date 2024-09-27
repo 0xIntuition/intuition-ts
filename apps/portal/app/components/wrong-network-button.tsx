@@ -24,7 +24,7 @@ const WrongNetworkButton: React.FC = () => {
       className="w-40 mx-auto"
       size="lg"
     >
-      Wrong Network
+      Switch Network
     </Button>
   )
 }
