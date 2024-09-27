@@ -440,3 +440,6 @@ export const getProfileUrl = (
   const baseUrl = readOnly ? `${PATHS.READONLY_PROFILE}/` : `${PATHS.PROFILE}/`
   return `${baseUrl}${userAddress}`
 }
+
+export const sleep = (ms: number) =>
+  new Promise((resolve) => setTimeout(resolve, ms))

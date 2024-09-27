@@ -32,6 +32,7 @@ import { getChainEnvConfig } from '@lib/utils/environment'
 import logger from '@lib/utils/logger'
 import { useFetcher, useNavigate } from '@remix-run/react'
 import { CreateClaimLoaderData } from '@routes/resources+/create-claim'
+import { GetClaimLoaderData } from '@routes/resources+/get-claim'
 import { TagLoaderData } from '@routes/resources+/tag'
 import {
   CREATE_CLAIM_RESOURCE_ROUTE,
@@ -135,6 +136,9 @@ function CreateClaimForm({
   const feeFetcher = useLoaderFetcher<CreateClaimLoaderData>(
     CREATE_CLAIM_RESOURCE_ROUTE,
   )
+  const claimChecker = useFetcher<TagLoaderData>()
+  const claimFetcher = useFetcher<GetClaimLoaderData>()
+
   const { fees } = (feeFetcher.data as CreateClaimLoaderData) ?? {}
 
   const [lastTxHash, setLastTxHash] = useState<string | undefined>(undefined)
@@ -198,12 +202,6 @@ function CreateClaimForm({
             hash: txHash,
           })
 
-          dispatch({
-            type: 'TRANSACTION_COMPLETE',
-            txHash,
-            txReceipt: receipt,
-          })
-
           type EventLogArgs = {
             sender: Address
             receiver?: Address
@@ -250,6 +248,35 @@ function CreateClaimForm({
       }
     }
   }
+
+  useEffect(() => {
+    if (txReceipt && vaultId) {
+      claimFetcher.load(`/resources/get-claim?claimId=${vaultId}`)
+    }
+  }, [txReceipt, vaultId])
+
+  useEffect(() => {
+    if (txReceipt) {
+      if (claimFetcher.data) {
+        console.log('claimFetcher.data', claimFetcher.data)
+        dispatch({
+          type: 'TRANSACTION_COMPLETE',
+          txHash: txReceipt.transactionHash,
+          txReceipt,
+        })
+      } else if (
+        claimFetcher.state === 'idle' &&
+        claimFetcher.data === undefined
+      ) {
+        const errorMessage = `Failed to fetch claim. It may not have resolved in our database yet. Your claims vault ID is ${vaultId}`
+        dispatch({
+          type: 'TRANSACTION_ERROR',
+          error: errorMessage,
+        })
+        toast.error(errorMessage)
+      }
+    }
+  }, [claimFetcher.data, claimFetcher.state, txReceipt])
 
   const handleSubmit = async () => {
     try {
@@ -313,8 +340,6 @@ function CreateClaimForm({
   const walletBalance = useGetWalletBalance(
     address ?? (wallet as `0x${string}`),
   )
-
-  const claimChecker = useFetcher<TagLoaderData>()
 
   useEffect(() => {
     if (

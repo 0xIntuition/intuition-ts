@@ -1,6 +1,6 @@
 import { ClaimsService } from '@0xintuition/api'
 
-import { getClaimOrPending } from '@lib/services/claims'
+import { getClaim } from '@lib/services/claims'
 import { getIdentityOrPending } from '@lib/services/identities'
 import { formatBalance } from '@lib/utils/misc'
 import type { LoaderFunctionArgs } from '@remix-run/node'
@@ -37,7 +37,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     tvl = +formatBalance(BigInt(claim.object?.assets_sum ?? 0), 18)
 
     if (type === 'claim') {
-      const { claim, isPending } = await getClaimOrPending(request, id)
+      const { claim } = await getClaim(request, id)
 
       if (!claim) {
         throw new Response('Not Found', { status: 404 })
@@ -45,14 +45,10 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
       const stringifiedClaim = `${claim.subject?.display_name} - ${claim.predicate?.display_name} - ${claim.object?.display_name}`
       title = stringifiedClaim ?? 'Intuition Explorer'
-      holdersFor = isPending ? 'Pending' : claim.for_num_positions
-      holdersAgainst = isPending ? 'Pending' : claim.against_num_positions
-      tvlFor = isPending
-        ? 'Pending'
-        : +formatBalance(BigInt(claim.for_assets_sum ?? 0), 18)
-      tvlAgainst = isPending
-        ? 'Pending'
-        : +formatBalance(BigInt(claim.against_assets_sum ?? 0), 18)
+      holdersFor = claim.for_num_positions
+      holdersAgainst = claim.against_num_positions
+      tvlFor = +formatBalance(BigInt(claim.for_assets_sum ?? 0), 18)
+      tvlAgainst = +formatBalance(BigInt(claim.against_assets_sum ?? 0), 18)
     }
   } else if (type === 'identity') {
     const { identity, isPending } = await getIdentityOrPending(request, id)
