@@ -42,7 +42,7 @@ const SubmitButton: React.FC<SubmitButtonProps> = ({
           {loadingText}
         </>
       ) : !correctChain ? (
-        'Wrong Network'
+        'Switch Network'
       ) : (
         buttonText
       )}

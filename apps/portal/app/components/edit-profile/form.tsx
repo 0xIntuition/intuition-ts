@@ -433,11 +433,9 @@ export function EditProfileForm({
         </div>
         <Button
           form={form.id}
+          type="submit"
           variant={'primary'}
           disabled={loading}
-          onClick={() => {
-            handleSubmit
-          }}
           className="mx-auto mt-4 w-40"
         >
           {loading ? (
