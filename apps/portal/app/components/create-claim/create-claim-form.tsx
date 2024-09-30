@@ -251,23 +251,20 @@ function CreateClaimForm({
 
   useEffect(() => {
     if (txReceipt && vaultId) {
-      claimFetcher.load(`/resources/get-claim?claimId=${vaultId}`)
+      claimFetcher.load(`/resources/get-claim?vaultId=${vaultId}`)
     }
   }, [txReceipt, vaultId])
 
   useEffect(() => {
     if (txReceipt) {
-      if (claimFetcher.data) {
+      if (claimFetcher.data && 'claim' in claimFetcher.data) {
         console.log('claimFetcher.data', claimFetcher.data)
         dispatch({
           type: 'TRANSACTION_COMPLETE',
           txHash: txReceipt.transactionHash,
           txReceipt,
         })
-      } else if (
-        claimFetcher.state === 'idle' &&
-        claimFetcher.data === undefined
-      ) {
+      } else if (claimFetcher.data && 'error' in claimFetcher.data) {
         const errorMessage = `Failed to fetch claim. It may not have resolved in our database yet. Your claims vault ID is ${vaultId}`
         dispatch({
           type: 'TRANSACTION_ERROR',
@@ -276,7 +273,7 @@ function CreateClaimForm({
         toast.error(errorMessage)
       }
     }
-  }, [claimFetcher.data, claimFetcher.state, txReceipt])
+  }, [claimFetcher.data, txReceipt, vaultId])
 
   const handleSubmit = async () => {
     try {

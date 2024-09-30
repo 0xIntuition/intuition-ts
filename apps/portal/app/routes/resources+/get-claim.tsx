@@ -9,23 +9,24 @@ import { NO_WALLET_ERROR } from 'app/consts'
 
 export interface GetClaimLoaderData {
   claim: ClaimPresenter
+  error?: string
 }
 
 const MAX_RETRIES = 10
-const RETRY_DELAY = 1000 // 1 second
+const RETRY_DELAY = 2000 // 2 seconds
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const wallet = await requireUserWallet(request)
   invariant(wallet, NO_WALLET_ERROR)
 
   const url = new URL(request.url)
-  const claimId = url.searchParams.get('claimId') || ''
+  const vaultId = url.searchParams.get('vaultId') || ''
 
   for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
     try {
       const claim = await fetchWrapper(request, {
         method: ClaimsService.getClaimById,
-        args: { id: claimId },
+        args: { id: vaultId },
       })
       if (claim) {
         logger('[get-claim route] claim:', claim)
@@ -36,13 +37,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
       }
     } catch (error) {
       if (attempt === MAX_RETRIES - 1) {
-        console.error('Error fetching claim:', error)
         return json({ error: 'Error fetching claim' }, { status: 500 })
       }
       await sleep(RETRY_DELAY)
     }
   }
 
-  logger('[get-claim route] claim not found after retries')
   return json({ error: 'Claim not found' }, { status: 404 })
 }
