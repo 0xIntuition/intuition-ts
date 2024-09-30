@@ -28,7 +28,6 @@ import { SortOption } from '../sort-select'
 import { List } from './list'
 
 export function TagsList({
-  identities,
   claims,
   tag,
   pagination,
@@ -38,7 +37,6 @@ export function TagsList({
   enableSort = true,
   readOnly = false,
 }: {
-  identities: IdentityPresenter[]
   claims: ClaimPresenter[]
   claim: ClaimPresenter
   tag?: IdentityPresenter | null
@@ -61,16 +59,6 @@ export function TagsList({
 
   const setSaveListModalActive = useSetAtom(saveListModalAtom)
 
-  const claimIdMap = new Map()
-  const vaultIdMap = new Map()
-
-  claims.forEach((claim) => {
-    if (claim.subject) {
-      claimIdMap.set(claim.subject.id, claim.claim_id)
-      vaultIdMap.set(claim.subject.id, claim.vault_id)
-    }
-  })
-
   return (
     <>
       <List<SortColumn>
@@ -89,42 +77,32 @@ export function TagsList({
             ]}
           />
         )}
-        {identities.map((identity) => {
-          if (!identity || typeof identity !== 'object') {
-            return null
-          }
-
-          const claimId = claimIdMap.get(identity.id)
-          const vaultId = vaultIdMap.get(identity.id)
-          const matchingClaim = claims.find(
-            (claim) => claim.claim_id === claimId,
-          )
+        {claims.map((claim) => {
+          const identity = claim.subject
           // TODO: ENG-0000: Show filled save if user has a position on claim
           // TODO: ENG-0000: Show only user position if user is on filtering by you.
 
           return (
             <div
-              key={identity.id}
+              key={claim.claim_id}
               className={`grow shrink basis-0 self-stretch bg-background first:border-t-px first:rounded-t-xl last:rounded-b-xl theme-border border-t-0 flex-col justify-start hover:bg-secondary/10 transition-colors duration-200 items-start gap-5 inline-flex`}
             >
               <div className="flex flex-row gap-2 w-full">
                 <IdentityRow
-                  variant={identity.is_user ? Identity.user : Identity.nonUser}
+                  variant={identity?.is_user ? Identity.user : Identity.nonUser}
                   avatarSrc={getAtomImage(identity)}
                   name={getAtomLabel(identity)}
                   description={getAtomDescription(identity)}
-                  id={identity.user?.wallet ?? identity.identity_id}
-                  claimLink={getClaimUrl(vaultId ?? '', readOnly)}
+                  id={identity?.user?.wallet ?? identity?.identity_id ?? ''}
+                  claimLink={getClaimUrl(claim.vault_id ?? '', readOnly)}
                   tags={
-                    identity.tags?.map((tag) => ({
+                    identity?.tags?.map((tag) => ({
                       label: tag.display_name,
                       value: tag.num_tagged_identities,
                     })) ?? undefined
                   }
-                  amount={
-                    +formatBalance(BigInt(matchingClaim?.assets_sum || 0), 18)
-                  }
-                  totalFollowers={matchingClaim?.num_positions || 0}
+                  amount={+formatBalance(BigInt(claim?.assets_sum || 0), 18)}
+                  totalFollowers={claim?.num_positions || 0}
                   link={getAtomLink(identity, readOnly)}
                   ipfsLink={getAtomIpfsLink(identity)}
                   className={`w-full hover:bg-transparent ${readOnly ? '' : 'pr-0'}`}
@@ -136,11 +114,11 @@ export function TagsList({
                     onClick={() => {
                       setSaveListModalActive({
                         isOpen: true,
-                        id: identity.vault_id,
+                        id: claim.vault_id,
                         identity,
                         tag:
                           tag &&
-                          identity.tags?.find(
+                          identity?.tags?.find(
                             (t) => t.vault_id === tag.vault_id,
                           ),
                       })

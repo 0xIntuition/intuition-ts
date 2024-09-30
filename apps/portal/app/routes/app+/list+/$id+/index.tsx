@@ -27,7 +27,7 @@ import { ListTabIdentityDisplay } from '@components/lists/list-tab-identity-disp
 import SaveListModal from '@components/save-list/save-list-modal'
 import { DataHeaderSkeleton, PaginatedListSkeleton } from '@components/skeleton'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
-import { getListIdentities, getListIdentitiesCount } from '@lib/services/lists'
+import { getListClaims } from '@lib/services/lists'
 import { addIdentitiesListModalAtom, saveListModalAtom } from '@lib/state/store'
 import {
   getAtomDescription,
@@ -52,7 +52,7 @@ import {
   NO_PARAM_ID_ERROR,
   NO_WALLET_ERROR,
 } from 'app/consts'
-import { IdentityListType, VaultDetailsType } from 'app/types'
+import { VaultDetailsType } from 'app/types'
 import { useAtom, useSetAtom } from 'jotai'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -88,43 +88,23 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   })
   invariant(claim.object?.id, NO_PARAM_ID_ERROR)
 
-  const totalGlobalIdentitiesCount = getListIdentitiesCount({
-    request,
-    objectId: claim.object.id,
-  })
-
-  const totalUserIdentitiesCount = getListIdentitiesCount({
-    request,
-    objectId: claim.object.id,
-    userWithPosition: userObject.id,
-    userAssetsForPresent: true,
-  })
-
-  const totalAdditionalUserIdentitiesCount = paramWallet
-    ? getListIdentitiesCount({
-        request,
-        objectId: claim.object.id,
-        userWithPosition: additionalUserObject?.id,
-        userAssetsForPresent: true,
-      })
-    : 0
   return defer({
     wallet,
     userObject,
-    globalListIdentities: getListIdentities({
+    globalListClaims: getListClaims({
       request,
       objectId: claim.object.id,
       searchParams,
     }),
-    userListIdentities: getListIdentities({
+    userListClaims: getListClaims({
       request,
       objectId: claim.object.id,
       searchParams,
       userWithPosition: userObject.id,
       userAssetsForPresent: true,
     }),
-    additionalUserListIdentities: paramWallet
-      ? getListIdentities({
+    additionalUserListClaims: paramWallet
+      ? getListClaims({
           request,
           objectId: claim.object.id,
           searchParams,
@@ -132,9 +112,6 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
           userAssetsForPresent: true,
         })
       : null,
-    totalGlobalIdentitiesCount,
-    totalUserIdentitiesCount,
-    additionalTotalUserIdentitiesCount: totalAdditionalUserIdentitiesCount,
     additionalUserObject,
   })
 }
@@ -142,10 +119,9 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 export default function ListOverview() {
   const {
     wallet,
-    globalListIdentities,
-    userListIdentities,
-    additionalUserListIdentities,
-    totalGlobalIdentitiesCount,
+    globalListClaims,
+    userListClaims,
+    additionalUserListClaims,
     userObject,
     additionalUserObject,
   } = useLiveLoader<typeof loader>(['create', 'attest'])
@@ -215,11 +191,11 @@ export default function ListOverview() {
       </div>
       <div className="flex flex-col gap-6 w-full">
         <Suspense fallback={<DataHeaderSkeleton />}>
-          <Await resolve={totalGlobalIdentitiesCount} errorElement={<></>}>
-            {(resolvedtotalIdentitiesCount) => (
+          <Await resolve={globalListClaims} errorElement={<></>}>
+            {(resolvedGlobalListClaims) => (
               <ListHeaderCard
                 label="Identities"
-                value={resolvedtotalIdentitiesCount}
+                value={resolvedGlobalListClaims.pagination.totalEntries}
               >
                 <Claim
                   size="md"
@@ -267,13 +243,13 @@ export default function ListOverview() {
             <Suspense
               fallback={<Skeleton className="w-44 h-10 rounded mr-2" />}
             >
-              <Await resolve={globalListIdentities}>
-                {(resolvedGlobalListIdentities) => (
+              <Await resolve={globalListClaims}>
+                {(resolvedGlobalListClaims) => (
                   <TabsTrigger
                     value="global"
                     label="Global"
                     totalCount={
-                      resolvedGlobalListIdentities?.pagination.totalEntries
+                      resolvedGlobalListClaims?.pagination.totalEntries
                     }
                     onClick={(e) => {
                       e.preventDefault()
@@ -284,8 +260,8 @@ export default function ListOverview() {
               </Await>
             </Suspense>
             <Suspense fallback={<Skeleton className="w-44 h-10 rounded" />}>
-              <Await resolve={userListIdentities}>
-                {(resolvedUserListIdentities) => (
+              <Await resolve={userListClaims}>
+                {(resolvedUserListClaims) => (
                   <TabsTrigger
                     value="you"
                     label={
@@ -293,9 +269,7 @@ export default function ListOverview() {
                         You
                       </ListTabIdentityDisplay>
                     }
-                    totalCount={
-                      resolvedUserListIdentities?.pagination.totalEntries
-                    }
+                    totalCount={resolvedUserListClaims?.pagination.totalEntries}
                     onClick={(e) => {
                       e.preventDefault()
                       handleTabChange('you')
@@ -306,13 +280,13 @@ export default function ListOverview() {
             </Suspense>
             {userWalletAddress && (
               <Suspense fallback={<Skeleton className="w-44 h-10 rounded" />}>
-                <Await resolve={additionalUserListIdentities}>
-                  {(resolvedAdditionalUserListIdentities) => (
+                <Await resolve={additionalUserListClaims}>
+                  {(resolvedAdditionalUserListClaims) => (
                     <TabsTrigger
                       className="text-left"
                       value="additional"
                       totalCount={
-                        resolvedAdditionalUserListIdentities?.pagination
+                        resolvedAdditionalUserListClaims?.pagination
                           .totalEntries
                       }
                       label={
@@ -334,18 +308,17 @@ export default function ListOverview() {
           </TabsList>
           <TabsContent value="global" className="mt-6">
             <Suspense fallback={<PaginatedListSkeleton />}>
-              <Await resolve={globalListIdentities}>
-                {(resolvedGlobalListIdentities: IdentityListType | null) => {
-                  if (!resolvedGlobalListIdentities) {
+              <Await resolve={globalListClaims}>
+                {(resolvedGlobalListClaims) => {
+                  if (!resolvedGlobalListClaims) {
                     return <PaginatedListSkeleton />
                   }
                   return isNavigating ? (
                     <PaginatedListSkeleton />
                   ) : (
                     <TagsList
-                      identities={resolvedGlobalListIdentities.listIdentities}
-                      claims={resolvedGlobalListIdentities.claims}
-                      pagination={resolvedGlobalListIdentities.pagination}
+                      claims={resolvedGlobalListClaims.claims}
+                      pagination={resolvedGlobalListClaims.pagination}
                       claim={claim}
                       wallet={wallet}
                       enableSearch={true}
@@ -358,18 +331,17 @@ export default function ListOverview() {
           </TabsContent>
           <TabsContent value="you">
             <Suspense fallback={<PaginatedListSkeleton />}>
-              <Await resolve={userListIdentities}>
-                {(resolvedUserListIdentities: IdentityListType | null) => {
-                  if (!resolvedUserListIdentities) {
+              <Await resolve={userListClaims}>
+                {(resolvedUserListClaims) => {
+                  if (!resolvedUserListClaims) {
                     return <PaginatedListSkeleton />
                   }
                   return isNavigating ? (
                     <PaginatedListSkeleton />
                   ) : (
                     <TagsList
-                      identities={resolvedUserListIdentities.listIdentities}
-                      claims={resolvedUserListIdentities.claims}
-                      pagination={resolvedUserListIdentities.pagination}
+                      claims={resolvedUserListClaims.claims}
+                      pagination={resolvedUserListClaims.pagination}
                       claim={claim}
                       tag={claim.object}
                       wallet={wallet}
@@ -381,24 +353,17 @@ export default function ListOverview() {
               </Await>
             </Suspense>
           </TabsContent>
-          {userWalletAddress && !!additionalUserListIdentities && (
+          {userWalletAddress && !!additionalUserListClaims && (
             <TabsContent value="additional">
               <Suspense fallback={<PaginatedListSkeleton />}>
-                <Await resolve={additionalUserListIdentities}>
-                  {(
-                    resolvedAdditionalUserListIdentities: IdentityListType | null,
-                  ) => {
+                <Await resolve={additionalUserListClaims}>
+                  {(resolvedAdditionalUserListClaims) => {
                     return isNavigating ? (
                       <PaginatedListSkeleton />
-                    ) : resolvedAdditionalUserListIdentities ? (
+                    ) : resolvedAdditionalUserListClaims ? (
                       <TagsList
-                        identities={
-                          resolvedAdditionalUserListIdentities.listIdentities
-                        }
-                        claims={resolvedAdditionalUserListIdentities.claims}
-                        pagination={
-                          resolvedAdditionalUserListIdentities.pagination
-                        }
+                        claims={resolvedAdditionalUserListClaims.claims}
+                        pagination={resolvedAdditionalUserListClaims.pagination}
                         claim={claim}
                         tag={claim.object}
                         wallet={wallet}
