@@ -143,7 +143,7 @@ export default function ListDetails() {
       <Button
         variant="secondary"
         onClick={() => {
-          navigate(`/app/identity/${claim.object?.id}`)
+          navigate(`/app/identity/${claim.object?.vault_id}`)
         }}
         className="w-full"
       >
