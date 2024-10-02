@@ -16,7 +16,7 @@ import {
 } from '@0xintuition/1ui'
 import { IdentityPresenter } from '@0xintuition/api'
 
-import { SmartContractForm } from '@components/create-identity/create-smart-contract'
+import { SmartContractForm } from '@components/create-identity/create-smart-contract-form'
 import { InfoTooltip } from '@components/info-tooltip'
 
 import { IdentityForm } from './create-identity-form'
