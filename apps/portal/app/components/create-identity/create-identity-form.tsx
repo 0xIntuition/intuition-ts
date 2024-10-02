@@ -3,7 +3,6 @@ import React, { useEffect, useRef, useState } from 'react'
 import {
   Badge,
   Button,
-  Checkbox,
   Icon,
   Input,
   Label,
@@ -109,7 +108,6 @@ export function IdentityForm({
   )
   const [imageUploadError, setImageUploadError] = useState<string | null>(null)
   const [initialDeposit, setInitialDeposit] = useState<string>('')
-  const [isContract, setIsContract] = useState(false)
   const [transactionResponseData, setTransactionResponseData] =
     useState<IdentityPresenter | null>(null)
 
@@ -218,10 +216,6 @@ export function IdentityForm({
 
         if (identityImageSrc !== null) {
           formData.set('image_url', identityImageSrc as string)
-        }
-
-        if (isContract) {
-          formData.set('is_contract', 'true')
         }
 
         const submission = parseWithZod(formData, {
@@ -455,7 +449,6 @@ export function IdentityForm({
     setIdentityImageSrc(null)
     setIdentityImageFile(undefined)
     setInitialDeposit('0')
-    setIsContract(false)
     setIsTransactionStarted(false)
     onClose()
   }
@@ -575,27 +568,10 @@ export function IdentityForm({
               {fields.display_name.value &&
                 fields.display_name.value.length === 42 &&
                 /^0x[a-fA-F0-9]{1,42}$/.test(fields.display_name.value) && (
-                  <div className="flex items-center gap-2">
-                    <Checkbox
-                      checked={isContract}
-                      onCheckedChange={(checked) => {
-                        const isChecked = checked === true
-                        setIsContract(isChecked)
-                        setFormState((prev) => ({
-                          ...prev,
-                          is_contract: isChecked,
-                        }))
-                      }}
-                      id={fields.is_contract.id}
-                      className="h-4 w-4 text-muted theme-border rounded focus:ring-primary focus:ring-1 bg-primary/10 cursor-pointer checked:bg-primary/10 form-checkbox"
-                    />
-                    <Label
-                      htmlFor={fields.is_contract.id}
-                      className="text-sm text-foreground/70"
-                    >
-                      is Contract?
-                    </Label>
-                  </div>
+                  <Text className="text-xs font-semibold text-destructive">
+                    {`If this is a smart contract, select 'Smart Contract' from
+                    the Atom Type dropdown above.`}
+                  </Text>
                 )}
             </div>
 
