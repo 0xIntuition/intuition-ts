@@ -2,15 +2,19 @@ import { useEffect, useRef, useState } from 'react'
 
 import {
   Button,
+  cn,
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
+  Icon,
+  IconName,
   Text,
   toast,
 } from '@0xintuition/1ui'
 
 import intuitionIcon from '@assets/intuition-qr-icon.svg'
+import { useCopy } from '@lib/hooks/useCopy'
 import logger from '@lib/utils/logger'
 import QRCodeStyling from '@solana/qr-code-styling'
 import { ClientOnly } from 'remix-utils/client-only'
@@ -76,33 +80,38 @@ function ShareQRInner({
 function ShareModalContent({ currentPath }: ShareModalProps) {
   logger('currentPath', currentPath)
 
-  const handleCopyLink = () => {
-    navigator.clipboard
-      .writeText(getShareableUrl(currentPath))
-      .then(() => {
-        logger('Link copied to clipboard')
-        toast?.success('Copied to clipboard!')
-      })
-      .catch((err) => {
-        console.error('Failed to copy link:', err)
-      })
+  const { copy } = useCopy()
+
+  const handleCopy = () => {
+    setCopied(true)
+    copy(getShareableUrl(currentPath))
+    setTimeout(() => setCopied(false), 2000)
+    toast?.success('Copied to clipboard!')
   }
 
+  const [copied, setCopied] = useState(false)
+
   return (
-    <DialogContent className="bg-neutral-950 rounded-xl shadow border-theme h-[550px] flex flex-col">
+    <DialogContent className="bg-neutral-950 rounded-xl shadow border-theme flex flex-col">
       <DialogHeader>
         <DialogTitle>Share via Link or QR Code</DialogTitle>
       </DialogHeader>
-      <Text variant="caption" weight="regular" className="text-foreground/70">
-        {SHARE_MODAL_MESSAGE}
-      </Text>
-      <div className="flex flex-col items-center justify-center w-full h-full gap-10">
-        <ClientOnly fallback={<div>Loading QR Code...</div>}>
-          {() => <ShareQRInner currentPath={currentPath} />}
-        </ClientOnly>
-        <Button variant="accent" onClick={handleCopyLink}>
-          Copy Link
-        </Button>
+      <div className="flex flex-col gap-10">
+        <Text variant="caption" weight="regular" className="text-foreground/70">
+          {SHARE_MODAL_MESSAGE}
+        </Text>
+        <div className="flex flex-col items-center justify-center w-full h-full gap-10">
+          <ClientOnly fallback={<div>Loading QR Code...</div>}>
+            {() => <ShareQRInner currentPath={currentPath} />}
+          </ClientOnly>
+          <Button variant="accent" onClick={handleCopy}>
+            <Icon
+              name={copied ? IconName.checkmark : IconName.chainLink}
+              className={cn(`h-4 w-4`)}
+            />{' '}
+            Copy Link
+          </Button>
+        </div>
       </div>
     </DialogContent>
   )
