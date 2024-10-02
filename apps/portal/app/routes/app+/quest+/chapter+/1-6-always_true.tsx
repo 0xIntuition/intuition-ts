@@ -29,7 +29,7 @@ import SaveListModal from '@components/save-list/save-list-modal'
 import { PaginatedListSkeleton } from '@components/skeleton'
 import { useQuestCompletion } from '@lib/hooks/useQuestCompletion'
 import { useQuestMdxContent } from '@lib/hooks/useQuestMdxContent'
-import { getListIdentities } from '@lib/services/lists'
+import { getListClaims } from '@lib/services/lists'
 import { saveListModalAtom } from '@lib/state/store'
 import { getQuestObjects } from '@lib/utils/app'
 import logger from '@lib/utils/logger'
@@ -46,7 +46,7 @@ import {
   MIN_DEPOSIT,
   MULTIVAULT_CONTRACT_ADDRESS,
 } from 'app/consts'
-import { IdentityListType, MDXContentVariant } from 'app/types'
+import { MDXContentVariant } from 'app/types'
 import { useAtom } from 'jotai'
 import { parseUnits } from 'viem'
 
@@ -96,7 +96,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     args: { id: discoverListFallbackAtomId },
   })
 
-  const globalListIdentities = await getListIdentities({
+  const globalListClaims = await getListClaims({
     request,
     objectId: claim.object?.id ?? '',
     searchParams,
@@ -111,7 +111,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     userQuest,
     userWallet: user.wallet?.address,
     claim,
-    globalListIdentities,
+    globalListClaims,
   })
 }
 
@@ -141,7 +141,7 @@ export async function action({ request }: ActionFunctionArgs) {
 }
 
 export default function Quests() {
-  const { quest, userQuest, userWallet, claim, globalListIdentities } =
+  const { quest, userQuest, userWallet, claim, globalListClaims } =
     useLoaderData<typeof loader>()
   const actionData = useActionData<typeof action>()
   const { successModalOpen, setSuccessModalOpen } =
@@ -180,9 +180,9 @@ export default function Quests() {
 
         <div className="rounded-lg theme-border p-5 flex min-h-96 theme-border text-warning/30 overflow-auto">
           <Suspense fallback={<PaginatedListSkeleton />}>
-            <Await resolve={globalListIdentities}>
-              {(resolvedGlobalListIdentities: IdentityListType | null) => {
-                if (!resolvedGlobalListIdentities) {
+            <Await resolve={globalListClaims}>
+              {(resolveGlobalListClaims) => {
+                if (!resolveGlobalListClaims) {
                   return <PaginatedListSkeleton />
                 }
                 return (
@@ -196,9 +196,8 @@ export default function Quests() {
                         maxStringLength={72}
                       />
                       <TagsList
-                        identities={resolvedGlobalListIdentities.listIdentities}
-                        claims={resolvedGlobalListIdentities.claims}
-                        pagination={resolvedGlobalListIdentities.pagination}
+                        claims={resolveGlobalListClaims.claims}
+                        pagination={resolveGlobalListClaims.pagination}
                         claim={claim}
                         tag={claim.object}
                         wallet={userWallet}

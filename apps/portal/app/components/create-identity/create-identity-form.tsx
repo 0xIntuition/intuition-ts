@@ -869,7 +869,7 @@ function CreateIdentityForm({
                     onClick={() => {
                       if (successAction === TransactionSuccessAction.VIEW) {
                         navigate(
-                          `${PATHS.IDENTITY}/${transactionResponseData.id}`,
+                          `${PATHS.IDENTITY}/${transactionResponseData.vault_id}`,
                         )
                       }
                       handleClose()

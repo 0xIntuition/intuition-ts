@@ -29,7 +29,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     if (redirectTo) {
       throw redirect(redirectTo)
     }
-    throw redirect(PATHS.PROFILE)
+    throw redirect(PATHS.HOME)
   }
 
   if (!sessionToken) {

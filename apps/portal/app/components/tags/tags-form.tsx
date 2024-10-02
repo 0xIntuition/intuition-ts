@@ -222,7 +222,7 @@ export function TagsForm({
                     navigate(
                       identity.is_user
                         ? `${PATHS.PROFILE}/${identity.identity_id}`
-                        : `${PATHS.IDENTITY}/${identity.id}`,
+                        : `${PATHS.IDENTITY}/${identity.vault_id}`,
                     )
 
                     onClose()

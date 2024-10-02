@@ -8,7 +8,6 @@ import {
   DialogTitle,
   Icon,
   Input,
-  Label,
   Text,
   toast,
 } from '@0xintuition/1ui'
@@ -18,13 +17,6 @@ import { IdentityPopover } from '@components/create-claim/create-claim-popovers'
 import CreateClaimReview from '@components/create-claim/create-claim-review'
 import { InfoTooltip } from '@components/info-tooltip'
 import WrongNetworkButton from '@components/wrong-network-button'
-import {
-  getFormProps,
-  getInputProps,
-  SubmissionResult,
-  useForm,
-} from '@conform-to/react'
-import { parseWithZod } from '@conform-to/zod'
 import { multivaultAbi } from '@lib/abis/multivault'
 import { useCreateTriple } from '@lib/hooks/useCreateTriple'
 import { useGetWalletBalance } from '@lib/hooks/useGetWalletBalance'
@@ -35,12 +27,12 @@ import {
   transactionReducer,
   useTransactionState,
 } from '@lib/hooks/useTransactionReducer'
-import { createClaimSchema } from '@lib/schemas/create-claim-schema'
 import { createClaimModalAtom } from '@lib/state/store'
 import { getChainEnvConfig } from '@lib/utils/environment'
 import logger from '@lib/utils/logger'
 import { useFetcher, useNavigate } from '@remix-run/react'
 import { CreateClaimLoaderData } from '@routes/resources+/create-claim'
+import { GetClaimLoaderData } from '@routes/resources+/get-claim'
 import { TagLoaderData } from '@routes/resources+/tag'
 import {
   CREATE_CLAIM_RESOURCE_ROUTE,
@@ -57,10 +49,9 @@ import {
   TransactionSuccessActionType,
 } from 'app/types/transaction'
 import { useAtomValue } from 'jotai'
-import { parseUnits } from 'viem'
-import { useAccount, usePublicClient, useWalletClient } from 'wagmi'
+import { Address, decodeEventLog, parseUnits } from 'viem'
+import { useAccount, usePublicClient } from 'wagmi'
 
-import ErrorList from '../error-list'
 import { TransactionState } from '../transaction-state'
 
 interface ClaimFormProps {
@@ -80,9 +71,6 @@ export function ClaimForm({
     TransactionStateType,
     TransactionActionType
   >(transactionReducer, initialTransactionState)
-
-  const [transactionResponseData, setTransactionResponseData] =
-    useState<ClaimPresenter | null>(null)
 
   const isTransactionStarted = [
     'approve',
@@ -122,8 +110,6 @@ export function ClaimForm({
           onClose={onClose}
           onSuccess={onSuccess}
           successAction={successAction}
-          setTransactionResponseData={setTransactionResponseData}
-          transactionResponseData={transactionResponseData}
         />
       </div>
     </div>
@@ -134,10 +120,6 @@ interface CreateClaimFormProps {
   wallet: string
   state: TransactionStateType
   dispatch: React.Dispatch<TransactionActionType>
-  setTransactionResponseData: React.Dispatch<
-    React.SetStateAction<ClaimPresenter | null>
-  >
-  transactionResponseData: ClaimPresenter | null
   onSuccess?: (claim: ClaimPresenter) => void
   successAction?: TransactionSuccessActionType
   onClose: () => void
@@ -147,26 +129,22 @@ function CreateClaimForm({
   wallet,
   state,
   dispatch,
-  setTransactionResponseData,
-  transactionResponseData,
   onClose,
-  onSuccess,
   successAction = TransactionSuccessAction.VIEW,
 }: CreateClaimFormProps) {
   const { subject, predicate, object } = useAtomValue(createClaimModalAtom)
   const feeFetcher = useLoaderFetcher<CreateClaimLoaderData>(
     CREATE_CLAIM_RESOURCE_ROUTE,
   )
+  const claimChecker = useFetcher<TagLoaderData>()
+  const claimFetcher = useFetcher<GetClaimLoaderData>()
+
   const { fees } = (feeFetcher.data as CreateClaimLoaderData) ?? {}
 
+  const [lastTxHash, setLastTxHash] = useState<string | undefined>(undefined)
   const [initialDeposit, setInitialDeposit] = useState<string>('0')
-
+  const [vaultId, setVaultId] = useState<string | undefined>(undefined)
   const navigate = useNavigate()
-  interface OffChainClaimFetcherData {
-    success: 'success' | 'error'
-    claim: ClaimPresenter
-    submission: SubmissionResult<string[]> | null
-  }
 
   // const [searchQuery, setSearchQuery] = useState('')
   const [isSubjectPopoverOpen, setIsSubjectPopoverOpen] = useState(false)
@@ -176,7 +154,6 @@ function CreateClaimForm({
 
   const { setSearchQuery, identities, handleInput } = useIdentityServerSearch()
 
-  const { data: walletClient } = useWalletClient()
   const publicClient = usePublicClient()
   const { address, chain } = useAccount()
 
@@ -184,6 +161,7 @@ function CreateClaimForm({
     writeContractAsync: writeCreateTriple,
     awaitingWalletConfirmation,
     awaitingOnChainConfirmation,
+    receipt: txReceipt,
   } = useCreateTriple()
 
   // form
@@ -224,11 +202,30 @@ function CreateClaimForm({
             hash: txHash,
           })
 
-          dispatch({
-            type: 'TRANSACTION_COMPLETE',
-            txHash,
-            txReceipt: receipt,
-          })
+          type EventLogArgs = {
+            sender: Address
+            receiver?: Address
+            owner?: Address
+            vaultId: string
+          }
+
+          if (
+            receipt?.logs[0].data &&
+            receipt?.transactionHash !== lastTxHash
+          ) {
+            const decodedLog = decodeEventLog({
+              abi: multivaultAbi,
+              data: receipt?.logs[0].data,
+              topics: receipt?.logs[0].topics,
+            })
+
+            const topics = decodedLog as unknown as {
+              eventName: string
+              args: EventLogArgs
+            }
+            setVaultId(topics.args.vaultId.toString())
+            setLastTxHash(receipt.transactionHash)
+          }
         }
       } catch (error) {
         console.error('error', error)
@@ -252,89 +249,50 @@ function CreateClaimForm({
     }
   }
 
-  const claimFetcher = useFetcher<OffChainClaimFetcherData>()
-  const lastOffChainSubmission = claimFetcher.data?.submission
+  useEffect(() => {
+    if (txReceipt && vaultId) {
+      claimFetcher.load(`/resources/get-claim?vaultId=${vaultId}`)
+    }
+  }, [txReceipt, vaultId])
 
   useEffect(() => {
-    if (
-      claimFetcher.state === 'idle' &&
-      claimFetcher.data !== null &&
-      claimFetcher.data !== undefined
-    ) {
-      const responseData = claimFetcher.data as OffChainClaimFetcherData
-      if (responseData !== null) {
-        setTransactionResponseData(responseData.claim)
-        logger('responseData', responseData)
-        if (
-          responseData.claim !== undefined &&
-          selectedIdentities.subject !== null &&
-          selectedIdentities.predicate !== null &&
-          selectedIdentities.object !== null
-        ) {
-          handleOnChainCreateTriple({
-            subjectVaultId: selectedIdentities.subject.vault_id,
-            predicateVaultId: selectedIdentities.predicate.vault_id,
-            objectVaultId: selectedIdentities.object.vault_id,
-          })
-        }
-      }
-      if (claimFetcher.data === null || claimFetcher.data === undefined) {
-        console.error('Error in offchain data creation.:', claimFetcher.data)
+    if (txReceipt) {
+      if (claimFetcher.data && 'claim' in claimFetcher.data) {
+        console.log('claimFetcher.data', claimFetcher.data)
+        dispatch({
+          type: 'TRANSACTION_COMPLETE',
+          txHash: txReceipt.transactionHash,
+          txReceipt,
+        })
+      } else if (claimFetcher.data && 'error' in claimFetcher.data) {
+        const errorMessage = `Your claim was created, but we're having trouble fetching its details. Vault ID: ${vaultId}`
         dispatch({
           type: 'TRANSACTION_ERROR',
-          error: 'Error in offchain claim creation.',
+          error: errorMessage,
         })
+        toast.error(errorMessage)
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [claimFetcher.state, claimFetcher.data, dispatch])
+  }, [claimFetcher.data, txReceipt, vaultId])
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
+  const handleSubmit = async () => {
     try {
+      dispatch({ type: 'CONFIRM_TRANSACTION' })
       if (
-        walletClient &&
-        selectedIdentities.subject &&
-        selectedIdentities.predicate &&
-        selectedIdentities.object
+        selectedIdentities.subject !== null &&
+        selectedIdentities.predicate !== null &&
+        selectedIdentities.object !== null
       ) {
-        const formData = new FormData()
-        formData.append('subject_id', selectedIdentities.subject.id)
-        formData.append('predicate_id', selectedIdentities.predicate.id)
-        formData.append('object_id', selectedIdentities.object.id)
-        const submission = parseWithZod(formData, {
-          schema: createClaimSchema,
+        handleOnChainCreateTriple({
+          subjectVaultId: selectedIdentities.subject.vault_id,
+          predicateVaultId: selectedIdentities.predicate.vault_id,
+          objectVaultId: selectedIdentities.object.vault_id,
         })
-
-        if (event.currentTarget.initial_deposit?.value !== undefined) {
-          setInitialDeposit(event.currentTarget.initial_deposit.value)
-        }
-
-        logger('submission', submission)
-
-        if (
-          submission.status === 'error' &&
-          submission.error !== null &&
-          Object.keys(submission.error).length
-        ) {
-          console.error('Create claim validation errors: ', submission.error)
-        }
-        claimFetcher.submit(formData, {
-          action: '/actions/create-claim',
-          method: 'post',
-        })
-        dispatch({ type: 'CONFIRM_TRANSACTION' })
       }
     } catch (error: unknown) {
       logger(error)
     }
   }
-
-  const [form, fields] = useForm({
-    id: 'create-claim',
-    lastResult: lastOffChainSubmission,
-    onSubmit: async (event) => handleSubmit(event),
-  })
 
   const [selectedIdentities, setSelectedIdentities] = useState<{
     subject: IdentityPresenter | null
@@ -380,8 +338,6 @@ function CreateClaimForm({
     address ?? (wallet as `0x${string}`),
   )
 
-  const claimChecker = useFetcher<TagLoaderData>()
-
   useEffect(() => {
     if (
       selectedIdentities.subject &&
@@ -404,14 +360,6 @@ function CreateClaimForm({
     }
   }, [claimChecker.data, selectedIdentities])
 
-  useEffect(() => {
-    if (state.status === 'complete') {
-      if (transactionResponseData) {
-        onSuccess?.(transactionResponseData)
-      }
-    }
-  }, [state.status, transactionResponseData])
-
   const Divider = () => (
     <span className="h-px w-2.5 flex bg-border/30 self-end mb-[1.2rem] max-sm:hidden" />
   )
@@ -420,12 +368,6 @@ function CreateClaimForm({
 
   return (
     <>
-      <claimFetcher.Form
-        method="post"
-        {...getFormProps(form)}
-        action="/actions/create-claim"
-        hidden
-      />
       <div className="h-full flex flex-col">
         {state.status === 'idle' ? (
           <div className="flex flex-col items-center justify-between h-full">
@@ -478,9 +420,6 @@ function CreateClaimForm({
                   <div className="flex w-full max-w-md flex-col mx-auto">
                     <div className="flex flex-row items-center justify-between mb-1">
                       <div className="inline-flex gap-1">
-                        <Label htmlFor={fields.initial_deposit.id} hidden>
-                          Initial Deposit
-                        </Label>
                         <div className="self-stretch flex-col justify-start items-start flex">
                           <div className="flex w-full items-center justify-between gap-1">
                             <Text
@@ -502,9 +441,6 @@ function CreateClaimForm({
                       </Badge>
                     </div>
                     <Input
-                      {...getInputProps(fields.initial_deposit, {
-                        type: 'text',
-                      })}
                       placeholder="0"
                       startAdornment="ETH"
                       value={initialDeposit}
@@ -523,10 +459,6 @@ function CreateClaimForm({
                         }
                         setInitialDeposit(sanitizedValue)
                       }}
-                    />
-                    <ErrorList
-                      id={fields.initial_deposit.errorId}
-                      errors={fields.initial_deposit.errors}
                     />
                   </div>
                 </div>
@@ -573,8 +505,7 @@ function CreateClaimForm({
                 <WrongNetworkButton />
               ) : (
                 <Button
-                  form={form.id}
-                  type="submit"
+                  onClick={handleSubmit}
                   variant="primary"
                   disabled={
                     !address ||
@@ -599,16 +530,14 @@ function CreateClaimForm({
               txHash={state.txHash}
               type="claim"
               successButton={
-                transactionResponseData && (
+                txReceipt && (
                   <Button
                     type="button"
                     variant="primary"
                     className="w-40"
                     onClick={() => {
                       if (successAction === TransactionSuccessAction.VIEW) {
-                        navigate(
-                          `${PATHS.CLAIM}/${transactionResponseData.claim_id}`,
-                        )
+                        navigate(`${PATHS.CLAIM}/${vaultId}`)
                       }
 
                       onClose()
@@ -626,7 +555,14 @@ function CreateClaimForm({
                   variant="primary"
                   className="mt-auto w-40"
                   onClick={() => {
-                    dispatch({ type: 'START_TRANSACTION' })
+                    if (txReceipt) {
+                      dispatch({ type: 'TRANSACTION_PENDING' })
+                      claimFetcher.load(
+                        `/resources/get-claim?vaultId=${vaultId}`,
+                      )
+                    } else {
+                      dispatch({ type: 'START_TRANSACTION' })
+                    }
                   }}
                 >
                   Retry

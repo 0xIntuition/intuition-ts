@@ -102,7 +102,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   }
 
   if (userIdentity && !isCreating) {
-    throw redirect(`${PATHS.PROFILE}`)
+    throw redirect(`${PATHS.HOME}`)
   }
 
   const ethPrice = await getEthPrice()

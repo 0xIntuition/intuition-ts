@@ -1,4 +1,4 @@
-import { Banner, BannerVariant, Claim, Identity } from '@0xintuition/1ui'
+import { BannerVariant, Claim, Identity } from '@0xintuition/1ui'
 import {
   ClaimPresenter,
   ClaimSortColumn,
@@ -8,10 +8,9 @@ import {
 
 import { DetailInfoCard } from '@components/detail-info-card'
 import { ErrorPage } from '@components/error-page'
-import NavigationButton from '@components/navigation-link'
 import ReadOnlyBanner from '@components/read-only-banner'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
-import { getClaimOrPending } from '@lib/services/claims'
+import { getClaim } from '@lib/services/claims'
 import { getSpecialPredicate } from '@lib/utils/app'
 import logger from '@lib/utils/logger'
 import {
@@ -41,7 +40,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const direction: SortDirection =
     (searchParams.get('direction') as SortDirection) ?? 'desc'
 
-  const { claim, isPending } = await getClaimOrPending(request, id)
+  const { claim } = await getClaim(request, id)
 
   if (!claim) {
     throw new Response('Not Found', { status: 404 })
@@ -70,7 +69,6 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
   return json({
     claim,
-    isPending,
     sortBy,
     direction,
     vaultDetails,
@@ -132,9 +130,8 @@ export interface ReadOnlyClaimDetailsLoaderData {
 }
 
 export default function ReadOnlyClaimDetails() {
-  const { claim, isPending } = useLiveLoader<{
+  const { claim } = useLiveLoader<{
     claim: ClaimPresenter
-    isPending: boolean
   }>(['create', 'attest'])
 
   const leftPanel = (
@@ -198,29 +195,12 @@ export default function ReadOnlyClaimDetails() {
       />
       <ReadOnlyBanner
         variant={BannerVariant.warning}
-        to={`${PATHS.CLAIM}/${claim.claim_id}`}
+        to={`${PATHS.CLAIM}/${claim.vault_id}`}
       />
     </div>
   )
 
-  const rightPanel = isPending ? (
-    <Banner
-      variant="warning"
-      title="Please Refresh the Page"
-      message="It looks like the on-chain transaction was successful, but we're still waiting for the information to update. Please refresh the page to ensure everything is up to date."
-    >
-      <NavigationButton
-        reloadDocument
-        variant="secondary"
-        to=""
-        className="max-lg:w-full"
-      >
-        Refresh
-      </NavigationButton>
-    </Banner>
-  ) : (
-    <Outlet />
-  )
+  const rightPanel = <Outlet />
 
   return (
     <>

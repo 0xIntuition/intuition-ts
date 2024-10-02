@@ -66,7 +66,7 @@ const DetailInfoCard = ({
             List
           </Text>
           <div className="flex justify-start items-center gap-1">
-            <a href={getListUrl(list.claim_id, '', readOnly)}>
+            <a href={getListUrl(list.vault_id, '', readOnly)}>
               <IdentityTag
                 variant={list.object?.user ? Identity.user : Identity.nonUser}
                 imgSrc={list.object?.image ?? ''}

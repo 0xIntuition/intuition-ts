@@ -398,8 +398,8 @@ export const getAtomLink = (
       : `${PATHS.PROFILE}/${atom.identity_id}`
   }
   return readOnly
-    ? `${PATHS.READONLY_IDENTITY}/${atom.id}`
-    : `${PATHS.IDENTITY}/${atom.id}`
+    ? `${PATHS.READONLY_IDENTITY}/${atom.vault_id}`
+    : `${PATHS.IDENTITY}/${atom.vault_id}`
 }
 
 export const getAtomId = (atom: IdentityPresenter) => {
@@ -440,3 +440,6 @@ export const getProfileUrl = (
   const baseUrl = readOnly ? `${PATHS.READONLY_PROFILE}/` : `${PATHS.PROFILE}/`
   return `${baseUrl}${userAddress}`
 }
+
+export const sleep = (ms: number) =>
+  new Promise((resolve) => setTimeout(resolve, ms))

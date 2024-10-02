@@ -14,22 +14,17 @@ import { useDepositTriple } from '@lib/hooks/useDepositTriple'
 import { useGetWalletBalance } from '@lib/hooks/useGetWalletBalance'
 import { useRedeemTriple } from '@lib/hooks/useRedeemTriple'
 import { transactionReducer } from '@lib/hooks/useTransactionReducer'
-import { getSpecialPredicate } from '@lib/utils/app'
+import { saveListModalAtom } from '@lib/state/store'
 import logger from '@lib/utils/logger'
 import { useGenericTxState } from '@lib/utils/use-tx-reducer'
 import { useFetcher, useLocation } from '@remix-run/react'
-import { ClaimLoaderData } from '@routes/resources+/search-claims-by-ids'
-import {
-  CURRENT_ENV,
-  GET_VAULT_DETAILS_RESOURCE_ROUTE,
-  MIN_DEPOSIT,
-  SEARCH_CLAIMS_BY_IDS_RESOURCE_ROUTE,
-} from 'app/consts'
+import { GET_VAULT_DETAILS_RESOURCE_ROUTE, MIN_DEPOSIT } from 'app/consts'
 import {
   TransactionActionType,
   TransactionStateType,
 } from 'app/types/transaction'
 import { VaultDetailsType } from 'app/types/vault'
+import { useAtomValue } from 'jotai'
 import { Abi, Address, decodeEventLog, formatUnits, parseUnits } from 'viem'
 import { useAccount, usePublicClient } from 'wagmi'
 
@@ -95,50 +90,16 @@ export default function SaveListModal({
     reset,
   } = mode === 'save' ? depositHook : redeemHook
 
-  const [fetchedClaimVaultId, setFetchedClaimVaultId] = useState<string | null>(
-    null,
-  )
-  const [fetchedClaimId, setFetchedClaimId] = useState<string | null>(null)
   const [vaultDetails, setVaultDetails] = useState<VaultDetailsType>()
-
-  const claimFetcher = useFetcher<ClaimLoaderData[]>()
   const vaultDetailsFetcher = useFetcher<VaultDetailsType>()
 
-  useEffect(() => {
-    let isCancelled = false
-
-    if (identity && tag) {
-      const fetchClaim = () => {
-        const searchParams = new URLSearchParams({
-          subject: identity.vault_id,
-          predicate:
-            getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId?.toString(),
-          object: tag.vault_id,
-          fetchId: fetchId.toString(),
-        })
-
-        const finalUrl = `${SEARCH_CLAIMS_BY_IDS_RESOURCE_ROUTE}?${searchParams.toString()}`
-
-        if (!isCancelled) {
-          claimFetcher.load(finalUrl)
-        }
-      }
-
-      fetchClaim()
-    }
-
-    return () => {
-      isCancelled = true
-    }
-    // omits the fetcher from the exhaustive deps
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [identity, tag, fetchId])
+  const { id: vaultId } = useAtomValue(saveListModalAtom)
 
   useEffect(() => {
     let isCancelled = false
 
-    if (fetchedClaimVaultId !== null) {
-      const finalUrl = `${GET_VAULT_DETAILS_RESOURCE_ROUTE}?contract=${contract}&vaultId=${fetchedClaimVaultId}&fetchId=${fetchId}`
+    if (vaultId !== null) {
+      const finalUrl = `${GET_VAULT_DETAILS_RESOURCE_ROUTE}?contract=${contract}&vaultId=${vaultId}&fetchId=${fetchId}`
       if (!isCancelled) {
         vaultDetailsFetcher.load(finalUrl)
       }
@@ -149,47 +110,13 @@ export default function SaveListModal({
     }
     // omits the fetcher from the exhaustive deps
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [contract, fetchedClaimVaultId, fetchId])
+  }, [contract, vaultId, fetchId])
 
   useEffect(() => {
-    if (
-      claimFetcher.state === 'loading' ||
-      vaultDetailsFetcher.state === 'loading'
-    ) {
+    if (vaultDetailsFetcher.state === 'loading') {
       setIsLoading(true)
     }
-  }, [claimFetcher.state, vaultDetailsFetcher.state])
-
-  useEffect(() => {
-    if (
-      claimFetcher.state === 'idle' &&
-      claimFetcher.data &&
-      Array.isArray(claimFetcher.data) &&
-      claimFetcher.data.length > 0
-    ) {
-      logger('claimFetcher.data[0]', claimFetcher.data[0])
-      const fetchedClaimResponse = claimFetcher.data[0] as unknown as {
-        claim_id: string
-        vault_id: string
-      }
-      if (fetchedClaimResponse && fetchedClaimResponse.vault_id) {
-        setFetchedClaimVaultId(fetchedClaimResponse.vault_id)
-      } else {
-        setFetchedClaimVaultId(null)
-      }
-
-      if (fetchedClaimResponse && fetchedClaimResponse.claim_id) {
-        setFetchedClaimId(fetchedClaimResponse.claim_id)
-      } else {
-        setFetchedClaimId(null)
-      }
-    } else if (
-      claimFetcher.state === 'idle' &&
-      (!claimFetcher.data || claimFetcher.data.length === 0)
-    ) {
-      setFetchedClaimVaultId(null)
-    }
-  }, [claimFetcher.state, claimFetcher.data])
+  }, [vaultDetailsFetcher.state])
 
   useEffect(() => {
     if (vaultDetailsFetcher.state === 'idle' && vaultDetailsFetcher.data) {
@@ -201,7 +128,7 @@ export default function SaveListModal({
   const useHandleAction = (actionType: string) => {
     return async () => {
       try {
-        if (!contract || !fetchedClaimVaultId || !vaultDetails) {
+        if (!contract || !vaultId || !vaultDetails) {
           throw new Error('Missing required parameters')
         }
         const txHash = await writeContractAsync({
@@ -211,11 +138,11 @@ export default function SaveListModal({
             actionType === 'save' ? 'depositTriple' : 'redeemTriple',
           args:
             actionType === 'save'
-              ? [userWallet as `0x${string}`, fetchedClaimVaultId]
+              ? [userWallet as `0x${string}`, vaultId]
               : [
                   vaultDetails.user_conviction,
                   userWallet as `0x${string}`,
-                  fetchedClaimVaultId,
+                  vaultId,
                 ],
           value:
             actionType === 'save'
@@ -387,15 +314,12 @@ export default function SaveListModal({
   const handleClose = () => {
     onClose()
     setMode('save')
-    setFetchedClaimVaultId(null)
     setVaultDetails(undefined)
     setIsLoading(true)
     setVal(formattedMinDeposit ?? MIN_DEPOSIT)
     setShowErrors(false)
     setValidationErrors([])
-    claimFetcher.data = undefined
     vaultDetailsFetcher.data = undefined
-    claimFetcher.state = 'idle'
     vaultDetailsFetcher.state = 'idle'
     setFetchId((prevId) => prevId + 1)
     setTimeout(() => {
@@ -407,15 +331,12 @@ export default function SaveListModal({
   useEffect(() => {
     if (open) {
       setMode('save')
-      setFetchedClaimVaultId(null)
       setVaultDetails(undefined)
       setIsLoading(true)
       setVal(formattedMinDeposit ?? MIN_DEPOSIT)
       setShowErrors(false)
       setValidationErrors([])
-      claimFetcher.data = undefined
       vaultDetailsFetcher.data = undefined
-      claimFetcher.state = 'idle'
       vaultDetailsFetcher.state = 'idle'
       setFetchId((prevId) => prevId + 1)
       dispatch({ type: 'START_TRANSACTION' })
@@ -429,7 +350,7 @@ export default function SaveListModal({
     'confirm',
   ].includes(state.status)
 
-  return (
+  return vaultId ? (
     <Dialog
       defaultOpen
       open={open}
@@ -445,7 +366,6 @@ export default function SaveListModal({
           <SaveForm
             tag={tag}
             identity={identity}
-            claimId={fetchedClaimId}
             user_assets={vaultDetails?.user_assets ?? '0'}
             entry_fee={vaultDetails?.formatted_entry_fee ?? '0'}
             exit_fee={vaultDetails?.formatted_exit_fee ?? '0'}
@@ -479,7 +399,7 @@ export default function SaveListModal({
                   handleClose={handleClose}
                   dispatch={dispatch}
                   state={state}
-                  identity={identity}
+                  vaultId={vaultId}
                   user_conviction={vaultDetails?.user_conviction ?? '0'}
                   className={`${(vaultDetails?.user_conviction && vaultDetails?.user_conviction > '0' && state.status === 'idle') || mode !== 'save' ? '' : 'hidden'}`}
                 />
@@ -490,7 +410,7 @@ export default function SaveListModal({
                   handleClose={handleClose}
                   dispatch={dispatch}
                   state={state}
-                  identity={identity}
+                  vaultId={vaultId}
                   min_deposit={vaultDetails?.min_deposit ?? '0'}
                   walletBalance={walletBalance}
                   conviction_price={vaultDetails?.conviction_price ?? '0'}
@@ -505,5 +425,5 @@ export default function SaveListModal({
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  )
+  ) : null
 }

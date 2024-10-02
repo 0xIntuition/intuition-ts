@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 
 import { Button, cn } from '@0xintuition/1ui'
-import { IdentityPresenter } from '@0xintuition/api'
 
 import { saveListModalAtom } from '@lib/state/store'
 import { getChainEnvConfig } from '@lib/utils/environment'
@@ -23,7 +22,7 @@ interface SaveButtonProps {
   handleClose: () => void
   dispatch: (action: TransactionActionType) => void
   state: TransactionStateType
-  identity: IdentityPresenter
+  vaultId: string
   min_deposit: string
   walletBalance: string
   conviction_price: string
@@ -40,7 +39,7 @@ const SaveButton: React.FC<SaveButtonProps> = ({
   handleClose,
   dispatch,
   state,
-  identity,
+  vaultId,
   min_deposit,
   walletBalance,
   conviction_price,
@@ -74,11 +73,11 @@ const SaveButton: React.FC<SaveButtonProps> = ({
       state.status === 'transaction-confirmed' ||
       state.status === 'complete'
     ) {
-      return 'View identity'
+      return 'View Claim'
     } else if (state.status === 'error') {
       return 'Retry'
     } else if (chain?.id !== getChainEnvConfig(CURRENT_ENV).chainId) {
-      return 'Wrong Network'
+      return 'Switch Network'
     }
     return `${user_assets > '0' ? 'Increase Stake' : 'Save'}`
   }
@@ -116,11 +115,7 @@ const SaveButton: React.FC<SaveButtonProps> = ({
           state.status === 'transaction-confirmed'
         ) {
           handleClose()
-          navigate(
-            identity.is_user
-              ? `${PATHS.PROFILE}/${identity.identity_id}`
-              : `${PATHS.IDENTITY}/${identity.id}`,
-          )
+          navigate(`${PATHS.CLAIM}/${vaultId}`)
         } else if (state.status === 'review-transaction') {
           handleAction()
         } else if (chain?.id !== getChainEnvConfig(CURRENT_ENV).chainId) {

@@ -21,7 +21,7 @@ import { TagsList } from '@components/list/tags'
 import { ListTabIdentityDisplay } from '@components/lists/list-tab-identity-display'
 import { DataHeaderSkeleton, PaginatedListSkeleton } from '@components/skeleton'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
-import { getListIdentities, getListIdentitiesCount } from '@lib/services/lists'
+import { getListClaims } from '@lib/services/lists'
 import {
   getAtomDescription,
   getAtomImage,
@@ -39,7 +39,7 @@ import {
 } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
 import { NO_CLAIM_ERROR, NO_PARAM_ID_ERROR } from 'app/consts'
-import { IdentityListType, VaultDetailsType } from 'app/types'
+import { VaultDetailsType } from 'app/types'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const id = params.id
@@ -64,33 +64,19 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   })
   invariant(claim.object?.id, NO_PARAM_ID_ERROR)
 
-  const totalGlobalIdentitiesCount = getListIdentitiesCount({
-    request,
-    objectId: claim.object.id,
-  })
-
-  const totalAdditionalUserIdentitiesCount = paramWallet
-    ? getListIdentitiesCount({
-        request,
-        objectId: claim.object.id,
-        userWithPosition: additionalUserObject?.id,
-        userAssetsForPresent: true,
-      })
-    : 0
-
   return defer({
-    globalListIdentities: getListIdentities({
+    globalListClaims: getListClaims({
       request,
       objectId: claim.object.id,
       searchParams,
     }),
-    userListIdentities: getListIdentities({
+    userListClaims: getListClaims({
       request,
       objectId: claim.object.id,
       searchParams,
     }),
-    additionalUserListIdentities: paramWallet
-      ? getListIdentities({
+    additionalUserListClaims: paramWallet
+      ? getListClaims({
           request,
           objectId: claim.object.id,
           searchParams,
@@ -98,19 +84,15 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
           userAssetsForPresent: true,
         })
       : null,
-    totalGlobalIdentitiesCount,
-    totalAdditionalUserIdentitiesCount,
     additionalUserObject,
   })
 }
 
 export default function ReadOnlyListOverview() {
   const {
-    globalListIdentities,
-    userListIdentities,
-    additionalUserListIdentities,
-    totalGlobalIdentitiesCount,
-
+    globalListClaims,
+    userListClaims,
+    additionalUserListClaims,
     additionalUserObject,
   } = useLiveLoader<typeof loader>(['create', 'attest'])
 
@@ -147,11 +129,11 @@ export default function ReadOnlyListOverview() {
     <div className="flex-col justify-start items-start flex w-full gap-6">
       <div className="flex flex-col gap-6 w-full">
         <Suspense fallback={<DataHeaderSkeleton />}>
-          <Await resolve={totalGlobalIdentitiesCount} errorElement={<></>}>
-            {(resolvedtotalIdentitiesCount) => (
+          <Await resolve={globalListClaims} errorElement={<></>}>
+            {(resolvedGlobalListClaims) => (
               <ListHeaderCard
                 label="Identities"
-                value={resolvedtotalIdentitiesCount}
+                value={resolvedGlobalListClaims.pagination.totalEntries}
               >
                 <Claim
                   size="md"
@@ -202,13 +184,13 @@ export default function ReadOnlyListOverview() {
             <Suspense
               fallback={<Skeleton className="w-44 h-10 rounded mr-2" />}
             >
-              <Await resolve={globalListIdentities}>
-                {(resolvedGlobalListIdentities) => (
+              <Await resolve={globalListClaims}>
+                {(resolvedGlobalListClaims) => (
                   <TabsTrigger
                     value="global"
                     label="Global"
                     totalCount={
-                      resolvedGlobalListIdentities?.pagination.totalEntries
+                      resolvedGlobalListClaims?.pagination.totalEntries
                     }
                     onClick={(e) => {
                       e.preventDefault()
@@ -220,13 +202,13 @@ export default function ReadOnlyListOverview() {
             </Suspense>
             {userWalletAddress && (
               <Suspense fallback={<Skeleton className="w-44 h-10 rounded" />}>
-                <Await resolve={additionalUserListIdentities}>
-                  {(resolvedAdditionalUserListIdentities) => (
+                <Await resolve={additionalUserListClaims}>
+                  {(resolvedAdditionalUserListClaims) => (
                     <TabsTrigger
                       className="text-left"
                       value="additional"
                       totalCount={
-                        resolvedAdditionalUserListIdentities?.pagination
+                        resolvedAdditionalUserListClaims?.pagination
                           .totalEntries
                       }
                       label={
@@ -248,18 +230,17 @@ export default function ReadOnlyListOverview() {
           </TabsList>
           <TabsContent value="global" className="mt-6">
             <Suspense fallback={<PaginatedListSkeleton />}>
-              <Await resolve={globalListIdentities}>
-                {(resolvedGlobalListIdentities: IdentityListType | null) => {
-                  if (!resolvedGlobalListIdentities) {
+              <Await resolve={globalListClaims}>
+                {(resolvedGlobalListClaims) => {
+                  if (!resolvedGlobalListClaims) {
                     return <PaginatedListSkeleton />
                   }
                   return isNavigating ? (
                     <PaginatedListSkeleton />
                   ) : (
                     <TagsList
-                      identities={resolvedGlobalListIdentities.listIdentities}
-                      claims={resolvedGlobalListIdentities.claims}
-                      pagination={resolvedGlobalListIdentities.pagination}
+                      claims={resolvedGlobalListClaims.claims}
+                      pagination={resolvedGlobalListClaims.pagination}
                       claim={claim}
                       enableSearch={true}
                       enableSort={true}
@@ -272,18 +253,17 @@ export default function ReadOnlyListOverview() {
           </TabsContent>
           <TabsContent value="you">
             <Suspense fallback={<PaginatedListSkeleton />}>
-              <Await resolve={userListIdentities}>
-                {(resolvedUserListIdentities: IdentityListType | null) => {
-                  if (!resolvedUserListIdentities) {
+              <Await resolve={userListClaims}>
+                {(resolvedUserListClaims) => {
+                  if (!resolvedUserListClaims) {
                     return <PaginatedListSkeleton />
                   }
                   return isNavigating ? (
                     <PaginatedListSkeleton />
                   ) : (
                     <TagsList
-                      identities={resolvedUserListIdentities.listIdentities}
-                      claims={resolvedUserListIdentities.claims}
-                      pagination={resolvedUserListIdentities.pagination}
+                      claims={resolvedUserListClaims.claims}
+                      pagination={resolvedUserListClaims.pagination}
                       claim={claim}
                       tag={claim.object}
                       enableSearch={true}
@@ -295,24 +275,17 @@ export default function ReadOnlyListOverview() {
               </Await>
             </Suspense>
           </TabsContent>
-          {userWalletAddress && !!additionalUserListIdentities && (
+          {userWalletAddress && !!additionalUserListClaims && (
             <TabsContent value="additional">
               <Suspense fallback={<PaginatedListSkeleton />}>
-                <Await resolve={additionalUserListIdentities}>
-                  {(
-                    resolvedAdditionalUserListIdentities: IdentityListType | null,
-                  ) => {
+                <Await resolve={additionalUserListClaims}>
+                  {(resolvedAdditionalUserListClaims) => {
                     return isNavigating ? (
                       <PaginatedListSkeleton />
-                    ) : resolvedAdditionalUserListIdentities ? (
+                    ) : resolvedAdditionalUserListClaims ? (
                       <TagsList
-                        identities={
-                          resolvedAdditionalUserListIdentities.listIdentities
-                        }
-                        claims={resolvedAdditionalUserListIdentities.claims}
-                        pagination={
-                          resolvedAdditionalUserListIdentities.pagination
-                        }
+                        claims={resolvedAdditionalUserListClaims.claims}
+                        pagination={resolvedAdditionalUserListClaims.pagination}
                         claim={claim}
                         tag={claim.object}
                         enableSearch={true}

@@ -1,5 +1,4 @@
 import {
-  Banner,
   Claim,
   ClaimStakeCard,
   Icon,
@@ -28,7 +27,7 @@ import ShareModal from '@components/share-modal'
 import StakeModal from '@components/stake/stake-modal'
 import { useGoBack } from '@lib/hooks/useGoBack'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
-import { getClaimOrPending } from '@lib/services/claims'
+import { getClaim } from '@lib/services/claims'
 import { shareModalAtom, stakeModalAtom } from '@lib/state/store'
 import { getSpecialPredicate } from '@lib/utils/app'
 import {
@@ -71,7 +70,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const direction: SortDirection =
     (searchParams.get('direction') as SortDirection) ?? 'desc'
 
-  const { claim, isPending } = await getClaimOrPending(request, id)
+  const { claim } = await getClaim(request, id)
 
   if (!claim) {
     throw new Response('Not Found', { status: 404 })
@@ -96,7 +95,6 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   return json({
     wallet,
     claim,
-    isPending,
     sortBy,
     direction,
     vaultDetails,
@@ -110,50 +108,37 @@ export interface ClaimDetailsLoaderData {
 }
 
 export default function ClaimDetails() {
-  const { wallet, claim, vaultDetails, isPending } = useLiveLoader<{
+  const { wallet, claim, vaultDetails } = useLiveLoader<{
     wallet: string
     claim: ClaimPresenter
     vaultDetails: VaultDetailsType
-    isPending: boolean
   }>(['create', 'attest'])
   const [stakeModalActive, setStakeModalActive] = useAtom(stakeModalAtom)
   const [shareModalActive, setShareModalActive] = useAtom(shareModalAtom)
 
-  const direction: 'for' | 'against' = isPending
-    ? 'for'
-    : (vaultDetails?.user_conviction ?? claim.user_conviction_for) > '0' ||
-        (vaultDetails?.user_conviction_against ??
-          claim.user_conviction_against) === '0'
+  const direction: 'for' | 'against' =
+    (vaultDetails?.user_conviction_against ?? claim.user_conviction_against) ===
+    '0'
       ? 'for'
       : 'against'
 
-  const user_assets: string = isPending
-    ? '0'
-    : (vaultDetails?.user_conviction ?? claim.user_conviction_for) > '0'
+  const user_assets: string =
+    (vaultDetails?.user_conviction ?? claim.user_conviction_for) > '0'
       ? vaultDetails?.user_assets ?? claim.user_assets_for
       : vaultDetails?.user_assets_against ?? claim.user_assets_against
 
-  const assets_sum: string = isPending
-    ? '0'
-    : (vaultDetails?.assets_sum ?? claim.for_assets_sum) > '0'
+  const assets_sum: string =
+    (vaultDetails?.assets_sum ?? claim.for_assets_sum) > '0'
       ? vaultDetails?.assets_sum ?? claim.for_assets_sum
       : vaultDetails?.against_assets_sum ?? claim.against_assets_sum
 
-  const userConviction = isPending
-    ? '0'
-    : vaultDetails?.user_conviction ?? claim.user_conviction_for
+  const userConviction =
+    vaultDetails?.user_conviction ?? claim.user_conviction_for
 
-  const directionTagVariant = isPending
-    ? TagVariant.for
-    : +userConviction > 0
-      ? TagVariant.for
-      : TagVariant.against
+  const directionTagVariant =
+    +userConviction > 0 ? TagVariant.for : TagVariant.against
 
-  const directionTagText = isPending
-    ? 'FOR'
-    : +userConviction > 0
-      ? 'FOR'
-      : 'AGAINST'
+  const directionTagText = +userConviction > 0 ? 'FOR' : 'AGAINST'
 
   const handleGoBack = useGoBack({ fallbackRoute: PATHS.EXPLORE_CLAIMS })
 
@@ -203,7 +188,7 @@ export default function ClaimDetails() {
           }}
         />
       </div>
-      {vaultDetails !== null && user_assets !== '0' && !isPending ? (
+      {vaultDetails !== null && user_assets !== '0' ? (
         <PositionCard
           onButtonClick={() =>
             setStakeModalActive((prevState) => ({
@@ -244,54 +229,50 @@ export default function ClaimDetails() {
           <PositionCardLastUpdated timestamp={claim.updated_at} />
         </PositionCard>
       ) : null}
-      {!isPending && (
-        <ClaimStakeCard
-          currency="ETH"
-          totalTVL={
-            +formatBalance(
-              +vaultDetails.assets_sum +
-                +(vaultDetails.against_assets_sum
-                  ? vaultDetails.against_assets_sum
-                  : '0'),
-            )
-          }
-          tvlAgainst={
-            +formatBalance(
-              vaultDetails.against_assets_sum ?? claim.against_assets_sum,
-            )
-          }
-          tvlFor={
-            +formatBalance(vaultDetails.assets_sum ?? claim.for_assets_sum)
-          }
-          amountAgainst={claim.against_num_positions}
-          amountFor={claim.for_num_positions}
-          onAgainstBtnClick={() =>
-            setStakeModalActive((prevState) => ({
-              ...prevState,
-              mode: 'deposit',
-              modalType: 'claim',
-              direction: 'against',
-              isOpen: true,
-            }))
-          }
-          onForBtnClick={() =>
-            setStakeModalActive((prevState) => ({
-              ...prevState,
-              mode: 'deposit',
-              modalType: 'claim',
-              direction: 'for',
-              isOpen: true,
-            }))
-          }
-          disableForBtn={
-            (vaultDetails.user_conviction_against ??
-              claim.user_conviction_against) > '0'
-          }
-          disableAgainstBtn={
-            (vaultDetails.user_conviction ?? claim.user_conviction_for) > '0'
-          }
-        />
-      )}
+      <ClaimStakeCard
+        currency="ETH"
+        totalTVL={
+          +formatBalance(
+            +vaultDetails.assets_sum +
+              +(vaultDetails.against_assets_sum
+                ? vaultDetails.against_assets_sum
+                : '0'),
+          )
+        }
+        tvlAgainst={
+          +formatBalance(
+            vaultDetails.against_assets_sum ?? claim.against_assets_sum,
+          )
+        }
+        tvlFor={+formatBalance(vaultDetails.assets_sum ?? claim.for_assets_sum)}
+        amountAgainst={claim.against_num_positions}
+        amountFor={claim.for_num_positions}
+        onAgainstBtnClick={() =>
+          setStakeModalActive((prevState) => ({
+            ...prevState,
+            mode: 'deposit',
+            modalType: 'claim',
+            direction: 'against',
+            isOpen: true,
+          }))
+        }
+        onForBtnClick={() =>
+          setStakeModalActive((prevState) => ({
+            ...prevState,
+            mode: 'deposit',
+            modalType: 'claim',
+            direction: 'for',
+            isOpen: true,
+          }))
+        }
+        disableForBtn={
+          (vaultDetails.user_conviction_against ??
+            claim.user_conviction_against) > '0'
+        }
+        disableAgainstBtn={
+          (vaultDetails.user_conviction ?? claim.user_conviction_for) > '0'
+        }
+      />
       <DetailInfoCard
         variant={Identity.user}
         list={
@@ -322,45 +303,26 @@ export default function ClaimDetails() {
     </div>
   )
 
-  const rightPanel = isPending ? (
-    <Banner
-      variant="warning"
-      title="Please Refresh the Page"
-      message="It looks like the on-chain transaction was successful, but we're still waiting for the information to update. Please refresh the page to ensure everything is up to date."
-    >
-      <NavigationButton
-        reloadDocument
-        variant="secondary"
-        to=""
-        className="max-lg:w-full"
-      >
-        Refresh
-      </NavigationButton>
-    </Banner>
-  ) : (
-    <Outlet />
-  )
+  const rightPanel = <Outlet />
 
   return (
     <>
       <TwoPanelLayout leftPanel={leftPanel} rightPanel={rightPanel} />
-      {!isPending && (
-        <StakeModal
-          userWallet={wallet}
-          contract={claim.contract}
-          open={stakeModalActive.isOpen}
-          direction={stakeModalActive.direction}
-          claim={claim}
-          vaultDetails={vaultDetails}
-          onClose={() => {
-            setStakeModalActive((prevState) => ({
-              ...prevState,
-              isOpen: false,
-              mode: undefined,
-            }))
-          }}
-        />
-      )}
+      <StakeModal
+        userWallet={wallet}
+        contract={claim.contract}
+        open={stakeModalActive.isOpen}
+        direction={stakeModalActive.direction}
+        claim={claim}
+        vaultDetails={vaultDetails}
+        onClose={() => {
+          setStakeModalActive((prevState) => ({
+            ...prevState,
+            isOpen: false,
+            mode: undefined,
+          }))
+        }}
+      />
       <ShareModal
         currentPath={location.pathname}
         open={shareModalActive.isOpen}

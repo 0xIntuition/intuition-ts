@@ -209,7 +209,7 @@ export default function ReadOnlyIdentityDetails() {
       />
       <ReadOnlyBanner
         variant={BannerVariant.warning}
-        to={`${PATHS.IDENTITY}/${identity.id}`}
+        to={`${PATHS.IDENTITY}/${identity.vault_id}`}
       />
     </div>
   )

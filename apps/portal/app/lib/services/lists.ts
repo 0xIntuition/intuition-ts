@@ -2,7 +2,6 @@ import {
   ClaimPresenter,
   ClaimSortColumn,
   ClaimsService,
-  IdentityPresenter,
   PositionSortColumn,
   SortColumn,
   SortDirection,
@@ -112,7 +111,7 @@ export async function getUserSavedLists({
   }
 }
 
-export async function getListIdentities({
+export async function getListClaims({
   request,
   objectId,
   creator,
@@ -134,7 +133,7 @@ export async function getListIdentities({
   })
   const displayName = searchParams.get('search') || null
 
-  const listIdentities = await fetchWrapper(request, {
+  const listClaims = await fetchWrapper(request, {
     method: ClaimsService.searchClaims,
     args: {
       page,
@@ -150,51 +149,17 @@ export async function getListIdentities({
     },
   })
 
-  const totalPages = calculateTotalPages(listIdentities?.total ?? 0, limit)
-
-  const listIdentitiesSubjects = listIdentities.data.map(
-    (claim) => claim.subject,
-  ) as IdentityPresenter[]
+  const totalPages = calculateTotalPages(listClaims?.total ?? 0, limit)
 
   return {
-    listIdentities: listIdentitiesSubjects as IdentityPresenter[],
-    claims: listIdentities.data as ClaimPresenter[],
+    claims: listClaims.data as ClaimPresenter[],
     pagination: {
       currentPage: Number(page),
       limit: Number(limit),
-      totalEntries: listIdentities.total,
+      totalEntries: listClaims.total,
       totalPages,
     },
   }
-}
-
-export async function getListIdentitiesCount({
-  request,
-  objectId,
-  creator,
-  userWithPosition,
-  userAssetsForPresent = null,
-}: {
-  request: Request
-  objectId: string
-  creator?: string
-  userWithPosition?: string
-  userAssetsForPresent?: boolean | null
-}) {
-  const listIdentities = await fetchWrapper(request, {
-    method: ClaimsService.searchClaims,
-    args: {
-      predicate: getSpecialPredicate(CURRENT_ENV).tagPredicate.id,
-      object: objectId,
-      creator,
-      userWithPosition,
-      page: 1,
-      limit: 1,
-      userAssetsPresent: userAssetsForPresent,
-    },
-  })
-
-  return listIdentities.total
 }
 
 export async function getFeaturedLists({

@@ -129,7 +129,7 @@ export default function ReadOnlyListDetails() {
         displayName={claim.object?.display_name ?? ''}
         avatarImgSrc={claim.object?.image ?? ''}
         onClick={() => {
-          navigate(`/readonly/identity/${claim.object?.id}`)
+          navigate(`/readonly/identity/${claim.object?.vault_id}`)
         }}
         className="hover:cursor-pointer w-full"
       />
@@ -151,7 +151,7 @@ export default function ReadOnlyListDetails() {
       <Button
         variant="secondary"
         onClick={() => {
-          navigate(`/readonly/identity/${claim.object?.id}`)
+          navigate(`/readonly/identity/${claim.object?.vault_id}`)
         }}
         className="w-full"
       >
@@ -159,7 +159,7 @@ export default function ReadOnlyListDetails() {
       </Button>
       <ReadOnlyBanner
         variant={BannerVariant.warning}
-        to={`${PATHS.LIST}/${claim.claim_id}`}
+        to={`${PATHS.LIST}/${claim.vault_id}`}
       />
     </div>
   )

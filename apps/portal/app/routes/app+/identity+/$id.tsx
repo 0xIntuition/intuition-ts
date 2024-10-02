@@ -254,7 +254,7 @@ export default function IdentityDetails() {
               }))
             }
             onViewAllClick={() =>
-              navigate(`${PATHS.IDENTITY}/${identity.id}#positions`)
+              navigate(`${PATHS.IDENTITY}/${identity.vault_id}#positions`)
             }
           />
         </>

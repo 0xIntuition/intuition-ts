@@ -32,7 +32,6 @@ import SaveReview from './save-review'
 interface SaveFormProps {
   tag: IdentityPresenter | TagEmbeddedPresenter
   identity: IdentityPresenter
-  claimId?: string | null
   user_assets: string
   entry_fee: string
   exit_fee: string
