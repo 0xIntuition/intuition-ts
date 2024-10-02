@@ -7,6 +7,7 @@ import {
   DialogHeader,
   DialogTitle,
   Text,
+  toast,
 } from '@0xintuition/1ui'
 
 import intuitionIcon from '@assets/intuition-qr-icon.svg'
@@ -79,8 +80,8 @@ function ShareModalContent({ currentPath }: ShareModalProps) {
     navigator.clipboard
       .writeText(getShareableUrl(currentPath))
       .then(() => {
-        // Optionally, you can add some feedback here, like a toast notification
         logger('Link copied to clipboard')
+        toast?.success('Copied to clipboard!')
       })
       .catch((err) => {
         console.error('Failed to copy link:', err)
