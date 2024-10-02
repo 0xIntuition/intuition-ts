@@ -1,4 +1,4 @@
-import { ClaimPresenter, ClaimsService } from '@0xintuition/api'
+import { ApiError, ClaimPresenter, ClaimsService } from '@0xintuition/api'
 
 import logger from '@lib/utils/logger'
 import { invariant, sleep } from '@lib/utils/misc'
@@ -12,7 +12,7 @@ export interface GetClaimLoaderData {
   error?: string
 }
 
-const MAX_RETRIES = 10
+const MAX_RETRIES = 1
 const RETRY_DELAY = 2000 // 2 seconds
 
 export async function loader({ request }: LoaderFunctionArgs) {
@@ -36,7 +36,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
         await sleep(RETRY_DELAY)
       }
     } catch (error) {
+      if (error instanceof ApiError && error.status === 404) {
+        return json({ error: 'Claim not found' }, { status: 404 })
+      }
       if (attempt === MAX_RETRIES - 1) {
+        logger('[get-claim route] Error:', error)
         return json({ error: 'Error fetching claim' }, { status: 500 })
       }
       await sleep(RETRY_DELAY)

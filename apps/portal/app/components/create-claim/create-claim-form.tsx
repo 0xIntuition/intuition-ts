@@ -265,7 +265,7 @@ function CreateClaimForm({
           txReceipt,
         })
       } else if (claimFetcher.data && 'error' in claimFetcher.data) {
-        const errorMessage = `Failed to fetch claim. It may not have resolved in our database yet. Your claims vault ID is ${vaultId}`
+        const errorMessage = `Your claim was created, but we're having trouble fetching its details. Vault ID: ${vaultId}`
         dispatch({
           type: 'TRANSACTION_ERROR',
           error: errorMessage,
@@ -555,7 +555,14 @@ function CreateClaimForm({
                   variant="primary"
                   className="mt-auto w-40"
                   onClick={() => {
-                    dispatch({ type: 'START_TRANSACTION' })
+                    if (txReceipt) {
+                      dispatch({ type: 'TRANSACTION_PENDING' })
+                      claimFetcher.load(
+                        `/resources/get-claim?vaultId=${vaultId}`,
+                      )
+                    } else {
+                      dispatch({ type: 'START_TRANSACTION' })
+                    }
                   }}
                 >
                   Retry
