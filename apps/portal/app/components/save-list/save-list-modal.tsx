@@ -99,10 +99,10 @@ export default function SaveListModal({
   useEffect(() => {
     let isCancelled = false
 
-    if (vaultId) {
+    if (vaultId !== null) {
       const vaultUrl = `${GET_VAULT_DETAILS_RESOURCE_ROUTE}?contract=${contract}&vaultId=${vaultId}&fetchId=${fetchId}`
 
-      if (vaultId !== null && !isCancelled) {
+      if (!isCancelled) {
         vaultDetailsFetcher.load(vaultUrl)
       }
     }
