@@ -133,7 +133,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     isPending,
     vaultDetails,
     userWallet,
-    tags: tagClaims,
+    tagClaims,
   })
 }
 
@@ -143,11 +143,11 @@ export interface IdentityLoaderData {
   vaultDetails: VaultDetailsType
   userWallet: string
   isPending: boolean
-  tags: ClaimPresenter[]
+  tagClaims: ClaimPresenter[]
 }
 
 export default function IdentityDetails() {
-  const { identity, list, vaultDetails, userWallet, isPending, tags } =
+  const { identity, list, vaultDetails, userWallet, isPending, tagClaims } =
     useLiveLoader<IdentityLoaderData>(['attest', 'create'])
   const navigate = useNavigate()
 
@@ -191,19 +191,19 @@ export default function IdentityDetails() {
         <>
           <Tags>
             <div className="flex flex-row gap-2 md:flex-col">
-              {Array.isArray(tags) && tags.length > 0 ? (
-                <TagsContent numberOfTags={tags?.length ?? 0}>
-                  {tags.slice(0, 5).map((tag) => (
+              {Array.isArray(tagClaims) && tagClaims.length > 0 ? (
+                <TagsContent numberOfTags={tagClaims?.length ?? 0}>
+                  {tagClaims.slice(0, 5).map((tagClaim) => (
                     <TagWithValue
-                      key={tag.claim_id}
-                      label={tag.object?.display_name}
-                      value={tag.num_positions}
+                      key={tagClaim.claim_id}
+                      label={tagClaim.object?.display_name}
+                      value={tagClaim.num_positions}
                       onStake={() => {
-                        setSelectedTag(tag.object)
+                        setSelectedTag(tagClaim.object)
                         setSaveListModalActive({
                           isOpen: true,
-                          id: tag.vault_id,
-                          tag: tag.object,
+                          id: tagClaim.vault_id,
+                          tag: tagClaim.object,
                         })
                       }}
                     />
@@ -338,7 +338,7 @@ export default function IdentityDetails() {
           />
           <TagsModal
             identity={identity}
-            tags={tags}
+            tagClaims={tagClaims}
             userWallet={userWallet}
             open={tagsModalActive.isOpen}
             mode={tagsModalActive.mode}

@@ -36,7 +36,7 @@ import { TagSearchCombobox } from './tags-search-combo-box'
 
 interface TagsFormProps {
   identity: IdentityPresenter
-  tags: ClaimPresenter[]
+  tagClaims: ClaimPresenter[]
   userWallet: string
   mode: 'view' | 'add'
   readOnly?: boolean
@@ -46,7 +46,7 @@ interface TagsFormProps {
 
 export function TagsForm({
   identity,
-  tags,
+  tagClaims,
   userWallet,
   mode,
   readOnly = false,
@@ -56,7 +56,9 @@ export function TagsForm({
   const navigate = useNavigate()
   const [currentTab, setCurrentTab] = useState(mode)
 
-  const existingTagIds = tags ? tags.map((tag) => tag.vault_id) : []
+  const existingTagIds = tagClaims
+    ? tagClaims.map((tagClaim) => tagClaim.vault_id)
+    : []
 
   const { state, dispatch } = useTransactionState<
     TransactionStateType,
@@ -92,11 +94,11 @@ export function TagsForm({
 
   const setSaveListModalActive = useSetAtom(saveListModalAtom)
 
-  const handleTagClick = (tag: ClaimPresenter) => {
+  const handleTagClick = (tagClaim: ClaimPresenter) => {
     setSaveListModalActive({
       isOpen: true,
-      id: tag.vault_id,
-      tag: tag.object,
+      id: tagClaim.vault_id,
+      tag: tagClaim.object,
     })
   }
 
@@ -170,7 +172,7 @@ export function TagsForm({
                   )}
                   <TabsContent value="view" className="h-full">
                     <TagSearchCombobox
-                      tags={tags || []}
+                      tagClaims={tagClaims || []}
                       shouldFilter={true}
                       onTagClick={handleTagClick}
                     />

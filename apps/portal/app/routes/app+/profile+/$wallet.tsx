@@ -207,7 +207,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     wallet,
     userWallet,
     userIdentity,
-    tags: tagClaims,
+    tagClaims,
     userTotals,
     followClaim,
     followVaultDetails,
@@ -223,7 +223,7 @@ export default function Profile() {
     wallet,
     userWallet,
     userIdentity,
-    tags,
+    tagClaims,
     userTotals,
     followClaim,
     followVaultDetails,
@@ -235,7 +235,7 @@ export default function Profile() {
     wallet: string
     userWallet: string
     userIdentity: IdentityPresenter
-    tags: ClaimPresenter[]
+    tagClaims: ClaimPresenter[]
     userTotals: UserTotalsPresenter
     followClaim: ClaimPresenter
     followVaultDetails: VaultDetailsType
@@ -345,19 +345,19 @@ export default function Profile() {
         <>
           <Tags>
             <div className="flex flex-row gap-2 md:flex-col">
-              {Array.isArray(tags) && tags.length > 0 ? (
-                <TagsContent numberOfTags={tags?.length ?? 0}>
-                  {tags.slice(0, 5).map((tag) => (
+              {Array.isArray(tagClaims) && tagClaims.length > 0 ? (
+                <TagsContent numberOfTags={tagClaims?.length ?? 0}>
+                  {tagClaims.slice(0, 5).map((tagClaim) => (
                     <TagWithValue
-                      key={tag.claim_id}
-                      label={tag.object?.display_name}
-                      value={tag.num_positions}
+                      key={tagClaim.claim_id}
+                      label={tagClaim.object?.display_name}
+                      value={tagClaim.num_positions}
                       onStake={() => {
-                        setSelectedTag(tag.object)
+                        setSelectedTag(tagClaim.object)
                         setSaveListModalActive({
                           isOpen: true,
-                          id: tag.vault_id,
-                          tag: tag.object,
+                          id: tagClaim.vault_id,
+                          tag: tagClaim.object,
                         })
                       }}
                     />
@@ -493,7 +493,7 @@ export default function Profile() {
           />
           <TagsModal
             identity={userIdentity}
-            tags={tags}
+            tagClaims={tagClaims}
             userWallet={userWallet}
             open={tagsModalActive.isOpen}
             mode={tagsModalActive.mode}

@@ -164,7 +164,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   return json({
     wallet,
     userIdentity,
-    tags: tagClaims,
+    tagClaims,
     userTotals,
     followClaim,
     followVaultDetails,
@@ -180,7 +180,7 @@ export default function ReadOnlyProfile() {
     wallet,
     userWallet,
     userIdentity,
-    tags,
+    tagClaims,
     userTotals,
     isPending,
     relicMintCount,
@@ -189,7 +189,7 @@ export default function ReadOnlyProfile() {
     wallet: string
     userWallet: string
     userIdentity: IdentityPresenter
-    tags: ClaimPresenter[]
+    tagClaims: ClaimPresenter[]
     userTotals: UserTotalsPresenter
     followClaim: ClaimPresenter
     followVaultDetails: VaultDetailsType
@@ -251,11 +251,11 @@ export default function ReadOnlyProfile() {
           <Tags>
             {userIdentity?.tags && userIdentity?.tags.length > 0 && (
               <TagsContent numberOfTags={userIdentity?.tag_count ?? 0}>
-                {tags.slice(0, 5).map((tag) => (
+                {tagClaims.slice(0, 5).map((tagClaim) => (
                   <TagWithValue
-                    key={tag.claim_id}
-                    label={tag.object?.display_name}
-                    value={tag.num_positions}
+                    key={tagClaim.claim_id}
+                    label={tagClaim.object?.display_name}
+                    value={tagClaim.num_positions}
                   />
                 ))}
               </TagsContent>
@@ -309,7 +309,7 @@ export default function ReadOnlyProfile() {
         <>
           <TagsModal
             identity={userIdentity}
-            tags={tags}
+            tagClaims={tagClaims}
             userWallet={userWallet}
             open={tagsModalActive.isOpen}
             mode={tagsModalActive.mode}

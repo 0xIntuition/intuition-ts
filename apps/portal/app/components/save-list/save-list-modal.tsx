@@ -97,13 +97,21 @@ export default function SaveListModal({
   const { id: vaultId } = useAtomValue(saveListModalAtom)
 
   useEffect(() => {
+    let isCancelled = false
+
     if (vaultId) {
       const vaultUrl = `${GET_VAULT_DETAILS_RESOURCE_ROUTE}?contract=${contract}&vaultId=${vaultId}&fetchId=${fetchId}`
 
-      if (vaultId !== null) {
+      if (vaultId !== null && !isCancelled) {
         vaultDetailsFetcher.load(vaultUrl)
       }
     }
+
+    return () => {
+      isCancelled = true
+    }
+    // omits the fetcher from the exhaustive deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [identity, tag, fetchId, contract, vaultId])
 
   useEffect(() => {

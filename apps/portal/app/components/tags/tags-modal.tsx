@@ -5,7 +5,7 @@ import { TagsForm } from './tags-form'
 
 export interface TagsModalProps {
   identity: IdentityPresenter
-  tags: ClaimPresenter[]
+  tagClaims: ClaimPresenter[]
   userWallet: string
   open?: boolean
   mode: 'view' | 'add'
@@ -16,7 +16,7 @@ export interface TagsModalProps {
 
 export default function TagsModal({
   identity,
-  tags,
+  tagClaims,
   userWallet,
   open,
   mode,
@@ -35,7 +35,7 @@ export default function TagsModal({
         <DialogContent className="h-[550px]">
           <TagsForm
             identity={identity}
-            tags={tags}
+            tagClaims={tagClaims}
             userWallet={userWallet}
             mode={mode}
             readOnly={readOnly}

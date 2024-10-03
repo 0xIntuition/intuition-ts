@@ -20,7 +20,7 @@ import { formatBalance, getAtomIpfsLink, truncateString } from '@lib/utils/misc'
 
 export interface TagSearchComboboxProps
   extends React.HTMLAttributes<HTMLDivElement> {
-  tags: ClaimPresenter[]
+  tagClaims: ClaimPresenter[]
   placeholder?: string
   shouldFilter?: boolean
   onTagClick?: (tag: ClaimPresenter) => void
@@ -28,7 +28,7 @@ export interface TagSearchComboboxProps
 
 const TagSearchCombobox = ({
   placeholder = 'Search',
-  tags,
+  tagClaims,
   onTagClick = () => {},
   ...props
 }: TagSearchComboboxProps) => {
@@ -43,24 +43,31 @@ const TagSearchCombobox = ({
               className="border-none"
             />
           </CommandEmpty>
-          <CommandGroup key={tags.length}>
-            {tags.map((tag, index) => {
+          <CommandGroup key={tagClaims.length}>
+            {tagClaims.map((tagClaim, index) => {
               return (
-                <HoverCard openDelay={150} closeDelay={150} key={tag.claim_id}>
+                <HoverCard
+                  openDelay={150}
+                  closeDelay={150}
+                  key={tagClaim.claim_id}
+                >
                   <HoverCardTrigger className="w-full">
                     <IdentitySearchComboboxItem
                       key={index}
                       variant={Identity.nonUser}
-                      name={truncateString(tag.object?.display_name ?? '', 16)}
-                      value={+formatBalance(tag.assets_sum)}
-                      walletAddress={tag.object?.identity_id ?? ''}
-                      avatarSrc={tag.object?.image ?? ''}
-                      tagCount={tag.num_positions || 0}
-                      onClick={() => onTagClick(tag)}
-                      onSelect={() => onTagClick(tag)}
+                      name={truncateString(
+                        tagClaim.object?.display_name ?? '',
+                        16,
+                      )}
+                      value={+formatBalance(tagClaim.assets_sum)}
+                      walletAddress={tagClaim.object?.identity_id ?? ''}
+                      avatarSrc={tagClaim.object?.image ?? ''}
+                      tagCount={tagClaim.num_positions || 0}
+                      onClick={() => onTagClick(tagClaim)}
+                      onSelect={() => onTagClick(tagClaim)}
                     />
                   </HoverCardTrigger>
-                  {tag && (
+                  {tagClaim && (
                     <HoverCardContent
                       side="right"
                       sideOffset={16}
@@ -69,14 +76,14 @@ const TagSearchCombobox = ({
                       <div className="w-80 max-md:w-[80%]">
                         <ProfileCard
                           variant={Identity.nonUser}
-                          avatarSrc={tag.object?.image ?? ''}
+                          avatarSrc={tagClaim.object?.image ?? ''}
                           name={truncateString(
-                            tag.object?.display_name ?? '',
+                            tagClaim.object?.display_name ?? '',
                             18,
                           )}
-                          id={tag.object?.identity_id}
-                          bio={tag.object?.description ?? ''}
-                          ipfsLink={getAtomIpfsLink(tag?.object)}
+                          id={tagClaim.object?.identity_id}
+                          bio={tagClaim.object?.description ?? ''}
+                          ipfsLink={getAtomIpfsLink(tagClaim?.object)}
                         />
                       </div>
                     </HoverCardContent>
