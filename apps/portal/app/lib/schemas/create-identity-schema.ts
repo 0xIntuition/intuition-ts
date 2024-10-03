@@ -73,7 +73,7 @@ export function createIdentitySchema() {
   })
 }
 
-export function createSmartContractSchema() {
+export function createCAIP10AccountSchema() {
   return z.object({
     address: z.string({ required_error: 'Please enter an address.' }).max(42, {
       message: 'Address must not be longer than 42 characters.',

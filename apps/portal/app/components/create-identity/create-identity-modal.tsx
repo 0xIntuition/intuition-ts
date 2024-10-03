@@ -16,7 +16,7 @@ import {
 } from '@0xintuition/1ui'
 import { IdentityPresenter } from '@0xintuition/api'
 
-import { SmartContractForm } from '@components/create-identity/create-smart-contract-form'
+import { CAIP10AccountForm } from '@components/create-identity/create-caip10-account-form'
 import { InfoTooltip } from '@components/info-tooltip'
 
 import { IdentityForm } from './create-identity-form'
@@ -116,7 +116,7 @@ export default function CreateIdentityModal({
             </>
           )}
           {selectedAtomType === 'Smart Contract' ? (
-            <SmartContractForm
+            <CAIP10AccountForm
               wallet={wallet}
               onClose={onClose}
               onSuccess={(identity) => {

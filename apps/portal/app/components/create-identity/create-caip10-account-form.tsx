@@ -33,7 +33,7 @@ import {
   initialIdentityTransactionState,
   useTransactionState,
 } from '@lib/hooks/useTransactionReducer'
-import { createSmartContractSchema } from '@lib/schemas/create-identity-schema'
+import { createCAIP10AccountSchema } from '@lib/schemas/create-identity-schema'
 import { getChainEnvConfig } from '@lib/utils/environment'
 import logger from '@lib/utils/logger'
 import { useFetcher, useNavigate } from '@remix-run/react'
@@ -65,7 +65,7 @@ interface FormState {
   initial_deposit?: string
 }
 
-export function SmartContractForm({
+export function CAIP10AccountForm({
   wallet,
   onClose,
   successAction = TransactionSuccessAction.VIEW,
@@ -233,10 +233,10 @@ export function SmartContractForm({
 
   const [form, fields] = useForm({
     id: 'create-identity',
-    constraint: getZodConstraint(createSmartContractSchema()),
+    constraint: getZodConstraint(createCAIP10AccountSchema()),
     onValidate({ formData }) {
       const result = parseWithZod(formData, {
-        schema: createSmartContractSchema,
+        schema: createCAIP10AccountSchema,
       })
       return result
     },
