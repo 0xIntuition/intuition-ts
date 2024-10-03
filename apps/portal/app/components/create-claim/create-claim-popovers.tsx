@@ -10,6 +10,7 @@ import {
   ProfileCard,
   Text,
   Trunctacular,
+  useSidebarLayoutContext,
 } from '@0xintuition/1ui'
 import { IdentityPresenter } from '@0xintuition/api'
 
@@ -51,11 +52,13 @@ export const IdentityPopover: React.FC<IdentityPopoverProps> = ({
   handleInput,
 }) => {
   const setCreateIdentityModalActive = useSetAtom(globalCreateIdentityModalAtom)
+  const { isMobileView } = useSidebarLayoutContext()
+
   return (
     <Popover
       open={isObjectPopoverOpen}
       onOpenChange={setIsObjectPopoverOpen}
-      modal={isObjectPopoverOpen}
+      modal={isMobileView ? false : isObjectPopoverOpen}
     >
       <PopoverTrigger asChild>
         <div className="flex flex-col gap-2 w-45">
