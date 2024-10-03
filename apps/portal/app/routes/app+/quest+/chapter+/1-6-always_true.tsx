@@ -198,9 +198,6 @@ export default function Quests() {
                       <TagsList
                         claims={resolveGlobalListClaims.claims}
                         pagination={resolveGlobalListClaims.pagination}
-                        claim={claim}
-                        tag={claim.object}
-                        wallet={userWallet}
                         enableSearch={true}
                         enableSort={true}
                       />

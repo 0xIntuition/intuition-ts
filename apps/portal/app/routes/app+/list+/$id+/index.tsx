@@ -319,8 +319,6 @@ export default function ListOverview() {
                     <TagsList
                       claims={resolvedGlobalListClaims.claims}
                       pagination={resolvedGlobalListClaims.pagination}
-                      claim={claim}
-                      wallet={wallet}
                       enableSearch={true}
                       enableSort={true}
                     />
@@ -342,9 +340,6 @@ export default function ListOverview() {
                     <TagsList
                       claims={resolvedUserListClaims.claims}
                       pagination={resolvedUserListClaims.pagination}
-                      claim={claim}
-                      tag={claim.object}
-                      wallet={wallet}
                       enableSearch={true}
                       enableSort={true}
                     />
@@ -364,9 +359,6 @@ export default function ListOverview() {
                       <TagsList
                         claims={resolvedAdditionalUserListClaims.claims}
                         pagination={resolvedAdditionalUserListClaims.pagination}
-                        claim={claim}
-                        tag={claim.object}
-                        wallet={wallet}
                         enableSearch={true}
                         enableSort={true}
                       />
