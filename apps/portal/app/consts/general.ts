@@ -31,8 +31,8 @@ export const DEFAULT_LIMIT = 10
 
 export const MIN_DEPOSIT = CURRENT_ENV === 'development' ? '0.00069' : '0.00042'
 // Form constants
-export const MAX_NAME_LENGTH = 69
-export const DESCRIPTION_MAX_LENGTH = 266
+export const MAX_NAME_LENGTH = 100
+export const DESCRIPTION_MAX_LENGTH = 512
 export const MAX_UPLOAD_SIZE = 1024 * 1024 * 5 // 5MB
 export const ACCEPTED_IMAGE_MIME_TYPES = [
   'image/jpeg',
