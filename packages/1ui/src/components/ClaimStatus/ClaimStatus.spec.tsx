@@ -140,6 +140,17 @@ describe('ClaimStatus', () => {
                 </div>
               </button>
             </div>
+            <div
+              class="pl-1"
+            >
+              <svg
+                class="h-4 w-4 transition-colors duration-200 text-secondary/50 group-hover:text-primary"
+              >
+                <use
+                  href="/src/components/Icon/Icon.sprites.svg#arrow-up-right"
+                />
+              </svg>
+            </div>
           </div>
         </div>
       </DocumentFragment>

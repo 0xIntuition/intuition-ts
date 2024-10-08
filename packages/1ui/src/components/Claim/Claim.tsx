@@ -5,6 +5,7 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from 'components/HoverCard'
+import { Icon } from 'components/Icon'
 import { IdentityTag, IdentityTagSize } from 'components/IdentityTag'
 import { ProfileCard } from 'components/ProfileCard'
 import { Separator } from 'components/Separator'
@@ -95,6 +96,17 @@ export const Claim = ({
           </div>
         </Fragment>
       ))}
+      <div className="pl-1">
+        <Icon
+          name={'arrow-up-right'}
+          className={cn(
+            'h-4 w-4 transition-colors duration-200',
+            isHovered && onClick
+              ? 'text-primary'
+              : 'text-secondary/50 group-hover:text-primary',
+          )}
+        />
+      </div>
     </div>
   )
 

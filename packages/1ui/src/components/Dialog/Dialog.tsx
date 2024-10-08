@@ -52,7 +52,7 @@ const DialogHeader = ({
 }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
     className={cn(
-      'flex flex-col space-y-1 text-center sm:text-left items-center',
+      'flex flex-col space-y-1 text-center sm:text-left items-center pb-6',
       className,
     )}
     {...props}
@@ -81,7 +81,7 @@ const DialogTitle = React.forwardRef<
   <DialogPrimitive.Title
     ref={ref}
     className={cn(
-      'flex justify-between items-center w-full text-lg font-semibold leading-none tracking-tight mb-2 max-sm:mb-6',
+      'flex justify-between items-center w-full text-lg font-medium leading-none tracking-tight mb-2 max-sm:mb-6',
       className,
     )}
     {...props}

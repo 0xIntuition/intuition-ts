@@ -91,6 +91,8 @@ export default function StakeModal({
         : vaultDetails.user_conviction_against ?? claim.user_conviction_against
   }
 
+  console.log('user_conviction', user_conviction)
+
   let conviction_price: string = '0'
   if (identityShouldOverride) {
     conviction_price =
@@ -357,7 +359,7 @@ export default function StakeModal({
         handleClose()
       }}
     >
-      <DialogContent className="flex flex-col w-[480px] h-[480px] gap-2.5 p-5">
+      <DialogContent className="flex flex-col min-w-[600px] h-[600px] gap-2.5 p-5 pb-10">
         <div className="flex-grow">
           <StakeForm
             userWallet={userWallet}
