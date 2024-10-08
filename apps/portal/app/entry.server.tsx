@@ -70,6 +70,7 @@ function handleBotRequest(
           const stream = createReadableStreamFromReadable(body)
 
           responseHeaders.set('Content-Type', 'text/html')
+          responseHeaders.set('X-Frame-Options', 'SAMEORIGIN')
 
           resolve(
             new Response(stream, {
@@ -120,11 +121,6 @@ function handleBrowserRequest(
           const stream = createReadableStreamFromReadable(body)
 
           responseHeaders.set('X-Frame-Options', 'SAMEORIGIN')
-          responseHeaders.set('X-Content-Type-Options', 'nosniff')
-          responseHeaders.set(
-            'Referrer-Policy',
-            'strict-origin-when-cross-origin',
-          )
 
           resolve(
             new Response(stream, {
