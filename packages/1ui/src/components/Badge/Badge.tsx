@@ -20,7 +20,7 @@ const badgeVariants = cva(
   {
     variants: {
       variant: {
-        [BadgeVariant.default]: 'bg-primary/15',
+        [BadgeVariant.default]: 'bg-primary/10',
         [BadgeVariant.success]: 'bg-success/50',
         [BadgeVariant.accent]: 'bg-accent/50',
         [BadgeVariant.social]: 'bg-social/50',

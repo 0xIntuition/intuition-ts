@@ -21,7 +21,7 @@ export const TagSize = {
 }
 
 const tagVariants = cva(
-  'inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground',
+  'inline-flex items-center gap-1 rounded-full px-2 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground',
   {
     variants: {
       variant: {

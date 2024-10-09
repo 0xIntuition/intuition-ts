@@ -1,27 +1,15 @@
 import {
   ActivePositionCard,
-  Badge,
-  Button,
   Claim,
-  DialogHeader,
-  DialogTitle,
-  Icon,
-  IconName,
   Identity,
   IdentityTag,
   Tabs,
   TabsList,
   TabsTrigger,
-  Tag,
-  TagSize,
-  TagVariant,
-  Text,
-  TextVariant,
   Trunctacular,
 } from '@0xintuition/1ui'
 import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
 
-import { InfoTooltip } from '@components/info-tooltip'
 import { TransactionState } from '@components/transaction-state'
 import { stakeModalAtom } from '@lib/state/store'
 import {
@@ -34,10 +22,7 @@ import {
 } from '@lib/utils/misc'
 import { type FetcherWithComponents } from '@remix-run/react'
 import { VaultDetailsType } from 'app/types'
-import {
-  TransactionActionType,
-  TransactionStateType,
-} from 'app/types/transaction'
+import { TransactionStateType } from 'app/types/transaction'
 import { useAtom } from 'jotai'
 
 import StakeActions from './stake-actions'
@@ -46,7 +31,6 @@ import StakeReview from './stake-review'
 
 interface StakeFormProps {
   userWallet: string
-  walletBalance: string
   identity?: IdentityPresenter
   claim?: ClaimPresenter
   user_conviction: string
@@ -57,7 +41,6 @@ interface StakeFormProps {
   val: string
   setVal: (val: string) => void
   mode: string | undefined
-  dispatch: (action: TransactionActionType) => void
   state: TransactionStateType
   fetchReval: FetcherWithComponents<unknown>
   formRef: React.RefObject<HTMLFormElement>
@@ -71,7 +54,6 @@ interface StakeFormProps {
 
 export default function StakeForm({
   userWallet,
-  walletBalance,
   identity,
   claim,
   user_conviction,
@@ -82,7 +64,6 @@ export default function StakeForm({
   val,
   setVal,
   mode,
-  dispatch,
   state,
   fetchReval,
   formRef,
@@ -109,57 +90,6 @@ export default function StakeForm({
       </fetchReval.Form>
       {state.status === 'idle' ? (
         <>
-          <DialogHeader>
-            <DialogTitle>
-              <div className="flex items-center justify-between w-full pr-2.5">
-                <div className="text-foreground flex items-center gap-2">
-                  {state.status !== 'idle' && (
-                    <Button
-                      onClick={() => dispatch({ type: 'START_TRANSACTION' })}
-                      variant="ghost"
-                      size="icon"
-                    >
-                      <Icon name={IconName.arrowLeft} className="h-4 w-4" />
-                    </Button>
-                  )}
-                  Stake{' '}
-                  <Tag
-                    variant={
-                      direction !== undefined
-                        ? direction === 'for'
-                          ? TagVariant.for
-                          : TagVariant.against
-                        : undefined
-                    }
-                    size={TagSize.sm}
-                    className={`${!direction && 'hidden'}`}
-                  >
-                    {direction === 'for' ? 'FOR' : 'AGAINST'}
-                  </Tag>
-                  <InfoTooltip
-                    title="Staking"
-                    content="Need copy for this section."
-                    icon={IconName.fingerprint}
-                  />
-                </div>
-                <Badge className="flex items-center gap-1">
-                  <Icon name="wallet" className="h-3 w-3 text-secondary/50" />
-                  <Text
-                    variant={TextVariant.caption}
-                    className="text-nowrap text-secondary/50"
-                  >
-                    {(+walletBalance).toFixed(2)} ETH
-                  </Text>
-                </Badge>
-              </div>
-            </DialogTitle>
-            <Text
-              variant={TextVariant.caption}
-              className="text-secondary/50 w-full"
-            >
-              Need copy for this section.
-            </Text>
-          </DialogHeader>
           <div className="h-full w-full flex-col">
             <div className="items-center justify-center flex flex-row w-full px-10 pt-5 pb-10">
               {modalType === 'identity' ? (
@@ -264,7 +194,7 @@ export default function StakeForm({
                   />
                 </TabsList>
               </Tabs>
-              <div className="pt-2.5">
+              <div className="pt-8">
                 <ActivePositionCard
                   value={Number(formatBalance(user_assets ?? 0, 18))}
                   claimPosition={
@@ -304,9 +234,7 @@ export default function StakeForm({
           <StakeReview
             mode={mode}
             val={val}
-            dispatch={dispatch}
             state={state}
-            direction={direction!}
             modalType={modalType}
             identity={identity}
             claim={claim}

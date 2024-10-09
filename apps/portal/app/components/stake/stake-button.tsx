@@ -160,7 +160,7 @@ const StakeButton: React.FC<StakeButtonProps> = ({
         state.status === 'transaction-pending' ||
         state.status === 'awaiting'
       }
-      className="w-40"
+      className="w-40 mx-auto"
     >
       {getButtonText()}
     </Button>

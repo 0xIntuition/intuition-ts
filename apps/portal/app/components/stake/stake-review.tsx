@@ -1,16 +1,12 @@
 import { useEffect, useState } from 'react'
 
 import {
-  Button,
   Claim,
-  DialogHeader,
-  DialogTitle,
   Icon,
   IconName,
   Identity,
   IdentityTag,
   Separator,
-  Tag,
   Text,
   TextVariant,
 } from '@0xintuition/1ui'
@@ -27,17 +23,12 @@ import {
   getAtomLink,
 } from '@lib/utils/misc'
 import { VaultDetailsType } from 'app/types'
-import {
-  TransactionActionType,
-  TransactionStateType,
-} from 'app/types/transaction'
+import { TransactionStateType } from 'app/types/transaction'
 
 interface StakeReviewProps {
   val: string
   mode: string | undefined
-  dispatch: (action: TransactionActionType) => void
   state: TransactionStateType
-  direction: 'for' | 'against'
   isError?: boolean
   modalType: 'identity' | 'claim' | null | undefined
   identity?: IdentityPresenter
@@ -133,9 +124,7 @@ interface Fees {
 export default function StakeReview({
   val,
   mode = 'identity',
-  dispatch,
   state,
-  direction,
   isError,
   modalType,
   identity,
@@ -237,27 +226,6 @@ export default function StakeReview({
 
   return (
     <>
-      <DialogHeader>
-        <DialogTitle className="justify-between">
-          <div className="flex flex-row gap-2">
-            <Button
-              onClick={(e) => {
-                e.preventDefault()
-                dispatch({ type: 'START_TRANSACTION' })
-              }}
-              variant="ghost"
-              size="icon"
-            >
-              <Icon name="arrow-left" className="h-4 w-4" />
-            </Button>
-            {direction !== undefined && (
-              <Tag variant={direction === 'for' ? 'for' : 'against'}>
-                {direction === 'for' ? 'FOR' : 'AGAINST'}
-              </Tag>
-            )}
-          </div>
-        </DialogTitle>
-      </DialogHeader>
       <div className="flex flex-grow flex-col justify-center items-center h-[358px]">
         <div className="flex flex-col justify-center items-center gap-5">
           <Icon name="await-action" className="h-20 w-20 text-neutral-50/30" />

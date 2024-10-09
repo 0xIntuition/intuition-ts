@@ -37,7 +37,7 @@ export const InfoTooltip = ({
           ) : (
             <Icon
               name={IconName.circleQuestionMark}
-              className="h-4 w-4 text-muted-foreground"
+              className="h-4 w-4 text-secondary/50 hover:text-primary"
             />
           )}
         </TooltipTrigger>
