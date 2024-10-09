@@ -32,7 +32,7 @@ describe('Tags', () => {
             class="flex flex-wrap gap-2 items-center"
           >
             <button
-              class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/20 hover:bg-primary/20 hover:text-primary hover:border-primary/40 text-base font-normal flex items-center cursor-default pl-2"
+              class="gap-1 rounded-full px-2 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/20 hover:bg-primary/20 hover:text-primary hover:border-primary/40 text-base font-normal flex items-center cursor-default pl-2"
             >
               <div
                 class="flex flex-row gap-2 items-center"
@@ -53,7 +53,7 @@ describe('Tags', () => {
               </div>
             </button>
             <button
-              class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/20 hover:bg-primary/20 hover:text-primary hover:border-primary/40 text-base font-normal flex items-center cursor-default pl-2"
+              class="gap-1 rounded-full px-2 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/20 hover:bg-primary/20 hover:text-primary hover:border-primary/40 text-base font-normal flex items-center cursor-default pl-2"
             >
               <div
                 class="flex flex-row gap-2 items-center"
@@ -74,7 +74,7 @@ describe('Tags', () => {
               </div>
             </button>
             <button
-              class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/20 hover:bg-primary/20 hover:text-primary hover:border-primary/40 text-base font-normal flex items-center cursor-default pl-2"
+              class="gap-1 rounded-full px-2 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/20 hover:bg-primary/20 hover:text-primary hover:border-primary/40 text-base font-normal flex items-center cursor-default pl-2"
             >
               <div
                 class="flex flex-row gap-2 items-center"
@@ -95,7 +95,7 @@ describe('Tags', () => {
               </div>
             </button>
             <button
-              class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/20 hover:bg-primary/20 hover:text-primary hover:border-primary/40 text-base font-normal flex items-center cursor-default pl-2"
+              class="gap-1 rounded-full px-2 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/20 hover:bg-primary/20 hover:text-primary hover:border-primary/40 text-base font-normal flex items-center cursor-default pl-2"
             >
               <div
                 class="flex flex-row gap-2 items-center"
@@ -116,7 +116,7 @@ describe('Tags', () => {
               </div>
             </button>
             <button
-              class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/20 hover:bg-primary/20 hover:text-primary hover:border-primary/40 text-base font-normal flex items-center cursor-default pl-2"
+              class="gap-1 rounded-full px-2 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/20 hover:bg-primary/20 hover:text-primary hover:border-primary/40 text-base font-normal flex items-center cursor-default pl-2"
             >
               <div
                 class="flex flex-row gap-2 items-center"
@@ -137,7 +137,7 @@ describe('Tags', () => {
               </div>
             </button>
             <button
-              class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/20 hover:bg-primary/20 hover:text-primary hover:border-primary/40 text-base font-normal flex items-center cursor-default pl-2"
+              class="gap-1 rounded-full px-2 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/20 hover:bg-primary/20 hover:text-primary hover:border-primary/40 text-base font-normal flex items-center cursor-default pl-2"
             >
               <div
                 class="flex flex-row gap-2 items-center"
@@ -158,7 +158,7 @@ describe('Tags', () => {
               </div>
             </button>
             <button
-              class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/20 hover:bg-primary/20 hover:text-primary hover:border-primary/40 text-base font-normal flex items-center cursor-default pl-2"
+              class="gap-1 rounded-full px-2 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/20 hover:bg-primary/20 hover:text-primary hover:border-primary/40 text-base font-normal flex items-center cursor-default pl-2"
             >
               <div
                 class="flex flex-row gap-2 items-center"
@@ -179,7 +179,7 @@ describe('Tags', () => {
               </div>
             </button>
             <button
-              class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/20 hover:bg-primary/20 hover:text-primary hover:border-primary/40 text-base font-normal flex items-center cursor-default pl-2"
+              class="gap-1 rounded-full px-2 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/20 hover:bg-primary/20 hover:text-primary hover:border-primary/40 text-base font-normal flex items-center cursor-default pl-2"
             >
               <div
                 class="flex flex-row gap-2 items-center"
@@ -200,7 +200,7 @@ describe('Tags', () => {
               </div>
             </button>
             <button
-              class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/20 hover:bg-primary/20 hover:text-primary hover:border-primary/40 text-base font-normal flex items-center cursor-default pl-2"
+              class="gap-1 rounded-full px-2 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/20 hover:bg-primary/20 hover:text-primary hover:border-primary/40 text-base font-normal flex items-center cursor-default pl-2"
             >
               <div
                 class="flex flex-row gap-2 items-center"
@@ -221,7 +221,7 @@ describe('Tags', () => {
               </div>
             </button>
             <button
-              class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/20 hover:bg-primary/20 hover:text-primary hover:border-primary/40 text-base font-normal flex items-center cursor-default pl-2"
+              class="gap-1 rounded-full px-2 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/20 hover:bg-primary/20 hover:text-primary hover:border-primary/40 text-base font-normal flex items-center cursor-default pl-2"
             >
               <div
                 class="flex flex-row gap-2 items-center"
@@ -292,7 +292,7 @@ describe('Tags', () => {
             class="flex flex-wrap gap-2 items-center"
           >
             <button
-              class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/20 hover:bg-primary/20 hover:text-primary hover:border-primary/40 text-base font-normal flex items-center cursor-default pl-2"
+              class="gap-1 rounded-full px-2 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/20 hover:bg-primary/20 hover:text-primary hover:border-primary/40 text-base font-normal flex items-center cursor-default pl-2"
             >
               <div
                 class="flex flex-row gap-2 items-center"
@@ -313,7 +313,7 @@ describe('Tags', () => {
               </div>
             </button>
             <button
-              class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/20 hover:bg-primary/20 hover:text-primary hover:border-primary/40 text-base font-normal flex items-center cursor-default pl-2"
+              class="gap-1 rounded-full px-2 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/20 hover:bg-primary/20 hover:text-primary hover:border-primary/40 text-base font-normal flex items-center cursor-default pl-2"
             >
               <div
                 class="flex flex-row gap-2 items-center"
@@ -334,7 +334,7 @@ describe('Tags', () => {
               </div>
             </button>
             <button
-              class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/20 hover:bg-primary/20 hover:text-primary hover:border-primary/40 text-base font-normal flex items-center cursor-default pl-2"
+              class="gap-1 rounded-full px-2 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/20 hover:bg-primary/20 hover:text-primary hover:border-primary/40 text-base font-normal flex items-center cursor-default pl-2"
             >
               <div
                 class="flex flex-row gap-2 items-center"
@@ -355,7 +355,7 @@ describe('Tags', () => {
               </div>
             </button>
             <button
-              class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/20 hover:bg-primary/20 hover:text-primary hover:border-primary/40 text-base font-normal flex items-center cursor-default pl-2"
+              class="gap-1 rounded-full px-2 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/20 hover:bg-primary/20 hover:text-primary hover:border-primary/40 text-base font-normal flex items-center cursor-default pl-2"
             >
               <div
                 class="flex flex-row gap-2 items-center"
@@ -376,7 +376,7 @@ describe('Tags', () => {
               </div>
             </button>
             <button
-              class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/20 hover:bg-primary/20 hover:text-primary hover:border-primary/40 text-base font-normal flex items-center cursor-default pl-2"
+              class="gap-1 rounded-full px-2 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/20 hover:bg-primary/20 hover:text-primary hover:border-primary/40 text-base font-normal flex items-center cursor-default pl-2"
             >
               <div
                 class="flex flex-row gap-2 items-center"
@@ -397,7 +397,7 @@ describe('Tags', () => {
               </div>
             </button>
             <button
-              class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/20 hover:bg-primary/20 hover:text-primary hover:border-primary/40 text-base font-normal flex items-center cursor-default pl-2"
+              class="gap-1 rounded-full px-2 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/20 hover:bg-primary/20 hover:text-primary hover:border-primary/40 text-base font-normal flex items-center cursor-default pl-2"
             >
               <div
                 class="flex flex-row gap-2 items-center"
@@ -418,7 +418,7 @@ describe('Tags', () => {
               </div>
             </button>
             <button
-              class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/20 hover:bg-primary/20 hover:text-primary hover:border-primary/40 text-base font-normal flex items-center cursor-default pl-2"
+              class="gap-1 rounded-full px-2 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/20 hover:bg-primary/20 hover:text-primary hover:border-primary/40 text-base font-normal flex items-center cursor-default pl-2"
             >
               <div
                 class="flex flex-row gap-2 items-center"
@@ -439,7 +439,7 @@ describe('Tags', () => {
               </div>
             </button>
             <button
-              class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/20 hover:bg-primary/20 hover:text-primary hover:border-primary/40 text-base font-normal flex items-center cursor-default pl-2"
+              class="gap-1 rounded-full px-2 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/20 hover:bg-primary/20 hover:text-primary hover:border-primary/40 text-base font-normal flex items-center cursor-default pl-2"
             >
               <div
                 class="flex flex-row gap-2 items-center"
@@ -460,7 +460,7 @@ describe('Tags', () => {
               </div>
             </button>
             <button
-              class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/20 hover:bg-primary/20 hover:text-primary hover:border-primary/40 text-base font-normal flex items-center cursor-default pl-2"
+              class="gap-1 rounded-full px-2 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/20 hover:bg-primary/20 hover:text-primary hover:border-primary/40 text-base font-normal flex items-center cursor-default pl-2"
             >
               <div
                 class="flex flex-row gap-2 items-center"
@@ -481,7 +481,7 @@ describe('Tags', () => {
               </div>
             </button>
             <button
-              class="gap-1 rounded-full px-1.5 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/20 hover:bg-primary/20 hover:text-primary hover:border-primary/40 text-base font-normal flex items-center cursor-default pl-2"
+              class="gap-1 rounded-full px-2 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/20 hover:bg-primary/20 hover:text-primary hover:border-primary/40 text-base font-normal flex items-center cursor-default pl-2"
             >
               <div
                 class="flex flex-row gap-2 items-center"

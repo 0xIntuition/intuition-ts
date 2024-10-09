@@ -44,7 +44,7 @@ describe('IdentityCard', () => {
                 super dave
               </div>
               <div
-                class="inline-flex items-center gap-1 rounded-md pl-1 pr-1.5 py-0.5 text-sm font-light text-foreground/65 bg-primary/15"
+                class="inline-flex items-center gap-1 rounded-md pl-1 pr-1.5 py-0.5 text-sm font-light text-foreground/65 bg-primary/10"
               >
                 4.123 ETH
               </div>
@@ -103,7 +103,7 @@ describe('IdentityCard', () => {
                 intuition
               </div>
               <div
-                class="inline-flex items-center gap-1 rounded-md pl-1 pr-1.5 py-0.5 text-sm font-light text-foreground/65 bg-primary/15"
+                class="inline-flex items-center gap-1 rounded-md pl-1 pr-1.5 py-0.5 text-sm font-light text-foreground/65 bg-primary/10"
               >
                 7.892 ETH
               </div>
