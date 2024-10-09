@@ -45,10 +45,10 @@ describe('Table', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="relative w-full overflow-auto  theme-border rounded-lg"
+          class="relative w-full overflow-auto"
         >
           <table
-            class="w-full caption-bottom text-sm"
+            class="w-full caption-bottom text-base"
           >
             <caption
               class="my-3 text-sm text-muted-foreground"
@@ -57,7 +57,7 @@ describe('Table', () => {
             </caption>
             <thead>
               <tr
-                class="border-b transition-colors hover:bg-primary/10 data-[state=selected]:bg-muted"
+                class="border-b border-border/20 transition-colors hover:bg-primary/10 data-[state=selected]:bg-muted"
               >
                 <th
                   class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0 border-0 border-b border-border/20 w-[100px]"
@@ -85,25 +85,25 @@ describe('Table', () => {
               class="[&_tr:last-child]:border-0"
             >
               <tr
-                class="border-b transition-colors hover:bg-primary/10 data-[state=selected]:bg-muted"
+                class="border-b border-border/20 transition-colors hover:bg-primary/10 data-[state=selected]:bg-muted"
               >
                 <td
-                  class="p-4 align-middle [&:has([role=checkbox])]:pr-0 font-medium"
+                  class="py-3 align-middle [&:has([role=checkbox])]:pr-0 font-medium"
                 >
                   INV001
                 </td>
                 <td
-                  class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+                  class="py-3 align-middle [&:has([role=checkbox])]:pr-0"
                 >
                   Paid
                 </td>
                 <td
-                  class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+                  class="py-3 align-middle [&:has([role=checkbox])]:pr-0"
                 >
                   $250.00
                 </td>
                 <td
-                  class="p-4 align-middle [&:has([role=checkbox])]:pr-0 text-right"
+                  class="py-3 align-middle [&:has([role=checkbox])]:pr-0 text-right"
                 >
                   Credit Card
                 </td>
@@ -113,16 +113,16 @@ describe('Table', () => {
               class="border-t bg-primary/10 font-medium [&>tr]:last:border-b-0"
             >
               <tr
-                class="border-b transition-colors hover:bg-primary/10 data-[state=selected]:bg-muted"
+                class="border-b border-border/20 transition-colors hover:bg-primary/10 data-[state=selected]:bg-muted"
               >
                 <td
-                  class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+                  class="py-3 align-middle [&:has([role=checkbox])]:pr-0"
                   colspan="3"
                 >
                   Total
                 </td>
                 <td
-                  class="p-4 align-middle [&:has([role=checkbox])]:pr-0 text-right"
+                  class="py-3 align-middle [&:has([role=checkbox])]:pr-0 text-right"
                 >
                   $2,500.00
                 </td>

@@ -48,7 +48,7 @@ describe('ListHeaderCard', () => {
             class="flex items-center"
           >
             <div
-              class="flex items-center w-full max-w-max group relative max-sm:flex-col max-sm:m-auto transition-colors duration-200"
+              class="flex items-center w-full max-w-max group relative max-sm:flex-col max-sm:m-auto transition-colors duration-200 flex-row"
             >
               <div>
                 <button
@@ -78,7 +78,7 @@ describe('ListHeaderCard', () => {
                 </button>
               </div>
               <div
-                class="shrink-0 bg-border/20 h-[1px] w-4 max-sm:w-px max-sm:h-2 transition-colors duration-200 group-hover:bg-primary"
+                class="shrink-0 bg-border/20 h-[1px] transition-colors duration-200 w-4 max-sm:w-px max-sm:h-2 group-hover:bg-primary"
                 data-orientation="horizontal"
                 role="none"
               />
@@ -110,7 +110,7 @@ describe('ListHeaderCard', () => {
                 </button>
               </div>
               <div
-                class="shrink-0 bg-border/20 h-[1px] w-4 max-sm:w-px max-sm:h-2 transition-colors duration-200 group-hover:bg-primary"
+                class="shrink-0 bg-border/20 h-[1px] transition-colors duration-200 w-4 max-sm:w-px max-sm:h-2 group-hover:bg-primary"
                 data-orientation="horizontal"
                 role="none"
               />
@@ -140,17 +140,6 @@ describe('ListHeaderCard', () => {
                     cool
                   </div>
                 </button>
-              </div>
-              <div
-                class="pl-1"
-              >
-                <svg
-                  class="h-4 w-4 transition-colors duration-200 text-secondary/50 group-hover:text-primary"
-                >
-                  <use
-                    href="/src/components/Icon/Icon.sprites.svg#arrow-up-right"
-                  />
-                </svg>
               </div>
             </div>
           </div>

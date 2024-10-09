@@ -378,7 +378,7 @@ export default function StakeModal({
         handleClose()
       }}
     >
-      <DialogContent className="flex flex-col min-w-[600px] h-[600px]">
+      <DialogContent className="flex flex-col min-w-[600px] min-h-[600px]">
         <DialogHeader>
           <DialogTitle>
             <div className="flex items-center justify-between w-full pr-2.5">
@@ -413,7 +413,7 @@ export default function StakeModal({
                   icon={IconName.fingerprint}
                 />
               </div>
-              <Badge className="flex items-center gap-1 bg-secondary/10">
+              <Badge className="flex items-center gap-1">
                 <Icon name="wallet" className="h-3 w-3 text-secondary/50" />
                 <Text
                   variant={TextVariant.caption}
