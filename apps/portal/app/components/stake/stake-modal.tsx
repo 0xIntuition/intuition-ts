@@ -378,7 +378,7 @@ export default function StakeModal({
         handleClose()
       }}
     >
-      <DialogContent className="flex flex-col min-w-[600px] min-h-[600px]">
+      <DialogContent className="flex flex-col min-w-[600px] min-h-[600px] gap-10">
         <DialogHeader>
           <DialogTitle>
             <div className="flex items-center justify-between w-full pr-2.5">

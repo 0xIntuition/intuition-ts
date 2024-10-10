@@ -7,6 +7,7 @@ import {
   IconName,
   Identity,
   IdentityTag,
+  ScrollArea,
   Table,
   TableBody,
   TableCell,
@@ -164,7 +165,7 @@ export default function StakeReview({
       : calculateRedeemFees(val, vaultDetails)
 
   return (
-    <>
+    <ScrollArea className="h-[600px] w-full">
       <div className="flex flex-col px-10">
         <div className="flex flex-col gap-10">
           <div className="flex flex-col gap-5 items-center justify-center">
@@ -449,6 +450,6 @@ export default function StakeReview({
           </div>
         </div>
       </div>
-    </>
+    </ScrollArea>
   )
 }
