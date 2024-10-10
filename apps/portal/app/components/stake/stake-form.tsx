@@ -6,7 +6,6 @@ import {
   Tabs,
   TabsList,
   TabsTrigger,
-  Trunctacular,
 } from '@0xintuition/1ui'
 import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
 
@@ -76,8 +75,6 @@ export default function StakeForm({
 }: StakeFormProps) {
   const [stakeModalState, setStakeModalState] = useAtom(stakeModalAtom)
 
-  console.log('user_conviction', user_conviction)
-
   return (
     <>
       <fetchReval.Form
@@ -91,19 +88,15 @@ export default function StakeForm({
       {state.status === 'idle' ? (
         <>
           <div className="h-full w-full flex-col flex-grow">
-            <div className="items-center justify-center flex flex-row w-full px-10 pt-5 pb-10">
+            <div className="items-center justify-center flex flex-row w-full px-10 pb-10">
               {modalType === 'identity' ? (
                 <IdentityTag
                   imgSrc={identity?.user?.image ?? identity?.image}
                   variant={identity?.user ? Identity.user : Identity.nonUser}
                 >
-                  <Trunctacular
-                    value={
-                      identity?.user?.display_name ??
-                      identity?.display_name ??
-                      'Identity'
-                    }
-                  />
+                  {identity?.user?.display_name ??
+                    identity?.display_name ??
+                    'Identity'}
                 </IdentityTag>
               ) : (
                 <Claim

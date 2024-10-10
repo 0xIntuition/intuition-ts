@@ -40,7 +40,11 @@ interface StakeReviewProps {
   vaultDetails: VaultDetailsType
 }
 
-const calculateDepositFees = (val: string, vaultDetails: VaultDetailsType) => {
+const calculateDepositFees = (
+  val: string,
+  vaultDetails: VaultDetailsType,
+  isClaim: boolean,
+) => {
   const protocolFee = vaultDetails?.formatted_protocol_fee || 0
   const entryFee = vaultDetails?.formatted_entry_fee || 0
   const atomFractionOnDeposit =
@@ -51,7 +55,9 @@ const calculateDepositFees = (val: string, vaultDetails: VaultDetailsType) => {
   const valAfterProtocolFee = +val - protocolFeeAmount
 
   // Atom Deposit Flow
-  const atomDepositAmount = valAfterProtocolFee * +atomFractionOnDeposit
+  const atomDepositAmount = isClaim
+    ? valAfterProtocolFee * +atomFractionOnDeposit
+    : valAfterProtocolFee
   const atomEntryFeeAmount = atomDepositAmount * +entryFee
   const atomPositionAmount = atomDepositAmount - atomEntryFeeAmount
 
@@ -130,14 +136,11 @@ export default function StakeReview({
   mode = 'identity',
   state,
   isError,
-  // modalType,
-  // identity,
+  identity,
   claim,
   vaultDetails,
 }: StakeReviewProps) {
   const [statusText, setStatusText] = useState<string>('')
-
-  console.log('claim', claim)
 
   useEffect(() => {
     const newText = isError
@@ -161,7 +164,7 @@ export default function StakeReview({
 
   const fees: Fees =
     mode === 'deposit'
-      ? calculateDepositFees(val, vaultDetails)
+      ? calculateDepositFees(val, vaultDetails, !!claim)
       : calculateRedeemFees(val, vaultDetails)
 
   return (
@@ -182,7 +185,7 @@ export default function StakeReview({
                   variant={TextVariant.bodyLarge}
                   weight={TextWeight.medium}
                 >
-                  ETH to Claim
+                  ETH to {claim ? 'Claim' : 'Identity'}
                 </Text>
                 <InfoTooltip
                   title="ETH to Claim"
@@ -198,71 +201,86 @@ export default function StakeReview({
                 <TableBody className="border-border/20 border-t border-b">
                   <TableRow>
                     <TableCell>
-                      <Claim
-                        size="default"
-                        subject={{
-                          variant: claim?.subject?.is_user
-                            ? Identity.user
-                            : Identity.nonUser,
-                          label: getAtomLabel(
-                            claim?.subject as IdentityPresenter,
-                          ),
-                          imgSrc: getAtomImage(
-                            claim?.subject as IdentityPresenter,
-                          ),
-                          id: claim?.subject?.identity_id,
-                          description: getAtomDescription(
-                            claim?.subject as IdentityPresenter,
-                          ),
-                          ipfsLink: getAtomIpfsLink(
-                            claim?.subject as IdentityPresenter,
-                          ),
-                          link: getAtomLink(
-                            claim?.subject as IdentityPresenter,
-                          ),
-                        }}
-                        predicate={{
-                          variant: claim?.predicate?.is_user
-                            ? Identity.user
-                            : Identity.nonUser,
-                          label: getAtomLabel(
-                            claim?.predicate as IdentityPresenter,
-                          ),
-                          imgSrc: getAtomImage(
-                            claim?.predicate as IdentityPresenter,
-                          ),
-                          id: claim?.predicate?.identity_id,
-                          description: getAtomDescription(
-                            claim?.predicate as IdentityPresenter,
-                          ),
-                          ipfsLink: getAtomIpfsLink(
-                            claim?.predicate as IdentityPresenter,
-                          ),
-                          link: getAtomLink(
-                            claim?.predicate as IdentityPresenter,
-                          ),
-                        }}
-                        object={{
-                          variant: claim?.object?.is_user
-                            ? Identity.user
-                            : Identity.nonUser,
-                          label: getAtomLabel(
-                            claim?.object as IdentityPresenter,
-                          ),
-                          imgSrc: getAtomImage(
-                            claim?.object as IdentityPresenter,
-                          ),
-                          id: claim?.object?.identity_id,
-                          description: getAtomDescription(
-                            claim?.object as IdentityPresenter,
-                          ),
-                          ipfsLink: getAtomIpfsLink(
-                            claim?.object as IdentityPresenter,
-                          ),
-                          link: getAtomLink(claim?.object as IdentityPresenter),
-                        }}
-                        orientation="vertical"
-                      />
+                      {claim ? (
+                        <Claim
+                          size="default"
+                          subject={{
+                            variant: claim?.subject?.is_user
+                              ? Identity.user
+                              : Identity.nonUser,
+                            label: getAtomLabel(
+                              claim?.subject as IdentityPresenter,
+                            ),
+                            imgSrc: getAtomImage(
+                              claim?.subject as IdentityPresenter,
+                            ),
+                            id: claim?.subject?.identity_id,
+                            description: getAtomDescription(
+                              claim?.subject as IdentityPresenter,
+                            ),
+                            ipfsLink: getAtomIpfsLink(
+                              claim?.subject as IdentityPresenter,
+                            ),
+                            link: getAtomLink(
+                              claim?.subject as IdentityPresenter,
+                            ),
+                          }}
+                          predicate={{
+                            variant: claim?.predicate?.is_user
+                              ? Identity.user
+                              : Identity.nonUser,
+                            label: getAtomLabel(
+                              claim?.predicate as IdentityPresenter,
+                            ),
+                            imgSrc: getAtomImage(
+                              claim?.predicate as IdentityPresenter,
+                            ),
+                            id: claim?.predicate?.identity_id,
+                            description: getAtomDescription(
+                              claim?.predicate as IdentityPresenter,
+                            ),
+                            ipfsLink: getAtomIpfsLink(
+                              claim?.predicate as IdentityPresenter,
+                            ),
+                            link: getAtomLink(
+                              claim?.predicate as IdentityPresenter,
+                            ),
+                          }}
+                          object={{
+                            variant: claim?.object?.is_user
+                              ? Identity.user
+                              : Identity.nonUser,
+                            label: getAtomLabel(
+                              claim?.object as IdentityPresenter,
+                            ),
+                            imgSrc: getAtomImage(
+                              claim?.object as IdentityPresenter,
+                            ),
+                            id: claim?.object?.identity_id,
+                            description: getAtomDescription(
+                              claim?.object as IdentityPresenter,
+                            ),
+                            ipfsLink: getAtomIpfsLink(
+                              claim?.object as IdentityPresenter,
+                            ),
+                            link: getAtomLink(
+                              claim?.object as IdentityPresenter,
+                            ),
+                          }}
+                          orientation="vertical"
+                        />
+                      ) : (
+                        <IdentityTag
+                          imgSrc={identity?.user?.image ?? identity?.image}
+                          variant={
+                            identity?.user ? Identity.user : Identity.nonUser
+                          }
+                        >
+                          {identity?.user?.display_name ??
+                            identity?.display_name ??
+                            'Identity'}
+                        </IdentityTag>
+                      )}
                     </TableCell>
                     <TableCell className="text-right">
                       <Text
@@ -270,118 +288,124 @@ export default function StakeReview({
                         weight={TextWeight.medium}
                         className="text-secondary-foreground/70"
                       >
-                        {fees.triplePositionAmount?.toFixed(6)} ETH
+                        {(claim
+                          ? fees.triplePositionAmount
+                          : fees.totalAtomPositionAmount
+                        )?.toFixed(6)}{' '}
+                        ETH
                       </Text>
                     </TableCell>
                   </TableRow>
                 </TableBody>
               </Table>
             </div>
-            <div className="flex flex-col gap-2.5">
-              <div className="flex flex-row gap-1">
-                <Text
-                  variant={TextVariant.bodyLarge}
-                  weight={TextWeight.medium}
-                >
-                  ETH to Individual Identities
-                </Text>
-                <InfoTooltip
-                  title="ETH to Individual Identities"
-                  icon={IconName.circleInfo}
-                  content={
-                    <div className="flex flex-col gap-2 w-full">
-                      The amount of ETH that will be staked on the individual
-                      Identities.
-                    </div>
-                  }
-                />
+            {claim && (
+              <div className="flex flex-col gap-2.5">
+                <div className="flex flex-row gap-1">
+                  <Text
+                    variant={TextVariant.bodyLarge}
+                    weight={TextWeight.medium}
+                  >
+                    ETH to Individual Identities
+                  </Text>
+                  <InfoTooltip
+                    title="ETH to Individual Identities"
+                    icon={IconName.circleInfo}
+                    content={
+                      <div className="flex flex-col gap-2 w-full">
+                        The amount of ETH that will be staked on the individual
+                        Identities.
+                      </div>
+                    }
+                  />
+                </div>
+                <Table className="border-transparent">
+                  <TableBody className="border-border/20 border-t border-b">
+                    <TableRow>
+                      <TableCell>
+                        <IdentityTag
+                          size="default"
+                          variant={
+                            claim?.subject?.is_user
+                              ? Identity.user
+                              : Identity.nonUser
+                          }
+                          imgSrc={getAtomImage(
+                            claim?.subject as IdentityPresenter,
+                          )}
+                          id={claim?.subject?.identity_id}
+                        >
+                          {getAtomLabel(claim?.subject as IdentityPresenter)}
+                        </IdentityTag>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <Text
+                          variant={TextVariant.body}
+                          weight={TextWeight.medium}
+                          className="text-secondary-foreground/70"
+                        >
+                          {fees.atomDepositAmount?.toFixed(6)} ETH
+                        </Text>
+                      </TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell>
+                        <IdentityTag
+                          size="default"
+                          variant={
+                            claim?.predicate?.is_user
+                              ? Identity.user
+                              : Identity.nonUser
+                          }
+                          imgSrc={getAtomImage(
+                            claim?.predicate as IdentityPresenter,
+                          )}
+                          id={claim?.predicate?.identity_id}
+                        >
+                          {getAtomLabel(claim?.predicate as IdentityPresenter)}
+                        </IdentityTag>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <Text
+                          variant={TextVariant.body}
+                          weight={TextWeight.medium}
+                          className="text-secondary-foreground/70"
+                        >
+                          {fees.atomDepositAmount?.toFixed(6)} ETH
+                        </Text>
+                      </TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell>
+                        <IdentityTag
+                          size="default"
+                          variant={
+                            claim?.object?.is_user
+                              ? Identity.user
+                              : Identity.nonUser
+                          }
+                          imgSrc={getAtomImage(
+                            claim?.object as IdentityPresenter,
+                          )}
+                          id={claim?.object?.identity_id}
+                        >
+                          {getAtomLabel(claim?.object as IdentityPresenter)}
+                        </IdentityTag>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <Text
+                          variant={TextVariant.body}
+                          weight={TextWeight.medium}
+                          className="text-secondary-foreground/70"
+                        >
+                          {fees.atomDepositAmount?.toFixed(6)} ETH
+                        </Text>
+                      </TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
               </div>
-              <Table className="border-transparent">
-                <TableBody className="border-border/20 border-t border-b">
-                  <TableRow>
-                    <TableCell>
-                      <IdentityTag
-                        size="default"
-                        variant={
-                          claim?.subject?.is_user
-                            ? Identity.user
-                            : Identity.nonUser
-                        }
-                        imgSrc={getAtomImage(
-                          claim?.subject as IdentityPresenter,
-                        )}
-                        id={claim?.subject?.identity_id}
-                      >
-                        {getAtomLabel(claim?.subject as IdentityPresenter)}
-                      </IdentityTag>
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <Text
-                        variant={TextVariant.body}
-                        weight={TextWeight.medium}
-                        className="text-secondary-foreground/70"
-                      >
-                        {fees.atomDepositAmount?.toFixed(6)} ETH
-                      </Text>
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell>
-                      <IdentityTag
-                        size="default"
-                        variant={
-                          claim?.predicate?.is_user
-                            ? Identity.user
-                            : Identity.nonUser
-                        }
-                        imgSrc={getAtomImage(
-                          claim?.predicate as IdentityPresenter,
-                        )}
-                        id={claim?.predicate?.identity_id}
-                      >
-                        {getAtomLabel(claim?.predicate as IdentityPresenter)}
-                      </IdentityTag>
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <Text
-                        variant={TextVariant.body}
-                        weight={TextWeight.medium}
-                        className="text-secondary-foreground/70"
-                      >
-                        {fees.atomDepositAmount?.toFixed(6)} ETH
-                      </Text>
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell>
-                      <IdentityTag
-                        size="default"
-                        variant={
-                          claim?.object?.is_user
-                            ? Identity.user
-                            : Identity.nonUser
-                        }
-                        imgSrc={getAtomImage(
-                          claim?.object as IdentityPresenter,
-                        )}
-                        id={claim?.object?.identity_id}
-                      >
-                        {getAtomLabel(claim?.object as IdentityPresenter)}
-                      </IdentityTag>
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <Text
-                        variant={TextVariant.body}
-                        weight={TextWeight.medium}
-                        className="text-secondary-foreground/70"
-                      >
-                        {fees.atomDepositAmount?.toFixed(6)} ETH
-                      </Text>
-                    </TableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
-            </div>
+            )}
             <div className="flex flex-col gap-2.5">
               <div className="flex flex-row gap-1">
                 <Text
@@ -426,24 +450,26 @@ export default function StakeReview({
                         weight={TextWeight.medium}
                         className="text-secondary-foreground/70"
                       >
-                        {fees.atomEntryFeeAmount?.toFixed(6)} ETH
+                        {fees.totalAtomEntryFeeAmount?.toFixed(6)} ETH
                       </Text>
                     </TableCell>
                   </TableRow>
-                  <TableRow>
-                    <TableCell className="text-secondary-foreground/70">
-                      ClaimEntryFee
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <Text
-                        variant={TextVariant.body}
-                        weight={TextWeight.medium}
-                        className="text-secondary-foreground/70"
-                      >
-                        {fees.tripleEntryFeeAmount?.toFixed(6)} ETH
-                      </Text>
-                    </TableCell>
-                  </TableRow>
+                  {claim && (
+                    <TableRow>
+                      <TableCell className="text-secondary-foreground/70">
+                        Claim Entry Fee
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <Text
+                          variant={TextVariant.body}
+                          weight={TextWeight.medium}
+                          className="text-secondary-foreground/70"
+                        >
+                          {fees.tripleEntryFeeAmount?.toFixed(6)} ETH
+                        </Text>
+                      </TableCell>
+                    </TableRow>
+                  )}
                 </TableBody>
               </Table>
             </div>
