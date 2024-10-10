@@ -170,6 +170,14 @@ const ClaimItem = ({
         value={item.label}
         disableTooltip={shouldHover}
         maxStringLength={effectiveMaxLength}
+        className={cn(
+          'relative z-10 identity-tag transition-colors duration-200 text-secondary/70',
+          {
+            'group-hover:text-primary': !isAnyHovered,
+            'text-primary': isHovered,
+            'text-secondary/70': isAnyHovered && !isHovered,
+          },
+        )}
       />
     </IdentityTag>
   )

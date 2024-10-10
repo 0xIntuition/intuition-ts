@@ -313,7 +313,6 @@ export default function StakeReview({
                       >
                         {getAtomLabel(claim?.subject as IdentityPresenter)}
                       </IdentityTag>
-                      Staked {claim?.subject?.user_assets} ETH
                     </TableCell>
                     <TableCell className="text-right">
                       <Text

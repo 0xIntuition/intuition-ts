@@ -90,7 +90,7 @@ export default function StakeForm({
       </fetchReval.Form>
       {state.status === 'idle' ? (
         <>
-          <div className="h-full w-full flex-col">
+          <div className="h-full w-full flex-col flex-grow">
             <div className="items-center justify-center flex flex-row w-full px-10 pt-5 pb-10">
               {modalType === 'identity' ? (
                 <IdentityTag

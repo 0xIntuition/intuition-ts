@@ -52,7 +52,7 @@ describe('ListHeaderCard', () => {
             >
               <div>
                 <button
-                  class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center rounded-md text-base [&>span]:h-6 [&>span]:w-6 relative z-10 identity-tag transition-colors duration-200 group-hover:border-primary"
+                  class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center text-secondary-foreground/70 hover:text-secondary-foreground rounded-md text-base [&>span]:h-6 [&>span]:w-6 relative z-10 identity-tag transition-colors duration-200 group-hover:border-primary"
                   data-state="closed"
                 >
                   <span
@@ -71,7 +71,7 @@ describe('ListHeaderCard', () => {
                     </span>
                   </span>
                   <div
-                    class="text-primary text-base font-normal"
+                    class="text-base font-normal relative z-10 identity-tag transition-colors duration-200 text-secondary/70 group-hover:text-primary"
                   >
                     0xintuition
                   </div>
@@ -84,7 +84,7 @@ describe('ListHeaderCard', () => {
               />
               <div>
                 <button
-                  class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center rounded-md text-base [&>span]:h-6 [&>span]:w-6 relative z-10 identity-tag transition-colors duration-200 group-hover:border-primary"
+                  class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center text-secondary-foreground/70 hover:text-secondary-foreground rounded-md text-base [&>span]:h-6 [&>span]:w-6 relative z-10 identity-tag transition-colors duration-200 group-hover:border-primary"
                   data-state="closed"
                 >
                   <span
@@ -103,7 +103,7 @@ describe('ListHeaderCard', () => {
                     </span>
                   </span>
                   <div
-                    class="text-primary text-base font-normal"
+                    class="text-base font-normal relative z-10 identity-tag transition-colors duration-200 text-secondary/70 group-hover:text-primary"
                   >
                     is really
                   </div>
@@ -116,7 +116,7 @@ describe('ListHeaderCard', () => {
               />
               <div>
                 <button
-                  class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center rounded-md text-base [&>span]:h-6 [&>span]:w-6 relative z-10 identity-tag transition-colors duration-200 group-hover:border-primary"
+                  class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center text-secondary-foreground/70 hover:text-secondary-foreground rounded-md text-base [&>span]:h-6 [&>span]:w-6 relative z-10 identity-tag transition-colors duration-200 group-hover:border-primary"
                   data-state="closed"
                 >
                   <span
@@ -135,7 +135,7 @@ describe('ListHeaderCard', () => {
                     </span>
                   </span>
                   <div
-                    class="text-primary text-base font-normal"
+                    class="text-base font-normal relative z-10 identity-tag transition-colors duration-200 text-secondary/70 group-hover:text-primary"
                   >
                     cool
                   </div>
