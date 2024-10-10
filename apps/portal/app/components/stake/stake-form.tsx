@@ -242,7 +242,7 @@ export default function StakeForm({
           />
         </div>
       ) : (
-        <div className="h-full flex flex-col">
+        <div className="flex flex-col flex-grow">
           <TransactionState
             status={state.status}
             txHash={state.txHash}
