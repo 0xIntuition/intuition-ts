@@ -1,0 +1,191 @@
+@context,@type,name,description,image,url
+http://schema.org,Thing,BNB,A utility token used for transactions and fees on the BNB Chain (formerly Binance Smart Chain). It's also used for various purposes within the Binance ecosystem.,https://s2.coinmarketcap.com/static/img/coins/64x64/1839.png,https://bnbchain.org/en
+http://schema.org,Thing,Bitcoin,"The first and most well-known cryptocurrency, created in 2009. It operates on a decentralized network and is often referred to as ""digital gold.""",https://s2.coinmarketcap.com/static/img/coins/64x64/1.png,https://bitcoin.org/
+http://schema.org,Thing,batcat,Cryptocurrency launched in 2024 on the Solana platform,https://s2.coinmarketcap.com/static/img/coins/64x64/31652.png,https://www.batcat.lol/
+http://schema.org,Thing,Boost Trump Campaign,Ethereum-based token launched in 2024,https://s2.coinmarketcap.com/static/img/coins/64x64/31469.png,https://boosttrumpcampaign.com/
+http://schema.org,Thing,Bullish Trump Coin,Ethereum-based token launched in 2024,https://s2.coinmarketcap.com/static/img/coins/64x64/32295.png,https://bullishtrumpcoin.io/
+http://schema.org,Thing,Satoshi Pumpomoto,Solana-based token launched in 2024,https://s2.coinmarketcap.com/static/img/coins/64x64/30938.png,https://pumpomoto.com/
+http://schema.org,Thing,Ethereum,"A decentralized, open-source blockchain platform that enables smart contracts and decentralized applications (dApps). It's the second-largest cryptocurrency by market cap.",https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png,https://www.ethereum.org/
+http://schema.org,Thing,The Infinite Garden,Ethereum-based token launched in 2024,https://s2.coinmarketcap.com/static/img/coins/64x64/29991.png,https://infinitegardentoken.com/
+http://schema.org,Thing,Solana,"A high-performance blockchain supporting smart contracts and decentralized applications, known for its fast transaction speeds and low fees.",https://s2.coinmarketcap.com/static/img/coins/64x64/5426.png,https://solana.com
+http://schema.org,Thing,SonicObamaLockheedMartin69Inu,Meme token on Solana platform launched in 2023,https://s2.coinmarketcap.com/static/img/coins/64x64/28825.png,https;//sol.sex
+http://schema.org,Thing,Wrapped Solana,Token representing Solana on other blockchains,https://s2.coinmarketcap.com/static/img/coins/64x64/16116.png,https://solana.com/
+http://schema.org,Thing,Solcoin,Mineable cryptocurrency,https://s2.coinmarketcap.com/static/img/coins/64x64/591.png,
+http://schema.org,Thing,Sola Token,Ethereum-based token,https://s2.coinmarketcap.com/static/img/coins/64x64/3333.png,https://sola.foundation/
+http://schema.org,Thing,SOL RUNE - Rune.Game,Gaming-related token on BNB Smart Chain,https://s2.coinmarketcap.com/static/img/coins/64x64/12003.png,https://rune.game/sol
+http://schema.org,Thing,BonkHoneyHNTMobileSOL,Solana-based token launched in 2023,https://s2.coinmarketcap.com/static/img/coins/64x64/28828.png,https://bhhntmsol.io/
+http://schema.org,Thing,Solidify,Ethereum-based token launched in 2024,https://s2.coinmarketcap.com/static/img/coins/64x64/29905.png,https://solidifysecurity.finance/
+http://schema.org,Thing,Tether USDt,Stablecoin pegged to the US dollar,https://s2.coinmarketcap.com/static/img/coins/64x64/825.png,https://tether.to
+http://schema.org,Thing,Cardano,"A blockchain platform that aims to provide a more sustainable, scalable, and efficient alternative to proof-of-work networks.",https://s2.coinmarketcap.com/static/img/coins/64x64/2010.png,https://www.cardano.org
+http://schema.org,Thing,Dogecoin,"Originally created as a joke, Dogecoin has gained popularity and is often used for tipping and charitable causes.",https://s2.coinmarketcap.com/static/img/coins/64x64/74.png,http://dogecoin.com/
+http://schema.org,Thing,Department Of Government Efficiency,Ethereum-based token launched in 2024,https://s2.coinmarketcap.com/static/img/coins/64x64/32778.png,https://newdogeoneth.vip/
+http://schema.org,Thing,Department Of Government Efficiency (DOGE),Ethereum-based token launched in 2024,https://s2.coinmarketcap.com/static/img/coins/64x64/32756.png,https://doge.gd
+http://schema.org,Thing,Dogecoin,"Originally created as a joke, Dogecoin has gained popularity and is often used for tipping and charitable causes.",https://s2.coinmarketcap.com/static/img/coins/64x64/31093.png,https://dogeonbase.org/
+http://schema.org,Thing,Doge on Pulsechain,PulseChain-based Dogecoin variant,https://s2.coinmarketcap.com/static/img/coins/64x64/27134.png,https://linktr.ee/DOGEonPulse
+http://schema.org,Thing,DOGECOIN X,BNB Smart Chain-based Dogecoin variant launched in 2023,https://s2.coinmarketcap.com/static/img/coins/64x64/28438.png,https://xcoininu.xyz/
+http://schema.org,Thing,MOON DOGE,BNB Smart Chain-based token launched in 2024,https://s2.coinmarketcap.com/static/img/coins/64x64/30548.png,https://moontokeninu.com
+http://schema.org,Thing,ELON DOGE,BNB Smart Chain-based token launched in 2024,https://s2.coinmarketcap.com/static/img/coins/64x64/29096.png,https://elontokeninu.xyz/
+http://schema.org,Thing,SPACE DOGE,BNB Smart Chain-based token launched in 2023,https://s2.coinmarketcap.com/static/img/coins/64x64/28872.png,https://spaceinucoin.xyz/
+http://schema.org,Thing,DOGE SATELLITE INU,BNB Smart Chain-based token launched in 2023,https://s2.coinmarketcap.com/static/img/coins/64x64/28384.png,https://xtokensat.xyz/
+http://schema.org,Thing,SUPER DOGE,BNB Smart Chain-based token launched in 2024,https://s2.coinmarketcap.com/static/img/coins/64x64/29403.png,https://supertokeninu.com/
+http://schema.org,Thing,WHALES DOGE,BNB Smart Chain-based token launched in 2024,https://s2.coinmarketcap.com/static/img/coins/64x64/30852.png,https://whalestokeninu.xyz/
+http://schema.org,Thing,DOGE SOL INU,Solana-based token launched in 2024,https://s2.coinmarketcap.com/static/img/coins/64x64/31751.png,https://tokensolinu.xyz/
+http://schema.org,Thing,DOGE 2.0,Ethereum-based token launched in 2023,https://s2.coinmarketcap.com/static/img/coins/64x64/27301.png,https://doge20.vip/
+http://schema.org,Thing,TRON,A blockchain-based platform aiming to build a decentralized internet infrastructure.,https://s2.coinmarketcap.com/static/img/coins/64x64/1958.png,https://trondao.org/
+http://schema.org,Thing,USDC,"A stablecoin backed by US dollars, designed to maintain a stable value relative to the USD.",https://s2.coinmarketcap.com/static/img/coins/64x64/3408.png,https://www.centre.io/usdc
+http://schema.org,Thing,XRP,"The native cryptocurrency of the XRP Ledger, designed for fast and cheap international money transfers.",https://s2.coinmarketcap.com/static/img/coins/64x64/52.png,https://xrpl.org/
+http://schema.org,Thing,HarryPotterObamaPacMan8Inu,Ethereum-based meme token launched in 2023,https://s2.coinmarketcap.com/static/img/coins/64x64/27809.png,https://hpop8i.com/
+http://schema.org,Thing,Avalanche,"A blockchain platform focused on speed, low costs, and eco-friendliness, using a novel consensus protocol.",https://s2.coinmarketcap.com/static/img/coins/64x64/5805.png,https://avax.network/
+http://schema.org,Thing,Bitcoin Cash,"A fork of Bitcoin created to address scalability issues, featuring larger block sizes for faster transactions.",https://s2.coinmarketcap.com/static/img/coins/64x64/1831.png,http://bch.info
+http://schema.org,Thing,Polkadot,A multi-chain network that allows for interoperability between different blockchain networks.,https://s2.coinmarketcap.com/static/img/coins/64x64/6636.png,https://polkadot.network/
+http://schema.org,Thing,Dogs Of Toly,Solana-based token launched in 2024,https://s2.coinmarketcap.com/static/img/coins/64x64/31059.png,https://dogsoftoly.xyz/
+http://schema.org,Thing,Chainlink,A decentralized oracle network that provides real-world data to smart contracts on the blockchain.,https://s2.coinmarketcap.com/static/img/coins/64x64/1975.png,https://chain.link/
+http://schema.org,Thing,Shiba Inu,"A decentralized meme token inspired by Dogecoin, which has gained significant popularity.",https://s2.coinmarketcap.com/static/img/coins/64x64/5994.png,https://shibatoken.com/
+http://schema.org,Thing,Shibwifhat,Solana-based token launched in 2024,https://s2.coinmarketcap.com/static/img/coins/64x64/29430.png,https://shibwifcoin.com
+http://schema.org,Thing,ShibaInu On Solana,Solana-based Shiba Inu variant launched in 2024,https://s2.coinmarketcap.com/static/img/coins/64x64/30105.png,https://shibainuonsolana.com/
+http://schema.org,Thing,SHIB ON SOLANA,Another Solana-based Shiba Inu variant launched in 2024,https://s2.coinmarketcap.com/static/img/coins/64x64/31501.png,https://shibonsol.xyz/
+http://schema.org,Thing,Shibaqua,BNB Smart Chain-based token launched in 2024,https://s2.coinmarketcap.com/static/img/coins/64x64/30271.png,https://shibaqua.io/
+http://schema.org,Thing,Shibsol,Solana-based token launched in 2024,https://s2.coinmarketcap.com/static/img/coins/64x64/31287.png,https://shibsol.io/
+http://schema.org,Thing,NicCageWaluigiElmo42069Inu,Ethereum-based meme token launched in 2023,https://s2.coinmarketcap.com/static/img/coins/64x64/27930.png,https://niccagewaluigielmo.com/
+http://schema.org,Thing,Dai,"A decentralized stablecoin on the Ethereum blockchain, designed to maintain a value close to one US dollar.",https://s2.coinmarketcap.com/static/img/coins/64x64/4943.png,https://makerdao.com/
+http://schema.org,Thing,DogeZila Ai,BNB Smart Chain-based token launched in 2023,https://s2.coinmarketcap.com/static/img/coins/64x64/23859.png,https://dogezillaai.com
+http://schema.org,Thing,Litecoin,"Often referred to as ""the silver to Bitcoin's gold,"" Litecoin is a peer-to-peer cryptocurrency created as a lighter version of Bitcoin.",https://s2.coinmarketcap.com/static/img/coins/64x64/2.png,https://litecoin.org/
+http://schema.org,Thing,Polygon,A scaling solution for Ethereum that aims to provide faster and cheaper transactions.,https://s2.coinmarketcap.com/static/img/coins/64x64/3890.png,https://polygon.technology/
+http://schema.org,Thing,NEAR Protocol,"A blockchain platform designed for scalability and usability, focusing on developer and user accessibility.",https://s2.coinmarketcap.com/static/img/coins/64x64/6535.png,https://near.org/
+http://schema.org,Thing,Uniswap,"A decentralized exchange protocol on Ethereum, known for its automated market maker model.",https://s2.coinmarketcap.com/static/img/coins/64x64/7083.png,https://uniswap.org/blog/uni/
+http://schema.org,Thing,UNICORN Token,Ethereum-based token launched in 2019,https://s2.coinmarketcap.com/static/img/coins/64x64/4307.png,https://unicorn.cm/
+http://schema.org,Thing,UniteCoin,Cryptocurrency with limited information available,https://s2.coinmarketcap.com/static/img/coins/64x64/126.png,http://unitecoin.com
+http://schema.org,Thing,Universe,Cryptocurrency launched in 2017,https://s2.coinmarketcap.com/static/img/coins/64x64/1605.png,http://universe-project.com/
+http://schema.org,Thing,UNI COIN,Ethereum-based token,https://s2.coinmarketcap.com/static/img/coins/64x64/4113.png,https://www.uni-c.io
+http://schema.org,Thing,Ethereum Classic,The original Ethereum blockchain that continued after the hard fork that created the current Ethereum chain.,https://s2.coinmarketcap.com/static/img/coins/64x64/1321.png,https://ethereumclassic.org/
+http://schema.org,Thing,Ethercoin,Cryptocurrency with limited information available,https://s2.coinmarketcap.com/static/img/coins/64x64/646.png,http://www.ethercoin.cc
+http://schema.org,Thing,Artificial Superintelligence Alliance,AI-focused blockchain project launched in 2018,https://s2.coinmarketcap.com/static/img/coins/64x64/3773.png,https://fetch.ai/
+http://schema.org,Thing,Internet Computer,"A blockchain network aiming to extend the functionality of the public internet, including hosting backend software.",https://s2.coinmarketcap.com/static/img/coins/64x64/8916.png,https://internetcomputer.org/
+http://schema.org,Thing,Stellar,"A platform that connects banks, payment systems, and people to facilitate fast, cross-border transactions.",https://s2.coinmarketcap.com/static/img/coins/64x64/512.png,https://www.stellar.org
+http://schema.org,Thing,Monero,A privacy-focused cryptocurrency that aims to provide anonymous and untraceable transactions.,https://s2.coinmarketcap.com/static/img/coins/64x64/328.png,https://www.getmonero.org/
+http://schema.org,Thing,Aave,A decentralized finance protocol that allows people to lend and borrow crypto.,https://s2.coinmarketcap.com/static/img/coins/64x64/7278.png,https://aave.com/
+http://schema.org,Thing,Cronos,"The native token of the Crypto.com Chain, a blockchain built on Cosmos SDK.",https://s2.coinmarketcap.com/static/img/coins/64x64/3635.png,https://cronos.org/
+http://schema.org,Thing,Cronos Coin,"Project aiming to address ""waste of time"" issues",https://s2.coinmarketcap.com/static/img/coins/64x64/5547.png,http://cronoscoin.org
+http://schema.org,Thing,Filecoin,A decentralized storage network designed to store humanity's most important information.,https://s2.coinmarketcap.com/static/img/coins/64x64/2280.png,https://filecoin.io/
+http://schema.org,Thing,Immutable,Ethereum-based platform for NFTs and gaming,https://s2.coinmarketcap.com/static/img/coins/64x64/10603.png,https://www.immutable.com/
+http://schema.org,Thing,Impact,Mineable cryptocurrency,https://s2.coinmarketcap.com/static/img/coins/64x64/1607.png,https://www.impact-coin.org/
+http://schema.org,Thing,Impermax,Ethereum-based DeFi platform launched in 2021,https://s2.coinmarketcap.com/static/img/coins/64x64/9532.png,https://impermax.finance/
+http://schema.org,Thing,Stacks,A blockchain that aims to bring smart contracts and decentralized apps to Bitcoin.,https://s2.coinmarketcap.com/static/img/coins/64x64/4847.png,https://stacks.co
+http://schema.org,Thing,Stox,Ethereum-based prediction market platform,https://s2.coinmarketcap.com/static/img/coins/64x64/1861.png,https://www.stox.com/
+http://schema.org,Thing,Synthetix Network,Ethereum-based token launched in 2024,https://s2.coinmarketcap.com/static/img/coins/64x64/31005.png,https://synthetixnet.io
+http://schema.org,Thing,StealthCash,Cryptocurrency with limited information available,https://s2.coinmarketcap.com/static/img/coins/64x64/937.png,
+http://schema.org,Thing,StaykX,Multi-token staking platform on XRPL,https://s2.coinmarketcap.com/static/img/coins/64x64/20859.png,https://www.staykx.com/
+http://schema.org,Thing,Arbitrum,Layer 2 scaling solution for Ethereum,https://s2.coinmarketcap.com/static/img/coins/64x64/11841.png,https://arbitrum.foundation
+http://schema.org,Thing,ARB Protocol,Solana-based token launched in 2022,https://s2.coinmarketcap.com/static/img/coins/64x64/21129.png,
+http://schema.org,Thing,ARbit,Mineable cryptocurrency,https://s2.coinmarketcap.com/static/img/coins/64x64/938.png,
+http://schema.org,Thing,ARBITRAGE,Ethereum-based arbitrage-focused token,https://s2.coinmarketcap.com/static/img/coins/64x64/2985.png,https://www.arbitraging.co/
+http://schema.org,Thing,Arbitrum (IOU),Placeholder token for Arbitrum,https://s2.coinmarketcap.com/static/img/coins/64x64/23979.png,https://arbitrum.io/
+http://schema.org,Thing,Hedera,"A public network that uses the hashgraph consensus algorithm for fast, fair, and secure applications.",https://s2.coinmarketcap.com/static/img/coins/64x64/4642.png,https://www.hedera.com/
+http://schema.org,Thing,Injective,A layer-1 blockchain for building financial applications.,https://s2.coinmarketcap.com/static/img/coins/64x64/7226.png,https://injective.com
+http://schema.org,Thing,Maker,"The governance token of the MakerDAO and Maker Protocol, which issues and manages the DAI stablecoin.",https://s2.coinmarketcap.com/static/img/coins/64x64/1518.png,https://makerdao.com/
+http://schema.org,Thing,VeChain,A blockchain platform designed to enhance supply chain management and business processes.,https://s2.coinmarketcap.com/static/img/coins/64x64/3077.png,https://www.vechain.org/
+http://schema.org,Thing,Cosmos,A network of independent parallel blockchains that can scale and interoperate with each other.,https://s2.coinmarketcap.com/static/img/coins/64x64/3794.png,https://cosmos.network/
+http://schema.org,Thing,ATOM (Atomicals),Token on the Atomicals-ARC20 platform,https://s2.coinmarketcap.com/static/img/coins/64x64/30019.png,
+http://schema.org,Thing,Atomic Coin,Mineable cryptocurrency,https://s2.coinmarketcap.com/static/img/coins/64x64/1420.png,https://www.atomicproject.org/
+http://schema.org,Thing,Fantom,"A fast, high-throughput open-source smart contract platform for digital assets and dApps.",https://s2.coinmarketcap.com/static/img/coins/64x64/3513.png,https://fantom.foundation/
+http://schema.org,Thing,Fitmin Finance,BNB Smart Chain-based token launched in 2021,https://s2.coinmarketcap.com/static/img/coins/64x64/9990.png,https://fitmin.finance
+http://schema.org,Thing,The Graph,"An indexing protocol for querying networks like Ethereum and IPFS, powering many applications in DeFi and the broader Web3 ecosystem.",https://s2.coinmarketcap.com/static/img/coins/64x64/6719.png,https://thegraph.com
+http://schema.org,Thing,Global Rental Token,Ethereum-based token launched in 2020,https://s2.coinmarketcap.com/static/img/coins/64x64/5243.png,https://globalrentaltoken.com/
+http://schema.org,Thing,Golden Ratio Token,Ethereum-based token launched in 2020,https://s2.coinmarketcap.com/static/img/coins/64x64/5711.png,https://goldenratiotoken.site
+http://schema.org,Thing,Retawars GoldRose Token,BNB Smart Chain-based gaming token,https://s2.coinmarketcap.com/static/img/coins/64x64/22086.png,https://retawars.com/
+http://schema.org,Thing,THORChain,A decentralized liquidity network that allows for cross-chain asset swaps.,https://s2.coinmarketcap.com/static/img/coins/64x64/4157.png,https://thorchain.org/
+http://schema.org,Thing,Rune,BNB Smart Chain-based gaming token launched in 2021,https://s2.coinmarketcap.com/static/img/coins/64x64/9905.png,https://rune.game
+http://schema.org,Thing,RUNE.FARM,DeFi farming platform with weekly token releases,https://s2.coinmarketcap.com/static/img/coins/64x64/10110.png,https://rune.farm
+http://schema.org,Thing,Theta Network,A blockchain-powered network for video delivery and streaming.,https://s2.coinmarketcap.com/static/img/coins/64x64/2416.png,https://www.thetatoken.org/
+http://schema.org,Thing,Algorand,"A blockchain platform focusing on speed, security, and decentralization, using a pure proof-of-stake consensus mechanism.",https://s2.coinmarketcap.com/static/img/coins/64x64/4030.png,http://algorand.foundation
+http://schema.org,Thing,Algowave,Ethereum-based token launched in 2024,https://s2.coinmarketcap.com/static/img/coins/64x64/30025.png,https://algowave.ai/
+http://schema.org,Thing,Flow,Blockchain for NFTs and digital assets,https://s2.coinmarketcap.com/static/img/coins/64x64/4558.png,https://flow.com
+http://schema.org,Thing,Flower Solana,Solana-based metaverse project,https://s2.coinmarketcap.com/static/img/coins/64x64/15801.png,https://flowersolana.com
+http://schema.org,Thing,Velocimeter,DeFi platform for liquidity provision and governance,https://s2.coinmarketcap.com/static/img/coins/64x64/27520.png,https://www.velocimeter.xyz/home
+http://schema.org,Thing,Helium,Decentralized wireless network,https://s2.coinmarketcap.com/static/img/coins/64x64/5665.png,https://www.helium.com/
+http://schema.org,Thing,Hinto,Ethereum-based token launched in 2019,https://s2.coinmarketcap.com/static/img/coins/64x64/5422.png,https://hinto.win/
+http://schema.org,Thing,JasmyCoin,Ethereum-based IoT platform token,https://s2.coinmarketcap.com/static/img/coins/64x64/8425.png,https://www.jasmy.co.jp/en_company.html
+http://schema.org,Thing,Lido DAO,A liquid staking solution for Ethereum and other proof-of-stake blockchains.,https://s2.coinmarketcap.com/static/img/coins/64x64/8000.png,https://lido.fi/
+http://schema.org,Thing,Axie Infinity,"The governance token of Axie Infinity, a blockchain-based game where players can earn tokens through gameplay.",https://s2.coinmarketcap.com/static/img/coins/64x64/6783.png,https://axieinfinity.com/
+http://schema.org,Thing,Bitcoin SV,A fork of Bitcoin Cash that aims to restore the original Bitcoin protocol.,https://s2.coinmarketcap.com/static/img/coins/64x64/3602.png,https://www.bsvblockchain.org/
+http://schema.org,Thing,MultiversX,"A highly scalable, fast, and secure blockchain platform for distributed apps and enterprise use.",https://s2.coinmarketcap.com/static/img/coins/64x64/6892.png,https://multiversx.com/
+http://schema.org,Thing,EOS,A blockchain platform designed for scalable decentralized applications.,https://s2.coinmarketcap.com/static/img/coins/64x64/1765.png,https://eosnetwork.com/
+http://schema.org,Thing,Quant,A blockchain operating system that aims to connect blockchains and networks globally without reducing efficiency.,https://s2.coinmarketcap.com/static/img/coins/64x64/3155.png,https://quant.network/
+http://schema.org,Thing,dYdX (Native),Decentralized trading platform token,https://s2.coinmarketcap.com/static/img/coins/64x64/28324.png,https://dydx.trade/?utm_source=cmc&utm_medium=media&utm_campaign=cmc-feed
+http://schema.org,Thing,Neo,A blockchain platform and cryptocurrency designed to build a scalable network of decentralized applications.,https://s2.coinmarketcap.com/static/img/coins/64x64/1376.png,https://neo.org/
+http://schema.org,Thing,NEO,A blockchain platform and cryptocurrency designed to build a scalable network of decentralized applications.,https://s2.coinmarketcap.com/static/img/coins/64x64/24253.png,https://neoaitoken.com/
+http://schema.org,Thing,eCash,Cryptocurrency focused on electronic cash payments,https://s2.coinmarketcap.com/static/img/coins/64x64/10791.png,https://e.cash/
+http://schema.org,Thing,Tezos,A self-amending blockchain network that can evolve by upgrading itself.,https://s2.coinmarketcap.com/static/img/coins/64x64/2011.png,https://www.tezos.com/
+http://schema.org,Thing,Zcash,A privacy-protecting digital currency built on strong science.,https://s2.coinmarketcap.com/static/img/coins/64x64/1437.png,https://z.cash/
+http://schema.org,Thing,Ethereum Name Service,Decentralized domain name system for Ethereum,https://s2.coinmarketcap.com/static/img/coins/64x64/13855.png,https://ens.domains/
+http://schema.org,Thing,Gala,Blockchain gaming platform token,https://s2.coinmarketcap.com/static/img/coins/64x64/7080.png,https://gala.com/
+http://schema.org,Thing,KuCoin Token,Native token of the KuCoin exchange,https://s2.coinmarketcap.com/static/img/coins/64x64/2087.png,https://www.kucoin.com/
+http://schema.org,Thing,Klaytn,Enterprise-focused blockchain platform,https://s2.coinmarketcap.com/static/img/coins/64x64/4256.png,https://www.klaytn.foundation/
+http://schema.org,Thing,The Sandbox,"A blockchain-based virtual world allowing users to create, build, buy and sell digital assets in the form of a game.",https://s2.coinmarketcap.com/static/img/coins/64x64/6210.png,https://www.sandbox.game/en/
+http://schema.org,Thing,Akash Network,Decentralized cloud computing marketplace,https://s2.coinmarketcap.com/static/img/coins/64x64/7431.png,https://akash.network
+http://schema.org,Thing,Akita Inu,Solana-based meme token launched in 2024,https://s2.coinmarketcap.com/static/img/coins/64x64/29457.png,https://akitainutoken.com/
+http://schema.org,Thing,Conflux,A high-performance public blockchain with a novel consensus mechanism.,https://s2.coinmarketcap.com/static/img/coins/64x64/7334.png,https://confluxnetwork.org/
+http://schema.org,Thing,CRYPTOFOREX,Ethereum-based token launched in 2020,https://s2.coinmarketcap.com/static/img/coins/64x64/5854.png,http://www.cfxmarketsltd.com/home
+http://schema.org,Thing,Decentraland,"A virtual reality platform powered by the Ethereum blockchain that allows users to create, experience, and monetize content and applications.",https://s2.coinmarketcap.com/static/img/coins/64x64/1966.png,https://decentraland.org/
+http://schema.org,Thing,Genesis Mana,Ethereum-based NFT project,https://s2.coinmarketcap.com/static/img/coins/64x64/12712.png,https://genesisproject.xyz/
+http://schema.org,Thing,Mina,A lightweight blockchain maintaining a constant size of around 22kb.,https://s2.coinmarketcap.com/static/img/coins/64x64/8646.png,https://minaprotocol.com/
+http://schema.org,Thing,MINA,A lightweight blockchain maintaining a constant size of around 22kb.,https://s2.coinmarketcap.com/static/img/coins/64x64/29544.png,https://minameme.com
+http://schema.org,Thing,Nexo,A platform for instant crypto-backed loans.,https://s2.coinmarketcap.com/static/img/coins/64x64/2694.png,https://nexo.com
+http://schema.org,Thing,AIOZ Network,Decentralized content delivery network,https://s2.coinmarketcap.com/static/img/coins/64x64/9104.png,https://aioz.network/
+http://schema.org,Thing,PancakeSwap,Decentralized exchange on BNB Chain,https://s2.coinmarketcap.com/static/img/coins/64x64/7186.png,https://pancakeswap.finance/
+http://schema.org,Thing,CakeDAO,DeFi platform on Avalanche,https://s2.coinmarketcap.com/static/img/coins/64x64/16149.png,https://app.cakedao.finance/
+http://schema.org,Thing,Chiliz,"A cryptocurrency for sports and entertainment platforms, powering Socios.com.",https://s2.coinmarketcap.com/static/img/coins/64x64/4066.png,https://www.chiliz.com/
+http://schema.org,Thing,Synthetix,A derivatives liquidity protocol providing the backbone for derivatives trading in DeFi.,https://s2.coinmarketcap.com/static/img/coins/64x64/2586.png,https://www.synthetix.io/
+http://schema.org,Thing,SincroniX,BNB Smart Chain-based token launched in 2023,https://s2.coinmarketcap.com/static/img/coins/64x64/24157.png,https://sincronix.org/
+http://schema.org,Thing,TrueUSD,USD-pegged stablecoin,https://s2.coinmarketcap.com/static/img/coins/64x64/2563.png,https://tusd.io/
+http://schema.org,Thing,DeXe,Decentralized social trading platform,https://s2.coinmarketcap.com/static/img/coins/64x64/7326.png,https://dexe.network/
+http://schema.org,Thing,FTX Token,Native token of the former FTX exchange,https://s2.coinmarketcap.com/static/img/coins/64x64/4195.png,
+http://schema.org,Thing,FTT Token,BNB Smart Chain-based token launched in 2023,https://s2.coinmarketcap.com/static/img/coins/64x64/28331.png,https://flash-technologies.org/
+http://schema.org,Thing,FarmaTrust,Ethereum-based supply chain platform for pharmaceuticals,https://s2.coinmarketcap.com/static/img/coins/64x64/3168.png,https://www.farmatrust.com/
+http://schema.org,Thing,FreeTip,Social token with self-destructing mechanism,https://s2.coinmarketcap.com/static/img/coins/64x64/5984.png,https://freetiptoken.com/
+http://schema.org,Thing,APENFT,NFT ecosystem token on TRON network,https://s2.coinmarketcap.com/static/img/coins/64x64/9816.png,http://apenft.org/
+http://schema.org,Thing,NFT,Ethereum-based NFT platform token,https://s2.coinmarketcap.com/static/img/coins/64x64/6650.png,https://www.nft.org/
+http://schema.org,Thing,NEFTiPEDiA,BNB Smart Chain-based NFT platform token,https://s2.coinmarketcap.com/static/img/coins/64x64/10829.png,https://neftipedia.com/
+http://schema.org,Thing,The NFT Token,Ethereum-based NFT-related token,https://s2.coinmarketcap.com/static/img/coins/64x64/15186.png,https://www.thenfttoken.com/
+http://schema.org,Thing,Digital Animals,Generative art NFT project,https://s2.coinmarketcap.com/static/img/coins/64x64/15417.png,https://digitalanimals.club/
+http://schema.org,Thing,SolNFTPad,Solana-based NFT platform,https://s2.coinmarketcap.com/static/img/coins/64x64/15729.png,https://solnft.app/
+http://schema.org,Thing,CryptoCrewz NFT,Music and art-focused NFT project,https://s2.coinmarketcap.com/static/img/coins/64x64/17550.png,https://www.cryptocrewz.com/pages/bm-nft
+http://schema.org,Thing,Not A Fucking Token,Ethereum-based token launched in 2023,https://s2.coinmarketcap.com/static/img/coins/64x64/27064.png,https://notafuckingtoken.com/index.html
+http://schema.org,Thing,PAX Gold,"A digital asset backed by physical gold, where one token represents one fine troy ounce of gold.",https://s2.coinmarketcap.com/static/img/coins/64x64/4705.png,https://www.paxos.com/paxgold/
+http://schema.org,Thing,Raydium,Automated market maker on Solana,https://s2.coinmarketcap.com/static/img/coins/64x64/8526.png,https://raydium.io/#/
+http://schema.org,Thing,Bitcoin Gold,A fork of Bitcoin that aims to democratize mining by using a different mining algorithm.,https://s2.coinmarketcap.com/static/img/coins/64x64/2083.png,https://bitcoingold.org/
+http://schema.org,Thing,Bitgem,Mineable cryptocurrency,https://s2.coinmarketcap.com/static/img/coins/64x64/34.png,http://www.bitgem.pw/
+http://schema.org,Thing,BitGoo,BNB Smart Chain-based token launched in 2021,https://s2.coinmarketcap.com/static/img/coins/64x64/15728.png,https://bitgoo.io/
+http://schema.org,Thing,Compound,A decentralized lending protocol on Ethereum.,https://s2.coinmarketcap.com/static/img/coins/64x64/5692.png,https://compoundlabs.xyz/
+http://schema.org,Thing,Compound Coin,Mineable cryptocurrency,https://s2.coinmarketcap.com/static/img/coins/64x64/3180.png,http://compound-coin.cc
+http://schema.org,Thing,Gnosis,A decentralized prediction market platform built on Ethereum.,https://s2.coinmarketcap.com/static/img/coins/64x64/1659.png,https://gnosis.io/
+http://schema.org,Thing,Livepeer,A decentralized video streaming network built on the Ethereum blockchain.,https://s2.coinmarketcap.com/static/img/coins/64x64/3640.png,https://livepeer.org/
+http://schema.org,Thing,Oasis,Privacy-focused blockchain for open finance,https://s2.coinmarketcap.com/static/img/coins/64x64/7653.png,https://oasisprotocol.org/
+http://schema.org,Thing,Rosecoin,TON-based token launched in 2024,https://s2.coinmarketcap.com/static/img/coins/64x64/30687.png,https://roseton.org
+http://schema.org,Thing,RoseWifHat,Solana-based meme token launched in 2024,https://s2.coinmarketcap.com/static/img/coins/64x64/30356.png,https://rosewifhatsol.com/
+http://schema.org,Thing,Rose,DeFi platform on Aurora network,https://s2.coinmarketcap.com/static/img/coins/64x64/16661.png,https://app.rose.fi/
+http://schema.org,Thing,1inch Network,A decentralized exchange aggregator that searches for the best prices across multiple liquidity sources.,https://s2.coinmarketcap.com/static/img/coins/64x64/8104.png,https://1inch.io/
+http://schema.org,Thing,IoTeX,Blockchain platform for Internet of Things,https://s2.coinmarketcap.com/static/img/coins/64x64/2777.png,https://www.iotex.io/
+http://schema.org,Thing,Kava,"A multi-chain DeFi platform offering stablecoins, loans, and other financial services.",https://s2.coinmarketcap.com/static/img/coins/64x64/4846.png,https://www.kava.io/
+http://schema.org,Thing,SafePal,Cryptocurrency wallet and ecosystem token,https://s2.coinmarketcap.com/static/img/coins/64x64/8119.png,https://www.safepal.com
+http://schema.org,Thing,XDC Network,Enterprise-ready blockchain platform,https://s2.coinmarketcap.com/static/img/coins/64x64/2634.png,https://www.xdc.org/
+http://schema.org,Thing,Amp,Digital collateral token,https://s2.coinmarketcap.com/static/img/coins/64x64/6945.png,https://amptoken.org
+http://schema.org,Thing,HyperSpace,Distributed computing platform,https://s2.coinmarketcap.com/static/img/coins/64x64/1125.png,https://site.hyperspace.app/
+http://schema.org,Thing,Dash,"A cryptocurrency focused on offering fast, cheap global payments.",https://s2.coinmarketcap.com/static/img/coins/64x64/131.png,https://www.dash.org/
+http://schema.org,Thing,GMT,Move-to-earn concept token,https://s2.coinmarketcap.com/static/img/coins/64x64/18069.png,https://www.stepn.com/
+http://schema.org,Thing,Mercury Protocol,Ethereum-based communication protocol token,https://s2.coinmarketcap.com/static/img/coins/64x64/2098.png,https://www.mercuryprotocol.com/
+http://schema.org,Thing,Gambit,DeFi platform on BNB Chain,https://s2.coinmarketcap.com/static/img/coins/64x64/9203.png,https://gambit.financial/
+http://schema.org,Thing,GreekMythology,BNB Smart Chain-based token,https://s2.coinmarketcap.com/static/img/coins/64x64/18487.png,https://www.greekmythologytoken.com/
+http://schema.org,Thing,Kusama,A network that allows for experimentation and testing of blockchain applications before they are deployed on Polkadot.,https://s2.coinmarketcap.com/static/img/coins/64x64/5034.png,https://kusama.network/
+http://schema.org,Thing,WOO,Deep liquidity network for DeFi and CeFi,https://s2.coinmarketcap.com/static/img/coins/64x64/7501.png,https://woo.org
+http://schema.org,Thing,Aragon,A platform for creating and managing decentralized autonomous organizations (DAOs).,https://s2.coinmarketcap.com/static/img/coins/64x64/1680.png,https://aragon.org/
+http://schema.org,Thing,AnonToken,BNB Smart Chain-based token launched in 2021,https://s2.coinmarketcap.com/static/img/coins/64x64/16473.png,https://anontoken.com/
+http://schema.org,Thing,Antspace,Arbitrum-based token,https://s2.coinmarketcap.com/static/img/coins/64x64/25513.png,https://antspace.xyz/
+http://schema.org,Thing,aelf,Multi-chain network with cloud computing integration,https://s2.coinmarketcap.com/static/img/coins/64x64/2299.png,http://aelf.com/
+http://schema.org,Thing,THE LAND ELF Crossing,Ethereum-based gaming token launched in 2024,https://s2.coinmarketcap.com/static/img/coins/64x64/32730.png,https://theland.game/
+http://schema.org,Thing,ELF Wallet,Ethereum-based wallet token launched in 2022,https://s2.coinmarketcap.com/static/img/coins/64x64/22153.png,https://www.elfwallets.com/
+http://schema.org,Thing,Elf Token,BNB Smart Chain-based token,https://s2.coinmarketcap.com/static/img/coins/64x64/14936.png,https://elftoken.io/
+http://schema.org,Thing,JUST,A decentralized lending platform on the TRON network.,https://s2.coinmarketcap.com/static/img/coins/64x64/5488.png,https://just.network/#/
+http://schema.org,Thing,JUMPN,BNB Smart Chain-based move-to-earn project,https://s2.coinmarketcap.com/static/img/coins/64x64/19810.png,https://jumpn.today
+http://schema.org,Thing,ConstitutionDAO,DAO created to bid on a copy of the US Constitution,https://s2.coinmarketcap.com/static/img/coins/64x64/14806.png,https://www.constitutiondao.com/
+http://schema.org,Thing,MAGA,BNB Smart Chain-based token launched in 2024,https://s2.coinmarketcap.com/static/img/coins/64x64/32079.png,https://peopletoken.xyz
