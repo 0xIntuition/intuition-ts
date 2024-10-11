@@ -839,7 +839,7 @@ export default function CSVEditor() {
                         }`}
                       >
                         <div className="flex items-center">
-                          <textarea
+                          <Textarea
                             value={cell}
                             onChange={(e) =>
                               handleCellEdit(
@@ -855,8 +855,7 @@ export default function CSVEditor() {
                             onPaste={(e) =>
                               handleCellPaste(e, rowIndex, cellIndex)
                             }
-                            className="w-full p-2 border-none focus:outline-none focus:ring-0 resize-none overflow-hidden"
-                            style={{ height: '2rem' }}
+                            className="w-full border-none focus:outline-none focus:ring-0 resize-none overflow-hidden h-8"
                             readOnly={
                               csvData[0][cellIndex] === '@context' ||
                               csvData[0][cellIndex] === '@type'
