@@ -12,7 +12,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     if (redirectTo) {
       throw redirect(redirectTo)
     }
-    throw redirect(PATHS.DATA_POPULATOR)
+    throw redirect(PATHS.APP)
   }
 
   if (!sessionToken) {

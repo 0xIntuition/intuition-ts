@@ -93,11 +93,6 @@ export function Document({
   nonce?: string
   theme?: string
 }) {
-  const [showOptions, setShowOptions] = useState(false)
-  const [showHistory, setShowHistory] = useState(false)
-
-  const handleOpenOptions = () => setShowOptions(true)
-  const handleOpenHistory = () => setShowHistory(true)
   return (
     <html lang="en" data-theme="dark">
       <head>
@@ -112,14 +107,6 @@ export function Document({
       </head>
       <body>
         <main className="relative flex min-h-screen w-full flex-col justify-between antialiased">
-          <Header
-            onOpenOptions={handleOpenOptions}
-            onOpenHistory={handleOpenHistory}
-          />
-          <HistoryModal
-            isOpen={showHistory}
-            onClose={() => setShowHistory(false)}
-          />
           <div className="z-10 flex-1">{children}</div>
         </main>
         <ScrollRestoration />
