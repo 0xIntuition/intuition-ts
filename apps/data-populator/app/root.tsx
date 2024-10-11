@@ -18,11 +18,13 @@ import { getTheme } from '@server/theme'
 
 import './styles/globals.css'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 import { Toaster } from '@0xintuition/1ui'
 
 import { ErrorPage } from '@components/error-page'
+import { Header } from '@components/header'
+import { HistoryModal } from '@components/history-modal'
 import { getChainEnvConfig } from '@lib/utils/environment'
 import { CURRENT_ENV } from 'app/consts'
 import { ClientOnly } from 'remix-utils/client-only'
@@ -91,6 +93,11 @@ export function Document({
   nonce?: string
   theme?: string
 }) {
+  const [showOptions, setShowOptions] = useState(false)
+  const [showHistory, setShowHistory] = useState(false)
+
+  const handleOpenOptions = () => setShowOptions(true)
+  const handleOpenHistory = () => setShowHistory(true)
   return (
     <html lang="en" data-theme="dark">
       <head>
@@ -105,6 +112,14 @@ export function Document({
       </head>
       <body>
         <main className="relative flex min-h-screen w-full flex-col justify-between antialiased">
+          <Header
+            onOpenOptions={handleOpenOptions}
+            onOpenHistory={handleOpenHistory}
+          />
+          <HistoryModal
+            isOpen={showHistory}
+            onClose={() => setShowHistory(false)}
+          />
           <div className="z-10 flex-1">{children}</div>
         </main>
         <ScrollRestoration />

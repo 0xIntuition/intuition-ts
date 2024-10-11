@@ -7,7 +7,6 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
   Input,
   Table,
   TableBody,
@@ -40,15 +39,7 @@ import {
   useNavigation,
   useSubmit,
 } from '@remix-run/react'
-import {
-  CheckCircle2,
-  Loader2,
-  Minus,
-  Plus,
-  Save,
-  Search,
-  Settings,
-} from 'lucide-react'
+import { CheckCircle2, Loader2, Minus, Plus, Save, Search } from 'lucide-react'
 
 // Add this new interface
 interface AtomExistsResult {
