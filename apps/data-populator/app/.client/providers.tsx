@@ -5,6 +5,7 @@ import { PrivyProvider } from '@privy-io/react-auth'
 import { SmartWalletsProvider } from '@privy-io/react-auth/smart-wallets'
 import { WagmiProvider } from '@privy-io/wagmi'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { baseSepolia } from 'viem/chains'
 
 const queryClient = new QueryClient()
 
@@ -19,6 +20,8 @@ const privyConfig: PrivyClientConfig = {
     theme: 'dark',
     showWalletLoginFirst: true,
   },
+  defaultChain: baseSepolia,
+  supportedChains: [baseSepolia],
 }
 
 // const smartWalletConfig = {

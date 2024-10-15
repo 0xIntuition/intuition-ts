@@ -33,35 +33,6 @@ export default function Playground() {
   )
   const { client } = useSmartWallets()
 
-  const transactions = [
-    {
-      to: '0x25709998B542f1Be27D19Fa0B3A9A67302bc1b94',
-      value: BigInt(300000000000000), // 0.0003 ETH in wei
-    },
-    {
-      to: '0x25709998B542f1Be27D19Fa0B3A9A67302bc1b94',
-      value: BigInt(200000000000000), // 0.0002 ETH in wei
-    },
-    {
-      to: '0x25709998B542f1Be27D19Fa0B3A9A67302bc1b94',
-      value: BigInt(100000000000000), // 0.0001 ETH in wei
-    },
-  ]
-
-  const sendBatchTx = async () => {
-    if (!client) {
-      console.error('No smart account client found')
-      return
-    }
-    client.sendTransaction({
-      account: client.account,
-      calls: transactions.map((tx) => ({
-        to: tx.to as `0x${string}`,
-        value: tx.value,
-      })),
-    })
-  }
-
   const sendTx = async () => {
     if (!client) {
       console.error('No smart account client found')
@@ -73,7 +44,7 @@ export default function Playground() {
       account: client.account,
       chain: baseSepolia,
       to: '0x25709998B542f1Be27D19Fa0B3A9A67302bc1b94',
-      value: BigInt(500000000000000), // 0.0005 ETH in wei
+      value: BigInt(1000000000000000), // 0.001 ETH in wei
     })
 
     logger('txHash', txHash)
@@ -96,7 +67,6 @@ export default function Playground() {
       <div className="flex items-center gap-2">
         <Button onClick={signMessage}>Sign Message</Button>
         <Button onClick={sendTx}>Send Tx</Button>
-        <Button onClick={sendBatchTx}>Send Batch Tx</Button>
       </div>
       <PrivyLogout wallet={wallet} />
     </div>

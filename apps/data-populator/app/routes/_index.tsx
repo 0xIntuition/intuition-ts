@@ -1,4 +1,3 @@
-import PrivyRefresh from '@client/privy-refresh'
 import { PATHS } from '@consts/paths'
 import logger from '@lib/utils/logger'
 import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
