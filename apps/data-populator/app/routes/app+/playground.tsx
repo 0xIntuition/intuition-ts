@@ -19,34 +19,39 @@ export async function loader({ request }: LoaderFunctionArgs) {
   logger('user', user)
   invariant(wallet, 'Unauthorized')
 
+  const transactions = [
+    {
+      to: '0x25709998B542f1Be27D19Fa0B3A9A67302bc1b94',
+      value: '300000000000000', // 0.0003 ETH in wei
+    },
+    {
+      to: '0x25709998B542f1Be27D19Fa0B3A9A67302bc1b94',
+      value: '200000000000000', // 0.0002 ETH in wei
+    },
+    {
+      to: '0x25709998B542f1Be27D19Fa0B3A9A67302bc1b94',
+      value: '100000000000000', // 0.0001 ETH in wei
+    },
+  ]
+
   return json({
     wallet,
     user,
+    transactions,
   })
 }
 
 export default function Playground() {
-  const { wallet, user } = useLoaderData<{ wallet: string; user: PrivyUser }>()
+  const { wallet, user, transactions } = useLoaderData<{
+    wallet: string
+    user: PrivyUser
+    transactions: { to: string; value: string }[]
+  }>()
 
   const smartWallet = user.linkedAccounts.find(
     (account) => account.type === 'smart_wallet',
   )
   const { client } = useSmartWallets()
-
-  const transactions = [
-    {
-      to: '0x25709998B542f1Be27D19Fa0B3A9A67302bc1b94',
-      value: BigInt(300000000000000), // 0.0003 ETH in wei
-    },
-    {
-      to: '0x25709998B542f1Be27D19Fa0B3A9A67302bc1b94',
-      value: BigInt(200000000000000), // 0.0002 ETH in wei
-    },
-    {
-      to: '0x25709998B542f1Be27D19Fa0B3A9A67302bc1b94',
-      value: BigInt(100000000000000), // 0.0001 ETH in wei
-    },
-  ]
 
   const sendBatchTx = async () => {
     if (!client) {
@@ -57,7 +62,7 @@ export default function Playground() {
       account: client.account,
       calls: transactions.map((tx) => ({
         to: tx.to as `0x${string}`,
-        value: tx.value,
+        value: BigInt(tx.value),
       })),
     })
   }
