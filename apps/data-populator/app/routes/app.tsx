@@ -46,7 +46,6 @@ export default function App() {
         onClose={() => setShowHistory(false)}
       />
       <Outlet />
-      <PrivyLogout wallet={wallet} />
     </div>
   )
 }
