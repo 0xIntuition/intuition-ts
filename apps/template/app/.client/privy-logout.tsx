@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react'
 
+import logger from '@lib/utils/logger'
 import { usePrivy } from '@privy-io/react-auth'
 import { useSubmit } from '@remix-run/react'
 import { useAccount, useDisconnect } from 'wagmi'
@@ -12,6 +13,7 @@ export default function PrivyLogout({ wallet }: { wallet: string }) {
   const logoutTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
   useEffect(() => {
+    logger('PrivyLogout use effect', address, wallet, isConnected)
     let mounted = true
     const handleLogout = async () => {
       if (mounted && ready) {

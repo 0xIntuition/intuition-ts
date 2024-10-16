@@ -44,13 +44,13 @@ export const verifyPrivyAccessToken = async (
   const verificationKey = process.env.PRIVY_VERIFICATION_KEY
   if (verificationKey) {
     // Convert the escaped newlines back to actual newlines
-    const formattedKey = verificationKey.replace(/\\n/g, '\n')
+    // const formattedKey = verificationKey.replace(/\\n/g, '\n')
     logger('[verifyPrivyAccessToken] Verification key found')
 
     try {
       const verifiedClaims = await privy.verifyAuthToken(
         authToken,
-        formattedKey,
+        // formattedKey,
       )
       logger('[verifyPrivyAccessToken] verifiedClaims', verifiedClaims)
       return verifiedClaims

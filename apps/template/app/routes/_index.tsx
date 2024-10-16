@@ -16,6 +16,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   }
 
   if (!sessionToken) {
+    logger('[_index loader] no session token')
     throw redirect('/login')
   } else {
     // if there is no access token, but there is a session token
