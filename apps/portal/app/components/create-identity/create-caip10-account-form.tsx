@@ -318,11 +318,18 @@ export function CAIP10AccountForm({
                 }}
                 value={formState.chainId}
               >
-                <SelectTrigger className="w-52 max-lg:w-full">
+                <SelectTrigger className="w-full">
                   <SelectValue placeholder="Select a chain" />
                 </SelectTrigger>
                 <SelectContent>
-                  {Object.values(chains).map((chain) => (
+                  {[
+                    chains.base,
+                    chains.mainnet,
+                    ...Object.values(chains).filter(
+                      (chain) =>
+                        chain !== chains.base && chain !== chains.mainnet,
+                    ),
+                  ].map((chain) => (
                     <SelectItem key={chain.id} value={chain.id.toString()}>
                       {chain.name}
                     </SelectItem>
