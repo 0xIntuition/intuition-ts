@@ -32,11 +32,10 @@ export default function StakeActions({
         variant="ghost"
         onClick={() => {
           if (userConviction && price) {
-            const userConvictionValue = BigInt(userConviction)
-            const priceValue = BigInt(price)
-            const maxEthInWei = userConvictionValue * priceValue
-            const maxEth = formatUnits(maxEthInWei, 36)
-            setVal(maxEth)
+            const userConvictionValue = formatUnits(BigInt(userConviction), 18)
+            const priceValue = formatUnits(BigInt(price), 18)
+            const maxEth = +userConvictionValue * +priceValue
+            setVal(maxEth.toString())
           }
         }}
         className={`${action === 'deposit' && 'hidden'}`}
