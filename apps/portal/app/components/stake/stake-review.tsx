@@ -177,10 +177,7 @@ export default function StakeReview({
               Review
             </Text>
           </div>
-          <ActivePositionCard
-            label="Total Cost"
-            value={Number(mode === 'deposit' ? val : fees.protocolFeeAmount)}
-          />
+          <ActivePositionCard label="Total Cost" value={Number(val)} />
           <div className="gap-10 flex flex-col w-full">
             <div className="flex flex-col gap-2.5 w-full">
               <div className="flex flex-row gap-1">
@@ -210,7 +207,7 @@ export default function StakeReview({
               </div>
               <Table className="border-transparent">
                 <TableBody className="border-border/20 border-t border-b">
-                  <TableRow>
+                  <TableRow className="hover:bg-transparent">
                     <TableCell>
                       {claim ? (
                         <Claim
@@ -333,7 +330,7 @@ export default function StakeReview({
                 </div>
                 <Table className="border-transparent">
                   <TableBody className="border-border/20 border-t border-b">
-                    <TableRow>
+                    <TableRow className="hover:bg-transparent">
                       <TableCell>
                         <IdentityTag
                           size="default"
@@ -360,7 +357,7 @@ export default function StakeReview({
                         </Text>
                       </TableCell>
                     </TableRow>
-                    <TableRow>
+                    <TableRow className="hover:bg-transparent">
                       <TableCell>
                         <IdentityTag
                           size="default"
@@ -387,7 +384,7 @@ export default function StakeReview({
                         </Text>
                       </TableCell>
                     </TableRow>
-                    <TableRow>
+                    <TableRow className="hover:bg-transparent">
                       <TableCell>
                         <IdentityTag
                           size="default"
@@ -438,7 +435,7 @@ export default function StakeReview({
               </div>
               <Table className="border-transparent">
                 <TableBody className="border-border/20 border-t border-b">
-                  <TableRow>
+                  <TableRow className="hover:bg-transparent">
                     <TableCell className="text-secondary-foreground/70">
                       Protocol Fee
                     </TableCell>
@@ -452,9 +449,9 @@ export default function StakeReview({
                       </Text>
                     </TableCell>
                   </TableRow>
-                  {mode === 'deposit' && (
+                  {mode === 'deposit' ? (
                     <>
-                      <TableRow>
+                      <TableRow className="hover:bg-transparent">
                         <TableCell className="text-secondary-foreground/70">
                           Identity Entry Fee
                         </TableCell>
@@ -469,7 +466,7 @@ export default function StakeReview({
                         </TableCell>
                       </TableRow>
                       {claim && (
-                        <TableRow>
+                        <TableRow className="hover:bg-transparent">
                           <TableCell className="text-secondary-foreground/70">
                             Claim Entry Fee
                           </TableCell>
@@ -485,6 +482,21 @@ export default function StakeReview({
                         </TableRow>
                       )}
                     </>
+                  ) : (
+                    <TableRow className="hover:bg-transparent">
+                      <TableCell className="text-secondary-foreground/70">
+                        Exit Fee
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <Text
+                          variant={TextVariant.body}
+                          weight={TextWeight.medium}
+                          className="text-secondary-foreground/70"
+                        >
+                          {fees.exitFeeAmount?.toFixed(6)} ETH
+                        </Text>
+                      </TableCell>
+                    </TableRow>
                   )}
                 </TableBody>
               </Table>
