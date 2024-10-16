@@ -297,11 +297,11 @@ export function CAIP10AccountForm({
               <div className="self-stretch flex-col justify-start items-start flex">
                 <div className="flex w-full items-center justify-between">
                   <Text variant="caption" className="text-secondary-foreground">
-                    Chain ID
+                    Chain
                   </Text>
                   <InfoTooltip
-                    title="Chain ID"
-                    content="This is the chain ID of the EVM compatible chain that the Smart Contract is deployed on - so make sure it is accurate!"
+                    title="Chain"
+                    content="This is the EVM compatible chain that the Smart Contract is deployed on - so make sure it is accurate!"
                   />
                 </div>
               </div>
