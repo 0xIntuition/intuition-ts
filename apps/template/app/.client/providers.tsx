@@ -1,26 +1,22 @@
 import { wagmiConfig } from '@lib/utils/wagmi'
 import type { PrivyClientConfig } from '@privy-io/react-auth'
 import { PrivyProvider } from '@privy-io/react-auth'
-import { SmartWalletsProvider } from '@privy-io/react-auth/smart-wallets'
 import { WagmiProvider } from '@privy-io/wagmi'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { baseSepolia } from 'viem/chains'
 
 const queryClient = new QueryClient()
 
 const privyConfig: PrivyClientConfig = {
   embeddedWallets: {
-    createOnLogin: 'all-users',
+    createOnLogin: 'users-without-wallets',
     requireUserPasswordOnCreate: true,
     noPromptOnSignature: false,
   },
-  loginMethods: ['email', 'sms', 'discord', 'twitter', 'github'],
+  loginMethods: ['wallet', 'email', 'sms', 'discord', 'twitter', 'github'],
   appearance: {
     theme: 'dark',
     showWalletLoginFirst: true,
   },
-  defaultChain: baseSepolia,
-  supportedChains: [baseSepolia],
 }
 
 export default function Providers({
@@ -37,13 +33,11 @@ export default function Providers({
       appId={privyAppId as string}
       config={privyConfig}
     >
-      <SmartWalletsProvider>
-        <QueryClientProvider client={queryClient}>
-          <WagmiProvider config={wagmiConfig} reconnectOnMount={false}>
-            {children}
-          </WagmiProvider>
-        </QueryClientProvider>
-      </SmartWalletsProvider>
+      <QueryClientProvider client={queryClient}>
+        <WagmiProvider config={wagmiConfig} reconnectOnMount={false}>
+          {children}
+        </WagmiProvider>
+      </QueryClientProvider>
     </PrivyProvider>
   )
 }

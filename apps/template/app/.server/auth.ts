@@ -50,6 +50,9 @@ export async function requireUser(
   if (!user) {
     throw await handlePrivyRedirect({ request, options })
   }
+  if (!user) {
+    throw new Error('User not found')
+  }
   return user
 }
 
@@ -61,6 +64,7 @@ export async function requireUserWallet(
   if (!wallet) {
     throw await handlePrivyRedirect({ request, options })
   }
+  logger('[requireUserWallet] no wallet', wallet)
   return wallet
 }
 
