@@ -1,6 +1,7 @@
 import { Button } from '@0xintuition/1ui'
 
 import PrivyLogout from '@client/privy-logout'
+import { multivaultAbi } from '@lib/abis/multivault'
 import logger from '@lib/utils/logger'
 import { invariant } from '@lib/utils/misc'
 import { User as PrivyUser } from '@privy-io/react-auth'
@@ -8,6 +9,7 @@ import { useSmartWallets } from '@privy-io/react-auth/smart-wallets'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 import { getUser, requireUserWallet } from '@server/auth'
+import { encodeFunctionData, toHex } from 'viem'
 import { baseSepolia } from 'viem/chains'
 
 export async function loader({ request }: LoaderFunctionArgs) {
@@ -34,23 +36,56 @@ export async function loader({ request }: LoaderFunctionArgs) {
     },
   ]
 
+  // when we want to interact with our contract, we'd do it with this format:
+
+  const atomTransactions = [
+    {
+      to: '0x1A6950807E33d5bC9975067e6D6b5Ea4cD661665', // multivault contract address
+      data: encodeFunctionData({
+        abi: multivaultAbi,
+        functionName: 'createAtom',
+        args: [toHex('0xc626CbfE61Bac7A1dB9d227b90878D872C379c6A')],
+      }),
+      value: '300100001000000',
+    },
+    // {
+    //   to: '0x1A6950807E33d5bC9975067e6D6b5Ea4cD661665', // multivault contract address
+    //   data: encodeFunctionData({
+    //     abi: multivaultAbi,
+    //     functionName: 'createAtom',
+    //     args: ['5002'],
+    //   }),
+    //   value: '300100001000000',
+    // },
+    // {
+    //   to: '0x1A6950807E33d5bC9975067e6D6b5Ea4cD661665', // multivault contract address
+    //   data: encodeFunctionData({
+    //     abi: multivaultAbi,
+    //     functionName: 'createAtom',
+    //     args: ['5003'],
+    //   }),
+    //   value: '300100001000000',
+    // },
+  ]
+
   return json({
     wallet,
     user,
-    transactions,
+    atomTransactions,
   })
 }
 
 export default function Playground() {
-  const { wallet, user, transactions } = useLoaderData<{
+  const { wallet, user, atomTransactions } = useLoaderData<{
     wallet: string
     user: PrivyUser
-    transactions: { to: string; value: string }[]
+    atomTransactions: any
   }>()
 
   const smartWallet = user.linkedAccounts.find(
     (account) => account.type === 'smart_wallet',
   )
+
   const { client } = useSmartWallets()
 
   const sendBatchTx = async () => {
@@ -58,10 +93,12 @@ export default function Playground() {
       console.error('No smart account client found')
       return
     }
+
     client.sendTransaction({
       account: client.account,
-      calls: transactions.map((tx) => ({
+      calls: atomTransactions.map((tx) => ({
         to: tx.to as `0x${string}`,
+        data: tx.data,
         value: BigInt(tx.value),
       })),
     })
