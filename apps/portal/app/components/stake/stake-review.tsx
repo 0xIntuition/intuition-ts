@@ -177,7 +177,10 @@ export default function StakeReview({
               Review
             </Text>
           </div>
-          <ActivePositionCard label="Total Cost" value={Number(val)} />
+          <ActivePositionCard
+            label="Total Cost"
+            value={Number(mode === 'deposit' ? val : fees.protocolFeeAmount)}
+          />
           <div className="gap-10 flex flex-col w-full">
             <div className="flex flex-col gap-2.5 w-full">
               <div className="flex flex-row gap-1">
@@ -185,14 +188,22 @@ export default function StakeReview({
                   variant={TextVariant.bodyLarge}
                   weight={TextWeight.medium}
                 >
-                  ETH to {claim ? 'Claim' : 'Identity'}
+                  {mode === 'deposit'
+                    ? `Deposit ETH into ${claim ? 'Claim' : 'Identity'}`
+                    : `Redeem ETH from ${claim ? 'Claim' : 'Identity'}`}
                 </Text>
                 <InfoTooltip
-                  title="ETH to Claim"
+                  title={
+                    mode === 'deposit'
+                      ? `Deposit ETH into ${claim ? 'Claim' : 'Identity'}`
+                      : `Redeem ETH from ${claim ? 'Claim' : 'Identity'}`
+                  }
                   icon={IconName.circleInfo}
                   content={
                     <div className="flex flex-col gap-2 w-full">
-                      The amount of ETH that will be staked on the Claim.
+                      The amount of ETH that will be{' '}
+                      {mode === 'deposit' ? 'staked on' : 'redeemed from'} the{' '}
+                      {claim ? 'Claim' : 'Identity'}.
                     </div>
                   }
                 />
@@ -288,10 +299,11 @@ export default function StakeReview({
                         weight={TextWeight.medium}
                         className="text-secondary-foreground/70"
                       >
-                        {(claim
-                          ? fees.triplePositionAmount
-                          : fees.totalAtomPositionAmount
-                        )?.toFixed(6)}{' '}
+                        {mode === 'deposit'
+                          ? claim
+                            ? fees.triplePositionAmount
+                            : fees.totalAtomPositionAmount?.toFixed(6)
+                          : fees.totalRedeem?.toFixed(6)}{' '}
                         ETH
                       </Text>
                     </TableCell>
@@ -299,7 +311,7 @@ export default function StakeReview({
                 </TableBody>
               </Table>
             </div>
-            {claim && (
+            {mode === 'deposit' && claim && (
               <div className="flex flex-col gap-2.5">
                 <div className="flex flex-row gap-1">
                   <Text
@@ -440,35 +452,39 @@ export default function StakeReview({
                       </Text>
                     </TableCell>
                   </TableRow>
-                  <TableRow>
-                    <TableCell className="text-secondary-foreground/70">
-                      Identity Entry Fee
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <Text
-                        variant={TextVariant.body}
-                        weight={TextWeight.medium}
-                        className="text-secondary-foreground/70"
-                      >
-                        {fees.totalAtomEntryFeeAmount?.toFixed(6)} ETH
-                      </Text>
-                    </TableCell>
-                  </TableRow>
-                  {claim && (
-                    <TableRow>
-                      <TableCell className="text-secondary-foreground/70">
-                        Claim Entry Fee
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <Text
-                          variant={TextVariant.body}
-                          weight={TextWeight.medium}
-                          className="text-secondary-foreground/70"
-                        >
-                          {fees.tripleEntryFeeAmount?.toFixed(6)} ETH
-                        </Text>
-                      </TableCell>
-                    </TableRow>
+                  {mode === 'deposit' && (
+                    <>
+                      <TableRow>
+                        <TableCell className="text-secondary-foreground/70">
+                          Identity Entry Fee
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <Text
+                            variant={TextVariant.body}
+                            weight={TextWeight.medium}
+                            className="text-secondary-foreground/70"
+                          >
+                            {fees.totalAtomEntryFeeAmount?.toFixed(6)} ETH
+                          </Text>
+                        </TableCell>
+                      </TableRow>
+                      {claim && (
+                        <TableRow>
+                          <TableCell className="text-secondary-foreground/70">
+                            Claim Entry Fee
+                          </TableCell>
+                          <TableCell className="text-right">
+                            <Text
+                              variant={TextVariant.body}
+                              weight={TextWeight.medium}
+                              className="text-secondary-foreground/70"
+                            >
+                              {fees.tripleEntryFeeAmount?.toFixed(6)} ETH
+                            </Text>
+                          </TableCell>
+                        </TableRow>
+                      )}
+                    </>
                   )}
                 </TableBody>
               </Table>
