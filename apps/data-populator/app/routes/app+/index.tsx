@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 
 import {
   Button,
+  Checkbox,
   Dialog,
   DialogContent,
   DialogFooter,
@@ -721,9 +722,9 @@ export default function CSVEditor() {
           />
           <Button onClick={addNewRow} disabled={isLoading}>
             {isLoading ? (
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              <Loader2 className="h-4 w-4 animate-spin" />
             ) : (
-              <Plus className="mr-2 h-4 w-4" />
+              <Plus className="h-4 w-4" />
             )}
             Add New Row
           </Button>
@@ -732,9 +733,9 @@ export default function CSVEditor() {
             disabled={selectedRows.length === 0 || isLoading}
           >
             {isLoading ? (
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              <Loader2 className="h-4 w-4 animate-spin" />
             ) : (
-              <Minus className="mr-2 h-4 w-4" />
+              <Minus className="h-4 w-4" />
             )}
             Delete Selected Row{selectedRows.length > 1 ? 's' : ''}
           </Button>
@@ -745,7 +746,7 @@ export default function CSVEditor() {
             Publish Atoms
           </Button>
           <Button onClick={saveCSV}>
-            <Save className="mr-2 h-4 w-4" /> Save CSV
+            <Save className="h-4 w-4" /> Save CSV
           </Button>
         </div>
 
@@ -787,17 +788,15 @@ export default function CSVEditor() {
                     </TableHead>
                   ))}
                   <TableHead
-                    className="cursor-pointer hover:bg-gray-100 w-24"
+                    className="cursor-pointer hover:bg-gray-100 w-16"
                     onClick={toggleAllRows}
                   >
                     <div className="flex items-center space-x-2">
-                      <Input
-                        type="checkbox"
+                      <Checkbox
                         checked={selectedRows.length === csvData.length - 1}
-                        onChange={toggleAllRows}
+                        onCheckedChange={toggleAllRows}
                         className="w-4 h-4"
                       />
-                      <span>Select</span>
                     </div>
                   </TableHead>
                 </TableRow>
@@ -872,11 +871,10 @@ export default function CSVEditor() {
                         </div>
                       </TableCell>
                     ))}
-                    <TableCell className="w-24">
-                      <Input
-                        type="checkbox"
+                    <TableCell className="w-16">
+                      <Checkbox
                         checked={selectedRows.includes(rowIndex - 1)}
-                        onChange={() => toggleRowSelection(rowIndex - 1)}
+                        onCheckedChange={() => toggleRowSelection(rowIndex - 1)}
                         className="w-4 h-4"
                       />
                     </TableCell>

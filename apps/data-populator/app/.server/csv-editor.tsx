@@ -1,10 +1,20 @@
-import { json, type ActionFunctionArgs, type LoaderFunctionArgs } from '@remix-run/node'
-import { db } from './db'
-import { convertCsvToSchemaObjects } from '../utils/schema'
-import { requestPopulateAtoms, checkAtomsExist, requestPopulateAndTagAtoms, getAtomDataFromID } from '../lib/services/populate'
+import { getMyRequests, getRequest } from '@lib/services/request'
+import { getMyAtoms, getMyTriples } from '@lib/services/supabase'
+import { convertCsvToSchemaObjects } from '@lib/utils/schema'
+import {
+  json,
+  type ActionFunctionArgs,
+  type LoaderFunctionArgs,
+} from '@remix-run/node'
 import { Thing, WithContext } from 'schema-dts'
-import { getMyAtoms, getMyTriples } from '../lib/services/supabase'
-import { getMyRequests, getRequest } from '../lib/services/request'
+
+import {
+  checkAtomsExist,
+  getAtomDataFromID,
+  requestPopulateAndTagAtoms,
+  requestPopulateAtoms,
+} from '../lib/services/populate'
+import { db } from './db'
 
 // TODO: Implement real functions for CSV editor operations
 // Ensure proper input and return type declarations for better understanding
@@ -24,7 +34,10 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     case 'getTripleHistory':
       const triplePage = parseInt(url.searchParams.get('page') || '0')
       const triplePageSize = parseInt(url.searchParams.get('pageSize') || '10')
-      const triples = await getMyTriples(triplePageSize, triplePage * triplePageSize)
+      const triples = await getMyTriples(
+        triplePageSize,
+        triplePage * triplePageSize,
+      )
       return json({ triples })
 
     case 'searchAtoms':
@@ -68,8 +81,12 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   switch (action) {
     case 'publishAtoms': {
       // Handle publishing of selected atoms
-      const selectedRows = JSON.parse(formData.get('selectedRows') as string) as number[]
-      const csvData = JSON.parse(formData.get('csvData') as string) as string[][]
+      const selectedRows = JSON.parse(
+        formData.get('selectedRows') as string,
+      ) as number[]
+      const csvData = JSON.parse(
+        formData.get('csvData') as string,
+      ) as string[][]
       const schemaObjects = convertCsvToSchemaObjects<Thing>(csvData)
       const selectedAtoms = selectedRows.map((index) => schemaObjects[index])
       // console.log('Selected atoms:', selectedAtoms)
@@ -80,15 +97,27 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
     case 'createAndTagAtoms': {
       // Handle creation and tagging of atoms
-      const selectedRows = JSON.parse(formData.get('selectedRows') as string) as number[]
-      const csvData = JSON.parse(formData.get('csvData') as string) as string[][]
-      const tag = JSON.parse(formData.get('tag') as string) as WithContext<Thing>
+      const selectedRows = JSON.parse(
+        formData.get('selectedRows') as string,
+      ) as number[]
+      const csvData = JSON.parse(
+        formData.get('csvData') as string,
+      ) as string[][]
+      const tag = JSON.parse(
+        formData.get('tag') as string,
+      ) as WithContext<Thing>
       const schemaObjects = convertCsvToSchemaObjects<Thing>(csvData)
       const selectedAtoms = selectedRows.map((index) => schemaObjects[index])
       // console.log('Selected atoms:', selectedAtoms)
       // console.log('Tag:', tag)
-      const publishAndTagAtomsRequestHash = await requestPopulateAndTagAtoms(selectedAtoms, tag)
-      console.log('Publish and tag atoms request hash:', publishAndTagAtomsRequestHash)
+      const publishAndTagAtomsRequestHash = await requestPopulateAndTagAtoms(
+        selectedAtoms,
+        tag,
+      )
+      console.log(
+        'Publish and tag atoms request hash:',
+        publishAndTagAtomsRequestHash,
+      )
       return json({ success: true, requestHash: publishAndTagAtomsRequestHash })
     }
 
@@ -97,12 +126,17 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       // const llmInput = formData.get('llmInput') as string
       // const llmResponse = await someExternalLLMService(llmInput)
       // return json({ success: true, llmResponse })
-      return json({ success: true, result: '[PLACEHOLDER] LLM Interaction Submitted' })
+      return json({
+        success: true,
+        result: '[PLACEHOLDER] LLM Interaction Submitted',
+      })
 
     case 'checkAtomsExist': {
       // Check if multiple atoms exist
       console.log('Checking atoms exist')
-      const csvData = JSON.parse(formData.get('csvData') as string) as string[][]
+      const csvData = JSON.parse(
+        formData.get('csvData') as string,
+      ) as string[][]
       const schemaObjects = convertCsvToSchemaObjects<Thing>(csvData)
       const atomExistsResults = await checkAtomsExist(schemaObjects)
       // console.log('Atom exists results:', atomExistsResults)
@@ -111,7 +145,9 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
     case 'checkAtomExists': {
       // Check if a single atom exists
-      const csvData = JSON.parse(formData.get('csvData') as string) as string[][]
+      const csvData = JSON.parse(
+        formData.get('csvData') as string,
+      ) as string[][]
       const schemaObjects = convertCsvToSchemaObjects<Thing>(csvData)
       const index = parseInt(formData.get('index') as string)
       const atomExistsResults = await checkAtomsExist([schemaObjects[index]])

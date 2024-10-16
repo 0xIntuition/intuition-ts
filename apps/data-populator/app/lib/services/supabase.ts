@@ -1,9 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
-import { ensureLoadConfig } from '../config/config';
 import { getSender } from './evm';
 // Initialize Supabase client
-
-ensureLoadConfig();
 
 const supabaseUrl = process.env.SUPABASE_URL!;
 const supabaseKey = process.env.SUPABASE_KEY!;
@@ -49,7 +46,7 @@ export async function searchMapping(key: string): Promise<string | null> {
 }
 
 // Interfaces for log entries
-interface AtomLogEntry {
+export interface AtomLogEntry {
   id: string;
   cid: string;
   txHash: string;
@@ -57,7 +54,7 @@ interface AtomLogEntry {
   sender: string;
 }
 
-interface TripleLogEntry {
+export interface TripleLogEntry {
   id: string;
   txHash: string;
   subjectId: string;
@@ -250,7 +247,7 @@ export async function storeAtomURI(id: string, uri: string): Promise<void> {
   }
 }
 
-interface Triple {
+export interface Triple {
   hash: string;
   id: string;
   subject: string;

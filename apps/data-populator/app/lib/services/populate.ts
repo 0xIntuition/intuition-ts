@@ -29,7 +29,7 @@ export async function populateAtom(obj: any) {
     }
 }
 
-async function pinAtomData(obj: any, requestHash?: string) {
+export async function pinAtomData(obj: any, requestHash?: string) {
     try {
         // Avoid re-uploading images that have already been uploaded
         obj['image'] = await resolveAndFilterImage(obj['image'], requestHash);
@@ -51,6 +51,11 @@ export async function populateTriple(subjectId: string, predicateId: string, obj
     } catch (error) {
         console.error('Error populating triple:', error);
     }
+}
+
+export interface TagAtomIDsResponse {
+    newTripleIds: string[];
+    existingTripleIds: string[];
 }
 
 export async function tagAtomIDs(tag: WithContext<Thing>, atomIds: string[], requestHash?: string) {
@@ -95,14 +100,9 @@ export async function tagAtomIDs(tag: WithContext<Thing>, atomIds: string[], req
     return response;
 }
 
-interface PopulateAndTagAtomsResponse {
+export interface PopulateAndTagAtomsResponse {
     newAtomIDs: string[];
     existingAtomIDs: string[];
-    newTripleIds: string[];
-    existingTripleIds: string[];
-}
-
-interface TagAtomIDsResponse {
     newTripleIds: string[];
     existingTripleIds: string[];
 }
@@ -118,7 +118,7 @@ export async function requestPopulateAndTagAtoms(atoms: any[], tag: WithContext<
     }
 }
 
-async function populateAndTagAtoms(atoms: any[], tag: WithContext<Thing>, requestHash?: string) {
+export async function populateAndTagAtoms(atoms: any[], tag: WithContext<Thing>, requestHash?: string) {
     let response: PopulateAndTagAtomsResponse = { newAtomIDs: [], existingAtomIDs: [], newTripleIds: [], existingTripleIds: [] };
     // Populate any new atoms
     const populateResponse = await populateAtoms(atoms, requestHash, false);
@@ -135,7 +135,7 @@ async function populateAndTagAtoms(atoms: any[], tag: WithContext<Thing>, reques
     return response;
 }
 
-interface PopulateAtomsResponse {
+export interface PopulateAtomsResponse {
     newAtomIDs: string[];
     existingAtomIDs: string[];
 }
@@ -208,7 +208,7 @@ export async function checkAtomsExist(atoms: any[]): Promise<AtomExistsResult[]>
     return atomExistsResults;
 }
 
-async function prepareTag(tag: WithContext<Thing>, requestHash?: string) {
+export async function prepareTag(tag: WithContext<Thing>, requestHash?: string) {
     const msgSender = await getSender()
     requestHash ? await pushUpdate(requestHash, "Fetching keywords predicate atom...") : null;
     const [keywordsPredicateAtomID, keywordsPredicateTxID] = await getOrCreateAtom(
@@ -235,7 +235,7 @@ async function prepareTag(tag: WithContext<Thing>, requestHash?: string) {
     return [keywordsPredicateAtomID, tagAtomID];
 }
 
-async function prepareTriplesFromTagAndAtomIDs(tag: WithContext<Thing>, atomIDs: string[], requestHash?: string) {
+export async function prepareTriplesFromTagAndAtomIDs(tag: WithContext<Thing>, atomIDs: string[], requestHash?: string) {
     const [keywordsPredicateAtomID, tagAtomID] = await prepareTag(tag, requestHash);
     const triples = atomIDs.map((atomID) => ({ subjectId: atomID, predicateId: keywordsPredicateAtomID, objectId: tagAtomID }));
     return triples;
@@ -244,7 +244,7 @@ async function prepareTriplesFromTagAndAtomIDs(tag: WithContext<Thing>, atomIDs:
 // Optimized Functions:
 
 // This function takes an array and a size, and splits the array into chunks of the given size
-function chunk<T>(array: T[], size: number): T[][] {
+export function chunk<T>(array: T[], size: number): T[][] {
     const chunked: T[][] = [];
     for (let i = 0; i < array.length; i += size) {
         chunked.push(array.slice(i, i + size));
@@ -252,11 +252,11 @@ function chunk<T>(array: T[], size: number): T[][] {
     return chunked;
 }
 
-function delay(ms: number) {
+export function delay(ms: number) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-interface AtomExistsResult {
+export interface AtomExistsResult {
     filteredObj: any;
     cid: string;
     originalIndex: number;
@@ -264,14 +264,14 @@ interface AtomExistsResult {
     atomId?: string;
 }
 
-interface PinDataResult {
+export interface PinDataResult {
     filteredObj: any;
     cid: string;
     originalIndex: number;
     alreadyExists?: boolean;
 }
 
-interface Triple {
+export interface Triple {
     subjectId: string;
     predicateId: string;
     objectId: string;
@@ -279,13 +279,13 @@ interface Triple {
     tripleId?: string;
 }
 
-interface AtomURIResult {
+export interface AtomURIResult {
     atomId: string;
     uri: string;
     originalIndex: number;
 }
 
-async function retryOperation<T>(operation: () => Promise<T>, maxRetries: number = 3): Promise<T> {
+export async function retryOperation<T>(operation: () => Promise<T>, maxRetries: number = 3): Promise<T> {
     for (let attempt = 1; attempt <= maxRetries; attempt++) {
         try {
             return await operation();
@@ -297,7 +297,7 @@ async function retryOperation<T>(operation: () => Promise<T>, maxRetries: number
     throw new Error('This should never be reached');
 };
 
-async function pinAllData(atoms: any[], concurrencyLimit: number, maxRetries: number = 3, delayBetweenBatches: number = 1000, requestHash?: string): Promise<PinDataResult[]> {
+export async function pinAllData(atoms: any[], concurrencyLimit: number, maxRetries: number = 3, delayBetweenBatches: number = 1000, requestHash?: string): Promise<PinDataResult[]> {
     requestHash ? await pushUpdate(requestHash, "Splitting atoms by unique image...") : null;
     const { uniqueAtoms, duplicateAtoms } = splitAtomsByUniqueImage(atoms);
 
@@ -318,7 +318,7 @@ async function pinAllData(atoms: any[], concurrencyLimit: number, maxRetries: nu
 }
 
 // Splits atoms into two arrays: unique and duplicate based on the 'image' field
-function splitAtomsByUniqueImage(atoms: any[]): { uniqueAtoms: any[], duplicateAtoms: any[] } {
+export function splitAtomsByUniqueImage(atoms: any[]): { uniqueAtoms: any[], duplicateAtoms: any[] } {
     const seenImages = new Set<string>();
     const uniqueAtoms: any[] = [];
     const duplicateAtoms: any[] = [];
@@ -337,7 +337,7 @@ function splitAtomsByUniqueImage(atoms: any[]): { uniqueAtoms: any[], duplicateA
 }
 
 // Processes atoms in batches, returning resolved PinDataResult objects
-async function processAtomDataBatches(atoms: any[], concurrencyLimit: number, maxRetries: number, delayBetweenBatches: number, startIndex: number = 0, requestHash?: string): Promise<PinDataResult[]> {
+export async function processAtomDataBatches(atoms: any[], concurrencyLimit: number, maxRetries: number, delayBetweenBatches: number, startIndex: number = 0, requestHash?: string): Promise<PinDataResult[]> {
     const pinDataBatches = chunk(atoms.map((atom, index) => ({ atom, index: index + startIndex })), concurrencyLimit);
     const pinnedData: PinDataResult[] = [];
 
@@ -360,7 +360,7 @@ async function processAtomDataBatches(atoms: any[], concurrencyLimit: number, ma
 }
 
 // Helper function for front end / interfaces
-async function processCheckAtomsExist(atoms: any[], concurrencyLimit: number, maxRetries: number, delayBetweenBatches: number, startIndex: number = 0): Promise<AtomExistsResult[]> {
+export async function processCheckAtomsExist(atoms: any[], concurrencyLimit: number, maxRetries: number, delayBetweenBatches: number, startIndex: number = 0): Promise<AtomExistsResult[]> {
     const atomBatches = chunk(atoms.map((atom, index) => ({ atom, index: index + startIndex })), concurrencyLimit);
     const atomExistsResults: AtomExistsResult[] = [];
 
@@ -393,7 +393,7 @@ async function processCheckAtomsExist(atoms: any[], concurrencyLimit: number, ma
 }
 
 
-async function cullExistingAtoms(pinnedData: PinDataResult[], concurrencyLimit: number, maxRetries: number = 3, requestHash?: string): Promise<[PinDataResult[], PinDataResult[]]> {
+export async function cullExistingAtoms(pinnedData: PinDataResult[], concurrencyLimit: number, maxRetries: number = 3, requestHash?: string): Promise<[PinDataResult[], PinDataResult[]]> {
     const filteredData: PinDataResult[] = [];
     const alreadyExistsData: PinDataResult[] = [];
     const pinnedDataBatches = chunk(pinnedData, concurrencyLimit);
@@ -419,7 +419,7 @@ async function cullExistingAtoms(pinnedData: PinDataResult[], concurrencyLimit: 
     return [filteredData, alreadyExistsData];
 }
 
-async function cullExistingTriples(
+export async function cullExistingTriples(
     triples: Triple[],
     concurrencyLimit: number,
     maxRetries: number = 3,
@@ -475,7 +475,7 @@ export async function getTripleIdsFromTripleData(triples: Triple[], concurrencyL
 
 
 // Reading from EVM concurrently needs a delay between requests
-async function getAtomIdsFromURI(URIs: string[], concurrencyLimit: number, maxRetries: number = 3, delayBetweenBatches: number = 1000): Promise<AtomURIResult[]> {
+export async function getAtomIdsFromURI(URIs: string[], concurrencyLimit: number, maxRetries: number = 3, delayBetweenBatches: number = 1000): Promise<AtomURIResult[]> {
     const atomIdBatches = chunk(URIs.map((uri, index) => ({ uri, index })), concurrencyLimit);
     const atoms: AtomURIResult[] = [];
 
@@ -501,7 +501,7 @@ async function getAtomIdsFromURI(URIs: string[], concurrencyLimit: number, maxRe
 }
 
 // Always perform these chunks sequentially
-async function processBatchAtoms(cids: string[], requestHash?: string): Promise<string[]> {
+export async function processBatchAtoms(cids: string[], requestHash?: string): Promise<string[]> {
     let result: string[] = [];
     console.log("Processing batch atoms with CIDs: ", cids);
     requestHash ? await pushUpdate(requestHash, `Processing batch atoms with CIDs: ${cids}`) : null;
@@ -568,7 +568,7 @@ async function processBatchAtoms(cids: string[], requestHash?: string): Promise<
 }
 
 // TODO: Refactor this to be abstract to avoid duplicating code in processBatchAtoms
-async function processBatchTriples(triples: Triple[], requestHash?: string): Promise<string[]> {
+export async function processBatchTriples(triples: Triple[], requestHash?: string): Promise<string[]> {
     let result: string[] = [];
     if (triples.length === 0) {
         requestHash ? await pushUpdate(requestHash, "No new triples to create") : null;
@@ -647,4 +647,3 @@ export async function getAtomDataFromID(atomID: string): Promise<any> {
     }
     return null;
 }
-

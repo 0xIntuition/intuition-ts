@@ -1,10 +1,7 @@
 import { EVMCallRequest, callAndConfirm, evmRead } from './evm'
-import { ensureLoadConfig } from '../config/config'
 
 import { BytesLike, ethers } from 'ethers'
 import { getAtomID } from './offchain-store';
-
-ensureLoadConfig();
 
 const environment = process.env.ENVIRONMENT;
 const rpc = environment === 'dev' ? process.env.EVM_RPC_DEV : process.env.EVM_RPC;

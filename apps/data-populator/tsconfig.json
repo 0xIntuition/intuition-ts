@@ -21,7 +21,12 @@
     },
     "outDir": "./build"
   },
-  "include": ["**/*.ts", "**/*.tsx", "tailwind.config.ts"],
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    "tailwind.config.ts",
+    "app/.server/csv-editor.tsx"
+  ],
   "exclude": ["node_modules", "build"],
   "references": [
     {

@@ -1,7 +1,4 @@
 import { ethers } from 'ethers'
-import { ensureLoadConfig } from '../config/config'
-
-ensureLoadConfig();
 
 const environment = process.env.ENVIRONMENT;
 const privateKey = environment === 'dev' ? process.env.PRIVATE_KEY_DEV : process.env.PRIVATE_KEY;
@@ -20,7 +17,7 @@ export interface EVMCallRequest {
   RPC: string
 }
 
-async function getProvider(RPC: string): Promise<ethers.JsonRpcProvider> {
+export async function getProvider(RPC: string): Promise<ethers.JsonRpcProvider> {
   try {
     const provider = new ethers.JsonRpcProvider(RPC) as ethers.JsonRpcProvider
     return provider
@@ -30,7 +27,7 @@ async function getProvider(RPC: string): Promise<ethers.JsonRpcProvider> {
   }
 }
 
-async function getSigner(
+export async function getSigner(
   provider: ethers.JsonRpcProvider,
 ): Promise<ethers.Signer> {
   try {
@@ -98,7 +95,7 @@ export async function estimateGas(call: EVMCallRequest): Promise<number> {
   }
 }
 
-async function evmCall(call: EVMCallRequest): Promise<string> {
+export async function evmCall(call: EVMCallRequest): Promise<string> {
   try {
     const provider = await getProvider(call.RPC)
     const signer = await getSigner(provider)
@@ -137,7 +134,7 @@ export async function evmRead(call: EVMCallRequest): Promise<any> {
   }
 }
 
-async function confirmTx(
+export async function confirmTx(
   txHash: string,
   RPC: string,
   timeout?: number,

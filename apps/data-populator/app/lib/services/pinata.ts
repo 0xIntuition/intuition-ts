@@ -1,10 +1,7 @@
 import pinataSDK from '@pinata/sdk'
 
 import { checkObjectPinned } from './cid'
-import { ensureLoadConfig } from '../config/config'
 import { pushUpdate } from './request';
-
-ensureLoadConfig();
 
 if (!process.env.PINATA_JWT_KEY) {
   throw new Error('PINATA_JWT_KEY is not set')

@@ -2,9 +2,7 @@
 
 import { supabase } from './supabase';
 import crypto from 'crypto';
-import { ensureLoadConfig } from '../config/config';
 import { getSender } from './evm';
-ensureLoadConfig();
 
 const environment = process.env.ENVIRONMENT!;
 const requestsTable = environment === 'dev' ? 'requests_dev' : 'requests';

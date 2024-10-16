@@ -3,10 +3,7 @@ import * as raw from 'multiformats/codecs/raw'
 import { sha256 } from 'multiformats/hashes/sha2'
 
 import { WithContext, Thing } from 'schema-dts';
-import { ensureLoadConfig } from '../config/config';
 import { pushUpdate } from './request';
-
-ensureLoadConfig();
 
 if (!process.env.PINATA_GATEWAY_KEY) {
     throw new Error('PINATA_GATEWAY_KEY is not set')
