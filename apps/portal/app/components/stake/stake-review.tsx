@@ -186,13 +186,13 @@ export default function StakeReview({
                   weight={TextWeight.medium}
                 >
                   {mode === 'deposit'
-                    ? `Deposit ETH into ${claim ? 'Claim' : 'Identity'}`
+                    ? `Deposit ETH to ${claim ? 'Claim' : 'Identity'}`
                     : `Redeem ETH from ${claim ? 'Claim' : 'Identity'}`}
                 </Text>
                 <InfoTooltip
                   title={
                     mode === 'deposit'
-                      ? `Deposit ETH into ${claim ? 'Claim' : 'Identity'}`
+                      ? `Deposit ETH to ${claim ? 'Claim' : 'Identity'}`
                       : `Redeem ETH from ${claim ? 'Claim' : 'Identity'}`
                   }
                   icon={IconName.circleInfo}
