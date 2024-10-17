@@ -32,8 +32,8 @@ interface HistoryModalProps {
 interface AtomLogEntry {
   id: string
   cid: string
-  txHash: string | null | undefined
-  data: any
+  txHash?: string | null | undefined
+  data?: any
 }
 
 interface TripleLogEntry {

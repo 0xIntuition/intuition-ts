@@ -350,7 +350,14 @@ export default function CSVEditor() {
               .map((result: AtomExistsResult) => result.originalIndex),
           )
           console.log('Existing atom indexes:', existingIndexes)
-          setExistingAtoms(new Set(existingIndexes as number[]))
+          // setExistingAtoms(new Set(existingIndexes as number[]))
+          setExistingAtoms(
+            new Set(
+              Array.from(existingIndexes).filter(
+                (index): index is number => typeof index === 'number',
+              ),
+            ),
+          )
         }
       } else {
         console.error('Failed to check existing atoms')

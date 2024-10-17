@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Thing, WithContext } from 'schema-dts'
+import { IdReference, ImageObject, Thing, WithContext } from 'schema-dts'
 
 import {
   batchCreateAtomRequest,
@@ -77,13 +77,16 @@ export async function populateTriple(
   }
 }
 
+type ThingWithImage = WithContext<Thing> & {
+  image?: string | ImageObject | IdReference
+}
 export interface TagAtomIDsResponse {
   newTripleIds: string[]
   existingTripleIds: string[]
 }
 
 export async function tagAtomIDs(
-  tag: WithContext<Thing>,
+  tag: ThingWithImage,
   atomIds: string[],
   requestHash?: string,
 ) {
@@ -317,10 +320,7 @@ export async function checkAtomsExist(
   return atomExistsResults
 }
 
-export async function prepareTag(
-  tag: WithContext<Thing>,
-  requestHash?: string,
-) {
+export async function prepareTag(tag: ThingWithImage, requestHash?: string) {
   const msgSender = await getSender()
   requestHash
     ? await pushUpdate(requestHash, 'Fetching keywords predicate atom...')

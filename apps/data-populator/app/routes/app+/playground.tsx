@@ -87,12 +87,13 @@ export default function Playground() {
     atomTransactions: AtomTransaction[]
   }>()
 
-  const smartWallet = user.linkedAccounts.find(
-    (account) => account.type === 'smart_wallet',
-  )
+  // const smartWallet = user.linkedAccounts.find(
+  //   (account) => account.type === 'smart_wallet',
+  // )
 
   const { client } = useSmartWallets()
 
+  logger('user', user)
   const sendBatchTx = async () => {
     if (!client) {
       console.error('No smart account client found')
@@ -139,7 +140,7 @@ export default function Playground() {
 
   return (
     <div className="h-screen flex flex-col items-center">
-      <pre>Smart Wallet: {smartWallet?.address || ''}</pre>
+      {/* <pre>Smart Wallet: {smartWallet?.address || ''}</pre> */}
       <div className="flex items-center gap-2">
         <Button onClick={signMessage}>Sign Message</Button>
         <Button onClick={sendTx}>Send Tx</Button>

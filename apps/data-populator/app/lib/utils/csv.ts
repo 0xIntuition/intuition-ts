@@ -50,7 +50,10 @@ function thingsToStringArrays(things: Thing[]): string[][] {
   rows.push(headers)
 
   for (const thing of things) {
-    const row = headers.map((header) => (thing[header] as string) || '')
+    const row = headers.map(
+      (header) =>
+        ((thing as unknown as Record<string, unknown>)[header] as string) || '',
+    )
     rows.push(row)
   }
   return rows
