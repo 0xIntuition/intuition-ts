@@ -297,11 +297,11 @@ export function CAIP10AccountForm({
               <div className="self-stretch flex-col justify-start items-start flex">
                 <div className="flex w-full items-center justify-between">
                   <Text variant="caption" className="text-secondary-foreground">
-                    Chain ID
+                    Chain
                   </Text>
                   <InfoTooltip
-                    title="Chain ID"
-                    content="This is the chain ID of the EVM compatible chain that the Smart Contract is deployed on - so make sure it is accurate!"
+                    title="Chain"
+                    content="This is the EVM compatible chain that the Smart Contract is deployed on - so make sure it is accurate!"
                   />
                 </div>
               </div>
@@ -318,11 +318,18 @@ export function CAIP10AccountForm({
                 }}
                 value={formState.chainId}
               >
-                <SelectTrigger className="w-52 max-lg:w-full">
+                <SelectTrigger className="w-full">
                   <SelectValue placeholder="Select a chain" />
                 </SelectTrigger>
                 <SelectContent>
-                  {Object.values(chains).map((chain) => (
+                  {[
+                    chains.base,
+                    chains.mainnet,
+                    ...Object.values(chains).filter(
+                      (chain) =>
+                        chain !== chains.base && chain !== chains.mainnet,
+                    ),
+                  ].map((chain) => (
                     <SelectItem key={chain.id} value={chain.id.toString()}>
                       {chain.name}
                     </SelectItem>
