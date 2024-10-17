@@ -498,9 +498,12 @@ export default function CSVEditor() {
 
   // Function to toggle row selection
   const toggleRowSelection = (index: number) => {
-    setSelectedRows((prev) =>
-      prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index],
-    )
+    setSelectedRows((prev) => {
+      if (prev.includes(index)) {
+        return prev.filter((i) => i !== index)
+      }
+      return [...prev, index]
+    })
   }
 
   // Function to toggle selection of all rows

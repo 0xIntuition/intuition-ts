@@ -287,18 +287,16 @@ export async function getOrCreateTriple(
   objectId: string,
 ) {
   const tripleHash = hashTriple(subjectId, predicateId, objectId)
-  const tripleId = (await getTripleByHash(tripleHash)) as string
+  let tripleId = (await getTripleByHash(tripleHash)) as string
   console.log('TRIPLE ID IN GET OR CREATE TRIPLE: ', tripleId)
   if (tripleId !== '0') {
     return [tripleId]
-  } else {
-    // eslint-disable-line no-else-return
-    console.log(`Creating triple: ${subjectId}, ${predicateId}, ${objectId}`)
-    const txId = await createTriple(subjectId, predicateId, objectId)
-    console.log('Transaction ID: ', txId)
-    const tripleId = await getTripleByHash(tripleHash)
-    return [tripleId, txId]
   }
+  console.log(`Creating triple: ${subjectId}, ${predicateId}, ${objectId}`)
+  const txId = await createTriple(subjectId, predicateId, objectId)
+  console.log('Transaction ID: ', txId)
+  tripleId = await getTripleByHash(tripleHash)
+  return [tripleId, txId]
 }
 
 // Todo: use this to ensure triple does not exist before submitting it in batch call
