@@ -13,9 +13,11 @@ export function insertIntoMapping(
       const fileContent = fs.readFileSync(filePath, 'utf8')
       mapping = JSON.parse(fileContent) // Load the existing mapping
     } catch (error) {
-      console.error(
-        `Failed to read or parse the existing file: ${error.message}`,
-      )
+      if (error instanceof Error) {
+        console.error(`Failed to save mapping to file: ${error.message}`)
+      } else {
+        console.error('Failed to save mapping to file: Unknown error')
+      }
       return
     }
   }
@@ -27,7 +29,11 @@ export function insertIntoMapping(
     const jsonContent = JSON.stringify(mapping, null, 2) // Convert the mapping to a JSON string
     fs.writeFileSync(filePath, jsonContent, 'utf8') // Write the JSON string to the file
   } catch (error) {
-    console.error(`Failed to save mapping to file: ${error.message}`)
+    if (error instanceof Error) {
+      console.error(`Failed to save mapping to file: ${error.message}`)
+    } else {
+      console.error('Failed to save mapping to file: Unknown error')
+    }
   }
 }
 
@@ -46,7 +52,11 @@ export function searchMapping(key: string, filePath: string): string | null {
     }
     return null
   } catch (error) {
-    console.error(`Failed to read or parse the file: ${error.message}`)
+    if (error instanceof Error) {
+      console.error(`Failed to save mapping to file: ${error.message}`)
+    } else {
+      console.error('Failed to save mapping to file: Unknown error')
+    }
     return null
   }
 }

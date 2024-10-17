@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { IdReference, ImageObject, Thing, WithContext } from 'schema-dts'
+import { Thing, WithContext } from 'schema-dts'
 
 import {
   batchCreateAtomRequest,
@@ -77,16 +77,13 @@ export async function populateTriple(
   }
 }
 
-type ThingWithImage = WithContext<Thing> & {
-  image?: string | ImageObject | IdReference
-}
 export interface TagAtomIDsResponse {
   newTripleIds: string[]
   existingTripleIds: string[]
 }
 
 export async function tagAtomIDs(
-  tag: ThingWithImage,
+  tag: WithContext<Thing>,
   atomIds: string[],
   requestHash?: string,
 ) {
@@ -320,7 +317,10 @@ export async function checkAtomsExist(
   return atomExistsResults
 }
 
-export async function prepareTag(tag: ThingWithImage, requestHash?: string) {
+export async function prepareTag(
+  tag: WithContext<Thing>,
+  requestHash?: string,
+) {
   const msgSender = await getSender()
   requestHash
     ? await pushUpdate(requestHash, 'Fetching keywords predicate atom...')
@@ -337,7 +337,9 @@ export async function prepareTag(tag: ThingWithImage, requestHash?: string) {
   )
 
   // Avoid re-uploading images that have already been uploaded
-  tag.image = await resolveAndFilterImage(tag.image, requestHash)
+  if ('image' in tag && typeof tag.image === 'string') {
+    tag.image = await resolveAndFilterImage(tag.image, requestHash)
+  }
 
   requestHash ? await pushUpdate(requestHash, 'Pinning tag atom...') : null
   const tagCID = await pinataPinJSON(tag)
@@ -460,7 +462,7 @@ export async function pinAllData(
     concurrencyLimit,
     maxRetries,
     delayBetweenBatches,
-    requestHash,
+    // requestHash, // TODO: eventually add support for requestHash to the function signature
   )
 
   // Process duplicate atoms after unique atoms
@@ -476,7 +478,7 @@ export async function pinAllData(
     maxRetries,
     delayBetweenBatches,
     uniqueAtoms.length,
-    requestHash,
+    // requestHash, // TODO: eventually add support for requestHash to the function signature
   )
 
   // Combine results and return in original order
