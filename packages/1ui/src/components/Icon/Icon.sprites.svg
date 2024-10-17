@@ -1,6 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <svg xmlns="http://www.w3.org/2000/svg">
   <defs>
+    <!-- arrow-up -->
+    <symbol id="arrow-up" viewBox="0 0 24 24">
+      <path
+        d="M5.75 10L12 3.75L18.25 10M12 20.25V4.5"
+        stroke="currentColor"
+        stroke-width="1.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </symbol>
+    <!-- arrow-down -->
+    <symbol id="arrow-down" viewBox="0 0 24 24">
+      <path d="M18.25 14L12 20.25L5.75 14M12 19.5V3.75"
+        stroke="currentColor"
+        stroke-width="1.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </symbol>
     <!-- arrow-left -->
     <symbol id="arrow-left" viewBox="0 0 24 24">
       <path
@@ -8,7 +27,8 @@
         fill="transparent"
         stroke="currentColor"
         stroke-width="1.5"
-        stroke-linecap="square"
+        stroke-linecap="round"
+        stroke-linejoin="round"
       />
     </symbol>
     <!-- arrow-right -->
@@ -18,7 +38,8 @@
         fill="transparent"
         stroke="currentColor"
         stroke-width="1.5"
-        stroke-linecap="square"
+        stroke-linecap="round"
+        stroke-linejoin="round"
       />
     </symbol>
     <!-- arrow-up-right -->
@@ -1240,6 +1261,18 @@
       <path
         d="M4.38356 21.4914H19.2065L18.5955 20.8814H4.99455V9.89197C4.99455 8.69486 5.3285 7.34293 5.89002 6.3774L5.49742 5.98572C4.76595 7.15758 4.37972 8.51147 4.38295 9.89236L4.38356 21.4914Z"
         fill="currentColor" stroke="currentColor" strokeWidth="0.8" strokeLinejoin="round" />
+    </symbol>
+    <!-- context -->
+    <symbol id="context" viewBox="0 0 24 24" fill="none">
+      <path
+        d="M12 5.25C12.8284 5.25 13.5 4.57842 13.5 3.75C13.5 2.92158 12.8284 2.25 12 2.25C11.1716 2.25 10.5 2.92158 10.5 3.75C10.5 4.57842 11.1716 5.25 12 5.25Z"
+        fill="currentColor" />
+      <path
+        d="M12 13.5C12.8284 13.5 13.5 12.8284 13.5 12C13.5 11.1716 12.8284 10.5 12 10.5C11.1716 10.5 10.5 11.1716 10.5 12C10.5 12.8284 11.1716 13.5 12 13.5Z"
+        fill="currentColor" />
+      <path
+        d="M12 21.75C12.8284 21.75 13.5 21.0784 13.5 20.25C13.5 19.4216 12.8284 18.75 12 18.75C11.1716 18.75 10.5 19.4216 10.5 20.25C10.5 21.0784 11.1716 21.75 12 21.75Z"
+        fill="currentColor" />
     </symbol>
   </defs>
 </svg>

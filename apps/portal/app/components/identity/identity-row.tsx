@@ -1,26 +1,24 @@
-import React, { useRef, useState } from 'react'
+import React from 'react'
 
 import {
-  Avatar,
+  Button,
+  ButtonVariant,
   cn,
-  Copy,
   CurrencyType,
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
+  Icon,
+  IconName,
   Identity,
+  IdentityTag,
+  IdentityTagSize,
   IdentityType,
-  IdentityValueDisplay,
-  ProfileCard,
-  TagsContent,
-  TagWithValue,
   TagWithValueProps,
+  Text,
   TextVariant,
-  Trunctacular,
-  useSidebarLayoutContext,
 } from '@0xintuition/1ui'
 
-import { useNavigate } from '@remix-run/react'
+import { stakeModalAtom } from '@lib/state/store'
+import { Link } from '@remix-run/react'
+import { useSetAtom } from 'jotai'
 
 export interface IdentityRowProps extends React.HTMLAttributes<HTMLDivElement> {
   variant?: IdentityType
@@ -37,177 +35,66 @@ export interface IdentityRowProps extends React.HTMLAttributes<HTMLDivElement> {
   tags?: TagWithValueProps[]
 }
 
-interface NameAndAddressProps {
-  name: string
-  id: string
-  link: string
-  ipfsLink: string
-  hasTags: boolean
-}
-
-const NameAndAddress = ({
-  name,
-  id,
-  link,
-  ipfsLink,
-  hasTags,
-}: NameAndAddressProps) => {
-  return (
-    <div
-      className={cn(
-        'mb-1 flex',
-        hasTags ? 'flex-row items-center' : 'flex-col',
-      )}
-    >
-      <a href={link}>
-        <Trunctacular
-          value={name}
-          variant={TextVariant.bodyLarge}
-          className="mr-2"
-          maxStringLength={42}
-        />
-      </a>
-      <div className="hidden md:flex flex-row gap-1 items-center">
-        <a href={ipfsLink} target="_blank" rel="noreferrer noreopener">
-          <Trunctacular
-            value={id}
-            className="text-primary/60 hover:text-primary"
-            maxStringLength={16}
-          />
-        </a>
-        <Copy text={id} />
-      </div>
-    </div>
-  )
-}
-
 const IdentityRow = ({
   variant = Identity.user,
   amount,
   currency,
   name,
-  description,
-  id,
-  claimLink,
   avatarSrc,
   link,
-  ipfsLink,
   totalFollowers,
-  tags,
   children,
   className,
 }: IdentityRowProps) => {
-  const hasTags = !!(tags && tags.length > 0)
-
-  const { isMobileView } = useSidebarLayoutContext()
-
-  const navigate = useNavigate()
-  const [isInteractiveElement, setIsInteractiveElement] = useState(false)
-  const linkRef = useRef<HTMLDivElement>(null)
-
-  const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
-    if (
-      !isInteractiveElement &&
-      (claimLink || link) &&
-      event.target === linkRef.current
-    ) {
-      navigate(claimLink || link)
-    }
-  }
-
-  const handleMouseMove = (event: React.MouseEvent<HTMLElement>) => {
-    const target = event.target as HTMLElement
-    const interactiveElement = target.closest(
-      'a, button, .identity-tag, .hover-card',
-    )
-    setIsInteractiveElement(!!interactiveElement)
-  }
-
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
-    if (event.key === 'Enter' && !isInteractiveElement && (claimLink || link)) {
-      navigate(claimLink || link)
-    }
-  }
+  const setStakeModalActive = useSetAtom(stakeModalAtom)
 
   const content = (
     <div
-      ref={linkRef}
-      onClick={handleClick}
-      onKeyDown={handleKeyDown}
-      onMouseMove={handleMouseMove}
-      role={isInteractiveElement ? undefined : 'button'}
-      tabIndex={isInteractiveElement ? undefined : 0}
       className={cn(
-        `w-full flex justify-between items-center max-sm:flex-col max-sm:gap-3 p-6`,
-        `hover:bg-secondary/10 transition-colors duration-200 group`,
-        isInteractiveElement ? 'cursor-default' : 'cursor-pointer',
+        `w-full flex justify-between items-center max-sm:flex-col max-sm:gap-3 p-4`,
         className,
       )}
     >
       <div className="flex items-center">
-        <HoverCard openDelay={150} closeDelay={150}>
-          <HoverCardTrigger asChild>
-            <a href={claimLink || link}>
-              <Avatar
-                variant={variant}
-                src={avatarSrc}
-                name={name}
-                className="mr-4 w-16 h-16"
-              />
-            </a>
-          </HoverCardTrigger>
-          <HoverCardContent side="right" className="w-max">
-            <div className="flex flex-col gap-4 w-80 max-md:w-[80%]">
-              <ProfileCard
-                variant={variant}
-                avatarSrc={avatarSrc ?? ''}
-                name={name}
-                id={id ?? ''}
-                bio={description ?? ''}
-                ipfsLink={ipfsLink}
-                className="profile-card"
-              />
-              {/* {link && (
-                <a href={link}>
-                  <Button variant={ButtonVariant.secondary} className="w-full">
-                    View Identity{' '}
-                    <Icon name={'arrow-up-right'} className="h-3 w-3" />
-                  </Button>
-                </a>
-              )} */}
-            </div>
-          </HoverCardContent>
-        </HoverCard>
-        <div className="flex flex-col">
-          <NameAndAddress
-            name={name}
-            id={id}
-            link={claimLink || link}
-            ipfsLink={ipfsLink}
-            hasTags={hasTags}
-          />
-          {hasTags && (
-            <div className="flex gap-2 mt-1">
-              <TagsContent numberOfTags={tags.length} link={link}>
-                {tags.slice(0, 2).map((tag, index) => (
-                  <TagWithValue
-                    label={tag.label}
-                    value={tag.value}
-                    maxStringLength={isMobileView ? 12 : 24}
-                    key={index}
-                  />
-                ))}
-              </TagsContent>
-            </div>
-          )}
-        </div>
+        <Link to={link}>
+          <IdentityTag
+            variant={variant}
+            imgSrc={avatarSrc}
+            size={IdentityTagSize.md}
+          >
+            {name}
+          </IdentityTag>
+        </Link>
       </div>
 
-      <IdentityValueDisplay
-        value={amount}
-        currency={currency}
-        followers={totalFollowers}
-      />
+      <div className="flex items-center gap-3">
+        <div className="flex flex-col items-end">
+          <Text variant={TextVariant.caption} className="text-primary/70">
+            TVL
+          </Text>
+          <Text variant={TextVariant.caption}>
+            {amount} {currency}
+          </Text>
+        </div>
+        <Button
+          variant={ButtonVariant.ghost}
+          className="bg-primary/10 border-primary/30 hover:bg-primary/20 hover:border-primary/60 py-0.5 px-2.5 gap-1.5"
+          onClick={() =>
+            setStakeModalActive((prevState) => ({
+              ...prevState,
+              mode: 'deposit',
+              modalType: 'identity',
+              isOpen: true,
+            }))
+          }
+        >
+          <Icon name={IconName.arrowUp} className="h-4 w-4" />{' '}
+          <Text variant={TextVariant.caption}>{totalFollowers}</Text>
+        </Button>
+        <Button variant={ButtonVariant.text} className="px-0 py-1">
+          <Icon name={IconName.context} className="h-4 w-4" />
+        </Button>
+      </div>
     </div>
   )
 
