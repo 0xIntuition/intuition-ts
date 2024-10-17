@@ -11,17 +11,18 @@ const config: CodegenConfig = {
   // },
   documents: 'src/**/*.graphql',
   generates: {
-    'src/generated/': {
+    './src/generated/': {
       preset: 'client',
       config: {
-        dedupeFragments: true,
-        nonOptionalTypename: false,
-        useTypeImports: true,
-        scalars: {
-          DateTime: 'string | Date',
-        },
-      },
+        documentMode: 'string'
+      }
     },
+    './schema.graphql': {
+      plugins: ['schema-ast'],
+      config: {
+        includeDirectives: true
+      }
+    }
   },
   hooks: { afterAllFileWrite: ['prettier --write'] },
 }

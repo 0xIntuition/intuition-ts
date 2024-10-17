@@ -1,0 +1,9206 @@
+schema {
+  query: query_root
+  subscription: subscription_root
+}
+
+"""
+whether this query should be cached (Hasura Cloud only)
+"""
+directive @cached(
+  """
+  refresh the cache entry
+  """
+  refresh: Boolean! = false
+  """
+  measured in seconds
+  """
+  ttl: Int! = 60
+) on QUERY
+
+"""
+Boolean expression to compare columns of type "Int". All fields are combined with logical 'AND'.
+"""
+input Int_comparison_exp {
+  _eq: Int
+  _gt: Int
+  _gte: Int
+  _in: [Int!]
+  _is_null: Boolean
+  _lt: Int
+  _lte: Int
+  _neq: Int
+  _nin: [Int!]
+}
+
+"""
+Boolean expression to compare columns of type "String". All fields are combined with logical 'AND'.
+"""
+input String_comparison_exp {
+  _eq: String
+  _gt: String
+  _gte: String
+  """
+  does the column match the given case-insensitive pattern
+  """
+  _ilike: String
+  _in: [String!]
+  """
+  does the column match the given POSIX regular expression, case insensitive
+  """
+  _iregex: String
+  _is_null: Boolean
+  """
+  does the column match the given pattern
+  """
+  _like: String
+  _lt: String
+  _lte: String
+  _neq: String
+  """
+  does the column NOT match the given case-insensitive pattern
+  """
+  _nilike: String
+  _nin: [String!]
+  """
+  does the column NOT match the given POSIX regular expression, case insensitive
+  """
+  _niregex: String
+  """
+  does the column NOT match the given pattern
+  """
+  _nlike: String
+  """
+  does the column NOT match the given POSIX regular expression, case sensitive
+  """
+  _nregex: String
+  """
+  does the column NOT match the given SQL regular expression
+  """
+  _nsimilar: String
+  """
+  does the column match the given POSIX regular expression, case sensitive
+  """
+  _regex: String
+  """
+  does the column match the given SQL regular expression
+  """
+  _similar: String
+}
+
+"""
+columns and relationships of "Account"
+"""
+type accounts {
+  """
+  An object relationship
+  """
+  atom: atoms
+  atomId: numeric
+  """
+  An array relationship
+  """
+  claims(
+    """
+    distinct select on columns
+    """
+    distinct_on: [claims_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [claims_order_by!]
+    """
+    filter the rows returned
+    """
+    where: claims_bool_exp
+  ): [claims!]!
+  """
+  An aggregate relationship
+  """
+  claims_aggregate(
+    """
+    distinct select on columns
+    """
+    distinct_on: [claims_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [claims_order_by!]
+    """
+    filter the rows returned
+    """
+    where: claims_bool_exp
+  ): claims_aggregate!
+  """
+  An array relationship
+  """
+  createdAtoms(
+    """
+    distinct select on columns
+    """
+    distinct_on: [atoms_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [atoms_order_by!]
+    """
+    filter the rows returned
+    """
+    where: atoms_bool_exp
+  ): [atoms!]!
+  """
+  An aggregate relationship
+  """
+  createdAtoms_aggregate(
+    """
+    distinct select on columns
+    """
+    distinct_on: [atoms_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [atoms_order_by!]
+    """
+    filter the rows returned
+    """
+    where: atoms_bool_exp
+  ): atoms_aggregate!
+  """
+  An array relationship
+  """
+  createdTriples(
+    """
+    distinct select on columns
+    """
+    distinct_on: [triples_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [triples_order_by!]
+    """
+    filter the rows returned
+    """
+    where: triples_bool_exp
+  ): [triples!]!
+  """
+  An aggregate relationship
+  """
+  createdTriples_aggregate(
+    """
+    distinct select on columns
+    """
+    distinct_on: [triples_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [triples_order_by!]
+    """
+    filter the rows returned
+    """
+    where: triples_bool_exp
+  ): triples_aggregate!
+  """
+  An array relationship
+  """
+  deposits(
+    """
+    distinct select on columns
+    """
+    distinct_on: [deposits_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [deposits_order_by!]
+    """
+    filter the rows returned
+    """
+    where: deposits_bool_exp
+  ): [deposits!]!
+  """
+  An aggregate relationship
+  """
+  deposits_aggregate(
+    """
+    distinct select on columns
+    """
+    distinct_on: [deposits_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [deposits_order_by!]
+    """
+    filter the rows returned
+    """
+    where: deposits_bool_exp
+  ): deposits_aggregate!
+  """
+  An array relationship
+  """
+  feeTransfers(
+    """
+    distinct select on columns
+    """
+    distinct_on: [feeTranfers_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [feeTranfers_order_by!]
+    """
+    filter the rows returned
+    """
+    where: feeTranfers_bool_exp
+  ): [feeTranfers!]!
+  """
+  An aggregate relationship
+  """
+  feeTransfers_aggregate(
+    """
+    distinct select on columns
+    """
+    distinct_on: [feeTranfers_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [feeTranfers_order_by!]
+    """
+    filter the rows returned
+    """
+    where: feeTranfers_bool_exp
+  ): feeTranfers_aggregate!
+  id: String!
+  image: String
+  label: String!
+  """
+  An array relationship
+  """
+  positions(
+    """
+    distinct select on columns
+    """
+    distinct_on: [positions_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [positions_order_by!]
+    """
+    filter the rows returned
+    """
+    where: positions_bool_exp
+  ): [positions!]!
+  """
+  An aggregate relationship
+  """
+  positions_aggregate(
+    """
+    distinct select on columns
+    """
+    distinct_on: [positions_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [positions_order_by!]
+    """
+    filter the rows returned
+    """
+    where: positions_bool_exp
+  ): positions_aggregate!
+  """
+  An array relationship
+  """
+  redemptions(
+    """
+    distinct select on columns
+    """
+    distinct_on: [redemptions_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [redemptions_order_by!]
+    """
+    filter the rows returned
+    """
+    where: redemptions_bool_exp
+  ): [redemptions!]!
+  """
+  An aggregate relationship
+  """
+  redemptions_aggregate(
+    """
+    distinct select on columns
+    """
+    distinct_on: [redemptions_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [redemptions_order_by!]
+    """
+    filter the rows returned
+    """
+    where: redemptions_bool_exp
+  ): redemptions_aggregate!
+  """
+  An array relationship
+  """
+  signals(
+    """
+    distinct select on columns
+    """
+    distinct_on: [signals_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [signals_order_by!]
+    """
+    filter the rows returned
+    """
+    where: signals_bool_exp
+  ): [signals!]!
+  """
+  An aggregate relationship
+  """
+  signals_aggregate(
+    """
+    distinct select on columns
+    """
+    distinct_on: [signals_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [signals_order_by!]
+    """
+    filter the rows returned
+    """
+    where: signals_bool_exp
+  ): signals_aggregate!
+  type: String!
+}
+
+"""
+aggregated selection of "Account"
+"""
+type accounts_aggregate {
+  aggregate: accounts_aggregate_fields
+  nodes: [accounts!]!
+}
+
+"""
+aggregate fields of "Account"
+"""
+type accounts_aggregate_fields {
+  avg: accounts_avg_fields
+  count(columns: [accounts_select_column!], distinct: Boolean): Int!
+  max: accounts_max_fields
+  min: accounts_min_fields
+  stddev: accounts_stddev_fields
+  stddev_pop: accounts_stddev_pop_fields
+  stddev_samp: accounts_stddev_samp_fields
+  sum: accounts_sum_fields
+  var_pop: accounts_var_pop_fields
+  var_samp: accounts_var_samp_fields
+  variance: accounts_variance_fields
+}
+
+"""
+aggregate avg on columns
+"""
+type accounts_avg_fields {
+  atomId: Float
+}
+
+"""
+Boolean expression to filter rows from the table "Account". All fields are combined with a logical 'AND'.
+"""
+input accounts_bool_exp {
+  _and: [accounts_bool_exp!]
+  _not: accounts_bool_exp
+  _or: [accounts_bool_exp!]
+  atom: atoms_bool_exp
+  atomId: numeric_comparison_exp
+  claims: claims_bool_exp
+  createdAtoms: atoms_bool_exp
+  createdTriples: triples_bool_exp
+  deposits: deposits_bool_exp
+  feeTransfers: feeTranfers_bool_exp
+  id: String_comparison_exp
+  image: String_comparison_exp
+  label: String_comparison_exp
+  positions: positions_bool_exp
+  redemptions: redemptions_bool_exp
+  signals: signals_bool_exp
+  type: String_comparison_exp
+}
+
+"""
+aggregate max on columns
+"""
+type accounts_max_fields {
+  atomId: numeric
+  id: String
+  image: String
+  label: String
+  type: String
+}
+
+"""
+aggregate min on columns
+"""
+type accounts_min_fields {
+  atomId: numeric
+  id: String
+  image: String
+  label: String
+  type: String
+}
+
+"""
+Ordering options when selecting data from "Account".
+"""
+input accounts_order_by {
+  atom: atoms_order_by
+  atomId: order_by
+  claims_aggregate: claims_aggregate_order_by
+  createdAtoms_aggregate: atoms_aggregate_order_by
+  createdTriples_aggregate: triples_aggregate_order_by
+  deposits_aggregate: deposits_aggregate_order_by
+  feeTransfers_aggregate: feeTranfers_aggregate_order_by
+  id: order_by
+  image: order_by
+  label: order_by
+  positions_aggregate: positions_aggregate_order_by
+  redemptions_aggregate: redemptions_aggregate_order_by
+  signals_aggregate: signals_aggregate_order_by
+  type: order_by
+}
+
+"""
+select columns of table "Account"
+"""
+enum accounts_select_column {
+  """
+  column name
+  """
+  atomId
+  """
+  column name
+  """
+  id
+  """
+  column name
+  """
+  image
+  """
+  column name
+  """
+  label
+  """
+  column name
+  """
+  type
+}
+
+"""
+aggregate stddev on columns
+"""
+type accounts_stddev_fields {
+  atomId: Float
+}
+
+"""
+aggregate stddev_pop on columns
+"""
+type accounts_stddev_pop_fields {
+  atomId: Float
+}
+
+"""
+aggregate stddev_samp on columns
+"""
+type accounts_stddev_samp_fields {
+  atomId: Float
+}
+
+"""
+aggregate sum on columns
+"""
+type accounts_sum_fields {
+  atomId: numeric
+}
+
+input accounts_that_claim_about_account_args {
+  address: String
+  predicate: numeric
+  subject: numeric
+}
+
+"""
+aggregate var_pop on columns
+"""
+type accounts_var_pop_fields {
+  atomId: Float
+}
+
+"""
+aggregate var_samp on columns
+"""
+type accounts_var_samp_fields {
+  atomId: Float
+}
+
+"""
+aggregate variance on columns
+"""
+type accounts_variance_fields {
+  atomId: Float
+}
+
+"""
+columns and relationships of "AtomValue"
+"""
+type atomValues {
+  """
+  An object relationship
+  """
+  account: accounts
+  accountId: String
+  """
+  An object relationship
+  """
+  atom: atoms
+  atomId: numeric!
+  """
+  An object relationship
+  """
+  book: books
+  bookId: numeric
+  id: numeric!
+  """
+  An object relationship
+  """
+  organization: organizations
+  organizationId: numeric
+  """
+  An object relationship
+  """
+  person: persons
+  personId: numeric
+  """
+  An object relationship
+  """
+  thing: things
+  thingId: numeric
+}
+
+"""
+aggregated selection of "AtomValue"
+"""
+type atomValues_aggregate {
+  aggregate: atomValues_aggregate_fields
+  nodes: [atomValues!]!
+}
+
+"""
+aggregate fields of "AtomValue"
+"""
+type atomValues_aggregate_fields {
+  avg: atomValues_avg_fields
+  count(columns: [atomValues_select_column!], distinct: Boolean): Int!
+  max: atomValues_max_fields
+  min: atomValues_min_fields
+  stddev: atomValues_stddev_fields
+  stddev_pop: atomValues_stddev_pop_fields
+  stddev_samp: atomValues_stddev_samp_fields
+  sum: atomValues_sum_fields
+  var_pop: atomValues_var_pop_fields
+  var_samp: atomValues_var_samp_fields
+  variance: atomValues_variance_fields
+}
+
+"""
+aggregate avg on columns
+"""
+type atomValues_avg_fields {
+  atomId: Float
+  bookId: Float
+  id: Float
+  organizationId: Float
+  personId: Float
+  thingId: Float
+}
+
+"""
+Boolean expression to filter rows from the table "AtomValue". All fields are combined with a logical 'AND'.
+"""
+input atomValues_bool_exp {
+  _and: [atomValues_bool_exp!]
+  _not: atomValues_bool_exp
+  _or: [atomValues_bool_exp!]
+  account: accounts_bool_exp
+  accountId: String_comparison_exp
+  atom: atoms_bool_exp
+  atomId: numeric_comparison_exp
+  book: books_bool_exp
+  bookId: numeric_comparison_exp
+  id: numeric_comparison_exp
+  organization: organizations_bool_exp
+  organizationId: numeric_comparison_exp
+  person: persons_bool_exp
+  personId: numeric_comparison_exp
+  thing: things_bool_exp
+  thingId: numeric_comparison_exp
+}
+
+"""
+aggregate max on columns
+"""
+type atomValues_max_fields {
+  accountId: String
+  atomId: numeric
+  bookId: numeric
+  id: numeric
+  organizationId: numeric
+  personId: numeric
+  thingId: numeric
+}
+
+"""
+aggregate min on columns
+"""
+type atomValues_min_fields {
+  accountId: String
+  atomId: numeric
+  bookId: numeric
+  id: numeric
+  organizationId: numeric
+  personId: numeric
+  thingId: numeric
+}
+
+"""
+Ordering options when selecting data from "AtomValue".
+"""
+input atomValues_order_by {
+  account: accounts_order_by
+  accountId: order_by
+  atom: atoms_order_by
+  atomId: order_by
+  book: books_order_by
+  bookId: order_by
+  id: order_by
+  organization: organizations_order_by
+  organizationId: order_by
+  person: persons_order_by
+  personId: order_by
+  thing: things_order_by
+  thingId: order_by
+}
+
+"""
+select columns of table "AtomValue"
+"""
+enum atomValues_select_column {
+  """
+  column name
+  """
+  accountId
+  """
+  column name
+  """
+  atomId
+  """
+  column name
+  """
+  bookId
+  """
+  column name
+  """
+  id
+  """
+  column name
+  """
+  organizationId
+  """
+  column name
+  """
+  personId
+  """
+  column name
+  """
+  thingId
+}
+
+"""
+aggregate stddev on columns
+"""
+type atomValues_stddev_fields {
+  atomId: Float
+  bookId: Float
+  id: Float
+  organizationId: Float
+  personId: Float
+  thingId: Float
+}
+
+"""
+aggregate stddev_pop on columns
+"""
+type atomValues_stddev_pop_fields {
+  atomId: Float
+  bookId: Float
+  id: Float
+  organizationId: Float
+  personId: Float
+  thingId: Float
+}
+
+"""
+aggregate stddev_samp on columns
+"""
+type atomValues_stddev_samp_fields {
+  atomId: Float
+  bookId: Float
+  id: Float
+  organizationId: Float
+  personId: Float
+  thingId: Float
+}
+
+"""
+aggregate sum on columns
+"""
+type atomValues_sum_fields {
+  atomId: numeric
+  bookId: numeric
+  id: numeric
+  organizationId: numeric
+  personId: numeric
+  thingId: numeric
+}
+
+"""
+aggregate var_pop on columns
+"""
+type atomValues_var_pop_fields {
+  atomId: Float
+  bookId: Float
+  id: Float
+  organizationId: Float
+  personId: Float
+  thingId: Float
+}
+
+"""
+aggregate var_samp on columns
+"""
+type atomValues_var_samp_fields {
+  atomId: Float
+  bookId: Float
+  id: Float
+  organizationId: Float
+  personId: Float
+  thingId: Float
+}
+
+"""
+aggregate variance on columns
+"""
+type atomValues_variance_fields {
+  atomId: Float
+  bookId: Float
+  id: Float
+  organizationId: Float
+  personId: Float
+  thingId: Float
+}
+
+"""
+columns and relationships of "Atom"
+"""
+type atoms {
+  """
+  An array relationship
+  """
+  asObject(
+    """
+    distinct select on columns
+    """
+    distinct_on: [triples_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [triples_order_by!]
+    """
+    filter the rows returned
+    """
+    where: triples_bool_exp
+  ): [triples!]!
+  """
+  An aggregate relationship
+  """
+  asObject_aggregate(
+    """
+    distinct select on columns
+    """
+    distinct_on: [triples_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [triples_order_by!]
+    """
+    filter the rows returned
+    """
+    where: triples_bool_exp
+  ): triples_aggregate!
+  """
+  An array relationship
+  """
+  asPredicate(
+    """
+    distinct select on columns
+    """
+    distinct_on: [triples_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [triples_order_by!]
+    """
+    filter the rows returned
+    """
+    where: triples_bool_exp
+  ): [triples!]!
+  """
+  An aggregate relationship
+  """
+  asPredicate_aggregate(
+    """
+    distinct select on columns
+    """
+    distinct_on: [triples_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [triples_order_by!]
+    """
+    filter the rows returned
+    """
+    where: triples_bool_exp
+  ): triples_aggregate!
+  """
+  An array relationship
+  """
+  asSubject(
+    """
+    distinct select on columns
+    """
+    distinct_on: [triples_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [triples_order_by!]
+    """
+    filter the rows returned
+    """
+    where: triples_bool_exp
+  ): [triples!]!
+  """
+  An aggregate relationship
+  """
+  asSubject_aggregate(
+    """
+    distinct select on columns
+    """
+    distinct_on: [triples_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [triples_order_by!]
+    """
+    filter the rows returned
+    """
+    where: triples_bool_exp
+  ): triples_aggregate!
+  blockNumber: numeric!
+  blockTimestamp: numeric!
+  """
+  An object relationship
+  """
+  creator: accounts
+  creatorId: String!
+  data: String!
+  emoji: String
+  id: numeric!
+  image: String
+  label: String
+  transactionHash: bytea!
+  type: String!
+  """
+  An object relationship
+  """
+  value: atomValues
+  valueId: numeric
+  """
+  An object relationship
+  """
+  vault: vaults
+  vaultId: numeric!
+  walletId: String!
+}
+
+"""
+aggregated selection of "Atom"
+"""
+type atoms_aggregate {
+  aggregate: atoms_aggregate_fields
+  nodes: [atoms!]!
+}
+
+"""
+aggregate fields of "Atom"
+"""
+type atoms_aggregate_fields {
+  avg: atoms_avg_fields
+  count(columns: [atoms_select_column!], distinct: Boolean): Int!
+  max: atoms_max_fields
+  min: atoms_min_fields
+  stddev: atoms_stddev_fields
+  stddev_pop: atoms_stddev_pop_fields
+  stddev_samp: atoms_stddev_samp_fields
+  sum: atoms_sum_fields
+  var_pop: atoms_var_pop_fields
+  var_samp: atoms_var_samp_fields
+  variance: atoms_variance_fields
+}
+
+"""
+order by aggregate values of table "Atom"
+"""
+input atoms_aggregate_order_by {
+  avg: atoms_avg_order_by
+  count: order_by
+  max: atoms_max_order_by
+  min: atoms_min_order_by
+  stddev: atoms_stddev_order_by
+  stddev_pop: atoms_stddev_pop_order_by
+  stddev_samp: atoms_stddev_samp_order_by
+  sum: atoms_sum_order_by
+  var_pop: atoms_var_pop_order_by
+  var_samp: atoms_var_samp_order_by
+  variance: atoms_variance_order_by
+}
+
+"""
+aggregate avg on columns
+"""
+type atoms_avg_fields {
+  blockNumber: Float
+  blockTimestamp: Float
+  id: Float
+  valueId: Float
+  vaultId: Float
+}
+
+"""
+order by avg() on columns of table "Atom"
+"""
+input atoms_avg_order_by {
+  blockNumber: order_by
+  blockTimestamp: order_by
+  id: order_by
+  valueId: order_by
+  vaultId: order_by
+}
+
+"""
+Boolean expression to filter rows from the table "Atom". All fields are combined with a logical 'AND'.
+"""
+input atoms_bool_exp {
+  _and: [atoms_bool_exp!]
+  _not: atoms_bool_exp
+  _or: [atoms_bool_exp!]
+  asObject: triples_bool_exp
+  asPredicate: triples_bool_exp
+  asSubject: triples_bool_exp
+  blockNumber: numeric_comparison_exp
+  blockTimestamp: numeric_comparison_exp
+  creator: accounts_bool_exp
+  creatorId: String_comparison_exp
+  data: String_comparison_exp
+  emoji: String_comparison_exp
+  id: numeric_comparison_exp
+  image: String_comparison_exp
+  label: String_comparison_exp
+  transactionHash: bytea_comparison_exp
+  type: String_comparison_exp
+  value: atomValues_bool_exp
+  valueId: numeric_comparison_exp
+  vault: vaults_bool_exp
+  vaultId: numeric_comparison_exp
+  walletId: String_comparison_exp
+}
+
+"""
+aggregate max on columns
+"""
+type atoms_max_fields {
+  blockNumber: numeric
+  blockTimestamp: numeric
+  creatorId: String
+  data: String
+  emoji: String
+  id: numeric
+  image: String
+  label: String
+  type: String
+  valueId: numeric
+  vaultId: numeric
+  walletId: String
+}
+
+"""
+order by max() on columns of table "Atom"
+"""
+input atoms_max_order_by {
+  blockNumber: order_by
+  blockTimestamp: order_by
+  creatorId: order_by
+  data: order_by
+  emoji: order_by
+  id: order_by
+  image: order_by
+  label: order_by
+  type: order_by
+  valueId: order_by
+  vaultId: order_by
+  walletId: order_by
+}
+
+"""
+aggregate min on columns
+"""
+type atoms_min_fields {
+  blockNumber: numeric
+  blockTimestamp: numeric
+  creatorId: String
+  data: String
+  emoji: String
+  id: numeric
+  image: String
+  label: String
+  type: String
+  valueId: numeric
+  vaultId: numeric
+  walletId: String
+}
+
+"""
+order by min() on columns of table "Atom"
+"""
+input atoms_min_order_by {
+  blockNumber: order_by
+  blockTimestamp: order_by
+  creatorId: order_by
+  data: order_by
+  emoji: order_by
+  id: order_by
+  image: order_by
+  label: order_by
+  type: order_by
+  valueId: order_by
+  vaultId: order_by
+  walletId: order_by
+}
+
+"""
+Ordering options when selecting data from "Atom".
+"""
+input atoms_order_by {
+  asObject_aggregate: triples_aggregate_order_by
+  asPredicate_aggregate: triples_aggregate_order_by
+  asSubject_aggregate: triples_aggregate_order_by
+  blockNumber: order_by
+  blockTimestamp: order_by
+  creator: accounts_order_by
+  creatorId: order_by
+  data: order_by
+  emoji: order_by
+  id: order_by
+  image: order_by
+  label: order_by
+  transactionHash: order_by
+  type: order_by
+  value: atomValues_order_by
+  valueId: order_by
+  vault: vaults_order_by
+  vaultId: order_by
+  walletId: order_by
+}
+
+"""
+select columns of table "Atom"
+"""
+enum atoms_select_column {
+  """
+  column name
+  """
+  blockNumber
+  """
+  column name
+  """
+  blockTimestamp
+  """
+  column name
+  """
+  creatorId
+  """
+  column name
+  """
+  data
+  """
+  column name
+  """
+  emoji
+  """
+  column name
+  """
+  id
+  """
+  column name
+  """
+  image
+  """
+  column name
+  """
+  label
+  """
+  column name
+  """
+  transactionHash
+  """
+  column name
+  """
+  type
+  """
+  column name
+  """
+  valueId
+  """
+  column name
+  """
+  vaultId
+  """
+  column name
+  """
+  walletId
+}
+
+"""
+aggregate stddev on columns
+"""
+type atoms_stddev_fields {
+  blockNumber: Float
+  blockTimestamp: Float
+  id: Float
+  valueId: Float
+  vaultId: Float
+}
+
+"""
+order by stddev() on columns of table "Atom"
+"""
+input atoms_stddev_order_by {
+  blockNumber: order_by
+  blockTimestamp: order_by
+  id: order_by
+  valueId: order_by
+  vaultId: order_by
+}
+
+"""
+aggregate stddev_pop on columns
+"""
+type atoms_stddev_pop_fields {
+  blockNumber: Float
+  blockTimestamp: Float
+  id: Float
+  valueId: Float
+  vaultId: Float
+}
+
+"""
+order by stddev_pop() on columns of table "Atom"
+"""
+input atoms_stddev_pop_order_by {
+  blockNumber: order_by
+  blockTimestamp: order_by
+  id: order_by
+  valueId: order_by
+  vaultId: order_by
+}
+
+"""
+aggregate stddev_samp on columns
+"""
+type atoms_stddev_samp_fields {
+  blockNumber: Float
+  blockTimestamp: Float
+  id: Float
+  valueId: Float
+  vaultId: Float
+}
+
+"""
+order by stddev_samp() on columns of table "Atom"
+"""
+input atoms_stddev_samp_order_by {
+  blockNumber: order_by
+  blockTimestamp: order_by
+  id: order_by
+  valueId: order_by
+  vaultId: order_by
+}
+
+"""
+aggregate sum on columns
+"""
+type atoms_sum_fields {
+  blockNumber: numeric
+  blockTimestamp: numeric
+  id: numeric
+  valueId: numeric
+  vaultId: numeric
+}
+
+"""
+order by sum() on columns of table "Atom"
+"""
+input atoms_sum_order_by {
+  blockNumber: order_by
+  blockTimestamp: order_by
+  id: order_by
+  valueId: order_by
+  vaultId: order_by
+}
+
+"""
+aggregate var_pop on columns
+"""
+type atoms_var_pop_fields {
+  blockNumber: Float
+  blockTimestamp: Float
+  id: Float
+  valueId: Float
+  vaultId: Float
+}
+
+"""
+order by var_pop() on columns of table "Atom"
+"""
+input atoms_var_pop_order_by {
+  blockNumber: order_by
+  blockTimestamp: order_by
+  id: order_by
+  valueId: order_by
+  vaultId: order_by
+}
+
+"""
+aggregate var_samp on columns
+"""
+type atoms_var_samp_fields {
+  blockNumber: Float
+  blockTimestamp: Float
+  id: Float
+  valueId: Float
+  vaultId: Float
+}
+
+"""
+order by var_samp() on columns of table "Atom"
+"""
+input atoms_var_samp_order_by {
+  blockNumber: order_by
+  blockTimestamp: order_by
+  id: order_by
+  valueId: order_by
+  vaultId: order_by
+}
+
+"""
+aggregate variance on columns
+"""
+type atoms_variance_fields {
+  blockNumber: Float
+  blockTimestamp: Float
+  id: Float
+  valueId: Float
+  vaultId: Float
+}
+
+"""
+order by variance() on columns of table "Atom"
+"""
+input atoms_variance_order_by {
+  blockNumber: order_by
+  blockTimestamp: order_by
+  id: order_by
+  valueId: order_by
+  vaultId: order_by
+}
+
+"""
+columns and relationships of "Book"
+"""
+type books {
+  """
+  An object relationship
+  """
+  atom: atoms
+  atomId: numeric!
+  description: String
+  genre: String
+  id: numeric!
+  name: String
+  url: String
+}
+
+"""
+aggregated selection of "Book"
+"""
+type books_aggregate {
+  aggregate: books_aggregate_fields
+  nodes: [books!]!
+}
+
+"""
+aggregate fields of "Book"
+"""
+type books_aggregate_fields {
+  avg: books_avg_fields
+  count(columns: [books_select_column!], distinct: Boolean): Int!
+  max: books_max_fields
+  min: books_min_fields
+  stddev: books_stddev_fields
+  stddev_pop: books_stddev_pop_fields
+  stddev_samp: books_stddev_samp_fields
+  sum: books_sum_fields
+  var_pop: books_var_pop_fields
+  var_samp: books_var_samp_fields
+  variance: books_variance_fields
+}
+
+"""
+aggregate avg on columns
+"""
+type books_avg_fields {
+  atomId: Float
+  id: Float
+}
+
+"""
+Boolean expression to filter rows from the table "Book". All fields are combined with a logical 'AND'.
+"""
+input books_bool_exp {
+  _and: [books_bool_exp!]
+  _not: books_bool_exp
+  _or: [books_bool_exp!]
+  atom: atoms_bool_exp
+  atomId: numeric_comparison_exp
+  description: String_comparison_exp
+  genre: String_comparison_exp
+  id: numeric_comparison_exp
+  name: String_comparison_exp
+  url: String_comparison_exp
+}
+
+"""
+aggregate max on columns
+"""
+type books_max_fields {
+  atomId: numeric
+  description: String
+  genre: String
+  id: numeric
+  name: String
+  url: String
+}
+
+"""
+aggregate min on columns
+"""
+type books_min_fields {
+  atomId: numeric
+  description: String
+  genre: String
+  id: numeric
+  name: String
+  url: String
+}
+
+"""
+Ordering options when selecting data from "Book".
+"""
+input books_order_by {
+  atom: atoms_order_by
+  atomId: order_by
+  description: order_by
+  genre: order_by
+  id: order_by
+  name: order_by
+  url: order_by
+}
+
+"""
+select columns of table "Book"
+"""
+enum books_select_column {
+  """
+  column name
+  """
+  atomId
+  """
+  column name
+  """
+  description
+  """
+  column name
+  """
+  genre
+  """
+  column name
+  """
+  id
+  """
+  column name
+  """
+  name
+  """
+  column name
+  """
+  url
+}
+
+"""
+aggregate stddev on columns
+"""
+type books_stddev_fields {
+  atomId: Float
+  id: Float
+}
+
+"""
+aggregate stddev_pop on columns
+"""
+type books_stddev_pop_fields {
+  atomId: Float
+  id: Float
+}
+
+"""
+aggregate stddev_samp on columns
+"""
+type books_stddev_samp_fields {
+  atomId: Float
+  id: Float
+}
+
+"""
+aggregate sum on columns
+"""
+type books_sum_fields {
+  atomId: numeric
+  id: numeric
+}
+
+"""
+aggregate var_pop on columns
+"""
+type books_var_pop_fields {
+  atomId: Float
+  id: Float
+}
+
+"""
+aggregate var_samp on columns
+"""
+type books_var_samp_fields {
+  atomId: Float
+  id: Float
+}
+
+"""
+aggregate variance on columns
+"""
+type books_variance_fields {
+  atomId: Float
+  id: Float
+}
+
+scalar bytea
+
+"""
+Boolean expression to compare columns of type "bytea". All fields are combined with logical 'AND'.
+"""
+input bytea_comparison_exp {
+  _eq: bytea
+  _gt: bytea
+  _gte: bytea
+  _in: [bytea!]
+  _is_null: Boolean
+  _lt: bytea
+  _lte: bytea
+  _neq: bytea
+  _nin: [bytea!]
+}
+
+"""
+columns and relationships of "ChainlinkPrice"
+"""
+type chainLinkPrices {
+  id: numeric!
+  usd: float8!
+}
+
+"""
+Boolean expression to filter rows from the table "ChainlinkPrice". All fields are combined with a logical 'AND'.
+"""
+input chainLinkPrices_bool_exp {
+  _and: [chainLinkPrices_bool_exp!]
+  _not: chainLinkPrices_bool_exp
+  _or: [chainLinkPrices_bool_exp!]
+  id: numeric_comparison_exp
+  usd: float8_comparison_exp
+}
+
+"""
+Ordering options when selecting data from "ChainlinkPrice".
+"""
+input chainLinkPrices_order_by {
+  id: order_by
+  usd: order_by
+}
+
+"""
+select columns of table "ChainlinkPrice"
+"""
+enum chainLinkPrices_select_column {
+  """
+  column name
+  """
+  id
+  """
+  column name
+  """
+  usd
+}
+
+"""
+columns and relationships of "Claim"
+"""
+type claims {
+  """
+  An object relationship
+  """
+  account: accounts
+  accountId: String!
+  counterShares: numeric!
+  """
+  An object relationship
+  """
+  counterVault: vaults
+  counterVaultId: numeric!
+  id: String!
+  """
+  An object relationship
+  """
+  object: atoms
+  objectId: numeric!
+  """
+  An object relationship
+  """
+  predicate: atoms
+  predicateId: numeric!
+  shares: numeric!
+  """
+  An object relationship
+  """
+  subject: atoms
+  subjectId: numeric!
+  """
+  An object relationship
+  """
+  triple: triples
+  tripleId: numeric!
+  """
+  An object relationship
+  """
+  vault: vaults
+  vaultId: numeric!
+}
+
+"""
+aggregated selection of "Claim"
+"""
+type claims_aggregate {
+  aggregate: claims_aggregate_fields
+  nodes: [claims!]!
+}
+
+"""
+aggregate fields of "Claim"
+"""
+type claims_aggregate_fields {
+  avg: claims_avg_fields
+  count(columns: [claims_select_column!], distinct: Boolean): Int!
+  max: claims_max_fields
+  min: claims_min_fields
+  stddev: claims_stddev_fields
+  stddev_pop: claims_stddev_pop_fields
+  stddev_samp: claims_stddev_samp_fields
+  sum: claims_sum_fields
+  var_pop: claims_var_pop_fields
+  var_samp: claims_var_samp_fields
+  variance: claims_variance_fields
+}
+
+"""
+order by aggregate values of table "Claim"
+"""
+input claims_aggregate_order_by {
+  avg: claims_avg_order_by
+  count: order_by
+  max: claims_max_order_by
+  min: claims_min_order_by
+  stddev: claims_stddev_order_by
+  stddev_pop: claims_stddev_pop_order_by
+  stddev_samp: claims_stddev_samp_order_by
+  sum: claims_sum_order_by
+  var_pop: claims_var_pop_order_by
+  var_samp: claims_var_samp_order_by
+  variance: claims_variance_order_by
+}
+
+"""
+aggregate avg on columns
+"""
+type claims_avg_fields {
+  counterShares: Float
+  counterVaultId: Float
+  objectId: Float
+  predicateId: Float
+  shares: Float
+  subjectId: Float
+  tripleId: Float
+  vaultId: Float
+}
+
+"""
+order by avg() on columns of table "Claim"
+"""
+input claims_avg_order_by {
+  counterShares: order_by
+  counterVaultId: order_by
+  objectId: order_by
+  predicateId: order_by
+  shares: order_by
+  subjectId: order_by
+  tripleId: order_by
+  vaultId: order_by
+}
+
+"""
+Boolean expression to filter rows from the table "Claim". All fields are combined with a logical 'AND'.
+"""
+input claims_bool_exp {
+  _and: [claims_bool_exp!]
+  _not: claims_bool_exp
+  _or: [claims_bool_exp!]
+  account: accounts_bool_exp
+  accountId: String_comparison_exp
+  counterShares: numeric_comparison_exp
+  counterVault: vaults_bool_exp
+  counterVaultId: numeric_comparison_exp
+  id: String_comparison_exp
+  object: atoms_bool_exp
+  objectId: numeric_comparison_exp
+  predicate: atoms_bool_exp
+  predicateId: numeric_comparison_exp
+  shares: numeric_comparison_exp
+  subject: atoms_bool_exp
+  subjectId: numeric_comparison_exp
+  triple: triples_bool_exp
+  tripleId: numeric_comparison_exp
+  vault: vaults_bool_exp
+  vaultId: numeric_comparison_exp
+}
+
+input claims_from_following_args {
+  address: String
+}
+
+"""
+aggregate max on columns
+"""
+type claims_max_fields {
+  accountId: String
+  counterShares: numeric
+  counterVaultId: numeric
+  id: String
+  objectId: numeric
+  predicateId: numeric
+  shares: numeric
+  subjectId: numeric
+  tripleId: numeric
+  vaultId: numeric
+}
+
+"""
+order by max() on columns of table "Claim"
+"""
+input claims_max_order_by {
+  accountId: order_by
+  counterShares: order_by
+  counterVaultId: order_by
+  id: order_by
+  objectId: order_by
+  predicateId: order_by
+  shares: order_by
+  subjectId: order_by
+  tripleId: order_by
+  vaultId: order_by
+}
+
+"""
+aggregate min on columns
+"""
+type claims_min_fields {
+  accountId: String
+  counterShares: numeric
+  counterVaultId: numeric
+  id: String
+  objectId: numeric
+  predicateId: numeric
+  shares: numeric
+  subjectId: numeric
+  tripleId: numeric
+  vaultId: numeric
+}
+
+"""
+order by min() on columns of table "Claim"
+"""
+input claims_min_order_by {
+  accountId: order_by
+  counterShares: order_by
+  counterVaultId: order_by
+  id: order_by
+  objectId: order_by
+  predicateId: order_by
+  shares: order_by
+  subjectId: order_by
+  tripleId: order_by
+  vaultId: order_by
+}
+
+"""
+Ordering options when selecting data from "Claim".
+"""
+input claims_order_by {
+  account: accounts_order_by
+  accountId: order_by
+  counterShares: order_by
+  counterVault: vaults_order_by
+  counterVaultId: order_by
+  id: order_by
+  object: atoms_order_by
+  objectId: order_by
+  predicate: atoms_order_by
+  predicateId: order_by
+  shares: order_by
+  subject: atoms_order_by
+  subjectId: order_by
+  triple: triples_order_by
+  tripleId: order_by
+  vault: vaults_order_by
+  vaultId: order_by
+}
+
+"""
+select columns of table "Claim"
+"""
+enum claims_select_column {
+  """
+  column name
+  """
+  accountId
+  """
+  column name
+  """
+  counterShares
+  """
+  column name
+  """
+  counterVaultId
+  """
+  column name
+  """
+  id
+  """
+  column name
+  """
+  objectId
+  """
+  column name
+  """
+  predicateId
+  """
+  column name
+  """
+  shares
+  """
+  column name
+  """
+  subjectId
+  """
+  column name
+  """
+  tripleId
+  """
+  column name
+  """
+  vaultId
+}
+
+"""
+aggregate stddev on columns
+"""
+type claims_stddev_fields {
+  counterShares: Float
+  counterVaultId: Float
+  objectId: Float
+  predicateId: Float
+  shares: Float
+  subjectId: Float
+  tripleId: Float
+  vaultId: Float
+}
+
+"""
+order by stddev() on columns of table "Claim"
+"""
+input claims_stddev_order_by {
+  counterShares: order_by
+  counterVaultId: order_by
+  objectId: order_by
+  predicateId: order_by
+  shares: order_by
+  subjectId: order_by
+  tripleId: order_by
+  vaultId: order_by
+}
+
+"""
+aggregate stddev_pop on columns
+"""
+type claims_stddev_pop_fields {
+  counterShares: Float
+  counterVaultId: Float
+  objectId: Float
+  predicateId: Float
+  shares: Float
+  subjectId: Float
+  tripleId: Float
+  vaultId: Float
+}
+
+"""
+order by stddev_pop() on columns of table "Claim"
+"""
+input claims_stddev_pop_order_by {
+  counterShares: order_by
+  counterVaultId: order_by
+  objectId: order_by
+  predicateId: order_by
+  shares: order_by
+  subjectId: order_by
+  tripleId: order_by
+  vaultId: order_by
+}
+
+"""
+aggregate stddev_samp on columns
+"""
+type claims_stddev_samp_fields {
+  counterShares: Float
+  counterVaultId: Float
+  objectId: Float
+  predicateId: Float
+  shares: Float
+  subjectId: Float
+  tripleId: Float
+  vaultId: Float
+}
+
+"""
+order by stddev_samp() on columns of table "Claim"
+"""
+input claims_stddev_samp_order_by {
+  counterShares: order_by
+  counterVaultId: order_by
+  objectId: order_by
+  predicateId: order_by
+  shares: order_by
+  subjectId: order_by
+  tripleId: order_by
+  vaultId: order_by
+}
+
+"""
+aggregate sum on columns
+"""
+type claims_sum_fields {
+  counterShares: numeric
+  counterVaultId: numeric
+  objectId: numeric
+  predicateId: numeric
+  shares: numeric
+  subjectId: numeric
+  tripleId: numeric
+  vaultId: numeric
+}
+
+"""
+order by sum() on columns of table "Claim"
+"""
+input claims_sum_order_by {
+  counterShares: order_by
+  counterVaultId: order_by
+  objectId: order_by
+  predicateId: order_by
+  shares: order_by
+  subjectId: order_by
+  tripleId: order_by
+  vaultId: order_by
+}
+
+"""
+aggregate var_pop on columns
+"""
+type claims_var_pop_fields {
+  counterShares: Float
+  counterVaultId: Float
+  objectId: Float
+  predicateId: Float
+  shares: Float
+  subjectId: Float
+  tripleId: Float
+  vaultId: Float
+}
+
+"""
+order by var_pop() on columns of table "Claim"
+"""
+input claims_var_pop_order_by {
+  counterShares: order_by
+  counterVaultId: order_by
+  objectId: order_by
+  predicateId: order_by
+  shares: order_by
+  subjectId: order_by
+  tripleId: order_by
+  vaultId: order_by
+}
+
+"""
+aggregate var_samp on columns
+"""
+type claims_var_samp_fields {
+  counterShares: Float
+  counterVaultId: Float
+  objectId: Float
+  predicateId: Float
+  shares: Float
+  subjectId: Float
+  tripleId: Float
+  vaultId: Float
+}
+
+"""
+order by var_samp() on columns of table "Claim"
+"""
+input claims_var_samp_order_by {
+  counterShares: order_by
+  counterVaultId: order_by
+  objectId: order_by
+  predicateId: order_by
+  shares: order_by
+  subjectId: order_by
+  tripleId: order_by
+  vaultId: order_by
+}
+
+"""
+aggregate variance on columns
+"""
+type claims_variance_fields {
+  counterShares: Float
+  counterVaultId: Float
+  objectId: Float
+  predicateId: Float
+  shares: Float
+  subjectId: Float
+  tripleId: Float
+  vaultId: Float
+}
+
+"""
+order by variance() on columns of table "Claim"
+"""
+input claims_variance_order_by {
+  counterShares: order_by
+  counterVaultId: order_by
+  objectId: order_by
+  predicateId: order_by
+  shares: order_by
+  subjectId: order_by
+  tripleId: order_by
+  vaultId: order_by
+}
+
+"""
+columns and relationships of "Deposit"
+"""
+type deposits {
+  blockNumber: numeric!
+  blockTimestamp: numeric!
+  entryFee: numeric!
+  id: String!
+  isAtomWallet: Int!
+  isTriple: Int!
+  """
+  An object relationship
+  """
+  receiver: accounts
+  receiverId: String!
+  receiverTotalSharesInVault: numeric!
+  """
+  An object relationship
+  """
+  sender: accounts
+  senderAssetsAfterTotalFees: numeric!
+  senderId: String!
+  sharesForReceiver: numeric!
+  transactionHash: bytea!
+  """
+  An object relationship
+  """
+  vault: vaults
+  vaultId: numeric!
+}
+
+"""
+aggregated selection of "Deposit"
+"""
+type deposits_aggregate {
+  aggregate: deposits_aggregate_fields
+  nodes: [deposits!]!
+}
+
+"""
+aggregate fields of "Deposit"
+"""
+type deposits_aggregate_fields {
+  avg: deposits_avg_fields
+  count(columns: [deposits_select_column!], distinct: Boolean): Int!
+  max: deposits_max_fields
+  min: deposits_min_fields
+  stddev: deposits_stddev_fields
+  stddev_pop: deposits_stddev_pop_fields
+  stddev_samp: deposits_stddev_samp_fields
+  sum: deposits_sum_fields
+  var_pop: deposits_var_pop_fields
+  var_samp: deposits_var_samp_fields
+  variance: deposits_variance_fields
+}
+
+"""
+order by aggregate values of table "Deposit"
+"""
+input deposits_aggregate_order_by {
+  avg: deposits_avg_order_by
+  count: order_by
+  max: deposits_max_order_by
+  min: deposits_min_order_by
+  stddev: deposits_stddev_order_by
+  stddev_pop: deposits_stddev_pop_order_by
+  stddev_samp: deposits_stddev_samp_order_by
+  sum: deposits_sum_order_by
+  var_pop: deposits_var_pop_order_by
+  var_samp: deposits_var_samp_order_by
+  variance: deposits_variance_order_by
+}
+
+"""
+aggregate avg on columns
+"""
+type deposits_avg_fields {
+  blockNumber: Float
+  blockTimestamp: Float
+  entryFee: Float
+  isAtomWallet: Float
+  isTriple: Float
+  receiverTotalSharesInVault: Float
+  senderAssetsAfterTotalFees: Float
+  sharesForReceiver: Float
+  vaultId: Float
+}
+
+"""
+order by avg() on columns of table "Deposit"
+"""
+input deposits_avg_order_by {
+  blockNumber: order_by
+  blockTimestamp: order_by
+  entryFee: order_by
+  isAtomWallet: order_by
+  isTriple: order_by
+  receiverTotalSharesInVault: order_by
+  senderAssetsAfterTotalFees: order_by
+  sharesForReceiver: order_by
+  vaultId: order_by
+}
+
+"""
+Boolean expression to filter rows from the table "Deposit". All fields are combined with a logical 'AND'.
+"""
+input deposits_bool_exp {
+  _and: [deposits_bool_exp!]
+  _not: deposits_bool_exp
+  _or: [deposits_bool_exp!]
+  blockNumber: numeric_comparison_exp
+  blockTimestamp: numeric_comparison_exp
+  entryFee: numeric_comparison_exp
+  id: String_comparison_exp
+  isAtomWallet: Int_comparison_exp
+  isTriple: Int_comparison_exp
+  receiver: accounts_bool_exp
+  receiverId: String_comparison_exp
+  receiverTotalSharesInVault: numeric_comparison_exp
+  sender: accounts_bool_exp
+  senderAssetsAfterTotalFees: numeric_comparison_exp
+  senderId: String_comparison_exp
+  sharesForReceiver: numeric_comparison_exp
+  transactionHash: bytea_comparison_exp
+  vault: vaults_bool_exp
+  vaultId: numeric_comparison_exp
+}
+
+"""
+aggregate max on columns
+"""
+type deposits_max_fields {
+  blockNumber: numeric
+  blockTimestamp: numeric
+  entryFee: numeric
+  id: String
+  isAtomWallet: Int
+  isTriple: Int
+  receiverId: String
+  receiverTotalSharesInVault: numeric
+  senderAssetsAfterTotalFees: numeric
+  senderId: String
+  sharesForReceiver: numeric
+  vaultId: numeric
+}
+
+"""
+order by max() on columns of table "Deposit"
+"""
+input deposits_max_order_by {
+  blockNumber: order_by
+  blockTimestamp: order_by
+  entryFee: order_by
+  id: order_by
+  isAtomWallet: order_by
+  isTriple: order_by
+  receiverId: order_by
+  receiverTotalSharesInVault: order_by
+  senderAssetsAfterTotalFees: order_by
+  senderId: order_by
+  sharesForReceiver: order_by
+  vaultId: order_by
+}
+
+"""
+aggregate min on columns
+"""
+type deposits_min_fields {
+  blockNumber: numeric
+  blockTimestamp: numeric
+  entryFee: numeric
+  id: String
+  isAtomWallet: Int
+  isTriple: Int
+  receiverId: String
+  receiverTotalSharesInVault: numeric
+  senderAssetsAfterTotalFees: numeric
+  senderId: String
+  sharesForReceiver: numeric
+  vaultId: numeric
+}
+
+"""
+order by min() on columns of table "Deposit"
+"""
+input deposits_min_order_by {
+  blockNumber: order_by
+  blockTimestamp: order_by
+  entryFee: order_by
+  id: order_by
+  isAtomWallet: order_by
+  isTriple: order_by
+  receiverId: order_by
+  receiverTotalSharesInVault: order_by
+  senderAssetsAfterTotalFees: order_by
+  senderId: order_by
+  sharesForReceiver: order_by
+  vaultId: order_by
+}
+
+"""
+Ordering options when selecting data from "Deposit".
+"""
+input deposits_order_by {
+  blockNumber: order_by
+  blockTimestamp: order_by
+  entryFee: order_by
+  id: order_by
+  isAtomWallet: order_by
+  isTriple: order_by
+  receiver: accounts_order_by
+  receiverId: order_by
+  receiverTotalSharesInVault: order_by
+  sender: accounts_order_by
+  senderAssetsAfterTotalFees: order_by
+  senderId: order_by
+  sharesForReceiver: order_by
+  transactionHash: order_by
+  vault: vaults_order_by
+  vaultId: order_by
+}
+
+"""
+select columns of table "Deposit"
+"""
+enum deposits_select_column {
+  """
+  column name
+  """
+  blockNumber
+  """
+  column name
+  """
+  blockTimestamp
+  """
+  column name
+  """
+  entryFee
+  """
+  column name
+  """
+  id
+  """
+  column name
+  """
+  isAtomWallet
+  """
+  column name
+  """
+  isTriple
+  """
+  column name
+  """
+  receiverId
+  """
+  column name
+  """
+  receiverTotalSharesInVault
+  """
+  column name
+  """
+  senderAssetsAfterTotalFees
+  """
+  column name
+  """
+  senderId
+  """
+  column name
+  """
+  sharesForReceiver
+  """
+  column name
+  """
+  transactionHash
+  """
+  column name
+  """
+  vaultId
+}
+
+"""
+aggregate stddev on columns
+"""
+type deposits_stddev_fields {
+  blockNumber: Float
+  blockTimestamp: Float
+  entryFee: Float
+  isAtomWallet: Float
+  isTriple: Float
+  receiverTotalSharesInVault: Float
+  senderAssetsAfterTotalFees: Float
+  sharesForReceiver: Float
+  vaultId: Float
+}
+
+"""
+order by stddev() on columns of table "Deposit"
+"""
+input deposits_stddev_order_by {
+  blockNumber: order_by
+  blockTimestamp: order_by
+  entryFee: order_by
+  isAtomWallet: order_by
+  isTriple: order_by
+  receiverTotalSharesInVault: order_by
+  senderAssetsAfterTotalFees: order_by
+  sharesForReceiver: order_by
+  vaultId: order_by
+}
+
+"""
+aggregate stddev_pop on columns
+"""
+type deposits_stddev_pop_fields {
+  blockNumber: Float
+  blockTimestamp: Float
+  entryFee: Float
+  isAtomWallet: Float
+  isTriple: Float
+  receiverTotalSharesInVault: Float
+  senderAssetsAfterTotalFees: Float
+  sharesForReceiver: Float
+  vaultId: Float
+}
+
+"""
+order by stddev_pop() on columns of table "Deposit"
+"""
+input deposits_stddev_pop_order_by {
+  blockNumber: order_by
+  blockTimestamp: order_by
+  entryFee: order_by
+  isAtomWallet: order_by
+  isTriple: order_by
+  receiverTotalSharesInVault: order_by
+  senderAssetsAfterTotalFees: order_by
+  sharesForReceiver: order_by
+  vaultId: order_by
+}
+
+"""
+aggregate stddev_samp on columns
+"""
+type deposits_stddev_samp_fields {
+  blockNumber: Float
+  blockTimestamp: Float
+  entryFee: Float
+  isAtomWallet: Float
+  isTriple: Float
+  receiverTotalSharesInVault: Float
+  senderAssetsAfterTotalFees: Float
+  sharesForReceiver: Float
+  vaultId: Float
+}
+
+"""
+order by stddev_samp() on columns of table "Deposit"
+"""
+input deposits_stddev_samp_order_by {
+  blockNumber: order_by
+  blockTimestamp: order_by
+  entryFee: order_by
+  isAtomWallet: order_by
+  isTriple: order_by
+  receiverTotalSharesInVault: order_by
+  senderAssetsAfterTotalFees: order_by
+  sharesForReceiver: order_by
+  vaultId: order_by
+}
+
+"""
+aggregate sum on columns
+"""
+type deposits_sum_fields {
+  blockNumber: numeric
+  blockTimestamp: numeric
+  entryFee: numeric
+  isAtomWallet: Int
+  isTriple: Int
+  receiverTotalSharesInVault: numeric
+  senderAssetsAfterTotalFees: numeric
+  sharesForReceiver: numeric
+  vaultId: numeric
+}
+
+"""
+order by sum() on columns of table "Deposit"
+"""
+input deposits_sum_order_by {
+  blockNumber: order_by
+  blockTimestamp: order_by
+  entryFee: order_by
+  isAtomWallet: order_by
+  isTriple: order_by
+  receiverTotalSharesInVault: order_by
+  senderAssetsAfterTotalFees: order_by
+  sharesForReceiver: order_by
+  vaultId: order_by
+}
+
+"""
+aggregate var_pop on columns
+"""
+type deposits_var_pop_fields {
+  blockNumber: Float
+  blockTimestamp: Float
+  entryFee: Float
+  isAtomWallet: Float
+  isTriple: Float
+  receiverTotalSharesInVault: Float
+  senderAssetsAfterTotalFees: Float
+  sharesForReceiver: Float
+  vaultId: Float
+}
+
+"""
+order by var_pop() on columns of table "Deposit"
+"""
+input deposits_var_pop_order_by {
+  blockNumber: order_by
+  blockTimestamp: order_by
+  entryFee: order_by
+  isAtomWallet: order_by
+  isTriple: order_by
+  receiverTotalSharesInVault: order_by
+  senderAssetsAfterTotalFees: order_by
+  sharesForReceiver: order_by
+  vaultId: order_by
+}
+
+"""
+aggregate var_samp on columns
+"""
+type deposits_var_samp_fields {
+  blockNumber: Float
+  blockTimestamp: Float
+  entryFee: Float
+  isAtomWallet: Float
+  isTriple: Float
+  receiverTotalSharesInVault: Float
+  senderAssetsAfterTotalFees: Float
+  sharesForReceiver: Float
+  vaultId: Float
+}
+
+"""
+order by var_samp() on columns of table "Deposit"
+"""
+input deposits_var_samp_order_by {
+  blockNumber: order_by
+  blockTimestamp: order_by
+  entryFee: order_by
+  isAtomWallet: order_by
+  isTriple: order_by
+  receiverTotalSharesInVault: order_by
+  senderAssetsAfterTotalFees: order_by
+  sharesForReceiver: order_by
+  vaultId: order_by
+}
+
+"""
+aggregate variance on columns
+"""
+type deposits_variance_fields {
+  blockNumber: Float
+  blockTimestamp: Float
+  entryFee: Float
+  isAtomWallet: Float
+  isTriple: Float
+  receiverTotalSharesInVault: Float
+  senderAssetsAfterTotalFees: Float
+  sharesForReceiver: Float
+  vaultId: Float
+}
+
+"""
+order by variance() on columns of table "Deposit"
+"""
+input deposits_variance_order_by {
+  blockNumber: order_by
+  blockTimestamp: order_by
+  entryFee: order_by
+  isAtomWallet: order_by
+  isTriple: order_by
+  receiverTotalSharesInVault: order_by
+  senderAssetsAfterTotalFees: order_by
+  sharesForReceiver: order_by
+  vaultId: order_by
+}
+
+"""
+columns and relationships of "Event"
+"""
+type events {
+  """
+  An object relationship
+  """
+  atom: atoms
+  atomId: numeric
+  blockNumber: numeric!
+  blockTimestamp: numeric!
+  """
+  An object relationship
+  """
+  deposit: deposits
+  depositId: String
+  """
+  An object relationship
+  """
+  feeTransfer: feeTranfers
+  feeTransferId: String
+  id: String!
+  """
+  An object relationship
+  """
+  redemption: redemptions
+  redemptionId: String
+  transactionHash: bytea!
+  """
+  An object relationship
+  """
+  triple: triples
+  tripleId: numeric
+  type: String!
+}
+
+"""
+aggregated selection of "Event"
+"""
+type events_aggregate {
+  aggregate: events_aggregate_fields
+  nodes: [events!]!
+}
+
+"""
+aggregate fields of "Event"
+"""
+type events_aggregate_fields {
+  avg: events_avg_fields
+  count(columns: [events_select_column!], distinct: Boolean): Int!
+  max: events_max_fields
+  min: events_min_fields
+  stddev: events_stddev_fields
+  stddev_pop: events_stddev_pop_fields
+  stddev_samp: events_stddev_samp_fields
+  sum: events_sum_fields
+  var_pop: events_var_pop_fields
+  var_samp: events_var_samp_fields
+  variance: events_variance_fields
+}
+
+"""
+aggregate avg on columns
+"""
+type events_avg_fields {
+  atomId: Float
+  blockNumber: Float
+  blockTimestamp: Float
+  tripleId: Float
+}
+
+"""
+Boolean expression to filter rows from the table "Event". All fields are combined with a logical 'AND'.
+"""
+input events_bool_exp {
+  _and: [events_bool_exp!]
+  _not: events_bool_exp
+  _or: [events_bool_exp!]
+  atom: atoms_bool_exp
+  atomId: numeric_comparison_exp
+  blockNumber: numeric_comparison_exp
+  blockTimestamp: numeric_comparison_exp
+  deposit: deposits_bool_exp
+  depositId: String_comparison_exp
+  feeTransfer: feeTranfers_bool_exp
+  feeTransferId: String_comparison_exp
+  id: String_comparison_exp
+  redemption: redemptions_bool_exp
+  redemptionId: String_comparison_exp
+  transactionHash: bytea_comparison_exp
+  triple: triples_bool_exp
+  tripleId: numeric_comparison_exp
+  type: String_comparison_exp
+}
+
+"""
+aggregate max on columns
+"""
+type events_max_fields {
+  atomId: numeric
+  blockNumber: numeric
+  blockTimestamp: numeric
+  depositId: String
+  feeTransferId: String
+  id: String
+  redemptionId: String
+  tripleId: numeric
+  type: String
+}
+
+"""
+aggregate min on columns
+"""
+type events_min_fields {
+  atomId: numeric
+  blockNumber: numeric
+  blockTimestamp: numeric
+  depositId: String
+  feeTransferId: String
+  id: String
+  redemptionId: String
+  tripleId: numeric
+  type: String
+}
+
+"""
+Ordering options when selecting data from "Event".
+"""
+input events_order_by {
+  atom: atoms_order_by
+  atomId: order_by
+  blockNumber: order_by
+  blockTimestamp: order_by
+  deposit: deposits_order_by
+  depositId: order_by
+  feeTransfer: feeTranfers_order_by
+  feeTransferId: order_by
+  id: order_by
+  redemption: redemptions_order_by
+  redemptionId: order_by
+  transactionHash: order_by
+  triple: triples_order_by
+  tripleId: order_by
+  type: order_by
+}
+
+"""
+select columns of table "Event"
+"""
+enum events_select_column {
+  """
+  column name
+  """
+  atomId
+  """
+  column name
+  """
+  blockNumber
+  """
+  column name
+  """
+  blockTimestamp
+  """
+  column name
+  """
+  depositId
+  """
+  column name
+  """
+  feeTransferId
+  """
+  column name
+  """
+  id
+  """
+  column name
+  """
+  redemptionId
+  """
+  column name
+  """
+  transactionHash
+  """
+  column name
+  """
+  tripleId
+  """
+  column name
+  """
+  type
+}
+
+"""
+aggregate stddev on columns
+"""
+type events_stddev_fields {
+  atomId: Float
+  blockNumber: Float
+  blockTimestamp: Float
+  tripleId: Float
+}
+
+"""
+aggregate stddev_pop on columns
+"""
+type events_stddev_pop_fields {
+  atomId: Float
+  blockNumber: Float
+  blockTimestamp: Float
+  tripleId: Float
+}
+
+"""
+aggregate stddev_samp on columns
+"""
+type events_stddev_samp_fields {
+  atomId: Float
+  blockNumber: Float
+  blockTimestamp: Float
+  tripleId: Float
+}
+
+"""
+aggregate sum on columns
+"""
+type events_sum_fields {
+  atomId: numeric
+  blockNumber: numeric
+  blockTimestamp: numeric
+  tripleId: numeric
+}
+
+"""
+aggregate var_pop on columns
+"""
+type events_var_pop_fields {
+  atomId: Float
+  blockNumber: Float
+  blockTimestamp: Float
+  tripleId: Float
+}
+
+"""
+aggregate var_samp on columns
+"""
+type events_var_samp_fields {
+  atomId: Float
+  blockNumber: Float
+  blockTimestamp: Float
+  tripleId: Float
+}
+
+"""
+aggregate variance on columns
+"""
+type events_variance_fields {
+  atomId: Float
+  blockNumber: Float
+  blockTimestamp: Float
+  tripleId: Float
+}
+
+"""
+columns and relationships of "FeeTransfer"
+"""
+type feeTranfers {
+  amount: numeric!
+  blockNumber: numeric!
+  blockTimestamp: numeric!
+  id: String!
+  """
+  An object relationship
+  """
+  receiver: accounts
+  receiverId: String!
+  """
+  An object relationship
+  """
+  sender: accounts
+  senderId: String!
+  transactionHash: bytea!
+}
+
+"""
+aggregated selection of "FeeTransfer"
+"""
+type feeTranfers_aggregate {
+  aggregate: feeTranfers_aggregate_fields
+  nodes: [feeTranfers!]!
+}
+
+"""
+aggregate fields of "FeeTransfer"
+"""
+type feeTranfers_aggregate_fields {
+  avg: feeTranfers_avg_fields
+  count(columns: [feeTranfers_select_column!], distinct: Boolean): Int!
+  max: feeTranfers_max_fields
+  min: feeTranfers_min_fields
+  stddev: feeTranfers_stddev_fields
+  stddev_pop: feeTranfers_stddev_pop_fields
+  stddev_samp: feeTranfers_stddev_samp_fields
+  sum: feeTranfers_sum_fields
+  var_pop: feeTranfers_var_pop_fields
+  var_samp: feeTranfers_var_samp_fields
+  variance: feeTranfers_variance_fields
+}
+
+"""
+order by aggregate values of table "FeeTransfer"
+"""
+input feeTranfers_aggregate_order_by {
+  avg: feeTranfers_avg_order_by
+  count: order_by
+  max: feeTranfers_max_order_by
+  min: feeTranfers_min_order_by
+  stddev: feeTranfers_stddev_order_by
+  stddev_pop: feeTranfers_stddev_pop_order_by
+  stddev_samp: feeTranfers_stddev_samp_order_by
+  sum: feeTranfers_sum_order_by
+  var_pop: feeTranfers_var_pop_order_by
+  var_samp: feeTranfers_var_samp_order_by
+  variance: feeTranfers_variance_order_by
+}
+
+"""
+aggregate avg on columns
+"""
+type feeTranfers_avg_fields {
+  amount: Float
+  blockNumber: Float
+  blockTimestamp: Float
+}
+
+"""
+order by avg() on columns of table "FeeTransfer"
+"""
+input feeTranfers_avg_order_by {
+  amount: order_by
+  blockNumber: order_by
+  blockTimestamp: order_by
+}
+
+"""
+Boolean expression to filter rows from the table "FeeTransfer". All fields are combined with a logical 'AND'.
+"""
+input feeTranfers_bool_exp {
+  _and: [feeTranfers_bool_exp!]
+  _not: feeTranfers_bool_exp
+  _or: [feeTranfers_bool_exp!]
+  amount: numeric_comparison_exp
+  blockNumber: numeric_comparison_exp
+  blockTimestamp: numeric_comparison_exp
+  id: String_comparison_exp
+  receiver: accounts_bool_exp
+  receiverId: String_comparison_exp
+  sender: accounts_bool_exp
+  senderId: String_comparison_exp
+  transactionHash: bytea_comparison_exp
+}
+
+"""
+aggregate max on columns
+"""
+type feeTranfers_max_fields {
+  amount: numeric
+  blockNumber: numeric
+  blockTimestamp: numeric
+  id: String
+  receiverId: String
+  senderId: String
+}
+
+"""
+order by max() on columns of table "FeeTransfer"
+"""
+input feeTranfers_max_order_by {
+  amount: order_by
+  blockNumber: order_by
+  blockTimestamp: order_by
+  id: order_by
+  receiverId: order_by
+  senderId: order_by
+}
+
+"""
+aggregate min on columns
+"""
+type feeTranfers_min_fields {
+  amount: numeric
+  blockNumber: numeric
+  blockTimestamp: numeric
+  id: String
+  receiverId: String
+  senderId: String
+}
+
+"""
+order by min() on columns of table "FeeTransfer"
+"""
+input feeTranfers_min_order_by {
+  amount: order_by
+  blockNumber: order_by
+  blockTimestamp: order_by
+  id: order_by
+  receiverId: order_by
+  senderId: order_by
+}
+
+"""
+Ordering options when selecting data from "FeeTransfer".
+"""
+input feeTranfers_order_by {
+  amount: order_by
+  blockNumber: order_by
+  blockTimestamp: order_by
+  id: order_by
+  receiver: accounts_order_by
+  receiverId: order_by
+  sender: accounts_order_by
+  senderId: order_by
+  transactionHash: order_by
+}
+
+"""
+select columns of table "FeeTransfer"
+"""
+enum feeTranfers_select_column {
+  """
+  column name
+  """
+  amount
+  """
+  column name
+  """
+  blockNumber
+  """
+  column name
+  """
+  blockTimestamp
+  """
+  column name
+  """
+  id
+  """
+  column name
+  """
+  receiverId
+  """
+  column name
+  """
+  senderId
+  """
+  column name
+  """
+  transactionHash
+}
+
+"""
+aggregate stddev on columns
+"""
+type feeTranfers_stddev_fields {
+  amount: Float
+  blockNumber: Float
+  blockTimestamp: Float
+}
+
+"""
+order by stddev() on columns of table "FeeTransfer"
+"""
+input feeTranfers_stddev_order_by {
+  amount: order_by
+  blockNumber: order_by
+  blockTimestamp: order_by
+}
+
+"""
+aggregate stddev_pop on columns
+"""
+type feeTranfers_stddev_pop_fields {
+  amount: Float
+  blockNumber: Float
+  blockTimestamp: Float
+}
+
+"""
+order by stddev_pop() on columns of table "FeeTransfer"
+"""
+input feeTranfers_stddev_pop_order_by {
+  amount: order_by
+  blockNumber: order_by
+  blockTimestamp: order_by
+}
+
+"""
+aggregate stddev_samp on columns
+"""
+type feeTranfers_stddev_samp_fields {
+  amount: Float
+  blockNumber: Float
+  blockTimestamp: Float
+}
+
+"""
+order by stddev_samp() on columns of table "FeeTransfer"
+"""
+input feeTranfers_stddev_samp_order_by {
+  amount: order_by
+  blockNumber: order_by
+  blockTimestamp: order_by
+}
+
+"""
+aggregate sum on columns
+"""
+type feeTranfers_sum_fields {
+  amount: numeric
+  blockNumber: numeric
+  blockTimestamp: numeric
+}
+
+"""
+order by sum() on columns of table "FeeTransfer"
+"""
+input feeTranfers_sum_order_by {
+  amount: order_by
+  blockNumber: order_by
+  blockTimestamp: order_by
+}
+
+"""
+aggregate var_pop on columns
+"""
+type feeTranfers_var_pop_fields {
+  amount: Float
+  blockNumber: Float
+  blockTimestamp: Float
+}
+
+"""
+order by var_pop() on columns of table "FeeTransfer"
+"""
+input feeTranfers_var_pop_order_by {
+  amount: order_by
+  blockNumber: order_by
+  blockTimestamp: order_by
+}
+
+"""
+aggregate var_samp on columns
+"""
+type feeTranfers_var_samp_fields {
+  amount: Float
+  blockNumber: Float
+  blockTimestamp: Float
+}
+
+"""
+order by var_samp() on columns of table "FeeTransfer"
+"""
+input feeTranfers_var_samp_order_by {
+  amount: order_by
+  blockNumber: order_by
+  blockTimestamp: order_by
+}
+
+"""
+aggregate variance on columns
+"""
+type feeTranfers_variance_fields {
+  amount: Float
+  blockNumber: Float
+  blockTimestamp: Float
+}
+
+"""
+order by variance() on columns of table "FeeTransfer"
+"""
+input feeTranfers_variance_order_by {
+  amount: order_by
+  blockNumber: order_by
+  blockTimestamp: order_by
+}
+
+scalar float8
+
+"""
+Boolean expression to compare columns of type "float8". All fields are combined with logical 'AND'.
+"""
+input float8_comparison_exp {
+  _eq: float8
+  _gt: float8
+  _gte: float8
+  _in: [float8!]
+  _is_null: Boolean
+  _lt: float8
+  _lte: float8
+  _neq: float8
+  _nin: [float8!]
+}
+
+input following_args {
+  address: String
+}
+
+scalar numeric
+
+"""
+Boolean expression to compare columns of type "numeric". All fields are combined with logical 'AND'.
+"""
+input numeric_comparison_exp {
+  _eq: numeric
+  _gt: numeric
+  _gte: numeric
+  _in: [numeric!]
+  _is_null: Boolean
+  _lt: numeric
+  _lte: numeric
+  _neq: numeric
+  _nin: [numeric!]
+}
+
+"""
+column ordering options
+"""
+enum order_by {
+  """
+  in ascending order, nulls last
+  """
+  asc
+  """
+  in ascending order, nulls first
+  """
+  asc_nulls_first
+  """
+  in ascending order, nulls last
+  """
+  asc_nulls_last
+  """
+  in descending order, nulls first
+  """
+  desc
+  """
+  in descending order, nulls first
+  """
+  desc_nulls_first
+  """
+  in descending order, nulls last
+  """
+  desc_nulls_last
+}
+
+"""
+columns and relationships of "Organization"
+"""
+type organizations {
+  """
+  An object relationship
+  """
+  atom: atoms
+  atomId: numeric!
+  description: String
+  email: String
+  id: numeric!
+  image: String
+  name: String
+  url: String
+}
+
+"""
+aggregated selection of "Organization"
+"""
+type organizations_aggregate {
+  aggregate: organizations_aggregate_fields
+  nodes: [organizations!]!
+}
+
+"""
+aggregate fields of "Organization"
+"""
+type organizations_aggregate_fields {
+  avg: organizations_avg_fields
+  count(columns: [organizations_select_column!], distinct: Boolean): Int!
+  max: organizations_max_fields
+  min: organizations_min_fields
+  stddev: organizations_stddev_fields
+  stddev_pop: organizations_stddev_pop_fields
+  stddev_samp: organizations_stddev_samp_fields
+  sum: organizations_sum_fields
+  var_pop: organizations_var_pop_fields
+  var_samp: organizations_var_samp_fields
+  variance: organizations_variance_fields
+}
+
+"""
+aggregate avg on columns
+"""
+type organizations_avg_fields {
+  atomId: Float
+  id: Float
+}
+
+"""
+Boolean expression to filter rows from the table "Organization". All fields are combined with a logical 'AND'.
+"""
+input organizations_bool_exp {
+  _and: [organizations_bool_exp!]
+  _not: organizations_bool_exp
+  _or: [organizations_bool_exp!]
+  atom: atoms_bool_exp
+  atomId: numeric_comparison_exp
+  description: String_comparison_exp
+  email: String_comparison_exp
+  id: numeric_comparison_exp
+  image: String_comparison_exp
+  name: String_comparison_exp
+  url: String_comparison_exp
+}
+
+"""
+aggregate max on columns
+"""
+type organizations_max_fields {
+  atomId: numeric
+  description: String
+  email: String
+  id: numeric
+  image: String
+  name: String
+  url: String
+}
+
+"""
+aggregate min on columns
+"""
+type organizations_min_fields {
+  atomId: numeric
+  description: String
+  email: String
+  id: numeric
+  image: String
+  name: String
+  url: String
+}
+
+"""
+Ordering options when selecting data from "Organization".
+"""
+input organizations_order_by {
+  atom: atoms_order_by
+  atomId: order_by
+  description: order_by
+  email: order_by
+  id: order_by
+  image: order_by
+  name: order_by
+  url: order_by
+}
+
+"""
+select columns of table "Organization"
+"""
+enum organizations_select_column {
+  """
+  column name
+  """
+  atomId
+  """
+  column name
+  """
+  description
+  """
+  column name
+  """
+  email
+  """
+  column name
+  """
+  id
+  """
+  column name
+  """
+  image
+  """
+  column name
+  """
+  name
+  """
+  column name
+  """
+  url
+}
+
+"""
+aggregate stddev on columns
+"""
+type organizations_stddev_fields {
+  atomId: Float
+  id: Float
+}
+
+"""
+aggregate stddev_pop on columns
+"""
+type organizations_stddev_pop_fields {
+  atomId: Float
+  id: Float
+}
+
+"""
+aggregate stddev_samp on columns
+"""
+type organizations_stddev_samp_fields {
+  atomId: Float
+  id: Float
+}
+
+"""
+aggregate sum on columns
+"""
+type organizations_sum_fields {
+  atomId: numeric
+  id: numeric
+}
+
+"""
+aggregate var_pop on columns
+"""
+type organizations_var_pop_fields {
+  atomId: Float
+  id: Float
+}
+
+"""
+aggregate var_samp on columns
+"""
+type organizations_var_samp_fields {
+  atomId: Float
+  id: Float
+}
+
+"""
+aggregate variance on columns
+"""
+type organizations_variance_fields {
+  atomId: Float
+  id: Float
+}
+
+"""
+columns and relationships of "Person"
+"""
+type persons {
+  """
+  An object relationship
+  """
+  atom: atoms
+  atomId: numeric!
+  description: String
+  email: String
+  id: numeric!
+  identifier: String
+  image: String
+  name: String
+  url: String
+}
+
+"""
+aggregated selection of "Person"
+"""
+type persons_aggregate {
+  aggregate: persons_aggregate_fields
+  nodes: [persons!]!
+}
+
+"""
+aggregate fields of "Person"
+"""
+type persons_aggregate_fields {
+  avg: persons_avg_fields
+  count(columns: [persons_select_column!], distinct: Boolean): Int!
+  max: persons_max_fields
+  min: persons_min_fields
+  stddev: persons_stddev_fields
+  stddev_pop: persons_stddev_pop_fields
+  stddev_samp: persons_stddev_samp_fields
+  sum: persons_sum_fields
+  var_pop: persons_var_pop_fields
+  var_samp: persons_var_samp_fields
+  variance: persons_variance_fields
+}
+
+"""
+aggregate avg on columns
+"""
+type persons_avg_fields {
+  atomId: Float
+  id: Float
+}
+
+"""
+Boolean expression to filter rows from the table "Person". All fields are combined with a logical 'AND'.
+"""
+input persons_bool_exp {
+  _and: [persons_bool_exp!]
+  _not: persons_bool_exp
+  _or: [persons_bool_exp!]
+  atom: atoms_bool_exp
+  atomId: numeric_comparison_exp
+  description: String_comparison_exp
+  email: String_comparison_exp
+  id: numeric_comparison_exp
+  identifier: String_comparison_exp
+  image: String_comparison_exp
+  name: String_comparison_exp
+  url: String_comparison_exp
+}
+
+"""
+aggregate max on columns
+"""
+type persons_max_fields {
+  atomId: numeric
+  description: String
+  email: String
+  id: numeric
+  identifier: String
+  image: String
+  name: String
+  url: String
+}
+
+"""
+aggregate min on columns
+"""
+type persons_min_fields {
+  atomId: numeric
+  description: String
+  email: String
+  id: numeric
+  identifier: String
+  image: String
+  name: String
+  url: String
+}
+
+"""
+Ordering options when selecting data from "Person".
+"""
+input persons_order_by {
+  atom: atoms_order_by
+  atomId: order_by
+  description: order_by
+  email: order_by
+  id: order_by
+  identifier: order_by
+  image: order_by
+  name: order_by
+  url: order_by
+}
+
+"""
+select columns of table "Person"
+"""
+enum persons_select_column {
+  """
+  column name
+  """
+  atomId
+  """
+  column name
+  """
+  description
+  """
+  column name
+  """
+  email
+  """
+  column name
+  """
+  id
+  """
+  column name
+  """
+  identifier
+  """
+  column name
+  """
+  image
+  """
+  column name
+  """
+  name
+  """
+  column name
+  """
+  url
+}
+
+"""
+aggregate stddev on columns
+"""
+type persons_stddev_fields {
+  atomId: Float
+  id: Float
+}
+
+"""
+aggregate stddev_pop on columns
+"""
+type persons_stddev_pop_fields {
+  atomId: Float
+  id: Float
+}
+
+"""
+aggregate stddev_samp on columns
+"""
+type persons_stddev_samp_fields {
+  atomId: Float
+  id: Float
+}
+
+"""
+aggregate sum on columns
+"""
+type persons_sum_fields {
+  atomId: numeric
+  id: numeric
+}
+
+"""
+aggregate var_pop on columns
+"""
+type persons_var_pop_fields {
+  atomId: Float
+  id: Float
+}
+
+"""
+aggregate var_samp on columns
+"""
+type persons_var_samp_fields {
+  atomId: Float
+  id: Float
+}
+
+"""
+aggregate variance on columns
+"""
+type persons_variance_fields {
+  atomId: Float
+  id: Float
+}
+
+"""
+columns and relationships of "Position"
+"""
+type positions {
+  """
+  An object relationship
+  """
+  account: accounts
+  accountId: String!
+  id: String!
+  shares: numeric!
+  """
+  An object relationship
+  """
+  vault: vaults
+  vaultId: numeric!
+}
+
+"""
+aggregated selection of "Position"
+"""
+type positions_aggregate {
+  aggregate: positions_aggregate_fields
+  nodes: [positions!]!
+}
+
+"""
+aggregate fields of "Position"
+"""
+type positions_aggregate_fields {
+  avg: positions_avg_fields
+  count(columns: [positions_select_column!], distinct: Boolean): Int!
+  max: positions_max_fields
+  min: positions_min_fields
+  stddev: positions_stddev_fields
+  stddev_pop: positions_stddev_pop_fields
+  stddev_samp: positions_stddev_samp_fields
+  sum: positions_sum_fields
+  var_pop: positions_var_pop_fields
+  var_samp: positions_var_samp_fields
+  variance: positions_variance_fields
+}
+
+"""
+order by aggregate values of table "Position"
+"""
+input positions_aggregate_order_by {
+  avg: positions_avg_order_by
+  count: order_by
+  max: positions_max_order_by
+  min: positions_min_order_by
+  stddev: positions_stddev_order_by
+  stddev_pop: positions_stddev_pop_order_by
+  stddev_samp: positions_stddev_samp_order_by
+  sum: positions_sum_order_by
+  var_pop: positions_var_pop_order_by
+  var_samp: positions_var_samp_order_by
+  variance: positions_variance_order_by
+}
+
+"""
+aggregate avg on columns
+"""
+type positions_avg_fields {
+  shares: Float
+  vaultId: Float
+}
+
+"""
+order by avg() on columns of table "Position"
+"""
+input positions_avg_order_by {
+  shares: order_by
+  vaultId: order_by
+}
+
+"""
+Boolean expression to filter rows from the table "Position". All fields are combined with a logical 'AND'.
+"""
+input positions_bool_exp {
+  _and: [positions_bool_exp!]
+  _not: positions_bool_exp
+  _or: [positions_bool_exp!]
+  account: accounts_bool_exp
+  accountId: String_comparison_exp
+  id: String_comparison_exp
+  shares: numeric_comparison_exp
+  vault: vaults_bool_exp
+  vaultId: numeric_comparison_exp
+}
+
+"""
+aggregate max on columns
+"""
+type positions_max_fields {
+  accountId: String
+  id: String
+  shares: numeric
+  vaultId: numeric
+}
+
+"""
+order by max() on columns of table "Position"
+"""
+input positions_max_order_by {
+  accountId: order_by
+  id: order_by
+  shares: order_by
+  vaultId: order_by
+}
+
+"""
+aggregate min on columns
+"""
+type positions_min_fields {
+  accountId: String
+  id: String
+  shares: numeric
+  vaultId: numeric
+}
+
+"""
+order by min() on columns of table "Position"
+"""
+input positions_min_order_by {
+  accountId: order_by
+  id: order_by
+  shares: order_by
+  vaultId: order_by
+}
+
+"""
+Ordering options when selecting data from "Position".
+"""
+input positions_order_by {
+  account: accounts_order_by
+  accountId: order_by
+  id: order_by
+  shares: order_by
+  vault: vaults_order_by
+  vaultId: order_by
+}
+
+"""
+select columns of table "Position"
+"""
+enum positions_select_column {
+  """
+  column name
+  """
+  accountId
+  """
+  column name
+  """
+  id
+  """
+  column name
+  """
+  shares
+  """
+  column name
+  """
+  vaultId
+}
+
+"""
+aggregate stddev on columns
+"""
+type positions_stddev_fields {
+  shares: Float
+  vaultId: Float
+}
+
+"""
+order by stddev() on columns of table "Position"
+"""
+input positions_stddev_order_by {
+  shares: order_by
+  vaultId: order_by
+}
+
+"""
+aggregate stddev_pop on columns
+"""
+type positions_stddev_pop_fields {
+  shares: Float
+  vaultId: Float
+}
+
+"""
+order by stddev_pop() on columns of table "Position"
+"""
+input positions_stddev_pop_order_by {
+  shares: order_by
+  vaultId: order_by
+}
+
+"""
+aggregate stddev_samp on columns
+"""
+type positions_stddev_samp_fields {
+  shares: Float
+  vaultId: Float
+}
+
+"""
+order by stddev_samp() on columns of table "Position"
+"""
+input positions_stddev_samp_order_by {
+  shares: order_by
+  vaultId: order_by
+}
+
+"""
+aggregate sum on columns
+"""
+type positions_sum_fields {
+  shares: numeric
+  vaultId: numeric
+}
+
+"""
+order by sum() on columns of table "Position"
+"""
+input positions_sum_order_by {
+  shares: order_by
+  vaultId: order_by
+}
+
+"""
+aggregate var_pop on columns
+"""
+type positions_var_pop_fields {
+  shares: Float
+  vaultId: Float
+}
+
+"""
+order by var_pop() on columns of table "Position"
+"""
+input positions_var_pop_order_by {
+  shares: order_by
+  vaultId: order_by
+}
+
+"""
+aggregate var_samp on columns
+"""
+type positions_var_samp_fields {
+  shares: Float
+  vaultId: Float
+}
+
+"""
+order by var_samp() on columns of table "Position"
+"""
+input positions_var_samp_order_by {
+  shares: order_by
+  vaultId: order_by
+}
+
+"""
+aggregate variance on columns
+"""
+type positions_variance_fields {
+  shares: Float
+  vaultId: Float
+}
+
+"""
+order by variance() on columns of table "Position"
+"""
+input positions_variance_order_by {
+  shares: order_by
+  vaultId: order_by
+}
+
+"""
+columns and relationships of "PredicateObject"
+"""
+type predicateObjects {
+  claimCount: Int!
+  id: String!
+  """
+  An object relationship
+  """
+  object: atoms
+  objectId: numeric!
+  """
+  An object relationship
+  """
+  predicate: atoms
+  predicateId: numeric!
+  tripleCount: Int!
+}
+
+"""
+aggregated selection of "PredicateObject"
+"""
+type predicateObjects_aggregate {
+  aggregate: predicateObjects_aggregate_fields
+  nodes: [predicateObjects!]!
+}
+
+"""
+aggregate fields of "PredicateObject"
+"""
+type predicateObjects_aggregate_fields {
+  avg: predicateObjects_avg_fields
+  count(columns: [predicateObjects_select_column!], distinct: Boolean): Int!
+  max: predicateObjects_max_fields
+  min: predicateObjects_min_fields
+  stddev: predicateObjects_stddev_fields
+  stddev_pop: predicateObjects_stddev_pop_fields
+  stddev_samp: predicateObjects_stddev_samp_fields
+  sum: predicateObjects_sum_fields
+  var_pop: predicateObjects_var_pop_fields
+  var_samp: predicateObjects_var_samp_fields
+  variance: predicateObjects_variance_fields
+}
+
+"""
+aggregate avg on columns
+"""
+type predicateObjects_avg_fields {
+  claimCount: Float
+  objectId: Float
+  predicateId: Float
+  tripleCount: Float
+}
+
+"""
+Boolean expression to filter rows from the table "PredicateObject". All fields are combined with a logical 'AND'.
+"""
+input predicateObjects_bool_exp {
+  _and: [predicateObjects_bool_exp!]
+  _not: predicateObjects_bool_exp
+  _or: [predicateObjects_bool_exp!]
+  claimCount: Int_comparison_exp
+  id: String_comparison_exp
+  object: atoms_bool_exp
+  objectId: numeric_comparison_exp
+  predicate: atoms_bool_exp
+  predicateId: numeric_comparison_exp
+  tripleCount: Int_comparison_exp
+}
+
+"""
+aggregate max on columns
+"""
+type predicateObjects_max_fields {
+  claimCount: Int
+  id: String
+  objectId: numeric
+  predicateId: numeric
+  tripleCount: Int
+}
+
+"""
+aggregate min on columns
+"""
+type predicateObjects_min_fields {
+  claimCount: Int
+  id: String
+  objectId: numeric
+  predicateId: numeric
+  tripleCount: Int
+}
+
+"""
+Ordering options when selecting data from "PredicateObject".
+"""
+input predicateObjects_order_by {
+  claimCount: order_by
+  id: order_by
+  object: atoms_order_by
+  objectId: order_by
+  predicate: atoms_order_by
+  predicateId: order_by
+  tripleCount: order_by
+}
+
+"""
+select columns of table "PredicateObject"
+"""
+enum predicateObjects_select_column {
+  """
+  column name
+  """
+  claimCount
+  """
+  column name
+  """
+  id
+  """
+  column name
+  """
+  objectId
+  """
+  column name
+  """
+  predicateId
+  """
+  column name
+  """
+  tripleCount
+}
+
+"""
+aggregate stddev on columns
+"""
+type predicateObjects_stddev_fields {
+  claimCount: Float
+  objectId: Float
+  predicateId: Float
+  tripleCount: Float
+}
+
+"""
+aggregate stddev_pop on columns
+"""
+type predicateObjects_stddev_pop_fields {
+  claimCount: Float
+  objectId: Float
+  predicateId: Float
+  tripleCount: Float
+}
+
+"""
+aggregate stddev_samp on columns
+"""
+type predicateObjects_stddev_samp_fields {
+  claimCount: Float
+  objectId: Float
+  predicateId: Float
+  tripleCount: Float
+}
+
+"""
+aggregate sum on columns
+"""
+type predicateObjects_sum_fields {
+  claimCount: Int
+  objectId: numeric
+  predicateId: numeric
+  tripleCount: Int
+}
+
+"""
+aggregate var_pop on columns
+"""
+type predicateObjects_var_pop_fields {
+  claimCount: Float
+  objectId: Float
+  predicateId: Float
+  tripleCount: Float
+}
+
+"""
+aggregate var_samp on columns
+"""
+type predicateObjects_var_samp_fields {
+  claimCount: Float
+  objectId: Float
+  predicateId: Float
+  tripleCount: Float
+}
+
+"""
+aggregate variance on columns
+"""
+type predicateObjects_variance_fields {
+  claimCount: Float
+  objectId: Float
+  predicateId: Float
+  tripleCount: Float
+}
+
+type query_root {
+  """
+  fetch data from the table: "Account" using primary key columns
+  """
+  account(id: String!): accounts
+  """
+  fetch data from the table: "Account"
+  """
+  accounts(
+    """
+    distinct select on columns
+    """
+    distinct_on: [accounts_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [accounts_order_by!]
+    """
+    filter the rows returned
+    """
+    where: accounts_bool_exp
+  ): [accounts!]!
+  """
+  fetch aggregated fields from the table: "Account"
+  """
+  accounts_aggregate(
+    """
+    distinct select on columns
+    """
+    distinct_on: [accounts_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [accounts_order_by!]
+    """
+    filter the rows returned
+    """
+    where: accounts_bool_exp
+  ): accounts_aggregate!
+  """
+  execute function "accounts_that_claim_about_account" which returns "Account"
+  """
+  accounts_that_claim_about_account(
+    """
+    input parameters for function "accounts_that_claim_about_account"
+    """
+    args: accounts_that_claim_about_account_args!
+    """
+    distinct select on columns
+    """
+    distinct_on: [accounts_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [accounts_order_by!]
+    """
+    filter the rows returned
+    """
+    where: accounts_bool_exp
+  ): [accounts!]!
+  """
+  execute function "accounts_that_claim_about_account" and query aggregates on result of table type "Account"
+  """
+  accounts_that_claim_about_account_aggregate(
+    """
+    input parameters for function "accounts_that_claim_about_account"
+    """
+    args: accounts_that_claim_about_account_args!
+    """
+    distinct select on columns
+    """
+    distinct_on: [accounts_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [accounts_order_by!]
+    """
+    filter the rows returned
+    """
+    where: accounts_bool_exp
+  ): accounts_aggregate!
+  """
+  fetch data from the table: "Atom" using primary key columns
+  """
+  atom(id: numeric!): atoms
+  """
+  fetch data from the table: "AtomValue" using primary key columns
+  """
+  atomValue(id: numeric!): atomValues
+  """
+  fetch data from the table: "AtomValue"
+  """
+  atomValues(
+    """
+    distinct select on columns
+    """
+    distinct_on: [atomValues_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [atomValues_order_by!]
+    """
+    filter the rows returned
+    """
+    where: atomValues_bool_exp
+  ): [atomValues!]!
+  """
+  fetch aggregated fields from the table: "AtomValue"
+  """
+  atomValues_aggregate(
+    """
+    distinct select on columns
+    """
+    distinct_on: [atomValues_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [atomValues_order_by!]
+    """
+    filter the rows returned
+    """
+    where: atomValues_bool_exp
+  ): atomValues_aggregate!
+  """
+  fetch data from the table: "Atom"
+  """
+  atoms(
+    """
+    distinct select on columns
+    """
+    distinct_on: [atoms_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [atoms_order_by!]
+    """
+    filter the rows returned
+    """
+    where: atoms_bool_exp
+  ): [atoms!]!
+  """
+  fetch aggregated fields from the table: "Atom"
+  """
+  atoms_aggregate(
+    """
+    distinct select on columns
+    """
+    distinct_on: [atoms_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [atoms_order_by!]
+    """
+    filter the rows returned
+    """
+    where: atoms_bool_exp
+  ): atoms_aggregate!
+  """
+  fetch data from the table: "Book" using primary key columns
+  """
+  book(id: numeric!): books
+  """
+  fetch data from the table: "Book"
+  """
+  books(
+    """
+    distinct select on columns
+    """
+    distinct_on: [books_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [books_order_by!]
+    """
+    filter the rows returned
+    """
+    where: books_bool_exp
+  ): [books!]!
+  """
+  fetch aggregated fields from the table: "Book"
+  """
+  books_aggregate(
+    """
+    distinct select on columns
+    """
+    distinct_on: [books_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [books_order_by!]
+    """
+    filter the rows returned
+    """
+    where: books_bool_exp
+  ): books_aggregate!
+  """
+  fetch data from the table: "ChainlinkPrice" using primary key columns
+  """
+  chainLinkPrice(id: numeric!): chainLinkPrices
+  """
+  fetch data from the table: "ChainlinkPrice"
+  """
+  chainLinkPrices(
+    """
+    distinct select on columns
+    """
+    distinct_on: [chainLinkPrices_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [chainLinkPrices_order_by!]
+    """
+    filter the rows returned
+    """
+    where: chainLinkPrices_bool_exp
+  ): [chainLinkPrices!]!
+  """
+  fetch data from the table: "Claim" using primary key columns
+  """
+  claim(id: String!): claims
+  """
+  An array relationship
+  """
+  claims(
+    """
+    distinct select on columns
+    """
+    distinct_on: [claims_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [claims_order_by!]
+    """
+    filter the rows returned
+    """
+    where: claims_bool_exp
+  ): [claims!]!
+  """
+  An aggregate relationship
+  """
+  claims_aggregate(
+    """
+    distinct select on columns
+    """
+    distinct_on: [claims_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [claims_order_by!]
+    """
+    filter the rows returned
+    """
+    where: claims_bool_exp
+  ): claims_aggregate!
+  """
+  execute function "claims_from_following" which returns "Claim"
+  """
+  claims_from_following(
+    """
+    input parameters for function "claims_from_following"
+    """
+    args: claims_from_following_args!
+    """
+    distinct select on columns
+    """
+    distinct_on: [claims_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [claims_order_by!]
+    """
+    filter the rows returned
+    """
+    where: claims_bool_exp
+  ): [claims!]!
+  """
+  execute function "claims_from_following" and query aggregates on result of table type "Claim"
+  """
+  claims_from_following_aggregate(
+    """
+    input parameters for function "claims_from_following"
+    """
+    args: claims_from_following_args!
+    """
+    distinct select on columns
+    """
+    distinct_on: [claims_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [claims_order_by!]
+    """
+    filter the rows returned
+    """
+    where: claims_bool_exp
+  ): claims_aggregate!
+  """
+  fetch data from the table: "Deposit" using primary key columns
+  """
+  deposit(id: String!): deposits
+  """
+  An array relationship
+  """
+  deposits(
+    """
+    distinct select on columns
+    """
+    distinct_on: [deposits_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [deposits_order_by!]
+    """
+    filter the rows returned
+    """
+    where: deposits_bool_exp
+  ): [deposits!]!
+  """
+  An aggregate relationship
+  """
+  deposits_aggregate(
+    """
+    distinct select on columns
+    """
+    distinct_on: [deposits_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [deposits_order_by!]
+    """
+    filter the rows returned
+    """
+    where: deposits_bool_exp
+  ): deposits_aggregate!
+  """
+  fetch data from the table: "Event" using primary key columns
+  """
+  event(id: String!): events
+  """
+  fetch data from the table: "Event"
+  """
+  events(
+    """
+    distinct select on columns
+    """
+    distinct_on: [events_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [events_order_by!]
+    """
+    filter the rows returned
+    """
+    where: events_bool_exp
+  ): [events!]!
+  """
+  fetch aggregated fields from the table: "Event"
+  """
+  events_aggregate(
+    """
+    distinct select on columns
+    """
+    distinct_on: [events_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [events_order_by!]
+    """
+    filter the rows returned
+    """
+    where: events_bool_exp
+  ): events_aggregate!
+  """
+  fetch data from the table: "FeeTransfer"
+  """
+  feeTranfers(
+    """
+    distinct select on columns
+    """
+    distinct_on: [feeTranfers_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [feeTranfers_order_by!]
+    """
+    filter the rows returned
+    """
+    where: feeTranfers_bool_exp
+  ): [feeTranfers!]!
+  """
+  fetch aggregated fields from the table: "FeeTransfer"
+  """
+  feeTranfers_aggregate(
+    """
+    distinct select on columns
+    """
+    distinct_on: [feeTranfers_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [feeTranfers_order_by!]
+    """
+    filter the rows returned
+    """
+    where: feeTranfers_bool_exp
+  ): feeTranfers_aggregate!
+  """
+  fetch data from the table: "FeeTransfer" using primary key columns
+  """
+  feeTransfers(id: String!): feeTranfers
+  """
+  execute function "following" which returns "Account"
+  """
+  following(
+    """
+    input parameters for function "following"
+    """
+    args: following_args!
+    """
+    distinct select on columns
+    """
+    distinct_on: [accounts_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [accounts_order_by!]
+    """
+    filter the rows returned
+    """
+    where: accounts_bool_exp
+  ): [accounts!]!
+  """
+  execute function "following" and query aggregates on result of table type "Account"
+  """
+  following_aggregate(
+    """
+    input parameters for function "following"
+    """
+    args: following_args!
+    """
+    distinct select on columns
+    """
+    distinct_on: [accounts_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [accounts_order_by!]
+    """
+    filter the rows returned
+    """
+    where: accounts_bool_exp
+  ): accounts_aggregate!
+  """
+  fetch data from the table: "Organization" using primary key columns
+  """
+  organization(id: numeric!): organizations
+  """
+  fetch data from the table: "Organization"
+  """
+  organizations(
+    """
+    distinct select on columns
+    """
+    distinct_on: [organizations_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [organizations_order_by!]
+    """
+    filter the rows returned
+    """
+    where: organizations_bool_exp
+  ): [organizations!]!
+  """
+  fetch aggregated fields from the table: "Organization"
+  """
+  organizations_aggregate(
+    """
+    distinct select on columns
+    """
+    distinct_on: [organizations_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [organizations_order_by!]
+    """
+    filter the rows returned
+    """
+    where: organizations_bool_exp
+  ): organizations_aggregate!
+  """
+  fetch data from the table: "Person" using primary key columns
+  """
+  person(id: numeric!): persons
+  """
+  fetch data from the table: "Person"
+  """
+  persons(
+    """
+    distinct select on columns
+    """
+    distinct_on: [persons_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [persons_order_by!]
+    """
+    filter the rows returned
+    """
+    where: persons_bool_exp
+  ): [persons!]!
+  """
+  fetch aggregated fields from the table: "Person"
+  """
+  persons_aggregate(
+    """
+    distinct select on columns
+    """
+    distinct_on: [persons_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [persons_order_by!]
+    """
+    filter the rows returned
+    """
+    where: persons_bool_exp
+  ): persons_aggregate!
+  """
+  fetch data from the table: "Position" using primary key columns
+  """
+  position(id: String!): positions
+  """
+  An array relationship
+  """
+  positions(
+    """
+    distinct select on columns
+    """
+    distinct_on: [positions_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [positions_order_by!]
+    """
+    filter the rows returned
+    """
+    where: positions_bool_exp
+  ): [positions!]!
+  """
+  An aggregate relationship
+  """
+  positions_aggregate(
+    """
+    distinct select on columns
+    """
+    distinct_on: [positions_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [positions_order_by!]
+    """
+    filter the rows returned
+    """
+    where: positions_bool_exp
+  ): positions_aggregate!
+  """
+  fetch data from the table: "PredicateObject" using primary key columns
+  """
+  predicateObject(id: String!): predicateObjects
+  """
+  fetch data from the table: "PredicateObject"
+  """
+  predicateObjects(
+    """
+    distinct select on columns
+    """
+    distinct_on: [predicateObjects_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [predicateObjects_order_by!]
+    """
+    filter the rows returned
+    """
+    where: predicateObjects_bool_exp
+  ): [predicateObjects!]!
+  """
+  fetch aggregated fields from the table: "PredicateObject"
+  """
+  predicateObjects_aggregate(
+    """
+    distinct select on columns
+    """
+    distinct_on: [predicateObjects_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [predicateObjects_order_by!]
+    """
+    filter the rows returned
+    """
+    where: predicateObjects_bool_exp
+  ): predicateObjects_aggregate!
+  """
+  fetch data from the table: "Redemption" using primary key columns
+  """
+  redemption(id: String!): redemptions
+  """
+  An array relationship
+  """
+  redemptions(
+    """
+    distinct select on columns
+    """
+    distinct_on: [redemptions_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [redemptions_order_by!]
+    """
+    filter the rows returned
+    """
+    where: redemptions_bool_exp
+  ): [redemptions!]!
+  """
+  An aggregate relationship
+  """
+  redemptions_aggregate(
+    """
+    distinct select on columns
+    """
+    distinct_on: [redemptions_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [redemptions_order_by!]
+    """
+    filter the rows returned
+    """
+    where: redemptions_bool_exp
+  ): redemptions_aggregate!
+  """
+  fetch data from the table: "Signal" using primary key columns
+  """
+  signal(id: String!): signals
+  """
+  An array relationship
+  """
+  signals(
+    """
+    distinct select on columns
+    """
+    distinct_on: [signals_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [signals_order_by!]
+    """
+    filter the rows returned
+    """
+    where: signals_bool_exp
+  ): [signals!]!
+  """
+  An aggregate relationship
+  """
+  signals_aggregate(
+    """
+    distinct select on columns
+    """
+    distinct_on: [signals_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [signals_order_by!]
+    """
+    filter the rows returned
+    """
+    where: signals_bool_exp
+  ): signals_aggregate!
+  """
+  execute function "signals_from_following" which returns "Signal"
+  """
+  signals_from_following(
+    """
+    input parameters for function "signals_from_following"
+    """
+    args: signals_from_following_args!
+    """
+    distinct select on columns
+    """
+    distinct_on: [signals_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [signals_order_by!]
+    """
+    filter the rows returned
+    """
+    where: signals_bool_exp
+  ): [signals!]!
+  """
+  execute function "signals_from_following" and query aggregates on result of table type "Signal"
+  """
+  signals_from_following_aggregate(
+    """
+    input parameters for function "signals_from_following"
+    """
+    args: signals_from_following_args!
+    """
+    distinct select on columns
+    """
+    distinct_on: [signals_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [signals_order_by!]
+    """
+    filter the rows returned
+    """
+    where: signals_bool_exp
+  ): signals_aggregate!
+  """
+  fetch data from the table: "Stats" using primary key columns
+  """
+  stat(id: Int!): stats
+  """
+  fetch data from the table: "StatsHour" using primary key columns
+  """
+  statHour(id: Int!): statHours
+  """
+  fetch data from the table: "StatsHour"
+  """
+  statHours(
+    """
+    distinct select on columns
+    """
+    distinct_on: [statHours_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [statHours_order_by!]
+    """
+    filter the rows returned
+    """
+    where: statHours_bool_exp
+  ): [statHours!]!
+  """
+  fetch aggregated fields from the table: "StatsHour"
+  """
+  statHours_aggregate(
+    """
+    distinct select on columns
+    """
+    distinct_on: [statHours_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [statHours_order_by!]
+    """
+    filter the rows returned
+    """
+    where: statHours_bool_exp
+  ): statHours_aggregate!
+  """
+  fetch data from the table: "Stats"
+  """
+  stats(
+    """
+    distinct select on columns
+    """
+    distinct_on: [stats_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [stats_order_by!]
+    """
+    filter the rows returned
+    """
+    where: stats_bool_exp
+  ): [stats!]!
+  """
+  fetch aggregated fields from the table: "Stats"
+  """
+  stats_aggregate(
+    """
+    distinct select on columns
+    """
+    distinct_on: [stats_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [stats_order_by!]
+    """
+    filter the rows returned
+    """
+    where: stats_bool_exp
+  ): stats_aggregate!
+  """
+  fetch data from the table: "Thing" using primary key columns
+  """
+  thing(id: numeric!): things
+  """
+  fetch data from the table: "Thing"
+  """
+  things(
+    """
+    distinct select on columns
+    """
+    distinct_on: [things_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [things_order_by!]
+    """
+    filter the rows returned
+    """
+    where: things_bool_exp
+  ): [things!]!
+  """
+  fetch aggregated fields from the table: "Thing"
+  """
+  things_aggregate(
+    """
+    distinct select on columns
+    """
+    distinct_on: [things_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [things_order_by!]
+    """
+    filter the rows returned
+    """
+    where: things_bool_exp
+  ): things_aggregate!
+  """
+  fetch data from the table: "Triple" using primary key columns
+  """
+  triple(id: numeric!): triples
+  """
+  fetch data from the table: "Triple"
+  """
+  triples(
+    """
+    distinct select on columns
+    """
+    distinct_on: [triples_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [triples_order_by!]
+    """
+    filter the rows returned
+    """
+    where: triples_bool_exp
+  ): [triples!]!
+  """
+  fetch aggregated fields from the table: "Triple"
+  """
+  triples_aggregate(
+    """
+    distinct select on columns
+    """
+    distinct_on: [triples_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [triples_order_by!]
+    """
+    filter the rows returned
+    """
+    where: triples_bool_exp
+  ): triples_aggregate!
+  """
+  fetch data from the table: "Vault" using primary key columns
+  """
+  vault(id: numeric!): vaults
+  """
+  fetch data from the table: "Vault"
+  """
+  vaults(
+    """
+    distinct select on columns
+    """
+    distinct_on: [vaults_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [vaults_order_by!]
+    """
+    filter the rows returned
+    """
+    where: vaults_bool_exp
+  ): [vaults!]!
+  """
+  fetch aggregated fields from the table: "Vault"
+  """
+  vaults_aggregate(
+    """
+    distinct select on columns
+    """
+    distinct_on: [vaults_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [vaults_order_by!]
+    """
+    filter the rows returned
+    """
+    where: vaults_bool_exp
+  ): vaults_aggregate!
+}
+
+"""
+columns and relationships of "Redemption"
+"""
+type redemptions {
+  assetsForReceiver: numeric!
+  blockNumber: numeric!
+  blockTimestamp: numeric!
+  exitFee: numeric!
+  id: String!
+  """
+  An object relationship
+  """
+  receiver: accounts
+  receiverId: String!
+  """
+  An object relationship
+  """
+  sender: accounts
+  senderId: String!
+  senderTotalSharesInVault: numeric!
+  sharesRedeemedBySender: numeric!
+  transactionHash: bytea!
+  """
+  An object relationship
+  """
+  vault: vaults
+  vaultId: numeric!
+}
+
+"""
+aggregated selection of "Redemption"
+"""
+type redemptions_aggregate {
+  aggregate: redemptions_aggregate_fields
+  nodes: [redemptions!]!
+}
+
+"""
+aggregate fields of "Redemption"
+"""
+type redemptions_aggregate_fields {
+  avg: redemptions_avg_fields
+  count(columns: [redemptions_select_column!], distinct: Boolean): Int!
+  max: redemptions_max_fields
+  min: redemptions_min_fields
+  stddev: redemptions_stddev_fields
+  stddev_pop: redemptions_stddev_pop_fields
+  stddev_samp: redemptions_stddev_samp_fields
+  sum: redemptions_sum_fields
+  var_pop: redemptions_var_pop_fields
+  var_samp: redemptions_var_samp_fields
+  variance: redemptions_variance_fields
+}
+
+"""
+order by aggregate values of table "Redemption"
+"""
+input redemptions_aggregate_order_by {
+  avg: redemptions_avg_order_by
+  count: order_by
+  max: redemptions_max_order_by
+  min: redemptions_min_order_by
+  stddev: redemptions_stddev_order_by
+  stddev_pop: redemptions_stddev_pop_order_by
+  stddev_samp: redemptions_stddev_samp_order_by
+  sum: redemptions_sum_order_by
+  var_pop: redemptions_var_pop_order_by
+  var_samp: redemptions_var_samp_order_by
+  variance: redemptions_variance_order_by
+}
+
+"""
+aggregate avg on columns
+"""
+type redemptions_avg_fields {
+  assetsForReceiver: Float
+  blockNumber: Float
+  blockTimestamp: Float
+  exitFee: Float
+  senderTotalSharesInVault: Float
+  sharesRedeemedBySender: Float
+  vaultId: Float
+}
+
+"""
+order by avg() on columns of table "Redemption"
+"""
+input redemptions_avg_order_by {
+  assetsForReceiver: order_by
+  blockNumber: order_by
+  blockTimestamp: order_by
+  exitFee: order_by
+  senderTotalSharesInVault: order_by
+  sharesRedeemedBySender: order_by
+  vaultId: order_by
+}
+
+"""
+Boolean expression to filter rows from the table "Redemption". All fields are combined with a logical 'AND'.
+"""
+input redemptions_bool_exp {
+  _and: [redemptions_bool_exp!]
+  _not: redemptions_bool_exp
+  _or: [redemptions_bool_exp!]
+  assetsForReceiver: numeric_comparison_exp
+  blockNumber: numeric_comparison_exp
+  blockTimestamp: numeric_comparison_exp
+  exitFee: numeric_comparison_exp
+  id: String_comparison_exp
+  receiver: accounts_bool_exp
+  receiverId: String_comparison_exp
+  sender: accounts_bool_exp
+  senderId: String_comparison_exp
+  senderTotalSharesInVault: numeric_comparison_exp
+  sharesRedeemedBySender: numeric_comparison_exp
+  transactionHash: bytea_comparison_exp
+  vault: vaults_bool_exp
+  vaultId: numeric_comparison_exp
+}
+
+"""
+aggregate max on columns
+"""
+type redemptions_max_fields {
+  assetsForReceiver: numeric
+  blockNumber: numeric
+  blockTimestamp: numeric
+  exitFee: numeric
+  id: String
+  receiverId: String
+  senderId: String
+  senderTotalSharesInVault: numeric
+  sharesRedeemedBySender: numeric
+  vaultId: numeric
+}
+
+"""
+order by max() on columns of table "Redemption"
+"""
+input redemptions_max_order_by {
+  assetsForReceiver: order_by
+  blockNumber: order_by
+  blockTimestamp: order_by
+  exitFee: order_by
+  id: order_by
+  receiverId: order_by
+  senderId: order_by
+  senderTotalSharesInVault: order_by
+  sharesRedeemedBySender: order_by
+  vaultId: order_by
+}
+
+"""
+aggregate min on columns
+"""
+type redemptions_min_fields {
+  assetsForReceiver: numeric
+  blockNumber: numeric
+  blockTimestamp: numeric
+  exitFee: numeric
+  id: String
+  receiverId: String
+  senderId: String
+  senderTotalSharesInVault: numeric
+  sharesRedeemedBySender: numeric
+  vaultId: numeric
+}
+
+"""
+order by min() on columns of table "Redemption"
+"""
+input redemptions_min_order_by {
+  assetsForReceiver: order_by
+  blockNumber: order_by
+  blockTimestamp: order_by
+  exitFee: order_by
+  id: order_by
+  receiverId: order_by
+  senderId: order_by
+  senderTotalSharesInVault: order_by
+  sharesRedeemedBySender: order_by
+  vaultId: order_by
+}
+
+"""
+Ordering options when selecting data from "Redemption".
+"""
+input redemptions_order_by {
+  assetsForReceiver: order_by
+  blockNumber: order_by
+  blockTimestamp: order_by
+  exitFee: order_by
+  id: order_by
+  receiver: accounts_order_by
+  receiverId: order_by
+  sender: accounts_order_by
+  senderId: order_by
+  senderTotalSharesInVault: order_by
+  sharesRedeemedBySender: order_by
+  transactionHash: order_by
+  vault: vaults_order_by
+  vaultId: order_by
+}
+
+"""
+select columns of table "Redemption"
+"""
+enum redemptions_select_column {
+  """
+  column name
+  """
+  assetsForReceiver
+  """
+  column name
+  """
+  blockNumber
+  """
+  column name
+  """
+  blockTimestamp
+  """
+  column name
+  """
+  exitFee
+  """
+  column name
+  """
+  id
+  """
+  column name
+  """
+  receiverId
+  """
+  column name
+  """
+  senderId
+  """
+  column name
+  """
+  senderTotalSharesInVault
+  """
+  column name
+  """
+  sharesRedeemedBySender
+  """
+  column name
+  """
+  transactionHash
+  """
+  column name
+  """
+  vaultId
+}
+
+"""
+aggregate stddev on columns
+"""
+type redemptions_stddev_fields {
+  assetsForReceiver: Float
+  blockNumber: Float
+  blockTimestamp: Float
+  exitFee: Float
+  senderTotalSharesInVault: Float
+  sharesRedeemedBySender: Float
+  vaultId: Float
+}
+
+"""
+order by stddev() on columns of table "Redemption"
+"""
+input redemptions_stddev_order_by {
+  assetsForReceiver: order_by
+  blockNumber: order_by
+  blockTimestamp: order_by
+  exitFee: order_by
+  senderTotalSharesInVault: order_by
+  sharesRedeemedBySender: order_by
+  vaultId: order_by
+}
+
+"""
+aggregate stddev_pop on columns
+"""
+type redemptions_stddev_pop_fields {
+  assetsForReceiver: Float
+  blockNumber: Float
+  blockTimestamp: Float
+  exitFee: Float
+  senderTotalSharesInVault: Float
+  sharesRedeemedBySender: Float
+  vaultId: Float
+}
+
+"""
+order by stddev_pop() on columns of table "Redemption"
+"""
+input redemptions_stddev_pop_order_by {
+  assetsForReceiver: order_by
+  blockNumber: order_by
+  blockTimestamp: order_by
+  exitFee: order_by
+  senderTotalSharesInVault: order_by
+  sharesRedeemedBySender: order_by
+  vaultId: order_by
+}
+
+"""
+aggregate stddev_samp on columns
+"""
+type redemptions_stddev_samp_fields {
+  assetsForReceiver: Float
+  blockNumber: Float
+  blockTimestamp: Float
+  exitFee: Float
+  senderTotalSharesInVault: Float
+  sharesRedeemedBySender: Float
+  vaultId: Float
+}
+
+"""
+order by stddev_samp() on columns of table "Redemption"
+"""
+input redemptions_stddev_samp_order_by {
+  assetsForReceiver: order_by
+  blockNumber: order_by
+  blockTimestamp: order_by
+  exitFee: order_by
+  senderTotalSharesInVault: order_by
+  sharesRedeemedBySender: order_by
+  vaultId: order_by
+}
+
+"""
+aggregate sum on columns
+"""
+type redemptions_sum_fields {
+  assetsForReceiver: numeric
+  blockNumber: numeric
+  blockTimestamp: numeric
+  exitFee: numeric
+  senderTotalSharesInVault: numeric
+  sharesRedeemedBySender: numeric
+  vaultId: numeric
+}
+
+"""
+order by sum() on columns of table "Redemption"
+"""
+input redemptions_sum_order_by {
+  assetsForReceiver: order_by
+  blockNumber: order_by
+  blockTimestamp: order_by
+  exitFee: order_by
+  senderTotalSharesInVault: order_by
+  sharesRedeemedBySender: order_by
+  vaultId: order_by
+}
+
+"""
+aggregate var_pop on columns
+"""
+type redemptions_var_pop_fields {
+  assetsForReceiver: Float
+  blockNumber: Float
+  blockTimestamp: Float
+  exitFee: Float
+  senderTotalSharesInVault: Float
+  sharesRedeemedBySender: Float
+  vaultId: Float
+}
+
+"""
+order by var_pop() on columns of table "Redemption"
+"""
+input redemptions_var_pop_order_by {
+  assetsForReceiver: order_by
+  blockNumber: order_by
+  blockTimestamp: order_by
+  exitFee: order_by
+  senderTotalSharesInVault: order_by
+  sharesRedeemedBySender: order_by
+  vaultId: order_by
+}
+
+"""
+aggregate var_samp on columns
+"""
+type redemptions_var_samp_fields {
+  assetsForReceiver: Float
+  blockNumber: Float
+  blockTimestamp: Float
+  exitFee: Float
+  senderTotalSharesInVault: Float
+  sharesRedeemedBySender: Float
+  vaultId: Float
+}
+
+"""
+order by var_samp() on columns of table "Redemption"
+"""
+input redemptions_var_samp_order_by {
+  assetsForReceiver: order_by
+  blockNumber: order_by
+  blockTimestamp: order_by
+  exitFee: order_by
+  senderTotalSharesInVault: order_by
+  sharesRedeemedBySender: order_by
+  vaultId: order_by
+}
+
+"""
+aggregate variance on columns
+"""
+type redemptions_variance_fields {
+  assetsForReceiver: Float
+  blockNumber: Float
+  blockTimestamp: Float
+  exitFee: Float
+  senderTotalSharesInVault: Float
+  sharesRedeemedBySender: Float
+  vaultId: Float
+}
+
+"""
+order by variance() on columns of table "Redemption"
+"""
+input redemptions_variance_order_by {
+  assetsForReceiver: order_by
+  blockNumber: order_by
+  blockTimestamp: order_by
+  exitFee: order_by
+  senderTotalSharesInVault: order_by
+  sharesRedeemedBySender: order_by
+  vaultId: order_by
+}
+
+"""
+columns and relationships of "Signal"
+"""
+type signals {
+  """
+  An object relationship
+  """
+  account: accounts
+  accountId: String!
+  """
+  An object relationship
+  """
+  atom: atoms
+  atomId: numeric
+  blockNumber: numeric!
+  blockTimestamp: numeric!
+  delta: numeric!
+  """
+  An object relationship
+  """
+  deposit: deposits
+  depositId: String
+  id: String!
+  """
+  An object relationship
+  """
+  redemption: redemptions
+  redemptionId: String
+  relativeStrength: numeric!
+  transactionHash: bytea!
+  """
+  An object relationship
+  """
+  triple: triples
+  tripleId: numeric
+}
+
+"""
+aggregated selection of "Signal"
+"""
+type signals_aggregate {
+  aggregate: signals_aggregate_fields
+  nodes: [signals!]!
+}
+
+"""
+aggregate fields of "Signal"
+"""
+type signals_aggregate_fields {
+  avg: signals_avg_fields
+  count(columns: [signals_select_column!], distinct: Boolean): Int!
+  max: signals_max_fields
+  min: signals_min_fields
+  stddev: signals_stddev_fields
+  stddev_pop: signals_stddev_pop_fields
+  stddev_samp: signals_stddev_samp_fields
+  sum: signals_sum_fields
+  var_pop: signals_var_pop_fields
+  var_samp: signals_var_samp_fields
+  variance: signals_variance_fields
+}
+
+"""
+order by aggregate values of table "Signal"
+"""
+input signals_aggregate_order_by {
+  avg: signals_avg_order_by
+  count: order_by
+  max: signals_max_order_by
+  min: signals_min_order_by
+  stddev: signals_stddev_order_by
+  stddev_pop: signals_stddev_pop_order_by
+  stddev_samp: signals_stddev_samp_order_by
+  sum: signals_sum_order_by
+  var_pop: signals_var_pop_order_by
+  var_samp: signals_var_samp_order_by
+  variance: signals_variance_order_by
+}
+
+"""
+aggregate avg on columns
+"""
+type signals_avg_fields {
+  atomId: Float
+  blockNumber: Float
+  blockTimestamp: Float
+  delta: Float
+  relativeStrength: Float
+  tripleId: Float
+}
+
+"""
+order by avg() on columns of table "Signal"
+"""
+input signals_avg_order_by {
+  atomId: order_by
+  blockNumber: order_by
+  blockTimestamp: order_by
+  delta: order_by
+  relativeStrength: order_by
+  tripleId: order_by
+}
+
+"""
+Boolean expression to filter rows from the table "Signal". All fields are combined with a logical 'AND'.
+"""
+input signals_bool_exp {
+  _and: [signals_bool_exp!]
+  _not: signals_bool_exp
+  _or: [signals_bool_exp!]
+  account: accounts_bool_exp
+  accountId: String_comparison_exp
+  atom: atoms_bool_exp
+  atomId: numeric_comparison_exp
+  blockNumber: numeric_comparison_exp
+  blockTimestamp: numeric_comparison_exp
+  delta: numeric_comparison_exp
+  deposit: deposits_bool_exp
+  depositId: String_comparison_exp
+  id: String_comparison_exp
+  redemption: redemptions_bool_exp
+  redemptionId: String_comparison_exp
+  relativeStrength: numeric_comparison_exp
+  transactionHash: bytea_comparison_exp
+  triple: triples_bool_exp
+  tripleId: numeric_comparison_exp
+}
+
+input signals_from_following_args {
+  address: String
+}
+
+"""
+aggregate max on columns
+"""
+type signals_max_fields {
+  accountId: String
+  atomId: numeric
+  blockNumber: numeric
+  blockTimestamp: numeric
+  delta: numeric
+  depositId: String
+  id: String
+  redemptionId: String
+  relativeStrength: numeric
+  tripleId: numeric
+}
+
+"""
+order by max() on columns of table "Signal"
+"""
+input signals_max_order_by {
+  accountId: order_by
+  atomId: order_by
+  blockNumber: order_by
+  blockTimestamp: order_by
+  delta: order_by
+  depositId: order_by
+  id: order_by
+  redemptionId: order_by
+  relativeStrength: order_by
+  tripleId: order_by
+}
+
+"""
+aggregate min on columns
+"""
+type signals_min_fields {
+  accountId: String
+  atomId: numeric
+  blockNumber: numeric
+  blockTimestamp: numeric
+  delta: numeric
+  depositId: String
+  id: String
+  redemptionId: String
+  relativeStrength: numeric
+  tripleId: numeric
+}
+
+"""
+order by min() on columns of table "Signal"
+"""
+input signals_min_order_by {
+  accountId: order_by
+  atomId: order_by
+  blockNumber: order_by
+  blockTimestamp: order_by
+  delta: order_by
+  depositId: order_by
+  id: order_by
+  redemptionId: order_by
+  relativeStrength: order_by
+  tripleId: order_by
+}
+
+"""
+Ordering options when selecting data from "Signal".
+"""
+input signals_order_by {
+  account: accounts_order_by
+  accountId: order_by
+  atom: atoms_order_by
+  atomId: order_by
+  blockNumber: order_by
+  blockTimestamp: order_by
+  delta: order_by
+  deposit: deposits_order_by
+  depositId: order_by
+  id: order_by
+  redemption: redemptions_order_by
+  redemptionId: order_by
+  relativeStrength: order_by
+  transactionHash: order_by
+  triple: triples_order_by
+  tripleId: order_by
+}
+
+"""
+select columns of table "Signal"
+"""
+enum signals_select_column {
+  """
+  column name
+  """
+  accountId
+  """
+  column name
+  """
+  atomId
+  """
+  column name
+  """
+  blockNumber
+  """
+  column name
+  """
+  blockTimestamp
+  """
+  column name
+  """
+  delta
+  """
+  column name
+  """
+  depositId
+  """
+  column name
+  """
+  id
+  """
+  column name
+  """
+  redemptionId
+  """
+  column name
+  """
+  relativeStrength
+  """
+  column name
+  """
+  transactionHash
+  """
+  column name
+  """
+  tripleId
+}
+
+"""
+aggregate stddev on columns
+"""
+type signals_stddev_fields {
+  atomId: Float
+  blockNumber: Float
+  blockTimestamp: Float
+  delta: Float
+  relativeStrength: Float
+  tripleId: Float
+}
+
+"""
+order by stddev() on columns of table "Signal"
+"""
+input signals_stddev_order_by {
+  atomId: order_by
+  blockNumber: order_by
+  blockTimestamp: order_by
+  delta: order_by
+  relativeStrength: order_by
+  tripleId: order_by
+}
+
+"""
+aggregate stddev_pop on columns
+"""
+type signals_stddev_pop_fields {
+  atomId: Float
+  blockNumber: Float
+  blockTimestamp: Float
+  delta: Float
+  relativeStrength: Float
+  tripleId: Float
+}
+
+"""
+order by stddev_pop() on columns of table "Signal"
+"""
+input signals_stddev_pop_order_by {
+  atomId: order_by
+  blockNumber: order_by
+  blockTimestamp: order_by
+  delta: order_by
+  relativeStrength: order_by
+  tripleId: order_by
+}
+
+"""
+aggregate stddev_samp on columns
+"""
+type signals_stddev_samp_fields {
+  atomId: Float
+  blockNumber: Float
+  blockTimestamp: Float
+  delta: Float
+  relativeStrength: Float
+  tripleId: Float
+}
+
+"""
+order by stddev_samp() on columns of table "Signal"
+"""
+input signals_stddev_samp_order_by {
+  atomId: order_by
+  blockNumber: order_by
+  blockTimestamp: order_by
+  delta: order_by
+  relativeStrength: order_by
+  tripleId: order_by
+}
+
+"""
+aggregate sum on columns
+"""
+type signals_sum_fields {
+  atomId: numeric
+  blockNumber: numeric
+  blockTimestamp: numeric
+  delta: numeric
+  relativeStrength: numeric
+  tripleId: numeric
+}
+
+"""
+order by sum() on columns of table "Signal"
+"""
+input signals_sum_order_by {
+  atomId: order_by
+  blockNumber: order_by
+  blockTimestamp: order_by
+  delta: order_by
+  relativeStrength: order_by
+  tripleId: order_by
+}
+
+"""
+aggregate var_pop on columns
+"""
+type signals_var_pop_fields {
+  atomId: Float
+  blockNumber: Float
+  blockTimestamp: Float
+  delta: Float
+  relativeStrength: Float
+  tripleId: Float
+}
+
+"""
+order by var_pop() on columns of table "Signal"
+"""
+input signals_var_pop_order_by {
+  atomId: order_by
+  blockNumber: order_by
+  blockTimestamp: order_by
+  delta: order_by
+  relativeStrength: order_by
+  tripleId: order_by
+}
+
+"""
+aggregate var_samp on columns
+"""
+type signals_var_samp_fields {
+  atomId: Float
+  blockNumber: Float
+  blockTimestamp: Float
+  delta: Float
+  relativeStrength: Float
+  tripleId: Float
+}
+
+"""
+order by var_samp() on columns of table "Signal"
+"""
+input signals_var_samp_order_by {
+  atomId: order_by
+  blockNumber: order_by
+  blockTimestamp: order_by
+  delta: order_by
+  relativeStrength: order_by
+  tripleId: order_by
+}
+
+"""
+aggregate variance on columns
+"""
+type signals_variance_fields {
+  atomId: Float
+  blockNumber: Float
+  blockTimestamp: Float
+  delta: Float
+  relativeStrength: Float
+  tripleId: Float
+}
+
+"""
+order by variance() on columns of table "Signal"
+"""
+input signals_variance_order_by {
+  atomId: order_by
+  blockNumber: order_by
+  blockTimestamp: order_by
+  delta: order_by
+  relativeStrength: order_by
+  tripleId: order_by
+}
+
+"""
+columns and relationships of "StatsHour"
+"""
+type statHours {
+  contractBalance: numeric!
+  id: Int!
+  totalAccounts: Int!
+  totalAtoms: Int!
+  totalFees: numeric!
+  totalPositions: Int!
+  totalSignals: Int!
+  totalTriples: Int!
+}
+
+"""
+aggregated selection of "StatsHour"
+"""
+type statHours_aggregate {
+  aggregate: statHours_aggregate_fields
+  nodes: [statHours!]!
+}
+
+"""
+aggregate fields of "StatsHour"
+"""
+type statHours_aggregate_fields {
+  avg: statHours_avg_fields
+  count(columns: [statHours_select_column!], distinct: Boolean): Int!
+  max: statHours_max_fields
+  min: statHours_min_fields
+  stddev: statHours_stddev_fields
+  stddev_pop: statHours_stddev_pop_fields
+  stddev_samp: statHours_stddev_samp_fields
+  sum: statHours_sum_fields
+  var_pop: statHours_var_pop_fields
+  var_samp: statHours_var_samp_fields
+  variance: statHours_variance_fields
+}
+
+"""
+aggregate avg on columns
+"""
+type statHours_avg_fields {
+  contractBalance: Float
+  id: Float
+  totalAccounts: Float
+  totalAtoms: Float
+  totalFees: Float
+  totalPositions: Float
+  totalSignals: Float
+  totalTriples: Float
+}
+
+"""
+Boolean expression to filter rows from the table "StatsHour". All fields are combined with a logical 'AND'.
+"""
+input statHours_bool_exp {
+  _and: [statHours_bool_exp!]
+  _not: statHours_bool_exp
+  _or: [statHours_bool_exp!]
+  contractBalance: numeric_comparison_exp
+  id: Int_comparison_exp
+  totalAccounts: Int_comparison_exp
+  totalAtoms: Int_comparison_exp
+  totalFees: numeric_comparison_exp
+  totalPositions: Int_comparison_exp
+  totalSignals: Int_comparison_exp
+  totalTriples: Int_comparison_exp
+}
+
+"""
+aggregate max on columns
+"""
+type statHours_max_fields {
+  contractBalance: numeric
+  id: Int
+  totalAccounts: Int
+  totalAtoms: Int
+  totalFees: numeric
+  totalPositions: Int
+  totalSignals: Int
+  totalTriples: Int
+}
+
+"""
+aggregate min on columns
+"""
+type statHours_min_fields {
+  contractBalance: numeric
+  id: Int
+  totalAccounts: Int
+  totalAtoms: Int
+  totalFees: numeric
+  totalPositions: Int
+  totalSignals: Int
+  totalTriples: Int
+}
+
+"""
+Ordering options when selecting data from "StatsHour".
+"""
+input statHours_order_by {
+  contractBalance: order_by
+  id: order_by
+  totalAccounts: order_by
+  totalAtoms: order_by
+  totalFees: order_by
+  totalPositions: order_by
+  totalSignals: order_by
+  totalTriples: order_by
+}
+
+"""
+select columns of table "StatsHour"
+"""
+enum statHours_select_column {
+  """
+  column name
+  """
+  contractBalance
+  """
+  column name
+  """
+  id
+  """
+  column name
+  """
+  totalAccounts
+  """
+  column name
+  """
+  totalAtoms
+  """
+  column name
+  """
+  totalFees
+  """
+  column name
+  """
+  totalPositions
+  """
+  column name
+  """
+  totalSignals
+  """
+  column name
+  """
+  totalTriples
+}
+
+"""
+aggregate stddev on columns
+"""
+type statHours_stddev_fields {
+  contractBalance: Float
+  id: Float
+  totalAccounts: Float
+  totalAtoms: Float
+  totalFees: Float
+  totalPositions: Float
+  totalSignals: Float
+  totalTriples: Float
+}
+
+"""
+aggregate stddev_pop on columns
+"""
+type statHours_stddev_pop_fields {
+  contractBalance: Float
+  id: Float
+  totalAccounts: Float
+  totalAtoms: Float
+  totalFees: Float
+  totalPositions: Float
+  totalSignals: Float
+  totalTriples: Float
+}
+
+"""
+aggregate stddev_samp on columns
+"""
+type statHours_stddev_samp_fields {
+  contractBalance: Float
+  id: Float
+  totalAccounts: Float
+  totalAtoms: Float
+  totalFees: Float
+  totalPositions: Float
+  totalSignals: Float
+  totalTriples: Float
+}
+
+"""
+aggregate sum on columns
+"""
+type statHours_sum_fields {
+  contractBalance: numeric
+  id: Int
+  totalAccounts: Int
+  totalAtoms: Int
+  totalFees: numeric
+  totalPositions: Int
+  totalSignals: Int
+  totalTriples: Int
+}
+
+"""
+aggregate var_pop on columns
+"""
+type statHours_var_pop_fields {
+  contractBalance: Float
+  id: Float
+  totalAccounts: Float
+  totalAtoms: Float
+  totalFees: Float
+  totalPositions: Float
+  totalSignals: Float
+  totalTriples: Float
+}
+
+"""
+aggregate var_samp on columns
+"""
+type statHours_var_samp_fields {
+  contractBalance: Float
+  id: Float
+  totalAccounts: Float
+  totalAtoms: Float
+  totalFees: Float
+  totalPositions: Float
+  totalSignals: Float
+  totalTriples: Float
+}
+
+"""
+aggregate variance on columns
+"""
+type statHours_variance_fields {
+  contractBalance: Float
+  id: Float
+  totalAccounts: Float
+  totalAtoms: Float
+  totalFees: Float
+  totalPositions: Float
+  totalSignals: Float
+  totalTriples: Float
+}
+
+"""
+columns and relationships of "Stats"
+"""
+type stats {
+  contractBalance: numeric!
+  id: Int!
+  totalAccounts: Int!
+  totalAtoms: Int!
+  totalFees: numeric!
+  totalPositions: Int!
+  totalSignals: Int!
+  totalTriples: Int!
+}
+
+"""
+aggregated selection of "Stats"
+"""
+type stats_aggregate {
+  aggregate: stats_aggregate_fields
+  nodes: [stats!]!
+}
+
+"""
+aggregate fields of "Stats"
+"""
+type stats_aggregate_fields {
+  avg: stats_avg_fields
+  count(columns: [stats_select_column!], distinct: Boolean): Int!
+  max: stats_max_fields
+  min: stats_min_fields
+  stddev: stats_stddev_fields
+  stddev_pop: stats_stddev_pop_fields
+  stddev_samp: stats_stddev_samp_fields
+  sum: stats_sum_fields
+  var_pop: stats_var_pop_fields
+  var_samp: stats_var_samp_fields
+  variance: stats_variance_fields
+}
+
+"""
+aggregate avg on columns
+"""
+type stats_avg_fields {
+  contractBalance: Float
+  id: Float
+  totalAccounts: Float
+  totalAtoms: Float
+  totalFees: Float
+  totalPositions: Float
+  totalSignals: Float
+  totalTriples: Float
+}
+
+"""
+Boolean expression to filter rows from the table "Stats". All fields are combined with a logical 'AND'.
+"""
+input stats_bool_exp {
+  _and: [stats_bool_exp!]
+  _not: stats_bool_exp
+  _or: [stats_bool_exp!]
+  contractBalance: numeric_comparison_exp
+  id: Int_comparison_exp
+  totalAccounts: Int_comparison_exp
+  totalAtoms: Int_comparison_exp
+  totalFees: numeric_comparison_exp
+  totalPositions: Int_comparison_exp
+  totalSignals: Int_comparison_exp
+  totalTriples: Int_comparison_exp
+}
+
+"""
+aggregate max on columns
+"""
+type stats_max_fields {
+  contractBalance: numeric
+  id: Int
+  totalAccounts: Int
+  totalAtoms: Int
+  totalFees: numeric
+  totalPositions: Int
+  totalSignals: Int
+  totalTriples: Int
+}
+
+"""
+aggregate min on columns
+"""
+type stats_min_fields {
+  contractBalance: numeric
+  id: Int
+  totalAccounts: Int
+  totalAtoms: Int
+  totalFees: numeric
+  totalPositions: Int
+  totalSignals: Int
+  totalTriples: Int
+}
+
+"""
+Ordering options when selecting data from "Stats".
+"""
+input stats_order_by {
+  contractBalance: order_by
+  id: order_by
+  totalAccounts: order_by
+  totalAtoms: order_by
+  totalFees: order_by
+  totalPositions: order_by
+  totalSignals: order_by
+  totalTriples: order_by
+}
+
+"""
+select columns of table "Stats"
+"""
+enum stats_select_column {
+  """
+  column name
+  """
+  contractBalance
+  """
+  column name
+  """
+  id
+  """
+  column name
+  """
+  totalAccounts
+  """
+  column name
+  """
+  totalAtoms
+  """
+  column name
+  """
+  totalFees
+  """
+  column name
+  """
+  totalPositions
+  """
+  column name
+  """
+  totalSignals
+  """
+  column name
+  """
+  totalTriples
+}
+
+"""
+aggregate stddev on columns
+"""
+type stats_stddev_fields {
+  contractBalance: Float
+  id: Float
+  totalAccounts: Float
+  totalAtoms: Float
+  totalFees: Float
+  totalPositions: Float
+  totalSignals: Float
+  totalTriples: Float
+}
+
+"""
+aggregate stddev_pop on columns
+"""
+type stats_stddev_pop_fields {
+  contractBalance: Float
+  id: Float
+  totalAccounts: Float
+  totalAtoms: Float
+  totalFees: Float
+  totalPositions: Float
+  totalSignals: Float
+  totalTriples: Float
+}
+
+"""
+aggregate stddev_samp on columns
+"""
+type stats_stddev_samp_fields {
+  contractBalance: Float
+  id: Float
+  totalAccounts: Float
+  totalAtoms: Float
+  totalFees: Float
+  totalPositions: Float
+  totalSignals: Float
+  totalTriples: Float
+}
+
+"""
+aggregate sum on columns
+"""
+type stats_sum_fields {
+  contractBalance: numeric
+  id: Int
+  totalAccounts: Int
+  totalAtoms: Int
+  totalFees: numeric
+  totalPositions: Int
+  totalSignals: Int
+  totalTriples: Int
+}
+
+"""
+aggregate var_pop on columns
+"""
+type stats_var_pop_fields {
+  contractBalance: Float
+  id: Float
+  totalAccounts: Float
+  totalAtoms: Float
+  totalFees: Float
+  totalPositions: Float
+  totalSignals: Float
+  totalTriples: Float
+}
+
+"""
+aggregate var_samp on columns
+"""
+type stats_var_samp_fields {
+  contractBalance: Float
+  id: Float
+  totalAccounts: Float
+  totalAtoms: Float
+  totalFees: Float
+  totalPositions: Float
+  totalSignals: Float
+  totalTriples: Float
+}
+
+"""
+aggregate variance on columns
+"""
+type stats_variance_fields {
+  contractBalance: Float
+  id: Float
+  totalAccounts: Float
+  totalAtoms: Float
+  totalFees: Float
+  totalPositions: Float
+  totalSignals: Float
+  totalTriples: Float
+}
+
+type subscription_root {
+  """
+  fetch data from the table: "Account" using primary key columns
+  """
+  account(id: String!): accounts
+  """
+  fetch data from the table: "Account"
+  """
+  accounts(
+    """
+    distinct select on columns
+    """
+    distinct_on: [accounts_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [accounts_order_by!]
+    """
+    filter the rows returned
+    """
+    where: accounts_bool_exp
+  ): [accounts!]!
+  """
+  fetch aggregated fields from the table: "Account"
+  """
+  accounts_aggregate(
+    """
+    distinct select on columns
+    """
+    distinct_on: [accounts_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [accounts_order_by!]
+    """
+    filter the rows returned
+    """
+    where: accounts_bool_exp
+  ): accounts_aggregate!
+  """
+  execute function "accounts_that_claim_about_account" which returns "Account"
+  """
+  accounts_that_claim_about_account(
+    """
+    input parameters for function "accounts_that_claim_about_account"
+    """
+    args: accounts_that_claim_about_account_args!
+    """
+    distinct select on columns
+    """
+    distinct_on: [accounts_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [accounts_order_by!]
+    """
+    filter the rows returned
+    """
+    where: accounts_bool_exp
+  ): [accounts!]!
+  """
+  execute function "accounts_that_claim_about_account" and query aggregates on result of table type "Account"
+  """
+  accounts_that_claim_about_account_aggregate(
+    """
+    input parameters for function "accounts_that_claim_about_account"
+    """
+    args: accounts_that_claim_about_account_args!
+    """
+    distinct select on columns
+    """
+    distinct_on: [accounts_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [accounts_order_by!]
+    """
+    filter the rows returned
+    """
+    where: accounts_bool_exp
+  ): accounts_aggregate!
+  """
+  fetch data from the table: "Atom" using primary key columns
+  """
+  atom(id: numeric!): atoms
+  """
+  fetch data from the table: "AtomValue" using primary key columns
+  """
+  atomValue(id: numeric!): atomValues
+  """
+  fetch data from the table: "AtomValue"
+  """
+  atomValues(
+    """
+    distinct select on columns
+    """
+    distinct_on: [atomValues_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [atomValues_order_by!]
+    """
+    filter the rows returned
+    """
+    where: atomValues_bool_exp
+  ): [atomValues!]!
+  """
+  fetch aggregated fields from the table: "AtomValue"
+  """
+  atomValues_aggregate(
+    """
+    distinct select on columns
+    """
+    distinct_on: [atomValues_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [atomValues_order_by!]
+    """
+    filter the rows returned
+    """
+    where: atomValues_bool_exp
+  ): atomValues_aggregate!
+  """
+  fetch data from the table: "Atom"
+  """
+  atoms(
+    """
+    distinct select on columns
+    """
+    distinct_on: [atoms_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [atoms_order_by!]
+    """
+    filter the rows returned
+    """
+    where: atoms_bool_exp
+  ): [atoms!]!
+  """
+  fetch aggregated fields from the table: "Atom"
+  """
+  atoms_aggregate(
+    """
+    distinct select on columns
+    """
+    distinct_on: [atoms_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [atoms_order_by!]
+    """
+    filter the rows returned
+    """
+    where: atoms_bool_exp
+  ): atoms_aggregate!
+  """
+  fetch data from the table: "Book" using primary key columns
+  """
+  book(id: numeric!): books
+  """
+  fetch data from the table: "Book"
+  """
+  books(
+    """
+    distinct select on columns
+    """
+    distinct_on: [books_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [books_order_by!]
+    """
+    filter the rows returned
+    """
+    where: books_bool_exp
+  ): [books!]!
+  """
+  fetch aggregated fields from the table: "Book"
+  """
+  books_aggregate(
+    """
+    distinct select on columns
+    """
+    distinct_on: [books_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [books_order_by!]
+    """
+    filter the rows returned
+    """
+    where: books_bool_exp
+  ): books_aggregate!
+  """
+  fetch data from the table: "ChainlinkPrice" using primary key columns
+  """
+  chainLinkPrice(id: numeric!): chainLinkPrices
+  """
+  fetch data from the table: "ChainlinkPrice"
+  """
+  chainLinkPrices(
+    """
+    distinct select on columns
+    """
+    distinct_on: [chainLinkPrices_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [chainLinkPrices_order_by!]
+    """
+    filter the rows returned
+    """
+    where: chainLinkPrices_bool_exp
+  ): [chainLinkPrices!]!
+  """
+  fetch data from the table: "Claim" using primary key columns
+  """
+  claim(id: String!): claims
+  """
+  An array relationship
+  """
+  claims(
+    """
+    distinct select on columns
+    """
+    distinct_on: [claims_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [claims_order_by!]
+    """
+    filter the rows returned
+    """
+    where: claims_bool_exp
+  ): [claims!]!
+  """
+  An aggregate relationship
+  """
+  claims_aggregate(
+    """
+    distinct select on columns
+    """
+    distinct_on: [claims_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [claims_order_by!]
+    """
+    filter the rows returned
+    """
+    where: claims_bool_exp
+  ): claims_aggregate!
+  """
+  execute function "claims_from_following" which returns "Claim"
+  """
+  claims_from_following(
+    """
+    input parameters for function "claims_from_following"
+    """
+    args: claims_from_following_args!
+    """
+    distinct select on columns
+    """
+    distinct_on: [claims_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [claims_order_by!]
+    """
+    filter the rows returned
+    """
+    where: claims_bool_exp
+  ): [claims!]!
+  """
+  execute function "claims_from_following" and query aggregates on result of table type "Claim"
+  """
+  claims_from_following_aggregate(
+    """
+    input parameters for function "claims_from_following"
+    """
+    args: claims_from_following_args!
+    """
+    distinct select on columns
+    """
+    distinct_on: [claims_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [claims_order_by!]
+    """
+    filter the rows returned
+    """
+    where: claims_bool_exp
+  ): claims_aggregate!
+  """
+  fetch data from the table: "Deposit" using primary key columns
+  """
+  deposit(id: String!): deposits
+  """
+  An array relationship
+  """
+  deposits(
+    """
+    distinct select on columns
+    """
+    distinct_on: [deposits_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [deposits_order_by!]
+    """
+    filter the rows returned
+    """
+    where: deposits_bool_exp
+  ): [deposits!]!
+  """
+  An aggregate relationship
+  """
+  deposits_aggregate(
+    """
+    distinct select on columns
+    """
+    distinct_on: [deposits_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [deposits_order_by!]
+    """
+    filter the rows returned
+    """
+    where: deposits_bool_exp
+  ): deposits_aggregate!
+  """
+  fetch data from the table: "Event" using primary key columns
+  """
+  event(id: String!): events
+  """
+  fetch data from the table: "Event"
+  """
+  events(
+    """
+    distinct select on columns
+    """
+    distinct_on: [events_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [events_order_by!]
+    """
+    filter the rows returned
+    """
+    where: events_bool_exp
+  ): [events!]!
+  """
+  fetch aggregated fields from the table: "Event"
+  """
+  events_aggregate(
+    """
+    distinct select on columns
+    """
+    distinct_on: [events_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [events_order_by!]
+    """
+    filter the rows returned
+    """
+    where: events_bool_exp
+  ): events_aggregate!
+  """
+  fetch data from the table: "FeeTransfer"
+  """
+  feeTranfers(
+    """
+    distinct select on columns
+    """
+    distinct_on: [feeTranfers_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [feeTranfers_order_by!]
+    """
+    filter the rows returned
+    """
+    where: feeTranfers_bool_exp
+  ): [feeTranfers!]!
+  """
+  fetch aggregated fields from the table: "FeeTransfer"
+  """
+  feeTranfers_aggregate(
+    """
+    distinct select on columns
+    """
+    distinct_on: [feeTranfers_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [feeTranfers_order_by!]
+    """
+    filter the rows returned
+    """
+    where: feeTranfers_bool_exp
+  ): feeTranfers_aggregate!
+  """
+  fetch data from the table: "FeeTransfer" using primary key columns
+  """
+  feeTransfers(id: String!): feeTranfers
+  """
+  execute function "following" which returns "Account"
+  """
+  following(
+    """
+    input parameters for function "following"
+    """
+    args: following_args!
+    """
+    distinct select on columns
+    """
+    distinct_on: [accounts_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [accounts_order_by!]
+    """
+    filter the rows returned
+    """
+    where: accounts_bool_exp
+  ): [accounts!]!
+  """
+  execute function "following" and query aggregates on result of table type "Account"
+  """
+  following_aggregate(
+    """
+    input parameters for function "following"
+    """
+    args: following_args!
+    """
+    distinct select on columns
+    """
+    distinct_on: [accounts_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [accounts_order_by!]
+    """
+    filter the rows returned
+    """
+    where: accounts_bool_exp
+  ): accounts_aggregate!
+  """
+  fetch data from the table: "Organization" using primary key columns
+  """
+  organization(id: numeric!): organizations
+  """
+  fetch data from the table: "Organization"
+  """
+  organizations(
+    """
+    distinct select on columns
+    """
+    distinct_on: [organizations_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [organizations_order_by!]
+    """
+    filter the rows returned
+    """
+    where: organizations_bool_exp
+  ): [organizations!]!
+  """
+  fetch aggregated fields from the table: "Organization"
+  """
+  organizations_aggregate(
+    """
+    distinct select on columns
+    """
+    distinct_on: [organizations_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [organizations_order_by!]
+    """
+    filter the rows returned
+    """
+    where: organizations_bool_exp
+  ): organizations_aggregate!
+  """
+  fetch data from the table: "Person" using primary key columns
+  """
+  person(id: numeric!): persons
+  """
+  fetch data from the table: "Person"
+  """
+  persons(
+    """
+    distinct select on columns
+    """
+    distinct_on: [persons_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [persons_order_by!]
+    """
+    filter the rows returned
+    """
+    where: persons_bool_exp
+  ): [persons!]!
+  """
+  fetch aggregated fields from the table: "Person"
+  """
+  persons_aggregate(
+    """
+    distinct select on columns
+    """
+    distinct_on: [persons_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [persons_order_by!]
+    """
+    filter the rows returned
+    """
+    where: persons_bool_exp
+  ): persons_aggregate!
+  """
+  fetch data from the table: "Position" using primary key columns
+  """
+  position(id: String!): positions
+  """
+  An array relationship
+  """
+  positions(
+    """
+    distinct select on columns
+    """
+    distinct_on: [positions_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [positions_order_by!]
+    """
+    filter the rows returned
+    """
+    where: positions_bool_exp
+  ): [positions!]!
+  """
+  An aggregate relationship
+  """
+  positions_aggregate(
+    """
+    distinct select on columns
+    """
+    distinct_on: [positions_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [positions_order_by!]
+    """
+    filter the rows returned
+    """
+    where: positions_bool_exp
+  ): positions_aggregate!
+  """
+  fetch data from the table: "PredicateObject" using primary key columns
+  """
+  predicateObject(id: String!): predicateObjects
+  """
+  fetch data from the table: "PredicateObject"
+  """
+  predicateObjects(
+    """
+    distinct select on columns
+    """
+    distinct_on: [predicateObjects_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [predicateObjects_order_by!]
+    """
+    filter the rows returned
+    """
+    where: predicateObjects_bool_exp
+  ): [predicateObjects!]!
+  """
+  fetch aggregated fields from the table: "PredicateObject"
+  """
+  predicateObjects_aggregate(
+    """
+    distinct select on columns
+    """
+    distinct_on: [predicateObjects_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [predicateObjects_order_by!]
+    """
+    filter the rows returned
+    """
+    where: predicateObjects_bool_exp
+  ): predicateObjects_aggregate!
+  """
+  fetch data from the table: "Redemption" using primary key columns
+  """
+  redemption(id: String!): redemptions
+  """
+  An array relationship
+  """
+  redemptions(
+    """
+    distinct select on columns
+    """
+    distinct_on: [redemptions_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [redemptions_order_by!]
+    """
+    filter the rows returned
+    """
+    where: redemptions_bool_exp
+  ): [redemptions!]!
+  """
+  An aggregate relationship
+  """
+  redemptions_aggregate(
+    """
+    distinct select on columns
+    """
+    distinct_on: [redemptions_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [redemptions_order_by!]
+    """
+    filter the rows returned
+    """
+    where: redemptions_bool_exp
+  ): redemptions_aggregate!
+  """
+  fetch data from the table: "Signal" using primary key columns
+  """
+  signal(id: String!): signals
+  """
+  An array relationship
+  """
+  signals(
+    """
+    distinct select on columns
+    """
+    distinct_on: [signals_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [signals_order_by!]
+    """
+    filter the rows returned
+    """
+    where: signals_bool_exp
+  ): [signals!]!
+  """
+  An aggregate relationship
+  """
+  signals_aggregate(
+    """
+    distinct select on columns
+    """
+    distinct_on: [signals_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [signals_order_by!]
+    """
+    filter the rows returned
+    """
+    where: signals_bool_exp
+  ): signals_aggregate!
+  """
+  execute function "signals_from_following" which returns "Signal"
+  """
+  signals_from_following(
+    """
+    input parameters for function "signals_from_following"
+    """
+    args: signals_from_following_args!
+    """
+    distinct select on columns
+    """
+    distinct_on: [signals_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [signals_order_by!]
+    """
+    filter the rows returned
+    """
+    where: signals_bool_exp
+  ): [signals!]!
+  """
+  execute function "signals_from_following" and query aggregates on result of table type "Signal"
+  """
+  signals_from_following_aggregate(
+    """
+    input parameters for function "signals_from_following"
+    """
+    args: signals_from_following_args!
+    """
+    distinct select on columns
+    """
+    distinct_on: [signals_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [signals_order_by!]
+    """
+    filter the rows returned
+    """
+    where: signals_bool_exp
+  ): signals_aggregate!
+  """
+  fetch data from the table: "Stats" using primary key columns
+  """
+  stat(id: Int!): stats
+  """
+  fetch data from the table: "StatsHour" using primary key columns
+  """
+  statHour(id: Int!): statHours
+  """
+  fetch data from the table: "StatsHour"
+  """
+  statHours(
+    """
+    distinct select on columns
+    """
+    distinct_on: [statHours_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [statHours_order_by!]
+    """
+    filter the rows returned
+    """
+    where: statHours_bool_exp
+  ): [statHours!]!
+  """
+  fetch aggregated fields from the table: "StatsHour"
+  """
+  statHours_aggregate(
+    """
+    distinct select on columns
+    """
+    distinct_on: [statHours_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [statHours_order_by!]
+    """
+    filter the rows returned
+    """
+    where: statHours_bool_exp
+  ): statHours_aggregate!
+  """
+  fetch data from the table: "Stats"
+  """
+  stats(
+    """
+    distinct select on columns
+    """
+    distinct_on: [stats_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [stats_order_by!]
+    """
+    filter the rows returned
+    """
+    where: stats_bool_exp
+  ): [stats!]!
+  """
+  fetch aggregated fields from the table: "Stats"
+  """
+  stats_aggregate(
+    """
+    distinct select on columns
+    """
+    distinct_on: [stats_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [stats_order_by!]
+    """
+    filter the rows returned
+    """
+    where: stats_bool_exp
+  ): stats_aggregate!
+  """
+  fetch data from the table: "Thing" using primary key columns
+  """
+  thing(id: numeric!): things
+  """
+  fetch data from the table: "Thing"
+  """
+  things(
+    """
+    distinct select on columns
+    """
+    distinct_on: [things_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [things_order_by!]
+    """
+    filter the rows returned
+    """
+    where: things_bool_exp
+  ): [things!]!
+  """
+  fetch aggregated fields from the table: "Thing"
+  """
+  things_aggregate(
+    """
+    distinct select on columns
+    """
+    distinct_on: [things_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [things_order_by!]
+    """
+    filter the rows returned
+    """
+    where: things_bool_exp
+  ): things_aggregate!
+  """
+  fetch data from the table: "Triple" using primary key columns
+  """
+  triple(id: numeric!): triples
+  """
+  fetch data from the table: "Triple"
+  """
+  triples(
+    """
+    distinct select on columns
+    """
+    distinct_on: [triples_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [triples_order_by!]
+    """
+    filter the rows returned
+    """
+    where: triples_bool_exp
+  ): [triples!]!
+  """
+  fetch aggregated fields from the table: "Triple"
+  """
+  triples_aggregate(
+    """
+    distinct select on columns
+    """
+    distinct_on: [triples_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [triples_order_by!]
+    """
+    filter the rows returned
+    """
+    where: triples_bool_exp
+  ): triples_aggregate!
+  """
+  fetch data from the table: "Vault" using primary key columns
+  """
+  vault(id: numeric!): vaults
+  """
+  fetch data from the table: "Vault"
+  """
+  vaults(
+    """
+    distinct select on columns
+    """
+    distinct_on: [vaults_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [vaults_order_by!]
+    """
+    filter the rows returned
+    """
+    where: vaults_bool_exp
+  ): [vaults!]!
+  """
+  fetch aggregated fields from the table: "Vault"
+  """
+  vaults_aggregate(
+    """
+    distinct select on columns
+    """
+    distinct_on: [vaults_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [vaults_order_by!]
+    """
+    filter the rows returned
+    """
+    where: vaults_bool_exp
+  ): vaults_aggregate!
+}
+
+"""
+columns and relationships of "Thing"
+"""
+type things {
+  """
+  An object relationship
+  """
+  atom: atoms
+  atomId: numeric!
+  description: String
+  id: numeric!
+  image: String
+  name: String
+  url: String
+}
+
+"""
+aggregated selection of "Thing"
+"""
+type things_aggregate {
+  aggregate: things_aggregate_fields
+  nodes: [things!]!
+}
+
+"""
+aggregate fields of "Thing"
+"""
+type things_aggregate_fields {
+  avg: things_avg_fields
+  count(columns: [things_select_column!], distinct: Boolean): Int!
+  max: things_max_fields
+  min: things_min_fields
+  stddev: things_stddev_fields
+  stddev_pop: things_stddev_pop_fields
+  stddev_samp: things_stddev_samp_fields
+  sum: things_sum_fields
+  var_pop: things_var_pop_fields
+  var_samp: things_var_samp_fields
+  variance: things_variance_fields
+}
+
+"""
+aggregate avg on columns
+"""
+type things_avg_fields {
+  atomId: Float
+  id: Float
+}
+
+"""
+Boolean expression to filter rows from the table "Thing". All fields are combined with a logical 'AND'.
+"""
+input things_bool_exp {
+  _and: [things_bool_exp!]
+  _not: things_bool_exp
+  _or: [things_bool_exp!]
+  atom: atoms_bool_exp
+  atomId: numeric_comparison_exp
+  description: String_comparison_exp
+  id: numeric_comparison_exp
+  image: String_comparison_exp
+  name: String_comparison_exp
+  url: String_comparison_exp
+}
+
+"""
+aggregate max on columns
+"""
+type things_max_fields {
+  atomId: numeric
+  description: String
+  id: numeric
+  image: String
+  name: String
+  url: String
+}
+
+"""
+aggregate min on columns
+"""
+type things_min_fields {
+  atomId: numeric
+  description: String
+  id: numeric
+  image: String
+  name: String
+  url: String
+}
+
+"""
+Ordering options when selecting data from "Thing".
+"""
+input things_order_by {
+  atom: atoms_order_by
+  atomId: order_by
+  description: order_by
+  id: order_by
+  image: order_by
+  name: order_by
+  url: order_by
+}
+
+"""
+select columns of table "Thing"
+"""
+enum things_select_column {
+  """
+  column name
+  """
+  atomId
+  """
+  column name
+  """
+  description
+  """
+  column name
+  """
+  id
+  """
+  column name
+  """
+  image
+  """
+  column name
+  """
+  name
+  """
+  column name
+  """
+  url
+}
+
+"""
+aggregate stddev on columns
+"""
+type things_stddev_fields {
+  atomId: Float
+  id: Float
+}
+
+"""
+aggregate stddev_pop on columns
+"""
+type things_stddev_pop_fields {
+  atomId: Float
+  id: Float
+}
+
+"""
+aggregate stddev_samp on columns
+"""
+type things_stddev_samp_fields {
+  atomId: Float
+  id: Float
+}
+
+"""
+aggregate sum on columns
+"""
+type things_sum_fields {
+  atomId: numeric
+  id: numeric
+}
+
+"""
+aggregate var_pop on columns
+"""
+type things_var_pop_fields {
+  atomId: Float
+  id: Float
+}
+
+"""
+aggregate var_samp on columns
+"""
+type things_var_samp_fields {
+  atomId: Float
+  id: Float
+}
+
+"""
+aggregate variance on columns
+"""
+type things_variance_fields {
+  atomId: Float
+  id: Float
+}
+
+"""
+columns and relationships of "Triple"
+"""
+type triples {
+  blockNumber: numeric!
+  blockTimestamp: numeric!
+  """
+  An object relationship
+  """
+  counterVault: vaults
+  counterVaultId: numeric!
+  """
+  An object relationship
+  """
+  creator: accounts
+  creatorId: String!
+  id: numeric!
+  label: String
+  """
+  An object relationship
+  """
+  object: atoms
+  objectId: numeric!
+  """
+  An object relationship
+  """
+  predicate: atoms
+  predicateId: numeric!
+  """
+  An object relationship
+  """
+  subject: atoms
+  subjectId: numeric!
+  transactionHash: bytea!
+  """
+  An object relationship
+  """
+  vault: vaults
+  vaultId: numeric!
+}
+
+"""
+aggregated selection of "Triple"
+"""
+type triples_aggregate {
+  aggregate: triples_aggregate_fields
+  nodes: [triples!]!
+}
+
+"""
+aggregate fields of "Triple"
+"""
+type triples_aggregate_fields {
+  avg: triples_avg_fields
+  count(columns: [triples_select_column!], distinct: Boolean): Int!
+  max: triples_max_fields
+  min: triples_min_fields
+  stddev: triples_stddev_fields
+  stddev_pop: triples_stddev_pop_fields
+  stddev_samp: triples_stddev_samp_fields
+  sum: triples_sum_fields
+  var_pop: triples_var_pop_fields
+  var_samp: triples_var_samp_fields
+  variance: triples_variance_fields
+}
+
+"""
+order by aggregate values of table "Triple"
+"""
+input triples_aggregate_order_by {
+  avg: triples_avg_order_by
+  count: order_by
+  max: triples_max_order_by
+  min: triples_min_order_by
+  stddev: triples_stddev_order_by
+  stddev_pop: triples_stddev_pop_order_by
+  stddev_samp: triples_stddev_samp_order_by
+  sum: triples_sum_order_by
+  var_pop: triples_var_pop_order_by
+  var_samp: triples_var_samp_order_by
+  variance: triples_variance_order_by
+}
+
+"""
+aggregate avg on columns
+"""
+type triples_avg_fields {
+  blockNumber: Float
+  blockTimestamp: Float
+  counterVaultId: Float
+  id: Float
+  objectId: Float
+  predicateId: Float
+  subjectId: Float
+  vaultId: Float
+}
+
+"""
+order by avg() on columns of table "Triple"
+"""
+input triples_avg_order_by {
+  blockNumber: order_by
+  blockTimestamp: order_by
+  counterVaultId: order_by
+  id: order_by
+  objectId: order_by
+  predicateId: order_by
+  subjectId: order_by
+  vaultId: order_by
+}
+
+"""
+Boolean expression to filter rows from the table "Triple". All fields are combined with a logical 'AND'.
+"""
+input triples_bool_exp {
+  _and: [triples_bool_exp!]
+  _not: triples_bool_exp
+  _or: [triples_bool_exp!]
+  blockNumber: numeric_comparison_exp
+  blockTimestamp: numeric_comparison_exp
+  counterVault: vaults_bool_exp
+  counterVaultId: numeric_comparison_exp
+  creator: accounts_bool_exp
+  creatorId: String_comparison_exp
+  id: numeric_comparison_exp
+  label: String_comparison_exp
+  object: atoms_bool_exp
+  objectId: numeric_comparison_exp
+  predicate: atoms_bool_exp
+  predicateId: numeric_comparison_exp
+  subject: atoms_bool_exp
+  subjectId: numeric_comparison_exp
+  transactionHash: bytea_comparison_exp
+  vault: vaults_bool_exp
+  vaultId: numeric_comparison_exp
+}
+
+"""
+aggregate max on columns
+"""
+type triples_max_fields {
+  blockNumber: numeric
+  blockTimestamp: numeric
+  counterVaultId: numeric
+  creatorId: String
+  id: numeric
+  label: String
+  objectId: numeric
+  predicateId: numeric
+  subjectId: numeric
+  vaultId: numeric
+}
+
+"""
+order by max() on columns of table "Triple"
+"""
+input triples_max_order_by {
+  blockNumber: order_by
+  blockTimestamp: order_by
+  counterVaultId: order_by
+  creatorId: order_by
+  id: order_by
+  label: order_by
+  objectId: order_by
+  predicateId: order_by
+  subjectId: order_by
+  vaultId: order_by
+}
+
+"""
+aggregate min on columns
+"""
+type triples_min_fields {
+  blockNumber: numeric
+  blockTimestamp: numeric
+  counterVaultId: numeric
+  creatorId: String
+  id: numeric
+  label: String
+  objectId: numeric
+  predicateId: numeric
+  subjectId: numeric
+  vaultId: numeric
+}
+
+"""
+order by min() on columns of table "Triple"
+"""
+input triples_min_order_by {
+  blockNumber: order_by
+  blockTimestamp: order_by
+  counterVaultId: order_by
+  creatorId: order_by
+  id: order_by
+  label: order_by
+  objectId: order_by
+  predicateId: order_by
+  subjectId: order_by
+  vaultId: order_by
+}
+
+"""
+Ordering options when selecting data from "Triple".
+"""
+input triples_order_by {
+  blockNumber: order_by
+  blockTimestamp: order_by
+  counterVault: vaults_order_by
+  counterVaultId: order_by
+  creator: accounts_order_by
+  creatorId: order_by
+  id: order_by
+  label: order_by
+  object: atoms_order_by
+  objectId: order_by
+  predicate: atoms_order_by
+  predicateId: order_by
+  subject: atoms_order_by
+  subjectId: order_by
+  transactionHash: order_by
+  vault: vaults_order_by
+  vaultId: order_by
+}
+
+"""
+select columns of table "Triple"
+"""
+enum triples_select_column {
+  """
+  column name
+  """
+  blockNumber
+  """
+  column name
+  """
+  blockTimestamp
+  """
+  column name
+  """
+  counterVaultId
+  """
+  column name
+  """
+  creatorId
+  """
+  column name
+  """
+  id
+  """
+  column name
+  """
+  label
+  """
+  column name
+  """
+  objectId
+  """
+  column name
+  """
+  predicateId
+  """
+  column name
+  """
+  subjectId
+  """
+  column name
+  """
+  transactionHash
+  """
+  column name
+  """
+  vaultId
+}
+
+"""
+aggregate stddev on columns
+"""
+type triples_stddev_fields {
+  blockNumber: Float
+  blockTimestamp: Float
+  counterVaultId: Float
+  id: Float
+  objectId: Float
+  predicateId: Float
+  subjectId: Float
+  vaultId: Float
+}
+
+"""
+order by stddev() on columns of table "Triple"
+"""
+input triples_stddev_order_by {
+  blockNumber: order_by
+  blockTimestamp: order_by
+  counterVaultId: order_by
+  id: order_by
+  objectId: order_by
+  predicateId: order_by
+  subjectId: order_by
+  vaultId: order_by
+}
+
+"""
+aggregate stddev_pop on columns
+"""
+type triples_stddev_pop_fields {
+  blockNumber: Float
+  blockTimestamp: Float
+  counterVaultId: Float
+  id: Float
+  objectId: Float
+  predicateId: Float
+  subjectId: Float
+  vaultId: Float
+}
+
+"""
+order by stddev_pop() on columns of table "Triple"
+"""
+input triples_stddev_pop_order_by {
+  blockNumber: order_by
+  blockTimestamp: order_by
+  counterVaultId: order_by
+  id: order_by
+  objectId: order_by
+  predicateId: order_by
+  subjectId: order_by
+  vaultId: order_by
+}
+
+"""
+aggregate stddev_samp on columns
+"""
+type triples_stddev_samp_fields {
+  blockNumber: Float
+  blockTimestamp: Float
+  counterVaultId: Float
+  id: Float
+  objectId: Float
+  predicateId: Float
+  subjectId: Float
+  vaultId: Float
+}
+
+"""
+order by stddev_samp() on columns of table "Triple"
+"""
+input triples_stddev_samp_order_by {
+  blockNumber: order_by
+  blockTimestamp: order_by
+  counterVaultId: order_by
+  id: order_by
+  objectId: order_by
+  predicateId: order_by
+  subjectId: order_by
+  vaultId: order_by
+}
+
+"""
+aggregate sum on columns
+"""
+type triples_sum_fields {
+  blockNumber: numeric
+  blockTimestamp: numeric
+  counterVaultId: numeric
+  id: numeric
+  objectId: numeric
+  predicateId: numeric
+  subjectId: numeric
+  vaultId: numeric
+}
+
+"""
+order by sum() on columns of table "Triple"
+"""
+input triples_sum_order_by {
+  blockNumber: order_by
+  blockTimestamp: order_by
+  counterVaultId: order_by
+  id: order_by
+  objectId: order_by
+  predicateId: order_by
+  subjectId: order_by
+  vaultId: order_by
+}
+
+"""
+aggregate var_pop on columns
+"""
+type triples_var_pop_fields {
+  blockNumber: Float
+  blockTimestamp: Float
+  counterVaultId: Float
+  id: Float
+  objectId: Float
+  predicateId: Float
+  subjectId: Float
+  vaultId: Float
+}
+
+"""
+order by var_pop() on columns of table "Triple"
+"""
+input triples_var_pop_order_by {
+  blockNumber: order_by
+  blockTimestamp: order_by
+  counterVaultId: order_by
+  id: order_by
+  objectId: order_by
+  predicateId: order_by
+  subjectId: order_by
+  vaultId: order_by
+}
+
+"""
+aggregate var_samp on columns
+"""
+type triples_var_samp_fields {
+  blockNumber: Float
+  blockTimestamp: Float
+  counterVaultId: Float
+  id: Float
+  objectId: Float
+  predicateId: Float
+  subjectId: Float
+  vaultId: Float
+}
+
+"""
+order by var_samp() on columns of table "Triple"
+"""
+input triples_var_samp_order_by {
+  blockNumber: order_by
+  blockTimestamp: order_by
+  counterVaultId: order_by
+  id: order_by
+  objectId: order_by
+  predicateId: order_by
+  subjectId: order_by
+  vaultId: order_by
+}
+
+"""
+aggregate variance on columns
+"""
+type triples_variance_fields {
+  blockNumber: Float
+  blockTimestamp: Float
+  counterVaultId: Float
+  id: Float
+  objectId: Float
+  predicateId: Float
+  subjectId: Float
+  vaultId: Float
+}
+
+"""
+order by variance() on columns of table "Triple"
+"""
+input triples_variance_order_by {
+  blockNumber: order_by
+  blockTimestamp: order_by
+  counterVaultId: order_by
+  id: order_by
+  objectId: order_by
+  predicateId: order_by
+  subjectId: order_by
+  vaultId: order_by
+}
+
+"""
+columns and relationships of "Vault"
+"""
+type vaults {
+  """
+  An object relationship
+  """
+  atom: atoms
+  atomId: numeric
+  currentSharePrice: numeric!
+  """
+  An array relationship
+  """
+  deposits(
+    """
+    distinct select on columns
+    """
+    distinct_on: [deposits_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [deposits_order_by!]
+    """
+    filter the rows returned
+    """
+    where: deposits_bool_exp
+  ): [deposits!]!
+  """
+  An aggregate relationship
+  """
+  deposits_aggregate(
+    """
+    distinct select on columns
+    """
+    distinct_on: [deposits_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [deposits_order_by!]
+    """
+    filter the rows returned
+    """
+    where: deposits_bool_exp
+  ): deposits_aggregate!
+  id: numeric!
+  positionCount: Int!
+  """
+  An array relationship
+  """
+  positions(
+    """
+    distinct select on columns
+    """
+    distinct_on: [positions_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [positions_order_by!]
+    """
+    filter the rows returned
+    """
+    where: positions_bool_exp
+  ): [positions!]!
+  """
+  An aggregate relationship
+  """
+  positions_aggregate(
+    """
+    distinct select on columns
+    """
+    distinct_on: [positions_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [positions_order_by!]
+    """
+    filter the rows returned
+    """
+    where: positions_bool_exp
+  ): positions_aggregate!
+  """
+  An object relationship
+  """
+  redemptions: redemptions
+  totalShares: numeric!
+  """
+  An object relationship
+  """
+  triple: triples
+  tripleId: numeric
+}
+
+"""
+aggregated selection of "Vault"
+"""
+type vaults_aggregate {
+  aggregate: vaults_aggregate_fields
+  nodes: [vaults!]!
+}
+
+"""
+aggregate fields of "Vault"
+"""
+type vaults_aggregate_fields {
+  avg: vaults_avg_fields
+  count(columns: [vaults_select_column!], distinct: Boolean): Int!
+  max: vaults_max_fields
+  min: vaults_min_fields
+  stddev: vaults_stddev_fields
+  stddev_pop: vaults_stddev_pop_fields
+  stddev_samp: vaults_stddev_samp_fields
+  sum: vaults_sum_fields
+  var_pop: vaults_var_pop_fields
+  var_samp: vaults_var_samp_fields
+  variance: vaults_variance_fields
+}
+
+"""
+aggregate avg on columns
+"""
+type vaults_avg_fields {
+  atomId: Float
+  currentSharePrice: Float
+  id: Float
+  positionCount: Float
+  totalShares: Float
+  tripleId: Float
+}
+
+"""
+Boolean expression to filter rows from the table "Vault". All fields are combined with a logical 'AND'.
+"""
+input vaults_bool_exp {
+  _and: [vaults_bool_exp!]
+  _not: vaults_bool_exp
+  _or: [vaults_bool_exp!]
+  atom: atoms_bool_exp
+  atomId: numeric_comparison_exp
+  currentSharePrice: numeric_comparison_exp
+  deposits: deposits_bool_exp
+  id: numeric_comparison_exp
+  positionCount: Int_comparison_exp
+  positions: positions_bool_exp
+  redemptions: redemptions_bool_exp
+  totalShares: numeric_comparison_exp
+  triple: triples_bool_exp
+  tripleId: numeric_comparison_exp
+}
+
+"""
+aggregate max on columns
+"""
+type vaults_max_fields {
+  atomId: numeric
+  currentSharePrice: numeric
+  id: numeric
+  positionCount: Int
+  totalShares: numeric
+  tripleId: numeric
+}
+
+"""
+aggregate min on columns
+"""
+type vaults_min_fields {
+  atomId: numeric
+  currentSharePrice: numeric
+  id: numeric
+  positionCount: Int
+  totalShares: numeric
+  tripleId: numeric
+}
+
+"""
+Ordering options when selecting data from "Vault".
+"""
+input vaults_order_by {
+  atom: atoms_order_by
+  atomId: order_by
+  currentSharePrice: order_by
+  deposits_aggregate: deposits_aggregate_order_by
+  id: order_by
+  positionCount: order_by
+  positions_aggregate: positions_aggregate_order_by
+  redemptions: redemptions_order_by
+  totalShares: order_by
+  triple: triples_order_by
+  tripleId: order_by
+}
+
+"""
+select columns of table "Vault"
+"""
+enum vaults_select_column {
+  """
+  column name
+  """
+  atomId
+  """
+  column name
+  """
+  currentSharePrice
+  """
+  column name
+  """
+  id
+  """
+  column name
+  """
+  positionCount
+  """
+  column name
+  """
+  totalShares
+  """
+  column name
+  """
+  tripleId
+}
+
+"""
+aggregate stddev on columns
+"""
+type vaults_stddev_fields {
+  atomId: Float
+  currentSharePrice: Float
+  id: Float
+  positionCount: Float
+  totalShares: Float
+  tripleId: Float
+}
+
+"""
+aggregate stddev_pop on columns
+"""
+type vaults_stddev_pop_fields {
+  atomId: Float
+  currentSharePrice: Float
+  id: Float
+  positionCount: Float
+  totalShares: Float
+  tripleId: Float
+}
+
+"""
+aggregate stddev_samp on columns
+"""
+type vaults_stddev_samp_fields {
+  atomId: Float
+  currentSharePrice: Float
+  id: Float
+  positionCount: Float
+  totalShares: Float
+  tripleId: Float
+}
+
+"""
+aggregate sum on columns
+"""
+type vaults_sum_fields {
+  atomId: numeric
+  currentSharePrice: numeric
+  id: numeric
+  positionCount: Int
+  totalShares: numeric
+  tripleId: numeric
+}
+
+"""
+aggregate var_pop on columns
+"""
+type vaults_var_pop_fields {
+  atomId: Float
+  currentSharePrice: Float
+  id: Float
+  positionCount: Float
+  totalShares: Float
+  tripleId: Float
+}
+
+"""
+aggregate var_samp on columns
+"""
+type vaults_var_samp_fields {
+  atomId: Float
+  currentSharePrice: Float
+  id: Float
+  positionCount: Float
+  totalShares: Float
+  tripleId: Float
+}
+
+"""
+aggregate variance on columns
+"""
+type vaults_variance_fields {
+  atomId: Float
+  currentSharePrice: Float
+  id: Float
+  positionCount: Float
+  totalShares: Float
+  tripleId: Float
+}

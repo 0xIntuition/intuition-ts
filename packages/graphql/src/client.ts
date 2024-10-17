@@ -1,6 +1,7 @@
 import { GraphQLClient } from 'graphql-request'
 
-const API_URL = process.env.HASURA_PROJECT_ENDPOINT || ''
+// const API_URL = process.env.HASURA_PROJECT_ENDPOINT || ''
+const API_URL = "https://hasura-xfvc.onrender.com/v1/graphql"
 // const HASURA_ADMIN_SECRET = process.env.HASURA_GRAPHQL_ADMIN_SECRET;
 
 type ClientParams = {

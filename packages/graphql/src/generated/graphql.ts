@@ -1,5 +1,5 @@
 /* eslint-disable */
-import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core'
+import { DocumentTypeDecoration } from '@graphql-typed-document-node/core'
 
 export type Maybe<T> = T | null
 export type InputMaybe<T> = Maybe<T>
@@ -2347,542 +2347,226 @@ export type GetAtomsQuery = {
   >
 }
 
-export const AtomTxnFragmentDoc = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'AtomTxn' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'atoms' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'blockNumber' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'blockTimestamp' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'transactionHash' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'creatorId' } },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<AtomTxnFragment, unknown>
-export const AtomVaultDetailsFragmentDoc = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'AtomVaultDetails' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'atoms' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'vaultId' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'walletId' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'vault' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'positionCount' },
-                },
-                { kind: 'Field', name: { kind: 'Name', value: 'totalShares' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'currentSharePrice' },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<AtomVaultDetailsFragment, unknown>
-export const EventFragmentDoc = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'Event' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'events' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'atomId' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'blockNumber' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'blockTimestamp' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'depositId' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'feeTransferId' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'redemptionId' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'transactionHash' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'tripleId' } },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<EventFragment, unknown>
-export const PositionDetailsFragmentDoc = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'PositionDetails' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'positions' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'accountId' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'shares' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'vaultId' } },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<PositionDetailsFragment, unknown>
-export const AtomMetadataFragmentDoc = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'AtomMetadata' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'atoms' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'data' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'image' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'label' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'emoji' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<AtomMetadataFragment, unknown>
-export const AccountMetadataFragmentDoc = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'AccountMetadata' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'accounts' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'label' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'image' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'atomId' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<AccountMetadataFragment, unknown>
-export const TripleMetadataFragmentDoc = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'TripleMetadata' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'triples' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'label' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'subject' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'AtomMetadata' },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'creator' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'FragmentSpread',
-                        name: { kind: 'Name', value: 'AccountMetadata' },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'predicate' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'AtomMetadata' },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'creator' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'FragmentSpread',
-                        name: { kind: 'Name', value: 'AccountMetadata' },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'object' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'AtomMetadata' },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'creator' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'FragmentSpread',
-                        name: { kind: 'Name', value: 'AccountMetadata' },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'AtomMetadata' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'atoms' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'data' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'image' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'label' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'emoji' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'AccountMetadata' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'accounts' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'label' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'image' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'atomId' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<TripleMetadataFragment, unknown>
-export const TripleTxnFragmentDoc = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'TripleTxn' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'triples' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'blockNumber' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'blockTimestamp' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'transactionHash' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'creatorId' } },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<TripleTxnFragment, unknown>
-export const VaultDetailsFragmentDoc = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'VaultDetails' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'vaults' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'atomId' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'currentSharePrice' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'positionCount' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'totalShares' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'tripleId' } },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<VaultDetailsFragment, unknown>
-export const TripleVaultDetailsFragmentDoc = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'TripleVaultDetails' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'triples' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'vaultId' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'counterVaultId' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'vault' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'VaultDetails' },
-                },
-              ],
-            },
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'counterVault' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'VaultDetails' },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'VaultDetails' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'vaults' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'atomId' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'currentSharePrice' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'positionCount' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'totalShares' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'tripleId' } },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<TripleVaultDetailsFragment, unknown>
-export const GetAtomsDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'query',
-      name: { kind: 'Name', value: 'GetAtoms' },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'atoms' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'AtomMetadata' },
-                },
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'AtomTxn' },
-                },
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'AtomVaultDetails' },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'creator' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'FragmentSpread',
-                        name: { kind: 'Name', value: 'AccountMetadata' },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'AtomMetadata' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'atoms' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'data' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'image' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'label' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'emoji' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'AtomTxn' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'atoms' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'blockNumber' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'blockTimestamp' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'transactionHash' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'creatorId' } },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'AtomVaultDetails' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'atoms' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'vaultId' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'walletId' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'vault' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'positionCount' },
-                },
-                { kind: 'Field', name: { kind: 'Name', value: 'totalShares' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'currentSharePrice' },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'AccountMetadata' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'accounts' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'label' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'image' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'atomId' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<GetAtomsQuery, GetAtomsQueryVariables>
+export class TypedDocumentString<TResult, TVariables>
+  extends String
+  implements DocumentTypeDecoration<TResult, TVariables>
+{
+  __apiType?: DocumentTypeDecoration<TResult, TVariables>['__apiType']
+
+  constructor(
+    private value: string,
+    public __meta__?: Record<string, any>,
+  ) {
+    super(value)
+  }
+
+  toString(): string & DocumentTypeDecoration<TResult, TVariables> {
+    return this.value
+  }
+}
+export const AtomTxnFragmentDoc = new TypedDocumentString(
+  `
+    fragment AtomTxn on atoms {
+  blockNumber
+  blockTimestamp
+  transactionHash
+  creatorId
+}
+    `,
+  { fragmentName: 'AtomTxn' },
+) as unknown as TypedDocumentString<AtomTxnFragment, unknown>
+export const AtomVaultDetailsFragmentDoc = new TypedDocumentString(
+  `
+    fragment AtomVaultDetails on atoms {
+  vaultId
+  walletId
+  vault {
+    positionCount
+    totalShares
+    currentSharePrice
+  }
+}
+    `,
+  { fragmentName: 'AtomVaultDetails' },
+) as unknown as TypedDocumentString<AtomVaultDetailsFragment, unknown>
+export const EventFragmentDoc = new TypedDocumentString(
+  `
+    fragment Event on events {
+  type
+  atomId
+  blockNumber
+  blockTimestamp
+  depositId
+  feeTransferId
+  id
+  redemptionId
+  transactionHash
+  tripleId
+}
+    `,
+  { fragmentName: 'Event' },
+) as unknown as TypedDocumentString<EventFragment, unknown>
+export const PositionDetailsFragmentDoc = new TypedDocumentString(
+  `
+    fragment PositionDetails on positions {
+  id
+  accountId
+  shares
+  vaultId
+}
+    `,
+  { fragmentName: 'PositionDetails' },
+) as unknown as TypedDocumentString<PositionDetailsFragment, unknown>
+export const AtomMetadataFragmentDoc = new TypedDocumentString(
+  `
+    fragment AtomMetadata on atoms {
+  data
+  id
+  image
+  label
+  emoji
+  type
+}
+    `,
+  { fragmentName: 'AtomMetadata' },
+) as unknown as TypedDocumentString<AtomMetadataFragment, unknown>
+export const AccountMetadataFragmentDoc = new TypedDocumentString(
+  `
+    fragment AccountMetadata on accounts {
+  label
+  image
+  id
+  atomId
+  type
+}
+    `,
+  { fragmentName: 'AccountMetadata' },
+) as unknown as TypedDocumentString<AccountMetadataFragment, unknown>
+export const TripleMetadataFragmentDoc = new TypedDocumentString(
+  `
+    fragment TripleMetadata on triples {
+  id
+  label
+  subject {
+    ...AtomMetadata
+    creator {
+      ...AccountMetadata
+    }
+  }
+  predicate {
+    ...AtomMetadata
+    creator {
+      ...AccountMetadata
+    }
+  }
+  object {
+    ...AtomMetadata
+    creator {
+      ...AccountMetadata
+    }
+  }
+}
+    fragment AccountMetadata on accounts {
+  label
+  image
+  id
+  atomId
+  type
+}
+fragment AtomMetadata on atoms {
+  data
+  id
+  image
+  label
+  emoji
+  type
+}`,
+  { fragmentName: 'TripleMetadata' },
+) as unknown as TypedDocumentString<TripleMetadataFragment, unknown>
+export const TripleTxnFragmentDoc = new TypedDocumentString(
+  `
+    fragment TripleTxn on triples {
+  blockNumber
+  blockTimestamp
+  transactionHash
+  creatorId
+}
+    `,
+  { fragmentName: 'TripleTxn' },
+) as unknown as TypedDocumentString<TripleTxnFragment, unknown>
+export const VaultDetailsFragmentDoc = new TypedDocumentString(
+  `
+    fragment VaultDetails on vaults {
+  atomId
+  currentSharePrice
+  id
+  positionCount
+  totalShares
+  tripleId
+}
+    `,
+  { fragmentName: 'VaultDetails' },
+) as unknown as TypedDocumentString<VaultDetailsFragment, unknown>
+export const TripleVaultDetailsFragmentDoc = new TypedDocumentString(
+  `
+    fragment TripleVaultDetails on triples {
+  vaultId
+  counterVaultId
+  vault {
+    ...VaultDetails
+  }
+  counterVault {
+    ...VaultDetails
+  }
+}
+    fragment VaultDetails on vaults {
+  atomId
+  currentSharePrice
+  id
+  positionCount
+  totalShares
+  tripleId
+}`,
+  { fragmentName: 'TripleVaultDetails' },
+) as unknown as TypedDocumentString<TripleVaultDetailsFragment, unknown>
+export const GetAtomsDocument = new TypedDocumentString(`
+    query GetAtoms {
+  atoms {
+    ...AtomMetadata
+    ...AtomTxn
+    ...AtomVaultDetails
+    creator {
+      ...AccountMetadata
+    }
+  }
+}
+    fragment AccountMetadata on accounts {
+  label
+  image
+  id
+  atomId
+  type
+}
+fragment AtomMetadata on atoms {
+  data
+  id
+  image
+  label
+  emoji
+  type
+}
+fragment AtomTxn on atoms {
+  blockNumber
+  blockTimestamp
+  transactionHash
+  creatorId
+}
+fragment AtomVaultDetails on atoms {
+  vaultId
+  walletId
+  vault {
+    positionCount
+    totalShares
+    currentSharePrice
+  }
+}`) as unknown as TypedDocumentString<GetAtomsQuery, GetAtomsQueryVariables>
