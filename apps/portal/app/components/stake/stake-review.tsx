@@ -19,6 +19,7 @@ import {
 import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
 
 import { InfoTooltip } from '@components/info-tooltip'
+import { PATHS } from '@consts/paths'
 import {
   getAtomDescription,
   getAtomImage,
@@ -26,6 +27,7 @@ import {
   getAtomLabel,
   getAtomLink,
 } from '@lib/utils/misc'
+import { Link } from '@remix-run/react'
 import { VaultDetailsType } from 'app/types'
 import { TransactionStateType } from 'app/types/transaction'
 
@@ -186,24 +188,9 @@ export default function StakeReview({
                   weight={TextWeight.medium}
                 >
                   {mode === 'deposit'
-                    ? `Deposit ETH to ${claim ? 'Claim' : 'Identity'}`
+                    ? `Deposit ETH on ${claim ? 'Claim' : 'Identity'}`
                     : `Redeem ETH from ${claim ? 'Claim' : 'Identity'}`}
                 </Text>
-                <InfoTooltip
-                  title={
-                    mode === 'deposit'
-                      ? `Deposit ETH to ${claim ? 'Claim' : 'Identity'}`
-                      : `Redeem ETH from ${claim ? 'Claim' : 'Identity'}`
-                  }
-                  icon={IconName.circleInfo}
-                  content={
-                    <div className="flex flex-col gap-2 w-full">
-                      The amount of ETH that will be{' '}
-                      {mode === 'deposit' ? 'staked on' : 'redeemed from'} the{' '}
-                      {claim ? 'Claim' : 'Identity'}.
-                    </div>
-                  }
-                />
               </div>
               <Table className="border-transparent">
                 <TableBody className="border-border/20 border-t border-b">
@@ -322,8 +309,12 @@ export default function StakeReview({
                     icon={IconName.circleInfo}
                     content={
                       <div className="flex flex-col gap-2 w-full">
-                        The amount of ETH that will be staked on the individual
-                        Identities.
+                        <Text variant="base">
+                          When staking on a Claim, a portion of the deposit
+                          amount is automatically allocated to each underlying
+                          Identity, as there is an indirect signaling of support
+                          of these Identities.
+                        </Text>
                       </div>
                     }
                   />
@@ -424,11 +415,22 @@ export default function StakeReview({
                   Estimated Fees
                 </Text>
                 <InfoTooltip
-                  title="ETH to Individual Identities"
+                  title="Estimated Fees"
                   icon={IconName.circleInfo}
                   content={
                     <div className="flex flex-col gap-2 w-full">
-                      The amount of ETH that will be paid in fees.
+                      <Text variant="base">
+                        Standard fees apply to this transaction. See{' '}
+                        <Link
+                          to={PATHS.HELP}
+                          target="_blank"
+                          prefetch="intent"
+                          className="underline"
+                        >
+                          Help Center
+                        </Link>{' '}
+                        for details.
+                      </Text>
                     </div>
                   }
                 />

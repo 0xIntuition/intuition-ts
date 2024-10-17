@@ -407,8 +407,17 @@ export default function StakeModal({
                 </Tag>
                 <InfoTooltip
                   title="Staking"
-                  content="Need copy for this section."
-                  icon={IconName.fingerprint}
+                  content={
+                    <div className="flex flex-col gap-2 w-full">
+                      <Text variant="base">
+                        Staking on an {claim ? 'Claim' : 'Identity'} signifies a
+                        belief in the relevancy of the respective{' '}
+                        {claim ? 'Claim' : 'Identity'} and enhances its
+                        discoverability in the Intuition system.
+                      </Text>
+                    </div>
+                  }
+                  icon={IconName.circleInfo}
                 />
               </div>
               <Badge className="flex items-center gap-1">
@@ -426,7 +435,8 @@ export default function StakeModal({
             variant={TextVariant.caption}
             className="text-secondary/50 w-full"
           >
-            Need copy for this section.
+            Staking on an {claim ? 'Claim' : 'Identity'} enhances its
+            discoverability in the Intuition system.
           </Text>
         </DialogHeader>
         <StakeForm
