@@ -88,6 +88,34 @@ export type ActivityQuery = {
   vaultId?: string | null
 }
 
+export type AgainstAssetsPresentQuery = {
+  combinator?: Combinator | null
+  comparator?: EnumComparators | null
+  options?: Array<boolean> | null
+  userValue?: boolean | null
+}
+
+export type AgainstAssetsQuery = {
+  combinator?: Combinator | null
+  comparator?: NumericComparators | null
+  options?: number | null
+  userValue?: number | null
+}
+
+export type AssetsPresentQuery = {
+  combinator?: Combinator | null
+  comparator?: EnumComparators | null
+  options?: Array<boolean> | null
+  userValue?: boolean | null
+}
+
+export type AssetsQuery = {
+  combinator?: Combinator | null
+  comparator?: EnumComparators | null
+  options?: Array<boolean> | null
+  userValue?: number | null
+}
+
 export type AtomCreated = {
   atom_data: Blob | File
   vault_id: string
@@ -134,10 +162,37 @@ export type Claim = {
 
 export type ClaimAttribute =
   | {
+      combinedVault: CombinedVaultQuery
+    }
+  | {
+      combinedId: CombinedIdQuery
+    }
+  | {
+      combinedIdentityId: CombinedIdentityIdQuery
+    }
+  | {
+      combinedDisplayName: CombinedDisplayNameQuery
+    }
+  | {
+      vault: VaultQuery
+    }
+  | {
+      counterVault: CounterVaultQuery
+    }
+  | {
       vaultId: VaultIdQuery
     }
   | {
       counterVaultId: CounterVaultIdQuery
+    }
+  | {
+      subjectVault: SubjectVaultQuery
+    }
+  | {
+      objectVault: ObjectVaultQuery
+    }
+  | {
+      predicateVault: PredicateVaultQuery
     }
   | {
       subjectVaultId: SubjectVaultIdQuery
@@ -152,18 +207,76 @@ export type ClaimAttribute =
       creator: CreatorQuery
     }
   | {
+      creatorId: CreatorIdQuery
+    }
+  | {
+      positionCreator: PositionCreatorQuery
+    }
+  | {
+      positionCreatorId: PositionCreatorIdQuery
+    }
+  | {
+      position: PositionQuery
+    }
+  | {
+      positionId: PositionIdQuery
+    }
+  | {
       status: StatusQuery
     }
   | {
-      subjectDisplayName: SubjectNameQuery
+      subjectDisplayName: SubjectDisplayNameQuery
     }
   | {
-      objectDisplayName: ObjectNameQuery
+      objectDisplayName: ObjectDisplayNameQuery
     }
   | {
-      predicateDisplayName: PredicateNameQuery
+      predicateDisplayName: PredicateDisplayNameQuery
     }
-  | 'noOp'
+  | {
+      displayName: DisplayNameQuery
+    }
+  | {
+      subjectId: SubjectIdQuery
+    }
+  | {
+      objectId: ObjectIdQuery
+    }
+  | {
+      predicateId: PredicateIdQuery
+    }
+  | {
+      subjectIdentityId: SubjectIdentityIdQuery
+    }
+  | {
+      objectIdentityId: ObjectIdentityIdQuery
+    }
+  | {
+      predicateIdentityId: PredicateIdentityIdQuery
+    }
+  | {
+      forAssets: ForAssetsQuery
+    }
+  | {
+      forAssetsPresent: ForAssetsPresentQuery
+    }
+  | {
+      againstAssets: AgainstAssetsQuery
+    }
+  | {
+      againstAssetsPresent: AgainstAssetsPresentQuery
+    }
+  | {
+      assets: AssetsQuery
+    }
+  | {
+      assetsPresent: AssetsPresentQuery
+    }
+  | {
+      positionValuePresent: PositionValuePresentQuery
+    }
+
+export type ClaimNestedAttribute = ClaimAttribute | Array<ClaimAttribute>
 
 export type ClaimPaginatedResponse = {
   data: Array<ClaimPresenter>
@@ -286,17 +399,52 @@ export const Combinator = {
   OR: 'or',
 } as const
 
+export type CombinedDisplayNameQuery = {
+  combinator?: Combinator | null
+  comparator?: EnumComparators | null
+  options?: Array<boolean> | null
+  userValue?: string | null
+}
+
+export type CombinedIdQuery = {
+  combinator?: Combinator | null
+  comparator?: EnumComparators | null
+  options?: Array<boolean> | null
+  userValue?: string | null
+}
+
+export type CombinedIdentityIdQuery = {
+  combinator?: Combinator | null
+  comparator?: EnumComparators | null
+  options?: Array<boolean> | null
+  userValue?: string | null
+}
+
 export type CombinedSort =
   | IdentitySort
   | ClaimSort
   | PositionSort
   | UserTotalsSort
 
+export type CombinedVaultQuery = {
+  combinator?: Combinator | null
+  comparator?: EnumComparators | null
+  options?: Array<boolean> | null
+  userValue?: string | null
+}
+
 export type CounterVaultIdQuery = {
   combinator?: Combinator | null
   comparator?: NumericComparators | null
   options?: number | null
-  userValue?: JsonNum | null
+  userValue?: number | null
+}
+
+export type CounterVaultQuery = {
+  combinator?: Combinator | null
+  comparator?: EnumComparators | null
+  options?: Array<boolean> | null
+  userValue?: string | null
 }
 
 export type CreateAtom = {
@@ -316,6 +464,13 @@ export type CreateWebhook = {
   url: string
 }
 
+export type CreatorIdQuery = {
+  combinator?: Combinator | null
+  comparator?: EnumComparators | null
+  options?: string | null
+  userValue?: string | null
+}
+
 export type CreatorQuery = {
   combinator?: Combinator | null
   comparator?: StringComparators | null
@@ -325,10 +480,10 @@ export type CreatorQuery = {
 
 export type DataSetQueries =
   | {
-      identity: Array<IdentityAttribute>
+      identity: Array<IdentityNestedAttribute>
     }
   | {
-      claim: Array<ClaimAttribute>
+      claim: Array<ClaimNestedAttribute>
     }
 
 export type DataSetQuery = {
@@ -453,6 +608,41 @@ export type FollowQuery = {
   userWallet?: string | null
 }
 
+export type FollowedByQuery = {
+  combinator?: Combinator | null
+  comparator?: EnumComparators | null
+  options?: Array<boolean> | null
+  userValue?: string | null
+}
+
+export type FollowsQuery = {
+  combinator?: Combinator | null
+  comparator?: EnumComparators | null
+  options?: Array<boolean> | null
+  userValue?: string | null
+}
+
+export type ForAssetsPresentQuery = {
+  combinator?: Combinator | null
+  comparator?: EnumComparators | null
+  options?: Array<boolean> | null
+  userValue?: boolean | null
+}
+
+export type ForAssetsQuery = {
+  combinator?: Combinator | null
+  comparator?: NumericComparators | null
+  options?: number | null
+  userValue?: number | null
+}
+
+export type HasTagQuery = {
+  combinator?: Combinator | null
+  comparator?: EnumComparators | null
+  options?: Array<boolean> | null
+  userValue?: Array<string> | null
+}
+
 export type Identifier = number | string
 
 export type IdentityAttribute =
@@ -460,10 +650,16 @@ export type IdentityAttribute =
       displayName: DisplayNameQuery
     }
   | {
+      userDisplayName: UserDisplayNameQuery
+    }
+  | {
       ids: IdsQuery
     }
   | {
       creator: CreatorQuery
+    }
+  | {
+      creatorId: CreatorIdQuery
     }
   | {
       description: DescriptionQuery
@@ -483,7 +679,36 @@ export type IdentityAttribute =
   | {
       status: StatusQuery
     }
-  | 'noOp'
+  | {
+      userWallet: UserWalletQuery
+    }
+  | {
+      follows: FollowsQuery
+    }
+  | {
+      followedBy: FollowedByQuery
+    }
+  | {
+      hasTag: HasTagQuery
+    }
+  | {
+      predicate: PredicateQuery
+    }
+  | {
+      isContract: IsContractQuery
+    }
+  | {
+      isUser: IsUserQuery
+    }
+  | {
+      positionCreatorId: PositionCreatorIdQuery
+    }
+  | {
+      positionCreator: PositionCreatorQuery
+    }
+  | {
+      positionValue: PositionValueQuery
+    }
 
 export type IdentityId = string
 
@@ -493,6 +718,10 @@ export type IdentityIdQuery = {
   options?: string | null
   userValue?: string | null
 }
+
+export type IdentityNestedAttribute =
+  | IdentityAttribute
+  | Array<IdentityAttribute>
 
 export type IdentityPaginatedResponse = {
   data: Array<IdentityPresenter>
@@ -567,6 +796,13 @@ export type IdsQuery = {
   userValue?: Array<string> | null
 }
 
+export type ImageQuery = {
+  combinator?: Combinator | null
+  comparator?: StringComparators | null
+  options?: string | null
+  userValue?: string | null
+}
+
 export type InputData =
   | {
       CreateAtom: CreateAtom
@@ -617,10 +853,17 @@ export type InviteCodesResponse = {
   invite_codes: Array<InviteCodePresenter>
 }
 
-export type IsCompleteQuery = {
+export type IsContractQuery = {
   combinator?: Combinator | null
   comparator?: EnumComparators | null
-  options?: boolean | null
+  options?: Array<boolean> | null
+  userValue?: boolean | null
+}
+
+export type IsUserQuery = {
+  combinator?: Combinator | null
+  comparator?: EnumComparators | null
+  options?: Array<boolean> | null
   userValue?: boolean | null
 }
 
@@ -787,7 +1030,21 @@ export const NumericComparators = {
   NOT_EQ: 'notEq',
 } as const
 
-export type ObjectNameQuery = {
+export type ObjectDisplayNameQuery = {
+  combinator?: Combinator | null
+  comparator?: StringComparators | null
+  options?: string | null
+  userValue?: string | null
+}
+
+export type ObjectIdQuery = {
+  combinator?: Combinator | null
+  comparator?: EnumComparators | null
+  options?: string | null
+  userValue?: string | null
+}
+
+export type ObjectIdentityIdQuery = {
   combinator?: Combinator | null
   comparator?: StringComparators | null
   options?: string | null
@@ -798,7 +1055,14 @@ export type ObjectVaultIdQuery = {
   combinator?: Combinator | null
   comparator?: NumericComparators | null
   options?: number | null
-  userValue?: JsonNum | null
+  userValue?: number | null
+}
+
+export type ObjectVaultQuery = {
+  combinator?: Combinator | null
+  comparator?: EnumComparators | null
+  options?: Array<boolean> | null
+  userValue?: string | null
 }
 
 export type PaginatedRequest = {
@@ -829,6 +1093,27 @@ export type PointsRequest = {
   points: number
 }
 
+export type PositionCreatorIdQuery = {
+  combinator?: Combinator | null
+  comparator?: EnumComparators | null
+  options?: Array<boolean> | null
+  userValue?: string | null
+}
+
+export type PositionCreatorQuery = {
+  combinator?: Combinator | null
+  comparator?: EnumComparators | null
+  options?: Array<boolean> | null
+  userValue?: string | null
+}
+
+export type PositionIdQuery = {
+  combinator?: Combinator | null
+  comparator?: EnumComparators | null
+  options?: string | null
+  userValue?: string | null
+}
+
 export type PositionPaginatedResponse = {
   data: Array<PositionPresenter>
   limit: number
@@ -857,6 +1142,13 @@ export type PositionPresenter = {
   vault_id: string
 }
 
+export type PositionQuery = {
+  combinator?: Combinator | null
+  comparator?: StringComparators | null
+  options?: string | null
+  userValue?: string | null
+}
+
 export type PositionSort = {
   direction?: SortDirection | null
   sortBy?: PositionSortColumn | null
@@ -883,18 +1175,60 @@ export type PositionSummaryPresenter = {
   value: string
 }
 
-export type PredicateNameQuery = {
+export type PositionValuePresentQuery = {
+  combinator?: Combinator | null
+  comparator?: EnumComparators | null
+  options?: Array<boolean> | null
+  userValue?: number | null
+}
+
+export type PositionValueQuery = {
+  combinator?: Combinator | null
+  comparator?: NumericComparators | null
+  options?: number | null
+  userValue?: number | null
+}
+
+export type PredicateDisplayNameQuery = {
   combinator?: Combinator | null
   comparator?: StringComparators | null
   options?: string | null
   userValue?: string | null
 }
 
+export type PredicateIdQuery = {
+  combinator?: Combinator | null
+  comparator?: EnumComparators | null
+  options?: string | null
+  userValue?: string | null
+}
+
+export type PredicateIdentityIdQuery = {
+  combinator?: Combinator | null
+  comparator?: StringComparators | null
+  options?: string | null
+  userValue?: string | null
+}
+
+export type PredicateQuery = {
+  combinator?: Combinator | null
+  comparator?: EnumComparators | null
+  options?: Array<boolean> | null
+  userValue?: boolean | null
+}
+
 export type PredicateVaultIdQuery = {
   combinator?: Combinator | null
   comparator?: NumericComparators | null
   options?: number | null
-  userValue?: JsonNum | null
+  userValue?: number | null
+}
+
+export type PredicateVaultQuery = {
+  combinator?: Combinator | null
+  comparator?: EnumComparators | null
+  options?: Array<boolean> | null
+  userValue?: string | null
 }
 
 export type Quest = {
@@ -1165,7 +1499,21 @@ export const StringComparators = {
   NOT_EQ: 'notEq',
 } as const
 
-export type SubjectNameQuery = {
+export type SubjectDisplayNameQuery = {
+  combinator?: Combinator | null
+  comparator?: StringComparators | null
+  options?: string | null
+  userValue?: string | null
+}
+
+export type SubjectIdQuery = {
+  combinator?: Combinator | null
+  comparator?: EnumComparators | null
+  options?: string | null
+  userValue?: string | null
+}
+
+export type SubjectIdentityIdQuery = {
   combinator?: Combinator | null
   comparator?: StringComparators | null
   options?: string | null
@@ -1176,7 +1524,14 @@ export type SubjectVaultIdQuery = {
   combinator?: Combinator | null
   comparator?: NumericComparators | null
   options?: number | null
-  userValue?: JsonNum | null
+  userValue?: number | null
+}
+
+export type SubjectVaultQuery = {
+  combinator?: Combinator | null
+  comparator?: EnumComparators | null
+  options?: Array<boolean> | null
+  userValue?: string | null
 }
 
 export type TagEmbeddedPresenter = {
@@ -1215,6 +1570,13 @@ export const TimeFrame = {
   LAST_MONTH: 'lastMonth',
   ANY: 'any',
 } as const
+
+export type TimeFrameQuery = {
+  combinator?: Combinator | null
+  comparator?: StringComparators | null
+  options?: string | null
+  userValue?: string | null
+}
 
 export type TripleCreated = {
   object_id: string
@@ -1325,10 +1687,17 @@ export type UserClaimQuery = {
   page?: number | null
   predicate?: Identifier | null
   showEmptyPosition?: boolean | null
-  sortBy?: SortColumn | null
+  sortBy?: ClaimSortColumn | null
   subject?: Identifier | null
   timeframe?: TimeFrame | null
   user?: Identifier | null
+}
+
+export type UserDisplayNameQuery = {
+  combinator?: Combinator | null
+  comparator?: EnumComparators | null
+  options?: Array<boolean> | null
+  userValue?: string | null
 }
 
 export type UserIdentityQuery = {
@@ -1337,7 +1706,6 @@ export type UserIdentityQuery = {
   limit?: number | null
   offset?: number | null
   page?: number | null
-  showEmptyPosition?: boolean | null
   sortBy?: SortColumn | null
   timeframe?: TimeFrame | null
   user?: Identifier | null
@@ -1503,11 +1871,38 @@ export type UserTotalsSort = {
   sortBy?: SortColumn | null
 }
 
+export type UserWallet = {
+  combinator?: Combinator | null
+  comparator?: StringComparators | null
+  options?: string | null
+  userValue?: string | null
+}
+
+export type UserWalletQuery = {
+  combinator?: Combinator | null
+  comparator?: StringComparators | null
+  options?: string | null
+  userValue?: string | null
+}
+
+export type UsersPointsRequest = {
+  point_type: PointType
+  points: number
+  users: Array<Identifier>
+}
+
 export type VaultIdQuery = {
   combinator?: Combinator | null
   comparator?: NumericComparators | null
   options?: number | null
-  userValue?: JsonNum | null
+  userValue?: number | null
+}
+
+export type VaultQuery = {
+  combinator?: Combinator | null
+  comparator?: EnumComparators | null
+  options?: Array<boolean> | null
+  userValue?: string | null
 }
 
 export type VaultType = 'for' | 'against'
@@ -1808,6 +2203,37 @@ export type SearchClaimsResponse = {
   total: number
 }
 
+export type SearchClaimsV2Data = {
+  counterVault?: Identifier | null
+  creator?: Identifier | null
+  direction?: SortDirection | null
+  displayName?: string | null
+  identity?: Identifier | null
+  limit?: number | null
+  object?: Identifier | null
+  offset?: number | null
+  page?: number | null
+  predicate?: Identifier | null
+  sortBy?: ClaimSortColumn | null
+  status?: Status | null
+  subject?: Identifier | null
+  userAssets?: number | null
+  userAssetsAgainst?: number | null
+  userAssetsAgainstPresent?: boolean | null
+  userAssetsFor?: number | null
+  userAssetsForPresent?: boolean | null
+  userAssetsPresent?: boolean | null
+  userWithPosition?: string | null
+  vault?: Identifier | null
+}
+
+export type SearchClaimsV2Response = {
+  data: Array<ClaimPresenter>
+  limit: number
+  page: number
+  total: number
+}
+
 export type ClaimSummaryData = {
   counterVault?: Identifier | null
   creator?: Identifier | null
@@ -1841,6 +2267,21 @@ export type ClaimSummaryResponse = {
   for_conviction_sum: string
   for_num_positions: number
   num_positions: number
+  total: number
+}
+
+export type GetClaimsV2Data = {
+  direction?: SortDirection | null
+  limit?: number | null
+  offset?: number | null
+  page?: number | null
+  sortBy?: ClaimSortColumn | null
+}
+
+export type GetClaimsV2Response = {
+  data: Array<ClaimPresenter>
+  limit: number
+  page: number
   total: number
 }
 
@@ -1915,6 +2356,23 @@ export type GetPendingIdentitiesResponse = {
   total: number
 }
 
+export type GetPendingIdentitiesV2Data = {
+  direction?: SortDirection | null
+  limit?: number | null
+  offset?: number | null
+  page?: number | null
+  sortBy?: SortColumn | null
+  timeframe?: TimeFrame | null
+  userWallet?: string | null
+}
+
+export type GetPendingIdentitiesV2Response = {
+  data: Array<IdentityPresenter>
+  limit: number
+  page: number
+  total: number
+}
+
 export type GetPendingIdentityData = {
   /**
    * User identifier
@@ -1953,6 +2411,23 @@ export type GetPendingIdentityResponse = {
   user_ens_name?: string | null
   vault_id: string
   vault_uuid?: string | null
+}
+
+export type GetIdentitiesV2Data = {
+  direction?: SortDirection | null
+  limit?: number | null
+  offset?: number | null
+  page?: number | null
+  sortBy?: SortColumn | null
+  timeframe?: TimeFrame | null
+  userWallet?: string | null
+}
+
+export type GetIdentitiesV2Response = {
+  data: Array<IdentityPresenter>
+  limit: number
+  page: number
+  total: number
 }
 
 export type UpdateIdentityData = {
@@ -2102,6 +2577,34 @@ export type SearchIdentityData = {
 }
 
 export type SearchIdentityResponse = {
+  data: Array<IdentityPresenter>
+  limit: number
+  page: number
+  total: number
+}
+
+export type SearchIdentityV2Data = {
+  creator?: Identifier | null
+  description?: string | null
+  direction?: SortDirection | null
+  displayName?: string | null
+  followedBy?: string | null
+  follows?: string | null
+  hasTag?: string | null
+  identityId?: IdentityId | null
+  isContract?: boolean | null
+  isUser?: boolean | null
+  limit?: number | null
+  offset?: number | null
+  page?: number | null
+  predicate?: boolean | null
+  sortBy?: SortColumn | null
+  status?: Status | null
+  timeframe?: TimeFrame | null
+  userWallet?: string | null
+}
+
+export type SearchIdentityV2Response = {
   data: Array<IdentityPresenter>
   limit: number
   page: number
@@ -2928,7 +3431,7 @@ export type GetUserClaimsData = {
   page?: number | null
   predicate?: Identifier | null
   showEmptyPosition?: boolean | null
-  sortBy?: SortColumn | null
+  sortBy?: ClaimSortColumn | null
   subject?: Identifier | null
   timeframe?: TimeFrame | null
   user?: Identifier | null
@@ -2941,13 +3444,34 @@ export type GetUserClaimsResponse = {
   total: number
 }
 
+export type GetUserClaimsV2Data = {
+  direction?: SortDirection | null
+  displayName?: string | null
+  limit?: number | null
+  object?: Identifier | null
+  offset?: number | null
+  page?: number | null
+  predicate?: Identifier | null
+  showEmptyPosition?: boolean | null
+  sortBy?: ClaimSortColumn | null
+  subject?: Identifier | null
+  timeframe?: TimeFrame | null
+  user?: Identifier | null
+}
+
+export type GetUserClaimsV2Response = {
+  data: Array<ClaimPresenter>
+  limit: number
+  page: number
+  total: number
+}
+
 export type GetUserIdentitiesData = {
   direction?: SortDirection | null
   displayName?: string | null
   limit?: number | null
   offset?: number | null
   page?: number | null
-  showEmptyPosition?: boolean | null
   sortBy?: SortColumn | null
   timeframe?: TimeFrame | null
   user?: Identifier | null
@@ -2959,6 +3483,38 @@ export type GetUserIdentitiesResponse = {
   page: number
   total: number
 }
+
+export type GetUserIdentitiesV2Data = {
+  direction?: SortDirection | null
+  displayName?: string | null
+  limit?: number | null
+  offset?: number | null
+  page?: number | null
+  sortBy?: SortColumn | null
+  timeframe?: TimeFrame | null
+  user?: Identifier | null
+}
+
+export type GetUserIdentitiesV2Response = {
+  data: Array<IdentityPresenter>
+  limit: number
+  page: number
+  total: number
+}
+
+export type UpdateUsersPointsBatchData = {
+  requestBody: UsersPointsRequest
+}
+
+export type UpdateUsersPointsBatchResponse = Array<{
+  created_at: string
+  id: string
+  point_type: PointType
+  points: number
+  updated_at: string
+  user_id?: string | null
+  wallet: string
+}>
 
 export type GetUsersPositionsData = {
   direction?: SortDirection | null
@@ -3050,6 +3606,24 @@ export type GetUserByWalletResponse = {
   social_points: number
   total_points: number
   updated_at: string
+  wallet: string
+}
+
+export type UpdateUserPointsData = {
+  /**
+   * User sql id or wallet
+   */
+  identifier: Identifier
+  requestBody: PointsRequest
+}
+
+export type UpdateUserPointsResponse = {
+  created_at: string
+  id: string
+  point_type: PointType
+  points: number
+  updated_at: string
+  user_id?: string | null
   wallet: string
 }
 
@@ -3208,37 +3782,6 @@ export type GetLinkedAccountsByUserResponse = {
   limit: number
   page: number
   total: number
-}
-
-export type UpdateUserPointsData = {
-  /**
-   * User sql id
-   */
-  id: string
-  requestBody: UpsertUser
-}
-
-export type UpdateUserPointsResponse = {
-  api_key?: string | null
-  created_at: string
-  description?: string | null
-  did?: string | null
-  display_name?: string | null
-  ens_name?: string | null
-  id: string
-  image?: string | null
-  invite_code?: string | null
-  last_login?: string | null
-  nft_points: number
-  privy_id?: string | null
-  protocol_points: number
-  quest_points: number
-  referral_points: number
-  role: Role
-  social_points: number
-  total_points: number
-  updated_at: string
-  wallet: string
 }
 
 export type GetUserByIdData = {
@@ -3733,6 +4276,44 @@ export type $OpenApiTs = {
       }
     }
   }
+  '/claims/search/v2': {
+    get: {
+      req: {
+        counterVault?: Identifier | null
+        creator?: Identifier | null
+        direction?: SortDirection | null
+        displayName?: string | null
+        identity?: Identifier | null
+        limit?: number | null
+        object?: Identifier | null
+        offset?: number | null
+        page?: number | null
+        predicate?: Identifier | null
+        sortBy?: ClaimSortColumn | null
+        status?: Status | null
+        subject?: Identifier | null
+        userAssets?: number | null
+        userAssetsAgainst?: number | null
+        userAssetsAgainstPresent?: boolean | null
+        userAssetsFor?: number | null
+        userAssetsForPresent?: boolean | null
+        userAssetsPresent?: boolean | null
+        userWithPosition?: string | null
+        vault?: Identifier | null
+      }
+      res: {
+        /**
+         * Search claims in paginated list
+         */
+        200: {
+          data: Array<ClaimPresenter>
+          limit: number
+          page: number
+          total: number
+        }
+      }
+    }
+  }
   '/claims/summary': {
     get: {
       req: {
@@ -3771,6 +4352,28 @@ export type $OpenApiTs = {
           for_conviction_sum: string
           for_num_positions: number
           num_positions: number
+          total: number
+        }
+      }
+    }
+  }
+  '/claims/v2': {
+    get: {
+      req: {
+        direction?: SortDirection | null
+        limit?: number | null
+        offset?: number | null
+        page?: number | null
+        sortBy?: ClaimSortColumn | null
+      }
+      res: {
+        /**
+         * Get all claims in paginated list
+         */
+        200: {
+          data: Array<ClaimPresenter>
+          limit: number
+          page: number
           total: number
         }
       }
@@ -3872,6 +4475,30 @@ export type $OpenApiTs = {
       }
     }
   }
+  '/identities/pending/v2': {
+    get: {
+      req: {
+        direction?: SortDirection | null
+        limit?: number | null
+        offset?: number | null
+        page?: number | null
+        sortBy?: SortColumn | null
+        timeframe?: TimeFrame | null
+        userWallet?: string | null
+      }
+      res: {
+        /**
+         * Get all pending identities in paginated list
+         */
+        200: {
+          data: Array<IdentityPresenter>
+          limit: number
+          page: number
+          total: number
+        }
+      }
+    }
+  }
   '/identities/pending/{identifier}': {
     get: {
       req: {
@@ -3920,6 +4547,30 @@ export type $OpenApiTs = {
          * Record not found in the DB
          */
         404: unknown
+      }
+    }
+  }
+  '/identities/v2': {
+    get: {
+      req: {
+        direction?: SortDirection | null
+        limit?: number | null
+        offset?: number | null
+        page?: number | null
+        sortBy?: SortColumn | null
+        timeframe?: TimeFrame | null
+        userWallet?: string | null
+      }
+      res: {
+        /**
+         * Get all identities in paginated list
+         */
+        200: {
+          data: Array<IdentityPresenter>
+          limit: number
+          page: number
+          total: number
+        }
       }
     }
   }
@@ -4087,6 +4738,41 @@ export type $OpenApiTs = {
       res: {
         /**
          * Search identities in paginated list
+         */
+        200: {
+          data: Array<IdentityPresenter>
+          limit: number
+          page: number
+          total: number
+        }
+      }
+    }
+  }
+  '/identity/search/v2': {
+    get: {
+      req: {
+        creator?: Identifier | null
+        description?: string | null
+        direction?: SortDirection | null
+        displayName?: string | null
+        followedBy?: string | null
+        follows?: string | null
+        hasTag?: string | null
+        identityId?: IdentityId | null
+        isContract?: boolean | null
+        isUser?: boolean | null
+        limit?: number | null
+        offset?: number | null
+        page?: number | null
+        predicate?: boolean | null
+        sortBy?: SortColumn | null
+        status?: Status | null
+        timeframe?: TimeFrame | null
+        userWallet?: string | null
+      }
+      res: {
+        /**
+         * Search identities using QB returning paginated list
          */
         200: {
           data: Array<IdentityPresenter>
@@ -5172,7 +5858,36 @@ export type $OpenApiTs = {
         page?: number | null
         predicate?: Identifier | null
         showEmptyPosition?: boolean | null
-        sortBy?: SortColumn | null
+        sortBy?: ClaimSortColumn | null
+        subject?: Identifier | null
+        timeframe?: TimeFrame | null
+        user?: Identifier | null
+      }
+      res: {
+        /**
+         * Get claims user has position on
+         */
+        200: {
+          data: Array<ClaimPresenter>
+          limit: number
+          page: number
+          total: number
+        }
+      }
+    }
+  }
+  '/users/claims/v2': {
+    get: {
+      req: {
+        direction?: SortDirection | null
+        displayName?: string | null
+        limit?: number | null
+        object?: Identifier | null
+        offset?: number | null
+        page?: number | null
+        predicate?: Identifier | null
+        showEmptyPosition?: boolean | null
+        sortBy?: ClaimSortColumn | null
         subject?: Identifier | null
         timeframe?: TimeFrame | null
         user?: Identifier | null
@@ -5198,7 +5913,6 @@ export type $OpenApiTs = {
         limit?: number | null
         offset?: number | null
         page?: number | null
-        showEmptyPosition?: boolean | null
         sortBy?: SortColumn | null
         timeframe?: TimeFrame | null
         user?: Identifier | null
@@ -5213,6 +5927,52 @@ export type $OpenApiTs = {
           page: number
           total: number
         }
+      }
+    }
+  }
+  '/users/identities/v2': {
+    get: {
+      req: {
+        direction?: SortDirection | null
+        displayName?: string | null
+        limit?: number | null
+        offset?: number | null
+        page?: number | null
+        sortBy?: SortColumn | null
+        timeframe?: TimeFrame | null
+        user?: Identifier | null
+      }
+      res: {
+        /**
+         * Get identities user has position on
+         */
+        200: {
+          data: Array<IdentityPresenter>
+          limit: number
+          page: number
+          total: number
+        }
+      }
+    }
+  }
+  '/users/points': {
+    post: {
+      req: {
+        requestBody: UsersPointsRequest
+      }
+      res: {
+        /**
+         * Allocate Points to multiple users
+         */
+        200: Array<{
+          created_at: string
+          id: string
+          point_type: PointType
+          points: number
+          updated_at: string
+          user_id?: string | null
+          wallet: string
+        }>
       }
     }
   }
@@ -5332,6 +6092,31 @@ export type $OpenApiTs = {
           social_points: number
           total_points: number
           updated_at: string
+          wallet: string
+        }
+      }
+    }
+  }
+  '/users/{identifier}/points': {
+    put: {
+      req: {
+        /**
+         * User sql id or wallet
+         */
+        identifier: Identifier
+        requestBody: PointsRequest
+      }
+      res: {
+        /**
+         * Add points for user
+         */
+        200: {
+          created_at: string
+          id: string
+          point_type: PointType
+          points: number
+          updated_at: string
+          user_id?: string | null
           wallet: string
         }
       }
@@ -5533,44 +6318,6 @@ export type $OpenApiTs = {
           limit: number
           page: number
           total: number
-        }
-      }
-    }
-  }
-  '/users/{id}/points': {
-    put: {
-      req: {
-        /**
-         * User sql id
-         */
-        id: string
-        requestBody: UpsertUser
-      }
-      res: {
-        /**
-         * Add points for user
-         */
-        200: {
-          api_key?: string | null
-          created_at: string
-          description?: string | null
-          did?: string | null
-          display_name?: string | null
-          ens_name?: string | null
-          id: string
-          image?: string | null
-          invite_code?: string | null
-          last_login?: string | null
-          nft_points: number
-          privy_id?: string | null
-          protocol_points: number
-          quest_points: number
-          referral_points: number
-          role: Role
-          social_points: number
-          total_points: number
-          updated_at: string
-          wallet: string
         }
       }
     }
