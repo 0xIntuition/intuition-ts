@@ -1,4 +1,4 @@
-import { Button, Icon, InfoCard, ProfileCard } from '@0xintuition/1ui'
+import { Button, Icon, ProfileCard } from '@0xintuition/1ui'
 import {
   ClaimPresenter,
   ClaimsService,
@@ -127,6 +127,9 @@ export default function ListDetails() {
         }}
         className="hover:cursor-pointer w-full"
       />
+      {/*
+      Reintroduce this card once we figure out how to handle the 'creator' of the list.
+
       <InfoCard
         variant="user"
         username={claim.creator?.display_name ?? claim.creator?.wallet ?? ''}
@@ -139,7 +142,7 @@ export default function ListDetails() {
         ipfsLink={`${BLOCK_EXPLORER_URL}/address/${claim.creator?.wallet}`}
         timestamp={claim.created_at}
         className="w-full"
-      />
+      /> */}
       <Button
         variant="secondary"
         onClick={() => {
