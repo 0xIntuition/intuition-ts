@@ -1,0 +1,7 @@
+fragment AccountMetadata on accounts {
+  label
+  image
+  id
+  atomId
+  type
+}

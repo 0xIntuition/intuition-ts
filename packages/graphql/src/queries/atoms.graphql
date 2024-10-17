@@ -1,0 +1,10 @@
+query GetAtoms {
+  atoms {
+    ...AtomMetadata
+    ...AtomTxn
+    ...AtomVaultDetails
+    creator {
+      ...AccountMetadata
+    }
+  }
+}

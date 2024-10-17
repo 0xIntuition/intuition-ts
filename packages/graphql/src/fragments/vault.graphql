@@ -1,0 +1,8 @@
+fragment VaultDetails on vaults {
+  atomId
+  currentSharePrice
+  id
+  positionCount
+  totalShares
+  tripleId
+}
