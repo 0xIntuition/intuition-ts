@@ -292,6 +292,7 @@ export async function getOrCreateTriple(
   if (tripleId !== '0') {
     return [tripleId]
   } else {
+    // eslint-disable-line no-else-return
     console.log(`Creating triple: ${subjectId}, ${predicateId}, ${objectId}`)
     const txId = await createTriple(subjectId, predicateId, objectId)
     console.log('Transaction ID: ', txId)

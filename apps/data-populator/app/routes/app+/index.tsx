@@ -111,12 +111,12 @@ export default function CSVEditor() {
   })
   const [sortedIndices, setSortedIndices] = useState<number[]>([])
   const [cellHighlights, setCellHighlights] = useState<CellHighlight[]>([])
-  const [setShowOptions] = useState(false)
-  const [options] = useState({
-    rpc: '',
-    multivault: '',
-    privateKey: '',
-  })
+  // const [setShowOptions] = useState(false)
+  // const [options] = useState({
+  //   rpc: '',
+  //   multivault: '',
+  //   privateKey: '',
+  // })
   // const [showHistory, setShowHistory] = useState(false)
   const [showProgressModal, setShowProgressModal] = useState(false)
   const [currentRequestHash, setCurrentRequestHash] = useState('')

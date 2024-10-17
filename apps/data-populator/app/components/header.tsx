@@ -28,7 +28,7 @@ export function Header({
   const handleToggleTheme = () => {
     const newTheme = theme === 'light' ? 'dark' : 'light'
     setTheme(newTheme)
-    toggleTheme()
+    // toggleTheme()
   }
   return (
     <header className="sticky top-0 z-40 w-full border-b bg-background">

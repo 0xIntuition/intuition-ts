@@ -44,6 +44,10 @@ interface TripleLogEntry {
   objectId: string
 }
 
+type JsonifyObject<T> = {
+  [P in keyof T]: T[P] extends object ? JsonifyObject<T[P]> : T[P]
+}
+
 // Function to get the appropriate block explorer URL
 const getBlockExplorerUrl = (isDev: boolean = true) => {
   return isDev ? 'https://sepolia.basescan.org/tx/' : 'https://basescan.org/tx/'

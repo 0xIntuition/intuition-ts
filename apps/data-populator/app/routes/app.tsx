@@ -5,7 +5,7 @@ import { HistoryModal } from '@components/history-modal'
 import logger from '@lib/utils/logger'
 import { invariant } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
-import { Outlet, useLoaderData, useLocation } from '@remix-run/react'
+import { Outlet, useLocation } from '@remix-run/react'
 import { requireUserWallet } from '@server/auth'
 
 export async function loader({ request }: LoaderFunctionArgs) {

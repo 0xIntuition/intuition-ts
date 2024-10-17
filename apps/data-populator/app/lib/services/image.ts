@@ -2,6 +2,7 @@ import axios from 'axios'
 import sharp from 'sharp'
 
 import { uploadImage } from './cloudinary'
+import { pushUpdate } from './request'
 // import { searchMapping, insertIntoMapping } from './cache-map';
 import { insertIntoMapping, searchMapping } from './supabase'
 

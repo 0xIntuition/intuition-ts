@@ -1,11 +1,5 @@
 import { faker } from '@faker-js/faker'
-import {
-  FollowAction,
-  Organization,
-  Person,
-  Thing,
-  WithContext,
-} from 'schema-dts'
+import { Organization, Person, Thing, WithContext } from 'schema-dts'
 import { parseEther } from 'viem'
 
 import { pinataPinJSON } from '../lib/pinata'
@@ -14,10 +8,10 @@ import { getIntuition, getOrCreateAtom } from '../lib/utils'
 async function main() {
   const admin = await getIntuition(0)
 
-  const followPredicate = await getOrCreateAtom(
-    admin.multivault,
-    'https://schema.org/FollowAction',
-  )
+  // const followPredicate = await getOrCreateAtom(
+  //   admin.multivault,
+  //   'https://schema.org/FollowAction',
+  // )
   const keywortsPredicate = await getOrCreateAtom(
     admin.multivault,
     'https://schema.org/keywords',
@@ -120,14 +114,14 @@ async function main() {
     `Created triple: ${alicePersonTriple.vaultId} https://schema.org/Person ${alicePersonJson.name} `,
   )
 
-  const res = await alice.multivault.depositTriple(
-    alicePersonTriple.vaultId,
-    parseEther('0.01'),
-  )
-  const res2 = await alice.multivault.redeemTriple(
-    alicePersonTriple.vaultId,
-    parseEther('0.003'),
-  )
+  // const res = await alice.multivault.depositTriple(
+  //   alicePersonTriple.vaultId,
+  //   parseEther('0.01'),
+  // )
+  // const res2 = await alice.multivault.redeemTriple(
+  //   alicePersonTriple.vaultId,
+  //   parseEther('0.003'),
+  // )
 
   // const allShares = await alice.multivault.getVaultStateForUser(alicePersonTriple.vaultId, alice.account.address)
   // const res2 = await alice.multivault.redeemTriple(alicePersonTriple.vaultId, allShares.shares)
@@ -164,14 +158,14 @@ async function main() {
 
   // Bob disagrees with alice. Her name is actually Alison
 
-  const counterVault = await bob.multivault.getCounterIdFromTriple(
-    alicePersonTriple.vaultId,
-  )
+  // const counterVault = await bob.multivault.getCounterIdFromTriple(
+  //   alicePersonTriple.vaultId,
+  // )
 
-  const downvote = await bob.multivault.depositTriple(
-    counterVault,
-    parseEther('0.001'),
-  )
+  // const downvote = await bob.multivault.depositTriple(
+  //   counterVault,
+  //   parseEther('0.001'),
+  // )
 
   const tagJson: WithContext<Thing> = {
     '@context': 'https://schema.org',
