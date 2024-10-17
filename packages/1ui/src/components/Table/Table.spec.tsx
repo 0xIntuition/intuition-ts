@@ -57,7 +57,7 @@ describe('Table', () => {
             </caption>
             <thead>
               <tr
-                class="border-b transition-colors hover:bg-primary/10 data-[state=selected]:bg-muted"
+                class="border-b border-border/20 transition-colors hover:bg-primary/10 data-[state=selected]:bg-muted"
               >
                 <th
                   class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0 border-0 border-b border-border/20 w-[100px]"
@@ -85,7 +85,7 @@ describe('Table', () => {
               class="[&_tr:last-child]:border-0"
             >
               <tr
-                class="border-b transition-colors hover:bg-primary/10 data-[state=selected]:bg-muted"
+                class="border-b border-border/20 transition-colors hover:bg-primary/10 data-[state=selected]:bg-muted"
               >
                 <td
                   class="p-4 align-middle [&:has([role=checkbox])]:pr-0 font-medium"
@@ -110,10 +110,10 @@ describe('Table', () => {
               </tr>
             </tbody>
             <tfoot
-              class="border-t bg-primary/10 font-medium [&>tr]:last:border-b-0"
+              class="border-t border-border/20 bg-primary/10 font-medium [&>tr]:last:border-b-0"
             >
               <tr
-                class="border-b transition-colors hover:bg-primary/10 data-[state=selected]:bg-muted"
+                class="border-b border-border/20 transition-colors hover:bg-primary/10 data-[state=selected]:bg-muted"
               >
                 <td
                   class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
