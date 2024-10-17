@@ -1,7 +1,8 @@
 import { ethers } from 'ethers'
 
-const environment = process.env.ENVIRONMENT;
-const privateKey = environment === 'dev' ? process.env.PRIVATE_KEY_DEV : process.env.PRIVATE_KEY;
+const environment = process.env.ENVIRONMENT
+const privateKey =
+  environment === 'dev' ? process.env.PRIVATE_KEY_DEV : process.env.PRIVATE_KEY
 
 if (!privateKey) {
   throw new Error('PRIVATE_KEY must be set')
@@ -17,7 +18,9 @@ export interface EVMCallRequest {
   RPC: string
 }
 
-export async function getProvider(RPC: string): Promise<ethers.JsonRpcProvider> {
+export async function getProvider(
+  RPC: string,
+): Promise<ethers.JsonRpcProvider> {
   try {
     const provider = new ethers.JsonRpcProvider(RPC) as ethers.JsonRpcProvider
     return provider
@@ -54,7 +57,9 @@ export async function getSender(): Promise<string> {
   }
 }
 
-async function generateTx(call: EVMCallRequest): Promise<ethers.ContractTransaction> {
+async function generateTx(
+  call: EVMCallRequest,
+): Promise<ethers.ContractTransaction> {
   try {
     const provider = await getProvider(call.RPC)
     const signer = await getSigner(provider)
@@ -71,10 +76,10 @@ async function generateTx(call: EVMCallRequest): Promise<ethers.ContractTransact
       call.txParams,
     )) as ethers.ContractTransaction
 
-    let gasEstimate = await signer.estimateGas(tx);
-    tx.gasLimit = gasEstimate * BigInt(125) / BigInt(100); // Add 25% to the gas estimate
+    const gasEstimate = await signer.estimateGas(tx)
+    tx.gasLimit = (gasEstimate * BigInt(125)) / BigInt(100) // Add 25% to the gas estimate
 
-    return tx;
+    return tx
   } catch (error) {
     console.error('Error generating TX...')
     throw error
@@ -83,11 +88,11 @@ async function generateTx(call: EVMCallRequest): Promise<ethers.ContractTransact
 
 export async function estimateGas(call: EVMCallRequest): Promise<number> {
   try {
-    const tx = await generateTx(call);
+    const tx = await generateTx(call)
     if (tx.gasLimit === undefined) {
-      throw new Error('Gas limit is undefined');
+      throw new Error('Gas limit is undefined')
     }
-    return tx.gasLimit.toString() as unknown as number;
+    return tx.gasLimit.toString() as unknown as number
   } catch (error) {
     console.error('Error estimating gas...')
     // console.log("Request: ", call);
@@ -100,7 +105,7 @@ export async function evmCall(call: EVMCallRequest): Promise<string> {
     const provider = await getProvider(call.RPC)
     const signer = await getSigner(provider)
 
-    const tx = await generateTx(call);
+    const tx = await generateTx(call)
 
     // ! TESTING
     // console.log("TX:", tx);
@@ -145,7 +150,7 @@ export async function confirmTx(
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const receipt = await provider.getTransactionReceipt(txHash)
     if (receipt && receipt.status === 0) {
-      throw new Error(`Transaction reverted: ${JSON.stringify(receipt)}`);
+      throw new Error(`Transaction reverted: ${JSON.stringify(receipt)}`)
     }
   } catch (error) {
     console.error('Error confirming transaction:', error)
@@ -158,13 +163,13 @@ export async function callAndConfirm(
   timeout?: number,
 ): Promise<string> {
   try {
-    console.log('Calling and confirming EVM');
-    const txHash = await evmCall(call);
-    console.log("Got TX Hash:", txHash);
-    console.log("Confirming TX...");
+    console.log('Calling and confirming EVM')
+    const txHash = await evmCall(call)
+    console.log('Got TX Hash:', txHash)
+    console.log('Confirming TX...')
     await confirmTx(txHash, call.RPC, timeout)
-    console.log("TX Confirmed! ", txHash);
-    return txHash;
+    console.log('TX Confirmed! ', txHash)
+    return txHash
   } catch (error) {
     console.error('Error calling and confirming EVM:', error)
     throw error

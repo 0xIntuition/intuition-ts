@@ -1,5 +1,6 @@
-import { getIntuition } from '../lib/utils'
 import { faker } from '@faker-js/faker'
+
+import { getIntuition } from '../lib/utils'
 
 async function main() {
   const count = 5

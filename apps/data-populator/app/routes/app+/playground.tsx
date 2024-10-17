@@ -21,20 +21,20 @@ export async function loader({ request }: LoaderFunctionArgs) {
   logger('user', user)
   invariant(wallet, 'Unauthorized')
 
-  const transactions = [
-    {
-      to: '0x25709998B542f1Be27D19Fa0B3A9A67302bc1b94',
-      value: '300000000000000', // 0.0003 ETH in wei
-    },
-    {
-      to: '0x25709998B542f1Be27D19Fa0B3A9A67302bc1b94',
-      value: '200000000000000', // 0.0002 ETH in wei
-    },
-    {
-      to: '0x25709998B542f1Be27D19Fa0B3A9A67302bc1b94',
-      value: '100000000000000', // 0.0001 ETH in wei
-    },
-  ]
+  // const transactions = [
+  //   {
+  //     to: '0x25709998B542f1Be27D19Fa0B3A9A67302bc1b94',
+  //     value: '300000000000000', // 0.0003 ETH in wei
+  //   },
+  //   {
+  //     to: '0x25709998B542f1Be27D19Fa0B3A9A67302bc1b94',
+  //     value: '200000000000000', // 0.0002 ETH in wei
+  //   },
+  //   {
+  //     to: '0x25709998B542f1Be27D19Fa0B3A9A67302bc1b94',
+  //     value: '100000000000000', // 0.0001 ETH in wei
+  //   },
+  // ]
 
   // when we want to interact with our contract, we'd do it with this format:
 
@@ -75,11 +75,16 @@ export async function loader({ request }: LoaderFunctionArgs) {
   })
 }
 
+type AtomTransaction = {
+  to: string
+  data: string
+  value: string
+}
 export default function Playground() {
   const { wallet, user, atomTransactions } = useLoaderData<{
     wallet: string
     user: PrivyUser
-    atomTransactions: any
+    atomTransactions: AtomTransaction[]
   }>()
 
   const smartWallet = user.linkedAccounts.find(
@@ -98,7 +103,7 @@ export default function Playground() {
       account: client.account,
       calls: atomTransactions.map((tx) => ({
         to: tx.to as `0x${string}`,
-        data: tx.data,
+        data: tx.data as `0x${string}`,
         value: BigInt(tx.value),
       })),
     })

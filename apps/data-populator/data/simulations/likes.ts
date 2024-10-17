@@ -1,6 +1,7 @@
-import { getIntuition, getOrCreateAtom } from '../lib/utils'
 import { LikeAction, WithContext } from 'schema-dts'
+
 import { ipfs } from '../lib/ipfs'
+import { getIntuition, getOrCreateAtom } from '../lib/utils'
 
 async function main() {
   const user = await getIntuition(0)
@@ -16,14 +17,14 @@ async function main() {
   user.multivault.createTriple({
     subjectId: 1n,
     predicateId: likeActionId,
-    objectId: 6n
+    objectId: 6n,
   })
 
   const user1 = await getIntuition(1)
   user1.multivault.createTriple({
     subjectId: 2n,
     predicateId: likeActionId,
-    objectId: 6n
+    objectId: 6n,
   })
 }
 

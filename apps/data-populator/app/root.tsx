@@ -18,13 +18,11 @@ import { getTheme } from '@server/theme'
 
 import './styles/globals.css'
 
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 
 import { Toaster } from '@0xintuition/1ui'
 
 import { ErrorPage } from '@components/error-page'
-import { Header } from '@components/header'
-import { HistoryModal } from '@components/history-modal'
 import { getChainEnvConfig } from '@lib/utils/environment'
 import { CURRENT_ENV } from 'app/consts'
 import { ClientOnly } from 'remix-utils/client-only'

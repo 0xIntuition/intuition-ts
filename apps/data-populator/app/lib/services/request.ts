@@ -1,24 +1,25 @@
 // request.ts
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import crypto from 'crypto'
 
-import { supabase } from './supabase';
-import crypto from 'crypto';
-import { getSender } from './evm';
+import { getSender } from './evm'
+import { supabase } from './supabase'
 
-const environment = process.env.ENVIRONMENT!;
-const requestsTable = environment === 'dev' ? 'requests_dev' : 'requests';
+const environment = process.env.ENVIRONMENT!
+const requestsTable = environment === 'dev' ? 'requests_dev' : 'requests'
 
 /**
  * Interface representing the structure of a request in the database.
  */
 export interface RequestData {
-  hash: string;
-  sender: string;
-  status: 'pending' | 'processing' | 'fulfilled' | 'failed';
-  type: 'createAtoms' | 'createTriples';
-  created_at: string;
-  updated_at: string;
-  data: any;
-  updates: any;
+  hash: string
+  sender: string
+  status: 'pending' | 'processing' | 'fulfilled' | 'failed'
+  type: 'createAtoms' | 'createTriples'
+  created_at: string
+  updated_at: string
+  data: any
+  updates: any
 }
 
 /**
@@ -32,13 +33,13 @@ export interface RequestData {
 export async function createRequest(
   data: any,
   sender: string,
-  type: 'createAtoms' | 'createTriples'
+  type: 'createAtoms' | 'createTriples',
 ): Promise<string> {
   // Generate a unique hash for the request
   const hash = crypto
     .createHash('sha256')
     .update(JSON.stringify(data) + sender + Date.now().toString())
-    .digest('hex');
+    .digest('hex')
 
   // Insert the new request into the 'requests' table
   const { error } = await supabase.from(requestsTable).insert([
@@ -50,13 +51,13 @@ export async function createRequest(
       data,
       updates: [],
     },
-  ]);
+  ])
 
   if (error) {
-    throw new Error(`Error creating request: ${error.message}`);
+    throw new Error(`Error creating request: ${error.message}`)
   }
 
-  return hash;
+  return hash
 }
 
 /**
@@ -67,23 +68,28 @@ export async function createRequest(
  */
 export async function updateRequest(
   hash: string,
-  updates: Partial<Omit<RequestData, 'hash' | 'sender' | 'created_at' | 'updated_at' | 'data' | 'type'>>
+  updates: Partial<
+    Omit<
+      RequestData,
+      'hash' | 'sender' | 'created_at' | 'updated_at' | 'data' | 'type'
+    >
+  >,
 ): Promise<void> {
   // Update the request with the provided updates
   const { error } = await supabase
     .from(requestsTable)
     .update(updates)
-    .eq('hash', hash);
+    .eq('hash', hash)
 
   if (error) {
-    throw new Error(`Error updating request: ${error.message}`);
+    throw new Error(`Error updating request: ${error.message}`)
   }
 }
 
 export async function pushUpdate(hash: string, update: string): Promise<void> {
-  let request = await getRequest(hash);
-  request.updates.push(update);
-  await updateRequest(hash, request);
+  const request = await getRequest(hash)
+  request.updates.push(update)
+  await updateRequest(hash, request)
 }
 
 /**
@@ -94,29 +100,28 @@ export async function pushUpdate(hash: string, update: string): Promise<void> {
  * @returns The request data if found.
  */
 export async function getRequest(
-  hash: string
+  hash: string,
   // sender?: string
 ): Promise<RequestData> {
-  let query = supabase
+  const query = supabase
     .from(requestsTable)
-    .select(
-      'hash, sender, status, type, created_at, updated_at, data, updates'
-    )
+    .select('hash, sender, status, type, created_at, updated_at, data, updates')
     .eq('hash', hash)
-    .single();
+    .single()
 
   // If sender is provided, include it in the query for ownership verification
   // if (sender) {
   //   query = query.eq('sender', sender);
   // }
 
-  const { data, error } = await query;
+  const { data, error } = await query
 
   if (error || !data) {
     throw new Error(
-      `Request not found or access denied: ${error ? error.message : 'No data returned'
-      }`
-    );
+      `Request not found or access denied: ${
+        error ? error.message : 'No data returned'
+      }`,
+    )
   }
 
   return {
@@ -128,22 +133,25 @@ export async function getRequest(
     updated_at: data.updated_at,
     data: data.data,
     updates: data.updates,
-  };
+  }
 }
 
-export async function getMyRequests(limit: number = 100, offset: number = 0): Promise<RequestData[]> {
-  const sender = await getSender();
+export async function getMyRequests(
+  limit: number = 100,
+  offset: number = 0,
+): Promise<RequestData[]> {
+  const sender = await getSender()
 
   const { data, error } = await supabase
     .from(requestsTable)
     .select('*')
     .eq('sender', sender)
     .order('created_at', { ascending: false })
-    .range(offset, offset + limit - 1);
+    .range(offset, offset + limit - 1)
 
   if (error) {
-    throw new Error(`Error fetching requests: ${error.message}`);
+    throw new Error(`Error fetching requests: ${error.message}`)
   }
 
-  return data as RequestData[];
+  return data as RequestData[]
 }

@@ -12,7 +12,7 @@ async function main() {
   )
 
   const adminAccountAtom = await admin.multivault.createAtom({
-    uri: admin.account.address
+    uri: admin.account.address,
   })
   const adminOrganizationJson: WithContext<Organization> = {
     '@context': 'https://schema.org',

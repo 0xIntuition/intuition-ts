@@ -8,8 +8,8 @@ import {
 } from 'schema-dts'
 import { parseEther } from 'viem'
 
-import { getIntuition, getOrCreateAtom } from '../lib/utils'
 import { pinataPinJSON } from '../lib/pinata'
+import { getIntuition, getOrCreateAtom } from '../lib/utils'
 
 async function main() {
   const admin = await getIntuition(0)
@@ -61,7 +61,6 @@ async function main() {
   console.log(
     `Created triple: ${adminOrganizationTriple.vaultId} https://schema.org/Organization ${adminOrganizationJson.name} `,
   )
-
 
   const adminOrganizationJson2: WithContext<Organization> = {
     '@context': 'https://schema.org',
@@ -135,7 +134,7 @@ async function main() {
 
   const bob = await getIntuition(2)
   const bobAccountAtom = await bob.multivault.createAtom({
-    uri: bob.account.address
+    uri: bob.account.address,
   })
 
   const bobPersonJson: WithContext<Person> = {
@@ -149,7 +148,7 @@ async function main() {
 
   const ipfs2 = await pinataPinJSON(bobPersonJson)
   const bobPersonAtom = await bob.multivault.createAtom({
-    uri: `ipfs://${ipfs2}`
+    uri: `ipfs://${ipfs2}`,
   })
 
   console.log(`Created atom: ${bobPersonAtom.vaultId} ${bobPersonJson.name} `)
@@ -182,7 +181,7 @@ async function main() {
 
   const ipfs3 = await pinataPinJSON(tagJson)
   const tagAtom = await bob.multivault.createAtom({
-    uri: `ipfs://${ipfs3}`
+    uri: `ipfs://${ipfs3}`,
   })
   console.log(`Created atom: ${tagAtom.vaultId} ${tagJson.name} `)
 

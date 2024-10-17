@@ -45,6 +45,7 @@ import { CheckCircle2, Loader2, Minus, Plus, Save, Search } from 'lucide-react'
 // Add this new interface
 interface AtomExistsResult {
   cid: string
+  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
   filteredObj: any
   alreadyExists: boolean
   originalIndex: number
@@ -80,7 +81,7 @@ export default function CSVEditor() {
 
   const [csvData, setCsvData] = useState<string[][]>([])
   const [selectedRows, setSelectedRows] = useState<number[]>([])
-  const [tags, setTags] = useState<string[][]>([])
+  // const [tags, setTags] = useState<string[][]>([])
   const [newTag, setNewTag] = useState<Record<string, string>>({
     '@context': 'https://schema.org',
     '@type': 'Thing',
@@ -97,7 +98,7 @@ export default function CSVEditor() {
   >(() => {})
   const [searchQuery, setSearchQuery] = useState('')
   const [thumbnails, setThumbnails] = useState<Record<number, string>>({})
-  const [imageCache, setImageCache] = useState<Record<string, string>>({})
+  // const [imageCache, setImageCache] = useState<Record<string, string>>({})
   const [existingAtoms, setExistingAtoms] = useState<Set<number>>(new Set())
   const [loadingRows, setLoadingRows] = useState<Set<number>>(new Set())
   const [isTagging, setIsTagging] = useState(false)
@@ -110,13 +111,13 @@ export default function CSVEditor() {
   })
   const [sortedIndices, setSortedIndices] = useState<number[]>([])
   const [cellHighlights, setCellHighlights] = useState<CellHighlight[]>([])
-  const [showOptions, setShowOptions] = useState(false)
-  const [options, setOptions] = useState({
+  const [setShowOptions] = useState(false)
+  const [options] = useState({
     rpc: '',
     multivault: '',
     privateKey: '',
   })
-  const [showHistory, setShowHistory] = useState(false)
+  // const [showHistory, setShowHistory] = useState(false)
   const [showProgressModal, setShowProgressModal] = useState(false)
   const [currentRequestHash, setCurrentRequestHash] = useState('')
   const [proofreadIssues, setProofreadIssues] = useState<
@@ -134,7 +135,9 @@ export default function CSVEditor() {
   // Function to load thumbnails for image URLs in the CSV data
   const loadThumbnailsForCSV = useCallback(async (data: string[][]) => {
     const imageColumnIndex = data[0].indexOf('image')
-    if (imageColumnIndex === -1) return
+    if (imageColumnIndex === -1) {
+      return
+    }
 
     const imageUrls = data.slice(1).map((row) => row[imageColumnIndex])
     const thumbnailUrls = await loadThumbnails(imageUrls)
@@ -253,28 +256,28 @@ export default function CSVEditor() {
     [],
   )
 
-  // Function to update all cell highlights based on adjacent duplicates
-  const updateAllHighlights = useCallback(() => {
-    setCsvData((currentCsvData) => {
-      setSortedIndices((currentSortedIndices) => {
-        if (currentCsvData.length > 1) {
-          const dataIndices =
-            currentSortedIndices.length > 0
-              ? currentSortedIndices
-              : currentCsvData.slice(1).map((_, i) => i + 1)
-          const highlights = detectAllAdjacentDuplicates(
-            currentCsvData,
-            dataIndices,
-          )
-          setCellHighlights(highlights)
-        } else {
-          setCellHighlights([])
-        }
-        return currentSortedIndices
-      })
-      return currentCsvData
-    })
-  }, [])
+  // // Function to update all cell highlights based on adjacent duplicates
+  // const updateAllHighlights = useCallback(() => {
+  //   setCsvData((currentCsvData) => {
+  //     setSortedIndices((currentSortedIndices) => {
+  //       if (currentCsvData.length > 1) {
+  //         const dataIndices =
+  //           currentSortedIndices.length > 0
+  //             ? currentSortedIndices
+  //             : currentCsvData.slice(1).map((_, i) => i + 1)
+  //         const highlights = detectAllAdjacentDuplicates(
+  //           currentCsvData,
+  //           dataIndices,
+  //         )
+  //         setCellHighlights(highlights)
+  //       } else {
+  //         setCellHighlights([])
+  //       }
+  //       return currentSortedIndices
+  //     })
+  //     return currentCsvData
+  //   })
+  // }, [])
 
   // Function to update cell highlights for a specific cell
   const updateCellHighlights = useCallback(
@@ -306,23 +309,23 @@ export default function CSVEditor() {
     [csvData, sortedIndices],
   )
 
-  // Function to process loaded CSV data, including duplicate detection and highlighting
-  const processLoadedCSV = (rows: string[][]) => {
-    setCsvData(rows)
-    setLoadingRows(new Set(rows.slice(1).map((_, index) => index)))
-    checkExistingAtoms(rows)
+  // // Function to process loaded CSV data, including duplicate detection and highlighting
+  // const processLoadedCSV = (rows: string[][]) => {
+  //   setCsvData(rows)
+  //   setLoadingRows(new Set(rows.slice(1).map((_, index) => index)))
+  //   checkExistingAtoms(rows)
 
-    // Initialize sortedIndices for the newly loaded data
-    const initialSortedIndices = rows.slice(1).map((_, index) => index + 1)
-    setSortedIndices(initialSortedIndices)
+  //   // Initialize sortedIndices for the newly loaded data
+  //   const initialSortedIndices = rows.slice(1).map((_, index) => index + 1)
+  //   setSortedIndices(initialSortedIndices)
 
-    // Perform initial highlighting
-    const initialHighlights = detectAllAdjacentDuplicates(
-      rows,
-      initialSortedIndices,
-    )
-    setCellHighlights(initialHighlights)
-  }
+  //   // Perform initial highlighting
+  //   const initialHighlights = detectAllAdjacentDuplicates(
+  //     rows,
+  //     initialSortedIndices,
+  //   )
+  //   setCellHighlights(initialHighlights)
+  // }
 
   // Function to check which atoms already exist in the system
   const checkExistingAtoms = async (data: string[][]) => {
@@ -447,8 +450,12 @@ export default function CSVEditor() {
       (rowIndex) => !existingAtoms.has(rowIndex),
     )
 
-    if (selectedAtomsExist) return 'Tag Selected Atoms'
-    if (selectedAtomsNotExist) return 'Create and Tag Selected Atoms'
+    if (selectedAtomsExist) {
+      return 'Tag Selected Atoms'
+    }
+    if (selectedAtomsNotExist) {
+      return 'Create and Tag Selected Atoms'
+    }
     return 'Create / Tag Selected Atoms'
   }, [selectedRows, existingAtoms])
 
@@ -632,19 +639,19 @@ export default function CSVEditor() {
     adjustInputHeight(e.target)
   }
 
-  const handleBlur = (e: React.FocusEvent<HTMLTextAreaElement>) => {
-    e.target.style.height = '2rem' // Reset to default height
-  }
+  // const handleBlur = (e: React.FocusEvent<HTMLTextAreaElement>) => {
+  //   e.target.style.height = '2rem' // Reset to default height
+  // }
 
   // Function to search for atoms (currently not implemented)
   const searchAtoms = () => {
     fetcher.load(`/api/csv-editor?action=searchAtoms&query=${searchQuery}`)
   }
 
-  // Function to add an atom to the CSV table
-  const addAtomToTable = (atom: string[]) => {
-    setCsvData((prev) => [...prev, atom])
-  }
+  // // Function to add an atom to the CSV table
+  // const addAtomToTable = (atom: string[]) => {
+  //   setCsvData((prev) => [...prev, atom])
+  // }
 
   // Function to save the current CSV data to a file
   const saveCSV = () => {
@@ -690,11 +697,11 @@ export default function CSVEditor() {
     }
   }
 
-  // Function to save options (currently not fully implemented)
-  const handleSaveOptions = () => {
-    console.log('Options saved:', options)
-    setShowOptions(false)
-  }
+  // // Function to save options (currently not fully implemented)
+  // const handleSaveOptions = () => {
+  //   console.log('Options saved:', options)
+  //   setShowOptions(false)
+  // }
 
   useEffect(() => {
     if (actionData?.requestHash) {

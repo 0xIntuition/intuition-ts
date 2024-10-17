@@ -9,7 +9,6 @@ cloudinary.v2.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 })
 
-
 // Usage:
 // const uploadedImage = (await uploadImage(data)) as CloudinaryResponse
 // return uploadedImage.secure_url
@@ -36,7 +35,7 @@ export async function uploadImage(data: AsyncIterable<Uint8Array>) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const response = (await uploadPromise) as any
   if (response.moderation && response.moderation[0].status === 'rejected') {
-    console.log("Moderation response: ", JSON.stringify(response))
+    console.log('Moderation response: ', JSON.stringify(response))
     throw new Error('Image failed moderation')
   }
 

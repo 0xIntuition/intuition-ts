@@ -1,6 +1,7 @@
-import { getIntuition } from '../lib/utils'
 import { faker } from '@faker-js/faker'
+
 import { ipfs } from '../lib/ipfs'
+import { getIntuition } from '../lib/utils'
 
 async function main() {
   const count = 5
@@ -15,7 +16,7 @@ async function main() {
     const { cid } = await ipfs.add(JSON.stringify(json))
 
     const atom = await user.multivault.createAtom({
-      uri: `ipfs://${cid}`
+      uri: `ipfs://${cid}`,
     })
 
     console.log(`Created atom: ${atom.vaultId} ${json.lorem} `)

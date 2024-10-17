@@ -4,7 +4,6 @@ import { Button } from '@0xintuition/1ui'
 
 import PrivyLogoutButton from '@client/privy-logout-button'
 import { Link } from '@remix-run/react'
-import { setTheme, setTheme } from '@server/theme'
 import { History, Moon, Settings, Sun } from 'lucide-react'
 import { ClientOnly } from 'remix-utils/client-only'
 

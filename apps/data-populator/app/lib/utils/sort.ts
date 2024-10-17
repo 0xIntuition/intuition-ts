@@ -16,8 +16,12 @@ export function sortData(data: string[][], sortState: SortState): number[] {
     const valueA = data[a][column].toLowerCase()
     const valueB = data[b][column].toLowerCase()
 
-    if (valueA < valueB) return direction === 'asc' ? -1 : 1
-    if (valueA > valueB) return direction === 'asc' ? 1 : -1
+    if (valueA < valueB) {
+      return direction === 'asc' ? -1 : 1
+    }
+    if (valueA > valueB) {
+      return direction === 'asc' ? 1 : -1
+    }
     return 0
   })
 

@@ -14,7 +14,6 @@ import {
   requestPopulateAndTagAtoms,
   requestPopulateAtoms,
 } from '../lib/services/populate'
-import { db } from './db'
 
 // TODO: Implement real functions for CSV editor operations
 // Ensure proper input and return type declarations for better understanding
@@ -25,13 +24,14 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   const action = url.searchParams.get('action')
 
   switch (action) {
-    case 'getAtomHistory':
+    case 'getAtomHistory': {
       const atomPage = parseInt(url.searchParams.get('page') || '0')
       const atomPageSize = parseInt(url.searchParams.get('pageSize') || '10')
       const atoms = await getMyAtoms(atomPageSize, atomPage * atomPageSize)
       return json({ atoms })
+    }
 
-    case 'getTripleHistory':
+    case 'getTripleHistory': {
       const triplePage = parseInt(url.searchParams.get('page') || '0')
       const triplePageSize = parseInt(url.searchParams.get('pageSize') || '10')
       const triples = await getMyTriples(
@@ -39,6 +39,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
         triplePage * triplePageSize,
       )
       return json({ triples })
+    }
 
     case 'searchAtoms':
       // TODO: Implement actual search logic
@@ -50,22 +51,25 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       // })
       return json({ success: true, result: '[PLACEHOLDER] Search Results' })
 
-    case 'getAtomData':
+    case 'getAtomData': {
       const atomID = url.searchParams.get('atomID') as string
       const atomData = await getAtomDataFromID(atomID)
       return json({ result: { atomID, atomData } })
+    }
 
-    case 'getRequestUpdate':
+    case 'getRequestUpdate': {
       const requestHash = url.searchParams.get('requestHash') as string
       const requestUpdate = await getRequest(requestHash)
       // console.log("requestUpdate response:",requestUpdate)
       return json({ result: requestUpdate })
+    }
 
-    case 'getMyRequests':
+    case 'getMyRequests': {
       const limit = parseInt(url.searchParams.get('limit') || '100')
       const offset = parseInt(url.searchParams.get('offset') || '0')
       const myRequests = await getMyRequests(limit, offset)
       return json({ result: myRequests })
+    }
 
     default:
       return json({ error: 'Invalid action' }, { status: 400 })

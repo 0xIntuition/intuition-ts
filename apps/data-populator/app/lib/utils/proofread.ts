@@ -49,7 +49,6 @@ export function proofreadAll(csvData: CsvData): CsvProofreadResult {
 }
 
 function checkForDuplicates(csvData: CsvData): DuplicateResult {
-  const headerRow = csvData[0]
   const dataRows = csvData.slice(1)
   const seen = new Set<string>()
   const duplicateIndices: number[] = []
@@ -164,12 +163,6 @@ export function detectUnusualCharacters(
   }
 }
 
-function containsGarbledText(cell: string): boolean {
-  // Regular expression for acceptable characters
-  const acceptableChars = /[^\x20-\x7E\u00A0-\u00FF\u2010-\u206F]/
-  return acceptableChars.test(cell)
-}
-
 function fixGarbledText(cell: string): {
   isGarbled: boolean
   fixedText: string
@@ -177,12 +170,14 @@ function fixGarbledText(cell: string): {
 } {
   let fixedText = cell
   let isGarbled = false
-  let reasons: string[] = []
+  const reasons: string[] = []
 
   // Check for control characters
+  // eslint-disable-next-line no-control-regex
   if (/[\x00-\x1F\x7F-\x9F]/.test(cell)) {
     isGarbled = true
     reasons.push('Control Characters')
+    // eslint-disable-next-line no-control-regex
     fixedText = fixedText.replace(/[\x00-\x1F\x7F-\x9F]/g, '')
   }
 

@@ -1,7 +1,8 @@
-import { getIntuition } from '../lib/utils'
 import { faker } from '@faker-js/faker'
 import { Book, WithContext } from 'schema-dts'
+
 import { ipfs } from '../lib/ipfs'
+import { getIntuition } from '../lib/utils'
 
 async function main() {
   const bookCount = 5
@@ -20,7 +21,7 @@ async function main() {
     const { cid } = await ipfs.add(JSON.stringify(book))
 
     const atom = await user.multivault.createAtom({
-      uri: `ipfs://${cid}`
+      uri: `ipfs://${cid}`,
     })
 
     console.log(`Created atom: ${atom.vaultId} ${book.name} `)

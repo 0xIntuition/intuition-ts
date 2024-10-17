@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import {
@@ -311,11 +312,11 @@ export function HistoryModal({ isOpen, onClose }: HistoryModalProps) {
         // Special case for schema.org URIs
         if (name.startsWith('https://schema.org/')) {
           const schemaOrgName = name.split('/').pop() || name
-          name = 'schema://' + schemaOrgName
+          name = `schema://${schemaOrgName}`
         }
       }
 
-      return { name: atomId + ' (' + name + ')', fullData }
+      return { name: `${atomId} (${name})`, fullData }
     },
     [atomData],
   )

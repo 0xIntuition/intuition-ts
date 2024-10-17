@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 
-import PrivyLogout from '@client/privy-logout'
 import { Header } from '@components/header'
 import { HistoryModal } from '@components/history-modal'
 import logger from '@lib/utils/logger'
@@ -22,10 +21,9 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export default function App() {
-  const { wallet } = useLoaderData<{ wallet: string }>()
   const { pathname } = useLocation()
 
-  const [showOptions, setShowOptions] = useState(false)
+  const [, setShowOptions] = useState(false)
   const [showHistory, setShowHistory] = useState(false)
 
   const handleOpenOptions = () => setShowOptions(true)
