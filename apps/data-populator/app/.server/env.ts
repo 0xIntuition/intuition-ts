@@ -20,15 +20,13 @@ const schema = z.object({
   ORIGIN_URL: z.string(),
   PRIVY_APP_ID: z.string(),
   GTM_TRACKING_ID: z.string(),
-  SUPABASE_URL: z.string(),
-  SUPABASE_KEY: z.string(),
   featureFlagsSchema,
 })
 
 declare global {
   /* eslint-disable @typescript-eslint/no-namespace */
   namespace NodeJS {
-    interface ProcessEnv extends z.infer<typeof schema> {}
+    interface ProcessEnv extends z.infer<typeof schema> { }
   }
 }
 
