@@ -1,0 +1,36 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "allowImportingTsExtensions": true,
+    "baseUrl": ".",
+    "forceConsistentCasingInFileNames": true,
+    "lib": ["DOM", "DOM.Iterable", "ES2022"],
+    "moduleResolution": "Bundler",
+    "noEmit": true,
+    "types": ["@remix-run/node", "vite/client"],
+    "paths": {
+      "@components/*": ["app/components/*"],
+      "@consts/*": ["app/consts/*"],
+      "@lib/*": ["app/lib/*"],
+      "@routes/*": ["app/routes/*"],
+      "@styles/*": ["app/styles/*"],
+      "@server/*": ["app/.server/*"],
+      "@client/*": ["app/.client/*"],
+      "@images/*": ["./src/images/*"],
+      "@assets/*": ["app/assets/*"]
+    },
+    "outDir": "./build"
+  },
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    "tailwind.config.ts",
+    "app/.server/csv-editor.tsx"
+  ],
+  "exclude": ["node_modules", "build"],
+  "references": [
+    {
+      "path": "../../packages/1ui"
+    }
+  ]
+}

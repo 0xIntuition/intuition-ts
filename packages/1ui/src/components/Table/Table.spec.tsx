@@ -110,7 +110,7 @@ describe('Table', () => {
               </tr>
             </tbody>
             <tfoot
-              class="border-t bg-primary/10 font-medium [&>tr]:last:border-b-0"
+              class="border-t border-border/20 bg-primary/10 font-medium [&>tr]:last:border-b-0"
             >
               <tr
                 class="border-b border-border/20 transition-colors hover:bg-primary/10 data-[state=selected]:bg-muted"

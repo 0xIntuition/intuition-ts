@@ -52,8 +52,12 @@ import type {
   GetClaimPositionsResponse,
   GetClaimsData,
   GetClaimsResponse,
+  GetClaimsV2Data,
+  GetClaimsV2Response,
   GetIdentitiesData,
   GetIdentitiesResponse,
+  GetIdentitiesV2Data,
+  GetIdentitiesV2Response,
   GetIdentityByIdData,
   GetIdentityByIdResponse,
   GetIdentityFollowedData,
@@ -74,6 +78,8 @@ import type {
   GetLinkedAccountsResponse,
   GetPendingIdentitiesData,
   GetPendingIdentitiesResponse,
+  GetPendingIdentitiesV2Data,
+  GetPendingIdentitiesV2Response,
   GetPendingIdentityData,
   GetPendingIdentityResponse,
   GetPositionByIdData,
@@ -91,8 +97,12 @@ import type {
   GetUserByWalletResponse,
   GetUserClaimsData,
   GetUserClaimsResponse,
+  GetUserClaimsV2Data,
+  GetUserClaimsV2Response,
   GetUserIdentitiesData,
   GetUserIdentitiesResponse,
+  GetUserIdentitiesV2Data,
+  GetUserIdentitiesV2Response,
   GetUserQuestByIdData,
   GetUserQuestByIdResponse,
   GetUserQuestByQuestIdData,
@@ -136,9 +146,13 @@ import type {
   RunDynamicQueryResponse,
   SearchClaimsData,
   SearchClaimsResponse,
+  SearchClaimsV2Data,
+  SearchClaimsV2Response,
   SearchData,
   SearchIdentityData,
   SearchIdentityResponse,
+  SearchIdentityV2Data,
+  SearchIdentityV2Response,
   SearchPositionsData,
   SearchPositionsResponse,
   SearchQuestsData,
@@ -162,6 +176,8 @@ import type {
   UpdateUserPointsData,
   UpdateUserPointsResponse,
   UpdateUserResponse,
+  UpdateUsersPointsBatchData,
+  UpdateUsersPointsBatchResponse,
 } from './types.gen'
 
 export class AlchemyControllerService {
@@ -571,6 +587,64 @@ export class ClaimsService {
    * @param data.userAssetsAgainstPresent
    * @param data.userAssets
    * @param data.userAssetsPresent
+   * @returns unknown Search claims in paginated list
+   * @throws ApiError
+   */
+  public static searchClaimsV2(
+    data: SearchClaimsV2Data = {},
+  ): CancelablePromise<SearchClaimsV2Response> {
+    return __request(OpenAPI, {
+      method: 'GET',
+      url: '/claims/search/v2',
+      query: {
+        direction: data.direction,
+        sortBy: data.sortBy,
+        page: data.page,
+        offset: data.offset,
+        limit: data.limit,
+        creator: data.creator,
+        subject: data.subject,
+        identity: data.identity,
+        object: data.object,
+        predicate: data.predicate,
+        vault: data.vault,
+        displayName: data.displayName,
+        counterVault: data.counterVault,
+        status: data.status,
+        userWithPosition: data.userWithPosition,
+        userAssetsFor: data.userAssetsFor,
+        userAssetsForPresent: data.userAssetsForPresent,
+        userAssetsAgainst: data.userAssetsAgainst,
+        userAssetsAgainstPresent: data.userAssetsAgainstPresent,
+        userAssets: data.userAssets,
+        userAssetsPresent: data.userAssetsPresent,
+      },
+    })
+  }
+
+  /**
+   * @param data The data for the request.
+   * @param data.direction
+   * @param data.sortBy
+   * @param data.page
+   * @param data.offset
+   * @param data.limit
+   * @param data.creator
+   * @param data.subject
+   * @param data.identity
+   * @param data.object
+   * @param data.predicate
+   * @param data.vault
+   * @param data.displayName
+   * @param data.counterVault
+   * @param data.status
+   * @param data.userWithPosition
+   * @param data.userAssetsFor
+   * @param data.userAssetsForPresent
+   * @param data.userAssetsAgainst
+   * @param data.userAssetsAgainstPresent
+   * @param data.userAssets
+   * @param data.userAssetsPresent
    * @returns unknown Summary of claim values based on query
    * @throws ApiError
    */
@@ -602,6 +676,32 @@ export class ClaimsService {
         userAssetsAgainstPresent: data.userAssetsAgainstPresent,
         userAssets: data.userAssets,
         userAssetsPresent: data.userAssetsPresent,
+      },
+    })
+  }
+
+  /**
+   * @param data The data for the request.
+   * @param data.direction
+   * @param data.sortBy
+   * @param data.page
+   * @param data.offset
+   * @param data.limit
+   * @returns unknown Get all claims in paginated list
+   * @throws ApiError
+   */
+  public static getClaimsV2(
+    data: GetClaimsV2Data = {},
+  ): CancelablePromise<GetClaimsV2Response> {
+    return __request(OpenAPI, {
+      method: 'GET',
+      url: '/claims/v2',
+      query: {
+        direction: data.direction,
+        sortBy: data.sortBy,
+        page: data.page,
+        offset: data.offset,
+        limit: data.limit,
       },
     })
   }
@@ -691,6 +791,36 @@ export class IdentitiesService {
 
   /**
    * @param data The data for the request.
+   * @param data.direction
+   * @param data.sortBy
+   * @param data.page
+   * @param data.offset
+   * @param data.limit
+   * @param data.userWallet
+   * @param data.timeframe
+   * @returns unknown Get all pending identities in paginated list
+   * @throws ApiError
+   */
+  public static getPendingIdentitiesV2(
+    data: GetPendingIdentitiesV2Data = {},
+  ): CancelablePromise<GetPendingIdentitiesV2Response> {
+    return __request(OpenAPI, {
+      method: 'GET',
+      url: '/identities/pending/v2',
+      query: {
+        direction: data.direction,
+        sortBy: data.sortBy,
+        page: data.page,
+        offset: data.offset,
+        limit: data.limit,
+        userWallet: data.userWallet,
+        timeframe: data.timeframe,
+      },
+    })
+  }
+
+  /**
+   * @param data The data for the request.
    * @param data.identifier User identifier
    * @returns unknown Get a pending identity by the identifier
    * @throws ApiError
@@ -706,6 +836,36 @@ export class IdentitiesService {
       },
       errors: {
         404: 'Record not found in the DB',
+      },
+    })
+  }
+
+  /**
+   * @param data The data for the request.
+   * @param data.direction
+   * @param data.sortBy
+   * @param data.page
+   * @param data.offset
+   * @param data.limit
+   * @param data.userWallet
+   * @param data.timeframe
+   * @returns unknown Get all identities in paginated list
+   * @throws ApiError
+   */
+  public static getIdentitiesV2(
+    data: GetIdentitiesV2Data = {},
+  ): CancelablePromise<GetIdentitiesV2Response> {
+    return __request(OpenAPI, {
+      method: 'GET',
+      url: '/identities/v2',
+      query: {
+        direction: data.direction,
+        sortBy: data.sortBy,
+        page: data.page,
+        offset: data.offset,
+        limit: data.limit,
+        userWallet: data.userWallet,
+        timeframe: data.timeframe,
       },
     })
   }
@@ -777,6 +937,58 @@ export class IdentitiesService {
     return __request(OpenAPI, {
       method: 'GET',
       url: '/identity/search',
+      query: {
+        direction: data.direction,
+        sortBy: data.sortBy,
+        page: data.page,
+        offset: data.offset,
+        limit: data.limit,
+        displayName: data.displayName,
+        creator: data.creator,
+        userWallet: data.userWallet,
+        status: data.status,
+        predicate: data.predicate,
+        isUser: data.isUser,
+        isContract: data.isContract,
+        hasTag: data.hasTag,
+        follows: data.follows,
+        followedBy: data.followedBy,
+        timeframe: data.timeframe,
+        identityId: data.identityId,
+        description: data.description,
+      },
+    })
+  }
+
+  /**
+   * @param data The data for the request.
+   * @param data.direction
+   * @param data.sortBy
+   * @param data.page
+   * @param data.offset
+   * @param data.limit
+   * @param data.displayName
+   * @param data.creator
+   * @param data.userWallet
+   * @param data.status
+   * @param data.predicate
+   * @param data.isUser
+   * @param data.isContract
+   * @param data.hasTag
+   * @param data.follows
+   * @param data.followedBy
+   * @param data.timeframe
+   * @param data.identityId
+   * @param data.description
+   * @returns unknown Search identities using QB returning paginated list
+   * @throws ApiError
+   */
+  public static searchIdentityV2(
+    data: SearchIdentityV2Data = {},
+  ): CancelablePromise<SearchIdentityV2Response> {
+    return __request(OpenAPI, {
+      method: 'GET',
+      url: '/identity/search/v2',
       query: {
         direction: data.direction,
         sortBy: data.sortBy,
@@ -1748,6 +1960,45 @@ export class UsersService {
    * @param data.user
    * @param data.displayName
    * @param data.showEmptyPosition
+   * @param data.subject
+   * @param data.predicate
+   * @param data.object
+   * @param data.timeframe
+   * @returns unknown Get claims user has position on
+   * @throws ApiError
+   */
+  public static getUserClaimsV2(
+    data: GetUserClaimsV2Data = {},
+  ): CancelablePromise<GetUserClaimsV2Response> {
+    return __request(OpenAPI, {
+      method: 'GET',
+      url: '/users/claims/v2',
+      query: {
+        direction: data.direction,
+        sortBy: data.sortBy,
+        page: data.page,
+        offset: data.offset,
+        limit: data.limit,
+        user: data.user,
+        displayName: data.displayName,
+        showEmptyPosition: data.showEmptyPosition,
+        subject: data.subject,
+        predicate: data.predicate,
+        object: data.object,
+        timeframe: data.timeframe,
+      },
+    })
+  }
+
+  /**
+   * @param data The data for the request.
+   * @param data.direction
+   * @param data.sortBy
+   * @param data.page
+   * @param data.offset
+   * @param data.limit
+   * @param data.user
+   * @param data.displayName
    * @param data.timeframe
    * @returns unknown Get identities user has position on
    * @throws ApiError
@@ -1766,9 +2017,57 @@ export class UsersService {
         limit: data.limit,
         user: data.user,
         displayName: data.displayName,
-        showEmptyPosition: data.showEmptyPosition,
         timeframe: data.timeframe,
       },
+    })
+  }
+
+  /**
+   * @param data The data for the request.
+   * @param data.direction
+   * @param data.sortBy
+   * @param data.page
+   * @param data.offset
+   * @param data.limit
+   * @param data.user
+   * @param data.displayName
+   * @param data.timeframe
+   * @returns unknown Get identities user has position on
+   * @throws ApiError
+   */
+  public static getUserIdentitiesV2(
+    data: GetUserIdentitiesV2Data = {},
+  ): CancelablePromise<GetUserIdentitiesV2Response> {
+    return __request(OpenAPI, {
+      method: 'GET',
+      url: '/users/identities/v2',
+      query: {
+        direction: data.direction,
+        sortBy: data.sortBy,
+        page: data.page,
+        offset: data.offset,
+        limit: data.limit,
+        user: data.user,
+        displayName: data.displayName,
+        timeframe: data.timeframe,
+      },
+    })
+  }
+
+  /**
+   * @param data The data for the request.
+   * @param data.requestBody
+   * @returns unknown Allocate Points to multiple users
+   * @throws ApiError
+   */
+  public static updateUsersPointsBatch(
+    data: UpdateUsersPointsBatchData,
+  ): CancelablePromise<UpdateUsersPointsBatchResponse> {
+    return __request(OpenAPI, {
+      method: 'POST',
+      url: '/users/points',
+      body: data.requestBody,
+      mediaType: 'application/json',
     })
   }
 
@@ -1863,6 +2162,27 @@ export class UsersService {
       path: {
         wallet: data.wallet,
       },
+    })
+  }
+
+  /**
+   * @param data The data for the request.
+   * @param data.identifier User sql id or wallet
+   * @param data.requestBody
+   * @returns unknown Add points for user
+   * @throws ApiError
+   */
+  public static updateUserPoints(
+    data: UpdateUserPointsData,
+  ): CancelablePromise<UpdateUserPointsResponse> {
+    return __request(OpenAPI, {
+      method: 'PUT',
+      url: '/users/{identifier}/points',
+      path: {
+        identifier: data.identifier,
+      },
+      body: data.requestBody,
+      mediaType: 'application/json',
     })
   }
 
@@ -1992,27 +2312,6 @@ export class UsersService {
       path: {
         id: data.id,
       },
-    })
-  }
-
-  /**
-   * @param data The data for the request.
-   * @param data.id User sql id
-   * @param data.requestBody
-   * @returns unknown Add points for user
-   * @throws ApiError
-   */
-  public static updateUserPoints(
-    data: UpdateUserPointsData,
-  ): CancelablePromise<UpdateUserPointsResponse> {
-    return __request(OpenAPI, {
-      method: 'PUT',
-      url: '/users/{id}/points',
-      path: {
-        id: data.id,
-      },
-      body: data.requestBody,
-      mediaType: 'application/json',
     })
   }
 

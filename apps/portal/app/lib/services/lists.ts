@@ -3,7 +3,6 @@ import {
   ClaimSortColumn,
   ClaimsService,
   PositionSortColumn,
-  SortColumn,
   SortDirection,
   UsersService,
 } from '@0xintuition/api'
@@ -90,7 +89,7 @@ export async function getUserSavedLists({
     args: {
       page,
       limit,
-      sortBy: sortBy as SortColumn,
+      sortBy: sortBy as ClaimSortColumn,
       direction,
       displayName,
       predicate: getSpecialPredicate(CURRENT_ENV).tagPredicate.id,

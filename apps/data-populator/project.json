@@ -1,0 +1,41 @@
+{
+  "name": "@0xintuition/data-populator",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/data-populator",
+  "projectType": "application",
+  "tags": [],
+  "targets": {
+    "build": {
+      "configurations": {
+        "development": {
+          "mode": "development"
+        },
+        "staging": {
+          "mode": "staging"
+        },
+        "production": {
+          "mode": "production"
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "options": {
+        "lintFilePatterns": ["apps/data-populator//**/*.{ts,tsx,js,jsx}"]
+      }
+    },
+    "test": {
+      "executor": "@nx/vite:test",
+      "options": {
+        "config": "apps/data-populator/vitest.config.ts"
+      }
+    },
+    "typecheck": {
+      "dependsOn": ["^build"],
+      "command": "tsc",
+      "options": {
+        "cwd": "apps/data-populator"
+      }
+    }
+  }
+}

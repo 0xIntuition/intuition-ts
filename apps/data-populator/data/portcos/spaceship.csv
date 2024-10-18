@@ -1,0 +1,33 @@
+@context,@type,name,description,image,url
+https://schema.org,Thing,Aether Games,A gaming and NFT project,https://aethergames.io/images/logos/aeg_logo.webp,https://aethergames.io
+https://schema.org,Thing,Arcadia,A DeFi infrastructure platform,https://www.arcadia.finance/arcadia_logo_green_bg_2.svg,https://www.arcadia.finance
+https://schema.org,Thing,Argus,A gaming project utilizing zero-knowledge technology,https://pbs.twimg.com/profile_images/1709263466480234499/xuF0nTco_400x400.jpg,https://argus.gg/
+https://schema.org,Thing,Astaria Labs,A lending platform for NFT-backed loans,https://pbs.twimg.com/profile_images/1773462870623174656/G88BsUuO_400x400.jpg,https://astaria.xyz/
+https://schema.org,Thing,Beaker DAO,A decentralized autonomous organization focused on decentralized science,,https://beakerdao.xyz
+https://schema.org,Thing,Blackbird,A consumer-focused NFT project,https://pbs.twimg.com/profile_images/1569693486407876609/lXu8g7r-_400x400.jpg,https://www.blackbird.xyz/
+https://schema.org,Thing,Blur,An NFT marketplace,https://imgs.blur.io/_assets/homepage/logo.png,https://blur.io/
+https://schema.org,Thing,Center,An NFT infrastructure project,https://pbs.twimg.com/profile_images/1765059853301477376/gSuC-LHX_400x400.jpg,https://center.app/
+https://schema.org,Thing,21 Impact Labs,A DAO focused on decentralized science and brain health,https://media.licdn.com/dms/image/v2/C4E0BAQGX4Eyb7b-WqQ/company-logo_200_200/company-logo_200_200/0/1663058883615/cherubimlabs_logo?e=2147483647&v=beta&t=22TnP2VeAS3kUqeUwnz8dFB3BPN-18LLvLU7n118668,https://21impactlabs.com
+https://schema.org,Thing,Eigenlayer,A DeFi infrastructure and staking platform,https://pbs.twimg.com/profile_images/1635879999264940033/_pozth32_400x400.jpg,https://eigenlayer.xyz
+https://schema.org,Thing,Gallery,An NFT-based media and consumer platform,https://pbs.twimg.com/profile_images/1507114143865786370/Ww3QGXhq_400x400.png,https://gallery.so/home
+https://schema.org,Thing,Holonym,A zero-knowledge technology project,https://pbs.twimg.com/profile_images/1816929038268497920/U20uABQQ_400x400.png,https://holonym.id
+https://schema.org,Thing,Identity Labs,An infrastructure and wallet project,https://pbs.twimg.com/profile_images/1811031418870333440/V1exfe_Q_400x400.png,https://nfid.one
+https://schema.org,Thing,LabDAO,A DAO focused on decentralized science and infrastructure,https://pbs.twimg.com/profile_images/1618921850834149377/BDiY-Z47_400x400.jpg,https://labdao.xyz
+https://schema.org,Thing,Lagrange,A zero-knowledge technology and infrastructure project,https://pbs.twimg.com/profile_images/1788037490424860672/W7mDo6sk_400x400.png,https://www.lagrange.dev/
+https://schema.org,Thing,Lens,A social platform with social tokens and infrastructure,https://pbs.twimg.com/profile_images/1762570225109590017/FFkzuaBS_400x400.jpg,https://www.lens.xyz
+https://schema.org,Thing,Lit Protocol,"An infrastructure project for social, wallet, and MPC applications",https://pbs.twimg.com/profile_images/1728954658192842752/OswcpR_W_400x400.jpg,https://litprotocol.com/
+https://schema.org,Thing,Matchbox DAO,A DAO focused on zero-knowledge technology and gaming,https://images.squarespace-cdn.com/content/v1/6290822c51b22e433112f8e8/d698b095-7ea3-4045-8daf-a69e137c29b8/Matchbox+Logo.png?format=1500w,https://www.matchboxdao.com/
+https://schema.org,Thing,Morpho Labs,A DeFi lending platform,https://pbs.twimg.com/profile_images/1712024635590455296/ksuEkiF7_400x400.jpg,https://www.morpho.best/
+https://schema.org,Thing,MultiVM,A zero-knowledge technology infrastructure project focused on zkEVM,https://pbs.twimg.com/profile_images/1798296607986749440/VYVY1ZBT_400x400.png,https://multivm.io
+https://schema.org,Thing,Noble Beta,An infrastructure and DAO project,,https://noble.place/
+https://schema.org,Thing,Octav Labs,An infrastructure and DeFi project,https://cdn.prod.website-files.com/6491d92f46e8d228410c7cff/65fd7f85f40de73e6a8833ca_octav-gray-for-light-bg%201-p-500.png,https://octav.fi/
+https://schema.org,Thing,prePO,A DeFi marketplace,https://prepo.io/prepo-logo.svg,https://prepo.io/
+https://schema.org,Thing,Red Kite,"An infrastructure, NFT, and marketplace project",,https://www.redkitenft.com/index.html
+https://schema.org,Thing,Reservoir,An NFT marketplace and infrastructure project,https://pbs.twimg.com/profile_images/1485982788125925380/FcpJsspv_400x400.png,https://www.reservoir.tools/
+https://schema.org,Thing,Seed Club Ventures,A consumer-focused investment fund,https://pbs.twimg.com/profile_images/1750759292645298176/5-mpZJJ8_400x400.jpg,https://www.seedclub.xyz/
+https://schema.org,Thing,Sora Ventures (Runes Fund),A Bitcoin-focused investment fund,https://sora.vc/resources/soralogotop.png,https://sora.vc/
+https://schema.org,Thing,Tonk,A zero-knowledge technology gaming project focused on autonomous worlds,https://pbs.twimg.com/profile_images/1676901915647418370/o5u7kkEN_400x400.jpg,https://tonk.gg
+https://schema.org,Thing,ValleyDAO,A DAO focused on decentralized science and synthetic biology,https://cdn.prod.website-files.com/630dbea24a4625cd2f1e793f/6315f76f93b5737098b53f90_logo.svg,https://www.valleydao.bio/
+https://schema.org,Thing,Venture Punk,An NFT studio,https://pbs.twimg.com/profile_images/1550568450933723137/Lr_-WX6f_400x400.jpg,https://venturepunk.com/
+https://schema.org,Thing,VitaDAO,A DAO focused on decentralized science and longevity research,https://pbs.twimg.com/profile_images/1654608284559593474/yNcmvtMG_400x400.jpg,https://www.vitadao.com/
+https://schema.org,Thing,Zharta,An NFT-Fi lending platform,https://pbs.twimg.com/profile_images/1614967794356965377/3t6l44w-_400x400.jpg,https://www.zharta.io/

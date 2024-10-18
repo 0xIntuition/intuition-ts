@@ -113,7 +113,7 @@ export async function getUserClaims({
       user: userWallet,
       page,
       limit,
-      sortBy: sortBy as SortColumn,
+      sortBy: sortBy as ClaimSortColumn,
       direction,
       displayName: claimsSearch,
     },

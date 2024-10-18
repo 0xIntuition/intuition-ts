@@ -1,0 +1,8 @@
+{
+    "@context": "http://schema.org",
+    "@type": "Thing",
+    "Name": "TV Series",
+    "Description": "A TV series that captivates audiences with engaging storylines, compelling characters, and high-quality production. This series has garnered widespread acclaim and continues to be a favorite among viewers.",
+    "Image": "https://www.the-sun.com/wp-content/uploads/sites/6/2021/04/NINTCHDBPICT000377559478.jpg?w=620",
+    "url": ""
+  }

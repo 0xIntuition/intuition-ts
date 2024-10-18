@@ -1,6 +1,7 @@
 import {
   ClaimPositionsService,
   ClaimPresenter,
+  ClaimSortColumn,
   ClaimsService,
   IdentitiesService,
   IdentityPresenter,
@@ -68,7 +69,7 @@ export async function getConnectionsData({
     args: {
       page: followingPage,
       limit: followingLimit,
-      sortBy: followingSortBy as SortColumn,
+      sortBy: followingSortBy as ClaimSortColumn,
       direction: followingDirection,
       displayName:
         getSpecialPredicate(CURRENT_ENV).amFollowingPredicate.displayName,
