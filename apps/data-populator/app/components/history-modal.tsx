@@ -7,6 +7,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  Table,
   TableBody,
   TableCell,
   TableHead,
@@ -21,7 +22,6 @@ import {
 import { generateCsvContent, jsonToTable } from '@lib/utils/csv'
 import { loadThumbnail } from '@lib/utils/image'
 import { useFetcher } from '@remix-run/react'
-import { Table } from 'lucide-react'
 
 interface HistoryModalProps {
   isOpen: boolean

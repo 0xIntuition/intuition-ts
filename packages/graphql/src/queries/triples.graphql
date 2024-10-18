@@ -1,0 +1,10 @@
+query GetTriples {
+  triples {
+    ...TripleMetadata
+    ...TripleTxn
+    ...TripleVaultDetails
+    creator {
+      ...AccountMetadata
+    }
+  }
+}

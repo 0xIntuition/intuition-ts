@@ -100,7 +100,7 @@ export default function Playground() {
       return
     }
 
-    client.sendTransaction({
+    const txHash = await client.sendTransaction({
       account: client.account,
       calls: atomTransactions.map((tx) => ({
         to: tx.to as `0x${string}`,

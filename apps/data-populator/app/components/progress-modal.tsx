@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 
 import {
   Dialog,
@@ -8,8 +8,11 @@ import {
   DialogTitle,
 } from '@0xintuition/1ui'
 
+import { usePollRequestDetails } from '@lib/hooks/usePollRequestDetails'
 import { useFetcher } from '@remix-run/react'
 import { CheckCircle2, Loader2, XCircle } from 'lucide-react'
+
+import { ScrollArea } from './ui/scroll-area'
 
 // import { ScrollArea } from '../components/ui/scroll-area'
 
@@ -35,46 +38,12 @@ export function ProgressModal({
   onClose,
   requestHash,
 }: ProgressModalProps) {
-  const [requestData, setRequestData] = useState<RequestData | null>(null)
-  const fetcher = useFetcher<{ result: RequestData }>()
   const scrollAreaRef = useRef<HTMLDivElement>(null)
-  const intervalRef = useRef<NodeJS.Timeout | null>(null)
 
-  useEffect(() => {
-    if (isOpen && requestHash) {
-      const fetchData = () => {
-        fetcher.load(
-          `/api/csv-editor?action=getRequestUpdate&requestHash=${requestHash}`,
-        )
-      }
-
-      fetchData() // Fetch immediately when opened
-      intervalRef.current = setInterval(() => {
-        if (
-          requestData?.status === 'fulfilled' ||
-          requestData?.status === 'failed'
-        ) {
-          if (intervalRef.current) {
-            clearInterval(intervalRef.current)
-          }
-        } else {
-          fetchData()
-        }
-      }, 1000)
-
-      return () => {
-        if (intervalRef.current) {
-          clearInterval(intervalRef.current)
-        }
-      }
-    }
-  }, [isOpen, requestHash, requestData?.status])
-
-  useEffect(() => {
-    if (fetcher.data?.result) {
-      setRequestData(fetcher.data.result as RequestData)
-    }
-  }, [fetcher.data])
+  const { requestData } = usePollRequestDetails({
+    requestHash,
+    active: isOpen,
+  })
 
   useEffect(() => {
     if (scrollAreaRef.current) {
@@ -106,32 +75,34 @@ export function ProgressModal({
         <DialogHeader>
           <DialogTitle>Operation Progress</DialogTitle>
         </DialogHeader>
-        {requestData && (
-          <div className="mt-4 space-y-4">
-            <div className="flex items-center justify-between">
-              <span className="font-semibold">{requestData.type}</span>
-              <div className="flex-shrink-0 w-6">
-                {getStatusIcon(requestData.status)}
+        <ScrollArea className="h-[60vh]" ref={scrollAreaRef}>
+          {requestData && (
+            <div className="mt-4 space-y-4">
+              <div className="flex items-center justify-between">
+                <span className="font-semibold">{requestData.type}</span>
+                <div className="flex-shrink-0 w-6">
+                  {getStatusIcon(requestData.status)}
+                </div>
+              </div>
+              <div className="text-sm text-gray-500">
+                Status:{' '}
+                <span className="font-semibold">{requestData.status}</span>
+              </div>
+
+              <div className="pr-4">
+                {requestData &&
+                  requestData.updates.map((update, index) => (
+                    <div
+                      key={index}
+                      className="mb-2 break-words text-gray-700 overflow-hidden text-ellipsis"
+                    >
+                      {update}
+                    </div>
+                  ))}
               </div>
             </div>
-            <div className="text-sm text-gray-500">
-              Status:{' '}
-              <span className="font-semibold">{requestData.status}</span>
-            </div>
-            {/* <ScrollArea
-              className="h-[300px] w-full rounded-md border p-4"
-              ref={scrollAreaRef}
-            > */}
-            <div className="pr-4">
-              {requestData.updates.map((update, index) => (
-                <div key={index} className="mb-2 break-words text-gray-700">
-                  {update}
-                </div>
-              ))}
-            </div>
-            {/* </ScrollArea> */}
-          </div>
-        )}
+          )}
+        </ScrollArea>
       </DialogContent>
     </Dialog>
   )

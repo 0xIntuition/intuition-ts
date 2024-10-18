@@ -9,8 +9,12 @@ import {
 import { Thing, WithContext } from 'schema-dts'
 
 import {
+  buildChunks,
   checkAtomsExist,
+  createPopulateAtomsRequest,
+  generateBatchAtomsCalldata,
   getAtomDataFromID,
+  pinAtoms,
   requestPopulateAndTagAtoms,
   requestPopulateAtoms,
 } from '../lib/services/populate'
@@ -93,10 +97,25 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       ) as string[][]
       const schemaObjects = convertCsvToSchemaObjects<Thing>(csvData)
       const selectedAtoms = selectedRows.map((index) => schemaObjects[index])
-      // console.log('Selected atoms:', selectedAtoms)
-      const publishAtomsRequestHash = await requestPopulateAtoms(selectedAtoms)
-      console.log('Publish atoms request hash:', publishAtomsRequestHash)
-      return json({ success: true, requestHash: publishAtomsRequestHash })
+      const requestHash = await createPopulateAtomsRequest(selectedAtoms)
+      const { existingCIDs, newCIDs } = await pinAtoms(
+        selectedAtoms,
+        requestHash,
+      )
+      const { chunks, chunkSize, calls } = await generateBatchAtomsCalldata(
+        newCIDs,
+        requestHash,
+      )
+
+      console.log('Publish atoms request hash:', requestHash)
+      return json({
+        success: true,
+        requestHash,
+        chunks,
+        chunkSize,
+        calls,
+        action,
+      })
     }
 
     case 'createAndTagAtoms': {

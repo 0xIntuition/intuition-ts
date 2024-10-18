@@ -10,6 +10,7 @@ import {
   Scripts,
   ScrollRestoration,
   useLoaderData,
+  useRevalidator,
   useRouteError,
 } from '@remix-run/react'
 import { useTheme } from '@routes/actions+/set-theme'
@@ -18,12 +19,15 @@ import { getTheme } from '@server/theme'
 
 import './styles/globals.css'
 
-import { useEffect } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 import { Toaster } from '@0xintuition/1ui'
 
 import { ErrorPage } from '@components/error-page'
 import { getChainEnvConfig } from '@lib/utils/environment'
+import logger from '@lib/utils/logger'
+import { createSupabaseServerClient } from '@server/supabase'
+import { createBrowserClient } from '@supabase/auth-helpers-remix'
 import { CURRENT_ENV } from 'app/consts'
 import { ClientOnly } from 'remix-utils/client-only'
 import { useAccount, useSwitchChain } from 'wagmi'
@@ -69,8 +73,10 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 }
 
 export async function loader({ request }: LoaderFunctionArgs) {
+  const env = getEnv()
+
   return json({
-    env: getEnv(),
+    env,
     requestInfo: {
       hints: getHints(request),
       path: new URL(request.url).pathname,
@@ -136,6 +142,12 @@ function App() {
 export function AppLayout() {
   const { chain } = useAccount()
   const { switchChain } = useSwitchChain()
+  const { env } = useLoaderData<typeof loader>()
+
+  const supabase = useMemo(() => {
+    logger('Creating supabase browser client')
+    return createBrowserClient(env.SUPABASE_URL, env.SUPABASE_KEY)
+  }, [env.SUPABASE_URL, env.SUPABASE_KEY])
 
   useEffect(() => {
     if (chain?.id !== getChainEnvConfig(CURRENT_ENV).chainId && switchChain) {
@@ -145,7 +157,7 @@ export function AppLayout() {
     }
   }, [chain, switchChain])
 
-  return <Outlet />
+  return <Outlet context={{ supabase }} />
 }
 
 export function ErrorBoundary() {

@@ -86,7 +86,13 @@ export async function updateRequest(
   }
 }
 
-export async function pushUpdate(hash: string, update: string): Promise<void> {
+export async function pushUpdate(
+  hash: string | undefined,
+  update: string,
+): Promise<void> {
+  if (!hash) {
+    return
+  }
   const request = await getRequest(hash)
   request.updates.push(update)
   await updateRequest(hash, request)
@@ -118,8 +124,7 @@ export async function getRequest(
 
   if (error || !data) {
     throw new Error(
-      `Request not found or access denied: ${
-        error ? error.message : 'No data returned'
+      `Request not found or access denied: ${error ? error.message : 'No data returned'
       }`,
     )
   }

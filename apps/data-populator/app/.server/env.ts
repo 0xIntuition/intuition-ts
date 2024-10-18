@@ -20,13 +20,15 @@ const schema = z.object({
   ORIGIN_URL: z.string(),
   PRIVY_APP_ID: z.string(),
   GTM_TRACKING_ID: z.string(),
+  SUPABASE_URL: z.string(),
+  SUPABASE_KEY: z.string(),
   featureFlagsSchema,
 })
 
 declare global {
   /* eslint-disable @typescript-eslint/no-namespace */
   namespace NodeJS {
-    interface ProcessEnv extends z.infer<typeof schema> {}
+    interface ProcessEnv extends z.infer<typeof schema> { }
   }
 }
 
@@ -69,6 +71,8 @@ export function getEnv() {
     ORIGIN_URL: process.env.ORIGIN_URL,
     PRIVY_APP_ID: process.env.PRIVY_APP_ID,
     GTM_TRACKING_ID: process.env.GTM_TRACKING_ID,
+    SUPABASE_URL: process.env.SUPABASE_URL,
+    SUPABASE_KEY: process.env.SUPABASE_KEY,
     // Feature flags
     FF_GENERIC_BANNER_ENABLED: process.env.FF_GENERIC_BANNER_ENABLED,
     FF_INCIDENT_BANNER_ENABLED: process.env.FF_INCIDENT_BANNER_ENABLED,

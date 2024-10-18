@@ -21,8 +21,10 @@ import {
 import { ProgressModal } from '@components/progress-modal'
 import { ProofreadModal } from '@components/proofread-modal'
 import { Progress } from '@components/ui/progress'
+import { BatchAtomsRequest } from '@lib/services/populate'
 import { generateCsvContent, parseCsv } from '@lib/utils/csv'
 import { loadThumbnail, loadThumbnails } from '@lib/utils/image'
+import logger from '@lib/utils/logger'
 import {
   detectAdjacentDuplicatesForCell,
   detectAllAdjacentDuplicates,
@@ -33,6 +35,7 @@ import {
 } from '@lib/utils/proofread'
 import type { SortDirection } from '@lib/utils/sort'
 import { getNextSortDirection, sortData } from '@lib/utils/sort'
+import { useSmartWallets } from '@privy-io/react-auth/smart-wallets'
 import { json, type ActionFunctionArgs } from '@remix-run/node'
 import {
   useActionData,
@@ -74,6 +77,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
 export default function CSVEditor() {
   // State variables for managing CSV data, UI interactions, and atom-related operations
+  const { client } = useSmartWallets()
+
   const actionData = useActionData<typeof action>()
   const submit = useSubmit()
   const navigation = useNavigation()
@@ -124,7 +129,7 @@ export default function CSVEditor() {
     UnusualCharacterIssue[]
   >([])
   const [showProofreadModal, setShowProofreadModal] = useState(false)
-
+  const [calls, setCalls] = useState<BatchAtomsRequest[]>([])
   // Ref for file input to trigger file selection programmatically
   const fileInputRef = useRef<HTMLInputElement>(null)
 
@@ -713,12 +718,41 @@ export default function CSVEditor() {
   //   setShowOptions(false)
   // }
 
+  const sendBatchTx = async (calls: BatchAtomsRequest[]) => {
+    if (!client) {
+      console.error('No smart account client found')
+      return
+    }
+    if (!calls.length) {
+      return
+    }
+
+    const txHash = await client.sendTransaction({
+      account: client.account,
+      calls: calls.map((call) => ({
+        to: call.to as `0x${string}`,
+        data: call.data as `0x${string}`,
+        value: BigInt(call.value),
+      })),
+    })
+    logger('txHash', txHash)
+  }
+
   useEffect(() => {
     if (actionData?.requestHash) {
       setCurrentRequestHash(actionData.requestHash)
       setShowProgressModal(true)
     }
+    if (!!actionData?.calls) {
+      setCalls(actionData.calls)
+    }
   }, [actionData])
+
+  useEffect(() => {
+    if (calls && calls.length > 0) {
+      sendBatchTx(calls)
+    }
+  }, [calls])
 
   // The main render function, containing the UI structure
   return (
