@@ -1,12 +1,10 @@
 import {
   Address,
-  Chain,
   createPublicClient,
   createWalletClient,
   Hex,
   http,
   parseAbi,
-  stringToHex,
 } from 'viem'
 import { privateKeyToAccount } from 'viem/accounts'
 
