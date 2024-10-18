@@ -1,5 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { MIN_DEPOSIT, MULTIVAULT_CONTRACT_ADDRESS } from '@consts/general'
+import { multivaultAbi } from '@lib/abis/multivault'
+import logger from '@lib/utils/logger'
+import { truncateString } from '@lib/utils/misc'
+import { multiVaultContract } from '@server/viem'
 import { Thing, WithContext } from 'schema-dts'
+import { encodeFunctionData, parseUnits, toHex, TransactionRequest } from 'viem'
 
 import {
   batchCreateAtomRequest,
@@ -22,12 +28,6 @@ import {
 import { pinataPinJSON } from './pinata'
 import { createRequest, pushUpdate, updateRequest } from './request'
 import { appendToAtomLog, appendToTripleLog } from './supabase'
-import logger from '@lib/utils/logger'
-import { encodeFunctionData, parseUnits, toHex, TransactionRequest } from 'viem'
-import { MIN_DEPOSIT, MULTIVAULT_CONTRACT_ADDRESS } from '@consts/general'
-import { multivaultAbi } from '@lib/abis/multivault'
-import { multiVaultContract } from '@server/viem'
-import { truncateString } from '@lib/utils/misc'
 
 export async function populateAtom(obj: any) {
   try {
@@ -231,7 +231,10 @@ export async function createPopulateAtomsRequest(atoms: any[]) {
   return requestHash
 }
 
-export async function pinAtoms(atoms: any[], requestHash?: string): Promise<{
+export async function pinAtoms(
+  atoms: any[],
+  requestHash?: string,
+): Promise<{
   existingCIDs: string[]
   newCIDs: string[]
 }> {
@@ -315,10 +318,7 @@ export async function buildChunks(
   const chunkSize = Math.ceil(cids.length / numChunks)
   const chunks = chunk(cids, chunkSize)
   console.log('Number of batch atom chunks: ', numChunks)
-  await pushUpdate(
-    requestHash,
-    `Number of batch atom chunks: ${numChunks}`,
-  )
+  await pushUpdate(requestHash, `Number of batch atom chunks: ${numChunks}`)
   console.log(
     'Chunk lengths: ',
     chunks.map((chunk) => chunk.length),
@@ -335,7 +335,9 @@ export type BatchAtomsRequest = {
   data: `0x${string}`
   value: string
 }
-export function getBatchAtomsCall(cids: string[]): BatchAtomsRequest | undefined {
+export function getBatchAtomsCall(
+  cids: string[],
+): BatchAtomsRequest | undefined {
   const minDeposit = parseUnits(MIN_DEPOSIT, 18).toString()
   if (cids.length !== 0) {
     return {
@@ -345,7 +347,7 @@ export function getBatchAtomsCall(cids: string[]): BatchAtomsRequest | undefined
         functionName: 'batchCreateAtom',
         args: [cids.map((cid) => toHex(cid))],
       }),
-      value: minDeposit,
+      value: (BigInt(minDeposit) * BigInt(cids.length)).toString(),
     }
   }
 }
@@ -353,9 +355,15 @@ export function getBatchAtomsCall(cids: string[]): BatchAtomsRequest | undefined
 export async function generateBatchAtomsCalldata(
   cids: string[],
   requestHash?: string,
-): Promise<{ chunks: string[][]; chunkSize: number, calls: BatchAtomsRequest[] }> {
+): Promise<{
+  chunks: string[][]
+  chunkSize: number
+  calls: BatchAtomsRequest[]
+}> {
   const { chunks, chunkSize } = await buildChunks(cids, requestHash)
-  const calls = chunks.map((batch) => getBatchAtomsCall(batch)).filter((call) => call !== undefined)
+  const calls = chunks
+    .map((batch) => getBatchAtomsCall(batch))
+    .filter((call) => call !== undefined)
 
   await pushUpdate(
     requestHash,
@@ -363,8 +371,6 @@ export async function generateBatchAtomsCalldata(
   )
   return { chunks, chunkSize, calls }
 }
-
-
 
 export async function populateAtoms(
   atoms: any[],
@@ -502,9 +508,9 @@ export async function prepareTag(
     : null
   requestHash
     ? await pushUpdate(
-      requestHash,
-      `Keywords Predicate Atom ID: ${keywordsPredicateAtomID}`,
-    )
+        requestHash,
+        `Keywords Predicate Atom ID: ${keywordsPredicateAtomID}`,
+      )
     : null
 
   return [keywordsPredicateAtomID, tagAtomID]
@@ -615,9 +621,9 @@ export async function pinAllData(
   // Process duplicate atoms after unique atoms
   requestHash
     ? await pushUpdate(
-      requestHash,
-      'Pinning atom data with duplicate images...',
-    )
+        requestHash,
+        'Pinning atom data with duplicate images...',
+      )
     : null
   const duplicatePinnedData = await processAtomDataBatches(
     duplicateAtoms,
@@ -917,9 +923,9 @@ export async function processBatchAtoms(
   console.log('Predetermining number of chunks to process batch atoms...')
   requestHash
     ? await pushUpdate(
-      requestHash,
-      'Predetermining number of chunks to process batch atoms...',
-    )
+        requestHash,
+        'Predetermining number of chunks to process batch atoms...',
+      )
     : null
   let numChunks = 1
 
@@ -956,9 +962,9 @@ export async function processBatchAtoms(
     if (staticExecutionReverted) {
       requestHash
         ? await pushUpdate(
-          requestHash,
-          'static execution reverted with chunk size of 1',
-        )
+            requestHash,
+            'static execution reverted with chunk size of 1',
+          )
         : null
       throw new Error('static execution reverted with chunk size of 1')
     }
@@ -973,9 +979,9 @@ export async function processBatchAtoms(
     console.log('Number of batch atom chunks: ', numChunks)
     requestHash
       ? await pushUpdate(
-        requestHash,
-        `Number of batch atom chunks: ${numChunks}`,
-      )
+          requestHash,
+          `Number of batch atom chunks: ${numChunks}`,
+        )
       : null
     console.log(
       'Chunk lengths: ',
@@ -983,9 +989,9 @@ export async function processBatchAtoms(
     )
     requestHash
       ? await pushUpdate(
-        requestHash,
-        `Chunk lengths: ${chunks.map((chunk) => chunk.length)}`,
-      )
+          requestHash,
+          `Chunk lengths: ${chunks.map((chunk) => chunk.length)}`,
+        )
       : null
     for (const batch of chunks) {
       lastChunkForDebug = batch
@@ -1029,9 +1035,9 @@ export async function processBatchTriples(
     console.log('Predetermining number of chunks to process batch triples...')
     requestHash
       ? await pushUpdate(
-        requestHash,
-        'Predetermining number of chunks to process batch triples...',
-      )
+          requestHash,
+          'Predetermining number of chunks to process batch triples...',
+        )
       : null
     while (staticExecutionReverted && numChunks < triples.length) {
       try {
@@ -1067,9 +1073,9 @@ export async function processBatchTriples(
     if (staticExecutionReverted) {
       requestHash
         ? await pushUpdate(
-          requestHash,
-          'static execution reverted with chunk size of 1',
-        )
+            requestHash,
+            'static execution reverted with chunk size of 1',
+          )
         : null
       throw new Error('static execution reverted with chunk size of 1')
     }
@@ -1084,9 +1090,9 @@ export async function processBatchTriples(
     console.log('Number of batch triple chunks: ', numChunks)
     requestHash
       ? await pushUpdate(
-        requestHash,
-        `Number of batch triple chunks: ${numChunks}`,
-      )
+          requestHash,
+          `Number of batch triple chunks: ${numChunks}`,
+        )
       : null
     console.log(
       'Chunk lengths: ',
@@ -1094,9 +1100,9 @@ export async function processBatchTriples(
     )
     requestHash
       ? await pushUpdate(
-        requestHash,
-        `Chunk lengths: ${chunks.map((chunk) => chunk.length)}`,
-      )
+          requestHash,
+          `Chunk lengths: ${chunks.map((chunk) => chunk.length)}`,
+        )
       : null
     for (const batch of chunks) {
       lastChunkForDebug = batch
@@ -1116,9 +1122,9 @@ export async function processBatchTriples(
     console.error('Error processing batch triples...', lastChunkForDebug)
     requestHash
       ? await pushUpdate(
-        requestHash,
-        `Error processing batch triples: ${error}`,
-      )
+          requestHash,
+          `Error processing batch triples: ${error}`,
+        )
       : null
     return result
   }

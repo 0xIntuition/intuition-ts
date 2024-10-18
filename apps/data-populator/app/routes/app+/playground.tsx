@@ -1,3 +1,5 @@
+import { useCallback } from 'react'
+
 import { Button } from '@0xintuition/1ui'
 
 import PrivyLogout from '@client/privy-logout'
@@ -9,6 +11,7 @@ import { useSmartWallets } from '@privy-io/react-auth/smart-wallets'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 import { getUser, requireUserWallet } from '@server/auth'
+import { data } from 'autoprefixer'
 import { encodeFunctionData, toHex } from 'viem'
 import { baseSepolia } from 'viem/chains'
 
@@ -21,20 +24,20 @@ export async function loader({ request }: LoaderFunctionArgs) {
   logger('user', user)
   invariant(wallet, 'Unauthorized')
 
-  // const transactions = [
-  //   {
-  //     to: '0x25709998B542f1Be27D19Fa0B3A9A67302bc1b94',
-  //     value: '300000000000000', // 0.0003 ETH in wei
-  //   },
-  //   {
-  //     to: '0x25709998B542f1Be27D19Fa0B3A9A67302bc1b94',
-  //     value: '200000000000000', // 0.0002 ETH in wei
-  //   },
-  //   {
-  //     to: '0x25709998B542f1Be27D19Fa0B3A9A67302bc1b94',
-  //     value: '100000000000000', // 0.0001 ETH in wei
-  //   },
-  // ]
+  const transactions = [
+    {
+      to: '0x25709998B542f1Be27D19Fa0B3A9A67302bc1b94',
+      value: '300000000000000', // 0.0003 ETH in wei
+    },
+    {
+      to: '0x25709998B542f1Be27D19Fa0B3A9A67302bc1b94',
+      value: '200000000000000', // 0.0002 ETH in wei
+    },
+    {
+      to: '0x25709998B542f1Be27D19Fa0B3A9A67302bc1b94',
+      value: '100000000000000', // 0.0001 ETH in wei
+    },
+  ]
 
   // when we want to interact with our contract, we'd do it with this format:
 
@@ -43,29 +46,20 @@ export async function loader({ request }: LoaderFunctionArgs) {
       to: '0x1A6950807E33d5bC9975067e6D6b5Ea4cD661665', // multivault contract address
       data: encodeFunctionData({
         abi: multivaultAbi,
-        functionName: 'createAtom',
-        args: [toHex('0xc626CbfE61Bac7A1dB9d227b90878D872C379c6A')],
+        functionName: 'batchCreateAtom',
+        args: [[toHex('jpTest4'), toHex('jpTest4b')]],
       }),
-      value: '300100001000000',
+      value: '600200002000000',
     },
-    // {
-    //   to: '0x1A6950807E33d5bC9975067e6D6b5Ea4cD661665', // multivault contract address
-    //   data: encodeFunctionData({
-    //     abi: multivaultAbi,
-    //     functionName: 'createAtom',
-    //     args: ['5002'],
-    //   }),
-    //   value: '300100001000000',
-    // },
-    // {
-    //   to: '0x1A6950807E33d5bC9975067e6D6b5Ea4cD661665', // multivault contract address
-    //   data: encodeFunctionData({
-    //     abi: multivaultAbi,
-    //     functionName: 'createAtom',
-    //     args: ['5003'],
-    //   }),
-    //   value: '300100001000000',
-    // },
+    {
+      to: '0x1A6950807E33d5bC9975067e6D6b5Ea4cD661665', // multivault contract address
+      data: encodeFunctionData({
+        abi: multivaultAbi,
+        functionName: 'batchCreateAtom',
+        args: [[toHex('jojiTest4'), toHex('jojiTest4b')]],
+      }),
+      value: '600200002000000',
+    },
   ]
 
   return json({
@@ -94,7 +88,8 @@ export default function Playground() {
   const { client } = useSmartWallets()
 
   logger('user', user)
-  const sendBatchTx = async () => {
+
+  const sendBatchTx = useCallback(async () => {
     if (!client) {
       console.error('No smart account client found')
       return
@@ -108,7 +103,8 @@ export default function Playground() {
         value: BigInt(tx.value),
       })),
     })
-  }
+    logger('batch txHash', txHash)
+  }, [client, atomTransactions])
 
   const sendTx = async () => {
     if (!client) {
