@@ -1,4 +1,5 @@
 import {
+  Abi,
   Address,
   createPublicClient,
   createWalletClient,
@@ -75,8 +76,8 @@ export async function getSender(): Promise<Address> {
 
 async function generateTx(call: EVMCallRequest): Promise<{
   gasLimit: bigint
-  args: any[]
-  abi: any
+  args: unknown[]
+  abi: Abi
   address: Address
   value?: bigint
 }> {

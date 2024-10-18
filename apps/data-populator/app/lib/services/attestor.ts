@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
 
-import { bytesToHex, encodePacked, keccak256, toBytes } from 'viem'
+import { bytesToHex, encodePacked, Hex, keccak256, toBytes } from 'viem'
 
 import { callAndConfirm, EVMCallRequest, evmRead } from './evm'
 import { getAtomID } from './offchain-store'
