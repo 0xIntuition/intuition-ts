@@ -1,120 +1,135 @@
-import { ethers } from 'ethers'
+import {
+  Address,
+  Chain,
+  createPublicClient,
+  createWalletClient,
+  Hex,
+  http,
+  parseAbi,
+  stringToHex,
+} from 'viem'
+import { privateKeyToAccount } from 'viem/accounts'
 
 const environment = process.env.ENVIRONMENT
 const privateKey =
-  environment === 'dev' ? process.env.PRIVATE_KEY_DEV : process.env.PRIVATE_KEY
+  environment === 'dev'
+    ? (process.env.PRIVATE_KEY_DEV as string)
+    : (process.env.PRIVATE_KEY as string)
 
 if (!privateKey) {
   throw new Error('PRIVATE_KEY must be set')
 }
 
+// if (privateKey.startsWith('0x')) {
+//   privateKey = privateKey.slice(2)
+// }
+
 export interface EVMCallRequest {
-  address: string
+  address: Address
   fnDeclaration: string[]
   fnName: string
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   args: any[]
-  txParams: object
+  txParams: {
+    gasLimit?: bigint
+    value?: bigint
+  }
   RPC: string
 }
 
-export async function getProvider(
-  RPC: string,
-): Promise<ethers.JsonRpcProvider> {
+export async function getPublicClient(RPC: string) {
   try {
-    const provider = new ethers.JsonRpcProvider(RPC) as ethers.JsonRpcProvider
-    return provider
+    const client = createPublicClient({
+      transport: http(RPC),
+    })
+    return client
   } catch (error) {
-    console.error('Error getting provider:', error)
+    console.error('Error getting public client:', error)
     throw error
   }
 }
 
-export async function getSigner(
-  provider: ethers.JsonRpcProvider,
-): Promise<ethers.Signer> {
+export async function getWalletClient(RPC: string) {
   try {
-    const sk = privateKey as string
-    const signer = new ethers.Wallet(sk, provider) as ethers.Signer
-    return signer
+    const account = privateKeyToAccount(`0x${privateKey.slice(2)}`)
+    const client = createWalletClient({
+      account,
+      transport: http(RPC),
+    })
+    return client
   } catch (error) {
-    console.error('Error getting signer:', error)
+    console.error('Error getting wallet client:', error)
     throw error
   }
 }
 
 // Using this for now to populate logs with the sender's address
 // Later we will get the sender's address via auth
-export async function getSender(): Promise<string> {
+export async function getSender(): Promise<Address> {
   try {
-    const sk = privateKey as string
-    const provider = new ethers.JsonRpcProvider()
-    const signer = new ethers.Wallet(sk, provider) as ethers.Signer
-    return await signer.getAddress()
+    const account = privateKeyToAccount(`0x${privateKey.slice(2)}`)
+    return account.address
   } catch (error) {
     console.error('Error getting sender:', error)
     throw error
   }
 }
 
-async function generateTx(
-  call: EVMCallRequest,
-): Promise<ethers.ContractTransaction> {
+async function generateTx(call: EVMCallRequest): Promise<{
+  gasLimit: bigint
+  args: any[]
+  abi: any
+  address: Address
+  value?: bigint
+}> {
   try {
-    const provider = await getProvider(call.RPC)
-    const signer = await getSigner(provider)
-
-    let contract: ethers.Contract = new ethers.Contract(
-      call.address,
-      call.fnDeclaration,
-      provider,
-    ) as ethers.Contract
-    contract = contract.connect(signer) as ethers.Contract
-
-    const tx = (await contract[call.fnName].populateTransaction(
-      ...call.args,
-      call.txParams,
-    )) as ethers.ContractTransaction
-
-    const gasEstimate = await signer.estimateGas(tx)
-    tx.gasLimit = (gasEstimate * BigInt(125)) / BigInt(100) // Add 25% to the gas estimate
-
-    return tx
+    const publicClient = await getPublicClient(call.RPC)
+    const abi = parseAbi(call.fnDeclaration)
+    const gasEstimate = await publicClient.estimateContractGas({
+      abi,
+      address: call.address,
+      functionName: call.fnName,
+      args: call.args,
+      value: call.txParams.value,
+    })
+    const gasLimit = (gasEstimate * 125n) / 100n // Add 25% to the gas estimate
+    return {
+      gasLimit,
+      args: call.args,
+      abi,
+      address: call.address,
+      value: call.txParams.value,
+    }
   } catch (error) {
     console.error('Error generating TX...')
     throw error
   }
 }
 
-export async function estimateGas(call: EVMCallRequest): Promise<number> {
+export async function estimateGas(call: EVMCallRequest): Promise<bigint> {
   try {
-    const tx = await generateTx(call)
-    if (tx.gasLimit === undefined) {
-      throw new Error('Gas limit is undefined')
-    }
-    return tx.gasLimit.toString() as unknown as number
+    const txData = await generateTx(call)
+    return txData.gasLimit
   } catch (error) {
     console.error('Error estimating gas...')
-    // console.log("Request: ", call);
     throw error
   }
 }
 
-export async function evmCall(call: EVMCallRequest): Promise<string> {
+export async function evmCall(call: EVMCallRequest): Promise<Hex> {
   try {
-    const provider = await getProvider(call.RPC)
-    const signer = await getSigner(provider)
-
-    const tx = await generateTx(call)
-
-    // ! TESTING
-    // console.log("TX:", tx);
-
-    const txHash = (await signer.sendTransaction(
-      tx,
-    )) as ethers.TransactionResponse
-
-    return txHash.hash as string
+    const walletClient = await getWalletClient(call.RPC)
+    const txData = await generateTx(call)
+    const txHash = await walletClient.writeContract({
+      abi: txData.abi,
+      address: txData.address,
+      functionName: call.fnName,
+      args: txData.args,
+      gas: txData.gasLimit,
+      value: txData.value,
+      chain: null, // This was specified via the RPC when we created the client
+    })
+    return txHash
   } catch (error) {
     console.error('Error calling EVM:', error)
     throw error
@@ -124,14 +139,14 @@ export async function evmCall(call: EVMCallRequest): Promise<string> {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function evmRead(call: EVMCallRequest): Promise<any> {
   try {
-    const provider = await getProvider(call.RPC)
-    const contract: ethers.Contract = new ethers.Contract(
-      call.address,
-      call.fnDeclaration,
-      provider,
-    ) as ethers.Contract
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const result = (await contract[call.fnName](...call.args)) as any
+    const publicClient = await getPublicClient(call.RPC)
+    const abi = parseAbi(call.fnDeclaration)
+    const result = await publicClient.readContract({
+      abi,
+      address: call.address,
+      functionName: call.fnName,
+      args: call.args,
+    })
     return result
   } catch (error) {
     console.error('Error reading EVM:', error)
@@ -140,16 +155,17 @@ export async function evmRead(call: EVMCallRequest): Promise<any> {
 }
 
 export async function confirmTx(
-  txHash: string,
+  txHash: Hex,
   RPC: string,
   timeout?: number,
 ): Promise<void> {
   try {
-    const provider = await getProvider(RPC)
-    await provider.waitForTransaction(txHash, 1, timeout)
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const receipt = await provider.getTransactionReceipt(txHash)
-    if (receipt && receipt.status === 0) {
+    const publicClient = await getPublicClient(RPC)
+    const receipt = await publicClient.waitForTransactionReceipt({
+      hash: txHash,
+      timeout,
+    })
+    if (receipt && receipt.status === 'reverted') {
       throw new Error(`Transaction reverted: ${JSON.stringify(receipt)}`)
     }
   } catch (error) {
@@ -161,7 +177,7 @@ export async function confirmTx(
 export async function callAndConfirm(
   call: EVMCallRequest,
   timeout?: number,
-): Promise<string> {
+): Promise<Hex> {
   try {
     console.log('Calling and confirming EVM')
     const txHash = await evmCall(call)

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
 
-import { BytesLike, ethers } from 'ethers'
+import { bytesToHex, encodePacked, keccak256, toBytes } from 'viem'
 
 import { callAndConfirm, EVMCallRequest, evmRead } from './evm'
 import { getAtomID } from './offchain-store'
@@ -31,11 +31,14 @@ if (
   )
 }
 
+const atomCostStr = await getAtomCost()
+const tripleCostStr = await getTripleCost()
+
 const atomValue = (
-  BigInt(additionalStakeAtom as string) + BigInt(await getAtomCost())
+  BigInt(additionalStakeAtom as string) + BigInt(atomCostStr)
 ).toString()
 const tripleValue = (
-  BigInt(additionalStakeTriple as string) + BigInt(await getTripleCost())
+  BigInt(additionalStakeTriple as string) + BigInt(tripleCostStr)
 ).toString()
 
 console.log('RPC: ', rpc)
@@ -45,15 +48,15 @@ console.log('Triple cost: ', tripleValue)
 function createAtomRequest(cid: string): EVMCallRequest {
   return {
     RPC: rpc as string,
-    address: attestorAddress as string,
+    address: attestorAddress as `0x${string}`,
     fnDeclaration: [
       'function createAtom(bytes calldata atomUri) external payable returns (uint256)',
     ],
     fnName: 'createAtom',
-    args: [ethers.toUtf8Bytes(cid)],
+    args: [bytesToHex(toBytes(cid))], // Converted to Hex string
     txParams: {
-      gasLimit: 500000,
-      value: atomValue,
+      gasLimit: 500000n,
+      value: BigInt(atomValue),
     },
   }
 }
@@ -62,14 +65,14 @@ export function batchCreateAtomRequest(cids: string[]): EVMCallRequest {
   const batchAtomValue = BigInt(atomValue) * BigInt(cids.length)
   return {
     RPC: rpc as string,
-    address: attestorAddress as string,
+    address: attestorAddress as `0x${string}`,
     fnDeclaration: [
       'function batchCreateAtom(bytes[] calldata atomUris) external payable returns (uint256[])',
     ],
     fnName: 'batchCreateAtom',
-    args: [cids.map((cid) => ethers.toUtf8Bytes(cid))],
+    args: [cids.map((cid) => bytesToHex(toBytes(cid)))], // Converted to Hex strings
     txParams: {
-      gasLimit: 30000000,
+      gasLimit: 30000000n,
       value: batchAtomValue,
     },
   }
@@ -83,14 +86,18 @@ export function batchCreateTripleRequest(
   const batchTripleValue = BigInt(tripleValue) * BigInt(subjectIds.length)
   return {
     RPC: rpc as string,
-    address: attestorAddress as string,
+    address: attestorAddress as `0x${string}`,
     fnDeclaration: [
       'function batchCreateTriple(uint256[] subjectIds, uint256[] predicateIds, uint256[] objectIds) external payable returns (uint256[])',
     ],
     fnName: 'batchCreateTriple',
-    args: [subjectIds, predicateIds, objectIds],
+    args: [
+      subjectIds.map(BigInt),
+      predicateIds.map(BigInt),
+      objectIds.map(BigInt),
+    ],
     txParams: {
-      gasLimit: 30000000,
+      gasLimit: 30000000n,
       value: batchTripleValue,
     },
   }
@@ -103,35 +110,26 @@ function createTripleRequest(
 ): EVMCallRequest {
   return {
     RPC: rpc as string,
-    address: attestorAddress as string,
+    address: attestorAddress as `0x${string}`,
     fnDeclaration: [
       'function createTriple(uint256 subjectId, uint256 predicateId, uint256 objectId) external payable returns (uint256)',
     ],
     fnName: 'createTriple',
-    args: [subjectId, predicateId, objectId],
+    args: [BigInt(subjectId), BigInt(predicateId), BigInt(objectId)],
     txParams: {
-      gasLimit: 1000000,
-      value: tripleValue,
+      gasLimit: 1000000n,
+      value: BigInt(tripleValue),
     },
   }
 }
 
 function hashURI(uri: string): string {
   try {
-    return ethers.keccak256(ethers.toUtf8Bytes(uri))
+    return keccak256(toBytes(uri))
   } catch (error) {
     console.error('Error hashing URI:', error)
   }
   return uri
-}
-
-function decodeURIHash(hash: string): string {
-  try {
-    return ethers.toUtf8String(hash)
-  } catch (error) {
-    console.error('Error decoding URI hash:', error)
-  }
-  return hash
 }
 
 export function hashTriple(
@@ -140,9 +138,11 @@ export function hashTriple(
   objectId: string,
 ): string {
   try {
-    return ethers.solidityPackedKeccak256(
-      ['uint256', 'uint256', 'uint256'],
-      [BigInt(subjectId), BigInt(predicateId), BigInt(objectId)],
+    return keccak256(
+      encodePacked(
+        ['uint256', 'uint256', 'uint256'],
+        [BigInt(subjectId), BigInt(predicateId), BigInt(objectId)],
+      ),
     )
   } catch (error) {
     console.error('Error hashing triple:', error)
@@ -154,10 +154,10 @@ export function hashTriple(
 export async function getAtomIdFromURI(cid: string): Promise<string> {
   const call: EVMCallRequest = {
     RPC: rpc as string,
-    address: multivaultAddress as string,
+    address: multivaultAddress as `0x${string}`,
     fnName: 'atomsByHash',
     fnDeclaration: [
-      'function atomsByHash(bytes32 calldata atomUri) external view returns (uint256)',
+      'function atomsByHash(bytes32 atomUri) external view returns (uint256)',
     ],
     args: [hashURI(cid)],
     txParams: {},
@@ -169,24 +169,25 @@ export async function getAtomIdFromURI(cid: string): Promise<string> {
 export async function getAtomURIFromID(atomId: string): Promise<string> {
   const call: EVMCallRequest = {
     RPC: rpc as string,
-    address: multivaultAddress as string,
+    address: multivaultAddress as `0x${string}`,
     fnName: 'atoms',
     fnDeclaration: [
       'function atoms(uint256 atomId) external view returns (bytes)',
     ],
-    args: [atomId],
+    args: [BigInt(atomId)],
     txParams: {},
   }
-  return decodeURIHash((await evmRead(call)) as BytesLike as string)
+  const result = (await evmRead(call)) as Hex // Viem returns Hex string
+  return Buffer.from(result.slice(2), 'hex').toString('utf8') // Decode Hex to string
 }
 
 export async function getTripleByHash(hash: string): Promise<string> {
   const call: EVMCallRequest = {
     RPC: rpc as string,
-    address: multivaultAddress as string,
+    address: multivaultAddress as `0x${string}`,
     fnName: 'triplesByHash',
     fnDeclaration: [
-      'function triplesByHash(bytes32 calldata tripleHash) external view returns (uint256)',
+      'function triplesByHash(bytes32 tripleHash) external view returns (uint256)',
     ],
     args: [hash],
     txParams: {},
@@ -197,7 +198,7 @@ export async function getTripleByHash(hash: string): Promise<string> {
 export async function getAtomCost(): Promise<string> {
   const call: EVMCallRequest = {
     RPC: rpc as string,
-    address: multivaultAddress as string,
+    address: multivaultAddress as `0x${string}`,
     fnName: 'getAtomCost',
     fnDeclaration: ['function getAtomCost() external view returns (uint256)'],
     args: [],
@@ -209,7 +210,7 @@ export async function getAtomCost(): Promise<string> {
 export async function getTripleCost(): Promise<string> {
   const call: EVMCallRequest = {
     RPC: rpc as string,
-    address: multivaultAddress as string,
+    address: multivaultAddress as `0x${string}`,
     fnName: 'getTripleCost',
     fnDeclaration: ['function getTripleCost() external view returns (uint256)'],
     args: [],
@@ -275,7 +276,7 @@ export async function getOrCreateAtom(uri: string) {
   return [atomId, txId]
 }
 
-// Should the logic calling this be refactored to take the ID?  Or would it be thrown away in scope?
+// Should the logic calling this be refactored to take the ID? Or would it be thrown away in scope?
 export async function checkAtomExists(uri: string) {
   const atomId = await getAtomID(uri)
   return atomId !== '0'
@@ -299,8 +300,6 @@ export async function getOrCreateTriple(
   return [tripleId, txId]
 }
 
-// Todo: use this to ensure triple does not exist before submitting it in batch call
-// Also decide to return ID or boolean - see comment above for checkAtomExists
 // Don't call this, use the wrapper from atom-uri.ts
 export async function getTripleId(
   subjectId: string,

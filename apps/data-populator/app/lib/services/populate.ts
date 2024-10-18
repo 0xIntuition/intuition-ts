@@ -355,9 +355,9 @@ export async function prepareTag(
     : null
   requestHash
     ? await pushUpdate(
-        requestHash,
-        `Keywords Predicate Atom ID: ${keywordsPredicateAtomID}`,
-      )
+      requestHash,
+      `Keywords Predicate Atom ID: ${keywordsPredicateAtomID}`,
+    )
     : null
 
   return [keywordsPredicateAtomID, tagAtomID]
@@ -468,9 +468,9 @@ export async function pinAllData(
   // Process duplicate atoms after unique atoms
   requestHash
     ? await pushUpdate(
-        requestHash,
-        'Pinning atom data with duplicate images...',
-      )
+      requestHash,
+      'Pinning atom data with duplicate images...',
+    )
     : null
   const duplicatePinnedData = await processAtomDataBatches(
     duplicateAtoms,
@@ -618,9 +618,9 @@ export async function cullExistingAtoms(
           const alreadyExists = await checkAtomExists(cid)
           requestHash
             ? await pushUpdate(
-                requestHash,
-                `${cid} Already exists: ${alreadyExists}`,
-              )
+              requestHash,
+              `${cid} Already exists: ${alreadyExists}`,
+            )
             : null
           return { filteredObj, cid, originalIndex, alreadyExists }
         }, maxRetries),
@@ -770,48 +770,51 @@ export async function processBatchAtoms(
   console.log('Predetermining number of chunks to process batch atoms...')
   requestHash
     ? await pushUpdate(
-        requestHash,
-        'Predetermining number of chunks to process batch atoms...',
-      )
+      requestHash,
+      'Predetermining number of chunks to process batch atoms...',
+    )
     : null
   let numChunks = 1
-  let staticExecutionReverted = true
-  let latestBatch: string[] = [] // for debugging
-  while (staticExecutionReverted && numChunks < cids.length) {
-    try {
-      const chunkSize = Math.ceil(cids.length / numChunks)
-      const chunks = chunk(cids, chunkSize)
-      for (const batch of chunks) {
-        latestBatch = batch // for debugging
-        const request = batchCreateAtomRequest(batch)
-        const gasEstimate = await estimateGas(request)
-        if (gasEstimate > 30000000) {
-          throw new Error(
-            'Gas estimate for batch atoms will likely exceed block gas limit',
-          )
-        }
-      }
-      staticExecutionReverted = false
-    } catch (error) {
-      console.log(
-        'Batch failed gas estimation, chunking further: ',
-        latestBatch,
-      )
-      requestHash
-        ? await pushUpdate(requestHash, `Reducing chunks: ${latestBatch}`)
-        : null
-      numChunks++
-    }
-  }
 
-  if (staticExecutionReverted) {
-    requestHash
-      ? await pushUpdate(
+  if (cids.length > 1) {
+    let staticExecutionReverted = true
+    let latestBatch: string[] = [] // for debugging
+    while (staticExecutionReverted && numChunks < cids.length) {
+      try {
+        const chunkSize = Math.ceil(cids.length / numChunks)
+        const chunks = chunk(cids, chunkSize)
+        for (const batch of chunks) {
+          latestBatch = batch // for debugging
+          const request = batchCreateAtomRequest(batch)
+          const gasEstimate = await estimateGas(request)
+          if (gasEstimate > 30000000) {
+            throw new Error(
+              'Gas estimate for batch atoms will likely exceed block gas limit',
+            )
+          }
+        }
+        staticExecutionReverted = false
+      } catch (error) {
+        console.log(
+          'Batch failed gas estimation, chunking further: ',
+          latestBatch,
+        )
+        requestHash
+          ? await pushUpdate(requestHash, `Reducing chunks: ${latestBatch}`)
+          : null
+        numChunks++
+      }
+    }
+
+    if (staticExecutionReverted) {
+      requestHash
+        ? await pushUpdate(
           requestHash,
           'static execution reverted with chunk size of 1',
         )
-      : null
-    throw new Error('static execution reverted with chunk size of 1')
+        : null
+      throw new Error('static execution reverted with chunk size of 1')
+    }
   }
 
   const chunkSize = Math.ceil(cids.length / numChunks)
@@ -823,9 +826,9 @@ export async function processBatchAtoms(
     console.log('Number of batch atom chunks: ', numChunks)
     requestHash
       ? await pushUpdate(
-          requestHash,
-          `Number of batch atom chunks: ${numChunks}`,
-        )
+        requestHash,
+        `Number of batch atom chunks: ${numChunks}`,
+      )
       : null
     console.log(
       'Chunk lengths: ',
@@ -833,9 +836,9 @@ export async function processBatchAtoms(
     )
     requestHash
       ? await pushUpdate(
-          requestHash,
-          `Chunk lengths: ${chunks.map((chunk) => chunk.length)}`,
-        )
+        requestHash,
+        `Chunk lengths: ${chunks.map((chunk) => chunk.length)}`,
+      )
       : null
     for (const batch of chunks) {
       lastChunkForDebug = batch
@@ -872,54 +875,57 @@ export async function processBatchTriples(
 
   // Attempt static execution in iteratively smaller chunks until it either succeeds or we have reason to believe the revert is not due to out of gas
   let numChunks = 1
-  let staticExecutionReverted = true
-  let latestBatch: Triple[] = [] // for debugging
-  console.log('Predetermining number of chunks to process batch triples...')
-  requestHash
-    ? await pushUpdate(
+
+  if (triples.length > 1) {
+    let staticExecutionReverted = true
+    let latestBatch: Triple[] = [] // for debugging
+    console.log('Predetermining number of chunks to process batch triples...')
+    requestHash
+      ? await pushUpdate(
         requestHash,
         'Predetermining number of chunks to process batch triples...',
       )
-    : null
-  while (staticExecutionReverted && numChunks < triples.length) {
-    try {
-      const chunkSize = Math.ceil(triples.length / numChunks)
-      const chunks = chunk(triples, chunkSize)
-      for (const batch of chunks) {
-        latestBatch = batch // for debugging
-        const request = batchCreateTripleRequest(
-          batch.map((triple) => triple.subjectId),
-          batch.map((triple) => triple.predicateId),
-          batch.map((triple) => triple.objectId),
-        )
-        const gasEstimate = await estimateGas(request)
-        if (gasEstimate > 30000000) {
-          throw new Error(
-            'Gas estimate for batch triples will likely exceed block gas limit',
+      : null
+    while (staticExecutionReverted && numChunks < triples.length) {
+      try {
+        const chunkSize = Math.ceil(triples.length / numChunks)
+        const chunks = chunk(triples, chunkSize)
+        for (const batch of chunks) {
+          latestBatch = batch // for debugging
+          const request = batchCreateTripleRequest(
+            batch.map((triple) => triple.subjectId),
+            batch.map((triple) => triple.predicateId),
+            batch.map((triple) => triple.objectId),
           )
+          const gasEstimate = await estimateGas(request)
+          if (gasEstimate > 30000000) {
+            throw new Error(
+              'Gas estimate for batch triples will likely exceed block gas limit',
+            )
+          }
         }
+        staticExecutionReverted = false
+      } catch (error) {
+        console.log(
+          'Batch failed gas estimation, chunking further: ',
+          latestBatch,
+        )
+        requestHash
+          ? await pushUpdate(requestHash, `Reducing chunks: ${latestBatch}`)
+          : null
+        numChunks++
       }
-      staticExecutionReverted = false
-    } catch (error) {
-      console.log(
-        'Batch failed gas estimation, chunking further: ',
-        latestBatch,
-      )
-      requestHash
-        ? await pushUpdate(requestHash, `Reducing chunks: ${latestBatch}`)
-        : null
-      numChunks++
     }
-  }
 
-  if (staticExecutionReverted) {
-    requestHash
-      ? await pushUpdate(
+    if (staticExecutionReverted) {
+      requestHash
+        ? await pushUpdate(
           requestHash,
           'static execution reverted with chunk size of 1',
         )
-      : null
-    throw new Error('static execution reverted with chunk size of 1')
+        : null
+      throw new Error('static execution reverted with chunk size of 1')
+    }
   }
 
   const chunkSize = Math.ceil(triples.length / numChunks)
@@ -931,9 +937,9 @@ export async function processBatchTriples(
     console.log('Number of batch triple chunks: ', numChunks)
     requestHash
       ? await pushUpdate(
-          requestHash,
-          `Number of batch triple chunks: ${numChunks}`,
-        )
+        requestHash,
+        `Number of batch triple chunks: ${numChunks}`,
+      )
       : null
     console.log(
       'Chunk lengths: ',
@@ -941,9 +947,9 @@ export async function processBatchTriples(
     )
     requestHash
       ? await pushUpdate(
-          requestHash,
-          `Chunk lengths: ${chunks.map((chunk) => chunk.length)}`,
-        )
+        requestHash,
+        `Chunk lengths: ${chunks.map((chunk) => chunk.length)}`,
+      )
       : null
     for (const batch of chunks) {
       lastChunkForDebug = batch
@@ -963,9 +969,9 @@ export async function processBatchTriples(
     console.error('Error processing batch triples...', lastChunkForDebug)
     requestHash
       ? await pushUpdate(
-          requestHash,
-          `Error processing batch triples: ${error}`,
-        )
+        requestHash,
+        `Error processing batch triples: ${error}`,
+      )
       : null
     return result
   }
