@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
 
-import { bytesToHex, encodePacked, Hex, keccak256, toBytes } from 'viem'
+import { encodePacked, Hex, keccak256, toBytes, toHex } from 'viem'
 
 import { callAndConfirm, EVMCallRequest, evmRead } from './evm'
 import { getAtomID } from './offchain-store'
@@ -53,7 +53,7 @@ function createAtomRequest(cid: string): EVMCallRequest {
       'function createAtom(bytes calldata atomUri) external payable returns (uint256)',
     ],
     fnName: 'createAtom',
-    args: [bytesToHex(toBytes(cid))], // Converted to Hex string
+    args: [toHex(cid)], // Converted to Hex string
     txParams: {
       gasLimit: 500000n,
       value: BigInt(atomValue),
@@ -70,7 +70,7 @@ export function batchCreateAtomRequest(cids: string[]): EVMCallRequest {
       'function batchCreateAtom(bytes[] calldata atomUris) external payable returns (uint256[])',
     ],
     fnName: 'batchCreateAtom',
-    args: [cids.map((cid) => bytesToHex(toBytes(cid)))], // Converted to Hex strings
+    args: [cids.map((cid) => toHex(cid))], // Converted to Hex strings
     txParams: {
       gasLimit: 30000000n,
       value: batchAtomValue,
