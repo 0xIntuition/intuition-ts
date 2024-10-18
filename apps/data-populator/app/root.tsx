@@ -142,12 +142,6 @@ function App() {
 export function AppLayout() {
   const { chain } = useAccount()
   const { switchChain } = useSwitchChain()
-  const { env } = useLoaderData<typeof loader>()
-
-  const supabase = useMemo(() => {
-    logger('Creating supabase browser client')
-    return createBrowserClient(env.SUPABASE_URL, env.SUPABASE_KEY)
-  }, [env.SUPABASE_URL, env.SUPABASE_KEY])
 
   useEffect(() => {
     if (chain?.id !== getChainEnvConfig(CURRENT_ENV).chainId && switchChain) {
@@ -157,7 +151,7 @@ export function AppLayout() {
     }
   }, [chain, switchChain])
 
-  return <Outlet context={{ supabase }} />
+  return <Outlet />
 }
 
 export function ErrorBoundary() {

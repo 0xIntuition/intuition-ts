@@ -20,6 +20,7 @@ interface ProgressModalProps {
   isOpen: boolean
   onClose: () => void
   requestHash: string
+  step: 'idle' | 'initiating' | 'publishing' | 'sending' | 'logging'
 }
 
 interface RequestData {
@@ -37,6 +38,7 @@ export function ProgressModal({
   isOpen,
   onClose,
   requestHash,
+  step,
 }: ProgressModalProps) {
   const scrollAreaRef = useRef<HTMLDivElement>(null)
 
@@ -73,7 +75,7 @@ export function ProgressModal({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[600px] w-full">
         <DialogHeader>
-          <DialogTitle>Operation Progress</DialogTitle>
+          <DialogTitle>Operation in Progress</DialogTitle>
         </DialogHeader>
         <ScrollArea className="h-[60vh]" ref={scrollAreaRef}>
           {requestData && (

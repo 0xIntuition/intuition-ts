@@ -46,7 +46,6 @@ export default function Providers({
   privyAppId: string
   children: React.ReactNode
 }) {
-  logger('smart wallets provider', SmartWalletsProvider)
   return (
     <PrivyProvider
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment

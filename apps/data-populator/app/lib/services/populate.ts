@@ -353,7 +353,7 @@ export function getBatchAtomsCall(cids: string[]): BatchAtomsRequest | undefined
 export async function generateBatchAtomsCalldata(
   cids: string[],
   requestHash?: string,
-): Promise<{ chunks: string[][], chunkSize: number, calls: BatchAtomsRequest[] }> {
+): Promise<{ chunks: string[][]; chunkSize: number, calls: BatchAtomsRequest[] }> {
   const { chunks, chunkSize } = await buildChunks(cids, requestHash)
   const calls = chunks.map((batch) => getBatchAtomsCall(batch)).filter((call) => call !== undefined)
 

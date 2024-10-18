@@ -27,7 +27,6 @@ export async function getUser(request: Request): Promise<User | null> {
 export async function getUserWallet(request: Request): Promise<string | null> {
   logger('[getUserWallet] Entering getUserWallet')
   const user = await getUser(request)
-  logger('[getUserWallet] user', user)
   return user?.wallet?.address ?? null
 }
 
