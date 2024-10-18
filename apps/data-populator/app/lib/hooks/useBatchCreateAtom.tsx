@@ -4,6 +4,7 @@ import type { BatchAtomsRequest } from '@lib/services/populate'
 import logger from '@lib/utils/logger'
 import { useSmartWallets } from '@privy-io/react-auth/smart-wallets'
 import { useFetcher } from '@remix-run/react'
+import { InitiateActionData, PublishActionData } from '@routes/app+'
 import { Thing, WithContext } from 'schema-dts'
 
 type State = {
@@ -66,7 +67,7 @@ export function useBatchCreateAtom() {
 
   const mountCount = useRef(0)
   const renderCount = useRef(0)
-  const lastActionRef = useRef<string | null>(null)
+  // const lastActionRef = useRef<string | null>(null)
 
   useEffect(() => {
     mountCount.current += 1
@@ -83,7 +84,9 @@ export function useBatchCreateAtom() {
 
   const initiateBatchRequest = useCallback(
     (selectedRows: number[], csvData: string[][]) => {
-      if (isProcessing) return
+      if (isProcessing) {
+        return
+      }
       if (!Array.isArray(selectedRows) || selectedRows.length === 0) {
         console.error('Invalid or empty selectedRows')
         return
@@ -110,7 +113,9 @@ export function useBatchCreateAtom() {
   )
 
   const publishAtoms = useCallback(() => {
-    if (!state.requestHash || isProcessing) return
+    if (!state.requestHash || isProcessing) {
+      return
+    }
     console.log('Publishing atoms')
     setIsProcessing(true)
     publishFetcher.submit(
@@ -124,7 +129,9 @@ export function useBatchCreateAtom() {
   }, [publishFetcher, state.requestHash, state.calls])
 
   const sendBatchTx = useCallback(async () => {
-    if (!client || !state.calls.length || isProcessing) return
+    if (!client || !state.calls.length || isProcessing) {
+      return
+    }
     console.log('Sending batch transaction')
     dispatch({ type: 'SET_STEP', payload: 'sending' })
     setIsProcessing(true)
@@ -153,7 +160,9 @@ export function useBatchCreateAtom() {
   }, [client, state.calls, isProcessing])
 
   const logTxHash = useCallback(() => {
-    if (!state.txHash || !state.requestHash || isProcessing) return
+    if (!state.txHash || !state.requestHash || isProcessing) {
+      return
+    }
     console.log('Logging transaction hash')
     setIsProcessing(true)
     dispatch({ type: 'SET_STEP', payload: 'logging' })
@@ -173,7 +182,7 @@ export function useBatchCreateAtom() {
       initiateFetcher.data &&
       state.step === 'initiating'
     ) {
-      const data = initiateFetcher.data as any
+      const data = initiateFetcher.data as InitiateActionData
       console.log('Initiate fetcher data received:', data)
       if (data.success && data.requestHash) {
         console.log('Initiate fetcher data received:', data)
@@ -196,7 +205,7 @@ export function useBatchCreateAtom() {
       publishFetcher.data &&
       state.step === 'publishing'
     ) {
-      const data = publishFetcher.data as any
+      const data = publishFetcher.data as PublishActionData
       console.log('Publish fetcher data received:', data)
       if (data.success && data.calls) {
         dispatch({ type: 'SET_CALLS', payload: data.calls })
@@ -230,7 +239,9 @@ export function useBatchCreateAtom() {
 
   useEffect(() => {
     const handleAsyncOperations = async () => {
-      if (isProcessing) return
+      if (isProcessing) {
+        return
+      }
 
       console.log('state.step', state.step)
       console.log('state.calls', state.calls)

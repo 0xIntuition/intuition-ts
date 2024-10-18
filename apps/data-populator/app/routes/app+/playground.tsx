@@ -11,7 +11,6 @@ import { useSmartWallets } from '@privy-io/react-auth/smart-wallets'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 import { getUser, requireUserWallet } from '@server/auth'
-import { data } from 'autoprefixer'
 import { encodeFunctionData, toHex } from 'viem'
 import { baseSepolia } from 'viem/chains'
 
@@ -24,20 +23,20 @@ export async function loader({ request }: LoaderFunctionArgs) {
   logger('user', user)
   invariant(wallet, 'Unauthorized')
 
-  const transactions = [
-    {
-      to: '0x25709998B542f1Be27D19Fa0B3A9A67302bc1b94',
-      value: '300000000000000', // 0.0003 ETH in wei
-    },
-    {
-      to: '0x25709998B542f1Be27D19Fa0B3A9A67302bc1b94',
-      value: '200000000000000', // 0.0002 ETH in wei
-    },
-    {
-      to: '0x25709998B542f1Be27D19Fa0B3A9A67302bc1b94',
-      value: '100000000000000', // 0.0001 ETH in wei
-    },
-  ]
+  // const transactions = [
+  //   {
+  //     to: '0x25709998B542f1Be27D19Fa0B3A9A67302bc1b94',
+  //     value: '300000000000000', // 0.0003 ETH in wei
+  //   },
+  //   {
+  //     to: '0x25709998B542f1Be27D19Fa0B3A9A67302bc1b94',
+  //     value: '200000000000000', // 0.0002 ETH in wei
+  //   },
+  //   {
+  //     to: '0x25709998B542f1Be27D19Fa0B3A9A67302bc1b94',
+  //     value: '100000000000000', // 0.0001 ETH in wei
+  //   },
+  // ]
 
   // when we want to interact with our contract, we'd do it with this format:
 

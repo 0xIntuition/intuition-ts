@@ -9,14 +9,12 @@ import {
 import { Thing, WithContext } from 'schema-dts'
 
 import {
-  buildChunks,
   checkAtomsExist,
   createPopulateAtomsRequest,
   generateBatchAtomsCalldata,
   getAtomDataFromID,
   pinAtoms,
   requestPopulateAndTagAtoms,
-  requestPopulateAtoms,
 } from '../lib/services/populate'
 
 // TODO: Implement real functions for CSV editor operations
@@ -98,10 +96,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       const schemaObjects = convertCsvToSchemaObjects<Thing>(csvData)
       const selectedAtoms = selectedRows.map((index) => schemaObjects[index])
       const requestHash = await createPopulateAtomsRequest(selectedAtoms)
-      const { existingCIDs, newCIDs } = await pinAtoms(
-        selectedAtoms,
-        requestHash,
-      )
+      const { newCIDs } = await pinAtoms(selectedAtoms, requestHash)
       const { chunks, chunkSize, calls } = await generateBatchAtomsCalldata(
         newCIDs,
         requestHash,

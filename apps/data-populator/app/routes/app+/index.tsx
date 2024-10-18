@@ -42,7 +42,6 @@ import {
 import { convertCsvToSchemaObjects } from '@lib/utils/schema'
 import type { SortDirection } from '@lib/utils/sort'
 import { getNextSortDirection, sortData } from '@lib/utils/sort'
-import { useSmartWallets } from '@privy-io/react-auth/smart-wallets'
 import { json, type ActionFunctionArgs } from '@remix-run/node'
 import {
   useActionData,
@@ -63,16 +62,35 @@ interface AtomExistsResult {
 }
 
 // Update the ActionData type to be more specific
-type ActionData =
-  | { success: true; requestHash: string; selectedRows: number[] }
-  | {
-      success: true
-      calls: BatchAtomsRequest[]
-      chunks: string[][]
-      chunkSize: number
-    }
+export type ActionData =
+  | InitiateActionData
+  | PublishActionData
+  | LogTxActionData
   | { success: true }
-  | { error: string }
+  | ErrorActionData
+
+export type InitiateActionData = {
+  success: boolean
+  requestHash: string
+  selectedRows: number[]
+  selectedAtoms: WithContext<Thing>[]
+  csvData: string[][]
+}
+
+export type PublishActionData = {
+  success: boolean
+  calls: BatchAtomsRequest[]
+  chunks: string[][]
+  chunkSize: number
+}
+
+export type LogTxActionData = {
+  success: boolean
+}
+
+export type ErrorActionData = {
+  error: string
+}
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   try {
@@ -100,10 +118,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         const selectedAtoms = JSON.parse(
           formData.get('selectedAtoms') as string,
         ) as WithContext<Thing>[]
-        const { existingCIDs, newCIDs } = await pinAtoms(
-          selectedAtoms,
-          requestHash,
-        )
+        const { newCIDs } = await pinAtoms(selectedAtoms, requestHash)
         const { chunks, chunkSize, calls } = await generateBatchAtomsCalldata(
           newCIDs,
           requestHash,
@@ -113,6 +128,9 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       case 'logTxHash': {
         const txHash = formData.get('txHash') as string
         const requestHash = formData.get('requestHash') as string
+        logger(
+          `Logging transaction hash: ${txHash} for request hash: ${requestHash}`,
+        )
         // Implement the logic to log the transaction hash
         // For example:
         // await logTransactionHash(txHash, requestHash)
@@ -128,7 +146,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
 export default function CSVEditor() {
   // State variables for managing CSV data, UI interactions, and atom-related operations
-  const { client } = useSmartWallets()
 
   const actionData = useActionData<ActionData>()
   const submit = useSubmit()
@@ -174,7 +191,7 @@ export default function CSVEditor() {
   //   privateKey: '',
   // })
   // const [showHistory, setShowHistory] = useState(false)
-  const [showProgressModal, setShowProgressModal] = useState(false)
+  const [, setShowProgressModal] = useState(false)
   const [proofreadIssues, setProofreadIssues] = useState<
     UnusualCharacterIssue[]
   >([])
@@ -183,19 +200,8 @@ export default function CSVEditor() {
   // Ref for file input to trigger file selection programmatically
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  const {
-    requestHash,
-    selectedAtoms,
-    calls,
-    txHash,
-    step,
-    isLoading,
-    isInitiating,
-    isPublishing,
-    isSending,
-    isLoggingTx,
-    initiateBatchRequest,
-  } = useBatchCreateAtom()
+  const { step, requestHash, isLoading, initiateBatchRequest } =
+    useBatchCreateAtom()
 
   // Function to load thumbnails for image URLs in the CSV data
   const loadThumbnailsForCSV = useCallback(async (data: string[][]) => {
@@ -1058,8 +1064,8 @@ export default function CSVEditor() {
           // You might want to handle this differently, perhaps by cancelling the operation
           console.log('Progress modal closed')
         }}
-        requestHash={requestHash}
         step={step}
+        requestHash={requestHash}
       />
 
       <ProofreadModal

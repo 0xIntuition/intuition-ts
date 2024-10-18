@@ -9,7 +9,6 @@ import {
 } from '@0xintuition/1ui'
 
 import { usePollRequestDetails } from '@lib/hooks/usePollRequestDetails'
-import { useFetcher } from '@remix-run/react'
 import { CheckCircle2, Loader2, XCircle } from 'lucide-react'
 
 import { ScrollArea } from './ui/scroll-area'
@@ -40,6 +39,8 @@ export function ProgressModal({
   requestHash,
   step,
 }: ProgressModalProps) {
+  // TODO: going to need this to handle UI on transaction stages anyway
+  console.log('step', step)
   const scrollAreaRef = useRef<HTMLDivElement>(null)
 
   const { requestData } = usePollRequestDetails({
