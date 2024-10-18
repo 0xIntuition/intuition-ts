@@ -5,6 +5,7 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from 'components/HoverCard'
+import { Icon } from 'components/Icon'
 import { IdentityTag, IdentityTagSize } from 'components/IdentityTag'
 import { ProfileCard } from 'components/ProfileCard'
 import { Separator } from 'components/Separator'
@@ -30,6 +31,7 @@ export interface ClaimProps {
   subject: ClaimItemProps
   predicate: ClaimItemProps
   object: ClaimItemProps
+  orientation?: 'horizontal' | 'vertical'
   onClick?: () => void
   maxIdentityLength?: number
 }
@@ -38,6 +40,7 @@ export const Claim = ({
   subject,
   predicate,
   object,
+  orientation = 'horizontal',
   disabled,
   size,
   onClick,
@@ -64,6 +67,7 @@ export const Claim = ({
     <div
       className={cn(
         'flex items-center w-full max-w-max group relative max-sm:flex-col max-sm:m-auto transition-colors duration-200',
+        orientation === 'vertical' ? 'flex-col items-start' : 'flex-row',
       )}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
@@ -73,8 +77,10 @@ export const Claim = ({
           {index > 0 && (
             <Separator
               className={cn(
-                separatorWidth,
-                'max-sm:w-px max-sm:h-2 transition-colors duration-200',
+                'transition-colors duration-200',
+                orientation === 'vertical'
+                  ? 'w-px h-2 ml-2'
+                  : `${separatorWidth} max-sm:w-px max-sm:h-2`,
                 { 'bg-primary': isHovered && onClick },
                 { 'group-hover:bg-primary': !onClick && hoveredIndex === null },
               )}
@@ -95,6 +101,19 @@ export const Claim = ({
           </div>
         </Fragment>
       ))}
+      {onClick && (
+        <div className="pl-1">
+          <Icon
+            name={'arrow-up-right'}
+            className={cn(
+              'h-4 w-4 transition-colors duration-200',
+              isHovered
+                ? 'text-primary'
+                : 'text-secondary/50 group-hover:text-primary',
+            )}
+          />
+        </div>
+      )}
     </div>
   )
 
@@ -151,6 +170,14 @@ const ClaimItem = ({
         value={item.label}
         disableTooltip={shouldHover}
         maxStringLength={effectiveMaxLength}
+        className={cn(
+          'relative z-10 identity-tag transition-colors duration-200 text-secondary/70',
+          {
+            'group-hover:text-primary': !isAnyHovered,
+            'text-primary': isHovered,
+            'text-secondary/70': isAnyHovered && !isHovered,
+          },
+        )}
       />
     </IdentityTag>
   )

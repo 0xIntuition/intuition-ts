@@ -1,16 +1,11 @@
 import {
   ActivePositionCard,
-  Badge,
   Claim,
-  DialogHeader,
-  DialogTitle,
-  Icon,
   Identity,
   IdentityTag,
   Tabs,
   TabsList,
   TabsTrigger,
-  Trunctacular,
 } from '@0xintuition/1ui'
 import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
 
@@ -26,10 +21,7 @@ import {
 } from '@lib/utils/misc'
 import { type FetcherWithComponents } from '@remix-run/react'
 import { VaultDetailsType } from 'app/types'
-import {
-  TransactionActionType,
-  TransactionStateType,
-} from 'app/types/transaction'
+import { TransactionStateType } from 'app/types/transaction'
 import { useAtom } from 'jotai'
 
 import StakeActions from './stake-actions'
@@ -38,7 +30,6 @@ import StakeReview from './stake-review'
 
 interface StakeFormProps {
   userWallet: string
-  walletBalance: string
   identity?: IdentityPresenter
   claim?: ClaimPresenter
   user_conviction: string
@@ -49,7 +40,6 @@ interface StakeFormProps {
   val: string
   setVal: (val: string) => void
   mode: string | undefined
-  dispatch: (action: TransactionActionType) => void
   state: TransactionStateType
   fetchReval: FetcherWithComponents<unknown>
   formRef: React.RefObject<HTMLFormElement>
@@ -63,7 +53,6 @@ interface StakeFormProps {
 
 export default function StakeForm({
   userWallet,
-  walletBalance,
   identity,
   claim,
   user_conviction,
@@ -74,7 +63,6 @@ export default function StakeForm({
   val,
   setVal,
   mode,
-  dispatch,
   state,
   fetchReval,
   formRef,
@@ -99,141 +87,137 @@ export default function StakeForm({
       </fetchReval.Form>
       {state.status === 'idle' ? (
         <>
-          <DialogHeader>
-            <DialogTitle>
-              <div className="flex items-center justify-between w-full pr-2.5">
-                {modalType === 'identity' ? (
-                  <IdentityTag
-                    imgSrc={identity?.user?.image ?? identity?.image}
-                    variant={identity?.user ? Identity.user : Identity.nonUser}
-                  >
-                    <Trunctacular
-                      value={
-                        identity?.user?.display_name ??
-                        identity?.display_name ??
-                        'Identity'
-                      }
-                    />
-                  </IdentityTag>
-                ) : (
-                  <Claim
-                    size="default"
-                    subject={{
-                      variant: claim?.subject?.is_user
-                        ? Identity.user
-                        : Identity.nonUser,
-                      label: getAtomLabel(claim?.subject as IdentityPresenter),
-                      imgSrc: getAtomImage(claim?.subject as IdentityPresenter),
-                      id: claim?.subject?.identity_id,
-                      description: getAtomDescription(
-                        claim?.subject as IdentityPresenter,
-                      ),
-                      ipfsLink: getAtomIpfsLink(
-                        claim?.subject as IdentityPresenter,
-                      ),
-                      link: getAtomLink(claim?.subject as IdentityPresenter),
-                    }}
-                    predicate={{
-                      variant: claim?.predicate?.is_user
-                        ? Identity.user
-                        : Identity.nonUser,
-                      label: getAtomLabel(
-                        claim?.predicate as IdentityPresenter,
-                      ),
-                      imgSrc: getAtomImage(
-                        claim?.predicate as IdentityPresenter,
-                      ),
-                      id: claim?.predicate?.identity_id,
-                      description: getAtomDescription(
-                        claim?.predicate as IdentityPresenter,
-                      ),
-                      ipfsLink: getAtomIpfsLink(
-                        claim?.predicate as IdentityPresenter,
-                      ),
-                      link: getAtomLink(claim?.predicate as IdentityPresenter),
-                    }}
-                    object={{
-                      variant: claim?.object?.is_user
-                        ? Identity.user
-                        : Identity.nonUser,
-                      label: getAtomLabel(claim?.object as IdentityPresenter),
-                      imgSrc: getAtomImage(claim?.object as IdentityPresenter),
-                      id: claim?.object?.identity_id,
-                      description: getAtomDescription(
-                        claim?.object as IdentityPresenter,
-                      ),
-                      ipfsLink: getAtomIpfsLink(
-                        claim?.object as IdentityPresenter,
-                      ),
-                      link: getAtomLink(claim?.object as IdentityPresenter),
-                    }}
-                    maxIdentityLength={8}
+          <div className="h-full w-full flex-col flex-grow">
+            <div className="items-center justify-center flex flex-row w-full px-10 pb-10">
+              {modalType === 'identity' ? (
+                <IdentityTag
+                  imgSrc={identity?.user?.image ?? identity?.image}
+                  variant={identity?.user ? Identity.user : Identity.nonUser}
+                >
+                  {identity?.user?.display_name ??
+                    identity?.display_name ??
+                    'Identity'}
+                </IdentityTag>
+              ) : (
+                <Claim
+                  size="default"
+                  subject={{
+                    variant: claim?.subject?.is_user
+                      ? Identity.user
+                      : Identity.nonUser,
+                    label: getAtomLabel(claim?.subject as IdentityPresenter),
+                    imgSrc: getAtomImage(claim?.subject as IdentityPresenter),
+                    id: claim?.subject?.identity_id,
+                    description: getAtomDescription(
+                      claim?.subject as IdentityPresenter,
+                    ),
+                    ipfsLink: getAtomIpfsLink(
+                      claim?.subject as IdentityPresenter,
+                    ),
+                    link: getAtomLink(claim?.subject as IdentityPresenter),
+                  }}
+                  predicate={{
+                    variant: claim?.predicate?.is_user
+                      ? Identity.user
+                      : Identity.nonUser,
+                    label: getAtomLabel(claim?.predicate as IdentityPresenter),
+                    imgSrc: getAtomImage(claim?.predicate as IdentityPresenter),
+                    id: claim?.predicate?.identity_id,
+                    description: getAtomDescription(
+                      claim?.predicate as IdentityPresenter,
+                    ),
+                    ipfsLink: getAtomIpfsLink(
+                      claim?.predicate as IdentityPresenter,
+                    ),
+                    link: getAtomLink(claim?.predicate as IdentityPresenter),
+                  }}
+                  object={{
+                    variant: claim?.object?.is_user
+                      ? Identity.user
+                      : Identity.nonUser,
+                    label: getAtomLabel(claim?.object as IdentityPresenter),
+                    imgSrc: getAtomImage(claim?.object as IdentityPresenter),
+                    id: claim?.object?.identity_id,
+                    description: getAtomDescription(
+                      claim?.object as IdentityPresenter,
+                    ),
+                    ipfsLink: getAtomIpfsLink(
+                      claim?.object as IdentityPresenter,
+                    ),
+                    link: getAtomLink(claim?.object as IdentityPresenter),
+                  }}
+                />
+              )}
+            </div>
+            <div className="w-96 mx-auto">
+              <Tabs defaultValue={mode}>
+                <TabsList className="relative overflow-hidden">
+                  <div
+                    className={`absolute mx-auto inset-0 bg-[radial-gradient(ellipse_at_bottom_center,_var(--tw-gradient-stops))] ${
+                      direction === 'for'
+                        ? 'from-for/50 via-for/10'
+                        : direction === 'against'
+                          ? 'from-against/50 via-against/10'
+                          : 'from-primary/20 via-primary/5'
+                    } to-transparent`}
                   />
-                )}
-                <Badge className="flex items-center gap-2">
-                  <Icon name="wallet" className="h-4 w-4" />
-                  <span className="text-sm text-nowrap">
-                    {(+walletBalance).toFixed(2)} ETH
-                  </span>
-                </Badge>
-              </div>
-            </DialogTitle>
-          </DialogHeader>
-          <div className="h-full w-full flex-col pt-5 px-10 pb-10 gap-5 inline-">
-            <Tabs defaultValue={mode}>
-              <TabsList>
-                <TabsTrigger
-                  variant="alternate"
-                  value="deposit"
-                  label="Deposit"
-                  onClick={(e) => {
-                    e.preventDefault()
-                    setStakeModalState({ ...stakeModalState, mode: 'deposit' })
-                  }}
+                  <TabsTrigger
+                    variant="alternate"
+                    value="deposit"
+                    label="Deposit"
+                    onClick={(e) => {
+                      e.preventDefault()
+                      setStakeModalState({
+                        ...stakeModalState,
+                        mode: 'deposit',
+                      })
+                    }}
+                    className="relative z-10"
+                  />
+                  <TabsTrigger
+                    variant="alternate"
+                    value="redeem"
+                    label="Redeem"
+                    onClick={(e) => {
+                      e.preventDefault()
+                      setStakeModalState({ ...stakeModalState, mode: 'redeem' })
+                    }}
+                    disabled={user_conviction === '0'}
+                    className="relative z-10"
+                  />
+                </TabsList>
+              </Tabs>
+              <div className="pt-8">
+                <ActivePositionCard
+                  value={Number(formatBalance(user_assets ?? 0, 18))}
+                  claimPosition={
+                    direction !== undefined
+                      ? direction === 'for'
+                        ? 'claimFor'
+                        : 'claimAgainst'
+                      : undefined
+                  }
                 />
-                <TabsTrigger
-                  variant="alternate"
-                  value="redeem"
-                  label="Redeem"
-                  onClick={(e) => {
-                    e.preventDefault()
-                    setStakeModalState({ ...stakeModalState, mode: 'redeem' })
-                  }}
-                  disabled={user_conviction === '0'}
-                />
-              </TabsList>
-            </Tabs>
-            <div className="pt-2.5">
-              <ActivePositionCard
-                value={Number(formatBalance(user_assets ?? 0, 18))}
-                claimPosition={
-                  direction !== undefined
-                    ? direction === 'for'
-                      ? 'claimFor'
-                      : 'claimAgainst'
-                    : undefined
-                }
-              />
-              <div className="rounded-t-lg bg-primary-950/15 px-4 pt-5">
-                <StakeInput
-                  val={val}
-                  setVal={setVal}
-                  wallet={userWallet ?? ''}
-                  isLoading={isLoading}
-                  validationErrors={validationErrors}
-                  setValidationErrors={setValidationErrors}
-                  showErrors={showErrors}
-                  setShowErrors={setShowErrors}
-                />
-                <div className="flex h-3 flex-col items-start justify-center gap-2 self-stretch" />
-                <StakeActions
-                  action={mode}
-                  setVal={setVal}
-                  walletBalance={walletBalance ?? '0'}
-                  minDeposit={vaultDetails.min_deposit ?? '0'}
-                  userConviction={user_conviction}
-                  price={conviction_price}
-                />
+                <div className="rounded-t-lg bg-primary-950/15 px-4 pt-5">
+                  <StakeInput
+                    val={val}
+                    setVal={setVal}
+                    wallet={userWallet ?? ''}
+                    isLoading={isLoading}
+                    validationErrors={validationErrors}
+                    setValidationErrors={setValidationErrors}
+                    showErrors={showErrors}
+                    setShowErrors={setShowErrors}
+                  />
+                  <div className="flex h-3 flex-col items-start justify-center gap-2 self-stretch" />
+                  <StakeActions
+                    action={mode}
+                    setVal={setVal}
+                    minDeposit={vaultDetails.min_deposit ?? '0'}
+                    userConviction={user_conviction}
+                    price={conviction_price}
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -243,9 +227,7 @@ export default function StakeForm({
           <StakeReview
             mode={mode}
             val={val}
-            dispatch={dispatch}
             state={state}
-            direction={direction!}
             modalType={modalType}
             identity={identity}
             claim={claim}
@@ -253,7 +235,7 @@ export default function StakeForm({
           />
         </div>
       ) : (
-        <div className="h-full flex flex-col">
+        <div className="flex flex-col flex-grow">
           <TransactionState
             status={state.status}
             txHash={state.txHash}

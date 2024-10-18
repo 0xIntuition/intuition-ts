@@ -5,7 +5,6 @@ import { formatUnits } from 'viem'
 interface StakeActionsProps {
   action: string | undefined
   setVal: (val: string) => void
-  walletBalance: string
   minDeposit: string
   userConviction?: string
   price?: string
@@ -14,28 +13,10 @@ interface StakeActionsProps {
 export default function StakeActions({
   action,
   setVal,
-  walletBalance,
   minDeposit,
   userConviction,
   price,
 }: StakeActionsProps) {
-  const formatDecimal = (value: number): string => {
-    return (Math.floor(value * 1e18) / 1e18).toFixed(18).replace(/\.?0+$/, '')
-  }
-
-  const calculateAndSetValue = (percentage: number) => {
-    if (action === 'deposit') {
-      const value = +walletBalance * percentage
-      setVal(formatDecimal(value))
-    } else if (userConviction && price) {
-      const maxEth =
-        +formatUnits(BigInt(userConviction), 18) *
-        +formatUnits(BigInt(price), 18)
-      const value = maxEth * percentage
-      setVal(formatDecimal(value))
-    }
-  }
-
   return (
     <div className="flex flex-row items-center justify-center gap-5">
       <Button
@@ -49,29 +30,15 @@ export default function StakeActions({
       </Button>
       <Button
         variant="ghost"
-        className={`${action === 'deposit' && 'hidden'}`}
-        onClick={() => calculateAndSetValue(0.05)}
-      >
-        <Text variant="small">5%</Text>
-      </Button>
-      <Button variant="ghost" onClick={() => calculateAndSetValue(0.1)}>
-        <Text variant="small">10%</Text>
-      </Button>
-      <Button variant="ghost" onClick={() => calculateAndSetValue(0.5)}>
-        <Text variant="small">50%</Text>
-      </Button>
-      <Button
-        variant="ghost"
         onClick={() => {
-          if (action === 'deposit') {
-            setVal(walletBalance)
-          } else if (userConviction && price) {
+          if (userConviction && price) {
             const userConvictionValue = formatUnits(BigInt(userConviction), 18)
             const priceValue = formatUnits(BigInt(price), 18)
             const maxEth = +userConvictionValue * +priceValue
             setVal(maxEth.toString())
           }
         }}
+        className={`${action === 'deposit' && 'hidden'}`}
       >
         <Text variant="small">Max</Text>
       </Button>

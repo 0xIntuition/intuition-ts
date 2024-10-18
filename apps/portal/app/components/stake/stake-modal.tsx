@@ -1,8 +1,27 @@
 import { useEffect, useRef, useState } from 'react'
 
-import { Dialog, DialogContent, DialogFooter, toast } from '@0xintuition/1ui'
+import {
+  Badge,
+  Button,
+  ButtonSize,
+  ButtonVariant,
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  Icon,
+  IconName,
+  Tag,
+  TagSize,
+  TagVariant,
+  Text,
+  TextVariant,
+  toast,
+} from '@0xintuition/1ui'
 import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
 
+import { InfoTooltip } from '@components/info-tooltip'
 import { multivaultAbi } from '@lib/abis/multivault'
 import { useDepositAtom } from '@lib/hooks/useDepositAtom'
 import { useGetWalletBalance } from '@lib/hooks/useGetWalletBalance'
@@ -357,35 +376,93 @@ export default function StakeModal({
         handleClose()
       }}
     >
-      <DialogContent className="flex flex-col w-[480px] h-[480px] gap-2.5 p-5">
-        <div className="flex-grow">
-          <StakeForm
-            userWallet={userWallet}
-            walletBalance={walletBalance}
-            identity={identity}
-            claim={claim}
-            vaultDetails={vaultDetails}
-            user_conviction={user_conviction}
-            conviction_price={conviction_price}
-            user_assets={user_assets}
-            direction={direction ? direction : undefined}
-            val={val}
-            setVal={setVal}
-            mode={mode}
-            dispatch={dispatch}
-            state={state}
-            fetchReval={fetchReval}
-            formRef={formRef}
-            isLoading={isLoading}
-            modalType={modalType}
-            validationErrors={validationErrors}
-            setValidationErrors={setValidationErrors}
-            showErrors={showErrors}
-            setShowErrors={setShowErrors}
-          />
-        </div>
+      <DialogContent className="flex flex-col min-w-[600px] min-h-[600px]">
+        <DialogHeader>
+          <DialogTitle>
+            <div className="flex items-center justify-between w-full pr-2.5">
+              <div className="text-foreground flex items-center gap-2">
+                {state.status !== 'idle' && (
+                  <Button
+                    onClick={() => dispatch({ type: 'START_TRANSACTION' })}
+                    variant={ButtonVariant.text}
+                    size={ButtonSize.icon}
+                    className="p-0"
+                  >
+                    <Icon name={IconName.arrowLeft} className="h-4 w-4" />
+                  </Button>
+                )}
+                Stake{' '}
+                <Tag
+                  variant={
+                    direction !== undefined
+                      ? direction === 'for'
+                        ? TagVariant.for
+                        : TagVariant.against
+                      : undefined
+                  }
+                  size={TagSize.sm}
+                  className={`${!direction && 'hidden'}`}
+                >
+                  {direction === 'for' ? 'FOR' : 'AGAINST'}
+                </Tag>
+                <InfoTooltip
+                  title="Staking"
+                  content={
+                    <div className="flex flex-col gap-2 w-full">
+                      <Text variant="base">
+                        Staking on an {claim ? 'Claim' : 'Identity'} signifies a
+                        belief in the relevancy of the respective{' '}
+                        {claim ? 'Claim' : 'Identity'} and enhances its
+                        discoverability in the Intuition system.
+                      </Text>
+                    </div>
+                  }
+                  icon={IconName.circleInfo}
+                />
+              </div>
+              <Badge className="flex items-center gap-1">
+                <Icon name="wallet" className="h-3 w-3 text-secondary/50" />
+                <Text
+                  variant={TextVariant.caption}
+                  className="text-nowrap text-secondary/50"
+                >
+                  {(+walletBalance).toFixed(2)} ETH
+                </Text>
+              </Badge>
+            </div>
+          </DialogTitle>
+          <Text
+            variant={TextVariant.caption}
+            className="text-secondary/50 w-full"
+          >
+            Staking on an {claim ? 'Claim' : 'Identity'} enhances its
+            discoverability in the Intuition system.
+          </Text>
+        </DialogHeader>
+        <StakeForm
+          userWallet={userWallet}
+          identity={identity}
+          claim={claim}
+          vaultDetails={vaultDetails}
+          user_conviction={user_conviction}
+          conviction_price={conviction_price}
+          user_assets={user_assets}
+          direction={direction ? direction : undefined}
+          val={val}
+          setVal={setVal}
+          mode={mode}
+          state={state}
+          fetchReval={fetchReval}
+          formRef={formRef}
+          isLoading={isLoading}
+          modalType={modalType}
+          validationErrors={validationErrors}
+          setValidationErrors={setValidationErrors}
+          showErrors={showErrors}
+          setShowErrors={setShowErrors}
+        />
         {!isTransactionStarted && (
-          <DialogFooter className="!justify-center !items-center gap-5">
+          <DialogFooter>
             <StakeButton
               val={val}
               mode={mode}

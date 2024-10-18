@@ -1,9 +1,6 @@
 import React from 'react'
 
 import {
-  Button,
-  DialogHeader,
-  DialogTitle,
   Icon,
   TransactionStatusCard,
   TransactionStatusIndicator,
@@ -38,14 +35,7 @@ export function TransactionState({
 }: TransactionStateProps) {
   return (
     <>
-      <DialogHeader>
-        <DialogTitle>
-          <Button variant="ghost" size="icon" disabled>
-            <Icon name="arrow-left" className="h-4 w-4" />
-          </Button>
-        </DialogTitle>
-      </DialogHeader>
-      <div className="flex flex-col items-center justify-center m-auto h-full">
+      <div className="flex flex-col items-center justify-center m-auto h-full flex-grow">
         <div
           className={clsx(
             'flex flex-col m-auto justify-center items-center h-full',

@@ -63,7 +63,7 @@ export default function StakeInput({
         />
         <Text
           weight="medium"
-          className="text-center text-secondary-foreground leading-normal pt-5"
+          className="text-center text-secondary-foreground leading-normal pt-4"
         >
           ETH
         </Text>

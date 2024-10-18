@@ -1,43 +1,40 @@
 import { useEffect, useState } from 'react'
 
 import {
-  Button,
+  ActivePositionCard,
   Claim,
-  DialogHeader,
-  DialogTitle,
   Icon,
   IconName,
   Identity,
   IdentityTag,
-  Separator,
-  Tag,
+  ScrollArea,
+  Table,
+  TableBody,
+  TableCell,
+  TableRow,
   Text,
   TextVariant,
+  TextWeight,
 } from '@0xintuition/1ui'
 import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
 
 import { InfoTooltip } from '@components/info-tooltip'
-import { FeeBreakdownTooltip } from '@components/stake/stake-fee-breakdown'
+import { PATHS } from '@consts/paths'
 import {
-  formatDisplayBalance,
   getAtomDescription,
   getAtomImage,
   getAtomIpfsLink,
   getAtomLabel,
   getAtomLink,
 } from '@lib/utils/misc'
+import { Link } from '@remix-run/react'
 import { VaultDetailsType } from 'app/types'
-import {
-  TransactionActionType,
-  TransactionStateType,
-} from 'app/types/transaction'
+import { TransactionStateType } from 'app/types/transaction'
 
 interface StakeReviewProps {
   val: string
   mode: string | undefined
-  dispatch: (action: TransactionActionType) => void
   state: TransactionStateType
-  direction: 'for' | 'against'
   isError?: boolean
   modalType: 'identity' | 'claim' | null | undefined
   identity?: IdentityPresenter
@@ -45,7 +42,11 @@ interface StakeReviewProps {
   vaultDetails: VaultDetailsType
 }
 
-const calculateDepositFees = (val: string, vaultDetails: VaultDetailsType) => {
+const calculateDepositFees = (
+  val: string,
+  vaultDetails: VaultDetailsType,
+  isClaim: boolean,
+) => {
   const protocolFee = vaultDetails?.formatted_protocol_fee || 0
   const entryFee = vaultDetails?.formatted_entry_fee || 0
   const atomFractionOnDeposit =
@@ -56,7 +57,9 @@ const calculateDepositFees = (val: string, vaultDetails: VaultDetailsType) => {
   const valAfterProtocolFee = +val - protocolFeeAmount
 
   // Atom Deposit Flow
-  const atomDepositAmount = valAfterProtocolFee * +atomFractionOnDeposit
+  const atomDepositAmount = isClaim
+    ? valAfterProtocolFee * +atomFractionOnDeposit
+    : valAfterProtocolFee
   const atomEntryFeeAmount = atomDepositAmount * +entryFee
   const atomPositionAmount = atomDepositAmount - atomEntryFeeAmount
 
@@ -133,11 +136,8 @@ interface Fees {
 export default function StakeReview({
   val,
   mode = 'identity',
-  dispatch,
   state,
-  direction,
   isError,
-  modalType,
   identity,
   claim,
   vaultDetails,
@@ -166,192 +166,346 @@ export default function StakeReview({
 
   const fees: Fees =
     mode === 'deposit'
-      ? calculateDepositFees(val, vaultDetails)
+      ? calculateDepositFees(val, vaultDetails, !!claim)
       : calculateRedeemFees(val, vaultDetails)
 
-  const renderHeadlineInfoTooltip = () => {
-    if (mode === 'deposit' && modalType === 'claim') {
-      return (
-        <InfoTooltip
-          title="Depositing on a Claim"
-          icon={IconName.circleInfo}
-          trigger={
-            <Icon name={IconName.circleQuestionMark} className="h-5 w-5" />
-          }
-          content={
-            <div className="flex flex-col gap-2 w-full">
-              <Text variant="base">
-                When depositing on a Claim, a portion of the deposit amount is
-                automatically allocated to each underlying Identity, as there is
-                an indirect signaling of support of these Identities.
-              </Text>
-              <div className="flex flex-row w-full justify-between">
-                <Text variant="base" weight="medium">
-                  Claim Deposit:
-                </Text>
-                <Text variant="base" weight="medium" className="text-success">
-                  {fees.triplePositionAmount?.toFixed(6)} ETH
-                </Text>
-              </div>
-              <div className="flex flex-row w-full justify-between">
-                <Text variant="base" weight="medium">
-                  Atom Equity:
-                </Text>
-                <Text variant="base" weight="medium" className="text-success">
-                  {fees.totalAtomPositionAmount?.toFixed(6)} ETH
-                </Text>
-              </div>
-              <Separator />
-              <div className="flex flex-row w-full justify-between">
-                <Text variant="base" weight="medium">
-                  Total Deposits:
-                </Text>
-                <Text variant="base" weight="medium" className="text-success">
-                  {fees.totalPosition?.toFixed(6)} ETH
-                </Text>
-              </div>
-            </div>
-          }
-        />
-      )
-    } else if (mode === 'deposit' && modalType === 'identity') {
-      return (
-        <InfoTooltip
-          title="Depositing on an Identity"
-          icon={IconName.circleInfo}
-          trigger={
-            <Icon name={IconName.circleQuestionMark} className="h-5 w-5" />
-          }
-          content={
-            <div className="flex flex-col gap-2 w-full">
-              Depositing on an Identity signifies a belief in the relevancy of
-              the respective Identity and enhances its discoverability in the
-              Intuition system.
-            </div>
-          }
-        />
-      )
-    }
-    return null
-  }
-
   return (
-    <>
-      <DialogHeader>
-        <DialogTitle className="justify-between">
-          <div className="flex flex-row gap-2">
-            <Button
-              onClick={(e) => {
-                e.preventDefault()
-                dispatch({ type: 'START_TRANSACTION' })
-              }}
-              variant="ghost"
-              size="icon"
-            >
-              <Icon name="arrow-left" className="h-4 w-4" />
-            </Button>
-            {direction !== undefined && (
-              <Tag variant={direction === 'for' ? 'for' : 'against'}>
-                {direction === 'for' ? 'FOR' : 'AGAINST'}
-              </Tag>
-            )}
-          </div>
-        </DialogTitle>
-      </DialogHeader>
-      <div className="flex flex-grow flex-col justify-center items-center h-[358px]">
-        <div className="flex flex-col justify-center items-center gap-5">
-          <Icon name="await-action" className="h-20 w-20 text-neutral-50/30" />
-          <div className="gap-5 flex flex-col items-center">
-            <div className="flex flex-row items-center gap-2">
-              <Text
-                variant="headline"
-                weight="medium text-white/70 leading-[30x]"
-              >
-                {mode === 'deposit' ? 'Deposit' : 'Redeem'}{' '}
-                {formatDisplayBalance(Number(val), 2)} ETH on{' '}
-                {modalType === 'identity' ? 'Identity' : 'Claim'}
-              </Text>
-              {renderHeadlineInfoTooltip()}
-            </div>
-            {modalType === 'identity' ? (
-              <IdentityTag
-                imgSrc={identity?.user?.image ?? identity?.image}
-                variant={identity?.user ? Identity.user : Identity.nonUser}
-              >
-                {identity?.user?.display_name ?? identity?.display_name}
-              </IdentityTag>
-            ) : (
-              <>
-                <Claim
-                  size="md"
-                  subject={{
-                    variant: claim?.subject?.is_user
-                      ? Identity.user
-                      : Identity.nonUser,
-                    label: getAtomLabel(claim?.subject as IdentityPresenter),
-                    imgSrc: getAtomImage(claim?.subject as IdentityPresenter),
-                    id: claim?.subject?.identity_id,
-                    description: getAtomDescription(
-                      claim?.subject as IdentityPresenter,
-                    ),
-                    ipfsLink: getAtomIpfsLink(
-                      claim?.subject as IdentityPresenter,
-                    ),
-                    link: getAtomLink(claim?.subject as IdentityPresenter),
-                    shouldHover: false,
-                  }}
-                  predicate={{
-                    variant: claim?.predicate?.is_user
-                      ? Identity.user
-                      : Identity.nonUser,
-                    label: getAtomLabel(claim?.predicate as IdentityPresenter),
-                    imgSrc: getAtomImage(claim?.predicate as IdentityPresenter),
-                    id: claim?.predicate?.identity_id,
-                    description: getAtomDescription(
-                      claim?.predicate as IdentityPresenter,
-                    ),
-                    ipfsLink: getAtomIpfsLink(
-                      claim?.predicate as IdentityPresenter,
-                    ),
-                    link: getAtomLink(claim?.predicate as IdentityPresenter),
-                    shouldHover: false,
-                  }}
-                  object={{
-                    variant: claim?.object?.is_user
-                      ? Identity.user
-                      : Identity.nonUser,
-                    label: getAtomLabel(claim?.object as IdentityPresenter),
-                    imgSrc: getAtomImage(claim?.object as IdentityPresenter),
-                    id: claim?.object?.identity_id,
-                    description: getAtomDescription(
-                      claim?.object as IdentityPresenter,
-                    ),
-                    ipfsLink: getAtomIpfsLink(
-                      claim?.object as IdentityPresenter,
-                    ),
-                    link: getAtomLink(claim?.object as IdentityPresenter),
-                    shouldHover: false,
-                  }}
-                  maxIdentityLength={12}
-                />
-              </>
-            )}
-            <Text
-              variant={TextVariant.body}
-              weight="normal"
-              className="text-neutral-50/50 flex items-center gap-1"
-            >
-              Estimated Fees: {fees.totalFees.toFixed(4)} ETH{' '}
-              <FeeBreakdownTooltip
-                fees={fees}
-                mode={mode}
-                claim={claim}
-                identity={identity}
-              />
+    <ScrollArea className="h-[600px] w-full">
+      <div className="flex flex-col px-10">
+        <div className="flex flex-col gap-10">
+          <div className="flex flex-col gap-5 items-center justify-center">
+            <Icon name="await-action" className="h-12 w-12 text-muted" />
+            <Text variant={TextVariant.headline} weight={TextWeight.medium}>
+              Review
             </Text>
+          </div>
+          <ActivePositionCard label="Total Cost" value={Number(val)} />
+          <div className="gap-10 flex flex-col w-full">
+            <div className="flex flex-col gap-2.5 w-full">
+              <div className="flex flex-row gap-1">
+                <Text
+                  variant={TextVariant.bodyLarge}
+                  weight={TextWeight.medium}
+                >
+                  {mode === 'deposit'
+                    ? `Deposit ETH on ${claim ? 'Claim' : 'Identity'}`
+                    : `Redeem ETH from ${claim ? 'Claim' : 'Identity'}`}
+                </Text>
+              </div>
+              <Table className="border-transparent">
+                <TableBody className="border-border/20 border-t border-b">
+                  <TableRow className="hover:bg-transparent">
+                    <TableCell>
+                      {claim ? (
+                        <Claim
+                          size="default"
+                          subject={{
+                            variant: claim?.subject?.is_user
+                              ? Identity.user
+                              : Identity.nonUser,
+                            label: getAtomLabel(
+                              claim?.subject as IdentityPresenter,
+                            ),
+                            imgSrc: getAtomImage(
+                              claim?.subject as IdentityPresenter,
+                            ),
+                            id: claim?.subject?.identity_id,
+                            description: getAtomDescription(
+                              claim?.subject as IdentityPresenter,
+                            ),
+                            ipfsLink: getAtomIpfsLink(
+                              claim?.subject as IdentityPresenter,
+                            ),
+                            link: getAtomLink(
+                              claim?.subject as IdentityPresenter,
+                            ),
+                          }}
+                          predicate={{
+                            variant: claim?.predicate?.is_user
+                              ? Identity.user
+                              : Identity.nonUser,
+                            label: getAtomLabel(
+                              claim?.predicate as IdentityPresenter,
+                            ),
+                            imgSrc: getAtomImage(
+                              claim?.predicate as IdentityPresenter,
+                            ),
+                            id: claim?.predicate?.identity_id,
+                            description: getAtomDescription(
+                              claim?.predicate as IdentityPresenter,
+                            ),
+                            ipfsLink: getAtomIpfsLink(
+                              claim?.predicate as IdentityPresenter,
+                            ),
+                            link: getAtomLink(
+                              claim?.predicate as IdentityPresenter,
+                            ),
+                          }}
+                          object={{
+                            variant: claim?.object?.is_user
+                              ? Identity.user
+                              : Identity.nonUser,
+                            label: getAtomLabel(
+                              claim?.object as IdentityPresenter,
+                            ),
+                            imgSrc: getAtomImage(
+                              claim?.object as IdentityPresenter,
+                            ),
+                            id: claim?.object?.identity_id,
+                            description: getAtomDescription(
+                              claim?.object as IdentityPresenter,
+                            ),
+                            ipfsLink: getAtomIpfsLink(
+                              claim?.object as IdentityPresenter,
+                            ),
+                            link: getAtomLink(
+                              claim?.object as IdentityPresenter,
+                            ),
+                          }}
+                          orientation="vertical"
+                        />
+                      ) : (
+                        <IdentityTag
+                          imgSrc={identity?.user?.image ?? identity?.image}
+                          variant={
+                            identity?.user ? Identity.user : Identity.nonUser
+                          }
+                        >
+                          {identity?.user?.display_name ??
+                            identity?.display_name ??
+                            'Identity'}
+                        </IdentityTag>
+                      )}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <Text
+                        variant={TextVariant.body}
+                        weight={TextWeight.medium}
+                        className="text-secondary-foreground/70"
+                      >
+                        {mode === 'deposit'
+                          ? claim
+                            ? fees.triplePositionAmount
+                            : fees.totalAtomPositionAmount?.toFixed(6)
+                          : fees.totalRedeem?.toFixed(6)}{' '}
+                        ETH
+                      </Text>
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </div>
+            {mode === 'deposit' && claim && (
+              <div className="flex flex-col gap-2.5">
+                <div className="flex flex-row gap-1">
+                  <Text
+                    variant={TextVariant.bodyLarge}
+                    weight={TextWeight.medium}
+                  >
+                    ETH to Individual Identities
+                  </Text>
+                  <InfoTooltip
+                    title="ETH to Individual Identities"
+                    icon={IconName.circleInfo}
+                    content={
+                      <div className="flex flex-col gap-2 w-full">
+                        <Text variant="base">
+                          When staking on a Claim, a portion of the deposit
+                          amount is automatically allocated to each underlying
+                          Identity, as there is an indirect signaling of support
+                          of these Identities.
+                        </Text>
+                      </div>
+                    }
+                  />
+                </div>
+                <Table className="border-transparent">
+                  <TableBody className="border-border/20 border-t border-b">
+                    <TableRow className="hover:bg-transparent">
+                      <TableCell>
+                        <IdentityTag
+                          size="default"
+                          variant={
+                            claim?.subject?.is_user
+                              ? Identity.user
+                              : Identity.nonUser
+                          }
+                          imgSrc={getAtomImage(
+                            claim?.subject as IdentityPresenter,
+                          )}
+                          id={claim?.subject?.identity_id}
+                        >
+                          {getAtomLabel(claim?.subject as IdentityPresenter)}
+                        </IdentityTag>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <Text
+                          variant={TextVariant.body}
+                          weight={TextWeight.medium}
+                          className="text-secondary-foreground/70"
+                        >
+                          {fees.atomDepositAmount?.toFixed(6)} ETH
+                        </Text>
+                      </TableCell>
+                    </TableRow>
+                    <TableRow className="hover:bg-transparent">
+                      <TableCell>
+                        <IdentityTag
+                          size="default"
+                          variant={
+                            claim?.predicate?.is_user
+                              ? Identity.user
+                              : Identity.nonUser
+                          }
+                          imgSrc={getAtomImage(
+                            claim?.predicate as IdentityPresenter,
+                          )}
+                          id={claim?.predicate?.identity_id}
+                        >
+                          {getAtomLabel(claim?.predicate as IdentityPresenter)}
+                        </IdentityTag>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <Text
+                          variant={TextVariant.body}
+                          weight={TextWeight.medium}
+                          className="text-secondary-foreground/70"
+                        >
+                          {fees.atomDepositAmount?.toFixed(6)} ETH
+                        </Text>
+                      </TableCell>
+                    </TableRow>
+                    <TableRow className="hover:bg-transparent">
+                      <TableCell>
+                        <IdentityTag
+                          size="default"
+                          variant={
+                            claim?.object?.is_user
+                              ? Identity.user
+                              : Identity.nonUser
+                          }
+                          imgSrc={getAtomImage(
+                            claim?.object as IdentityPresenter,
+                          )}
+                          id={claim?.object?.identity_id}
+                        >
+                          {getAtomLabel(claim?.object as IdentityPresenter)}
+                        </IdentityTag>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <Text
+                          variant={TextVariant.body}
+                          weight={TextWeight.medium}
+                          className="text-secondary-foreground/70"
+                        >
+                          {fees.atomDepositAmount?.toFixed(6)} ETH
+                        </Text>
+                      </TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </div>
+            )}
+            <div className="flex flex-col gap-2.5">
+              <div className="flex flex-row gap-1">
+                <Text
+                  variant={TextVariant.bodyLarge}
+                  weight={TextWeight.medium}
+                >
+                  Estimated Fees
+                </Text>
+                <InfoTooltip
+                  title="Estimated Fees"
+                  icon={IconName.circleInfo}
+                  content={
+                    <div className="flex flex-col gap-2 w-full">
+                      <Text variant="base">
+                        Standard fees apply to this transaction. See{' '}
+                        <Link
+                          to={PATHS.HELP}
+                          target="_blank"
+                          prefetch="intent"
+                          className="underline"
+                        >
+                          Help Center
+                        </Link>{' '}
+                        for details.
+                      </Text>
+                    </div>
+                  }
+                />
+              </div>
+              <Table className="border-transparent">
+                <TableBody className="border-border/20 border-t border-b">
+                  <TableRow className="hover:bg-transparent">
+                    <TableCell className="text-secondary-foreground/70">
+                      Protocol Fee
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <Text
+                        variant={TextVariant.body}
+                        weight={TextWeight.medium}
+                        className="text-secondary-foreground/70"
+                      >
+                        {fees.protocolFeeAmount.toFixed(6)} ETH
+                      </Text>
+                    </TableCell>
+                  </TableRow>
+                  {mode === 'deposit' ? (
+                    <>
+                      <TableRow className="hover:bg-transparent">
+                        <TableCell className="text-secondary-foreground/70">
+                          Identity Entry Fee
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <Text
+                            variant={TextVariant.body}
+                            weight={TextWeight.medium}
+                            className="text-secondary-foreground/70"
+                          >
+                            {fees.totalAtomEntryFeeAmount?.toFixed(6)} ETH
+                          </Text>
+                        </TableCell>
+                      </TableRow>
+                      {claim && (
+                        <TableRow className="hover:bg-transparent">
+                          <TableCell className="text-secondary-foreground/70">
+                            Claim Entry Fee
+                          </TableCell>
+                          <TableCell className="text-right">
+                            <Text
+                              variant={TextVariant.body}
+                              weight={TextWeight.medium}
+                              className="text-secondary-foreground/70"
+                            >
+                              {fees.tripleEntryFeeAmount?.toFixed(6)} ETH
+                            </Text>
+                          </TableCell>
+                        </TableRow>
+                      )}
+                    </>
+                  ) : (
+                    <TableRow className="hover:bg-transparent">
+                      <TableCell className="text-secondary-foreground/70">
+                        Exit Fee
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <Text
+                          variant={TextVariant.body}
+                          weight={TextWeight.medium}
+                          className="text-secondary-foreground/70"
+                        >
+                          {fees.exitFeeAmount?.toFixed(6)} ETH
+                        </Text>
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </div>
           </div>
         </div>
       </div>
-    </>
+    </ScrollArea>
   )
 }
