@@ -47,7 +47,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
       data: encodeFunctionData({
         abi: multivaultAbi,
         functionName: 'batchCreateAtom',
-        args: [[toHex('jpTest4'), toHex('jpTest4b')]],
+        args: [[toHex('jpTest7'), toHex('jpTest7b')]],
       }),
       value: '600200002000000',
     },
@@ -56,7 +56,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
       data: encodeFunctionData({
         abi: multivaultAbi,
         functionName: 'batchCreateAtom',
-        args: [[toHex('jojiTest4'), toHex('jojiTest4b')]],
+        args: [[toHex('jojiTest7'), toHex('jojiTest7b')]],
       }),
       value: '600200002000000',
     },

@@ -64,6 +64,23 @@ export function useBatchCreateAtom() {
   const logTxFetcher = useFetcher({ key: 'log-tx-hash' })
   const { client } = useSmartWallets()
 
+  const mountCount = useRef(0)
+  const renderCount = useRef(0)
+  const lastActionRef = useRef<string | null>(null)
+
+  useEffect(() => {
+    mountCount.current += 1
+    console.log(
+      `useBatchCreateAtom mounted. Mount count: ${mountCount.current}`,
+    )
+    return () => console.log('useBatchCreateAtom unmounted')
+  }, [])
+
+  renderCount.current += 1
+  console.log(
+    `useBatchCreateAtom rendered. Render count: ${renderCount.current}`,
+  )
+
   const initiateBatchRequest = useCallback(
     (selectedRows: number[], csvData: string[][]) => {
       if (isProcessing) return

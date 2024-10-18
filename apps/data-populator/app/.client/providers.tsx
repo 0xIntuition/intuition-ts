@@ -1,13 +1,17 @@
-import logger from '@lib/utils/logger'
 import { wagmiConfig } from '@lib/utils/wagmi'
 import type { PrivyClientConfig } from '@privy-io/react-auth'
-import { PrivyProvider } from '@privy-io/react-auth'
+import { addRpcUrlOverrideToChain, PrivyProvider } from '@privy-io/react-auth'
 import { SmartWalletsProvider } from '@privy-io/react-auth/smart-wallets'
 import { WagmiProvider } from '@privy-io/wagmi'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { baseSepolia } from 'viem/chains'
 
 const queryClient = new QueryClient()
+
+const baseSepoliaOverride = addRpcUrlOverrideToChain(
+  baseSepolia,
+  'https://base-sepolia.g.alchemy.com/v2/YpOdm_FHq4EdAApPiAocXtFNhp2tUUeP',
+)
 
 const privyConfig: PrivyClientConfig = {
   embeddedWallets: {
@@ -21,23 +25,8 @@ const privyConfig: PrivyClientConfig = {
     showWalletLoginFirst: true,
   },
   defaultChain: baseSepolia,
-  supportedChains: [baseSepolia],
+  supportedChains: [baseSepoliaOverride],
 }
-
-// const smartWalletConfig = {
-//   paymasterContext: {
-//     policyId: 'your-alchemy-policy-id',
-//   },
-//   enabled: true,
-//   smartWalletType: 'bundler',
-//   configuredNetworks: [
-//     {
-//       chainId: '84532',
-//       bundlerUrl:
-//         '=https://base-sepolia.g.alchemy.com/v2/YpOdm_FHq4EdAApPiAocXtFNhp2tUUeP',
-//     },
-//   ],
-// }
 
 export default function Providers({
   privyAppId,

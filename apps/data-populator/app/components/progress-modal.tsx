@@ -93,7 +93,7 @@ export function ProgressModal({
 
               <div className="pr-4">
                 {requestData &&
-                  requestData.updates.map((update, index) => (
+                  requestData.updates.map((update: string, index: number) => (
                     <div
                       key={index}
                       className="mb-2 break-words text-gray-700 overflow-hidden text-ellipsis"
