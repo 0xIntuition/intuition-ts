@@ -10,7 +10,6 @@ import {
   Scripts,
   ScrollRestoration,
   useLoaderData,
-  useRevalidator,
   useRouteError,
 } from '@remix-run/react'
 import { useTheme } from '@routes/actions+/set-theme'
@@ -19,15 +18,12 @@ import { getTheme } from '@server/theme'
 
 import './styles/globals.css'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect } from 'react'
 
 import { Toaster } from '@0xintuition/1ui'
 
 import { ErrorPage } from '@components/error-page'
 import { getChainEnvConfig } from '@lib/utils/environment'
-import logger from '@lib/utils/logger'
-import { createSupabaseServerClient } from '@server/supabase'
-import { createBrowserClient } from '@supabase/auth-helpers-remix'
 import { CURRENT_ENV } from 'app/consts'
 import { ClientOnly } from 'remix-utils/client-only'
 import { useAccount, useSwitchChain } from 'wagmi'

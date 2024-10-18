@@ -28,6 +28,11 @@ import {
 import { pinataPinJSON } from './pinata'
 import { createRequest, pushUpdate, updateRequest } from './request'
 import { appendToAtomLog, appendToTripleLog } from './supabase'
+import logger from '@lib/utils/logger'
+import { encodeFunctionData, parseUnits, toHex, } from 'viem'
+import { MIN_DEPOSIT, MULTIVAULT_CONTRACT_ADDRESS } from '@consts/general'
+import { multivaultAbi } from '@lib/abis/multivault'
+import { truncateString } from '@lib/utils/misc'
 
 export async function populateAtom(obj: any) {
   try {
