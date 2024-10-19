@@ -13,19 +13,27 @@ import * as types from './graphql'
  * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
  */
 const documents = {
-  'fragment AccountMetadata on accounts {\n  label\n  image\n  id\n  atomId\n  type\n}':
+  '\n  fragment AccountMetadata on accounts {\n    label\n    image\n    id\n    atomId\n    type\n  }\n':
     types.AccountMetadataFragmentDoc,
-  'fragment AtomMetadata on atoms {\n  data\n  id\n  image\n  label\n  emoji\n  type\n}\n\nfragment AtomTxn on atoms {\n  blockNumber\n  blockTimestamp\n  transactionHash\n  creatorId\n}\n\nfragment AtomVaultDetails on atoms {\n  vaultId\n  walletId\n  vault {\n    positionCount\n    totalShares\n    currentSharePrice\n  }\n}':
+  '\n  fragment AtomMetadata on atoms {\n    data\n    id\n    image\n    label\n    emoji\n    type\n  }\n':
     types.AtomMetadataFragmentDoc,
-  'fragment Event on events {\n  type\n  atomId\n  blockNumber\n  blockTimestamp\n  depositId\n  feeTransferId\n  id\n  redemptionId\n  transactionHash\n  tripleId\n}':
+  '\n  fragment AtomTxn on atoms {\n    blockNumber\n    blockTimestamp\n    transactionHash\n    creatorId\n  }\n':
+    types.AtomTxnFragmentDoc,
+  '\n  fragment AtomVaultDetails on atoms {\n    vaultId\n    walletId\n    vault {\n      positionCount\n      totalShares\n      currentSharePrice\n    }\n  }\n':
+    types.AtomVaultDetailsFragmentDoc,
+  '\n  fragment Event on events {\n    type\n    atomId\n    blockNumber\n    blockTimestamp\n    depositId\n    feeTransferId\n    id\n    redemptionId\n    transactionHash\n    tripleId\n  }\n':
     types.EventFragmentDoc,
-  'fragment PositionDetails on positions {\n  id\n  accountId\n  shares\n  vaultId\n}':
+  '\n  fragment PositionDetails on positions {\n    id\n    accountId\n    shares\n    vaultId\n  }\n':
     types.PositionDetailsFragmentDoc,
-  'fragment TripleMetadata on triples {\n  id\n  label\n  subject {\n    ...AtomMetadata\n    creator {\n      ...AccountMetadata\n    }\n  }\n  predicate {\n    ...AtomMetadata\n    creator {\n      ...AccountMetadata\n    }\n  }\n  object {\n    ...AtomMetadata\n    creator {\n      ...AccountMetadata\n    }\n  }\n}\n\nfragment TripleTxn on triples {\n  blockNumber\n  blockTimestamp\n  transactionHash\n  creatorId\n}\n\nfragment TripleVaultDetails on triples {\n  vaultId\n  counterVaultId\n  vault {\n    ...VaultDetails\n  }\n  counterVault {\n    ...VaultDetails\n  }\n}':
+  '\n  fragment TripleMetadata on triples {\n    id\n    label\n    subject {\n      ...AtomMetadata\n      creator {\n        ...AccountMetadata\n      }\n    }\n    predicate {\n      ...AtomMetadata\n      creator {\n        ...AccountMetadata\n      }\n    }\n    object {\n      ...AtomMetadata\n      creator {\n        ...AccountMetadata\n      }\n    }\n  }\n  \n  \n':
     types.TripleMetadataFragmentDoc,
-  'fragment VaultDetails on vaults {\n  atomId\n  currentSharePrice\n  id\n  positionCount\n  totalShares\n  tripleId\n}':
+  '\n  fragment TripleTxn on triples {\n    blockNumber\n    blockTimestamp\n    transactionHash\n    creatorId\n  }\n':
+    types.TripleTxnFragmentDoc,
+  '\n  fragment TripleVaultDetails on triples {\n    vaultId\n    counterVaultId\n    vault {\n      ...VaultDetails\n    }\n    counterVault {\n      ...VaultDetails\n    }\n  }\n  \n':
+    types.TripleVaultDetailsFragmentDoc,
+  '\n  fragment VaultDetails on vaults {\n    atomId\n    currentSharePrice\n    id\n    positionCount\n    totalShares\n    tripleId\n  }\n':
     types.VaultDetailsFragmentDoc,
-  'query GetAtoms {\n  atoms {\n    ...AtomMetadata\n    ...AtomTxn\n    ...AtomVaultDetails\n    creator {\n      ...AccountMetadata\n    }\n  }\n}':
+  '\n  query GetAtoms($limit: Int, $offset: Int, $orderBy: [atoms_order_by!], $where: atoms_bool_exp) {\n    atoms(limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {\n      ...AtomMetadata\n      ...AtomTxn\n      ...AtomVaultDetails\n      creator {\n        ...AccountMetadata\n      }\n    }\n  }\n  \n  \n  \n  \n':
     types.GetAtomsDocument,
 }
 
@@ -33,43 +41,67 @@ const documents = {
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-  source: 'fragment AccountMetadata on accounts {\n  label\n  image\n  id\n  atomId\n  type\n}',
+  source: '\n  fragment AccountMetadata on accounts {\n    label\n    image\n    id\n    atomId\n    type\n  }\n',
 ): typeof import('./graphql').AccountMetadataFragmentDoc
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-  source: 'fragment AtomMetadata on atoms {\n  data\n  id\n  image\n  label\n  emoji\n  type\n}\n\nfragment AtomTxn on atoms {\n  blockNumber\n  blockTimestamp\n  transactionHash\n  creatorId\n}\n\nfragment AtomVaultDetails on atoms {\n  vaultId\n  walletId\n  vault {\n    positionCount\n    totalShares\n    currentSharePrice\n  }\n}',
+  source: '\n  fragment AtomMetadata on atoms {\n    data\n    id\n    image\n    label\n    emoji\n    type\n  }\n',
 ): typeof import('./graphql').AtomMetadataFragmentDoc
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-  source: 'fragment Event on events {\n  type\n  atomId\n  blockNumber\n  blockTimestamp\n  depositId\n  feeTransferId\n  id\n  redemptionId\n  transactionHash\n  tripleId\n}',
+  source: '\n  fragment AtomTxn on atoms {\n    blockNumber\n    blockTimestamp\n    transactionHash\n    creatorId\n  }\n',
+): typeof import('./graphql').AtomTxnFragmentDoc
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+  source: '\n  fragment AtomVaultDetails on atoms {\n    vaultId\n    walletId\n    vault {\n      positionCount\n      totalShares\n      currentSharePrice\n    }\n  }\n',
+): typeof import('./graphql').AtomVaultDetailsFragmentDoc
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+  source: '\n  fragment Event on events {\n    type\n    atomId\n    blockNumber\n    blockTimestamp\n    depositId\n    feeTransferId\n    id\n    redemptionId\n    transactionHash\n    tripleId\n  }\n',
 ): typeof import('./graphql').EventFragmentDoc
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-  source: 'fragment PositionDetails on positions {\n  id\n  accountId\n  shares\n  vaultId\n}',
+  source: '\n  fragment PositionDetails on positions {\n    id\n    accountId\n    shares\n    vaultId\n  }\n',
 ): typeof import('./graphql').PositionDetailsFragmentDoc
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-  source: 'fragment TripleMetadata on triples {\n  id\n  label\n  subject {\n    ...AtomMetadata\n    creator {\n      ...AccountMetadata\n    }\n  }\n  predicate {\n    ...AtomMetadata\n    creator {\n      ...AccountMetadata\n    }\n  }\n  object {\n    ...AtomMetadata\n    creator {\n      ...AccountMetadata\n    }\n  }\n}\n\nfragment TripleTxn on triples {\n  blockNumber\n  blockTimestamp\n  transactionHash\n  creatorId\n}\n\nfragment TripleVaultDetails on triples {\n  vaultId\n  counterVaultId\n  vault {\n    ...VaultDetails\n  }\n  counterVault {\n    ...VaultDetails\n  }\n}',
+  source: '\n  fragment TripleMetadata on triples {\n    id\n    label\n    subject {\n      ...AtomMetadata\n      creator {\n        ...AccountMetadata\n      }\n    }\n    predicate {\n      ...AtomMetadata\n      creator {\n        ...AccountMetadata\n      }\n    }\n    object {\n      ...AtomMetadata\n      creator {\n        ...AccountMetadata\n      }\n    }\n  }\n  \n  \n',
 ): typeof import('./graphql').TripleMetadataFragmentDoc
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-  source: 'fragment VaultDetails on vaults {\n  atomId\n  currentSharePrice\n  id\n  positionCount\n  totalShares\n  tripleId\n}',
+  source: '\n  fragment TripleTxn on triples {\n    blockNumber\n    blockTimestamp\n    transactionHash\n    creatorId\n  }\n',
+): typeof import('./graphql').TripleTxnFragmentDoc
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+  source: '\n  fragment TripleVaultDetails on triples {\n    vaultId\n    counterVaultId\n    vault {\n      ...VaultDetails\n    }\n    counterVault {\n      ...VaultDetails\n    }\n  }\n  \n',
+): typeof import('./graphql').TripleVaultDetailsFragmentDoc
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+  source: '\n  fragment VaultDetails on vaults {\n    atomId\n    currentSharePrice\n    id\n    positionCount\n    totalShares\n    tripleId\n  }\n',
 ): typeof import('./graphql').VaultDetailsFragmentDoc
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-  source: 'query GetAtoms {\n  atoms {\n    ...AtomMetadata\n    ...AtomTxn\n    ...AtomVaultDetails\n    creator {\n      ...AccountMetadata\n    }\n  }\n}',
+  source: '\n  query GetAtoms($limit: Int, $offset: Int, $orderBy: [atoms_order_by!], $where: atoms_bool_exp) {\n    atoms(limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {\n      ...AtomMetadata\n      ...AtomTxn\n      ...AtomVaultDetails\n      creator {\n        ...AccountMetadata\n      }\n    }\n  }\n  \n  \n  \n  \n',
 ): typeof import('./graphql').GetAtomsDocument
 
 export function graphql(source: string) {

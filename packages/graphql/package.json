@@ -2,11 +2,11 @@
   "name": "@0xintuition/graphql",
   "version": "0.2.1",
   "description": "GraphQL",
-  "main": "src/index.js",
+  "main": "dist/index.js",
   "exports": {
     ".": "./src/index.js"
   },
-  "types": "src/index.d.ts",
+  "types": "src/index.ts",
   "scripts": {
     "generate": "dotenv graphql-codegen --config codegen.ts",
     "test": "vitest",

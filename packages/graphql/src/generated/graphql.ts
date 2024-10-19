@@ -2323,7 +2323,12 @@ export type VaultDetailsFragment = {
   tripleId?: any | null
 } & { ' $fragmentName'?: 'VaultDetailsFragment' }
 
-export type GetAtomsQueryVariables = Exact<{ [key: string]: never }>
+export type GetAtomsQueryVariables = Exact<{
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  orderBy?: InputMaybe<Array<Atoms_Order_By> | Atoms_Order_By>
+  where?: InputMaybe<Atoms_Bool_Exp>
+}>
 
 export type GetAtomsQuery = {
   __typename?: 'query_root'
@@ -2530,8 +2535,8 @@ export const TripleVaultDetailsFragmentDoc = new TypedDocumentString(
   { fragmentName: 'TripleVaultDetails' },
 ) as unknown as TypedDocumentString<TripleVaultDetailsFragment, unknown>
 export const GetAtomsDocument = new TypedDocumentString(`
-    query GetAtoms {
-  atoms {
+    query GetAtoms($limit: Int, $offset: Int, $orderBy: [atoms_order_by!], $where: atoms_bool_exp) {
+  atoms(limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {
     ...AtomMetadata
     ...AtomTxn
     ...AtomVaultDetails

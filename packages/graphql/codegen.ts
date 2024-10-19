@@ -9,12 +9,18 @@ const config: CodegenConfig = {
   //     'x-hasura-admin-secret': `${process.env.HASURA_GRAPHQL_ADMIN_SECRET}`,
   //   },
   // },
-  documents: 'src/**/*.graphql',
+  documents: ['src/**/*.ts', '!src/gql/**/*'],
   generates: {
     './src/generated/': {
       preset: 'client',
       config: {
-        documentMode: 'string'
+        documentMode: 'string',
+        config: {
+          enumsAsTypes: false,
+          skipTypename: false,
+          exportFragmentSpreadSubTypes: true,
+          dedupeFragments: true
+        }
       }
     },
     './schema.graphql': {

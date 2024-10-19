@@ -1,6 +1,0 @@
-fragment PositionDetails on positions {
-  id
-  accountId
-  shares
-  vaultId
-}
