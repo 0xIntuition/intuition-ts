@@ -1,0 +1,113 @@
+services:
+  - type: web
+    name: data-populator
+    env: docker
+    region: oregon
+    plan: standard
+    dockerfilePath: ./apps/data-populator/Dockerfile
+    dockerContext: .
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 8080
+      - key: PINATA_JWT_KEY
+        sync: false
+      - key: PINATA_GATEWAY_KEY
+        sync: false
+      - key: IPFS_GATEWAY
+        sync: false
+      - key: ATTEST_CONTRACT_ADDRESS
+        value: 0x430BbF52503Bd4801E51182f4cB9f8F534225DE5
+      - key: ATTEST_CONTRACT_ADDRESS_DEV
+        value: 0x1A6950807E33d5bC9975067e6D6b5Ea4cD661665
+      - key: MULTIVAULT_CONTRACT_ADDRESS
+        value: 0x430BbF52503Bd4801E51182f4cB9f8F534225DE5
+      - key: MULTIVAULT_CONTRACT_ADDRESS_DEV
+        value: 0x1A6950807E33d5bC9975067e6D6b5Ea4cD661665
+      - key: PRIVATE_KEY
+        sync: false
+      - key: PRIVATE_KEY_DEV
+        sync: false
+      - key: EVM_RPC
+        sync: false
+      - key: EVM_RPC_DEV
+        sync: false
+      - key: ADDITIONAL_STAKE_ATOM
+        value: 100000000000
+      - key: ADDITIONAL_STAKE_TRIPLE
+        value: 100000000000
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_KEY
+        sync: false
+      - key: ENVIRONMENT
+        value: production
+      - key: MULTIVAULT_ADDRESS_BASE_SEPOLIA
+        sync: false
+      - key: MULTIVAULT_ADDRESS_BASE_MAINNET
+        sync: false
+      - key: ALCHEMY_MAINNET_API_KEY
+        sync: false
+      - key: ALCHEMY_API_KEY
+        sync: false
+      - key: ALCHEMY_MAINNET_RPC_URL
+        sync: false
+      - key: ALCHEMY_OP_SEPOLIA_RPC_URL
+        sync: false
+      - key: ALCHEMY_BASE_SEPOLIA_RPC_URL
+        sync: false
+      - key: ALCHEMY_BASE_RPC_URL
+        sync: false
+      - key: WALLETCONNECT_PROJECT_ID
+        sync: false
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: API_URL
+        value: https://api.intuition.systems
+      - key: API_KEY
+        sync: false
+      - key: AWS_SECRET_KEY
+        sync: false
+      - key: AWS_ACCESS_KEY
+        sync: false
+      - key: STORAGE_REGION
+        sync: false
+      - key: STORAGE_BUCKET
+        sync: false
+      - key: ADMIN_PRIVATE_KEY
+        sync: false
+      - key: CLAIMR_AUTH_TOKEN
+        sync: false
+      - key: CLAIMR_CAMPAIGN_ID
+        sync: false
+      - key: ORIGIN_URL
+        value: https://portal.intuition.systems
+      - key: PRIVY_APP_ID
+        sync: false
+      - key: PRIVY_AUTH_URL
+        sync: false
+      - key: PRIVY_APP_SECRET
+        sync: false
+      - key: SENTRY_AUTH_TOKEN
+        sync: false
+      - key: SENTRY_DSN
+        sync: false
+      - key: SENTRY_ORG
+        sync: false
+      - key: SENTRY_PROJECT
+        sync: false
+      - key: VITE_DEPLOY_ENV
+        value: production
+      - key: FF_FULL_LOCKDOWN_ENABLED
+        value: "false"
+      - key: FF_INCIDENT_BANNER_ENABLED
+        value: "false"
+      - key: FF_GENERIC_BANNER_ENABLED
+        value: "false"
