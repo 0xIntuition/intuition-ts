@@ -3,7 +3,7 @@ services:
     name: data-populator
     env: docker
     region: oregon
-    plan: standard
+    rootDir: apps/data-populator
     dockerfilePath: ./apps/data-populator/Dockerfile
     dockerContext: .
     envVars:
@@ -48,7 +48,7 @@ services:
       - key: SUPABASE_KEY
         sync: false
       - key: ENVIRONMENT
-        value: production
+        value: dev
       - key: MULTIVAULT_ADDRESS_BASE_SEPOLIA
         sync: false
       - key: MULTIVAULT_ADDRESS_BASE_MAINNET
