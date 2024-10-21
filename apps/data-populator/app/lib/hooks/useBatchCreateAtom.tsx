@@ -154,6 +154,8 @@ export function useBatchCreateAtom() {
     console.log('Publishing atoms')
     console.log('msgSender', client?.account)
 
+    console.log('msgSender', client?.account)
+
     setIsProcessing(true)
     publishFetcher.submit(
       {
