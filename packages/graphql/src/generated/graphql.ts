@@ -2352,6 +2352,61 @@ export type GetAtomsQuery = {
   >
 }
 
+export type GetTripleQueryVariables = Exact<{
+  tripleId: Scalars['numeric']['input']
+}>
+
+export type GetTripleQuery = {
+  __typename?: 'query_root'
+  triple?:
+    | ({
+        __typename?: 'triples'
+        creator?:
+          | ({ __typename?: 'accounts' } & {
+              ' $fragmentRefs'?: {
+                AccountMetadataFragment: AccountMetadataFragment
+              }
+            })
+          | null
+      } & {
+        ' $fragmentRefs'?: {
+          TripleMetadataFragment: TripleMetadataFragment
+          TripleTxnFragment: TripleTxnFragment
+          TripleVaultDetailsFragment: TripleVaultDetailsFragment
+        }
+      })
+    | null
+}
+
+export type GetTriplesQueryVariables = Exact<{
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  orderBy?: InputMaybe<Array<Triples_Order_By> | Triples_Order_By>
+  where?: InputMaybe<Triples_Bool_Exp>
+}>
+
+export type GetTriplesQuery = {
+  __typename?: 'query_root'
+  triples: Array<
+    {
+      __typename?: 'triples'
+      creator?:
+        | ({ __typename?: 'accounts' } & {
+            ' $fragmentRefs'?: {
+              AccountMetadataFragment: AccountMetadataFragment
+            }
+          })
+        | null
+    } & {
+      ' $fragmentRefs'?: {
+        TripleMetadataFragment: TripleMetadataFragment
+        TripleTxnFragment: TripleTxnFragment
+        TripleVaultDetailsFragment: TripleVaultDetailsFragment
+      }
+    }
+  >
+}
+
 export class TypedDocumentString<TResult, TVariables>
   extends String
   implements DocumentTypeDecoration<TResult, TVariables>
@@ -2575,3 +2630,147 @@ fragment AtomVaultDetails on atoms {
     currentSharePrice
   }
 }`) as unknown as TypedDocumentString<GetAtomsQuery, GetAtomsQueryVariables>
+export const GetTripleDocument = new TypedDocumentString(`
+    query GetTriple($tripleId: numeric!) {
+  triple(id: $tripleId) {
+    ...TripleMetadata
+    ...TripleTxn
+    ...TripleVaultDetails
+    creator {
+      ...AccountMetadata
+    }
+  }
+}
+    fragment AccountMetadata on accounts {
+  label
+  image
+  id
+  atomId
+  type
+}
+fragment AtomMetadata on atoms {
+  data
+  id
+  image
+  label
+  emoji
+  type
+}
+fragment TripleMetadata on triples {
+  id
+  label
+  subject {
+    ...AtomMetadata
+    creator {
+      ...AccountMetadata
+    }
+  }
+  predicate {
+    ...AtomMetadata
+    creator {
+      ...AccountMetadata
+    }
+  }
+  object {
+    ...AtomMetadata
+    creator {
+      ...AccountMetadata
+    }
+  }
+}
+fragment TripleTxn on triples {
+  blockNumber
+  blockTimestamp
+  transactionHash
+  creatorId
+}
+fragment TripleVaultDetails on triples {
+  vaultId
+  counterVaultId
+  vault {
+    ...VaultDetails
+  }
+  counterVault {
+    ...VaultDetails
+  }
+}
+fragment VaultDetails on vaults {
+  atomId
+  currentSharePrice
+  id
+  positionCount
+  totalShares
+  tripleId
+}`) as unknown as TypedDocumentString<GetTripleQuery, GetTripleQueryVariables>
+export const GetTriplesDocument = new TypedDocumentString(`
+    query GetTriples($limit: Int, $offset: Int, $orderBy: [triples_order_by!], $where: triples_bool_exp) {
+  triples(limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {
+    ...TripleMetadata
+    ...TripleTxn
+    ...TripleVaultDetails
+    creator {
+      ...AccountMetadata
+    }
+  }
+}
+    fragment AccountMetadata on accounts {
+  label
+  image
+  id
+  atomId
+  type
+}
+fragment AtomMetadata on atoms {
+  data
+  id
+  image
+  label
+  emoji
+  type
+}
+fragment TripleMetadata on triples {
+  id
+  label
+  subject {
+    ...AtomMetadata
+    creator {
+      ...AccountMetadata
+    }
+  }
+  predicate {
+    ...AtomMetadata
+    creator {
+      ...AccountMetadata
+    }
+  }
+  object {
+    ...AtomMetadata
+    creator {
+      ...AccountMetadata
+    }
+  }
+}
+fragment TripleTxn on triples {
+  blockNumber
+  blockTimestamp
+  transactionHash
+  creatorId
+}
+fragment TripleVaultDetails on triples {
+  vaultId
+  counterVaultId
+  vault {
+    ...VaultDetails
+  }
+  counterVault {
+    ...VaultDetails
+  }
+}
+fragment VaultDetails on vaults {
+  atomId
+  currentSharePrice
+  id
+  positionCount
+  totalShares
+  tripleId
+}`) as unknown as TypedDocumentString<GetTriplesQuery, GetTriplesQueryVariables>

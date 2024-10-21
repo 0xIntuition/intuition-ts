@@ -35,6 +35,10 @@ const documents = {
     types.VaultDetailsFragmentDoc,
   '\n  query GetAtoms($limit: Int, $offset: Int, $orderBy: [atoms_order_by!], $where: atoms_bool_exp) {\n    atoms(limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {\n      ...AtomMetadata\n      ...AtomTxn\n      ...AtomVaultDetails\n      creator {\n        ...AccountMetadata\n      }\n    }\n  }\n  \n  \n  \n  \n':
     types.GetAtomsDocument,
+  '\n  query GetTriple($tripleId: numeric!) {\n    triple(id: $tripleId) {\n      ...TripleMetadata\n      ...TripleTxn\n      ...TripleVaultDetails\n      creator {\n        ...AccountMetadata\n      }\n    }\n  }\n  \n  \n  \n':
+    types.GetTripleDocument,
+  '\n  query GetTriples($limit: Int, $offset: Int, $orderBy: [triples_order_by!], $where: triples_bool_exp) {\n    triples(limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {\n      ...TripleMetadata\n      ...TripleTxn\n      ...TripleVaultDetails\n      creator {\n        ...AccountMetadata\n      }\n    }\n  }\n  \n  \n  \n':
+    types.GetTriplesDocument,
 }
 
 /**
@@ -103,6 +107,18 @@ export function graphql(
 export function graphql(
   source: '\n  query GetAtoms($limit: Int, $offset: Int, $orderBy: [atoms_order_by!], $where: atoms_bool_exp) {\n    atoms(limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {\n      ...AtomMetadata\n      ...AtomTxn\n      ...AtomVaultDetails\n      creator {\n        ...AccountMetadata\n      }\n    }\n  }\n  \n  \n  \n  \n',
 ): typeof import('./graphql').GetAtomsDocument
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+  source: '\n  query GetTriple($tripleId: numeric!) {\n    triple(id: $tripleId) {\n      ...TripleMetadata\n      ...TripleTxn\n      ...TripleVaultDetails\n      creator {\n        ...AccountMetadata\n      }\n    }\n  }\n  \n  \n  \n',
+): typeof import('./graphql').GetTripleDocument
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+  source: '\n  query GetTriples($limit: Int, $offset: Int, $orderBy: [triples_order_by!], $where: triples_bool_exp) {\n    triples(limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {\n      ...TripleMetadata\n      ...TripleTxn\n      ...TripleVaultDetails\n      creator {\n        ...AccountMetadata\n      }\n    }\n  }\n  \n  \n  \n',
+): typeof import('./graphql').GetTriplesDocument
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {}
