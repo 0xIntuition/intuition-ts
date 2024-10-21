@@ -464,6 +464,57 @@ export async function populateAtoms(
   return { newAtomIDs: [], existingAtomIDs: [] } as PopulateAtomsResponse
 }
 
+export async function verifyAndLogNewAtoms(
+  filteredCIDs: string[],
+  txIDs: string[],
+  filteredData: PinDataResult[],
+  msgSender: string,
+  requestHash?: string,
+): Promise<string[]> {
+  // Verify atom IDs from URIs
+  console.log('Verifying new atom IDs...')
+  requestHash
+    ? await pushUpdate(requestHash, 'Verifying new atom IDs...')
+    : null
+  const newAtoms = await getAtomIdsFromURI(filteredCIDs, 100)
+  const newAtomIDs = newAtoms.map((atom) => atom.atomId)
+
+  // Append to atom log
+  console.log('Logging new atoms to database...')
+  requestHash
+    ? await pushUpdate(requestHash, 'Logging new atoms to database...')
+    : null
+  const txID = txIDs.join(' ') // temporary fix before we create objects for each atom and assign a txID to each along with other data
+  newAtoms.forEach(
+    async (atom) =>
+      await appendToAtomLog(
+        atom.atomId,
+        atom.uri,
+        txID,
+        filteredData[atom.originalIndex].filteredObj,
+        msgSender,
+      ),
+  )
+
+  return newAtomIDs
+}
+
+export async function logTransactionHash(txHash: string, requestHash?: string) {
+  console.log(`Logging transaction hash: ${txHash}`)
+
+  if (requestHash) {
+    await pushUpdate(requestHash, `Logging transaction hash: ${txHash}`)
+  }
+
+  // TODO: Implement actual logging logic here
+  // This could involve writing to a file, sending to an API, or updating a database
+  // For now, we'll just log to the console
+  console.log(`Transaction hash ${txHash} logged successfully`)
+
+  // Return true to indicate success
+  return true
+}
+
 export async function checkAtomsExist(
   atoms: any[],
 ): Promise<AtomExistsResult[]> {

@@ -1,11 +1,14 @@
 import { useCallback, useEffect, useReducer, useRef, useState } from 'react'
 
+import { toast } from '@0xintuition/1ui'
+
 import type { BatchAtomsRequest } from '@lib/services/populate'
 import logger from '@lib/utils/logger'
 import { useSmartWallets } from '@privy-io/react-auth/smart-wallets'
 import { useFetcher } from '@remix-run/react'
 import { InitiateActionData, PublishActionData } from '@routes/app+'
 import { Thing, WithContext } from 'schema-dts'
+import { TransactionReceipt } from 'viem'
 
 type State = {
   requestHash: string
@@ -14,7 +17,17 @@ type State = {
   csvData: string[][]
   calls: BatchAtomsRequest[]
   txHash: string
-  step: 'idle' | 'initiating' | 'publishing' | 'sending' | 'logging'
+  setNewAtoms: WithContext<Thing>[]
+  error?: string
+  step:
+    | 'idle'
+    | 'initiating'
+    | 'publishing'
+    | 'sending'
+    | 'logging'
+    | 'verifying'
+    | 'complete'
+    | 'error'
 }
 
 type Action =
@@ -25,6 +38,11 @@ type Action =
   | { type: 'SET_STEP'; payload: State['step'] }
   | { type: 'SET_SELECTED_ROWS'; payload: number[] }
   | { type: 'SET_CSV_DATA'; payload: string[][] }
+  | {
+      type: 'SET_TX_COMPLETE'
+      txHash?: string
+    }
+  | { type: 'SET_ERROR'; error: string }
 
 const initialState: State = {
   requestHash: '',
@@ -34,6 +52,8 @@ const initialState: State = {
   calls: [],
   txHash: '',
   step: 'idle',
+  setNewAtoms: [],
+  error: '',
 }
 
 function reducer(state: State, action: Action): State {
@@ -52,6 +72,14 @@ function reducer(state: State, action: Action): State {
       return { ...state, selectedRows: action.payload }
     case 'SET_CSV_DATA':
       return { ...state, csvData: action.payload }
+    case 'SET_ERROR':
+      return { ...state, step: 'error', error: action.error }
+    case 'SET_TX_COMPLETE':
+      return {
+        ...state,
+        step: 'complete',
+        txHash: action.txHash ?? '',
+      }
     default:
       return state
   }
@@ -147,13 +175,31 @@ export function useBatchCreateAtom() {
       })
       dispatch({ type: 'SET_TX_HASH', payload: hash })
       dispatch({ type: 'SET_STEP', payload: 'logging' })
+      // this needs to be moved to later
+      // dispatch({ type: 'SET_TX_COMPLETE', txHash: hash })
+      // toast.success('Atoms created successfully', {
+      //   duration: 5000,
+      //   description: `Transaction hash: ${hash.slice(0, 10)}...${hash.slice(-8)}`,
+      // })
       logger('txHash', hash)
       return hash
     } catch (error) {
       console.error('Error sending batch transaction:', error)
       dispatch({ type: 'SET_STEP', payload: 'idle' })
-      // Optionally, you can add error handling here, such as setting an error state
-      // dispatch({ type: 'SET_ERROR', payload: error.message });
+
+      const errorMessage =
+        error instanceof Error ? error.message : String(error)
+      logger('error', { message: errorMessage, context: 'sendBatchTx' })
+
+      dispatch({
+        type: 'SET_ERROR',
+        error: error instanceof Error ? error.message : String(error),
+      })
+      dispatch({ type: 'SET_STEP', payload: 'error' })
+      toast.error(`Failed to create atoms: ${errorMessage}`, {
+        duration: 5000,
+        description: 'Please try again.',
+      })
     } finally {
       setIsProcessing(false)
     }
@@ -280,5 +326,7 @@ export function useBatchCreateAtom() {
     isPublishing: state.step === 'publishing',
     isSending: state.step === 'sending',
     isLoggingTx: state.step === 'logging',
+    isComplete: state.step === 'complete',
+    isError: state.step === 'error',
   }
 }

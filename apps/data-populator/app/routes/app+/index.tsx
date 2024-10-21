@@ -26,6 +26,7 @@ import {
   BatchAtomsRequest,
   createPopulateAtomsRequest,
   generateBatchAtomsCalldata,
+  logTransactionHash,
   pinAtoms,
 } from '@lib/services/populate'
 import { generateCsvContent, parseCsv } from '@lib/utils/csv'
@@ -131,9 +132,11 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         logger(
           `Logging transaction hash: ${txHash} for request hash: ${requestHash}`,
         )
+        logger('[index] we are now at this step: logTxHash')
         // Implement the logic to log the transaction hash
         // For example:
-        // await logTransactionHash(txHash, requestHash)
+        await logTransactionHash(txHash, requestHash)
+
         return json({ success: true })
       }
       // ... (keep other action cases)
