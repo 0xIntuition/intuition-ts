@@ -1,4 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import console from 'console'
+
 import { MIN_DEPOSIT, MULTIVAULT_CONTRACT_ADDRESS } from '@consts/general'
 import { multivaultAbi } from '@lib/abis/multivault'
 import logger from '@lib/utils/logger'
@@ -236,6 +238,8 @@ export async function pinAtoms(
 ): Promise<{
   existingCIDs: string[]
   newCIDs: string[]
+  filteredData: PinDataResult[]
+  existingData: PinDataResult[]
 }> {
   await pushUpdate(requestHash, 'Pinning new data to IPFS...')
   const pinnedData = requestHash
@@ -253,7 +257,7 @@ export async function pinAtoms(
 
   logger(`Done pinning atoms.`)
   await pushUpdate(requestHash, 'Done pinning atoms.')
-  return { existingCIDs, newCIDs }
+  return { existingCIDs, newCIDs, filteredData, existingData }
 }
 
 export async function buildChunks(
@@ -415,6 +419,10 @@ export async function populateAtoms(
 
     const txID = txIDs.join(' ') // temporary fix before we create objects for each atom and assign a txID to each along with other data
 
+    // send the txHash from previous step as txId
+    // we need to use the new CIDs
+    // new cids are the filtered cids
+
     // Verify atom IDs from URIs
     console.log('Verifying new atom IDs...')
     requestHash
@@ -433,9 +441,9 @@ export async function populateAtoms(
         await appendToAtomLog(
           atom.atomId,
           atom.uri,
-          txID,
+          txID, // txHash from previous step
           filteredData[atom.originalIndex].filteredObj,
-          msgSender,
+          msgSender, // from the privy auth'd user (smart wallet)
         ),
     )
 
@@ -462,41 +470,6 @@ export async function populateAtoms(
     console.error('Error populating atoms:', error)
   }
   return { newAtomIDs: [], existingAtomIDs: [] } as PopulateAtomsResponse
-}
-
-export async function verifyAndLogNewAtoms(
-  filteredCIDs: string[],
-  txIDs: string[],
-  filteredData: PinDataResult[],
-  msgSender: string,
-  requestHash?: string,
-): Promise<string[]> {
-  // Verify atom IDs from URIs
-  console.log('Verifying new atom IDs...')
-  requestHash
-    ? await pushUpdate(requestHash, 'Verifying new atom IDs...')
-    : null
-  const newAtoms = await getAtomIdsFromURI(filteredCIDs, 100)
-  const newAtomIDs = newAtoms.map((atom) => atom.atomId)
-
-  // Append to atom log
-  console.log('Logging new atoms to database...')
-  requestHash
-    ? await pushUpdate(requestHash, 'Logging new atoms to database...')
-    : null
-  const txID = txIDs.join(' ') // temporary fix before we create objects for each atom and assign a txID to each along with other data
-  newAtoms.forEach(
-    async (atom) =>
-      await appendToAtomLog(
-        atom.atomId,
-        atom.uri,
-        txID,
-        filteredData[atom.originalIndex].filteredObj,
-        msgSender,
-      ),
-  )
-
-  return newAtomIDs
 }
 
 export async function logTransactionHash(txHash: string, requestHash?: string) {

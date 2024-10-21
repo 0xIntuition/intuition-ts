@@ -28,6 +28,7 @@ import {
   generateBatchAtomsCalldata,
   logTransactionHash,
   pinAtoms,
+  PinDataResult,
 } from '@lib/services/populate'
 import { generateCsvContent, parseCsv } from '@lib/utils/csv'
 import { loadThumbnail, loadThumbnails } from '@lib/utils/image'
@@ -83,6 +84,10 @@ export type PublishActionData = {
   calls: BatchAtomsRequest[]
   chunks: string[][]
   chunkSize: number
+  existingCIDs: string[]
+  newCIDs: string[]
+  filteredData: PinDataResult[]
+  existingData: PinDataResult[]
 }
 
 export type LogTxActionData = {
@@ -119,25 +124,34 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         const selectedAtoms = JSON.parse(
           formData.get('selectedAtoms') as string,
         ) as WithContext<Thing>[]
-        const { newCIDs } = await pinAtoms(selectedAtoms, requestHash)
+        const { existingCIDs, newCIDs, filteredData, existingData } =
+          await pinAtoms(selectedAtoms, requestHash)
         const { chunks, chunkSize, calls } = await generateBatchAtomsCalldata(
           newCIDs,
           requestHash,
         )
-        return json({ success: true, calls, chunks, chunkSize })
+        // return this on the payload in the same way we're setting the calls
+        // use in the final step for verifying the atoms
+        return json({
+          success: true,
+          calls,
+          chunks,
+          chunkSize,
+          newCIDs,
+          existingCIDs,
+          filteredData,
+          existingData,
+        })
       }
-      case 'logTxHash': {
+      case 'logTxHashAndVerifyAtoms': {
         const txHash = formData.get('txHash') as string
         const requestHash = formData.get('requestHash') as string
         logger(
           `Logging transaction hash: ${txHash} for request hash: ${requestHash}`,
         )
         logger('[index] we are now at this step: logTxHash')
-        // Implement the logic to log the transaction hash
-        // For example:
-        await logTransactionHash(txHash, requestHash)
-
-        return json({ success: true })
+        const loggedTxHash = await logTransactionHash(txHash, requestHash)
+        return json({ success: true, loggedTxHash })
       }
       // ... (keep other action cases)
     }
