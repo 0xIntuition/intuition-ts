@@ -114,7 +114,7 @@ export function useBatchCreateAtom() {
   const initiateFetcher = useFetcher({ key: 'initiate-batch' })
   const publishFetcher = useFetcher({ key: 'publish-atoms' })
   const logTxFetcher = useFetcher({ key: 'log-tx-hash-and-verify-atoms' })
-  const completeFetcher = useFetcher({ key: 'complete-batch' })
+  // const completeFetcher = useFetcher({ key: 'complete-batch' })
   const { client } = useSmartWallets()
 
   const initiateBatchRequest = useCallback(
