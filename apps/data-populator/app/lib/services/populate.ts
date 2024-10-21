@@ -472,7 +472,14 @@ export async function populateAtoms(
   return { newAtomIDs: [], existingAtomIDs: [] } as PopulateAtomsResponse
 }
 
-export async function logTransactionHash(txHash: string, requestHash?: string) {
+export async function logTransactionHashAndVerifyAtoms(
+  txHash: string,
+  filteredCIDs: string[],
+  filteredData: PinDataResult[],
+  msgSender: `0x${string}`,
+  oldAtomCIDs: string[],
+  requestHash?: string,
+): Promise<PopulateAtomsResponse> {
   console.log(`Logging transaction hash: ${txHash}`)
 
   if (requestHash) {
@@ -484,8 +491,53 @@ export async function logTransactionHash(txHash: string, requestHash?: string) {
   // For now, we'll just log to the console
   console.log(`Transaction hash ${txHash} logged successfully`)
 
-  // Return true to indicate success
-  return true
+  // Verify atom IDs from URIs
+  console.log('Verifying new atom IDs...')
+  if (requestHash) {
+    await pushUpdate(requestHash, 'Verifying new atom IDs...')
+  }
+  const newAtoms = await getAtomIdsFromURI(filteredCIDs, 100)
+
+  // Append to atom log
+  console.log('Logging new atoms to database...')
+  if (requestHash) {
+    await pushUpdate(requestHash, 'Logging new atoms to database...')
+  }
+
+  for (const atom of newAtoms) {
+    const filteredObj = filteredData.find(
+      (data) => data.cid === atom.uri,
+    )?.filteredObj
+
+    if (filteredObj) {
+      await appendToAtomLog(
+        atom.atomId,
+        atom.uri,
+        txHash,
+        filteredObj,
+        msgSender,
+      )
+    } else {
+      console.warn(`No filtered object found for atom with URI: ${atom.uri}`)
+    }
+  }
+
+  // Verify old atom IDs from URIs
+  console.log('Verifying old atom IDs...')
+  if (requestHash) {
+    await pushUpdate(requestHash, 'Verifying old atom IDs...')
+  }
+  const oldAtoms = await getAtomIdsFromURI(oldAtomCIDs, 100)
+
+  console.log('Done verifying and logging new atoms.')
+  if (requestHash) {
+    await pushUpdate(requestHash, 'Done verifying and logging new atoms.')
+  }
+
+  const newAtomIDs = newAtoms.map((atom) => atom.atomId)
+  const existingAtomIDs = oldAtoms.map((atom) => atom.atomId)
+
+  return { newAtomIDs, existingAtomIDs } as PopulateAtomsResponse
 }
 
 export async function checkAtomsExist(

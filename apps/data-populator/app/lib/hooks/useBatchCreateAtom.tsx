@@ -147,6 +147,8 @@ export function useBatchCreateAtom() {
       return
     }
     console.log('Publishing atoms')
+    console.log('msgSender', client?.account)
+
     setIsProcessing(true)
     publishFetcher.submit(
       {
@@ -212,6 +214,7 @@ export function useBatchCreateAtom() {
       return
     }
     console.log('Logging transaction hash')
+
     setIsProcessing(true)
     dispatch({ type: 'SET_STEP', payload: 'logging' })
     logTxFetcher.submit(
@@ -219,6 +222,11 @@ export function useBatchCreateAtom() {
         action: 'logTxHashAndVerifyAtoms',
         txHash: state.txHash,
         requestHash: state.requestHash,
+        filteredCIDs: JSON.stringify(state.newCIDs),
+        filteredData: JSON.stringify(state.filteredData),
+        // msgSender: state.msgSender,
+        msgSender: client?.account.address as `0x${string}`,
+        oldAtomCIDs: JSON.stringify(state.existingCIDs),
       },
       { method: 'post' },
     )

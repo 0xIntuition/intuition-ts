@@ -26,7 +26,7 @@ import {
   BatchAtomsRequest,
   createPopulateAtomsRequest,
   generateBatchAtomsCalldata,
-  logTransactionHash,
+  logTransactionHashAndVerifyAtoms,
   pinAtoms,
   PinDataResult,
 } from '@lib/services/populate'
@@ -146,12 +146,28 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       case 'logTxHashAndVerifyAtoms': {
         const txHash = formData.get('txHash') as string
         const requestHash = formData.get('requestHash') as string
+        const filteredCIDs = JSON.parse(formData.get('filteredCIDs') as string)
+        const filteredData = JSON.parse(formData.get('filteredData') as string)
+        const msgSender = formData.get('msgSender') as `0x${string}`
+        const oldAtomCIDs = JSON.parse(formData.get('oldAtomCIDs') as string)
         logger(
           `Logging transaction hash: ${txHash} for request hash: ${requestHash}`,
         )
         logger('[index] we are now at this step: logTxHash')
-        const loggedTxHash = await logTransactionHash(txHash, requestHash)
-        return json({ success: true, loggedTxHash })
+        // const loggedTxHash = await logTransactionHashAndVerifyAtoms(
+        //   txHash,
+        //   requestHash,
+        // )
+        const { newAtomIDs, existingAtomIDs } =
+          await logTransactionHashAndVerifyAtoms(
+            txHash,
+            filteredCIDs,
+            filteredData,
+            msgSender,
+            oldAtomCIDs,
+            requestHash,
+          )
+        return json({ success: true, newAtomIDs, existingAtomIDs, txHash })
       }
       // ... (keep other action cases)
     }
