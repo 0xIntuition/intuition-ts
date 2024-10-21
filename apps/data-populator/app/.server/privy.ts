@@ -93,7 +93,6 @@ export const getPrivyAccessToken = (req: Request): string | null => {
     req.headers.get('Authorization')?.replace('Bearer ', '') ||
     cookies['privy-id-token']
   if (authIdToken) {
-    logger('authIdToken', authIdToken)
     return authIdToken
   }
 

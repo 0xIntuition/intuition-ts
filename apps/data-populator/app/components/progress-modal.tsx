@@ -13,13 +13,19 @@ import { CheckCircle2, Loader2, XCircle } from 'lucide-react'
 
 import { ScrollArea } from './ui/scroll-area'
 
-// import { ScrollArea } from '../components/ui/scroll-area'
-
 interface ProgressModalProps {
   isOpen: boolean
   onClose: () => void
   requestHash: string
-  step: 'idle' | 'initiating' | 'publishing' | 'sending' | 'logging'
+  step:
+    | 'idle'
+    | 'initiating'
+    | 'publishing'
+    | 'sending'
+    | 'logging'
+    | 'verifying'
+    | 'complete'
+    | 'error'
 }
 
 interface RequestData {

@@ -6,7 +6,11 @@ import type { BatchAtomsRequest, PinDataResult } from '@lib/services/populate'
 import logger from '@lib/utils/logger'
 import { useSmartWallets } from '@privy-io/react-auth/smart-wallets'
 import { useFetcher } from '@remix-run/react'
-import { InitiateActionData, PublishActionData } from '@routes/app+'
+import {
+  InitiateActionData,
+  LogTxActionData,
+  PublishActionData,
+} from '@routes/app+'
 import { Thing, WithContext } from 'schema-dts'
 
 type State = {
@@ -110,6 +114,7 @@ export function useBatchCreateAtom() {
   const initiateFetcher = useFetcher({ key: 'initiate-batch' })
   const publishFetcher = useFetcher({ key: 'publish-atoms' })
   const logTxFetcher = useFetcher({ key: 'log-tx-hash-and-verify-atoms' })
+  const completeFetcher = useFetcher({ key: 'complete-batch' })
   const { client } = useSmartWallets()
 
   const initiateBatchRequest = useCallback(
@@ -179,12 +184,6 @@ export function useBatchCreateAtom() {
       })
       dispatch({ type: 'SET_TX_HASH', payload: hash })
       dispatch({ type: 'SET_STEP', payload: 'logging' })
-      // this needs to be moved to later
-      // dispatch({ type: 'SET_TX_COMPLETE', txHash: hash })
-      // toast.success('Atoms created successfully', {
-      //   duration: 5000,
-      //   description: `Transaction hash: ${hash.slice(0, 10)}...${hash.slice(-8)}`,
-      // })
       logger('txHash', hash)
       return hash
     } catch (error) {
@@ -200,10 +199,6 @@ export function useBatchCreateAtom() {
         error: error instanceof Error ? error.message : String(error),
       })
       dispatch({ type: 'SET_STEP', payload: 'error' })
-      toast.error(`Failed to create atoms: ${errorMessage}`, {
-        duration: 5000,
-        description: 'Please try again.',
-      })
     } finally {
       setIsProcessing(false)
     }
@@ -224,7 +219,6 @@ export function useBatchCreateAtom() {
         requestHash: state.requestHash,
         filteredCIDs: JSON.stringify(state.newCIDs),
         filteredData: JSON.stringify(state.filteredData),
-        // msgSender: state.msgSender,
         msgSender: client?.account.address as `0x${string}`,
         oldAtomCIDs: JSON.stringify(state.existingCIDs),
       },
@@ -297,10 +291,28 @@ export function useBatchCreateAtom() {
       state.step === 'logging'
     ) {
       console.log('Log TX fetcher data received:', logTxFetcher.data)
-      dispatch({ type: 'SET_STEP', payload: 'idle' })
+
+      // Check if the operation was successful
+      const data = logTxFetcher.data as LogTxActionData
+
+      if (data.success) {
+        console.log('logTxFetcher success')
+        dispatch({ type: 'SET_STEP', payload: 'idle' })
+        toast.success('Atom(s) created successfully', {
+          duration: 5000,
+        })
+      } else {
+        // Handle the case where the operation was not successful
+        console.error('Failed to create atom(s):', data.error)
+        toast.error('Failed to create atom(s). Please try again.', {
+          duration: 5000,
+        })
+        dispatch({ type: 'SET_STEP', payload: 'idle' })
+      }
+
       setIsProcessing(false)
     }
-  }, [logTxFetcher.state, logTxFetcher.data, state.step])
+  }, [logTxFetcher.state, logTxFetcher.data, state.step, state.txHash])
 
   useEffect(() => {
     const handleAsyncOperations = async () => {

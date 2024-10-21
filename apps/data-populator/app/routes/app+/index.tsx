@@ -92,6 +92,7 @@ export type PublishActionData = {
 
 export type LogTxActionData = {
   success: boolean
+  error: ErrorActionData
 }
 
 export type ErrorActionData = {
@@ -154,10 +155,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           `Logging transaction hash: ${txHash} for request hash: ${requestHash}`,
         )
         logger('[index] we are now at this step: logTxHash')
-        // const loggedTxHash = await logTransactionHashAndVerifyAtoms(
-        //   txHash,
-        //   requestHash,
-        // )
         const { newAtomIDs, existingAtomIDs } =
           await logTransactionHashAndVerifyAtoms(
             txHash,
