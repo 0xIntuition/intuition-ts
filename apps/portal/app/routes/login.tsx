@@ -20,7 +20,13 @@ import {
   LoaderFunctionArgs,
   redirect,
 } from '@remix-run/node'
-import { Link, useLoaderData, useNavigate, useSubmit } from '@remix-run/react'
+import {
+  Link,
+  useFetcher,
+  useLoaderData,
+  useNavigate,
+  useSubmit,
+} from '@remix-run/react'
 import { getFeatureFlags } from '@server/env'
 import { verifyPrivyAccessToken } from '@server/privy'
 import { PATHS } from 'app/consts'
@@ -73,7 +79,15 @@ export default function Login() {
     submit(formData, { method: 'post' })
   }
 
+  const fetcher = useFetcher()
   const navigate = useNavigate()
+  const handleBackNavigation = () => {
+    fetcher.submit(
+      { action: 'clearOnboardingCookie' },
+      { method: 'post', action: '/actions/clear-onboarding-cookie' },
+    )
+    navigate(PATHS.THE_BIG_BANG)
+  }
 
   return (
     <div>
@@ -82,7 +96,7 @@ export default function Login() {
         <div className="flex flex-row justify-between w-full">
           <div className="flex flex-row gap-2">
             <Button
-              onClick={() => navigate(PATHS.THE_BIG_BANG)}
+              onClick={handleBackNavigation}
               variant={ButtonVariant.text}
               size={ButtonSize.icon}
               className="p-0"
