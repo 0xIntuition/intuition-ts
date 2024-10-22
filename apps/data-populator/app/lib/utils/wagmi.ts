@@ -1,11 +1,6 @@
 import { createConfig } from '@privy-io/wagmi'
-import { base, baseSepolia, mainnet } from 'viem/chains'
+import { base, baseSepolia } from 'viem/chains'
 import { Config, http } from 'wagmi'
-
-const alchemyMainnetRpcUrl =
-  typeof window !== 'undefined'
-    ? window.ENV?.ALCHEMY_MAINNET_RPC_URL
-    : process.env.ALCHEMY_MAINNET_RPC_URL
 
 const alchemyBaseRpcUrl =
   typeof window !== 'undefined'
@@ -23,15 +18,8 @@ const originUrl =
     : process.env.ORIGIN_URL
 
 export const wagmiConfig: Config = createConfig({
-  chains: [mainnet, base, baseSepolia],
+  chains: [base, baseSepolia],
   transports: {
-    [mainnet.id]: http(alchemyMainnetRpcUrl, {
-      fetchOptions: {
-        headers: {
-          Origin: originUrl,
-        },
-      },
-    }),
     [base.id]: http(alchemyBaseRpcUrl, {
       fetchOptions: {
         headers: {

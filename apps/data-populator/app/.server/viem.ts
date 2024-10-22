@@ -7,7 +7,7 @@ import {
   PublicClient,
   type Abi,
 } from 'viem'
-import { base, baseSepolia, mainnet } from 'viem/chains'
+import { base, baseSepolia } from 'viem/chains'
 
 export const publicClient: PublicClient = createPublicClient({
   batch: {
@@ -27,14 +27,6 @@ export const publicClient: PublicClient = createPublicClient({
     },
   ),
 }) as PublicClient
-
-export const mainnetClient = createPublicClient({
-  batch: {
-    multicall: true,
-  },
-  chain: mainnet,
-  transport: http(process.env.ALCHEMY_MAINNET_RPC_URL),
-})
 
 export const getMultivaultContract = getContract({
   address: MULTIVAULT_CONTRACT_ADDRESS as `0x${string}`,

@@ -8,9 +8,15 @@ import { baseSepolia } from 'viem/chains'
 
 const queryClient = new QueryClient()
 
+// uses pattern to ensure this is set. we'll need this for the base override as well
+const alchemyBaseSepoliaRpcUrl =
+  typeof window !== 'undefined'
+    ? window.ENV?.ALCHEMY_BASE_SEPOLIA_RPC_URL
+    : process.env.ALCHEMY_BASE_SEPOLIA_RPC_URL
+
 const baseSepoliaOverride = addRpcUrlOverrideToChain(
   baseSepolia,
-  'https://base-sepolia.g.alchemy.com/v2/YpOdm_FHq4EdAApPiAocXtFNhp2tUUeP',
+  alchemyBaseSepoliaRpcUrl,
 )
 
 const privyConfig: PrivyClientConfig = {

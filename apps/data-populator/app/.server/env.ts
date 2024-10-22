@@ -3,12 +3,8 @@ import { z } from 'zod'
 const schema = z.object({
   NODE_ENV: z.enum(['production', 'development'] as const), // remix only has development (local) and production (deployed)
   DEPLOY_ENV: z.enum(['production', 'staging', 'development'] as const), // based on the environment context
-  API_URL: z.string(),
-  WALLETCONNECT_PROJECT_ID: z.string(),
-  ALCHEMY_MAINNET_RPC_URL: z.string(),
   ALCHEMY_BASE_SEPOLIA_RPC_URL: z.string(),
   ALCHEMY_BASE_RPC_URL: z.string(),
-  ALCHEMY_SEPOLIA_RPC_URL: z.string(),
   MULTIVAULT_ADDRESS_BASE_SEPOLIA: z.string(),
   MULTIVAULT_ADDRESS_BASE_MAINNET: z.string(),
   ORIGIN_URL: z.string(),
@@ -48,12 +44,8 @@ export function getEnv() {
   return {
     MODE: process.env.NODE_ENV,
     DEPLOY_ENV: process.env.DEPLOY_ENV,
-    API_URL: process.env.API_URL,
-    WALLETCONNECT_PROJECT_ID: process.env.WALLETCONNECT_PROJECT_ID,
-    ALCHEMY_MAINNET_RPC_URL: process.env.ALCHEMY_MAINNET_RPC_URL,
     ALCHEMY_BASE_SEPOLIA_RPC_URL: process.env.ALCHEMY_BASE_SEPOLIA_RPC_URL,
     ALCHEMY_BASE_RPC_URL: process.env.ALCHEMY_BASE_RPC_URL,
-    ALCHEMY_SEPOLIA_RPC_URL: process.env.ALCHEMY_SEPOLIA_RPC_URL,
     MULTIVAULT_ADDRESS_BASE_SEPOLIA:
       process.env.MULTIVAULT_ADDRESS_BASE_SEPOLIA,
     MULTIVAULT_ADDRESS_BASE_MAINNET:
