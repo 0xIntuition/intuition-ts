@@ -31,7 +31,6 @@ type State = {
     | 'publishing'
     | 'sending'
     | 'logging'
-    | 'verifying'
     | 'complete'
     | 'error'
 }
@@ -114,7 +113,7 @@ export function useBatchCreateAtom() {
   const initiateFetcher = useFetcher({ key: 'initiate-batch' })
   const publishFetcher = useFetcher({ key: 'publish-atoms' })
   const logTxFetcher = useFetcher({ key: 'log-tx-hash-and-verify-atoms' })
-  // const completeFetcher = useFetcher({ key: 'complete-batch' })
+
   const { client } = useSmartWallets()
 
   const initiateBatchRequest = useCallback(
@@ -299,9 +298,20 @@ export function useBatchCreateAtom() {
 
       if (data.success) {
         console.log('logTxFetcher success')
-        dispatch({ type: 'SET_STEP', payload: 'idle' })
+
+        dispatch({ type: 'SET_STEP', payload: 'complete' })
         toast.success('Atom(s) created successfully', {
           duration: 5000,
+        })
+        // reset to initial state
+        dispatch({
+          type: 'SET_CALLS',
+          payload: {
+            calls: [],
+            newCIDs: [],
+            existingCIDs: [],
+            filteredData: [],
+          },
         })
       } else {
         // Handle the case where the operation was not successful
@@ -314,7 +324,7 @@ export function useBatchCreateAtom() {
 
       setIsProcessing(false)
     }
-  }, [logTxFetcher.state, logTxFetcher.data, state.step, state.txHash])
+  }, [logTxFetcher.state, logTxFetcher.data, state.step])
 
   useEffect(() => {
     const handleAsyncOperations = async () => {
@@ -356,7 +366,10 @@ export function useBatchCreateAtom() {
   return {
     ...state,
     initiateBatchRequest,
-    isLoading: state.step !== 'idle',
+    isLoading:
+      state.step !== 'idle' &&
+      state.step !== 'complete' &&
+      state.step !== 'error',
     isInitiating: state.step === 'initiating',
     isPublishing: state.step === 'publishing',
     isSending: state.step === 'sending',

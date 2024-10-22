@@ -23,7 +23,6 @@ interface ProgressModalProps {
     | 'publishing'
     | 'sending'
     | 'logging'
-    | 'verifying'
     | 'complete'
     | 'error'
 }

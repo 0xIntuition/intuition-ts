@@ -482,9 +482,7 @@ export async function logTransactionHashAndVerifyAtoms(
 ): Promise<PopulateAtomsResponse> {
   console.log(`Logging transaction hash: ${txHash}`)
 
-  if (requestHash) {
-    await pushUpdate(requestHash, `Logging transaction hash: ${txHash}`)
-  }
+  await pushUpdate(requestHash, `Logging transaction hash: ${txHash}`)
 
   // TODO: Implement actual logging logic here
   // This could involve writing to a file, sending to an API, or updating a database
