@@ -9,26 +9,6 @@ export function getPrivyClient() {
   )
 }
 
-// export const verifyPrivyAccessToken = async (
-//   req: Request,
-// ): Promise<AuthTokenClaims | null> => {
-//   logger('[verifyPrivyAccessToken] Entering verifyPrivyAccessToken')
-//   const privy = getPrivyClient()
-//   const authToken = getPrivyAccessToken(req)
-//   logger('[verifyPrivyAccessToken] authToken', authToken)
-//   if (!authToken) {
-//     logger('No privy access token found')
-//     return null
-//   }
-//   logger('[verifyPrivyAccessToken] verifiedClaims')
-//   const verifiedClaims = await privy.verifyAuthToken(
-//     authToken,
-//     process.env.PRIVY_VERIFICATION_KEY,
-//   )
-//   logger('[verifyPrivyAccessToken] verifiedClaims', verifiedClaims)
-//   return verifiedClaims
-// }
-
 export const verifyPrivyAccessToken = async (
   req: Request,
 ): Promise<AuthTokenClaims | null> => {
