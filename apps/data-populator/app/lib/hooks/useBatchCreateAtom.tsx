@@ -151,7 +151,6 @@ export function useBatchCreateAtom() {
       return
     }
     console.log('Publishing atoms')
-    console.log('msgSender', client?.account)
 
     console.log('msgSender', client?.account)
 
