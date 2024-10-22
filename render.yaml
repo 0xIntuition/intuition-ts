@@ -49,44 +49,18 @@ services:
         sync: false
       - key: ENVIRONMENT
         value: dev
+      - key: VITE_DEPLOY_ENV
+        value: development
       - key: MULTIVAULT_ADDRESS_BASE_SEPOLIA
         sync: false
       - key: MULTIVAULT_ADDRESS_BASE_MAINNET
-        sync: false
-      - key: ALCHEMY_MAINNET_API_KEY
-        sync: false
-      - key: ALCHEMY_API_KEY
-        sync: false
-      - key: ALCHEMY_MAINNET_RPC_URL
-        sync: false
-      - key: ALCHEMY_OP_SEPOLIA_RPC_URL
         sync: false
       - key: ALCHEMY_BASE_SEPOLIA_RPC_URL
         sync: false
       - key: ALCHEMY_BASE_RPC_URL
         sync: false
-      - key: WALLETCONNECT_PROJECT_ID
-        sync: false
       - key: SESSION_SECRET
         generateValue: true
-      - key: API_URL
-        value: https://api.intuition.systems
-      - key: API_KEY
-        sync: false
-      - key: AWS_SECRET_KEY
-        sync: false
-      - key: AWS_ACCESS_KEY
-        sync: false
-      - key: STORAGE_REGION
-        sync: false
-      - key: STORAGE_BUCKET
-        sync: false
-      - key: ADMIN_PRIVATE_KEY
-        sync: false
-      - key: CLAIMR_AUTH_TOKEN
-        sync: false
-      - key: CLAIMR_CAMPAIGN_ID
-        sync: false
       - key: ORIGIN_URL
         value: https://portal.intuition.systems
       - key: PRIVY_APP_ID
@@ -95,19 +69,3 @@ services:
         sync: false
       - key: PRIVY_APP_SECRET
         sync: false
-      - key: SENTRY_AUTH_TOKEN
-        sync: false
-      - key: SENTRY_DSN
-        sync: false
-      - key: SENTRY_ORG
-        sync: false
-      - key: SENTRY_PROJECT
-        sync: false
-      - key: VITE_DEPLOY_ENV
-        value: production
-      - key: FF_FULL_LOCKDOWN_ENABLED
-        value: "false"
-      - key: FF_INCIDENT_BANNER_ENABLED
-        value: "false"
-      - key: FF_GENERIC_BANNER_ENABLED
-        value: "false"
