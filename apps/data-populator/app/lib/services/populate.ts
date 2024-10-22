@@ -535,6 +535,10 @@ export async function logTransactionHashAndVerifyAtoms(
   const newAtomIDs = newAtoms.map((atom) => atom.atomId)
   const existingAtomIDs = oldAtoms.map((atom) => atom.atomId)
 
+  if (requestHash) {
+    await updateRequest(requestHash, { status: 'fulfilled' })
+  }
+
   return { newAtomIDs, existingAtomIDs } as PopulateAtomsResponse
 }
 
