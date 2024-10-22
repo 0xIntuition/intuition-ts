@@ -48,9 +48,9 @@ services:
       - key: SUPABASE_KEY
         sync: false
       - key: ENVIRONMENT
-        value: dev
+        sync: false
       - key: VITE_DEPLOY_ENV
-        value: development
+        sync: false
       - key: MULTIVAULT_ADDRESS_BASE_SEPOLIA
         sync: false
       - key: MULTIVAULT_ADDRESS_BASE_MAINNET
