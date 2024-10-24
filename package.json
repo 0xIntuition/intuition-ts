@@ -32,7 +32,7 @@
     "graphql:build": "nx build @0xintuition/graphql",
     "graphql:lint": "nx lint @0xintuition/graphql",
     "graphql:test": "nx test @0xintuition/graphql --reporter=verbose",
-    "graphql:generate": "nx generate @0xintuition/graphql",
+    "graphql:codegen": "nx codegen @0xintuition/graphql",
     "protocol:build": "nx build @0xintuition/protocol",
     "protocol:lint": "nx lint @0xintuition/protocol",
     "protocol:test": "nx test @0xintuition/protocol --reporter=verbose",
