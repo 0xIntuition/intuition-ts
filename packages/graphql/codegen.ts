@@ -1,28 +1,45 @@
 import { CodegenConfig } from '@graphql-codegen/cli'
+import type { Types } from '@graphql-codegen/plugin-helpers'
+
+const commonGenerateOptions: Types.ConfiguredOutput = {
+  config: {
+    reactQueryVersion: 5,
+    fetcher: "@/client#fetcher",
+    exposeDocument: true,
+    exposeFetcher: true,
+    exposeQueryKeys: true,
+    exposeMutationKeys: true,
+    enumsAsTypes: true,
+    dedupeFragments: true,
+    scalars: {
+      Date: 'Date',
+      JSON: 'Record<string, any>',
+      ID: 'string',
+      Void: 'void',
+    },
+  },
+  plugins: [
+    'typescript',
+    '@graphql-codegen/typescript-operations',
+    '@graphql-codegen/typescript-react-query',
+  ],
+}
 
 const config: CodegenConfig = {
+  overwrite: true,
+  hooks: { afterAllFileWrite: ['prettier --write'] },
   schema: process.env.VITE_HASURA_PROJECT_ENDPOINT
     ? [process.env.VITE_HASURA_PROJECT_ENDPOINT]
     : [],
-  // [`${process.env.HASURA_PROJECT_ENDPOINT}`]: {
-  //   headers: {
-  //     'x-hasura-admin-secret': `${process.env.HASURA_GRAPHQL_ADMIN_SECRET}`,
-  //   },
-  // },
   ignoreNoDocuments: true, // for better experience with the watcher
-  documents: ["**/*.ts", "**/*.tsx"],
+  documents: ["**/*.graphql"],
   generates: {
-    './src/generated/': {
-      preset: 'client',
+    './src/generated/index.ts': {
       config: {
-        documentMode: 'string',
-        config: {
-          enumsAsTypes: false,
-          exportFragmentSpreadSubTypes: true,
-          dedupeFragments: true,
-          strictScalars: true,
-        },
-      }
+        // documentMode: 'string',
+        ...commonGenerateOptions.config,
+      },
+      plugins: commonGenerateOptions.plugins,
     },
     './schema.graphql': {
       plugins: ['schema-ast'],
@@ -32,7 +49,6 @@ const config: CodegenConfig = {
     }
   },
   watch: true,
-  hooks: { afterAllFileWrite: ['prettier --write'] },
 }
 
 export default config

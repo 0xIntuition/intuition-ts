@@ -3,6 +3,10 @@
   "include": ["src/**/*.ts"],
   "exclude": [],
   "compilerOptions": {
-    "moduleResolution": "bundler"
+    "moduleResolution": "bundler",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    }
   }
 }

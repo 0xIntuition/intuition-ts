@@ -1,0 +1,14 @@
+# Import fragments
+#import "../fragments/triple.graphql"
+#import "../fragments/account.graphql"
+
+query GetTriple($tripleId: numeric!) {
+  triple(id: $tripleId) {
+    ...TripleMetadata
+    ...TripleTxn
+    ...TripleVaultDetails
+    creator {
+      ...AccountMetadata
+    }
+  }
+}

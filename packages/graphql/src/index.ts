@@ -1,3 +1,2 @@
-export * from './generated/graphql'
-export * from './generated/gql'
-export { default as client } from './client'
+export * from './generated/index'
+// export { default as client } from './client'
