@@ -1,6 +1,6 @@
-import { gql } from 'graphql-request';
+import { graphql } from "../generated/gql";
 
-export const ATOM_METADATA_FRAGMENT = gql`
+export const AtomMetadataFragment = graphql(`
   fragment AtomMetadata on atoms {
     data
     id
@@ -9,18 +9,18 @@ export const ATOM_METADATA_FRAGMENT = gql`
     emoji
     type
   }
-`;
+`)
 
-export const ATOM_TXN_FRAGMENT = gql`
+export const AtomTxnFragment = graphql(`
   fragment AtomTxn on atoms {
     blockNumber
     blockTimestamp
     transactionHash
     creatorId
   }
-`;
+`)
 
-export const ATOM_VAULT_DETAILS_FRAGMENT = gql`
+export const AtomVaultDetailsFragment = graphql(`
   fragment AtomVaultDetails on atoms {
     vaultId
     walletId
@@ -30,4 +30,4 @@ export const ATOM_VAULT_DETAILS_FRAGMENT = gql`
       currentSharePrice
     }
   }
-`;
+`)

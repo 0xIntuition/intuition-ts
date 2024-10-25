@@ -1,15 +1,16 @@
 import { CodegenConfig } from '@graphql-codegen/cli'
 
 const config: CodegenConfig = {
-  schema: process.env.HASURA_PROJECT_ENDPOINT
-    ? [process.env.HASURA_PROJECT_ENDPOINT]
+  schema: process.env.VITE_HASURA_PROJECT_ENDPOINT
+    ? [process.env.VITE_HASURA_PROJECT_ENDPOINT]
     : [],
   // [`${process.env.HASURA_PROJECT_ENDPOINT}`]: {
   //   headers: {
   //     'x-hasura-admin-secret': `${process.env.HASURA_GRAPHQL_ADMIN_SECRET}`,
   //   },
   // },
-  documents: ['src/**/*.ts', '!src/gql/**/*'],
+  ignoreNoDocuments: true, // for better experience with the watcher
+  documents: ["**/*.ts", "**/*.tsx"],
   generates: {
     './src/generated/': {
       preset: 'client',
@@ -17,10 +18,10 @@ const config: CodegenConfig = {
         documentMode: 'string',
         config: {
           enumsAsTypes: false,
-          skipTypename: false,
           exportFragmentSpreadSubTypes: true,
-          dedupeFragments: true
-        }
+          dedupeFragments: true,
+          strictScalars: true,
+        },
       }
     },
     './schema.graphql': {
@@ -30,6 +31,7 @@ const config: CodegenConfig = {
       }
     }
   },
+  watch: true,
   hooks: { afterAllFileWrite: ['prettier --write'] },
 }
 

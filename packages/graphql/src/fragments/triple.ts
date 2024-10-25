@@ -1,9 +1,6 @@
-import { gql } from 'graphql-request';
-import { ATOM_METADATA_FRAGMENT } from './atom';
-import { ACCOUNT_METADATA_FRAGMENT } from './account';
-import { VAULT_DETAILS_FRAGMENT } from './vault';
+import { graphql } from "../generated/gql";
 
-export const TRIPLE_METADATA_FRAGMENT = gql`
+export const TripleMetadataFragment = graphql(`
   fragment TripleMetadata on triples {
     id
     label
@@ -26,20 +23,18 @@ export const TRIPLE_METADATA_FRAGMENT = gql`
       }
     }
   }
-  ${ATOM_METADATA_FRAGMENT}
-  ${ACCOUNT_METADATA_FRAGMENT}
-`;
+`);
 
-export const TRIPLE_TXN_FRAGMENT = gql`
+export const TripleTxnFragment = graphql(`
   fragment TripleTxn on triples {
     blockNumber
     blockTimestamp
     transactionHash
     creatorId
   }
-`;
+`);
 
-export const TRIPLE_VAULT_DETAILS_FRAGMENT = gql`
+export const TripleVaultDetailsFragment = graphql(`
   fragment TripleVaultDetails on triples {
     vaultId
     counterVaultId
@@ -50,5 +45,4 @@ export const TRIPLE_VAULT_DETAILS_FRAGMENT = gql`
       ...VaultDetails
     }
   }
-  ${VAULT_DETAILS_FRAGMENT}
-`;
+`);

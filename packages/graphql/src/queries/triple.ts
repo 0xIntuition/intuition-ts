@@ -1,7 +1,6 @@
-import { gql } from 'graphql-request';
-import { TRIPLE_METADATA_FRAGMENT, TRIPLE_TXN_FRAGMENT, TRIPLE_VAULT_DETAILS_FRAGMENT } from '../fragments';
+import { graphql } from "../generated/gql";
 
-export const GET_TRIPLE_QUERY = gql`
+export const GetTripleDocument = graphql(`
   query GetTriple($tripleId: numeric!) {
     triple(id: $tripleId) {
       ...TripleMetadata
@@ -12,7 +11,4 @@ export const GET_TRIPLE_QUERY = gql`
       }
     }
   }
-  ${TRIPLE_METADATA_FRAGMENT}
-  ${TRIPLE_TXN_FRAGMENT}
-  ${TRIPLE_VAULT_DETAILS_FRAGMENT}
-`;
+`)

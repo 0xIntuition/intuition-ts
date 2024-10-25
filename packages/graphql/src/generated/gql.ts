@@ -25,19 +25,19 @@ const documents = {
     types.EventFragmentDoc,
   '\n  fragment PositionDetails on positions {\n    id\n    accountId\n    shares\n    vaultId\n  }\n':
     types.PositionDetailsFragmentDoc,
-  '\n  fragment TripleMetadata on triples {\n    id\n    label\n    subject {\n      ...AtomMetadata\n      creator {\n        ...AccountMetadata\n      }\n    }\n    predicate {\n      ...AtomMetadata\n      creator {\n        ...AccountMetadata\n      }\n    }\n    object {\n      ...AtomMetadata\n      creator {\n        ...AccountMetadata\n      }\n    }\n  }\n  \n  \n':
+  '\n  fragment TripleMetadata on triples {\n    id\n    label\n    subject {\n      ...AtomMetadata\n      creator {\n        ...AccountMetadata\n      }\n    }\n    predicate {\n      ...AtomMetadata\n      creator {\n        ...AccountMetadata\n      }\n    }\n    object {\n      ...AtomMetadata\n      creator {\n        ...AccountMetadata\n      }\n    }\n  }\n':
     types.TripleMetadataFragmentDoc,
   '\n  fragment TripleTxn on triples {\n    blockNumber\n    blockTimestamp\n    transactionHash\n    creatorId\n  }\n':
     types.TripleTxnFragmentDoc,
-  '\n  fragment TripleVaultDetails on triples {\n    vaultId\n    counterVaultId\n    vault {\n      ...VaultDetails\n    }\n    counterVault {\n      ...VaultDetails\n    }\n  }\n  \n':
+  '\n  fragment TripleVaultDetails on triples {\n    vaultId\n    counterVaultId\n    vault {\n      ...VaultDetails\n    }\n    counterVault {\n      ...VaultDetails\n    }\n  }\n':
     types.TripleVaultDetailsFragmentDoc,
   '\n  fragment VaultDetails on vaults {\n    atomId\n    currentSharePrice\n    id\n    positionCount\n    totalShares\n    tripleId\n  }\n':
     types.VaultDetailsFragmentDoc,
-  '\n  query GetAtoms($limit: Int, $offset: Int, $orderBy: [atoms_order_by!], $where: atoms_bool_exp) {\n    atoms(limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {\n      ...AtomMetadata\n      ...AtomTxn\n      ...AtomVaultDetails\n      creator {\n        ...AccountMetadata\n      }\n    }\n  }\n  \n  \n  \n  \n':
+  '\n  query GetAtoms($limit: Int, $offset: Int, $orderBy: [atoms_order_by!], $where: atoms_bool_exp) {\n    atoms(limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {\n      ...AtomMetadata\n      ...AtomTxn\n      ...AtomVaultDetails\n      creator {\n        ...AccountMetadata\n      }\n    }\n  }\n':
     types.GetAtomsDocument,
-  '\n  query GetTriple($tripleId: numeric!) {\n    triple(id: $tripleId) {\n      ...TripleMetadata\n      ...TripleTxn\n      ...TripleVaultDetails\n      creator {\n        ...AccountMetadata\n      }\n    }\n  }\n  \n  \n  \n':
+  '\n  query GetTriple($tripleId: numeric!) {\n    triple(id: $tripleId) {\n      ...TripleMetadata\n      ...TripleTxn\n      ...TripleVaultDetails\n      creator {\n        ...AccountMetadata\n      }\n    }\n  }\n':
     types.GetTripleDocument,
-  '\n  query GetTriples($limit: Int, $offset: Int, $orderBy: [triples_order_by!], $where: triples_bool_exp) {\n    triples(limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {\n      ...TripleMetadata\n      ...TripleTxn\n      ...TripleVaultDetails\n      creator {\n        ...AccountMetadata\n      }\n    }\n  }\n  \n  \n  \n':
+  '\n  query GetTriples($limit: Int, $offset: Int, $orderBy: [triples_order_by!], $where: triples_bool_exp) {\n    triples(limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {\n      ...TripleMetadata\n      ...TripleTxn\n      ...TripleVaultDetails\n      creator {\n        ...AccountMetadata\n      }\n    }\n  }\n':
     types.GetTriplesDocument,
 }
 
@@ -81,7 +81,7 @@ export function graphql(
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-  source: '\n  fragment TripleMetadata on triples {\n    id\n    label\n    subject {\n      ...AtomMetadata\n      creator {\n        ...AccountMetadata\n      }\n    }\n    predicate {\n      ...AtomMetadata\n      creator {\n        ...AccountMetadata\n      }\n    }\n    object {\n      ...AtomMetadata\n      creator {\n        ...AccountMetadata\n      }\n    }\n  }\n  \n  \n',
+  source: '\n  fragment TripleMetadata on triples {\n    id\n    label\n    subject {\n      ...AtomMetadata\n      creator {\n        ...AccountMetadata\n      }\n    }\n    predicate {\n      ...AtomMetadata\n      creator {\n        ...AccountMetadata\n      }\n    }\n    object {\n      ...AtomMetadata\n      creator {\n        ...AccountMetadata\n      }\n    }\n  }\n',
 ): typeof import('./graphql').TripleMetadataFragmentDoc
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
@@ -93,7 +93,7 @@ export function graphql(
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-  source: '\n  fragment TripleVaultDetails on triples {\n    vaultId\n    counterVaultId\n    vault {\n      ...VaultDetails\n    }\n    counterVault {\n      ...VaultDetails\n    }\n  }\n  \n',
+  source: '\n  fragment TripleVaultDetails on triples {\n    vaultId\n    counterVaultId\n    vault {\n      ...VaultDetails\n    }\n    counterVault {\n      ...VaultDetails\n    }\n  }\n',
 ): typeof import('./graphql').TripleVaultDetailsFragmentDoc
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
@@ -105,19 +105,19 @@ export function graphql(
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-  source: '\n  query GetAtoms($limit: Int, $offset: Int, $orderBy: [atoms_order_by!], $where: atoms_bool_exp) {\n    atoms(limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {\n      ...AtomMetadata\n      ...AtomTxn\n      ...AtomVaultDetails\n      creator {\n        ...AccountMetadata\n      }\n    }\n  }\n  \n  \n  \n  \n',
+  source: '\n  query GetAtoms($limit: Int, $offset: Int, $orderBy: [atoms_order_by!], $where: atoms_bool_exp) {\n    atoms(limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {\n      ...AtomMetadata\n      ...AtomTxn\n      ...AtomVaultDetails\n      creator {\n        ...AccountMetadata\n      }\n    }\n  }\n',
 ): typeof import('./graphql').GetAtomsDocument
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-  source: '\n  query GetTriple($tripleId: numeric!) {\n    triple(id: $tripleId) {\n      ...TripleMetadata\n      ...TripleTxn\n      ...TripleVaultDetails\n      creator {\n        ...AccountMetadata\n      }\n    }\n  }\n  \n  \n  \n',
+  source: '\n  query GetTriple($tripleId: numeric!) {\n    triple(id: $tripleId) {\n      ...TripleMetadata\n      ...TripleTxn\n      ...TripleVaultDetails\n      creator {\n        ...AccountMetadata\n      }\n    }\n  }\n',
 ): typeof import('./graphql').GetTripleDocument
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-  source: '\n  query GetTriples($limit: Int, $offset: Int, $orderBy: [triples_order_by!], $where: triples_bool_exp) {\n    triples(limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {\n      ...TripleMetadata\n      ...TripleTxn\n      ...TripleVaultDetails\n      creator {\n        ...AccountMetadata\n      }\n    }\n  }\n  \n  \n  \n',
+  source: '\n  query GetTriples($limit: Int, $offset: Int, $orderBy: [triples_order_by!], $where: triples_bool_exp) {\n    triples(limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {\n      ...TripleMetadata\n      ...TripleTxn\n      ...TripleVaultDetails\n      creator {\n        ...AccountMetadata\n      }\n    }\n  }\n',
 ): typeof import('./graphql').GetTriplesDocument
 
 export function graphql(source: string) {

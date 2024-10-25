@@ -29,6 +29,7 @@
     "data-populator:lint": "nx lint @0xintuition/data-populator",
     "data-populator:test": "nx test @0xintuition/data-populator --reporter=verbose",
     "data-populator:typecheck": "nx typecheck @0xintuition/data-populator",
+    "graphql:dev": "nx dev @0xintuition/graphql",
     "graphql:build": "nx build @0xintuition/graphql",
     "graphql:lint": "nx lint @0xintuition/graphql",
     "graphql:test": "nx test @0xintuition/graphql --reporter=verbose",

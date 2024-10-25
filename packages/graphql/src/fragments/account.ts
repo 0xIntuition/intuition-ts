@@ -1,6 +1,6 @@
-import { gql } from 'graphql-request';
+import { graphql } from "../generated/gql";
 
-export const ACCOUNT_METADATA_FRAGMENT = gql`
+export const AccountMetadataFragment = graphql(`
   fragment AccountMetadata on accounts {
     label
     image
@@ -8,4 +8,4 @@ export const ACCOUNT_METADATA_FRAGMENT = gql`
     atomId
     type
   }
-`;
+`)

@@ -1,6 +1,6 @@
-import { gql } from 'graphql-request';
+import { graphql } from "../generated/gql";
 
-export const EVENT_FRAGMENT = gql`
+export const EventFragment = graphql(`
   fragment Event on events {
     type
     atomId
@@ -13,4 +13,4 @@ export const EVENT_FRAGMENT = gql`
     transactionHash
     tripleId
   }
-`;
+`)

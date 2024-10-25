@@ -1,6 +1,6 @@
-import { gql } from 'graphql-request';
+import { graphql } from "../generated/gql";
 
-export const VAULT_DETAILS_FRAGMENT = gql`
+export const VaultDetailsFragment = graphql(`
   fragment VaultDetails on vaults {
     atomId
     currentSharePrice
@@ -9,4 +9,4 @@ export const VAULT_DETAILS_FRAGMENT = gql`
     totalShares
     tripleId
   }
-`;
+`);

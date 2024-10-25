@@ -1,4 +1,9 @@
-import { client, GET_TRIPLE_QUERY, GetTripleQuery } from '@0xintuition/graphql'
+import {
+  client,
+  GetTripleDocument,
+  GetTripleQuery,
+  GetTriplesDocument,
+} from '@0xintuition/graphql'
 
 import { useQuery } from '@tanstack/react-query'
 
@@ -17,7 +22,7 @@ export const useTriple = ({
   >({
     queryKey: [token, tripleId],
     queryFn: () =>
-      client({ token }).request(GET_TRIPLE_QUERY, {
+      client({ token }).request(GetTripleDocument, {
         tripleId,
       }),
   })
