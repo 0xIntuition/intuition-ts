@@ -77,7 +77,9 @@ export function OverviewAboutHeader({
               {variant === 'claims' ? 'Claims' : 'Positions'}
             </Text>
             <Text variant="bodyLarge" weight="medium" className="items-center">
-              {variant === 'claims' ? totalClaims ?? 0 : totalPositions ?? 0}
+              {variant === 'claims'
+                ? (totalClaims ?? 0)
+                : (totalPositions ?? 0)}
             </Text>
           </div>
           <div className="flex flex-col max-md:items-center">

@@ -17,21 +17,9 @@ services:
         sync: false
       - key: IPFS_GATEWAY
         sync: false
-      - key: ATTEST_CONTRACT_ADDRESS
-        value: 0x430BbF52503Bd4801E51182f4cB9f8F534225DE5
-      - key: ATTEST_CONTRACT_ADDRESS_DEV
-        value: 0x1A6950807E33d5bC9975067e6D6b5Ea4cD661665
-      - key: MULTIVAULT_CONTRACT_ADDRESS
-        value: 0x430BbF52503Bd4801E51182f4cB9f8F534225DE5
-      - key: MULTIVAULT_CONTRACT_ADDRESS_DEV
-        value: 0x1A6950807E33d5bC9975067e6D6b5Ea4cD661665
       - key: PRIVATE_KEY
         sync: false
       - key: PRIVATE_KEY_DEV
-        sync: false
-      - key: EVM_RPC
-        sync: false
-      - key: EVM_RPC_DEV
         sync: false
       - key: ADDITIONAL_STAKE_ATOM
         value: 100000000000
@@ -47,20 +35,14 @@ services:
         sync: false
       - key: SUPABASE_KEY
         sync: false
-      - key: ENVIRONMENT
-        sync: false
       - key: VITE_DEPLOY_ENV
         sync: false
-      - key: MULTIVAULT_ADDRESS_BASE_SEPOLIA
+      - key: VITE_ALCHEMY_API_KEY
         sync: false
-      - key: MULTIVAULT_ADDRESS_BASE_MAINNET
+      - key: ALCHEMY_API_KEY
         sync: false
-      - key: ALCHEMY_BASE_SEPOLIA_RPC_URL
-        sync: false
-      - key: ALCHEMY_BASE_RPC_URL
-        sync: false
-      - key: SESSION_SECRET
-        generateValue: true
+      - key: VITE_ORIGIN_URL
+        value: https://portal.intuition.systems
       - key: ORIGIN_URL
         value: https://portal.intuition.systems
       - key: PRIVY_APP_ID
@@ -68,4 +50,6 @@ services:
       - key: PRIVY_AUTH_URL
         sync: false
       - key: PRIVY_APP_SECRET
+        sync: false
+      - key: PRIVY_VERIFICATION_KEY
         sync: false

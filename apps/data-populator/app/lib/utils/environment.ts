@@ -1,36 +1,15 @@
-import process from 'process'
-
-import { Address } from 'viem'
+import { Transport } from 'viem'
 import { base, baseSepolia, type mainnet } from 'viem/chains'
 
+import { multivaultContractsMap, transportsMap } from './chains'
 import logger from './logger'
-
-const alchemyRpcUrlBaseSepolia =
-  typeof window !== 'undefined'
-    ? window.ENV?.ALCHEMY_BASE_SEPOLIA_RPC_URL
-    : process.env.ALCHEMY_BASE_SEPOLIA_RPC_URL
-
-const alchemyRpcUrlBaseMainnet =
-  typeof window !== 'undefined'
-    ? window.ENV?.ALCHEMY_BASE_RPC_URL
-    : process.env.ALCHEMY_BASE_RPC_URL
-
-const multiVaultContractAddressBaseMainnet =
-  typeof window !== 'undefined'
-    ? window.ENV?.MULTIVAULT_ADDRESS_BASE_MAINNET
-    : process.env.MULTIVAULT_ADDRESS_BASE_MAINNET
-
-const multiVaultContractAddressBaseSepolia =
-  typeof window !== 'undefined'
-    ? window.ENV?.MULTIVAULT_ADDRESS_BASE_SEPOLIA
-    : process.env.MULTIVAULT_ADDRESS_BASE_SEPOLIA
 
 type ChainId = typeof base.id | typeof baseSepolia.id | typeof mainnet.id
 
 export type ChainConfig = {
   chainId: ChainId
   name: string
-  alchemyRpcUrl: string
+  transport: Transport
   contractAddress: `0x${string}`
 }
 
@@ -43,20 +22,20 @@ export const getChainEnvConfig = (env: string): ChainConfig => {
     development: {
       chainId: baseSepolia.id,
       name: baseSepolia.name,
-      alchemyRpcUrl: alchemyRpcUrlBaseSepolia,
-      contractAddress: multiVaultContractAddressBaseSepolia as Address,
+      transport: transportsMap(baseSepolia.id),
+      contractAddress: multivaultContractsMap(baseSepolia.id),
     },
     staging: {
       chainId: base.id,
       name: base.name,
-      alchemyRpcUrl: alchemyRpcUrlBaseMainnet,
-      contractAddress: multiVaultContractAddressBaseMainnet as Address,
+      transport: transportsMap(base.id),
+      contractAddress: multivaultContractsMap(base.id),
     },
     production: {
       chainId: base.id,
       name: base.name,
-      alchemyRpcUrl: alchemyRpcUrlBaseMainnet,
-      contractAddress: multiVaultContractAddressBaseMainnet as Address,
+      transport: transportsMap(base.id),
+      contractAddress: multivaultContractsMap(base.id),
     },
   }
 

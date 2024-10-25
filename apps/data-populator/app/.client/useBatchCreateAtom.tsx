@@ -4,7 +4,6 @@ import { toast } from '@0xintuition/1ui'
 
 import type { BatchAtomsRequest, PinDataResult } from '@lib/services/populate'
 import logger from '@lib/utils/logger'
-import { useSmartWallets } from '@privy-io/react-auth/smart-wallets'
 import { useFetcher } from '@remix-run/react'
 import {
   InitiateActionData,
@@ -12,6 +11,9 @@ import {
   PublishActionData,
 } from '@routes/app+'
 import { Thing, WithContext } from 'schema-dts'
+import { useSendTransaction } from 'wagmi'
+
+import { useUserClient } from './useUserWallet'
 
 type State = {
   requestHash: string
@@ -114,7 +116,10 @@ export function useBatchCreateAtom() {
   const publishFetcher = useFetcher({ key: 'publish-atoms' })
   const logTxFetcher = useFetcher({ key: 'log-tx-hash-and-verify-atoms' })
 
-  const { client } = useSmartWallets()
+  const { smartWalletClient, publicClient, address, isSmartWalletUser, ready } =
+    useUserClient()
+
+  const { sendTransaction } = useSendTransaction()
 
   const initiateBatchRequest = useCallback(
     (selectedRows: number[], csvData: string[][]) => {
@@ -129,6 +134,7 @@ export function useBatchCreateAtom() {
         console.error('Invalid or empty csvData')
         return
       }
+
       console.log('Initiating batch request')
       console.log('Selected Rows:', selectedRows)
       console.log('CSV Data:', csvData)
@@ -151,7 +157,6 @@ export function useBatchCreateAtom() {
       return
     }
     console.log('Publishing atoms')
-    console.log('msgSender', client?.account)
 
     setIsProcessing(true)
     publishFetcher.submit(
@@ -165,26 +170,73 @@ export function useBatchCreateAtom() {
   }, [publishFetcher, state.requestHash, state.calls])
 
   const sendBatchTx = useCallback(async () => {
-    if (!client || !state.calls.length || isProcessing) {
-      return
-    }
     console.log('Sending batch transaction')
     dispatch({ type: 'SET_STEP', payload: 'sending' })
     setIsProcessing(true)
 
+    if (!ready) {
+      console.error('No active client or address found')
+      return
+    }
+
     try {
-      const hash = await client.sendTransaction({
-        account: client.account,
-        calls: state.calls.map((call) => ({
-          to: call.to as `0x${string}`,
-          data: call.data as `0x${string}`,
-          value: BigInt(call.value),
-        })),
-      })
-      dispatch({ type: 'SET_TX_HASH', payload: hash })
+      let txHash
+      if (isSmartWalletUser) {
+        logger('[start] smart wallet sending batch tx')
+        txHash = await smartWalletClient.sendTransaction({
+          account: smartWalletClient.account,
+          calls: state.calls.map((call) => ({
+            to: call.to as `0x${string}`,
+            data: call.data as `0x${string}`,
+            value: BigInt(call.value),
+          })),
+        })
+        logger('[end] smart wallet batch txHash', txHash)
+      } else {
+        logger('isSmartWalletUser', isSmartWalletUser)
+        logger('[start] non-smart wallet atom tx calls', state.calls)
+
+        const confirmedHashes: `0x${string}`[] = []
+
+        for (const tx of state.calls) {
+          await new Promise<void>((resolve, reject) => {
+            sendTransaction(
+              {
+                to: tx.to as `0x${string}`,
+                data: tx.data as `0x${string}`,
+                value: BigInt(tx.value),
+              },
+              {
+                onSuccess: async (hash) => {
+                  try {
+                    const receipt =
+                      await publicClient?.waitForTransactionReceipt({ hash })
+                    confirmedHashes.push(receipt?.transactionHash ?? hash)
+                    logger(
+                      `Transaction confirmed: ${receipt?.transactionHash ?? hash}`,
+                    )
+                    resolve()
+                  } catch (confirmError) {
+                    console.error('Error confirming transaction:', confirmError)
+                    reject(confirmError)
+                  }
+                },
+                onError: (error) => {
+                  console.error('Error sending transaction:', error)
+                  reject(error)
+                },
+              },
+            )
+          })
+        }
+        // Use the last transaction hash as the overall txHash
+        txHash = confirmedHashes[confirmedHashes.length - 1]
+      }
+
+      dispatch({ type: 'SET_TX_HASH', payload: txHash })
       dispatch({ type: 'SET_STEP', payload: 'logging' })
-      logger('txHash', hash)
-      return hash
+      logger('txHash', txHash)
+      return txHash
     } catch (error) {
       console.error('Error sending batch transaction:', error)
       dispatch({ type: 'SET_STEP', payload: 'idle' })
@@ -195,13 +247,20 @@ export function useBatchCreateAtom() {
 
       dispatch({
         type: 'SET_ERROR',
-        error: error instanceof Error ? error.message : String(error),
+        error: errorMessage,
       })
       dispatch({ type: 'SET_STEP', payload: 'error' })
+      toast.error(errorMessage)
     } finally {
       setIsProcessing(false)
     }
-  }, [client, state.calls, isProcessing])
+  }, [
+    smartWalletClient,
+    publicClient,
+    isSmartWalletUser,
+    state.calls,
+    sendTransaction,
+  ])
 
   const logTxHash = useCallback(() => {
     if (!state.txHash || !state.requestHash || isProcessing) {
@@ -218,12 +277,22 @@ export function useBatchCreateAtom() {
         requestHash: state.requestHash,
         filteredCIDs: JSON.stringify(state.newCIDs),
         filteredData: JSON.stringify(state.filteredData),
-        msgSender: client?.account.address as `0x${string}`,
+        msgSender: isSmartWalletUser
+          ? (smartWalletClient?.account.address as `0x${string}`)
+          : (address as `0x${string}`),
         oldAtomCIDs: JSON.stringify(state.existingCIDs),
       },
       { method: 'post' },
     )
-  }, [logTxFetcher, state.txHash, state.requestHash])
+  }, [
+    logTxFetcher,
+    state.txHash,
+    state.requestHash,
+    isSmartWalletUser,
+    smartWalletClient,
+    address,
+    isProcessing,
+  ])
 
   useEffect(() => {
     if (
@@ -364,6 +433,9 @@ export function useBatchCreateAtom() {
   return {
     ...state,
     initiateBatchRequest,
+    publishAtoms,
+    sendBatchTx,
+    logTxHash,
     isLoading:
       state.step !== 'idle' &&
       state.step !== 'complete' &&

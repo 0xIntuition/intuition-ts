@@ -5,8 +5,9 @@ import crypto from 'crypto'
 import { getSender } from './evm'
 import { supabase } from './supabase'
 
-const environment = process.env.ENVIRONMENT!
-const requestsTable = environment === 'dev' ? 'requests_dev' : 'requests'
+const environment = import.meta.env.VITE_DEPLOY_ENV
+const requestsTable =
+  environment === 'development' ? 'requests_dev' : 'requests'
 
 /**
  * Interface representing the structure of a request in the database.

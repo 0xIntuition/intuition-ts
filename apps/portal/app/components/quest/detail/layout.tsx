@@ -40,7 +40,7 @@ export function Header({
     <div className="flex items-bottom justify-between w-full max-sm:flex-col max-sm:gap-2">
       <div className="flex flex-row gap-4 items-center">
         <Text variant="heading4" weight="medium">
-          {position ? `Chapter ${position} : ${title}` : title ?? ''}
+          {position ? `Chapter ${position} : ${title}` : (title ?? '')}
         </Text>
         {questAudio && <AudioPlayer audioSrc={questAudio} />}
       </div>

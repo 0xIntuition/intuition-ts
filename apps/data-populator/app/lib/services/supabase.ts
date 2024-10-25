@@ -8,14 +8,15 @@ import { getSender } from './evm'
 const supabaseUrl = process.env.SUPABASE_URL!
 const supabaseKey = process.env.SUPABASE_KEY!
 export const supabase = createClient(supabaseUrl, supabaseKey)
-const environment = process.env.ENVIRONMENT!
+const environment = import.meta.env.VITE_DEPLOY_ENV!
 
 const imageMappingTable =
-  environment === 'dev' ? 'image_mapping_dev' : 'image_mapping'
-const atomLogTable = environment === 'dev' ? 'atom_log_dev' : 'atom_log'
-const tripleLogTable = environment === 'dev' ? 'triple_log_dev' : 'triple_log'
-const uriTable = environment === 'dev' ? 'atom_uris_dev' : 'atom_uris'
-const tripleTable = environment === 'dev' ? 'triples_dev' : 'triples'
+  environment === 'development' ? 'image_mapping_dev' : 'image_mapping'
+const atomLogTable = environment === 'development' ? 'atom_log_dev' : 'atom_log'
+const tripleLogTable =
+  environment === 'development' ? 'triple_log_dev' : 'triple_log'
+const uriTable = environment === 'development' ? 'atom_uris_dev' : 'atom_uris'
+const tripleTable = environment === 'development' ? 'triples_dev' : 'triples'
 const dataTable = 'uri_data' // only one environment for URIs
 
 // Function to insert or update a key-value pair in the mapping table

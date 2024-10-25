@@ -53,7 +53,10 @@ export default defineConfig({
     noExternal: [
       '@privy-io/react-auth',
       '@privy-io/wagmi',
+      'wagmi',
       'mini-svg-data-uri',
+      // /^@walletconnect\/.*/,
+      '@walletconnect/jsonrpc-ws-connection',
     ],
   },
 })

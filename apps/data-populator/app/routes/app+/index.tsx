@@ -18,10 +18,10 @@ import {
   Textarea,
 } from '@0xintuition/1ui'
 
+import { useBatchCreateAtom } from '@client/useBatchCreateAtom'
 import { ProgressModal } from '@components/progress-modal'
 import { ProofreadModal } from '@components/proofread-modal'
 import { Progress } from '@components/ui/progress'
-import { useBatchCreateAtom } from '@lib/hooks/useBatchCreateAtom'
 import {
   BatchAtomsRequest,
   createPopulateAtomsRequest,

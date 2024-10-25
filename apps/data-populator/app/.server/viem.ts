@@ -1,12 +1,7 @@
 import { multivaultAbi } from '@lib/abis/multivault'
+import { transportsMap } from '@lib/utils/chains'
 import { CURRENT_ENV, MULTIVAULT_CONTRACT_ADDRESS } from 'app/consts'
-import {
-  createPublicClient,
-  getContract,
-  http,
-  PublicClient,
-  type Abi,
-} from 'viem'
+import { createPublicClient, getContract, PublicClient, type Abi } from 'viem'
 import { base, baseSepolia } from 'viem/chains'
 
 export const publicClient: PublicClient = createPublicClient({
@@ -14,18 +9,10 @@ export const publicClient: PublicClient = createPublicClient({
     multicall: true,
   },
   chain: CURRENT_ENV === 'development' ? baseSepolia : base,
-  transport: http(
+  transport:
     CURRENT_ENV === 'development'
-      ? process.env.ALCHEMY_BASE_SEPOLIA_RPC_URL
-      : process.env.ALCHEMY_BASE_RPC_URL,
-    {
-      fetchOptions: {
-        headers: {
-          Origin: process.env.ORIGIN_URL,
-        },
-      },
-    },
-  ),
+      ? transportsMap(baseSepolia.id)
+      : transportsMap(base.id),
 }) as PublicClient
 
 export const getMultivaultContract = getContract({
@@ -41,8 +28,3 @@ export const createMultiVaultContract = (contractAddress: string) =>
     address: contractAddress as `0x${string}`,
     abi: multivaultAbi as Abi,
   }) as const
-
-export const multiVaultContract = {
-  address: MULTIVAULT_CONTRACT_ADDRESS as `0x${string}`,
-  abi: multivaultAbi as Abi,
-} as const

@@ -1,23 +1,31 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
 
+import {
+  alchemyRpcUrlMap,
+  attestorContractsMap,
+  multivaultContractsMap,
+} from '@lib/utils/chains'
 import { encodePacked, Hex, keccak256, toBytes, toHex } from 'viem'
+import { base, baseSepolia } from 'viem/chains'
 
 import { callAndConfirm, EVMCallRequest, evmRead } from './evm'
 import { getAtomID } from './offchain-store'
 
-const environment = process.env.ENVIRONMENT
+const environment = import.meta.env.VITE_DEPLOY_ENV
 const rpc =
-  environment === 'dev' ? process.env.EVM_RPC_DEV : process.env.EVM_RPC
+  environment === 'development'
+    ? alchemyRpcUrlMap(baseSepolia.id)
+    : alchemyRpcUrlMap(base.id)
 const attestorAddress =
-  environment === 'dev'
-    ? process.env.ATTEST_CONTRACT_ADDRESS_DEV
-    : process.env.ATTEST_CONTRACT_ADDRESS
+  environment === 'development'
+    ? attestorContractsMap(baseSepolia.id)
+    : attestorContractsMap(base.id)
 const multivaultAddress =
-  environment === 'dev'
-    ? process.env.MULTIVAULT_CONTRACT_ADDRESS_DEV
-    : process.env.MULTIVAULT_CONTRACT_ADDRESS
-const additionalStakeAtom = process.env.ADDITIONAL_STAKE_ATOM
-const additionalStakeTriple = process.env.ADDITIONAL_STAKE_TRIPLE
+  environment === 'development'
+    ? multivaultContractsMap(baseSepolia.id) // dev contract address TODO: Duplicate to be cleaned up once everything is pulling from single source of truth
+    : multivaultContractsMap(base.id) // prod contract address // TODO: Duplicate to be cleaned up once everything is pulling from single source of truth
+const additionalStakeAtom = import.meta.env.VITE_ADDITIONAL_STAKE_ATOM
+const additionalStakeTriple = import.meta.env.VITE_ADDITIONAL_STAKE_TRIPLE
 
 if (
   !rpc ||
@@ -26,9 +34,7 @@ if (
   !multivaultAddress ||
   !additionalStakeTriple
 ) {
-  throw new Error(
-    'Missing required environment variables EVM_RPC, ATTEST_CONTRACT_ADDRESS, ADDITIONAL_STAKE_ATOM, MULTIVAULT_CONTRACT_ADDRESS, ADDITIONAL_STAKE_TRIPLE',
-  )
+  throw new Error('Missing required environment variables.')
 }
 
 const atomCostStr = await getAtomCost()

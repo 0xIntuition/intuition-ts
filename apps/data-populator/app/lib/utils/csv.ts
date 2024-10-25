@@ -9,7 +9,7 @@ export async function parseCsv(content: File): Promise<string[][]> {
   return rows
 }
 
-function fileToText(file: File): Promise<string> {
+export function fileToText(file: File): Promise<string> {
   return new Promise<string>((resolve, reject) => {
     const reader = new FileReader()
     reader.onload = () => resolve(reader.result as string)
@@ -18,7 +18,7 @@ function fileToText(file: File): Promise<string> {
   })
 }
 
-function parseCsvToThings(text: string): Thing[] {
+export function parseCsvToThings(text: string): Thing[] {
   const rows = parseCsvText(text)
   // Assuming each row corresponds to a Thing with properties matching the CSV headers
   const headers = rows[0]
@@ -33,7 +33,7 @@ function parseCsvToThings(text: string): Thing[] {
     for (let j = 0; j < headers.length; j++) {
       const key = headers[j]
       const value = row[j]
-      ;(thing as any)[key] = value
+        ; (thing as any)[key] = value
     }
     things.push(thing)
   }

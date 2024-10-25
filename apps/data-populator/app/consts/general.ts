@@ -1,3 +1,4 @@
+import { multivaultContractsMap } from '@lib/utils/chains'
 import { ChainEnv } from '@lib/utils/environment'
 import { base, baseSepolia } from 'viem/chains'
 
@@ -15,8 +16,8 @@ export const DEFAULT_VERIFIER = function (): void {
 
 export const MULTIVAULT_CONTRACT_ADDRESS =
   CURRENT_ENV === 'development'
-    ? '0x1A6950807E33d5bC9975067e6D6b5Ea4cD661665' // dev contract address
-    : '0x430BbF52503Bd4801E51182f4cB9f8F534225DE5' // prod contract address
+    ? multivaultContractsMap(baseSepolia.id) // dev contract address
+    : multivaultContractsMap(base.id) // prod contract address
 
 export const RELIC_CONTRACT_ADDRESS =
   CURRENT_ENV === 'development'

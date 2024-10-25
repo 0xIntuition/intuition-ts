@@ -9,9 +9,9 @@ import {
 } from 'viem'
 import { privateKeyToAccount } from 'viem/accounts'
 
-const environment = process.env.ENVIRONMENT
+const environment = import.meta.env.VITE_DEPLOY_ENV
 const privateKey =
-  environment === 'dev'
+  environment === 'development'
     ? (process.env.PRIVATE_KEY_DEV as string)
     : (process.env.PRIVATE_KEY as string)
 

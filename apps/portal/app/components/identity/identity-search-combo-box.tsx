@@ -108,8 +108,8 @@ const IdentitySearchCombobox = ({
                       value={+formatBalance(value)}
                       walletAddress={
                         identity.is_user === true
-                          ? identity.user?.ens_name ??
-                            sliceString(identity.user?.wallet, 6, 4)
+                          ? (identity.user?.ens_name ??
+                            sliceString(identity.user?.wallet, 6, 4))
                           : identity.identity_id
                       }
                       socialCount={socialCount || 0}
