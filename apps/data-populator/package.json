@@ -25,7 +25,7 @@
     "@faker-js/faker": "^8.4.1",
     "@paralleldrive/cuid2": "^2.2.2",
     "@pinata/sdk": "^2.1.0",
-    "@privy-io/react-auth": "1.92.2",
+    "@privy-io/react-auth": "^1.92.4",
     "@privy-io/server-auth": "1.14.2",
     "@privy-io/wagmi": "0.2.12",
     "@radix-ui/react-progress": "^1.1.0",
