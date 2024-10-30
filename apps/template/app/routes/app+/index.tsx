@@ -21,11 +21,16 @@ const edgeTypes = {
 }
 
 export default function App() {
-  const { data, isLoading } = useGetTripleQuery({
-    tripleId: 12,
-  })
+  const { data, isLoading, isError } = useGetTripleQuery(
+    {
+      tripleId: 12,
+    },
+    {
+      queryKey: ['12'],
+    },
+  )
   const triple = data?.triple
-  console.log(triple, isLoading)
+  console.log(triple, isLoading, isError)
 
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes)
   const [edges, setEdges, onEdgesChange] = useEdgesState(initalEdges)

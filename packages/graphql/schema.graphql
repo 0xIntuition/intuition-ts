@@ -1,5 +1,6 @@
 schema {
   query: query_root
+  mutation: mutation_root
   subscription: subscription_root
 }
 
@@ -85,6 +86,17 @@ input String_comparison_exp {
   does the column match the given SQL regular expression
   """
   _similar: String
+}
+
+input ThingInput {
+  description: String
+  image: String
+  name: String
+  url: String
+}
+
+type ThingOutput {
+  cid: String
 }
 
 """
@@ -544,16 +556,24 @@ input accounts_bool_exp {
   atom: atoms_bool_exp
   atomId: numeric_comparison_exp
   claims: claims_bool_exp
+  claims_aggregate: claims_aggregate_bool_exp
   createdAtoms: atoms_bool_exp
+  createdAtoms_aggregate: atoms_aggregate_bool_exp
   createdTriples: triples_bool_exp
+  createdTriples_aggregate: triples_aggregate_bool_exp
   deposits: deposits_bool_exp
+  deposits_aggregate: deposits_aggregate_bool_exp
   feeTransfers: feeTranfers_bool_exp
+  feeTransfers_aggregate: feeTranfers_aggregate_bool_exp
   id: String_comparison_exp
   image: String_comparison_exp
   label: String_comparison_exp
   positions: positions_bool_exp
+  positions_aggregate: positions_aggregate_bool_exp
   redemptions: redemptions_bool_exp
+  redemptions_aggregate: redemptions_aggregate_bool_exp
   signals: signals_bool_exp
+  signals_aggregate: signals_aggregate_bool_exp
   type: String_comparison_exp
 }
 
@@ -644,6 +664,31 @@ aggregate stddev_samp on columns
 """
 type accounts_stddev_samp_fields {
   atomId: Float
+}
+
+"""
+Streaming cursor of the table "accounts"
+"""
+input accounts_stream_cursor_input {
+  """
+  Stream column input with initial value
+  """
+  initial_value: accounts_stream_cursor_value_input!
+  """
+  cursor ordering
+  """
+  ordering: cursor_ordering
+}
+
+"""
+Initial value of the column from where the streaming should start
+"""
+input accounts_stream_cursor_value_input {
+  atomId: numeric
+  id: String
+  image: String
+  label: String
+  type: String
 }
 
 """
@@ -892,6 +937,33 @@ type atomValues_stddev_samp_fields {
 }
 
 """
+Streaming cursor of the table "atomValues"
+"""
+input atomValues_stream_cursor_input {
+  """
+  Stream column input with initial value
+  """
+  initial_value: atomValues_stream_cursor_value_input!
+  """
+  cursor ordering
+  """
+  ordering: cursor_ordering
+}
+
+"""
+Initial value of the column from where the streaming should start
+"""
+input atomValues_stream_cursor_value_input {
+  accountId: String
+  atomId: numeric
+  bookId: numeric
+  id: numeric
+  organizationId: numeric
+  personId: numeric
+  thingId: numeric
+}
+
+"""
 aggregate sum on columns
 """
 type atomValues_sum_fields {
@@ -1128,6 +1200,17 @@ type atoms_aggregate {
   nodes: [atoms!]!
 }
 
+input atoms_aggregate_bool_exp {
+  count: atoms_aggregate_bool_exp_count
+}
+
+input atoms_aggregate_bool_exp_count {
+  arguments: [atoms_select_column!]
+  distinct: Boolean
+  filter: atoms_bool_exp
+  predicate: Int_comparison_exp!
+}
+
 """
 aggregate fields of "Atom"
 """
@@ -1192,8 +1275,11 @@ input atoms_bool_exp {
   _not: atoms_bool_exp
   _or: [atoms_bool_exp!]
   asObject: triples_bool_exp
+  asObject_aggregate: triples_aggregate_bool_exp
   asPredicate: triples_bool_exp
+  asPredicate_aggregate: triples_aggregate_bool_exp
   asSubject: triples_bool_exp
+  asSubject_aggregate: triples_aggregate_bool_exp
   blockNumber: numeric_comparison_exp
   blockTimestamp: numeric_comparison_exp
   creator: accounts_bool_exp
@@ -1431,6 +1517,39 @@ input atoms_stddev_samp_order_by {
   id: order_by
   valueId: order_by
   vaultId: order_by
+}
+
+"""
+Streaming cursor of the table "atoms"
+"""
+input atoms_stream_cursor_input {
+  """
+  Stream column input with initial value
+  """
+  initial_value: atoms_stream_cursor_value_input!
+  """
+  cursor ordering
+  """
+  ordering: cursor_ordering
+}
+
+"""
+Initial value of the column from where the streaming should start
+"""
+input atoms_stream_cursor_value_input {
+  blockNumber: numeric
+  blockTimestamp: numeric
+  creatorId: String
+  data: String
+  emoji: String
+  id: numeric
+  image: String
+  label: String
+  transactionHash: bytea
+  type: String
+  valueId: numeric
+  vaultId: numeric
+  walletId: String
 }
 
 """
@@ -1678,6 +1797,32 @@ type books_stddev_samp_fields {
 }
 
 """
+Streaming cursor of the table "books"
+"""
+input books_stream_cursor_input {
+  """
+  Stream column input with initial value
+  """
+  initial_value: books_stream_cursor_value_input!
+  """
+  cursor ordering
+  """
+  ordering: cursor_ordering
+}
+
+"""
+Initial value of the column from where the streaming should start
+"""
+input books_stream_cursor_value_input {
+  atomId: numeric
+  description: String
+  genre: String
+  id: numeric
+  name: String
+  url: String
+}
+
+"""
 aggregate sum on columns
 """
 type books_sum_fields {
@@ -1768,6 +1913,28 @@ enum chainLinkPrices_select_column {
 }
 
 """
+Streaming cursor of the table "chainLinkPrices"
+"""
+input chainLinkPrices_stream_cursor_input {
+  """
+  Stream column input with initial value
+  """
+  initial_value: chainLinkPrices_stream_cursor_value_input!
+  """
+  cursor ordering
+  """
+  ordering: cursor_ordering
+}
+
+"""
+Initial value of the column from where the streaming should start
+"""
+input chainLinkPrices_stream_cursor_value_input {
+  id: numeric
+  usd: float8
+}
+
+"""
 columns and relationships of "Claim"
 """
 type claims {
@@ -1817,6 +1984,17 @@ aggregated selection of "Claim"
 type claims_aggregate {
   aggregate: claims_aggregate_fields
   nodes: [claims!]!
+}
+
+input claims_aggregate_bool_exp {
+  count: claims_aggregate_bool_exp_count
+}
+
+input claims_aggregate_bool_exp_count {
+  arguments: [claims_select_column!]
+  distinct: Boolean
+  filter: claims_bool_exp
+  predicate: Int_comparison_exp!
 }
 
 """
@@ -2129,6 +2307,36 @@ input claims_stddev_samp_order_by {
 }
 
 """
+Streaming cursor of the table "claims"
+"""
+input claims_stream_cursor_input {
+  """
+  Stream column input with initial value
+  """
+  initial_value: claims_stream_cursor_value_input!
+  """
+  cursor ordering
+  """
+  ordering: cursor_ordering
+}
+
+"""
+Initial value of the column from where the streaming should start
+"""
+input claims_stream_cursor_value_input {
+  accountId: String
+  counterShares: numeric
+  counterVaultId: numeric
+  id: String
+  objectId: numeric
+  predicateId: numeric
+  shares: numeric
+  subjectId: numeric
+  tripleId: numeric
+  vaultId: numeric
+}
+
+"""
 aggregate sum on columns
 """
 type claims_sum_fields {
@@ -2241,6 +2449,20 @@ input claims_variance_order_by {
 }
 
 """
+ordering argument of a cursor
+"""
+enum cursor_ordering {
+  """
+  ascending ordering of the cursor
+  """
+  ASC
+  """
+  descending ordering of the cursor
+  """
+  DESC
+}
+
+"""
 columns and relationships of "Deposit"
 """
 type deposits {
@@ -2277,6 +2499,17 @@ aggregated selection of "Deposit"
 type deposits_aggregate {
   aggregate: deposits_aggregate_fields
   nodes: [deposits!]!
+}
+
+input deposits_aggregate_bool_exp {
+  count: deposits_aggregate_bool_exp_count
+}
+
+input deposits_aggregate_bool_exp_count {
+  arguments: [deposits_select_column!]
+  distinct: Boolean
+  filter: deposits_bool_exp
+  predicate: Int_comparison_exp!
 }
 
 """
@@ -2608,6 +2841,39 @@ input deposits_stddev_samp_order_by {
   senderAssetsAfterTotalFees: order_by
   sharesForReceiver: order_by
   vaultId: order_by
+}
+
+"""
+Streaming cursor of the table "deposits"
+"""
+input deposits_stream_cursor_input {
+  """
+  Stream column input with initial value
+  """
+  initial_value: deposits_stream_cursor_value_input!
+  """
+  cursor ordering
+  """
+  ordering: cursor_ordering
+}
+
+"""
+Initial value of the column from where the streaming should start
+"""
+input deposits_stream_cursor_value_input {
+  blockNumber: numeric
+  blockTimestamp: numeric
+  entryFee: numeric
+  id: String
+  isAtomWallet: Int
+  isTriple: Int
+  receiverId: String
+  receiverTotalSharesInVault: numeric
+  senderAssetsAfterTotalFees: numeric
+  senderId: String
+  sharesForReceiver: numeric
+  transactionHash: bytea
+  vaultId: numeric
 }
 
 """
@@ -2953,6 +3219,36 @@ type events_stddev_samp_fields {
 }
 
 """
+Streaming cursor of the table "events"
+"""
+input events_stream_cursor_input {
+  """
+  Stream column input with initial value
+  """
+  initial_value: events_stream_cursor_value_input!
+  """
+  cursor ordering
+  """
+  ordering: cursor_ordering
+}
+
+"""
+Initial value of the column from where the streaming should start
+"""
+input events_stream_cursor_value_input {
+  atomId: numeric
+  blockNumber: numeric
+  blockTimestamp: numeric
+  depositId: String
+  feeTransferId: String
+  id: String
+  redemptionId: String
+  transactionHash: bytea
+  tripleId: numeric
+  type: String
+}
+
+"""
 aggregate sum on columns
 """
 type events_sum_fields {
@@ -3019,6 +3315,17 @@ aggregated selection of "FeeTransfer"
 type feeTranfers_aggregate {
   aggregate: feeTranfers_aggregate_fields
   nodes: [feeTranfers!]!
+}
+
+input feeTranfers_aggregate_bool_exp {
+  count: feeTranfers_aggregate_bool_exp_count
+}
+
+input feeTranfers_aggregate_bool_exp_count {
+  arguments: [feeTranfers_select_column!]
+  distinct: Boolean
+  filter: feeTranfers_bool_exp
+  predicate: Int_comparison_exp!
 }
 
 """
@@ -3243,6 +3550,33 @@ input feeTranfers_stddev_samp_order_by {
 }
 
 """
+Streaming cursor of the table "feeTranfers"
+"""
+input feeTranfers_stream_cursor_input {
+  """
+  Stream column input with initial value
+  """
+  initial_value: feeTranfers_stream_cursor_value_input!
+  """
+  cursor ordering
+  """
+  ordering: cursor_ordering
+}
+
+"""
+Initial value of the column from where the streaming should start
+"""
+input feeTranfers_stream_cursor_value_input {
+  amount: numeric
+  blockNumber: numeric
+  blockTimestamp: numeric
+  id: String
+  receiverId: String
+  senderId: String
+  transactionHash: bytea
+}
+
+"""
 aggregate sum on columns
 """
 type feeTranfers_sum_fields {
@@ -3333,6 +3667,16 @@ input float8_comparison_exp {
 
 input following_args {
   address: String
+}
+
+"""
+mutation root
+"""
+type mutation_root {
+  """
+  Uploads Thing to IPFS
+  """
+  uploadThing(arg1: ThingInput!): ThingOutput
 }
 
 scalar numeric
@@ -3548,6 +3892,33 @@ type organizations_stddev_samp_fields {
 }
 
 """
+Streaming cursor of the table "organizations"
+"""
+input organizations_stream_cursor_input {
+  """
+  Stream column input with initial value
+  """
+  initial_value: organizations_stream_cursor_value_input!
+  """
+  cursor ordering
+  """
+  ordering: cursor_ordering
+}
+
+"""
+Initial value of the column from where the streaming should start
+"""
+input organizations_stream_cursor_value_input {
+  atomId: numeric
+  description: String
+  email: String
+  id: numeric
+  image: String
+  name: String
+  url: String
+}
+
+"""
 aggregate sum on columns
 """
 type organizations_sum_fields {
@@ -3754,6 +4125,34 @@ type persons_stddev_samp_fields {
 }
 
 """
+Streaming cursor of the table "persons"
+"""
+input persons_stream_cursor_input {
+  """
+  Stream column input with initial value
+  """
+  initial_value: persons_stream_cursor_value_input!
+  """
+  cursor ordering
+  """
+  ordering: cursor_ordering
+}
+
+"""
+Initial value of the column from where the streaming should start
+"""
+input persons_stream_cursor_value_input {
+  atomId: numeric
+  description: String
+  email: String
+  id: numeric
+  identifier: String
+  image: String
+  name: String
+  url: String
+}
+
+"""
 aggregate sum on columns
 """
 type persons_sum_fields {
@@ -3809,6 +4208,17 @@ aggregated selection of "Position"
 type positions_aggregate {
   aggregate: positions_aggregate_fields
   nodes: [positions!]!
+}
+
+input positions_aggregate_bool_exp {
+  count: positions_aggregate_bool_exp_count
+}
+
+input positions_aggregate_bool_exp_count {
+  arguments: [positions_select_column!]
+  distinct: Boolean
+  filter: positions_bool_exp
+  predicate: Int_comparison_exp!
 }
 
 """
@@ -3996,6 +4406,30 @@ order by stddev_samp() on columns of table "Position"
 input positions_stddev_samp_order_by {
   shares: order_by
   vaultId: order_by
+}
+
+"""
+Streaming cursor of the table "positions"
+"""
+input positions_stream_cursor_input {
+  """
+  Stream column input with initial value
+  """
+  initial_value: positions_stream_cursor_value_input!
+  """
+  cursor ordering
+  """
+  ordering: cursor_ordering
+}
+
+"""
+Initial value of the column from where the streaming should start
+"""
+input positions_stream_cursor_value_input {
+  accountId: String
+  id: String
+  shares: numeric
+  vaultId: numeric
 }
 
 """
@@ -4224,6 +4658,31 @@ type predicateObjects_stddev_samp_fields {
 }
 
 """
+Streaming cursor of the table "predicateObjects"
+"""
+input predicateObjects_stream_cursor_input {
+  """
+  Stream column input with initial value
+  """
+  initial_value: predicateObjects_stream_cursor_value_input!
+  """
+  cursor ordering
+  """
+  ordering: cursor_ordering
+}
+
+"""
+Initial value of the column from where the streaming should start
+"""
+input predicateObjects_stream_cursor_value_input {
+  claimCount: Int
+  id: String
+  objectId: numeric
+  predicateId: numeric
+  tripleCount: Int
+}
+
+"""
 aggregate sum on columns
 """
 type predicateObjects_sum_fields {
@@ -4352,7 +4811,7 @@ type query_root {
   """
   accounts_that_claim_about_account_aggregate(
     """
-    input parameters for function "accounts_that_claim_about_account"
+    input parameters for function "accounts_that_claim_about_account_aggregate"
     """
     args: accounts_that_claim_about_account_args!
     """
@@ -4655,7 +5114,7 @@ type query_root {
   """
   claims_from_following_aggregate(
     """
-    input parameters for function "claims_from_following"
+    input parameters for function "claims_from_following_aggregate"
     """
     args: claims_from_following_args!
     """
@@ -4875,7 +5334,7 @@ type query_root {
   """
   following_aggregate(
     """
-    input parameters for function "following"
+    input parameters for function "following_aggregate"
     """
     args: following_args!
     """
@@ -5257,7 +5716,7 @@ type query_root {
   """
   signals_from_following_aggregate(
     """
-    input parameters for function "signals_from_following"
+    input parameters for function "signals_from_following_aggregate"
     """
     args: signals_from_following_args!
     """
@@ -5590,6 +6049,17 @@ type redemptions_aggregate {
   nodes: [redemptions!]!
 }
 
+input redemptions_aggregate_bool_exp {
+  count: redemptions_aggregate_bool_exp_count
+}
+
+input redemptions_aggregate_bool_exp_count {
+  arguments: [redemptions_select_column!]
+  distinct: Boolean
+  filter: redemptions_bool_exp
+  predicate: Int_comparison_exp!
+}
+
 """
 aggregate fields of "Redemption"
 """
@@ -5886,6 +6356,37 @@ input redemptions_stddev_samp_order_by {
 }
 
 """
+Streaming cursor of the table "redemptions"
+"""
+input redemptions_stream_cursor_input {
+  """
+  Stream column input with initial value
+  """
+  initial_value: redemptions_stream_cursor_value_input!
+  """
+  cursor ordering
+  """
+  ordering: cursor_ordering
+}
+
+"""
+Initial value of the column from where the streaming should start
+"""
+input redemptions_stream_cursor_value_input {
+  assetsForReceiver: numeric
+  blockNumber: numeric
+  blockTimestamp: numeric
+  exitFee: numeric
+  id: String
+  receiverId: String
+  senderId: String
+  senderTotalSharesInVault: numeric
+  sharesRedeemedBySender: numeric
+  transactionHash: bytea
+  vaultId: numeric
+}
+
+"""
 aggregate sum on columns
 """
 type redemptions_sum_fields {
@@ -6032,6 +6533,17 @@ aggregated selection of "Signal"
 type signals_aggregate {
   aggregate: signals_aggregate_fields
   nodes: [signals!]!
+}
+
+input signals_aggregate_bool_exp {
+  count: signals_aggregate_bool_exp_count
+}
+
+input signals_aggregate_bool_exp_count {
+  arguments: [signals_select_column!]
+  distinct: Boolean
+  filter: signals_bool_exp
+  predicate: Int_comparison_exp!
 }
 
 """
@@ -6330,6 +6842,37 @@ input signals_stddev_samp_order_by {
 }
 
 """
+Streaming cursor of the table "signals"
+"""
+input signals_stream_cursor_input {
+  """
+  Stream column input with initial value
+  """
+  initial_value: signals_stream_cursor_value_input!
+  """
+  cursor ordering
+  """
+  ordering: cursor_ordering
+}
+
+"""
+Initial value of the column from where the streaming should start
+"""
+input signals_stream_cursor_value_input {
+  accountId: String
+  atomId: numeric
+  blockNumber: numeric
+  blockTimestamp: numeric
+  delta: numeric
+  depositId: String
+  id: String
+  redemptionId: String
+  relativeStrength: numeric
+  transactionHash: bytea
+  tripleId: numeric
+}
+
+"""
 aggregate sum on columns
 """
 type signals_sum_fields {
@@ -6618,6 +7161,34 @@ type statHours_stddev_samp_fields {
 }
 
 """
+Streaming cursor of the table "statHours"
+"""
+input statHours_stream_cursor_input {
+  """
+  Stream column input with initial value
+  """
+  initial_value: statHours_stream_cursor_value_input!
+  """
+  cursor ordering
+  """
+  ordering: cursor_ordering
+}
+
+"""
+Initial value of the column from where the streaming should start
+"""
+input statHours_stream_cursor_value_input {
+  contractBalance: numeric
+  id: Int
+  totalAccounts: Int
+  totalAtoms: Int
+  totalFees: numeric
+  totalPositions: Int
+  totalSignals: Int
+  totalTriples: Int
+}
+
+"""
 aggregate sum on columns
 """
 type statHours_sum_fields {
@@ -6866,6 +7437,34 @@ type stats_stddev_samp_fields {
 }
 
 """
+Streaming cursor of the table "stats"
+"""
+input stats_stream_cursor_input {
+  """
+  Stream column input with initial value
+  """
+  initial_value: stats_stream_cursor_value_input!
+  """
+  cursor ordering
+  """
+  ordering: cursor_ordering
+}
+
+"""
+Initial value of the column from where the streaming should start
+"""
+input stats_stream_cursor_value_input {
+  contractBalance: numeric
+  id: Int
+  totalAccounts: Int
+  totalAtoms: Int
+  totalFees: numeric
+  totalPositions: Int
+  totalSignals: Int
+  totalTriples: Int
+}
+
+"""
 aggregate sum on columns
 """
 type stats_sum_fields {
@@ -6977,6 +7576,23 @@ type subscription_root {
     where: accounts_bool_exp
   ): accounts_aggregate!
   """
+  fetch data from the table in a streaming manner: "Account"
+  """
+  accounts_stream(
+    """
+    maximum number of rows returned in a single batch
+    """
+    batch_size: Int!
+    """
+    cursor to stream the results returned by the query
+    """
+    cursor: [accounts_stream_cursor_input]!
+    """
+    filter the rows returned
+    """
+    where: accounts_bool_exp
+  ): [accounts!]!
+  """
   execute function "accounts_that_claim_about_account" which returns "Account"
   """
   accounts_that_claim_about_account(
@@ -7010,7 +7626,7 @@ type subscription_root {
   """
   accounts_that_claim_about_account_aggregate(
     """
-    input parameters for function "accounts_that_claim_about_account"
+    input parameters for function "accounts_that_claim_about_account_aggregate"
     """
     args: accounts_that_claim_about_account_args!
     """
@@ -7093,6 +7709,23 @@ type subscription_root {
     where: atomValues_bool_exp
   ): atomValues_aggregate!
   """
+  fetch data from the table in a streaming manner: "AtomValue"
+  """
+  atomValues_stream(
+    """
+    maximum number of rows returned in a single batch
+    """
+    batch_size: Int!
+    """
+    cursor to stream the results returned by the query
+    """
+    cursor: [atomValues_stream_cursor_input]!
+    """
+    filter the rows returned
+    """
+    where: atomValues_bool_exp
+  ): [atomValues!]!
+  """
   fetch data from the table: "Atom"
   """
   atoms(
@@ -7142,6 +7775,23 @@ type subscription_root {
     """
     where: atoms_bool_exp
   ): atoms_aggregate!
+  """
+  fetch data from the table in a streaming manner: "Atom"
+  """
+  atoms_stream(
+    """
+    maximum number of rows returned in a single batch
+    """
+    batch_size: Int!
+    """
+    cursor to stream the results returned by the query
+    """
+    cursor: [atoms_stream_cursor_input]!
+    """
+    filter the rows returned
+    """
+    where: atoms_bool_exp
+  ): [atoms!]!
   """
   fetch data from the table: "Book" using primary key columns
   """
@@ -7197,6 +7847,23 @@ type subscription_root {
     where: books_bool_exp
   ): books_aggregate!
   """
+  fetch data from the table in a streaming manner: "Book"
+  """
+  books_stream(
+    """
+    maximum number of rows returned in a single batch
+    """
+    batch_size: Int!
+    """
+    cursor to stream the results returned by the query
+    """
+    cursor: [books_stream_cursor_input]!
+    """
+    filter the rows returned
+    """
+    where: books_bool_exp
+  ): [books!]!
+  """
   fetch data from the table: "ChainlinkPrice" using primary key columns
   """
   chainLinkPrice(id: numeric!): chainLinkPrices
@@ -7220,6 +7887,23 @@ type subscription_root {
     sort the rows by one or more columns
     """
     order_by: [chainLinkPrices_order_by!]
+    """
+    filter the rows returned
+    """
+    where: chainLinkPrices_bool_exp
+  ): [chainLinkPrices!]!
+  """
+  fetch data from the table in a streaming manner: "ChainlinkPrice"
+  """
+  chainLinkPrices_stream(
+    """
+    maximum number of rows returned in a single batch
+    """
+    batch_size: Int!
+    """
+    cursor to stream the results returned by the query
+    """
+    cursor: [chainLinkPrices_stream_cursor_input]!
     """
     filter the rows returned
     """
@@ -7313,7 +7997,7 @@ type subscription_root {
   """
   claims_from_following_aggregate(
     """
-    input parameters for function "claims_from_following"
+    input parameters for function "claims_from_following_aggregate"
     """
     args: claims_from_following_args!
     """
@@ -7337,6 +8021,23 @@ type subscription_root {
     """
     where: claims_bool_exp
   ): claims_aggregate!
+  """
+  fetch data from the table in a streaming manner: "Claim"
+  """
+  claims_stream(
+    """
+    maximum number of rows returned in a single batch
+    """
+    batch_size: Int!
+    """
+    cursor to stream the results returned by the query
+    """
+    cursor: [claims_stream_cursor_input]!
+    """
+    filter the rows returned
+    """
+    where: claims_bool_exp
+  ): [claims!]!
   """
   fetch data from the table: "Deposit" using primary key columns
   """
@@ -7392,6 +8093,23 @@ type subscription_root {
     where: deposits_bool_exp
   ): deposits_aggregate!
   """
+  fetch data from the table in a streaming manner: "Deposit"
+  """
+  deposits_stream(
+    """
+    maximum number of rows returned in a single batch
+    """
+    batch_size: Int!
+    """
+    cursor to stream the results returned by the query
+    """
+    cursor: [deposits_stream_cursor_input]!
+    """
+    filter the rows returned
+    """
+    where: deposits_bool_exp
+  ): [deposits!]!
+  """
   fetch data from the table: "Event" using primary key columns
   """
   event(id: String!): events
@@ -7446,6 +8164,23 @@ type subscription_root {
     where: events_bool_exp
   ): events_aggregate!
   """
+  fetch data from the table in a streaming manner: "Event"
+  """
+  events_stream(
+    """
+    maximum number of rows returned in a single batch
+    """
+    batch_size: Int!
+    """
+    cursor to stream the results returned by the query
+    """
+    cursor: [events_stream_cursor_input]!
+    """
+    filter the rows returned
+    """
+    where: events_bool_exp
+  ): [events!]!
+  """
   fetch data from the table: "FeeTransfer"
   """
   feeTranfers(
@@ -7496,6 +8231,23 @@ type subscription_root {
     where: feeTranfers_bool_exp
   ): feeTranfers_aggregate!
   """
+  fetch data from the table in a streaming manner: "FeeTransfer"
+  """
+  feeTranfers_stream(
+    """
+    maximum number of rows returned in a single batch
+    """
+    batch_size: Int!
+    """
+    cursor to stream the results returned by the query
+    """
+    cursor: [feeTranfers_stream_cursor_input]!
+    """
+    filter the rows returned
+    """
+    where: feeTranfers_bool_exp
+  ): [feeTranfers!]!
+  """
   fetch data from the table: "FeeTransfer" using primary key columns
   """
   feeTransfers(id: String!): feeTranfers
@@ -7533,7 +8285,7 @@ type subscription_root {
   """
   following_aggregate(
     """
-    input parameters for function "following"
+    input parameters for function "following_aggregate"
     """
     args: following_args!
     """
@@ -7612,6 +8364,23 @@ type subscription_root {
     where: organizations_bool_exp
   ): organizations_aggregate!
   """
+  fetch data from the table in a streaming manner: "Organization"
+  """
+  organizations_stream(
+    """
+    maximum number of rows returned in a single batch
+    """
+    batch_size: Int!
+    """
+    cursor to stream the results returned by the query
+    """
+    cursor: [organizations_stream_cursor_input]!
+    """
+    filter the rows returned
+    """
+    where: organizations_bool_exp
+  ): [organizations!]!
+  """
   fetch data from the table: "Person" using primary key columns
   """
   person(id: numeric!): persons
@@ -7665,6 +8434,23 @@ type subscription_root {
     """
     where: persons_bool_exp
   ): persons_aggregate!
+  """
+  fetch data from the table in a streaming manner: "Person"
+  """
+  persons_stream(
+    """
+    maximum number of rows returned in a single batch
+    """
+    batch_size: Int!
+    """
+    cursor to stream the results returned by the query
+    """
+    cursor: [persons_stream_cursor_input]!
+    """
+    filter the rows returned
+    """
+    where: persons_bool_exp
+  ): [persons!]!
   """
   fetch data from the table: "Position" using primary key columns
   """
@@ -7720,6 +8506,23 @@ type subscription_root {
     where: positions_bool_exp
   ): positions_aggregate!
   """
+  fetch data from the table in a streaming manner: "Position"
+  """
+  positions_stream(
+    """
+    maximum number of rows returned in a single batch
+    """
+    batch_size: Int!
+    """
+    cursor to stream the results returned by the query
+    """
+    cursor: [positions_stream_cursor_input]!
+    """
+    filter the rows returned
+    """
+    where: positions_bool_exp
+  ): [positions!]!
+  """
   fetch data from the table: "PredicateObject" using primary key columns
   """
   predicateObject(id: String!): predicateObjects
@@ -7774,6 +8577,23 @@ type subscription_root {
     where: predicateObjects_bool_exp
   ): predicateObjects_aggregate!
   """
+  fetch data from the table in a streaming manner: "PredicateObject"
+  """
+  predicateObjects_stream(
+    """
+    maximum number of rows returned in a single batch
+    """
+    batch_size: Int!
+    """
+    cursor to stream the results returned by the query
+    """
+    cursor: [predicateObjects_stream_cursor_input]!
+    """
+    filter the rows returned
+    """
+    where: predicateObjects_bool_exp
+  ): [predicateObjects!]!
+  """
   fetch data from the table: "Redemption" using primary key columns
   """
   redemption(id: String!): redemptions
@@ -7827,6 +8647,23 @@ type subscription_root {
     """
     where: redemptions_bool_exp
   ): redemptions_aggregate!
+  """
+  fetch data from the table in a streaming manner: "Redemption"
+  """
+  redemptions_stream(
+    """
+    maximum number of rows returned in a single batch
+    """
+    batch_size: Int!
+    """
+    cursor to stream the results returned by the query
+    """
+    cursor: [redemptions_stream_cursor_input]!
+    """
+    filter the rows returned
+    """
+    where: redemptions_bool_exp
+  ): [redemptions!]!
   """
   fetch data from the table: "Signal" using primary key columns
   """
@@ -7915,7 +8752,7 @@ type subscription_root {
   """
   signals_from_following_aggregate(
     """
-    input parameters for function "signals_from_following"
+    input parameters for function "signals_from_following_aggregate"
     """
     args: signals_from_following_args!
     """
@@ -7939,6 +8776,23 @@ type subscription_root {
     """
     where: signals_bool_exp
   ): signals_aggregate!
+  """
+  fetch data from the table in a streaming manner: "Signal"
+  """
+  signals_stream(
+    """
+    maximum number of rows returned in a single batch
+    """
+    batch_size: Int!
+    """
+    cursor to stream the results returned by the query
+    """
+    cursor: [signals_stream_cursor_input]!
+    """
+    filter the rows returned
+    """
+    where: signals_bool_exp
+  ): [signals!]!
   """
   fetch data from the table: "Stats" using primary key columns
   """
@@ -7998,6 +8852,23 @@ type subscription_root {
     where: statHours_bool_exp
   ): statHours_aggregate!
   """
+  fetch data from the table in a streaming manner: "StatsHour"
+  """
+  statHours_stream(
+    """
+    maximum number of rows returned in a single batch
+    """
+    batch_size: Int!
+    """
+    cursor to stream the results returned by the query
+    """
+    cursor: [statHours_stream_cursor_input]!
+    """
+    filter the rows returned
+    """
+    where: statHours_bool_exp
+  ): [statHours!]!
+  """
   fetch data from the table: "Stats"
   """
   stats(
@@ -8047,6 +8918,23 @@ type subscription_root {
     """
     where: stats_bool_exp
   ): stats_aggregate!
+  """
+  fetch data from the table in a streaming manner: "Stats"
+  """
+  stats_stream(
+    """
+    maximum number of rows returned in a single batch
+    """
+    batch_size: Int!
+    """
+    cursor to stream the results returned by the query
+    """
+    cursor: [stats_stream_cursor_input]!
+    """
+    filter the rows returned
+    """
+    where: stats_bool_exp
+  ): [stats!]!
   """
   fetch data from the table: "Thing" using primary key columns
   """
@@ -8102,6 +8990,23 @@ type subscription_root {
     where: things_bool_exp
   ): things_aggregate!
   """
+  fetch data from the table in a streaming manner: "Thing"
+  """
+  things_stream(
+    """
+    maximum number of rows returned in a single batch
+    """
+    batch_size: Int!
+    """
+    cursor to stream the results returned by the query
+    """
+    cursor: [things_stream_cursor_input]!
+    """
+    filter the rows returned
+    """
+    where: things_bool_exp
+  ): [things!]!
+  """
   fetch data from the table: "Triple" using primary key columns
   """
   triple(id: numeric!): triples
@@ -8156,6 +9061,23 @@ type subscription_root {
     where: triples_bool_exp
   ): triples_aggregate!
   """
+  fetch data from the table in a streaming manner: "Triple"
+  """
+  triples_stream(
+    """
+    maximum number of rows returned in a single batch
+    """
+    batch_size: Int!
+    """
+    cursor to stream the results returned by the query
+    """
+    cursor: [triples_stream_cursor_input]!
+    """
+    filter the rows returned
+    """
+    where: triples_bool_exp
+  ): [triples!]!
+  """
   fetch data from the table: "Vault" using primary key columns
   """
   vault(id: numeric!): vaults
@@ -8209,6 +9131,23 @@ type subscription_root {
     """
     where: vaults_bool_exp
   ): vaults_aggregate!
+  """
+  fetch data from the table in a streaming manner: "Vault"
+  """
+  vaults_stream(
+    """
+    maximum number of rows returned in a single batch
+    """
+    batch_size: Int!
+    """
+    cursor to stream the results returned by the query
+    """
+    cursor: [vaults_stream_cursor_input]!
+    """
+    filter the rows returned
+    """
+    where: vaults_bool_exp
+  ): [vaults!]!
 }
 
 """
@@ -8368,6 +9307,32 @@ type things_stddev_samp_fields {
 }
 
 """
+Streaming cursor of the table "things"
+"""
+input things_stream_cursor_input {
+  """
+  Stream column input with initial value
+  """
+  initial_value: things_stream_cursor_value_input!
+  """
+  cursor ordering
+  """
+  ordering: cursor_ordering
+}
+
+"""
+Initial value of the column from where the streaming should start
+"""
+input things_stream_cursor_value_input {
+  atomId: numeric
+  description: String
+  id: numeric
+  image: String
+  name: String
+  url: String
+}
+
+"""
 aggregate sum on columns
 """
 type things_sum_fields {
@@ -8446,6 +9411,17 @@ aggregated selection of "Triple"
 type triples_aggregate {
   aggregate: triples_aggregate_fields
   nodes: [triples!]!
+}
+
+input triples_aggregate_bool_exp {
+  count: triples_aggregate_bool_exp_count
+}
+
+input triples_aggregate_bool_exp_count {
+  arguments: [triples_select_column!]
+  distinct: Boolean
+  filter: triples_bool_exp
+  predicate: Int_comparison_exp!
 }
 
 """
@@ -8758,6 +9734,37 @@ input triples_stddev_samp_order_by {
 }
 
 """
+Streaming cursor of the table "triples"
+"""
+input triples_stream_cursor_input {
+  """
+  Stream column input with initial value
+  """
+  initial_value: triples_stream_cursor_value_input!
+  """
+  cursor ordering
+  """
+  ordering: cursor_ordering
+}
+
+"""
+Initial value of the column from where the streaming should start
+"""
+input triples_stream_cursor_value_input {
+  blockNumber: numeric
+  blockTimestamp: numeric
+  counterVaultId: numeric
+  creatorId: String
+  id: numeric
+  label: String
+  objectId: numeric
+  predicateId: numeric
+  subjectId: numeric
+  transactionHash: bytea
+  vaultId: numeric
+}
+
+"""
 aggregate sum on columns
 """
 type triples_sum_fields {
@@ -9041,9 +10048,11 @@ input vaults_bool_exp {
   atomId: numeric_comparison_exp
   currentSharePrice: numeric_comparison_exp
   deposits: deposits_bool_exp
+  deposits_aggregate: deposits_aggregate_bool_exp
   id: numeric_comparison_exp
   positionCount: Int_comparison_exp
   positions: positions_bool_exp
+  positions_aggregate: positions_aggregate_bool_exp
   redemptions: redemptions_bool_exp
   totalShares: numeric_comparison_exp
   triple: triples_bool_exp
@@ -9155,6 +10164,32 @@ type vaults_stddev_samp_fields {
   positionCount: Float
   totalShares: Float
   tripleId: Float
+}
+
+"""
+Streaming cursor of the table "vaults"
+"""
+input vaults_stream_cursor_input {
+  """
+  Stream column input with initial value
+  """
+  initial_value: vaults_stream_cursor_value_input!
+  """
+  cursor ordering
+  """
+  ordering: cursor_ordering
+}
+
+"""
+Initial value of the column from where the streaming should start
+"""
+input vaults_stream_cursor_value_input {
+  atomId: numeric
+  currentSharePrice: numeric
+  id: numeric
+  positionCount: Int
+  totalShares: numeric
+  tripleId: numeric
 }
 
 """

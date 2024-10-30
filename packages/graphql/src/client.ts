@@ -57,7 +57,7 @@ export function fetcher<TData, TVariables>(
   options?: RequestInit["headers"],
 ) {
   return async () => {
-    const res = await fetch("https://hasura-xfvc.onrender.com/v1/graphql", {
+    const res = await fetch("https://api.i7n.dev/v1/graphql", {
       method: "POST",
       ...fetchParams(),
       ...options,

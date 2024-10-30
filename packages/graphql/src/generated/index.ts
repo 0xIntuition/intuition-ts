@@ -79,6 +79,18 @@ export type String_Comparison_Exp = {
   _similar?: InputMaybe<Scalars['String']['input']>
 }
 
+export type ThingInput = {
+  description?: InputMaybe<Scalars['String']['input']>
+  image?: InputMaybe<Scalars['String']['input']>
+  name?: InputMaybe<Scalars['String']['input']>
+  url?: InputMaybe<Scalars['String']['input']>
+}
+
+export type ThingOutput = {
+  __typename?: 'ThingOutput'
+  cid?: Maybe<Scalars['String']['output']>
+}
+
 /** columns and relationships of "Account" */
 export type Accounts = {
   __typename?: 'accounts'
@@ -310,16 +322,24 @@ export type Accounts_Bool_Exp = {
   atom?: InputMaybe<Atoms_Bool_Exp>
   atomId?: InputMaybe<Numeric_Comparison_Exp>
   claims?: InputMaybe<Claims_Bool_Exp>
+  claims_aggregate?: InputMaybe<Claims_Aggregate_Bool_Exp>
   createdAtoms?: InputMaybe<Atoms_Bool_Exp>
+  createdAtoms_aggregate?: InputMaybe<Atoms_Aggregate_Bool_Exp>
   createdTriples?: InputMaybe<Triples_Bool_Exp>
+  createdTriples_aggregate?: InputMaybe<Triples_Aggregate_Bool_Exp>
   deposits?: InputMaybe<Deposits_Bool_Exp>
+  deposits_aggregate?: InputMaybe<Deposits_Aggregate_Bool_Exp>
   feeTransfers?: InputMaybe<FeeTranfers_Bool_Exp>
+  feeTransfers_aggregate?: InputMaybe<FeeTranfers_Aggregate_Bool_Exp>
   id?: InputMaybe<String_Comparison_Exp>
   image?: InputMaybe<String_Comparison_Exp>
   label?: InputMaybe<String_Comparison_Exp>
   positions?: InputMaybe<Positions_Bool_Exp>
+  positions_aggregate?: InputMaybe<Positions_Aggregate_Bool_Exp>
   redemptions?: InputMaybe<Redemptions_Bool_Exp>
+  redemptions_aggregate?: InputMaybe<Redemptions_Aggregate_Bool_Exp>
   signals?: InputMaybe<Signals_Bool_Exp>
+  signals_aggregate?: InputMaybe<Signals_Aggregate_Bool_Exp>
   type?: InputMaybe<String_Comparison_Exp>
 }
 
@@ -390,6 +410,23 @@ export type Accounts_Stddev_Pop_Fields = {
 export type Accounts_Stddev_Samp_Fields = {
   __typename?: 'accounts_stddev_samp_fields'
   atomId?: Maybe<Scalars['Float']['output']>
+}
+
+/** Streaming cursor of the table "accounts" */
+export type Accounts_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Accounts_Stream_Cursor_Value_Input
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>
+}
+
+/** Initial value of the column from where the streaming should start */
+export type Accounts_Stream_Cursor_Value_Input = {
+  atomId?: InputMaybe<Scalars['numeric']['input']>
+  id?: InputMaybe<Scalars['String']['input']>
+  image?: InputMaybe<Scalars['String']['input']>
+  label?: InputMaybe<Scalars['String']['input']>
+  type?: InputMaybe<Scalars['String']['input']>
 }
 
 /** aggregate sum on columns */
@@ -597,6 +634,25 @@ export type AtomValues_Stddev_Samp_Fields = {
   thingId?: Maybe<Scalars['Float']['output']>
 }
 
+/** Streaming cursor of the table "atomValues" */
+export type AtomValues_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: AtomValues_Stream_Cursor_Value_Input
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>
+}
+
+/** Initial value of the column from where the streaming should start */
+export type AtomValues_Stream_Cursor_Value_Input = {
+  accountId?: InputMaybe<Scalars['String']['input']>
+  atomId?: InputMaybe<Scalars['numeric']['input']>
+  bookId?: InputMaybe<Scalars['numeric']['input']>
+  id?: InputMaybe<Scalars['numeric']['input']>
+  organizationId?: InputMaybe<Scalars['numeric']['input']>
+  personId?: InputMaybe<Scalars['numeric']['input']>
+  thingId?: InputMaybe<Scalars['numeric']['input']>
+}
+
 /** aggregate sum on columns */
 export type AtomValues_Sum_Fields = {
   __typename?: 'atomValues_sum_fields'
@@ -738,6 +794,17 @@ export type Atoms_Aggregate = {
   nodes: Array<Atoms>
 }
 
+export type Atoms_Aggregate_Bool_Exp = {
+  count?: InputMaybe<Atoms_Aggregate_Bool_Exp_Count>
+}
+
+export type Atoms_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<Atoms_Select_Column>>
+  distinct?: InputMaybe<Scalars['Boolean']['input']>
+  filter?: InputMaybe<Atoms_Bool_Exp>
+  predicate: Int_Comparison_Exp
+}
+
 /** aggregate fields of "Atom" */
 export type Atoms_Aggregate_Fields = {
   __typename?: 'atoms_aggregate_fields'
@@ -800,8 +867,11 @@ export type Atoms_Bool_Exp = {
   _not?: InputMaybe<Atoms_Bool_Exp>
   _or?: InputMaybe<Array<Atoms_Bool_Exp>>
   asObject?: InputMaybe<Triples_Bool_Exp>
+  asObject_aggregate?: InputMaybe<Triples_Aggregate_Bool_Exp>
   asPredicate?: InputMaybe<Triples_Bool_Exp>
+  asPredicate_aggregate?: InputMaybe<Triples_Aggregate_Bool_Exp>
   asSubject?: InputMaybe<Triples_Bool_Exp>
+  asSubject_aggregate?: InputMaybe<Triples_Aggregate_Bool_Exp>
   blockNumber?: InputMaybe<Numeric_Comparison_Exp>
   blockTimestamp?: InputMaybe<Numeric_Comparison_Exp>
   creator?: InputMaybe<Accounts_Bool_Exp>
@@ -993,6 +1063,31 @@ export type Atoms_Stddev_Samp_Order_By = {
   id?: InputMaybe<Order_By>
   valueId?: InputMaybe<Order_By>
   vaultId?: InputMaybe<Order_By>
+}
+
+/** Streaming cursor of the table "atoms" */
+export type Atoms_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Atoms_Stream_Cursor_Value_Input
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>
+}
+
+/** Initial value of the column from where the streaming should start */
+export type Atoms_Stream_Cursor_Value_Input = {
+  blockNumber?: InputMaybe<Scalars['numeric']['input']>
+  blockTimestamp?: InputMaybe<Scalars['numeric']['input']>
+  creatorId?: InputMaybe<Scalars['String']['input']>
+  data?: InputMaybe<Scalars['String']['input']>
+  emoji?: InputMaybe<Scalars['String']['input']>
+  id?: InputMaybe<Scalars['numeric']['input']>
+  image?: InputMaybe<Scalars['String']['input']>
+  label?: InputMaybe<Scalars['String']['input']>
+  transactionHash?: InputMaybe<Scalars['bytea']['input']>
+  type?: InputMaybe<Scalars['String']['input']>
+  valueId?: InputMaybe<Scalars['numeric']['input']>
+  vaultId?: InputMaybe<Scalars['numeric']['input']>
+  walletId?: InputMaybe<Scalars['String']['input']>
 }
 
 /** aggregate sum on columns */
@@ -1203,6 +1298,24 @@ export type Books_Stddev_Samp_Fields = {
   id?: Maybe<Scalars['Float']['output']>
 }
 
+/** Streaming cursor of the table "books" */
+export type Books_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Books_Stream_Cursor_Value_Input
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>
+}
+
+/** Initial value of the column from where the streaming should start */
+export type Books_Stream_Cursor_Value_Input = {
+  atomId?: InputMaybe<Scalars['numeric']['input']>
+  description?: InputMaybe<Scalars['String']['input']>
+  genre?: InputMaybe<Scalars['String']['input']>
+  id?: InputMaybe<Scalars['numeric']['input']>
+  name?: InputMaybe<Scalars['String']['input']>
+  url?: InputMaybe<Scalars['String']['input']>
+}
+
 /** aggregate sum on columns */
 export type Books_Sum_Fields = {
   __typename?: 'books_sum_fields'
@@ -1273,6 +1386,20 @@ export type ChainLinkPrices_Select_Column =
   /** column name */
   | 'usd'
 
+/** Streaming cursor of the table "chainLinkPrices" */
+export type ChainLinkPrices_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: ChainLinkPrices_Stream_Cursor_Value_Input
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>
+}
+
+/** Initial value of the column from where the streaming should start */
+export type ChainLinkPrices_Stream_Cursor_Value_Input = {
+  id?: InputMaybe<Scalars['numeric']['input']>
+  usd?: InputMaybe<Scalars['float8']['input']>
+}
+
 /** columns and relationships of "Claim" */
 export type Claims = {
   __typename?: 'claims'
@@ -1307,6 +1434,17 @@ export type Claims_Aggregate = {
   __typename?: 'claims_aggregate'
   aggregate?: Maybe<Claims_Aggregate_Fields>
   nodes: Array<Claims>
+}
+
+export type Claims_Aggregate_Bool_Exp = {
+  count?: InputMaybe<Claims_Aggregate_Bool_Exp_Count>
+}
+
+export type Claims_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<Claims_Select_Column>>
+  distinct?: InputMaybe<Scalars['Boolean']['input']>
+  filter?: InputMaybe<Claims_Bool_Exp>
+  predicate: Int_Comparison_Exp
 }
 
 /** aggregate fields of "Claim" */
@@ -1576,6 +1714,28 @@ export type Claims_Stddev_Samp_Order_By = {
   vaultId?: InputMaybe<Order_By>
 }
 
+/** Streaming cursor of the table "claims" */
+export type Claims_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Claims_Stream_Cursor_Value_Input
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>
+}
+
+/** Initial value of the column from where the streaming should start */
+export type Claims_Stream_Cursor_Value_Input = {
+  accountId?: InputMaybe<Scalars['String']['input']>
+  counterShares?: InputMaybe<Scalars['numeric']['input']>
+  counterVaultId?: InputMaybe<Scalars['numeric']['input']>
+  id?: InputMaybe<Scalars['String']['input']>
+  objectId?: InputMaybe<Scalars['numeric']['input']>
+  predicateId?: InputMaybe<Scalars['numeric']['input']>
+  shares?: InputMaybe<Scalars['numeric']['input']>
+  subjectId?: InputMaybe<Scalars['numeric']['input']>
+  tripleId?: InputMaybe<Scalars['numeric']['input']>
+  vaultId?: InputMaybe<Scalars['numeric']['input']>
+}
+
 /** aggregate sum on columns */
 export type Claims_Sum_Fields = {
   __typename?: 'claims_sum_fields'
@@ -1676,6 +1836,13 @@ export type Claims_Variance_Order_By = {
   vaultId?: InputMaybe<Order_By>
 }
 
+/** ordering argument of a cursor */
+export type Cursor_Ordering =
+  /** ascending ordering of the cursor */
+  | 'ASC'
+  /** descending ordering of the cursor */
+  | 'DESC'
+
 /** columns and relationships of "Deposit" */
 export type Deposits = {
   __typename?: 'deposits'
@@ -1705,6 +1872,17 @@ export type Deposits_Aggregate = {
   __typename?: 'deposits_aggregate'
   aggregate?: Maybe<Deposits_Aggregate_Fields>
   nodes: Array<Deposits>
+}
+
+export type Deposits_Aggregate_Bool_Exp = {
+  count?: InputMaybe<Deposits_Aggregate_Bool_Exp_Count>
+}
+
+export type Deposits_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<Deposits_Select_Column>>
+  distinct?: InputMaybe<Scalars['Boolean']['input']>
+  filter?: InputMaybe<Deposits_Bool_Exp>
+  predicate: Int_Comparison_Exp
 }
 
 /** aggregate fields of "Deposit" */
@@ -1988,6 +2166,31 @@ export type Deposits_Stddev_Samp_Order_By = {
   senderAssetsAfterTotalFees?: InputMaybe<Order_By>
   sharesForReceiver?: InputMaybe<Order_By>
   vaultId?: InputMaybe<Order_By>
+}
+
+/** Streaming cursor of the table "deposits" */
+export type Deposits_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Deposits_Stream_Cursor_Value_Input
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>
+}
+
+/** Initial value of the column from where the streaming should start */
+export type Deposits_Stream_Cursor_Value_Input = {
+  blockNumber?: InputMaybe<Scalars['numeric']['input']>
+  blockTimestamp?: InputMaybe<Scalars['numeric']['input']>
+  entryFee?: InputMaybe<Scalars['numeric']['input']>
+  id?: InputMaybe<Scalars['String']['input']>
+  isAtomWallet?: InputMaybe<Scalars['Int']['input']>
+  isTriple?: InputMaybe<Scalars['Int']['input']>
+  receiverId?: InputMaybe<Scalars['String']['input']>
+  receiverTotalSharesInVault?: InputMaybe<Scalars['numeric']['input']>
+  senderAssetsAfterTotalFees?: InputMaybe<Scalars['numeric']['input']>
+  senderId?: InputMaybe<Scalars['String']['input']>
+  sharesForReceiver?: InputMaybe<Scalars['numeric']['input']>
+  transactionHash?: InputMaybe<Scalars['bytea']['input']>
+  vaultId?: InputMaybe<Scalars['numeric']['input']>
 }
 
 /** aggregate sum on columns */
@@ -2280,6 +2483,28 @@ export type Events_Stddev_Samp_Fields = {
   tripleId?: Maybe<Scalars['Float']['output']>
 }
 
+/** Streaming cursor of the table "events" */
+export type Events_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Events_Stream_Cursor_Value_Input
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>
+}
+
+/** Initial value of the column from where the streaming should start */
+export type Events_Stream_Cursor_Value_Input = {
+  atomId?: InputMaybe<Scalars['numeric']['input']>
+  blockNumber?: InputMaybe<Scalars['numeric']['input']>
+  blockTimestamp?: InputMaybe<Scalars['numeric']['input']>
+  depositId?: InputMaybe<Scalars['String']['input']>
+  feeTransferId?: InputMaybe<Scalars['String']['input']>
+  id?: InputMaybe<Scalars['String']['input']>
+  redemptionId?: InputMaybe<Scalars['String']['input']>
+  transactionHash?: InputMaybe<Scalars['bytea']['input']>
+  tripleId?: InputMaybe<Scalars['numeric']['input']>
+  type?: InputMaybe<Scalars['String']['input']>
+}
+
 /** aggregate sum on columns */
 export type Events_Sum_Fields = {
   __typename?: 'events_sum_fields'
@@ -2337,6 +2562,17 @@ export type FeeTranfers_Aggregate = {
   __typename?: 'feeTranfers_aggregate'
   aggregate?: Maybe<FeeTranfers_Aggregate_Fields>
   nodes: Array<FeeTranfers>
+}
+
+export type FeeTranfers_Aggregate_Bool_Exp = {
+  count?: InputMaybe<FeeTranfers_Aggregate_Bool_Exp_Count>
+}
+
+export type FeeTranfers_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<FeeTranfers_Select_Column>>
+  distinct?: InputMaybe<Scalars['Boolean']['input']>
+  filter?: InputMaybe<FeeTranfers_Bool_Exp>
+  predicate: Int_Comparison_Exp
 }
 
 /** aggregate fields of "FeeTransfer" */
@@ -2524,6 +2760,25 @@ export type FeeTranfers_Stddev_Samp_Order_By = {
   blockTimestamp?: InputMaybe<Order_By>
 }
 
+/** Streaming cursor of the table "feeTranfers" */
+export type FeeTranfers_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: FeeTranfers_Stream_Cursor_Value_Input
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>
+}
+
+/** Initial value of the column from where the streaming should start */
+export type FeeTranfers_Stream_Cursor_Value_Input = {
+  amount?: InputMaybe<Scalars['numeric']['input']>
+  blockNumber?: InputMaybe<Scalars['numeric']['input']>
+  blockTimestamp?: InputMaybe<Scalars['numeric']['input']>
+  id?: InputMaybe<Scalars['String']['input']>
+  receiverId?: InputMaybe<Scalars['String']['input']>
+  senderId?: InputMaybe<Scalars['String']['input']>
+  transactionHash?: InputMaybe<Scalars['bytea']['input']>
+}
+
 /** aggregate sum on columns */
 export type FeeTranfers_Sum_Fields = {
   __typename?: 'feeTranfers_sum_fields'
@@ -2599,6 +2854,18 @@ export type Float8_Comparison_Exp = {
 
 export type Following_Args = {
   address?: InputMaybe<Scalars['String']['input']>
+}
+
+/** mutation root */
+export type Mutation_Root = {
+  __typename?: 'mutation_root'
+  /** Uploads Thing to IPFS */
+  uploadThing?: Maybe<ThingOutput>
+}
+
+/** mutation root */
+export type Mutation_RootUploadThingArgs = {
+  arg1: ThingInput
 }
 
 /** Boolean expression to compare columns of type "numeric". All fields are combined with logical 'AND'. */
@@ -2766,6 +3033,25 @@ export type Organizations_Stddev_Samp_Fields = {
   __typename?: 'organizations_stddev_samp_fields'
   atomId?: Maybe<Scalars['Float']['output']>
   id?: Maybe<Scalars['Float']['output']>
+}
+
+/** Streaming cursor of the table "organizations" */
+export type Organizations_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Organizations_Stream_Cursor_Value_Input
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>
+}
+
+/** Initial value of the column from where the streaming should start */
+export type Organizations_Stream_Cursor_Value_Input = {
+  atomId?: InputMaybe<Scalars['numeric']['input']>
+  description?: InputMaybe<Scalars['String']['input']>
+  email?: InputMaybe<Scalars['String']['input']>
+  id?: InputMaybe<Scalars['numeric']['input']>
+  image?: InputMaybe<Scalars['String']['input']>
+  name?: InputMaybe<Scalars['String']['input']>
+  url?: InputMaybe<Scalars['String']['input']>
 }
 
 /** aggregate sum on columns */
@@ -2942,6 +3228,26 @@ export type Persons_Stddev_Samp_Fields = {
   id?: Maybe<Scalars['Float']['output']>
 }
 
+/** Streaming cursor of the table "persons" */
+export type Persons_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Persons_Stream_Cursor_Value_Input
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>
+}
+
+/** Initial value of the column from where the streaming should start */
+export type Persons_Stream_Cursor_Value_Input = {
+  atomId?: InputMaybe<Scalars['numeric']['input']>
+  description?: InputMaybe<Scalars['String']['input']>
+  email?: InputMaybe<Scalars['String']['input']>
+  id?: InputMaybe<Scalars['numeric']['input']>
+  identifier?: InputMaybe<Scalars['String']['input']>
+  image?: InputMaybe<Scalars['String']['input']>
+  name?: InputMaybe<Scalars['String']['input']>
+  url?: InputMaybe<Scalars['String']['input']>
+}
+
 /** aggregate sum on columns */
 export type Persons_Sum_Fields = {
   __typename?: 'persons_sum_fields'
@@ -2988,6 +3294,17 @@ export type Positions_Aggregate = {
   __typename?: 'positions_aggregate'
   aggregate?: Maybe<Positions_Aggregate_Fields>
   nodes: Array<Positions>
+}
+
+export type Positions_Aggregate_Bool_Exp = {
+  count?: InputMaybe<Positions_Aggregate_Bool_Exp_Count>
+}
+
+export type Positions_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<Positions_Select_Column>>
+  distinct?: InputMaybe<Scalars['Boolean']['input']>
+  filter?: InputMaybe<Positions_Bool_Exp>
+  predicate: Int_Comparison_Exp
 }
 
 /** aggregate fields of "Position" */
@@ -3145,6 +3462,22 @@ export type Positions_Stddev_Samp_Fields = {
 export type Positions_Stddev_Samp_Order_By = {
   shares?: InputMaybe<Order_By>
   vaultId?: InputMaybe<Order_By>
+}
+
+/** Streaming cursor of the table "positions" */
+export type Positions_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Positions_Stream_Cursor_Value_Input
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>
+}
+
+/** Initial value of the column from where the streaming should start */
+export type Positions_Stream_Cursor_Value_Input = {
+  accountId?: InputMaybe<Scalars['String']['input']>
+  id?: InputMaybe<Scalars['String']['input']>
+  shares?: InputMaybe<Scalars['numeric']['input']>
+  vaultId?: InputMaybe<Scalars['numeric']['input']>
 }
 
 /** aggregate sum on columns */
@@ -3334,6 +3667,23 @@ export type PredicateObjects_Stddev_Samp_Fields = {
   objectId?: Maybe<Scalars['Float']['output']>
   predicateId?: Maybe<Scalars['Float']['output']>
   tripleCount?: Maybe<Scalars['Float']['output']>
+}
+
+/** Streaming cursor of the table "predicateObjects" */
+export type PredicateObjects_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: PredicateObjects_Stream_Cursor_Value_Input
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>
+}
+
+/** Initial value of the column from where the streaming should start */
+export type PredicateObjects_Stream_Cursor_Value_Input = {
+  claimCount?: InputMaybe<Scalars['Int']['input']>
+  id?: InputMaybe<Scalars['String']['input']>
+  objectId?: InputMaybe<Scalars['numeric']['input']>
+  predicateId?: InputMaybe<Scalars['numeric']['input']>
+  tripleCount?: InputMaybe<Scalars['Int']['input']>
 }
 
 /** aggregate sum on columns */
@@ -4003,6 +4353,17 @@ export type Redemptions_Aggregate = {
   nodes: Array<Redemptions>
 }
 
+export type Redemptions_Aggregate_Bool_Exp = {
+  count?: InputMaybe<Redemptions_Aggregate_Bool_Exp_Count>
+}
+
+export type Redemptions_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<Redemptions_Select_Column>>
+  distinct?: InputMaybe<Scalars['Boolean']['input']>
+  filter?: InputMaybe<Redemptions_Bool_Exp>
+  predicate: Int_Comparison_Exp
+}
+
 /** aggregate fields of "Redemption" */
 export type Redemptions_Aggregate_Fields = {
   __typename?: 'redemptions_aggregate_fields'
@@ -4254,6 +4615,29 @@ export type Redemptions_Stddev_Samp_Order_By = {
   vaultId?: InputMaybe<Order_By>
 }
 
+/** Streaming cursor of the table "redemptions" */
+export type Redemptions_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Redemptions_Stream_Cursor_Value_Input
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>
+}
+
+/** Initial value of the column from where the streaming should start */
+export type Redemptions_Stream_Cursor_Value_Input = {
+  assetsForReceiver?: InputMaybe<Scalars['numeric']['input']>
+  blockNumber?: InputMaybe<Scalars['numeric']['input']>
+  blockTimestamp?: InputMaybe<Scalars['numeric']['input']>
+  exitFee?: InputMaybe<Scalars['numeric']['input']>
+  id?: InputMaybe<Scalars['String']['input']>
+  receiverId?: InputMaybe<Scalars['String']['input']>
+  senderId?: InputMaybe<Scalars['String']['input']>
+  senderTotalSharesInVault?: InputMaybe<Scalars['numeric']['input']>
+  sharesRedeemedBySender?: InputMaybe<Scalars['numeric']['input']>
+  transactionHash?: InputMaybe<Scalars['bytea']['input']>
+  vaultId?: InputMaybe<Scalars['numeric']['input']>
+}
+
 /** aggregate sum on columns */
 export type Redemptions_Sum_Fields = {
   __typename?: 'redemptions_sum_fields'
@@ -4377,6 +4761,17 @@ export type Signals_Aggregate = {
   __typename?: 'signals_aggregate'
   aggregate?: Maybe<Signals_Aggregate_Fields>
   nodes: Array<Signals>
+}
+
+export type Signals_Aggregate_Bool_Exp = {
+  count?: InputMaybe<Signals_Aggregate_Bool_Exp_Count>
+}
+
+export type Signals_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<Signals_Select_Column>>
+  distinct?: InputMaybe<Scalars['Boolean']['input']>
+  filter?: InputMaybe<Signals_Bool_Exp>
+  predicate: Int_Comparison_Exp
 }
 
 /** aggregate fields of "Signal" */
@@ -4630,6 +5025,29 @@ export type Signals_Stddev_Samp_Order_By = {
   tripleId?: InputMaybe<Order_By>
 }
 
+/** Streaming cursor of the table "signals" */
+export type Signals_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Signals_Stream_Cursor_Value_Input
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>
+}
+
+/** Initial value of the column from where the streaming should start */
+export type Signals_Stream_Cursor_Value_Input = {
+  accountId?: InputMaybe<Scalars['String']['input']>
+  atomId?: InputMaybe<Scalars['numeric']['input']>
+  blockNumber?: InputMaybe<Scalars['numeric']['input']>
+  blockTimestamp?: InputMaybe<Scalars['numeric']['input']>
+  delta?: InputMaybe<Scalars['numeric']['input']>
+  depositId?: InputMaybe<Scalars['String']['input']>
+  id?: InputMaybe<Scalars['String']['input']>
+  redemptionId?: InputMaybe<Scalars['String']['input']>
+  relativeStrength?: InputMaybe<Scalars['numeric']['input']>
+  transactionHash?: InputMaybe<Scalars['bytea']['input']>
+  tripleId?: InputMaybe<Scalars['numeric']['input']>
+}
+
 /** aggregate sum on columns */
 export type Signals_Sum_Fields = {
   __typename?: 'signals_sum_fields'
@@ -4880,6 +5298,26 @@ export type StatHours_Stddev_Samp_Fields = {
   totalTriples?: Maybe<Scalars['Float']['output']>
 }
 
+/** Streaming cursor of the table "statHours" */
+export type StatHours_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: StatHours_Stream_Cursor_Value_Input
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>
+}
+
+/** Initial value of the column from where the streaming should start */
+export type StatHours_Stream_Cursor_Value_Input = {
+  contractBalance?: InputMaybe<Scalars['numeric']['input']>
+  id?: InputMaybe<Scalars['Int']['input']>
+  totalAccounts?: InputMaybe<Scalars['Int']['input']>
+  totalAtoms?: InputMaybe<Scalars['Int']['input']>
+  totalFees?: InputMaybe<Scalars['numeric']['input']>
+  totalPositions?: InputMaybe<Scalars['Int']['input']>
+  totalSignals?: InputMaybe<Scalars['Int']['input']>
+  totalTriples?: InputMaybe<Scalars['Int']['input']>
+}
+
 /** aggregate sum on columns */
 export type StatHours_Sum_Fields = {
   __typename?: 'statHours_sum_fields'
@@ -5098,6 +5536,26 @@ export type Stats_Stddev_Samp_Fields = {
   totalTriples?: Maybe<Scalars['Float']['output']>
 }
 
+/** Streaming cursor of the table "stats" */
+export type Stats_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Stats_Stream_Cursor_Value_Input
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>
+}
+
+/** Initial value of the column from where the streaming should start */
+export type Stats_Stream_Cursor_Value_Input = {
+  contractBalance?: InputMaybe<Scalars['numeric']['input']>
+  id?: InputMaybe<Scalars['Int']['input']>
+  totalAccounts?: InputMaybe<Scalars['Int']['input']>
+  totalAtoms?: InputMaybe<Scalars['Int']['input']>
+  totalFees?: InputMaybe<Scalars['numeric']['input']>
+  totalPositions?: InputMaybe<Scalars['Int']['input']>
+  totalSignals?: InputMaybe<Scalars['Int']['input']>
+  totalTriples?: InputMaybe<Scalars['Int']['input']>
+}
+
 /** aggregate sum on columns */
 export type Stats_Sum_Fields = {
   __typename?: 'stats_sum_fields'
@@ -5158,6 +5616,8 @@ export type Subscription_Root = {
   accounts: Array<Accounts>
   /** fetch aggregated fields from the table: "Account" */
   accounts_aggregate: Accounts_Aggregate
+  /** fetch data from the table in a streaming manner: "Account" */
+  accounts_stream: Array<Accounts>
   /** execute function "accounts_that_claim_about_account" which returns "Account" */
   accounts_that_claim_about_account: Array<Accounts>
   /** execute function "accounts_that_claim_about_account" and query aggregates on result of table type "Account" */
@@ -5170,20 +5630,28 @@ export type Subscription_Root = {
   atomValues: Array<AtomValues>
   /** fetch aggregated fields from the table: "AtomValue" */
   atomValues_aggregate: AtomValues_Aggregate
+  /** fetch data from the table in a streaming manner: "AtomValue" */
+  atomValues_stream: Array<AtomValues>
   /** fetch data from the table: "Atom" */
   atoms: Array<Atoms>
   /** fetch aggregated fields from the table: "Atom" */
   atoms_aggregate: Atoms_Aggregate
+  /** fetch data from the table in a streaming manner: "Atom" */
+  atoms_stream: Array<Atoms>
   /** fetch data from the table: "Book" using primary key columns */
   book?: Maybe<Books>
   /** fetch data from the table: "Book" */
   books: Array<Books>
   /** fetch aggregated fields from the table: "Book" */
   books_aggregate: Books_Aggregate
+  /** fetch data from the table in a streaming manner: "Book" */
+  books_stream: Array<Books>
   /** fetch data from the table: "ChainlinkPrice" using primary key columns */
   chainLinkPrice?: Maybe<ChainLinkPrices>
   /** fetch data from the table: "ChainlinkPrice" */
   chainLinkPrices: Array<ChainLinkPrices>
+  /** fetch data from the table in a streaming manner: "ChainlinkPrice" */
+  chainLinkPrices_stream: Array<ChainLinkPrices>
   /** fetch data from the table: "Claim" using primary key columns */
   claim?: Maybe<Claims>
   /** An array relationship */
@@ -5194,22 +5662,30 @@ export type Subscription_Root = {
   claims_from_following: Array<Claims>
   /** execute function "claims_from_following" and query aggregates on result of table type "Claim" */
   claims_from_following_aggregate: Claims_Aggregate
+  /** fetch data from the table in a streaming manner: "Claim" */
+  claims_stream: Array<Claims>
   /** fetch data from the table: "Deposit" using primary key columns */
   deposit?: Maybe<Deposits>
   /** An array relationship */
   deposits: Array<Deposits>
   /** An aggregate relationship */
   deposits_aggregate: Deposits_Aggregate
+  /** fetch data from the table in a streaming manner: "Deposit" */
+  deposits_stream: Array<Deposits>
   /** fetch data from the table: "Event" using primary key columns */
   event?: Maybe<Events>
   /** fetch data from the table: "Event" */
   events: Array<Events>
   /** fetch aggregated fields from the table: "Event" */
   events_aggregate: Events_Aggregate
+  /** fetch data from the table in a streaming manner: "Event" */
+  events_stream: Array<Events>
   /** fetch data from the table: "FeeTransfer" */
   feeTranfers: Array<FeeTranfers>
   /** fetch aggregated fields from the table: "FeeTransfer" */
   feeTranfers_aggregate: FeeTranfers_Aggregate
+  /** fetch data from the table in a streaming manner: "FeeTransfer" */
+  feeTranfers_stream: Array<FeeTranfers>
   /** fetch data from the table: "FeeTransfer" using primary key columns */
   feeTransfers?: Maybe<FeeTranfers>
   /** execute function "following" which returns "Account" */
@@ -5222,30 +5698,40 @@ export type Subscription_Root = {
   organizations: Array<Organizations>
   /** fetch aggregated fields from the table: "Organization" */
   organizations_aggregate: Organizations_Aggregate
+  /** fetch data from the table in a streaming manner: "Organization" */
+  organizations_stream: Array<Organizations>
   /** fetch data from the table: "Person" using primary key columns */
   person?: Maybe<Persons>
   /** fetch data from the table: "Person" */
   persons: Array<Persons>
   /** fetch aggregated fields from the table: "Person" */
   persons_aggregate: Persons_Aggregate
+  /** fetch data from the table in a streaming manner: "Person" */
+  persons_stream: Array<Persons>
   /** fetch data from the table: "Position" using primary key columns */
   position?: Maybe<Positions>
   /** An array relationship */
   positions: Array<Positions>
   /** An aggregate relationship */
   positions_aggregate: Positions_Aggregate
+  /** fetch data from the table in a streaming manner: "Position" */
+  positions_stream: Array<Positions>
   /** fetch data from the table: "PredicateObject" using primary key columns */
   predicateObject?: Maybe<PredicateObjects>
   /** fetch data from the table: "PredicateObject" */
   predicateObjects: Array<PredicateObjects>
   /** fetch aggregated fields from the table: "PredicateObject" */
   predicateObjects_aggregate: PredicateObjects_Aggregate
+  /** fetch data from the table in a streaming manner: "PredicateObject" */
+  predicateObjects_stream: Array<PredicateObjects>
   /** fetch data from the table: "Redemption" using primary key columns */
   redemption?: Maybe<Redemptions>
   /** An array relationship */
   redemptions: Array<Redemptions>
   /** An aggregate relationship */
   redemptions_aggregate: Redemptions_Aggregate
+  /** fetch data from the table in a streaming manner: "Redemption" */
+  redemptions_stream: Array<Redemptions>
   /** fetch data from the table: "Signal" using primary key columns */
   signal?: Maybe<Signals>
   /** An array relationship */
@@ -5256,6 +5742,8 @@ export type Subscription_Root = {
   signals_from_following: Array<Signals>
   /** execute function "signals_from_following" and query aggregates on result of table type "Signal" */
   signals_from_following_aggregate: Signals_Aggregate
+  /** fetch data from the table in a streaming manner: "Signal" */
+  signals_stream: Array<Signals>
   /** fetch data from the table: "Stats" using primary key columns */
   stat?: Maybe<Stats>
   /** fetch data from the table: "StatsHour" using primary key columns */
@@ -5264,28 +5752,38 @@ export type Subscription_Root = {
   statHours: Array<StatHours>
   /** fetch aggregated fields from the table: "StatsHour" */
   statHours_aggregate: StatHours_Aggregate
+  /** fetch data from the table in a streaming manner: "StatsHour" */
+  statHours_stream: Array<StatHours>
   /** fetch data from the table: "Stats" */
   stats: Array<Stats>
   /** fetch aggregated fields from the table: "Stats" */
   stats_aggregate: Stats_Aggregate
+  /** fetch data from the table in a streaming manner: "Stats" */
+  stats_stream: Array<Stats>
   /** fetch data from the table: "Thing" using primary key columns */
   thing?: Maybe<Things>
   /** fetch data from the table: "Thing" */
   things: Array<Things>
   /** fetch aggregated fields from the table: "Thing" */
   things_aggregate: Things_Aggregate
+  /** fetch data from the table in a streaming manner: "Thing" */
+  things_stream: Array<Things>
   /** fetch data from the table: "Triple" using primary key columns */
   triple?: Maybe<Triples>
   /** fetch data from the table: "Triple" */
   triples: Array<Triples>
   /** fetch aggregated fields from the table: "Triple" */
   triples_aggregate: Triples_Aggregate
+  /** fetch data from the table in a streaming manner: "Triple" */
+  triples_stream: Array<Triples>
   /** fetch data from the table: "Vault" using primary key columns */
   vault?: Maybe<Vaults>
   /** fetch data from the table: "Vault" */
   vaults: Array<Vaults>
   /** fetch aggregated fields from the table: "Vault" */
   vaults_aggregate: Vaults_Aggregate
+  /** fetch data from the table in a streaming manner: "Vault" */
+  vaults_stream: Array<Vaults>
 }
 
 export type Subscription_RootAccountArgs = {
@@ -5305,6 +5803,12 @@ export type Subscription_RootAccounts_AggregateArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>
   offset?: InputMaybe<Scalars['Int']['input']>
   order_by?: InputMaybe<Array<Accounts_Order_By>>
+  where?: InputMaybe<Accounts_Bool_Exp>
+}
+
+export type Subscription_RootAccounts_StreamArgs = {
+  batch_size: Scalars['Int']['input']
+  cursor: Array<InputMaybe<Accounts_Stream_Cursor_Input>>
   where?: InputMaybe<Accounts_Bool_Exp>
 }
 
@@ -5350,6 +5854,12 @@ export type Subscription_RootAtomValues_AggregateArgs = {
   where?: InputMaybe<AtomValues_Bool_Exp>
 }
 
+export type Subscription_RootAtomValues_StreamArgs = {
+  batch_size: Scalars['Int']['input']
+  cursor: Array<InputMaybe<AtomValues_Stream_Cursor_Input>>
+  where?: InputMaybe<AtomValues_Bool_Exp>
+}
+
 export type Subscription_RootAtomsArgs = {
   distinct_on?: InputMaybe<Array<Atoms_Select_Column>>
   limit?: InputMaybe<Scalars['Int']['input']>
@@ -5363,6 +5873,12 @@ export type Subscription_RootAtoms_AggregateArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>
   offset?: InputMaybe<Scalars['Int']['input']>
   order_by?: InputMaybe<Array<Atoms_Order_By>>
+  where?: InputMaybe<Atoms_Bool_Exp>
+}
+
+export type Subscription_RootAtoms_StreamArgs = {
+  batch_size: Scalars['Int']['input']
+  cursor: Array<InputMaybe<Atoms_Stream_Cursor_Input>>
   where?: InputMaybe<Atoms_Bool_Exp>
 }
 
@@ -5386,6 +5902,12 @@ export type Subscription_RootBooks_AggregateArgs = {
   where?: InputMaybe<Books_Bool_Exp>
 }
 
+export type Subscription_RootBooks_StreamArgs = {
+  batch_size: Scalars['Int']['input']
+  cursor: Array<InputMaybe<Books_Stream_Cursor_Input>>
+  where?: InputMaybe<Books_Bool_Exp>
+}
+
 export type Subscription_RootChainLinkPriceArgs = {
   id: Scalars['numeric']['input']
 }
@@ -5395,6 +5917,12 @@ export type Subscription_RootChainLinkPricesArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>
   offset?: InputMaybe<Scalars['Int']['input']>
   order_by?: InputMaybe<Array<ChainLinkPrices_Order_By>>
+  where?: InputMaybe<ChainLinkPrices_Bool_Exp>
+}
+
+export type Subscription_RootChainLinkPrices_StreamArgs = {
+  batch_size: Scalars['Int']['input']
+  cursor: Array<InputMaybe<ChainLinkPrices_Stream_Cursor_Input>>
   where?: InputMaybe<ChainLinkPrices_Bool_Exp>
 }
 
@@ -5436,6 +5964,12 @@ export type Subscription_RootClaims_From_Following_AggregateArgs = {
   where?: InputMaybe<Claims_Bool_Exp>
 }
 
+export type Subscription_RootClaims_StreamArgs = {
+  batch_size: Scalars['Int']['input']
+  cursor: Array<InputMaybe<Claims_Stream_Cursor_Input>>
+  where?: InputMaybe<Claims_Bool_Exp>
+}
+
 export type Subscription_RootDepositArgs = {
   id: Scalars['String']['input']
 }
@@ -5453,6 +5987,12 @@ export type Subscription_RootDeposits_AggregateArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>
   offset?: InputMaybe<Scalars['Int']['input']>
   order_by?: InputMaybe<Array<Deposits_Order_By>>
+  where?: InputMaybe<Deposits_Bool_Exp>
+}
+
+export type Subscription_RootDeposits_StreamArgs = {
+  batch_size: Scalars['Int']['input']
+  cursor: Array<InputMaybe<Deposits_Stream_Cursor_Input>>
   where?: InputMaybe<Deposits_Bool_Exp>
 }
 
@@ -5476,6 +6016,12 @@ export type Subscription_RootEvents_AggregateArgs = {
   where?: InputMaybe<Events_Bool_Exp>
 }
 
+export type Subscription_RootEvents_StreamArgs = {
+  batch_size: Scalars['Int']['input']
+  cursor: Array<InputMaybe<Events_Stream_Cursor_Input>>
+  where?: InputMaybe<Events_Bool_Exp>
+}
+
 export type Subscription_RootFeeTranfersArgs = {
   distinct_on?: InputMaybe<Array<FeeTranfers_Select_Column>>
   limit?: InputMaybe<Scalars['Int']['input']>
@@ -5489,6 +6035,12 @@ export type Subscription_RootFeeTranfers_AggregateArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>
   offset?: InputMaybe<Scalars['Int']['input']>
   order_by?: InputMaybe<Array<FeeTranfers_Order_By>>
+  where?: InputMaybe<FeeTranfers_Bool_Exp>
+}
+
+export type Subscription_RootFeeTranfers_StreamArgs = {
+  batch_size: Scalars['Int']['input']
+  cursor: Array<InputMaybe<FeeTranfers_Stream_Cursor_Input>>
   where?: InputMaybe<FeeTranfers_Bool_Exp>
 }
 
@@ -5534,6 +6086,12 @@ export type Subscription_RootOrganizations_AggregateArgs = {
   where?: InputMaybe<Organizations_Bool_Exp>
 }
 
+export type Subscription_RootOrganizations_StreamArgs = {
+  batch_size: Scalars['Int']['input']
+  cursor: Array<InputMaybe<Organizations_Stream_Cursor_Input>>
+  where?: InputMaybe<Organizations_Bool_Exp>
+}
+
 export type Subscription_RootPersonArgs = {
   id: Scalars['numeric']['input']
 }
@@ -5551,6 +6109,12 @@ export type Subscription_RootPersons_AggregateArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>
   offset?: InputMaybe<Scalars['Int']['input']>
   order_by?: InputMaybe<Array<Persons_Order_By>>
+  where?: InputMaybe<Persons_Bool_Exp>
+}
+
+export type Subscription_RootPersons_StreamArgs = {
+  batch_size: Scalars['Int']['input']
+  cursor: Array<InputMaybe<Persons_Stream_Cursor_Input>>
   where?: InputMaybe<Persons_Bool_Exp>
 }
 
@@ -5574,6 +6138,12 @@ export type Subscription_RootPositions_AggregateArgs = {
   where?: InputMaybe<Positions_Bool_Exp>
 }
 
+export type Subscription_RootPositions_StreamArgs = {
+  batch_size: Scalars['Int']['input']
+  cursor: Array<InputMaybe<Positions_Stream_Cursor_Input>>
+  where?: InputMaybe<Positions_Bool_Exp>
+}
+
 export type Subscription_RootPredicateObjectArgs = {
   id: Scalars['String']['input']
 }
@@ -5594,6 +6164,12 @@ export type Subscription_RootPredicateObjects_AggregateArgs = {
   where?: InputMaybe<PredicateObjects_Bool_Exp>
 }
 
+export type Subscription_RootPredicateObjects_StreamArgs = {
+  batch_size: Scalars['Int']['input']
+  cursor: Array<InputMaybe<PredicateObjects_Stream_Cursor_Input>>
+  where?: InputMaybe<PredicateObjects_Bool_Exp>
+}
+
 export type Subscription_RootRedemptionArgs = {
   id: Scalars['String']['input']
 }
@@ -5611,6 +6187,12 @@ export type Subscription_RootRedemptions_AggregateArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>
   offset?: InputMaybe<Scalars['Int']['input']>
   order_by?: InputMaybe<Array<Redemptions_Order_By>>
+  where?: InputMaybe<Redemptions_Bool_Exp>
+}
+
+export type Subscription_RootRedemptions_StreamArgs = {
+  batch_size: Scalars['Int']['input']
+  cursor: Array<InputMaybe<Redemptions_Stream_Cursor_Input>>
   where?: InputMaybe<Redemptions_Bool_Exp>
 }
 
@@ -5652,6 +6234,12 @@ export type Subscription_RootSignals_From_Following_AggregateArgs = {
   where?: InputMaybe<Signals_Bool_Exp>
 }
 
+export type Subscription_RootSignals_StreamArgs = {
+  batch_size: Scalars['Int']['input']
+  cursor: Array<InputMaybe<Signals_Stream_Cursor_Input>>
+  where?: InputMaybe<Signals_Bool_Exp>
+}
+
 export type Subscription_RootStatArgs = {
   id: Scalars['Int']['input']
 }
@@ -5676,6 +6264,12 @@ export type Subscription_RootStatHours_AggregateArgs = {
   where?: InputMaybe<StatHours_Bool_Exp>
 }
 
+export type Subscription_RootStatHours_StreamArgs = {
+  batch_size: Scalars['Int']['input']
+  cursor: Array<InputMaybe<StatHours_Stream_Cursor_Input>>
+  where?: InputMaybe<StatHours_Bool_Exp>
+}
+
 export type Subscription_RootStatsArgs = {
   distinct_on?: InputMaybe<Array<Stats_Select_Column>>
   limit?: InputMaybe<Scalars['Int']['input']>
@@ -5689,6 +6283,12 @@ export type Subscription_RootStats_AggregateArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>
   offset?: InputMaybe<Scalars['Int']['input']>
   order_by?: InputMaybe<Array<Stats_Order_By>>
+  where?: InputMaybe<Stats_Bool_Exp>
+}
+
+export type Subscription_RootStats_StreamArgs = {
+  batch_size: Scalars['Int']['input']
+  cursor: Array<InputMaybe<Stats_Stream_Cursor_Input>>
   where?: InputMaybe<Stats_Bool_Exp>
 }
 
@@ -5712,6 +6312,12 @@ export type Subscription_RootThings_AggregateArgs = {
   where?: InputMaybe<Things_Bool_Exp>
 }
 
+export type Subscription_RootThings_StreamArgs = {
+  batch_size: Scalars['Int']['input']
+  cursor: Array<InputMaybe<Things_Stream_Cursor_Input>>
+  where?: InputMaybe<Things_Bool_Exp>
+}
+
 export type Subscription_RootTripleArgs = {
   id: Scalars['numeric']['input']
 }
@@ -5732,6 +6338,12 @@ export type Subscription_RootTriples_AggregateArgs = {
   where?: InputMaybe<Triples_Bool_Exp>
 }
 
+export type Subscription_RootTriples_StreamArgs = {
+  batch_size: Scalars['Int']['input']
+  cursor: Array<InputMaybe<Triples_Stream_Cursor_Input>>
+  where?: InputMaybe<Triples_Bool_Exp>
+}
+
 export type Subscription_RootVaultArgs = {
   id: Scalars['numeric']['input']
 }
@@ -5749,6 +6361,12 @@ export type Subscription_RootVaults_AggregateArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>
   offset?: InputMaybe<Scalars['Int']['input']>
   order_by?: InputMaybe<Array<Vaults_Order_By>>
+  where?: InputMaybe<Vaults_Bool_Exp>
+}
+
+export type Subscription_RootVaults_StreamArgs = {
+  batch_size: Scalars['Int']['input']
+  cursor: Array<InputMaybe<Vaults_Stream_Cursor_Input>>
   where?: InputMaybe<Vaults_Bool_Exp>
 }
 
@@ -5884,6 +6502,24 @@ export type Things_Stddev_Samp_Fields = {
   id?: Maybe<Scalars['Float']['output']>
 }
 
+/** Streaming cursor of the table "things" */
+export type Things_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Things_Stream_Cursor_Value_Input
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>
+}
+
+/** Initial value of the column from where the streaming should start */
+export type Things_Stream_Cursor_Value_Input = {
+  atomId?: InputMaybe<Scalars['numeric']['input']>
+  description?: InputMaybe<Scalars['String']['input']>
+  id?: InputMaybe<Scalars['numeric']['input']>
+  image?: InputMaybe<Scalars['String']['input']>
+  name?: InputMaybe<Scalars['String']['input']>
+  url?: InputMaybe<Scalars['String']['input']>
+}
+
 /** aggregate sum on columns */
 export type Things_Sum_Fields = {
   __typename?: 'things_sum_fields'
@@ -5945,6 +6581,17 @@ export type Triples_Aggregate = {
   __typename?: 'triples_aggregate'
   aggregate?: Maybe<Triples_Aggregate_Fields>
   nodes: Array<Triples>
+}
+
+export type Triples_Aggregate_Bool_Exp = {
+  count?: InputMaybe<Triples_Aggregate_Bool_Exp_Count>
+}
+
+export type Triples_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<Triples_Select_Column>>
+  distinct?: InputMaybe<Scalars['Boolean']['input']>
+  filter?: InputMaybe<Triples_Bool_Exp>
+  predicate: Int_Comparison_Exp
 }
 
 /** aggregate fields of "Triple" */
@@ -6212,6 +6859,29 @@ export type Triples_Stddev_Samp_Order_By = {
   vaultId?: InputMaybe<Order_By>
 }
 
+/** Streaming cursor of the table "triples" */
+export type Triples_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Triples_Stream_Cursor_Value_Input
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>
+}
+
+/** Initial value of the column from where the streaming should start */
+export type Triples_Stream_Cursor_Value_Input = {
+  blockNumber?: InputMaybe<Scalars['numeric']['input']>
+  blockTimestamp?: InputMaybe<Scalars['numeric']['input']>
+  counterVaultId?: InputMaybe<Scalars['numeric']['input']>
+  creatorId?: InputMaybe<Scalars['String']['input']>
+  id?: InputMaybe<Scalars['numeric']['input']>
+  label?: InputMaybe<Scalars['String']['input']>
+  objectId?: InputMaybe<Scalars['numeric']['input']>
+  predicateId?: InputMaybe<Scalars['numeric']['input']>
+  subjectId?: InputMaybe<Scalars['numeric']['input']>
+  transactionHash?: InputMaybe<Scalars['bytea']['input']>
+  vaultId?: InputMaybe<Scalars['numeric']['input']>
+}
+
 /** aggregate sum on columns */
 export type Triples_Sum_Fields = {
   __typename?: 'triples_sum_fields'
@@ -6422,9 +7092,11 @@ export type Vaults_Bool_Exp = {
   atomId?: InputMaybe<Numeric_Comparison_Exp>
   currentSharePrice?: InputMaybe<Numeric_Comparison_Exp>
   deposits?: InputMaybe<Deposits_Bool_Exp>
+  deposits_aggregate?: InputMaybe<Deposits_Aggregate_Bool_Exp>
   id?: InputMaybe<Numeric_Comparison_Exp>
   positionCount?: InputMaybe<Int_Comparison_Exp>
   positions?: InputMaybe<Positions_Bool_Exp>
+  positions_aggregate?: InputMaybe<Positions_Aggregate_Bool_Exp>
   redemptions?: InputMaybe<Redemptions_Bool_Exp>
   totalShares?: InputMaybe<Numeric_Comparison_Exp>
   triple?: InputMaybe<Triples_Bool_Exp>
@@ -6514,6 +7186,24 @@ export type Vaults_Stddev_Samp_Fields = {
   positionCount?: Maybe<Scalars['Float']['output']>
   totalShares?: Maybe<Scalars['Float']['output']>
   tripleId?: Maybe<Scalars['Float']['output']>
+}
+
+/** Streaming cursor of the table "vaults" */
+export type Vaults_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Vaults_Stream_Cursor_Value_Input
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>
+}
+
+/** Initial value of the column from where the streaming should start */
+export type Vaults_Stream_Cursor_Value_Input = {
+  atomId?: InputMaybe<Scalars['numeric']['input']>
+  currentSharePrice?: InputMaybe<Scalars['numeric']['input']>
+  id?: InputMaybe<Scalars['numeric']['input']>
+  positionCount?: InputMaybe<Scalars['Int']['input']>
+  totalShares?: InputMaybe<Scalars['numeric']['input']>
+  tripleId?: InputMaybe<Scalars['numeric']['input']>
 }
 
 /** aggregate sum on columns */
