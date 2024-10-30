@@ -7450,6 +7450,63 @@ export type GetAtomsQuery = {
   }>
 }
 
+export type GetClaimsByAddressQueryVariables = Exact<{
+  address?: InputMaybe<Scalars['String']['input']>
+}>
+
+export type GetClaimsByAddressQuery = {
+  __typename?: 'query_root'
+  claims_aggregate: {
+    __typename?: 'claims_aggregate'
+    nodes: Array<{
+      __typename?: 'claims'
+      id: string
+      vaultId: any
+      counterVaultId: any
+      shares: any
+      counterShares: any
+      account?: { __typename?: 'accounts'; label: string } | null
+      triple?: {
+        __typename?: 'triples'
+        subject?: { __typename?: 'atoms'; label?: string | null } | null
+        predicate?: { __typename?: 'atoms'; label?: string | null } | null
+        object?: { __typename?: 'atoms'; label?: string | null } | null
+      } | null
+    }>
+  }
+}
+
+export type GetListItemsQueryVariables = Exact<{
+  objectId?: InputMaybe<Scalars['numeric']['input']>
+}>
+
+export type GetListItemsQuery = {
+  __typename?: 'query_root'
+  triples: Array<{
+    __typename?: 'triples'
+    vaultId: any
+    counterVaultId: any
+    vault?: {
+      __typename?: 'vaults'
+      atomId?: any | null
+      currentSharePrice: any
+      id: any
+      positionCount: number
+      totalShares: any
+      tripleId?: any | null
+    } | null
+    counterVault?: {
+      __typename?: 'vaults'
+      atomId?: any | null
+      currentSharePrice: any
+      id: any
+      positionCount: number
+      totalShares: any
+      tripleId?: any | null
+    } | null
+  }>
+}
+
 export type GetTripleQueryVariables = Exact<{
   tripleId: Scalars['numeric']['input']
 }>
@@ -7802,6 +7859,132 @@ useGetAtomsQuery.fetcher = (
 ) =>
   fetcher<GetAtomsQuery, GetAtomsQueryVariables>(
     GetAtomsDocument,
+    variables,
+    options,
+  )
+
+export const GetClaimsByAddressDocument = `
+    query GetClaimsByAddress($address: String) {
+  claims_aggregate(where: {accountId: {_eq: $address}}) {
+    nodes {
+      account {
+        label
+      }
+      triple {
+        subject {
+          label
+        }
+        predicate {
+          label
+        }
+        object {
+          label
+        }
+      }
+      id
+      vaultId
+      counterVaultId
+      shares
+      counterShares
+    }
+  }
+}
+    `
+
+export const useGetClaimsByAddressQuery = <
+  TData = GetClaimsByAddressQuery,
+  TError = unknown,
+>(
+  variables?: GetClaimsByAddressQueryVariables,
+  options?: Omit<
+    UseQueryOptions<GetClaimsByAddressQuery, TError, TData>,
+    'queryKey'
+  > & {
+    queryKey?: UseQueryOptions<
+      GetClaimsByAddressQuery,
+      TError,
+      TData
+    >['queryKey']
+  },
+) => {
+  return useQuery<GetClaimsByAddressQuery, TError, TData>({
+    queryKey:
+      variables === undefined
+        ? ['GetClaimsByAddress']
+        : ['GetClaimsByAddress', variables],
+    queryFn: fetcher<GetClaimsByAddressQuery, GetClaimsByAddressQueryVariables>(
+      GetClaimsByAddressDocument,
+      variables,
+    ),
+    ...options,
+  })
+}
+
+useGetClaimsByAddressQuery.document = GetClaimsByAddressDocument
+
+useGetClaimsByAddressQuery.getKey = (
+  variables?: GetClaimsByAddressQueryVariables,
+) =>
+  variables === undefined
+    ? ['GetClaimsByAddress']
+    : ['GetClaimsByAddress', variables]
+
+useGetClaimsByAddressQuery.fetcher = (
+  variables?: GetClaimsByAddressQueryVariables,
+  options?: RequestInit['headers'],
+) =>
+  fetcher<GetClaimsByAddressQuery, GetClaimsByAddressQueryVariables>(
+    GetClaimsByAddressDocument,
+    variables,
+    options,
+  )
+
+export const GetListItemsDocument = `
+    query GetListItems($objectId: numeric) {
+  triples(
+    where: {predicateId: {_eq: 4}, objectId: {_eq: $objectId}}
+    order_by: [{vault: {positionCount: desc}, counterVault: {positionCount: desc}}]
+  ) {
+    ...TripleVaultDetails
+  }
+}
+    ${TripleVaultDetailsFragmentDoc}
+${VaultDetailsFragmentDoc}`
+
+export const useGetListItemsQuery = <
+  TData = GetListItemsQuery,
+  TError = unknown,
+>(
+  variables?: GetListItemsQueryVariables,
+  options?: Omit<
+    UseQueryOptions<GetListItemsQuery, TError, TData>,
+    'queryKey'
+  > & {
+    queryKey?: UseQueryOptions<GetListItemsQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useQuery<GetListItemsQuery, TError, TData>({
+    queryKey:
+      variables === undefined ? ['GetListItems'] : ['GetListItems', variables],
+    queryFn: fetcher<GetListItemsQuery, GetListItemsQueryVariables>(
+      GetListItemsDocument,
+      variables,
+    ),
+    ...options,
+  })
+}
+
+useGetListItemsQuery.document = GetListItemsDocument
+
+useGetListItemsQuery.getKey = (variables?: GetListItemsQueryVariables) =>
+  variables === undefined ? ['GetListItems'] : ['GetListItems', variables]
+
+useGetListItemsQuery.fetcher = (
+  variables?: GetListItemsQueryVariables,
+  options?: RequestInit['headers'],
+) =>
+  fetcher<GetListItemsQuery, GetListItemsQueryVariables>(
+    GetListItemsDocument,
     variables,
     options,
   )

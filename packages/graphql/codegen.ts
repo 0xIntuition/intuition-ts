@@ -4,7 +4,7 @@ import type { Types } from '@graphql-codegen/plugin-helpers'
 const commonGenerateOptions: Types.ConfiguredOutput = {
   config: {
     reactQueryVersion: 5,
-    fetcher: "@/client#fetcher",
+    fetcher: '@/client#fetcher',
     exposeDocument: true,
     exposeFetcher: true,
     exposeQueryKeys: true,
@@ -28,11 +28,11 @@ const commonGenerateOptions: Types.ConfiguredOutput = {
 const config: CodegenConfig = {
   overwrite: true,
   hooks: { afterAllFileWrite: ['prettier --write'] },
-  schema: process.env.VITE_HASURA_PROJECT_ENDPOINT
-    ? [process.env.VITE_HASURA_PROJECT_ENDPOINT]
-    : [],
-  ignoreNoDocuments: true, // for better experience with the watcher
-  documents: ["**/*.graphql"],
+  schema: process.env.HASURA_PROJECT_ENDPOINT
+    ? [process.env.HASURA_PROJECT_ENDPOINT]
+    : ['./schema.graphql'],
+  ignoreNoDocuments: true,
+  documents: ['**/*.graphql'],
   generates: {
     './src/generated/index.ts': {
       config: {
@@ -44,9 +44,9 @@ const config: CodegenConfig = {
     './schema.graphql': {
       plugins: ['schema-ast'],
       config: {
-        includeDirectives: true
-      }
-    }
+        includeDirectives: true,
+      },
+    },
   },
   watch: true,
 }
