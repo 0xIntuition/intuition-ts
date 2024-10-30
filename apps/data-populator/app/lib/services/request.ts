@@ -121,7 +121,7 @@ export async function getRequest(
   //   query = query.eq('sender', sender);
   // }
 
-  const { data, error } = await query
+  const { data, error } = (await query) as any // TODO: fix this
 
   if (error || !data) {
     throw new Error(
@@ -160,5 +160,5 @@ export async function getMyRequests(
     throw new Error(`Error fetching requests: ${error.message}`)
   }
 
-  return data as RequestData[]
+  return data as unknown as RequestData[] // TODO: fix this
 }

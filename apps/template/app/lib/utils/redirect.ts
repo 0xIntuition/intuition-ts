@@ -16,7 +16,7 @@ export async function getRedirectToUrl(
   const redirectTo =
     options.redirectTo === null
       ? null
-      : options.redirectTo ?? `${requestUrl.pathname}${requestUrl.search}`
+      : (options.redirectTo ?? `${requestUrl.pathname}${requestUrl.search}`)
 
   // Create URLSearchParams if redirectTo is not null
   const params = redirectTo ? new URLSearchParams({ redirectTo }) : null

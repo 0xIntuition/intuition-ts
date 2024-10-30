@@ -106,8 +106,9 @@ export default function StakeModal({
   } else if (claim) {
     user_conviction =
       direction === 'for'
-        ? vaultDetails.user_conviction ?? claim.user_conviction_for
-        : vaultDetails.user_conviction_against ?? claim.user_conviction_against
+        ? (vaultDetails.user_conviction ?? claim.user_conviction_for)
+        : (vaultDetails.user_conviction_against ??
+          claim.user_conviction_against)
   }
 
   let conviction_price: string = '0'
@@ -117,9 +118,9 @@ export default function StakeModal({
   } else if (claim) {
     conviction_price =
       direction === 'for'
-        ? vaultDetails.conviction_price ?? claim.for_conviction_price
-        : vaultDetails.against_conviction_price ??
-          claim.against_conviction_price
+        ? (vaultDetails.conviction_price ?? claim.for_conviction_price)
+        : (vaultDetails.against_conviction_price ??
+          claim.against_conviction_price)
   }
 
   let user_assets: string = '0'
@@ -128,8 +129,8 @@ export default function StakeModal({
   } else if (claim) {
     user_assets =
       direction === 'for'
-        ? vaultDetails.user_assets ?? claim.user_assets_for
-        : vaultDetails.user_assets_against ?? claim.user_assets_against
+        ? (vaultDetails.user_assets ?? claim.user_assets_for)
+        : (vaultDetails.user_assets_against ?? claim.user_assets_against)
   }
 
   const { min_deposit } = vaultDetails

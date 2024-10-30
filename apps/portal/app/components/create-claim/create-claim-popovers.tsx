@@ -119,8 +119,8 @@ export const IdentityPopover: React.FC<IdentityPopoverProps> = ({
                     name={getAtomLabel(selectedIdentity)}
                     id={
                       selectedIdentity.is_user === true
-                        ? selectedIdentity.user?.ens_name ??
-                          sliceString(selectedIdentity.user?.wallet, 6, 4)
+                        ? (selectedIdentity.user?.ens_name ??
+                          sliceString(selectedIdentity.user?.wallet, 6, 4))
                         : selectedIdentity.identity_id
                     }
                     stats={

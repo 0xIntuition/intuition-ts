@@ -1,6 +1,5 @@
 import * as React from 'react'
 
-import { PrimitiveButtonProps } from '@radix-ui/react-dialog'
 import * as TabsPrimitive from '@radix-ui/react-tabs'
 import { cva, type VariantProps } from 'class-variance-authority'
 
@@ -44,10 +43,10 @@ const tabsTriggerVariants = cva(
 )
 
 export interface TabsTriggerProps
-  extends PrimitiveButtonProps,
+  extends React.ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger>,
     VariantProps<typeof tabsTriggerVariants> {
   value: string
-  label: React.ReactNode // Updated to accept ReactNode
+  label: React.ReactNode
   totalCount?: number
 }
 

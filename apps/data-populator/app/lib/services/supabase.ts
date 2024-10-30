@@ -36,11 +36,11 @@ export async function insertIntoMapping(
 
 // Function to search for a value by key in the mapping table
 export async function searchMapping(key: string): Promise<string | null> {
-  const { data, error } = await supabase
+  const { data, error } = (await supabase
     .from(imageMappingTable)
     .select('value')
     .eq('key', key)
-    .single()
+    .single()) as any // TODO: fix this
 
   if (error) {
     if (error.code === 'PGRST116') {
@@ -152,7 +152,7 @@ export async function searchAtomLog(
     return []
   }
 
-  return data as unknown as AtomLogEntry[]
+  return data as unknown as AtomLogEntry[] // TODO: fix this
 }
 
 // Function to search the triple_log table based on various criteria
@@ -203,7 +203,7 @@ export async function searchTripleLog(
     return []
   }
 
-  return data as TripleLogEntry[]
+  return data as unknown as TripleLogEntry[] // TODO: fix this
 }
 
 export async function getAtomsBySender(
@@ -278,11 +278,11 @@ export async function getMyTriples(
 }
 
 export async function getAtomURI(id: string): Promise<string | null> {
-  const { data, error } = await supabase
+  const { data, error } = (await supabase
     .from(uriTable)
     .select('uri')
     .eq('id', id)
-    .single()
+    .single()) as any // TODO: fix this
 
   if (error) {
     console.error('Error getting URI:', error)
@@ -293,11 +293,11 @@ export async function getAtomURI(id: string): Promise<string | null> {
 }
 
 export async function getAtomID(uri: string): Promise<string | null> {
-  const { data, error } = await supabase
+  const { data, error } = (await supabase
     .from(uriTable)
     .select('id')
     .eq('uri', uri)
-    .single()
+    .single()) as any // TODO: fix this
 
   if (error) {
     console.error('Error getting ID:', error)
@@ -327,11 +327,11 @@ export interface Triple {
 }
 
 export async function getTripleID(hash: string): Promise<string | null> {
-  const { data, error } = await supabase
+  const { data, error } = (await supabase
     .from(tripleTable)
     .select('id')
     .eq('hash', hash)
-    .single()
+    .single()) as any // TODO: fix this
 
   if (error) {
     if (error.code !== 'PGRST116') {
@@ -357,7 +357,7 @@ export async function getTripleData(id: string): Promise<Triple | null> {
     return null
   }
 
-  return data as Triple | null
+  return data as unknown as Triple | null // TODO: fix this
 }
 
 export async function storeTriple(triple: Triple): Promise<void> {
@@ -369,11 +369,11 @@ export async function storeTriple(triple: Triple): Promise<void> {
 }
 
 export async function getURIData(uri: string): Promise<any | null> {
-  const { data, error } = await supabase
+  const { data, error } = (await supabase
     .from(dataTable)
     .select('*')
     .eq('uri', uri)
-    .single()
+    .single()) as any // TODO: fix this
 
   if (error) {
     if (error.code !== 'PGRST116') {
