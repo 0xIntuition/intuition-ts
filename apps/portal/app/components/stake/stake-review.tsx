@@ -39,7 +39,7 @@ interface StakeReviewProps {
   modalType: 'identity' | 'claim' | null | undefined
   identity?: IdentityPresenter
   claim?: ClaimPresenter
-  vaultDetails: VaultDetailsType
+  vaultDetails?: VaultDetailsType
 }
 
 const calculateDepositFees = (

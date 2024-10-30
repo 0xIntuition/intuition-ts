@@ -15,9 +15,11 @@ import {
   Text,
   TextVariant,
 } from '@0xintuition/1ui'
+import { IdentityPresenter } from '@0xintuition/api'
 
 import { stakeModalAtom } from '@lib/state/store'
 import { Link } from '@remix-run/react'
+import { VaultDetailsType } from 'app/types'
 import { useSetAtom } from 'jotai'
 
 export interface IdentityRowProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -31,8 +33,11 @@ export interface IdentityRowProps extends React.HTMLAttributes<HTMLDivElement> {
   avatarSrc: string
   link: string
   ipfsLink: string
-  totalFollowers: number
+  numPositions: number
   tags?: TagWithValueProps[]
+  identity: IdentityPresenter
+  vaultId: string
+  vaultDetails: VaultDetailsType
 }
 
 const IdentityRow = ({
@@ -42,9 +47,10 @@ const IdentityRow = ({
   name,
   avatarSrc,
   link,
-  totalFollowers,
+  numPositions,
   children,
   className,
+  identity,
 }: IdentityRowProps) => {
   const setStakeModalActive = useSetAtom(stakeModalAtom)
 
@@ -78,18 +84,20 @@ const IdentityRow = ({
         </div>
         <Button
           variant={ButtonVariant.ghost}
-          className="bg-primary/10 border-primary/30 hover:bg-primary/20 hover:border-primary/60 py-0.5 px-2.5 gap-1.5"
+          className="bg-primary/10 border-primary/30 hover:bg-primary/20 hover:border-primary/60 py-0.5 px-2.5 gap-1.5 h-9"
           onClick={() =>
             setStakeModalActive((prevState) => ({
               ...prevState,
               mode: 'deposit',
               modalType: 'identity',
               isOpen: true,
+              identity,
+              vaultId: identity.vault_id,
             }))
           }
         >
           <Icon name={IconName.arrowUp} className="h-4 w-4" />{' '}
-          <Text variant={TextVariant.caption}>{totalFollowers}</Text>
+          <Text variant={TextVariant.caption}>{numPositions}</Text>
         </Button>
         <Button variant={ButtonVariant.text} className="px-0 py-1">
           <Icon name={IconName.context} className="h-4 w-4" />

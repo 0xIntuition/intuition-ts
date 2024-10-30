@@ -10,6 +10,7 @@ import {
 import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
 
 import { TransactionState } from '@components/transaction-state'
+import { MIN_DEPOSIT } from '@consts/general'
 import { stakeModalAtom } from '@lib/state/store'
 import {
   formatBalance,
@@ -35,7 +36,7 @@ interface StakeFormProps {
   user_conviction: string
   conviction_price: string
   user_assets: string
-  vaultDetails: VaultDetailsType
+  vaultDetails?: VaultDetailsType
   direction?: 'for' | 'against'
   val: string
   setVal: (val: string) => void
@@ -213,7 +214,7 @@ export default function StakeForm({
                   <StakeActions
                     action={mode}
                     setVal={setVal}
-                    minDeposit={vaultDetails.min_deposit ?? '0'}
+                    minDeposit={vaultDetails?.min_deposit ?? MIN_DEPOSIT}
                     userConviction={user_conviction}
                     price={conviction_price}
                   />

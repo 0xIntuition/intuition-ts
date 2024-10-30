@@ -22,6 +22,7 @@ import {
 import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
 
 import { InfoTooltip } from '@components/info-tooltip'
+import { MIN_DEPOSIT } from '@consts/general'
 import { multivaultAbi } from '@lib/abis/multivault'
 import { useDepositAtom } from '@lib/hooks/useDepositAtom'
 import { useGetWalletBalance } from '@lib/hooks/useGetWalletBalance'
@@ -56,12 +57,12 @@ interface StakeModalProps {
   open: boolean
   identity?: IdentityPresenter
   claim?: ClaimPresenter
-  vaultDetails: VaultDetailsType
+  vaultDetails?: VaultDetailsType
   onClose?: () => void
   onSuccess?: (args: {
     identity?: IdentityPresenter
     claim?: ClaimPresenter
-    vaultDetails: VaultDetailsType
+    vaultDetails?: VaultDetailsType
     direction?: 'for' | 'against'
   }) => void
   direction?: 'for' | 'against'
@@ -102,37 +103,37 @@ export default function StakeModal({
 
   let user_conviction: string = '0'
   if (identityShouldOverride) {
-    user_conviction = vaultDetails.user_conviction ?? identity.user_conviction
+    user_conviction = vaultDetails?.user_conviction ?? identity.user_conviction
   } else if (claim) {
     user_conviction =
       direction === 'for'
-        ? vaultDetails.user_conviction ?? claim.user_conviction_for
-        : vaultDetails.user_conviction_against ?? claim.user_conviction_against
+        ? vaultDetails?.user_conviction ?? claim.user_conviction_for
+        : vaultDetails?.user_conviction_against ?? claim.user_conviction_against
   }
 
   let conviction_price: string = '0'
   if (identityShouldOverride) {
     conviction_price =
-      vaultDetails.conviction_price ?? identity.conviction_price
+      vaultDetails?.conviction_price ?? identity.conviction_price
   } else if (claim) {
     conviction_price =
       direction === 'for'
-        ? vaultDetails.conviction_price ?? claim.for_conviction_price
-        : vaultDetails.against_conviction_price ??
+        ? vaultDetails?.conviction_price ?? claim.for_conviction_price
+        : vaultDetails?.against_conviction_price ??
           claim.against_conviction_price
   }
 
   let user_assets: string = '0'
   if (identityShouldOverride) {
-    user_assets = vaultDetails.user_assets ?? identity.user_assets
+    user_assets = vaultDetails?.user_assets ?? identity.user_assets
   } else if (claim) {
     user_assets =
       direction === 'for'
-        ? vaultDetails.user_assets ?? claim.user_assets_for
-        : vaultDetails.user_assets_against ?? claim.user_assets_against
+        ? vaultDetails?.user_assets ?? claim.user_assets_for
+        : vaultDetails?.user_assets_against ?? claim.user_assets_against
   }
 
-  const { min_deposit } = vaultDetails
+  const { min_deposit } = vaultDetails ?? { min_deposit: MIN_DEPOSIT }
 
   const depositHook = useDepositAtom(contract)
 

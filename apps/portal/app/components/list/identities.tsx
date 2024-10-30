@@ -84,7 +84,8 @@ export function IdentitiesList({
                   18,
                 )
               }
-              totalFollowers={identity.num_positions}
+              currency={'ETH'}
+              numPositions={identity.num_positions}
               link={getAtomLink(identity, readOnly)}
               ipfsLink={getAtomIpfsLink(identity)}
               tags={
@@ -93,6 +94,7 @@ export function IdentitiesList({
                   value: tag.num_tagged_identities,
                 })) ?? undefined
               }
+              identity={identity}
             />
           </div>
         )

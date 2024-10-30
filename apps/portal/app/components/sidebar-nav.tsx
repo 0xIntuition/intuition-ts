@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import {
   Button,
@@ -27,13 +27,22 @@ import PrivyButton from '@client/privy-button'
 import {
   globalCreateClaimModalAtom,
   globalCreateIdentityModalAtom,
+  stakeModalAtom,
 } from '@lib/state/store'
-import { NavLink, useLocation, useNavigate, useSubmit } from '@remix-run/react'
-import { PATHS } from 'app/consts'
+import {
+  NavLink,
+  useFetcher,
+  useLocation,
+  useNavigate,
+  useSubmit,
+} from '@remix-run/react'
+import { MULTIVAULT_CONTRACT_ADDRESS, PATHS } from 'app/consts'
+import { VaultDetailsType } from 'app/types'
 import { useAtom } from 'jotai'
 
 import CreateClaimModal from './create-claim/create-claim-modal'
 import CreateIdentityModal from './create-identity/create-identity-modal'
+import StakeModal from './stake/stake-modal'
 
 interface SidebarNavRoute {
   route: string
@@ -114,6 +123,8 @@ export default function SidebarNav({
     globalCreateClaimModalAtom,
   )
 
+  const [stakeModalActive, setStakeModalActive] = useAtom(stakeModalAtom)
+
   function onLogout() {
     submit(null, {
       action: '/actions/logout',
@@ -140,6 +151,16 @@ export default function SidebarNav({
     }
     return location.pathname.startsWith(route)
   }
+
+  const vaultDetailsFetcher = useFetcher<VaultDetailsType>()
+
+  useEffect(() => {
+    vaultDetailsFetcher.load(
+      `/resources/get-vault-details?contract=${MULTIVAULT_CONTRACT_ADDRESS}&${stakeModalActive.vaultId ?? '0'}}`,
+    )
+  }, [stakeModalActive.vaultId])
+
+  const vaultDetails = vaultDetailsFetcher.data
 
   return (
     <>
@@ -389,6 +410,21 @@ export default function SidebarNav({
         open={createClaimModalActive}
         wallet={userObject.wallet}
         onClose={() => setCreateClaimModalActive(false)}
+      />
+      <StakeModal
+        open={stakeModalActive.isOpen}
+        onClose={() =>
+          setStakeModalActive({
+            isOpen: false,
+            id: null,
+            vaultId: null,
+            vaultDetails: null,
+          })
+        }
+        identity={stakeModalActive.identity}
+        claim={stakeModalActive.claim}
+        vaultDetails={vaultDetails ?? stakeModalActive.vaultDetails}
+        vaultId={stakeModalActive.vaultId}
       />
     </>
   )
