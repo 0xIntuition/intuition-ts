@@ -55,7 +55,6 @@ export default defineConfig({
       '@privy-io/wagmi',
       'wagmi',
       'mini-svg-data-uri',
-      // /^@walletconnect\/.*/,
       '@walletconnect/jsonrpc-ws-connection',
     ],
   },

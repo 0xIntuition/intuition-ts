@@ -124,13 +124,13 @@ export default function ClaimDetails() {
 
   const user_assets: string =
     (vaultDetails?.user_conviction ?? claim.user_conviction_for) > '0'
-      ? (vaultDetails?.user_assets ?? claim.user_assets_for)
-      : (vaultDetails?.user_assets_against ?? claim.user_assets_against)
+      ? vaultDetails?.user_assets ?? claim.user_assets_for
+      : vaultDetails?.user_assets_against ?? claim.user_assets_against
 
   const assets_sum: string =
     (vaultDetails?.assets_sum ?? claim.for_assets_sum) > '0'
-      ? (vaultDetails?.assets_sum ?? claim.for_assets_sum)
-      : (vaultDetails?.against_assets_sum ?? claim.against_assets_sum)
+      ? vaultDetails?.assets_sum ?? claim.for_assets_sum
+      : vaultDetails?.against_assets_sum ?? claim.against_assets_sum
 
   const userConviction =
     vaultDetails?.user_conviction ?? claim.user_conviction_for

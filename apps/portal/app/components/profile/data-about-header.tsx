@@ -73,7 +73,7 @@ const DataAboutHeader: React.FC<DataAboutHeaderProps> = ({
             weight="medium"
             className="leading-[30px] items-center"
           >
-            {variant === 'claims' ? (totalClaims ?? 0) : (totalPositions ?? 0)}
+            {variant === 'claims' ? totalClaims ?? 0 : totalPositions ?? 0}
           </Text>
         </div>
         <div className="flex flex-col items-end  max-md:items-center">
