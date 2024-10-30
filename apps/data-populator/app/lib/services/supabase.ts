@@ -152,7 +152,7 @@ export async function searchAtomLog(
     return []
   }
 
-  return data as AtomLogEntry[]
+  return data as unknown as AtomLogEntry[]
 }
 
 // Function to search the triple_log table based on various criteria
