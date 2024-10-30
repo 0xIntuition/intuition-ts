@@ -1,25 +1,23 @@
-import { useGetAtomsQuery, useGetTripleQuery } from '@0xintuition/graphql'
+import { useGetAtomsQuery, useGetTriplesQuery } from '@0xintuition/graphql'
 
 export default function Playground() {
-  // const { data, isLoading, isError } = useGetTripleQuery(
-  //   {
-  //     tripleId: 12,
-  //   },
-  //   {
-  //     queryKey: ['12'],
-  //   },
-  // )
-  // const triple = data?.triple
-  // console.log('triple from query', triple)
-
-  const { data, isLoading, isError } = useGetAtomsQuery(
+  const { data: atomsData } = useGetAtomsQuery(
     {},
     {
-      queryKey: ['getAtomsQuery'],
+      queryKey: ['get-atoms-query'],
     },
   )
-  const atoms = data?.atoms
+  const atoms = atomsData?.atoms
+
+  const { data: triplesData } = useGetTriplesQuery(
+    {},
+    {
+      queryKey: ['get-triples-query'],
+    },
+  )
+  const triples = triplesData?.triples
   console.log('atoms from query', atoms)
+  console.log('triples from query', triples)
 
   return <div>Playground</div>
 }
