@@ -1,0 +1,25 @@
+query GetClaimsByAddress($address: String) {
+  claims_aggregate(where: { accountId: { _eq: $address } }) {
+    nodes {
+      account {
+        label
+      }
+      triple {
+        subject {
+          label
+        }
+        predicate {
+          label
+        }
+        object {
+          label
+        }
+      }
+      id
+      vaultId
+      counterVaultId
+      shares
+      counterShares
+    }
+  }
+}
