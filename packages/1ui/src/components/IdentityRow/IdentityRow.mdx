@@ -1,0 +1,33 @@
+import { Canvas, Controls, Meta, Source, Title } from '@storybook/blocks'
+
+import * as Stories from './IdentityRow.stories'
+
+<Meta of={Stories} />
+
+<Title />
+
+#### Displays identity information with TVL and stake actions.
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { IdentityRow } from '@0xintuition/1ui'
+
+<IdentityRow
+  variant="user"
+  totalTVL={420.69}
+  tvlFor={240.69}
+  currency="ETH"
+  name="John Doe"
+  avatarSrc="https://avatars.githubusercontent.com/u/1?v=4"
+  link="/identity/1"
+  numPositions={69}
+/>
+`} />
+
+<Canvas of={Stories.BasicUsage} sourceState="none" />
+
+## Properties
+
+<Controls />

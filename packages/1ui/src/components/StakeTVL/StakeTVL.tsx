@@ -6,7 +6,7 @@ import { cn } from 'styles'
 
 export interface StakeTVLProps {
   totalTVL: number
-  currency: string
+  currency?: string
   isClaim?: boolean
   tvlFor?: number
   className?: string
@@ -16,15 +16,16 @@ const StakeTVL = React.forwardRef<HTMLDivElement, StakeTVLProps>(
   (
     {
       totalTVL = 420.69,
-      tvlFor = 240.69,
-      currency,
+      tvlFor,
+      currency = 'ETH',
       className,
-      isClaim = 'false',
+      isClaim,
       ...props
     },
     ref,
   ) => {
-    const stakedForPercentage = (tvlFor / totalTVL) * 100
+    const stakedForPercentage =
+      tvlFor && totalTVL ? (tvlFor / totalTVL) * 100 : 0
 
     return (
       <div
