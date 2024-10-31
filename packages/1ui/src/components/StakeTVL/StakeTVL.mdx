@@ -1,0 +1,24 @@
+import { Canvas, Controls, Meta, Source, Title } from '@storybook/blocks'
+
+import * as Stories from './StakeTVL.stories'
+
+<Meta of={Stories} />
+
+<Title />
+
+#### Displays TVL (Total Value Locked) information.
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { StakeTVL } from '@0xintuition/1ui'
+
+<StakeTVL amount="4.928" currency="ETH" />
+`} />
+
+<Canvas of={Stories.BasicUsage} sourceState="none" />
+
+## Properties
+
+<Controls />
