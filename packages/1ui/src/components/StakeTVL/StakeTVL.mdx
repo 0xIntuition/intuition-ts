@@ -6,7 +6,7 @@ import * as Stories from './StakeTVL.stories'
 
 <Title />
 
-#### Displays TVL (Total Value Locked) information.
+#### Displays TVL (Total Value Locked) information with optional pie chart visualization.
 
 <Source
   dark
@@ -14,7 +14,7 @@ import * as Stories from './StakeTVL.stories'
   code={`
 import { StakeTVL } from '@0xintuition/1ui'
 
-<StakeTVL amount="4.928" currency="ETH" />
+<StakeTVL totalTVL={420.69} tvlFor={240.69} currency="ETH" />
 `} />
 
 <Canvas of={Stories.BasicUsage} sourceState="none" />
@@ -22,3 +22,22 @@ import { StakeTVL } from '@0xintuition/1ui'
 ## Properties
 
 <Controls />
+
+## Variants
+
+### With Pie Chart
+
+<Source
+  dark
+  language="tsx"
+  code={`
+<StakeTVL
+  totalTVL={420.69}
+  tvlFor={240.69}
+  currency="ETH"
+  isClaim={true}
+/>
+`}
+/>
+
+<Canvas of={Stories.WithPieChart} sourceState="none" />

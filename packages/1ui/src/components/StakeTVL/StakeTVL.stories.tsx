@@ -8,7 +8,8 @@ const meta: Meta<typeof StakeTVL> = {
   parameters: {
     docs: {
       description: {
-        component: 'Displays TVL (Total Value Locked) information.',
+        component:
+          'Displays TVL (Total Value Locked) information with optional pie chart.',
       },
     },
     controls: {
@@ -16,13 +17,21 @@ const meta: Meta<typeof StakeTVL> = {
     },
   },
   argTypes: {
-    amount: {
-      description: 'The TVL amount',
+    totalTVL: {
+      description: 'Total TVL amount',
       table: {
-        type: { summary: 'string' },
-        defaultValue: { summary: '4.928' },
+        type: { summary: 'number' },
+        defaultValue: { summary: '420.69' },
       },
-      control: 'text',
+      control: 'number',
+    },
+    tvlFor: {
+      description: 'TVL amount for the "For" position',
+      table: {
+        type: { summary: 'number' },
+        defaultValue: { summary: '240.69' },
+      },
+      control: 'number',
     },
     currency: {
       description: 'The currency symbol',
@@ -31,6 +40,14 @@ const meta: Meta<typeof StakeTVL> = {
         defaultValue: { summary: 'ETH' },
       },
       control: 'text',
+    },
+    isClaim: {
+      description: 'Whether to show the pie chart',
+      table: {
+        type: { summary: 'boolean' },
+        defaultValue: { summary: 'false' },
+      },
+      control: 'boolean',
     },
   },
 }
@@ -41,8 +58,19 @@ type Story = StoryObj<typeof StakeTVL>
 
 export const BasicUsage: Story = {
   args: {
-    amount: '4.928',
+    totalTVL: 420.69,
     currency: 'ETH',
+    isClaim: false,
+  },
+  render: (args) => <StakeTVL {...args} />,
+}
+
+export const WithPieChart: Story = {
+  args: {
+    totalTVL: 420.69,
+    tvlFor: 240.69,
+    currency: 'ETH',
+    isClaim: true,
   },
   render: (args) => <StakeTVL {...args} />,
 }

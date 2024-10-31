@@ -26,7 +26,7 @@ export interface PieChartProps extends React.HTMLAttributes<HTMLDivElement> {
 
 const determinePieChartSize = (size: PieChartSizeType) => {
   if (size === PieChartSize.sm) {
-    return { size: 22, width: 2 }
+    return { size: 32, width: 4 }
   } else if (size === PieChartSize.md) {
     return { size: 80, width: 10 }
   }
