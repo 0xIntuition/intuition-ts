@@ -18,6 +18,8 @@ These components are fully type safe and have the styles/variants/etc. injected.
 
 ## Adding Components to the Component Library
 
+To create a new component in 1ui run the command `pnpm 1ui:component:create` and follow the prompts.
+
 We leverage the Shadcn/ui stack whenever possible:
 
 - Shadcn/ui: [Shadcn/ui Documentation](https://tailwindcss.com/docs/installation)
