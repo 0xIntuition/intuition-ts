@@ -1,8 +1,3 @@
-# Import other fragments
-#import "./atom.graphql"
-#import "./account.graphql"
-#import "./vault.graphql"
-
 fragment TripleMetadata on triples {
   id
   label

@@ -1,7 +1,3 @@
-# Import fragments
-#import "../fragments/triple.graphql"
-#import "../fragments/account.graphql"
-
 query GetTriples(
   $limit: Int
   $offset: Int
@@ -9,6 +5,17 @@ query GetTriples(
   $where: triples_bool_exp
 ) {
   triples(limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {
+    ...TripleMetadata
+    ...TripleTxn
+    ...TripleVaultDetails
+    creator {
+      ...AccountMetadata
+    }
+  }
+}
+
+query GetTriple($tripleId: numeric!) {
+  triple(id: $tripleId) {
     ...TripleMetadata
     ...TripleTxn
     ...TripleVaultDetails

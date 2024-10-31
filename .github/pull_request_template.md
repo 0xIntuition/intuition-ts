@@ -2,12 +2,15 @@
 
 Apps
 
+- [ ] data populator
 - [ ] portal
+- [ ] template
 
 Packages
 
 - [ ] 1ui
 - [ ] api
+- [ ] graphql
 - [ ] protocol
 - [ ] sdk
 

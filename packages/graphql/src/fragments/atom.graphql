@@ -23,3 +23,24 @@ fragment AtomVaultDetails on atoms {
     currentSharePrice
   }
 }
+
+fragment AtomTriple on atoms {
+  asSubject {
+    ...AtomMetadata
+    creator {
+      ...AccountMetadata
+    }
+  }
+  asPredicate {
+    ...AtomMetadata
+    creator {
+      ...AccountMetadata
+    }
+  }
+  asObject {
+    ...AtomMetadata
+    creator {
+      ...AccountMetadata
+    }
+  }
+}

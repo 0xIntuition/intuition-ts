@@ -1,7 +1,3 @@
-# Import fragments
-#import "../fragments/atom.graphql"
-#import "../fragments/account.graphql"
-
 query GetAtoms(
   $limit: Int
   $offset: Int
@@ -15,5 +11,17 @@ query GetAtoms(
     creator {
       ...AccountMetadata
     }
+  }
+}
+
+query GetAtom($id: numeric!) {
+  atom(id: $id) {
+    ...AtomMetadata
+    ...AtomTxn
+    ...AtomVaultDetails
+    creator {
+      ...AccountMetadata
+    }
+    ...AtomTriple
   }
 }

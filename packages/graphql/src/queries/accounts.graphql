@@ -1,0 +1,18 @@
+query GetAccounts {
+  accounts {
+    ...AccountMetadata
+    ...AccountClaims
+    ...AccountPositions
+  }
+}
+
+query GetAccount($address: String!) {
+  account(id: $address) {
+    ...AccountMetadata
+    ...AccountClaims
+    ...AccountPositions
+  }
+  chainLinkPrices(limit: 1, order_by: { id: desc }) {
+    usd
+  }
+}

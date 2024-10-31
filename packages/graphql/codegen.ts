@@ -11,6 +11,8 @@ const commonGenerateOptions: Types.ConfiguredOutput = {
     exposeMutationKeys: true,
     enumsAsTypes: true,
     dedupeFragments: true,
+    documentMode: 'documentNode',
+    documentVariableSuffix: '_QUERY',
     scalars: {
       Date: 'Date',
       JSON: 'Record<string, any>',
@@ -22,6 +24,7 @@ const commonGenerateOptions: Types.ConfiguredOutput = {
     'typescript',
     '@graphql-codegen/typescript-operations',
     '@graphql-codegen/typescript-react-query',
+    'typescript-document-nodes',
   ],
 }
 
@@ -36,7 +39,6 @@ const config: CodegenConfig = {
   generates: {
     './src/generated/index.ts': {
       config: {
-        // documentMode: 'string',
         ...commonGenerateOptions.config,
       },
       plugins: commonGenerateOptions.plugins,
