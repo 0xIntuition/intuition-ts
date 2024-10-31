@@ -12,7 +12,6 @@ const commonGenerateOptions: Types.ConfiguredOutput = {
     enumsAsTypes: true,
     dedupeFragments: true,
     documentMode: 'documentNode',
-    documentVariableSuffix: '_QUERY',
     scalars: {
       Date: 'Date',
       JSON: 'Record<string, any>',

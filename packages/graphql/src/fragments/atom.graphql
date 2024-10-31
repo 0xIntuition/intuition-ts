@@ -26,21 +26,81 @@ fragment AtomVaultDetails on atoms {
 
 fragment AtomTriple on atoms {
   asSubject {
-    ...AtomMetadata
-    creator {
-      ...AccountMetadata
+    id
+    label
+    object {
+      data
+      id
+      image
+      label
+      emoji
+      type
+      creator {
+        ...AccountMetadata
+      }
+    }
+    predicate {
+      data
+      id
+      image
+      label
+      emoji
+      type
+      creator {
+        ...AccountMetadata
+      }
     }
   }
   asPredicate {
-    ...AtomMetadata
-    creator {
-      ...AccountMetadata
+    id
+    label
+    subject {
+      data
+      id
+      image
+      label
+      emoji
+      type
+      creator {
+        ...AccountMetadata
+      }
+    }
+    object {
+      data
+      id
+      image
+      label
+      emoji
+      type
+      creator {
+        ...AccountMetadata
+      }
     }
   }
   asObject {
-    ...AtomMetadata
-    creator {
-      ...AccountMetadata
+    id
+    label
+    subject {
+      data
+      id
+      image
+      label
+      emoji
+      type
+      creator {
+        ...AccountMetadata
+      }
+    }
+    predicate {
+      data
+      id
+      image
+      label
+      emoji
+      type
+      creator {
+        ...AccountMetadata
+      }
     }
   }
 }

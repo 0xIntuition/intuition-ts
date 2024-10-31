@@ -2,19 +2,34 @@ fragment TripleMetadata on triples {
   id
   label
   subject {
-    ...AtomMetadata
+    data
+    id
+    image
+    label
+    emoji
+    type
     creator {
       ...AccountMetadata
     }
   }
   predicate {
-    ...AtomMetadata
+    data
+    id
+    image
+    label
+    emoji
+    type
     creator {
       ...AccountMetadata
     }
   }
   object {
-    ...AtomMetadata
+    data
+    id
+    image
+    label
+    emoji
+    type
     creator {
       ...AccountMetadata
     }
