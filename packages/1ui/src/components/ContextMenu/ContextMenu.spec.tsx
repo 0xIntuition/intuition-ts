@@ -24,7 +24,6 @@ describe('ContextMenu', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <span
-          aria-expanded="false"
           data-state="closed"
         >
           Right click me

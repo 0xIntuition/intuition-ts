@@ -1,8 +1,6 @@
-import React from 'react'
-
 import type { Meta, StoryObj } from '@storybook/react'
 
-import { Button } from '..'
+import { Button, ButtonSize, ButtonVariant, Icon, IconName } from '..'
 import {
   ContextMenu,
   ContextMenuContent,
@@ -33,7 +31,9 @@ export const BasicUsage: Story = {
   render: (args) => (
     <ContextMenu {...args}>
       <ContextMenuTrigger>
-        <Button size="lg">Right click me</Button>
+        <Button variant={ButtonVariant.navigation} size={ButtonSize.icon}>
+          <Icon name={IconName.context} className="h-4 w-4" />
+        </Button>
       </ContextMenuTrigger>
       <ContextMenuContent>
         <ContextMenuItem>Profile</ContextMenuItem>
