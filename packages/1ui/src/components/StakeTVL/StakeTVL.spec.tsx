@@ -90,4 +90,16 @@ describe('StakeTVL', () => {
       </DocumentFragment>
     `)
   })
+
+  it('should render TVL with pie chart', () => {
+    const { asFragment } = render(
+      <StakeTVL
+        totalTVL={420.69}
+        tvlFor={240.69}
+        currency="ETH"
+        isClaim={true}
+      />,
+    )
+    expect(asFragment()).toMatchInlineSnapshot()
+  })
 })
