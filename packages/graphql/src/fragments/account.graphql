@@ -18,20 +18,22 @@ fragment AccountClaims on accounts {
 }
 
 fragment AccountPositions on accounts {
-  positions(order_by: { shares: desc }) {
-    id
-    shares
-    vault {
+  positions_aggregate(order_by: { shares: desc }) {
+    nodes {
       id
-      totalShares
-      currentSharePrice
-      atom {
+      shares
+      vault {
         id
-        label
-      }
-      triple {
-        id
-        label
+        totalShares
+        currentSharePrice
+        atom {
+          id
+          label
+        }
+        triple {
+          id
+          label
+        }
       }
     }
   }

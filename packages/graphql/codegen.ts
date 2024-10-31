@@ -9,6 +9,7 @@ const commonGenerateOptions: Types.ConfiguredOutput = {
     exposeFetcher: true,
     exposeQueryKeys: true,
     exposeMutationKeys: true,
+    addInfiniteQuery: true,
     enumsAsTypes: true,
     dedupeFragments: true,
     documentMode: 'documentNode',

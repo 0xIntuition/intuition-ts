@@ -1,5 +1,11 @@
 import { fetcher } from '@/client'
-import { useQuery, UseQueryOptions } from '@tanstack/react-query'
+import {
+  InfiniteData,
+  useInfiniteQuery,
+  UseInfiniteQueryOptions,
+  useQuery,
+  UseQueryOptions,
+} from '@tanstack/react-query'
 import { DocumentNode } from 'graphql'
 
 export type Maybe<T> = T | null
@@ -8326,7 +8332,7 @@ export const TripleVaultDetailsFragmentDoc = `
   }
 }
     `
-export const GetAccounts_Query = `
+export const GetAccountsDocument = `
     query GetAccounts {
   accounts {
     ...AccountMetadata
@@ -8351,29 +8357,69 @@ export const useGetAccountsQuery = <TData = GetAccountsQuery, TError = unknown>(
     queryKey:
       variables === undefined ? ['GetAccounts'] : ['GetAccounts', variables],
     queryFn: fetcher<GetAccountsQuery, GetAccountsQueryVariables>(
-      GetAccounts_Query,
+      GetAccountsDocument,
       variables,
     ),
     ...options,
   })
 }
 
-useGetAccountsQuery.document = GetAccounts_Query
+useGetAccountsQuery.document = GetAccountsDocument
 
 useGetAccountsQuery.getKey = (variables?: GetAccountsQueryVariables) =>
   variables === undefined ? ['GetAccounts'] : ['GetAccounts', variables]
+
+export const useInfiniteGetAccountsQuery = <
+  TData = InfiniteData<GetAccountsQuery>,
+  TError = unknown,
+>(
+  variables: GetAccountsQueryVariables,
+  options: Omit<
+    UseInfiniteQueryOptions<GetAccountsQuery, TError, TData>,
+    'queryKey'
+  > & {
+    queryKey?: UseInfiniteQueryOptions<
+      GetAccountsQuery,
+      TError,
+      TData
+    >['queryKey']
+  },
+) => {
+  return useInfiniteQuery<GetAccountsQuery, TError, TData>(
+    (() => {
+      const { queryKey: optionsQueryKey, ...restOptions } = options
+      return {
+        queryKey:
+          optionsQueryKey ?? variables === undefined
+            ? ['GetAccounts.infinite']
+            : ['GetAccounts.infinite', variables],
+        queryFn: (metaData) =>
+          fetcher<GetAccountsQuery, GetAccountsQueryVariables>(
+            GetAccountsDocument,
+            { ...variables, ...(metaData.pageParam ?? {}) },
+          )(),
+        ...restOptions,
+      }
+    })(),
+  )
+}
+
+useInfiniteGetAccountsQuery.getKey = (variables?: GetAccountsQueryVariables) =>
+  variables === undefined
+    ? ['GetAccounts.infinite']
+    : ['GetAccounts.infinite', variables]
 
 useGetAccountsQuery.fetcher = (
   variables?: GetAccountsQueryVariables,
   options?: RequestInit['headers'],
 ) =>
   fetcher<GetAccountsQuery, GetAccountsQueryVariables>(
-    GetAccounts_Query,
+    GetAccountsDocument,
     variables,
     options,
   )
 
-export const GetAccount_Query = `
+export const GetAccountDocument = `
     query GetAccount($address: String!) {
   account(id: $address) {
     ...AccountMetadata
@@ -8400,17 +8446,54 @@ export const useGetAccountQuery = <TData = GetAccountQuery, TError = unknown>(
   return useQuery<GetAccountQuery, TError, TData>({
     queryKey: ['GetAccount', variables],
     queryFn: fetcher<GetAccountQuery, GetAccountQueryVariables>(
-      GetAccount_Query,
+      GetAccountDocument,
       variables,
     ),
     ...options,
   })
 }
 
-useGetAccountQuery.document = GetAccount_Query
+useGetAccountQuery.document = GetAccountDocument
 
 useGetAccountQuery.getKey = (variables: GetAccountQueryVariables) => [
   'GetAccount',
+  variables,
+]
+
+export const useInfiniteGetAccountQuery = <
+  TData = InfiniteData<GetAccountQuery>,
+  TError = unknown,
+>(
+  variables: GetAccountQueryVariables,
+  options: Omit<
+    UseInfiniteQueryOptions<GetAccountQuery, TError, TData>,
+    'queryKey'
+  > & {
+    queryKey?: UseInfiniteQueryOptions<
+      GetAccountQuery,
+      TError,
+      TData
+    >['queryKey']
+  },
+) => {
+  return useInfiniteQuery<GetAccountQuery, TError, TData>(
+    (() => {
+      const { queryKey: optionsQueryKey, ...restOptions } = options
+      return {
+        queryKey: optionsQueryKey ?? ['GetAccount.infinite', variables],
+        queryFn: (metaData) =>
+          fetcher<GetAccountQuery, GetAccountQueryVariables>(
+            GetAccountDocument,
+            { ...variables, ...(metaData.pageParam ?? {}) },
+          )(),
+        ...restOptions,
+      }
+    })(),
+  )
+}
+
+useInfiniteGetAccountQuery.getKey = (variables: GetAccountQueryVariables) => [
+  'GetAccount.infinite',
   variables,
 ]
 
@@ -8419,12 +8502,12 @@ useGetAccountQuery.fetcher = (
   options?: RequestInit['headers'],
 ) =>
   fetcher<GetAccountQuery, GetAccountQueryVariables>(
-    GetAccount_Query,
+    GetAccountDocument,
     variables,
     options,
   )
 
-export const GetAtoms_Query = `
+export const GetAtomsDocument = `
     query GetAtoms($limit: Int, $offset: Int, $orderBy: [atoms_order_by!], $where: atoms_bool_exp) {
   atoms(limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {
     ...AtomMetadata
@@ -8449,29 +8532,65 @@ export const useGetAtomsQuery = <TData = GetAtomsQuery, TError = unknown>(
   return useQuery<GetAtomsQuery, TError, TData>({
     queryKey: variables === undefined ? ['GetAtoms'] : ['GetAtoms', variables],
     queryFn: fetcher<GetAtomsQuery, GetAtomsQueryVariables>(
-      GetAtoms_Query,
+      GetAtomsDocument,
       variables,
     ),
     ...options,
   })
 }
 
-useGetAtomsQuery.document = GetAtoms_Query
+useGetAtomsQuery.document = GetAtomsDocument
 
 useGetAtomsQuery.getKey = (variables?: GetAtomsQueryVariables) =>
   variables === undefined ? ['GetAtoms'] : ['GetAtoms', variables]
+
+export const useInfiniteGetAtomsQuery = <
+  TData = InfiniteData<GetAtomsQuery>,
+  TError = unknown,
+>(
+  variables: GetAtomsQueryVariables,
+  options: Omit<
+    UseInfiniteQueryOptions<GetAtomsQuery, TError, TData>,
+    'queryKey'
+  > & {
+    queryKey?: UseInfiniteQueryOptions<GetAtomsQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useInfiniteQuery<GetAtomsQuery, TError, TData>(
+    (() => {
+      const { queryKey: optionsQueryKey, ...restOptions } = options
+      return {
+        queryKey:
+          optionsQueryKey ?? variables === undefined
+            ? ['GetAtoms.infinite']
+            : ['GetAtoms.infinite', variables],
+        queryFn: (metaData) =>
+          fetcher<GetAtomsQuery, GetAtomsQueryVariables>(GetAtomsDocument, {
+            ...variables,
+            ...(metaData.pageParam ?? {}),
+          })(),
+        ...restOptions,
+      }
+    })(),
+  )
+}
+
+useInfiniteGetAtomsQuery.getKey = (variables?: GetAtomsQueryVariables) =>
+  variables === undefined
+    ? ['GetAtoms.infinite']
+    : ['GetAtoms.infinite', variables]
 
 useGetAtomsQuery.fetcher = (
   variables?: GetAtomsQueryVariables,
   options?: RequestInit['headers'],
 ) =>
   fetcher<GetAtomsQuery, GetAtomsQueryVariables>(
-    GetAtoms_Query,
+    GetAtomsDocument,
     variables,
     options,
   )
 
-export const GetAtom_Query = `
+export const GetAtomDocument = `
     query GetAtom($id: numeric!) {
   atom(id: $id) {
     ...AtomMetadata
@@ -8498,17 +8617,50 @@ export const useGetAtomQuery = <TData = GetAtomQuery, TError = unknown>(
   return useQuery<GetAtomQuery, TError, TData>({
     queryKey: ['GetAtom', variables],
     queryFn: fetcher<GetAtomQuery, GetAtomQueryVariables>(
-      GetAtom_Query,
+      GetAtomDocument,
       variables,
     ),
     ...options,
   })
 }
 
-useGetAtomQuery.document = GetAtom_Query
+useGetAtomQuery.document = GetAtomDocument
 
 useGetAtomQuery.getKey = (variables: GetAtomQueryVariables) => [
   'GetAtom',
+  variables,
+]
+
+export const useInfiniteGetAtomQuery = <
+  TData = InfiniteData<GetAtomQuery>,
+  TError = unknown,
+>(
+  variables: GetAtomQueryVariables,
+  options: Omit<
+    UseInfiniteQueryOptions<GetAtomQuery, TError, TData>,
+    'queryKey'
+  > & {
+    queryKey?: UseInfiniteQueryOptions<GetAtomQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useInfiniteQuery<GetAtomQuery, TError, TData>(
+    (() => {
+      const { queryKey: optionsQueryKey, ...restOptions } = options
+      return {
+        queryKey: optionsQueryKey ?? ['GetAtom.infinite', variables],
+        queryFn: (metaData) =>
+          fetcher<GetAtomQuery, GetAtomQueryVariables>(GetAtomDocument, {
+            ...variables,
+            ...(metaData.pageParam ?? {}),
+          })(),
+        ...restOptions,
+      }
+    })(),
+  )
+}
+
+useInfiniteGetAtomQuery.getKey = (variables: GetAtomQueryVariables) => [
+  'GetAtom.infinite',
   variables,
 ]
 
@@ -8517,12 +8669,12 @@ useGetAtomQuery.fetcher = (
   options?: RequestInit['headers'],
 ) =>
   fetcher<GetAtomQuery, GetAtomQueryVariables>(
-    GetAtom_Query,
+    GetAtomDocument,
     variables,
     options,
   )
 
-export const GetClaimsByAddress_Query = `
+export const GetClaimsByAddressDocument = `
     query GetClaimsByAddress($address: String) {
   claims_aggregate(where: {accountId: {_eq: $address}}) {
     nodes {
@@ -8572,14 +8724,14 @@ export const useGetClaimsByAddressQuery = <
         ? ['GetClaimsByAddress']
         : ['GetClaimsByAddress', variables],
     queryFn: fetcher<GetClaimsByAddressQuery, GetClaimsByAddressQueryVariables>(
-      GetClaimsByAddress_Query,
+      GetClaimsByAddressDocument,
       variables,
     ),
     ...options,
   })
 }
 
-useGetClaimsByAddressQuery.document = GetClaimsByAddress_Query
+useGetClaimsByAddressQuery.document = GetClaimsByAddressDocument
 
 useGetClaimsByAddressQuery.getKey = (
   variables?: GetClaimsByAddressQueryVariables,
@@ -8588,17 +8740,59 @@ useGetClaimsByAddressQuery.getKey = (
     ? ['GetClaimsByAddress']
     : ['GetClaimsByAddress', variables]
 
+export const useInfiniteGetClaimsByAddressQuery = <
+  TData = InfiniteData<GetClaimsByAddressQuery>,
+  TError = unknown,
+>(
+  variables: GetClaimsByAddressQueryVariables,
+  options: Omit<
+    UseInfiniteQueryOptions<GetClaimsByAddressQuery, TError, TData>,
+    'queryKey'
+  > & {
+    queryKey?: UseInfiniteQueryOptions<
+      GetClaimsByAddressQuery,
+      TError,
+      TData
+    >['queryKey']
+  },
+) => {
+  return useInfiniteQuery<GetClaimsByAddressQuery, TError, TData>(
+    (() => {
+      const { queryKey: optionsQueryKey, ...restOptions } = options
+      return {
+        queryKey:
+          optionsQueryKey ?? variables === undefined
+            ? ['GetClaimsByAddress.infinite']
+            : ['GetClaimsByAddress.infinite', variables],
+        queryFn: (metaData) =>
+          fetcher<GetClaimsByAddressQuery, GetClaimsByAddressQueryVariables>(
+            GetClaimsByAddressDocument,
+            { ...variables, ...(metaData.pageParam ?? {}) },
+          )(),
+        ...restOptions,
+      }
+    })(),
+  )
+}
+
+useInfiniteGetClaimsByAddressQuery.getKey = (
+  variables?: GetClaimsByAddressQueryVariables,
+) =>
+  variables === undefined
+    ? ['GetClaimsByAddress.infinite']
+    : ['GetClaimsByAddress.infinite', variables]
+
 useGetClaimsByAddressQuery.fetcher = (
   variables?: GetClaimsByAddressQueryVariables,
   options?: RequestInit['headers'],
 ) =>
   fetcher<GetClaimsByAddressQuery, GetClaimsByAddressQueryVariables>(
-    GetClaimsByAddress_Query,
+    GetClaimsByAddressDocument,
     variables,
     options,
   )
 
-export const GetListItems_Query = `
+export const GetListItemsDocument = `
     query GetListItems($objectId: numeric) {
   triples(
     where: {predicateId: {_eq: 4}, objectId: {_eq: $objectId}}
@@ -8626,29 +8820,71 @@ export const useGetListItemsQuery = <
     queryKey:
       variables === undefined ? ['GetListItems'] : ['GetListItems', variables],
     queryFn: fetcher<GetListItemsQuery, GetListItemsQueryVariables>(
-      GetListItems_Query,
+      GetListItemsDocument,
       variables,
     ),
     ...options,
   })
 }
 
-useGetListItemsQuery.document = GetListItems_Query
+useGetListItemsQuery.document = GetListItemsDocument
 
 useGetListItemsQuery.getKey = (variables?: GetListItemsQueryVariables) =>
   variables === undefined ? ['GetListItems'] : ['GetListItems', variables]
+
+export const useInfiniteGetListItemsQuery = <
+  TData = InfiniteData<GetListItemsQuery>,
+  TError = unknown,
+>(
+  variables: GetListItemsQueryVariables,
+  options: Omit<
+    UseInfiniteQueryOptions<GetListItemsQuery, TError, TData>,
+    'queryKey'
+  > & {
+    queryKey?: UseInfiniteQueryOptions<
+      GetListItemsQuery,
+      TError,
+      TData
+    >['queryKey']
+  },
+) => {
+  return useInfiniteQuery<GetListItemsQuery, TError, TData>(
+    (() => {
+      const { queryKey: optionsQueryKey, ...restOptions } = options
+      return {
+        queryKey:
+          optionsQueryKey ?? variables === undefined
+            ? ['GetListItems.infinite']
+            : ['GetListItems.infinite', variables],
+        queryFn: (metaData) =>
+          fetcher<GetListItemsQuery, GetListItemsQueryVariables>(
+            GetListItemsDocument,
+            { ...variables, ...(metaData.pageParam ?? {}) },
+          )(),
+        ...restOptions,
+      }
+    })(),
+  )
+}
+
+useInfiniteGetListItemsQuery.getKey = (
+  variables?: GetListItemsQueryVariables,
+) =>
+  variables === undefined
+    ? ['GetListItems.infinite']
+    : ['GetListItems.infinite', variables]
 
 useGetListItemsQuery.fetcher = (
   variables?: GetListItemsQueryVariables,
   options?: RequestInit['headers'],
 ) =>
   fetcher<GetListItemsQuery, GetListItemsQueryVariables>(
-    GetListItems_Query,
+    GetListItemsDocument,
     variables,
     options,
   )
 
-export const GetTriples_Query = `
+export const GetTriplesDocument = `
     query GetTriples($limit: Int, $offset: Int, $orderBy: [triples_order_by!], $where: triples_bool_exp) {
   triples(limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {
     ...TripleMetadata
@@ -8678,29 +8914,69 @@ export const useGetTriplesQuery = <TData = GetTriplesQuery, TError = unknown>(
     queryKey:
       variables === undefined ? ['GetTriples'] : ['GetTriples', variables],
     queryFn: fetcher<GetTriplesQuery, GetTriplesQueryVariables>(
-      GetTriples_Query,
+      GetTriplesDocument,
       variables,
     ),
     ...options,
   })
 }
 
-useGetTriplesQuery.document = GetTriples_Query
+useGetTriplesQuery.document = GetTriplesDocument
 
 useGetTriplesQuery.getKey = (variables?: GetTriplesQueryVariables) =>
   variables === undefined ? ['GetTriples'] : ['GetTriples', variables]
+
+export const useInfiniteGetTriplesQuery = <
+  TData = InfiniteData<GetTriplesQuery>,
+  TError = unknown,
+>(
+  variables: GetTriplesQueryVariables,
+  options: Omit<
+    UseInfiniteQueryOptions<GetTriplesQuery, TError, TData>,
+    'queryKey'
+  > & {
+    queryKey?: UseInfiniteQueryOptions<
+      GetTriplesQuery,
+      TError,
+      TData
+    >['queryKey']
+  },
+) => {
+  return useInfiniteQuery<GetTriplesQuery, TError, TData>(
+    (() => {
+      const { queryKey: optionsQueryKey, ...restOptions } = options
+      return {
+        queryKey:
+          optionsQueryKey ?? variables === undefined
+            ? ['GetTriples.infinite']
+            : ['GetTriples.infinite', variables],
+        queryFn: (metaData) =>
+          fetcher<GetTriplesQuery, GetTriplesQueryVariables>(
+            GetTriplesDocument,
+            { ...variables, ...(metaData.pageParam ?? {}) },
+          )(),
+        ...restOptions,
+      }
+    })(),
+  )
+}
+
+useInfiniteGetTriplesQuery.getKey = (variables?: GetTriplesQueryVariables) =>
+  variables === undefined
+    ? ['GetTriples.infinite']
+    : ['GetTriples.infinite', variables]
 
 useGetTriplesQuery.fetcher = (
   variables?: GetTriplesQueryVariables,
   options?: RequestInit['headers'],
 ) =>
   fetcher<GetTriplesQuery, GetTriplesQueryVariables>(
-    GetTriples_Query,
+    GetTriplesDocument,
     variables,
     options,
   )
 
-export const GetTriple_Query = `
+export const GetTripleDocument = `
     query GetTriple($tripleId: numeric!) {
   triple(id: $tripleId) {
     ...TripleMetadata
@@ -8726,17 +9002,54 @@ export const useGetTripleQuery = <TData = GetTripleQuery, TError = unknown>(
   return useQuery<GetTripleQuery, TError, TData>({
     queryKey: ['GetTriple', variables],
     queryFn: fetcher<GetTripleQuery, GetTripleQueryVariables>(
-      GetTriple_Query,
+      GetTripleDocument,
       variables,
     ),
     ...options,
   })
 }
 
-useGetTripleQuery.document = GetTriple_Query
+useGetTripleQuery.document = GetTripleDocument
 
 useGetTripleQuery.getKey = (variables: GetTripleQueryVariables) => [
   'GetTriple',
+  variables,
+]
+
+export const useInfiniteGetTripleQuery = <
+  TData = InfiniteData<GetTripleQuery>,
+  TError = unknown,
+>(
+  variables: GetTripleQueryVariables,
+  options: Omit<
+    UseInfiniteQueryOptions<GetTripleQuery, TError, TData>,
+    'queryKey'
+  > & {
+    queryKey?: UseInfiniteQueryOptions<
+      GetTripleQuery,
+      TError,
+      TData
+    >['queryKey']
+  },
+) => {
+  return useInfiniteQuery<GetTripleQuery, TError, TData>(
+    (() => {
+      const { queryKey: optionsQueryKey, ...restOptions } = options
+      return {
+        queryKey: optionsQueryKey ?? ['GetTriple.infinite', variables],
+        queryFn: (metaData) =>
+          fetcher<GetTripleQuery, GetTripleQueryVariables>(GetTripleDocument, {
+            ...variables,
+            ...(metaData.pageParam ?? {}),
+          })(),
+        ...restOptions,
+      }
+    })(),
+  )
+}
+
+useInfiniteGetTripleQuery.getKey = (variables: GetTripleQueryVariables) => [
+  'GetTriple.infinite',
   variables,
 ]
 
@@ -8745,7 +9058,7 @@ useGetTripleQuery.fetcher = (
   options?: RequestInit['headers'],
 ) =>
   fetcher<GetTripleQuery, GetTripleQueryVariables>(
-    GetTriple_Query,
+    GetTripleDocument,
     variables,
     options,
   )
