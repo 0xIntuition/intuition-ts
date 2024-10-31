@@ -1,0 +1,62 @@
+import { Canvas, Controls, Meta, Source, Title } from '@storybook/blocks'
+
+import * as Stories from './StakeButton.stories'
+
+<Meta of={Stories} />
+
+<Title />
+
+#### Displays a button for inline staking on Claim and Identity row components.
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { StakeButton } from '@0xintuition/1ui'
+
+<StakeButton variant="identity" numPositions={69} />
+`} />
+
+<Canvas of={Stories.BasicUsage} sourceState="none" />
+
+## Properties
+
+<Controls />
+
+## Variants
+
+### Identity
+
+<Source
+  dark
+  language="tsx"
+  code={`
+<StakeButton variant="identity" numPositions={69} />
+`}
+/>
+
+<Canvas of={Stories.BasicUsage} sourceState="none" />
+
+### Claim For
+
+<Source
+  dark
+  language="tsx"
+  code={`
+<StakeButton variant="claimFor" numPositions={69} />
+`}
+/>
+
+<Canvas of={Stories.ClaimFor} sourceState="none" />
+
+### Claim Against
+
+<Source
+  dark
+  language="tsx"
+  code={`
+<StakeButton variant="claimAgainst" numPositions={69} />
+`}
+/>
+
+<Canvas of={Stories.ClaimAgainst} sourceState="none" />

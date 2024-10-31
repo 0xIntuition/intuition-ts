@@ -20,7 +20,7 @@ import { IdentityPresenter } from '@0xintuition/api'
 import { stakeModalAtom } from '@lib/state/store'
 import { Link } from '@remix-run/react'
 import { VaultDetailsType } from 'app/types'
-import { useSetAtom } from 'jotai'
+import { useAtom } from 'jotai'
 
 export interface IdentityRowProps extends React.HTMLAttributes<HTMLDivElement> {
   variant?: IdentityType
@@ -52,7 +52,7 @@ const IdentityRow = ({
   className,
   identity,
 }: IdentityRowProps) => {
-  const setStakeModalActive = useSetAtom(stakeModalAtom)
+  const [stakeModalActive, setStakeModalActive] = useAtom(stakeModalAtom)
 
   const content = (
     <div
@@ -92,7 +92,7 @@ const IdentityRow = ({
               modalType: 'identity',
               isOpen: true,
               identity,
-              vaultId: identity.vault_id,
+              vaultId: stakeModalActive.vaultId,
             }))
           }
         >
