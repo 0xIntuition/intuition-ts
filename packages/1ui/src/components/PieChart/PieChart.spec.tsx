@@ -33,11 +33,11 @@ describe('PieChart', () => {
         >
           <span
             class="col-[1] row-[1] rounded-full block"
-            style="height: 22px; width: 22px; mask: radial-gradient(farthest-side,#0000 calc(99% - 2px),var(--background) calc(100% - 2px);"
+            style="height: 32px; width: 32px; mask: radial-gradient(farthest-side,#0000 calc(99% - 4px),var(--background) calc(100% - 4px);"
           />
           <span
             class="col-[1] row-[1] border-muted-foreground rounded-full block"
-            style="border-width: 2px;"
+            style="border-width: 4px;"
           />
         </div>
       </DocumentFragment>
