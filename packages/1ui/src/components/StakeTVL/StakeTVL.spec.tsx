@@ -32,6 +32,22 @@ describe('StakeTVL', () => {
               </div>
             </div>
           </div>
+          <div
+            class="p-0.5"
+          >
+            <div
+              class="grid"
+            >
+              <span
+                class="col-[1] row-[1] rounded-full block"
+                style="height: 32px; width: 32px; mask: radial-gradient(farthest-side,#0000 calc(99% - 4px),var(--background) calc(100% - 4px);"
+              />
+              <span
+                class="col-[1] row-[1] border-muted-foreground rounded-full block"
+                style="border-width: 4px;"
+              />
+            </div>
+          </div>
         </div>
       </DocumentFragment>
     `)
