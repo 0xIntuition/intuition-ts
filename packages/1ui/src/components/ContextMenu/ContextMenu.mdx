@@ -1,0 +1,66 @@
+import { Canvas, Controls, Meta, Source, Title } from '@storybook/blocks'
+
+import { Button } from '..'
+
+import * as Stories from './ContextMenu.stories'
+
+<Meta of={Stories} />
+
+<Title />
+
+#### Displays a context menu triggered by right click.
+
+<Button
+  variant="accent"
+  onClick={() =>
+    window.open(
+      'https://www.radix-ui.com/primitives/docs/components/context-menu',
+      '_blank',
+    )
+  }
+>
+  {'API Reference'}
+</Button>
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuTrigger
+} from '@0xintuition/1ui'
+
+<ContextMenu>
+  <ContextMenuTrigger>
+    <Button size="lg">Right click me</Button>
+  </ContextMenuTrigger>
+  <ContextMenuContent>
+    <ContextMenuItem>Profile</ContextMenuItem>
+    <ContextMenuItem>Settings</ContextMenuItem>
+    <ContextMenuItem>Logout</ContextMenuItem>
+  </ContextMenuContent>
+</ContextMenu>
+`} />
+
+<Canvas of={Stories.BasicUsage} sourceState="none" />
+
+## Properties
+
+<Controls />
+
+## Components
+
+The ContextMenu consists of multiple components that can be composed together:
+
+- ContextMenu - The root component
+- ContextMenuTrigger - The element that triggers the menu
+- ContextMenuContent - The content of the menu
+- ContextMenuItem - Individual menu items
+- ContextMenuSeparator - A visual separator
+- ContextMenuLabel - A label for groups of items
+- ContextMenuCheckboxItem - A menu item with a checkbox
+- ContextMenuRadioGroup - A group of radio items
+- ContextMenuRadioItem - A menu item that can be selected from a group
