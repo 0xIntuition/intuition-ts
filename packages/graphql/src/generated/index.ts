@@ -1,4 +1,3 @@
-import { fetcher } from '@/client'
 import {
   InfiniteData,
   useInfiniteQuery,
@@ -7,6 +6,8 @@ import {
   UseQueryOptions,
 } from '@tanstack/react-query'
 import { DocumentNode } from 'graphql'
+
+import { fetcher } from '../client'
 
 export type Maybe<T> = T | null
 export type InputMaybe<T> = Maybe<T>
@@ -7278,19 +7279,26 @@ export type AccountClaimsFragment = {
 
 export type AccountPositionsFragment = {
   __typename?: 'accounts'
-  positions: Array<{
-    __typename?: 'positions'
-    id: string
-    shares: any
-    vault?: {
-      __typename?: 'vaults'
-      id: any
-      totalShares: any
-      currentSharePrice: any
-      atom?: { __typename?: 'atoms'; id: any; label?: string | null } | null
-      triple?: { __typename?: 'triples'; id: any; label?: string | null } | null
-    } | null
-  }>
+  positions_aggregate: {
+    __typename?: 'positions_aggregate'
+    nodes: Array<{
+      __typename?: 'positions'
+      id: string
+      shares: any
+      vault?: {
+        __typename?: 'vaults'
+        id: any
+        totalShares: any
+        currentSharePrice: any
+        atom?: { __typename?: 'atoms'; id: any; label?: string | null } | null
+        triple?: {
+          __typename?: 'triples'
+          id: any
+          label?: string | null
+        } | null
+      } | null
+    }>
+  }
 }
 
 export type AtomMetadataFragment = {
@@ -7582,23 +7590,26 @@ export type GetAccountsQuery = {
       counterShares: any
       triple?: { __typename?: 'triples'; id: any; label?: string | null } | null
     }>
-    positions: Array<{
-      __typename?: 'positions'
-      id: string
-      shares: any
-      vault?: {
-        __typename?: 'vaults'
-        id: any
-        totalShares: any
-        currentSharePrice: any
-        atom?: { __typename?: 'atoms'; id: any; label?: string | null } | null
-        triple?: {
-          __typename?: 'triples'
+    positions_aggregate: {
+      __typename?: 'positions_aggregate'
+      nodes: Array<{
+        __typename?: 'positions'
+        id: string
+        shares: any
+        vault?: {
+          __typename?: 'vaults'
           id: any
-          label?: string | null
+          totalShares: any
+          currentSharePrice: any
+          atom?: { __typename?: 'atoms'; id: any; label?: string | null } | null
+          triple?: {
+            __typename?: 'triples'
+            id: any
+            label?: string | null
+          } | null
         } | null
-      } | null
-    }>
+      }>
+    }
   }>
 }
 
@@ -7621,23 +7632,26 @@ export type GetAccountQuery = {
       counterShares: any
       triple?: { __typename?: 'triples'; id: any; label?: string | null } | null
     }>
-    positions: Array<{
-      __typename?: 'positions'
-      id: string
-      shares: any
-      vault?: {
-        __typename?: 'vaults'
-        id: any
-        totalShares: any
-        currentSharePrice: any
-        atom?: { __typename?: 'atoms'; id: any; label?: string | null } | null
-        triple?: {
-          __typename?: 'triples'
+    positions_aggregate: {
+      __typename?: 'positions_aggregate'
+      nodes: Array<{
+        __typename?: 'positions'
+        id: string
+        shares: any
+        vault?: {
+          __typename?: 'vaults'
           id: any
-          label?: string | null
+          totalShares: any
+          currentSharePrice: any
+          atom?: { __typename?: 'atoms'; id: any; label?: string | null } | null
+          triple?: {
+            __typename?: 'triples'
+            id: any
+            label?: string | null
+          } | null
         } | null
-      } | null
-    }>
+      }>
+    }
   } | null
   chainLinkPrices: Array<{ __typename?: 'chainLinkPrices'; usd: any }>
 }
@@ -8102,20 +8116,22 @@ export const AccountClaimsFragmentDoc = `
     `
 export const AccountPositionsFragmentDoc = `
     fragment AccountPositions on accounts {
-  positions(order_by: {shares: desc}) {
-    id
-    shares
-    vault {
+  positions_aggregate(order_by: {shares: desc}) {
+    nodes {
       id
-      totalShares
-      currentSharePrice
-      atom {
+      shares
+      vault {
         id
-        label
-      }
-      triple {
-        id
-        label
+        totalShares
+        currentSharePrice
+        atom {
+          id
+          label
+        }
+        triple {
+          id
+          label
+        }
       }
     }
   }
@@ -9137,7 +9153,7 @@ export const AccountPositions = {
         selections: [
           {
             kind: 'Field',
-            name: { kind: 'Name', value: 'positions' },
+            name: { kind: 'Name', value: 'positions_aggregate' },
             arguments: [
               {
                 kind: 'Argument',
@@ -9157,26 +9173,20 @@ export const AccountPositions = {
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'shares' } },
                 {
                   kind: 'Field',
-                  name: { kind: 'Name', value: 'vault' },
+                  name: { kind: 'Name', value: 'nodes' },
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
                       { kind: 'Field', name: { kind: 'Name', value: 'id' } },
                       {
                         kind: 'Field',
-                        name: { kind: 'Name', value: 'totalShares' },
+                        name: { kind: 'Name', value: 'shares' },
                       },
                       {
                         kind: 'Field',
-                        name: { kind: 'Name', value: 'currentSharePrice' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'atom' },
+                        name: { kind: 'Name', value: 'vault' },
                         selectionSet: {
                           kind: 'SelectionSet',
                           selections: [
@@ -9186,24 +9196,48 @@ export const AccountPositions = {
                             },
                             {
                               kind: 'Field',
-                              name: { kind: 'Name', value: 'label' },
-                            },
-                          ],
-                        },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'triple' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'id' },
+                              name: { kind: 'Name', value: 'totalShares' },
                             },
                             {
                               kind: 'Field',
-                              name: { kind: 'Name', value: 'label' },
+                              name: {
+                                kind: 'Name',
+                                value: 'currentSharePrice',
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'atom' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'label' },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'triple' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'label' },
+                                  },
+                                ],
+                              },
                             },
                           ],
                         },
@@ -9964,7 +9998,7 @@ export const GetAccounts = {
         selections: [
           {
             kind: 'Field',
-            name: { kind: 'Name', value: 'positions' },
+            name: { kind: 'Name', value: 'positions_aggregate' },
             arguments: [
               {
                 kind: 'Argument',
@@ -9984,26 +10018,20 @@ export const GetAccounts = {
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'shares' } },
                 {
                   kind: 'Field',
-                  name: { kind: 'Name', value: 'vault' },
+                  name: { kind: 'Name', value: 'nodes' },
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
                       { kind: 'Field', name: { kind: 'Name', value: 'id' } },
                       {
                         kind: 'Field',
-                        name: { kind: 'Name', value: 'totalShares' },
+                        name: { kind: 'Name', value: 'shares' },
                       },
                       {
                         kind: 'Field',
-                        name: { kind: 'Name', value: 'currentSharePrice' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'atom' },
+                        name: { kind: 'Name', value: 'vault' },
                         selectionSet: {
                           kind: 'SelectionSet',
                           selections: [
@@ -10013,24 +10041,48 @@ export const GetAccounts = {
                             },
                             {
                               kind: 'Field',
-                              name: { kind: 'Name', value: 'label' },
-                            },
-                          ],
-                        },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'triple' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'id' },
+                              name: { kind: 'Name', value: 'totalShares' },
                             },
                             {
                               kind: 'Field',
-                              name: { kind: 'Name', value: 'label' },
+                              name: {
+                                kind: 'Name',
+                                value: 'currentSharePrice',
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'atom' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'label' },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'triple' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'label' },
+                                  },
+                                ],
+                              },
                             },
                           ],
                         },
@@ -10221,7 +10273,7 @@ export const GetAccount = {
         selections: [
           {
             kind: 'Field',
-            name: { kind: 'Name', value: 'positions' },
+            name: { kind: 'Name', value: 'positions_aggregate' },
             arguments: [
               {
                 kind: 'Argument',
@@ -10241,26 +10293,20 @@ export const GetAccount = {
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'shares' } },
                 {
                   kind: 'Field',
-                  name: { kind: 'Name', value: 'vault' },
+                  name: { kind: 'Name', value: 'nodes' },
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
                       { kind: 'Field', name: { kind: 'Name', value: 'id' } },
                       {
                         kind: 'Field',
-                        name: { kind: 'Name', value: 'totalShares' },
+                        name: { kind: 'Name', value: 'shares' },
                       },
                       {
                         kind: 'Field',
-                        name: { kind: 'Name', value: 'currentSharePrice' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'atom' },
+                        name: { kind: 'Name', value: 'vault' },
                         selectionSet: {
                           kind: 'SelectionSet',
                           selections: [
@@ -10270,24 +10316,48 @@ export const GetAccount = {
                             },
                             {
                               kind: 'Field',
-                              name: { kind: 'Name', value: 'label' },
-                            },
-                          ],
-                        },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'triple' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'id' },
+                              name: { kind: 'Name', value: 'totalShares' },
                             },
                             {
                               kind: 'Field',
-                              name: { kind: 'Name', value: 'label' },
+                              name: {
+                                kind: 'Name',
+                                value: 'currentSharePrice',
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'atom' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'label' },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'triple' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'label' },
+                                  },
+                                ],
+                              },
                             },
                           ],
                         },

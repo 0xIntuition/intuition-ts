@@ -17,7 +17,6 @@ import { getEnv } from '@server/env'
 import { getTheme } from '@server/theme'
 
 import './styles/globals.css'
-import '@xyflow/react/dist/style.css'
 
 import { useEffect } from 'react'
 

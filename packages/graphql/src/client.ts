@@ -13,7 +13,8 @@ export function getClientConfig(token?: string): ClientConfig {
   }
 }
 
-export function createServerClient(token?: string) {
+// add userId back in when we need to add user auth for mutations
+export function createServerClient({ token }: { token?: string }) {
   return new GraphQLClient(
     'https://api.i7n.dev/v1/graphql',
     getClientConfig(token),

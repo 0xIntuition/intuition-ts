@@ -49,7 +49,7 @@ export default function Playground() {
     error: accountError,
   } = useGetAccountQuery(
     {
-      address,
+      address: address!,
     },
     {
       queryKey: ['get-account-query'],
@@ -68,7 +68,7 @@ export default function Playground() {
       // Map and sort triples
       const triplesWithPositions = triples
         .map((triple) => {
-          const position = userAccount?.positions.find(
+          const position = userAccount?.positions_aggregate.nodes.find(
             (pos) => pos.vault?.triple?.id === triple.id,
           )
 
@@ -108,10 +108,26 @@ export default function Playground() {
   }
 
   // Error states
-  if (triplesError || accountError || combinedData.error) {
+  if (triplesError) {
     return (
       <div className="p-4 text-red-500">
-        Error: {(triplesError || accountError || combinedData.error)?.message}
+        Error loading triples: {(triplesError as Error).message}
+      </div>
+    )
+  }
+
+  if (accountError) {
+    return (
+      <div className="p-4 text-red-500">
+        Error loading account: {(accountError as Error).message}
+      </div>
+    )
+  }
+
+  if (combinedData.error) {
+    return (
+      <div className="p-4 text-red-500">
+        Error processing data: {(combinedData.error as Error).message}
       </div>
     )
   }
@@ -120,7 +136,7 @@ export default function Playground() {
   const triplesWithPositionsCount =
     combinedData.data?.filter((triple) => triple.userPosition).length || 0
 
-  console.log('Account positions:', accountData?.account?.positions)
+  console.log('Account positions:', accountData?.account?.positions_aggregate)
   console.log('All triples:', triplesData?.triples)
 
   return (
@@ -132,7 +148,10 @@ export default function Playground() {
           <div className="p-4 rounded">
             <p>ID: {accountData.account.id}</p>
             <p>Label: {accountData.account.label}</p>
-            <p>Total Positions: {accountData.account.positions.length}</p>
+            <p>
+              Total Positions:{' '}
+              {accountData.account.positions_aggregate.nodes.length}
+            </p>
           </div>
         )}
       </div>
@@ -186,7 +205,8 @@ export default function Playground() {
             {
               atomsCount: atoms?.length,
               triplesCount: triplesData?.triples.length,
-              accountPositions: accountData?.account?.positions.length,
+              accountPositions:
+                accountData?.account?.positions_aggregate.nodes.length,
               combinedCount: combinedData.data?.length,
               triplesWithPositions: triplesWithPositionsCount,
             },
