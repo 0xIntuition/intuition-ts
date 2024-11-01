@@ -6,23 +6,25 @@ import * as Stories from './ClaimRow.stories'
 
 <Title />
 
-#### A representation of claim details.
+#### Displays a claim with TVL and stake actions.
 
 <Source
   dark
   language="tsx"
   code={`
-import { ClaimRow, Claim } from '@0xintuition/1ui'
+import { ClaimRow } from '@0xintuition/1ui'
 
-<ClaimRow claimsFor={736} claimsAgainst={234} amount={0.383}>
+<ClaimRow
+  numPositionsFor={69}
+  numPositionsAgainst={42}
+  totalTVL={420.69}
+  tvlFor={240.69}
+  currency="ETH"
+>
   <Claim
-    size="sm"
-    subject={{
-      variant: 'default',
-      label: '0xintuition',
-    }}
-    predicate={{ label: 'is really' }}
-    object={{ label: 'cool' }}
+    subject={{ variant: 'non-user', label: '0xintuition' }}
+    predicate={{ variant: 'non-user', label: 'is really' }}
+    object={{ variant: 'non-user', label: 'cool' }}
   />
 </ClaimRow>
 `} />
