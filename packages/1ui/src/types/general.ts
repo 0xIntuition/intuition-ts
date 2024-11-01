@@ -5,8 +5,8 @@ export const Identity = {
 export type IdentityType = (typeof Identity)[keyof typeof Identity]
 
 export const ClaimPosition = {
-  claimFor: 'claimFor',
-  claimAgainst: 'claimAgainst',
+  claimFor: 'for',
+  claimAgainst: 'against',
 } as const
 export type ClaimPositionType =
   (typeof ClaimPosition)[keyof typeof ClaimPosition]

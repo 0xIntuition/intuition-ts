@@ -34,3 +34,31 @@ import { ClaimRow } from '@0xintuition/1ui'
 ## Properties
 
 <Controls />
+
+## Variants
+
+### With User Position
+
+<Source
+  dark
+  language="tsx"
+  code={`
+<ClaimRow
+  numPositionsFor={69}
+  numPositionsAgainst={42}
+  totalTVL={420.69}
+  tvlFor={240.69}
+  currency="ETH"
+  userPosition={3.19}
+  positionDirection="claimFor"
+>
+  <Claim
+    subject={{ variant: 'non-user', label: '0xintuition' }}
+    predicate={{ variant: 'non-user', label: 'is really' }}
+    object={{ variant: 'non-user', label: 'cool' }}
+  />
+</ClaimRow>
+`}
+/>
+
+<Canvas of={Stories.WithUserPosition} sourceState="none" />

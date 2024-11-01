@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { Claim } from 'components/Claim'
+import { ClaimPosition } from 'types'
 
 import { ClaimRow } from './ClaimRow'
 
@@ -57,6 +58,23 @@ const meta: Meta<typeof ClaimRow> = {
       },
       control: 'text',
     },
+    userPosition: {
+      description: 'Amount staked by the user',
+      table: {
+        type: { summary: 'number' },
+        defaultValue: { summary: '3.19' },
+      },
+      control: 'number',
+    },
+    positionDirection: {
+      description: 'Direction of the user position',
+      table: {
+        type: { summary: 'ClaimPosition' },
+        defaultValue: { summary: 'claimFor' },
+      },
+      control: 'select',
+      options: Object.values(ClaimPosition),
+    },
   },
 }
 
@@ -76,20 +94,20 @@ export const BasicUsage: Story = {
     <div className="w-[800px]">
       <ClaimRow {...args}>
         <Claim
-          subject={{
-            variant: 'non-user',
-            label: '0xintuition',
-          }}
-          predicate={{
-            variant: 'non-user',
-            label: 'is really',
-          }}
-          object={{
-            variant: 'non-user',
-            label: 'cool',
-          }}
+          subject={{ variant: 'non-user', label: '0xintuition' }}
+          predicate={{ variant: 'non-user', label: 'is really' }}
+          object={{ variant: 'non-user', label: 'cool' }}
         />
       </ClaimRow>
     </div>
   ),
+}
+
+export const WithUserPosition: Story = {
+  args: {
+    ...BasicUsage.args,
+    userPosition: 3.19,
+    positionDirection: ClaimPosition.claimFor,
+  },
+  render: BasicUsage.render,
 }

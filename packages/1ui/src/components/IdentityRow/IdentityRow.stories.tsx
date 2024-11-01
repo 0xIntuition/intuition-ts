@@ -42,6 +42,14 @@ const meta: Meta<typeof IdentityRow> = {
       },
       control: 'number',
     },
+    userPosition: {
+      description: 'Amount staked by the user',
+      table: {
+        type: { summary: 'number' },
+        defaultValue: { summary: '3.19' },
+      },
+      control: 'number',
+    },
   },
 }
 
@@ -64,4 +72,12 @@ export const BasicUsage: Story = {
       <IdentityRow {...args} />
     </div>
   ),
+}
+
+export const WithUserPosition: Story = {
+  args: {
+    ...BasicUsage.args,
+    userPosition: 3.19,
+  },
+  render: BasicUsage.render,
 }

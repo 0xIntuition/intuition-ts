@@ -17,7 +17,6 @@ import { IdentityRow } from '@0xintuition/1ui'
 <IdentityRow
   variant="user"
   totalTVL={420.69}
-  tvlFor={240.69}
   currency="ETH"
   name="John Doe"
   avatarSrc="https://avatars.githubusercontent.com/u/1?v=4"
@@ -31,3 +30,26 @@ import { IdentityRow } from '@0xintuition/1ui'
 ## Properties
 
 <Controls />
+
+## Variants
+
+### With User Position
+
+<Source
+  dark
+  language="tsx"
+  code={`
+<IdentityRow
+  variant="user"
+  totalTVL={420.69}
+  currency="ETH"
+  name="John Doe"
+  avatarSrc="https://avatars.githubusercontent.com/u/1?v=4"
+  link="/identity/1"
+  numPositions={69}
+  userPosition={3.19}
+/>
+`}
+/>
+
+<Canvas of={Stories.WithUserPosition} sourceState="none" />
