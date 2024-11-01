@@ -1,1 +1,1 @@
-export * from './StakeCard'
+export * from './IdentityStakeCard'

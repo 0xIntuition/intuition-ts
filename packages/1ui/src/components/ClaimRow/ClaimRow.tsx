@@ -1,6 +1,13 @@
 import React from 'react'
 
-import { ContextMenu } from 'components/ContextMenu'
+import { Button, ButtonSize, ButtonVariant } from 'components/Button'
+import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuTrigger,
+} from 'components/ContextMenu'
+import { Icon, IconName } from 'components/Icon'
 import { StakeButton, StakeButtonVariant } from 'components/StakeButton'
 import { StakeTVL } from 'components/StakeTVL'
 import { cn } from 'styles'
@@ -46,7 +53,18 @@ const ClaimRow = ({
           variant={StakeButtonVariant.claimAgainst}
           numPositions={numPositionsAgainst}
         />
-        <ContextMenu />
+        <ContextMenu>
+          <ContextMenuTrigger>
+            <Button variant={ButtonVariant.navigation} size={ButtonSize.icon}>
+              <Icon name={IconName.context} className="h-4 w-4" />
+            </Button>
+          </ContextMenuTrigger>
+          <ContextMenuContent>
+            <ContextMenuItem>Profile</ContextMenuItem>
+            <ContextMenuItem>Settings</ContextMenuItem>
+            <ContextMenuItem>Logout</ContextMenuItem>
+          </ContextMenuContent>
+        </ContextMenu>
       </div>
     </div>
   )

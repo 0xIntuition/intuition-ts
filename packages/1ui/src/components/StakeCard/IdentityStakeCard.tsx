@@ -5,7 +5,8 @@ import { CurrencyType, Identity, IdentityType } from 'types'
 
 import { Button, IdentityTag, MonetaryValue, Text, Trunctacular } from '..'
 
-export interface StakeCardProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface IdentityStakeCardProps
+  extends React.HTMLAttributes<HTMLDivElement> {
   tvl: number
   currency?: CurrencyType
   holders: number
@@ -16,7 +17,7 @@ export interface StakeCardProps extends React.HTMLAttributes<HTMLDivElement> {
   onViewAllClick?: () => void
 }
 
-const StakeCard = ({
+const IdentityStakeCard = ({
   tvl,
   currency,
   holders,
@@ -27,7 +28,7 @@ const StakeCard = ({
   onViewAllClick,
   className,
   ...props
-}: StakeCardProps) => {
+}: IdentityStakeCardProps) => {
   return (
     <div
       className={cn(
@@ -72,4 +73,4 @@ const StakeCard = ({
   )
 }
 
-export { StakeCard }
+export { IdentityStakeCard }

@@ -4,7 +4,7 @@ import { Identity } from 'types'
 import { IdentityRow } from './IdentityRow'
 
 const meta: Meta<typeof IdentityRow> = {
-  title: 'Components/IdentityRow',
+  title: 'Components/Identity/IdentityRow',
   component: IdentityRow,
   parameters: {
     docs: {

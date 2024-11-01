@@ -210,6 +210,21 @@ describe('ClaimRow', () => {
                 42
               </div>
             </button>
+            <span
+              data-state="closed"
+            >
+              <button
+                class="flex justify-center items-center gap-2 text-sm font-medium border disabled:bg-muted aria-disabled:bg-muted disabled:border-muted aria-disabled:border-muted aria-disabled:pointer-events-none bg-transparent text-secondary-foreground/70 border-transparent rounded-lg hover:text-secondary-foreground hover:border-border/20 aria-selected:bg-primary/10 aria-selected:text-secondary-foreground/80 disabled:text-muted-foreground aria-disabled:text-muted-foreground p-1"
+              >
+                <svg
+                  class="h-4 w-4"
+                >
+                  <use
+                    href="/src/components/Icon/Icon.sprites.svg#context"
+                  />
+                </svg>
+              </button>
+            </span>
           </div>
         </div>
       </DocumentFragment>

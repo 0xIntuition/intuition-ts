@@ -1,14 +1,12 @@
-import React from 'react'
-
 import { render } from '@testing-library/react'
 import { Identity } from 'types'
 
-import { StakeCard } from './StakeCard'
+import { IdentityStakeCard } from './IdentityStakeCard'
 
-describe('StakeCard', () => {
+describe('IdentityStakeCard', () => {
   it('should render appropriate element', () => {
     const { asFragment } = render(
-      <StakeCard
+      <IdentityStakeCard
         tvl={4.928}
         holders={69}
         variant={Identity.user}

@@ -171,9 +171,25 @@ function ActivityItem({
           </HoverCard>
           <Text>{message}</Text>
         </div>
-        <Text className="text-secondary-foreground">
-          {formatDistance(new Date(activity.timestamp), new Date())} ago
-        </Text>
+        <div className="flex gap-2 items-center">
+          <Text className="text-secondary-foreground">
+            {formatDistance(new Date(activity.timestamp), new Date())} ago
+          </Text>
+          <a
+            href={`${BLOCK_EXPLORER_URL}/tx/${activity.transaction_hash}`}
+            target="_blank"
+            rel="noreferrer noopener"
+          >
+            <Button
+              variant={ButtonVariant.secondary}
+              size={ButtonSize.md}
+              className="w-max h-fit"
+            >
+              View on Explorer{' '}
+              <Icon name={IconName.squareArrowTopRight} className="h-4 w-4" />
+            </Button>
+          </a>
+        </div>
       </div>
       <div className="flex w-full">
         {activity.identity && (
@@ -200,22 +216,8 @@ function ActivityItem({
                   value: tag.num_tagged_identities,
                 })) ?? undefined
               }
-              className="w-full hover:bg-transparent pr-0"
+              className="w-full hover:bg-transparent"
             />
-            <a
-              href={`${BLOCK_EXPLORER_URL}/tx/${activity.transaction_hash}`}
-              target="_blank"
-              rel="noreferrer noopener"
-            >
-              <Button
-                variant={ButtonVariant.secondary}
-                size={ButtonSize.md}
-                className="w-max h-fit mr-6"
-              >
-                View on Explorer{' '}
-                <Icon name={IconName.squareArrowTopRight} className="h-4 w-4" />
-              </Button>
-            </a>
           </div>
         )}
         {activity.claim && (
@@ -226,7 +228,7 @@ function ActivityItem({
               tvlFor={+formatBalance(activity.claim.for_assets_sum, 18)}
               totalTVL={+formatBalance(activity.claim.assets_sum, 18)}
               link={`${PATHS.CLAIM}/${activity.claim.vault_id}`}
-              className="w-full hover:bg-transparent pr-0"
+              className="w-full hover:bg-transparent"
             >
               <Claim
                 size="md"
@@ -293,20 +295,6 @@ function ActivityItem({
                 }}
               />
             </ClaimRow>
-            <a
-              href={`${BLOCK_EXPLORER_URL}/tx/${activity.transaction_hash}`}
-              target="_blank"
-              rel="noreferrer noopener"
-            >
-              <Button
-                variant={ButtonVariant.secondary}
-                size={ButtonSize.md}
-                className="w-max h-fit mr-6"
-              >
-                View on Explorer{' '}
-                <Icon name={IconName.squareArrowTopRight} className="h-4 w-4" />
-              </Button>
-            </a>
           </div>
         )}
       </div>

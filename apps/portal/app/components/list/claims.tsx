@@ -72,11 +72,10 @@ export function ClaimsList({
           className="grow shrink basis-0 self-stretch bg-background first:border-t-px first:rounded-t-xl last:rounded-b-xl theme-border border-t-0 flex-col justify-start gap-5 inline-flex"
         >
           <ClaimRow
-            claimsFor={claim.for_num_positions}
-            claimsAgainst={claim.against_num_positions}
-            claimsForValue={+formatBalance(claim.for_assets_sum, 18)}
-            claimsAgainstValue={+formatBalance(claim.against_assets_sum, 18)}
-            tvl={+formatBalance(claim.assets_sum, 18)}
+            numPositionsFor={claim.for_num_positions}
+            numPositionsAgainst={claim.against_num_positions}
+            tvlFor={+formatBalance(claim.for_assets_sum, 18)}
+            totalTVL={+formatBalance(claim.assets_sum, 18)}
             link={getClaimUrl(claim.vault_id, readOnly)}
           >
             <Claim

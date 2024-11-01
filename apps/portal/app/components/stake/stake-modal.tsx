@@ -377,7 +377,10 @@ export default function StakeModal({
         handleClose()
       }}
     >
-      <DialogContent className="flex flex-col min-w-[600px] min-h-[600px]">
+      <DialogContent
+        onOpenAutoFocus={(event) => event.preventDefault()}
+        className="flex flex-col min-w-[600px] min-h-[600px]"
+      >
         <DialogHeader>
           <DialogTitle>
             <div className="flex items-center justify-between w-full pr-2.5">

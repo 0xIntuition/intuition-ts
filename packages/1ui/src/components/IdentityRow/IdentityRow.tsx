@@ -1,6 +1,13 @@
 import React from 'react'
 
-import { ContextMenu } from 'components/ContextMenu'
+import { Button, ButtonSize, ButtonVariant } from 'components/Button'
+import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuTrigger,
+} from 'components/ContextMenu'
+import { Icon, IconName } from 'components/Icon'
 import { IdentityTag, IdentityTagSize } from 'components/IdentityTag'
 import { StakeButton } from 'components/StakeButton'
 import { StakeTVL } from 'components/StakeTVL'
@@ -54,7 +61,18 @@ const IdentityRow = ({
       <div className="flex items-center gap-3">
         <StakeTVL totalTVL={totalTVL} currency={currency} />
         <StakeButton numPositions={numPositions} />
-        <ContextMenu />
+        <ContextMenu>
+          <ContextMenuTrigger>
+            <Button variant={ButtonVariant.navigation} size={ButtonSize.icon}>
+              <Icon name={IconName.context} className="h-4 w-4" />
+            </Button>
+          </ContextMenuTrigger>
+          <ContextMenuContent>
+            <ContextMenuItem>Profile</ContextMenuItem>
+            <ContextMenuItem>Settings</ContextMenuItem>
+            <ContextMenuItem>Logout</ContextMenuItem>
+          </ContextMenuContent>
+        </ContextMenu>
       </div>
     </div>
   )
