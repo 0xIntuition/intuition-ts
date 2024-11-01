@@ -43,10 +43,10 @@ describe('ClaimRow', () => {
                     data-state="closed"
                   >
                     <span
-                      class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square bg-background theme-border rounded"
+                      class="flex h-full w-full items-center justify-center bg-inherit"
                     >
-                      <span
-                        class="flex h-full w-full items-center justify-center bg-inherit"
+                      <svg
+                        class="text-primary/30 w-[80%] h-[80%] max-w-8 max-h-8"
                       >
                         <svg
                           class="text-primary/30 w-[80%] h-[80%]"
@@ -75,10 +75,10 @@ describe('ClaimRow', () => {
                     data-state="closed"
                   >
                     <span
-                      class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square bg-background theme-border rounded"
+                      class="flex h-full w-full items-center justify-center bg-inherit"
                     >
-                      <span
-                        class="flex h-full w-full items-center justify-center bg-inherit"
+                      <svg
+                        class="text-primary/30 w-[80%] h-[80%] max-w-8 max-h-8"
                       >
                         <svg
                           class="text-primary/30 w-[80%] h-[80%]"
@@ -465,6 +465,40 @@ describe('ClaimRow', () => {
             >
               You have staked 3.19 ETH for this claim
             </div>
+            <button
+              class="flex justify-center items-center text-sm font-medium border disabled:text-muted-foreground aria-disabled:text-muted-foreground disabled:border-muted aria-disabled:border-muted aria-disabled:pointer-events-none bg-gradient-to-b from-transparent to-transparent text-primary/70 border-primary/50 rounded-lg hover:text-primary hover:border-primary disabled:bg-transparent aria-disabled:bg-transparent aria-selected:primary-gradient-subtle aria-selected:border-primary/10 shadow-md-subtle max-sm:py-2 max-sm:text-base py-0.5 px-2.5 gap-1.5 h-9 w-16"
+            >
+              <svg
+                class="h-4 w-4"
+              >
+                <use
+                  href="/src/components/Icon/Icon.sprites.svg#arrow-up"
+                />
+              </svg>
+
+              <div
+                class="text-sm font-normal text-inherit"
+              >
+                69
+              </div>
+            </button>
+            <button
+              class="flex justify-center items-center text-sm font-medium border disabled:text-muted-foreground aria-disabled:text-muted-foreground disabled:border-muted aria-disabled:border-muted aria-disabled:pointer-events-none bg-gradient-to-b from-transparent to-transparent text-primary/70 border-primary/50 rounded-lg hover:text-primary hover:border-primary disabled:bg-transparent aria-disabled:bg-transparent aria-selected:primary-gradient-subtle aria-selected:border-primary/10 shadow-md-subtle max-sm:py-2 max-sm:text-base py-0.5 px-2.5 gap-1.5 h-9 w-16"
+            >
+              <svg
+                class="h-4 w-4"
+              >
+                <use
+                  href="/src/components/Icon/Icon.sprites.svg#arrow-up"
+                />
+              </svg>
+
+              <div
+                class="text-sm font-normal text-inherit"
+              >
+                42
+              </div>
+            </button>
           </div>
         </div>
       </DocumentFragment>
