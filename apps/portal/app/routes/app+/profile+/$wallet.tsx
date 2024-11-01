@@ -6,13 +6,13 @@ import {
   Icon,
   IconName,
   Identity,
+  IdentityStakeCard,
   PieChartVariant,
   PositionCard,
   PositionCardLastUpdated,
   PositionCardOwnership,
   PositionCardStaked,
   ProfileCard,
-  StakeCard,
   Tag,
   Tags,
   TagsButton,
@@ -407,7 +407,7 @@ export default function Profile() {
               <PositionCardLastUpdated timestamp={userIdentity.updated_at} />
             </PositionCard>
           ) : null}
-          <StakeCard
+          <IdentityStakeCard
             tvl={+formatBalance(assets_sum ?? '0')}
             holders={userIdentity.num_positions}
             variant={userIdentity.is_user ? Identity.user : Identity.nonUser}

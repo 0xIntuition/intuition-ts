@@ -3,6 +3,7 @@ import {
   ButtonSize,
   ButtonVariant,
   Identity,
+  IdentityStakeCard,
   InfoCard,
   PieChartVariant,
   PositionCard,
@@ -10,7 +11,6 @@ import {
   PositionCardOwnership,
   PositionCardStaked,
   ProfileCard,
-  StakeCard,
 } from '@0xintuition/1ui'
 import {
   GetPositionByIdResponse,
@@ -67,7 +67,7 @@ export default function StakeIdentityActivity({
 
           <div className="flex flex-col md:flex-row gap-5 items-start pb-5 px-5">
             <div className="w-full min-w-80 h-full">
-              <StakeCard
+              <IdentityStakeCard
                 className="bg-primary/5"
                 tvl={+formatBalance(identity?.assets_sum)}
                 holders={identity?.num_positions}
