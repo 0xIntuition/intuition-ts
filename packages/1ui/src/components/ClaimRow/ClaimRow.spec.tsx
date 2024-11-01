@@ -37,7 +37,7 @@ describe('ClaimRow', () => {
           class="w-full flex justify-between items-center max-sm:flex-col max-sm:gap-3 p-4"
         >
           <div
-            class="flex items-center"
+            class="flex items-center gap-1"
           >
             <div
               class="flex items-center w-full max-w-max group relative max-sm:flex-col max-sm:m-auto transition-colors duration-200 flex-row"
@@ -159,9 +159,25 @@ describe('ClaimRow', () => {
                   </div>
                 </div>
               </div>
+              <div
+                class="p-0.5"
+              >
+                <div
+                  class="grid"
+                >
+                  <span
+                    class="col-[1] row-[1] rounded-full block"
+                    style="height: 32px; width: 32px; mask: radial-gradient(farthest-side,#0000 calc(99% - 4px),var(--background) calc(100% - 4px);"
+                  />
+                  <span
+                    class="col-[1] row-[1] border-muted-foreground rounded-full block"
+                    style="border-width: 4px;"
+                  />
+                </div>
+              </div>
             </div>
             <button
-              class="flex justify-center items-center text-sm font-medium border disabled:text-muted-foreground aria-disabled:text-muted-foreground disabled:border-muted aria-disabled:border-muted aria-disabled:pointer-events-none bg-gradient-to-b from-transparent to-transparent text-primary/70 border-primary/50 rounded-lg hover:text-primary hover:border-primary disabled:bg-transparent aria-disabled:bg-transparent aria-selected:primary-gradient-subtle aria-selected:border-primary/10 shadow-md-subtle max-sm:py-2 max-sm:text-base py-0.5 px-2.5 gap-1.5 h-9 w-16"
+              class="flex justify-center items-center text-sm font-medium border disabled:text-muted-foreground aria-disabled:text-muted-foreground disabled:border-muted aria-disabled:border-muted aria-disabled:pointer-events-none bg-gradient-to-b from-transparent to-transparent rounded-lg hover:text-primary disabled:bg-transparent aria-disabled:bg-transparent aria-selected:primary-gradient-subtle aria-selected:border-primary/10 shadow-md-subtle max-sm:py-2 max-sm:text-base py-0.5 px-2.5 gap-1.5 h-9 w-16 bg-for/10 border-for/30 hover:bg-for hover:border-for/50 text-for"
             >
               <svg
                 class="h-4 w-4"
@@ -170,7 +186,7 @@ describe('ClaimRow', () => {
                   href="/src/components/Icon/Icon.sprites.svg#arrow-up"
                 />
               </svg>
-
+               
               <div
                 class="text-sm font-normal text-inherit"
               >
@@ -178,7 +194,7 @@ describe('ClaimRow', () => {
               </div>
             </button>
             <button
-              class="flex justify-center items-center text-sm font-medium border disabled:text-muted-foreground aria-disabled:text-muted-foreground disabled:border-muted aria-disabled:border-muted aria-disabled:pointer-events-none bg-gradient-to-b from-transparent to-transparent text-primary/70 border-primary/50 rounded-lg hover:text-primary hover:border-primary disabled:bg-transparent aria-disabled:bg-transparent aria-selected:primary-gradient-subtle aria-selected:border-primary/10 shadow-md-subtle max-sm:py-2 max-sm:text-base py-0.5 px-2.5 gap-1.5 h-9 w-16"
+              class="flex justify-center items-center text-sm font-medium border disabled:text-muted-foreground aria-disabled:text-muted-foreground disabled:border-muted aria-disabled:border-muted aria-disabled:pointer-events-none bg-gradient-to-b from-transparent to-transparent rounded-lg hover:text-primary disabled:bg-transparent aria-disabled:bg-transparent aria-selected:primary-gradient-subtle aria-selected:border-primary/10 shadow-md-subtle max-sm:py-2 max-sm:text-base py-0.5 px-2.5 gap-1.5 h-9 w-16 bg-against/10 border-against/30 hover:bg-against hover:border-against/50 text-against"
             >
               <svg
                 class="h-4 w-4"
@@ -187,7 +203,7 @@ describe('ClaimRow', () => {
                   href="/src/components/Icon/Icon.sprites.svg#arrow-up"
                 />
               </svg>
-
+               
               <div
                 class="text-sm font-normal text-inherit"
               >

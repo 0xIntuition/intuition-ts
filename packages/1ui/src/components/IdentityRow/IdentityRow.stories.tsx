@@ -34,14 +34,6 @@ const meta: Meta<typeof IdentityRow> = {
       },
       control: 'number',
     },
-    tvlFor: {
-      description: 'TVL amount for the "For" position',
-      table: {
-        type: { summary: 'number' },
-        defaultValue: { summary: '240.69' },
-      },
-      control: 'number',
-    },
     numPositions: {
       description: 'Number of positions',
       table: {
@@ -61,7 +53,6 @@ export const BasicUsage: Story = {
   args: {
     variant: Identity.user,
     totalTVL: 420.69,
-    tvlFor: 240.69,
     currency: 'ETH',
     name: 'John Doe',
     avatarSrc: 'https://avatars.githubusercontent.com/u/1?v=4',

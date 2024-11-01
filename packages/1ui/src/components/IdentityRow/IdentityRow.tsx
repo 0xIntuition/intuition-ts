@@ -11,24 +11,20 @@ import { CurrencyType, Identity, IdentityType } from 'types'
 export interface IdentityRowProps extends React.HTMLAttributes<HTMLDivElement> {
   variant?: IdentityType
   totalTVL: number
-  tvlFor: number
   currency?: CurrencyType
   name: string
-  description: string
-  id: string
+  description?: string
   claimLink?: string
   avatarSrc: string
   link: string
   ipfsLink: string
   numPositions: number
   tags?: TagWithValueProps[]
-  vaultId: string
 }
 
 const IdentityRow = ({
   variant = Identity.user,
   totalTVL,
-  tvlFor,
   currency,
   name,
   avatarSrc,
@@ -56,7 +52,7 @@ const IdentityRow = ({
       </div>
 
       <div className="flex items-center gap-3">
-        <StakeTVL totalTVL={totalTVL} tvlFor={tvlFor} currency={currency} />
+        <StakeTVL totalTVL={totalTVL} currency={currency} />
         <StakeButton numPositions={numPositions} />
         <ContextMenu />
       </div>

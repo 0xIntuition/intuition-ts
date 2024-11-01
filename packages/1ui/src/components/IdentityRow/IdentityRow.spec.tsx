@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { render } from '@testing-library/react'
 import { Identity } from 'types'
 
@@ -11,7 +9,6 @@ describe('IdentityRow', () => {
       <IdentityRow
         variant={Identity.user}
         totalTVL={420.69}
-        tvlFor={240.69}
         currency="ETH"
         name="John Doe"
         avatarSrc="https://avatars.githubusercontent.com/u/1?v=4"
@@ -20,7 +17,6 @@ describe('IdentityRow', () => {
         id="1"
         description="Test description"
         ipfsLink="ipfs://test"
-        vaultId="1"
       />,
     )
     expect(asFragment()).toMatchInlineSnapshot(`

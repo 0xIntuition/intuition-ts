@@ -9,6 +9,7 @@ import {
   Icon,
   IconName,
   Identity,
+  IdentityRow,
   IdentityTag,
   ProfileCard,
   Text,
@@ -22,7 +23,6 @@ import {
 } from '@0xintuition/api'
 
 import { ClaimRow } from '@components/claim/claim-row'
-import { IdentityRow } from '@components/identity/identity-row'
 import {
   formatBalance,
   getAtomDescription,
@@ -188,10 +188,10 @@ function ActivityItem({
               id={
                 activity.identity.user?.wallet ?? activity.identity.identity_id
               }
-              amount={
+              totalTVL={
                 +formatBalance(BigInt(activity.identity.assets_sum ?? '0'), 18)
               }
-              totalFollowers={activity.identity.num_positions}
+              numPositions={activity.identity.num_positions}
               link={getAtomLink(activity.identity)}
               ipfsLink={getAtomIpfsLink(activity.identity)}
               tags={
@@ -221,13 +221,10 @@ function ActivityItem({
         {activity.claim && (
           <div className="bg-secondary-foreground/10 rounded-xl flex flex-row w-full gap-6 rounded-t-none items-center max-md:flex-col group hover:bg-secondary/10 transition-colors duration-200">
             <ClaimRow
-              claimsFor={activity.claim.for_num_positions}
-              claimsAgainst={activity.claim.against_num_positions}
-              claimsForValue={+formatBalance(activity.claim.for_assets_sum, 18)}
-              claimsAgainstValue={
-                +formatBalance(activity.claim.against_assets_sum, 18)
-              }
-              tvl={+formatBalance(activity.claim.assets_sum, 18)}
+              numPositionsFor={activity.claim.for_num_positions}
+              numPositionsAgainst={activity.claim.against_num_positions}
+              tvlFor={+formatBalance(activity.claim.for_assets_sum, 18)}
+              totalTVL={+formatBalance(activity.claim.assets_sum, 18)}
               link={`${PATHS.CLAIM}/${activity.claim.vault_id}`}
               className="w-full hover:bg-transparent pr-0"
             >
