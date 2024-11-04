@@ -428,6 +428,9 @@ export default function StakeModal({
     'confirm',
   ].includes(state.status)
 
+  console.log('userWallet', userWallet)
+  console.log('isLoading', isLoading)
+
   return (
     <Dialog
       defaultOpen

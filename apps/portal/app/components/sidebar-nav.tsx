@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 import {
   Button,
@@ -29,15 +29,8 @@ import {
   globalCreateIdentityModalAtom,
   stakeModalAtom,
 } from '@lib/state/store'
-import {
-  NavLink,
-  useFetcher,
-  useLocation,
-  useNavigate,
-  useSubmit,
-} from '@remix-run/react'
+import { NavLink, useLocation, useNavigate, useSubmit } from '@remix-run/react'
 import { MULTIVAULT_CONTRACT_ADDRESS, PATHS } from 'app/consts'
-import { VaultDetailsType } from 'app/types'
 import { useAtom } from 'jotai'
 
 import CreateClaimModal from './create-claim/create-claim-modal'
@@ -151,16 +144,6 @@ export default function SidebarNav({
     }
     return location.pathname.startsWith(route)
   }
-
-  const vaultDetailsFetcher = useFetcher<VaultDetailsType>()
-
-  useEffect(() => {
-    vaultDetailsFetcher.load(
-      `/resources/get-vault-details?contract=${MULTIVAULT_CONTRACT_ADDRESS}&${stakeModalActive.vaultId ?? '0'}}`,
-    )
-  }, [stakeModalActive.vaultId])
-
-  const vaultDetails = vaultDetailsFetcher.data
 
   return (
     <>
@@ -418,13 +401,13 @@ export default function SidebarNav({
             isOpen: false,
             id: null,
             vaultId: null,
-            vaultDetails: null,
+            vaultDetails: undefined,
           })
         }
         identity={stakeModalActive.identity}
         claim={stakeModalActive.claim}
-        vaultDetails={vaultDetails ?? stakeModalActive.vaultDetails}
-        vaultId={stakeModalActive.vaultId}
+        userWallet={userObject.wallet}
+        contract={MULTIVAULT_CONTRACT_ADDRESS}
       />
     </>
   )
