@@ -1,5 +1,7 @@
 import React from 'react'
 
+import { useGetAtomQuery } from '@0xintuition/graphql'
+
 import type { Meta, StoryObj } from '@storybook/react'
 import { Currency, Identity } from 'types'
 
@@ -74,4 +76,33 @@ export const Entity: Story = {
       walletAddress="0x1234567890abcdef1234567890abcdef12345678"
     />
   ),
+}
+
+const SmartIdentityCard = () => {
+  const { data: atomData } = useGetAtomQuery({
+    id: 2,
+  })
+
+  return (
+    <IdentityCard
+      variant="non-user"
+      avatarSrc={atomData?.atom?.image ?? ''}
+      name={atomData?.atom?.label ?? ''}
+      value={atomData?.atom?.vault?.totalShares ?? 0}
+      currency="ETH"
+      walletAddress={atomData?.atom?.walletId ?? ''}
+    />
+  )
+}
+
+export const WithLiveData: Story = {
+  render: () => <SmartIdentityCard />,
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'This example shows the IdentityCard component with live data fetched from the Intuition GraphQL API..',
+      },
+    },
+  },
 }

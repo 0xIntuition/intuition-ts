@@ -1,9 +1,11 @@
 import {
   useGetAccountQuery,
+  useGetAtomQuery,
   useGetAtomsQuery,
   useGetTriplesQuery,
 } from '@0xintuition/graphql'
 
+import logger from '@lib/utils/logger'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 import { useQuery } from '@tanstack/react-query'
@@ -21,6 +23,12 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 export default function Playground() {
   const { address } = useLoaderData<typeof loader>()
+
+  const { data: atomData } = useGetAtomQuery(
+    { id: 2 },
+    { queryKey: ['get-atom-query'] },
+  )
+  logger('atomData', atomData)
 
   const { data: atomsData } = useGetAtomsQuery(
     {},
