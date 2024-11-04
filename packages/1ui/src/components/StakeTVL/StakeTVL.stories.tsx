@@ -58,7 +58,7 @@ type Story = StoryObj<typeof StakeTVL>
 
 export const BasicUsage: Story = {
   args: {
-    totalTVL: 420.69,
+    totalTVL: '420.69',
     currency: 'ETH',
     isClaim: false,
   },
@@ -67,8 +67,8 @@ export const BasicUsage: Story = {
 
 export const WithPieChart: Story = {
   args: {
-    totalTVL: 420.69,
-    tvlFor: 240.69,
+    totalTVL: '420.69',
+    tvlFor: '240.69',
     currency: 'ETH',
     isClaim: true,
   },

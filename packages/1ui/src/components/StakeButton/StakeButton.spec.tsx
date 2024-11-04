@@ -19,7 +19,6 @@ describe('StakeButton', () => {
               href="/src/components/Icon/Icon.sprites.svg#arrow-up"
             />
           </svg>
-
           <div
             class="text-sm font-normal text-inherit"
           >
@@ -50,7 +49,6 @@ describe('StakeButton', () => {
               href="/src/components/Icon/Icon.sprites.svg#arrow-up"
             />
           </svg>
-
           <div
             class="text-sm font-normal text-inherit"
           >
@@ -81,7 +79,6 @@ describe('StakeButton', () => {
               href="/src/components/Icon/Icon.sprites.svg#arrow-up"
             />
           </svg>
-
           <div
             class="text-sm font-normal text-inherit"
           >
