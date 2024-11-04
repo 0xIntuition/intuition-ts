@@ -1,4 +1,4 @@
-fragment PositionDetails on Position {
+fragment PositionDetails on positions {
   id
   account {
     id
