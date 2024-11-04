@@ -144,16 +144,6 @@ export const ConnectionsHeader: React.FC<ConnectionsHeaderProps> = ({
                       link: '',
                     }
               }
-              onClick={
-                variant === 'following'
-                  ? () =>
-                      setCreateClaimModalActive({
-                        isOpen: true,
-                        subject: followClaim.subject,
-                        predicate: followClaim.predicate,
-                      })
-                  : undefined
-              }
             />
           </div>
         </div>

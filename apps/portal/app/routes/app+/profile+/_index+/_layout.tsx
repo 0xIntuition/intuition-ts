@@ -475,7 +475,7 @@ export default function Profile() {
             contract={userIdentity.contract}
             open={stakeModalActive.isOpen}
             identity={userIdentity}
-            vaultDetails={vaultDetails}
+            vaultDetailsProp={vaultDetails}
             onClose={() => {
               setStakeModalActive((prevState) => ({
                 ...prevState,

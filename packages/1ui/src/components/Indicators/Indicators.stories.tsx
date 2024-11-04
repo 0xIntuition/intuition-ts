@@ -40,7 +40,7 @@ export const IndicatorUsage: Story = {
         <p>PositionValueDisplay - claimFor</p>
         <PositionValueDisplay
           value={0.345}
-          position="claimFor"
+          position="for"
           feesAccrued={0.005}
         />
       </Container>
@@ -48,7 +48,7 @@ export const IndicatorUsage: Story = {
         <p>PositionValueDisplay - claimAgainst</p>
         <PositionValueDisplay
           value={0.5}
-          position="claimAgainst"
+          position="against"
           feesAccrued={0.01}
           currency="ETH"
         />

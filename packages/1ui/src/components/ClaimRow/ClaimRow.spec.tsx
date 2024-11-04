@@ -1,6 +1,5 @@
 import { render } from '@testing-library/react'
 import { Claim } from 'components/Claim'
-import { ClaimPosition } from 'types'
 
 import { ClaimRow } from './ClaimRow'
 
@@ -10,9 +9,11 @@ describe('ClaimRow', () => {
       <ClaimRow
         numPositionsFor={69}
         numPositionsAgainst={42}
-        totalTVL={420.69}
-        tvlFor={240.69}
+        totalTVL={'420.69'}
+        tvlFor={'240.69'}
         currency="ETH"
+        onStakeForClick={() => console.log('Clicked!')}
+        onStakeAgainstClick={() => console.log('Clicked!')}
       >
         <Claim
           subject={{ variant: 'non-user', label: '0xintuition' }}
@@ -33,11 +34,11 @@ describe('ClaimRow', () => {
               class="flex items-center gap-1"
             >
               <div
-                class="flex items-center w-full max-w-max group relative max-sm:flex-col max-sm:m-auto transition-colors duration-200 flex-row"
+                class="flex items-center w-full max-w-max relative max-sm:flex-col max-sm:m-auto transition-colors duration-200 flex-row"
               >
                 <div>
                   <button
-                    class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center text-secondary/70 hover:text-secondary rounded-md text-base [&>span]:h-6 [&>span]:w-6 relative z-10 identity-tag transition-colors duration-200 group-hover:border-primary"
+                    class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center text-secondary/70 hover:text-secondary rounded-md text-base [&>span]:h-6 [&>span]:w-6 relative z-10 identity-tag transition-colors duration-200 border-theme"
                     data-state="closed"
                   >
                     <span
@@ -56,20 +57,20 @@ describe('ClaimRow', () => {
                       </span>
                     </span>
                     <div
-                      class="text-base font-normal relative z-10 identity-tag transition-colors duration-200 text-secondary/70 group-hover:text-primary"
+                      class="text-base font-normal relative z-10 identity-tag transition-colors duration-200 text-secondary/70"
                     >
                       0xintuition
                     </div>
                   </button>
                 </div>
                 <div
-                  class="shrink-0 bg-border/20 h-[1px] transition-colors duration-200 w-4 max-sm:w-px max-sm:h-2 group-hover:bg-primary"
+                  class="shrink-0 bg-border/20 h-[1px] transition-colors duration-200 w-4 max-sm:w-px max-sm:h-2"
                   data-orientation="horizontal"
                   role="none"
                 />
                 <div>
                   <button
-                    class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center text-secondary/70 hover:text-secondary rounded-md text-base [&>span]:h-6 [&>span]:w-6 relative z-10 identity-tag transition-colors duration-200 group-hover:border-primary"
+                    class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center text-secondary/70 hover:text-secondary rounded-md text-base [&>span]:h-6 [&>span]:w-6 relative z-10 identity-tag transition-colors duration-200 border-theme"
                     data-state="closed"
                   >
                     <span
@@ -88,20 +89,20 @@ describe('ClaimRow', () => {
                       </span>
                     </span>
                     <div
-                      class="text-base font-normal relative z-10 identity-tag transition-colors duration-200 text-secondary/70 group-hover:text-primary"
+                      class="text-base font-normal relative z-10 identity-tag transition-colors duration-200 text-secondary/70"
                     >
                       is really
                     </div>
                   </button>
                 </div>
                 <div
-                  class="shrink-0 bg-border/20 h-[1px] transition-colors duration-200 w-4 max-sm:w-px max-sm:h-2 group-hover:bg-primary"
+                  class="shrink-0 bg-border/20 h-[1px] transition-colors duration-200 w-4 max-sm:w-px max-sm:h-2"
                   data-orientation="horizontal"
                   role="none"
                 />
                 <div>
                   <button
-                    class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center text-secondary/70 hover:text-secondary rounded-md text-base [&>span]:h-6 [&>span]:w-6 relative z-10 identity-tag transition-colors duration-200 group-hover:border-primary"
+                    class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center text-secondary/70 hover:text-secondary rounded-md text-base [&>span]:h-6 [&>span]:w-6 relative z-10 identity-tag transition-colors duration-200 border-theme"
                     data-state="closed"
                   >
                     <span
@@ -120,7 +121,7 @@ describe('ClaimRow', () => {
                       </span>
                     </span>
                     <div
-                      class="text-base font-normal relative z-10 identity-tag transition-colors duration-200 text-secondary/70 group-hover:text-primary"
+                      class="text-base font-normal relative z-10 identity-tag transition-colors duration-200 text-secondary/70"
                     >
                       cool
                     </div>
@@ -202,10 +203,12 @@ describe('ClaimRow', () => {
                 </div>
               </button>
               <span
+                data-disabled=""
                 data-state="closed"
               >
                 <button
-                  class="flex justify-center items-center gap-2 text-sm font-medium border disabled:bg-muted aria-disabled:bg-muted disabled:border-muted aria-disabled:border-muted aria-disabled:pointer-events-none bg-transparent text-secondary-foreground/70 border-transparent rounded-lg hover:text-secondary-foreground hover:border-border/20 aria-selected:bg-primary/10 aria-selected:text-secondary-foreground/80 disabled:text-muted-foreground aria-disabled:text-muted-foreground p-1"
+                  class="flex justify-center items-center gap-2 text-sm font-medium border disabled:text-muted-foreground aria-disabled:text-muted-foreground aria-disabled:pointer-events-none bg-transparent text-primary/70 border-transparent hover:text-primary disabled:border-transparent aria-disabled:border-transparent disabled:bg-transparent aria-disabled:bg-transparent shadow-none p-1"
+                  disabled=""
                 >
                   <svg
                     class="text-secondary/70 h-4 w-4"
@@ -228,11 +231,13 @@ describe('ClaimRow', () => {
       <ClaimRow
         numPositionsFor={69}
         numPositionsAgainst={42}
-        totalTVL={420.69}
-        tvlFor={240.69}
+        totalTVL={'420.69'}
+        tvlFor={'240.69'}
         currency="ETH"
-        userPosition={3.19}
-        positionDirection={ClaimPosition.claimFor}
+        userPosition={'3.19'}
+        positionDirection="for"
+        onStakeForClick={() => console.log('Clicked!')}
+        onStakeAgainstClick={() => console.log('Clicked!')}
       >
         <Claim
           subject={{ variant: 'non-user', label: '0xintuition' }}
@@ -253,11 +258,11 @@ describe('ClaimRow', () => {
               class="flex items-center gap-1"
             >
               <div
-                class="flex items-center w-full max-w-max group relative max-sm:flex-col max-sm:m-auto transition-colors duration-200 flex-row"
+                class="flex items-center w-full max-w-max relative max-sm:flex-col max-sm:m-auto transition-colors duration-200 flex-row"
               >
                 <div>
                   <button
-                    class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center text-secondary/70 hover:text-secondary rounded-md text-base [&>span]:h-6 [&>span]:w-6 relative z-10 identity-tag transition-colors duration-200 group-hover:border-primary"
+                    class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center text-secondary/70 hover:text-secondary rounded-md text-base [&>span]:h-6 [&>span]:w-6 relative z-10 identity-tag transition-colors duration-200 border-theme"
                     data-state="closed"
                   >
                     <span
@@ -276,20 +281,20 @@ describe('ClaimRow', () => {
                       </span>
                     </span>
                     <div
-                      class="text-base font-normal relative z-10 identity-tag transition-colors duration-200 text-secondary/70 group-hover:text-primary"
+                      class="text-base font-normal relative z-10 identity-tag transition-colors duration-200 text-secondary/70"
                     >
                       0xintuition
                     </div>
                   </button>
                 </div>
                 <div
-                  class="shrink-0 bg-border/20 h-[1px] transition-colors duration-200 w-4 max-sm:w-px max-sm:h-2 group-hover:bg-primary"
+                  class="shrink-0 bg-border/20 h-[1px] transition-colors duration-200 w-4 max-sm:w-px max-sm:h-2"
                   data-orientation="horizontal"
                   role="none"
                 />
                 <div>
                   <button
-                    class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center text-secondary/70 hover:text-secondary rounded-md text-base [&>span]:h-6 [&>span]:w-6 relative z-10 identity-tag transition-colors duration-200 group-hover:border-primary"
+                    class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center text-secondary/70 hover:text-secondary rounded-md text-base [&>span]:h-6 [&>span]:w-6 relative z-10 identity-tag transition-colors duration-200 border-theme"
                     data-state="closed"
                   >
                     <span
@@ -308,20 +313,20 @@ describe('ClaimRow', () => {
                       </span>
                     </span>
                     <div
-                      class="text-base font-normal relative z-10 identity-tag transition-colors duration-200 text-secondary/70 group-hover:text-primary"
+                      class="text-base font-normal relative z-10 identity-tag transition-colors duration-200 text-secondary/70"
                     >
                       is really
                     </div>
                   </button>
                 </div>
                 <div
-                  class="shrink-0 bg-border/20 h-[1px] transition-colors duration-200 w-4 max-sm:w-px max-sm:h-2 group-hover:bg-primary"
+                  class="shrink-0 bg-border/20 h-[1px] transition-colors duration-200 w-4 max-sm:w-px max-sm:h-2"
                   data-orientation="horizontal"
                   role="none"
                 />
                 <div>
                   <button
-                    class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center text-secondary/70 hover:text-secondary rounded-md text-base [&>span]:h-6 [&>span]:w-6 relative z-10 identity-tag transition-colors duration-200 group-hover:border-primary"
+                    class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center text-secondary/70 hover:text-secondary rounded-md text-base [&>span]:h-6 [&>span]:w-6 relative z-10 identity-tag transition-colors duration-200 border-theme"
                     data-state="closed"
                   >
                     <span
@@ -340,7 +345,7 @@ describe('ClaimRow', () => {
                       </span>
                     </span>
                     <div
-                      class="text-base font-normal relative z-10 identity-tag transition-colors duration-200 text-secondary/70 group-hover:text-primary"
+                      class="text-base font-normal relative z-10 identity-tag transition-colors duration-200 text-secondary/70"
                     >
                       cool
                     </div>
@@ -423,10 +428,12 @@ describe('ClaimRow', () => {
                 </div>
               </button>
               <span
+                data-disabled=""
                 data-state="closed"
               >
                 <button
-                  class="flex justify-center items-center gap-2 text-sm font-medium border disabled:bg-muted aria-disabled:bg-muted disabled:border-muted aria-disabled:border-muted aria-disabled:pointer-events-none bg-transparent text-secondary-foreground/70 border-transparent rounded-lg hover:text-secondary-foreground hover:border-border/20 aria-selected:bg-primary/10 aria-selected:text-secondary-foreground/80 disabled:text-muted-foreground aria-disabled:text-muted-foreground p-1"
+                  class="flex justify-center items-center gap-2 text-sm font-medium border disabled:text-muted-foreground aria-disabled:text-muted-foreground aria-disabled:pointer-events-none bg-transparent text-primary/70 border-transparent hover:text-primary disabled:border-transparent aria-disabled:border-transparent disabled:bg-transparent aria-disabled:bg-transparent shadow-none p-1"
+                  disabled=""
                 >
                   <svg
                     class="text-secondary/70 h-4 w-4"

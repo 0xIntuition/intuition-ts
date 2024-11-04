@@ -18,7 +18,7 @@ type Story = StoryObj<typeof ClaimPositionRow>
 export const UserVariant: Story = {
   args: {
     variant: 'user',
-    position: 'claimFor',
+    position: 'for',
     name: 'John Doe',
     id: '0x1234567890abcdef1234567890abcdef12345678',
     avatarSrc: 'https://avatars.githubusercontent.com/u/94311139?s=200&v=4"',
@@ -36,7 +36,7 @@ export const UserVariant: Story = {
 export const IdentityVariant: Story = {
   args: {
     variant: 'claim',
-    position: 'claimAgainst',
+    position: 'against',
     claimsFor: 30,
     claimsAgainst: 70,
     amount: 1.21,

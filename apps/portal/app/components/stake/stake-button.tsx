@@ -97,6 +97,7 @@ const StakeButton: React.FC<StakeButtonProps> = ({
       setStakeModalActive({
         isOpen: false,
         id: null,
+        vaultId: null,
       })
       setNavigationStarted(false)
     }

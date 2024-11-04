@@ -86,9 +86,11 @@ export const BasicUsage: Story = {
   args: {
     numPositionsFor: 69,
     numPositionsAgainst: 42,
-    totalTVL: 420.69,
-    tvlFor: 240.69,
+    totalTVL: '420.69',
+    tvlFor: '240.69',
     currency: 'ETH',
+    onStakeForClick: () => console.log('Clicked!'),
+    onStakeAgainstClick: () => console.log('Clicked!'),
   },
   render: (args) => (
     <div className="w-[800px]">
@@ -106,7 +108,7 @@ export const BasicUsage: Story = {
 export const WithUserPosition: Story = {
   args: {
     ...BasicUsage.args,
-    userPosition: 3.19,
+    userPosition: '3.19',
     positionDirection: ClaimPosition.claimFor,
   },
   render: BasicUsage.render,

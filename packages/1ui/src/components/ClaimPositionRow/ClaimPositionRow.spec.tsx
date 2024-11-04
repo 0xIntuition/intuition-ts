@@ -10,7 +10,7 @@ describe('ClaimPositionRow', () => {
     const { asFragment } = render(
       <ClaimPositionRow
         variant="user"
-        position="claimFor"
+        position="for"
         name="John Doe"
         description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi."
         id="0x1234567890abcdef1234567890abcdef12345678"
@@ -134,7 +134,7 @@ describe('ClaimPositionRow', () => {
       const { asFragment } = render(
         <ClaimPositionRow
           variant="claim"
-          position="claimAgainst"
+          position="against"
           claimsFor={30}
           claimsAgainst={70}
           claimsForValue={10}

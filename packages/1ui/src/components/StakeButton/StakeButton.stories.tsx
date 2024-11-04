@@ -39,6 +39,10 @@ const meta: Meta<typeof StakeButton> = {
       },
       control: 'select',
     },
+    onClick: {
+      description: 'Callback function when the stake button is clicked',
+      control: false,
+    },
   },
 }
 
@@ -52,6 +56,7 @@ export const BasicUsage: Story = {
   args: {
     variant: StakeButtonVariant.identity,
     numPositions: 69,
+    onClick: () => console.log('Clicked!'),
   },
   render: (args) => <StakeButton {...args} />,
 }
@@ -60,6 +65,7 @@ export const ClaimFor: Story = {
   args: {
     variant: StakeButtonVariant.claimFor,
     numPositions: 69,
+    onClick: () => console.log('Clicked!'),
   },
   render: (args) => <StakeButton {...args} />,
 }
@@ -68,6 +74,7 @@ export const ClaimAgainst: Story = {
   args: {
     variant: StakeButtonVariant.claimAgainst,
     numPositions: 69,
+    onClick: () => console.log('Clicked!'),
   },
   render: (args) => <StakeButton {...args} />,
 }

@@ -1,4 +1,4 @@
-import { IconName, Identity } from '@0xintuition/1ui'
+import { ClaimPosition, IconName, Identity } from '@0xintuition/1ui'
 import {
   ClaimPresenter,
   IdentityPresenter,
@@ -87,7 +87,7 @@ export function FollowList({
               >
                 <ClaimPositionRow
                   variant={Identity.user}
-                  position={'claimFor'}
+                  position={ClaimPosition.claimFor}
                   avatarSrc={getAtomImage(identity)}
                   name={getAtomLabel(identity)}
                   description={getAtomDescription(identity)}
@@ -117,7 +117,7 @@ export function FollowList({
             >
               <ClaimPositionRow
                 variant={Identity.user}
-                position={'claimFor'}
+                position={ClaimPosition.claimFor}
                 avatarSrc={position.user?.image ?? ''}
                 name={
                   position.user?.display_name ??

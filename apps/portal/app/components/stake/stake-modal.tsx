@@ -81,6 +81,8 @@ export default function StakeModal({
   direction,
   onSuccess,
 }: StakeModalProps) {
+  console.log('claim', claim)
+  console.log('direction', direction)
   const fetchReval = useFetcher()
   const [stakeModalState] = useAtom(stakeModalAtom)
   const { mode, modalType } = stakeModalState
@@ -426,9 +428,6 @@ export default function StakeModal({
     'awaiting',
     'confirm',
   ].includes(state.status)
-
-  console.log('userWallet', userWallet)
-  console.log('isLoading', isLoading)
 
   return (
     <Dialog

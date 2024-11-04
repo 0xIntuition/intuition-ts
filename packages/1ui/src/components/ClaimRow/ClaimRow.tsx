@@ -17,11 +17,13 @@ import { ClaimPosition, ClaimPositionType, CurrencyType } from 'types'
 export interface ClaimRowProps extends React.HTMLAttributes<HTMLDivElement> {
   numPositionsFor: number
   numPositionsAgainst: number
-  totalTVL: number
-  tvlFor: number
+  totalTVL: string
+  tvlFor: string
   currency?: CurrencyType
-  userPosition?: number
+  userPosition?: string
   positionDirection?: ClaimPositionType
+  onStakeForClick: () => void
+  onStakeAgainstClick: () => void
 }
 
 const ClaimRow = ({
@@ -34,6 +36,8 @@ const ClaimRow = ({
   children,
   userPosition,
   positionDirection,
+  onStakeForClick,
+  onStakeAgainstClick,
 }: ClaimRowProps) => {
   return (
     <div
@@ -43,7 +47,7 @@ const ClaimRow = ({
       )}
     >
       <div
-        className={`w-full flex justify-between items-center p-4 rounded-t-lg ${userPosition && (positionDirection === ClaimPosition.claimFor ? 'bg-gradient-to-r from-transparent to-for' : 'bg-gradient-to-r from-transparent to-against')}`}
+        className={`w-full flex justify-between items-center p-4 rounded-t-lg ${userPosition && userPosition !== '0' && (positionDirection === ClaimPosition.claimFor ? 'bg-gradient-to-r from-transparent to-for' : 'bg-gradient-to-r from-transparent to-against')}`}
       >
         <div className="flex items-center gap-1">{children}</div>
         <div className="flex items-center gap-3">
@@ -59,6 +63,7 @@ const ClaimRow = ({
             direction={ClaimPosition.claimFor}
             positionDirection={positionDirection}
             disabled={positionDirection === ClaimPosition.claimAgainst}
+            onClick={onStakeForClick}
           />
           <StakeButton
             variant={StakeButtonVariant.claimAgainst}
@@ -66,10 +71,15 @@ const ClaimRow = ({
             direction={ClaimPosition.claimAgainst}
             positionDirection={positionDirection}
             disabled={positionDirection === ClaimPosition.claimFor}
+            onClick={onStakeAgainstClick}
           />
           <ContextMenu>
-            <ContextMenuTrigger>
-              <Button variant={ButtonVariant.navigation} size={ButtonSize.icon}>
+            <ContextMenuTrigger disabled>
+              <Button
+                variant={ButtonVariant.text}
+                size={ButtonSize.icon}
+                disabled
+              >
                 <Icon
                   name={IconName.context}
                   className="text-secondary/70 h-4 w-4"
@@ -84,7 +94,7 @@ const ClaimRow = ({
           </ContextMenu>
         </div>
       </div>
-      {userPosition && (
+      {userPosition && userPosition !== '0' && (
         <div
           className={`flex flex-row justify-end px-4 py-0.5 w-full items-center gap-1.5 h-9 ${
             positionDirection === ClaimPosition.claimFor

@@ -8,7 +8,7 @@ describe('IdentityRow', () => {
     const { asFragment } = render(
       <IdentityRow
         variant={Identity.user}
-        totalTVL={420.69}
+        totalTVL={'420.69'}
         currency="ETH"
         name="John Doe"
         avatarSrc="https://avatars.githubusercontent.com/u/1?v=4"
@@ -17,6 +17,7 @@ describe('IdentityRow', () => {
         id="1"
         description="Test description"
         ipfsLink="ipfs://test"
+        onStakeClick={() => console.log('Clicked!')}
       />,
     )
     expect(asFragment()).toMatchInlineSnapshot(`
@@ -25,7 +26,7 @@ describe('IdentityRow', () => {
           class="w-full flex flex-col items-center bg-primary/5 border border-border/10 rounded-lg max-sm:flex-col max-sm:gap-3"
         >
           <div
-            class="w-full flex justify-between items-center p-4 rounded-t-lg undefined"
+            class="w-full flex justify-between items-center p-4 undefined"
           >
             <div
               class="flex items-center"
@@ -97,10 +98,12 @@ describe('IdentityRow', () => {
                 </div>
               </button>
               <span
+                data-disabled=""
                 data-state="closed"
               >
                 <button
-                  class="flex justify-center items-center gap-2 text-sm font-medium border disabled:bg-muted aria-disabled:bg-muted disabled:border-muted aria-disabled:border-muted aria-disabled:pointer-events-none bg-transparent text-secondary-foreground/70 border-transparent rounded-lg hover:text-secondary-foreground hover:border-border/20 aria-selected:bg-primary/10 aria-selected:text-secondary-foreground/80 disabled:text-muted-foreground aria-disabled:text-muted-foreground p-1"
+                  class="flex justify-center items-center gap-2 text-sm font-medium border disabled:text-muted-foreground aria-disabled:text-muted-foreground aria-disabled:pointer-events-none bg-transparent text-primary/70 border-transparent hover:text-primary disabled:border-transparent aria-disabled:border-transparent disabled:bg-transparent aria-disabled:bg-transparent shadow-none p-1"
+                  disabled=""
                 >
                   <svg
                     class="text-secondary/70 h-4 w-4"
@@ -122,7 +125,7 @@ describe('IdentityRow', () => {
     const { asFragment } = render(
       <IdentityRow
         variant={Identity.user}
-        totalTVL={420.69}
+        totalTVL={'420.69'}
         currency="ETH"
         name="John Doe"
         avatarSrc="https://avatars.githubusercontent.com/u/1?v=4"
@@ -131,7 +134,8 @@ describe('IdentityRow', () => {
         id="1"
         description="Test description"
         ipfsLink="ipfs://test"
-        userPosition={3.19}
+        userPosition={'3.19'}
+        onStakeClick={() => console.log('Clicked!')}
       />,
     )
     expect(asFragment()).toMatchInlineSnapshot(`
@@ -140,7 +144,7 @@ describe('IdentityRow', () => {
           class="w-full flex flex-col items-center bg-primary/5 border border-border/10 rounded-lg max-sm:flex-col max-sm:gap-3"
         >
           <div
-            class="w-full flex justify-between items-center p-4 rounded-t-lg bg-gradient-to-r from-transparent to-primary/10"
+            class="w-full flex justify-between items-center p-4 bg-gradient-to-r from-transparent to-primary/10"
           >
             <div
               class="flex items-center"
@@ -212,10 +216,12 @@ describe('IdentityRow', () => {
                 </div>
               </button>
               <span
+                data-disabled=""
                 data-state="closed"
               >
                 <button
-                  class="flex justify-center items-center gap-2 text-sm font-medium border disabled:bg-muted aria-disabled:bg-muted disabled:border-muted aria-disabled:border-muted aria-disabled:pointer-events-none bg-transparent text-secondary-foreground/70 border-transparent rounded-lg hover:text-secondary-foreground hover:border-border/20 aria-selected:bg-primary/10 aria-selected:text-secondary-foreground/80 disabled:text-muted-foreground aria-disabled:text-muted-foreground p-1"
+                  class="flex justify-center items-center gap-2 text-sm font-medium border disabled:text-muted-foreground aria-disabled:text-muted-foreground aria-disabled:pointer-events-none bg-transparent text-primary/70 border-transparent hover:text-primary disabled:border-transparent aria-disabled:border-transparent disabled:bg-transparent aria-disabled:bg-transparent shadow-none p-1"
+                  disabled=""
                 >
                   <svg
                     class="text-secondary/70 h-4 w-4"

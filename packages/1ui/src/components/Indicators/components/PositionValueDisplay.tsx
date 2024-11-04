@@ -8,8 +8,8 @@ import { MonetaryValue } from './MonetaryValue'
 
 export const PositionValueVariants = {
   identity: 'identity',
-  claimFor: 'claimFor',
-  claimAgainst: 'claimAgainst',
+  claimFor: 'for',
+  claimAgainst: 'against',
 } as const
 
 export type PositionValueVariantType =

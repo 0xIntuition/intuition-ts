@@ -44,8 +44,8 @@ interface StakeReviewProps {
 
 const calculateDepositFees = (
   val: string,
-  vaultDetails: VaultDetailsType,
   isClaim: boolean,
+  vaultDetails?: VaultDetailsType,
 ) => {
   const protocolFee = vaultDetails?.formatted_protocol_fee || 0
   const entryFee = vaultDetails?.formatted_entry_fee || 0
@@ -88,7 +88,7 @@ const calculateDepositFees = (
   }
 }
 
-const calculateRedeemFees = (val: string, vaultDetails: VaultDetailsType) => {
+const calculateRedeemFees = (val: string, vaultDetails?: VaultDetailsType) => {
   const protocolFee = vaultDetails?.formatted_protocol_fee || 0
   const exitFee = vaultDetails?.formatted_exit_fee || 0
 
@@ -166,7 +166,7 @@ export default function StakeReview({
 
   const fees: Fees =
     mode === 'deposit'
-      ? calculateDepositFees(val, vaultDetails, !!claim)
+      ? calculateDepositFees(val, !!claim, vaultDetails)
       : calculateRedeemFees(val, vaultDetails)
 
   return (

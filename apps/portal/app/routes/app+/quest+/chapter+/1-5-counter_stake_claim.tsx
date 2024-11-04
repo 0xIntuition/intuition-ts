@@ -307,7 +307,7 @@ export default function Quests() {
   function handleActivitySuccess(args: {
     identity?: IdentityPresenter
     claim?: ClaimPresenter
-    vaultDetails: VaultDetailsType
+    vaultDetailsProp?: VaultDetailsType
     direction?: 'for' | 'against'
   }) {
     const { claim } = args
@@ -414,7 +414,7 @@ export default function Quests() {
         claim={claim}
         userWallet={userWallet}
         contract={claim.contract}
-        vaultDetails={vaultDetails}
+        vaultDetailsProp={vaultDetails}
         onClose={handleCloseActivityModal}
         onSuccess={handleActivitySuccess}
         direction={stakeModalActive.direction}

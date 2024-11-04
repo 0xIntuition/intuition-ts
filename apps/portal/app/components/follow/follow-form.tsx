@@ -2,6 +2,7 @@ import {
   ActivePositionCard,
   Badge,
   Claim,
+  ClaimPosition,
   DialogDescription,
   DialogHeader,
   DialogTitle,
@@ -149,7 +150,9 @@ export default function FollowForm({
                 <div className="w-full bg-neutral-50/5 rounded-lg border border-neutral-300/10 flex-col justify-start items-start inline-flex">
                   <ActivePositionCard
                     value={Number(formatBalance(user_assets, 18))}
-                    claimPosition={+user_assets > 0 ? 'claimFor' : null}
+                    claimPosition={
+                      +user_assets > 0 ? ClaimPosition.claimFor : null
+                    }
                   />
                 </div>
               </div>

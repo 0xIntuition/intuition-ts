@@ -1,4 +1,4 @@
-import { Claim, IconName, Identity } from '@0xintuition/1ui'
+import { Claim, ClaimPosition, IconName, Identity } from '@0xintuition/1ui'
 import { ClaimPresenter, IdentityPresenter, SortColumn } from '@0xintuition/api'
 
 import { ClaimPositionRow } from '@components/claim/claim-position-row'
@@ -53,7 +53,11 @@ export function ActivePositionsOnClaims({
         >
           <ClaimPositionRow
             variant="claim"
-            position={claim.user_assets_for > '0' ? 'claimFor' : 'claimAgainst'}
+            position={
+              claim.user_assets_for > '0'
+                ? ClaimPosition.claimFor
+                : ClaimPosition.claimAgainst
+            }
             claimsFor={claim.for_num_positions}
             claimsAgainst={claim.against_num_positions}
             claimsForValue={+formatBalance(claim.for_assets_sum, 18)}

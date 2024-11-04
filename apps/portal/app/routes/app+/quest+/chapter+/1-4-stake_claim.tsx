@@ -305,7 +305,7 @@ export default function Quests() {
   function handleActivitySuccess(args: {
     identity?: IdentityPresenter
     claim?: ClaimPresenter
-    vaultDetails: VaultDetailsType
+    vaultDetailsProp?: VaultDetailsType
     direction?: 'for' | 'against'
   }) {
     const { claim } = args
@@ -421,7 +421,7 @@ export default function Quests() {
             ? identities[stakeModalActive.id]?.identity.contract
             : claim.contract
         }
-        vaultDetails={
+        vaultDetailsProp={
           stakeModalActive.modalType === 'identity' &&
           position &&
           identities &&

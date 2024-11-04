@@ -96,6 +96,7 @@ const FollowButton: React.FC<FollowButtonProps> = ({
       setStakeModalActive({
         isOpen: false,
         id: null,
+        vaultId: null,
       })
       setNavigationStarted(false)
     }

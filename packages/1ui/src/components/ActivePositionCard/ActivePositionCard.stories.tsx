@@ -48,7 +48,7 @@ export const BasicUsage: Story = {
 export const For: Story = {
   render: () => (
     <div className="w-[500px]">
-      <ActivePositionCard value={0.567} claimPosition="claimFor" />
+      <ActivePositionCard value={0.567} claimPosition="for" />
     </div>
   ),
 }
@@ -56,7 +56,7 @@ export const For: Story = {
 export const Against: Story = {
   render: () => (
     <div className="w-[500px]">
-      <ActivePositionCard value={0.567} claimPosition="claimAgainst" />
+      <ActivePositionCard value={0.567} claimPosition="against" />
     </div>
   ),
 }

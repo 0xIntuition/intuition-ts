@@ -5,12 +5,12 @@ import {
   Icon,
   IconName,
   Identity,
+  IdentityRow,
 } from '@0xintuition/1ui'
 import { ClaimPresenter, SortColumn } from '@0xintuition/api'
 
-import { IdentityRow } from '@components/identity/identity-row'
 import { ListHeader } from '@components/list/list-header'
-import { saveListModalAtom } from '@lib/state/store'
+import { saveListModalAtom, stakeModalAtom } from '@lib/state/store'
 import {
   formatBalance,
   getAtomDescription,
@@ -51,6 +51,7 @@ export function TagsList({
   ]
 
   const setSaveListModalActive = useSetAtom(saveListModalAtom)
+  const setStakeModalActive = useSetAtom(stakeModalAtom)
 
   return (
     <>
@@ -99,10 +100,20 @@ export function TagsList({
                       value: tag.num_tagged_identities,
                     })) ?? undefined
                   }
-                  amount={+formatBalance(BigInt(claim?.assets_sum || 0), 18)}
-                  totalFollowers={claim?.num_positions || 0}
-                  link={getAtomLink(claim.subject, readOnly)}
-                  ipfsLink={getAtomIpfsLink(claim.subject)}
+                  totalTVL={formatBalance(BigInt(claim?.assets_sum || 0), 18)}
+                  numPositions={claim?.num_positions || 0}
+                  link={getAtomLink(identity, readOnly)}
+                  ipfsLink={getAtomIpfsLink(identity)}
+                  onStakeClick={() =>
+                    setStakeModalActive((prevState) => ({
+                      ...prevState,
+                      mode: 'deposit',
+                      modalType: 'identity',
+                      isOpen: true,
+                      identity: identity ?? undefined,
+                      vaultId: identity?.vault_id ?? null,
+                    }))
+                  }
                   className={`w-full hover:bg-transparent ${readOnly ? '' : 'pr-0'}`}
                 />
                 {readOnly === false && (

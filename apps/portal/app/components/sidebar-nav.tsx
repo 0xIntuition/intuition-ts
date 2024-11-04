@@ -406,6 +406,7 @@ export default function SidebarNav({
         }
         identity={stakeModalActive.identity}
         claim={stakeModalActive.claim}
+        direction={stakeModalActive.direction}
         userWallet={userObject.wallet}
         contract={MULTIVAULT_CONTRACT_ADDRESS}
       />

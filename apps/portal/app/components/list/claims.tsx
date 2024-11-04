@@ -1,12 +1,18 @@
-import { Claim, IconName, Identity } from '@0xintuition/1ui'
+import {
+  Claim,
+  ClaimPosition,
+  ClaimRow,
+  IconName,
+  Identity,
+} from '@0xintuition/1ui'
 import {
   ClaimPresenter,
   ClaimSortColumn,
   IdentityPresenter,
 } from '@0xintuition/api'
 
-import { ClaimRow } from '@components/claim/claim-row'
 import { ListHeader } from '@components/list/list-header'
+import { stakeModalAtom } from '@lib/state/store'
 import {
   formatBalance,
   getAtomDescription,
@@ -16,7 +22,9 @@ import {
   getAtomLink,
   getClaimUrl,
 } from '@lib/utils/misc'
+import { Link } from '@remix-run/react'
 import { PaginationType } from 'app/types/pagination'
+import { useSetAtom } from 'jotai'
 
 import { SortOption } from '../sort-select'
 import { List } from './list'
@@ -38,6 +46,8 @@ export function ClaimsList({
   enableSort?: boolean
   readOnly?: boolean
 }) {
+  const setStakeModalActive = useSetAtom(stakeModalAtom)
+
   const options: SortOption<ClaimSortColumn>[] = [
     { value: 'Total ETH', sortBy: 'AssetsSum' },
     { value: 'ETH For', sortBy: 'ForAssetsSum' },
@@ -74,55 +84,96 @@ export function ClaimsList({
           <ClaimRow
             numPositionsFor={claim.for_num_positions}
             numPositionsAgainst={claim.against_num_positions}
-            tvlFor={+formatBalance(claim.for_assets_sum, 18)}
-            totalTVL={+formatBalance(claim.assets_sum, 18)}
-            link={getClaimUrl(claim.vault_id, readOnly)}
+            tvlFor={formatBalance(claim.for_assets_sum, 18)}
+            totalTVL={formatBalance(claim.assets_sum, 18)}
+            userPosition={formatBalance(claim.user_assets, 18)}
+            positionDirection={
+              +claim.user_assets_for > 0
+                ? ClaimPosition.claimFor
+                : +claim.user_assets_against > 0
+                  ? ClaimPosition.claimAgainst
+                  : undefined
+            }
+            onStakeForClick={() =>
+              setStakeModalActive((prevState) => ({
+                ...prevState,
+                mode: 'deposit',
+                modalType: 'claim',
+                direction: ClaimPosition.claimFor,
+                isOpen: true,
+                claim,
+                vaultId: claim.vault_id,
+              }))
+            }
+            onStakeAgainstClick={() =>
+              setStakeModalActive((prevState) => ({
+                ...prevState,
+                mode: 'deposit',
+                modalType: 'claim',
+                direction: ClaimPosition.claimAgainst,
+                isOpen: true,
+                claim,
+                vaultId: claim.counter_vault_id,
+              }))
+            }
+            className="border-none rounded-none"
           >
-            <Claim
-              size="md"
-              subject={{
-                variant: claim.subject?.is_user
-                  ? Identity.user
-                  : Identity.nonUser,
-                label: getAtomLabel(claim.subject as IdentityPresenter),
-                imgSrc: getAtomImage(claim.subject as IdentityPresenter),
-                id: claim.subject?.identity_id,
-                description: getAtomDescription(
-                  claim.subject as IdentityPresenter,
-                ),
-                ipfsLink: getAtomIpfsLink(claim.subject as IdentityPresenter),
-                link: getAtomLink(claim.subject as IdentityPresenter, readOnly),
-              }}
-              predicate={{
-                variant: claim.predicate?.is_user
-                  ? Identity.user
-                  : Identity.nonUser,
-                label: getAtomLabel(claim.predicate as IdentityPresenter),
-                imgSrc: getAtomImage(claim.predicate as IdentityPresenter),
-                id: claim.predicate?.identity_id,
-                description: getAtomDescription(
-                  claim.predicate as IdentityPresenter,
-                ),
-                ipfsLink: getAtomIpfsLink(claim.predicate as IdentityPresenter),
-                link: getAtomLink(
-                  claim.predicate as IdentityPresenter,
-                  readOnly,
-                ),
-              }}
-              object={{
-                variant: claim.object?.is_user
-                  ? Identity.user
-                  : Identity.nonUser,
-                label: getAtomLabel(claim.object as IdentityPresenter),
-                imgSrc: getAtomImage(claim.object as IdentityPresenter),
-                id: claim.object?.identity_id,
-                description: getAtomDescription(
-                  claim.object as IdentityPresenter,
-                ),
-                ipfsLink: getAtomIpfsLink(claim.object as IdentityPresenter),
-                link: getAtomLink(claim.object as IdentityPresenter, readOnly),
-              }}
-            />
+            <Link to={getClaimUrl(claim.vault_id)} prefetch="intent">
+              <Claim
+                size="md"
+                subject={{
+                  variant: claim.subject?.is_user
+                    ? Identity.user
+                    : Identity.nonUser,
+                  label: getAtomLabel(claim.subject as IdentityPresenter),
+                  imgSrc: getAtomImage(claim.subject as IdentityPresenter),
+                  id: claim.subject?.identity_id,
+                  description: getAtomDescription(
+                    claim.subject as IdentityPresenter,
+                  ),
+                  ipfsLink: getAtomIpfsLink(claim.subject as IdentityPresenter),
+                  link: getAtomLink(
+                    claim.subject as IdentityPresenter,
+                    readOnly,
+                  ),
+                }}
+                predicate={{
+                  variant: claim.predicate?.is_user
+                    ? Identity.user
+                    : Identity.nonUser,
+                  label: getAtomLabel(claim.predicate as IdentityPresenter),
+                  imgSrc: getAtomImage(claim.predicate as IdentityPresenter),
+                  id: claim.predicate?.identity_id,
+                  description: getAtomDescription(
+                    claim.predicate as IdentityPresenter,
+                  ),
+                  ipfsLink: getAtomIpfsLink(
+                    claim.predicate as IdentityPresenter,
+                  ),
+                  link: getAtomLink(
+                    claim.predicate as IdentityPresenter,
+                    readOnly,
+                  ),
+                }}
+                object={{
+                  variant: claim.object?.is_user
+                    ? Identity.user
+                    : Identity.nonUser,
+                  label: getAtomLabel(claim.object as IdentityPresenter),
+                  imgSrc: getAtomImage(claim.object as IdentityPresenter),
+                  id: claim.object?.identity_id,
+                  description: getAtomDescription(
+                    claim.object as IdentityPresenter,
+                  ),
+                  ipfsLink: getAtomIpfsLink(claim.object as IdentityPresenter),
+                  link: getAtomLink(
+                    claim.object as IdentityPresenter,
+                    readOnly,
+                  ),
+                }}
+                isClickable={true}
+              />
+            </Link>
           </ClaimRow>
         </div>
       ))}

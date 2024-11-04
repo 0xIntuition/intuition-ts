@@ -1,4 +1,4 @@
-import { IconName } from '@0xintuition/1ui'
+import { ClaimPosition, IconName } from '@0xintuition/1ui'
 import { PositionPresenter, PositionSortColumn } from '@0xintuition/api'
 
 import { ClaimPositionRow } from '@components/claim/claim-position-row'
@@ -52,7 +52,9 @@ export function PositionsOnClaim({
             id={position.user?.wallet ?? ''}
             amount={+formatBalance(BigInt(position.assets), 18)}
             position={
-              position.direction === 'for' ? 'claimFor' : 'claimAgainst'
+              position.direction === 'for'
+                ? ClaimPosition.claimFor
+                : ClaimPosition.claimAgainst
             }
             feesAccrued={Number(
               formatUnits(BigInt(+position.assets - +position.value), 18),

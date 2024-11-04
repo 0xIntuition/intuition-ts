@@ -3,6 +3,8 @@ import {
   ButtonSize,
   ButtonVariant,
   Claim,
+  ClaimPosition,
+  ClaimRow,
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
@@ -22,7 +24,7 @@ import {
   SortColumn,
 } from '@0xintuition/api'
 
-import { ClaimRow } from '@components/claim/claim-row'
+import { stakeModalAtom } from '@lib/state/store'
 import {
   formatBalance,
   getAtomDescription,
@@ -35,6 +37,7 @@ import { Link } from '@remix-run/react'
 import { BLOCK_EXPLORER_URL, PATHS } from 'app/consts'
 import { PaginationType } from 'app/types/pagination'
 import { formatDistance } from 'date-fns'
+import { useSetAtom } from 'jotai'
 
 import { List } from './list'
 
@@ -106,6 +109,8 @@ function ActivityItem({
       ? (eventMessage as (value: string) => string)(value).toString()
       : eventMessage.toString()
     : ''
+
+  const setStakeModalActive = useSetAtom(stakeModalAtom)
 
   return (
     <div
@@ -192,7 +197,7 @@ function ActivityItem({
         </div>
       </div>
       <div className="flex w-full">
-        {activity.identity && (
+        {activity.identity !== null && activity.identity !== undefined && (
           <div className="bg-secondary-foreground/10 rounded-xl flex flex-row w-full gap-6 rounded-t-none items-center max-md:flex-col group hover:bg-secondary/10 transition-colors duration-200">
             <IdentityRow
               variant={
@@ -204,9 +209,10 @@ function ActivityItem({
               id={
                 activity.identity.user?.wallet ?? activity.identity.identity_id
               }
-              totalTVL={
-                +formatBalance(BigInt(activity.identity.assets_sum ?? '0'), 18)
-              }
+              totalTVL={formatBalance(
+                BigInt(activity.identity.assets_sum ?? '0'),
+                18,
+              )}
               numPositions={activity.identity.num_positions}
               link={getAtomLink(activity.identity)}
               ipfsLink={getAtomIpfsLink(activity.identity)}
@@ -215,6 +221,16 @@ function ActivityItem({
                   label: tag.display_name,
                   value: tag.num_tagged_identities,
                 })) ?? undefined
+              }
+              onStakeClick={() =>
+                setStakeModalActive((prevState) => ({
+                  ...prevState,
+                  mode: 'deposit',
+                  modalType: 'identity',
+                  isOpen: true,
+                  identity: activity.identity ?? undefined,
+                  vaultId: activity.identity?.vault_id ?? null,
+                }))
               }
               className="w-full hover:bg-transparent"
             />
@@ -225,9 +241,38 @@ function ActivityItem({
             <ClaimRow
               numPositionsFor={activity.claim.for_num_positions}
               numPositionsAgainst={activity.claim.against_num_positions}
-              tvlFor={+formatBalance(activity.claim.for_assets_sum, 18)}
-              totalTVL={+formatBalance(activity.claim.assets_sum, 18)}
-              link={`${PATHS.CLAIM}/${activity.claim.vault_id}`}
+              tvlFor={formatBalance(activity.claim.for_assets_sum, 18)}
+              totalTVL={formatBalance(activity.claim.assets_sum, 18)}
+              userPosition={formatBalance(activity.claim.user_assets, 18)}
+              positionDirection={
+                +activity.claim.user_assets_for > 0
+                  ? ClaimPosition.claimFor
+                  : +activity.claim.user_assets_against > 0
+                    ? ClaimPosition.claimAgainst
+                    : undefined
+              }
+              onStakeForClick={() =>
+                setStakeModalActive((prevState) => ({
+                  ...prevState,
+                  mode: 'deposit',
+                  modalType: 'claim',
+                  direction: ClaimPosition.claimFor,
+                  isOpen: true,
+                  claim: activity.claim ?? undefined,
+                  vaultId: activity.claim?.vault_id ?? null,
+                }))
+              }
+              onStakeAgainstClick={() =>
+                setStakeModalActive((prevState) => ({
+                  ...prevState,
+                  mode: 'deposit',
+                  modalType: 'claim',
+                  direction: ClaimPosition.claimAgainst,
+                  isOpen: true,
+                  claim: activity.claim ?? undefined,
+                  vaultId: activity.claim?.counter_vault_id ?? null,
+                }))
+              }
               className="w-full hover:bg-transparent"
             >
               <Claim

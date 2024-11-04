@@ -52,7 +52,7 @@ const IdentityRow = ({
       )}
     >
       <div
-        className={`w-full flex justify-between items-center p-4 ${userPosition && 'bg-gradient-to-r from-transparent to-primary/10'}`}
+        className={`w-full flex justify-between items-center p-4 ${userPosition && userPosition !== '0' && 'bg-gradient-to-r from-transparent to-primary/10'}`}
       >
         <div className="flex items-center">
           <a href={link}>
@@ -70,8 +70,12 @@ const IdentityRow = ({
           <StakeTVL totalTVL={totalTVL} currency={currency} />
           <StakeButton numPositions={numPositions} onClick={onStakeClick} />
           <ContextMenu>
-            <ContextMenuTrigger>
-              <Button variant={ButtonVariant.navigation} size={ButtonSize.icon}>
+            <ContextMenuTrigger disabled>
+              <Button
+                variant={ButtonVariant.text}
+                size={ButtonSize.icon}
+                disabled
+              >
                 <Icon
                   name={IconName.context}
                   className="text-secondary/70 h-4 w-4"
@@ -86,7 +90,7 @@ const IdentityRow = ({
           </ContextMenu>
         </div>
       </div>
-      {userPosition && (
+      {userPosition && userPosition !== '0' && (
         <div className="flex flex-row justify-end px-4 py-0.5 w-full items-center gap-1.5 h-9">
           <Icon name={IconName.arrowUp} className="h-4 w-4" />
           <Text variant={TextVariant.caption}>

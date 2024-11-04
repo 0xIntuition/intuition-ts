@@ -314,7 +314,7 @@ export default function ClaimDetails() {
         open={stakeModalActive.isOpen}
         direction={stakeModalActive.direction}
         claim={claim}
-        vaultDetails={vaultDetails}
+        vaultDetailsProp={vaultDetails}
         onClose={() => {
           setStakeModalActive((prevState) => ({
             ...prevState,

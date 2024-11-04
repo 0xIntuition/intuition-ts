@@ -327,7 +327,7 @@ export default function IdentityDetails() {
             contract={identity.contract}
             open={stakeModalActive.isOpen}
             identity={identity}
-            vaultDetails={vaultDetails}
+            vaultDetailsProp={vaultDetails}
             onClose={() => {
               setStakeModalActive((prevState) => ({
                 ...prevState,

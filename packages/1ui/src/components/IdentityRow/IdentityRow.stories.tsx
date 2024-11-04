@@ -60,12 +60,13 @@ type Story = StoryObj<typeof IdentityRow>
 export const BasicUsage: Story = {
   args: {
     variant: Identity.user,
-    totalTVL: 420.69,
+    totalTVL: '420.69',
     currency: 'ETH',
     name: 'John Doe',
     avatarSrc: 'https://avatars.githubusercontent.com/u/1?v=4',
     link: '/identity/1',
     numPositions: 69,
+    onStakeClick: () => console.log('Clicked!'),
   },
   render: (args) => (
     <div className="w-[800px]">
@@ -77,7 +78,7 @@ export const BasicUsage: Story = {
 export const WithUserPosition: Story = {
   args: {
     ...BasicUsage.args,
-    userPosition: 3.19,
+    userPosition: '3.19',
   },
   render: BasicUsage.render,
 }

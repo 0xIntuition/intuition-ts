@@ -9,7 +9,7 @@ describe('FollowPosition', () => {
   it('should render UI', () => {
     const { asFragment } = render(
       <FollowPosition
-        position="claimFor"
+        position="for"
         name="John Doe"
         walletAddress="0x1234567890abcdef1234567890abcdef12345678"
         avatarSrc="https://avatars.githubusercontent.com/u/94311139?s=200&v=4"

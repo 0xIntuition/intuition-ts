@@ -68,7 +68,7 @@ export function IdentitiesList({
         return (
           <div
             key={identity.id}
-            className={`grow shrink basis-0 self-stretch bg-background first:border-t-px first:rounded-t-xl last:rounded-b-xl theme-border border-t-0 flex-col justify-start items-start gap-5 inline-flex`}
+            className={`grow shrink basis-0 self-stretch bg-background first:border-t-px first:rounded-t-xl last:rounded-b-xl theme-border border-t-0 flex-col justify-start items-start inline-flex gap-8`}
           >
             <IdentityRow
               variant={identity.is_user ? Identity.user : Identity.nonUser}

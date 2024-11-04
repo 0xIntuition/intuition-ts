@@ -1,6 +1,7 @@
 import {
   ActivePositionCard,
   Claim,
+  ClaimPosition,
   DialogDescription,
   DialogHeader,
   DialogTitle,
@@ -10,7 +11,6 @@ import {
 } from '@0xintuition/1ui'
 import { IdentityPresenter } from '@0xintuition/api'
 
-import StakingRadioGroup from '@components/staking-radio-group'
 import { TransactionState } from '@components/transaction-state'
 import {
   formatBalance,
@@ -35,7 +35,6 @@ interface SaveFormProps {
   user_assets: string
   entry_fee: string
   exit_fee: string
-  min_deposit: string
   val: string
   setVal: (val: string) => void
   mode: string | undefined
@@ -43,10 +42,6 @@ interface SaveFormProps {
   state: TransactionStateType
   fetchReval: FetcherWithComponents<unknown>
   formRef: React.RefObject<HTMLFormElement>
-  showErrors: boolean
-  setShowErrors: (show: boolean) => void
-  validationErrors: string[]
-  setValidationErrors: (errors: string[]) => void
   isLoading: boolean
 }
 
@@ -56,18 +51,12 @@ export default function SaveForm({
   user_assets,
   entry_fee,
   exit_fee,
-  min_deposit,
   val,
-  setVal,
   mode,
   dispatch,
   state,
   fetchReval,
   formRef,
-  showErrors,
-  setShowErrors,
-  validationErrors,
-  setValidationErrors,
   isLoading,
 }: SaveFormProps) {
   return (
@@ -134,29 +123,18 @@ export default function SaveForm({
                 maxIdentityLength={12}
               />
             </div>
-            <div className="flex flex-col md:px-10 gap-5">
-              <div className="flex flex-row items-center justify-center">
-                <div className="w-full bg-neutral-50/5 rounded-lg border border-neutral-300/10 flex-col justify-start items-start inline-flex">
-                  {isLoading ? (
-                    <Skeleton className="h-12 w-full" />
-                  ) : (
-                    <ActivePositionCard
-                      value={Number(formatBalance(user_assets, 18))}
-                      claimPosition={user_assets > '0' ? 'claimFor' : null}
-                    />
-                  )}
-                </div>
-              </div>
-              <div className="rounded-t-lg bg-primary-950/15 w-full">
-                <StakingRadioGroup
-                  setVal={setVal}
-                  validationErrors={validationErrors}
-                  setValidationErrors={setValidationErrors}
-                  showErrors={showErrors}
-                  setShowErrors={setShowErrors}
-                  isLoading={isLoading}
-                  min_deposit={min_deposit}
-                />
+            <div className="flex flex-row items-center justify-center">
+              <div className="w-full bg-neutral-50/5 rounded-lg border border-neutral-300/10 flex-col justify-start items-start inline-flex">
+                {isLoading ? (
+                  <Skeleton className="h-12 w-full" />
+                ) : (
+                  <ActivePositionCard
+                    value={Number(formatBalance(user_assets, 18))}
+                    claimPosition={
+                      user_assets > '0' ? ClaimPosition.claimFor : null
+                    }
+                  />
+                )}
               </div>
             </div>
           </div>
