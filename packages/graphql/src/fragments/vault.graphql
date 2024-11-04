@@ -1,8 +1,33 @@
 fragment VaultDetails on vaults {
-  atomId
-  currentSharePrice
   id
-  positionCount
+  atom {
+    id
+    label
+  }
+  triple {
+    id
+    subject {
+      id
+      label
+    }
+    predicate {
+      id
+      label
+    }
+    object {
+      id
+      label
+    }
+  }
+  positions_aggregate {
+    nodes {
+      account {
+        id
+        label
+      }
+      shares
+    }
+  }
+  currentSharePrice
   totalShares
-  tripleId
 }

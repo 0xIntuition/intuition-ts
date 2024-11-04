@@ -1,0 +1,9 @@
+fragment StatDetails on stats {
+  contractBalance
+  totalAccounts
+  totalFees
+  totalAtoms
+  totalTriples
+  totalPositions
+  totalSignals
+}

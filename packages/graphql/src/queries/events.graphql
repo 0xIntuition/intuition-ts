@@ -1,0 +1,17 @@
+query GetEvents(
+  $limit: Int
+  $offset: Int
+  $orderBy: [events_order_by!]
+  $where: events_bool_exp
+) {
+  events_aggregate(
+    limit: $limit
+    offset: $offset
+    order_by: $orderBy
+    where: $where
+  ) {
+    nodes {
+      ...EventDetails
+    }
+  }
+}

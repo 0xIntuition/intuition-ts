@@ -1,12 +1,11 @@
-fragment Event on events {
-  type
-  atomId
+fragment EventDetails on events {
   blockNumber
   blockTimestamp
+  type
+  transactionHash
+  atomId
+  tripleId
   depositId
   feeTransferId
-  id
   redemptionId
-  transactionHash
-  tripleId
 }

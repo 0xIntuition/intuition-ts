@@ -1,0 +1,23 @@
+query GetPositions(
+  $limit: Int
+  $offset: Int
+  $orderBy: [positions_order_by!]
+  $where: positions_bool_exp
+) {
+  positions_aggregate(
+    limit: $limit
+    offset: $offset
+    order_by: $orderBy
+    where: $where
+  ) {
+    nodes {
+      ...PositionDetails
+    }
+  }
+}
+
+query GetPosition($positionId: String!) {
+  position(id: $positionId) {
+    ...PositionDetails
+  }
+}

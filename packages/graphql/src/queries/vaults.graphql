@@ -1,0 +1,53 @@
+query GetVaults(
+  $limit: Int
+  $offset: Int
+  $orderBy: [vaults_order_by!]
+  $where: vaults_bool_exp
+) {
+  vaults_aggregate(
+    limit: $limit
+    offset: $offset
+    order_by: $orderBy
+    where: $where
+  ) {
+    nodes {
+      id
+      atom {
+        id
+        label
+      }
+      triple {
+        id
+        subject {
+          id
+          label
+        }
+        predicate {
+          id
+          label
+        }
+        object {
+          id
+          label
+        }
+      }
+      positions_aggregate {
+        nodes {
+          account {
+            id
+            label
+          }
+          shares
+        }
+      }
+      currentSharePrice
+      totalShares
+    }
+  }
+}
+
+query GetVault($vaultId: numeric!) {
+  vault(id: $vaultId) {
+    ...VaultDetails
+  }
+}

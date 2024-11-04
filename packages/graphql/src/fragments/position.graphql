@@ -1,6 +1,31 @@
-fragment PositionDetails on positions {
+fragment PositionDetails on Position {
   id
-  accountId
+  account {
+    id
+    label
+  }
+  vault {
+    id
+    atom {
+      id
+      label
+    }
+    triple {
+      id
+      subject {
+        id
+        label
+      }
+      predicate {
+        id
+        label
+      }
+      object {
+        id
+        label
+      }
+    }
+  }
   shares
   vaultId
 }
