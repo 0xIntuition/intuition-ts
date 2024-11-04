@@ -18,7 +18,7 @@ import { CurrencyType, Identity, IdentityType } from 'types'
 
 export interface IdentityRowProps extends React.HTMLAttributes<HTMLDivElement> {
   variant?: IdentityType
-  totalTVL: number
+  totalTVL: string
   currency?: CurrencyType
   name: string
   description?: string
@@ -28,7 +28,8 @@ export interface IdentityRowProps extends React.HTMLAttributes<HTMLDivElement> {
   ipfsLink: string
   numPositions: number
   tags?: TagWithValueProps[]
-  userPosition?: number
+  userPosition?: string
+  onStakeClick: () => void
 }
 
 const IdentityRow = ({
@@ -41,6 +42,7 @@ const IdentityRow = ({
   numPositions,
   className,
   userPosition,
+  onStakeClick,
 }: IdentityRowProps) => {
   return (
     <div
@@ -50,7 +52,7 @@ const IdentityRow = ({
       )}
     >
       <div
-        className={`w-full flex justify-between items-center p-4 rounded-t-lg ${userPosition && 'bg-gradient-to-r from-transparent to-primary/10'}`}
+        className={`w-full flex justify-between items-center p-4 ${userPosition && 'bg-gradient-to-r from-transparent to-primary/10'}`}
       >
         <div className="flex items-center">
           <a href={link}>
@@ -66,7 +68,7 @@ const IdentityRow = ({
 
         <div className="flex items-center gap-3">
           <StakeTVL totalTVL={totalTVL} currency={currency} />
-          <StakeButton numPositions={numPositions} />
+          <StakeButton numPositions={numPositions} onClick={onStakeClick} />
           <ContextMenu>
             <ContextMenuTrigger>
               <Button variant={ButtonVariant.navigation} size={ButtonSize.icon}>

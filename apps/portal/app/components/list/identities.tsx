@@ -1,8 +1,8 @@
-import { IconName, Identity } from '@0xintuition/1ui'
+import { IconName, Identity, IdentityRow } from '@0xintuition/1ui'
 import { IdentityPresenter, SortColumn } from '@0xintuition/api'
 
-import { IdentityRow } from '@components/identity/identity-row'
 import { ListHeader } from '@components/list/list-header'
+import { stakeModalAtom } from '@lib/state/store'
 import {
   formatBalance,
   getAtomDescription,
@@ -12,12 +12,12 @@ import {
   getAtomLink,
 } from '@lib/utils/misc'
 import { PaginationType } from 'app/types/pagination'
+import { useSetAtom } from 'jotai'
 
 import { SortOption } from '../sort-select'
 import { List } from './list'
 
 export function IdentitiesList({
-  variant = 'explore',
   identities,
   pagination,
   paramPrefix,
@@ -41,6 +41,8 @@ export function IdentitiesList({
     { value: 'Updated At', sortBy: 'UpdatedAt' },
     { value: 'Created At', sortBy: 'CreatedAt' },
   ]
+
+  const setStakeModalActive = useSetAtom(stakeModalAtom)
 
   return (
     <List<SortColumn>
@@ -74,16 +76,7 @@ export function IdentitiesList({
               name={getAtomLabel(identity)}
               description={getAtomDescription(identity)}
               id={identity.user?.wallet ?? identity.identity_id}
-              amount={
-                +formatBalance(
-                  BigInt(
-                    variant === 'explore'
-                      ? identity.assets_sum
-                      : identity.user_assets || '',
-                  ),
-                  18,
-                )
-              }
+              totalTVL={formatBalance(BigInt(identity.assets_sum), 18)}
               currency={'ETH'}
               numPositions={identity.num_positions}
               link={getAtomLink(identity, readOnly)}
@@ -94,7 +87,18 @@ export function IdentitiesList({
                   value: tag.num_tagged_identities,
                 })) ?? undefined
               }
-              identity={identity}
+              userPosition={formatBalance(identity.user_assets, 18)}
+              onStakeClick={() =>
+                setStakeModalActive((prevState) => ({
+                  ...prevState,
+                  mode: 'deposit',
+                  modalType: 'identity',
+                  isOpen: true,
+                  identity,
+                  vaultId: identity.vault_id,
+                }))
+              }
+              className="border-none rounded-none"
             />
           </div>
         )

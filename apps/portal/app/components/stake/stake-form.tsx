@@ -191,13 +191,7 @@ export default function StakeForm({
               <div className="pt-8">
                 <ActivePositionCard
                   value={Number(formatBalance(user_assets ?? 0, 18))}
-                  claimPosition={
-                    direction !== undefined
-                      ? direction === 'for'
-                        ? 'claimFor'
-                        : 'claimAgainst'
-                      : undefined
-                  }
+                  claimPosition={direction}
                 />
                 <div className="rounded-t-lg bg-primary-950/15 px-4 pt-5">
                   <StakeInput

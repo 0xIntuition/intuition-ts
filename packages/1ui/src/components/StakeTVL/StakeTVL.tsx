@@ -5,10 +5,10 @@ import { Text, TextVariant } from 'components/Text'
 import { cn } from 'styles'
 
 export interface StakeTVLProps {
-  totalTVL: number
+  totalTVL: string
   currency?: string
   isClaim?: boolean
-  tvlFor?: number
+  tvlFor?: string
   className?: string
 }
 
@@ -25,7 +25,7 @@ const StakeTVL = React.forwardRef<HTMLDivElement, StakeTVLProps>(
     ref,
   ) => {
     const stakedForPercentage =
-      tvlFor && totalTVL ? (tvlFor / totalTVL) * 100 : 0
+      tvlFor && totalTVL ? (+tvlFor / +totalTVL) * 100 : 0
 
     return (
       <div

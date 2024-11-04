@@ -47,7 +47,7 @@ export const stakeModalAtom = atom<{
   claim?: ClaimPresenter
   identity?: IdentityPresenter
   vaultId: string | null
-  vaultDetails: VaultDetailsType | null
+  vaultDetails?: VaultDetailsType
 }>({
   isOpen: false,
   id: null,
@@ -57,7 +57,7 @@ export const stakeModalAtom = atom<{
   claim: undefined,
   identity: undefined,
   vaultId: null,
-  vaultDetails: null,
+  vaultDetails: undefined,
 })
 
 export const followModalAtom = atom<{

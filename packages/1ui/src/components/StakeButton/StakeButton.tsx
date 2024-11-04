@@ -45,6 +45,7 @@ export interface StakeButtonProps
   direction?: ClaimPositionType
   positionDirection?: ClaimPositionType
   className?: string
+  onClick: () => void
 }
 
 const StakeButton = React.forwardRef<HTMLButtonElement, StakeButtonProps>(
@@ -55,6 +56,7 @@ const StakeButton = React.forwardRef<HTMLButtonElement, StakeButtonProps>(
       numPositions,
       direction,
       positionDirection,
+      onClick,
       ...props
     },
     ref,
@@ -70,7 +72,7 @@ const StakeButton = React.forwardRef<HTMLButtonElement, StakeButtonProps>(
           }),
         )}
         ref={ref}
-        onClick={() => console.log('Button Clicked!')}
+        onClick={onClick}
         {...props}
       >
         <Icon

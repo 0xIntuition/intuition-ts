@@ -22,7 +22,7 @@ import {
 import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
 
 import { InfoTooltip } from '@components/info-tooltip'
-import { MIN_DEPOSIT } from '@consts/general'
+import { GET_VAULT_DETAILS_RESOURCE_ROUTE, MIN_DEPOSIT } from '@consts/general'
 import { multivaultAbi } from '@lib/abis/multivault'
 import { useDepositAtom } from '@lib/hooks/useDepositAtom'
 import { useGetWalletBalance } from '@lib/hooks/useGetWalletBalance'
@@ -57,7 +57,8 @@ interface StakeModalProps {
   open: boolean
   identity?: IdentityPresenter
   claim?: ClaimPresenter
-  vaultDetails?: VaultDetailsType
+  vaultId?: string
+  vaultDetailsProp?: VaultDetailsType
   onClose?: () => void
   onSuccess?: (args: {
     identity?: IdentityPresenter
@@ -75,7 +76,8 @@ export default function StakeModal({
   onClose = () => {},
   identity,
   claim,
-  vaultDetails,
+  vaultId,
+  vaultDetailsProp,
   direction,
   onSuccess,
 }: StakeModalProps) {
@@ -84,7 +86,7 @@ export default function StakeModal({
   const { mode, modalType } = stakeModalState
   const formRef = useRef(null)
   const [val, setVal] = useState('')
-  const [loading, setLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
   const [lastTxHash, setLastTxHash] = useState<string | undefined>(undefined)
   const { state, dispatch } = useGenericTxState<
     TransactionStateType,
@@ -92,9 +94,42 @@ export default function StakeModal({
   >(transactionReducer, initialTxState)
   const publicClient = usePublicClient()
 
+  const vaultDetailsFetcher = useFetcher<VaultDetailsType>()
+  const [fetchId, setFetchId] = useState(0)
+
+  const [vaultDetails, setVaultDetails] = useState<
+    VaultDetailsType | undefined
+  >(vaultDetailsProp)
+
+  useEffect(() => {
+    setVaultDetails(vaultDetailsProp)
+  }, [vaultDetailsProp])
+
+  useEffect(() => {
+    let isCancelled = false
+
+    if (vaultId !== null) {
+      const finalUrl = `${GET_VAULT_DETAILS_RESOURCE_ROUTE}?contract=${contract}&vaultId=${vaultId}&fetchId=${fetchId}`
+      if (!isCancelled) {
+        vaultDetailsFetcher.load(finalUrl)
+      }
+    }
+
+    return () => {
+      isCancelled = true
+    }
+    // omits the fetcher from the exhaustive deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [contract, vaultId, fetchId])
+
+  useEffect(() => {
+    if (vaultDetailsFetcher.state === 'idle' && vaultDetailsFetcher.data) {
+      setVaultDetails(vaultDetailsFetcher.data)
+    }
+  }, [vaultDetailsFetcher.state, vaultDetailsFetcher.data])
+
   const identityShouldOverride = identity && identity.vault_id !== '0'
 
-  let vaultId: string = '0'
   if (identityShouldOverride) {
     vaultId = identity.vault_id
   } else if (claim) {
@@ -206,7 +241,7 @@ export default function StakeModal({
         }
       } catch (error) {
         logger('error', error)
-        setLoading(false)
+        setIsLoading(false)
         if (error instanceof Error) {
           let errorMessage = 'Failed transaction'
           if (error.message.includes('insufficient')) {
@@ -234,7 +269,7 @@ export default function StakeModal({
   useEffect(() => {
     if (isError) {
       reset()
-      setLoading(false)
+      setIsLoading(false)
     }
   }, [isError, reset])
 
@@ -319,13 +354,15 @@ export default function StakeModal({
     dispatch,
   ])
 
-  const isLoading =
-    !!awaitingWalletConfirmation ||
-    !!awaitingOnChainConfirmation ||
-    loading ||
-    state.status === 'confirm' ||
-    state.status === 'transaction-pending' ||
-    state.status === 'transaction-confirmed'
+  useEffect(() => {
+    setIsLoading(
+      !!awaitingWalletConfirmation ||
+        !!awaitingOnChainConfirmation ||
+        state.status === 'confirm' ||
+        state.status === 'transaction-pending' ||
+        state.status === 'transaction-confirmed',
+    )
+  }, [awaitingWalletConfirmation, awaitingOnChainConfirmation, state.status])
 
   const { address } = useAccount()
   const walletBalance = useGetWalletBalance(
@@ -355,12 +392,33 @@ export default function StakeModal({
 
   const handleClose = () => {
     onClose()
+    setVaultDetails(undefined)
+    setIsLoading(false)
+    setVal('')
+    setShowErrors(false)
+    setValidationErrors([])
+    vaultDetailsFetcher.data = undefined
+    vaultDetailsFetcher.state = 'idle'
+    setFetchId((prevId) => prevId + 1)
     setTimeout(() => {
       dispatch({ type: 'START_TRANSACTION' })
       reset()
-      setVal('')
     }, 500)
   }
+
+  useEffect(() => {
+    if (open) {
+      setVaultDetails(undefined)
+      setIsLoading(false)
+      setVal('')
+      setShowErrors(false)
+      setValidationErrors([])
+      vaultDetailsFetcher.data = undefined
+      vaultDetailsFetcher.state = 'idle'
+      setFetchId((prevId) => prevId + 1)
+      dispatch({ type: 'START_TRANSACTION' })
+    }
+  }, [open, dispatch])
 
   const isTransactionStarted = [
     'approve-transaction',
@@ -368,6 +426,9 @@ export default function StakeModal({
     'awaiting',
     'confirm',
   ].includes(state.status)
+
+  console.log('userWallet', userWallet)
+  console.log('isLoading', isLoading)
 
   return (
     <Dialog
@@ -444,7 +505,7 @@ export default function StakeModal({
           </Text>
         </DialogHeader>
         <StakeForm
-          userWallet={userWallet}
+          userWallet={address ?? userWallet}
           identity={identity}
           claim={claim}
           vaultDetails={vaultDetails}
