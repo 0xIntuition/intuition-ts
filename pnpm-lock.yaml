@@ -814,7 +814,7 @@ importers:
   packages/1ui:
     dependencies:
       '@0xintuition/graphql':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../graphql
       '@radix-ui/react-accordion':
         specifier: ^1.1.2
@@ -874,7 +874,7 @@ importers:
         specifier: ^0.1.1
         version: 0.1.1(tailwindcss@3.4.4(ts-node@10.9.1(@swc/core@1.3.107(@swc/helpers@0.5.11))(@types/node@20.14.2)(typescript@5.4.5)))
       '@tanstack/react-query':
-        specifier: ^5.32.0
+        specifier: ^5.45.0
         version: 5.45.0(react@18.3.1)
       class-variance-authority:
         specifier: ^0.7.0
@@ -949,6 +949,9 @@ importers:
       autoprefixer:
         specifier: ^10.4.19
         version: 10.4.19(postcss@8.4.38)
+      graphql-request:
+        specifier: ^7.1.0
+        version: 7.1.0(graphql@16.9.0)
       jsdom:
         specifier: ~22.1.0
         version: 22.1.0(bufferutil@4.0.8)(utf-8-validate@6.0.4)
@@ -5443,9 +5446,6 @@ packages:
   '@safe-global/safe-gateway-typescript-sdk@3.21.2':
     resolution: {integrity: sha512-N9Y2CKPBVbc8FbOKzqepy8TJUY2VILX7bmxV4ruByLJvR9PBnGvGfnOhw975cDn6PmSziXL0RaUWHpSW23rsng==}
     engines: {node: '>=16'}
-
-  '@scure/base@1.1.6':
-    resolution: {integrity: sha512-ok9AWwhcgYuGG3Zfhyqg+zwl+Wn5uE+dwC0NV/2qQkx4dABbb/bx96vWu8NSj+BNjjSjno+JRYRjle1jV08k3g==}
 
   '@scure/base@1.1.9':
     resolution: {integrity: sha512-8YKhl8GHiNI/pU2VMaofa2Tor7PJRAjwQLBBuilkJ9L5+13yVbC7JO/wS7piioAvPSwR3JKM1IJ/u4xQzbcXKg==}
@@ -21512,21 +21512,19 @@ snapshots:
 
   '@safe-global/safe-gateway-typescript-sdk@3.21.2': {}
 
-  '@scure/base@1.1.6': {}
-
   '@scure/base@1.1.9': {}
 
   '@scure/bip32@1.3.2':
     dependencies:
       '@noble/curves': 1.2.0
       '@noble/hashes': 1.3.2
-      '@scure/base': 1.1.6
+      '@scure/base': 1.1.9
 
   '@scure/bip32@1.4.0':
     dependencies:
       '@noble/curves': 1.4.0
       '@noble/hashes': 1.4.0
-      '@scure/base': 1.1.6
+      '@scure/base': 1.1.9
 
   '@scure/bip32@1.5.0':
     dependencies:
@@ -21537,12 +21535,12 @@ snapshots:
   '@scure/bip39@1.2.1':
     dependencies:
       '@noble/hashes': 1.3.2
-      '@scure/base': 1.1.6
+      '@scure/base': 1.1.9
 
   '@scure/bip39@1.3.0':
     dependencies:
       '@noble/hashes': 1.4.0
-      '@scure/base': 1.1.6
+      '@scure/base': 1.1.9
 
   '@scure/bip39@1.4.0':
     dependencies:
@@ -23783,7 +23781,7 @@ snapshots:
       pathe: 1.1.2
       picocolors: 1.0.1
       sirv: 2.0.4
-      vitest: 1.6.0(@types/node@18.16.9)(@vitest/ui@1.6.0)(jsdom@22.1.0(bufferutil@4.0.8)(utf-8-validate@6.0.4))(terser@5.31.1)
+      vitest: 1.6.0(@types/node@20.14.2)(@vitest/ui@1.6.0)(jsdom@22.1.0(bufferutil@4.0.8)(utf-8-validate@6.0.4))(terser@5.31.1)
 
   '@vitest/utils@1.3.1':
     dependencies:
@@ -29323,7 +29321,7 @@ snapshots:
       whatwg-encoding: 2.0.0
       whatwg-mimetype: 3.0.0
       whatwg-url: 11.0.0
-      ws: 8.17.0(bufferutil@4.0.8)(utf-8-validate@6.0.4)
+      ws: 8.18.0(bufferutil@4.0.8)(utf-8-validate@6.0.4)
       xml-name-validator: 4.0.0
     transitivePeerDependencies:
       - bufferutil
@@ -29469,7 +29467,7 @@ snapshots:
 
   key-did-provider-ed25519@4.0.2(bufferutil@4.0.8)(typescript@5.4.5)(utf-8-validate@6.0.4)(zod@3.23.8):
     dependencies:
-      '@noble/curves': 1.4.0
+      '@noble/curves': 1.6.0
       did-jwt: 7.4.7
       dids: 5.0.2(bufferutil@4.0.8)(typescript@5.4.5)(utf-8-validate@6.0.4)(zod@3.23.8)
       fast-json-stable-stringify: 2.1.0
@@ -29483,7 +29481,7 @@ snapshots:
 
   key-did-resolver@4.0.0:
     dependencies:
-      '@noble/curves': 1.4.0
+      '@noble/curves': 1.6.0
       multiformats: 13.3.0
       uint8arrays: 5.1.0
       varint: 6.0.0
@@ -34670,8 +34668,8 @@ snapshots:
 
   webauthn-p256@0.0.5:
     dependencies:
-      '@noble/curves': 1.4.0
-      '@noble/hashes': 1.4.0
+      '@noble/curves': 1.6.0
+      '@noble/hashes': 1.5.0
 
   webextension-polyfill@0.10.0: {}
 

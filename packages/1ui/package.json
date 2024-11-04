@@ -22,7 +22,7 @@
     "react": "^18.2.0"
   },
   "dependencies": {
-    "@0xintuition/graphql": "workspace:*",
+    "@0xintuition/graphql": "workspace:^",
     "@radix-ui/react-accordion": "^1.1.2",
     "@radix-ui/react-alert-dialog": "^1.1.1",
     "@radix-ui/react-avatar": "^1.0.4",
@@ -42,7 +42,7 @@
     "@radix-ui/react-tabs": "^1.1.0",
     "@radix-ui/react-tooltip": "^1.0.7",
     "@tailwindcss/container-queries": "^0.1.1",
-    "@tanstack/react-query": "^5.32.0",
+    "@tanstack/react-query": "^5.45.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "cmdk": "^1.0.0",
@@ -68,6 +68,7 @@
     "@types/node": "^20.12.7",
     "@types/react": "^18.2.20",
     "autoprefixer": "^10.4.19",
+    "graphql-request": "^7.1.0",
     "jsdom": "~22.1.0",
     "postcss": "^8.4.38",
     "storybook": "^8.0.9",

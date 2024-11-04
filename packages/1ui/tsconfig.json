@@ -4,7 +4,8 @@
     "jsx": "react-jsx",
     "baseUrl": "./src",
     "outDir": "../../dist/packages/1ui",
-    "composite": true
+    "composite": true,
+    "moduleResolution": "bundler"
   },
   "include": ["src"]
 }

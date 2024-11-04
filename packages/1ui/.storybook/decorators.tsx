@@ -6,6 +6,7 @@
 import React, { FC, useLayoutEffect } from 'react'
 
 import { Decorator } from '@storybook/react'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
 /**
  * Makes sure the app theme changes by running an effect on the provided theme prop.
@@ -21,6 +22,24 @@ const ThemeChanger: FC<{ theme: string }> = ({ theme }) => {
   }, [theme])
 
   return null
+}
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      retry: false,
+      staleTime: Infinity,
+    },
+  },
+})
+
+export const withReactQuery: Decorator = (Story) => {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <Story />
+    </QueryClientProvider>
+  )
 }
 
 /**
