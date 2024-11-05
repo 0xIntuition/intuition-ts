@@ -11,9 +11,11 @@ jobs:
     name: Deploy to Staging
     runs-on: ubuntu-latest
     env:
+      ENV: staging
       CLUSTER_NAME: systems-intuition-staging-cluster
       SERVICE_NAME: portal-intuition-staging
       ECR_IMAGE: ${{ secrets.AWS_ACCOUNT }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/portal-staging:latest
+      SECRETS_MANAGER: arn:aws:secretsmanager:us-west-2:064662847354:secret:portal.staging-dw3JHq
 
     steps:
       - name: Check if important variables are set
@@ -35,10 +37,11 @@ jobs:
       - name: Print variables
         shell: bash
         run: |
-          echo "ENV=$ENV"
-          echo "CLUSTER_NAME=$CLUSTER_NAME"
-          echo "SERVICE_NAME=$SERVICE_NAME"
-          echo "ECR_IMAGE=$ECR_IMAGE"
+          echo "ENV=${{ env.ENV }}"
+          echo "CLUSTER_NAME=${{ env.CLUSTER_NAME }}"
+          echo "SERVICE_NAME=${{ env.SERVICE_NAME }}"
+          echo "ECR_IMAGE=${{ env.ECR_IMAGE }}"
+          echo "SECRETS_MANAGER=${{ env.SECRETS_MANAGER }}"
 
       - name: Checkout code
         uses: actions/checkout@v4
@@ -73,43 +76,14 @@ jobs:
 
       - name: Build, tag, and push image to AWS ECR
         run: |
-          echo "${{ secrets.PRIVY_VERIFICATION_KEY_PROD }}" > privy_verification_key.pem
-          docker build \
-          --platform linux/x86_64 \
-          -t portal \
-          -f apps/portal/Dockerfile \
-          . \
-          --build-arg ALCHEMY_MAINNET_API_KEY=${{ secrets.ALCHEMY_MAINNET_API_KEY }} \
-          --build-arg ALCHEMY_API_KEY=${{ secrets.ALCHEMY_API_KEY }} \
-          --build-arg ALCHEMY_MAINNET_RPC_URL=${{ secrets.ALCHEMY_MAINNET_RPC_URL }} \
-          --build-arg ALCHEMY_BASE_SEPOLIA_RPC_URL=${{ secrets.ALCHEMY_BASE_SEPOLIA_RPC_URL }} \
-          --build-arg ALCHEMY_BASE_RPC_URL=${{ secrets.ALCHEMY_BASE_RPC_URL }} \
-          --build-arg WALLETCONNECT_PROJECT_ID=${{ secrets.WALLETCONNECT_PROJECT_ID }} \
-          --build-arg SESSION_SECRET=${{ secrets.SESSION_SECRET }} \
-          --build-arg API_URL=${{ secrets.API_URL_PRODUCTION }} \
-          --build-arg API_KEY=${{ secrets.API_KEY }} \
-          --build-arg PRIVY_APP_ID=${{ secrets.PRIVY_APP_ID_STAGING }} \
-          --build-arg PRIVY_APP_SECRET=${{ secrets.PRIVY_APP_SECRET_STAGING }} \
-          --build-arg PRIVY_VERIFICATION_KEY="$(cat privy_verification_key.pem)" \
-          --build-arg CLOUDINARY_CLOUD_NAME=${{ secrets.CLOUDINARY_CLOUD_NAME }} \
-          --build-arg CLOUDINARY_API_KEY=${{ secrets.CLOUDINARY_API_KEY }} \
-          --build-arg CLOUDINARY_API_SECRET=${{ secrets.CLOUDINARY_API_SECRET }} \
-          --build-arg SENTRY_DSN=${{ secrets.SENTRY_DSN }} \
-          --build-arg SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }} \
-          --build-arg SENTRY_ORG=${{ secrets.SENTRY_ORG }} \
-          --build-arg SENTRY_PROJECT=${{ secrets.SENTRY_PROJECT }} \
-          --build-arg VITE_DEPLOY_ENV=staging \
-          --build-arg ORIGIN_URL=${{ secrets.ORIGIN_URL_PRODUCTION }} \
-          --build-arg PHOSPHOR_API_KEY=${{ secrets.PHOSPHOR_API_KEY }} \
-          --build-arg PHOSPHOR_ADMIN_API_URL=${{ secrets.PHOSPHOR_ADMIN_API_URL }} \
-          --build-arg PHOSPHOR_COLLECTION_ID=${{ secrets.PHOSPHOR_COLLECTION_ID }} \
-          --build-arg GTM_TRACKING_ID=${{ secrets.GTM_TRACKING_ID }} \
-          --build-arg FF_FULL_LOCKDOWN_ENABLED=false \
-          --build-arg FF_INCIDENT_BANNER_ENABLED=false \
-          --build-arg FF_GENERIC_BANNER_ENABLED=false
+          docker build --platform linux/x86_64 -t portal -f apps/portal/Dockerfile . \
+          --build-arg VITE_DEPLOY_ENV=${{ env.ENV }} \
+          --build-arg SECRETS_MANAGER=${{ env.SECRETS_MANAGER }} \
+          --build-arg AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} \
+          --build-arg AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} \
+          --build-arg AWS_REGION=${{ secrets.AWS_REGION }}
           docker tag portal ${{ env.ECR_IMAGE }}
           docker push ${{ env.ECR_IMAGE }}
-          rm privy_verification_key.pem
 
       - name: Download task definition
         shell: bash
