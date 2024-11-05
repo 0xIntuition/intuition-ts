@@ -80,9 +80,9 @@ describe('ActivePositionCard', () => {
             class="flex items-center gap-2"
           >
             <button
-              class="inline-flex items-center gap-1 rounded-full px-2 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-for/10 text-for/90 border-for/30 hover:bg-for/40 hover:text-for hover:border-for/60 text-xs font-medium"
+              class="inline-flex items-center gap-1 rounded-full px-2 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-against/10 text-against/90 border-against/40 hover:bg-against/30 hover:text-against hover:border-against/60 text-xs font-medium"
             >
-              FOR
+              AGAINST
             </button>
             <div
               class="text-primary text-base font-normal"
