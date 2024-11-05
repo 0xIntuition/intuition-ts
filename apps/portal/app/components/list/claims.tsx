@@ -85,6 +85,7 @@ export function ClaimsList({
             numPositionsFor={claim.for_num_positions}
             numPositionsAgainst={claim.against_num_positions}
             tvlFor={formatBalance(claim.for_assets_sum, 18)}
+            tvlAgainst={formatBalance(claim.against_assets_sum, 18)}
             totalTVL={formatBalance(claim.assets_sum, 18)}
             userPosition={formatBalance(claim.user_assets, 18)}
             positionDirection={

@@ -112,8 +112,8 @@ export default function StakeClaimActivity({
               tvlFor={
                 +formatBalance(vaultDetails.assets_sum ?? claim.for_assets_sum)
               }
-              amountAgainst={claim.against_num_positions}
-              amountFor={claim.for_num_positions}
+              numPositionsAgainst={claim.against_num_positions}
+              numPositionsFor={claim.for_num_positions}
               onAgainstBtnClick={handleAgainstClick}
               onForBtnClick={handleForClick}
               disableForBtn={

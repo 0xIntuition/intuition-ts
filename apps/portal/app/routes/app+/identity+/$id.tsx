@@ -234,6 +234,7 @@ export default function IdentityDetails() {
                   ...prevState,
                   mode: 'redeem',
                   modalType: 'identity',
+                  identity,
                   isOpen: true,
                 }))
               }
@@ -263,6 +264,7 @@ export default function IdentityDetails() {
                 ...prevState,
                 mode: 'deposit',
                 modalType: 'identity',
+                identity,
                 isOpen: true,
               }))
             }

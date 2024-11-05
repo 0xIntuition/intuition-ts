@@ -195,6 +195,7 @@ export default function ClaimDetails() {
               ...prevState,
               mode: 'redeem',
               modalType: 'claim',
+              claim,
               direction,
               isOpen: true,
             }))
@@ -245,13 +246,14 @@ export default function ClaimDetails() {
           )
         }
         tvlFor={+formatBalance(vaultDetails.assets_sum ?? claim.for_assets_sum)}
-        amountAgainst={claim.against_num_positions}
-        amountFor={claim.for_num_positions}
+        numPositionsAgainst={claim.against_num_positions}
+        numPositionsFor={claim.for_num_positions}
         onAgainstBtnClick={() =>
           setStakeModalActive((prevState) => ({
             ...prevState,
             mode: 'deposit',
             modalType: 'claim',
+            claim,
             direction: 'against',
             isOpen: true,
           }))
@@ -261,6 +263,7 @@ export default function ClaimDetails() {
             ...prevState,
             mode: 'deposit',
             modalType: 'claim',
+            claim,
             direction: 'for',
             isOpen: true,
           }))

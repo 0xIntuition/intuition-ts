@@ -237,6 +237,7 @@ function ActivityItem({
             numPositionsFor={activity.claim.for_num_positions}
             numPositionsAgainst={activity.claim.against_num_positions}
             tvlFor={formatBalance(activity.claim.for_assets_sum, 18)}
+            tvlAgainst={formatBalance(activity.claim.against_assets_sum, 18)}
             totalTVL={formatBalance(activity.claim.assets_sum, 18)}
             userPosition={formatBalance(activity.claim.user_assets, 18)}
             positionDirection={

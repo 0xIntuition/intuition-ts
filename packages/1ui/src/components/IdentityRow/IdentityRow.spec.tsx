@@ -23,10 +23,10 @@ describe('IdentityRow', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="w-full flex flex-col items-center bg-primary/5 border border-border/10 rounded-lg max-sm:flex-col max-sm:gap-3"
+          class="w-full flex flex-col items-center bg-primary/5 border border-border/10 max-sm:flex-col max-sm:gap-3 rounded-t-xl rounded-b-xl"
         >
           <div
-            class="w-full flex justify-between items-center p-4 undefined"
+            class="w-full flex justify-between items-center p-4 rounded-t-xl"
           >
             <div
               class="flex items-center"
@@ -141,10 +141,10 @@ describe('IdentityRow', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="w-full flex flex-col items-center bg-primary/5 border border-border/10 rounded-lg max-sm:flex-col max-sm:gap-3"
+          class="w-full flex flex-col items-center bg-primary/5 border border-border/10 max-sm:flex-col max-sm:gap-3 rounded-t-xl rounded-b-xl"
         >
           <div
-            class="w-full flex justify-between items-center p-4 bg-gradient-to-r from-transparent to-primary/10"
+            class="w-full flex justify-between items-center p-4 rounded-t-xl bg-gradient-to-r from-transparent to-primary/10"
           >
             <div
               class="flex items-center"

@@ -7,7 +7,7 @@ import { StakeTVL } from './StakeTVL'
 describe('StakeTVL', () => {
   it('should render basic TVL information', () => {
     const { asFragment } = render(
-      <StakeTVL totalTVL={'420.69'} tvlFor={'240.69'} currency="ETH" />,
+      <StakeTVL totalTVL={420.69} tvlFor={240.69} currency="ETH" />,
     )
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
@@ -40,8 +40,8 @@ describe('StakeTVL', () => {
   it('should render TVL with pie chart', () => {
     const { asFragment } = render(
       <StakeTVL
-        totalTVL={'420.69'}
-        tvlFor={'240.69'}
+        totalTVL={420.69}
+        tvlFor={240.69}
         currency="ETH"
         isClaim={true}
       />,
@@ -50,6 +50,7 @@ describe('StakeTVL', () => {
       <DocumentFragment>
         <div
           class="h-9 justify-start items-center gap-1 inline-flex"
+          data-state="closed"
         >
           <div
             class="justify-start items-center gap-1 flex"

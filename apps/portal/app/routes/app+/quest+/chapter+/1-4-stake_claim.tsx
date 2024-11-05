@@ -256,6 +256,7 @@ export default function Quests() {
       isOpen: true,
       id: claim.claim_id,
       modalType: 'claim',
+      claim,
       mode: 'deposit',
       direction: 'for',
     }))
@@ -267,6 +268,7 @@ export default function Quests() {
       isOpen: true,
       id: claim.claim_id,
       modalType: 'claim',
+      claim,
       mode: 'deposit',
       direction: 'against',
     }))
@@ -278,6 +280,7 @@ export default function Quests() {
       isOpen: true,
       id: claim.claim_id,
       modalType: 'claim',
+      claim,
       mode: 'redeem',
     }))
     logger('Redeem claim', claim)
@@ -288,6 +291,7 @@ export default function Quests() {
       isOpen: true,
       id: identity.id,
       modalType: 'identity',
+      identity,
       mode: 'redeem',
     }))
     logger('Redeem identity', identity)

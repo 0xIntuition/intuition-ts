@@ -80,8 +80,9 @@ export interface ClaimStakeCardProps
   totalTVL: number
   tvlAgainst: number
   tvlFor: number
-  amountAgainst: number
-  amountFor: number
+  numPositionsAgainst: number
+  numPositionsFor: number
+  disableStaking?: boolean
   disableAgainstBtn?: boolean
   onAgainstBtnClick?: () => void
   disableForBtn?: boolean
@@ -93,8 +94,9 @@ const ClaimStakeCard = ({
   totalTVL,
   tvlAgainst,
   tvlFor,
-  amountAgainst,
-  amountFor,
+  numPositionsAgainst,
+  numPositionsFor,
+  disableStaking = false,
   disableAgainstBtn = false,
   onAgainstBtnClick,
   disableForBtn = false,
@@ -112,7 +114,7 @@ const ClaimStakeCard = ({
       )}
       {...props}
     >
-      <Text variant={TextVariant.bodyLarge}>Stake</Text>
+      {!disableStaking && <Text variant={TextVariant.bodyLarge}>Stake</Text>}
       <div className="grid justify-center items-center">
         <div className="col-[1] row-[1] block w-full">
           <PieChart
@@ -151,33 +153,35 @@ const ClaimStakeCard = ({
       <div className="flex justify-between items-center">
         <ClaimStakeCardDataSet
           variant={StakeCardDataSetVariant.for}
-          value={amountFor}
+          value={numPositionsFor}
         />
         <ClaimStakeCardDataSet
           variant={StakeCardDataSetVariant.against}
-          value={amountAgainst}
+          value={numPositionsAgainst}
         />
       </div>
-      <div className="flex justify-between items-center gap-4 w-full mt-2">
-        <Button
-          variant={ButtonVariant.for}
-          size={ButtonSize.md}
-          disabled={disableForBtn || !onForBtnClick}
-          onClick={onForBtnClick}
-          className="w-full"
-        >
-          Deposit For
-        </Button>
-        <Button
-          variant={ButtonVariant.against}
-          size={ButtonSize.md}
-          disabled={disableAgainstBtn || !onAgainstBtnClick}
-          onClick={onAgainstBtnClick}
-          className="w-full"
-        >
-          Deposit Against
-        </Button>
-      </div>
+      {!disableStaking && (
+        <div className="flex justify-between items-center gap-4 w-full mt-2">
+          <Button
+            variant={ButtonVariant.for}
+            size={ButtonSize.md}
+            disabled={disableForBtn || !onForBtnClick}
+            onClick={onForBtnClick}
+            className="w-full"
+          >
+            Deposit For
+          </Button>
+          <Button
+            variant={ButtonVariant.against}
+            size={ButtonSize.md}
+            disabled={disableAgainstBtn || !onAgainstBtnClick}
+            onClick={onAgainstBtnClick}
+            className="w-full"
+          >
+            Deposit Against
+          </Button>
+        </div>
+      )}
     </div>
   )
 }

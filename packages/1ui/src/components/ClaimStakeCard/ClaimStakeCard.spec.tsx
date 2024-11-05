@@ -12,8 +12,8 @@ describe('ClaimStakeCard', () => {
         totalTVL={4.928}
         tvlAgainst={0.567}
         tvlFor={3.643}
-        amountAgainst={39}
-        amountFor={124}
+        numPositionsAgainst={39}
+        numPositionsFor={124}
         onAgainstBtnClick={() => console.log('test')}
         onForBtnClick={() => console.log('test')}
       />,
@@ -171,8 +171,8 @@ describe('ClaimStakeCard', () => {
         totalTVL={4.928}
         tvlAgainst={0.567}
         tvlFor={3.643}
-        amountAgainst={39}
-        amountFor={124}
+        numPositionsAgainst={39}
+        numPositionsFor={124}
       />,
     )
     expect(asFragment()).toMatchInlineSnapshot(`

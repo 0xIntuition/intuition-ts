@@ -1,25 +1,39 @@
 import React from 'react'
 
+import { ClaimStakeCard } from 'components/ClaimStakeCard'
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from 'components/HoverCard'
 import { PieChart, PieChartSize, PieChartVariant } from 'components/PieChart'
 import { Text, TextVariant } from 'components/Text'
 import { cn } from 'styles'
+import { CurrencyType } from 'types'
 
 export interface StakeTVLProps {
-  totalTVL: string
-  currency?: string
+  totalTVL: number
+  numPositions?: number
+  numPositionsFor?: number
+  numPositionsAgainst?: number
+  currency?: CurrencyType
   isClaim?: boolean
-  tvlFor?: string
+  tvlFor?: number
+  tvlAgainst?: number
   className?: string
 }
 
 const StakeTVL = React.forwardRef<HTMLDivElement, StakeTVLProps>(
   (
     {
-      totalTVL = 420.69,
-      tvlFor,
+      totalTVL,
+      numPositionsFor,
+      numPositionsAgainst,
       currency = 'ETH',
       className,
       isClaim,
+      tvlFor,
+      tvlAgainst,
       ...props
     },
     ref,
@@ -27,7 +41,7 @@ const StakeTVL = React.forwardRef<HTMLDivElement, StakeTVLProps>(
     const stakedForPercentage =
       tvlFor && totalTVL ? (+tvlFor / +totalTVL) * 100 : 0
 
-    return (
+    const content = (
       <div
         ref={ref}
         className={cn(
@@ -56,6 +70,28 @@ const StakeTVL = React.forwardRef<HTMLDivElement, StakeTVLProps>(
           </div>
         )}
       </div>
+    )
+
+    if (!isClaim) {
+      return content
+    }
+
+    return (
+      <HoverCard>
+        <HoverCardTrigger asChild>{content}</HoverCardTrigger>
+        <HoverCardContent align="end" side="top">
+          <ClaimStakeCard
+            currency={currency}
+            totalTVL={totalTVL}
+            tvlAgainst={tvlAgainst!}
+            tvlFor={tvlFor!}
+            numPositionsAgainst={numPositionsAgainst ?? 0}
+            numPositionsFor={numPositionsFor ?? 0}
+            disableStaking={true}
+            className="border-none p-0"
+          />
+        </HoverCardContent>
+      </HoverCard>
     )
   },
 )

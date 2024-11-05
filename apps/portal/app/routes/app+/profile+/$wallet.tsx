@@ -389,6 +389,7 @@ export default function Profile() {
                   ...prevState,
                   mode: 'redeem',
                   modalType: 'identity',
+                  identity: userIdentity,
                   isOpen: true,
                 }))
               }
@@ -418,6 +419,7 @@ export default function Profile() {
                 ...prevState,
                 mode: 'deposit',
                 modalType: 'identity',
+                identity: userIdentity,
                 isOpen: true,
               }))
             }

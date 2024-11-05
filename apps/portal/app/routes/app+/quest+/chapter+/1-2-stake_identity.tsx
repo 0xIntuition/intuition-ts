@@ -182,6 +182,7 @@ export default function Quests() {
       isOpen: true,
       id: identity.id,
       modalType: 'identity',
+      identity,
       mode: 'deposit',
     }))
   }
@@ -192,6 +193,7 @@ export default function Quests() {
       isOpen: true,
       id: identity.id,
       modalType: 'identity',
+      identity,
       mode: 'redeem',
     }))
   }

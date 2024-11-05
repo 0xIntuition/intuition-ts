@@ -19,6 +19,7 @@ export interface ClaimRowProps extends React.HTMLAttributes<HTMLDivElement> {
   numPositionsAgainst: number
   totalTVL: string
   tvlFor: string
+  tvlAgainst: string
   currency?: CurrencyType
   userPosition?: string
   positionDirection?: ClaimPositionType
@@ -33,6 +34,7 @@ const ClaimRow = ({
   numPositionsAgainst,
   totalTVL,
   tvlFor,
+  tvlAgainst,
   currency = 'ETH',
   className,
   children,
@@ -66,10 +68,13 @@ const ClaimRow = ({
         <div className="flex items-center gap-1">{children}</div>
         <div className="flex items-center gap-3">
           <StakeTVL
-            totalTVL={totalTVL}
-            tvlFor={tvlFor}
+            totalTVL={+totalTVL}
+            tvlFor={+tvlFor}
+            tvlAgainst={+tvlAgainst}
             currency={currency}
             isClaim={true}
+            numPositionsFor={numPositionsFor}
+            numPositionsAgainst={numPositionsAgainst}
           />
           <StakeButton
             variant={StakeButtonVariant.claimFor}

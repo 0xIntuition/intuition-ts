@@ -50,6 +50,14 @@ const meta: Meta<typeof ClaimRow> = {
       },
       control: 'number',
     },
+    tvlAgainst: {
+      description: 'TVL amount for the "Against" positions',
+      table: {
+        type: { summary: 'number' },
+        defaultValue: { summary: '180' },
+      },
+      control: 'number',
+    },
     currency: {
       description: 'The currency symbol',
       table: {
@@ -88,6 +96,7 @@ export const BasicUsage: Story = {
     numPositionsAgainst: 42,
     totalTVL: '420.69',
     tvlFor: '240.69',
+    tvlAgainst: '180',
     currency: 'ETH',
     onStakeForClick: () => console.log('Clicked!'),
     onStakeAgainstClick: () => console.log('Clicked!'),
