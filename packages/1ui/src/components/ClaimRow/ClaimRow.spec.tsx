@@ -598,6 +598,7 @@ describe('ClaimRow', () => {
         numPositionsAgainst={42}
         totalTVL={'420.69'}
         tvlFor={'240.69'}
+        tvlAgainst={'180'}
         currency="ETH"
         userPosition={'3.19'}
         positionDirection="for"
@@ -614,10 +615,10 @@ describe('ClaimRow', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="w-full flex flex-col items-center bg-primary/5 border border-border/10 rounded-lg max-sm:flex-col max-sm:gap-3"
+          class="w-full flex flex-col items-center bg-primary/5 border border-border/10 rounded-t-xl rounded-b-xl"
         >
           <div
-            class="w-full flex justify-between items-center p-4 rounded-t-lg bg-gradient-to-r from-transparent to-for"
+            class="w-full flex justify-between items-center p-4 rounded-t-xl bg-gradient-to-r from-transparent to-for"
           >
             <div
               class="flex items-center gap-1"
@@ -723,6 +724,7 @@ describe('ClaimRow', () => {
             >
               <div
                 class="h-9 justify-start items-center gap-1 inline-flex"
+                data-state="closed"
               >
                 <div
                   class="justify-start items-center gap-1 flex"
