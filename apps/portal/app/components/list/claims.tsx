@@ -76,7 +76,7 @@ export function ClaimsList({
           ]}
         />
       )}
-      {claims.map((claim) => (
+      {claims.map((claim, index) => (
         <div
           key={claim.claim_id}
           className="grow shrink basis-0 self-stretch bg-background first:border-t-px first:rounded-t-xl last:rounded-b-xl theme-border border-t-0 flex-col justify-start gap-5 inline-flex"
@@ -116,6 +116,8 @@ export function ClaimsList({
                 vaultId: claim.counter_vault_id,
               }))
             }
+            isFirst={!enableHeader && index === 0}
+            isLast={index === claims.length - 1}
             className="border-none rounded-none"
           >
             <Link to={getClaimUrl(claim.vault_id)} prefetch="intent">

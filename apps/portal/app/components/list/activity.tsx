@@ -115,9 +115,9 @@ function ActivityItem({
   return (
     <div
       key={activity.id}
-      className={`bg-background rounded-xl mb-6 theme-border last:mb-0 flex flex-col w-full max-sm:p-3`}
+      className={`bg-background rounded-xl mb-6 last:mb-0 flex flex-col w-full max-sm:p-3`}
     >
-      <div className="flex flex-row items-center px-6 py-4 justify-between min-w-full max-md:flex-col max-md:gap-3">
+      <div className="flex flex-row items-center py-3 justify-between min-w-full max-md:flex-col max-md:gap-3">
         <div className="flex flex-row items-center gap-2 max-md:flex-col">
           <HoverCard openDelay={150} closeDelay={150}>
             <HoverCardTrigger asChild>
@@ -198,149 +198,139 @@ function ActivityItem({
       </div>
       <div className="flex w-full">
         {activity.identity !== null && activity.identity !== undefined && (
-          <div className="bg-secondary-foreground/10 rounded-xl flex flex-row w-full gap-6 rounded-t-none items-center max-md:flex-col group hover:bg-secondary/10 transition-colors duration-200">
-            <IdentityRow
-              variant={
-                activity.identity.is_user ? Identity.user : Identity.nonUser
-              }
-              avatarSrc={getAtomImage(activity.identity)}
-              name={getAtomLabel(activity.identity)}
-              description={getAtomDescription(activity.identity)}
-              id={
-                activity.identity.user?.wallet ?? activity.identity.identity_id
-              }
-              totalTVL={formatBalance(
-                BigInt(activity.identity.assets_sum ?? '0'),
-                18,
-              )}
-              numPositions={activity.identity.num_positions}
-              link={getAtomLink(activity.identity)}
-              ipfsLink={getAtomIpfsLink(activity.identity)}
-              tags={
-                activity.identity.tags?.map((tag) => ({
-                  label: tag.display_name,
-                  value: tag.num_tagged_identities,
-                })) ?? undefined
-              }
-              onStakeClick={() =>
-                setStakeModalActive((prevState) => ({
-                  ...prevState,
-                  mode: 'deposit',
-                  modalType: 'identity',
-                  isOpen: true,
-                  identity: activity.identity ?? undefined,
-                  vaultId: activity.identity?.vault_id ?? null,
-                }))
-              }
-              className="w-full hover:bg-transparent"
-            />
-          </div>
+          <IdentityRow
+            variant={
+              activity.identity.is_user ? Identity.user : Identity.nonUser
+            }
+            avatarSrc={getAtomImage(activity.identity)}
+            name={getAtomLabel(activity.identity)}
+            description={getAtomDescription(activity.identity)}
+            id={activity.identity.user?.wallet ?? activity.identity.identity_id}
+            totalTVL={formatBalance(
+              BigInt(activity.identity.assets_sum ?? '0'),
+              18,
+            )}
+            numPositions={activity.identity.num_positions}
+            link={getAtomLink(activity.identity)}
+            ipfsLink={getAtomIpfsLink(activity.identity)}
+            tags={
+              activity.identity.tags?.map((tag) => ({
+                label: tag.display_name,
+                value: tag.num_tagged_identities,
+              })) ?? undefined
+            }
+            onStakeClick={() =>
+              setStakeModalActive((prevState) => ({
+                ...prevState,
+                mode: 'deposit',
+                modalType: 'identity',
+                isOpen: true,
+                identity: activity.identity ?? undefined,
+                vaultId: activity.identity?.vault_id ?? null,
+              }))
+            }
+            className="w-full hover:bg-transparent"
+          />
         )}
         {activity.claim && (
-          <div className="bg-secondary-foreground/10 rounded-xl flex flex-row w-full gap-6 rounded-t-none items-center max-md:flex-col group hover:bg-secondary/10 transition-colors duration-200">
-            <ClaimRow
-              numPositionsFor={activity.claim.for_num_positions}
-              numPositionsAgainst={activity.claim.against_num_positions}
-              tvlFor={formatBalance(activity.claim.for_assets_sum, 18)}
-              totalTVL={formatBalance(activity.claim.assets_sum, 18)}
-              userPosition={formatBalance(activity.claim.user_assets, 18)}
-              positionDirection={
-                +activity.claim.user_assets_for > 0
-                  ? ClaimPosition.claimFor
-                  : +activity.claim.user_assets_against > 0
-                    ? ClaimPosition.claimAgainst
-                    : undefined
-              }
-              onStakeForClick={() =>
-                setStakeModalActive((prevState) => ({
-                  ...prevState,
-                  mode: 'deposit',
-                  modalType: 'claim',
-                  direction: ClaimPosition.claimFor,
-                  isOpen: true,
-                  claim: activity.claim ?? undefined,
-                  vaultId: activity.claim?.vault_id ?? null,
-                }))
-              }
-              onStakeAgainstClick={() =>
-                setStakeModalActive((prevState) => ({
-                  ...prevState,
-                  mode: 'deposit',
-                  modalType: 'claim',
-                  direction: ClaimPosition.claimAgainst,
-                  isOpen: true,
-                  claim: activity.claim ?? undefined,
-                  vaultId: activity.claim?.counter_vault_id ?? null,
-                }))
-              }
-              className="w-full hover:bg-transparent"
-            >
-              <Claim
-                size="md"
-                subject={{
-                  variant: activity.claim.subject?.is_user
-                    ? Identity.user
-                    : Identity.nonUser,
-                  label: getAtomLabel(
-                    activity.claim.subject as IdentityPresenter,
-                  ),
-                  imgSrc: getAtomImage(
-                    activity.claim.subject as IdentityPresenter,
-                  ),
-                  id: activity.claim.subject?.identity_id,
-                  description: getAtomDescription(
-                    activity.claim.subject as IdentityPresenter,
-                  ),
-                  ipfsLink: getAtomIpfsLink(
-                    activity.claim.subject as IdentityPresenter,
-                  ),
-                  link: getAtomLink(
-                    activity.claim.subject as IdentityPresenter,
-                  ),
-                }}
-                predicate={{
-                  variant: activity.claim.predicate?.is_user
-                    ? Identity.user
-                    : Identity.nonUser,
-                  label: getAtomLabel(
-                    activity.claim.predicate as IdentityPresenter,
-                  ),
-                  imgSrc: getAtomImage(
-                    activity.claim.predicate as IdentityPresenter,
-                  ),
-                  id: activity.claim.predicate?.identity_id,
-                  description: getAtomDescription(
-                    activity.claim.predicate as IdentityPresenter,
-                  ),
-                  ipfsLink: getAtomIpfsLink(
-                    activity.claim.predicate as IdentityPresenter,
-                  ),
-                  link: getAtomLink(
-                    activity.claim.predicate as IdentityPresenter,
-                  ),
-                }}
-                object={{
-                  variant: activity.claim.object?.is_user
-                    ? Identity.user
-                    : Identity.nonUser,
-                  label: getAtomLabel(
-                    activity.claim.object as IdentityPresenter,
-                  ),
-                  imgSrc: getAtomImage(
-                    activity.claim.object as IdentityPresenter,
-                  ),
-                  id: activity.claim.object?.identity_id,
-                  description: getAtomDescription(
-                    activity.claim.object as IdentityPresenter,
-                  ),
-                  ipfsLink: getAtomIpfsLink(
-                    activity.claim.object as IdentityPresenter,
-                  ),
-                  link: getAtomLink(activity.claim.object as IdentityPresenter),
-                }}
-              />
-            </ClaimRow>
-          </div>
+          <ClaimRow
+            numPositionsFor={activity.claim.for_num_positions}
+            numPositionsAgainst={activity.claim.against_num_positions}
+            tvlFor={formatBalance(activity.claim.for_assets_sum, 18)}
+            totalTVL={formatBalance(activity.claim.assets_sum, 18)}
+            userPosition={formatBalance(activity.claim.user_assets, 18)}
+            positionDirection={
+              +activity.claim.user_assets_for > 0
+                ? ClaimPosition.claimFor
+                : +activity.claim.user_assets_against > 0
+                  ? ClaimPosition.claimAgainst
+                  : undefined
+            }
+            onStakeForClick={() =>
+              setStakeModalActive((prevState) => ({
+                ...prevState,
+                mode: 'deposit',
+                modalType: 'claim',
+                direction: ClaimPosition.claimFor,
+                isOpen: true,
+                claim: activity.claim ?? undefined,
+                vaultId: activity.claim?.vault_id ?? null,
+              }))
+            }
+            onStakeAgainstClick={() =>
+              setStakeModalActive((prevState) => ({
+                ...prevState,
+                mode: 'deposit',
+                modalType: 'claim',
+                direction: ClaimPosition.claimAgainst,
+                isOpen: true,
+                claim: activity.claim ?? undefined,
+                vaultId: activity.claim?.counter_vault_id ?? null,
+              }))
+            }
+            className="w-full hover:bg-transparent"
+          >
+            <Claim
+              size="md"
+              subject={{
+                variant: activity.claim.subject?.is_user
+                  ? Identity.user
+                  : Identity.nonUser,
+                label: getAtomLabel(
+                  activity.claim.subject as IdentityPresenter,
+                ),
+                imgSrc: getAtomImage(
+                  activity.claim.subject as IdentityPresenter,
+                ),
+                id: activity.claim.subject?.identity_id,
+                description: getAtomDescription(
+                  activity.claim.subject as IdentityPresenter,
+                ),
+                ipfsLink: getAtomIpfsLink(
+                  activity.claim.subject as IdentityPresenter,
+                ),
+                link: getAtomLink(activity.claim.subject as IdentityPresenter),
+              }}
+              predicate={{
+                variant: activity.claim.predicate?.is_user
+                  ? Identity.user
+                  : Identity.nonUser,
+                label: getAtomLabel(
+                  activity.claim.predicate as IdentityPresenter,
+                ),
+                imgSrc: getAtomImage(
+                  activity.claim.predicate as IdentityPresenter,
+                ),
+                id: activity.claim.predicate?.identity_id,
+                description: getAtomDescription(
+                  activity.claim.predicate as IdentityPresenter,
+                ),
+                ipfsLink: getAtomIpfsLink(
+                  activity.claim.predicate as IdentityPresenter,
+                ),
+                link: getAtomLink(
+                  activity.claim.predicate as IdentityPresenter,
+                ),
+              }}
+              object={{
+                variant: activity.claim.object?.is_user
+                  ? Identity.user
+                  : Identity.nonUser,
+                label: getAtomLabel(activity.claim.object as IdentityPresenter),
+                imgSrc: getAtomImage(
+                  activity.claim.object as IdentityPresenter,
+                ),
+                id: activity.claim.object?.identity_id,
+                description: getAtomDescription(
+                  activity.claim.object as IdentityPresenter,
+                ),
+                ipfsLink: getAtomIpfsLink(
+                  activity.claim.object as IdentityPresenter,
+                ),
+                link: getAtomLink(activity.claim.object as IdentityPresenter),
+              }}
+            />
+          </ClaimRow>
         )}
       </div>
     </div>

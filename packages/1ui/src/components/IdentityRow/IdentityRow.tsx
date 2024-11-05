@@ -30,6 +30,8 @@ export interface IdentityRowProps extends React.HTMLAttributes<HTMLDivElement> {
   tags?: TagWithValueProps[]
   userPosition?: string
   onStakeClick: () => void
+  isFirst?: boolean
+  isLast?: boolean
 }
 
 const IdentityRow = ({
@@ -43,16 +45,26 @@ const IdentityRow = ({
   className,
   userPosition,
   onStakeClick,
+  isFirst = true,
+  isLast = true,
 }: IdentityRowProps) => {
   return (
     <div
       className={cn(
-        `w-full flex flex-col items-center bg-primary/5 border border-border/10 rounded-lg max-sm:flex-col max-sm:gap-3`,
+        `w-full flex flex-col items-center bg-primary/5 border border-border/10 max-sm:flex-col max-sm:gap-3`,
+        isFirst && 'rounded-t-xl',
+        isLast && 'rounded-b-xl',
         className,
       )}
     >
       <div
-        className={`w-full flex justify-between items-center p-4 ${userPosition && userPosition !== '0' && 'bg-gradient-to-r from-transparent to-primary/10'}`}
+        className={cn(
+          `w-full flex justify-between items-center p-4`,
+          isFirst && 'rounded-t-xl',
+          userPosition &&
+            userPosition !== '0' &&
+            'bg-gradient-to-r from-transparent to-primary/10',
+        )}
       >
         <div className="flex items-center">
           <a href={link}>

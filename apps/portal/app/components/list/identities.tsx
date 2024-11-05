@@ -21,7 +21,7 @@ export function IdentitiesList({
   identities,
   pagination,
   paramPrefix,
-  enalbeHeader = true,
+  enableHeader = true,
   enableSearch = true,
   enableSort = true,
   readOnly = false,
@@ -30,7 +30,7 @@ export function IdentitiesList({
   identities: IdentityPresenter[]
   pagination?: PaginationType
   paramPrefix?: string
-  enalbeHeader?: boolean
+  enableHeader?: boolean
   enableSearch?: boolean
   enableSort?: boolean
   readOnly?: boolean
@@ -53,7 +53,7 @@ export function IdentitiesList({
       enableSearch={enableSearch}
       enableSort={enableSort}
     >
-      {enalbeHeader && (
+      {enableHeader && (
         <ListHeader
           items={[
             { label: 'Identity', icon: IconName.fingerprint },
@@ -61,7 +61,7 @@ export function IdentitiesList({
           ]}
         />
       )}
-      {identities.map((identity) => {
+      {identities.map((identity, index) => {
         if (!identity || typeof identity !== 'object') {
           return null
         }
@@ -98,6 +98,8 @@ export function IdentitiesList({
                   vaultId: identity.vault_id,
                 }))
               }
+              isFirst={!enableHeader && index === 0}
+              isLast={index === identities.length - 1}
               className="border-none rounded-none"
             />
           </div>

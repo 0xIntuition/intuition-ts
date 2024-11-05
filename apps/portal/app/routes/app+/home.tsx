@@ -221,7 +221,7 @@ export default function HomePage() {
                 return (
                   <IdentitiesList
                     identities={resolvedTopUsers.data}
-                    enalbeHeader={false}
+                    enableHeader={false}
                     enableSearch={false}
                     enableSort={false}
                   />

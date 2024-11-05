@@ -24,6 +24,8 @@ export interface ClaimRowProps extends React.HTMLAttributes<HTMLDivElement> {
   positionDirection?: ClaimPositionType
   onStakeForClick: () => void
   onStakeAgainstClick: () => void
+  isFirst?: boolean
+  isLast?: boolean
 }
 
 const ClaimRow = ({
@@ -38,16 +40,28 @@ const ClaimRow = ({
   positionDirection,
   onStakeForClick,
   onStakeAgainstClick,
+  isFirst = true,
+  isLast = true,
 }: ClaimRowProps) => {
   return (
     <div
       className={cn(
-        `w-full flex flex-col items-center bg-primary/5 border border-border/10 rounded-lg max-sm:flex-col max-sm:gap-3`,
+        `w-full flex flex-col items-center bg-primary/5 border border-border/10`,
+        isFirst && 'rounded-t-xl',
+        isLast && 'rounded-b-xl',
         className,
       )}
     >
       <div
-        className={`w-full flex justify-between items-center p-4 rounded-t-lg ${userPosition && userPosition !== '0' && (positionDirection === ClaimPosition.claimFor ? 'bg-gradient-to-r from-transparent to-for' : 'bg-gradient-to-r from-transparent to-against')}`}
+        className={cn(
+          `w-full flex justify-between items-center p-4`,
+          isFirst && 'rounded-t-xl',
+          userPosition &&
+            userPosition !== '0' &&
+            (positionDirection === ClaimPosition.claimFor
+              ? 'bg-gradient-to-r from-transparent to-for'
+              : 'bg-gradient-to-r from-transparent to-against'),
+        )}
       >
         <div className="flex items-center gap-1">{children}</div>
         <div className="flex items-center gap-3">
@@ -96,11 +110,12 @@ const ClaimRow = ({
       </div>
       {userPosition && userPosition !== '0' && (
         <div
-          className={`flex flex-row justify-end px-4 py-0.5 w-full items-center gap-1.5 h-9 ${
+          className={cn(
+            `flex flex-row justify-end px-4 py-0.5 w-full items-center gap-1.5 h-9`,
             positionDirection === ClaimPosition.claimFor
               ? 'bg-for/10 text-for'
-              : 'bg-against/10 text-against'
-          }`}
+              : 'bg-against/10 text-against',
+          )}
         >
           <Icon name={IconName.arrowUp} className="h-4 w-4" />
           <Text variant={TextVariant.caption} className="text-inherit">
