@@ -284,6 +284,7 @@ export default function Quests() {
       modalType: 'claim',
       claim,
       mode: 'redeem',
+      direction: 'against',
     }))
     logger('redeem claim', claim)
   }
