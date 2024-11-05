@@ -8,6 +8,7 @@ import {
   IdentitiesService,
   SortDirection,
 } from '@0xintuition/api'
+import { fetcher, GetStatsDocument, GetStatsQuery } from '@0xintuition/graphql'
 
 import { ErrorPage } from '@components/error-page'
 import HomeBanner from '@components/home/home-banner'
@@ -27,13 +28,13 @@ import {
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { getActivity } from '@lib/services/activity'
 import { getFeaturedLists } from '@lib/services/lists'
-import { getSystemStats } from '@lib/services/stats'
 import { getFeaturedListObjectIds } from '@lib/utils/app'
 import { invariant } from '@lib/utils/misc'
 import { defer, LoaderFunctionArgs } from '@remix-run/node'
 import { Await } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
+import { QueryClient } from '@tanstack/react-query'
 import { CURRENT_ENV, NO_WALLET_ERROR } from 'app/consts'
 import FullPageLayout from 'app/layouts/full-page-layout'
 import { PaginationType } from 'app/types'
@@ -50,8 +51,15 @@ export async function loader({ request }: LoaderFunctionArgs) {
   listSearchParams.set('direction', SortDirection.DESC)
   listSearchParams.set('limit', '6')
 
+  const queryClient = new QueryClient()
+
+  await queryClient.prefetchQuery({
+    queryKey: ['get-stats-query'],
+    queryFn: () => fetcher(GetStatsDocument)(),
+  })
+
   return defer({
-    systemStats: getSystemStats({ request }),
+    systemStats: queryClient.getQueryData(['get-stats-query']) as GetStatsQuery,
     topUsers: fetchWrapper(request, {
       method: IdentitiesService.searchIdentity,
       args: {
@@ -103,17 +111,22 @@ export default function HomePage() {
                 </ErrorStateCard>
               }
             >
-              {(resolvedStats) => (
-                <HomeStatsHeader
-                  totalIdentities={resolvedStats.totalIdentities}
-                  totalClaims={resolvedStats.totalClaims}
-                  totalUsers={resolvedStats.totalUsers}
-                  // totalStaked={
-                  //   Number(formatBalance(resolvedStats.totalStaked, 18)) || 0
-                  // }
-                  totalSignals={resolvedStats.totalSignals || 0}
-                />
-              )}
+              {(resolvedStats) => {
+                if (!resolvedStats?.stats?.[0]) {
+                  return <ErrorStateCard message="No stats data available" />
+                }
+
+                const stats = resolvedStats.stats[0]
+                return (
+                  <HomeStatsHeader
+                    totalIdentities={stats.totalAtoms}
+                    totalClaims={stats.totalTriples}
+                    totalUsers={stats.totalAccounts}
+                    totalStaked={stats.contractBalance}
+                    totalSignals={stats.totalSignals}
+                  />
+                )
+              }}
             </Await>
           </Suspense>
         </div>

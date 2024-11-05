@@ -3,6 +3,7 @@ import React from 'react'
 import { Separator, Text } from '@0xintuition/1ui'
 
 import { PATHS } from '@consts/paths'
+import { formatBalance } from '@lib/utils/misc'
 import { Link } from '@remix-run/react'
 
 interface HomeStatsHeaderProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -19,7 +20,7 @@ export function HomeStatsHeader({
   totalClaims,
   totalUsers,
   // totalVolume,  omitting until we can support this
-  // totalStaked,
+  totalStaked,
   totalSignals,
   ...props
 }: HomeStatsHeaderProps) {
@@ -39,19 +40,23 @@ export function HomeStatsHeader({
           value={totalClaims}
           link={PATHS.EXPLORE_CLAIMS}
         />
-        {/* <StatItem label="Users" value={totalUsers} /> */}
+        <StatItem
+          label="Users"
+          value={totalUsers}
+          link={`${PATHS.EXPLORE_IDENTITIES}?isUser=true`}
+        />
       </div>
       <Separator
         orientation="vertical"
         className="mx-8 h-12 w-px bg-gradient-radial from-white via-white/20"
       />
       <div className="flex gap-8 max-lg:flex-col max-lg:gap-2">
-        {/* {totalStaked && <StatItem label="TVL" value={`${totalStaked} ETH`} />} */}
-        <StatItem
-          label="Users"
-          value={totalUsers}
-          link={`${PATHS.EXPLORE_IDENTITIES}?isUser=true`}
-        />
+        {totalStaked && (
+          <StatItem
+            label="TVL"
+            value={`${formatBalance(totalStaked, 18)} ETH`}
+          />
+        )}
         <StatItem
           label="Signals"
           value={totalSignals}
@@ -65,12 +70,12 @@ export function HomeStatsHeader({
 interface StatItemProps {
   label: string
   value: string | number
-  link: string
+  link?: string
 }
 
 function StatItem({ label, value, link }: StatItemProps) {
-  return (
-    <Link to={link} className="flex flex-col items-start">
+  const content = (
+    <>
       <Text
         variant="caption"
         weight="regular"
@@ -81,6 +86,16 @@ function StatItem({ label, value, link }: StatItemProps) {
       <Text variant="headline" weight="medium">
         {value}
       </Text>
-    </Link>
+    </>
   )
+
+  if (link) {
+    return (
+      <Link to={link} className="flex flex-col items-start">
+        {content}
+      </Link>
+    )
+  }
+
+  return <div className="flex flex-col items-start">{content}</div>
 }
