@@ -1,3 +1,4 @@
+import { Text } from '@0xintuition/1ui'
 import {
   fetcher,
   GetAtomsDocument,
@@ -6,53 +7,78 @@ import {
   useGetAtomsQuery,
 } from '@0xintuition/graphql'
 
-import { json } from '@remix-run/node'
-import { useLoaderData } from '@remix-run/react'
-import {
-  dehydrate,
-  HydrationBoundary,
-  QueryClient,
-} from '@tanstack/react-query'
+import { json, type LoaderFunctionArgs } from '@remix-run/node'
+import { useLoaderData, useSearchParams } from '@remix-run/react'
+import { dehydrate, QueryClient } from '@tanstack/react-query'
 
-export async function loader() {
+export async function loader({ request }: LoaderFunctionArgs) {
+  const url = new URL(request.url)
+  const limit = parseInt(url.searchParams.get('limit') || '10')
+  const offset = parseInt(url.searchParams.get('offset') || '0')
+
   const queryClient = new QueryClient()
 
-  console.log('🟡 Server: Starting prefetch')
   await queryClient.prefetchQuery({
-    queryKey: ['get-atoms-query'],
+    queryKey: ['GetAtoms', { limit, offset }],
     queryFn: () =>
-      fetcher<GetAtomsQuery, GetAtomsQueryVariables>(GetAtomsDocument, {})(),
+      fetcher<GetAtomsQuery, GetAtomsQueryVariables>(GetAtomsDocument, {
+        limit,
+        offset,
+      })(),
   })
-  console.log('🟢 Server: Prefetch complete')
 
   return json({
     dehydratedState: dehydrate(queryClient),
+    initialParams: { limit, offset },
   })
 }
 
-function Atoms() {
+export default function PlaygroundHydration() {
+  const { initialParams } = useLoaderData<typeof loader>()
+  const [searchParams, setSearchParams] = useSearchParams()
+
+  const limit = parseInt(
+    searchParams.get('limit') || String(initialParams.limit),
+  )
+  const offset = parseInt(
+    searchParams.get('offset') || String(initialParams.offset),
+  )
+
   const { data: atomsData } = useGetAtomsQuery(
-    {},
+    { limit, offset },
     {
-      queryKey: ['get-atoms-query'],
+      queryKey: ['GetAtoms', { limit, offset }],
     },
   )
 
   return (
-    <div>
-      <h1>Playground Hydration</h1>
+    <div className="space-y-4">
+      <Text variant="h1">Playground Hydration Pagination</Text>
+      <div className="flex gap-2">
+        <button
+          onClick={() => {
+            const params = new URLSearchParams(searchParams)
+            params.set('offset', String(Math.max(0, offset - limit)))
+            setSearchParams(params)
+          }}
+          disabled={offset === 0}
+        >
+          Previous
+        </button>
+        <span>Page {offset / limit + 1}</span>
+        <button
+          onClick={() => {
+            const params = new URLSearchParams(searchParams)
+            params.set('offset', String(offset + limit))
+            setSearchParams(params)
+          }}
+          disabled={!atomsData?.atoms?.length}
+        >
+          Next
+        </button>
+      </div>
+
       <pre>{JSON.stringify(atomsData?.atoms || [], null, 2)}</pre>
     </div>
-  )
-}
-
-export default function PlaygroundHydration() {
-  console.log('🔵 Client: Component rendering')
-  const { dehydratedState } = useLoaderData<typeof loader>()
-
-  return (
-    <HydrationBoundary state={dehydratedState}>
-      <Atoms />
-    </HydrationBoundary>
   )
 }
