@@ -8,7 +8,12 @@ import {
   IdentitiesService,
   SortDirection,
 } from '@0xintuition/api'
-import { fetcher, GetStatsDocument, GetStatsQuery } from '@0xintuition/graphql'
+import {
+  fetcher,
+  GetStatsDocument,
+  GetStatsQuery,
+  useGetStatsQuery,
+} from '@0xintuition/graphql'
 
 import { ErrorPage } from '@components/error-page'
 import HomeBanner from '@components/home/home-banner'
@@ -25,13 +30,12 @@ import {
   HomeStatsHeaderSkeleton,
   PaginatedListSkeleton,
 } from '@components/skeleton'
-import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { getActivity } from '@lib/services/activity'
 import { getFeaturedLists } from '@lib/services/lists'
 import { getFeaturedListObjectIds } from '@lib/utils/app'
 import { invariant } from '@lib/utils/misc'
 import { defer, LoaderFunctionArgs } from '@remix-run/node'
-import { Await } from '@remix-run/react'
+import { Await, useLoaderData } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
 import { QueryClient } from '@tanstack/react-query'
@@ -54,12 +58,14 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const queryClient = new QueryClient()
 
   await queryClient.prefetchQuery({
-    queryKey: ['get-stats-query'],
+    queryKey: ['GetStats'],
     queryFn: () => fetcher(GetStatsDocument)(),
   })
 
+  const systemStats = queryClient.getQueryData<GetStatsQuery>(['GetStats'])
+
   return defer({
-    systemStats: queryClient.getQueryData(['get-stats-query']) as GetStatsQuery,
+    systemStats,
     topUsers: fetchWrapper(request, {
       method: IdentitiesService.searchIdentity,
       args: {
@@ -87,8 +93,15 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export default function HomePage() {
-  const { systemStats, topUsers, topClaims, featuredLists, activity } =
-    useLiveLoader<typeof loader>(['attest', 'create'])
+  const { topUsers, topClaims, featuredLists, activity } =
+    useLoaderData<typeof loader>()
+
+  const { data: systemStats } = useGetStatsQuery(
+    {},
+    {
+      queryKey: ['GetStats'],
+    },
+  )
 
   return (
     <FullPageLayout>
