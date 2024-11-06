@@ -12,7 +12,6 @@ import {
   toast,
 } from '@0xintuition/1ui'
 import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
-import { useGetTripleQuery } from '@0xintuition/graphql'
 
 import { IdentityPopover } from '@components/create-claim/create-claim-popovers'
 import CreateClaimReview from '@components/create-claim/create-claim-review'
@@ -22,6 +21,7 @@ import { multivaultAbi } from '@lib/abis/multivault'
 import { useCheckClaim } from '@lib/hooks/useCheckClaim'
 import { useCreateClaimConfig } from '@lib/hooks/useCreateClaimConfig'
 import { useCreateTriple } from '@lib/hooks/useCreateTriple'
+import { useGetClaim } from '@lib/hooks/useGetClaim'
 import { useGetWalletBalance } from '@lib/hooks/useGetWalletBalance'
 import { useIdentityServerSearch } from '@lib/hooks/useIdentityServerSearch'
 import {
@@ -161,21 +161,7 @@ function CreateClaimForm({
     objectId: selectedIdentities.object?.vault_id,
   })
 
-  const { data: claimData, refetch: refetchClaim } = useGetTripleQuery(
-    { tripleId: vaultId ? parseFloat(vaultId) : 0 },
-    {
-      enabled: Boolean(vaultId),
-      retry: 1,
-      retryDelay: 2000,
-      refetchInterval: (query) => {
-        if (query.state.status === 'success') {
-          return false
-        }
-        return 2000
-      },
-      queryKey: ['GetTriple', { id: vaultId ? parseFloat(vaultId) : 0 }],
-    },
-  )
+  const { data: claimData, refetch: refetchClaim } = useGetClaim(vaultId)
 
   const navigate = useNavigate()
 
