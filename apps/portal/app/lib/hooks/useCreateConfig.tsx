@@ -1,10 +1,3 @@
-import {
-  getAtomConfig,
-  getAtomCost,
-  getFees,
-  getGeneralConfig,
-  getTripleCost,
-} from '@server/multivault'
 import { useQuery } from '@tanstack/react-query'
 
 export type CreateConfigData = {
@@ -22,30 +15,11 @@ export function useCreateConfig() {
   return useQuery<CreateConfigData>({
     queryKey: ['create-config'],
     queryFn: async () => {
-      const [
-        atomCost,
-        tripleCost,
-        [, atomCreationFee],
-        [entryFee, , protocolFee],
-        [, , feeDenominator, minDeposit],
-      ] = await Promise.all([
-        getAtomCost(),
-        getTripleCost(),
-        getAtomConfig(),
-        getFees(),
-        getGeneralConfig(),
-      ])
-
-      return {
-        vaultId: '0',
-        atomCost: atomCost.toString(),
-        tripleCost: tripleCost.toString(),
-        atomCreationFee: atomCreationFee.toString(),
-        protocolFee: protocolFee.toString(),
-        entryFee: entryFee.toString(),
-        feeDenominator: feeDenominator.toString(),
-        minDeposit: minDeposit.toString(),
+      const response = await fetch('/resources/create')
+      if (!response.ok) {
+        throw new Error('Failed to fetch create config')
       }
+      return response.json()
     },
   })
 }
