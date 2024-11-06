@@ -4,7 +4,14 @@ import { PrivyProvider } from '@privy-io/react-auth'
 import { WagmiProvider } from '@privy-io/wagmi'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      // Disable automatic refetching on window focus for SSR
+      refetchOnWindowFocus: false,
+    },
+  },
+})
 
 const privyConfig: PrivyClientConfig = {
   embeddedWallets: {
