@@ -1,6 +1,6 @@
 import type { Preview } from '@storybook/react'
 
-import { themeDecorator } from './decorators'
+import { themeDecorator, withReactQuery } from './decorators'
 import DocumentationTemplate from './templates/DocumentationTemplate.mdx'
 
 import '../src/styles/globals.css'
@@ -53,6 +53,6 @@ export const globalTypes = {
   },
 }
 
-export const decorators = [themeDecorator]
+export const decorators = [withReactQuery, themeDecorator]
 
 export default preview
