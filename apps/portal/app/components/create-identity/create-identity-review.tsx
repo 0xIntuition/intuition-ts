@@ -118,7 +118,7 @@ const CreateIdentityReview: React.FC<CreateIdentityReviewProps> = ({
               weight="normal"
               className="text-neutral-50/50 flex items-center gap-1"
             >
-              Estimated Cost: {totalFees.toFixed(4)} ETH
+              Estimated Fees: {totalFees.toFixed(4)} ETH
               <InfoTooltip
                 content={
                   <div className="flex flex-col gap-2">

@@ -107,12 +107,7 @@ const ProfileCard = ({
               weight="medium"
               className="text-primary-300 pt-2.5 whitespace-pre-wrap"
             >
-              <Trunctacular
-                value={bio}
-                maxStringLength={266}
-                className="text-left items-start"
-                disableTooltip
-              />
+              <Trunctacular value={bio} maxStringLength={266} />
             </Text>
           </div>
         )}
