@@ -13,16 +13,16 @@ Each app and package has it's own README with instructions for getting up and ru
 ### Apps
 
 - [Portal](./apps/portal/) is the first core application in our new monorepo. The Portal README contains additional information and details about how to get started.
+- [Data Populator](./apps/data-populator/) is an app for bulk creation of atom data. The Data Populator README contains additional information.
+- [Template](./apps/template) is an opionionated template for our core app development stack.
 
 ### Packages
 
 - [1ui Component Library](./packages/1ui/) is the first package in our new monorepo. This is our core component library that also includes a Storybook instance. The 1ui README contains additional information.
-
-- [api](./packages/api/) is the api interaction layer of Intuition
-
-- [protocol](./packages/protocol/) is the on-chain interactions (abi, bytecode) SDK
-
-- [sdk](./packages/sdk/) contains high level logic that combines both on-chain and off-chain interactions
+- [api](./packages/api/) is the REST API interaction layer of Intuition.
+- [graphql](./packages/graphql/) is the SDK for the GraphQL interaction layer of Intuition containing hooks, queries, and other utilities.
+- [protocol](./packages/protocol/) is the onchain interactions (ABIs, bytecode) SDK.
+- [sdk](./packages/sdk/) contains high level logic that combines both on-chain and off-chain interactions. Coming Soon!
 
 ## Getting Started
 
