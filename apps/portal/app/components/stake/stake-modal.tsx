@@ -23,10 +23,12 @@ import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
 
 import { InfoTooltip } from '@components/info-tooltip'
 import { multivaultAbi } from '@lib/abis/multivault'
-import { useStakeMutation } from '@lib/hooks/mutations/useStakeMutation'
+import { useDepositAtom } from '@lib/hooks/useDepositAtom'
 import { useGetWalletBalance } from '@lib/hooks/useGetWalletBalance'
+import { useRedeemAtom } from '@lib/hooks/useRedeemAtom'
 import { transactionReducer } from '@lib/hooks/useTransactionReducer'
 import { stakeModalAtom } from '@lib/state/store'
+import logger from '@lib/utils/logger'
 import { useGenericTxState } from '@lib/utils/use-tx-reducer'
 import { useFetcher, useLocation } from '@remix-run/react'
 import {
@@ -35,7 +37,7 @@ import {
 } from 'app/types/transaction'
 import { VaultDetailsType } from 'app/types/vault'
 import { useAtom } from 'jotai'
-import { Address, decodeEventLog, formatUnits } from 'viem'
+import { Abi, Address, decodeEventLog, formatUnits, parseUnits } from 'viem'
 import { useAccount, usePublicClient } from 'wagmi'
 
 import StakeButton from './stake-button'
@@ -132,56 +134,101 @@ export default function StakeModal({
 
   const { min_deposit } = vaultDetails
 
+  const depositHook = useDepositAtom(contract)
+
+  const redeemHook = useRedeemAtom(contract)
+
   const {
-    mutateAsync: stake,
-    txReceipt,
+    writeContractAsync,
+    receipt: txReceipt,
     awaitingWalletConfirmation,
     awaitingOnChainConfirmation,
     isError,
     reset,
-  } = useStakeMutation(contract, mode as 'deposit' | 'redeem')
+  } = mode === 'deposit' ? depositHook : redeemHook
 
-  const handleAction = async () => {
-    try {
-      const txHash = await stake({
-        val,
-        userWallet,
-        vaultId,
-        claim,
-        identity,
-        conviction_price,
-        mode,
-        contract,
-      })
-
-      if (publicClient && txHash) {
-        dispatch({ type: 'TRANSACTION_PENDING' })
-        const receipt = await publicClient.waitForTransactionReceipt({
-          hash: txHash,
+  const useHandleAction = (actionType: string) => {
+    return async () => {
+      try {
+        const parsedValue = parseUnits(val === '' ? '0' : val, 18)
+        const txHash = await writeContractAsync({
+          address: contract as `0x${string}`,
+          abi: multivaultAbi as Abi,
+          functionName:
+            actionType === 'buy'
+              ? claim !== undefined
+                ? 'depositTriple'
+                : 'depositAtom'
+              : claim !== undefined
+                ? 'redeemTriple'
+                : 'redeemAtom',
+          args:
+            actionType === 'buy'
+              ? [userWallet as `0x${string}`, vaultId]
+              : [
+                  parseUnits(
+                    val === ''
+                      ? '0'
+                      : (
+                          Number(val) /
+                          Number(formatUnits(BigInt(conviction_price), 18))
+                        ).toString(),
+                    18,
+                  ),
+                  userWallet as `0x${string}`,
+                  vaultId,
+                ],
+          value: actionType === 'buy' ? parsedValue : undefined,
         })
 
-        dispatch({
-          type: 'TRANSACTION_COMPLETE',
-          txHash,
-          txReceipt: receipt,
-        })
-
-        onSuccess?.({
-          identity,
-          claim,
-          vaultDetails,
-          direction,
-        })
+        if (publicClient && txHash) {
+          dispatch({ type: 'TRANSACTION_PENDING' })
+          const receipt = await publicClient.waitForTransactionReceipt({
+            hash: txHash,
+          })
+          logger('receipt', receipt)
+          logger('txHash', txHash)
+          dispatch({
+            type: 'TRANSACTION_COMPLETE',
+            txHash,
+            txReceipt: receipt,
+          })
+          onSuccess?.({
+            identity,
+            claim,
+            vaultDetails,
+            direction,
+          })
+          fetchReval.submit(formRef.current, {
+            method: 'POST',
+          })
+        }
+      } catch (error) {
+        logger('error', error)
+        setLoading(false)
+        if (error instanceof Error) {
+          let errorMessage = 'Failed transaction'
+          if (error.message.includes('insufficient')) {
+            errorMessage = 'Insufficient funds'
+          }
+          if (error.message.includes('rejected')) {
+            errorMessage = 'Transaction rejected'
+          }
+          dispatch({
+            type: 'TRANSACTION_ERROR',
+            error: errorMessage,
+          })
+          toast.error(errorMessage)
+          return
+        }
       }
-    } catch (error) {
-      dispatch({
-        type: 'TRANSACTION_ERROR',
-        error: 'Error processing transaction',
-      })
     }
   }
 
-  const action = handleAction
+  const handleDeposit = useHandleAction('buy')
+  const handleRedeem = useHandleAction('sell')
+
+  const action = mode === 'deposit' ? handleDeposit : handleRedeem
 
   useEffect(() => {
     if (isError) {

@@ -50,7 +50,7 @@ export function ActivitySkeleton() {
 export function HomeStatsHeaderSkeleton() {
   return (
     <div className="w-full">
-      <Skeleton className="w-full h-20" />
+      <Skeleton className="w-full h-24" />
     </div>
   )
 }
