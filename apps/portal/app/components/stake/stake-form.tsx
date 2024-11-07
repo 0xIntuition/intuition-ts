@@ -20,7 +20,6 @@ import {
   getAtomLabel,
   getAtomLink,
 } from '@lib/utils/misc'
-import { type FetcherWithComponents } from '@remix-run/react'
 import { VaultDetailsType } from 'app/types'
 import { TransactionStateType } from 'app/types/transaction'
 import { useAtom } from 'jotai'
@@ -42,8 +41,6 @@ interface StakeFormProps {
   setVal: (val: string) => void
   mode: string | undefined
   state: TransactionStateType
-  fetchReval: FetcherWithComponents<unknown>
-  formRef: React.RefObject<HTMLFormElement>
   isLoading: boolean
   modalType: 'identity' | 'claim' | null | undefined
   showErrors: boolean
@@ -65,8 +62,6 @@ export default function StakeForm({
   setVal,
   mode,
   state,
-  fetchReval,
-  formRef,
   isLoading,
   modalType,
   showErrors,
@@ -78,14 +73,6 @@ export default function StakeForm({
 
   return (
     <>
-      <fetchReval.Form
-        hidden
-        ref={formRef}
-        action={`/actions/reval`}
-        method="post"
-      >
-        <input type="hidden" name="eventName" value="attest" />
-      </fetchReval.Form>
       {state.status === 'idle' ? (
         <>
           <div className="h-full w-full flex-col flex-grow">

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import {
   Badge,
@@ -31,7 +31,7 @@ import { transactionReducer } from '@lib/hooks/useTransactionReducer'
 import { stakeModalAtom } from '@lib/state/store'
 import logger from '@lib/utils/logger'
 import { useGenericTxState } from '@lib/utils/use-tx-reducer'
-import { useFetcher, useLocation } from '@remix-run/react'
+import { useLocation } from '@remix-run/react'
 import {
   TransactionActionType,
   TransactionStateType,
@@ -86,7 +86,6 @@ export default function StakeModal({
   const fetchReval = useFetcher()
   const [stakeModalState] = useAtom(stakeModalAtom)
   const { mode, modalType } = stakeModalState
-  const formRef = useRef(null)
   const [val, setVal] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [lastTxHash, setLastTxHash] = useState<string | undefined>(undefined)
@@ -516,8 +515,6 @@ export default function StakeModal({
           setVal={setVal}
           mode={mode}
           state={state}
-          fetchReval={fetchReval}
-          formRef={formRef}
           isLoading={isLoading}
           modalType={modalType}
           validationErrors={validationErrors}
