@@ -1,40 +1,24 @@
-# Welcome to the Intuition Portal
+# Welcome to the Intuition Data Populator
 
-Our Portal app is built with Remix/Vite.
+The Data Populator app is built with Remix/Vite.
 📖 See the [Remix docs](https://remix.run/docs) and the [Remix Vite docs](https://remix.run/docs/en/main/guides/vite) for details on supported features.
+
+You can use the Data Populator to load CSV files which contain long lists of atom data. The user interface will allow you to perform some basic proofreading of the data, and when you’re ready you can submit it to the Intuition System in one fell swoop. This works by batching all of the atom data together into very large EVM transactions, after automatically pinning and filtering the metadata onto IPFS. This is very similar to the behavior in the Portal App, except it’s designed to work with much larger volumes of data.
 
 ## Getting Started
 
-Once you've cloned the `intuition-ts` monorepo you can run Portal from the monorepo root. Install all packages from the monorepo root by running `pnpm install`.
+Once you've cloned the `intuition-ts` monorepo you can run Data Populator from the monorepo root.
 
-## Stack
+Install all packages from the monorepo root by running `pnpm install`.
 
-- **Remix (with Vite)**
-  - Vite: [Vite Documentation](https://vitejs.dev/guide/)
-  - Remix Flat Routes: [Flat Routes Documentation](https://github.com/kiliman/remix-flat-routes)
-- **Web3:**
-  - Privy: [Privy Documentation](https://docs.privy.io/)
-  - Wagmi: [Wagmi Documentation](https://wagmi.sh/)
-  - Viem: [Viem Documentation](https://viem.sh/)
-  - RainbowKit: [RainbowKit Documentation](https://www.rainbowkit.com/docs/introduction)
-  - Sign in with Ethereum: [Sign in with Ethereum Documentation](https://login.xyz/)
-  - DIDSession: [Ceramic Network did-session Module Documentation](https://developers.ceramic.network/docs/protocol/js-ceramic/guides/ceramic-clients/authentication/did-session)
-- **Styling:**
-  - Shadcn/ui: [Shadcn/ui Documentation](https://tailwindcss.com/docs/installation)
-  - Tailwind: [Tailwind Documentation](https://tailwindcss.com/docs/installation)
-  - Radix: [Radix Documentation](https://www.radix-ui.com/)
-- **Forms and Data:**
-  - Zod: [Zod Documentation](https://zod.dev/)
-  - Conform: [Conform Documentation](https://conform.guide/)
+Copy the `.env.example` and create a `.env` file:
+
+`cp .env.example .env`
+
+Note: To run locally you'll need to populate the environment variables with your own API keys and values.
 
 ## Development
 
 Run the Vite dev server:
 
-`pnpm run --filter portal dev`
-
-## Deployments
-
-Please read the [Portal deployments runbook](../../docs/portal-deployments.md) for a detailed explanation of how we deploy to Dev, Staging, and Prod.
-
-You can also refer to [this loom recording](https://www.loom.com/share/e8f5ec555693466d8dc608642849ddcc?sid=3d634a20-6f52-44a7-80e0-a4c37c78b853) for a quick walkthrough
+`pnpm data-populator:dev`
