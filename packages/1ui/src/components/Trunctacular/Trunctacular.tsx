@@ -53,7 +53,9 @@ const Trunctacular = ({
           <TooltipTrigger>
             <Text {...textProps}>{content}</Text>
           </TooltipTrigger>
-          <TooltipContent>{value}</TooltipContent>
+          <TooltipContent>
+            <Text {...textProps}>{value}</Text>
+          </TooltipContent>
         </Tooltip>
       </TooltipProvider>
     )

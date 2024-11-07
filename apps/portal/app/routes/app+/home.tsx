@@ -19,19 +19,13 @@ import { IdentitiesList } from '@components/list/identities'
 import { ListClaimsList } from '@components/list/list-claims'
 import { ListClaimsSkeletonLayout } from '@components/lists/list-skeletons'
 import { RevalidateButton } from '@components/revalidate-button'
-import {
-  ActivitySkeleton,
-  HomeStatsHeaderSkeleton,
-  PaginatedListSkeleton,
-} from '@components/skeleton'
-import { useLiveLoader } from '@lib/hooks/useLiveLoader'
+import { ActivitySkeleton, PaginatedListSkeleton } from '@components/skeleton'
 import { getActivity } from '@lib/services/activity'
 import { getFeaturedLists } from '@lib/services/lists'
-import { getSystemStats } from '@lib/services/stats'
 import { getFeaturedListObjectIds } from '@lib/utils/app'
 import { invariant } from '@lib/utils/misc'
 import { defer, LoaderFunctionArgs } from '@remix-run/node'
-import { Await } from '@remix-run/react'
+import { Await, useLoaderData } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
 import { CURRENT_ENV, NO_WALLET_ERROR } from 'app/consts'
@@ -51,7 +45,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
   listSearchParams.set('limit', '6')
 
   return defer({
-    systemStats: getSystemStats({ request }),
     topUsers: fetchWrapper(request, {
       method: IdentitiesService.searchIdentity,
       args: {
@@ -79,8 +72,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export default function HomePage() {
-  const { systemStats, topUsers, topClaims, featuredLists, activity } =
-    useLiveLoader<typeof loader>(['attest', 'create'])
+  const { topUsers, topClaims, featuredLists, activity } =
+    useLoaderData<typeof loader>()
 
   return (
     <FullPageLayout>
@@ -94,28 +87,7 @@ export default function HomePage() {
           >
             System Stats
           </Text>
-          <Suspense fallback={<HomeStatsHeaderSkeleton />}>
-            <Await
-              resolve={systemStats}
-              errorElement={
-                <ErrorStateCard>
-                  <RevalidateButton />
-                </ErrorStateCard>
-              }
-            >
-              {(resolvedStats) => (
-                <HomeStatsHeader
-                  totalIdentities={resolvedStats.totalIdentities}
-                  totalClaims={resolvedStats.totalClaims}
-                  totalUsers={resolvedStats.totalUsers}
-                  // totalStaked={
-                  //   Number(formatBalance(resolvedStats.totalStaked, 18)) || 0
-                  // }
-                  totalSignals={resolvedStats.totalSignals || 0}
-                />
-              )}
-            </Await>
-          </Suspense>
+          <HomeStatsHeader />
         </div>
         <div className="flex flex-col gap-4">
           <HomeSectionHeader
