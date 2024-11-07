@@ -24,10 +24,10 @@ This package uses GraphQL Code Generator to create TypeScript types and React Qu
 pnpm run codegen
 ```
 
-To run in watch mode during development:
+You can also run this from the monorepo root:
 
 ```bash
-pnpm run dev
+pnpm graphql:codegen
 ```
 
 ### Testing
@@ -36,6 +36,12 @@ Run unit tests with:
 
 ```bash
 pnpm run test
+```
+
+You can also run this from the monorepo root:
+
+```bash
+pnpm graphql:test
 ```
 
 ## Usage
