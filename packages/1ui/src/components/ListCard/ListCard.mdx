@@ -1,0 +1,39 @@
+import { Canvas, Controls, Meta, Source, Title } from '@storybook/blocks'
+
+import * as Stories from './ListCard.stories'
+
+<Meta of={Stories} />
+
+<Title />
+
+#### A card component for displaying list information.
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { ListCard } from '@0xintuition/1ui'
+
+<ListCard
+  displayName="My Favorite Claims"
+  imgSrc="https://example.com/image.jpg"
+  identitiesCount={42}
+  savedAmount="4.928"
+  currency="ETH"
+  onViewClick={() => console.log('View clicked')}
+  onSaveClick={() => console.log('Save clicked')}
+  isSaved={false}
+/>
+`} />
+
+<Canvas of={Stories.BasicUsage} sourceState="none" />
+
+## Properties
+
+<Controls />
+
+## Variants
+
+### Saved List
+
+<Canvas of={Stories.SavedList} sourceState="none" />

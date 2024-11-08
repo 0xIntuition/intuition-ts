@@ -17,8 +17,8 @@
       "@/*": ["src/*"],
       "@0xintuition/1ui": ["packages/1ui/src/index.ts"],
       "@0xintuition/api": ["packages/api/src/index.ts"],
-      "@0xintuition/graphql": ["packages/graphql/src/index.ts"],
       "@0xintuition/automation-tools": ["tools/src/index.ts"],
+      "@0xintuition/graphql": ["packages/graphql/src/index.ts"],
       "@0xintuition/portal": ["apps/portal/src/index.ts"],
       "@0xintuition/protocol": ["packages/protocol/src/index.ts"],
       "@0xintuition/sdk": ["packages/sdk/src/index.ts"]
