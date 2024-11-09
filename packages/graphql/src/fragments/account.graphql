@@ -58,11 +58,7 @@ fragment AccountCreatedAtoms on accounts {
       data
       vault {
         totalShares
-        positions_aggregate(
-          where: {
-            accountId: { _eq: "0x25709998b542f1be27d19fa0b3a9a67302bc1b94" }
-          }
-        ) {
+        positions_aggregate(where: { accountId: { _eq: $address } }) {
           nodes {
             account {
               id
