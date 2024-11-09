@@ -38,3 +38,64 @@ fragment AccountPositions on accounts {
     }
   }
 }
+
+fragment AccountCreatedAtoms on accounts {
+  createdAtoms_aggregate(
+    where: $atomsWhere
+    order_by: $atomsOrderBy
+    limit: $atomsLimit
+    offset: $atomsOffset
+  ) {
+    aggregate {
+      count
+      sum {
+        id
+      }
+    }
+    nodes {
+      id
+      label
+      data
+      vault {
+        totalShares
+        positions_aggregate(where: { accountId: { _eq: $address } }) {
+          nodes {
+            account {
+              id
+            }
+            shares
+          }
+        }
+      }
+    }
+  }
+}
+
+fragment AccountCreatedTriples on accounts {
+  createdTriples_aggregate(
+    where: $triplesWhere
+    order_by: $triplesOrderBy
+    limit: $triplesLimit
+    offset: $triplesOffset
+  ) {
+    aggregate {
+      count
+    }
+    nodes {
+      id
+      label
+      subject {
+        id
+        label
+      }
+      predicate {
+        id
+        label
+      }
+      object {
+        id
+        label
+      }
+    }
+  }
+}
