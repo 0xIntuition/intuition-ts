@@ -6,7 +6,7 @@ import * as Stories from './ListCard.stories'
 
 <Title />
 
-#### A card component for displaying list information.
+#### A card component for displaying list information with an image, title, and identity count.
 
 <Source
   dark
@@ -18,11 +18,7 @@ import { ListCard } from '@0xintuition/1ui'
   displayName="My Favorite Claims"
   imgSrc="https://example.com/image.jpg"
   identitiesCount={42}
-  savedAmount="4.928"
-  currency="ETH"
   onViewClick={() => console.log('View clicked')}
-  onSaveClick={() => console.log('Save clicked')}
-  isSaved={false}
 />
 `} />
 
@@ -34,6 +30,10 @@ import { ListCard } from '@0xintuition/1ui'
 
 ## Variants
 
-### Saved List
+### Without Image
 
-<Canvas of={Stories.SavedList} sourceState="none" />
+<Canvas of={Stories.NoImage} sourceState="none" />
+
+### Long Title
+
+<Canvas of={Stories.LongTitle} sourceState="none" />

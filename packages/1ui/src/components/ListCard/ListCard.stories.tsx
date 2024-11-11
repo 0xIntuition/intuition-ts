@@ -1,24 +1,12 @@
 import React from 'react'
 
 import type { Meta, StoryObj } from '@storybook/react'
-import { Currency } from 'types'
 
 import { ListCard } from './ListCard'
 
 const meta: Meta<typeof ListCard> = {
   title: 'Components/Lists/ListCard',
   component: ListCard,
-  argTypes: {
-    currency: {
-      description: 'Currency type',
-      options: Object.values(Currency),
-      table: {
-        type: { summary: 'string' },
-        defaultValue: { summary: 'ETH' },
-      },
-      control: 'select',
-    },
-  },
 }
 
 export default meta
@@ -30,29 +18,25 @@ export const BasicUsage: Story = {
     displayName: 'My Favorite Claims',
     imgSrc: 'https://avatars.githubusercontent.com/u/94311139?s=200&v=4',
     identitiesCount: 42,
-    savedAmount: '4.928',
-    currency: 'ETH',
-    isSaved: false,
+    onViewClick: () => console.log('View clicked'),
   },
-  render: (args) => (
-    <div className="w-[300px]">
-      <ListCard {...args} />
-    </div>
-  ),
+  render: (args) => <ListCard {...args} />,
 }
 
-export const SavedList: Story = {
+export const NoImage: Story = {
   args: {
-    displayName: 'Top Trending Claims',
-    imgSrc: 'https://avatars.githubusercontent.com/u/94311139?s=200&v=4',
-    identitiesCount: 156,
-    savedAmount: '12.345',
-    currency: 'ETH',
-    isSaved: true,
+    displayName: 'List Without Image',
+    identitiesCount: 15,
+    onViewClick: () => console.log('View clicked'),
   },
-  render: (args) => (
-    <div className="w-[300px]">
-      <ListCard {...args} />
-    </div>
-  ),
+}
+
+export const LongTitle: Story = {
+  args: {
+    displayName:
+      'This is a very long list title that should be truncated properly using the Trunctacular component',
+    imgSrc: 'https://avatars.githubusercontent.com/u/94311139?s=200&v=4',
+    identitiesCount: 42,
+    onViewClick: () => console.log('View clicked'),
+  },
 }
