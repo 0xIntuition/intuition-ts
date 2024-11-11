@@ -12,16 +12,18 @@ import {
   toast,
 } from '@0xintuition/1ui'
 import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
+import { useGetTripleQuery } from '@0xintuition/graphql'
 
 import { IdentityPopover } from '@components/create-claim/create-claim-popovers'
 import CreateClaimReview from '@components/create-claim/create-claim-review'
 import { InfoTooltip } from '@components/info-tooltip'
 import WrongNetworkButton from '@components/wrong-network-button'
 import { multivaultAbi } from '@lib/abis/multivault'
+import { useCheckClaim } from '@lib/hooks/useCheckClaim'
+import { useCreateClaimConfig } from '@lib/hooks/useCreateClaimConfig'
 import { useCreateTriple } from '@lib/hooks/useCreateTriple'
 import { useGetWalletBalance } from '@lib/hooks/useGetWalletBalance'
 import { useIdentityServerSearch } from '@lib/hooks/useIdentityServerSearch'
-import { useLoaderFetcher } from '@lib/hooks/useLoaderFetcher'
 import {
   initialTransactionState,
   transactionReducer,
@@ -30,12 +32,8 @@ import {
 import { createClaimModalAtom } from '@lib/state/store'
 import { getChainEnvConfig } from '@lib/utils/environment'
 import logger from '@lib/utils/logger'
-import { useFetcher, useNavigate } from '@remix-run/react'
-import { CreateClaimLoaderData } from '@routes/resources+/create-claim'
-import { GetClaimLoaderData } from '@routes/resources+/get-claim'
-import { TagLoaderData } from '@routes/resources+/tag'
+import { useNavigate } from '@remix-run/react'
 import {
-  CREATE_CLAIM_RESOURCE_ROUTE,
   CURRENT_ENV,
   GENERIC_ERROR_MSG,
   MULTIVAULT_CONTRACT_ADDRESS,
@@ -133,24 +131,53 @@ function CreateClaimForm({
   successAction = TransactionSuccessAction.VIEW,
 }: CreateClaimFormProps) {
   const { subject, predicate, object } = useAtomValue(createClaimModalAtom)
-  const feeFetcher = useLoaderFetcher<CreateClaimLoaderData>(
-    CREATE_CLAIM_RESOURCE_ROUTE,
-  )
-  const claimChecker = useFetcher<TagLoaderData>()
-  const claimFetcher = useFetcher<GetClaimLoaderData>()
 
-  const { fees } = (feeFetcher.data as CreateClaimLoaderData) ?? {}
-
-  const [lastTxHash, setLastTxHash] = useState<string | undefined>(undefined)
-  const [initialDeposit, setInitialDeposit] = useState<string>('0')
-  const [vaultId, setVaultId] = useState<string | undefined>(undefined)
-  const navigate = useNavigate()
-
-  // const [searchQuery, setSearchQuery] = useState('')
   const [isSubjectPopoverOpen, setIsSubjectPopoverOpen] = useState(false)
   const [isPredicatePopoverOpen, setIsPredicatePopoverOpen] = useState(false)
   const [isObjectPopoverOpen, setIsObjectPopoverOpen] = useState(false)
   const [claimExists, setClaimExists] = useState(false)
+  const [lastTxHash, setLastTxHash] = useState<string | undefined>(undefined)
+  const [initialDeposit, setInitialDeposit] = useState<string>('0')
+  const [vaultId, setVaultId] = useState<string | undefined>(undefined)
+  // const [searchQuery, setSearchQuery] = useState('')
+  const [selectedIdentities, setSelectedIdentities] = useState<{
+    subject: IdentityPresenter | null
+    predicate: IdentityPresenter | null
+    object: IdentityPresenter | null
+  }>({
+    subject: subject ?? null,
+    predicate: predicate ?? null,
+    object: object ?? null,
+  })
+
+  const { data: configData, isLoading: isLoadingConfig } =
+    useCreateClaimConfig()
+
+  const { fees } = configData ?? {}
+
+  const { data: claimCheckData, refetch: refetchClaimCheck } = useCheckClaim({
+    subjectId: selectedIdentities.subject?.vault_id,
+    predicateId: selectedIdentities.predicate?.vault_id,
+    objectId: selectedIdentities.object?.vault_id,
+  })
+
+  const { data: claimData, refetch: refetchClaim } = useGetTripleQuery(
+    { tripleId: vaultId ? parseFloat(vaultId) : 0 },
+    {
+      enabled: Boolean(vaultId),
+      retry: 1,
+      retryDelay: 2000,
+      refetchInterval: (query) => {
+        if (query.state.status === 'success') {
+          return false
+        }
+        return 2000
+      },
+      queryKey: ['GetTriple', { id: vaultId ? parseFloat(vaultId) : 0 }],
+    },
+  )
+
+  const navigate = useNavigate()
 
   const { setSearchQuery, identities, handleInput } = useIdentityServerSearch()
 
@@ -251,29 +278,21 @@ function CreateClaimForm({
 
   useEffect(() => {
     if (txReceipt && vaultId) {
-      claimFetcher.load(`/resources/get-claim?vaultId=${vaultId}`)
+      refetchClaim()
     }
-  }, [txReceipt, vaultId])
+  }, [txReceipt, vaultId, refetchClaim])
 
   useEffect(() => {
     if (txReceipt) {
-      if (claimFetcher.data && 'claim' in claimFetcher.data) {
-        console.log('claimFetcher.data', claimFetcher.data)
+      if (claimData) {
         dispatch({
           type: 'TRANSACTION_COMPLETE',
           txHash: txReceipt.transactionHash,
           txReceipt,
         })
-      } else if (claimFetcher.data && 'error' in claimFetcher.data) {
-        const errorMessage = `Your claim was created, but we're having trouble fetching its details. Vault ID: ${vaultId}`
-        dispatch({
-          type: 'TRANSACTION_ERROR',
-          error: errorMessage,
-        })
-        toast.error(errorMessage)
       }
     }
-  }, [claimFetcher.data, txReceipt, vaultId])
+  }, [claimData, txReceipt, vaultId])
 
   const handleSubmit = async () => {
     try {
@@ -293,16 +312,6 @@ function CreateClaimForm({
       logger(error)
     }
   }
-
-  const [selectedIdentities, setSelectedIdentities] = useState<{
-    subject: IdentityPresenter | null
-    predicate: IdentityPresenter | null
-    object: IdentityPresenter | null
-  }>({
-    subject: subject ?? null,
-    predicate: predicate ?? null,
-    object: object ?? null,
-  })
 
   const handleIdentitySelection = (
     identityType: ClaimElementType,
@@ -344,9 +353,7 @@ function CreateClaimForm({
       selectedIdentities.predicate &&
       selectedIdentities.object
     ) {
-      claimChecker.load(
-        `/resources/tag?subjectId=${selectedIdentities.subject.vault_id}&predicateId=${selectedIdentities.predicate.vault_id}&objectId=${selectedIdentities.object.vault_id}`,
-      )
+      refetchClaimCheck()
     }
   }, [
     selectedIdentities.subject,
@@ -355,10 +362,10 @@ function CreateClaimForm({
   ])
 
   useEffect(() => {
-    if (claimChecker.data) {
-      setClaimExists(claimChecker.data.result !== '0')
+    if (claimCheckData) {
+      setClaimExists(claimCheckData.result !== '0')
     }
-  }, [claimChecker.data, selectedIdentities])
+  }, [claimCheckData, selectedIdentities])
 
   const Divider = () => (
     <span className="h-px w-2.5 flex bg-border/30 self-end mb-[1.2rem] max-sm:hidden" />
@@ -478,6 +485,7 @@ function CreateClaimForm({
                   disabled={
                     !address ||
                     claimExists ||
+                    isLoadingConfig ||
                     selectedIdentities.subject === null ||
                     selectedIdentities.predicate === null ||
                     selectedIdentities.object === null ||
@@ -492,7 +500,7 @@ function CreateClaimForm({
               )}
             </div>
           </div>
-        ) : state.status === 'review-transaction' ? (
+        ) : state.status === 'review-transaction' && fees ? (
           <div className="h-full flex flex-col">
             <CreateClaimReview
               dispatch={dispatch}
@@ -557,9 +565,7 @@ function CreateClaimForm({
                   onClick={() => {
                     if (txReceipt) {
                       dispatch({ type: 'TRANSACTION_PENDING' })
-                      claimFetcher.load(
-                        `/resources/get-claim?vaultId=${vaultId}`,
-                      )
+                      refetchClaim()
                     } else {
                       dispatch({ type: 'START_TRANSACTION' })
                     }

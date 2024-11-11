@@ -28,7 +28,7 @@ import {
 import { getZodConstraint, parseWithZod } from '@conform-to/zod'
 import { multivaultAbi } from '@lib/abis/multivault'
 import { useCreateAtom } from '@lib/hooks/useCreateAtom'
-import { useCreateConfig } from '@lib/hooks/useCreateConfig'
+import { useCreateIdentityConfig } from '@lib/hooks/useCreateIdentityConfig'
 import { useGetWalletBalance } from '@lib/hooks/useGetWalletBalance'
 import { useImageUploadFetcher } from '@lib/hooks/useImageUploadFetcher'
 import {
@@ -120,7 +120,8 @@ export function IdentityForm({
     }
   }, [state.status, transactionResponseData])
 
-  const { data: configData, isLoading: isLoadingConfig } = useCreateConfig()
+  const { data: configData, isLoading: isLoadingConfig } =
+    useCreateIdentityConfig()
 
   useEffect(() => {
     logger('file changed', identityImageFile)
