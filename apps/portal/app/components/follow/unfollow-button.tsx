@@ -20,6 +20,7 @@ interface UnfollowButtonProps {
   dispatch: (action: TransactionActionType) => void
   state: TransactionStateType
   user_conviction: string
+  isLoadingConfig: boolean
   className?: string
 }
 
@@ -30,6 +31,7 @@ const UnfollowButton: React.FC<UnfollowButtonProps> = ({
   dispatch,
   state,
   user_conviction,
+  isLoadingConfig,
   className,
 }) => {
   const { switchChain } = useSwitchChain()
@@ -106,7 +108,8 @@ const UnfollowButton: React.FC<UnfollowButtonProps> = ({
         !address ||
         state.status === 'confirm' ||
         state.status === 'transaction-pending' ||
-        state.status === 'awaiting'
+        state.status === 'awaiting' ||
+        isLoadingConfig
       }
       className={cn(`w-40`, className)}
     >

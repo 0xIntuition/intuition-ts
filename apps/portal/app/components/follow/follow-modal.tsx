@@ -1,27 +1,22 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { Dialog, DialogContent, DialogFooter, toast } from '@0xintuition/1ui'
 import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
 
 import { multivaultAbi } from '@lib/abis/multivault'
-import { useCreateTriple } from '@lib/hooks/useCreateTriple'
-import { useDepositTriple } from '@lib/hooks/useDepositTriple'
+import { useFollowMutation } from '@lib/hooks/mutations/useFollowMutation'
+import { useCreateConfig } from '@lib/hooks/useCreateConfig'
 import { useGetWalletBalance } from '@lib/hooks/useGetWalletBalance'
-import { useLoaderFetcher } from '@lib/hooks/useLoaderFetcher'
-import { useRedeemTriple } from '@lib/hooks/useRedeemTriple'
 import { transactionReducer } from '@lib/hooks/useTransactionReducer'
-import { getSpecialPredicate } from '@lib/utils/app'
-import logger from '@lib/utils/logger'
 import { useGenericTxState } from '@lib/utils/use-tx-reducer'
-import { useFetcher, useLocation } from '@remix-run/react'
-import { CreateLoaderData } from '@routes/resources+/create'
-import { CREATE_RESOURCE_ROUTE, CURRENT_ENV, MIN_DEPOSIT } from 'app/consts'
+import { useLocation } from '@remix-run/react'
+import { MIN_DEPOSIT } from 'app/consts'
 import {
   TransactionActionType,
   TransactionStateType,
 } from 'app/types/transaction'
 import { VaultDetailsType } from 'app/types/vault'
-import { Abi, Address, decodeEventLog, parseUnits } from 'viem'
+import { Address, decodeEventLog } from 'viem'
 import { useAccount, usePublicClient } from 'wagmi'
 
 import FollowButton from './follow-button'
@@ -63,9 +58,6 @@ export default function FollowModal({
     formatted_exit_fee = '0',
   } = vaultDetails ? vaultDetails : {}
 
-  const fetchReval = useFetcher()
-  const formRef = useRef(null)
-
   const [val, setVal] = useState(MIN_DEPOSIT)
   const [mode, setMode] = useState<'follow' | 'unfollow'>('follow')
   const [showErrors, setShowErrors] = useState(false)
@@ -81,96 +73,61 @@ export default function FollowModal({
   let vault_id: string = '0'
   vault_id = claim ? claim.vault_id : '0'
 
-  const depositHook = useDepositTriple(contract)
+  const { address } = useAccount()
 
-  const redeemHook = useRedeemTriple(contract)
-
-  const createHook = useCreateTriple()
+  const { data: configData, isLoading: isLoadingConfig } = useCreateConfig()
 
   const {
-    writeContractAsync,
-    receipt: txReceipt,
+    mutateAsync: follow,
+    txReceipt,
     awaitingWalletConfirmation,
     awaitingOnChainConfirmation,
     isError,
     reset,
-  } = !claim ? createHook : mode === 'follow' ? depositHook : redeemHook
+  } = useFollowMutation(contract, claim, user_conviction, mode)
 
-  const feeFetcher = useLoaderFetcher<CreateLoaderData>(CREATE_RESOURCE_ROUTE)
+  const handleAction = async () => {
+    try {
+      const txHash = await follow({
+        val,
+        userWallet,
+        vaultId: vault_id,
+        claim,
+        identity,
+        tripleCost: BigInt(configData?.tripleCost ?? '0'),
+        userVaultId,
+      })
 
-  const { address } = useAccount()
-
-  const { tripleCost } = (feeFetcher.data as CreateLoaderData) ?? {
-    atomEquityFeeRaw: BigInt(0),
-    atomCost: BigInt(0),
-    tripleCost: BigInt(0),
-  }
-
-  const useHandleAction = (actionType: string) => {
-    return async () => {
-      try {
-        const txHash = await writeContractAsync({
-          address: contract as `0x${string}`,
-          abi: multivaultAbi as Abi,
-          functionName: !claim
-            ? 'createTriple'
-            : actionType === 'follow'
-              ? 'depositTriple'
-              : 'redeemTriple',
-          args: !claim
-            ? [
-                getSpecialPredicate(CURRENT_ENV).iPredicate.vaultId,
-                getSpecialPredicate(CURRENT_ENV).amFollowingPredicate.vaultId,
-                userVaultId,
-              ]
-            : actionType === 'follow'
-              ? [userWallet as `0x${string}`, vault_id]
-              : [user_conviction, userWallet as `0x${string}`, vault_id],
-          value: !claim
-            ? BigInt(tripleCost) + parseUnits(val === '' ? '0' : val, 18)
-            : actionType === 'follow'
-              ? parseUnits(val === '' ? '0' : val, 18)
-              : undefined,
+      if (publicClient && txHash) {
+        dispatch({ type: 'TRANSACTION_PENDING' })
+        const receipt = await publicClient.waitForTransactionReceipt({
+          hash: txHash,
         })
-        if (txHash) {
-          dispatch({ type: 'TRANSACTION_PENDING' })
-          const receipt = await publicClient?.waitForTransactionReceipt({
-            hash: txHash,
-          })
-          logger('receipt', receipt)
-          logger('txHash', txHash)
-          dispatch({
-            type: 'TRANSACTION_COMPLETE',
-            txHash,
-            txReceipt: receipt!,
-          })
-          fetchReval.submit(formRef.current, {
-            method: 'POST',
-          })
+
+        dispatch({
+          type: 'TRANSACTION_COMPLETE',
+          txHash,
+          txReceipt: receipt,
+        })
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        let errorMessage = 'Failed transaction'
+        if (error.message.includes('insufficient')) {
+          errorMessage = 'Insufficient funds'
         }
-      } catch (error) {
-        logger('error', error)
-        if (error instanceof Error) {
-          let errorMessage = 'Failed transaction'
-          if (error.message.includes('insufficient')) {
-            errorMessage = 'Insufficient funds'
-          }
-          if (error.message.includes('rejected')) {
-            errorMessage = 'Transaction rejected'
-          }
-          dispatch({
-            type: 'TRANSACTION_ERROR',
-            error: errorMessage,
-          })
-          toast.error(errorMessage)
-          return
+        if (error.message.includes('rejected')) {
+          errorMessage = 'Transaction rejected'
         }
+        dispatch({
+          type: 'TRANSACTION_ERROR',
+          error: errorMessage,
+        })
+        toast.error(errorMessage)
+        return
       }
     }
   }
-
-  const handleFollow = useHandleAction('follow')
-  const handleUnfollow = useHandleAction('unfollow')
 
   useEffect(() => {
     if (isError) {
@@ -267,7 +224,7 @@ export default function FollowModal({
       setShowErrors(true)
       return
     }
-    handleFollow()
+    handleAction()
   }
 
   const handleUnfollowButtonClick = async () => {
@@ -275,7 +232,7 @@ export default function FollowModal({
       setShowErrors(true)
       return
     }
-    handleUnfollow()
+    handleAction()
   }
 
   const location = useLocation()
@@ -325,8 +282,6 @@ export default function FollowModal({
             mode={mode}
             dispatch={dispatch}
             state={state}
-            fetchReval={fetchReval}
-            formRef={formRef}
             validationErrors={validationErrors}
             setValidationErrors={setValidationErrors}
             showErrors={showErrors}
@@ -343,6 +298,7 @@ export default function FollowModal({
                 dispatch={dispatch}
                 state={state}
                 user_conviction={user_conviction ?? '0'}
+                isLoadingConfig={isLoadingConfig}
                 className={`${(user_conviction && user_conviction > '0' && state.status === 'idle') || mode !== 'follow' ? '' : 'hidden'}`}
               />
               <FollowButton
@@ -358,6 +314,7 @@ export default function FollowModal({
                 user_assets={user_assets ?? '0'}
                 setValidationErrors={setValidationErrors}
                 setShowErrors={setShowErrors}
+                isLoadingConfig={isLoadingConfig}
                 className={`${mode === 'unfollow' && 'hidden'}`}
               />
             </>

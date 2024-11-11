@@ -23,7 +23,6 @@ import {
   getAtomLabel,
   getAtomLink,
 } from '@lib/utils/misc'
-import { type FetcherWithComponents } from '@remix-run/react'
 import {
   TransactionActionType,
   TransactionStateType,
@@ -43,8 +42,6 @@ interface FollowFormProps {
   mode: string | undefined
   dispatch: (action: TransactionActionType) => void
   state: TransactionStateType
-  fetchReval: FetcherWithComponents<unknown>
-  formRef: React.RefObject<HTMLFormElement>
   showErrors: boolean
   setShowErrors: (show: boolean) => void
   validationErrors: string[]
@@ -63,8 +60,6 @@ export default function FollowForm({
   mode,
   dispatch,
   state,
-  fetchReval,
-  formRef,
   showErrors,
   setShowErrors,
   validationErrors,
@@ -72,14 +67,6 @@ export default function FollowForm({
 }: FollowFormProps) {
   return (
     <>
-      <fetchReval.Form
-        hidden
-        ref={formRef}
-        action={`/actions/reval`}
-        method="post"
-      >
-        <input type="hidden" name="eventName" value="attest" />
-      </fetchReval.Form>
       {state.status === 'idle' ? (
         <>
           <DialogHeader>
