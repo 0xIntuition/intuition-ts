@@ -28,7 +28,6 @@ export function ListClaimsList<T extends SortColumnType = ClaimSortColumn>({
   enableSearch = false,
   enableSort = false,
   onLoadMore,
-  columns,
   sortOptions,
   sourceUserAddress,
   readOnly = false,
@@ -39,7 +38,6 @@ export function ListClaimsList<T extends SortColumnType = ClaimSortColumn>({
   enableSearch?: boolean
   enableSort?: boolean
   onLoadMore?: () => void
-  columns?: number
   sortOptions?: SortOption<T>[]
   sourceUserAddress?: string
   readOnly?: boolean
@@ -104,7 +102,7 @@ export function ListClaimsList<T extends SortColumnType = ClaimSortColumn>({
             />
           )}
         </div>
-        <ListGrid columns={columns}>
+        <ListGrid>
           {uniqueClaimData.map(
             (claim, index) =>
               claim &&

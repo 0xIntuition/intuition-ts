@@ -152,7 +152,6 @@ export default function HomePage() {
                     listClaims={resolvedFeaturedLists.featuredLists}
                     enableSort={false}
                     enableSearch={false}
-                    columns={3}
                   />
                 )
               }}

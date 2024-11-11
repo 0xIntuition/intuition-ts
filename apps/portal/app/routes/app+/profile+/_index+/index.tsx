@@ -188,7 +188,6 @@ export default function UserProfileOverview() {
           listClaims={savedListClaims?.savedListClaims ?? []}
           enableSort={false}
           enableSearch={false}
-          columns={3}
         />
       </div>
     </div>

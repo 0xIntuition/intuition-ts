@@ -119,7 +119,6 @@ export default function ProfileLists() {
                 pagination={resolvedSavedListClaims.pagination}
                 enableSort={true}
                 enableSearch={true}
-                columns={3}
                 onLoadMore={() => handleLoadMore(resolvedSavedListClaims)}
                 sortOptions={sortOptions}
                 sourceUserAddress={wallet}

@@ -1,6 +1,5 @@
-import React from 'react'
-
 import type { Meta, StoryObj } from '@storybook/react'
+import { ListCard } from 'components/ListCard'
 
 import { ListGrid } from './ListGrid'
 
@@ -60,40 +59,20 @@ export const BasicUsage: Story = {
 export const UsageWithChildren: Story = {
   args: {
     children: [
-      <div
+      <ListCard
         key="1"
-        className="flex flex-col items-center"
-        style={{ height: '18rem' }}
-      >
-        <img
-          src="https://avatars.githubusercontent.com/u/94311139?s=200&v=4"
-          alt="Best Crypto Portfolio Trackers"
-          className="mb-4 w-16 h-16"
-        />
-        <div className="text-center">
-          <h2 className="text-xl font-bold mb-2">
-            Best Crypto Portfolio Trackers
-          </h2>
-          <p className="text-secondary/50 mb-2">45 identities</p>
-        </div>
-      </div>,
-      <div
+        displayName="Best Crypto Portfolio Trackers"
+        imgSrc="https://avatars.githubusercontent.com/u/94311139?s=200&v=4"
+        identitiesCount={45}
+        onSaveClick={() => alert('Best Crypto Portfolio Trackers saved!')}
+      />,
+      <ListCard
         key="2"
-        className="flex flex-col items-center"
-        style={{ height: '18rem' }}
-      >
-        <img
-          src="https://avatars.githubusercontent.com/u/94311139?s=200&v=4"
-          alt="Decentralized Finance Platforms"
-          className="mb-4 w-16 h-16"
-        />
-        <div className="text-center">
-          <h2 className="text-xl font-bold mb-2">
-            Decentralized Finance Platforms
-          </h2>
-          <p className="text-secondary/50 mb-2">45 identities</p>
-        </div>
-      </div>,
+        displayName="Decentralized Finance Platforms"
+        imgSrc="https://avatars.githubusercontent.com/u/94311139?s=200&v=4"
+        identitiesCount={45}
+        onSaveClick={() => alert('Decentralized Finance Platforms saved!')}
+      />,
     ],
   },
   render: (args) => (

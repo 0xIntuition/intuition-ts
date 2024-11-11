@@ -244,7 +244,6 @@ export default function ProfileOverview() {
                   listClaims={resolvedSavedListClaims?.savedListClaims ?? []}
                   enableSort={false}
                   enableSearch={false}
-                  columns={3}
                   sourceUserAddress={wallet}
                 />
               )

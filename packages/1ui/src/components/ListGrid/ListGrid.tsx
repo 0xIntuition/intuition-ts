@@ -1,34 +1,28 @@
 import * as React from 'react'
 
-import { ListIdentityCard, ListIdentityCardProps } from 'components'
+import { ListCard, ListIdentityCardProps } from 'components'
 
 export interface ListGridProps extends React.HTMLAttributes<HTMLDivElement> {
   identities?: ListIdentityCardProps[]
   children?: React.ReactNode
-  columns?: number
 }
 
 const ListGrid: React.FC<ListGridProps> = ({
   identities,
   children,
-  columns = 4,
   ...props
 }) => {
-  const gridClasses = `w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-${columns} gap-7`
+  const gridClasses =
+    'w-full grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-8'
 
   return (
     <div className={gridClasses} {...props}>
       {identities
         ? identities.map((identity, index) => (
-            <ListIdentityCard key={index} {...identity} />
+            <ListCard key={index} {...identity} />
           ))
         : React.Children.map(children, (child, index) => (
-            <div
-              key={index}
-              className="theme-border p-8 rounded-xl flex flex-col justify-center items-center h-72 max-sm:h-fit max-sm:p-5"
-            >
-              {child}
-            </div>
+            <div key={index}>{child}</div>
           ))}
     </div>
   )

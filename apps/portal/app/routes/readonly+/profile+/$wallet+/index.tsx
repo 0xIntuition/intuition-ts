@@ -216,7 +216,6 @@ export default function ReadOnlyProfileOverview() {
                   listClaims={resolvedSavedListClaims?.savedListClaims ?? []}
                   enableSort={false}
                   enableSearch={false}
-                  columns={3}
                   sourceUserAddress={wallet}
                   readOnly={true}
                 />

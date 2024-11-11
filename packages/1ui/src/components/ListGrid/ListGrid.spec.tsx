@@ -6,7 +6,7 @@ import { ListGrid } from './ListGrid'
 
 describe('ListGrid', () => {
   it('should render appropriate elements', () => {
-    const { asFragment } = render(
+    const { container } = render(
       <ListGrid
         identities={[
           {
@@ -24,7 +24,7 @@ describe('ListGrid', () => {
         ]}
       />,
     )
-    expect(asFragment()).toMatchInlineSnapshot(`
+    expect(container).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
           class="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-7"
