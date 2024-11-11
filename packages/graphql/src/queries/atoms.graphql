@@ -24,4 +24,7 @@ query GetAtom($id: numeric!) {
     }
     ...AtomTriple
   }
+  thing(id: $id) {
+    ...ThingMetadata
+  }
 }

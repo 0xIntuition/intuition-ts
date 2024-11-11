@@ -1,3 +1,12 @@
+# ThingMetadata fragment included with atom fragments because of the context it's used in (atom queries)
+fragment ThingMetadata on things {
+  id
+  image
+  name
+  description
+  url
+}
+
 fragment AtomMetadata on atoms {
   data
   id
