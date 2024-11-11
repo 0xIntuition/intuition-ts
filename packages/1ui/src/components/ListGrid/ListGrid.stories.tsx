@@ -16,36 +16,82 @@ export const BasicUsage: Story = {
   args: {
     identities: [
       {
-        displayName: 'Best Crypto Portfolio Trackers',
+        displayName: 'Best Crypto Trackers',
         imgSrc: 'https://avatars.githubusercontent.com/u/94311139?s=200&v=4',
         identitiesCount: 45,
-        savedAmount: '0.047',
-        onSaveClick: () => alert('Best Crypto Portfolio Trackers saved!'),
-        isSaved: true,
+        buttonWrapper: (button) => (
+          <span
+            role="link"
+            tabIndex={0}
+            onClick={() => alert('Best Crypto Trackers clicked!')}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                alert('Best Crypto Portfolio Trackers clicked!')
+              }
+            }}
+          >
+            {button}
+          </span>
+        ),
       },
       {
         displayName: 'Top Decentralized Finance Platforms',
         imgSrc: 'https://avatars.githubusercontent.com/u/94311139?s=200&v=4',
         identitiesCount: 45,
-        savedAmount: '0.047',
-        onSaveClick: () => alert('Top Decentralized Finance Platforms saved!'),
-        isSaved: false,
+        buttonWrapper: (button) => (
+          <span
+            role="link"
+            tabIndex={0}
+            onClick={() =>
+              alert('Top Decentralized Finance Platforms clicked!')
+            }
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                alert('Top Decentralized Finance Platforms clicked!')
+              }
+            }}
+          >
+            {button}
+          </span>
+        ),
       },
       {
         displayName: 'Best Crypto Portfolio Trackers',
         imgSrc: 'https://avatars.githubusercontent.com/u/94311139?s=200&v=4',
         identitiesCount: 45,
-        savedAmount: '0.047',
-        onSaveClick: () => alert('Best Crypto Portfolio Trackers saved!'),
-        isSaved: true,
+        buttonWrapper: (button) => (
+          <span
+            role="link"
+            tabIndex={0}
+            onClick={() => alert('Best Crypto Portfolio Trackers saved!')}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                alert('Best Crypto Portfolio Trackers saved!')
+              }
+            }}
+          >
+            {button}
+          </span>
+        ),
       },
       {
         displayName: 'Top Decentralized Finance Platforms',
         imgSrc: 'https://avatars.githubusercontent.com/u/94311139?s=200&v=4',
         identitiesCount: 45,
-        savedAmount: '0.047',
-        onSaveClick: () => alert('Top Decentralized Finance Platforms saved!'),
-        isSaved: false,
+        buttonWrapper: (button) => (
+          <span
+            role="link"
+            tabIndex={0}
+            onClick={() => alert('Top Decentralized Finance Platforms saved!')}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                alert('Top Decentralized Finance Platforms saved!')
+              }
+            }}
+          >
+            {button}
+          </span>
+        ),
       },
     ],
   },
@@ -64,14 +110,42 @@ export const UsageWithChildren: Story = {
         displayName="Best Crypto Portfolio Trackers"
         imgSrc="https://avatars.githubusercontent.com/u/94311139?s=200&v=4"
         identitiesCount={45}
-        onSaveClick={() => alert('Best Crypto Portfolio Trackers saved!')}
+        buttonWrapper={(button) => (
+          <span
+            role="link"
+            tabIndex={0}
+            onClick={() => alert('Best Crypto Portfolio Trackers clicked!')}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                alert('Best Crypto Portfolio Trackers clicked!')
+              }
+            }}
+            className="w-full"
+          >
+            {button}
+          </span>
+        )}
       />,
       <ListCard
         key="2"
         displayName="Decentralized Finance Platforms"
         imgSrc="https://avatars.githubusercontent.com/u/94311139?s=200&v=4"
         identitiesCount={45}
-        onSaveClick={() => alert('Decentralized Finance Platforms saved!')}
+        buttonWrapper={(button) => (
+          <span
+            role="link"
+            tabIndex={0}
+            onClick={() => alert('Decentralized Finance Platforms clicked!')}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                alert('Decentralized Finance Platforms clicked!')
+              }
+            }}
+            className="w-full"
+          >
+            {button}
+          </span>
+        )}
       />,
     ],
   },

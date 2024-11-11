@@ -1,0 +1,34 @@
+import { Canvas, Controls, Meta, Source, Title } from '@storybook/blocks'
+
+import * as Stories from './FeaturedListCard.stories'
+
+<Meta of={Stories} />
+
+<Title />
+
+#### A featured card component for displaying list information with an image, title, TVL, holders count and stakeholders.
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { FeaturedListCard } from '@0xintuition/1ui'
+
+<FeaturedListCard
+  displayName="My Featured List"
+  imgSrc="https://example.com/image.jpg"
+  identitiesCount={42}
+  tvl="4.928"
+  holdersCount={69}
+  stakeholders={[
+    { name: 'John Doe', avatar: 'https://example.com/avatar1.jpg' },
+    { name: 'Jane Smith', avatar: 'https://example.com/avatar2.jpg' },
+  ]}
+/>
+`} />
+
+<Canvas of={Stories.BasicUsage} sourceState="none" />
+
+## Properties
+
+<Controls />

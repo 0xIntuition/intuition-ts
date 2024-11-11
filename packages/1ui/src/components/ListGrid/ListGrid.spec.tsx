@@ -13,27 +13,45 @@ describe('ListGrid', () => {
             displayName: 'Best Crypto Portfolio Trackers',
             imgSrc: 'path/to/image1.png',
             identitiesCount: 45,
-            savedAmount: '0.047',
+            buttonWrapper: (button) => (
+              <span
+                role="link"
+                tabIndex={0}
+                onClick={() => null}
+                onKeyDown={() => null}
+              >
+                {button}
+              </span>
+            ),
           },
           {
             displayName: 'Top Decentralized Finance Platforms',
             imgSrc: 'path/to/image2.png',
             identitiesCount: 45,
-            savedAmount: '0.047',
+            buttonWrapper: (button) => (
+              <span
+                role="link"
+                tabIndex={0}
+                onClick={() => null}
+                onKeyDown={() => null}
+              >
+                {button}
+              </span>
+            ),
           },
         ]}
       />,
     )
     expect(container).toMatchInlineSnapshot(`
-      <DocumentFragment>
+      <div>
         <div
-          class="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-7"
+          class="w-full grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-8"
         >
           <div
-            class="theme-border p-8 rounded-xl flex flex-col items-center justify-between h-72 max-sm:h-fit"
+            class="relative h-full w-[230px] max-sm:h-fit flex flex-col items-center gap-2 max-sm:gap-px p-5 bg-primary/5 border border-primary/20 rounded-xl hover:bg-primary/10 hover:border-primary/50 transition-all duration-300"
           >
             <span
-              class="relative flex shrink-0 overflow-hidden aspect-square bg-background theme-border rounded mb-4 w-16 h-16"
+              class="relative flex shrink-0 overflow-hidden aspect-square bg-background theme-border h-[180px] w-auto mb-2 rounded-xl"
             >
               <span
                 class="flex h-full w-full items-center justify-center bg-inherit"
@@ -48,30 +66,37 @@ describe('ListGrid', () => {
               </span>
             </span>
             <div
-              class="text-center flex-grow flex flex-col justify-between items-center"
+              class="w-full flex flex-col flex-grow gap-2"
             >
               <div
-                class="text-lg font-medium text-primary/80 mb-2"
+                class="text-lg font-medium text-left text-primary/80"
               >
                 Best Crypto Portfolio Trackers
               </div>
               <div
-                class="text-base font-normal text-secondary/50 mb-2"
+                class="text-base font-normal text-secondary/50"
               >
-                45 identities
+                45
+                 identities
               </div>
             </div>
-            <button
-              class="flex justify-center items-center gap-2 text-sm font-medium border disabled:bg-muted aria-disabled:bg-muted disabled:text-muted-foreground aria-disabled:text-muted-foreground disabled:border-muted aria-disabled:border-muted aria-disabled:pointer-events-none primary-gradient-subtle text-primary/60 border-primary/10 rounded-lg hover:text-primary disabled:from-muted aria-disabled:from-muted disabled:to-muted aria-disabled:to-muted shadow-md-subtle px-3 py-1 max-sm:py-2 max-sm:text-base mt-4 w-full"
+            <span
+              class="w-full"
+              role="link"
+              tabindex="0"
             >
-              Saved: 0.047 ETH
-            </button>
+              <button
+                class="flex justify-center items-center font-medium border disabled:bg-muted aria-disabled:bg-muted disabled:text-muted-foreground aria-disabled:text-muted-foreground disabled:border-muted aria-disabled:border-muted aria-disabled:pointer-events-none primary-gradient-subtle text-primary/60 border-primary/10 rounded-lg hover:text-primary disabled:from-muted aria-disabled:from-muted disabled:to-muted aria-disabled:to-muted shadow-md-subtle px-4 py-2 gap-2 text-base w-full"
+              >
+                View List
+              </button>
+            </span>
           </div>
           <div
-            class="theme-border p-8 rounded-xl flex flex-col items-center justify-between h-72 max-sm:h-fit"
+            class="relative h-full w-[230px] max-sm:h-fit flex flex-col items-center gap-2 max-sm:gap-px p-5 bg-primary/5 border border-primary/20 rounded-xl hover:bg-primary/10 hover:border-primary/50 transition-all duration-300"
           >
             <span
-              class="relative flex shrink-0 overflow-hidden aspect-square bg-background theme-border rounded mb-4 w-16 h-16"
+              class="relative flex shrink-0 overflow-hidden aspect-square bg-background theme-border h-[180px] w-auto mb-2 rounded-xl"
             >
               <span
                 class="flex h-full w-full items-center justify-center bg-inherit"
@@ -86,27 +111,34 @@ describe('ListGrid', () => {
               </span>
             </span>
             <div
-              class="text-center flex-grow flex flex-col justify-between items-center"
+              class="w-full flex flex-col flex-grow gap-2"
             >
               <div
-                class="text-lg font-medium text-primary/80 mb-2"
+                class="text-lg font-medium text-left text-primary/80"
               >
                 Top Decentralized Finance Platforms
               </div>
               <div
-                class="text-base font-normal text-secondary/50 mb-2"
+                class="text-base font-normal text-secondary/50"
               >
-                45 identities
+                45
+                 identities
               </div>
             </div>
-            <button
-              class="flex justify-center items-center gap-2 text-sm font-medium border disabled:bg-muted aria-disabled:bg-muted disabled:text-muted-foreground aria-disabled:text-muted-foreground disabled:border-muted aria-disabled:border-muted aria-disabled:pointer-events-none primary-gradient-subtle text-primary/60 border-primary/10 rounded-lg hover:text-primary disabled:from-muted aria-disabled:from-muted disabled:to-muted aria-disabled:to-muted shadow-md-subtle px-3 py-1 max-sm:py-2 max-sm:text-base mt-4 w-full"
+            <span
+              class="w-full"
+              role="link"
+              tabindex="0"
             >
-              Saved: 0.047 ETH
-            </button>
+              <button
+                class="flex justify-center items-center font-medium border disabled:bg-muted aria-disabled:bg-muted disabled:text-muted-foreground aria-disabled:text-muted-foreground disabled:border-muted aria-disabled:border-muted aria-disabled:pointer-events-none primary-gradient-subtle text-primary/60 border-primary/10 rounded-lg hover:text-primary disabled:from-muted aria-disabled:from-muted disabled:to-muted aria-disabled:to-muted shadow-md-subtle px-4 py-2 gap-2 text-base w-full"
+              >
+                View List
+              </button>
+            </span>
           </div>
         </div>
-      </DocumentFragment>
+      </div>
     `)
   })
 })

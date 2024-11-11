@@ -1,5 +1,3 @@
-import React from 'react'
-
 import type { Meta, StoryObj } from '@storybook/react'
 
 import { ListCard } from './ListCard'
@@ -18,16 +16,43 @@ export const BasicUsage: Story = {
     displayName: 'My Favorite Claims',
     imgSrc: 'https://avatars.githubusercontent.com/u/94311139?s=200&v=4',
     identitiesCount: 42,
-    onViewClick: () => console.log('View clicked'),
+    buttonWrapper: (button) => (
+      <span
+        role="link"
+        tabIndex={0}
+        onClick={() => console.log('View clicked')}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            console.log('View clicked')
+          }
+        }}
+        className="w-full"
+      >
+        {button}
+      </span>
+    ),
   },
-  render: (args) => <ListCard {...args} />,
 }
 
 export const NoImage: Story = {
   args: {
     displayName: 'List Without Image',
     identitiesCount: 15,
-    onViewClick: () => console.log('View clicked'),
+    buttonWrapper: (button) => (
+      <span
+        role="link"
+        tabIndex={0}
+        onClick={() => console.log('View clicked')}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            console.log('View clicked')
+          }
+        }}
+        className="w-full"
+      >
+        {button}
+      </span>
+    ),
   },
 }
 
@@ -37,6 +62,20 @@ export const LongTitle: Story = {
       'This is a very long list title that should be truncated properly using the Trunctacular component',
     imgSrc: 'https://avatars.githubusercontent.com/u/94311139?s=200&v=4',
     identitiesCount: 42,
-    onViewClick: () => console.log('View clicked'),
+    buttonWrapper: (button) => (
+      <span
+        role="link"
+        tabIndex={0}
+        onClick={() => console.log('View clicked')}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            console.log('View clicked')
+          }
+        }}
+        className="w-full"
+      >
+        {button}
+      </span>
+    ),
   },
 }

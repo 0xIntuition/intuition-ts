@@ -1,0 +1,45 @@
+import { Canvas, Controls, Meta, Source, Title } from '@storybook/blocks'
+
+import * as Stories from './StakeholdersList.stories'
+
+<Meta of={Stories} />
+
+<Title />
+
+#### A component for displaying a list of stakeholders with their avatars and names in a condensed format.
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { StakeholdersList } from '@0xintuition/1ui'
+
+<StakeholdersList
+  stakeholders={[
+    {
+      name: 'John Doe',
+      avatar: 'https://example.com/avatar1.jpg',
+    },
+    {
+      name: 'Jane Smith',
+      avatar: 'https://example.com/avatar2.jpg',
+    },
+  ]}
+/>
+`} />
+
+<Canvas of={Stories.BasicUsage} sourceState="none" />
+
+## Properties
+
+<Controls />
+
+## Variants
+
+### Single Stakeholder
+
+<Canvas of={Stories.SingleStakeholder} sourceState="none" />
+
+### Multiple Stakeholders
+
+<Canvas of={Stories.MultipleStakeholders} sourceState="none" />
