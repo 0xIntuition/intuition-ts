@@ -15,7 +15,7 @@ export function HomeStatsHeader({ ...props }: HomeStatsHeaderProps) {
   const { data: systemStats } = useGetStatsQuery(
     {},
     {
-      queryKey: ['GetStats'],
+      queryKey: ['get-stats'],
     },
   )
 

@@ -28,6 +28,7 @@ interface FollowButtonProps {
   user_assets: string
   setValidationErrors: (errors: string[]) => void
   setShowErrors: (show: boolean) => void
+  isLoadingConfig: boolean
   className?: string
 }
 
@@ -45,6 +46,7 @@ const FollowButton: React.FC<FollowButtonProps> = ({
   setValidationErrors,
   setShowErrors,
   className,
+  isLoadingConfig,
 }) => {
   const { switchChain } = useSwitchChain()
 
@@ -141,7 +143,8 @@ const FollowButton: React.FC<FollowButtonProps> = ({
         val === '' ||
         state.status === 'confirm' ||
         state.status === 'transaction-pending' ||
-        state.status === 'awaiting'
+        state.status === 'awaiting' ||
+        isLoadingConfig
       }
       className={cn(`w-40`, className)}
     >

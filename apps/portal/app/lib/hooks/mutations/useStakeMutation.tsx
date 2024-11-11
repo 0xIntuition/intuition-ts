@@ -72,7 +72,7 @@ export function useStakeMutation(contract: string, mode: 'deposit' | 'redeem') {
         })
       },
       onSuccess: async () => {
-        queryClient.invalidateQueries({ queryKey: ['GetStats'] })
+        queryClient.invalidateQueries({ queryKey: ['get-stats'] })
       },
     }),
     txReceipt,
