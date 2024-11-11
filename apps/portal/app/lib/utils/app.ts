@@ -121,7 +121,7 @@ export const getSpecialPredicate = (
 
 export const getFeaturedListObjectIds = (chainEnv: ChainEnv): number[] => {
   const featuredListObjectIds: Record<ChainEnv, number[]> = {
-    development: [33, 22],
+    development: [33, 22, 747, 548],
     staging: [
       980, // Pro Crypto Politicians
       1193, // Anti Crypto Politicians
