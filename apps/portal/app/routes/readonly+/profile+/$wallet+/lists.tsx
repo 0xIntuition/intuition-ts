@@ -115,7 +115,6 @@ export default function ReadOnlyProfileLists() {
                 pagination={resolvedSavedListClaims.pagination}
                 enableSort={true}
                 enableSearch={true}
-                columns={3}
                 onLoadMore={() => handleLoadMore(resolvedSavedListClaims)}
                 sortOptions={sortOptions}
                 sourceUserAddress={wallet}
