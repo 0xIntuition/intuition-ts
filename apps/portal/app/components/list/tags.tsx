@@ -72,6 +72,7 @@ export function TagsList({
           />
         )}
         {claims.map((claim) => {
+          const identity = claim.subject
           // TODO: ENG-0000: Show filled save if user has a position on claim
           // TODO: ENG-0000: Show only user position if user is on filtering by you.
 

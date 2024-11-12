@@ -359,31 +359,29 @@ export default function SaveListModal({
       }}
     >
       <DialogContent
-        className="flex flex-col md:w-[476px] h-[570px] gap-0"
+        className="flex flex-col md:w-[476px] gap-0"
         onOpenAutoFocus={(event) => event.preventDefault()}
       >
-        <div className="flex-grow">
-          <SaveForm
-            tag={tag}
-            identity={identity}
-            user_assets={vaultDetails?.user_assets ?? '0'}
-            entry_fee={vaultDetails?.formatted_entry_fee ?? '0'}
-            exit_fee={vaultDetails?.formatted_exit_fee ?? '0'}
-            min_deposit={min_deposit ?? vaultDetails?.min_deposit ?? '0'}
-            val={val}
-            setVal={setVal}
-            mode={mode}
-            dispatch={dispatch}
-            state={state}
-            fetchReval={fetchReval}
-            formRef={formRef}
-            validationErrors={validationErrors}
-            setValidationErrors={setValidationErrors}
-            showErrors={showErrors}
-            setShowErrors={setShowErrors}
-            isLoading={isLoading}
-          />
-        </div>
+        <SaveForm
+          tag={tag}
+          identity={identity}
+          user_assets={vaultDetails?.user_assets ?? '0'}
+          entry_fee={vaultDetails?.formatted_entry_fee ?? '0'}
+          exit_fee={vaultDetails?.formatted_exit_fee ?? '0'}
+          min_deposit={min_deposit ?? vaultDetails?.min_deposit ?? '0'}
+          val={val}
+          setVal={setVal}
+          mode={mode}
+          dispatch={dispatch}
+          state={state}
+          fetchReval={fetchReval}
+          formRef={formRef}
+          validationErrors={validationErrors}
+          setValidationErrors={setValidationErrors}
+          showErrors={showErrors}
+          setShowErrors={setShowErrors}
+          isLoading={isLoading}
+        />
         <DialogFooter className="!justify-center !items-center gap-5">
           {!isTransactionStarted ? (
             isLoading && state.status !== 'complete' ? (

@@ -11,6 +11,7 @@ import {
 } from '@0xintuition/1ui'
 import { IdentityPresenter } from '@0xintuition/api'
 
+import StakingRadioGroup from '@components/staking-radio-group'
 import { TransactionState } from '@components/transaction-state'
 import {
   formatBalance,
@@ -35,6 +36,7 @@ interface SaveFormProps {
   user_assets: string
   entry_fee: string
   exit_fee: string
+  min_deposit: string
   val: string
   setVal: (val: string) => void
   mode: string | undefined
@@ -42,6 +44,10 @@ interface SaveFormProps {
   state: TransactionStateType
   fetchReval: FetcherWithComponents<unknown>
   formRef: React.RefObject<HTMLFormElement>
+  showErrors: boolean
+  setShowErrors: (show: boolean) => void
+  validationErrors: string[]
+  setValidationErrors: (errors: string[]) => void
   isLoading: boolean
 }
 
@@ -51,12 +57,18 @@ export default function SaveForm({
   user_assets,
   entry_fee,
   exit_fee,
+  min_deposit,
   val,
+  setVal,
   mode,
   dispatch,
   state,
   fetchReval,
   formRef,
+  showErrors,
+  setShowErrors,
+  validationErrors,
+  setValidationErrors,
   isLoading,
 }: SaveFormProps) {
   return (
@@ -89,7 +101,7 @@ export default function SaveForm({
               </Text>
             </DialogDescription>
           </DialogHeader>
-          <div className="h-full w-full flex-col pt-5 pb-10 gap-5 inline-flex">
+          <div className="h-full w-full flex-col py-5 gap-5 inline-flex">
             <div className="flex items-center w-full mr-2.5 gap-5 justify-center">
               <Claim
                 size="md"
@@ -136,6 +148,17 @@ export default function SaveForm({
                   />
                 )}
               </div>
+            </div>
+            <div className="rounded-t-lg bg-primary-950/15 w-full">
+              <StakingRadioGroup
+                setVal={setVal}
+                validationErrors={validationErrors}
+                setValidationErrors={setValidationErrors}
+                showErrors={showErrors}
+                setShowErrors={setShowErrors}
+                isLoading={isLoading}
+                min_deposit={min_deposit}
+              />
             </div>
           </div>
         </>
