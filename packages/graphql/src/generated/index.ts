@@ -7354,6 +7354,15 @@ export type AccountCreatedTriplesFragment = {
   }
 }
 
+export type ThingMetadataFragment = {
+  __typename?: 'things'
+  id: any
+  image?: string | null
+  name?: string | null
+  description?: string | null
+  url?: string | null
+}
+
 export type AtomMetadataFragment = {
   __typename?: 'atoms'
   data: string
@@ -8031,6 +8040,14 @@ export type GetAtomQuery = {
       } | null
     }>
   } | null
+  thing?: {
+    __typename?: 'things'
+    id: any
+    image?: string | null
+    name?: string | null
+    description?: string | null
+    url?: string | null
+  } | null
 }
 
 export type GetClaimsByAddressQueryVariables = Exact<{
@@ -8695,9 +8712,7 @@ export const AccountCreatedAtomsFragmentDoc = `
       data
       vault {
         totalShares
-        positions_aggregate(
-          where: {accountId: {_eq: "0x25709998b542f1be27d19fa0b3a9a67302bc1b94"}}
-        ) {
+        positions_aggregate(where: {accountId: {_eq: $address}}) {
           nodes {
             account {
               id
@@ -8738,6 +8753,15 @@ export const AccountCreatedTriplesFragmentDoc = `
       }
     }
   }
+}
+    `
+export const ThingMetadataFragmentDoc = `
+    fragment ThingMetadata on things {
+  id
+  image
+  name
+  description
+  url
 }
     `
 export const AtomMetadataFragmentDoc = `
@@ -9284,12 +9308,16 @@ export const GetAtomDocument = `
     }
     ...AtomTriple
   }
+  thing(id: $id) {
+    ...ThingMetadata
+  }
 }
     ${AtomMetadataFragmentDoc}
 ${AtomTxnFragmentDoc}
 ${AtomVaultDetailsFragmentDoc}
 ${AccountMetadataFragmentDoc}
-${AtomTripleFragmentDoc}`
+${AtomTripleFragmentDoc}
+${ThingMetadataFragmentDoc}`
 
 export const useGetAtomQuery = <TData = GetAtomQuery, TError = unknown>(
   variables: GetAtomQueryVariables,
@@ -10573,10 +10601,11 @@ export const AccountCreatedAtoms = {
                                                 value: '_eq',
                                               },
                                               value: {
-                                                kind: 'StringValue',
-                                                value:
-                                                  '0x25709998b542f1be27d19fa0b3a9a67302bc1b94',
-                                                block: false,
+                                                kind: 'Variable',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'address',
+                                                },
                                               },
                                             },
                                           ],
@@ -10769,6 +10798,29 @@ export const AccountCreatedTriples = {
               ],
             },
           },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
+export const ThingMetadata = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'ThingMetadata' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'things' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'url' } },
         ],
       },
     },
@@ -12405,10 +12457,11 @@ export const GetAccount = {
                                                 value: '_eq',
                                               },
                                               value: {
-                                                kind: 'StringValue',
-                                                value:
-                                                  '0x25709998b542f1be27d19fa0b3a9a67302bc1b94',
-                                                block: false,
+                                                kind: 'Variable',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'address',
+                                                },
                                               },
                                             },
                                           ],
@@ -12888,6 +12941,29 @@ export const GetAtom = {
               ],
             },
           },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'thing' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'id' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'ThingMetadata' },
+                },
+              ],
+            },
+          },
         ],
       },
     },
@@ -12906,6 +12982,24 @@ export const GetAtom = {
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'atomId' } },
           { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'ThingMetadata' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'things' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'url' } },
         ],
       },
     },
