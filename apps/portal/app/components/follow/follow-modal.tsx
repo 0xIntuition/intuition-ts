@@ -5,7 +5,7 @@ import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
 
 import { multivaultAbi } from '@lib/abis/multivault'
 import { useFollowMutation } from '@lib/hooks/mutations/useFollowMutation'
-import { useCreateConfig } from '@lib/hooks/useCreateConfig'
+import { useCreateClaimConfig } from '@lib/hooks/useCreateClaimConfig'
 import { useGetWalletBalance } from '@lib/hooks/useGetWalletBalance'
 import { transactionReducer } from '@lib/hooks/useTransactionReducer'
 import { useGenericTxState } from '@lib/utils/use-tx-reducer'
@@ -75,7 +75,8 @@ export default function FollowModal({
 
   const { address } = useAccount()
 
-  const { data: configData, isLoading: isLoadingConfig } = useCreateConfig()
+  const { data: configData, isLoading: isLoadingConfig } =
+    useCreateClaimConfig()
 
   const {
     mutateAsync: follow,
@@ -94,7 +95,7 @@ export default function FollowModal({
         vaultId: vault_id,
         claim,
         identity,
-        tripleCost: BigInt(configData?.tripleCost ?? '0'),
+        tripleCost: BigInt(configData?.fees.tripleCost ?? '0'),
         userVaultId,
       })
 
