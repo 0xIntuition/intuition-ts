@@ -1,55 +1,69 @@
 services:
   - type: web
-    name: data-populator
+    name: portal
     env: docker
     region: oregon
     rootDir: .
-    dockerfilePath: ./apps/data-populator/Dockerfile
+    dockerfilePath: ./apps/portal/Dockerfile
     dockerContext: .
     envVars:
       - key: NODE_ENV
         value: production
       - key: PORT
         value: 8080
-      - key: PINATA_JWT_KEY
+      - key: ALCHEMY_MAINNET_API_KEY
         sync: false
-      - key: PINATA_GATEWAY_KEY
+      - key: ALCHEMY_API_KEY
         sync: false
-      - key: IPFS_GATEWAY
+      - key: ALCHEMY_MAINNET_RPC_URL
         sync: false
-      - key: PRIVATE_KEY
+      - key: ALCHEMY_BASE_SEPOLIA_RPC_URL
         sync: false
-      - key: PRIVATE_KEY_DEV
+      - key: ALCHEMY_BASE_RPC_URL
         sync: false
-      - key: ADDITIONAL_STAKE_ATOM
-        value: 100000000000
-      - key: ADDITIONAL_STAKE_TRIPLE
-        value: 100000000000
+      - key: WALLETCONNECT_PROJECT_ID
+        sync: false
+      - key: SESSION_SECRET
+        sync: false
+      - key: API_URL
+        sync: false
+      - key: API_KEY
+        sync: false
+      - key: PRIVY_APP_ID
+        sync: false
+      - key: PRIVY_APP_SECRET
+        sync: false
+      - key: PRIVY_VERIFICATION_KEY
+        sync: false
       - key: CLOUDINARY_CLOUD_NAME
         sync: false
       - key: CLOUDINARY_API_KEY
         sync: false
       - key: CLOUDINARY_API_SECRET
         sync: false
-      - key: SUPABASE_URL
+      - key: SENTRY_AUTH_TOKEN
         sync: false
-      - key: SUPABASE_KEY
+      - key: SENTRY_DSN
+        sync: false
+      - key: SENTRY_ORG
+        sync: false
+      - key: SENTRY_PROJECT
+        sync: false
+      - key: ORIGIN_URL
+        sync: false
+      - key: PHOSPHOR_API_KEY
+        sync: false
+      - key: PHOSPHOR_ADMIN_API_URL
+        sync: false
+      - key: PHOSPHOR_COLLECTION_ID
+        sync: false
+      - key: GTM_TRACKING_ID
+        sync: false
+      - key: FF_FULL_LOCKDOWN_ENABLED
+        sync: false
+      - key: FF_INCIDENT_BANNER_ENABLED
+        sync: false
+      - key: FF_GENERIC_BANNER_ENABLED
         sync: false
       - key: VITE_DEPLOY_ENV
-        sync: false
-      - key: VITE_ALCHEMY_API_KEY
-        sync: false
-      - key: ALCHEMY_API_KEY
-        sync: false
-      - key: VITE_ORIGIN_URL
-        value: https://portal.intuition.systems
-      - key: ORIGIN_URL
-        value: https://portal.intuition.systems
-      - key: PRIVY_APP_ID
-        sync: false
-      - key: PRIVY_AUTH_URL
-        sync: false
-      - key: PRIVY_APP_SECRET
-        sync: false
-      - key: PRIVY_VERIFICATION_KEY
         sync: false
