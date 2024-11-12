@@ -76,6 +76,9 @@ import {
   BookCheck,
   CirclePlus,
   Download,
+  File,
+  FileSpreadsheet,
+  BookCheck,
   FileType,
   Loader2,
   Minus,
@@ -86,6 +89,7 @@ import {
   Tag,
   Trash,
   Upload,
+  TagIcon,
 } from 'lucide-react'
 import { Thing, WithContext } from 'schema-dts'
 
@@ -1263,7 +1267,10 @@ export default function CSVEditor() {
           <TabsContent value="upload" className="p-5">
             <div className="space-y-5">
               <div className="space-y-2">
-                <Text variant={TextVariant.headline}>Upload CSV</Text>
+                <div className="flex items-center space-x-2">
+                  <FileSpreadsheet className="w-6 h-6" strokeWidth={1.5} />
+                  <Text variant={TextVariant.headline}>Upload CSV</Text>
+                </div>
                 <Text
                   variant={TextVariant.body}
                   className="text-muted-foreground"
@@ -1295,7 +1302,10 @@ export default function CSVEditor() {
           <TabsContent value="publish" className="p-5">
             <div className="space-y-4">
               <div className="space-y-2">
-                <Text variant={TextVariant.headline}>Publish Atoms</Text>
+                <div className="flex items-center space-x-2">
+                  <BookCheck className="w-6 h-6" strokeWidth={1.5} />
+                  <Text variant={TextVariant.headline}>Publish Atoms</Text>
+                </div>
                 <Text
                   variant={TextVariant.body}
                   className="text-muted-foreground"
@@ -1342,7 +1352,10 @@ export default function CSVEditor() {
           <TabsContent value="tag" className="p-5">
             <div className="space-y-4">
               <div className="space-y-2">
-                <Text variant={TextVariant.headline}>Tag Atoms</Text>
+                <div className="flex items-center space-x-2">
+                  <TagIcon className="w-6 h-6" strokeWidth={1.5} />
+                  <Text variant={TextVariant.headline}>Tag Atoms</Text>
+                </div>
                 <Text
                   variant={TextVariant.body}
                   className="text-muted-foreground"
