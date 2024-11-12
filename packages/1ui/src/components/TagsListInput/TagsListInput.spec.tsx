@@ -31,10 +31,10 @@ describe('TagsListInput', () => {
               class="gap-1 rounded-full px-2 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/20 hover:bg-primary/20 hover:text-primary hover:border-primary/40 text-base font-normal flex items-center cursor-default pl-2"
             >
               <div
-                class="flex flex-row gap-2 items-center"
+                class="flex flex-row gap-1.5 items-center"
               >
                 <div
-                  class="text-primary text-base font-normal"
+                  class="text-primary text-base font-normal px-0.5"
                 >
                   Tag Name 1
                 </div>
@@ -42,7 +42,7 @@ describe('TagsListInput', () => {
             </button>
             <button
               aria-label="Remove tag"
-              class="ml-2 cursor-pointer"
+              class="ml-1 cursor-pointer"
             >
               <svg
                 class="h-3 w-3"
@@ -57,10 +57,10 @@ describe('TagsListInput', () => {
             class="gap-1 rounded-full px-2 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/20 hover:bg-primary/20 hover:text-primary hover:border-primary/40 text-base font-normal flex items-center cursor-default pl-2"
           >
             <div
-              class="flex flex-row gap-2 items-center"
+              class="flex flex-row gap-1.5 items-center"
             >
               <div
-                class="text-primary text-base font-normal"
+                class="text-primary text-base font-normal px-0.5"
               >
                 Tag Name 2
               </div>
@@ -68,7 +68,7 @@ describe('TagsListInput', () => {
           </button>
           <button
             aria-label="Remove tag"
-            class="ml-2 cursor-pointer"
+            class="ml-1 cursor-pointer"
           >
             <svg
               class="h-3 w-3"
@@ -83,10 +83,10 @@ describe('TagsListInput', () => {
           class="gap-1 rounded-full px-2 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/20 hover:bg-primary/20 hover:text-primary hover:border-primary/40 text-base font-normal flex items-center cursor-default pl-2"
         >
           <div
-            class="flex flex-row gap-2 items-center"
+            class="flex flex-row gap-1.5 items-center"
           >
             <div
-              class="text-primary text-base font-normal"
+              class="text-primary text-base font-normal px-0.5"
             >
               Tag Name 3
             </div>
@@ -94,7 +94,7 @@ describe('TagsListInput', () => {
         </button>
         <button
           aria-label="Remove tag"
-          class="ml-2 cursor-pointer"
+          class="ml-1 cursor-pointer"
         >
           <svg
             class="h-3 w-3"
@@ -194,10 +194,10 @@ describe('TagsListInput', () => {
               class="gap-1 rounded-full px-2 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-social/10 text-social/90 border-social/40 hover:bg-social/30 hover:text-social hover:border-social/60 text-base font-normal flex items-center cursor-default pl-2"
             >
               <div
-                class="flex flex-row gap-2 items-center"
+                class="flex flex-row gap-1.5 items-center"
               >
                 <div
-                  class="text-primary text-base font-normal"
+                  class="text-primary text-base font-normal px-0.5"
                 >
                   Tag Name 1
                 </div>
@@ -205,7 +205,7 @@ describe('TagsListInput', () => {
             </button>
             <button
               aria-label="Remove tag"
-              class="ml-2 cursor-pointer"
+              class="ml-1 cursor-pointer"
             >
               <svg
                 class="h-3 w-3"
@@ -220,10 +220,10 @@ describe('TagsListInput', () => {
             class="gap-1 rounded-full px-2 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-social/10 text-social/90 border-social/40 hover:bg-social/30 hover:text-social hover:border-social/60 text-base font-normal flex items-center cursor-default pl-2"
           >
             <div
-              class="flex flex-row gap-2 items-center"
+              class="flex flex-row gap-1.5 items-center"
             >
               <div
-                class="text-primary text-base font-normal"
+                class="text-primary text-base font-normal px-0.5"
               >
                 Tag Name 2
               </div>
@@ -231,7 +231,7 @@ describe('TagsListInput', () => {
           </button>
           <button
             aria-label="Remove tag"
-            class="ml-2 cursor-pointer"
+            class="ml-1 cursor-pointer"
           >
             <svg
               class="h-3 w-3"
@@ -246,10 +246,10 @@ describe('TagsListInput', () => {
           class="gap-1 rounded-full px-2 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-social/10 text-social/90 border-social/40 hover:bg-social/30 hover:text-social hover:border-social/60 text-base font-normal flex items-center cursor-default pl-2"
         >
           <div
-            class="flex flex-row gap-2 items-center"
+            class="flex flex-row gap-1.5 items-center"
           >
             <div
-              class="text-primary text-base font-normal"
+              class="text-primary text-base font-normal px-0.5"
             >
               Tag Name 3
             </div>
@@ -257,7 +257,7 @@ describe('TagsListInput', () => {
         </button>
         <button
           aria-label="Remove tag"
-          class="ml-2 cursor-pointer"
+          class="ml-1 cursor-pointer"
         >
           <svg
             class="h-3 w-3"

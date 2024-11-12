@@ -6,7 +6,7 @@ import {
   IconName,
   Identity,
 } from '@0xintuition/1ui'
-import { ClaimPresenter, IdentityPresenter, SortColumn } from '@0xintuition/api'
+import { ClaimPresenter, SortColumn } from '@0xintuition/api'
 
 import { IdentityRow } from '@components/identity/identity-row'
 import { ListHeader } from '@components/list/list-header'
@@ -28,7 +28,6 @@ import { List } from './list'
 
 export function TagsList({
   claims,
-  tag,
   pagination,
   paramPrefix,
   enableHeader = true,
@@ -37,9 +36,6 @@ export function TagsList({
   readOnly = false,
 }: {
   claims: ClaimPresenter[]
-  claim: ClaimPresenter
-  tag?: IdentityPresenter | null
-  wallet?: string
   pagination?: PaginationType
   paramPrefix?: string
   enableHeader?: boolean
@@ -75,7 +71,6 @@ export function TagsList({
           />
         )}
         {claims.map((claim) => {
-          const identity = claim.subject
           // TODO: ENG-0000: Show filled save if user has a position on claim
           // TODO: ENG-0000: Show only user position if user is on filtering by you.
 
@@ -86,22 +81,28 @@ export function TagsList({
             >
               <div className="flex flex-row gap-2 w-full">
                 <IdentityRow
-                  variant={identity?.is_user ? Identity.user : Identity.nonUser}
-                  avatarSrc={getAtomImage(identity)}
-                  name={getAtomLabel(identity)}
-                  description={getAtomDescription(identity)}
-                  id={identity?.user?.wallet ?? identity?.identity_id ?? ''}
+                  variant={
+                    claim.subject?.is_user ? Identity.user : Identity.nonUser
+                  }
+                  avatarSrc={getAtomImage(claim.subject)}
+                  name={getAtomLabel(claim.subject)}
+                  description={getAtomDescription(claim.subject)}
+                  id={
+                    claim.subject?.user?.wallet ??
+                    claim.subject?.identity_id ??
+                    ''
+                  }
                   claimLink={getClaimUrl(claim.vault_id ?? '', readOnly)}
                   tags={
-                    identity?.tags?.map((tag) => ({
+                    claim.subject?.tags?.map((tag) => ({
                       label: tag.display_name,
                       value: tag.num_tagged_identities,
                     })) ?? undefined
                   }
                   amount={+formatBalance(BigInt(claim?.assets_sum || 0), 18)}
                   totalFollowers={claim?.num_positions || 0}
-                  link={getAtomLink(identity, readOnly)}
-                  ipfsLink={getAtomIpfsLink(identity)}
+                  link={getAtomLink(claim.subject, readOnly)}
+                  ipfsLink={getAtomIpfsLink(claim.subject)}
                   className={`w-full hover:bg-transparent ${readOnly ? '' : 'pr-0'}`}
                 />
                 {readOnly === false && (
@@ -112,12 +113,8 @@ export function TagsList({
                       setSaveListModalActive({
                         isOpen: true,
                         id: claim.vault_id,
-                        identity,
-                        tag:
-                          tag &&
-                          identity?.tags?.find(
-                            (t) => t.vault_id === tag.vault_id,
-                          ),
+                        identity: claim.subject,
+                        tag: claim.object,
                       })
                     }}
                   >

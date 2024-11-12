@@ -35,10 +35,10 @@ describe('Tags', () => {
               class="gap-1 rounded-full px-2 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/20 hover:bg-primary/20 hover:text-primary hover:border-primary/40 text-base font-normal flex items-center cursor-default pl-2"
             >
               <div
-                class="flex flex-row gap-2 items-center"
+                class="flex flex-row gap-1.5 items-center"
               >
                 <div
-                  class="text-primary text-base font-normal"
+                  class="text-primary text-base font-normal px-0.5"
                 >
                   keyboard
                 </div>
@@ -56,10 +56,10 @@ describe('Tags', () => {
               class="gap-1 rounded-full px-2 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/20 hover:bg-primary/20 hover:text-primary hover:border-primary/40 text-base font-normal flex items-center cursor-default pl-2"
             >
               <div
-                class="flex flex-row gap-2 items-center"
+                class="flex flex-row gap-1.5 items-center"
               >
                 <div
-                  class="text-primary text-base font-normal"
+                  class="text-primary text-base font-normal px-0.5"
                 >
                   ergonomic
                 </div>
@@ -77,10 +77,10 @@ describe('Tags', () => {
               class="gap-1 rounded-full px-2 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/20 hover:bg-primary/20 hover:text-primary hover:border-primary/40 text-base font-normal flex items-center cursor-default pl-2"
             >
               <div
-                class="flex flex-row gap-2 items-center"
+                class="flex flex-row gap-1.5 items-center"
               >
                 <div
-                  class="text-primary text-base font-normal"
+                  class="text-primary text-base font-normal px-0.5"
                 >
                   wireless
                 </div>
@@ -98,10 +98,10 @@ describe('Tags', () => {
               class="gap-1 rounded-full px-2 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/20 hover:bg-primary/20 hover:text-primary hover:border-primary/40 text-base font-normal flex items-center cursor-default pl-2"
             >
               <div
-                class="flex flex-row gap-2 items-center"
+                class="flex flex-row gap-1.5 items-center"
               >
                 <div
-                  class="text-primary text-base font-normal"
+                  class="text-primary text-base font-normal px-0.5"
                 >
                   gaming
                 </div>
@@ -119,10 +119,10 @@ describe('Tags', () => {
               class="gap-1 rounded-full px-2 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/20 hover:bg-primary/20 hover:text-primary hover:border-primary/40 text-base font-normal flex items-center cursor-default pl-2"
             >
               <div
-                class="flex flex-row gap-2 items-center"
+                class="flex flex-row gap-1.5 items-center"
               >
                 <div
-                  class="text-primary text-base font-normal"
+                  class="text-primary text-base font-normal px-0.5"
                 >
                   mechanical
                 </div>
@@ -140,10 +140,10 @@ describe('Tags', () => {
               class="gap-1 rounded-full px-2 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/20 hover:bg-primary/20 hover:text-primary hover:border-primary/40 text-base font-normal flex items-center cursor-default pl-2"
             >
               <div
-                class="flex flex-row gap-2 items-center"
+                class="flex flex-row gap-1.5 items-center"
               >
                 <div
-                  class="text-primary text-base font-normal"
+                  class="text-primary text-base font-normal px-0.5"
                 >
                   tech
                 </div>
@@ -161,10 +161,10 @@ describe('Tags', () => {
               class="gap-1 rounded-full px-2 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/20 hover:bg-primary/20 hover:text-primary hover:border-primary/40 text-base font-normal flex items-center cursor-default pl-2"
             >
               <div
-                class="flex flex-row gap-2 items-center"
+                class="flex flex-row gap-1.5 items-center"
               >
                 <div
-                  class="text-primary text-base font-normal"
+                  class="text-primary text-base font-normal px-0.5"
                 >
                   innovation
                 </div>
@@ -182,10 +182,10 @@ describe('Tags', () => {
               class="gap-1 rounded-full px-2 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/20 hover:bg-primary/20 hover:text-primary hover:border-primary/40 text-base font-normal flex items-center cursor-default pl-2"
             >
               <div
-                class="flex flex-row gap-2 items-center"
+                class="flex flex-row gap-1.5 items-center"
               >
                 <div
-                  class="text-primary text-base font-normal"
+                  class="text-primary text-base font-normal px-0.5"
                 >
                   typing
                 </div>
@@ -203,10 +203,10 @@ describe('Tags', () => {
               class="gap-1 rounded-full px-2 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/20 hover:bg-primary/20 hover:text-primary hover:border-primary/40 text-base font-normal flex items-center cursor-default pl-2"
             >
               <div
-                class="flex flex-row gap-2 items-center"
+                class="flex flex-row gap-1.5 items-center"
               >
                 <div
-                  class="text-primary text-base font-normal"
+                  class="text-primary text-base font-normal px-0.5"
                 >
                   quality
                 </div>
@@ -224,10 +224,10 @@ describe('Tags', () => {
               class="gap-1 rounded-full px-2 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/20 hover:bg-primary/20 hover:text-primary hover:border-primary/40 text-base font-normal flex items-center cursor-default pl-2"
             >
               <div
-                class="flex flex-row gap-2 items-center"
+                class="flex flex-row gap-1.5 items-center"
               >
                 <div
-                  class="text-primary text-base font-normal"
+                  class="text-primary text-base font-normal px-0.5"
                 >
                   brand
                 </div>
@@ -295,10 +295,10 @@ describe('Tags', () => {
               class="gap-1 rounded-full px-2 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/20 hover:bg-primary/20 hover:text-primary hover:border-primary/40 text-base font-normal flex items-center cursor-default pl-2"
             >
               <div
-                class="flex flex-row gap-2 items-center"
+                class="flex flex-row gap-1.5 items-center"
               >
                 <div
-                  class="text-primary text-base font-normal"
+                  class="text-primary text-base font-normal px-0.5"
                 >
                   keyboard
                 </div>
@@ -316,10 +316,10 @@ describe('Tags', () => {
               class="gap-1 rounded-full px-2 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/20 hover:bg-primary/20 hover:text-primary hover:border-primary/40 text-base font-normal flex items-center cursor-default pl-2"
             >
               <div
-                class="flex flex-row gap-2 items-center"
+                class="flex flex-row gap-1.5 items-center"
               >
                 <div
-                  class="text-primary text-base font-normal"
+                  class="text-primary text-base font-normal px-0.5"
                 >
                   ergonomic
                 </div>
@@ -337,10 +337,10 @@ describe('Tags', () => {
               class="gap-1 rounded-full px-2 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/20 hover:bg-primary/20 hover:text-primary hover:border-primary/40 text-base font-normal flex items-center cursor-default pl-2"
             >
               <div
-                class="flex flex-row gap-2 items-center"
+                class="flex flex-row gap-1.5 items-center"
               >
                 <div
-                  class="text-primary text-base font-normal"
+                  class="text-primary text-base font-normal px-0.5"
                 >
                   wireless
                 </div>
@@ -358,10 +358,10 @@ describe('Tags', () => {
               class="gap-1 rounded-full px-2 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/20 hover:bg-primary/20 hover:text-primary hover:border-primary/40 text-base font-normal flex items-center cursor-default pl-2"
             >
               <div
-                class="flex flex-row gap-2 items-center"
+                class="flex flex-row gap-1.5 items-center"
               >
                 <div
-                  class="text-primary text-base font-normal"
+                  class="text-primary text-base font-normal px-0.5"
                 >
                   gaming
                 </div>
@@ -379,10 +379,10 @@ describe('Tags', () => {
               class="gap-1 rounded-full px-2 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/20 hover:bg-primary/20 hover:text-primary hover:border-primary/40 text-base font-normal flex items-center cursor-default pl-2"
             >
               <div
-                class="flex flex-row gap-2 items-center"
+                class="flex flex-row gap-1.5 items-center"
               >
                 <div
-                  class="text-primary text-base font-normal"
+                  class="text-primary text-base font-normal px-0.5"
                 >
                   mechanical
                 </div>
@@ -400,10 +400,10 @@ describe('Tags', () => {
               class="gap-1 rounded-full px-2 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/20 hover:bg-primary/20 hover:text-primary hover:border-primary/40 text-base font-normal flex items-center cursor-default pl-2"
             >
               <div
-                class="flex flex-row gap-2 items-center"
+                class="flex flex-row gap-1.5 items-center"
               >
                 <div
-                  class="text-primary text-base font-normal"
+                  class="text-primary text-base font-normal px-0.5"
                 >
                   tech
                 </div>
@@ -421,10 +421,10 @@ describe('Tags', () => {
               class="gap-1 rounded-full px-2 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/20 hover:bg-primary/20 hover:text-primary hover:border-primary/40 text-base font-normal flex items-center cursor-default pl-2"
             >
               <div
-                class="flex flex-row gap-2 items-center"
+                class="flex flex-row gap-1.5 items-center"
               >
                 <div
-                  class="text-primary text-base font-normal"
+                  class="text-primary text-base font-normal px-0.5"
                 >
                   innovation
                 </div>
@@ -442,10 +442,10 @@ describe('Tags', () => {
               class="gap-1 rounded-full px-2 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/20 hover:bg-primary/20 hover:text-primary hover:border-primary/40 text-base font-normal flex items-center cursor-default pl-2"
             >
               <div
-                class="flex flex-row gap-2 items-center"
+                class="flex flex-row gap-1.5 items-center"
               >
                 <div
-                  class="text-primary text-base font-normal"
+                  class="text-primary text-base font-normal px-0.5"
                 >
                   typing
                 </div>
@@ -463,10 +463,10 @@ describe('Tags', () => {
               class="gap-1 rounded-full px-2 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/20 hover:bg-primary/20 hover:text-primary hover:border-primary/40 text-base font-normal flex items-center cursor-default pl-2"
             >
               <div
-                class="flex flex-row gap-2 items-center"
+                class="flex flex-row gap-1.5 items-center"
               >
                 <div
-                  class="text-primary text-base font-normal"
+                  class="text-primary text-base font-normal px-0.5"
                 >
                   quality
                 </div>
@@ -484,10 +484,10 @@ describe('Tags', () => {
               class="gap-1 rounded-full px-2 py-0.5 border disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground bg-primary/10 text-primary/90 border-primary/20 hover:bg-primary/20 hover:text-primary hover:border-primary/40 text-base font-normal flex items-center cursor-default pl-2"
             >
               <div
-                class="flex flex-row gap-2 items-center"
+                class="flex flex-row gap-1.5 items-center"
               >
                 <div
-                  class="text-primary text-base font-normal"
+                  class="text-primary text-base font-normal px-0.5"
                 >
                   brand
                 </div>

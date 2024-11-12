@@ -7,7 +7,7 @@ import {
   Skeleton,
   toast,
 } from '@0xintuition/1ui'
-import { IdentityPresenter, TagEmbeddedPresenter } from '@0xintuition/api'
+import { IdentityPresenter } from '@0xintuition/api'
 
 import { multivaultAbi } from '@lib/abis/multivault'
 import { useDepositTriple } from '@lib/hooks/useDepositTriple'
@@ -42,7 +42,7 @@ const initialTxState: TransactionStateType = {
 interface SaveListModalProps {
   userWallet: string
   open: boolean
-  tag: TagEmbeddedPresenter | IdentityPresenter
+  tag: IdentityPresenter
   identity: IdentityPresenter
   contract: string
   onClose?: () => void

@@ -1,4 +1,11 @@
-import { Text } from '@0xintuition/1ui'
+import {
+  Button,
+  ButtonSize,
+  ButtonVariant,
+  Icon,
+  IconName,
+  Text,
+} from '@0xintuition/1ui'
 
 import PrivyLoginButton from '@client/privy-login-button'
 import { BuiltOnBase } from '@components/built-on-base'
@@ -13,7 +20,13 @@ import {
   LoaderFunctionArgs,
   redirect,
 } from '@remix-run/node'
-import { Link, useLoaderData, useSubmit } from '@remix-run/react'
+import {
+  Link,
+  useFetcher,
+  useLoaderData,
+  useNavigate,
+  useSubmit,
+} from '@remix-run/react'
 import { getFeatureFlags } from '@server/env'
 import { verifyPrivyAccessToken } from '@server/privy'
 import { PATHS } from 'app/consts'
@@ -66,12 +79,32 @@ export default function Login() {
     submit(formData, { method: 'post' })
   }
 
+  const fetcher = useFetcher()
+  const navigate = useNavigate()
+  const handleBackNavigation = () => {
+    fetcher.submit(
+      { action: 'clearOnboardingCookie' },
+      { method: 'post', action: '/actions/clear-onboarding-cookie' },
+    )
+    navigate(PATHS.THE_BIG_BANG)
+  }
+
   return (
     <div>
       <SiteWideBanner featureFlags={featureFlags} />
       <div className="flex flex-col justify-between h-screen w-full p-8">
         <div className="flex flex-row justify-between w-full">
-          <HeaderLogo />
+          <div className="flex flex-row gap-2">
+            <Button
+              onClick={handleBackNavigation}
+              variant={ButtonVariant.text}
+              size={ButtonSize.icon}
+              className="p-0"
+            >
+              <Icon name={IconName.arrowLeft} className="h-4 w-4" />
+            </Button>
+            <HeaderLogo />
+          </div>
           <div className="justify-end">
             <BuiltOnBase />
           </div>

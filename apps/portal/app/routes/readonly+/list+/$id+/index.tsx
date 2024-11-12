@@ -241,7 +241,6 @@ export default function ReadOnlyListOverview() {
                     <TagsList
                       claims={resolvedGlobalListClaims.claims}
                       pagination={resolvedGlobalListClaims.pagination}
-                      claim={claim}
                       enableSearch={true}
                       enableSort={true}
                       readOnly={true}
@@ -264,8 +263,6 @@ export default function ReadOnlyListOverview() {
                     <TagsList
                       claims={resolvedUserListClaims.claims}
                       pagination={resolvedUserListClaims.pagination}
-                      claim={claim}
-                      tag={claim.object}
                       enableSearch={true}
                       enableSort={true}
                       readOnly={true}
@@ -286,8 +283,6 @@ export default function ReadOnlyListOverview() {
                       <TagsList
                         claims={resolvedAdditionalUserListClaims.claims}
                         pagination={resolvedAdditionalUserListClaims.pagination}
-                        claim={claim}
-                        tag={claim.object}
                         enableSearch={true}
                         enableSort={true}
                         readOnly={true}

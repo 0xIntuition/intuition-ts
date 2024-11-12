@@ -1,10 +1,11 @@
 import { Dialog, DialogContent } from '@0xintuition/1ui'
-import { IdentityPresenter } from '@0xintuition/api'
+import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
 
 import { TagsForm } from './tags-form'
 
 export interface TagsModalProps {
   identity: IdentityPresenter
+  tagClaims: ClaimPresenter[]
   userWallet: string
   open?: boolean
   mode: 'view' | 'add'
@@ -15,6 +16,7 @@ export interface TagsModalProps {
 
 export default function TagsModal({
   identity,
+  tagClaims,
   userWallet,
   open,
   mode,
@@ -33,6 +35,7 @@ export default function TagsModal({
         <DialogContent className="h-[550px]">
           <TagsForm
             identity={identity}
+            tagClaims={tagClaims}
             userWallet={userWallet}
             mode={mode}
             readOnly={readOnly}

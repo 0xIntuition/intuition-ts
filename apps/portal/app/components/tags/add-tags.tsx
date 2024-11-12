@@ -50,6 +50,7 @@ export function AddTags({
   const formattedTags = selectedTags?.map((tag) => ({
     name: tag.display_name,
     id: tag.vault_id,
+    tagCount: tag.tag_count,
   }))
 
   const [, setCreateIdentityModalActive] = useAtom(

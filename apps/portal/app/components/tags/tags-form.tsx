@@ -12,7 +12,7 @@ import {
   TabsTrigger,
   Trunctacular,
 } from '@0xintuition/1ui'
-import { IdentityPresenter, TagEmbeddedPresenter } from '@0xintuition/api'
+import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
 
 import { TransactionState } from '@components/transaction-state'
 import {
@@ -36,6 +36,7 @@ import { TagSearchCombobox } from './tags-search-combo-box'
 
 interface TagsFormProps {
   identity: IdentityPresenter
+  tagClaims: ClaimPresenter[]
   userWallet: string
   mode: 'view' | 'add'
   readOnly?: boolean
@@ -45,6 +46,7 @@ interface TagsFormProps {
 
 export function TagsForm({
   identity,
+  tagClaims,
   userWallet,
   mode,
   readOnly = false,
@@ -54,8 +56,8 @@ export function TagsForm({
   const navigate = useNavigate()
   const [currentTab, setCurrentTab] = useState(mode)
 
-  const existingTagIds = identity.tags
-    ? identity.tags.map((tag) => tag.identity_id)
+  const existingTagIds = tagClaims
+    ? tagClaims.map((tagClaim) => tagClaim.vault_id)
     : []
 
   const { state, dispatch } = useTransactionState<
@@ -92,11 +94,11 @@ export function TagsForm({
 
   const setSaveListModalActive = useSetAtom(saveListModalAtom)
 
-  const handleTagClick = (tag: TagEmbeddedPresenter) => {
+  const handleTagClick = (tagClaim: ClaimPresenter) => {
     setSaveListModalActive({
       isOpen: true,
-      id: tag.vault_id,
-      tag,
+      id: tagClaim.vault_id,
+      tag: tagClaim.object,
     })
   }
 
@@ -170,7 +172,7 @@ export function TagsForm({
                   )}
                   <TabsContent value="view" className="h-full">
                     <TagSearchCombobox
-                      tags={identity.tags || []}
+                      tagClaims={tagClaims || []}
                       shouldFilter={true}
                       onTagClick={handleTagClick}
                     />

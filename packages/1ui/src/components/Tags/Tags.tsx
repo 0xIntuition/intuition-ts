@@ -75,12 +75,13 @@ const TagWithValue = ({
   ...props
 }: TagWithValueProps) => {
   const TagContent = (
-    <div className="flex flex-row gap-2 items-center">
+    <div className="flex flex-row gap-1.5 items-center">
       <Trunctacular
         value={label ? label : ''}
         maxStringLength={maxStringLength}
+        className="px-0.5"
       />
-      {value && (
+      {value !== undefined && value !== null && (
         <div className="flex flex-row gap-1.5 items-center">
           <span className="h-[2px] w-[2px] bg-primary" />
           {value}
@@ -92,7 +93,7 @@ const TagWithValue = ({
             e.stopPropagation()
             onRemove()
           }}
-          className="ml-2 cursor-pointer"
+          className="ml-1 cursor-pointer"
           aria-label="Remove tag"
         >
           <Icon name="cross-large" className="h-3 w-3" />

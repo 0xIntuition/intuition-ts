@@ -158,7 +158,7 @@ export default function TagsReview({
                 <TagWithValue
                   key={index}
                   label={tag.display_name}
-                  value={tag.num_positions}
+                  value={tag.tag_count ?? 0}
                 />
               ))}
             </div>

@@ -8,7 +8,7 @@ import {
   Skeleton,
   Text,
 } from '@0xintuition/1ui'
-import { IdentityPresenter, TagEmbeddedPresenter } from '@0xintuition/api'
+import { IdentityPresenter } from '@0xintuition/api'
 
 import StakingRadioGroup from '@components/staking-radio-group'
 import { TransactionState } from '@components/transaction-state'
@@ -30,7 +30,7 @@ import {
 import SaveReview from './save-review'
 
 interface SaveFormProps {
-  tag: IdentityPresenter | TagEmbeddedPresenter
+  tag: IdentityPresenter
   identity: IdentityPresenter
   user_assets: string
   entry_fee: string
@@ -100,8 +100,8 @@ export default function SaveForm({
               </Text>
             </DialogDescription>
           </DialogHeader>
-          <div className="h-full w-full flex-col pt-5 md:px-10 pb-10 gap-5 inline-flex">
-            <div className="flex items-center w-full mr-2.5 gap-5 ">
+          <div className="h-full w-full flex-col pt-5 pb-10 gap-5 inline-flex">
+            <div className="flex items-center w-full mr-2.5 gap-5 justify-center">
               <Claim
                 size="md"
                 subject={{
@@ -124,38 +124,40 @@ export default function SaveForm({
                 }}
                 object={{
                   variant: Identity.nonUser,
-                  label: tag.display_name ?? tag.identity_id ?? '',
-                  imgSrc: tag.image,
+                  label: getAtomLabel(tag),
+                  imgSrc: getAtomImage(tag),
                   id: tag.identity_id,
-                  description: '',
-                  ipfsLink: '',
-                  link: '',
+                  description: getAtomDescription(tag),
+                  ipfsLink: getAtomIpfsLink(tag),
+                  link: getAtomLink(tag),
                 }}
                 maxIdentityLength={12}
               />
             </div>
-            <div className="flex flex-row items-center justify-center">
-              <div className="w-full bg-neutral-50/5 rounded-lg border border-neutral-300/10 flex-col justify-start items-start inline-flex">
-                {isLoading ? (
-                  <Skeleton className="h-12 w-full" />
-                ) : (
-                  <ActivePositionCard
-                    value={Number(formatBalance(user_assets, 18))}
-                    claimPosition={user_assets > '0' ? 'claimFor' : null}
-                  />
-                )}
+            <div className="flex flex-col md:px-10 gap-5">
+              <div className="flex flex-row items-center justify-center">
+                <div className="w-full bg-neutral-50/5 rounded-lg border border-neutral-300/10 flex-col justify-start items-start inline-flex">
+                  {isLoading ? (
+                    <Skeleton className="h-12 w-full" />
+                  ) : (
+                    <ActivePositionCard
+                      value={Number(formatBalance(user_assets, 18))}
+                      claimPosition={user_assets > '0' ? 'claimFor' : null}
+                    />
+                  )}
+                </div>
               </div>
-            </div>
-            <div className="rounded-t-lg bg-primary-950/15 w-full">
-              <StakingRadioGroup
-                setVal={setVal}
-                validationErrors={validationErrors}
-                setValidationErrors={setValidationErrors}
-                showErrors={showErrors}
-                setShowErrors={setShowErrors}
-                isLoading={isLoading}
-                min_deposit={min_deposit}
-              />
+              <div className="rounded-t-lg bg-primary-950/15 w-full">
+                <StakingRadioGroup
+                  setVal={setVal}
+                  validationErrors={validationErrors}
+                  setValidationErrors={setValidationErrors}
+                  showErrors={showErrors}
+                  setShowErrors={setShowErrors}
+                  isLoading={isLoading}
+                  min_deposit={min_deposit}
+                />
+              </div>
             </div>
           </div>
         </>
