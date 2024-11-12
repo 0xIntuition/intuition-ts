@@ -1,6 +1,7 @@
-import React, { Suspense, Suspense } from 'react'
+import React, { Suspense } from 'react'
 
 import { ErrorStateCard, Separator, Text } from '@0xintuition/1ui'
+import { useGetStatsQuery } from '@0xintuition/graphql'
 
 import { RevalidateButton } from '@components/revalidate-button'
 import { HomeStatsHeaderSkeleton } from '@components/skeleton'
@@ -84,12 +85,12 @@ export function HomeStatsHeader({ ...props }: HomeStatsHeaderProps) {
 interface StatItemProps {
   label: string
   value: string | number
-  link: string
+  link?: string
 }
 
 function StatItem({ label, value, link }: StatItemProps) {
-  return (
-    <Link to={link} className="flex flex-col items-start">
+  const content = (
+    <>
       <Text
         variant="caption"
         weight="regular"
@@ -100,6 +101,16 @@ function StatItem({ label, value, link }: StatItemProps) {
       <Text variant="headline" weight="medium">
         {value}
       </Text>
-    </Link>
+    </>
   )
+
+  if (link) {
+    return (
+      <Link to={link} className="flex flex-col items-start">
+        {content}
+      </Link>
+    )
+  }
+
+  return <div className="flex flex-col items-start">{content}</div>
 }
