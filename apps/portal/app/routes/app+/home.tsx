@@ -10,13 +10,13 @@ import {
 } from '@0xintuition/api'
 
 import { ErrorPage } from '@components/error-page'
-import { FeaturedListCarousel } from '@components/featured-lists-carousel'
 import HomeBanner from '@components/home/home-banner'
 import { HomeSectionHeader } from '@components/home/home-section-header'
 import { HomeStatsHeader } from '@components/home/home-stats-header'
 import { ActivityList } from '@components/list/activity'
 import { ClaimsList } from '@components/list/claims'
 import { IdentitiesList } from '@components/list/identities'
+import { FeaturedListCarousel } from '@components/lists/featured-lists-carousel'
 import { ListClaimsSkeletonLayout } from '@components/lists/list-skeletons'
 import { RevalidateButton } from '@components/revalidate-button'
 import {
