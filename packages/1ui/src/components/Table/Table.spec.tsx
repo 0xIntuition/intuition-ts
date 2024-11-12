@@ -45,37 +45,39 @@ describe('Table', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="relative w-full overflow-auto"
+          class="w-full overflow-auto"
         >
           <table
-            class="w-full caption-bottom text-base"
+            class="w-full caption-bottom text-sm"
           >
             <caption
-              class="my-3 text-sm text-muted-foreground"
+              class="mt-4 text-sm text-foreground/70"
             >
               A list of your recent invoices.
             </caption>
-            <thead>
+            <thead
+              class="[&_tr]:border-b"
+            >
               <tr
-                class="border-b border-border/20 transition-colors hover:bg-primary/10 data-[state=selected]:bg-muted"
+                class="border-b border-primary/20 transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
               >
                 <th
-                  class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0 border-0 border-b border-border/20 w-[100px]"
+                  class="h-12 p-4 text-left align-middle font-medium text-foreground/70 [&:has([role=checkbox])]:pr-0 hover:bg-primary-800 w-[100px]"
                 >
                   Invoice
                 </th>
                 <th
-                  class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0 border-0 border-b border-border/20"
+                  class="h-12 p-4 text-left align-middle font-medium text-foreground/70 [&:has([role=checkbox])]:pr-0 hover:bg-primary-800"
                 >
                   Status
                 </th>
                 <th
-                  class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0 border-0 border-b border-border/20"
+                  class="h-12 p-4 text-left align-middle font-medium text-foreground/70 [&:has([role=checkbox])]:pr-0 hover:bg-primary-800"
                 >
                   Method
                 </th>
                 <th
-                  class="h-12 px-4 align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0 border-0 border-b border-border/20 text-right"
+                  class="h-12 p-4 align-middle font-medium text-foreground/70 [&:has([role=checkbox])]:pr-0 hover:bg-primary-800 text-right"
                 >
                   Amount
                 </th>
@@ -85,44 +87,44 @@ describe('Table', () => {
               class="[&_tr:last-child]:border-0"
             >
               <tr
-                class="border-b border-border/20 transition-colors hover:bg-primary/10 data-[state=selected]:bg-muted"
+                class="border-b border-primary/20 transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
               >
                 <td
-                  class="py-3 align-middle [&:has([role=checkbox])]:pr-0 font-medium"
+                  class="p-4 align-middle [&:has([role=checkbox])]:pr-0 font-medium"
                 >
                   INV001
                 </td>
                 <td
-                  class="py-3 align-middle [&:has([role=checkbox])]:pr-0"
+                  class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
                 >
                   Paid
                 </td>
                 <td
-                  class="py-3 align-middle [&:has([role=checkbox])]:pr-0"
+                  class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
                 >
                   $250.00
                 </td>
                 <td
-                  class="py-3 align-middle [&:has([role=checkbox])]:pr-0 text-right"
+                  class="p-4 align-middle [&:has([role=checkbox])]:pr-0 text-right"
                 >
                   Credit Card
                 </td>
               </tr>
             </tbody>
             <tfoot
-              class="border-t border-border/20 bg-primary/10 font-medium [&>tr]:last:border-b-0"
+              class="bg-primary font-medium text-primary-foreground"
             >
               <tr
-                class="border-b border-border/20 transition-colors hover:bg-primary/10 data-[state=selected]:bg-muted"
+                class="border-b border-primary/20 transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
               >
                 <td
-                  class="py-3 align-middle [&:has([role=checkbox])]:pr-0"
+                  class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
                   colspan="3"
                 >
                   Total
                 </td>
                 <td
-                  class="py-3 align-middle [&:has([role=checkbox])]:pr-0 text-right"
+                  class="p-4 align-middle [&:has([role=checkbox])]:pr-0 text-right"
                 >
                   $2,500.00
                 </td>

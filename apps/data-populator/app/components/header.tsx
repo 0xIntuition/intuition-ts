@@ -4,6 +4,7 @@ import {
   Button,
   ButtonSize,
   ButtonVariant,
+  cn,
   Text,
   Tooltip,
   TooltipContent,
@@ -78,10 +79,10 @@ export function Header({ onOpenHistory }: { onOpenHistory: () => void }) {
             </Tooltip>
           ) : (
             <Text
-              className={`px-2 py-1 rounded-md ${
+              className={`px-2 py-1 rounded-lg text-sm tracking-widest font-medium ${
                 CURRENT_ENV === 'production'
-                  ? 'text-green-500 bg-green-500/10'
-                  : 'text-cyan-500 bg-cyan-500/10'
+                  ? 'text-accent bg-accent/15 border border-accent/20'
+                  : 'text-warning bg-warning/15 border border-warning/20'
               }`}
             >
               {CURRENT_ENV === 'production' ? 'MAINNET' : 'TESTNET'}
@@ -97,7 +98,9 @@ export function Header({ onOpenHistory }: { onOpenHistory: () => void }) {
                   variant={ButtonVariant.secondary}
                   size={ButtonSize.iconLg}
                   onClick={toggleTooltips}
-                  className="text-accent"
+                  className={cn(
+                    'transition text-accent !bg-accent/10 border-accent/60 hover:text-accent hover:bg-accent/5 hover:border-accent/80',
+                  )}
                 >
                   <HelpCircle className="h-5 w-5" />
                 </Button>

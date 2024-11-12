@@ -40,8 +40,7 @@ const tooltipMap: Record<TooltipKey, string> = {
   [TooltipKey.LOAD_CSV]:
     'Loads a .csv file from disk and performs basic proofreading - see documentation for formatting requirements.',
   [TooltipKey.ADD_ROW]: 'Add a new row matching the existing schema',
-  [TooltipKey.DELETE_ROWS]:
-    'This will delete the rows you have currently selected using the checkboxes on the right',
+  [TooltipKey.DELETE_ROWS]: 'Delete the selected row(s)',
   [TooltipKey.PUBLISH_ATOMS]:
     'Begins the process of uploading the selected atoms to the Intuition System',
   [TooltipKey.SAVE_CSV]:
@@ -57,10 +56,10 @@ const tooltipMap: Record<TooltipKey, string> = {
   [TooltipKey.ATOMS_TAB]: 'View and manage atoms. Begin your journey here.',
   [TooltipKey.TAGGING_TAB]:
     'View and manage tags. Select some Atoms you want to tag and go here to tag them.',
-  [TooltipKey.ATOM_LIVE]: 'This atom is live on the Intuition System',
-  [TooltipKey.ATOM_NOT_PUBLISHED]: 'Atom ready to publish',
-  [TooltipKey.TAG_LIVE]: 'This tag is live on the Intuition System',
-  [TooltipKey.TAG_NOT_PUBLISHED]: 'Tag ready to publish',
+  [TooltipKey.ATOM_LIVE]: 'Atom already exists',
+  [TooltipKey.ATOM_NOT_PUBLISHED]: 'New atom ready to publish',
+  [TooltipKey.TAG_LIVE]: 'Tag already exists',
+  [TooltipKey.TAG_NOT_PUBLISHED]: 'New tag ready to publish',
 }
 
 export function getTooltip(key: TooltipKey): string {
