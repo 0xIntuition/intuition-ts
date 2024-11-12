@@ -45,7 +45,7 @@ describe('IdentityRow', () => {
                       class="flex h-full w-full items-center justify-center bg-inherit"
                     >
                       <svg
-                        class="text-primary/30 w-[80%] h-[80%] max-w-8 max-h-8"
+                        class="text-primary/30 w-[80%] h-[80%]"
                       >
                         <use
                           href="/src/components/Icon/Icon.sprites.svg#crypto-punk"
@@ -164,7 +164,7 @@ describe('IdentityRow', () => {
                       class="flex h-full w-full items-center justify-center bg-inherit"
                     >
                       <svg
-                        class="text-primary/30 w-[80%] h-[80%] max-w-8 max-h-8"
+                        class="text-primary/30 w-[80%] h-[80%]"
                       >
                         <use
                           href="/src/components/Icon/Icon.sprites.svg#crypto-punk"
