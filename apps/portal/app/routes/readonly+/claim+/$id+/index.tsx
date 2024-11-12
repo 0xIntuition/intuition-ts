@@ -12,6 +12,7 @@ import { ClaimsService, IdentityPresenter, VaultType } from '@0xintuition/api'
 
 import { ErrorPage } from '@components/error-page'
 import { PositionsOnClaim } from '@components/list/positions-on-claim'
+import RemixLink from '@components/remix-link'
 import { PaginatedListSkeleton, TabsSkeleton } from '@components/skeleton'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { getPositionsOnClaim } from '@lib/services/positions'
@@ -101,6 +102,7 @@ export default function ReadOnlyClaimOverview() {
             description: getAtomDescription(claim.subject as IdentityPresenter),
             ipfsLink: getAtomIpfsLink(claim.subject as IdentityPresenter),
             link: getAtomLink(claim.subject as IdentityPresenter),
+            linkComponent: RemixLink,
           }}
           predicate={{
             variant: claim.predicate?.is_user
@@ -114,6 +116,7 @@ export default function ReadOnlyClaimOverview() {
             ),
             ipfsLink: getAtomIpfsLink(claim.predicate as IdentityPresenter),
             link: getAtomLink(claim.predicate as IdentityPresenter),
+            linkComponent: RemixLink,
           }}
           object={{
             variant: claim.object?.is_user ? Identity.user : Identity.nonUser,
@@ -123,6 +126,7 @@ export default function ReadOnlyClaimOverview() {
             description: getAtomDescription(claim.object as IdentityPresenter),
             ipfsLink: getAtomIpfsLink(claim.object as IdentityPresenter),
             link: getAtomLink(claim.object as IdentityPresenter),
+            linkComponent: RemixLink,
           }}
         />
       </div>

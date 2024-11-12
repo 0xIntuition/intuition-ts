@@ -23,6 +23,11 @@ interface ClaimItemProps {
   ipfsLink?: string
   link?: string
   shouldHover?: boolean
+  linkComponent?: React.ComponentType<{
+    href: string
+    onClick: (e: React.MouseEvent) => void
+    children: React.ReactNode
+  }>
 }
 
 export interface ClaimProps {
@@ -34,6 +39,11 @@ export interface ClaimProps {
   orientation?: 'horizontal' | 'vertical'
   isClickable?: boolean
   maxIdentityLength?: number
+  linkComponent?: React.ComponentType<{
+    href: string
+    onClick: (e: React.MouseEvent) => void
+    children: React.ReactNode
+  }>
 }
 
 export const Claim = ({
@@ -130,6 +140,7 @@ const ClaimItem = ({
   isHovered,
   onMouseEnter,
   onMouseLeave,
+  linkComponent: LinkComponent,
 }: {
   item: ClaimItemProps
   link?: string
@@ -140,6 +151,11 @@ const ClaimItem = ({
   isHovered: boolean
   onMouseEnter: () => void
   onMouseLeave: () => void
+  linkComponent?: React.ComponentType<{
+    href: string
+    onClick: (e: React.MouseEvent) => void
+    children: React.ReactNode
+  }>
 }) => {
   const effectiveMaxLength = maxIdentityLength ?? 24
 
@@ -175,14 +191,40 @@ const ClaimItem = ({
     </IdentityTag>
   )
 
+  const linkProps = {
+    href: item.link || '',
+    onClick: (e: React.MouseEvent) => e.stopPropagation(),
+    children: <span aria-label={`Link to ${item.label}`}>{content}</span>,
+  }
+
   if (disabled || !shouldHover) {
-    return item.link ? <a href={item.link}>{content}</a> : content
+    return item.link ? (
+      LinkComponent ? (
+        <LinkComponent {...linkProps} />
+      ) : (
+        <a {...linkProps}>
+          <span>{content}</span>
+        </a>
+      )
+    ) : (
+      content
+    )
   }
 
   return (
     <HoverCard openDelay={150} closeDelay={150}>
       <HoverCardTrigger asChild>
-        {item.link ? <a href={item.link}>{content}</a> : content}
+        {item.link ? (
+          LinkComponent ? (
+            <LinkComponent {...linkProps} />
+          ) : (
+            <a {...linkProps}>
+              <span>{content}</span>
+            </a>
+          )
+        ) : (
+          content
+        )}
       </HoverCardTrigger>
       <HoverCardContent
         side="bottom"

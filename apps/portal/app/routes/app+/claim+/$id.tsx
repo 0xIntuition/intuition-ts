@@ -22,6 +22,7 @@ import {
 import { DetailInfoCard } from '@components/detail-info-card'
 import { ErrorPage } from '@components/error-page'
 import NavigationButton from '@components/navigation-link'
+import RemixLink from '@components/remix-link'
 import ShareCta from '@components/share-cta'
 import ShareModal from '@components/share-modal'
 import StakeModal from '@components/stake/stake-modal'
@@ -163,6 +164,7 @@ export default function ClaimDetails() {
             description: getAtomDescription(claim.subject as IdentityPresenter),
             ipfsLink: getAtomIpfsLink(claim.subject as IdentityPresenter),
             link: getAtomLink(claim.subject as IdentityPresenter),
+            linkComponent: RemixLink,
           }}
           predicate={{
             variant: claim.predicate?.is_user
@@ -176,6 +178,7 @@ export default function ClaimDetails() {
             ),
             ipfsLink: getAtomIpfsLink(claim.predicate as IdentityPresenter),
             link: getAtomLink(claim.predicate as IdentityPresenter),
+            linkComponent: RemixLink,
           }}
           object={{
             variant: claim.object?.is_user ? Identity.user : Identity.nonUser,
@@ -185,6 +188,7 @@ export default function ClaimDetails() {
             description: getAtomDescription(claim.object as IdentityPresenter),
             ipfsLink: getAtomIpfsLink(claim.object as IdentityPresenter),
             link: getAtomLink(claim.object as IdentityPresenter),
+            linkComponent: RemixLink,
           }}
         />
       </div>

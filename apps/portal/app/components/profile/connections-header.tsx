@@ -9,6 +9,7 @@ import {
 import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
 
 import CreateClaimModal from '@components/create-claim/create-claim-modal'
+import RemixLink from '@components/remix-link'
 import { NO_FOLLOW_CLAIM_ERROR, NO_WALLET_ERROR } from '@consts/errors'
 import { createClaimModalAtom } from '@lib/state/store'
 import {
@@ -17,9 +18,10 @@ import {
   getAtomIpfsLink,
   getAtomLabel,
   getAtomLink,
+  getClaimUrl,
   invariant,
 } from '@lib/utils/misc'
-import { useLocation, useRouteLoaderData } from '@remix-run/react'
+import { Link, useLocation, useRouteLoaderData } from '@remix-run/react'
 import { useAtom } from 'jotai'
 
 export const ConnectionsHeaderVariants = {
@@ -103,48 +105,53 @@ export const ConnectionsHeader: React.FC<ConnectionsHeaderProps> = ({
             >
               Follow Claim
             </Text>
-            <Claim
-              size="md"
-              subject={{
-                variant: Identity.nonUser,
-                label: getAtomLabel(followClaim.subject),
-                imgSrc: getAtomImage(followClaim.subject),
-                id: followClaim.subject?.identity_id,
-                description: getAtomDescription(followClaim.subject),
-                ipfsLink: getAtomIpfsLink(followClaim.subject),
-                link: getAtomLink(followClaim.subject),
-              }}
-              predicate={{
-                variant: Identity.nonUser,
-                label: getAtomLabel(followClaim.predicate),
-                imgSrc: getAtomImage(followClaim.predicate),
-                id: followClaim.predicate?.identity_id,
-                description: getAtomDescription(followClaim.predicate),
-                ipfsLink: getAtomIpfsLink(followClaim.predicate),
-                link: getAtomLink(followClaim.predicate),
-              }}
-              object={
-                variant === 'followers'
-                  ? {
-                      variant: Identity.user,
-                      label: getAtomLabel(userIdentity),
-                      imgSrc: getAtomImage(userIdentity),
-                      id: userIdentity?.identity_id,
-                      description: getAtomDescription(userIdentity),
-                      ipfsLink: getAtomIpfsLink(userIdentity),
-                      link: getAtomLink(userIdentity),
-                    }
-                  : {
-                      variant: Identity.nonUser,
-                      label: '?',
-                      imgSrc: '',
-                      id: '?',
-                      description: '?',
-                      ipfsLink: '',
-                      link: '',
-                    }
-              }
-            />
+            <Link to={getClaimUrl(followClaim.vault_id)} prefetch="intent">
+              <Claim
+                size="md"
+                subject={{
+                  variant: Identity.nonUser,
+                  label: getAtomLabel(followClaim.subject),
+                  imgSrc: getAtomImage(followClaim.subject),
+                  id: followClaim.subject?.identity_id,
+                  description: getAtomDescription(followClaim.subject),
+                  ipfsLink: getAtomIpfsLink(followClaim.subject),
+                  link: getAtomLink(followClaim.subject),
+                  linkComponent: RemixLink,
+                }}
+                predicate={{
+                  variant: Identity.nonUser,
+                  label: getAtomLabel(followClaim.predicate),
+                  imgSrc: getAtomImage(followClaim.predicate),
+                  id: followClaim.predicate?.identity_id,
+                  description: getAtomDescription(followClaim.predicate),
+                  ipfsLink: getAtomIpfsLink(followClaim.predicate),
+                  link: getAtomLink(followClaim.predicate),
+                  linkComponent: RemixLink,
+                }}
+                object={
+                  variant === 'followers'
+                    ? {
+                        variant: Identity.user,
+                        label: getAtomLabel(userIdentity),
+                        imgSrc: getAtomImage(userIdentity),
+                        id: userIdentity?.identity_id,
+                        description: getAtomDescription(userIdentity),
+                        ipfsLink: getAtomIpfsLink(userIdentity),
+                        link: getAtomLink(userIdentity),
+                        linkComponent: RemixLink,
+                      }
+                    : {
+                        variant: Identity.nonUser,
+                        label: '?',
+                        imgSrc: '',
+                        id: '?',
+                        description: '?',
+                        ipfsLink: '',
+                      }
+                }
+                isClickable={variant === 'followers'}
+              />
+            </Link>
           </div>
         </div>
       </div>

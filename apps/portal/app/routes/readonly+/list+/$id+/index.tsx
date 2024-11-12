@@ -19,6 +19,7 @@ import {
 import { ErrorPage } from '@components/error-page'
 import { TagsList } from '@components/list/tags'
 import { ListTabIdentityDisplay } from '@components/lists/list-tab-identity-display'
+import RemixLink from '@components/remix-link'
 import { DataHeaderSkeleton, PaginatedListSkeleton } from '@components/skeleton'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { getListClaims } from '@lib/services/lists'
@@ -158,6 +159,7 @@ export default function ReadOnlyListOverview() {
                       claim.predicate as IdentityPresenter,
                       true,
                     ),
+                    linkComponent: RemixLink,
                   }}
                   object={{
                     variant: claim.object?.is_user ? 'user' : 'non-user',
@@ -171,6 +173,7 @@ export default function ReadOnlyListOverview() {
                       claim.object as IdentityPresenter,
                     ),
                     link: getAtomLink(claim.object as IdentityPresenter, true),
+                    linkComponent: RemixLink,
                   }}
                 />
               </ListHeaderCard>

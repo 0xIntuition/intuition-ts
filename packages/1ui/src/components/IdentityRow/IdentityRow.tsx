@@ -1,6 +1,13 @@
 import React from 'react'
 
-import { Text, TextVariant } from 'components'
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+  ProfileCard,
+  Text,
+  TextVariant,
+} from 'components'
 import { Button, ButtonSize, ButtonVariant } from 'components/Button'
 import {
   ContextMenu,
@@ -20,6 +27,7 @@ export interface IdentityRowProps extends React.HTMLAttributes<HTMLDivElement> {
   variant?: IdentityType
   totalTVL: string
   currency?: CurrencyType
+  id: string
   name: string
   description?: string
   claimLink?: string
@@ -38,9 +46,12 @@ const IdentityRow = ({
   variant = Identity.user,
   totalTVL,
   currency,
+  id,
   name,
+  description,
   avatarSrc,
   link,
+  ipfsLink,
   numPositions,
   className,
   userPosition,
@@ -67,15 +78,35 @@ const IdentityRow = ({
         )}
       >
         <div className="flex items-center">
-          <a href={link}>
-            <IdentityTag
-              variant={variant}
-              imgSrc={avatarSrc}
-              size={IdentityTagSize.md}
+          <HoverCard openDelay={150} closeDelay={150}>
+            <HoverCardTrigger asChild>
+              <a href={link}>
+                <IdentityTag
+                  variant={variant}
+                  imgSrc={avatarSrc}
+                  size={IdentityTagSize.md}
+                >
+                  {name}
+                </IdentityTag>
+              </a>
+            </HoverCardTrigger>
+            <HoverCardContent
+              side="bottom"
+              className="w-full hover-card cursor-default"
+              align="center"
             >
-              {name}
-            </IdentityTag>
-          </a>
+              <div className="flex flex-col gap-4 w-80 max-md:max-w-fit">
+                <ProfileCard
+                  variant={variant}
+                  avatarSrc={avatarSrc ?? ''}
+                  name={name}
+                  id={id ?? ''}
+                  bio={description ?? ''}
+                  ipfsLink={ipfsLink}
+                />
+              </div>
+            </HoverCardContent>
+          </HoverCard>
         </div>
 
         <div className="flex items-center gap-3">

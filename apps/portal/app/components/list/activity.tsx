@@ -24,6 +24,7 @@ import {
   SortColumn,
 } from '@0xintuition/api'
 
+import RemixLink from '@components/remix-link'
 import { stakeModalAtom } from '@lib/state/store'
 import {
   formatBalance,
@@ -32,6 +33,7 @@ import {
   getAtomIpfsLink,
   getAtomLabel,
   getAtomLink,
+  getClaimUrl,
 } from '@lib/utils/misc'
 import { Link } from '@remix-run/react'
 import { BLOCK_EXPLORER_URL, PATHS } from 'app/consts'
@@ -271,66 +273,76 @@ function ActivityItem({
             }
             className="w-full hover:bg-transparent"
           >
-            <Claim
-              size="md"
-              subject={{
-                variant: activity.claim.subject?.is_user
-                  ? Identity.user
-                  : Identity.nonUser,
-                label: getAtomLabel(
-                  activity.claim.subject as IdentityPresenter,
-                ),
-                imgSrc: getAtomImage(
-                  activity.claim.subject as IdentityPresenter,
-                ),
-                id: activity.claim.subject?.identity_id,
-                description: getAtomDescription(
-                  activity.claim.subject as IdentityPresenter,
-                ),
-                ipfsLink: getAtomIpfsLink(
-                  activity.claim.subject as IdentityPresenter,
-                ),
-                link: getAtomLink(activity.claim.subject as IdentityPresenter),
-              }}
-              predicate={{
-                variant: activity.claim.predicate?.is_user
-                  ? Identity.user
-                  : Identity.nonUser,
-                label: getAtomLabel(
-                  activity.claim.predicate as IdentityPresenter,
-                ),
-                imgSrc: getAtomImage(
-                  activity.claim.predicate as IdentityPresenter,
-                ),
-                id: activity.claim.predicate?.identity_id,
-                description: getAtomDescription(
-                  activity.claim.predicate as IdentityPresenter,
-                ),
-                ipfsLink: getAtomIpfsLink(
-                  activity.claim.predicate as IdentityPresenter,
-                ),
-                link: getAtomLink(
-                  activity.claim.predicate as IdentityPresenter,
-                ),
-              }}
-              object={{
-                variant: activity.claim.object?.is_user
-                  ? Identity.user
-                  : Identity.nonUser,
-                label: getAtomLabel(activity.claim.object as IdentityPresenter),
-                imgSrc: getAtomImage(
-                  activity.claim.object as IdentityPresenter,
-                ),
-                id: activity.claim.object?.identity_id,
-                description: getAtomDescription(
-                  activity.claim.object as IdentityPresenter,
-                ),
-                ipfsLink: getAtomIpfsLink(
-                  activity.claim.object as IdentityPresenter,
-                ),
-                link: getAtomLink(activity.claim.object as IdentityPresenter),
-              }}
-            />
+            <Link to={getClaimUrl(activity.claim.vault_id)} prefetch="intent">
+              <Claim
+                size="md"
+                subject={{
+                  variant: activity.claim.subject?.is_user
+                    ? Identity.user
+                    : Identity.nonUser,
+                  label: getAtomLabel(
+                    activity.claim.subject as IdentityPresenter,
+                  ),
+                  imgSrc: getAtomImage(
+                    activity.claim.subject as IdentityPresenter,
+                  ),
+                  id: activity.claim.subject?.identity_id,
+                  description: getAtomDescription(
+                    activity.claim.subject as IdentityPresenter,
+                  ),
+                  ipfsLink: getAtomIpfsLink(
+                    activity.claim.subject as IdentityPresenter,
+                  ),
+                  link: getAtomLink(
+                    activity.claim.subject as IdentityPresenter,
+                  ),
+                  linkComponent: RemixLink,
+                }}
+                predicate={{
+                  variant: activity.claim.predicate?.is_user
+                    ? Identity.user
+                    : Identity.nonUser,
+                  label: getAtomLabel(
+                    activity.claim.predicate as IdentityPresenter,
+                  ),
+                  imgSrc: getAtomImage(
+                    activity.claim.predicate as IdentityPresenter,
+                  ),
+                  id: activity.claim.predicate?.identity_id,
+                  description: getAtomDescription(
+                    activity.claim.predicate as IdentityPresenter,
+                  ),
+                  ipfsLink: getAtomIpfsLink(
+                    activity.claim.predicate as IdentityPresenter,
+                  ),
+                  link: getAtomLink(
+                    activity.claim.predicate as IdentityPresenter,
+                  ),
+                  linkComponent: RemixLink,
+                }}
+                object={{
+                  variant: activity.claim.object?.is_user
+                    ? Identity.user
+                    : Identity.nonUser,
+                  label: getAtomLabel(
+                    activity.claim.object as IdentityPresenter,
+                  ),
+                  imgSrc: getAtomImage(
+                    activity.claim.object as IdentityPresenter,
+                  ),
+                  id: activity.claim.object?.identity_id,
+                  description: getAtomDescription(
+                    activity.claim.object as IdentityPresenter,
+                  ),
+                  ipfsLink: getAtomIpfsLink(
+                    activity.claim.object as IdentityPresenter,
+                  ),
+                  link: getAtomLink(activity.claim.object as IdentityPresenter),
+                  linkComponent: RemixLink,
+                }}
+                isClickable={true}
+              />
+            </Link>
           </ClaimRow>
         )}
       </div>

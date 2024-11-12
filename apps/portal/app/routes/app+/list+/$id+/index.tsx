@@ -24,6 +24,7 @@ import { ErrorPage } from '@components/error-page'
 import { InfoPopover } from '@components/info-popover'
 import { TagsList } from '@components/list/tags'
 import { ListTabIdentityDisplay } from '@components/lists/list-tab-identity-display'
+import RemixLink from '@components/remix-link'
 import SaveListModal from '@components/save-list/save-list-modal'
 import { DataHeaderSkeleton, PaginatedListSkeleton } from '@components/skeleton'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
@@ -217,6 +218,7 @@ export default function ListOverview() {
                       claim.predicate as IdentityPresenter,
                     ),
                     link: getAtomLink(claim.predicate as IdentityPresenter),
+                    linkComponent: RemixLink,
                   }}
                   object={{
                     variant: claim.object?.is_user ? 'user' : 'non-user',
@@ -230,6 +232,7 @@ export default function ListOverview() {
                       claim.object as IdentityPresenter,
                     ),
                     link: getAtomLink(claim.object as IdentityPresenter),
+                    linkComponent: RemixLink,
                   }}
                 />
               </ListHeaderCard>

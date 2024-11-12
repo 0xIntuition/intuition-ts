@@ -9,6 +9,7 @@ import {
 import { DetailInfoCard } from '@components/detail-info-card'
 import { ErrorPage } from '@components/error-page'
 import ReadOnlyBanner from '@components/read-only-banner'
+import RemixLink from '@components/remix-link'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { getClaim } from '@lib/services/claims'
 import { getSpecialPredicate } from '@lib/utils/app'
@@ -147,6 +148,7 @@ export default function ReadOnlyClaimDetails() {
             description: getAtomDescription(claim.subject as IdentityPresenter),
             ipfsLink: getAtomIpfsLink(claim.subject as IdentityPresenter),
             link: getAtomLink(claim.subject as IdentityPresenter),
+            linkComponent: RemixLink,
           }}
           predicate={{
             variant: claim.predicate?.is_user
@@ -160,6 +162,7 @@ export default function ReadOnlyClaimDetails() {
             ),
             ipfsLink: getAtomIpfsLink(claim.predicate as IdentityPresenter),
             link: getAtomLink(claim.predicate as IdentityPresenter),
+            linkComponent: RemixLink,
           }}
           object={{
             variant: claim.object?.is_user ? Identity.user : Identity.nonUser,
@@ -169,6 +172,7 @@ export default function ReadOnlyClaimDetails() {
             description: getAtomDescription(claim.object as IdentityPresenter),
             ipfsLink: getAtomIpfsLink(claim.object as IdentityPresenter),
             link: getAtomLink(claim.object as IdentityPresenter),
+            linkComponent: RemixLink,
           }}
         />
       </div>

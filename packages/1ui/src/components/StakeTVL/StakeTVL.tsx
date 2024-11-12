@@ -63,7 +63,11 @@ const StakeTVL = React.forwardRef<HTMLDivElement, StakeTVLProps>(
         {isClaim && (
           <div className="p-0.5">
             <PieChart
-              variant={PieChartVariant.forVsAgainst}
+              variant={
+                (tvlFor && +tvlFor > 0) || (tvlAgainst && +tvlAgainst > 0)
+                  ? PieChartVariant.forVsAgainst
+                  : PieChartVariant.default
+              }
               size={PieChartSize.sm}
               percentage={stakedForPercentage}
             />

@@ -12,6 +12,7 @@ import {
 } from '@0xintuition/api'
 
 import { ListHeader } from '@components/list/list-header'
+import RemixLink from '@components/remix-link'
 import { stakeModalAtom } from '@lib/state/store'
 import {
   formatBalance,
@@ -139,6 +140,7 @@ export function ClaimsList({
                     claim.subject as IdentityPresenter,
                     readOnly,
                   ),
+                  linkComponent: RemixLink,
                 }}
                 predicate={{
                   variant: claim.predicate?.is_user
@@ -157,6 +159,7 @@ export function ClaimsList({
                     claim.predicate as IdentityPresenter,
                     readOnly,
                   ),
+                  linkComponent: RemixLink,
                 }}
                 object={{
                   variant: claim.object?.is_user
@@ -173,6 +176,7 @@ export function ClaimsList({
                     claim.object as IdentityPresenter,
                     readOnly,
                   ),
+                  linkComponent: RemixLink,
                 }}
                 isClickable={true}
               />
