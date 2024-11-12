@@ -15,7 +15,6 @@ import {
 
 import intuitionIcon from '@assets/intuition-qr-icon.svg'
 import { useCopy } from '@lib/hooks/useCopy'
-import logger from '@lib/utils/logger'
 import QRCodeStyling from '@solana/qr-code-styling'
 import { ClientOnly } from 'remix-utils/client-only'
 
@@ -37,7 +36,6 @@ function createShareQRCode(path: string) {
     width: 256,
     height: 256,
     type: 'svg',
-    // data: `${window.location.origin}${path.replace('/app/', '/readonly/')}`,
     data: getShareableUrl(path),
     dotsOptions: { type: 'classy-rounded', color: '#000000' },
     backgroundOptions: { color: '#ffffff' },
@@ -78,8 +76,6 @@ function ShareQRInner({
 }
 
 function ShareModalContent({ currentPath }: ShareModalProps) {
-  logger('currentPath', currentPath)
-
   const { copy } = useCopy()
 
   const handleCopy = () => {

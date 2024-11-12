@@ -89,7 +89,10 @@ export default function ListDetails() {
   const navigate = useNavigate()
   const handleGoBack = useGoBack({ fallbackRoute: PATHS.EXPLORE_LISTS })
 
-  const fullPath = `${location.pathname}${location.search}`
+  const hasUserParam = location.search.includes('user=')
+  const fullPath = hasUserParam
+    ? `${location.pathname}${location.search}`
+    : `${location.pathname}${location.search}${location.search ? '&' : '?'}user=${userWallet}`
 
   const leftPanel = (
     <div className="flex-col justify-start items-start gap-6 inline-flex max-lg:w-full">

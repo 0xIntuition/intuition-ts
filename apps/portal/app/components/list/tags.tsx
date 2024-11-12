@@ -11,7 +11,6 @@ import { ClaimPresenter, IdentityPresenter, SortColumn } from '@0xintuition/api'
 import { IdentityRow } from '@components/identity/identity-row'
 import { ListHeader } from '@components/list/list-header'
 import { saveListModalAtom } from '@lib/state/store'
-import logger from '@lib/utils/logger'
 import {
   formatBalance,
   getAtomDescription,
@@ -54,8 +53,6 @@ export function TagsList({
     { value: 'Updated At', sortBy: 'UpdatedAt' },
     { value: 'Created At', sortBy: 'CreatedAt' },
   ]
-
-  logger('readonly', readOnly)
 
   const setSaveListModalActive = useSetAtom(saveListModalAtom)
 
