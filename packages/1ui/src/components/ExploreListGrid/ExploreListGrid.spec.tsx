@@ -3,12 +3,12 @@ import React from 'react'
 import { render } from '@testing-library/react'
 import { ListCard } from 'components'
 
-import { ListGrid } from './ListGrid'
+import { ExploreListGrid } from './ExploreListGrid'
 
-describe('ListGrid', () => {
+describe('ExploreListGrid', () => {
   it('should render appropriate elements', () => {
     const { container } = render(
-      <ListGrid>
+      <ExploreListGrid>
         <ListCard
           displayName="Best Crypto Portfolio Trackers"
           imgSrc="path/to/image1.png"
@@ -39,12 +39,12 @@ describe('ListGrid', () => {
             </span>
           )}
         />
-      </ListGrid>,
+      </ExploreListGrid>,
     )
     expect(container).toMatchInlineSnapshot(`
       <div>
         <div
-          class="w-full grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4"
+          class="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 px-4"
         >
           <div
             class="relative flex flex-col min-w-[200px] max-w-[400px] h-auto p-5 bg-primary/5 border border-primary/20 rounded-xl overflow-hidden hover:bg-primary/10 hover:border-primary/50 transition-all duration-300"

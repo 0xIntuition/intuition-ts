@@ -20,7 +20,7 @@ describe('FeaturedListCard', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="relative h-[360px] w-[530px] flex flex-col overflow-hidden gap-3 p-5 text-left bg-primary/5 border border-primary/20 rounded-2xl hover:bg-primary/10 hover:border-primary/50 hover:cursor-pointer transition-all duration-300"
+          class="relative w-[530px] flex flex-col overflow-hidden gap-3 p-5 text-left bg-primary/5 border border-primary/20 rounded-2xl hover:bg-primary/10 hover:border-primary/50 hover:cursor-pointer transition-all duration-300"
         >
           <div>
             <h6
@@ -70,7 +70,7 @@ describe('FeaturedListCard', () => {
                   class="flex h-full w-full items-center justify-center bg-inherit"
                 >
                   <svg
-                    class="text-primary/30 w-[80%] h-[80%] max-w-8 max-h-8"
+                    class="text-primary/30 w-[80%] h-[80%]"
                   >
                     <use
                       href="/src/components/Icon/Icon.sprites.svg#crypto-punk"
@@ -85,7 +85,7 @@ describe('FeaturedListCard', () => {
                   class="flex h-full w-full items-center justify-center bg-inherit"
                 >
                   <svg
-                    class="text-primary/30 w-[80%] h-[80%] max-w-8 max-h-8"
+                    class="text-primary/30 w-[80%] h-[80%]"
                   >
                     <use
                       href="/src/components/Icon/Icon.sprites.svg#crypto-punk"
@@ -110,7 +110,7 @@ describe('FeaturedListCard', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="relative h-[360px] w-[530px] flex flex-col overflow-hidden gap-3 p-5 text-left bg-primary/5 border border-primary/20 rounded-2xl hover:bg-primary/10 hover:border-primary/50 hover:cursor-pointer transition-all duration-300"
+          class="relative w-[530px] flex flex-col overflow-hidden gap-3 p-5 text-left bg-primary/5 border border-primary/20 rounded-2xl hover:bg-primary/10 hover:border-primary/50 hover:cursor-pointer transition-all duration-300"
         >
           <div>
             <h6
@@ -125,16 +125,6 @@ describe('FeaturedListCard', () => {
                 class="text-base font-normal text-secondary/70"
               >
                  identities
-              </div>
-              <div
-                class="text-base font-normal text-secondary/70"
-              >
-                TVL  ETH
-              </div>
-              <div
-                class="text-base font-normal text-secondary/70"
-              >
-                 Holders
               </div>
             </div>
           </div>

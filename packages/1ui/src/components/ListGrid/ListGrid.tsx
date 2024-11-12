@@ -1,47 +1,23 @@
 import * as React from 'react'
 
-import { ListCard, ListCardProps } from 'components'
-
 export interface ListGridProps extends React.HTMLAttributes<HTMLDivElement> {
-  identities?: ListCardProps[]
   children?: React.ReactNode
+  variant?: 'explore' | 'profile'
 }
 
 const ListGrid: React.FC<ListGridProps> = ({
-  identities,
   children,
+  variant = 'profile',
   ...props
 }) => {
   const gridClasses =
-    'w-full grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-8'
+    variant === 'explore'
+      ? 'w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 px-4'
+      : 'w-full grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4'
 
   return (
     <div className={gridClasses} {...props}>
-      {identities
-        ? identities.map((identity, index) => (
-            <ListCard
-              key={index}
-              {...identity}
-              buttonWrapper={(button) => (
-                <span
-                  role="link"
-                  tabIndex={0}
-                  className="w-full"
-                  onClick={() => console.log('View clicked')}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      console.log('View clicked')
-                    }
-                  }}
-                >
-                  {button}
-                </span>
-              )}
-            />
-          ))
-        : React.Children.map(children, (child, index) => (
-            <div key={index}>{child}</div>
-          ))}
+      {children}
     </div>
   )
 }

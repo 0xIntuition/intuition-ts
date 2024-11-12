@@ -6,19 +6,20 @@ import * as Stories from './ListCard.stories'
 
 <Title />
 
-#### A card component for displaying list information with an image, title, and identity count.
+#### A card component for displaying list information with an image, title, identity count, and a wrappable view button.
 
 <Source
   dark
   language="tsx"
   code={`
 import { ListCard } from '@0xintuition/1ui'
+import { Link } from 'your-router-library'
 
 <ListCard
   displayName="My Favorite Claims"
   imgSrc="https://example.com/image.jpg"
   identitiesCount={42}
-  onViewClick={() => console.log('View clicked')}
+  buttonWrapper={(button) => <Link to="/lists/my-favorites">{button}</Link>}
 />
 `} />
 
@@ -33,7 +34,3 @@ import { ListCard } from '@0xintuition/1ui'
 ### Without Image
 
 <Canvas of={Stories.NoImage} sourceState="none" />
-
-### Long Title
-
-<Canvas of={Stories.LongTitle} sourceState="none" />

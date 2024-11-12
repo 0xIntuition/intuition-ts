@@ -4,6 +4,7 @@ import {
   Button,
   ButtonVariant,
   EmptyStateCard,
+  ListCard,
   ListGrid,
 } from '@0xintuition/1ui'
 import { ClaimPresenter, ClaimSortColumn } from '@0xintuition/api'
@@ -15,10 +16,9 @@ import {
   useSearchAndSortParamsHandler,
 } from '@lib/hooks/useSearchAndSortParams'
 import { getListUrl } from '@lib/utils/misc'
-import { useNavigate } from '@remix-run/react'
+import { Link } from '@remix-run/react'
 import { PaginationType } from 'app/types/pagination'
 
-import { ListIdentityCardPortal } from '../lists/list-identity-card-portal'
 import { SortOption } from '../sort-select'
 
 export function ListClaimsList<T extends SortColumnType = ClaimSortColumn>({
@@ -42,7 +42,6 @@ export function ListClaimsList<T extends SortColumnType = ClaimSortColumn>({
   sourceUserAddress?: string
   readOnly?: boolean
 }) {
-  const navigate = useNavigate()
   const defaultOptions: SortOption<ClaimSortColumn>[] = [
     { value: 'Total ETH', sortBy: 'AssetsSum' },
     { value: 'ETH For', sortBy: 'ForAssetsSum' },
@@ -103,34 +102,28 @@ export function ListClaimsList<T extends SortColumnType = ClaimSortColumn>({
           )}
         </div>
         <ListGrid>
-          {uniqueClaimData.map(
-            (claim, index) =>
-              claim &&
-              claim.object && (
-                <ListIdentityCardPortal
-                  key={claim.claim_id || index}
-                  displayName={claim.object.display_name ?? undefined}
-                  imgSrc={claim.object?.image ?? undefined}
-                  identitiesCount={claim.object.tag_count ?? 0}
-                  isSaved={claim.user_assets_for !== '0'}
-                  savedAmount={claim.user_assets_for}
-                  navigateLink={getListUrl(
-                    claim.vault_id,
-                    sourceUserAddress ?? '',
-                    readOnly,
-                  )}
-                  onViewClick={() =>
-                    navigate(
-                      getListUrl(
-                        claim.vault_id,
-                        sourceUserAddress ?? '',
-                        readOnly,
-                      ),
-                    )
-                  }
-                />
-              ),
-          )}
+          {uniqueClaimData
+            .filter((claim) => claim && claim.object)
+            .map((claim, index) => (
+              <ListCard
+                key={claim.claim_id || index}
+                displayName={claim.object?.display_name ?? 'Unknown'}
+                imgSrc={claim.object?.image ?? undefined}
+                identitiesCount={claim.object?.tag_count ?? 0}
+                buttonWrapper={(button) => (
+                  <Link
+                    to={getListUrl(
+                      claim.vault_id,
+                      sourceUserAddress ?? '',
+                      readOnly,
+                    )}
+                    prefetch="intent"
+                  >
+                    {button}
+                  </Link>
+                )}
+              />
+            ))}
         </ListGrid>
         {pagination && pagination.currentPage < pagination.totalPages && (
           <div className="flex justify-center mt-4">
