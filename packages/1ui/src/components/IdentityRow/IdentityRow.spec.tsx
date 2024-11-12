@@ -32,6 +32,7 @@ describe('IdentityRow', () => {
               class="flex items-center"
             >
               <a
+                data-state="closed"
                 href="/identity/1"
               >
                 <button
@@ -150,6 +151,7 @@ describe('IdentityRow', () => {
               class="flex items-center"
             >
               <a
+                data-state="closed"
                 href="/identity/1"
               >
                 <button
