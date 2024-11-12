@@ -8,6 +8,7 @@ interface StakeActionsProps {
   minDeposit: string
   userConviction?: string
   price?: string
+  disabled?: boolean
 }
 
 export default function StakeActions({
@@ -16,15 +17,17 @@ export default function StakeActions({
   minDeposit,
   userConviction,
   price,
+  disabled,
 }: StakeActionsProps) {
   return (
     <div className="flex flex-row items-center justify-center gap-5">
       <Button
         variant="ghost"
-        className={`${action === 'redeem' && 'hidden'}`}
+        className={`${action === 'redeem' && 'hidden'} ${disabled && 'opacity-50'}`}
         onClick={() => {
           setVal(formatUnits(BigInt(minDeposit), 18))
         }}
+        disabled={disabled}
       >
         <Text variant="small">Min</Text>
       </Button>
@@ -38,7 +41,8 @@ export default function StakeActions({
             setVal(maxEth.toString())
           }
         }}
-        className={`${action === 'deposit' && 'hidden'}`}
+        className={`${action === 'deposit' && 'hidden'} ${disabled && 'opacity-50'}`}
+        disabled={disabled}
       >
         <Text variant="small">Max</Text>
       </Button>

@@ -27,7 +27,8 @@ export const transactionReducer = (
   switch (action.type) {
     case 'START_TRANSACTION':
       return { ...state, status: 'idle' }
-
+    case 'INITIAL_DEPOSIT':
+      return { ...state, status: 'initial-deposit' }
     case 'APPROVE_TRANSACTION':
       return { ...state, status: 'awaiting' }
     case 'REVIEW_TRANSACTION':
@@ -66,6 +67,8 @@ export const identityTransactionReducer = (
   switch (action.type) {
     case 'START_TRANSACTION':
       return { ...state, status: 'idle' }
+    case 'INITIAL_DEPOSIT':
+      return { ...state, status: 'initial-deposit' }
     case 'START_IMAGE_UPLOAD':
       return { ...state, status: 'uploading-image' }
     case 'IMAGE_UPLOAD_COMPLETE':

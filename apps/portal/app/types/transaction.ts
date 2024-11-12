@@ -17,8 +17,9 @@ export type BaseTransactionStateType<TStatus> = {
 
 export type TransactionActionType =
   | { type: 'START_TRANSACTION' }
-  | { type: 'APPROVE_TRANSACTION' }
+  | { type: 'INITIAL_DEPOSIT' }
   | { type: 'REVIEW_TRANSACTION' }
+  | { type: 'APPROVE_TRANSACTION' }
   | { type: 'CONFIRM_TRANSACTION' }
   | { type: 'TRANSACTION_PENDING' }
   | { type: 'TRANSACTION_CONFIRMED' }
@@ -40,6 +41,7 @@ export type IdentityTransactionActionType =
       description: string
       externalReference: string
     }
+  | { type: 'INITIAL_DEPOSIT' }
   | { type: 'REVIEW_TRANSACTION' }
   | { type: 'PREPARING_IDENTITY' }
   | { type: 'PUBLISHING_IDENTITY' }

@@ -1,14 +1,23 @@
 import React, { useEffect, useRef, useState } from 'react'
 
 import {
-  Badge,
+  ActivePositionCard,
   Button,
+  ButtonSize,
+  ButtonVariant,
+  DialogFooter,
   Icon,
+  Identity,
+  IdentityTag,
   Input,
   Label,
+  Tabs,
+  TabsList,
+  TabsTrigger,
   Text,
   Textarea,
   TextVariant,
+  TextWeight,
   toast,
 } from '@0xintuition/1ui'
 import { IdentityPresenter } from '@0xintuition/api'
@@ -17,6 +26,9 @@ import CreateIdentityReview from '@components/create-identity/create-identity-re
 import ErrorList from '@components/error-list'
 import { ImageChooser } from '@components/image-chooser'
 import { InfoTooltip } from '@components/info-tooltip'
+import StakeActions from '@components/stake/stake-actions'
+import StakeButton from '@components/stake/stake-button'
+import StakeInput from '@components/stake/stake-input'
 import { TransactionState } from '@components/transaction-state'
 import WrongNetworkButton from '@components/wrong-network-button'
 import {
@@ -34,17 +46,13 @@ import {
   OffChainFetcherData,
   useOffChainFetcher,
 } from '@lib/hooks/useOffChainFetcher'
-import {
-  identityTransactionReducer,
-  initialIdentityTransactionState,
-  useTransactionState,
-} from '@lib/hooks/useTransactionReducer'
 import { createIdentitySchema } from '@lib/schemas/create-identity-schema'
 import { getChainEnvConfig } from '@lib/utils/environment'
 import logger from '@lib/utils/logger'
-import { truncateString } from '@lib/utils/misc'
+import { formatBalance, truncateString } from '@lib/utils/misc'
 import { useFetcher, useNavigate } from '@remix-run/react'
 import { CreateLoaderData } from '@routes/resources+/create'
+import { GetIdentityLoaderData } from '@routes/resources+/get-identity'
 import {
   ACCEPTED_IMAGE_MIME_TYPES,
   CURRENT_ENV,
@@ -59,7 +67,7 @@ import {
   TransactionSuccessAction,
   TransactionSuccessActionType,
 } from 'app/types'
-import { parseUnits, toHex } from 'viem'
+import { Address, decodeEventLog, parseUnits, toHex } from 'viem'
 import { useAccount, usePublicClient, useWalletClient } from 'wagmi'
 
 interface IdentityFormProps {
@@ -67,7 +75,8 @@ interface IdentityFormProps {
   onSuccess?: (identity: IdentityPresenter) => void
   onClose: () => void
   successAction?: TransactionSuccessActionType
-  setIsTransactionStarted: (isTransactionStarted: boolean) => void
+  state: IdentityTransactionStateType
+  dispatch: React.Dispatch<IdentityTransactionActionType>
 }
 
 interface FormState {
@@ -89,14 +98,11 @@ export function IdentityForm({
   onClose,
   onSuccess,
   successAction = TransactionSuccessAction.VIEW,
-  setIsTransactionStarted,
+  state,
+  dispatch,
 }: IdentityFormProps) {
-  const { state, dispatch } = useTransactionState<
-    IdentityTransactionStateType,
-    IdentityTransactionActionType
-  >(identityTransactionReducer, initialIdentityTransactionState)
-
   const { offChainFetcher, lastOffChainSubmission } = useOffChainFetcher()
+  const identityFetcher = useFetcher<GetIdentityLoaderData>()
   const navigate = useNavigate()
   const imageUploadFetcher = useImageUploadFetcher()
   const [imageUploading, setImageUploading] = React.useState(false)
@@ -108,6 +114,8 @@ export function IdentityForm({
   )
   const [imageUploadError, setImageUploadError] = useState<string | null>(null)
   const [initialDeposit, setInitialDeposit] = useState<string>('')
+  const [lastTxHash, setLastTxHash] = useState<string | undefined>(undefined)
+  const [vaultId, setVaultId] = useState<string | undefined>(undefined)
   const [transactionResponseData, setTransactionResponseData] =
     useState<IdentityPresenter | null>(null)
 
@@ -174,8 +182,8 @@ export function IdentityForm({
 
   const { data: walletClient } = useWalletClient()
   const publicClient = usePublicClient()
-  const { address } = useAccount()
   const {
+    receipt: txReceipt,
     writeContractAsync: writeCreateIdentity,
     awaitingWalletConfirmation,
     awaitingOnChainConfirmation,
@@ -304,18 +312,36 @@ export function IdentityForm({
             BigInt(fees.atomCost) +
             parseUnits(initialDeposit === '' ? '0' : initialDeposit, 18),
         })
-
+        dispatch({ type: 'TRANSACTION_PENDING' })
         if (txHash) {
-          dispatch({ type: 'TRANSACTION_PENDING' })
           const receipt = await publicClient.waitForTransactionReceipt({
             hash: txHash,
           })
-          dispatch({
-            type: 'TRANSACTION_COMPLETE',
-            txHash,
-            txReceipt: receipt,
-            identityId: transactionResponseData?.id,
-          })
+          console.log('receipt', receipt)
+          type EventLogArgs = {
+            sender: Address
+            receiver?: Address
+            owner?: Address
+            vaultId: string
+          }
+
+          if (
+            receipt?.logs[0].data &&
+            receipt?.transactionHash !== lastTxHash
+          ) {
+            const decodedLog = decodeEventLog({
+              abi: multivaultAbi,
+              data: receipt?.logs[0].data,
+              topics: receipt?.logs[0].topics,
+            })
+
+            const topics = decodedLog as unknown as {
+              eventName: string
+              args: EventLogArgs
+            }
+            setVaultId(topics.args.vaultId.toString())
+            setLastTxHash(receipt.transactionHash)
+          }
         }
       } catch (error) {
         setLoading(false)
@@ -341,6 +367,35 @@ export function IdentityForm({
       )
     }
   }
+
+  useEffect(() => {
+    console.log('txReceipt useEffect', txReceipt)
+    console.log('vaultId', vaultId)
+    if (txReceipt && vaultId) {
+      identityFetcher.load(`/resources/get-identity?vaultId=${vaultId}`)
+    }
+  }, [txReceipt, vaultId])
+
+  useEffect(() => {
+    console.log('txReceipt', txReceipt)
+    if (txReceipt) {
+      if (identityFetcher.data && 'identity' in identityFetcher.data) {
+        console.log('identityFetcher.data', identityFetcher.data)
+        dispatch({
+          type: 'TRANSACTION_COMPLETE',
+          txHash: txReceipt.transactionHash,
+          txReceipt,
+        })
+      } else if (identityFetcher.data && 'error' in identityFetcher.data) {
+        const errorMessage = `Your identity was created, but we're having trouble fetching its details. Vault ID: ${vaultId}`
+        dispatch({
+          type: 'TRANSACTION_ERROR',
+          error: errorMessage,
+        })
+        toast.error(errorMessage)
+      }
+    }
+  }, [identityFetcher.data, txReceipt, vaultId])
 
   function handleIdentityTxReceiptReceived() {
     if (createdIdentity) {
@@ -422,7 +477,6 @@ export function IdentityForm({
       event.preventDefault()
       const formDataObject = Object.fromEntries(formData.entries())
       setFormState(formDataObject)
-      setIsTransactionStarted(true)
       dispatch({ type: 'REVIEW_TRANSACTION' })
     },
   })
@@ -449,13 +503,24 @@ export function IdentityForm({
     setIdentityImageSrc(null)
     setIdentityImageFile(undefined)
     setInitialDeposit('0')
-    setIsTransactionStarted(false)
     onClose()
   }
 
+  //staking related
+  const [showErrors, setShowErrors] = useState(false)
+  const [validationErrors, setValidationErrors] = useState<string[]>([])
+  const { address } = useAccount()
   const walletBalance = useGetWalletBalance(
     address ?? (wallet as `0x${string}`),
   )
+
+  const handleStakeButtonClick = async () => {
+    if (+initialDeposit > +walletBalance) {
+      setShowErrors(true)
+      return
+    }
+    dispatch({ type: 'REVIEW_TRANSACTION' })
+  }
 
   return (
     <>
@@ -472,11 +537,14 @@ export function IdentityForm({
             <div className="flex flex-col w-full gap-1.5">
               <div className="self-stretch flex-col justify-start items-start flex">
                 <div className="flex w-full items-center justify-between">
-                  <Text variant="caption" className="text-secondary-foreground">
-                    Image
+                  <Text
+                    variant={TextVariant.caption}
+                    weight={TextWeight.medium}
+                  >
+                    Identity Display Picture
                   </Text>
                   <InfoTooltip
-                    title="Image"
+                    title="Identity Display Picture"
                     content={`We've done some image filtering in The Portal, so that
                           we don't begin our journey with a bunch of
                           inappropriate images - though the Intuition Protocol
@@ -484,7 +552,7 @@ export function IdentityForm({
                   />
                 </div>
               </div>
-              <div className="self-stretch h-24 px-9 py-2.5 theme-border bg-primary/10 rounded-md justify-between items-center inline-flex">
+              <div className="self-stretch px-7 py-5 theme-border bg-primary/10 rounded-md justify-between items-center inline-flex">
                 <div className="justify-start items-center gap-[18px] flex">
                   <div className="w-16 h-16 rounded-xl justify-center items-center flex">
                     <ImageChooser
@@ -499,12 +567,18 @@ export function IdentityForm({
                     />
                   </div>
                   <div className="flex-col justify-start items-start inline-flex">
-                    <div className="text-center text-neutral-200 text-sm font-normal leading-tight">
+                    <Text
+                      variant={TextVariant.body}
+                      className="text-center text-secondary/70"
+                    >
                       {truncateString(imageFilename ?? '', 36)}
-                    </div>
-                    <div className="text-center text-neutral-200 text-xs font-normal leading-[18px]">
+                    </Text>
+                    <Text
+                      variant={TextVariant.body}
+                      className="text-center text-secondary/70"
+                    >
                       {imageFilesize}
-                    </div>
+                    </Text>
                   </div>
                 </div>
                 <div className="flex-col justify-end items-end inline-flex">
@@ -521,7 +595,7 @@ export function IdentityForm({
                   >
                     <Icon
                       name="circle-x"
-                      className="h-6 w-6 relative text-neutral-700 hover:text-neutral-600 transition-colors duration-300"
+                      className="h-5 w-5 relative text-secondary/50 hover:text-primary transition-colors duration-300"
                     />
                   </button>
                 </div>
@@ -537,21 +611,24 @@ export function IdentityForm({
             <div className="flex flex-col w-full gap-1.5">
               <div className="self-stretch flex-col justify-start items-start flex">
                 <div className="flex w-full items-center justify-between">
-                  <Text variant="caption" className="text-secondary-foreground">
-                    Display Name
+                  <Text
+                    variant={TextVariant.caption}
+                    weight={TextWeight.medium}
+                  >
+                    Identity Name
                   </Text>
                   <InfoTooltip
-                    title="Display Name"
+                    title="Identity Name"
                     content="This is the display name of your Atom/Identity, and will be a main way that people discover it - so make sure it is good!"
                   />
                 </div>
               </div>
               <Label htmlFor={fields.display_name.id} hidden>
-                Display Name
+                Identity Name
               </Label>
               <Input
                 {...getInputProps(fields.display_name, { type: 'text' })}
-                placeholder="Enter a display name here"
+                placeholder="Enter a identity name here"
                 onChange={(e) => {
                   setFormState((prev) => ({
                     ...prev,
@@ -578,8 +655,11 @@ export function IdentityForm({
             <div className="flex flex-col w-full gap-1.5">
               <div className="self-stretch flex-col justify-start items-start flex">
                 <div className="flex w-full items-center justify-between">
-                  <Text variant="caption" className="text-secondary-foreground">
-                    Description
+                  <Text
+                    variant={TextVariant.caption}
+                    weight={TextWeight.medium}
+                  >
+                    Identity Description
                   </Text>
                   <InfoTooltip
                     title="Description"
@@ -588,11 +668,11 @@ export function IdentityForm({
                 </div>
               </div>
               <Label htmlFor={fields.description.id} hidden>
-                Description
+                Identity Description
               </Label>
               <Textarea
                 {...getInputProps(fields.description, { type: 'text' })}
-                placeholder="Enter description here"
+                placeholder="Enter identity description here"
                 className="theme-border"
                 onChange={(e) =>
                   setFormState((prev) => ({
@@ -610,7 +690,10 @@ export function IdentityForm({
             <div className="flex flex-col w-full gap-1.5">
               <div className="self-stretch flex-col justify-start items-start flex">
                 <div className="flex w-full items-center justify-between">
-                  <Text variant="caption" className="text-secondary-foreground">
+                  <Text
+                    variant={TextVariant.caption}
+                    weight={TextWeight.medium}
+                  >
                     Add Link
                   </Text>
                   <InfoTooltip
@@ -638,85 +721,22 @@ export function IdentityForm({
                 errors={fields.external_reference.errors}
               />
             </div>
-            <div className="flex flex-col w-full gap-1.5">
-              <div className="flex flex-row items-center justify-between mb-1">
-                <div className="inline-flex gap-1">
-                  <Label htmlFor={fields.initial_deposit.id} hidden>
-                    Initial Deposit
-                  </Label>
-                  <div className="self-stretch flex-col justify-start items-start flex">
-                    <div className="flex w-full items-center justify-between gap-1">
-                      <Text
-                        variant="caption"
-                        className="text-secondary-foreground"
-                      >
-                        Initial Deposit
-                      </Text>
-
-                      <InfoTooltip
-                        title="Initial Deposit"
-                        content="You will not receive shares merely by creating this Atom/Identity - so, if you believe in it, and think that it will generate fees, then you will need to deposit on it, to gain ownership of it. You will not be charged an entry fee for depositing on your newly-created Atom/Identity."
-                      />
-                    </div>
-                  </div>
-                </div>
-                <Badge className="bg-transparent">
-                  <Icon name="wallet" className="h-4 w-4" />
-                  {(+walletBalance).toFixed(2)} ETH
-                </Badge>
-              </div>
-              <Label htmlFor={fields.initial_deposit.id} hidden>
-                Initial Deposit
-              </Label>
-              <Input
-                id="position"
-                autoComplete="off"
-                type="text"
-                value={initialDeposit}
-                onChange={(e) => {
-                  e.preventDefault()
-                  let inputValue = e.target.value
-                  if (inputValue.startsWith('.')) {
-                    inputValue = `0${inputValue}`
-                  }
-                  const sanitizedValue = inputValue.replace(/[^0-9.]/g, '')
-                  if (sanitizedValue.split('.').length > 2) {
-                    return
-                  }
-                  setInitialDeposit(sanitizedValue)
-                }}
-                min={'0'}
-                placeholder={'0'}
-                startAdornment="ETH"
-              />
-              <ErrorList
-                id={fields.initial_deposit.errorId}
-                errors={fields.initial_deposit.errors}
-              />
-              <Text
-                variant={TextVariant.caption}
-                className="text-center text-primary/70 mt-1"
-              >
-                Note: You will not be charged an entry fee for this initial
-                deposit.
-              </Text>
-            </div>
-            <div className="mt-auto mx-auto">
+            <div className="mt-auto mx-auto pt-2">
               {isWrongNetwork ? (
                 <WrongNetworkButton />
               ) : (
                 <Button
                   type="button"
-                  variant="primary"
+                  variant={ButtonVariant.primary}
+                  size={ButtonSize.lg}
                   onClick={() => {
                     const result = form.valid && !imageUploadError
                     if (result && !imageUploadError) {
-                      setIsTransactionStarted(true)
-                      dispatch({ type: 'REVIEW_TRANSACTION' })
+                      dispatch({ type: 'INITIAL_DEPOSIT' })
                     }
                   }}
                   disabled={
-                    !address ||
+                    !wallet ||
                     loading ||
                     !formTouched ||
                     ['confirm', 'transaction-pending', 'awaiting'].includes(
@@ -725,11 +745,93 @@ export function IdentityForm({
                   }
                   className="w-40 mx-auto"
                 >
-                  Review
+                  Next
                 </Button>
               )}
             </div>
           </div>
+        ) : state.status === 'initial-deposit' ? (
+          <>
+            <div className="h-full w-full flex-col flex-grow">
+              <div className="items-center justify-center flex flex-row w-full px-10 pb-10">
+                <IdentityTag
+                  imgSrc={reviewIdentity.imageUrl}
+                  variant={Identity.nonUser}
+                >
+                  {reviewIdentity.displayName}
+                </IdentityTag>
+              </div>
+              <div className="w-96 mx-auto">
+                <Tabs defaultValue={'deposit'}>
+                  <TabsList className="relative overflow-hidden">
+                    <div
+                      className={`absolute mx-auto inset-0 bg-[radial-gradient(ellipse_at_bottom_center,_var(--tw-gradient-stops))] from-primary/20 via-primary/5'
+                       to-transparent`}
+                    />
+                    <TabsTrigger
+                      variant="alternate"
+                      value="deposit"
+                      label="Deposit"
+                      onClick={(e) => {
+                        e.preventDefault()
+                      }}
+                      className="relative z-10"
+                    />
+                    <TabsTrigger
+                      variant="alternate"
+                      value="redeem"
+                      label="Redeem"
+                      onClick={(e) => {
+                        e.preventDefault()
+                      }}
+                      disabled={true}
+                      className="relative z-10"
+                    />
+                  </TabsList>
+                </Tabs>
+                <div className="pt-8">
+                  <ActivePositionCard value={Number(formatBalance(0, 18))} />
+                  <div className="rounded-t-lg bg-primary-950/15 px-4 pt-5">
+                    <StakeInput
+                      val={initialDeposit}
+                      setVal={setInitialDeposit}
+                      wallet={wallet ?? ''}
+                      isLoading={loading}
+                      validationErrors={validationErrors}
+                      setValidationErrors={setValidationErrors}
+                      showErrors={showErrors}
+                      setShowErrors={setShowErrors}
+                    />
+                    <div className="flex h-3 flex-col items-start justify-center gap-2 self-stretch" />
+                    <StakeActions
+                      action={'deposit'}
+                      setVal={setInitialDeposit}
+                      minDeposit={'0'}
+                      userConviction={'0'}
+                      price={'0'}
+                      disabled={true}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <DialogFooter>
+              <StakeButton
+                val={'0'}
+                mode={'deposit'}
+                handleAction={handleStakeButtonClick}
+                handleClose={handleClose}
+                dispatch={dispatch}
+                state={state}
+                min_deposit={'0'}
+                walletBalance={walletBalance}
+                user_conviction={'0'}
+                setValidationErrors={setValidationErrors}
+                setShowErrors={setShowErrors}
+                conviction_price={'0'}
+              />
+            </DialogFooter>
+          </>
         ) : state.status === 'review-transaction' ? (
           <div className="h-[600px] flex flex-col">
             <CreateIdentityReview
@@ -745,19 +847,20 @@ export function IdentityForm({
                 <Button
                   form={form.id}
                   type="submit"
-                  variant="primary"
+                  variant={ButtonVariant.primary}
+                  size={ButtonSize.lg}
                   onClick={handleSubmit}
                   disabled={
-                    !address ||
+                    !wallet ||
                     loading ||
                     !formTouched ||
                     ['confirm', 'transaction-pending', 'awaiting'].includes(
                       state.status,
                     )
                   }
-                  className="w-40 mx-auto"
+                  className="w-40 mx-auto mt-10"
                 >
-                  Create Identity
+                  Confirm
                 </Button>
               )}
             </div>
@@ -773,13 +876,12 @@ export function IdentityForm({
                 transactionResponseData && (
                   <Button
                     type="button"
-                    variant="primary"
+                    variant={ButtonVariant.primary}
+                    size={ButtonSize.lg}
                     className="mt-auto w-40"
                     onClick={() => {
                       if (successAction === TransactionSuccessAction.VIEW) {
-                        navigate(
-                          `${PATHS.IDENTITY}/${transactionResponseData.vault_id}`,
-                        )
+                        navigate(`${PATHS.IDENTITY}/${vaultId}`)
                       }
                       handleClose()
                     }}
@@ -793,7 +895,8 @@ export function IdentityForm({
               errorButton={
                 <Button
                   type="button"
-                  variant="primary"
+                  variant={ButtonVariant.primary}
+                  size={ButtonSize.lg}
                   className="mt-auto w-40"
                   onClick={() => {
                     dispatch({ type: 'START_TRANSACTION' })

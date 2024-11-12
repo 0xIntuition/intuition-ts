@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-import { Button } from '@0xintuition/1ui'
+import { Button, ButtonSize } from '@0xintuition/1ui'
 
 import { stakeModalAtom } from '@lib/state/store'
 import { getChainEnvConfig } from '@lib/utils/environment'
@@ -78,7 +78,7 @@ const StakeButton: React.FC<StakeButtonProps> = ({
     } else if (chain?.id !== getChainEnvConfig(CURRENT_ENV).chainId) {
       return 'Switch Network'
     }
-    return `Review ${mode === 'deposit' ? 'Deposit' : 'Redeem'}`
+    return `Review`
   }
 
   const setStakeModalActive = useSetAtom(stakeModalAtom)
@@ -106,6 +106,7 @@ const StakeButton: React.FC<StakeButtonProps> = ({
   return (
     <Button
       variant="primary"
+      size={ButtonSize.lg}
       onClick={(e) => {
         e.preventDefault()
         if (

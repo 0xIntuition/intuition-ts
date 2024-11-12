@@ -23,7 +23,7 @@ export function ImageChooser({
         <label
           htmlFor="image-input"
           className={cn(
-            'group left-0 flex h-16 w-16 w-full cursor-pointer rounded-lg focus-within:ring-2 focus-within:ring-ring border border-solid border-primary/50',
+            'group left-0 flex h-16 w-16 w-full cursor-pointer rounded-lg focus-within:ring-2 focus-within:ring-ring border border-solid border-secondary/50',
             {
               'opacity-40 focus-within:opacity-100 hover:opacity-100':
                 !previewImage,

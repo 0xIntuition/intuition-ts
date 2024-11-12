@@ -1,4 +1,8 @@
-import { ApiError, ClaimPresenter, ClaimsService } from '@0xintuition/api'
+import {
+  ApiError,
+  IdentitiesService,
+  IdentityPresenter,
+} from '@0xintuition/api'
 
 import logger from '@lib/utils/logger'
 import { invariant, sleep } from '@lib/utils/misc'
@@ -7,8 +11,8 @@ import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
 import { NO_WALLET_ERROR } from 'app/consts'
 
-export interface GetClaimLoaderData {
-  claim: ClaimPresenter
+export interface GetIdentityLoaderData {
+  identity: IdentityPresenter
   error?: string
 }
 
@@ -16,7 +20,7 @@ const MAX_RETRIES = 10
 const RETRY_DELAY = 2000 // 2 seconds
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  console.log('get-claim loader called', request.url)
+  console.log('get-identity loader called', request.url)
 
   const wallet = await requireUserWallet(request)
   invariant(wallet, NO_WALLET_ERROR)
@@ -28,24 +32,24 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
     try {
-      console.log(`Attempt ${attempt + 1} to fetch claim`)
-      const claim = await fetchWrapper(request, {
-        method: ClaimsService.getClaimById,
+      console.log(`Attempt ${attempt + 1} to fetch identity`)
+      const identity = await fetchWrapper(request, {
+        method: IdentitiesService.getIdentityById,
         args: { id: vaultId },
       })
-      if (claim) {
-        logger('[get-claim route] claim:', claim)
-        return json({ claim })
+      if (identity) {
+        logger('[get-identity route] identity:', identity)
+        return json({ identity })
       }
-      console.log(`Claim not found on attempt ${attempt + 1}`)
+      console.log(`Identity not found on attempt ${attempt + 1}`)
     } catch (error) {
       console.log(`Error on attempt ${attempt + 1}:`, error)
       if (attempt === MAX_RETRIES - 1) {
         if (error instanceof ApiError && error.status === 404) {
-          return json({ error: 'Claim not found' }, { status: 404 })
+          return json({ error: 'Identity not found' }, { status: 404 })
         }
-        logger('[get-claim route] Error:', error)
-        return json({ error: 'Error fetching claim' }, { status: 500 })
+        logger('[get-identity route] Error:', error)
+        return json({ error: 'Error fetching identity' }, { status: 500 })
       }
     }
 
@@ -55,5 +59,5 @@ export async function loader({ request }: LoaderFunctionArgs) {
     }
   }
 
-  return json({ error: 'Claim not found' }, { status: 404 })
+  return json({ error: 'Identity not found' }, { status: 404 })
 }

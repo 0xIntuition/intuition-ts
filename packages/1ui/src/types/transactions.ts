@@ -1,19 +1,20 @@
 export const TransactionStatus = {
   idle: 'idle',
+  uploadingImage: 'uploading-image',
+  imageUploadComplete: 'image-upload-complete',
   awaiting: 'awaiting',
   inProgress: 'in-progress',
   preparingIdentity: 'preparing-identity',
   publishingIdentity: 'publishing-identity',
-  approveTransaction: 'approve-transaction',
+  initialDeposit: 'initial-deposit',
   reviewTransaction: 'review-transaction',
+  approveTransaction: 'approve-transaction',
   transactionHash: 'hash',
   transactionPending: 'transaction-pending',
   transactionConfirmed: 'transaction-confirmed',
   confirm: 'confirm',
   complete: 'complete',
   error: 'error',
-  uploadingImage: 'uploading-image',
-  imageUploadComplete: 'image-upload-complete',
 } as const
 
 export type TransactionStatusType =

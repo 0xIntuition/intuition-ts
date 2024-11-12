@@ -1,6 +1,8 @@
 import { useState } from 'react'
 
 import {
+  Badge,
+  Button,
   Dialog,
   DialogContent,
   DialogHeader,
@@ -13,11 +15,24 @@ import {
   SelectTrigger,
   SelectValue,
   Text,
+  TextVariant,
+  TextWeight,
 } from '@0xintuition/1ui'
 import { IdentityPresenter } from '@0xintuition/api'
 
 import { CAIP10AccountForm } from '@components/create-identity/create-caip10-account-form'
 import { InfoTooltip } from '@components/info-tooltip'
+import { useGetWalletBalance } from '@lib/hooks/useGetWalletBalance'
+import {
+  identityTransactionReducer,
+  initialIdentityTransactionState,
+  useTransactionState,
+} from '@lib/hooks/useTransactionReducer'
+import {
+  IdentityTransactionActionType,
+  IdentityTransactionStateType,
+} from 'app/types'
+import { useAccount } from 'wagmi'
 
 import { IdentityForm } from './create-identity-form'
 
@@ -36,55 +51,88 @@ export default function CreateIdentityModal({
   onSuccess,
   successAction = 'view',
 }: CreateIdentityModalProps) {
+  const { state, dispatch } = useTransactionState<
+    IdentityTransactionStateType,
+    IdentityTransactionActionType
+  >(identityTransactionReducer, initialIdentityTransactionState)
+
   const options = ['Default', 'Smart Contract']
 
   const [selectedAtomType, setSelectedAtomType] = useState(options[0])
-  const [isTransactionStarted, setIsTransactionStarted] = useState(false)
 
   const handleClose = () => {
     setSelectedAtomType(options[0])
     onClose()
   }
 
+  const { address } = useAccount()
+  const walletBalance = useGetWalletBalance(
+    address ?? (wallet as `0x${string}`),
+  )
+
   return (
     <>
       <Dialog open={open} onOpenChange={handleClose}>
         <DialogContent
           onOpenAutoFocus={(event) => event.preventDefault()}
-          className="flex flex-col max-sm:min-w-0"
+          className="flex flex-col max-sm:min-w-0 min-w-[600px]"
         >
-          {!isTransactionStarted && (
-            <>
-              <DialogHeader className="pb-1">
-                <DialogTitle>
+          <>
+            <DialogHeader>
+              <DialogTitle>
+                <div className="flex items-center justify-between w-full pr-2.5">
                   <div className="text-foreground flex items-center gap-2">
-                    <Icon name={IconName.fingerprint} className="w-6 h-6" />
+                    {state.status !== 'idle' && (
+                      <Button
+                        onClick={() => {
+                          if (state.status === 'review-transaction') {
+                            dispatch({ type: 'INITIAL_DEPOSIT' })
+                          } else if (state.status === 'initial-deposit') {
+                            dispatch({ type: 'START_TRANSACTION' })
+                          } else {
+                            dispatch({ type: 'START_TRANSACTION' })
+                          }
+                        }}
+                        variant="ghost"
+                        size="icon"
+                      >
+                        <Icon name={IconName.arrowLeft} className="h-4 w-4" />
+                      </Button>
+                    )}
                     Create Identity{' '}
                     <InfoTooltip
                       title="Create Identity"
-                      content="You are encouraged to create the best Atom/Identity you can, so that others will use it! As this Identity is interacted with, its shareholders will earn fees - so create a good one, and be the first to stake on it! Please note - you will not be able to change this data later."
+                      content="In Intuition, every thing is given a unique, decentralized digital identifier in the form of an Atom. These &rsquo;Identities&lsquo; serve as conceptual anchors to which we attach and correlate data,experiences, and perceptions."
                       icon={IconName.fingerprint}
                     />
                   </div>
-                </DialogTitle>
-                <Text
-                  variant="caption"
-                  className="text-muted-foreground w-full"
-                >
-                  In Intuition, every thing is given a unique, decentralized
-                  digital identifier in the form of an Atom. These
-                  &rsquo;Identities&lsquo; serve as conceptual anchors to which
-                  we attach and correlate data, experiences, and perceptions.
-                </Text>
-              </DialogHeader>
+                  <Badge className="flex items-center gap-1">
+                    <Icon name="wallet" className="h-3 w-3 text-secondary/50" />
+                    <Text
+                      variant={TextVariant.caption}
+                      className="text-nowrap text-secondary/50"
+                    >
+                      {(+walletBalance).toFixed(2)} ETH
+                    </Text>
+                  </Badge>
+                </div>
+              </DialogTitle>
+              <Text
+                variant={TextVariant.caption}
+                className="text-secondary/50 w-full"
+              >
+                Begin the process of establishing a new digital representation.
+              </Text>
+            </DialogHeader>
+            {state.status === 'idle' && (
               <div className="flex flex-col w-full gap-1.5 mb-5">
                 <div className="self-stretch flex-col justify-start items-start flex">
                   <div className="flex w-full items-center justify-between">
                     <Text
-                      variant="caption"
-                      className="text-secondary-foreground"
+                      variant={TextVariant.caption}
+                      weight={TextWeight.medium}
                     >
-                      Atom Type
+                      Identity Type
                     </Text>
                   </div>
                 </div>
@@ -98,7 +146,7 @@ export default function CreateIdentityModal({
                     }
                   }}
                 >
-                  <SelectTrigger className="w-52 max-lg:w-full">
+                  <SelectTrigger className="w-full">
                     <SelectValue placeholder={selectedAtomType} />
                   </SelectTrigger>
                   <SelectContent>
@@ -113,27 +161,29 @@ export default function CreateIdentityModal({
                   </SelectContent>
                 </Select>
               </div>
-            </>
-          )}
+            )}
+          </>
           {selectedAtomType === 'Smart Contract' ? (
             <CAIP10AccountForm
-              wallet={wallet}
+              state={state}
+              dispatch={dispatch}
+              wallet={address ?? (wallet as `0x${string}`)}
               onClose={onClose}
               onSuccess={(identity) => {
                 onSuccess?.(identity)
               }}
               successAction={successAction}
-              setIsTransactionStarted={setIsTransactionStarted}
             />
           ) : (
             <IdentityForm
-              wallet={wallet}
+              state={state}
+              dispatch={dispatch}
+              wallet={address ?? (wallet as `0x${string}`)}
               onClose={onClose}
               onSuccess={(identity) => {
                 onSuccess?.(identity)
               }}
               successAction={successAction}
-              setIsTransactionStarted={setIsTransactionStarted}
             />
           )}
         </DialogContent>
