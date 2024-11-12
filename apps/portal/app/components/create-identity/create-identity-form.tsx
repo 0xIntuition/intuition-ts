@@ -316,9 +316,6 @@ export function IdentityForm({
             data: receipt?.logs[0].data,
             topics: receipt?.logs[0].topics,
           })
-
-          console.log('decodedLog', decodedLog)
-
           const topics = decodedLog as unknown as {
             eventName: string
             args: { vaultId: string }
