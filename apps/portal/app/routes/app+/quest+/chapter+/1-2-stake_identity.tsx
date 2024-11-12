@@ -291,6 +291,7 @@ export default function Quests() {
         identity={identity}
         userWallet={userWallet}
         contract={identity.contract}
+        vaultId={identity.vault_id}
         vaultDetailsProp={vaultDetails}
         onClose={handleCloseActivityModal}
         onSuccess={handleActivitySuccess}

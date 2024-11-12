@@ -46,7 +46,7 @@ export const stakeModalAtom = atom<{
   mode?: 'deposit' | 'redeem'
   claim?: ClaimPresenter
   identity?: IdentityPresenter
-  vaultId: string | null
+  vaultId: string
   vaultDetails?: VaultDetailsType
 }>({
   isOpen: false,
@@ -56,7 +56,7 @@ export const stakeModalAtom = atom<{
   mode: undefined,
   claim: undefined,
   identity: undefined,
-  vaultId: null,
+  vaultId: '0',
   vaultDetails: undefined,
 })
 

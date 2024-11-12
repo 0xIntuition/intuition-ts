@@ -419,6 +419,7 @@ export default function Quests() {
         claim={claim}
         userWallet={userWallet}
         contract={claim.contract}
+        vaultId={claim.counter_vault_id}
         vaultDetailsProp={vaultDetails}
         onClose={handleCloseActivityModal}
         onSuccess={handleActivitySuccess}

@@ -420,6 +420,7 @@ export default function Quests() {
             ? identities[stakeModalActive.id!]?.identity
             : undefined
         }
+        vaultId={claim.vault_id}
         userWallet={userWallet}
         contract={
           stakeModalActive.modalType === 'identity' && stakeModalActive.id

@@ -400,12 +400,13 @@ export default function SidebarNav({
           setStakeModalActive({
             isOpen: false,
             id: null,
-            vaultId: null,
+            vaultId: '0',
             vaultDetails: undefined,
           })
         }
         identity={stakeModalActive.identity}
         claim={stakeModalActive.claim}
+        vaultId={stakeModalActive.vaultId}
         direction={stakeModalActive.direction}
         userWallet={userObject.wallet}
         contract={MULTIVAULT_CONTRACT_ADDRESS}

@@ -173,20 +173,7 @@ function CreateClaimForm({
         }
         return 2000
       },
-      select: (data) => ({
-        claim: {
-          id: data.triple?.id,
-          vault_id: data.triple?.vaultId,
-          contract: data.triple?.vault?.id,
-          counter_vault_id: data.triple?.counterVaultId,
-          subject: data.triple?.subject,
-          predicate: data.triple?.predicate,
-          object: data.triple?.object,
-          created_at: data.triple?.blockTimestamp,
-          updated_at: data.triple?.blockTimestamp,
-        },
-        queryKey: ['GetTriple', { id: vaultId ? parseFloat(vaultId) : 0 }],
-      }),
+      queryKey: ['GetTriple', { id: vaultId ? parseFloat(vaultId) : 0 }],
     },
   )
 
