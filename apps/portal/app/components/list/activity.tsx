@@ -228,7 +228,7 @@ function ActivityItem({
                 modalType: 'identity',
                 isOpen: true,
                 identity: activity.identity ?? undefined,
-                vaultId: activity.identity?.vault_id ?? null,
+                vaultId: activity.identity?.vault_id ?? '0',
               }))
             }
             className="w-full hover:bg-transparent"
@@ -257,7 +257,7 @@ function ActivityItem({
                 direction: ClaimPosition.claimFor,
                 isOpen: true,
                 claim: activity.claim ?? undefined,
-                vaultId: activity.claim?.vault_id ?? null,
+                vaultId: activity.claim?.vault_id ?? '0',
               }))
             }
             onStakeAgainstClick={() =>
@@ -268,7 +268,7 @@ function ActivityItem({
                 direction: ClaimPosition.claimAgainst,
                 isOpen: true,
                 claim: activity.claim ?? undefined,
-                vaultId: activity.claim?.counter_vault_id ?? null,
+                vaultId: activity.claim?.counter_vault_id ?? '0',
               }))
             }
             className="w-full hover:bg-transparent"

@@ -112,7 +112,7 @@ export function TagsList({
                       modalType: 'identity',
                       isOpen: true,
                       identity: identity ?? undefined,
-                      vaultId: identity?.vault_id ?? null,
+                      vaultId: identity?.vault_id ?? '0',
                     }))
                   }
                   className={`w-full hover:bg-transparent ${readOnly ? '' : 'pr-0'}`}
