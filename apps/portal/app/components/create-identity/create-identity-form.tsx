@@ -59,7 +59,7 @@ import {
   TransactionSuccessAction,
   TransactionSuccessActionType,
 } from 'app/types'
-import { parseUnits, toHex } from 'viem'
+import { decodeEventLog, parseUnits, toHex } from 'viem'
 import { useAccount, usePublicClient, useWalletClient } from 'wagmi'
 
 interface IdentityFormProps {
@@ -108,6 +108,7 @@ export function IdentityForm({
   )
   const [imageUploadError, setImageUploadError] = useState<string | null>(null)
   const [initialDeposit, setInitialDeposit] = useState<string>('')
+  const [vaultId, setVaultId] = useState<string | undefined>(undefined)
   const [transactionResponseData, setTransactionResponseData] =
     useState<IdentityPresenter | null>(null)
 
@@ -310,6 +311,20 @@ export function IdentityForm({
           const receipt = await publicClient.waitForTransactionReceipt({
             hash: txHash,
           })
+          const decodedLog = decodeEventLog({
+            abi: multivaultAbi,
+            data: receipt?.logs[0].data,
+            topics: receipt?.logs[0].topics,
+          })
+
+          console.log('decodedLog', decodedLog)
+
+          const topics = decodedLog as unknown as {
+            eventName: string
+            args: { vaultId: string }
+          }
+
+          setVaultId(topics.args.vaultId.toString())
           dispatch({
             type: 'TRANSACTION_COMPLETE',
             txHash,
@@ -777,9 +792,7 @@ export function IdentityForm({
                     className="mt-auto w-40"
                     onClick={() => {
                       if (successAction === TransactionSuccessAction.VIEW) {
-                        navigate(
-                          `${PATHS.IDENTITY}/${transactionResponseData.vault_id}`,
-                        )
+                        navigate(`${PATHS.IDENTITY}/${vaultId}`)
                       }
                       handleClose()
                     }}
