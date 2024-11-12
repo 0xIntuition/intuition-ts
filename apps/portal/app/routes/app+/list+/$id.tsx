@@ -92,7 +92,7 @@ export default function ListDetails() {
   const hasUserParam = location.search.includes('user=')
   const fullPath = hasUserParam
     ? `${location.pathname}${location.search}`
-    : `${location.pathname}${location.search}${location.search ? '&' : '?'}user=${userWallet}`
+    : `${location.pathname}${location.search}${location.search ? '&' : '?'}user=${userWallet}&tab=additional`
 
   const leftPanel = (
     <div className="flex-col justify-start items-start gap-6 inline-flex max-lg:w-full">
