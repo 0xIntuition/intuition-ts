@@ -20,7 +20,9 @@ import {
   TableHead,
   TableHeader,
   TableRow,
+  Text,
   Textarea,
+  TextVariant,
   Tooltip,
   TooltipContent,
   TooltipTrigger,
@@ -28,9 +30,11 @@ import {
 
 import { useBatchCreateAtom } from '@client/useBatchCreateAtom'
 import { useBatchCreateTriple } from '@client/useBatchCreateTriple'
+import CsvUploader from '@components/csv-uploader'
 import { ProgressModal } from '@components/progress-modal'
 import { ProofreadModal } from '@components/proofread-modal'
 import { Progress } from '@components/ui/progress'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@components/ui/tabs'
 import {
   BatchAtomsRequest,
   checkAndFilterURIs,
@@ -75,10 +79,15 @@ import { motion } from 'framer-motion'
 import {
   CircleEllipsis,
   CloudCog,
+  FileText,
   Loader2,
   Minus,
   Plus,
   Save,
+  Send,
+  Shapes,
+  Tag,
+  Upload,
 } from 'lucide-react'
 import { Thing, WithContext } from 'schema-dts'
 
@@ -323,14 +332,18 @@ type FormatChangeDialog = {
 }
 
 // Add this type and constant before the CSVEditor component
-type ViewTab = 'atoms' | 'tagging'
+type ViewTab = 'select' | 'upload' | 'publish' | 'tag'
 
 const tabs = [
-  { id: 'atoms' as ViewTab, label: 'Atoms' },
-  { id: 'tagging' as ViewTab, label: 'Tagging' },
+  { id: 'select', label: 'Select Type', icon: Shapes, cta: 'Select Type' },
+  { id: 'upload', label: 'Upload', icon: Upload, cta: 'Select Files' },
+  { id: 'publish', label: 'Publish', icon: Send, cta: 'Go Live' },
+  { id: 'tag', label: 'Tag', icon: Tag, cta: 'Add Tags' },
 ]
 
 export default function CSVEditor() {
+  const [file, setFile] = useState<File | null>(null)
+  const [activeTab, setActiveTab] = useState<ViewTab>('select')
   const [selectedType, setSelectedType] = useState<AtomDataTypeKey>('CSV')
 
   // State variables for managing CSV data, UI interactions, and atom-related operations
@@ -538,17 +551,12 @@ export default function CSVEditor() {
       newFormat: null,
     })
 
-  // Update loadCSV to use the format change dialog
-  const loadCSV = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]
-    if (!file) {
-      return
-    }
-
+  // Update loadCSV to take a File directly
+  const loadCSV = async (file: File) => {
     const text = await file.text()
     const headers = text.split('\n')[0].split(',')
     const detectedType = detectAtomDataType(headers)
-    const rows = await parseCsv(new File([text], file.name), detectedType)
+    const rows = await parseCsv(file, detectedType)
 
     if (detectedType !== selectedType && isCSVDataModified) {
       setFormatChangeDialog({
@@ -572,6 +580,16 @@ export default function CSVEditor() {
         setBatchCreateAtomSelectedType(detectedType)
       }
       processLoadedData(rows, detectedType)
+    }
+  }
+
+  // Update the file input handler
+  const handleFileInput = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const selectedFile = event.target.files?.[0]
+    if (selectedFile) {
+      await loadCSV(selectedFile)
     }
   }
 
@@ -1168,450 +1186,285 @@ export default function CSVEditor() {
     setFormatChangeDialog({ isOpen: false, newFormat: null })
   }
 
-  // Add this state near the top of your other state declarations
-  const [activeTab, setActiveTab] = useState<ViewTab>('atoms')
-
-  // Update the return statement to include the tabs and conditional rendering
   return (
     <>
-      {/* Animated Tabs */}
-      <div className="bg-gray-800 p-4 mb-4">
-        <div className="flex space-x-1">
-          {tabs.map((tab) =>
-            (tooltipsEnabled ? (
-              <Tooltip key={tab.id}>
-                <TooltipTrigger asChild>
-                  <button
-                    onClick={() => setActiveTab(tab.id)}
-                    className={`${
-                      activeTab === tab.id ? '' : 'hover:text-white/60'
-                    } relative rounded-full px-3 py-1.5 text-sm font-medium text-white outline-sky-400 transition focus-visible:outline-2 w-24 text-center`}
-                    style={{
-                      WebkitTapHighlightColor: 'transparent',
-                    }}
-                  >
-                    {activeTab === tab.id && (
-                      <motion.span
-                        layoutId="bubble"
-                        className="absolute inset-0 z-10 bg-white mix-blend-difference"
-                        style={{ borderRadius: 9999 }}
-                        transition={{
-                          type: 'spring',
-                          bounce: 0.2,
-                          duration: 0.6,
-                        }}
-                      />
-                    )}
-                    {tab.label}
-                  </button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  {getTooltip(
-                    tab.id === 'atoms'
-                      ? TooltipKey.ATOMS_TAB
-                      : TooltipKey.TAGGING_TAB,
-                  )}
-                </TooltipContent>
-              </Tooltip>
-            ) : (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`${
-                  activeTab === tab.id ? '' : 'hover:text-white/60'
-                } relative rounded-full px-3 py-1.5 text-sm font-medium text-white outline-sky-400 transition focus-visible:outline-2 w-24 text-center`}
-                style={{
-                  WebkitTapHighlightColor: 'transparent',
-                }}
-              >
-                {activeTab === tab.id && (
-                  <motion.span
-                    layoutId="bubble"
-                    className="absolute inset-0 z-10 bg-white mix-blend-difference"
-                    style={{ borderRadius: 9999 }}
-                    transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
-                  />
-                )}
+      <div className="container mx-auto p-0 theme-border rounded-lg my-4">
+        <Tabs
+          value={activeTab}
+          onValueChange={(value) => setActiveTab(value as ViewTab)}
+          className="w-full"
+        >
+          <TabsList className="grid w-full grid-cols-4 rounded-b-none">
+            {tabs.map((tab, index) => (
+              <TabsTrigger key={tab.id} value={tab.id} className="relative">
+                <span className="absolute top-0 left-0 w-6 h-6 flex items-center justify-center bg-primary text-primary-foreground rounded-full text-xs font-bold -translate-x-1/2 -translate-y-1/2">
+                  {index + 1}
+                </span>
                 {tab.label}
-              </button>
-            )),
-          )}
-        </div>
-      </div>
-
-      {/* Main content */}
-      <div className="container mx-auto p-4 space-y-6 relative">
-        {/* Atoms View Content */}
-        {activeTab === 'atoms' && (
-          <>
-            {/* File input */}
-            <input
-              type="file"
-              ref={fileInputRef}
-              onChange={loadCSV}
-              style={{ display: 'none' }}
-              accept=".csv"
-            />
-
-            {/* Atoms View Buttons */}
-            <div className="flex space-x-4 h-8 mt-2">
-              {tooltipsEnabled ? (
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button onClick={() => fileInputRef.current?.click()}>
-                      Load CSV
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    {getTooltip(TooltipKey.LOAD_CSV)}
-                  </TooltipContent>
-                </Tooltip>
-              ) : (
-                <Button onClick={() => fileInputRef.current?.click()}>
-                  Load CSV
-                </Button>
-              )}
-
-              {tooltipsEnabled ? (
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button onClick={addNewRow} disabled={isLoading}>
-                      {isLoading ? (
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                      ) : (
-                        <Plus className="h-4 w-4" />
-                      )}
-                      Add New Row
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    {getTooltip(TooltipKey.ADD_ROW)}
-                  </TooltipContent>
-                </Tooltip>
-              ) : (
-                <Button onClick={addNewRow} disabled={isLoading}>
-                  {isLoading ? (
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                  ) : (
-                    <Plus className="h-4 w-4" />
-                  )}
-                  Add New Row
-                </Button>
-              )}
-
-              {tooltipsEnabled ? (
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      onClick={deleteSelectedRows}
-                      disabled={selectedRows.length === 0 || isLoading}
-                    >
-                      {isLoading ? (
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                      ) : (
-                        <Minus className="h-4 w-4" />
-                      )}
-                      Delete Selected Row{selectedRows.length > 1 ? 's' : ''}
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    {getTooltip(TooltipKey.DELETE_ROWS)}
-                  </TooltipContent>
-                </Tooltip>
-              ) : (
-                <Button
-                  onClick={deleteSelectedRows}
-                  disabled={selectedRows.length === 0 || isLoading}
+              </TabsTrigger>
+            ))}
+          </TabsList>
+          <TabsContent value="select" className="p-5">
+            <div className="space-y-5">
+              <div className="space-y-2">
+                <Text variant={TextVariant.headline}>Select Data Type</Text>
+                <Text
+                  variant={TextVariant.body}
+                  className="text-muted-foreground"
                 >
-                  {isLoading ? (
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                  ) : (
-                    <Minus className="h-4 w-4" />
-                  )}
-                  Delete Selected Row{selectedRows.length > 1 ? 's' : ''}
-                </Button>
-              )}
-
-              {tooltipsEnabled ? (
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      onClick={handlePublishAtoms}
-                      disabled={selectedRows.length === 0 || isLoading}
+                  To start, select the type of atom data you are uploading. Use{' '}
+                  {'<Thing>'} for atom with metadata, or CAIP-10 for a smart
+                  contract, or URI for a raw URI (advanced). Refer to{' '}
+                  <a href="#" target="_blank" className="underline">
+                    documentation
+                  </a>{' '}
+                  for more details.
+                </Text>
+              </div>
+              <div className="">
+                <div className="flex items-center mb-4">
+                  <div className="space-y-2">
+                    <Select
+                      value={selectedType}
+                      onValueChange={handleFormatChange}
                     >
-                      {isLoading ? 'Processing...' : 'Publish Selected Atoms'}
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    {getTooltip(TooltipKey.PUBLISH_ATOMS)}
-                  </TooltipContent>
-                </Tooltip>
-              ) : (
+                      <SelectTrigger className="w-[180px]">
+                        <SelectValue placeholder="Select type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {Object.entries(atomDataTypes).map(([key, type]) => (
+                          <SelectItem key={key} value={key}>
+                            {type.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+              </div>
+              <div className="flex justify-end">
                 <Button
-                  onClick={handlePublishAtoms}
-                  disabled={selectedRows.length === 0 || isLoading}
+                  onClick={() => setActiveTab('upload')}
+                  disabled={!selectedType}
                 >
-                  {isLoading ? 'Processing...' : 'Publish Selected Atoms'}
+                  Continue
                 </Button>
-              )}
-
-              {tooltipsEnabled ? (
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button onClick={saveCSV} disabled={!isCSVDataModified}>
-                      <Save className="h-4 w-4" /> Save CSV
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    {getTooltip(TooltipKey.SAVE_CSV)}
-                  </TooltipContent>
-                </Tooltip>
-              ) : (
-                <Button onClick={saveCSV} disabled={!isCSVDataModified}>
-                  <Save className="h-4 w-4" /> Save CSV
-                </Button>
-              )}
+              </div>
             </div>
+          </TabsContent>
+          <TabsContent value="upload" className="p-5">
+            <div className="space-y-5">
+              <div className="space-y-2">
+                <Text variant={TextVariant.headline}>Upload CSV</Text>
+                <Text
+                  variant={TextVariant.body}
+                  className="text-muted-foreground"
+                >
+                  Upload a CSV file to begin. Once the file is uploaded, we will
+                  will automatically perform some basic proofreading. <br />
+                  Refer to{' '}
+                  <a href="#" target="_blank" className="underline">
+                    documentation
+                  </a>{' '}
+                  for formatting requirements.
+                </Text>
+              </div>
+              <CsvUploader
+                file={file}
+                setFile={setFile}
+                onFileChange={loadCSV}
+              />
+              <div className="flex justify-end">
+                <Button
+                  onClick={() => setActiveTab('publish')}
+                  disabled={!file}
+                >
+                  Continue
+                </Button>
+              </div>
+            </div>
+          </TabsContent>
+          <TabsContent value="publish" className="p-5">
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Text variant={TextVariant.headline}>Publish Atoms</Text>
+                <Text
+                  variant={TextVariant.body}
+                  className="text-muted-foreground"
+                >
+                  Begin the process by uploading atoms to Intuition.
+                  Pre-existing atoms will automatically be omitted from
+                  publishing. <br />
+                  Refer to{' '}
+                  <a href="#" target="_blank" className="underline">
+                    documentation
+                  </a>{' '}
+                  for more details.
+                </Text>
+              </div>
+              <div className="border border-dashed border-warning/30 rounded-lg p-6 text-center text-warning bg-warning/15">
+                Placeholder for validation
+              </div>
+              <div className="flex justify-end">
+                {tooltipsEnabled ? (
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        onClick={handlePublishAtoms}
+                        disabled={selectedRows.length === 0 || isLoading}
+                      >
+                        {isLoading ? 'Processing...' : 'Publish Selected Atoms'}
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      {getTooltip(TooltipKey.PUBLISH_ATOMS)}
+                    </TooltipContent>
+                  </Tooltip>
+                ) : (
+                  <Button
+                    onClick={handlePublishAtoms}
+                    disabled={selectedRows.length === 0 || isLoading}
+                  >
+                    {isLoading ? 'Processing...' : 'Publish Selected Atoms'}
+                  </Button>
+                )}
+              </div>
+            </div>
+          </TabsContent>
+          <TabsContent value="tag" className="p-5">
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Text variant={TextVariant.headline}>Tag Atoms</Text>
+                <Text
+                  variant={TextVariant.body}
+                  className="text-muted-foreground"
+                >
+                  Organize your published atoms by adding tags via triples. The
+                  tag atoms must be published first, and the tag must be
+                  created.
+                  <br />
+                  Refer to{' '}
+                  <a href="#" target="_blank" className="underline">
+                    documentation
+                  </a>{' '}
+                  for more details.
+                </Text>
+              </div>
+              <>
+                {/* Move buttons to top */}
 
-            {/* Progress bar */}
-            {isLoading && <Progress value={undefined} className="w-full" />}
+                {/* Tag status indicator */}
+                <div className="flex items-center space-x-2 mt-4">
+                  {isCheckingTag ? (
+                    <Loader2 className="animate-spin text-blue-500 w-6 h-6" />
+                  ) : tagExists ? (
+                    tooltipsEnabled ? (
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <CloudCog className="text-blue-500 w-6 h-6" />
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          {getTooltip(TooltipKey.TAG_LIVE)}
+                        </TooltipContent>
+                      </Tooltip>
+                    ) : (
+                      <CloudCog className="text-blue-500 w-6 h-6" />
+                    )
+                  ) : isCheckingTag === false ? (
+                    tooltipsEnabled ? (
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <CircleEllipsis className="text-green-500 w-6 h-6" />
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          {getTooltip(TooltipKey.TAG_NOT_PUBLISHED)}
+                        </TooltipContent>
+                      </Tooltip>
+                    ) : (
+                      <CircleEllipsis className="text-green-500 w-6 h-6" />
+                    )
+                  ) : null}
+                </div>
 
-            {/* CSV data table */}
-            {csvData.length > 0 && (
-              <div className="mt-4">
-                <div className="flex items-center space-x-2 mb-4">
+                {/* Tag input fields */}
+                <div className="grid grid-cols-2 gap-4 mt-4">
+                  {Object.keys(newTag).map((key) => (
+                    <div key={key}>
+                      <label
+                        htmlFor={key}
+                        className="block text-sm font-medium text-gray-700"
+                      >
+                        {key}
+                      </label>
+                      <Input
+                        id={key}
+                        value={newTag[key]}
+                        onChange={(e) =>
+                          setNewTag((prev) => ({
+                            ...prev,
+                            [key]: e.target.value,
+                          }))
+                        }
+                        disabled={key === '@context' || key === '@type'}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </>
+              <div className="flex justify-end">
+                <div className="flex space-x-4 h-8 mt-2">
                   {tooltipsEnabled ? (
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        <div className="flex items-center space-x-2">
-                          <span className="text-sm font-medium">Type:</span>
-                          <Select
-                            value={selectedType}
-                            onValueChange={handleFormatChange}
-                          >
-                            <SelectTrigger className="w-[180px]">
-                              <SelectValue placeholder="Select type" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {Object.entries(atomDataTypes).map(
-                                ([key, type]) => (
-                                  <SelectItem key={key} value={key}>
-                                    {type.name}
-                                  </SelectItem>
-                                ),
-                              )}
-                            </SelectContent>
-                          </Select>
-                        </div>
+                        <Button
+                          className="h-8"
+                          onClick={handleCreateTag}
+                          disabled={tagExists}
+                        >
+                          Create Tag
+                        </Button>
                       </TooltipTrigger>
                       <TooltipContent>
-                        {getTooltip(TooltipKey.ATOM_TYPE)}
+                        {getTooltip(TooltipKey.CREATE_TAG)}
                       </TooltipContent>
                     </Tooltip>
                   ) : (
-                    <div className="flex items-center space-x-2">
-                      <span className="text-sm font-medium">Type:</span>
-                      <Select
-                        value={selectedType}
-                        onValueChange={handleFormatChange}
-                      >
-                        <SelectTrigger className="w-[180px]">
-                          <SelectValue placeholder="Select type" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {Object.entries(atomDataTypes).map(([key, type]) => (
-                            <SelectItem key={key} value={key}>
-                              {type.name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
+                    <Button
+                      className="h-8"
+                      onClick={handleCreateTag}
+                      disabled={tagExists}
+                    >
+                      Create Tag
+                    </Button>
                   )}
-                </div>
-                <div className="overflow-x-auto">
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead className="w-8"></TableHead>{' '}
-                        {/* New column for checkmark */}
-                        {csvData[0].map((header, index) => (
-                          <TableHead
-                            key={index}
-                            className={`cursor-pointer hover:bg-gray-100 ${
-                              header === '@context'
-                                ? 'w-40'
-                                : header === '@type'
-                                  ? 'w-24'
-                                  : header === 'name'
-                                    ? 'w-48'
-                                    : header === 'image'
-                                      ? 'w-64'
-                                      : ''
-                            }`}
-                            onClick={() => handleSort(index)}
-                          >
-                            <div className="flex items-center space-x-2">
-                              <span>{header}</span>
-                              {sortState.column === index && (
-                                <span>
-                                  {sortState.direction === 'asc' ? '▲' : '▼'}
-                                </span>
-                              )}
-                            </div>
-                          </TableHead>
-                        ))}
-                        <TableHead
-                          className="cursor-pointer hover:bg-gray-100 w-16"
-                          onClick={toggleAllRows}
+                  {tooltipsEnabled ? (
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          className="h-8"
+                          onClick={handleCreateAndTagAtoms}
+                          disabled={
+                            selectedRows.length === 0 ||
+                            !tagExists ||
+                            isTagging ||
+                            navigation.state === 'submitting'
+                          }
                         >
-                          <div className="flex items-center space-x-2">
-                            <Checkbox
-                              checked={
-                                selectedRows.length === csvData.length - 1
-                              }
-                              onCheckedChange={toggleAllRows}
-                              className="w-4 h-4"
-                            />
-                          </div>
-                        </TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {(sortedIndices.length > 0
-                        ? sortedIndices
-                        : csvData.slice(1).map((_, i) => i + 1)
-                      ).map((rowIndex, displayIndex) => (
-                        <TableRow key={rowIndex}>
-                          <TableCell className="w-8 p-0">
-                            {loadingRows.has(rowIndex - 1) ? (
-                              <Loader2 className="animate-spin text-blue-500 w-6 h-6" />
-                            ) : existingAtoms.has(rowIndex - 1) ? (
-                              tooltipsEnabled ? (
-                                <Tooltip>
-                                  <TooltipTrigger asChild>
-                                    <CloudCog className="text-blue-500 w-6 h-6" />
-                                  </TooltipTrigger>
-                                  <TooltipContent>
-                                    {getTooltip(TooltipKey.ATOM_LIVE)}
-                                  </TooltipContent>
-                                </Tooltip>
-                              ) : (
-                                <CloudCog className="text-blue-500 w-6 h-6" />
-                              )
-                            ) : loadingRows.has(rowIndex - 1) === false ? (
-                              tooltipsEnabled ? (
-                                <Tooltip>
-                                  <TooltipTrigger asChild>
-                                    <CircleEllipsis className="text-green-500 w-6 h-6" />
-                                  </TooltipTrigger>
-                                  <TooltipContent>
-                                    {getTooltip(TooltipKey.ATOM_NOT_PUBLISHED)}
-                                  </TooltipContent>
-                                </Tooltip>
-                              ) : (
-                                <CircleEllipsis className="text-green-500 w-6 h-6" />
-                              )
-                            ) : null}
-                          </TableCell>
-                          {csvData[rowIndex].map((cell, cellIndex) => (
-                            <TableCell
-                              key={cellIndex}
-                              className={`p-0 ${
-                                csvData[0][cellIndex] === '@context'
-                                  ? 'w-40'
-                                  : csvData[0][cellIndex] === '@type'
-                                    ? 'w-24'
-                                    : csvData[0][cellIndex] === 'name'
-                                      ? 'w-48'
-                                      : csvData[0][cellIndex] === 'image'
-                                        ? 'w-64'
-                                        : ''
-                              } ${
-                                cellHighlights.some(
-                                  (highlight) =>
-                                    highlight.rowIndex === displayIndex &&
-                                    highlight.cellIndex === cellIndex,
-                                )
-                                  ? 'border-yellow-400 border-2'
-                                  : ''
-                              }`}
-                            >
-                              <div className="flex items-center">
-                                <Textarea
-                                  value={cell}
-                                  onChange={(e) =>
-                                    handleCellEdit(
-                                      rowIndex,
-                                      cellIndex,
-                                      e.target.value,
-                                    )
-                                  }
-                                  onFocus={handleFocus}
-                                  onBlur={(e) =>
-                                    handleCellBlur(e, rowIndex, cellIndex)
-                                  }
-                                  onPaste={(e) =>
-                                    handleCellPaste(e, rowIndex, cellIndex)
-                                  }
-                                  placeholder={
-                                    !cell &&
-                                    atomDataTypes[selectedType]
-                                      .defaultDescriptions[
-                                      csvData[0][cellIndex]
-                                    ]
-                                      ? atomDataTypes[selectedType]
-                                          .defaultDescriptions[
-                                          csvData[0][cellIndex]
-                                        ]
-                                      : ''
-                                  }
-                                  className={`w-full border-none focus:outline-none focus:ring-0 resize-none overflow-hidden h-8 ${
-                                    !cell ? 'text-gray-400 italic' : ''
-                                  }`}
-                                  readOnly={
-                                    csvData[0][cellIndex] === '@context' ||
-                                    csvData[0][cellIndex] === '@type'
-                                  }
-                                />
-                                {csvData[0][cellIndex] === 'image' &&
-                                  thumbnails[rowIndex] && (
-                                    <img
-                                      src={thumbnails[rowIndex]}
-                                      alt="Thumbnail"
-                                      className="w-8 h-8 object-cover ml-2 flex-shrink-0"
-                                    />
-                                  )}
-                              </div>
-                            </TableCell>
-                          ))}
-                          <TableCell className="w-16">
-                            <Checkbox
-                              checked={selectedRows.includes(rowIndex - 1)}
-                              onCheckedChange={() =>
-                                toggleRowSelection(rowIndex - 1)
-                              }
-                              className="w-4 h-4"
-                            />
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </div>
-              </div>
-            )}
-          </>
-        )}
-
-        {/* Tagging View Content */}
-        {activeTab === 'tagging' && (
-          <>
-            {/* Move buttons to top */}
-            <div className="flex space-x-4 h-8 mt-2">
-              {tooltipsEnabled ? (
-                <Tooltip>
-                  <TooltipTrigger asChild>
+                          {isTagging || navigation.state === 'submitting' ? (
+                            <>
+                              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                              Tagging...
+                            </>
+                          ) : (
+                            getCreateTagButtonText()
+                          )}
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        {getTooltip(TooltipKey.TAG_ATOMS)}
+                      </TooltipContent>
+                    </Tooltip>
+                  ) : (
                     <Button
                       className="h-8"
                       onClick={handleCreateAndTagAtoms}
@@ -1631,118 +1484,271 @@ export default function CSVEditor() {
                         getCreateTagButtonText()
                       )}
                     </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    {getTooltip(TooltipKey.TAG_ATOMS)}
-                  </TooltipContent>
-                </Tooltip>
-              ) : (
-                <Button
-                  className="h-8"
-                  onClick={handleCreateAndTagAtoms}
-                  disabled={
-                    selectedRows.length === 0 ||
-                    !tagExists ||
-                    isTagging ||
-                    navigation.state === 'submitting'
-                  }
-                >
-                  {isTagging || navigation.state === 'submitting' ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Tagging...
-                    </>
-                  ) : (
-                    getCreateTagButtonText()
                   )}
-                </Button>
-              )}
-
-              {tooltipsEnabled ? (
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      className="h-8"
-                      onClick={handleCreateTag}
-                      disabled={tagExists}
-                    >
-                      Create Tag
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    {getTooltip(TooltipKey.CREATE_TAG)}
-                  </TooltipContent>
-                </Tooltip>
-              ) : (
-                <Button
-                  className="h-8"
-                  onClick={handleCreateTag}
-                  disabled={tagExists}
-                >
-                  Create Tag
-                </Button>
-              )}
-            </div>
-
-            {/* Tag status indicator */}
-            <div className="flex items-center space-x-2 mt-4">
-              {isCheckingTag ? (
-                <Loader2 className="animate-spin text-blue-500 w-6 h-6" />
-              ) : tagExists ? (
-                tooltipsEnabled ? (
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <CloudCog className="text-blue-500 w-6 h-6" />
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      {getTooltip(TooltipKey.TAG_LIVE)}
-                    </TooltipContent>
-                  </Tooltip>
-                ) : (
-                  <CloudCog className="text-blue-500 w-6 h-6" />
-                )
-              ) : isCheckingTag === false ? (
-                tooltipsEnabled ? (
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <CircleEllipsis className="text-green-500 w-6 h-6" />
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      {getTooltip(TooltipKey.TAG_NOT_PUBLISHED)}
-                    </TooltipContent>
-                  </Tooltip>
-                ) : (
-                  <CircleEllipsis className="text-green-500 w-6 h-6" />
-                )
-              ) : null}
-            </div>
-
-            {/* Tag input fields */}
-            <div className="grid grid-cols-2 gap-4 mt-4">
-              {Object.keys(newTag).map((key) => (
-                <div key={key}>
-                  <label
-                    htmlFor={key}
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    {key}
-                  </label>
-                  <Input
-                    id={key}
-                    value={newTag[key]}
-                    onChange={(e) =>
-                      setNewTag((prev) => ({
-                        ...prev,
-                        [key]: e.target.value,
-                      }))
-                    }
-                    disabled={key === '@context' || key === '@type'}
-                  />
                 </div>
-              ))}
+              </div>
             </div>
-          </>
-        )}
+          </TabsContent>
+        </Tabs>
+      </div>
+
+      {/* Main content */}
+      <div className="container mx-auto p-4 space-y-6 relative">
+        <>
+          <div className="flex space-x-4 h-8 mt-2">
+            {tooltipsEnabled ? (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button onClick={addNewRow} disabled={isLoading}>
+                    {isLoading ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <Plus className="h-4 w-4" />
+                    )}
+                    Add New Row
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  {getTooltip(TooltipKey.ADD_ROW)}
+                </TooltipContent>
+              </Tooltip>
+            ) : (
+              <Button onClick={addNewRow} disabled={isLoading}>
+                {isLoading ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Plus className="h-4 w-4" />
+                )}
+                Add New Row
+              </Button>
+            )}
+
+            {tooltipsEnabled ? (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    onClick={deleteSelectedRows}
+                    disabled={selectedRows.length === 0 || isLoading}
+                  >
+                    {isLoading ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <Minus className="h-4 w-4" />
+                    )}
+                    Delete Selected Row{selectedRows.length > 1 ? 's' : ''}
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  {getTooltip(TooltipKey.DELETE_ROWS)}
+                </TooltipContent>
+              </Tooltip>
+            ) : (
+              <Button
+                onClick={deleteSelectedRows}
+                disabled={selectedRows.length === 0 || isLoading}
+              >
+                {isLoading ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Minus className="h-4 w-4" />
+                )}
+                Delete Selected Row{selectedRows.length > 1 ? 's' : ''}
+              </Button>
+            )}
+
+            {tooltipsEnabled ? (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button onClick={saveCSV} disabled={!isCSVDataModified}>
+                    <Save className="h-4 w-4" /> Save CSV
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  {getTooltip(TooltipKey.SAVE_CSV)}
+                </TooltipContent>
+              </Tooltip>
+            ) : (
+              <Button onClick={saveCSV} disabled={!isCSVDataModified}>
+                <Save className="h-4 w-4" /> Save CSV
+              </Button>
+            )}
+          </div>
+
+          {/* Progress bar */}
+          {isLoading && <Progress value={undefined} className="w-full" />}
+
+          {/* CSV data table */}
+          {csvData.length > 0 && (
+            <div className="mt-4">
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="w-8"></TableHead>{' '}
+                      {/* New column for checkmark */}
+                      {csvData[0].map((header, index) => (
+                        <TableHead
+                          key={index}
+                          className={`cursor-pointer hover:bg-gray-100 ${
+                            header === '@context'
+                              ? 'w-40'
+                              : header === '@type'
+                                ? 'w-24'
+                                : header === 'name'
+                                  ? 'w-48'
+                                  : header === 'image'
+                                    ? 'w-64'
+                                    : ''
+                          }`}
+                          onClick={() => handleSort(index)}
+                        >
+                          <div className="flex items-center space-x-2">
+                            <span>{header}</span>
+                            {sortState.column === index && (
+                              <span>
+                                {sortState.direction === 'asc' ? '▲' : '▼'}
+                              </span>
+                            )}
+                          </div>
+                        </TableHead>
+                      ))}
+                      <TableHead
+                        className="cursor-pointer hover:bg-gray-100 w-16"
+                        onClick={toggleAllRows}
+                      >
+                        <div className="flex items-center space-x-2">
+                          <Checkbox
+                            checked={selectedRows.length === csvData.length - 1}
+                            onCheckedChange={toggleAllRows}
+                            className="w-4 h-4"
+                          />
+                        </div>
+                      </TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {(sortedIndices.length > 0
+                      ? sortedIndices
+                      : csvData.slice(1).map((_, i) => i + 1)
+                    ).map((rowIndex, displayIndex) => (
+                      <TableRow key={rowIndex}>
+                        <TableCell className="w-8 p-0">
+                          {loadingRows.has(rowIndex - 1) ? (
+                            <Loader2 className="animate-spin text-blue-500 w-6 h-6" />
+                          ) : existingAtoms.has(rowIndex - 1) ? (
+                            tooltipsEnabled ? (
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <CloudCog className="text-blue-500 w-6 h-6" />
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                  {getTooltip(TooltipKey.ATOM_LIVE)}
+                                </TooltipContent>
+                              </Tooltip>
+                            ) : (
+                              <CloudCog className="text-blue-500 w-6 h-6" />
+                            )
+                          ) : loadingRows.has(rowIndex - 1) === false ? (
+                            tooltipsEnabled ? (
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <CircleEllipsis className="text-green-500 w-6 h-6" />
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                  {getTooltip(TooltipKey.ATOM_NOT_PUBLISHED)}
+                                </TooltipContent>
+                              </Tooltip>
+                            ) : (
+                              <CircleEllipsis className="text-green-500 w-6 h-6" />
+                            )
+                          ) : null}
+                        </TableCell>
+                        {csvData[rowIndex].map((cell, cellIndex) => (
+                          <TableCell
+                            key={cellIndex}
+                            className={`p-0 ${
+                              csvData[0][cellIndex] === '@context'
+                                ? 'w-40'
+                                : csvData[0][cellIndex] === '@type'
+                                  ? 'w-24'
+                                  : csvData[0][cellIndex] === 'name'
+                                    ? 'w-48'
+                                    : csvData[0][cellIndex] === 'image'
+                                      ? 'w-64'
+                                      : ''
+                            } ${
+                              cellHighlights.some(
+                                (highlight) =>
+                                  highlight.rowIndex === displayIndex &&
+                                  highlight.cellIndex === cellIndex,
+                              )
+                                ? 'border-yellow-400 border-2'
+                                : ''
+                            }`}
+                          >
+                            <div className="flex items-center">
+                              <Textarea
+                                value={cell}
+                                onChange={(e) =>
+                                  handleCellEdit(
+                                    rowIndex,
+                                    cellIndex,
+                                    e.target.value,
+                                  )
+                                }
+                                onFocus={handleFocus}
+                                onBlur={(e) =>
+                                  handleCellBlur(e, rowIndex, cellIndex)
+                                }
+                                onPaste={(e) =>
+                                  handleCellPaste(e, rowIndex, cellIndex)
+                                }
+                                placeholder={
+                                  !cell &&
+                                  atomDataTypes[selectedType]
+                                    .defaultDescriptions[csvData[0][cellIndex]]
+                                    ? atomDataTypes[selectedType]
+                                        .defaultDescriptions[
+                                        csvData[0][cellIndex]
+                                      ]
+                                    : ''
+                                }
+                                className={`w-full border-none focus:outline-none focus:ring-0 resize-none overflow-hidden h-8 ${
+                                  !cell ? 'text-gray-400 italic' : ''
+                                }`}
+                                readOnly={
+                                  csvData[0][cellIndex] === '@context' ||
+                                  csvData[0][cellIndex] === '@type'
+                                }
+                              />
+                              {csvData[0][cellIndex] === 'image' &&
+                                thumbnails[rowIndex] && (
+                                  <img
+                                    src={thumbnails[rowIndex]}
+                                    alt="Thumbnail"
+                                    className="w-8 h-8 object-cover ml-2 flex-shrink-0"
+                                  />
+                                )}
+                            </div>
+                          </TableCell>
+                        ))}
+                        <TableCell className="w-16">
+                          <Checkbox
+                            checked={selectedRows.includes(rowIndex - 1)}
+                            onCheckedChange={() =>
+                              toggleRowSelection(rowIndex - 1)
+                            }
+                            className="w-4 h-4"
+                          />
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </div>
+          )}
+        </>
       </div>
 
       {/* Add this confirmation modal dialog */}
