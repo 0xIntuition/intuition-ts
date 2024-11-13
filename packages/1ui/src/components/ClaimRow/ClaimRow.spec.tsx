@@ -26,10 +26,11 @@ describe('ClaimRow', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="w-full flex flex-col items-center bg-primary/5 border border-border/10 rounded-t-xl rounded-b-xl"
+          class="w-full flex flex-col items-center bg-primary/5 border border-border/10 overflow-hidden rounded-t-xl rounded-b-xl"
         >
           <div
             class="w-full flex justify-between items-center p-4 rounded-t-xl"
+            style="background-image: none;"
           >
             <div
               class="flex items-center gap-1"
@@ -252,10 +253,10 @@ describe('ClaimRow', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="w-full flex flex-col items-center bg-primary/5 border border-border/10 rounded-t-xl rounded-b-xl"
+          class="w-full flex flex-col items-center bg-primary/5 border border-border/10 overflow-hidden rounded-t-xl rounded-b-xl"
         >
           <div
-            class="w-full flex justify-between items-center p-4 rounded-t-xl bg-gradient-to-r from-transparent to-for"
+            class="w-full flex justify-between items-center p-4 rounded-t-xl"
           >
             <div
               class="flex items-center gap-1"
@@ -451,7 +452,7 @@ describe('ClaimRow', () => {
             </div>
           </div>
           <div
-            class="flex flex-row justify-end px-4 py-0.5 w-full items-center gap-1.5 h-9 bg-for/10 text-for"
+            class="flex flex-row justify-end px-4 py-0.5 w-full items-center gap-1.5 h-9 rounded-b-xl"
           >
             <svg
               class="h-4 w-4"

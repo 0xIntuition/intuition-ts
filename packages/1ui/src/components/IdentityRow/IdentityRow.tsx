@@ -37,7 +37,7 @@ export interface IdentityRowProps extends React.HTMLAttributes<HTMLDivElement> {
   numPositions: number
   tags?: TagWithValueProps[]
   userPosition?: string
-  onStakeClick: () => void
+  onStakeClick?: () => void
   isFirst?: boolean
   isLast?: boolean
 }
@@ -111,11 +111,13 @@ const IdentityRow = ({
 
         <div className="flex items-center gap-3">
           <StakeTVL totalTVL={+totalTVL} currency={currency} />
-          <StakeButton
-            numPositions={numPositions}
-            userPosition={!!userPosition && userPosition !== '0'}
-            onClick={onStakeClick}
-          />
+          {!!onStakeClick && (
+            <StakeButton
+              numPositions={numPositions}
+              userPosition={!!userPosition && userPosition !== '0'}
+              onClick={onStakeClick}
+            />
+          )}
           <ContextMenu>
             <ContextMenuTrigger disabled>
               <Button

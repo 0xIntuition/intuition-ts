@@ -25,7 +25,6 @@ import {
 } from '@0xintuition/api'
 
 import RemixLink from '@components/remix-link'
-import { stakeModalAtom } from '@lib/state/store'
 import {
   formatBalance,
   getAtomDescription,
@@ -39,7 +38,6 @@ import { Link } from '@remix-run/react'
 import { BLOCK_EXPLORER_URL, PATHS } from 'app/consts'
 import { PaginationType } from 'app/types/pagination'
 import { formatDistance } from 'date-fns'
-import { useSetAtom } from 'jotai'
 
 import { List } from './list'
 
@@ -73,11 +71,13 @@ export function ActivityList({
       enableSearch={false}
       enableSort={false}
     >
-      {activities.map((activity) => (
+      {activities.map((activity, index) => (
         <ActivityItem
           key={activity.id}
           activity={activity}
           eventMessages={eventMessages}
+          index={index}
+          totalItems={activities.length}
         />
       ))}
     </List>
@@ -96,9 +96,13 @@ type EventMessages = {
 function ActivityItem({
   activity,
   eventMessages,
+  index,
+  totalItems,
 }: {
   activity: ActivityPresenter
   eventMessages: EventMessages
+  index: number
+  totalItems: number
 }) {
   const eventMessage = eventMessages[activity.event_type as keyof EventMessages]
   const isRedeemEvent = activity.event_type.startsWith('redeem')
@@ -112,14 +116,12 @@ function ActivityItem({
       : eventMessage.toString()
     : ''
 
-  const setStakeModalActive = useSetAtom(stakeModalAtom)
-
   return (
     <div
       key={activity.id}
-      className={`bg-background rounded-xl mb-6 last:mb-0 flex flex-col w-full max-sm:p-3`}
+      className="grow shrink basis-0 self-stretch bg-background first:border-t-px first:rounded-t-xl last:rounded-b-xl theme-border border-t-0 flex-col justify-start inline-flex"
     >
-      <div className="flex flex-row items-center py-3 justify-between min-w-full max-md:flex-col max-md:gap-3">
+      <div className="flex flex-row items-center px-4 py-3 justify-between min-w-full max-md:flex-col max-md:gap-3">
         <div className="flex flex-row items-center gap-2 max-md:flex-col">
           <HoverCard openDelay={150} closeDelay={150}>
             <HoverCardTrigger asChild>
@@ -221,17 +223,9 @@ function ActivityItem({
                 value: tag.num_tagged_identities,
               })) ?? undefined
             }
-            onStakeClick={() =>
-              setStakeModalActive((prevState) => ({
-                ...prevState,
-                mode: 'deposit',
-                modalType: 'identity',
-                isOpen: true,
-                identity: activity.identity ?? undefined,
-                vaultId: activity.identity?.vault_id ?? null,
-              }))
-            }
-            className="w-full hover:bg-transparent"
+            isFirst={index === 0}
+            isLast={index === totalItems - 1}
+            className="border-none rounded-none"
           />
         )}
         {activity.claim && (
@@ -249,29 +243,9 @@ function ActivityItem({
                   ? ClaimPosition.claimAgainst
                   : undefined
             }
-            onStakeForClick={() =>
-              setStakeModalActive((prevState) => ({
-                ...prevState,
-                mode: 'deposit',
-                modalType: 'claim',
-                direction: ClaimPosition.claimFor,
-                isOpen: true,
-                claim: activity.claim ?? undefined,
-                vaultId: activity.claim?.vault_id ?? null,
-              }))
-            }
-            onStakeAgainstClick={() =>
-              setStakeModalActive((prevState) => ({
-                ...prevState,
-                mode: 'deposit',
-                modalType: 'claim',
-                direction: ClaimPosition.claimAgainst,
-                isOpen: true,
-                claim: activity.claim ?? undefined,
-                vaultId: activity.claim?.counter_vault_id ?? null,
-              }))
-            }
-            className="w-full hover:bg-transparent"
+            isFirst={index === 0}
+            isLast={index === totalItems - 1}
+            className="border-none rounded-none"
           >
             <Link to={getClaimUrl(activity.claim.vault_id)} prefetch="intent">
               <Claim

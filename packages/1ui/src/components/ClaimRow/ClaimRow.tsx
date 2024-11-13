@@ -23,8 +23,8 @@ export interface ClaimRowProps extends React.HTMLAttributes<HTMLDivElement> {
   currency?: CurrencyType
   userPosition?: string
   positionDirection?: ClaimPositionType
-  onStakeForClick: () => void
-  onStakeAgainstClick: () => void
+  onStakeForClick?: () => void
+  onStakeAgainstClick?: () => void
   isFirst?: boolean
   isLast?: boolean
 }
@@ -79,22 +79,26 @@ const ClaimRow = ({
             numPositionsFor={numPositionsFor}
             numPositionsAgainst={numPositionsAgainst}
           />
-          <StakeButton
-            variant={StakeButtonVariant.claimFor}
-            numPositions={numPositionsFor}
-            direction={ClaimPosition.claimFor}
-            positionDirection={positionDirection}
-            disabled={positionDirection === ClaimPosition.claimAgainst}
-            onClick={onStakeForClick}
-          />
-          <StakeButton
-            variant={StakeButtonVariant.claimAgainst}
-            numPositions={numPositionsAgainst}
-            direction={ClaimPosition.claimAgainst}
-            positionDirection={positionDirection}
-            disabled={positionDirection === ClaimPosition.claimFor}
-            onClick={onStakeAgainstClick}
-          />
+          {!!onStakeForClick && !!onStakeAgainstClick && (
+            <>
+              <StakeButton
+                variant={StakeButtonVariant.claimFor}
+                numPositions={numPositionsFor}
+                direction={ClaimPosition.claimFor}
+                positionDirection={positionDirection}
+                disabled={positionDirection === ClaimPosition.claimAgainst}
+                onClick={onStakeForClick}
+              />
+              <StakeButton
+                variant={StakeButtonVariant.claimAgainst}
+                numPositions={numPositionsAgainst}
+                direction={ClaimPosition.claimAgainst}
+                positionDirection={positionDirection}
+                disabled={positionDirection === ClaimPosition.claimFor}
+                onClick={onStakeAgainstClick}
+              />
+            </>
+          )}
           <ContextMenu>
             <ContextMenuTrigger disabled>
               <Button
