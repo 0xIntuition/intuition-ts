@@ -23,7 +23,7 @@ export default function StakeActions({
         variant="ghost"
         className={`${action === 'redeem' && 'hidden'}`}
         onClick={() => {
-          setVal(formatUnits(BigInt(minDeposit), 18))
+          setVal(minDeposit)
         }}
       >
         <Text variant="small">Min</Text>
