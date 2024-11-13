@@ -23,6 +23,7 @@ import {
 import { VaultDetailsType } from 'app/types'
 import { TransactionStateType } from 'app/types/transaction'
 import { useAtom } from 'jotai'
+import { formatUnits } from 'viem'
 
 import StakeActions from './stake-actions'
 import StakeInput from './stake-input'
@@ -170,7 +171,7 @@ export default function StakeForm({
                       e.preventDefault()
                       setStakeModalState({ ...stakeModalState, mode: 'redeem' })
                     }}
-                    disabled={user_conviction === '0'}
+                    disabled={user_assets === '0'}
                     className="relative z-10"
                   />
                 </TabsList>
@@ -195,7 +196,11 @@ export default function StakeForm({
                   <StakeActions
                     action={mode}
                     setVal={setVal}
-                    minDeposit={vaultDetails?.min_deposit ?? MIN_DEPOSIT}
+                    minDeposit={
+                      (vaultDetails &&
+                        formatUnits(BigInt(vaultDetails.min_deposit), 18)) ??
+                      MIN_DEPOSIT
+                    }
                     userConviction={user_conviction}
                     price={conviction_price}
                   />

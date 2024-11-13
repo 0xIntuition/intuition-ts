@@ -120,13 +120,8 @@ const StakeButton: React.FC<StakeButtonProps> = ({
           handleSwitch()
         } else if (val !== '') {
           const errors = []
-          if (
-            mode === 'deposit' &&
-            +val < +formatUnits(BigInt(min_deposit), 18)
-          ) {
-            errors.push(
-              `Minimum deposit is ${formatUnits(BigInt(min_deposit), 18)} ETH`,
-            )
+          if (mode === 'deposit' && +val < +min_deposit) {
+            errors.push(`Minimum deposit is ${min_deposit} ETH`)
           }
           if (
             mode === 'deposit'

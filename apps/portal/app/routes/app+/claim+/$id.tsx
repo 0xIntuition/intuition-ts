@@ -72,7 +72,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     (searchParams.get('direction') as SortDirection) ?? 'desc'
 
   const { claim } = await getClaim(request, id)
-
+  console.log('claim', claim)
   if (!claim) {
     throw new Response('Not Found', { status: 404 })
   }

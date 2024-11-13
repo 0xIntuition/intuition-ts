@@ -7,6 +7,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url)
   const contract = url.searchParams.get('contract')
   const vaultId = url.searchParams.get('vaultId')
+  const counterVaultId = url.searchParams.get('counterVaultId')
 
   if (!contract || !vaultId) {
     return json({ error: 'Missing contract or vaultId' }, { status: 400 })
@@ -17,6 +18,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
       contract,
       vaultId,
       userWallet as `0x${string}`,
+      counterVaultId ?? undefined,
     )
     return json(vaultDetails)
   } catch (error) {
