@@ -25,6 +25,9 @@ const stakeButtonVariants = cva(
         [StakeButtonVariant.claimAgainst]:
           'bg-against/10 border-against/30 hover:bg-against hover:border-against/50 text-against',
       },
+      userPosition: {
+        true: 'bg-primary/20 border-primary/60 hover:border-primary/60',
+      },
       positionDirection: {
         [ClaimPosition.claimFor]:
           'text-primary bg-for border-border/30 hover:border-border/30',
@@ -43,6 +46,7 @@ export interface StakeButtonProps
     VariantProps<typeof stakeButtonVariants> {
   numPositions: number
   direction?: ClaimPositionType
+  userPosition?: boolean
   positionDirection?: ClaimPositionType
   className?: string
   onClick: () => void
@@ -54,6 +58,7 @@ const StakeButton = React.forwardRef<HTMLButtonElement, StakeButtonProps>(
       className,
       variant,
       numPositions,
+      userPosition,
       direction,
       positionDirection,
       onClick,
@@ -67,6 +72,7 @@ const StakeButton = React.forwardRef<HTMLButtonElement, StakeButtonProps>(
         className={cn(
           stakeButtonVariants({
             variant,
+            userPosition,
             positionDirection,
             className,
           }),

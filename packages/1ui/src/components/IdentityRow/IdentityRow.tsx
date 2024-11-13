@@ -111,7 +111,11 @@ const IdentityRow = ({
 
         <div className="flex items-center gap-3">
           <StakeTVL totalTVL={+totalTVL} currency={currency} />
-          <StakeButton numPositions={numPositions} onClick={onStakeClick} />
+          <StakeButton
+            numPositions={numPositions}
+            userPosition={!!userPosition && userPosition !== '0'}
+            onClick={onStakeClick}
+          />
           <ContextMenu>
             <ContextMenuTrigger disabled>
               <Button

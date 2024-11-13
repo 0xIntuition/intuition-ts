@@ -152,14 +152,14 @@ export default function StakeForm({
             </div>
             <div className="w-96 mx-auto">
               <Tabs defaultValue={mode}>
-                <TabsList className="relative overflow-hidden">
+                <TabsList className="relative overflow-visible">
                   <div
-                    className={`absolute mx-auto inset-0 bg-[radial-gradient(ellipse_at_bottom_center,_var(--tw-gradient-stops))] ${
+                    className={`absolute mx-auto overflow-visible inset-0 bg-[radial-gradient(70%_150%_at_50%_100%,_var(--tw-gradient-stops))] ${
                       direction === 'for'
-                        ? 'from-for/50 via-for/10'
+                        ? 'from-for/50 via-for/20 via-for/10 via-for/5'
                         : direction === 'against'
-                          ? 'from-against/50 via-against/10'
-                          : 'from-primary/20 via-primary/5'
+                          ? 'from-against/50 via-against/20 via-against/10 via-against/5'
+                          : 'from-primary/20 via-primary/10 via-primary/5 via-primary/2'
                     } to-transparent`}
                   />
                   <TabsTrigger

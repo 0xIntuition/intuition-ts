@@ -48,21 +48,24 @@ const ClaimRow = ({
   return (
     <div
       className={cn(
-        `w-full flex flex-col items-center bg-primary/5 border border-border/10`,
+        `w-full flex flex-col items-center bg-primary/5 border border-border/10 overflow-hidden`,
         isFirst && 'rounded-t-xl',
         isLast && 'rounded-b-xl',
         className,
       )}
     >
       <div
+        style={{
+          backgroundImage:
+            userPosition && userPosition !== '0'
+              ? positionDirection === ClaimPosition.claimFor
+                ? 'linear-gradient(to right, transparent, rgba(0, 111, 232, 0.5))'
+                : 'linear-gradient(to right, transparent, rgba(255, 149, 0, 0.5))'
+              : 'none',
+        }}
         className={cn(
           `w-full flex justify-between items-center p-4`,
           isFirst && 'rounded-t-xl',
-          userPosition &&
-            userPosition !== '0' &&
-            (positionDirection === ClaimPosition.claimFor
-              ? 'bg-gradient-to-r from-transparent to-for'
-              : 'bg-gradient-to-r from-transparent to-against'),
         )}
       >
         <div className="flex items-center gap-1">{children}</div>
@@ -115,11 +118,15 @@ const ClaimRow = ({
       </div>
       {userPosition && userPosition !== '0' && (
         <div
+          style={{
+            backgroundImage:
+              positionDirection === ClaimPosition.claimFor
+                ? 'linear-gradient(to right, transparent, rgba(0, 111, 232, 0.2))'
+                : 'linear-gradient(to right, transparent, rgba(255, 149, 0, 0.2))',
+          }}
           className={cn(
             `flex flex-row justify-end px-4 py-0.5 w-full items-center gap-1.5 h-9`,
-            positionDirection === ClaimPosition.claimFor
-              ? 'bg-for/10 text-for'
-              : 'bg-against/10 text-against',
+            isLast && 'rounded-b-xl',
           )}
         >
           <Icon name={IconName.arrowUp} className="h-4 w-4" />
