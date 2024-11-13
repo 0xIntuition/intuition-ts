@@ -82,7 +82,7 @@ const Avatar = ({ className, variant, src, name, onClick }: AvatarProps) => {
               ? IconName.fingerprint
               : IconName.cryptoPunk
           }
-          className="text-primary/30 w-[80%] h-[80%]"
+          className="text-primary/30 w-1/2 h-1/2 max-h-10 max-w-10"
         />
       </AvatarFallback>
     </AvatarContainer>

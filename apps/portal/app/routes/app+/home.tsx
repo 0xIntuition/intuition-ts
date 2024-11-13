@@ -1,6 +1,11 @@
 import { Suspense } from 'react'
 
-import { EmptyStateCard, ErrorStateCard, Text } from '@0xintuition/1ui'
+import {
+  EmptyStateCard,
+  ErrorStateCard,
+  Skeleton,
+  Text,
+} from '@0xintuition/1ui'
 import {
   ActivityPresenter,
   ClaimSortColumn,
@@ -17,13 +22,8 @@ import { ActivityList } from '@components/list/activity'
 import { ClaimsList } from '@components/list/claims'
 import { IdentitiesList } from '@components/list/identities'
 import { FeaturedListCarousel } from '@components/lists/featured-lists-carousel'
-import { ListClaimsSkeletonLayout } from '@components/lists/list-skeletons'
 import { RevalidateButton } from '@components/revalidate-button'
-import {
-  ActivitySkeleton,
-  HomeStatsHeaderSkeleton,
-  PaginatedListSkeleton,
-} from '@components/skeleton'
+import { ActivitySkeleton, PaginatedListSkeleton } from '@components/skeleton'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { getActivity } from '@lib/services/activity'
 import { getFeaturedLists } from '@lib/services/lists'
@@ -94,7 +94,7 @@ export default function HomePage() {
           >
             System Stats
           </Text>
-          <Suspense fallback={<HomeStatsHeaderSkeleton />}>
+          <Suspense fallback={<Skeleton className="w-full h-[82px]" />}>
             <Await
               resolve={systemStats}
               errorElement={
@@ -123,15 +123,7 @@ export default function HomePage() {
             buttonText="Explore Lists"
             buttonLink="/app/explore/lists"
           />
-          <Suspense
-            fallback={
-              <ListClaimsSkeletonLayout
-                totalItems={6}
-                enableSearch={false}
-                enableSort={false}
-              />
-            }
-          >
+          <Suspense fallback={<Skeleton className="w-full h-[348px]" />}>
             <Await
               resolve={featuredLists}
               errorElement={
