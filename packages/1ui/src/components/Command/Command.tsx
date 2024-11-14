@@ -40,18 +40,14 @@ const CommandInput = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof CommandPrimitive.Input>
 >(({ className, ...props }, ref) => (
   <div
-    className="flex items-center border-b border-border/30 px-3"
+    className="flex items-center border-b border-border/10 px-4 bg-gradient-to-b from-black to-primary/5"
     // eslint-disable-next-line
     cmdk-input-wrapper=""
   >
-    <Icon
-      name={IconName.magnifyingGlass}
-      className="mr-2 h-4 w-4 shrink-0 opacity-50"
-    />
     <CommandPrimitive.Input
       ref={ref}
       className={cn(
-        'flex h-11 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50',
+        'flex h-16 w-full rounded-md bg-transparent py-3 text-lg outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50',
         className,
       )}
       {...props}
@@ -67,7 +63,10 @@ const CommandList = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <CommandPrimitive.List
     ref={ref}
-    className={cn('max-h-[300px] overflow-y-auto overflow-x-hidden', className)}
+    className={cn(
+      'h-full max-h-[360px] overflow-y-auto overflow-x-hidden',
+      className,
+    )}
     {...props}
   />
 ))
@@ -109,7 +108,7 @@ const CommandSeparator = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <CommandPrimitive.Separator
     ref={ref}
-    className={cn('-mx-1 h-px bg-border/30', className)}
+    className={cn('-mx-1 h-px bg-border/10', className)}
     {...props}
   />
 ))
