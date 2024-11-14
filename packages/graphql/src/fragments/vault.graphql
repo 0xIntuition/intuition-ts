@@ -31,3 +31,42 @@ fragment VaultDetails on vaults {
   currentSharePrice
   totalShares
 }
+
+fragment VaultDetailsWithFilteredPositions on vaults {
+  id
+  atom {
+    id
+    label
+  }
+  triple {
+    id
+    subject {
+      id
+      label
+    }
+    predicate {
+      id
+      label
+    }
+    object {
+      id
+      label
+    }
+  }
+  positions_aggregate(where: { accountId: { _in: $addresses } }) {
+    aggregate {
+      sum {
+        shares
+      }
+    }
+    nodes {
+      account {
+        id
+        label
+      }
+      shares
+    }
+  }
+  currentSharePrice
+  totalShares
+}

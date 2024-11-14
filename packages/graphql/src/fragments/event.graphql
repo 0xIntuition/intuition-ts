@@ -6,6 +6,15 @@ fragment EventDetails on events {
   atomId
   tripleId
   depositId
-  feeTransferId
   redemptionId
+  ...DepositEventFragment
+  ...RedemptionEventFragment
+  atom {
+    ...AtomMetadata
+    ...AtomVaultDetailsWithPositions
+  }
+  triple {
+    ...TripleMetadata
+    ...TripleVaultCouterVaultDetailsWithPositions
+  }
 }
