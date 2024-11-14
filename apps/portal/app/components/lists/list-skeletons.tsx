@@ -10,17 +10,23 @@ export function ListClaimsSkeletonLayout({
   enableSort?: boolean
 }) {
   return (
-    <div className="flex flex-col w-full gap-5 my-5">
-      <div className="flex items-center justify-between mb-4">
-        {enableSearch && <Skeleton className="w-64 h-10" />}
-        {enableSort && <Skeleton className="w-44 h-10" />}
+    <div className="flex flex-col w-full">
+      <div className="flex flex-col w-full">
+        <div
+          className={`flex flex-row w-full ${enableSearch ? 'justify-between' : 'justify-end'} ${enableSort ? 'mb-6' : 'mb-0'}`}
+        >
+          {enableSearch && <Skeleton className="w-64 h-10" />}
+          {enableSort && <Skeleton className="w-44 h-10" />}
+        </div>
+        <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {[...Array(totalItems)].map((_, index) => (
+            <Skeleton
+              key={index}
+              className="relative flex flex-col min-w-[200px] max-w-[400px] min-h-[370px] p-5 rounded-xl overflow-hidden"
+            />
+          ))}
+        </div>
       </div>
-      <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 auto-rows-fr gap-7">
-        {[...Array(totalItems)].map((_, index) => (
-          <Skeleton key={index} className="w-full aspect-[3/2]" />
-        ))}
-      </div>
-      <Skeleton className="w-full h-10 mt-4" />
     </div>
   )
 }
