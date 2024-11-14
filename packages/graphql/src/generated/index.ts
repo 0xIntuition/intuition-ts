@@ -8076,6 +8076,13 @@ export type EventDetailsFragment = {
       } | null
       positions_aggregate: {
         __typename?: 'positions_aggregate'
+        aggregate?: {
+          __typename?: 'positions_aggregate_fields'
+          sum?: {
+            __typename?: 'positions_sum_fields'
+            shares?: any | null
+          } | null
+        } | null
         nodes: Array<{
           __typename?: 'positions'
           shares: any
@@ -8110,6 +8117,13 @@ export type EventDetailsFragment = {
       } | null
       positions_aggregate: {
         __typename?: 'positions_aggregate'
+        aggregate?: {
+          __typename?: 'positions_aggregate_fields'
+          sum?: {
+            __typename?: 'positions_sum_fields'
+            shares?: any | null
+          } | null
+        } | null
         nodes: Array<{
           __typename?: 'positions'
           shares: any
@@ -8484,6 +8498,13 @@ export type TripleVaultCouterVaultDetailsWithPositionsFragment = {
     } | null
     positions_aggregate: {
       __typename?: 'positions_aggregate'
+      aggregate?: {
+        __typename?: 'positions_aggregate_fields'
+        sum?: {
+          __typename?: 'positions_sum_fields'
+          shares?: any | null
+        } | null
+      } | null
       nodes: Array<{
         __typename?: 'positions'
         shares: any
@@ -8510,6 +8531,13 @@ export type TripleVaultCouterVaultDetailsWithPositionsFragment = {
     } | null
     positions_aggregate: {
       __typename?: 'positions_aggregate'
+      aggregate?: {
+        __typename?: 'positions_aggregate_fields'
+        sum?: {
+          __typename?: 'positions_sum_fields'
+          shares?: any | null
+        } | null
+      } | null
       nodes: Array<{
         __typename?: 'positions'
         shares: any
@@ -8557,6 +8585,10 @@ export type VaultDetailsWithFilteredPositionsFragment = {
   } | null
   positions_aggregate: {
     __typename?: 'positions_aggregate'
+    aggregate?: {
+      __typename?: 'positions_aggregate_fields'
+      sum?: { __typename?: 'positions_sum_fields'; shares?: any | null } | null
+    } | null
     nodes: Array<{
       __typename?: 'positions'
       shares: any
@@ -9554,6 +9586,13 @@ export type GetEventsQuery = {
           } | null
           positions_aggregate: {
             __typename?: 'positions_aggregate'
+            aggregate?: {
+              __typename?: 'positions_aggregate_fields'
+              sum?: {
+                __typename?: 'positions_sum_fields'
+                shares?: any | null
+              } | null
+            } | null
             nodes: Array<{
               __typename?: 'positions'
               shares: any
@@ -9592,6 +9631,13 @@ export type GetEventsQuery = {
           } | null
           positions_aggregate: {
             __typename?: 'positions_aggregate'
+            aggregate?: {
+              __typename?: 'positions_aggregate_fields'
+              sum?: {
+                __typename?: 'positions_sum_fields'
+                shares?: any | null
+              } | null
+            } | null
             nodes: Array<{
               __typename?: 'positions'
               shares: any
@@ -10894,6 +10940,11 @@ export const VaultDetailsWithFilteredPositionsFragmentDoc = `
     }
   }
   positions_aggregate(where: {accountId: {_in: $addresses}}) {
+    aggregate {
+      sum {
+        shares
+      }
+    }
     nodes {
       account {
         id
@@ -14007,6 +14058,28 @@ export const VaultDetailsWithFilteredPositions = {
               selections: [
                 {
                   kind: 'Field',
+                  name: { kind: 'Name', value: 'aggregate' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'sum' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'shares' },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
                   name: { kind: 'Name', value: 'nodes' },
                   selectionSet: {
                     kind: 'SelectionSet',
@@ -14197,6 +14270,28 @@ export const TripleVaultCouterVaultDetailsWithPositions = {
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'aggregate' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'sum' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'shares' },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'nodes' },
@@ -14887,6 +14982,28 @@ export const EventDetails = {
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'aggregate' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'sum' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'shares' },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'nodes' },
@@ -18121,6 +18238,28 @@ export const GetEvents = {
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'aggregate' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'sum' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'shares' },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'nodes' },

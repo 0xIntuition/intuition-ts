@@ -54,6 +54,11 @@ fragment VaultDetailsWithFilteredPositions on vaults {
     }
   }
   positions_aggregate(where: { accountId: { _in: $addresses } }) {
+    aggregate {
+      sum {
+        shares
+      }
+    }
     nodes {
       account {
         id
