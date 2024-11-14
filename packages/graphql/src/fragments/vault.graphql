@@ -19,7 +19,7 @@ fragment VaultDetails on vaults {
       label
     }
   }
-  positions_aggregate(where: { accountId: { _in: $addresses } }) {
+  positions_aggregate {
     nodes {
       account {
         id
@@ -32,48 +32,36 @@ fragment VaultDetails on vaults {
   totalShares
 }
 
-fragment AtomVaultDetailsWithPositions on vaults {
-  vault {
-    totalShares
-    currentSharePrice
-    positions_aggregate(where: { accountId: { _in: $addresses } }) {
-      aggregate {
-        sum {
-          shares
-        }
-      }
-      nodes {
-        account {
-          id
-        }
-        shares
-      }
+fragment VaultDetailsWithFilteredPositions on vaults {
+  id
+  atom {
+    id
+    label
+  }
+  triple {
+    id
+    subject {
+      id
+      label
+    }
+    predicate {
+      id
+      label
+    }
+    object {
+      id
+      label
     }
   }
-}
-
-fragment TripleVaultCountDetailsWithPositions on vaults {
-  vault {
-    totalShares
-    currentSharePrice
-    positions_aggregate(where: { accountId: { _in: $addresses } }) {
-      nodes {
-        account {
-          id
-        }
-        shares
+  positions_aggregate(where: { accountId: { _in: $addresses } }) {
+    nodes {
+      account {
+        id
+        label
       }
+      shares
     }
   }
-  counterVault {
-    totalShares
-    positions_aggregate(where: { accountId: { _in: $addresses } }) {
-      nodes {
-        account {
-          id
-        }
-        shares
-      }
-    }
-  }
+  currentSharePrice
+  totalShares
 }

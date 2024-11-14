@@ -127,3 +127,23 @@ fragment AtomTriple on atoms {
     }
   }
 }
+
+fragment AtomVaultDetailsWithPositions on atoms {
+  vault {
+    totalShares
+    currentSharePrice
+    positions_aggregate(where: { accountId: { _in: $addresses } }) {
+      aggregate {
+        sum {
+          shares
+        }
+      }
+      nodes {
+        account {
+          id
+        }
+        shares
+      }
+    }
+  }
+}

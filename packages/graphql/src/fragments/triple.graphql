@@ -56,3 +56,14 @@ fragment TripleVaultDetails on triples {
     ...VaultDetails
   }
 }
+
+fragment TripleVaultCouterVaultDetailsWithPositions on triples {
+  vaultId
+  counterVaultId
+  vault {
+    ...VaultDetailsWithFilteredPositions
+  }
+  counterVault {
+    ...VaultDetailsWithFilteredPositions
+  }
+}
