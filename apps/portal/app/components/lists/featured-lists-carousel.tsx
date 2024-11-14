@@ -106,7 +106,7 @@ export function FeaturedListCarousel({ lists }: FeaturedListCarouselProps) {
   }, [emblaApi])
 
   return (
-    <div className="relative max-w-[400px] md:max-w-none">
+    <div className="relative w-full">
       <div className="overflow-hidden" ref={emblaRef}>
         <div className="flex gap-6">
           {lists.map((list) => (
@@ -114,7 +114,7 @@ export function FeaturedListCarousel({ lists }: FeaturedListCarouselProps) {
               <Link
                 to={getListUrl(list.vault_id, '')}
                 prefetch="intent"
-                className="block md:w-auto mx-auto max-w-[400px] md:max-w-none"
+                className="block"
                 onClick={(e) => e.stopPropagation()}
               >
                 <FeaturedListCard
