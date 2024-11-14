@@ -271,7 +271,7 @@ describe('IdentityRow', () => {
                 </div>
               </div>
               <button
-                class="flex justify-center items-center text-sm font-medium border aria-disabled:text-muted-foreground aria-disabled:border-muted aria-disabled:pointer-events-none bg-gradient-to-b from-transparent to-transparent hover:text-primary aria-disabled:bg-transparent aria-selected:primary-gradient-subtle aria-selected:border-primary/10 shadow-md-subtle max-sm:py-2 max-sm:text-base py-0.5 px-2.5 gap-1.5 h-9 w-16 rounded-xl disabled:bg-primary/5 disabled:border-primary/20 disabled:text-primary/20 hover:bg-primary/20 text-secondary bg-primary/20 border-primary/60 hover:border-primary/60"
+                class="flex justify-center items-center text-sm font-medium border aria-disabled:text-muted-foreground aria-disabled:border-muted aria-disabled:pointer-events-none bg-gradient-to-b from-transparent to-transparent hover:text-primary aria-disabled:bg-transparent aria-selected:primary-gradient-subtle aria-selected:border-primary/10 shadow-md-subtle max-sm:py-2 max-sm:text-base py-0.5 px-2.5 gap-1.5 h-9 rounded-xl disabled:bg-primary/5 disabled:border-primary/20 disabled:text-primary/20 hover:bg-primary/20 text-secondary bg-primary/20 border-primary/60 hover:border-primary/60 w-full"
               >
                 <svg
                   class="h-4 w-4"

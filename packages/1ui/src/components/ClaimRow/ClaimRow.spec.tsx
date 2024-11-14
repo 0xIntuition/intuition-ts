@@ -29,7 +29,7 @@ describe('ClaimRow', () => {
           class="w-full flex flex-col items-center bg-primary/5 border border-border/10 overflow-hidden rounded-t-xl rounded-b-xl"
         >
           <div
-            class="w-full flex justify-between items-center p-4 rounded-t-xl"
+            class="w-full flex flex-col md:flex-row justify-between items-center p-4 max-sm:gap-6 rounded-t-xl"
             style="background-image: none;"
           >
             <div
@@ -293,7 +293,7 @@ describe('ClaimRow', () => {
           class="w-full flex flex-col items-center bg-primary/5 border border-border/10 overflow-hidden rounded-t-xl rounded-b-xl"
         >
           <div
-            class="w-full flex justify-between items-center p-4 rounded-t-xl"
+            class="w-full flex flex-col md:flex-row justify-between items-center p-4 max-sm:gap-6 rounded-t-xl"
           >
             <div
               class="flex w-full items-start md:items-center gap-1"
@@ -526,7 +526,7 @@ describe('ClaimRow', () => {
             </div>
           </div>
           <div
-            class="flex flex-row justify-end px-4 py-0.5 w-full items-center gap-1.5 h-9 rounded-b-xl"
+            class="flex flex-row justify-center md:justify-end px-4 py-0.5 w-full items-center gap-1.5 h-14 md:h-9 rounded-b-xl bg-for/10 text-for"
           >
             <svg
               class="h-4 w-4"

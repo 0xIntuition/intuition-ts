@@ -107,6 +107,7 @@ const ClaimRow = ({
                 positionDirection={positionDirection}
                 disabled={positionDirection === ClaimPosition.claimAgainst}
                 onClick={onStakeForClick}
+                className="max-sm:w-full"
               />
               <StakeButton
                 variant={StakeButtonVariant.claimAgainst}
@@ -115,6 +116,7 @@ const ClaimRow = ({
                 positionDirection={positionDirection}
                 disabled={positionDirection === ClaimPosition.claimFor}
                 onClick={onStakeAgainstClick}
+                className="max-sm:w-full"
               />
             </>
           )}
