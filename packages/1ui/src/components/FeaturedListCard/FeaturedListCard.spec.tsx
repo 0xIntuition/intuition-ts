@@ -20,7 +20,7 @@ describe('FeaturedListCard', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="relative w-full md:w-[530px] flex flex-col overflow-hidden gap-3 p-5 text-left bg-primary/5 border border-primary/20 rounded-2xl hover:bg-primary/10 hover:border-primary/50 hover:cursor-pointer transition-all duration-300"
+          class="relative w-full flex flex-col overflow-hidden gap-3 p-5 text-left bg-primary/5 border border-primary/20 rounded-2xl hover:bg-primary/10 hover:border-primary/50 hover:cursor-pointer transition-all duration-300 max-w-[400px] md:max-w-none"
         >
           <div>
             <h6
@@ -53,7 +53,7 @@ describe('FeaturedListCard', () => {
           >
             <img
               alt="Test List"
-              class="h-full w-full object-cover rounded-xl"
+              class="h-full object-cover rounded-xl aspect-video"
               src="test-image.jpg"
             />
           </div>
@@ -110,7 +110,7 @@ describe('FeaturedListCard', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="relative w-full md:w-[530px] flex flex-col overflow-hidden gap-3 p-5 text-left bg-primary/5 border border-primary/20 rounded-2xl hover:bg-primary/10 hover:border-primary/50 hover:cursor-pointer transition-all duration-300"
+          class="relative w-full flex flex-col overflow-hidden gap-3 p-5 text-left bg-primary/5 border border-primary/20 rounded-2xl hover:bg-primary/10 hover:border-primary/50 hover:cursor-pointer transition-all duration-300 max-w-[400px] md:max-w-none"
         >
           <div>
             <h6
@@ -133,7 +133,7 @@ describe('FeaturedListCard', () => {
           >
             <img
               alt="Test List"
-              class="h-full w-full object-cover rounded-xl"
+              class="h-full object-cover rounded-xl aspect-video"
             />
           </div>
         </div>

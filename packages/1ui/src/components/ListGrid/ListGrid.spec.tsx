@@ -44,7 +44,7 @@ describe('ListGrid', () => {
     expect(container).toMatchInlineSnapshot(`
       <div>
         <div
-          class="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"
+          class="w-full grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4"
         >
           <div
             class="relative flex flex-col min-w-[200px] max-w-[400px] h-auto p-5 bg-primary/5 border border-primary/20 rounded-xl overflow-hidden hover:bg-primary/10 hover:border-primary/50 transition-all duration-300"

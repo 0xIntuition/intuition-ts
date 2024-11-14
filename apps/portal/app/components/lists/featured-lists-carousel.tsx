@@ -106,14 +106,11 @@ export function FeaturedListCarousel({ lists }: FeaturedListCarouselProps) {
   }, [emblaApi])
 
   return (
-    <div className="relative w-full">
+    <div className="relative max-w-[400px] md:max-w-none">
       <div className="overflow-hidden" ref={emblaRef}>
         <div className="flex gap-6">
           {lists.map((list) => (
-            <div
-              key={list.claim_id}
-              className="shrink-0 w-[350px] md:w-[530px]"
-            >
+            <div key={list.claim_id} className={cn('shrink-0')}>
               <Link
                 to={getListUrl(list.vault_id, '')}
                 prefetch="intent"
