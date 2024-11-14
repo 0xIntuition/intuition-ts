@@ -132,7 +132,7 @@ const IdentityRow = ({
           </ContextMenu>
         </div>
         <Separator className="md:hidden" />
-        <div className="flex items-center max-sm:justify-between max-sm:w-full max-sm:gap-3">
+        <div className="flex items-center gap-3 max-sm:justify-between max-sm:w-full">
           <StakeTVL totalTVL={+totalTVL} currency={currency} />
           {!!onStakeClick && (
             <StakeButton

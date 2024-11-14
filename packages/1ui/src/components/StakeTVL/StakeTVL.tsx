@@ -40,6 +40,8 @@ const StakeTVL = React.forwardRef<HTMLDivElement, StakeTVLProps>(
   ) => {
     const stakedForPercentage =
       tvlFor && totalTVL ? (+tvlFor / +totalTVL) * 100 : 0
+    const formattedTVL =
+      totalTVL < 0.0001 ? '<\u00A00.0001' : totalTVL.toFixed(4)
 
     const content = (
       <div
@@ -56,7 +58,7 @@ const StakeTVL = React.forwardRef<HTMLDivElement, StakeTVLProps>(
               TVL
             </Text>
             <div className="flex flex-row items-center gap-1">
-              <Text variant={TextVariant.caption}>{totalTVL}</Text>
+              <Text variant={TextVariant.caption}>{formattedTVL}</Text>
               <Text variant={TextVariant.caption}>{currency}</Text>
             </div>
           </div>
