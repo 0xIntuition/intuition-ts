@@ -31,3 +31,49 @@ fragment VaultDetails on vaults {
   currentSharePrice
   totalShares
 }
+
+fragment AtomVaultDetailsWithPositions on vaults {
+  vault {
+    totalShares
+    currentSharePrice
+    positions_aggregate(where: { accountId: { _in: $addresses } }) {
+      aggregate {
+        sum {
+          shares
+        }
+      }
+      nodes {
+        account {
+          id
+        }
+        shares
+      }
+    }
+  }
+}
+
+fragment TripleVaultCountDetailsWithPositions on vaults {
+  vault {
+    totalShares
+    currentSharePrice
+    positions_aggregate(where: { accountId: { _in: $addresses } }) {
+      nodes {
+        account {
+          id
+        }
+        shares
+      }
+    }
+  }
+  counterVault {
+    totalShares
+    positions_aggregate(where: { accountId: { _in: $addresses } }) {
+      nodes {
+        account {
+          id
+        }
+        shares
+      }
+    }
+  }
+}
