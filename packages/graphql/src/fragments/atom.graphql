@@ -1,19 +1,33 @@
-# ThingMetadata fragment included with atom fragments because of the context it's used in (atom queries)
-fragment ThingMetadata on things {
-  id
-  image
-  name
-  description
-  url
+fragment AtomValue on atoms {
+  value {
+    person {
+      name
+      image
+      description
+      url
+    }
+    thing {
+      name
+      image
+      description
+      url
+    }
+    organization {
+      name
+      image
+      description
+      url
+    }
+  }
 }
 
 fragment AtomMetadata on atoms {
-  data
   id
   image
   label
   emoji
   type
+  ...AtomValue
 }
 
 fragment AtomTxn on atoms {

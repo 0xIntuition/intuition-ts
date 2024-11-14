@@ -4,6 +4,9 @@ fragment AccountMetadata on accounts {
   id
   atomId
   type
+  atom {
+    ...AtomValue
+  }
 }
 
 fragment AccountClaims on accounts {
