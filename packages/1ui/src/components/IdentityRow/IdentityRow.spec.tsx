@@ -23,13 +23,13 @@ describe('IdentityRow', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="w-full flex flex-col items-center bg-primary/5 border border-border/10 max-sm:flex-col max-sm:gap-3 rounded-t-xl rounded-b-xl"
+          class="w-full flex flex-col items-center bg-primary/5 border border-border/10 rounded-t-xl rounded-b-xl"
         >
           <div
-            class="w-full flex justify-between items-center p-4 rounded-t-xl"
+            class="w-full flex flex-col md:flex-row justify-between items-center p-4 max-sm:gap-6 rounded-t-xl"
           >
             <div
-              class="flex items-center"
+              class="flex w-full items-start md:items-center gap-1"
             >
               <a
                 data-state="closed"
@@ -53,12 +53,37 @@ describe('IdentityRow', () => {
                       </svg>
                     </span>
                   </span>
-                  John Doe
+                  <div
+                    class="text-primary text-base font-normal"
+                  >
+                    John Doe
+                  </div>
                 </button>
               </a>
+              <span
+                class="sm:hidden ml-auto"
+                data-state="closed"
+              >
+                <button
+                  class="flex justify-center items-center gap-2 text-sm font-medium border disabled:text-muted-foreground aria-disabled:text-muted-foreground aria-disabled:pointer-events-none bg-transparent text-primary/70 border-transparent hover:text-primary disabled:border-transparent aria-disabled:border-transparent disabled:bg-transparent aria-disabled:bg-transparent shadow-none p-1"
+                >
+                  <svg
+                    class="text-secondary/70 h-4 w-4"
+                  >
+                    <use
+                      href="/src/components/Icon/Icon.sprites.svg#context"
+                    />
+                  </svg>
+                </button>
+              </span>
             </div>
             <div
-              class="flex items-center gap-3"
+              class="shrink-0 bg-border/20 h-[1px] w-full md:hidden"
+              data-orientation="horizontal"
+              role="none"
+            />
+            <div
+              class="flex items-center max-sm:justify-between max-sm:w-full max-sm:gap-3"
             >
               <div
                 class="h-9 justify-start items-center gap-1 inline-flex"
@@ -75,15 +100,24 @@ describe('IdentityRow', () => {
                       TVL
                     </div>
                     <div
-                      class="text-primary text-sm font-normal"
+                      class="flex flex-row items-center gap-1"
                     >
-                      420.69 ETH
+                      <div
+                        class="text-primary text-sm font-normal"
+                      >
+                        420.69
+                      </div>
+                      <div
+                        class="text-primary text-sm font-normal"
+                      >
+                        ETH
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
               <button
-                class="flex justify-center items-center text-sm font-medium border aria-disabled:text-muted-foreground aria-disabled:border-muted aria-disabled:pointer-events-none bg-gradient-to-b from-transparent to-transparent hover:text-primary aria-disabled:bg-transparent aria-selected:primary-gradient-subtle aria-selected:border-primary/10 shadow-md-subtle max-sm:py-2 max-sm:text-base py-0.5 px-2.5 gap-1.5 h-9 w-16 rounded-xl disabled:bg-primary/5 disabled:border-primary/20 disabled:text-primary/20 bg-primary/10 border-primary/30 hover:bg-primary/20 hover:border-primary/60 text-secondary"
+                class="flex justify-center items-center text-sm font-medium border aria-disabled:text-muted-foreground aria-disabled:border-muted aria-disabled:pointer-events-none bg-gradient-to-b from-transparent to-transparent hover:text-primary aria-disabled:bg-transparent aria-selected:primary-gradient-subtle aria-selected:border-primary/10 shadow-md-subtle max-sm:py-2 max-sm:text-base py-0.5 px-2.5 gap-1.5 h-9 rounded-xl disabled:bg-primary/5 disabled:border-primary/20 disabled:text-primary/20 bg-primary/10 border-primary/30 hover:bg-primary/20 hover:border-primary/60 text-secondary w-full"
               >
                 <svg
                   class="h-4 w-4"
@@ -99,6 +133,7 @@ describe('IdentityRow', () => {
                 </div>
               </button>
               <span
+                class="max-sm:hidden"
                 data-disabled=""
                 data-state="closed"
               >
@@ -142,13 +177,13 @@ describe('IdentityRow', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="w-full flex flex-col items-center bg-primary/5 border border-border/10 max-sm:flex-col max-sm:gap-3 rounded-t-xl rounded-b-xl"
+          class="w-full flex flex-col items-center bg-primary/5 border border-border/10 rounded-t-xl rounded-b-xl"
         >
           <div
-            class="w-full flex justify-between items-center p-4 rounded-t-xl bg-gradient-to-r from-transparent to-primary/10"
+            class="w-full flex flex-col md:flex-row justify-between items-center p-4 max-sm:gap-6 rounded-t-xl bg-gradient-to-r from-transparent to-primary/10"
           >
             <div
-              class="flex items-center"
+              class="flex w-full items-start md:items-center gap-1"
             >
               <a
                 data-state="closed"
@@ -172,12 +207,37 @@ describe('IdentityRow', () => {
                       </svg>
                     </span>
                   </span>
-                  John Doe
+                  <div
+                    class="text-primary text-base font-normal"
+                  >
+                    John Doe
+                  </div>
                 </button>
               </a>
+              <span
+                class="sm:hidden ml-auto"
+                data-state="closed"
+              >
+                <button
+                  class="flex justify-center items-center gap-2 text-sm font-medium border disabled:text-muted-foreground aria-disabled:text-muted-foreground aria-disabled:pointer-events-none bg-transparent text-primary/70 border-transparent hover:text-primary disabled:border-transparent aria-disabled:border-transparent disabled:bg-transparent aria-disabled:bg-transparent shadow-none p-1"
+                >
+                  <svg
+                    class="text-secondary/70 h-4 w-4"
+                  >
+                    <use
+                      href="/src/components/Icon/Icon.sprites.svg#context"
+                    />
+                  </svg>
+                </button>
+              </span>
             </div>
             <div
-              class="flex items-center gap-3"
+              class="shrink-0 bg-border/20 h-[1px] w-full md:hidden"
+              data-orientation="horizontal"
+              role="none"
+            />
+            <div
+              class="flex items-center max-sm:justify-between max-sm:w-full max-sm:gap-3"
             >
               <div
                 class="h-9 justify-start items-center gap-1 inline-flex"
@@ -194,9 +254,18 @@ describe('IdentityRow', () => {
                       TVL
                     </div>
                     <div
-                      class="text-primary text-sm font-normal"
+                      class="flex flex-row items-center gap-1"
                     >
-                      420.69 ETH
+                      <div
+                        class="text-primary text-sm font-normal"
+                      >
+                        420.69
+                      </div>
+                      <div
+                        class="text-primary text-sm font-normal"
+                      >
+                        ETH
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -218,6 +287,7 @@ describe('IdentityRow', () => {
                 </div>
               </button>
               <span
+                class="max-sm:hidden"
                 data-disabled=""
                 data-state="closed"
               >
@@ -237,7 +307,7 @@ describe('IdentityRow', () => {
             </div>
           </div>
           <div
-            class="flex flex-row justify-end px-4 py-0.5 w-full items-center gap-1.5 h-9"
+            class="flex flex-row justify-center md:justify-end px-4 py-0.5 w-full items-center gap-1.5 h-14 md:h-9"
           >
             <svg
               class="h-4 w-4"

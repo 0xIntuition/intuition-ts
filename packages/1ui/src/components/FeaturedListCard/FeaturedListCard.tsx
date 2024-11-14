@@ -27,7 +27,7 @@ const FeaturedListCard: React.FC<FeaturedListCardProps> = ({
   stakeholders,
 }) => {
   return (
-    <div className="relative w-[530px] flex flex-col overflow-hidden gap-3 p-5 text-left bg-primary/5 border border-primary/20 rounded-2xl hover:bg-primary/10 hover:border-primary/50 hover:cursor-pointer transition-all duration-300">
+    <div className="relative w-full md:w-[530px] flex flex-col overflow-hidden gap-3 p-5 text-left bg-primary/5 border border-primary/20 rounded-2xl hover:bg-primary/10 hover:border-primary/50 hover:cursor-pointer transition-all duration-300">
       <div>
         <Trunctacular
           value={displayName}

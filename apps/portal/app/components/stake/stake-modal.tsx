@@ -439,7 +439,7 @@ export default function StakeModal({
     >
       <DialogContent
         onOpenAutoFocus={(event) => event.preventDefault()}
-        className="flex flex-col min-w-[600px] min-h-[600px]"
+        className="flex flex-col md:min-w-[600px] md:min-h-[600px]"
       >
         <DialogHeader>
           <DialogTitle>

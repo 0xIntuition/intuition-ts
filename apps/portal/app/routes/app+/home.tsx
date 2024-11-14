@@ -146,7 +146,7 @@ export default function HomePage() {
                 )
               }}
             </Await>
-          </Suspense>{' '}
+          </Suspense>
         </div>
         <div className="flex flex-col gap-4">
           <HomeSectionHeader

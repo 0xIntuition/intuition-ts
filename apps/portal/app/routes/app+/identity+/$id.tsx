@@ -190,7 +190,7 @@ export default function IdentityDetails() {
       {!isPending && (
         <>
           <Tags>
-            <div className="flex flex-row gap-2 md:flex-col">
+            <div className="flex flex-col gap-2">
               {Array.isArray(tagClaims) && tagClaims.length > 0 ? (
                 <TagsContent numberOfTags={tagClaims?.length ?? 0}>
                   {tagClaims.slice(0, 5).map((tagClaim) => (

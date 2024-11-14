@@ -8,6 +8,7 @@ import {
   ContextMenuTrigger,
 } from 'components/ContextMenu'
 import { Icon, IconName } from 'components/Icon'
+import { Separator } from 'components/Separator'
 import { StakeButton, StakeButtonVariant } from 'components/StakeButton'
 import { StakeTVL } from 'components/StakeTVL'
 import { Text, TextVariant } from 'components/Text'
@@ -64,12 +65,30 @@ const ClaimRow = ({
               : 'none',
         }}
         className={cn(
-          `w-full flex justify-between items-center p-4`,
+          `w-full flex flex-col md:flex-row justify-between items-center p-4 max-sm:gap-6`,
           isFirst && 'rounded-t-xl',
         )}
       >
-        <div className="flex items-center gap-1">{children}</div>
-        <div className="flex items-center gap-3">
+        <div className="flex w-full items-start md:items-center gap-1">
+          {children}
+          <ContextMenu>
+            <ContextMenuTrigger className="sm:hidden ml-auto">
+              <Button variant={ButtonVariant.text} size={ButtonSize.icon}>
+                <Icon
+                  name={IconName.context}
+                  className="text-secondary/70 h-4 w-4"
+                />
+              </Button>
+            </ContextMenuTrigger>
+            <ContextMenuContent>
+              <ContextMenuItem>Profile</ContextMenuItem>
+              <ContextMenuItem>Settings</ContextMenuItem>
+              <ContextMenuItem>Logout</ContextMenuItem>
+            </ContextMenuContent>
+          </ContextMenu>
+        </div>
+        <Separator className="md:hidden" />
+        <div className="flex items-center gap-3 max-sm:w-full">
           <StakeTVL
             totalTVL={+totalTVL}
             tvlFor={+tvlFor}
@@ -100,7 +119,7 @@ const ClaimRow = ({
             </>
           )}
           <ContextMenu>
-            <ContextMenuTrigger disabled>
+            <ContextMenuTrigger disabled className="max-sm:hidden">
               <Button
                 variant={ButtonVariant.text}
                 size={ButtonSize.icon}
@@ -129,8 +148,11 @@ const ClaimRow = ({
                 : 'linear-gradient(to right, transparent, rgba(255, 149, 0, 0.2))',
           }}
           className={cn(
-            `flex flex-row justify-end px-4 py-0.5 w-full items-center gap-1.5 h-9`,
+            `flex flex-row justify-center md:justify-end px-4 py-0.5 w-full items-center gap-1.5 h-14 md:h-9`,
             isLast && 'rounded-b-xl',
+            positionDirection === ClaimPosition.claimFor
+              ? 'bg-for/10 text-for'
+              : 'bg-against/10 text-against',
           )}
         >
           <Icon name={IconName.arrowUp} className="h-4 w-4" />

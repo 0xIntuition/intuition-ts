@@ -55,9 +55,10 @@ const StakeTVL = React.forwardRef<HTMLDivElement, StakeTVLProps>(
             <Text variant={TextVariant.caption} className="text-primary/70">
               TVL
             </Text>
-            <Text variant={TextVariant.caption}>
-              {totalTVL} {currency}
-            </Text>
+            <div className="flex flex-row items-center gap-1">
+              <Text variant={TextVariant.caption}>{totalTVL}</Text>
+              <Text variant={TextVariant.caption}>{currency}</Text>
+            </div>
           </div>
         </div>
         {isClaim && (

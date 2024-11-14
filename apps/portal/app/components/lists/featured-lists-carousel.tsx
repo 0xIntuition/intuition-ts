@@ -21,8 +21,16 @@ export function FeaturedListCarousel({ lists }: FeaturedListCarouselProps) {
     () => ({
       dragFree: true,
       containScroll: 'trimSnaps',
-      align: 'start' as const,
+      align: 'center',
       slidesToScroll: 1,
+      breakpoints: {
+        '(max-width: 768px)': {
+          dragFree: false,
+          containScroll: 'keepSnaps',
+          slidesToScroll: 1,
+          loop: true,
+        },
+      },
     }),
     [],
   )
@@ -98,24 +106,24 @@ export function FeaturedListCarousel({ lists }: FeaturedListCarouselProps) {
   }, [emblaApi])
 
   return (
-    <div className="relative">
+    <div className="relative max-w-[400px] md:max-w-none">
       <div className="overflow-hidden" ref={emblaRef}>
         <div className="flex gap-6">
           {lists.map((list) => (
-            <div key={list.claim_id} className="flex-shrink-0">
+            <div
+              key={list.claim_id}
+              className="md:flex-shrink-0 flex-[0_0_100%] md:flex-[0_0_auto] min-w-0"
+            >
               <Link
                 to={getListUrl(list.vault_id, '')}
                 prefetch="intent"
-                className="block"
+                className="block md:w-auto mx-auto max-w-[400px] md:max-w-none"
                 onClick={(e) => e.stopPropagation()}
               >
                 <FeaturedListCard
                   displayName={list.object?.display_name ?? ''}
                   imgSrc={list.object?.image ?? ''}
                   identitiesCount={list.object?.tag_count ?? 0}
-                  // TODO: Update TVL and holders count when it becomes available. Because the list is identified by the object, the tvl and holders count are related to specific claim used for the query rather than the list itself.
-                  // tvl={formatBalance(list.assets_sum ?? 0, 18)}
-                  // holdersCount={list.num_positions ?? 0}
                 />
               </Link>
             </div>

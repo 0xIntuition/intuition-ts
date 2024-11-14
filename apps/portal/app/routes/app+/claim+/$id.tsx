@@ -11,6 +11,7 @@ import {
   Tag,
   TagSize,
   TagVariant,
+  useSidebarLayoutContext,
 } from '@0xintuition/1ui'
 import {
   ClaimPresenter,
@@ -143,6 +144,8 @@ export default function ClaimDetails() {
 
   const handleGoBack = useGoBack({ fallbackRoute: PATHS.EXPLORE_CLAIMS })
 
+  const { isMobileView } = useSidebarLayoutContext()
+
   const leftPanel = (
     <div className="flex-col justify-start items-start gap-6 inline-flex w-full">
       <NavigationButton
@@ -190,6 +193,7 @@ export default function ClaimDetails() {
             link: getAtomLink(claim.object as IdentityPresenter),
             linkComponent: RemixLink,
           }}
+          orientation={isMobileView ? 'vertical' : 'horizontal'}
         />
       </div>
       {vaultDetails !== null && user_assets !== '0' ? (

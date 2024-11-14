@@ -64,7 +64,7 @@ export const Claim = ({
   const claimContent = (
     <div
       className={cn(
-        'flex items-center w-full max-w-max relative max-sm:flex-col max-sm:m-auto transition-colors duration-200',
+        'flex items-center w-full max-w-max relative max-sm:m-auto transition-colors duration-200',
         orientation === 'vertical' ? 'flex-col items-start' : 'flex-row',
       )}
     >
@@ -81,7 +81,7 @@ export const Claim = ({
               )}
             />
           )}
-          <div>
+          <div className="flex items-center">
             <ClaimItem
               item={item}
               size={size}
@@ -100,31 +100,31 @@ export const Claim = ({
                 }
               }}
             />
+            {isClickable && index === items.length - 1 && (
+              <div
+                className="pl-1"
+                onMouseEnter={(e) => {
+                  e.stopPropagation()
+                  setIsFullClaimHovered(true)
+                  setHoveredIndex(null)
+                }}
+                onMouseLeave={(e) => {
+                  e.stopPropagation()
+                  setIsFullClaimHovered(false)
+                }}
+              >
+                <Icon
+                  name={'arrow-up-right'}
+                  className={cn(
+                    'h-4 w-4 transition-colors duration-200',
+                    isFullClaimHovered ? 'text-primary' : 'text-secondary/50',
+                  )}
+                />
+              </div>
+            )}
           </div>
         </Fragment>
       ))}
-      {isClickable && ( // Replace onClick check with isClickable
-        <div
-          className="pl-1"
-          onMouseEnter={(e) => {
-            e.stopPropagation()
-            setIsFullClaimHovered(true)
-            setHoveredIndex(null)
-          }}
-          onMouseLeave={(e) => {
-            e.stopPropagation()
-            setIsFullClaimHovered(false)
-          }}
-        >
-          <Icon
-            name={'arrow-up-right'}
-            className={cn(
-              'h-4 w-4 transition-colors duration-200',
-              isFullClaimHovered ? 'text-primary' : 'text-secondary/50',
-            )}
-          />
-        </div>
-      )}
     </div>
   )
 

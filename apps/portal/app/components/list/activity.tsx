@@ -16,6 +16,7 @@ import {
   ProfileCard,
   Text,
   Trunctacular,
+  useSidebarLayoutContext,
 } from '@0xintuition/1ui'
 import {
   ActivityPresenter,
@@ -115,6 +116,8 @@ function ActivityItem({
       ? (eventMessage as (value: string) => string)(value).toString()
       : eventMessage.toString()
     : ''
+
+  const { isMobileView } = useSidebarLayoutContext()
 
   return (
     <div
@@ -315,6 +318,7 @@ function ActivityItem({
                   linkComponent: RemixLink,
                 }}
                 isClickable={true}
+                orientation={isMobileView ? 'vertical' : 'horizontal'}
               />
             </Link>
           </ClaimRow>

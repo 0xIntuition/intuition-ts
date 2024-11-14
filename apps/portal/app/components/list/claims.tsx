@@ -4,6 +4,7 @@ import {
   ClaimRow,
   IconName,
   Identity,
+  useSidebarLayoutContext,
 } from '@0xintuition/1ui'
 import {
   ClaimPresenter,
@@ -48,6 +49,7 @@ export function ClaimsList({
   readOnly?: boolean
 }) {
   const setStakeModalActive = useSetAtom(stakeModalAtom)
+  const { isMobileView } = useSidebarLayoutContext()
 
   const options: SortOption<ClaimSortColumn>[] = [
     { value: 'Total ETH', sortBy: 'AssetsSum' },
@@ -178,6 +180,7 @@ export function ClaimsList({
                   ),
                   linkComponent: RemixLink,
                 }}
+                orientation={isMobileView ? 'vertical' : 'horizontal'}
                 isClickable={true}
               />
             </Link>

@@ -28,9 +28,11 @@ describe('Claim', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="flex items-center w-full max-w-max relative max-sm:flex-col max-sm:m-auto transition-colors duration-200 flex-row"
+          class="flex items-center w-full max-w-max relative max-sm:m-auto transition-colors duration-200 flex-row"
         >
-          <div>
+          <div
+            class="flex items-center"
+          >
             <button
               class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center text-secondary/70 hover:text-secondary rounded-full [&>span]:rounded-full [&>span]:overflow-hidden text-base [&>span]:h-7 [&>span]:w-7 relative z-10 identity-tag transition-colors duration-200 border-theme"
               data-state="closed"
@@ -62,7 +64,9 @@ describe('Claim', () => {
             data-orientation="horizontal"
             role="none"
           />
-          <div>
+          <div
+            class="flex items-center"
+          >
             <button
               class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center text-secondary/70 hover:text-secondary rounded-md text-base [&>span]:h-7 [&>span]:w-7 relative z-10 identity-tag transition-colors duration-200 border-theme"
               data-state="closed"
@@ -94,7 +98,9 @@ describe('Claim', () => {
             data-orientation="horizontal"
             role="none"
           />
-          <div>
+          <div
+            class="flex items-center"
+          >
             <button
               class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center text-secondary/70 hover:text-secondary rounded-md text-base [&>span]:h-7 [&>span]:w-7 relative z-10 identity-tag transition-colors duration-200 border-theme"
               data-state="closed"
@@ -131,9 +137,11 @@ describe('Claim', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="flex items-center w-full max-w-max relative max-sm:flex-col max-sm:m-auto transition-colors duration-200 flex-row"
+          class="flex items-center w-full max-w-max relative max-sm:m-auto transition-colors duration-200 flex-row"
         >
-          <div>
+          <div
+            class="flex items-center"
+          >
             <button
               class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center text-secondary/70 hover:text-secondary rounded-full [&>span]:rounded-full [&>span]:overflow-hidden text-base [&>span]:h-7 [&>span]:w-7 disabled:opacity-50 cursor-not-allowed relative z-10 identity-tag transition-colors duration-200 border-theme"
               disabled=""
@@ -165,7 +173,9 @@ describe('Claim', () => {
             data-orientation="horizontal"
             role="none"
           />
-          <div>
+          <div
+            class="flex items-center"
+          >
             <button
               class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center text-secondary/70 hover:text-secondary rounded-md text-base [&>span]:h-7 [&>span]:w-7 disabled:opacity-50 cursor-not-allowed relative z-10 identity-tag transition-colors duration-200 border-theme"
               disabled=""
@@ -197,7 +207,9 @@ describe('Claim', () => {
             data-orientation="horizontal"
             role="none"
           />
-          <div>
+          <div
+            class="flex items-center"
+          >
             <button
               class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center text-secondary/70 hover:text-secondary rounded-md text-base [&>span]:h-7 [&>span]:w-7 disabled:opacity-50 cursor-not-allowed relative z-10 identity-tag transition-colors duration-200 border-theme"
               disabled=""
@@ -236,9 +248,11 @@ describe('Claim', () => {
     expect(smFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="flex items-center w-full max-w-max relative max-sm:flex-col max-sm:m-auto transition-colors duration-200 flex-row"
+          class="flex items-center w-full max-w-max relative max-sm:m-auto transition-colors duration-200 flex-row"
         >
-          <div>
+          <div
+            class="flex items-center"
+          >
             <button
               class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center text-secondary/70 hover:text-secondary rounded-full [&>span]:rounded-full [&>span]:overflow-hidden text-xl [&>span]:h-11 [&>span]:w-11 relative z-10 identity-tag transition-colors duration-200 border-theme"
               data-state="closed"
@@ -270,7 +284,9 @@ describe('Claim', () => {
             data-orientation="horizontal"
             role="none"
           />
-          <div>
+          <div
+            class="flex items-center"
+          >
             <button
               class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center text-secondary/70 hover:text-secondary rounded-md text-xl [&>span]:h-11 [&>span]:w-11 relative z-10 identity-tag transition-colors duration-200 border-theme"
               data-state="closed"
@@ -302,7 +318,9 @@ describe('Claim', () => {
             data-orientation="horizontal"
             role="none"
           />
-          <div>
+          <div
+            class="flex items-center"
+          >
             <button
               class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center text-secondary/70 hover:text-secondary rounded-md text-xl [&>span]:h-11 [&>span]:w-11 relative z-10 identity-tag transition-colors duration-200 border-theme"
               data-state="closed"
@@ -339,9 +357,11 @@ describe('Claim', () => {
     expect(lgFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="flex items-center w-full max-w-max relative max-sm:flex-col max-sm:m-auto transition-colors duration-200 flex-row"
+          class="flex items-center w-full max-w-max relative max-sm:m-auto transition-colors duration-200 flex-row"
         >
-          <div>
+          <div
+            class="flex items-center"
+          >
             <button
               class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center text-secondary/70 hover:text-secondary rounded-full [&>span]:rounded-full [&>span]:overflow-hidden text-lg [&>span]:h-8 [&>span]:w-8 relative z-10 identity-tag transition-colors duration-200 border-theme"
               data-state="closed"
@@ -373,7 +393,9 @@ describe('Claim', () => {
             data-orientation="horizontal"
             role="none"
           />
-          <div>
+          <div
+            class="flex items-center"
+          >
             <button
               class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center text-secondary/70 hover:text-secondary rounded-md text-lg [&>span]:h-8 [&>span]:w-8 relative z-10 identity-tag transition-colors duration-200 border-theme"
               data-state="closed"
@@ -405,7 +427,9 @@ describe('Claim', () => {
             data-orientation="horizontal"
             role="none"
           />
-          <div>
+          <div
+            class="flex items-center"
+          >
             <button
               class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center text-secondary/70 hover:text-secondary rounded-md text-lg [&>span]:h-8 [&>span]:w-8 relative z-10 identity-tag transition-colors duration-200 border-theme"
               data-state="closed"

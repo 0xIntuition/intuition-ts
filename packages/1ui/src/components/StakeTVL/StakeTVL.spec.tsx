@@ -26,9 +26,18 @@ describe('StakeTVL', () => {
                 TVL
               </div>
               <div
-                class="text-primary text-sm font-normal"
+                class="flex flex-row items-center gap-1"
               >
-                420.69 ETH
+                <div
+                  class="text-primary text-sm font-normal"
+                >
+                  420.69
+                </div>
+                <div
+                  class="text-primary text-sm font-normal"
+                >
+                  ETH
+                </div>
               </div>
             </div>
           </div>
@@ -64,9 +73,18 @@ describe('StakeTVL', () => {
                 TVL
               </div>
               <div
-                class="text-primary text-sm font-normal"
+                class="flex flex-row items-center gap-1"
               >
-                420.69 ETH
+                <div
+                  class="text-primary text-sm font-normal"
+                >
+                  420.69
+                </div>
+                <div
+                  class="text-primary text-sm font-normal"
+                >
+                  ETH
+                </div>
               </div>
             </div>
           </div>

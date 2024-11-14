@@ -74,8 +74,8 @@ const StakeButton = React.forwardRef<HTMLButtonElement, StakeButtonProps>(
             variant,
             userPosition,
             positionDirection,
-            className,
           }),
+          className,
         )}
         ref={ref}
         onClick={onClick}
