@@ -6,11 +6,23 @@ query GetAccounts {
   }
 }
 
-query GetAccount($address: String!) {
+query GetAccount(
+  $address: String!
+  $atomsWhere: atoms_bool_exp
+  $atomsOrderBy: [atoms_order_by!]
+  $atomsLimit: Int
+  $atomsOffset: Int
+  $triplesWhere: triples_bool_exp
+  $triplesOrderBy: [triples_order_by!]
+  $triplesLimit: Int
+  $triplesOffset: Int
+) {
   account(id: $address) {
     ...AccountMetadata
     ...AccountClaims
     ...AccountPositions
+    ...AccountCreatedAtoms
+    ...AccountCreatedTriples
   }
   chainLinkPrices(limit: 1, order_by: { id: desc }) {
     usd

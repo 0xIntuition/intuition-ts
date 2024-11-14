@@ -18,6 +18,7 @@
   "dependencies": {
     "@0xintuition/1ui": "workspace:^",
     "@0xintuition/api": "workspace:^",
+    "@0xintuition/graphql": "workspace:^",
     "@conform-to/react": "^1.1.3",
     "@conform-to/zod": "^1.1.3",
     "@epic-web/remember": "^1.0.2",

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import {
   Badge,
@@ -28,6 +28,7 @@ import {
 import { getZodConstraint, parseWithZod } from '@conform-to/zod'
 import { multivaultAbi } from '@lib/abis/multivault'
 import { useCreateAtom } from '@lib/hooks/useCreateAtom'
+import { useCreateIdentityConfig } from '@lib/hooks/useCreateIdentityConfig'
 import { useGetWalletBalance } from '@lib/hooks/useGetWalletBalance'
 import { useImageUploadFetcher } from '@lib/hooks/useImageUploadFetcher'
 import {
@@ -120,17 +121,8 @@ export function IdentityForm({
     }
   }, [state.status, transactionResponseData])
 
-  const loaderFetcher = useFetcher<CreateLoaderData>()
-  const loaderFetcherUrl = '/resources/create'
-  const loaderFetcherRef = useRef(loaderFetcher.load)
-
-  useEffect(() => {
-    loaderFetcherRef.current = loaderFetcher.load
-  })
-
-  useEffect(() => {
-    loaderFetcherRef.current(loaderFetcherUrl)
-  }, [loaderFetcherUrl])
+  const { data: configData, isLoading: isLoadingConfig } =
+    useCreateIdentityConfig()
 
   useEffect(() => {
     logger('file changed', identityImageFile)
@@ -171,7 +163,7 @@ export function IdentityForm({
     }
   }, [imageUploadFetcher.data])
 
-  const fees = loaderFetcher.data as CreateLoaderData
+  const fees = configData as CreateLoaderData
 
   const { data: walletClient } = useWalletClient()
   const publicClient = usePublicClient()
@@ -762,6 +754,7 @@ export function IdentityForm({
                   disabled={
                     !address ||
                     loading ||
+                    isLoadingConfig ||
                     !formTouched ||
                     ['confirm', 'transaction-pending', 'awaiting'].includes(
                       state.status,

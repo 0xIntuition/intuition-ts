@@ -3,6 +3,7 @@ query GetEvents(
   $offset: Int
   $orderBy: [events_order_by!]
   $where: events_bool_exp
+  $addresses: [String!]
 ) {
   events_aggregate(
     limit: $limit

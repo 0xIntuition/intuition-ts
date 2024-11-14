@@ -1,0 +1,13 @@
+fragment DepositEventFragment on events {
+  deposit {
+    vaultId
+    senderAssetsAfterTotalFees
+    sharesForReceiver
+    receiver {
+      id
+    }
+    sender {
+      id
+    }
+  }
+}

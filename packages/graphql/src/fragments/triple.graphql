@@ -8,6 +8,7 @@ fragment TripleMetadata on triples {
     label
     emoji
     type
+    ...AtomValue
     creator {
       ...AccountMetadata
     }
@@ -19,6 +20,7 @@ fragment TripleMetadata on triples {
     label
     emoji
     type
+    ...AtomValue
     creator {
       ...AccountMetadata
     }
@@ -30,6 +32,7 @@ fragment TripleMetadata on triples {
     label
     emoji
     type
+    ...AtomValue
     creator {
       ...AccountMetadata
     }
@@ -51,5 +54,16 @@ fragment TripleVaultDetails on triples {
   }
   counterVault {
     ...VaultDetails
+  }
+}
+
+fragment TripleVaultCouterVaultDetailsWithPositions on triples {
+  vaultId
+  counterVaultId
+  vault {
+    ...VaultDetailsWithFilteredPositions
+  }
+  counterVault {
+    ...VaultDetailsWithFilteredPositions
   }
 }
