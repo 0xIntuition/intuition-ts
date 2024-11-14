@@ -19,16 +19,16 @@ export function FeaturedListCarousel({ lists }: FeaturedListCarouselProps) {
 
   const options = useMemo<EmblaOptionsType>(
     () => ({
-      dragFree: true,
-      containScroll: 'trimSnaps',
+      dragFree: false,
+      containScroll: 'keepSnaps',
       align: 'center',
       slidesToScroll: 1,
+      loop: true,
       breakpoints: {
-        '(max-width: 768px)': {
-          dragFree: false,
-          containScroll: 'keepSnaps',
-          slidesToScroll: 1,
-          loop: true,
+        '(min-width: 768px)': {
+          align: 'start',
+          dragFree: true,
+          containScroll: 'trimSnaps',
         },
       },
     }),
@@ -106,18 +106,18 @@ export function FeaturedListCarousel({ lists }: FeaturedListCarouselProps) {
   }, [emblaApi])
 
   return (
-    <div className="relative max-w-[400px] md:max-w-none">
+    <div className="relative w-full">
       <div className="overflow-hidden" ref={emblaRef}>
         <div className="flex gap-6">
           {lists.map((list) => (
             <div
               key={list.claim_id}
-              className="md:flex-shrink-0 flex-[0_0_100%] md:flex-[0_0_auto] min-w-0"
+              className="shrink-0 w-[350px] md:w-[530px]"
             >
               <Link
                 to={getListUrl(list.vault_id, '')}
                 prefetch="intent"
-                className="block md:w-auto mx-auto max-w-[400px] md:max-w-none"
+                className="block"
                 onClick={(e) => e.stopPropagation()}
               >
                 <FeaturedListCard

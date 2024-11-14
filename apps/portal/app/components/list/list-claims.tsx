@@ -31,6 +31,7 @@ export function ListClaimsList<T extends SortColumnType = ClaimSortColumn>({
   sortOptions,
   sourceUserAddress,
   readOnly = false,
+  variant,
 }: {
   listClaims: ClaimPresenter[]
   pagination?: PaginationType
@@ -41,6 +42,7 @@ export function ListClaimsList<T extends SortColumnType = ClaimSortColumn>({
   sortOptions?: SortOption<T>[]
   sourceUserAddress?: string
   readOnly?: boolean
+  variant?: 'explore' | 'profile'
 }) {
   const defaultOptions: SortOption<ClaimSortColumn>[] = [
     { value: 'Total ETH', sortBy: 'AssetsSum' },
@@ -101,7 +103,7 @@ export function ListClaimsList<T extends SortColumnType = ClaimSortColumn>({
             />
           )}
         </div>
-        <ListGrid>
+        <ListGrid variant={variant}>
           {uniqueClaimData
             .filter((claim) => claim && claim.object)
             .map((claim, index) => (

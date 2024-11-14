@@ -126,7 +126,7 @@ export default function UserProfileOverview() {
         >
           About
         </Text>
-        <div className="flex flex-col items-center gap-6 md:flex-row">
+        <div className="flex flex-col xl:flex-row items-center gap-6">
           <OverviewAboutHeader
             variant="claims"
             userIdentity={userIdentity}
@@ -161,7 +161,7 @@ export default function UserProfileOverview() {
             }
             link={`${PATHS.PROFILE}/data-created`}
           />
-          <div className="flex flex-row w-full items-center gap-6 max-md:flex-col">
+          <div className="flex flex-col w-full items-center gap-6 xl:flex-row">
             <OverviewCreatedHeader
               variant="identities"
               totalCreated={userTotals?.total_identities ?? 0}

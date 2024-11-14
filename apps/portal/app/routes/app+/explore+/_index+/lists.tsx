@@ -107,6 +107,7 @@ export default function ExploreLists() {
         enableSearch={false}
         enableSort={true}
         onLoadMore={handleLoadMore}
+        variant="explore"
       />
     </>
   )
