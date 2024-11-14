@@ -114,7 +114,7 @@ export function FeaturedListCarousel({ lists }: FeaturedListCarouselProps) {
               <Link
                 to={getListUrl(list.vault_id, '')}
                 prefetch="intent"
-                className="block"
+                className="block md:w-auto mx-auto max-w-[400px] md:max-w-none"
                 onClick={(e) => e.stopPropagation()}
               >
                 <FeaturedListCard
