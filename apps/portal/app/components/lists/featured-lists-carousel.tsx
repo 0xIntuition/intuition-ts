@@ -106,7 +106,7 @@ export function FeaturedListCarousel({ lists }: FeaturedListCarouselProps) {
   }, [emblaApi])
 
   return (
-    <div className="relative w-full">
+    <div className="relative max-w-[400px] md:max-w-none">
       <div className="overflow-hidden" ref={emblaRef}>
         <div className="flex gap-6">
           {lists.map((list) => (
