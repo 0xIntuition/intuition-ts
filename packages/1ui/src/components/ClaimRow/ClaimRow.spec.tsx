@@ -182,7 +182,7 @@ describe('ClaimRow', () => {
                       <div
                         class="text-primary text-sm font-normal"
                       >
-                        420.69
+                        420.6900
                       </div>
                       <div
                         class="text-primary text-sm font-normal"
@@ -445,7 +445,7 @@ describe('ClaimRow', () => {
                       <div
                         class="text-primary text-sm font-normal"
                       >
-                        420.69
+                        420.6900
                       </div>
                       <div
                         class="text-primary text-sm font-normal"

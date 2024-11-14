@@ -83,7 +83,7 @@ describe('IdentityRow', () => {
               role="none"
             />
             <div
-              class="flex items-center max-sm:justify-between max-sm:w-full max-sm:gap-3"
+              class="flex items-center gap-3 max-sm:justify-between max-sm:w-full"
             >
               <div
                 class="h-9 justify-start items-center gap-1 inline-flex"
@@ -105,7 +105,7 @@ describe('IdentityRow', () => {
                       <div
                         class="text-primary text-sm font-normal"
                       >
-                        420.69
+                        420.6900
                       </div>
                       <div
                         class="text-primary text-sm font-normal"
@@ -237,7 +237,7 @@ describe('IdentityRow', () => {
               role="none"
             />
             <div
-              class="flex items-center max-sm:justify-between max-sm:w-full max-sm:gap-3"
+              class="flex items-center gap-3 max-sm:justify-between max-sm:w-full"
             >
               <div
                 class="h-9 justify-start items-center gap-1 inline-flex"
@@ -259,7 +259,7 @@ describe('IdentityRow', () => {
                       <div
                         class="text-primary text-sm font-normal"
                       >
-                        420.69
+                        420.6900
                       </div>
                       <div
                         class="text-primary text-sm font-normal"
