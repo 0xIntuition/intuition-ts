@@ -19,7 +19,7 @@ fragment VaultDetails on vaults {
       label
     }
   }
-  positions_aggregate {
+  positions_aggregate(where: { accountId: { _in: $addresses } }) {
     nodes {
       account {
         id
