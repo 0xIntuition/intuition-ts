@@ -45,7 +45,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
     return (
       <div
         className={cn(
-          'flex justify-between gap-2 items-center h-10 px-3 bg-primary/10 theme-border rounded-md text-base',
+          'flex justify-between gap-2 items-center h-10 px-3 bg-primary/10 theme-border rounded-md text-base ring-offset-background focus-within:outline-none focus-within:ring-[0.5px] focus-within:ring-ring focus-within:ring-offset-2',
           className,
         )}
       >
@@ -54,7 +54,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         )}
         <input
           type={type}
-          className="flex w-full px-2 bg-transparent ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-[0.5px] focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+          className="flex w-full px-2 bg-transparent file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
           ref={ref}
           {...props}
         />

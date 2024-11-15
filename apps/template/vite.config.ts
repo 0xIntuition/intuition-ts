@@ -54,6 +54,7 @@ export default defineConfig({
       '@privy-io/react-auth',
       '@privy-io/wagmi',
       'mini-svg-data-uri',
+      'react-dropzone'
     ],
   },
 })
