@@ -34,6 +34,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const searchParams = new URLSearchParams(url.search)
   const limit = parseInt(searchParams.get('limit') || '10')
   const offset = parseInt(searchParams.get('offset') || '0')
+  const addresses = [wallet.toLowerCase()]
 
   const queryClient = new QueryClient()
   try {
@@ -43,21 +44,35 @@ export async function loader({ request }: LoaderFunctionArgs) {
     >(GetEventsDocument, {
       limit,
       offset,
+      addresses,
     })()
 
-    await queryClient.setQueryData(
-      ['events-global', { limit, offset }],
-      prefetchedData,
-    )
-
-    logger('Prefetched data:', prefetchedData)
+    if (prefetchedData?.events_aggregate?.nodes) {
+      await queryClient.setQueryData(
+        ['events-global', { limit, offset, addresses }],
+        prefetchedData,
+      )
+      logger('Prefetched data:', prefetchedData)
+    } else {
+      await queryClient.setQueryData(
+        ['events-global', { limit, offset, addresses }],
+        // { events_aggregate: { nodes: [] } },
+      )
+      logger('No events found, setting empty array')
+    }
   } catch (error) {
     logger('Error prefetching data:', error)
+    await queryClient.setQueryData(
+      ['events-global', { limit, offset, addresses }],
+      {
+        // events_aggregate: { nodes: [] },
+      },
+    )
   }
 
   return json({
     dehydratedState: dehydrate(queryClient),
-    initialParams: { limit, offset },
+    initialParams: { limit, offset, addresses },
   })
 }
 
@@ -65,19 +80,22 @@ export default function GlobalActivityFeed() {
   const { initialParams } = useLoaderData<typeof loader>()
   const [searchParams] = useSearchParams()
 
-  // Get current pagination values
   const limit = parseInt(
     searchParams.get('limit') || String(initialParams.limit),
   )
   const offset = parseInt(
     searchParams.get('offset') || String(initialParams.offset),
   )
+  const addresses = initialParams.addresses
 
-  // Use React Query hook for client-side updates
   const { data: eventsData, isLoading } = useGetEventsQuery(
-    { limit, offset },
     {
-      queryKey: ['events-global', { limit, offset }],
+      limit,
+      offset,
+      addresses,
+    },
+    {
+      queryKey: ['events-global', { limit, offset, addresses }],
       staleTime: 30000,
       retry: 2,
     },
@@ -93,17 +111,17 @@ export default function GlobalActivityFeed() {
         icon={IconName.lightningBolt}
         bgImage={HEADER_BANNER_ACTIVITY}
       />
-      <ActivityList
+      {/* <ActivityList
         activities={eventsData?.events_aggregate?.nodes || []}
         pagination={{
           currentPage: offset / limit + 1,
           limit,
-          totalEntries: eventsData?.events_aggregate?.nodes?.length || 0,
+          totalEntries: eventsData?.events_aggregate?.aggregate?.count || 0,
           totalPages: Math.ceil(
-            (eventsData?.events_aggregate?.nodes?.length || 0) / limit,
+            (eventsData?.events_aggregate?.aggregate?.count || 0) / limit,
           ),
         }}
-      />
+      /> */}
     </>
   )
 }
