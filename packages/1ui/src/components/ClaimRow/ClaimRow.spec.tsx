@@ -526,7 +526,7 @@ describe('ClaimRow', () => {
             </div>
           </div>
           <div
-            class="flex flex-row justify-center md:justify-end px-4 py-0.5 w-full items-center gap-1.5 h-14 md:h-9 rounded-b-xl bg-for/10 text-for"
+            class="flex flex-row justify-center md:justify-end px-4 py-0.5 w-full items-center gap-1.5 h-14 md:h-9 rounded-b-xl text-for"
           >
             <svg
               class="h-4 w-4"

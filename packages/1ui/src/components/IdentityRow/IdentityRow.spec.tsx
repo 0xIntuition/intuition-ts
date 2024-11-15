@@ -307,7 +307,7 @@ describe('IdentityRow', () => {
             </div>
           </div>
           <div
-            class="flex flex-row justify-center md:justify-end px-4 py-0.5 w-full items-center gap-1.5 h-14 md:h-9  text-primary/70 font-medium"
+            class="flex flex-row justify-center md:justify-end px-4 py-0.5 w-full items-center gap-1.5 h-14 md:h-9  text-primary/70 font-medium bg-gradient-to-r from-transparent to-primary/10"
           >
             <svg
               class="h-4 w-4"

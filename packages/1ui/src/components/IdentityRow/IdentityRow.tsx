@@ -170,7 +170,7 @@ const IdentityRow = ({
         </div>
       </div>
       {userPosition && userPosition !== '0' && (
-        <div className="flex flex-row justify-center md:justify-end px-4 py-0.5 w-full items-center gap-1.5 h-14 md:h-9  text-primary/70 font-medium">
+        <div className="flex flex-row justify-center md:justify-end px-4 py-0.5 w-full items-center gap-1.5 h-14 md:h-9  text-primary/70 font-medium bg-gradient-to-r from-transparent to-primary/10">
           <Icon name={IconName.arrowUp} className="h-4 w-4" />
           <Text variant={TextVariant.caption} className="text-inherit">
             You have staked {userPosition} {currency}

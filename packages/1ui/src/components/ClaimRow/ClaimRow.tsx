@@ -153,8 +153,8 @@ const ClaimRow = ({
             `flex flex-row justify-center md:justify-end px-4 py-0.5 w-full items-center gap-1.5 h-14 md:h-9`,
             isLast && 'rounded-b-xl',
             positionDirection === ClaimPosition.claimFor
-              ? 'bg-for/10 text-for'
-              : 'bg-against/10 text-against',
+              ? 'text-for'
+              : 'text-against',
           )}
         >
           <Icon name={IconName.arrowUp} className="h-4 w-4" />
