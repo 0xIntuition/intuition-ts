@@ -1,7 +1,7 @@
 {
-  "name": "@0xintuition/template",
+  "name": "@0xintuition/template-remix-vite",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "apps/template",
+  "sourceRoot": "apps/template-remix-vite",
   "projectType": "application",
   "tags": [],
   "targets": {
@@ -21,20 +21,20 @@
     "lint": {
       "executor": "@nx/eslint:lint",
       "options": {
-        "lintFilePatterns": ["apps/template/**/*.{ts,tsx,js,jsx}"]
+        "lintFilePatterns": ["apps/template-remix-vite/**/*.{ts,tsx,js,jsx}"]
       }
     },
     "test": {
       "executor": "@nx/vite:test",
       "options": {
-        "config": "apps/template/vitest.config.ts"
+        "config": "apps/template-remix-vite/vitest.config.ts"
       }
     },
     "typecheck": {
       "dependsOn": ["^build"],
       "command": "tsc",
       "options": {
-        "cwd": "apps/template"
+        "cwd": "apps/template-remix-vite"
       }
     }
   }

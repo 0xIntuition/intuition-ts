@@ -14,7 +14,7 @@ Each app and package has it's own README with instructions for getting up and ru
 
 - [Portal](./apps/portal/) is the first core application in our new monorepo. The Portal README contains additional information and details about how to get started.
 - [Data Populator](./apps/data-populator/) is an app for bulk creation of atom data. The Data Populator README contains additional information.
-- [Template](./apps/template) is an opionionated template for our core app development stack.
+- [Remix/Vite Template](./apps/template-remix-vite) is an opionionated Remix/Vite template using our core app development stack, Neurofunk.
 
 ### Packages
 
