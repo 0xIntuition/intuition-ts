@@ -48,7 +48,7 @@ export function ActivityList({
   pagination,
   paramPrefix,
 }: {
-  activities: ActivityPresenter[]
+  activities: any[]
   pagination: PaginationType
   paramPrefix?: string
 }) {
