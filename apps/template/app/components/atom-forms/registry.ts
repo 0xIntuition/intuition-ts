@@ -1,5 +1,5 @@
 import { z } from "zod"
-import { Atom } from "./types"
+import { Atom, atomSchema } from "./types"
 
 export interface AtomFormProps<T extends z.ZodSchema> {
   onSubmit: (data: z.infer<T>) => Promise<void>

@@ -2,6 +2,8 @@ import {
   InfiniteData,
   useInfiniteQuery,
   UseInfiniteQueryOptions,
+  useMutation,
+  UseMutationOptions,
   useQuery,
   UseQueryOptions,
 } from '@tanstack/react-query'
@@ -8597,6 +8599,18 @@ export type VaultDetailsWithFilteredPositionsFragment = {
   }
 }
 
+export type UploadThingMutationVariables = Exact<{
+  name: Scalars['String']['input']
+  description?: InputMaybe<Scalars['String']['input']>
+  image?: InputMaybe<Scalars['String']['input']>
+  url?: InputMaybe<Scalars['String']['input']>
+}>
+
+export type UploadThingMutation = {
+  __typename?: 'mutation_root'
+  uploadThing?: { __typename?: 'ThingOutput'; cid?: string | null } | null
+}
+
 export type GetAccountsQueryVariables = Exact<{ [key: string]: never }>
 
 export type GetAccountsQuery = {
@@ -11090,6 +11104,52 @@ export const TripleVaultDetailsFragmentDoc = `
   }
 }
     `
+export const UploadThingDocument = `
+    mutation UploadThing($name: String!, $description: String, $image: String, $url: String) {
+  uploadThing(
+    arg1: {description: $description, image: $image, name: $name, url: $url}
+  ) {
+    cid
+  }
+}
+    `
+
+export const useUploadThingMutation = <TError = unknown, TContext = unknown>(
+  options?: UseMutationOptions<
+    UploadThingMutation,
+    TError,
+    UploadThingMutationVariables,
+    TContext
+  >,
+) => {
+  return useMutation<
+    UploadThingMutation,
+    TError,
+    UploadThingMutationVariables,
+    TContext
+  >({
+    mutationKey: ['UploadThing'],
+    mutationFn: (variables?: UploadThingMutationVariables) =>
+      fetcher<UploadThingMutation, UploadThingMutationVariables>(
+        UploadThingDocument,
+        variables,
+      )(),
+    ...options,
+  })
+}
+
+useUploadThingMutation.getKey = () => ['UploadThing']
+
+useUploadThingMutation.fetcher = (
+  variables: UploadThingMutationVariables,
+  options?: RequestInit['headers'],
+) =>
+  fetcher<UploadThingMutation, UploadThingMutationVariables>(
+    UploadThingDocument,
+    variables,
+    options,
+  )
+
 export const GetAccountsDocument = `
     query GetAccounts {
   accounts {
@@ -15469,6 +15529,108 @@ export const TripleVaultDetails = {
           },
           { kind: 'Field', name: { kind: 'Name', value: 'currentSharePrice' } },
           { kind: 'Field', name: { kind: 'Name', value: 'totalShares' } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
+export const UploadThing = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'UploadThing' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'name' } },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'description' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'image' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'url' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'uploadThing' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'arg1' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'description' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'description' },
+                      },
+                    },
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'image' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'image' },
+                      },
+                    },
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'name' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'name' },
+                      },
+                    },
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'url' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'url' },
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'cid' } },
+              ],
+            },
+          },
         ],
       },
     },

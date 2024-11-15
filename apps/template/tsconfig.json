@@ -5,7 +5,8 @@
     "baseUrl": ".",
     "forceConsistentCasingInFileNames": true,
     "lib": ["DOM", "DOM.Iterable", "ES2022"],
-    "moduleResolution": "Bundler",
+    "module": "ESNext",
+    "moduleResolution": "Node",
     "noEmit": true,
     "types": ["@remix-run/node", "vite/client"],
     "paths": {

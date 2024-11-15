@@ -9,9 +9,10 @@ import { Atom } from './types'
 
 interface FormContainerProps {
   onSubmit: (data: Atom) => Promise<void>
+  isLoading?: boolean
 }
 
-export function FormContainer({ onSubmit }: FormContainerProps) {
+export function FormContainer({ onSubmit, isLoading }: FormContainerProps) {
   const [selectedType, setSelectedType] = useState<Atom['type']>('Person')
 
   const formConfig = getAtomForm(selectedType)
@@ -46,8 +47,9 @@ export function FormContainer({ onSubmit }: FormContainerProps) {
               size={ButtonSize.md}
               type="submit"
               form={`${selectedType.toLowerCase()}-form`}
+              disabled={!!isLoading}
             >
-              Create {selectedType}
+              {isLoading ? 'Creating...' : `Create ${selectedType}`}
             </Button>
           </div>
         </div>

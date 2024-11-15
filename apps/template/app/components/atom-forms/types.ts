@@ -1,4 +1,5 @@
 import { z } from "zod"
+import { parseEther } from 'viem'
 
 // Person atom schema
 export const personAtomSchema = z.object({
@@ -34,8 +35,46 @@ export const atomSchema = z.discriminatedUnion("type", [
   organizationAtomSchema,
 ])
 
-// TypeScript types inferred from schemas
+// types inferred from schemas
 export type PersonAtom = z.infer<typeof personAtomSchema>
 export type ThingAtom = z.infer<typeof thingAtomSchema>
 export type OrganizationAtom = z.infer<typeof organizationAtomSchema>
-export type Atom = z.infer<typeof atomSchema> 
+export type Atom = z.infer<typeof atomSchema>
+
+export const createDepositSchema = (minDeposit: string, balance?: bigint) =>
+  z.object({
+    amount: z.string()
+      .min(1, "Amount is required")
+      .superRefine(async (val, ctx) => {
+        try {
+          const amount = parseEther(val)
+          const min = parseEther(minDeposit)
+
+          if (amount < min) {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: `Minimum deposit is ${minDeposit} ETH`,
+            })
+            return false
+          }
+
+          if (balance && amount > balance) {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: `Insufficient balance`,
+            })
+            return false
+          }
+
+          return true
+        } catch {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "Invalid ETH amount",
+          })
+          return false
+        }
+      }),
+  })
+
+export type DepositFormData = z.infer<ReturnType<typeof createDepositSchema>> 

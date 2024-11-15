@@ -1,3 +1,4 @@
+import { IPFS_GATEWAY_URL } from '@consts/general'
 import { ChainEnv, DEFAULT_CHAIN_ENV } from './environment'
 import logger from './logger'
 
@@ -247,3 +248,6 @@ export const getQuestObjects = (chainEnv: ChainEnv) => {
   }
   return questObjects[chainEnv as ChainEnv]
 }
+
+
+export const ipfsUrl = (hash: string) => `${IPFS_GATEWAY_URL}/ipfs/${hash}`;

@@ -32,7 +32,7 @@ export const BLOCK_EXPLORER_URL =
     ? 'https://sepolia.basescan.org'
     : 'https://basescan.org'
 
-export const IPFS_GATEWAY_URL = 'https://ipfs.io/ipfs'
+export const IPFS_GATEWAY_URL = 'https://ipfs.io'
 export const GET_VAULT_DETAILS_RESOURCE_ROUTE = '/resources/get-vault-details'
 
 // SPECIAL ATOMS

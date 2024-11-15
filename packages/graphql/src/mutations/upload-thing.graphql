@@ -1,0 +1,12 @@
+mutation UploadThing(
+  $name: String!
+  $description: String
+  $image: String
+  $url: String
+) {
+  uploadThing(
+    arg1: { description: $description, image: $image, name: $name, url: $url }
+  ) {
+    cid
+  }
+}

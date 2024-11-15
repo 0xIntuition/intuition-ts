@@ -1,9 +1,6 @@
 import { useCallback, useState } from 'react'
 
 import {
-  Button,
-  ButtonSize,
-  ButtonVariant,
   FormControl,
   FormField,
   FormItem,
@@ -68,8 +65,8 @@ export function FormImageUpload({ name, label }: ImageUploadProps) {
           <FormControl>
             <div
               {...getRootProps()}
-              className="theme-border border-dashed rounded-lg p-4 text-center transition-colors min-h-[160px] flex flex-col items-center justify-center relative cursor-pointer
-                    hover:border-primary/50 bg-primary/10"
+              className="theme-border border-dashed rounded-lg p-6 text-center transition-colors min-h-[200px] flex flex-col items-center justify-center relative cursor-pointer bg-primary/10
+                    hover:border-primary/50"
             >
               <input {...getInputProps()} />
               {preview ? (
@@ -79,16 +76,17 @@ export function FormImageUpload({ name, label }: ImageUploadProps) {
                     alt="Preview"
                     className="absolute inset-0 w-full h-full object-contain p-2"
                   />
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 hover:opacity-100 transition-opacity">
+                    <p className="text-white text-sm">Click to change image</p>
+                  </div>
                   <div className="absolute top-2 right-2 z-10">
-                    <Button
+                    <button
                       type="button"
-                      variant={ButtonVariant.destructive}
-                      size={ButtonSize.icon}
-                      className="rounded-md"
                       onClick={handleRemove}
+                      className="p-1 rounded-full bg-destructive text-destructive-foreground hover:bg-destructive/90"
                     >
                       <Icon name={IconName.trashCan} className="w-4 h-4" />
-                    </Button>
+                    </button>
                   </div>
                 </>
               ) : (
