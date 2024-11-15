@@ -73,15 +73,17 @@ export function useStakeMutation(contract: string, mode: 'deposit' | 'redeem') {
       },
       onSuccess: async (_, variables) => {
         await queryClient.invalidateQueries({
-          queryKey: [
-            'get-vault-details',
-            variables.contract,
-            variables.vaultId,
-            variables.claim?.counter_vault_id,
-          ],
-          refetchType: 'active',
+          predicate: (query) => {
+            const [key, contract, vaultId, counterVaultId] = query.queryKey
+            return (
+              (key === 'get-vault-details' &&
+                contract === variables.contract &&
+                vaultId === variables.vaultId &&
+                counterVaultId === variables.claim?.counter_vault_id) ||
+              key === 'get-stats'
+            )
+          },
         })
-        await queryClient.invalidateQueries({ queryKey: ['get-stats'] })
       },
     }),
     txReceipt,
