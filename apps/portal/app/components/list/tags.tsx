@@ -65,8 +65,8 @@ export function TagsList({
         {enableHeader && (
           <ListHeader
             items={[
-              { label: 'Tag', icon: IconName.bookmark },
-              { label: 'TVL', icon: IconName.ethereum },
+              { label: 'Identity', icon: IconName.fingerprint },
+              { label: 'Claim TVL', icon: IconName.ethereum },
             ]}
           />
         )}
