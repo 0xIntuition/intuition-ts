@@ -8800,85 +8800,88 @@ export type GetAtomsQueryVariables = Exact<{
 
 export type GetAtomsQuery = {
   __typename?: 'query_root'
-  atoms: Array<{
-    __typename?: 'atoms'
-    id: any
-    image?: string | null
-    label?: string | null
-    emoji?: string | null
-    type: string
-    blockNumber: any
-    blockTimestamp: any
-    transactionHash: any
-    creatorId: string
-    vaultId: any
-    walletId: string
-    creator?: {
-      __typename?: 'accounts'
-      label: string
+  atoms_aggregate: {
+    __typename?: 'atoms_aggregate'
+    nodes: Array<{
+      __typename?: 'atoms'
+      id: any
       image?: string | null
-      id: string
-      atomId?: any | null
+      label?: string | null
+      emoji?: string | null
       type: string
-      atom?: {
-        __typename?: 'atoms'
-        value?: {
-          __typename?: 'atomValues'
-          person?: {
-            __typename?: 'persons'
-            name?: string | null
-            image?: string | null
-            description?: string | null
-            url?: string | null
-          } | null
-          thing?: {
-            __typename?: 'things'
-            name?: string | null
-            image?: string | null
-            description?: string | null
-            url?: string | null
-          } | null
-          organization?: {
-            __typename?: 'organizations'
-            name?: string | null
-            image?: string | null
-            description?: string | null
-            url?: string | null
+      blockNumber: any
+      blockTimestamp: any
+      transactionHash: any
+      creatorId: string
+      vaultId: any
+      walletId: string
+      creator?: {
+        __typename?: 'accounts'
+        label: string
+        image?: string | null
+        id: string
+        atomId?: any | null
+        type: string
+        atom?: {
+          __typename?: 'atoms'
+          value?: {
+            __typename?: 'atomValues'
+            person?: {
+              __typename?: 'persons'
+              name?: string | null
+              image?: string | null
+              description?: string | null
+              url?: string | null
+            } | null
+            thing?: {
+              __typename?: 'things'
+              name?: string | null
+              image?: string | null
+              description?: string | null
+              url?: string | null
+            } | null
+            organization?: {
+              __typename?: 'organizations'
+              name?: string | null
+              image?: string | null
+              description?: string | null
+              url?: string | null
+            } | null
           } | null
         } | null
       } | null
-    } | null
-    vault?: {
-      __typename?: 'vaults'
-      positionCount: number
-      totalShares: any
-      currentSharePrice: any
-    } | null
-    value?: {
-      __typename?: 'atomValues'
-      person?: {
-        __typename?: 'persons'
-        name?: string | null
-        image?: string | null
-        description?: string | null
-        url?: string | null
+      vault?: {
+        __typename?: 'vaults'
+        positionCount: number
+        totalShares: any
+        currentSharePrice: any
       } | null
-      thing?: {
-        __typename?: 'things'
-        name?: string | null
-        image?: string | null
-        description?: string | null
-        url?: string | null
+      value?: {
+        __typename?: 'atomValues'
+        person?: {
+          __typename?: 'persons'
+          name?: string | null
+          image?: string | null
+          description?: string | null
+          url?: string | null
+        } | null
+        thing?: {
+          __typename?: 'things'
+          name?: string | null
+          image?: string | null
+          description?: string | null
+          url?: string | null
+        } | null
+        organization?: {
+          __typename?: 'organizations'
+          name?: string | null
+          image?: string | null
+          description?: string | null
+          url?: string | null
+        } | null
       } | null
-      organization?: {
-        __typename?: 'organizations'
-        name?: string | null
-        image?: string | null
-        description?: string | null
-        url?: string | null
-      } | null
-    } | null
-  }>
+    }>
+  }
 }
 
 export type GetAtomQueryVariables = Exact<{
@@ -9676,79 +9679,90 @@ export type GetListItemsQueryVariables = Exact<{
 
 export type GetListItemsQuery = {
   __typename?: 'query_root'
-  triples: Array<{
-    __typename?: 'triples'
-    vaultId: any
-    counterVaultId: any
-    vault?: {
-      __typename?: 'vaults'
-      id: any
-      currentSharePrice: any
-      totalShares: any
-      atom?: { __typename?: 'atoms'; id: any; label?: string | null } | null
-      triple?: {
-        __typename?: 'triples'
+  triples_aggregate: {
+    __typename?: 'triples_aggregate'
+    nodes: Array<{
+      __typename?: 'triples'
+      vaultId: any
+      counterVaultId: any
+      vault?: {
+        __typename?: 'vaults'
         id: any
-        subject?: {
-          __typename?: 'atoms'
+        currentSharePrice: any
+        totalShares: any
+        atom?: { __typename?: 'atoms'; id: any; label?: string | null } | null
+        triple?: {
+          __typename?: 'triples'
           id: any
-          label?: string | null
-        } | null
-        predicate?: {
-          __typename?: 'atoms'
-          id: any
-          label?: string | null
-        } | null
-        object?: { __typename?: 'atoms'; id: any; label?: string | null } | null
-      } | null
-      positions_aggregate: {
-        __typename?: 'positions_aggregate'
-        nodes: Array<{
-          __typename?: 'positions'
-          shares: any
-          account?: {
-            __typename?: 'accounts'
-            id: string
-            label: string
+          subject?: {
+            __typename?: 'atoms'
+            id: any
+            label?: string | null
           } | null
-        }>
-      }
-    } | null
-    counterVault?: {
-      __typename?: 'vaults'
-      id: any
-      currentSharePrice: any
-      totalShares: any
-      atom?: { __typename?: 'atoms'; id: any; label?: string | null } | null
-      triple?: {
-        __typename?: 'triples'
+          predicate?: {
+            __typename?: 'atoms'
+            id: any
+            label?: string | null
+          } | null
+          object?: {
+            __typename?: 'atoms'
+            id: any
+            label?: string | null
+          } | null
+        } | null
+        positions_aggregate: {
+          __typename?: 'positions_aggregate'
+          nodes: Array<{
+            __typename?: 'positions'
+            shares: any
+            account?: {
+              __typename?: 'accounts'
+              id: string
+              label: string
+            } | null
+          }>
+        }
+      } | null
+      counterVault?: {
+        __typename?: 'vaults'
         id: any
-        subject?: {
-          __typename?: 'atoms'
+        currentSharePrice: any
+        totalShares: any
+        atom?: { __typename?: 'atoms'; id: any; label?: string | null } | null
+        triple?: {
+          __typename?: 'triples'
           id: any
-          label?: string | null
-        } | null
-        predicate?: {
-          __typename?: 'atoms'
-          id: any
-          label?: string | null
-        } | null
-        object?: { __typename?: 'atoms'; id: any; label?: string | null } | null
-      } | null
-      positions_aggregate: {
-        __typename?: 'positions_aggregate'
-        nodes: Array<{
-          __typename?: 'positions'
-          shares: any
-          account?: {
-            __typename?: 'accounts'
-            id: string
-            label: string
+          subject?: {
+            __typename?: 'atoms'
+            id: any
+            label?: string | null
           } | null
-        }>
-      }
-    } | null
-  }>
+          predicate?: {
+            __typename?: 'atoms'
+            id: any
+            label?: string | null
+          } | null
+          object?: {
+            __typename?: 'atoms'
+            id: any
+            label?: string | null
+          } | null
+        } | null
+        positions_aggregate: {
+          __typename?: 'positions_aggregate'
+          nodes: Array<{
+            __typename?: 'positions'
+            shares: any
+            account?: {
+              __typename?: 'accounts'
+              id: string
+              label: string
+            } | null
+          }>
+        }
+      } | null
+    }>
+  }
 }
 
 export type GetPositionsQueryVariables = Exact<{
@@ -9856,25 +9870,96 @@ export type GetTriplesQueryVariables = Exact<{
 
 export type GetTriplesQuery = {
   __typename?: 'query_root'
-  triples: Array<{
-    __typename?: 'triples'
-    id: any
-    label?: string | null
-    blockNumber: any
-    blockTimestamp: any
-    transactionHash: any
-    creatorId: string
-    vaultId: any
-    counterVaultId: any
-    creator?: {
-      __typename?: 'accounts'
-      label: string
-      image?: string | null
-      id: string
-      atomId?: any | null
-      type: string
-      atom?: {
+  triples_aggregate: {
+    __typename?: 'triples_aggregate'
+    nodes: Array<{
+      __typename?: 'triples'
+      id: any
+      label?: string | null
+      blockNumber: any
+      blockTimestamp: any
+      transactionHash: any
+      creatorId: string
+      vaultId: any
+      counterVaultId: any
+      creator?: {
+        __typename?: 'accounts'
+        label: string
+        image?: string | null
+        id: string
+        atomId?: any | null
+        type: string
+        atom?: {
+          __typename?: 'atoms'
+          value?: {
+            __typename?: 'atomValues'
+            person?: {
+              __typename?: 'persons'
+              name?: string | null
+              image?: string | null
+              description?: string | null
+              url?: string | null
+            } | null
+            thing?: {
+              __typename?: 'things'
+              name?: string | null
+              image?: string | null
+              description?: string | null
+              url?: string | null
+            } | null
+            organization?: {
+              __typename?: 'organizations'
+              name?: string | null
+              image?: string | null
+              description?: string | null
+              url?: string | null
+            } | null
+          } | null
+        } | null
+      } | null
+      subject?: {
         __typename?: 'atoms'
+        data: string
+        id: any
+        image?: string | null
+        label?: string | null
+        emoji?: string | null
+        type: string
+        creator?: {
+          __typename?: 'accounts'
+          label: string
+          image?: string | null
+          id: string
+          atomId?: any | null
+          type: string
+          atom?: {
+            __typename?: 'atoms'
+            value?: {
+              __typename?: 'atomValues'
+              person?: {
+                __typename?: 'persons'
+                name?: string | null
+                image?: string | null
+                description?: string | null
+                url?: string | null
+              } | null
+              thing?: {
+                __typename?: 'things'
+                name?: string | null
+                image?: string | null
+                description?: string | null
+                url?: string | null
+              } | null
+              organization?: {
+                __typename?: 'organizations'
+                name?: string | null
+                image?: string | null
+                description?: string | null
+                url?: string | null
+              } | null
+            } | null
+          } | null
+        } | null
         value?: {
           __typename?: 'atomValues'
           person?: {
@@ -9900,280 +9985,220 @@ export type GetTriplesQuery = {
           } | null
         } | null
       } | null
-    } | null
-    subject?: {
-      __typename?: 'atoms'
-      data: string
-      id: any
-      image?: string | null
-      label?: string | null
-      emoji?: string | null
-      type: string
-      creator?: {
-        __typename?: 'accounts'
-        label: string
-        image?: string | null
-        id: string
-        atomId?: any | null
-        type: string
-        atom?: {
-          __typename?: 'atoms'
-          value?: {
-            __typename?: 'atomValues'
-            person?: {
-              __typename?: 'persons'
-              name?: string | null
-              image?: string | null
-              description?: string | null
-              url?: string | null
-            } | null
-            thing?: {
-              __typename?: 'things'
-              name?: string | null
-              image?: string | null
-              description?: string | null
-              url?: string | null
-            } | null
-            organization?: {
-              __typename?: 'organizations'
-              name?: string | null
-              image?: string | null
-              description?: string | null
-              url?: string | null
-            } | null
-          } | null
-        } | null
-      } | null
-      value?: {
-        __typename?: 'atomValues'
-        person?: {
-          __typename?: 'persons'
-          name?: string | null
-          image?: string | null
-          description?: string | null
-          url?: string | null
-        } | null
-        thing?: {
-          __typename?: 'things'
-          name?: string | null
-          image?: string | null
-          description?: string | null
-          url?: string | null
-        } | null
-        organization?: {
-          __typename?: 'organizations'
-          name?: string | null
-          image?: string | null
-          description?: string | null
-          url?: string | null
-        } | null
-      } | null
-    } | null
-    predicate?: {
-      __typename?: 'atoms'
-      data: string
-      id: any
-      image?: string | null
-      label?: string | null
-      emoji?: string | null
-      type: string
-      creator?: {
-        __typename?: 'accounts'
-        label: string
-        image?: string | null
-        id: string
-        atomId?: any | null
-        type: string
-        atom?: {
-          __typename?: 'atoms'
-          value?: {
-            __typename?: 'atomValues'
-            person?: {
-              __typename?: 'persons'
-              name?: string | null
-              image?: string | null
-              description?: string | null
-              url?: string | null
-            } | null
-            thing?: {
-              __typename?: 'things'
-              name?: string | null
-              image?: string | null
-              description?: string | null
-              url?: string | null
-            } | null
-            organization?: {
-              __typename?: 'organizations'
-              name?: string | null
-              image?: string | null
-              description?: string | null
-              url?: string | null
-            } | null
-          } | null
-        } | null
-      } | null
-      value?: {
-        __typename?: 'atomValues'
-        person?: {
-          __typename?: 'persons'
-          name?: string | null
-          image?: string | null
-          description?: string | null
-          url?: string | null
-        } | null
-        thing?: {
-          __typename?: 'things'
-          name?: string | null
-          image?: string | null
-          description?: string | null
-          url?: string | null
-        } | null
-        organization?: {
-          __typename?: 'organizations'
-          name?: string | null
-          image?: string | null
-          description?: string | null
-          url?: string | null
-        } | null
-      } | null
-    } | null
-    object?: {
-      __typename?: 'atoms'
-      data: string
-      id: any
-      image?: string | null
-      label?: string | null
-      emoji?: string | null
-      type: string
-      creator?: {
-        __typename?: 'accounts'
-        label: string
-        image?: string | null
-        id: string
-        atomId?: any | null
-        type: string
-        atom?: {
-          __typename?: 'atoms'
-          value?: {
-            __typename?: 'atomValues'
-            person?: {
-              __typename?: 'persons'
-              name?: string | null
-              image?: string | null
-              description?: string | null
-              url?: string | null
-            } | null
-            thing?: {
-              __typename?: 'things'
-              name?: string | null
-              image?: string | null
-              description?: string | null
-              url?: string | null
-            } | null
-            organization?: {
-              __typename?: 'organizations'
-              name?: string | null
-              image?: string | null
-              description?: string | null
-              url?: string | null
-            } | null
-          } | null
-        } | null
-      } | null
-      value?: {
-        __typename?: 'atomValues'
-        person?: {
-          __typename?: 'persons'
-          name?: string | null
-          image?: string | null
-          description?: string | null
-          url?: string | null
-        } | null
-        thing?: {
-          __typename?: 'things'
-          name?: string | null
-          image?: string | null
-          description?: string | null
-          url?: string | null
-        } | null
-        organization?: {
-          __typename?: 'organizations'
-          name?: string | null
-          image?: string | null
-          description?: string | null
-          url?: string | null
-        } | null
-      } | null
-    } | null
-    vault?: {
-      __typename?: 'vaults'
-      id: any
-      currentSharePrice: any
-      totalShares: any
-      atom?: { __typename?: 'atoms'; id: any; label?: string | null } | null
-      triple?: {
-        __typename?: 'triples'
+      predicate?: {
+        __typename?: 'atoms'
+        data: string
         id: any
-        subject?: {
-          __typename?: 'atoms'
-          id: any
-          label?: string | null
-        } | null
-        predicate?: {
-          __typename?: 'atoms'
-          id: any
-          label?: string | null
-        } | null
-        object?: { __typename?: 'atoms'; id: any; label?: string | null } | null
-      } | null
-      positions_aggregate: {
-        __typename?: 'positions_aggregate'
-        nodes: Array<{
-          __typename?: 'positions'
-          shares: any
-          account?: {
-            __typename?: 'accounts'
-            id: string
-            label: string
+        image?: string | null
+        label?: string | null
+        emoji?: string | null
+        type: string
+        creator?: {
+          __typename?: 'accounts'
+          label: string
+          image?: string | null
+          id: string
+          atomId?: any | null
+          type: string
+          atom?: {
+            __typename?: 'atoms'
+            value?: {
+              __typename?: 'atomValues'
+              person?: {
+                __typename?: 'persons'
+                name?: string | null
+                image?: string | null
+                description?: string | null
+                url?: string | null
+              } | null
+              thing?: {
+                __typename?: 'things'
+                name?: string | null
+                image?: string | null
+                description?: string | null
+                url?: string | null
+              } | null
+              organization?: {
+                __typename?: 'organizations'
+                name?: string | null
+                image?: string | null
+                description?: string | null
+                url?: string | null
+              } | null
+            } | null
           } | null
-        }>
-      }
-    } | null
-    counterVault?: {
-      __typename?: 'vaults'
-      id: any
-      currentSharePrice: any
-      totalShares: any
-      atom?: { __typename?: 'atoms'; id: any; label?: string | null } | null
-      triple?: {
-        __typename?: 'triples'
+        } | null
+        value?: {
+          __typename?: 'atomValues'
+          person?: {
+            __typename?: 'persons'
+            name?: string | null
+            image?: string | null
+            description?: string | null
+            url?: string | null
+          } | null
+          thing?: {
+            __typename?: 'things'
+            name?: string | null
+            image?: string | null
+            description?: string | null
+            url?: string | null
+          } | null
+          organization?: {
+            __typename?: 'organizations'
+            name?: string | null
+            image?: string | null
+            description?: string | null
+            url?: string | null
+          } | null
+        } | null
+      } | null
+      object?: {
+        __typename?: 'atoms'
+        data: string
         id: any
-        subject?: {
-          __typename?: 'atoms'
-          id: any
-          label?: string | null
-        } | null
-        predicate?: {
-          __typename?: 'atoms'
-          id: any
-          label?: string | null
-        } | null
-        object?: { __typename?: 'atoms'; id: any; label?: string | null } | null
-      } | null
-      positions_aggregate: {
-        __typename?: 'positions_aggregate'
-        nodes: Array<{
-          __typename?: 'positions'
-          shares: any
-          account?: {
-            __typename?: 'accounts'
-            id: string
-            label: string
+        image?: string | null
+        label?: string | null
+        emoji?: string | null
+        type: string
+        creator?: {
+          __typename?: 'accounts'
+          label: string
+          image?: string | null
+          id: string
+          atomId?: any | null
+          type: string
+          atom?: {
+            __typename?: 'atoms'
+            value?: {
+              __typename?: 'atomValues'
+              person?: {
+                __typename?: 'persons'
+                name?: string | null
+                image?: string | null
+                description?: string | null
+                url?: string | null
+              } | null
+              thing?: {
+                __typename?: 'things'
+                name?: string | null
+                image?: string | null
+                description?: string | null
+                url?: string | null
+              } | null
+              organization?: {
+                __typename?: 'organizations'
+                name?: string | null
+                image?: string | null
+                description?: string | null
+                url?: string | null
+              } | null
+            } | null
           } | null
-        }>
-      }
-    } | null
-  }>
+        } | null
+        value?: {
+          __typename?: 'atomValues'
+          person?: {
+            __typename?: 'persons'
+            name?: string | null
+            image?: string | null
+            description?: string | null
+            url?: string | null
+          } | null
+          thing?: {
+            __typename?: 'things'
+            name?: string | null
+            image?: string | null
+            description?: string | null
+            url?: string | null
+          } | null
+          organization?: {
+            __typename?: 'organizations'
+            name?: string | null
+            image?: string | null
+            description?: string | null
+            url?: string | null
+          } | null
+        } | null
+      } | null
+      vault?: {
+        __typename?: 'vaults'
+        id: any
+        currentSharePrice: any
+        totalShares: any
+        atom?: { __typename?: 'atoms'; id: any; label?: string | null } | null
+        triple?: {
+          __typename?: 'triples'
+          id: any
+          subject?: {
+            __typename?: 'atoms'
+            id: any
+            label?: string | null
+          } | null
+          predicate?: {
+            __typename?: 'atoms'
+            id: any
+            label?: string | null
+          } | null
+          object?: {
+            __typename?: 'atoms'
+            id: any
+            label?: string | null
+          } | null
+        } | null
+        positions_aggregate: {
+          __typename?: 'positions_aggregate'
+          nodes: Array<{
+            __typename?: 'positions'
+            shares: any
+            account?: {
+              __typename?: 'accounts'
+              id: string
+              label: string
+            } | null
+          }>
+        }
+      } | null
+      counterVault?: {
+        __typename?: 'vaults'
+        id: any
+        currentSharePrice: any
+        totalShares: any
+        atom?: { __typename?: 'atoms'; id: any; label?: string | null } | null
+        triple?: {
+          __typename?: 'triples'
+          id: any
+          subject?: {
+            __typename?: 'atoms'
+            id: any
+            label?: string | null
+          } | null
+          predicate?: {
+            __typename?: 'atoms'
+            id: any
+            label?: string | null
+          } | null
+          object?: {
+            __typename?: 'atoms'
+            id: any
+            label?: string | null
+          } | null
+        } | null
+        positions_aggregate: {
+          __typename?: 'positions_aggregate'
+          nodes: Array<{
+            __typename?: 'positions'
+            shares: any
+            account?: {
+              __typename?: 'accounts'
+              id: string
+              label: string
+            } | null
+          }>
+        }
+      } | null
+    }>
+  }
 }
 
 export type GetTripleQueryVariables = Exact<{
@@ -11273,12 +11298,19 @@ useGetAccountQuery.fetcher = (
 
 export const GetAtomsDocument = `
     query GetAtoms($limit: Int, $offset: Int, $orderBy: [atoms_order_by!], $where: atoms_bool_exp) {
-  atoms(limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {
-    ...AtomMetadata
-    ...AtomTxn
-    ...AtomVaultDetails
-    creator {
-      ...AccountMetadata
+  atoms_aggregate(
+    limit: $limit
+    offset: $offset
+    order_by: $orderBy
+    where: $where
+  ) {
+    nodes {
+      ...AtomMetadata
+      ...AtomTxn
+      ...AtomVaultDetails
+      creator {
+        ...AccountMetadata
+      }
     }
   }
 }
@@ -11656,11 +11688,13 @@ useGetEventsQuery.fetcher = (
 
 export const GetListItemsDocument = `
     query GetListItems($predicateId: numeric, $objectId: numeric) {
-  triples(
+  triples_aggregate(
     where: {predicateId: {_eq: predicateId}, objectId: {_eq: $objectId}}
     order_by: [{vault: {positionCount: desc}, counterVault: {positionCount: desc}}]
   ) {
-    ...TripleVaultDetails
+    nodes {
+      ...TripleVaultDetails
+    }
   }
 }
     ${TripleVaultDetailsFragmentDoc}
@@ -11999,12 +12033,19 @@ useGetStatsQuery.fetcher = (
 
 export const GetTriplesDocument = `
     query GetTriples($limit: Int, $offset: Int, $orderBy: [triples_order_by!], $where: triples_bool_exp) {
-  triples(limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {
-    ...TripleMetadata
-    ...TripleTxn
-    ...TripleVaultDetails
-    creator {
-      ...AccountMetadata
+  triples_aggregate(
+    limit: $limit
+    offset: $offset
+    order_by: $orderBy
+    where: $where
+  ) {
+    nodes {
+      ...TripleMetadata
+      ...TripleTxn
+      ...TripleVaultDetails
+      creator {
+        ...AccountMetadata
+      }
     }
   }
 }
@@ -16603,7 +16644,7 @@ export const GetAtoms = {
         selections: [
           {
             kind: 'Field',
-            name: { kind: 'Name', value: 'atoms' },
+            name: { kind: 'Name', value: 'atoms_aggregate' },
             arguments: [
               {
                 kind: 'Argument',
@@ -16642,26 +16683,35 @@ export const GetAtoms = {
               kind: 'SelectionSet',
               selections: [
                 {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'AtomMetadata' },
-                },
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'AtomTxn' },
-                },
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'AtomVaultDetails' },
-                },
-                {
                   kind: 'Field',
-                  name: { kind: 'Name', value: 'creator' },
+                  name: { kind: 'Name', value: 'nodes' },
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
                       {
                         kind: 'FragmentSpread',
-                        name: { kind: 'Name', value: 'AccountMetadata' },
+                        name: { kind: 'Name', value: 'AtomMetadata' },
+                      },
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'AtomTxn' },
+                      },
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'AtomVaultDetails' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'creator' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'FragmentSpread',
+                              name: { kind: 'Name', value: 'AccountMetadata' },
+                            },
+                          ],
+                        },
                       },
                     ],
                   },
@@ -18330,7 +18380,7 @@ export const GetListItems = {
         selections: [
           {
             kind: 'Field',
-            name: { kind: 'Name', value: 'triples' },
+            name: { kind: 'Name', value: 'triples_aggregate' },
             arguments: [
               {
                 kind: 'Argument',
@@ -18419,8 +18469,17 @@ export const GetListItems = {
               kind: 'SelectionSet',
               selections: [
                 {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'TripleVaultDetails' },
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'nodes' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'TripleVaultDetails' },
+                      },
+                    ],
+                  },
                 },
               ],
             },
@@ -19075,7 +19134,7 @@ export const GetTriples = {
         selections: [
           {
             kind: 'Field',
-            name: { kind: 'Name', value: 'triples' },
+            name: { kind: 'Name', value: 'triples_aggregate' },
             arguments: [
               {
                 kind: 'Argument',
@@ -19114,26 +19173,35 @@ export const GetTriples = {
               kind: 'SelectionSet',
               selections: [
                 {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'TripleMetadata' },
-                },
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'TripleTxn' },
-                },
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'TripleVaultDetails' },
-                },
-                {
                   kind: 'Field',
-                  name: { kind: 'Name', value: 'creator' },
+                  name: { kind: 'Name', value: 'nodes' },
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
                       {
                         kind: 'FragmentSpread',
-                        name: { kind: 'Name', value: 'AccountMetadata' },
+                        name: { kind: 'Name', value: 'TripleMetadata' },
+                      },
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'TripleTxn' },
+                      },
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'TripleVaultDetails' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'creator' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'FragmentSpread',
+                              name: { kind: 'Name', value: 'AccountMetadata' },
+                            },
+                          ],
+                        },
                       },
                     ],
                   },

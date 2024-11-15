@@ -28,7 +28,7 @@ export default function Playground() {
       queryKey: ['get-atoms-query'],
     },
   )
-  const atoms = atomsData?.atoms
+  const atoms = atomsData?.atoms_aggregate.nodes
 
   // First query to get all triples
   const {
@@ -62,7 +62,7 @@ export default function Playground() {
     queryKey: ['triples-with-positions', triplesData, accountData],
     enabled: !!triplesData && !!accountData,
     queryFn: () => {
-      const triples = triplesData?.triples || []
+      const triples = triplesData?.triples_aggregate.nodes || []
       const userAccount = accountData?.account
 
       // Map and sort triples
@@ -137,7 +137,7 @@ export default function Playground() {
     combinedData.data?.filter((triple) => triple.userPosition).length || 0
 
   console.log('Account positions:', accountData?.account?.positions_aggregate)
-  console.log('All triples:', triplesData?.triples)
+  console.log('All triples:', triplesData?.triples_aggregate.nodes)
 
   return (
     <div className="p-4">
@@ -204,7 +204,7 @@ export default function Playground() {
           {JSON.stringify(
             {
               atomsCount: atoms?.length,
-              triplesCount: triplesData?.triples.length,
+              triplesCount: triplesData?.triples_aggregate.nodes.length,
               accountPositions:
                 accountData?.account?.positions_aggregate.nodes.length,
               combinedCount: combinedData.data?.length,

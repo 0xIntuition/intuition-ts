@@ -90,7 +90,9 @@ export default function PlaygroundHydration() {
           placeholder="Search atoms by label or description..."
         />
 
-        <pre>{JSON.stringify(atomsData?.atoms || [], null, 2)}</pre>
+        <pre>
+          {JSON.stringify(atomsData?.atoms_aggregate.nodes || [], null, 2)}
+        </pre>
       </div>
     </HydrationBoundary>
   )
