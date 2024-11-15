@@ -23,10 +23,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
 export default function App() {
   const { pathname } = useLocation()
 
-  const [, setShowOptions] = useState(false)
   const [showHistory, setShowHistory] = useState(false)
 
-  const handleOpenOptions = () => setShowOptions(true)
   const handleOpenHistory = () => setShowHistory(true)
 
   useEffect(() => {
@@ -35,10 +33,7 @@ export default function App() {
 
   return (
     <div className="h-screen flex flex-col">
-      <Header
-        onOpenOptions={handleOpenOptions}
-        onOpenHistory={handleOpenHistory}
-      />
+      <Header onOpenHistory={handleOpenHistory} />
       <HistoryModal
         isOpen={showHistory}
         onClose={() => setShowHistory(false)}

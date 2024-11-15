@@ -1,3 +1,5 @@
+import { getAddress } from 'viem'
+
 export type CsvData = string[][]
 
 export interface DuplicateResult {
@@ -27,6 +29,19 @@ export interface CsvProofreadResult {
   duplicates: DuplicateResult
   unusualCharacters: UnusualCharacterResult
   // Add more CSV-level proofing results here
+}
+
+export interface CAIP10Issue {
+  rowIndex: number
+  cellIndex: number
+  originalValue: string
+  suggestedValue: string
+  reason: string
+}
+
+export interface CAIP10ProofreadResult {
+  csvData: CsvData
+  cellIssues: CAIP10Issue[]
 }
 
 export function proofreadRow(
@@ -201,4 +216,93 @@ function fixGarbledText(cell: string): {
   const reason = reasons.join(', ')
 
   return { isGarbled, fixedText, reason }
+}
+
+export function proofreadCAIP10s(csvData: CsvData): CAIP10ProofreadResult {
+  const cellIssues: CAIP10Issue[] = []
+  const dataRows = csvData.slice(1) // Skip header row
+
+  for (let rowIndex = 0; rowIndex < dataRows.length; rowIndex++) {
+    const row = dataRows[rowIndex]
+    for (let cellIndex = 0; cellIndex < row.length; cellIndex++) {
+      const cell = row[cellIndex]
+      const fixResult = fixCAIP10(cell)
+      if (
+        !fixResult.isValidCAIP10 ||
+        fixResult.reason === 'Address checksummed'
+      ) {
+        cellIssues.push({
+          rowIndex: rowIndex + 1, // Add 1 to account for header row
+          cellIndex,
+          originalValue: cell,
+          suggestedValue: fixResult.fixedText,
+          reason: fixResult.reason,
+        })
+      }
+    }
+  }
+
+  return { csvData, cellIssues }
+}
+
+export function fixCAIP10(text: string): {
+  isValidCAIP10: boolean
+  fixedText: string
+  reason: string
+} {
+  try {
+    // Split into namespace:chainId:address
+    const parts = text.split(':')
+    if (parts.length !== 3) {
+      return {
+        isValidCAIP10: false,
+        fixedText: text,
+        reason: 'Invalid CAIP-10 format - must have 3 parts',
+      }
+    }
+
+    const [namespace, chainId, address] = parts
+
+    // Verify namespace
+    if (namespace !== 'eip155') {
+      return {
+        isValidCAIP10: false,
+        fixedText: text,
+        reason: 'Invalid namespace - must be eip155',
+      }
+    }
+
+    // Verify chainId is a number
+    if (!/^\d+$/.test(chainId)) {
+      return {
+        isValidCAIP10: false,
+        fixedText: text,
+        reason: 'Invalid chainId - must be numeric',
+      }
+    }
+
+    // Verify and checksum the address
+    try {
+      const checksummedAddress = getAddress(address)
+      const fixedCAIP10 = `${namespace}:${chainId}:${checksummedAddress}`
+
+      return {
+        isValidCAIP10: true,
+        fixedText: fixedCAIP10,
+        reason: text === fixedCAIP10 ? '' : 'Address checksummed',
+      }
+    } catch {
+      return {
+        isValidCAIP10: false,
+        fixedText: text,
+        reason: 'Invalid Ethereum address',
+      }
+    }
+  } catch {
+    return {
+      isValidCAIP10: false,
+      fixedText: text,
+      reason: 'Invalid format',
+    }
+  }
 }

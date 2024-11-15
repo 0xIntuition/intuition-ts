@@ -1,12 +1,24 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Thing, WithContext } from 'schema-dts'
 
-export async function parseCsv(content: File): Promise<string[][]> {
+import { AtomDataTypeKey } from './atom-data-types'
+
+function parseCsvToRaw(text: string): string[][] {
+  return parseCsvText(text)
+}
+
+export async function parseCsv(
+  content: File,
+  type: AtomDataTypeKey = 'CSV',
+): Promise<string[][]> {
   const text = await fileToText(content)
-  const things = parseCsvToThings(text)
-  const rows = thingsToStringArrays(things)
-  // console.log(rows);
-  return rows
+
+  // If we are parsing Things, convert it to the schema-dts Thing[] before a string[][]
+  if (type === 'CSV') {
+    const things = parseCsvToThings(text)
+    return thingsToStringArrays(things)
+  }
+  return parseCsvToRaw(text)
 }
 
 function fileToText(file: File): Promise<string> {

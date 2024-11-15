@@ -34,16 +34,38 @@ if (!process.env.IPFS_GATEWAY) {
 const ipfs = process.env.IPFS_GATEWAY
 const gatewayToken = process.env.PINATA_GATEWAY_KEY
 
+async function fetchWithTimeout(
+  url: string,
+  timeout = 1000,
+): Promise<Response> {
+  const controller = new AbortController()
+  const timeoutId = setTimeout(() => controller.abort(), timeout)
+
+  try {
+    const response = await fetch(url, {
+      signal: controller.signal,
+    })
+    clearTimeout(timeoutId)
+    return response
+  } catch (error) {
+    clearTimeout(timeoutId)
+    throw error
+  }
+}
+
 export async function checkCIDPinned(cid: string): Promise<boolean> {
   try {
-    const response = await fetch(
+    const response = await fetchWithTimeout(
       `${ipfs}/ipfs/${cid}?pinataGatewayToken=${gatewayToken}`,
     )
     return response.ok
   } catch (error) {
-    console.log(error)
+    if ((error as DOMException).name === 'AbortError') {
+      return false
+    }
+    console.log('THROWING, ERROR WAS NOT ABORT FROM TIMEOUT')
+    throw error
   }
-  return false
 }
 
 export async function checkObjectPinned(
@@ -61,19 +83,25 @@ export async function checkObjectPinned(
     const pinned = await checkCIDPinned(cid)
     return [pinned, cid]
   } catch (error) {
+    requestHash ? pushUpdate(requestHash, `IPFS Gateway Error: ${error}`) : null
     console.log(error)
+    // continue anyway, worst case scenario we pin the same thing twice
   }
   return [false, '']
 }
 
 export async function getDataFromCID(cid: string): Promise<string> {
   try {
-    const response = await fetch(
+    const response = await fetchWithTimeout(
       `${ipfs}/ipfs/${cid}?pinataGatewayToken=${gatewayToken}`,
     )
     return await response.text()
   } catch (error) {
+    if (error instanceof DOMException && error.name === 'AbortError') {
+      console.log('Request timed out')
+      return ''
+    }
     console.log(error)
+    return ''
   }
-  return ''
 }
