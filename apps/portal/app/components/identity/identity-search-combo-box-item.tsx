@@ -47,7 +47,7 @@ const IdentitySearchComboboxItem = ({
           name={name}
           value={value}
           currency={currency}
-          walletAddress={walletAddress}
+          walletAddress={walletAddress ?? '0'}
         />
         <div className="flex items-center gap-1">
           <TooltipProvider>

@@ -14,29 +14,21 @@ import {
   HoverCardTrigger,
   Icon,
   IconName,
+  Identity,
   ProfileCard,
 } from '@0xintuition/1ui'
-import { IdentityPresenter } from '@0xintuition/api'
 
-import {
-  formatBalance,
-  getAtomDescription,
-  getAtomId,
-  getAtomImage,
-  getAtomIpfsLink,
-  getAtomLabel,
-  sliceString,
-  truncateString,
-} from '@lib/utils/misc'
+import { formatBalance, truncateString } from '@lib/utils/misc'
+import { IdentityType } from 'app/types'
 
 import { IdentitySearchComboboxItem } from './identity-search-combo-box-item'
 
 export interface IdentitySearchComboboxProps
   extends React.HTMLAttributes<HTMLDivElement> {
-  identities: IdentityPresenter[]
+  identities: IdentityType[]
   placeholder?: string
-  onIdentityClick?: (identity: IdentityPresenter) => void
-  onIdentitySelect?: (identity: IdentityPresenter) => void
+  onIdentityClick?: (identity: IdentityType) => void
+  onIdentitySelect?: (identity: IdentityType) => void
   onCreateIdentityClick?: () => void
   value?: string
   onValueChange?: (value: string) => void
@@ -86,34 +78,25 @@ const IdentitySearchCombobox = ({
           </CommandEmpty>
           <CommandGroup key={identities.length}>
             {identities.map((identity) => {
-              const {
-                display_name: name,
-                user,
-                image,
-                assets_sum: value,
-                follower_count: socialCount,
-                tag_count: tagCount,
-                is_user: isUser,
-              } = identity
-              const variant = isUser ? 'user' : 'non-user'
-
               return (
                 <HoverCard openDelay={150} closeDelay={150} key={identity.id}>
                   <HoverCardTrigger className="w-full">
                     <IdentitySearchComboboxItem
                       key={identity.id}
-                      variant={variant}
-                      name={truncateString(user?.display_name ?? name, 7)}
-                      avatarSrc={user?.image ?? image ?? ''}
-                      value={+formatBalance(value)}
-                      walletAddress={
-                        identity.is_user === true
-                          ? identity.user?.ens_name ??
-                            sliceString(identity.user?.wallet, 6, 4)
-                          : identity.identity_id
+                      variant={
+                        identity.type === ('Person' || 'Account')
+                          ? Identity.user
+                          : Identity.nonUser
                       }
-                      socialCount={socialCount || 0}
-                      tagCount={tagCount || 0}
+                      name={truncateString(identity.label ?? '', 7)}
+                      avatarSrc={identity.image ?? ''}
+                      value={
+                        +formatBalance(identity.vault?.currentSharePrice, 18) *
+                          +formatBalance(identity.vault?.totalShares, 18) ?? '0'
+                      }
+                      walletAddress={identity.walletId}
+                      socialCount={0} // TODO: add follower count
+                      tagCount={0} // TODO: add tag count
                       onClick={() => onIdentityClick(identity)}
                       onSelect={() => onIdentitySelect(identity)}
                     />
@@ -126,22 +109,34 @@ const IdentitySearchCombobox = ({
                     >
                       <div className="w-80 max-md:w-[80%]">
                         <ProfileCard
-                          variant={identity.is_user ? 'user' : 'non-user'}
-                          avatarSrc={getAtomImage(identity)}
-                          name={getAtomLabel(identity)}
-                          id={getAtomId(identity)}
+                          variant={
+                            identity.type === ('Person' || 'Account')
+                              ? Identity.user
+                              : Identity.nonUser
+                          }
+                          avatarSrc={identity.image ?? ''}
+                          name={identity.label ?? ''}
+                          id={identity.walletId}
                           stats={
-                            identity.is_user === true
+                            identity.type === ('Person' || 'Account')
                               ? {
-                                  numberOfFollowers:
-                                    identity.follower_count ?? 0,
-                                  numberOfFollowing:
-                                    identity.followed_count ?? 0,
+                                  numberOfFollowers: 0,
+                                  numberOfFollowing: 0,
                                 }
                               : undefined
                           }
-                          bio={getAtomDescription(identity)}
-                          ipfsLink={getAtomIpfsLink(identity)}
+                          bio={
+                            identity.value?.person?.description ||
+                            identity.value?.thing?.description ||
+                            identity.value?.organization?.description ||
+                            ''
+                          }
+                          ipfsLink={
+                            identity.value?.person?.url ||
+                            identity.value?.thing?.url ||
+                            identity.value?.organization?.url ||
+                            ''
+                          }
                         />
                       </div>
                     </HoverCardContent>

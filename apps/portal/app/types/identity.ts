@@ -5,6 +5,7 @@ import {
   SearchClaimsResponse,
   SearchPositionsResponse,
 } from '@0xintuition/api'
+import { GetAtomsQuery } from '@0xintuition/graphql'
 
 export type ExtendedIdentityPresenter = IdentityPresenter & {
   follower_count: number
@@ -34,3 +35,7 @@ export type IdentityListType = {
     totalPages: number
   }
 }
+
+export type IdentityType = NonNullable<
+  GetAtomsQuery['atoms_aggregate']['nodes'][0]
+>

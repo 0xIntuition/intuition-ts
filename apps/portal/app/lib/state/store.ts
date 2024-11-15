@@ -1,6 +1,6 @@
 import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
 
-import { VaultDetailsType } from 'app/types'
+import { IdentityType, VaultDetailsType } from 'app/types'
 import type { WritableAtom } from 'jotai'
 import { atom, createStore } from 'jotai'
 
@@ -79,7 +79,7 @@ export const addIdentitiesListModalAtom = atom<{
 export const saveListModalAtom = atom<{
   isOpen: boolean
   id?: string | null
-  tag?: IdentityPresenter | null
+  tag?: IdentityPresenter | IdentityType | null
   identity?: IdentityPresenter | null
   invalidIdentity?: IdentityPresenter | null
 }>({
