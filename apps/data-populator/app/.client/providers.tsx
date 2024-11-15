@@ -1,3 +1,7 @@
+import { createContext, useContext, useState } from 'react'
+
+import { TooltipProvider } from '@0xintuition/1ui'
+
 import { alchemyRpcUrlMap } from '@lib/utils/chains'
 import { wagmiConfig } from '@lib/utils/wagmi'
 import type { PrivyClientConfig } from '@privy-io/react-auth'
@@ -8,6 +12,22 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { base, baseSepolia } from 'viem/chains'
 
 const queryClient = new QueryClient()
+
+// Add tooltip context
+interface TooltipContextType {
+  enabled: boolean
+  toggleTooltips: () => void
+}
+
+const TooltipContext = createContext<TooltipContextType>({
+  enabled: true,
+  toggleTooltips: () => {},
+})
+
+// Export the hook
+export function useTooltips() {
+  return useContext(TooltipContext)
+}
 
 const baseSepoliaOverride = addRpcUrlOverrideToChain(
   baseSepolia,
@@ -42,20 +62,42 @@ export default function Providers({
   privyAppId: string
   children: React.ReactNode
 }) {
+  const [tooltipsEnabled, setTooltipsEnabled] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('tooltipsEnabled')
+      return saved ? JSON.parse(saved) : true
+    }
+    return true
+  })
+
+  const toggleTooltips = () => {
+    setTooltipsEnabled((prev: boolean) => {
+      const newValue = !prev
+      localStorage.setItem('tooltipsEnabled', JSON.stringify(newValue))
+      return newValue
+    })
+  }
+
   return (
-    <PrivyProvider
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      appId={privyAppId as string}
-      config={privyConfig}
+    <TooltipContext.Provider
+      value={{ enabled: tooltipsEnabled, toggleTooltips }}
     >
-      <SmartWalletsProvider>
-        <QueryClientProvider client={queryClient}>
-          <WagmiProvider config={wagmiConfig} reconnectOnMount={false}>
-            {children}
-          </WagmiProvider>
-        </QueryClientProvider>
-      </SmartWalletsProvider>
-    </PrivyProvider>
+      <TooltipProvider>
+        <PrivyProvider
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          appId={privyAppId as string}
+          config={privyConfig}
+        >
+          <SmartWalletsProvider>
+            <QueryClientProvider client={queryClient}>
+              <WagmiProvider config={wagmiConfig} reconnectOnMount={false}>
+                {children}
+              </WagmiProvider>
+            </QueryClientProvider>
+          </SmartWalletsProvider>
+        </PrivyProvider>
+      </TooltipProvider>
+    </TooltipContext.Provider>
   )
 }

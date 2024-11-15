@@ -40,10 +40,10 @@ if (
 const atomCostStr = await getAtomCost()
 const tripleCostStr = await getTripleCost()
 
-const atomValue = (
+export const atomValue = (
   BigInt(additionalStakeAtom as string) + BigInt(atomCostStr)
 ).toString()
-const tripleValue = (
+export const tripleValue = (
   BigInt(additionalStakeTriple as string) + BigInt(tripleCostStr)
 ).toString()
 

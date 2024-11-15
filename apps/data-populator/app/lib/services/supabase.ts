@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createClient } from '@supabase/supabase-js'
 
-import { getSender } from './evm'
+import { getSender } from './requestSender'
 
 // Initialize Supabase client
 
@@ -243,10 +243,11 @@ export async function getTriplesBySender(
 
 // Temporary helpers before we have auth
 export async function getMyAtoms(
+  nodeRequest?: Request,
   limit: number = 100,
   offset: number = 0,
 ): Promise<AtomLogEntry[]> {
-  const sender = await getSender()
+  const sender = await getSender(nodeRequest)
   return await searchAtomLog(
     sender,
     false,
@@ -260,10 +261,11 @@ export async function getMyAtoms(
 }
 
 export async function getMyTriples(
+  nodeRequest?: Request,
   limit: number = 100,
   offset: number = 0,
 ): Promise<TripleLogEntry[]> {
-  const sender = await getSender()
+  const sender = await getSender(nodeRequest)
   return await searchTripleLog(
     sender,
     false,
