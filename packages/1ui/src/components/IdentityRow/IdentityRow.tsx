@@ -43,6 +43,7 @@ export interface IdentityRowProps extends React.HTMLAttributes<HTMLDivElement> {
   onStakeClick?: () => void
   isFirst?: boolean
   isLast?: boolean
+  hideContextMenu?: boolean
 }
 
 const IdentityRow = ({
@@ -61,6 +62,7 @@ const IdentityRow = ({
   onStakeClick,
   isFirst = true,
   isLast = true,
+  hideContextMenu = false,
 }: IdentityRowProps) => {
   const { isMobileView } = useSidebarLayoutContext()
 
@@ -115,21 +117,23 @@ const IdentityRow = ({
               </div>
             </HoverCardContent>
           </HoverCard>
-          <ContextMenu>
-            <ContextMenuTrigger className="sm:hidden ml-auto">
-              <Button variant={ButtonVariant.text} size={ButtonSize.icon}>
-                <Icon
-                  name={IconName.context}
-                  className="text-secondary/70 h-4 w-4"
-                />
-              </Button>
-            </ContextMenuTrigger>
-            <ContextMenuContent>
-              <ContextMenuItem>Profile</ContextMenuItem>
-              <ContextMenuItem>Settings</ContextMenuItem>
-              <ContextMenuItem>Logout</ContextMenuItem>
-            </ContextMenuContent>
-          </ContextMenu>
+          {!hideContextMenu && (
+            <ContextMenu>
+              <ContextMenuTrigger className="sm:hidden ml-auto">
+                <Button variant={ButtonVariant.text} size={ButtonSize.icon}>
+                  <Icon
+                    name={IconName.context}
+                    className="text-secondary/70 h-4 w-4"
+                  />
+                </Button>
+              </ContextMenuTrigger>
+              <ContextMenuContent>
+                <ContextMenuItem>Profile</ContextMenuItem>
+                <ContextMenuItem>Settings</ContextMenuItem>
+                <ContextMenuItem>Logout</ContextMenuItem>
+              </ContextMenuContent>
+            </ContextMenu>
+          )}
         </div>
         <Separator className="md:hidden" />
         <div className="flex items-center gap-3 max-sm:justify-between max-sm:w-full">
@@ -142,25 +146,27 @@ const IdentityRow = ({
               className="w-full"
             />
           )}
-          <ContextMenu>
-            <ContextMenuTrigger disabled className="max-sm:hidden">
-              <Button
-                variant={ButtonVariant.text}
-                size={ButtonSize.icon}
-                disabled
-              >
-                <Icon
-                  name={IconName.context}
-                  className="text-secondary/70 h-4 w-4"
-                />
-              </Button>
-            </ContextMenuTrigger>
-            <ContextMenuContent>
-              <ContextMenuItem>Profile</ContextMenuItem>
-              <ContextMenuItem>Settings</ContextMenuItem>
-              <ContextMenuItem>Logout</ContextMenuItem>
-            </ContextMenuContent>
-          </ContextMenu>
+          {!hideContextMenu && (
+            <ContextMenu>
+              <ContextMenuTrigger disabled className="max-sm:hidden">
+                <Button
+                  variant={ButtonVariant.text}
+                  size={ButtonSize.icon}
+                  disabled
+                >
+                  <Icon
+                    name={IconName.context}
+                    className="text-secondary/70 h-4 w-4"
+                  />
+                </Button>
+              </ContextMenuTrigger>
+              <ContextMenuContent>
+                <ContextMenuItem>Profile</ContextMenuItem>
+                <ContextMenuItem>Settings</ContextMenuItem>
+                <ContextMenuItem>Logout</ContextMenuItem>
+              </ContextMenuContent>
+            </ContextMenu>
+          )}
         </div>
       </div>
       {userPosition && userPosition !== '0' && (
