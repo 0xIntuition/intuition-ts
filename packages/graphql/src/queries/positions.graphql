@@ -10,6 +10,9 @@ query GetPositions(
     order_by: $orderBy
     where: $where
   ) {
+    aggregate {
+      count
+    }
     nodes {
       ...PositionDetails
     }

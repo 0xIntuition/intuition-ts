@@ -8601,67 +8601,82 @@ export type GetAccountsQueryVariables = Exact<{ [key: string]: never }>
 
 export type GetAccountsQuery = {
   __typename?: 'query_root'
-  accounts: Array<{
-    __typename?: 'accounts'
-    label: string
-    image?: string | null
-    id: string
-    atomId?: any | null
-    type: string
-    atom?: {
-      __typename?: 'atoms'
-      value?: {
-        __typename?: 'atomValues'
-        person?: {
-          __typename?: 'persons'
-          name?: string | null
-          image?: string | null
-          description?: string | null
-          url?: string | null
-        } | null
-        thing?: {
-          __typename?: 'things'
-          name?: string | null
-          image?: string | null
-          description?: string | null
-          url?: string | null
-        } | null
-        organization?: {
-          __typename?: 'organizations'
-          name?: string | null
-          image?: string | null
-          description?: string | null
-          url?: string | null
-        } | null
-      } | null
+  accounts_aggregate: {
+    __typename?: 'accounts_aggregate'
+    aggregate?: {
+      __typename?: 'accounts_aggregate_fields'
+      count: number
     } | null
-    claims: Array<{
-      __typename?: 'claims'
-      shares: any
-      counterShares: any
-      triple?: { __typename?: 'triples'; id: any; label?: string | null } | null
-    }>
-    positions_aggregate: {
-      __typename?: 'positions_aggregate'
-      nodes: Array<{
-        __typename?: 'positions'
-        id: string
-        shares: any
-        vault?: {
-          __typename?: 'vaults'
-          id: any
-          totalShares: any
-          currentSharePrice: any
-          atom?: { __typename?: 'atoms'; id: any; label?: string | null } | null
-          triple?: {
-            __typename?: 'triples'
-            id: any
-            label?: string | null
+    nodes: Array<{
+      __typename?: 'accounts'
+      label: string
+      image?: string | null
+      id: string
+      atomId?: any | null
+      type: string
+      atom?: {
+        __typename?: 'atoms'
+        value?: {
+          __typename?: 'atomValues'
+          person?: {
+            __typename?: 'persons'
+            name?: string | null
+            image?: string | null
+            description?: string | null
+            url?: string | null
+          } | null
+          thing?: {
+            __typename?: 'things'
+            name?: string | null
+            image?: string | null
+            description?: string | null
+            url?: string | null
+          } | null
+          organization?: {
+            __typename?: 'organizations'
+            name?: string | null
+            image?: string | null
+            description?: string | null
+            url?: string | null
           } | null
         } | null
+      } | null
+      claims: Array<{
+        __typename?: 'claims'
+        shares: any
+        counterShares: any
+        triple?: {
+          __typename?: 'triples'
+          id: any
+          label?: string | null
+        } | null
       }>
-    }
-  }>
+      positions_aggregate: {
+        __typename?: 'positions_aggregate'
+        nodes: Array<{
+          __typename?: 'positions'
+          id: string
+          shares: any
+          vault?: {
+            __typename?: 'vaults'
+            id: any
+            totalShares: any
+            currentSharePrice: any
+            atom?: {
+              __typename?: 'atoms'
+              id: any
+              label?: string | null
+            } | null
+            triple?: {
+              __typename?: 'triples'
+              id: any
+              label?: string | null
+            } | null
+          } | null
+        }>
+      }
+    }>
+  }
 }
 
 export type GetAccountQueryVariables = Exact<{
@@ -8802,6 +8817,7 @@ export type GetAtomsQuery = {
   __typename?: 'query_root'
   atoms_aggregate: {
     __typename?: 'atoms_aggregate'
+    aggregate?: { __typename?: 'atoms_aggregate_fields'; count: number } | null
     nodes: Array<{
       __typename?: 'atoms'
       id: any
@@ -9258,6 +9274,7 @@ export type GetClaimsByAddressQuery = {
   __typename?: 'query_root'
   claims_aggregate: {
     __typename?: 'claims_aggregate'
+    aggregate?: { __typename?: 'claims_aggregate_fields'; count: number } | null
     nodes: Array<{
       __typename?: 'claims'
       id: string
@@ -9290,6 +9307,7 @@ export type GetEventsQuery = {
   __typename?: 'query_root'
   events_aggregate: {
     __typename?: 'events_aggregate'
+    aggregate?: { __typename?: 'events_aggregate_fields'; count: number } | null
     nodes: Array<{
       __typename?: 'events'
       blockNumber: any
@@ -9681,6 +9699,10 @@ export type GetListItemsQuery = {
   __typename?: 'query_root'
   triples_aggregate: {
     __typename?: 'triples_aggregate'
+    aggregate?: {
+      __typename?: 'triples_aggregate_fields'
+      count: number
+    } | null
     nodes: Array<{
       __typename?: 'triples'
       vaultId: any
@@ -9776,6 +9798,10 @@ export type GetPositionsQuery = {
   __typename?: 'query_root'
   positions_aggregate: {
     __typename?: 'positions_aggregate'
+    aggregate?: {
+      __typename?: 'positions_aggregate_fields'
+      count: number
+    } | null
     nodes: Array<{
       __typename?: 'positions'
       id: string
@@ -9872,6 +9898,10 @@ export type GetTriplesQuery = {
   __typename?: 'query_root'
   triples_aggregate: {
     __typename?: 'triples_aggregate'
+    aggregate?: {
+      __typename?: 'triples_aggregate_fields'
+      count: number
+    } | null
     nodes: Array<{
       __typename?: 'triples'
       id: any
@@ -10538,6 +10568,7 @@ export type GetVaultsQuery = {
   __typename?: 'query_root'
   vaults_aggregate: {
     __typename?: 'vaults_aggregate'
+    aggregate?: { __typename?: 'vaults_aggregate_fields'; count: number } | null
     nodes: Array<{
       __typename?: 'vaults'
       id: any
@@ -11117,10 +11148,15 @@ export const TripleVaultDetailsFragmentDoc = `
     `
 export const GetAccountsDocument = `
     query GetAccounts {
-  accounts {
-    ...AccountMetadata
-    ...AccountClaims
-    ...AccountPositions
+  accounts_aggregate {
+    aggregate {
+      count
+    }
+    nodes {
+      ...AccountMetadata
+      ...AccountClaims
+      ...AccountPositions
+    }
   }
 }
     ${AccountMetadataFragmentDoc}
@@ -11304,6 +11340,9 @@ export const GetAtomsDocument = `
     order_by: $orderBy
     where: $where
   ) {
+    aggregate {
+      count
+    }
     nodes {
       ...AtomMetadata
       ...AtomTxn
@@ -11475,6 +11514,9 @@ useGetAtomQuery.fetcher = (
 export const GetClaimsByAddressDocument = `
     query GetClaimsByAddress($address: String) {
   claims_aggregate(where: {accountId: {_eq: $address}}) {
+    aggregate {
+      count
+    }
     nodes {
       account {
         label
@@ -11598,6 +11640,9 @@ export const GetEventsDocument = `
     order_by: $orderBy
     where: $where
   ) {
+    aggregate {
+      count
+    }
     nodes {
       ...EventDetails
     }
@@ -11692,6 +11737,9 @@ export const GetListItemsDocument = `
     where: {predicateId: {_eq: predicateId}, objectId: {_eq: $objectId}}
     order_by: [{vault: {positionCount: desc}, counterVault: {positionCount: desc}}]
   ) {
+    aggregate {
+      count
+    }
     nodes {
       ...TripleVaultDetails
     }
@@ -11788,6 +11836,9 @@ export const GetPositionsDocument = `
     order_by: $orderBy
     where: $where
   ) {
+    aggregate {
+      count
+    }
     nodes {
       ...PositionDetails
     }
@@ -12039,6 +12090,9 @@ export const GetTriplesDocument = `
     order_by: $orderBy
     where: $where
   ) {
+    aggregate {
+      count
+    }
     nodes {
       ...TripleMetadata
       ...TripleTxn
@@ -12227,6 +12281,9 @@ export const GetVaultsDocument = `
     order_by: $orderBy
     where: $where
   ) {
+    aggregate {
+      count
+    }
     nodes {
       id
       atom {
@@ -15527,21 +15584,40 @@ export const GetAccounts = {
         selections: [
           {
             kind: 'Field',
-            name: { kind: 'Name', value: 'accounts' },
+            name: { kind: 'Name', value: 'accounts_aggregate' },
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
                 {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'AccountMetadata' },
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'aggregate' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'count' } },
+                    ],
+                  },
                 },
                 {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'AccountClaims' },
-                },
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'AccountPositions' },
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'nodes' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'AccountMetadata' },
+                      },
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'AccountClaims' },
+                      },
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'AccountPositions' },
+                      },
+                    ],
+                  },
                 },
               ],
             },
@@ -16684,6 +16760,16 @@ export const GetAtoms = {
               selections: [
                 {
                   kind: 'Field',
+                  name: { kind: 'Name', value: 'aggregate' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'count' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
                   name: { kind: 'Name', value: 'nodes' },
                   selectionSet: {
                     kind: 'SelectionSet',
@@ -17416,6 +17502,16 @@ export const GetClaimsByAddress = {
               selections: [
                 {
                   kind: 'Field',
+                  name: { kind: 'Name', value: 'aggregate' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'count' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
                   name: { kind: 'Name', value: 'nodes' },
                   selectionSet: {
                     kind: 'SelectionSet',
@@ -17622,6 +17718,16 @@ export const GetEvents = {
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'aggregate' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'count' } },
+                    ],
+                  },
+                },
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'nodes' },
@@ -18470,6 +18576,16 @@ export const GetListItems = {
               selections: [
                 {
                   kind: 'Field',
+                  name: { kind: 'Name', value: 'aggregate' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'count' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
                   name: { kind: 'Name', value: 'nodes' },
                   selectionSet: {
                     kind: 'SelectionSet',
@@ -18735,6 +18851,16 @@ export const GetPositions = {
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'aggregate' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'count' } },
+                    ],
+                  },
+                },
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'nodes' },
@@ -19172,6 +19298,16 @@ export const GetTriples = {
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'aggregate' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'count' } },
+                    ],
+                  },
+                },
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'nodes' },
@@ -20143,6 +20279,16 @@ export const GetVaults = {
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'aggregate' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'count' } },
+                    ],
+                  },
+                },
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'nodes' },

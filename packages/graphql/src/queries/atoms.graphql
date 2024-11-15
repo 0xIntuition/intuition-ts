@@ -10,6 +10,9 @@ query GetAtoms(
     order_by: $orderBy
     where: $where
   ) {
+    aggregate {
+      count
+    }
     nodes {
       ...AtomMetadata
       ...AtomTxn

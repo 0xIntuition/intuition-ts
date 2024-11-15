@@ -10,6 +10,9 @@ query GetVaults(
     order_by: $orderBy
     where: $where
   ) {
+    aggregate {
+      count
+    }
     nodes {
       id
       atom {

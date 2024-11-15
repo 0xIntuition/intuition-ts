@@ -11,6 +11,9 @@ query GetEvents(
     order_by: $orderBy
     where: $where
   ) {
+    aggregate {
+      count
+    }
     nodes {
       ...EventDetails
     }

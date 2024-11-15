@@ -10,6 +10,9 @@ query GetTriples(
     order_by: $orderBy
     where: $where
   ) {
+    aggregate {
+      count
+    }
     nodes {
       ...TripleMetadata
       ...TripleTxn

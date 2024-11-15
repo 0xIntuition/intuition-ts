@@ -7,6 +7,9 @@ query GetListItems($predicateId: numeric, $objectId: numeric) {
       { vault: { positionCount: desc }, counterVault: { positionCount: desc } }
     ]
   ) {
+    aggregate {
+      count
+    }
     nodes {
       ...TripleVaultDetails
     }

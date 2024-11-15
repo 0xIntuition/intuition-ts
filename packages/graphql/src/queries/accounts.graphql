@@ -1,8 +1,13 @@
 query GetAccounts {
-  accounts {
-    ...AccountMetadata
-    ...AccountClaims
-    ...AccountPositions
+  accounts_aggregate {
+    aggregate {
+      count
+    }
+    nodes {
+      ...AccountMetadata
+      ...AccountClaims
+      ...AccountPositions
+    }
   }
 }
 
