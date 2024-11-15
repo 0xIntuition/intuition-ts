@@ -49,7 +49,7 @@ const ClaimRow = ({
   return (
     <div
       className={cn(
-        `w-full flex flex-col items-center bg-primary/5 border border-border/10 overflow-hidden`,
+        `w-full flex flex-col items-center border border-border/10 overflow-hidden`,
         isFirst && 'rounded-t-xl',
         isLast && 'rounded-b-xl',
         className,
@@ -60,8 +60,8 @@ const ClaimRow = ({
           backgroundImage:
             userPosition && userPosition !== '0'
               ? positionDirection === ClaimPosition.claimFor
-                ? 'linear-gradient(to right, transparent, rgba(0, 111, 232, 0.5))'
-                : 'linear-gradient(to right, transparent, rgba(255, 149, 0, 0.5))'
+                ? 'linear-gradient(to right, transparent, rgba(0, 111, 232, 0.3))'
+                : 'linear-gradient(to right, transparent, rgba(255, 149, 0, 0.3))'
               : 'none',
         }}
         className={cn(
@@ -146,8 +146,8 @@ const ClaimRow = ({
           style={{
             backgroundImage:
               positionDirection === ClaimPosition.claimFor
-                ? 'linear-gradient(to right, transparent, rgba(0, 111, 232, 0.2))'
-                : 'linear-gradient(to right, transparent, rgba(255, 149, 0, 0.2))',
+                ? 'linear-gradient(to right, transparent, rgba(0, 111, 232, 0.3))'
+                : 'linear-gradient(to right, transparent, rgba(255, 149, 0, 0.3))',
           }}
           className={cn(
             `flex flex-row justify-center md:justify-end px-4 py-0.5 w-full items-center gap-1.5 h-14 md:h-9`,
@@ -158,7 +158,7 @@ const ClaimRow = ({
           )}
         >
           <Icon name={IconName.arrowUp} className="h-4 w-4" />
-          <Text variant={TextVariant.caption} className="text-inherit">
+          <Text variant={TextVariant.caption} className={cn('text-inherit')}>
             You have staked {userPosition} {currency} {positionDirection} this
             claim
           </Text>

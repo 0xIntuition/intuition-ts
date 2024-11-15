@@ -57,7 +57,7 @@ export function PaginationComponent({
   }
 
   return (
-    <Pagination className="flex w-full justify-between max-sm:flex-col max-sm:items-center max-sm:gap-3">
+    <Pagination className="flex w-full justify-between max-sm:flex-col max-sm:items-center max-sm:gap-3 px-5">
       <PaginationSummary totalEntries={totalEntries} label={label} />
       <div className="flex max-sm:flex-col max-sm:items-center max-sm:gap-3">
         <PaginationRowSelection

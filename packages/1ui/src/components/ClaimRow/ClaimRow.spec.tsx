@@ -26,7 +26,7 @@ describe('ClaimRow', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="w-full flex flex-col items-center bg-primary/5 border border-border/10 overflow-hidden rounded-t-xl rounded-b-xl"
+          class="w-full flex flex-col items-center border border-border/10 overflow-hidden rounded-t-xl rounded-b-xl"
         >
           <div
             class="w-full flex flex-col md:flex-row justify-between items-center p-4 max-sm:gap-6 rounded-t-xl"
@@ -42,11 +42,11 @@ describe('ClaimRow', () => {
                   class="flex items-center"
                 >
                   <button
-                    class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center text-secondary/70 hover:text-secondary rounded-md text-base [&>span]:h-6 [&>span]:w-6 relative z-10 identity-tag transition-colors duration-200 border-theme"
+                    class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center text-secondary/70 hover:text-secondary rounded-md text-base [&>span]:h-6 [&>span]:w-6 relative z-10 identity-tag transition-colors duration-200 theme-border"
                     data-state="closed"
                   >
                     <span
-                      class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square bg-background theme-border rounded"
+                      class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square bg-background border-border/10 rounded"
                     >
                       <span
                         class="flex h-full w-full items-center justify-center bg-inherit"
@@ -76,11 +76,11 @@ describe('ClaimRow', () => {
                   class="flex items-center"
                 >
                   <button
-                    class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center text-secondary/70 hover:text-secondary rounded-md text-base [&>span]:h-6 [&>span]:w-6 relative z-10 identity-tag transition-colors duration-200 border-theme"
+                    class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center text-secondary/70 hover:text-secondary rounded-md text-base [&>span]:h-6 [&>span]:w-6 relative z-10 identity-tag transition-colors duration-200 theme-border"
                     data-state="closed"
                   >
                     <span
-                      class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square bg-background theme-border rounded"
+                      class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square bg-background border-border/10 rounded"
                     >
                       <span
                         class="flex h-full w-full items-center justify-center bg-inherit"
@@ -110,11 +110,11 @@ describe('ClaimRow', () => {
                   class="flex items-center"
                 >
                   <button
-                    class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center text-secondary/70 hover:text-secondary rounded-md text-base [&>span]:h-6 [&>span]:w-6 relative z-10 identity-tag transition-colors duration-200 border-theme"
+                    class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center text-secondary/70 hover:text-secondary rounded-md text-base [&>span]:h-6 [&>span]:w-6 relative z-10 identity-tag transition-colors duration-200 theme-border"
                     data-state="closed"
                   >
                     <span
-                      class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square bg-background theme-border rounded"
+                      class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square bg-background border-border/10 rounded"
                     >
                       <span
                         class="flex h-full w-full items-center justify-center bg-inherit"
@@ -210,7 +210,7 @@ describe('ClaimRow', () => {
                 </div>
               </div>
               <button
-                class="flex justify-center items-center text-sm font-medium border aria-disabled:text-muted-foreground aria-disabled:border-muted aria-disabled:pointer-events-none bg-gradient-to-b from-transparent to-transparent hover:text-primary aria-disabled:bg-transparent aria-selected:primary-gradient-subtle aria-selected:border-primary/10 shadow-md-subtle max-sm:py-2 max-sm:text-base py-0.5 px-2.5 gap-1.5 h-9 w-16 rounded-xl disabled:bg-primary/5 disabled:border-primary/20 disabled:text-primary/20 bg-for/10 border-for/30 hover:bg-for hover:border-for/50 text-for max-sm:w-full"
+                class="flex justify-center items-center text-sm font-medium border aria-disabled:text-muted-foreground aria-disabled:pointer-events-none bg-gradient-to-b from-transparent to-transparent hover:text-primary disabled:hover:cursor-not-allowed aria-disabled:bg-primary/5 aria-disabled:border-primary/10 aria-selected:primary-gradient-subtle aria-selected:border-primary/10 shadow-md-subtle max-sm:py-2 max-sm:text-base py-0.5 px-2.5 gap-1.5 h-9 w-16 rounded-xl disabled:bg-primary/5 disabled:border-primary/20 disabled:text-primary/20 bg-for/10 border-for/30 hover:bg-for hover:border-for/50 text-for max-sm:w-full"
               >
                 <svg
                   class="h-4 w-4"
@@ -226,7 +226,7 @@ describe('ClaimRow', () => {
                 </div>
               </button>
               <button
-                class="flex justify-center items-center text-sm font-medium border aria-disabled:text-muted-foreground aria-disabled:border-muted aria-disabled:pointer-events-none bg-gradient-to-b from-transparent to-transparent hover:text-primary aria-disabled:bg-transparent aria-selected:primary-gradient-subtle aria-selected:border-primary/10 shadow-md-subtle max-sm:py-2 max-sm:text-base py-0.5 px-2.5 gap-1.5 h-9 w-16 rounded-xl disabled:bg-primary/5 disabled:border-primary/20 disabled:text-primary/20 bg-against/10 border-against/30 hover:bg-against hover:border-against/50 text-against max-sm:w-full"
+                class="flex justify-center items-center text-sm font-medium border aria-disabled:text-muted-foreground aria-disabled:pointer-events-none bg-gradient-to-b from-transparent to-transparent hover:text-primary disabled:hover:cursor-not-allowed aria-disabled:bg-primary/5 aria-disabled:border-primary/10 aria-selected:primary-gradient-subtle aria-selected:border-primary/10 shadow-md-subtle max-sm:py-2 max-sm:text-base py-0.5 px-2.5 gap-1.5 h-9 w-16 rounded-xl disabled:bg-primary/5 disabled:border-primary/20 disabled:text-primary/20 bg-against/10 border-against/30 hover:bg-against hover:border-against/50 text-against max-sm:w-full"
               >
                 <svg
                   class="h-4 w-4"
@@ -290,7 +290,7 @@ describe('ClaimRow', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="w-full flex flex-col items-center bg-primary/5 border border-border/10 overflow-hidden rounded-t-xl rounded-b-xl"
+          class="w-full flex flex-col items-center border border-border/10 overflow-hidden rounded-t-xl rounded-b-xl"
         >
           <div
             class="w-full flex flex-col md:flex-row justify-between items-center p-4 max-sm:gap-6 rounded-t-xl"
@@ -305,11 +305,11 @@ describe('ClaimRow', () => {
                   class="flex items-center"
                 >
                   <button
-                    class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center text-secondary/70 hover:text-secondary rounded-md text-base [&>span]:h-6 [&>span]:w-6 relative z-10 identity-tag transition-colors duration-200 border-theme"
+                    class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center text-secondary/70 hover:text-secondary rounded-md text-base [&>span]:h-6 [&>span]:w-6 relative z-10 identity-tag transition-colors duration-200 theme-border"
                     data-state="closed"
                   >
                     <span
-                      class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square bg-background theme-border rounded"
+                      class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square bg-background border-border/10 rounded"
                     >
                       <span
                         class="flex h-full w-full items-center justify-center bg-inherit"
@@ -339,11 +339,11 @@ describe('ClaimRow', () => {
                   class="flex items-center"
                 >
                   <button
-                    class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center text-secondary/70 hover:text-secondary rounded-md text-base [&>span]:h-6 [&>span]:w-6 relative z-10 identity-tag transition-colors duration-200 border-theme"
+                    class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center text-secondary/70 hover:text-secondary rounded-md text-base [&>span]:h-6 [&>span]:w-6 relative z-10 identity-tag transition-colors duration-200 theme-border"
                     data-state="closed"
                   >
                     <span
-                      class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square bg-background theme-border rounded"
+                      class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square bg-background border-border/10 rounded"
                     >
                       <span
                         class="flex h-full w-full items-center justify-center bg-inherit"
@@ -373,11 +373,11 @@ describe('ClaimRow', () => {
                   class="flex items-center"
                 >
                   <button
-                    class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center text-secondary/70 hover:text-secondary rounded-md text-base [&>span]:h-6 [&>span]:w-6 relative z-10 identity-tag transition-colors duration-200 border-theme"
+                    class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center text-secondary/70 hover:text-secondary rounded-md text-base [&>span]:h-6 [&>span]:w-6 relative z-10 identity-tag transition-colors duration-200 theme-border"
                     data-state="closed"
                   >
                     <span
-                      class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square bg-background theme-border rounded"
+                      class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square bg-background border-border/10 rounded"
                     >
                       <span
                         class="flex h-full w-full items-center justify-center bg-inherit"
@@ -473,7 +473,7 @@ describe('ClaimRow', () => {
                 </div>
               </div>
               <button
-                class="flex justify-center items-center text-sm font-medium border aria-disabled:text-muted-foreground aria-disabled:border-muted aria-disabled:pointer-events-none bg-gradient-to-b from-transparent to-transparent hover:text-primary aria-disabled:bg-transparent aria-selected:primary-gradient-subtle aria-selected:border-primary/10 shadow-md-subtle max-sm:py-2 max-sm:text-base py-0.5 px-2.5 gap-1.5 h-9 w-16 rounded-xl disabled:bg-primary/5 disabled:border-primary/20 disabled:text-primary/20 hover:bg-for text-primary bg-for border-border/30 hover:border-border/30 max-sm:w-full"
+                class="flex justify-center items-center text-sm font-medium border aria-disabled:text-muted-foreground aria-disabled:pointer-events-none bg-gradient-to-b from-transparent to-transparent hover:text-primary disabled:hover:cursor-not-allowed aria-disabled:bg-primary/5 aria-disabled:border-primary/10 aria-selected:primary-gradient-subtle aria-selected:border-primary/10 shadow-md-subtle max-sm:py-2 max-sm:text-base py-0.5 px-2.5 gap-1.5 h-9 w-16 rounded-xl disabled:bg-primary/5 disabled:border-primary/20 disabled:text-primary/20 hover:bg-for text-primary bg-for border-border/30 hover:border-border/30 max-sm:w-full"
               >
                 <svg
                   class="h-4 w-4"
@@ -489,7 +489,7 @@ describe('ClaimRow', () => {
                 </div>
               </button>
               <button
-                class="flex justify-center items-center text-sm font-medium border aria-disabled:text-muted-foreground aria-disabled:border-muted aria-disabled:pointer-events-none bg-gradient-to-b from-transparent to-transparent hover:text-primary aria-disabled:bg-transparent aria-selected:primary-gradient-subtle aria-selected:border-primary/10 shadow-md-subtle max-sm:py-2 max-sm:text-base py-0.5 px-2.5 gap-1.5 h-9 w-16 rounded-xl disabled:bg-primary/5 disabled:border-primary/20 disabled:text-primary/20 hover:bg-against text-primary bg-for border-border/30 hover:border-border/30 max-sm:w-full"
+                class="flex justify-center items-center text-sm font-medium border aria-disabled:text-muted-foreground aria-disabled:pointer-events-none bg-gradient-to-b from-transparent to-transparent hover:text-primary disabled:hover:cursor-not-allowed aria-disabled:bg-primary/5 aria-disabled:border-primary/10 aria-selected:primary-gradient-subtle aria-selected:border-primary/10 shadow-md-subtle max-sm:py-2 max-sm:text-base py-0.5 px-2.5 gap-1.5 h-9 w-16 rounded-xl disabled:bg-primary/5 disabled:border-primary/20 disabled:text-primary/20 hover:bg-against text-primary bg-for border-border/30 hover:border-border/30 max-sm:w-full"
                 disabled=""
               >
                 <svg

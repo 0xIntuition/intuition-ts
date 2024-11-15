@@ -27,7 +27,7 @@ describe('StakeholdersList', () => {
             class="flex -space-x-2"
           >
             <span
-              class="relative flex shrink-0 overflow-hidden aspect-square bg-background theme-border w-6 h-6 rounded-full"
+              class="relative flex shrink-0 overflow-hidden aspect-square bg-background border-border/10 w-6 h-6 rounded-full"
             >
               <span
                 class="flex h-full w-full items-center justify-center bg-inherit"
@@ -42,7 +42,7 @@ describe('StakeholdersList', () => {
               </span>
             </span>
             <span
-              class="relative flex shrink-0 overflow-hidden aspect-square bg-background theme-border w-6 h-6 rounded-full"
+              class="relative flex shrink-0 overflow-hidden aspect-square bg-background border-border/10 w-6 h-6 rounded-full"
             >
               <span
                 class="flex h-full w-full items-center justify-center bg-inherit"

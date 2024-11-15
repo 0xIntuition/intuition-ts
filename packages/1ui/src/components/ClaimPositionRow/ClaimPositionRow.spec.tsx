@@ -35,7 +35,7 @@ describe('ClaimPositionRow', () => {
               href="https://sepolia.basescan.org/address/0x1234567890abcdef1234567890abcdef12345678"
             >
               <span
-                class="relative flex shrink-0 overflow-hidden aspect-square bg-background theme-border rounded-full mr-4 w-[64px] h-[64px]"
+                class="relative flex shrink-0 overflow-hidden aspect-square bg-background border-border/10 rounded-full mr-4 w-[64px] h-[64px]"
               >
                 <span
                   class="flex h-full w-full items-center justify-center bg-inherit"

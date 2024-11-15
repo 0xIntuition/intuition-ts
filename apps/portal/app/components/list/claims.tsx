@@ -82,7 +82,7 @@ export function ClaimsList({
       {claims.map((claim, index) => (
         <div
           key={claim.claim_id}
-          className="grow shrink basis-0 self-stretch bg-background first:border-t-px first:rounded-t-xl last:rounded-b-xl theme-border border-t-0 flex-col justify-start gap-5 inline-flex"
+          className="grow shrink basis-0 self-stretch first:border-t-px first:rounded-t-xl last:rounded-b-xl theme-border border-t-0 flex-col justify-start gap-5 inline-flex"
         >
           <ClaimRow
             numPositionsFor={claim.for_num_positions}

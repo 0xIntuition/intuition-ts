@@ -27,7 +27,7 @@ describe('FollowPosition', () => {
             class="flex items-center"
           >
             <span
-              class="relative flex shrink-0 overflow-hidden aspect-square bg-background theme-border rounded-full w-16 h-16 mr-4"
+              class="relative flex shrink-0 overflow-hidden aspect-square bg-background border-border/10 rounded-full w-16 h-16 mr-4"
             >
               <span
                 class="flex h-full w-full items-center justify-center bg-inherit"

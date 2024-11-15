@@ -47,13 +47,13 @@ describe('ListGrid', () => {
           class="w-full grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4"
         >
           <div
-            class="relative flex flex-col min-w-[200px] max-w-[400px] h-auto p-5 bg-primary/5 border border-primary/20 rounded-xl overflow-hidden hover:bg-primary/10 hover:border-primary/50 transition-all duration-300"
+            class="relative flex flex-col min-w-[200px] max-w-[400px] h-auto p-5 bg-primary/5 border border-primary/10 rounded-xl overflow-hidden hover:bg-primary/10 hover:border-primary/50 transition-all duration-300"
           >
             <div
               class="aspect-square w-full"
             >
               <span
-                class="relative flex shrink-0 overflow-hidden aspect-square bg-background theme-border w-full h-auto rounded-xl"
+                class="relative flex shrink-0 overflow-hidden aspect-square bg-background border-border/10 w-full h-auto rounded-xl"
               >
                 <span
                   class="flex h-full w-full items-center justify-center bg-inherit"
@@ -101,13 +101,13 @@ describe('ListGrid', () => {
             </div>
           </div>
           <div
-            class="relative flex flex-col min-w-[200px] max-w-[400px] h-auto p-5 bg-primary/5 border border-primary/20 rounded-xl overflow-hidden hover:bg-primary/10 hover:border-primary/50 transition-all duration-300"
+            class="relative flex flex-col min-w-[200px] max-w-[400px] h-auto p-5 bg-primary/5 border border-primary/10 rounded-xl overflow-hidden hover:bg-primary/10 hover:border-primary/50 transition-all duration-300"
           >
             <div
               class="aspect-square w-full"
             >
               <span
-                class="relative flex shrink-0 overflow-hidden aspect-square bg-background theme-border w-full h-auto rounded-xl"
+                class="relative flex shrink-0 overflow-hidden aspect-square bg-background border-border/10 w-full h-auto rounded-xl"
               >
                 <span
                   class="flex h-full w-full items-center justify-center bg-inherit"

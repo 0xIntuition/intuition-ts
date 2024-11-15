@@ -48,7 +48,10 @@ export function List<T extends SortColumnType>({
   const setCreateClaimModalActive = useSetAtom(globalCreateClaimModalAtom)
 
   return (
-    <div className="flex flex-col w-full gap-6" ref={listContainerRef}>
+    <div
+      className="flex flex-col w-full gap-6 overflow-hidden"
+      ref={listContainerRef}
+    >
       {(enableSearch || enableSort) && (
         <div
           className={`flex w-full max-lg:flex-col max-lg:gap-4 ${enableSearch ? 'justify-between' : 'justify-end'}`}

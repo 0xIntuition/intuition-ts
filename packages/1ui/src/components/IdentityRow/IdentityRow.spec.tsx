@@ -23,7 +23,7 @@ describe('IdentityRow', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="w-full flex flex-col items-center bg-primary/5 border border-border/10 rounded-t-xl rounded-b-xl"
+          class="w-full flex flex-col items-center border border-border/10 rounded-t-xl rounded-b-xl"
         >
           <div
             class="w-full flex flex-col md:flex-row justify-between items-center p-4 max-sm:gap-6 rounded-t-xl"
@@ -39,7 +39,7 @@ describe('IdentityRow', () => {
                   class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center text-secondary/70 hover:text-secondary rounded-full [&>span]:rounded-full [&>span]:overflow-hidden text-base [&>span]:h-7 [&>span]:w-7"
                 >
                   <span
-                    class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square bg-background theme-border rounded-full"
+                    class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square bg-background border-border/10 rounded-full"
                   >
                     <span
                       class="flex h-full w-full items-center justify-center bg-inherit"
@@ -117,7 +117,7 @@ describe('IdentityRow', () => {
                 </div>
               </div>
               <button
-                class="flex justify-center items-center text-sm font-medium border aria-disabled:text-muted-foreground aria-disabled:border-muted aria-disabled:pointer-events-none bg-gradient-to-b from-transparent to-transparent hover:text-primary aria-disabled:bg-transparent aria-selected:primary-gradient-subtle aria-selected:border-primary/10 shadow-md-subtle max-sm:py-2 max-sm:text-base py-0.5 px-2.5 gap-1.5 h-9 rounded-xl disabled:bg-primary/5 disabled:border-primary/20 disabled:text-primary/20 bg-primary/10 border-primary/30 hover:bg-primary/20 hover:border-primary/60 text-secondary w-full"
+                class="flex justify-center items-center text-sm font-medium border aria-disabled:text-muted-foreground aria-disabled:pointer-events-none bg-gradient-to-b from-transparent to-transparent hover:text-primary disabled:hover:cursor-not-allowed aria-disabled:bg-primary/5 aria-disabled:border-primary/10 aria-selected:primary-gradient-subtle aria-selected:border-primary/10 shadow-md-subtle max-sm:py-2 max-sm:text-base py-0.5 px-2.5 gap-1.5 h-9 rounded-xl disabled:bg-primary/5 disabled:border-primary/20 disabled:text-primary/20 bg-primary/10 border-primary/30 hover:bg-primary/20 hover:border-primary/60 text-secondary w-full"
               >
                 <svg
                   class="h-4 w-4"
@@ -177,7 +177,7 @@ describe('IdentityRow', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="w-full flex flex-col items-center bg-primary/5 border border-border/10 rounded-t-xl rounded-b-xl"
+          class="w-full flex flex-col items-center border border-border/10 rounded-t-xl rounded-b-xl"
         >
           <div
             class="w-full flex flex-col md:flex-row justify-between items-center p-4 max-sm:gap-6 rounded-t-xl bg-gradient-to-r from-transparent to-primary/10"
@@ -193,7 +193,7 @@ describe('IdentityRow', () => {
                   class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center text-secondary/70 hover:text-secondary rounded-full [&>span]:rounded-full [&>span]:overflow-hidden text-base [&>span]:h-7 [&>span]:w-7"
                 >
                   <span
-                    class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square bg-background theme-border rounded-full"
+                    class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square bg-background border-border/10 rounded-full"
                   >
                     <span
                       class="flex h-full w-full items-center justify-center bg-inherit"
@@ -271,7 +271,7 @@ describe('IdentityRow', () => {
                 </div>
               </div>
               <button
-                class="flex justify-center items-center text-sm font-medium border aria-disabled:text-muted-foreground aria-disabled:border-muted aria-disabled:pointer-events-none bg-gradient-to-b from-transparent to-transparent hover:text-primary aria-disabled:bg-transparent aria-selected:primary-gradient-subtle aria-selected:border-primary/10 shadow-md-subtle max-sm:py-2 max-sm:text-base py-0.5 px-2.5 gap-1.5 h-9 rounded-xl disabled:bg-primary/5 disabled:border-primary/20 disabled:text-primary/20 hover:bg-primary/20 text-secondary bg-primary/20 border-primary/60 hover:border-primary/60 w-full"
+                class="flex justify-center items-center text-sm font-medium border aria-disabled:text-muted-foreground aria-disabled:pointer-events-none bg-gradient-to-b from-transparent to-transparent hover:text-primary disabled:hover:cursor-not-allowed aria-disabled:bg-primary/5 aria-disabled:border-primary/10 aria-selected:primary-gradient-subtle aria-selected:border-primary/10 shadow-md-subtle max-sm:py-2 max-sm:text-base py-0.5 px-2.5 gap-1.5 h-9 rounded-xl disabled:bg-primary/5 disabled:border-primary/20 disabled:text-primary/20 hover:bg-primary/20 text-secondary bg-primary/20 border-primary/60 hover:border-primary/60 w-full"
               >
                 <svg
                   class="h-4 w-4"
@@ -307,7 +307,7 @@ describe('IdentityRow', () => {
             </div>
           </div>
           <div
-            class="flex flex-row justify-center md:justify-end px-4 py-0.5 w-full items-center gap-1.5 h-14 md:h-9"
+            class="flex flex-row justify-center md:justify-end px-4 py-0.5 w-full items-center gap-1.5 h-14 md:h-9  text-primary/70 font-medium"
           >
             <svg
               class="h-4 w-4"
@@ -317,7 +317,7 @@ describe('IdentityRow', () => {
               />
             </svg>
             <div
-              class="text-primary text-sm font-normal"
+              class="text-sm font-normal text-inherit"
             >
               You have staked 3.19 ETH
             </div>

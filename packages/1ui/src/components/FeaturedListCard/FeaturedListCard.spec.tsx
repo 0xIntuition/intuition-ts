@@ -20,7 +20,7 @@ describe('FeaturedListCard', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="relative w-full flex flex-col overflow-hidden gap-3 p-5 text-left bg-primary/5 border border-primary/20 rounded-2xl hover:bg-primary/10 hover:border-primary/50 hover:cursor-pointer transition-all duration-300 max-w-[400px] md:max-w-none"
+          class="relative w-full flex flex-col overflow-hidden gap-3 p-5 text-left bg-primary/5 border border-primary/10 rounded-2xl hover:bg-primary/10 hover:border-primary/50 hover:cursor-pointer transition-all duration-300 max-w-[400px] md:max-w-none"
         >
           <div>
             <h6
@@ -64,7 +64,7 @@ describe('FeaturedListCard', () => {
               class="flex -space-x-2"
             >
               <span
-                class="relative flex shrink-0 overflow-hidden aspect-square bg-background theme-border w-6 h-6 rounded-full"
+                class="relative flex shrink-0 overflow-hidden aspect-square bg-background border-border/10 w-6 h-6 rounded-full"
               >
                 <span
                   class="flex h-full w-full items-center justify-center bg-inherit"
@@ -79,7 +79,7 @@ describe('FeaturedListCard', () => {
                 </span>
               </span>
               <span
-                class="relative flex shrink-0 overflow-hidden aspect-square bg-background theme-border w-6 h-6 rounded-full"
+                class="relative flex shrink-0 overflow-hidden aspect-square bg-background border-border/10 w-6 h-6 rounded-full"
               >
                 <span
                   class="flex h-full w-full items-center justify-center bg-inherit"
@@ -110,7 +110,7 @@ describe('FeaturedListCard', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="relative w-full flex flex-col overflow-hidden gap-3 p-5 text-left bg-primary/5 border border-primary/20 rounded-2xl hover:bg-primary/10 hover:border-primary/50 hover:cursor-pointer transition-all duration-300 max-w-[400px] md:max-w-none"
+          class="relative w-full flex flex-col overflow-hidden gap-3 p-5 text-left bg-primary/5 border border-primary/10 rounded-2xl hover:bg-primary/10 hover:border-primary/50 hover:cursor-pointer transition-all duration-300 max-w-[400px] md:max-w-none"
         >
           <div>
             <h6

@@ -22,7 +22,7 @@ describe('ListIdentityCard', () => {
           class="theme-border p-8 rounded-xl flex flex-col items-center justify-between h-72 max-sm:h-fit"
         >
           <span
-            class="relative flex shrink-0 overflow-hidden aspect-square bg-background theme-border rounded mb-4 w-16 h-16"
+            class="relative flex shrink-0 overflow-hidden aspect-square bg-background border-border/10 rounded mb-4 w-16 h-16"
           >
             <span
               class="flex h-full w-full items-center justify-center bg-inherit"

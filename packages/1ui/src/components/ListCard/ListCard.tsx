@@ -40,7 +40,7 @@ const ListCard: React.FC<ListCardProps> = ({
   return (
     <div
       className={cn(
-        'relative flex flex-col min-w-[200px] max-w-[400px] h-auto p-5 bg-primary/5 border border-primary/20 rounded-xl overflow-hidden hover:bg-primary/10 hover:border-primary/50 transition-all duration-300',
+        'relative flex flex-col min-w-[200px] max-w-[400px] h-auto p-5 bg-primary/5 border border-primary/10 rounded-xl overflow-hidden hover:bg-primary/10 hover:border-primary/50 transition-all duration-300',
         className,
       )}
     >

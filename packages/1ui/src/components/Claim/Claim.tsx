@@ -170,8 +170,8 @@ const ClaimItem = ({
       className={cn(
         'relative z-10 identity-tag transition-colors duration-200',
         {
-          'border-primary bg-primary/10': isHovered,
-          'border-theme': !isHovered,
+          'border-primary/50 bg-primary/10': isHovered,
+          'theme-border': !isHovered,
         },
       )}
       shouldHover={shouldHover}
