@@ -8,6 +8,7 @@ import {
   TabsContent,
   TabsList,
   TabsTrigger,
+  Trunctacular,
 } from '@0xintuition/1ui'
 import {
   ClaimPresenter,
@@ -218,7 +219,12 @@ export default function ReadOnlyListOverview() {
                         <ListTabIdentityDisplay
                           imgSrc={additionalUserObject?.image}
                         >
-                          {additionalUserObject?.display_name ?? 'Additional'}
+                          <Trunctacular
+                            value={
+                              additionalUserObject?.display_name ?? 'Additional'
+                            }
+                            maxStringLength={12}
+                          />
                         </ListTabIdentityDisplay>
                       }
                       onClick={(e) => {
