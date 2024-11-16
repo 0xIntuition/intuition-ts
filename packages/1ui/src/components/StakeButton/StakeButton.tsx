@@ -6,6 +6,7 @@ import { Icon, IconName } from 'components/Icon'
 import { Text, TextVariant } from 'components/Text'
 import { cn } from 'styles'
 import { ClaimPosition, ClaimPositionType } from 'types'
+import { formatNumber } from 'utils'
 
 export const StakeButtonVariant = {
   identity: 'identity',
@@ -90,7 +91,7 @@ const StakeButton = React.forwardRef<HTMLButtonElement, StakeButtonProps>(
           className="h-4 w-4"
         />
         <Text variant={TextVariant.caption} className="text-inherit">
-          {numPositions}
+          {formatNumber(numPositions)}
         </Text>
       </Button>
     )
