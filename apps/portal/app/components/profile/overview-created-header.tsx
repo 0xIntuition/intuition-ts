@@ -3,6 +3,7 @@ import React from 'react'
 import {
   Button,
   ButtonVariant,
+  formatNumber,
   Icon,
   IconName,
   Text,
@@ -51,7 +52,7 @@ export function OverviewCreatedHeader({
             weight="medium"
             className="items-center max-sm:items-start"
           >
-            {totalCreated ?? 0}
+            {formatNumber(totalCreated ?? 0)}
           </Text>
         </div>
         <div className="flex flex-col items-end justify-end ml-auto">
