@@ -8,7 +8,7 @@ export const formatNumber = (value: number): string => {
   } else if (value >= 1000) {
     const thousands = value / 1000
     return thousands >= 100
-      ? `${Math.round(thousands)}k`
+      ? `${Math.round(thousands)}K`
       : `${thousands.toFixed(1).replace(/\.?0+$/, '')}K`
   }
   return value.toString()
