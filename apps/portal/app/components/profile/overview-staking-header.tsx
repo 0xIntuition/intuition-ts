@@ -3,6 +3,7 @@ import React from 'react'
 import {
   Button,
   ButtonVariant,
+  formatNumber,
   Icon,
   IconName,
   MonetaryValue,
@@ -54,7 +55,7 @@ export function OverviewStakingHeader({
                 Identities
               </Text>
               <Text variant="bodyLarge" weight="medium">
-                {totalIdentities}
+                {formatNumber(totalIdentities)}
               </Text>
             </div>
             <div className="flex flex-col max-sm:items-center">
@@ -66,7 +67,7 @@ export function OverviewStakingHeader({
                 Claims
               </Text>
               <Text variant="bodyLarge" weight="medium">
-                {totalClaims}
+                {formatNumber(totalClaims)}
               </Text>
             </div>
           </div>
@@ -78,7 +79,7 @@ export function OverviewStakingHeader({
             >
               TVL
             </Text>
-            <MonetaryValue value={totalStake} currency="ETH" />
+            <MonetaryValue value={+totalStake.toFixed(2)} currency="ETH" />
           </div>
         </div>
         <div className="flex">
