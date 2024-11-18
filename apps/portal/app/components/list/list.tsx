@@ -90,7 +90,9 @@ export function List<T extends SortColumnType>({
           currentPage={pagination.currentPage ?? 0}
           totalPages={pagination.totalPages ?? 0}
           limit={pagination.limit ?? 0}
-          onPageChange={onPageChange}
+          onPageChange={(newOffset) => {
+            onPageChange(newOffset)
+          }}
           onLimitChange={onLimitChange}
           label={paginationLabel}
           listContainerRef={listContainerRef}

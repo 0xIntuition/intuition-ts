@@ -22,6 +22,7 @@ import { Events, Events_Aggregate } from '@0xintuition/graphql'
 
 import RemixLink from '@components/remix-link'
 import { stakeModalAtom } from '@lib/state/store'
+import logger from '@lib/utils/logger'
 import {
   formatBalance,
   getAtomDescription,
@@ -105,6 +106,7 @@ function ActivityItem({
       : eventMessage.toString()
     : ''
 
+  logger('activity', activity)
   const setStakeModalActive = useSetAtom(stakeModalAtom)
 
   // Basic required fields with fallbacks

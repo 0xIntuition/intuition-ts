@@ -18,6 +18,8 @@ const queryClient = new QueryClient({
   },
 })
 
+logger('queryClient', queryClient)
+
 const privyConfig: PrivyClientConfig = {
   embeddedWallets: {
     createOnLogin: 'users-without-wallets',
