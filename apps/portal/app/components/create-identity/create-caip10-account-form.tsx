@@ -45,7 +45,14 @@ import {
   TransactionSuccessAction,
   TransactionSuccessActionType,
 } from 'app/types'
-import { Address, decodeEventLog, extractChain, parseUnits, toHex } from 'viem'
+import {
+  Address,
+  decodeEventLog,
+  extractChain,
+  getAddress,
+  parseUnits,
+  toHex,
+} from 'viem'
 import { reset } from 'viem/actions'
 import * as chains from 'viem/chains'
 import { mode } from 'viem/chains'
@@ -250,10 +257,22 @@ export function CAIP10AccountForm({
     },
   })
 
-  const reviewIdentity = {
-    imageUrl: IconName.fileText,
-    displayName: `caip10:eip155:${formState.chainId}:${formState.address}`,
-  }
+  const reviewIdentity =
+    formState.address && formState.chainId
+      ? {
+          imageUrl: IconName.fileText,
+          displayName: `caip10:eip155:${formState.chainId}:${getAddress(formState.address, Number(formState.chainId))}`,
+          description: undefined,
+          externalReference: undefined,
+          initialDeposit: undefined,
+        }
+      : {
+          imageUrl: undefined,
+          displayName: undefined,
+          description: undefined,
+          externalReference: undefined,
+          initialDeposit: undefined,
+        }
 
   return (
     <>
@@ -446,15 +465,20 @@ export function CAIP10AccountForm({
                   form={form.id}
                   type="submit"
                   variant="primary"
-                  onClick={() =>
+                  onClick={() => {
+                    if (!formState.chainId || !formState.address) {
+                      return
+                    }
                     handleOnChainCreateIdentity({
-                      atomData: `caip10:eip155:${formState.chainId}:${formState.address}`,
+                      atomData: `caip10:eip155:${formState.chainId}:${getAddress(formState.address, Number(formState.chainId))}`,
                     })
-                  }
+                  }}
                   disabled={
                     !address ||
                     loading ||
                     !formTouched ||
+                    !formState.chainId ||
+                    !formState.address ||
                     ['confirm', 'transaction-pending', 'awaiting'].includes(
                       state.status,
                     )
