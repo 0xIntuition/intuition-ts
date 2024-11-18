@@ -28,7 +28,7 @@ export default function Playground() {
       queryKey: ['get-atoms-query'],
     },
   )
-  const atoms = atomsData?.atoms_aggregate.nodes
+  const atoms = atomsData?.atoms
 
   // First query to get all triples
   const {
@@ -62,13 +62,13 @@ export default function Playground() {
     queryKey: ['triples-with-positions', triplesData, accountData],
     enabled: !!triplesData && !!accountData,
     queryFn: () => {
-      const triples = triplesData?.triples_aggregate.nodes || []
+      const triples = triplesData?.triples || []
       const userAccount = accountData?.account
 
       // Map and sort triples
       const triplesWithPositions = triples
         .map((triple) => {
-          const position = userAccount?.positions_aggregate.nodes.find(
+          const position = userAccount?.positions.find(
             (pos) => pos.vault?.triple?.id === triple.id,
           )
 
@@ -136,8 +136,8 @@ export default function Playground() {
   const triplesWithPositionsCount =
     combinedData.data?.filter((triple) => triple.userPosition).length || 0
 
-  console.log('Account positions:', accountData?.account?.positions_aggregate)
-  console.log('All triples:', triplesData?.triples_aggregate.nodes)
+  console.log('Account positions:', accountData?.account?.positions)
+  console.log('All triples:', triplesData?.triples)
 
   return (
     <div className="p-4">
@@ -148,10 +148,7 @@ export default function Playground() {
           <div className="p-4 rounded">
             <p>ID: {accountData.account.id}</p>
             <p>Label: {accountData.account.label}</p>
-            <p>
-              Total Positions:{' '}
-              {accountData.account.positions_aggregate.nodes.length}
-            </p>
+            <p>Total Positions: {accountData.account.positions.length}</p>
           </div>
         )}
       </div>
@@ -204,9 +201,8 @@ export default function Playground() {
           {JSON.stringify(
             {
               atomsCount: atoms?.length,
-              triplesCount: triplesData?.triples_aggregate.nodes.length,
-              accountPositions:
-                accountData?.account?.positions_aggregate.nodes.length,
+              triplesCount: triplesData?.triples.length,
+              accountPositions: accountData?.account?.positions.length,
               combinedCount: combinedData.data?.length,
               triplesWithPositions: triplesWithPositionsCount,
             },

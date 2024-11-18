@@ -9,13 +9,13 @@ query GetAtoms(
     aggregate {
       count
     }
-    atoms(limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {
-      ...AtomMetadata
-      ...AtomTxn
-      ...AtomVaultDetails
-      creator {
-        ...AccountMetadata
-      }
+  }
+  atoms(limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {
+    ...AtomMetadata
+    ...AtomTxn
+    ...AtomVaultDetails
+    creator {
+      ...AccountMetadata
     }
   }
 }

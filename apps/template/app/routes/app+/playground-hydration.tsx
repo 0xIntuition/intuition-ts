@@ -72,15 +72,13 @@ export default function PlaygroundHydration() {
             params.set('offset', String(offset + limit))
             setSearchParams(params)
           }}
-          disabled={!atomsData?.atoms_aggregate.nodes?.length}
+          disabled={!atomsData?.atoms.length}
         >
           Next
         </button>
       </div>
 
-      <pre>
-        {JSON.stringify(atomsData?.atoms_aggregate.nodes || [], null, 2)}
-      </pre>
+      <pre>{JSON.stringify(atomsData?.atoms || [], null, 2)}</pre>
     </div>
   )
 }

@@ -10,7 +10,7 @@ query GetTriples(
       count
     }
   }
-  events(limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {
+  triples(limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {
     ...TripleMetadata
     ...TripleTxn
     ...TripleVaultDetails
