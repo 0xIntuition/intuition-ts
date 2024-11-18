@@ -2,8 +2,8 @@
 query GetAccounts(
   $limit: Int
   $offset: Int
-  $orderBy: [atoms_order_by!]
-  $where: atoms_bool_exp
+  $orderBy: [accounts_order_by!]
+  $where: accounts_bool_exp
 ) {
   accounts(limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {
     ...AccountMetadata
@@ -16,8 +16,8 @@ query GetAccounts(
 query GetAccountsWithAggregates(
   $limit: Int
   $offset: Int
-  $orderBy: [atoms_order_by!]
-  $where: atoms_bool_exp
+  $orderBy: [accounts_order_by!]
+  $where: accounts_bool_exp
 ) {
   accounts_aggregate(
     limit: $limit
@@ -32,6 +32,14 @@ query GetAccountsWithAggregates(
       ...AccountMetadata
       ...AccountClaims
       ...AccountPositions
+    }
+  }
+}
+
+query GetAccountsCount($where: accounts_bool_exp) {
+  accounts_aggregate(where: $where) {
+    aggregate {
+      count
     }
   }
 }

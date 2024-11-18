@@ -47,6 +47,14 @@ query GetEventsWithAggregates(
   }
 }
 
+query GetEventsCount($where: events_bool_exp) {
+  events_aggregate(where: $where) {
+    aggregate {
+      count
+    }
+  }
+}
+
 query GetEventsData($where: events_bool_exp) {
   events_aggregate(where: $where) {
     aggregate {

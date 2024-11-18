@@ -37,6 +37,14 @@ query GetPositionsWithAggregates(
   }
 }
 
+query GetPositionsCount($where: positions_bool_exp) {
+  positions_aggregate(where: $where) {
+    aggregate {
+      count
+    }
+  }
+}
+
 query GetPosition($positionId: String!) {
   position(id: $positionId) {
     ...PositionDetails

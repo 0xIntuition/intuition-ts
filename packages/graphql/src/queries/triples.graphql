@@ -47,6 +47,14 @@ query GetTriplesWithAggregates(
   }
 }
 
+query GetTriplesCount($where: triples_bool_exp) {
+  triples_aggregate(where: $where) {
+    aggregate {
+      count
+    }
+  }
+}
+
 query GetTriple($tripleId: numeric!) {
   triple(id: $tripleId) {
     ...TripleMetadata

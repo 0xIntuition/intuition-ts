@@ -47,6 +47,14 @@ query GetAtomsWithAggregates(
   }
 }
 
+query GetAtomsCount($where: atoms_bool_exp) {
+  atoms_aggregate(where: $where) {
+    aggregate {
+      count
+    }
+  }
+}
+
 query GetAtom($id: numeric!) {
   atom(id: $id) {
     ...AtomMetadata
