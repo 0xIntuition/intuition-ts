@@ -1,4 +1,22 @@
+# Main pagination query
 query GetPositions(
+  $limit: Int
+  $offset: Int
+  $orderBy: [positions_order_by!]
+  $where: positions_bool_exp
+) {
+  total: positions_aggregate(where: $where) {
+    aggregate {
+      count
+    }
+  }
+  positions(limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {
+    ...PositionDetails
+  }
+}
+
+# Combined query with aggregates and nodes
+query GetPositionsWithAggregates(
   $limit: Int
   $offset: Int
   $orderBy: [positions_order_by!]

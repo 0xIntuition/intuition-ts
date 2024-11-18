@@ -1,5 +1,30 @@
-query GetAccounts {
-  accounts_aggregate {
+# Main pagination query
+query GetAccounts(
+  $limit: Int
+  $offset: Int
+  $orderBy: [atoms_order_by!]
+  $where: atoms_bool_exp
+) {
+  accounts(limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {
+    ...AccountMetadata
+    ...AccountClaims
+    ...AccountPositions
+  }
+}
+
+# Combined query with aggregates and nodes
+query GetAccountsWithAggregates(
+  $limit: Int
+  $offset: Int
+  $orderBy: [atoms_order_by!]
+  $where: atoms_bool_exp
+) {
+  accounts_aggregate(
+    limit: $limit
+    offset: $offset
+    order_by: $orderBy
+    where: $where
+  ) {
     aggregate {
       count
     }

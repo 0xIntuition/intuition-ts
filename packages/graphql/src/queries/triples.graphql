@@ -1,4 +1,27 @@
+# Main pagination query
 query GetTriples(
+  $limit: Int
+  $offset: Int
+  $orderBy: [triples_order_by!]
+  $where: triples_bool_exp
+) {
+  total: triples_aggregate(where: $where) {
+    aggregate {
+      count
+    }
+  }
+  events(limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {
+    ...TripleMetadata
+    ...TripleTxn
+    ...TripleVaultDetails
+    creator {
+      ...AccountMetadata
+    }
+  }
+}
+
+# Combined query with aggregates and nodes
+query GetTriplesWithAggregates(
   $limit: Int
   $offset: Int
   $orderBy: [triples_order_by!]

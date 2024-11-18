@@ -1,3 +1,4 @@
+# Main pagination query
 query GetEvents(
   $limit: Int
   $offset: Int
@@ -5,17 +6,62 @@ query GetEvents(
   $where: events_bool_exp
   $addresses: [String!]
 ) {
-  events_aggregate(
-    limit: $limit
-    offset: $offset
-    order_by: $orderBy
-    where: $where
-  ) {
+  total: events_aggregate(where: $where) {
     aggregate {
       count
     }
+  }
+  events(limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {
+    ...EventDetails
+  }
+}
+
+# Combined query with aggregates and nodes
+query GetEventsWithAggregates(
+  $limit: Int
+  $offset: Int
+  $orderBy: [events_order_by!]
+  $where: events_bool_exp
+  $addresses: [String!]
+) {
+  events_aggregate(
+    where: $where
+    limit: $limit
+    offset: $offset
+    order_by: $orderBy
+  ) {
+    aggregate {
+      count
+      max {
+        blockTimestamp
+        blockNumber
+      }
+      min {
+        blockTimestamp
+        blockNumber
+      }
+    }
     nodes {
       ...EventDetails
+    }
+  }
+}
+
+query GetEventsData($where: events_bool_exp) {
+  events_aggregate(where: $where) {
+    aggregate {
+      count
+      max {
+        blockTimestamp
+        blockNumber
+      }
+      min {
+        blockTimestamp
+        blockNumber
+      }
+      avg {
+        blockNumber
+      }
     }
   }
 }
