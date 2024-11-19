@@ -52,7 +52,6 @@ fragment AtomTriple on atoms {
   asSubject {
     id
     label
-    data
     object {
       data
       id
@@ -78,7 +77,6 @@ fragment AtomTriple on atoms {
   }
   asPredicate {
     id
-    data
     label
     subject {
       data
@@ -105,7 +103,6 @@ fragment AtomTriple on atoms {
   }
   asObject {
     id
-    data
     label
     subject {
       data

@@ -7489,6 +7489,7 @@ export type AtomValueFragment = {
 export type AtomMetadataFragment = {
   __typename?: 'atoms'
   id: any
+  data: string
   image?: string | null
   label?: string | null
   emoji?: string | null
@@ -7871,6 +7872,7 @@ export type EventDetailsFragment = {
   atom?: {
     __typename?: 'atoms'
     id: any
+    data: string
     image?: string | null
     label?: string | null
     emoji?: string | null
@@ -9377,6 +9379,7 @@ export type GetAtomsQuery = {
   atoms: Array<{
     __typename?: 'atoms'
     id: any
+    data: string
     image?: string | null
     label?: string | null
     emoji?: string | null
@@ -9470,6 +9473,7 @@ export type GetAtomsWithAggregatesQuery = {
     nodes: Array<{
       __typename?: 'atoms'
       id: any
+      data: string
       image?: string | null
       label?: string | null
       emoji?: string | null
@@ -9570,6 +9574,7 @@ export type GetAtomQuery = {
   atom?: {
     __typename?: 'atoms'
     id: any
+    data: string
     image?: string | null
     label?: string | null
     emoji?: string | null
@@ -9983,6 +9988,7 @@ export type GetEventsQuery = {
     atom?: {
       __typename?: 'atoms'
       id: any
+      data: string
       image?: string | null
       label?: string | null
       emoji?: string | null
@@ -10434,6 +10440,7 @@ export type GetEventsWithAggregatesQuery = {
       atom?: {
         __typename?: 'atoms'
         id: any
+        data: string
         image?: string | null
         label?: string | null
         emoji?: string | null
@@ -13325,6 +13332,7 @@ export const RedemptionEventFragmentFragmentDoc = `
 export const AtomMetadataFragmentDoc = `
     fragment AtomMetadata on atoms {
   id
+  data
   image
   label
   emoji
@@ -18489,6 +18497,7 @@ export const AtomMetadata = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'data' } },
           { kind: 'Field', name: { kind: 'Name', value: 'image' } },
           { kind: 'Field', name: { kind: 'Name', value: 'label' } },
           { kind: 'Field', name: { kind: 'Name', value: 'emoji' } },
@@ -19690,6 +19699,7 @@ export const EventDetails = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'data' } },
           { kind: 'Field', name: { kind: 'Name', value: 'image' } },
           { kind: 'Field', name: { kind: 'Name', value: 'label' } },
           { kind: 'Field', name: { kind: 'Name', value: 'emoji' } },
@@ -24744,6 +24754,7 @@ export const GetAtoms = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'data' } },
           { kind: 'Field', name: { kind: 'Name', value: 'image' } },
           { kind: 'Field', name: { kind: 'Name', value: 'label' } },
           { kind: 'Field', name: { kind: 'Name', value: 'emoji' } },
@@ -25065,6 +25076,7 @@ export const GetAtomsWithAggregates = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'data' } },
           { kind: 'Field', name: { kind: 'Name', value: 'image' } },
           { kind: 'Field', name: { kind: 'Name', value: 'label' } },
           { kind: 'Field', name: { kind: 'Name', value: 'emoji' } },
@@ -25371,6 +25383,7 @@ export const GetAtom = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'data' } },
           { kind: 'Field', name: { kind: 'Name', value: 'image' } },
           { kind: 'Field', name: { kind: 'Name', value: 'label' } },
           { kind: 'Field', name: { kind: 'Name', value: 'emoji' } },
@@ -26072,6 +26085,7 @@ export const GetEvents = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'data' } },
           { kind: 'Field', name: { kind: 'Name', value: 'image' } },
           { kind: 'Field', name: { kind: 'Name', value: 'label' } },
           { kind: 'Field', name: { kind: 'Name', value: 'emoji' } },
@@ -27108,6 +27122,7 @@ export const GetEventsWithAggregates = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'data' } },
           { kind: 'Field', name: { kind: 'Name', value: 'image' } },
           { kind: 'Field', name: { kind: 'Name', value: 'label' } },
           { kind: 'Field', name: { kind: 'Name', value: 'emoji' } },
