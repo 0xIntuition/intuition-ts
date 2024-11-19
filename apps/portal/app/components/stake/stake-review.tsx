@@ -170,7 +170,7 @@ export default function StakeReview({
       : calculateRedeemFees(val, vaultDetails)
 
   return (
-    <ScrollArea className="h-[600px] w-full">
+    <ScrollArea className="h-[calc(100vh-240px)] min-h-[360px] max-h-[600px] w-full">
       <div className="flex flex-col px-10">
         <div className="flex flex-col gap-10">
           <div className="flex flex-col gap-5 items-center justify-center">
