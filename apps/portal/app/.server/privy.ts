@@ -15,14 +15,19 @@ export const verifyPrivyAccessToken = async (
   const privy = getPrivyClient()
   const authToken = getPrivyAccessToken(req)
   if (!authToken) {
-    logger('No privy access token found')
+    logger('No Privy access token found')
     return null
   }
-  const verifiedClaims = await privy.verifyAuthToken(
-    authToken,
-    process.env.PRIVY_VERIFICATION_KEY,
-  )
-  return verifiedClaims
+  try {
+    const verifiedClaims = await privy.verifyAuthToken(
+      authToken,
+      process.env.PRIVY_VERIFICATION_KEY,
+    )
+    return verifiedClaims
+  } catch (error) {
+    logger('Error verifying Privy access token', error)
+    return null
+  }
 }
 
 // takes user privy DID (e.g. authCheck().userId)

@@ -28,7 +28,7 @@ const privySessionCookie = createCookie('privy-session', {
   secure: true,
   sameSite: 'strict',
   path: '/',
-  domain: 'portal.intuition.systems',
+  domain: '.portal.intuition.systems',
 })
 
 export async function loader({ request }: LoaderFunctionArgs) {
