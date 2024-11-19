@@ -1,0 +1,110 @@
+query GetFollowingPositions(
+  $subjectId: numeric!
+  $predicateId: numeric!
+  $objectId: numeric!
+  $positionsLimit: Int
+  $positionsOffset: Int
+  $positionsOrderBy: [positions_order_by!]
+  $positionsWhere: positions_bool_exp
+) {
+  triples(
+    where: {
+      _and: [
+        { subjectId: { _eq: $subjectId } }
+        { predicateId: { _eq: $predicateId } }
+        { objectId: { _eq: $objectId } }
+      ]
+    }
+  ) {
+    ...FollowMetadata
+  }
+}
+
+query GetFollowerPositions(
+  $subjectId: numeric!
+  $predicateId: numeric!
+  $address: String!
+) {
+  triples_aggregate(
+    where: {
+      _and: [
+        { subjectId: { _eq: $subjectId } }
+        { predicateId: { _eq: $predicateId } }
+        { vault: { positions: { accountId: { _eq: $address } } } }
+      ]
+    }
+  ) {
+    ...FollowAggregate
+  }
+  triples(
+    where: {
+      _and: [
+        { subjectId: { _eq: $subjectId } }
+        { predicateId: { _eq: $predicateId } }
+        { vault: { positions: { accountId: { _eq: $address } } } }
+      ]
+    }
+  ) {
+    ...FollowMetadata
+  }
+}
+
+# Combined query to get following and followers
+query GetConnections(
+  $subjectId: numeric!
+  $predicateId: numeric!
+  $objectId: numeric!
+  $addresses: [String!]
+  $positionsLimit: Int
+  $positionsOffset: Int
+  $positionsOrderBy: [positions_order_by!]
+  $positionsWhere: positions_bool_exp
+) {
+  # Following
+  following: triples(
+    where: {
+      _and: [
+        { subjectId: { _eq: $subjectId } }
+        { predicateId: { _eq: $predicateId } }
+        { objectId: { _eq: $objectId } }
+      ]
+    }
+  ) {
+    ...FollowMetadata
+  }
+  following_aggregate(
+    where: {
+      _and: [
+        { subjectId: { _eq: $subjectId } }
+        { predicateId: { _eq: $predicateId } }
+        { objectId: { _eq: $objectId } }
+      ]
+    }
+  ) {
+    ...FollowAggregate
+  }
+
+  # Followers
+  followers: triples(
+    where: {
+      _and: [
+        { subjectId: { _eq: $subjectId } }
+        { predicateId: { _eq: $predicateId } }
+        { vault: { positions: { accountId: { _in: $addresses } } } }
+      ]
+    }
+  ) {
+    ...FollowMetadata
+  }
+  followers_aggregate(
+    where: {
+      _and: [
+        { subjectId: { _eq: $subjectId } }
+        { predicateId: { _eq: $predicateId } }
+        { vault: { positions: { accountId: { _in: $addresses } } } }
+      ]
+    }
+  ) {
+    ...FollowAggregate
+  }
+}

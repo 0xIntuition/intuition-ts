@@ -1,0 +1,42 @@
+fragment FollowMetadata on triples {
+  id
+  subject {
+    label
+  }
+  predicate {
+    label
+  }
+  object {
+    label
+  }
+  vault {
+    totalShares
+    currentSharePrice
+    positions_aggregate(where: $positionsWhere) {
+      aggregate {
+        count
+        sum {
+          shares
+        }
+      }
+    }
+    positions(
+      limit: $positionsLimit
+      offset: $positionsOffset
+      order_by: $positionsOrderBy
+      where: $positionsWhere
+    ) {
+      account {
+        id
+        label
+      }
+      shares
+    }
+  }
+}
+
+fragment FollowAggregate on triples_aggregate {
+  aggregate {
+    count
+  }
+}
