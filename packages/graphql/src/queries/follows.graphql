@@ -45,7 +45,7 @@ query GetFollowerPositions(
       _and: [
         { subjectId: { _eq: $subjectId } }
         { predicateId: { _eq: $predicateId } }
-        { vault: { positions: { accountId: { _eq: $address } } }
+        { vault: { positions: { accountId: { _eq: $address } } } }
       ]
     }
   ) {
