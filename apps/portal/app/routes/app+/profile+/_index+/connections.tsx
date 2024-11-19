@@ -17,6 +17,12 @@ import {
   GetConnectionsDocument,
   GetConnectionsQuery,
   GetConnectionsQueryVariables,
+  GetFollowerPositionsDocument,
+  GetFollowerPositionsQuery,
+  GetFollowerPositionsQueryVariables,
+  GetFollowingPositionsDocument,
+  GetFollowingPositionsQuery,
+  GetFollowingPositionsQueryVariables,
   useGetConnectionsQuery,
 } from '@0xintuition/graphql'
 
@@ -58,53 +64,104 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const searchParams = new URLSearchParams(url.search)
   const limit = parseInt(searchParams.get('limit') || '10')
   const offset = parseInt(searchParams.get('offset') || '0')
+  const addressForQuery = userWallet.toLowerCase()
 
   const queryClient = new QueryClient()
 
-  const accountData = await fetcher<GetAccountQuery, GetAccountQueryVariables>(
-    GetAccountDocument,
-    { address: userWallet.toLowerCase() },
-  )()
-  logger('atomId', accountData?.account?.atomId)
-  const connectionsData = await fetcher<
-    GetConnectionsQuery,
-    GetConnectionsQueryVariables
-  >(GetConnectionsDocument, {
-    subjectId: '13',
-    predicateId: '4',
-    objectId: '14',
-    addresses: [userWallet.toLowerCase()],
-    positionsLimit: limit,
-    positionsOffset: offset,
-  })()
-  logger('connectionsData', connectionsData)
+  try {
+    // First get account data
+    logger('Fetching Account Data for wallet:', userWallet)
+    const accountData = await fetcher<
+      GetAccountQuery,
+      GetAccountQueryVariables
+    >(GetAccountDocument, { address: addressForQuery })()
+    logger('Account Data Result:', accountData)
 
-  // await queryClient.prefetchQuery({
-  //     queryKey: ['get-connections', { subjectId: accountData?.account?.atomId, limit, offset }],
+    if (!accountData.account?.atomId) {
+      throw new Error('No atom ID found for account')
+    }
 
-  //     queryFn: () =>
-  //  fetcher<GetConnectionsQuery, GetConnectionsQueryVariables>(GetConnectionsDocument, {
-  //         positionsLimit:limit,
-  //         positionsOffset: offset,
-  //         subjectId: "13",
-  //         predicateId: "4",
-  //         objectId: "14"
-  //       // subjectId:  getSpecialPredicate(CURRENT_ENV).iPredicate.vaultId,
-  //       // predicateId:      getSpecialPredicate(CURRENT_ENV).amFollowingPredicate.vaultId,
-  //       // objectId:  accountData?.account?.atomId,
-  //       })(),
-  //   })
+    // Log initial parameters
+    logger('Initial Parameters:', {
+      userWallet,
+      limit,
+      offset,
+      predicates: {
+        iPredicate: getSpecialPredicate(CURRENT_ENV).iPredicate.vaultId,
+        amFollowingPredicate:
+          getSpecialPredicate(CURRENT_ENV).amFollowingPredicate.vaultId,
+      },
+    })
 
-  // return defer({
-  //   connectionsData: getConnectionsData({
-  //     request,
-  //     userWallet,
-  //     searchParams,
-  //   }),
-  return json({
-    dehydratedState: dehydrate(queryClient),
-    initialParams: { searchParams: searchParams.toString() },
-  })
+    // Prefetch Following Positions
+    logger('Prefetching Following Positions...')
+    const followingResult = await fetcher<
+      GetFollowingPositionsQuery,
+      GetFollowingPositionsQueryVariables
+    >(GetFollowingPositionsDocument, {
+      subjectId: getSpecialPredicate(CURRENT_ENV).iPredicate.vaultId,
+      predicateId:
+        getSpecialPredicate(CURRENT_ENV).amFollowingPredicate.vaultId,
+      objectId: accountData.account.atomId,
+      positionsLimit: limit,
+      positionsOffset: offset,
+    })()
+    logger('Following Positions Result:', followingResult)
+
+    await queryClient.prefetchQuery({
+      queryKey: ['get-following-positions', { userWallet, limit, offset }],
+      queryFn: () => followingResult,
+    })
+
+    // Prefetch Follower Positions
+    logger('Prefetching Follower Positions...')
+    const followerResult = await fetcher<
+      GetFollowerPositionsQuery,
+      GetFollowerPositionsQueryVariables
+    >(GetFollowerPositionsDocument, {
+      subjectId: getSpecialPredicate(CURRENT_ENV).iPredicate.vaultId,
+      predicateId:
+        getSpecialPredicate(CURRENT_ENV).amFollowingPredicate.vaultId,
+      objectId: accountData.account.atomId,
+      positionsLimit: limit,
+      positionsOffset: offset,
+    })()
+    logger('Follower Positions Result:', followerResult)
+
+    await queryClient.prefetchQuery({
+      queryKey: ['get-follower-positions', { userWallet, limit, offset }],
+      queryFn: () => followerResult,
+    })
+
+    logger('Query Client State:', {
+      followingQuery: queryClient.getQueryData([
+        'get-following-positions',
+        { addressForQuery, limit, offset },
+      ]),
+      followerQuery: queryClient.getQueryData([
+        'get-follower-positions',
+        { addressForQuery, limit, offset },
+      ]),
+    })
+
+    return json({
+      dehydratedState: dehydrate(queryClient),
+      initialParams: {
+        addressForQuery,
+        limit,
+        offset,
+      },
+    })
+  } catch (error) {
+    logger('Connections Query Error:', {
+      message: (error as Error).message,
+      stack: (error as Error).stack,
+      addressForQuery,
+      limit,
+      offset,
+    })
+    throw error
+  }
 }
 
 const TabContent = ({
