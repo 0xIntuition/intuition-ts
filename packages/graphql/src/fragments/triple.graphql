@@ -1,6 +1,8 @@
 fragment TripleMetadata on triples {
   id
-  label
+  subjectId
+  predicateId
+  objectId
   subject {
     data
     id
@@ -35,6 +37,26 @@ fragment TripleMetadata on triples {
     ...AtomValue
     creator {
       ...AccountMetadata
+    }
+  }
+  vault {
+    totalShares
+    currentSharePrice
+    allPositions: positions_aggregate {
+      ...PositionAggregateFields
+    }
+    positions {
+      ...PositionFields
+    }
+  }
+  counterVault {
+    totalShares
+    currentSharePrice
+    allPositions: positions_aggregate {
+      ...PositionAggregateFields
+    }
+    positions {
+      ...PositionFields
     }
   }
 }

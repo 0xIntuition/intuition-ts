@@ -166,7 +166,6 @@ export default function Playground() {
             <div key={triple.id} className="p-4 border rounded">
               {/* Triple Info */}
               <div className="mb-4">
-                <h3 className="font-bold">{triple.label}</h3>
                 <div className="text-sm text-green-100">
                   <p>Subject: {triple.subject?.label}</p>
                   <p>Predicate: {triple.predicate?.label}</p>

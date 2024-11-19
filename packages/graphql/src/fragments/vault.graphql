@@ -19,15 +19,6 @@ fragment VaultDetails on vaults {
       label
     }
   }
-  positions_aggregate {
-    nodes {
-      account {
-        id
-        label
-      }
-      shares
-    }
-  }
   currentSharePrice
   totalShares
 }
@@ -69,4 +60,15 @@ fragment VaultDetailsWithFilteredPositions on vaults {
   }
   currentSharePrice
   totalShares
+}
+
+fragment VaultFieldsForTriple on vaults {
+  totalShares
+  currentSharePrice
+  positions_aggregate {
+    ...PositionAggregateFields
+  }
+  positions {
+    ...PositionFields
+  }
 }
