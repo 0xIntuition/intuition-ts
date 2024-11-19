@@ -24,6 +24,10 @@ query GetFollowerPositions(
   $subjectId: numeric!
   $predicateId: numeric!
   $address: String!
+  $positionsLimit: Int
+  $positionsOffset: Int
+  $positionsOrderBy: [positions_order_by!]
+  $positionsWhere: positions_bool_exp
 ) {
   triples_aggregate(
     where: {
@@ -41,7 +45,7 @@ query GetFollowerPositions(
       _and: [
         { subjectId: { _eq: $subjectId } }
         { predicateId: { _eq: $predicateId } }
-        { vault: { positions: { accountId: { _eq: $address } } } }
+        { vault: { positions: { accountId: { _eq: $address } } }
       ]
     }
   ) {
@@ -61,6 +65,19 @@ query GetConnections(
   $positionsWhere: positions_bool_exp
 ) {
   # Following
+  following_count: triples_aggregate(
+    where: {
+      _and: [
+        { subjectId: { _eq: $subjectId } }
+        { predicateId: { _eq: $predicateId } }
+        { objectId: { _eq: $objectId } }
+      ]
+    }
+  ) {
+    aggregate {
+      count
+    }
+  }
   following: triples(
     where: {
       _and: [
@@ -72,19 +89,21 @@ query GetConnections(
   ) {
     ...FollowMetadata
   }
-  following_aggregate(
+
+  # Followers
+  followers_count: triples_aggregate(
     where: {
       _and: [
         { subjectId: { _eq: $subjectId } }
         { predicateId: { _eq: $predicateId } }
-        { objectId: { _eq: $objectId } }
+        { vault: { positions: { accountId: { _in: $addresses } } } }
       ]
     }
   ) {
-    ...FollowAggregate
+    aggregate {
+      count
+    }
   }
-
-  # Followers
   followers: triples(
     where: {
       _and: [
@@ -95,16 +114,5 @@ query GetConnections(
     }
   ) {
     ...FollowMetadata
-  }
-  followers_aggregate(
-    where: {
-      _and: [
-        { subjectId: { _eq: $subjectId } }
-        { predicateId: { _eq: $predicateId } }
-        { vault: { positions: { accountId: { _in: $addresses } } } }
-      ]
-    }
-  ) {
-    ...FollowAggregate
   }
 }

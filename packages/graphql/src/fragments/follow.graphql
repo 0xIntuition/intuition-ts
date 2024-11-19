@@ -1,15 +1,19 @@
 fragment FollowMetadata on triples {
   id
   subject {
+    id
     label
   }
   predicate {
+    id
     label
   }
   object {
+    id
     label
   }
   vault {
+    id
     totalShares
     currentSharePrice
     positions_aggregate(where: $positionsWhere) {
