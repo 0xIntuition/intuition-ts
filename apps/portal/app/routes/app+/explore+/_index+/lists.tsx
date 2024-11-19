@@ -10,9 +10,12 @@ import {
 import { ErrorPage } from '@components/error-page'
 import ExploreHeader from '@components/explore/ExploreHeader'
 import { ExploreSearch } from '@components/explore/ExploreSearch'
+import { HomeSectionHeader } from '@components/home/home-section-header'
 import { ListClaimsList } from '@components/list/list-claims'
+import { FeaturedListCarousel } from '@components/lists/featured-lists-carousel'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
-import { getSpecialPredicate } from '@lib/utils/app'
+import { getFeaturedLists } from '@lib/services/lists'
+import { getFeaturedListObjectIds, getSpecialPredicate } from '@lib/utils/app'
 import { calculateTotalPages, invariant, loadMore } from '@lib/utils/misc'
 import { getStandardPageParams } from '@lib/utils/params'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
@@ -51,10 +54,16 @@ export async function loader({ request }: LoaderFunctionArgs) {
     },
   })
 
+  const featuredLists = await getFeaturedLists({
+    request,
+    listIds: getFeaturedListObjectIds(CURRENT_ENV),
+  })
+
   const totalPages = calculateTotalPages(listClaims?.total ?? 0, limit)
 
   return json({
     listClaims: listClaims?.data as ClaimPresenter[],
+    featuredLists,
     sortBy,
     direction,
     pagination: {
@@ -68,9 +77,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 export default function ExploreLists() {
   const submit = useSubmit()
-  const { listClaims, pagination, sortBy, direction } = useLiveLoader<
-    typeof loader
-  >(['create', 'attest'])
+  const { listClaims, featuredLists, pagination, sortBy, direction } =
+    useLiveLoader<typeof loader>(['create', 'attest'])
   const [searchParams] = useSearchParams()
 
   const currentPage = Number(searchParams.get('page') || '1')
@@ -100,6 +108,14 @@ export default function ExploreLists() {
         icon={IconName.bookmark}
         bgImage={HEADER_BANNER_LISTS}
       />
+      <div className="flex flex-col gap-4">
+        <HomeSectionHeader
+          title="Featured Lists"
+          buttonText="Explore Lists"
+          buttonLink="/app/explore/lists"
+        />
+        <FeaturedListCarousel lists={featuredLists.featuredLists} />
+      </div>
       <ExploreSearch variant="list" />
       <ListClaimsList
         listClaims={accumulatedClaims}
