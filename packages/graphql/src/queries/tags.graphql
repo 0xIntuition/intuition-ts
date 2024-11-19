@@ -1,0 +1,120 @@
+query GetTags($subjectId: numeric!, $predicateId: numeric!) {
+  triples(
+    where: {
+      _and: [
+        { subjectId: { _eq: $subjectId } }
+        { predicateId: { _eq: $predicateId } }
+      ]
+    }
+  ) {
+    id
+    label
+    subjectId
+    predicateId
+    objectId
+    subject {
+      label
+    }
+    predicate {
+      label
+    }
+    object {
+      label
+    }
+    vault {
+      totalShares
+      currentSharePrice
+      positions_aggregate {
+        aggregate {
+          count
+          sum {
+            shares
+          }
+        }
+      }
+      positions {
+        account {
+          id
+          label
+        }
+        shares
+      }
+    }
+    counterVault {
+      totalShares
+      currentSharePrice
+      positions_aggregate {
+        aggregate {
+          count
+          sum {
+            shares
+          }
+        }
+      }
+      positions {
+        account {
+          id
+          label
+        }
+        shares
+      }
+    }
+  }
+}
+
+query GetTagsCustom($where: triples_bool_exp) {
+  triples(where: $where) {
+    id
+    label
+    subjectId
+    predicateId
+    objectId
+    subject {
+      label
+    }
+    predicate {
+      label
+    }
+    object {
+      label
+    }
+    vault {
+      totalShares
+      currentSharePrice
+      positions_aggregate {
+        aggregate {
+          count
+          sum {
+            shares
+          }
+        }
+      }
+      positions {
+        account {
+          id
+          label
+        }
+        shares
+      }
+    }
+    counterVault {
+      totalShares
+      currentSharePrice
+      positions_aggregate {
+        aggregate {
+          count
+          sum {
+            shares
+          }
+        }
+      }
+      positions {
+        account {
+          id
+          label
+        }
+        shares
+      }
+    }
+  }
+}
