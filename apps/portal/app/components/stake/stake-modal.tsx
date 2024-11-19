@@ -81,8 +81,6 @@ export default function StakeModal({
   direction,
   onSuccess,
 }: StakeModalProps) {
-  console.log('claim', claim)
-  console.log('direction', direction)
   const fetchReval = useFetcher()
   const [stakeModalState] = useAtom(stakeModalAtom)
   const { mode, modalType } = stakeModalState
@@ -110,7 +108,7 @@ export default function StakeModal({
   useEffect(() => {
     let isCancelled = false
 
-    if (vaultId !== null) {
+    if (open && vaultId !== null) {
       const finalUrl = `${GET_VAULT_DETAILS_RESOURCE_ROUTE}?contract=${contract}&vaultId=${vaultId}&fetchId=${fetchId}`
       if (!isCancelled) {
         vaultDetailsFetcher.load(finalUrl)
