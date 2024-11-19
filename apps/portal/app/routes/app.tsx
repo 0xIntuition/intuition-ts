@@ -24,7 +24,7 @@ import { Address } from 'viem'
 
 // Create a cookie instance to handle the test cookie
 const privySessionCookie = createCookie('privy-session', {
-  httpOnly: true,
+  httpOnly: false,
   secure: true,
   sameSite: 'strict',
   path: '/',
