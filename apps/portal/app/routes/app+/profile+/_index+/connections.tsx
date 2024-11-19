@@ -9,6 +9,16 @@ import {
   Text,
 } from '@0xintuition/1ui'
 import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
+import {
+  fetcher,
+  GetAccountDocument,
+  GetAccountQuery,
+  GetAccountQueryVariables,
+  GetConnectionsDocument,
+  GetConnectionsQuery,
+  GetConnectionsQueryVariables,
+  useGetConnectionsQuery,
+} from '@0xintuition/graphql'
 
 import { ErrorPage } from '@components/error-page'
 import { FollowList } from '@components/list/follow'
@@ -24,11 +34,15 @@ import {
 } from '@components/skeleton'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { getConnectionsData } from '@lib/services/connections'
+import { getSpecialPredicate } from '@lib/utils/app'
+import logger from '@lib/utils/logger'
 import { formatBalance, invariant } from '@lib/utils/misc'
-import { defer, LoaderFunctionArgs } from '@remix-run/node'
-import { Await, useRouteLoaderData } from '@remix-run/react'
+import { defer, json, LoaderFunctionArgs } from '@remix-run/node'
+import { Await, useLoaderData, useRouteLoaderData } from '@remix-run/react'
 import { requireUserWallet } from '@server/auth'
+import { dehydrate, QueryClient } from '@tanstack/react-query'
 import {
+  CURRENT_ENV,
   NO_USER_IDENTITY_ERROR,
   NO_USER_TOTALS_ERROR,
   NO_WALLET_ERROR,
@@ -42,13 +56,54 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   const url = new URL(request.url)
   const searchParams = new URLSearchParams(url.search)
+  const limit = parseInt(searchParams.get('limit') || '10')
+  const offset = parseInt(searchParams.get('offset') || '0')
 
-  return defer({
-    connectionsData: getConnectionsData({
-      request,
-      userWallet,
-      searchParams,
-    }),
+  const queryClient = new QueryClient()
+
+  const accountData = await fetcher<GetAccountQuery, GetAccountQueryVariables>(
+    GetAccountDocument,
+    { address: userWallet.toLowerCase() },
+  )()
+  logger('atomId', accountData?.account?.atomId)
+  const connectionsData = await fetcher<
+    GetConnectionsQuery,
+    GetConnectionsQueryVariables
+  >(GetConnectionsDocument, {
+    subjectId: '13',
+    predicateId: '4',
+    objectId: '14',
+    addresses: [userWallet.toLowerCase()],
+    positionsLimit: limit,
+    positionsOffset: offset,
+  })()
+  logger('connectionsData', connectionsData)
+
+  // await queryClient.prefetchQuery({
+  //     queryKey: ['get-connections', { subjectId: accountData?.account?.atomId, limit, offset }],
+
+  //     queryFn: () =>
+  //  fetcher<GetConnectionsQuery, GetConnectionsQueryVariables>(GetConnectionsDocument, {
+  //         positionsLimit:limit,
+  //         positionsOffset: offset,
+  //         subjectId: "13",
+  //         predicateId: "4",
+  //         objectId: "14"
+  //       // subjectId:  getSpecialPredicate(CURRENT_ENV).iPredicate.vaultId,
+  //       // predicateId:      getSpecialPredicate(CURRENT_ENV).amFollowingPredicate.vaultId,
+  //       // objectId:  accountData?.account?.atomId,
+  //       })(),
+  //   })
+
+  // return defer({
+  //   connectionsData: getConnectionsData({
+  //     request,
+  //     userWallet,
+  //     searchParams,
+  //   }),
+  return json({
+    dehydratedState: dehydrate(queryClient),
+    initialParams: { searchParams: searchParams.toString() },
   })
 }
 
@@ -82,12 +137,25 @@ const TabContent = ({
 }
 
 export default function ProfileConnections() {
-  const { connectionsData } = useLiveLoader<typeof loader>(['attest'])
-  const { userIdentity } =
-    useRouteLoaderData<ProfileLoaderData>(
-      'routes/app+/profile+/_index+/_layout',
-    ) ?? {}
-  invariant(userIdentity, NO_USER_IDENTITY_ERROR)
+  const { initialParams } = useLoaderData<typeof loader>()
+
+  // const { userIdentity } =
+  //   useRouteLoaderData<ProfileLoaderData>(
+  //     'routes/app+/profile+/_index+/_layout',
+  //   ) ?? {}
+  // invariant(userIdentity, NO_USER_IDENTITY_ERROR)
+
+  // const { data: connectionsData } = useGetConnectionsQuery(
+  //   {
+  //     userWallet: initialParams.userWallet,
+  //     searchParams: initialParams.searchParams,
+  //   },
+  //   {
+  //     queryKey: ['GetConnections', initialParams],
+  //   },
+  // )
+
+  // logger('connectionsData', connectionsData)
 
   return (
     <div className="flex flex-col w-full gap-4">
@@ -100,10 +168,10 @@ export default function ProfileConnections() {
           Connections
         </Text>
       </div>
-      <ConnectionsContent
+      {/* <ConnectionsContent
         userIdentity={userIdentity}
         connectionsData={connectionsData}
-      />
+      /> */}
     </div>
   )
 }
