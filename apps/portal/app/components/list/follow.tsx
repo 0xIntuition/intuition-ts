@@ -96,7 +96,7 @@ export function FollowList({
               position.object?.description ??
               ''
             }
-            id={position.account?.id ?? position.object?.wallet ?? ''}
+            id={position.account?.id ?? position.object?.data ?? ''}
             amount={
               +formatBalance(
                 BigInt(
@@ -122,18 +122,6 @@ export function FollowList({
               readOnly,
             )}
           />
-          <pre>
-            {
-              +formatBalance(
-                BigInt(
-                  position.shares ||
-                    position.vault?.positions?.[0]?.shares ||
-                    '0',
-                ),
-                18,
-              )
-            }
-          </pre>
         </div>
       ))}
     </List>

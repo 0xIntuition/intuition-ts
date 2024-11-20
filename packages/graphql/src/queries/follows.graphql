@@ -104,6 +104,7 @@ query GetFollowerPositions(
         account {
           id
           label
+          image
         }
         shares
       }
