@@ -172,27 +172,26 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 const TabContent = ({
   value,
-  userIdentity,
   totalFollowers,
   totalStake,
   variant,
+  triples,
   children,
 }: {
   value: string
-  userIdentity: IdentityPresenter
-  followClaim?: ClaimPresenter
   totalFollowers: number | null | undefined
   totalStake: string
   variant: ConnectionsHeaderVariantType
+  triples?: any[]
   children?: ReactNode
 }) => {
   return (
     <TabsContent value={value} className="flex flex-col w-full gap-6">
       <ConnectionsHeader
         variant={variant}
-        userIdentity={userIdentity}
         totalStake={totalStake}
         totalFollowers={totalFollowers ?? 0}
+        triples={triples}
       />
       {children}
     </TabsContent>
@@ -260,8 +259,8 @@ export default function Connections() {
       },
     )
 
-  logger('Following Data:', followingData)
   logger('Follower Data:', followerData)
+  logger('Following Data:', followingData)
 
   return (
     <div className="flex flex-col w-full gap-4">
@@ -274,114 +273,99 @@ export default function Connections() {
           Connections
         </Text>
       </div>
-      {/* <ConnectionsContent
-        userIdentity={userIdentity}
-        connectionsData={connectionsData}
-      /> */}
+      <Suspense
+        fallback={
+          <div className="flex flex-col w-full gap-6">
+            <TabsSkeleton numOfTabs={2} />
+            <DataHeaderSkeleton />
+            <PaginatedListSkeleton />
+          </div>
+        }
+      >
+        <Tabs
+          className="w-full"
+          defaultValue={ConnectionsHeaderVariants.followers}
+        >
+          <TabsList className="mb-6">
+            <TabsTrigger
+              value={ConnectionsHeaderVariants.followers}
+              label="Followers"
+              totalCount={
+                followerData?.triples[0].vault.positions_aggregate?.aggregate
+                  ?.count ?? 0
+              }
+            />
+            <TabsTrigger
+              value={ConnectionsHeaderVariants.following}
+              label="Following"
+              totalCount={
+                followingData?.triples_aggregate?.aggregate?.count ?? 0
+              }
+            />
+          </TabsList>
+
+          <TabsContent value={ConnectionsHeaderVariants.followers}>
+            <ConnectionsHeader
+              variant={ConnectionsHeaderVariants.followers}
+              totalFollowers={
+                followerData?.triples[0]?.vault?.positions_aggregate?.aggregate
+                  ?.count ?? 0
+              }
+              totalStake={formatBalance(
+                followerData?.triples[0]?.vault?.positions_aggregate?.aggregate
+                  ?.sum?.shares ?? '0',
+                18,
+              )}
+              triples={followerData?.triples}
+            />
+            <FollowList
+              positions={followerData?.triples[0]?.vault?.positions}
+              pagination={{
+                currentPage: offset / limit + 1,
+                limit,
+                totalEntries:
+                  followerData?.triples[0]?.vault?.positions_aggregate
+                    ?.aggregate?.count ?? 0,
+                totalPages: Math.ceil(
+                  (followerData?.triples[0]?.vault?.positions_aggregate
+                    ?.aggregate?.count ?? 0) / limit,
+                ),
+              }}
+              paramPrefix={ConnectionsHeaderVariants.followers}
+            />
+          </TabsContent>
+
+          <TabsContent value={ConnectionsHeaderVariants.following}>
+            <ConnectionsHeader
+              variant={ConnectionsHeaderVariants.following}
+              totalFollowers={
+                followingData?.triples_aggregate?.aggregate?.count ?? 0
+              }
+              totalStake={formatBalance(
+                followingData?.triples[0]?.vault?.positions_aggregate?.aggregate
+                  ?.sum?.shares ?? '0',
+                18,
+              )}
+              triples={followerData?.triples}
+            />
+            <FollowList
+              positions={followingData?.triples}
+              pagination={{
+                currentPage: offset / limit + 1,
+                limit,
+                totalEntries:
+                  followingData?.triples_aggregate?.aggregate?.count ?? 0,
+                totalPages: Math.ceil(
+                  (followingData?.triples_aggregate?.aggregate?.count ?? 0) /
+                    limit,
+                ),
+              }}
+              paramPrefix={ConnectionsHeaderVariants.following}
+            />
+          </TabsContent>
+        </Tabs>
+      </Suspense>
     </div>
-  )
-}
-
-function ConnectionsContent({
-  userIdentity,
-  connectionsData,
-}: {
-  userIdentity: IdentityPresenter
-  connectionsData: Promise<NonNullable<
-    Awaited<ReturnType<typeof getConnectionsData>>
-  > | null>
-}) {
-  const { userTotals } =
-    useRouteLoaderData<ProfileLoaderData>(
-      'routes/app+/profile+/_index+/_layout',
-    ) ?? {}
-  invariant(userTotals, NO_USER_TOTALS_ERROR)
-
-  return (
-    <Suspense
-      fallback={
-        <div className="flex flex-col w-full gap-6">
-          <TabsSkeleton numOfTabs={2} />
-          <DataHeaderSkeleton />
-          <PaginatedListSkeleton />
-        </div>
-      }
-    >
-      <Await resolve={connectionsData} errorElement={<></>}>
-        {(resolvedConnectionsData) => {
-          const {
-            followClaim,
-            followers,
-            followersPagination,
-            followingIdentities,
-            followingClaims,
-            followingPagination,
-          } = resolvedConnectionsData || {}
-          return (
-            <Tabs
-              className="w-full"
-              defaultValue={ConnectionsHeaderVariants.followers}
-            >
-              <TabsList className="mb-6">
-                <TabsTrigger
-                  value={ConnectionsHeaderVariants.followers}
-                  label="Followers"
-                  totalCount={followersPagination?.totalEntries ?? 0}
-                />
-                <TabsTrigger
-                  value={ConnectionsHeaderVariants.following}
-                  label="Following"
-                  totalCount={followingPagination?.totalEntries ?? 0}
-                />
-              </TabsList>
-              <TabsContent value={ConnectionsHeaderVariants.followers}>
-                {followClaim ? (
-                  <TabContent
-                    value={ConnectionsHeaderVariants.followers}
-                    followClaim={followClaim}
-                    userIdentity={userIdentity}
-                    totalFollowers={userIdentity.follower_count}
-                    totalStake={formatBalance(followClaim.assets_sum, 18)}
-                    variant={ConnectionsHeaderVariants.followers}
-                  >
-                    <FollowList
-                      positions={followers}
-                      pagination={followersPagination!}
-                      paramPrefix={ConnectionsHeaderVariants.followers}
-                    />
-                  </TabContent>
-                ) : (
-                  <EmptyStateCard message="This user has no follow claim yet. A follow claim will be created when the first person follows them." />
-                )}
-              </TabsContent>
-              <TabsContent value={ConnectionsHeaderVariants.following}>
-                <TabContent
-                  value={ConnectionsHeaderVariants.following}
-                  followClaim={followClaim}
-                  userIdentity={userIdentity}
-                  totalFollowers={userIdentity.followed_count}
-                  totalStake={formatBalance(userTotals.followed_assets, 18)}
-                  variant={ConnectionsHeaderVariants.following}
-                >
-                  {followingIdentities &&
-                    followingClaims &&
-                    followingPagination && (
-                      <FollowList
-                        identities={followingIdentities}
-                        claims={followingClaims}
-                        pagination={followingPagination}
-                        paramPrefix={ConnectionsHeaderVariants.following}
-                        enableSearch={false}
-                        enableSort={false}
-                      />
-                    )}
-                </TabContent>
-              </TabsContent>
-            </Tabs>
-          )
-        }}
-      </Await>
-    </Suspense>
   )
 }
 
