@@ -18,6 +18,7 @@ import { IdentityPresenter } from '@0xintuition/api'
 import { IdentitySearchCombobox } from '@components/identity/identity-search-combo-box'
 import { InfoTooltip } from '@components/info-tooltip'
 import SaveListModal from '@components/save-list/save-list-modal'
+import { useCheckClaim } from '@lib/hooks/useCheckClaim'
 import useFilteredIdentitySearch from '@lib/hooks/useFilteredIdentitySearch'
 import useInvalidItems from '@lib/hooks/useInvalidItems'
 import {
@@ -25,9 +26,8 @@ import {
   saveListModalAtom,
 } from '@lib/state/store'
 import { getSpecialPredicate } from '@lib/utils/app'
-import { useFetcher } from '@remix-run/react'
 import { TagLoaderData } from '@routes/resources+/tag'
-import { CURRENT_ENV, TAG_RESOURCE_ROUTE } from 'app/consts'
+import { CURRENT_ENV } from 'app/consts'
 import { useAtom } from 'jotai'
 
 import { AddListExistingCta } from './add-list-existing-cta'
@@ -75,23 +75,19 @@ export function AddIdentities({
   const [selectedInvalidIdentity, setSelectedInvalidIdentity] =
     useState<IdentityPresenter | null>(null)
 
-  const tagFetcher = useFetcher<TagLoaderData>()
-
-  const handleIdentitySelect = (identity: IdentityPresenter) => {
-    onAddIdentity(identity)
-    setSearchQuery('')
-    setIsPopoverOpen(false)
-
-    const searchParams = new URLSearchParams({
+  const { data: claimCheckData = { result: '0' }, refetch: refetchClaimCheck } =
+    useCheckClaim({
       subjectId: identity.vault_id,
       predicateId:
         getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId?.toString(),
       objectId: objectVaultId,
     })
 
-    const finalUrl = `${TAG_RESOURCE_ROUTE}?${searchParams.toString()}`
-
-    tagFetcher.load(finalUrl)
+  const handleIdentitySelect = (identity: IdentityPresenter) => {
+    onAddIdentity(identity)
+    setSearchQuery('')
+    refetchClaimCheck()
+    setIsPopoverOpen(false)
   }
 
   const handleSaveClick = (invalidIdentity: IdentityPresenter) => {
@@ -103,7 +99,7 @@ export function AddIdentities({
   }
 
   useInvalidItems({
-    fetcher: tagFetcher,
+    data: claimCheckData as TagLoaderData,
     selectedItems: selectedIdentities,
     setInvalidItems: setInvalidIdentities,
     idKey: 'vault_id',

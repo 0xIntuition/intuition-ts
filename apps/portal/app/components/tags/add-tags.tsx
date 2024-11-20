@@ -7,6 +7,7 @@ import { IdentitySearchCombobox } from '@components/identity/identity-search-com
 import { InfoTooltip } from '@components/info-tooltip'
 import { AddListExistingCta } from '@components/lists/add-list-existing-cta'
 import SaveListModal from '@components/save-list/save-list-modal'
+import { useCheckClaim } from '@lib/hooks/useCheckClaim'
 import useFilteredIdentitySearch from '@lib/hooks/useFilteredIdentitySearch'
 import useInvalidItems from '@lib/hooks/useInvalidItems'
 import {
@@ -14,9 +15,8 @@ import {
   saveListModalAtom,
 } from '@lib/state/store'
 import { getSpecialPredicate } from '@lib/utils/app'
-import { useFetcher } from '@remix-run/react'
 import { TagLoaderData } from '@routes/resources+/tag'
-import { CURRENT_ENV, TAG_RESOURCE_ROUTE } from 'app/consts'
+import { CURRENT_ENV } from 'app/consts'
 import { TransactionActionType } from 'app/types/transaction'
 import { useAtom } from 'jotai'
 
@@ -70,22 +70,18 @@ export function AddTags({
       selectedItems: selectedTags,
     })
 
-  const tagFetcher = useFetcher<TagLoaderData>()
+  const { data: claimCheckData = { result: '0' }, refetch: refetchClaimCheck } =
+    useCheckClaim({
+      subjectId: subjectVaultId,
+      predicateId:
+        getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId?.toString(),
+      objectId: identity?.vault_id,
+    })
 
   const handleIdentitySelect = (identity: IdentityPresenter) => {
     onAddTag(identity)
     setSearchQuery('')
-
-    const searchParams = new URLSearchParams({
-      subjectId: subjectVaultId,
-      predicateId:
-        getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId?.toString(),
-      objectId: identity.vault_id,
-    })
-
-    const finalUrl = `${TAG_RESOURCE_ROUTE}?${searchParams.toString()}`
-
-    tagFetcher.load(finalUrl)
+    refetchClaimCheck()
     setIsPopoverOpen(false)
   }
 
@@ -98,7 +94,7 @@ export function AddTags({
   }
 
   useInvalidItems({
-    fetcher: tagFetcher,
+    data: claimCheckData as TagLoaderData,
     selectedItems: selectedTags,
     setInvalidItems: setInvalidTags,
     onRemoveItem: onRemoveTag,

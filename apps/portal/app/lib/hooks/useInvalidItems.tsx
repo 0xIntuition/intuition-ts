@@ -1,10 +1,9 @@
 import { useEffect } from 'react'
 
-import type { useFetcher } from '@remix-run/react'
 import { TagLoaderData } from '@routes/resources+/tag'
 
 interface UseInvalidItemsProps<T> {
-  fetcher: ReturnType<typeof useFetcher<TagLoaderData>>
+  data: TagLoaderData
   selectedItems: T[]
   setInvalidItems: React.Dispatch<React.SetStateAction<T[]>>
   onRemoveItem?: (id: string) => void
@@ -13,7 +12,7 @@ interface UseInvalidItemsProps<T> {
 }
 
 function useInvalidItems<T>({
-  fetcher,
+  data,
   selectedItems,
   setInvalidItems,
   onRemoveItem,
@@ -21,9 +20,9 @@ function useInvalidItems<T>({
   dataIdKey,
 }: UseInvalidItemsProps<T>) {
   useEffect(() => {
-    if (fetcher.state === 'idle' && fetcher.data !== undefined) {
-      const result = fetcher.data.result
-      const itemId = fetcher.data?.[dataIdKey]
+    if (data !== undefined) {
+      const result = data.result
+      const itemId = data?.[dataIdKey]
 
       if (result === '0') {
         setInvalidItems((prev) => prev.filter((item) => item[idKey] !== itemId))
@@ -42,15 +41,7 @@ function useInvalidItems<T>({
         }
       }
     }
-  }, [
-    fetcher.state,
-    fetcher.data,
-    setInvalidItems,
-    selectedItems,
-    onRemoveItem,
-    idKey,
-    dataIdKey,
-  ])
+  }, [data, setInvalidItems, selectedItems, onRemoveItem, idKey, dataIdKey])
 }
 
 export default useInvalidItems
