@@ -4,6 +4,7 @@ query GetFollowingPositions(
   $address: String!
   $limit: Int
   $offset: Int
+  $positionsOrderBy: [positions_order_by!]
 ) {
   triples_aggregate(
     where: {
@@ -50,7 +51,10 @@ query GetFollowingPositions(
           }
         }
       }
-      positions(where: { accountId: { _eq: $address } }) {
+      positions(
+        where: { accountId: { _eq: $address } }
+        order_by: $positionsOrderBy
+      ) {
         accountId
         account {
           id
