@@ -68,6 +68,8 @@ query GetFollowerPositions(
   $objectId: numeric!
   $positionsLimit: Int
   $positionsOffset: Int
+  $positionsOrderBy: [positions_order_by!]
+  $positionsWhere: positions_bool_exp
 ) {
   triples(
     where: {
@@ -100,7 +102,12 @@ query GetFollowerPositions(
           }
         }
       }
-      positions(limit: $positionsLimit, offset: $positionsOffset) {
+      positions(
+        limit: $positionsLimit
+        offset: $positionsOffset
+        order_by: $positionsOrderBy
+        where: $positionsWhere
+      ) {
         account {
           id
           label

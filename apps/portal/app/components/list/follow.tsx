@@ -2,7 +2,6 @@ import { ClaimPosition, IconName, Identity } from '@0xintuition/1ui'
 import {
   ClaimPresenter,
   IdentityPresenter,
-  PositionPresenter,
   PositionSortColumn,
   SortColumn,
 } from '@0xintuition/api'
@@ -11,15 +10,7 @@ import { ClaimPositionRow } from '@components/claim/claim-position-row'
 import { ListHeader } from '@components/list/list-header'
 import { SortOption } from '@components/sort-select'
 import logger from '@lib/utils/logger'
-import {
-  formatBalance,
-  getAtomDescription,
-  getAtomImage,
-  getAtomIpfsLink,
-  getAtomLabel,
-  getAtomLink,
-  getProfileUrl,
-} from '@lib/utils/misc'
+import { formatBalance, getProfileUrl } from '@lib/utils/misc'
 import { BLOCK_EXPLORER_URL } from 'app/consts'
 import { PaginationType } from 'app/types/pagination'
 
@@ -33,14 +24,19 @@ export function FollowList({
   enableSearch = true,
   enableSort = true,
   readOnly = false,
+  identities,
+  claims,
 }: {
-  positions?: any[]
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  positions?: any[] // TODO: (ENG-4782) Fix once we have the correct types
   pagination?: PaginationType
   paramPrefix?: string
   enableHeader?: boolean
   enableSearch?: boolean
   enableSort?: boolean
   readOnly?: boolean
+  identities?: IdentityPresenter[] // remove once we fully migrate
+  claims?: ClaimPresenter[] // remove once we fully migrate
 }) {
   const followingOptions: SortOption<SortColumn>[] = [
     { value: 'Position Amount', sortBy: 'UserAssets' },
@@ -56,6 +52,9 @@ export function FollowList({
   ]
 
   logger('positions', positions)
+  logger('identities', identities)
+  logger('claims', claims)
+
   return (
     <List<SortColumn | PositionSortColumn>
       pagination={pagination}

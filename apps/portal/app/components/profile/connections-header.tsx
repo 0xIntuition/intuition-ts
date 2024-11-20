@@ -6,26 +6,13 @@ import {
   TextVariant,
   TextWeight,
 } from '@0xintuition/1ui'
-import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
+import { IdentityPresenter } from '@0xintuition/api'
 
-import CreateClaimModal from '@components/create-claim/create-claim-modal'
 import RemixLink from '@components/remix-link'
-import { NO_FOLLOW_CLAIM_ERROR, NO_WALLET_ERROR } from '@consts/errors'
 import { BLOCK_EXPLORER_URL } from '@consts/general'
-import { createClaimModalAtom } from '@lib/state/store'
 import logger from '@lib/utils/logger'
-import {
-  getAtomDescription,
-  getAtomImage,
-  getAtomIpfsLink,
-  getAtomLabel,
-  getAtomLink,
-  getClaimUrl,
-  getProfileUrl,
-  invariant,
-} from '@lib/utils/misc'
-import { Link, useLocation, useRouteLoaderData } from '@remix-run/react'
-import { useAtom } from 'jotai'
+import { getAtomLink, getClaimUrl, getProfileUrl } from '@lib/utils/misc'
+import { Link } from '@remix-run/react'
 
 export const ConnectionsHeaderVariants = {
   followers: 'followers',
@@ -39,7 +26,9 @@ interface ConnectionsHeaderProps {
   variant: ConnectionsHeaderVariantType
   totalFollowers: number
   totalStake: string
-  triples?: any[]
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  triples?: any[] // TODO: )ENG-4782) Fix once we have the correct types
+  userIdentity?: IdentityPresenter // remove once we fully migrate
 }
 
 export const ConnectionsHeader: React.FC<ConnectionsHeaderProps> = ({

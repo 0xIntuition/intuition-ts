@@ -1,14 +1,12 @@
-import { ReactNode, Suspense } from 'react'
+import { Suspense } from 'react'
 
 import {
-  EmptyStateCard,
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
   Text,
 } from '@0xintuition/1ui'
-import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
 import {
   fetcher,
   GetAccountDocument,
@@ -29,7 +27,6 @@ import { FollowList } from '@components/list/follow'
 import {
   ConnectionsHeader,
   ConnectionsHeaderVariants,
-  ConnectionsHeaderVariantType,
 } from '@components/profile/connections-header'
 import {
   DataHeaderSkeleton,
@@ -40,12 +37,7 @@ import { getSpecialPredicate } from '@lib/utils/app'
 import logger from '@lib/utils/logger'
 import { formatBalance, invariant } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
-import {
-  Await,
-  useLoaderData,
-  useRouteLoaderData,
-  useSearchParams,
-} from '@remix-run/react'
+import { useLoaderData, useSearchParams } from '@remix-run/react'
 import { requireUserWallet } from '@server/auth'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
 import { CURRENT_ENV, NO_WALLET_ERROR } from 'app/consts'
@@ -58,6 +50,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   const url = new URL(request.url)
   const searchParams = new URLSearchParams(url.search)
+
+  const followersSearch = searchParams.get('followersSearch') || ''
   const limit = parseInt(searchParams.get('limit') || '10')
   const offset = parseInt(searchParams.get('offset') || '0')
 
@@ -70,7 +64,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
       GetAccountQuery,
       GetAccountQueryVariables
     >(GetAccountDocument, { address: queryAddress })()
-    logger('Account Data Result:', accountResult)
 
     if (!accountResult.account?.atomId) {
       throw new Error('No atom ID found for account')
@@ -89,7 +82,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
       limit,
       offset,
     })()
-    logger('Following Positions Result:', followingResult)
 
     // Prefetch Follower Positions
     logger('Prefetching Follower Positions...')
@@ -103,8 +95,21 @@ export async function loader({ request }: LoaderFunctionArgs) {
       objectId: accountResult.account.atomId,
       positionsLimit: limit,
       positionsOffset: offset,
+      positionsWhere: followersSearch
+        ? {
+            _or: [
+              {
+                account: {
+                  label: {
+                    _ilike: `%${followersSearch}%`,
+                  },
+                },
+              },
+            ],
+          }
+        : undefined,
     })()
-    logger('Follower Positions Result:', followerResult)
+    logger('Follower Result:', followerResult)
 
     await queryClient.prefetchQuery({
       queryKey: [
@@ -157,37 +162,9 @@ export async function loader({ request }: LoaderFunctionArgs) {
   }
 }
 
-const TabContent = ({
-  value,
-  totalFollowers,
-  totalStake,
-  variant,
-  triples,
-  children,
-}: {
-  value: string
-  totalFollowers: number | null | undefined
-  totalStake: string
-  variant: ConnectionsHeaderVariantType
-  triples?: any[]
-  children?: ReactNode
-}) => {
-  return (
-    <TabsContent value={value} className="flex flex-col w-full gap-6">
-      <ConnectionsHeader
-        variant={variant}
-        totalStake={totalStake}
-        totalFollowers={totalFollowers ?? 0}
-        triples={triples}
-      />
-      {children}
-    </TabsContent>
-  )
-}
-
 export default function Connections() {
   const { initialParams } = useLoaderData<typeof loader>()
-  const [searchParams, setSearchParams] = useSearchParams()
+  const [searchParams] = useSearchParams()
 
   // Determine default tab based on query parameters
   const defaultTab = searchParams.has('following')
@@ -203,55 +180,68 @@ export default function Connections() {
     searchParams.get('offset') || String(initialParams.offset),
   )
 
-  const { data: followingData, isLoading: isLoadingFollowing } =
-    useGetFollowingPositionsQuery(
-      {
-        subjectId: getSpecialPredicate(CURRENT_ENV).iPredicate.vaultId,
-        predicateId:
-          getSpecialPredicate(CURRENT_ENV).amFollowingPredicate.vaultId,
-        address: initialParams.queryAddress,
-        limit,
-        offset,
-      },
-      {
-        queryKey: [
-          'get-following-positions',
-          {
-            subjectId: getSpecialPredicate(CURRENT_ENV).iPredicate.vaultId,
-            predicateId:
-              getSpecialPredicate(CURRENT_ENV).amFollowingPredicate.vaultId,
-            address: initialParams.queryAddress,
-            limit,
-            offset,
-          },
-        ],
-      },
-    )
+  const followersSearch = searchParams.get('followersSearch') || ''
+  logger('clientside followersSearch', followersSearch)
 
-  const { data: followerData, isLoading: isLoadingFollowers } =
-    useGetFollowerPositionsQuery(
-      {
-        subjectId: getSpecialPredicate(CURRENT_ENV).iPredicate.vaultId,
-        predicateId:
-          getSpecialPredicate(CURRENT_ENV).amFollowingPredicate.vaultId,
-        objectId: initialParams.atomId,
-        positionsLimit: limit,
-        positionsOffset: offset,
-      },
-      {
-        queryKey: [
-          'get-follower-positions',
-          {
-            subjectId: getSpecialPredicate(CURRENT_ENV).iPredicate.vaultId,
-            predicateId:
-              getSpecialPredicate(CURRENT_ENV).amFollowingPredicate.vaultId,
-            objectId: initialParams.atomId,
-            positionsLimit: limit,
-            positionsOffset: offset,
-          },
-        ],
-      },
-    )
+  const { data: followingData } = useGetFollowingPositionsQuery(
+    {
+      subjectId: getSpecialPredicate(CURRENT_ENV).iPredicate.vaultId,
+      predicateId:
+        getSpecialPredicate(CURRENT_ENV).amFollowingPredicate.vaultId,
+      address: initialParams.queryAddress,
+      limit,
+      offset,
+    },
+    {
+      queryKey: [
+        'get-following-positions',
+        {
+          subjectId: getSpecialPredicate(CURRENT_ENV).iPredicate.vaultId,
+          predicateId:
+            getSpecialPredicate(CURRENT_ENV).amFollowingPredicate.vaultId,
+          address: initialParams.queryAddress,
+          limit,
+          offset,
+        },
+      ],
+    },
+  )
+
+  const { data: followerData } = useGetFollowerPositionsQuery(
+    {
+      subjectId: getSpecialPredicate(CURRENT_ENV).iPredicate.vaultId,
+      predicateId:
+        getSpecialPredicate(CURRENT_ENV).amFollowingPredicate.vaultId,
+      objectId: initialParams.atomId,
+      positionsLimit: limit,
+      positionsOffset: offset,
+      positionsWhere: followersSearch
+        ? {
+            _or: [{ account: { label: { _ilike: `%${followersSearch}%` } } }],
+          }
+        : undefined,
+    },
+    {
+      queryKey: [
+        'get-follower-positions',
+        {
+          subjectId: getSpecialPredicate(CURRENT_ENV).iPredicate.vaultId,
+          predicateId:
+            getSpecialPredicate(CURRENT_ENV).amFollowingPredicate.vaultId,
+          objectId: initialParams.atomId,
+          positionsLimit: limit,
+          positionsOffset: offset,
+          positionsWhere: followersSearch
+            ? {
+                _or: [
+                  { account: { label: { _ilike: `%${followersSearch}%` } } },
+                ],
+              }
+            : undefined,
+        },
+      ],
+    },
+  )
 
   logger('Follower Data:', followerData)
   logger('Following Data:', followingData)
@@ -282,7 +272,7 @@ export default function Connections() {
               value={ConnectionsHeaderVariants.followers}
               label="Followers"
               totalCount={
-                followerData?.triples[0].vault.positions_aggregate?.aggregate
+                followerData?.triples[0]?.vault?.positions_aggregate?.aggregate
                   ?.count ?? 0
               }
             />
@@ -323,6 +313,8 @@ export default function Connections() {
                 ),
               }}
               paramPrefix={ConnectionsHeaderVariants.followers}
+              enableSort={false}
+              enableSearch={false}
             />
           </TabsContent>
 
@@ -352,6 +344,8 @@ export default function Connections() {
                 ),
               }}
               paramPrefix={ConnectionsHeaderVariants.following}
+              enableSort={false}
+              enableSearch={false}
             />
           </TabsContent>
         </Tabs>
