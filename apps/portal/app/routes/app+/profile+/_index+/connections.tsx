@@ -202,6 +202,13 @@ export default function Connections() {
   const { initialParams } = useLoaderData<typeof loader>()
   const [searchParams, setSearchParams] = useSearchParams()
 
+  // Determine default tab based on query parameters
+  const defaultTab = searchParams.has('following')
+    ? ConnectionsHeaderVariants.following
+    : searchParams.has('followers')
+      ? ConnectionsHeaderVariants.followers
+      : ConnectionsHeaderVariants.followers // fallback to followers if no param
+
   const limit = parseInt(
     searchParams.get('limit') || String(initialParams.limit),
   )
@@ -282,10 +289,7 @@ export default function Connections() {
           </div>
         }
       >
-        <Tabs
-          className="w-full"
-          defaultValue={ConnectionsHeaderVariants.followers}
-        >
+        <Tabs className="w-full" defaultValue={defaultTab}>
           <TabsList className="mb-6">
             <TabsTrigger
               value={ConnectionsHeaderVariants.followers}

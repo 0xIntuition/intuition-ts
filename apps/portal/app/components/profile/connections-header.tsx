@@ -52,7 +52,7 @@ export const ConnectionsHeader: React.FC<ConnectionsHeaderProps> = ({
   logger('triple', triple)
 
   return (
-    <div className="flex flex-col w-full gap-3">
+    <div className="flex flex-col w-full gap-3 mb-6">
       <div className="p-6 bg-black rounded-xl theme-border flex flex-col gap-5">
         <div className="flex justify-between items-center max-sm:flex-col max-sm:gap-3">
           <div className="flex gap-10 max-sm:flex-col max-sm:gap-3 max-sm:m-auto">
@@ -93,7 +93,7 @@ export const ConnectionsHeader: React.FC<ConnectionsHeaderProps> = ({
               >
                 Follow Claim
               </Text>
-              <Link to={getClaimUrl(triple.vault?.id)} prefetch="intent">
+              <Link to={getClaimUrl(triple.id)} prefetch="intent">
                 <Claim
                   size="md"
                   subject={{
@@ -103,7 +103,7 @@ export const ConnectionsHeader: React.FC<ConnectionsHeaderProps> = ({
                     id: triple.subject?.id,
                     description: triple.subject?.description ?? '',
                     ipfsLink: `${BLOCK_EXPLORER_URL}/address/${triple.subject?.id}`,
-                    link: getProfileUrl(triple.subject?.id),
+                    link: getAtomLink(triple.subject),
                     linkComponent: RemixLink,
                   }}
                   predicate={{

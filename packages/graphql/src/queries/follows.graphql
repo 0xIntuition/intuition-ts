@@ -31,13 +31,13 @@ query GetFollowingPositions(
   ) {
     id
     subject {
-      label
+      ...AtomMetadata
     }
     predicate {
-      label
+      ...AtomMetadata
     }
     object {
-      label
+      ...AtomMetadata
     }
     vault {
       totalShares
@@ -50,7 +50,7 @@ query GetFollowingPositions(
           }
         }
       }
-      positions {
+      positions(where: { accountId: { _eq: $address } }) {
         accountId
         account {
           id
@@ -81,13 +81,13 @@ query GetFollowerPositions(
     id
     label
     subject {
-      label
+      ...AtomMetadata
     }
     predicate {
-      label
+      ...AtomMetadata
     }
     object {
-      label
+      ...AtomMetadata
     }
     vault {
       totalShares

@@ -10,6 +10,7 @@ import {
 import { ClaimPositionRow } from '@components/claim/claim-position-row'
 import { ListHeader } from '@components/list/list-header'
 import { SortOption } from '@components/sort-select'
+import logger from '@lib/utils/logger'
 import {
   formatBalance,
   getAtomDescription,
@@ -54,6 +55,7 @@ export function FollowList({
     { value: 'Created At', sortBy: 'CreatedAt' },
   ]
 
+  logger('positions', positions)
   return (
     <List<SortColumn | PositionSortColumn>
       pagination={pagination}
@@ -95,7 +97,16 @@ export function FollowList({
               ''
             }
             id={position.account?.id ?? position.object?.wallet ?? ''}
-            amount={+formatBalance(BigInt(position.shares ?? '0'), 18)}
+            amount={
+              +formatBalance(
+                BigInt(
+                  position.shares ||
+                    position.vault?.positions?.[0]?.shares ||
+                    '0',
+                ),
+                18,
+              )
+            }
             feesAccrued={
               position.user_asset_delta
                 ? +formatBalance(
@@ -107,10 +118,22 @@ export function FollowList({
             updatedAt={position.updated_at}
             ipfsLink={`${BLOCK_EXPLORER_URL}/address/${position.account?.id ?? position.object?.wallet}`}
             link={getProfileUrl(
-              position.account?.id ?? position.object?.wallet,
+              position.account?.id ?? position.object?.data,
               readOnly,
             )}
           />
+          <pre>
+            {
+              +formatBalance(
+                BigInt(
+                  position.shares ||
+                    position.vault?.positions?.[0]?.shares ||
+                    '0',
+                ),
+                18,
+              )
+            }
+          </pre>
         </div>
       ))}
     </List>
