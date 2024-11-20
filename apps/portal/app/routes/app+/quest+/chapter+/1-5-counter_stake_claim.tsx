@@ -318,13 +318,21 @@ export default function Quests() {
     const { claim } = args
     logger('Activity success', claim)
     if (
-      (claim && userQuest.status !== QuestStatus.CLAIMABLE) ||
+      claim &&
+      userQuest.status !== QuestStatus.CLAIMABLE &&
       userQuest.status !== QuestStatus.COMPLETED
     ) {
       logger('Firing off check quest success')
       checkQuestSuccess()
     }
   }
+
+  // TODO: This is a temporary fix to ensure the quest completes when the user stakes the claim, remove once backend is properly setting the quest_completion_object_id
+  useEffect(() => {
+    if (claim && claim.user_assets) {
+      checkQuestSuccess()
+    }
+  }, [claim])
 
   useEffect(() => {
     if (actionData?.success) {
