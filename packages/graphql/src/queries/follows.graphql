@@ -1,33 +1,9 @@
 query GetFollowingPositions(
   $subjectId: numeric!
   $predicateId: numeric!
-  $objectId: numeric!
-  $positionsLimit: Int
-  $positionsOffset: Int
-  $positionsOrderBy: [positions_order_by!]
-  $positionsWhere: positions_bool_exp
-) {
-  triples(
-    where: {
-      _and: [
-        { subjectId: { _eq: $subjectId } }
-        { predicateId: { _eq: $predicateId } }
-        { objectId: { _eq: $objectId } }
-      ]
-    }
-  ) {
-    ...FollowMetadata
-  }
-}
-
-query GetFollowerPositions(
-  $subjectId: numeric!
-  $predicateId: numeric!
   $address: String!
-  $positionsLimit: Int
-  $positionsOffset: Int
-  $positionsOrderBy: [positions_order_by!]
-  $positionsWhere: positions_bool_exp
+  $limit: Int
+  $offset: Int
 ) {
   triples_aggregate(
     where: {
@@ -38,9 +14,13 @@ query GetFollowerPositions(
       ]
     }
   ) {
-    ...FollowAggregate
+    aggregate {
+      count
+    }
   }
   triples(
+    limit: $limit
+    offset: $offset
     where: {
       _and: [
         { subjectId: { _eq: $subjectId } }
@@ -49,7 +29,85 @@ query GetFollowerPositions(
       ]
     }
   ) {
-    ...FollowMetadata
+    id
+    subject {
+      label
+    }
+    predicate {
+      label
+    }
+    object {
+      label
+    }
+    vault {
+      totalShares
+      currentSharePrice
+      positions_aggregate {
+        aggregate {
+          count
+          sum {
+            shares
+          }
+        }
+      }
+      positions {
+        accountId
+        account {
+          id
+          label
+        }
+        shares
+      }
+    }
+  }
+}
+
+query GetFollowerPositions(
+  $subjectId: numeric!
+  $predicateId: numeric!
+  $objectId: numeric!
+  $positionsLimit: Int
+  $positionsOffset: Int
+) {
+  triples(
+    where: {
+      _and: [
+        { subjectId: { _eq: $subjectId } }
+        { predicateId: { _eq: $predicateId } }
+        { objectId: { _eq: $objectId } }
+      ]
+    }
+  ) {
+    id
+    label
+    subject {
+      label
+    }
+    predicate {
+      label
+    }
+    object {
+      label
+    }
+    vault {
+      totalShares
+      currentSharePrice
+      positions_aggregate {
+        aggregate {
+          count
+          sum {
+            shares
+          }
+        }
+      }
+      positions(limit: $positionsLimit, offset: $positionsOffset) {
+        account {
+          id
+          label
+        }
+        shares
+      }
+    }
   }
 }
 
