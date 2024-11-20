@@ -1,10 +1,5 @@
 import { ClaimPosition, IconName, Identity } from '@0xintuition/1ui'
-import {
-  ClaimPresenter,
-  IdentityPresenter,
-  PositionSortColumn,
-  SortColumn,
-} from '@0xintuition/api'
+import { PositionSortColumn, SortColumn } from '@0xintuition/api'
 
 import { ClaimPositionRow } from '@components/claim/claim-position-row'
 import { ListHeader } from '@components/list/list-header'
@@ -24,8 +19,6 @@ export function FollowList({
   enableSearch = true,
   enableSort = true,
   readOnly = false,
-  identities,
-  claims,
 }: {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   positions?: any[] // TODO: (ENG-4782) Fix once we have the correct types
@@ -35,8 +28,6 @@ export function FollowList({
   enableSearch?: boolean
   enableSort?: boolean
   readOnly?: boolean
-  identities?: IdentityPresenter[] // remove once we fully migrate
-  claims?: ClaimPresenter[] // remove once we fully migrate
 }) {
   const followingOptions: SortOption<SortColumn>[] = [
     { value: 'Position Amount', sortBy: 'UserAssets' },
@@ -52,8 +43,6 @@ export function FollowList({
   ]
 
   logger('positions', positions)
-  logger('identities', identities)
-  logger('claims', claims)
 
   return (
     <List<SortColumn | PositionSortColumn>

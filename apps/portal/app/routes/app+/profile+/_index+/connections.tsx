@@ -81,6 +81,9 @@ export async function loader({ request }: LoaderFunctionArgs) {
       address: queryAddress,
       limit,
       offset,
+      positionsOrderBy: {
+        shares: 'desc',
+      },
     })()
 
     // Prefetch Follower Positions
@@ -95,6 +98,9 @@ export async function loader({ request }: LoaderFunctionArgs) {
       objectId: accountResult.account.atomId,
       positionsLimit: limit,
       positionsOffset: offset,
+      positionsOrderBy: {
+        shares: 'desc',
+      },
       positionsWhere: followersSearch
         ? {
             _or: [
@@ -121,6 +127,9 @@ export async function loader({ request }: LoaderFunctionArgs) {
           address: queryAddress,
           limit,
           offset,
+          positionsOrderBy: {
+            shares: 'desc',
+          },
         },
       ],
       queryFn: () => followingResult,
@@ -136,6 +145,9 @@ export async function loader({ request }: LoaderFunctionArgs) {
           objectId: accountResult.account.atomId,
           positionsLimit: limit,
           positionsOffset: offset,
+          positionsOrderBy: {
+            shares: 'desc',
+          },
         },
       ],
       queryFn: () => followerResult,
@@ -191,6 +203,9 @@ export default function Connections() {
       address: initialParams.queryAddress,
       limit,
       offset,
+      positionsOrderBy: {
+        shares: 'desc',
+      },
     },
     {
       queryKey: [
@@ -202,6 +217,9 @@ export default function Connections() {
           address: initialParams.queryAddress,
           limit,
           offset,
+          positionsOrderBy: {
+            shares: 'desc',
+          },
         },
       ],
     },
@@ -215,6 +233,9 @@ export default function Connections() {
       objectId: initialParams.atomId,
       positionsLimit: limit,
       positionsOffset: offset,
+      positionsOrderBy: {
+        shares: 'desc',
+      },
       positionsWhere: followersSearch
         ? {
             _or: [{ account: { label: { _ilike: `%${followersSearch}%` } } }],
@@ -231,6 +252,9 @@ export default function Connections() {
           objectId: initialParams.atomId,
           positionsLimit: limit,
           positionsOffset: offset,
+          positionsOrderBy: {
+            shares: 'desc',
+          },
           positionsWhere: followersSearch
             ? {
                 _or: [

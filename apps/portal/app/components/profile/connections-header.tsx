@@ -6,7 +6,6 @@ import {
   TextVariant,
   TextWeight,
 } from '@0xintuition/1ui'
-import { IdentityPresenter } from '@0xintuition/api'
 
 import RemixLink from '@components/remix-link'
 import { BLOCK_EXPLORER_URL } from '@consts/general'
@@ -28,7 +27,6 @@ interface ConnectionsHeaderProps {
   totalStake: string
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   triples?: any[] // TODO: )ENG-4782) Fix once we have the correct types
-  userIdentity?: IdentityPresenter // remove once we fully migrate
 }
 
 export const ConnectionsHeader: React.FC<ConnectionsHeaderProps> = ({

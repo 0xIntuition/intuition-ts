@@ -1,7 +1,6 @@
-import { ReactNode, Suspense } from 'react'
+import { Suspense } from 'react'
 
 import {
-  EmptyStateCard,
   Tabs,
   TabsContent,
   TabsList,
@@ -9,34 +8,39 @@ import {
   Text,
 } from '@0xintuition/1ui'
 import {
-  ClaimPresenter,
-  IdentityPresenter,
-  UserTotalsPresenter,
-} from '@0xintuition/api'
+  fetcher,
+  GetAccountDocument,
+  GetAccountQuery,
+  GetAccountQueryVariables,
+  GetFollowerPositionsDocument,
+  GetFollowerPositionsQuery,
+  GetFollowerPositionsQueryVariables,
+  GetFollowingPositionsDocument,
+  GetFollowingPositionsQuery,
+  GetFollowingPositionsQueryVariables,
+  useGetFollowerPositionsQuery,
+  useGetFollowingPositionsQuery,
+} from '@0xintuition/graphql'
 
 import { ErrorPage } from '@components/error-page'
 import { FollowList } from '@components/list/follow'
 import {
   ConnectionsHeader,
   ConnectionsHeaderVariants,
-  ConnectionsHeaderVariantType,
 } from '@components/profile/connections-header'
 import {
   DataHeaderSkeleton,
   PaginatedListSkeleton,
   TabsSkeleton,
 } from '@components/skeleton'
-import { useLiveLoader } from '@lib/hooks/useLiveLoader'
-import { getConnectionsData } from '@lib/services/connections'
+import { getSpecialPredicate } from '@lib/utils/app'
+import logger from '@lib/utils/logger'
 import { formatBalance, invariant } from '@lib/utils/misc'
-import { defer, LoaderFunctionArgs } from '@remix-run/node'
-import { Await, useRouteLoaderData } from '@remix-run/react'
+import { json, LoaderFunctionArgs } from '@remix-run/node'
+import { useLoaderData, useSearchParams } from '@remix-run/react'
 import { requireUserWallet } from '@server/auth'
-import {
-  NO_USER_IDENTITY_ERROR,
-  NO_USER_TOTALS_ERROR,
-  NO_WALLET_ERROR,
-} from 'app/consts'
+import { dehydrate, QueryClient } from '@tanstack/react-query'
+import { CURRENT_ENV, NO_WALLET_ERROR } from 'app/consts'
 
 export async function loader({ params, request }: LoaderFunctionArgs) {
   const userWallet = await requireUserWallet(request)
@@ -47,60 +51,236 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
     throw new Error('Wallet is undefined.')
   }
 
+  const queryAddress = wallet.toLowerCase()
+  logger('queryAddress', queryAddress)
+
   const url = new URL(request.url)
   const searchParams = new URLSearchParams(url.search)
 
-  return defer({
-    connectionsData: getConnectionsData({
-      request,
-      userWallet: wallet,
-      searchParams,
-    }),
-  })
+  const followersSearch = searchParams.get('followersSearch') || ''
+  const limit = parseInt(searchParams.get('limit') || '10')
+  const offset = parseInt(searchParams.get('offset') || '0')
+
+  const queryClient = new QueryClient()
+
+  try {
+    // First get account data
+    logger('Fetching Account Data...')
+    const accountResult = await fetcher<
+      GetAccountQuery,
+      GetAccountQueryVariables
+    >(GetAccountDocument, { address: queryAddress })()
+
+    if (!accountResult.account?.atomId) {
+      throw new Error('No atom ID found for account')
+    }
+
+    // Prefetch Following Positions
+    logger('Prefetching Following Positions...')
+    const followingResult = await fetcher<
+      GetFollowingPositionsQuery,
+      GetFollowingPositionsQueryVariables
+    >(GetFollowingPositionsDocument, {
+      subjectId: getSpecialPredicate(CURRENT_ENV).iPredicate.vaultId,
+      predicateId:
+        getSpecialPredicate(CURRENT_ENV).amFollowingPredicate.vaultId,
+      address: queryAddress,
+      limit,
+      offset,
+      positionsOrderBy: {
+        shares: 'desc',
+      },
+    })()
+
+    // Prefetch Follower Positions
+    logger('Prefetching Follower Positions...')
+    const followerResult = await fetcher<
+      GetFollowerPositionsQuery,
+      GetFollowerPositionsQueryVariables
+    >(GetFollowerPositionsDocument, {
+      subjectId: getSpecialPredicate(CURRENT_ENV).iPredicate.vaultId,
+      predicateId:
+        getSpecialPredicate(CURRENT_ENV).amFollowingPredicate.vaultId,
+      objectId: accountResult.account.atomId,
+      positionsLimit: limit,
+      positionsOffset: offset,
+      positionsOrderBy: {
+        shares: 'desc',
+      },
+      positionsWhere: followersSearch
+        ? {
+            _or: [
+              {
+                account: {
+                  label: {
+                    _ilike: `%${followersSearch}%`,
+                  },
+                },
+              },
+            ],
+          }
+        : undefined,
+    })()
+    logger('Follower Result:', followerResult)
+
+    await queryClient.prefetchQuery({
+      queryKey: [
+        'get-following-positions',
+        {
+          subjectId: getSpecialPredicate(CURRENT_ENV).iPredicate.vaultId,
+          predicateId:
+            getSpecialPredicate(CURRENT_ENV).amFollowingPredicate.vaultId,
+          address: queryAddress,
+          limit,
+          offset,
+          positionsOrderBy: {
+            shares: 'desc',
+          },
+        },
+      ],
+      queryFn: () => followingResult,
+    })
+
+    await queryClient.prefetchQuery({
+      queryKey: [
+        'get-follower-positions',
+        {
+          subjectId: getSpecialPredicate(CURRENT_ENV).iPredicate.vaultId,
+          predicateId:
+            getSpecialPredicate(CURRENT_ENV).amFollowingPredicate.vaultId,
+          objectId: accountResult.account.atomId,
+          positionsLimit: limit,
+          positionsOffset: offset,
+          positionsOrderBy: {
+            shares: 'desc',
+          },
+        },
+      ],
+      queryFn: () => followerResult,
+    })
+
+    return json({
+      dehydratedState: dehydrate(queryClient),
+      initialParams: {
+        atomId: accountResult.account.atomId,
+        queryAddress,
+        limit,
+        offset,
+        positionsOrderBy: {
+          shares: 'desc',
+        },
+      },
+    })
+  } catch (error) {
+    logger('Connections Query Error:', {
+      message: (error as Error).message,
+      stack: (error as Error).stack,
+      userWallet,
+      limit,
+      offset,
+    })
+    throw error
+  }
 }
 
-const TabContent = ({
-  value,
-  userIdentity,
-  totalFollowers,
-  totalStake,
-  variant,
-  children,
-}: {
-  value: string
-  userIdentity: IdentityPresenter
-  followClaim?: ClaimPresenter
-  totalFollowers: number | null | undefined
-  totalStake: string
-  variant: ConnectionsHeaderVariantType
-  children?: ReactNode
-}) => {
-  return (
-    <TabsContent value={value} className="flex flex-col w-full gap-6">
-      <ConnectionsHeader
-        variant={variant}
-        userIdentity={userIdentity}
-        totalStake={totalStake}
-        totalFollowers={totalFollowers ?? 0}
-      />
-      {children}
-    </TabsContent>
+export default function Connections() {
+  const { initialParams } = useLoaderData<typeof loader>()
+  const [searchParams] = useSearchParams()
+
+  // Determine default tab based on query parameters
+  const defaultTab = searchParams.has('following')
+    ? ConnectionsHeaderVariants.following
+    : searchParams.has('followers')
+      ? ConnectionsHeaderVariants.followers
+      : ConnectionsHeaderVariants.followers // fallback to followers if no param
+
+  const limit = parseInt(
+    searchParams.get('limit') || String(initialParams.limit),
   )
-}
+  const offset = parseInt(
+    searchParams.get('offset') || String(initialParams.offset),
+  )
 
-interface RouteLoaderData {
-  userIdentity: IdentityPresenter
-  userTotals: UserTotalsPresenter
-}
+  const followersSearch = searchParams.get('followersSearch') || ''
+  logger('clientside followersSearch', followersSearch)
 
-export default function ProfileConnections() {
-  const { connectionsData } = useLiveLoader<typeof loader>(['attest'])
-  const { userIdentity } =
-    useRouteLoaderData<RouteLoaderData>('routes/app+/profile+/$wallet') ?? {}
-  invariant(userIdentity, NO_USER_IDENTITY_ERROR)
+  const { data: followingData } = useGetFollowingPositionsQuery(
+    {
+      subjectId: getSpecialPredicate(CURRENT_ENV).iPredicate.vaultId,
+      predicateId:
+        getSpecialPredicate(CURRENT_ENV).amFollowingPredicate.vaultId,
+      address: initialParams.queryAddress,
+      limit,
+      offset,
+      positionsOrderBy: {
+        shares: 'desc',
+      },
+    },
+    {
+      queryKey: [
+        'get-following-positions',
+        {
+          subjectId: getSpecialPredicate(CURRENT_ENV).iPredicate.vaultId,
+          predicateId:
+            getSpecialPredicate(CURRENT_ENV).amFollowingPredicate.vaultId,
+          address: initialParams.queryAddress,
+          limit,
+          offset,
+          positionsOrderBy: {
+            shares: 'desc',
+          },
+        },
+      ],
+    },
+  )
+
+  const { data: followerData } = useGetFollowerPositionsQuery(
+    {
+      subjectId: getSpecialPredicate(CURRENT_ENV).iPredicate.vaultId,
+      predicateId:
+        getSpecialPredicate(CURRENT_ENV).amFollowingPredicate.vaultId,
+      objectId: initialParams.atomId,
+      positionsLimit: limit,
+      positionsOffset: offset,
+      positionsOrderBy: {
+        shares: 'desc',
+      },
+      positionsWhere: followersSearch
+        ? {
+            _or: [{ account: { label: { _ilike: `%${followersSearch}%` } } }],
+          }
+        : undefined,
+    },
+    {
+      queryKey: [
+        'get-follower-positions',
+        {
+          subjectId: getSpecialPredicate(CURRENT_ENV).iPredicate.vaultId,
+          predicateId:
+            getSpecialPredicate(CURRENT_ENV).amFollowingPredicate.vaultId,
+          objectId: initialParams.atomId,
+          positionsLimit: limit,
+          positionsOffset: offset,
+          positionsOrderBy: {
+            shares: 'desc',
+          },
+          positionsWhere: followersSearch
+            ? {
+                _or: [
+                  { account: { label: { _ilike: `%${followersSearch}%` } } },
+                ],
+              }
+            : undefined,
+        },
+      ],
+    },
+  )
+
+  logger('Follower Data:', followerData)
+  logger('Following Data:', followingData)
 
   return (
-    <div className="flex flex-col w-full gap-10">
+    <div className="flex flex-col w-full gap-4">
       <div className="self-stretch justify-between items-center inline-flex">
         <Text
           variant="headline"
@@ -110,112 +290,100 @@ export default function ProfileConnections() {
           Connections
         </Text>
       </div>
-      <ConnectionsContent
-        userIdentity={userIdentity}
-        connectionsData={connectionsData}
-      />
+      <Suspense
+        fallback={
+          <div className="flex flex-col w-full gap-6">
+            <TabsSkeleton numOfTabs={2} />
+            <DataHeaderSkeleton />
+            <PaginatedListSkeleton />
+          </div>
+        }
+      >
+        <Tabs className="w-full" defaultValue={defaultTab}>
+          <TabsList className="mb-6">
+            <TabsTrigger
+              value={ConnectionsHeaderVariants.followers}
+              label="Followers"
+              totalCount={
+                followerData?.triples[0]?.vault?.positions_aggregate?.aggregate
+                  ?.count ?? 0
+              }
+            />
+            <TabsTrigger
+              value={ConnectionsHeaderVariants.following}
+              label="Following"
+              totalCount={
+                followingData?.triples_aggregate?.aggregate?.count ?? 0
+              }
+            />
+          </TabsList>
+
+          <TabsContent value={ConnectionsHeaderVariants.followers}>
+            <ConnectionsHeader
+              variant={ConnectionsHeaderVariants.followers}
+              totalFollowers={
+                followerData?.triples[0]?.vault?.positions_aggregate?.aggregate
+                  ?.count ?? 0
+              }
+              totalStake={formatBalance(
+                followerData?.triples[0]?.vault?.positions_aggregate?.aggregate
+                  ?.sum?.shares ?? '0',
+                18,
+              )}
+              triples={followerData?.triples}
+            />
+            <FollowList
+              positions={followerData?.triples[0]?.vault?.positions}
+              pagination={{
+                currentPage: offset / limit + 1,
+                limit,
+                totalEntries:
+                  followerData?.triples[0]?.vault?.positions_aggregate
+                    ?.aggregate?.count ?? 0,
+                totalPages: Math.ceil(
+                  (followerData?.triples[0]?.vault?.positions_aggregate
+                    ?.aggregate?.count ?? 0) / limit,
+                ),
+              }}
+              paramPrefix={ConnectionsHeaderVariants.followers}
+              enableSort={false}
+              enableSearch={false}
+            />
+          </TabsContent>
+
+          <TabsContent value={ConnectionsHeaderVariants.following}>
+            <ConnectionsHeader
+              variant={ConnectionsHeaderVariants.following}
+              totalFollowers={
+                followingData?.triples_aggregate?.aggregate?.count ?? 0
+              }
+              totalStake={formatBalance(
+                followingData?.triples[0]?.vault?.positions_aggregate?.aggregate
+                  ?.sum?.shares ?? '0',
+                18,
+              )}
+              triples={followerData?.triples}
+            />
+            <FollowList
+              positions={followingData?.triples}
+              pagination={{
+                currentPage: offset / limit + 1,
+                limit,
+                totalEntries:
+                  followingData?.triples_aggregate?.aggregate?.count ?? 0,
+                totalPages: Math.ceil(
+                  (followingData?.triples_aggregate?.aggregate?.count ?? 0) /
+                    limit,
+                ),
+              }}
+              paramPrefix={ConnectionsHeaderVariants.following}
+              enableSort={false}
+              enableSearch={false}
+            />
+          </TabsContent>
+        </Tabs>
+      </Suspense>
     </div>
-  )
-}
-
-function ConnectionsContent({
-  userIdentity,
-  connectionsData,
-}: {
-  userIdentity: IdentityPresenter
-  connectionsData: Promise<NonNullable<
-    Awaited<ReturnType<typeof getConnectionsData>>
-  > | null>
-}) {
-  const { userTotals } =
-    useRouteLoaderData<RouteLoaderData>('routes/app+/profile+/$wallet') ?? {}
-  invariant(userTotals, NO_USER_TOTALS_ERROR)
-
-  return (
-    <Suspense
-      fallback={
-        <div className="flex flex-col w-full gap-6">
-          <TabsSkeleton numOfTabs={2} />
-          <DataHeaderSkeleton />
-          <PaginatedListSkeleton />
-        </div>
-      }
-    >
-      <Await resolve={connectionsData} errorElement={<></>}>
-        {(resolvedConnectionsData) => {
-          const {
-            followClaim,
-            followers,
-            followersPagination,
-            followingIdentities,
-            followingClaims,
-            followingPagination,
-          } = resolvedConnectionsData || {}
-          return (
-            <Tabs
-              className="w-full"
-              defaultValue={ConnectionsHeaderVariants.followers}
-            >
-              <TabsList className="mb-6">
-                <TabsTrigger
-                  value={ConnectionsHeaderVariants.followers}
-                  label="Followers"
-                  totalCount={followersPagination?.totalEntries ?? 0}
-                />
-                <TabsTrigger
-                  value={ConnectionsHeaderVariants.following}
-                  label="Following"
-                  totalCount={followingPagination?.totalEntries ?? 0}
-                />
-              </TabsList>
-              <TabsContent value={ConnectionsHeaderVariants.followers}>
-                {followClaim ? (
-                  <TabContent
-                    value={ConnectionsHeaderVariants.followers}
-                    followClaim={followClaim}
-                    userIdentity={userIdentity}
-                    totalFollowers={userIdentity.follower_count}
-                    totalStake={formatBalance(followClaim.assets_sum, 18)}
-                    variant={ConnectionsHeaderVariants.followers}
-                  >
-                    <FollowList
-                      positions={followers}
-                      pagination={followersPagination!}
-                      paramPrefix={ConnectionsHeaderVariants.followers}
-                    />
-                  </TabContent>
-                ) : (
-                  <EmptyStateCard message="This user has no follow claim yet. A follow claim will be created when the first person follows them." />
-                )}
-              </TabsContent>
-              <TabsContent value={ConnectionsHeaderVariants.following}>
-                <TabContent
-                  value={ConnectionsHeaderVariants.following}
-                  followClaim={followClaim}
-                  userIdentity={userIdentity}
-                  totalFollowers={userIdentity.followed_count}
-                  totalStake={formatBalance(userTotals.followed_assets, 18)}
-                  variant={ConnectionsHeaderVariants.following}
-                >
-                  {followingIdentities &&
-                    followingClaims &&
-                    followingPagination && (
-                      <FollowList
-                        identities={followingIdentities}
-                        claims={followingClaims}
-                        pagination={followingPagination}
-                        paramPrefix={ConnectionsHeaderVariants.following}
-                        enableSearch={false}
-                        enableSort={false}
-                      />
-                    )}
-                </TabContent>
-              </TabsContent>
-            </Tabs>
-          )
-        }}
-      </Await>
-    </Suspense>
   )
 }
 
