@@ -1,3 +1,4 @@
+import { error } from 'console'
 import { useEffect, useState } from 'react'
 
 import {
@@ -27,6 +28,21 @@ import {
   UsersService,
   UserTotalsPresenter,
 } from '@0xintuition/api'
+import {
+  fetcher,
+  GetAccountDocument,
+  GetAccountQuery,
+  GetAccountQueryVariables,
+  GetConnectionsCountDocument,
+  GetConnectionsCountQuery,
+  GetConnectionsCountQueryVariables,
+  GetTagsDocument,
+  GetTagsQuery,
+  GetTagsQueryVariables,
+  useGetAccountQuery,
+  useGetConnectionsCountQuery,
+  useGetTagsQuery,
+} from '@0xintuition/graphql'
 
 import PrivyRevalidate from '@client/privy-revalidate'
 import EditProfileModal from '@components/edit-profile/modal'
@@ -73,6 +89,7 @@ import { fetchWrapper } from '@server/api'
 import { requireUser, requireUserWallet } from '@server/auth'
 import { getVaultDetails } from '@server/multivault'
 import { getRelicCount } from '@server/relics'
+import { dehydrate, QueryClient } from '@tanstack/react-query'
 import {
   BLOCK_EXPLORER_URL,
   CURRENT_ENV,
@@ -90,9 +107,12 @@ export async function loader({ request }: LoaderFunctionArgs) {
   invariant(user, 'User not found')
   invariant(user.wallet?.address, 'User wallet not found')
   const userWallet = user.wallet?.address
+  const queryAddress = userWallet.toLowerCase()
 
   const wallet = await requireUserWallet(request)
   invariant(wallet, NO_WALLET_ERROR)
+
+  const queryClient = new QueryClient()
 
   // TODO: Remove this relic hold/mint count and points calculation when it is stored in BE.
   const relicHoldCount = await getRelicCount(userWallet as `0x${string}`)
@@ -195,6 +215,84 @@ export async function loader({ request }: LoaderFunctionArgs) {
     searchParams,
   })
 
+  let accountResult: GetAccountQuery | null = null
+
+  try {
+    logger('Fetching Account Data...')
+    accountResult = await fetcher<GetAccountQuery, GetAccountQueryVariables>(
+      GetAccountDocument,
+      { address: queryAddress },
+    )()
+
+    if (!accountResult) {
+      throw new Error('No account data found for address')
+    }
+
+    if (!accountResult.account?.atomId) {
+      throw new Error('No atom ID found for account')
+    }
+
+    await queryClient.prefetchQuery({
+      queryKey: ['get-account', { address: queryAddress }],
+      queryFn: () => accountResult,
+    })
+
+    const accountTagsResult = await fetcher<
+      GetTagsQuery,
+      GetTagsQueryVariables
+    >(GetTagsDocument, {
+      subjectId: accountResult.account.atomId,
+      predicateId: getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId,
+    })()
+
+    logger('Account Tags Result:', accountTagsResult)
+
+    await queryClient.prefetchQuery({
+      queryKey: [
+        'get-tags',
+        {
+          subjectId: accountResult.account.atomId,
+          predicateId: getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId,
+        },
+      ],
+      queryFn: () => accountTagsResult,
+    })
+
+    const accountConnectionsCountResult = await fetcher<
+      GetConnectionsCountQuery,
+      GetConnectionsCountQueryVariables
+    >(GetConnectionsCountDocument, {
+      subjectId: getSpecialPredicate(CURRENT_ENV).iPredicate.vaultId,
+      predicateId:
+        getSpecialPredicate(CURRENT_ENV).amFollowingPredicate.vaultId,
+      objectId: accountResult.account.atomId,
+      address: queryAddress,
+    })()
+
+    logger('Account Connections Count Result:', accountConnectionsCountResult)
+
+    await queryClient.prefetchQuery({
+      queryKey: [
+        'get-connections-count',
+        {
+          address: queryAddress,
+          subjectId: getSpecialPredicate(CURRENT_ENV).iPredicate.vaultId,
+          predicateId:
+            getSpecialPredicate(CURRENT_ENV).amFollowingPredicate.vaultId,
+          objectId: accountResult.account.atomId,
+        },
+      ],
+      queryFn: () => accountConnectionsCountResult,
+    })
+  } catch (error) {
+    logger('Query Error:', {
+      message: (error as Error).message,
+      stack: (error as Error).stack,
+      queryAddress,
+    })
+    throw error
+  }
+
   return json({
     privyUser: user,
     userWallet,
@@ -207,6 +305,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
     isPending,
     relicHoldCount: relicHoldCount.toString(),
     relicMintCount,
+    dehydratedState: dehydrate(queryClient),
+    initialParams: {
+      subjectId: accountResult?.account?.atomId,
+      queryAddress,
+    },
   })
 }
 
@@ -222,6 +325,10 @@ export interface ProfileLoaderData {
   isPending: boolean
   relicMintCount: number
   relicHoldCount: string
+  initialParams: {
+    queryAddress: string
+    subjectId: string
+  }
 }
 
 export default function Profile() {
@@ -236,7 +343,60 @@ export default function Profile() {
     isPending,
     relicMintCount,
     relicHoldCount,
+    initialParams,
   } = useLiveLoader<ProfileLoaderData>(['attest', 'create'])
+
+  const { data: accountResult } = useGetAccountQuery(
+    {
+      address: initialParams.queryAddress,
+    },
+    {
+      queryKey: ['get-account', { address: initialParams.queryAddress }],
+    },
+  )
+
+  const { data: accountTagsResult } = useGetTagsQuery(
+    {
+      subjectId: accountResult?.account?.atomId,
+      predicateId: getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId,
+    },
+    {
+      queryKey: [
+        'get-tags',
+        {
+          subjectId: initialParams?.subjectId,
+          predicateId: getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId,
+        },
+      ],
+      enabled: !!accountResult?.account?.atomId,
+    },
+  )
+
+  const { data: accountConnectionsCountResult } = useGetConnectionsCountQuery(
+    {
+      subjectId: getSpecialPredicate(CURRENT_ENV).iPredicate.vaultId,
+      predicateId:
+        getSpecialPredicate(CURRENT_ENV).amFollowingPredicate.vaultId,
+      objectId: accountResult?.account?.atomId,
+      address: initialParams.queryAddress,
+    },
+    {
+      queryKey: [
+        'get-connections-count',
+        {
+          address: initialParams.queryAddress,
+          subjectId: getSpecialPredicate(CURRENT_ENV).iPredicate.vaultId,
+          predicateId:
+            getSpecialPredicate(CURRENT_ENV).amFollowingPredicate.vaultId,
+          objectId: accountResult?.account?.atomId,
+        },
+      ],
+    },
+  )
+
+  logger('Account Result:', accountResult)
+  logger('Account Tags Result:', accountTagsResult)
+  logger('Account Connections Count Result:', accountConnectionsCountResult)
 
   const { user_assets, assets_sum } = vaultDetails ? vaultDetails : userIdentity
 
