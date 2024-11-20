@@ -101,6 +101,7 @@ import {
 import TwoPanelLayout from 'app/layouts/two-panel-layout'
 import { VaultDetailsType } from 'app/types/vault'
 import { useAtom } from 'jotai'
+import { Tag } from '@0xintuition/1ui';
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await requireUser(request)
@@ -396,6 +397,7 @@ export default function Profile() {
 
   logger('Account Result:', accountResult)
   logger('Account Tags Result:', accountTagsResult)
+  logger('tags', accountTagsResult && accountTagsResult?.triples)
   logger('Account Connections Count Result:', accountConnectionsCountResult)
 
   const { user_assets, assets_sum } = vaultDetails ? vaultDetails : userIdentity
@@ -469,18 +471,21 @@ export default function Profile() {
     <div className="flex-col justify-start items-start gap-5 inline-flex max-lg:w-full">
       <ProfileCard
         variant="user"
-        avatarSrc={userObject.image ?? ''}
-        name={userObject.display_name ?? ''}
-        id={userObject.ens_name ?? userObject.wallet}
-        vaultId={userIdentity.vault_id}
+        avatarSrc={accountResult?.account?.image ?? ''}
+        name={accountResult?.account?.label ?? ''}
+        id={accountResult?.account?.id ?? ''}
+        vaultId={accountResult?.account?.atomId ?? 0}
         stats={{
-          numberOfFollowers: userTotals.follower_count,
-          numberOfFollowing: userTotals.followed_count,
-          // TODO: Remove this relic hold/mint count and points calculation when it is stored in BE.
+          numberOfFollowers:
+            accountConnectionsCountResult?.followers_count?.[0]?.vault
+              .positions_aggregate?.aggregate?.count ?? 0,
+          numberOfFollowing:
+            accountConnectionsCountResult?.following_count?.aggregate?.count ??
+            0,
           points: totalPoints,
         }}
-        bio={userObject.description ?? ''}
-        ipfsLink={`${BLOCK_EXPLORER_URL}/address/${userObject.wallet}`}
+        bio={accountResult?.account?.atom?.value?.person?.description ?? ''}
+        ipfsLink={`${BLOCK_EXPLORER_URL}/address/${accountResult?.account?.id}`}
         followingLink={`${PATHS.PROFILE_CONNECTIONS}?tab=following`}
         followerLink={`${PATHS.PROFILE_CONNECTIONS}?tab=followers`}
         onAvatarClick={() => {
@@ -509,19 +514,22 @@ export default function Profile() {
         <>
           <Tags>
             <div className="flex flex-row gap-2 md:flex-col">
-              {Array.isArray(tagClaims) && tagClaims.length > 0 ? (
-                <TagsContent numberOfTags={tagClaims?.length ?? 0}>
-                  {tagClaims.slice(0, 5).map((tagClaim) => (
+              {/* {Array.isArray(tagClaims) && tagClaims.length > 0 ? ( */}
+              {accountTagsResult && accountTagsResult.triples.length > 0 ? (
+                <TagsContent
+                  numberOfTags={accountTagsResult.triples.length ?? 0}
+                >
+                  {accountTagsResult.triples.slice(0, 5).map((tag) => (
                     <TagWithValue
-                      key={tagClaim.claim_id}
-                      label={tagClaim.object?.display_name}
-                      value={tagClaim.num_positions}
+                      key={tag.id}
+                      label={tag.object?.label ?? ''}
+                      value={tag.vault?.allPositions?.aggregate?.count ?? 0}
                       onStake={() => {
-                        setSelectedTag(tagClaim.object)
+                        setSelectedTag(tag?.object ?? null)
                         setSaveListModalActive({
                           isOpen: true,
-                          id: tagClaim.vault_id,
-                          tag: tagClaim.object,
+                          id: tag.id,
+                          tag: tag.object,
                         })
                       }}
                     />
