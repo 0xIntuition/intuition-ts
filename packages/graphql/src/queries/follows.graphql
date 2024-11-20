@@ -186,3 +186,47 @@ query GetConnections(
     ...FollowMetadata
   }
 }
+
+query GetConnectionsCount(
+  $subjectId: numeric!
+  $predicateId: numeric!
+  $objectId: numeric!
+  $address: String!
+) {
+  # Following count
+  following_count: triples_aggregate(
+    where: {
+      _and: [
+        { subjectId: { _eq: $subjectId } }
+        { predicateId: { _eq: $predicateId } }
+        { vault: { positions: { accountId: { _eq: $address } } } }
+      ]
+    }
+  ) {
+    aggregate {
+      count
+    }
+  }
+
+  # Followers count
+  followers_count: triples(
+    where: {
+      _and: [
+        { subjectId: { _eq: $subjectId } }
+        { predicateId: { _eq: $predicateId } }
+        { objectId: { _eq: $objectId } }
+      ]
+    }
+  ) {
+    vault {
+      positions_aggregate {
+        aggregate {
+          count
+          sum {
+            shares
+          }
+        }
+      }
+    }
+  }
+}
