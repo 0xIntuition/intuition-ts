@@ -20,28 +20,40 @@ function useInvalidItems<T>({
   dataIdKey,
 }: UseInvalidItemsProps<T>) {
   useEffect(() => {
-    if (data !== undefined) {
-      const result = data.result
-      const itemId = data?.[dataIdKey]
-
-      if (result === '0') {
-        setInvalidItems((prev) => prev.filter((item) => item[idKey] !== itemId))
-      } else if (itemId) {
-        const itemToAdd = selectedItems.find((item) => item[idKey] === itemId)
-        if (itemToAdd) {
-          setInvalidItems((prev) => {
-            if (prev.some((item) => item[idKey] === itemId)) {
-              return prev
-            }
-            return [...prev, itemToAdd]
-          })
-          if (onRemoveItem) {
-            onRemoveItem(itemId)
-          }
-        }
-      }
+    if (!data?.result || !data?.[dataIdKey]) {
+      return
     }
-  }, [data, setInvalidItems, selectedItems, onRemoveItem, idKey, dataIdKey])
+
+    const result = data.result
+    const itemId = data[dataIdKey]
+
+    setInvalidItems((prev) => {
+      if (result === '0') {
+        return prev.filter((item) => item[idKey] !== itemId)
+      }
+
+      if (!itemId) {
+        return prev
+      }
+
+      const itemToAdd = selectedItems.find((item) => item[idKey] === itemId)
+      if (!itemToAdd || prev.some((item) => item[idKey] === itemId)) {
+        return prev
+      }
+
+      if (onRemoveItem) {
+        onRemoveItem(itemId)
+      }
+      return [...prev, itemToAdd]
+    })
+  }, [
+    data?.result,
+    data?.[dataIdKey],
+    selectedItems,
+    idKey,
+    dataIdKey,
+    onRemoveItem,
+  ])
 }
 
 export default useInvalidItems

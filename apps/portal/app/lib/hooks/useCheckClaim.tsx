@@ -1,15 +1,18 @@
 import { TagLoaderData } from '@routes/resources+/tag'
 import { useQuery } from '@tanstack/react-query'
 
-export function useCheckClaim({
-  subjectId,
-  predicateId,
-  objectId,
-}: {
-  subjectId?: string
-  predicateId?: string
-  objectId?: string
-}) {
+export function useCheckClaim(
+  {
+    subjectId,
+    predicateId,
+    objectId,
+  }: {
+    subjectId?: string
+    predicateId?: string
+    objectId?: string
+  },
+  options = {},
+) {
   return useQuery<TagLoaderData>({
     queryKey: ['check-claim', subjectId, predicateId, objectId],
     queryFn: async () => {
@@ -25,5 +28,6 @@ export function useCheckClaim({
       return response.json()
     },
     enabled: Boolean(subjectId && predicateId && objectId),
+    ...options,
   })
 }

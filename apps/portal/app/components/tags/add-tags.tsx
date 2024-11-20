@@ -70,18 +70,24 @@ export function AddTags({
       selectedItems: selectedTags,
     })
 
-  const { data: claimCheckData = { result: '0' }, refetch: refetchClaimCheck } =
-    useCheckClaim({
+  const { data: claimCheckData = { result: '0' } } = useCheckClaim(
+    {
       subjectId: subjectVaultId,
       predicateId:
         getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId?.toString(),
-      objectId: identity?.vault_id,
-    })
+      objectId: selectedTags[selectedTags.length - 1]?.vault_id,
+    },
+    {
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+      refetchOnReconnect: false,
+      enabled: Boolean(selectedTags[selectedTags.length - 1]?.vault_id),
+    },
+  )
 
   const handleIdentitySelect = (identity: IdentityPresenter) => {
     onAddTag(identity)
     setSearchQuery('')
-    refetchClaimCheck()
     setIsPopoverOpen(false)
   }
 
@@ -90,6 +96,7 @@ export function AddTags({
     setSaveListModalActive({
       isOpen: true,
       identity: invalidTag,
+      id: invalidTag.vault_id,
     })
   }
 
@@ -152,7 +159,9 @@ export function AddTags({
             key={invalidTag.vault_id}
             identity={invalidTag}
             variant="tag"
-            onSaveClick={() => handleSaveClick(invalidTag)}
+            onSaveClick={() => {
+              handleSaveClick(invalidTag)
+            }}
             onClose={() => onRemoveInvalidTag(invalidTag.vault_id)}
           />
         ))}

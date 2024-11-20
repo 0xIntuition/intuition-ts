@@ -105,14 +105,6 @@ export default function StakeModal({
     })
 
   const vaultDetails = vaultDetailsData ?? vaultDetailsProp
-  console.log('vaultDetails source:', {
-    vaultDetailsData,
-    vaultDetailsProp,
-    finalVaultDetails: vaultDetails,
-  })
-
-  console.log('vaultDetails', vaultDetails)
-  console.log('claim', claim)
 
   const identityShouldOverride = identity && identity.vault_id !== '0'
 
@@ -146,30 +138,18 @@ export default function StakeModal({
         : claim.against_conviction_price
   }
   let user_assets: string = '0'
-  console.log('Starting values:', {
-    identityShouldOverride,
-    identity: identity?.user_assets,
-    claim,
-    direction,
-    vaultDetails: vaultDetails?.user_assets,
-  })
 
   if (identityShouldOverride) {
     user_assets = identity?.user_assets ?? '0'
-    console.log('Set from identity:', user_assets)
   } else if (claim && direction) {
     user_assets =
       direction === 'for'
         ? claim.user_assets_for ?? '0'
         : claim.user_assets_against ?? '0'
-    console.log('Set from claim:', user_assets)
   }
   if (vaultDetails?.user_assets) {
     user_assets = vaultDetails.user_assets
-    console.log('Set from vaultDetails:', user_assets)
   }
-
-  console.log('Final user_assets:', user_assets)
 
   const min_deposit = vaultDetails
     ? formatUnits(BigInt(vaultDetails?.min_deposit), 18)
