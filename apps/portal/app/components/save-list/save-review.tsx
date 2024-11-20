@@ -60,12 +60,12 @@ export default function SaveReview({
         ? 'Attestation in progress'
         : state.status === 'transaction-confirmed' ||
             state.status === 'complete'
-          ? mode === 'follow'
+          ? mode === 'deposit'
             ? 'Deposited successfully'
             : 'Redeemed successfully'
           : state.status === 'error'
             ? 'Transaction failed'
-            : mode === 'follow'
+            : mode === 'deposit'
               ? 'Deposit'
               : 'Redeem'
     if (newText !== statusText) {
@@ -97,9 +97,9 @@ export default function SaveReview({
               variant="headline"
               weight="medium text-white/70 leading-[30x]"
             >
-              {mode === 'save' ? 'Deposit' : 'Redeem'}{' '}
+              {mode === 'deposit' ? 'Deposit' : 'Redeem'}{' '}
               {formatDisplayBalance(
-                mode === 'unsave'
+                mode === 'redeem'
                   ? Number(formatBalance(user_assets, 18))
                   : Number(val),
                 2,
@@ -144,8 +144,8 @@ export default function SaveReview({
             >
               Estimated Fees:{' '}
               {(
-                (mode === 'save' ? +val : +formatBalance(user_assets, 18)) *
-                (mode === 'save' ? +entry_fee : +exit_fee)
+                (mode === 'deposit' ? +val : +formatBalance(user_assets, 18)) *
+                (mode === 'deposit' ? +entry_fee : +exit_fee)
               ).toFixed(6)}{' '}
               ETH
             </Text>

@@ -171,6 +171,7 @@ export function AddTags({
           contract={identity.contract}
           tag={selectedInvalidTag}
           identity={identity}
+          vaultId={selectedInvalidTag.vault_id}
           userWallet={userWallet}
           open={saveListModalActive.isOpen}
           onClose={() => {

@@ -17,7 +17,7 @@ import { useAccount, useSwitchChain } from 'wagmi'
 
 interface SaveButtonProps {
   val: string
-  setMode: (mode: 'save' | 'unsave') => void
+  setMode: (mode: 'deposit' | 'redeem') => void
   handleAction: () => void
   handleClose: () => void
   dispatch: (action: TransactionActionType) => void
@@ -135,7 +135,7 @@ const SaveButton: React.FC<SaveButtonProps> = ({
             setValidationErrors(errors)
             setShowErrors(true)
           } else {
-            setMode('save')
+            setMode('deposit')
             dispatch({ type: 'REVIEW_TRANSACTION' })
             setValidationErrors([])
           }

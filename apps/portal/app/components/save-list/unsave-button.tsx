@@ -14,7 +14,7 @@ import { useSetAtom } from 'jotai'
 import { useAccount, useSwitchChain } from 'wagmi'
 
 interface UnsaveButtonProps {
-  setMode: (mode: 'save' | 'unsave') => void
+  setMode: (mode: 'deposit' | 'redeem') => void
   handleAction: () => void
   handleClose: () => void
   dispatch: (action: TransactionActionType) => void
@@ -103,7 +103,7 @@ const UnsaveButton: React.FC<UnsaveButtonProps> = ({
         } else if (chain?.id !== getChainEnvConfig(CURRENT_ENV).chainId) {
           handleSwitch()
         } else if (user_conviction !== '') {
-          setMode('unsave')
+          setMode('redeem')
           dispatch({ type: 'REVIEW_TRANSACTION' })
         }
       }}

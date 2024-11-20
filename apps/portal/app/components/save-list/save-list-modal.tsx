@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import {
   Dialog,
@@ -10,22 +10,19 @@ import {
 import { IdentityPresenter } from '@0xintuition/api'
 
 import { multivaultAbi } from '@lib/abis/multivault'
-import { useDepositTriple } from '@lib/hooks/useDepositTriple'
+import { useStakeMutation } from '@lib/hooks/mutations/useStakeMutation'
+import { useGetVaultDetails } from '@lib/hooks/useGetVaultDetails'
 import { useGetWalletBalance } from '@lib/hooks/useGetWalletBalance'
-import { useRedeemTriple } from '@lib/hooks/useRedeemTriple'
 import { transactionReducer } from '@lib/hooks/useTransactionReducer'
-import { saveListModalAtom } from '@lib/state/store'
-import logger from '@lib/utils/logger'
 import { useGenericTxState } from '@lib/utils/use-tx-reducer'
-import { useFetcher, useLocation } from '@remix-run/react'
-import { GET_VAULT_DETAILS_RESOURCE_ROUTE, MIN_DEPOSIT } from 'app/consts'
+import { useLocation } from '@remix-run/react'
+import { useQueryClient } from '@tanstack/react-query'
+import { MIN_DEPOSIT } from 'app/consts'
 import {
   TransactionActionType,
   TransactionStateType,
 } from 'app/types/transaction'
-import { VaultDetailsType } from 'app/types/vault'
-import { useAtomValue } from 'jotai'
-import { Abi, Address, decodeEventLog, formatUnits, parseUnits } from 'viem'
+import { Address, decodeEventLog, formatUnits } from 'viem'
 import { useAccount, usePublicClient } from 'wagmi'
 
 import SaveButton from './save-button'
@@ -43,6 +40,7 @@ interface SaveListModalProps {
   userWallet: string
   open: boolean
   tag: IdentityPresenter
+  vaultId: string
   identity: IdentityPresenter
   contract: string
   onClose?: () => void
@@ -53,19 +51,17 @@ export default function SaveListModal({
   userWallet,
   open = false,
   tag,
+  vaultId,
   identity,
   contract,
   onClose = () => {},
   min_deposit,
 }: SaveListModalProps) {
-  const fetchReval = useFetcher()
-  const [fetchId, setFetchId] = useState(0)
-  const formRef = useRef(null)
   const formattedMinDeposit = min_deposit
     ? formatUnits(BigInt(BigInt(min_deposit)), 18)
     : null
   const [val, setVal] = useState(formattedMinDeposit ?? MIN_DEPOSIT)
-  const [mode, setMode] = useState<'save' | 'unsave'>('save')
+  const [mode, setMode] = useState<'deposit' | 'redeem'>('deposit')
   const [showErrors, setShowErrors] = useState(false)
   const [validationErrors, setValidationErrors] = useState<string[]>([])
   const [lastTxHash, setLastTxHash] = useState<string | undefined>(undefined)
@@ -77,116 +73,66 @@ export default function SaveListModal({
 
   const [isLoading, setIsLoading] = useState(true)
 
-  const depositHook = useDepositTriple(contract)
+  const queryClient = useQueryClient()
+  const { data: vaultDetails } = useGetVaultDetails(
+    contract,
+    vaultId,
+    undefined,
+    {
+      queryKey: ['get-vault-details', contract, vaultId],
+      enabled: open,
+    },
+  )
 
-  const redeemHook = useRedeemTriple(contract)
+  useEffect(() => {
+    if (vaultDetails) {
+      setIsLoading(false)
+    }
+  }, [vaultDetails])
 
   const {
-    writeContractAsync,
-    receipt: txReceipt,
+    mutateAsync: stake,
+    txReceipt,
     awaitingWalletConfirmation,
     awaitingOnChainConfirmation,
     isError,
     reset,
-  } = mode === 'save' ? depositHook : redeemHook
+  } = useStakeMutation(contract, mode as 'deposit' | 'redeem')
 
-  const [vaultDetails, setVaultDetails] = useState<VaultDetailsType>()
-  const vaultDetailsFetcher = useFetcher<VaultDetailsType>()
+  const handleAction = async () => {
+    try {
+      const txHash = await stake({
+        val,
+        userWallet,
+        vaultId,
+        identity,
+        mode,
+        contract,
+      })
 
-  const { id: vaultId } = useAtomValue(saveListModalAtom)
-
-  useEffect(() => {
-    let isCancelled = false
-
-    if (vaultId !== null) {
-      const finalUrl = `${GET_VAULT_DETAILS_RESOURCE_ROUTE}?contract=${contract}&vaultId=${vaultId}&fetchId=${fetchId}`
-      if (!isCancelled) {
-        vaultDetailsFetcher.load(finalUrl)
-      }
-    }
-
-    return () => {
-      isCancelled = true
-    }
-    // omits the fetcher from the exhaustive deps
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [contract, vaultId, fetchId])
-
-  useEffect(() => {
-    if (vaultDetailsFetcher.state === 'loading') {
-      setIsLoading(true)
-    }
-  }, [vaultDetailsFetcher.state])
-
-  useEffect(() => {
-    if (vaultDetailsFetcher.state === 'idle' && vaultDetailsFetcher.data) {
-      setVaultDetails(vaultDetailsFetcher.data)
-      setIsLoading(false)
-    }
-  }, [vaultDetailsFetcher.state, vaultDetailsFetcher.data])
-
-  const useHandleAction = (actionType: string) => {
-    return async () => {
-      try {
-        if (!contract || !vaultId || !vaultDetails) {
-          throw new Error('Missing required parameters')
-        }
-        const txHash = await writeContractAsync({
-          address: contract as `0x${string}`,
-          abi: multivaultAbi as Abi,
-          functionName:
-            actionType === 'save' ? 'depositTriple' : 'redeemTriple',
-          args:
-            actionType === 'save'
-              ? [userWallet as `0x${string}`, vaultId]
-              : [
-                  vaultDetails.user_conviction,
-                  userWallet as `0x${string}`,
-                  vaultId,
-                ],
-          value:
-            actionType === 'save'
-              ? parseUnits(val === '' ? '0' : val, 18)
-              : undefined,
+      if (publicClient && txHash) {
+        dispatch({ type: 'TRANSACTION_PENDING' })
+        const receipt = await publicClient.waitForTransactionReceipt({
+          hash: txHash,
         })
-        if (txHash) {
-          dispatch({ type: 'TRANSACTION_PENDING' })
-          const receipt = await publicClient?.waitForTransactionReceipt({
-            hash: txHash,
-          })
 
-          dispatch({
-            type: 'TRANSACTION_COMPLETE',
-            txHash,
-            txReceipt: receipt!,
-          })
-          fetchReval.submit(formRef.current, {
-            method: 'POST',
-          })
-        }
-      } catch (error) {
-        logger('error', error)
-        if (error instanceof Error) {
-          let errorMessage = 'Failed transaction'
-          if (error.message.includes('insufficient')) {
-            errorMessage = 'Insufficient funds'
-          }
-          if (error.message.includes('rejected')) {
-            errorMessage = 'Transaction rejected'
-          }
-          dispatch({
-            type: 'TRANSACTION_ERROR',
-            error: errorMessage,
-          })
-          toast.error(errorMessage)
-          return
-        }
+        dispatch({
+          type: 'TRANSACTION_COMPLETE',
+          txHash,
+          txReceipt: receipt,
+        })
+
+        await queryClient.refetchQueries({
+          queryKey: ['get-vault-details', contract, vaultId],
+        })
       }
+    } catch (error) {
+      dispatch({
+        type: 'TRANSACTION_ERROR',
+        error: 'Error processing transaction',
+      })
     }
   }
-
-  const handleSave = useHandleAction('save')
-  const handleUnsave = useHandleAction('unsave')
 
   useEffect(() => {
     if (isError) {
@@ -197,7 +143,7 @@ export default function SaveListModal({
   useEffect(() => {
     let assets = ''
     const receipt = txReceipt
-    const action = mode === 'save' ? 'Save' : 'Unsave'
+    const action = mode === 'deposit' ? 'Save' : 'Unsave'
 
     type BuyArgs = {
       sender: Address
@@ -239,7 +185,7 @@ export default function SaveListModal({
 
       if (topics.args.sender === (userWallet as `0x${string}`)) {
         assets =
-          mode === 'save'
+          mode === 'deposit'
             ? (topics.args as BuyArgs).senderAssetsAfterTotalFees.toString()
             : (topics.args as SellArgs).assetsForReceiver.toString()
 
@@ -281,6 +227,8 @@ export default function SaveListModal({
     address ?? (userWallet as `0x${string}`),
   )
 
+  console.log('vaultDetails', vaultDetails)
+
   const handleSaveButtonClick = async () => {
     if (!vaultDetails) {
       throw new Error('Missing required parameters')
@@ -289,7 +237,7 @@ export default function SaveListModal({
       setShowErrors(true)
       return
     }
-    handleSave()
+    handleAction()
   }
 
   const handleUnsaveButtonClick = async () => {
@@ -300,7 +248,7 @@ export default function SaveListModal({
       setShowErrors(true)
       return
     }
-    handleUnsave()
+    handleAction()
   }
 
   const location = useLocation()
@@ -313,15 +261,11 @@ export default function SaveListModal({
 
   const handleClose = () => {
     onClose()
-    setMode('save')
-    setVaultDetails(undefined)
+    setMode('deposit')
     setIsLoading(true)
     setVal(formattedMinDeposit ?? MIN_DEPOSIT)
     setShowErrors(false)
     setValidationErrors([])
-    vaultDetailsFetcher.data = undefined
-    vaultDetailsFetcher.state = 'idle'
-    setFetchId((prevId) => prevId + 1)
     setTimeout(() => {
       dispatch({ type: 'START_TRANSACTION' })
       reset()
@@ -330,15 +274,10 @@ export default function SaveListModal({
 
   useEffect(() => {
     if (open) {
-      setMode('save')
-      setVaultDetails(undefined)
-      setIsLoading(true)
+      setMode('deposit')
       setVal(formattedMinDeposit ?? MIN_DEPOSIT)
       setShowErrors(false)
       setValidationErrors([])
-      vaultDetailsFetcher.data = undefined
-      vaultDetailsFetcher.state = 'idle'
-      setFetchId((prevId) => prevId + 1)
       dispatch({ type: 'START_TRANSACTION' })
     }
   }, [open, dispatch])
@@ -374,8 +313,6 @@ export default function SaveListModal({
           mode={mode}
           dispatch={dispatch}
           state={state}
-          fetchReval={fetchReval}
-          formRef={formRef}
           validationErrors={validationErrors}
           setValidationErrors={setValidationErrors}
           showErrors={showErrors}
@@ -399,7 +336,7 @@ export default function SaveListModal({
                   state={state}
                   vaultId={vaultId}
                   user_conviction={vaultDetails?.user_conviction ?? '0'}
-                  className={`${(vaultDetails?.user_conviction && vaultDetails?.user_conviction > '0' && state.status === 'idle') || mode !== 'save' ? '' : 'hidden'}`}
+                  className={`${(vaultDetails?.user_conviction && vaultDetails?.user_conviction > '0' && state.status === 'idle') || mode !== 'deposit' ? '' : 'hidden'}`}
                 />
                 <SaveButton
                   val={val}
@@ -415,7 +352,7 @@ export default function SaveListModal({
                   user_assets={vaultDetails?.user_assets ?? '0'}
                   setValidationErrors={setValidationErrors}
                   setShowErrors={setShowErrors}
-                  className={`${mode === 'unsave' && 'hidden'}`}
+                  className={`${mode === 'redeem' && 'hidden'}`}
                 />
               </>
             )
