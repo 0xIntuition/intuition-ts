@@ -14,16 +14,12 @@ import {
   GetAccountDocument,
   GetAccountQuery,
   GetAccountQueryVariables,
-  GetConnectionsDocument,
-  GetConnectionsQuery,
-  GetConnectionsQueryVariables,
   GetFollowerPositionsDocument,
   GetFollowerPositionsQuery,
   GetFollowerPositionsQueryVariables,
   GetFollowingPositionsDocument,
   GetFollowingPositionsQuery,
   GetFollowingPositionsQueryVariables,
-  useGetConnectionsQuery,
   useGetFollowerPositionsQuery,
   useGetFollowingPositionsQuery,
 } from '@0xintuition/graphql'
@@ -40,12 +36,10 @@ import {
   PaginatedListSkeleton,
   TabsSkeleton,
 } from '@components/skeleton'
-import { useLiveLoader } from '@lib/hooks/useLiveLoader'
-import { getConnectionsData } from '@lib/services/connections'
 import { getSpecialPredicate } from '@lib/utils/app'
 import logger from '@lib/utils/logger'
 import { formatBalance, invariant } from '@lib/utils/misc'
-import { defer, json, LoaderFunctionArgs } from '@remix-run/node'
+import { json, LoaderFunctionArgs } from '@remix-run/node'
 import {
   Await,
   useLoaderData,
@@ -54,14 +48,7 @@ import {
 } from '@remix-run/react'
 import { requireUserWallet } from '@server/auth'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
-import {
-  CURRENT_ENV,
-  NO_USER_IDENTITY_ERROR,
-  NO_USER_TOTALS_ERROR,
-  NO_WALLET_ERROR,
-} from 'app/consts'
-
-import { ProfileLoaderData } from './_layout'
+import { CURRENT_ENV, NO_WALLET_ERROR } from 'app/consts'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const userWallet = await requireUserWallet(request)
