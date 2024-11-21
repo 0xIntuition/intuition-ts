@@ -19,7 +19,7 @@ export default function PrivyRefresh({
         return
       }
 
-      console.log('Getting access token...')
+      logger('Getting access token...')
       const idToken = await getAccessToken()
       logger('Access token:', idToken)
       setAccessToken(idToken)
