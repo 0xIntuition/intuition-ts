@@ -1,4 +1,3 @@
-import { error } from 'console'
 import { useEffect, useState } from 'react'
 
 import {
@@ -55,6 +54,7 @@ import SaveListModal from '@components/save-list/save-list-modal'
 import { SegmentedNav } from '@components/segmented-nav'
 import StakeModal from '@components/stake/stake-modal'
 import TagsModal from '@components/tags/tags-modal'
+import { useGetVaultDetails } from '@lib/hooks/useGetVaultDetails'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { getIdentityOrPending } from '@lib/services/identities'
 import { getPurchaseIntentsByAddress } from '@lib/services/phosphor'
@@ -87,7 +87,6 @@ import {
 } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
 import { requireUser, requireUserWallet } from '@server/auth'
-import { getVaultDetails } from '@server/multivault'
 import { getRelicCount } from '@server/relics'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
 import {
@@ -99,9 +98,7 @@ import {
   userIdentityRouteOptions,
 } from 'app/consts'
 import TwoPanelLayout from 'app/layouts/two-panel-layout'
-import { VaultDetailsType } from 'app/types/vault'
 import { useAtom } from 'jotai'
-import { Tag } from '@0xintuition/1ui';
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await requireUser(request)
@@ -173,21 +170,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   if (!userTotals) {
     return logger('No user totals found')
-  }
-
-  let vaultDetails: VaultDetailsType | null = null
-
-  if (userIdentity !== undefined && userIdentity.vault_id) {
-    try {
-      vaultDetails = await getVaultDetails(
-        userIdentity.contract,
-        userIdentity.vault_id,
-        userWallet as `0x${string}`,
-      )
-    } catch (error) {
-      logger('Failed to fetch vaultDetails', error)
-      vaultDetails = null
-    }
   }
 
   let followClaim: ClaimPresenter | null = null
@@ -301,7 +283,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
     tagClaims,
     userObject,
     userTotals,
-    vaultDetails,
     followClaim,
     isPending,
     relicHoldCount: relicHoldCount.toString(),
@@ -321,7 +302,6 @@ export interface ProfileLoaderData {
   tagClaims: ClaimPresenter[]
   userObject: UserPresenter
   userTotals: UserTotalsPresenter
-  vaultDetails: VaultDetailsType
   followClaim: ClaimPresenter
   isPending: boolean
   relicMintCount: number
@@ -340,12 +320,13 @@ export default function Profile() {
     userIdentity,
     tagClaims,
     userTotals,
-    vaultDetails,
-    isPending,
     relicMintCount,
     relicHoldCount,
     initialParams,
   } = useLiveLoader<ProfileLoaderData>(['attest', 'create'])
+
+  // TODO: Remove this once the `status is added to atoms -- that will be what we check if something is pending. For now setting this to false and removing the legacy isPending check
+  const isPending = false
 
   const { data: accountResult } = useGetAccountQuery(
     {
@@ -395,10 +376,25 @@ export default function Profile() {
     },
   )
 
+  const { data: vaultDetails, isLoading: isLoadingVaultDetails } =
+    useGetVaultDetails(
+      MULTIVAULT_CONTRACT_ADDRESS,
+      accountResult?.account?.atomId,
+      undefined, // no counterVaultId
+      {
+        queryKey: [
+          'get-vault-details',
+          MULTIVAULT_CONTRACT_ADDRESS,
+          accountResult?.account?.atomId,
+        ],
+      },
+    )
+
   logger('Account Result:', accountResult)
   logger('Account Tags Result:', accountTagsResult)
-  logger('tags', accountTagsResult && accountTagsResult?.triples)
   logger('Account Connections Count Result:', accountConnectionsCountResult)
+  logger('tags', accountTagsResult && accountTagsResult?.triples)
+  logger('Vault Details:', vaultDetails)
 
   const { user_assets, assets_sum } = vaultDetails ? vaultDetails : userIdentity
 
@@ -450,10 +446,6 @@ export default function Profile() {
     return <Outlet />
   }
 
-  if (!userObject) {
-    return null
-  }
-
   // TODO: Remove this relic hold/mint count and points calculation when it is stored in BE.
   const nftMintPoints = relicMintCount ? relicMintCount * 2000000 : 0
   const nftHoldPoints = relicHoldCount ? +relicHoldCount * 250000 : 0
@@ -478,7 +470,7 @@ export default function Profile() {
         stats={{
           numberOfFollowers:
             accountConnectionsCountResult?.followers_count?.[0]?.vault
-              .positions_aggregate?.aggregate?.count ?? 0,
+              ?.positions_aggregate?.aggregate?.count ?? 0,
           numberOfFollowing:
             accountConnectionsCountResult?.following_count?.aggregate?.count ??
             0,
@@ -514,7 +506,6 @@ export default function Profile() {
         <>
           <Tags>
             <div className="flex flex-row gap-2 md:flex-col">
-              {/* {Array.isArray(tagClaims) && tagClaims.length > 0 ? ( */}
               {accountTagsResult && accountTagsResult.triples.length > 0 ? (
                 <TagsContent
                   numberOfTags={accountTagsResult.triples.length ?? 0}
@@ -525,11 +516,13 @@ export default function Profile() {
                       label={tag.object?.label ?? ''}
                       value={tag.vault?.allPositions?.aggregate?.count ?? 0}
                       onStake={() => {
-                        setSelectedTag(tag?.object ?? null)
+                        setSelectedTag(
+                          tag?.object as unknown as IdentityPresenter,
+                        ) // TODO: (ENG-4782) temporary type fix until we lock in final types
                         setSaveListModalActive({
                           isOpen: true,
                           id: tag.id,
-                          tag: tag.object,
+                          tag: tag.object as unknown as IdentityPresenter, // TODO: (ENG-4782) temporary type fix until we lock in final types
                         })
                       }}
                     />
@@ -582,15 +575,50 @@ export default function Profile() {
           <IdentityStakeCard
             tvl={+formatBalance(assets_sum)}
             holders={userIdentity.num_positions}
-            variant={userIdentity.is_user ? Identity.user : Identity.nonUser}
-            identityImgSrc={getAtomImage(userIdentity)}
-            identityDisplayName={getAtomLabel(userIdentity)}
+            variant={Identity.user} // TODO: Use the atom type to determine this once we have these
+            // identityImgSrc={getAtomImage(accountResult?.account)} // TODO: Modify our utils and then re-add this
+            identityImgSrc={accountResult?.account?.image ?? ''}
+            // identityDisplayName={getAtomLabel(accountResult?.account)}
+            identityDisplayName={accountResult?.account?.label ?? ''}
             onBuyClick={() =>
               setStakeModalActive((prevState) => ({
                 ...prevState,
                 mode: 'deposit',
                 modalType: 'identity',
-                identity: userIdentity,
+                identity: {
+                  // TODO: (ENG-4782) temporary type fix until we lock in final types
+                  id: accountResult?.account?.id ?? '',
+                  label: accountResult?.account?.label ?? '',
+                  image: accountResult?.account?.image ?? '',
+                  vault_id: accountResult?.account?.atomId,
+                  assets_sum: '0',
+                  user_assets: '0',
+                  contract: MULTIVAULT_CONTRACT_ADDRESS,
+                  asset_delta: '0',
+                  conviction_price: '0',
+                  conviction_price_delta: '0',
+                  conviction_sum: '0',
+                  num_positions: 0,
+                  price: '0',
+                  price_delta: '0',
+                  status: 'active',
+                  total_conviction: '0',
+                  type: 'user',
+                  updated_at: new Date().toISOString(),
+                  created_at: new Date().toISOString(),
+                  creator_address: '',
+                  display_name: accountResult?.account?.label ?? '',
+                  follow_vault_id: '',
+                  user: null,
+                  creator: null,
+                  identity_hash: '',
+                  identity_id: '',
+                  is_contract: false,
+                  is_user: true,
+                  pending: false,
+                  pending_type: null,
+                  pending_vault_id: null,
+                } as unknown as IdentityPresenter,
                 isOpen: true,
               }))
             }
@@ -630,7 +658,7 @@ export default function Profile() {
       {!isPending && (
         <>
           <EditProfileModal
-            userObject={userObject}
+            userObject={accountResult?.account}
             setUserObject={setUserObject}
             open={editProfileModalActive}
             onClose={() => setEditProfileModalActive(false)}
@@ -642,7 +670,7 @@ export default function Profile() {
           />
           <StakeModal
             userWallet={userWallet}
-            contract={userIdentity.contract}
+            contract={MULTIVAULT_CONTRACT_ADDRESS}
             open={stakeModalActive.isOpen}
             identity={userIdentity}
             vaultId={stakeModalActive.vaultId}

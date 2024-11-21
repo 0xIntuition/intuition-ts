@@ -4,7 +4,8 @@ import { UserPresenter } from '@0xintuition/api'
 import { EditProfileForm } from './form'
 
 export interface EditProfileModalProps {
-  userObject: UserPresenter
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  userObject: any //TODO: (ENG-4782) Fix once we have the correct types
   open?: boolean
   setUserObject?: (userObject: UserPresenter) => void
   onClose: () => void

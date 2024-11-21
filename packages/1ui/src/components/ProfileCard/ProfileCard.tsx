@@ -94,7 +94,7 @@ const ProfileCard = ({
             <ProfileCardStatItem
               value={stats.points}
               label="IQ Points"
-              valueClassName="text-success"
+              valueClassName="text-warning"
             />
           )}
         </div>
