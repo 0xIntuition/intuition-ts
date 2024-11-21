@@ -21,7 +21,7 @@ export default function PrivyRefresh({
 
       console.log('Getting access token...')
       const idToken = await getAccessToken()
-      console.log('Access token:', idToken)
+      logger('Access token:', idToken)
       setAccessToken(idToken)
     } catch (error) {
       console.error('Failed to refresh session:', error)
