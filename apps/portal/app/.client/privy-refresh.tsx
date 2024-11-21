@@ -34,7 +34,7 @@ export default function PrivyRefresh({
   useEffect(() => {
     if (accessToken) {
       // instead of revalidating, redirect to same route and replace true
-      console.log('Redirecting to', `${refreshPath}?redirectTo=${redirectTo}`)
+      logger('Redirecting to', `${refreshPath}?redirectTo=${redirectTo}`)
       window.location.replace(`${refreshPath}?redirectTo=${redirectTo}`)
     }
   }, [accessToken])
