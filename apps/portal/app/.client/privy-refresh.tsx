@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
-
+import logger from '@lib/utils/logger'
 import LoadingLogo from '@components/loading-logo'
 import { usePrivy } from '@privy-io/react-auth'
 
