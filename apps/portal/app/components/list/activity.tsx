@@ -17,7 +17,7 @@ import {
   Text,
   Trunctacular,
 } from '@0xintuition/1ui'
-import { SortColumn } from '@0xintuition/api'
+import { IdentityPresenter, Redeemed, SortColumn } from '@0xintuition/api'
 import { Events, Events_Aggregate } from '@0xintuition/graphql'
 
 import RemixLink from '@components/remix-link'
@@ -40,6 +40,15 @@ import { useSetAtom } from 'jotai'
 
 import { List } from './list'
 
+type EventMessages = {
+  AtomCreated: string
+  TripleCreated: string
+  depositAtom: (value: string) => string
+  redeemAtom: (value: string) => string
+  depositTriple: (value: string) => string
+  redeemTriple: (value: string) => string
+}
+
 export function ActivityList({
   activities,
   pagination,
@@ -50,8 +59,8 @@ export function ActivityList({
   paramPrefix?: string
 }) {
   const eventMessages: EventMessages = {
-    createAtom: 'created an identity',
-    createTriple: 'created a claim',
+    AtomCreated: 'created an identity',
+    TripleCreated: 'created a claim',
     depositAtom: (value: string) =>
       `deposited ${formatBalance(value, 18)} ETH on an identity`,
     redeemAtom: (value: string) =>
@@ -62,6 +71,7 @@ export function ActivityList({
       `redeemed ${formatBalance(value, 18)} ETH from a claim`,
   }
 
+  logger('activities in activity list', activities)
   return (
     <List<SortColumn>
       pagination={pagination}
@@ -81,15 +91,6 @@ export function ActivityList({
   )
 }
 
-type EventMessages = {
-  createAtom: string
-  createTriple: string
-  depositAtom: (value: string) => string
-  redeemAtom: (value: string) => string
-  depositTriple: (value: string) => string
-  redeemTriple: (value: string) => string
-}
-
 function ActivityItem({
   activity,
   eventMessages,
@@ -97,16 +98,39 @@ function ActivityItem({
   activity: Events
   eventMessages: EventMessages
 }) {
-  const eventMessage = eventMessages[activity.type as keyof EventMessages]
-  const isRedeemEvent = activity.type?.startsWith('redeem') || false
-  const value = activity.value || '0'
+  let messageKey: keyof EventMessages | undefined
+
+  // Determine if it's an atom or triple action by checking which field exists
+  const isAtomAction = activity.atom !== null
+  const isTripleAction = activity.triple !== null
+
+  if (activity.type === 'Deposited') {
+    messageKey = isAtomAction ? 'depositAtom' : 'depositTriple'
+  } else if (activity.type === 'Redeemed') {
+    messageKey = isAtomAction ? 'redeemAtom' : 'redeemTriple'
+  } else if (activity.type === 'AtomCreated') {
+    messageKey = 'AtomCreated'
+  } else if (activity.type === 'TripleCreated') {
+    messageKey = 'TripleCreated'
+  }
+
+  const eventMessage = messageKey ? eventMessages[messageKey] : undefined
+  const value =
+    activity.type === 'Deposited' || activity.type === 'Redeemed'
+      ? activity.redemption?.assetsForReceiver
+      : null
+
   const message = eventMessage
     ? typeof eventMessage === 'function'
-      ? (eventMessage as (value: string) => string)(value).toString()
+      ? (eventMessage as (value: string) => string)(value || '0').toString()
       : eventMessage.toString()
     : ''
 
   logger('activity', activity)
+  console.log('activity.type:', activity.type)
+  console.log('eventMessage:', eventMessage)
+  console.log('value:', value)
+  console.log('final message:', message)
   const setStakeModalActive = useSetAtom(stakeModalAtom)
 
   // Basic required fields with fallbacks
@@ -115,8 +139,13 @@ function ActivityItem({
     : new Date()
 
   const creator = activity.atom?.creator
-  const creatorAddress = activity.atom?.creator_address || '0x'
+  logger('creator', creator)
+  const creatorAddress = activity?.atom?.creator?.id || '0x'
   const atomId = activity.atom?.id || ''
+
+  function formatTransactionHash(txHash: string): string {
+    return `0x${txHash.replace('\\x', '')}`
+  }
 
   return (
     <div
@@ -157,7 +186,7 @@ function ActivityItem({
                     avatarSrc={creator.image ?? ''}
                     name={creator.label ?? ''}
                     id={creator.id}
-                    bio={creator.description ?? ''}
+                    // bio={creator.description ?? ''} // TODO: we need to determine best way to surface this field
                     ipfsLink={`${BLOCK_EXPLORER_URL}/address/${creator.id}`}
                     className="w-80"
                   />
@@ -182,7 +211,7 @@ function ActivityItem({
             {formatDistance(timestamp, new Date())} ago
           </Text>
           <a
-            href={`${BLOCK_EXPLORER_URL}/tx/${activity.transactionHash}`}
+            href={`${BLOCK_EXPLORER_URL}/tx/${formatTransactionHash(activity.transactionHash)}`}
             target="_blank"
             rel="noreferrer noopener"
           >
@@ -204,7 +233,7 @@ function ActivityItem({
           }
           avatarSrc={activity.atom.image ?? ''}
           name={activity.atom.label ?? atomId}
-          description={activity.atom.description ?? ''}
+          // description={activity.atom.description ?? ''} // TODO: we need to determine best way to surface this field
           id={activity.atom.id}
           totalTVL={formatBalance(
             BigInt(activity.atom.vault?.totalShares ?? '0'),
@@ -227,6 +256,110 @@ function ActivityItem({
           }
           className="w-full hover:bg-transparent"
         />
+      )}
+      {activity.triple && (
+        <ClaimRow
+          numPositionsFor={
+            activity.triple.vault?.allPositions?.aggregate?.count ?? 0
+          }
+          numPositionsAgainst={
+            activity.triple.counterVault?.allPositions?.aggregate?.count ?? 0
+          }
+          tvlFor={formatBalance(activity.triple.vault?.totalShares ?? '0', 18)}
+          tvlAgainst={formatBalance(
+            activity.triple.counterVault?.totalShares ?? '0',
+            18,
+          )}
+          totalTVL={formatBalance(
+            BigInt(activity.triple.vault?.totalShares ?? '0') +
+              BigInt(activity.triple.counterVault?.totalShares ?? '0'),
+            18,
+          )}
+          userPosition={formatBalance(
+            activity.triple.vault?.positions?.[0]?.shares ?? '0',
+            18,
+          )}
+          positionDirection={
+            +(activity.triple.vault?.positions?.[0]?.shares ?? '0') > 0
+              ? ClaimPosition.claimFor
+              : +(activity.triple.counterVault?.positions?.[0]?.shares ?? '0') >
+                  0
+                ? ClaimPosition.claimAgainst
+                : undefined
+          }
+          onStakeForClick={() =>
+            setStakeModalActive((prevState) => ({
+              ...prevState,
+              mode: 'deposit',
+              modalType: 'claim',
+              direction: ClaimPosition.claimFor,
+              isOpen: true,
+              claim: activity.triple ?? undefined,
+              vaultId: activity.triple?.vaultId ?? '0',
+            }))
+          }
+          onStakeAgainstClick={() =>
+            setStakeModalActive((prevState) => ({
+              ...prevState,
+              mode: 'deposit',
+              modalType: 'claim',
+              direction: ClaimPosition.claimAgainst,
+              isOpen: true,
+              claim: activity.triple ?? undefined,
+              vaultId: activity.triple?.counterVaultId ?? '0',
+            }))
+          }
+          className="w-full hover:bg-transparent"
+        >
+          <Link
+            to={getClaimUrl(activity.triple.vaultId ?? '0')}
+            prefetch="intent"
+          >
+            <Claim
+              size="md"
+              subject={{
+                variant:
+                  activity.triple.subject?.type === 'user'
+                    ? Identity.user
+                    : Identity.nonUser,
+                label: getAtomLabel(activity.triple.subject),
+                imgSrc: activity.triple.subject?.image ?? '',
+                id: activity.triple.subject?.id,
+                description: activity.triple.subject?.data?.description ?? '',
+                ipfsLink: getAtomIpfsLink(activity.triple.subject),
+                link: getAtomLink(activity.triple.subject),
+                linkComponent: RemixLink,
+              }}
+              predicate={{
+                variant:
+                  activity.triple.predicate?.type === 'user'
+                    ? Identity.user
+                    : Identity.nonUser,
+                label: getAtomLabel(activity.triple.predicate),
+                imgSrc: activity.triple.predicate?.image ?? '',
+                id: activity.triple.predicate?.id,
+                description: activity.triple.predicate?.data?.description ?? '',
+                ipfsLink: getAtomIpfsLink(activity.triple.predicate),
+                link: getAtomLink(activity.triple.predicate),
+                linkComponent: RemixLink,
+              }}
+              object={{
+                variant:
+                  activity.triple.object?.type === 'user'
+                    ? Identity.user
+                    : Identity.nonUser,
+                label: getAtomLabel(activity.triple.object),
+                imgSrc: activity.triple.object?.image ?? '',
+                id: activity.triple.object?.id,
+                description: activity.triple.object?.data?.description ?? '',
+                ipfsLink: getAtomIpfsLink(activity.triple.object),
+                link: getAtomLink(activity.triple.object),
+                linkComponent: RemixLink,
+              }}
+              isClickable={true}
+            />
+          </Link>
+        </ClaimRow>
       )}
     </div>
   )

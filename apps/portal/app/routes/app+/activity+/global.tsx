@@ -41,6 +41,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
         offset,
         addresses,
         orderBy: [{ blockTimestamp: 'desc' }],
+        where: {
+          type: {
+            _neq: 'FeesTransfered',
+          },
+        },
       })(),
   })
 
@@ -68,6 +73,11 @@ export default function GlobalActivityFeed() {
       offset,
       addresses,
       orderBy: [{ blockTimestamp: 'desc' }],
+      where: {
+        type: {
+          _neq: 'FeesTransfered',
+        },
+      },
     },
     {
       queryKey: ['get-events-global', { limit, offset, addresses }],
@@ -77,9 +87,8 @@ export default function GlobalActivityFeed() {
   console.log('Full events response:', eventsData)
 
   const totalCount = eventsData?.total?.aggregate?.count ?? 0
-  const nodes = eventsData?.events_aggregate?.nodes ?? []
   logger('totalCount', totalCount)
-  const hasMore = nodes.length === limit
+  const hasMore = eventsData?.events?.length === limit
 
   const handlePageChange = (newOffset: number) => {
     const params = new URLSearchParams(searchParams)
@@ -98,10 +107,10 @@ export default function GlobalActivityFeed() {
       <Suspense fallback={<ActivitySkeleton />}>
         {isLoading ? (
           <ActivitySkeleton />
-        ) : nodes.length > 0 ? (
+        ) : eventsData?.events && eventsData?.events?.length > 0 ? (
           <>
             <ActivityList
-              activities={nodes}
+              activities={eventsData.events}
               pagination={{
                 currentPage: offset / limit + 1,
                 limit,

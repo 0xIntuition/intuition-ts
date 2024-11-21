@@ -1,4 +1,3 @@
-import logger from '@lib/utils/logger'
 import { wagmiConfig } from '@lib/utils/wagmi'
 import type { PrivyClientConfig } from '@privy-io/react-auth'
 import { PrivyProvider } from '@privy-io/react-auth'
@@ -17,8 +16,6 @@ const queryClient = new QueryClient({
     },
   },
 })
-
-logger('queryClient', queryClient)
 
 const privyConfig: PrivyClientConfig = {
   embeddedWallets: {
