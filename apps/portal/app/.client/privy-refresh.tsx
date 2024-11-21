@@ -2,7 +2,6 @@ import { useCallback, useEffect, useState } from 'react'
 
 import LoadingLogo from '@components/loading-logo'
 import { usePrivy } from '@privy-io/react-auth'
-import { useLocation, useNavigate, useRevalidator } from '@remix-run/react'
 
 export default function PrivyRefresh({
   refreshPath,
@@ -16,7 +15,9 @@ export default function PrivyRefresh({
 
   const refresh = useCallback(async () => {
     try {
-      if (!ready) return
+      if (!ready) {
+        return
+      }
 
       console.log('Getting access token...')
       const idToken = await getAccessToken()

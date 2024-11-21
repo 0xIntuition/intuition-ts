@@ -11,7 +11,6 @@ import {
   getPrivyAccessToken,
   getPrivyClient,
   getPrivySessionToken,
-  getPrivyUserById,
   isOAuthInProgress,
   verifyPrivyAccessToken,
 } from './privy'
@@ -24,14 +23,23 @@ export async function getUserId(request: Request): Promise<string | null> {
 export async function getUser(request: Request): Promise<User | null> {
   const privyIdToken = getPrivyAccessToken(request)
   const privyClient = getPrivyClient()
+
   if (!privyIdToken) {
+    logger('No Privy ID token found')
     return null
   }
+
   try {
-    // get User returns a partial user object, so we need to check for the wallet address
-    const partialUser = await getPrivyUserById(privyIdToken)
-    const user = await privyClient.getUserById(partialUser.id)
-    logger('Successfully fetched getUserById', user.wallet?.address)
+    // First verify the token is valid
+    const verifiedClaims = await verifyPrivyAccessToken(request)
+    if (!verifiedClaims) {
+      logger('Invalid Privy token')
+      return null
+    }
+
+    // Then get the full user object directly using the verified user ID
+    const user = await privyClient.getUserById(verifiedClaims.userId)
+    logger('Successfully fetched user by ID', user.wallet?.address)
     return user
   } catch (error) {
     logger('Error fetching user', error)
@@ -114,16 +122,21 @@ export async function handlePrivyRedirect({
   options?: RedirectOptions
 }) {
   const accessToken = getPrivyAccessToken(request)
+  const sessionToken = getPrivySessionToken(request)
   const isOAuth = await isOAuthInProgress(request.url)
+
   if (isOAuth) {
     // Do not redirect or interrupt the flow.
-    return
-  } else if (!accessToken) {
+    return null
+  }
+
+  if (!accessToken || !sessionToken) {
     const redirectUrl = await getRedirectToUrl(request, path, options)
     throw redirect(redirectUrl)
   }
-  logger('Hit end of handlePrivyRedirect', accessToken, isOAuth)
-  return
+
+  // Explicitly return null when we reach the end
+  return null
 }
 
 export async function setupAPI(request: Request) {
