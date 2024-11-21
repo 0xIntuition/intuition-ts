@@ -19,8 +19,6 @@ import {
   TagWithValue,
 } from '@0xintuition/1ui'
 import {
-  ClaimPresenter,
-  ClaimsService,
   IdentityPresenter,
   UserPresenter,
   UsersService,
@@ -57,7 +55,6 @@ import { useGetVaultDetails } from '@lib/hooks/useGetVaultDetails'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { getIdentityOrPending } from '@lib/services/identities'
 import { getPurchaseIntentsByAddress } from '@lib/services/phosphor'
-import { getTags } from '@lib/services/tags'
 import {
   editProfileModalAtom,
   editSocialLinksModalAtom,
@@ -169,32 +166,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
     return logger('No user totals found')
   }
 
-  let followClaim: ClaimPresenter | null = null
-
-  const followClaimResponse = await fetchWrapper(request, {
-    method: ClaimsService.searchClaims,
-    args: {
-      subject: getSpecialPredicate(CURRENT_ENV).iPredicate.vaultId,
-      predicate: getSpecialPredicate(CURRENT_ENV).amFollowingPredicate.vaultId,
-      object: userIdentity.vault_id,
-      page: 1,
-      limit: 1,
-    },
-  })
-
-  if (followClaimResponse.data && followClaimResponse.data.length) {
-    followClaim = followClaimResponse.data[0]
-  }
-
-  const url = new URL(request.url)
-  const searchParams = new URLSearchParams(url.search)
-
-  const { tagClaims } = await getTags({
-    request,
-    subjectId: userIdentity.id,
-    searchParams,
-  })
-
   let accountResult: GetAccountQuery | null = null
 
   try {
@@ -277,10 +248,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
     privyUser: user,
     userWallet,
     userIdentity,
-    tagClaims,
     userObject,
     userTotals,
-    followClaim,
     isPending,
     relicHoldCount: relicHoldCount.toString(),
     relicMintCount,
@@ -296,10 +265,8 @@ export interface ProfileLoaderData {
   privyUser: User
   userWallet: string
   userIdentity: IdentityPresenter
-  tagClaims: ClaimPresenter[]
   userObject: UserPresenter
   userTotals: UserTotalsPresenter
-  followClaim: ClaimPresenter
   isPending: boolean
   relicMintCount: number
   relicHoldCount: string
@@ -315,7 +282,6 @@ export default function Profile() {
     privyUser,
     userWallet,
     userIdentity,
-    tagClaims,
     userTotals,
     relicMintCount,
     relicHoldCount,
@@ -701,7 +667,43 @@ export default function Profile() {
             userWallet={userWallet}
             contract={MULTIVAULT_CONTRACT_ADDRESS}
             open={stakeModalActive.isOpen}
-            identity={userIdentity}
+            identity={
+              accountResult?.account
+                ? ({
+                    id: accountResult?.account?.id ?? '',
+                    label: accountResult?.account?.label ?? '',
+                    image: accountResult?.account?.image ?? '',
+                    vault_id: accountResult?.account?.atomId,
+                    assets_sum: '0',
+                    user_assets: '0',
+                    contract: MULTIVAULT_CONTRACT_ADDRESS,
+                    asset_delta: '0',
+                    conviction_price: '0',
+                    conviction_price_delta: '0',
+                    conviction_sum: '0',
+                    num_positions: 0,
+                    price: '0',
+                    price_delta: '0',
+                    status: 'active',
+                    total_conviction: '0',
+                    type: 'user',
+                    updated_at: new Date().toISOString(),
+                    created_at: new Date().toISOString(),
+                    creator_address: '',
+                    display_name: accountResult?.account?.label ?? '',
+                    follow_vault_id: '',
+                    user: null,
+                    creator: null,
+                    identity_hash: '',
+                    identity_id: '',
+                    is_contract: false,
+                    is_user: true,
+                    pending: false,
+                    pending_type: null,
+                    pending_vault_id: null,
+                  } as unknown as IdentityPresenter)
+                : undefined
+            } // TODO: (ENG-4782) temporary type fix until we lock in final types
             vaultId={stakeModalActive.vaultId}
             vaultDetailsProp={vaultDetails}
             onClose={() => {
@@ -712,8 +714,44 @@ export default function Profile() {
             }}
           />
           <TagsModal
-            identity={userIdentity}
-            tagClaims={tagClaims}
+            identity={
+              accountResult?.account
+                ? ({
+                    id: accountResult?.account?.id ?? '',
+                    label: accountResult?.account?.label ?? '',
+                    image: accountResult?.account?.image ?? '',
+                    vault_id: accountResult?.account?.atomId,
+                    assets_sum: '0',
+                    user_assets: '0',
+                    contract: MULTIVAULT_CONTRACT_ADDRESS,
+                    asset_delta: '0',
+                    conviction_price: '0',
+                    conviction_price_delta: '0',
+                    conviction_sum: '0',
+                    num_positions: 0,
+                    price: '0',
+                    price_delta: '0',
+                    status: 'active',
+                    total_conviction: '0',
+                    type: 'user',
+                    updated_at: new Date().toISOString(),
+                    created_at: new Date().toISOString(),
+                    creator_address: '',
+                    display_name: accountResult?.account?.label ?? '',
+                    follow_vault_id: '',
+                    user: null,
+                    creator: null,
+                    identity_hash: '',
+                    identity_id: '',
+                    is_contract: false,
+                    is_user: true,
+                    pending: false,
+                    pending_type: null,
+                    pending_vault_id: null,
+                  } as unknown as IdentityPresenter)
+                : undefined
+            } // TODO: (ENG-4782) temporary type fix until we lock in final types
+            tags={accountTagsResult?.triples ?? []} // TODO: (ENG-4782) temporary type fix until we lock in final types
             userWallet={userWallet}
             open={tagsModalActive.isOpen}
             mode={tagsModalActive.mode}

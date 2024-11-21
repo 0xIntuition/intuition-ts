@@ -12,7 +12,7 @@ import {
   TabsTrigger,
   Trunctacular,
 } from '@0xintuition/1ui'
-import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
+import { IdentityPresenter } from '@0xintuition/api'
 
 import { TransactionState } from '@components/transaction-state'
 import {
@@ -35,8 +35,9 @@ import TagsReview from './tags-review'
 import { TagSearchCombobox } from './tags-search-combo-box'
 
 interface TagsFormProps {
-  identity: IdentityPresenter
-  tagClaims: ClaimPresenter[]
+  identity: IdentityPresenter | undefined // TODO: (ENG-4782) temporary type fix until we lock in final types
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  tags: any[] // TODO: (ENG-4782) temporary type fix until we lock in final types
   userWallet: string
   mode: 'view' | 'add'
   readOnly?: boolean
@@ -46,7 +47,7 @@ interface TagsFormProps {
 
 export function TagsForm({
   identity,
-  tagClaims,
+  tags,
   userWallet,
   mode,
   readOnly = false,
@@ -56,9 +57,9 @@ export function TagsForm({
   const navigate = useNavigate()
   const [currentTab, setCurrentTab] = useState(mode)
 
-  const existingTagIds = tagClaims
-    ? tagClaims.map((tagClaim) => tagClaim.vault_id)
-    : []
+  logger('tags in tag form', tags)
+  logger('identity in tags-form', identity)
+  const existingTagIds = tags ? tags.map((tag) => tag.id) : []
 
   const { state, dispatch } = useTransactionState<
     TransactionStateType,
@@ -94,11 +95,13 @@ export function TagsForm({
 
   const setSaveListModalActive = useSetAtom(saveListModalAtom)
 
-  const handleTagClick = (tagClaim: ClaimPresenter) => {
+  // TODO: (ENG-4782) temporary type fix until we lock in final types
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleTagClick = (tag: any) => {
     setSaveListModalActive({
       isOpen: true,
-      id: tagClaim.vault_id,
-      tag: tagClaim.object,
+      id: tag.id,
+      tag: tag.object,
     })
   }
 
@@ -164,7 +167,7 @@ export function TagsForm({
                         dispatch={dispatch}
                         onRemoveTag={handleRemoveTag}
                         onRemoveInvalidTag={handleRemoveInvalidTag}
-                        subjectVaultId={identity.vault_id}
+                        subjectVaultId={identity?.id ?? ''}
                         invalidTags={invalidTags}
                         setInvalidTags={setInvalidTags}
                       />
@@ -172,7 +175,7 @@ export function TagsForm({
                   )}
                   <TabsContent value="view" className="h-full">
                     <TagSearchCombobox
-                      tagClaims={tagClaims || []}
+                      tagClaims={tags || []}
                       shouldFilter={true}
                       onTagClick={handleTagClick}
                     />
@@ -201,7 +204,7 @@ export function TagsForm({
             <div className="h-full flex flex-col">
               <TagsReview
                 dispatch={dispatch}
-                subjectVaultId={identity.vault_id}
+                subjectVaultId={identity?.id ?? ''}
                 tags={selectedTags}
               />
             </div>
@@ -222,15 +225,15 @@ export function TagsForm({
                   className="w-40"
                   onClick={() => {
                     navigate(
-                      identity.is_user
-                        ? `${PATHS.PROFILE}/${identity.identity_id}`
-                        : `${PATHS.IDENTITY}/${identity.vault_id}`,
+                      identity?.is_user
+                        ? `${PATHS.PROFILE}/${identity?.id}`
+                        : `${PATHS.IDENTITY}/${identity?.id}`,
                     )
 
                     onClose()
                   }}
                 >
-                  View {identity.is_user ? 'profile' : 'identity'}
+                  View {identity?.is_user ? 'profile' : 'identity'}
                 </Button>
               )
             }

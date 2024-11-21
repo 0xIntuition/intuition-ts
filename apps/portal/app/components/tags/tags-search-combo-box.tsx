@@ -16,6 +16,7 @@ import {
 import { ClaimPresenter } from '@0xintuition/api'
 
 import { IdentitySearchComboboxItem } from '@components/identity/identity-search-combo-box-item'
+import logger from '@lib/utils/logger'
 import { formatBalance, getAtomIpfsLink, truncateString } from '@lib/utils/misc'
 
 export interface TagSearchComboboxProps
@@ -32,6 +33,7 @@ const TagSearchCombobox = ({
   onTagClick = () => {},
   ...props
 }: TagSearchComboboxProps) => {
+  logger('tagClaims in tags-search-combo-box', tagClaims)
   return (
     <div className="min-w-96" {...props}>
       <Command className="border-none">
