@@ -424,7 +424,7 @@ export default function Profile() {
         {!isPending && (
           <Button
             variant="secondary"
-            className="w-full text-warning"
+            className="w-full"
             onClick={() =>
               setFollowModalActive((prevState) => ({
                 ...prevState,

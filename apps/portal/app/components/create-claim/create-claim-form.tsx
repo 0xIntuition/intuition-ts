@@ -173,7 +173,7 @@ function CreateClaimForm({
         }
         return 2000
       },
-      queryKey: ['GetTriple', { id: vaultId ? parseFloat(vaultId) : 0 }],
+      queryKey: ['get-triple', { id: vaultId ? parseFloat(vaultId) : 0 }],
     },
   )
 

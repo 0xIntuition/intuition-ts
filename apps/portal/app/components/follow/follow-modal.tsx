@@ -83,7 +83,7 @@ export default function FollowModal({
         }
         return 2000
       },
-      queryKey: ['GetTriple', { id: claimCheckData?.result }],
+      queryKey: ['get-triple', { id: claimCheckData?.result }],
     },
   )
 
