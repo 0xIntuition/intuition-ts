@@ -7265,33 +7265,6 @@ export type AccountMetadataFragment = {
   id: string
   atomId?: any | null
   type: string
-  atom?: {
-    __typename?: 'atoms'
-    value?: {
-      __typename?: 'atomValues'
-      person?: {
-        __typename?: 'persons'
-        name?: string | null
-        image?: string | null
-        description?: string | null
-        url?: string | null
-      } | null
-      thing?: {
-        __typename?: 'things'
-        name?: string | null
-        image?: string | null
-        description?: string | null
-        url?: string | null
-      } | null
-      organization?: {
-        __typename?: 'organizations'
-        name?: string | null
-        image?: string | null
-        description?: string | null
-        url?: string | null
-      } | null
-    } | null
-  } | null
 }
 
 export type AccountClaimsAggregateFragment = {
@@ -7578,33 +7551,6 @@ export type AtomTripleFragment = {
         id: string
         atomId?: any | null
         type: string
-        atom?: {
-          __typename?: 'atoms'
-          value?: {
-            __typename?: 'atomValues'
-            person?: {
-              __typename?: 'persons'
-              name?: string | null
-              image?: string | null
-              description?: string | null
-              url?: string | null
-            } | null
-            thing?: {
-              __typename?: 'things'
-              name?: string | null
-              image?: string | null
-              description?: string | null
-              url?: string | null
-            } | null
-            organization?: {
-              __typename?: 'organizations'
-              name?: string | null
-              image?: string | null
-              description?: string | null
-              url?: string | null
-            } | null
-          } | null
-        } | null
       } | null
     } | null
     predicate?: {
@@ -7622,33 +7568,6 @@ export type AtomTripleFragment = {
         id: string
         atomId?: any | null
         type: string
-        atom?: {
-          __typename?: 'atoms'
-          value?: {
-            __typename?: 'atomValues'
-            person?: {
-              __typename?: 'persons'
-              name?: string | null
-              image?: string | null
-              description?: string | null
-              url?: string | null
-            } | null
-            thing?: {
-              __typename?: 'things'
-              name?: string | null
-              image?: string | null
-              description?: string | null
-              url?: string | null
-            } | null
-            organization?: {
-              __typename?: 'organizations'
-              name?: string | null
-              image?: string | null
-              description?: string | null
-              url?: string | null
-            } | null
-          } | null
-        } | null
       } | null
     } | null
   }>
@@ -7671,33 +7590,6 @@ export type AtomTripleFragment = {
         id: string
         atomId?: any | null
         type: string
-        atom?: {
-          __typename?: 'atoms'
-          value?: {
-            __typename?: 'atomValues'
-            person?: {
-              __typename?: 'persons'
-              name?: string | null
-              image?: string | null
-              description?: string | null
-              url?: string | null
-            } | null
-            thing?: {
-              __typename?: 'things'
-              name?: string | null
-              image?: string | null
-              description?: string | null
-              url?: string | null
-            } | null
-            organization?: {
-              __typename?: 'organizations'
-              name?: string | null
-              image?: string | null
-              description?: string | null
-              url?: string | null
-            } | null
-          } | null
-        } | null
       } | null
     } | null
     object?: {
@@ -7715,33 +7607,6 @@ export type AtomTripleFragment = {
         id: string
         atomId?: any | null
         type: string
-        atom?: {
-          __typename?: 'atoms'
-          value?: {
-            __typename?: 'atomValues'
-            person?: {
-              __typename?: 'persons'
-              name?: string | null
-              image?: string | null
-              description?: string | null
-              url?: string | null
-            } | null
-            thing?: {
-              __typename?: 'things'
-              name?: string | null
-              image?: string | null
-              description?: string | null
-              url?: string | null
-            } | null
-            organization?: {
-              __typename?: 'organizations'
-              name?: string | null
-              image?: string | null
-              description?: string | null
-              url?: string | null
-            } | null
-          } | null
-        } | null
       } | null
     } | null
   }>
@@ -7764,33 +7629,6 @@ export type AtomTripleFragment = {
         id: string
         atomId?: any | null
         type: string
-        atom?: {
-          __typename?: 'atoms'
-          value?: {
-            __typename?: 'atomValues'
-            person?: {
-              __typename?: 'persons'
-              name?: string | null
-              image?: string | null
-              description?: string | null
-              url?: string | null
-            } | null
-            thing?: {
-              __typename?: 'things'
-              name?: string | null
-              image?: string | null
-              description?: string | null
-              url?: string | null
-            } | null
-            organization?: {
-              __typename?: 'organizations'
-              name?: string | null
-              image?: string | null
-              description?: string | null
-              url?: string | null
-            } | null
-          } | null
-        } | null
       } | null
     } | null
     predicate?: {
@@ -7808,33 +7646,6 @@ export type AtomTripleFragment = {
         id: string
         atomId?: any | null
         type: string
-        atom?: {
-          __typename?: 'atoms'
-          value?: {
-            __typename?: 'atomValues'
-            person?: {
-              __typename?: 'persons'
-              name?: string | null
-              image?: string | null
-              description?: string | null
-              url?: string | null
-            } | null
-            thing?: {
-              __typename?: 'things'
-              name?: string | null
-              image?: string | null
-              description?: string | null
-              url?: string | null
-            } | null
-            organization?: {
-              __typename?: 'organizations'
-              name?: string | null
-              image?: string | null
-              description?: string | null
-              url?: string | null
-            } | null
-          } | null
-        } | null
       } | null
     } | null
   }>
@@ -7963,33 +7774,6 @@ export type EventDetailsFragment = {
         id: string
         atomId?: any | null
         type: string
-        atom?: {
-          __typename?: 'atoms'
-          value?: {
-            __typename?: 'atomValues'
-            person?: {
-              __typename?: 'persons'
-              name?: string | null
-              image?: string | null
-              description?: string | null
-              url?: string | null
-            } | null
-            thing?: {
-              __typename?: 'things'
-              name?: string | null
-              image?: string | null
-              description?: string | null
-              url?: string | null
-            } | null
-            organization?: {
-              __typename?: 'organizations'
-              name?: string | null
-              image?: string | null
-              description?: string | null
-              url?: string | null
-            } | null
-          } | null
-        } | null
       } | null
       value?: {
         __typename?: 'atomValues'
@@ -8031,33 +7815,6 @@ export type EventDetailsFragment = {
         id: string
         atomId?: any | null
         type: string
-        atom?: {
-          __typename?: 'atoms'
-          value?: {
-            __typename?: 'atomValues'
-            person?: {
-              __typename?: 'persons'
-              name?: string | null
-              image?: string | null
-              description?: string | null
-              url?: string | null
-            } | null
-            thing?: {
-              __typename?: 'things'
-              name?: string | null
-              image?: string | null
-              description?: string | null
-              url?: string | null
-            } | null
-            organization?: {
-              __typename?: 'organizations'
-              name?: string | null
-              image?: string | null
-              description?: string | null
-              url?: string | null
-            } | null
-          } | null
-        } | null
       } | null
       value?: {
         __typename?: 'atomValues'
@@ -8099,33 +7856,6 @@ export type EventDetailsFragment = {
         id: string
         atomId?: any | null
         type: string
-        atom?: {
-          __typename?: 'atoms'
-          value?: {
-            __typename?: 'atomValues'
-            person?: {
-              __typename?: 'persons'
-              name?: string | null
-              image?: string | null
-              description?: string | null
-              url?: string | null
-            } | null
-            thing?: {
-              __typename?: 'things'
-              name?: string | null
-              image?: string | null
-              description?: string | null
-              url?: string | null
-            } | null
-            organization?: {
-              __typename?: 'organizations'
-              name?: string | null
-              image?: string | null
-              description?: string | null
-              url?: string | null
-            } | null
-          } | null
-        } | null
       } | null
       value?: {
         __typename?: 'atomValues'
@@ -8401,33 +8131,6 @@ export type TripleMetadataFragment = {
       id: string
       atomId?: any | null
       type: string
-      atom?: {
-        __typename?: 'atoms'
-        value?: {
-          __typename?: 'atomValues'
-          person?: {
-            __typename?: 'persons'
-            name?: string | null
-            image?: string | null
-            description?: string | null
-            url?: string | null
-          } | null
-          thing?: {
-            __typename?: 'things'
-            name?: string | null
-            image?: string | null
-            description?: string | null
-            url?: string | null
-          } | null
-          organization?: {
-            __typename?: 'organizations'
-            name?: string | null
-            image?: string | null
-            description?: string | null
-            url?: string | null
-          } | null
-        } | null
-      } | null
     } | null
     value?: {
       __typename?: 'atomValues'
@@ -8469,33 +8172,6 @@ export type TripleMetadataFragment = {
       id: string
       atomId?: any | null
       type: string
-      atom?: {
-        __typename?: 'atoms'
-        value?: {
-          __typename?: 'atomValues'
-          person?: {
-            __typename?: 'persons'
-            name?: string | null
-            image?: string | null
-            description?: string | null
-            url?: string | null
-          } | null
-          thing?: {
-            __typename?: 'things'
-            name?: string | null
-            image?: string | null
-            description?: string | null
-            url?: string | null
-          } | null
-          organization?: {
-            __typename?: 'organizations'
-            name?: string | null
-            image?: string | null
-            description?: string | null
-            url?: string | null
-          } | null
-        } | null
-      } | null
     } | null
     value?: {
       __typename?: 'atomValues'
@@ -8537,33 +8213,6 @@ export type TripleMetadataFragment = {
       id: string
       atomId?: any | null
       type: string
-      atom?: {
-        __typename?: 'atoms'
-        value?: {
-          __typename?: 'atomValues'
-          person?: {
-            __typename?: 'persons'
-            name?: string | null
-            image?: string | null
-            description?: string | null
-            url?: string | null
-          } | null
-          thing?: {
-            __typename?: 'things'
-            name?: string | null
-            image?: string | null
-            description?: string | null
-            url?: string | null
-          } | null
-          organization?: {
-            __typename?: 'organizations'
-            name?: string | null
-            image?: string | null
-            description?: string | null
-            url?: string | null
-          } | null
-        } | null
-      } | null
     } | null
     value?: {
       __typename?: 'atomValues'
@@ -8841,29 +8490,33 @@ export type GetAccountsQuery = {
     type: string
     atom?: {
       __typename?: 'atoms'
-      value?: {
-        __typename?: 'atomValues'
-        person?: {
-          __typename?: 'persons'
-          name?: string | null
-          image?: string | null
-          description?: string | null
-          url?: string | null
-        } | null
-        thing?: {
-          __typename?: 'things'
-          name?: string | null
-          image?: string | null
-          description?: string | null
-          url?: string | null
-        } | null
-        organization?: {
-          __typename?: 'organizations'
-          name?: string | null
-          image?: string | null
-          description?: string | null
-          url?: string | null
-        } | null
+      vaultId: any
+      walletId: string
+      vault?: {
+        __typename?: 'vaults'
+        positionCount: number
+        totalShares: any
+        positions_aggregate: {
+          __typename?: 'positions_aggregate'
+          aggregate?: {
+            __typename?: 'positions_aggregate_fields'
+            count: number
+            sum?: {
+              __typename?: 'positions_sum_fields'
+              shares?: any | null
+            } | null
+          } | null
+        }
+        positions: Array<{
+          __typename?: 'positions'
+          id: string
+          shares: any
+          account?: {
+            __typename?: 'accounts'
+            label: string
+            id: string
+          } | null
+        }>
       } | null
     } | null
     claims: Array<{
@@ -8924,33 +8577,6 @@ export type GetAccountsWithAggregatesQuery = {
       id: string
       atomId?: any | null
       type: string
-      atom?: {
-        __typename?: 'atoms'
-        value?: {
-          __typename?: 'atomValues'
-          person?: {
-            __typename?: 'persons'
-            name?: string | null
-            image?: string | null
-            description?: string | null
-            url?: string | null
-          } | null
-          thing?: {
-            __typename?: 'things'
-            name?: string | null
-            image?: string | null
-            description?: string | null
-            url?: string | null
-          } | null
-          organization?: {
-            __typename?: 'organizations'
-            name?: string | null
-            image?: string | null
-            description?: string | null
-            url?: string | null
-          } | null
-        } | null
-      } | null
       claims: Array<{
         __typename?: 'claims'
         shares: any
@@ -9026,29 +8652,33 @@ export type GetAccountQuery = {
     type: string
     atom?: {
       __typename?: 'atoms'
-      value?: {
-        __typename?: 'atomValues'
-        person?: {
-          __typename?: 'persons'
-          name?: string | null
-          image?: string | null
-          description?: string | null
-          url?: string | null
-        } | null
-        thing?: {
-          __typename?: 'things'
-          name?: string | null
-          image?: string | null
-          description?: string | null
-          url?: string | null
-        } | null
-        organization?: {
-          __typename?: 'organizations'
-          name?: string | null
-          image?: string | null
-          description?: string | null
-          url?: string | null
-        } | null
+      vaultId: any
+      walletId: string
+      vault?: {
+        __typename?: 'vaults'
+        positionCount: number
+        totalShares: any
+        positions_aggregate: {
+          __typename?: 'positions_aggregate'
+          aggregate?: {
+            __typename?: 'positions_aggregate_fields'
+            count: number
+            sum?: {
+              __typename?: 'positions_sum_fields'
+              shares?: any | null
+            } | null
+          } | null
+        }
+        positions: Array<{
+          __typename?: 'positions'
+          id: string
+          shares: any
+          account?: {
+            __typename?: 'accounts'
+            label: string
+            id: string
+          } | null
+        }>
       } | null
     } | null
     claims: Array<{
@@ -9143,33 +8773,6 @@ export type GetAccountWithPaginatedRelationsQuery = {
     id: string
     atomId?: any | null
     type: string
-    atom?: {
-      __typename?: 'atoms'
-      value?: {
-        __typename?: 'atomValues'
-        person?: {
-          __typename?: 'persons'
-          name?: string | null
-          image?: string | null
-          description?: string | null
-          url?: string | null
-        } | null
-        thing?: {
-          __typename?: 'things'
-          name?: string | null
-          image?: string | null
-          description?: string | null
-          url?: string | null
-        } | null
-        organization?: {
-          __typename?: 'organizations'
-          name?: string | null
-          image?: string | null
-          description?: string | null
-          url?: string | null
-        } | null
-      } | null
-    } | null
     claims: Array<{
       __typename?: 'claims'
       shares: any
@@ -9261,33 +8864,6 @@ export type GetAccountWithAggregatesQuery = {
     id: string
     atomId?: any | null
     type: string
-    atom?: {
-      __typename?: 'atoms'
-      value?: {
-        __typename?: 'atomValues'
-        person?: {
-          __typename?: 'persons'
-          name?: string | null
-          image?: string | null
-          description?: string | null
-          url?: string | null
-        } | null
-        thing?: {
-          __typename?: 'things'
-          name?: string | null
-          image?: string | null
-          description?: string | null
-          url?: string | null
-        } | null
-        organization?: {
-          __typename?: 'organizations'
-          name?: string | null
-          image?: string | null
-          description?: string | null
-          url?: string | null
-        } | null
-      } | null
-    } | null
     claims_aggregate: {
       __typename?: 'claims_aggregate'
       aggregate?: {
@@ -9415,33 +8991,6 @@ export type GetAtomsQuery = {
       id: string
       atomId?: any | null
       type: string
-      atom?: {
-        __typename?: 'atoms'
-        value?: {
-          __typename?: 'atomValues'
-          person?: {
-            __typename?: 'persons'
-            name?: string | null
-            image?: string | null
-            description?: string | null
-            url?: string | null
-          } | null
-          thing?: {
-            __typename?: 'things'
-            name?: string | null
-            image?: string | null
-            description?: string | null
-            url?: string | null
-          } | null
-          organization?: {
-            __typename?: 'organizations'
-            name?: string | null
-            image?: string | null
-            description?: string | null
-            url?: string | null
-          } | null
-        } | null
-      } | null
     } | null
     vault?: {
       __typename?: 'vaults'
@@ -9525,33 +9074,6 @@ export type GetAtomsWithAggregatesQuery = {
         id: string
         atomId?: any | null
         type: string
-        atom?: {
-          __typename?: 'atoms'
-          value?: {
-            __typename?: 'atomValues'
-            person?: {
-              __typename?: 'persons'
-              name?: string | null
-              image?: string | null
-              description?: string | null
-              url?: string | null
-            } | null
-            thing?: {
-              __typename?: 'things'
-              name?: string | null
-              image?: string | null
-              description?: string | null
-              url?: string | null
-            } | null
-            organization?: {
-              __typename?: 'organizations'
-              name?: string | null
-              image?: string | null
-              description?: string | null
-              url?: string | null
-            } | null
-          } | null
-        } | null
       } | null
       vault?: {
         __typename?: 'vaults'
@@ -9646,33 +9168,6 @@ export type GetAtomQuery = {
       id: string
       atomId?: any | null
       type: string
-      atom?: {
-        __typename?: 'atoms'
-        value?: {
-          __typename?: 'atomValues'
-          person?: {
-            __typename?: 'persons'
-            name?: string | null
-            image?: string | null
-            description?: string | null
-            url?: string | null
-          } | null
-          thing?: {
-            __typename?: 'things'
-            name?: string | null
-            image?: string | null
-            description?: string | null
-            url?: string | null
-          } | null
-          organization?: {
-            __typename?: 'organizations'
-            name?: string | null
-            image?: string | null
-            description?: string | null
-            url?: string | null
-          } | null
-        } | null
-      } | null
     } | null
     vault?: {
       __typename?: 'vaults'
@@ -9715,33 +9210,6 @@ export type GetAtomQuery = {
           id: string
           atomId?: any | null
           type: string
-          atom?: {
-            __typename?: 'atoms'
-            value?: {
-              __typename?: 'atomValues'
-              person?: {
-                __typename?: 'persons'
-                name?: string | null
-                image?: string | null
-                description?: string | null
-                url?: string | null
-              } | null
-              thing?: {
-                __typename?: 'things'
-                name?: string | null
-                image?: string | null
-                description?: string | null
-                url?: string | null
-              } | null
-              organization?: {
-                __typename?: 'organizations'
-                name?: string | null
-                image?: string | null
-                description?: string | null
-                url?: string | null
-              } | null
-            } | null
-          } | null
         } | null
       } | null
       predicate?: {
@@ -9759,33 +9227,6 @@ export type GetAtomQuery = {
           id: string
           atomId?: any | null
           type: string
-          atom?: {
-            __typename?: 'atoms'
-            value?: {
-              __typename?: 'atomValues'
-              person?: {
-                __typename?: 'persons'
-                name?: string | null
-                image?: string | null
-                description?: string | null
-                url?: string | null
-              } | null
-              thing?: {
-                __typename?: 'things'
-                name?: string | null
-                image?: string | null
-                description?: string | null
-                url?: string | null
-              } | null
-              organization?: {
-                __typename?: 'organizations'
-                name?: string | null
-                image?: string | null
-                description?: string | null
-                url?: string | null
-              } | null
-            } | null
-          } | null
         } | null
       } | null
     }>
@@ -9808,33 +9249,6 @@ export type GetAtomQuery = {
           id: string
           atomId?: any | null
           type: string
-          atom?: {
-            __typename?: 'atoms'
-            value?: {
-              __typename?: 'atomValues'
-              person?: {
-                __typename?: 'persons'
-                name?: string | null
-                image?: string | null
-                description?: string | null
-                url?: string | null
-              } | null
-              thing?: {
-                __typename?: 'things'
-                name?: string | null
-                image?: string | null
-                description?: string | null
-                url?: string | null
-              } | null
-              organization?: {
-                __typename?: 'organizations'
-                name?: string | null
-                image?: string | null
-                description?: string | null
-                url?: string | null
-              } | null
-            } | null
-          } | null
         } | null
       } | null
       object?: {
@@ -9852,33 +9266,6 @@ export type GetAtomQuery = {
           id: string
           atomId?: any | null
           type: string
-          atom?: {
-            __typename?: 'atoms'
-            value?: {
-              __typename?: 'atomValues'
-              person?: {
-                __typename?: 'persons'
-                name?: string | null
-                image?: string | null
-                description?: string | null
-                url?: string | null
-              } | null
-              thing?: {
-                __typename?: 'things'
-                name?: string | null
-                image?: string | null
-                description?: string | null
-                url?: string | null
-              } | null
-              organization?: {
-                __typename?: 'organizations'
-                name?: string | null
-                image?: string | null
-                description?: string | null
-                url?: string | null
-              } | null
-            } | null
-          } | null
         } | null
       } | null
     }>
@@ -9901,33 +9288,6 @@ export type GetAtomQuery = {
           id: string
           atomId?: any | null
           type: string
-          atom?: {
-            __typename?: 'atoms'
-            value?: {
-              __typename?: 'atomValues'
-              person?: {
-                __typename?: 'persons'
-                name?: string | null
-                image?: string | null
-                description?: string | null
-                url?: string | null
-              } | null
-              thing?: {
-                __typename?: 'things'
-                name?: string | null
-                image?: string | null
-                description?: string | null
-                url?: string | null
-              } | null
-              organization?: {
-                __typename?: 'organizations'
-                name?: string | null
-                image?: string | null
-                description?: string | null
-                url?: string | null
-              } | null
-            } | null
-          } | null
         } | null
       } | null
       predicate?: {
@@ -9945,33 +9305,6 @@ export type GetAtomQuery = {
           id: string
           atomId?: any | null
           type: string
-          atom?: {
-            __typename?: 'atoms'
-            value?: {
-              __typename?: 'atomValues'
-              person?: {
-                __typename?: 'persons'
-                name?: string | null
-                image?: string | null
-                description?: string | null
-                url?: string | null
-              } | null
-              thing?: {
-                __typename?: 'things'
-                name?: string | null
-                image?: string | null
-                description?: string | null
-                url?: string | null
-              } | null
-              organization?: {
-                __typename?: 'organizations'
-                name?: string | null
-                image?: string | null
-                description?: string | null
-                url?: string | null
-              } | null
-            } | null
-          } | null
         } | null
       } | null
     }>
@@ -10132,33 +9465,6 @@ export type GetEventsQuery = {
           id: string
           atomId?: any | null
           type: string
-          atom?: {
-            __typename?: 'atoms'
-            value?: {
-              __typename?: 'atomValues'
-              person?: {
-                __typename?: 'persons'
-                name?: string | null
-                image?: string | null
-                description?: string | null
-                url?: string | null
-              } | null
-              thing?: {
-                __typename?: 'things'
-                name?: string | null
-                image?: string | null
-                description?: string | null
-                url?: string | null
-              } | null
-              organization?: {
-                __typename?: 'organizations'
-                name?: string | null
-                image?: string | null
-                description?: string | null
-                url?: string | null
-              } | null
-            } | null
-          } | null
         } | null
         value?: {
           __typename?: 'atomValues'
@@ -10200,33 +9506,6 @@ export type GetEventsQuery = {
           id: string
           atomId?: any | null
           type: string
-          atom?: {
-            __typename?: 'atoms'
-            value?: {
-              __typename?: 'atomValues'
-              person?: {
-                __typename?: 'persons'
-                name?: string | null
-                image?: string | null
-                description?: string | null
-                url?: string | null
-              } | null
-              thing?: {
-                __typename?: 'things'
-                name?: string | null
-                image?: string | null
-                description?: string | null
-                url?: string | null
-              } | null
-              organization?: {
-                __typename?: 'organizations'
-                name?: string | null
-                image?: string | null
-                description?: string | null
-                url?: string | null
-              } | null
-            } | null
-          } | null
         } | null
         value?: {
           __typename?: 'atomValues'
@@ -10268,33 +9547,6 @@ export type GetEventsQuery = {
           id: string
           atomId?: any | null
           type: string
-          atom?: {
-            __typename?: 'atoms'
-            value?: {
-              __typename?: 'atomValues'
-              person?: {
-                __typename?: 'persons'
-                name?: string | null
-                image?: string | null
-                description?: string | null
-                url?: string | null
-              } | null
-              thing?: {
-                __typename?: 'things'
-                name?: string | null
-                image?: string | null
-                description?: string | null
-                url?: string | null
-              } | null
-              organization?: {
-                __typename?: 'organizations'
-                name?: string | null
-                image?: string | null
-                description?: string | null
-                url?: string | null
-              } | null
-            } | null
-          } | null
         } | null
         value?: {
           __typename?: 'atomValues'
@@ -10585,33 +9837,6 @@ export type GetEventsWithAggregatesQuery = {
             id: string
             atomId?: any | null
             type: string
-            atom?: {
-              __typename?: 'atoms'
-              value?: {
-                __typename?: 'atomValues'
-                person?: {
-                  __typename?: 'persons'
-                  name?: string | null
-                  image?: string | null
-                  description?: string | null
-                  url?: string | null
-                } | null
-                thing?: {
-                  __typename?: 'things'
-                  name?: string | null
-                  image?: string | null
-                  description?: string | null
-                  url?: string | null
-                } | null
-                organization?: {
-                  __typename?: 'organizations'
-                  name?: string | null
-                  image?: string | null
-                  description?: string | null
-                  url?: string | null
-                } | null
-              } | null
-            } | null
           } | null
           value?: {
             __typename?: 'atomValues'
@@ -10653,33 +9878,6 @@ export type GetEventsWithAggregatesQuery = {
             id: string
             atomId?: any | null
             type: string
-            atom?: {
-              __typename?: 'atoms'
-              value?: {
-                __typename?: 'atomValues'
-                person?: {
-                  __typename?: 'persons'
-                  name?: string | null
-                  image?: string | null
-                  description?: string | null
-                  url?: string | null
-                } | null
-                thing?: {
-                  __typename?: 'things'
-                  name?: string | null
-                  image?: string | null
-                  description?: string | null
-                  url?: string | null
-                } | null
-                organization?: {
-                  __typename?: 'organizations'
-                  name?: string | null
-                  image?: string | null
-                  description?: string | null
-                  url?: string | null
-                } | null
-              } | null
-            } | null
           } | null
           value?: {
             __typename?: 'atomValues'
@@ -10721,33 +9919,6 @@ export type GetEventsWithAggregatesQuery = {
             id: string
             atomId?: any | null
             type: string
-            atom?: {
-              __typename?: 'atoms'
-              value?: {
-                __typename?: 'atomValues'
-                person?: {
-                  __typename?: 'persons'
-                  name?: string | null
-                  image?: string | null
-                  description?: string | null
-                  url?: string | null
-                } | null
-                thing?: {
-                  __typename?: 'things'
-                  name?: string | null
-                  image?: string | null
-                  description?: string | null
-                  url?: string | null
-                } | null
-                organization?: {
-                  __typename?: 'organizations'
-                  name?: string | null
-                  image?: string | null
-                  description?: string | null
-                  url?: string | null
-                } | null
-              } | null
-            } | null
           } | null
           value?: {
             __typename?: 'atomValues'
@@ -11645,33 +10816,6 @@ export type GetTagsQuery = {
         id: string
         atomId?: any | null
         type: string
-        atom?: {
-          __typename?: 'atoms'
-          value?: {
-            __typename?: 'atomValues'
-            person?: {
-              __typename?: 'persons'
-              name?: string | null
-              image?: string | null
-              description?: string | null
-              url?: string | null
-            } | null
-            thing?: {
-              __typename?: 'things'
-              name?: string | null
-              image?: string | null
-              description?: string | null
-              url?: string | null
-            } | null
-            organization?: {
-              __typename?: 'organizations'
-              name?: string | null
-              image?: string | null
-              description?: string | null
-              url?: string | null
-            } | null
-          } | null
-        } | null
       } | null
       value?: {
         __typename?: 'atomValues'
@@ -11713,33 +10857,6 @@ export type GetTagsQuery = {
         id: string
         atomId?: any | null
         type: string
-        atom?: {
-          __typename?: 'atoms'
-          value?: {
-            __typename?: 'atomValues'
-            person?: {
-              __typename?: 'persons'
-              name?: string | null
-              image?: string | null
-              description?: string | null
-              url?: string | null
-            } | null
-            thing?: {
-              __typename?: 'things'
-              name?: string | null
-              image?: string | null
-              description?: string | null
-              url?: string | null
-            } | null
-            organization?: {
-              __typename?: 'organizations'
-              name?: string | null
-              image?: string | null
-              description?: string | null
-              url?: string | null
-            } | null
-          } | null
-        } | null
       } | null
       value?: {
         __typename?: 'atomValues'
@@ -11781,33 +10898,6 @@ export type GetTagsQuery = {
         id: string
         atomId?: any | null
         type: string
-        atom?: {
-          __typename?: 'atoms'
-          value?: {
-            __typename?: 'atomValues'
-            person?: {
-              __typename?: 'persons'
-              name?: string | null
-              image?: string | null
-              description?: string | null
-              url?: string | null
-            } | null
-            thing?: {
-              __typename?: 'things'
-              name?: string | null
-              image?: string | null
-              description?: string | null
-              url?: string | null
-            } | null
-            organization?: {
-              __typename?: 'organizations'
-              name?: string | null
-              image?: string | null
-              description?: string | null
-              url?: string | null
-            } | null
-          } | null
-        } | null
       } | null
       value?: {
         __typename?: 'atomValues'
@@ -11906,33 +10996,6 @@ export type GetTagsCustomQuery = {
         id: string
         atomId?: any | null
         type: string
-        atom?: {
-          __typename?: 'atoms'
-          value?: {
-            __typename?: 'atomValues'
-            person?: {
-              __typename?: 'persons'
-              name?: string | null
-              image?: string | null
-              description?: string | null
-              url?: string | null
-            } | null
-            thing?: {
-              __typename?: 'things'
-              name?: string | null
-              image?: string | null
-              description?: string | null
-              url?: string | null
-            } | null
-            organization?: {
-              __typename?: 'organizations'
-              name?: string | null
-              image?: string | null
-              description?: string | null
-              url?: string | null
-            } | null
-          } | null
-        } | null
       } | null
       value?: {
         __typename?: 'atomValues'
@@ -11974,33 +11037,6 @@ export type GetTagsCustomQuery = {
         id: string
         atomId?: any | null
         type: string
-        atom?: {
-          __typename?: 'atoms'
-          value?: {
-            __typename?: 'atomValues'
-            person?: {
-              __typename?: 'persons'
-              name?: string | null
-              image?: string | null
-              description?: string | null
-              url?: string | null
-            } | null
-            thing?: {
-              __typename?: 'things'
-              name?: string | null
-              image?: string | null
-              description?: string | null
-              url?: string | null
-            } | null
-            organization?: {
-              __typename?: 'organizations'
-              name?: string | null
-              image?: string | null
-              description?: string | null
-              url?: string | null
-            } | null
-          } | null
-        } | null
       } | null
       value?: {
         __typename?: 'atomValues'
@@ -12042,33 +11078,6 @@ export type GetTagsCustomQuery = {
         id: string
         atomId?: any | null
         type: string
-        atom?: {
-          __typename?: 'atoms'
-          value?: {
-            __typename?: 'atomValues'
-            person?: {
-              __typename?: 'persons'
-              name?: string | null
-              image?: string | null
-              description?: string | null
-              url?: string | null
-            } | null
-            thing?: {
-              __typename?: 'things'
-              name?: string | null
-              image?: string | null
-              description?: string | null
-              url?: string | null
-            } | null
-            organization?: {
-              __typename?: 'organizations'
-              name?: string | null
-              image?: string | null
-              description?: string | null
-              url?: string | null
-            } | null
-          } | null
-        } | null
       } | null
       value?: {
         __typename?: 'atomValues'
@@ -12175,33 +11184,6 @@ export type GetTriplesQuery = {
       id: string
       atomId?: any | null
       type: string
-      atom?: {
-        __typename?: 'atoms'
-        value?: {
-          __typename?: 'atomValues'
-          person?: {
-            __typename?: 'persons'
-            name?: string | null
-            image?: string | null
-            description?: string | null
-            url?: string | null
-          } | null
-          thing?: {
-            __typename?: 'things'
-            name?: string | null
-            image?: string | null
-            description?: string | null
-            url?: string | null
-          } | null
-          organization?: {
-            __typename?: 'organizations'
-            name?: string | null
-            image?: string | null
-            description?: string | null
-            url?: string | null
-          } | null
-        } | null
-      } | null
     } | null
     subject?: {
       __typename?: 'atoms'
@@ -12218,33 +11200,6 @@ export type GetTriplesQuery = {
         id: string
         atomId?: any | null
         type: string
-        atom?: {
-          __typename?: 'atoms'
-          value?: {
-            __typename?: 'atomValues'
-            person?: {
-              __typename?: 'persons'
-              name?: string | null
-              image?: string | null
-              description?: string | null
-              url?: string | null
-            } | null
-            thing?: {
-              __typename?: 'things'
-              name?: string | null
-              image?: string | null
-              description?: string | null
-              url?: string | null
-            } | null
-            organization?: {
-              __typename?: 'organizations'
-              name?: string | null
-              image?: string | null
-              description?: string | null
-              url?: string | null
-            } | null
-          } | null
-        } | null
       } | null
       value?: {
         __typename?: 'atomValues'
@@ -12286,33 +11241,6 @@ export type GetTriplesQuery = {
         id: string
         atomId?: any | null
         type: string
-        atom?: {
-          __typename?: 'atoms'
-          value?: {
-            __typename?: 'atomValues'
-            person?: {
-              __typename?: 'persons'
-              name?: string | null
-              image?: string | null
-              description?: string | null
-              url?: string | null
-            } | null
-            thing?: {
-              __typename?: 'things'
-              name?: string | null
-              image?: string | null
-              description?: string | null
-              url?: string | null
-            } | null
-            organization?: {
-              __typename?: 'organizations'
-              name?: string | null
-              image?: string | null
-              description?: string | null
-              url?: string | null
-            } | null
-          } | null
-        } | null
       } | null
       value?: {
         __typename?: 'atomValues'
@@ -12354,33 +11282,6 @@ export type GetTriplesQuery = {
         id: string
         atomId?: any | null
         type: string
-        atom?: {
-          __typename?: 'atoms'
-          value?: {
-            __typename?: 'atomValues'
-            person?: {
-              __typename?: 'persons'
-              name?: string | null
-              image?: string | null
-              description?: string | null
-              url?: string | null
-            } | null
-            thing?: {
-              __typename?: 'things'
-              name?: string | null
-              image?: string | null
-              description?: string | null
-              url?: string | null
-            } | null
-            organization?: {
-              __typename?: 'organizations'
-              name?: string | null
-              image?: string | null
-              description?: string | null
-              url?: string | null
-            } | null
-          } | null
-        } | null
       } | null
       value?: {
         __typename?: 'atomValues'
@@ -12520,33 +11421,6 @@ export type GetTriplesWithAggregatesQuery = {
         id: string
         atomId?: any | null
         type: string
-        atom?: {
-          __typename?: 'atoms'
-          value?: {
-            __typename?: 'atomValues'
-            person?: {
-              __typename?: 'persons'
-              name?: string | null
-              image?: string | null
-              description?: string | null
-              url?: string | null
-            } | null
-            thing?: {
-              __typename?: 'things'
-              name?: string | null
-              image?: string | null
-              description?: string | null
-              url?: string | null
-            } | null
-            organization?: {
-              __typename?: 'organizations'
-              name?: string | null
-              image?: string | null
-              description?: string | null
-              url?: string | null
-            } | null
-          } | null
-        } | null
       } | null
       subject?: {
         __typename?: 'atoms'
@@ -12563,33 +11437,6 @@ export type GetTriplesWithAggregatesQuery = {
           id: string
           atomId?: any | null
           type: string
-          atom?: {
-            __typename?: 'atoms'
-            value?: {
-              __typename?: 'atomValues'
-              person?: {
-                __typename?: 'persons'
-                name?: string | null
-                image?: string | null
-                description?: string | null
-                url?: string | null
-              } | null
-              thing?: {
-                __typename?: 'things'
-                name?: string | null
-                image?: string | null
-                description?: string | null
-                url?: string | null
-              } | null
-              organization?: {
-                __typename?: 'organizations'
-                name?: string | null
-                image?: string | null
-                description?: string | null
-                url?: string | null
-              } | null
-            } | null
-          } | null
         } | null
         value?: {
           __typename?: 'atomValues'
@@ -12631,33 +11478,6 @@ export type GetTriplesWithAggregatesQuery = {
           id: string
           atomId?: any | null
           type: string
-          atom?: {
-            __typename?: 'atoms'
-            value?: {
-              __typename?: 'atomValues'
-              person?: {
-                __typename?: 'persons'
-                name?: string | null
-                image?: string | null
-                description?: string | null
-                url?: string | null
-              } | null
-              thing?: {
-                __typename?: 'things'
-                name?: string | null
-                image?: string | null
-                description?: string | null
-                url?: string | null
-              } | null
-              organization?: {
-                __typename?: 'organizations'
-                name?: string | null
-                image?: string | null
-                description?: string | null
-                url?: string | null
-              } | null
-            } | null
-          } | null
         } | null
         value?: {
           __typename?: 'atomValues'
@@ -12699,33 +11519,6 @@ export type GetTriplesWithAggregatesQuery = {
           id: string
           atomId?: any | null
           type: string
-          atom?: {
-            __typename?: 'atoms'
-            value?: {
-              __typename?: 'atomValues'
-              person?: {
-                __typename?: 'persons'
-                name?: string | null
-                image?: string | null
-                description?: string | null
-                url?: string | null
-              } | null
-              thing?: {
-                __typename?: 'things'
-                name?: string | null
-                image?: string | null
-                description?: string | null
-                url?: string | null
-              } | null
-              organization?: {
-                __typename?: 'organizations'
-                name?: string | null
-                image?: string | null
-                description?: string | null
-                url?: string | null
-              } | null
-            } | null
-          } | null
         } | null
         value?: {
           __typename?: 'atomValues'
@@ -12888,33 +11681,6 @@ export type GetTripleQuery = {
       id: string
       atomId?: any | null
       type: string
-      atom?: {
-        __typename?: 'atoms'
-        value?: {
-          __typename?: 'atomValues'
-          person?: {
-            __typename?: 'persons'
-            name?: string | null
-            image?: string | null
-            description?: string | null
-            url?: string | null
-          } | null
-          thing?: {
-            __typename?: 'things'
-            name?: string | null
-            image?: string | null
-            description?: string | null
-            url?: string | null
-          } | null
-          organization?: {
-            __typename?: 'organizations'
-            name?: string | null
-            image?: string | null
-            description?: string | null
-            url?: string | null
-          } | null
-        } | null
-      } | null
     } | null
     subject?: {
       __typename?: 'atoms'
@@ -12931,33 +11697,6 @@ export type GetTripleQuery = {
         id: string
         atomId?: any | null
         type: string
-        atom?: {
-          __typename?: 'atoms'
-          value?: {
-            __typename?: 'atomValues'
-            person?: {
-              __typename?: 'persons'
-              name?: string | null
-              image?: string | null
-              description?: string | null
-              url?: string | null
-            } | null
-            thing?: {
-              __typename?: 'things'
-              name?: string | null
-              image?: string | null
-              description?: string | null
-              url?: string | null
-            } | null
-            organization?: {
-              __typename?: 'organizations'
-              name?: string | null
-              image?: string | null
-              description?: string | null
-              url?: string | null
-            } | null
-          } | null
-        } | null
       } | null
       value?: {
         __typename?: 'atomValues'
@@ -12999,33 +11738,6 @@ export type GetTripleQuery = {
         id: string
         atomId?: any | null
         type: string
-        atom?: {
-          __typename?: 'atoms'
-          value?: {
-            __typename?: 'atomValues'
-            person?: {
-              __typename?: 'persons'
-              name?: string | null
-              image?: string | null
-              description?: string | null
-              url?: string | null
-            } | null
-            thing?: {
-              __typename?: 'things'
-              name?: string | null
-              image?: string | null
-              description?: string | null
-              url?: string | null
-            } | null
-            organization?: {
-              __typename?: 'organizations'
-              name?: string | null
-              image?: string | null
-              description?: string | null
-              url?: string | null
-            } | null
-          } | null
-        } | null
       } | null
       value?: {
         __typename?: 'atomValues'
@@ -13067,33 +11779,6 @@ export type GetTripleQuery = {
         id: string
         atomId?: any | null
         type: string
-        atom?: {
-          __typename?: 'atoms'
-          value?: {
-            __typename?: 'atomValues'
-            person?: {
-              __typename?: 'persons'
-              name?: string | null
-              image?: string | null
-              description?: string | null
-              url?: string | null
-            } | null
-            thing?: {
-              __typename?: 'things'
-              name?: string | null
-              image?: string | null
-              description?: string | null
-              url?: string | null
-            } | null
-            organization?: {
-              __typename?: 'organizations'
-              name?: string | null
-              image?: string | null
-              description?: string | null
-              url?: string | null
-            } | null
-          } | null
-        } | null
       } | null
       value?: {
         __typename?: 'atomValues'
@@ -13510,30 +12195,6 @@ export const AtomVaultDetailsFragmentDoc = `
   }
 }
     `
-export const AtomValueFragmentDoc = `
-    fragment AtomValue on atoms {
-  value {
-    person {
-      name
-      image
-      description
-      url
-    }
-    thing {
-      name
-      image
-      description
-      url
-    }
-    organization {
-      name
-      image
-      description
-      url
-    }
-  }
-}
-    `
 export const AccountMetadataFragmentDoc = `
     fragment AccountMetadata on accounts {
   label
@@ -13541,9 +12202,6 @@ export const AccountMetadataFragmentDoc = `
   id
   atomId
   type
-  atom {
-    ...AtomValue
-  }
 }
     `
 export const AtomTripleFragmentDoc = `
@@ -13650,6 +12308,30 @@ export const RedemptionEventFragmentFragmentDoc = `
     receiverId
     sharesRedeemedBySender
     assetsForReceiver
+  }
+}
+    `
+export const AtomValueFragmentDoc = `
+    fragment AtomValue on atoms {
+  value {
+    person {
+      name
+      image
+      description
+      url
+    }
+    thing {
+      name
+      image
+      description
+      url
+    }
+    organization {
+      name
+      image
+      description
+      url
+    }
   }
 }
     `
@@ -14000,10 +12682,33 @@ export const GetAccountsDocument = `
     ...AccountMetadata
     ...AccountClaims
     ...AccountPositions
+    atom {
+      vaultId
+      walletId
+      vault {
+        positionCount
+        totalShares
+        positions_aggregate {
+          aggregate {
+            count
+            sum {
+              shares
+            }
+          }
+        }
+        positions {
+          id
+          account {
+            label
+            id
+          }
+          shares
+        }
+      }
+    }
   }
 }
     ${AccountMetadataFragmentDoc}
-${AtomValueFragmentDoc}
 ${AccountClaimsFragmentDoc}
 ${AccountPositionsFragmentDoc}`
 
@@ -14101,7 +12806,6 @@ export const GetAccountsWithAggregatesDocument = `
   }
 }
     ${AccountMetadataFragmentDoc}
-${AtomValueFragmentDoc}
 ${AccountClaimsFragmentDoc}
 ${AccountPositionsFragmentDoc}`
 
@@ -14297,6 +13001,9 @@ export const GetAccountDocument = `
     query GetAccount($address: String!, $claimsLimit: Int, $claimsOffset: Int, $claimsWhere: claims_bool_exp, $positionsLimit: Int, $positionsOffset: Int, $positionsWhere: positions_bool_exp, $atomsWhere: atoms_bool_exp, $atomsOrderBy: [atoms_order_by!], $atomsLimit: Int, $atomsOffset: Int, $triplesWhere: triples_bool_exp, $triplesOrderBy: [triples_order_by!], $triplesLimit: Int, $triplesOffset: Int) {
   account(id: $address) {
     ...AccountMetadata
+    atom {
+      ...AtomVaultDetails
+    }
     ...AccountClaims
     ...AccountPositions
     ...AccountCreatedAtoms
@@ -14307,7 +13014,7 @@ export const GetAccountDocument = `
   }
 }
     ${AccountMetadataFragmentDoc}
-${AtomValueFragmentDoc}
+${AtomVaultDetailsFragmentDoc}
 ${AccountClaimsFragmentDoc}
 ${AccountPositionsFragmentDoc}
 ${AccountCreatedAtomsFragmentDoc}
@@ -14397,7 +13104,6 @@ export const GetAccountWithPaginatedRelationsDocument = `
   }
 }
     ${AccountMetadataFragmentDoc}
-${AtomValueFragmentDoc}
 ${AccountClaimsFragmentDoc}
 ${AccountPositionsFragmentDoc}
 ${AccountCreatedAtomsFragmentDoc}
@@ -14502,7 +13208,6 @@ export const GetAccountWithAggregatesDocument = `
   }
 }
     ${AccountMetadataFragmentDoc}
-${AtomValueFragmentDoc}
 ${AccountClaimsAggregateFragmentDoc}
 ${AccountPositionsAggregateFragmentDoc}
 ${AccountCreatedAtomsAggregateFragmentDoc}
@@ -18452,81 +17157,6 @@ export const AtomVaultDetails = {
     },
   ],
 } as unknown as DocumentNode
-export const AtomValue = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'AtomValue' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'atoms' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'value' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'person' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'description' },
-                      },
-                      { kind: 'Field', name: { kind: 'Name', value: 'url' } },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'thing' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'description' },
-                      },
-                      { kind: 'Field', name: { kind: 'Name', value: 'url' } },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'organization' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'description' },
-                      },
-                      { kind: 'Field', name: { kind: 'Name', value: 'url' } },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode
 export const AccountMetadata = {
   kind: 'Document',
   definitions: [
@@ -18545,89 +17175,6 @@ export const AccountMetadata = {
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'atomId' } },
           { kind: 'Field', name: { kind: 'Name', value: 'type' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'atom' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'AtomValue' },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'AtomValue' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'atoms' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'value' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'person' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'description' },
-                      },
-                      { kind: 'Field', name: { kind: 'Name', value: 'url' } },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'thing' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'description' },
-                      },
-                      { kind: 'Field', name: { kind: 'Name', value: 'url' } },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'organization' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'description' },
-                      },
-                      { kind: 'Field', name: { kind: 'Name', value: 'url' } },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
         ],
       },
     },
@@ -18865,89 +17412,6 @@ export const AtomTriple = {
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'atomId' } },
           { kind: 'Field', name: { kind: 'Name', value: 'type' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'atom' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'AtomValue' },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'AtomValue' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'atoms' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'value' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'person' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'description' },
-                      },
-                      { kind: 'Field', name: { kind: 'Name', value: 'url' } },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'thing' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'description' },
-                      },
-                      { kind: 'Field', name: { kind: 'Name', value: 'url' } },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'organization' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'description' },
-                      },
-                      { kind: 'Field', name: { kind: 'Name', value: 'url' } },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
         ],
       },
     },
@@ -19037,6 +17501,81 @@ export const RedemptionEventFragment = {
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'assetsForReceiver' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
+export const AtomValue = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'AtomValue' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'atoms' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'value' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'person' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'description' },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'thing' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'description' },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'organization' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'description' },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                    ],
+                  },
                 },
               ],
             },
@@ -19552,19 +18091,6 @@ export const TripleMetadata = {
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'atomId' } },
           { kind: 'Field', name: { kind: 'Name', value: 'type' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'atom' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'AtomValue' },
-                },
-              ],
-            },
-          },
         ],
       },
     },
@@ -20166,19 +18692,6 @@ export const EventDetails = {
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'atomId' } },
           { kind: 'Field', name: { kind: 'Name', value: 'type' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'atom' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'AtomValue' },
-                },
-              ],
-            },
-          },
         ],
       },
     },
@@ -21769,6 +20282,121 @@ export const GetAccounts = {
                   kind: 'FragmentSpread',
                   name: { kind: 'Name', value: 'AccountPositions' },
                 },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'atom' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'vaultId' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'walletId' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'vault' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'positionCount' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'totalShares' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: {
+                                kind: 'Name',
+                                value: 'positions_aggregate',
+                              },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'aggregate' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'count',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'sum' },
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'shares',
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'positions' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'account' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'label',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'id' },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'shares' },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -21790,19 +20418,6 @@ export const GetAccounts = {
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'atomId' } },
           { kind: 'Field', name: { kind: 'Name', value: 'type' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'atom' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'AtomValue' },
-                },
-              ],
-            },
-          },
         ],
       },
     },
@@ -21991,76 +20606,6 @@ export const GetAccounts = {
                           ],
                         },
                       },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'AtomValue' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'atoms' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'value' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'person' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'description' },
-                      },
-                      { kind: 'Field', name: { kind: 'Name', value: 'url' } },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'thing' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'description' },
-                      },
-                      { kind: 'Field', name: { kind: 'Name', value: 'url' } },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'organization' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'description' },
-                      },
-                      { kind: 'Field', name: { kind: 'Name', value: 'url' } },
                     ],
                   },
                 },
@@ -22318,19 +20863,6 @@ export const GetAccountsWithAggregates = {
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'atomId' } },
           { kind: 'Field', name: { kind: 'Name', value: 'type' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'atom' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'AtomValue' },
-                },
-              ],
-            },
-          },
         ],
       },
     },
@@ -22519,76 +21051,6 @@ export const GetAccountsWithAggregates = {
                           ],
                         },
                       },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'AtomValue' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'atoms' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'value' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'person' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'description' },
-                      },
-                      { kind: 'Field', name: { kind: 'Name', value: 'url' } },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'thing' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'description' },
-                      },
-                      { kind: 'Field', name: { kind: 'Name', value: 'url' } },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'organization' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'description' },
-                      },
-                      { kind: 'Field', name: { kind: 'Name', value: 'url' } },
                     ],
                   },
                 },
@@ -22846,6 +21308,19 @@ export const GetAccount = {
                   name: { kind: 'Name', value: 'AccountMetadata' },
                 },
                 {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'atom' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'AtomVaultDetails' },
+                      },
+                    ],
+                  },
+                },
+                {
                   kind: 'FragmentSpread',
                   name: { kind: 'Name', value: 'AccountClaims' },
                 },
@@ -22913,19 +21388,6 @@ export const GetAccount = {
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'atomId' } },
           { kind: 'Field', name: { kind: 'Name', value: 'type' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'atom' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'AtomValue' },
-                },
-              ],
-            },
-          },
         ],
       },
     },
@@ -23382,7 +21844,7 @@ export const GetAccount = {
     },
     {
       kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'AtomValue' },
+      name: { kind: 'Name', value: 'AtomVaultDetails' },
       typeCondition: {
         kind: 'NamedType',
         name: { kind: 'Name', value: 'atoms' },
@@ -23390,57 +21852,82 @@ export const GetAccount = {
       selectionSet: {
         kind: 'SelectionSet',
         selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'vaultId' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'walletId' } },
           {
             kind: 'Field',
-            name: { kind: 'Name', value: 'value' },
+            name: { kind: 'Name', value: 'vault' },
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
                 {
                   kind: 'Field',
-                  name: { kind: 'Name', value: 'person' },
+                  name: { kind: 'Name', value: 'positionCount' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'totalShares' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'positions_aggregate' },
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
                       {
                         kind: 'Field',
-                        name: { kind: 'Name', value: 'description' },
+                        name: { kind: 'Name', value: 'aggregate' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'count' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'sum' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'shares' },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
                       },
-                      { kind: 'Field', name: { kind: 'Name', value: 'url' } },
                     ],
                   },
                 },
                 {
                   kind: 'Field',
-                  name: { kind: 'Name', value: 'thing' },
+                  name: { kind: 'Name', value: 'positions' },
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
                       {
                         kind: 'Field',
-                        name: { kind: 'Name', value: 'description' },
+                        name: { kind: 'Name', value: 'account' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'label' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                          ],
+                        },
                       },
-                      { kind: 'Field', name: { kind: 'Name', value: 'url' } },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'organization' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
                       {
                         kind: 'Field',
-                        name: { kind: 'Name', value: 'description' },
+                        name: { kind: 'Name', value: 'shares' },
                       },
-                      { kind: 'Field', name: { kind: 'Name', value: 'url' } },
                     ],
                   },
                 },
@@ -23677,19 +22164,6 @@ export const GetAccountWithPaginatedRelations = {
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'atomId' } },
           { kind: 'Field', name: { kind: 'Name', value: 'type' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'atom' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'AtomValue' },
-                },
-              ],
-            },
-          },
         ],
       },
     },
@@ -24135,76 +22609,6 @@ export const GetAccountWithPaginatedRelations = {
                           ],
                         },
                       },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'AtomValue' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'atoms' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'value' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'person' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'description' },
-                      },
-                      { kind: 'Field', name: { kind: 'Name', value: 'url' } },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'thing' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'description' },
-                      },
-                      { kind: 'Field', name: { kind: 'Name', value: 'url' } },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'organization' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'description' },
-                      },
-                      { kind: 'Field', name: { kind: 'Name', value: 'url' } },
                     ],
                   },
                 },
@@ -24444,19 +22848,6 @@ export const GetAccountWithAggregates = {
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'atomId' } },
           { kind: 'Field', name: { kind: 'Name', value: 'type' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'atom' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'AtomValue' },
-                },
-              ],
-            },
-          },
         ],
       },
     },
@@ -24978,76 +23369,6 @@ export const GetAccountWithAggregates = {
         ],
       },
     },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'AtomValue' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'atoms' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'value' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'person' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'description' },
-                      },
-                      { kind: 'Field', name: { kind: 'Name', value: 'url' } },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'thing' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'description' },
-                      },
-                      { kind: 'Field', name: { kind: 'Name', value: 'url' } },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'organization' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'description' },
-                      },
-                      { kind: 'Field', name: { kind: 'Name', value: 'url' } },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
   ],
 } as unknown as DocumentNode
 export const GetAtoms = {
@@ -25222,19 +23543,6 @@ export const GetAtoms = {
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'atomId' } },
           { kind: 'Field', name: { kind: 'Name', value: 'type' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'atom' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'AtomValue' },
-                },
-              ],
-            },
-          },
         ],
       },
     },
@@ -25607,19 +23915,6 @@ export const GetAtomsWithAggregates = {
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'atomId' } },
           { kind: 'Field', name: { kind: 'Name', value: 'type' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'atom' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'AtomValue' },
-                },
-              ],
-            },
-          },
         ],
       },
     },
@@ -25977,19 +24272,6 @@ export const GetAtom = {
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'atomId' } },
           { kind: 'Field', name: { kind: 'Name', value: 'type' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'atom' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'AtomValue' },
-                },
-              ],
-            },
-          },
         ],
       },
     },
@@ -26742,19 +25024,6 @@ export const GetEvents = {
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'atomId' } },
           { kind: 'Field', name: { kind: 'Name', value: 'type' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'atom' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'AtomValue' },
-                },
-              ],
-            },
-          },
         ],
       },
     },
@@ -27780,19 +26049,6 @@ export const GetEventsWithAggregates = {
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'atomId' } },
           { kind: 'Field', name: { kind: 'Name', value: 'type' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'atom' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'AtomValue' },
-                },
-              ],
-            },
-          },
         ],
       },
     },
@@ -32207,19 +30463,6 @@ export const GetTags = {
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'atomId' } },
           { kind: 'Field', name: { kind: 'Name', value: 'type' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'atom' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'AtomValue' },
-                },
-              ],
-            },
-          },
         ],
       },
     },
@@ -32621,19 +30864,6 @@ export const GetTagsCustom = {
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'atomId' } },
           { kind: 'Field', name: { kind: 'Name', value: 'type' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'atom' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'AtomValue' },
-                },
-              ],
-            },
-          },
         ],
       },
     },
@@ -33143,19 +31373,6 @@ export const GetTriples = {
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'atomId' } },
           { kind: 'Field', name: { kind: 'Name', value: 'type' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'atom' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'AtomValue' },
-                },
-              ],
-            },
-          },
         ],
       },
     },
@@ -33782,19 +31999,6 @@ export const GetTriplesWithAggregates = {
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'atomId' } },
           { kind: 'Field', name: { kind: 'Name', value: 'type' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'atom' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'AtomValue' },
-                },
-              ],
-            },
-          },
         ],
       },
     },
@@ -34405,19 +32609,6 @@ export const GetTriple = {
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'atomId' } },
           { kind: 'Field', name: { kind: 'Name', value: 'type' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'atom' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'AtomValue' },
-                },
-              ],
-            },
-          },
         ],
       },
     },

@@ -15,6 +15,30 @@ query GetAccounts(
     ...AccountMetadata
     ...AccountClaims
     ...AccountPositions
+    atom {
+      vaultId
+      walletId
+      vault {
+        positionCount
+        totalShares
+        positions_aggregate {
+          aggregate {
+            count
+            sum {
+              shares
+            }
+          }
+        }
+        positions {
+          id
+          account {
+            label
+            id
+          }
+          shares
+        }
+      }
+    }
   }
 }
 
@@ -83,6 +107,9 @@ query GetAccount(
 ) {
   account(id: $address) {
     ...AccountMetadata
+    atom {
+      ...AtomVaultDetails
+    }
     ...AccountClaims
     ...AccountPositions
     ...AccountCreatedAtoms
