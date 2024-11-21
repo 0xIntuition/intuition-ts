@@ -5,7 +5,6 @@ import {
   Button,
   Icon,
   IconName,
-  IconName,
   Identity,
   IdentityStakeCard,
   PieChartVariant,
@@ -55,7 +54,6 @@ import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { getIdentityOrPending } from '@lib/services/identities'
 import { getPurchaseIntentsByAddress } from '@lib/services/phosphor'
 import {
-  followModalAtom,
   imageModalAtom,
   saveListModalAtom,
   shareModalAtom,
@@ -432,10 +430,10 @@ export default function Profile() {
             //   }))
             // }
           >
-              <>
-                <Icon name={IconName.peopleAdd} className="h-4 w-4" />
-                Follow
-              </>
+            <>
+              <Icon name={IconName.peopleAdd} className="h-4 w-4" />
+              Follow
+            </>
           </Button>
         )}
       </ProfileCard>
@@ -478,7 +476,7 @@ export default function Profile() {
             </div>
 
             <TagsButton
-            className='text-warning'
+              className="text-warning"
               onClick={() => {
                 setTagsModalActive({ isOpen: true, mode: 'view' })
               }}
